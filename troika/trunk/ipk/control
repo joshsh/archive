@@ -1,0 +1,10 @@
+Package: hello3
+Installed-Size: 14k
+Filename: ./troika.ipk
+Version: 0.01
+Depends:
+Priority: optional
+Section: qpe
+Maintainer: Josh Shinavier <parcour@gmail.com>
+Architecture: arm
+Description: Test application

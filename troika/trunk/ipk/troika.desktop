@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment = Did it work?
+Exec = troika
+File = ../apps/Games/troika
+Icon = troika.png
+Type = Application
+Name = Test app
+Name[de] = Testprogramm
