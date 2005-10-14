@@ -4,11 +4,19 @@
 ## Note: depends on macro EXEC (the executable to be placed in the data directory).
 
 APP	=	troika
-
 TAR	=	tar -cvz -f
 
 
-all: $(APP).ipk
+all: ipk
+
+clean:
+	- rm -rf opt data.tar.gz control.tar.gz
+
+distclean: clean
+	- rm -f $(APP).ipk
+
+
+ipk: $(APP).ipk
 
 ## Compress the whole thing up to make the installable package.
 $(APP).ipk: data.tar.gz control.tar.gz debian-binary
@@ -24,7 +32,7 @@ data.tar.gz: opt
 
 opt: $(EXEC) $(APP).png $(APP).desktop
 	# Create opt directory structure.
-	rm -rf opt/
+	- rm -rf opt/
 	mkdir opt/
 	mkdir opt/QtPalmTop/
 	mkdir opt/QtPalmTop/apps/

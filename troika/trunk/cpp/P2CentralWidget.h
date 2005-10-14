@@ -1,29 +1,20 @@
-#ifndef P2MainWindow_h
-#define P2MainWindow_h
+#ifndef P2CentralWidget_h
+#define P2CentralWidget_h 1
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 
 #include <qwidget.h>  // QWidget
-#include <qmainwindow.h>  // QMainWindow
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2MainWindow : public QMainWindow
+class P2CentralWidget : public QWidget
 {
-    Q_OBJECT
-
 public:
-
-    P2MainWindow(QWidget* parent=0, const char* name=0, WFlags fl=0);
-
-public slots:
-
-    void    cmdFileQuit();
-
+    P2CentralWidget( QWidget *parent=0, const char *name=0 );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2MainWindow_h
+#endif  // P2CentralWidget_h
