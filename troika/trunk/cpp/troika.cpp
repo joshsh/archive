@@ -6,13 +6,13 @@
 
 int main(int argc, char** argv)
 {
-    QApplication *a = new QApplication(argc, argv);
-    QMainWindow *w = new P2MainWindow();
+    QApplication a(argc, argv);
 
-    a->setMainWidget(w);
+    P2MainWindow w;
+    a.setMainWidget(&w);
 
     // Maximize the main window if it has not defined its own maximum dimensions.
-    w->showMaximized();
+    w.showMaximized();
 
-    return a->exec();
+    return a.exec();
 }

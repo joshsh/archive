@@ -5,20 +5,52 @@
 #include <qwidget.h>  // QWidget
 #include <qpushbutton.h>  // QPushButton
 
-#include <qpalette.h>  // QColorGroup
+#include <qpalette.h>  // QColorGroup, QPalette
 #include <qcolor.h>  // QColor
 
-////////////////////////////////////////////////////////////////////////////////
+    #include <qpainter.h> // QPainter
+    #include <qstring.h> // QString
+
+    #include <qimage.h> // QImage
+    #include <qpoint.h> // QPoint
+
+    #include <qbutton.h>  // QButton
+    #include <qpixmap.h>  // QPixmap
+
+    //#include <qtextedit.h>  ! Apparently not supported...
+
+    #include <qurloperator.h>
+    #include <qnetworkprotocol.h>
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+/* XPM */
+static const char * ohio_xpm[] = {
+"28 7 2 1",
+"       c None",
+".      c #000000000000",
+" ....   ..  ..  ....   .... ",
+"..  ..  ..  ..   ..   ..  ..",
+"..  ..  ..  ..   ..   ..  ..",
+"..  ..  ......   ..   ..  ..",
+"..  ..  ..  ..   ..   ..  ..",
+"..  ..  ..  ..   ..   ..  ..",
+" ....   ..  ..  ....   .... "};
+
 
 P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
         : QWidget( parent, name )
 {
+    setPalette( QPalette( QColor( 255, 255, 255) ) );
+
+/*
     QColorGroup cg = this->colorGroup();    // if this is a widget.
     cg.setColor(QColorGroup::Background, Qt::white);
-
     // But how do you re-define QWidget::PaletteBackground?
     setBackgroundMode(QWidget::PaletteBackground);
-
+*/
     //setMinimumSize( 240, 320 );
     //setMaximumSize( 240, 320 );
 
@@ -36,10 +68,120 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
     //QTextEdit *editor = new QTextEdit(this, "editor");
     //editor->setGeometry( 20, 70, 50, 50 );
 
-
     // "Because the MyWidget class doesn't know about the application object, it
     // has to connect to Qt's pointer to it, qApp."
     connect( quit, SIGNAL(clicked()), qApp, SLOT(quit()) );
 
     connect( bleah, SIGNAL(clicked()), quit, SLOT(hide()) );
+    //connect( bleah, SIGNAL(clicked()), (P2CentralWidget *) this, SLOT(foobar()) );
+
+/*
+    // Ohio as a QPixmap (below, it's a QImage).
+    QButton ohio( this, "Button", 0 );
+    //const QPixmap ohio_pix(ohio_xpm);
+    //ohio.setPixmap(ohio_pix);
+    ohio.setGeometry( 100, 60, 30, 30 );
+    ohio.setFont( QFont( "Times", 18, QFont::Bold ) );
+    ohio.setText( QString("foobar") );
+*/
+
+
 }
+
+
+// Fill this with a real draw procedure...
+void P2CentralWidget::paintEvent( QPaintEvent * )
+{
+    QPainter painter( this );
+    //painter.begin(&anyPaintDevice);
+
+    painter.setBrush( Qt::blue );
+    //QBrush brush( Qt::blue );
+    //painter.setBrush( brush );
+    painter.setPen( NoPen );
+    painter.drawRect ( 102, 152, 10, 10 );
+    painter.setBrush( NoBrush );
+    painter.setPen( Qt::red );
+    painter.drawRect ( 100, 150, 14, 14 );
+
+    //painter.drawText( rect(), AlignCenter, "The Text" );
+
+    QString s = "The answer = " + QString::number( 42 );
+    painter.drawText( 100, 200, s );
+
+    painter.setPen( Qt::black );
+    painter.drawPoint(20, 20);
+    painter.drawPoint(23, 20);
+    painter.drawPoint(20, 23);
+    painter.drawPoint(23, 23);
+
+/* XPM */
+const char * light_off_xpm[] = {
+"16 16 4 1",
+"       c None",
+".      c #000000000000",
+"X      c #6B6B6C6C6C6C",
+"o      c #FFFF6C6C0000",
+"                ",
+"                ",
+"       ...      ",
+"      .   .     ",
+"     .    X.    ",
+"    .      X.   ",
+"    .    XXX.   ",
+"    .   X XX.   ",
+"     .   XX.    ",
+"     .  XXX.    ",
+"      .  X.     ",
+"      .  X..    ",
+"      .ooo..    ",
+"      .ooo..    ",
+"       .o..     ",
+"        ..      "};
+
+
+
+QImage image(light_off_xpm);
+painter.drawImage(50, 180,  // dest. origin
+            image,
+            0, 0,  // source origin
+            -1, -1,  // source maxima
+            0 );  // conversionFlags
+
+QImage image2(ohio_xpm);
+painter.drawImage(70, 260,  // dest. origin
+            image2,
+            0, 0,  // source origin
+            -1, -1,  // source maxima
+            0 );  // conversionFlags
+
+
+
+
+
+    QUrlOperator op( "ftp://ftp.is.co.za/rfc/" );
+    // do some other stuff like op.listChildren() or op.mkdir( "new Dir" )
+    const QNetworkOperation *no = op.get("rfc1808.txt");
+    int state = no ? no->state() : -1;
+    QString s2 = "State = " + QString::number( state );
+    //cout << no->arg(0).latin1();
+    painter.setBrush( NoBrush );
+    painter.setPen( Qt::red );
+    painter.drawText( 20, 220, s2 );
+
+
+
+
+
+    //painter.end();
+}
+
+
+
+
+
+
+
+
+
+

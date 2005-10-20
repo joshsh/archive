@@ -13,6 +13,9 @@ class P2CentralWidget : public QWidget
 {
 public:
     P2CentralWidget( QWidget *parent=0, const char *name=0 );
+
+protected:
+    void paintEvent( QPaintEvent * );
 };
 
 ////////////////////////////////////////////////////////////////////////////////

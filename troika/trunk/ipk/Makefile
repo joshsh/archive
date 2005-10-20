@@ -33,12 +33,9 @@ data.tar.gz: opt
 opt: $(EXEC) $(APP).png $(APP).desktop
 	# Create opt directory structure.
 	- rm -rf opt/
-	mkdir opt/
-	mkdir opt/QtPalmTop/
-	mkdir opt/QtPalmTop/apps/
-	mkdir opt/QtPalmTop/apps/Games/
-	mkdir opt/QtPalmTop/bin/
-	mkdir opt/QtPalmTop/pics/
+	mkdir -p opt/QtPalmTop/apps/Games/
+	mkdir -p opt/QtPalmTop/bin/
+	mkdir -p opt/QtPalmTop/pics/
 	
 	# Fill opt directory with the appropriate data.
 	cp $(APP).png opt/QtPalmTop/pics

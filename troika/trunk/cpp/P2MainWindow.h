@@ -20,7 +20,7 @@ public:
 
 public slots:
 
-    void    cmdFileQuit();
+    void    quit();
 
 };
 
