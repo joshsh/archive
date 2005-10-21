@@ -1,4 +1,5 @@
 #include "P2CentralWidget.h"  // P2CentralWidget
+#include "P2Binder.h"  // P2Binder
 
 #include <qapplication.h>  // qApp
 
@@ -39,6 +40,57 @@ static const char * ohio_xpm[] = {
 "..  ..  ..  ..   ..   ..  ..",
 " ....   ..  ..  ....   .... "};
 
+/* XPM */
+static const char * sk_s_xpm[] = {
+"10 11 2 1",
+"       c None",
+".      c #000000000000",
+"..........",
+".        .",
+".  ....  .",
+". ..  .. .",
+". ..     .",
+".  ....  .",
+".     .. .",
+". ..  .. .",
+".  ....  .",
+".        .",
+".........."};
+
+/* XPM */
+static const char * sk_k_xpm[] = {
+"10 11 2 1",
+"       c None",
+".      c #000000000000",
+"..........",
+".        .",
+". ..  .. .",
+". ..  .. .",
+". .. ..  .",
+". ....   .",
+". .. ..  .",
+". ..  .. .",
+". ..  .. .",
+".        .",
+".........."};
+
+/* XPM */
+static const char * sk_i_xpm[] = {
+"10 11 2 1",
+"       c None",
+".      c #000000000000",
+"..........",
+".        .",
+".  ....  .",
+".   ..   .",
+".   ..   .",
+".   ..   .",
+".   ..   .",
+".   ..   .",
+".  ....  .",
+".        .",
+".........."};
+
 
 P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
         : QWidget( parent, name )
@@ -75,6 +127,9 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
     connect( bleah, SIGNAL(clicked()), quit, SLOT(hide()) );
     //connect( bleah, SIGNAL(clicked()), (P2CentralWidget *) this, SLOT(foobar()) );
 
+    P2Binder *binder = new P2Binder(this, "test binder");
+    binder->move(170, 20);
+
 /*
     // Ohio as a QPixmap (below, it's a QImage).
     QButton ohio( this, "Button", 0 );
@@ -87,6 +142,7 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
 
 
 }
+
 
 
 // Fill this with a real draw procedure...
@@ -155,10 +211,29 @@ painter.drawImage(70, 260,  // dest. origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
+QImage image3(sk_s_xpm);
+painter.drawImage(170, 100,  // dest. origin
+            image3,
+            0, 0,  // source origin
+            -1, -1,  // source maxima
+            0 );  // conversionFlags
 
+QImage image4(sk_k_xpm);
+painter.drawImage(170, 120,  // dest. origin
+            image4,
+            0, 0,  // source origin
+            -1, -1,  // source maxima
+            0 );  // conversionFlags
 
+QImage image5(sk_i_xpm);
+painter.drawImage(170, 140,  // dest. origin
+            image5,
+            0, 0,  // source origin
+            -1, -1,  // source maxima
+            0 );  // conversionFlags
 
-
+    //~
+    #ifndef ARM_COMPILE
     QUrlOperator op( "ftp://ftp.is.co.za/rfc/" );
     // do some other stuff like op.listChildren() or op.mkdir( "new Dir" )
     const QNetworkOperation *no = op.get("rfc1808.txt");
@@ -168,6 +243,7 @@ painter.drawImage(70, 260,  // dest. origin
     painter.setBrush( NoBrush );
     painter.setPen( Qt::red );
     painter.drawText( 20, 220, s2 );
+    #endif
 
 
 

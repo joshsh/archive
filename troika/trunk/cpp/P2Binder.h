@@ -1,29 +1,28 @@
-#ifndef P2MainWindow_h
-#define P2MainWindow_h
+#ifndef P2Binder_h
+#define P2Binder_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 
 #include <qwidget.h>  // QWidget
-#include <qmainwindow.h>  // QMainWindow
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2MainWindow : public QMainWindow
+class P2Binder : public QWidget
 {
     Q_OBJECT
 
 public:
 
-    P2MainWindow(QWidget* parent=0, const char* name=0, WFlags fl=0);
+    P2Binder(QWidget* parent = 0, const char* name = 0);
 
-public slots:
+protected:
 
-    void quit();
-
+    void mousePressEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2MainWindow_h
+#endif  // P2Binder_h

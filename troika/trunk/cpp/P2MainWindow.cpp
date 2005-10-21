@@ -48,11 +48,11 @@ P2MainWindow::P2MainWindow(QWidget* parent, const char* name, WFlags fl)
     P2CentralWidget *w = new P2CentralWidget(this, "central widget");
     setCentralWidget(w);
 
-    // QTextView *tv = new QTextView("Foo bar", 0, this, "Log viewer");
+    // QTextView *tv = new QTextView("Salut!", 0, this, "Log viewer");
     // setCentralWidget(tv);
 
     // QMultiLineEdit *mle = new QMultiLineEdit( this );
-    // mle->setText("Foo bar");
+    // mle->setText("Salut!");
     // setCentralWidget(mle);
 }
 

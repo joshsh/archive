@@ -60,8 +60,8 @@ x86-distclean: x86-clean
 arm: x86-clean $(APP)_arm
 
 ## Link.
-$(APP)_arm: compile-target-arm $(APP).o P2MainWindow.o P2CentralWidget.o P2MainWindow_moc.o P2CentralWidget_moc.o
-	$(CXX) $(LIBS) -o $(APP)_arm $(APP).o P2MainWindow.o P2MainWindow_moc.o P2CentralWidget.o P2CentralWidget_moc.o
+$(APP)_arm: compile-target-arm $(APP).o P2MainWindow.o P2CentralWidget.o P2Binder.o P2MainWindow_moc.o P2CentralWidget_moc.o P2Binder_moc.o
+	$(CXX) $(LIBS) -o $(APP)_arm $(APP).o P2MainWindow.o P2MainWindow_moc.o P2CentralWidget.o P2CentralWidget_moc.o P2Binder.o P2Binder_moc.o
 
 ## Use macros specific to the target architecture.
 compile-target-arm: compile-target-arm.h
@@ -76,19 +76,24 @@ P2MainWindow.o: P2MainWindow.cpp P2MainWindow.h
 	$(CXX) $(INCPATH) $(CXXFLAGS) -o P2MainWindow.o -c P2MainWindow.cpp
 P2CentralWidget.o: P2CentralWidget.cpp P2CentralWidget.h
 	$(CXX) $(INCPATH) $(CXXFLAGS) -o P2CentralWidget.o -c P2CentralWidget.cpp
+P2Binder.o: P2Binder.cpp P2Binder.h
+	$(CXX) $(INCPATH) $(CXXFLAGS) -o P2Binder.o -c P2Binder.cpp
 
 ## Compile the _mocs.
 P2MainWindow_moc.o: P2MainWindow_moc.cpp
 	$(CXX) $(INCPATH) $(CXXFLAGS) -o P2MainWindow_moc.o -c P2MainWindow_moc.cpp
 P2CentralWidget_moc.o: P2CentralWidget_moc.cpp
 	$(CXX) $(INCPATH) $(CXXFLAGS) -o P2CentralWidget_moc.o -c P2CentralWidget_moc.cpp
+P2Binder_moc.o: P2Binder_moc.cpp
+	$(CXX) $(INCPATH) $(CXXFLAGS) -o P2Binder_moc.o -c P2Binder_moc.cpp
 
 ## Run Meta Object Compiler on header files.
 P2MainWindow_moc.cpp: P2MainWindow.h
 	$(MOC) -o P2MainWindow_moc.cpp P2MainWindow.h
 P2CentralWidget_moc.cpp: P2CentralWidget.h
 	$(MOC) -o P2CentralWidget_moc.cpp P2CentralWidget.h
-
+P2Binder_moc.cpp: P2Binder.h
+	$(MOC) -o P2Binder_moc.cpp P2Binder.h
 
 arm-clean:
 	- rm -f compile-target.h *.o *_moc.cpp
