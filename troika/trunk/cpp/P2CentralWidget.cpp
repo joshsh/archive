@@ -1,5 +1,6 @@
 #include "P2CentralWidget.h"  // P2CentralWidget
 #include "P2Binder.h"  // P2Binder
+#include "P2BitmapEditor.h"  // P2BitmapEditor
 
 #include <qapplication.h>  // qApp
 
@@ -92,10 +93,13 @@ static const char * sk_i_xpm[] = {
 ".........."};
 
 
+#define BACKGROUND_COLOR        255, 255, 255
+
+
 P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
         : QWidget( parent, name )
 {
-    setPalette( QPalette( QColor( 255, 255, 255) ) );
+    setPalette( QPalette( QColor(BACKGROUND_COLOR) ) );
 
 /*
     QColorGroup cg = this->colorGroup();    // if this is a widget.
@@ -106,16 +110,16 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
     //setMinimumSize( 240, 320 );
     //setMaximumSize( 240, 320 );
 
+    // This my button.
+    QPushButton *bleah = new QPushButton( "Hide", this, "bleah" );
+    bleah->setGeometry( 30, 10, 75, 30 );
+    bleah->setFont( QFont( "Times", 18, QFont::Bold ) );
+
     // "The widget name has nothing to do with the button text; it just happens
     // to be similar in this case."
     QPushButton *quit = new QPushButton( "Quit", this, "quit" );
-    quit->setGeometry( 62, 40, 75, 30 );
+    quit->setGeometry( 30, 40, 75, 30 );
     quit->setFont( QFont( "Times", 18, QFont::Bold ) );
-
-    // This my button.
-    QPushButton *bleah = new QPushButton( "Hide", this, "bleah" );
-    bleah->setGeometry( 62, 10, 75, 30 );
-    bleah->setFont( QFont( "Times", 18, QFont::Bold ) );
 
     //QTextEdit *editor = new QTextEdit(this, "editor");
     //editor->setGeometry( 20, 70, 50, 50 );
@@ -128,7 +132,19 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
     //connect( bleah, SIGNAL(clicked()), (P2CentralWidget *) this, SLOT(foobar()) );
 
     P2Binder *binder = new P2Binder(this, "test binder");
-    binder->move(170, 20);
+    binder->move(5, 20);
+
+    QImage *image = new QImage();
+    // 16x16 dimensions, 32-bit depth.
+    image->create( 11, 11, 32 );
+    // R, G, B and alpha color components.
+    image->fill( qRgba( 0, 0, 0, 0 ) );
+    // Enable transparency.
+    image->setAlphaBuffer( true );
+    P2BitmapEditor *editor = new P2BitmapEditor( this, "editor", image, 5, true );
+    //P2BitmapEditor *editor = new P2BitmapEditor( this, "editor" );
+    editor->move(110, 10);
+
 
 /*
     // Ohio as a QPixmap (below, it's a QImage).
@@ -144,6 +160,7 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
 }
 
 
+int delayX = 5;
 
 // Fill this with a real draw procedure...
 void P2CentralWidget::paintEvent( QPaintEvent * )
@@ -212,21 +229,21 @@ painter.drawImage(70, 260,  // dest. origin
             0 );  // conversionFlags
 
 QImage image3(sk_s_xpm);
-painter.drawImage(170, 100,  // dest. origin
+painter.drawImage(5, 100,  // dest. origin
             image3,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
 QImage image4(sk_k_xpm);
-painter.drawImage(170, 120,  // dest. origin
+painter.drawImage(5, 120,  // dest. origin
             image4,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
 QImage image5(sk_i_xpm);
-painter.drawImage(170, 140,  // dest. origin
+painter.drawImage(5, 140,  // dest. origin
             image5,
             0, 0,  // source origin
             -1, -1,  // source maxima
@@ -246,8 +263,16 @@ painter.drawImage(170, 140,  // dest. origin
     #endif
 
 
-
-
+    for ( int i = 0; i < 1000000000; i++ )
+    {
+        i++;
+        i--;
+    }
+    painter.setPen( Qt::black );
+    painter.setBrush( NoBrush );
+    painter.drawRect ( delayX, 5, 4, 4 );
+    delayX += 5;
+    //painter.drawPoint(delayX, 5);
 
     //painter.end();
 }

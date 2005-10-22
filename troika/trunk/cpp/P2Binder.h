@@ -15,12 +15,20 @@ class P2Binder : public QWidget
 
 public:
 
+    // P2Binder( P2Binder *parentBinder, const char *name = 0 );
     P2Binder(QWidget* parent = 0, const char* name = 0);
 
 protected:
 
     void mousePressEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
+
+    //void resizePixmap( QSize newSize );
+
+private:
+
+    //QSize size;  // Size of the pixmap, plus border padding.
+    //QPixmap pixmap;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

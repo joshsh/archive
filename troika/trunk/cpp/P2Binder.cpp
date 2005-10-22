@@ -101,3 +101,5 @@ void P2Binder::paintEvent(QPaintEvent *event)
         -1, -1,  // source maxima
         0 );  // conversionFlags
 }
+
+
