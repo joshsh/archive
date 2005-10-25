@@ -1,19 +1,6 @@
-/*+
+/*//////////////////////////////////////////////////////////////////////////////
 
-  sk.c
-
-  A simple library to represent and reduce impure S,K terms.  Completely
-  type-safe.
-
-  Caution: errors occurring at the level of the imported primitives should be
-  dealt with at that level.  This library contains only rudimentary exception
-  handling to catch a few potential logical errors and programming mistakes.
-
-  last edited: 9/5/05
-
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -28,14 +15,14 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
- *//////////////////////////////////////////////////////////////////////////////
+*///////////////////////////////////////////////////////////////////////////////
 
 #include "sk.h"
 #include "../p2_primitive.h"
+
+#include <stdlib.h>  // malloc
+#include <string.h>  // memcpy
+
 
 
 // Pointer to a function which generates output as terms are reduced.
@@ -63,7 +50,6 @@ P2_error SK_init(void (*debug_print)(P2_term *))
     TYPE_MISMATCH = P2_register_error("TYPE_MISMATCH");
     ATOM_APPLIED_AS_FUNCTION = P2_register_error("ATOM_APPLIED_AS_FUNCTION");
     PRIMITIVE_APPLIED_TO_NONATOM = P2_register_error("PRIMITIVE_APPLIED_TO_NONATOM");
-    TOO_MANY_PARAMETERS = P2_register_error("TOO_MANY_PARAMETERS");
     NULL_TERM = P2_register_error("NULL_TERM");
     NULL_ATOM = P2_register_error("NULL_ATOM");
     NULL_PRIMITIVE = P2_register_error("NULL_PRIMITIVE");
@@ -127,7 +113,7 @@ P2_term *SK_reduce(P2_term *term)
 
 
 
-//Kxy --> x
+// Kxy --> x
 // [term size] [2]{K} [x_size]{x} [y_size]{y} ...
 //     --> [term size - y_size - 2] [x_size]{x} ...
 P2_term *K_reduce(P2_term *term)
@@ -159,7 +145,7 @@ P2_term *K_reduce(P2_term *term)
 
 
 
-//Sxyz --> xz(yz)
+// Sxyz --> xz(yz)
 // [term size] [2]{S} [x_size]{x} [y_size]{y} [z_size]{z} ...
 //     --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ...
 P2_term *S_reduce(P2_term *term)
@@ -290,7 +276,7 @@ P2_term *prim_reduce(P2_term *term)
                         args[0], args[1], args[2], args[3], args[4]);
                     break;
                 default:
-                    err = TOO_MANY_PARAMETERS;
+                    err = FAILURE;
             }
         }
 
@@ -330,9 +316,5 @@ P2_term *error_term(P2_error err)
 {
     return P2_term__new(P2_error_atom(err), 2);
 }
-
-
-
-/*- end of file */
 
 
