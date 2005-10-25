@@ -476,10 +476,9 @@ int main(int argv, char *args[])
     else
     {
         // Print GPL notice.
-        cout << endl;
-        cout << "Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier." << endl;
-        cout << "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. ";
-        cout << "This is free software, and you are welcome to redistribute it under certain conditions; type '/show license;' for details." << endl;
+        cout << endl
+             << "Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier." << endl
+             << "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '/show license;' for details." << endl;
 
         // Show type indices for debugging.
         #ifdef DEBUG

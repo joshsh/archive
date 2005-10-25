@@ -1,12 +1,13 @@
-/*+
+/**
+    \file p2_primitive.h
 
-  p2_primitive.h
+    \author Joshua Shinavier   \n
+            parcour@gmail.com  \n
+            +1 509 570-6990    \n */
 
-  last edited: 6/4/05
+/*//////////////////////////////////////////////////////////////////////////////
 
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -21,67 +22,98 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
 *///////////////////////////////////////////////////////////////////////////////
 
 #ifndef P2_PRIMITIVE_H
 #define P2_PRIMITIVE_H
 
 
+#include "p2_flags.h"
+#include "p2_type.h"  // P2_type
 
-#include "p2_type.h"
-
-#define P2_PRIMITIVE_NAME    "PrimitiveReference"
-
-
-
-P2_type P2_primitive_type;
-
-struct P2_primitive_
-{
-  char *name;
-
-  // Physical location of the C function.
-  void *value;
-
-  // Number of input parameters.
-  int parameters;
-
-  // An array of length {parameters} containing the data type of all input
-  // parameters in the appropriate order.
-  P2_type *parameter_types;
-
-  // Not used.
-  char **parameter_names;
-  
-  // An array of length {parameters} containing at each parameter index a zero
-  // if the primitive may have side-effects on an argument passed via that,
-  // or a 1 otherwise (the primitive is "referentially transparent" with respect
-  // to that parameter).  Not yet used.
-  char *transparency;
-
-  P2_type return_type;
-};
-
-typedef struct P2_primitive_ P2_primitive;
-
-
-
-P2_error P2_primitive_init();
-
-P2_error P2_primitive_end();
-
-
-
-void P2_register_primitive(P2_primitive *prim);
-
-P2_primitive *P2_lookup_primitive(char *name);
-
-
-
+#ifdef P2DEF_MANAGE_PRIMITIVES
+    #include "p2_error.h"  // P2_error
 #endif
 
-/*- end of file */
+
+////////////////////////////////////////////////////////////////////////////////
+
+/** A structure containing a C function pointer together with typing information
+    and a unique name. */
+typedef struct
+{
+  /** Memory location of the C function. */
+  void *value;
+
+  /** A unique name (preferably the same as the C function stub referenced by
+      the pointer, e.g. "math_h__cos"). */
+  char *name;
+
+  /** Number of input parameters. */
+  int parameters;
+
+  /** An array of length {parameters} containing the data type of all input
+      parameters in the correct order. */
+  P2_type *parameter_types;
+
+  /** \note  Not used. */
+  char **parameter_names;
+
+  /** An array of length {parameters} containing at each parameter index a 0
+      if the argument at that index may experience a side-effect, or a 1
+      otherwise (the primitive is said to be "referentially transparent" with
+      respect to that parameter).
+      \note  Not yet used. */
+  char *transparency;
+
+  /** The primitive's (constant) return type. */
+  P2_type return_type;
+
+} P2_primitive;
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+/** Create a new P2_primitive.
+    \note  Array arguments are copied into the new structure (and not simply
+    referenced again).
+    \warning  Arguments are assumed to be sound. */
+P2_primitive *P2_primitive__new(
+    void *value,               /**< Memory location of the C function. */
+    char *name,                /**< A unique name (preferably the same as the C function stub referenced by the pointer, e.g. "math_h__cos"). */
+    int parameters,            /**< Number of input parameters. */
+    P2_type *parameter_types,  /**< An array of length {parameters} containing the data type of all input parameters in the correct order. */
+    char **parameter_names,    /**< \note  Not used.  May pass a NULL instead. */
+    char *transparency,        /**< An array of length {parameters} containing at each parameter index a 0 if the argument at that index may experience a side-effect, or a 1 otherwise (the primitive is said to be "referentially transparent" with respect to that parameter).
+                                    \note  Not yet used.  May pass a NULL instead. */
+    P2_type return_type);      /**< The primitive's (constant) return type. */
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+#ifdef P2DEF_MANAGE_PRIMITIVES
+
+    P2_error P2_primitive_init();
+
+    P2_error P2_primitive_end();
+
+    P2_primitive *P2_primitive__lookup(char *name);
+
+    /** Serialize a P2_primitive to a string. */
+    void P2_primitive__encode(P2_primitive *p, char *buffer);
+
+    /** Deserialize a P2_primitive from a string. */
+    P2_primitive *P2_primitive__decode(char *buffer);
+
+#else
+
+   /** Destroy the P2_primitive. */
+   void P2_primitive__delete(P2_primitive *prim);
+
+#endif  // P2DEF_MANAGE_PRIMITIVES
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+#endif  // P2_PRIMITIVE_H
+

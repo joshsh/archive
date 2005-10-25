@@ -53,7 +53,7 @@ parcour@gmail.com
        re-name JS_array to P2_array, etc.
 */
 
-#include "p2_debug.h"
+#include "p2_flags.h"
 
 #include "p2_atom.h"
 #include "p2_error.h"

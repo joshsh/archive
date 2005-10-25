@@ -1,8 +1,7 @@
 ############################################################
 #
-#  Makefile for the "Phase2" programming environment.
+#  Makefile for the "Phase2" programming API.
 #  author: Joshua Shinavier
-#  last edited: 5/31/2005
 #
 #  Use "make", "make clean", "make distclean"
 
@@ -72,7 +71,7 @@ APP_LIBS = \
 ############################################################
 # Build the command line interface.
 
-phase2 :  $(CORE_LIBS) $(APP_LIBS) $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2.nsmap # $(UTIL_OBJECTS) $(SOAP_PATH)/xmldom.h $(SOAP_PATH)/xmldom.cpp commands.cpp $(GSOAP_OUTPUT) p2_debug.h 
+phase2 :  $(CORE_LIBS) $(APP_LIBS) $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2.nsmap # $(UTIL_OBJECTS) $(SOAP_PATH)/xmldom.h $(SOAP_PATH)/xmldom.cpp commands.cpp $(GSOAP_OUTPUT) p2_flags.h 
 	$(CPP) -o phase2 -I$(GSOAP_PATH) $(CFLAGS) \
 		$(UTIL_OBJECTS) \
 		$(PARSER_OBJECTS) \
@@ -95,10 +94,10 @@ p2.nsmap : $(SOAP_PATH)/gsoap_header.h
 ############################################################
 # Compile p2_error and p2_command libraries.
 
-#p2_error.o : p2_error.c p2_debug.h
+#p2_error.o : p2_error.c p2_flags.h
 #	$(CC) -c p2_error.c
 
-#p2_syntax.o : p2_syntax.c p2_debug.h
+#p2_syntax.o : p2_syntax.c p2_flags.h
 #	$(CC) -c p2_syntax.c
 
 #p2_command.o : p2_command.c p2_error.h $(UTIL_PATH)/array.h $(UTIL_PATH)/hash_table.h
@@ -121,7 +120,7 @@ p2_dataset.o : p2_dataset.cpp p2_dataset.h
 ############################################################
 # Compile SK semantics library.
 
-#sk.o : $(SK_PATH)/sk.c p2.h p2_debug.h
+#sk.o : $(SK_PATH)/sk.c p2.h p2_flags.h
 #	$(CC) -c sk.c
 
 
@@ -155,7 +154,7 @@ BISON_OUTPUT = \
 	p2_parse.output \
 	#p2_parse.vcg
 
-lex.yy.o : lex.yy.c p2_parse.tab.h p2_debug.h
+lex.yy.o : lex.yy.c p2_parse.tab.h p2_flags.h
 	$(CC) -c lex.yy.c
 
 p2_parse.tab.o : p2_parse.tab.c
@@ -164,7 +163,7 @@ p2_parse.tab.o : p2_parse.tab.c
 lex.yy.c : p2_parse.l
 	$(LEX) p2_parse.l
 
-p2_parse.tab.c p2_parse.tab.h : p2_parse.y p2_debug.h
+p2_parse.tab.c p2_parse.tab.h : p2_parse.y p2_flags.h
 	$(YACC) -dv p2_parse.y
 
 

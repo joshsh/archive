@@ -4,20 +4,19 @@
 
 
 
-// Note: the use of an expanding array here is temporary.  For one thing, a
-// single, monolithic array will eventually lead to a memory fault.  For
-// another, the repetitive copying of array contents is unnecessary.  A
-// linked list of arrays might be the way to go.
-#ifdef MARK_AND_SWEEP
-#include "util/array.h"
-P2_array *markandsweep_atoms = NULL;
+#ifdef P2DEF_MARK_AND_SWEEP
+
+    #include "util/bunch.h"
+
+    P2_bunch *markandsweep_atoms = 0;
+
 #endif
 
 
 
 P2_error P2_atom_init()
 {
-    #ifdef MARK_AND_SWEEP
+    #ifdef P2DEF_MARK_AND_SWEEP
     // Initialize "mark and sweep" array.
     markandsweep_atoms = array__new(1000, 2.0);
     #endif
@@ -29,7 +28,7 @@ P2_error P2_atom_init()
 
 P2_error P2_atom_end()
 {
-    #ifdef MARK_AND_SWEEP
+    #ifdef P2DEF_MARK_AND_SWEEP
     P2_sweep();
 
     if (markandsweep_atoms)
@@ -55,8 +54,8 @@ P2_atom *P2_atom__new(P2_type type, void *value)
     outbound_edges = NULL;
     #endif
 
-    #ifdef MARK_AND_SWEEP
-    markandsweep_atoms->enqueue((void *) atom);
+    #ifdef P2DEF_MARK_AND_SWEEP
+    markandsweep_atoms->add((void *) atom);
     #endif
 }
 
@@ -80,7 +79,7 @@ void P2_atom__delete(P2_atom *atom)
 
 
 
-#ifdef MARK_AND_SWEEP
+#ifdef P2DEF_MARK_AND_SWEEP
 
 P2_atom *mark(P2_atom *atom)
 {
@@ -91,11 +90,6 @@ P2_atom *mark(P2_atom *atom)
 
 
 
-/**
- * Marks all atoms referenced by the given P2_term.
- */
-// Note: P2_term__mark assumes that type identifiers are positive (it "marks"
-// atoms by reversing the sign of their type id).
 void P2_mark(P2_term *term)
 {
     P2_term__substitute_all(term, (void *(*)(void *)) mark);
@@ -103,9 +97,6 @@ void P2_mark(P2_term *term)
 
 
 
-/**
- * Deallocates all unmarked atoms, and unmarks the rest.
- */
 void P2_sweep()
 {
     int i, size = markandsweep_atoms->size;
@@ -130,9 +121,6 @@ void P2_sweep()
 
 
 
-/**
- * Returns the number of atoms in the "mark and sweep" buffer.
- */
 unsigned int P2_total_markandsweep_atoms()
 {
    if (markandsweep_atoms)
@@ -143,6 +131,6 @@ unsigned int P2_total_markandsweep_atoms()
 
 
 
-#endif
+#endif  // P2DEF_MARK_AND_SWEEP
 
 

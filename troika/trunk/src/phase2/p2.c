@@ -35,7 +35,7 @@ parcour@gmail.com
 
 
 
-#ifdef MARK_AND_SWEEP
+#ifdef P2DEF_MARK_AND_SWEEP
 P2_term *error_atoms_;
 #endif
 
@@ -44,9 +44,9 @@ P2_term *error_atoms_;
 P2_error P2_init()
 {
     P2_error err;
-    
+
     P2_term__init(2.0);
-    
+
     // Note: P2_type_init must be called before P2_error_init.
     if (!(err = P2_type_init())
         &&!(err = P2_error_init())
@@ -71,7 +71,7 @@ P2_error P2_init()
     else
         error_atoms_ = P2_term__cat(error_atoms_, term);
 	*/
-    
+
     return err;
 }
 
@@ -94,13 +94,13 @@ P2_error P2_end()
         err = err2;
     if ((err2 = P2_type_end()))
         err = err2;
-    
+
     return err;
 }
 
 
 
-#ifdef MARK_AND_SWEEP
+#ifdef P2DEF_MARK_AND_SWEEP
 P2_atom *P2_error_atom(P2_error err)
 {
     return (P2_atom *)

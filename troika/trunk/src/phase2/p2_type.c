@@ -1,12 +1,6 @@
-/*+
+/*//////////////////////////////////////////////////////////////////////////////
 
-  p2_type.c
-
-  last edited: 5/31/05
-
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -21,29 +15,23 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
 *///////////////////////////////////////////////////////////////////////////////
 
 /*
 
 [ba] destroy/delete, clone/copy
 
-["] factory method
 
-[N] Consider sorting DOM data sets.
 */
 
 
-
-#include <string.h>
 
 #include "p2_type.h"
 
 #include "util/array.h"
 #include "util/hash_table.h"
+
+#include <string.h>
 
 
 

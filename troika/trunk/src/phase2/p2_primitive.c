@@ -1,12 +1,6 @@
-/*+
+/*//////////////////////////////////////////////////////////////////////////////
 
-  p2_primitive.c
-
-  last edited: 6/4/05
-
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -21,10 +15,6 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
 *///////////////////////////////////////////////////////////////////////////////
 
 #include "p2_primitive.h"
@@ -32,12 +22,8 @@ parcour@gmail.com
 #include "util/array.h"
 #include "util/hash_table.h"
 
-#include <stdio.h>
-
-
-
-P2_array *registered_primitives_;
-P2_hash_table *primitives_dictionary_;
+#include <stdio.h>  // sprintf
+#include <string.h>  // memcpy, strdup
 
 
 
@@ -45,16 +31,48 @@ P2_hash_table *primitives_dictionary_;
 
 
 
-void P2_primitive__encode(P2_primitive *p, char *buffer)
+P2_primitive *P2_primitive__new(
+    void *value,
+    char *name,
+    int parameters,
+    P2_type *parameter_types,
+    char **parameter_names,
+    char *transparency,
+    P2_type return_type)
 {
-    sprintf(buffer, p->name);
-}
+    int i;
 
+    P2_primitive *prim = (P2_primitive *) malloc(sizeof(P2_primitive));
 
+    prim->value = value;
+    prim->name = strdup(name);
+    prim->parameters = parameters;
 
-P2_primitive *P2_primitive__decode(char *buffer)
-{
-    return P2_lookup_primitive(buffer);
+    prim->parameter_types = (P2_type *) malloc(parameters * sizeof(P2_type));
+    memcpy(prim->parameter_types, parameter_types, parameters * sizeof(P2_type));
+
+    if (!parameter_names)
+        prim->parameter_names = 0;
+    else
+    {
+        prim->parameter_names = (char **) malloc(parameters * sizeof(char *));
+        for (i = 0; i < parameters; i++)
+            prim->parameter_names[i] = strdup(parameter_names[i]);
+    }
+
+    if (!transparency)
+        prim->transparency = 0;
+    else
+    {
+        prim->transparency = (char *) malloc(parameters * sizeof(char));
+        memcpy(prim->transparency, transparency, parameters * sizeof(char));
+    }
+
+    prim->return_type = return_type;
+
+    #ifdef P2DEF_MANAGE_PRIMITIVES
+        P2_primitive__retister(prim);
+    #endif
 }
 
 
@@ -75,16 +93,17 @@ void P2_primitive__delete(P2_primitive *prim)
 ////////////////////////////////////////////////////////////////////////////////
 
 
+#ifdef P2DEF_MANAGE_PRIMITIVES
+
+
+
+P2_array *registered_primitives_;
+P2_hash_table *primitives_dictionary_;
+
+
 
 P2_error P2_primitive_init()
 {
-    P2_primitive_type = P2_register_type(P2_PRIMITIVE_NAME,
-        (ENCODE_FORMAT) P2_primitive__encode,
-        (DECODE_FORMAT) P2_primitive__decode,
-        //(DESTROY_FORMAT) P2_primitive__delete,
-	(DESTROY_FORMAT) NULL,
-        (CLONE_FORMAT) NULL);
-
     registered_primitives_ = array__new(30, 2.0);
     primitives_dictionary_ = hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
 
@@ -93,20 +112,18 @@ P2_error P2_primitive_init()
 
 
 
-// Caution: primitives are garbage-collected in this library although they
-// will have been constructed outside of it.
 P2_error P2_primitive_end()
 {
-        array__forall(registered_primitives_, (void (*)(void *)) P2_primitive__delete);
-        array__delete(registered_primitives_);
-        hash_table__delete(primitives_dictionary_);
+    array__forall(registered_primitives_, (void (*)(void *)) P2_primitive__delete);
+    array__delete(registered_primitives_);
+    hash_table__delete(primitives_dictionary_);
 
-        return P2_SUCCESS;
+    return P2_SUCCESS;
 }
 
 
 
-void P2_register_primitive(P2_primitive *prim)
+void P2_primitive__register(P2_primitive *prim)
 {
     array__enqueue(registered_primitives_, (void *) prim);
     hash_table__add(primitives_dictionary_, (void *) prim->name, (void *) prim);
@@ -114,11 +131,20 @@ void P2_register_primitive(P2_primitive *prim)
 
 
 
-P2_primitive *P2_lookup_primitive(char *name)
+void P2_primitive__encode(P2_primitive *p, char *buffer)
+{
+    sprintf(buffer, p->name);
+}
+
+
+
+P2_primitive *P2_primitive__decode(char *buffer)
 {
     return (P2_primitive *) hash_table__lookup(primitives_dictionary_, (void *) name);
 }
 
 
 
-/*- end of file */
+#endif  // P2DEF_MANAGE_PRIMITIVES
+
+
