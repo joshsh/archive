@@ -38,8 +38,8 @@ parcour@gmail.com
 
 
 // Global vars for this module only.
-ARRAY *registered_errors_;
-HASH_TABLE *error_dictionary_;
+P2_array *registered_errors_;
+P2_hash_table *error_dictionary_;
 int total_errors_ = 0;
 
 

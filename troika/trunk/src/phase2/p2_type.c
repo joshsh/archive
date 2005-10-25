@@ -67,8 +67,8 @@ void *default__clone(void *p) { return NULL; }
 
 
 // Global vars for this module only.
-ARRAY *registered_types_;
-HASH_TABLE *type_dictionary_;
+P2_array *registered_types_;
+P2_hash_table *type_dictionary_;
 int total_types_ = 0;
 
 

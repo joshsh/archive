@@ -53,7 +53,7 @@ parcour@gmail.com
 
 // Global variables to hold all user commands.
 P2_hash_table *commands_;
-ARRAY *command_names_;
+P2_array *command_names_;
 
 
 

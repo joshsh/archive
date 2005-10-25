@@ -65,13 +65,13 @@ extern "C"
 
 class P2_data_set
 {
-    HASH_TABLE *dictionary;
-    HASH_TABLE *reverse_dictionary;
-    ARRAY *names;
+    P2_hash_table *dictionary;
+    P2_hash_table *reverse_dictionary;
+    P2_array *names;
 
     // A complete set of data elements for "last moment sweep" garbage
     // collection (each atom is associated with its type).
-    //HASH_TABLE *all_atoms;
+    //P2_hash_table *all_atoms;
     //SET *all_atoms;
 
     P2_term *(*reduce)(P2_term *);
@@ -132,7 +132,7 @@ public:
 // These are only meaningful during XML encoding or decoding.
 
     DOM_Element *document, *root;
-    HASH_TABLE *translation_table;
+    P2_hash_table *translation_table;
     char buffer[1000];
 
     // Note: an id of "ref-0" never actually occurs; the first id used is "ref-1".

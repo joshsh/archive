@@ -1,5 +1,7 @@
 #include "p2_atom.h"
 
+#include <stdlib.h>  // malloc
+
 
 
 // Note: the use of an expanding array here is temporary.  For one thing, a
@@ -8,7 +10,7 @@
 // linked list of arrays might be the way to go.
 #ifdef MARK_AND_SWEEP
 #include "util/array.h"
-ARRAY *markandsweep_atoms = NULL;
+P2_array *markandsweep_atoms = NULL;
 #endif
 
 

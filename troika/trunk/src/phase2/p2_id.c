@@ -1,5 +1,6 @@
 #include "p2_id.h"
 
+#include <stdlib.h>  // malloc
 
 
 P2_id *P2_id__new(char *dataset_id, char *local_id)
@@ -19,3 +20,5 @@ void P2_id__delete(P2_id *id)
         free(id->dataset_id);
     free(id);
 }
+
+

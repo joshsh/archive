@@ -36,8 +36,8 @@ parcour@gmail.com
 
 
 
-ARRAY *registered_primitives_;
-HASH_TABLE *primitives_dictionary_;
+P2_array *registered_primitives_;
+P2_hash_table *primitives_dictionary_;
 
 
 

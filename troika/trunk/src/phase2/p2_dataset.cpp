@@ -425,7 +425,7 @@ P2_term *P2_data_set::decode(DOM_Element *el)
 
 
 
-HASH_TABLE *dictionary_;
+P2_hash_table *dictionary_;
 
 // Attempt to replace all "dictionary lookup" terms (P2_ids) in a
 // client-generated expression with immediate values.
@@ -622,7 +622,7 @@ void P2_data_set::display(char *name)
 
 
 
-//HASH_TABLE *dictionary_;
+//P2_hash_table *dictionary_;
 void display_entry(char *name, P2_term *term)
 {
     P2_type type = (P2_type) term->type;
