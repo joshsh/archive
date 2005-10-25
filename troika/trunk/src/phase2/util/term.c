@@ -1,16 +1,9 @@
-/*+
-  term.c
+/*//////////////////////////////////////////////////////////////////////////////
 
-  An empty P2_term has no data; it is represented by the NULL.
-
-  Note: this program assumes that sizeof(void *) == sizeof(unsigned int).
-
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
-the P2_terms of the GNU General Public License as published by the Free Software
+the terms of the GNU General Public License as published by the Free Software
 Foundation; either version 2 of the License, or (at your option) any later
 version.
 
@@ -22,10 +15,6 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
 *///////////////////////////////////////////////////////////////////////////////
 
 #include "term.h"
@@ -36,6 +25,8 @@ parcour@gmail.com
 
 
 /////////////////////////////////////////////////////////////////////////////////
+
+
 
 // Global array expansion factor, with a default value.
 float P2_term__expansion_factor = TERM__DEFAULT_EXPANSION;
@@ -76,13 +67,10 @@ P2_term *P2_term__expand(P2_term *term, unsigned int minimum_buffer_size)
 
 
 
-/** Constructors and destructor *///////////////////////////////////////////////
+// Constructors and destructor /////////////////////////////////////////////////
 
 
 
-/**
- * Create a new P2_term containing a single atom.
- */
 P2_term *P2_term__new(void *p, unsigned int initial_buffer_size)
 {
     P2_term *term = (P2_term *) malloc(sizeof(P2_term));
@@ -108,9 +96,6 @@ P2_term *P2_term__new(void *p, unsigned int initial_buffer_size)
 
 
 
-/**
- * Copy constructor.
- */
 P2_term *P2_term__copy(P2_term *source)
 {
     unsigned int size;
@@ -154,16 +139,10 @@ void P2_term__delete(P2_term *term)
 
 
 
-/** Accessors */////////////////////////////////////////////////////////////////
+// Accessors ///////////////////////////////////////////////////////////////////
 
 
 
-/**
- * Logical length of the P2_term, i.e. the number of sub-P2_terms it contains.  Not to
- * be confused with the number of cells required to represent the P2_term (that's in
- * P2_term->head) or its physical size in memory (*(P2_term->head) * sizeof(void *)).
- * Caution: O(n) time overhead to count n sub-P2_terms.
- */
 unsigned int P2_term__length(P2_term *term)
 {
     unsigned int length = 0;
@@ -203,17 +182,14 @@ void P2_term__set_expansion_factor(float expansion_factor)
 
 
 
-/** Normalizing functions *//////////////////////////////////////////////////////
+// Normalizing functions ///////////////////////////////////////////////////////
 
 
 
-/** Merge functions *////////////////////////////////////////////////////////////
+// Merge functions /////////////////////////////////////////////////////////////
 
 
 
-/**
- * ((A1 ... Am) (B1 ... Bn))    simple merge
- */
 P2_term *P2_term__merge(P2_term *t1, P2_term *t2)
 {
     // Find the size of each P2_term, as well as of the resulting P2_term.
@@ -238,9 +214,6 @@ P2_term *P2_term__merge(P2_term *t1, P2_term *t2)
 
 
 
-/**
- * (A1 ... Am (B1 ... Bn))      left-associative merge
- */
 P2_term *P2_term__merge_la(P2_term *t1, P2_term *t2)
 {
     // Find the size of each P2_term, as well as of the resulting P2_term.
@@ -268,9 +241,6 @@ P2_term *P2_term__merge_la(P2_term *t1, P2_term *t2)
 
 
 
-/**
- * ((A1 ... Am) B1 ... Bn)      right-associative merge
- */
 P2_term *P2_term__merge_ra(P2_term *t1, P2_term *t2)
 {
     // Find the size of each P2_term, as well as of the resulting P2_term.
@@ -299,9 +269,6 @@ P2_term *P2_term__merge_ra(P2_term *t1, P2_term *t2)
 
 
 
-/**
- * (A1 ... Am B1 ... Bn)        concatenation
- */
 P2_term *P2_term__cat(P2_term *t1, P2_term *t2)
 {
     // Find the size of each P2_term, as well as of the resulting P2_term.
@@ -333,7 +300,7 @@ P2_term *P2_term__cat(P2_term *t1, P2_term *t2)
 
 
 
-/** Logical set functions and atom substitution *////////////////////////////////
+// Logical set functions and atom substitution /////////////////////////////////
 
 
 
@@ -465,10 +432,6 @@ void *P2_term__exists(P2_term *term, void *(*criterion)(void *))
 
 
 
-/**
-  Note: unlike the equivalent sequence__replace_atoms, there is no return value
-  to indicate substitution failure.
-*/
 P2_term *P2_term__substitute_all(P2_term *term, void *(*substitution)(void *))
 {
     if (term)
@@ -481,5 +444,3 @@ P2_term *P2_term__substitute_all(P2_term *term, void *(*substitution)(void *))
 }
 
 
-
-/*- end of file -*/

@@ -3,53 +3,61 @@
 
 APP	=	troika
 
+SRC_DIR	=	src/gui
+IPK_DIR	=	ipk
+DOXYGEN_DIR	=	doxygen
 
 
-all: x86 ipk
+all: x86 ipk doxygen
 
 clean:
-	$(MAKE) clean -C cpp
-	$(MAKE) clean -C ipk
+	$(MAKE) clean -C $(SRC_DIR)
+	$(MAKE) clean -C $(IPK_DIR)
 
 distclean:
-	$(MAKE) distclean -C cpp
-	$(MAKE) distclean -C ipk
+	$(MAKE) distclean -C $(SRC_DIR)
+	$(MAKE) distclean -C $(IPK_DIR)
+	rm -rf $(DOXYGEN_DIR)/html
+
+.PHONY : doxygen
+doxygen:
+	doxygen $(DOXYGEN_DIR)/phase2.cfg
 
 
 
-x86: ./cpp/$(APP)
+x86: $(SRC_DIR)/$(APP)
 
-./cpp/$(APP):
-	$(MAKE) x86 -C cpp
+$(SRC_DIR)/$(APP):
+	$(MAKE) x86 -C $(SRC_DIR)
 
 x86-clean:
-	$(MAKE) x86-clean -C cpp
+	$(MAKE) x86-clean -C $(SRC_DIR)
 
 x86-distclean:
-	$(MAKE) x86-distclean -C cpp
+	$(MAKE) x86-distclean -C $(SRC_DIR)
 
 
 
-ipk: ./ipk/$(APP).ipk
+ipk: $(IPK_DIR)/$(APP).ipk
 
-./ipk/$(APP).ipk: ./cpp/$(APP)_arm
-	$(MAKE) -C ipk EXEC=../cpp/$(APP)_arm
+$(IPK_DIR)/$(APP).ipk: $(SRC_DIR)/$(APP)_arm
+	$(MAKE) -C $(IPK_DIR) EXEC=../$(SRC_DIR)/$(APP)_arm
 
 ipk-clean:
-	$(MAKE) clean -C ipk
+	$(MAKE) clean -C $(IPK_DIR)
 
 ipk-distclean:
-	$(MAKE) distclean -C ipk
+	$(MAKE) distclean -C $(IPK_DIR)
 
 
 
-arm: ./cpp/$(APP)_arm
+arm: $(SRC_DIR)/$(APP)_arm
 
-./cpp/$(APP)_arm:
-	$(MAKE) arm -C cpp
+$(SRC_DIR)/$(APP)_arm:
+	$(MAKE) arm -C $(SRC_DIR)
 
 arm-clean:
-	$(MAKE) arm-clean -C cpp
+	$(MAKE) arm-clean -C $(SRC_DIR)
 
 arm-distclean:
-	$(MAKE) arm-distclean -C cpp
+	$(MAKE) arm-distclean -C $(SRC_DIR)

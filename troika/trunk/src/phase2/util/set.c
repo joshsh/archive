@@ -1,30 +1,6 @@
-/*+
-  set.c
+/*//////////////////////////////////////////////////////////////////////////////
 
-  A simplified expanding hash table to store an unordered set of unique
-  identifiers, for instance a set of data addresses.  The idea is not to bind the
-  set elements with any other data, but merely to indicate their presence in the
-  set.  Each function is modelled after a mathematical equivalent:
-
-      P2_set__size(S) :            "magnitude of S"
-      P2_set__lookup(S, s) :       "s is an element of S"
-      P2_set__add(S, s) :          "S' = S union {s}"
-      P2_set__remove(S, s) :       "S' = S minus {s}"
-      P2_set__union(S, T) :        "S' = S union T"
-      P2_set__intersection(S, T) : "S' = S intersect T"
-      P2_set__forall(S, f) :       "for all s in S, f(s)"
-      P2_set__exists(S, f) :       "there exists s in S such that f(s)"
-      P2_set__subset(S, f) :       "S' = all s in S such that f(s)"
-
-  Note: there is no "complement of" operator... but one could easily be
-  constructed using the above functions.
-
-
-  last edited: 5/17/05
-
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -39,11 +15,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
- *///////////////////////////////////////////////////////////////////////////////
+*///////////////////////////////////////////////////////////////////////////////
 
 #include "set.h"
 
@@ -63,27 +35,27 @@ parcour@gmail.com
 
 
 
-/**
- * Returns the least prime > 2 and >= i.
- */
-int find_next_prime_0(int i)
+/** \return the least prime > 2 and >= i. */
+int find_next_prime(int i)
 {
-  int j;
+    int j;
 
-  if (i<3)
-    i=3;
-  else if (!(i%2))
-    i++;
+    if (i <= 3)
+        return 3;
+    else if (!(i % 2))
+        i++;
 
-  while (1) { //Breaks out when next prime is found.
-    for (j=3; j<i; j+=2)
-      if (!(i%j))
-        j=i+1;
-    if (j>i)
-      i+=2;
-    else
-      return i;
-  }
+    while (1)  // Breaks out when next prime is found.
+    {
+        for (j = 3; j < i; j += 2)
+            if (!(i % j))
+                j = i + 1;
+
+        if (j > i)
+            i += 2;
+        else
+            return i;
+   }
 }
 
 
@@ -96,7 +68,7 @@ void P2_set__expand(P2_set *h)
   if (size0 > h->buffer_size) {
     size_old = h->buffer_size;
     buffer_old = h->buffer;
-    h->buffer_size = find_next_prime_0(size0);
+    h->buffer_size = find_next_prime(size0);
     h->buffer = (void **) malloc(sizeof(void *) * h->buffer_size);
     h->capacity = (int) (((double) h->buffer_size)/h->sparsity);
     for (i=0; i<h->buffer_size; i++)
@@ -114,16 +86,13 @@ void P2_set__expand(P2_set *h)
 
 
 
-/**
- *
- */
 P2_set *P2_set__new(int buffer_size, float sparsity, float expansion)
 {
   int i;
 
   P2_set *h = (P2_set *) malloc(sizeof(P2_set));
 
-  h->buffer_size = find_next_prime_0(buffer_size);
+  h->buffer_size = find_next_prime(buffer_size);
 
   // sparsity must be at least 1, otherwise the table will not resize
   // even when it is completely full.
@@ -152,7 +121,6 @@ P2_set *P2_set__new(int buffer_size, float sparsity, float expansion)
 
 
 
-// Copy constructor
 P2_set *P2_set__copy(P2_set *S)
 {
     P2_set *S2 = (P2_set *) malloc(sizeof(P2_set));
@@ -275,8 +243,6 @@ P2_set *P2_set__remove(P2_set *h, void *key)
 
 
 
-// P2_set__union(Sdouble, T) :        "S' = S union T"
-// O(n) time complexity
 P2_set *P2_set__union(P2_set *S, P2_set *T)
 {
     void **p = T->buffer, **psup = T->buffer + T->buffer_size;
@@ -292,8 +258,6 @@ P2_set *P2_set__union(P2_set *S, P2_set *T)
 
 
 
-// P2_set__intersection(S, T) : "S' = S intersect T"
-// O(n^2) time complexity
 P2_set *P2_set__intersection(P2_set *S, P2_set *T)
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
@@ -312,7 +276,6 @@ P2_set *P2_set__intersection(P2_set *S, P2_set *T)
 
 
 
-// P2_set__forall(S, f) :       "for all s in S, f(s)"
 void *P2_set__forall(P2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
@@ -329,9 +292,6 @@ void *P2_set__forall(P2_set *S, void *(*f)(void *))
 
 
 
-// P2_set__exists(S, f) :       "there exists s in S such that f(s)"
-// Note: this function returns the first element s encountered for which f(s) is
-// not NULL.  Otherwise it returns NULL.
 void *P2_set__exists(P2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
@@ -348,7 +308,6 @@ void *P2_set__exists(P2_set *S, void *(*f)(void *))
 
 
 
-// P2_set__subset(S, f) :       "S' = all s in S such that f(s)"
 P2_set *P2_set__subset(P2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
@@ -367,8 +326,6 @@ P2_set *P2_set__subset(P2_set *S, void *(*f)(void *))
 
 
 
-// A wrapper for "free" which always returns a 1 (for use in conjunction with
-// P2_set__forall)
 void *P2_set__free(void *s)
 {
     free(s);

@@ -1,16 +1,17 @@
 /**
     \file bunch.h
 
-    \brief Provides the means to keep track of large, disorderly collections of
-           items in memory.  Once added to a bunch, items cannot be retrieved
-           individually, but are handled en masse by the "for all" "exists" and
-           "exclude if" functions, which mimic set operations.
+    \brief A utility to keep track of large, unordered collections of pointers.
+
+    Once added to a bunch, items cannot be retrieved individually, but are
+    handled en masse via the "for all" "exists" and "exclude if" functions, which
+    mimic set operations.
 
     \author Joshua Shinavier   \n
             parcour@gmail.com  \n
-            +1 509 570-6990    \n
+            +1 509 570-6990    \n */
 
-*//*////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -34,6 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "array.h"
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /** \brief A container for an array of pointers.
@@ -51,6 +53,7 @@ typedef struct
 
 } block;
 
+
 /** \brief A container for large, unordered bags of references.
     Consists of a P2_array of "blocks" of a preferred size.
     May contain nulls and/or repeat references. */
@@ -67,6 +70,7 @@ typedef struct
 
 } P2_bunch;
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Constructor. */
@@ -78,6 +82,7 @@ P2_bunch *P2_bunch__copy(P2_bunch *b);
 /** Destructor. */
 void P2_bunch__delete(P2_bunch *b);
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Adds a single item to the bunch. */
@@ -86,23 +91,24 @@ void P2_bunch__add(P2_bunch *b, void *p);
 /** Adds the contents of one bunch to another. */
 void P2_bunch__add_all(P2_bunch *dest, P2_bunch *src);
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
-/** If criterion evaluates to a non-zero value ("true") for each item in the
-    bunch, return 1 for "true", else 0 for "false". */
+/** \return 1 if the criterion evaluates to a non-zero value ("true") for each
+    item in the bunch, else 0. */
 void *P2_bunch__forall(P2_bunch *b, void *(*criterion) (void *));
 
-/** If the criterion evaluates to a non-zero value ("true") for ANY item in the
-    bunch, return that value.  Else return 0 for "false". */
+/** \return the first item for which the criterion evaluates to a non-zero
+    value ("true").  If no such item exists, the return value is 0. */
 void *P2_bunch__exists(P2_bunch *b, void *(*criterion) (void *));
 
-/** Exclude all items from the bunch for which criterion evaluates to a non-zero
+/** Excludes all items from the bunch for which criterion evaluates to a non-zero
     value ("true").
     \return the original bunch, but without the excluded items */
 P2_bunch *P2_bunch__exclude_if(P2_bunch *b, void *(*criterion) (void *));
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif  // BUNCH_H
-
 

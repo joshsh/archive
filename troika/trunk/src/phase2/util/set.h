@@ -1,29 +1,31 @@
-/*+
-  set.h
+/**
+    \file set.h
 
-  A simplified expanding hash table to store an unordered set of unique
-  identifiers, for instance a set of data addresses.  The idea is not to bind the
-  set elements with any other data, but merely to indicate their presence in the
-  set.  Each function is modelled after a mathematical equivalent:
+    \brief A simple mathematical set utility.
 
-      P2_set__size(S) :            "magnitude of S"
-      P2_set__lookup(S, s) :       "s is an element of S"
-      P2_set__add(S, s) :          "S' = S union {s}"
-      P2_set__remove(S, s) :       "S' = S minus {s}"
-      P2_set__union(S, T) :        "S' = S union T"
-      P2_set__intersection(S, T) : "S' = S intersect T"
-      P2_set__forall(S, f) :       "for all s in S, f(s)"
-      P2_set__exists(S, f) :       "there exists s in S such that f(s)"
-      P2_set__subset(S, f) :       "S' = all s in S such that f(s)"
+    The idea is not to bind set elements with data, but only to indicate
+    their presence in the set.  Each function mimics a mathematical equivalent:
 
-  Note: there is no "complement of" operator... but one could easily be
-  constructed using the above functions.
+      P2_set__size(S) :            "magnitude of S"                      \n
+      P2_set__lookup(S, s) :       "s is an element of S"                \n
+      P2_set__add(S, s) :          "S' = S union {s}"                    \n
+      P2_set__remove(S, s) :       "S' = S minus {s}"                    \n
+      P2_set__union(S, T) :        "S' = S union T"                      \n
+      P2_set__intersection(S, T) : "S' = S intersect T"                  \n
+      P2_set__forall(S, f) :       "for all s in S, f(s)"                \n
+      P2_set__exists(S, f) :       "there exists s in S such that f(s)"  \n
+      P2_set__subset(S, f) :       "S' = all s in S such that f(s)"      \n
 
-  last edited: 5/17/05
+    \note There is no "complement of" operator... but one could easily be
+    constructed using the above functions.
 
-*//*/////////////////////////////////////////////////////////////////////////////
+    \author Joshua Shinavier   \n
+            parcour@gmail.com  \n
+            +1 509 570-6990    \n */
 
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+/*//////////////////////////////////////////////////////////////////////////////
+
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -38,80 +40,108 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
- *///////////////////////////////////////////////////////////////////////////////
+*///////////////////////////////////////////////////////////////////////////////
 
 #ifndef SET_H
 #define SET_H
 
 
-
 #include <stdlib.h>
 
+/** \brief Simulates a mathematical set.
+
+    Implemented using hash tables.  Set elements are represented by unique
+    32-bit addresses, or equivalently, by 32-bit integers. */
 typedef struct
 {
-  int size, buffer_size, capacity;
-  float expansion, sparsity;
-  void **buffer;
+    /** The number of occupied cells in the hash table. */
+    int size;
+
+    /** The number of cells the buffer array. */
+    int buffer_size;
+
+    /** The number of occupied cells the buffer can hold before the hash table
+        becomes too dense. */
+    int capacity;
+
+    /** The ratio of empty cells to occupied cells is to be at least this large.
+        A more sparse hash table takes up more memory but is more time-efficient
+        because collisions are less frequent. */
+    float sparsity;
+
+    /** The hash table expands by this factor whenever it becomes too dense.
+        Re-hashing the set into a new buffer is expensive, so beware of setting
+        the expansion factor too low. */
+    float expansion;
+
+    /** The hash table buffer array. */
+    void **buffer;
+
 } P2_set;
 
 
+////////////////////////////////////////////////////////////////////////////////
 
-/** Constructor
- * The first argument is the (int) initial size of the buffer (the actual buffer size
- * is the next prime number above the argument).  Second is a (double) expansion
- * factor which determine how aggressively the table expands when it becomes too full.
- * The third argument is a (double) sparsity factor which tells it when this has
- * occurred.  Any of these values will be set to a default if it is too low.
+/** Constructor.
+    \param buffer_size the initial size of the hash table buffer (the actual
+    buffer size is the next lowest prime number)
+    \param expansion see above.  Will be set to a default if too low.
+    \param sparsity see above.  Will be set to a default if too low.
 */
 P2_set *P2_set__new(int buffer_size, float expansion, float sparsity);
 
-// Copy constructor
+/** Copy constructor. */
 P2_set *P2_set__copy(P2_set *S);
 
-// Destructor
+/** Destructor. */
 void P2_set__delete(P2_set *S);
 
-// P2_set__size(S) :            "magnitude of S"      
+
+////////////////////////////////////////////////////////////////////////////////
+
+/** "magnitude of S" */
 int P2_set__size(P2_set *S);
 
-// P2_set__lookup(S, s) :       "s is an element of S"
+/** "s is an element of S" */
 void *P2_set__lookup(P2_set *S, void *s);
 
-// P2_set__add(S, s) :          "S' = S union {s}"
+/** "S' = S union {s}" */
 P2_set *P2_set__add(P2_set *S, void *s);
 
-// P2_set__remove(S, s) :       "S' = S minus {s}"
+/** "S' = S minus {s}" */
 P2_set *P2_set__remove(P2_set *S, void *s);
 
-// P2_set__union(S, T) :        "S' = S union T"
+
+////////////////////////////////////////////////////////////////////////////////
+
+/** "S' = S union T"
+    \note O(n) time complexity */
 P2_set *P2_set__union(P2_set *S, P2_set *T);
 
-// P2_set__intersection(S, T) : "S' = S intersect T"
+/** "S' = S intersect T"
+    \note O(n^2) time complexity */
 P2_set *P2_set__intersection(P2_set *S, P2_set *T);
 
-// P2_set__forall(S, f) :       "for all s in S, f(s)"
+/** "for all s in S, f(s)"
+    \return 1 if the criterion evaluates to a non-zero value ("true") for each
+    item in the bunch, else 0. */
 void *P2_set__forall(P2_set *S, void *(*f)(void *));
 
-// P2_set__exists(S, f) :       "there exists s in S such that f(s)"
-// Note: this function returns the first element s encountered for which f(s) is
-// not NULL.  Otherwise it returns NULL.
+/** "there exists s in S such that f(s)"
+    \return the first item for which the criterion evaluates to a non-zero
+    value ("true").  If no such item exists, the return value is 0. */
 void *P2_set__exists(P2_set *S, void *(*f)(void *));
 
-// P2_set__subset(S, f) :       "S' = all s in S such that f(s)"
+/** "S' = all s in S such that f(s)" */
 P2_set *P2_set__subset(P2_set *S, void *(*f)(void *));
 
 
+////////////////////////////////////////////////////////////////////////////////
 
-// A wrapper for "free" which always returns a 1 (for use in conjunction with
-// P2_set__forall)
+/** A wrapper for "free" which always returns a 1 (for use in conjunction with
+    P2_set__forall) */
 void *P2_set__free(void *s);
-
 
 
 #endif  // SET_H
 
-/*- end of file --------------------------------------------------------------*/
