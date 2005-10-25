@@ -11,8 +11,12 @@ int main(int argc, char** argv)
     P2MainWindow w;
     a.setMainWidget(&w);
 
-    // Maximize the main window if it has not defined its own maximum dimensions.
+    // If the display area is small, maximize the main window.
+    #ifdef ARM_COMPILE
     w.showMaximized();
+    #else
+    w.show();
+    #endif
 
     return a.exec();
 }

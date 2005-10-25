@@ -93,6 +93,20 @@ static const char * sk_i_xpm[] = {
 ".........."};
 
 
+/* XPM */
+static const char * troika_xpm[] = {
+"41 7 2 1",
+"       c None",
+".      c #00000000FFFF",
+"....  ....    ....   ....  ..  ..   .... ",
+" ..   .. ..  ..  ..   ..   ..  ..  ..  ..",
+" ..   .. ..  ..  ..   ..   .. ..   ..  ..",
+" ..   ....   ..  ..   ..   ....    ......",
+" ..   .. ..  ..  ..   ..   .. ..   ..  ..",
+" ..   .. ..  ..  ..   ..   ..  ..  ..  ..",
+" ..   .. ..   ....   ....  ..  ..  ..  .."};
+
+
 #define BACKGROUND_COLOR        255, 255, 255
 
 
@@ -224,6 +238,13 @@ painter.drawImage(50, 180,  // dest. origin
 QImage image2(ohio_xpm);
 painter.drawImage(70, 260,  // dest. origin
             image2,
+            0, 0,  // source origin
+            -1, -1,  // source maxima
+            0 );  // conversionFlags
+
+QImage image2a(troika_xpm);
+painter.drawImage(50, 240,  // dest. origin
+            image2a,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags

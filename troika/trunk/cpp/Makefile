@@ -32,6 +32,9 @@ x86: arm-clean $(APP)
 $(APP): compile-target-x86 Makefile_x86
 	make -f Makefile_x86
 
+x86-qmake: arm-clean compile-target-x86 Makefile_x86-qmake
+	make -f Makefile_x86-qmake
+
 ## Use macros specific to the target architecture.
 compile-target-x86: compile-target-x86.h
 	cp compile-target-x86.h compile-target.h
@@ -41,6 +44,9 @@ Makefile_x86: $(APP).pro
 	# had some problems.
 	# Note: requires environment variables defined in top-level make.sh.
 	tmake $(APP).pro > Makefile_x86
+
+Makefile_x86-qmake: $(APP).pro
+	qmake -o Makefile_x86-qmake
 
 $(APP).pro: $(HSRC) $(CPPSRC)
 	qmake -project -o $(APP).pro

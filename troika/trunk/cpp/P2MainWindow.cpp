@@ -9,8 +9,8 @@
 #include <qpopupmenu.h>  // QPopupMenu
 #include <qmenubar.h>  // QMenuBar
 
-    #include <qtextview.h>
-    #include <qmultilineedit.h>
+// #include <qtextview.h>
+// #include <qmultilineedit.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
