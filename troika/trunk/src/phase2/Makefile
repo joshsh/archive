@@ -33,10 +33,11 @@ CFLAGS = $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
 UTIL_OBJECTS = \
 	array.o \
+	bunch.o \
 	hash_table.o \
-	sequence.o \
 	#set.o \
-	
+	term.o \
+
 PARSER_OBJECTS = \
 	lex.yy.o \
 	p2_parse.tab.o
@@ -56,7 +57,7 @@ CORE_LIBS = \
 	p2_error.c \
 	p2_type.c \
 	p2_primitive.c
-	
+
 APP_LIBS = \
 	sk/sk.c \
 	p2_syntax.c \
@@ -100,13 +101,13 @@ p2.nsmap : $(SOAP_PATH)/gsoap_header.h
 #p2_syntax.o : p2_syntax.c p2_flags.h
 #	$(CC) -c p2_syntax.c
 
-#p2_command.o : p2_command.c p2_error.h $(UTIL_PATH)/array.h $(UTIL_PATH)/hash_table.h
+#p2_command.o : p2_command.c p2_error.h $(UTIL_PATH)/p2_array.h $(UTIL_PATH)/p2_hash_table.h
 #	$(CC) -c p2_command.c
 #	
-#p2_type.o : p2_type.c p2_error.h $(UTIL_PATH)/array.h $(UTIL_PATH)/hash_table.h
+#p2_type.o : p2_type.c p2_error.h $(UTIL_PATH)/p2_array.h $(UTIL_PATH)/p2_hash_table.h
 #	$(CC) -c p2_type.c
 #	
-#p2_primitive.o : p2_primitive.c p2_error.h $(UTIL_PATH)/array.h $(UTIL_PATH)/hash_table.h
+#p2_primitive.o : p2_primitive.c p2_error.h $(UTIL_PATH)/p2_array.h $(UTIL_PATH)/p2_hash_table.h
 #	$(CC) -c p2_primitive.c
 
 
@@ -127,20 +128,23 @@ p2_dataset.o : p2_dataset.cpp p2_dataset.h
 ############################################################
 # Compile helper utilities.
 
-#set.o : $(UTIL_PATH)/set.c
-#	$(CC) -c $(UTIL_PATH)/set.c
+array.o : $(UTIL_PATH)/p2_array.c
+	$(CC) -c $(UTIL_PATH)/p2_array.c
 
-array.o : $(UTIL_PATH)/array.c
-	$(CC) -c $(UTIL_PATH)/array.c
+bunch.o : $(UTIL_PATH)/p2_bunch.c
+	$(CC) -c $(UTIL_PATH)/p2_bunch.c
 
-hash_table.o : $(UTIL_PATH)/hash_table.c
-	$(CC) -c $(UTIL_PATH)/hash_table.c
+hash_table.o : $(UTIL_PATH)/p2_hash_table.c
+	$(CC) -c $(UTIL_PATH)/p2_hash_table.c
 
-term.o : $(UTIL_PATH)/term.c
-	$(CC) -c $(UTIL_PATH)/term.c
+array.o : $(UTIL_PATH)/p2_array.c
+	$(CC) -c $(UTIL_PATH)/p2_array.c
 
-#sequence.o : $(UTIL_PATH)/sequence.c
-#	$(CC) -c $(UTIL_PATH)/sequence.c
+#set.o : $(UTIL_PATH)/p2_set.c
+#	$(CC) -c $(UTIL_PATH)/p2_set.c
+
+term.o : $(UTIL_PATH)/p2_term.c
+	$(CC) -c $(UTIL_PATH)/p2_term.c
 
 
 ############################################################
