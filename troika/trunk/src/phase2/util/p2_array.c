@@ -17,16 +17,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "array.h"
+#include "p2_array.h"
 
 #include <stdlib.h>  // malloc
 #include <string.h>  // memcpy
 
 
-// By default, array__expand() floats the size of the array.
+// By default, p2_array__expand() doubles the size of the array.
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
-void array__expand(P2_array *a);
+void p2_array__expand(p2_array *a);
 
 
 
@@ -34,9 +34,9 @@ void array__expand(P2_array *a);
 
 
 
-P2_array *array__new(int buffer_size, float expansion)
+p2_array *p2_array__new(int buffer_size, float expansion)
 {
-    P2_array *a = (P2_array *) malloc(sizeof(P2_array));
+    p2_array *a = (p2_array *) malloc(sizeof(p2_array));
 
     if (expansion <= 1)
         a->expansion = DEFAULT_EXPANSION_FACTOR;
@@ -57,11 +57,11 @@ P2_array *array__new(int buffer_size, float expansion)
 
 
 
-P2_array *array__copy(P2_array *a)
+p2_array *p2_array__copy(p2_array *a)
 {
     int size;
 
-    P2_array *b = (P2_array *) malloc(sizeof(P2_array));
+    p2_array *b = (p2_array *) malloc(sizeof(p2_array));
 
     b->head = a->head;
     b->size = a->size;
@@ -77,7 +77,7 @@ P2_array *array__copy(P2_array *a)
 
 
 
-void array__delete(P2_array *a)
+void p2_array__delete(p2_array *a)
 {
     free(a->buffer);
     free(a);
@@ -90,7 +90,7 @@ void array__delete(P2_array *a)
 
 
 // Hidden.
-void array__expand(P2_array *a)
+void p2_array__expand(p2_array *a)
 {
     void **buffer0;
     int i, size0 = (int) (a->expansion * a->buffer_size);
@@ -115,7 +115,7 @@ void array__expand(P2_array *a)
 
 
 
-void *array__get(P2_array *a, int index)
+void *p2_array__get(p2_array *a, int index)
 {
     if ((index >= 0) && (index < a->size))
         return a->buffer[(index + a->head) % a->buffer_size];
@@ -125,7 +125,7 @@ void *array__get(P2_array *a, int index)
 
 
 
-void array__set(P2_array *a, int index, void *p)
+void p2_array__set(p2_array *a, int index, void *p)
 {
     if ((index >=0) && (index < a->size))
         a->buffer[(index + a->head) % a->buffer_size] = p;
@@ -144,7 +144,7 @@ void array__set(P2_array *a, int index, void *p)
 
 
 
-void *array__peek(P2_array *a)
+void *p2_array__peek(p2_array *a)
 {
     if (a->size)
         return a->buffer[a->head];
@@ -154,10 +154,10 @@ void *array__peek(P2_array *a)
 
 
 
-void array__push(P2_array *a, void *p)
+void p2_array__push(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
-        array__expand(a);  // Note: replaces a->buffer
+        p2_array__expand(a);  // Note: replaces a->buffer
     a->head = ((a->head - 1) + a->buffer_size) % a->buffer_size;
     a->buffer[a->head] = p;
     a->size++;
@@ -165,7 +165,7 @@ void array__push(P2_array *a, void *p)
 
 
 
-void *array__pop(P2_array *a)
+void *p2_array__pop(p2_array *a)
 {
     void *p;
 
@@ -182,17 +182,17 @@ void *array__pop(P2_array *a)
 
 
 
-void array__enqueue(P2_array *a, void *p)
+void p2_array__enqueue(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
-        array__expand(a);  // Note: replaces a->buffer
+        p2_array__expand(a);  // Note: replaces a->buffer
     a->buffer[(a->head + a->size) % a->buffer_size] = p;
     a->size++;
 }
 
 
 
-void *array__dequeue(P2_array *a)
+void *p2_array__dequeue(p2_array *a)
 {
     if (a->size)
     {
@@ -209,14 +209,14 @@ void *array__dequeue(P2_array *a)
 
 
 
-void array__insert_before(P2_array *a, int index, void *p)
+void p2_array__insert_before(p2_array *a, int index, void *p)
 {
     int i;
 
     if ((index >= 0) && (index < a->size))
     {
         if (a->size >= a->buffer_size)
-            array__expand(a);  // Note: replaces a->buffer
+            p2_array__expand(a);  // Note: replaces a->buffer
 
         for (i = a->size; i > index; i--)
             a->buffer[(a->head + i) % a->buffer_size]
@@ -229,14 +229,14 @@ void array__insert_before(P2_array *a, int index, void *p)
 
 
 
-void array__insert_after(P2_array *a, int index, void *p)
+void p2_array__insert_after(p2_array *a, int index, void *p)
 {
     int i;
 
     if ((index >= 0)&&(index < a->size))
     {
         if (a->size >= a->buffer_size)
-            array__expand(a);  // Note: replaces a->buffer
+            p2_array__expand(a);  // Note: replaces a->buffer
 
         for (i = a->size; i > (index + 1); i--)
             a->buffer[(a->head + i) % a->buffer_size]
@@ -249,7 +249,7 @@ void array__insert_after(P2_array *a, int index, void *p)
 
 
 
-void array__remove(P2_array *a, int index)
+void p2_array__remove(p2_array *a, int index)
 {
     int i;
 
@@ -265,7 +265,7 @@ void array__remove(P2_array *a, int index)
 
 
 
-void array__simple_remove(P2_array *a, int index)
+void p2_array__simple_remove(p2_array *a, int index)
 {
     if ((index >= 0) && (index < a->size))
     {
@@ -288,7 +288,7 @@ int (*compare_) (void *, void *);
 
 
 /* adapted from a MergeSort example by H.W. Lang */
-void array__merge_(int lo, int m, int hi)
+void p2_array__merge_(int lo, int m, int hi)
 {
     int i, j, k;
 
@@ -316,22 +316,22 @@ void array__merge_(int lo, int m, int hi)
 
 
 /* adapted from a MergeSort example by H.W. Lang */
-void array__mergesort_(int lo, int hi)
+void p2_array__mergesort_(int lo, int hi)
 {
     int m;
 
     if (lo < hi)
     {
         m = (lo + hi) / 2;
-        array__mergesort_(lo, m);
-        array__mergesort_(m + 1, hi);
-        array__merge_(lo, m, hi);
+        p2_array__mergesort_(lo, m);
+        p2_array__mergesort_(m + 1, hi);
+        p2_array__merge_(lo, m, hi);
     }
 }
 
 
 
-void array__mergesort(P2_array *a, int (*compare) (void *, void *))
+void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *))
 {
     int i;
 
@@ -347,12 +347,12 @@ void array__mergesort(P2_array *a, int (*compare) (void *, void *))
     a->buffer = buffer_;
     free(buffer);
 
-    // Create auxiliary array for array__merge_
+    // Create auxiliary array for p2_array__merge_
     aux_ = (void **) malloc(sizeof(void*)*a->size);
 
     compare_ = compare;
 
-    array__mergesort_(0, size - 1);
+    p2_array__mergesort_(0, size - 1);
 
     // Destroy the auxiliary array.
     free(aux_);
@@ -364,7 +364,7 @@ void array__mergesort(P2_array *a, int (*compare) (void *, void *))
 
 
 
-void array__clear(P2_array *a)
+void p2_array__clear(p2_array *a)
 {
     a->size = 0;
     a->head = 0;
@@ -372,7 +372,7 @@ void array__clear(P2_array *a)
 
 
 
-void array__minimize(P2_array *a)
+void p2_array__minimize(p2_array *a)
 {
     int i;
     void **buffer0;
@@ -400,7 +400,7 @@ void array__minimize(P2_array *a)
 
 
 
-void array__forall(P2_array *a, void (*func) (void *))
+void p2_array__forall(p2_array *a, void (*func) (void *))
 {
     int i;
 

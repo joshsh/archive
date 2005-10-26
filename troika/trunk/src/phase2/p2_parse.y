@@ -51,8 +51,8 @@ parcour@gmail.com
 /*
   Semantic functions from p2_itf.c:
 */
-extern void P2_evaluate_expression(char *name, char *expr);
-extern void P2_evaluate_command(char *name, char *args);
+extern void p2_evaluate_expression(char *name, char *expr);
+extern void p2_evaluate_command(char *name, char *args);
 
 
 
@@ -176,7 +176,7 @@ command:
 		char *s = sequence_tag("");
 		DEBUG_PRINTF("Found {COMMAND parameter_list;}.\n");
 		printf("\n");
-		P2_evaluate_command($1, s);
+		p2_evaluate_command($1, s);
 		printf("\n");
 		free(s);
 	}
@@ -185,7 +185,7 @@ command:
 		free($2);
 		DEBUG_PRINTF("Found {COMMAND parameter_list;}.\n");
 		printf("\n");
-		P2_evaluate_command($1, s);
+		p2_evaluate_command($1, s);
 		printf("\n");
 		free(s);
 	};
@@ -215,7 +215,7 @@ expression:
 		DEBUG_PRINTF("Found {term;}.\n");
 		free($1);
 		printf("\n");
-		P2_evaluate_expression(NULL, s);
+		p2_evaluate_expression(NULL, s);
 		printf("\n");
 		free(s);
 	}
@@ -224,7 +224,7 @@ expression:
 		DEBUG_PRINTF("Found {term;}.\n");
 		free($1);
 		printf("\n");
-		P2_evaluate_expression($3, s);
+		p2_evaluate_expression($3, s);
 		printf("\n");
 		free($3); free(s);
 	};

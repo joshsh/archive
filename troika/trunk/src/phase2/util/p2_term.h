@@ -28,8 +28,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#ifndef TERM_H
-#define TERM_H
+#ifndef P2_TERM_H
+#define P2_TERM_H
 
 
 /** By default, the size of a term's buffer will be multiplied by this factor
@@ -40,7 +40,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** \brief A data structure to represent and manipulate nested sequences.
     The implementation is not recursive.
 
-    \note An empty P2_term has no data; it is represented by the NULL.
+    \note An empty p2_term has no data; it is represented by the NULL.
  */
 typedef struct
 {
@@ -52,41 +52,41 @@ typedef struct
         which it is the first cell). */
     void **buffer;
 
-    /** Position of the first cell of the P2_term representation in the buffer.
+    /** Position of the first cell of the p2_term representation in the buffer.
         It always contains an unsigned int value indicating the overall size of
-        the P2_term. */
+        the p2_term. */
     void **head;
-} P2_term;
+} p2_term;
 
 
 /** \note Needed by sk.c. */
-P2_term *P2_term__expand(P2_term *term, unsigned int minimum_buffer_size);
+p2_term *p2_term__expand(p2_term *term, unsigned int minimum_buffer_size);
 
 
 // Constructors and destructor /////////////////////////////////////////////////
 
-/** Creates a new P2_term containing a single atom. */
-P2_term *P2_term__new(void *p, unsigned int initial_buffer_size);
+/** Creates a new p2_term containing a single atom. */
+p2_term *p2_term__new(void *p, unsigned int initial_buffer_size);
 
 /** Copy constructor. */
-P2_term *P2_term__copy(P2_term *source);
+p2_term *p2_term__copy(p2_term *source);
 
 /** Destructor. */
-void P2_term__delete(P2_term *P2_term);
+void p2_term__delete(p2_term *p2_term);
 
 
 // Accessors ///////////////////////////////////////////////////////////////////
 
 /** \return the logical length of the term, i.e. the number of sub-terms it
     contains.  Not to be confused with the number of cells required to represent
-    the term (that's in P2_term->head) or its physical size in memory
-    (*(P2_term->head) * sizeof(void *)).
+    the term (that's in p2_term->head) or its physical size in memory
+    (*(p2_term->head) * sizeof(void *)).
     \warning O(n) time overhead to count n sub-terms. */
-unsigned int P2_term__length(P2_term *P2_term);
+unsigned int p2_term__length(p2_term *p2_term);
 
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
     the new buffer will be this much larger. */
-void P2_term__set_expansion_factor(float expansion_factor);
+void p2_term__set_expansion_factor(float expansion_factor);
 
 
 // Normalizing functions ///////////////////////////////////////////////////////
@@ -95,33 +95,33 @@ void P2_term__set_expansion_factor(float expansion_factor);
 // Merge functions /////////////////////////////////////////////////////////////
 
 /** ((A1 ... Am) (B1 ... Bn))    simple merge */
-P2_term *P2_term__merge(P2_term *t1, P2_term *t2);
+p2_term *p2_term__merge(p2_term *t1, p2_term *t2);
 
 /** (A1 ... Am (B1 ... Bn))      left-associative merge */
-P2_term *P2_term__merge_la(P2_term *t1, P2_term *t2);
+p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2);
 
 /** ((A1 ... Am) B1 ... Bn)      right-associative merge */
-P2_term *P2_term__merge_ra(P2_term *t1, P2_term *t2);
+p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2);
 
 /** (A1 ... Am B1 ... Bn)        concatenation */
-P2_term *P2_term__cat(P2_term *t1, P2_term *t2);
+p2_term *p2_term__cat(p2_term *t1, p2_term *t2);
 
 
 // Logical set functions and atom substitution /////////////////////////////////
 
 /** \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the term, else 0. */
-void *P2_term__for_all(P2_term *P2_term, void *(*criterion)(void *));
+void *p2_term__for_all(p2_term *p2_term, void *(*criterion)(void *));
 
 /** \return the first item for which the criterion evaluates to a non-zero
     value ("true").  If no such item exists, the return value is 0.
-    \warning output may not be meaningful if the P2_term contains NULL atoms. */
-void *P2_term__exists(P2_term *P2_term, void *(*criterion)(void *));
+    \warning output may not be meaningful if the p2_term contains NULL atoms. */
+void *p2_term__exists(p2_term *p2_term, void *(*criterion)(void *));
 
 /** Replaces each item in the term with a new item determined by substitution.
     \note there is no special return value to indicate substitution failure. */
-P2_term *P2_term__substitute_all(P2_term *P2_term, void *(*substitution)(void *));
+p2_term *p2_term__substitute_all(p2_term *p2_term, void *(*substitution)(void *));
 
 
-#endif  // TERM_H
+#endif  // P2_TERM_H
 

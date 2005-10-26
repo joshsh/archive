@@ -32,8 +32,8 @@ parcour@gmail.com
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#ifndef P2_H
-#define P2_H	1
+#ifndef p2_H
+#define p2_H	1
 
 
 
@@ -49,8 +49,8 @@ parcour@gmail.com
 /*
   [ba] don't SK-reduce null terms, nor terms which don't begin with Kxy or Sxyz.
   [ba] will SK_S, SK_K collide with other "special" addresses/identifiers?
-  [ba] name collision ^ TERM, P2_term -- maybe use one or the other.  Maybe
-       re-name JS_array to P2_array, etc.
+  [ba] name collision ^ TERM, p2_term -- maybe use one or the other.  Maybe
+       re-name JS_array to p2_array, etc.
 */
 
 #include "p2_flags.h"
@@ -62,21 +62,21 @@ parcour@gmail.com
 
 
 
-typedef void * P2_function_ptr; //~
+typedef void * p2_function_ptr; //~
 
-P2_type P2_id_type;
+p2_type p2_id_type;
 
 #include "p2_id.h"
 
 
 
-P2_error P2_init();
-P2_error P2_end();
+p2_error p2_init();
+p2_error p2_end();
 
 
 
 #ifdef MARK_AND_SWEEP
-P2_atom *P2_error_atom(P2_error err);
+p2_atom *p2_error_atom(p2_error err);
 #endif
 
 

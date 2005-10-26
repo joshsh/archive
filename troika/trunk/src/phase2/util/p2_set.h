@@ -6,15 +6,15 @@
     The idea is not to bind set elements with data, but only to indicate
     their presence in the set.  Each function mimics a mathematical equivalent:
 
-      P2_set__size(S) :            "magnitude of S"                      \n
-      P2_set__lookup(S, s) :       "s is an element of S"                \n
-      P2_set__add(S, s) :          "S' = S union {s}"                    \n
-      P2_set__remove(S, s) :       "S' = S minus {s}"                    \n
-      P2_set__union(S, T) :        "S' = S union T"                      \n
-      P2_set__intersection(S, T) : "S' = S intersect T"                  \n
-      P2_set__forall(S, f) :       "for all s in S, f(s)"                \n
-      P2_set__exists(S, f) :       "there exists s in S such that f(s)"  \n
-      P2_set__subset(S, f) :       "S' = all s in S such that f(s)"      \n
+      p2_set__size(S) :            "magnitude of S"                      \n
+      p2_set__lookup(S, s) :       "s is an element of S"                \n
+      p2_set__add(S, s) :          "S' = S union {s}"                    \n
+      p2_set__remove(S, s) :       "S' = S minus {s}"                    \n
+      p2_set__union(S, T) :        "S' = S union T"                      \n
+      p2_set__intersection(S, T) : "S' = S intersect T"                  \n
+      p2_set__forall(S, f) :       "for all s in S, f(s)"                \n
+      p2_set__exists(S, f) :       "there exists s in S such that f(s)"  \n
+      p2_set__subset(S, f) :       "S' = all s in S such that f(s)"      \n
 
     \note There is no "complement of" operator... but one could easily be
     constructed using the above functions.
@@ -42,8 +42,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#ifndef SET_H
-#define SET_H
+#ifndef P2_SET_H
+#define P2_SET_H
 
 
 #include <stdlib.h>
@@ -77,7 +77,7 @@ typedef struct
     /** The hash table buffer array. */
     void **buffer;
 
-} P2_set;
+} p2_set;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,60 +88,60 @@ typedef struct
     \param expansion see above.  Will be set to a default if too low.
     \param sparsity see above.  Will be set to a default if too low.
 */
-P2_set *P2_set__new(int buffer_size, float expansion, float sparsity);
+p2_set *p2_set__new(int buffer_size, float expansion, float sparsity);
 
 /** Copy constructor. */
-P2_set *P2_set__copy(P2_set *S);
+p2_set *p2_set__copy(p2_set *S);
 
 /** Destructor. */
-void P2_set__delete(P2_set *S);
+void p2_set__delete(p2_set *S);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** "magnitude of S" */
-int P2_set__size(P2_set *S);
+int p2_set__size(p2_set *S);
 
 /** "s is an element of S" */
-void *P2_set__lookup(P2_set *S, void *s);
+void *p2_set__lookup(p2_set *S, void *s);
 
 /** "S' = S union {s}" */
-P2_set *P2_set__add(P2_set *S, void *s);
+p2_set *p2_set__add(p2_set *S, void *s);
 
 /** "S' = S minus {s}" */
-P2_set *P2_set__remove(P2_set *S, void *s);
+p2_set *p2_set__remove(p2_set *S, void *s);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** "S' = S union T"
     \note O(n) time complexity */
-P2_set *P2_set__union(P2_set *S, P2_set *T);
+p2_set *p2_set__union(p2_set *S, p2_set *T);
 
 /** "S' = S intersect T"
     \note O(n^2) time complexity */
-P2_set *P2_set__intersection(P2_set *S, P2_set *T);
+p2_set *p2_set__intersection(p2_set *S, p2_set *T);
 
 /** "for all s in S, f(s)"
     \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the bunch, else 0. */
-void *P2_set__forall(P2_set *S, void *(*f)(void *));
+void *p2_set__forall(p2_set *S, void *(*f)(void *));
 
 /** "there exists s in S such that f(s)"
     \return the first item for which the criterion evaluates to a non-zero
     value ("true").  If no such item exists, the return value is 0. */
-void *P2_set__exists(P2_set *S, void *(*f)(void *));
+void *p2_set__exists(p2_set *S, void *(*f)(void *));
 
 /** "S' = all s in S such that f(s)" */
-P2_set *P2_set__subset(P2_set *S, void *(*f)(void *));
+p2_set *p2_set__subset(p2_set *S, void *(*f)(void *));
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** A wrapper for "free" which always returns a 1 (for use in conjunction with
-    P2_set__forall) */
-void *P2_set__free(void *s);
+    p2_set__forall) */
+void *p2_set__free(void *s);
 
 
-#endif  // SET_H
+#endif  // P2_SET_H
 

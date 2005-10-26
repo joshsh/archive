@@ -32,12 +32,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** A unique 32-bit value to identify a specific error type. */
-typedef void * P2_error;
+typedef void * p2_error;
 
 
 // Error codes for a variety of contexts (custom errors may be created with
-// P2_register_error).
-P2_error
+// p2_register_error).
+p2_error
 
     P2_SUCCESS,
 
@@ -66,19 +66,19 @@ P2_error
 
 
 /**  */
-P2_error P2_error_init();
+p2_error p2_error_init();
 
 /**  */
-P2_error P2_error_end();
+p2_error p2_error_end();
 
 /**
     \note  There is nothing to prevent duplicate error names.  The name is just
     a helpful description, and may even be omitted if it will not be used.  The
-    actual P2_error code is what uniquely identifies the error. */
-P2_error P2_error__new(char *name);
+    actual p2_error code is what uniquely identifies the error. */
+p2_error p2_error__new(char *name);
 
 /**  */
-void P2_error__encode(P2_error err, char *buffer);
+void p2_error__encode(p2_error err, char *buffer);
 
 
 #endif  // P2_ERROR_H

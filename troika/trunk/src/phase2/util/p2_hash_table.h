@@ -27,10 +27,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#ifndef HASH_TABLE_H
-#define HASH_TABLE_H
-
-#include <stdlib.h>
+#ifndef P2_HASH_TABLE_H
+#define P2_HASH_TABLE_H
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +39,7 @@ int compare_addresses(void *key1, void *key2);
 /** Default address hashing function. */
 int hash_address(void *key);
 
-/** Overrides the function pointer arguments in hash_table__new. */
+/** Overrides the function pointer arguments in p2_hash_table__new. */
 #define ADDRESS_DEFAULTS hash_address, compare_addresses
 
 /** Default string comparison function. */
@@ -50,7 +48,7 @@ int compare_strings(void *key1, void *key2);
 /** Default string-hashing function. */
 int hash_string(void *key);
 
-/** Overrides the function pointer arguments in hash_table__new. */
+/** Overrides the function pointer arguments in p2_hash_table__new. */
 #define STRING_DEFAULTS hash_string, compare_strings
 
 
@@ -90,7 +88,7 @@ typedef struct
     /** A comparison function for key values. */
     int (*compare_to) (void *key1, void *key2);
 
-} P2_hash_table;
+} p2_hash_table;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,13 +115,13 @@ typedef struct
     macros ADDRESS_DEFAULTS or STRING_DEFAULTS (C strings only!) if efficiency
     is not foremost, e.g.
 
-      P2_hash_table *myfrobs = hash_table__new(        \n
+      p2_hash_table *myfrobs = p2_hash_table__new(        \n
         500, 2, 1.5, my_hashing_func, my_compare_to);  \n
                                                        \n
-      P2_hash_table *myfrobs = hash_table__new(        \n
+      p2_hash_table *myfrobs = p2_hash_table__new(        \n
         0, 0, 0, STRING_DEFAULTS);                     \n
 */
-P2_hash_table *hash_table__new(
+p2_hash_table *p2_hash_table__new(
   int buffer_size,
   float expansion,
   float sparsity,
@@ -134,38 +132,36 @@ P2_hash_table *hash_table__new(
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Destructor. */
-void hash_table__delete(P2_hash_table *h);
+void p2_hash_table__delete(p2_hash_table *h);
 
 /** Looks up a key to obtain a target.
     \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
     target value, else you won't be able to tell it apart from a failed lookup.
 */
-void *hash_table__lookup(P2_hash_table *h, void *key);
+void *p2_hash_table__lookup(p2_hash_table *h, void *key);
 
 /** Adds a key/target pair.
     \return the target which is displaced by the new target (if any). */
-void *hash_table__add(P2_hash_table *h, void *key, void *target);
+void *p2_hash_table__add(p2_hash_table *h, void *key, void *target);
 
 /** Removes the key and its target.
     \return the target */
-void *hash_table__remove(P2_hash_table *h, void *key);
+void *p2_hash_table__remove(p2_hash_table *h, void *key);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Applies a void function to each key/target pair in turn. */
-void hash_table__forall(P2_hash_table *h, void (*func)(void *, void *));
+void p2_hash_table__forall(p2_hash_table *h, void (*func)(void *, void *));
 
 /** Applies a void function to each key value in turn. */
-void hash_table__forall_keys(P2_hash_table *h, void (*func)(void *));
+void p2_hash_table__forall_keys(p2_hash_table *h, void (*func)(void *));
 
 /** Applies a void function to each target value in turn. */
-void hash_table__forall_targets(P2_hash_table *h, void (*func)(void *));
+void p2_hash_table__forall_targets(p2_hash_table *h, void (*func)(void *));
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif
-
-/*- end of file */
+#endif  // P2_HASH_TABLE_H
 

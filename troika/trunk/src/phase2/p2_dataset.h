@@ -45,7 +45,7 @@ parcour@gmail.com
 */
 
 #ifndef P2_DATASET_H
-#define P2_DATASET_H	1
+#define P2_DATASET_H
 
 
 
@@ -53,41 +53,41 @@ extern "C"
 {
     #include "p2.h"
 
-    #include "util/array.h"
-    //#include "util/set.h"
-    #include "util/hash_table.h"
-    #include "util/term.h"
+    //#include "util/p2_array.h"
+    //#include "util/p2_set.h"
+    #include "util/p2_hash_table.h"
+    #include "util/p2_term.h"
 }
 
 #include "xml/xmldom.h"
 
 
 
-class P2_data_set
+class p2_data_set
 {
-    P2_hash_table *dictionary;
-    P2_hash_table *reverse_dictionary;
-    P2_array *names;
+    p2_hash_table *dictionary;
+    p2_hash_table *reverse_dictionary;
+    p2_array *names;
 
     // A complete set of data elements for "last moment sweep" garbage
     // collection (each atom is associated with its type).
-    //P2_hash_table *all_atoms;
+    //p2_hash_table *all_atoms;
     //SET *all_atoms;
 
-    P2_term *(*reduce)(P2_term *);
+    p2_term *(*reduce)(p2_term *);
 
-    void common_constructor(P2_term *(*reduce0)(P2_term *));
+    void common_constructor(p2_term *(*reduce0)(p2_term *));
 
     static char *next_multiref_id();
     static int decode_multiref_id(char *id);
 
-    static DOM_Element *encode(P2_term *term);
-    static P2_term *decode(DOM_Element *domterm);
-    static DOM_Element *encode_atom(P2_term *term);
+    static DOM_Element *encode(p2_term *term);
+    static p2_term *decode(DOM_Element *domterm);
+    static DOM_Element *encode_atom(p2_term *term);
     static void decode_atoms(DOM_Element *el);
 
-    static void encode_dict_firstpass(char *name, P2_term *term);
-    static void encode_dict_secondpass(char *name, P2_term *term);
+    static void encode_dict_firstpass(char *name, p2_term *term);
+    static void encode_dict_secondpass(char *name, p2_term *term);
     //*/
 
 public:
@@ -96,31 +96,31 @@ public:
     bool debug;
 
     // temporary...
-    void debug_print(P2_term *term);
-    void print(P2_term *term);
+    void debug_print(p2_term *term);
+    void print(p2_term *term);
     void display(char *name);
     void display_dictionary();
     //void display_last();
 
-    P2_data_set(P2_term *(*reduce0)(P2_term *));
+    p2_data_set(p2_term *(*reduce0)(p2_term *));
 
-    P2_data_set(
-        P2_term *(*reduce0)(P2_term *),
+    p2_data_set(
+        p2_term *(*reduce0)(p2_term *),
         DOM_Element *domset);
 
-    ~P2_data_set();
+    ~p2_data_set();
 
     DOM_Element *encode(DOM_Element *document0);
 
     DOM_Element *encode(DOM_Element *document0, char *name);
 
-    P2_error add(char *name, P2_term *term);
+    p2_error add(char *name, p2_term *term);
 
-    P2_term *get(char *name);
+    p2_term *get(char *name);
 
     void remove(char *name);
 
-    P2_error mark_all();
+    p2_error mark_all();
 
     //SK_term *lookup(char *name);
 
@@ -132,7 +132,7 @@ public:
 // These are only meaningful during XML encoding or decoding.
 
     DOM_Element *document, *root;
-    P2_hash_table *translation_table;
+    p2_hash_table *translation_table;
     char buffer[1000];
 
     // Note: an id of "ref-0" never actually occurs; the first id used is "ref-1".
@@ -140,6 +140,6 @@ public:
 
 
 
-#endif
+#endif  // P2_DATASET_H
 
-/*- end of file */
+

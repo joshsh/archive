@@ -34,10 +34,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef SK_H
 #define SK_H
 
-/*  For the debug macro, P2_error and associated functions, and the primitive
+/*  For the debug macro, p2_error and associated functions, and the primitive
     and typing mechanisms. */
 #include "../p2_atom.h"
-#include "../util/term.h"
+#include "../util/p2_term.h"
 #include "../p2.h"
 
 
@@ -48,19 +48,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** The S combinator type. */
-P2_type SK_S_type;
+p2_type SK_S_type;
 
 /** The K combinator type. */
-P2_type SK_K_type;
+p2_type SK_K_type;
 
 /** Singleton S combinator. */
-P2_atom *SK_S;
+p2_atom *SK_S;
 
 /** Singleton K combinator. */
-P2_atom *SK_K;
+p2_atom *SK_K;
 
 
-P2_error
+p2_error
 
     FAILURE,                       /**< Generic failure message. */
     TYPE_MISMATCH,                 /**< Parameter and argument types don't match. */
@@ -74,7 +74,7 @@ P2_error
 
 
 /** Initializes types, errors, and singleton S, K combinators. */
-P2_error SK_init(void (*debug_print)(P2_term *));
+p2_error SK_init(void (*debug_print)(p2_term *));
 
 /** \brief Reduce an S,K term recursively according to the rules of combinator
     expressions.
@@ -83,17 +83,17 @@ P2_error SK_init(void (*debug_print)(P2_term *));
     been called, and should not be used again.
 
     \return normally, the reduced term. If an error is encountered during
-    reduction, the returned term will contain a single P2_atom of type
-    P2_error_type and with an error value describing the exception.
+    reduction, the returned term will contain a single p2_atom of type
+    p2_error_type and with an error value describing the exception.
 
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
-    which is not an S or K combinator or a P2_primitive, is considered a
+    which is not an S or K combinator or a p2_primitive, is considered a
     non-redex atom.
 
     \warning this function makes no attempt to detect infinite loops or memory
     faults due to extremely large S,K terms.
 */
-P2_term *SK_reduce(P2_term *term);
+p2_term *SK_reduce(p2_term *term);
 
 
 #endif  // SK_H

@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "sk.h"
+#include "sk.h"  // p2_term
 #include "../p2_primitive.h"
 
 #include <stdlib.h>  // malloc
@@ -26,46 +26,46 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 // Pointer to a function which generates output as terms are reduced.
-void (*debug_print_)(P2_term *);
+void (*debug_print_)(p2_term *);
 
-P2_term *S_reduce(P2_term *term);
-P2_term *K_reduce(P2_term *term);
-P2_term *prim_reduce(P2_term *term);
-P2_term *error_term(P2_error err);
+p2_term *S_reduce(p2_term *term);
+p2_term *K_reduce(p2_term *term);
+p2_term *prim_reduce(p2_term *term);
+p2_term *error_term(p2_error err);
 
 
 
-P2_error SK_init(void (*debug_print)(P2_term *))
+p2_error SK_init(void (*debug_print)(p2_term *))
 {
     debug_print_ = debug_print;
 
-    SK_S_type = P2_register_type("S", NULL, NULL, NULL, NULL);
-    SK_K_type = P2_register_type("K", NULL, NULL, NULL, NULL);
+    SK_S_type = p2_register_type("S", NULL, NULL, NULL, NULL);
+    SK_K_type = p2_register_type("K", NULL, NULL, NULL, NULL);
 
-    SK_S = P2_atom__new((void *) SK_S_type, NULL);
-    SK_K = P2_atom__new((void *) SK_K_type, NULL);
+    SK_S = p2_atom__new((void *) SK_S_type, NULL);
+    SK_K = p2_atom__new((void *) SK_K_type, NULL);
 
     // Register special errors raised by SK_reduce.
-    FAILURE = P2_register_error("FAILURE");
-    TYPE_MISMATCH = P2_register_error("TYPE_MISMATCH");
-    ATOM_APPLIED_AS_FUNCTION = P2_register_error("ATOM_APPLIED_AS_FUNCTION");
-    PRIMITIVE_APPLIED_TO_NONATOM = P2_register_error("PRIMITIVE_APPLIED_TO_NONATOM");
-    NULL_TERM = P2_register_error("NULL_TERM");
-    NULL_ATOM = P2_register_error("NULL_ATOM");
-    NULL_PRIMITIVE = P2_register_error("NULL_PRIMITIVE");
-    EXPIRED_TERM = P2_register_error("EXPIRED_TERM");
-    PROGRAM_ERROR = P2_register_error("PROGRAM_ERROR");
+    FAILURE = p2_register_error("FAILURE");
+    TYPE_MISMATCH = p2_register_error("TYPE_MISMATCH");
+    ATOM_APPLIED_AS_FUNCTION = p2_register_error("ATOM_APPLIED_AS_FUNCTION");
+    PRIMITIVE_APPLIED_TO_NONATOM = p2_register_error("PRIMITIVE_APPLIED_TO_NONATOM");
+    NULL_TERM = p2_register_error("NULL_TERM");
+    NULL_ATOM = p2_register_error("NULL_ATOM");
+    NULL_PRIMITIVE = p2_register_error("NULL_PRIMITIVE");
+    EXPIRED_TERM = p2_register_error("EXPIRED_TERM");
+    PROGRAM_ERROR = p2_register_error("PROGRAM_ERROR");
 
     return P2_SUCCESS;
 }
 
 
 
-P2_term *SK_reduce(P2_term *term)
+p2_term *SK_reduce(p2_term *term)
 {
-    P2_atom *function;  //? Better descriptor?
-    P2_term *result = NULL;
-    P2_type type;
+    p2_atom *function;  //? Better descriptor?
+    p2_term *result = NULL;
+    p2_type type;
 
     // Iterate while !result.
     do
@@ -74,13 +74,13 @@ P2_term *SK_reduce(P2_term *term)
 
         // Get the atom at the head of the term.
         // Caution: the term MUST be in normal form.
-        function = (P2_atom *) *(term->head + 2);
+        function = (p2_atom *) *(term->head + 2);
 
         // Attempt to apply the leftmost atom to the arguments on its right.
-        type = (P2_type) function->type;
+        type = (p2_type) function->type;
 
         // Apply primitive.
-        if (type == P2_primitive_type)
+        if (type == p2_primitive_type)
             result = prim_reduce(term);
 
         // Sxyz... --> xz(yz)...
@@ -91,7 +91,7 @@ P2_term *SK_reduce(P2_term *term)
         else if (type == SK_K_type)
             result = SK_reduce(K_reduce(term));
 
-        // Any atom which is not an S or K combinator or a P2_primitive is
+        // Any atom which is not an S or K combinator or a p2_primitive is
         // is considered a non-redex atom.
         else
         {
@@ -99,7 +99,7 @@ P2_term *SK_reduce(P2_term *term)
                 result = term;
             #else
                 // Garbage-collect whatever is left of {term}
-                P2_term__delete(term);
+                p2_term__delete(term);
 
                 // Generate an error.
                 result = error_term(ATOM_APPLIED_AS_FUNCTION);
@@ -116,12 +116,12 @@ P2_term *SK_reduce(P2_term *term)
 // Kxy --> x
 // [term size] [2]{K} [x_size]{x} [y_size]{y} ...
 //     --> [term size - y_size - 2] [x_size]{x} ...
-P2_term *K_reduce(P2_term *term)
+p2_term *K_reduce(p2_term *term)
 {
     void **x, **y;
     unsigned int x_size, y_size;
 
-    if (P2_term__length(term) < 3)
+    if (p2_term__length(term) < 3)
         return term;
 
     // Skip the 'K' to reach the head of the 'x' sub-term.
@@ -148,12 +148,12 @@ P2_term *K_reduce(P2_term *term)
 // Sxyz --> xz(yz)
 // [term size] [2]{S} [x_size]{x} [y_size]{y} [z_size]{z} ...
 //     --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ...
-P2_term *S_reduce(P2_term *term)
+p2_term *S_reduce(p2_term *term)
 {
     void **x, **y, **z;
     unsigned int x_size, y_size, z_size, newsize;
 
-    if (P2_term__length(term) < 4)
+    if (p2_term__length(term) < 4)
         return term;
 
     // Locate the head of 'x', 'y' and 'z'.
@@ -169,7 +169,7 @@ P2_term *S_reduce(P2_term *term)
     newsize = (unsigned int) *(term->head) + z_size - 1;
     if (newsize > term->buffer_size)
     {
-        term = P2_term__expand(term, newsize);
+        term = p2_term__expand(term, newsize);
 
         // Re-locate the head of 'x', 'y' and 'z'.
         x = term->head + 3;
@@ -208,22 +208,22 @@ P2_term *S_reduce(P2_term *term)
 
 
 // Note: prim_reduce allows for at most five arguments.
-P2_atom *args[10];
+p2_atom *args[10];
 
 // Assumes head-normal form and a sufficient number of arguments.
 // Note: it's probably worth trying to find a way to consolidate the type
 // checking and garbage collection of arguments.
-P2_term *prim_reduce(P2_term *term)
+p2_term *prim_reduce(p2_term *term)
 {
     int i;
-    P2_atom *arg, *return_value;
-    P2_term *result;
-    P2_error err = (P2_error) 0;
+    p2_atom *arg, *return_value;
+    p2_term *result;
+    p2_error err = (p2_error) 0;
     void **cur = term->head + 2;
-    P2_primitive *prim = ((P2_primitive *) *cur)->value;
+    p2_primitive *prim = ((p2_primitive *) *cur)->value;
     cur++;
 
-    if (P2_term_length(term) <= prim->parameters)
+    if (p2_term_length(term) <= prim->parameters)
         result = term;
 
     else
@@ -237,7 +237,7 @@ P2_term *prim_reduce(P2_term *term)
                 break;
             }
             cur++;
-            arg = (P2_atom *) *cur;
+            arg = (p2_atom *) *cur;
             if (arg->type != prim->parameter_types[i])
             {
                 err = TYPE_MISMATCH;
@@ -256,27 +256,27 @@ P2_term *prim_reduce(P2_term *term)
             {
                 // Note: no 0 case.
                 case 1:
-                    return_value = (P2_atom *) ((void *(*)(void *)) prim->value)(
+                    return_value = (p2_atom *) ((void *(*)(void *)) prim->value)(
                         args[0]);
                     break;
                 case 2:
-                    return_value = (P2_atom *) ((void *(*)(void *, void *)) prim->value)(
+                    return_value = (p2_atom *) ((void *(*)(void *, void *)) prim->value)(
                         args[0], args[1]);
                     break;
                 case 3:
-                    return_value = (P2_atom *) ((void *(*)(void *, void *, void *)) prim->value)(
+                    return_value = (p2_atom *) ((void *(*)(void *, void *, void *)) prim->value)(
                         args[0], args[1], args[2]);
                     break;
                 case 4:
-                    return_value = (P2_atom *) ((void *(*)(void *, void *, void *, void *)) prim->value)(
+                    return_value = (p2_atom *) ((void *(*)(void *, void *, void *, void *)) prim->value)(
                         args[0], args[1], args[2], args[3]);
                     break;
                 case 5:
-                    return_value = (P2_atom *) ((void *(*)(void *, void *, void *, void *, void *)) prim->value)(
+                    return_value = (p2_atom *) ((void *(*)(void *, void *, void *, void *, void *)) prim->value)(
                         args[0], args[1], args[2], args[3], args[4]);
                     break;
                 default:
-                    err = FAILURE;
+                    err = PROGRAM_ERROR;
             }
         }
 
@@ -312,9 +312,9 @@ P2_term *prim_reduce(P2_term *term)
 
 
 
-P2_term *error_term(P2_error err)
+p2_term *error_term(p2_error err)
 {
-    return P2_term__new(P2_error_atom(err), 2);
+    return p2_term__new(p2_error_atom(err), 2);
 }
 
 

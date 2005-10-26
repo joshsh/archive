@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** A unique 32-bit value to identify a specific data type. */
-typedef void * P2_type;
+typedef void * p2_type;
 
 
 /** Type casting macro for first-class encoders. */
@@ -49,13 +49,13 @@ typedef void * P2_type;
 #define CLONE_FORMAT     void *(*)(void *)
 
 
-P2_error P2_type_init();
+p2_error p2_type_init();
 
-P2_error P2_type_end();
+p2_error p2_type_end();
 
 
-// [!] Re-name to P2_type__new.
-P2_type P2_register_type(
+// [!] Re-name to p2_type__new.
+p2_type p2_register_type(
 
     char *name,
     void (*encode)(void *, char *),
@@ -64,19 +64,19 @@ P2_type P2_register_type(
     void *(*clone)(void *));
 
 
-P2_type P2_type_lookup(char *name);
+p2_type p2_type_lookup(char *name);
 
-char *P2_type_name(P2_type type_index);
-
-
-void P2_encode(void *p, P2_type type_index, char *buffer);
-
-void *P2_decode(P2_type type_index, char *buffer);
-
-void P2_destroy(void *p, P2_type type_index);
-
-void *P2_clone(void *p, P2_type type_index);
+char *p2_type_name(p2_type type_index);
 
 
-#endif
+void p2_encode(void *p, p2_type type_index, char *buffer);
+
+void *p2_decode(p2_type type_index, char *buffer);
+
+void p2_destroy(void *p, p2_type type_index);
+
+void *p2_clone(void *p, p2_type type_index);
+
+
+#endif  // P2_TYPE_H
 

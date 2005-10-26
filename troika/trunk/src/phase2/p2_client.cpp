@@ -1,14 +1,15 @@
-/*+
+/**
+    \file p2_client.cpp
 
-p2_client.cpp
+    \brief Semantic module for the Phase2 command line interface.
 
-Semantic module for the Phase2 command line interface.
+    \author Joshua Shinavier   \n
+            parcour@gmail.com  \n
+            +1 509 570-6990    \n */
 
-last edited: 9/5/05
+/*//////////////////////////////////////////////////////////////////////////////
 
-*//*/////////////////////////////////////////////////////////////////////////////
-
-Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -23,14 +24,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-Joshua Shinavier
-parcour@gmail.com
-+1 509 747-6051
-
-*////////////////////////////////////////////////////////////////////////////////
-
-//   [unrelated] Kernighan ^ 1974 C tutorial: http://www.lysator.liu.se/c/bwk-tutor.html
-// g++ -c p2_client.cpp -I../../gsoap-linux-2.7
+*///////////////////////////////////////////////////////////////////////////////
 
 using namespace std;
 
@@ -39,9 +33,9 @@ using namespace std;
 
 extern "C"
 {
-    #include "util/array.h"
-    #include "util/hash_table.h"
-    #include "util/term.h"
+    #include "util/p2_array.h"
+    #include "util/p2_hash_table.h"
+    #include "util/p2_term.h"
 
 /*
     // Core Phase2 libraries.
@@ -66,8 +60,8 @@ extern "C"
     #include "sk/sk.c"
 
     // These two functions need to be global for the sake of p2_parse.y
-    void P2_evaluate_expression(char *name, char *expr);
-    void P2_evaluate_command(char *name, char *args);
+    void p2_evaluate_expression(char *name, char *expr);
+    void p2_evaluate_command(char *name, char *args);
 
     void yyparse();
 }
@@ -82,11 +76,11 @@ extern "C"
 #include "p2_dataset.cpp" //!
 //#include "p2_dataset.h"
 
-//void P2_print(void *p);
+//void p2_print(void *p);
 void deserialize(char *xmlstr, DOM_Element *document);
 
 HASH_TABLE *all_datasets_;
-P2_data_set *active_dataset_;
+p2_data_set *active_dataset_;
 DOM_Element *active_document_;
 
 #include "import/primitives.cpp"  //!
@@ -95,12 +89,12 @@ DOM_Element *active_document_;
 
 // Consider making this library into a class, and replacing these two functions
 // with its constructor and destructor.
-P2_error P2_client_init();
-P2_error P2_client_end();
+p2_error p2_client_init();
+p2_error p2_client_end();
 
 
 
-void debug_print(P2_term *term)
+void debug_print(p2_term *term)
 {
     active_dataset_->debug_print(term);
 }
@@ -132,20 +126,20 @@ void deserialize(char *xmlstr, DOM_Element *document)
 
 
 // Note: check for NULL output (<== empty sequence).
-P2_term *decode_parser_expression(DOM_Element *el)
+p2_term *decode_parser_expression(DOM_Element *el)
 {
     static char buffer[1000];
-    P2_term *term, *subterm;
+    p2_term *term, *subterm;
 
     // Simple term.
-    if (strcmp(DOM_tagName(el), P2_P2_term))
+    if (strcmp(DOM_tagName(el), p2_p2_term))
     {
-        // The buffer is necessary because of P2_parse_id.
+        // The buffer is necessary because of p2_parse_id.
         *buffer = '\0';
         char *text = DOM_text(el);
         if (text)
             strcat(buffer, text);
-        term = P2_parse_token(buffer);
+        term = p2_parse_token(buffer);
     }
 
     // Compound term;
@@ -164,10 +158,10 @@ P2_term *decode_parser_expression(DOM_Element *el)
             }
 
             // Error in subterm; abort.
-            else if ((P2_type) subterm->type == P2_error_type)
+            else if ((p2_type) subterm->type == p2_error_type)
             {
                 if (term)
-                    P2_term__delete(term);
+                    p2_p2_term__delete(term);
                 term = subterm;  // Propagate error upward.
                 break;
             }
@@ -179,7 +173,7 @@ P2_term *decode_parser_expression(DOM_Element *el)
                     term = subterm;
                 else
                     //Note: Left-associativity of terms is imposed here.
-                    term = P2_term__merge_la(term, subterm);
+                    term = p2_p2_term__merge_la(term, subterm);
         }
             cur = DOM_nextSibling(cur);
         }
@@ -190,16 +184,16 @@ P2_term *decode_parser_expression(DOM_Element *el)
 
 
 
-P2_term *resolve_nonlocal_ids(P2_term *term)
+p2_term *resolve_nonlocal_ids(p2_term *term)
 {
-    P2_term *newseq = term;
+    p2_term *newseq = term;
 
-    if ((P2_type) term->type == P2_id_type)
+    if ((p2_type) term->type == p2_id_type)
     {
-        P2_id *id = (P2_id *) term->value;
+        p2_id *id = (p2_id *) term->value;
         if (id->dataset_id)
         {
-           P2_data_set *ds = (P2_data_set *) hash_table__lookup(all_datasets_, (void *) id->dataset_id);
+           p2_data_set *ds = (p2_data_set *) p2_hash_table__lookup(all_datasets_, (void *) id->dataset_id);
            if (ds)
                newseq = ds->get(id->local_id);
         }
@@ -212,9 +206,9 @@ P2_term *resolve_nonlocal_ids(P2_term *term)
 /*
   Process the expression and send it through the SK semantics module.
 */
-void P2_evaluate_expression(char *name, char *xmlexpr)
+void p2_evaluate_expression(char *name, char *xmlexpr)
 {
-//cout << "+ P2_evaluate_expression" << endl; cout.flush();
+//cout << "+ p2_evaluate_expression" << endl; cout.flush();
     // Instantiate a DOM object.
     struct soap soap;
     soap_init2(&soap, SOAP_IO_DEFAULT, SOAP_XML_TREE);
@@ -230,7 +224,7 @@ void P2_evaluate_expression(char *name, char *xmlexpr)
     #endif
 
     // Interpret the resulting XML.
-    P2_term *term = decode_parser_expression(&document);
+    p2_term *term = decode_parser_expression(&document);
 
     // Destroy the DOM object.
     soap_destroy(document.soap); // delete entire DOM
@@ -240,37 +234,37 @@ void P2_evaluate_expression(char *name, char *xmlexpr)
     soap_end(&soap); // remove all temporary and deserialized data
     soap_done(&soap);
 
-    P2_error err = P2_SUCCESS;
+    p2_error err = P2_SUCCESS;
 
     if (!term)
     {
         cout << "\t>> Client error: received empty input sequence from parser. <<" << endl;
     }
 
-    else if ((P2_type) term->type == P2_error_type)
+    else if ((p2_type) term->type == p2_error_type)
     {
         char s[100];
-        P2_print_error((P2_error) term->value, s);
+        p2_print_error((p2_error) term->value, s);
         cout << "\t>> Error: " << s << " <<" << endl;
     }
 
     else
     {
         // Resolve identifiers.
-        term = P2_term__replace_atoms(term, resolve_nonlocal_ids);
-        //P2_term__forall_atoms(term, resolve_nonlocal_ids);
-        term = P2_term__normalize_la(term);
+        term = p2_p2_term__replace_atoms(term, resolve_nonlocal_ids);
+        //p2_p2_term__forall_atoms(term, resolve_nonlocal_ids);
+        term = p2_p2_term__normalize_la(term);
 
         char *local_id = NULL;
 
-        P2_term *id_seq = NULL;
+        p2_term *id_seq = NULL;
 
         // Submit to the approprite data set.
         if (name != NULL)
         {
-            id_seq = P2_parse_id(name);
+            id_seq = p2_parse_id(name);
 
-            if ((P2_type) id_seq->type == P2_error_type)
+            if ((p2_type) id_seq->type == p2_error_type)
             {
                 printf("\t>> Warning: dictionary assignment failed (bad identifier). <<\n");
                 err = P2_SUCCESS;
@@ -278,7 +272,7 @@ void P2_evaluate_expression(char *name, char *xmlexpr)
 
             else
             {
-                local_id = ((P2_id *) (id_seq->value))->local_id;
+                local_id = ((p2_id *) (id_seq->value))->local_id;
                 err = active_dataset_->add(local_id, term);
             }
         }
@@ -298,27 +292,27 @@ void P2_evaluate_expression(char *name, char *xmlexpr)
         }
 
         if (id_seq)
-            P2_term__delete(id_seq);
+            p2_p2_term__delete(id_seq);
 
-        P2_term__delete(term);
+        p2_p2_term__delete(term);
 
     }
 
     if (err)
     {
         char s[100];
-        P2_print_error(err, s);
+        p2_print_error(err, s);
         cout << "\t>> Error: " << s << " <<" << endl;
     }
-//cout << "- P2_evaluate_expression" << endl; cout.flush();
+//cout << "- p2_evaluate_expression" << endl; cout.flush();
 }
 
 
 
 /*
-  Extract command arguments from the XML and call P2_execute_command.
+  Extract command arguments from the XML and call p2_execute_command.
 */
-void P2_evaluate_command(char *name, char *xmlargs)
+void p2_evaluate_command(char *name, char *xmlargs)
 {
     int nargs;
     char **args;
@@ -361,11 +355,11 @@ void P2_evaluate_command(char *name, char *xmlargs)
     soap_end(&soap); // remove all temporary and deserialized data
     soap_done(&soap);
 
-    P2_error err = P2_execute_command(name, nargs, args);
+    p2_error err = p2_execute_command(name, nargs, args);
     char s[100];
     if (err)
     {
-        P2_print_error(err, s);
+        p2_print_error(err, s);
     cout << "\t>> Error: " << s << ". <<" << endl;
     }
 
@@ -381,13 +375,13 @@ void P2_evaluate_command(char *name, char *xmlargs)
 
 
 
-P2_error P2_client_init(char *filepath)
+p2_error p2_client_init(char *filepath)
 {
-    P2_error err;
+    p2_error err;
 
-    if (!(err = P2_init())
-      &&!(err = P2_syntax_init())
-      &&!(err = P2_command_init())
+    if (!(err = p2_init())
+      &&!(err = p2_syntax_init())
+      &&!(err = p2_command_init())
       &&!(err = SK_init(NULL, debug_print))
 
       &&!(err = construct_commands())
@@ -395,21 +389,21 @@ P2_error P2_client_init(char *filepath)
 
     if (!err)
     {
-        all_datasets_ = hash_table__new(20, 2.0, 2.0, STRING_DEFAULTS);
+        all_datasets_ = p2_hash_table__new(20, 2.0, 2.0, STRING_DEFAULTS);
         if (filepath)
     {
         char **args = new (char *)[2];
         args[0] = "default";
         args[1] = filepath;
-        err = P2_load(2, args);
+        err = p2_load(2, args);
         delete args;
-        active_dataset_ = (P2_data_set *) hash_table__lookup(all_datasets_, (void *) "default");
+        active_dataset_ = (p2_data_set *) p2_hash_table__lookup(all_datasets_, (void *) "default");
     }
 
     else
     {
-        active_dataset_ = new P2_data_set(SK_reduce);
-            hash_table__add(all_datasets_, (void *) strdup("default"), (void *) active_dataset_);
+        active_dataset_ = new p2_data_set(SK_reduce);
+            p2_hash_table__add(all_datasets_, (void *) strdup("default"), (void *) active_dataset_);
     }
     construct_primitives();
     }
@@ -419,8 +413,8 @@ P2_error P2_client_init(char *filepath)
 
 
 
-// For P2_client_end.
-void destroy_dataset(char *name, P2_data_set *ds)
+// For p2_client_end.
+void destroy_dataset(char *name, p2_data_set *ds)
 {
     free(name);
     delete ds;
@@ -428,20 +422,20 @@ void destroy_dataset(char *name, P2_data_set *ds)
 
 
 
-P2_error P2_client_end()
+p2_error p2_client_end()
 {
-    P2_error err = P2_SUCCESS, err2;
+    p2_error err = P2_SUCCESS, err2;
 
     // Note: attend to data sets displaced by /load...
-    hash_table__forall(all_datasets_, (void (*)(void *, void *)) destroy_dataset);
-    hash_table__delete(all_datasets_);
+    p2_hash_table__forall(all_datasets_, (void (*)(void *, void *)) destroy_dataset);
+    p2_hash_table__delete(all_datasets_);
 
     // (g++ suggested the extra parens).
-    if ((err2 = P2_command_end()))
+    if ((err2 = p2_command_end()))
         err = err2;
-    if ((err2 = P2_syntax_end()))
+    if ((err2 = p2_syntax_end()))
         err = err2;
-    if ((err2 = P2_end()))
+    if ((err2 = p2_end()))
         err = err2;
 
     return err;
@@ -456,18 +450,18 @@ P2_error P2_client_end()
 int main(int argv, char *args[])
 {
     char s[100];
-    P2_error err;
+    p2_error err;
 
     if (argv < 2)
         // Create default data set.
-        err = P2_client_init(NULL);
+        err = p2_client_init(NULL);
     else
         // Load from file.
-        err = P2_client_init(args[1]);
+        err = p2_client_init(args[1]);
 
     if (err)
     {
-        P2_print_error(err, s);
+        p2_print_error(err, s);
         cout << "\t>> Initialization error: " << s << " <<\n";
         exit(1);
     }
@@ -482,9 +476,9 @@ int main(int argv, char *args[])
 
         // Show type indices for debugging.
         #ifdef DEBUG
-        int types = P2_total_types();
+        int types = p2_total_types();
         for (int i=1; i<=types; i++)
-            cout << "type " << i << ": " << P2_type_name((P2_type) i) << endl;
+            cout << "type " << i << ": " << p2_type_name((p2_type) i) << endl;
         #endif
 
         // Hand over control to the (flex/bison) parser.

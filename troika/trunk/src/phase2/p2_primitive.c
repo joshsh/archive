@@ -19,37 +19,37 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_primitive.h"
 
-#include "util/array.h"
-#include "util/hash_table.h"
+#include "util/p2_array.h"
+#include "util/p2_hash_table.h"
 
 #include <stdio.h>  // sprintf
 #include <string.h>  // memcpy, strdup
 
 
 
-// P2_primitive type interface /////////////////////////////////////////////////
+// p2_primitive type interface /////////////////////////////////////////////////
 
 
 
-P2_primitive *P2_primitive__new(
+p2_primitive *p2_primitive__new(
     void *value,
     char *name,
     int parameters,
-    P2_type *parameter_types,
+    p2_type *parameter_types,
     char **parameter_names,
     char *transparency,
-    P2_type return_type)
+    p2_type return_type)
 {
     int i;
 
-    P2_primitive *prim = (P2_primitive *) malloc(sizeof(P2_primitive));
+    p2_primitive *prim = (p2_primitive *) malloc(sizeof(p2_primitive));
 
     prim->value = value;
     prim->name = strdup(name);
     prim->parameters = parameters;
 
-    prim->parameter_types = (P2_type *) malloc(parameters * sizeof(P2_type));
-    memcpy(prim->parameter_types, parameter_types, parameters * sizeof(P2_type));
+    prim->parameter_types = (p2_type *) malloc(parameters * sizeof(p2_type));
+    memcpy(prim->parameter_types, parameter_types, parameters * sizeof(p2_type));
 
     if (!parameter_names)
         prim->parameter_names = 0;
@@ -70,14 +70,14 @@ P2_primitive *P2_primitive__new(
 
     prim->return_type = return_type;
 
-    #ifdef P2DEF_MANAGE_PRIMITIVES
-        P2_primitive__retister(prim);
+    #ifdef P2FLAGS__MANAGE_PRIMITIVES
+        p2_primitive__retister(prim);
     #endif
 }
 
 
 
-void P2_primitive__delete(P2_primitive *prim)
+void p2_primitive__delete(p2_primitive *prim)
 {
     free(prim->name);
     free(prim->parameter_types);
@@ -93,58 +93,58 @@ void P2_primitive__delete(P2_primitive *prim)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#ifdef P2DEF_MANAGE_PRIMITIVES
+#ifdef P2FLAGS__MANAGE_PRIMITIVES
 
 
 
-P2_array *registered_primitives_;
-P2_hash_table *primitives_dictionary_;
+p2_array *registered_primitives_;
+p2_hash_table *primitives_dictionary_;
 
 
 
-P2_error P2_primitive_init()
+p2_error p2_primitive_init()
 {
-    registered_primitives_ = array__new(30, 2.0);
-    primitives_dictionary_ = hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
+    registered_primitives_ = p2_array__new(30, 2.0);
+    primitives_dictionary_ = p2_hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
 
     return P2_SUCCESS;
 }
 
 
 
-P2_error P2_primitive_end()
+p2_error p2_primitive_end()
 {
-    array__forall(registered_primitives_, (void (*)(void *)) P2_primitive__delete);
-    array__delete(registered_primitives_);
-    hash_table__delete(primitives_dictionary_);
+    p2_array__forall(registered_primitives_, (void (*)(void *)) p2_primitive__delete);
+    p2_array__delete(registered_primitives_);
+    p2_hash_table__delete(primitives_dictionary_);
 
     return P2_SUCCESS;
 }
 
 
 
-void P2_primitive__register(P2_primitive *prim)
+void p2_primitive__register(p2_primitive *prim)
 {
-    array__enqueue(registered_primitives_, (void *) prim);
-    hash_table__add(primitives_dictionary_, (void *) prim->name, (void *) prim);
+    p2_array__enqueue(registered_primitives_, (void *) prim);
+    p2_hash_table__add(primitives_dictionary_, (void *) prim->name, (void *) prim);
 }
 
 
 
-void P2_primitive__encode(P2_primitive *p, char *buffer)
+void p2_primitive__encode(p2_primitive *p, char *buffer)
 {
     sprintf(buffer, p->name);
 }
 
 
 
-P2_primitive *P2_primitive__decode(char *buffer)
+p2_primitive *p2_primitive__decode(char *buffer)
 {
-    return (P2_primitive *) hash_table__lookup(primitives_dictionary_, (void *) name);
+    return (p2_primitive *) p2_hash_table__lookup(primitives_dictionary_, (void *) name);
 }
 
 
 
-#endif  // P2DEF_MANAGE_PRIMITIVES
+#endif  // P2FLAGS__MANAGE_PRIMITIVES
 
 

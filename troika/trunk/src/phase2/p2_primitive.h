@@ -29,10 +29,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "p2_flags.h"
-#include "p2_type.h"  // P2_type
+#include "p2_type.h"  // p2_type
 
-#ifdef P2DEF_MANAGE_PRIMITIVES
-    #include "p2_error.h"  // P2_error
+#ifdef P2FLAGS__MANAGE_PRIMITIVES
+    #include "p2_error.h"  // p2_error
 #endif
 
 
@@ -54,7 +54,7 @@ typedef struct
 
   /** An array of length {parameters} containing the data type of all input
       parameters in the correct order. */
-  P2_type *parameter_types;
+  p2_type *parameter_types;
 
   /** \note  Not used. */
   char **parameter_names;
@@ -67,50 +67,50 @@ typedef struct
   char *transparency;
 
   /** The primitive's (constant) return type. */
-  P2_type return_type;
+  p2_type return_type;
 
-} P2_primitive;
+} p2_primitive;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/** Create a new P2_primitive.
+/** Create a new p2_primitive.
     \note  Array arguments are copied into the new structure (and not simply
     referenced again).
     \warning  Arguments are assumed to be sound. */
-P2_primitive *P2_primitive__new(
+p2_primitive *p2_primitive__new(
     void *value,               /**< Memory location of the C function. */
     char *name,                /**< A unique name (preferably the same as the C function stub referenced by the pointer, e.g. "math_h__cos"). */
     int parameters,            /**< Number of input parameters. */
-    P2_type *parameter_types,  /**< An array of length {parameters} containing the data type of all input parameters in the correct order. */
+    p2_type *parameter_types,  /**< An array of length {parameters} containing the data type of all input parameters in the correct order. */
     char **parameter_names,    /**< \note  Not used.  May pass a NULL instead. */
     char *transparency,        /**< An array of length {parameters} containing at each parameter index a 0 if the argument at that index may experience a side-effect, or a 1 otherwise (the primitive is said to be "referentially transparent" with respect to that parameter).
                                     \note  Not yet used.  May pass a NULL instead. */
-    P2_type return_type);      /**< The primitive's (constant) return type. */
+    p2_type return_type);      /**< The primitive's (constant) return type. */
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifdef P2DEF_MANAGE_PRIMITIVES
+#ifdef P2FLAGS__MANAGE_PRIMITIVES
 
-    P2_error P2_primitive_init();
+    p2_error p2_primitive_init();
 
-    P2_error P2_primitive_end();
+    p2_error p2_primitive_end();
 
-    P2_primitive *P2_primitive__lookup(char *name);
+    p2_primitive *p2_primitive__lookup(char *name);
 
-    /** Serialize a P2_primitive to a string. */
-    void P2_primitive__encode(P2_primitive *p, char *buffer);
+    /** Serialize a p2_primitive to a string. */
+    void p2_primitive__encode(p2_primitive *p, char *buffer);
 
-    /** Deserialize a P2_primitive from a string. */
-    P2_primitive *P2_primitive__decode(char *buffer);
+    /** Deserialize a p2_primitive from a string. */
+    p2_primitive *p2_primitive__decode(char *buffer);
 
 #else
 
-   /** Destroy the P2_primitive. */
-   void P2_primitive__delete(P2_primitive *prim);
+   /** Destroy the p2_primitive. */
+   void p2_primitive__delete(p2_primitive *prim);
 
-#endif  // P2DEF_MANAGE_PRIMITIVES
+#endif  // P2FLAGS__MANAGE_PRIMITIVES
 
 
 ////////////////////////////////////////////////////////////////////////////////

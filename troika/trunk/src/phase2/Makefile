@@ -111,7 +111,7 @@ p2.nsmap : $(SOAP_PATH)/gsoap_header.h
 
 
 ############################################################
-# Compile the P2_data_set class.
+# Compile the p2_data_set class.
 
 p2_dataset.o : p2_dataset.cpp p2_dataset.h
 	$(CPP) -c p2_dataset.cpp

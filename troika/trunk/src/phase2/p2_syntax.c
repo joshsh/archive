@@ -33,7 +33,7 @@ parcour@gmail.com
 *///////////////////////////////////////////////////////////////////////////////
 
 #include "p2_syntax.h"
-#include "p2.h"  // For P2_id_type
+#include "p2.h"  // For p2_id_type
 
 //!
 #include "import/int.c"
@@ -45,8 +45,8 @@ parcour@gmail.com
 
 
 
-// Use (only) the standard POSIX.2 interface for regular expression matching.
-// Note: stdlib.h defines _POSIX_C_SOURCE for you.
+/** Use (only) the standard POSIX.2 interface for regular expression matching.
+    \note  stdlib.h defines _POSIX_C_SOURCE for you. */
 #ifndef _POSIX_C_SOURCE
     #define _POSIX_C_SOURCE
 #endif
@@ -70,9 +70,9 @@ regex_t colon_regex;
      * escape characters in chars and string literals
      * exponential notation in ints and floats.
 */
-P2_error P2_syntax_init()
+p2_error p2_syntax_init()
 {
-    P2_error err;
+    p2_error err;
 
     // What about garbage collection?
     if ( 0
@@ -104,22 +104,22 @@ P2_error P2_syntax_init()
         err = P2_SUCCESS;
 
     // Register standard data types.
-    P2_int_type = P2_register_type(P2_INT_NAME,
+    p2_int_type = p2_register_type(P2_INT_NAME,
         (ENCODE_FORMAT) int__encode,
         (DECODE_FORMAT) int__decode,
         (DESTROY_FORMAT) int__delete,
         (CLONE_FORMAT) NULL);
-    P2_char_type = P2_register_type(P2_CHAR_NAME,
+    p2_char_type = p2_register_type(P2_CHAR_NAME,
         (ENCODE_FORMAT) char__encode,
         (DECODE_FORMAT) char__decode,
         (DESTROY_FORMAT) char__delete,
         (CLONE_FORMAT) NULL);
-    P2_double_type = P2_register_type(P2_DOUBLE_NAME,
+    p2_double_type = p2_register_type(P2_DOUBLE_NAME,
         (ENCODE_FORMAT) double__encode,
         (DECODE_FORMAT) double__decode,
         (DESTROY_FORMAT) double__delete,
         (CLONE_FORMAT) NULL);
-    P2_cstring_type = P2_register_type(P2_CSTRING_NAME,
+    p2_cstring_type = p2_register_type(P2_CSTRING_NAME,
         (ENCODE_FORMAT) cstring__encode,
         (DECODE_FORMAT) cstring__decode,
         (DESTROY_FORMAT) cstring__delete,
@@ -130,7 +130,7 @@ P2_error P2_syntax_init()
 
 
 
-P2_error P2_syntax_end()
+p2_error p2_syntax_end()
 {
     free(&id_regex);
     free(&int_regex);
@@ -150,12 +150,12 @@ P2_error P2_syntax_end()
 
 
 // local only.
-P2_id *parse_id(char *s)
+p2_id *parse_id(char *s)
 {
     int i;
     char ch;
     regmatch_t rem [1];
-    P2_id *id;
+    p2_id *id;
 
     // Look for a colon.
     if (!regexec(&colon_regex, s, 1, rem, 0))
@@ -170,23 +170,23 @@ P2_id *parse_id(char *s)
         {*/
             ch = s[i];
             s[i] = '\0';
-            id = P2_id__new(strdup(s), strdup(s+i+1));
+            id = p2_id__new(strdup(s), strdup(s+i+1));
             s[i] = ch;
         //}
     }
     else
-        id = P2_id__new(NULL, strdup(s));
+        id = p2_id__new(NULL, strdup(s));
 
     return id;
 }
 
 
 
-P2_atom *P2_parse_token(char *s)
+p2_atom *p2_parse_token(char *s)
 {
     int i;
     char ch;
-    P2_type type;
+    p2_type type;
     void *value;
 
     // If a token does not match any of the special syntaxes for integers,
@@ -196,68 +196,66 @@ P2_atom *P2_parse_token(char *s)
     // the "parent" and local parts of a dictionary reference.
     if (!regexec(&int_regex, s, 0, NULL, 0))
     {
-        type = P2_int_type;
-        value = P2_decode(type, s);
+        type = p2_int_type;
+        value = p2_decode(type, s);
     }
     else if (!regexec(&char_regex, s, 0, NULL, 0))
     {
-        type = P2_char_type;
+        type = p2_char_type;
         ch = *(s+2);
         *(s+2) = '\0';
-        value = P2_decode(type, s+1);
+        value = p2_decode(type, s+1);
     }
     else if (!regexec(&float_regex, s, 0, NULL, 0))
     {
-        type = P2_double_type;
-        value = P2_decode(type, s);
+        type = p2_double_type;
+        value = p2_decode(type, s);
     }
     else if (!regexec(&literal_regex, s, 0, NULL, 0))
     {
 //printf("found LITERAL\n");
-        type = P2_cstring_type;
+        type = p2_cstring_type;
         i = strlen(s)-1;
         ch = s[i];
         s[i] = '\0';
-        value = P2_decode(type, s+1);
+        value = p2_decode(type, s+1);
         s[i] = ch;
     }
     else if (!regexec(&id_regex, s, 0, NULL, 0))
     {
 //printf("found ID\n");
-        type = P2_id_type;
+        type = p2_id_type;
         value = (void *) parse_id(s);
     }
     else
     {
-        type = P2_error_type;
+        type = p2_error_type;
         value = (void *) INVALID_TOKEN;
     }
 
-    return P2_atom__new(type, value);
+    return p2_atom__new(type, value);
 }
 
 
 
-P2_atom *P2_parse_id(char *s)
+p2_atom *p2_parse_id(char *s)
 {
-    P2_atom *atom;
+    p2_atom *atom;
 
     if (!regexec(&id_regex, s, 0, NULL, 0))
-        atom = P2_atom__new(P2_id_type, (void *) parse_id(s));
+        atom = p2_atom__new(p2_id_type, (void *) parse_id(s));
 
     else
-        atom = P2_atom__new(P2_error_type, (void *) INVALID_IDENTIFIER);
+        atom = p2_atom__new(p2_error_type, (void *) INVALID_IDENTIFIER);
 
     return atom;
 }
 
 
 
-int P2_valid_command_name(char *s)
+int p2_valid_command_name(char *s)
 {
     return !(regexec(&command_regex, s, 0, NULL, 0));
 }
 
 
-
-/*- end of file */

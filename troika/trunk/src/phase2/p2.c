@@ -30,46 +30,46 @@ parcour@gmail.com
 *///////////////////////////////////////////////////////////////////////////////
 
 #include "p2.h"
-#include "util/term.h"
+#include "util/p2_term.h"
 #include <stdlib.h>  // For NULL.
 
 
 
-#ifdef P2DEF_MARK_AND_SWEEP
-P2_term *error_atoms_;
+#ifdef P2FLAGS__MARK_AND_SWEEP
+p2_term *error_atoms_;
 #endif
 
 
 
-P2_error P2_init()
+p2_error p2_init()
 {
-    P2_error err;
+    p2_error err;
 
-    P2_term__init(2.0);
+    p2_p2_term__init(2.0);
 
-    // Note: P2_type_init must be called before P2_error_init.
-    if (!(err = P2_type_init())
-        &&!(err = P2_error_init())
-        &&!(err = P2_primitive_init())
-	&&!(err = P2_atom_init())
+    // Note: p2_type_init must be called before p2_error_init.
+    if (!(err = p2_type_init())
+        &&!(err = p2_error_init())
+        &&!(err = p2_primitive_init())
+	&&!(err = p2_atom_init())
         ) err = P2_SUCCESS;
 
-    // Register P2_identifier type.
-    P2_id_type = P2_register_type(P2_ID_NAME,
+    // Register p2_identifier type.
+    p2_id_type = p2_register_type(P2_ID_NAME,
         (ENCODE_FORMAT) NULL,
         (DECODE_FORMAT) NULL,
-        (DESTROY_FORMAT) P2_id__delete,
+        (DESTROY_FORMAT) p2_id__delete,
         (CLONE_FORMAT) NULL);	
 
-    // Create a term containing each P2_error in registered_errors.
+    // Create a term containing each p2_error in registered_errors.
     /*
     size = registered_errors_->size;
-    P2_atom *atom = P2_atom_new(P2_error_type, (void *) err);
-    P2_term *term = P2_term__new(atom);
+    p2_atom *atom = p2_atom_new(p2_error_type, (void *) err);
+    p2_term *term = p2_p2_term__new(atom);
     if (!error_atoms_)
         error_atoms_ = term;
     else
-        error_atoms_ = P2_term__cat(error_atoms_, term);
+        error_atoms_ = p2_p2_term__cat(error_atoms_, term);
 	*/
 
     return err;
@@ -77,22 +77,22 @@ P2_error P2_init()
 
 
 
-P2_error P2_end()
+p2_error p2_end()
 {
-    P2_error err = P2_SUCCESS, err2;
+    p2_error err = P2_SUCCESS, err2;
 
-    P2_term__end();
+    p2_p2_term__end();
 
     // (g++ suggested the extra parens).
     // Garbage collection must be performed *before* the type interfaces are
     // destroyed.
-    if ((err2 = P2_atom_end()))
+    if ((err2 = p2_atom_end()))
         err = err2;
-    if ((err2 = P2_error_end()))
+    if ((err2 = p2_error_end()))
         err = err2;
-    if ((err2 = P2_primitive_end()))
+    if ((err2 = p2_primitive_end()))
         err = err2;
-    if ((err2 = P2_type_end()))
+    if ((err2 = p2_type_end()))
         err = err2;
 
     return err;
@@ -100,10 +100,10 @@ P2_error P2_end()
 
 
 
-#ifdef P2DEF_MARK_AND_SWEEP
-P2_atom *P2_error_atom(P2_error err)
+#ifdef P2FLAGS__MARK_AND_SWEEP
+p2_atom *p2_error_atom(p2_error err)
 {
-    return (P2_atom *)
+    return (p2_atom *)
         *(error_atoms_->head + 1 + ((int) err * 2));
 }
 #endif
@@ -123,8 +123,8 @@ P2_atom *P2_error_atom(P2_error err)
 *//*
 int main()
 {
-    P2_init();
-    P2_end();
+    p2_init();
+    p2_end();
 }
 //*/
 

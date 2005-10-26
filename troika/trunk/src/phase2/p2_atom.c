@@ -1,24 +1,43 @@
+/*//////////////////////////////////////////////////////////////////////////////
+
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place, Suite 330, Boston, MA 02111-1307 USA
+
+*///////////////////////////////////////////////////////////////////////////////
+
 #include "p2_atom.h"
 
 #include <stdlib.h>  // malloc
 
 
 
-#ifdef P2DEF_MARK_AND_SWEEP
+#ifdef P2FLAGS__MARK_AND_SWEEP
 
-    #include "util/bunch.h"
+    #include "util/p2_bunch.h"
 
-    P2_bunch *markandsweep_atoms = 0;
+    p2_bunch *markandsweep_atoms = 0;
 
 #endif
 
 
 
-P2_error P2_atom_init()
+p2_error p2_atom_init()
 {
-    #ifdef P2DEF_MARK_AND_SWEEP
+    #ifdef P2FLAGS__MARK_AND_SWEEP
     // Initialize "mark and sweep" array.
-    markandsweep_atoms = array__new(1000, 2.0);
+    markandsweep_atoms = p2_bunch__new(1000);
     #endif
 
     return P2_SUCCESS;
@@ -26,15 +45,15 @@ P2_error P2_atom_init()
 
 
 
-P2_error P2_atom_end()
+p2_error p2_atom_end()
 {
-    #ifdef P2DEF_MARK_AND_SWEEP
-    P2_sweep();
+    #ifdef P2FLAGS__MARK_AND_SWEEP
+    p2_sweep();
 
     if (markandsweep_atoms)
     {
-        array__delete(markandsweep_atoms);
-        markandsweep_atoms = NULL;
+        p2_bunch__delete(markandsweep_atoms);
+        markandsweep_atoms = 0;
     }
     #endif
 
@@ -43,31 +62,31 @@ P2_error P2_atom_end()
 
 
 
-P2_atom *P2_atom__new(P2_type type, void *value)
+p2_atom *p2_atom__new(p2_type type, void *value)
 {
-    P2_atom *atom = (P2_atom *) malloc(sizeof(P2_atom));
+    p2_atom *atom = (p2_atom *) malloc(sizeof(p2_atom));
     atom->type = type;
     atom->value = value;
 
     #ifdef USE_ASSOCIATION
-    inbound_edges = NULL;
-    outbound_edges = NULL;
+    inbound_edges = 0;
+    outbound_edges = 0;
     #endif
 
-    #ifdef P2DEF_MARK_AND_SWEEP
-    markandsweep_atoms->add((void *) atom);
+    #ifdef P2FLAGS__MARK_AND_SWEEP
+    p2_bunch__add(markandsweep_atoms, (void *) atom);
     #endif
 }
 
 
 
-void P2_atom__delete(P2_atom *atom)
+void p2_atom__delete(p2_atom *atom)
 {
     #ifdef USE_ASSOCIATION
     if (atom->inbound_edges)
-        hash_table__delete(atom->inbound_edges);
+        p2_hash_table__delete(atom->inbound_edges);
     if (atom->outbound_edges)
-        hash_table__delete(atom->outbound_edges);
+        p2_hash_table__delete(atom->outbound_edges);
     #endif
 
     free(atom);
@@ -79,35 +98,35 @@ void P2_atom__delete(P2_atom *atom)
 
 
 
-#ifdef P2DEF_MARK_AND_SWEEP
+#ifdef P2FLAGS__MARK_AND_SWEEP
 
-P2_atom *mark(P2_atom *atom)
+p2_atom *mark(p2_atom *atom)
 {
     if (atom->type > 0)
-        atom->type = (P2_type) -((unsigned int) atom->type);
+        atom->type = (p2_type) -((unsigned int) atom->type);
     return atom;
 }
 
 
 
-void P2_mark(P2_term *term)
+void p2_mark(p2_term *term)
 {
-    P2_term__substitute_all(term, (void *(*)(void *)) mark);
+    p2_p2_term__substitute_all(term, (void *(*)(void *)) mark);
 }
 
 
 
-void P2_sweep()
+void p2_sweep()
 {
     int i, size = markandsweep_atoms->size;
-    P2_atom *atom;
+    p2_atom *atom;
 
     for (i = 0; i < size; i++)
     {
-        atom = (P2_atom *) array__get(markandsweep_atoms, i);
+        atom = (p2_atom *) p2_array__get(markandsweep_atoms, i);
         if (atom->type > 0)
         {
-            array__simple_remove(markandsweep_atoms, i);
+            p2_array__simple_remove(markandsweep_atoms, i);
             size--;
             i--;
             deallocate_atom(atom);
@@ -115,13 +134,13 @@ void P2_sweep()
         }
         else
             // un-mark
-            atom->type = (P2_type) -((unsigned int) atom->type);
+            atom->type = (p2_type) -((unsigned int) atom->type);
     }
 }
 
 
 
-unsigned int P2_total_markandsweep_atoms()
+unsigned int p2_total_markandsweep_atoms()
 {
    if (markandsweep_atoms)
         return markandsweep_atoms->size;
@@ -131,6 +150,6 @@ unsigned int P2_total_markandsweep_atoms()
 
 
 
-#endif  // P2DEF_MARK_AND_SWEEP
+#endif  // P2FLAGS__MARK_AND_SWEEP
 
 

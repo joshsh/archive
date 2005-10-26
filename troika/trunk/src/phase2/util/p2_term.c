@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "term.h"
+#include "p2_term.h"
 
 #include <stdlib.h>  // malloc
 #include <string.h>  // memcpy
@@ -29,10 +29,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 // Global array expansion factor, with a default value.
-float P2_term__expansion_factor = TERM__DEFAULT_EXPANSION;
+float p2_term__expansion_factor = TERM__DEFAULT_EXPANSION;
 
 // Copy the term to a larger buffer.  Hidden.
-P2_term *P2_term__expand(P2_term *term, unsigned int minimum_buffer_size)
+p2_term *p2_term__expand(p2_term *term, unsigned int minimum_buffer_size)
 {
     void **new_buffer, **new_head;
     unsigned int size, new_buffer_size;
@@ -40,9 +40,9 @@ P2_term *P2_term__expand(P2_term *term, unsigned int minimum_buffer_size)
     if (term)
     {
         // Ordinarily, the new buffer size will be the old buffer size times the
-        // P2_term expansion factor.
+        // p2_term expansion factor.
         new_buffer_size = (unsigned int)
-            (term->buffer_size * P2_term__expansion_factor);
+            (term->buffer_size * p2_term__expansion_factor);
 
         // If the new buffer size is not large enough, use the given minimum
         // buffer size instead.
@@ -56,7 +56,7 @@ P2_term *P2_term__expand(P2_term *term, unsigned int minimum_buffer_size)
         memcpy(new_head, term->head, size * sizeof(void *));  
         free(term->buffer);
 
-        // Update the P2_term's metadata.
+        // Update the p2_term's metadata.
         term->buffer = new_buffer;
         term->buffer_size = new_buffer_size;
         term->head = new_head;
@@ -71,9 +71,9 @@ P2_term *P2_term__expand(P2_term *term, unsigned int minimum_buffer_size)
 
 
 
-P2_term *P2_term__new(void *p, unsigned int initial_buffer_size)
+p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
 {
-    P2_term *term = (P2_term *) malloc(sizeof(P2_term));
+    p2_term *term = (p2_term *) malloc(sizeof(p2_term));
 
     // Buffer starts out at this size, but may expand later.
     term->buffer_size = initial_buffer_size;
@@ -87,7 +87,7 @@ P2_term *P2_term__new(void *p, unsigned int initial_buffer_size)
     term->head = term->buffer + term->buffer_size - 1;
     *(term->head) = p;
 
-    // Set the head of the P2_term and store its size there.
+    // Set the head of the p2_term and store its size there.
     term->head--;
     *(term->head) = (void *) 2;
 
@@ -96,10 +96,10 @@ P2_term *P2_term__new(void *p, unsigned int initial_buffer_size)
 
 
 
-P2_term *P2_term__copy(P2_term *source)
+p2_term *p2_term__copy(p2_term *source)
 {
     unsigned int size;
-    P2_term *term;
+    p2_term *term;
 
     if (!source)
         term = 0;
@@ -107,7 +107,7 @@ P2_term *P2_term__copy(P2_term *source)
     {
         size = (unsigned int) *(source->head);
 
-        term = (P2_term *) malloc(sizeof(P2_term));
+        term = (p2_term *) malloc(sizeof(p2_term));
 
         // Buffer starts out at this size, but may expand later.
         term->buffer_size = source->buffer_size;
@@ -115,11 +115,11 @@ P2_term *P2_term__copy(P2_term *source)
         // Create the buffer.
         term->buffer = (void **) malloc(term->buffer_size * sizeof(void *));
 
-        // Set the head of the P2_term and store its size there.
+        // Set the head of the p2_term and store its size there.
         term->head = term->buffer + term->buffer_size - size;    
         *(term->head) = (void *) size;
 
-        // Copy data from source buffer to new P2_term's buffer.
+        // Copy data from source buffer to new p2_term's buffer.
         memcpy(term->head, source->head, size * sizeof(void *));
     }
 
@@ -128,7 +128,7 @@ P2_term *P2_term__copy(P2_term *source)
 
 
 
-void P2_term__delete(P2_term *term)
+void p2_term__delete(p2_term *term)
 {
     if (term)
     {
@@ -143,7 +143,7 @@ void P2_term__delete(P2_term *term)
 
 
 
-unsigned int P2_term__length(P2_term *term)
+unsigned int p2_term__length(p2_term *term)
 {
     unsigned int length = 0;
     void **cur;
@@ -173,11 +173,11 @@ unsigned int P2_term__length(P2_term *term)
 
 
 
-void P2_term__set_expansion_factor(float expansion_factor)
+void p2_term__set_expansion_factor(float expansion_factor)
 {
     // Override the default array expansion factor.
     if (expansion_factor > 1)
-        P2_term__expansion_factor = expansion_factor;
+        p2_term__expansion_factor = expansion_factor;
 }
 
 
@@ -190,22 +190,22 @@ void P2_term__set_expansion_factor(float expansion_factor)
 
 
 
-P2_term *P2_term__merge(P2_term *t1, P2_term *t2)
+p2_term *p2_term__merge(p2_term *t1, p2_term *t2)
 {
-    // Find the size of each P2_term, as well as of the resulting P2_term.
+    // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
     unsigned int newsize = t1_size + t2_size + 1;
 
-    // P2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
+    // p2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
     if (t2->buffer_size < newsize)
-        t2 = P2_term__expand(t2, newsize);
+        t2 = p2_term__expand(t2, newsize);
 
     // Prepend t1 to t2.  Note: t2->head may have changed.
     t2->head -= t1_size;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
-    // Add a new P2_term head.
+    // Add a new p2_term head.
     t2->head--;
     *(t2->head) = (void *) newsize;
 
@@ -214,24 +214,24 @@ P2_term *P2_term__merge(P2_term *t1, P2_term *t2)
 
 
 
-P2_term *P2_term__merge_la(P2_term *t1, P2_term *t2)
+p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2)
 {
-    // Find the size of each P2_term, as well as of the resulting P2_term.
+    // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
     unsigned int newsize = t1_size + t2_size + 1;
     if (t1_size == 2)
         newsize++;
 
-    // P2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
+    // p2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
     if (t2->buffer_size < newsize)
-        t2 = P2_term__expand(t2, newsize);
+        t2 = p2_term__expand(t2, newsize);
 
     // Prepend t1 to t2.  Note: t2->head may have changed.
     t2->head -= t1_size;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
-    // Add a new P2_term head.
+    // Add a new p2_term head.
     if (t1_size == 2)
         t2->head--;
     *(t2->head) = (void *) newsize;
@@ -241,18 +241,18 @@ P2_term *P2_term__merge_la(P2_term *t1, P2_term *t2)
 
 
 
-P2_term *P2_term__merge_ra(P2_term *t1, P2_term *t2)
+p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2)
 {
-    // Find the size of each P2_term, as well as of the resulting P2_term.
+    // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
     unsigned int newsize = t1_size + t2_size + 1;
     if (t2_size == 2)
         newsize++;
 
-    // P2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
+    // p2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
     if (t2->buffer_size < newsize)
-        t2 = P2_term__expand(t2, newsize);
+        t2 = p2_term__expand(t2, newsize);
 
     // Prepend t1 to t2.  Note: t2->head may have changed.
     t2->head -= t1_size;
@@ -260,7 +260,7 @@ P2_term *P2_term__merge_ra(P2_term *t1, P2_term *t2)
         t2->head++;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
-    // Add a new P2_term head.
+    // Add a new p2_term head.
     t2->head--;
     *(t2->head) = (void *) newsize;
 
@@ -269,9 +269,9 @@ P2_term *P2_term__merge_ra(P2_term *t1, P2_term *t2)
 
 
 
-P2_term *P2_term__cat(P2_term *t1, P2_term *t2)
+p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 {
-    // Find the size of each P2_term, as well as of the resulting P2_term.
+    // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
     unsigned int newsize = t1_size + t2_size + 1;
@@ -280,9 +280,9 @@ P2_term *P2_term__cat(P2_term *t1, P2_term *t2)
     if (t2_size != 2)
         newsize--;
 
-    // P2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
+    // p2_term t2 will be receiving t1's data.  Expand its buffer if necessary.
     if (t2->buffer_size < newsize)
-        t2 = P2_term__expand(t2, newsize);
+        t2 = p2_term__expand(t2, newsize);
 
     // Prepend t1 to t2.  Note: t2->head may have changed.
     t2->head -= t1_size;
@@ -290,7 +290,7 @@ P2_term *P2_term__cat(P2_term *t1, P2_term *t2)
         t2->head++;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
-    // Add a new P2_term head.
+    // Add a new p2_term head.
     if (t1_size == 2)
         t2->head--;
     *(t2->head) = (void *) newsize;
@@ -306,12 +306,12 @@ P2_term *P2_term__cat(P2_term *t1, P2_term *t2)
 
 // A (hidden) global variable to avoid repetitive passing of the same function pointer to
 // the subterm functions.
-void *(*P2_term__f)(void *);
+void *(*p2_term__f)(void *);
 
 
 
 // Hidden.
-void *P2_term__for_all_(void **head)
+void *p2_term__for_all_(void **head)
 {
     void **sup;
 
@@ -320,7 +320,7 @@ void *P2_term__for_all_(void **head)
     if ((unsigned int) *(head) == 2)
     {
         head++;
-        return (void *) (P2_term__f(*head) != (void *) 0);
+        return (void *) (p2_term__f(*head) != (void *) 0);
     }
 
     // If the sub-term contains further sub-terms, iterate through them.
@@ -331,7 +331,7 @@ void *P2_term__for_all_(void **head)
         head++;
         while (head < sup)
         {
-            if (!P2_term__for_all_(head))
+            if (!p2_term__for_all_(head))
                 return (void *) 0;
             head += (unsigned int) *head;
         }
@@ -342,7 +342,7 @@ void *P2_term__for_all_(void **head)
 
 
 // Hidden.
-void *P2_term__exists_(void **head)
+void *p2_term__exists_(void **head)
 {
     void **sup;
     void *result;
@@ -352,7 +352,7 @@ void *P2_term__exists_(void **head)
     if ((unsigned int) *(head) == 2)
     {
         head++;
-        if (P2_term__f(*head) != (void *) 0)
+        if (p2_term__f(*head) != (void *) 0)
             return *head;
         else
             return (void *) 0;
@@ -367,7 +367,7 @@ void *P2_term__exists_(void **head)
         head++;
         while (head < sup)
         {
-            result = P2_term__exists_(head);
+            result = p2_term__exists_(head);
             if (result)
                 return result;
             head += (unsigned int) *head;
@@ -379,7 +379,7 @@ void *P2_term__exists_(void **head)
 
 
 // Hidden.
-void P2_term__substitute_all_(void **head)
+void p2_term__substitute_all_(void **head)
 {
     void **sup;
 
@@ -387,7 +387,7 @@ void P2_term__substitute_all_(void **head)
     if ((unsigned int) *(head) == 2)
     {
         head++;
-        *head = P2_term__f(*head);
+        *head = p2_term__f(*head);
     }
 
     // If the sub-term contains further sub-terms, iterate through them.
@@ -397,7 +397,7 @@ void P2_term__substitute_all_(void **head)
         head++;
         while (head < sup)
         {
-            P2_term__substitute_all_(head);
+            p2_term__substitute_all_(head);
             head += (unsigned int) *head;
         }
     }
@@ -405,39 +405,39 @@ void P2_term__substitute_all_(void **head)
 
 
 
-void *P2_term__for_all(P2_term *term, void *(*criterion)(void *))
+void *p2_term__for_all(p2_term *term, void *(*criterion)(void *))
 {
     if (!term)
         return (void *) 0;
     else
     {
-        P2_term__f = criterion;
-        return P2_term__for_all_(term->head);
+        p2_term__f = criterion;
+        return p2_term__for_all_(term->head);
     }
 }
 
 
 
-// Caution: output may not be meaningful if the P2_term contains NULL atoms.
-void *P2_term__exists(P2_term *term, void *(*criterion)(void *))
+// Caution: output may not be meaningful if the p2_term contains NULL atoms.
+void *p2_term__exists(p2_term *term, void *(*criterion)(void *))
 {
     if (!term)
         return (void *) 0;
     else
     {
-        P2_term__f = criterion;
-        return P2_term__exists_(term->head);
+        p2_term__f = criterion;
+        return p2_term__exists_(term->head);
     }
 }
 
 
 
-P2_term *P2_term__substitute_all(P2_term *term, void *(*substitution)(void *))
+p2_term *p2_term__substitute_all(p2_term *term, void *(*substitution)(void *))
 {
     if (term)
     {
-        P2_term__f = substitution;
-        P2_term__substitute_all_(term->head);
+        p2_term__f = substitution;
+        p2_term__substitute_all_(term->head);
     }
 
     return term;

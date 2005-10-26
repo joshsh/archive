@@ -17,11 +17,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "set.h"
+#include "p2_set.h"
 
 #include <string.h>  // memcpy
 
-// #define P2_set_DEBUG
+// #define p2_SET_DEBUG
 
 
 
@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 // Note: the sparsity factor does not need to be an integer.
 #define DEFAULT_SPARSITY_FACTOR 3
 
-// By default, P2_set___expand() approximately doubles the size of the buffer.
+// By default, p2_set___expand() approximately doubles the size of the buffer.
 // Note: the expansion factor does not need to be an integer.
 #define DEFAULT_EXPANSION_FACTOR 2
 
@@ -60,7 +60,7 @@ int find_next_prime(int i)
 
 
 
-void P2_set__expand(P2_set *h)
+void p2_set__expand(p2_set *h)
 {
   int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
   void **p, **q, **buffer_old;
@@ -77,7 +77,7 @@ void P2_set__expand(P2_set *h)
       p = buffer_old+i;
       if (*p != NULL) {
         h->size--; //Cancel out the incrementation for this re-hashing add()
-        P2_set__add(h, *p);
+        p2_set__add(h, *p);
       }
     }
     free(buffer_old);
@@ -86,11 +86,11 @@ void P2_set__expand(P2_set *h)
 
 
 
-P2_set *P2_set__new(int buffer_size, float sparsity, float expansion)
+p2_set *p2_set__new(int buffer_size, float sparsity, float expansion)
 {
   int i;
 
-  P2_set *h = (P2_set *) malloc(sizeof(P2_set));
+  p2_set *h = (p2_set *) malloc(sizeof(p2_set));
 
   h->buffer_size = find_next_prime(buffer_size);
 
@@ -121,9 +121,9 @@ P2_set *P2_set__new(int buffer_size, float sparsity, float expansion)
 
 
 
-P2_set *P2_set__copy(P2_set *S)
+p2_set *p2_set__copy(p2_set *S)
 {
-    P2_set *S2 = (P2_set *) malloc(sizeof(P2_set));
+    p2_set *S2 = (p2_set *) malloc(sizeof(p2_set));
     S2->size = S->size;
     S2->buffer_size = S->buffer_size;
     S2->capacity = S->capacity;
@@ -137,15 +137,15 @@ P2_set *P2_set__copy(P2_set *S)
 
 
 
-void P2_set__delete(P2_set *h)
+void p2_set__delete(p2_set *h)
 {
   free(h->buffer);
   free(h);
 }
 
 
-// P2_set__size(S) :            "magnitude of S"
-int P2_set__size(P2_set *S)
+// p2_set__size(S) :            "magnitude of S"
+int p2_set__size(p2_set *S)
 {
     return S->size;
 }
@@ -155,9 +155,9 @@ int P2_set__size(P2_set *S)
 /*
  * returns 0 if an entry is not found.  Beware of
  * storing a 0/NULL as an element of the set, else you won't be able to tell it
- * apart from a failed P2_set___lookup().
+ * apart from a failed p2_set___lookup().
  */
-void *P2_set__lookup(P2_set *h, void *key)
+void *p2_set__lookup(p2_set *h, void *key)
 {
   int int_key;
   void **p;
@@ -183,7 +183,7 @@ void *P2_set__lookup(P2_set *h, void *key)
 
 
 
-P2_set *P2_set__add(P2_set *h, void *key)
+p2_set *p2_set__add(p2_set *h, void *key)
 {
   int int_key;
   void **p;
@@ -208,14 +208,14 @@ P2_set *P2_set__add(P2_set *h, void *key)
   *p = key;
   h->size++;
   if (h->size >= h->capacity)
-    P2_set__expand(h);
+    p2_set__expand(h);
 
   return h;
 }
 
 
 
-P2_set *P2_set__remove(P2_set *h, void *key)
+p2_set *p2_set__remove(p2_set *h, void *key)
 {
   int int_key;
   void **p;
@@ -243,13 +243,13 @@ P2_set *P2_set__remove(P2_set *h, void *key)
 
 
 
-P2_set *P2_set__union(P2_set *S, P2_set *T)
+p2_set *p2_set__union(p2_set *S, p2_set *T)
 {
     void **p = T->buffer, **psup = T->buffer + T->buffer_size;
     while (p < psup)
     {
         if (*p != NULL)
-            P2_set__add(S, *p);
+            p2_set__add(S, *p);
         p++;
     }
 
@@ -258,12 +258,12 @@ P2_set *P2_set__union(P2_set *S, P2_set *T)
 
 
 
-P2_set *P2_set__intersection(P2_set *S, P2_set *T)
+p2_set *p2_set__intersection(p2_set *S, p2_set *T)
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
     while (p < psup)
     {
-        if ((*p != NULL)&&(!P2_set__lookup(T, *p)))
+        if ((*p != NULL)&&(!p2_set__lookup(T, *p)))
         {
            *p = NULL;
            S->size--;
@@ -276,7 +276,7 @@ P2_set *P2_set__intersection(P2_set *S, P2_set *T)
 
 
 
-void *P2_set__forall(P2_set *S, void *(*f)(void *))
+void *p2_set__forall(p2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
     while (p < psup)
@@ -292,7 +292,7 @@ void *P2_set__forall(P2_set *S, void *(*f)(void *))
 
 
 
-void *P2_set__exists(P2_set *S, void *(*f)(void *))
+void *p2_set__exists(p2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
     while (p < psup)
@@ -308,7 +308,7 @@ void *P2_set__exists(P2_set *S, void *(*f)(void *))
 
 
 
-P2_set *P2_set__subset(P2_set *S, void *(*f)(void *))
+p2_set *p2_set__subset(p2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
     while (p < psup)
@@ -326,7 +326,7 @@ P2_set *P2_set__subset(P2_set *S, void *(*f)(void *))
 
 
 
-void *P2_set__free(void *s)
+void *p2_set__free(void *s)
 {
     free(s);
     return (void *) 1;
@@ -334,29 +334,27 @@ void *P2_set__free(void *s)
 
 
 
-#ifdef P2_set_DEBUG
+#ifdef p2_SET_DEBUG
 
     #include <stdio.h>
 
     int main()
     {
-        P2_set *S2, *S = P2_set__new(20, 2.0, 2.0);
-        P2_set__add(S, (void *) 5);
-        P2_set__add(S, (void *) 6);
-        P2_set__add(S, (void *) 7);
-        P2_set__add(S, (void *) 8);
+        p2_set *S2, *S = p2_set__new(20, 2.0, 2.0);
+        p2_set__add(S, (void *) 5);
+        p2_set__add(S, (void *) 6);
+        p2_set__add(S, (void *) 7);
+        p2_set__add(S, (void *) 8);
 
-        S2 = P2_set__copy(S);
+        S2 = p2_set__copy(S);
 
-        printf("%d, %d\n", (int) P2_set__lookup(S, (void *) 7),
-        (int) P2_set__lookup(S, (void *) 4));
+        printf("%d, %d\n", (int) p2_set__lookup(S, (void *) 7),
+        (int) p2_set__lookup(S, (void *) 4));
 
-        P2_set__delete(S);
-        P2_set__delete(S2);
+        p2_set__delete(S);
+        p2_set__delete(S2);
     }
 
-#endif
+#endif  // p2_SET_DEBUG
 
 
-
-/*- end of file --------------------------------------------------------------*/

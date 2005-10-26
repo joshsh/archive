@@ -32,8 +32,8 @@ parcour@gmail.com
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#ifndef P2_PARSE_H
-#define P2_PARSE_H	1
+#ifndef P2_SYNTAX_H
+#define P2_SYNTAX_H
 
 
 
@@ -44,11 +44,11 @@ parcour@gmail.com
 
 
 
-P2_type
-   P2_int_type,
-   P2_char_type,
-   P2_double_type,
-   P2_cstring_type;
+p2_type
+   p2_int_type,
+   p2_char_type,
+   p2_double_type,
+   p2_cstring_type;
 
 #define P2_INT_NAME      "xs_int"
 #define P2_CHAR_NAME     "xs_byte"
@@ -57,23 +57,22 @@ P2_type
 
 
 
-P2_error P2_syntax_init();
-P2_error P2_syntax_end();
+p2_error p2_syntax_init();
+p2_error p2_syntax_end();
 
-// Returns an atom of type P2_error, P2_id, or any one of the basic
+// Returns an atom of type p2_error, p2_id, or any one of the basic
 // data types.
-P2_atom *P2_parse_token(char *s);
+p2_atom *p2_parse_token(char *s);
 
-// Returns a P2_id atom or a P2_error atom.
-P2_atom *P2_parse_id(char *s);
+// Returns a p2_id atom or a p2_error atom.
+p2_atom *p2_parse_id(char *s);
 
-int P2_valid_command_name(char *s);
+int p2_valid_command_name(char *s);
 
 // Miscellaneous
-//void P2_print_token(struct P2_token t);
+//void p2_print_token(struct p2_token t);
 
 
 
-#endif
+#endif  // P2_SYNTAX_H
 
-/*- end of file */

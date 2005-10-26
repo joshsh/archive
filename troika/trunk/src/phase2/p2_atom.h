@@ -31,8 +31,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_flags.h"
 #include "p2_type.h"
 
-#ifdef P2DEF_ASSOCIATION
-    #include "util/hash_table.h"
+#ifdef P2FLAGS__ASSOCIATION
+    #include "util/p2_hash_table.h"
 #endif
 
 
@@ -40,59 +40,59 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef struct
 {
     /** A positively signed integer indicating the data type of the atom. */
-    P2_type type;
+    p2_type type;
 
     /** A generic pointer which references the atom's data. */
     void *value;
 
-    #ifdef P2DEF_ASSOCIATION
+    #ifdef P2FLAGS__ASSOCIATION
 
-        #ifdef P2DEF_OUTBOUND_EDGES
+        #ifdef P2FLAGS__OUTBOUND_EDGES
             /** Associative edges pointing away from the atom.
                 For example, (X, y, z). */
-            P2_hash_table *outbound_edges;
+            p2_hash_table *outbound_edges;
         #endif
 
-        #ifdef P2DEF_TRANS_EDGES
+        #ifdef P2FLAGS__TRANS_EDGES
             /** Associative edges pointing "through" the atom.
                 For example, (x, Y, z). */
-            P2_hash_table *trans_edges;
+            p2_hash_table *trans_edges;
         #endif
 
-        #ifdef P2DEF_INBOUND_EDGES
+        #ifdef P2FLAGS__INBOUND_EDGES
             /** Associative edges pointing towards the atom.
                 For example, (x, y, Z). */
-            P2_hash_table *inbound_edges;
+            p2_hash_table *inbound_edges;
         #endif
 
     #endif
 
-} P2_atom;
+} p2_atom;
 
 
-P2_error P2_atom_init();
-P2_error P2_atom_end();
+p2_error p2_atom_init();
+p2_error p2_atom_end();
 
-P2_atom *P2_atom__new(P2_type type, void *value);
-void P2_atom__delete(P2_atom *atom);
+p2_atom *p2_atom__new(p2_type type, void *value);
+void p2_atom__delete(p2_atom *atom);
 
 
 // "Mark and sweep" memory reclamation /////////////////////////////////////////
 
-#ifdef P2DEF_MARK_AND_SWEEP
+#ifdef P2FLAGS__MARK_AND_SWEEP
 
     #include "util/term.h"
 
-    /** Marks all atoms referenced by the given P2_term.
+    /** Marks all atoms referenced by the given p2_term.
         \note  this function assumes that type identifiers are positive (it
        "marks" an atom by reversing the sign of its type id). */
-    void P2_mark(P2_term *term);
+    void p2_mark(p2_term *term);
 
     /** Deallocates all unmarked atoms and unmarks the rest. */
-    void P2_sweep();
+    void p2_sweep();
 
     /** Returns the number of atoms in the "mark and sweep" collection. */
-    unsigned int P2_total_markandsweep_atoms();
+    unsigned int p2_total_markandsweep_atoms();
 
 #endif
 

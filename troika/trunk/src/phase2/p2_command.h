@@ -5,13 +5,13 @@
   This library defines a mechanism for storing and retrieving user commands,
   where a command is a global function of the form:
 
-      enum P2_error (*command_name)(int nargs, char **args) { ... }
+      enum p2_error (*command_name)(int nargs, char **args) { ... }
 
   A command accepts zero or more arguments in the form of C strings, and returns
   an error code describing execution outcome.
 
   A collection of accessible commands is built up by binding each command
-  function with an id via P2_register_command.  Commands are then called by
+  function with an id via p2_register_command.  Commands are then called by
   specifying the id of the command, plus its arguments.
 
   last edited: 5/16/05
@@ -48,27 +48,26 @@ parcour@gmail.com
 
 
 
-#define COMMAND_FORMAT			P2_error (*)(int, char **)
-#define COMMAND_REFERENCE(param)	P2_error (* param )(int, char **)
-#define COMMAND(function_name)		P2_error function_name (int nargs, char **args)
+#define COMMAND_FORMAT			p2_error (*)(int, char **)
+#define COMMAND_REFERENCE(param)	p2_error (* param )(int, char **)
+#define COMMAND(function_name)		p2_error function_name (int nargs, char **args)
 
 
 
-P2_error P2_command_init();
-P2_error P2_command_end();
+p2_error p2_command_init();
+p2_error p2_command_end();
 
 
 
-P2_error P2_register_command(char *name, COMMAND_REFERENCE(command));
+p2_error p2_register_command(char *name, COMMAND_REFERENCE(command));
 
 
 
 // Pass the name of the command to execute and an array of arguments (nargs is
 // the dimension of the array).
-P2_error P2_execute_command(char *name, int nargs, char **args);
+p2_error p2_execute_command(char *name, int nargs, char **args);
 
 
 
-#endif
+#endif  // P2_COMMAND_H
 
-/*- end of file */

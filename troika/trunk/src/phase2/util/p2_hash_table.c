@@ -17,8 +17,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "hash_table.h"
-#include <string.h>
+#include "p2_hash_table.h"
+
+#include <stdlib.h>  // malloc
+#include <string.h>  // strcmp
 
 
 
@@ -26,11 +28,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 // By default, the hash table will wait until it is 1/3 full before expanding.
 // Note: the sparsity factor does not need to be an integer.
-#define DEFAULT_SPARSITY_FACTOR 3
+#define DEFAULT_SPARSITY_FACTOR 3.0
 
-// By default, hash_table__expand() approximately floats the size of the buffer.
+// By default, p2_hash_table__expand() approximately floats the size of the buffer.
 // Note: the expansion factor does not need to be an integer.
-#define DEFAULT_EXPANSION_FACTOR 2
+#define DEFAULT_EXPANSION_FACTOR 2.0
 
 // The number of void references contained in a single entry.
 #define ENTRY_SIZE 2
@@ -51,15 +53,15 @@ int compare_addresses(void *key1, void *key2)
     return (key1 != key2);
 }
 
-// Convert the first four bytes of the string to an integer, and use it as the
-// hashing value.  Of course, this will result in a collision for any two strings
-// with the same four first characters.
-// Note: little-vs-big-endian-sensitive.
+/** Convert the first four bytes of the string to an integer, and use it as the
+    hashing value.  Of course, this will result in a collision for any two strings
+    with the same four first characters.
+    \warning  little-vs-big-endian-sensitive. */
 int hash_string(void *key)
 {
     int len = strlen((char *) key);
     if (len < 3)
-        return ((int) *((void **) key)) << (3-len)*SIZEOF_CHAR >> (3-len)*SIZEOF_CHAR;
+        return ((int) *((void **) key)) << (3-len) * SIZEOF_CHAR >> (3-len) * SIZEOF_CHAR;
     else
         return (int) *((void **) key);
 }
@@ -98,7 +100,7 @@ int find_next_prime(int i)
 
 
 
-void hash_table__expand(P2_hash_table *h)
+void p2_hash_table__expand(p2_hash_table *h)
 {
     int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
     void **p, **q, **buffer_old;
@@ -108,20 +110,20 @@ void hash_table__expand(P2_hash_table *h)
         size_old = h->buffer_size;
         buffer_old = h->buffer;
         h->buffer_size = find_next_prime(size0);
-        h->buffer = (void **) malloc(sizeof(void *) * (ENTRY_SIZE*h->buffer_size));
-        h->capacity = (int) (((float) h->buffer_size)/h->sparsity);
+        h->buffer = (void **) malloc(sizeof(void *) * (ENTRY_SIZE * h->buffer_size));
+        h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
-        for (i=0; i<ENTRY_SIZE*h->buffer_size; i++)
+        for (i = 0; i < ENTRY_SIZE * h->buffer_size; i++)
             h->buffer[i] = NULL;
 
         for (i=0; i<size_old; i++)
         {
-            p = buffer_old+(i*ENTRY_SIZE);
+            p = buffer_old + (i * ENTRY_SIZE);
             if (*p != NULL)
             {
-                q = p+1;
+                q = p + 1;
                 h->size--; //Cancel out the incrementation for this re-hashing add()
-                hash_table__add(h, *p, *q);
+                p2_hash_table__add(h, *p, *q);
             }
         }
 
@@ -131,7 +133,7 @@ void hash_table__expand(P2_hash_table *h)
 
 
 
-P2_hash_table *hash_table__new(
+p2_hash_table *p2_hash_table__new(
     int buffer_size,
     float sparsity,
     float expansion,
@@ -140,7 +142,7 @@ P2_hash_table *hash_table__new(
 {
     int i;
 
-    P2_hash_table *h = (P2_hash_table *) malloc(sizeof(P2_hash_table));
+    p2_hash_table *h = (p2_hash_table *) malloc(sizeof(p2_hash_table));
 
     h->buffer_size = find_next_prime(buffer_size);
 
@@ -170,18 +172,18 @@ P2_hash_table *hash_table__new(
     h->buffer = (void **) malloc(sizeof(void*) * (ENTRY_SIZE * h->buffer_size));
     h->size = 0;
 
-    for (i=0; i<(h->buffer_size*ENTRY_SIZE); i++)
+    for (i = 0; i < (h->buffer_size * ENTRY_SIZE); i++)
         h->buffer[i] = NULL;
 
     // capacity is re-calculated whenever the table resizes
-    h->capacity = (int) (((float) h->buffer_size)/h->sparsity);
+    h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
     return h;
 }
 
 
 
-void hash_table__delete(P2_hash_table *h)
+void p2_hash_table__delete(p2_hash_table *h)
 {
     free(h->buffer);
     free(h);
@@ -189,7 +191,7 @@ void hash_table__delete(P2_hash_table *h)
 
 
 
-void *hash_table__lookup(P2_hash_table *h, void *key)
+void *p2_hash_table__lookup(p2_hash_table *h, void *key)
 {
     int int_key, actual_size;
     void **p;
@@ -200,9 +202,9 @@ void *hash_table__lookup(P2_hash_table *h, void *key)
     int_key = h->hashing_function(key);
     if (int_key < 0)
         int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE*(int_key%h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE*(int_key % h->buffer_size));
 
-    actual_size = ENTRY_SIZE*h->buffer_size;
+    actual_size = ENTRY_SIZE * h->buffer_size;
 
     while (1)
     {
@@ -210,7 +212,7 @@ void *hash_table__lookup(P2_hash_table *h, void *key)
             break;
 
         // Increment and wrap
-        p = h->buffer + ((p + ENTRY_SIZE - h->buffer)%actual_size);
+        p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
     }
 
     p++;
@@ -219,7 +221,7 @@ void *hash_table__lookup(P2_hash_table *h, void *key)
 
 
 
-void *hash_table__add(P2_hash_table *h, void *key, void *target)
+void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 {
     int int_key, actual_size;
     void **p, *r;
@@ -230,9 +232,9 @@ void *hash_table__add(P2_hash_table *h, void *key, void *target)
     int_key = h->hashing_function(key);
     if (int_key < 0)
         int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE*(int_key%h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE*(int_key % h->buffer_size));
 
-    actual_size = ENTRY_SIZE*h->buffer_size;
+    actual_size = ENTRY_SIZE * h->buffer_size;
 
     while (*p != NULL)
     {
@@ -253,14 +255,14 @@ void *hash_table__add(P2_hash_table *h, void *key, void *target)
 
     h->size++;
     if (h->size >= h->capacity)
-        hash_table__expand(h);
+        p2_hash_table__expand(h);
 
   return r;
 }
 
 
 
-void *hash_table__remove(P2_hash_table *h, void *key)
+void *p2_hash_table__remove(p2_hash_table *h, void *key)
 {
     int int_key, actual_size;
     void **p, *r = NULL;
@@ -271,9 +273,9 @@ void *hash_table__remove(P2_hash_table *h, void *key)
     int_key = h->hashing_function(key);
     if (int_key < 0)
         int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE*(int_key%h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE * (int_key % h->buffer_size));
 
-    actual_size = ENTRY_SIZE*h->buffer_size;
+    actual_size = ENTRY_SIZE * h->buffer_size;
 
     while (*p != NULL)
     {
@@ -296,20 +298,20 @@ void *hash_table__remove(P2_hash_table *h, void *key)
 
 
 
-void hash_table__forall(P2_hash_table *h, void (*func)(void *, void *))
+void p2_hash_table__forall(p2_hash_table *h, void (*func)(void *, void *))
 {
     void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
     while (cur < sup)
     {
         if (*cur)
-            func(*cur, *(cur+1));
+            func(*cur, *(cur + 1));
         cur += 2;
     }
 }
 
 
 
-void hash_table__forall_keys(P2_hash_table *h, void (*func)(void *))
+void p2_hash_table__forall_keys(p2_hash_table *h, void (*func)(void *))
 {
     void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
     while (cur < sup)
@@ -322,7 +324,7 @@ void hash_table__forall_keys(P2_hash_table *h, void (*func)(void *))
 
 
 
-void hash_table__forall_targets(P2_hash_table *h, void (*func)(void *))
+void p2_hash_table__forall_targets(p2_hash_table *h, void (*func)(void *))
 {
     void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
     while (cur < sup)
