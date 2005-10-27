@@ -41,21 +41,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  // malloc
 #include <string.h>
 
-#include "p2_parse_debug.h"
+#include "p2_parser-macros.h"
 
 
 
-/*
-  Semantic functions from p2_itf.c:
-*/
-extern void p2_evaluate_expression(char *name, char *expr);
+/** Command evaluator from the semantic module. */
 extern void p2_evaluate_command(char *name, char *args);
+
+/** Expression evaluator from the semantic module. */
+extern void p2_evaluate_expression(char *name, char *expr);
 
 
 
 void yyerror(const char *str)
 {
-    fprintf(stderr,"Parse error: %s\n",str);
+    fprintf(stderr,"Parse error: %s\n", str);
 }
 
 int yywrap()
@@ -63,12 +63,7 @@ int yywrap()
     return 1;
 }
 
-/*
-main()
-{
-    yyparse();
-}
-*/
+/*  main() { yyparse(); }  */
 
 
 
@@ -130,12 +125,46 @@ char *sequence_tag_delayed(char *contents)
 }
 
 
+
+void handle_command(char *name, char *args)
+{
+    printf("\n");
+
+    #ifdef ENCLOSE_COMMAND_OUTPUT
+        printf("\t>> ");
+        p2_evaluate_command(name, args);
+        printf(" <<");
+    #else
+        p2_evaluate_command(name, args);
+    #endif
+
+    printf("\n");
+}
+
+void handle_expression(char *name, char *expr)
+{
+    printf("\n");
+
+    #ifdef ENCLOSE_EXPRESSION_OUTPUT
+        printf("\t>> ");
+        p2_evaluate_expression(name, expr);
+        printf(" <<");
+    #else
+        p2_evaluate_expression(name, expr);
+    #endif
+
+    printf("\n");
+}
+
+
+
 %}
 
 %token SEMICOLON EQUALS
 %token OPEN_PAREN CLOSE_PAREN
 %token OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET
 %token OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
+%token NEWLINE
 
 %union
 {
@@ -157,8 +186,12 @@ parser_input:
     {
         // Global variables could be initialized here.
 
-        //printf("\t>> <<\n\n");
-        printf("\n");
+        #ifdef INPUT_PREFIX
+            printf(INPUT_PREFIX);  // Can the lexer do this?
+        #else
+            printf("\n");
+            // printf("\t>> <<\n\n");
+        #endif
     }
     | parser_input command
     {
@@ -170,16 +203,13 @@ parser_input:
     };
 
 
-
 command:
 
     COMMAND SEMICOLON
     {
         char *s = sequence_tag("");
-        DEBUG_PRINTF("Found {COMMAND parameter_list;}.\n");
-        printf("\n");
-        p2_evaluate_command($1, s);
-        printf("\n");
+        DEBUG_PRINTF("Found {COMMAND ;}.\n");
+        handle_command($1, s);
         free(s);
     }
     | COMMAND parameter_list SEMICOLON
@@ -187,9 +217,7 @@ command:
         char *s = sequence_tag($2);
         free($2);
         DEBUG_PRINTF("Found {COMMAND parameter_list;}.\n");
-        printf("\n");
-        p2_evaluate_command($1, s);
-        printf("\n");
+        handle_command($1, s);
         free(s);
     };
 
@@ -222,9 +250,7 @@ expression:
         char *s = sequence_tag($1);
         DEBUG_PRINTF("Found {term;}.\n");
         free($1);
-        printf("\n");
-        p2_evaluate_expression(NULL, s);
-        printf("\n");
+        handle_expression(0, s);
         free(s);
     }
     | term EQUALS token SEMICOLON
@@ -232,9 +258,7 @@ expression:
         char *s = sequence_tag($1);
         DEBUG_PRINTF("Found {term;}.\n");
         free($1);
-        printf("\n");
-        p2_evaluate_expression($3, s);
-        printf("\n");
+        handle_expression($3, s);
         free($3); free(s);
     };
 
