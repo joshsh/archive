@@ -3,11 +3,7 @@
 // #define LEXER_DEBUG
 // #define PARSER_DEBUG
 
-#ifdef PARSER_DEBUG
-    #define DEBUG_PRINTF printf
-#else
-    #define DEBUG_PRINTF
-#endif
+// #define PRINT_TERM_AS_ARRAY
 
 
 // Formatting //////////////////////////////////////////////////////////////////
@@ -18,11 +14,8 @@
 /** Added to a block of output (where defined). Used by the parser. */
 // #define COMMAND_OUTPUT_PREFIX "\t>> "
 // #define EXPRESSION_OUTPUT_PREFIX "\t>> "
+// #define ERROR_OUTPUT_PREFIX "\t>> "
 // #define COMMAND_OUTPUT_SUFFIX " <<"
 // #define EXPRESSION_OUTPUT_SUFFIX " <<"
+// #define ERROR_OUTPUT_SUFFIX " <<"
 
-
-// 
-
-/** Omit namespace prefixes ..........................
-#define OMIT_XMLNS

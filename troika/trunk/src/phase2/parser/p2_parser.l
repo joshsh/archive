@@ -1,12 +1,25 @@
 %{
 
 /**
-    \file  p2_parse.l
+    \file  p2_parser.l
 
     \brief  Flex input file for the command line interface.
 
-    \note  There is no call for comments in Phase2, as you shouldn't really be
-    working off of an "input file".
+    This lexer deals with only four special tokens...
+
+        ( ) = ;
+
+    ...as well as command names (which always begin with a slash) and string
+    literals.  String literals may be simple (e.g. foo) or quoted
+    (e.g. "foo = bar"), where the quoted form is just a trick to allow the user
+    to input literal tokens which may contain whitespace and other special
+    characters.
+
+    \note  There is no call for comments in Phase2, as you're not expected to
+    be working off of an "input file".  If desired, an anonymous string literal
+    will do the trick in the current implementation:
+
+        "This is a comment.  It does nothing." ;
 
     \author  Joshua Shinavier   \n
              parcour@gmail.com  \n
@@ -38,42 +51,44 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>
 #include <string.h>  // strdup
 
+
 // extern YYSTYPE yylval;
 
 
 #ifdef LEXER_DEBUG
-    #define ECHO echo
+    #define ECHO echo_token
 #else
     #define ECHO
 #endif
 
-void echo(char *s);
 
+void echo_token(char *s);
+char *extract_literal(char *s);
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 %}
 
 
-/** Special characters reserved as syntax elements. */
+/** A minimal set of special characters reserved as stand-alone syntax elements.
+    \note  The slash, backslash and double quote are also special characters. */
 SEMICOLON             [;]
 EQUALS                [=]
 OPEN_PAREN            [(]
 CLOSE_PAREN           [)]
-OPEN_SQUARE_BRACKET   [\[]
-CLOSE_SQUARE_BRACKET  [\]]
-OPEN_CURLY_BRACKET    [{]
-CLOSE_CURLY_BRACKET   [}]
 
 /** Letter or decimal digit. */
 ALNUM                 [A-Za-z0-9]
 
 /** Non-syntactic, non-whitespace character. */
-NS                    [^;=()\[\]{}\0-\40]
+NS                    [^;=()\0-\40"]
 
 /** Non-syntactic, non-whitespace character which is also not a slash. */
-NOSLASH               [^;=()\[\]{}\0-\40/]
+NOSLASH               [^;=()\0-\40"/]
 
-/** Non-alphanumeric, non-syntactic, non-whitespace character. */
-NONALNUM              [^;=()\[\]{}\0-\40A-Za-z0-9]
+/** Non-syntactic, non-whitespace, non-alphanumeric character. */
+NONALNUM              [^;=()\0-\40"A-Za-z0-9]
 
 /** \note  Multi-line literals are accepted.
     \note  The only escape sequences are \" and \\, and are un-done before they
@@ -90,17 +105,6 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 {EQUALS}                { ECHO("EQUALS"); return EQUALS; }
 {OPEN_PAREN}            { ECHO("OPEN_PAREN"); return OPEN_PAREN; }
 {CLOSE_PAREN}           { ECHO("CLOSE_PAREN"); return CLOSE_PAREN; }
-{OPEN_SQUARE_BRACKET}   { ECHO("OPEN_SQUARE_BRACKET"); return OPEN_SQUARE_BRACKET; }
-{CLOSE_SQUARE_BRACKET}  { ECHO("CLOSE_SQUARE_BRACKET"); return CLOSE_SQUARE_BRACKET; }
-{OPEN_CURLY_BRACKET}    { ECHO("OPEN_CURLY_BRACKET"); return OPEN_CURLY_BRACKET; }
-{CLOSE_CURLY_BRACKET}   { ECHO("CLOSE_CURLY_BRACKET"); return CLOSE_CURLY_BRACKET; }
-
-
-({NOSLASH}|([/]{NONALNUM})){NS}*  {
-    ECHO("IDENTIFIER");
-    yylval.string = strdup(yytext);  // Free this string in the parser.
-    return IDENTIFIER;
-}
 
 
 [/]{ALNUM}{NS}*  {  // It's only a command if it starts with a letter or digit.
@@ -110,16 +114,22 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-{STRLIT}  {
-    ECHO("LITERAL");
-    yylval.string=extract_literal(yytext);  // Free this string in the parser.
-    //yylval.string=strdup(yytext+1);  // Free this string in the parser.
-    return LITERAL;
+({NOSLASH}|([/]{NONALNUM})){NS}*  {  // Simple string literal.
+    ECHO("STRING");
+    yylval.string = strdup(yytext);  // Free this string in the parser.
+    return STRING;
+}
+
+
+{STRLIT}  {  // String literal in quotes (to allow whitespace and special characters).
+    ECHO("STRING");
+    yylval.string = extract_literal(yytext);  // Free this string in the parser.
+    return STRING;
 }
 
 
 \n  {
-    ECHO("NEWLINE");
+    ECHO("[newline]");
 
     #ifdef INPUT_PREFIX
         printf(INPUT_PREFIX);
@@ -128,14 +138,17 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 
 .  {  // Ignore unrecognized characters (unless debugging).
-       ECHO("[ASCII %d]", (int) *yytext);
+       ECHO("[unrecognized character]");
    }
 
 
 %%
 
+////////////////////////////////////////////////////////////////////////////////
 
-void echo(char *s)
+
+/** Debugging output. */
+void echo_token(char *s)
 {
     printf("Found %s.\n", s);
 }
@@ -176,3 +189,4 @@ char *extract_literal(char *s)
 
     return strdup(s);
 }
+

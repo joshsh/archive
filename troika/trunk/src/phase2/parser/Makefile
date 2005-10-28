@@ -9,25 +9,31 @@ CC   = gcc
 LEX  = flex
 YACC = bison
 
+UTILS = ../util
+
+
+################################################################################
 
 all: objects
 
 
 clean:
 	-rm lex.yy.c
-	-rm *.tab.c *.tab.h *.output # *.vcg
+	-rm *.tab.c *.tab.h *.output p2_term.o # *.vcg
 
 
 distclean: clean
-	-rm *.o $(NAME)-debug
+	-rm *.o $(NAME)-debugger
 
 
-debugger: objects $(NAME)-debug.c $(NAME)-macros.h
-	$(CC) $(NAME)-debug.c lex.yy.o $(NAME).tab.o -o $(NAME)-debug
+debugger: objects $(NAME)-debugger.c $(NAME)-macros.h p2_term.o
+	$(CC) $(NAME)-debugger.c lex.yy.o $(NAME).tab.o p2_term.o -o $(NAME)-debugger
 
 
 objects: lex.yy.o $(NAME).tab.o
 
+
+################################################################################
 
 lex.yy.o : lex.yy.c $(NAME).tab.h $(NAME)-macros.h
 	$(CC) -c lex.yy.c
@@ -43,4 +49,10 @@ lex.yy.c : $(NAME).l
 
 $(NAME).tab.c $(NAME).tab.h : $(NAME).y $(NAME)-macros.h
 	$(YACC) -dv $(NAME).y
+
+
+################################################################################
+
+p2_term.o : $(UTILS)/p2_term.c
+	$(CC) -c $(UTILS)/p2_term.c -o p2_term.o
 

@@ -14,15 +14,15 @@ SOAP_PATH = ./xml
 GSOAP_PATH = ../../gsoap-linux-2.7
 IMPORT_PATH = ./import
 
-CC = gcc
-CPP = g++
-LEX = flex
-YACC = bison
-GSOAP = $(GSOAP_PATH)/soapcpp2
-SOAPH = $(GSOAP_PATH)/stdsoap2.h
-SOAPC = $(GSOAP_PATH)/stdsoap2.c
+CC      = gcc
+CPP     = g++
+LEX     = flex
+YACC    = bison
+GSOAP   = $(GSOAP_PATH)/soapcpp2
+SOAPH   = $(GSOAP_PATH)/stdsoap2.h
+SOAPC   = $(GSOAP_PATH)/stdsoap2.c
 SOAPCPP = $(GSOAP_PATH)/stdsoap2.cpp
-DOMCPP = $(GSOAP_PATH)/dom++.cpp
+DOMCPP  = $(GSOAP_PATH)/dom++.cpp
 
 LIBS =
 COFLAGS = -O2

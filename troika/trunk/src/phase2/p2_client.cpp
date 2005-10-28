@@ -60,8 +60,8 @@ extern "C"
     #include "sk/sk.c"
 
     // These two functions need to be global for the sake of p2_parse.y
-    void p2_evaluate_expression(char *name, char *expr);
     void p2_evaluate_command(char *name, char *args);
+    void p2_evaluate_expression(char *name, char *expr);
 
     void yyparse();
 }

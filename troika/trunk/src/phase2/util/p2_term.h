@@ -3,7 +3,20 @@
 
     \brief A simple nested sequence utility.
 
-    \note This program assumes that sizeof(void *) == sizeof(unsigned int).
+    Terms are represented by arrays of 4-byte cells, each of which contains
+    either a reference to an "atom" or an integer i indicating the head of a
+    sub-term with a length of i cells.  For instance, \n
+                                                      \n
+        "a"  <-->  2 a                                \n
+                                                      \n
+        "a b"  <-->  5 2 a 2 b                        \n
+                                                      \n
+        "a (b c)"  <-->  8 2 a 5 2 b 2 c              \n
+
+    The term array occupies the higher-address portion of an expanding buffer
+    and grows towards the lower-address end.
+
+    \note This library assumes that sizeof(void *) == sizeof(unsigned int).
 
     \author Joshua Shinavier   \n
             parcour@gmail.com  \n
@@ -77,12 +90,17 @@ void p2_term__delete(p2_term *p2_term);
 
 // Accessors ///////////////////////////////////////////////////////////////////
 
-/** \return the logical length of the term, i.e. the number of sub-terms it
+/** \return  the logical length of the term, i.e. the number of sub-terms it
     contains.  Not to be confused with the number of cells required to represent
     the term (that's in p2_term->head) or its physical size in memory
     (*(p2_term->head) * sizeof(void *)).
-    \warning O(n) time overhead to count n sub-terms. */
+    \warning  O(n) time overhead to count n sub-terms. */
 unsigned int p2_term__length(p2_term *p2_term);
+
+/** \return  a new p2_term representing the subterm at a given index */
+/** \warning  For the sake of efficiency, there is no error checking.  Make sure
+    your index is in range by first calling p2_term__length. */
+p2_term *p2_term__subterm_at(p2_term *term, int index);
 
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
     the new buffer will be this much larger. */

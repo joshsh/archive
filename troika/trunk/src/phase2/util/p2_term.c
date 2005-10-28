@@ -146,29 +146,54 @@ void p2_term__delete(p2_term *term)
 unsigned int p2_term__length(p2_term *term)
 {
     unsigned int length = 0;
-    void **cur;
-    void **sup;
+    void **cur, **sup;
 
-    if (!term)
-        length = 0;
+    cur = term->head;
+    if (*cur == (void *) 2)
+        length = 1;
     else
     {
-        cur = term->head;
-        if (*cur == (void *) 2)
-            length = 1;
-        else
+        cur++;
+        sup = term->buffer + term->buffer_size;
+        while (cur < sup)
         {
-            cur++;
-            sup = term->buffer + term->buffer_size;
-            while (cur < sup)
-            {
-                length++;
-                cur += (unsigned int) *cur;
-            }
+            length++;
+            cur += (unsigned int) *cur;
         }
     }
 
     return length;
+}
+
+
+
+p2_term *p2_term__subterm_at(p2_term *term, int index)
+{
+    p2_term *subterm;
+    void **cur = term->head;
+    unsigned int length;
+
+    // If the term contains a single element, skip to copy (assumes that index
+    // is equal to 0).  Otherwise cycle through the target index.
+    if (*cur > (void *) 2)
+    {
+        cur++;
+
+        while (index)
+        {
+            cur += (unsigned int) *cur;
+            index--;
+        }
+    }
+
+    length = (unsigned int) *cur;
+    subterm = (p2_term *) malloc(sizeof(p2_term));
+    subterm->buffer_size = length;
+    subterm->buffer = (void **) malloc(length * sizeof(void *));
+    subterm->head = subterm->buffer;
+    memcpy(subterm->head, cur, length * sizeof(void *));
+
+    return subterm;
 }
 
 
@@ -201,12 +226,12 @@ p2_term *p2_term__merge(p2_term *t1, p2_term *t2)
     if (t2->buffer_size < newsize)
         t2 = p2_term__expand(t2, newsize);
 
-    // Prepend t1 to t2.  Note: t2->head may have changed.
+    // Prepend t1 to t2.  Note: pointer t2->head may have changed.
     t2->head -= t1_size;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
     // Add a new p2_term head.
-    t2->head--;
+    t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
 
     return t2;
@@ -219,7 +244,7 @@ p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2)
     // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
-    unsigned int newsize = t1_size + t2_size + 1;
+    unsigned int newsize = t1_size + t2_size;
     if (t1_size == 2)
         newsize++;
 
@@ -227,13 +252,12 @@ p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2)
     if (t2->buffer_size < newsize)
         t2 = p2_term__expand(t2, newsize);
 
-    // Prepend t1 to t2.  Note: t2->head may have changed.
+    // Prepend t1 to t2.  Note: pointer t2->head may have changed.
     t2->head -= t1_size;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
     // Add a new p2_term head.
-    if (t1_size == 2)
-        t2->head--;
+    t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
 
     return t2;
@@ -246,7 +270,7 @@ p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2)
     // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
-    unsigned int newsize = t1_size + t2_size + 1;
+    unsigned int newsize = t1_size + t2_size;
     if (t2_size == 2)
         newsize++;
 
@@ -254,14 +278,14 @@ p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2)
     if (t2->buffer_size < newsize)
         t2 = p2_term__expand(t2, newsize);
 
-    // Prepend t1 to t2.  Note: t2->head may have changed.
+    // Prepend t1 to t2.  Note: pointer t2->head may have changed.
     t2->head -= t1_size;
     if (t2_size > 2)
         t2->head++;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
     // Add a new p2_term head.
-    t2->head--;
+    t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
 
     return t2;
@@ -284,15 +308,14 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
     if (t2->buffer_size < newsize)
         t2 = p2_term__expand(t2, newsize);
 
-    // Prepend t1 to t2.  Note: t2->head may have changed.
+    // Prepend t1 to t2.  Note: pointer t2->head may have changed.
     t2->head -= t1_size;
     if (t2_size > 2)
         t2->head++;
     memcpy(t2->head, t1->head, t1_size * sizeof(void *));
 
     // Add a new p2_term head.
-    if (t1_size == 2)
-        t2->head--;
+    t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
 
     return t2;

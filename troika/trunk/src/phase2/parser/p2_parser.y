@@ -1,18 +1,48 @@
 %{
 
 /**
-    \file  p2_parse.y
+    \file  p2_parser.y
 
     \brief  Bison grammar file for the command line interface.
 
-    The actual parser behavior is pretty minimal; it just matches user input
-    against a simple "expression" and "command" syntax, encodes it as XML and
-    sends it to the p2_itf.cpp module, which tells it what to print to the
-    console.
+    Phase2's command-line interface is a separable feature of the language. It
+    allows the user to pass arguments to either of a pair of functions defined
+    in the Phase2 client: one for program construction and one for querying or
+    manipulating the programming environment.
 
-    \note  don't forget to include curly braces after each Bison grammar clause
-    (even if the action is empty), otherwise be prepared for errors of this ilk:
-        j.y:54: type clash (`' `number') on default action
+    Expression Syntax
+
+    At the parser level, an expression is a parenthetically nested sequence of
+    dictionary items or special symbols, terminated by a semicolon. To give an
+    expression (that is, its "reduced" counterpart) a name, the semicolon may be
+    preceded by an equality symbol and then the name, e.g.
+
+        (token1 token2) token3 = token4;
+
+    The unorthodox placement of the dictionary assignment command at the end of
+    the expression is aimed at command-line applications for which the programs
+    you write will not necessarily be read as you type them. After all, you
+    might not need to give an expression a name (particularly if you're only
+    interested in the side-effects); the trailing assignment command lets you
+    put that decision off till the last moment.
+
+    Command Syntax
+
+    Special commands are indicated with a slash plus the name of the command,
+    followed by a whitespace-delimited list of arguments (no parentheses) and
+    terminated by a semicolon, e.g.
+
+        /command arg1 arg2;
+
+    Commands thus indicated do not belong to the program under construction, and
+    are to take immediate effect at parse time.
+
+    Interaction with the client
+
+    The role of the parser is simply to construct a p2_term to send to the
+    client for evaluation.  The client then handles the term and eventually
+    deallocates it after generating output.  The client cannot "talk back" to
+    the parser.
 
     \author  Joshua Shinavier   \n
              parcour@gmail.com  \n
@@ -37,169 +67,171 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
-#include <stdlib.h>  // malloc
-#include <string.h>
-
 #include "p2_parser-macros.h"
+#include "../util/p2_term.h"
+
+#include <stdio.h>  // fprintf, printf
 
 
+/** Command evaluator from the semantic module.
+    \note  Both name and args (if not null) need to be freed externally. */
+extern void p2_evaluate_command(char *name, p2_term *args);
 
-/** Command evaluator from the semantic module. */
-extern void p2_evaluate_command(char *name, char *args);
+/** Expression evaluator from the semantic module.
+    \note  Both name (if not null) and expr need to be freed externally. */
+extern void p2_evaluate_expression(char *name, p2_term *expr);
 
-/** Expression evaluator from the semantic module. */
-extern void p2_evaluate_expression(char *name, char *expr);
+/** Parse error handler from the semantic module. */
+extern void p2_handle_parse_error(char *msg);
 
 
+////////////////////////////////////////////////////////////////////////////////
 
-void yyerror(const char *str)
-{
-    fprintf(stderr,"Parse error: %s\n", str);
-}
 
 int yywrap()
 {
     return 1;
 }
 
+
 /*  main() { yyparse(); }  */
 
 
+void yyerror(const char *msg) { }
 
-// While the gSOAP DOM parser is still struggling with namespaces...
-#ifdef OMIT_XMLNS
 
-    #define TOK_    "<string>"
-    #define _TOK    "</string>\n"
+/** Evaluate a command, decorating output. */
+void handle_command(char *name, p2_term *args)
+{
+    printf("\n");
 
-    #define SEQ_    "<Sequence sequenceType=\"immediate\">\n"
-    #define _SEQ    "</Sequence>\n"
+    #ifdef COMMAND_OUTPUT_PREFIX
+        printf(COMMAND_OUTPUT_PREFIX);
+    #endif
 
-    #define SEQD_    "<Sequence sequenceType=\"delayed\">\n"
-    #define _SEQD    "</Sequence>\n"
+    p2_evaluate_command(name, args);
 
+    #ifdef COMMAND_OUTPUT_SUFFIX
+        printf(COMMAND_OUTPUT_SUFFIX);
+    #endif
+
+    printf("\n");
+}
+
+
+/** Evaluate a expression, decorating output. */
+void handle_expression(char *name, p2_term *expr)
+{
+    printf("\n");
+
+    #ifdef EXPRESSION_OUTPUT_PREFIX
+        printf(EXPRESSION_OUTPUT_PREFIX);
+    #endif
+
+    p2_evaluate_expression(name, expr);
+
+    #ifdef EXPRESSION_OUTPUT_SUFFIX
+        printf(EXPRESSION_OUTPUT_SUFFIX);
+    #endif
+
+    printf("\n");
+}
+
+
+void handle_error(char *msg)
+{
+    printf("\n");
+
+    #ifdef ERROR_OUTPUT_PREFIX
+        printf(ERROR_OUTPUT_PREFIX);
+    #endif
+
+    p2_handle_parse_error(msg);
+
+    #ifdef ERROR_OUTPUT_SUFFIX
+        printf(ERROR_OUTPUT_SUFFIX);
+    #endif
+
+    printf("\n");
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+#ifdef PARSER_DEBUG
+    #define ECHO echo_production
 #else
-
-    #define TOK_    "<xs:string>"
-    #define _TOK    "</xs:string>\n"
-
-    #define SEQ_    "<P2:Sequence sequenceType=\"immediate\">\n"
-    #define _SEQ    "</P2:Sequence>\n"
-
-    #define SEQD_    "<P2:Sequence sequenceType=\"delayed\">\n"
-    #define _SEQD    "</P2:Sequence>\n"
-
+    #define ECHO
 #endif
 
 
-
-//! Not safe as-is.  E.g. a string literal with a '"' would be a
-//  problem.  Eventually token_tag will need to transform XML-unfriendly strings.
-char *token_tag(char *contents)
+/** Debugging output. */
+void echo_production(char *s)
 {
-    const int len = 1 + strlen(TOK_) + strlen(_TOK);
-    char *s = (char *) malloc(sizeof(char) * (strlen(contents) + len));
-    sprintf(s, "%s%s%s", TOK_, contents, _TOK);
-    return s;
+    printf("Found %s\n", s);
 }
 
 
-
-char *sequence_tag(char *contents)
-{
-    const int len = 1 + strlen(SEQ_) + strlen(_SEQ);
-    char *s = (char *) malloc(sizeof(char) * (strlen(contents) + len));
-    sprintf(s, "%s%s%s", SEQ_, contents, _SEQ);
-    return s;
-}
-
-
-
-char *sequence_tag_delayed(char *contents)
-{
-    const int len = 1 + strlen(SEQD_) + strlen(_SEQD);
-    char *s = (char *) malloc(sizeof(char) * (strlen(contents) + len));
-    sprintf(s, "%s%s%s", SEQD_, contents, _SEQD);
-    return s;
-}
-
-
-
-void handle_command(char *name, char *args)
-{
-    printf("\n");
-
-    #ifdef ENCLOSE_COMMAND_OUTPUT
-        printf("\t>> ");
-        p2_evaluate_command(name, args);
-        printf(" <<");
-    #else
-        p2_evaluate_command(name, args);
-    #endif
-
-    printf("\n");
-}
-
-void handle_expression(char *name, char *expr)
-{
-    printf("\n");
-
-    #ifdef ENCLOSE_EXPRESSION_OUTPUT
-        printf("\t>> ");
-        p2_evaluate_expression(name, expr);
-        printf(" <<");
-    #else
-        p2_evaluate_expression(name, expr);
-    #endif
-
-    printf("\n");
-}
-
-
+////////////////////////////////////////////////////////////////////////////////
 
 %}
 
-%token SEMICOLON EQUALS
-%token OPEN_PAREN CLOSE_PAREN
-%token OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET
-%token OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
-%token NEWLINE
 
 %union
 {
     char *string;
+
+    /** (void *) instead of (p2_term *) because Bison won't take the alias. */
+    void *parser_term;
 }
 
-%token <string> LITERAL
-%token <string> IDENTIFIER
+%token SEMICOLON EQUALS OPEN_PAREN CLOSE_PAREN
+
+%token <string> STRING
 %token <string> COMMAND
 
-%type <string> token term subterm expression parameter_list command
+%type <parser_term> term subterm arguments
+
 
 %%
 
 
 parser_input:
 
-    /* empty */
+    /* This production precedes input. */
     {
+        ECHO("parser_input:  [null]");
+
         // Global variables could be initialized here.
 
         #ifdef INPUT_PREFIX
             printf(INPUT_PREFIX);  // Can the lexer do this?
         #else
             printf("\n");
-            // printf("\t>> <<\n\n");
         #endif
     }
     | parser_input command
     {
-        DEBUG_PRINTF("Found {parser_input command}.\n");
+        ECHO("parser_input:  parser_input command");
     }
     | parser_input expression
     {
-        DEBUG_PRINTF("Found {parser_input expression}.\n");
+        ECHO("parser_input:  parser_input expression");
+    }
+    | parser_input SEMICOLON
+    {
+        ECHO("parser_input:  parser_input SEMICOLON");
+
+        // Redundant semicolons are permitted.
+    }
+    | error SEMICOLON
+    {
+        ECHO("parser_input:  error SEMICOLON");
+
+        // Wait until the end of a statement to report an error (i.e. print
+        // only one error message per invalid statement).
+        handle_error("invalid statement");
     };
 
 
@@ -207,111 +239,86 @@ command:
 
     COMMAND SEMICOLON
     {
-        char *s = sequence_tag("");
-        DEBUG_PRINTF("Found {COMMAND ;}.\n");
-        handle_command($1, s);
-        free(s);
+        ECHO("command :  COMMAND SEMICOLON");
+
+        // Handle command with no arguments.
+        handle_command($1, 0);
     }
-    | COMMAND parameter_list SEMICOLON
+    | COMMAND arguments SEMICOLON
     {
-        char *s = sequence_tag($2);
-        free($2);
-        DEBUG_PRINTF("Found {COMMAND parameter_list;}.\n");
-        handle_command($1, s);
-        free(s);
+        ECHO("command :  COMMAND arguments SEMICOLON");
+
+        // Handle command with arguments.
+        handle_command($1, (p2_term *) $2);
     };
-
-
-
-parameter_list:
-
-    token
-    {
-        DEBUG_PRINTF("Found {token}.\n");
-        $$ = token_tag($1);
-        free($1);
-    }
-    | parameter_list token
-    {
-        char *t = token_tag($2);
-        free($2);
-        DEBUG_PRINTF("Found {parameter_list token}.\n");
-        $$ = (char *) malloc(sizeof(char) * (1 + strlen($1) + strlen(t)));
-        sprintf($$, "%s%s", $1, t);
-        free($1); free(t);
-    };
-
 
 
 expression:
 
     term SEMICOLON
     {
-        char *s = sequence_tag($1);
-        DEBUG_PRINTF("Found {term;}.\n");
-        free($1);
-        handle_expression(0, s);
-        free(s);
+        ECHO("expression :  term SEMICOLON");
+
+        // Handle anonymous expression.
+        handle_expression(0, (p2_term *) $1);
     }
-    | term EQUALS token SEMICOLON
+    | term EQUALS STRING SEMICOLON
     {
-        char *s = sequence_tag($1);
-        DEBUG_PRINTF("Found {term;}.\n");
-        free($1);
-        handle_expression($3, s);
-        free($3); free(s);
+        ECHO("expression :  term EQUALS token SEMICOLON");
+
+        // Handle named expression.
+        handle_expression($3, (p2_term *) $1);
     };
 
+
+arguments:
+
+    STRING
+    {
+        ECHO("arguments :  token");
+
+        // Create a singleton term containing one argument.
+        $$ = p2_term__new((void *) $1, 1);
+    }
+    | arguments STRING
+    {
+        ECHO("arguments :  arguments token");
+
+        // Concatenate the command arguments.
+        $$ = p2_term__cat((p2_term *) $1, p2_term__new((void *) $2, 1));
+    };
 
 
 term:
 
     subterm
     {
+        ECHO("term :  subterm");
         $$ = $1;
     }
     | term subterm
     {
-        DEBUG_PRINTF("Found {term subterm}.\n");
-        $$ = (char *) malloc(sizeof(char) * (1 + strlen($1) + strlen($2)));
-        sprintf($$, "%s%s", $1, $2);
-        free($1); free($2);
-    };
+        ECHO("term :  term subterm");
 
+        // Combine the terms using a left-associative merge.
+        $$ = p2_term__merge_la((p2_term *) $1, (p2_term *) $2);
+    };
 
 
 subterm:
 
-    token
+    STRING
     {
-        $$ = token_tag($1);
-        free($1);
-        DEBUG_PRINTF("Found {token}.\n");
+        ECHO("subterm :  token");
+
+        // Create a singleton term containing one literal or identifier.
+        $$ = p2_term__new((void *) $1, 1);
     }
     | OPEN_PAREN term CLOSE_PAREN
     {
-        DEBUG_PRINTF("Found {(term)}.\n");
-        $$ = sequence_tag($2);
-        free($2);
-    }
-    | OPEN_SQUARE_BRACKET term CLOSE_SQUARE_BRACKET
-    {
-        DEBUG_PRINTF("Found {(term)}.\n");
-        $$ = sequence_tag_delayed($2);
-        free($2);
+        ECHO("subterm :  OPEN_PAREN term CLOSE_PAREN");
+
+        // "Remove the parentheses" from the term.
+        $$ = $2;
     };
-
-
-
-token:
-
-    IDENTIFIER
-    {
-        $$ = $1;
-    }
-    | LITERAL
-    {
-        $$ = $1;
-    };
-
 
