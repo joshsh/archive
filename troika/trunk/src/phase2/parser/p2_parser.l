@@ -1,29 +1,39 @@
 %{
 
 /**
-    \file  p2_parser.l
 
-    \brief  Flex input file for the command line interface.
+\file  p2_parser.l
 
-    This lexer deals with only four special tokens...
+\brief  Flex input file for the command line interface.
 
-        ( ) = ;
+This lexer deals with only four special tokens...
 
-    ...as well as command names (which always begin with a slash) and string
-    literals.  String literals may be simple (e.g. foo) or quoted
-    (e.g. "foo = bar"), where the quoted form is just a trick to allow the user
-    to input literal tokens which may contain whitespace and other special
-    characters.
+    ( ) = ;
 
-    \note  There is no call for comments in Phase2, as you're not expected to
-    be working off of an "input file".  If desired, an anonymous string literal
-    will do the trick in the current implementation:
+...as well as command names (which are preceded with a slash) and string
+literals.  String literals may be simple (e.g. foo) or quoted
+(e.g. "foo = bar"), where the quoted form is just a trick to allow the user to
+input literal tokens which may contain whitespace and other special characters.
+The only escape sequences are \" and \\, which are un-done before they are
+passed up to the parser, e.g.
 
-        "This is a comment.  It does nothing." ;
+    "Say \"hello\"!\\n" --> Say "hello"!\n
 
-    \author  Joshua Shinavier   \n
-             parcour@gmail.com  \n
-             +1 509 570-6990    \n */
+Literal tokens must be separated either by white space or by parentheses, e.g.
+
+    + a b  or  (+ a)b  or  ((+)a)b  but not  +ab
+
+(the lexer will interpret this last expression as a single token).
+
+\note  There is no call for comments in Phase2, as you're not expected to be
+working off of an "input file".  If desired, an anonymous string literal will do
+the trick in the current implementation, e.g.
+
+    "This is a comment.  It does nothing." ;
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -66,6 +76,20 @@ void echo_token(char *s);
 char *extract_literal(char *s);
 
 
+extern void advance_line();
+extern int parser_line_number();
+
+extern int line_number;
+
+int character_number = 0, last_character_number = 0;
+
+void advance_character_number(int nchars)
+{
+    last_character_number = character_number;
+    character_number += nchars;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 %}
@@ -81,20 +105,16 @@ CLOSE_PAREN           [)]
 /** Letter or decimal digit. */
 ALNUM                 [A-Za-z0-9]
 
-/** Non-syntactic, non-whitespace character. */
+/** Non-syntactic, non-whitespace character (including slash). */
 NS                    [^;=()\0-\40"]
 
-/** Non-syntactic, non-whitespace character which is also not a slash. */
+/** Non-syntactic, non-whitespace character (excluding slash). */
 NOSLASH               [^;=()\0-\40"/]
 
 /** Non-syntactic, non-whitespace, non-alphanumeric character. */
 NONALNUM              [^;=()\0-\40"A-Za-z0-9]
 
-/** \note  Multi-line literals are accepted.
-    \note  The only escape sequences are \" and \\, and are un-done before they
-    are passed up to the parser, e.g.
-        "Say \"hello\"!\\n" --> Say "hello"!\n
-*/
+/** \note  Multi-line literals are accepted. */
 STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 
@@ -107,15 +127,17 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 {CLOSE_PAREN}           { ECHO("CLOSE_PAREN"); return CLOSE_PAREN; }
 
 
-[/]{ALNUM}{NS}*  {  // It's only a command if it starts with a letter or digit.
-    ECHO("COMMAND");
+[/]{ALNUM}{NS}*  {  // It's only a command if the slash is followed with a letter or digit.
+    ECHO("COMMAND_NAME");
+    advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext + 1);  // Free this string in the parser.
-    return COMMAND;
+    return COMMAND_NAME;
 }
 
 
 ({NOSLASH}|([/]{NONALNUM})){NS}*  {  // Simple string literal.
     ECHO("STRING");
+    advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext);  // Free this string in the parser.
     return STRING;
 }
@@ -123,23 +145,49 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 {STRLIT}  {  // String literal in quotes (to allow whitespace and special characters).
     ECHO("STRING");
+    advance_character_number(strlen(yytext));
     yylval.string = extract_literal(yytext);  // Free this string in the parser.
     return STRING;
 }
 
 
-\n  {
+\n  {  // Report newlines to the parser (but not as tokens).
     ECHO("[newline]");
 
-    #ifdef INPUT_PREFIX
-        printf(INPUT_PREFIX);
+    #ifndef SUPPRESS_OUTPUT
+
+        #ifdef SHOW_INPUT_LINENO
+            printf("%d ", line_number + 1);  // 1-index the line number.
+        #endif
+
+        #ifdef INPUT_PREFIX
+            // Add a prefix to each new line of input, to distinguish it from output.
+            printf(INPUT_PREFIX);
+        #endif
+
     #endif
+
+    advance_line();
 }
 
 
-.  {  // Ignore unrecognized characters (unless debugging).
-       ECHO("[unrecognized character]");
-   }
+[ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
+    ECHO("[whitespace]");
+    advance_character_number(1);
+}
+
+
+<<EOF>>  {
+    ECHO("EOF");
+
+    return E_O_F;
+}
+
+
+.  {  // Ignore unrecognized characters (unless debugging the lexer).
+    ECHO("[unrecognized character]");
+    advance_character_number(1);
+}
 
 
 %%

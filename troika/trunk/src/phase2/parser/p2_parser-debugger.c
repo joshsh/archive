@@ -1,13 +1,14 @@
 /**
-    \file  p2_parser-debugger.c
 
-    \brief  Debugging/testing application for the Phase2 command line parser.
+\file  p2_parser-debugger.c
 
-    \note  This is not part of the Phase2 build.
+\brief  Example implementation of the Phase2 command line parser.
 
-    \author  Joshua Shinavier   \n
-             parcour@gmail.com  \n
-             +1 509 570-6990    \n */
+\note  This is not part of the Phase2 build.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -32,10 +33,129 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../util/p2_term.h"
 
 #include <stdio.h>  // printf
+#include <string.h>  // strcmp, strlen
+#include <stdlib.h>  // exit (avoids 'implicit declaration' warning)
 
 
-/** Debugging print function for p2_terms. */
-void p2_term__print(p2_term *term)
+void p2_term__print(p2_term *term, int top_level);
+void *deallocate(void *p);
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+/** The Bison parser function. */
+extern int yyparse();
+
+/** Term cleanup function from Bison output. */
+extern void cleanup_term(p2_term *term);
+
+/** Get line number from the parser.  Not strictly necessary. */
+extern int parser_line_number();
+
+
+/** Mock command evaluator.
+    \note  the p2_term argument 'args' should be freed after use (if not null),
+    whereas the character string 'name' belongs to the parser. */
+extern void p2_evaluate_command(char *name, p2_term *args)
+{
+    int quit = 0;
+
+    if (!name || !strlen(name))
+    {
+        printf("Error: command must have a name!");
+        return;
+    }
+
+    if (args)
+    {
+        printf("Evaluate command \"%s\": ", name);
+        p2_term__print(args, 1);
+        printf("\n");
+
+    }
+
+    else
+        printf("Evaluate command \"%s\"\n", name);
+
+
+    // Process the command.
+    if (!strcmp(name, "exit"))
+        quit = 1;
+    // else
+    //    printf("Unknown command.\n");
+
+    if (args)
+        cleanup_term(args);
+
+    if (quit)
+        exit(0);
+}
+
+
+/** Mock expression evaluator.
+    \note  the p2_term argument 'args' should be freed after use,
+    whereas the character string 'name' belongs to the parser. */
+extern void p2_evaluate_expression(char *name, p2_term *expr)
+{
+    if (!expr)
+    {
+        printf("Error: expression must not be null!");
+        return;
+    }
+
+    if (name)
+    {
+        printf("Evaluate expression \"%s\": ", name);
+        p2_term__print(expr, 1);
+        printf("\n");
+    }
+
+    else
+    {
+        printf("Evaluate anonymous expression: ");  fflush(stdout);
+        p2_term__print(expr, 1);
+        printf("\n");
+    }
+
+    cleanup_term(expr);
+}
+
+
+/** Mock parse error handler.
+    \note  the character string 'msg' belongs to the parser. */
+extern void p2_handle_parse_error(char *msg)
+{
+    if (msg && strlen(msg))
+        printf("Handle parse error: %s.\n", msg);
+    else
+        printf("Handle parse error.\n");
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+/** Invocation of yyparse() is here. */
+main()
+{
+    printf("Phase2 command-line parser debugger.  Type '/exit' to quit.\n\n");
+
+    #ifdef INPUT_PREFIX
+        printf(INPUT_PREFIX);  // Can the lexer do this?
+    #else
+        printf("\n");
+    #endif
+
+    if (yyparse())
+        printf("Parser (would have) exited abnormally.\n");
+    else
+        printf("Parser (would have) exited normally.\n");
+}
+
+
+/** Print function for p2_terms. */
+void p2_term__print(p2_term *term, int top_level)
 {
     #ifdef PRINT_TERM_AS_ARRAY
         void **cur = term->head, **sup = term->buffer + term->buffer_size;
@@ -53,97 +173,19 @@ void p2_term__print(p2_term *term)
 
         else
         {
-            printf("(");
+            if (!top_level)
+                printf("(");
+
             for (i = 0; i < length - 1; i++)
             {
-                p2_term__print(p2_term__subterm_at(term, i));
+                p2_term__print(p2_term__subterm_at(term, i), 0);
                 printf(" ");
             }
-            p2_term__print(p2_term__subterm_at(term, length - 1));
-            printf(")");
+            p2_term__print(p2_term__subterm_at(term, length - 1), 0);
+
+            if (!top_level)
+                printf(")");
         }
     #endif  // PRINT_TERM_AS_ARRAY
-}
-
-
-/** To be passed as a function pointer to p2_term__for_all. */
-void *deallocate(void *p)
-{
-    free(p);
-    return (void *) 1;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-/** The Bison parser function. */
-extern int yyparse();
-
-
-/** Mock command evaluator. */
-extern void p2_evaluate_command(char *name, p2_term *args)
-{
-    if (args)
-    {
-        printf("Command \"%s\": ", name);
-        p2_term__print(args);
-        printf("\n");
-
-        p2_term__for_all(args, deallocate);
-        p2_term__delete(args);
-    }
-
-    else
-        printf("Command \"%s\"\n", name);
-
-    free(name);
-}
-
-
-/** Mock expression evaluator. */
-extern void p2_evaluate_expression(char *name, p2_term *expr)
-{
-    if (name)
-    {
-        printf("Expression \"%s\": ", name);
-        p2_term__print(expr);
-        printf("\n");
-
-        free(name);
-    }
-
-    else
-    {
-        printf("Anonymous expression: ");  fflush(stdout);
-        p2_term__print(expr);
-        printf("\n");
-    }
-
-    // Expression argument should never be null.
-    p2_term__for_all(expr, deallocate);
-    p2_term__delete(expr);
-}
-
-
-/** Mock parse error handler. */
-extern void p2_handle_parse_error(char *msg)
-{
-    fprintf(stderr,"Parse error: %s\n", msg);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-main()
-{
-    while (1)  // Break out of the debugger by killing the process.
-    {
-        if (yyparse())
-            printf("Parser (would have) exited abnormally.\n");
-        else
-            printf("Parser (would have) exited normally.\n");
-    }
 }
 

@@ -1,52 +1,52 @@
 %{
 
 /**
-    \file  p2_parser.y
 
-    \brief  Bison grammar file for the command line interface.
+\file  p2_parser.y
 
-    Phase2's command-line interface is a separable feature of the language. It
-    allows the user to pass arguments to either of a pair of functions defined
-    in the Phase2 client: one for program construction and one for querying or
-    manipulating the programming environment.
+\brief  Bison grammar file for the command line interface.
 
-    Expression Syntax
+Phase2's command-line interface is a separable feature of the language. It
+allows the user to pass arguments to either of a pair of functions defined in
+the Phase2 client: one for program construction and one for querying or
+manipulating the programming environment.
 
-    At the parser level, an expression is a parenthetically nested sequence of
-    dictionary items or special symbols, terminated by a semicolon. To give an
-    expression (that is, its "reduced" counterpart) a name, the semicolon may be
-    preceded by an equality symbol and then the name, e.g.
+Expression Syntax
 
-        (token1 token2) token3 = token4;
+At the parser level, an expression is a parenthetically nested sequence of
+dictionary items or special symbols, terminated by a semicolon. To give an
+expression (that is, its "reduced" counterpart) a name, the semicolon may be
+preceded by an equality symbol and then the name, e.g.
 
-    The unorthodox placement of the dictionary assignment command at the end of
-    the expression is aimed at command-line applications for which the programs
-    you write will not necessarily be read as you type them. After all, you
-    might not need to give an expression a name (particularly if you're only
-    interested in the side-effects); the trailing assignment command lets you
-    put that decision off till the last moment.
+    (token1 token2) token3 = token4;
 
-    Command Syntax
+The unorthodox placement of the dictionary assignment command at the end of the
+expression is aimed at command-line applications for which the programs you
+write will not necessarily be read as you type them. After all, you might not
+need to give an expression a name (particularly if you're only interested in the
+side-effects); the trailing assignment command lets you put that decision off
+till the last moment.
 
-    Special commands are indicated with a slash plus the name of the command,
-    followed by a whitespace-delimited list of arguments (no parentheses) and
-    terminated by a semicolon, e.g.
+Command Syntax
 
-        /command arg1 arg2;
+Special commands are indicated with a slash plus the name of the command,
+followed by a whitespace-delimited list of arguments (no parentheses) and
+terminated by a semicolon, e.g.
 
-    Commands thus indicated do not belong to the program under construction, and
-    are to take immediate effect at parse time.
+    /command arg1 arg2;
 
-    Interaction with the client
+Commands thus indicated do not belong to the program under construction, and are
+to take immediate effect at parse time.
 
-    The role of the parser is simply to construct a p2_term to send to the
-    client for evaluation.  The client then handles the term and eventually
-    deallocates it after generating output.  The client cannot "talk back" to
-    the parser.
+Interaction with the client
 
-    \author  Joshua Shinavier   \n
-             parcour@gmail.com  \n
-             +1 509 570-6990    \n */
+The role of the parser is simply to construct a p2_term to send to the client
+for evaluation.  The client then handles the term and eventually deallocates it
+after generating output.  The client cannot "talk back" to the parser.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -70,7 +70,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_parser-macros.h"
 #include "../util/p2_term.h"
 
-#include <stdio.h>  // fprintf, printf
+#include <stdio.h>  // printf, sprintf
+#include <string.h>  // strcpy
 
 
 /** Command evaluator from the semantic module.
@@ -88,8 +89,58 @@ extern void p2_handle_parse_error(char *msg);
 ////////////////////////////////////////////////////////////////////////////////
 
 
+/** Current number of times yyparse() has been invoked. */
+int input_number = 0;
+
+/** Current line number.  Starts at 0. */
+int line_number;
+
+/** Current statement number.  Starts at 0 for each line of input. */
+int statement_number;
+
+extern int character_number;
+
+int error_character_number, error_line_number, error_statement_number;
+extern int last_character_number;
+
+/** Error message to send to the semantic module. */
+char error_msg[100];
+
+/** Error message received by yyerror. */
+char yyerror_msg[200];
+
+
+void advance_input()
+{
+    input_number++;
+    line_number = 0;
+    statement_number = 0;
+    character_number = 0;
+    last_character_number = 0;
+}
+
+
+extern void advance_line()
+{
+    line_number++;
+    statement_number = 0;
+    character_number = 0;
+    last_character_number = 0;
+}
+
+
+void advance_statement()
+{
+    statement_number++;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 int yywrap()
 {
+    // Parse only a single input stream.
     return 1;
 }
 
@@ -97,62 +148,115 @@ int yywrap()
 /*  main() { yyparse(); }  */
 
 
-void yyerror(const char *msg) { }
+void yyerror(const char *msg)
+{
+    if (*yyerror_msg)
+        fprintf(stderr,
+            "Parser warning: error reported by yyerror was never handled.\n");
+
+    strcpy(yyerror_msg, msg);
+
+    error_character_number = character_number;
+    error_line_number = line_number;
+    error_statement_number = statement_number;
+}
 
 
-/** Evaluate a command, decorating output. */
+////////////////////////////////////////////////////////////////////////////////
+
+
+/** Evaluate a command. */
 void handle_command(char *name, p2_term *args)
 {
-    printf("\n");
+    #ifndef SUPPRESS_OUTPUT
 
-    #ifdef COMMAND_OUTPUT_PREFIX
-        printf(COMMAND_OUTPUT_PREFIX);
-    #endif
+        if (!statement_number)
+            printf("\n");
+
+        #ifdef COMMAND_OUTPUT_PREFIX
+            printf(COMMAND_OUTPUT_PREFIX);
+        #endif
+
+    #ifndef SUPPRESS_OUTPUT
 
     p2_evaluate_command(name, args);
 
-    #ifdef COMMAND_OUTPUT_SUFFIX
-        printf(COMMAND_OUTPUT_SUFFIX);
-    #endif
+    #ifndef SUPPRESS_OUTPUT
 
-    printf("\n");
+        #ifdef COMMAND_OUTPUT_SUFFIX
+            printf(COMMAND_OUTPUT_SUFFIX);
+        #endif
+
+        printf("\n");
+
+    #ifndef SUPPRESS_OUTPUT
 }
 
 
-/** Evaluate a expression, decorating output. */
+/** Evaluate an expression. */
 void handle_expression(char *name, p2_term *expr)
 {
-    printf("\n");
+    #ifndef SUPPRESS_OUTPUT
 
-    #ifdef EXPRESSION_OUTPUT_PREFIX
-        printf(EXPRESSION_OUTPUT_PREFIX);
-    #endif
+        if (!statement_number)
+            printf("\n");
+
+        #ifdef EXPRESSION_OUTPUT_PREFIX
+            printf(EXPRESSION_OUTPUT_PREFIX);
+        #endif
+
+    #ifndef SUPPRESS_OUTPUT
 
     p2_evaluate_expression(name, expr);
 
-    #ifdef EXPRESSION_OUTPUT_SUFFIX
-        printf(EXPRESSION_OUTPUT_SUFFIX);
-    #endif
+    #ifndef SUPPRESS_OUTPUT
 
-    printf("\n");
+        #ifdef EXPRESSION_OUTPUT_SUFFIX
+            printf(EXPRESSION_OUTPUT_SUFFIX);
+        #endif
+
+        printf("\n");
+
+    #ifndef SUPPRESS_OUTPUT
 }
 
 
+/** Deal gracefully with a parse error.
+    \note  the line and statement numbers in the error message reflect the
+    position where the error was first detected. */
 void handle_error(char *msg)
 {
-    printf("\n");
+    #ifndef SUPPRESS_OUTPUT
 
-    #ifdef ERROR_OUTPUT_PREFIX
-        printf(ERROR_OUTPUT_PREFIX);
+        if (!statement_number)
+            printf("\n");
+
+        #ifdef ERROR_OUTPUT_PREFIX
+            printf(ERROR_OUTPUT_PREFIX);
+        #endif
+
     #endif
 
-    p2_handle_parse_error(msg);
+    // Note: "char" rather than "column" on account of the tab character.
+    if (*yyerror_msg)
+        sprintf(error_msg, "line %d, char %d: %s",
+            error_line_number + 1, error_character_number + 1, yyerror_msg);
+    else
+        // If this happens, it means that the parser has not recovered from a
+        // previous error, or that you've needlessly called handle_error.
+        sprintf(error_msg, "unreported");
+    *yyerror_msg = '\0';
+    p2_handle_parse_error(error_msg);
 
-    #ifdef ERROR_OUTPUT_SUFFIX
-        printf(ERROR_OUTPUT_SUFFIX);
-    #endif
+    #ifndef SUPPRESS_OUTPUT
 
-    printf("\n");
+        #ifdef ERROR_OUTPUT_SUFFIX
+            printf(ERROR_OUTPUT_SUFFIX);
+        #endif
+
+        printf("\n");
+
+    #ifndef SUPPRESS_OUTPUT
 }
 
 
@@ -175,6 +279,26 @@ void echo_production(char *s)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+
+/** To be passed as a function pointer to p2_term__for_all. */
+void *deallocate(void *p)
+{
+    free(p);
+    return (void *) 1;
+}
+
+
+/** Cleanup function for terms which own their atoms. */
+void cleanup_term(p2_term *term)
+{
+    p2_term__for_all(term, deallocate);
+    p2_term__delete(term);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 %}
 
 
@@ -186,12 +310,16 @@ void echo_production(char *s)
     void *parser_term;
 }
 
-%token SEMICOLON EQUALS OPEN_PAREN CLOSE_PAREN
+%token YYERROR_VERBOSE
+
+%token SEMICOLON EQUALS OPEN_PAREN CLOSE_PAREN NEWLINE E_O_F
 
 %token <string> STRING
-%token <string> COMMAND
+%token <string> COMMAND_NAME
 
 %type <parser_term> term subterm arguments
+
+%start parser_input
 
 
 %%
@@ -203,53 +331,61 @@ parser_input:
     {
         ECHO("parser_input:  [null]");
 
-        // Global variables could be initialized here.
-
-        #ifdef INPUT_PREFIX
-            printf(INPUT_PREFIX);  // Can the lexer do this?
-        #else
-            printf("\n");
-        #endif
+        advance_input();
     }
     | parser_input command
     {
         ECHO("parser_input:  parser_input command");
+
+        advance_statement();
     }
     | parser_input expression
     {
         ECHO("parser_input:  parser_input expression");
+
+        advance_statement();
     }
     | parser_input SEMICOLON
     {
         ECHO("parser_input:  parser_input SEMICOLON");
 
-        // Redundant semicolons are permitted.
+        // Redundant semicolons are tolerated, but aren't recognized as
+        // statements.
     }
-    | error SEMICOLON
+    | parser_input error SEMICOLON
     {
         ECHO("parser_input:  error SEMICOLON");
 
         // Wait until the end of a statement to report an error (i.e. print
         // only one error message per invalid statement).
-        handle_error("invalid statement");
+        handle_error("(invalid statement ignored)");
+
+        // Make error reporting resume immediately.
+        yyerrok;
+
+        // Clear the lookahead token.
+        yyclearin;
+
+        advance_statement();
     };
 
 
 command:
 
-    COMMAND SEMICOLON
+    COMMAND_NAME SEMICOLON
     {
         ECHO("command :  COMMAND SEMICOLON");
 
         // Handle command with no arguments.
         handle_command($1, 0);
     }
-    | COMMAND arguments SEMICOLON
+    | COMMAND_NAME arguments SEMICOLON
     {
         ECHO("command :  COMMAND arguments SEMICOLON");
 
         // Handle command with arguments.
         handle_command($1, (p2_term *) $2);
+        free($1);
     };
 
 
@@ -268,6 +404,7 @@ expression:
 
         // Handle named expression.
         handle_expression($3, (p2_term *) $1);
+        free($3);
     };
 
 
@@ -300,8 +437,21 @@ term:
     {
         ECHO("term :  term subterm");
 
+        if (!$2)
+        {
+            cleanup_term($1);
+            ...
+        }
+
         // Combine the terms using a left-associative merge.
         $$ = p2_term__merge_la((p2_term *) $1, (p2_term *) $2);
+    }
+    | term error
+    {
+        ECHO("term :  term error");
+
+        cleanup_term((p2_term *) $1);
+        $$ = 0;
     };
 
 
