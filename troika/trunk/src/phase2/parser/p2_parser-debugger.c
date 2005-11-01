@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "p2_parser-macros.h"
+#include "p2_parser.h"
 #include "../util/p2_term.h"
 
 #include <stdio.h>  // printf
@@ -49,9 +49,6 @@ extern int yyparse();
 
 /** Term cleanup function from Bison output. */
 extern void cleanup_term(p2_term *term);
-
-/** Get line number from the parser.  Not strictly necessary. */
-extern int parser_line_number();
 
 
 /** Mock command evaluator.

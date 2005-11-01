@@ -65,8 +65,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 // extern YYSTYPE yylval;
 
 
-extern void advance_character_number(int nchars), void advance_line_number();
+extern void advance_character_number(int nchars);
+extern void advance_line_number();
 extern void print_input_prefix();
+
+extern int suppress_output, show_line_numbers;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -78,7 +82,11 @@ extern void print_input_prefix();
 #endif
 
 
+/** Debugging output. */
 void echo_token(char *s);
+
+/** Gets the interior of a string literal, undoing the two escape sequences
+    in the process. */
 char *extract_literal(char *s);
 
 
@@ -195,14 +203,12 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 %%
 
-/** Debugging output. */
 void echo_token(char *s)
 {
     printf("Found %s.\n", s);
 }
 
 
-/** Gets the interior of a string literal, undoing the two escape sequences. */
 char *extract_literal(char *s)
 {
     char *s_low = s, *s_high = s_low + 1;

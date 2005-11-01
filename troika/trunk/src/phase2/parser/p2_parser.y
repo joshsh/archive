@@ -76,7 +76,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
 /** Command evaluator from the semantic module.
     \note  args (if not null) needs to be freed externally. */
 extern void p2_evaluate_command(char *name, p2_term *args);
@@ -91,33 +90,21 @@ extern void p2_handle_parse_error(char *msg);
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/** Evaluate a command. */
+void handle_command(char *name, p2_term *args);
 
-extern void new_parse();
+/** Evaluate an expression. */
+void handle_expression(char *name, p2_term *expr);
 
-extern int last_character_number, line_number, statement_number;
-int error_character_number, error_line_number, error_statement_number;
-
-extern void advance_statement_number();
-
-extern int suppress_output, show_line_numbers;
+/** Deal gracefully with a parse error. */
+void handle_error(char *msg);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-/** This is the default value. */
-#define YYMAXDEPTH    10000
-
-/** This is the default value. */
-#define YYINITDEPTH   200
-
-int yywrap();
-void yyerror(const char *msg);
-
-
-void handle_command(char *name, p2_term *args);
-void handle_expression(char *name, p2_term *expr);
-void handle_error(char *msg);
+extern int last_character_number, line_number, statement_number;
+extern int suppress_output, show_line_numbers;
+int error_character_number, error_line_number, error_statement_number;
 
 
 /** "verbose" error message received by yyerror. */
@@ -127,14 +114,38 @@ char yyerror_msg[200];
 char error_msg[100];
 
 
+extern void new_parse();
+extern void advance_statement_number();
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+/** This is the default value. */
+#define YYMAXDEPTH    10000
+
+/** This is the default value. */
+#define YYINITDEPTH   200
+
+/** Tells the parser to process only a single input stream. */
+int yywrap();
+
+/** Copies reported error messages to a string, where they wait to passed on to
+    the semantic module. */
+void yyerror(const char *msg);
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 #ifdef PARSER_DEBUG
     #define ECHO echo_production
 #else
     #define ECHO
 #endif
 
+/** Debugging output. */
 void echo_production(char *s);
 
+/** Cleanup function for terms which own their atoms. */
 void cleanup_term(p2_term *term);
 
 
@@ -154,7 +165,7 @@ void cleanup_term(p2_term *term);
 /** Report more detailed parse error messages. */
 %token YYERROR_VERBOSE
 
-%token SEMICOLON EQUALS OPEN_PAREN CLOSE_PAREN NEWLINE E_O_F
+%token OPEN_PAREN CLOSE_PAREN EQUALS SEMICOLON NEWLINE E_O_F
 
 %token <string> STRING COMMAND_NAME
 
@@ -381,7 +392,6 @@ subterm:
 
 int yywrap()
 {
-    // Parse only a single input stream.
     return 1;
 }
 
@@ -389,8 +399,6 @@ int yywrap()
 /*  main() { yyparse(); }  */
 
 
-/** Copies reported error messages to a string, where they wait to passed on to
-    the semantic module. */
 void yyerror(const char *msg)
 {
     if (*yyerror_msg)
@@ -409,7 +417,6 @@ void yyerror(const char *msg)
 // Expression handling /////////////////////////////////////////////////////////
 
 
-/** Evaluate a command. */
 void handle_command(char *name, p2_term *args)
 {
     if (!suppress_output)
@@ -435,7 +442,6 @@ void handle_command(char *name, p2_term *args)
 }
 
 
-/** Evaluate an expression. */
 void handle_expression(char *name, p2_term *expr)
 {
     if (!suppress_output)
@@ -461,9 +467,6 @@ void handle_expression(char *name, p2_term *expr)
 }
 
 
-/** Deal gracefully with a parse error.
-    \note  the line and statement numbers in the error message reflect the
-    position where the error was first detected. */
 void handle_error(char *msg)
 {
     if (!suppress_output)
@@ -501,7 +504,6 @@ void handle_error(char *msg)
 // Debugging and cleanup ///////////////////////////////////////////////////////
 
 
-/** Debugging output. */
 void echo_production(char *s)
 {
     printf("Found %s\n", s);
@@ -516,7 +518,6 @@ void *deallocate(void *p)
 }
 
 
-/** Cleanup function for terms which own their atoms. */
 void cleanup_term(p2_term *term)
 {
     p2_term__for_all(term, deallocate);

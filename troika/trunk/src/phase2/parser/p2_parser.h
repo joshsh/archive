@@ -1,4 +1,4 @@
-// Debugging ///////////////////////////////////////////////////////////////////
+// Debugging flags /////////////////////////////////////////////////////////////
 
 /** If defined, echo each token as it is matched by the lexer. */
 // #define LEXER_DEBUG
@@ -11,7 +11,7 @@
 // #define PRINT_TERM_AS_ARRAY
 
 
-// Formatting //////////////////////////////////////////////////////////////////
+// Formatting flags ////////////////////////////////////////////////////////////
 
 /** If defined, prevent all output from the parser module (apart from debugging
     messages). */
@@ -34,9 +34,6 @@
 
 // Declarations ////////////////////////////////////////////////////////////////
 
-/** Flag for output suppression. */
-int suppress_output;
-
 
 /** Current "column" number, where tabs only count for one column. */
 int character_number, last_character_number;
@@ -56,4 +53,18 @@ void advance_line_number();
 
 /** Registers a new statement. */
 void advance_statement_number();
+
+
+/** Initialize the parser for a new invocation of yyparse(). */
+void new_parse();
+
+/** Decorate command-line input. */
+void print_input_prefix();
+
+
+/** Turn output suppression on or off. */
+void p2_parser__set_suppress_output(int flag);
+
+/** Turn line numbers on or off. */
+void p2_parser__set_show_line_numbers(int flag);
 
