@@ -26,7 +26,7 @@ distclean: clean
 	-rm *.o $(NAME)-debugger
 
 
-debugger: objects $(NAME)-debugger.c $(NAME).h p2_term.o
+debugger: objects $(NAME)-debugger.c $(NAME)-aux.h p2_term.o
 	$(CC) $(NAME)-debugger.c $(NAME)-aux.o lex.yy.o $(NAME).tab.o p2_term.o -o $(NAME)-debugger
 
 
@@ -35,7 +35,7 @@ objects: lex.yy.o $(NAME).tab.o $(NAME)-aux.o
 
 ################################################################################
 
-lex.yy.o : lex.yy.c $(NAME).tab.h $(NAME).h
+lex.yy.o : lex.yy.c $(NAME).tab.h $(NAME)-aux.h
 	$(CC) -c lex.yy.c
 
 
@@ -47,13 +47,13 @@ lex.yy.c : $(NAME).l
 	$(LEX) $(NAME).l
 
 
-$(NAME).tab.c $(NAME).tab.h : $(NAME).y $(NAME).h
+$(NAME).tab.c $(NAME).tab.h : $(NAME).y $(NAME)-aux.h
 	$(YACC) -dv $(NAME).y
 
 
 ################################################################################
 
-$(NAME)-aux.o : $(NAME)-aux.c $(NAME).h
+$(NAME)-aux.o : $(NAME)-aux.c $(NAME)-aux.h
 	$(CC) -c $(NAME)-aux.c
 
 

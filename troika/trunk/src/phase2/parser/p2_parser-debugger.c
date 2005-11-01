@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "p2_parser.h"
+#include "p2_parser-aux.h"
 #include "../util/p2_term.h"
 
 #include <stdio.h>  // printf
@@ -87,6 +87,8 @@ extern void p2_evaluate_command(char *name, p2_term *args)
     if (quit)
     {
         printf("\n\n");
+
+        /** \warning  This way, yyparse never terminates. */
         exit(0);
     }
 }
