@@ -67,19 +67,22 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "p2_parser-macros.h"
+#include "p2_parser.h"
 #include "../util/p2_term.h"
 
-#include <stdio.h>  // printf, sprintf
+#include <stdio.h>  // fprintf, printf, sprintf
 #include <string.h>  // strcpy
 
 
+////////////////////////////////////////////////////////////////////////////////
+
+
 /** Command evaluator from the semantic module.
-    \note  Both name and args (if not null) need to be freed externally. */
+    \note  args (if not null) needs to be freed externally. */
 extern void p2_evaluate_command(char *name, p2_term *args);
 
 /** Expression evaluator from the semantic module.
-    \note  Both name (if not null) and expr need to be freed externally. */
+    \note  expr needs to be freed externally. */
 extern void p2_evaluate_expression(char *name, p2_term *expr);
 
 /** Parse error handler from the semantic module. */
@@ -89,178 +92,39 @@ extern void p2_handle_parse_error(char *msg);
 ////////////////////////////////////////////////////////////////////////////////
 
 
-/** Current number of times yyparse() has been invoked. */
-int input_number = 0;
+extern void new_parse();
 
-/** Current line number.  Starts at 0. */
-int line_number;
-
-/** Current statement number.  Starts at 0 for each line of input. */
-int statement_number;
-
-extern int character_number;
-
+extern int last_character_number, line_number, statement_number;
 int error_character_number, error_line_number, error_statement_number;
-extern int last_character_number;
 
-/** Error message to send to the semantic module. */
-char error_msg[100];
+extern void advance_statement_number();
 
-/** Error message received by yyerror. */
+extern int suppress_output, show_line_numbers;
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+/** This is the default value. */
+#define YYMAXDEPTH    10000
+
+/** This is the default value. */
+#define YYINITDEPTH   200
+
+int yywrap();
+void yyerror(const char *msg);
+
+
+void handle_command(char *name, p2_term *args);
+void handle_expression(char *name, p2_term *expr);
+void handle_error(char *msg);
+
+
+/** "verbose" error message received by yyerror. */
 char yyerror_msg[200];
 
-
-void advance_input()
-{
-    input_number++;
-    line_number = 0;
-    statement_number = 0;
-    character_number = 0;
-    last_character_number = 0;
-}
-
-
-extern void advance_line()
-{
-    line_number++;
-    statement_number = 0;
-    character_number = 0;
-    last_character_number = 0;
-}
-
-
-void advance_statement()
-{
-    statement_number++;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-int yywrap()
-{
-    // Parse only a single input stream.
-    return 1;
-}
-
-
-/*  main() { yyparse(); }  */
-
-
-void yyerror(const char *msg)
-{
-    if (*yyerror_msg)
-        fprintf(stderr,
-            "Parser warning: error reported by yyerror was never handled.\n");
-
-    strcpy(yyerror_msg, msg);
-
-    error_character_number = character_number;
-    error_line_number = line_number;
-    error_statement_number = statement_number;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-/** Evaluate a command. */
-void handle_command(char *name, p2_term *args)
-{
-    #ifndef SUPPRESS_OUTPUT
-
-        if (!statement_number)
-            printf("\n");
-
-        #ifdef COMMAND_OUTPUT_PREFIX
-            printf(COMMAND_OUTPUT_PREFIX);
-        #endif
-
-    #ifndef SUPPRESS_OUTPUT
-
-    p2_evaluate_command(name, args);
-
-    #ifndef SUPPRESS_OUTPUT
-
-        #ifdef COMMAND_OUTPUT_SUFFIX
-            printf(COMMAND_OUTPUT_SUFFIX);
-        #endif
-
-        printf("\n");
-
-    #ifndef SUPPRESS_OUTPUT
-}
-
-
-/** Evaluate an expression. */
-void handle_expression(char *name, p2_term *expr)
-{
-    #ifndef SUPPRESS_OUTPUT
-
-        if (!statement_number)
-            printf("\n");
-
-        #ifdef EXPRESSION_OUTPUT_PREFIX
-            printf(EXPRESSION_OUTPUT_PREFIX);
-        #endif
-
-    #ifndef SUPPRESS_OUTPUT
-
-    p2_evaluate_expression(name, expr);
-
-    #ifndef SUPPRESS_OUTPUT
-
-        #ifdef EXPRESSION_OUTPUT_SUFFIX
-            printf(EXPRESSION_OUTPUT_SUFFIX);
-        #endif
-
-        printf("\n");
-
-    #ifndef SUPPRESS_OUTPUT
-}
-
-
-/** Deal gracefully with a parse error.
-    \note  the line and statement numbers in the error message reflect the
-    position where the error was first detected. */
-void handle_error(char *msg)
-{
-    #ifndef SUPPRESS_OUTPUT
-
-        if (!statement_number)
-            printf("\n");
-
-        #ifdef ERROR_OUTPUT_PREFIX
-            printf(ERROR_OUTPUT_PREFIX);
-        #endif
-
-    #endif
-
-    // Note: "char" rather than "column" on account of the tab character.
-    if (*yyerror_msg)
-        sprintf(error_msg, "line %d, char %d: %s",
-            error_line_number + 1, error_character_number + 1, yyerror_msg);
-    else
-        // If this happens, it means that the parser has not recovered from a
-        // previous error, or that you've needlessly called handle_error.
-        sprintf(error_msg, "unreported");
-    *yyerror_msg = '\0';
-    p2_handle_parse_error(error_msg);
-
-    #ifndef SUPPRESS_OUTPUT
-
-        #ifdef ERROR_OUTPUT_SUFFIX
-            printf(ERROR_OUTPUT_SUFFIX);
-        #endif
-
-        printf("\n");
-
-    #ifndef SUPPRESS_OUTPUT
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
+/** Adorned (with location info.) error message to send to the semantic module. */
+char error_msg[100];
 
 
 #ifdef PARSER_DEBUG
@@ -269,35 +133,12 @@ void handle_error(char *msg)
     #define ECHO
 #endif
 
+void echo_production(char *s);
 
-/** Debugging output. */
-void echo_production(char *s)
-{
-    printf("Found %s\n", s);
-}
+void cleanup_term(p2_term *term);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
-/** To be passed as a function pointer to p2_term__for_all. */
-void *deallocate(void *p)
-{
-    free(p);
-    return (void *) 1;
-}
-
-
-/** Cleanup function for terms which own their atoms. */
-void cleanup_term(p2_term *term)
-{
-    p2_term__for_all(term, deallocate);
-    p2_term__delete(term);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
 
 %}
 
@@ -310,12 +151,12 @@ void cleanup_term(p2_term *term)
     void *parser_term;
 }
 
+/** Report more detailed parse error messages. */
 %token YYERROR_VERBOSE
 
 %token SEMICOLON EQUALS OPEN_PAREN CLOSE_PAREN NEWLINE E_O_F
 
-%token <string> STRING
-%token <string> COMMAND_NAME
+%token <string> STRING COMMAND_NAME
 
 %type <parser_term> term subterm arguments
 
@@ -327,38 +168,51 @@ void cleanup_term(p2_term *term)
 
 parser_input:
 
+    statements E_O_F
+    {
+        ECHO("parser_input:  statements E_O_F");
+
+        /** Always exit normally from here. */
+        YYACCEPT;
+    };
+
+
+statements:
+
     /* This production precedes input. */
     {
-        ECHO("parser_input:  [null]");
+        ECHO("statements:  [null]");
 
-        advance_input();
+        new_parse();
     }
-    | parser_input command
+    | statements command
     {
-        ECHO("parser_input:  parser_input command");
+        ECHO("statements:  statements command");
 
-        advance_statement();
+        yyerrok;
+        advance_statement_number();
     }
-    | parser_input expression
+    | statements expression
     {
-        ECHO("parser_input:  parser_input expression");
+        ECHO("statements:  statements expression");
 
-        advance_statement();
+        yyerrok;
+        advance_statement_number();
     }
-    | parser_input SEMICOLON
+    | statements SEMICOLON
     {
-        ECHO("parser_input:  parser_input SEMICOLON");
+        ECHO("statements:  statements SEMICOLON");
 
         // Redundant semicolons are tolerated, but aren't recognized as
         // statements.
     }
-    | parser_input error SEMICOLON
+    | statements error SEMICOLON
     {
-        ECHO("parser_input:  error SEMICOLON");
+        ECHO("statements:  error SEMICOLON");
 
         // Wait until the end of a statement to report an error (i.e. print
         // only one error message per invalid statement).
-        handle_error("(invalid statement ignored)");
+        handle_error("[this argument is ignored]");
 
         // Make error reporting resume immediately.
         yyerrok;
@@ -366,7 +220,7 @@ parser_input:
         // Clear the lookahead token.
         yyclearin;
 
-        advance_statement();
+        advance_statement_number();
     };
 
 
@@ -378,13 +232,15 @@ command:
 
         // Handle command with no arguments.
         handle_command($1, 0);
+        free($1);
     }
     | COMMAND_NAME arguments SEMICOLON
     {
         ECHO("command :  COMMAND arguments SEMICOLON");
 
         // Handle command with arguments.
-        handle_command($1, (p2_term *) $2);
+        if ($2)
+            handle_command($1, (p2_term *) $2);
         free($1);
     };
 
@@ -396,14 +252,16 @@ expression:
         ECHO("expression :  term SEMICOLON");
 
         // Handle anonymous expression.
-        handle_expression(0, (p2_term *) $1);
+        if ($1)
+            handle_expression(0, (p2_term *) $1);
     }
     | term EQUALS STRING SEMICOLON
     {
         ECHO("expression :  term EQUALS token SEMICOLON");
 
         // Handle named expression.
-        handle_expression($3, (p2_term *) $1);
+        if ($1)
+            handle_expression($3, (p2_term *) $1);
         free($3);
     };
 
@@ -422,7 +280,32 @@ arguments:
         ECHO("arguments :  arguments token");
 
         // Concatenate the command arguments.
-        $$ = p2_term__cat((p2_term *) $1, p2_term__new((void *) $2, 1));
+        if ($1)
+            $$ = p2_term__cat((p2_term *) $1, p2_term__new((void *) $2, 1));
+        else
+        {
+            free($2);
+            $$ = 0;
+        }
+    }
+    | arguments error
+    {
+        // Error is encountered after an argument term has been constructed.
+        // Clean up the existing term, and produce a null term as the semantic
+        // value.
+
+        ECHO("arguments :  arguments error");
+
+        // Handle the error only if the existing term is good (i.e. if an error
+        // is found in an argument list, ignore errors in the rest of the
+        // statement).
+        if ($1)
+        {
+            cleanup_term((p2_term *) $1);
+            handle_error(0);
+        }
+
+        $$ = 0;
     };
 
 
@@ -437,20 +320,38 @@ term:
     {
         ECHO("term :  term subterm");
 
-        if (!$2)
+        // If either subterm is null, clean up the existing term and produce a
+        // null term as the semantic value.  In this case, the error has already
+        // been reported.
+        if (!$1 || !$2)
         {
-            cleanup_term($1);
-            ...
+            if ($1)
+                cleanup_term($1);
+            if ($2)
+                cleanup_term($2);
+            $$ = 0;
         }
 
-        // Combine the terms using a left-associative merge.
-        $$ = p2_term__merge_la((p2_term *) $1, (p2_term *) $2);
+        else
+            // Combine the terms using a left-associative merge.
+            $$ = p2_term__merge_la((p2_term *) $1, (p2_term *) $2);
     }
     | term error
     {
+        // Error is encountered after a term has been constructed.  Clean up the
+        // existing term, and produce a null term as the semantic value.
+
         ECHO("term :  term error");
 
-        cleanup_term((p2_term *) $1);
+        // Handle the error only if the existing term is good (i.e. if an error
+        // is found in an expression, ignore errors in the rest of the
+        // expression).
+        if ($1)
+        {
+            cleanup_term((p2_term *) $1);
+            handle_error(0);
+        }
+
         $$ = 0;
     };
 
@@ -471,4 +372,154 @@ subterm:
         // "Remove the parentheses" from the term.
         $$ = $2;
     };
+
+
+%%
+
+// Basic parser functions //////////////////////////////////////////////////////
+
+
+int yywrap()
+{
+    // Parse only a single input stream.
+    return 1;
+}
+
+
+/*  main() { yyparse(); }  */
+
+
+/** Copies reported error messages to a string, where they wait to passed on to
+    the semantic module. */
+void yyerror(const char *msg)
+{
+    if (*yyerror_msg)
+        fprintf(stderr,
+            "Parser warning: last error reported to yyerror was never handled: %s.\n",
+            yyerror_msg);
+
+    strcpy(yyerror_msg, msg);
+
+    error_character_number = last_character_number;
+    error_line_number = line_number;
+    error_statement_number = statement_number;
+}
+
+
+// Expression handling /////////////////////////////////////////////////////////
+
+
+/** Evaluate a command. */
+void handle_command(char *name, p2_term *args)
+{
+    if (!suppress_output)
+    {
+        if (!statement_number)
+            printf("\n");
+
+        #ifdef COMMAND_OUTPUT_PREFIX
+            printf(COMMAND_OUTPUT_PREFIX);
+        #endif
+    }
+
+    p2_evaluate_command(name, args);
+
+    if (!suppress_output)
+    {
+        #ifdef COMMAND_OUTPUT_SUFFIX
+            printf(COMMAND_OUTPUT_SUFFIX);
+        #endif
+
+        printf("\n\n");
+    }
+}
+
+
+/** Evaluate an expression. */
+void handle_expression(char *name, p2_term *expr)
+{
+    if (!suppress_output)
+    {
+        if (!statement_number)
+            printf("\n");
+
+        #ifdef EXPRESSION_OUTPUT_PREFIX
+            printf(EXPRESSION_OUTPUT_PREFIX);
+        #endif
+    }
+
+    p2_evaluate_expression(name, expr);
+
+    if (!suppress_output)
+    {
+        #ifdef EXPRESSION_OUTPUT_SUFFIX
+            printf(EXPRESSION_OUTPUT_SUFFIX);
+        #endif
+
+        printf("\n\n");
+    }
+}
+
+
+/** Deal gracefully with a parse error.
+    \note  the line and statement numbers in the error message reflect the
+    position where the error was first detected. */
+void handle_error(char *msg)
+{
+    if (!suppress_output)
+    {
+        if (!statement_number)
+            printf("\n");
+
+        #ifdef ERROR_OUTPUT_PREFIX
+            printf(ERROR_OUTPUT_PREFIX);
+        #endif
+    }
+
+    // Note: "char" rather than "column" on account of the tab character.
+    if (*yyerror_msg)
+        sprintf(error_msg, "line %d, char %d: %s",
+            error_line_number + 1, error_character_number + 1, yyerror_msg);
+    else
+        // If this happens, it means that the parser has not recovered from a
+        // previous error, or that you've needlessly called handle_error.
+        sprintf(error_msg, "unreported");
+    *yyerror_msg = '\0';
+    p2_handle_parse_error(error_msg);
+
+    if (!suppress_output)
+    {
+        #ifdef ERROR_OUTPUT_SUFFIX
+            printf(ERROR_OUTPUT_SUFFIX);
+        #endif
+
+        printf("\n\n");
+    }
+}
+
+
+// Debugging and cleanup ///////////////////////////////////////////////////////
+
+
+/** Debugging output. */
+void echo_production(char *s)
+{
+    printf("Found %s\n", s);
+}
+
+
+/** To be passed as a function pointer to p2_term__for_all. */
+void *deallocate(void *p)
+{
+    free(p);
+    return (void *) 1;
+}
+
+
+/** Cleanup function for terms which own their atoms. */
+void cleanup_term(p2_term *term)
+{
+    p2_term__for_all(term, deallocate);
+    p2_term__delete(term);
+}
 

@@ -55,7 +55,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *///////////////////////////////////////////////////////////////////////////////
 
 #include "p2_parser.tab.h"
-#include "p2_parser-macros.h"
+#include "p2_parser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,6 +63,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 // extern YYSTYPE yylval;
+
+
+extern void advance_character_number(int nchars), void advance_line_number();
+extern void print_input_prefix();
+
+////////////////////////////////////////////////////////////////////////////////
 
 
 #ifdef LEXER_DEBUG
@@ -74,20 +80,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 void echo_token(char *s);
 char *extract_literal(char *s);
-
-
-extern void advance_line();
-extern int parser_line_number();
-
-extern int line_number;
-
-int character_number = 0, last_character_number = 0;
-
-void advance_character_number(int nchars)
-{
-    last_character_number = character_number;
-    character_number += nchars;
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,16 +113,38 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 %%
 
 
-{SEMICOLON}             { ECHO("SEMICOLON"); return SEMICOLON; }
-{EQUALS}                { ECHO("EQUALS"); return EQUALS; }
-{OPEN_PAREN}            { ECHO("OPEN_PAREN"); return OPEN_PAREN; }
-{CLOSE_PAREN}           { ECHO("CLOSE_PAREN"); return CLOSE_PAREN; }
+{SEMICOLON}  {
+    ECHO("SEMICOLON");
+    advance_character_number(1);
+    return SEMICOLON;
+}
+
+
+{EQUALS}  {
+    ECHO("EQUALS");
+    advance_character_number(1);
+    return EQUALS;
+}
+
+
+{OPEN_PAREN}  {
+    ECHO("OPEN_PAREN");
+    advance_character_number(1);
+    return OPEN_PAREN;
+}
+
+
+{CLOSE_PAREN}  {
+    ECHO("CLOSE_PAREN");
+    advance_character_number(1);
+    return CLOSE_PAREN;
+}
 
 
 [/]{ALNUM}{NS}*  {  // It's only a command if the slash is followed with a letter or digit.
     ECHO("COMMAND_NAME");
     advance_character_number(strlen(yytext));
-    yylval.string = strdup(yytext + 1);  // Free this string in the parser.
+    yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
     return COMMAND_NAME;
 }
 
@@ -138,7 +152,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 ({NOSLASH}|([/]{NONALNUM})){NS}*  {  // Simple string literal.
     ECHO("STRING");
     advance_character_number(strlen(yytext));
-    yylval.string = strdup(yytext);  // Free this string in the parser.
+    yylval.string = strdup(yytext);  // Free this string outside of the lexer.
     return STRING;
 }
 
@@ -146,7 +160,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 {STRLIT}  {  // String literal in quotes (to allow whitespace and special characters).
     ECHO("STRING");
     advance_character_number(strlen(yytext));
-    yylval.string = extract_literal(yytext);  // Free this string in the parser.
+    yylval.string = extract_literal(yytext);  // Free this string outside of the lexer.
     return STRING;
 }
 
@@ -154,20 +168,9 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 \n  {  // Report newlines to the parser (but not as tokens).
     ECHO("[newline]");
 
-    #ifndef SUPPRESS_OUTPUT
+    advance_line_number();
 
-        #ifdef SHOW_INPUT_LINENO
-            printf("%d ", line_number + 1);  // 1-index the line number.
-        #endif
-
-        #ifdef INPUT_PREFIX
-            // Add a prefix to each new line of input, to distinguish it from output.
-            printf(INPUT_PREFIX);
-        #endif
-
-    #endif
-
-    advance_line();
+    print_input_prefix();
 }
 
 
@@ -191,9 +194,6 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 
 %%
-
-////////////////////////////////////////////////////////////////////////////////
-
 
 /** Debugging output. */
 void echo_token(char *s)

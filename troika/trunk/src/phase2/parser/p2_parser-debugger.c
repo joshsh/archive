@@ -71,12 +71,11 @@ extern void p2_evaluate_command(char *name, p2_term *args)
     {
         printf("Evaluate command \"%s\": ", name);
         p2_term__print(args, 1);
-        printf("\n");
-
+        //printf("\n");
     }
 
     else
-        printf("Evaluate command \"%s\"\n", name);
+        printf("Evaluate command \"%s\"", name);
 
 
     // Process the command.
@@ -89,7 +88,10 @@ extern void p2_evaluate_command(char *name, p2_term *args)
         cleanup_term(args);
 
     if (quit)
+    {
+        printf("\n\n");
         exit(0);
+    }
 }
 
 
@@ -108,14 +110,12 @@ extern void p2_evaluate_expression(char *name, p2_term *expr)
     {
         printf("Evaluate expression \"%s\": ", name);
         p2_term__print(expr, 1);
-        printf("\n");
     }
 
     else
     {
-        printf("Evaluate anonymous expression: ");  fflush(stdout);
+        printf("Evaluate anonymous expression: ");
         p2_term__print(expr, 1);
-        printf("\n");
     }
 
     cleanup_term(expr);
@@ -127,30 +127,24 @@ extern void p2_evaluate_expression(char *name, p2_term *expr)
 extern void p2_handle_parse_error(char *msg)
 {
     if (msg && strlen(msg))
-        printf("Handle parse error: %s.\n", msg);
+        printf("Handle parse error: %s.", msg);
     else
-        printf("Handle parse error.\n");
+        printf("Handle parse error.");
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-/** Invocation of yyparse() is here. */
+/** Debugger controlling function.  Invocation of yyparse() is here. */
 main()
 {
     printf("Phase2 command-line parser debugger.  Type '/exit' to quit.\n\n");
 
-    #ifdef INPUT_PREFIX
-        printf(INPUT_PREFIX);  // Can the lexer do this?
-    #else
-        printf("\n");
-    #endif
-
     if (yyparse())
-        printf("Parser (would have) exited abnormally.\n");
+        printf("Parser exited abnormally.\n");
     else
-        printf("Parser (would have) exited normally.\n");
+        printf("Parser exited normally.\n");
 }
 
 

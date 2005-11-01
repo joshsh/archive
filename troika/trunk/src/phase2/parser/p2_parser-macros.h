@@ -1,8 +1,13 @@
 // Debugging ///////////////////////////////////////////////////////////////////
 
+/** If defined, echo each token as it is matched by the lexer. */
 // #define LEXER_DEBUG
+
+/** If defined, echo each production as it is matched by the parser. */
 // #define PARSER_DEBUG
 
+/** If defined, print terms as raw integer sequences, rather than as
+    parenthesized expressions. */
 // #define PRINT_TERM_AS_ARRAY
 
 
@@ -25,4 +30,30 @@
 // #define COMMAND_OUTPUT_SUFFIX " <<"
 // #define EXPRESSION_OUTPUT_SUFFIX " <<"
 // #define ERROR_OUTPUT_SUFFIX " <<"
+
+
+// Declarations ////////////////////////////////////////////////////////////////
+
+/** Flag for output suppression. */
+int suppress_output;
+
+
+/** Current "column" number, where tabs only count for one column. */
+int character_number, last_character_number;
+
+/** Current line number.  Starts at 0. */
+int line_number;
+
+/** Current statement number.  Starts at 0 for each line of input. */
+int statement_number;
+
+
+/** Registers a new column offset. */
+void advance_character_number(int nchars);
+
+/** Registers a new line of input. */
+void advance_line_number();
+
+/** Registers a new statement. */
+void advance_statement_number();
 
