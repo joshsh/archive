@@ -50,6 +50,9 @@ extern int yyparse();
 /** Term cleanup function from Bison output. */
 extern void cleanup_term(p2_term *term);
 
+extern void p2_parser__set_suppress_output(int flag);
+extern void p2_parser__set_show_line_numbers(int flag);
+
 
 /** Mock command evaluator.
     \note  the p2_term argument 'args' should be freed after use (if not null),
@@ -138,6 +141,9 @@ extern void p2_handle_parse_error(char *msg)
 /** Debugger controlling function.  Invocation of yyparse() is here. */
 main()
 {
+    p2_parser__set_suppress_output(0);
+    p2_parser__set_show_line_numbers(1);
+
     printf("Phase2 command-line parser debugger.  Type '/exit' to quit.\n\n");
 
     if (yyparse())
