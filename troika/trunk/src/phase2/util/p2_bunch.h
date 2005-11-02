@@ -74,38 +74,38 @@ typedef struct
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Constructor. */
-p2_bunch *p2_p2_bunch__new(int block_size);
+p2_bunch *p2_bunch__new(int block_size);
 
 /** Copy constructor. */
-p2_bunch *p2_p2_bunch__copy(p2_bunch *b);
+p2_bunch *p2_bunch__copy(p2_bunch *b);
 
 /** Destructor. */
-void p2_p2_bunch__delete(p2_bunch *b);
+void p2_bunch__delete(p2_bunch *b);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Adds a single item to the bunch. */
-void p2_p2_bunch__add(p2_bunch *b, void *p);
+void p2_bunch__add(p2_bunch *b, void *p);
 
 /** Adds the contents of one bunch to another. */
-void p2_p2_bunch__add_all(p2_bunch *dest, p2_bunch *src);
+void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the bunch, else 0. */
-void *p2_p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *));
+void *p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *));
 
 /** \return the first item for which the criterion evaluates to a non-zero
     value ("true").  If no such item exists, the return value is 0. */
-void *p2_p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *));
+void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *));
 
 /** Excludes all items from the bunch for which criterion evaluates to a non-zero
     value ("true").
     \return the original bunch, but without the excluded items */
-p2_bunch *p2_p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *));
+p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *));
 
 
 ////////////////////////////////////////////////////////////////////////////////

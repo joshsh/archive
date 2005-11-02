@@ -96,23 +96,24 @@ char *extract_literal(char *s);
 
 
 /** A minimal set of special characters reserved as stand-alone syntax elements.
-    \note  The slash, backslash and double quote are also special characters. */
+    \note  The backslash and double quote are also special characters. */
 SEMICOLON             [;]
 EQUALS                [=]
 OPEN_PAREN            [(]
 CLOSE_PAREN           [)]
+SLASH                 [/]
 
 /** Letter or decimal digit. */
 ALNUM                 [A-Za-z0-9]
 
-/** Non-syntactic, non-whitespace character (including slash). */
-NS                    [^;=()\0-\40"]
+/** Non-syntactic, non-whitespace character (excluding slash and equals). */
+NS_HEAD               [^;=()\0-\40"/]
 
-/** Non-syntactic, non-whitespace character (excluding slash). */
-NOSLASH               [^;=()\0-\40"/]
+/** Non-syntactic, non-whitespace character (but including slash and equals). */
+NS_TAIL               [^;()\0-\40"]
 
 /** Non-syntactic, non-whitespace, non-alphanumeric character. */
-NONALNUM              [^;=()\0-\40"A-Za-z0-9]
+NONALNUM              [^;()\0-\40"A-Za-z0-9]
 
 /** \note  Multi-line literals are accepted. */
 STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
@@ -149,7 +150,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-[/]{ALNUM}{NS}*  {  // It's only a command if the slash is followed with a letter or digit.
+{SLASH}{ALNUM}{NS_TAIL}*  {  // It's only a command if the slash is followed with a letter or digit.
     ECHO("COMMAND_NAME");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
@@ -157,7 +158,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-({NOSLASH}|([/]{NONALNUM})){NS}*  {  // Simple string literal.
+({NS_HEAD}|({SLASH}{NONALNUM})){NS_TAIL}*  {  // Simple string literal.
     ECHO("STRING");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext);  // Free this string outside of the lexer.

@@ -40,7 +40,7 @@ parcour@gmail.com
  *//////////////////////////////////////////////////////////////////////////////
 
 #ifndef XMLDOM_H
-#define XMLDOM_H    1
+#define XMLDOM_H
 
 using namespace std;
 
@@ -54,9 +54,6 @@ using namespace std;
 
 #include "stdsoap2.h"  // Need -I[gSOAP path] when compiling
 #include <fstream>
-
-
-#define DOM_NULL    NULL
 
 
 
@@ -83,7 +80,7 @@ typedef char* DOM_DOMString;
 */
 //[!] make stubs out of these so you can check for NULLs, etc.
 #define new_DOM_Element(document, namespaceURL, baseName, value) \
-    new soap_dom_element((document)->soap, NULL, strdup(baseName), strdup(value))
+    new soap_dom_element((document)->soap, 0, strdup(baseName), strdup(value))
 //#define new_DOM_Element(document, namespaceURL, baseName, value)
 //    new soap_dom_element((document)->soap, namespaceURL, strdup(baseName), strdup(value))
 
@@ -91,7 +88,7 @@ typedef char* DOM_DOMString;
     delete element
 
 #define new_DOM_Attr(document, namespaceURL, baseName, value) \
-    new soap_dom_attribute((document)->soap, NULL, strdup(baseName), strdup(value))
+    new soap_dom_attribute((document)->soap, 0, strdup(baseName), strdup(value))
 //#define new_DOM_Attr(document, namespaceURL, baseName, value) 
 //    new soap_dom_attribute((document)->soap, namespaceURL, strdup(baseName), strdup(value))
 

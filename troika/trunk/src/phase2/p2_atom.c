@@ -36,8 +36,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 p2_error p2_atom_init()
 {
     #ifdef P2FLAGS__MARK_AND_SWEEP
-    // Initialize "mark and sweep" array.
-    markandsweep_atoms = p2_bunch__new(1000);
+        // Initialize "mark and sweep" collection.
+        markandsweep_atoms = p2_bunch__new(1000);
     #endif
 
     return P2_SUCCESS;
@@ -68,13 +68,20 @@ p2_atom *p2_atom__new(p2_type type, void *value)
     atom->type = type;
     atom->value = value;
 
-    #ifdef USE_ASSOCIATION
-    inbound_edges = 0;
-    outbound_edges = 0;
+    #ifdef P2FLAGS__ASSOCIATION
+        #ifdef P2FLAGS__OUTBOUND_EDGES
+            atom->outbound_edges = 0;
+        #endif
+        #ifdef P2FLAGS__INTBOUND_EDGES
+            atom->inbound_edges = 0;
+        #endif
+        #ifdef P2FLAGS__TRANS_EDGES
+            atom->trans_edges = 0;
+        #endif
     #endif
 
     #ifdef P2FLAGS__MARK_AND_SWEEP
-    p2_bunch__add(markandsweep_atoms, (void *) atom);
+        p2_bunch__add(markandsweep_atoms, (void *) atom);
     #endif
 }
 
@@ -82,19 +89,53 @@ p2_atom *p2_atom__new(p2_type type, void *value)
 
 void p2_atom__delete(p2_atom *atom)
 {
-    #ifdef USE_ASSOCIATION
-    if (atom->inbound_edges)
-        p2_hash_table__delete(atom->inbound_edges);
-    if (atom->outbound_edges)
-        p2_hash_table__delete(atom->outbound_edges);
+    #ifdef P2FLAGS__ASSOCIATION
+        #ifdef P2FLAGS__OUTBOUND_EDGES
+            if (atom->outbound_edges)
+                p2_hash_table__delete(atom->outbound_edges);
+        #endif
+        #ifdef P2FLAGS__INBOUND_EDGES
+            if (atom->inbound_edges)
+                p2_hash_table__delete(atom->inbound_edges);
+        #endif
+        #ifdef P2FLAGS__TRANS_EDGES
+            if (atom->trans_edges)
+                p2_hash_table__delete(atom->trans_edges);
+        #endif
     #endif
+
+    // Caution: assumes that the atom owns its value.
+    p2_destroy(atom->value, atom->type);
 
     free(atom);
 }
 
 
 
-/** "Mark and sweep" memory reclamation *////////////////////////////////////////
+void p2_atom__encode(p2_atom *atom, char *buffer)
+{
+    p2_encode(atom->value, atom->type, buffer);
+}
+
+
+
+p2_atom *p2_atom__decode(p2_type type_index, char *buffer)
+{
+    void *value = p2_decode(type_index, char *buffer);
+    p2_atom *atom;
+
+    if (!value)
+        atom = p2_error_atom(DESERIALIZATION_FAILED);  //.................
+
+    else
+        atom = p2_atom__new(type_index, value);
+
+    return atom;
+}
+
+
+
+// "Mark and sweep" memory reclamation /////////////////////////////////////////
 
 
 
@@ -109,33 +150,31 @@ p2_atom *mark(p2_atom *atom)
 
 
 
+p2_atom *unmark(p2_atom *atom)
+{
+    if (atom->type < 0)
+    {
+        atom->type = (p2_type) -((unsigned int) atom->type);
+        atom = 0;
+    }
+    else
+        p2_atom__delete(atom);
+
+    return atom;
+}
+
+
+
 void p2_mark(p2_term *term)
 {
-    p2_p2_term__substitute_all(term, (void *(*)(void *)) mark);
+    p2_term__substitute_all(term, (void *(*)(void *)) mark);
 }
 
 
 
 void p2_sweep()
 {
-    int i, size = markandsweep_atoms->size;
-    p2_atom *atom;
-
-    for (i = 0; i < size; i++)
-    {
-        atom = (p2_atom *) p2_array__get(markandsweep_atoms, i);
-        if (atom->type > 0)
-        {
-            p2_array__simple_remove(markandsweep_atoms, i);
-            size--;
-            i--;
-            deallocate_atom(atom);
-            free(atom);
-        }
-        else
-            // un-mark
-            atom->type = (p2_type) -((unsigned int) atom->type);
-    }
+    markandsweep_atoms = p2_bunch__exclude_if(markandsweep_atoms, (void *(*)(void *)) unmark);
 }
 
 

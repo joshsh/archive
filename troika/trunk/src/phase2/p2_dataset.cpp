@@ -254,7 +254,7 @@ DOM_Element *p2_data_set::encode(p2_atom *atom)
 
         // The existing element needs a multiref id by this point; if it doesn't
         // have one, create one for it.
-        if (existing_id == DOM_NULL)
+        if (!existing_id)
         {
             existing_id = new_DOM_Attr(document, NULL, "id", next_multiref_id());
             DOM_setAttributeNode(existing_element, existing_id);
@@ -285,7 +285,7 @@ DOM_Element *p2_data_set::encode(p2_term *term)
 {
     DOM_Element *el;
     int length = p2_term__length(term);
-    
+
     // Singleton sequence (assumes head-normal form).
     if (length == 1)
     {
@@ -297,7 +297,7 @@ DOM_Element *p2_data_set::encode(p2_term *term)
     {
         el = new_DOM_Element(document, p2_XMLNS_URL, p2_TERM, "");
         void **cur = term->head + 1;
-....
+
         // Add child subterm elements to el.
         for (int i = 0; i < length; i++)
         {

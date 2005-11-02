@@ -73,8 +73,21 @@ typedef struct
 p2_error p2_atom_init();
 p2_error p2_atom_end();
 
+/** Create a new typed constant. */
 p2_atom *p2_atom__new(p2_type type, void *value);
-void p2_atom__delete(p2_atom *atom);
+
+#ifndef P2FLAGS__MARK_AND_SWEEP
+
+    /** Deallocate a typed constant. */
+    void p2_atom__delete(p2_atom *atom);
+
+#endif
+
+/** Serializes a p2_atom to a string. */
+void p2_atom__encode(p2_atom *atom, char *buffer);
+
+/** Deserializes a p2_atom from a string. */
+p2_atom *p2_atom__decode(p2_type type_index, char *buffer);
 
 
 // "Mark and sweep" memory reclamation /////////////////////////////////////////
@@ -84,7 +97,7 @@ void p2_atom__delete(p2_atom *atom);
     #include "util/term.h"
 
     /** Marks all atoms referenced by the given p2_term.
-        \note  this function assumes that type identifiers are positive (it
+        \note  This function assumes that type identifiers are positive (it
        "marks" an atom by reversing the sign of its type id). */
     void p2_mark(p2_term *term);
 
@@ -94,7 +107,7 @@ void p2_atom__delete(p2_atom *atom);
     /** Returns the number of atoms in the "mark and sweep" collection. */
     unsigned int p2_total_markandsweep_atoms();
 
-#endif
+#endif  // P2FLAGS__MARK_AND_SWEEP
 
 
 #endif  // P2_ATOM_H

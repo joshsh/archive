@@ -1,5 +1,10 @@
 /**
-    \file flags.h
+    \file p2_void.h
+
+    \brief  Defines the trivial p2_void data type.
+
+    \note  It is assumed that the implementation will not call p2_void__new so
+           many times as to use up every below-range address.
 
     \author Joshua Shinavier   \n
             parcour@gmail.com  \n
@@ -24,42 +29,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#ifndef P2_FLAGS_H
-#define P2_FLAGS_H
+#ifndef P2_VOID_H
+#define P2_VOID_H
 
 
-// Association /////////////////////////////////////////////////////////////////
-
-#define P2FLAGS__ASSOCIATION
-
-#ifdef P2FLAGS__ASSOCIATION
-    #define P2FLAGS__OUTBOUND_EDGES
-    // #define P2FLAGS__TRANS_EDGES
-    // #define P2FLAGS__INBOUND_EDGES
-#endif
+/** A p2_void item is a pointer to an out-of-range memory location, which serves
+    as a unique identifier for the item but does not contain any meaningful
+    data. */
+typedef void p2_void;
 
 
-// Memory management ///////////////////////////////////////////////////////////
-
-#define P2FLAGS__MARK_AND_SWEEP
-
-#define P2FLAGS__MANAGE_PRIMITIVES
+/** The constructor merely returns an unused out-of-range address. */
+p2_void *p2_void__new(char *dataset_id, char *local_id);
 
 
-// Debugging ///////////////////////////////////////////////////////////////////
-
-/** While the gSOAP DOM parser is still struggling with namespaces... */
-#define P2FLAGS__OMIT_XMLNS
-
-//#define P2FLAGS__DEBUG
-
-// ! This is not a flag.
-#ifdef P2FLAGS__DEBUG
-    #include <stdio.h>  // printf
-#endif
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-#endif  // P2_FLAGS_H
+#endif  // P2_VOID_H
 

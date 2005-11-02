@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_error.h"
 
 
-/** A unique 32-bit value to identify a specific data type. */
+/** A unique 32-bit value to identify a data type. */
 typedef void * p2_type;
 
 
@@ -49,13 +49,15 @@ typedef void * p2_type;
 #define CLONE_FORMAT     void *(*)(void *)
 
 
+/**  */
 p2_error p2_type_init();
 
+/**  */
 p2_error p2_type_end();
 
 
-// [!] Re-name to p2_type__new.
-p2_type p2_register_type(
+/** Registers a new data type. */
+p2_type p2_type__new(
 
     char *name,
     void (*encode)(void *, char *),
@@ -64,17 +66,23 @@ p2_type p2_register_type(
     void *(*clone)(void *));
 
 
+/** Retrieves a type identifier by name. */
 p2_type p2_type_lookup(char *name);
 
+/**  */
 char *p2_type_name(p2_type type_index);
 
 
+/** Serializes a data item to a string. */
 void p2_encode(void *p, p2_type type_index, char *buffer);
 
+/** Deserializes a data item from a string. */
 void *p2_decode(p2_type type_index, char *buffer);
 
+/** Deallocates a data item. */
 void p2_destroy(void *p, p2_type type_index);
 
+/** Creates a copy of a data item. */
 void *p2_clone(void *p, p2_type type_index);
 
 

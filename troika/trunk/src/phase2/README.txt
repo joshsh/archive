@@ -124,6 +124,34 @@ set_trigger(key, target)
 }
 
 
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+core:
+
+    (register atom, error, primitive, type)
+    SK reduce (term)
+    ^ and ^=
+    mark (term), sweep
+    serialize (term), deserialize (term)
+
+client:
+
+    p2_evaluate_command
+    p2_evaluate_expression
+    p2_handle_parse_error
+
+graphical interface, command-line interface
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[*] Args to register a regular expression and bind it to a type:
+--[.] regular expression for recognition
+--[.] p2_type
+
+[*] Regular expressions are matched in the order in which they were registered.
+
+
 TODO :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 

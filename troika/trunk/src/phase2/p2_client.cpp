@@ -321,7 +321,7 @@ void p2_evaluate_command(char *name, char *xmlargs)
     struct soap soap;
     soap_init2(&soap, SOAP_IO_DEFAULT, SOAP_XML_TREE);
     soap_dom_element document(soap_new()); // create a DOM with a new soap environment
-    soap_set_imode(document.soap, SOAP_DOM_TREE); // DOM tree w/o application data
+    soap_set_imode(document.soap, SOAP_DOM_TREE); // DOM tree without application data
 
     // Deserialize XML input.
     deserialize(xmlargs, &document);
@@ -332,7 +332,7 @@ void p2_evaluate_command(char *name, char *xmlargs)
 
     nargs = 0;
     DOM_Element *cur = DOM_firstChild(&document);
-    while (cur != DOM_NULL)
+    while (cur)
     {
         nargs++;
         cur = DOM_nextSibling(cur);
@@ -340,7 +340,7 @@ void p2_evaluate_command(char *name, char *xmlargs)
     args = (char **) malloc(nargs * sizeof(char *));
     cur = DOM_firstChild(&document);
     int i = 0;
-    while (cur != DOM_NULL)
+    while (cur)
     {
         args[i] = strdup(DOM_text(cur));
         cur = DOM_nextSibling(cur);
@@ -360,7 +360,7 @@ void p2_evaluate_command(char *name, char *xmlargs)
     if (err)
     {
         p2_print_error(err, s);
-    cout << "\t>> Error: " << s << ". <<" << endl;
+        cout << "\t>> Error: " << s << ". <<" << endl;
     }
 
     // Destroy argument list.
@@ -472,7 +472,7 @@ int main(int argv, char *args[])
         // Print GPL notice.
         cout << endl
              << "Phase2 version 0.5, Copyright (C) 2005 Joshua Shinavier." << endl
-             << "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '/show license;' for details." << endl;
+             << "The Phase2 programming environment comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '/show license;' for details." << endl;
 
         // Show type indices for debugging.
         #ifdef DEBUG

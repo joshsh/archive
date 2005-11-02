@@ -3,7 +3,7 @@
   p2_error.c
 
   last edited: 5/31/05
-  
+
 *//*/////////////////////////////////////////////////////////////////////////////
 
 Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
@@ -36,6 +36,8 @@ parcour@gmail.com
 #include <stdio.h>   // free, sprintf
 
 
+////////////////////////////////////////////////////////////////////////////////
+
 
 // Global vars for this module only.
 p2_array *registered_errors_;
@@ -43,10 +45,11 @@ p2_hash_table *error_dictionary_;
 int total_errors_ = 0;
 
 
+////////////////////////////////////////////////////////////////////////////////
+
 
 p2_error p2_error_init()
 {
-
     registered_errors_ = p2_array__new(30, 2.0);
     error_dictionary_ = p2_hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
 
@@ -79,7 +82,6 @@ p2_error p2_error_init()
 }
 
 
-
 p2_error p2_error_end()
 {
     p2_array__forall(registered_errors_, (void (*)(void *)) free);
@@ -88,7 +90,6 @@ p2_error p2_error_end()
 
     return P2_SUCCESS;
 }
-
 
 
 p2_error p2_error__new(char *name)
@@ -106,12 +107,10 @@ p2_error p2_error__new(char *name)
 }
 
 
-
 void p2_error__encode(p2_error err, char *buffer)
 {
     if (err)
         //printf("\t>> Error: %s <<\n", p2_errors[err]);
         sprintf(buffer, (char *) p2_array__get(registered_errors_, (int) err - 1));
 }
-
 

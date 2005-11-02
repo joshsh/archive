@@ -71,7 +71,6 @@ extern void p2_evaluate_command(char *name, p2_term *args)
     {
         printf("Evaluate command \"%s\": ", name);
         p2_term__print(args, 1);
-        //printf("\n");
     }
 
     else

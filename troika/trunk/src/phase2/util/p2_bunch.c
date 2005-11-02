@@ -66,7 +66,7 @@ void block__delete(block *bl)
 
 
 
-p2_bunch *p2_p2_bunch__new(int block_size)
+p2_bunch *p2_bunch__new(int block_size)
 {
     p2_bunch *b = (p2_bunch *) malloc(sizeof(p2_bunch));
 
@@ -79,7 +79,7 @@ p2_bunch *p2_p2_bunch__new(int block_size)
 
 
 
-p2_bunch *p2_p2_bunch__copy(p2_bunch *b)
+p2_bunch *p2_bunch__copy(p2_bunch *b)
 {
     int i, size = b->block_size;
     block *bl;
@@ -102,7 +102,7 @@ p2_bunch *p2_p2_bunch__copy(p2_bunch *b)
 
 
 
-void p2_p2_bunch__delete(p2_bunch *b)
+void p2_bunch__delete(p2_bunch *b)
 {
     // Free all blocks.
     p2_array__forall(b->blocks, (void (*) (void *)) block__delete);
@@ -116,7 +116,7 @@ void p2_p2_bunch__delete(p2_bunch *b)
 
 
 
-void p2_p2_bunch__add(p2_bunch *b, void *p)
+void p2_bunch__add(p2_bunch *b, void *p)
 {
     // Get or create tail-end block.
     if (!b->last_block || b->last_block->filled == b->last_block->size)
@@ -131,7 +131,7 @@ void p2_p2_bunch__add(p2_bunch *b, void *p)
 
 
 
-void p2_p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
+void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
 {
     int i, size;
     block *last_block = dest->last_block;
@@ -156,13 +156,13 @@ void p2_p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
 
     // Add all items from the previous tail-end block (if any).
     for (i = 0; i < last_block->filled; i++)
-        p2_p2_bunch__add(dest, last_block->buffer[i]);
+        p2_bunch__add(dest, last_block->buffer[i]);
     free(last_block);
 }
 
 
 
-void *p2_p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *))
+void *p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *))
 {
     int i, j, numblocks = b->blocks->size;
     block *bl;
@@ -180,7 +180,7 @@ void *p2_p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *))
 
 
 
-void *p2_p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *))
+void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *))
 {
     int i, j, numblocks = b->blocks->size;
     block *bl;
@@ -202,7 +202,7 @@ void *p2_p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *))
 
 
 
-p2_bunch *p2_p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
+p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
 {
     int i, j, numblocks = b->blocks->size;
     block *bl;
