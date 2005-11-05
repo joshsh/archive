@@ -116,6 +116,13 @@ void p2_bunch__delete(p2_bunch *b)
 
 
 
+void p2_bunch__size(p2_bunch *b)
+{
+    return (b->blocks->size * b->block_size) - (b->block_size - b->last_block->filled);
+}
+
+
+
 void p2_bunch__add(p2_bunch *b, void *p)
 {
     // Get or create tail-end block.
@@ -158,6 +165,29 @@ void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
     for (i = 0; i < last_block->filled; i++)
         p2_bunch__add(dest, last_block->buffer[i]);
     free(last_block);
+}
+
+
+
+void *p2_bunch__remove(p2_bunch *b)
+{
+    block *bl = b->last_block;
+    void *p = bl->buffer[--bl->filled];
+
+    // Remove the tail-end block if empty.
+    if (!bl->filled)
+    {
+        block__delete((block *) p2_array__dequeue(b->blocks));
+
+        if (bl == b->last_block)
+        {
+            b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+            return b;
+        }
+
+        else
+            b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+    }
 }
 
 

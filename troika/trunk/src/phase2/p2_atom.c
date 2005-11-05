@@ -22,22 +22,46 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  // malloc
 
 
-
 #ifdef P2FLAGS__MARK_AND_SWEEP
 
-    #include "util/p2_bunch.h"
+#include "util/p2_bunch.h"
+#include "util/p2_term.h"
+#include "util/p2_set.h"
 
-    p2_bunch *markandsweep_atoms = 0;
+/** A global collection of pointers which references all atoms in the
+    environment at a given time.  Memory can be reclaimed by eliminating
+    orphan atoms with the mark and sweep functions. */
+p2_bunch *markandsweep_atoms = 0;
 
-#endif
+/** Atoms in this queue have already been marked, however they may have outbound
+    edges which need to be investigated.
+    \note  This collection is always null outside of a mark and sweep interval,
+    and is initialized in add_to_queue. */
+p2_bunch *edge_marking_queue = 0;
 
+#ifdef P2FLAGS__OUTBOUND_EDGES
+
+/** A global lookup table for "trigger" tables.
+    \note  This table is is always null outside of a mark and sweep interval,
+    and is initialized in mark_edge. */
+p2_hash_table *all_triggers = 0;
+
+#endif  // P2FLAGS__OUTBOUND_EDGES
+
+#endif  // P2FLAGS__MARK_AND_SWEEP
+
+
+//!
+p2_atom *p2_error_atom(p2_error err) { return 0 ; }
+p2_type p2_term__type = (p2_type) 655321;
+p2_type p2_set__type = (p2_type) 655322;
 
 
 p2_error p2_atom_init()
 {
     #ifdef P2FLAGS__MARK_AND_SWEEP
         // Initialize "mark and sweep" collection.
-        markandsweep_atoms = p2_bunch__new(1000);
+        markandsweep_atoms = p2_bunch__new(P2FLAGS__MARKANDSWEEP_ATOMS__BLOCK_SIZE);
     #endif
 
     return P2_SUCCESS;
@@ -68,7 +92,7 @@ p2_atom *p2_atom__new(p2_type type, void *value)
     atom->type = type;
     atom->value = value;
 
-    #ifdef P2FLAGS__ASSOCIATION
+    #ifdef P2FLAGS__OUTBOUND_EDGES
         #ifdef P2FLAGS__OUTBOUND_EDGES
             atom->outbound_edges = 0;
         #endif
@@ -89,7 +113,7 @@ p2_atom *p2_atom__new(p2_type type, void *value)
 
 void p2_atom__delete(p2_atom *atom)
 {
-    #ifdef P2FLAGS__ASSOCIATION
+    #ifdef P2FLAGS__OUTBOUND_EDGES
         #ifdef P2FLAGS__OUTBOUND_EDGES
             if (atom->outbound_edges)
                 p2_hash_table__delete(atom->outbound_edges);
@@ -121,7 +145,7 @@ void p2_atom__encode(p2_atom *atom, char *buffer)
 
 p2_atom *p2_atom__decode(p2_type type_index, char *buffer)
 {
-    void *value = p2_decode(type_index, char *buffer);
+    void *value = p2_decode(type_index, buffer);
     p2_atom *atom;
 
     if (!value)
@@ -138,16 +162,157 @@ p2_atom *p2_atom__decode(p2_type type_index, char *buffer)
 // "Mark and sweep" memory reclamation /////////////////////////////////////////
 
 
-
 #ifdef P2FLAGS__MARK_AND_SWEEP
 
-p2_atom *mark(p2_atom *atom)
+
+unsigned int p2_total_markandsweep_atoms()
 {
-    if (atom->type > 0)
-        atom->type = (p2_type) -((unsigned int) atom->type);
-    return atom;
+   if (markandsweep_atoms)
+        return p2_bunch__size(markandsweep_atoms);
+   else
+        return 0;
 }
 
+
+//void *(*)(void *, void *)
+
+/** \return  a type-specific "apply to all" function, or 0 if the argument is
+    not of a collection type. */
+void *(*distributing_function (p2_type type))(void *, void *(*)(void *))
+{
+    if (type == p2_term__type)
+        return (void *(*)(void *, void *(*)(void *))) p2_term__for_all;
+    else if (type == p2_set__type)
+        return (void *(*)(void *, void *(*)(void *))) p2_set__for_all;
+    else
+        return 0;
+}
+
+
+/** Adds an atom to the edge-marking queue. */
+void add_to_queue(p2_atom *atom)
+{
+    if (!edge_marking_queue)
+        edge_marking_queue = p2_bunch__new(P2FLAGS__MARKANDSWEEP_QUEUE__BLOCK_SIZE);
+
+    p2_bunch__add(edge_marking_queue, atom);
+}
+
+
+void *mark_atom(p2_atom *atom)
+{
+    // If the atom has not already been marked...
+    if (atom->type > 0)
+    {
+        // Mark the atom by reversing the sign of its type.
+        atom->type = (p2_type) -((unsigned int) atom->type) ;
+
+        // Before interfering with the atom's type...
+        #ifdef P2FLAGS__OUTBOUND_EDGES
+            // This atom may have edges which need to be investigated.
+            add_to_queue(atom) ;
+
+            // Flip any "triggers" bound to this atom.
+            p2_hash_table *triggers = p2_hash_table__lookup(all_triggers, atom);
+            if (triggers)
+            {
+                // Mark each atom in the argument atom's trigger table.
+                p2_hash_table__for_all(triggers, (void (*)(void *, void *)) mark_atom);
+
+                // The marked atom has no more need for a trigger table.
+                p2_hash_table__remove(all_triggers, triggers);
+                p2_hash_table__delete(triggers);
+            }
+        #else
+            // If there are no associative edges, then only parent-child edges
+            // are possible.
+            if (distributing_function(-atom->type))
+                add_to_queue(atom) ;
+        #endif
+    }
+
+    // Perfunctory nonzero return value.
+    return (void *) 1;
+}
+
+
+#ifdef P2FLAGS__OUTBOUND_EDGES
+
+void mark_edge(p2_atom *key, p2_atom *target)
+{
+    // If the target has not already been marked...
+    if (target->type > 0)
+    {
+        // If the key is already marked, then we can immediately mark the target.
+        if (key->type < 0)
+            mark_atom(target) ;
+
+        // Otherwise, set up a "trigger" which will cause the target atom to be
+        // marked in the event that the key is marked.
+        else
+        {
+            // Initialize the trigger table lookup table if necessary.
+            if (!all_triggers)
+                all_triggers = p2_hash_table__new(
+                    P2FLAGS__INIT_MARKANDSWEEP_BUFFER_SIZE, 0, 0, ADDRESS_DEFAULTS);
+
+            // Find or create the appropriate trigger table.
+            p2_hash_table *triggers = p2_hash_table__lookup(all_triggers, key);
+            if (!triggers)
+            {
+                triggers = p2_hash_table__new(
+                    P2FLAGS__INIT_TRIGGER_BUFFER_SIZE, 0, 0, ADDRESS_DEFAULTS);
+
+                p2_hash_table__add(all_triggers, key, triggers);
+            }
+
+            // Add a trigger to the table.
+            p2_hash_table__add(all_triggers, triggers, target);
+        }
+    }
+}
+
+#endif  // P2FLAGS__OUTBOUND_EDGES
+
+
+/** Marks all of an atom's outbound edges. */
+void mark_outbound_edges(p2_atom *atom)
+{
+    #ifdef P2FLAGS__OUTBOUND_EDGES
+
+        // If the atom has any outbound associations...
+        if (atom->outbound_edges)
+        {
+            // Investigate each outbound associative edge.
+            p2_hash_table__for_all(atom->outbound_edges,
+                (void (*)(void *, void *)) mark_edge) ;
+        }
+
+    #endif
+
+    // Note: this logic assumes that the argument atom has already been marked.
+    void *(*for_all)(void *, void *(*)(void *))
+        = distributing_function((p2_type) -((unsigned int) atom->type)) ;
+
+    // If the argument atom is of a collection type, mark each child atom.
+    if (for_all)
+        for_all(atom->value, (void *(*)(void *)) mark_atom) ;
+}
+
+
+void p2_atom__mark(p2_atom *atom)
+{
+    mark_atom(atom) ;
+
+    if (edge_marking_queue)
+    {
+        while (edge_marking_queue->last_block->filled)  //~?
+        {
+            atom = (p2_atom *) p2_bunch__remove(edge_marking_queue) ;
+            mark_outbound_edges(atom) ;
+        }
+    }
+}
 
 
 p2_atom *unmark(p2_atom *atom)
@@ -155,6 +320,8 @@ p2_atom *unmark(p2_atom *atom)
     if (atom->type < 0)
     {
         atom->type = (p2_type) -((unsigned int) atom->type);
+
+        // Don't exclude this atom.
         atom = 0;
     }
     else
@@ -164,31 +331,35 @@ p2_atom *unmark(p2_atom *atom)
 }
 
 
-
-void p2_mark(p2_term *term)
-{
-    p2_term__substitute_all(term, (void *(*)(void *)) mark);
-}
-
-
-
 void p2_sweep()
 {
+    // Unmark all marked atoms in the environment, and delete the rest.
     markandsweep_atoms = p2_bunch__exclude_if(markandsweep_atoms, (void *(*)(void *)) unmark);
+
+    // Eliminate the edge marking queue.
+    if (edge_marking_queue)
+    {
+        p2_bunch__delete(edge_marking_queue);
+        edge_marking_queue = 0;
+    }
+
+    #ifdef P2FLAGS__OUTBOUND_EDGES
+
+        if (all_triggers)
+        {
+            // Delete all remaining trigger tables.
+            p2_hash_table__for_all_targets(
+                all_triggers,
+                (void (*)(void *)) p2_hash_table__delete);
+
+            // Eliminate the global lookup table.
+            p2_hash_table__delete(all_triggers);
+            all_triggers = 0;
+        }
+
+    #endif
 }
-
-
-
-unsigned int p2_total_markandsweep_atoms()
-{
-   if (markandsweep_atoms)
-        return markandsweep_atoms->size;
-   else
-        return 0;
-}
-
 
 
 #endif  // P2FLAGS__MARK_AND_SWEEP
-
 

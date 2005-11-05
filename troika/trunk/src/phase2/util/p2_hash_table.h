@@ -115,10 +115,10 @@ typedef struct
     macros ADDRESS_DEFAULTS or STRING_DEFAULTS (C strings only!) if efficiency
     is not foremost, e.g.
 
-      p2_hash_table *myfrobs = p2_hash_table__new(        \n
+      p2_hash_table *myfrobs = p2_hash_table__new(     \n
         500, 2, 1.5, my_hashing_func, my_compare_to);  \n
                                                        \n
-      p2_hash_table *myfrobs = p2_hash_table__new(        \n
+      p2_hash_table *myfrobs = p2_hash_table__new(     \n
         0, 0, 0, STRING_DEFAULTS);                     \n
 */
 p2_hash_table *p2_hash_table__new(
@@ -152,13 +152,13 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key);
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Applies a void function to each key/target pair in turn. */
-void p2_hash_table__forall(p2_hash_table *h, void (*func)(void *, void *));
+void p2_hash_table__for_all(p2_hash_table *h, void (*func)(void *, void *));
 
 /** Applies a void function to each key value in turn. */
-void p2_hash_table__forall_keys(p2_hash_table *h, void (*func)(void *));
+void p2_hash_table__for_all_keys(p2_hash_table *h, void (*func)(void *));
 
 /** Applies a void function to each target value in turn. */
-void p2_hash_table__forall_targets(p2_hash_table *h, void (*func)(void *));
+void p2_hash_table__for_all_targets(p2_hash_table *h, void (*func)(void *));
 
 
 ////////////////////////////////////////////////////////////////////////////////

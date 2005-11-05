@@ -298,7 +298,7 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key)
 
 
 
-void p2_hash_table__forall(p2_hash_table *h, void (*func)(void *, void *))
+void p2_hash_table__for_all(p2_hash_table *h, void (*func)(void *, void *))
 {
     void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
     while (cur < sup)
@@ -311,7 +311,7 @@ void p2_hash_table__forall(p2_hash_table *h, void (*func)(void *, void *))
 
 
 
-void p2_hash_table__forall_keys(p2_hash_table *h, void (*func)(void *))
+void p2_hash_table__for_all_keys(p2_hash_table *h, void (*func)(void *))
 {
     void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
     while (cur < sup)
@@ -324,7 +324,7 @@ void p2_hash_table__forall_keys(p2_hash_table *h, void (*func)(void *))
 
 
 
-void p2_hash_table__forall_targets(p2_hash_table *h, void (*func)(void *))
+void p2_hash_table__for_all_targets(p2_hash_table *h, void (*func)(void *))
 {
     void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
     while (cur < sup)

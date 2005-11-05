@@ -158,7 +158,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-({NS_HEAD}|({SLASH}{NONALNUM})){NS_TAIL}*  {  // Simple string literal.
+{SLASH}|(({NS_HEAD}|({SLASH}{NONALNUM})){NS_TAIL}*)  {  // Simple string literal.
     ECHO("STRING");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext);  // Free this string outside of the lexer.

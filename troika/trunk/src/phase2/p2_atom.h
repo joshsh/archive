@@ -73,6 +73,8 @@ typedef struct
 p2_error p2_atom_init();
 p2_error p2_atom_end();
 
+p2_error DESERIALIZATION_FAILED;   //.................
+
 /** Create a new typed constant. */
 p2_atom *p2_atom__new(p2_type type, void *value);
 
@@ -94,12 +96,16 @@ p2_atom *p2_atom__decode(p2_type type_index, char *buffer);
 
 #ifdef P2FLAGS__MARK_AND_SWEEP
 
-    #include "util/term.h"
+    //#include "util/p2_term.h"
+
+    /** Marks an atom, and subsequently checks the edge marking queue for other
+        atoms which need to be handled. */
+    void p2_atom__mark(p2_atom *atom);
 
     /** Marks all atoms referenced by the given p2_term.
         \note  This function assumes that type identifiers are positive (it
        "marks" an atom by reversing the sign of its type id). */
-    void p2_mark(p2_term *term);
+    //void p2_mark(p2_term *term);
 
     /** Deallocates all unmarked atoms and unmarks the rest. */
     void p2_sweep();

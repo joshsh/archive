@@ -125,7 +125,7 @@ p2_set *p2_set__intersection(p2_set *S, p2_set *T);
 /** "for all s in S, f(s)"
     \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the bunch, else 0. */
-void *p2_set__forall(p2_set *S, void *(*f)(void *));
+void *p2_set__for_all(p2_set *S, void *(*f)(void *));
 
 /** "there exists s in S such that f(s)"
     \return the first item for which the criterion evaluates to a non-zero

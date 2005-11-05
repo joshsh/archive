@@ -85,12 +85,19 @@ void p2_bunch__delete(p2_bunch *b);
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/** How big of a bunch is it? */
+unsigned int p2_bunch__size(p2_bunch *b);
+
+////////////////////////////////////////////////////////////////////////////////
+
 /** Adds a single item to the bunch. */
 void p2_bunch__add(p2_bunch *b, void *p);
 
 /** Adds the contents of one bunch to another. */
 void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src);
 
+/** Removes a single item from the bunch. */
+void *p2_bunch__remove(p2_bunch *b);
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -133,6 +133,9 @@ int yywrap();
     the semantic module. */
 void yyerror(const char *msg);
 
+/** Causes the last error reported to yyerror to be ignored. */
+void skip_error();
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -275,6 +278,34 @@ expression:
         if ($1)
             handle_expression($3, (p2_term *) $1);
         free($3);
+    }
+    | term EQUALS error
+    {
+        ECHO("expression :  term EQUALS error");
+
+        if ($1)
+        {
+            cleanup_term((p2_term *) $1);
+
+            // Note: this error propagates upward to a statement production, and
+            // doesn't need to be handled here.
+            skip_error();
+        }
+    }
+    | term EQUALS STRING error
+    {
+        ECHO("expression :  term EQUALS STRING error");
+
+        if ($1)
+        {
+            cleanup_term((p2_term *) $1);
+
+            // Note: this error propagates upward to a statement production, and
+            // doesn't need to be handled here.
+            skip_error();
+        }
+
+        free($3);
     };
 
 
@@ -383,6 +414,15 @@ subterm:
 
         // "Remove the parentheses" from the term.
         $$ = $2;
+    }
+    | OPEN_PAREN term error
+    {
+        ECHO("subterm :  OPEN_PAREN term error");
+
+        cleanup_term((p2_term *) $2);
+        handle_error(0);
+
+        $$ = 0;
     };
 
 
@@ -412,6 +452,12 @@ void yyerror(const char *msg)
     error_character_number = last_character_number;
     error_line_number = line_number;
     error_statement_number = statement_number;
+}
+
+
+void skip_error()
+{
+    *yyerror_msg = 0;
 }
 
 

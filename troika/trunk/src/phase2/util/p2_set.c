@@ -276,7 +276,7 @@ p2_set *p2_set__intersection(p2_set *S, p2_set *T)
 
 
 
-void *p2_set__forall(p2_set *S, void *(*f)(void *))
+void *p2_set__for_all(p2_set *S, void *(*f)(void *))
 {
     void **p = S->buffer, **psup = S->buffer + S->buffer_size;
     while (p < psup)
