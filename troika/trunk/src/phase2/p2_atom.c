@@ -39,14 +39,14 @@ p2_bunch *markandsweep_atoms = 0;
     and is initialized in add_to_queue. */
 p2_bunch *edge_marking_queue = 0;
 
-#ifdef P2FLAGS__OUTBOUND_EDGES
+#ifdef P2FLAGS__ASSOCIATION
 
 /** A global lookup table for "trigger" tables.
     \note  This table is is always null outside of a mark and sweep interval,
     and is initialized in mark_edge. */
 p2_hash_table *all_triggers = 0;
 
-#endif  // P2FLAGS__OUTBOUND_EDGES
+#endif  // P2FLAGS__ASSOCIATION
 
 #endif  // P2FLAGS__MARK_AND_SWEEP
 
@@ -92,16 +92,18 @@ p2_atom *p2_atom__new(p2_type type, void *value)
     atom->type = type;
     atom->value = value;
 
-    #ifdef P2FLAGS__OUTBOUND_EDGES
-        #ifdef P2FLAGS__OUTBOUND_EDGES
-            atom->outbound_edges = 0;
-        #endif
-        #ifdef P2FLAGS__INTBOUND_EDGES
+    #ifdef P2FLAGS__ASSOCIATION
+
+        atom->outbound_edges = 0;
+
+        #ifdef P2FLAGS__INBOUND_EDGES
             atom->inbound_edges = 0;
         #endif
+
         #ifdef P2FLAGS__TRANS_EDGES
             atom->trans_edges = 0;
         #endif
+
     #endif
 
     #ifdef P2FLAGS__MARK_AND_SWEEP
@@ -113,19 +115,21 @@ p2_atom *p2_atom__new(p2_type type, void *value)
 
 void p2_atom__delete(p2_atom *atom)
 {
-    #ifdef P2FLAGS__OUTBOUND_EDGES
-        #ifdef P2FLAGS__OUTBOUND_EDGES
-            if (atom->outbound_edges)
-                p2_hash_table__delete(atom->outbound_edges);
-        #endif
+    #ifdef P2FLAGS__ASSOCIATION
+
+        if (atom->outbound_edges)
+            p2_hash_table__delete(atom->outbound_edges);
+
         #ifdef P2FLAGS__INBOUND_EDGES
             if (atom->inbound_edges)
                 p2_hash_table__delete(atom->inbound_edges);
         #endif
+
         #ifdef P2FLAGS__TRANS_EDGES
             if (atom->trans_edges)
                 p2_hash_table__delete(atom->trans_edges);
         #endif
+
     #endif
 
     // Caution: assumes that the atom owns its value.
@@ -157,6 +161,44 @@ p2_atom *p2_atom__decode(p2_type type_index, char *buffer)
     return atom;
 }
 
+
+
+// Association /////////////////////////////////////////////////////////////////
+
+#ifdef P2FLAGS__ASSOCIATION
+
+p2_atom *p2_multiply(p2_atom *ref, p2_atom *key)
+{
+    return ref->outbound_edges ?
+        p2_hash_table__lookup(ref->outbound_edges, key) : 0 ;
+}
+
+
+// Note: doesn't take association sets into account yet.
+p2_atom *p2_associate(p2_atom *ref, p2_atom *key, p2_atom *target)
+{
+    if (ref->outbound_edges)
+    {
+        if (target)
+            p2_hash_table__add(ref->outbound_edges, key, target);
+        else
+            p2_hash_table__remove(ref->outbound_edges, key);
+    }
+
+    // If the outbound edges hash table does not exist, create it, provided
+    // that we have a non-null value to map to (the null mapping is implicit).
+    else if (target)
+    {
+        ref->outbound_edges = p2_hash_table__new(
+            P2FLAGS__ATOM__INIT_ASSOC_BUFFER_SIZE, 0, 0, ADDRESS_DEFAULTS);
+
+        p2_hash_table__add(ref->outbound_edges, key, target);
+    }
+
+    return ref;
+}
+
+#endif  // P2FLAGS__ASSOCIATION
 
 
 // "Mark and sweep" memory reclamation /////////////////////////////////////////
@@ -208,7 +250,7 @@ void *mark_atom(p2_atom *atom)
         atom->type = (p2_type) -((unsigned int) atom->type) ;
 
         // Before interfering with the atom's type...
-        #ifdef P2FLAGS__OUTBOUND_EDGES
+        #ifdef P2FLAGS__ASSOCIATION
             // This atom may have edges which need to be investigated.
             add_to_queue(atom) ;
 
@@ -236,7 +278,7 @@ void *mark_atom(p2_atom *atom)
 }
 
 
-#ifdef P2FLAGS__OUTBOUND_EDGES
+#ifdef P2FLAGS__ASSOCIATION
 
 void mark_edge(p2_atom *key, p2_atom *target)
 {
@@ -272,13 +314,13 @@ void mark_edge(p2_atom *key, p2_atom *target)
     }
 }
 
-#endif  // P2FLAGS__OUTBOUND_EDGES
+#endif  // P2FLAGS__ASSOCIATION
 
 
 /** Marks all of an atom's outbound edges. */
 void mark_outbound_edges(p2_atom *atom)
 {
-    #ifdef P2FLAGS__OUTBOUND_EDGES
+    #ifdef P2FLAGS__ASSOCIATION
 
         // If the atom has any outbound associations...
         if (atom->outbound_edges)
@@ -343,7 +385,7 @@ void p2_sweep()
         edge_marking_queue = 0;
     }
 
-    #ifdef P2FLAGS__OUTBOUND_EDGES
+    #ifdef P2FLAGS__ASSOCIATION
 
         if (all_triggers)
         {

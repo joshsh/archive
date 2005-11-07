@@ -47,11 +47,9 @@ typedef struct
 
     #ifdef P2FLAGS__ASSOCIATION
 
-        #ifdef P2FLAGS__OUTBOUND_EDGES
-            /** Associative edges pointing away from the atom.
-                For example, (X, y, z). */
-            p2_hash_table *outbound_edges;
-        #endif
+        /** Associative edges pointing away from the atom.
+            For example, (X, y, z). */
+        p2_hash_table *outbound_edges;
 
         #ifdef P2FLAGS__TRANS_EDGES
             /** Associative edges pointing "through" the atom.
@@ -90,6 +88,17 @@ void p2_atom__encode(p2_atom *atom, char *buffer);
 
 /** Deserializes a p2_atom from a string. */
 p2_atom *p2_atom__decode(p2_type type_index, char *buffer);
+
+
+// Association /////////////////////////////////////////////////////////////////
+
+#ifdef P2FLAGS__ASSOCIATION
+
+    p2_atom *p2_multiply(p2_atom *ref, p2_atom *key);
+
+    p2_atom *p2_associate(p2_atom *ref, p2_atom *key, p2_atom *target);
+
+#endif
 
 
 // "Mark and sweep" memory reclamation /////////////////////////////////////////
