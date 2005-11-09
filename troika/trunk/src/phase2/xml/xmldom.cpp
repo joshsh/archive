@@ -367,7 +367,7 @@ void DOM_print(DOM_Element *el, ofstream &out, int indent)
     DOM_Element *curchild = DOM_firstChild(el);
     DOM_Attr *curattr = DOM_firstAttribute(el);
     char *text = DOM_text(el);
-        
+
     // Indention and tag name.
     for (int i=0; i<indent; i++)
         STROUT << "    ";
@@ -379,18 +379,18 @@ void DOM_print(DOM_Element *el, ofstream &out, int indent)
         STROUT << " " << DOM_name(curattr) << "=\"" << DOM_value(curattr) << "\"";
         curattr = DOM_nextAttribute(curattr);
     }
-    
+
     // No child elements.
     if ((!text || !strlen(text)) && !curchild)
     {
       STROUT << "/>\n";
     }
-    
+
     // Serialize text and child elements (in that arbitrary order).
     else
     {
         STROUT << ">";
-    
+
     // Write text.
         if (text)
             STROUT << text;
