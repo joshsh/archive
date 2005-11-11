@@ -1,9 +1,10 @@
 /**
-    \file p2_primitive.h
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\file  p2_primitive.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +41,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** A structure containing a C function pointer together with typing information
     and a unique name. */
-typedef struct
+typedef struct _p2_primitive
 {
   /** Memory location of the C function. */
   void *value;

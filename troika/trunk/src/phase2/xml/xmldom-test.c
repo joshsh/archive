@@ -32,6 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <stdio.h>  // printf
 
+#define UC  ( unsigned char* )
 
 int main( int argc, char **argv )
 {
@@ -40,38 +41,56 @@ int main( int argc, char **argv )
 
     dom_document *doc = dom_document__new( );
 
-    dom_element *el = dom_element__new( doc, "Root", 0 );
-    dom_element__add_text( el, "Some text..." );
-    dom_element__set_attr( el, "foo", "bar" );
-    dom_namespace *ns = dom_namespace__new( el, "http://tempuri.org/", "tempuri" ) ;
+    dom_element *el = dom_element__new( doc, UC "Root", 0 );
+    dom_element__add_text( el, UC "Some text..." );
+    dom_attr *attr = dom_attr__new( el, UC "foo", UC "42", 0 );
+    //dom_element__set_attr( el, "foo", "bar" );
+    dom_namespace *ns = dom_namespace__new( el, UC "http://tempuri.org/", UC "tempuri" ) ;
+    attr = dom_attr__new( el, UC "bar", UC "137", ns );
     dom_element__set_namespace( el, ns );
     dom_document__set_root( doc, el );
 
     ns = dom_element__namespace( el ) ;
 
-    dom_element *el2 = dom_element__new( doc, "ChildElement", ns );
-    dom_element__add_text( el2, "Colorless green ideas sleep furiously." );
-    dom_element__set_attr( el2, "programs", "data" );
+    dom_element *el2 = dom_element__new( doc, UC "ChildElement", ns );
+    dom_element__add_text( el2, UC "Colorless green ideas sleep furiously." );
+    attr = dom_attr__new(el2, UC "programs", UC "data", 0 );
     dom_element__add_child( el, el2 );
 
-    el2 = dom_element__new( doc, "UnqualifiedElement", 0 );
-    dom_element__add_text( el2, "Another node." );
+    el2 = dom_element__new( doc, UC "UnqualifiedElement", 0 );
+    dom_element__add_text( el2, UC "Another node." );
     dom_element__add_child( el, el2 );
 
     dom_document__write_to_file( doc, "test.xml" );
-
-
     dom_document__delete( doc );
 
     doc = dom_document__read_from_file( "test.xml" );
 
+    printf("----------\n");
+
     el = dom_document__root( doc ) ;
     printf( "child name = %s.\n", dom_element__name( el )) ;
+    attr = dom_element__first_attr( el );
+    printf( "child attr #1 = (%s, %s).\n",
+        dom_attr__name( attr ),
+        dom_attr__value( attr ));
+    attr = dom_attr__next_sibling( attr );
+    ns = dom_attr__namespace( attr );
+    printf( "child attr #2 = (%s:%s, %s).\n",
+        dom_namespace__prefix( ns ),
+        dom_attr__name( attr ),
+        dom_attr__value( attr ));
     el2 = dom_element__first_child( el ) ;
     printf( "grandchild name = %s.\n", dom_element__name( el2 )) ;
-    printf( "grandchild attribute \"programs\" = %s.\n", dom_element__attr( el2, "programs" )) ;
+    attr = dom_element__attr( el2, UC "programs", 0 );
+    printf( "grandchild attribute \"programs\" = %s.\n", dom_attr__value( attr )) ;
+
+    printf("----------\n");
 
     dom_document__write_to_file( doc, "-" );
+    dom_document__delete( doc );
+
+    printf("----------\n");
 
 
     xmldom__end( );

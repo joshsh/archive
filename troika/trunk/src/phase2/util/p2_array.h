@@ -1,11 +1,12 @@
 /**
-    \file array.h
 
-    \brief A simple expanding array utility.
+\file  p2_array.h
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\brief  A simple expanding array utility.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -32,10 +33,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** \brief An expanding array of void pointers, suitable for use as a stack,
     queue, or indexed array.
-
     You can even use it as a general ordered list, although there is memory
     copying overhead involved in insertions and removals. */
-typedef struct
+typedef struct _p2_array
 {
     /** A relative pointer to the first item in the array.  Stack operations
         cause this to change. */

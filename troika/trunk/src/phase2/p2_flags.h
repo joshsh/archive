@@ -37,7 +37,28 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     // #define P2FLAGS__INBOUND_EDGES
 
     #define P2FLAGS__ATOM__INIT_ASSOC_BUFFER_SIZE  0
-#endif
+
+    /** If defined, the inclusion of the subject of a semantic triple implies the
+        inclusion of the object. */
+    //#define P2FLAGS__SUBJECT_IMPLIES_OBJECT
+
+    #ifndef P2FLAGS__SUBJECT_IMPLIES_OBJECT
+        /** If defined, the inclusion of the both the subject and predicate of a
+            semantic triple implies the inclusion of the object. */
+        #define P2FLAGS__SUBJECT_AND_PREDICATE_IMPLY_OBJECT
+    #endif
+
+    /** If defined, the inclusion of the subject of a semantic triple implies the
+        inclusion of the predicate. */
+    //#define P2FLAGS__SUBJECT_IMPLIES_PREDICATE
+
+    #ifndef P2FLAGS__SUBJECT_IMPLIES_PREDICATE
+        /** If defined, the inclusion of the both the subject and object of a
+            semantic triple implies the inclusion of the predicate. */
+        //#define P2FLAGS__SUBJECT_AND_OBJECT_IMPLY_PREDICATE
+    #endif
+
+#endif  // P2FLAGS__ASSOCIATION
 
 
 // Memory management ///////////////////////////////////////////////////////////

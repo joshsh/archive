@@ -1,16 +1,16 @@
 /**
-    \file  sk.h
 
-    \brief  A simple utility to represent and reduce impure S,K terms.
+\file  sk.h
 
-    Completely type-safe.
+\brief  A simple utility to represent and reduce impure S,K terms.
 
-    \warning  Errors occurring at the level of the imported primitives should be
-    dealt with at that level.  This library contains only rudimentary exception
-    handling to catch a few potential logical errors and programming mistakes.
+Completely type-safe.
 
-    \todo  go back and get "documentation" from old sk.h, sk.c
-*/
+\warning  Errors occurring at the level of the imported primitives should be
+dealt with at that level.  This library contains only rudimentary exception
+handling to catch a few potential logical errors and programming mistakes.
+
+\todo  go back and get "documentation" from old sk.h, sk.c */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -76,13 +76,13 @@ p2_error
 /** Initializes types, errors, and singleton S, K combinators. */
 p2_error SK_init(void (*debug_print)(p2_term *));
 
-/** \brief Reduce an S,K term recursively according to the rules of combinator
+/** \brief  Reduce an S,K term recursively according to the rules of combinator
     expressions.
 
     \param term  the term to reduce.  It is undefined once this function has
     been called, and should not be used again.
 
-    \return normally, the reduced term. If an error is encountered during
+    \return  normally, the reduced term. If an error is encountered during
     reduction, the returned term will contain a single p2_atom of type
     p2_error_type and with an error value describing the exception.
 
@@ -90,7 +90,7 @@ p2_error SK_init(void (*debug_print)(p2_term *));
     which is not an S or K combinator or a p2_primitive, is considered a
     non-redex atom.
 
-    \warning this function makes no attempt to detect infinite loops or memory
+    \warning  This function makes no attempt to detect infinite loops or memory
     faults due to extremely large S,K terms.
 */
 p2_term *SK_reduce(p2_term *term);

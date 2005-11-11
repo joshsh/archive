@@ -1,9 +1,10 @@
 /**
-    \file p2_type.h
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\file  p2_type.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 

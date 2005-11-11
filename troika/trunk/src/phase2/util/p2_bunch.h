@@ -1,15 +1,15 @@
 /**
-    \file bunch.h
+    \file  p2_bunch.h
 
-    \brief A utility to keep track of large, unordered collections of pointers.
+    \brief  A utility to keep track of large, unordered collections of pointers.
 
     Once added to a bunch, items cannot be retrieved individually, but are
     handled en masse via the "for all" "exists" and "exclude if" functions, which
     mimic set operations.
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+    \author  Joshua Shinavier   \n
+             parcour@gmail.com  \n
+             +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** \brief A container for an array of pointers.
     May be completely or partially full. */
-typedef struct
+typedef struct _block
 {
     /** The number of (void *) cells in the buffer. */
     int size;
@@ -57,7 +57,7 @@ typedef struct
 /** \brief A container for large, unordered bags of references.
     Consists of a p2_array of "blocks" of a preferred size.
     May contain nulls and/or repeat references. */
-typedef struct
+typedef struct _p2_bunch
 {
     /** An expanding array of memory blocks. */
     p2_array *blocks;

@@ -1,26 +1,27 @@
 /**
-    \file term.h
 
-    \brief A simple nested sequence utility.
+\file  p2_term.h
 
-    Terms are represented by arrays of 4-byte cells, each of which contains
-    either a reference to an "atom" or an integer i indicating the head of a
-    sub-term with a length of i cells.  For instance, \n
-                                                      \n
-        "a"  <-->  2 a                                \n
-                                                      \n
-        "a b"  <-->  5 2 a 2 b                        \n
-                                                      \n
-        "a (b c)"  <-->  8 2 a 5 2 b 2 c              \n
+\brief  A simple nested sequence utility.
 
-    The term array occupies the higher-address portion of an expanding buffer
-    and grows towards the lower-address end.
+Terms are represented by arrays of 4-byte cells, each of which contains either
+a reference to an "atom" or an integer i indicating the head of a sub-term with
+a length of i cells.  For instance, \n
+                                                  \n
+    "a"  <-->  2 a                                \n
+                                                  \n
+    "a b"  <-->  5 2 a 2 b                        \n
+                                                  \n
+    "a (b c)"  <-->  8 2 a 5 2 b 2 c              \n
 
-    \note This library assumes that sizeof(void *) == sizeof(unsigned int).
+The term array occupies the higher-address portion of an expanding buffer and
+grows towards the lower-address end.
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\note  This library assumes that sizeof(void *) == sizeof(unsigned int).
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +56,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     \note An empty p2_term has no data; it is represented by the NULL.
  */
-typedef struct
+typedef struct _p2_term
 {
     /** Number of cells the buffer can hold. */
     unsigned int buffer_size;

@@ -1,9 +1,10 @@
 /**
-    \file p2_atom.h
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\file  p2_atom.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +38,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** The least addressable unit of data in a Phase2 environment. */
-typedef struct
+typedef struct _p2_atom
 {
     /** A positively signed integer indicating the data type of the atom. */
     p2_type type;

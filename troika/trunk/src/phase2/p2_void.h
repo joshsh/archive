@@ -1,14 +1,15 @@
 /**
-    \file p2_void.h
 
-    \brief  Defines the trivial p2_void data type.
+\file p2_void.h
 
-    \note  It is assumed that the implementation will not call p2_void__new so
-           many times as to use up every below-range address.
+\brief  Defines the trivial p2_void data type.
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\note  It is assumed that the implementation will not call p2_void__new so
+       many times as to use up every below-range address.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 

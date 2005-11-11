@@ -1,27 +1,28 @@
 /**
-    \file set.h
 
-    \brief A simple mathematical set utility.
+\file  p2_set.h
 
-    The idea is not to bind set elements with data, but only to indicate
-    their presence in the set.  Each function mimics a mathematical equivalent:
+\brief  A simple mathematical set utility.
 
-      p2_set__size(S) :            "magnitude of S"                      \n
-      p2_set__lookup(S, s) :       "s is an element of S"                \n
-      p2_set__add(S, s) :          "S' = S union {s}"                    \n
-      p2_set__remove(S, s) :       "S' = S minus {s}"                    \n
-      p2_set__union(S, T) :        "S' = S union T"                      \n
-      p2_set__intersection(S, T) : "S' = S intersect T"                  \n
-      p2_set__forall(S, f) :       "for all s in S, f(s)"                \n
-      p2_set__exists(S, f) :       "there exists s in S such that f(s)"  \n
-      p2_set__subset(S, f) :       "S' = all s in S such that f(s)"      \n
+The idea is not to bind set elements with data, but only to indicate their
+presence in the set.  Each function mimics a mathematical equivalent:
 
-    \note There is no "complement of" operator... but one could easily be
-    constructed using the above functions.
+    p2_set__size(S) :            "magnitude of S"                      \n
+    p2_set__lookup(S, s) :       "s is an element of S"                \n
+    p2_set__add(S, s) :          "S' = S union {s}"                    \n
+    p2_set__remove(S, s) :       "S' = S minus {s}"                    \n
+    p2_set__union(S, T) :        "S' = S union T"                      \n
+    p2_set__intersection(S, T) : "S' = S intersect T"                  \n
+    p2_set__forall(S, f) :       "for all s in S, f(s)"                \n
+    p2_set__exists(S, f) :       "there exists s in S such that f(s)"  \n
+    p2_set__subset(S, f) :       "S' = all s in S such that f(s)"      \n
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\note  There is no "complement of" operator... but one could easily be
+constructed using the above functions.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -52,7 +53,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     Implemented using hash tables.  Set elements are represented by unique
     32-bit addresses, or equivalently, by 32-bit integers. */
-typedef struct
+typedef struct _p2_set
 {
     /** The number of occupied cells in the hash table. */
     int size;

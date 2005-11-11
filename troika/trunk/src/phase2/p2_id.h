@@ -2,7 +2,7 @@
 #define P2_ID_H
 
 
-typedef struct
+typedef struct _p2_id
 {
     char *dataset_id;
     char *local_id;

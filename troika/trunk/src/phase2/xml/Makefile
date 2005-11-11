@@ -1,5 +1,7 @@
 ################################################################################
-## 
+## Makefile for the XML DOM interface module.
+##
+## Use "make test" to compile the test program.
 
 LIBXML2_FLAGS    = `xml2-config --cflags`
 LIBXML2_LIBS     = `xml2-config --libs`
@@ -26,5 +28,5 @@ xmldom.o :  xmldom-libxml2.o
 	cp xmldom-libxml2.o xmldom.o
 
 xmldom-libxml2.o :  xmldom.h libxml2/xmldom-libxml2.c
-	gcc -c -o xmldom-libxml2.o $(FLAGS) libxml2/xmldom-libxml2.c # $(LIBXML2_LIBS)
+	gcc -c -o xmldom-libxml2.o $(FLAGS) libxml2/xmldom-libxml2.c
 

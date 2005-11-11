@@ -116,7 +116,7 @@ void p2_bunch__delete(p2_bunch *b)
 
 
 
-void p2_bunch__size(p2_bunch *b)
+unsigned int p2_bunch__size(p2_bunch *b)
 {
     return (b->blocks->size * b->block_size) - (b->block_size - b->last_block->filled);
 }

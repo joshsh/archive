@@ -44,9 +44,9 @@ parcour@gmail.com
  *//////////////////////////////////////////////////////////////////////////////
 
 #include "xmldom.h"
-#include <cstdlib>
-#include <iostream>  // For the sake of DOM_print
-#include <cstring>  // For wcslen
+#include <stdlib.h>
+#include <iostream.h>  // For the sake of DOM_print
+#include <string.h>  // For wcslen
 
 
 

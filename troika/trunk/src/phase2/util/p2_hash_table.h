@@ -1,12 +1,13 @@
 /**
-    \file hash_table.h
 
-    \brief A simple 32-bit hashing utility.
-    The hashing and comparison functions used by the table are customizable.
+\file  p2_hash_table.h
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+\brief  A simple 32-bit hashing utility.
+The hashing and comparison functions used by the table are customizable.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +58,7 @@ int hash_string(void *key);
 /**
     \brief An expanding hash table to bind pairs of generic pointers.
 */
-typedef struct
+typedef struct _p2_hash_table
 {
     /** The number of occupied cells in the hash table. */
     int size;
