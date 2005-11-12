@@ -19,7 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_term.h"
 
-#include <stdlib.h>  // malloc
+#include <stdlib.h>  // free
 #include <string.h>  // memcpy
 
 
@@ -234,6 +234,9 @@ p2_term *p2_term__merge(p2_term *t1, p2_term *t2)
     t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
 
+    // Destroy t1.
+    p2_term__delete( t1 );
+
     return t2;
 }
 
@@ -259,6 +262,9 @@ p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2)
     // Add a new p2_term head.
     t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
+
+    // Destroy t1.
+    p2_term__delete( t1 );
 
     return t2;
 }
@@ -288,9 +294,11 @@ p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2)
     t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
 
+    // Destroy t1.
+    p2_term__delete( t1 );
+
     return t2;
 }
-
 
 
 p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
@@ -298,6 +306,7 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
     // Find the size of each p2_term, as well as of the resulting p2_term.
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
+
     unsigned int newsize = t1_size + t2_size + 1;
     if (t1_size != 2)
         newsize--;
@@ -317,6 +326,9 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
     // Add a new p2_term head.
     t2->head = t2->buffer + t2->buffer_size - newsize;
     *(t2->head) = (void *) newsize;
+
+    // Destroy t1.
+    p2_term__delete( t1 );
 
     return t2;
 }

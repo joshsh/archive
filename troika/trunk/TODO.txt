@@ -1,0 +1,17 @@
+Things to do -- URGENT! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[!] Abstract the graph traversal algorithm from the memory manager --> re-use it for the serializer
+--[!] Formalize edge-inference logic
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[!] At some point, write a specialized "bunch" library for p2_atoms, for better space efficiency.  The atom-bunch should maintain p2_atom arrays, rather than pointer arrays, and should handle vacated cells by referencing them in a collection, rather than by immediately relocating the high-end cell.  This way, the built-in memory manager doesn't need to keep track of individual p2_atoms; it only keeps track of the blocks allocated for the atom-bunch.
+--[ba] the atom-bunch can't shrink (without additional atom-counting overhead)
+
+
+Long-term ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[!Y] type-safe kernel -- no possibility of a type mismatch in any reachable state --> can safely disable dynamic type checking
+--[ba] [@] kernel imports a foreign data structure and loses its type safety
+

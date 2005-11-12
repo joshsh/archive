@@ -34,6 +34,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define UC  ( unsigned char* )
 
+
 int main( int argc, char **argv )
 {
     xmldom__init( );
@@ -70,6 +71,7 @@ int main( int argc, char **argv )
 
     el = dom_document__root( doc ) ;
     printf( "child name = %s.\n", dom_element__name( el )) ;
+    printf( "child text = %s.\n", dom_element__text( el )) ;
     attr = dom_element__first_attr( el );
     printf( "child attr #1 = (%s, %s).\n",
         dom_attr__name( attr ),

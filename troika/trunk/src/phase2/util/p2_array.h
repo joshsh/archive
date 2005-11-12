@@ -136,7 +136,7 @@ void p2_array__clear(p2_array *a);
 void p2_array__minimize(p2_array *a);
 
 /** Applies a void function to each array item in turn. */
-void p2_array__forall(p2_array *a, void (*func) (void *));
+void p2_array__for_all(p2_array *a, void (*func) (void *));
 
 
 #endif  // P2_ARRAY_H

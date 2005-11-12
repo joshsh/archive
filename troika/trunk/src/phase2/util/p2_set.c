@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** \return the least prime > 2 and >= i. */
-int find_next_prime(int i)
+int p2_set__find_next_prime(int i)
 {
     int j;
 
@@ -68,7 +68,7 @@ void p2_set__expand(p2_set *h)
   if (size0 > h->buffer_size) {
     size_old = h->buffer_size;
     buffer_old = h->buffer;
-    h->buffer_size = find_next_prime(size0);
+    h->buffer_size = p2_set__find_next_prime(size0);
     h->buffer = (void **) malloc(sizeof(void *) * h->buffer_size);
     h->capacity = (int) (((double) h->buffer_size)/h->sparsity);
     for (i=0; i<h->buffer_size; i++)
@@ -92,7 +92,7 @@ p2_set *p2_set__new(int buffer_size, float sparsity, float expansion)
 
   p2_set *h = (p2_set *) malloc(sizeof(p2_set));
 
-  h->buffer_size = find_next_prime(buffer_size);
+  h->buffer_size = p2_set__find_next_prime(buffer_size);
 
   // sparsity must be at least 1, otherwise the table will not resize
   // even when it is completely full.

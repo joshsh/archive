@@ -55,9 +55,7 @@ int hash_string(void *key);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
-    \brief An expanding hash table to bind pairs of generic pointers.
-*/
+/** \brief An expanding hash table to bind pairs of generic pointers. */
 typedef struct _p2_hash_table
 {
     /** The number of occupied cells in the hash table. */

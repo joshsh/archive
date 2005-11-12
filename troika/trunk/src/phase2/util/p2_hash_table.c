@@ -76,7 +76,7 @@ int compare_strings(void *key1, void *key2)
 
 
 /** \return the least prime > 2 and >= i. */
-int find_next_prime(int i)
+int p2_hash_table__find_next_prime(int i)
 {
     int j;
 
@@ -109,7 +109,7 @@ void p2_hash_table__expand(p2_hash_table *h)
     {
         size_old = h->buffer_size;
         buffer_old = h->buffer;
-        h->buffer_size = find_next_prime(size0);
+        h->buffer_size = p2_hash_table__find_next_prime(size0);
         h->buffer = (void **) malloc(sizeof(void *) * (ENTRY_SIZE * h->buffer_size));
         h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
@@ -144,7 +144,7 @@ p2_hash_table *p2_hash_table__new(
 
     p2_hash_table *h = (p2_hash_table *) malloc(sizeof(p2_hash_table));
 
-    h->buffer_size = find_next_prime(buffer_size);
+    h->buffer_size = p2_hash_table__find_next_prime(buffer_size);
 
     if (hashing_function == NULL)
         h->hashing_function = hash_address;
@@ -202,7 +202,7 @@ void *p2_hash_table__lookup(p2_hash_table *h, void *key)
     int_key = h->hashing_function(key);
     if (int_key < 0)
         int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE*(int_key % h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE * (int_key % h->buffer_size));
 
     actual_size = ENTRY_SIZE * h->buffer_size;
 
@@ -257,7 +257,7 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
     if (h->size >= h->capacity)
         p2_hash_table__expand(h);
 
-  return r;
+    return r;
 }
 
 
@@ -337,5 +337,3 @@ void p2_hash_table__for_all_targets(p2_hash_table *h, void (*func)(void *))
 }
 
 
-
-/*- end of file */

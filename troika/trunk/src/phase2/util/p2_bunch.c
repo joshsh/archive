@@ -105,7 +105,7 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
 void p2_bunch__delete(p2_bunch *b)
 {
     // Free all blocks.
-    p2_array__forall(b->blocks, (void (*) (void *)) block__delete);
+    p2_array__for_all(b->blocks, (void (*) (void *)) block__delete);
 
     // Delete the blocks array.
     p2_array__delete(b->blocks);
@@ -192,7 +192,7 @@ void *p2_bunch__remove(p2_bunch *b)
 
 
 
-void *p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *))
+void *p2_bunch__for_all(p2_bunch *b, void *(*criterion) (void *))
 {
     int i, j, numblocks = b->blocks->size;
     block *bl;

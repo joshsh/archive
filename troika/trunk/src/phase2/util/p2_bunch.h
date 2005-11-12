@@ -103,7 +103,7 @@ void *p2_bunch__remove(p2_bunch *b);
 
 /** \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the bunch, else 0. */
-void *p2_bunch__forall(p2_bunch *b, void *(*criterion) (void *));
+void *p2_bunch__for_all(p2_bunch *b, void *(*criterion) (void *));
 
 /** \return the first item for which the criterion evaluates to a non-zero
     value ("true").  If no such item exists, the return value is 0. */

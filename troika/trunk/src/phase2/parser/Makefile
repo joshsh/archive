@@ -9,6 +9,8 @@ CC   = gcc
 LEX  = flex
 YACC = bison
 
+CFLAGS = -g # temporary...
+
 UTILS = ../util
 
 
@@ -27,7 +29,7 @@ distclean: clean
 
 
 debugger: objects $(NAME)-debugger.c $(NAME)-aux.h p2_term.o
-	$(CC) $(NAME)-debugger.c $(NAME)-aux.o lex.yy.o $(NAME).tab.o p2_term.o -o $(NAME)-debugger
+	$(CC) $(CFLAGS) $(NAME)-debugger.c $(NAME)-aux.o lex.yy.o $(NAME).tab.o p2_term.o -o $(NAME)-debugger
 
 
 objects: lex.yy.o $(NAME).tab.o $(NAME)-aux.o
@@ -36,11 +38,11 @@ objects: lex.yy.o $(NAME).tab.o $(NAME)-aux.o
 ################################################################################
 
 lex.yy.o : lex.yy.c $(NAME).tab.h $(NAME)-aux.h
-	$(CC) -c lex.yy.c
+	$(CC) $(CFLAGS) -c lex.yy.c
 
 
 $(NAME).tab.o : $(NAME).tab.c
-	$(CC) -c $(NAME).tab.c
+	$(CC) $(CFLAGS) -c $(NAME).tab.c
 
 
 lex.yy.c : $(NAME).l
@@ -54,9 +56,9 @@ $(NAME).tab.c $(NAME).tab.h : $(NAME).y $(NAME)-aux.h
 ################################################################################
 
 $(NAME)-aux.o : $(NAME)-aux.c $(NAME)-aux.h
-	$(CC) -c $(NAME)-aux.c
+	$(CC) $(CFLAGS) -c $(NAME)-aux.c
 
 
 p2_term.o : $(UTILS)/p2_term.c
-	$(CC) -c $(UTILS)/p2_term.c -o p2_term.o
+	$(CC) $(CFLAGS) -c $(UTILS)/p2_term.c -o p2_term.o
 
