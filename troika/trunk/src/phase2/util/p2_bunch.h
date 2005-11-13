@@ -43,10 +43,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef struct _block
 {
     /** The number of (void *) cells in the buffer. */
-    int size;
+    unsigned int size;
 
     /** The number of cells which contain meaningful data. */
-    int filled;
+    unsigned int filled;
 
     /** A simple pointer array. */
     void **buffer;
@@ -63,7 +63,7 @@ typedef struct _p2_bunch
     p2_array *blocks;
 
     /** The intended size of a block. */
-    int block_size;
+    unsigned int block_size;
 
     /** Saves on array lookups. */
     block *last_block;
@@ -74,7 +74,7 @@ typedef struct _p2_bunch
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Constructor. */
-p2_bunch *p2_bunch__new(int block_size);
+p2_bunch *p2_bunch__new(unsigned int block_size);
 
 /** Copy constructor. */
 p2_bunch *p2_bunch__copy(p2_bunch *b);

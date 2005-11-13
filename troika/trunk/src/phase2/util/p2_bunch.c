@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 
-block *block__new(int size)
+block *block__new(unsigned int size)
 {
     block *bl = (block *) malloc(sizeof(block));
     bl->filled = 0;
@@ -37,6 +37,8 @@ block *block__new(int size)
     //  smaller than the intended size).
     bl->buffer = (void **) malloc(size * sizeof(void *));
     bl->size = size;
+
+    return bl;
 }
 
 
@@ -66,11 +68,13 @@ void block__delete(block *bl)
 
 
 
-p2_bunch *p2_bunch__new(int block_size)
+p2_bunch *p2_bunch__new(unsigned int block_size)
 {
     p2_bunch *b = (p2_bunch *) malloc(sizeof(p2_bunch));
 
+    // Block size must be at least 1.
     b->block_size = (block_size > 0) ? block_size : 1;
+
     b->blocks = p2_array__new(42, 2.0);
     b->last_block = 0;
 
@@ -120,7 +124,6 @@ unsigned int p2_bunch__size(p2_bunch *b)
 {
     return (b->blocks->size * b->block_size) - (b->block_size - b->last_block->filled);
 }
-
 
 
 void p2_bunch__add(p2_bunch *b, void *p)
@@ -244,10 +247,10 @@ p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
         for (j = 0; j < bl->filled; j++)
         {
             p = bl->buffer[j];
-            if (criterion(p))
+            while (criterion(p))
             {
                 // Replace the item with the last item in the bunch.
-                bl->buffer[j] = b->last_block->buffer[--(b->last_block->filled)];
+                p = bl->buffer[j] = b->last_block->buffer[--(b->last_block->filled)];
 
                 // Remove the tail-end block if empty.
                 if (!b->last_block->filled)
@@ -256,7 +259,8 @@ p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
 
                     if (bl == b->last_block)
                     {
-                        b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+                        b->last_block = 0;
+                        //b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
                         return b;
                     }
 

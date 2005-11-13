@@ -84,9 +84,46 @@ void p2_array__debug( )
 }
 
 
+void *is_odd( void *p )
+{
+    void *r = ( void* ) (( unsigned int ) p % 2 );
+    if ( r )
+        free( p );
+    return r;
+}
+
+void *is_even( void *p )
+{
+    void *r = ( void* ) !(( unsigned int ) p % 2 );
+    if ( r )
+        free( p );
+    return r;
+}
+
+void *always( void *p )
+{
+    free( p );
+    return ( void* ) 1;
+}
+
 void p2_bunch__debug( )
 {
+    int i;
+
     func_begin( "p2_bunch__debug" );
+
+    p2_bunch *bunch = p2_bunch__new( 1000 );
+    for (i = 0; i < 10000; i++ )
+        p2_bunch__add( bunch, malloc( sizeof( void* )));
+    p2_bunch__for_all( bunch, p2_set__free );
+    p2_bunch__delete( bunch );
+
+    bunch = p2_bunch__new( 100 );
+    for (i = 0; i < 10000; i++ )
+        p2_bunch__add( bunch, malloc( sizeof( void* )));
+    p2_bunch__exclude_if( bunch, is_odd );
+    p2_bunch__exclude_if( bunch, is_even );
+    p2_bunch__delete( bunch );
 
     func_end( "p2_bunch__debug" );
 }
@@ -145,6 +182,18 @@ void p2_set__debug( )
 {
     func_begin( "p2_set__debug" );
 
+    p2_set *set = p2_set__new( 100, 2.0, 3.0 );
+    p2_set__add( set, VP 42 );
+    p2_set__add( set, VP 1331 );
+    p2_set__delete( set );
+
+    set = p2_set__new( 1000, 0, 0 );
+    p2_set__add( set, malloc( sizeof( void* )));
+    p2_set__add( set, malloc( sizeof( void* )));
+    p2_set__add( set, malloc( sizeof( void* )));
+    p2_set__for_all( set, p2_set__free );
+    p2_set__delete( set );
+
     func_end( "p2_set__debug" );
 }
 
@@ -171,9 +220,9 @@ int main( int argc, char **argv )
     func_begin( "main" );
 
     p2_array__debug( );
-    //p2_bunch__debug( );
+    p2_bunch__debug( );
     p2_hash_table__debug( );
-    //p2_set__debug( );
+    p2_set__debug( );
     p2_term__debug( );
 
     func_end( "main" );

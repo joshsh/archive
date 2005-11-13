@@ -140,7 +140,7 @@ p2_set *p2_set__subset(p2_set *S, void *(*f)(void *));
 ////////////////////////////////////////////////////////////////////////////////
 
 /** A wrapper for "free" which always returns a 1 (for use in conjunction with
-    p2_set__forall) */
+    p2_set__for_all) */
 void *p2_set__free(void *s);
 
 
