@@ -8,16 +8,12 @@
 
 UTIL_PATH = ./util
 SK_PATH = ./sk
-PARSER_PATH = .
-SOAP_PATH = ./xml
-#LIBXML2_PATH = /usr/include/libxml2
-GSOAP_PATH = ../../gsoap-linux-2.7
+PARSER_PATH = ./parser
+XML_PATH = ./xml
 IMPORT_PATH = ./import
 
 CC      = gcc
 CPP     = g++
-LEX     = flex
-YACC    = bison
 GSOAP   = $(GSOAP_PATH)/soapcpp2
 SOAPH   = $(GSOAP_PATH)/stdsoap2.h
 SOAPC   = $(GSOAP_PATH)/stdsoap2.c
@@ -35,12 +31,13 @@ UTIL_OBJECTS = \
 	array.o \
 	bunch.o \
 	hash_table.o \
-	#set.o \
+	set.o \
 	term.o \
 
 PARSER_OBJECTS = \
 	lex.yy.o \
-	p2_parse.tab.o
+	p2_parser.tab.o \
+	p2_parser-aux.o
 
 #P2_OBJECTS = \
 #	p2_error.o \
@@ -168,7 +165,7 @@ lex.yy.c : p2_parse.l
 	$(LEX) p2_parse.l
 
 p2_parse.tab.c p2_parse.tab.h : p2_parse.y p2_flags.h
-	$(YACC) -dv p2_parse.y
+	$(YACC) -dv p2_parse.y	-rm $(UTIL_OBJECTS)
 
 
 
@@ -176,20 +173,17 @@ p2_parse.tab.c p2_parse.tab.h : p2_parse.y p2_flags.h
 # "make clean" (Note: doesn't remove the executable)
 
 .PHONY : clean
-clean : 
-	-rm \
-	$(UTIL_OBJECTS) \
-	$(PARSER_OBJECTS) \
-	$(FLEX_OUTPUT) \
-	$(BISON_OUTPUT) \
+clean :
+	$(MAKE) clean -C $(XML_PATH)
+	$(MAKE) clean -C $(PARSER_PATH)
+	$(MAKE) clean -C $(UTIL_PATH)
+	-rm $(UTIL_OBJECTS)
 
 .PHONY : distclean
-distclean:
-	-rm \
-	$(UTIL_OBJECTS) \
-	$(PARSER_OBJECTS) \
-	$(FLEX_OUTPUT) \
-	$(BISON_OUTPUT) \
-	rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soap*.* phase2
+distclean :  clean
+	$(MAKE) distclean -C $(XML_PATH)
+	$(MAKE) distclean -C $(PARSER_PATH)
+	$(MAKE) distclean -C $(UTIL_PATH)
+	-rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soap*.* phase2
 
 

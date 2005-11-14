@@ -40,6 +40,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 void p2_term__print(p2_term *term, int top_level);
 void *deallocate(void *p);
 
+int retval = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -57,9 +59,9 @@ extern void p2_parser__set_show_line_numbers(int flag);
 /** Mock command evaluator.
     \note  the p2_term argument 'args' should be freed after use (if not null),
     whereas the character string 'name' belongs to the parser. */
-extern void p2_evaluate_command(char *name, p2_term *args)
+extern int p2_evaluate_command(char *name, p2_term *args)
 {
-    int quit = 0;
+    retval = 0;
 
     if (!name || !strlen(name))
     {
@@ -79,28 +81,28 @@ extern void p2_evaluate_command(char *name, p2_term *args)
 
     // Process the command.
     if (!strcmp(name, "exit"))
-        quit = 1;
+    {
+        retval = FORCED_EXIT;
+        printf("\n\n");
+    }
+
     // else
     //    printf("Unknown command.\n");
 
     if (args)
         cleanup_term(args);
 
-    if (quit)
-    {
-        printf("\n\n");
-
-        /** \warning  This way, yyparse never terminates. */
-        exit(0);
-    }
+    return retval;
 }
 
 
 /** Mock expression evaluator.
     \note  the p2_term argument 'args' should be freed after use,
     whereas the character string 'name' belongs to the parser. */
-extern void p2_evaluate_expression(char *name, p2_term *expr)
+extern int p2_evaluate_expression(char *name, p2_term *expr)
 {
+    retval = 0;
+
     if (!expr)
     {
         printf("Error: expression must not be null!");
@@ -120,17 +122,23 @@ extern void p2_evaluate_expression(char *name, p2_term *expr)
     }
 
     cleanup_term(expr);
+
+    return retval;
 }
 
 
 /** Mock parse error handler.
     \note  the character string 'msg' belongs to the parser. */
-extern void p2_handle_parse_error(char *msg)
+extern int p2_handle_parse_error(char *msg)
 {
+    retval = 0;
+
     if (msg && strlen(msg))
         printf("Handle parse error: %s.", msg);
     else
         printf("Handle parse error.");
+
+    return retval;
 }
 
 
@@ -140,13 +148,20 @@ extern void p2_handle_parse_error(char *msg)
 /** Debugger controlling function.  Invocation of yyparse() is here. */
 main()
 {
+    int exit_value;
+
     p2_parser__set_suppress_output(0);
     p2_parser__set_show_line_numbers(1);
 
     printf("Phase2 command-line parser debugger.  Type '/exit' to quit.\n\n");
 
-    if (yyparse())
-        printf("Parser exited abnormally.\n");
+    if (exit_value = yyparse())
+    {
+        if (retval == FORCED_EXIT)
+            printf("Parser was terminated by a user action.\n");
+        else
+            printf("Parser exited abnormally (exit_value = %d).\n", exit_value);
+    }
     else
         printf("Parser exited normally.\n");
 }
@@ -155,6 +170,8 @@ main()
 /** Print function for p2_terms. */
 void p2_term__print(p2_term *term, int top_level)
 {
+    p2_term *subterm;
+
     #ifdef PRINT_TERM_AS_ARRAY
         void **cur = term->head, **sup = term->buffer + term->buffer_size;
 
@@ -176,10 +193,15 @@ void p2_term__print(p2_term *term, int top_level)
 
             for (i = 0; i < length - 1; i++)
             {
-                p2_term__print(p2_term__subterm_at(term, i), 0);
+                subterm = p2_term__subterm_at(term, i);
+                p2_term__print(subterm, 0);
+                p2_term__delete(subterm);
                 printf(" ");
             }
-            p2_term__print(p2_term__subterm_at(term, length - 1), 0);
+
+            subterm = p2_term__subterm_at(term, length - 1);
+            p2_term__print(subterm, 0);
+            p2_term__delete(subterm);
 
             if (!top_level)
                 printf(")");

@@ -1,12 +1,12 @@
 ################################################################################
-## Compile and run a test program under valgrind (memcheck).
+## Compile and run a test program under Valgrind (memcheck).
 
-NAME    = p2-util-debugger
-CC      = gcc
-CFLAGS  = -g
+NAME     = p2-util-debugger
+CC       = gcc
+CFLAGS   = -g
+VALGRIND = valgrind --tool=memcheck --leak-check=full --show-reachable=yes
 
-
-all :  exec-valgrind
+all :  valgrind
 
 clean :
 	-rm *.o
@@ -15,8 +15,8 @@ distclean :  clean
 	-rm $(NAME)
 
 
-exec-valgrind :  $(NAME)
-	-valgrind --tool=memcheck --leak-check=full $(NAME)
+valgrind :  $(NAME)
+	-$(VALGRIND) $(NAME)
 
 $(NAME) :  $(NAME).c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 	gcc $(CFLAGS) -o $(NAME) $(NAME).c \

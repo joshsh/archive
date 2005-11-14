@@ -6,8 +6,10 @@
 NAME = p2_parser
 
 CC   = gcc
-LEX  = flex
+LEX  = flex \
+       -pp  # Get comments regarding features that lead to performance losses.
 YACC = bison
+VALGRIND = valgrind --tool=memcheck --leak-check=full --show-reachable=yes
 
 CFLAGS = -g # temporary...
 
@@ -26,6 +28,10 @@ clean:
 
 distclean: clean
 	-rm *.o $(NAME)-debugger
+
+
+valgrind :  debugger
+	-$(VALGRIND) $(NAME)-debugger
 
 
 debugger: objects $(NAME)-debugger.c $(NAME)-aux.h p2_term.o

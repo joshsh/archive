@@ -21,8 +21,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <string.h>  // memcpy
 
-// #define p2_SET_DEBUG
-
 
 
 // By default, the hash table will wait until it is 1/3 full before expanding.
@@ -62,10 +60,11 @@ int p2_set__find_next_prime(int i)
 
 void p2_set__expand(p2_set *h)
 {
-  int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
-  void **p, **q, **buffer_old;
+    int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
+    void **p, **q, **buffer_old;
 
-  if (size0 > h->buffer_size) {
+    if (size0 > h->buffer_size)
+    {
     size_old = h->buffer_size;
     buffer_old = h->buffer;
     h->buffer_size = p2_set__find_next_prime(size0);
@@ -81,42 +80,49 @@ void p2_set__expand(p2_set *h)
       }
     }
     free(buffer_old);
-  }
+    }
 }
 
 
 
 p2_set *p2_set__new(int buffer_size, float sparsity, float expansion)
 {
-  int i;
+    int i;
 
-  p2_set *h = (p2_set *) malloc(sizeof(p2_set));
+    p2_set *S = (p2_set *) malloc(sizeof(p2_set));
 
-  h->buffer_size = p2_set__find_next_prime(buffer_size);
+    if (S)
+    {
+        S->buffer_size = p2_set__find_next_prime(buffer_size);
 
-  // sparsity must be at least 1, otherwise the table will not resize
-  // even when it is completely full.
-  if (sparsity < 1)
-    h->sparsity = DEFAULT_SPARSITY_FACTOR;
-  else
-    h->sparsity = sparsity;
+        // Sparsity must be at least 1, otherwise the buffer will not resize
+        // even when it is completely full.
+        if (sparsity < 1)
+            S->sparsity = DEFAULT_SPARSITY_FACTOR;
+        else
+            S->sparsity = sparsity;
 
-  // expansion must be greater than 1 for the buffer to actually gain in size
-  if (expansion <= 1)
-    h->expansion = DEFAULT_EXPANSION_FACTOR;
-  else
-    h->expansion = expansion;
+        // Expansion factor must be greater than 1 for the buffer to actually
+        // gain in size.
+        if (expansion <= 1)
+            S->expansion = DEFAULT_EXPANSION_FACTOR;
+        else
+            S->expansion = expansion;
 
-  h->buffer = (void **) malloc(sizeof(void*) * h->buffer_size);
-  h->size = 0;
+        // Buffer is initially empty.
+        S->size = 0;
 
-  for (i=0; i<h->buffer_size; i++)
-    h->buffer[i] = NULL;
+        // Capacity is re-calculated whenever the buffer resizes.
+        S->capacity = (int) (((float) S->buffer_size) / S->sparsity);
 
-  // capacity is re-calculated whenever the table resizes
-  h->capacity = (int) (((float) h->buffer_size)/h->sparsity);
+        if (!(S->buffer = (void **) malloc(sizeof(void*) * S->buffer_size)))
+            S = 0;
+        else
+            for (i = 0; i < S->buffer_size; i++)
+                S->buffer[i] = 0;
+    }
 
-  return h;
+    return S;
 }
 
 
@@ -124,30 +130,25 @@ p2_set *p2_set__new(int buffer_size, float sparsity, float expansion)
 p2_set *p2_set__copy(p2_set *S)
 {
     p2_set *S2 = (p2_set *) malloc(sizeof(p2_set));
-    S2->size = S->size;
-    S2->buffer_size = S->buffer_size;
-    S2->capacity = S->capacity;
-    S2->expansion = S->expansion;
-    S2->sparsity = S->sparsity;
-    S2->buffer = (void **) malloc(sizeof(void*) * S2->buffer_size);
-    memcpy((void *) S2->buffer, (void *) S->buffer, sizeof(void*) * S2->buffer_size);
+
+    if (S2)
+    {
+        memcpy(S2, S, sizeof(p2_set));
+        if (!(S2->buffer = (void **) malloc(sizeof(void*) * S2->buffer_size)))
+            S2 = 0;
+        else
+            memcpy((void *) S2->buffer, (void *) S->buffer, sizeof(void*) * S2->buffer_size);
+    }
 
     return S2;
 }
 
 
 
-void p2_set__delete(p2_set *h)
+void p2_set__delete(p2_set *S)
 {
-  free(h->buffer);
-  free(h);
-}
-
-
-// p2_set__size(S) :            "magnitude of S"
-int p2_set__size(p2_set *S)
-{
-    return S->size;
+  free(S->buffer);
+  free(S);
 }
 
 
@@ -157,100 +158,85 @@ int p2_set__size(p2_set *S)
  * storing a 0/NULL as an element of the set, else you won't be able to tell it
  * apart from a failed p2_set___lookup().
  */
-void *p2_set__lookup(p2_set *h, void *key)
+void *p2_set__lookup(p2_set *S, void *key)
 {
-  int int_key;
-  void **p;
+    void **p;
 
-  if (!key)
-    return NULL;
+    if (!key)
+        return;
 
-  int_key = (int) key;
-  if (int_key < 0)
-    int_key *= -1;
-  p = h->buffer + (int_key%h->buffer_size);
+    // Apply the hashing function.
+    p = (int) key < 0 ?
+        S->buffer + ((- (int) key) % S->buffer_size)
+      : S->buffer + ((  (int) key) % S->buffer_size);
 
-  while (1) {
-    if (*p == NULL)
-      break;
-    if (*p == key)
-      return key;
-    // Increment and wrap
-    p = h->buffer + ((p + 1 - h->buffer)%h->buffer_size);
-  }
-  return NULL;
-}
-
-
-
-p2_set *p2_set__add(p2_set *h, void *key)
-{
-  int int_key;
-  void **p;
-
-//printf("h = %d\n", (int) h);
-  if (key == NULL)
-    return;
-
-  int_key = (int) key;
-  if (int_key < 0)
-    int_key *= -1;
-  p = h->buffer + (int_key%h->buffer_size);
-
-  while (*p != NULL) {
-    if (*p == key) {
-      h->size--;
-      break;  //No duplicate entries allowed.  Replace with new target value.
-    }
-    // Increment and wrap
-    p = h->buffer + ((p + 1 - h->buffer)%h->buffer_size);
-  }
-  *p = key;
-  h->size++;
-  if (h->size >= h->capacity)
-    p2_set__expand(h);
-
-  return h;
-}
-
-
-
-p2_set *p2_set__remove(p2_set *h, void *key)
-{
-  int int_key;
-  void **p;
-
-  if (key == NULL)
-    return;
-
-  int_key = (int) key;
-  if (int_key < 0)
-    int_key *= -1;
-  p = h->buffer + (int_key%h->buffer_size);
-
-  while (*p != NULL) {
-    if (*p == key) {
-      *p = NULL;
-      h->size--;
-      break;
-    }
-    // Increment and wrap
-    p = h->buffer + ((p + 1 - h->buffer)%h->buffer_size);
-  }
-
-  return h;
-}
-
-
-
-p2_set *p2_set__union(p2_set *S, p2_set *T)
-{
-    void **p = T->buffer, **psup = T->buffer + T->buffer_size;
-    while (p < psup)
+    while (*p && *p != key)
     {
-        if (*p != NULL)
-            p2_set__add(S, *p);
-        p++;
+        // Increment and wrap
+        p = S->buffer + ((p + 1 - S->buffer) % S->buffer_size);
+    }
+
+    return *p;
+}
+
+
+
+p2_set *p2_set__add(p2_set *S, void *key)
+{
+    void **p;
+
+    if (!key)
+        return;
+
+    // Apply the hashing function.
+    p = (int) key < 0 ?
+        S->buffer + ((- (int) key) % S->buffer_size)
+      : S->buffer + ((  (int) key) % S->buffer_size);
+
+    while (*p)
+    {
+        if (*p == key)
+        {
+            S->size--;
+            break;  //No duplicate entries allowed.  Replace with new target value.
+        }
+        // Increment and wrap
+        p = S->buffer + ((p + 1 - S->buffer) % S->buffer_size);
+    }
+
+    *p = key;
+
+    if (++S->size >= S->capacity)
+        p2_set__expand(S);
+
+    return S;
+}
+
+
+
+p2_set *p2_set__remove(p2_set *S, void *key)
+{
+    void **p;
+
+    if (!key)
+        return;
+
+    // Apply the hashing function.
+    p = (int) key < 0 ?
+        S->buffer + ((- (int) key) % S->buffer_size)
+      : S->buffer + ((  (int) key) % S->buffer_size);
+
+    while (*p)
+    {
+        if (*p == key)
+        {
+            *p = 0;
+            S->size--;
+            break;
+        }
+
+        // Increment and wrap
+        p = S->buffer + ((p + 1 - S->buffer) % S->buffer_size);
     }
 
     return S;
@@ -258,19 +244,36 @@ p2_set *p2_set__union(p2_set *S, p2_set *T)
 
 
 
+p2_set *p2_set__union(p2_set *S, p2_set *T)
+{
+    void **p = S->buffer;
+    void **psup = S->buffer + S->buffer_size;
+
+    do
+        if (*p)
+            p2_set__add(T, *p);
+    while (++p < psup);
+
+    p2_set__delete(S);
+    return T;
+}
+
+
+
 p2_set *p2_set__intersection(p2_set *S, p2_set *T)
 {
-    void **p = S->buffer, **psup = S->buffer + S->buffer_size;
-    while (p < psup)
-    {
-        if ((*p != NULL)&&(!p2_set__lookup(T, *p)))
+    void **p = S->buffer;
+    void **psup = S->buffer + S->buffer_size;
+
+    do
+        if (*p && !p2_set__lookup(T, *p))
         {
-           *p = NULL;
+           *p = 0;
            S->size--;
         }
-        p++;
-    }
+    while (++p < psup);
 
+    p2_set__delete(T);
     return S;
 }
 
@@ -278,14 +281,13 @@ p2_set *p2_set__intersection(p2_set *S, p2_set *T)
 
 void *p2_set__for_all(p2_set *S, void *(*f)(void *))
 {
-    void **p = S->buffer, **psup = S->buffer + S->buffer_size;
-    while (p < psup)
-    {
-        if ((*p != NULL)&&(f(*p) == NULL))
-            return NULL;
-        else
-            p++;
-    }
+    void **p = S->buffer;
+    void **psup = S->buffer + S->buffer_size;
+
+    do
+       if (*p && !f(*p))
+            return 0;
+    while (++p < psup);
 
     return (void *) 1;
 }
@@ -294,32 +296,31 @@ void *p2_set__for_all(p2_set *S, void *(*f)(void *))
 
 void *p2_set__exists(p2_set *S, void *(*f)(void *))
 {
-    void **p = S->buffer, **psup = S->buffer + S->buffer_size;
-    while (p < psup)
-    {
-        if ((*p != NULL)&&(f(*p) != NULL))
-            return *p;
-        else
-            p++;
-    }
+    void **p = S->buffer;
+    void **psup = S->buffer + S->buffer_size;
 
-    return NULL;
+    do
+        if (*p && f(*p))
+            return *p;
+    while (++p < psup);
+
+    return 0;
 }
 
 
 
 p2_set *p2_set__subset(p2_set *S, void *(*f)(void *))
 {
-    void **p = S->buffer, **psup = S->buffer + S->buffer_size;
-    while (p < psup)
-    {
-        if ((*p != NULL)&&(f(*p) == NULL))
+    void **p = S->buffer;
+    void **psup = S->buffer + S->buffer_size;
+
+    do
+        if (*p && !f(*p))
         {
-            *p = NULL;
+            *p = 0;
             S->size--;
         }
-        p++;
-    }
+    while (++p < psup);
 
     return S;
 }
@@ -331,30 +332,5 @@ void *p2_set__free(void *s)
     free(s);
     return (void *) 1;
 }
-
-
-
-#ifdef p2_SET_DEBUG
-
-    #include <stdio.h>
-
-    int main()
-    {
-        p2_set *S2, *S = p2_set__new(20, 2.0, 2.0);
-        p2_set__add(S, (void *) 5);
-        p2_set__add(S, (void *) 6);
-        p2_set__add(S, (void *) 7);
-        p2_set__add(S, (void *) 8);
-
-        S2 = p2_set__copy(S);
-
-        printf("%d, %d\n", (int) p2_set__lookup(S, (void *) 7),
-        (int) p2_set__lookup(S, (void *) 4));
-
-        p2_set__delete(S);
-        p2_set__delete(S2);
-    }
-
-#endif  // p2_SET_DEBUG
 
 

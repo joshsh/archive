@@ -126,7 +126,7 @@ p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2);
 p2_term *p2_term__cat(p2_term *t1, p2_term *t2);
 
 
-// Logical set functions and atom substitution /////////////////////////////////
+// Logical set functions and itom substitution /////////////////////////////////
 
 /** \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the term, else 0. */

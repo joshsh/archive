@@ -1,3 +1,8 @@
+/** An arbitrary value indicating that the parser was terminated by a user
+    action, rather than by reaching the end of input. */
+#define FORCED_EXIT 1331
+
+
 // Debugging flags /////////////////////////////////////////////////////////////
 
 /** If defined, echo each token as it is matched by the lexer. */
@@ -15,7 +20,7 @@
 
 /** If defined, prevent all output from the parser module (apart from debugging
     messages). */
-// define SUPPRESS_OUTPUT
+// #define SUPPRESS_OUTPUT
 
 /** If defined, begin each new line of input with a line number. */
 #define SHOW_INPUT_LINENO

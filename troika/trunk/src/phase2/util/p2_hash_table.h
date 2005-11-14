@@ -140,7 +140,9 @@ void p2_hash_table__delete(p2_hash_table *h);
 void *p2_hash_table__lookup(p2_hash_table *h, void *key);
 
 /** Adds a key/target pair.
-    \return the target which is displaced by the new target (if any). */
+    \param key  the key value to map from.  Should not be 0/NULL.
+    \param target  the target value to bind to the key
+    \return  The target which is displaced by the new target (if any). */
 void *p2_hash_table__add(p2_hash_table *h, void *key, void *target);
 
 /** Removes the key and its target.

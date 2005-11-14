@@ -80,6 +80,8 @@ typedef struct _p2_set
 
 } p2_set;
 
+/** "magnitude of S" */
+int p2_set__size(p2_set *S);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -100,13 +102,11 @@ void p2_set__delete(p2_set *S);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/** "magnitude of S" */
-int p2_set__size(p2_set *S);
-
 /** "s is an element of S" */
 void *p2_set__lookup(p2_set *S, void *s);
 
-/** "S' = S union {s}" */
+/** "S' = S union {s}"
+    \param s  an element to add to the set.  Should not be 0/NULL. */
 p2_set *p2_set__add(p2_set *S, void *s);
 
 /** "S' = S minus {s}" */

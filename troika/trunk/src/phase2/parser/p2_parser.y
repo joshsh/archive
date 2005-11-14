@@ -15,17 +15,10 @@ Expression Syntax
 
 At the parser level, an expression is a parenthetically nested sequence of
 dictionary items or special symbols, terminated by a semicolon. To give an
-expression (that is, its "reduced" counterpart) a name, the semicolon may be
-preceded by an equality symbol and then the name, e.g.
+expression a name, the semicolon may be preceded by an equality symbol and
+hen the name, e.g.
 
     (token1 token2) token3 = token4;
-
-The unorthodox placement of the dictionary assignment command at the end of the
-expression is aimed at command-line applications for which the programs you
-write will not necessarily be read as you type them. After all, you might not
-need to give an expression a name (particularly if you're only interested in the
-side-effects); the trailing assignment command lets you put that decision off
-till the last moment.
 
 Command Syntax
 
@@ -42,7 +35,8 @@ Interaction with the client
 
 The role of the parser is simply to construct a p2_term to send to the client
 for evaluation.  The client then handles the term and eventually deallocates it
-after generating output.  The client cannot "talk back" to the parser.
+after generating output.  The client cannot "talk back" to the parser except to
+tell it to terminate.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -73,31 +67,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdio.h>  // fprintf, printf, sprintf
 #include <string.h>  // strcpy
 
+#ifdef PARSER_DEBUG
+    #define YYDEBUG 1
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Command evaluator from the semantic module.
     \note  args (if not null) needs to be freed externally. */
-extern void p2_evaluate_command(char *name, p2_term *args);
+extern int p2_evaluate_command(char *name, p2_term *args);
 
 /** Expression evaluator from the semantic module.
     \note  expr needs to be freed externally. */
-extern void p2_evaluate_expression(char *name, p2_term *expr);
+extern int p2_evaluate_expression(char *name, p2_term *expr);
 
 /** Parse error handler from the semantic module. */
-extern void p2_handle_parse_error(char *msg);
+extern int p2_handle_parse_error(char *msg);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Evaluate a command. */
-void handle_command(char *name, p2_term *args);
+int handle_command(char *name, p2_term *args);
 
 /** Evaluate an expression. */
-void handle_expression(char *name, p2_term *expr);
+int handle_expression(char *name, p2_term *expr);
 
 /** Deal gracefully with a parse error. */
-void handle_error(char *msg);
+int handle_error(char *msg);
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,6 +134,11 @@ void yyerror(const char *msg);
 /** Causes the last error reported to yyerror to be ignored. */
 void skip_error();
 
+//extern void yyterminate();
+//extern void yy_fatal_error(char *);
+/** Exit the parser (before reaching the end of input). */
+#define END_IT_ALL  { /*yylex(0,0);*/ YYABORT; }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -169,14 +172,13 @@ void cleanup_term(p2_term *term);
 /** Report more detailed parse error messages. */
 %token YYERROR_VERBOSE
 
-%token OPEN_PAREN CLOSE_PAREN EQUALS SEMICOLON NEWLINE E_O_F
+%token OPEN_PAREN CLOSE_PAREN EQUALS SEMICOLON E_O_F
 
 %token <string> STRING COMMAND_NAME
 
 %type <parser_term> term subterm arguments
 
 %start parser_input
-
 
 %%
 
@@ -227,7 +229,8 @@ statements:
 
         // Wait until the end of a statement to report an error (i.e. print
         // only one error message per invalid statement).
-        handle_error("[this argument is ignored]");
+        if (handle_error("[this argument is ignored]"))
+            END_IT_ALL;
 
         // Make error reporting resume immediately.
         yyerrok;
@@ -243,20 +246,32 @@ command:
 
     COMMAND_NAME SEMICOLON
     {
+        int exit = 0;
+
         ECHO("command :  COMMAND SEMICOLON");
 
         // Handle command with no arguments.
-        handle_command($1, 0);
+        if (handle_command($1, 0))
+            exit = 1;
         free($1);
+
+        if (exit)
+            END_IT_ALL
     }
     | COMMAND_NAME arguments SEMICOLON
     {
+        int exit = 0;
+
         ECHO("command :  COMMAND arguments SEMICOLON");
 
         // Handle command with arguments.
         if ($2)
-            handle_command($1, (p2_term *) $2);
+            if (handle_command($1, (p2_term *) $2))
+                exit = 1;
         free($1);
+
+        if (exit)
+            END_IT_ALL;
     };
 
 
@@ -268,16 +283,23 @@ expression:
 
         // Handle anonymous expression.
         if ($1)
-            handle_expression(0, (p2_term *) $1);
+            if (handle_expression(0, (p2_term *) $1))
+                END_IT_ALL;
     }
     | term EQUALS STRING SEMICOLON
     {
+        int exit = 0;
+
         ECHO("expression :  term EQUALS token SEMICOLON");
 
         // Handle named expression.
         if ($1)
-            handle_expression($3, (p2_term *) $1);
+            if (handle_expression($3, (p2_term *) $1))
+                exit = 1;
         free($3);
+
+        if (exit)
+            END_IT_ALL;
     }
     | term EQUALS error
     {
@@ -341,11 +363,12 @@ arguments:
 
         // Handle the error only if the existing term is good (i.e. if an error
         // is found in an argument list, ignore errors in the rest of the
-        // statement).
+        // statement).VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
         if ($1)
         {
             cleanup_term((p2_term *) $1);
-            handle_error(0);
+            if (handle_error(0))
+                END_IT_ALL;
         }
 
         $$ = 0;
@@ -392,7 +415,8 @@ term:
         if ($1)
         {
             cleanup_term((p2_term *) $1);
-            handle_error(0);
+            if (handle_error(0))
+                END_IT_ALL;
         }
 
         $$ = 0;
@@ -420,7 +444,8 @@ subterm:
         ECHO("subterm :  OPEN_PAREN term error");
 
         cleanup_term((p2_term *) $2);
-        handle_error(0);
+        if (handle_error(0))
+            END_IT_ALL;
 
         $$ = 0;
     };
@@ -428,7 +453,8 @@ subterm:
 
 %%
 
-// Basic parser functions //////////////////////////////////////////////////////
+// Basic parser functions //////////////////////////////////////////VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
+////////////
 
 
 int yywrap()
@@ -464,8 +490,10 @@ void skip_error()
 // Expression handling /////////////////////////////////////////////////////////
 
 
-void handle_command(char *name, p2_term *args)
+int handle_command(char *name, p2_term *args)
 {
+    int retval;
+
     if (!suppress_output)
     {
         if (!statement_number)
@@ -476,7 +504,7 @@ void handle_command(char *name, p2_term *args)
         #endif
     }
 
-    p2_evaluate_command(name, args);
+    retval = p2_evaluate_command(name, args);
 
     if (!suppress_output)
     {
@@ -486,11 +514,15 @@ void handle_command(char *name, p2_term *args)
 
         printf("\n\n");
     }
+
+    return retval;
 }
 
 
-void handle_expression(char *name, p2_term *expr)
+int handle_expression(char *name, p2_term *expr)
 {
+    int retval;
+
     if (!suppress_output)
     {
         if (!statement_number)
@@ -501,7 +533,7 @@ void handle_expression(char *name, p2_term *expr)
         #endif
     }
 
-    p2_evaluate_expression(name, expr);
+    retval = p2_evaluate_expression(name, expr);
 
     if (!suppress_output)
     {
@@ -511,11 +543,15 @@ void handle_expression(char *name, p2_term *expr)
 
         printf("\n\n");
     }
+
+    return retval;
 }
 
 
-void handle_error(char *msg)
+int handle_error(char *msg)
 {
+    int retval;
+
     if (!suppress_output)
     {
         if (!statement_number)
@@ -535,7 +571,7 @@ void handle_error(char *msg)
         // previous error, or that you've needlessly called handle_error.
         sprintf(error_msg, "unreported");
     *yyerror_msg = '\0';
-    p2_handle_parse_error(error_msg);
+    retval = p2_handle_parse_error(error_msg);
 
     if (!suppress_output)
     {
@@ -545,6 +581,8 @@ void handle_error(char *msg)
 
         printf("\n\n");
     }
+
+    return retval;
 }
 
 
@@ -560,6 +598,7 @@ void echo_production(char *s)
 /** To be passed as a function pointer to p2_term__for_all. */
 void *deallocate(void *p)
 {
+printf("::::: deallocate\n");
     free(p);
     return (void *) 1;
 }
@@ -567,6 +606,7 @@ void *deallocate(void *p)
 
 void cleanup_term(p2_term *term)
 {
+printf("::::: cleanup_term\n");
     p2_term__for_all(term, deallocate);
     p2_term__delete(term);
 }

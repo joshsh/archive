@@ -31,12 +31,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 block *block__new(unsigned int size)
 {
     block *bl = (block *) malloc(sizeof(block));
-    bl->filled = 0;
 
-    //~ take memory faults into account (actual block size might have to be
-    //  smaller than the intended size).
-    bl->buffer = (void **) malloc(size * sizeof(void *));
-    bl->size = size;
+    if (bl)
+    {
+        bl->filled = 0;
+            bl->size = size;
+
+        //~ take memory faults into account (actual block size might have to be
+        //  smaller than the intended size).
+        if (!(bl->buffer = (void **) malloc(size * sizeof(void *))))
+            bl = 0;
+    }
 
     return bl;
 }
@@ -47,11 +52,18 @@ block *block__copy(block *bl)
 {
     block *bl2 = (block *) malloc(sizeof(block));
 
-    bl2->size = bl->size;
-    bl2->filled = bl->filled;
+    if (bl2)
+    {
+        bl2->size = bl->size;
+        bl2->filled = bl->filled;
 
-    bl2->buffer = (void **) malloc(bl2->size * sizeof(void *));
-    memcpy(bl2->buffer, bl->buffer, bl->filled * sizeof(void *));
+        if (!(bl2->buffer = (void **) malloc(bl2->size * sizeof(void *))))
+            bl2 = 0;
+        else
+            memcpy(bl2->buffer, bl->buffer, bl->filled * sizeof(void *));
+    }
+
+    return bl2;
 }
 
 
@@ -72,11 +84,16 @@ p2_bunch *p2_bunch__new(unsigned int block_size)
 {
     p2_bunch *b = (p2_bunch *) malloc(sizeof(p2_bunch));
 
-    // Block size must be at least 1.
-    b->block_size = (block_size > 0) ? block_size : 1;
+    if (b)
+    {
+        // Block size must be at least 1.
+        b->block_size = (block_size > 0) ? block_size : 1;
 
-    b->blocks = p2_array__new(42, 2.0);
-    b->last_block = 0;
+        b->last_block = 0;
+
+        if (!(b->blocks = p2_array__new(42, 2.0)))
+            b = 0;
+    }
 
     return b;
 }

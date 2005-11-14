@@ -100,6 +100,21 @@ int p2_hash_table__find_next_prime(int i)
 
 
 
+p2_hash_table *rehash_dest;
+
+void rehash(void *key, void *target)
+{
+    p2_hash_table__add(rehash_dest, key, target);
+}
+
+void rehash_all(p2_hash_table *src, p2_hash_table *dest)
+{
+    rehash_dest = dest;
+    p2_hash_table__for_all(src, (void (*)(void*, void *)) rehash);
+}
+
+
+
 void p2_hash_table__expand(p2_hash_table *h)
 {
     int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
@@ -110,19 +125,22 @@ void p2_hash_table__expand(p2_hash_table *h)
         size_old = h->buffer_size;
         buffer_old = h->buffer;
         h->buffer_size = p2_hash_table__find_next_prime(size0);
-        h->buffer = (void **) malloc(sizeof(void *) * (ENTRY_SIZE * h->buffer_size));
+        h->buffer = (void **) malloc(sizeof(void *) * (ENTRY_SIZE * h->buffer_size ));
         h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
         for (i = 0; i < ENTRY_SIZE * h->buffer_size; i++)
-            h->buffer[i] = NULL;
+            h->buffer[i] = 0;
 
-        for (i=0; i<size_old; i++)
+        for (i = 0; i < size_old; i++)
         {
             p = buffer_old + (i * ENTRY_SIZE);
-            if (*p != NULL)
+            if (*p)
             {
                 q = p + 1;
-                h->size--; //Cancel out the incrementation for this re-hashing add()
+
+                //Cancel out the incrementation for this re-hashing add().
+                h->size--;
+
                 p2_hash_table__add(h, *p, *q);
             }
         }
@@ -144,43 +162,69 @@ p2_hash_table *p2_hash_table__new(
 
     p2_hash_table *h = (p2_hash_table *) malloc(sizeof(p2_hash_table));
 
-    h->buffer_size = p2_hash_table__find_next_prime(buffer_size);
+    if (h)
+    {
+        h->buffer_size = p2_hash_table__find_next_prime(buffer_size);
 
-    if (hashing_function == NULL)
-        h->hashing_function = hash_address;
-    else
-        h->hashing_function = hashing_function;
+        if (hashing_function == NULL)
+            h->hashing_function = hash_address;
+        else
+            h->hashing_function = hashing_function;
 
-    if (compare_to == NULL)
-        h->compare_to = compare_addresses;
-    else
-        h->compare_to = compare_to;
+        if (compare_to == NULL)
+            h->compare_to = compare_addresses;
+        else
+            h->compare_to = compare_to;
 
-    // sparsity must be at least 1, otherwise the table will not resize
-    // even when it is completely full.
-    if (sparsity < 1)
-        h->sparsity = DEFAULT_SPARSITY_FACTOR;
-    else
-        h->sparsity = sparsity;
+        // Sparsity must be at least 1, otherwise the buffer will not resize
+        // even when it is completely full.
+        if (sparsity < 1)
+            h->sparsity = DEFAULT_SPARSITY_FACTOR;
+        else
+            h->sparsity = sparsity;
 
-    // expansion must be greater than 1 for the buffer to actually gain in size
-    if (expansion <= 1)
-        h->expansion = DEFAULT_EXPANSION_FACTOR;
-    else
-        h->expansion = expansion;
+        // Expansion factor must be greater than 1 for the buffer to actually
+        // gain in size.
+        if (expansion <= 1)
+            h->expansion = DEFAULT_EXPANSION_FACTOR;
+        else
+            h->expansion = expansion;
 
-    h->buffer = (void **) malloc(sizeof(void*) * (ENTRY_SIZE * h->buffer_size));
-    h->size = 0;
+        // Buffer is initially empty.
+        h->size = 0;
 
-    for (i = 0; i < (h->buffer_size * ENTRY_SIZE); i++)
-        h->buffer[i] = NULL;
+        // Capacity is re-calculated whenever the table resizes.
+        h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
-    // capacity is re-calculated whenever the table resizes
-    h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
+        if (!(h->buffer = (void **) malloc(sizeof(void*)
+                          * (ENTRY_SIZE * h->buffer_size))))
+            h = 0;
+        else
+            for (i = 0; i < (h->buffer_size * ENTRY_SIZE); i++)
+                h->buffer[i] = NULL;
+    }
 
     return h;
 }
 
+
+
+void p2_hash_table__copy(p2_hash_table *h)
+{
+    p2_hash_table *h2 = (p2_hash_table *) malloc(sizeof(p2_hash_table));
+
+    if (h2)
+    {
+        memcpy(h2, h, sizeof(p2_hash_table));
+        if (!(h2->buffer = (void **) malloc(sizeof(void*)
+                          * (ENTRY_SIZE * h2->buffer_size))))
+            h2 = 0;
+        else
+            rehash_all(h, h2);
+    }
+
+    return h2;
+}
 
 
 void p2_hash_table__delete(p2_hash_table *h)
@@ -300,7 +344,9 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key)
 
 void p2_hash_table__for_all(p2_hash_table *h, void (*func)(void *, void *))
 {
-    void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
+    void **cur = h->buffer;
+    void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
+
     while (cur < sup)
     {
         if (*cur)
@@ -313,11 +359,13 @@ void p2_hash_table__for_all(p2_hash_table *h, void (*func)(void *, void *))
 
 void p2_hash_table__for_all_keys(p2_hash_table *h, void (*func)(void *))
 {
-    void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
+    void **cur = h->buffer;
+    void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
+
     while (cur < sup)
     {
         if (*cur)
-        func(*cur);
+            func(*cur);
         cur += 2;
     }
 }
@@ -326,13 +374,14 @@ void p2_hash_table__for_all_keys(p2_hash_table *h, void (*func)(void *))
 
 void p2_hash_table__for_all_targets(p2_hash_table *h, void (*func)(void *))
 {
-    void **cur = h->buffer, **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
+    void **cur = h->buffer;
+    void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
+
     while (cur < sup)
     {
-        cur++;
         if (*cur)
-            func(*cur);
-        cur++;
+            func(*(cur + 1));
+        cur += 2;
     }
 }
 

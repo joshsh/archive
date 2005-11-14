@@ -38,19 +38,27 @@ p2_array *p2_array__new(int buffer_size, float expansion)
 {
     p2_array *a = (p2_array *) malloc(sizeof(p2_array));
 
-    if (expansion <= 1)
-        a->expansion = DEFAULT_EXPANSION_FACTOR;
-    else
-        a->expansion = expansion;
+    if (a)
+    {
+        // Expansion factor must be greater than 1 for the buffer to actually
+        // gain in size.
+        if (expansion <= 1)
+            a->expansion = DEFAULT_EXPANSION_FACTOR;
+        else
+            a->expansion = expansion;
 
-    if (buffer_size < 1)
-        a->buffer_size = 1;
-    else
-        a->buffer_size = buffer_size;
+        // Buffer size must be positive.
+        if (buffer_size < 1)
+            a->buffer_size = 1;
+        else
+            a->buffer_size = buffer_size;
 
-    a->head = 0;
-    a->size = 0;
-    a->buffer = (void **) malloc(a->buffer_size * sizeof(void *));
+        a->head = 0;
+        a->size = 0;
+
+        if (!(a->buffer = (void **) malloc(a->buffer_size * sizeof(void *))))
+            a = 0;
+    }
 
     return a;
 }
@@ -62,15 +70,18 @@ p2_array *p2_array__copy(p2_array *a)
     int size;
 
     p2_array *b = (p2_array *) malloc(sizeof(p2_array));
-
-    b->head = a->head;
-    b->size = a->size;
-    b->expansion = a->expansion;
-    b->buffer_size = a->buffer_size;
-    size = b->buffer_size * sizeof(void *);
-    b->buffer = malloc(size);
-
-    memcpy(b->buffer, a->buffer, size);
+    if (b)
+    {
+        b->head = a->head;
+        b->size = a->size;
+        b->expansion = a->expansion;
+        b->buffer_size = a->buffer_size;
+        size = b->buffer_size * sizeof(void *);
+        if (!(b->buffer = malloc(size)))
+            b = 0;
+        else
+            memcpy(b->buffer, a->buffer, size);
+    }
 
     return b;
 }

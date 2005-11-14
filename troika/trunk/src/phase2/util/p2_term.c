@@ -37,30 +37,27 @@ p2_term *p2_term__expand(p2_term *term, unsigned int minimum_buffer_size)
     void **new_buffer, **new_head;
     unsigned int size, new_buffer_size;
 
-    if (term)
-    {
-        // Ordinarily, the new buffer size will be the old buffer size times the
-        // p2_term expansion factor.
-        new_buffer_size = (unsigned int)
-            (term->buffer_size * p2_term__expansion_factor);
+    // Ordinarily, the new buffer size will be the old buffer size times the
+    // p2_term expansion factor.
+    new_buffer_size = (unsigned int)
+        (term->buffer_size * p2_term__expansion_factor);
 
-        // If the new buffer size is not large enough, use the given minimum
-        // buffer size instead.
-        if (new_buffer_size < minimum_buffer_size)
-            new_buffer_size = minimum_buffer_size;
+    // If the new buffer size is not large enough, use the given minimum
+    // buffer size instead.
+    if (new_buffer_size < minimum_buffer_size)
+        new_buffer_size = minimum_buffer_size;
 
-        // Copy array data to the new buffer.
-        size = (unsigned int) *(term->head);
-        new_buffer = (void **) malloc(new_buffer_size * sizeof(void *));
-        new_head = new_buffer + new_buffer_size - size;
-        memcpy(new_head, term->head, size * sizeof(void *));  
-        free(term->buffer);
+    // Copy array data to the new buffer.
+    size = (unsigned int) *(term->head);
+    new_buffer = (void **) malloc(new_buffer_size * sizeof(void *));
+    new_head = new_buffer + new_buffer_size - size;
+    memcpy(new_head, term->head, size * sizeof(void *));
+    free(term->buffer);
 
-        // Update the p2_term's metadata.
-        term->buffer = new_buffer;
-        term->buffer_size = new_buffer_size;
-        term->head = new_head;
-    }
+    // Update the p2_term's metadata.
+    term->buffer = new_buffer;
+    term->buffer_size = new_buffer_size;
+    term->head = new_head;
 
     return term;
 }
@@ -76,9 +73,9 @@ p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
     p2_term *term = (p2_term *) malloc(sizeof(p2_term));
 
     // Buffer starts out at this size, but may expand later.
+    if (initial_buffer_size < 2)
+        initial_buffer_size = 2;
     term->buffer_size = initial_buffer_size;
-    if (term->buffer_size < 2)
-        term->buffer_size = 2;
 
     // Create the buffer.
     term->buffer = (void **) malloc(term->buffer_size * sizeof(void *));
@@ -130,11 +127,8 @@ p2_term *p2_term__copy(p2_term *source)
 
 void p2_term__delete(p2_term *term)
 {
-    if (term)
-    {
-        free(term->buffer);
-        free(term);
-    }
+    free(term->buffer);
+    free(term);
 }
 
 
