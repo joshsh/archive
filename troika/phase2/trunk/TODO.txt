@@ -3,6 +3,8 @@ Things to do -- URGENT! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 [!] Abstract the graph traversal algorithm from the memory manager --> re-use it for the serializer
 --[!] Formalize edge-inference logic
 
+[!P] Layout algorithm for binder frames.
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
