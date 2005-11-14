@@ -1,0 +1,75 @@
+<P2_DataSet>
+    <K name="true"/>
+    <PrimitiveReference name="*">*</PrimitiveReference>
+    <PrimitiveReference name="+">+</PrimitiveReference>
+    <PrimitiveReference name="-">-</PrimitiveReference>
+    <PrimitiveReference name="/">/</PrimitiveReference>
+    <Sequence sequenceType="immediate" name="omega">
+        <S/>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <K/>
+            <K/>
+        </Sequence>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <K/>
+            <K/>
+        </Sequence>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="+1">
+        <S/>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <Sequence sequenceType="immediate">
+                <K/>
+                <S/>
+            </Sequence>
+            <K/>
+        </Sequence>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="B">
+        <S/>
+        <Sequence sequenceType="immediate">
+            <K/>
+            <S/>
+        </Sequence>
+        <K/>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="C">
+        <S/>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <Sequence sequenceType="immediate">
+                <K/>
+                <S/>
+            </Sequence>
+            <K/>
+            <Sequence sequenceType="immediate">
+                <S/>
+                <Sequence sequenceType="immediate">
+                    <K/>
+                    <S/>
+                </Sequence>
+                <K/>
+            </Sequence>
+            <S/>
+        </Sequence>
+        <Sequence sequenceType="immediate">
+            <K/>
+            <K/>
+        </Sequence>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="false">
+        <S/>
+        <K/>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="I">
+        <S/>
+        <K/>
+        <K/>
+    </Sequence>
+    <K name="K"/>
+    <PrimitiveReference name="system">system</PrimitiveReference>
+    <S name="S"/>
+</P2_DataSet>

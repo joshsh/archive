@@ -1,0 +1,75 @@
+May 10, 2005:
+* Rearranged the gSOAP test packages to make them independent of the version of gSOAP, following van Engelen's e-mail (^ bug in DOM parser ^ v2.7.1) -- will use the last version without the bug (v2.6.2) for now
+* No problem building the Google API client using v2.6.2
+* In fact, v2.6.2 has the same bug (missing definition for soap_put_xsd__anyType, declared in dom++.cpp / dom.c).
+* v2.5.2 apparently works just fine -- both for my DOM test as well as for the Google API client
+* soap_dom_element->add(soap_dom_element) is not working in this version, so hopefully my DOM_appendChild stub in xmldom.h will accomplish the same thing.
+* There's something fundamentally wrong with the soap_dom_element struct in v2.5.2, which is probably why the constructors were torn out in the first place.  Looks like I'll just have to wait for the next release (it's supposed to happen within the week).
+
+May 11, 2005:
+* Added a MergeSort routine to array.h
+* p2_itf.c --> p2_itf.cpp
+
+May 13, 2005:
+* p2_itf.cpp ^ regex.h expression matching for tokens
+[Lost entries for May 14, 15:
+* Revised exception handling in sk.c/sk.h (recovered from a backup)
+* Added a new term class, nratom_class ^ delayed evaluation (recovered)
+* Created the p2_client library (lost)]
+
+May 16, 2005:
+* All file names to lower case ^ avoid Windows/Linux issues
+* Created the p2_type and p2_primitive libraries
+
+May 17, 2005:
+* Modified hash_table.h/.c to form a new utility, JS_set, based on an analogy with mathematical set operations.  For use by the P2_dataset class.
+
+May 18, 2005 -- v0.2.0:
+* Created another new utility, JS_sequence, for nested lists.  It wasn't 
+particularly germane to the task at hand (putting together a mockup for tomorrow morning) although I'm sure to get plenty of mileage out of it in the coming weeks.
+* Got the mockup working and debugged it against a little demo program.
+
+[no entry for v0.2.1]
+
+May 28, 2005 -- v0.3.0:
+* p2.cpp --> p2_client.cpp
+* Created p2.h, p2.c as the "core" library.
+* Revised the typing system in favor of better modularity.
+* Remodeled error handling after the (new) typing system to make it more 
+extensible.
+
+May 29, 2005:
+* Added default encode, decode, destroy and clone functions to p2_type.c, to avoid repetitive checking for NULL type interface members at execution time.
+* Added "for all key values" and "for all target values" functions to 
+JS_hash_table.
+
+May 30, 2005:
+* Wrote normalizing functions for JS_sequence.
+
+[v0.2.1 and v0.3.0 were lost when my JumpDrive failed.  sk.h, sk.c and most of p2_client.cpp survived -- otherwise I had to start "from scratch" with v0.2.0]
+
+June 2, 2005 -- v0.3b:
+* Am caught up to the point where I lost my work on Monday, but took a significantly different approach this time, giving central importance to JS_sequence, minimizing the SK library and keeping it strictly separate both from P2_data_set and from the client.  It should be possible now to combine several "languages", or reduction algorithms, at the same time within the same environment.  Multireferencing data sets can be arbitrarily loaded, saved, etc. but cannot yet exchange information.
+
+June 3, 2005:
+* Added a macro (PERMIT_IRREDUCIBLE_TERMS) to the SK library.  If defined, allow non-redex atoms at the beginning of an expression, and simply abandon reduction when they are encountered (rather than raising an error).
+
+June 4, 2005:
+* Added a macro (REFERENCE_COUNTING) to JS_sequence, to enable "eager" garbage collection when defined.  Should work well until I get into "association"...
+* Added a "swap" function to JS_sequence to make direct tampering with type and value members unnecessary (which could now throw off the reference count if done wrong).
+* Added a GPL preamble to the parser interface, along with a new command, /show, for copyright and warranty information.
+
+June 5, 2005:
+* Merged the /display command with /show (/display --> /display dictionary).
+* Added another macro (MARK_AND_SWEEP) to JS_sequence, for an alternative memory reclamation scheme (seeing as simple reference counting won't quite work for "associational" graphs).
+* Added a command, /markandsweep, to manually call the mark and sweep algorithm.  Hidden when MARK_AND_SWEEP is not defined.
+
+[...]
+
+June 10, 2005 -- v0.4:
+* Reduced the number of bugs to a reasonable level... there are still some order dependencies with the commands, e.g. saving after garbage collecting, loading files from within the environment as opposed to initializing them as the default.  Got a floating point exception at one point, don't know if that's been fixed by subsequent repairs.  Anyway, I've thought of a far, far better data structure and algorithm for handling the sequences, so there's no point in any more debugging for now:
+
+    Sxyz = 41S1x1y1z
+    xz(yz) = 31x1z21y1z
+    
+or a more compact version thereof in which the 1's are assumed.  S and K use array copying operations on a single array which is always kept in head-normal form.

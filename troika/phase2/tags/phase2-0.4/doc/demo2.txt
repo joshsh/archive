@@ -1,0 +1,145 @@
+/load prims data/primitives.xml;
+prims:double__multiply = *;
+3.1415 = pi;
+* 2.0 pi;
+* $ = circumference;
+/load combs data/combinators.xml;
+combs:C combs:S combs:I * = sq;
+combs:B (* pi) sq = area;
+0.5 = radius;
+circumference radius;
+area radius;
+/show dict;
+/save data/circle.xml;
+prims:system "cat data/circle.xml";
+/show env;
+/markandsweep;
+/show env;
+/exit;
+
+
+
+
+
+
+
+
+[root@localhost Phase2_v0.4]# ./phase2
+
+Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '/show license;' for details.
+
+/load prims data/primitives.xml;
+
+
+prims:double__multiply = *;
+
+         >> <PrimitiveReference> *:     double__multiply <<
+
+3.1415 = pi;
+
+         >> <xs_double> pi:     3.1415 <<
+
+* 2.0 pi;
+
+         >> <xs_double> $:      6.283 <<
+
+* $ = circumference;
+
+         >> <P2_Sequence> circumference:        * $ <<
+
+/load combs data/combinators.xml;
+
+
+combs:C combs:S combs:I * = sq;
+
+         >> <P2_Sequence> sq:   S * (S K K) <<
+
+combs:B (* pi) sq = area;
+
+         >> <P2_Sequence> area: S (K (* pi)) (S * (S K K)) <<
+
+0.5 = radius;
+
+         >> <xs_double> radius: 0.5 <<
+
+circumference radius;
+
+         >> <xs_double> $:      3.1415 <<
+
+area radius;
+
+         >> <xs_double> $:      0.785375 <<
+
+/show dict;
+
+Dictionary:
+    <xs_double> pi
+    <xs_double> radius
+    <Sequence> circumference
+    <xs_double> $
+    <PrimitiveReference> *
+    <Sequence> sq
+    <Sequence> area
+
+/save data/circle.xml;
+
+
+prims:system "cat data/circle.xml";
+
+<P2_DataSet>
+    <xs_double name="pi" id="ref-2">3.1415</xs_double>
+    <xs_double name="radius">0.5</xs_double>
+    <Sequence sequenceType="immediate" name="circumference">
+        <PrimitiveReference ref="ref-1"/>
+        <xs_double>6.283</xs_double>
+    </Sequence>
+    <xs_double name="$">0.785375</xs_double>
+    <PrimitiveReference name="*" id="ref-1">double__multiply</PrimitiveReference>
+    <Sequence sequenceType="immediate" name="sq">
+        <S/>
+        <PrimitiveReference ref="ref-1"/>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <K/>
+            <K/>
+        </Sequence>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="area">
+        <S/>
+        <Sequence sequenceType="immediate">
+            <K/>
+            <Sequence sequenceType="immediate">
+                <PrimitiveReference ref="ref-1"/>
+                <xs_double ref="ref-2"/>
+            </Sequence>
+        </Sequence>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <PrimitiveReference ref="ref-1"/>
+            <Sequence sequenceType="immediate">
+                <S/>
+                <K/>
+                <K/>
+            </Sequence>
+        </Sequence>
+    </Sequence>
+</P2_DataSet>
+         >> <xs_string> $:       <<
+
+/show env;
+
+3 active data set(s): combs, default, prims
+"Mark and sweep" buffer contains 85 items.
+
+/markandsweep;
+
+
+/show env;
+
+3 active data set(s): combs, default, prims
+"Mark and sweep" buffer contains 52 items.
+
+/exit;
+
+[root@localhost Phase2_v0.4]#

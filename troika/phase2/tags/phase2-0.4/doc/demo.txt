@@ -1,0 +1,17 @@
+/debug on;
+
+S(S(K S)K) = +1;
++1 (S K) = n1;
++1 n1 = n2;
++1 n2 = n3;
+* 2 = f;
+n3 f = fff;
+fff 2;
+
+S K K = I;
+S (K S) K = B;
+S (B B S) (K K) = C;
+C S I = fxx;
+
+n3 (fxx *) 2;
+

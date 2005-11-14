@@ -1,0 +1,38 @@
+<P2_DataSet>
+    <xs_double name="pi" id="ref-2">3.1415</xs_double>
+    <xs_double name="radius">0.5</xs_double>
+    <Sequence sequenceType="immediate" name="circumference">
+        <PrimitiveReference ref="ref-1"/>
+        <xs_double>6.283</xs_double>
+    </Sequence>
+    <xs_double name="$">0.785375</xs_double>
+    <PrimitiveReference name="*" id="ref-1">double__multiply</PrimitiveReference>
+    <Sequence sequenceType="immediate" name="sq">
+        <S/>
+        <PrimitiveReference ref="ref-1"/>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <K/>
+            <K/>
+        </Sequence>
+    </Sequence>
+    <Sequence sequenceType="immediate" name="area">
+        <S/>
+        <Sequence sequenceType="immediate">
+            <K/>
+            <Sequence sequenceType="immediate">
+                <PrimitiveReference ref="ref-1"/>
+                <xs_double ref="ref-2"/>
+            </Sequence>
+        </Sequence>
+        <Sequence sequenceType="immediate">
+            <S/>
+            <PrimitiveReference ref="ref-1"/>
+            <Sequence sequenceType="immediate">
+                <S/>
+                <K/>
+                <K/>
+            </Sequence>
+        </Sequence>
+    </Sequence>
+</P2_DataSet>

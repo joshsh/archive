@@ -1,0 +1,546 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+ "http://www.w3.org/TR/html4/loose.dtd"/>
+
+<HTML lang="en">
+
+<HEAD>
+  <TITLE>Overview of the Phase2 Programming Language</TITLE>
+  <META name="resource-type" content="document">
+  <META name="description" content="Overview of the Phase2 Programming Language">
+  <META name="keywords" content="Phase2, programming, functional, language, Shinavier, EWU">
+  <META content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#1F00FF" ALINK="#FF0000" VLINK="#9900DD">
+
+
+
+<P>
+<TABLE BORDER="0" CELLSPACING="0"><TR><TD VALIGN="CENTER">
+<IMG SRC="clover_sm.gif" WIDTH="100" HEIGHT="100" ALT="Josh's clover/torus thingy"/>
+</TD><TD NOWRAP>&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="CENTER" NOWRAP>
+<FONT SIZE="+2"><B>Overview of the Phase2 Programming Language</B></FONT><HR>
+Joshua Shinavier, CSCD 499<BR>
+Spring Quarter 2005
+</TD></TR></TABLE>
+
+This document describes a lightweight, component-oriented functional language which combines a simple, point-free syntax with an extensible set of primitives and a platform-independent XML encoding scheme.  Phase2 is implemented in C and C++ and makes use of the gSOAP toolkit for XML parsing and (eventually) distributed data flow.  The command-line parser is built using Flex and Bison.  As Phase2 is in its early stages, some of the features described below, particularly those involving XML Schema, are not fully implemented yet and will be indicated with comments [in square braces].
+</P>
+
+<HR>
+
+
+
+<H3>Table of Contents</H3>
+<P>
+    <UL>
+        <LI><A HREF="#introduction">Introduction</A>
+        <LI><A HREF="#data_types">Data Types</A><UL>
+            <LI><A HREF="#simple_types">Simple Types</A>
+            <LI><A HREF="#the_placeholder_type">The PlaceHolder Type</A>
+            <LI><A HREF="#derived_types">Derived Types</A>
+            <LI><A HREF="#type_checking">Type Checking</A>
+            </UL>
+        <LI><A HREF="#primitives">Primitives</A><UL>
+            <LI><A HREF="#referential_transparency">Referential Transparency</A>
+            <LI><A HREF="#extensibility">Extensibility</A>
+            </UL>
+        <LI><A HREF="#command_line_parsing">Command-Line Parsing</A><UL>
+            <LI><A HREF="#expression_syntax">Expression Syntax</A>
+            <LI><A HREF="#command_syntax">Command Syntax</A>
+            </UL>
+        <LI><A HREF="#schema_definitions">Schema Definitions</A>
+        <LI><A HREF="#data_sets">Data Sets</A><UL>
+            <LI><A HREF="#serialization_and_deserialization">Serialization and Deserialization</A>
+            <LI><A HREF="#multireferencing">Multireferencing</A>
+            </UL>
+        <LI><A HREF="#the_phase2_client">The Phase2 Client</A><UL>
+            <LI><A HREF="#expression_evaluation">Expression Evaluation</A>
+            <LI><A HREF="#command_execution">Command Execution</A>
+            <LI><A HREF="#distributed_features">Distributed Features</A>
+            </UL>
+        <LI><A HREF="#memory_management">Memory Management</A><UL>
+            <LI><A HREF="#mark_and_sweep_garbage_collection">"Mark and Sweep" Garbage Collection</A>
+            <LI><A HREF="#reference_counting">Reference Counting</A>
+            </UL>
+        <LI><A HREF="#exception_handling">Exception Handling</A>
+        <LI><A HREF="#combinator_semantics">Combinator Semantics</A>
+        <LI><A HREF="#associational_programming">"Associational" Programming</A><UL>
+            <LI><A HREF="#ordering_and_associativity_of_expression_syntax">Ordering and Associativity of Expression Syntax</A>
+            <LI><A HREF="#minimalism">Minimalism</A>
+            </UL>
+        <LI><A HREF="#an_example_session_in_phase2">An Example Session in Phase2</A>
+        <LI><A HREF="#references">References</A>
+    </UL>
+</P>
+
+<HR>
+
+
+
+<A NAME="introduction"/>
+<H3>Introduction</H3>
+<P>
+
+[...]
+
+</UL>
+<HR>
+
+
+
+<A NAME="data_types"/>
+<H3>Data Types</H3>
+<P>
+  All data and programs in Phase2 are in the form of "atoms" and "sequences", an atom being a typed constant and a sequence being a nested list of atoms.
+</P>
+
+
+<A NAME="simple_types"/>
+<H4>Simple Types</H4>
+<P>
+  Unlike primitives, there is a single, predefined set of simple types in Phase2, all of which are drawn from the XML Schema standard (with one exception; see <A HREF="#the_placeholder_type">below</A>).  For instance, the Schema "string" type is identified with character strings in C, "integer" is identified with the int type, and so on, the idea being to make good use of existing validating and encoding schemes for these types, and to achieve a certain degree of independence from the host language (C/C++).
+</P>
+
+<A NAME="the_placeholder_type"/>
+<H4>The PlaceHolder Type</H4>
+<P>
+  The only data type with no XML Schema equivalent is the trivial PlaceHolder type and its equivalents.  There is a need, in certain applications, for graph elements which help define a larger data structure but otherwise contain no information.  As such an element must still be assigned a unique address as an identifier for hashing and comparison functions, PlaceHolders are given out-of-range addresses and trivial associated functions so as to avoid pointless memory allocation [not yet implemented, except as a Schema definition -- see <A HREF="xml/xmlpli.xsd">xmlpli.xsd</A> -- and implicitly as the S and K combinator types].
+</P>
+
+<A NAME="derived_types"/>
+<H4>Derived Types</H4>
+<P>
+  The definition of new types in Phase2 occurs at the application level, and depends on the choice of a reduction algorithm [an easy choice for now, because there's only one].  For instance, combinator semantics lend themselves to the use of ordered tuples for recursive data structures as well as for arrays and other aggregate types.  However, from the underlying program's point of view these are not types at all; they're just more sequences.
+</P>
+
+<A NAME="type_checking"/>
+<H4>Type Checking</H4>
+<P>
+  Phase2 is strongly typed.  There are no equivalence or compatibility relationships between simple types, and any mismatch will lead to an exception.  There is no generic "pointer" type which can be cast and re-cast to suit the context, as handy as this feature is in C; instead, the functional paradigm is supposed to be flexible enough to make this sort of "cheating" unnecessary. Currently, types are checked dynamically with every call to a primitive: if there is a discrepancy between the type of an argument and of the corresponding input parameter, reduction is abandoned, the term is deallocated and an error term is propagated upward to the calling function.  Prospective versions of the language will use type inference to cut down on redundant or unnecessary type checking.
+</P>
+
+<HR>
+
+
+
+<A NAME="primitives"/>
+<H3>Primitives</H3>
+<P>
+A primitive function in Phase2 is a structure containing a C function pointer together with:
+<UL>
+    <LI>A unique name (preferably the same as the C function stub referenced by the pointer, e.g. "math_h__cos").  This name is used as a reference to the primitive in the XML.
+    <LI>A return (output) type, which is packaged together with the return value of a function call to form a typed constant ("atom").
+    <LI>For each input parameter:<UL>
+        <LI>Its type
+        <LI>A name [currently not used].  Unlike the identifying name of the primitive, parameter names are just a aid to the programmer, and may be left empty.
+        <LI>A true/false value indicating the primitive's "transparency" with respect to the parameter (see below).
+        </UL>
+</UL>
+All of this descriptive information is to be extracted from a PrimitiveFunction object as defined in <A HREF="xml/xmlpli.xsd">xmlpli.xsd</A> [the Schema definition is not used, for now; the dummy primitives in the example programs are defined programmatically in <A HREF="src/import/primitives.cpp">primitives.cpp</A>].
+</P>
+
+<A NAME="referential_transparency"/>
+<H4>Referential Transparency</H4>
+<P>
+  A "purely" functional lanuage is distinguished by the requirement that a function call (i.e. evaluation of an expression) has no "side-effects" which may influence subsequent function calls.  Phase2 is not purely functional in that it does allow the importing of primitives with side-effects, but it requires that the effect be limited to one or more of its formal parameters.  In other words, a call to function f(x,y) may affect the state of an element passed as x or y, but it may not affect a global element z (by default, Phase2 assumes the worst of its primitives: it assumes that <I>both</I> x and y will be affected.  The programmer must mark either or both parameters with a positively-valued "transparency" attribute to state otherwise).  This "weak" form of referential transparency is still amenable to formal analysis but permits a Phase2 application to interact with a broader range of programs [defined but not used].
+</P>
+
+<A NAME="extensibility"/>
+<H4>Extensibility [project goal]</H4>
+<P>
+  By design, Phase2 does not define any of its own primitives, but gives the programmer the means to arbitrarily import procedures from other sources and treat them as native language constructs.  All it needs, in a hypothetical Phase2 universe, is the basic typing information described above, and a way to call the procedure.  [In fact, Phase2 can only "import" C or C++ functions for now.  As far as other languages go it will be more a matter of treating already-compiled programs as functions, than of "calling a function" in another language].
+</P>
+
+<HR>
+
+
+
+<A NAME="command_line_parsing"/>
+<H3>Command-Line Parsing</H3>
+<P>
+  Phase2's command-line interface is a separable feature of the language.  It allows the user to pass arguments to either of a pair of functions defined in the Phase2 client: one for program construction and one for querying or manipulating the programming environment.  In both cases the information is passed in the form of an XML element...  potentially, any other type of interface could do the same thing.
+</P>
+
+<A NAME="expression_syntax"/>
+<H4>Expression Syntax</H4>
+<P>
+  At the parser level, an expression is a parenthetically nested sequence of dictionary items or special symbols, terminated by a semicolon. To give an expression (that is, its "reduced" counterpart) a name, the semicolon may be preceded by an equality symbol and then the name, e.g.
+  <PRE>    (token1 token2) token3 = token4;</PRE>
+  The unorthodox placement of the dictionary assignment command at the end of the expression is aimed at command-line applications for which the programs you write will not necessarily be read as you type them. After all, you might not need to give an expression a name (particularly if you're only interested in the side-effects); the trailing assignment command lets you put that decision off till the last moment.  The Phase2 client even defines a special symbol, "$" to grab the result of the last reduction and either give it a name or plug it into the next expression (see <A HREF="#expression_evaluation">below</A>).
+</P>
+
+<A NAME="command_syntax"/>
+<H4>Command Syntax</H4>
+<P>
+  Special commands are indicated with a slash plus the name of the command, followed by a whitespace-delimited list of arguments (no parentheses) and terminated by a semicolon, e.g.
+  <PRE>    /command arg1 arg2;</PRE>
+  Commands thus indicated do not belong to the program under construction, and are to take immediate effect at parse time.  A list of actual commands is given <A HREF="#command_execution">below</A>.
+</P>
+
+<HR>
+
+
+
+<A NAME="schema_definitions"/>
+<H3>Schema Definitions</H3>
+<P>
+  Phase2 is designed to express as much of its basic structure as possible at the level of XML Schema.  Sequences are defined at that level, as are data types, primitives, and the data set dictionaries described <A HREF="#data_sets">below</A>.  Language constructs are expected to validate against these definitions, which are really the core of the language; everything else is just implementation.  The figure illustrates the dependencies between the various document types:
+<IMG SRC="schemas.gif" WIDTH="263" HEIGHT="200" ALIGN="right" ALT="Phase2 Schema dependencies"/>
+  <UL>
+  <LI><A HREF="xml/xmlpli.xsd">xmlpli.xsd</A> contains the LanguageInterface definition for the complete description of the types and primitives of a specific implementation.  In the case of types this simply means choosing a subset of XML Schema's simple types and giving them each a name.
+  <LI>Once a <A HREF="xml/Phase2_v0.itf.xml">LanguageInterface</A> is established, it is used to generate the actual <A HREF="xml/Phase2_v0.xsd">language Schema</A> against which data sets ("save files") in the implementation language are validated (the schemas themselves are validated against the W3C <A HREF="http://www.w3.org/2001/XMLSchema.xsd">XML Schema for schemas</A>).
+  </UL>
+  [Note: although the Schemas are the first thing I wrote for this language, they'are not actually being used yet.  My choice of the gSOAP toolkit for RPCs has meant that I also have to use its DOM parser to embed custom XML in a SOAP envelope, as gSOAP is intended to generate the XML for you, based on function prototypes and structure definitions.  The DOM parser is still under development and can't handle namespace prefixes or Schema validation]
+</P>
+
+<HR>
+
+
+
+<A NAME="data_sets"/>
+<H3>Data Sets</H3>
+<P>
+  A Phase2 data set is a dictionary of named expressions defined by the programmer, and is the largest possible unit of data in the language.  It may consist of one program or many programs, which may or may not share data.
+</P>
+
+<A NAME="serialization_and_deserialization"/>
+<H4>Serialization and Deserialization</H4>
+<P>
+</P>
+
+<A NAME="multireferencing"/>
+<H4>Multireferencing</H4>
+<P>
+  Apart from
+</P>
+
+<HR>
+
+
+
+<A NAME="the_phase2_client"/>
+<H3>The Phase2 Client</H3>
+<P>
+parser expressions ^ implicitly typed
+parser I/O
+</P>
+
+<A NAME="expression_evaluation"/>
+<H4>Expression Evaluation</H4>
+<P>
+  <OL>
+      <LI>Validate the XML coming in from the parser and translate it into a DOM object.
+      <LI>Translate the DOM object into a nested sequence of immediate values and IDs by matching input tokens against regular expressions for the various simple data types.
+      <LI>Identify the target data set and replace IDs for data outside of that set with immediate values.  By default (i.e. if not otherwise specified by an assignment ID), the target is the default data set, which may be redefined with the /ref command.
+      <LI>Pass the resulting "homogeneous" expression to the target data set for   evaluation, and assign it a name.  If no name was given, use "$" as a symbol for "the last evaluated expression", e.g.
+<PRE>    + 2 3;
+
+        &gt;&gt; &lt;xs:integer&gt; $:	5 &lt;&lt;
+
+    * $ $ = result;
+
+        &gt;&gt; &lt;xs:integer&gt; result: 25 &lt;&lt;</PRE>
+  </OL>
+</P>
+
+<A NAME="command_execution"/>
+<H4>Command Execution</H4>
+<P>
+
+  Currently supported commands include:<UL>
+      <LI><B>/close</B> &lt;dataset_name&gt; ;<BR>
+      Remove an active data set from the environment.
+      <LI><B>/exit</B> ;<BR>
+      End the client session.
+      <LI><B>/forget</B> [dataset_id:]&lt;local_id&gt; ;<BR>
+      Remove a named term from a data set (if dataset_id is not given, assume the "default" data set).
+      <LI><B>/load</B> &lt;dataset_name&gt; &lt;path&gt; ;<BR>
+      Look for an XML-encoded Phase2 data set at the given location [eventually a URL], give it a name and load it into memory.
+      <LI><B>/markandsweep</B> ;<BR>
+      Manual call to the mark and sweep garbage collector (hidden if referencing counting is used instead).
+      <LI><B>/ref</B> &lt;dataset_name&gt; ;<BR>
+      Reference the given data set as the default.  If Phase2 is instantiated with an argument (the location of a valid data set), that data set starts out as the default.  Otherwise a new data set is created.
+      <LI><B>/save</B> [dataset_name] &lt;path&gt; ;<BR>
+      Serialize a data set for later retrieval.
+      <LI><B>/show</B> env|license|(dictionary [dataset_name]) ;<BR>
+      Display environment information, the GPL license or the contents of a data set dictionary.
+      </UL>
+</P>
+
+<A NAME="distributed_features"/>
+<H4>Distributed Features [project goal]</H4>
+<P>
+  The motivation behind
+</P>
+
+<HR>
+
+
+
+<A NAME="memory_management"/>
+<H3>Memory Management</H3>
+<P>
+  At present (i.e. using combinator reduction), garbage collection is particularly simple in Phase2 because its basic data structure, the sequence, is a self-contained unit; sequences may not reference each other, although they may reference the same atomic values.  For example, a new term:<PRE>    function argument = result;</PRE> does not actually contain the terms "function" or "argument"; instead the original terms are either copied in their entirety or (if they were anonymous) simply incorporated into the new term and reduced.  The reduced term is then bound to the name "result" in the dictionary.  This means that a memory manager really only has to keep track of atoms, and since atoms cannot reference each other, there are no dependencies to worry about.  Phase2 further reduces memory management overhead by referencing existing atoms, wherever possible, rather than creating new ones.  For instance, there is only one S and one K combinator in memory at a time, and only one instance of each primitive.  When terms are copied, you get new references to atoms, but no new atoms.
+</P>
+
+<A NAME="mark_and_sweep_garbage_collection"/>
+<H4>"Mark and Sweep" Garbage Collection</H4>
+<P>
+  For now, the "mark and sweep" garbage collector is called manually with the /markandsweep command.  You can use "/show env;" to get a before-and-after picture of memory use.  /markandsweep instructs each active data set to call a "mark" function on each of its terms, which reverses the sign of the type identifier of any atom referenced by the term.  A subsequent call to the "sweep" function then iterates through a global collection of atoms, deallocating all unmarked atoms and unmarking the rest.
+</P>
+
+<A NAME="reference_counting"/>
+<H4>Reference Counting</H4>
+<P>
+  Depending on a couple of macro definitions in the "sequence" library, Phase2 will use an alternative, automatic memory reclamation scheme which stores an additional integer field (the "reference count") with each atom.  The count is incremented when a new term or subterm references the atom, and decremented when that term is deleted.  Again,
+  there's no possibility of circular references in the pure combinator-based model, so this should work fine for now [written but not tested].
+</P>
+
+<HR>
+
+
+
+<A NAME="exception_handling"/>
+<H3>Exception Handling</H3>
+<P>
+Exception handling in Phase2 is very basic at this point, and consists solely of the passing of error codes for bad arguments, unexpected values, and so on.  There is no handling of low-level errors, and even a parse error will cause failure.  Clearly this is a project for the summer...
+</P>
+
+<HR>
+
+<H3>.......</H3>
+
+
+
+<A NAME="combinator_semantics"/>
+<H3>Combinator Semantics</H3>
+<P>
+  Combinators are a kind of variable-free ("point-free") expression which are entirely equivalent to the expressions of lambda calculus.  The usual approach is to build them up out of two basic operators, S (for
+  <UL>
+      <LI><B>K</B> c x &rarr; c
+      <LI><B>S</B> f g x &rarr; f x (g x)
+      </UL>
+
+  The lack of variables is a mixed blessing; on the one hand they do away with all the complexities of lexical scope.
+  On the other hand, point-free expressions can be very <A HREF="http://www.madore.org/~david/programs/unlambda/">confusing</A>;
+
+
+
+<PRE>    S (S K K) (S K K) = omega;
+
+        &gt;&gt; &lt;P2:Sequence&gt; omega:	S (S K K) (S K K) &lt;&lt;
+
+    omega omega;
+
+        [reduction never terminates]</PRE>
+</P>
+
+
+
+<A NAME="associational_programming"/>
+<H3>"Associational" Programming [project goal]</H3>
+<P>
+  Let C be a finite set of constants, and A (for "association") a function from C&times;C to C.  If Aab = c, we'll say that a is "associated with c through b".  If we treat A as an infix operator ^ we get a sort of multiplication: a ^ b = Aab = c.
+distinguished null element
+similar behavior
+global hash table
+Compatibility with combinators, which have essentially the same behavior.
+Treating atoms as
+<PRE>    (&lambda;<SUP>*</SUP>xy.Axy)</PRE> at the variable level can be used to embed association in an antidiagrammatic order function expression, e.g.
+<PRE>    show map (England capital_city);</PRE>
+<PRE>    print integer 42;</PRE>, where print ^ integer = an integer-specific print function.  Function application runs in one direction, association in the other.
+</P>
+
+<A NAME="ordering_and_associativity_of_expression_syntax"/>
+<H4>Ordering and Associativity of Expression Syntax</H4>
+<P>
+  <UL>
+    <LI>Diagrammatic order: argument function
+    <LI>Anti-diagrammatic order: function argument
+  </UL>
+
+  <BR>
+  Otherwise known as postfix notation,
+  <UL>
+      <LI><B>Left-associative:</B> (a b) c = a b c
+      <LI><B>Right-associative:</B> a (b c) = a b c
+      <LI><B>Concatenative:</B> (a b) c = a (b c) = a b c
+  </UL>
+  A "concatenative" language is one in which any expression can be arbitrarily bisected into two equally valid subexpressions.  For instance, FORTH is (mostly) concatenative, and there is a very interesting class of concatenative functional languages (notably, Manfred von Thun's <A HREF="http://www.latrobe.edu.au/philosophy/phimvt/joy.html">Joy</A> language) whose syntax is based on the associative operation of function composition.  This is an attractive feature from a programmer's point of view, because it does away with the copious parentheses of other functional languages, such as Lisp.
+<BR>
+left-associative diagrammatic order for mnemonics
+
+
+expressions as input sequences to a deterministic finite-state automaton, in which the words of the input language are identified with the set of states
+
+
+</P>
+
+<A NAME="minimalism"/>
+<H4>Minimalism</H4>
+<P>
+interactive
+"conversational" style
+
+cues / prompting
+</P>
+
+<HR>
+
+
+
+<A NAME="an_example_session_in_phase2"/>
+<H3>An Example Session in Phase2</H3>
+<P>
+<PRE>
+[root@localhost Phase2_v0.4]# ./phase2
+
+Phase2 version 0.4, Copyright (C) 2005 Joshua Shinavier.
+The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free
+software, and you are welcome to redistribute it under certain conditions;
+type '/show license;' for details.
+
+/load prims data/primitives.xml;
+
+
+prims:double__multiply = *;
+
+         &gt;&gt; &lt;PrimitiveReference&gt; *:     double__multiply &lt;&lt;
+
+3.1415 = pi;
+
+         &gt;&gt; &lt;xs_double&gt; pi:     3.1415 &lt;&lt;
+
+* 2.0 pi;
+
+         &gt;&gt; &lt;xs_double&gt; $:      6.283 &lt;&lt;
+
+* $ = circumference;
+
+         &gt;&gt; &lt;P2_Sequence&gt; circumference:        * $ &lt;&lt;
+
+/load combs data/combinators.xml;
+
+
+combs:C combs:S combs:I * = sq;
+
+         &gt;&gt; &lt;P2_Sequence&gt; sq:   S * (S K K) &lt;&lt;
+
+combs:B (* pi) sq = area;
+
+         &gt;&gt; &lt;P2_Sequence&gt; area: S (K (* pi)) (S * (S K K)) &lt;&lt;
+
+0.5 = radius;
+
+         &gt;&gt; &lt;xs_double&gt; radius: 0.5 &lt;&lt;
+
+circumference radius;
+
+         &gt;&gt; &lt;xs_double&gt; $:      3.1415 &lt;&lt;
+
+area radius;
+
+         &gt;&gt; &lt;xs_double&gt; $:      0.785375 &lt;&lt;
+
+/show dict;
+
+Dictionary:
+    &lt;xs_double&gt; pi
+    &lt;xs_double&gt; radius
+    &lt;Sequence&gt; circumference
+    &lt;xs_double&gt; $
+    &lt;PrimitiveReference&gt; *
+    &lt;Sequence&gt; sq
+    &lt;Sequence&gt; area
+
+/save data/circle.xml;
+
+
+prims:system "cat data/circle.xml";
+
+&lt;P2_DataSet&gt;
+    &lt;xs_double name="pi" id="ref-2"&gt;3.1415&lt;/xs_double&gt;
+    &lt;xs_double name="radius"&gt;0.5&lt;/xs_double&gt;
+    &lt;Sequence sequenceType="immediate" name="circumference"&gt;
+        &lt;PrimitiveReference ref="ref-1"/&gt;
+        &lt;xs_double&gt;6.283&lt;/xs_double&gt;
+    &lt;/Sequence&gt;
+    &lt;xs_double name="$"&gt;0.785375&lt;/xs_double&gt;
+    &lt;PrimitiveReference name="*" id="ref-1"&gt;double__multiply&lt;/PrimitiveReference&gt;
+    &lt;Sequence sequenceType="immediate" name="sq"&gt;
+        &lt;S/&gt;
+        &lt;PrimitiveReference ref="ref-1"/&gt;
+        &lt;Sequence sequenceType="immediate"&gt;
+            &lt;S/&gt;
+            &lt;K/&gt;
+            &lt;K/&gt;
+        &lt;/Sequence&gt;
+    &lt;/Sequence&gt;
+    &lt;Sequence sequenceType="immediate" name="area"&gt;
+        &lt;S/&gt;
+        &lt;Sequence sequenceType="immediate"&gt;
+            &lt;K/&gt;
+            &lt;Sequence sequenceType="immediate"&gt;
+                &lt;PrimitiveReference ref="ref-1"/&gt;
+                &lt;xs_double ref="ref-2"/&gt;
+            &lt;/Sequence&gt;
+        &lt;/Sequence&gt;
+        &lt;Sequence sequenceType="immediate"&gt;
+            &lt;S/&gt;
+            &lt;PrimitiveReference ref="ref-1"/&gt;
+            &lt;Sequence sequenceType="immediate"&gt;
+                &lt;S/&gt;
+                &lt;K/&gt;
+                &lt;K/&gt;
+            &lt;/Sequence&gt;
+        &lt;/Sequence&gt;
+    &lt;/Sequence&gt;
+&lt;/P2_DataSet&gt;
+         &gt;&gt; &lt;xs_string&gt; $:       &lt;&lt;
+
+/show env;
+
+3 active data set(s): combs, default, prims
+"Mark and sweep" buffer contains 85 items.
+
+/markandsweep;
+
+
+/show env;
+
+3 active data set(s): combs, default, prims
+"Mark and sweep" buffer contains 52 items.
+
+/exit;
+
+[root@localhost Phase2_v0.4]#
+</PRE>
+</P>
+
+<HR>
+
+
+
+<A NAME="references"/>
+<H3>References</H3>
+<P>
+  <UL>
+      <LI>K. C. Louden, Programming Languages, Principles and Practice, Brooks/Cole, 2003.
+      <LI>J. R. Hindley and J. P. Seldin. Introduction to Combinators and &lambda;-Calculus. London Mathematical Society, Student Texts 1. Cambridge University Press, 1986.
+      <LI><A HREF="http://en.wikipedia.org/wiki/Combinatory_logic">http://en.wikipedia.org/wiki/Combinatory_logic</A>
+
+  </UL>
+</P>
+
+<HR>
+
+
+
+<CENTER>
+<FONT SIZE="-1">Last edited June 10, 2005.  E-mail: parcour@gmail.com</FONT>
+</CENTER>
+
+</BODY>
+</HTML>
+

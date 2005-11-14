@@ -1,0 +1,42 @@
+<XMLPLI:LanguageInterface xmlns:XMLPLI="XMLPLI.xsd"
+creationDate="2005-04-13" creationTime="11:02:45.123" languageName="Phase2_v0">
+
+
+
+  <!--
+    Identify each primitive type with a standard XML Schema type.
+    Note: if the XMLSchemaEquivalent attribute is omitted or empty, the data
+    type will be identified with the trivial XMLPLI:PlaceHolder type.
+  -->
+  <PrimitiveTypes>
+
+    <Type name="string" XMLSchemaEquivalent="string"/>
+    <Type name="integer" XMLSchemaEquivalent="integer"/>
+    <Type name="byte" XMLSchemaEquivalent="byte"/>
+    <Type name="void"/>
+
+  </PrimitiveTypes>
+
+
+
+  <!--
+    Describe each primitive function in terms of its parameters.  The
+    "transparency" attribute is an expression of the function's side-effect
+    behavior: if there is no possibility that an argument passed to a primitive
+    will experience a side-effect as a result of the function call, then the
+    corresponding Parameter's transparency may be set to "1".  Otherwise it
+    should be set to "0".  If omitted it will default to "0".
+    Parameter types and Function returnTypes should be drawn from the set of
+    Type names defined above.
+  -->
+  <PrimitiveFunctions>
+
+    <Function name="..." returnType="...">
+      <Parameter name="..." type="..." transparency="1"/>
+    </Function>
+
+  </PrimitiveFunctions>
+
+
+
+</XMLPLI:LanguageInterface>
