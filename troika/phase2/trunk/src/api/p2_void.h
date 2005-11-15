@@ -1,6 +1,6 @@
 /**
 
-\file p2_void.h
+\file  p2_void.h
 
 \brief  Defines the trivial p2_void data type.
 

@@ -6,11 +6,12 @@
 #  Use "make", "make clean", "make distclean"
 
 
-UTIL_PATH = ./util
-SK_PATH = ./sk
-PARSER_PATH = ./parser
-XML_PATH = ./xml
-IMPORT_PATH = ./import
+UTIL_PATH     = ./util
+SK_PATH       = ./sk
+PARSER_PATH   = ./parser
+XML_PATH      = ./xml
+IMPORT_PATH   = ./import
+IMPORTER_PATH = ./importer
 
 CC      = gcc
 CPP     = g++
@@ -21,7 +22,7 @@ SOAPCPP = $(GSOAP_PATH)/stdsoap2.cpp
 DOMCPP  = $(GSOAP_PATH)/dom++.cpp
 
 LIBS =
-COFLAGS = -O2
+COFLAGS = -O2    # [ba] May result in bigger (but faster) binaries.
 CWFLAGS = -Wall
 CIFLAGS =
 CMFLAGS =
@@ -177,6 +178,7 @@ clean :
 	$(MAKE) clean -C $(XML_PATH)
 	$(MAKE) clean -C $(PARSER_PATH)
 	$(MAKE) clean -C $(UTIL_PATH)
+	$(MAKE) clean -C $(IMPORTER_PATH)
 	-rm $(UTIL_OBJECTS)
 
 .PHONY : distclean

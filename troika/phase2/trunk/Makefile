@@ -1,11 +1,11 @@
 ################################################################################
 ## Top-level makefile for the 'Troika' Phase2 interface.
 
-APP	=	troika
+APP         = troika
 
-SRC_DIR	=	src/gui
-IPK_DIR	=	ipk
-DOXYGEN_DIR	=	doxygen
+SRC_DIR     = src/gui
+IPK_DIR     = ipk
+DOXYGEN_DIR = doxygen
 
 
 all: x86 ipk doxygen

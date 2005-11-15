@@ -1,9 +1,9 @@
 /**
-    \file flags.h
+    \file  p2_flags.h
 
-    \author Joshua Shinavier   \n
-            parcour@gmail.com  \n
-            +1 509 570-6990    \n */
+    \author  Joshua Shinavier   \n
+             parcour@gmail.com  \n
+             +1 509 570-6990    \n */
 
 /*//////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +26,18 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #ifndef P2_FLAGS_H
 #define P2_FLAGS_H
+
+
+// Reduction ///////////////////////////////////////////////////////////////////
+
+#define P2FLAGS__DO_TYPE_CHECKING
+
+// #P2FLAGS__HIGHER_ORDER_PRIMITIVES
+
+/** If defined, allow non-redex atoms at the beginning of an expression, and
+   simply abandon reduction when they are encountered (rather than raising an
+   error). */
+#define P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
 
 
 // Association /////////////////////////////////////////////////////////////////
@@ -79,19 +91,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #define P2FLAGS__MANAGE_PRIMITIVES
-
-
-// Debugging ///////////////////////////////////////////////////////////////////
-
-/** While the gSOAP DOM parser is still struggling with namespaces... */
-#define P2FLAGS__OMIT_XMLNS
-
-//#define P2FLAGS__DEBUG
-
-// ! This is not a flag.
-#ifdef P2FLAGS__DEBUG
-    #include <stdio.h>  // printf
-#endif
 
 
 ////////////////////////////////////////////////////////////////////////////////

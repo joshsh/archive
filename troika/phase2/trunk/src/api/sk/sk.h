@@ -39,12 +39,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../p2_atom.h"
 #include "../util/p2_term.h"
 #include "../p2.h"
+#include "../p2_flags.h"  // P2FLAGS__DO_TYPE_CHECKING,
+                          // P2FLAGS__HIGHER_ORDER_PRIMITIVES,
+                          // P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
 
-
-/** If defined, allow non-redex atoms at the beginning of an expression, and
-   simply abandon reduction when they are encountered (rather than raising an
-   error). */
-#define PERMIT_IRREDUCIBLE_TERMS	1
 
 
 /** The S combinator type. */

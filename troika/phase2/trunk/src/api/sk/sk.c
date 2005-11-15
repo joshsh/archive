@@ -31,6 +31,7 @@ void (*debug_print_)(p2_term *);
 p2_term *S_reduce(p2_term *term);
 p2_term *K_reduce(p2_term *term);
 p2_term *prim_reduce(p2_term *term);
+
 p2_term *error_term(p2_error err);
 
 
@@ -39,11 +40,11 @@ p2_error SK_init(void (*debug_print)(p2_term *))
 {
     debug_print_ = debug_print;
 
-    SK_S_type = p2_register_type("S", NULL, NULL, NULL, NULL);
-    SK_K_type = p2_register_type("K", NULL, NULL, NULL, NULL);
+    SK_S_type = p2_register_type("S", 0, 0, 0, 0);
+    SK_K_type = p2_register_type("K", 0, 0, 0, 0);
 
-    SK_S = p2_atom__new((void *) SK_S_type, NULL);
-    SK_K = p2_atom__new((void *) SK_K_type, NULL);
+    SK_S = p2_atom__new((void *) SK_S_type, 0);
+    SK_K = p2_atom__new((void *) SK_K_type, 0);
 
     // Register special errors raised by SK_reduce.
     FAILURE = p2_register_error("FAILURE");
@@ -95,7 +96,7 @@ p2_term *SK_reduce(p2_term *term)
         // is considered a non-redex atom.
         else
         {
-            #ifdef PERMIT_IRREDUCIBLE_TERMS
+            #ifdef P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
                 result = term;
             #else
                 // Garbage-collect whatever is left of {term}
@@ -210,7 +211,7 @@ p2_term *S_reduce(p2_term *term)
 // Note: prim_reduce allows for at most five arguments.
 p2_atom *args[10];
 
-// Assumes head-normal form and a sufficient number of arguments.
+// Assumes head-normal form.
 // Note: it's probably worth trying to find a way to consolidate the type
 // checking and garbage collection of arguments.
 p2_term *prim_reduce(p2_term *term)
@@ -223,32 +224,36 @@ p2_term *prim_reduce(p2_term *term)
     p2_primitive *prim = ((p2_primitive *) *cur)->value;
     cur++;
 
+    //  Insufficient number of arguments for reduction.
     if (p2_term_length(term) <= prim->parameters)
         result = term;
 
     else
     {
-        // Type-check the arguments, bail if there is a mismatch.
-        for (i = 0; i < prim->parameters; i++)
-        {
-            if ((unsigned int) *cur != 2)
+        #ifdef P2FLAGS__DO_TYPE_CHECKING
+            // Type-check the arguments, bail if there is a mismatch.
+            for (i = 0; i < prim->parameters; i++)
             {
-                err = PRIMITIVE_APPLIED_TO_NONATOM;
-                break;
+                if ((unsigned int) *cur != 2)
+                {
+                    err = PRIMITIVE_APPLIED_TO_NONATOM;
+                    break;
+                }
+                cur++;
+                arg = (p2_atom *) *cur;
+                if (arg->type != prim->parameter_types[i])
+                {
+                    err = TYPE_MISMATCH;
+                    break;
+                }
+                args[i] = arg;
+                cur++;
             }
-            cur++;
-            arg = (p2_atom *) *cur;
-            if (arg->type != prim->parameter_types[i])
-            {
-                err = TYPE_MISMATCH;
-                break;
-            }
-            args[i] = arg;
-            cur++;
-        }
+
+        if (!err)
+        #endif  // P2FLAGS__DO_TYPE_CHECKING
 
         // Apply the primitive.
-        if (!err)
         {
             // I'm sure this is the stupid way to type-cast a function of a
             // variable number of parameters... but it's handy enough for now.
@@ -299,7 +304,7 @@ p2_term *prim_reduce(p2_term *term)
             // Unless the application of a primitive can yield another
             // primitive (or S or K combinator), the resulting term
             // cannot be further reduced.
-            #ifdef HIGHER_ORDER_PRIMITIVES
+            #ifdef P2FLAGS__HIGHER_ORDER_PRIMITIVES
                 result = SK_reduce(term);
             #else
                 result = term;
@@ -314,7 +319,7 @@ p2_term *prim_reduce(p2_term *term)
 
 p2_term *error_term(p2_error err)
 {
-    return p2_term__new(p2_error_atom(err), 2);
+    return p2_term__new(p2_error_atom(err), 0);
 }
 
 
