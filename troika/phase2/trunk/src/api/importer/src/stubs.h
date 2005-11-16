@@ -1,2 +1,12 @@
-/** \param a  $transparent */
-int add(int a, int b);
+#include <math.h>
+#include <string.h>
+
+
+double cosh( double x );
+
+/** \param exp  $opaque */
+double frexp( double x, int *exp );
+
+/** \return  $identify-with dest */
+char *strcat( char *dest, const char *src );
+
