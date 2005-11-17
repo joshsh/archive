@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 // Global array expansion factor, with a default value.
 float p2_term__expansion_factor = TERM__DEFAULT_EXPANSION;
 
-// Copy the term to a larger buffer.  Hidden.
+// Copy the term to a larger buffer.
 p2_term *p2_term__expand(p2_term *term, unsigned int minimum_buffer_size)
 {
     void **new_buffer, **new_head;
@@ -339,8 +339,7 @@ void *(*p2_term__f)(void *);
 
 
 
-// Hidden.
-void *p2_term__for_all_(void **head)
+static void *p2_term__for_all_(void **head)
 {
     void **sup;
 
@@ -370,8 +369,7 @@ void *p2_term__for_all_(void **head)
 
 
 
-// Hidden.
-void *p2_term__exists_(void **head)
+static void *p2_term__exists_(void **head)
 {
     void **sup;
     void *result;
@@ -407,8 +405,7 @@ void *p2_term__exists_(void **head)
 
 
 
-// Hidden.
-void p2_term__substitute_all_(void **head)
+static void p2_term__substitute_all_(void **head)
 {
     void **sup;
 

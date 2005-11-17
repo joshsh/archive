@@ -68,7 +68,7 @@ p2_type p2_type__new(
 
 
 /** Retrieves a type identifier by name. */
-p2_type p2_type_lookup(char *name);
+p2_type *p2_type__lookup(char *name);
 
 /**  */
 char *p2_type_name(p2_type type_index);

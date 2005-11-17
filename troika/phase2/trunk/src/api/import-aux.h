@@ -3,7 +3,7 @@
 \file  import-aux.h
 
 \brief  Primitive-building functions to be included by the generated file
-import.c.
+p2-import.c.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -31,23 +31,28 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef IMPORT_AUX_H
 #define IMPORT_AUX_H
 
-#include "p2_primitive.h"  // p2_function_ptr, p2_primitive
+#include "p2_primitive.h"
 
 
-/** \return  a new (but incomplete) p2_primitive.  You must fill in the
-    primitive's parameters using prim__set_parameter. */
-p2_primitive *prim__new( p2_function_ptr func,
-                         char *name,
-                         char *return_type_id,
-                         int parameters );
+/** Begins a p2_primitive declaration.
+    \return  null for failure, non-null for success.  You must now fill in the
+    primitive's parameters using p2_primdef__parameter. */
+void *p2_primdef__head(
+    void *( *cstub )( void** ),
+    char *name,
+    char *return_type_id,
+    int parameters );
 
-/** \return  the original primitive with its new parameter */
-p2_primitive *prim__set_parameter(
-    p2_primitive *prim,
+/** Defines a p2_primitive input parameter.
+    \return  null for failure, non-null for success */
+void *p2_primdef__parameter(
     char *param_name,
     char *param_type_id,
-    char param_transparency,
-    int index );
+    char param_transparency );
+
+/** Ends a p2_primitive declaration, registering the p2_primitive.
+    \return  null for failure, non-null for success */
+void *p2_primdef__tail( );
 
 
 #endif  // IMPORT_AUX_H

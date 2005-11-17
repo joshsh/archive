@@ -18,72 +18,142 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *///////////////////////////////////////////////////////////////////////////////
 
 #include "import-aux.h"
+#include <stdio.h>  // fprintf
+#include <string.h>  // strcat, strlen
+
+/** \warning  No overflow checking. */
+#define MAX_NAMELEN  100
+#define MAX_PARAMS   100
 
 
-p2_primitive *prim__new( p2_function_ptr func,
-                         char *name,
-                         char *return_type_id,
-                         int parameters )
+int state__within_definition = 0;
+
+p2_primitive *prim;
+
+char prim__name[MAX_NAMELEN];
+void *( *prim__cstub )( void** );
+p2_type *prim__return_type;
+
+int prim__parameters;
+int prim__parameters;
+char *prim__parameter_names[MAX_PARAMS];
+char param_names_array[MAX_PARAMS * MAX_NAMELEN];
+p2_type *prim__parameter_types[MAX_PARAMS];
+char prim__transparency[MAX_PARAMS];
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+void *p2_primdef__head(
+    void *( *cstub )( void** ),
+    char *name,
+    char *return_type_id,
+    int parameters )
 {
-    prim->return_type = p2_type__lookup( return_type_id );
-
-    if (!prim->return_type)
+    if ( state__within_definition )
     {
         fprintf( stderr,
-            "Return type \"%s\" of primitive "\"%s\" is not a known type.\n",
+            "Nested definition of p2_primitives is not allowed.\n" );
+        return ( void* ) ( state__within_definition = 0 );
+    }
+
+    else if ( !name || !strlen( strcpy( prim__name, name )))
+    {
+        fprintf( stderr,
+            "Missing function name for primitive.\n" );
+        return 0;
+    }
+
+    else if ( !( prim__return_type = p2_type__lookup( return_type_id )) )
+    {
+        fprintf( stderr,
+            "Return type \"%s\" of primitive \"%s\" is not a known type.\n",
             return_type_id, name );
         return 0;
     }
 
-    else
-    {
-        p2_primitive *prim = ( p2_primitive* ) malloc( sizeof( p2_primitive* ));
-
-        prim->name = strdup( name );
-
-        if ( parameters > 0 )
-        {
-            parameter_names = ( char** ) malloc( parameters * sizeof( char* ));
-            parameter_types = ( p2_type** ) malloc( parameters * sizeof( p2_type* ));
-            parameter_transparency = ( char ) malloc( parameters * sizeof( char ));
-        }
-
-        else
-        {
-            parameter_names = 0;
-            parameter_types = 0;
-            parameter_transparency = 0;
-        }
-
-        return prim;
-    }
-}
-
-
-p2_primitive *prim__set_parameter(
-    p2_primitive *prim,
-    char *param_name,
-    char *param_type_id,
-    char param_transparency,
-    int index )
-{
-    p2_atom_type *type_p = prim->parameter_types + index;
-
-    *type_p = p2_type__lookup( param_type_id );
-
-    if (!*type_p)
+    else if ( !( prim__cstub = cstub ) )
     {
         fprintf( stderr,
-           "Parameter type \"%s\" at index %d of primitive "\"%s\" is not a known type.\n",
-           return_type_id, index, name );
+            "Missing C stub for primitive \"%s\".\n", name );
+        return 0;
+    }
+
+    else if (( prim__parameters = parameters ) < 0 )
+    {
+        fprintf( stderr,
+            "Primitive \"%s\" cannot have %d parameters!\n", name, parameters );
         return 0;
     }
 
     else
     {
-        prim->parameter_names[ index ] = strdup( param_name );
-        prim->parameter_transparency[ index ] = param_transparency;
-        return prim;
+        int state__within_definition = 1;
+        int prim__parameters = 0;
+        return ( void* ) 1;
+    }
+}
+
+
+void *p2_primdef__parameter(
+    char *param_name,
+    char *param_type_id,
+    char param_transparency )
+{
+    if ( !state__within_definition )
+    {
+        fprintf( stderr,
+            "Cannot define a parameter outside of a primitive definition.\n" );
+        return 0;
+    }
+
+    else if ( !( prim__parameter_types[ prim__parameters ] = p2_type__lookup( param_type_id )))
+    {
+        fprintf( stderr,
+           "Parameter type \"%s\" at index %d of primitive \"%s\" is not a known type.\n",
+           param_type_id, prim__parameters, prim__name );
+        return ( void* ) ( state__within_definition = 0 );
+    }
+
+    else if ( !param_name || !( prim__parameter_names[ prim__parameters ] = strcpy( param_names_array + ( prim__parameters * MAX_NAMELEN ), param_name )))
+    {
+        fprintf( stderr,
+            "Missing parameter name for primitive \"s\".\n", prim__name );
+        return ( void* ) ( state__within_definition = 0 );
+    }
+
+    else
+    {
+        prim__transparency[ prim__parameters ] = param_transparency;
+
+        prim__parameters++;
+        return ( void* ) 1;
+    }
+}
+
+
+void *p2_primdef__tail( )
+{
+    if ( !state__within_definition )
+    {
+        fprintf( stderr,
+            "Cannot define a parameter outside of a primitive definition.\n" );
+        return 0;
+    }
+
+    else
+    {
+        state__within_definition = 0;
+
+        return p2_primitive__new(
+            prim__cstub,
+            prim__name,
+            prim__parameters,
+            prim__parameter_types,
+            prim__parameter_names,
+            prim__transparency,
+            prim__return_type ) ? ( void* ) 1 : 0;
     }
 }
 

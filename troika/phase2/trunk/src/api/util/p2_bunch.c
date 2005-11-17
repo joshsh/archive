@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 
-block *block__new(unsigned int size)
+static block *block__new(unsigned int size)
 {
     block *bl = (block *) malloc(sizeof(block));
 
@@ -48,7 +48,7 @@ block *block__new(unsigned int size)
 
 
 
-block *block__copy(block *bl)
+static block *block__copy(block *bl)
 {
     block *bl2 = (block *) malloc(sizeof(block));
 
@@ -68,7 +68,7 @@ block *block__copy(block *bl)
 
 
 
-void block__delete(block *bl)
+static void block__delete(block *bl)
 {
     free(bl->buffer);
     free(bl);

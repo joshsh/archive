@@ -27,14 +27,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 // Note: the sparsity factor does not need to be an integer.
 #define DEFAULT_SPARSITY_FACTOR 3
 
-// By default, p2_set___expand() approximately doubles the size of the buffer.
+// By default, expand() approximately doubles the size of the buffer.
 // Note: the expansion factor does not need to be an integer.
 #define DEFAULT_EXPANSION_FACTOR 2
 
 
 
 /** \return the least prime > 2 and >= i. */
-int p2_set__find_next_prime(int i)
+static int next_prime(int i)
 {
     int j;
 
@@ -58,28 +58,33 @@ int p2_set__find_next_prime(int i)
 
 
 
-void p2_set__expand(p2_set *h)
+static void expand(p2_set *h)
 {
     int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
     void **p, **q, **buffer_old;
 
     if (size0 > h->buffer_size)
     {
-    size_old = h->buffer_size;
-    buffer_old = h->buffer;
-    h->buffer_size = p2_set__find_next_prime(size0);
-    h->buffer = (void **) malloc(sizeof(void *) * h->buffer_size);
-    h->capacity = (int) (((double) h->buffer_size)/h->sparsity);
-    for (i=0; i<h->buffer_size; i++)
-      h->buffer[i] = NULL;
-    for (i=0; i<size_old; i++) {
-      p = buffer_old+i;
-      if (*p != NULL) {
-        h->size--; //Cancel out the incrementation for this re-hashing add()
-        p2_set__add(h, *p);
-      }
-    }
-    free(buffer_old);
+        size_old = h->buffer_size;
+        buffer_old = h->buffer;
+        h->buffer_size = next_prime(size0);
+        h->buffer = (void **) malloc(sizeof(void *) * h->buffer_size);
+        h->capacity = (int) (((double) h->buffer_size) / h->sparsity);
+
+        for (i = 0; i < h->buffer_size; i++)
+            h->buffer[i] = NULL;
+
+        for (i = 0; i < size_old; i++)
+        {
+            p = buffer_old + i;
+            if (*p != NULL)
+            {
+                h->size--; //Cancel out the incrementation for this re-hashing add()
+                p2_set__add(h, *p);
+            }
+        }
+
+        free(buffer_old);
     }
 }
 
@@ -93,7 +98,7 @@ p2_set *p2_set__new(int buffer_size, float sparsity, float expansion)
 
     if (S)
     {
-        S->buffer_size = p2_set__find_next_prime(buffer_size);
+        S->buffer_size = next_prime(buffer_size);
 
         // Sparsity must be at least 1, otherwise the buffer will not resize
         // even when it is completely full.
@@ -207,7 +212,7 @@ p2_set *p2_set__add(p2_set *S, void *key)
     *p = key;
 
     if (++S->size >= S->capacity)
-        p2_set__expand(S);
+        expand(S);
 
     return S;
 }

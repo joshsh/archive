@@ -44,10 +44,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef struct _p2_primitive
 {
   /** Memory location of the C function. */
-  void *value;
+  void *( *cstub )( void ** );
 
   /** A unique name (preferably the same as the C function stub referenced by
-      the pointer, e.g. "math_h__cos"). */
+      the pointer, e.g. "strdup"). */
   char *name;
 
   /** Number of input parameters. */
@@ -55,9 +55,9 @@ typedef struct _p2_primitive
 
   /** An array of length {parameters} containing the data type of all input
       parameters in the correct order. */
-  p2_type *parameter_types;
+  p2_type **parameter_types;
 
-  /** \note  Not used. */
+  /** \note  Not yet used. */
   char **parameter_names;
 
   /** An array of length {parameters} containing at each parameter index a 0
@@ -68,7 +68,7 @@ typedef struct _p2_primitive
   char *transparency;
 
   /** The primitive's (constant) return type. */
-  p2_type return_type;
+  p2_type *return_type;
 
 } p2_primitive;
 
@@ -80,14 +80,14 @@ typedef struct _p2_primitive
     referenced again).
     \warning  Arguments are assumed to be sound. */
 p2_primitive *p2_primitive__new(
-    void *value,               /**< Memory location of the C function. */
-    char *name,                /**< A unique name (preferably the same as the C function stub referenced by the pointer, e.g. "math_h__cos"). */
-    int parameters,            /**< Number of input parameters. */
-    p2_type *parameter_types,  /**< An array of length {parameters} containing the data type of all input parameters in the correct order. */
-    char **parameter_names,    /**< \note  Not used.  May pass a NULL instead. */
-    char *transparency,        /**< An array of length {parameters} containing at each parameter index a 0 if the argument at that index may experience a side-effect, or a 1 otherwise (the primitive is said to be "referentially transparent" with respect to that parameter).
+    void *( *cstub )( void ** ),  /**< Memory location of the C function. */
+    char *name,                   /**< A unique name (preferably the same as the C function stub referenced by the pointer, e.g. "strdup"). */
+    int parameters,               /**< Number of input parameters. */
+    p2_type **parameter_types,    /**< An array of length {parameters} containing the data type of all input parameters in the correct order. */
+    char **parameter_names,       /**< \note  Not yet used.  May pass a NULL instead. */
+    char *transparency,           /**< An array of length {parameters} containing at each parameter index a 0 if the argument at that index may experience a side-effect, or a 1 otherwise (the primitive is said to be "referentially transparent" with respect to that parameter).
                                     \note  Not yet used.  May pass a NULL instead. */
-    p2_type return_type);      /**< The primitive's (constant) return type. */
+    p2_type *return_type);        /**< The primitive's (constant) return type. */
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,6 +112,9 @@ p2_primitive *p2_primitive__new(
    void p2_primitive__delete(p2_primitive *prim);
 
 #endif  // P2FLAGS__MANAGE_PRIMITIVES
+
+
+//p2_atom *p2_primitive__apply( p2_primitive *prim, void **args );
 
 
 ////////////////////////////////////////////////////////////////////////////////

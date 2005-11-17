@@ -23,10 +23,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  // memcpy
 
 
-// By default, p2_array__expand() doubles the size of the array.
+// By default, expand() doubles the size of the array.
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
-void p2_array__expand(p2_array *a);
+static void expand(p2_array *a);
 
 
 
@@ -100,8 +100,7 @@ void p2_array__delete(p2_array *a)
 
 
 
-// Hidden.
-void p2_array__expand(p2_array *a)
+static void expand(p2_array *a)
 {
     void **buffer0;
     int i, size0 = (int) (a->expansion * a->buffer_size);
@@ -168,7 +167,7 @@ void *p2_array__peek(p2_array *a)
 void p2_array__push(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
-        p2_array__expand(a);  // Note: replaces a->buffer
+        expand(a);  // Note: replaces a->buffer
     a->head = ((a->head - 1) + a->buffer_size) % a->buffer_size;
     a->buffer[a->head] = p;
     a->size++;
@@ -196,7 +195,7 @@ void *p2_array__pop(p2_array *a)
 void p2_array__enqueue(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
-        p2_array__expand(a);  // Note: replaces a->buffer
+        expand(a);  // Note: replaces a->buffer
     a->buffer[(a->head + a->size) % a->buffer_size] = p;
     a->size++;
 }
@@ -227,7 +226,7 @@ void p2_array__insert_before(p2_array *a, int index, void *p)
     if ((index >= 0) && (index < a->size))
     {
         if (a->size >= a->buffer_size)
-            p2_array__expand(a);  // Note: replaces a->buffer
+            expand(a);  // Note: replaces a->buffer
 
         for (i = a->size; i > index; i--)
             a->buffer[(a->head + i) % a->buffer_size]
@@ -247,7 +246,7 @@ void p2_array__insert_after(p2_array *a, int index, void *p)
     if ((index >= 0)&&(index < a->size))
     {
         if (a->size >= a->buffer_size)
-            p2_array__expand(a);  // Note: replaces a->buffer
+            expand(a);  // Note: replaces a->buffer
 
         for (i = a->size; i > (index + 1); i--)
             a->buffer[(a->head + i) % a->buffer_size]
@@ -299,7 +298,7 @@ int (*compare_) (void *, void *);
 
 
 /* adapted from a MergeSort example by H.W. Lang */
-void p2_array__merge_(int lo, int m, int hi)
+static void p2_array__merge_(int lo, int m, int hi)
 {
     int i, j, k;
 
@@ -327,7 +326,7 @@ void p2_array__merge_(int lo, int m, int hi)
 
 
 /* adapted from a MergeSort example by H.W. Lang */
-void p2_array__mergesort_(int lo, int hi)
+static void p2_array__mergesort_(int lo, int hi)
 {
     int m;
 

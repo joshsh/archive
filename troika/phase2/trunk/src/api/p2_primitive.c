@@ -32,24 +32,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 p2_primitive *p2_primitive__new(
-    void *value,
+    void *( *cstub )( void ** ),
     char *name,
     int parameters,
-    p2_type *parameter_types,
+    p2_type **parameter_types,
     char **parameter_names,
     char *transparency,
-    p2_type return_type)
+    p2_type *return_type)
 {
     int i;
 
     p2_primitive *prim = (p2_primitive *) malloc(sizeof(p2_primitive));
 
-    prim->value = value;
+    prim->cstub = cstub;
     prim->name = strdup(name);
     prim->parameters = parameters;
 
-    prim->parameter_types = (p2_type *) malloc(parameters * sizeof(p2_type));
-    memcpy(prim->parameter_types, parameter_types, parameters * sizeof(p2_type));
+    prim->parameter_types = (p2_type **) malloc(parameters * sizeof(p2_type*));
+    memcpy(prim->parameter_types, parameter_types, parameters * sizeof(p2_type*));
 
     if (!parameter_names)
         prim->parameter_names = 0;
@@ -71,7 +71,7 @@ p2_primitive *p2_primitive__new(
     prim->return_type = return_type;
 
     #ifdef P2FLAGS__MANAGE_PRIMITIVES
-        p2_primitive__retister(prim);
+        p2_primitive__register(prim);
     #endif
 }
 

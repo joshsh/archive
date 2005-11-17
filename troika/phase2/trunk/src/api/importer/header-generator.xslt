@@ -27,8 +27,10 @@
 
 <xsl:text />/** \note  This is an automatically generated file. */
 
-extern &quot;C&quot;
-{
+//extern &quot;C&quot;
+//{
+
+#include &lt;stdlib.h&gt;  // malloc
 
 <xsl:text />
         <xsl:for-each select="compounddef">
@@ -44,7 +46,7 @@ extern &quot;C&quot;
 
         <!-- Add any includes from the source file. -->
         <xsl:for-each select="includes">
-#include <xsl:text />
+// #include <xsl:text />
             <xsl:choose>
                 <xsl:when test="@local = 'yes'">
                     <xsl:call-template name="enclose-in-quotes">
@@ -62,7 +64,6 @@ extern &quot;C&quot;
             <xsl:text>&#xa;</xsl:text>
         </xsl:if>
 
-
         <xsl:text>&#xa;</xsl:text>
 
         <!-- Create function stubs. -->
@@ -77,7 +78,7 @@ extern &quot;C&quot;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-}  // extern &quot;C&quot;
+//}  // extern &quot;C&quot;
 <xsl:text />
 
     </xsl:template>
@@ -88,7 +89,21 @@ extern &quot;C&quot;
 
     <xsl:template name="p2__import_primitives">
 
-#include &quot;import-aux.h&quot;
+//#include &quot;import-aux.h&quot;
+
+extern void *p2_primdef__head(
+    void *( *cstub )( void** ),
+    char *name,
+    char *return_type_id,
+    int parameters );
+
+extern void *p2_primdef__parameter(
+    char *param_name,
+    char *param_type_id,
+    char param_transparency );
+
+extern void *p2_primdef__tail( );
+
 
 #define RT  ( char ) 1  // Referentially transparent.
 #define RO  ( char ) 0  // Referentially opaque.
@@ -96,7 +111,7 @@ extern &quot;C&quot;
 
 int p2__import_primitives()
 {
-    p2_primitive *prim;
+    return ( 1
 <xsl:text />
 
         <xsl:for-each select="compounddef">
@@ -113,7 +128,7 @@ int p2__import_primitives()
         </xsl:for-each>
 
 <xsl:text />
-    return 1;
+    );
 }
 
 <xsl:text />
@@ -172,11 +187,7 @@ void *<xsl:text />
             <xsl:otherwise>
                  <xsl:for-each select="param"><xsl:text />
                      <xsl:call-template name="parameter-cast">
-                          <xsl:with-param name="type">
-                              <xsl:call-template name="depointerize">
-                                  <xsl:with-param name="type" select="type" />
-                              </xsl:call-template>
-                          </xsl:with-param>
+                          <xsl:with-param name="type" select="type" />
                           <xsl:with-param name="array-index">
                               <xsl:value-of select="position() - 1" />
                           </xsl:with-param>
@@ -203,6 +214,7 @@ void *<xsl:text />
 
     </xsl:template>
 
+
     <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 
@@ -215,35 +227,44 @@ void *<xsl:text />
         <xsl:variable name="this" select="." />
 
         <!-- Define the p2_primitive. -->
-    if ( !( prim = prim__new( <xsl:text />
+        // <xsl:value-of select="$function-name" />
+        &amp;&amp; p2_primdef__head( <xsl:text />
         <xsl:call-template name="mangle-function-name">
             <xsl:with-param name="original-name" select="$function-name" />
         </xsl:call-template>, &quot;<xsl:text />
         <xsl:value-of select="$function-name" />&quot;, &quot;<xsl:text />
-        <xsl:call-template name="depointerize">
-            <xsl:with-param name="type" select="$return-type" />
+        <xsl:call-template name="remove-qualifiers">
+            <xsl:with-param name="type">
+                <xsl:call-template name="depointerize">
+                    <xsl:with-param name="type" select="$return-type" />
+                </xsl:call-template>
+            </xsl:with-param>
         </xsl:call-template>&quot;, <xsl:text />
-        <xsl:value-of select="count(param)" /> ))) return 0;<xsl:text />
+        <xsl:value-of select="count(param)" /> )<xsl:text />
 
         <!-- Define each parameter. -->
         <xsl:for-each select="param">
             <xsl:variable name="pos" select="position()" />
             <xsl:variable name="name" select="declname/text()" />
 <xsl:text />
-    if ( !( prim__set_parameter( prim, &quot;<xsl:text />
+        &amp;&amp; p2_primdef__parameter( &quot;<xsl:text />
             <xsl:value-of select="declname/text()" />&quot;, &quot;<xsl:text />
-            <xsl:call-template name="depointerize">
-                <xsl:with-param name="type" select="type" />
+            <xsl:call-template name="remove-qualifiers">
+                <xsl:with-param name="type">
+                    <xsl:call-template name="depointerize">
+                        <xsl:with-param name="type" select="type" />
+                    </xsl:call-template>
+                </xsl:with-param>
             </xsl:call-template>&quot;, <xsl:text />
             <xsl:call-template name="boolean-as-transparency">
                 <xsl:with-param name="arg" select="not(contains($this/detaileddescription/para/parameterlist/parameteritem[parameternamelist/parametername/text() = $name]/parameterdescription/para/text(), '$opaque'))" />
-            </xsl:call-template>, <xsl:text />
-            <xsl:value-of select="position() - 1" /> ))) return 0;<xsl:text />
+            </xsl:call-template> )<xsl:text />
 
         </xsl:for-each>
 
+        <!-- Register the primitive. -->
 <xsl:text />
-    p2_primitive__register( prim );
+        &amp;&amp; p2_primdef__tail( )
 <xsl:text />
     </xsl:template>
 
@@ -328,7 +349,7 @@ void *<xsl:text />
     <xsl:template name="mangle-function-name">
 
         <xsl:param name="original-name" />
-        <xsl:text />p2_imported__<xsl:value-of select="$original-name" />
+        <xsl:text />p2_cstub__<xsl:value-of select="$original-name" />
 
     </xsl:template>
 
@@ -341,7 +362,20 @@ void *<xsl:text />
 
         <xsl:param name="type" />
         <xsl:param name="array-index" />
-        *(( <xsl:value-of select="$type" />* ) args[<xsl:value-of select="$array-index" />] )<xsl:text />
+        <xsl:variable name="depointerized-type">
+            <xsl:call-template name="depointerize">
+                <xsl:with-param name="type" select="type" />
+            </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:choose>
+            <xsl:when test="contains($type, '*')">
+        ( <xsl:value-of select="$depointerized-type" />* ) args[<xsl:value-of select="$array-index" />]<xsl:text />
+            </xsl:when>
+            <xsl:otherwise>
+        *(( <xsl:value-of select="$depointerized-type" />* ) args[<xsl:value-of select="$array-index" />] )<xsl:text />
+            </xsl:otherwise>
+        </xsl:choose>
 
     </xsl:template>
 
@@ -375,6 +409,23 @@ void *<xsl:text />
         <xsl:choose>
             <xsl:when test="contains($type, '*')">
                 <xsl:value-of select="normalize-space(substring-before($type, '*'))" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$type" />
+            </xsl:otherwise>
+        </xsl:choose>
+
+    </xsl:template>
+
+
+    <!-- Remove any type qualifiers. -->
+    <xsl:template name="remove-qualifiers">
+
+        <xsl:param name="type" />
+
+        <xsl:choose>
+            <xsl:when test="contains($type, 'const')">
+                <xsl:value-of select="normalize-space(substring-after($type, 'const'))" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$type" />

@@ -1,32 +1,37 @@
 ################################################################################
 ## Makefile for the Phase2 importing utility.
 ##
-## [This program builds a header file which is included in the Phase2 API source
-## when an application is compiled.  To import a function or data type, place a
-## skeleton in stubs.h in the src directory.  If this function or data type
-## depends on special libraries or compiler options, these must be worked into
-## the project Makefile by hand.]
+## This program builds an object file which is linked with the Phase2 API source
+## when an application is compiled.  To import a function [or data type], place a
+## skeleton header file in the src directory.  If this function [or data type]
+## depends on special libraries or compiler options, these must be specified in
+## the project Makefile.
 
 NAME         = p2-import
 
 SRC_PATH     = ./src
 XMLOUT_PATH  = ./xml
-CFG_FILE     = $(NAME).cfg
+DOXYGEN_CFG  = $(NAME).cfg
 DOXYGEN_OUT  = doxygen-out.xml
-HEADER       = p2-import-header.h
+CC           = gcc
 
-all : $(HEADER)
+
+all : $(SRC_PATH)/$(NAME).o
+	nm $(SRC_PATH)/$(NAME).o
 
 clean :
-	-rm $(DOXYGEN_OUT) -rf $(XMLOUT_PATH) $(HEADER)
+	-rm $(DOXYGEN_OUT) -rf $(XMLOUT_PATH) $(HEADER) $(SRC_PATH)/$(NAME).*
 
-$(HEADER) : $(DOXYGEN_OUT) header-generator.xslt
-	xsltproc header-generator.xslt $(DOXYGEN_OUT) > $(HEADER)
+$(SRC_PATH)/$(NAME).o : $(SRC_PATH)/$(NAME).c
+	gcc -c -o $(SRC_PATH)/$(NAME).o $(SRC_PATH)/$(NAME).c
+
+$(SRC_PATH)/$(NAME).c : $(DOXYGEN_OUT) header-generator.xslt
+	xsltproc header-generator.xslt $(DOXYGEN_OUT) > $(SRC_PATH)/$(NAME).c
 
 $(DOXYGEN_OUT) :  doxygen
 	xsltproc $(XMLOUT_PATH)/combine.xslt $(XMLOUT_PATH)/index.xml > $(DOXYGEN_OUT)
 
 .PHONY : doxygen
 doxygen :
-	doxygen $(CFG_FILE)
+	doxygen $(DOXYGEN_CFG)
 

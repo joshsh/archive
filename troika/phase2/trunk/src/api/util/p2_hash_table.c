@@ -30,7 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 // Note: the sparsity factor does not need to be an integer.
 #define DEFAULT_SPARSITY_FACTOR 3.0
 
-// By default, p2_hash_table__expand() approximately floats the size of the buffer.
+// By default, expand() approximately floats the size of the buffer.
 // Note: the expansion factor does not need to be an integer.
 #define DEFAULT_EXPANSION_FACTOR 2.0
 
@@ -76,7 +76,7 @@ int compare_strings(void *key1, void *key2)
 
 
 /** \return the least prime > 2 and >= i. */
-int p2_hash_table__find_next_prime(int i)
+static int next_prime(int i)
 {
     int j;
 
@@ -102,12 +102,12 @@ int p2_hash_table__find_next_prime(int i)
 
 p2_hash_table *rehash_dest;
 
-void rehash(void *key, void *target)
+static void rehash(void *key, void *target)
 {
     p2_hash_table__add(rehash_dest, key, target);
 }
 
-void rehash_all(p2_hash_table *src, p2_hash_table *dest)
+static void rehash_all(p2_hash_table *src, p2_hash_table *dest)
 {
     rehash_dest = dest;
     p2_hash_table__for_all(src, (void (*)(void*, void *)) rehash);
@@ -115,7 +115,7 @@ void rehash_all(p2_hash_table *src, p2_hash_table *dest)
 
 
 
-void p2_hash_table__expand(p2_hash_table *h)
+static void expand(p2_hash_table *h)
 {
     int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
     void **p, **q, **buffer_old;
@@ -124,7 +124,7 @@ void p2_hash_table__expand(p2_hash_table *h)
     {
         size_old = h->buffer_size;
         buffer_old = h->buffer;
-        h->buffer_size = p2_hash_table__find_next_prime(size0);
+        h->buffer_size = next_prime(size0);
         h->buffer = (void **) malloc(sizeof(void *) * (ENTRY_SIZE * h->buffer_size ));
         h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
@@ -164,7 +164,7 @@ p2_hash_table *p2_hash_table__new(
 
     if (h)
     {
-        h->buffer_size = p2_hash_table__find_next_prime(buffer_size);
+        h->buffer_size = next_prime(buffer_size);
 
         if (hashing_function == NULL)
             h->hashing_function = hash_address;
@@ -299,7 +299,7 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 
     h->size++;
     if (h->size >= h->capacity)
-        p2_hash_table__expand(h);
+        expand(h);
 
     return r;
 }
