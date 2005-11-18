@@ -5,6 +5,9 @@
 \brief  Primitive-building functions to be included by the generated file
 p2-import.c.
 
+\todo  After calling p2__import_primitives, the type registry must be checked
+for incomplete types.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -34,6 +37,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_primitive.h"
 
 
+enum function_marker
+{
+    unmarked = 0,
+    encoder,
+    decoder,
+    destructor
+};
+
+
 /** Begins a p2_primitive declaration.
     \return  null for failure, non-null for success.  You must now fill in the
     primitive's parameters using p2_primdef__parameter. */
@@ -51,8 +63,10 @@ void *p2_primdef__parameter(
     char param_transparency );
 
 /** Ends a p2_primitive declaration, registering the p2_primitive.
+    \param  marker Marks the primitive as an encoder, decoder or destructor.
+            \note  For now, only one marker is possible per primitive.
     \return  null for failure, non-null for success */
-void *p2_primdef__tail( );
+void *p2_primdef__tail( enum function_marker marker );
 
 
 #endif  // IMPORT_AUX_H

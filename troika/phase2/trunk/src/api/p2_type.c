@@ -1,4 +1,4 @@
-/*//////////////////////////////////////////////////////////////////////////////
+*//////////////////////////////////////////////////////////////////////////////
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -35,14 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 
-struct p2_type_itf
-{
-    char *name;
-    void (*encode)(void *, char *);
-    void *(*decode)(char *);
-    void (*destroy)(void *);
-    void *(*clone)(void *);
-};
+
 
 
 

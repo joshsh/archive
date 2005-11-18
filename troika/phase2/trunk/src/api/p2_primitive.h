@@ -43,32 +43,32 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     and a unique name. */
 typedef struct _p2_primitive
 {
-  /** Memory location of the C function. */
-  void *( *cstub )( void ** );
+    /** Memory location of the C function. */
+    void *( *cstub )( void **foo );
 
-  /** A unique name (preferably the same as the C function stub referenced by
-      the pointer, e.g. "strdup"). */
-  char *name;
+    /** A unique name (preferably the same as the C function stub referenced by
+        the pointer, e.g. "strdup"). */
+    char *name;
 
-  /** Number of input parameters. */
-  int parameters;
+    /** Number of input parameters. */
+    int parameters;
 
-  /** An array of length {parameters} containing the data type of all input
-      parameters in the correct order. */
-  p2_type **parameter_types;
+    /** An array of length {parameters} containing the data type of all input
+        parameters in the correct order. */
+    p2_type **parameter_types;
 
-  /** \note  Not yet used. */
-  char **parameter_names;
+    /** \note  Not yet used. */
+    char **parameter_names;
 
-  /** An array of length {parameters} containing at each parameter index a 0
-      if the argument at that index may experience a side-effect, or a 1
-      otherwise (the primitive is said to be "referentially transparent" with
-      respect to that parameter).
-      \note  Not yet used. */
-  char *transparency;
+    /** An array of length {parameters} containing at each parameter index a 0
+        if the argument at that index may experience a side-effect, or a 1
+        otherwise (the primitive is said to be "referentially transparent" with
+        respect to that parameter).
+        \note  Not yet used. */
+    char *transparency;
 
-  /** The primitive's (constant) return type. */
-  p2_type *return_type;
+    /** The primitive's (constant) return type. */
+    p2_type *return_type;
 
 } p2_primitive;
 

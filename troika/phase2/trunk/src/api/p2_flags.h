@@ -87,7 +87,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
         #define P2FLAGS__INIT_TRIGGER_BUFFER_SIZE  10
     #endif
 
-#endif
+#endif  // P2FLAGS__MARK_AND_SWEEP
 
 
 #define P2FLAGS__MANAGE_PRIMITIVES

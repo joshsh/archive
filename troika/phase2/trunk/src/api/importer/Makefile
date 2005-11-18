@@ -12,7 +12,7 @@ NAME         = p2-import
 SRC_PATH     = ./src
 XMLOUT_PATH  = ./xml
 DOXYGEN_CFG  = $(NAME).cfg
-DOXYGEN_OUT  = doxygen-out.xml
+DOXYGEN_OUT  = $(XMLOUT_PATH)/doxygen-out.xml
 CC           = gcc
 
 
@@ -20,7 +20,7 @@ all : $(SRC_PATH)/$(NAME).o
 	nm $(SRC_PATH)/$(NAME).o
 
 clean :
-	-rm $(DOXYGEN_OUT) -rf $(XMLOUT_PATH) $(HEADER) $(SRC_PATH)/$(NAME).*
+	-rm $(DOXYGEN_OUT) -rf $(XMLOUT_PATH) $(HEADER) $(SRC_PATH)/$(NAME).* $(SRC_PATH)/.o
 
 $(SRC_PATH)/$(NAME).o : $(SRC_PATH)/$(NAME).c
 	gcc -c -o $(SRC_PATH)/$(NAME).o $(SRC_PATH)/$(NAME).c

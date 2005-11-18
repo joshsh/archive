@@ -91,6 +91,14 @@
 
 //#include &quot;import-aux.h&quot;
 
+enum function_marker
+{
+    unmarked = 0,
+    encoder,
+    decoder,
+    destructor
+};
+
 extern void *p2_primdef__head(
     void *( *cstub )( void** ),
     char *name,
@@ -102,7 +110,7 @@ extern void *p2_primdef__parameter(
     char *param_type_id,
     char param_transparency );
 
-extern void *p2_primdef__tail( );
+extern void *p2_primdef__tail( enum function_marker marker );
 
 
 #define RT  ( char ) 1  // Referentially transparent.
@@ -157,27 +165,30 @@ void *<xsl:text />
         </xsl:call-template>( void **args )
 {
     <xsl:text />
-        <xsl:choose>
-            <xsl:when test="$is-struct">struct <xsl:text /></xsl:when>
-        </xsl:choose>
-        <xsl:call-template name="depointerize">
-            <xsl:with-param name="type" select="$return-type" />
-        </xsl:call-template> *ret<xsl:text />
-        <xsl:choose>
-            <xsl:when test="$returns-pointer-type">;<xsl:text /></xsl:when>
-            <xsl:otherwise> = ( <xsl:text />
-                <xsl:value-of select="$return-type" />* ) malloc( sizeof( <xsl:text />
-                <xsl:value-of select="$return-type" /> ));<xsl:text />
-            </xsl:otherwise>
-        </xsl:choose>
-
+        <xsl:if test="not($return-type = 'void')">
+            <xsl:choose>
+                <xsl:when test="$is-struct">struct <xsl:text /></xsl:when>
+            </xsl:choose>
+            <xsl:call-template name="depointerize">
+                <xsl:with-param name="type" select="$return-type" />
+            </xsl:call-template> *ret<xsl:text />
+            <xsl:choose>
+                <xsl:when test="$returns-pointer-type">;<xsl:text /></xsl:when>
+                 <xsl:otherwise> = ( <xsl:text />
+                    <xsl:value-of select="$return-type" />* ) malloc( sizeof( <xsl:text />
+                    <xsl:value-of select="$return-type" /> ));<xsl:text />
+                </xsl:otherwise>
+            </xsl:choose>
     <xsl:text>
 
     </xsl:text>
+        </xsl:if>
 
-        <xsl:if test="not($returns-pointer-type)">*</xsl:if>
-
-    <xsl:text />ret = <xsl:value-of select="$function-name" />(<xsl:text />
+        <xsl:if test="not($return-type = 'void')">
+            <xsl:if test="not($returns-pointer-type)">*</xsl:if>
+    <xsl:text />ret = <xsl:text />
+        </xsl:if>
+        <xsl:value-of select="$function-name" />(<xsl:text />
 
         <xsl:variable name="number-of-parameters" select="count(param)" />
         <xsl:choose>
@@ -207,7 +218,18 @@ void *<xsl:text />
             </xsl:otherwise>
         </xsl:choose>
 
-    return ( void* ) ret;
+        <xsl:choose>
+            <xsl:when test="$return-type = 'void'">
+<xsl:text />
+
+    return 0;<xsl:text />
+            </xsl:when>
+            <xsl:otherwise>
+<xsl:text />
+
+    return ( void* ) ret;<xsl:text />
+            </xsl:otherwise>
+        </xsl:choose>
 }
 
 <xsl:text />
@@ -264,7 +286,21 @@ void *<xsl:text />
 
         <!-- Register the primitive. -->
 <xsl:text />
-        &amp;&amp; p2_primdef__tail( )
+        &amp;&amp; p2_primdef__tail( <xsl:text />
+        <xsl:variable name="marker">
+            <xsl:for-each select="detaileddescription/para">
+                <xsl:call-template name="function-marker" />
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="string-length($marker) > 0">
+                <xsl:value-of select="$marker" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>unmarked</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text/> )
 <xsl:text />
     </xsl:template>
 
@@ -430,6 +466,26 @@ void *<xsl:text />
             <xsl:otherwise>
                 <xsl:value-of select="$type" />
             </xsl:otherwise>
+        </xsl:choose>
+
+    </xsl:template>
+
+
+    <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+
+    <xsl:template name="function-marker">
+
+        <xsl:choose>
+            <xsl:when test="contains(text(), '$encoder')">
+                <xsl:text>encoder</xsl:text>
+            </xsl:when>
+            <xsl:when test="contains(text(), '$decoder')">
+                <xsl:text>decoder</xsl:text>
+            </xsl:when>
+            <xsl:when test="contains(text(), '$destructor')">
+                <xsl:text>destructor</xsl:text>
+            </xsl:when>
         </xsl:choose>
 
     </xsl:template>

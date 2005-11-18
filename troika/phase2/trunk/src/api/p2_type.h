@@ -33,8 +33,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_error.h"
 
 
-/** A unique 32-bit value to identify a data type. */
-typedef void * p2_type;
+/** Address is a unique 32-bit value to identify a data type. */
+typedef struct _p2_type
+{
+    char *name;
+    void ( *encoder )( void** );
+    void ( *decoder )( void** );
+    void ( *destructor )( void** );
+
+} p2_type;
 
 
 /** Type casting macro for first-class encoders. */
@@ -58,33 +65,32 @@ p2_error p2_type_end();
 
 
 /** Registers a new data type. */
-p2_type p2_type__new(
+p2_type *p2_type__new(
 
     char *name,
-    void (*encode)(void *, char *),
-    void *(*decode)(char *),
-    void (*destroy)(void *),
-    void *(*clone)(void *));
+    void *( *encoder )( void** ),
+    void *( *decoder )( void** ),
+    void *( *destructor )( void** ));
 
 
 /** Retrieves a type identifier by name. */
-p2_type *p2_type__lookup(char *name);
+//p2_type *p2_type__lookup( char *name );
 
 /**  */
-char *p2_type_name(p2_type type_index);
+//char *p2_type_name( p2_type *type );
 
 
 /** Serializes a data item to a string. */
-void p2_encode(void *p, p2_type type_index, char *buffer);
+void p2_encode( void *p, p2_type *type, char *buffer );
 
 /** Deserializes a data item from a string. */
-void *p2_decode(p2_type type_index, char *buffer);
+void *p2_decode( p2_type *type, char *buffer );
 
 /** Deallocates a data item. */
-void p2_destroy(void *p, p2_type type_index);
+void p2_destroy( void *p, p2_type *type );
 
 /** Creates a copy of a data item. */
-void *p2_clone(void *p, p2_type type_index);
+//void *p2_clone( void *p, p2_type *type );
 
 
 #endif  // P2_TYPE_H
