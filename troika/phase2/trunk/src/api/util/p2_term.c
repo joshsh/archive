@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 // Global array expansion factor, with a default value.
-float p2_term__expansion_factor = TERM__DEFAULT_EXPANSION;
+static float expansion_factor = TERM__DEFAULT_EXPANSION;
 
 // Copy the term to a larger buffer.
 p2_term *p2_term__expand(p2_term *term, unsigned int minimum_buffer_size)
@@ -40,7 +40,7 @@ p2_term *p2_term__expand(p2_term *term, unsigned int minimum_buffer_size)
     // Ordinarily, the new buffer size will be the old buffer size times the
     // p2_term expansion factor.
     new_buffer_size = (unsigned int)
-        (term->buffer_size * p2_term__expansion_factor);
+        (term->buffer_size * expansion_factor);
 
     // If the new buffer size is not large enough, use the given minimum
     // buffer size instead.
@@ -196,7 +196,7 @@ void p2_term__set_expansion_factor(float expansion_factor)
 {
     // Override the default array expansion factor.
     if (expansion_factor > 1)
-        p2_term__expansion_factor = expansion_factor;
+        expansion_factor = expansion_factor;
 }
 
 
@@ -333,13 +333,13 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 
 
 
-// A (hidden) global variable to avoid repetitive passing of the same function pointer to
+// A global variable to avoid repetitive passing of the same function pointer to
 // the subterm functions.
-void *(*p2_term__f)(void *);
+static void *(*p2_term__f)(void *);
 
 
 
-static void *p2_term__for_all_(void **head)
+static void *for_all(void **head)
 {
     void **sup;
 
@@ -359,7 +359,7 @@ static void *p2_term__for_all_(void **head)
         head++;
         while (head < sup)
         {
-            if (!p2_term__for_all_(head))
+            if (!for_all(head))
                 return (void *) 0;
             head += (unsigned int) *head;
         }
@@ -369,7 +369,7 @@ static void *p2_term__for_all_(void **head)
 
 
 
-static void *p2_term__exists_(void **head)
+static void *exists(void **head)
 {
     void **sup;
     void *result;
@@ -394,7 +394,7 @@ static void *p2_term__exists_(void **head)
         head++;
         while (head < sup)
         {
-            result = p2_term__exists_(head);
+            result = exists(head);
             if (result)
                 return result;
             head += (unsigned int) *head;
@@ -405,7 +405,7 @@ static void *p2_term__exists_(void **head)
 
 
 
-static void p2_term__substitute_all_(void **head)
+static void substitute_all(void **head)
 {
     void **sup;
 
@@ -423,7 +423,7 @@ static void p2_term__substitute_all_(void **head)
         head++;
         while (head < sup)
         {
-            p2_term__substitute_all_(head);
+            substitute_all(head);
             head += (unsigned int) *head;
         }
     }
@@ -438,7 +438,7 @@ void *p2_term__for_all(p2_term *term, void *(*criterion)(void *))
     else
     {
         p2_term__f = criterion;
-        return p2_term__for_all_(term->head);
+        return for_all(term->head);
     }
 }
 
@@ -452,7 +452,7 @@ void *p2_term__exists(p2_term *term, void *(*criterion)(void *))
     else
     {
         p2_term__f = criterion;
-        return p2_term__exists_(term->head);
+        return exists(term->head);
     }
 }
 
@@ -463,7 +463,7 @@ p2_term *p2_term__substitute_all(p2_term *term, void *(*substitution)(void *))
     if (term)
     {
         p2_term__f = substitution;
-        p2_term__substitute_all_(term->head);
+        substitute_all(term->head);
     }
 
     return term;

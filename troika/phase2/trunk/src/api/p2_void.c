@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** Start off with a small, out-of-range address and work upwards. */
-p2_void *p2_void__maxval = (p2_void *) 42;
+static p2_void *p2_void__maxval = (p2_void *) 42;
 
 
 p2_void *p2_void__new(char *dataset_id, char *local_id)

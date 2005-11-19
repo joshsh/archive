@@ -298,7 +298,7 @@ int (*compare_) (void *, void *);
 
 
 /* adapted from a MergeSort example by H.W. Lang */
-static void p2_array__merge_(int lo, int m, int hi)
+static void merge(int lo, int m, int hi)
 {
     int i, j, k;
 
@@ -326,16 +326,16 @@ static void p2_array__merge_(int lo, int m, int hi)
 
 
 /* adapted from a MergeSort example by H.W. Lang */
-static void p2_array__mergesort_(int lo, int hi)
+static void mergesort(int lo, int hi)
 {
     int m;
 
     if (lo < hi)
     {
         m = (lo + hi) / 2;
-        p2_array__mergesort_(lo, m);
-        p2_array__mergesort_(m + 1, hi);
-        p2_array__merge_(lo, m, hi);
+        mergesort(lo, m);
+        mergesort(m + 1, hi);
+        merge(lo, m, hi);
     }
 }
 
@@ -357,12 +357,12 @@ void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *))
     a->buffer = buffer_;
     free(buffer);
 
-    // Create auxiliary array for p2_array__merge_
+    // Create auxiliary array for merge
     aux_ = (void **) malloc(sizeof(void*)*a->size);
 
     compare_ = compare;
 
-    p2_array__mergesort_(0, size - 1);
+    mergesort(0, size - 1);
 
     // Destroy the auxiliary array.
     free(aux_);

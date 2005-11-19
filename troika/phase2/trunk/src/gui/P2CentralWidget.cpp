@@ -283,7 +283,8 @@ painter.drawImage(5, 140,  // dest. origin
     painter.drawText( 20, 220, s2 );
     #endif
 
-
+/*
+    // ...look at this again.
     for ( int i = 0; i < 1000000000; i++ )
     {
         i++;
@@ -294,6 +295,8 @@ painter.drawImage(5, 140,  // dest. origin
     painter.drawRect ( delayX, 5, 4, 4 );
     delayX += 5;
     //painter.drawPoint(delayX, 5);
+//*/
+
 
     //painter.end();
 }
