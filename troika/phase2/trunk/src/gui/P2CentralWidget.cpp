@@ -127,37 +127,37 @@ P2CentralWidget::P2CentralWidget( QWidget *parent, const char *name )
     // This my button.
     QPushButton *bleah = new QPushButton( "Hide", this, "bleah" );
     bleah->setGeometry( 30, 10, 75, 30 );
-    bleah->setFont( QFont( "Times", 18, QFont::Bold ) );
+    bleah->setFont( QFont( "Times", 18, QFont::Bold ));
 
     // "The widget name has nothing to do with the button text; it just happens
     // to be similar in this case."
     QPushButton *quit = new QPushButton( "Quit", this, "quit" );
     quit->setGeometry( 30, 40, 75, 30 );
-    quit->setFont( QFont( "Times", 18, QFont::Bold ) );
+    quit->setFont( QFont( "Times", 18, QFont::Bold ));
 
     //QTextEdit *editor = new QTextEdit(this, "editor");
     //editor->setGeometry( 20, 70, 50, 50 );
 
     // "Because the MyWidget class doesn't know about the application object, it
     // has to connect to Qt's pointer to it, qApp."
-    connect( quit, SIGNAL(clicked()), qApp, SLOT(quit()) );
+    connect( quit, SIGNAL( clicked( )), qApp, SLOT( quit( )));
 
-    connect( bleah, SIGNAL(clicked()), quit, SLOT(hide()) );
+    connect( bleah, SIGNAL( clicked( )), quit, SLOT (hide( )));
     //connect( bleah, SIGNAL(clicked()), (P2CentralWidget *) this, SLOT(foobar()) );
 
-    P2Binder *binder = new P2Binder(this, "test binder");
-    binder->move(5, 20);
+    P2Binder *binder = new P2Binder( this, "test binder" );
+    binder->move( 5, 20 );
 
-    QImage *image = new QImage();
+    QImage *image = new QImage( );
     // 16x16 dimensions, 32-bit depth.
     image->create( 11, 11, 32 );
     // R, G, B and alpha color components.
-    image->fill( qRgba( 0, 0, 0, 0 ) );
+    image->fill( qRgba( 0, 0, 0, 0 ));
     // Enable transparency.
     image->setAlphaBuffer( true );
     P2BitmapEditor *editor = new P2BitmapEditor( this, "editor", image, 5, true );
     //P2BitmapEditor *editor = new P2BitmapEditor( this, "editor" );
-    editor->move(110, 10);
+    editor->move( 110, 10 );
 
 
 /*
@@ -197,10 +197,10 @@ void P2CentralWidget::paintEvent( QPaintEvent * )
     painter.drawText( 100, 200, s );
 
     painter.setPen( Qt::black );
-    painter.drawPoint(20, 20);
-    painter.drawPoint(23, 20);
-    painter.drawPoint(20, 23);
-    painter.drawPoint(23, 23);
+    painter.drawPoint( 20, 20 );
+    painter.drawPoint( 23, 20 );
+    painter.drawPoint( 20, 23 );
+    painter.drawPoint( 23, 23 );
 
 /* XPM */
 const char * light_off_xpm[] = {
@@ -228,43 +228,43 @@ const char * light_off_xpm[] = {
 
 
 
-QImage image(light_off_xpm);
-painter.drawImage(50, 180,  // dest. origin
+QImage image( light_off_xpm );
+painter.drawImage( 50, 180,  // dest. origin
             image,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
-QImage image2(ohio_xpm);
-painter.drawImage(70, 260,  // dest. origin
+QImage image2( ohio_xpm );
+painter.drawImage( 70, 260,  // dest. origin
             image2,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
-QImage image2a(troika_xpm);
-painter.drawImage(50, 240,  // dest. origin
+QImage image2a( troika_xpm );
+painter.drawImage( 50, 240,  // dest. origin
             image2a,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
 QImage image3(sk_s_xpm);
-painter.drawImage(5, 100,  // dest. origin
+painter.drawImage( 5, 100,  // dest. origin
             image3,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
-QImage image4(sk_k_xpm);
-painter.drawImage(5, 120,  // dest. origin
+QImage image4( sk_k_xpm );
+painter.drawImage( 5, 120,  // dest. origin
             image4,
             0, 0,  // source origin
             -1, -1,  // source maxima
             0 );  // conversionFlags
 
-QImage image5(sk_i_xpm);
-painter.drawImage(5, 140,  // dest. origin
+QImage image5( sk_i_xpm );
+painter.drawImage( 5, 140,  // dest. origin
             image5,
             0, 0,  // source origin
             -1, -1,  // source maxima
@@ -274,8 +274,8 @@ painter.drawImage(5, 140,  // dest. origin
     #ifndef ARM_COMPILE
     QUrlOperator op( "ftp://ftp.is.co.za/rfc/" );
     // do some other stuff like op.listChildren() or op.mkdir( "new Dir" )
-    const QNetworkOperation *no = op.get("rfc1808.txt");
-    int state = no ? no->state() : -1;
+    const QNetworkOperation *no = op.get( "rfc1808.txt" );
+    int state = no ? no->state( ) : -1;
     QString s2 = "State = " + QString::number( state );
     //cout << no->arg(0).latin1();
     painter.setBrush( NoBrush );
@@ -294,11 +294,11 @@ painter.drawImage(5, 140,  // dest. origin
     painter.setBrush( NoBrush );
     painter.drawRect ( delayX, 5, 4, 4 );
     delayX += 5;
-    //painter.drawPoint(delayX, 5);
+    //painter.drawPoint( delayX, 5 );
 //*/
 
 
-    //painter.end();
+    //painter.end( );
 }
 
 

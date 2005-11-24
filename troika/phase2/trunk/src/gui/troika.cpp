@@ -4,19 +4,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
-    QApplication a(argc, argv);
+    QApplication a( argc, argv );
 
     P2MainWindow w;
-    a.setMainWidget(&w);
+    a.setMainWidget( &w );
 
     // If the display area is small, maximize the main window.
     #ifdef ARM_COMPILE
-    w.showMaximized();
+    w.showMaximized( );
     #else
-    w.show();
+    w.show( );
     #endif
 
-    return a.exec();
+    return a.exec( );
 }
+

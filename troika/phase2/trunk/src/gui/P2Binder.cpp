@@ -61,16 +61,16 @@ static const char * sk_i_xpm[] = {
 ".........."};
 
 int toggle;
-QImage **images = new QImage*[3];
+QImage **images = new QImage*[ 3 ];
 
-P2Binder::P2Binder(QWidget* parent, const char* name)
+P2Binder::P2Binder( QWidget* parent, const char* name )
         : QWidget( parent, name )
 {
-    setFixedSize(10, 11);
+    setFixedSize( 10, 11 );
 
-    images[0] = new QImage(sk_s_xpm);
-    images[1] = new QImage(sk_k_xpm);
-    images[2] = new QImage(sk_i_xpm);
+    images[ 0 ] = new QImage( sk_s_xpm );
+    images[ 1 ] = new QImage( sk_k_xpm );
+    images[ 2 ] = new QImage( sk_i_xpm );
 
     toggle = 0;
 }
@@ -79,24 +79,24 @@ P2Binder::P2Binder(QWidget* parent, const char* name)
 
 // Note: the ButtonState is not used for now, as
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
-void P2Binder::mousePressEvent(QMouseEvent *event)
+void P2Binder::mousePressEvent( QMouseEvent *event )
 {
-    toggle = (toggle + 1) % 3;
+    toggle = ( toggle + 1 ) % 3;
 
-    paintEvent(0);
+    paintEvent( 0 );
 }
 
 
 
-void P2Binder::paintEvent(QPaintEvent *event)
+void P2Binder::paintEvent( QPaintEvent *event )
 {
-    erase();
+    erase( );
 
     QPainter painter( this );
 
     painter.drawImage(
         0, 0,  // dest. origin
-        *(images[toggle]),
+        *( images[toggle]),
         0, 0,  // source origin
         -1, -1,  // source maxima
         0 );  // conversionFlags

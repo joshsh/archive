@@ -16,11 +16,11 @@ class P2MainWindow : public QMainWindow
 
 public:
 
-    P2MainWindow(QWidget* parent=0, const char* name=0, WFlags fl=0);
+    P2MainWindow( QWidget* parent=0, const char* name=0, WFlags fl=0 );
 
 public slots:
 
-    void quit();
+    void quit( );
 
 };
 
