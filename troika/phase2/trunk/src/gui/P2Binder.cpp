@@ -1,105 +1,81 @@
-#include "P2Binder.h"  // P2Binder
+#include "P2Binder.h"
+#include "P2Layout.h"
+//#include "ToggleWidget.h"
 
-#include <qwidget.h>  // QWidget
-
-#include <qpainter.h>  // QPainter
-#include <qimage.h>  // QImage
-
-#include <qevent.h>  // QMouseEvent
+#include <QtGui>
+//    #include <QCheckBox>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/* XPM */
-static const char * sk_s_xpm[] = {
-"10 11 2 1",
-"       c None",
-".      c #FFFF80000000",
-"..........",
-".        .",
-".  ....  .",
-". ..  .. .",
-". ..     .",
-".  ....  .",
-".     .. .",
-". ..  .. .",
-".  ....  .",
-".        .",
-".........."};
+//! Temporary.
+QWidget *special;
 
-/* XPM */
-static const char * sk_k_xpm[] = {
-"10 11 2 1",
-"       c None",
-".      c #FFFF80000000",
-"..........",
-".        .",
-". ..  .. .",
-". ..  .. .",
-". .. ..  .",
-". ....   .",
-". .. ..  .",
-". ..  .. .",
-". ..  .. .",
-".        .",
-".........."};
 
-/* XPM */
-static const char * sk_i_xpm[] = {
-"10 11 2 1",
-"       c None",
-".      c #FFFF80000000",
-"..........",
-".        .",
-".  ....  .",
-".   ..   .",
-".   ..   .",
-".   ..   .",
-".   ..   .",
-".   ..   .",
-".  ....  .",
-".        .",
-".........."};
-
-int toggle;
-QImage **images = new QImage*[ 3 ];
-
-P2Binder::P2Binder( QWidget* parent, const char* name )
-        : QWidget( parent, name )
+P2Binder::P2Binder( QWidget* parent )
+    : QWidget( parent, 0 )
 {
-    setFixedSize( 10, 11 );
-
-    images[ 0 ] = new QImage( sk_s_xpm );
-    images[ 1 ] = new QImage( sk_k_xpm );
-    images[ 2 ] = new QImage( sk_i_xpm );
-
-    toggle = 0;
+    initialize();
 }
 
 
-
-// Note: the ButtonState is not used for now, as
-// LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
-void P2Binder::mousePressEvent( QMouseEvent *event )
+void P2Binder::addWidget( QWidget *widget )
 {
-    toggle = ( toggle + 1 ) % 3;
-
-    paintEvent( 0 );
+    (( P2Layout* ) layout())->addWidget( widget );
 }
 
 
-
+// Note: event object is not used.
 void P2Binder::paintEvent( QPaintEvent *event )
 {
-    erase( );
-
     QPainter painter( this );
 
-    painter.drawImage(
-        0, 0,  // dest. origin
-        *( images[toggle]),
-        0, 0,  // source origin
-        -1, -1,  // source maxima
-        0 );  // conversionFlags
+    // Eventually, borders and padding will be outside of the P2Binder, handled
+    // by the P2Layout instead.
+    painter.setPen( Qt::blue );
+    QRect borderRect( geometry().topLeft(), geometry().size() - QSize( 1, 1) );
+    painter.drawRect( borderRect );
+
+    //int minx = geometry().topLeft().x();
+    //int miny = geometry().topLeft().y();
+    //int maxx = geometry().bottomRight().x();
+    //int maxy = geometry().bottomRight().y();
+    //QRect r(minx, miny, maxx - minx, maxy - miny - 1 );
+    //painter.setPen( Qt::black );
+    //painter.drawRect( r );
+
+    //painter.setPen( Qt::red );
+    //painter.drawRect( ( ( P2Layout* ) layout() )->boundingRectangle() );
+
+    //painter.setPen( Qt::blue );
+    //painter.drawRect( special->geometry() );
 }
 
+
+bool P2Binder::acceptDrops () const
+{
+    return true;
+}
+
+
+void P2Binder::initialize()
+{
+    // Note: no need to call setLayout after using this constructor.
+    P2Layout *layout = new P2Layout( this );
+
+    //resize( layout->calculateSize() );
+
+    //layout->setGeometry( QRect( 0, 0, 300, 300 ) );
+}
+
+
+void P2Binder::resize( QSize newSize )
+{
+    QSize oldSize = geometry().size();
+    QPoint center = geometry().center();
+    setGeometry(
+        center.x() - newSize.width()/2,
+        center.y() - newSize.height()/2,
+        newSize.width(),
+        newSize.height() );
+}
 

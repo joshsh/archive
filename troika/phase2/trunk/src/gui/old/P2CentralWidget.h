@@ -1,29 +1,27 @@
-#ifndef P2MainWindow_h
-#define P2MainWindow_h
+#ifndef P2CentralWidget_h
+#define P2CentralWidget_h 1
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 
-#include <QWidget>  // QWidget
-#include <QMainWindow>  // QMainWindow
+#include <qwidget.h>  // QWidget
+//Added by qt3to4:
+#include <QPaintEvent>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2MainWindow : public QMainWindow
+class P2CentralWidget : public QWidget
 {
-    Q_OBJECT
-
 public:
 
-    P2MainWindow( QWidget* parent, Qt::WFlags fl );
+    P2CentralWidget( QWidget *parent=0, const char *name=0 );
 
-public slots:
+protected:
 
-    void quit( );
-
+    void paintEvent( QPaintEvent * );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2MainWindow_h
+#endif  // P2CentralWidget_h

@@ -3,6 +3,9 @@
 //#include <qwidget.h>
 #include <qnamespace.h>
 #include <qpainter.h>  // QPainter
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -5,33 +5,40 @@
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 
-#include <qwidget.h>  // QWidget
+#include <QWidget>  // QWidget
+#include <QPaintEvent>  // QPaintEvent
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class P2Binder : public QWidget
 {
+    // Necessary?
     Q_OBJECT
 
 public:
 
-    // P2Binder( P2Binder *parentBinder, const char *name = 0 );
-    P2Binder( QWidget* parent = 0, const char* name = 0 );
+    /** Constructs an empty P2Binder. */
+    P2Binder( QWidget* parent );
+
+    /** Adds a QWidget to this P2Binder's P2Layout, which assumes ownership of
+        the QWidget and orders it into its P2LayoutItem tree. */
+    void addWidget( QWidget *widget );
 
 protected:
 
-    void mousePressEvent( QMouseEvent *event );
     void paintEvent( QPaintEvent *event );
 
-    //void resizePixmap( QSize newSize );
+    /** A P2Binder may accept drop events... I think. */
+    bool acceptDrops () const;
 
 private:
 
-    //QSize size;  // Size of the pixmap, plus border padding.
-    //QPixmap pixmap;
+    /** Common routines for the constructors. */
+    void initialize();
+
+    void resize( QSize newSize );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif  // P2Binder_h
-

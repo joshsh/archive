@@ -11,6 +11,8 @@ int main( int argc, char** argv )
     P2MainWindow w;
     a.setMainWidget( &w );
 
+    //P2MainWindow w2;
+
     // If the display area is small, maximize the main window.
     #ifdef ARM_COMPILE
     w.showMaximized( );

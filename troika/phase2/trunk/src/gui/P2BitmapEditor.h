@@ -7,6 +7,9 @@
 
 #include <qwidget.h>  // QWidget
 #include <qimage.h>  // QImage, QColor
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QPaintEvent>
 //? // QSize
 
 ////////////////////////////////////////////////////////////////////////////////
