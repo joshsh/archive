@@ -3,10 +3,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "compile-target.h"  // Macros specific to the target architecture.
+#include "global.h"
+#include "P2Environment.h"
+#include "P2CentralWidget.h"
 
-#include <QWidget>  // QWidget
-#include <QMainWindow>  // QMainWindow
+#include <QtGui>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,10 +18,18 @@ class P2MainWindow : public QMainWindow
 public:
 
     P2MainWindow( QWidget* parent, Qt::WFlags fl );
+    ~P2MainWindow();
 
 public slots:
 
     void quit( );
+    void showIdleFrames( );
+    void hideIdleFrames( );
+
+private:
+
+    P2Environment *environment;
+    P2CentralWidget *centralWidget;
 
 };
 

@@ -3,35 +3,30 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-//#include "compile-target.h"  // Macros specific to the target architecture.
+#include "global.h"
+#include "P2BasicWidget.h"
 
-#include <qwidget.h>  // QWidget
-//Added by qt3to4:
-#include <QMouseEvent>
-#include <QPaintEvent>
+#include <QtGui>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToggleWidget : public QWidget
+class ToggleWidget : public P2BasicWidget
 {
-    Q_OBJECT
 
 public:
 
-    // ToggleWidget( ToggleWidget *parentBinder, const char *name = 0 );
-    ToggleWidget( QWidget* parent );
+    ToggleWidget();
 
 protected:
 
-    void mousePressEvent( QMouseEvent *event );
+    bool handleMousePressEvent( QMouseEvent *event );
     void paintEvent( QPaintEvent *event );
 
     //void resizePixmap( QSize newSize );
 
 private:
 
-    //QSize size;  // Size of the pixmap, plus border padding.
-    //QPixmap pixmap;
+    QList<QImage> *imageList;
 
     int toggle;
 };

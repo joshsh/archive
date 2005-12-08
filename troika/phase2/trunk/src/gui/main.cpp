@@ -3,7 +3,7 @@ export QTDIR=/usr/local/Trolltech/Qt-4.0.1/
 export PATH=$QTDIR/bin:$PATH
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 
-NAME=P2LayoutTest
+NAME=troika
 qmake -project -o $NAME.pro
 qmake $NAME.pro
 make

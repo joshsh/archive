@@ -3,22 +3,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "compile-target.h"  // Macros specific to the target architecture.
-
-#include <QWidget>  // QWidget
-#include <QPaintEvent>  // QPaintEvent
+#include "global.h"
+#include "P2BasicWidget.h"
+#include "P2Environment.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2CentralWidget : public QWidget
+class P2CentralWidget : public P2BasicWidget
 {
+
 public:
 
-    P2CentralWidget( QWidget *parent );
+    P2CentralWidget( QWidget *parent, P2Environment *e );
 
-protected:
+    bool handleMousePressEvent( QMouseEvent *event );
 
-    //void paintEvent( QPaintEvent* );
 };
 
 ////////////////////////////////////////////////////////////////////////////////

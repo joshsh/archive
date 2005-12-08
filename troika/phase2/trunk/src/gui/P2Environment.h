@@ -1,20 +1,24 @@
-#ifndef P2Logger_h
-#define P2Logger_h 1
+#ifndef P2Environment_h
+#define P2Environment_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "compile-target.h"  // Macros specific to the target architecture.
-
-#include <qwidget.h>  // QWidget
+#include "global.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2Logger
+struct P2Environment
 {
+
 public:
-    P2Logger();
+
+    /** Initializes the P2Environment with default values. */
+    P2Environment();
+
+    bool idleFramesAreVisible;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2Logger_h
+#endif  // P2Environment_h

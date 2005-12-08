@@ -1,33 +1,34 @@
-#include "P2MainWindow.h"  // P2MainWindow, QMainWindow, QWidget
-#include "P2CentralWidget.h"  // P2CentralWidget
-
-    #include "P2Binder.h"
+#include "P2MainWindow.h"
 
 // ? WFlags
 
-//#include <q3popupmenu.h>  // QPopupMenu
-#include <QMenuBar>  // QMenu, QMenuBar
-
-// #include <qtextview.h>
-// #include <qmultilineedit.h>
 
 ////////////////////////////////////////////////////////////////////////////////
+
 
 P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
     : QMainWindow( parent, fl )
 {
+    #ifdef DEBUG
+        cout << "P2MainWindow[" << (int) this << "]::P2MainWindow( "
+             << (int) parent << ", "
+             << fl << " )" << endl;
+    #endif
+
+    environment = new P2Environment();
+
     //~ Just testing the macros.
     #ifdef ARM_COMPILE
         #ifdef X86_COMPILE
-            setWindowTitle("Phase2 GUI (???)");
+            setWindowTitle( "Phase2 GUI (???)" );
         #else
-            setWindowTitle("Phase2 GUI (ARM)");
+            setWindowTitle( "Phase2 GUI (ARM)" );
         #endif
     #else
         #ifdef X86_COMPILE
-            setWindowTitle("Phase2 GUI (X86)");
+            setWindowTitle( "Phase2 GUI (X86)" );
         #else
-            setWindowTitle("Phase2 GUI (???)");
+            setWindowTitle( "Phase2 GUI (???)" );
         #endif
     #endif
 
@@ -42,9 +43,15 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
     QMenuBar *menubar = this->menuBar( );
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
+    QMenu *viewMenu = menubar->addMenu( "&View" );
+    QMenu *frameVisibilityMenu = viewMenu->addMenu( "Frames" );
+    frameVisibilityMenu->addAction( "Always visible", this,
+        SLOT( showIdleFrames() ), 0 );
+    frameVisibilityMenu->addAction( "Hidden when idle", this,
+        SLOT( hideIdleFrames() ), 0 );
 
-    P2CentralWidget *cw = new P2CentralWidget( this );
-    setCentralWidget( cw );
+    centralWidget = new P2CentralWidget( this, environment );
+    setCentralWidget( centralWidget );
 
     // QTextView *tv = new QTextView( "Salut!", 0, this, "Log viewer" );
     // setCentralWidget( tv );
@@ -55,7 +62,47 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
 }
 
 
+P2MainWindow::~P2MainWindow()
+{
+    delete environment;
+    delete centralWidget;
+}
+
+
 void P2MainWindow::quit( )
 {
     this->close( );
+}
+
+
+void P2MainWindow::showIdleFrames( )
+{
+    environment->idleFramesAreVisible = true;
+
+    QWidget cover( this, 0 );
+    cover.setGeometry( contentsRect() );
+    cover.setVisible( true );
+    cover.setVisible( false );
+}
+
+
+void P2MainWindow::hideIdleFrames( )
+{
+    environment->idleFramesAreVisible = false;
+
+    QWidget cover( this, 0 );
+    cover.setGeometry( contentsRect() );
+    cover.setVisible( true );
+    cover.setVisible( false );
+
+    //show();
+    //update();
+    //update( visibleRegion() );
+    //update( 0, 0, width(), height() );
+    //update( QRegion( QRect( QPoint( 0, 0 ), QSize( geometry().width(), geometry().height() ) ), QRegion::Rectangle ) );
+    //update( QRect( QPoint( 0, 0 ), QSize( geometry().width(), geometry().height() ) ) );
+    //update( geometry() );
+    //centralWidget->doUpdate();
+    //centralWidget->update( 0, 0, centralWidget->geometry().width(), centralWidget->geometry().height() );
+    //centralWidget->update();
 }

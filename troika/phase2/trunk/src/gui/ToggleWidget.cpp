@@ -1,17 +1,5 @@
 #include "ToggleWidget.h"  // ToggleWidget
 
-#include <qwidget.h>  // QWidget
-
-#include <qpainter.h>  // QPainter
-#include <qimage.h>  // QImage
-
-#include <qevent.h>  // QMouseEvent
-
-#include <qlist.h>  // QList
-//Added by qt3to4:
-#include <QMouseEvent>
-#include <QPaintEvent>
-
     //#include <iostream.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,17 +55,13 @@ static const char * sk_i_xpm[] = {
 ".        .",
 ".........."};
 
-QList<QImage> *imageList = new QList<QImage>();
 
-ToggleWidget::ToggleWidget( QWidget* parent )
-        : QWidget( parent, 0 )
+ToggleWidget::ToggleWidget()
+        : P2BasicWidget()
 {
     setFixedSize( 10, 11 );
-/*
-    imageList->append( new QImage( sk_s_xpm ) );
-    imageList->append( new QImage( sk_k_xpm ) );
-    imageList->append( new QImage( sk_i_xpm ) );
-*/
+
+    imageList = new QList<QImage>();
     imageList->append( QImage( sk_s_xpm ) );
     imageList->append( QImage( sk_k_xpm ) );
     imageList->append( QImage( sk_i_xpm ) );
@@ -89,12 +73,13 @@ ToggleWidget::ToggleWidget( QWidget* parent )
 
 // Note: the ButtonState is not used for now, as
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
-void ToggleWidget::mousePressEvent( QMouseEvent *event )
+bool ToggleWidget::handleMousePressEvent( QMouseEvent *event )
 {
     toggle = ( toggle + 1 ) % 3;
 
-//setGeometry(QRect(QPoint(geometry().topLeft()), QSize(geometry().size()) + QSize(5, 5)));
-    paintEvent( 0 );
+    update();
+
+    return false;
 }
 
 
@@ -102,8 +87,6 @@ void ToggleWidget::mousePressEvent( QMouseEvent *event )
 void ToggleWidget::paintEvent( QPaintEvent *event )
 {
     //erase( );
-    QSize size = frameSize();
-    //cout << "width = " << size.width() << ", height = " << size.height() << "." << endl;
 
     QPainter painter( this );
     painter.drawImage(

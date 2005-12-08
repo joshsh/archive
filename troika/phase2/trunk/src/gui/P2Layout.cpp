@@ -1,16 +1,37 @@
 #include "P2Layout.h"
 
-    #include <QtGui>
-
     #include <iostream.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
+void printGeometry( QWidget *widget )
+{
+    cout << "[" << (int) widget << "]geometry = ("
+         << widget->geometry().x() << ", "
+         << widget->geometry().y() << "), "
+         << widget->size().width() << ", "
+         << widget->size().height() << endl;
+}
+
+
+
+
+
+
+
 P2Layout::P2Layout( QWidget *parent )
     : QLayout( parent )
 {
+    #ifdef DEBUG
+        cout << "P2Layout[" << (int) this << "]::P2Layout( "
+             << (int) parent << " )" << endl;
+    #endif
+
+cout << "on layout creation: ";
+printGeometry( parentWidget() );
+
     // Width-1px border.
     setMargin( 1 );
 
@@ -19,6 +40,10 @@ P2Layout::P2Layout( QWidget *parent )
 
     // Minimum distance of 1px between child widgets.
     setSpacing( 1 );
+
+    // Initially empty layout has a minimal content rectangle.
+    contentRectangle = QRect( QPoint( 2, 2 ), QSize( 0, 0 ) );
+    size = contentRectangle.size() + QSize( 4, 4 );
 }
 
 
@@ -39,26 +64,22 @@ void P2Layout::addItem( QLayoutItem *item )
 {
     children.append( new P2LayoutItem( item ) );
 
-    QPoint p( 2, 2 );
+    if ( children.size() == 1 )
+        contentRectangle = item->geometry();
+    else
+        contentRectangle = contentRectangle.unite( item->geometry() );
 
-    for ( int i = 0; i < children.size(); i++ )
-    {
-        QLayoutItem *item = children.at( i )->item;
-        QSize s = item->sizeHint();
-        item->setGeometry( QRect( p, s ) );
-        s = children.at( i )->size();
-        p += QPoint( s.width(), s.height() );
-        //children.at( i )->item->setGeometry( QRect( 0, 0, 20, 20 ) );
-    }
+    size = contentRectangle.size() + QSize( 4, 4 );
 
-    findBoundingRectangle();
+    justifyContents();
 }
 
 
-void P2Layout::addWidget( QWidget *widget )
+void P2Layout::addWidget( QWidget *widget, QPoint position )
 {
-    // Create a QLayoutItem to hold a QWidget (a QWidgetItem) and add it.
-    addItem( new QWidgetItem( widget ) );
+    QWidgetItem *item = new QWidgetItem( widget );
+    item->setGeometry( QRect( position, item->sizeHint() ) );
+    addItem( item );
 }
 
 
@@ -106,140 +127,41 @@ bool P2Layout::hasHeightForWidth() const
 
 QSize P2Layout::minimumSize() const
 {
-    return size;//calculateSize();
+    return size;
 }
 
 
 QSize P2Layout::sizeHint() const
 {
-    //return QSize( 50, 50 );
-    return size;//calculateSize();
-}
-
-
-void P2Layout::findBoundingRectangle()// const
-{
-    QRect r = children.at( 0 )->item->geometry();
-    QPoint p = r.topLeft();
-    int minx = p.x(); cout << "minx = " << minx << endl;
-    int miny = p.y(); cout << "miny = " << miny << endl;
-    p = r.bottomRight();
-    int maxx = p.x(); cout << "maxx = " << maxx << endl;
-    int maxy = p.y(); cout << "maxy = " << maxy << endl;
-
-    for ( int i = 0; i < children.size(); i++ )
-    {
-        int x, y;
-
-        r = children.at( i )->item->geometry();
-        //r = QRect( children.at( i )->item->geometry().topLeft(), children.at( i )->size() );
-
-        cout << "p = r.topLeft();" << endl;
-        p = r.topLeft();
-        x = p.x();
-        y = p.y();
-        if ( x < minx ) {minx = x; cout << "minx = " << minx << endl; }
-        if ( y < miny ) {miny = y; cout << "miny = " << miny << endl; }
-
-        cout << "p = r.bottomRight();" << endl;
-        p = r.bottomRight();
-        x = p.x();
-        y = p.y();
-        if ( x > maxx ) {maxx = x; cout << "maxx = " << maxx << endl; }
-        if ( y > maxy ) {maxy = y; cout << "maxy = " << maxy << endl; }
-    }
-
-cout << "children.size() = " << children.size() << endl;
-cout << "P2Layout bounding rectangle:" << endl
-     << "  Upper left corner at (" << minx << ", " << miny << ")" << endl
-     << "  Width = " << maxx - minx << endl
-     << "  Height = " << maxy - miny << endl;
-
-    size = QSize( QSize( maxx - minx + 4, maxy - miny + 4 ) );
-    //boundingRectangle = QRect( QPoint( minx, miny ), QSize( maxx - minx + 4, maxy - miny + 4 ) );
-}
-
-
-/** \warning  Assumes at least one child widget.
-    \note  minimumSize() and sizeHint() are not distinguished for now. */
-QSize P2Layout::calculateSize() const
-{
     return size;
-    //QRect r = boundingRectangle;
-    //return QSize( r.width(), r.height() );
 }
 
 
-void P2Layout::setGeometry(const QRect &rect)
+void P2Layout::setGeometry( const QRect &rect )
 {
-/*
-        ItemWrapper *center = 0;
-        int eastWidth = 0;
-        int westWidth = 0;
-        int northHeight = 0;
-        int southHeight = 0;
-        int centerHeight = 0;
-        int i;
-*/
     QLayout::setGeometry(rect);
 
+    //...
+}
 
-/*
-        for (i = 0; i < children.size(); ++i) {
-            ItemWrapper *wrapper = children.at(i);
-            QLayoutItem *item = wrapper->item;
-            Position position = wrapper->position;
 
-            if (position == North) {
-                item->setGeometry(QRect(rect.x(), northHeight, rect.width(),
-                                        item->sizeHint().height()));
+void P2Layout::justifyContents()
+{
+    // Content origin should be at (2, 2).
+    int xoffset = contentRectangle.x() - 2;
+    int yoffset = contentRectangle.y() - 2;
 
-                northHeight += item->geometry().height() + spacing();
-            } else if (position == South) {
-                item->setGeometry(QRect(item->geometry().x(),
-                                        item->geometry().y(), rect.width(),
-                                        item->sizeHint().height()));
+    if ( xoffset || yoffset )
+    {
+        QPoint negOffset( -xoffset, -yoffset );
 
-                southHeight += item->geometry().height() + spacing();
-
-                item->setGeometry(QRect(rect.x(),
-                                  rect.y() + rect.height() - southHeight + spacing(),
-                                  item->geometry().width(),
-                                  item->geometry().height()));
-            } else if (position == Center) {
-                center = wrapper;
-            }
+        for ( int i = 0; i < children.size(); i++ )
+        {
+            QLayoutItem *item = children.at( i )->item;
+            item->setGeometry( item->geometry().translated( negOffset ) );
         }
 
-        centerHeight = rect.height() - northHeight - southHeight;
-
-        for (i = 0; i < children.size(); ++i) {
-            ItemWrapper *wrapper = children.at(i);
-            QLayoutItem *item = wrapper->item;
-            Position position = wrapper->position;
-
-            if (position == West) {
-                item->setGeometry(QRect(rect.x() + westWidth, northHeight,
-                                        item->sizeHint().width(), centerHeight));
-
-                westWidth += item->geometry().width() + spacing();
-            } else if (position == East) {
-                item->setGeometry(QRect(item->geometry().x(), item->geometry().y(),
-                                        item->sizeHint().width(), centerHeight));
-
-                eastWidth += item->geometry().width() + spacing();
-
-                item->setGeometry(QRect(
-                                  rect.x() + rect.width() - eastWidth + spacing(),
-                                  northHeight, item->geometry().width(),
-                                  item->geometry().height()));
-            }
-        }
-
-        if (center)
-            center->item->setGeometry(QRect(westWidth, northHeight,
-                                            rect.width() - eastWidth - westWidth,
-                                            centerHeight));
-*/
+        contentRectangle = contentRectangle.translated( negOffset );
+    }
 }
 
