@@ -1,24 +1,12 @@
 #include "P2Layout.h"
 
-    #include <iostream.h>
+#include <iostream.h>
+
+// Abandon collision resolution after this many iterations.
+#define MAX_COLLISIONS  1000
 
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
-void printGeometry( QWidget *widget )
-{
-    cout << "[" << (int) widget << "]geometry = ("
-         << widget->geometry().x() << ", "
-         << widget->geometry().y() << "), "
-         << widget->size().width() << ", "
-         << widget->size().height() << endl;
-}
-
-
-
-
-
 
 
 P2Layout::P2Layout( QWidget *parent )
@@ -28,9 +16,6 @@ P2Layout::P2Layout( QWidget *parent )
         cout << "P2Layout[" << (int) this << "]::P2Layout( "
              << (int) parent << " )" << endl;
     #endif
-
-cout << "on layout creation: ";
-printGeometry( parentWidget() );
 
     // Width-1px border.
     setMargin( 1 );
@@ -49,11 +34,11 @@ printGeometry( parentWidget() );
 
 P2Layout::~P2Layout()
 {
-    QLayoutItem *l;
+    P2LayoutItem *item;
 
-    // Delete all child widgets.
-    while ( ( l = takeAt( 0 ) ) )
-        delete l;
+    // Delete all layout items.
+    while ( ( item = children.takeAt( 0 ) ) )
+        delete item;
 }
 
 
@@ -62,7 +47,7 @@ P2Layout::~P2Layout()
 
 void P2Layout::addItem( QLayoutItem *item )
 {
-    children.append( new P2LayoutItem( item ) );
+    children.append( ( P2LayoutItem* ) item );
 
     if ( children.size() == 1 )
         contentRectangle = item->geometry();
@@ -71,7 +56,8 @@ void P2Layout::addItem( QLayoutItem *item )
 
     size = contentRectangle.size() + QSize( 4, 4 );
 
-    justifyContents();
+    resolveCollisions();
+    //justifyContents();
 }
 
 
@@ -91,18 +77,14 @@ int P2Layout::count() const
 
 QLayoutItem *P2Layout::itemAt( int index ) const
 {
-    P2LayoutItem *p2item = children.value(index);
-    if (p2item)
-        return p2item->item;
-    else
-        return 0;
+    return children.value(index);
 }
 
 
 QLayoutItem *P2Layout::takeAt(int index)
 {
     if ( index >= 0 && index < children.size() )
-        return children.takeAt(index)->item;
+        return children.takeAt( index );
     else
         return 0;
 }
@@ -145,6 +127,25 @@ void P2Layout::setGeometry( const QRect &rect )
 }
 
 
+// Coordination ////////////////////////////////////////////////////////////////
+
+
+void P2Layout::refreshContentRectangle()
+{
+    if ( !children.size() )
+        contentRectangle = QRect( QPoint( 2, 2 ), QSize( 0, 0 ) );
+
+    else
+    {
+        contentRectangle = children.at( 0 )->geometry();
+        for ( int i = 1; i < children.size(); i++ )
+            contentRectangle = contentRectangle.unite( children.at( i )->geometry() );
+    }
+
+    size = contentRectangle.size() + QSize( 4, 4 );
+}
+
+
 void P2Layout::justifyContents()
 {
     // Content origin should be at (2, 2).
@@ -157,11 +158,118 @@ void P2Layout::justifyContents()
 
         for ( int i = 0; i < children.size(); i++ )
         {
-            QLayoutItem *item = children.at( i )->item;
+            QLayoutItem *item = children.at( i );
             item->setGeometry( item->geometry().translated( negOffset ) );
         }
 
         contentRectangle = contentRectangle.translated( negOffset );
     }
+}
+
+
+int abs( int x )
+{
+    return x < 0 ? -x : x;
+}
+
+
+int P2Layout::resolveCollisions()
+{
+    int size = children.size();
+
+    // Expand all layout items by a 1px-wide right and bottom margin.
+    for ( int i = 0; i < size; i++ )
+    {
+        QLayoutItem *item = children.at( i );
+        item->setGeometry( QRect(
+            item->geometry().topLeft(),
+            item->geometry().size() + QSize( 1, 1 ) ) );
+    }
+
+    // Find all initial collisions.
+    QList<int> collisions;
+    for ( int i = 0; i < size; i++ )
+    {
+        QLayoutItem *a = children.at( i );
+        for ( int j = i + 1; j < children.size(); j++ )
+        {
+            QLayoutItem *b = children.at( j );
+            if ( a->geometry().intersects( b->geometry() ) )
+                collisions.append( ( i * size ) + j );
+        }
+    }
+
+    int iterations = 0;
+
+    // While there are any collisions in the queue, resolve them in order.  New
+    // collisions may result in the process, and some collisions may be solved
+    // "accidentally" before they are encountered in the queue.
+    while ( collisions.size() && ( iterations++ < MAX_COLLISIONS ) )
+    {
+        int index = collisions.takeFirst();
+        QLayoutItem *a = children.at( index / size );
+        QLayoutItem *b = children.at( index % size );
+
+        QRect rectA = a->geometry();
+        QRect rectB = b->geometry();
+        QRect intersection = rectA.intersect( rectB );
+        if ( !intersection.isEmpty() )
+        {
+            // Find the offset necessary to resolve the collision by displacing
+            // the first frame in each of the the four compass directions.
+            int offset[4];
+            offset[0] = rectB.y() - ( rectA.y() + rectA.height() ); // north
+            offset[1] = ( rectB.y() + rectB.height() ) - rectA.y();  // south
+            offset[2] = ( rectB.x() + rectB.width() ) - rectA.x();  // east
+            offset[3] = rectB.x() - ( rectA.x() + rectA.width() );  // west
+
+            // Find the direction with the smallest offset.
+            int j = 0;
+            for ( int i = 1; i < 4; i++ )
+                if ( abs( offset[i] ) < abs( offset[j] ) )
+                    j = i;
+
+            // Displace the frames in opposite directions by a total distance
+            // equal to the offset.
+            int offsetA = offset[j] / 2;
+            int offsetB = offsetA - offset[j];
+
+            if ( j < 2 )  // North / south.
+            {
+                a->setGeometry( a->geometry().translated( QPoint( 0, offsetA ) ) );
+                b->setGeometry( b->geometry().translated( QPoint( 0, offsetB ) ) );
+            }
+            else  // East / west.
+            {
+                a->setGeometry( a->geometry().translated( QPoint( offsetA, 0 ) ) );
+                b->setGeometry( b->geometry().translated( QPoint( offsetB, 0 ) ) );
+            }
+
+            // Check for new collisions resulting from the displacement.
+            for ( int i = 0; i < children.size(); i++ )
+            {
+                QLayoutItem *item = children.at( i );
+                if ( ( item != a ) && item->geometry().intersects( a->geometry() ) )
+                    collisions.append( ( index / size ) * size + i );
+                if ( ( item != b ) && item->geometry().intersects( b->geometry() ) )
+                    collisions.append( ( index % size ) * size + i );
+            }
+        }
+    }
+
+    // Restore original sizes of layout items.
+    for ( int i = 0; i < children.size(); i++ )
+    {
+        QLayoutItem *item = children.at( i );
+        item->setGeometry( QRect(
+            item->geometry().topLeft(),
+            item->geometry().size() - QSize( 1, 1 ) ) );
+    }
+
+    // Compensate for any overall displacement which may have occurred.
+    refreshContentRectangle();
+    justifyContents();
+
+    return iterations;
 }
 

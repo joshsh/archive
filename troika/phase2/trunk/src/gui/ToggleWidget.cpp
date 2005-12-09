@@ -75,10 +75,13 @@ ToggleWidget::ToggleWidget()
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
 bool ToggleWidget::handleMousePressEvent( QMouseEvent *event )
 {
-    toggle = ( toggle + 1 ) % 3;
+    if ( event->button() == Qt::LeftButton )
+    {
+        toggle = ( toggle + 1 ) % 3;
+        update();
+    }
 
-    update();
-
+    // Objects of this class are not meant to have dependent P2BasicWidgets.
     return false;
 }
 

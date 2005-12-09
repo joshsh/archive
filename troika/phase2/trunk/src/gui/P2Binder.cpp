@@ -140,22 +140,49 @@ void P2Binder::unfocus()
 // Event handling //////////////////////////////////////////////////////////////
 
 
+void P2Binder::showInfo()
+{
+    cout << "P2Binder[" << (int) this << "]::showInfo():" << endl;
+    cout << "    Geometry: (" << geometry().x() << ", " << geometry().y()
+         << "), " << geometry().width() << " by " << geometry().height()
+         << " pixels." << endl;
+    cout << "    Children: " << ( ( P2Layout* ) layout() )->count() << endl;
+}
+
+
 bool P2Binder::handleMousePressEvent( QMouseEvent *event )
 {
-    // "Second tap" event allows access to the wrapped QWidget, if not itself
-    // a P2Binder.
+    // If the P2Binder is already in focus...
     if ( focusChild == this )
     {
-        // ...
-        return true;
+        if ( event->button() == Qt::RightButton )
+        {
+            showInfo();
+            return false;
+        }
+
+        // "Second tap" event allows access to the wrapped QWidget, if not itself
+        // a P2Binder.
+        else
+            return true;
     }
 
-    // "First tap" event selects the P2Binder and deselects all others.
+    // If the P2Binder is not in focus...
     else
     {
-        setFocus( this );
-        update();
-        return false;
+        // "First tap" event selects the P2Binder and deselects all others.
+        if ( event->button() == Qt::LeftButton )
+        {
+            setFocus( this );
+            update();
+            return false;
+        }
+
+        //else if ( event->button() == Qt::RightButton )
+        //    return false;
+
+        else
+            return true;
     }
 }
 

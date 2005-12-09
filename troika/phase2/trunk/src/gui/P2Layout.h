@@ -8,7 +8,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// You can also test to see if two QRects intersect with intersects(), or retrieve the intersection as a QRect using intersect():
 
 class P2Layout : public QLayout
 {
@@ -38,17 +37,27 @@ public:
 
 private:
 
-    /** A wrapper for QLayoutItem which holds some additional (graph)
-        information needed by the P2Layout. */
-    struct P2LayoutItem
+    struct P2LayoutEdge;
+
+    /** A QLayoutItem which holds some additional (graph) information needed
+        by the P2Layout. */
+    class P2LayoutItem : public QLayoutItem
     {
-        P2LayoutItem( QLayoutItem *i )
+        //QList<P2LayoutEdge *> outboundEdges;
+
+        P2LayoutEdge *edgeTo( P2LayoutItem *otherItem )
         {
-            item = i;
+            if ( geometry().intersects( otherItem->geometry() ) )
+                return 0;
+
+            else
+            {
+                //...
+
+                return new P2LayoutEdge( otherItem, 0, 0 );
+            }
         }
 
-        QLayoutItem *item;
-        //QList<P2LayoutEdge *> outboundEdges;
     };
 
     /** A graph edge which describes the relative position of a neighboring
@@ -82,12 +91,16 @@ private:
 
     QRect contentRectangle;
 
-    void justifyContents();
-
     // "Calling QLayoutItem::sizeHint(), etc. may be expensive, so you should
     // store the value in a local variable if you need it again later in the
     // same function."
     QSize size;
+
+    void refreshContentRectangle();
+    void justifyContents();
+
+    /** \return  the number of iterations it took to resolve the collision */
+    int resolveCollisions();
 
 };
 

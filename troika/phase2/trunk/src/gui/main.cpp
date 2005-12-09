@@ -9,14 +9,13 @@ qmake $NAME.pro
 make
 */
 
-#include "P2MainWindow.h"  // P2MainWindow
+#include "P2MainWindow.h"
 
-#include <QApplication>
-
+#include <QtGui>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int main( int argc, char** argv )
+int main( int argc, char **argv )
 {
     QApplication a( argc, argv );
 
@@ -25,9 +24,9 @@ int main( int argc, char** argv )
 
     // If the display area is small, maximize the main window.
     #ifdef ARM_COMPILE
-    w.showMaximized( );
+        w.showMaximized( );
     #else
-    w.show( );
+        w.show( );
     #endif
 
     return a.exec( );

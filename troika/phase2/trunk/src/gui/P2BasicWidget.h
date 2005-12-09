@@ -20,6 +20,9 @@ public:
     /** Shortcut to the global environment. */
     P2Environment *environment;
 
+    /** A convenience method. */
+    void setPosition( QPoint p );
+
 protected:
 
     /** Constructs an empty P2BasicWidget. */
@@ -29,6 +32,8 @@ protected:
     P2BasicWidget( QWidget* parent, P2Environment *e );
 
     void mousePressEvent( QMouseEvent *event );
+
+    bool mousePressEventWrapper( QMouseEvent *event );
 
     virtual bool handleMousePressEvent( QMouseEvent *event ) = 0;
 

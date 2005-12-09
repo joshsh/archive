@@ -50,6 +50,8 @@ private:
     /** A common routine for the constructors. */
     void initialize();
 
+    void showInfo();
+
     //!
     void resize( QSize newSize );
 

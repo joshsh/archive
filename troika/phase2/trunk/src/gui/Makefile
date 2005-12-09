@@ -2,7 +2,7 @@ APP	=	troika
 
 INCPATH	=	-I /opt/Qtopia/sharp/include/
 LIBS	=	-L /opt/Qtopia/sharp/lib/ -lqpe -lqte -ljpeg -luuid
-CXXFLAGS=	-DQWS -fno-rtti
+CXXFLAGS=	-DQWS -fno-rtti -Wno-deprecated
 
 CXX	=	/opt/Embedix/tools/bin/arm-linux-g++
 MOC	=	/opt/Qtopia/sharp/bin/moc
