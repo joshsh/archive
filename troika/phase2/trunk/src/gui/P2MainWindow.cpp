@@ -40,7 +40,7 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
         setMaximumSize( QSize( 240, 320 ) );
     #endif
 
-    QMenuBar *menubar = this->menuBar( );
+    QMenuBar *menubar = this->menuBar();
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
     QMenu *viewMenu = menubar->addMenu( "&View" );
@@ -49,6 +49,9 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
         SLOT( showIdleFrames() ), 0 );
     frameVisibilityMenu->addAction( "Hidden when idle", this,
         SLOT( hideIdleFrames() ), 0 );
+    QAction *newAction = viewMenu->addAction( "new action" );
+    newAction->setCheckable( true );
+    newAction->setChecked( true );
 
     centralWidget = new P2CentralWidget( this, environment );
     setCentralWidget( centralWidget );
