@@ -53,6 +53,8 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
     centralWidget = new P2CentralWidget( this, environment );
     setCentralWidget( centralWidget );
 
+    setWindowIcon( QIcon( P2GUI_ICON ) );
+
     // QTextView *tv = new QTextView( "Salut!", 0, this, "Log viewer" );
     // setCentralWidget( tv );
 

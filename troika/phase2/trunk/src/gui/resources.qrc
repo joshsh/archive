@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file alias="p2gui.png">images/p2gui.png</file>
+    <file alias="troika.png">../../ipk/troika.png</file>
+</qresource>
+</RCC>
