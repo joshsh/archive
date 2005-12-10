@@ -17,9 +17,11 @@ public:
 
     ToggleWidget();
 
+    bool isBinder() { return false; }
+
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event );
+    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
     void paintEvent( QPaintEvent *event );
 
     //void resizePixmap( QSize newSize );

@@ -9,6 +9,7 @@ qmake $NAME.pro
 make
 */
 
+#include "global.h"
 #include "P2MainWindow.h"
 
 #include <QtGui>

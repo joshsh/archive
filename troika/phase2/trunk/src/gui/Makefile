@@ -46,7 +46,7 @@ $(APP).pro: $(HSRC) $(CPPSRC)
 
 
 x86-clean:
-	- rm -f Makefile_x86 $(APP).pro compile-target.h *.o moc_*
+	- rm -f Makefile_x86 $(APP).pro compile-target.h *.o moc_* qrc_resources.cpp
 
 
 x86-distclean: x86-clean

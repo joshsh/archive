@@ -53,7 +53,10 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
     newAction->setCheckable( true );
     newAction->setChecked( true );
 
-    centralWidget = new P2CentralWidget( this, environment );
+    centralWidget = new P2CentralWidget( environment );
+    centralWidget->setParent( this );
+
+    //centralWidget = new P2CentralWidget( this, environment );
     setCentralWidget( centralWidget );
 
     setWindowIcon( QIcon( P2GUI_ICON ) );

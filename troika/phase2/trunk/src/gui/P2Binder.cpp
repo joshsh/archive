@@ -18,7 +18,7 @@ P2Binder::P2Binder()
     initialize();
 }
 
-
+/*
 P2Binder::P2Binder( QWidget *parent, P2Environment *e )
     : P2BasicWidget( parent, e )
 {
@@ -29,7 +29,7 @@ P2Binder::P2Binder( QWidget *parent, P2Environment *e )
     #endif
 
     initialize();
-}
+}*/
 
 
 void P2Binder::initialize()
@@ -150,40 +150,52 @@ void P2Binder::showInfo()
 }
 
 
-bool P2Binder::handleMousePressEvent( QMouseEvent *event )
+bool P2Binder::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 {
-    // If the P2Binder is already in focus...
-    if ( focusChild == this )
+    if ( event->button() == Qt::RightButton )
     {
-        if ( event->button() == Qt::RightButton )
+        // If the P2Binder is in focus...
+        if ( focusChild == this )
         {
             showInfo();
             return false;
         }
 
-        // "Second tap" event allows access to the wrapped QWidget, if not itself
-        // a P2Binder.
         else
             return true;
     }
 
-    // If the P2Binder is not in focus...
-    else
+    else if ( event->button() == Qt::LeftButton )
     {
-        // "First tap" event selects the P2Binder and deselects all others.
-        if ( event->button() == Qt::LeftButton )
+        // If the P2Binder is already in focus...
+        if ( focusChild == this )
+        {
+            //setFocus( this );
+            //update();
+            return true;
+            //if ( depth <= 1 )
+            //    return true;
+        }
+
+        else if ( childIsBinder )
+            return true;
+
+        else
         {
             setFocus( this );
             update();
             return false;
         }
 
-        //else if ( event->button() == Qt::RightButton )
-        //    return false;
-
-        else
-            return true;
+        // "Second tap" event allows access to the wrapped QWidget, if not itself
+        // a P2Binder.
+        //else
+        //    return true;
     }
+
+    // Don't care about other QMouseEvents.
+    else
+        return true;
 }
 
 

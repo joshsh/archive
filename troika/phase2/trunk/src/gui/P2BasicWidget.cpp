@@ -12,9 +12,10 @@ P2BasicWidget::P2BasicWidget()
     #endif
 
     isDependent = false;
+    environment = 0;
 }
 
-
+/*
 P2BasicWidget::P2BasicWidget( QWidget *parent, P2Environment *e )
     : QWidget( parent, 0 )
 {
@@ -26,6 +27,12 @@ P2BasicWidget::P2BasicWidget( QWidget *parent, P2Environment *e )
 
     isDependent = false;
     environment = e;
+}*/
+
+
+void P2BasicWidget::setEnvironment( P2Environment *e )
+{
+    environment = e;
 }
 
 
@@ -35,24 +42,24 @@ void P2BasicWidget::setPosition( QPoint p )
 }
 
 
-bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event )
+bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBinder )
 {
     if ( isDependent )
     {
         // Note: the position info in the QMouseEvent will not be meaningful
         // to the parent P2Binder.
-        if ( ( ( P2BasicWidget* ) parentWidget() )->mousePressEventWrapper( event ) )
-            handleMousePressEvent( event );
+        if ( ( ( P2BasicWidget* ) parentWidget() )->mousePressEventWrapper( event, isBinder() ) )
+            handleMousePressEvent( event, childIsBinder );
     }
 
     // No parent to tell this widget what to do.
     else
-        handleMousePressEvent( event );
+        handleMousePressEvent( event, childIsBinder );
 }
 
 
 void P2BasicWidget::mousePressEvent( QMouseEvent *event )
 {
-    mousePressEventWrapper( event );
+    mousePressEventWrapper( event, false );
 }
 

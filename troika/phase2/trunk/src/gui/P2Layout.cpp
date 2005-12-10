@@ -37,8 +37,10 @@ P2Layout::~P2Layout()
     P2LayoutItem *item;
 
     // Delete all layout items.
-    while ( ( item = children.takeAt( 0 ) ) )
-        delete item;
+    for ( int i = 0; i < children.size(); i++ )
+        delete children.at( i );
+    //while ( ( item = children.takeAt( 0 ) ) )
+    //    delete item;
 }
 
 
@@ -81,7 +83,7 @@ QLayoutItem *P2Layout::itemAt( int index ) const
 }
 
 
-QLayoutItem *P2Layout::takeAt(int index)
+QLayoutItem *P2Layout::takeAt( int index )
 {
     if ( index >= 0 && index < children.size() )
         return children.takeAt( index );
@@ -229,9 +231,16 @@ int P2Layout::resolveCollisions()
                 if ( abs( offset[i] ) < abs( offset[j] ) )
                     j = i;
 
+            // Decide how to split up the offset.  Larger widgets take a smaller
+            // share, as they are more likely to interfere with other widgets.
+            int volumeA = rectA.width() * rectB.height();
+            int volumeB = rectB.width() * rectB.height();
+            double weight = ( double ) volumeB / ( double ) ( volumeA + volumeB );
+
             // Displace the frames in opposite directions by a total distance
             // equal to the offset.
-            int offsetA = offset[j] / 2;
+            int offsetA = ( int ) ( offset[j] * weight );
+            //int offsetA = offset[j] / 2;
             int offsetB = offsetA - offset[j];
 
             if ( j < 2 )  // North / south.

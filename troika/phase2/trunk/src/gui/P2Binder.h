@@ -18,7 +18,7 @@ public:
     P2Binder();
 
     /** Constructs an empty P2Binder. */
-    P2Binder( QWidget* parent, P2Environment *e );
+    //P2Binder( QWidget* parent, P2Environment *e );
 
     /** Adds a QWidget to this P2Binder's P2Layout, which assumes ownership of
         the QWidget and orders it into its P2LayoutItem tree. */
@@ -35,6 +35,8 @@ public:
     // needs to be recalculated. Reimplement QWidget::event() to handle
     // QEvent::LayoutHint events."
 
+    bool isBinder() { return true; }
+
 protected:
 
     //void mousePressEvent( QMouseEvent *event );
@@ -43,7 +45,7 @@ protected:
     /** A P2Binder may accept drop events... I think. */
     bool acceptDrops () const;
 
-    bool handleMousePressEvent( QMouseEvent *event );
+    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
 
 private:
 

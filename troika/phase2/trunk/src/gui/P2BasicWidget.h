@@ -23,22 +23,25 @@ public:
     /** A convenience method. */
     void setPosition( QPoint p );
 
+    virtual bool isBinder() = 0;
+
+    void setEnvironment( P2Environment *e );
+
+    virtual bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder ) = 0;
+
 protected:
 
     /** Constructs an empty P2BasicWidget. */
     P2BasicWidget();
 
     /** Constructs an empty P2BasicWidget. */
-    P2BasicWidget( QWidget* parent, P2Environment *e );
+    //P2BasicWidget( QWidget* parent, P2Environment *e );
 
     void mousePressEvent( QMouseEvent *event );
 
-    bool mousePressEventWrapper( QMouseEvent *event );
-
-    virtual bool handleMousePressEvent( QMouseEvent *event ) = 0;
+    bool mousePressEventWrapper( QMouseEvent *event, bool childIsBinder );
 
 private:
-
 
 };
 

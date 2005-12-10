@@ -99,7 +99,9 @@ private:
     void refreshContentRectangle();
     void justifyContents();
 
-    /** \return  the number of iterations it took to resolve the collision */
+    /** Resolves collisions by repeatedly shoving interfering widgets apart
+        until they are all at a proper distance from one another.
+        \return  the number of iterations it took to do this */
     int resolveCollisions();
 
 };
