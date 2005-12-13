@@ -17,7 +17,7 @@ public:
 
     bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
 
-    bool isBinder() { return false; }
+    bool isFrame() { return false; }
 
 };
 

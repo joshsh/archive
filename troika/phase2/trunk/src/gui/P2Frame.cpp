@@ -1,4 +1,4 @@
-#include "P2Binder.h"
+#include "P2Frame.h"
 #include "P2Layout.h"
 
 #include <QtGui>
@@ -8,18 +8,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Binder::P2Binder()
+P2Frame::P2Frame()
     : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2Binder[" <<  (int) this << "]::P2Binder()" << endl;
+        cout << "P2Frame[" <<  (int) this << "]::P2Frame()" << endl;
     #endif
 
     initialize();
 }
 
 
-void P2Binder::initialize()
+void P2Frame::initialize()
 {
     // Note: no need to call setLayout after using this constructor.
     new P2Layout( this );
@@ -29,10 +29,10 @@ void P2Binder::initialize()
 }
 
 
-void P2Binder::addChild( P2BasicWidget *widget, QPoint position )
+void P2Frame::addChild( P2BasicWidget *widget, QPoint position )
 {
     #ifdef DEBUG
-        cout << "P2Binder[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
+        cout << "P2Frame[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
     #endif
 
     // "When you use a layout, you don't need to pass a parent when constructing
@@ -52,25 +52,25 @@ void P2Binder::addChild( P2BasicWidget *widget, QPoint position )
 // Size geometry ///////////////////////////////////////////////////////////////
 
 
-QSize P2Binder::sizeHint() const
+QSize P2Frame::sizeHint() const
 {
     return layout()->sizeHint();
 }
 
 
-QSize P2Binder::minimumSizeHint() const
+QSize P2Frame::minimumSizeHint() const
 {
     return layout()->minimumSize();
 }
 
 
-QSizePolicy P2Binder::sizePolicy() const
+QSizePolicy P2Frame::sizePolicy() const
 {
     return QSizePolicy();
 }
 
 
-void P2Binder::resize( QSize newSize )
+void P2Frame::resize( QSize newSize )
 {
     QSize oldSize = geometry().size();
     QPoint center = geometry().center();
@@ -85,11 +85,11 @@ void P2Binder::resize( QSize newSize )
 // Focus ///////////////////////////////////////////////////////////////////////
 
 
-void P2Binder::setFocus( P2Binder *child )
+void P2Frame::setFocus( P2Frame *child )
 {
 //cout << (int) this << " setFocus( " << (int) child << " )" << endl;
 
-    // If P2Binder or one of its children is already in focus...
+    // If P2Frame or one of its children is already in focus...
     if ( focusChild )
     {
         // If this is a CHANGE of focus...
@@ -104,11 +104,11 @@ void P2Binder::setFocus( P2Binder *child )
         focusChild = child;
 
     if ( isDependent )
-        ( ( P2Binder* ) parentWidget() )->setFocus( this );
+        ( ( P2Frame* ) parentWidget() )->setFocus( this );
 }
 
 
-void P2Binder::unfocus()
+void P2Frame::unfocus()
 {
 //cout << (int) this << " unFocus" << endl;
 
@@ -126,9 +126,9 @@ void P2Binder::unfocus()
 // Event handling //////////////////////////////////////////////////////////////
 
 
-void P2Binder::showInfo()
+void P2Frame::showInfo()
 {
-    cout << "P2Binder[" << (int) this << "]::showInfo():" << endl;
+    cout << "P2Frame[" << (int) this << "]::showInfo():" << endl;
     cout << "    Geometry: (" << geometry().x() << ", " << geometry().y()
          << "), " << geometry().width() << " by " << geometry().height()
          << " pixels." << endl;
@@ -136,11 +136,11 @@ void P2Binder::showInfo()
 }
 
 
-bool P2Binder::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool P2Frame::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 {
     if ( event->button() == Qt::RightButton )
     {
-        // If the P2Binder is in focus...
+        // If the P2Frame is in focus...
         if ( focusChild == this )
         {
             showInfo();
@@ -153,7 +153,7 @@ bool P2Binder::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 
     else if ( event->button() == Qt::LeftButton )
     {
-        // If the P2Binder is already in focus...
+        // If the P2Frame is already in focus...
         if ( focusChild == this )
         {
             //setFocus( this );
@@ -174,7 +174,7 @@ bool P2Binder::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
         }
 
         // "Second tap" event allows access to the wrapped QWidget, if not itself
-        // a P2Binder.
+        // a P2Frame.
         //else
         //    return true;
     }
@@ -186,7 +186,7 @@ bool P2Binder::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 
 
 // Note: QPaintEvent object is not used.
-void P2Binder::paintEvent( QPaintEvent *event )
+void P2Frame::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
 
@@ -211,7 +211,7 @@ void P2Binder::paintEvent( QPaintEvent *event )
 }
 
 
-bool P2Binder::acceptDrops () const
+bool P2Frame::acceptDrops () const
 {
     return true;
 }

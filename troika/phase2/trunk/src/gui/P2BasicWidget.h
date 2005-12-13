@@ -23,7 +23,7 @@ public:
     /** A convenience method. */
     void setPosition( QPoint p );
 
-    virtual bool isBinder() = 0;
+    virtual bool isFrame() = 0;
 
     virtual bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder ) = 0;
 

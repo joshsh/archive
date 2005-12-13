@@ -37,7 +37,7 @@ public:
     void setShowGridLines( bool newShowGridLines );
     bool getShowGridLines() const { return showGridLines; }
 
-    bool isBinder() { return false; }
+    bool isFrame() { return false; }
 
 protected:
 

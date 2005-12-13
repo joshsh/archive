@@ -20,7 +20,7 @@ public:
 
     ~P2CheckBox();
 
-    bool isBinder() { return false; }
+    bool isFrame() { return false; }
 
     QSize sizeHint() const;  // Must be const.
 

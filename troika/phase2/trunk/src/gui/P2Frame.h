@@ -1,5 +1,5 @@
-#ifndef P2Binder_h
-#define P2Binder_h
+#ifndef P2Frame_h
+#define P2Frame_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -8,15 +8,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2Binder : public P2BasicWidget
+class P2Frame : public P2BasicWidget
 {
 
 public:
 
-    /** Constructs an empty P2Binder. */
-    P2Binder();
+    /** Constructs an empty P2Frame. */
+    P2Frame();
 
-    /** Adds a QWidget to this P2Binder's P2Layout, which assumes ownership of
+    /** Adds a QWidget to this P2Frame's P2Layout, which assumes ownership of
         the QWidget.
         \param widget  the P2BasicWidget to add
         \param position  the relative position of the top left-hand corner of
@@ -34,14 +34,14 @@ public:
     // needs to be recalculated. Reimplement QWidget::event() to handle
     // QEvent::LayoutHint events."
 
-    bool isBinder() { return true; }
+    bool isFrame() { return true; }
 
 protected:
 
     //void mousePressEvent( QMouseEvent *event );
     void paintEvent( QPaintEvent *event );
 
-    /** A P2Binder may accept drop events... I think. */
+    /** A P2Frame may accept drop events... I think. */
     bool acceptDrops () const;
 
     bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
@@ -56,11 +56,11 @@ private:
     //!
     void resize( QSize newSize );
 
-    P2Binder *focusChild;
-    void setFocus( P2Binder *child );
+    P2Frame *focusChild;
+    void setFocus( P2Frame *child );
     void unfocus();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2Binder_h
+#endif  // P2Frame_h

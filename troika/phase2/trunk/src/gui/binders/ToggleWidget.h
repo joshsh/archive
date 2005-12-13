@@ -17,7 +17,7 @@ public:
 
     ToggleWidget();
 
-    bool isBinder() { return false; }
+    bool isFrame() { return false; }
 
 protected:
 

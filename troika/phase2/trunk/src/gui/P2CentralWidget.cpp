@@ -1,5 +1,5 @@
 #include "P2CentralWidget.h"
-#include "P2Binder.h"
+#include "P2Frame.h"
 
     #include "binders/ToggleWidget.h"
     #include "binders/P2BitmapEditor.h"
@@ -17,16 +17,16 @@ P2CentralWidget::P2CentralWidget( )
     #endif
 
     // Top-level binder.
-    P2Binder *b = new P2Binder();
+    P2Frame *b = new P2Frame();
     b->setParent( this );
     b->setPosition( QPoint( 5, 5 ) );
 
-    P2Binder *togglers = new P2Binder();
+    P2Frame *togglers = new P2Frame();
 
     // ( Really, togglers should be fully constructed before it is added )
     b->addChild( togglers, QPoint( 0, 0 ) );
 
-    P2Binder *b2;
+    P2Frame *b2;
     ToggleWidget *tw;
 
     QPoint p( 0, 0 );
@@ -34,7 +34,7 @@ P2CentralWidget::P2CentralWidget( )
 
     for ( int i = 0; i < 3; i++)
     {
-        b2 = new P2Binder();
+        b2 = new P2Frame();
         tw = new ToggleWidget();
         b2->addChild( tw, QPoint( 0, 0 ) );
 
@@ -44,10 +44,10 @@ P2CentralWidget::P2CentralWidget( )
     }
 
     // Empty binders are tolerated.
-    b2 = new P2Binder();
+    b2 = new P2Frame();
     b->addChild( b2, p );
 
-    b2 = new P2Binder();
+    b2 = new P2Frame();
     P2CheckBox *cbox = new P2CheckBox();
     b2->addChild( cbox, QPoint( 0, 0 ) );
     b->addChild( b2, p );
@@ -56,7 +56,7 @@ P2CentralWidget::P2CentralWidget( )
     editor->setGeometry(
         QRect( editor->geometry().topLeft() + QPoint( 60, 60 ),
         editor->geometry().size() ) );
-    b2 = new P2Binder();
+    b2 = new P2Frame();
     b2->addChild( editor, QPoint( 0, 0 ) );
     b->addChild( b2, p );
 

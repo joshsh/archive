@@ -27,7 +27,7 @@ bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBind
     {
         // Note: the position info in the QMouseEvent will not be meaningful
         // to the parent P2Binder.
-        if ( ( ( P2BasicWidget* ) parentWidget() )->mousePressEventWrapper( event, isBinder() ) )
+        if ( ( ( P2BasicWidget* ) parentWidget() )->mousePressEventWrapper( event, isFrame() ) )
             handleMousePressEvent( event, childIsBinder );
     }
 
