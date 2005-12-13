@@ -1,4 +1,3 @@
-#include "global.h"
 #include "P2CheckBox.h"
 
 
@@ -8,6 +7,10 @@
 P2CheckBox::P2CheckBox()
         : P2BasicWidget()
 {
+    #ifdef DEBUG
+        cout << "P2CheckBox[" <<  (int) this << "]::P2CheckBox()" << endl;
+    #endif
+
     //setFixedSize( 20, 20 );
 
     //checkbox = new QCheckBox( this );
@@ -18,6 +21,10 @@ P2CheckBox::P2CheckBox()
 
 P2CheckBox::~P2CheckBox()
 {
+    #ifdef DEBUG
+        cout << "P2CheckBox[" <<  (int) this << "]::~P2CheckBox()" << endl;
+    #endif
+
     delete checkbox;
 }
 

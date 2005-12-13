@@ -4,7 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
-#include "P2Environment.h"
 #include "P2CentralWidget.h"
 
 #include <QtGui>
@@ -28,7 +27,7 @@ public slots:
 
 private:
 
-    P2Environment *environment;
+    //! Not necessary...
     P2CentralWidget *centralWidget;
 
 };

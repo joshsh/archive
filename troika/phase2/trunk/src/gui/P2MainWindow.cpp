@@ -15,7 +15,20 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
              << fl << " )" << endl;
     #endif
 
-    environment = new P2Environment();
+    setPalette( QPalette(
+        palette().foreground(),  // Foreground color.
+        palette().button(),  // Button color.
+        palette().light(),
+        palette().dark(),
+        palette().mid(),
+        palette().text(),
+        palette().brightText(),
+        palette().base(),
+        QBrush( QColor( BACKGROUND_COLOR ), Qt::SolidPattern ) ) );  // Background color.
+    //setPalette( QPalette( QColor( BACKGROUND_COLOR ) ) );
+
+    //setMinimumSize( 240, 320 );
+    //setMaximumSize( 240, 320 );
 
     //~ Just testing the macros.
     #ifdef ARM_COMPILE
@@ -40,6 +53,7 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
         setMaximumSize( QSize( 240, 320 ) );
     #endif
 
+    // Build the menu bar.
     QMenuBar *menubar = this->menuBar();
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
@@ -53,26 +67,16 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
     newAction->setCheckable( true );
     newAction->setChecked( true );
 
-    centralWidget = new P2CentralWidget( environment );
-    centralWidget->setParent( this );
-
-    //centralWidget = new P2CentralWidget( this, environment );
+    centralWidget = new P2CentralWidget();
     setCentralWidget( centralWidget );
 
+    // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );
-
-    // QTextView *tv = new QTextView( "Salut!", 0, this, "Log viewer" );
-    // setCentralWidget( tv );
-
-    // QMultiLineEdit *mle = new QMultiLineEdit( this );
-    // mle->setText( "Salut!" );
-    // setCentralWidget( mle );
 }
 
 
 P2MainWindow::~P2MainWindow()
 {
-    delete environment;
     delete centralWidget;
 }
 
@@ -85,7 +89,7 @@ void P2MainWindow::quit( )
 
 void P2MainWindow::showIdleFrames( )
 {
-    environment->idleFramesAreVisible = true;
+    environment()->idleFramesAreVisible = true;
 
     QWidget cover( this, 0 );
     cover.setGeometry( contentsRect() );
@@ -96,7 +100,7 @@ void P2MainWindow::showIdleFrames( )
 
 void P2MainWindow::hideIdleFrames( )
 {
-    environment->idleFramesAreVisible = false;
+    environment()->idleFramesAreVisible = false;
 
     QWidget cover( this, 0 );
     cover.setGeometry( contentsRect() );

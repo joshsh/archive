@@ -3,14 +3,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "global.h"
-//#include "P2BasicWidget.h"
+#include "../global.h"
+#include "../P2BasicWidget.h"
 
 #include <QtGui>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2BitmapEditor : public QWidget
+class P2BitmapEditor : public P2BasicWidget
+//class P2BitmapEditor : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY( QColor penColor READ penColor WRITE setPenColor )
@@ -20,8 +21,9 @@ class P2BitmapEditor : public QWidget
 
 public:
 
-    P2BitmapEditor( QWidget *parent = 0,
-        QImage *image0 = 0, int zoom0 = 1, bool showGridLines0 = false );
+    P2BitmapEditor( QImage *image0 = 0, int zoom0 = 1, bool showGridLines0 = false );
+    //P2BitmapEditor( QWidget *parent = 0,
+    //    QImage *image0 = 0, int zoom0 = 1, bool showGridLines0 = false );
     //P2BitmapEditor( QWidget *parent = 0, const char *name = 0 );
     //~P2BitmapEditor();
 
@@ -35,15 +37,18 @@ public:
     void setShowGridLines( bool newShowGridLines );
     bool getShowGridLines() const { return showGridLines; }
 
+    bool isBinder() { return false; }
+
 protected:
 
-    void mousePressEvent( QMouseEvent *event );
+    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    //void mousePressEvent( QMouseEvent *event );
     void mouseMoveEvent( QMouseEvent *event );
     void paintEvent( QPaintEvent *event );
 
 private:
 
-    void drawImagePixel( QPainter *painter, int i, int j );
+    //void drawImagePixel( QPainter *painter, int i, int j );
     void setImagePixel( const QPoint &pos, bool opaque );
 
     QColor curColor;

@@ -3,8 +3,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "global.h"
-#include "P2BasicWidget.h"
+#include "../global.h"
+#include "../P2BasicWidget.h"
 
 #include <QtGui>
 

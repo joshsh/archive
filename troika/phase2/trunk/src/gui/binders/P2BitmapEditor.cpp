@@ -4,12 +4,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-//P2BitmapEditor::P2BitmapEditor( QWidget* parent, const char* name,
-//    QImage *image0 = 0, int zoom0 = 1, bool showGridLines0 = false)
-P2BitmapEditor::P2BitmapEditor( QWidget* parent,
-    QImage *image0, int zoom0, bool showGridLines0 )
-        : QWidget( parent, 0 ) //WStaticContents )
+P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
+        : P2BasicWidget()
+//P2BitmapEditor::P2BitmapEditor( QWidget* parent,
+//    QImage *image0, int zoom0, bool showGridLines0 )
+//        : QWidget( parent, 0 ) //WStaticContents )
 {
+    #ifdef DEBUG
+        cout << "P2BitmapEditor[" <<  (int) this << "]::P2BitmapEditor( QImage *, int, bool )" << endl;
+    #endif
+
     if ( image0 )
         image = *image0;
     else
@@ -92,12 +96,14 @@ void P2BitmapEditor::setShowGridLines( bool newShowGridLines )
 }
 
 
-void P2BitmapEditor::mousePressEvent( QMouseEvent *event )
+bool P2BitmapEditor::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 {
     if ( event->button() == Qt::LeftButton )
         setImagePixel( event->pos(), true );
     else if ( event->button() == Qt::RightButton )
         setImagePixel( event->pos(), false );
+
+    return false;
 }
 
 
@@ -118,7 +124,23 @@ void P2BitmapEditor::paintEvent( QPaintEvent *event )
 
     for ( int i = 0; i < image.width(); ++i )
         for ( int j = 0; j < image.height(); ++j )
-            drawImagePixel( &painter, i, j );
+        {
+            QColor color;
+            QRgb rgb = image.pixel( i, j );
+
+            if ( qAlpha( rgb ) == 0 )
+                color = palette().base().color();
+            else
+                color.setRgb( rgb );
+
+            if ( ( zoom >= 3 ) && ( showGridLines ) )
+                painter.fillRect( zoom * i + 1, zoom * j + 1,
+                          zoom - 1, zoom - 1, color );
+            else
+                painter.fillRect( zoom * i, zoom * j,
+                          zoom, zoom, color );
+        }
+        //    drawImagePixel( &painter, i, j );
 
     // Draw grid lines.
     if ( ( zoom >= 3 ) && ( showGridLines ) )
@@ -133,7 +155,7 @@ void P2BitmapEditor::paintEvent( QPaintEvent *event )
     }
 }
 
-
+/*
 void P2BitmapEditor::drawImagePixel( QPainter *painter, int i, int j )
 {
     QColor color;
@@ -151,7 +173,7 @@ void P2BitmapEditor::drawImagePixel( QPainter *painter, int i, int j )
         painter->fillRect( zoom * i, zoom * j,
                           zoom, zoom, color );
 }
-
+*/
 
 void P2BitmapEditor::setImagePixel( const QPoint &pos, bool opaque )
 {
@@ -165,8 +187,9 @@ void P2BitmapEditor::setImagePixel( const QPoint &pos, bool opaque )
         else
             image.setPixel( i, j, qRgba( 0, 0, 0, 0 ) );
 
-        QPainter painter( this );
-        drawImagePixel( &painter, i, j );
+        //QPainter painter( this );
+        //drawImagePixel( &painter, i, j );
+        update();
     }
 }
 

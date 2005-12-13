@@ -3,6 +3,11 @@
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 
+#include "P2Environment.h"
+
+/** \return  a global P2Environment variable. */
+extern P2Environment *environment();
+
 
 // Debugging ///////////////////////////////////////////////////////////////////
 
@@ -27,4 +32,6 @@
 //#define P2GUI_ICON    ":/p2gui.png"
 #define P2GUI_ICON    ":/troika.png"
 
+
 #endif  // global_h
+

@@ -4,7 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
-#include "P2Environment.h"
 
 #include <QtGui>
 
@@ -15,17 +14,16 @@ class P2BasicWidget : public QWidget
 
 public:
 
+    /** A value which determines whether this is a top-level P2BasicWidget, in
+        terms of input event handling.  If true, it is assumed that the widget's
+        parent is also a P2BasicWidget, and input events are handled solely at
+        the discretion of the parent. */
     bool isDependent;
-
-    /** Shortcut to the global environment. */
-    P2Environment *environment;
 
     /** A convenience method. */
     void setPosition( QPoint p );
 
     virtual bool isBinder() = 0;
-
-    void setEnvironment( P2Environment *e );
 
     virtual bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder ) = 0;
 
@@ -33,9 +31,6 @@ protected:
 
     /** Constructs an empty P2BasicWidget. */
     P2BasicWidget();
-
-    /** Constructs an empty P2BasicWidget. */
-    //P2BasicWidget( QWidget* parent, P2Environment *e );
 
     void mousePressEvent( QMouseEvent *event );
 

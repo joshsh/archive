@@ -59,6 +59,10 @@ static const char * sk_i_xpm[] = {
 ToggleWidget::ToggleWidget()
         : P2BasicWidget()
 {
+    #ifdef DEBUG
+        cout << "ToggleWidget[" <<  (int) this << "]::ToggleWidget()" << endl;
+    #endif
+
     setFixedSize( 10, 11 );
 
     imageList = new QList<QImage>();

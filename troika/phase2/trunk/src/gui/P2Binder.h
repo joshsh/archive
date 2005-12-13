@@ -4,7 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
-#include "P2Environment.h"
 #include "P2BasicWidget.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -17,12 +16,12 @@ public:
     /** Constructs an empty P2Binder. */
     P2Binder();
 
-    /** Constructs an empty P2Binder. */
-    //P2Binder( QWidget* parent, P2Environment *e );
-
     /** Adds a QWidget to this P2Binder's P2Layout, which assumes ownership of
-        the QWidget and orders it into its P2LayoutItem tree. */
-    void addDependentWidget( P2BasicWidget *widget, QPoint position );
+        the QWidget.
+        \param widget  the P2BasicWidget to add
+        \param position  the relative position of the top left-hand corner of
+        the child's geometry(), before collision resolution */
+    void addChild( P2BasicWidget *widget, QPoint position );
 
     QSize sizeHint() const;
     QSize minimumSizeHint() const;

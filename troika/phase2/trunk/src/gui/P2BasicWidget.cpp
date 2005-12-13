@@ -12,27 +12,6 @@ P2BasicWidget::P2BasicWidget()
     #endif
 
     isDependent = false;
-    environment = 0;
-}
-
-/*
-P2BasicWidget::P2BasicWidget( QWidget *parent, P2Environment *e )
-    : QWidget( parent, 0 )
-{
-    #ifdef DEBUG
-        cout << "P2BasicWidget[" << (int) this << "]::P2BasicWidget( "
-             << (int) parent << ", "
-             << (int) e << " )" << endl;
-    #endif
-
-    isDependent = false;
-    environment = e;
-}*/
-
-
-void P2BasicWidget::setEnvironment( P2Environment *e )
-{
-    environment = e;
 }
 
 

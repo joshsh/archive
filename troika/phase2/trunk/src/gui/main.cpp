@@ -11,13 +11,30 @@ make
 
 #include "global.h"
 #include "P2MainWindow.h"
+#include "P2Environment.h"
 
 #include <QtGui>
 
+
 ////////////////////////////////////////////////////////////////////////////////
+
+
+P2Environment *env = 0;
+
+
+P2Environment *environment()
+{
+    return env;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 int main( int argc, char **argv )
 {
+    env = new P2Environment();
+
     QApplication a( argc, argv );
 
     // Single top-level widget.
@@ -30,6 +47,10 @@ int main( int argc, char **argv )
         w.show( );
     #endif
 
-    return a.exec( );
+    int ret = a.exec( );
+
+    delete env;
+
+    return ret;
 }
 

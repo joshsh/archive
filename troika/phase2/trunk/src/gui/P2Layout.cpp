@@ -58,8 +58,20 @@ void P2Layout::addItem( QLayoutItem *item )
 
     size = contentRectangle.size() + QSize( 4, 4 );
 
+    //- If new item collides
+    //      resolveCollisions()
+    //      refreshContentRectangle();
+    //      justifyContents();
+
+    //- If size has changed
+    //      notify parent of the change in size (can this be automatic?)
+
+    //~ Call this function only when necessary.
     resolveCollisions();
-    //justifyContents();
+
+    // Compensate for any overall displacement which may have occurred.
+    refreshContentRectangle();
+    justifyContents();
 }
 
 
@@ -274,10 +286,6 @@ int P2Layout::resolveCollisions()
             item->geometry().topLeft(),
             item->geometry().size() - QSize( 1, 1 ) ) );
     }
-
-    // Compensate for any overall displacement which may have occurred.
-    refreshContentRectangle();
-    justifyContents();
 
     return iterations;
 }

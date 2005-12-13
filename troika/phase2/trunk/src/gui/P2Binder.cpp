@@ -18,19 +18,6 @@ P2Binder::P2Binder()
     initialize();
 }
 
-/*
-P2Binder::P2Binder( QWidget *parent, P2Environment *e )
-    : P2BasicWidget( parent, e )
-{
-    #ifdef DEBUG
-        cout << "P2Binder[" << (int) this << "]::P2Binder( "
-             << (int) parent << ", "
-             << (int) e << " )" << endl;
-    #endif
-
-    initialize();
-}*/
-
 
 void P2Binder::initialize()
 {
@@ -42,10 +29,10 @@ void P2Binder::initialize()
 }
 
 
-void P2Binder::addDependentWidget( P2BasicWidget *widget, QPoint position )
+void P2Binder::addChild( P2BasicWidget *widget, QPoint position )
 {
     #ifdef DEBUG
-        cout << "P2Binder[" << (int) this << "]::addDependentWidget( " << (int) widget << " )" << endl;
+        cout << "P2Binder[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
     #endif
 
     // "When you use a layout, you don't need to pass a parent when constructing
@@ -55,7 +42,6 @@ void P2Binder::addDependentWidget( P2BasicWidget *widget, QPoint position )
     widget->setParent( this );
 
     widget->isDependent = true;
-    widget->environment = environment;
 
     (( P2Layout* ) layout())->addWidget( widget, position );
 
@@ -199,14 +185,14 @@ bool P2Binder::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 }
 
 
-// Note: event object is not used.
+// Note: QPaintEvent object is not used.
 void P2Binder::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
 
     if ( focusChild != this )
     {
-        QColor inactiveColor = environment->idleFramesAreVisible
+        QColor inactiveColor = environment()->idleFramesAreVisible
             ? QColor( 0xBF, 0xBF, 0xFF, 0xFF )  // Light blue.
             : Qt::white;
         painter.setPen( inactiveColor );
