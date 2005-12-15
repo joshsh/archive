@@ -29,6 +29,8 @@ void P2BasicWidget::setPosition( QPoint p )
 
 bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBinder )
 {
+    clearFocus();
+
     if ( isDependent )
     {
         // Note: the position info in the QMouseEvent will not be meaningful
@@ -39,7 +41,10 @@ bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBind
 
     // No parent to tell this widget what to do.
     else
+    {
+        setFocus();
         handleMousePressEvent( event, childIsBinder );
+    }
 }
 
 

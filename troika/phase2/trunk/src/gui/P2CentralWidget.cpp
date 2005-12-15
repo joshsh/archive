@@ -73,7 +73,7 @@ cout << "add editor frame" << endl;
     b2->addChild( text, QPoint( 0, 0 ) );
     b->addChild( b2, p );
 
-//*
+/*
     QTextEdit *text2 = new QTextEdit( "Testing...<BR>Second line...", this );
     text2->setGeometry( text->geometry().translated( QPoint ( 0, 140 ) ) );
     text2->setReadOnly( true );
