@@ -1,11 +1,12 @@
 #ifndef global_h
 #define global_h
 
+
 #include "compile-target.h"  // Macros specific to the target architecture.
 
 #include "P2Environment.h"
 
-/** \return  a global P2Environment variable. */
+/** \return  a global P2Environment variable */
 extern P2Environment *environment();
 
 
@@ -29,8 +30,9 @@ extern P2Environment *environment();
 
 // File paths //////////////////////////////////////////////////////////////////
 
-//#define P2GUI_ICON    ":/p2gui.png"
+/** Identifier for the Phase2 window icon. */
 #define P2GUI_ICON    ":/troika.png"
+//#define P2GUI_ICON    ":/p2gui.png"
 
 
 #endif  // global_h

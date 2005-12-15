@@ -4,7 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
-#include "P2CentralWidget.h"
 
 #include <QtGui>
 
@@ -16,19 +15,13 @@ class P2MainWindow : public QMainWindow
 
 public:
 
-    P2MainWindow( QWidget* parent, Qt::WFlags fl );
-    ~P2MainWindow();
+    P2MainWindow( QWidget* parent );
 
 public slots:
 
     void quit( );
     void showIdleFrames( );
     void hideIdleFrames( );
-
-private:
-
-    //! Not necessary...
-    P2CentralWidget *centralWidget;
 
 };
 

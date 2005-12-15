@@ -13,7 +13,7 @@ class P2CentralWidget : public P2BasicWidget
 
 public:
 
-    P2CentralWidget();
+    P2CentralWidget( int fixedWidth );
 
     bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
 

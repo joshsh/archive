@@ -19,9 +19,11 @@ make
 ////////////////////////////////////////////////////////////////////////////////
 
 
+/** A global P2Environment variable */
 P2Environment *env = 0;
 
 
+/** \return  a global P2Environment variable */
 P2Environment *environment()
 {
     return env;
@@ -31,6 +33,7 @@ P2Environment *environment()
 ////////////////////////////////////////////////////////////////////////////////
 
 
+/** Main function for the Phase2 GUI. */
 int main( int argc, char **argv )
 {
     env = new P2Environment();
@@ -38,7 +41,7 @@ int main( int argc, char **argv )
     QApplication a( argc, argv );
 
     // Single top-level widget.
-    P2MainWindow w( 0, 0 );
+    P2MainWindow w( 0 );
 
     // If the display area is small, maximize the main window.
     #ifdef ARM_COMPILE

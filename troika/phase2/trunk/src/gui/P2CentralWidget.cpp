@@ -4,17 +4,21 @@
     #include "binders/ToggleWidget.h"
     #include "binders/P2BitmapEditor.h"
     #include "binders/P2CheckBox.h"
+    #include "binders/P2Text.h"
+    #include "binders/P2TextEdit.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 
-P2CentralWidget::P2CentralWidget( )
+P2CentralWidget::P2CentralWidget( int fixedWidth )
     : P2BasicWidget()
 {
     #ifdef DEBUG
         cout << "P2CentralWidget[" << (int) this << "]::P2CentralWidget()"
              << endl;
     #endif
+
+    setFixedWidth( fixedWidth );
 
     // Top-level binder.
     P2Frame *b = new P2Frame();
@@ -24,6 +28,7 @@ P2CentralWidget::P2CentralWidget( )
     P2Frame *togglers = new P2Frame();
 
     // ( Really, togglers should be fully constructed before it is added )
+cout << "add togglers" << endl;
     b->addChild( togglers, QPoint( 0, 0 ) );
 
     P2Frame *b2;
@@ -38,6 +43,7 @@ P2CentralWidget::P2CentralWidget( )
         tw = new ToggleWidget();
         b2->addChild( tw, QPoint( 0, 0 ) );
 
+cout << "add child to togglers" << endl;
         togglers->addChild( b2, p );
 
         //p = p + QPoint( 14, 15 );
@@ -58,11 +64,29 @@ P2CentralWidget::P2CentralWidget( )
         editor->geometry().size() ) );
     b2 = new P2Frame();
     b2->addChild( editor, QPoint( 0, 0 ) );
+cout << "add editor frame" << endl;
     b->addChild( b2, p );
 
-    QTextEdit *text = new QTextEdit( "Testing...", this );
-    text->setGeometry( text->geometry().translated( QPoint ( 0, 140 ) ) );
-    text->setReadOnly( true );
+
+    P2TextEdit *text = new P2TextEdit( "Testing...", false );
+    b2 = new P2Frame();
+    b2->addChild( text, QPoint( 0, 0 ) );
+    b->addChild( b2, p );
+
+//*
+    QTextEdit *text2 = new QTextEdit( "Testing...<BR>Second line...", this );
+    text2->setGeometry( text->geometry().translated( QPoint ( 0, 140 ) ) );
+    text2->setReadOnly( true );
+//*/
+
+    P2Text *t = new P2Text( "Bleah." );
+    //t->setParent( this );
+    b2 = new P2Frame();
+    b2->addChild( t, QPoint( 0, 0 ) );
+    b->addChild( b2, QPoint( 0, 0 ) );
+
+    //QPoint center( this->geometry().width() / 2, this->geometry().height() / 2 );
+    //b->setCenter( center );
 
     // QMultiLineEdit *mle = new QMultiLineEdit( this );
     // mle->setText( "Salut!" );

@@ -8,6 +8,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/** \note  P2Frame is unrelated to QFrame. */
 class P2Frame : public P2BasicWidget
 {
 
@@ -16,11 +17,10 @@ public:
     /** Constructs an empty P2Frame. */
     P2Frame();
 
-    /** Adds a QWidget to this P2Frame's P2Layout, which assumes ownership of
-        the QWidget.
-        \param widget  the P2BasicWidget to add
-        \param position  the relative position of the top left-hand corner of
-        the child's geometry(), before collision resolution */
+    /** Adds a widget to this P2Frame's P2Layout, which assumes ownership of it.
+        \param widget  the child P2BasicWidget to add
+        \param position  the intended top left-hand corner of the child's
+        geometry(), before collision resolution */
     void addChild( P2BasicWidget *widget, QPoint position );
 
     QSize sizeHint() const;
@@ -38,7 +38,6 @@ public:
 
 protected:
 
-    //void mousePressEvent( QMouseEvent *event );
     void paintEvent( QPaintEvent *event );
 
     /** A P2Frame may accept drop events... I think. */
@@ -48,13 +47,10 @@ protected:
 
 private:
 
-    /** A common routine for the constructors. */
-    void initialize();
-
     void showInfo();
 
     //!
-    void resize( QSize newSize );
+    void resize( QSize &newSize );
 
     P2Frame *focusChild;
     void setFocus( P2Frame *child );

@@ -1,18 +1,16 @@
 #include "P2MainWindow.h"
-
-// ? WFlags
+#include "P2CentralWidget.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
-    : QMainWindow( parent, fl )
+P2MainWindow::P2MainWindow( QWidget* parent )
+    : QMainWindow( parent )
 {
     #ifdef DEBUG
         cout << "P2MainWindow[" << (int) this << "]::P2MainWindow( "
-             << (int) parent << ", "
-             << fl << " )" << endl;
+             << (int) parent << " )" << endl;
     #endif
 
     setPalette( QPalette(
@@ -55,6 +53,7 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
 
     // Build the menu bar.
     QMenuBar *menubar = this->menuBar();
+//menubar->setFrameStyle( QFrame::NoFrame );
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
     QMenu *viewMenu = menubar->addMenu( "&View" );
@@ -67,17 +66,12 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags fl )
     newAction->setCheckable( true );
     newAction->setChecked( true );
 
-    centralWidget = new P2CentralWidget();
+    P2CentralWidget *centralWidget = new P2CentralWidget( contentsRect().width() );
     setCentralWidget( centralWidget );
+cout << "width = " << centralWidget->width() << endl;
 
     // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );
-}
-
-
-P2MainWindow::~P2MainWindow()
-{
-    delete centralWidget;
 }
 
 
@@ -91,6 +85,7 @@ void P2MainWindow::showIdleFrames( )
 {
     environment()->idleFramesAreVisible = true;
 
+    //~ temporary
     QWidget cover( this, 0 );
     cover.setGeometry( contentsRect() );
     cover.setVisible( true );
@@ -102,6 +97,7 @@ void P2MainWindow::hideIdleFrames( )
 {
     environment()->idleFramesAreVisible = false;
 
+    //~ temporary
     QWidget cover( this, 0 );
     cover.setGeometry( contentsRect() );
     cover.setVisible( true );

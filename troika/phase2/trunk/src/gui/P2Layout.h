@@ -1,5 +1,5 @@
 #ifndef P2Layout_h
-#define P2Layout_h 1
+#define P2Layout_h
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -94,7 +94,7 @@ private:
     // "Calling QLayoutItem::sizeHint(), etc. may be expensive, so you should
     // store the value in a local variable if you need it again later in the
     // same function."
-    QSize size;
+    QSize cachedSizeHint;
 
     void refreshContentRectangle();
     void justifyContents();
@@ -103,6 +103,8 @@ private:
         until they are all at a proper distance from one another.
         \return  the number of iterations it took to do this */
     int resolveCollisions();
+
+    void adjustGeometry();
 
 };
 

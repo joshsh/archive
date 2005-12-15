@@ -3,7 +3,6 @@
 
 #include <QtGui>
 
-    #include <iostream.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -15,16 +14,9 @@ P2Frame::P2Frame()
         cout << "P2Frame[" <<  (int) this << "]::P2Frame()" << endl;
     #endif
 
-    initialize();
-}
-
-
-void P2Frame::initialize()
-{
     // Note: no need to call setLayout after using this constructor.
     new P2Layout( this );
 
-    //parentBinder = 0;
     focusChild = 0;
 }
 
@@ -70,7 +62,7 @@ QSizePolicy P2Frame::sizePolicy() const
 }
 
 
-void P2Frame::resize( QSize newSize )
+void P2Frame::resize( QSize &newSize )
 {
     QSize oldSize = geometry().size();
     QPoint center = geometry().center();
@@ -125,6 +117,7 @@ void P2Frame::unfocus()
 
 // Event handling //////////////////////////////////////////////////////////////
 
+    #include <iostream.h>
 
 void P2Frame::showInfo()
 {

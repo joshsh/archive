@@ -21,6 +21,9 @@ public:
     bool isDependent;
 
     /** A convenience method. */
+    void setCenter( QPoint p );
+
+    /** A convenience method. */
     void setPosition( QPoint p );
 
     virtual bool isFrame() = 0;

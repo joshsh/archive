@@ -13,19 +13,9 @@ P2CheckBox::P2CheckBox()
 
     //setFixedSize( 20, 20 );
 
-    //checkbox = new QCheckBox( this );
+    // Note: a P2CheckBox object owns its CheckBoxWrapper as a child widget.
     checkbox = new CheckBoxWrapper( this );
-    //checkbox->setParent( this );
-}
-
-
-P2CheckBox::~P2CheckBox()
-{
-    #ifdef DEBUG
-        cout << "P2CheckBox[" <<  (int) this << "]::~P2CheckBox()" << endl;
-    #endif
-
-    delete checkbox;
+    //new CheckBoxWrapper( this );
 }
 
 

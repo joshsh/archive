@@ -1,5 +1,5 @@
-#ifndef P2CheckBox_h
-#define P2CheckBox_h
+#ifndef P2TextEdit_h
+#define P2TextEdit_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -10,13 +10,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/** \brief  A wrapper for QCheckbox. */
-class P2CheckBox : public P2BasicWidget
+/** \brief  A wrapper for QTextEdit. */
+class P2TextEdit : public P2BasicWidget
 {
 
 public:
 
-    P2CheckBox();
+    P2TextEdit( char *text, bool readOnly );
 
     bool isFrame() { return false; }
 
@@ -27,27 +27,26 @@ public:
 protected:
 
     bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
-    //void paintEvent( QPaintEvent *event );
 
 private:
 
-    class CheckBoxWrapper : public QCheckBox
+    class TextEditWrapper : public QTextEdit
     {
     public:
-        CheckBoxWrapper( P2CheckBox *parent )
-            : QCheckBox( parent ) { }
+        TextEditWrapper( char *text, P2TextEdit *parent )
+            : QTextEdit( text, parent ) { }
 
         void mousePressEvent( QMouseEvent *event )
         {
-            if ( ( ( P2CheckBox* ) parentWidget() )->handleMousePressEvent( event, false ) )
-                QCheckBox::mousePressEvent( event );
+            if ( ( ( P2TextEdit* ) parentWidget() )->handleMousePressEvent( event, false ) )
+                QTextEdit::mousePressEvent( event );
         }
     };
 
-    CheckBoxWrapper *checkbox;
+    TextEditWrapper *textEdit;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2CheckBox_h
+#endif  // P2TextEdit_h
 

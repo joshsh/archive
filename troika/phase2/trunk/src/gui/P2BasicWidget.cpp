@@ -15,6 +15,12 @@ P2BasicWidget::P2BasicWidget()
 }
 
 
+void P2BasicWidget::setCenter( QPoint p )
+{
+    setGeometry( geometry().translated( p - geometry().center() ) );
+}
+
+
 void P2BasicWidget::setPosition( QPoint p )
 {
     setGeometry( QRect( p, geometry().size() ) );

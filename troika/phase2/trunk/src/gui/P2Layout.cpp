@@ -1,6 +1,5 @@
 #include "P2Layout.h"
-
-#include <iostream.h>
+#include "P2Frame.h"
 
 // Abandon collision resolution after this many iterations.
 #define MAX_COLLISIONS  1000
@@ -17,24 +16,24 @@ P2Layout::P2Layout( QWidget *parent )
              << (int) parent << " )" << endl;
     #endif
 
-    // Width-1px border.
-    setMargin( 1 );
-
     // No resizing for now.
     setSizeConstraint( QLayout::SetFixedSize );
 
-    // Minimum distance of 1px between child widgets.
+    // Minimum distance of 1 pixel between child widgets.
     setSpacing( 1 );
 
+    // Border padding of 2 pixels around content rectangle.
+    setMargin( 2 );
+
     // Initially empty layout has a minimal content rectangle.
-    contentRectangle = QRect( QPoint( 2, 2 ), QSize( 0, 0 ) );
-    size = contentRectangle.size() + QSize( 4, 4 );
+    contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
+    cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
 }
 
 
 P2Layout::~P2Layout()
 {
-    P2LayoutItem *item;
+    //P2LayoutItem *item;
 
     // Delete all layout items.
     for ( int i = 0; i < children.size(); i++ )
@@ -49,6 +48,8 @@ P2Layout::~P2Layout()
 
 void P2Layout::addItem( QLayoutItem *item )
 {
+    QRect beforeGeometry = contentRectangle;
+
     children.append( ( P2LayoutItem* ) item );
 
     if ( children.size() == 1 )
@@ -56,22 +57,22 @@ void P2Layout::addItem( QLayoutItem *item )
     else
         contentRectangle = contentRectangle.unite( item->geometry() );
 
-    size = contentRectangle.size() + QSize( 4, 4 );
+    //cachedSizeHint
+    //    = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
 
-    //- If new item collides
-    //      resolveCollisions()
-    //      refreshContentRectangle();
-    //      justifyContents();
+    adjustGeometry();
 
-    //- If size has changed
-    //      notify parent of the change in size (can this be automatic?)
+    if ( ( contentRectangle != beforeGeometry ) )
+cout << "foooooooooooo" << endl;
 
-    //~ Call this function only when necessary.
-    resolveCollisions();
-
-    // Compensate for any overall displacement which may have occurred.
-    refreshContentRectangle();
-    justifyContents();
+    if ( ( contentRectangle != beforeGeometry )
+      && ( ( P2Frame* ) parentWidget() )->isDependent )
+    {
+cout << "FOOOOOOOOOOOO" << endl;
+        P2Layout *parentLayout
+            = ( P2Layout* ) ( ( P2Frame* ) parentWidget() )->layout();
+        parentLayout->adjustGeometry();
+    }
 }
 
 
@@ -123,19 +124,19 @@ bool P2Layout::hasHeightForWidth() const
 
 QSize P2Layout::minimumSize() const
 {
-    return size;
+    return cachedSizeHint;
 }
 
 
 QSize P2Layout::sizeHint() const
 {
-    return size;
+    return cachedSizeHint;
 }
 
 
 void P2Layout::setGeometry( const QRect &rect )
 {
-    QLayout::setGeometry(rect);
+    QLayout::setGeometry( rect );
 
     //...
 }
@@ -147,7 +148,7 @@ void P2Layout::setGeometry( const QRect &rect )
 void P2Layout::refreshContentRectangle()
 {
     if ( !children.size() )
-        contentRectangle = QRect( QPoint( 2, 2 ), QSize( 0, 0 ) );
+        contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
 
     else
     {
@@ -156,7 +157,7 @@ void P2Layout::refreshContentRectangle()
             contentRectangle = contentRectangle.unite( children.at( i )->geometry() );
     }
 
-    size = contentRectangle.size() + QSize( 4, 4 );
+    cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
 }
 
 
@@ -270,10 +271,16 @@ int P2Layout::resolveCollisions()
             for ( int i = 0; i < children.size(); i++ )
             {
                 QLayoutItem *item = children.at( i );
-                if ( ( item != a ) && item->geometry().intersects( a->geometry() ) )
-                    collisions.append( ( index / size ) * size + i );
-                if ( ( item != b ) && item->geometry().intersects( b->geometry() ) )
-                    collisions.append( ( index % size ) * size + i );
+
+                // Note: a and b don't need to be checked against each other,
+                // and would cause problems if checked against themselves.
+                if ( item != a && item != b )
+                {
+                    if ( item->geometry().intersects( a->geometry() ) )
+                        collisions.append( ( index / size ) * size + i );
+                    if ( item->geometry().intersects( b->geometry() ) )
+                        collisions.append( ( index % size ) * size + i );
+                }
             }
         }
     }
@@ -287,6 +294,33 @@ int P2Layout::resolveCollisions()
             item->geometry().size() - QSize( 1, 1 ) ) );
     }
 
+cout << "collisions found = " << iterations << endl;
     return iterations;
+}
+
+
+//- Should have an argument -- which item to check for consistency.
+void P2Layout::adjustGeometry()
+{
+    //- If new item collides
+    //      resolveCollisions()
+    //      refreshContentRectangle();
+    //      justifyContents();
+
+    //- If size has changed
+    //      notify parent of the change in size (can this be automatic?)
+
+    //~ Call this function only when necessary.
+    resolveCollisions();
+
+    // Compensate for any overall displacement which may have occurred.
+    refreshContentRectangle();
+    justifyContents();
+
+
+    //setGeometry( QRect( contentRectangle.topLeft() - QPoint( 2, 2 ),
+    //                    contentRectangle.size() + QSize( 4, 4 ) ) );
+
+    //parentWidget()->updateGeometry();
 }
 
