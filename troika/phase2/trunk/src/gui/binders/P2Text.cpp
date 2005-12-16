@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Text::P2Text( char *text )
+P2Text::P2Text( char *text, QColor *color )
         : P2BasicWidget()
 {
     #ifdef DEBUG
@@ -13,14 +13,11 @@ P2Text::P2Text( char *text )
 
     this->text = text;
 
-    size = QSize( 40, 20 );
+    this->color = color
+        ? *color
+        : palette().foreground().color();
 
-    QPainter painter( this );
-    //QRect boundingRect = painter.boundingRect( QRect( 0, 0, 0, 0 ), 0, text );
-//cout << "(" << boundingRect.x() << ", " << boundingRect.y() << "), "
-  //   << boundingRect.width() << " x " << boundingRect.height() << endl;
-    //size = boundingRect.size();
-
+    size = fontMetrics().boundingRect( text ).size();
 }
 
 
@@ -38,25 +35,13 @@ bool P2Text::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
 
 void P2Text::paintEvent( QPaintEvent *event )
 {
-cout << "Drawing '" << text << "'." << endl;
     QPainter painter( this );
-    QRect boundingRect = painter.boundingRect( QRect( 0, 0, 0, 0 ), 0, text );
-cout << "(" << boundingRect.x() << ", " << boundingRect.y() << "), "
-     << boundingRect.width() << " x " << boundingRect.height() << endl;
-    //size = boundingRect.size();
-    //setGeometry( boundingRect );
-    //painter.setPen( Qt::black );
-    painter.setPen( palette().foreground().color() );
-    painter.setBrush( Qt::NoBrush );
-    //painter.drawText( QPoint( 0, 0 ), text );
-    //painter.drawText( QPoint( 0, 0 ), QString( text ) );
 
-QRect borderRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
-painter.drawRect( borderRect );
-borderRect = QRect( QPoint( 0, 0 ), geometry().size() - QSize( 10, 10 ) );
-painter.drawRect( borderRect );
+    painter.setPen( color );
+    //painter.setBrush( Qt::NoBrush );
 
-    painter.drawText( 0, 10, QString( text ) );
-
+    // Note: assumes the same font as the one used to find the bounding
+    // rectangle at construction time.
+    painter.drawText( 0, size.height(), QString( text ) );
 }
 

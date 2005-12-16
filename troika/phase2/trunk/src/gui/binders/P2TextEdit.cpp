@@ -14,8 +14,6 @@ P2TextEdit::P2TextEdit( char *text, bool readOnly )
     // Note: a P2TextEdit object owns its TextEditWrapper as a child widget.
     textEdit = new TextEditWrapper( text, this );
     textEdit->setReadOnly( readOnly );
-
-    textEdit->setFrameStyle( QFrame::NoFrame );
 }
 
 

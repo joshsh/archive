@@ -10,13 +10,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/** */
+/** A display widget for short plain-text strings. */
 class P2Text : public P2BasicWidget
 {
 
 public:
 
-    P2Text( char *text );
+    /** \param text  character string content
+        \param color  text color (defaults to the foreground color) */
+    P2Text( char *text, QColor *color );
 
     bool isFrame() { return false; }
 
@@ -31,6 +33,7 @@ private:
 
     char *text;
     QSize size;
+    QColor color;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

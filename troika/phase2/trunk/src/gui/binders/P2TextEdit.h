@@ -34,7 +34,19 @@ private:
     {
     public:
         TextEditWrapper( char *text, P2TextEdit *parent )
-            : QTextEdit( text, parent ) { }
+            : QTextEdit( text, parent )
+        {
+            // Prevent the 1-pixel foreground-color frame.
+            setFrameStyle( QFrame::NoFrame );
+
+            // Prevent border/margin/padding around text and cursor.
+            QTextFrame *frame = document()->rootFrame();
+            QTextFrameFormat format = frame->frameFormat();
+            format.setBorder( 0 );
+            format.setMargin( 0 );
+            format.setPadding( 0 );
+            frame->setFrameFormat( format );
+        }
 
         void mousePressEvent( QMouseEvent *event )
         {

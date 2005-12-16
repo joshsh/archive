@@ -68,7 +68,7 @@ cout << "add editor frame" << endl;
     b->addChild( b2, p );
 
 
-    P2TextEdit *text = new P2TextEdit( "Testing...", false );
+    P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
     b2 = new P2Frame();
     b2->addChild( text, QPoint( 0, 0 ) );
     b->addChild( b2, p );
@@ -79,8 +79,7 @@ cout << "add editor frame" << endl;
     text2->setReadOnly( true );
 //*/
 
-    P2Text *t = new P2Text( "Bleah." );
-    //t->setParent( this );
+    P2Text *t = new P2Text( "Bleah.", 0 );
     b2 = new P2Frame();
     b2->addChild( t, QPoint( 0, 0 ) );
     b->addChild( b2, QPoint( 0, 0 ) );
