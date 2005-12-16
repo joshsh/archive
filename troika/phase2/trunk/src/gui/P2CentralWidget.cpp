@@ -6,6 +6,22 @@
     #include "binders/P2CheckBox.h"
     #include "binders/P2Text.h"
     #include "binders/P2TextEdit.h"
+    #include "binders/P2Image.h"
+
+
+/* XPM */
+static const char * troika_xpm[] = {
+"44 7 2 1",
+"       c None",
+".      c #00000000FFFF",
+"......  .....    ....   ....  ..  ..   .... ",
+"  ..    ..  ..  ..  ..   ..   ..  ..  ..  ..",
+"  ..    ..  ..  ..  ..   ..   .. ..   ..  ..",
+"  ..    .....   ..  ..   ..   ....    ......",
+"  ..    ..  ..  ..  ..   ..   .. ..   ..  ..",
+"  ..    ..  ..  ..  ..   ..   ..  ..  ..  ..",
+"  ..    ..  ..   ....   ....  ..  ..  ..  .."};
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +83,10 @@ cout << "add child to togglers" << endl;
 cout << "add editor frame" << endl;
     b->addChild( b2, p );
 
+    P2Image *image = new P2Image( troika_xpm );
+    b2 = new P2Frame();
+    b2->addChild( image, QPoint( 0, 0 ) );
+    b->addChild( b2, p );
 
     P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
     b2 = new P2Frame();

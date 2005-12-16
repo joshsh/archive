@@ -48,31 +48,17 @@ P2Layout::~P2Layout()
 
 void P2Layout::addItem( QLayoutItem *item )
 {
-    QRect beforeGeometry = contentRectangle;
-
     children.append( ( P2LayoutItem* ) item );
 
-    if ( children.size() == 1 )
-        contentRectangle = item->geometry();
-    else
-        contentRectangle = contentRectangle.unite( item->geometry() );
+    //if ( children.size() == 1 )
+    //    contentRectangle = item->geometry();
+    //else
+    //    contentRectangle = contentRectangle.unite( item->geometry() );
 
     //cachedSizeHint
     //    = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
 
     adjustGeometry();
-
-    if ( ( contentRectangle != beforeGeometry ) )
-cout << "foooooooooooo" << endl;
-
-    if ( ( contentRectangle != beforeGeometry )
-      && ( ( P2Frame* ) parentWidget() )->isDependent )
-    {
-cout << "FOOOOOOOOOOOO" << endl;
-        P2Layout *parentLayout
-            = ( P2Layout* ) ( ( P2Frame* ) parentWidget() )->layout();
-        parentLayout->adjustGeometry();
-    }
 }
 
 
@@ -158,6 +144,7 @@ void P2Layout::refreshContentRectangle()
     }
 
     cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
+cout << "[" << (int) this << "]: cachedSizeHint has changed" << endl;
 }
 
 
@@ -302,6 +289,11 @@ cout << "collisions found = " << iterations << endl;
 //- Should have an argument -- which item to check for consistency.
 void P2Layout::adjustGeometry()
 {
+cout << "[" << (int) this << "]: adjustGeometry()" << endl;
+
+    QRect beforeGeometry = contentRectangle;
+
+
     //- If new item collides
     //      resolveCollisions()
     //      refreshContentRectangle();
@@ -321,6 +313,19 @@ void P2Layout::adjustGeometry()
     //setGeometry( QRect( contentRectangle.topLeft() - QPoint( 2, 2 ),
     //                    contentRectangle.size() + QSize( 4, 4 ) ) );
 
-    //parentWidget()->updateGeometry();
+//( ( P2Frame* ) parentWidget() )->updateGeometry();
+
+
+    if ( ( contentRectangle != beforeGeometry ) )
+cout << "foooooooooooo" << endl;
+
+    if ( ( contentRectangle != beforeGeometry )
+      && ( ( P2Frame* ) parentWidget() )->isDependent )
+    {
+        P2Layout *parentLayout
+            = ( P2Layout* ) parentWidget()->parentWidget()->layout();
+cout << "[" << (int) this << "]: alerting parent [" << (int) parentLayout << "] to change"  << endl;
+        parentLayout->adjustGeometry();
+    }
 }
 
