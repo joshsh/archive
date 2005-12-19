@@ -74,6 +74,7 @@ cout << "add child to togglers" << endl;
     b2->addChild( cbox, QPoint( 0, 0 ) );
     b->addChild( b2, p );
 
+/*
     P2BitmapEditor *editor = new P2BitmapEditor( 0, 8, true );
     editor->setGeometry(
         QRect( editor->geometry().topLeft() + QPoint( 60, 60 ),
@@ -82,6 +83,7 @@ cout << "add child to togglers" << endl;
     b2->addChild( editor, QPoint( 0, 0 ) );
 cout << "add editor frame" << endl;
     b->addChild( b2, p );
+*/
 
     P2Image *image = new P2Image( troika_xpm );
     b2 = new P2Frame();

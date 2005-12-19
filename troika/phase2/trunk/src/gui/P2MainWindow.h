@@ -20,8 +20,7 @@ public:
 public slots:
 
     void quit( );
-    void showIdleFrames( );
-    void hideIdleFrames( );
+    void toggleFrameVisibility();
 
 };
 

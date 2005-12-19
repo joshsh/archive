@@ -57,15 +57,12 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
     QMenu *viewMenu = menubar->addMenu( "&View" );
-    QMenu *frameVisibilityMenu = viewMenu->addMenu( "Frames" );
-    frameVisibilityMenu->addAction( "Always visible", this,
-        SLOT( showIdleFrames() ), 0 );
-    frameVisibilityMenu->addAction( "Hidden when idle", this,
-        SLOT( hideIdleFrames() ), 0 );
-    QAction *newAction = viewMenu->addAction( "new action" );
+    QAction *newAction = viewMenu->addAction( "Show idle frames", this,
+        SLOT( toggleFrameVisibility() ), 0 );
     newAction->setCheckable( true );
-    newAction->setChecked( true );
+    newAction->setChecked( false );
 
+    // Create the central widget.
     P2CentralWidget *centralWidget = new P2CentralWidget( contentsRect().width() );
     setCentralWidget( centralWidget );
 cout << "width = " << centralWidget->width() << endl;
@@ -81,21 +78,9 @@ void P2MainWindow::quit( )
 }
 
 
-void P2MainWindow::showIdleFrames( )
+void P2MainWindow::toggleFrameVisibility()
 {
-    environment()->idleFramesAreVisible = true;
-
-    //~ temporary
-    QWidget cover( this, 0 );
-    cover.setGeometry( contentsRect() );
-    cover.setVisible( true );
-    cover.setVisible( false );
-}
-
-
-void P2MainWindow::hideIdleFrames( )
-{
-    environment()->idleFramesAreVisible = false;
+    environment()->idleFramesAreVisible = !environment()->idleFramesAreVisible;
 
     //~ temporary
     QWidget cover( this, 0 );
@@ -114,3 +99,4 @@ void P2MainWindow::hideIdleFrames( )
     //centralWidget->update( 0, 0, centralWidget->geometry().width(), centralWidget->geometry().height() );
     //centralWidget->update();
 }
+
