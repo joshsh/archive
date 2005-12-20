@@ -21,11 +21,13 @@ public:
         \param widget  the child P2BasicWidget to add
         \param position  the intended top left-hand corner of the child's
         geometry(), before collision resolution */
-    void addChild( P2BasicWidget *widget, QPoint position );
+    void addChild( P2BasicWidget *widget, const QPoint &position );
 
+/*
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSizePolicy sizePolicy() const;
+//*/
 
     //- "Reimplement QWidget::resizeEvent() to calculate the required
     // distribution of sizes and call setGeometry() on each child."
@@ -50,7 +52,7 @@ private:
     void showInfo();
 
     //!
-    void resize( QSize &newSize );
+    //void resize( QSize &newSize );
 
     P2Frame *focusChild;
     void setFocus( P2Frame *child );

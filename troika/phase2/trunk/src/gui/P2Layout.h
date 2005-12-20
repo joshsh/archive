@@ -6,6 +6,8 @@
 #include "global.h"
 #include <QtGui>
 
+#include "P2BasicWidget.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -22,7 +24,7 @@ public:
     void addItem( QLayoutItem *item );
 
     /** Create a QLayoutItem to hold a QWidget (a QWidgetItem) and add it. */
-    void addWidget( QWidget *widget, QPoint position );
+    void addWidget( P2BasicWidget *widget, const QPoint &position );
 
     int count() const;
     QLayoutItem *itemAt( int index ) const;
@@ -31,9 +33,12 @@ public:
     /** \note  minimumSize() and sizeHint() are not distinguished for now. */
     QSize sizeHint() const;  // Must be const.
     QSize minimumSize() const;
+
     void setGeometry( const QRect &rect );
     bool hasHeightForWidth() const;
     Qt::Orientations expandingDirections() const;
+
+    void adjustGeometry();
 
 private:
 
@@ -103,8 +108,6 @@ private:
         until they are all at a proper distance from one another.
         \return  the number of iterations it took to do this */
     int resolveCollisions();
-
-    void adjustGeometry();
 
 };
 

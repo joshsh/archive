@@ -62,7 +62,7 @@ void P2Layout::addItem( QLayoutItem *item )
 }
 
 
-void P2Layout::addWidget( QWidget *widget, QPoint position )
+void P2Layout::addWidget( P2BasicWidget *widget, const QPoint &position )
 {
     QWidgetItem *item = new QWidgetItem( widget );
     item->setGeometry( QRect( position, item->sizeHint() ) );
@@ -144,6 +144,9 @@ void P2Layout::refreshContentRectangle()
     }
 
     cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
+
+( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
+
 cout << "[" << (int) this << "]: cachedSizeHint has changed" << endl;
 }
 
@@ -289,9 +292,9 @@ cout << "collisions found = " << iterations << endl;
 //- Should have an argument -- which item to check for consistency.
 void P2Layout::adjustGeometry()
 {
-cout << "[" << (int) this << "]: adjustGeometry()" << endl;
+cout << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 
-    QRect beforeGeometry = contentRectangle;
+    //QRect beforeGeometry = contentRectangle;
 
 
     //- If new item collides
@@ -309,15 +312,11 @@ cout << "[" << (int) this << "]: adjustGeometry()" << endl;
     refreshContentRectangle();
     justifyContents();
 
-
     //setGeometry( QRect( contentRectangle.topLeft() - QPoint( 2, 2 ),
     //                    contentRectangle.size() + QSize( 4, 4 ) ) );
 
 //( ( P2Frame* ) parentWidget() )->updateGeometry();
-
-
-    if ( ( contentRectangle != beforeGeometry ) )
-cout << "foooooooooooo" << endl;
+/*
 
     if ( ( contentRectangle != beforeGeometry )
       && ( ( P2Frame* ) parentWidget() )->isDependent )
@@ -327,5 +326,7 @@ cout << "foooooooooooo" << endl;
 cout << "[" << (int) this << "]: alerting parent [" << (int) parentLayout << "] to change"  << endl;
         parentLayout->adjustGeometry();
     }
+*/
+cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 }
 

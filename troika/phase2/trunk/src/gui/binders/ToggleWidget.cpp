@@ -3,6 +3,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+
 /* XPM */
 static const char * sk_s_xpm[] = {
 "10 11 2 1",
@@ -55,6 +56,9 @@ static const char * sk_i_xpm[] = {
 ".........."};
 
 
+////////////////////////////////////////////////////////////////////////////////
+
+
 ToggleWidget::ToggleWidget()
         : P2BasicWidget()
 {
@@ -73,7 +77,6 @@ ToggleWidget::ToggleWidget()
 }
 
 
-
 // Note: the ButtonState is not used for now, as
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
 bool ToggleWidget::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
@@ -89,7 +92,6 @@ bool ToggleWidget::handleMousePressEvent( QMouseEvent *event, bool childIsBinder
 }
 
 
-
 void ToggleWidget::paintEvent( QPaintEvent *event )
 {
     //erase( );
@@ -102,5 +104,4 @@ void ToggleWidget::paintEvent( QPaintEvent *event )
         -1, -1,  // source maxima
         0 );  // conversionFlags
 }
-
 

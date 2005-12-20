@@ -27,6 +27,9 @@ extern P2Environment *environment();
     own. */
 #define BACKGROUND_COLOR    0xFF, 0xFF, 0xFF
 
+#define SL5600__DISPLAY_WIDTH  240
+#define SL5600__DISPLAY_HEIGHT  320
+
 
 // File paths //////////////////////////////////////////////////////////////////
 

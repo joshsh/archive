@@ -21,10 +21,12 @@ public:
     bool isDependent;
 
     /** A convenience method. */
-    void setCenter( QPoint p );
+    void setCenter( const QPoint &p );
 
     /** A convenience method. */
-    void setPosition( QPoint p );
+    void setPosition( const QPoint &p );
+
+    void setSize( const QSize &s );
 
     virtual bool isFrame() = 0;
 

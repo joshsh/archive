@@ -20,6 +20,8 @@ public:
 public slots:
 
     void quit( );
+
+    /** Turns inactive frame visibility on or off. */
     void toggleFrameVisibility();
 
 };

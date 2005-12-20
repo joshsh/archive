@@ -46,9 +46,9 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     // Only limit the size of the main window if it's to be displayed on a
     // large screen (otherwise allow the application to maximize it).
     #ifndef ARM_COMPILE
-        setGeometry( QRect( 500, 500, 240, 320 ) );
-        setMinimumSize( QSize( 240, 320 ) );
-        setMaximumSize( QSize( 240, 320 ) );
+        setGeometry( QRect( 500, 500, SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+        setMinimumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+        setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
     // Build the menu bar.
@@ -57,7 +57,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
     QMenu *viewMenu = menubar->addMenu( "&View" );
-    QAction *newAction = viewMenu->addAction( "Show idle frames", this,
+    QAction *newAction = viewMenu->addAction( "Show idle &frames", this,
         SLOT( toggleFrameVisibility() ), 0 );
     newAction->setCheckable( true );
     newAction->setChecked( false );
@@ -65,6 +65,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     // Create the central widget.
     P2CentralWidget *centralWidget = new P2CentralWidget( contentsRect().width() );
     setCentralWidget( centralWidget );
+
 cout << "width = " << centralWidget->width() << endl;
 
     // Define the window icon.

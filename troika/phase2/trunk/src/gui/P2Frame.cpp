@@ -21,7 +21,7 @@ P2Frame::P2Frame()
 }
 
 
-void P2Frame::addChild( P2BasicWidget *widget, QPoint position )
+void P2Frame::addChild( P2BasicWidget *widget, const QPoint &position )
 {
     #ifdef DEBUG
         cout << "P2Frame[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
@@ -43,12 +43,11 @@ void P2Frame::addChild( P2BasicWidget *widget, QPoint position )
 
 // Size geometry ///////////////////////////////////////////////////////////////
 
-
+/*
 QSize P2Frame::sizeHint() const
 {
     return layout()->sizeHint();
 }
-
 
 QSize P2Frame::minimumSizeHint() const
 {
@@ -58,10 +57,12 @@ QSize P2Frame::minimumSizeHint() const
 
 QSizePolicy P2Frame::sizePolicy() const
 {
-    return QSizePolicy();
+    return QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 }
+//*/
 
 
+/*
 void P2Frame::resize( QSize &newSize )
 {
     QSize oldSize = geometry().size();
@@ -71,7 +72,7 @@ void P2Frame::resize( QSize &newSize )
         center.y() - newSize.height() / 2,
         newSize.width(),
         newSize.height() );
-}
+}*/
 
 
 // Focus ///////////////////////////////////////////////////////////////////////
