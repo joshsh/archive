@@ -25,8 +25,8 @@ QSize P2TextEdit::sizeHint() const
 }
 
 
-bool P2TextEdit::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool P2TextEdit::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 {
-    return ( ( P2BasicWidget* ) parentWidget() )->handleMousePressEvent( event, childIsBinder );
+    return ( ( P2BasicWidget* ) parentWidget() )->handleMousePressEvent( event, origin );
 }
 

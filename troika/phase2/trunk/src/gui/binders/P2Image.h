@@ -22,7 +22,9 @@ public:
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+
     void paintEvent( QPaintEvent *event );
 
 private:

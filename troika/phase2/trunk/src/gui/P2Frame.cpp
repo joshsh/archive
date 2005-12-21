@@ -37,42 +37,8 @@ void P2Frame::addChild( P2BasicWidget *widget, const QPoint &position )
 
     (( P2Layout* ) layout())->addWidget( widget, position );
 
-    updateGeometry();  //~
+    //updateGeometry();  //~
 }
-
-
-// Size geometry ///////////////////////////////////////////////////////////////
-
-/*
-QSize P2Frame::sizeHint() const
-{
-    return layout()->sizeHint();
-}
-
-QSize P2Frame::minimumSizeHint() const
-{
-    return layout()->minimumSize();
-}
-
-
-QSizePolicy P2Frame::sizePolicy() const
-{
-    return QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-}
-//*/
-
-
-/*
-void P2Frame::resize( QSize &newSize )
-{
-    QSize oldSize = geometry().size();
-    QPoint center = geometry().center();
-    setGeometry(
-        center.x() - newSize.width() / 2,
-        center.y() - newSize.height() / 2,
-        newSize.width(),
-        newSize.height() );
-}*/
 
 
 // Focus ///////////////////////////////////////////////////////////////////////
@@ -130,52 +96,32 @@ void P2Frame::showInfo()
 }
 
 
-bool P2Frame::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool P2Frame::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 {
-    if ( event->button() == Qt::RightButton )
-    {
-        // If the P2Frame is in focus...
-        if ( focusChild == this )
-        {
-            showInfo();
-            return false;
-        }
+    if ( ( origin == CHILD_FRAME )
+      || ( origin == CHILD_NOFRAME && focusChild == this ) )
 
-        else
-            return true;
-    }
+        return true;
 
     else if ( event->button() == Qt::LeftButton )
     {
-        // If the P2Frame is already in focus...
-        if ( focusChild == this )
-        {
-            //setFocus( this );
-            //update();
-            return true;
-            //if ( depth <= 1 )
-            //    return true;
-        }
-
-        else if ( childIsBinder )
-            return true;
-
-        else
-        {
-            setFocus( this );
-            update();
-            return false;
-        }
-
-        // "Second tap" event allows access to the wrapped QWidget, if not itself
-        // a P2Frame.
-        //else
-        //    return true;
+        setFocus( this );
+        update();
+        return false;
     }
 
-    // Don't care about other QMouseEvents.
     else
-        return true;
+        return false;
+}
+
+
+// Caution: this system allows non-frame children to catch move events
+// immediately after the mouse click which initiated them.  If it were the
+// mouseReleaseEvent which causes a focus, then this would not be an issue.
+bool P2Frame::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin )
+{
+    return ( ( origin == CHILD_FRAME )
+          || ( origin == CHILD_NOFRAME && focusChild == this ) );
 }
 
 

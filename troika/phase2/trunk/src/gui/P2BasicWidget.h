@@ -30,7 +30,10 @@ public:
 
     virtual bool isFrame() = 0;
 
-    virtual bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder ) = 0;
+    enum EventOrigin { SELF, CHILD_FRAME, CHILD_NOFRAME };
+
+    virtual bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) = 0;
+    virtual bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) = 0;
 
 protected:
 
@@ -38,11 +41,20 @@ protected:
     P2BasicWidget();
 
     void mousePressEvent( QMouseEvent *event );
-
-    bool mousePressEventWrapper( QMouseEvent *event, bool childIsBinder );
+    void mouseMoveEvent( QMouseEvent *event );
 
 private:
 
+    EventOrigin originIfFrame()
+    {
+        if ( isFrame() )
+            return CHILD_FRAME;
+        else
+            return CHILD_NOFRAME;
+    }
+
+    bool mousePressEventWrapper( QMouseEvent *event, EventOrigin origin );
+    bool mouseMoveEventWrapper( QMouseEvent *event, EventOrigin origin );
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -25,9 +25,9 @@ QSize P2CheckBox::sizeHint() const
 }
 
 
-bool P2CheckBox::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool P2CheckBox::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 {
     //checkbox->mousePressEvent( event );
-    return ( ( P2BasicWidget* ) parentWidget() )->handleMousePressEvent( event, childIsBinder );
+    return ( ( P2BasicWidget* ) parentWidget() )->handleMousePressEvent( event, origin );
 }
 

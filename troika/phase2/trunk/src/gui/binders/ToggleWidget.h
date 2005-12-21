@@ -21,7 +21,9 @@ public:
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+
     void paintEvent( QPaintEvent *event );
 
     //void resizePixmap( QSize newSize );

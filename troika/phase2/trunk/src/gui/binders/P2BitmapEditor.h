@@ -41,20 +41,24 @@ public:
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
-    //void mousePressEvent( QMouseEvent *event );
-    void mouseMoveEvent( QMouseEvent *event );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin );
+
     void paintEvent( QPaintEvent *event );
 
 private:
 
     //void drawImagePixel( QPainter *painter, int i, int j );
-    void setImagePixel( const QPoint &pos, bool opaque );
+    void setImagePixel( const QPoint &pos );
 
     QColor curColor;
     QImage image;
     int zoom;
     bool showGridLines;
+
+    enum DrawMode { DRAW, ERASE, NODRAW };
+
+    DrawMode drawMode;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,30 +26,86 @@ void P2BasicWidget::setCenter( const QPoint &p )
 
 void P2BasicWidget::setPosition( const QPoint &p )
 {
-    setGeometry( QRect( p, geometry().size() ) );
+    setGeometry( geometry().translated( p - geometry().topLeft() ) );
 }
 
 
 void P2BasicWidget::setSize( const QSize &s )
 {
-cout << "P2BasicWidget[" << (int) this << "]::setSize( QSize( "
-     << s.width() << ", " << s.height() << ") )" << endl;
-
+    // Only if the widget needs to resize...
     if ( s != size() )
     {
-        // Reset sizeHint.
-        //setMinimumSize( s );
-
         resize( s );
 
         if ( isDependent )
             ( ( P2Layout* ) parentWidget()->layout() )->adjustGeometry();
-        //if ( isDependent )
-        //    parentWidget()->layout()->parentWidget()->updateGeometry();
     }
 }
 
 
+bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, EventOrigin origin )
+{
+    clearFocus();
+
+    if ( isDependent )
+    {
+        // Note: the position info in the QMouseEvent will not be meaningful
+        // to the parent P2Binder.
+        if ( ( ( P2BasicWidget* ) parentWidget() )->mousePressEventWrapper( event, originIfFrame() ) )
+        {
+            #ifndef DISABLE_FOCUS
+                setFocus();
+            #endif
+            return handleMousePressEvent( event, origin );
+        }
+
+        else
+            return false;
+    }
+
+    // No parent to tell this widget what to do.
+    else
+    {
+        #ifndef DISABLE_FOCUS
+            setFocus();
+        #endif
+        return handleMousePressEvent( event, origin );
+    }
+}
+
+
+bool P2BasicWidget::mouseMoveEventWrapper( QMouseEvent *event, EventOrigin origin )
+{
+    clearFocus();
+
+    if ( isDependent )
+    {
+        // Note: the position info in the QMouseEvent will not be meaningful
+        // to the parent P2Binder.
+        if ( ( ( P2BasicWidget* ) parentWidget() )->mouseMoveEventWrapper( event, originIfFrame() ) )
+        {
+            #ifndef DISABLE_FOCUS
+                setFocus();
+            #endif
+            return handleMouseMoveEvent( event, origin );
+        }
+
+        else
+            return false;
+    }
+
+    // No parent to tell this widget what to do.
+    else
+    {
+        #ifndef DISABLE_FOCUS
+            setFocus();
+        #endif
+        return handleMouseMoveEvent( event, origin );
+    }
+}
+
+
+/*
 bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBinder )
 {
     clearFocus();
@@ -59,7 +115,13 @@ bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBind
         // Note: the position info in the QMouseEvent will not be meaningful
         // to the parent P2Binder.
         if ( ( ( P2BasicWidget* ) parentWidget() )->mousePressEventWrapper( event, isFrame() ) )
+        {
+            setFocus();
             return handleMousePressEvent( event, childIsBinder );
+        }
+
+        else
+            return false;
     }
 
     // No parent to tell this widget what to do.
@@ -68,13 +130,17 @@ bool P2BasicWidget::mousePressEventWrapper( QMouseEvent *event, bool childIsBind
         setFocus();
         return handleMousePressEvent( event, childIsBinder );
     }
-
-    return false;
 }
-
+//*/
 
 void P2BasicWidget::mousePressEvent( QMouseEvent *event )
 {
-    mousePressEventWrapper( event, false );
+    mousePressEventWrapper( event, SELF );
+}
+
+
+void P2BasicWidget::mouseMoveEvent( QMouseEvent *event )
+{
+    mouseMoveEventWrapper( event, SELF );
 }
 

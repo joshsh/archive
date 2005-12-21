@@ -26,7 +26,8 @@ public:
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
 private:
 
@@ -50,7 +51,7 @@ private:
 
         void mousePressEvent( QMouseEvent *event )
         {
-            if ( ( ( P2TextEdit* ) parentWidget() )->handleMousePressEvent( event, false ) )
+            if ( ( ( P2TextEdit* ) parentWidget() )->handleMousePressEvent( event, CHILD_NOFRAME ) )
                 QTextEdit::mousePressEvent( event );
         }
     };

@@ -16,8 +16,9 @@ P2Layout::P2Layout( QWidget *parent )
              << (int) parent << " )" << endl;
     #endif
 
-    // No resizing for now.
-    setSizeConstraint( QLayout::SetFixedSize );
+    // Frames may be (programmatically) resized, but may not be smaller than
+    // minimumSize.
+    setSizeConstraint( QLayout::SetDefaultConstraint );
 
     // Minimum distance of 1 pixel between child widgets.
     setSpacing( 1 );
@@ -25,9 +26,8 @@ P2Layout::P2Layout( QWidget *parent )
     // Border padding of 2 pixels around content rectangle.
     setMargin( 2 );
 
-    // Initially empty layout has a minimal content rectangle.
-    contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
-    cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
+    // The initially empty layout has a minimal content rectangle.
+    refreshContentRectangle();
 }
 
 
@@ -133,6 +133,8 @@ void P2Layout::setGeometry( const QRect &rect )
 
 void P2Layout::refreshContentRectangle()
 {
+cout << "Befo': (" << cachedSizeHint.width() << ", " << cachedSizeHint.height() << ")" << endl;
+
     if ( !children.size() )
         contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
 
@@ -144,10 +146,11 @@ void P2Layout::refreshContentRectangle()
     }
 
     cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
+cout << "Aftuh: (" << cachedSizeHint.width() << ", " << cachedSizeHint.height() << ")" << endl;
 
-( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
-
-cout << "[" << (int) this << "]: cachedSizeHint has changed" << endl;
+    ( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
+//( ( P2Frame* ) parentWidget() )->updateGeometry();
+//( ( P2Frame* ) parentWidget() )->update();
 }
 
 
@@ -312,21 +315,6 @@ cout << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
     refreshContentRectangle();
     justifyContents();
 
-    //setGeometry( QRect( contentRectangle.topLeft() - QPoint( 2, 2 ),
-    //                    contentRectangle.size() + QSize( 4, 4 ) ) );
-
-//( ( P2Frame* ) parentWidget() )->updateGeometry();
-/*
-
-    if ( ( contentRectangle != beforeGeometry )
-      && ( ( P2Frame* ) parentWidget() )->isDependent )
-    {
-        P2Layout *parentLayout
-            = ( P2Layout* ) parentWidget()->parentWidget()->layout();
-cout << "[" << (int) this << "]: alerting parent [" << (int) parentLayout << "] to change"  << endl;
-        parentLayout->adjustGeometry();
-    }
-*/
 cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 }
 

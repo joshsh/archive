@@ -25,7 +25,7 @@ cout << "ResizeWidget[" <<  (int) this << "]::sizeHint(): QSize( "
 }
 
 
-bool ResizeWidget::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool ResizeWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 {
     if ( event->button() == Qt::LeftButton )
     {
@@ -44,7 +44,7 @@ void ResizeWidget::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
     painter.setPen( QColor( 0x00, 0x00, 0x00, 0xFF ) );
-    painter.setBrush( QBrush( QColor( 0xBF, 0xBF, 0xFF, 0xFF ) ) );
+    painter.setBrush( QBrush( QColor( 0xBF, 0xBF, 0xBF, 0xFF ) ) );
     QRect borderRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
     painter.drawRect( borderRect );
 }

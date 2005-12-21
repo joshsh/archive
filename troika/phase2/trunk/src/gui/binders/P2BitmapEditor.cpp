@@ -6,9 +6,6 @@
 
 P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
         : P2BasicWidget()
-//P2BitmapEditor::P2BitmapEditor( QWidget* parent,
-//    QImage *image0, int zoom0, bool showGridLines0 )
-//        : QWidget( parent, 0 ) //WStaticContents )
 {
     #ifdef DEBUG
         cout << "P2BitmapEditor[" <<  (int) this << "]::P2BitmapEditor( QImage *, int, bool )" << endl;
@@ -23,8 +20,7 @@ P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
         //image.create( 11, 11, 32 );
 
         // R, G, B and alpha color components.
-        image.fill( QColor( 0xFF, 0xFF, 0xFF, 0xFF ).rgb() );//.rgb() );
-        //image.fill( qRgba( 0, 0, 0, 0 ) );
+        image.fill( QColor( 0xFF, 0xFF, 0xFF, 0xFF ).rgb() );
 
         // Enable transparency.
         //image.setAlphaBuffer( true );
@@ -38,6 +34,8 @@ P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
     zoom = 5;
 
     setFixedSize( sizeHint() );
+
+    drawMode = DRAW;
 }
 
 
@@ -96,28 +94,31 @@ void P2BitmapEditor::setShowGridLines( bool newShowGridLines )
 }
 
 
-bool P2BitmapEditor::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool P2BitmapEditor::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 {
     if ( event->button() == Qt::LeftButton )
-        setImagePixel( event->pos(), true );
+        drawMode = DRAW;
     else if ( event->button() == Qt::RightButton )
-        setImagePixel( event->pos(), false );
+        drawMode = ERASE;
+    else
+        drawMode = NODRAW;
+
+    setImagePixel( event->pos() );
 
     return false;
 }
 
 
-void P2BitmapEditor::mouseMoveEvent( QMouseEvent *event )
+bool P2BitmapEditor::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin )
 {
-    if ( event->button() == Qt::LeftButton )
-    //if ( event->state() & Qt::LeftButton )
-        setImagePixel( event->pos(), true );
-    else if ( event->button() == Qt::RightButton )
-    //else if ( event->state() & Qt::RightButton )
-        setImagePixel( event->pos(), false );
+    setImagePixel( event->pos() );
+
+    return false;
 }
 
 
+//- Consider double-buffering so as to avoid having to re-draw the entire
+//  grid each time.
 void P2BitmapEditor::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
@@ -175,21 +176,24 @@ void P2BitmapEditor::drawImagePixel( QPainter *painter, int i, int j )
 }
 */
 
-void P2BitmapEditor::setImagePixel( const QPoint &pos, bool opaque )
+void P2BitmapEditor::setImagePixel( const QPoint &pos )
 {
-    int i = pos.x() / zoom;
-    int j = pos.y() / zoom;
-
-    if ( image.rect().contains( i, j ) )
+    if ( drawMode != NODRAW )
     {
-        if ( opaque )
-            image.setPixel( i, j, penColor().rgb() );
-        else
-            image.setPixel( i, j, qRgba( 0, 0, 0, 0 ) );
+        int i = pos.x() / zoom;
+        int j = pos.y() / zoom;
 
-        //QPainter painter( this );
-        //drawImagePixel( &painter, i, j );
-        update();
+        if ( image.rect().contains( i, j ) )
+        {
+            if ( drawMode == DRAW )
+                image.setPixel( i, j, penColor().rgb() );
+            else
+                image.setPixel( i, j, qRgba( 0, 0, 0, 0 ) );
+
+            //QPainter painter( this );
+            //drawImagePixel( &painter, i, j );
+            update();
+        }
     }
 }
 

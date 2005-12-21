@@ -15,7 +15,8 @@ public:
 
     P2CentralWidget( int fixedWidth );
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
     bool isFrame() { return false; }
 

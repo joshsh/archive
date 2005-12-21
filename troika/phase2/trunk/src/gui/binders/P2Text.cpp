@@ -27,12 +27,6 @@ QSize P2Text::sizeHint() const
 }
 
 
-bool P2Text::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
-{
-    return false;
-}
-
-
 void P2Text::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );

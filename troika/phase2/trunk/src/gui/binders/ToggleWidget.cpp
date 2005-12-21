@@ -79,7 +79,7 @@ ToggleWidget::ToggleWidget()
 
 // Note: the ButtonState is not used for now, as
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
-bool ToggleWidget::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
+bool ToggleWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 {
     if ( event->button() == Qt::LeftButton )
     {

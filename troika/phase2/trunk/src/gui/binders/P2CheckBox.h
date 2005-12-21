@@ -26,7 +26,9 @@ public:
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+
     //void paintEvent( QPaintEvent *event );
 
 private:
@@ -39,7 +41,7 @@ private:
 
         void mousePressEvent( QMouseEvent *event )
         {
-            if ( ( ( P2CheckBox* ) parentWidget() )->handleMousePressEvent( event, false ) )
+            if ( ( ( P2CheckBox* ) parentWidget() )->handleMousePressEvent( event, CHILD_NOFRAME ) )
                 QCheckBox::mousePressEvent( event );
         }
     };

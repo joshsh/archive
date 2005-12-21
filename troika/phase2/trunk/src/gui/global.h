@@ -20,6 +20,8 @@ extern P2Environment *environment();
 
 #endif   // DEBUG
 
+#define DISABLE_FOCUS
+
 
 // Display settings ////////////////////////////////////////////////////////////
 

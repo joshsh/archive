@@ -23,12 +23,6 @@ public:
         geometry(), before collision resolution */
     void addChild( P2BasicWidget *widget, const QPoint &position );
 
-/*
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
-    QSizePolicy sizePolicy() const;
-//*/
-
     //- "Reimplement QWidget::resizeEvent() to calculate the required
     // distribution of sizes and call setGeometry() on each child."
 
@@ -45,7 +39,8 @@ protected:
     /** A P2Frame may accept drop events... I think. */
     bool acceptDrops () const;
 
-    bool handleMousePressEvent( QMouseEvent *event, bool childIsBinder );
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
+    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin );
 
 private:
 

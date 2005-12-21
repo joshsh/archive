@@ -17,13 +17,6 @@ P2Image::P2Image( const char * const xpm[] )
 }
 
 
-bool P2Image::handleMousePressEvent( QMouseEvent *event, bool childIsBinder )
-{
-    // Objects of this class are not meant to have dependent P2BasicWidgets.
-    return false;
-}
-
-
 void P2Image::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
