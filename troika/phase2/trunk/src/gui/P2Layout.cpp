@@ -174,12 +174,12 @@ void P2Layout::justifyContents()
     }
 }
 
-
-int abs( int x )
+/*
+static int abs( int x )
 {
     return x < 0 ? -x : x;
 }
-
+*/
 
 int P2Layout::resolveCollisions()
 {
@@ -316,5 +316,90 @@ cout << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
     justifyContents();
 
 cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+P2LayoutEdge::P2LayoutEdge( P2LayoutItem *src, P2LayoutItem *dest )
+{
+    int src_pos[2] = { src->geometry().x(),
+                       src->geometry().x() + src->geometry().width() };
+    int dest_pos[2] = { dest->geometry().x(),
+                        dest->geometry().x() + dest->geometry().width() };
+
+    x_combo = 0;
+    x_offset = abs( dest_pos[0] - src_pos[0] );
+
+    for ( int i = 1; i < 4; i++ )
+    {
+        int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
+
+        if ( offset < x_offset )
+        {
+            x_combo = i;
+            x_offset = offset;
+        }
+    }
+
+    x_offset = dest_pos[ x_combo % 2 ] - src_pos[ x_combo / 2 ];
+
+    src_pos[0] = src->geometry().y();
+    src_pos[1] = src->geometry().y() + src->geometry().height();
+    dest_pos[0] = dest->geometry().y();
+    dest_pos[1] = dest->geometry().y() + dest->geometry().height();
+
+    y_combo = 0;
+    y_offset = abs( dest_pos[0] - src_pos[0] );
+
+    for ( int i = 1; i < 4; i++ )
+    {
+        int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
+
+        if ( offset < y_offset )
+        {
+            y_combo = i;
+            y_offset = offset;
+        }
+    }
+
+    y_offset = dest_pos[ y_combo % 2 ] - src_pos[ y_combo / 2 ];
+}
+
+
+int P2LayoutEdge::compareTo( const P2LayoutEdge &otherEdge )
+{
+    int minOffset = x_offset < y_offset
+        ? x_offset : y_offset;
+    int otherMinOffset = otherEdge.x_offset < otherEdge.y_offset
+        ? otherEdge.x_offset : otherEdge.y_offset;
+
+    if ( minOffset == otherMinOffset )
+        return 0;
+
+    else if ( minOffset < otherMinOffset )
+        return -1;
+
+    else
+        return 1;
+}
+
+
+void P2LayoutEdge::setDestPosition( P2LayoutItem *src, P2LayoutItem *dest )
+{
+    int x = src->geometry().x() + x_offset;
+    if ( x_combo / 2 )
+        x += src->geometry().width();
+    if ( x_combo % 2 )
+        x -= dest->geometry().width();
+
+    int y = src->geometry().y() + y_offset;
+    if ( y_combo / 2 )
+        y += src->geometry().height();
+    if ( y_combo % 2 )
+        y -= dest->geometry().height();
+
+    dest->setGeometry( QRect( QPoint( x, y ), dest->geometry().size() ) );
 }
 

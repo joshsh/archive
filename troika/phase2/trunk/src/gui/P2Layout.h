@@ -10,6 +10,54 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** A QLayoutItem which holds some additional (graph) information needed
+    by the P2Layout. */
+class P2LayoutItem : public QLayoutItem
+{
+
+public:
+
+private:
+
+    //QList<P2LayoutEdge *> outboundEdges;
+
+};
+
+/** A graph edge which describes the relative position of a neighboring
+    vertex in terms of a minimum x and y offset.
+    \note  In future, a weighted average of each of the two sets of four
+    offset combos (as opposed to picking the "best one") might give smoother
+    resizing behavior. */
+class P2LayoutEdge
+{
+
+public:
+
+    /** \warning  Assumes that the two P2LayoutItems do not intersect. */
+    P2LayoutEdge( P2LayoutItem *src, P2LayoutItem *dest );
+
+    int compareTo( const P2LayoutEdge &otherEdge );
+
+    void setDestPosition( P2LayoutItem *src, P2LayoutItem *dest );
+
+private:
+
+    /** x-offset (in pixels) to targetItem. */
+    int x_offset;
+
+    /** y-offset (in pixels) to targetItem. */
+    int y_offset;
+
+    /** A value from 0 to 4, indicating which side of the src and of the dest
+        rectangle are to be off-set by x_offset. */
+    int x_combo;
+
+    /** A value from 0 to 4, indicating which side of the src and of the dest
+        rectangle are to be off-set by y_offset. */
+    int y_combo;
+};
+
+////////////////////////////////////////////////////////////////////////////////
 
 class P2Layout : public QLayout
 {
@@ -41,50 +89,6 @@ public:
     void adjustGeometry();
 
 private:
-
-    struct P2LayoutEdge;
-
-    /** A QLayoutItem which holds some additional (graph) information needed
-        by the P2Layout. */
-    class P2LayoutItem : public QLayoutItem
-    {
-        //QList<P2LayoutEdge *> outboundEdges;
-
-        P2LayoutEdge *edgeTo( P2LayoutItem *otherItem )
-        {
-            if ( geometry().intersects( otherItem->geometry() ) )
-                return 0;
-
-            else
-            {
-                //...
-
-                return new P2LayoutEdge( otherItem, 0, 0 );
-            }
-        }
-
-    };
-
-    /** A graph edge which describes the relative position of a neighboring
-        vertex in terms of direction and distance. */
-    struct P2LayoutEdge
-    {
-        P2LayoutEdge( P2LayoutItem *i, int o, double a )
-        {
-            targetItem = i;
-            offset = o;
-            angle = a;
-        }
-
-        /** The other vertex of the edge. */
-        P2LayoutItem *targetItem;
-
-        /** Distance (in pixels) to targetItem. */
-        int offset;
-
-        /** Angle (in radians) to targetItem. */
-        double angle;
-    };
 
     /** The root of a weighted tree data structure which defines the ideal
         relative positions of this P2Layout's child widgets. */

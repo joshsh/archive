@@ -10,7 +10,6 @@
     #include "binders/ToggleWidget.h"
     #include "binders/ResizeWidget.h"
 
-/* XPM */
 static const char * troika_xpm[] = {
 "44 7 2 1",
 "       c None",
@@ -23,6 +22,30 @@ static const char * troika_xpm[] = {
 "  ..    ..  ..  ..  ..   ..   ..  ..  ..  ..",
 "  ..    ..  ..   ....   ....  ..  ..  ..  .."};
 
+static const char * troika_icon_xpm[] = {
+"5 5 2 1",
+"       c None",
+".      c #000000000000",
+"  .  ",
+"     ",
+" ... ",
+"  .  ",
+". . ."};
+
+static const char * troika_icon_big_xpm[] = {
+"10 10 2 1",
+"       c None",
+".      c #000000000000",
+"    ..    ",
+"    ..    ",
+"          ",
+"          ",
+"  ......  ",
+"  ......  ",
+"    ..    ",
+"    ..    ",
+"..  ..  ..",
+"..  ..  .."};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -77,10 +100,16 @@ P2CentralWidget::P2CentralWidget( int fixedWidth )
     b2->addChild( image, QPoint( 0, 0 ) );
     b->addChild( b2, p );
 
-    //P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
-    //b2 = new P2Frame();
-    //b2->addChild( text, QPoint( 0, 0 ) );
-    //b->addChild( b2, p );
+    image = new P2Image( troika_icon_big_xpm );
+    b2 = new P2Frame();
+    b2->addChild( image, QPoint( 0, 0 ) );
+    b->addChild( b2, p );
+/*
+    P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
+    b2 = new P2Frame();
+    b2->addChild( text, QPoint( 0, 0 ) );
+    b->addChild( b2, p );
+//*/
 
     P2Text *t = new P2Text( "Bleah.", 0 );
     b2 = new P2Frame();
@@ -94,8 +123,6 @@ P2CentralWidget::P2CentralWidget( int fixedWidth )
     b2 = new P2Frame();
     b2->addChild( editor, QPoint( 0, 0 ) );
     b->addChild( b2, p );
-
-//*/
 
     ResizeWidget *rs = new ResizeWidget();
     b2 = new P2Frame();
