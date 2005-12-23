@@ -319,6 +319,24 @@ cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 }
 
 
+// Spanning tree ///////////////////////////////////////////////////////////////
+
+/*
+P2Layout::...()
+{
+    int size = children.size();
+
+    // Generate an adjacency matrix.
+    P2LayoutEdge allEdges[ size ][ size ];
+    for ( int i = 0; i < size; i++ )
+        for ( int j = i + 1; j < size; j++ )
+            allEdges[ i ][ j ]
+                = P2LayoutEdge( children.at( i ), children.at( j ) );
+
+    //... Prim's...
+}
+*/
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
