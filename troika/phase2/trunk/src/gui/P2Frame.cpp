@@ -1,5 +1,5 @@
 #include "P2Frame.h"
-#include "P2Layout.h"
+#include "layout/P2Layout.h"
 
 #include <QtGui>
 

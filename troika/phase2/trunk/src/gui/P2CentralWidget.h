@@ -5,6 +5,7 @@
 
 #include "global.h"
 #include "P2BasicWidget.h"
+#include "P2Frame.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -13,13 +14,18 @@ class P2CentralWidget : public P2BasicWidget
 
 public:
 
-    P2CentralWidget( int fixedWidth );
+    P2CentralWidget( const QSize &fixedSize );
 
     bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
     bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
     bool isFrame() { return false; }
 
+    QSize sizeHint() const { return centralFrame->sizeHint() + QSize( 4, 4 ); }
+
+private:
+
+    P2Frame *centralFrame;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

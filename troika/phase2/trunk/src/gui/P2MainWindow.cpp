@@ -13,6 +13,9 @@ P2MainWindow::P2MainWindow( QWidget* parent )
              << (int) parent << " )" << endl;
     #endif
 
+    // Define the window icon.
+    setWindowIcon( QIcon( P2GUI_ICON ) );
+
     setPalette( QPalette(
         palette().foreground(),  // Foreground color.
         palette().button(),  // Button color.
@@ -63,13 +66,18 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     newAction->setChecked( false );
 
     // Create the central widget.
-    P2CentralWidget *centralWidget = new P2CentralWidget( contentsRect().width() );
-    setCentralWidget( centralWidget );
+    P2CentralWidget *centralWidget = new P2CentralWidget(
+        contentsRect().size() );
+    //setCentralWidget( centralWidget );
+
+    QScrollArea *scrollArea = new QScrollArea();
+    //scrollArea->setBackgroundRole(QPalette::Dark);
+    scrollArea->setWidget( centralWidget );
+    setCentralWidget( scrollArea );
 
 cout << "width = " << centralWidget->width() << endl;
-
-    // Define the window icon.
-    setWindowIcon( QIcon( P2GUI_ICON ) );
+cout << "height = " << centralWidget->height() << endl;
+cout << "position = (" << centralWidget->x() << ", " << centralWidget->y() << ")" << endl;
 }
 
 

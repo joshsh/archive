@@ -4,6 +4,15 @@
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Arbitrary out-of-range integer.
+#define INT__INFINITY  100000
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "P2Environment.h"
 
 /** \return  a global P2Environment variable */

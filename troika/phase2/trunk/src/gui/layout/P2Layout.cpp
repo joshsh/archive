@@ -33,8 +33,6 @@ P2Layout::P2Layout( QWidget *parent )
 
 P2Layout::~P2Layout()
 {
-    //P2LayoutItem *item;
-
     // Delete all layout items.
     for ( int i = 0; i < children.size(); i++ )
         delete children.at( i );
@@ -48,7 +46,9 @@ P2Layout::~P2Layout()
 
 void P2Layout::addItem( QLayoutItem *item )
 {
-    children.append( ( P2LayoutItem* ) item );
+    children.append( item );
+
+    generateSpanningTree();
 
     //if ( children.size() == 1 )
     //    contentRectangle = item->geometry();
@@ -62,11 +62,17 @@ void P2Layout::addItem( QLayoutItem *item )
 }
 
 
+// Warning: this is NOT an efficient way to add multiple items at a time.
 void P2Layout::addWidget( P2BasicWidget *widget, const QPoint &position )
 {
-    QWidgetItem *item = new QWidgetItem( widget );
-    item->setGeometry( QRect( position, item->sizeHint() ) );
-    addItem( item );
+
+    // Adjust the position of the new item so it does not collide.
+    QPoint adjustedPosition = findBestPosition(
+        QRect( position, widget->sizeHint() ) );// item->geometry() );
+    widget->setGeometry( QRect( adjustedPosition, widget->sizeHint() ) );
+    //item->setGeometry( QRect( position, item->sizeHint() ) );
+
+    addItem( new QWidgetItem( widget ) );
 }
 
 
@@ -133,24 +139,33 @@ void P2Layout::setGeometry( const QRect &rect )
 
 void P2Layout::refreshContentRectangle()
 {
-cout << "Befo': (" << cachedSizeHint.width() << ", " << cachedSizeHint.height() << ")" << endl;
+    cout << "+ P2Layout::refreshContentRectangle()" << endl; cout.flush();
 
     if ( !children.size() )
         contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
 
     else
     {
+//cout << "#### __p" << endl; cout.flush();
+
         contentRectangle = children.at( 0 )->geometry();
+//cout << "#### __q" << endl; cout.flush();
+
         for ( int i = 1; i < children.size(); i++ )
             contentRectangle = contentRectangle.unite( children.at( i )->geometry() );
+//cout << "#### __r" << endl; cout.flush();
+
     }
+//cout << "#### a" << endl; cout.flush();
 
     cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
-cout << "Aftuh: (" << cachedSizeHint.width() << ", " << cachedSizeHint.height() << ")" << endl;
+//cout << "#### b" << endl; cout.flush();
 
     ( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
 //( ( P2Frame* ) parentWidget() )->updateGeometry();
 //( ( P2Frame* ) parentWidget() )->update();
+
+    cout << "- P2Layout::refreshContentRectangle()" << endl; cout.flush();
 }
 
 
@@ -181,18 +196,37 @@ static int abs( int x )
 }
 */
 
-int P2Layout::resolveCollisions()
+void P2Layout::expandChildrenByMargin()
 {
-    int size = children.size();
-
     // Expand all layout items by a 1px-wide right and bottom margin.
-    for ( int i = 0; i < size; i++ )
+    for ( int i = 0; i < children.size(); i++ )
     {
         QLayoutItem *item = children.at( i );
         item->setGeometry( QRect(
             item->geometry().topLeft(),
-            item->geometry().size() + QSize( 1, 1 ) ) );
+            item->geometry().size() + QSize( spacing(), spacing() ) ) );
     }
+}
+
+
+void P2Layout::shrinkChildrenByMargin()
+{
+    // Restore original sizes of layout items.
+    for ( int i = 0; i < children.size(); i++ )
+    {
+        QLayoutItem *item = children.at( i );
+        item->setGeometry( QRect(
+            item->geometry().topLeft(),
+            item->geometry().size() - QSize( spacing(), spacing() ) ) );
+    }
+}
+
+
+int P2Layout::resolveCollisions()
+{
+    int size = children.size();
+
+    expandChildrenByMargin();
 
     // Find all initial collisions.
     QList<int> collisions;
@@ -278,17 +312,90 @@ int P2Layout::resolveCollisions()
         }
     }
 
-    // Restore original sizes of layout items.
-    for ( int i = 0; i < children.size(); i++ )
-    {
-        QLayoutItem *item = children.at( i );
-        item->setGeometry( QRect(
-            item->geometry().topLeft(),
-            item->geometry().size() - QSize( 1, 1 ) ) );
-    }
+    shrinkChildrenByMargin();
 
 cout << "collisions found = " << iterations << endl;
     return iterations;
+}
+
+
+struct Displacement
+{
+    Displacement( int c, QRect p )
+    {
+        cost = c;
+        position = p;
+    }
+    QRect position;
+    int cost;
+};
+
+
+QPoint P2Layout::findBestPosition( const QRect &rect )
+{
+//cout << "children.size() = " << children.size() << endl;
+//cout << "rect.size() = ( " << rect.width() << ", " << rect.height() << " )" << endl;
+//cout << "Original position = ( " << rect.topLeft().x() << ", " << rect.topLeft().y() << " )" << endl;
+    QList< Displacement > queue;
+    queue.append( Displacement( 0,
+        // Original rectangle with a margin.
+        QRect( rect.topLeft() - QPoint( spacing(), spacing() ),
+               rect.size() + QSize( 2 * spacing(), 2 * spacing() ) ) ) );
+
+    int minCost = INT__INFINITY;
+    QRect bestPosition;// = rect.topLeft();
+
+    while ( ( queue.size() ) )
+    {
+        Displacement d = queue.takeFirst();
+        int cost = d.cost;
+        QRect r = d.position;
+
+        // Only consider this position if there is a cost advantage.
+        if ( cost < minCost )
+        {
+            bool doesIntersect = false;
+
+            for ( int i = 0; i < children.size(); i++ )
+            {
+                QRect r2 = children.at( i )->geometry();
+
+                // Check for collision.
+                if ( r.intersects( r2 ) )
+                {
+                    doesIntersect = true;
+                    int offset;
+
+                    // Displace the rectangle in each of the four compass
+                    // directions to resolve the immediate collision.
+                    offset = r2.x() + r2.width() - r.x();
+                    queue.append( Displacement( cost + offset,
+                        r.translated( QPoint( offset, 0 ) ) ) );
+                    offset = r2.x() - ( r.x() + r.width() ) ;
+                    queue.append( Displacement( cost + offset,
+                        r.translated( QPoint( offset, 0 ) ) ) );
+                    offset = r2.y() + r2.height() - r.y();
+                    queue.append( Displacement( cost + offset,
+                        r.translated( QPoint( 0, offset ) ) ) );
+                    offset = r2.y() - ( r.y() + r.height() ) ;
+                    queue.append( Displacement( cost + offset,
+                        r.translated( QPoint( 0, offset ) ) ) );
+                }
+
+            }
+
+            if ( !doesIntersect )
+            {
+                minCost = cost;
+                bestPosition = r;
+            }
+        }
+    }
+
+//cout << "Adjusted position: (" << bestPosition.topLeft().x() + spacing() << ", " << bestPosition.topLeft().y() + spacing() << " )" << endl;
+
+    // Top-left corner of the "best position" rectangle without the margin.
+    return bestPosition.topLeft() + QPoint( spacing(), spacing() );
 }
 
 
@@ -307,12 +414,22 @@ cout << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 
     //- If size has changed
     //      notify parent of the change in size (can this be automatic?)
+//cout << "#### 1" << endl; cout.flush();
+    //if ( root )
+    //    root->updateFromSpanningTree();
 
-    //~ Call this function only when necessary.
-    resolveCollisions();
+//cout << "#### 2" << endl; cout.flush();
+
+    applySpanningTree();
+
+    if ( resolveCollisions() ) //|| !root )
+//int foo = 1;
+        generateSpanningTree();
+//cout << "#### 3" << endl; cout.flush();
 
     // Compensate for any overall displacement which may have occurred.
     refreshContentRectangle();
+//cout << "#### 4" << endl; cout.flush();
     justifyContents();
 
 cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
@@ -321,103 +438,26 @@ cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 
 // Spanning tree ///////////////////////////////////////////////////////////////
 
-/*
-P2Layout::...()
+
+
+void P2Layout::generateSpanningTree()
 {
-    int size = children.size();
+cout << "+ P2Layout[" << (int) this << "]::generateSpanningTree()" << endl; cout.flush();
+cout << "children.size() = " << children.size() << endl;
 
-    // Generate an adjacency matrix.
-    P2LayoutEdge allEdges[ size ][ size ];
-    for ( int i = 0; i < size; i++ )
-        for ( int j = i + 1; j < size; j++ )
-            allEdges[ i ][ j ]
-                = P2LayoutEdge( children.at( i ), children.at( j ) );
+    tree = P2FreeFormLayoutTree( children );
 
-    //... Prim's...
-}
-*/
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-P2LayoutEdge::P2LayoutEdge( P2LayoutItem *src, P2LayoutItem *dest )
-{
-    int src_pos[2] = { src->geometry().x(),
-                       src->geometry().x() + src->geometry().width() };
-    int dest_pos[2] = { dest->geometry().x(),
-                        dest->geometry().x() + dest->geometry().width() };
-
-    x_combo = 0;
-    x_offset = abs( dest_pos[0] - src_pos[0] );
-
-    for ( int i = 1; i < 4; i++ )
-    {
-        int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
-
-        if ( offset < x_offset )
-        {
-            x_combo = i;
-            x_offset = offset;
-        }
-    }
-
-    x_offset = dest_pos[ x_combo % 2 ] - src_pos[ x_combo / 2 ];
-
-    src_pos[0] = src->geometry().y();
-    src_pos[1] = src->geometry().y() + src->geometry().height();
-    dest_pos[0] = dest->geometry().y();
-    dest_pos[1] = dest->geometry().y() + dest->geometry().height();
-
-    y_combo = 0;
-    y_offset = abs( dest_pos[0] - src_pos[0] );
-
-    for ( int i = 1; i < 4; i++ )
-    {
-        int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
-
-        if ( offset < y_offset )
-        {
-            y_combo = i;
-            y_offset = offset;
-        }
-    }
-
-    y_offset = dest_pos[ y_combo % 2 ] - src_pos[ y_combo / 2 ];
+cout << "- P2Layout[" << (int) this << "]::generateSpanningTree()" << endl; cout.flush();
 }
 
 
-int P2LayoutEdge::compareTo( const P2LayoutEdge &otherEdge )
+void P2Layout::applySpanningTree()
 {
-    int minOffset = x_offset < y_offset
-        ? x_offset : y_offset;
-    int otherMinOffset = otherEdge.x_offset < otherEdge.y_offset
-        ? otherEdge.x_offset : otherEdge.y_offset;
+cout << "+ P2Layout[" << (int) this << "]::applySpanningTree()" << endl; cout.flush();
+cout << "children.size() = " << children.size() << endl;
 
-    if ( minOffset == otherMinOffset )
-        return 0;
+    tree.applyTo( children );
 
-    else if ( minOffset < otherMinOffset )
-        return -1;
-
-    else
-        return 1;
-}
-
-
-void P2LayoutEdge::setDestPosition( P2LayoutItem *src, P2LayoutItem *dest )
-{
-    int x = src->geometry().x() + x_offset;
-    if ( x_combo / 2 )
-        x += src->geometry().width();
-    if ( x_combo % 2 )
-        x -= dest->geometry().width();
-
-    int y = src->geometry().y() + y_offset;
-    if ( y_combo / 2 )
-        y += src->geometry().height();
-    if ( y_combo % 2 )
-        y -= dest->geometry().height();
-
-    dest->setGeometry( QRect( QPoint( x, y ), dest->geometry().size() ) );
+cout << "- P2Layout[" << (int) this << "]::applySpanningTree()" << endl; cout.flush();
 }
 
