@@ -16,6 +16,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );
 
+    // Define the palette.
     setPalette( QPalette(
         palette().foreground(),  // Foreground color.
         palette().button(),  // Button color.
@@ -57,13 +58,23 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     // Build the menu bar.
     QMenuBar *menubar = this->menuBar();
 //menubar->setFrameStyle( QFrame::NoFrame );
+
+    // File menu.
     QMenu *fileMenu = menubar->addMenu( "&File" );
     fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
+
+    //- Edit menu.
+
+    // View menu.
     QMenu *viewMenu = menubar->addMenu( "&View" );
     QAction *newAction = viewMenu->addAction( "Show idle &frames", this,
         SLOT( toggleFrameVisibility() ), 0 );
     newAction->setCheckable( true );
     newAction->setChecked( false );
+    newAction = viewMenu->addAction( "&Console", this, SLOT( consoleView() ), 0 );
+    newAction->setEnabled( false );
+
+    //- Help menu.
 
     // Create the central widget.
     P2CentralWidget *centralWidget = new P2CentralWidget(
@@ -81,9 +92,15 @@ cout << "position = (" << centralWidget->x() << ", " << centralWidget->y() << ")
 }
 
 
-void P2MainWindow::quit( )
+void P2MainWindow::quit()
 {
     this->close( );
+}
+
+
+void P2MainWindow::consoleView()
+{
+    cout << "void P2MainWindow::consoleView()" << endl;
 }
 
 

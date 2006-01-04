@@ -21,6 +21,8 @@ public slots:
 
     void quit( );
 
+    void consoleView();
+
     /** Turns inactive frame visibility on or off. */
     void toggleFrameVisibility();
 
