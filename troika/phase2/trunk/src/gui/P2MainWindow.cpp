@@ -55,26 +55,69 @@ P2MainWindow::P2MainWindow( QWidget* parent )
         setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
+    QAction *action;
+
     // Build the menu bar.
     QMenuBar *menubar = this->menuBar();
 //menubar->setFrameStyle( QFrame::NoFrame );
 
     // File menu.
     QMenu *fileMenu = menubar->addMenu( "&File" );
-    fileMenu->addAction( "&Quit", this, SLOT( quit() ), 0 );
+    action = fileMenu->addAction( "&New", this, SLOT( fileNew() ), 0 );
+    action->setIcon( QIcon( ":/fileNew.png" ) );
+    action = fileMenu->addAction( "&Open", this, SLOT( fileOpen() ), 0 );
+    action->setIcon( QIcon( ":/fileOpen.png" ) );
+    action = fileMenu->addAction( "&Save", this, SLOT( fileSave() ), 0 );
+    action->setIcon( QIcon( ":/fileSave.png" ) );
+    action = fileMenu->addAction( "Save &As", this, SLOT( fileSaveAs() ), 0 );
+    action->setIcon( QIcon( ":/fileSaveAs.png" ) );
+    fileMenu->addSeparator();
+    action = fileMenu->addAction( "&Print", this, SLOT( filePrint() ), 0 );
+    action->setIcon( QIcon( ":/filePrint.png" ) );
+    fileMenu->addSeparator();
+    action = fileMenu->addAction( "E&xit", this, SLOT( fileExit() ), 0 );
+    action->setIcon( QIcon( ":/fileExit.png" ) );
 
     //- Edit menu.
+    QMenu *editMenu = menubar->addMenu( "&Edit" );
+    action = editMenu->addAction( "&Undo", this, SLOT( editUndo() ), 0 );
+    action->setIcon( QIcon( ":/editUndo.png" ) );
+    action = editMenu->addAction( "&Redo", this, SLOT( editRedo() ), 0 );
+    action->setIcon( QIcon( ":/editRedo.png" ) );
+    editMenu->addSeparator();
+    action = editMenu->addAction( "Cu&t", this, SLOT( editCut() ), 0 );
+    action->setIcon( QIcon( ":/editCut.png" ) );
+    action = editMenu->addAction( "&Copy", this, SLOT( editCopy() ), 0 );
+    action->setIcon( QIcon( ":/editCopy.png" ) );
+    action = editMenu->addAction( "&Paste", this, SLOT( editPaste() ), 0 );
+    action->setIcon( QIcon( ":/editPaste.png" ) );
+    // action = editMenu->addAction( "&Find", this, SLOT( edit() ), 0 );
+    // action->setIcon( QIcon( ":/editFind.png" ) );
 
     // View menu.
     QMenu *viewMenu = menubar->addMenu( "&View" );
-    QAction *newAction = viewMenu->addAction( "Show idle &frames", this,
-        SLOT( toggleFrameVisibility() ), 0 );
-    newAction->setCheckable( true );
-    newAction->setChecked( false );
-    newAction = viewMenu->addAction( "&Console", this, SLOT( consoleView() ), 0 );
-    newAction->setEnabled( false );
+    action = viewMenu->addAction( "&Console", this, SLOT( viewConsole() ), 0 );
+    // action->setIcon( QIcon( ":/viewConsole.png" ) );
+    action->setEnabled( false );
+    viewMenu->addSeparator();
+    action = viewMenu->addAction( "&Forward", this, SLOT( viewForward() ), 0 );
+    action->setIcon( QIcon( ":/viewForward.png" ) );
+    action = viewMenu->addAction( "&Back", this, SLOT( viewBack() ), 0 );
+    action->setIcon( QIcon( ":/viewBack.png" ) );
+    viewMenu->addSeparator();
+    action = viewMenu->addAction(
+        "&Show Frames", this, SLOT( viewShowFrames() ), 0 );
+    action->setIcon( QIcon( ":/viewShowFrames.png" ) );
+    action->setCheckable( true );
+    action->setChecked( false );
 
     //- Help menu.
+    QMenu *helpMenu = menubar->addMenu( "&Help" );
+    action = helpMenu->addAction( "&Manual", this, SLOT( helpManual() ), 0 );
+    action->setIcon( QIcon( ":/helpManual.png" ) );
+    helpMenu->addSeparator();
+    action = helpMenu->addAction( "&About Phase2", this, SLOT( helpAboutPhase2() ), 0 );
+    action->setIcon( QIcon( ":/helpAboutPhase2.png" ) );
 
     // Create the central widget.
     P2CentralWidget *centralWidget = new P2CentralWidget(
@@ -92,19 +135,100 @@ cout << "position = (" << centralWidget->x() << ", " << centralWidget->y() << ")
 }
 
 
-void P2MainWindow::quit()
+////////////////////////////////////////////////////////////////////////////////
+
+
+void P2MainWindow::fileNew()
 {
-    this->close( );
+    cout << "void P2MainWindow::fileNew()" << endl;
 }
 
 
-void P2MainWindow::consoleView()
+void P2MainWindow::fileOpen()
 {
-    cout << "void P2MainWindow::consoleView()" << endl;
+    cout << "void P2MainWindow::fileOpen()" << endl;
 }
 
 
-void P2MainWindow::toggleFrameVisibility()
+void P2MainWindow::fileSave()
+{
+    cout << "void P2MainWindow::fileSave()" << endl;
+}
+
+
+void P2MainWindow::fileSaveAs()
+{
+    cout << "void P2MainWindow::fileSaveAs()" << endl;
+}
+
+
+void P2MainWindow::filePrint()
+{
+    cout << "void P2MainWindow::filePrint()" << endl;
+}
+
+
+void P2MainWindow::fileExit()
+{
+    this->close();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+void P2MainWindow::editUndo()
+{
+    cout << "void P2MainWindow::editUndo()" << endl;
+}
+
+
+void P2MainWindow::editRedo()
+{
+    cout << "void P2MainWindow::editRedo()" << endl;
+}
+
+
+void P2MainWindow::editCut()
+{
+    cout << "void P2MainWindow::editCut()" << endl;
+}
+
+
+void P2MainWindow::editCopy()
+{
+    cout << "void P2MainWindow::editCopy()" << endl;
+}
+
+
+void P2MainWindow::editPaste()
+{
+    cout << "void P2MainWindow::editPaste()" << endl;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+void P2MainWindow::viewConsole()
+{
+    cout << "void P2MainWindow::viewConsole()" << endl;
+}
+
+
+void P2MainWindow::viewForward()
+{
+    cout << "void P2MainWindow::viewForward()" << endl;
+}
+
+
+void P2MainWindow::viewBack()
+{
+    cout << "void P2MainWindow::viewBack()" << endl;
+}
+
+
+void P2MainWindow::viewShowFrames()
 {
     environment()->idleFramesAreVisible = !environment()->idleFramesAreVisible;
 
@@ -124,5 +248,20 @@ void P2MainWindow::toggleFrameVisibility()
     //centralWidget->doUpdate();
     //centralWidget->update( 0, 0, centralWidget->geometry().width(), centralWidget->geometry().height() );
     //centralWidget->update();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+void P2MainWindow::helpManual()
+{
+    cout << "void P2MainWindow::helpManual()" << endl;
+}
+
+
+void P2MainWindow::helpAboutPhase2()
+{
+    cout << "void P2MainWindow::helpAboutPhase2()" << endl;
 }
 

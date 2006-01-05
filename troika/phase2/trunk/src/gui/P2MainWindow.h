@@ -19,12 +19,27 @@ public:
 
 public slots:
 
-    void quit( );
+    void fileNew();
+    void fileOpen();
+    void fileSave();
+    void fileSaveAs();
+    void filePrint();
+    void fileExit();
 
-    void consoleView();
+    void editUndo();
+    void editRedo();
+    void editCut();
+    void editCopy();
+    void editPaste();
 
     /** Turns inactive frame visibility on or off. */
-    void toggleFrameVisibility();
+    void viewConsole();
+    void viewForward();
+    void viewBack();
+    void viewShowFrames();
+
+    void helpManual();
+    void helpAboutPhase2();
 
 };
 

@@ -1,6 +1,29 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+
     <file alias="p2gui.png">images/p2gui.png</file>
     <file alias="troika.png">../../ipk/troika.png</file>
+
+    <file alias="fileNew.png">images/Bluecurve/filenew.png</file>
+    <file alias="fileOpen.png">images/Bluecurve/fileopen.png</file>
+    <file alias="fileSave.png">images/Bluecurve/filesave.png</file>
+    <file alias="fileSaveAs.png">images/Bluecurve/filesaveas.png</file>
+    <file alias="filePrint.png">images/Bluecurve/fileprint.png</file>
+    <file alias="fileExit.png">images/Bluecurve/exit.png</file>
+
+    <file alias="editUndo.png">images/Bluecurve/undo.png</file>
+    <file alias="editRedo.png">images/Bluecurve/redo.png</file>
+    <file alias="editCut.png">images/Bluecurve/editcut.png</file>
+    <file alias="editCopy.png">images/Bluecurve/editcopy.png</file>
+    <file alias="editPaste.png">images/Bluecurve/editpaste.png</file>
+    <file alias="editFind.png">images/Bluecurve/viewmag1.png</file>
+
+    <file alias="viewShowFrames.png">images/viewShowFrames.png</file>
+    <file alias="viewForward.png">images/Bluecurve/forward.png</file>
+    <file alias="viewBack.png">images/Bluecurve/back.png</file>
+
+    <file alias="helpManual.png">images/Bluecurve/help.png</file>
+    <file alias="helpAboutPhase2.png">images/Bluecurve/about_kde.png</file>
+
 </qresource>
 </RCC>
