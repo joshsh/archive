@@ -31,6 +31,8 @@ public slots:
     void editCut();
     void editCopy();
     void editPaste();
+    void editSelectAll();
+    void editFind();
 
     /** Turns inactive frame visibility on or off. */
     void viewConsole();

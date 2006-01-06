@@ -65,15 +65,19 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     QMenu *fileMenu = menubar->addMenu( "&File" );
     action = fileMenu->addAction( "&New", this, SLOT( fileNew() ), 0 );
     action->setIcon( QIcon( ":/fileNew.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_N );
     action = fileMenu->addAction( "&Open", this, SLOT( fileOpen() ), 0 );
     action->setIcon( QIcon( ":/fileOpen.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_O );
     action = fileMenu->addAction( "&Save", this, SLOT( fileSave() ), 0 );
     action->setIcon( QIcon( ":/fileSave.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_S );
     action = fileMenu->addAction( "Save &As", this, SLOT( fileSaveAs() ), 0 );
     action->setIcon( QIcon( ":/fileSaveAs.png" ) );
     fileMenu->addSeparator();
     action = fileMenu->addAction( "&Print", this, SLOT( filePrint() ), 0 );
     action->setIcon( QIcon( ":/filePrint.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_P );
     fileMenu->addSeparator();
     action = fileMenu->addAction( "E&xit", this, SLOT( fileExit() ), 0 );
     action->setIcon( QIcon( ":/fileExit.png" ) );
@@ -82,22 +86,32 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     QMenu *editMenu = menubar->addMenu( "&Edit" );
     action = editMenu->addAction( "&Undo", this, SLOT( editUndo() ), 0 );
     action->setIcon( QIcon( ":/editUndo.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_Z );
     action = editMenu->addAction( "&Redo", this, SLOT( editRedo() ), 0 );
     action->setIcon( QIcon( ":/editRedo.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_Y );
     editMenu->addSeparator();
     action = editMenu->addAction( "Cu&t", this, SLOT( editCut() ), 0 );
     action->setIcon( QIcon( ":/editCut.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_X );
     action = editMenu->addAction( "&Copy", this, SLOT( editCopy() ), 0 );
     action->setIcon( QIcon( ":/editCopy.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_C );
     action = editMenu->addAction( "&Paste", this, SLOT( editPaste() ), 0 );
     action->setIcon( QIcon( ":/editPaste.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_V );
+    // editMenu->addSeparator();
+    // action = editMenu->addAction( "Select &All", this, SLOT( editSelectAll() ), 0 );
+    // action->setShortcut( Qt::CTRL + Qt::Key_A );
+    // editMenu->addSeparator();
     // action = editMenu->addAction( "&Find", this, SLOT( edit() ), 0 );
     // action->setIcon( QIcon( ":/editFind.png" ) );
+    // action->setShortcut( Qt::CTRL + Qt::Key_F );
 
     // View menu.
     QMenu *viewMenu = menubar->addMenu( "&View" );
     action = viewMenu->addAction( "&Console", this, SLOT( viewConsole() ), 0 );
-    // action->setIcon( QIcon( ":/viewConsole.png" ) );
+    action->setIcon( QIcon( ":/viewConsole.png" ) );
     action->setEnabled( false );
     viewMenu->addSeparator();
     action = viewMenu->addAction( "&Forward", this, SLOT( viewForward() ), 0 );
@@ -115,7 +129,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     QMenu *helpMenu = menubar->addMenu( "&Help" );
     action = helpMenu->addAction( "&Manual", this, SLOT( helpManual() ), 0 );
     action->setIcon( QIcon( ":/helpManual.png" ) );
-    helpMenu->addSeparator();
+    // helpMenu->addSeparator();
     action = helpMenu->addAction( "&About Phase2", this, SLOT( helpAboutPhase2() ), 0 );
     action->setIcon( QIcon( ":/helpAboutPhase2.png" ) );
 
@@ -204,6 +218,18 @@ void P2MainWindow::editCopy()
 void P2MainWindow::editPaste()
 {
     cout << "void P2MainWindow::editPaste()" << endl;
+}
+
+
+void P2MainWindow::editSelectAll()
+{
+    cout << "void P2MainWindow::editSelectAll()" << endl;
+}
+
+
+void P2MainWindow::editFind()
+{
+    cout << "void P2MainWindow::editFind()" << endl;
 }
 
 

@@ -18,6 +18,7 @@
     <file alias="editPaste.png">images/Bluecurve/editpaste.png</file>
     <file alias="editFind.png">images/Bluecurve/viewmag1.png</file>
 
+    <file alias="viewConsole.png">images/Bluecurve/apps/icon-terminal.png</file>
     <file alias="viewShowFrames.png">images/viewShowFrames.png</file>
     <file alias="viewForward.png">images/Bluecurve/forward.png</file>
     <file alias="viewBack.png">images/Bluecurve/back.png</file>
