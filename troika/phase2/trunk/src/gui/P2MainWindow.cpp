@@ -74,13 +74,17 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     action->setShortcut( Qt::CTRL + Qt::Key_S );
     action = fileMenu->addAction( "Save &As", this, SLOT( fileSaveAs() ), 0 );
     action->setIcon( QIcon( ":/fileSaveAs.png" ) );
+    action = fileMenu->addAction( "&Close", this, SLOT( fileClose() ), 0 );
+    // action->setIcon( QIcon( ":/fileClose.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_W );
     fileMenu->addSeparator();
     action = fileMenu->addAction( "&Print", this, SLOT( filePrint() ), 0 );
     action->setIcon( QIcon( ":/filePrint.png" ) );
     action->setShortcut( Qt::CTRL + Qt::Key_P );
     fileMenu->addSeparator();
-    action = fileMenu->addAction( "E&xit", this, SLOT( fileExit() ), 0 );
-    action->setIcon( QIcon( ":/fileExit.png" ) );
+    action = fileMenu->addAction( "&Quit", this, SLOT( fileQuit() ), 0 );
+    action->setIcon( QIcon( ":/fileQuit.png" ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_Q );
 
     //- Edit menu.
     QMenu *editMenu = menubar->addMenu( "&Edit" );
@@ -110,18 +114,22 @@ P2MainWindow::P2MainWindow( QWidget* parent )
 
     // View menu.
     QMenu *viewMenu = menubar->addMenu( "&View" );
-    action = viewMenu->addAction( "&Console", this, SLOT( viewConsole() ), 0 );
+    action = viewMenu->addAction( "&Command Line", this, SLOT( viewConsole() ), 0 );
     action->setIcon( QIcon( ":/viewConsole.png" ) );
+    action->setShortcut( Qt::Key_F7 );
     action->setEnabled( false );
     viewMenu->addSeparator();
     action = viewMenu->addAction( "&Forward", this, SLOT( viewForward() ), 0 );
     action->setIcon( QIcon( ":/viewForward.png" ) );
+    action->setShortcut( Qt::ALT + Qt::Key_Right );
     action = viewMenu->addAction( "&Back", this, SLOT( viewBack() ), 0 );
     action->setIcon( QIcon( ":/viewBack.png" ) );
+    action->setShortcut( Qt::ALT + Qt::Key_Left );
     viewMenu->addSeparator();
     action = viewMenu->addAction(
         "&Show Frames", this, SLOT( viewShowFrames() ), 0 );
     action->setIcon( QIcon( ":/viewShowFrames.png" ) );
+    action->setShortcut( Qt::Key_F6 );
     action->setCheckable( true );
     action->setChecked( false );
 
@@ -129,6 +137,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     QMenu *helpMenu = menubar->addMenu( "&Help" );
     action = helpMenu->addAction( "&Manual", this, SLOT( helpManual() ), 0 );
     action->setIcon( QIcon( ":/helpManual.png" ) );
+    action->setShortcut( Qt::Key_F1 );
     // helpMenu->addSeparator();
     action = helpMenu->addAction( "&About Phase2", this, SLOT( helpAboutPhase2() ), 0 );
     action->setIcon( QIcon( ":/helpAboutPhase2.png" ) );
@@ -176,13 +185,19 @@ void P2MainWindow::fileSaveAs()
 }
 
 
+void P2MainWindow::fileClose()
+{
+    cout << "void P2MainWindow::fileClose()" << endl;
+}
+
+
 void P2MainWindow::filePrint()
 {
     cout << "void P2MainWindow::filePrint()" << endl;
 }
 
 
-void P2MainWindow::fileExit()
+void P2MainWindow::fileQuit()
 {
     this->close();
 }

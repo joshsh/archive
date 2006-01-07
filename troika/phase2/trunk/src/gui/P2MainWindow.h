@@ -23,8 +23,9 @@ public slots:
     void fileOpen();
     void fileSave();
     void fileSaveAs();
+    void fileClose();
     void filePrint();
-    void fileExit();
+    void fileQuit();
 
     void editUndo();
     void editRedo();

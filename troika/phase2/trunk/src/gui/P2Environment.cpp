@@ -10,6 +10,19 @@ P2Environment::P2Environment()
         cout << "P2Environment[" << (int) this << "]::P2Environment()" << endl;
     #endif
 
-    bool idleFramesAreVisible = false;
+    idleFramesAreVisible = false;
+    viewMode = layoutMode;
+}
+
+
+P2Environment::ViewMode P2Environment::getViewMode()
+{
+    return viewMode;
+}
+
+
+void P2Environment::setViewMode( P2Environment::ViewMode viewMode )
+{
+    this->viewMode = viewMode;
 }
 

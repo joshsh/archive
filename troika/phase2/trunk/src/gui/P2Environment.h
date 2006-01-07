@@ -12,10 +12,19 @@ struct P2Environment
 
 public:
 
+    enum ViewMode { layoutMode, commandLineMode };
+
+    bool idleFramesAreVisible;
+
     /** Initializes the P2Environment with default values. */
     P2Environment();
 
-    bool idleFramesAreVisible;
+    ViewMode getViewMode();
+    void setViewMode( ViewMode viewMode );
+
+private:
+
+    ViewMode viewMode;
 
 };
 

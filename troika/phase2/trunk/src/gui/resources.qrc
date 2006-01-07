@@ -8,8 +8,9 @@
     <file alias="fileOpen.png">images/Bluecurve/fileopen.png</file>
     <file alias="fileSave.png">images/Bluecurve/filesave.png</file>
     <file alias="fileSaveAs.png">images/Bluecurve/filesaveas.png</file>
+    <file alias="fileClose.png">images/Bluecurve/filesaveas.png</file>
     <file alias="filePrint.png">images/Bluecurve/fileprint.png</file>
-    <file alias="fileExit.png">images/Bluecurve/exit.png</file>
+    <file alias="fileQuit.png">images/Bluecurve/exit.png</file>
 
     <file alias="editUndo.png">images/Bluecurve/undo.png</file>
     <file alias="editRedo.png">images/Bluecurve/redo.png</file>
