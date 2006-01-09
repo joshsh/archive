@@ -16,6 +16,13 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );
 
+    // Create a checkmark icon for QMenu actions.
+    checkmark = QIcon();
+    QPixmap pixmap = QPixmap( ":/check.png", 0, Qt::AutoColor );
+    checkmark.addPixmap( pixmap, QIcon::Active, QIcon::On );
+    pixmap = QPixmap( ":/empty.png", 0, Qt::AutoColor );
+    checkmark.addPixmap( pixmap, QIcon::Active, QIcon::Off );
+
     // Define the palette.
     setPalette( QPalette(
         palette().foreground(),  // Foreground color.
@@ -55,92 +62,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
         setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
-    QAction *action;
-
-    // Build the menu bar.
-    QMenuBar *menubar = this->menuBar();
-//menubar->setFrameStyle( QFrame::NoFrame );
-
-    // File menu.
-    QMenu *fileMenu = menubar->addMenu( "&File" );
-    action = fileMenu->addAction( "&New", this, SLOT( fileNew() ), 0 );
-    action->setIcon( QIcon( ":/fileNew.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_N );
-    action = fileMenu->addAction( "&Open", this, SLOT( fileOpen() ), 0 );
-    action->setIcon( QIcon( ":/fileOpen.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_O );
-    action = fileMenu->addAction( "&Save", this, SLOT( fileSave() ), 0 );
-    action->setIcon( QIcon( ":/fileSave.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_S );
-    action = fileMenu->addAction( "Save &As", this, SLOT( fileSaveAs() ), 0 );
-    action->setIcon( QIcon( ":/fileSaveAs.png" ) );
-    action = fileMenu->addAction( "&Close", this, SLOT( fileClose() ), 0 );
-    // action->setIcon( QIcon( ":/fileClose.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_W );
-    fileMenu->addSeparator();
-    action = fileMenu->addAction( "&Print", this, SLOT( filePrint() ), 0 );
-    action->setIcon( QIcon( ":/filePrint.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_P );
-    fileMenu->addSeparator();
-    action = fileMenu->addAction( "&Quit", this, SLOT( fileQuit() ), 0 );
-    action->setIcon( QIcon( ":/fileQuit.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_Q );
-
-    //- Edit menu.
-    QMenu *editMenu = menubar->addMenu( "&Edit" );
-    action = editMenu->addAction( "&Undo", this, SLOT( editUndo() ), 0 );
-    action->setIcon( QIcon( ":/editUndo.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_Z );
-    action = editMenu->addAction( "&Redo", this, SLOT( editRedo() ), 0 );
-    action->setIcon( QIcon( ":/editRedo.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_Y );
-    editMenu->addSeparator();
-    action = editMenu->addAction( "Cu&t", this, SLOT( editCut() ), 0 );
-    action->setIcon( QIcon( ":/editCut.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_X );
-    action = editMenu->addAction( "&Copy", this, SLOT( editCopy() ), 0 );
-    action->setIcon( QIcon( ":/editCopy.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_C );
-    action = editMenu->addAction( "&Paste", this, SLOT( editPaste() ), 0 );
-    action->setIcon( QIcon( ":/editPaste.png" ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_V );
-    // editMenu->addSeparator();
-    // action = editMenu->addAction( "Select &All", this, SLOT( editSelectAll() ), 0 );
-    // action->setShortcut( Qt::CTRL + Qt::Key_A );
-    // editMenu->addSeparator();
-    // action = editMenu->addAction( "&Find", this, SLOT( edit() ), 0 );
-    // action->setIcon( QIcon( ":/editFind.png" ) );
-    // action->setShortcut( Qt::CTRL + Qt::Key_F );
-
-    // View menu.
-    QMenu *viewMenu = menubar->addMenu( "&View" );
-    action = viewMenu->addAction( "&Command Line", this, SLOT( viewConsole() ), 0 );
-    action->setIcon( QIcon( ":/viewConsole.png" ) );
-    action->setShortcut( Qt::Key_F7 );
-    action->setEnabled( false );
-    viewMenu->addSeparator();
-    action = viewMenu->addAction( "&Forward", this, SLOT( viewForward() ), 0 );
-    action->setIcon( QIcon( ":/viewForward.png" ) );
-    action->setShortcut( Qt::ALT + Qt::Key_Right );
-    action = viewMenu->addAction( "&Back", this, SLOT( viewBack() ), 0 );
-    action->setIcon( QIcon( ":/viewBack.png" ) );
-    action->setShortcut( Qt::ALT + Qt::Key_Left );
-    viewMenu->addSeparator();
-    action = viewMenu->addAction(
-        "&Show Frames", this, SLOT( viewShowFrames() ), 0 );
-    action->setIcon( QIcon( ":/viewShowFrames.png" ) );
-    action->setShortcut( Qt::Key_F6 );
-    action->setCheckable( true );
-    action->setChecked( false );
-
-    //- Help menu.
-    QMenu *helpMenu = menubar->addMenu( "&Help" );
-    action = helpMenu->addAction( "&Manual", this, SLOT( helpManual() ), 0 );
-    action->setIcon( QIcon( ":/helpManual.png" ) );
-    action->setShortcut( Qt::Key_F1 );
-    // helpMenu->addSeparator();
-    action = helpMenu->addAction( "&About Phase2", this, SLOT( helpAboutPhase2() ), 0 );
-    action->setIcon( QIcon( ":/helpAboutPhase2.png" ) );
+    createMenusAndToolbar();
 
     // Create the central widget.
     P2CentralWidget *centralWidget = new P2CentralWidget(
@@ -155,6 +77,297 @@ P2MainWindow::P2MainWindow( QWidget* parent )
 cout << "width = " << centralWidget->width() << endl;
 cout << "height = " << centralWidget->height() << endl;
 cout << "position = (" << centralWidget->x() << ", " << centralWidget->y() << ")" << endl;
+}
+
+
+void P2MainWindow::createMenusAndToolbar()
+{
+    QAction *action;
+    QIcon icon;
+
+    // Build the menu bar.
+    //QMenuBar *menubar = this->menuBar();
+    QMenuBar *menubar = new QMenuBar( this );
+    setMenuBar( menubar );
+//menubar->setTearOffEnabled( false );
+//menubar->setFrameStyle( QFrame::NoFrame );
+    QToolBar *toolbar = this->addToolBar( tr( "Tool Bar" ) );
+//toolbar->setTearOffEnabled( false );
+
+    // File menu. //////////////////////////////////////////////////////////////
+
+    QMenu *fileMenu = menubar->addMenu( tr( "&File" ) );
+
+    // New.
+    icon = QIcon( ":/fileNew.png" );
+    action = new QAction( icon, tr( "&New" ), this );
+    action->setStatusTip( tr( "Create a new file" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_N );
+    fileMenu->addAction( action );
+    #ifdef TOOLBAR__FILE__NEW
+        toolbar->addAction( action );
+    #endif
+
+    // Open.
+    icon = QIcon( ":/fileOpen.png" );
+    action = new QAction( icon, tr( "&Open" ), this );
+    action->setStatusTip( tr( "Open an existing file" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_O );
+    fileMenu->addAction( action );
+    #ifdef TOOLBAR__FILE__OPEN
+        toolbar->addAction( action );
+    #endif
+
+    // Save.
+    icon = QIcon( ":/fileSave.png" );
+    action = new QAction( icon, tr( "&Save" ), this );
+    action->setStatusTip( tr( "Save the current document to disk" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_S );
+    fileMenu->addAction( action );
+    #ifdef TOOLBAR__FILE__SAVE
+        toolbar->addAction( action );
+    #endif
+
+    // Save As.
+    icon = QIcon( ":/fileSaveAs.png" );
+    action = new QAction( icon, tr( "Save &As..." ), this );
+    action->setStatusTip( tr( "Save the current document as a new file" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
+    fileMenu->addAction( action );
+    #ifdef TOOLBAR__FILE__SAVE_AS
+        toolbar->addAction( action );
+    #endif
+
+    // Close.
+    icon = QIcon( ":/fileClose.png" );
+    action = new QAction( icon, tr( "&Close" ), this );
+    action->setStatusTip( tr( "Close the current document" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fileClose() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_W );
+    fileMenu->addAction( action );
+
+    fileMenu->addSeparator();
+
+    // Print.
+    icon = QIcon( ":/filePrint.png" );
+    action = new QAction( icon, tr( "&Print" ), this );
+    action->setStatusTip( tr( "Print the document" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_P );
+    fileMenu->addAction( action );
+    #ifdef TOOLBAR__FILE__PRINT
+        toolbar->addAction( action );
+    #endif
+
+    fileMenu->addSeparator();
+
+    // Quit.
+    icon = QIcon( ":/fileQuit.png" );
+    action = new QAction( icon, tr( "&Quit" ), this );
+    action->setStatusTip( tr( "Exit Phase2" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fileQuit() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_Q );
+    fileMenu->addAction( action );
+    #ifdef TOOLBAR__FILE__QUIT
+        toolbar->addAction( action );
+    #endif
+
+    #if defined TOOLBAR__FILE_ACTIONS && \
+        ( defined TOOLBAR__EDIT_ACTIONS \
+       || defined TOOLBAR__VIEW_ACTIONS \
+       || defined TOOLBAR__HELP_ACTIONS )
+        toolbar->addSeparator();
+    #endif
+
+    // Edit menu. //////////////////////////////////////////////////////////////
+
+    QMenu *editMenu = menubar->addMenu( tr( "&Edit" ) );
+
+    // Undo.
+    icon = QIcon( ":/editUndo.png" );
+    action = new QAction( icon, tr( "&Undo" ), this );
+    action->setStatusTip( tr( "Undo the last operation" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editUndo() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_Z );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__UNDO
+        toolbar->addAction( action );
+    #endif
+
+    // Redo.
+    icon = QIcon( ":/editRedo.png" );
+    action = new QAction( icon, tr( "&Redo" ), this );
+    action->setStatusTip( tr( "Redo the last operation" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editRedo() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_Y );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__REDO
+        toolbar->addAction( action );
+    #endif
+
+    editMenu->addSeparator();
+
+    // Cut.
+    icon = QIcon( ":/editCut.png" );
+    action = new QAction( icon, tr( "Cu&t" ), this );
+    action->setStatusTip( tr( "Cut the current selection's contents to the "
+                                "clipboard" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editCut() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_X );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__CUT
+        toolbar->addAction( action );
+    #endif
+
+    // Copy.
+    icon = QIcon( ":/editCopy.png" );
+    action = new QAction( icon, tr( "&Copy" ), this );
+    action->setStatusTip( tr( "Copy the current selection's contents to the "
+                                 "clipboard" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editCopy() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_C );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__COPY
+        toolbar->addAction( action );
+    #endif
+
+    // Paste.
+    icon = QIcon( ":/editPaste.png" );
+    action = new QAction( icon, tr( "&Paste" ), this );
+    action->setStatusTip( tr( "Paste the clipboard's contents into the current "
+                                  "selection" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editPaste() ) );
+    action->setShortcut( Qt::CTRL + Qt::Key_V );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__PASTE
+        toolbar->addAction( action );
+    #endif
+
+    // Delete.
+    icon = QIcon( ":/editDelete.png" );
+    action = new QAction( icon, tr( "&Delete" ), this );
+    action->setStatusTip( tr( "Delete the current selection" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editDelete() ) );
+    action->setShortcut( Qt::Key_Delete );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__DELETE
+        toolbar->addAction( action );
+    #endif
+
+    // editMenu->addSeparator();
+
+    // Select All.
+    // action = editMenu->addAction(
+    //     "Select &All", this, SLOT( editSelectAll() ), Qt::CTRL + Qt::Key_A );
+
+    // editMenu->addSeparator();
+
+    // Find.
+    // icon = QIcon( ":/editFind.png" );
+    // action = editMenu->addAction(
+    //     icon, "&Find", this, SLOT( edit() ), Qt::CTRL + Qt::Key_F );
+
+    #if defined TOOLBAR__EDIT_ACTIONS && \
+        ( defined TOOLBAR__VIEW_ACTIONS \
+       || defined TOOLBAR__HELP_ACTIONS )
+        toolbar->addSeparator();
+    #endif
+
+    // View menu. //////////////////////////////////////////////////////////////
+
+    QMenu *viewMenu = menubar->addMenu( tr( "&View" ) );
+
+//QIcon::Mode mode;  // QIcon::Active  QIcon::Disabled
+//QIcon::State state;  // QIcon::On  QIcon::Off
+//icon = QIcon();
+//icon.addPixmap( QPixmap::fromImage( image ), mode, state );
+
+    // Command Line.
+    icon = QIcon( ":/viewCommandLine.png" );
+    action = new QAction( icon, tr( "&Command Line" ), this );
+    action->setStatusTip( tr( "Switch to the command line view" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewCommandLine() ) );
+    action->setShortcut( Qt::Key_F7 );
+    action->setEnabled( false );
+    viewMenu->addAction( action );
+    #ifdef TOOLBAR__VIEW__COMMAND_LINE
+        toolbar->addAction( action );
+    #endif
+
+    viewMenu->addSeparator();
+
+    // Back.
+    icon = QIcon( ":/viewBack.png" );
+    action = new QAction( icon, tr( "&Back" ), this );
+    action->setStatusTip( tr( "Navigate to the previous item" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewBack() ) );
+    action->setShortcut( Qt::ALT + Qt::Key_Left );
+    viewMenu->addAction( action );
+    #ifdef TOOLBAR__VIEW__BACK
+        toolbar->addAction( action );
+    #endif
+
+    // Forward.
+    icon = QIcon( ":/viewForward.png" );
+    action = new QAction( icon, tr( "&Forward" ), this );
+    action->setStatusTip( tr( "Navigate to the next item" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewForward() ) );
+    action->setShortcut( Qt::ALT + Qt::Key_Right );
+    viewMenu->addAction( action );
+    #ifdef TOOLBAR__VIEW__FORWARD
+        toolbar->addAction( action );
+    #endif
+
+    viewMenu->addSeparator();
+
+    // Show Frames.
+//QIcon::Mode mode;  // QIcon::Active  QIcon::Disabled
+//QIcon::State state;  // QIcon::On  QIcon::Off
+
+    //icon = QIcon( ":/viewShowFrames.png" );
+    action = new QAction( checkmark, tr( "&Show Frames" ), this );
+    //action = new QAction( tr( "&Show Frames" ), this );
+    action->setStatusTip( tr( "Draw borders around all frames" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
+    action->setShortcut( Qt::Key_F6 );
+    action->setCheckable( true );
+    action->setChecked( false );
+    viewMenu->addAction( action );
+    #ifdef TOOLBAR__VIEW__SHOW_FRAMES
+        toolbar->addAction( action );
+    #endif
+
+    #if defined TOOLBAR__VIEW_ACTIONS && ( defined TOOLBAR__HELP_ACTIONS )
+        toolbar->addSeparator();
+    #endif
+
+    // Help menu. //////////////////////////////////////////////////////////////
+
+    QMenu *helpMenu = menubar->addMenu( tr( "&Help" ) );
+
+    // Manual.
+    icon = QIcon( ":/helpManual.png" );
+    action = new QAction( icon, tr( "&Manual" ), this );
+    action->setStatusTip( tr( "Show Phase2's help manual" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( helpManual() ) );
+    action->setShortcut( Qt::Key_F1 );
+    helpMenu->addAction( action );
+    #ifdef TOOLBAR__HELP__MANUAL
+        toolbar->addAction( action );
+    #endif
+
+    // About Phase2.
+    icon = QIcon( ":/helpAboutPhase2.png" );
+    action = new QAction( icon, tr( "&About Phase2" ), this );
+    action->setStatusTip( tr( "Show Phase2's About box" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( helpAboutPhase2() ) );
+    helpMenu->addAction( action );
+    #ifdef TOOLBAR__HELP__ABOUT_PHASE2
+        toolbar->addAction( action );
+    #endif
 }
 
 
@@ -236,6 +449,12 @@ void P2MainWindow::editPaste()
 }
 
 
+void P2MainWindow::editDelete()
+{
+    cout << "void P2MainWindow::editDelete()" << endl;
+}
+
+
 void P2MainWindow::editSelectAll()
 {
     cout << "void P2MainWindow::editSelectAll()" << endl;
@@ -251,9 +470,9 @@ void P2MainWindow::editFind()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void P2MainWindow::viewConsole()
+void P2MainWindow::viewCommandLine()
 {
-    cout << "void P2MainWindow::viewConsole()" << endl;
+    cout << "void P2MainWindow::viewCommandLine()" << endl;
 }
 
 

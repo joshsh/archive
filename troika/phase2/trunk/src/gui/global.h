@@ -42,6 +42,47 @@ extern P2Environment *environment();
 #define SL5600__DISPLAY_HEIGHT  320
 
 
+// Tool bar ////////////////////////////////////////////////////////////////////
+
+// #define TOOLBAR__FILE_ACTIONS
+#define TOOLBAR__EDIT_ACTIONS
+#define TOOLBAR__VIEW_ACTIONS
+// #define TOOLBAR__HELP_ACTIONS
+
+#ifdef TOOLBAR__FILE_ACTIONS
+    #define TOOLBAR__FILE__NEW
+    #define TOOLBAR__FILE__OPEN
+    #define TOOLBAR__FILE__SAVE
+    #define TOOLBAR__FILE__SAVE_AS
+    #define TOOLBAR__FILE__CLOSE
+    #define TOOLBAR__FILE__PRINT
+    // #define TOOLBAR__FILE__QUIT
+#endif
+
+#ifdef TOOLBAR__EDIT_ACTIONS
+    // #define TOOLBAR__EDIT__UNDO
+    // #define TOOLBAR__EDIT__REDO
+    #define TOOLBAR__EDIT__CUT
+    #define TOOLBAR__EDIT__COPY
+    #define TOOLBAR__EDIT__PASTE
+    // #define TOOLBAR__EDIT__DELETE
+    // #define TOOLBAR__EDIT__SELECT_ALL
+    // #define TOOLBAR__EDIT__FIND
+#endif
+
+#ifdef TOOLBAR__VIEW_ACTIONS
+    #define TOOLBAR__VIEW__COMMAND_LINE
+    #define TOOLBAR__VIEW__BACK
+    #define TOOLBAR__VIEW__FORWARD
+    // #define TOOLBAR__VIEW__SHOW_FRAMES
+#endif
+
+#ifdef TOOLBAR__HELP_ACTIONS
+    #define TOOLBAR__HELP__MANUAL
+    #define TOOLBAR__HELP__ABOUT_PHASE2
+#endif
+
+
 // File paths //////////////////////////////////////////////////////////////////
 
 /** Identifier for the Phase2 window icon. */

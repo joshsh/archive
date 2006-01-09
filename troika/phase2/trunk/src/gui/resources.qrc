@@ -3,29 +3,33 @@
 
     <file alias="p2gui.png">images/p2gui.png</file>
     <file alias="troika.png">../../ipk/troika.png</file>
+    <file alias="check.png">images/check.png</file>
+    <file alias="empty.png">images/empty.png</file>
 
-    <file alias="fileNew.png">images/Bluecurve/filenew.png</file>
-    <file alias="fileOpen.png">images/Bluecurve/fileopen.png</file>
-    <file alias="fileSave.png">images/Bluecurve/filesave.png</file>
-    <file alias="fileSaveAs.png">images/Bluecurve/filesaveas.png</file>
-    <file alias="fileClose.png">images/Bluecurve/filesaveas.png</file>
-    <file alias="filePrint.png">images/Bluecurve/fileprint.png</file>
-    <file alias="fileQuit.png">images/Bluecurve/exit.png</file>
+    <file alias="fileNew.png">images/Bluecurve/actions/filenew.png</file>
+    <file alias="fileOpen.png">images/Bluecurve/actions/fileopen.png</file>
+    <file alias="fileSave.png">images/Bluecurve/actions/filesave.png</file>
+    <file alias="fileSaveAs.png">images/Bluecurve/actions/filesaveas.png</file>
+    <!--file alias="fileClose.png">images/Bluecurve/stock/stock-close.png</file-->
+    <file alias="fileClose.png">images/crystalsvg/actions/fileclose.png</file>
+    <file alias="filePrint.png">images/Bluecurve/actions/fileprint.png</file>
+    <file alias="fileQuit.png">images/Bluecurve/actions/exit.png</file>
 
-    <file alias="editUndo.png">images/Bluecurve/undo.png</file>
-    <file alias="editRedo.png">images/Bluecurve/redo.png</file>
-    <file alias="editCut.png">images/Bluecurve/editcut.png</file>
-    <file alias="editCopy.png">images/Bluecurve/editcopy.png</file>
-    <file alias="editPaste.png">images/Bluecurve/editpaste.png</file>
-    <file alias="editFind.png">images/Bluecurve/viewmag1.png</file>
+    <file alias="editUndo.png">images/Bluecurve/actions/undo.png</file>
+    <file alias="editRedo.png">images/Bluecurve/actions/redo.png</file>
+    <file alias="editCut.png">images/Bluecurve/actions/editcut.png</file>
+    <file alias="editCopy.png">images/Bluecurve/actions/editcopy.png</file>
+    <file alias="editPaste.png">images/Bluecurve/actions/editpaste.png</file>
+    <file alias="editDelete.png">images/Bluecurve/actions/editdelete.png</file>
+    <file alias="editFind.png">images/Bluecurve/actions/viewmag1.png</file>
 
-    <file alias="viewConsole.png">images/Bluecurve/apps/icon-terminal.png</file>
+    <file alias="viewCommandLine.png">images/Bluecurve/apps/icon-terminal.png</file>
     <file alias="viewShowFrames.png">images/viewShowFrames.png</file>
-    <file alias="viewForward.png">images/Bluecurve/forward.png</file>
-    <file alias="viewBack.png">images/Bluecurve/back.png</file>
+    <file alias="viewForward.png">images/Bluecurve/actions/forward.png</file>
+    <file alias="viewBack.png">images/Bluecurve/actions/back.png</file>
 
-    <file alias="helpManual.png">images/Bluecurve/help.png</file>
-    <file alias="helpAboutPhase2.png">images/Bluecurve/about_kde.png</file>
+    <file alias="helpManual.png">images/Bluecurve/actions/contents.png</file>
+    <file alias="helpAboutPhase2.png">images/Bluecurve/actions/about_kde.png</file>
 
 </qresource>
 </RCC>

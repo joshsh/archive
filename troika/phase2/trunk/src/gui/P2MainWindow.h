@@ -32,17 +32,24 @@ public slots:
     void editCut();
     void editCopy();
     void editPaste();
+    void editDelete();
     void editSelectAll();
     void editFind();
 
     /** Turns inactive frame visibility on or off. */
-    void viewConsole();
+    void viewCommandLine();
     void viewForward();
     void viewBack();
     void viewShowFrames();
 
     void helpManual();
     void helpAboutPhase2();
+
+private:
+
+    void createMenusAndToolbar();
+
+    QIcon checkmark;
 
 };
 
