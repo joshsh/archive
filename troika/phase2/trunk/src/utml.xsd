@@ -2,17 +2,17 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
+    <xsd:element name="graph">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" type="topLevelElement" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 
-
-
-
-    <xsd:complexType name="topLevelElement">
-        <xsd:group name="ResponseElement">
-            <xsd:choice>
-
-            </xsd:choice>
-        </xsd:group>
-    </xsd:complexType>
+                    <xsd:complexType name="topLevelElement">
+                            <xsd:choice>
+                                <xsd:element name="element">
 
     <!--
         <element id="ref-0">
@@ -25,14 +25,62 @@
             <relation>...</relation>
             <relation>...</relation>
         </element>
+
+        <element id="ref-42" type="xsd:string">Zaphod Beeblebrox</element>
     -->
-    <xsd:complexType name="elementWithId">
-        <xsd:sequence>
-            <xsd:element ref="subject" minOccurs="0" maxOccurs="1" />
-            <xsd:element ref="relation" minOccurs="1" maxOccurs="unbounded" />
-        </xsd:sequence>
-        <xsd:attribute name="id" type="xsd:ID" use="required" />
+                                    <xsd:element type="nodeWithId" />
+
+                                </xsd:element>
+                            </xsd:choice>
+                    </xsd:complexType>
+
+    <xsd:complexType name="nodeWithId">
+                                        <xsd:extension base="node">
+                                            <xsd:attribute name="id" type="xsd:ID" use="required" />
+                                        </xsd:extension>
     </xsd:complexType>
+
+    <xsd:group name="node">
+        <xsd:choice>
+
+            <!--
+                <element>
+                    <subject ... >
+                    <relation>...</relation>
+                </element>
+
+                <element>
+                    <relation>...</relation>
+                    <relation>...</relation>
+                    <relation>...</relation>
+                </element>
+            -->
+            <xsd:element name="element">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element ref="subject" minOccurs="0" maxOccurs="1" />
+                    <xsd:element ref="relation" minOccurs="1" maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            </xsd:element>
+
+            <!--
+                <element type="xsd:string">Zaphod Beeblebrox</element>
+            -->
+            <xsd:element name="element">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <!-- Node values are untyped as far as the Schema is
+                         concerned... -->
+                    <xsd:element type="xsd:anyType" />
+                </xsd:sequence>
+                <!-- ...but a type reference is required as an attribute. -->
+                <xsd:attribute name="type" type="xsd:anyURI" />
+            </xsd:complexType>
+            </xsd:element>
+
+        </xsd:choice>
+    </xsd:group>
 
     <!--
         <relation>
@@ -40,59 +88,34 @@
             <object ... >
         </relation>
     -->
-    <xsd:element name="relation">
-        <xsd:complexType>
+        <xsd:complexType name="relation">
             <xsd:sequence>
                 <xsd:element ref="predicate" />
                 <xsd:element ref="object" />
             </xsd:sequence>
         </xsd:complexType>
-    </xsd:element>
 
-    <xsd:element name="subject">
+    <xsd:element name="subject" type="embeddedElement" />
 
-    </xsd:element>
+    <xsd:element name="predicate" type="embeddedElement" />
 
-    <xsd:element name="predicate">
-
-    </xsd:element>
-
-    <xsd:element name="object">
-
-    </xsd:element>
+    <xsd:element name="object" type="embeddedElement" />
 
     <!--
     -->
-    <xsd:complexType name="immediateOrReference...">
-        <xsd:group>
+     <xsd:complexType name="embeddedElement">
             <xsd:choice>
-
-                <!--
-                    <predicate ref="ref-0" />
-                -->
-                <xsd:complexType>
-                    <xsd:attribute name="ref" type="xsd:ID" use="required" />
-                </xsd:complexType>
-
-                <!--
-                    <subject type="xsd:string">42</subject>
-
-                    <element type="xsd:string">This is a string.</element>
-                -->
-                <xsd:complexType name="embeddedElement">
-                    <xsd:sequence>
-                        <!-- Node values are untyped... -->
-                        <xsd:element ref="xsd:anyType" />
-                    </xsd:sequence>
-                    <!-- ...but a type reference is required. -->
-                    <xsd:attribute name="type" type="xsd:anyURI" use="required" />
-                </xsd:complexType>
-
+                <xsd:element type="reference" />
+                <xsd:group ref="node" />
             </xsd:choice>
-        </xsd:group>
+     </xsd:complexType>
+
+    <!--
+        <predicate ref="ref-0" />
+    -->
+    <xsd:complexType name="reference">
+        <xsd:attribute name="ref" type="xsd:ID" use="required" />
     </xsd:complexType>
-
-
 
 </xsd:schema>
 
