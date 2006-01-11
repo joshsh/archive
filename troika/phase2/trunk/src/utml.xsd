@@ -10,8 +10,8 @@
         </xsd:complexType>
     </xsd:element>
 
-                    <xsd:complexType name="topLevelElement">
-                            <xsd:choice>
+    <xsd:complexType name="topLevelElement">
+        <xsd:choice>
                                 <xsd:element name="element">
 
     <!--
@@ -35,9 +35,11 @@
                     </xsd:complexType>
 
     <xsd:complexType name="nodeWithId">
-                                        <xsd:extension base="node">
-                                            <xsd:attribute name="id" type="xsd:ID" use="required" />
-                                        </xsd:extension>
+        <xsd:complexContent>
+                        <xsd:group ref="node">
+                            <xsd:attribute name="id" type="xsd:ID" use="required" />
+                        </xsd:group>
+        </xsd:complexContent>
     </xsd:complexType>
 
     <xsd:group name="node">
@@ -103,12 +105,12 @@
 
     <!--
     -->
-     <xsd:complexType name="embeddedElement">
+     <xsd:group name="embeddedElementGroup">
             <xsd:choice>
                 <xsd:element type="reference" />
                 <xsd:group ref="node" />
             </xsd:choice>
-     </xsd:complexType>
+     </xsd:group>
 
     <!--
         <predicate ref="ref-0" />
