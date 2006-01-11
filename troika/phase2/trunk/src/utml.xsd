@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+
+
+
+
+    <xsd:complexType name="topLevelElement">
+        <xsd:group name="ResponseElement">
+            <xsd:choice>
+
+            </xsd:choice>
+        </xsd:group>
+    </xsd:complexType>
+
+    <!--
+        <element id="ref-0">
+            <subject ... >
+            <relation>...</relation>
+        </element>
+
+        <element id="ref-0">
+            <relation>...</relation>
+            <relation>...</relation>
+            <relation>...</relation>
+        </element>
+    -->
+    <xsd:complexType name="elementWithId">
+        <xsd:sequence>
+            <xsd:element ref="subject" minOccurs="0" maxOccurs="1" />
+            <xsd:element ref="relation" minOccurs="1" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID" use="required" />
+    </xsd:complexType>
+
+    <!--
+        <relation>
+            <predicate ... >
+            <object ... >
+        </relation>
+    -->
+    <xsd:element name="relation">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="predicate" />
+                <xsd:element ref="object" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="subject">
+
+    </xsd:element>
+
+    <xsd:element name="predicate">
+
+    </xsd:element>
+
+    <xsd:element name="object">
+
+    </xsd:element>
+
+    <!--
+    -->
+    <xsd:complexType name="immediateOrReference...">
+        <xsd:group>
+            <xsd:choice>
+
+                <!--
+                    <predicate ref="ref-0" />
+                -->
+                <xsd:complexType>
+                    <xsd:attribute name="ref" type="xsd:ID" use="required" />
+                </xsd:complexType>
+
+                <!--
+                    <subject type="xsd:string">42</subject>
+
+                    <element type="xsd:string">This is a string.</element>
+                -->
+                <xsd:complexType name="embeddedElement">
+                    <xsd:sequence>
+                        <!-- Node values are untyped... -->
+                        <xsd:element ref="xsd:anyType" />
+                    </xsd:sequence>
+                    <!-- ...but a type reference is required. -->
+                    <xsd:attribute name="type" type="xsd:anyURI" use="required" />
+                </xsd:complexType>
+
+            </xsd:choice>
+        </xsd:group>
+    </xsd:complexType>
+
+
+
+</xsd:schema>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
