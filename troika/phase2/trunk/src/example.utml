@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<graph 
+<graph xmlns="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/utml-weak.xsd"
     xmlns:foo="http://foo.com/foo.utml">
 
     <element id="ref-0" type="xsd:string" value="This is a string.">
