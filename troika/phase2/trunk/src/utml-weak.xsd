@@ -2,10 +2,10 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
-    <xsd:element name="graph" id="graph">
+    <xsd:element name="Ontology">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="element" type="topLevelElement" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element name="Subject" type="topLevelElement" minOccurs="0" maxOccurs="unbounded" />
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -58,11 +58,11 @@
 
                 <xsd:group ref="value" minOccurs="0" maxOccurs="1"/>
 
-                <xsd:element name="relation" minOccurs="0" maxOccurs="unbounded" >
+                <xsd:element name="Relation" minOccurs="0" maxOccurs="unbounded" >
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="predicate" type="embeddedElement" />
-                            <xsd:element name="object" type="embeddedElement" />
+                            <xsd:element name="Predicate" type="embeddedElement" />
+                            <xsd:element name="Object" type="embeddedElement" />
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
@@ -81,12 +81,12 @@
 
             <!-- Note: as it is, the value element may even have
                  attributes. -->
-            <xsd:element name="value" type="xsd:anyType" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="Value" type="xsd:anyType" minOccurs="0" maxOccurs="1" />
 
-            <xsd:element name="list">
+            <xsd:element name="List">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="element" type="embeddedElement" minOccurs="1" maxOccurs="unbounded" />
+                        <xsd:element name="Subject" type="embeddedElement" minOccurs="1" maxOccurs="unbounded" />
                     </xsd:sequence>
                     <xsd:attribute name="memberType" type="xsd:anyURI" use="optional" />
                     <xsd:attribute name="type" type="xsd:anyURI" use="optional" />

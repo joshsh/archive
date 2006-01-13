@@ -1,64 +1,89 @@
 <?xml version="1.0"?>
 
-<graph xmlns="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/utml-weak.xsd"
-    xmlns:foo="http://foo.com/foo.utml">
+<utml:Ontology xmlns:utml="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/utml-weak.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:p2="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/phase2.utml" xmlns:foo="http://foo.com/foo.utml">
 
-    <element id="ref-0" type="xsd:string" value="This is a string.">
-        <relation>
-            <predicate ref="foo:author" />
-            <object>
-                <relation>
-                    <predicate ref="foo:name" />
-                    <object type="xsd:string" value="Oolon Colluphid" />
-                </relation>
-            </object>
-        </relation>
-    </element>
+    <utml:Subject id="ref-0" type="xsd:string" value="This is a string.">
+        <utml:Relation>
+            <utml:Predicate ref="foo:author" />
+            <utml:Object>
+                <utml:Relation>
+                    <utml:Predicate ref="foo:name" />
+                    <utml:Object type="xsd:string" value="Oolon Colluphid" />
+                </utml:Relation>
+            </utml:Object>
+        </utml:Relation>
+    </utml:Subject>
 
-    <element id="ref-42" type="xsd:string">
-        <value>Zaphod Beeblebrox</value>
-        <relation>
-            <predicate ref="name" />
-            <object type="xsd:string" value="Josh Shinavier" />
-        </relation>
-    </element>
+    <utml:Subject id="ref-42" type="xsd:string">
+        <utml:Value>Zaphod Beeblebrox</utml:Value>
+        <utml:Relation>
+            <utml:Predicate ref="name" />
+            <utml:Object type="xsd:string" value="Josh Shinavier" />
+        </utml:Relation>
+    </utml:Subject>
 
-    <element id="josh">
-        <relation>
-            <predicate ref="name" />
-            <object type="xsd:string" value="Josh Shinavier" />
-        </relation>
-        <relation>
-            <predicate ref="foo:gender" />
-            <object ref="foo:male" />
-        </relation>
-        <relation>
-            <predicate type="xsd:string" value="friends" />
-            <object>
-                <list memberType="xsd:string">
-                    <element value="Larry" />
-                    <element value="Curly" />
-                    <element value="Moe" />
-                </list>
-            </object>
-        </relation>
-    </element>
+    <utml:Subject id="Josh">
+        <utml:Relation>
+            <utml:Predicate ref="name" />
+            <utml:Object type="xsd:string" value="Josh Shinavier" />
+        </utml:Relation>
+        <utml:Relation>
+            <utml:Predicate ref="foo:gender" />
+            <utml:Object ref="foo:male" />
+        </utml:Relation>
+        <utml:Relation>
+            <utml:Predicate type="xsd:string" value="friends" />
+            <utml:Object>
+                <utml:List memberType="xsd:string">
+                    <utml:Subject value="Larry" />
+                    <utml:Subject value="Curly" />
+                    <utml:Subject value="Moe" />
+                </utml:List>
+            </utml:Object>
+        </utml:Relation>
+    </utml:Subject>
 
-    <element id="mylist">
-        <list type="bag">
-            <element type="xsd:integer" value="42" />
-            <element type="xsd:string" value="forty-two" />
-        </list>
-    </element>
+    <utml:Subject id="myList">
+        <utml:List type="p2:bag">
+            <utml:Subject type="xsd:integer" value="42" />
+            <utml:Subject type="xsd:string" value="forty-two" />
+        </utml:List>
+    </utml:Subject>
 
-    <element id="Some_SK_term">
-        <list type="SKTerm">
-             <element ref="S" />
-        </list>
-        <relation>
-            <predicate ref="size" />
-            <object type="xsd:integer" value="1" />
-        </relation>
-    </element>
+    <utml:Subject id="omega">
+        <utml:List type="p2:SKTerm">
+             <utml:Subject ref="p2:S" />
+             <utml:Subject>
+                 <utml:List type="p2:SKTerm">
+                     <utml:Subject ref="p2:S" />
+                     <utml:Subject ref="p2:K" />
+                     <utml:Subject ref="p2:K" />
+                 </utml:List>
+             </utml:Subject>
+             <utml:Subject>
+                 <utml:List type="p2:SKTerm">
+                     <utml:Subject ref="p2:S" />
+                     <utml:Subject ref="p2:K" />
+                     <utml:Subject ref="p2:K" />
+                 </utml:List>
+             </utml:Subject>
+        </utml:List>
+        <utml:Relation>
+            <utml:Predicate ref="size" />
+            <utml:Object type="xsd:integer" value="1" />
+        </utml:Relation>
+    </utml:Subject>
 
-</graph>
+    <utml:Subject id="DaysOfWeek">
+        <utml:List memberType="xsd:string">
+            <utml:Subject value="Sunday" />
+            <utml:Subject value="Monday" />
+            <utml:Subject value="Tuesday" />
+            <utml:Subject value="Wednesday" />
+            <utml:Subject value="Thursday" />
+            <utml:Subject value="Friday" />
+            <utml:Subject value="Saturday" />
+        </utml:List>
+    </utml:Subject>
+
+</utml:Ontology>
