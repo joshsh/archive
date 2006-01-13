@@ -8,6 +8,7 @@ P2Environment::P2Environment()
 {
     #ifdef DEBUG
         cout << "P2Environment[" << (int) this << "]::P2Environment()" << endl;
+        //cout << indentPlus() << "P2Environment[" << (int) this << "]::P2Environment()" << endl;
     #endif
 
     idleFramesAreVisible = false;

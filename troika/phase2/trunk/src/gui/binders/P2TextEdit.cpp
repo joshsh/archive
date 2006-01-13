@@ -8,7 +8,8 @@ P2TextEdit::P2TextEdit( char *text, bool readOnly )
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2TextEdit[" <<  (int) this << "]::P2TextEdit()" << endl;
+        cout << indent()
+             << "P2TextEdit[" <<  (int) this << "]::P2TextEdit()" << endl;
     #endif
 
     // Note: a P2TextEdit object owns its TextEditWrapper as a child widget.

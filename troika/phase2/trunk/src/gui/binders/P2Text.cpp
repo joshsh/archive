@@ -8,7 +8,8 @@ P2Text::P2Text( char *text, QColor *color )
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2Text[" <<  (int) this << "]::P2Text()" << endl;
+        cout << indent()
+             << "P2Text[" <<  (int) this << "]::P2Text()" << endl;
     #endif
 
     this->text = text;

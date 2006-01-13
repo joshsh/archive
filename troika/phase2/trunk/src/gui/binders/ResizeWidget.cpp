@@ -8,7 +8,8 @@ ResizeWidget::ResizeWidget()
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "ResizeWidget[" <<  (int) this << "]::ResizeWidget()" << endl;
+        cout << indent()
+             << "ResizeWidget[" <<  (int) this << "]::ResizeWidget()" << endl;
     #endif
 
     toggle = 0;
@@ -18,7 +19,7 @@ ResizeWidget::ResizeWidget()
 QSize ResizeWidget::sizeHint() const
 {
     int len = 10 * ( toggle + 1 ) ;
-cout << "ResizeWidget[" <<  (int) this << "]::sizeHint(): QSize( "
+cout << indent() << "ResizeWidget[" <<  (int) this << "]::sizeHint(): QSize( "
      << len << ", " << len << " )" << endl;
 
     return QSize( len, len );

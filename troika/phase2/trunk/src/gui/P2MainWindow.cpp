@@ -9,7 +9,8 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     : QMainWindow( parent )
 {
     #ifdef DEBUG
-        cout << "P2MainWindow[" << (int) this << "]::P2MainWindow( "
+        cout << indent()
+             << "P2MainWindow[" << (int) this << "]::P2MainWindow( "
              << (int) parent << " )" << endl;
     #endif
 

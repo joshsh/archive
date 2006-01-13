@@ -8,7 +8,8 @@ P2Image::P2Image( const char * const xpm[] )
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2Image[" <<  (int) this << "]::P2Image()" << endl;
+        cout << indent()
+             << "P2Image[" <<  (int) this << "]::P2Image()" << endl;
     #endif
 
     image = QImage( xpm );

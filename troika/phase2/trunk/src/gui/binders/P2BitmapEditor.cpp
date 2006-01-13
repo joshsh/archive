@@ -8,7 +8,8 @@ P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2BitmapEditor[" <<  (int) this << "]::P2BitmapEditor( QImage *, int, bool )" << endl;
+        cout << indent()
+             << "P2BitmapEditor[" <<  (int) this << "]::P2BitmapEditor( QImage *, int, bool )" << endl;
     #endif
 
     if ( image0 )

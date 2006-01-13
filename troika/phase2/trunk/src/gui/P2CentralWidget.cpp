@@ -54,7 +54,8 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2CentralWidget[" << (int) this << "]::P2CentralWidget()"
+        cout << indent()
+             << "P2CentralWidget[" << (int) this << "]::P2CentralWidget()"
              << endl;
     #endif
 

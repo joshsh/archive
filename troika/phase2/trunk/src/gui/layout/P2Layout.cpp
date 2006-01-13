@@ -12,7 +12,8 @@ P2Layout::P2Layout( QWidget *parent )
     : QLayout( parent )
 {
     #ifdef DEBUG
-        cout << "P2Layout[" << (int) this << "]::P2Layout( "
+        cout << indent()
+             << "P2Layout[" << (int) this << "]::P2Layout( "
              << (int) parent << " )" << endl;
     #endif
 
@@ -139,7 +140,8 @@ void P2Layout::setGeometry( const QRect &rect )
 
 void P2Layout::refreshContentRectangle()
 {
-    cout << "+ P2Layout::refreshContentRectangle()" << endl; cout.flush();
+    cout << indentPlus()
+         << "+ P2Layout::refreshContentRectangle()" << endl;
 
     if ( !children.size() )
         contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
@@ -165,7 +167,8 @@ void P2Layout::refreshContentRectangle()
 //( ( P2Frame* ) parentWidget() )->updateGeometry();
 //( ( P2Frame* ) parentWidget() )->update();
 
-    cout << "- P2Layout::refreshContentRectangle()" << endl; cout.flush();
+    cout << indentMinus()
+         << "- P2Layout::refreshContentRectangle()" << endl;
 }
 
 
@@ -314,7 +317,7 @@ int P2Layout::resolveCollisions()
 
     shrinkChildrenByMargin();
 
-cout << "collisions found = " << iterations << endl;
+cout << indent() << "collisions found = " << iterations << endl;
     return iterations;
 }
 
@@ -402,7 +405,8 @@ QPoint P2Layout::findBestPosition( const QRect &rect )
 //- Should have an argument -- which item to check for consistency.
 void P2Layout::adjustGeometry()
 {
-cout << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
+cout << indentPlus()
+     << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 
     //QRect beforeGeometry = contentRectangle;
 
@@ -432,7 +436,8 @@ cout << "+ P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 //cout << "#### 4" << endl; cout.flush();
     justifyContents();
 
-cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
+cout << indentMinus()
+     << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 }
 
 
@@ -442,22 +447,26 @@ cout << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;
 
 void P2Layout::generateSpanningTree()
 {
-cout << "+ P2Layout[" << (int) this << "]::generateSpanningTree()" << endl; cout.flush();
-cout << "children.size() = " << children.size() << endl;
+cout << indentPlus()
+     << "+ P2Layout[" << (int) this << "]::generateSpanningTree()" << endl;
+cout << indent() << "children.size() = " << children.size() << endl;
 
     tree = P2FreeFormLayoutTree( children );
 
-cout << "- P2Layout[" << (int) this << "]::generateSpanningTree()" << endl; cout.flush();
+cout << indentMinus()
+     << "- P2Layout[" << (int) this << "]::generateSpanningTree()" << endl;
 }
 
 
 void P2Layout::applySpanningTree()
 {
-cout << "+ P2Layout[" << (int) this << "]::applySpanningTree()" << endl; cout.flush();
-cout << "children.size() = " << children.size() << endl;
+cout << indentPlus()
+     << "+ P2Layout[" << (int) this << "]::applySpanningTree()" << endl;
+cout << indent() << "children.size() = " << children.size() << endl;
 
     tree.applyTo( children );
 
-cout << "- P2Layout[" << (int) this << "]::applySpanningTree()" << endl; cout.flush();
+cout << indentMinus()
+     << "- P2Layout[" << (int) this << "]::applySpanningTree()" << endl;
 }
 

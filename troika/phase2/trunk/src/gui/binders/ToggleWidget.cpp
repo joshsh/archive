@@ -63,7 +63,8 @@ ToggleWidget::ToggleWidget()
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "ToggleWidget[" <<  (int) this << "]::ToggleWidget()" << endl;
+        cout << indent()
+             << "ToggleWidget[" <<  (int) this << "]::ToggleWidget()" << endl;
     #endif
 
     setFixedSize( 10, 11 );

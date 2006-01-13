@@ -53,7 +53,8 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
     : QList< P2FreeFormLayoutEdge >()
 {
     #ifdef DEBUG
-        cout << "P2FreeFormLayoutTree[" << (int) this
+        cout << indent()
+             << "P2FreeFormLayoutTree[" << (int) this
              << "]::P2FreeFormLayoutTree("
              << ( int ) &vertices << ")" << endl; cout.flush();
     #endif
@@ -61,7 +62,8 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
     int size = vertices.size();
     if ( !size )
     {
-        cerr << "! P2FreeFormLayoutTree[ "
+        cerr << indent()
+             << "! P2FreeFormLayoutTree[ "
              << ( int ) this
              << " ]::P2FreeFormLayoutTree( "
              << ( int ) &vertices
@@ -85,13 +87,15 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
         for ( int i = 0; i < size; i++ )
             edgeWeights[ i ][ i ] = 0;
 
-        cout << "P2FreeFormLayoutTree adjacency matrix:\n\t";
+        cout << indent()
+             << "P2FreeFormLayoutTree adjacency matrix:\n"
+             << indent() << "\t";
         for ( int j = 0; j < size; j++ )
-            cout << j << ":\t";
+            cout << "\t" << j << ":";
         cout << endl;
         for ( int i = 0; i < size; i++ )
         {
-            cout << i << ":\t";
+            cout << indent() << "\t" << i << ":\t";
             for ( int j = 0; j < size; j++ )
                 cout << edgeWeights[ i ][ j ] << "\t";
             cout << endl;
@@ -162,10 +166,12 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
     }
 
     #ifdef DEBUG
-        cout << "Spanning tree:\n\t";
+        cout << indent()
+             << "Spanning tree:\n"
+             << indent() << "\t";
         for ( int j = 0; j < size; j++ )
             cout << j << ":\t";
-        cout << endl;
+        cout << endl << indent();
         for ( int j = 0; j < size; j++ )
             cout << "\t" << table[ j ].predecessor << "/" << table[ j ].weight;
         cout << endl;

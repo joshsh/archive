@@ -31,6 +31,17 @@ extern P2Environment *environment();
 
 #define DISABLE_FOCUS
 
+/** \return  indentation whitespace for debugging output
+    \note  Indentation level is post-incremented. */
+const char *indentPlus();
+
+/** \return  indentation whitespace for debugging output */
+const char *indent();
+
+/** \return  indentation whitespace for debugging output
+    \note  Indentation level is pre-decremented. */
+const char *indentMinus();
+
 
 // Display settings ////////////////////////////////////////////////////////////
 

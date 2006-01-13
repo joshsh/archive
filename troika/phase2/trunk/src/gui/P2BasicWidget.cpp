@@ -9,7 +9,8 @@ P2BasicWidget::P2BasicWidget()
     : QWidget( 0, 0 )
 {
     #ifdef DEBUG
-        cout << "P2BasicWidget[" << (int) this << "]::P2BasicWidget()" << endl;
+        cout << indent()
+             << "P2BasicWidget[" << (int) this << "]::P2BasicWidget()" << endl;
     #endif
 
     isDependent = false;

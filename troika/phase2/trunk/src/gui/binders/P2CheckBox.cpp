@@ -8,7 +8,8 @@ P2CheckBox::P2CheckBox()
         : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2CheckBox[" <<  (int) this << "]::P2CheckBox()" << endl;
+        cout << indent()
+             << "P2CheckBox[" <<  (int) this << "]::P2CheckBox()" << endl;
     #endif
 
     //setFixedSize( 20, 20 );

@@ -11,7 +11,8 @@ P2Frame::P2Frame()
     : P2BasicWidget()
 {
     #ifdef DEBUG
-        cout << "P2Frame[" <<  (int) this << "]::P2Frame()" << endl;
+        cout << indent()
+             << "P2Frame[" <<  (int) this << "]::P2Frame()" << endl;
     #endif
 
     // Note: no need to call setLayout after using this constructor.
@@ -24,7 +25,8 @@ P2Frame::P2Frame()
 void P2Frame::addChild( P2BasicWidget *widget, const QPoint &position )
 {
     #ifdef DEBUG
-        cout << "P2Frame[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
+        cout << indent()
+             << "P2Frame[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
     #endif
 
     // "When you use a layout, you don't need to pass a parent when constructing
