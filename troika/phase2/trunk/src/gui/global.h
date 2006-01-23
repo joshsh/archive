@@ -18,6 +18,9 @@
 /** \return  a global P2Environment variable */
 extern P2Environment *environment();
 
+extern void newMainWindow();
+extern void refreshAll();
+
 
 // Debugging ///////////////////////////////////////////////////////////////////
 
@@ -112,6 +115,7 @@ const char *indentMinus();
     #define TOOLBAR__VIEW__COMMAND_LINE
     #define TOOLBAR__VIEW__BACK
     #define TOOLBAR__VIEW__FORWARD
+    // #define TOOLBAR__VIEW__NEW_WINDOW
     // #define TOOLBAR__VIEW__SHOW_FRAMES
     // #define TOOLBAR__VIEW__SHOW_NAMES
 #endif

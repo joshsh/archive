@@ -16,7 +16,9 @@ class P2MainWindow : public QMainWindow
 
 public:
 
-    P2MainWindow( QWidget* parent );
+    P2MainWindow( QWidget* parent, Qt::WFlags flags = 0 );
+
+    void refresh();
 
 public slots:
 
@@ -40,6 +42,7 @@ public slots:
     void viewCommandLine();
     void viewForward();
     void viewBack();
+    void viewNewWindow();
     /** Turns inactive frame visibility on or off. */
     void viewShowFrames();
     /** Turns lexical display on or off. */
@@ -52,6 +55,9 @@ private:
 
     QIcon checkmark;
     P2CentralWidget *centralWidget;
+
+    // Checkable actions which are bound to the environment.
+    QAction *viewShowNamesAction, *viewShowFramesAction;
 
     void createMenusAndToolbar();
 

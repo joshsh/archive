@@ -30,7 +30,40 @@ P2Environment *environment()
 }
 
 
+QList< P2MainWindow* > windows;
+
+
 ////////////////////////////////////////////////////////////////////////////////
+
+
+/** Create a new top-level widget. */
+void newMainWindow()
+{
+    P2MainWindow *w = new P2MainWindow( 0, 0 );
+/*
+            Qt::Window
+            | Qt::WindowTitleHint
+            | Qt::WindowSystemMenuHint
+            | Qt::WindowMinMaxButtonsHint );
+//*/
+
+    windows.append( w );
+
+    w->show();
+
+    // If the display area is small, maximize the first main window.
+    #ifdef ARM_COMPILE
+        if ( windows.size() == 1 )
+            w->showMaximized( );
+    #endif
+}
+
+
+void refreshAll()
+{
+    for ( int i = 0; i < windows.size(); i++ )
+        windows.at( i )->refresh();
+}
 
 
 /** Main function for the Phase2 GUI. */
@@ -40,19 +73,15 @@ int main( int argc, char **argv )
 
     QApplication a( argc, argv );
 
-    // Single top-level widget.
-    P2MainWindow w( 0 );
-
-    // If the display area is small, maximize the main window.
-    #ifdef ARM_COMPILE
-        w.showMaximized( );
-    #else
-        w.show( );
-    #endif
+    // In the beginning there was a single top-level window.
+    newMainWindow();
 
     int ret = a.exec( );
 
     delete env;
+
+    while ( windows.size() )
+        delete windows.takeFirst();
 
     return ret;
 }

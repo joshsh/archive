@@ -4,8 +4,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2MainWindow::P2MainWindow( QWidget* parent )
-    : QMainWindow( parent )
+P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags flags )
+    : QMainWindow( parent, flags )
 {
     #ifdef DEBUG
         cout << indent()
@@ -58,8 +58,8 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     // large screen (otherwise allow the application to maximize it).
     #ifndef ARM_COMPILE
         setGeometry( QRect( 500, 500, SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
-        setMinimumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
-        setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+        //setMinimumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+        //setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
     createMenusAndToolbar();
@@ -321,6 +321,17 @@ void P2MainWindow::createMenusAndToolbar()
         toolbar->addAction( action );
     #endif
 
+    // New Window.
+    icon = QIcon( ":/viewNewWindow.png" );
+    action = new QAction( icon, tr( "&New Window" ), this );
+    action->setStatusTip( tr( "Open a new top-level window" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewNewWindow() ) );
+    //action->setShortcut( ... );
+    viewMenu->addAction( action );
+    #ifdef TOOLBAR__VIEW__NEW_WINDOW
+        toolbar->addAction( action );
+    #endif
+
     viewMenu->addSeparator();
 
     // Show Frames.
@@ -328,7 +339,7 @@ void P2MainWindow::createMenusAndToolbar()
 //QIcon::State state;  // QIcon::On  QIcon::Off
 
     //icon = QIcon( ":/viewShowFrames.png" );
-    action = new QAction( checkmark, tr( "&Show Frames" ), this );
+    action = viewShowFramesAction = new QAction( checkmark, tr( "&Show Frames" ), this );
     //action = new QAction( tr( "&Show Frames" ), this );
     action->setStatusTip( tr( "Draw borders around all frames" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
@@ -340,7 +351,7 @@ void P2MainWindow::createMenusAndToolbar()
         toolbar->addAction( action );
     #endif
 
-    action = new QAction( checkmark, tr( "Show &Names" ), this );
+    action = viewShowNamesAction = new QAction( checkmark, tr( "Show Names" ), this );
     action->setStatusTip( tr( "Display lexical names" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( viewShowNames() ) );
     //action->setShortcut( Qt::Key_F6 );
@@ -379,6 +390,40 @@ void P2MainWindow::createMenusAndToolbar()
     #ifdef TOOLBAR__HELP__ABOUT_PHASE2
         toolbar->addAction( action );
     #endif
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+void P2MainWindow::refresh()
+{
+    viewShowFramesAction->setChecked( environment()->getIdleFrameVisibility() );
+    viewShowNamesAction->setChecked( environment()->getNameVisibility() );
+
+    centralWidget->refresh();
+    //update();
+
+    //~ temporary
+    QWidget cover( this, 0 );
+    cover.setGeometry( contentsRect() );
+    cover.setVisible( true );
+    cover.setVisible( false );
+
+    //show();
+    //update();
+    //update( visibleRegion() );
+    //update( 0, 0, width(), height() );
+    //update( QRegion( QRect( QPoint( 0, 0 ), QSize( geometry().width(), geometry().height() ) ), QRegion::Rectangle ) );
+    //update( QRect( QPoint( 0, 0 ), QSize( geometry().width(), geometry().height() ) ) );
+    //update( geometry() );
+    //centralWidget->doUpdate();
+    //centralWidget->update( 0, 0, centralWidget->geometry().width(), centralWidget->geometry().height() );
+    //centralWidget->update();
+
+    // This works, but with a hefty flicker.
+    //setVisible( false );
+    //setVisible( true );
 }
 
 
@@ -499,27 +544,18 @@ void P2MainWindow::viewBack()
 }
 
 
+void P2MainWindow::viewNewWindow()
+{
+    newMainWindow();
+}
+
+
 void P2MainWindow::viewShowFrames()
 {
     environment()->setIdleFrameVisibility(
         !environment()->getIdleFrameVisibility() );
 
-    //~ temporary
-    QWidget cover( this, 0 );
-    cover.setGeometry( contentsRect() );
-    cover.setVisible( true );
-    cover.setVisible( false );
-
-    //show();
-    //update();
-    //update( visibleRegion() );
-    //update( 0, 0, width(), height() );
-    //update( QRegion( QRect( QPoint( 0, 0 ), QSize( geometry().width(), geometry().height() ) ), QRegion::Rectangle ) );
-    //update( QRect( QPoint( 0, 0 ), QSize( geometry().width(), geometry().height() ) ) );
-    //update( geometry() );
-    //centralWidget->doUpdate();
-    //centralWidget->update( 0, 0, centralWidget->geometry().width(), centralWidget->geometry().height() );
-    //centralWidget->update();
+    refreshAll();
 }
 
 
@@ -529,7 +565,7 @@ void P2MainWindow::viewShowNames()
 
     environment()->setNameVisibility( !environment()->getNameVisibility() );
 
-    centralWidget->refresh();
+    refreshAll();
 }
 
 
