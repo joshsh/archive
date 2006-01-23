@@ -9,7 +9,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2CentralWidget : public P2BasicWidget
+class P2CentralWidget : public P2Widget
 {
 
 public:
@@ -19,7 +19,9 @@ public:
     bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
     bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
+    const QString className();
     bool isFrame() { return false; }
+    void refresh();
 
     QSize sizeHint() const { return centralFrame->sizeHint() + QSize( 4, 4 ); }
 

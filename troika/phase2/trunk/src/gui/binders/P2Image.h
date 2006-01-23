@@ -18,7 +18,7 @@ public:
 
     P2Image( const char * const xpm[] );
 
-    bool isFrame() { return false; }
+    const QString className();
 
 protected:
 

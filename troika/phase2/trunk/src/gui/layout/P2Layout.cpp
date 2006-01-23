@@ -22,13 +22,20 @@ P2Layout::P2Layout( QWidget *parent )
     setSizeConstraint( QLayout::SetDefaultConstraint );
 
     // Minimum distance of 1 pixel between child widgets.
-    setSpacing( 1 );
+    setSpacing( FRAME__CONTENTS__SPACING );
 
     // Border padding of 2 pixels around content rectangle.
-    setMargin( 2 );
+    setMargin( FRAME__CONTENTS__SPACING + FRAME__CONTENTS__PADDING );
+
+    generateSpanningTree();
+
+    receivedMinimumSize = QSize( 0, 0 );
 
     // The initially empty layout has a minimal content rectangle.
-    refreshContentRectangle();
+    setContentOffset( QPoint( 0, 0 ) );
+
+    //adjustGeometry();
+    //justifyContents();
 }
 
 
@@ -42,6 +49,44 @@ P2Layout::~P2Layout()
 }
 
 
+void P2Layout::setContentOffset( const QPoint &offset )
+{
+    QPoint newOffset = offset;
+
+    if ( newOffset.x() < margin() )
+        newOffset.setX( margin() );
+    if ( newOffset.y() < margin() )
+        newOffset.setY( margin() );
+
+    if ( newOffset != contentOffset )
+    {
+        contentOffset = newOffset;
+        adjustGeometry();
+    }
+}
+
+
+void P2Layout::refresh()
+{
+    // Propagate the signal to all children.
+    for ( int i = 0; i < children.size(); i++ )
+    {
+        P2Widget *child = ( P2Widget* ) children.at( i )->widget();
+        child->refresh();
+    }
+}
+
+
+void P2Layout::setMinimumSize( const QSize &size )
+{
+    if ( size != receivedMinimumSize )
+    {
+        receivedMinimumSize = size;
+        adjustGeometry();
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -49,7 +94,7 @@ void P2Layout::addItem( QLayoutItem *item )
 {
     children.append( item );
 
-    generateSpanningTree();
+    //generateSpanningTree();
 
     //if ( children.size() == 1 )
     //    contentRectangle = item->geometry();
@@ -64,7 +109,7 @@ void P2Layout::addItem( QLayoutItem *item )
 
 
 // Warning: this is NOT an efficient way to add multiple items at a time.
-void P2Layout::addWidget( P2BasicWidget *widget, const QPoint &position )
+void P2Layout::addWidget( P2Widget *widget, const QPoint &position )
 {
 
     // Adjust the position of the new item so it does not collide.
@@ -95,6 +140,23 @@ QLayoutItem *P2Layout::takeAt( int index )
         return children.takeAt( index );
     else
         return 0;
+}
+
+
+void P2Layout::showChildren() const
+{
+    for ( int i = 0; i < children.size(); i++ )
+    {
+        cout << indent()
+             << i << ":\t";
+
+        P2Widget *child = ( P2Widget* ) children.at( i )->widget();
+        cout << child->className().toStdString() << "\t";
+        if ( child->objectName() != 0 )
+            cout << child->objectName().toStdString();
+
+        cout << endl;
+    }
 }
 
 
@@ -138,45 +200,53 @@ void P2Layout::setGeometry( const QRect &rect )
 // Coordination ////////////////////////////////////////////////////////////////
 
 
-void P2Layout::refreshContentRectangle()
+void P2Layout::justifyContents()
 {
-    cout << indentPlus()
-         << "+ P2Layout::refreshContentRectangle()" << endl;
-
     if ( !children.size() )
-        contentRectangle = QRect( QPoint( margin(), margin() ), QSize( 0, 0 ) );
+        contentRectangle = QRect(
+            QPoint( 0, 0 ), QSize( 0, 0 ) );
 
     else
     {
-//cout << "#### __p" << endl; cout.flush();
-
         contentRectangle = children.at( 0 )->geometry();
-//cout << "#### __q" << endl; cout.flush();
 
         for ( int i = 1; i < children.size(); i++ )
             contentRectangle = contentRectangle.unite( children.at( i )->geometry() );
-//cout << "#### __r" << endl; cout.flush();
-
     }
-//cout << "#### a" << endl; cout.flush();
 
-    cachedSizeHint = contentRectangle.size() + QSize( 2 * margin(), 2 * margin() );
-//cout << "#### b" << endl; cout.flush();
+    cachedSizeHint = contentRectangle.size()
+        + QSize( contentOffset.x(), contentOffset.y() )
+        + QSize( margin(), margin() );
 
-    ( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
-//( ( P2Frame* ) parentWidget() )->updateGeometry();
-//( ( P2Frame* ) parentWidget() )->update();
+    QPoint actualOffset = contentOffset;
+    if ( ( receivedMinimumSize.width() > 0 )
+      && ( contentRectangle.width() + contentOffset.x() + margin() < receivedMinimumSize.width() )
+      && ( FRAME__CONTENTS__ALIGNMENT != Qt::AlignLeft ) )
+    {
+        int xoffset;
 
-    cout << indentMinus()
-         << "- P2Layout::refreshContentRectangle()" << endl;
-}
+        switch ( FRAME__CONTENTS__ALIGNMENT )
+        {
+            case Qt::AlignRight:
 
+                xoffset = receivedMinimumSize.width() - ( margin() + contentRectangle.width() );
+                break;
 
-void P2Layout::justifyContents()
-{
+            case Qt::AlignHCenter:
+
+                xoffset = ( receivedMinimumSize.width() - contentRectangle.width() ) / 2;
+                break;
+        }
+
+        actualOffset.setX( xoffset );
+
+        cachedSizeHint.setWidth( receivedMinimumSize.width() );
+    }
+    // Note: no need for special vertical alignment at this stage.
+
     // Content origin should be at (2, 2).
-    int xoffset = contentRectangle.x() - 2;
-    int yoffset = contentRectangle.y() - 2;
+    int xoffset = contentRectangle.x() - actualOffset.x();
+    int yoffset = contentRectangle.y() - actualOffset.y();
 
     if ( xoffset || yoffset )
     {
@@ -190,14 +260,10 @@ void P2Layout::justifyContents()
 
         contentRectangle = contentRectangle.translated( negOffset );
     }
+
+    ( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
 }
 
-/*
-static int abs( int x )
-{
-    return x < 0 ? -x : x;
-}
-*/
 
 void P2Layout::expandChildrenByMargin()
 {
@@ -432,8 +498,6 @@ cout << indentPlus()
 //cout << "#### 3" << endl; cout.flush();
 
     // Compensate for any overall displacement which may have occurred.
-    refreshContentRectangle();
-//cout << "#### 4" << endl; cout.flush();
     justifyContents();
 
 cout << indentMinus()
@@ -450,6 +514,7 @@ void P2Layout::generateSpanningTree()
 cout << indentPlus()
      << "+ P2Layout[" << (int) this << "]::generateSpanningTree()" << endl;
 cout << indent() << "children.size() = " << children.size() << endl;
+showChildren();
 
     tree = P2FreeFormLayoutTree( children );
 

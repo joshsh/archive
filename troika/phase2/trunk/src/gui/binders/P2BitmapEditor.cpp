@@ -40,6 +40,12 @@ P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
 }
 
 
+const QString P2BitmapEditor::className()
+{
+    return QString( "P2BitmapEditor" );
+}
+
+
 /*
 P2BitmapEditor::~P2BitmapEditor()
 {

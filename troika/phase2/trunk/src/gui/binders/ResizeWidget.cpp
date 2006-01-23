@@ -16,6 +16,12 @@ ResizeWidget::ResizeWidget()
 }
 
 
+const QString ResizeWidget::className()
+{
+    return QString( "ResizeWidget" );
+}
+
+
 QSize ResizeWidget::sizeHint() const
 {
     int len = 10 * ( toggle + 1 ) ;

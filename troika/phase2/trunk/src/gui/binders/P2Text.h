@@ -20,7 +20,7 @@ public:
         \param color  text color (defaults to the foreground color) */
     P2Text( char *text, QColor *color );
 
-    bool isFrame() { return false; }
+    const QString className();
 
     QSize sizeHint() const;  // Must be const.
 

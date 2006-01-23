@@ -21,6 +21,12 @@ setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 }
 
 
+const QString P2TextEdit::className()
+{
+    return QString( "P2TextEdit" );
+}
+
+
 QSize P2TextEdit::sizeHint() const
 {
     return textEdit->sizeHint();

@@ -20,6 +20,12 @@ P2CheckBox::P2CheckBox()
 }
 
 
+const QString P2CheckBox::className()
+{
+    return QString( "P2CheckBox" );
+}
+
+
 QSize P2CheckBox::sizeHint() const
 {
     return checkbox->sizeHint();

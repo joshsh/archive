@@ -51,7 +51,7 @@ static const char * troika_icon_big_xpm[] = {
 
 
 P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
-    : P2BasicWidget()
+    : P2Widget()
 {
     #ifdef DEBUG
         cout << indent()
@@ -66,6 +66,7 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     // Top-level binder.
     P2Frame *b = centralFrame = new P2Frame(), *b2;
     b->setParent( this );
+    b->setObjectName( "Top-level frame" );
     //b->setPosition( QPoint( 5, 5 ) );
 
     QPoint p( 0, 0 );
@@ -127,6 +128,7 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     b2 = new P2Frame();
     b2->addChild( editor, QPoint( 0, 0 ) );
     b->addChild( b2, QPoint( 0, 100 ) );
+    b2->setObjectName( QString( QChar( 0x00DC ) ) + "jlabel" );
 
     ResizeWidget *rs = new ResizeWidget();
     b->addChild( rs, QPoint( 0, 20 ) );
@@ -141,9 +143,23 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
         resizers->addChild( b2, QPoint( 0, 0 ) );
     }
     b->addChild( resizers, QPoint( 0, 30 ) );
+    resizers->setObjectName( "Resizable widgets" );
 
     //QPoint center( this->geometry().width() / 2, this->geometry().height() / 2 );
     //b->setCenter( center );
 
+    refresh();
+}
+
+
+const QString P2CentralWidget::className()
+{
+    return QString( "P2CentralWidget" );
+}
+
+
+void P2CentralWidget::refresh()
+{
+    centralFrame->refresh();
 }
 

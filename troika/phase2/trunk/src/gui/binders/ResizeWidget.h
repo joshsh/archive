@@ -17,7 +17,7 @@ public:
 
     ResizeWidget();
 
-    bool isFrame() { return false; }
+    const QString className();
 
     QSize sizeHint() const;
 

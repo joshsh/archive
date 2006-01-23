@@ -11,8 +11,11 @@ P2Environment::P2Environment()
         //cout << indentPlus() << "P2Environment[" << (int) this << "]::P2Environment()" << endl;
     #endif
 
-    idleFramesAreVisible = false;
+    idleFramesAreVisible = true;
     viewMode = layoutMode;
+    namesAreVisible = true;
+
+    contentOffset = QSize( 0, 0 );
 }
 
 
@@ -25,5 +28,29 @@ P2Environment::ViewMode P2Environment::getViewMode()
 void P2Environment::setViewMode( P2Environment::ViewMode viewMode )
 {
     this->viewMode = viewMode;
+}
+
+
+bool P2Environment::getIdleFrameVisibility()
+{
+    return idleFramesAreVisible;
+}
+
+
+void P2Environment::setIdleFrameVisibility( bool v )
+{
+    idleFramesAreVisible = v;
+}
+
+
+bool P2Environment::getNameVisibility()
+{
+    return namesAreVisible;
+}
+
+
+void P2Environment::setNameVisibility( bool v )
+{
+    namesAreVisible = v;
 }
 

@@ -18,6 +18,12 @@ P2Image::P2Image( const char * const xpm[] )
 }
 
 
+const QString P2Image::className()
+{
+    return QString( "P2Image" );
+}
+
+
 void P2Image::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );

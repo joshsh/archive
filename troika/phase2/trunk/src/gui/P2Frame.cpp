@@ -8,7 +8,7 @@
 
 
 P2Frame::P2Frame()
-    : P2BasicWidget()
+    : P2Widget()
 {
     #ifdef DEBUG
         cout << indent()
@@ -22,7 +22,13 @@ P2Frame::P2Frame()
 }
 
 
-void P2Frame::addChild( P2BasicWidget *widget, const QPoint &position )
+const QString P2Frame::className()
+{
+    return QString( "P2Frame" );
+}
+
+
+void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 {
     #ifdef DEBUG
         cout << indent()
@@ -40,6 +46,38 @@ void P2Frame::addChild( P2BasicWidget *widget, const QPoint &position )
     (( P2Layout* ) layout())->addWidget( widget, position );
 
     //updateGeometry();  //~
+}
+
+
+void P2Frame::refresh()
+{
+    P2Layout *l = ( P2Layout* ) layout();
+    QSize labelSize = fontMetrics().boundingRect( objectName() ).size();
+
+    QPoint offset;
+    int minWidth;
+
+    // Find label offset and minimum width.
+    if ( environment()->getNameVisibility() && objectName() != 0 )
+    {
+        offset = QPoint( 0, labelSize.height() + FRAME__CONTENTS__PADDING );
+        minWidth = labelSize.width() + ( 2 * ( FRAME__LABEL__X_PADDING + FRAME__LABEL__X_MARGIN ) );
+    }
+
+    else
+    {
+        offset = QPoint( 0, 0 );
+        minWidth = 0;
+    }
+
+    // Refresh label params.
+    l->setContentOffset( offset );
+    l->setMinimumSize( QSize( minWidth, 0 ) );
+
+    // Refresh minimum size.
+
+    // Propagate "refresh" signal to children.
+    l->refresh();
 }
 
 
@@ -131,25 +169,77 @@ bool P2Frame::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin )
 void P2Frame::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
+    QColor activeColor( COLOR__FRAME__ACTIVE );
 
     if ( focusChild != this )
     {
-        QColor inactiveColor = environment()->idleFramesAreVisible
-            ? QColor( 0xBF, 0xBF, 0xFF, 0xFF )  // Light blue.
+        QColor inactiveColor = environment()->getIdleFrameVisibility()
+            ? QColor( COLOR__FRAME__INACTIVE )
             : Qt::white;
         painter.setPen( inactiveColor );
     }
 
     else
     {
-        QColor activeColor( 0x00, 0x00, 0xFF, 0xFF );  // Full blue.
         QPen activePen( Qt::NoBrush, 1, Qt::SolidLine, Qt::SquareCap, Qt::BevelJoin );
         activePen.setColor( activeColor );
         painter.setPen( activePen );
     }
 
-    QRect borderRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
-    painter.drawRect( borderRect );
+    QRect borderRect;
+
+    // Draw border with object name as a label.
+    if ( ( objectName() != 0 ) && environment()->getNameVisibility() )
+    {
+        QSize size = fontMetrics().boundingRect( objectName() ).size();
+        int yoffset = size.height() / 2;
+        int xoffset;
+
+        // Draw border rectangle.
+        borderRect = QRect( QPoint( 0, yoffset ), geometry().size() - QSize( 1, 1 + yoffset ) );
+        painter.drawRect( borderRect );
+
+        switch ( FRAME__LABEL__ALIGNMENT )
+        {
+            case Qt::AlignLeft:
+
+                xoffset = FRAME__LABEL__X_MARGIN + FRAME__LABEL__X_PADDING;
+                break;
+
+            case Qt::AlignRight:
+
+                xoffset = width() - ( FRAME__LABEL__X_MARGIN + FRAME__LABEL__X_PADDING + size.width() );
+                break;
+
+            case Qt::AlignHCenter:
+
+                xoffset = ( width() - size.width() ) / 2;
+                break;
+        }
+
+        QRect textRect = QRect(
+            QPoint( xoffset - FRAME__LABEL__X_PADDING, yoffset),
+            size + QSize( 2 * FRAME__LABEL__X_PADDING, 0 ) );
+
+        // Draw opaque background rectangle for text.
+        painter.setPen( QColor( COLOR__BACKGROUND ) );
+        painter.setBrush( QBrush( QColor( COLOR__BACKGROUND ), Qt::SolidPattern ) );
+        painter.drawRect( textRect );
+
+        // Draw text.
+        painter.setPen( activeColor );
+        painter.setBackgroundMode( Qt::OpaqueMode );
+        painter.setBackground( QBrush( QColor( COLOR__BACKGROUND ), Qt::SolidPattern ) );
+        painter.drawText( xoffset, size.height() - 2, objectName() );
+    }
+
+    // Draw border with no label.
+    else
+    {
+        // Draw border rectangle.
+        borderRect = QRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
+        painter.drawRect( borderRect );
+    }
 }
 
 

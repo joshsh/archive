@@ -6,7 +6,7 @@
 #include "global.h"
 #include <QtGui>
 
-#include "P2BasicWidget.h"
+#include "P2Widget.h"
 #include "P2FreeFormLayoutTree.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ public:
     void addItem( QLayoutItem *item );
 
     /** Create a QLayoutItem to hold a QWidget (a QWidgetItem) and add it. */
-    void addWidget( P2BasicWidget *widget, const QPoint &position );
+    void addWidget( P2Widget *widget, const QPoint &position );
 
     int count() const;
     QLayoutItem *itemAt( int index ) const;
@@ -40,6 +40,12 @@ public:
 
     void adjustGeometry();
 
+    void setContentOffset( const QPoint &offset );
+
+    void setMinimumSize( const QSize &size );
+
+    void refresh();
+
 private:
 
     /** An auxiliary QList for quick iteration by index over this P2Layout's
@@ -50,14 +56,19 @@ private:
         positions of this P2Layout's child widgets. */
     P2FreeFormLayoutTree tree;
 
+    /** Bounding rectangle of layout contents. */
     QRect contentRectangle;
 
-    // "Calling QLayoutItem::sizeHint(), etc. may be expensive, so you should
-    // store the value in a local variable if you need it again later in the
-    // same function."
+    //~ not necessary
+    QPoint contentOffset;
+
+    QSize receivedMinimumSize;
+
+    /** "Calling QLayoutItem::sizeHint(), etc. may be expensive, so you should
+        store the value in a local variable if you need it again later in the
+        same function." */
     QSize cachedSizeHint;
 
-    void refreshContentRectangle();
     void justifyContents();
 
     /** \todo  It would be nice if these were not necessary. */
@@ -69,11 +80,15 @@ private:
         \return  the number of iterations it took to do this */
     int resolveCollisions();
 
+    /** \return  the closest non-interfering position of an item to be placed
+        into the layout tree (does not affect existing layout items) */
     QPoint findBestPosition( const QRect &rect );
 
     void generateSpanningTree();
     void applySpanningTree();
 
+    /** Show names and types of children.  A debugging method. */
+    void showChildren() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -22,6 +22,12 @@ P2Text::P2Text( char *text, QColor *color )
 }
 
 
+const QString P2Text::className()
+{
+    return QString( "P2Text" );
+}
+
+
 QSize P2Text::sizeHint() const
 {
     return size;

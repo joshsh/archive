@@ -27,6 +27,8 @@ extern P2Environment *environment();
 
     #include <iostream.h>
 
+    //#define DEBUG__LAYOUT__FF_LAYOUT_TREE
+
 #endif   // DEBUG
 
 #define DISABLE_FOCUS
@@ -45,12 +47,37 @@ const char *indentMinus();
 
 // Display settings ////////////////////////////////////////////////////////////
 
-/** All child widgets inherit this background color, rather than defining their
-    own. */
-#define BACKGROUND_COLOR    0xFF, 0xFF, 0xFF
-
 #define SL5600__DISPLAY_WIDTH  240
 #define SL5600__DISPLAY_HEIGHT  320
+
+/** All child widgets inherit this background color, rather than defining their
+    own. */
+#define COLOR__BACKGROUND       0xFF, 0xFF, 0xFF
+
+// Full blue.
+#define COLOR__FRAME__ACTIVE    0x00, 0x00, 0xFF, 0xFF
+// Light blue.
+#define COLOR__FRAME__INACTIVE  0xBF, 0xBF, 0xFF, 0xFF
+
+
+// Layout //////////////////////////////////////////////////////////////////////
+
+/** Number of empty pixels on either side of a frame label. */
+#define FRAME__LABEL__X_PADDING     2
+
+/** Minimum x offset of a label from either side of its frame. */
+#define FRAME__LABEL__X_MARGIN      7
+
+/** Horizontal alignment of frame labels. */
+#define FRAME__LABEL__ALIGNMENT     Qt::AlignLeft
+//#define FRAME__LABEL__ALIGNMENT     Qt::AlignHCenter
+//#define FRAME__LABEL__ALIGNMENT     Qt::AlignRight
+
+/** Horizontal alignment of frame contents. */
+#define FRAME__CONTENTS__ALIGNMENT  Qt::AlignHCenter
+
+#define FRAME__CONTENTS__SPACING    1
+#define FRAME__CONTENTS__PADDING    1
 
 
 // Tool bar ////////////////////////////////////////////////////////////////////
@@ -86,6 +113,7 @@ const char *indentMinus();
     #define TOOLBAR__VIEW__BACK
     #define TOOLBAR__VIEW__FORWARD
     // #define TOOLBAR__VIEW__SHOW_FRAMES
+    // #define TOOLBAR__VIEW__SHOW_NAMES
 #endif
 
 #ifdef TOOLBAR__HELP_ACTIONS

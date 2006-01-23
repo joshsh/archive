@@ -27,6 +27,8 @@ public:
     //P2BitmapEditor( QWidget *parent = 0, const char *name = 0 );
     //~P2BitmapEditor();
 
+    const QString className();
+
     void setPenColor( const QColor &newColor );
     QColor penColor() const { return curColor; }
     void setZoomFactor( int newZoom );
@@ -36,8 +38,6 @@ public:
     QSize sizeHint() const;
     void setShowGridLines( bool newShowGridLines );
     bool getShowGridLines() const { return showGridLines; }
-
-    bool isFrame() { return false; }
 
 protected:
 

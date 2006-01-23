@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 //#include "global.h"
+#include <QtGui>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -14,18 +15,26 @@ public:
 
     enum ViewMode { layoutMode, commandLineMode };
 
-    bool idleFramesAreVisible;
-
     /** Initializes the P2Environment with default values. */
     P2Environment();
 
     ViewMode getViewMode();
     void setViewMode( ViewMode viewMode );
 
+    bool getIdleFrameVisibility();
+    void setIdleFrameVisibility( bool v );
+
+    bool getNameVisibility();
+    void setNameVisibility( bool v );
+
+    QSize contentOffset;
+
 private:
 
-    ViewMode viewMode;
+    bool namesAreVisible;
+    bool idleFramesAreVisible;
 
+    ViewMode viewMode;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

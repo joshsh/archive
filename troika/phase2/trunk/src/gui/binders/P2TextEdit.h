@@ -18,7 +18,7 @@ public:
 
     P2TextEdit( char *text, bool readOnly );
 
-    bool isFrame() { return false; }
+    const QString className();
 
     /** \note  Without an overloaded sizeHint, Qt apparently assumes
         QSize( 0, 0 ). */

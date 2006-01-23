@@ -78,6 +78,12 @@ ToggleWidget::ToggleWidget()
 }
 
 
+const QString ToggleWidget::className()
+{
+    return QString( "ToggleWidget" );
+}
+
+
 // Note: the ButtonState is not used for now, as
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
 bool ToggleWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )

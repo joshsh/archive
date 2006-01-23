@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
+#include "P2CentralWidget.h"
 
 #include <QtGui>
 
@@ -36,20 +37,23 @@ public slots:
     void editSelectAll();
     void editFind();
 
-    /** Turns inactive frame visibility on or off. */
     void viewCommandLine();
     void viewForward();
     void viewBack();
+    /** Turns inactive frame visibility on or off. */
     void viewShowFrames();
+    /** Turns lexical display on or off. */
+    void viewShowNames();
 
     void helpManual();
     void helpAboutPhase2();
 
 private:
 
-    void createMenusAndToolbar();
-
     QIcon checkmark;
+    P2CentralWidget *centralWidget;
+
+    void createMenusAndToolbar();
 
 };
 

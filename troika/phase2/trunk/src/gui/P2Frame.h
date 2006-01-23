@@ -4,12 +4,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
-#include "P2BasicWidget.h"
+#include "P2Widget.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /** \note  P2Frame is unrelated to QFrame. */
-class P2Frame : public P2BasicWidget
+class P2Frame : public P2Widget
 {
 
 public:
@@ -18,10 +18,10 @@ public:
     P2Frame();
 
     /** Adds a widget to this P2Frame's P2Layout, which assumes ownership of it.
-        \param widget  the child P2BasicWidget to add
+        \param widget  the child P2Widget to add
         \param position  the intended top left-hand corner of the child's
         geometry(), before collision resolution */
-    void addChild( P2BasicWidget *widget, const QPoint &position );
+    void addChild( P2Widget *widget, const QPoint &position );
 
     //- "Reimplement QWidget::resizeEvent() to calculate the required
     // distribution of sizes and call setGeometry() on each child."
@@ -30,7 +30,9 @@ public:
     // needs to be recalculated. Reimplement QWidget::event() to handle
     // QEvent::LayoutHint events."
 
+    const QString className();
     bool isFrame() { return true; }
+    void refresh();
 
 protected:
 

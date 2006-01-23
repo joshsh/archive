@@ -17,7 +17,7 @@ public:
 
     ToggleWidget();
 
-    bool isFrame() { return false; }
+    const QString className();
 
 protected:
 

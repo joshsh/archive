@@ -52,7 +52,7 @@ end loop
 P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
     : QList< P2FreeFormLayoutEdge >()
 {
-    #ifdef DEBUG
+    #ifdef DEBUG__LAYOUT__FF_LAYOUT_TREE
         cout << indent()
              << "P2FreeFormLayoutTree[" << (int) this
              << "]::P2FreeFormLayoutTree("
@@ -61,16 +61,8 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
 
     int size = vertices.size();
     if ( !size )
-    {
-        cerr << indent()
-             << "! P2FreeFormLayoutTree[ "
-             << ( int ) this
-             << " ]::P2FreeFormLayoutTree( "
-             << ( int ) &vertices
-             << "): " << "empty vertex set" << endl;
-        cerr.flush();
+        // Nothing to do.
         return;
-    }
 
     // Generate a weighted adjacency matrix.
     int edgeWeights[ size ][ size ];
@@ -83,7 +75,7 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
                 = P2FreeFormLayoutEdge::distance( srcItem, vertices.at( j ) );
     }
 
-    #ifdef DEBUG
+    #ifdef DEBUG__LAYOUT__FF_LAYOUT_TREE
         for ( int i = 0; i < size; i++ )
             edgeWeights[ i ][ i ] = 0;
 
@@ -165,7 +157,7 @@ P2FreeFormLayoutTree::P2FreeFormLayoutTree( QList< QLayoutItem* > vertices )
         }
     }
 
-    #ifdef DEBUG
+    #ifdef DEBUG__LAYOUT__FF_LAYOUT_TREE
         cout << indent()
              << "Spanning tree:\n"
              << indent() << "\t";

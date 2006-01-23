@@ -1,5 +1,4 @@
 #include "P2MainWindow.h"
-#include "P2CentralWidget.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +33,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
         palette().text(),
         palette().brightText(),
         palette().base(),
-        QBrush( QColor( BACKGROUND_COLOR ), Qt::SolidPattern ) ) );  // Background color.
+        QBrush( QColor( COLOR__BACKGROUND ), Qt::SolidPattern ) ) );  // Background color.
     //setPalette( QPalette( QColor( BACKGROUND_COLOR ) ) );
 
     //setMinimumSize( 240, 320 );
@@ -66,7 +65,7 @@ P2MainWindow::P2MainWindow( QWidget* parent )
     createMenusAndToolbar();
 
     // Create the central widget.
-    P2CentralWidget *centralWidget = new P2CentralWidget(
+    centralWidget = new P2CentralWidget(
         contentsRect().size() );
     //setCentralWidget( centralWidget );
 
@@ -335,9 +334,20 @@ void P2MainWindow::createMenusAndToolbar()
     connect( action, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
     action->setShortcut( Qt::Key_F6 );
     action->setCheckable( true );
-    action->setChecked( false );
+    action->setChecked( environment()->getIdleFrameVisibility() );
     viewMenu->addAction( action );
     #ifdef TOOLBAR__VIEW__SHOW_FRAMES
+        toolbar->addAction( action );
+    #endif
+
+    action = new QAction( checkmark, tr( "Show &Names" ), this );
+    action->setStatusTip( tr( "Display lexical names" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewShowNames() ) );
+    //action->setShortcut( Qt::Key_F6 );
+    action->setCheckable( true );
+    action->setChecked( environment()->getNameVisibility() );
+    viewMenu->addAction( action );
+    #ifdef TOOLBAR__VIEW__SHOW_NAMES
         toolbar->addAction( action );
     #endif
 
@@ -491,7 +501,8 @@ void P2MainWindow::viewBack()
 
 void P2MainWindow::viewShowFrames()
 {
-    environment()->idleFramesAreVisible = !environment()->idleFramesAreVisible;
+    environment()->setIdleFrameVisibility(
+        !environment()->getIdleFrameVisibility() );
 
     //~ temporary
     QWidget cover( this, 0 );
@@ -509,6 +520,16 @@ void P2MainWindow::viewShowFrames()
     //centralWidget->doUpdate();
     //centralWidget->update( 0, 0, centralWidget->geometry().width(), centralWidget->geometry().height() );
     //centralWidget->update();
+}
+
+
+void P2MainWindow::viewShowNames()
+{
+    cout << "void P2MainWindow::viewShowNames()" << endl;
+
+    environment()->setNameVisibility( !environment()->getNameVisibility() );
+
+    centralWidget->refresh();
 }
 
 
