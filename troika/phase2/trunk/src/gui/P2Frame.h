@@ -34,6 +34,8 @@ public:
     bool isFrame() { return true; }
     void refresh();
 
+    //void resizeEvent();
+
 protected:
 
     void paintEvent( QPaintEvent *event );

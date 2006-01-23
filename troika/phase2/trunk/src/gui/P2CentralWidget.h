@@ -25,6 +25,8 @@ public:
 
     QSize sizeHint() const { return centralFrame->sizeHint() + QSize( 4, 4 ); }
 
+    void resizeEvent();
+
 private:
 
     P2Frame *centralFrame;

@@ -1,5 +1,6 @@
 #include "P2Layout.h"
 #include "P2Frame.h"
+#include "P2CentralWidget.h"
 
 // Abandon collision resolution after this many iterations.
 #define MAX_COLLISIONS  1000
@@ -262,6 +263,11 @@ void P2Layout::justifyContents()
     }
 
     ( ( P2Frame* ) parentWidget() )->setSize( cachedSizeHint );
+    if ( ( ( P2Frame* ) parentWidget() )->isDependent )
+    {
+        if ( !( ( P2Widget* ) parentWidget()->parentWidget() )->isDependent )
+            ( ( P2CentralWidget* ) parentWidget()->parentWidget() )->resizeEvent();
+    }
 }
 
 
@@ -499,6 +505,17 @@ cout << indentPlus()
 
     // Compensate for any overall displacement which may have occurred.
     justifyContents();
+
+    //( ( P2Frame* ) widget() )->resizeEvent();
+
+/*
+    if ( !( ( P2Widget* ) widget() )->isDependent )
+    {
+        //QResizeEvent event( QSize( 0, 0 ), QSize( 0, 0 ) );
+        ( ( P2CentralWidget* ) widget()->parentWidget() )->resizeEvent( 0 );
+        //( ( P2CentralWidget* ) widget() )->resizeEvent( &event );
+    }
+//*/
 
 cout << indentMinus()
      << "- P2Layout[" << (int) this << "]::adjustGeometry()" << endl;

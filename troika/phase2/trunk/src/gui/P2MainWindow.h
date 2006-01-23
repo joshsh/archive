@@ -45,7 +45,7 @@ public slots:
     void viewNewWindow();
     /** Turns inactive frame visibility on or off. */
     void viewShowFrames();
-    /** Turns lexical display on or off. */
+    /** Turns label display on or off. */
     void viewShowNames();
 
     void helpManual();
@@ -55,6 +55,7 @@ private:
 
     QIcon checkmark;
     P2CentralWidget *centralWidget;
+    QScrollArea *scrollArea;
 
     // Checkable actions which are bound to the environment.
     QAction *viewShowNamesAction, *viewShowFramesAction;

@@ -69,10 +69,21 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags flags )
         contentsRect().size() );
     //setCentralWidget( centralWidget );
 
-    QScrollArea *scrollArea = new QScrollArea();
+/*
+    QWorkspace *ws = new QWorkspace( 0 );
+    ws->setScrollBarsEnabled( true );
+    centralWidget->setParent( ws );
+    ws->addWindow( centralWidget, 0 );
+    setCentralWidget( ws );
+//*/
+
+///*
+    scrollArea = new QScrollArea();
     //scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setWidget( centralWidget );
     setCentralWidget( scrollArea );
+    scrollArea->resize( centralWidget->geometry().size() );
+//*/
 
 cout << "width = " << centralWidget->width() << endl;
 cout << "height = " << centralWidget->height() << endl;

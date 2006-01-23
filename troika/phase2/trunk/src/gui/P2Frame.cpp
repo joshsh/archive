@@ -80,6 +80,12 @@ void P2Frame::refresh()
     l->refresh();
 }
 
+/*
+void P2Frame::resizeEvent()
+{
+        ( ( P2CentralWidget* ) parentWidget() )->resizeEvent( 0 );
+}
+*/
 
 // Focus ///////////////////////////////////////////////////////////////////////
 

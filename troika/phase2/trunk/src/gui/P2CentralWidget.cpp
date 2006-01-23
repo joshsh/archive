@@ -64,15 +64,16 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     //setFixedSize( fixedSize );
 
     // Top-level binder.
-    P2Frame *b = centralFrame = new P2Frame(), *b2;
+    P2Frame *b = centralFrame = new P2Frame(), *b2, *b3;
     b->setParent( this );
-    b->setObjectName( "Top-level frame" );
+    b->setObjectName( "Top-level P2Frame" );
     //b->setPosition( QPoint( 5, 5 ) );
 
     QPoint p( 0, 0 );
 
 //*
     P2Frame *togglers = new P2Frame();
+    togglers->setObjectName( "ToggleWidgets" );
 
     // ( Really, togglers should be fully constructed before it is added )
     b->addChild( togglers, QPoint( 0, 30 ) );
@@ -127,8 +128,10 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
         editor->geometry().size() ) );
     b2 = new P2Frame();
     b2->addChild( editor, QPoint( 0, 0 ) );
-    b->addChild( b2, QPoint( 0, 100 ) );
-    b2->setObjectName( QString( QChar( 0x00DC ) ) + "jlabel" );
+    b3 = new P2Frame();
+    b3->addChild( b2, QPoint( 0, 0 ) );
+    b->addChild( b3, QPoint( 0, 100 ) );
+    b3->setObjectName( "P2BitmapEditor" );
 
     ResizeWidget *rs = new ResizeWidget();
     b->addChild( rs, QPoint( 0, 20 ) );
@@ -143,7 +146,7 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
         resizers->addChild( b2, QPoint( 0, 0 ) );
     }
     b->addChild( resizers, QPoint( 0, 30 ) );
-    resizers->setObjectName( "Resizable widgets" );
+    resizers->setObjectName( "ResizeWidgets" );
 
     //QPoint center( this->geometry().width() / 2, this->geometry().height() / 2 );
     //b->setCenter( center );
@@ -161,5 +164,11 @@ const QString P2CentralWidget::className()
 void P2CentralWidget::refresh()
 {
     centralFrame->refresh();
+}
+
+
+void P2CentralWidget::resizeEvent()
+{
+    ( ( QScrollArea* ) parentWidget() )->resize( geometry().size() );
 }
 
