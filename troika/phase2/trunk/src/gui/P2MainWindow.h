@@ -5,6 +5,7 @@
 
 #include "global.h"
 #include "P2CentralWidget.h"
+#include "P2ScrollArea.h"
 
 #include <QtGui>
 
@@ -55,7 +56,7 @@ private:
 
     QIcon checkmark;
     P2CentralWidget *centralWidget;
-    QScrollArea *scrollArea;
+    //QScrollArea *scrollArea;
 
     // Checkable actions which are bound to the environment.
     QAction *viewShowNamesAction, *viewShowFramesAction;

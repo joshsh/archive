@@ -25,9 +25,6 @@ const QString ResizeWidget::className()
 QSize ResizeWidget::sizeHint() const
 {
     int len = 10 * ( toggle + 1 ) ;
-cout << indent() << "ResizeWidget[" <<  (int) this << "]::sizeHint(): QSize( "
-     << len << ", " << len << " )" << endl;
-
     return QSize( len, len );
 }
 
@@ -37,12 +34,11 @@ bool ResizeWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin
     if ( event->button() == Qt::LeftButton )
     {
         toggle = ( toggle + 1 ) % 3;
-        //setGeometry( QRect( geometry().topLeft(), sizeHint() ) );
-        setSize( sizeHint() );
+        resize( sizeHint() );
         update();
     }
 
-    // Objects of this class are not meant to have dependent P2BasicWidgets.
+    // Objects of this class are not meant to have dependent P2Widgets.
     return false;
 }
 

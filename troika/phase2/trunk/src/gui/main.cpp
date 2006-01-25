@@ -1,5 +1,5 @@
 /*
-export QTDIR=/usr/local/Trolltech/Qt-4.0.1/
+export QTDIR=/usr/local/Trolltech/Qt-4.1.0/
 export PATH=$QTDIR/bin:$PATH
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 

@@ -16,7 +16,9 @@ P2Frame::P2Frame()
     #endif
 
     // Note: no need to call setLayout after using this constructor.
-    new P2Layout( this );
+    P2Layout *layout = new P2Layout( this );
+
+    connect( layout, SIGNAL( resized() ), this, SLOT( layoutResizedEvent() ) );
 
     focusChild = 0;
 }
@@ -52,7 +54,6 @@ void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 void P2Frame::refresh()
 {
     P2Layout *l = ( P2Layout* ) layout();
-    QSize labelSize = fontMetrics().boundingRect( objectName() ).size();
 
     QPoint offset;
     int minWidth;
@@ -60,8 +61,10 @@ void P2Frame::refresh()
     // Find label offset and minimum width.
     if ( environment()->getNameVisibility() && objectName() != 0 )
     {
+        QSize labelSize = fontMetrics().boundingRect( objectName() ).size();
         offset = QPoint( 0, labelSize.height() + FRAME__CONTENTS__PADDING );
-        minWidth = labelSize.width() + ( 2 * ( FRAME__LABEL__X_PADDING + FRAME__LABEL__X_MARGIN ) );
+        minWidth = labelSize.width()
+            + ( 2 * ( FRAME__LABEL__X_PADDING + FRAME__LABEL__X_MARGIN ) );
     }
 
     else
@@ -77,23 +80,15 @@ void P2Frame::refresh()
     // Refresh minimum size.
 
     // Propagate "refresh" signal to children.
-    l->refresh();
+    l->refreshChildren();
 }
 
-/*
-void P2Frame::resizeEvent()
-{
-        ( ( P2CentralWidget* ) parentWidget() )->resizeEvent( 0 );
-}
-*/
 
 // Focus ///////////////////////////////////////////////////////////////////////
 
 
 void P2Frame::setFocus( P2Frame *child )
 {
-//cout << (int) this << " setFocus( " << (int) child << " )" << endl;
-
     // If P2Frame or one of its children is already in focus...
     if ( focusChild )
     {
@@ -115,8 +110,6 @@ void P2Frame::setFocus( P2Frame *child )
 
 void P2Frame::unfocus()
 {
-//cout << (int) this << " unFocus" << endl;
-
     if ( focusChild )
     {
         if ( focusChild != this )
@@ -125,6 +118,12 @@ void P2Frame::unfocus()
         focusChild = 0;
         update();
     }
+}
+
+
+void P2Frame::layoutResizedEvent()
+{
+    resize( layout()->sizeHint() );
 }
 
 

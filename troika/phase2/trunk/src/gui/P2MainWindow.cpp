@@ -67,27 +67,10 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags flags )
     // Create the central widget.
     centralWidget = new P2CentralWidget(
         contentsRect().size() );
-    //setCentralWidget( centralWidget );
 
-/*
-    QWorkspace *ws = new QWorkspace( 0 );
-    ws->setScrollBarsEnabled( true );
-    centralWidget->setParent( ws );
-    ws->addWindow( centralWidget, 0 );
-    setCentralWidget( ws );
-//*/
-
-///*
-    scrollArea = new QScrollArea();
-    //scrollArea->setBackgroundRole(QPalette::Dark);
-    scrollArea->setWidget( centralWidget );
+    // Place the central widget in a scroll area.
+    P2ScrollArea *scrollArea = new P2ScrollArea( centralWidget );
     setCentralWidget( scrollArea );
-    scrollArea->resize( centralWidget->geometry().size() );
-//*/
-
-cout << "width = " << centralWidget->width() << endl;
-cout << "height = " << centralWidget->height() << endl;
-cout << "position = (" << centralWidget->x() << ", " << centralWidget->y() << ")" << endl;
 }
 
 
@@ -314,6 +297,7 @@ void P2MainWindow::createMenusAndToolbar()
     icon = QIcon( ":/viewBack.png" );
     action = new QAction( icon, tr( "&Back" ), this );
     action->setStatusTip( tr( "Navigate to the previous item" ) );
+    //action->setToolTip( tr( "Navigate to the previous item" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( viewBack() ) );
     action->setShortcut( Qt::ALT + Qt::Key_Left );
     viewMenu->addAction( action );

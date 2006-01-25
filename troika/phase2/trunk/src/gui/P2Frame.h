@@ -11,6 +11,7 @@
 /** \note  P2Frame is unrelated to QFrame. */
 class P2Frame : public P2Widget
 {
+    Q_OBJECT
 
 public:
 
@@ -34,8 +35,6 @@ public:
     bool isFrame() { return true; }
     void refresh();
 
-    //void resizeEvent();
-
 protected:
 
     void paintEvent( QPaintEvent *event );
@@ -50,12 +49,14 @@ private:
 
     void showInfo();
 
-    //!
-    //void resize( QSize &newSize );
-
     P2Frame *focusChild;
     void setFocus( P2Frame *child );
     void unfocus();
+
+private slots:
+
+    void layoutResizedEvent();
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -67,7 +67,6 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     P2Frame *b = centralFrame = new P2Frame(), *b2, *b3;
     b->setParent( this );
     b->setObjectName( "Top-level P2Frame" );
-    //b->setPosition( QPoint( 5, 5 ) );
 
     QPoint p( 0, 0 );
 
@@ -148,8 +147,10 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     b->addChild( resizers, QPoint( 0, 30 ) );
     resizers->setObjectName( "ResizeWidgets" );
 
-    //QPoint center( this->geometry().width() / 2, this->geometry().height() / 2 );
-    //b->setCenter( center );
+    centralFrame->setPosition(
+        QPoint( WINDOW__CONTENTS__PADDING, WINDOW__CONTENTS__PADDING ) );
+    connect( centralFrame, SIGNAL( resized( QResizeEvent* ) ),
+             this, SLOT( childResizeEvent( QResizeEvent* ) ) );
 
     refresh();
 }
@@ -167,8 +168,9 @@ void P2CentralWidget::refresh()
 }
 
 
-void P2CentralWidget::resizeEvent()
+void P2CentralWidget::childResizeEvent( QResizeEvent *event )
 {
-    ( ( QScrollArea* ) parentWidget() )->resize( geometry().size() );
+    resize( centralFrame->sizeHint()
+        + QSize( 2 * WINDOW__CONTENTS__PADDING, 2 * WINDOW__CONTENTS__PADDING ) );
 }
 

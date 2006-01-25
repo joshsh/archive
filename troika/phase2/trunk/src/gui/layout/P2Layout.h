@@ -13,6 +13,7 @@
 
 class P2Layout : public QLayout
 {
+    Q_OBJECT
 
 public:
 
@@ -38,13 +39,21 @@ public:
     bool hasHeightForWidth() const;
     Qt::Orientations expandingDirections() const;
 
-    void adjustGeometry();
-
     void setContentOffset( const QPoint &offset );
 
     void setMinimumSize( const QSize &size );
 
-    void refresh();
+    void refreshChildren();
+
+    void adjustGeometry();
+
+public slots:
+
+    void childResizeEvent( QResizeEvent *event );
+
+signals:
+
+    void resized();
 
 private:
 
@@ -59,7 +68,7 @@ private:
     /** Bounding rectangle of layout contents. */
     QRect contentRectangle;
 
-    //~ not necessary
+    /** Upper left hand corner of layout content. */
     QPoint contentOffset;
 
     QSize receivedMinimumSize;
@@ -71,9 +80,9 @@ private:
 
     void justifyContents();
 
-    /** \todo  It would be nice if these were not necessary. */
-    void expandChildrenByMargin();
-    void shrinkChildrenByMargin();
+    /** \return  whether two layout rectangles are within spacing() pixels of
+        one another */
+    bool tooClose( const QRect &a, const QRect &b );
 
     /** Resolves collisions by repeatedly shoving interfering widgets apart
         until they are all at a proper distance from one another.

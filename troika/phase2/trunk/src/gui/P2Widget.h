@@ -11,6 +11,7 @@
 
 class P2Widget : public QWidget
 {
+    Q_OBJECT
 
 public:
 
@@ -26,8 +27,6 @@ public:
     /** A convenience method. */
     void setPosition( const QPoint &p );
 
-    void setSize( const QSize &s );
-
     virtual const QString className() = 0;
     virtual bool isFrame() = 0;
     virtual void refresh() = 0;
@@ -37,6 +36,10 @@ public:
     virtual bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) = 0;
     virtual bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) = 0;
 
+signals:
+
+    void resized( QResizeEvent *event );
+
 protected:
 
     /** Constructs an empty P2Widget. */
@@ -44,6 +47,8 @@ protected:
 
     void mousePressEvent( QMouseEvent *event );
     void mouseMoveEvent( QMouseEvent *event );
+
+    void resizeEvent( QResizeEvent *event );
 
 private:
 
@@ -57,6 +62,7 @@ private:
 
     bool mousePressEventWrapper( QMouseEvent *event, EventOrigin origin );
     bool mouseMoveEventWrapper( QMouseEvent *event, EventOrigin origin );
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////

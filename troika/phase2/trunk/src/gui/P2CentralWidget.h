@@ -11,6 +11,7 @@
 
 class P2CentralWidget : public P2Widget
 {
+    Q_OBJECT
 
 public:
 
@@ -25,7 +26,9 @@ public:
 
     QSize sizeHint() const { return centralFrame->sizeHint() + QSize( 4, 4 ); }
 
-    void resizeEvent();
+public slots:
+
+    void childResizeEvent( QResizeEvent *event );
 
 private:
 

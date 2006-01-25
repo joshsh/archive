@@ -24,13 +24,19 @@ extern void refreshAll();
 
 // Debugging ///////////////////////////////////////////////////////////////////
 
-#define DEBUG 1
+#define DEBUG
 
 #ifdef DEBUG
 
     #include <iostream.h>
 
-    //#define DEBUG__LAYOUT__FF_LAYOUT_TREE
+    //#define DEBUG__LAYOUT
+
+    #ifdef DEBUG__LAYOUT
+
+        #define DEBUG__LAYOUT__FF_LAYOUT_TREE
+
+    #endif
 
 #endif   // DEBUG
 
@@ -81,6 +87,8 @@ const char *indentMinus();
 
 #define FRAME__CONTENTS__SPACING    1
 #define FRAME__CONTENTS__PADDING    1
+
+#define WINDOW__CONTENTS__PADDING   5
 
 
 // Tool bar ////////////////////////////////////////////////////////////////////

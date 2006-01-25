@@ -1,5 +1,4 @@
 #include "P2Widget.h"
-#include "P2Layout.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -28,19 +27,6 @@ void P2Widget::setCenter( const QPoint &p )
 void P2Widget::setPosition( const QPoint &p )
 {
     setGeometry( geometry().translated( p - geometry().topLeft() ) );
-}
-
-
-void P2Widget::setSize( const QSize &s )
-{
-    // Only if the widget needs to resize...
-    if ( s != size() )
-    {
-        resize( s );
-
-        if ( isDependent )
-            ( ( P2Layout* ) parentWidget()->layout() )->adjustGeometry();
-    }
 }
 
 
@@ -143,5 +129,11 @@ void P2Widget::mousePressEvent( QMouseEvent *event )
 void P2Widget::mouseMoveEvent( QMouseEvent *event )
 {
     mouseMoveEventWrapper( event, SELF );
+}
+
+
+void P2Widget::resizeEvent( QResizeEvent *event )
+{
+    emit resized( event );
 }
 
