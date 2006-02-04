@@ -36,10 +36,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** Address is a unique 32-bit value to identify a data type. */
 typedef struct _p2_type
 {
+    /** Lexical identifier. */
     char *name;
-    void ( *encoder )( void** );
-    void ( *decoder )( void** );
-    void ( *destructor )( void** );
+
+    /** Serializes a data item to a string. */
+    void ( *encode )( void** );
+
+    /** Deserializes a data item from a string. */
+    void ( *decode )( void** );
+
+    /** Deallocates a data item. */
+    void ( *destroy )( void** );
+
+    /** Creates a copy of a data item. */
+    //void ( *clone )( void* );
 
 } p2_type;
 
@@ -68,30 +78,29 @@ p2_error p2_type_end();
 p2_type *p2_type__new(
 
     char *name,
-    void *( *encoder )( void** ),
-    void *( *decoder )( void** ),
-    void *( *destructor )( void** ));
+    void *( *encode )( void** ),
+    void *( *decode )( void** ),
+    void *( *destroy )( void** ));
+
+p2_type *p2_type__delete( p2_type *type );
 
 
 /** Retrieves a type identifier by name. */
-//p2_type *p2_type__lookup( char *name );
+p2_type *p2_type__lookup( char *name );
 
 /**  */
 //char *p2_type_name( p2_type *type );
 
 
-/** Serializes a data item to a string. */
+/*
 void p2_encode( void *p, p2_type *type, char *buffer );
 
-/** Deserializes a data item from a string. */
 void *p2_decode( p2_type *type, char *buffer );
 
-/** Deallocates a data item. */
 void p2_destroy( void *p, p2_type *type );
 
-/** Creates a copy of a data item. */
 //void *p2_clone( void *p, p2_type *type );
-
+*/
 
 #endif  // P2_TYPE_H
 

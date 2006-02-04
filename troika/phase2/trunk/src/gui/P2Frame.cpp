@@ -10,8 +10,8 @@
 P2Frame::P2Frame()
     : P2Widget()
 {
-    #ifdef DEBUG
-        cout << indent()
+    #ifdef DEBUG__FRAME
+        cout << indentPlus()
              << "P2Frame[" <<  (int) this << "]::P2Frame()" << endl;
     #endif
 
@@ -21,6 +21,10 @@ P2Frame::P2Frame()
     connect( layout, SIGNAL( resized() ), this, SLOT( layoutResizedEvent() ) );
 
     focusChild = 0;
+
+    #ifdef DEBUG__FRAME
+        indentMinus();
+    #endif
 }
 
 
@@ -32,7 +36,7 @@ const QString P2Frame::className()
 
 void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 {
-    #ifdef DEBUG
+    #ifdef DEBUG__FRAME
         cout << indent()
              << "P2Frame[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
     #endif

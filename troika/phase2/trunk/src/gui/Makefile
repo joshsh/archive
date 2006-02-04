@@ -29,7 +29,7 @@ CPPSRC	=	main.cpp P2MainWindow.cpp P2CentralWidget.cpp
 
 #x86: arm-clean compile-target-x86 Makefile_x86
 x86: compile-target-x86 Makefile_x86
-	make -f Makefile_x86
+	$(MAKE) -f Makefile_x86
 
 
 ## Use macros specific to the target architecture.

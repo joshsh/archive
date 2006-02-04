@@ -153,7 +153,7 @@ main()
     p2_parser__set_suppress_output(0);
     p2_parser__set_show_line_numbers(1);
 
-    printf("Phase2 command-line parser debugger.  Type '/exit' to quit.\n\n");
+    printf("Phase2 command-line parser debugger.  Type '/exit;' to quit.\n\n");
 
     if (exit_value = yyparse())
     {

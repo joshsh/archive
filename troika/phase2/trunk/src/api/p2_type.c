@@ -1,4 +1,4 @@
-*//////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -24,18 +24,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 */
 
-
-
 #include "p2_type.h"
 
 #include "util/p2_array.h"
 #include "util/p2_hash_table.h"
 
 #include <string.h>
-
-
-
-
 
 
 
@@ -47,9 +41,9 @@ void *default__clone(void *p) { return NULL; }
 
 
 
-// Global vars for this module only.
-p2_array *registered_types_;
-p2_hash_table *type_dictionary_;
+// Global variables for this module only.
+p2_array *registered_types;
+p2_hash_table *type_dictionary;
 int total_types_ = 0;
 
 
@@ -65,8 +59,8 @@ void p2_type__delete(struct p2_type_itf *type)
 
 p2_error p2_type_init()
 {
-    registered_types_ = p2_array__new(30, 2.0);
-    type_dictionary_ = p2_hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
+    registered_types = p2_array__new(30, 2.0);
+    type_dictionary = p2_hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
 
     return P2_SUCCESS;
 }
@@ -75,9 +69,9 @@ p2_error p2_type_init()
 
 p2_error p2_type_end()
 {
-    p2_array__forall(registered_types_, (void (*)(void *)) p2_type__delete);
-    p2_array__delete(registered_types_);
-    p2_hash_table__delete(type_dictionary_);
+    p2_array__forall(registered_types, (void (*)(void *)) p2_type__delete);
+    p2_array__delete(registered_types);
+    p2_hash_table__delete(type_dictionary);
 
     return P2_SUCCESS;
 }
@@ -101,8 +95,8 @@ p2_type p2_register_type(
 
     // Important: the type with index 1 actually is at position 0 in the array.
     // The 0 index is avoided so that it can't be mistaken for a NULL.
-    p2_array__enqueue(registered_types_, (void *) type);
-    p2_hash_table__add(type_dictionary_, (void *) name, (void *) ++total_types_);
+    p2_array__enqueue(registered_types, (void *) type);
+    p2_hash_table__add(type_dictionary, (void *) name, (void *) ++total_types_);
 
     return (p2_type) total_types_;
 }
@@ -118,7 +112,7 @@ int p2_total_types()
 
 p2_type p2_type_lookup(char *name)
 {
-    return (p2_type) p2_hash_table__lookup(type_dictionary_, (void *) name);
+    return (p2_type) p2_hash_table__lookup(type_dictionary, (void *) name);
 }
 
 
@@ -126,15 +120,17 @@ p2_type p2_type_lookup(char *name)
 char *p2_type_name(p2_type type_index)
 {
     // Warning: no checking of array bounds... this had better be a registered type.
-    return ((struct p2_type_itf *) (p2_array__get(registered_types_, (int) type_index-1)))->name;
+    return ((struct p2_type_itf *) (p2_array__get(registered_types, (int) type_index-1)))->name;
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
 
-void p2_encode(void *p, p2_type type_index, char *buffer)
+/*
+void p2_encode(void *p, p2_type *type, char *buffer)
 {
     // Warning: no checking of array bounds... this had better be a registered type.
-    struct p2_type_itf *type = (struct p2_type_itf *) p2_array__get(registered_types_, (int) type_index-1);
+    struct p2_type_itf *type = (struct p2_type_itf *) p2_array__get(registered_types, (int) type_index-1);
     type->encode(p, buffer);
 }
 
@@ -143,7 +139,7 @@ void p2_encode(void *p, p2_type type_index, char *buffer)
 void *p2_decode(p2_type type_index, char *buffer)
 {
     // Warning: no checking of array bounds... this had better be a registered type.
-    struct p2_type_itf *type = (struct p2_type_itf *) p2_array__get(registered_types_, (int) type_index-1);
+    p2_type *type = (p2_type *) p2_array__get(registered_types, (int) type - 1);
     return type->decode(buffer);
 }
 
@@ -152,8 +148,8 @@ void *p2_decode(p2_type type_index, char *buffer)
 void p2_destroy(void *p, p2_type type)
 {
 //printf("+ p2_destroy: atom = %d, type = %d\n", (int) p, (int) type); fflush(stdout);
-    struct p2_type_itf *itf = (struct p2_type_itf *) p2_array__get(registered_types_, (int) type-1);
-    itf->destroy(p);
+    p2_type *type = (p2_type *) p2_array__get(registered_types, (int) type - 1);
+    type->destroy(p);
 //printf("- p2_destroy\n"); fflush(stdout);
 }
 
@@ -161,10 +157,10 @@ void p2_destroy(void *p, p2_type type)
 
 void *p2_clone(void *p, p2_type type)
 {
-    struct p2_type_itf *itf = (struct p2_type_itf *) p2_array__get(registered_types_, (int) type-1);
-    return itf->clone(p);
+    p2_type *type = (p2_type *) p2_array__get(registered_types, (int) type - 1);
+    return type->clone(p);
 }
-
+*/
 
 
 /*- end of file */

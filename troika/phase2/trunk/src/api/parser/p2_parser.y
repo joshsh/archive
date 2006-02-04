@@ -598,7 +598,7 @@ void echo_production(char *s)
 /** To be passed as a function pointer to p2_term__for_all. */
 void *deallocate(void *p)
 {
-printf("::::: deallocate\n");
+//printf("::::: deallocate\n");
     free(p);
     return (void *) 1;
 }
@@ -606,7 +606,7 @@ printf("::::: deallocate\n");
 
 void cleanup_term(p2_term *term)
 {
-printf("::::: cleanup_term\n");
+//printf("::::: cleanup_term\n");
     p2_term__for_all(term, deallocate);
     p2_term__delete(term);
 }

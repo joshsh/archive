@@ -30,6 +30,7 @@ extern void refreshAll();
 
     #include <iostream.h>
 
+    #define DEBUG__FRAME
     //#define DEBUG__LAYOUT
 
     #ifdef DEBUG__LAYOUT

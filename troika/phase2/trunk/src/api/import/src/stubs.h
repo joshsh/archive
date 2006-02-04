@@ -10,7 +10,5 @@ double frexp( double x, int *exp );
 /** \return  $identify-with dest */
 char *strcat( char *dest, const char *src );
 
-const char *quux( );
-
 void void_func( float your_boat );
 

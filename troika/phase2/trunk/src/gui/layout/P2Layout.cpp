@@ -10,7 +10,7 @@
 P2Layout::P2Layout( QWidget *parent )
     : QLayout( parent )
 {
-    #ifdef DEBUG
+    #ifdef DEBUG__LAYOUT
         cout << indent()
              << "P2Layout[" << (int) this << "]::P2Layout( "
              << (int) parent << " )" << endl;

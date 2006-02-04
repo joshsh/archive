@@ -2,11 +2,12 @@
 
 \file  xmldom.h
 
-A collection of stubs to bind DOM data types, properties and functions with the corresponding entities in a particular XML toolkit.  To adapt the project to a
+A collection of stubs to bind DOM data types, properties and functions with the
+corresponding entities in a particular XML toolkit.  To adapt the project to a
 different toolkit, you need only write a new implementation file xmldom-xxx.c,
 then add a Makefile target xmldom-xxx.o and swap it into the build.
 
-\note  These functions were chosen with ease of use in mind, and are not
+\note  These functions have been chosen with ease of use in mind, and are not
 representative of any particular DOM standard.
 
 \author  Joshua Shinavier   \n
