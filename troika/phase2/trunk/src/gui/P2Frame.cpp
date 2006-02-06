@@ -22,6 +22,8 @@ P2Frame::P2Frame()
 
     focusChild = 0;
 
+setAcceptDrops(true);
+
     #ifdef DEBUG__FRAME
         indentMinus();
     #endif
@@ -89,6 +91,12 @@ void P2Frame::refresh()
 
 
 // Focus ///////////////////////////////////////////////////////////////////////
+
+
+P2Frame *P2Frame::focusFrame()
+{
+    return focusChild;
+}
 
 
 void P2Frame::setFocus( P2Frame *child )
@@ -169,8 +177,36 @@ bool P2Frame::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
 // mouseReleaseEvent which causes a focus, then this would not be an issue.
 bool P2Frame::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin )
 {
-    return ( ( origin == CHILD_FRAME )
-          || ( origin == CHILD_NOFRAME && focusChild == this ) );
+
+    if ( ( origin == CHILD_FRAME )
+          || ( origin == CHILD_NOFRAME && focusChild == this ) )
+        return true;
+    else
+    {
+
+
+
+
+    if ( (event->buttons() & Qt::LeftButton)
+      && !( ( event->pos() - dragStartPosition ).manhattanLength()
+         < QApplication::startDragDistance() ) )
+    {
+        QDrag *drag = new QDrag( this );
+        QMimeData *mimeData = new QMimeData;
+
+        //mimeData->setData( mimeType, data );
+        mimeData->setText( "P2Widget" );
+        drag->setMimeData( mimeData );
+
+        Qt::DropAction dropAction = drag->start( Qt::CopyAction | Qt::MoveAction );
+        //...
+    }
+
+
+
+
+        return false;
+    }
 }
 
 
@@ -257,4 +293,24 @@ bool P2Frame::acceptDrops () const
     return true;
 }
 
+
+    void P2Frame::dragEnterEvent( QDragEnterEvent *event )
+    {
+        //if (event->mimeData()->hasFormat("text/plain"))
+            event->acceptProposedAction();
+    }
+
+
+    void P2Frame::dropEvent( QDropEvent *event )
+    {
+        cout << "Accepting a drop event: " << event->mimeData()->text().toStdString() << endl;
+
+        //textBrowser->setPlainText(event->mimeData()->text());
+        //mimeTypeCombo->clear();
+        //mimeTypeCombo->addItems(event->mimeData()->formats());
+
+        event->acceptProposedAction();
+    }
+
+    // S.a.  dragMoveEvent, dragLeaveEvent
 

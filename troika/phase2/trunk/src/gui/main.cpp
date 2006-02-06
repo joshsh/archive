@@ -1,4 +1,8 @@
 /*
+export QTDIR=/usr/local/Trolltech/Qt-4.0.1/
+export PATH=$QTDIR/bin:$PATH
+export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
+
 export QTDIR=/usr/local/Trolltech/Qt-4.1.0/
 export PATH=$QTDIR/bin:$PATH
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
@@ -72,6 +76,10 @@ int main( int argc, char **argv )
     env = new P2Environment();
 
     QApplication a( argc, argv );
+
+cout << "a.startDragDistance():" << a.startDragDistance() << endl;
+cout << "a.startDragTime():" << a.startDragTime() << endl;
+//a.setStartDragTime( 5000 );
 
     // In the beginning there was a single top-level window.
     newMainWindow();

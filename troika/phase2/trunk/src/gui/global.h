@@ -116,6 +116,7 @@ const char *indentMinus();
     #define TOOLBAR__EDIT__COPY
     #define TOOLBAR__EDIT__PASTE
     // #define TOOLBAR__EDIT__DELETE
+    // #define TOOLBAR__EDIT__RENAME
     // #define TOOLBAR__EDIT__SELECT_ALL
     // #define TOOLBAR__EDIT__FIND
 #endif

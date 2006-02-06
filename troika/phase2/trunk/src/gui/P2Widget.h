@@ -50,6 +50,8 @@ protected:
 
     void resizeEvent( QResizeEvent *event );
 
+    QPoint dragStartPosition;
+
 private:
 
     EventOrigin originIfFrame()

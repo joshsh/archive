@@ -37,6 +37,7 @@ public slots:
     void editCopy();
     void editPaste();
     void editDelete();
+    void editRename();
     void editSelectAll();
     void editFind();
 

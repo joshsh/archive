@@ -152,7 +152,14 @@ P2CentralWidget::P2CentralWidget( const QSize &fixedSize )
     connect( centralFrame, SIGNAL( resized( QResizeEvent* ) ),
              this, SLOT( childResizeEvent( QResizeEvent* ) ) );
 
+    centralFrame->setFocus( centralFrame );
     refresh();
+}
+
+
+P2Frame *P2CentralWidget::focusFrame()
+{
+    return centralFrame->focusFrame();
 }
 
 

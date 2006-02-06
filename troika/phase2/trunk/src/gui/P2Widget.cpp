@@ -32,6 +32,9 @@ void P2Widget::setPosition( const QPoint &p )
 
 bool P2Widget::mousePressEventWrapper( QMouseEvent *event, EventOrigin origin )
 {
+    if ( event->button() == Qt::LeftButton )
+        dragStartPosition = event->pos();
+
     clearFocus();
 
     if ( isDependent )
@@ -123,6 +126,19 @@ bool P2Widget::mousePressEventWrapper( QMouseEvent *event, bool childIsBinder )
 void P2Widget::mousePressEvent( QMouseEvent *event )
 {
     mousePressEventWrapper( event, SELF );
+
+/*
+            QDrag *drag = new QDrag(this);
+            QMimeData *mimeData = new QMimeData;
+
+            //mimeData->setText(commentEdit->toPlainText());
+            //drag->setMimeData(mimeData);
+            //drag->setPixmap(iconPixmap);
+            mimeData->setText( "P2Widget" );
+            drag->setMimeData( mimeData );
+
+            Qt::DropAction dropAction = drag->start();
+*/
 }
 
 

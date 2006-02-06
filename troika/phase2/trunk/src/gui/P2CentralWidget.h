@@ -26,6 +26,8 @@ public:
 
     QSize sizeHint() const { return centralFrame->sizeHint() + QSize( 4, 4 ); }
 
+    P2Frame *focusFrame();
+
 public slots:
 
     void childResizeEvent( QResizeEvent *event );

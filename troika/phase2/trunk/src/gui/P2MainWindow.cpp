@@ -1,4 +1,5 @@
 #include "P2MainWindow.h"
+#include "RenameDialog.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,6 +249,17 @@ void P2MainWindow::createMenusAndToolbar()
     action->setShortcut( Qt::Key_Delete );
     editMenu->addAction( action );
     #ifdef TOOLBAR__EDIT__DELETE
+        toolbar->addAction( action );
+    #endif
+
+    // Rename.
+    //icon = QIcon( ":/editDelete.png" );
+    action = new QAction( tr( "&Rename" ), this );
+    action->setStatusTip( tr( "Rename the current selection" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editRename() ) );
+    action->setShortcut( Qt::Key_F2 );
+    editMenu->addAction( action );
+    #ifdef TOOLBAR__EDIT__RENAME
         toolbar->addAction( action );
     #endif
 
@@ -503,6 +515,15 @@ void P2MainWindow::editPaste()
 void P2MainWindow::editDelete()
 {
     cout << "void P2MainWindow::editDelete()" << endl;
+}
+
+
+void P2MainWindow::editRename()
+{
+    RenameDialog dialog( this, centralWidget->focusFrame() );
+    dialog.exec();
+
+    refresh();
 }
 
 

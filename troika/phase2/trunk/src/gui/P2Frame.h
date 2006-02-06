@@ -35,12 +35,20 @@ public:
     bool isFrame() { return true; }
     void refresh();
 
+    P2Frame *focusFrame();
+
+    //~ Only public for the sake of P2CentralWidget...
+    void setFocus( P2Frame *child );
+
 protected:
 
     void paintEvent( QPaintEvent *event );
 
     /** A P2Frame may accept drop events... I think. */
     bool acceptDrops () const;
+
+    void dragEnterEvent( QDragEnterEvent *event );
+    void dropEvent( QDropEvent *event );
 
     bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
     bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin );
@@ -50,7 +58,6 @@ private:
     void showInfo();
 
     P2Frame *focusChild;
-    void setFocus( P2Frame *child );
     void unfocus();
 
 private slots:
