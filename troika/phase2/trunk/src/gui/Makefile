@@ -33,8 +33,8 @@ x86: compile-target-x86 Makefile_x86
 
 
 ## Use macros specific to the target architecture.
-compile-target-x86: compile-target-x86.h
-	cp compile-target-x86.h compile-target.h
+compile-target-x86:
+	echo "#define X86_COMPILE" >> compile-target.h
 
 
 Makefile_x86: $(APP).pro
@@ -65,8 +65,8 @@ $(APP)_arm: compile-target-arm $(APP).o P2MainWindow.o P2CentralWidget.o P2Binde
 
 
 ## Use macros specific to the target architecture.
-compile-target-arm: compile-target-arm.h
-	cp compile-target-arm.h compile-target.h
+compile-target-arm:
+	echo "#define ARM_COMPILE" >> compile-target.h
 
 
 ## Compile the main class.
