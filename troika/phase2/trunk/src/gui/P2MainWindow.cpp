@@ -15,6 +15,7 @@ P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
     #endif
 
     environment = &env;
+    viewMode = layoutMode;
 
     // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );

@@ -69,6 +69,9 @@ private:
 
     P2Environment *environment;
 
+    enum ViewMode { layoutMode, commandLineMode };
+
+    ViewMode viewMode;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

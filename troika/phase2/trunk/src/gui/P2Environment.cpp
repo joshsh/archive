@@ -12,8 +12,10 @@ P2Environment::P2Environment()
     #endif
 
     idleFramesAreVisible = true;
-    viewMode = layoutMode;
     namesAreVisible = true;
+
+    frameContentsSpacing = FRAME__CONTENTS__SPACING;
+    frameContentsPadding = FRAME__CONTENTS__PADDING;
 }
 
 
@@ -26,21 +28,7 @@ P2Environment::P2Environment( const P2Environment &other )
     #endif
 
     idleFramesAreVisible = other.idleFramesAreVisible;
-    viewMode = other.viewMode;
     namesAreVisible = other.namesAreVisible;
-}
-
-
-P2Environment::ViewMode P2Environment::getViewMode() const
-{
-    return viewMode;
-}
-
-
-void P2Environment::setViewMode( P2Environment::ViewMode viewMode )
-{
-    this->viewMode = viewMode;
-    emit changed();
 }
 
 
@@ -70,28 +58,28 @@ void P2Environment::setNameVisibility( bool v )
 }
 
 
-int P2Environment::getFrameSpacing() const
+int P2Environment::getFrameContentsSpacing() const
 {
-    return frameSpacing;
+    return frameContentsSpacing;
 }
 
 
-int P2Environment::getFramePadding() const
+int P2Environment::getFrameContentsPadding() const
 {
-    return framePadding;
+    return frameContentsPadding;
 }
 
 
-void P2Environment::setFrameSpacing( int spacing )
+void P2Environment::setFrameContentsSpacing( int spacing )
 {
-    frameSpacing = spacing;
+    frameContentsSpacing = spacing;
     emit changed();
 }
 
 
-void P2Environment::setFramePadding( int padding )
+void P2Environment::setFrameContentsPadding( int padding )
 {
-    framePadding = padding;
+    frameContentsPadding = padding;
     emit changed();
 }
 
