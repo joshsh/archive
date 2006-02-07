@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
+#include "P2Environment.h"
 #include "P2CentralWidget.h"
 #include "P2ScrollArea.h"
 
@@ -17,11 +18,13 @@ class P2MainWindow : public QMainWindow
 
 public:
 
-    P2MainWindow( QWidget* parent, Qt::WFlags flags = 0 );
-
-    void refresh();
+    P2MainWindow( P2Environment &env, Qt::WFlags flags = 0 );
 
 public slots:
+
+    /** \note  A P2MainWindow is bound to the same P2Environment for the
+     *  duration of its existence. */
+    void refresh();
 
     void fileNew();
     void fileOpen();
@@ -62,7 +65,9 @@ private:
     // Checkable actions which are bound to the environment.
     QAction *viewShowNamesAction, *viewShowFramesAction;
 
-    void createMenusAndToolbar();
+    void createMenusAndToolbar( const P2Environment &env );
+
+    P2Environment *environment;
 
 };
 

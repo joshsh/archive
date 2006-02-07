@@ -3,6 +3,7 @@
 
 
 #include "compile-target.h"  // Macros specific to the target architecture.
+#include "P2Environment.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -13,13 +14,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "P2Environment.h"
-
-/** \return  a global P2Environment variable */
-extern P2Environment *environment();
-
-extern void newMainWindow();
-extern void refreshAll();
+/** \note  From main.cpp. */
+extern void newMainWindow( P2Environment &env );
 
 
 // Debugging ///////////////////////////////////////////////////////////////////

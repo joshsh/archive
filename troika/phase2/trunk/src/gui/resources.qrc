@@ -1,5 +1,6 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource>
 
     <file alias="p2gui.png">images/p2gui.png</file>
     <file alias="troika.png">../../ipk/troika.png</file>
@@ -32,5 +33,5 @@
     <file alias="helpManual.png">images/Bluecurve/actions/contents.png</file>
     <file alias="helpAboutPhase2.png">images/Bluecurve/actions/about_kde.png</file>
 
-</qresource>
+  </qresource>
 </RCC>

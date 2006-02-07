@@ -15,20 +15,21 @@ class P2CentralWidget : public P2Widget
 
 public:
 
-    P2CentralWidget( const QSize &fixedSize );
+    P2CentralWidget( const P2Environment &env );
 
     bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
     bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
     const QString className();
     bool isFrame() { return false; }
-    void refresh();
 
     QSize sizeHint() const { return centralFrame->sizeHint() + QSize( 4, 4 ); }
 
     P2Frame *focusFrame();
 
 public slots:
+
+    void refresh( const P2Environment &env );
 
     void childResizeEvent( QResizeEvent *event );
 

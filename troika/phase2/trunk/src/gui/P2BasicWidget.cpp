@@ -23,7 +23,7 @@ bool P2BasicWidget::isFrame()
 }
 
 
-void P2BasicWidget::refresh()
+void P2BasicWidget::refresh( const P2Environment &env )
 {
     // Do nothing.
 }

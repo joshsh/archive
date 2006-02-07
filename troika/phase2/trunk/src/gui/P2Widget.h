@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
+#include "P2Environment.h"
 
 #include <QtGui>
 
@@ -29,12 +30,15 @@ public:
 
     virtual const QString className() = 0;
     virtual bool isFrame() = 0;
-    virtual void refresh() = 0;
 
     enum EventOrigin { SELF, CHILD_FRAME, CHILD_NOFRAME };
 
     virtual bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) = 0;
     virtual bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) = 0;
+
+public slots:
+
+    virtual void refresh( const P2Environment &env ) = 0;
 
 signals:
 

@@ -5,6 +5,7 @@
 
 #include "global.h"
 #include "P2Widget.h"
+#include "P2Environment.h"
 
 #include <QtGui>
 
@@ -16,7 +17,10 @@ class P2BasicWidget : public P2Widget
 public:
 
     bool isFrame();
-    void refresh();
+
+public slots:
+
+    void refresh( const P2Environment &env );
 
 protected:
 

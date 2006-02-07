@@ -5,6 +5,7 @@
 
 #include "global.h"
 #include "P2Widget.h"
+#include "P2Environment.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +17,7 @@ class P2Frame : public P2Widget
 public:
 
     /** Constructs an empty P2Frame. */
-    P2Frame();
+    P2Frame( const P2Environment &env );
 
     /** Adds a widget to this P2Frame's P2Layout, which assumes ownership of it.
         \param widget  the child P2Widget to add
@@ -33,12 +34,15 @@ public:
 
     const QString className();
     bool isFrame() { return true; }
-    void refresh();
 
     P2Frame *focusFrame();
 
     //~ Only public for the sake of P2CentralWidget...
     void setFocus( P2Frame *child );
+
+public slots:
+
+    void refresh( const P2Environment &env );
 
 protected:
 
@@ -59,6 +63,8 @@ private:
 
     P2Frame *focusChild;
     void unfocus();
+
+    const P2Environment *environment;
 
 private slots:
 

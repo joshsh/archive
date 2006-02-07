@@ -43,8 +43,8 @@ RenameDialog::RenameDialog( QWidget *parent, P2Frame *frameToRename )
 
     // Buttons -------------------------
 
-    QPushButton *okButton = new QPushButton( tr( "OK" ), this );
-    QPushButton *cancelButton = new QPushButton( tr( "Cancel" ), this );
+    QPushButton *okButton = new QPushButton( tr( "OK" ) );
+    QPushButton *cancelButton = new QPushButton( tr( "Cancel" ) );
 
     connect( okButton, SIGNAL( clicked() ), this, SLOT( accept() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( reject() ) );

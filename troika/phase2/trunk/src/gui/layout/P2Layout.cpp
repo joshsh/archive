@@ -65,13 +65,13 @@ void P2Layout::setContentOffset( const QPoint &offset )
 }
 
 
-void P2Layout::refreshChildren()
+void P2Layout::refreshChildren( const P2Environment &env )
 {
     // Propagate the signal to all children.
     for ( int i = 0; i < children.size(); i++ )
     {
         P2Widget *child = ( P2Widget* ) children.at( i )->widget();
-        child->refresh();
+        child->refresh( env );
     }
 }
 

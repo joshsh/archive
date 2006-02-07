@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Frame::P2Frame()
+P2Frame::P2Frame( const P2Environment &env )
     : P2Widget()
 {
     #ifdef DEBUG__FRAME
@@ -21,6 +21,8 @@ P2Frame::P2Frame()
     connect( layout, SIGNAL( resized() ), this, SLOT( layoutResizedEvent() ) );
 
     focusChild = 0;
+
+    environment = &env;
 
 setAcceptDrops(true);
 
@@ -57,7 +59,7 @@ void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 }
 
 
-void P2Frame::refresh()
+void P2Frame::refresh( const P2Environment &env )
 {
     P2Layout *l = ( P2Layout* ) layout();
 
@@ -65,7 +67,7 @@ void P2Frame::refresh()
     int minWidth;
 
     // Find label offset and minimum width.
-    if ( environment()->getNameVisibility() && objectName() != 0 )
+    if ( env.getNameVisibility() && objectName() != 0 )
     {
         QSize labelSize = fontMetrics().boundingRect( objectName() ).size();
         offset = QPoint( 0, labelSize.height() + FRAME__CONTENTS__PADDING );
@@ -86,7 +88,7 @@ void P2Frame::refresh()
     // Refresh minimum size.
 
     // Propagate "refresh" signal to children.
-    l->refreshChildren();
+    l->refreshChildren( env );
 }
 
 
@@ -218,7 +220,7 @@ void P2Frame::paintEvent( QPaintEvent *event )
 
     if ( focusChild != this )
     {
-        QColor inactiveColor = environment()->getIdleFrameVisibility()
+        QColor inactiveColor = environment->getIdleFrameVisibility()
             ? QColor( COLOR__FRAME__INACTIVE )
             : Qt::white;
         painter.setPen( inactiveColor );
@@ -234,7 +236,7 @@ void P2Frame::paintEvent( QPaintEvent *event )
     QRect borderRect;
 
     // Draw border with object name as a label.
-    if ( ( objectName() != 0 ) && environment()->getNameVisibility() )
+    if ( ( objectName() != 0 ) && environment->getNameVisibility() )
     {
         QSize size = fontMetrics().boundingRect( objectName() ).size();
         int yoffset = size.height() / 2;

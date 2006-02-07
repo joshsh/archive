@@ -4,10 +4,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "global.h"
-#include <QtGui>
-
 #include "P2Widget.h"
 #include "P2FreeFormLayoutTree.h"
+#include "P2Environment.h"
+
+#include <QtGui>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +44,7 @@ public:
 
     void setMinimumSize( const QSize &size );
 
-    void refreshChildren();
+    void refreshChildren( const P2Environment &env );
 
     void adjustGeometry();
 

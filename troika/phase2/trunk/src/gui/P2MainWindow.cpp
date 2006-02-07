@@ -5,14 +5,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags flags )
-    : QMainWindow( parent, flags )
+P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
+    : QMainWindow( 0, flags )
 {
     #ifdef DEBUG
         cout << indent()
-             << "P2MainWindow[" << (int) this << "]::P2MainWindow( "
-             << (int) parent << " )" << endl;
+             << "P2MainWindow[" << (int) this << "]::P2MainWindow("
+             << (int) &env << ")" << endl;
     #endif
+
+    environment = &env;
 
     // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );
@@ -63,19 +65,22 @@ P2MainWindow::P2MainWindow( QWidget* parent, Qt::WFlags flags )
         //setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
-    createMenusAndToolbar();
+    createMenusAndToolbar( env );
 
     // Create the central widget.
-    centralWidget = new P2CentralWidget(
-        contentsRect().size() );
+    centralWidget = new P2CentralWidget( env );
 
     // Place the central widget in a scroll area.
     P2ScrollArea *scrollArea = new P2ScrollArea( centralWidget );
     setCentralWidget( scrollArea );
+
+    // Changes in the environment are to have immediate effect on the window and
+    // its contents.
+    connect( &env, SIGNAL( changed() ), this, SLOT( refresh() ) );
 }
 
 
-void P2MainWindow::createMenusAndToolbar()
+void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 {
     QAction *action;
     QIcon icon;
@@ -352,7 +357,7 @@ void P2MainWindow::createMenusAndToolbar()
     connect( action, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
     action->setShortcut( Qt::Key_F6 );
     action->setCheckable( true );
-    action->setChecked( environment()->getIdleFrameVisibility() );
+    action->setChecked( env.getIdleFrameVisibility() );
     viewMenu->addAction( action );
     #ifdef TOOLBAR__VIEW__SHOW_FRAMES
         toolbar->addAction( action );
@@ -363,7 +368,7 @@ void P2MainWindow::createMenusAndToolbar()
     connect( action, SIGNAL( triggered() ), this, SLOT( viewShowNames() ) );
     //action->setShortcut( Qt::Key_F6 );
     action->setCheckable( true );
-    action->setChecked( environment()->getNameVisibility() );
+    action->setChecked( env.getNameVisibility() );
     viewMenu->addAction( action );
     #ifdef TOOLBAR__VIEW__SHOW_NAMES
         toolbar->addAction( action );
@@ -405,10 +410,10 @@ void P2MainWindow::createMenusAndToolbar()
 
 void P2MainWindow::refresh()
 {
-    viewShowFramesAction->setChecked( environment()->getIdleFrameVisibility() );
-    viewShowNamesAction->setChecked( environment()->getNameVisibility() );
+    viewShowFramesAction->setChecked( environment->getIdleFrameVisibility() );
+    viewShowNamesAction->setChecked( environment->getNameVisibility() );
 
-    centralWidget->refresh();
+    centralWidget->refresh( *environment );
     //update();
 
     //~ temporary
@@ -562,16 +567,14 @@ void P2MainWindow::viewBack()
 
 void P2MainWindow::viewNewWindow()
 {
-    newMainWindow();
+    newMainWindow( *environment );
 }
 
 
 void P2MainWindow::viewShowFrames()
 {
-    environment()->setIdleFrameVisibility(
-        !environment()->getIdleFrameVisibility() );
-
-    refreshAll();
+    environment->setIdleFrameVisibility(
+        !environment->getIdleFrameVisibility() );
 }
 
 
@@ -579,9 +582,7 @@ void P2MainWindow::viewShowNames()
 {
     cout << "void P2MainWindow::viewShowNames()" << endl;
 
-    environment()->setNameVisibility( !environment()->getNameVisibility() );
-
-    refreshAll();
+    environment->setNameVisibility( !environment->getNameVisibility() );
 }
 
 

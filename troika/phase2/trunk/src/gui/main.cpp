@@ -22,18 +22,6 @@ make
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-/** A global P2Environment variable */
-P2Environment *env = 0;
-
-
-/** \return  a global P2Environment variable */
-P2Environment *environment()
-{
-    return env;
-}
-
-
 QList< P2MainWindow* > windows;
 
 
@@ -41,9 +29,9 @@ QList< P2MainWindow* > windows;
 
 
 /** Create a new top-level widget. */
-void newMainWindow()
+void newMainWindow( P2Environment &env )
 {
-    P2MainWindow *w = new P2MainWindow( 0, 0 );
+    P2MainWindow *w = new P2MainWindow( env, 0 );
 /*
             Qt::Window
             | Qt::WindowTitleHint
@@ -63,17 +51,10 @@ void newMainWindow()
 }
 
 
-void refreshAll()
-{
-    for ( int i = 0; i < windows.size(); i++ )
-        windows.at( i )->refresh();
-}
-
-
 /** Main function for the Phase2 GUI. */
 int main( int argc, char **argv )
 {
-    env = new P2Environment();
+    P2Environment env;
 
     QApplication a( argc, argv );
 
@@ -81,12 +62,11 @@ cout << "a.startDragDistance():" << a.startDragDistance() << endl;
 cout << "a.startDragTime():" << a.startDragTime() << endl;
 //a.setStartDragTime( 5000 );
 
+
     // In the beginning there was a single top-level window.
-    newMainWindow();
+    newMainWindow( env );
 
-    int ret = a.exec( );
-
-    delete env;
+    int ret = a.exec();
 
     while ( windows.size() )
         delete windows.takeFirst();
