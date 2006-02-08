@@ -7,6 +7,7 @@
 #include "P2Environment.h"
 #include "P2CentralWidget.h"
 #include "P2ScrollArea.h"
+#include "dialogs/AboutDialog.h"
 
 #include <QtGui>
 
@@ -72,6 +73,12 @@ private:
     enum ViewMode { layoutMode, commandLineMode };
 
     ViewMode viewMode;
+
+    //AboutDialog *aboutDialog;
+
+//private slots:
+
+//    void aboutDialogDestroyed();
 };
 
 ////////////////////////////////////////////////////////////////////////////////

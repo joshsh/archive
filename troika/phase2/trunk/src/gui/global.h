@@ -3,8 +3,9 @@
 
 
 #include "compile-target.h"  // Macros specific to the target architecture.
-#include "P2Environment.h"
+//#include "P2Environment.h"
 
+class P2Environment;
 
 ////////////////////////////////////////////////////////////////////////////////
 

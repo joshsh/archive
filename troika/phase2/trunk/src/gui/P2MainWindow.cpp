@@ -1,12 +1,15 @@
 #include "P2MainWindow.h"
-#include "RenameDialog.h"
+#include "dialogs/RenameDialog.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
 P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
-    : QMainWindow( 0, flags )
+    : QMainWindow( 0, flags ),
+      //aboutDialog( new AboutDialog( this ) ),
+      environment( &env ),
+      viewMode( layoutMode )
 {
     #ifdef DEBUG
         cout << indent()
@@ -14,8 +17,8 @@ P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
              << (int) &env << ")" << endl;
     #endif
 
-    environment = &env;
-    viewMode = layoutMode;
+    //environment = &env;
+    //viewMode = layoutMode;
 
     // Define the window icon.
     setWindowIcon( QIcon( P2GUI_ICON ) );
@@ -581,8 +584,6 @@ void P2MainWindow::viewShowFrames()
 
 void P2MainWindow::viewShowNames()
 {
-    cout << "void P2MainWindow::viewShowNames()" << endl;
-
     environment->setNameVisibility( !environment->getNameVisibility() );
 }
 
@@ -598,6 +599,23 @@ void P2MainWindow::helpManual()
 
 void P2MainWindow::helpAboutPhase2()
 {
-    cout << "void P2MainWindow::helpAboutPhase2()" << endl;
+    //if ( !aboutDialog || !aboutDialog->isVisible() )
+   // {
+   //     if ( aboutDialog )
+   //         aboutDialog->deleteLater();
+
+        AboutDialog *aboutDialog = new AboutDialog( this );
+  //      connect( aboutDialog, SIGNAL( destroyed() ), this, SLOT( aboutDialogDestoyed() ) )
+        aboutDialog->show();
+  //  }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+void P2MainWindow::aboutDialogDestroyed()
+{
+    aboutDialog = 0;
+}
+*/
