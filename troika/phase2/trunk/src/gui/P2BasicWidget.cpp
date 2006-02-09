@@ -28,3 +28,5 @@ void P2BasicWidget::refresh( const P2Environment &env )
     // Do nothing.
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

@@ -27,12 +27,14 @@ RenameDialog::RenameDialog( QWidget *parent, P2Frame *frameToRename )
     nameBox->setCheckable( false );
     nameBox->setFlat( false );
 
-    nameField = new QTextEdit( frameToRename->objectName() );
+    nameField = new QLineEdit( frameToRename->objectName() );
+    nameField->setMaxLength( 31 );
+    nameField->setFixedWidth( 180 );
+    //nameField = new QTextEdit( frameToRename->objectName() );
     //nameField->setAcceptRichText( false );
     //nameField->setWrapMode( QTextEdit::NoWrap );
 
     //~
-    nameField->setFixedSize( QSize( 180, 30 ) );
     //nameField->setFixedSize( QSize( 180, nameField->minimumSize().height() ) );
     //nameField->resize( 50, 20 );//nameField->height() );
     //nameField->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
@@ -73,7 +75,8 @@ void RenameDialog::accept()
     //~ Check for name collision.
 
     // Note: this will remove an object from its dictionary if nameField is empty.
-    frameToRename->setObjectName( nameField->toPlainText() );
+    frameToRename->setObjectName( nameField->text() );
+    //frameToRename->setObjectName( nameField->toPlainText() );
 
     //emit( accepted() );
     emit( done( 0 ) ); hide();
@@ -96,3 +99,5 @@ void RenameDialog::reject()
     emit( done( 0 ) ); hide();
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

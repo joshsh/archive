@@ -179,3 +179,5 @@ void P2CentralWidget::childResizeEvent( QResizeEvent *event )
         + QSize( 2 * WINDOW__CONTENTS__PADDING, 2 * WINDOW__CONTENTS__PADDING ) );
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

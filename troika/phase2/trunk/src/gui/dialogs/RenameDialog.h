@@ -33,9 +33,12 @@ public slots:
 private:
 
     P2Frame *frameToRename;
-    QTextEdit *nameField;
+    QLineEdit *nameField;
+    //QTextEdit *nameField;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif  // RenameDialog_h
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

@@ -46,3 +46,5 @@ void P2Text::paintEvent( QPaintEvent *event )
     painter.drawText( 0, size.height(), QString( text ) );
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

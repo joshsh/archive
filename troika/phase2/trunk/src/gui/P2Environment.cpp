@@ -83,3 +83,5 @@ void P2Environment::setFrameContentsPadding( int padding )
     emit changed();
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

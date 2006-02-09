@@ -316,3 +316,5 @@ bool P2Frame::acceptDrops () const
 
     // S.a.  dragMoveEvent, dragLeaveEvent
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

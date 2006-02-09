@@ -51,3 +51,6 @@ void ResizeWidget::paintEvent( QPaintEvent *event )
     QRect borderRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
     painter.drawRect( borderRect );
 }
+
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

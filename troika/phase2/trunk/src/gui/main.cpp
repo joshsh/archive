@@ -1,16 +1,7 @@
 /*
-export QTDIR=/usr/local/Trolltech/Qt-4.0.1/
-export PATH=$QTDIR/bin:$PATH
-export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
-
 export QTDIR=/usr/local/Trolltech/Qt-4.1.0/
 export PATH=$QTDIR/bin:$PATH
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
-
-NAME=troika
-qmake -project -o $NAME.pro
-qmake $NAME.pro
-make
 */
 
 #include "global.h"
@@ -23,9 +14,6 @@ make
 ////////////////////////////////////////////////////////////////////////////////
 
 QList< P2MainWindow* > windows;
-
-
-////////////////////////////////////////////////////////////////////////////////
 
 
 /** Create a new top-level widget. */
@@ -62,7 +50,6 @@ cout << "a.startDragDistance():" << a.startDragDistance() << endl;
 cout << "a.startDragTime():" << a.startDragTime() << endl;
 //a.setStartDragTime( 5000 );
 
-
     // In the beginning there was a single top-level window.
     newMainWindow( env );
 
@@ -74,3 +61,5 @@ cout << "a.startDragTime():" << a.startDragTime() << endl;
     return ret;
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

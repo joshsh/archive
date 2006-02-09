@@ -306,3 +306,5 @@ void P2FreeFormLayoutEdge::setDestPosition( QList< QLayoutItem* > vertices ) con
     vertices.at( dest )->setGeometry( QRect( QPoint( x, y ), destRect.size() ) );
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

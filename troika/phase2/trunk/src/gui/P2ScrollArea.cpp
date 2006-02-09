@@ -31,3 +31,5 @@ void P2ScrollArea::childResizeEvent( QResizeEvent *event )
     //widget()->setGeometry( QPoint( 50, 50 ), widget()->size() );
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
