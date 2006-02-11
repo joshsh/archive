@@ -83,11 +83,68 @@ extern int suppress_output, show_line_numbers;
 
 
 /** Debugging output. */
-void echo_token(char *s);
+void echo_token( char *s )
+{
+    printf( "Found %s.\n", s );
+}
 
-/** Gets the interior of a string literal, undoing the two escape sequences
-    in the process. */
-char *extract_literal(char *s);
+
+/** \return  the interior of a string literal, with escape sequences undone */
+char *extract_literal(char *s)
+{
+    char *s_low = s, *s_high = s_low;
+
+    while (*s_high != '\0')
+    {
+         if (*s_high == '\\')
+         {
+             s_high++;
+             switch (*s_high)
+             {
+                 case '"':
+                     *s_low = '"';
+                     break;
+                 case '\\':
+                     *s_low = '\\';
+                     break;
+                 default:
+                     *s_low = '\\';
+                     s_low++;
+                     *s_low = *s_high;
+             }
+        }
+        else
+            *s_low = *s_high;
+
+        s_low++;
+        s_high++;
+    }
+
+    *s_low = '\0';
+
+    return strdup(s);
+}
+
+
+/** Buffer size is arbitary... */
+#define STRING_BUFFER__SIZE  0xFFF
+
+char string_buffer[STRING_BUFFER__SIZE];
+char *buffer_limit = string_buffer + STRING_BUFFER__SIZE - 1;
+char *buffer_pos = string_buffer;
+//string_buffer[0] = '\0';
+
+void append_to_buffer( char *s )
+{
+    int len = strlen( s );
+
+    if ( buffer_pos + len < buffer_limit )
+    {
+        strcpy( buffer_pos, s );
+        buffer_limit += len;
+        buffer_pos += len;
+    }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,38 +176,81 @@ NONALNUM              [^;()\0-\40"A-Za-z0-9]
 STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 
+/** String values have their own mini-scanner. */
+%x STRLIT COMMENT
+
 %%
 
 
-{SEMICOLON}  {
+<INITIAL>"/"+"*"  {
+    ECHO( "COMMENT" );
+    BEGIN( COMMENT );
+}
+
+
+<INITIAL>["] {
+    advance_character_number(1);
+    BEGIN( STRLIT );
+}
+
+
+<STRLIT>([^"\n\\]*|[\\][^\n])  {
+    advance_character_number(2);
+    append_to_buffer( yytext );
+}
+<STRLIT>([\\]?)[\n]  {
+    append_to_buffer( yytext );
+    advance_line_number();
+    print_input_prefix();
+}
+<STRLIT>["]  {
+    advance_character_number(1);
+    yylval.string = strdup(yytext);  // Free this string outside of the lexer.
+    BEGIN( INITIAL );
+    yylval.string = extract_literal( string_buffer );
+    buffer_pos = string_buffer;
+    return STRING;
+}
+
+
+<COMMENT>[^*\n]*        /* eat anything that's not a '*' */
+<COMMENT>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+<COMMENT>\n  {
+    advance_line_number();
+    print_input_prefix();
+}
+<COMMENT>"*"+"/"        BEGIN( INITIAL );
+
+
+<INITIAL>{SEMICOLON}  {
     ECHO("SEMICOLON");
     advance_character_number(1);
     return SEMICOLON;
 }
 
 
-{EQUALS}  {
+<INITIAL>{EQUALS}  {
     ECHO("EQUALS");
     advance_character_number(1);
     return EQUALS;
 }
 
 
-{OPEN_PAREN}  {
+<INITIAL>{OPEN_PAREN}  {
     ECHO("OPEN_PAREN");
     advance_character_number(1);
     return OPEN_PAREN;
 }
 
 
-{CLOSE_PAREN}  {
+<INITIAL>{CLOSE_PAREN}  {
     ECHO("CLOSE_PAREN");
     advance_character_number(1);
     return CLOSE_PAREN;
 }
 
 
-{SLASH}{ALNUM}{NS_TAIL}*  {  // It's only a command if the slash is followed with a letter or digit.
+<INITIAL>{SLASH}{ALNUM}{NS_TAIL}*  {  // It's only a command if the slash is followed with a letter or digit.
     ECHO("COMMAND_NAME");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
@@ -158,7 +258,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-{SLASH}|(({NS_HEAD}|({SLASH}{NONALNUM})){NS_TAIL}*)  {  // Simple string literal.
+<INITIAL>{SLASH}|(({NS_HEAD}|({SLASH}{NONALNUM})){NS_TAIL}*)  {  // Simple string literal.
     ECHO("STRING");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext);  // Free this string outside of the lexer.
@@ -166,37 +266,29 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-{STRLIT}  {  // String literal in quotes (to allow whitespace and special characters).
-    ECHO("STRING");
-    advance_character_number(strlen(yytext));
-    yylval.string = extract_literal(yytext);  // Free this string outside of the lexer.
-    return STRING;
-}
 
 
-\n  {  // Report newlines to the parser (but not as tokens).
+<INITIAL>\n  {  // Report newlines to the parser (but not as tokens).
     ECHO("[newline]");
-
     advance_line_number();
-
     print_input_prefix();
 }
 
 
-[ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
+<INITIAL>[ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
     ECHO("[whitespace]");
     advance_character_number(1);
 }
 
 
-<<EOF>>  {
+<INITIAL><<EOF>>  {
     ECHO("EOF");
 
     return E_O_F;
 }
 
 
-.  {  // Ignore unrecognized characters (unless debugging the lexer).
+<INITIAL>.  {  // Ignore unrecognized characters (unless debugging the lexer).
     ECHO("[unrecognized character]");
     advance_character_number(1);
 }
@@ -204,44 +296,5 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 
 %%
 
-void echo_token(char *s)
-{
-    printf("Found %s.\n", s);
-}
 
-
-char *extract_literal(char *s)
-{
-    char *s_low = s, *s_high = s_low + 1;
-
-    while (*s_high != '"')
-    {
-         if (*s_high == '\\')
-         {
-             s_high++;
-             switch (*s_high)
-             {
-                 case '"':
-                     *s_low = '"';
-                     break;
-                 case '\\':
-                     *s_low = '\\';
-                     break;
-                 default:
-                     *s_low = '\\';
-                     s_low++;
-                     *s_low = *s_high;
-             }
-        }
-        else
-            *s_low = *s_high;
-
-        s_low++;
-        s_high++;
-    }
-
-    *s_low = '\0';
-
-    return strdup(s);
-}
-
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
