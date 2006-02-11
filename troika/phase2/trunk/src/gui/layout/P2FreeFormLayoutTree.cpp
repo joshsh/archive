@@ -236,50 +236,92 @@ P2FreeFormLayoutEdge::P2FreeFormLayoutEdge(
     this->src = src;
     this->dest = dest;
 
-    QRect srcRect = vertices.at( src )->geometry();
-    QRect destRect = vertices.at( dest )->geometry();
+    #ifdef LAYOUT__FF__WEIGHTED_ALIGNMENT
 
-    int src_pos[2] = { srcRect.x(),
-                       srcRect.x() + srcRect.width() };
-    int dest_pos[2] = { destRect.x(),
+        QRect srcRect = vertices.at( src )->geometry();
+        QRect destRect = vertices.at( dest )->geometry();
+
+        int src_pos_x[2] = { srcRect.x(), srcRect.x() + srcRect.width() };
+        int src_pos_y[2] = { srcRect.y(), srcRect.y() + srcRect.height() };
+        int dest_pos_x[2] = { destRect.x(), destRect.x() + destRect.width() };
+        int dest_pos_y[2] = { destRect.y(), destRect.y() + destRect.height() };
+
+        // Assuming at least a 32-bit machine.
+        #define bigweight  ( unsigned int ) 0xFFFFFFFF
+
+        int x_total = 0, y_total = 0;
+
+        for ( int i = 0; i < 4; i++ )
+        {
+            int offset;
+
+            offset = dest_pos_x[ i % 2 ] - src_pos_x[ i / 2 ];
+            if ( offset )
+                weighted_offset[0][i] = bigweight / abs( offset );
+            else
+            {
+                weighted_offset[0][i] = bigweight;
+                x_total += bigweight; ..................................
+            }
+            x_total +=
+
+            offset_weight[1][i] =
+                ( offset[1][i] = dest_pos_y[ i % 2 ] - src_pos_y[ i / 2 ] )
+                ? bigweight / abs( offset[1][i] )
+                : bigweight ;
+        }
+
+        //...
+
+    #else
+
+        QRect srcRect = vertices.at( src )->geometry();
+        QRect destRect = vertices.at( dest )->geometry();
+
+        int src_pos[2] = { srcRect.x(),
+                           srcRect.x() + srcRect.width() };
+        int dest_pos[2] = { destRect.x(),
                         destRect.x() + destRect.width() };
 
-    x_combo = 0;
-    x_offset = abs( dest_pos[0] - src_pos[0] );
+        x_combo = 0;
+        x_offset = abs( dest_pos[0] - src_pos[0] );
 
-    for ( int i = 1; i < 4; i++ )
-    {
-        int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
-
-        if ( offset < x_offset )
+        for ( int i = 1; i < 4; i++ )
         {
-            x_combo = i;
-            x_offset = offset;
+            int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
+
+            if ( offset < x_offset )
+            {
+                x_combo = i;
+                x_offset = offset;
+            }
         }
-    }
 
-    x_offset = dest_pos[ x_combo % 2 ] - src_pos[ x_combo / 2 ];
+        x_offset = dest_pos[ x_combo % 2 ] - src_pos[ x_combo / 2 ];
 
-    src_pos[0] = srcRect.y();
-    src_pos[1] = srcRect.y() + srcRect.height();
-    dest_pos[0] = destRect.y();
-    dest_pos[1] = destRect.y() + destRect.height();
+        src_pos[0] = srcRect.y();
+        src_pos[1] = srcRect.y() + srcRect.height();
+        dest_pos[0] = destRect.y();
+        dest_pos[1] = destRect.y() + destRect.height();
 
-    y_combo = 0;
-    y_offset = abs( dest_pos[0] - src_pos[0] );
+        y_combo = 0;
+        y_offset = abs( dest_pos[0] - src_pos[0] );
 
-    for ( int i = 1; i < 4; i++ )
-    {
-        int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
-
-        if ( offset < y_offset )
+        for ( int i = 1; i < 4; i++ )
         {
-            y_combo = i;
-            y_offset = offset;
-        }
-    }
+            int offset = abs( dest_pos[ i % 2 ] - src_pos[ i / 2 ] );
 
-    y_offset = dest_pos[ y_combo % 2 ] - src_pos[ y_combo / 2 ];
+            if ( offset < y_offset )
+            {
+                y_combo = i;
+                y_offset = offset;
+            }
+        }
+
+        y_offset = dest_pos[ y_combo % 2 ] - src_pos[ y_combo / 2 ];
+
+    #endif  // LAYOUT__FF__WEIGHTED_ALIGNMENT
+
 }
 
 

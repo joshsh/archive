@@ -88,6 +88,10 @@ const char *indentMinus();
 
 #define WINDOW__CONTENTS__PADDING   5
 
+/** If defined, use a weighted average rather than a best fit approach to
+    edge alignment. */
+//#define LAYOUT__FF__WEIGHTED_ALIGNMENT
+
 
 // Tool bar ////////////////////////////////////////////////////////////////////
 

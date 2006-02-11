@@ -35,19 +35,31 @@ private:
     /** Destination vertex. */
     int dest;
 
-    /** x-offset (in pixels) from src to dest. */
-    int x_offset;
+    #ifdef LAYOUT__FF__WEIGHTED_ALIGNMENT
 
-    /** y-offset (in pixels) from src to dest. */
-    int y_offset;
+        int weighted_offset[2][4];
+        // Note: a workaround will be needed for the Zaurus, which has no floating
+        // point unit.
+        //int offset_weight[4];
 
-    /** A value from 0 to 4, indicating which side of the src and of the dest
-        rectangle are to be off-set by x_offset. */
-    int x_combo;
+    #else
 
-    /** A value from 0 to 4, indicating which side of the src and of the dest
-        rectangle are to be off-set by y_offset. */
-    int y_combo;
+        /** x-offset (in pixels) from src to dest. */
+        int x_offset;
+
+        /** y-offset (in pixels) from src to dest. */
+        int y_offset;
+
+        /** A value from 0 to 4, indicating which side of the src and of the dest
+            rectangle are to be off-set by x_offset. */
+        int x_combo;
+
+        /** A value from 0 to 4, indicating which side of the src and of the dest
+            rectangle are to be off-set by y_offset. */
+        int y_combo;
+
+    #endif  // LAYOUT__FF__WEIGHTED_ALIGNMENT
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////
