@@ -174,6 +174,9 @@ void cleanup_term(p2_term *term);
 
 %token OPEN_PAREN CLOSE_PAREN EQUALS SEMICOLON E_O_F
 
+/** For collections. */
+%token OPEN_CURLY_BRACKET COMMA CLOSE_CURLY_BRACKET
+
 %token <string> STRING COMMAND_NAME
 
 %type <parser_term> term subterm arguments
@@ -451,6 +454,29 @@ subterm:
     };
 
 
+collection:
+
+    collection_head CLOSE_CURLY_BRACKET
+    {
+        ECHO("collection :  collection-body CLOSE_CURLY_BRACKET");
+
+    };
+
+
+collection_head:
+
+    OPEN_CURLY_BRACKET term
+    {
+        ECHO("collection_head :  OPEN_CURLY_BRACKET term");
+
+    }
+    | collection_head COMMA term
+    {
+        ECHO("collection_head :  collection_head COMMA term");
+
+    };
+
+
 %%
 
 // Basic parser functions //////////////////////////////////////////VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
@@ -611,3 +637,5 @@ void cleanup_term(p2_term *term)
     p2_term__delete(term);
 }
 
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

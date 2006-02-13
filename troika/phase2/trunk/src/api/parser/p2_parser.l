@@ -152,14 +152,6 @@ void append_to_buffer( char *s )
 %}
 
 
-/** A minimal set of special characters reserved as stand-alone syntax elements.
-    \note  The backslash and double quote are also special characters. */
-SEMICOLON             [;]
-EQUALS                [=]
-OPEN_PAREN            [(]
-CLOSE_PAREN           [)]
-SLASH                 [/]
-
 /** Letter or decimal digit. */
 ALNUM                 [A-Za-z0-9]
 
@@ -172,85 +164,117 @@ NS_TAIL               [^;()\0-\40"]
 /** Non-syntactic, non-whitespace, non-alphanumeric character. */
 NONALNUM              [^;()\0-\40"A-Za-z0-9]
 
-/** \note  Multi-line literals are accepted. */
-STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
-
-
-/** String values have their own mini-scanner. */
-%x STRLIT COMMENT
+/** Comments and string literals have their own mini-scanners. */
+%x SC_STRING SC_COMMENT
 
 %%
 
 
-<INITIAL>"/"+"*"  {
-    ECHO( "COMMENT" );
-    BEGIN( COMMENT );
+<SC_STRING>
+{
+    ([^"\n\\]*|\\[^\n])  {  // Body of string literal.
+        advance_character_number(2);
+        append_to_buffer( yytext );
+    }
+
+    (\\?)\n  {  // Newlines are permitted in string literals.
+        append_to_buffer( yytext );
+        advance_line_number();
+        print_input_prefix();
+    }
+
+    "\""  {  // End quote after string literal.
+        advance_character_number(1);
+
+        // Note: you must free this string outside of the lexer.
+        yylval.string = strdup(yytext);
+
+        BEGIN( INITIAL );
+        yylval.string = extract_literal( string_buffer );
+        buffer_pos = string_buffer;
+        return STRING;
+    }
 }
 
 
-<INITIAL>["] {
+<SC_COMMENT>
+{
+    [^*\n]*        /* eat anything that's not a '*' */
+
+    "*"[^*/\n]*   /* eat up '*'s not followed by '/'s */
+
+    \n  {
+        advance_line_number();
+        print_input_prefix();
+    }
+
+    "*/"  {
+        BEGIN( INITIAL );
+    }
+}
+
+
+"/*"  {  // Begins a C-style comment.
+    ECHO( "SC_COMMENT" );
+    BEGIN( SC_COMMENT );
+}
+
+
+["] {  // Begins a string literal.
     advance_character_number(1);
-    BEGIN( STRLIT );
+    BEGIN( SC_STRING );
 }
 
 
-<STRLIT>([^"\n\\]*|[\\][^\n])  {
-    advance_character_number(2);
-    append_to_buffer( yytext );
-}
-<STRLIT>([\\]?)[\n]  {
-    append_to_buffer( yytext );
-    advance_line_number();
-    print_input_prefix();
-}
-<STRLIT>["]  {
-    advance_character_number(1);
-    yylval.string = strdup(yytext);  // Free this string outside of the lexer.
-    BEGIN( INITIAL );
-    yylval.string = extract_literal( string_buffer );
-    buffer_pos = string_buffer;
-    return STRING;
-}
-
-
-<COMMENT>[^*\n]*        /* eat anything that's not a '*' */
-<COMMENT>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
-<COMMENT>\n  {
-    advance_line_number();
-    print_input_prefix();
-}
-<COMMENT>"*"+"/"        BEGIN( INITIAL );
-
-
-<INITIAL>{SEMICOLON}  {
+";"  {  // Marks the end of an expression or command.
     ECHO("SEMICOLON");
     advance_character_number(1);
     return SEMICOLON;
 }
 
 
-<INITIAL>{EQUALS}  {
+"="  {  // Assignment operator.
     ECHO("EQUALS");
     advance_character_number(1);
     return EQUALS;
 }
 
-
-<INITIAL>{OPEN_PAREN}  {
+"("  {
     ECHO("OPEN_PAREN");
     advance_character_number(1);
     return OPEN_PAREN;
 }
 
 
-<INITIAL>{CLOSE_PAREN}  {
+")"  {
     ECHO("CLOSE_PAREN");
     advance_character_number(1);
     return CLOSE_PAREN;
 }
 
 
-<INITIAL>{SLASH}{ALNUM}{NS_TAIL}*  {  // It's only a command if the slash is followed with a letter or digit.
+"{"  {
+    ECHO("OPEN_CURLY_BRACKET");
+    advance_character_number(1);
+    return OPEN_CURLY_BRACKET;
+}
+
+
+","  {
+    ECHO("COMMA");
+    advance_character_number(1);
+    return COMMA;
+}
+
+
+"}"  {
+    ECHO("CLOSE_CURLY_BRACKET");
+    advance_character_number(1);
+    return CLOSE_CURLY_BRACKET;
+}
+
+
+"/"{ALNUM}{NS_TAIL}*  {  // It's only a command if the slash is followed with a letter or digit.
     ECHO("COMMAND_NAME");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
@@ -258,7 +282,7 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-<INITIAL>{SLASH}|(({NS_HEAD}|({SLASH}{NONALNUM})){NS_TAIL}*)  {  // Simple string literal.
+"/"|(({NS_HEAD}|("/"{NONALNUM})){NS_TAIL}*)  {  // Simple string literal.
     ECHO("STRING");
     advance_character_number(strlen(yytext));
     yylval.string = strdup(yytext);  // Free this string outside of the lexer.
@@ -266,29 +290,27 @@ STRLIT                ["]([^"\\]|([\\]([\"]|[\\]|[^"\\])))*["]
 }
 
 
-
-
-<INITIAL>\n  {  // Report newlines to the parser (but not as tokens).
+\n  {  // Report newlines to the parser (but not as tokens).
     ECHO("[newline]");
     advance_line_number();
     print_input_prefix();
 }
 
 
-<INITIAL>[ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
+[ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
     ECHO("[whitespace]");
     advance_character_number(1);
 }
 
 
-<INITIAL><<EOF>>  {
+<<EOF>>  {
     ECHO("EOF");
 
     return E_O_F;
 }
 
 
-<INITIAL>.  {  // Ignore unrecognized characters (unless debugging the lexer).
+.  {  // Ignore unrecognized characters (unless debugging the lexer).
     ECHO("[unrecognized character]");
     advance_character_number(1);
 }
