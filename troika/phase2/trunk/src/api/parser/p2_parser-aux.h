@@ -3,17 +3,34 @@
 #define FORCED_EXIT 1331
 
 
+enum p2_parser_item__type { URI, TERM, BAG };
+
+typedef struct _p2_parser_item
+{
+    enum p2_parser_item__type type;
+
+    void *value;
+
+} p2_parser_atom;
+
+
 // Debugging flags /////////////////////////////////////////////////////////////
 
-/** If defined, echo each token as it is matched by the lexer. */
-// #define LEXER_DEBUG
+//#define DEBUG
 
-/** If defined, echo each production as it is matched by the parser. */
-// #define PARSER_DEBUG
+#ifdef DEBUG
+
+    /** If defined, echo each token as it is matched by the lexer. */
+    #define LEXER_DEBUG
+
+    /** If defined, echo each production as it is matched by the parser. */
+    #define PARSER_DEBUG
+
+#endif  // DEBUG
 
 /** If defined, print terms as raw integer sequences, rather than as
     parenthesized expressions. */
-// #define PRINT_TERM_AS_ARRAY
+//#define PRINT_TERM_AS_ARRAY
 
 
 // Formatting flags ////////////////////////////////////////////////////////////
@@ -38,33 +55,6 @@
 
 
 // Declarations ////////////////////////////////////////////////////////////////
-
-
-/** Current "column" number, where tabs only count for one column. */
-int character_number, last_character_number;
-
-/** Current line number.  Starts at 0. */
-int line_number;
-
-/** Current statement number.  Starts at 0 for each line of input. */
-int statement_number;
-
-
-/** Registers a new column offset. */
-void advance_character_number(int nchars);
-
-/** Registers a new line of input. */
-void advance_line_number();
-
-/** Registers a new statement. */
-void advance_statement_number();
-
-
-/** Initialize the parser for a new invocation of yyparse(). */
-void new_parse();
-
-/** Decorate command-line input. */
-void print_input_prefix();
 
 
 /** Turn output suppression on or off. */

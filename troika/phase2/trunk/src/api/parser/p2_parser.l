@@ -6,30 +6,23 @@
 
 \brief  Flex input file for the command line interface.
 
-This lexer deals with only four special tokens...
-
-    ( ) = ;
-
-...as well as command names (which are preceded with a slash) and string
-literals.  String literals may be simple (e.g. foo) or quoted
-(e.g. "foo = bar"), where the quoted form is just a trick to allow the user to
-input literal tokens which may contain whitespace and other special characters.
-The only escape sequences are \" and \\, which are un-done before they are
-passed up to the parser, e.g.
-
-    "Say \"hello\"!\\n" --> Say "hello"!\n
-
-Literal tokens must be separated either by white space or by parentheses, e.g.
+\note  White space is always relevant in Phase2 expressions.  Indentifiers
+must be separated either by white space or by appropriate syntax tokens, e.g.
 
     + a b  or  (+ a)b  or  ((+)a)b  but not  +ab
 
-(the lexer will interpret this last expression as a single token).
+(the lexer will interpret this last expression as a single token, "+ab").
+To preserve white space within an identifier itself, enclose it in quotation
+marks, e.g.
 
-\note  There is no call for comments in Phase2, as you're not expected to be
-working off of an "input file".  If desired, an anonymous string literal will do
-the trick in the current implementation, e.g.
+    >> 1  print README.txt;
 
-    "This is a comment.  It does nothing." ;
+but
+
+    >> 1  print "Untitled document #3";
+
+To include a quote character in such a string, use {\"}.  For the backslash
+character, use {\\}.  There are no other escape sequences in quoted identifiers.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -54,8 +47,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "p2_parser.tab.h"
 #include "p2_parser-aux.h"
+
+#include "p2_parser.tab.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,15 +59,80 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 // extern YYSTYPE yylval;
 
 
-extern void advance_character_number(int nchars);
-extern void advance_line_number();
-extern void print_input_prefix();
+// Line and character numbers //////////////////////////////////////////////////
 
 extern int suppress_output, show_line_numbers;
 
+int line_number, yy_n_chars__at_last_newline;
 
-////////////////////////////////////////////////////////////////////////////////
 
+/** Decorate command-line input. */
+void print_input_prefix()
+{
+    if ( !suppress_output )
+    {
+        // Display a line number at the beginning of each new line of input.
+        if ( show_line_numbers )
+            printf( "%d ", line_number );
+
+        // Add a prefix to each new line of input, to distinguish it from
+        // output, and possibly to separate it from the line number.
+        #ifdef INPUT_PREFIX
+            printf( INPUT_PREFIX );
+        #endif
+    }
+}
+
+
+/** Initialize the lexer for a new invocation of yyparse(). */
+void new_parse()
+{
+    line_number = 1;
+    yy_n_chars__at_last_newline = 0;
+
+    print_input_prefix();
+}
+
+
+int buf_pos()
+{
+    //return ( int ) ( YY_CURRENT_BUFFER->yy_buf_pos - YY_CURRENT_BUFFER->yy_ch_buf );
+    return YY_CURRENT_BUFFER->yy_n_chars;
+}
+
+
+void new_line()
+{
+    line_number++;
+
+    yy_n_chars__at_last_newline = buf_pos();
+
+    print_input_prefix();
+}
+
+
+/** \return  the current line number.  Starts at 0. */
+int get_line_number()
+{
+    return line_number;
+}
+
+
+/** \return the current "column" number, where tabs only count for one column. */
+int get_char_number()
+{
+    //return buf_pos() - yy_n_chars__at_last_newline;
+
+    //int i = 0;
+    //while ( yytext[i] != '\0' )
+    //    i++;
+    //return i;
+
+    return 0;
+}
+
+
+// Debugging output ////////////////////////////////////////////////////////////
 
 #ifdef LEXER_DEBUG
     #define ECHO echo_token
@@ -86,6 +145,35 @@ extern int suppress_output, show_line_numbers;
 void echo_token( char *s )
 {
     printf( "Found %s.\n", s );
+}
+
+
+// Comments ////////////////////////////////////////////////////////////////////
+
+/** Allows nested comments. */
+int comment_level = 0;
+
+
+// Quoted identifiers //////////////////////////////////////////////////////////
+
+/** Buffer size is arbitary... */
+#define STRING_BUFFER__SIZE  0xFFF
+
+char string_buffer[STRING_BUFFER__SIZE];
+char *buffer_limit = string_buffer + STRING_BUFFER__SIZE - 1;
+char *buffer_pos = string_buffer;
+
+
+void append_to_buffer( char *s )
+{
+    int len = strlen( s );
+
+    if ( buffer_pos + len < buffer_limit )
+    {
+        strcpy( buffer_pos, s );
+        buffer_limit += len;
+        buffer_pos += len;
+    }
 }
 
 
@@ -126,69 +214,141 @@ char *extract_literal(char *s)
 }
 
 
-/** Buffer size is arbitary... */
-#define STRING_BUFFER__SIZE  0xFFF
-
-char string_buffer[STRING_BUFFER__SIZE];
-char *buffer_limit = string_buffer + STRING_BUFFER__SIZE - 1;
-char *buffer_pos = string_buffer;
-//string_buffer[0] = '\0';
-
-void append_to_buffer( char *s )
-{
-    int len = strlen( s );
-
-    if ( buffer_pos + len < buffer_limit )
-    {
-        strcpy( buffer_pos, s );
-        buffer_limit += len;
-        buffer_pos += len;
-    }
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 %}
 
 
-/** Letter or decimal digit. */
+/** For command names. */
+LETTER                [A-Za-z]
 ALNUM                 [A-Za-z0-9]
 
-/** Non-syntactic, non-whitespace character (excluding slash and equals). */
-NS_HEAD               [^;=()\0-\40"/]
+/** For lexical identifiers. */
+NAME_CHAR             [^\0-\40/*:;=(){,}\"\\]
 
-/** Non-syntactic, non-whitespace character (but including slash and equals). */
-NS_TAIL               [^;()\0-\40"]
-
-/** Non-syntactic, non-whitespace, non-alphanumeric character. */
-NONALNUM              [^;()\0-\40"A-Za-z0-9]
 
 /** Comments and string literals have their own mini-scanners. */
 %x SC_STRING SC_COMMENT
 
+%option yylineno
+
+
 %%
+
+
+<INITIAL>
+{
+    "/"+"*"  {  // Begins a C-style comment.
+        ECHO( "COMMENT" );
+        comment_level++;
+        BEGIN( SC_COMMENT );
+    }
+
+    ["]  {  // Begins a string literal.
+        //advance_character_number(1);
+        BEGIN( SC_STRING );
+    }
+
+    ":"  {  // Namespace delimiter.
+        ECHO("COLON");
+        //advance_character_number(1);
+        return COLON;
+    }
+
+    ";"  {  // Marks the end of an expression or command.
+        ECHO("SEMICOLON");
+        //advance_character_number(1);
+        return SEMICOLON;
+    }
+
+    "="  {  // Assignment operator.
+        ECHO("EQUALS");
+        //advance_character_number(1);
+        return EQUALS;
+    }
+
+    "("  {  // Marks the beginning of a sub-term.
+        ECHO("OPEN_PAREN");
+        //advance_character_number(1);
+        return OPEN_PAREN;
+    }
+
+    ")"  {  // Marks the end of a sub-term.
+        ECHO("CLOSE_PAREN");
+        //advance_character_number(1);
+        return CLOSE_PAREN;
+    }
+
+    "{"  {  // Marks the beginning of an enumerated collection.
+        ECHO("OPEN_CURLY_BRACKET");
+        //advance_character_number(1);
+        return OPEN_CURLY_BRACKET;
+    }
+
+    ","  {  // Separates elements in an enumerated collection.
+        ECHO("COMMA");
+        //advance_character_number(1);
+        return COMMA;
+    }
+
+    "}"  {  // Marks the end of an enumerated collection.
+        ECHO("CLOSE_CURLY_BRACKET");
+        //advance_character_number(1);
+        return CLOSE_CURLY_BRACKET;
+    }
+
+    "\\"{LETTER}{ALNUM}*  {
+        ECHO("COMMAND_NAME");
+        //advance_character_number(strlen(yytext));
+        yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
+        return COMMAND_NAME;
+    }
+
+    (("/"*{NAME_CHAR}+)|"*"+)?"/"*  {  // Note: matches the empty string.
+        ECHO("STRING");
+        //advance_character_number(strlen(yytext));
+        yylval.string = strdup(yytext);  // Free this string outside of the lexer.
+        return STRING;
+    }
+
+    \n  {  // Report newlines to the parser (but not as tokens).
+        ECHO("[newline]");
+        new_line();
+    }
+
+    [ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
+        ECHO("[whitespace]");
+        //advance_character_number(1);
+    }
+
+    <<EOF>>  {
+        ECHO("EOF");
+
+        return E_O_F;
+    }
+
+    .  {  // Ignore unrecognized characters (unless debugging the lexer).
+        ECHO("[unrecognized character]");
+        //advance_character_number(1);
+    }
+}
 
 
 <SC_STRING>
 {
     ([^"\n\\]*|\\[^\n])  {  // Body of string literal.
-        advance_character_number(2);
+        //advance_character_number(2);
         append_to_buffer( yytext );
     }
 
-    (\\?)\n  {  // Newlines are permitted in string literals.
+    \\?\n  {  // Newlines are permitted.
         append_to_buffer( yytext );
-        advance_line_number();
-        print_input_prefix();
+        new_line();
     }
 
-    "\""  {  // End quote after string literal.
-        advance_character_number(1);
-
-        // Note: you must free this string outside of the lexer.
-        yylval.string = strdup(yytext);
-
+    \"  {  // End quote after string literal.
+        //advance_character_number(1);
+        yylval.string = strdup(yytext);  // Free this string outside of the lexer.
         BEGIN( INITIAL );
         yylval.string = extract_literal( string_buffer );
         buffer_pos = string_buffer;
@@ -199,120 +359,23 @@ NONALNUM              [^;()\0-\40"A-Za-z0-9]
 
 <SC_COMMENT>
 {
-    [^*\n]*        /* eat anything that's not a '*' */
+    "/*"  {  // Begins a nested C-style comment.
+        ECHO( "COMMENT (nested)" );
+        comment_level++;
+    }
 
-    "*"[^*/\n]*   /* eat up '*'s not followed by '/'s */
+    [^*\n]        /* Eat anything that's not a '*'. */
+
+    "*"[^*/\n]*   /* Eat up '*'s not followed by '/'s. */
 
     \n  {
-        advance_line_number();
-        print_input_prefix();
+        new_line();
     }
 
     "*/"  {
-        BEGIN( INITIAL );
+        if (! --comment_level )
+            BEGIN( INITIAL );
     }
-}
-
-
-"/*"  {  // Begins a C-style comment.
-    ECHO( "SC_COMMENT" );
-    BEGIN( SC_COMMENT );
-}
-
-
-["] {  // Begins a string literal.
-    advance_character_number(1);
-    BEGIN( SC_STRING );
-}
-
-
-";"  {  // Marks the end of an expression or command.
-    ECHO("SEMICOLON");
-    advance_character_number(1);
-    return SEMICOLON;
-}
-
-
-"="  {  // Assignment operator.
-    ECHO("EQUALS");
-    advance_character_number(1);
-    return EQUALS;
-}
-
-"("  {
-    ECHO("OPEN_PAREN");
-    advance_character_number(1);
-    return OPEN_PAREN;
-}
-
-
-")"  {
-    ECHO("CLOSE_PAREN");
-    advance_character_number(1);
-    return CLOSE_PAREN;
-}
-
-
-"{"  {
-    ECHO("OPEN_CURLY_BRACKET");
-    advance_character_number(1);
-    return OPEN_CURLY_BRACKET;
-}
-
-
-","  {
-    ECHO("COMMA");
-    advance_character_number(1);
-    return COMMA;
-}
-
-
-"}"  {
-    ECHO("CLOSE_CURLY_BRACKET");
-    advance_character_number(1);
-    return CLOSE_CURLY_BRACKET;
-}
-
-
-"/"{ALNUM}{NS_TAIL}*  {  // It's only a command if the slash is followed with a letter or digit.
-    ECHO("COMMAND_NAME");
-    advance_character_number(strlen(yytext));
-    yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
-    return COMMAND_NAME;
-}
-
-
-"/"|(({NS_HEAD}|("/"{NONALNUM})){NS_TAIL}*)  {  // Simple string literal.
-    ECHO("STRING");
-    advance_character_number(strlen(yytext));
-    yylval.string = strdup(yytext);  // Free this string outside of the lexer.
-    return STRING;
-}
-
-
-\n  {  // Report newlines to the parser (but not as tokens).
-    ECHO("[newline]");
-    advance_line_number();
-    print_input_prefix();
-}
-
-
-[ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
-    ECHO("[whitespace]");
-    advance_character_number(1);
-}
-
-
-<<EOF>>  {
-    ECHO("EOF");
-
-    return E_O_F;
-}
-
-
-.  {  // Ignore unrecognized characters (unless debugging the lexer).
-    ECHO("[unrecognized character]");
-    advance_character_number(1);
 }
 
 
