@@ -7,7 +7,7 @@
 \brief  Bison grammar file for the command line interface.
 
 Phase2's command-line interface is a separable feature of the language. It
-allows the user to pass arguments to either of a pair of functions defined in
+allows the user to pass command_args to either of a pair of functions defined in
 the Phase2 client: one for program construction and one for querying or
 manipulating the programming environment.
 
@@ -16,14 +16,14 @@ Expression Syntax
 At the parser level, an expression is a parenthetically nested sequence of
 dictionary items or special symbols, terminated by a semicolon. To give an
 expression a name, the semicolon may be preceded by an equality symbol and
-hen the name, e.g.
+then the name, e.g.
 
     (token1 token2) token3 = token4;
 
 Command Syntax
 
 Special commands are indicated with a slash plus the name of the command,
-followed by a whitespace-delimited list of arguments (no parentheses) and
+followed by a whitespace-delimited list of command_args (no parentheses) and
 terminated by a semicolon, e.g.
 
     /command arg1 arg2;
@@ -34,15 +34,15 @@ to take immediate effect at parse time.
 Interaction with the client
 
 The role of the parser is simply to construct a p2_term to send to the client
-for evaluation.  The client then handles the term and eventually deallocates it
+for evaluation.  The client then handles the term and eventually frees it
 after generating output.  The client cannot "talk back" to the parser except to
 tell it to terminate.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
-         +1 509 570-6990    \n */
+         +1 509 570-6990    \n
 
-/*//////////////////////////////////////////////////////////////////////////////
+********************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -59,70 +59,76 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
-#include "p2_parser-aux.h"
+#include "p2_ast.h"
+#include "debug.h"
+
 #include "../util/p2_term.h"
-//#include "../util/p2_array.h"
 
-#include <stdio.h>  // fprintf, printf, sprintf
-#include <string.h>  // strcpy
-
-#ifdef PARSER_DEBUG
-    #define YYDEBUG 1
-#endif
+#include <stdio.h>  /* printf, sprintf */
+#include <string.h>  /* strcpy */
+#include <stdlib.h>  /* malloc */
 
 
-////////////////////////////////////////////////////////////////////////////////
+/* Language module dependencies ***********************************************/
 
-/** Command evaluator from the semantic module.
-    \note  args (if not null) needs to be freed externally. */
-extern int p2_evaluate_command( char *name, p2_term *args );
 
-/** Expression evaluator from the semantic module.
-    \note  expr needs to be freed externally. */
-extern int p2_evaluate_expression( char *name, p2_term *expr );
-
-/** Parse error handler from the semantic module. */
+extern int p2_evaluate_command( char *name, p2_ast *args );
+extern int p2_evaluate_expression( char *name, p2_ast *expr );
 extern int p2_handle_parse_error( char *msg );
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-/** Evaluate a command. */
-int handle_command( char *name, p2_term *args );
-
-/** Evaluate an expression. */
-int handle_expression( char *name, p2_term *expr );
-
-/** Deal gracefully with a parse error. */
-int handle_error( char *msg );
+extern int p2_parser__suppress_output();
+extern int p2_parser__show_line_numbers();
 
 
-////////////////////////////////////////////////////////////////////////////////
+/* Lexer dependencies *********************************************************/
 
-extern int suppress_output;
 
 extern void new_parse();
 extern int get_char_number();
 extern int get_line_number();
 
-
 /** Current statement number.  Starts at 0 for each line of input. */
-int statement_number;
-
-//extern int last_character_number, line_number, statement_number;
-int error_character_number, error_line_number, error_statement_number;
-
-
-/** "verbose" error message received by yyerror. */
-char yyerror_msg[200];
-
-/** Adorned (with location info.) error message to send to the semantic module. */
-char error_msg[100];
+extern int statement_number;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+
+
+/** Output decoration. */
+/* #define COMMAND_OUTPUT_PREFIX "\t>> "    */
+/* #define EXPRESSION_OUTPUT_PREFIX "\t>> " */
+/* #define ERROR_OUTPUT_PREFIX "\t>> "      */
+/* #define COMMAND_OUTPUT_SUFFIX " <<"      */
+/* #define EXPRESSION_OUTPUT_SUFFIX " <<"   */
+/* #define ERROR_OUTPUT_SUFFIX " <<"        */
+
+
+/** Evaluate a command. */
+void handle_command( char *name, p2_ast *args );
+
+/** Evaluate an expression. */
+void handle_expression( char *name, p2_ast *expr );
+
+/** Deal gracefully with a parse error. */
+void handle_error();
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+#define ERROR_BUFFER_SIZE  0xFF
+
+int exit_early;
+
+int error_character_number, error_line_number, invalid_statement_number;
+
+/** Buffer for "verbose" error message received by yyerror. */
+char yyerror_msg[ ERROR_BUFFER_SIZE ];
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 /** This is the default value. */
 #define YYMAXDEPTH    10000
@@ -130,39 +136,80 @@ char error_msg[100];
 /** This is the default value. */
 #define YYINITDEPTH   200
 
+
 /** Tells the parser to process only a single input stream. */
-int yywrap();
+int yywrap()
+{
+    return 1;
+}
+
 
 /** Copies reported error messages to a string, where they wait to passed on to
     the semantic module. */
-void yyerror( const char *msg );
+void yyerror( enum parser_return_state *ignored, const char *msg )
+{
+    /* Only the first error in a statement is reported. */
+    if ( ! *yyerror_msg )
+    {
+        #if DEBUG__PARSER
+            printf( "yyerror: %s (reported)\n", msg );
+        #endif
 
-/** Causes the last error reported to yyerror to be ignored. */
-void skip_error();
+        if ( strlen( msg ) >= ERROR_BUFFER_SIZE )
+            strcpy( yyerror_msg, "[parser error message overflows buffer]" );
+        else
+            strcpy( yyerror_msg, msg );
 
-//extern void yyterminate();
-//extern void yy_fatal_error(char *);
-/** Exit the parser (before reaching the end of input). */
-#define END_IT_ALL  { /*yylex(0,0);*/ YYABORT; }
+        error_character_number = get_char_number();
+        error_line_number = get_line_number();
+        invalid_statement_number = statement_number;
+    }
+
+    else
+    {
+        #if DEBUG__PARSER
+            printf( "yyerror: %s (not reported due to previous error)\n" );
+        #endif
+    }
+}
 
 
-////////////////////////////////////////////////////////////////////////////////
+#define ERROK  { yyerrok; yyclearin; exit_early = 0; }
 
 
-#ifdef PARSER_DEBUG
-    #define ECHO echo_production
+#if DEBUG__PARSER
+    #define PRODUCTION( x )  printf( "Matched %s\n", x );
 #else
-    #define ECHO
+    #define PRODUCTION
 #endif
 
-/** Debugging output. */
-void echo_production( char *s );
-
-/** Cleanup function for terms which own their atoms. */
-void cleanup_term( p2_term *term );
+#if DEBUG__PARSER__USE_YYDEBUG
+    #define YYDEBUG  1
+#endif
 
 
 ////////////////////////////////////////////////////////////////////////////////
+
+
+struct statement
+{
+    char *name;
+    p2_ast *expr;
+};
+
+struct statement *new_statement( char *name, p2_ast *expr )
+{
+    struct statement *stmt = ( struct statement* ) malloc( sizeof( struct statement ) );
+
+    stmt->name = name;
+    stmt->expr = expr;
+
+    return stmt;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 %}
 
@@ -171,37 +218,55 @@ void cleanup_term( p2_term *term );
 {
     char *string;
 
-    /** (void *) instead of (p2_term *) because Bison won't take the alias. */
-    void *parser_term;
+    /** (void *) instead of (p2_term *), (p2_ast *) (p2_array*) because
+        Bison won't take an alias here. */
+    void *term, *name, *bag, *parser_node;
+
+    struct statement *stmt;
 }
 
-/** Report more detailed parse error messages. */
-%token YYERROR_VERBOSE
 
-%token COLON EQUALS SEMICOLON E_O_F
-
-/** For terms. */
 %token OPEN_PAREN CLOSE_PAREN
-
-/** For collections. */
+%token OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET;
 %token OPEN_CURLY_BRACKET COMMA CLOSE_CURLY_BRACKET
+%token COLON EQUALS SEMICOLON E_O_F
 
 %token <string> STRING COMMAND_NAME
 
-%type <parser_term> term subterm arguments
+%type <term> term subterm command_args
+%type <parser_node> term_item bracketed_term
+%type <bag> bag bag_head
+%type <name> name
+%type <stmt> statement command expression
 
-%start parser_input
+
+%parse-param { enum parser_return_state *return_state }
+
+/** Report more detailed parse error messages. */
+%error-verbose
+
+%start input
+
 
 %%
 
 
-parser_input:
+input:
 
     statements E_O_F
     {
-        ECHO( "parser_input:  statements E_O_F" );
+        PRODUCTION( "input ::=  statements E_O_F" );
 
-        /** Always exit normally from here. */
+        if ( *yyerror_msg )
+            handle_error();
+
+        if ( exit_early )
+            *return_state = RETURN_STATE__ABORTED;
+
+        else
+            *return_state = RETURN_STATE__END_OF_INPUT;
+
+        /* Exit normally. */
         YYACCEPT;
     };
 
@@ -210,180 +275,199 @@ statements:
 
     /* This production precedes input. */
     {
-        ECHO( "statements:  [null]" );
+        PRODUCTION( "statements ::=  [null]" );
+
+        *return_state = RETURN_STATE__PARSE_FAILURE;
+
+        #if YYDEBUG
+            yydebug = 1;
+        #endif
 
         new_parse();
-    }
-    | statements command
-    {
-        ECHO( "statements:  statements command" );
 
-        yyerrok;
+        ERROK;
+    }
+
+    | statements statement
+    {
+        PRODUCTION( "statements ::=  statements statement" );
+
+        if ( *yyerror_msg )
+            handle_error();
+
+        if ( exit_early )
+        {
+            *return_state = RETURN_STATE__ABORTED;
+            YYACCEPT;
+        }
+
         statement_number++;
     }
-    | statements expression
-    {
-        ECHO( "statements:  statements expression" );
 
-        yyerrok;
-        statement_number++;
-    }
+    /* Redundant semicolons are tolerated. */
     | statements SEMICOLON
     {
-        ECHO( "statements:  statements SEMICOLON" );
+        PRODUCTION( "statements ::=  statements SEMICOLON" );
 
-        // Redundant semicolons are tolerated, but aren't recognized as
-        // statements.
-    }
-    | statements error SEMICOLON
+        if ( *yyerror_msg )
+            handle_error();
+
+        if ( exit_early )
+        {
+            *return_state = RETURN_STATE__ABORTED;
+            YYACCEPT;
+        }
+    };
+
+
+statement:
+
+    /* Wait for the semicolon before executing a command. */
+    command SEMICOLON
     {
-        ECHO( "statements:  error SEMICOLON" );
+        PRODUCTION( "statement ::=  command SEMICOLON" );
 
-        // Wait until the end of a statement to report an error (i.e. print
-        // only one error message per invalid statement).
-        if ( handle_error( "[this argument is ignored]" ) )
-            END_IT_ALL;
+        $$ = 0;
 
-        // Make error reporting resume immediately.
-        yyerrok;
+        if ( $1 )
+        {
+            if ( $1->name )
+                handle_command( $1->name, $1->expr );
 
-        // Clear the lookahead token.
-        yyclearin;
+            free( $1 );
+        }
+    }
 
-        statement_number++;
+    /* Wait for the semicolon before evaluating an expression. */
+    | expression SEMICOLON
+    {
+        PRODUCTION( "statement ::=  expression SEMICOLON" );
+
+        $$ = 0;
+
+        if ( $1 )
+        {
+            if ( $1->expr )
+                handle_expression( $1->name, $1->expr );
+
+            free( $1 );
+        }
+    }
+
+    /* Eat up errors until a semicolon is found. */
+    | invalid_statement SEMICOLON
+    {
+        PRODUCTION( "statements ::=  invalid_statement SEMICOLON" );
+    }
+
+    /* Handle premature EOF.  The next EOF token will cause YYACCEPT. */
+    | invalid_statement E_O_F
+    {
+        PRODUCTION( "statements ::=  invalid_statement E_O_F" );
+    };
+
+
+invalid_statement:
+
+    error
+    {
+        PRODUCTION( "invalid_statement ::=  error" );
+    }
+
+    | invalid_statement error
+    {
+        PRODUCTION( "invalid_statement ::=  invalid_statement error" );
     };
 
 
 command:
 
-    COMMAND_NAME SEMICOLON
+    /* Command with no command_args. */
+    COMMAND_NAME
     {
-        int exit = 0;
+        PRODUCTION( "command ::=  COMMAND_NAME" );
 
-        ECHO( "command :  COMMAND SEMICOLON" );
-
-        // Handle command with no arguments.
-        if ( handle_command( $1, 0 ) )
-            exit = 1;
-        free( $1 );
-
-        if ( exit )
-            END_IT_ALL
+        if ( $1 )
+            $$ = new_statement( $1, 0 );
+        else
+            $$ = 0;
     }
-    | COMMAND_NAME arguments SEMICOLON
+
+    /* Command with command_args. */
+    | COMMAND_NAME command_args
     {
-        int exit = 0;
+        PRODUCTION( "command ::=  COMMAND_NAME command_args" );
 
-        ECHO( "command :  COMMAND arguments SEMICOLON" );
+        if ( $1 )
+            $$ = new_statement( $1, p2_ast__term( ( p2_term* ) $2 ) );
+        else
+            $$ = 0;
+    };
 
-        // Handle command with arguments.
-        if ( $2 )
-            if ( handle_command( $1, ( p2_term* ) $2 ) )
-                exit = 1;
-        free( $1 );
 
-        if ( exit )
-            END_IT_ALL;
+command_args:
+
+    name
+    {
+        PRODUCTION( "command_args ::=  name" );
+
+        /* Create a singleton term containing one argument. */
+        $$ = p2_term__new( ( void* ) p2_ast__name( ( p2_array* ) $1 ), 1 );
+    }
+
+    | command_args name
+    {
+        PRODUCTION( "command_args ::=  command_args name" );
+
+        /* Concatenate the command command_args. */
+        if ( $1 )
+        {
+            $$ = p2_term__cat(
+                ( p2_term* ) $1,
+                p2_term__new( ( void* ) p2_ast__name( ( p2_array* ) $2 ), 1 ) );
+        }
+
+        else
+        {
+            $$ = 0;
+
+            free( $2 );
+        }
     };
 
 
 expression:
 
-    term SEMICOLON
+    /* Anonymous expression. */
+    term
     {
-        ECHO( "expression :  term SEMICOLON" );
+        PRODUCTION( "expression ::=  term" );
 
-        // Handle anonymous expression.
         if ( $1 )
-            if ( handle_expression( 0, ( p2_term* ) $1 ) )
-                END_IT_ALL;
+            $$ = new_statement( 0, p2_ast__term( ( p2_term* ) $1 ) );
+        else
+            $$ = 0;
     }
-    | term EQUALS STRING SEMICOLON
+
+    /* Named expression. */
+    | term EQUALS STRING
     {
-        int exit = 0;
+        PRODUCTION("expression ::=  term EQUALS STRING");
 
-        ECHO("expression :  term EQUALS token SEMICOLON");
-
-        // Handle named expression.
         if ( $1 )
-            if ( handle_expression( $3, ( p2_term* ) $1 ) )
-                exit = 1;
-        free( $3 );
-
-        if ( exit )
-            END_IT_ALL;
+            $$ = new_statement( ( char* ) $3, p2_ast__term( ( p2_term* ) $1 ) );
+        else
+            $$ = 0;
     }
+
     | term EQUALS error
     {
-        ECHO( "expression :  term EQUALS error" );
-
-        if ($1)
-        {
-            cleanup_term( ( p2_term* ) $1 );
-
-            // Note: this error propagates upward to a statement production, and
-            // doesn't need to be handled here.
-            skip_error();
-        }
-    }
-    | term EQUALS STRING error
-    {
-        ECHO( "expression :  term EQUALS STRING error" );
-
-        if ( $1 )
-        {
-            cleanup_term( ( p2_term* ) $1 );
-
-            // Note: this error propagates upward to a statement production, and
-            // doesn't need to be handled here.
-            skip_error();
-        }
-
-        free( $3 );
-    };
-
-
-arguments:
-
-    STRING
-    {
-        ECHO( "arguments :  token" );
-
-        // Create a singleton term containing one argument.
-        $$ = p2_term__new( ( void* ) $1, 1 );
-    }
-    | arguments STRING
-    {
-        ECHO( "arguments :  arguments token" );
-
-        // Concatenate the command arguments.
-        if ( $1 )
-            $$ = p2_term__cat( ( p2_term* ) $1, p2_term__new( ( void* ) $2, 1 ) );
-        else
-        {
-            free( $2 );
-            $$ = 0;
-        }
-    }
-    | arguments error
-    {
-        // Error is encountered after an argument term has been constructed.
-        // Clean up the existing term, and produce a null term as the semantic
-        // value.
-
-        ECHO( "arguments :  arguments error" );
-
-        // Handle the error only if the existing term is good (i.e. if an error
-        // is found in an argument list, ignore errors in the rest of the
-        // statement).VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
-        if ( $1 )
-        {
-            cleanup_term( ( p2_term* ) $1 );
-            if ( handle_error( 0 ) )
-                END_IT_ALL;
-        }
+        PRODUCTION( "expression ::=  term EQUALS error" );
 
         $$ = 0;
+
+        if ( $1 )
+            p2_ast__delete( p2_ast__term( ( p2_term* ) $1 ) );
     };
 
 
@@ -391,144 +475,263 @@ term:
 
     subterm
     {
-        ECHO( "term :  subterm" );
+        PRODUCTION( "term ::=  subterm" );
+
         $$ = $1;
     }
+
     | term subterm
     {
-        ECHO( "term :  term subterm" );
+        PRODUCTION( "term ::=  term subterm" );
 
-        // If either subterm is null, clean up the existing term and produce a
-        // null term as the semantic value.  In this case, the error has already
-        // been reported.
-        if ( !$1 || !$2 )
-        {
-            if ( $1 )
-                cleanup_term( $1 );
-            if ( $2 )
-                cleanup_term( $2 );
-            $$ = 0;
-        }
+        if ( $1 && $2 )
+            /* Combine the terms using a left-associative merge. */
+            $$ = p2_term__merge_la( ( p2_term* ) $1,  ( p2_term* ) $2 );
 
         else
-            // Combine the terms using a left-associative merge.
-            $$ = p2_term__merge_la( ( p2_term* ) $1, ( p2_term* ) $2 );
-    }
-    | term error
-    {
-        // Error is encountered after a term has been constructed.  Clean up the
-        // existing term, and produce a null term as the semantic value.
-
-        ECHO( "term :  term error" );
-
-        // Handle the error only if the existing term is good (i.e. if an error
-        // is found in an expression, ignore errors in the rest of the
-        // expression).
-        if ( $1 )
         {
-            cleanup_term( ( p2_term* ) $1 );
-            if ( handle_error( 0 ) )
-                END_IT_ALL;
-        }
+            $$ = 0;
 
-        $$ = 0;
+            if ( $1 )
+                p2_ast__delete( p2_ast__term( ( p2_term* ) $1 ) );
+            if ( $2 )
+                p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+        }
     };
 
 
 subterm:
 
-    STRING
+    term_item
     {
-        ECHO( "subterm :  token" );
+        PRODUCTION( "subterm ::=  term_item" );
 
-        // Create a singleton term containing one literal or identifier.
-        $$ = p2_term__new( ( void* ) $1, 1 );
+        if ( $1 )
+            $$ = ( void* ) p2_term__new( $1, 0 );
+
+        else
+            $$ = 0;
     }
+
     | OPEN_PAREN term CLOSE_PAREN
     {
-        ECHO( "subterm :  OPEN_PAREN term CLOSE_PAREN" );
+        PRODUCTION( "subterm ::=  OPEN_PAREN term CLOSE_PAREN" );
 
-        // "Remove the parentheses" from the term.
-        $$ = $2;
+        if ( $2 )
+            /* "Remove the parentheses" from the term. */
+            $$ = $2;
+
+        else
+            $$ = 0;
     }
-    | OPEN_PAREN term error
-    {
-        ECHO( "subterm :  OPEN_PAREN term error" );
 
-        cleanup_term( ( p2_term* ) $2 );
-        if ( handle_error( 0 ) )
-            END_IT_ALL;
+    | OPEN_PAREN error
+    {
+        PRODUCTION( "subterm ::=  OPEN_PAREN error" );
 
         $$ = 0;
-    };
+    }
 
-
-collection:
-
-    collection_head CLOSE_CURLY_BRACKET
+    | OPEN_PAREN term error
     {
-        ECHO( "collection :  collection-body CLOSE_CURLY_BRACKET" );
+        PRODUCTION( "subterm ::=  OPEN_PAREN term error" );
 
+        $$ = 0;
+
+        if ( $2 )
+            p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
     };
 
 
-collection_head:
+term_item:
+
+    bag
+    {
+        PRODUCTION( "term_item ::=  bag" );
+
+        if ( $1 )
+            $$ = ( void* ) p2_ast__bag( ( p2_array* ) $1 );
+
+        else
+            $$ = 0;
+    }
+
+    | name
+    {
+        PRODUCTION( "term_item ::=  name" );
+
+        if ( $1 )
+            $$ = ( void* ) p2_ast__name( ( p2_array* ) $1 );
+
+        else
+            $$ = 0;
+    }
+    | bracketed_term
+    {
+        PRODUCTION( "term_item ::=  bracketed_term" );
+
+        $$ = $1;
+    };
+
+
+bracketed_term:
+
+    OPEN_SQUARE_BRACKET term CLOSE_SQUARE_BRACKET
+    {
+        PRODUCTION( "bracketed_term ::=  OPEN_SQUARE_BRACKET term CLOSE_SQUARE_BRACKET" );
+
+        if ( $2 )
+            $$ = ( void* ) p2_ast__term( ( p2_term* ) $2 );
+
+        else
+            $$ = 0;
+    }
+
+    | OPEN_SQUARE_BRACKET error
+    {
+        PRODUCTION( "bracketed_term ::=  OPEN_SQUARE_BRACKET error" );
+
+        $$ = 0;
+    }
+
+    | OPEN_SQUARE_BRACKET term error
+    {
+        PRODUCTION( "bracketed_term ::=  OPEN_SQUARE_BRACKET term error" );
+
+        $$ = 0;
+
+        if ( $2 )
+            p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+    };
+
+
+bag:
+
+    bag_head CLOSE_CURLY_BRACKET
+    {
+        PRODUCTION( "bag ::=  bag_head CLOSE_CURLY_BRACKET" );
+
+        if ( $1 )
+            $$ = $1;
+
+        else
+            $$ = 0;
+    }
+
+    | bag_head error
+    {
+        PRODUCTION( "bag ::=  bag_head error" );
+
+        $$ = 0;
+
+        if ( $1 )
+            p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+    };
+
+
+bag_head:
 
     OPEN_CURLY_BRACKET term
     {
-        ECHO( "collection_head :  OPEN_CURLY_BRACKET term" );
+        PRODUCTION( "bag_head ::=  OPEN_CURLY_BRACKET term" );
 
+        if ( $2 )
+        {
+            $$ = ( void* ) p2_array__new( 1, 0 );
+            p2_array__enqueue( ( p2_array* ) $$, $2 );
+        }
+
+        else
+            $$ = 0;
     }
-    | collection_head COMMA term
-    {
-        ECHO( "collection_head :  collection_head COMMA term" );
 
+    | OPEN_CURLY_BRACKET error
+    {
+        PRODUCTION( "bag_head ::=  OPEN_CURLY_BRACKET error" );
+
+        $$ = 0;
+    }
+
+    | bag_head COMMA term
+    {
+        PRODUCTION( "bag_head ::=  bag_head COMMA term" );
+
+        if ( $1 && $3 )
+        {
+            $$ = $1;
+            p2_array__enqueue( ( p2_array* ) $$, $3 );
+        }
+
+        else
+        {
+            $$ = 0;
+
+            if ( $1 )
+                p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+            if ( $3 )
+                p2_ast__delete( ( p2_ast* ) $3 );
+        }
+    }
+
+    | bag_head COMMA error
+    {
+        PRODUCTION( "bag_head ::=  bag_head COMMA error" );
+
+        $$ = 0;
+
+        if ( $1 )
+            p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+    };
+
+
+name:
+
+    STRING
+    {
+        PRODUCTION( "name ::=  STRING" );
+
+        $$ = ( void* ) p2_array__new( 1, 0 );
+        p2_array__enqueue( ( p2_array* ) $$, $1 );
+    }
+
+    | name COLON STRING
+    {
+        PRODUCTION( "name ::=  name COLON STRING" );
+
+        if ( $1 )
+        {
+            $$ = $1;
+            p2_array__enqueue( ( p2_array* ) $$, ( void* ) $3 );
+        }
+
+        else
+        {
+            $$ = 0;
+            free( $3 );
+        }
+    }
+
+    | name COLON error
+    {
+        PRODUCTION( "name ::=  name COLON error" );
+
+        $$ = 0;
+        p2_ast__delete( p2_ast__name( ( p2_array* ) $1 ) );
     };
 
 
 %%
 
-// Basic parser functions //////////////////////////////////////////////////////
-
-
-int yywrap()
-{
-    return 1;
-}
-
 
 /*  main() { yyparse(); }  */
 
 
-void yyerror( const char *msg )
+/* Expression handling ********************************************************/
+
+
+void handle_command( char *name, p2_ast *args )
 {
-    if ( *yyerror_msg )
-        fprintf( stderr,
-            "Parser warning: last error reported to yyerror was never handled: %s.\n",
-            yyerror_msg );
-
-    strcpy( yyerror_msg, msg );
-
-    error_character_number = get_char_number();//last_character_number;
-    error_line_number = get_line_number();
-    error_statement_number = statement_number;
-}
-
-
-void skip_error()
-{
-    *yyerror_msg = 0;
-}
-
-
-// Expression handling /////////////////////////////////////////////////////////
-
-
-int handle_command( char *name, p2_term *args )
-{
-    int retval;
-
-    if ( !suppress_output )
+    if ( !p2_parser__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -538,9 +741,11 @@ int handle_command( char *name, p2_term *args )
         #endif
     }
 
-    retval = p2_evaluate_command( name, args );
+    /* Note: ownership of name and arguments are conferred to
+       p2_evaluate_command. */
+    exit_early = exit_early || p2_evaluate_command( name, args );
 
-    if ( !suppress_output )
+    if ( !p2_parser__suppress_output() )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
             printf( COMMAND_OUTPUT_SUFFIX );
@@ -548,16 +753,12 @@ int handle_command( char *name, p2_term *args )
 
         printf( "\n\n" );
     }
-
-    return retval;
 }
 
 
-int handle_expression( char *name, p2_term *expr )
+void handle_expression( char *name, p2_ast *expr )
 {
-    int retval;
-
-    if ( !suppress_output )
+    if ( !p2_parser__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -567,9 +768,11 @@ int handle_expression( char *name, p2_term *expr )
         #endif
     }
 
-    retval = p2_evaluate_expression( name, expr );
+    /* Note: ownership of name and expression are conferred to
+       p2_evaluate_expression. */
+    exit_early = exit_early || p2_evaluate_expression( name, expr );
 
-    if (!suppress_output)
+    if (!p2_parser__suppress_output())
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
             printf( EXPRESSION_OUTPUT_SUFFIX );
@@ -577,16 +780,14 @@ int handle_expression( char *name, p2_term *expr )
 
         printf( "\n\n" );
     }
-
-    return retval;
 }
 
 
-int handle_error( char *msg )
+void handle_error()
 {
-    int retval;
+    char error_msg[ ERROR_BUFFER_SIZE + 0x20 ];
 
-    if ( !suppress_output )
+    if ( !p2_parser__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -596,18 +797,14 @@ int handle_error( char *msg )
         #endif
     }
 
-    // Note: "char" rather than "column" on account of the tab character.
-    if ( *yyerror_msg )
-        sprintf( error_msg, "line %d, char %d: %s",
-            error_line_number, error_character_number, yyerror_msg );
-    else
-        // If this happens, it means that the parser has not recovered from a
-        // previous error, or that you've needlessly called handle_error.
-        sprintf( error_msg, "unreported" );
-    *yyerror_msg = '\0';
-    retval = p2_handle_parse_error( error_msg );
+    /* Note: "char" rather than "column" on account of the tab character. */
+    sprintf( error_msg, "line %d, char %d: %s",
+        error_line_number, error_character_number, yyerror_msg );
 
-    if ( !suppress_output )
+    *yyerror_msg = '\0';
+    exit_early = exit_early || p2_handle_parse_error( error_msg );
+
+    if ( !p2_parser__suppress_output() )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
             printf( ERROR_OUTPUT_SUFFIX );
@@ -615,35 +812,7 @@ int handle_error( char *msg )
 
         printf( "\n\n" );
     }
-
-    return retval;
 }
 
 
-// Debugging and cleanup ///////////////////////////////////////////////////////
-
-
-void echo_production( char *s )
-{
-    printf( "Found %s\n", s );
-}
-
-
-/** To be passed as a function pointer to p2_term__for_all. */
-void *deallocate( void *p )
-{
-//printf("::::: deallocate\n");
-    free( p );
-    return ( void* ) 1;
-}
-
-
-void cleanup_term( p2_term *term )
-{
-//printf("::::: cleanup_term\n");
-    p2_term__for_all( term, deallocate );
-    p2_term__delete( term );
-}
-
-
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

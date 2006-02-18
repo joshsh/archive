@@ -29,183 +29,137 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *///////////////////////////////////////////////////////////////////////////////
 
-#include "p2_parser-aux.h"
+#include "p2_ast.h"
+#include "debug.h"
+
 #include "../util/p2_term.h"
 
-#include <stdio.h>  // printf
-#include <string.h>  // strcmp, strlen
-#include <stdlib.h>  // exit (avoids 'implicit declaration' warning)
+#include <stdio.h>  /* printf */
+#include <string.h>  /* strcmp, strlen */
+#include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
 
 
-void p2_term__print(p2_term *term, int top_level);
-void *deallocate(void *p);
-
-int retval = 0;
+/** Bison parser dependency. */
+extern int yyparse();
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-/** The Bison parser function. */
-extern int yyparse();
-
-/** Term cleanup function from Bison output. */
-extern void cleanup_term(p2_term *term);
-
-extern void p2_parser__set_suppress_output(int flag);
-extern void p2_parser__set_show_line_numbers(int flag);
-
-
 /** Mock command evaluator.
     \note  the p2_term argument 'args' should be freed after use (if not null),
     whereas the character string 'name' belongs to the parser. */
-extern int p2_evaluate_command(char *name, p2_term *args)
+int p2_evaluate_command( char *name, p2_ast *args )
 {
-    retval = 0;
+    int ret = 0;
 
-    if (!name || !strlen(name))
+    if ( args )
     {
-        printf("Error: command must have a name!");
-        return;
-    }
-
-    if (args)
-    {
-        printf("Evaluate command \"%s\": ", name);
-        p2_term__print(args, 1);
+        printf( "Evaluate command \"%s\":  ", name );
+        p2_ast__print( args );
     }
 
     else
-        printf("Evaluate command \"%s\"", name);
+        printf( "Evaluate command \"%s\"", name );
 
 
-    // Process the command.
-    if (!strcmp(name, "exit"))
+    // Debugger recognizes just one command.
+    if ( !strcmp( name, "exit" ) )
     {
-        retval = FORCED_EXIT;
-        printf("\n\n");
+        ret = 1;
+        printf( "\n\n" );
     }
 
-    // else
-    //    printf("Unknown command.\n");
+    if ( args )
+        p2_ast__delete( args );
 
-    if (args)
-        cleanup_term(args);
+    free( name );
 
-    return retval;
+    return ret;
 }
 
 
 /** Mock expression evaluator.
     \note  the p2_term argument 'args' should be freed after use,
     whereas the character string 'name' belongs to the parser. */
-extern int p2_evaluate_expression(char *name, p2_term *expr)
+int p2_evaluate_expression( char *name, p2_ast *expr )
 {
-    retval = 0;
+    int ret = 0;
 
-    if (!expr)
+    if ( name )
     {
-        printf("Error: expression must not be null!");
-        return;
-    }
-
-    if (name)
-    {
-        printf("Evaluate expression \"%s\": ", name);
-        p2_term__print(expr, 1);
+        printf( "Evaluate expression \"%s\":  ", name );
+        p2_ast__print( expr );
+        free( name );
     }
 
     else
     {
-        printf("Evaluate anonymous expression: ");
-        p2_term__print(expr, 1);
+        printf( "Evaluate anonymous expression:  " );
+        p2_ast__print( expr );
     }
 
-    cleanup_term(expr);
+    p2_ast__delete( expr );
 
-    return retval;
+    return ret;
 }
 
 
 /** Mock parse error handler.
     \note  the character string 'msg' belongs to the parser. */
-extern int p2_handle_parse_error(char *msg)
+int p2_handle_parse_error( char *msg )
 {
-    retval = 0;
+    int ret = 0;
 
-    if (msg && strlen(msg))
-        printf("Handle parse error: %s.", msg);
+    if ( msg && strlen( msg ) )
+        printf( "Handle parse error: %s.", msg );
     else
-        printf("Handle parse error.");
+        printf( "Handle parse error." );
 
-    return retval;
+    return ret;
+}
+
+
+/** \return  whether the lexer and parser are to avoid printing to stdout while
+    matching input */
+int p2_parser__suppress_output()
+{
+    return 0;
+}
+
+
+/** \return  whether a line number is printed before each new line of input */
+int p2_parser__show_line_numbers()
+{
+    return 1;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-/** Debugger controlling function.  Invocation of yyparse() is here. */
+/** yyparse is invoked here. */
 main()
 {
-    int exit_value;
+    int yyparse__exit_value;
+    enum parser_return_state return_state;
 
-    p2_parser__set_suppress_output(0);
-    p2_parser__set_show_line_numbers(1);
+    if ( p2_ast__init() )
+        exit( 1 );
 
-    printf("Phase2 command-line parser debugger.  Type '/exit;' to quit.\n\n");
+    printf( "Phase2 command-line parser debugger.  Type '\\exit;' to quit.\n\n" );
 
-    if (exit_value = yyparse())
-    {
-        if (retval == FORCED_EXIT)
-            printf("Parser was terminated by a user action.\n");
-        else
-            printf("Parser exited abnormally (exit_value = %d).\n", exit_value);
-    }
+    if ( yyparse__exit_value = yyparse( &return_state ) )
+        printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
+
+    else if ( return_state == RETURN_STATE__ABORTED )
+        printf( "Parser was aborted by a user action.\n" );
     else
-        printf("Parser exited normally.\n");
+        printf( "Parser reached end-of-input.\n" );
+
+    if ( p2_ast__end() )
+        exit( 1 );
 }
 
 
-/** Print function for p2_terms. */
-void p2_term__print(p2_term *term, int top_level)
-{
-    p2_term *subterm;
-
-    #ifdef PRINT_TERM_AS_ARRAY
-        void **cur = term->head, **sup = term->buffer + term->buffer_size;
-
-        while (cur < sup)
-        {
-            printf("%d ", (int) *cur);
-            cur++;
-        }
-    #else
-        unsigned int i, length = p2_term__length(term);
-
-        if (length == 1)
-            printf((char *) *(term->head + 1));
-
-        else
-        {
-            if (!top_level)
-                printf("(");
-
-            for (i = 0; i < length - 1; i++)
-            {
-                subterm = p2_term__subterm_at(term, i);
-                p2_term__print(subterm, 0);
-                p2_term__delete(subterm);
-                printf(" ");
-            }
-
-            subterm = p2_term__subterm_at(term, length - 1);
-            p2_term__print(subterm, 0);
-            p2_term__delete(subterm);
-
-            if (!top_level)
-                printf(")");
-        }
-    #endif  // PRINT_TERM_AS_ARRAY
-}
-
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -3,47 +3,55 @@
 ##
 ## Use "make debugger" for a test application.
 
-NAME = p2_parser
+NAME     = p2_parser
+UTILS    = ../util
 
-CC   = gcc
-LEX  = flex \
-       -pp  # Get comments regarding features that lead to performance losses.
-YACC = bison
-VALGRIND = valgrind --tool=memcheck --leak-check=full --show-reachable=yes
-
-CFLAGS = -g # temporary...
-
-UTILS = ../util
+CC       = gcc
+CFLAGS   = -g # temporary...
+LEX      = flex \
+           -pp  # Get comments regarding features that lead to performance losses.
+YACC     = bison
+VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
 
 ################################################################################
 
-all: objects
+.PHONY : default
+default: objects
 
 
+.PHONY : clean
 clean:
 	-rm lex.yy.c
-	-rm *.tab.c *.tab.h *.output p2_term.o # *.vcg
+	-rm *.tab.c *.tab.h *.output *.o # *.vcg
 
 
+.PHONY : distclean
 distclean: clean
-	-rm *.o $(NAME)-debugger
+	-rm *.o debugger
 
 
-valgrind :  debugger
-	-$(VALGRIND) $(NAME)-debugger
+.PHONY : test
+test :  debugger
+	$(VALGRIND) echo "\exit;" | ./debugger
 
 
-debugger: objects $(NAME)-debugger.c $(NAME)-aux.h p2_term.o
-	$(CC) $(CFLAGS) $(NAME)-debugger.c $(NAME)-aux.o lex.yy.o $(NAME).tab.o p2_term.o -o $(NAME)-debugger
+.PHONY : valgrind-session
+valgrind-session :  $(DEBUGGER)
+	$(VALGRIND) debugger
 
 
-objects: lex.yy.o $(NAME).tab.o $(NAME)-aux.o
+debugger :  objects p2_parser-debugger.c p2_array.o p2_term.o debug.h
+	$(CC) $(CFLAGS) -o debugger $(NAME)-debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_array.o p2_term.o
 
 
 ################################################################################
 
-lex.yy.o : lex.yy.c $(NAME).tab.h $(NAME)-aux.h
+.PHONY : objects
+objects: lex.yy.o $(NAME).tab.o p2_ast.o ##$(NAME)-aux.o
+
+
+lex.yy.o : lex.yy.c $(NAME).tab.h
 	$(CC) $(CFLAGS) -c lex.yy.c
 
 
@@ -51,18 +59,26 @@ $(NAME).tab.o : $(NAME).tab.c
 	$(CC) $(CFLAGS) -c $(NAME).tab.c
 
 
-lex.yy.c : $(NAME).l
+lex.yy.c : $(NAME).l debug.h
 	$(LEX) $(NAME).l
 
 
-$(NAME).tab.c $(NAME).tab.h : $(NAME).y $(NAME)-aux.h
+$(NAME).tab.c $(NAME).tab.h : $(NAME).y debug.h
 	$(YACC) -dv $(NAME).y
 
 
 ################################################################################
 
-$(NAME)-aux.o : $(NAME)-aux.c $(NAME)-aux.h
-	$(CC) $(CFLAGS) -c $(NAME)-aux.c
+##$(NAME)-aux.o : $(NAME)-aux.c $(NAME)-aux.h
+##	$(CC) $(CFLAGS) -c $(NAME)-aux.c
+
+
+p2_ast.o : p2_ast.c
+	$(CC) $(CFLAGS) -c p2_ast.c
+
+
+p2_array.o : $(UTILS)/p2_array.c
+	$(CC) $(CFLAGS) -c $(UTILS)/p2_array.c -o p2_array.o
 
 
 p2_term.o : $(UTILS)/p2_term.c

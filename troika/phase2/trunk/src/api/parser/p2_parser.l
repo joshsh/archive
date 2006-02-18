@@ -6,7 +6,9 @@
 
 \brief  Flex input file for the command line interface.
 
-\note  White space is always relevant in Phase2 expressions.  Indentifiers
+Comments are delimited by "(:" and ":)", and may be nested to any level.
+
+\note  White space is always relevant in Phase2 expressions.  Identifiers
 must be separated either by white space or by appropriate syntax tokens, e.g.
 
     + a b  or  (+ a)b  or  ((+)a)b  but not  +ab
@@ -26,9 +28,9 @@ character, use {\\}.  There are no other escape sequences in quoted identifiers.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
-         +1 509 570-6990    \n */
+         +1 509 570-6990    \n
 
-/*//////////////////////////////////////////////////////////////////////////////
+********************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -45,38 +47,38 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
-#include "p2_parser-aux.h"
+#include "debug.h"
 
 #include "p2_parser.tab.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>  // strdup
+#include <string.h>  /* strdup */
 
 
-// extern YYSTYPE yylval;
+/** Added to each row of input (if defined). */
+#define INPUT_PREFIX  ">>  "
 
 
-// Line and character numbers //////////////////////////////////////////////////
+/* Line and character numbers *************************************************/
 
-extern int suppress_output, show_line_numbers;
 
-int line_number, yy_n_chars__at_last_newline;
+int line_number, column_number, last_column_number, statement_number;
 
 
 /** Decorate command-line input. */
 void print_input_prefix()
 {
-    if ( !suppress_output )
+    if ( !p2_parser__suppress_output() )
     {
-        // Display a line number at the beginning of each new line of input.
-        if ( show_line_numbers )
+        /* Display a line number at the beginning of each new line of input. */
+        if ( p2_parser__show_line_numbers() )
             printf( "%d ", line_number );
 
-        // Add a prefix to each new line of input, to distinguish it from
-        // output, and possibly to separate it from the line number.
+        /* Add a prefix to each new line of input, to distinguish it from
+           output, and possibly to separate it from the line number. */
         #ifdef INPUT_PREFIX
             printf( INPUT_PREFIX );
         #endif
@@ -84,34 +86,32 @@ void print_input_prefix()
 }
 
 
-/** Initialize the lexer for a new invocation of yyparse(). */
-void new_parse()
+void new_token( int length )
 {
-    line_number = 1;
-    yy_n_chars__at_last_newline = 0;
-
-    print_input_prefix();
-}
-
-
-int buf_pos()
-{
-    //return ( int ) ( YY_CURRENT_BUFFER->yy_buf_pos - YY_CURRENT_BUFFER->yy_ch_buf );
-    return YY_CURRENT_BUFFER->yy_n_chars;
+    last_column_number = column_number;
+    column_number += length;
 }
 
 
 void new_line()
 {
     line_number++;
-
-    yy_n_chars__at_last_newline = buf_pos();
+    column_number = last_column_number = 0;
+    statement_number = 0;
 
     print_input_prefix();
 }
 
 
-/** \return  the current line number.  Starts at 0. */
+/** Initialize the lexer for a new invocation of yyparse(). */
+void new_parse()
+{
+    line_number = 0;
+    new_line();
+}
+
+
+/** \return  the current line number.  Starts at 1. */
 int get_line_number()
 {
     return line_number;
@@ -121,40 +121,36 @@ int get_line_number()
 /** \return the current "column" number, where tabs only count for one column. */
 int get_char_number()
 {
-    //return buf_pos() - yy_n_chars__at_last_newline;
-
-    //int i = 0;
-    //while ( yytext[i] != '\0' )
-    //    i++;
-    //return i;
-
-    return 0;
+    if ( !last_column_number )
+        return 1;
+    else
+        return last_column_number;
 }
 
 
-// Debugging output ////////////////////////////////////////////////////////////
+/* Debugging output ***********************************************************/
 
-#ifdef LEXER_DEBUG
-    #define ECHO echo_token
+
+/** TOKEN macro handles debugging messages and column count as well as return
+    values from rules.  It must be the last statement in a rule action. */
+#if DEBUG__LEXER
+    #define TOKEN( x, y )  { new_token( yyleng ); \
+                              if ( y ) printf( "Matched {%s}\n", y ); \
+                              if ( x ) return x; }
 #else
-    #define ECHO
+    #define TOKEN( x, y )  { new_token( yyleng ); \
+                            if ( x ) return x; }
 #endif
 
 
-/** Debugging output. */
-void echo_token( char *s )
-{
-    printf( "Found %s.\n", s );
-}
+/* Comments *******************************************************************/
 
-
-// Comments ////////////////////////////////////////////////////////////////////
 
 /** Allows nested comments. */
 int comment_level = 0;
 
 
-// Quoted identifiers //////////////////////////////////////////////////////////
+/* Quoted name fragments ******************************************************/
 
 /** Buffer size is arbitary... */
 #define STRING_BUFFER__SIZE  0xFFF
@@ -214,7 +210,8 @@ char *extract_literal(char *s)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
+
 
 %}
 
@@ -224,13 +221,11 @@ LETTER                [A-Za-z]
 ALNUM                 [A-Za-z0-9]
 
 /** For lexical identifiers. */
-NAME_CHAR             [^\0-\40/*:;=(){,}\"\\]
+NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
 
 
 /** Comments and string literals have their own mini-scanners. */
 %x SC_STRING SC_COMMENT
-
-%option yylineno
 
 
 %%
@@ -238,143 +233,143 @@ NAME_CHAR             [^\0-\40/*:;=(){,}\"\\]
 
 <INITIAL>
 {
-    "/"+"*"  {  // Begins a C-style comment.
-        ECHO( "COMMENT" );
+    "(:"  {  /* Begins a comment. */
         comment_level++;
         BEGIN( SC_COMMENT );
+        TOKEN( 0, "comment (begin)" );
     }
 
-    ["]  {  // Begins a string literal.
-        //advance_character_number(1);
+    ["]  {  /* Begins a string literal. */
         BEGIN( SC_STRING );
+        TOKEN( 0, "quoted STRING (begin)" );
     }
 
-    ":"  {  // Namespace delimiter.
-        ECHO("COLON");
-        //advance_character_number(1);
-        return COLON;
+    ":"  {  /* Namespace delimiter. */
+        TOKEN( COLON, "COLON" );
     }
 
-    ";"  {  // Marks the end of an expression or command.
-        ECHO("SEMICOLON");
-        //advance_character_number(1);
-        return SEMICOLON;
+    ";"  {  /* Marks the end of an expression or command. */
+        TOKEN( SEMICOLON, "SEMICOLON" );
     }
 
-    "="  {  // Assignment operator.
-        ECHO("EQUALS");
-        //advance_character_number(1);
-        return EQUALS;
+    "="  {  /* Assignment operator. */
+        TOKEN( EQUALS, "EQUALS" );
     }
 
-    "("  {  // Marks the beginning of a sub-term.
-        ECHO("OPEN_PAREN");
-        //advance_character_number(1);
-        return OPEN_PAREN;
+    "("  {  /* Marks the beginning of a sub-term. */
+        TOKEN( OPEN_PAREN, "OPEN_PAREN" );
     }
 
-    ")"  {  // Marks the end of a sub-term.
-        ECHO("CLOSE_PAREN");
-        //advance_character_number(1);
-        return CLOSE_PAREN;
+    ")"  {  /* Marks the end of a sub-term. */
+        TOKEN( CLOSE_PAREN, "CLOSE_PAREN" );
     }
 
-    "{"  {  // Marks the beginning of an enumerated collection.
-        ECHO("OPEN_CURLY_BRACKET");
-        //advance_character_number(1);
-        return OPEN_CURLY_BRACKET;
+    "["  {  /* Marks the beginning of a general sequence. */
+        TOKEN( OPEN_SQUARE_BRACKET, "OPEN_SQUARE_BRACKET" );
     }
 
-    ","  {  // Separates elements in an enumerated collection.
-        ECHO("COMMA");
-        //advance_character_number(1);
-        return COMMA;
+    "]"  {  /* Marks the beginning of a general sequence. */
+        TOKEN( CLOSE_SQUARE_BRACKET, "CLOSE_SQUARE_BRACKET" );
     }
 
-    "}"  {  // Marks the end of an enumerated collection.
-        ECHO("CLOSE_CURLY_BRACKET");
-        //advance_character_number(1);
-        return CLOSE_CURLY_BRACKET;
+    "{"  {  /* Marks the beginning of a bag. */
+        TOKEN( OPEN_CURLY_BRACKET, "OPEN_CURLY_BRACKET" );
+    }
+
+    ","  {  /* Separates elements in a bag. */
+        TOKEN( COMMA, "COMMA" );
+    }
+
+    "}"  {  /* Marks the end of a bag. */
+        TOKEN( CLOSE_CURLY_BRACKET, "CLOSE_CURLY_BRACKET" );
     }
 
     "\\"{LETTER}{ALNUM}*  {
-        ECHO("COMMAND_NAME");
-        //advance_character_number(strlen(yytext));
-        yylval.string = strdup(yytext + 1);  // Free this string outside of the lexer.
-        return COMMAND_NAME;
+
+        /* Ownership of this string is conferred to the parser. */
+        yylval.string = strdup( yytext + 1 );
+
+        TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }
 
-    (("/"*{NAME_CHAR}+)|"*"+)?"/"*  {  // Note: matches the empty string.
-        ECHO("STRING");
-        //advance_character_number(strlen(yytext));
-        yylval.string = strdup(yytext);  // Free this string outside of the lexer.
-        return STRING;
+    {NAME_CHAR}+  {  /* Matches a name fragment. */
+
+        /* Ownership of this string is conferred to the parser. */
+        yylval.string = strdup( yytext );
+
+        TOKEN( STRING, "STRING" );
     }
 
-    \n  {  // Report newlines to the parser (but not as tokens).
-        ECHO("[newline]");
+    \n  {  /* Ignore newlines, except for formatting. */
         new_line();
+        TOKEN( 0, "newline" );
     }
 
-    [ \t]  {  // Ignore whitespace and carriage returns (unless debugging the lexer).
-        ECHO("[whitespace]");
-        //advance_character_number(1);
+    [ \t]  {  /* Ignore whitespace and carriage returns. */
+        TOKEN( 0, "whitespace" );
     }
 
     <<EOF>>  {
-        ECHO("EOF");
-
-        return E_O_F;
+        TOKEN( E_O_F, "EOF" );
     }
 
-    .  {  // Ignore unrecognized characters (unless debugging the lexer).
-        ECHO("[unrecognized character]");
-        //advance_character_number(1);
+    .  {  /* Ignore unrecognized characters. */
+        TOKEN( 0, "unrecognized character" );
     }
 }
 
 
 <SC_STRING>
 {
-    ([^"\n\\]*|\\[^\n])  {  // Body of string literal.
-        //advance_character_number(2);
+    ([^"\n\\]*|\\[^\n])  {  /* Body of string literal. */
         append_to_buffer( yytext );
+        TOKEN( 0, 0 );
     }
 
-    \\?\n  {  // Newlines are permitted.
+    \\?\n  {  /* Newlines are permitted. */
         append_to_buffer( yytext );
         new_line();
+        TOKEN( 0, "newline in SC_STRING" );
     }
 
-    \"  {  // End quote after string literal.
-        //advance_character_number(1);
-        yylval.string = strdup(yytext);  // Free this string outside of the lexer.
-        BEGIN( INITIAL );
+    \"  {  /* End quote after string literal. */
+
+        /* Ownership of this string is conferred to the parser. */
         yylval.string = extract_literal( string_buffer );
         buffer_pos = string_buffer;
-        return STRING;
+
+        BEGIN( INITIAL );
+
+        TOKEN( STRING, "quoted STRING (end)" );
     }
 }
 
 
 <SC_COMMENT>
 {
-    "/*"  {  // Begins a nested C-style comment.
-        ECHO( "COMMENT (nested)" );
+    "(:"  {  /* Begins a nested comment. */
         comment_level++;
+        TOKEN( 0, "comment (begin nested)" );
     }
 
-    [^*\n]        /* Eat anything that's not a '*'. */
-
-    "*"[^*/\n]*   /* Eat up '*'s not followed by '/'s. */
-
-    \n  {
-        new_line();
-    }
-
-    "*/"  {
+    ":)"  {  /* Ends a comment. */
         if (! --comment_level )
+        {
             BEGIN( INITIAL );
+            TOKEN( 0, "comment (end)" );
+        }
+
+        else
+            TOKEN( 0, "comment (end nested)" );
+    }
+
+    \n  {  /*  Newlines are ignored, except for formatting. */
+        new_line();
+        TOKEN( 0, "newline in SC_COMMENT" );
+    }
+
+    .  {  /* Ignore everything else. */
+        TOKEN( 0, 0 );
     }
 }
 
@@ -382,4 +377,6 @@ NAME_CHAR             [^\0-\40/*:;=(){,}\"\\]
 %%
 
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+/* extern YYSTYPE yylval; */
+
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
