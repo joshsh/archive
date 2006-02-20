@@ -8,6 +8,7 @@ UTILS    = ../util
 
 CC       = gcc
 CFLAGS   = -g # temporary...
+           # --ansi
 LEX      = flex \
            -pp  # Get comments regarding features that lead to performance losses.
 YACC     = bison
@@ -41,8 +42,8 @@ valgrind-session :  $(DEBUGGER)
 	$(VALGRIND) debugger
 
 
-debugger :  objects p2_parser-debugger.c p2_array.o p2_term.o debug.h
-	$(CC) $(CFLAGS) -o debugger $(NAME)-debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_array.o p2_term.o
+debugger :  objects debugger.c p2_array.o p2_term.o debug.h
+	$(CC) $(CFLAGS) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_array.o p2_term.o
 
 
 ################################################################################

@@ -28,9 +28,9 @@ character, use {\\}.  There are no other escape sequences in quoted identifiers.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
-         +1 509 570-6990    \n
+         +1 509 570-6990    \n */
 
-********************************************************************************
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -152,10 +152,11 @@ int comment_level = 0;
 
 /* Quoted name fragments ******************************************************/
 
+
 /** Buffer size is arbitary... */
 #define STRING_BUFFER__SIZE  0xFFF
 
-char string_buffer[STRING_BUFFER__SIZE];
+char string_buffer[ STRING_BUFFER__SIZE ];
 char *buffer_limit = string_buffer + STRING_BUFFER__SIZE - 1;
 char *buffer_pos = string_buffer;
 
@@ -174,16 +175,16 @@ void append_to_buffer( char *s )
 
 
 /** \return  the interior of a string literal, with escape sequences undone */
-char *extract_literal(char *s)
+char *extract_literal( char *s )
 {
     char *s_low = s, *s_high = s_low;
 
-    while (*s_high != '\0')
+    while ( *s_high != '\0' )
     {
-         if (*s_high == '\\')
+         if ( *s_high == '\\' )
          {
              s_high++;
-             switch (*s_high)
+             switch ( *s_high )
              {
                  case '"':
                      *s_low = '"';
@@ -197,6 +198,7 @@ char *extract_literal(char *s)
                      *s_low = *s_high;
              }
         }
+
         else
             *s_low = *s_high;
 
@@ -206,7 +208,7 @@ char *extract_literal(char *s)
 
     *s_low = '\0';
 
-    return strdup(s);
+    return strdup( s );
 }
 
 
@@ -257,23 +259,23 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     }
 
     "("  {  /* Marks the beginning of a sub-term. */
-        TOKEN( OPEN_PAREN, "OPEN_PAREN" );
+        TOKEN( L_PAREN, "L_PAREN" );
     }
 
     ")"  {  /* Marks the end of a sub-term. */
-        TOKEN( CLOSE_PAREN, "CLOSE_PAREN" );
+        TOKEN( R_PAREN, "R_PAREN" );
     }
 
     "["  {  /* Marks the beginning of a general sequence. */
-        TOKEN( OPEN_SQUARE_BRACKET, "OPEN_SQUARE_BRACKET" );
+        TOKEN( L_SQ_BRACKET, "L_SQ_BRACKET" );
     }
 
     "]"  {  /* Marks the beginning of a general sequence. */
-        TOKEN( CLOSE_SQUARE_BRACKET, "CLOSE_SQUARE_BRACKET" );
+        TOKEN( R_SQ_BRACKET, "R_SQ_BRACKET" );
     }
 
     "{"  {  /* Marks the beginning of a bag. */
-        TOKEN( OPEN_CURLY_BRACKET, "OPEN_CURLY_BRACKET" );
+        TOKEN( L_BRACE, "L_BRACE" );
     }
 
     ","  {  /* Separates elements in a bag. */
@@ -281,7 +283,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     }
 
     "}"  {  /* Marks the end of a bag. */
-        TOKEN( CLOSE_CURLY_BRACKET, "CLOSE_CURLY_BRACKET" );
+        TOKEN( R_BRACE, "R_BRACE" );
     }
 
     "\\"{LETTER}{ALNUM}*  {
@@ -347,7 +349,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
 
 <SC_COMMENT>
 {
-    "(:"  {  /* Begins a nested comment. */
+    "(:"  {  /* Begins a comment within a comment. */
         comment_level++;
         TOKEN( 0, "comment (begin nested)" );
     }
@@ -363,7 +365,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
             TOKEN( 0, "comment (end nested)" );
     }
 
-    \n  {  /*  Newlines are ignored, except for formatting. */
+    \n  {  /* Newlines are ignored, except for formatting. */
         new_line();
         TOKEN( 0, "newline in SC_COMMENT" );
     }

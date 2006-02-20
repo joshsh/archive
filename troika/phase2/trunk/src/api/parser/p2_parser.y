@@ -40,9 +40,9 @@ tell it to terminate.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
-         +1 509 570-6990    \n
+         +1 509 570-6990    \n */
 
-********************************************************************************
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -75,7 +75,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 extern int p2_evaluate_command( char *name, p2_ast *args );
-extern int p2_evaluate_expression( char *name, p2_ast *expr );
+extern int p2_evaluate_expression( p2_name *name, p2_ast *expr );
 extern int p2_handle_parse_error( char *msg );
 
 extern int p2_parser__suppress_output();
@@ -109,25 +109,27 @@ extern int statement_number;
 void handle_command( char *name, p2_ast *args );
 
 /** Evaluate an expression. */
-void handle_expression( char *name, p2_ast *expr );
+void handle_expression( p2_name *name, p2_ast *expr );
 
 /** Deal gracefully with a parse error. */
 void handle_error();
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-#define ERROR_BUFFER_SIZE  0xFF
+
+/** Buffer size is arbitary... */
+#define ERROR_BUFFER__SIZE  0xFF
 
 int exit_early;
 
 int error_character_number, error_line_number, invalid_statement_number;
 
 /** Buffer for "verbose" error message received by yyerror. */
-char yyerror_msg[ ERROR_BUFFER_SIZE ];
+char yyerror_msg[ ERROR_BUFFER__SIZE ];
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 /** This is the default value. */
@@ -155,7 +157,7 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
             printf( "yyerror: %s (reported)\n", msg );
         #endif
 
-        if ( strlen( msg ) >= ERROR_BUFFER_SIZE )
+        if ( strlen( msg ) >= ERROR_BUFFER__SIZE )
             strcpy( yyerror_msg, "[parser error message overflows buffer]" );
         else
             strcpy( yyerror_msg, msg );
@@ -188,7 +190,7 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
 #endif
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 struct statement
@@ -196,6 +198,7 @@ struct statement
     char *name;
     p2_ast *expr;
 };
+
 
 struct statement *new_statement( char *name, p2_ast *expr )
 {
@@ -208,7 +211,7 @@ struct statement *new_statement( char *name, p2_ast *expr )
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 %}
@@ -226,9 +229,9 @@ struct statement *new_statement( char *name, p2_ast *expr )
 }
 
 
-%token OPEN_PAREN CLOSE_PAREN
-%token OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET;
-%token OPEN_CURLY_BRACKET COMMA CLOSE_CURLY_BRACKET
+%token L_PAREN R_PAREN
+%token L_SQ_BRACKET R_SQ_BRACKET;
+%token L_BRACE COMMA R_BRACE
 %token COLON EQUALS SEMICOLON E_O_F
 
 %token <string> STRING COMMAND_NAME
@@ -348,9 +351,11 @@ statement:
         if ( $1 )
         {
             if ( $1->expr )
-                handle_expression( $1->name, $1->expr );
+                                   /* !      */
+                handle_expression( ( p2_name* ) $1->name, $1->expr );
 
-            free( $1 );
+            //p2_ast__delete( p2_ast__name( ( p2_name* ) $1->name ) );
+            //free( $1 );
         }
     }
 
@@ -450,11 +455,12 @@ expression:
     }
 
     /* Named expression. */
-    | term EQUALS STRING
+    | term EQUALS name
     {
-        PRODUCTION("expression ::=  term EQUALS STRING");
+        PRODUCTION("expression ::=  term EQUALS name");
 
         if ( $1 )
+                                /* !      */
             $$ = new_statement( ( char* ) $3, p2_ast__term( ( p2_term* ) $1 ) );
         else
             $$ = 0;
@@ -513,9 +519,9 @@ subterm:
             $$ = 0;
     }
 
-    | OPEN_PAREN term CLOSE_PAREN
+    | L_PAREN term R_PAREN
     {
-        PRODUCTION( "subterm ::=  OPEN_PAREN term CLOSE_PAREN" );
+        PRODUCTION( "subterm ::=  L_PAREN term R_PAREN" );
 
         if ( $2 )
             /* "Remove the parentheses" from the term. */
@@ -525,16 +531,16 @@ subterm:
             $$ = 0;
     }
 
-    | OPEN_PAREN error
+    | L_PAREN error
     {
-        PRODUCTION( "subterm ::=  OPEN_PAREN error" );
+        PRODUCTION( "subterm ::=  L_PAREN error" );
 
         $$ = 0;
     }
 
-    | OPEN_PAREN term error
+    | L_PAREN term error
     {
-        PRODUCTION( "subterm ::=  OPEN_PAREN term error" );
+        PRODUCTION( "subterm ::=  L_PAREN term error" );
 
         $$ = 0;
 
@@ -566,6 +572,7 @@ term_item:
         else
             $$ = 0;
     }
+
     | bracketed_term
     {
         PRODUCTION( "term_item ::=  bracketed_term" );
@@ -576,9 +583,9 @@ term_item:
 
 bracketed_term:
 
-    OPEN_SQUARE_BRACKET term CLOSE_SQUARE_BRACKET
+    L_SQ_BRACKET term R_SQ_BRACKET
     {
-        PRODUCTION( "bracketed_term ::=  OPEN_SQUARE_BRACKET term CLOSE_SQUARE_BRACKET" );
+        PRODUCTION( "bracketed_term ::=  L_SQ_BRACKET term R_SQ_BRACKET" );
 
         if ( $2 )
             $$ = ( void* ) p2_ast__term( ( p2_term* ) $2 );
@@ -587,16 +594,16 @@ bracketed_term:
             $$ = 0;
     }
 
-    | OPEN_SQUARE_BRACKET error
+    | L_SQ_BRACKET error
     {
-        PRODUCTION( "bracketed_term ::=  OPEN_SQUARE_BRACKET error" );
+        PRODUCTION( "bracketed_term ::=  L_SQ_BRACKET error" );
 
         $$ = 0;
     }
 
-    | OPEN_SQUARE_BRACKET term error
+    | L_SQ_BRACKET term error
     {
-        PRODUCTION( "bracketed_term ::=  OPEN_SQUARE_BRACKET term error" );
+        PRODUCTION( "bracketed_term ::=  L_SQ_BRACKET term error" );
 
         $$ = 0;
 
@@ -607,9 +614,9 @@ bracketed_term:
 
 bag:
 
-    bag_head CLOSE_CURLY_BRACKET
+    bag_head R_BRACE
     {
-        PRODUCTION( "bag ::=  bag_head CLOSE_CURLY_BRACKET" );
+        PRODUCTION( "bag ::=  bag_head R_BRACE" );
 
         if ( $1 )
             $$ = $1;
@@ -631,9 +638,9 @@ bag:
 
 bag_head:
 
-    OPEN_CURLY_BRACKET term
+    L_BRACE term
     {
-        PRODUCTION( "bag_head ::=  OPEN_CURLY_BRACKET term" );
+        PRODUCTION( "bag_head ::=  L_BRACE term" );
 
         if ( $2 )
         {
@@ -645,9 +652,9 @@ bag_head:
             $$ = 0;
     }
 
-    | OPEN_CURLY_BRACKET error
+    | L_BRACE error
     {
-        PRODUCTION( "bag_head ::=  OPEN_CURLY_BRACKET error" );
+        PRODUCTION( "bag_head ::=  L_BRACE error" );
 
         $$ = 0;
     }
@@ -726,9 +733,6 @@ name:
 /*  main() { yyparse(); }  */
 
 
-/* Expression handling ********************************************************/
-
-
 void handle_command( char *name, p2_ast *args )
 {
     if ( !p2_parser__suppress_output() )
@@ -756,7 +760,7 @@ void handle_command( char *name, p2_ast *args )
 }
 
 
-void handle_expression( char *name, p2_ast *expr )
+void handle_expression( p2_name *name, p2_ast *expr )
 {
     if ( !p2_parser__suppress_output() )
     {
@@ -785,7 +789,7 @@ void handle_expression( char *name, p2_ast *expr )
 
 void handle_error()
 {
-    char error_msg[ ERROR_BUFFER_SIZE + 0x20 ];
+    char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
     if ( !p2_parser__suppress_output() )
     {
@@ -802,7 +806,7 @@ void handle_error()
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
-    exit_early = exit_early || p2_handle_parse_error( error_msg );
+    exit_early = exit_early || p2_handle_parse_error( strdup( error_msg ) );
 
     if ( !p2_parser__suppress_output() )
     {

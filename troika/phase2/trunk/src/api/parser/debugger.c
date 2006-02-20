@@ -1,6 +1,6 @@
 /**
 
-\file  p2_parser-debugger.c
+\file  debugger.c
 
 \brief  Example implementation of the Phase2 command line parser.
 
@@ -10,7 +10,7 @@
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "p2_ast.h"
 #include "debug.h"
@@ -43,19 +43,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 extern int yyparse();
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
-/** Mock command evaluator.
-    \note  the p2_term argument 'args' should be freed after use (if not null),
-    whereas the character string 'name' belongs to the parser. */
+/** Mock command evaluator. */
 int p2_evaluate_command( char *name, p2_ast *args )
 {
     int ret = 0;
 
     if ( args )
     {
-        printf( "Evaluate command \"%s\":  ", name );
+        printf( "Evaluate command \"%s\" :  ", name );
         p2_ast__print( args );
     }
 
@@ -63,12 +61,9 @@ int p2_evaluate_command( char *name, p2_ast *args )
         printf( "Evaluate command \"%s\"", name );
 
 
-    // Debugger recognizes just one command.
+    /* Debugger recognizes just one command. */
     if ( !strcmp( name, "exit" ) )
-    {
         ret = 1;
-        printf( "\n\n" );
-    }
 
     if ( args )
         p2_ast__delete( args );
@@ -79,42 +74,44 @@ int p2_evaluate_command( char *name, p2_ast *args )
 }
 
 
-/** Mock expression evaluator.
-    \note  the p2_term argument 'args' should be freed after use,
-    whereas the character string 'name' belongs to the parser. */
-int p2_evaluate_expression( char *name, p2_ast *expr )
+/** Mock expression evaluator. */
+int p2_evaluate_expression( p2_name *name, p2_ast *expr )
 {
     int ret = 0;
+    p2_ast *a;
 
     if ( name )
     {
-        printf( "Evaluate expression \"%s\":  ", name );
-        p2_ast__print( expr );
-        free( name );
+        a = p2_ast__name( name );
+        printf( "Evaluate expression \"" );
+        p2_ast__print( a );
+        p2_ast__delete( a );
+        printf( "\" :  ");
     }
 
     else
-    {
-        printf( "Evaluate anonymous expression:  " );
-        p2_ast__print( expr );
-    }
+        printf( "Evaluate anonymous expression :  " );
 
+    p2_ast__print( expr );
     p2_ast__delete( expr );
 
     return ret;
 }
 
 
-/** Mock parse error handler.
-    \note  the character string 'msg' belongs to the parser. */
+/** Mock parse error handler. */
 int p2_handle_parse_error( char *msg )
 {
     int ret = 0;
 
-    if ( msg && strlen( msg ) )
-        printf( "Handle parse error: %s.", msg );
+    if ( msg )
+    {
+        printf( "Handle parse error :  %s", msg );
+        free( msg );
+    }
+
     else
-        printf( "Handle parse error." );
+        printf( "Handle parse error" );
 
     return ret;
 }

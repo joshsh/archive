@@ -1,3 +1,22 @@
+/*******************************************************************************
+
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place, Suite 330, Boston, MA 02111-1307 USA
+
+*******************************************************************************/
+
 #include "p2_ast.h"
 
 #include <stdlib.h>  /* free */
@@ -13,7 +32,6 @@
 
 /** Regular expression for name fragments. */
 regex_t name_regex;
-
 
 
 int p2_ast__init()
@@ -60,7 +78,7 @@ static void *p2_free( void *p )
 
 static void *term_of_nodes__delete( p2_term *t )
 {
-    p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );
+    return p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );
 }
 
 
@@ -76,9 +94,9 @@ p2_ast *p2_ast__term( p2_term *term )
 }
 
 
-p2_ast *p2_ast__name( p2_array *uri )
+p2_ast *p2_ast__name( p2_name *name )
 {
-    return p2_ast__new( NAME, ( void* ) uri );
+    return p2_ast__new( NAME, ( void* ) name );
 }
 
 
