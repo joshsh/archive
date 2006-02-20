@@ -1,4 +1,4 @@
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "p2_array.h"
 #include "p2_bunch.h"
@@ -23,15 +23,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_set.h"
 #include "p2_term.h"
 
-#include <stdlib.h>  // free
-#include <stdio.h>  // printf
-#include <string.h>  // strdup
+#include <stdlib.h>  /* free */
+#include <stdio.h>  /* printf */
+#include <string.h>  /* strdup */
 
 
 #define VP ( void* )
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 int stack_depth = 0;
@@ -66,7 +66,7 @@ void func_end( char *name )
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 void *is_odd( void *p )
@@ -94,7 +94,7 @@ void *always( void *p )
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 void p2_array__debug( )
@@ -104,7 +104,7 @@ void p2_array__debug( )
     p2_array *array = p2_array__new( 200, 2.0 );
     int *foo = ( int* ) malloc( sizeof( int ));
     p2_array__push( array, foo );
-    p2_array__for_all( array, free );
+    p2_array__for_all( array, p2_set__free );
     p2_array__delete( array );
 
     func_end( "p2_array__debug" );
@@ -143,7 +143,7 @@ void p2_hash_table__debug( )
 
     func_begin( "p2_hash_table__debug" );
 
-    // Test expansion ////////
+    /* Test expansion *****************/
 
     p2_hash_table *table = p2_hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
     p2_hash_table__add( table, VP -1, VP 42 );
@@ -152,15 +152,15 @@ void p2_hash_table__debug( )
         p2_hash_table__add( table, VP i, VP i );
     p2_hash_table__delete( table );
 
-    // Test key cleanup ////////
+    /* Test key cleanup ***************/
 
     table = p2_hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
     for ( i = 0; i < 1000; i++ )
         p2_hash_table__add( table, malloc( sizeof( void* )), VP 42 );
-    p2_hash_table__for_all_keys( table, free );
+    p2_hash_table__for_all_keys( table, p2_set__free );
     p2_hash_table__delete( table );
 
-    // Test target cleanup ////////
+    /* Test target cleanup ************/
 
     table = p2_hash_table__new( 0, 2, 1.5, STRING_DEFAULTS );
     p2_hash_table__add( table, VP "1", VP strdup( "foo" ));
@@ -172,10 +172,10 @@ void p2_hash_table__debug( )
     p2_hash_table__add( table, VP "7", VP strdup( "foo" ));
     p2_hash_table__add( table, VP "8", VP strdup( "foo" ));
     p2_hash_table__add( table, VP "9", VP strdup( "foo" ));
-    p2_hash_table__for_all_targets( table, free );
+    p2_hash_table__for_all_targets( table, p2_set__free );
     p2_hash_table__delete( table );
 
-    //////////
+    /**********************************/
 
     func_end( "p2_hash_table__debug" );
 }
@@ -187,7 +187,7 @@ void p2_set__debug( )
 
     func_begin( "p2_set__debug" );
 
-    // Test expansion ////////
+    /* Test expansion *****************/
 
     p2_set *set = p2_set__new( 100, 2.0, 3.0 );
     for ( i = 0; i < 500; i++ )
@@ -198,7 +198,7 @@ void p2_set__debug( )
     }
     p2_set__delete( set );
 
-    // Test cleanup ////////
+    /* Test cleanup *******************/
 
     set = p2_set__new( 1000, 0, 0 );
     for ( i = 0; i < 500; i++ )
@@ -208,7 +208,7 @@ void p2_set__debug( )
     p2_set__for_all( set, p2_set__free );
     p2_set__delete( set );
 
-    ////////////////
+    /**********************************/
 
     p2_set *S2, *S = p2_set__new(20, 2.0, 2.0);
     p2_set__add(S, (void *) 5);
@@ -224,7 +224,7 @@ void p2_set__debug( )
     p2_set__delete(S);
     p2_set__delete(S2);
 
-    ////////////
+    /**********************************/
 
     func_end( "p2_set__debug" );
 }
@@ -232,12 +232,11 @@ void p2_set__debug( )
 
 void p2_term__debug( )
 {
-
     int i;
 
     func_begin( "p2_term__debug" );
 
-    // Test merge functions ////////
+    /* Test merge functions ***********/
 
     p2_term *term1 = p2_term__new( VP 42, 100 );
     p2_term *term2 = p2_term__new( VP 137, 100 );
@@ -246,7 +245,7 @@ void p2_term__debug( )
     p2_term *term5 = p2_term__merge_la( term3, term4 );
     p2_term__delete( term5 );
 
-    // Test cleanup ////////
+    /* Test cleanup *******************/
 
     term1 = p2_term__new( malloc( sizeof( void * )), 0 );
     term3 = p2_term__new( malloc( sizeof( void * )), 100 );
@@ -265,7 +264,7 @@ void p2_term__debug( )
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 int main( int argc, char **argv )
@@ -281,3 +280,5 @@ int main( int argc, char **argv )
     func_end( "main" );
 }
 
+
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

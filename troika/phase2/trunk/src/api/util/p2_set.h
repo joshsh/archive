@@ -24,7 +24,7 @@ constructed using the above functions.
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -41,7 +41,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_SET_H
 #define P2_SET_H
@@ -83,7 +83,8 @@ typedef struct _p2_set
 /** "magnitude of S" */
 int p2_set__size(p2_set *S);
 
-////////////////////////////////////////////////////////////////////////////////
+
+/******************************************************************************/
 
 /** Constructor.
     \param buffer_size the initial size of the hash table buffer (the actual
@@ -100,7 +101,7 @@ p2_set *p2_set__copy(p2_set *S);
 void p2_set__delete(p2_set *S);
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** "s is an element of S" */
 void *p2_set__lookup(p2_set *S, void *s);
@@ -113,7 +114,7 @@ p2_set *p2_set__add(p2_set *S, void *s);
 p2_set *p2_set__remove(p2_set *S, void *s);
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** "S' = S union T"
     \note O(n) time complexity */
@@ -137,12 +138,15 @@ void *p2_set__exists(p2_set *S, void *(*f)(void *));
 p2_set *p2_set__subset(p2_set *S, void *(*f)(void *));
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** A wrapper for "free" which always returns a 1 (for use in conjunction with
     p2_set__for_all) */
 void *p2_set__free(void *s);
 
 
-#endif  // P2_SET_H
+#endif  /* P2_SET_H */
+
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
+
 

@@ -8,7 +8,7 @@
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_ARRAY_H
 #define P2_ARRAY_H
@@ -58,7 +58,7 @@ typedef struct _p2_array
 } p2_array;
 
 
-// Constructors and destructor /////////////////////////////////////////////////
+/* Constructors and destructor ************************************************/
 
 /** Constructor. */
 p2_array *p2_array__new(int buffer_size, float expansion);
@@ -70,7 +70,7 @@ p2_array *p2_array__copy(p2_array *a);
 void p2_array__delete(p2_array *a);
 
 
-// Random access ///////////////////////////////////////////////////////////////
+/* Random access **************************************************************/
 
 /** Gets the array item at a given index. */
 void *p2_array__get(p2_array *a, int index);
@@ -79,7 +79,7 @@ void *p2_array__get(p2_array *a, int index);
 void p2_array__set(p2_array *a, int index, void *p);
 
 
-// Stack and queue operations //////////////////////////////////////////////////
+/* Stack and queue operations *************************************************/
 
 /** Gets the first item in the array without removing it. */
 void *p2_array__peek(p2_array *a);
@@ -98,7 +98,7 @@ void p2_array__enqueue(p2_array *a, void *p);
 void *p2_array__dequeue(p2_array *a);
 
 
-// Random insertion and removal ////////////////////////////////////////////////
+/* Random insertion and removal ***********************************************/
 
 /** Insert an item before the given index.
     \warning O(n) memory copying overhead */
@@ -119,13 +119,29 @@ void p2_array__remove(p2_array *a, int index);
 void p2_array__simple_remove(p2_array *a, int index);
 
 
-// Array sorting ///////////////////////////////////////////////////////////////
+/* Array sorting **************************************************************/
 
 /** Sorts the array using MergeSort. */
 void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *));
 
 
-// Miscellaneous ///////////////////////////////////////////////////////////////
+/* Logical set functions and item substitution ********************************/
+
+/** \return 1 if the criterion evaluates to a non-zero value ("true") for each
+    item in the term, else 0. */
+void *p2_array__for_all(p2_array *a, void *(*criterion) (void *));
+
+/** \return the first item for which the criterion evaluates to a non-zero
+    value ("true").  If no such item exists, the return value is 0.
+    \warning output may not be meaningful if the p2_array contains NULL atoms. */
+void *p2_array__exists(p2_array *a, void *(*criterion)(void *));
+
+/** Replaces each item in the term with a new item determined by substitution.
+    \note there is no special return value to indicate substitution failure. */
+p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *));
+
+
+/* Miscellaneous **************************************************************/
 
 /** Empties the array. */
 void p2_array__clear(p2_array *a);
@@ -135,9 +151,7 @@ void p2_array__clear(p2_array *a);
     maximum. */
 void p2_array__minimize(p2_array *a);
 
-/** Applies a void function to each array item in turn. */
-void p2_array__for_all(p2_array *a, void (*func) (void *));
 
+#endif  /* P2_ARRAY_H */
 
-#endif  // P2_ARRAY_H
-
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

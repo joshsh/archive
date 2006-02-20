@@ -11,7 +11,7 @@
              parcour@gmail.com  \n
              +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_BUNCH_H
 #define P2_BUNCH_H
@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_array.h"
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** \brief A container for an array of pointers.
     May be completely or partially full. */
@@ -71,7 +71,7 @@ typedef struct _p2_bunch
 } p2_bunch;
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** Constructor. */
 p2_bunch *p2_bunch__new(unsigned int block_size);
@@ -83,12 +83,13 @@ p2_bunch *p2_bunch__copy(p2_bunch *b);
 void p2_bunch__delete(p2_bunch *b);
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** How big of a bunch is it? */
 unsigned int p2_bunch__size(p2_bunch *b);
 
-////////////////////////////////////////////////////////////////////////////////
+
+/******************************************************************************/
 
 /** Adds a single item to the bunch. */
 void p2_bunch__add(p2_bunch *b, void *p);
@@ -99,7 +100,8 @@ void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src);
 /** Removes a single item from the bunch. */
 void *p2_bunch__remove(p2_bunch *b);
 
-////////////////////////////////////////////////////////////////////////////////
+
+/******************************************************************************/
 
 /** \return 1 if the criterion evaluates to a non-zero value ("true") for each
     item in the bunch, else 0. */
@@ -115,7 +117,9 @@ void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *));
 p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *));
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-#endif  // P2_BUNCH_H
+#endif  /* P2_BUNCH_H */
+
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
 

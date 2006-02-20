@@ -9,7 +9,7 @@ The hashing and comparison functions used by the table are customizable.
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -26,13 +26,13 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_HASH_TABLE_H
 #define P2_HASH_TABLE_H
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** Default address comparison function. */
 int compare_addresses(void *key1, void *key2);
@@ -53,7 +53,7 @@ int hash_string(void *key);
 #define STRING_DEFAULTS hash_string, compare_strings
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** \brief An expanding hash table to bind pairs of generic pointers. */
 typedef struct _p2_hash_table
@@ -90,7 +90,7 @@ typedef struct _p2_hash_table
 } p2_hash_table;
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** Constructor.
 
@@ -127,11 +127,14 @@ p2_hash_table *p2_hash_table__new(
   int (*hashing_function) (void *),
   int (*compare_to) (void *, void *));
 
-
-////////////////////////////////////////////////////////////////////////////////
+/** Copy constructor. */
+p2_hash_table *p2_hash_table__copy(p2_hash_table *h);
 
 /** Destructor. */
 void p2_hash_table__delete(p2_hash_table *h);
+
+
+/******************************************************************************/
 
 /** Looks up a key to obtain a target.
     \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
@@ -150,19 +153,20 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target);
 void *p2_hash_table__remove(p2_hash_table *h, void *key);
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 /** Applies a void function to each key/target pair in turn. */
-void p2_hash_table__for_all(p2_hash_table *h, void (*func)(void *, void *));
+void *p2_hash_table__for_all(p2_hash_table *h, void *(*func)(void *, void *));
 
 /** Applies a void function to each key value in turn. */
-void p2_hash_table__for_all_keys(p2_hash_table *h, void (*func)(void *));
+void *p2_hash_table__for_all_keys(p2_hash_table *h, void *(*func)(void *));
 
 /** Applies a void function to each target value in turn. */
-void p2_hash_table__for_all_targets(p2_hash_table *h, void (*func)(void *));
+void *p2_hash_table__for_all_targets(p2_hash_table *h, void *(*func)(void *));
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-#endif  // P2_HASH_TABLE_H
+#endif  /* P2_HASH_TABLE_H */
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

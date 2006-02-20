@@ -1,4 +1,4 @@
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -15,43 +15,44 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "p2_hash_table.h"
 
-#include <stdlib.h>  // malloc
-#include <string.h>  // strcmp
-
+#include <stdlib.h>  /* malloc */
+#include <string.h>  /* strcmp */
 
 
 #define SIZEOF_CHAR 8
 
-// By default, the hash table will wait until it is 1/3 full before expanding.
-// Note: the sparsity factor does not need to be an integer.
+/* By default, the hash table will wait until it is 1/3 full before expanding.
+   Note: the sparsity factor does not need to be an integer. */
 #define DEFAULT_SPARSITY_FACTOR 3.0
 
-// By default, expand() approximately floats the size of the buffer.
-// Note: the expansion factor does not need to be an integer.
+/* By default, expand() approximately floats the size of the buffer.
+   Note: the expansion factor does not need to be an integer. */
 #define DEFAULT_EXPANSION_FACTOR 2.0
 
-// The number of void references contained in a single entry.
+/* The number of void references contained in a single entry. */
 #define ENTRY_SIZE 2
 
 
+/******************************************************************************/
 
-////////////////////////////////////////////////////////////////////////////////
 
-// Works well enough for addresses so long as there's a one-to-one correspondence
-// between addresses and key values.
+/* Works well enough for addresses so long as there's a one-to-one correspondence
+   between addresses and key values. */
 int hash_address(void *key)
 {
     return (int) key;
 }
 
+
 int compare_addresses(void *key1, void *key2)
 {
     return (key1 != key2);
 }
+
 
 /** Convert the first four bytes of the string to an integer, and use it as the
     hashing value.  Of course, this will result in a collision for any two strings
@@ -66,13 +67,14 @@ int hash_string(void *key)
         return (int) *((void **) key);
 }
 
+
 int compare_strings(void *key1, void *key2)
 {
     return strcmp((char *) key1, (char *) key2);
 }
 
-////////////////////////////////////////////////////////////////////////////////
 
+/******************************************************************************/
 
 
 /** \return the least prime > 2 and >= i. */
@@ -85,7 +87,7 @@ static int next_prime(int i)
     else if (!(i % 2))
         i++;
 
-    while (1)  // Breaks out when next prime is found.
+    while (1)  /* Breaks out when next prime is found. */
     {
         for (j = 3; j < i; j += 2)
             if (!(i % j))
@@ -99,20 +101,21 @@ static int next_prime(int i)
 }
 
 
-
 p2_hash_table *rehash_dest;
 
-static void rehash(void *key, void *target)
+
+static void *rehash(void *key, void *target)
 {
     p2_hash_table__add(rehash_dest, key, target);
+    return (void*) 1;
 }
+
 
 static void rehash_all(p2_hash_table *src, p2_hash_table *dest)
 {
     rehash_dest = dest;
-    p2_hash_table__for_all(src, (void (*)(void*, void *)) rehash);
+    p2_hash_table__for_all(src, (void *(*)(void*, void *)) rehash);
 }
-
 
 
 static void expand(p2_hash_table *h)
@@ -138,7 +141,7 @@ static void expand(p2_hash_table *h)
             {
                 q = p + 1;
 
-                //Cancel out the incrementation for this re-hashing add().
+                /* Cancel out the incrementation for this re-hashing add(). */
                 h->size--;
 
                 p2_hash_table__add(h, *p, *q);
@@ -148,7 +151,6 @@ static void expand(p2_hash_table *h)
         free(buffer_old);
     }
 }
-
 
 
 p2_hash_table *p2_hash_table__new(
@@ -176,24 +178,24 @@ p2_hash_table *p2_hash_table__new(
         else
             h->compare_to = compare_to;
 
-        // Sparsity must be at least 1, otherwise the buffer will not resize
-        // even when it is completely full.
+        /* Sparsity must be at least 1, otherwise the buffer will not resize
+           even when it is completely full. */
         if (sparsity < 1)
             h->sparsity = DEFAULT_SPARSITY_FACTOR;
         else
             h->sparsity = sparsity;
 
-        // Expansion factor must be greater than 1 for the buffer to actually
-        // gain in size.
+        /* Expansion factor must be greater than 1 for the buffer to actually
+           gain in size. */
         if (expansion <= 1)
             h->expansion = DEFAULT_EXPANSION_FACTOR;
         else
             h->expansion = expansion;
 
-        // Buffer is initially empty.
+        /* Buffer is initially empty. */
         h->size = 0;
 
-        // Capacity is re-calculated whenever the table resizes.
+        /* Capacity is re-calculated whenever the table resizes. */
         h->capacity = (int) (((float) h->buffer_size) / h->sparsity);
 
         if (!(h->buffer = (void **) malloc(sizeof(void*)
@@ -208,8 +210,7 @@ p2_hash_table *p2_hash_table__new(
 }
 
 
-
-void p2_hash_table__copy(p2_hash_table *h)
+p2_hash_table *p2_hash_table__copy(p2_hash_table *h)
 {
     p2_hash_table *h2 = (p2_hash_table *) malloc(sizeof(p2_hash_table));
 
@@ -234,7 +235,6 @@ void p2_hash_table__delete(p2_hash_table *h)
 }
 
 
-
 void *p2_hash_table__lookup(p2_hash_table *h, void *key)
 {
     int int_key, actual_size;
@@ -255,14 +255,13 @@ void *p2_hash_table__lookup(p2_hash_table *h, void *key)
         if ((*p == NULL)||(!h->compare_to(*p, key)))
             break;
 
-        // Increment and wrap
+        /* Increment and wrap. */
         p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
     }
 
     p++;
-    return *p;  //Note: relies on the target value of empty h->buffer being NULL.
+    return *p;  /* Note: relies on the target value of empty h->buffer being NULL. */
 }
-
 
 
 void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
@@ -285,10 +284,10 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
         if (!h->compare_to(*p, key))
         {
             h->size--;
-            break;  //No duplicate entries allowed.  Replace with new target value.
+            break;  /* No duplicate entries allowed.  Replace with new target value. */
         }
 
-        // Increment and wrap
+        /* Increment and wrap */
         p = h->buffer + ((p + ENTRY_SIZE - h->buffer)%actual_size);
     }
 
@@ -303,7 +302,6 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 
     return r;
 }
-
 
 
 void *p2_hash_table__remove(p2_hash_table *h, void *key)
@@ -333,7 +331,7 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key)
             break;
         }
 
-        // Increment and wrap
+        /* Increment and wrap. */
         p = h->buffer + ((p + ENTRY_SIZE - h->buffer)%actual_size);
     }
 
@@ -341,48 +339,52 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key)
 }
 
 
-
-void p2_hash_table__for_all(p2_hash_table *h, void (*func)(void *, void *))
+void *p2_hash_table__for_all(p2_hash_table *h, void *(*func)(void *, void *))
 {
     void **cur = h->buffer;
     void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
 
     while (cur < sup)
     {
-        if (*cur)
-            func(*cur, *(cur + 1));
+        if (*cur && !func(*cur, *(cur + 1)))
+            return 0;
         cur += 2;
     }
+
+    return (void*) 1;
 }
 
 
-
-void p2_hash_table__for_all_keys(p2_hash_table *h, void (*func)(void *))
+void *p2_hash_table__for_all_keys(p2_hash_table *h, void *(*func)(void *))
 {
     void **cur = h->buffer;
     void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
 
     while (cur < sup)
     {
-        if (*cur)
-            func(*cur);
+        if (*cur && !func(*cur))
+            return 0;
         cur += 2;
     }
+
+    return (void*) 1;
 }
 
 
-
-void p2_hash_table__for_all_targets(p2_hash_table *h, void (*func)(void *))
+void *p2_hash_table__for_all_targets(p2_hash_table *h, void *(*func)(void *))
 {
     void **cur = h->buffer;
     void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
 
     while (cur < sup)
     {
-        if (*cur)
-            func(*(cur + 1));
+        if (*cur && !func(*(cur + 1)))
+            return 0;
         cur += 2;
     }
+
+    return (void*) 1;
 }
 
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

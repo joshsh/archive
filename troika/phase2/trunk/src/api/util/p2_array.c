@@ -1,4 +1,4 @@
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -15,23 +15,21 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "p2_array.h"
 
-#include <stdlib.h>  // malloc
-#include <string.h>  // memcpy
+#include <stdlib.h>  /* malloc */
+#include <string.h>  /* memcpy */
 
 
-// By default, expand() doubles the size of the array.
+/* By default, expand() doubles the size of the array. */
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
 static void expand(p2_array *a);
 
 
-
-// Constructors and destructor /////////////////////////////////////////////////
-
+/* Constructors and destructor ************************************************/
 
 
 p2_array *p2_array__new(int buffer_size, float expansion)
@@ -40,14 +38,14 @@ p2_array *p2_array__new(int buffer_size, float expansion)
 
     if (a)
     {
-        // Expansion factor must be greater than 1 for the buffer to actually
-        // gain in size.
+        /* Expansion factor must be greater than 1 for the buffer to actually
+           gain in size. */
         if (expansion <= 1)
             a->expansion = DEFAULT_EXPANSION_FACTOR;
         else
             a->expansion = expansion;
 
-        // Buffer size must be positive.
+        /* Buffer size must be positive. */
         if (buffer_size < 1)
             a->buffer_size = 1;
         else
@@ -62,7 +60,6 @@ p2_array *p2_array__new(int buffer_size, float expansion)
 
     return a;
 }
-
 
 
 p2_array *p2_array__copy(p2_array *a)
@@ -87,7 +84,6 @@ p2_array *p2_array__copy(p2_array *a)
 }
 
 
-
 void p2_array__delete(p2_array *a)
 {
     free(a->buffer);
@@ -95,9 +91,7 @@ void p2_array__delete(p2_array *a)
 }
 
 
-
-// Array resizing //////////////////////////////////////////////////////////////
-
+/* Array resizing *************************************************************/
 
 
 static void expand(p2_array *a)
@@ -105,8 +99,8 @@ static void expand(p2_array *a)
     void **buffer0;
     int i, size0 = (int) (a->expansion * a->buffer_size);
 
-    // If the the array's own exansion factor is too close to 1 to resize the
-    // buffer, use DEFAULT_EXPANSION_FACTOR instead.
+    /* If the the array's own exansion factor is too close to 1 to resize the
+       buffer, use DEFAULT_EXPANSION_FACTOR instead. */
     if (size0 <= a->buffer_size)
         size0 = DEFAULT_EXPANSION_FACTOR * a->buffer_size;
 
@@ -120,9 +114,7 @@ static void expand(p2_array *a)
 }
 
 
-
-// Random access ///////////////////////////////////////////////////////////////
-
+/* Random access **************************************************************/
 
 
 void *p2_array__get(p2_array *a, int index)
@@ -134,7 +126,6 @@ void *p2_array__get(p2_array *a, int index)
 }
 
 
-
 void p2_array__set(p2_array *a, int index, void *p)
 {
     if ((index >=0) && (index < a->size))
@@ -142,8 +133,7 @@ void p2_array__set(p2_array *a, int index, void *p)
 }
 
 
-
-// Stack and queue operations //////////////////////////////////////////////////
+/* Stack and queue operations *************************************************/
 
 /*
    push    : pre-decrement head (pre-resize if is_full)
@@ -151,7 +141,6 @@ void p2_array__set(p2_array *a, int index, void *p)
    pop     : post-increment head (if array is non-empty)
    "dequeue" : pre-decrement tail_index (if array is non-empty)
 */
-
 
 
 void *p2_array__peek(p2_array *a)
@@ -163,16 +152,14 @@ void *p2_array__peek(p2_array *a)
 }
 
 
-
 void p2_array__push(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
-        expand(a);  // Note: replaces a->buffer
+        expand(a);  /* Note: replaces a->buffer */
     a->head = ((a->head - 1) + a->buffer_size) % a->buffer_size;
     a->buffer[a->head] = p;
     a->size++;
 }
-
 
 
 void *p2_array__pop(p2_array *a)
@@ -191,15 +178,13 @@ void *p2_array__pop(p2_array *a)
 }
 
 
-
 void p2_array__enqueue(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
-        expand(a);  // Note: replaces a->buffer
+        expand(a);  /* Note: replaces a->buffer */
     a->buffer[(a->head + a->size) % a->buffer_size] = p;
     a->size++;
 }
-
 
 
 void *p2_array__dequeue(p2_array *a)
@@ -214,9 +199,7 @@ void *p2_array__dequeue(p2_array *a)
 }
 
 
-
-// Random insertion and removal ////////////////////////////////////////////////
-
+/* Random insertion and removal ***********************************************/
 
 
 void p2_array__insert_before(p2_array *a, int index, void *p)
@@ -226,7 +209,7 @@ void p2_array__insert_before(p2_array *a, int index, void *p)
     if ((index >= 0) && (index < a->size))
     {
         if (a->size >= a->buffer_size)
-            expand(a);  // Note: replaces a->buffer
+            expand(a);  /* Note: replaces a->buffer */
 
         for (i = a->size; i > index; i--)
             a->buffer[(a->head + i) % a->buffer_size]
@@ -238,7 +221,6 @@ void p2_array__insert_before(p2_array *a, int index, void *p)
 }
 
 
-
 void p2_array__insert_after(p2_array *a, int index, void *p)
 {
     int i;
@@ -246,7 +228,7 @@ void p2_array__insert_after(p2_array *a, int index, void *p)
     if ((index >= 0)&&(index < a->size))
     {
         if (a->size >= a->buffer_size)
-            expand(a);  // Note: replaces a->buffer
+            expand(a);  /* Note: replaces a->buffer */
 
         for (i = a->size; i > (index + 1); i--)
             a->buffer[(a->head + i) % a->buffer_size]
@@ -256,7 +238,6 @@ void p2_array__insert_after(p2_array *a, int index, void *p)
         a->size++;
     }
 }
-
 
 
 void p2_array__remove(p2_array *a, int index)
@@ -274,7 +255,6 @@ void p2_array__remove(p2_array *a, int index)
 }
 
 
-
 void p2_array__simple_remove(p2_array *a, int index)
 {
     if ((index >= 0) && (index < a->size))
@@ -286,15 +266,12 @@ void p2_array__simple_remove(p2_array *a, int index)
 }
 
 
-
-// Array sorting ///////////////////////////////////////////////////////////////
-
+/* Array sorting **************************************************************/
 
 
 /* Some (hidden) global variables to save on argument passing */
 void **buffer_, **aux_;
 int (*compare_) (void *, void *);
-
 
 
 /* adapted from a MergeSort example by H.W. Lang */
@@ -303,13 +280,13 @@ static void merge(int lo, int m, int hi)
     int i, j, k;
 
     i = 0; j = lo;
-    // copy first half of target array to auxiliary array
+    /* Copy first half of target array to auxiliary array. */
     while (j <= m)
         aux_[i++] = buffer_[j++];
 
     i = 0; k = lo;
 
-    // copy back next-greatest element at each time
+    /* Copy back next-greatest element at each time. */
     while (k < j && j <= hi)
     {
         if (compare_(aux_[i],buffer_[j]) <= 0)
@@ -318,14 +295,13 @@ static void merge(int lo, int m, int hi)
             buffer_[k++] = buffer_[j++];
     }
 
-    // copy back remaining elements of first half (if any)
+    /* Copy back remaining elements of first half (if any). */
     while (k < j)
         buffer_[k++] = aux_[i++];
 }
 
 
-
-/* adapted from a MergeSort example by H.W. Lang */
+/* Adapted from a MergeSort example by H.W. Lang */
 static void mergesort(int lo, int hi)
 {
     int m;
@@ -340,7 +316,6 @@ static void mergesort(int lo, int hi)
 }
 
 
-
 void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *))
 {
     int i;
@@ -348,8 +323,8 @@ void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *))
     int size = a->size, buffer_size = a->buffer_size, head = a->head;
     void **buffer = a->buffer;
 
-    // Normalize the array a so that the mergesort algorithm doesn't have to
-    // deal with index wrapping.
+    /* Normalize the array a so that the mergesort algorithm doesn't have to
+       deal with index wrapping. */
     buffer_ = (void **) malloc(sizeof(void*)*a->size);
     for (i=0; i<size; i++)
         buffer_[i] = buffer[(head+i)%buffer_size];
@@ -357,21 +332,60 @@ void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *))
     a->buffer = buffer_;
     free(buffer);
 
-    // Create auxiliary array for merge
+    /* Create auxiliary array for merge. */
     aux_ = (void **) malloc(sizeof(void*)*a->size);
 
     compare_ = compare;
 
     mergesort(0, size - 1);
 
-    // Destroy the auxiliary array.
+    /* Destroy the auxiliary array. */
     free(aux_);
 }
 
 
+/* Logical set functions and item substitution ********************************/
 
-// Miscellaneous ///////////////////////////////////////////////////////////////
 
+void *p2_array__for_all(p2_array *a, void *(*criterion) (void *))
+{
+    int i;
+
+    for (i = 0; i < a->size; i++)
+        if (!criterion(a->buffer[(a->head + i) % a->buffer_size]))
+            return 0;
+
+    return (void*) 1;
+}
+
+
+void *p2_array__exists(p2_array *a, void *(*criterion)(void *))
+{
+    int i;
+
+    for (i = 0; i < a->size; i++)
+        if (criterion(a->buffer[(a->head + i) % a->buffer_size]))
+            return (void*) 1;
+
+    return 0;
+}
+
+
+p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *))
+{
+    int i, index;
+
+    for (i = 0; i < a->size; i++)
+    {
+        index = (a->head + i) % a->buffer_size;
+        a->buffer[index] = substitution(a->buffer[index]);
+    }
+
+    return a;
+}
+
+
+/* Miscellaneous **************************************************************/
 
 
 void p2_array__clear(p2_array *a)
@@ -379,7 +393,6 @@ void p2_array__clear(p2_array *a)
     a->size = 0;
     a->head = 0;
 }
-
 
 
 void p2_array__minimize(p2_array *a)
@@ -409,12 +422,4 @@ void p2_array__minimize(p2_array *a)
 }
 
 
-
-void p2_array__for_all(p2_array *a, void (*func) (void *))
-{
-    int i;
-
-    for (i = 0; i < a->size; i++)
-        func(a->buffer[(a->head + i) % a->buffer_size]);
-}
-
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

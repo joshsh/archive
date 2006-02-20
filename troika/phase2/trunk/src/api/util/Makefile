@@ -1,39 +1,51 @@
 ################################################################################
-## Compile and run a test program under Valgrind (memcheck).
+## Compile utilities and run a test program under Valgrind (memcheck).
 
-NAME     = p2-util-debugger
+TESTAPP  = p2-util-debugger
 CC       = gcc
 CFLAGS   = -g
-VALGRIND = valgrind --tool=memcheck --leak-check=full --show-reachable=yes
+VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
-all :  valgrind
 
+.PHONY : default
+default :  test
+
+
+.PHONY : clean
 clean :
 	-rm *.o
 
+
+.PHONY : distclean
 distclean :  clean
-	-rm $(NAME)
+	-rm $(TESTAPP)
 
 
-valgrind :  $(NAME)
-	-$(VALGRIND) $(NAME)
+.PHONY : test
+test :  $(TESTAPP)
+	$(VALGRIND) $(TESTAPP)
 
-$(NAME) :  $(NAME).c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
-	gcc $(CFLAGS) -o $(NAME) $(NAME).c \
+
+$(TESTAPP) :  $(TESTAPP).c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
+	gcc $(CFLAGS) -o $(TESTAPP) $(TESTAPP).c \
 		p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 
 
 p2_array.o :  p2_array.c p2_array.h
 	gcc -c $(CFLAGS) p2_array.c
 
+
 p2_bunch.o :  p2_bunch.c p2_bunch.h
 	gcc -c $(CFLAGS) p2_bunch.c
+
 
 p2_hash_table.o :  p2_hash_table.c p2_hash_table.h
 	gcc -c $(CFLAGS) p2_hash_table.c
 
+
 p2_set.o :  p2_set.c p2_set.h
 	gcc -c $(CFLAGS) p2_set.c
+
 
 p2_term.o :  p2_term.c p2_term.h
 	gcc -c $(CFLAGS) p2_term.c

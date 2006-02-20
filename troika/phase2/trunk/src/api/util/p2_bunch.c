@@ -1,4 +1,4 @@
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -15,17 +15,15 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "p2_bunch.h"
 
-#include <stdlib.h>  // malloc
-#include <string.h>  // memcpy
+#include <stdlib.h>  /* malloc */
+#include <string.h>  /* memcpy */
 
 
-
-////////////////////////////////////////////////////////////////////////////////
-
+/******************************************************************************/
 
 
 static block *block__new(unsigned int size)
@@ -37,15 +35,14 @@ static block *block__new(unsigned int size)
         bl->filled = 0;
             bl->size = size;
 
-        //~ take memory faults into account (actual block size might have to be
-        //  smaller than the intended size).
+        /*~ take memory faults into account (actual block size might have to be
+            smaller than the intended size). */
         if (!(bl->buffer = (void **) malloc(size * sizeof(void *))))
             bl = 0;
     }
 
     return bl;
 }
-
 
 
 static block *block__copy(block *bl)
@@ -67,17 +64,16 @@ static block *block__copy(block *bl)
 }
 
 
-
-static void block__delete(block *bl)
+static void *block__delete(block *bl)
 {
     free(bl->buffer);
     free(bl);
+
+    return ( void* ) 1;
 }
 
 
-
-////////////////////////////////////////////////////////////////////////////////
-
+/******************************************************************************/
 
 
 p2_bunch *p2_bunch__new(unsigned int block_size)
@@ -86,7 +82,7 @@ p2_bunch *p2_bunch__new(unsigned int block_size)
 
     if (b)
     {
-        // Block size must be at least 1.
+        /* Block size must be at least 1. */
         b->block_size = (block_size > 0) ? block_size : 1;
 
         b->last_block = 0;
@@ -97,7 +93,6 @@ p2_bunch *p2_bunch__new(unsigned int block_size)
 
     return b;
 }
-
 
 
 p2_bunch *p2_bunch__copy(p2_bunch *b)
@@ -122,19 +117,17 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
 }
 
 
-
 void p2_bunch__delete(p2_bunch *b)
 {
-    // Free all blocks.
-    p2_array__for_all(b->blocks, (void (*) (void *)) block__delete);
+    /* Free all blocks. */
+    p2_array__for_all(b->blocks, (void *(*) (void *)) block__delete);
 
-    // Delete the blocks array.
+    /* Delete the blocks array. */
     p2_array__delete(b->blocks);
 
-    // Free the bunch structure itself.
+    /* Free the bunch structure itself. */
     free(b);
 }
-
 
 
 unsigned int p2_bunch__size(p2_bunch *b)
@@ -145,17 +138,16 @@ unsigned int p2_bunch__size(p2_bunch *b)
 
 void p2_bunch__add(p2_bunch *b, void *p)
 {
-    // Get or create tail-end block.
+    /* Get or create tail-end block. */
     if (!b->last_block || b->last_block->filled == b->last_block->size)
     {
         b->last_block = block__new(b->block_size);
         p2_array__enqueue(b->blocks, (void *) b->last_block);
     }
 
-    // Add the item to the tail-end block.
+    /* Add the item to the tail-end block. */
     b->last_block->buffer[b->last_block->filled++] = p;
 }
-
 
 
 void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
@@ -163,7 +155,7 @@ void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
     int i, size;
     block *last_block = dest->last_block;
 
-    // Remove the tail-end block if it is only partially filled.
+    /* Remove the tail-end block if it is only partially filled. */
     if (last_block)
     {
         if (last_block->filled < last_block->size)
@@ -172,21 +164,20 @@ void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
             last_block = 0;
     }
 
-    // Add all source blocks.
+    /* Add all source blocks. */
     size = src->blocks->size;
     for (i = 0; i < size; i++)
         p2_array__enqueue(dest->blocks,
             (void *) block__copy((block *) p2_array__get(src->blocks, i)));
 
-    // Find the new tail-end block.
+    /* Find the new tail-end block. */
     dest->last_block = (block *) p2_array__get(dest->blocks, dest->blocks->size - 1);
 
-    // Add all items from the previous tail-end block (if any).
+    /* Add all items from the previous tail-end block (if any). */
     for (i = 0; i < last_block->filled; i++)
         p2_bunch__add(dest, last_block->buffer[i]);
     free(last_block);
 }
-
 
 
 void *p2_bunch__remove(p2_bunch *b)
@@ -194,7 +185,7 @@ void *p2_bunch__remove(p2_bunch *b)
     block *bl = b->last_block;
     void *p = bl->buffer[--bl->filled];
 
-    // Remove the tail-end block if empty.
+    /* Remove the tail-end block if empty. */
     if (!bl->filled)
     {
         block__delete((block *) p2_array__dequeue(b->blocks));
@@ -209,7 +200,6 @@ void *p2_bunch__remove(p2_bunch *b)
             b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
     }
 }
-
 
 
 void *p2_bunch__for_all(p2_bunch *b, void *(*criterion) (void *))
@@ -227,7 +217,6 @@ void *p2_bunch__for_all(p2_bunch *b, void *(*criterion) (void *))
 
     return (void *) 1;
 }
-
 
 
 void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *))
@@ -251,7 +240,6 @@ void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *))
 }
 
 
-
 p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
 {
     int i, j, numblocks = b->blocks->size;
@@ -266,10 +254,10 @@ p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
             p = bl->buffer[j];
             while (criterion(p))
             {
-                // Replace the item with the last item in the bunch.
+                /* Replace the item with the last item in the bunch. */
                 p = bl->buffer[j] = b->last_block->buffer[--(b->last_block->filled)];
 
-                // Remove the tail-end block if empty.
+                /* Remove the tail-end block if empty. */
                 if (!b->last_block->filled)
                 {
                     block__delete((block *) p2_array__dequeue(b->blocks));
@@ -277,7 +265,7 @@ p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
                     if (bl == b->last_block)
                     {
                         b->last_block = 0;
-                        //b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+                        /*b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1); */
                         return b;
                     }
 
@@ -295,3 +283,4 @@ p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
 }
 
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
