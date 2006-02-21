@@ -57,9 +57,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>
 #include <string.h>  /* strdup */
 
-
 /** Added to each row of input (if defined). */
 #define INPUT_PREFIX  ">>  "
+
+
+/* Language module dependencies ***********************************************/
+
+extern int p2_parser__suppress_output();
+extern int p2_parser__show_line_numbers();
 
 
 /* Line and character numbers *************************************************/
@@ -208,7 +213,7 @@ char *extract_literal( char *s )
 
     *s_low = '\0';
 
-    return strdup( s );
+    return STRDUP( s );
 }
 
 
@@ -289,7 +294,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     "\\"{LETTER}{ALNUM}*  {
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string = strdup( yytext + 1 );
+        yylval.string = STRDUP( yytext + 1 );
 
         TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }
@@ -297,7 +302,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     {NAME_CHAR}+  {  /* Matches a name fragment. */
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string = strdup( yytext );
+        yylval.string = STRDUP( yytext );
 
         TOKEN( STRING, "STRING" );
     }

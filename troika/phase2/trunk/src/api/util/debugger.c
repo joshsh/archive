@@ -278,6 +278,8 @@ int main( int argc, char **argv )
     p2_term__debug( );
 
     func_end( "main" );
+
+    return 0;
 }
 
 

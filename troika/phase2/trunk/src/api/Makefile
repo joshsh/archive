@@ -5,13 +5,11 @@
 #
 #  Use "make", "make clean", "make distclean"
 
-
 UTIL_PATH     = ./util
 SK_PATH       = ./sk
 PARSER_PATH   = ./parser
 XML_PATH      = ./xml
-IMPORT_PATH   = ./import
-IMPORTER_PATH = ./importer
+IMPORT_PATH = ./import
 
 CC      = gcc
 CPP     = g++
@@ -67,6 +65,36 @@ APP_LIBS = \
 	$(IMPORT_PATH)/commands.cpp
 
 
+.PHONY : default
+default :  phase2
+
+
+.PHONY : clean
+clean :
+	$(MAKE) clean -C $(IMPORT_PATH)
+	$(MAKE) clean -C $(PARSER_PATH)
+	$(MAKE) clean -C $(UTIL_PATH)
+	$(MAKE) clean -C $(XML_PATH)
+	-rm $(UTIL_OBJECTS)
+
+
+.PHONY : distclean
+distclean :  clean
+	$(MAKE) distclean -C $(IMPORT_PATH)
+	$(MAKE) distclean -C $(PARSER_PATH)
+	$(MAKE) distclean -C $(UTIL_PATH)
+	$(MAKE) distclean -C $(XML_PATH)
+	-rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soap*.* phase2
+
+
+.PHONY : test
+test :
+	$(MAKE) test -C $(IMPORT_PATH)
+	$(MAKE) test -C $(PARSER_PATH)
+	$(MAKE) test -C $(UTIL_PATH)
+	$(MAKE) test -C $(XML_PATH)
+
+
 ############################################################
 # Build the command line interface.
 
@@ -82,12 +110,12 @@ phase2 :  $(CORE_LIBS) $(APP_LIBS) $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2.nsmap # 
 		#$(CORE_LIBS) \
 		#$(SK_PATH)/sk.c \
 
+
 ############################################################
 # Invoke gSOAP's "stdsoap2" to generate proxy code.
 
 p2.nsmap : $(SOAP_PATH)/gsoap_header.h
 	$(GSOAP) $(SOAP_PATH)/gsoap_header.h
-
 
 
 ############################################################
@@ -121,71 +149,4 @@ p2_dataset.o : p2_dataset.cpp p2_dataset.h
 
 #sk.o : $(SK_PATH)/sk.c p2.h p2_flags.h
 #	$(CC) -c sk.c
-
-
-############################################################
-# Compile helper utilities.
-
-array.o : $(UTIL_PATH)/p2_array.c
-	$(CC) -c $(UTIL_PATH)/p2_array.c
-
-bunch.o : $(UTIL_PATH)/p2_bunch.c
-	$(CC) -c $(UTIL_PATH)/p2_bunch.c
-
-hash_table.o : $(UTIL_PATH)/p2_hash_table.c
-	$(CC) -c $(UTIL_PATH)/p2_hash_table.c
-
-array.o : $(UTIL_PATH)/p2_array.c
-	$(CC) -c $(UTIL_PATH)/p2_array.c
-
-#set.o : $(UTIL_PATH)/p2_set.c
-#	$(CC) -c $(UTIL_PATH)/p2_set.c
-
-term.o : $(UTIL_PATH)/p2_term.c
-	$(CC) -c $(UTIL_PATH)/p2_term.c
-
-
-############################################################
-# Compile the (flex/bison) parser.
-
-FLEX_OUTPUT = lex.yy.c
-
-BISON_OUTPUT = \
-	p2_parse.tab.c \
-	p2_parse.tab.h \
-	p2_parse.output \
-	#p2_parse.vcg
-
-lex.yy.o : lex.yy.c p2_parse.tab.h p2_flags.h
-	$(CC) -c lex.yy.c
-
-p2_parse.tab.o : p2_parse.tab.c
-	$(CC) -c p2_parse.tab.c
-
-lex.yy.c : p2_parse.l
-	$(LEX) p2_parse.l
-
-p2_parse.tab.c p2_parse.tab.h : p2_parse.y p2_flags.h
-	$(YACC) -dv p2_parse.y	-rm $(UTIL_OBJECTS)
-
-
-
-############################################################
-# "make clean" (Note: doesn't remove the executable)
-
-.PHONY : clean
-clean :
-	$(MAKE) clean -C $(XML_PATH)
-	$(MAKE) clean -C $(PARSER_PATH)
-	$(MAKE) clean -C $(UTIL_PATH)
-	$(MAKE) clean -C $(IMPORTER_PATH)
-	-rm $(UTIL_OBJECTS)
-
-.PHONY : distclean
-distclean :  clean
-	$(MAKE) distclean -C $(XML_PATH)
-	$(MAKE) distclean -C $(PARSER_PATH)
-	$(MAKE) distclean -C $(UTIL_PATH)
-	-rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soap*.* phase2
-
 

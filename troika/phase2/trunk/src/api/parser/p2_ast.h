@@ -87,6 +87,6 @@ void *p2_ast__delete( p2_ast *ast );
 void p2_ast__print( p2_ast *ast );
 
 
-#endif  // P2_AST_H
+#endif  /* P2_AST_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

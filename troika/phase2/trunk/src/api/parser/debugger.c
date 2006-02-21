@@ -132,21 +132,21 @@ int p2_parser__show_line_numbers()
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 /** yyparse is invoked here. */
-main()
+int main()
 {
     int yyparse__exit_value;
     enum parser_return_state return_state;
 
     if ( p2_ast__init() )
-        exit( 1 );
+        return 1;
 
     printf( "Phase2 command-line parser debugger.  Type '\\exit;' to quit.\n\n" );
 
-    if ( yyparse__exit_value = yyparse( &return_state ) )
+    if ( ( yyparse__exit_value = yyparse( &return_state ) ) )
         printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
 
     else if ( return_state == RETURN_STATE__ABORTED )
@@ -155,7 +155,9 @@ main()
         printf( "Parser reached end-of-input.\n" );
 
     if ( p2_ast__end() )
-        exit( 1 );
+        return 1;
+
+    return 0;
 }
 
 

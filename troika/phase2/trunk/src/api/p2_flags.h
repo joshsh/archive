@@ -5,7 +5,7 @@
              parcour@gmail.com  \n
              +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -22,17 +22,17 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_FLAGS_H
 #define P2_FLAGS_H
 
 
-// Reduction ///////////////////////////////////////////////////////////////////
+/* Reduction ******************************************************************/
 
 #define P2FLAGS__DO_TYPE_CHECKING
 
-// #P2FLAGS__HIGHER_ORDER_PRIMITIVES
+#define P2FLAGS__HIGHER_ORDER_PRIMITIVES  0
 
 /** If defined, allow non-redex atoms at the beginning of an expression, and
    simply abandon reduction when they are encountered (rather than raising an
@@ -40,40 +40,40 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
 
 
-// Association /////////////////////////////////////////////////////////////////
+/* Association ****************************************************************/
 
-#define P2FLAGS__ASSOCIATION
+#define P2FLAGS__ASSOCIATION    1
 
-#ifdef P2FLAGS__ASSOCIATION
-    // #define P2FLAGS__TRANS_EDGES
-    // #define P2FLAGS__INBOUND_EDGES
+#if P2FLAGS__ASSOCIATION
+    #define P2FLAGS__TRANS_EDGES    0
+    #define P2FLAGS__INBOUND_EDGES  0
 
-    #define P2FLAGS__ATOM__INIT_ASSOC_BUFFER_SIZE  0
+    #define P2FLAGS__ATOM__INIT_ASSOC_BUFFER_SIZE   0
 
     /** If defined, the inclusion of the subject of a semantic triple implies the
         inclusion of the object. */
-    //#define P2FLAGS__SUBJECT_IMPLIES_OBJECT
+    #define P2FLAGS__SUBJECT_IMPLIES_OBJECT 0
 
-    #ifndef P2FLAGS__SUBJECT_IMPLIES_OBJECT
+    #if !P2FLAGS__SUBJECT_IMPLIES_OBJECT
         /** If defined, the inclusion of the both the subject and predicate of a
             semantic triple implies the inclusion of the object. */
-        #define P2FLAGS__SUBJECT_AND_PREDICATE_IMPLY_OBJECT
+        #define P2FLAGS__SUBJECT_AND_PREDICATE_IMPLY_OBJECT 1
     #endif
 
     /** If defined, the inclusion of the subject of a semantic triple implies the
         inclusion of the predicate. */
-    //#define P2FLAGS__SUBJECT_IMPLIES_PREDICATE
+    #define P2FLAGS__SUBJECT_IMPLIES_PREDICATE  0
 
-    #ifndef P2FLAGS__SUBJECT_IMPLIES_PREDICATE
+    #if !P2FLAGS__SUBJECT_IMPLIES_PREDICATE
         /** If defined, the inclusion of the both the subject and object of a
             semantic triple implies the inclusion of the predicate. */
-        //#define P2FLAGS__SUBJECT_AND_OBJECT_IMPLY_PREDICATE
+        #define P2FLAGS__SUBJECT_AND_OBJECT_IMPLY_PREDICATE 0
     #endif
 
-#endif  // P2FLAGS__ASSOCIATION
+#endif  /* P2FLAGS__ASSOCIATION */
 
 
-// Memory management ///////////////////////////////////////////////////////////
+/* Memory management **********************************************************/
 
 #define P2FLAGS__MARK_AND_SWEEP
 
@@ -87,13 +87,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
         #define P2FLAGS__INIT_TRIGGER_BUFFER_SIZE  10
     #endif
 
-#endif  // P2FLAGS__MARK_AND_SWEEP
+#endif  /* P2FLAGS__MARK_AND_SWEEP */
 
 
 #define P2FLAGS__MANAGE_PRIMITIVES
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-#endif  // P2_FLAGS_H
+#endif  /* P2_FLAGS_H */
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

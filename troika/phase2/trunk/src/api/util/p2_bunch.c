@@ -199,6 +199,8 @@ void *p2_bunch__remove(p2_bunch *b)
         else
             b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
     }
+
+    return p;
 }
 
 

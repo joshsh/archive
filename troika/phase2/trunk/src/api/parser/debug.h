@@ -30,6 +30,9 @@ enum parser_return_state
 };
 
 
+#define STRDUP( x )  strcpy( ( char* ) malloc( 1 + strlen( x ) ), x )
+
+
 #endif  /* DEBUG_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

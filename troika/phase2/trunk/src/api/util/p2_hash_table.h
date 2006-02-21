@@ -136,17 +136,17 @@ void p2_hash_table__delete(p2_hash_table *h);
 
 /******************************************************************************/
 
-/** Looks up a key to obtain a target.
-    \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
-    target value, else you won't be able to tell it apart from a failed lookup.
-*/
-void *p2_hash_table__lookup(p2_hash_table *h, void *key);
-
 /** Adds a key/target pair.
     \param key  the key value to map from.  Should not be 0/NULL.
     \param target  the target value to bind to the key
     \return  The target which is displaced by the new target (if any). */
 void *p2_hash_table__add(p2_hash_table *h, void *key, void *target);
+
+/** Looks up a key to obtain a target.
+    \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
+    target value, else you won't be able to tell it apart from a failed lookup.
+*/
+void *p2_hash_table__lookup(p2_hash_table *h, void *key);
 
 /** Removes the key and its target.
     \return the target */

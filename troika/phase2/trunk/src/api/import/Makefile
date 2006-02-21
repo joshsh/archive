@@ -16,20 +16,35 @@ DOXYGEN_OUT  = $(XMLOUT_PATH)/doxygen-out.xml
 CC           = gcc
 
 
-all : $(SRC_PATH)/$(NAME).o
+.PHONY : default
+default : $(SRC_PATH)/$(NAME).o
 	nm $(SRC_PATH)/$(NAME).o
 
+
+.PHONY : clean
 clean :
 	-rm $(DOXYGEN_OUT) -rf $(XMLOUT_PATH) $(HEADER) $(SRC_PATH)/$(NAME).* $(SRC_PATH)/.o
+
+
+.PHONY : distclean
+distclean : clean
+
+
+.PHONY : test
+test :
+
 
 $(SRC_PATH)/$(NAME).o : $(SRC_PATH)/$(NAME).c
 	gcc -c -o $(SRC_PATH)/$(NAME).o $(SRC_PATH)/$(NAME).c
 
+
 $(SRC_PATH)/$(NAME).c : $(DOXYGEN_OUT) header-generator.xslt
 	xsltproc header-generator.xslt $(DOXYGEN_OUT) > $(SRC_PATH)/$(NAME).c
 
+
 $(DOXYGEN_OUT) :  doxygen
 	xsltproc $(XMLOUT_PATH)/combine.xslt $(XMLOUT_PATH)/index.xml > $(DOXYGEN_OUT)
+
 
 .PHONY : doxygen
 doxygen :

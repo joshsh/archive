@@ -79,7 +79,6 @@ extern int p2_evaluate_expression( p2_name *name, p2_ast *expr );
 extern int p2_handle_parse_error( char *msg );
 
 extern int p2_parser__suppress_output();
-extern int p2_parser__show_line_numbers();
 
 
 /* Lexer dependencies *********************************************************/
@@ -93,7 +92,7 @@ extern int get_line_number();
 extern int statement_number;
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
 /** Output decoration. */
@@ -175,15 +174,20 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
     }
 }
 
-
+                          /* !    */
 #define ERROK  { yyerrok; yyclearin; exit_early = 0; }
 
 
 #if DEBUG__PARSER
-    #define PRODUCTION( x )  printf( "Matched %s\n", x );
+    production( char *s )
+    {
+        printf( "Matched %s\n", x );
+    }
+    /*#define PRODUCTION( x )  printf( "Matched %s\n", x );
 #else
-    #define PRODUCTION
+    #define PRODUCTION*/
 #endif
+
 
 #if DEBUG__PARSER__USE_YYDEBUG
     #define YYDEBUG  1
@@ -258,7 +262,9 @@ input:
 
     statements E_O_F
     {
-        PRODUCTION( "input ::=  statements E_O_F" );
+        #if DEBUG__PARSER
+            production( "input ::=  statements E_O_F" );
+        #endif
 
         if ( *yyerror_msg )
             handle_error();
@@ -278,7 +284,9 @@ statements:
 
     /* This production precedes input. */
     {
-        PRODUCTION( "statements ::=  [null]" );
+        #if DEBUG__PARSER
+            production( "statements ::=  [null]" );
+        #endif
 
         *return_state = RETURN_STATE__PARSE_FAILURE;
 
@@ -293,7 +301,9 @@ statements:
 
     | statements statement
     {
-        PRODUCTION( "statements ::=  statements statement" );
+        #if DEBUG__PARSER
+            production( "statements ::=  statements statement" );
+        #endif
 
         if ( *yyerror_msg )
             handle_error();
@@ -310,7 +320,9 @@ statements:
     /* Redundant semicolons are tolerated. */
     | statements SEMICOLON
     {
-        PRODUCTION( "statements ::=  statements SEMICOLON" );
+        #if DEBUG__PARSER
+            production( "statements ::=  statements SEMICOLON" );
+        #endif
 
         if ( *yyerror_msg )
             handle_error();
@@ -328,7 +340,9 @@ statement:
     /* Wait for the semicolon before executing a command. */
     command SEMICOLON
     {
-        PRODUCTION( "statement ::=  command SEMICOLON" );
+        #if DEBUG__PARSER
+            production( "statement ::=  command SEMICOLON" );
+        #endif
 
         $$ = 0;
 
@@ -344,7 +358,9 @@ statement:
     /* Wait for the semicolon before evaluating an expression. */
     | expression SEMICOLON
     {
-        PRODUCTION( "statement ::=  expression SEMICOLON" );
+        #if DEBUG__PARSER
+            production( "statement ::=  expression SEMICOLON" );
+        #endif
 
         $$ = 0;
 
@@ -354,21 +370,24 @@ statement:
                                    /* !      */
                 handle_expression( ( p2_name* ) $1->name, $1->expr );
 
-            //p2_ast__delete( p2_ast__name( ( p2_name* ) $1->name ) );
-            //free( $1 );
+            free( $1 );
         }
     }
 
     /* Eat up errors until a semicolon is found. */
     | invalid_statement SEMICOLON
     {
-        PRODUCTION( "statements ::=  invalid_statement SEMICOLON" );
+        #if DEBUG__PARSER
+            production( "statements ::=  invalid_statement SEMICOLON" );
+        #endif
     }
 
     /* Handle premature EOF.  The next EOF token will cause YYACCEPT. */
     | invalid_statement E_O_F
     {
-        PRODUCTION( "statements ::=  invalid_statement E_O_F" );
+        #if DEBUG__PARSER
+            production( "statements ::=  invalid_statement E_O_F" );
+        #endif
     };
 
 
@@ -376,12 +395,16 @@ invalid_statement:
 
     error
     {
-        PRODUCTION( "invalid_statement ::=  error" );
+        #if DEBUG__PARSER
+            production( "invalid_statement ::=  error" );
+        #endif
     }
 
     | invalid_statement error
     {
-        PRODUCTION( "invalid_statement ::=  invalid_statement error" );
+        #if DEBUG__PARSER
+            production( "invalid_statement ::=  invalid_statement error" );
+        #endif
     };
 
 
@@ -390,7 +413,9 @@ command:
     /* Command with no command_args. */
     COMMAND_NAME
     {
-        PRODUCTION( "command ::=  COMMAND_NAME" );
+        #if DEBUG__PARSER
+            production( "command ::=  COMMAND_NAME" );
+        #endif
 
         if ( $1 )
             $$ = new_statement( $1, 0 );
@@ -401,7 +426,9 @@ command:
     /* Command with command_args. */
     | COMMAND_NAME command_args
     {
-        PRODUCTION( "command ::=  COMMAND_NAME command_args" );
+        #if DEBUG__PARSER
+            production( "command ::=  COMMAND_NAME command_args" );
+        #endif
 
         if ( $1 )
             $$ = new_statement( $1, p2_ast__term( ( p2_term* ) $2 ) );
@@ -414,7 +441,9 @@ command_args:
 
     name
     {
-        PRODUCTION( "command_args ::=  name" );
+        #if DEBUG__PARSER
+            production( "command_args ::=  name" );
+        #endif
 
         /* Create a singleton term containing one argument. */
         $$ = p2_term__new( ( void* ) p2_ast__name( ( p2_array* ) $1 ), 1 );
@@ -422,7 +451,9 @@ command_args:
 
     | command_args name
     {
-        PRODUCTION( "command_args ::=  command_args name" );
+        #if DEBUG__PARSER
+            production( "command_args ::=  command_args name" );
+        #endif
 
         /* Concatenate the command command_args. */
         if ( $1 )
@@ -446,7 +477,9 @@ expression:
     /* Anonymous expression. */
     term
     {
-        PRODUCTION( "expression ::=  term" );
+        #if DEBUG__PARSER
+            production( "expression ::=  term" );
+        #endif
 
         if ( $1 )
             $$ = new_statement( 0, p2_ast__term( ( p2_term* ) $1 ) );
@@ -457,7 +490,9 @@ expression:
     /* Named expression. */
     | term EQUALS name
     {
-        PRODUCTION("expression ::=  term EQUALS name");
+        #if DEBUG__PARSER
+            production( "expression ::=  term EQUALS name" );
+        #endif
 
         if ( $1 )
                                 /* !      */
@@ -468,7 +503,9 @@ expression:
 
     | term EQUALS error
     {
-        PRODUCTION( "expression ::=  term EQUALS error" );
+        #if DEBUG__PARSER
+            production( "expression ::=  term EQUALS error" );
+        #endif
 
         $$ = 0;
 
@@ -481,14 +518,18 @@ term:
 
     subterm
     {
-        PRODUCTION( "term ::=  subterm" );
+        #if DEBUG__PARSER
+            production( "term ::=  subterm" );
+        #endif
 
         $$ = $1;
     }
 
     | term subterm
     {
-        PRODUCTION( "term ::=  term subterm" );
+        #if DEBUG__PARSER
+            production( "term ::=  term subterm" );
+        #endif
 
         if ( $1 && $2 )
             /* Combine the terms using a left-associative merge. */
@@ -510,7 +551,9 @@ subterm:
 
     term_item
     {
-        PRODUCTION( "subterm ::=  term_item" );
+        #if DEBUG__PARSER
+            production( "subterm ::=  term_item" );
+        #endif
 
         if ( $1 )
             $$ = ( void* ) p2_term__new( $1, 0 );
@@ -521,7 +564,9 @@ subterm:
 
     | L_PAREN term R_PAREN
     {
-        PRODUCTION( "subterm ::=  L_PAREN term R_PAREN" );
+        #if DEBUG__PARSER
+            production( "subterm ::=  L_PAREN term R_PAREN" );
+        #endif
 
         if ( $2 )
             /* "Remove the parentheses" from the term. */
@@ -533,14 +578,18 @@ subterm:
 
     | L_PAREN error
     {
-        PRODUCTION( "subterm ::=  L_PAREN error" );
+        #if DEBUG__PARSER
+            production( "subterm ::=  L_PAREN error" );
+        #endif
 
         $$ = 0;
     }
 
     | L_PAREN term error
     {
-        PRODUCTION( "subterm ::=  L_PAREN term error" );
+        #if DEBUG__PARSER
+            production( "subterm ::=  L_PAREN term error" );
+        #endif
 
         $$ = 0;
 
@@ -553,7 +602,9 @@ term_item:
 
     bag
     {
-        PRODUCTION( "term_item ::=  bag" );
+        #if DEBUG__PARSER
+            production( "term_item ::=  bag" );
+        #endif
 
         if ( $1 )
             $$ = ( void* ) p2_ast__bag( ( p2_array* ) $1 );
@@ -564,7 +615,9 @@ term_item:
 
     | name
     {
-        PRODUCTION( "term_item ::=  name" );
+        #if DEBUG__PARSER
+            production( "term_item ::=  name" );
+        #endif
 
         if ( $1 )
             $$ = ( void* ) p2_ast__name( ( p2_array* ) $1 );
@@ -575,7 +628,9 @@ term_item:
 
     | bracketed_term
     {
-        PRODUCTION( "term_item ::=  bracketed_term" );
+        #if DEBUG__PARSER
+            production( "term_item ::=  bracketed_term" );
+        #endif
 
         $$ = $1;
     };
@@ -585,7 +640,9 @@ bracketed_term:
 
     L_SQ_BRACKET term R_SQ_BRACKET
     {
-        PRODUCTION( "bracketed_term ::=  L_SQ_BRACKET term R_SQ_BRACKET" );
+        #if DEBUG__PARSER
+            production( "bracketed_term ::=  L_SQ_BRACKET term R_SQ_BRACKET" );
+        #endif
 
         if ( $2 )
             $$ = ( void* ) p2_ast__term( ( p2_term* ) $2 );
@@ -596,14 +653,18 @@ bracketed_term:
 
     | L_SQ_BRACKET error
     {
-        PRODUCTION( "bracketed_term ::=  L_SQ_BRACKET error" );
+        #if DEBUG__PARSER
+            production( "bracketed_term ::=  L_SQ_BRACKET error" );
+        #endif
 
         $$ = 0;
     }
 
     | L_SQ_BRACKET term error
     {
-        PRODUCTION( "bracketed_term ::=  L_SQ_BRACKET term error" );
+        #if DEBUG__PARSER
+            production( "bracketed_term ::=  L_SQ_BRACKET term error" );
+        #endif
 
         $$ = 0;
 
@@ -616,7 +677,9 @@ bag:
 
     bag_head R_BRACE
     {
-        PRODUCTION( "bag ::=  bag_head R_BRACE" );
+        #if DEBUG__PARSER
+            production( "bag ::=  bag_head R_BRACE" );
+        #endif
 
         if ( $1 )
             $$ = $1;
@@ -627,7 +690,9 @@ bag:
 
     | bag_head error
     {
-        PRODUCTION( "bag ::=  bag_head error" );
+        #if DEBUG__PARSER
+            production( "bag ::=  bag_head error" );
+        #endif
 
         $$ = 0;
 
@@ -640,7 +705,9 @@ bag_head:
 
     L_BRACE term
     {
-        PRODUCTION( "bag_head ::=  L_BRACE term" );
+        #if DEBUG__PARSER
+            production( "bag_head ::=  L_BRACE term" );
+        #endif
 
         if ( $2 )
         {
@@ -654,14 +721,18 @@ bag_head:
 
     | L_BRACE error
     {
-        PRODUCTION( "bag_head ::=  L_BRACE error" );
+        #if DEBUG__PARSER
+            production( "bag_head ::=  L_BRACE error" );
+        #endif
 
         $$ = 0;
     }
 
     | bag_head COMMA term
     {
-        PRODUCTION( "bag_head ::=  bag_head COMMA term" );
+        #if DEBUG__PARSER
+            production( "bag_head ::=  bag_head COMMA term" );
+        #endif
 
         if ( $1 && $3 )
         {
@@ -682,7 +753,9 @@ bag_head:
 
     | bag_head COMMA error
     {
-        PRODUCTION( "bag_head ::=  bag_head COMMA error" );
+        #if DEBUG__PARSER
+            production( "bag_head ::=  bag_head COMMA error" );
+        #endif
 
         $$ = 0;
 
@@ -695,7 +768,9 @@ name:
 
     STRING
     {
-        PRODUCTION( "name ::=  STRING" );
+        #if DEBUG__PARSER
+            production( "name ::=  STRING" );
+        #endif
 
         $$ = ( void* ) p2_array__new( 1, 0 );
         p2_array__enqueue( ( p2_array* ) $$, $1 );
@@ -703,7 +778,9 @@ name:
 
     | name COLON STRING
     {
-        PRODUCTION( "name ::=  name COLON STRING" );
+        #if DEBUG__PARSER
+            production( "name ::=  name COLON STRING" );
+        #endif
 
         if ( $1 )
         {
@@ -720,7 +797,9 @@ name:
 
     | name COLON error
     {
-        PRODUCTION( "name ::=  name COLON error" );
+        #if DEBUG__PARSER
+            production( "name ::=  name COLON error" );
+        #endif
 
         $$ = 0;
         p2_ast__delete( p2_ast__name( ( p2_array* ) $1 ) );
@@ -806,7 +885,7 @@ void handle_error()
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
-    exit_early = exit_early || p2_handle_parse_error( strdup( error_msg ) );
+    exit_early = exit_early || p2_handle_parse_error( STRDUP( error_msg ) );
 
     if ( !p2_parser__suppress_output() )
     {

@@ -153,14 +153,14 @@ static void term__print( p2_term *term, int top_level )
 
         if ( length == 1 )
             p2_ast__print( ( p2_ast* ) *( term->head + 1 ) );
-            //printf((char *) *(term->head + 1));
+            /*printf((char *) *(term->head + 1)); */
 
         else
         {
             if ( !top_level )
                 printf( "( " );
-            //else
-            //    printf( "[ " );
+            /*else
+                  printf( "[ " ); */
 
             for ( i = 0; i < length - 1; i++ )
             {
@@ -176,10 +176,10 @@ static void term__print( p2_term *term, int top_level )
 
             if ( !top_level )
                 printf( " )" );
-            //else
-            //    printf( " ]" );
+            /*else
+                  printf( " ]" ); */
         }
-    #endif  // PRINT_TERM_AS_ARRAY
+    #endif  /* PRINT_TERM_AS_ARRAY */
 }
 
 
@@ -263,4 +263,4 @@ void p2_ast__print( p2_ast *ast )
 }
 
 
-/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on        */
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

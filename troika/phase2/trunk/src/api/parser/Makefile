@@ -1,5 +1,6 @@
 ################################################################################
 ## Compile the (flex/bison) parser for the Phase2 command-line interface.
+## Completely ANSI-compliant.
 ##
 ## Use "make debugger" for a test application.
 
@@ -7,8 +8,9 @@ NAME     = p2_parser
 UTILS    = ../util
 
 CC       = gcc
-CFLAGS   = -g # temporary...
-           # --ansi
+CFLAGS   = -Wall \
+           --ansi \
+           -g # temporary...
 LEX      = flex \
            -pp  # Get comments regarding features that lead to performance losses.
 YACC     = bison

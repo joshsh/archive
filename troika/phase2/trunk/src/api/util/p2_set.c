@@ -58,7 +58,7 @@ static int next_prime(int i)
 static void expand(p2_set *h)
 {
     int i, size_old, size0 = (int) (h->buffer_size * h->expansion);
-    void **p, **q, **buffer_old;
+    void **p, **buffer_old;
 
     if (size0 > h->buffer_size)
     {
@@ -156,7 +156,7 @@ void *p2_set__lookup(p2_set *S, void *key)
     void **p;
 
     if (!key)
-        return;
+        return 0;
 
     /* Apply the hashing function. */
     p = (int) key < 0 ?
@@ -178,7 +178,7 @@ p2_set *p2_set__add(p2_set *S, void *key)
     void **p;
 
     if (!key)
-        return;
+        return 0;
 
     /* Apply the hashing function. */
     p = (int) key < 0 ?
@@ -210,7 +210,7 @@ p2_set *p2_set__remove(p2_set *S, void *key)
     void **p;
 
     if (!key)
-        return;
+        return 0;
 
     /* Apply the hashing function. */
     p = (int) key < 0 ?

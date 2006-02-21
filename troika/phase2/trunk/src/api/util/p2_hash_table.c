@@ -235,35 +235,6 @@ void p2_hash_table__delete(p2_hash_table *h)
 }
 
 
-void *p2_hash_table__lookup(p2_hash_table *h, void *key)
-{
-    int int_key, actual_size;
-    void **p;
-
-    if (key == NULL)
-        return NULL;
-
-    int_key = h->hashing_function(key);
-    if (int_key < 0)
-        int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE * (int_key % h->buffer_size));
-
-    actual_size = ENTRY_SIZE * h->buffer_size;
-
-    while (1)
-    {
-        if ((*p == NULL)||(!h->compare_to(*p, key)))
-            break;
-
-        /* Increment and wrap. */
-        p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
-    }
-
-    p++;
-    return *p;  /* Note: relies on the target value of empty h->buffer being NULL. */
-}
-
-
 void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 {
     int int_key, actual_size;
@@ -304,13 +275,42 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 }
 
 
+void *p2_hash_table__lookup(p2_hash_table *h, void *key)
+{
+    int int_key, actual_size;
+    void **p;
+
+    if (key == NULL)
+        return NULL;
+
+    int_key = h->hashing_function(key);
+    if (int_key < 0)
+        int_key *= -1;
+    p = h->buffer + (ENTRY_SIZE * (int_key % h->buffer_size));
+
+    actual_size = ENTRY_SIZE * h->buffer_size;
+
+    while (1)
+    {
+        if ((*p == NULL)||(!h->compare_to(*p, key)))
+            break;
+
+        /* Increment and wrap. */
+        p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
+    }
+
+    p++;
+    return *p;  /* Note: relies on the target value of empty h->buffer being NULL. */
+}
+
+
 void *p2_hash_table__remove(p2_hash_table *h, void *key)
 {
     int int_key, actual_size;
     void **p, *r = NULL;
 
     if (key == NULL)
-        return;
+        return 0;
 
     int_key = h->hashing_function(key);
     if (int_key < 0)

@@ -6,7 +6,7 @@
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_TYPE_H
 #define P2_TYPE_H
@@ -49,7 +49,7 @@ typedef struct _p2_type
     void ( *destroy )( void** );
 
     /** Creates a copy of a data item. */
-    //void ( *clone )( void* );
+    /*void ( *clone )( void* );*/
 
 } p2_type;
 
@@ -89,7 +89,7 @@ p2_type *p2_type__delete( p2_type *type );
 p2_type *p2_type__lookup( char *name );
 
 /**  */
-//char *p2_type_name( p2_type *type );
+/*char *p2_type_name( p2_type *type );*/
 
 
 /*
@@ -102,5 +102,5 @@ void p2_destroy( void *p, p2_type *type );
 //void *p2_clone( void *p, p2_type *type );
 */
 
-#endif  // P2_TYPE_H
+#endif  /* P2_TYPE_H */
 

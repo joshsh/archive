@@ -1,9 +1,8 @@
 ################################################################################
 ## Compile utilities and run a test program under Valgrind (memcheck).
 
-TESTAPP  = p2-util-debugger
 CC       = gcc
-CFLAGS   = -g
+CFLAGS   = -g -Wall --ansi -D_GNU_SOURCE
 VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
 
@@ -18,16 +17,16 @@ clean :
 
 .PHONY : distclean
 distclean :  clean
-	-rm $(TESTAPP)
+	-rm debugger
 
 
 .PHONY : test
-test :  $(TESTAPP)
-	$(VALGRIND) $(TESTAPP)
+test :  debugger
+	$(VALGRIND) debugger
 
 
-$(TESTAPP) :  $(TESTAPP).c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
-	gcc $(CFLAGS) -o $(TESTAPP) $(TESTAPP).c \
+debugger :  debugger.c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
+	gcc $(CFLAGS) -o debugger debugger.c \
 		p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 
 
