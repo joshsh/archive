@@ -9,5 +9,5 @@ void double__encode( double p, char *buffer );
 double double__decode( char *buffer );
 
 
-#endif  // DOUBLE_H
+#endif  /* DOUBLE_H */
 

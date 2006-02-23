@@ -6,47 +6,53 @@
 ## skeleton header file in the src directory.  If this function [or data type]
 ## depends on special libraries or compiler options, these must be specified in
 ## the project Makefile.
+##
+## Dependencies: doxygen, xsltproc
 
 NAME         = p2-import
 
-SRC_PATH     = ./src
-XMLOUT_PATH  = ./xml
-DOXYGEN_CFG  = $(NAME).cfg
-DOXYGEN_OUT  = $(XMLOUT_PATH)/doxygen-out.xml
-CC           = gcc
+CXX_IN  = ./src
+CXX_OUT = ./target/cxx
+XML_OUT = ./target/xml
+OBJ_OUT = ./target
+
+CFLAGS       = -g -Wall --pedantic-errors  # These are temporary.
+CC           = gcc $(CFLAGS)
 
 
 .PHONY : default
-default : $(SRC_PATH)/$(NAME).o
-	nm $(SRC_PATH)/$(NAME).o
+default :  $(OBJ_OUT)/p2-stubs.o
+	nm $(OBJ_OUT)/p2-stubs.o
 
 
 .PHONY : clean
 clean :
-	-rm $(DOXYGEN_OUT) -rf $(XMLOUT_PATH) $(HEADER) $(SRC_PATH)/$(NAME).* $(SRC_PATH)/.o
+	-rm -rf $(CXX_OUT) $(XML_OUT) $(OBJ_OUT)
 
 
 .PHONY : distclean
-distclean : clean
+distclean :  clean
 
 
 .PHONY : test
-test :
+test :  # (Does nothing for now)
 
 
-$(SRC_PATH)/$(NAME).o : $(SRC_PATH)/$(NAME).c
-	gcc -c -o $(SRC_PATH)/$(NAME).o $(SRC_PATH)/$(NAME).c
+$(OBJ_OUT)/p2-stubs.o :  $(CXX_OUT)/p2-stubs.c
+	$(CC) -c $(CXX_OUT)/p2-stubs.c -o $(OBJ_OUT)/p2-stubs.o
 
 
-$(SRC_PATH)/$(NAME).c : $(DOXYGEN_OUT) header-generator.xslt
-	xsltproc header-generator.xslt $(DOXYGEN_OUT) > $(SRC_PATH)/$(NAME).c
+$(CXX_OUT)/p2-stubs.c :  $(XML_OUT)/p2-import.xml p2-stub-gen.xslt
+	-rm -rf $(CXX_OUT)
+	cp -r $(CXX_IN) $(CXX_OUT)
+	xsltproc p2-stub-gen.xslt $(XML_OUT)/p2-import.xml > $(CXX_OUT)/p2-stubs.c
 
 
-$(DOXYGEN_OUT) :  doxygen
-	xsltproc $(XMLOUT_PATH)/combine.xslt $(XMLOUT_PATH)/index.xml > $(DOXYGEN_OUT)
+$(XML_OUT)/p2-import.xml :  doxygen
+	xsltproc $(XML_OUT)/combine.xslt $(XML_OUT)/index.xml > $(XML_OUT)/p2-import.xml
 
 
 .PHONY : doxygen
 doxygen :
-	doxygen $(DOXYGEN_CFG)
+	doxygen p2-import.cfg
 

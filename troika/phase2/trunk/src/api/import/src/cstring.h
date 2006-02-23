@@ -9,5 +9,5 @@ void cstring__encode( char *p, char *buffer );
 char *cstring__decode( char *buffer );
 
 
-#endif  // CSTRING_H
+#endif  /* CSTRING_H */
 

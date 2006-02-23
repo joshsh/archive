@@ -9,5 +9,5 @@ void int__encode( int p, char *buffer );
 int int__decode( char *buffer );
 
 
-#endif  // INT_H
+#endif  /* INT_H */
 

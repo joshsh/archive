@@ -27,26 +27,27 @@
 
 <xsl:text />/** \note  This is an automatically generated file. */
 
-//extern &quot;C&quot;
-//{
+#ifdef __cplusplus
+extern &quot;C&quot;
+{
+#endif
 
-#include &lt;stdlib.h&gt;  // malloc
+#include &lt;stdlib.h&gt;  /* malloc */
 
 <xsl:text />
         <xsl:for-each select="compounddef">
             <xsl:if test="count(sectiondef) > 0">
+/******************************************************************************/
+
 #include &quot;<xsl:text />
         <xsl:value-of select="compoundname/text()" />
-        <xsl:text />&quot; <xsl:text />
-        <xsl:call-template name="comment-bar">
-            <xsl:with-param name="length" select="68 - string-length(compoundname/text())" />
-        </xsl:call-template>
+        <xsl:text />&quot;<xsl:text />
 
         <xsl:text>&#xa;</xsl:text>
 
         <!-- Add any includes from the source file. -->
         <xsl:for-each select="includes">
-// #include <xsl:text />
+/* #include <xsl:text />
             <xsl:choose>
                 <xsl:when test="@local = 'yes'">
                     <xsl:call-template name="enclose-in-quotes">
@@ -58,7 +59,7 @@
                         <xsl:with-param name="arg" select="text()" />
                     </xsl:call-template>
                 </xsl:otherwise>
-            </xsl:choose>
+            </xsl:choose> */<xsl:text/>
         </xsl:for-each>
         <xsl:if test="count(includes) > 0">
             <xsl:text>&#xa;</xsl:text>
@@ -75,10 +76,13 @@
 
             </xsl:if>
         </xsl:for-each>
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
 
-//}  // extern &quot;C&quot;
+#ifdef __cplusplus
+}  /* extern &quot;C&quot; */
+#endif
+
 <xsl:text />
 
     </xsl:template>
@@ -89,7 +93,7 @@
 
     <xsl:template name="p2__import_primitives">
 
-//#include &quot;import-aux.h&quot;
+/* #include &quot;import-aux.h&quot; */
 
 enum function_marker
 {
@@ -113,8 +117,8 @@ extern void *p2_primdef__parameter(
 extern void *p2_primdef__tail( enum function_marker marker );
 
 
-#define RT  ( char ) 1  // Referentially transparent.
-#define RO  ( char ) 0  // Referentially opaque.
+#define RT  ( char ) 1  /* Referentially transparent. */
+#define RO  ( char ) 0  /* Referentially opaque. */
 
 
 int p2__import_primitives()
@@ -211,9 +215,9 @@ void *<xsl:text />
                              <xsl:text />,   <xsl:text />
                          </xsl:otherwise>
                      </xsl:choose>
-                     <xsl:text />// <xsl:value-of select="type" />
+                     <xsl:text />/* <xsl:value-of select="type" />
                      <xsl:value-of select="' '" />
-                     <xsl:value-of select="declname" />
+                     <xsl:value-of select="declname" /> */<xsl:text/>
                  </xsl:for-each>
             </xsl:otherwise>
         </xsl:choose>
@@ -249,7 +253,7 @@ void *<xsl:text />
         <xsl:variable name="this" select="." />
 
         <!-- Define the p2_primitive. -->
-        // <xsl:value-of select="$function-name" />
+        /* <xsl:value-of select="$function-name" /> */
         &amp;&amp; p2_primdef__head( <xsl:text />
         <xsl:call-template name="mangle-function-name">
             <xsl:with-param name="original-name" select="$function-name" />
@@ -320,14 +324,6 @@ void *<xsl:text />
 
         <xsl:param name="arg" />
         <xsl:text />&quot;<xsl:value-of select="$arg" />&quot;<xsl:text />
-
-    </xsl:template>
-
-
-    <xsl:template name="comment-bar">
-
-        <xsl:param name="length" />
-        <xsl:value-of select="substring('////////////////////////////////////////////////////////////////////////////////', 1, $length)" />
 
     </xsl:template>
 

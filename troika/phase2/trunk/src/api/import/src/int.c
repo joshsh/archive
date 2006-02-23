@@ -1,5 +1,5 @@
 #include "int.h"
-#include <stdio.h>  // atoi, sprintf
+#include <stdio.h>  /* atoi, sprintf */
 
 
 void int__encode( int p, char *buffer )

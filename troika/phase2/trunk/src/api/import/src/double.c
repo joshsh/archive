@@ -1,5 +1,5 @@
 #include "double.h"
-#include <stdio.h>  // atof
+#include <stdio.h>  /* atof */
 
 
 void double__encode( double p, char *buffer )
