@@ -299,6 +299,25 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
         TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }
 
+    '[^']'  {  /* Matches an ASCII character in single quotes. */
+        /* Note: no escaped characters yet. */
+        yylval.char_t = *( ++yytext );
+        TOKEN( CHAR, "CHAR" );
+    }
+
+    -?(0|[1-9][0-9]*).[0-9]+  {  /* A number is interpreted as a FLOAT if it
+                                    contains a decimal point (as in Forth). */
+        /* Note: atof is error-safe (it fails with a return value of 0.0). */
+        yylval.float_t = atof( yytext );
+        TOKEN( FLOAT, "FLOAT" );
+    }
+
+    0|(-?[1-9][0-9]*)  {
+        /* Note: atoi is error-safe (it fails with a return value of 0). */
+        yylval.int_t = atoi( yytext );
+        TOKEN( INT, "INT" );
+    }
+
     {NAME_CHAR}+  {  /* Matches a name fragment. */
 
         /* Ownership of this string is conferred to the parser. */

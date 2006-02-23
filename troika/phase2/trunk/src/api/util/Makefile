@@ -7,7 +7,7 @@ VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
 
 .PHONY : default
-default :  test
+default :  objects
 
 
 .PHONY : clean
@@ -28,6 +28,10 @@ test :  debugger
 debugger :  debugger.c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 	gcc $(CFLAGS) -o debugger debugger.c \
 		p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
+
+
+.PHONY : objects
+objects :  p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 
 
 p2_array.o :  p2_array.c p2_array.h

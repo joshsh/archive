@@ -92,7 +92,7 @@ unsigned int p2_bunch__size(p2_bunch *b);
 /******************************************************************************/
 
 /** Adds a single item to the bunch. */
-void p2_bunch__add(p2_bunch *b, void *p);
+void *p2_bunch__add(p2_bunch *b, void *p);
 
 /** Adds the contents of one bunch to another. */
 void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src);

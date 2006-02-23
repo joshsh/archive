@@ -89,6 +89,12 @@ typedef struct _p2_hash_table
 
 } p2_hash_table;
 
+typedef struct _p2_hashing_pair
+{
+    void *key;
+    void *target;
+} p2_hashing_pair;
+
 
 /******************************************************************************/
 
@@ -118,8 +124,7 @@ typedef struct _p2_hash_table
         500, 2, 1.5, my_hashing_func, my_compare_to);  \n
                                                        \n
       p2_hash_table *myfrobs = p2_hash_table__new(     \n
-        0, 0, 0, STRING_DEFAULTS);                     \n
-*/
+        0, 0, 0, STRING_DEFAULTS);                     \n */
 p2_hash_table *p2_hash_table__new(
   int buffer_size,
   float expansion,
@@ -139,8 +144,8 @@ void p2_hash_table__delete(p2_hash_table *h);
 /** Adds a key/target pair.
     \param key  the key value to map from.  Should not be 0/NULL.
     \param target  the target value to bind to the key
-    \return  The target which is displaced by the new target (if any). */
-void *p2_hash_table__add(p2_hash_table *h, void *key, void *target);
+    \return  The key/target pair which is displaced by the new pair. */
+p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target);
 
 /** Looks up a key to obtain a target.
     \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
@@ -149,8 +154,8 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target);
 void *p2_hash_table__lookup(p2_hash_table *h, void *key);
 
 /** Removes the key and its target.
-    \return the target */
-void *p2_hash_table__remove(p2_hash_table *h, void *key);
+    \return  the displaced key / target pair */
+p2_hashing_pair p2_hash_table__remove(p2_hash_table *h, void *key);
 
 
 /******************************************************************************/

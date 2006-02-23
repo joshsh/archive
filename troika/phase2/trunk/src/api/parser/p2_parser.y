@@ -225,6 +225,10 @@ struct statement *new_statement( char *name, p2_ast *expr )
 {
     char *string;
 
+    int int_t;
+    double float_t;
+    char char_t;
+
     /** (void *) instead of (p2_term *), (p2_ast *) (p2_array*) because
         Bison won't take an alias here. */
     void *term, *name, *bag, *parser_node;
@@ -239,6 +243,9 @@ struct statement *new_statement( char *name, p2_ast *expr )
 %token COLON EQUALS SEMICOLON E_O_F
 
 %token <string> STRING COMMAND_NAME
+%token <char_t> CHAR
+%token <float_t> FLOAT;
+%token <int_t> INT;
 
 %type <term> term subterm command_args
 %type <parser_node> term_item bracketed_term
@@ -600,7 +607,22 @@ subterm:
 
 term_item:
 
-    bag
+    CHAR
+    {
+        $$ = p2_ast__char( $1 );
+    }
+
+    | FLOAT
+    {
+        $$ = p2_ast__float( $1 );
+    }
+
+    | INT
+    {
+        $$ = p2_ast__int( $1 );
+    }
+
+    | bag
     {
         #if DEBUG__PARSER
             production( "term_item ::=  bag" );

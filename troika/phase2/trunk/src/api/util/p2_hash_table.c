@@ -168,12 +168,12 @@ p2_hash_table *p2_hash_table__new(
     {
         h->buffer_size = next_prime(buffer_size);
 
-        if (hashing_function == NULL)
+        if (hashing_function == 0)
             h->hashing_function = hash_address;
         else
             h->hashing_function = hashing_function;
 
-        if (compare_to == NULL)
+        if (compare_to == 0)
             h->compare_to = compare_addresses;
         else
             h->compare_to = compare_to;
@@ -203,7 +203,7 @@ p2_hash_table *p2_hash_table__new(
             h = 0;
         else
             for (i = 0; i < (h->buffer_size * ENTRY_SIZE); i++)
-                h->buffer[i] = NULL;
+                h->buffer[i] = 0;
     }
 
     return h;
@@ -235,13 +235,20 @@ void p2_hash_table__delete(p2_hash_table *h)
 }
 
 
-void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
+p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 {
+    p2_hashing_pair displaced_pair;
     int int_key, actual_size;
-    void **p, *r;
+    void **p;
 
-    if ((key == NULL)||(target == NULL))
-        return NULL;
+    #if DEBUG__SAFE
+        if (!key || !target)
+        {
+            DEBUG__SAFE__PRINT("hashing key and target must not be null");
+            displaced_pair.key = displaced_pair.target = 0;
+            return displaced_pair;
+        }
+    #endif
 
     int_key = h->hashing_function(key);
     if (int_key < 0)
@@ -250,28 +257,32 @@ void *p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 
     actual_size = ENTRY_SIZE * h->buffer_size;
 
-    while (*p != NULL)
+    while (*p != 0)
     {
+        /* No duplicate entries allowed.  Replace with new key / target pair. */
         if (!h->compare_to(*p, key))
         {
+            /* Table doesn't grow. */
             h->size--;
-            break;  /* No duplicate entries allowed.  Replace with new target value. */
+
+            break;
         }
 
         /* Increment and wrap */
-        p = h->buffer + ((p + ENTRY_SIZE - h->buffer)%actual_size);
+        p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
     }
 
+    displaced_pair.key = *p;
     *p = key;
     p++;
-    r = *p;
+    displaced_pair.target = *p;
     *p = target;
 
     h->size++;
     if (h->size >= h->capacity)
         expand(h);
 
-    return r;
+    return displaced_pair;
 }
 
 
@@ -280,8 +291,8 @@ void *p2_hash_table__lookup(p2_hash_table *h, void *key)
     int int_key, actual_size;
     void **p;
 
-    if (key == NULL)
-        return NULL;
+    if (!key)
+        return 0;
 
     int_key = h->hashing_function(key);
     if (int_key < 0)
@@ -292,7 +303,7 @@ void *p2_hash_table__lookup(p2_hash_table *h, void *key)
 
     while (1)
     {
-        if ((*p == NULL)||(!h->compare_to(*p, key)))
+        if ((*p == 0)||(!h->compare_to(*p, key)))
             break;
 
         /* Increment and wrap. */
@@ -304,13 +315,20 @@ void *p2_hash_table__lookup(p2_hash_table *h, void *key)
 }
 
 
-void *p2_hash_table__remove(p2_hash_table *h, void *key)
+p2_hashing_pair p2_hash_table__remove(p2_hash_table *h, void *key)
 {
+    p2_hashing_pair displaced_pair;
     int int_key, actual_size;
-    void **p, *r = NULL;
+    void **p;
 
-    if (key == NULL)
-        return 0;
+    #if DEBUG__SAFE
+        if (!key)
+        {
+            PRINTERR( "p2_hash_table__remove: null key" );
+            displaced_pair.key = displaced_pair.target = 0;
+            return displaced_pair;
+        }
+    #endif
 
     int_key = h->hashing_function(key);
     if (int_key < 0)
@@ -319,14 +337,15 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key)
 
     actual_size = ENTRY_SIZE * h->buffer_size;
 
-    while (*p != NULL)
+    while (*p != 0)
     {
         if (!h->compare_to(*p, key))
         {
-            *p = NULL;
+            displaced_pair.key = *p;
+            *p = 0;
             p++;
-            r = *p;
-            *p = NULL;
+            displaced_pair.target = *p;
+            *p = 0;
             h->size--;
             break;
         }
@@ -335,7 +354,7 @@ void *p2_hash_table__remove(p2_hash_table *h, void *key)
         p = h->buffer + ((p + ENTRY_SIZE - h->buffer)%actual_size);
     }
 
-    return r;
+    return displaced_pair;
 }
 
 

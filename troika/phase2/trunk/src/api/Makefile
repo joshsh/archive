@@ -1,68 +1,19 @@
-############################################################
+################################################################################
 #
-#  Makefile for the "Phase2" programming API.
-#  author: Joshua Shinavier
-#
-#  Use "make", "make clean", "make distclean"
+#  Makefile for the Phase2 programming API.
+#  Author: Joshua Shinavier
 
-UTIL_PATH     = ./util
-SK_PATH       = ./sk
-PARSER_PATH   = ./parser
-XML_PATH      = ./xml
-IMPORT_PATH = ./import
+UTIL_PATH    = ./util
+SK_PATH      = ./sk
+PARSER_PATH  = ./parser
+XML_PATH     = ./xml
+IMPORT_PATH  = ./import
 
-CC      = gcc
-CPP     = g++
-GSOAP   = $(GSOAP_PATH)/soapcpp2
-SOAPH   = $(GSOAP_PATH)/stdsoap2.h
-SOAPC   = $(GSOAP_PATH)/stdsoap2.c
-SOAPCPP = $(GSOAP_PATH)/stdsoap2.cpp
-DOMCPP  = $(GSOAP_PATH)/dom++.cpp
 
-LIBS =
-COFLAGS = -O2    # [ba] May result in bigger (but faster) binaries.
-CWFLAGS = -Wall
-CIFLAGS =
-CMFLAGS =
-CFLAGS = $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
-
-UTIL_OBJECTS = \
-	array.o \
-	bunch.o \
-	hash_table.o \
-	set.o \
-	term.o \
-
-PARSER_OBJECTS = \
-	lex.yy.o \
-	p2_parser.tab.o \
-	p2_parser-aux.o
-
-#P2_OBJECTS = \
-#	p2_error.o \
-#	p2_command.o \
-#	p2_type.o \
-#	#p2_primitive.o
-
-GSOAP_OUTPUT = \
-	p2.nsmap
-	# ....
-
-CORE_LIBS = \
-	p2.c \
-	p2_error.c \
-	p2_type.c \
-	p2_primitive.c
-
-APP_LIBS = \
-	sk/sk.c \
-	p2_syntax.c \
-	p2_command.c \
-	p2_dataset.cpp \
-	p2_client.cpp \
-	$(SOAP_PATH)/xmldom.h $(SOAP_PATH)/xmldom.cpp \
-	$(IMPORT_PATH)/primitives.cpp \
-	$(IMPORT_PATH)/commands.cpp
+#         |temporary  |bigger but faster  |
+CFLAGS  = -g          -O2                 --ansi
+CC      = gcc $(CFLAGS)
+LIBS    =
 
 
 .PHONY : default
@@ -75,16 +26,16 @@ clean :
 	$(MAKE) clean -C $(PARSER_PATH)
 	$(MAKE) clean -C $(UTIL_PATH)
 	$(MAKE) clean -C $(XML_PATH)
-	-rm $(UTIL_OBJECTS)
+	-rm -f *.o
 
 
 .PHONY : distclean
-distclean :  clean
+distclean :
 	$(MAKE) distclean -C $(IMPORT_PATH)
 	$(MAKE) distclean -C $(PARSER_PATH)
 	$(MAKE) distclean -C $(UTIL_PATH)
 	$(MAKE) distclean -C $(XML_PATH)
-	-rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soap*.* phase2
+	-rm -f *.o phase2
 
 
 .PHONY : test
@@ -95,58 +46,58 @@ test :
 	$(MAKE) test -C $(XML_PATH)
 
 
-############################################################
+################################################################################
+# Build the parser.
+
+PARSER_OBJECTS = $(PARSER_PATH)/lex.yy.o \
+                 $(PARSER_PATH)/p2_parser.tab.o \
+                 $(PARSER_PATH)/p2_ast.o
+
+.PHONY: $(PARSER_OBJECTS)
+$(PARSER_OBJECTS) :
+	$(MAKE) -C $(PARSER_PATH)
+
+
+################################################################################
+# Compile utilities.
+
+UTIL_OBJECTS = $(UTIL_PATH)/p2_array.o \
+               $(UTIL_PATH)/p2_bunch.o \
+               $(UTIL_PATH)/p2_hash_table.o \
+               $(UTIL_PATH)/p2_set.o \
+               $(UTIL_PATH)/p2_term.o
+
+.PHONY : $(UTIL_OBJECTS)
+$(UTIL_OBJECTS) :
+	$(MAKE) -C $(UTIL_PATH)
+
+
+################################################################################
 # Build the command line interface.
 
-phase2 :  $(CORE_LIBS) $(APP_LIBS) $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2.nsmap # $(UTIL_OBJECTS) $(SOAP_PATH)/xmldom.h $(SOAP_PATH)/xmldom.cpp commands.cpp $(GSOAP_OUTPUT) p2_flags.h 
-	$(CPP) -o phase2 -I$(GSOAP_PATH) $(CFLAGS) \
-		$(UTIL_OBJECTS) \
-		$(PARSER_OBJECTS) \
-		p2_client.cpp \
-		$(SOAP_PATH)/xmldom.cpp \
-		$(SOAPCPP) $(LIBS) $(DOMCPP) soapC.cpp soapClient.cpp \
-		#p2_dataset.o \
-		#$(APP_LIBS) \
-		#$(CORE_LIBS) \
-		#$(SK_PATH)/sk.c \
+.PHONY : phase2
+phase2 :  $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2_memory_manager.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o
 
 
-############################################################
-# Invoke gSOAP's "stdsoap2" to generate proxy code.
+p2_memory_manager.o :  p2_memory_manager.c
+	$(CC) -c p2_memory_manager.c
 
-p2.nsmap : $(SOAP_PATH)/gsoap_header.h
-	$(GSOAP) $(SOAP_PATH)/gsoap_header.h
+p2_namespace.o :  p2_namespace.c
+	$(CC) -D_GNU_SOURCE -c p2_namespace.c
 
+p2_object.o :  p2_object.c
+	$(CC) -c p2_object.c
 
-############################################################
-# Compile p2_error and p2_command libraries.
+p2_primitive.o :  p2_primitive.c
+	$(CC) -c p2_primitive.c
 
-#p2_error.o : p2_error.c p2_flags.h
-#	$(CC) -c p2_error.c
-
-#p2_syntax.o : p2_syntax.c p2_flags.h
-#	$(CC) -c p2_syntax.c
-
-#p2_command.o : p2_command.c p2_error.h $(UTIL_PATH)/p2_array.h $(UTIL_PATH)/p2_hash_table.h
-#	$(CC) -c p2_command.c
-#	
-#p2_type.o : p2_type.c p2_error.h $(UTIL_PATH)/p2_array.h $(UTIL_PATH)/p2_hash_table.h
-#	$(CC) -c p2_type.c
-#	
-#p2_primitive.o : p2_primitive.c p2_error.h $(UTIL_PATH)/p2_array.h $(UTIL_PATH)/p2_hash_table.h
-#	$(CC) -c p2_primitive.c
+p2_type.o :  p2_type.c
+	$(CC) -c p2_type.c
 
 
-############################################################
-# Compile the p2_data_set class.
-
-p2_dataset.o : p2_dataset.cpp p2_dataset.h
-	$(CPP) -c p2_dataset.cpp
-
-
-############################################################
+################################################################################
 # Compile SK semantics library.
 
-#sk.o : $(SK_PATH)/sk.c p2.h p2_flags.h
+#sk.o :  $(SK_PATH)/sk.c p2.h p2_flags.h
 #	$(CC) -c sk.c
 

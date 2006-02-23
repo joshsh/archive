@@ -1,11 +1,18 @@
 #include "util/p2_dictionary.h"
 
+
+/* Special, global data types. */
+p2_type *p2_namespace_t;
+p2_type *int_t, *double_t, *char_t, *cstring_t;
+
+
 /** A data structure which is equivalent to a namespace containing uniquely
     named data types, function primitives, and data sets. */
 typedef struct _p2_environment
 {
     p2_dictionary *types;
     p2_dictionary *primitives;
+
     p2_dictionary *datasets;
 
 } p2_environment;

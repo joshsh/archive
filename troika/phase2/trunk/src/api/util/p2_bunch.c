@@ -88,7 +88,10 @@ p2_bunch *p2_bunch__new(unsigned int block_size)
         b->last_block = 0;
 
         if (!(b->blocks = p2_array__new(42, 2.0)))
+        {
+            free(b);
             b = 0;
+        }
     }
 
     return b;
@@ -136,7 +139,7 @@ unsigned int p2_bunch__size(p2_bunch *b)
 }
 
 
-void p2_bunch__add(p2_bunch *b, void *p)
+void *p2_bunch__add(p2_bunch *b, void *p)
 {
     /* Get or create tail-end block. */
     if (!b->last_block || b->last_block->filled == b->last_block->size)
@@ -147,6 +150,8 @@ void p2_bunch__add(p2_bunch *b, void *p)
 
     /* Add the item to the tail-end block. */
     b->last_block->buffer[b->last_block->filled++] = p;
+
+    return p;
 }
 
 

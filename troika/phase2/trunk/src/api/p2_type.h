@@ -30,77 +30,60 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "p2_flags.h"
-#include "p2_error.h"
 
 
-/** Address is a unique 32-bit value to identify a data type. */
+/** */
 typedef struct _p2_type
 {
-    /** Lexical identifier. */
+    /** */
     char *name;
 
-    /** Serializes a data item to a string. */
-    void ( *encode )( void** );
+    /** Copy constructor. */
+    void *( *clone )( void* );
 
-    /** Deserializes a data item from a string. */
-    void ( *decode )( void** );
+    /** Deserializer. */
+    void *( *decode )( char* );
 
-    /** Deallocates a data item. */
-    void ( *destroy )( void** );
+    /** Destructor. */
+    void ( *destroy )( void* );
 
-    /** Creates a copy of a data item. */
-    /*void ( *clone )( void* );*/
+    /** Serializer. */
+    void ( *encode )( void*, char* );
+
+    /** "Element exists" callback distributor. */
+    void *( *exists )( void*, void *(*)( void* ) );
+
+    /** "For all elements" callback distributor. */
+    void *( *for_all )( void*, void *(*)( void* ) );
 
 } p2_type;
 
 
-/** Type casting macro for first-class encoders. */
-#define ENCODE_FORMAT    void (*)(void *, char *)
-
-/** Type casting macro for first-class decoders. */
-#define DECODE_FORMAT    void *(*)(char *)
-
-/** Type casting macro for first-class destructors. */
-#define DESTROY_FORMAT   void (*)(void *)
-
-/** Type casting macro for first-class copy constructors. */
-#define CLONE_FORMAT     void *(*)(void *)
+#define CLONE_T     void *(*)(void *)
+#define DECODE_T    void *(*)(char *)
+#define DESTROY_T   void (*)(void *)
+#define ENCODE_T    void (*)(void *, char *)
+#define EXISTS_T    void *(*)(void *, void *(*)(void*))
+#define FOR_ALL_T   void *(*)(void *, void *(*)(void*))
 
 
-/**  */
-p2_error p2_type_init();
-
-/**  */
-p2_error p2_type_end();
-
-
-/** Registers a new data type. */
-p2_type *p2_type__new(
-
+/** Constructor.
+    \note  The type assumes ownership if its name argument. */
+p2_type *p2_type__new
+(
     char *name,
-    void *( *encode )( void** ),
-    void *( *decode )( void** ),
-    void *( *destroy )( void** ));
+    void *( *clone )( void* ),
+    void *( *decode )( char* ),
+    void ( *destroy )( void* ),
+    void ( *encode )( void*, char* ),
+    void *( *exists )( void*, void *(*)( void* ) ),
+    void *( *for_all )( void*, void *(*)( void* ) )
+);
 
-p2_type *p2_type__delete( p2_type *type );
+/** Destructor. */
+void p2_type__delete( p2_type *type );
 
-
-/** Retrieves a type identifier by name. */
-p2_type *p2_type__lookup( char *name );
-
-/**  */
-/*char *p2_type_name( p2_type *type );*/
-
-
-/*
-void p2_encode( void *p, p2_type *type, char *buffer );
-
-void *p2_decode( p2_type *type, char *buffer );
-
-void p2_destroy( void *p, p2_type *type );
-
-//void *p2_clone( void *p, p2_type *type );
-*/
 
 #endif  /* P2_TYPE_H */
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -17,150 +17,61 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-/*
-
-[ba] destroy/delete, clone/copy
-
-
-*/
-
 #include "p2_type.h"
 
-#include "util/p2_array.h"
-#include "util/p2_hash_table.h"
 
-#include <string.h>
-
-
-
-// Default type interface members (use with caution)
-void default__encode(void *p, char *buffer) { *buffer = '\0'; }
-void *default__decode(char *buffer) { return NULL; }
-void default__destroy(void *p) { }
-void *default__clone(void *p) { return NULL; }
+/* Default member functions (use with caution). */
+static void *default__clone( void *p ) { return 0; }
+static void *default__decode( char *buffer ) { return 0; }
+static void default__destroy( void *p ) { }
+static void default__encode( void *p, char *buffer ) { *buffer = '\0'; }
+static void *default__exists( void *p, void *(*f)( void* ) ) { return 0; }
+static void *default__for_all( void *p, void *(*f)( void* ) ) { return 0; }
 
 
-
-// Global variables for this module only.
-p2_array *registered_types;
-p2_hash_table *type_dictionary;
-int total_types_ = 0;
-
-
-
-// hidden for now.
-void p2_type__delete(struct p2_type_itf *type)
-{
-    free(type->name);
-    free(type);
-}
-
-
-
-p2_error p2_type_init()
-{
-    registered_types = p2_array__new(30, 2.0);
-    type_dictionary = p2_hash_table__new(60, 2.0, 2.0, STRING_DEFAULTS);
-
-    return P2_SUCCESS;
-}
-
-
-
-p2_error p2_type_end()
-{
-    p2_array__forall(registered_types, (void (*)(void *)) p2_type__delete);
-    p2_array__delete(registered_types);
-    p2_hash_table__delete(type_dictionary);
-
-    return P2_SUCCESS;
-}
-
-
-
-p2_type p2_register_type(
+p2_type *p2_type__new
+(
     char *name,
-    void (*encode)(void *, char *),
-    void *(*decode)(char *),
-    void (*destroy)(void *),
-    void *(*clone)(void *))
+    void *( *clone )( void* ),
+    void *( *decode )( char* ),
+    void ( *destroy )( void* ),
+    void ( *encode )( void*, char* ),
+    void *( *exists )( void*, void *(*)( void* ) ),
+    void *( *for_all )( void*, void *(*)( void* ) )
+)
 {
-    struct p2_type_itf *type = (struct p2_type_itf *) malloc(sizeof(struct p2_type_itf));
-    type->name = strdup(name);
+    #if DEBUG__SAFE
+        if ( !name || !( *name ) )
+        {
+            PRINTERR( "p2_type__new: null or empty name" );
+            return 0;
+        }
+    #endif
 
-    type->encode = encode ? encode : default__encode;
-    type->decode = decode ? decode : default__decode;
-    type->destroy = destroy ? destroy : default__destroy;
-    type->clone = clone ? clone : default__clone;
+    p2_type *t = new( p2_type );
+    if ( !t )
+        return 0;
 
-    // Important: the type with index 1 actually is at position 0 in the array.
-    // The 0 index is avoided so that it can't be mistaken for a NULL.
-    p2_array__enqueue(registered_types, (void *) type);
-    p2_hash_table__add(type_dictionary, (void *) name, (void *) ++total_types_);
+    t->name = name;
 
-    return (p2_type) total_types_;
+    t->clone = clone ? clone : default__clone;
+    t->decode = decode ? decode : default__decode;
+    t->destroy = destroy ? destroy : default__destroy;
+    t->encode = encode ? encode : default__encode;
+    t->exists = exists ? exists : default__exists;
+    t->for_all = for_all ? for_all : default__for_all;
+
+    return t;
 }
 
 
-
-int p2_total_types()
+void p2_type__delete( p2_type *type)
 {
-    return total_types_;
+    if ( type->name )
+        free( type->name );
+
+    free( type );
 }
 
 
-
-p2_type p2_type_lookup(char *name)
-{
-    return (p2_type) p2_hash_table__lookup(type_dictionary, (void *) name);
-}
-
-
-//#include <stdio.h>
-char *p2_type_name(p2_type type_index)
-{
-    // Warning: no checking of array bounds... this had better be a registered type.
-    return ((struct p2_type_itf *) (p2_array__get(registered_types, (int) type_index-1)))->name;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*
-void p2_encode(void *p, p2_type *type, char *buffer)
-{
-    // Warning: no checking of array bounds... this had better be a registered type.
-    struct p2_type_itf *type = (struct p2_type_itf *) p2_array__get(registered_types, (int) type_index-1);
-    type->encode(p, buffer);
-}
-
-
-
-void *p2_decode(p2_type type_index, char *buffer)
-{
-    // Warning: no checking of array bounds... this had better be a registered type.
-    p2_type *type = (p2_type *) p2_array__get(registered_types, (int) type - 1);
-    return type->decode(buffer);
-}
-
-
-
-void p2_destroy(void *p, p2_type type)
-{
-//printf("+ p2_destroy: atom = %d, type = %d\n", (int) p, (int) type); fflush(stdout);
-    p2_type *type = (p2_type *) p2_array__get(registered_types, (int) type - 1);
-    type->destroy(p);
-//printf("- p2_destroy\n"); fflush(stdout);
-}
-
-
-
-void *p2_clone(void *p, p2_type type)
-{
-    p2_type *type = (p2_type *) p2_array__get(registered_types, (int) type - 1);
-    return type->clone(p);
-}
-*/
-
-
-/*- end of file */
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

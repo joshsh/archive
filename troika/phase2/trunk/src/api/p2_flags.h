@@ -1,6 +1,8 @@
 /**
     \file  p2_flags.h
 
+    \brief  Global includes and macros.
+
     \author  Joshua Shinavier   \n
              parcour@gmail.com  \n
              +1 509 570-6990    \n */
@@ -28,6 +30,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_FLAGS_H
 
 
+/* Errors / debugging *********************************************************/
+
+#include <stdio.h>  /* fprintf */
+
+#define PRINTERR( msg )  fprintf( stderr, "Error: %s.\n", msg )
+
+#include <stdlib.h>  /* malloc */
+
+#define new( type )  ( type* ) malloc( sizeof( type ) )
+
+#define DEBUG__SAFE 1
+
+
 /* Reduction ******************************************************************/
 
 #define P2FLAGS__DO_TYPE_CHECKING
@@ -40,57 +55,66 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
 
 
-/* Association ****************************************************************/
+/* Triples / association ******************************************************/
 
-#define P2FLAGS__ASSOCIATION    1
+#define TRIPLES 1
 
-#if P2FLAGS__ASSOCIATION
-    #define P2FLAGS__TRANS_EDGES    0
-    #define P2FLAGS__INBOUND_EDGES  0
+#if TRIPLES
 
-    #define P2FLAGS__ATOM__INIT_ASSOC_BUFFER_SIZE   0
+    #define TRIPLES__GLOBAL    1
 
-    /** If defined, the inclusion of the subject of a semantic triple implies the
-        inclusion of the object. */
-    #define P2FLAGS__SUBJECT_IMPLIES_OBJECT 0
+    #if TRIPLES__GLOBAL
 
-    #if !P2FLAGS__SUBJECT_IMPLIES_OBJECT
-        /** If defined, the inclusion of the both the subject and predicate of a
-            semantic triple implies the inclusion of the object. */
-        #define P2FLAGS__SUBJECT_AND_PREDICATE_IMPLY_OBJECT 1
+        #define TRIPLES__GLOBAL__OBJECT_INIT_BUFFER_SIZE   0
+
+        #define TRIPLES__GLOBAL__IN_EDGES   0
+        #define TRIPLES__GLOBAL__OUT_EDGES  1
+        #define TRIPLES__GLOBAL__TRANS_EDGES    0
+
     #endif
 
-    /** If defined, the inclusion of the subject of a semantic triple implies the
-        inclusion of the predicate. */
-    #define P2FLAGS__SUBJECT_IMPLIES_PREDICATE  0
+    /** Subject ==> Predicate */
+    #define TRIPLES__IMPLICATION__S_P   1
 
-    #if !P2FLAGS__SUBJECT_IMPLIES_PREDICATE
-        /** If defined, the inclusion of the both the subject and object of a
-            semantic triple implies the inclusion of the predicate. */
-        #define P2FLAGS__SUBJECT_AND_OBJECT_IMPLY_PREDICATE 0
+    #if !TRIPLES__IMPLICATION__S_P
+        /** Subject + Object ==> Predicate */
+        #define TRIPLES__IMPLICATION__SO_P  0
     #endif
 
-#endif  /* P2FLAGS__ASSOCIATION */
+    /** Subject ==> Object */
+    #define TRIPLES__IMPLICATION__S_O   1
+
+    /** Subject + Predicate ==> Object */
+    #if !TRIPLES__IMPLICATION__S_O
+        #define TRIPLES__IMPLICATION__SP_O  0
+    #endif
+
+#endif  /* TRIPLES__GLOBAL */
 
 
 /* Memory management **********************************************************/
 
-#define P2FLAGS__MARK_AND_SWEEP
+/* For p2_object's flags field. */
+#define OBJECT__IS_OBJ_COLL ( int ) 0x001
+#define OBJECT__MARKED      ( int ) 0x010
+#define OBJECT__OWNED       ( int ) 0x100
 
-#ifdef P2FLAGS__MARK_AND_SWEEP
+#define MEM__MARK_AND_SWEEP 1
 
-    #define P2FLAGS__MARKANDSWEEP_QUEUE__BLOCK_SIZE  1000
-    #define P2FLAGS__MARKANDSWEEP_ATOMS__BLOCK_SIZE  1000
-    #define P2FLAGS__INIT_MARKANDSWEEP_BUFFER_SIZE   1000
+#if MEM__MARK_AND_SWEEP
 
-    #ifdef P2FLAGS__ASSOCIATION
+    #define P2FLAGS__MARKANDSWEEP_QUEUE__BLOCK_SIZE 1000
+    #define MEM_MANAGER__OBJECTS__BLOCK_SIZE        1000
+    #define P2FLAGS__INIT_MARKANDSWEEP_BUFFER_SIZE  1000
+
+    #if TRIPLES__GLOBAL
         #define P2FLAGS__INIT_TRIGGER_BUFFER_SIZE  10
     #endif
 
 #endif  /* P2FLAGS__MARK_AND_SWEEP */
 
 
-#define P2FLAGS__MANAGE_PRIMITIVES
+#define P2FLAGS__MANAGE_PRIMITIVES  1
 
 
 /******************************************************************************/

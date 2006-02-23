@@ -31,15 +31,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_AST_H
 
 
+#include "../p2_name.h"
 #include "../util/p2_array.h"
 #include "../util/p2_term.h"
 
 
 enum p2_ast__type
 {
-    BAG,  /**< A bag composed of terms. */
-    NAME, /**< A URN-like sequence of name fragments. */
-    TERM  /**< A term composed of p2_asts. */
+    BAG_T,  /**< A bag composed of terms. */
+    CHAR_T,
+    FLOAT_T,
+    INT_T,
+    NAME_T, /**< A URN-like sequence of name fragments. */
+    TERM_T  /**< A term composed of p2_asts. */
 };
 
 
@@ -51,9 +55,6 @@ typedef struct _p2_ast
     void *value;
 
 } p2_ast;
-
-
-typedef p2_array p2_name;
 
 
 /** \return  a non-zero value indicates an error */
@@ -68,6 +69,11 @@ int p2_ast__end();
     \return  a new AST node of type BAG */
 p2_ast *p2_ast__bag( p2_array *bag );
 
+p2_ast *p2_ast__char( char c );
+
+p2_ast *p2_ast__float( double f );
+
+p2_ast *p2_ast__int( int i );
 
 /** \param term  a p2_term of AST nodes
     \return  a new AST node of type TERM */

@@ -84,19 +84,43 @@ static void *term_of_nodes__delete( p2_term *t )
 
 p2_ast *p2_ast__bag( p2_array *bag )
 {
-    return p2_ast__new( BAG, ( void* ) bag );
+    return p2_ast__new( BAG_T, bag );
+}
+
+
+p2_ast *p2_ast__char( char c )
+{
+    char *p = ( char* ) malloc( sizeof( char ) );
+    *p = c;
+    return p2_ast__new( CHAR_T, p );
+}
+
+
+p2_ast *p2_ast__float( double f )
+{
+    double *p = ( double* ) malloc( sizeof( double ) );
+    *p = f;
+    return p2_ast__new( FLOAT_T, p );
+}
+
+
+p2_ast *p2_ast__int( int i )
+{
+    int *p = ( int* ) malloc( sizeof( int ) );
+    *p = i;
+    return p2_ast__new( INT_T, p );
 }
 
 
 p2_ast *p2_ast__term( p2_term *term )
 {
-    return p2_ast__new( TERM, ( void* ) term );
+    return p2_ast__new( TERM_T, term );
 }
 
 
 p2_ast *p2_ast__name( p2_name *name )
 {
-    return p2_ast__new( NAME, ( void* ) name );
+    return p2_ast__new( NAME_T, name );
 }
 
 
@@ -104,7 +128,7 @@ void *p2_ast__delete( p2_ast *ast )
 {
     switch( ast->type )
     {
-        case BAG:
+        case BAG_T:
 
             p2_array__for_all(
                 ( p2_array* ) ast->value,
@@ -112,7 +136,22 @@ void *p2_ast__delete( p2_ast *ast )
             p2_array__delete( ( p2_array* ) ast->value );
             break;
 
-        case TERM:
+        case CHAR_T:
+
+            free( ast->value );
+            break;
+
+        case FLOAT_T:
+
+            free( ast->value );
+            break;
+
+        case INT_T:
+
+            free( ast->value );
+            break;
+
+        case TERM_T:
 
             p2_term__for_all(
                 ( p2_term* ) ast->value,
@@ -120,7 +159,7 @@ void *p2_ast__delete( p2_ast *ast )
             p2_term__delete( ( p2_term* ) ast->value );
             break;
 
-        case NAME:
+        case NAME_T:
 
             p2_array__for_all(
                 ( p2_array* ) ast->value,
@@ -218,7 +257,7 @@ static void name__print( p2_array *a )
 
         s = ( char* ) p2_array__get( a, i );
 
-        if ( !regexec( &name_regex, s, 0, NULL, 0 ) )
+        if ( !regexec( &name_regex, s, 0, 0, 0 ) )
             printf( s );
         else
         {
@@ -246,17 +285,29 @@ void p2_ast__print( p2_ast *ast )
 {
     switch( ast->type )
     {
-        case BAG:
+        case BAG_T:
             bag__print( ( p2_array* ) ast->value );
             break;
 
-        case TERM:
+        case CHAR_T:
+            printf( "'%c'", *( ( char* ) ast->value ) );
+            break;
+
+        case FLOAT_T:
+            printf( "%g", *( ( double* ) ast->value ) );
+            break;
+
+        case INT_T:
+            printf( "%i", *( ( int* ) ast->value ) );
+            break;
+
+        case TERM_T:
             printf( "[ " );
             term__print( ( p2_term* ) ast->value, 1 );
             printf( " ]" );
             break;
 
-        case NAME:
+        case NAME_T:
             name__print( ( p2_array* ) ast->value );
             break;
     }

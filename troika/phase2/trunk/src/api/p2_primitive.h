@@ -6,7 +6,7 @@
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -23,101 +23,75 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef P2_PRIMITIVE_H
 #define P2_PRIMITIVE_H
 
 
-#include "p2_flags.h"
-#include "p2_type.h"  // p2_type
-
-#ifdef P2FLAGS__MANAGE_PRIMITIVES
-    #include "p2_error.h"  // p2_error
-#endif
+#include "p2_type.h"
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-/** A structure containing a C function pointer together with typing information
+/** A structure containing a C function pointer together with type information
     and a unique name. */
 typedef struct _p2_primitive
 {
-    /** Memory location of the C function. */
-    void *( *cstub )( void **foo );
+    /** Memory location of the C function stub. */
+    void *( *cstub )( void ** );
 
     /** A unique name (preferably the same as the C function stub referenced by
         the pointer, e.g. "strdup"). */
     char *name;
 
-    /** Number of input parameters. */
-    int parameters;
+    /** Number of parameters. */
+    int n_params;
 
-    /** An array of length {parameters} containing the data type of all input
-        parameters in the correct order. */
+    /** An array of length {n_params} containing the data type of each
+        parameter. */
     p2_type **parameter_types;
 
     /** \note  Not yet used. */
     char **parameter_names;
 
-    /** An array of length {parameters} containing at each parameter index a 0
+    /** An array of length {n_params} containing at each parameter index a 0
         if the argument at that index may experience a side-effect, or a 1
         otherwise (the primitive is said to be "referentially transparent" with
         respect to that parameter).
         \note  Not yet used. */
     char *transparency;
 
-    /** The primitive's (constant) return type. */
+    /** The primitive's return type. */
     p2_type *return_type;
 
 } p2_primitive;
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-/** Create a new p2_primitive.
-    \note  Array arguments are copied into the new structure (and not simply
-    referenced again).
-    \warning  Arguments are assumed to be sound. */
-p2_primitive *p2_primitive__new(
-    void *( *cstub )( void ** ),  /**< Memory location of the C function. */
-    char *name,                   /**< A unique name (preferably the same as the C function stub referenced by the pointer, e.g. "strdup"). */
-    int parameters,               /**< Number of input parameters. */
-    p2_type **parameter_types,    /**< An array of length {parameters} containing the data type of all input parameters in the correct order. */
-    char **parameter_names,       /**< \note  Not yet used.  May pass a NULL instead. */
-    char *transparency,           /**< An array of length {parameters} containing at each parameter index a 0 if the argument at that index may experience a side-effect, or a 1 otherwise (the primitive is said to be "referentially transparent" with respect to that parameter).
-                                    \note  Not yet used.  May pass a NULL instead. */
-    p2_type *return_type);        /**< The primitive's (constant) return type. */
+/** Constructor.
+    \note  The primitive assumes ownership of the arguments. */
+p2_primitive *p2_primitive__new
+(
+    void *( *cstub )( void ** ),
+    char *name,
+    int n_params,
+    p2_type **parameter_types,
+    char **parameter_names,
+    char *transparency,
+    p2_type *return_type
+);
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-#ifdef P2FLAGS__MANAGE_PRIMITIVES
-
-    p2_error p2_primitive_init();
-
-    p2_error p2_primitive_end();
-
-    p2_primitive *p2_primitive__lookup(char *name);
-
-    /** Serialize a p2_primitive to a string. */
-    void p2_primitive__encode(p2_primitive *p, char *buffer);
-
-    /** Deserialize a p2_primitive from a string. */
-    p2_primitive *p2_primitive__decode(char *buffer);
-
-#else
-
-   /** Destroy the p2_primitive. */
-   void p2_primitive__delete(p2_primitive *prim);
-
-#endif  // P2FLAGS__MANAGE_PRIMITIVES
+/** Destructor. */
+void p2_primitive__delete( p2_primitive *prim );
 
 
-//p2_atom *p2_primitive__apply( p2_primitive *prim, void **args );
+/*p2_object *p2_primitive__apply( p2_primitive *prim, void **args );*/
 
 
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
 
-#endif  // P2_PRIMITIVE_H
+#endif  /* P2_PRIMITIVE_H */
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
