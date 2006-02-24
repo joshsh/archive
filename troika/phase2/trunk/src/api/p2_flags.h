@@ -45,14 +45,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Reduction ******************************************************************/
 
-#define P2FLAGS__DO_TYPE_CHECKING
+#define PRIMS__CHECKS__ARG_TYPE_MISMATCH    1
 
-#define P2FLAGS__HIGHER_ORDER_PRIMITIVES  0
+#define PRIMS__ALLOW_HIGHER_ORDER           0
+#define PRIMS__ALLOW_NOARG_FUNCTIONS        0
+#define PRIMS__ALLOW_VOID_FUNCTIONS         0
 
-/** If defined, allow non-redex atoms at the beginning of an expression, and
-   simply abandon reduction when they are encountered (rather than raising an
-   error). */
-#define P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
+#define SK__CHECKS__APPLY_TO_NONATOM        1
+
+/** Allow non-redex atoms at the beginning of an expression, and simply abandon
+   reduction when they are encountered. */
+#define SK__PERMIT_NONREDUX                 1
+
+#define P2FLAGS__HIGHER_ORDER_PRIMITIVES    0
 
 
 /* Triples / association ******************************************************/

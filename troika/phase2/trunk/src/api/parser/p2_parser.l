@@ -4,9 +4,14 @@
 
 \file  p2_parser.l
 
-\brief  Flex input file for the command line interface.
+\brief  Flex input file for Phase2's command line front-end.
 
 Comments are delimited by "(:" and ":)", and may be nested to any level.
+
+String literals are delimited by quote characters, and use the escape
+sequences {\"} for the quote character and {\\} for the backslash, e.g.
+
+    system "echo \"Hello World!\"";
 
 \note  White space is always relevant in Phase2 expressions.  Identifiers
 must be separated either by white space or by appropriate syntax tokens, e.g.
@@ -14,17 +19,13 @@ must be separated either by white space or by appropriate syntax tokens, e.g.
     + a b  or  (+ a)b  or  ((+)a)b  but not  +ab
 
 (the lexer will interpret this last expression as a single token, "+ab").
-To preserve white space within an identifier itself, enclose it in quotation
-marks, e.g.
+To include space characters within an identifier itself, use {\ }, e.g.
 
-    >> 1  print README.txt;
+    print README.txt;
 
 but
 
-    >> 1  print "Untitled document #3";
-
-To include a quote character in such a string, use {\"}.  For the backslash
-character, use {\\}.  There are no other escape sequences in quoted identifiers.
+    print Untitled\ document\ #3;
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -140,11 +141,11 @@ int get_char_number()
     values from rules.  It must be the last statement in a rule action. */
 #if DEBUG__LEXER
     #define TOKEN( x, y )  { new_token( yyleng ); \
-                              if ( y ) printf( "Matched {%s}\n", y ); \
-                              if ( x ) return x; }
+                             if ( y ) printf( "Matched {%s}\n", y ); \
+                             if ( x ) return x; }
 #else
     #define TOKEN( x, y )  { new_token( yyleng ); \
-                            if ( x ) return x; }
+                             if ( x ) return x; }
 #endif
 
 
@@ -176,6 +177,41 @@ void append_to_buffer( char *s )
         buffer_limit += len;
         buffer_pos += len;
     }
+}
+
+
+/** \return  the interior of an id, with escape sequences undone */
+char *extract_id( char *s )
+{
+    char *s_low = s, *s_high = s_low;
+
+    while ( *s_high != '\0' )
+    {
+         if ( *s_high == '\\' )
+         {
+             s_high++;
+             switch ( *s_high )
+             {
+                 case ' ':
+                     *s_low = ' ';
+                     break;
+
+                 default:
+                     fprintf( stderr, "extract_id: bad char: %i ('%c')\n", ( int ) *s_high, *s_high );
+                     return 0;
+             }
+        }
+
+        else
+            *s_low = *s_high;
+
+        s_low++;
+        s_high++;
+    }
+
+    *s_low = '\0';
+
+    return STRDUP( s );
 }
 
 
@@ -224,11 +260,11 @@ char *extract_literal( char *s )
 
 
 /** For command names. */
-LETTER                [A-Za-z]
-ALNUM                 [A-Za-z0-9]
+LETTER  [A-Za-z]
+ALNUM   [A-Za-z0-9]
 
 /** For lexical identifiers. */
-NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
+IDCHAR  [^\]\[[:space:]:;=(){,}\"\\]
 
 
 /** Comments and string literals have their own mini-scanners. */
@@ -294,7 +330,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     "\\"{LETTER}{ALNUM}*  {
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string = STRDUP( yytext + 1 );
+        yylval.string_t = STRDUP( yytext + 1 );
 
         TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }
@@ -318,12 +354,12 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
         TOKEN( INT, "INT" );
     }
 
-    {NAME_CHAR}+  {  /* Matches a name fragment. */
+    {IDCHAR}("\\ "*{IDCHAR})*  {  /* Matches a name fragment. */
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string = STRDUP( yytext );
+        yylval.string_t = extract_id( yytext );
 
-        TOKEN( STRING, "STRING" );
+        TOKEN( ID, "ID" );
     }
 
     \n  {  /* Ignore newlines, except for formatting. */
@@ -349,7 +385,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
 {
     ([^"\n\\]*|\\[^\n])  {  /* Body of string literal. */
         append_to_buffer( yytext );
-        TOKEN( 0, 0 );
+        TOKEN( 0, ( char* ) 0 );
     }
 
     \\?\n  {  /* Newlines are permitted. */
@@ -361,7 +397,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     \"  {  /* End quote after string literal. */
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string = extract_literal( string_buffer );
+        yylval.string_t = extract_literal( string_buffer );
         buffer_pos = string_buffer;
 
         BEGIN( INITIAL );
@@ -395,7 +431,7 @@ NAME_CHAR             [^][[:space:]:;=(){,}\"\\]
     }
 
     .  {  /* Ignore everything else. */
-        TOKEN( 0, 0 );
+        TOKEN( 0, ( char* ) 0 );
     }
 }
 

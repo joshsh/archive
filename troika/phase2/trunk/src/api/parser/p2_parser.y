@@ -4,7 +4,7 @@
 
 \file  p2_parser.y
 
-\brief  Bison grammar file for the command line interface.
+\brief  Bison grammar file for Phase2's command line front-end.
 
 Phase2's command-line interface is a separable feature of the language. It
 allows the user to pass command_args to either of a pair of functions defined in
@@ -22,11 +22,11 @@ then the name, e.g.
 
 Command Syntax
 
-Special commands are indicated with a slash plus the name of the command,
+Special commands are indicated with a backslash plus the name of the command,
 followed by a whitespace-delimited list of command_args (no parentheses) and
 terminated by a semicolon, e.g.
 
-    /command arg1 arg2;
+    \command arg1 arg2;
 
 Commands thus indicated do not belong to the program under construction, and are
 to take immediate effect at parse time.
@@ -145,7 +145,7 @@ int yywrap()
 }
 
 
-/** Copies reported error messages to a string, where they wait to passed on to
+/** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
 void yyerror( enum parser_return_state *ignored, const char *msg )
 {
@@ -169,7 +169,7 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
     else
     {
         #if DEBUG__PARSER
-            printf( "yyerror: %s (not reported due to previous error)\n" );
+            printf( "yyerror: %s (not reported due to previous error)\n", msg );
         #endif
     }
 }
@@ -179,9 +179,9 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
 
 
 #if DEBUG__PARSER
-    production( char *s )
+    void production( char *s )
     {
-        printf( "Matched %s\n", x );
+        printf( "Matched %s\n", s );
     }
     /*#define PRODUCTION( x )  printf( "Matched %s\n", x );
 #else
@@ -223,7 +223,7 @@ struct statement *new_statement( char *name, p2_ast *expr )
 
 %union
 {
-    char *string;
+    char *string_t;
 
     int int_t;
     double float_t;
@@ -242,7 +242,7 @@ struct statement *new_statement( char *name, p2_ast *expr )
 %token L_BRACE COMMA R_BRACE
 %token COLON EQUALS SEMICOLON E_O_F
 
-%token <string> STRING COMMAND_NAME
+%token <string_t> ID STRING COMMAND_NAME
 %token <char_t> CHAR
 %token <float_t> FLOAT;
 %token <int_t> INT;
@@ -609,17 +609,38 @@ term_item:
 
     CHAR
     {
+        #if DEBUG__PARSER
+            production( "term_item ::=  CHAR" );
+        #endif
+
         $$ = p2_ast__char( $1 );
     }
 
     | FLOAT
     {
+        #if DEBUG__PARSER
+            production( "term_item ::=  FLOAT" );
+        #endif
+
         $$ = p2_ast__float( $1 );
     }
 
     | INT
     {
+        #if DEBUG__PARSER
+            production( "term_item ::=  INT" );
+        #endif
+
         $$ = p2_ast__int( $1 );
+    }
+
+    | STRING
+    {
+        #if DEBUG__PARSER
+            production( "term_item ::=  STRING" );
+        #endif
+
+        $$ = p2_ast__string( $1 );
     }
 
     | bag
@@ -788,20 +809,20 @@ bag_head:
 
 name:
 
-    STRING
+    ID
     {
         #if DEBUG__PARSER
-            production( "name ::=  STRING" );
+            production( "name ::=  ID" );
         #endif
 
         $$ = ( void* ) p2_array__new( 1, 0 );
         p2_array__enqueue( ( p2_array* ) $$, $1 );
     }
 
-    | name COLON STRING
+    | name COLON ID
     {
         #if DEBUG__PARSER
-            production( "name ::=  name COLON STRING" );
+            production( "name ::=  name COLON ID" );
         #endif
 
         if ( $1 )

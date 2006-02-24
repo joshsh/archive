@@ -17,7 +17,7 @@ a length of i cells.  For instance, \n
 The term array occupies the higher-address portion of an expanding buffer and
 grows towards the lower-address end.
 
-\note  This library assumes that sizeof(void *) == sizeof(unsigned int).
+\note  This library assumes that sizeof( void* ) == sizeof( unsigned int ).
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -79,7 +79,9 @@ p2_term *p2_term__expand(p2_term *t, unsigned int minimum_buffer_size);
 
 /* Constructors and destructor ************************************************/
 
-/** Creates a new p2_term containing a single atom. */
+/** Creates a new p2_term containing a single atom.
+    \note  The term does not own its atoms, which will suffer no ill effects
+    when the term is deleted. */
 p2_term *p2_term__new(void *p, unsigned int initial_buffer_size);
 
 /** Copy constructor. */

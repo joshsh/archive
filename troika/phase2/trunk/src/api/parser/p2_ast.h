@@ -38,12 +38,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 enum p2_ast__type
 {
-    BAG_T,  /**< A bag composed of terms. */
+    BAG_T,      /**< A bag composed of terms. */
     CHAR_T,
     FLOAT_T,
     INT_T,
-    NAME_T, /**< A URN-like sequence of name fragments. */
-    TERM_T  /**< A term composed of p2_asts. */
+    NAME_T,     /**< A URN-like sequence of name fragments. */
+    STRING_T,
+    TERM_T      /**< A term composed of p2_asts. */
 };
 
 
@@ -75,14 +76,15 @@ p2_ast *p2_ast__float( double f );
 
 p2_ast *p2_ast__int( int i );
 
-/** \param term  a p2_term of AST nodes
-    \return  a new AST node of type TERM */
-p2_ast *p2_ast__term( p2_term *term );
-
-
 /** \param name  a p2_array of C strings representing a name
     \return  a new AST node of type NAME */
 p2_ast *p2_ast__name( p2_name *name );
+
+p2_ast *p2_ast__string( char *s );
+
+/** \param term  a p2_term of AST nodes
+    \return  a new AST node of type TERM */
+p2_ast *p2_ast__term( p2_term *term );
 
 
 /** \param ast  AST node to free */

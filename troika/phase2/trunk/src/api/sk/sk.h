@@ -4,7 +4,7 @@
 
 \brief  A simple utility to represent and reduce impure S,K terms.
 
-Completely type-safe.
+Completely type-safe and thread-safe.
 
 \warning  Errors occurring at the level of the imported primitives should be
 dealt with at that level.  This library contains only rudimentary exception
@@ -34,65 +34,42 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef SK_H
 #define SK_H
 
-/*  For the debug macro, p2_error and associated functions, and the primitive
-    and typing mechanisms. */
-#include "../p2_atom.h"
+
+#include "../p2_memory_manager.h"
 #include "../util/p2_term.h"
-#include "../p2.h"
-#include "../p2_flags.h"  // P2FLAGS__DO_TYPE_CHECKING,
-                          // P2FLAGS__HIGHER_ORDER_PRIMITIVES,
-                          // P2FLAGS__PERMIT_IRREDUCIBLE_TERMS
 
 
+/** \brief  Reduce an S,K term according to the rules of combinator expressions.
 
-/** The S combinator type. */
-p2_type SK_S_type;
+    \param term  the term to reduce.  It must be in strictly left-associative
+    form, and is undefined once it has been passed as an argument to this
+    function.
 
-/** The K combinator type. */
-p2_type SK_K_type;
+    \param p2_memory_manager  memory manager which will claim ownership of any
+    new objects
 
-/** Singleton S combinator. */
-p2_atom *SK_S;
+    \param primitive_type  type of an embedded primitive function
 
-/** Singleton K combinator. */
-p2_atom *SK_K;
+    \param S_type  type of the S combinator
 
+    \param K_type  type of the K combinator
 
-p2_error
-
-    FAILURE,                       /**< Generic failure message. */
-    TYPE_MISMATCH,                 /**< Parameter and argument types don't match. */
-    ATOM_APPLIED_AS_FUNCTION,      /**< A non-function atom was found at the head of a term. */
-    PRIMITIVE_APPLIED_TO_NONATOM,  /**< A function primitive was applied to a combinator or other non-atom. */
-    NULL_TERM,                     /**< Null term encountered. */
-    NULL_ATOM,                     /**< Null atom encountered. */
-    NULL_PRIMITIVE,                /**< Null primitive encountered. */
-    EXPIRED_TERM,                  /**< Program tried to re-use a term which has already been passed as an argument to SK_reduce or another function which invalidates its argument. */
-    PROGRAM_ERROR;                 /**< Generic error message. */
-
-
-/** Initializes types, errors, and singleton S, K combinators. */
-p2_error SK_init(void (*debug_print)(p2_term *));
-
-/** \brief  Reduce an S,K term recursively according to the rules of combinator
-    expressions.
-
-    \param term  the term to reduce.  It is undefined once this function has
-    been called, and should not be used again.
-
-    \return  normally, the reduced term. If an error is encountered during
-    reduction, the returned term will contain a single p2_atom of type
-    p2_error_type and with an error value describing the exception.
+    \return  the reduced term, or 0 if an exception has occurred
 
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
-    which is not an S or K combinator or a p2_primitive, is considered a
-    non-redex atom.
+    which is not an S or K combinator or a primitive, is considered a
+    non-redex object.
 
     \warning  This function makes no attempt to detect infinite loops or memory
-    faults due to extremely large S,K terms.
-*/
-p2_term *SK_reduce(p2_term *term);
+    faults due to extremely large S,K terms. */
+p2_term *SK_reduce(
+    p2_term *term,
+    p2_memory_manager *m,
+    p2_type *primitive_type,
+    p2_type *S_type,
+    p2_type *K_type );
 
 
-#endif  // SK_H
+#endif  /* SK_H */
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

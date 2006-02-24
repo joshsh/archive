@@ -141,9 +141,6 @@ int main()
     int yyparse__exit_value;
     enum parser_return_state return_state;
 
-    if ( p2_ast__init() )
-        return 1;
-
     printf( "Phase2 command-line parser debugger.  Type '\\exit;' to quit.\n\n" );
 
     if ( ( yyparse__exit_value = yyparse( &return_state ) ) )
@@ -153,9 +150,6 @@ int main()
         printf( "Parser was aborted by a user action.\n" );
     else
         printf( "Parser reached end-of-input.\n" );
-
-    if ( p2_ast__end() )
-        return 1;
 
     return 0;
 }

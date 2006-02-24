@@ -22,38 +22,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  /* free */
 #include <stdio.h>  /* fprintf, printf */
 
-#include <regex.h>  /* regcomp, regexec, regfree */
-
 
 /** If defined, print terms as raw integer sequences, rather than as
     parenthesized expressions. */
 /* #define PRINT_TERM_AS_ARRAY */
-
-
-/** Regular expression for name fragments. */
-regex_t name_regex;
-
-
-int p2_ast__init()
-{
-    /* See NAME_CHAR in p2_parser.l */
-    if ( regcomp( &name_regex, "^[^][[:space:]:;=(){,}\\\"\\\\]\\+$", 0 ) )
-    {
-        fprintf( stderr, "Error: regcomp failed.\n" );
-        return 1;
-    }
-
-    else
-        return 0;
-}
-
-
-int p2_ast__end()
-{
-    regfree( &name_regex );
-
-    return 0;
-}
 
 
 /* Constructors, destructors **************************************************/
@@ -112,15 +84,21 @@ p2_ast *p2_ast__int( int i )
 }
 
 
-p2_ast *p2_ast__term( p2_term *term )
-{
-    return p2_ast__new( TERM_T, term );
-}
-
-
 p2_ast *p2_ast__name( p2_name *name )
 {
     return p2_ast__new( NAME_T, name );
+}
+
+
+p2_ast *p2_ast__string( char *s )
+{
+    return p2_ast__new( STRING_T, s );
+}
+
+
+p2_ast *p2_ast__term( p2_term *term )
+{
+    return p2_ast__new( TERM_T, term );
 }
 
 
@@ -151,6 +129,19 @@ void *p2_ast__delete( p2_ast *ast )
             free( ast->value );
             break;
 
+        case NAME_T:
+
+            p2_array__for_all(
+                ( p2_array* ) ast->value,
+                p2_free );
+            p2_array__delete( ( p2_array* ) ast->value );
+            break;
+
+        case STRING_T:
+
+            free( ast->value );
+            break;
+
         case TERM_T:
 
             p2_term__for_all(
@@ -159,13 +150,10 @@ void *p2_ast__delete( p2_ast *ast )
             p2_term__delete( ( p2_term* ) ast->value );
             break;
 
-        case NAME_T:
+        default:
 
-            p2_array__for_all(
-                ( p2_array* ) ast->value,
-                p2_free );
-            p2_array__delete( ( p2_array* ) ast->value );
-            break;
+            fprintf( stderr, "p2_ast__delete: bad AST type: %i\n", ast->type );
+            return 0;
     }
 
     return p2_free( ast );
@@ -245,37 +233,26 @@ static void bag__print( p2_array *a )
 }
 
 
-static void name__print( p2_array *a )
+/* ! Move to p2_name.c */
+static void name__print( p2_name *n )
 {
     char *s;
-    int i, size = a->size;
+    int i, size = n->size;
 
     for ( i = 0; i < size; i++ )
     {
         if ( i )
             printf( ":" );
 
-        s = ( char* ) p2_array__get( a, i );
+        s = ( char* ) p2_array__get( n, i );
 
-        if ( !regexec( &name_regex, s, 0, 0, 0 ) )
-            printf( s );
-        else
+        while ( *s )
         {
-            printf( "\"" );
+            if ( *s == ' ' )
+                printf( "\\" );
 
-            while ( *s )
-            {
-                if ( *s == '\"' )
-                    printf( "\\\"" );
-                else if ( *s == '\\' )
-                    printf( "\\\\" );
-                else
-                    printf( "%c", *s );
-
-                s++;
-            }
-
-            printf( "\"" );
+            printf( "%c", *s );
+            s++;
         }
     }
 }
@@ -283,33 +260,60 @@ static void name__print( p2_array *a )
 
 void p2_ast__print( p2_ast *ast )
 {
+    char *s;
+
     switch( ast->type )
     {
         case BAG_T:
+
             bag__print( ( p2_array* ) ast->value );
             break;
 
         case CHAR_T:
+
             printf( "'%c'", *( ( char* ) ast->value ) );
             break;
 
         case FLOAT_T:
+
             printf( "%g", *( ( double* ) ast->value ) );
             break;
 
         case INT_T:
+
             printf( "%i", *( ( int* ) ast->value ) );
             break;
 
+        case NAME_T:
+
+            name__print( ( p2_name* ) ast->value );
+            break;
+
+        case STRING_T:
+
+            s = ( char* ) ast->value;
+            printf( "\"" );
+            while ( *s )
+            {
+                if ( *s == '"' || *s == '\\' )
+                    printf( "\\" );
+
+                printf( "%c", *s );
+                s++;
+            }
+            printf( "\"" );
+            break;
+
         case TERM_T:
+
             printf( "[ " );
             term__print( ( p2_term* ) ast->value, 1 );
             printf( " ]" );
             break;
 
-        case NAME_T:
-            name__print( ( p2_array* ) ast->value );
-            break;
+        default:
+
+            fprintf( stderr, "p2_ast__delete: bad AST type: %i\n", ast->type );
     }
 }
 
