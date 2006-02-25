@@ -2,35 +2,13 @@
 #define DEBUG_H
 
 
-#define DEBUG  0
-
-#if DEBUG
-
-    /** Echo each token as it is matched by the lexer. */
-    #define DEBUG__LEXER  1
-
-    /** Echo each production as it is matched by the parser. */
-    #define DEBUG__PARSER  1
-
-    #if DEBUG__PARSER
-
-        /** Use Bison's built-in trace facility. */
-        #define DEBUG__PARSER__USE_YYDEBUG  0
-
-    #endif
-
-#endif
-
-
 enum parser_return_state
 {
     RETURN_STATE__END_OF_INPUT,
     RETURN_STATE__ABORTED,
-    RETURN_STATE__PARSE_FAILURE
+    RETURN_STATE__PARSE_FAILURE,
+    RETURN_STATE__LOCKED_OUT
 };
-
-
-#define STRDUP( x )  strcpy( ( char* ) malloc( 1 + strlen( x ) ), x )
 
 
 #endif  /* DEBUG_H */

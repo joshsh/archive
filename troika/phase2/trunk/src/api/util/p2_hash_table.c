@@ -42,9 +42,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Works well enough for addresses so long as there's a one-to-one correspondence
    between addresses and key values. */
-int hash_address(void *key)
+unsigned int hash_address(void *key)
 {
-    return (int) key;
+    return (unsigned int) key;
 }
 
 
@@ -54,17 +54,29 @@ int compare_addresses(void *key1, void *key2)
 }
 
 
-/** Convert the first four bytes of the string to an integer, and use it as the
-    hashing value.  Of course, this will result in a collision for any two strings
-    with the same four first characters.
-    \warning  little-vs-big-endian-sensitive. */
-int hash_string(void *key)
+/** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
+unsigned int hash_string(void *key)
 {
+    char *p;
+    unsigned int h = 0, g;
+    for ( p = key; *p != '\0'; p++ )
+    {
+        h = ( h << 4 ) + *p;
+        if ( ( g = h & 0xf0000000 ) )
+        {
+            h = h ^ ( g >> 24 );
+            h = h ^ g;
+        }
+    }
+
+    return h;
+/*
     int len = strlen((char *) key);
     if (len < 3)
-        return ((int) *((void **) key)) << (3-len) * SIZEOF_CHAR >> (3-len) * SIZEOF_CHAR;
+        return ((unsigned int) *((void **) key)) << (3-len) * SIZEOF_CHAR >> (3-len) * SIZEOF_CHAR;
     else
-        return (int) *((void **) key);
+        return (unsigned int) *((void **) key);
+*/
 }
 
 
@@ -78,7 +90,7 @@ int compare_strings(void *key1, void *key2)
 
 
 /** \return the least prime > 2 and >= i. */
-static int next_prime(int i)
+static unsigned int next_prime(unsigned int i)
 {
     int j;
 
@@ -101,6 +113,7 @@ static int next_prime(int i)
 }
 
 
+/* ! Multithreading hazard. */
 p2_hash_table *rehash_dest;
 
 
@@ -154,10 +167,10 @@ static void expand(p2_hash_table *h)
 
 
 p2_hash_table *p2_hash_table__new(
-    int buffer_size,
+    unsigned int buffer_size,
     float sparsity,
     float expansion,
-    int (*hashing_function) (void *),
+    unsigned int (*hashing_function) (void *),
     int (*compare_to) (void *, void *))
 {
     int i;
@@ -168,12 +181,12 @@ p2_hash_table *p2_hash_table__new(
     {
         h->buffer_size = next_prime(buffer_size);
 
-        if (hashing_function == 0)
+        if (!hashing_function)
             h->hashing_function = hash_address;
         else
             h->hashing_function = hashing_function;
 
-        if (compare_to == 0)
+        if (!compare_to)
             h->compare_to = compare_addresses;
         else
             h->compare_to = compare_to;
@@ -238,22 +251,19 @@ void p2_hash_table__delete(p2_hash_table *h)
 p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 {
     p2_hashing_pair displaced_pair;
-    int int_key, actual_size;
+    unsigned int actual_size;
     void **p;
 
     #if DEBUG__SAFE
-        if (!key || !target)
-        {
-            DEBUG__SAFE__PRINT("hashing key and target must not be null");
-            displaced_pair.key = displaced_pair.target = 0;
-            return displaced_pair;
-        }
+    if (!key || !target)
+    {
+        DEBUG__SAFE__PRINT("null hashing key and/or target");
+        displaced_pair.key = displaced_pair.target = 0;
+        return displaced_pair;
+    }
     #endif
 
-    int_key = h->hashing_function(key);
-    if (int_key < 0)
-        int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE*(int_key % h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE*(h->hashing_function(key) % h->buffer_size));
 
     actual_size = ENTRY_SIZE * h->buffer_size;
 
@@ -288,16 +298,13 @@ p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 
 void *p2_hash_table__lookup(p2_hash_table *h, void *key)
 {
-    int int_key, actual_size;
+    unsigned int actual_size;
     void **p;
 
     if (!key)
         return 0;
 
-    int_key = h->hashing_function(key);
-    if (int_key < 0)
-        int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE * (int_key % h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE * (h->hashing_function(key) % h->buffer_size));
 
     actual_size = ENTRY_SIZE * h->buffer_size;
 
@@ -318,7 +325,7 @@ void *p2_hash_table__lookup(p2_hash_table *h, void *key)
 p2_hashing_pair p2_hash_table__remove(p2_hash_table *h, void *key)
 {
     p2_hashing_pair displaced_pair;
-    int int_key, actual_size;
+    unsigned int actual_size;
     void **p;
 
     #if DEBUG__SAFE
@@ -330,10 +337,7 @@ p2_hashing_pair p2_hash_table__remove(p2_hash_table *h, void *key)
         }
     #endif
 
-    int_key = h->hashing_function(key);
-    if (int_key < 0)
-        int_key *= -1;
-    p = h->buffer + (ENTRY_SIZE * (int_key % h->buffer_size));
+    p = h->buffer + (ENTRY_SIZE * (h->hashing_function(key) % h->buffer_size));
 
     actual_size = ENTRY_SIZE * h->buffer_size;
 

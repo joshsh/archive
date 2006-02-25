@@ -10,8 +10,8 @@ XML_PATH     = ./xml
 IMPORT_PATH  = ./import
 
 
-#         |temporary  |bigger but faster  |
-CFLAGS  = -g          -O2                 --ansi
+#         |temporary  |bigger but faster  |       |
+CFLAGS  = -g          -O2                 --ansi  -Wall
 CC      = gcc $(CFLAGS)
 LIBS    =
 
@@ -76,28 +76,28 @@ $(UTIL_OBJECTS) :
 # Build the command line interface.
 
 .PHONY : phase2
-phase2 :  $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2_memory_manager.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o
+phase2 :  $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2_memory_manager.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o sk.o
 
 
-p2_memory_manager.o :  p2_memory_manager.c
+p2_memory_manager.o :  p2_memory_manager.c p2_flags.h
 	$(CC) -c p2_memory_manager.c
 
-p2_namespace.o :  p2_namespace.c
+p2_namespace.o :  p2_namespace.c p2_flags.h
 	$(CC) -D_GNU_SOURCE -c p2_namespace.c
 
-p2_object.o :  p2_object.c
+p2_object.o :  p2_object.c p2_flags.h
 	$(CC) -c p2_object.c
 
-p2_primitive.o :  p2_primitive.c
+p2_primitive.o :  p2_primitive.c p2_flags.h
 	$(CC) -c p2_primitive.c
 
-p2_type.o :  p2_type.c
+p2_type.o :  p2_type.c p2_flags.h
 	$(CC) -c p2_type.c
 
 
 ################################################################################
 # Compile SK semantics library.
 
-#sk.o :  $(SK_PATH)/sk.c p2.h p2_flags.h
-#	$(CC) -c sk.c
+sk.o :  sk/sk.c p2_flags.h
+	$(CC) -c sk/sk.c
 

@@ -45,14 +45,13 @@ typedef struct _p2_primitive
         the pointer, e.g. "strdup"). */
     char *name;
 
-    /** Number of parameters. */
+    /** The number of formal parameters. */
     int n_params;
 
-    /** An array of length {n_params} containing the data type of each
-        parameter. */
+    /** The data type of each parameter. */
     p2_type **parameter_types;
 
-    /** \note  Not yet used. */
+    /** A helpful name for each parameter. */
     char **parameter_names;
 
     /** An array of length {n_params} containing at each parameter index a 0

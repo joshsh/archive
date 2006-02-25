@@ -9,7 +9,7 @@
              parcour@gmail.com  \n
              +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -26,11 +26,11 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "xmldom.h"
 
-#include <stdio.h>  // printf
+#include <stdio.h>  /* printf */
 
 #define UC  ( unsigned char* )
 
@@ -45,7 +45,7 @@ int main( int argc, char **argv )
     dom_element *el = dom_element__new( doc, UC "Root", 0 );
     dom_element__add_text( el, UC "Some text..." );
     dom_attr *attr = dom_attr__new( el, UC "foo", UC "42", 0 );
-    //dom_element__set_attr( el, "foo", "bar" );
+    /*dom_element__set_attr( el, "foo", "bar" );*/
     dom_namespace *ns = dom_namespace__new( el, UC "http://tempuri.org/", UC "tempuri" ) ;
     attr = dom_attr__new( el, UC "bar", UC "137", ns );
     dom_element__set_namespace( el, ns );
@@ -99,3 +99,5 @@ int main( int argc, char **argv )
     return 0;
 }
 
+
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

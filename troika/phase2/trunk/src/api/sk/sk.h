@@ -12,7 +12,7 @@ handling to catch a few potential logical errors and programming mistakes.
 
 \todo  go back and get "documentation" from old sk.h, sk.c */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef SK_H
 #define SK_H
@@ -54,20 +54,22 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     \param K_type  type of the K combinator
 
+    \param for_each_iteration  a function to apply to the term (e.g. a debug
+    print function) once per iteration of the reduction algorithm.  Only has
+    effect if DEBUG__SK is nonzero.
+
     \return  the reduced term, or 0 if an exception has occurred
 
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
     which is not an S or K combinator or a primitive, is considered a
-    non-redex object.
-
-    \warning  This function makes no attempt to detect infinite loops or memory
-    faults due to extremely large S,K terms. */
+    non-redex object. */
 p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
     p2_type *primitive_type,
     p2_type *S_type,
-    p2_type *K_type );
+    p2_type *K_type,
+    void (*for_each_iteration)(p2_term*) );
 
 
 #endif  /* SK_H */

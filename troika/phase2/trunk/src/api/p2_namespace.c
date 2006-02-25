@@ -29,24 +29,38 @@ extern p2_type *p2_namespace__type;
 /******************************************************************************/
 
 
-p2_namespace *p2_namespace__new()
+p2_namespace *p2_namespace__new( p2_namespace *parent )
 {
-    return p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS );
+    p2_namespace *ns = new( p2_namespace );
+
+    if ( ns )
+    {
+        ns->parent = parent;
+        ns->children = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS );
+
+        if ( !ns->children )
+        {
+            free( ns );
+            ns = 0;
+        }
+    }
+
+    return ns;
 }
 
 
 static void *p2_free( void *p )
 {
     #if DEBUG__SAFE
-        if ( !p )
-        {
-            PRINTERR( "p2_free in p2_namespace.c: null pointer" );
-            return 0;
-        }
+    if ( !p )
+    {
+        PRINTERR( "p2_free in p2_namespace.c: null pointer" );
+        return 0;
+    }
     #endif
 
     free( p );
-    return ( void* ) 1;
+    return p;
 }
 
 
@@ -60,10 +74,12 @@ void p2_namespace__delete( p2_namespace *ns )
         }
     #endif
 
-    /* The namespace hashing keys, but it does not own its targets. */
-    p2_hash_table__for_all_keys( ns, p2_free );
+    /* The namespace owns its hashing keys, but it does not own its targets. */
+    p2_hash_table__for_all_keys( ns->children, p2_free );
 
-    p2_hash_table__delete( ns );
+    p2_hash_table__delete( ns->children );
+
+    free( ns );
 }
 
 
@@ -98,7 +114,7 @@ p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
     if ( name->size == 1 )
     {
         key = strdup( ( char* ) p2_array__peek( name ) );
-        displaced_pair = p2_hash_table__add( ns, key, o );
+        displaced_pair = p2_hash_table__add( ns->children, key, o );
 
         if ( displaced_pair.key )
             free( displaced_pair.key );
@@ -110,7 +126,7 @@ p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_object = ( p2_object* ) p2_hash_table__lookup( ns, key );
+        child_ns_object = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
 
         if ( child_ns_object->type != p2_namespace__type )
         {
@@ -158,7 +174,7 @@ p2_object *p2_namespace__lookup( p2_namespace *ns, p2_name *name )
 
     #endif
 
-    o = ( p2_object* ) p2_hash_table__lookup( ns, p2_array__peek( name ) );
+    o = ( p2_object* ) p2_hash_table__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
     if ( name->size > 1 )
@@ -214,7 +230,7 @@ p2_object *p2_namespace__remove( p2_namespace *ns, p2_name *name )
     if ( name->size == 1 )
     {
         key = ( char* ) p2_array__peek( name );
-        displaced_pair = p2_hash_table__remove( ns, key );
+        displaced_pair = p2_hash_table__remove( ns->children, key );
 
         if ( displaced_pair.key )
             free( displaced_pair.key );
@@ -226,7 +242,7 @@ p2_object *p2_namespace__remove( p2_namespace *ns, p2_name *name )
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_object = ( p2_object* ) p2_hash_table__lookup( ns, key );
+        child_ns_object = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
 
         if ( child_ns_object->type != p2_namespace__type )
         {

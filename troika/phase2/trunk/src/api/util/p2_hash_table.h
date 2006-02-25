@@ -38,7 +38,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 int compare_addresses(void *key1, void *key2);
 
 /** Default address hashing function. */
-int hash_address(void *key);
+unsigned int hash_address(void *key);
 
 /** Overrides the function pointer arguments in p2_hash_table__new. */
 #define ADDRESS_DEFAULTS hash_address, compare_addresses
@@ -47,7 +47,7 @@ int hash_address(void *key);
 int compare_strings(void *key1, void *key2);
 
 /** Default string-hashing function. */
-int hash_string(void *key);
+unsigned int hash_string(void *key);
 
 /** Overrides the function pointer arguments in p2_hash_table__new. */
 #define STRING_DEFAULTS hash_string, compare_strings
@@ -59,14 +59,14 @@ int hash_string(void *key);
 typedef struct _p2_hash_table
 {
     /** The number of occupied cells in the hash table. */
-    int size;
+    unsigned int size;
 
     /** The number of cells the buffer array. */
-    int buffer_size;
+    unsigned int buffer_size;
 
     /** The number of occupied cells the buffer can hold before the hash table
         becomes too dense. */
-    int capacity;
+    unsigned int capacity;
 
     /** The ratio of empty cells to occupied cells is to be at least this large.
         A more sparse hash table takes up more memory but is more time-efficient
@@ -82,7 +82,7 @@ typedef struct _p2_hash_table
     void **buffer;
 
     /** A hashing function specific to the table's "key" type. */
-    int (*hashing_function) (void *key);
+    unsigned int (*hashing_function) (void *key);
 
     /** A comparison function for key values. */
     int (*compare_to) (void *key1, void *key2);
@@ -102,20 +102,15 @@ typedef struct _p2_hashing_pair
 
     \param buffer_size the initial size of the hash table buffer (the actual
     buffer size is the next lowest prime number)
-
     \param expansion see above.  Will be set to a default if too low.
-
     \param sparsity see above.  Will be set to a default if too low.
-
     \param hashing_function a hashing function specific to the table's "key"
     type.  The hashing function should accept a single void pointer and
     return an int, the idea being to distribute values over a broad stretch of the
     32-bit range.
-
     \param compare_to a comparison function for key values.  The comparison
     function should accept two void pointers a, b as arguments and return an int
     which is &lt; 0 when a &lt; b, &gt; 0 when a &gt; b, and 0 when a == b.
-
     \note You can replace the function pointer parameters with either of the
     macros ADDRESS_DEFAULTS or STRING_DEFAULTS (C strings only!) if efficiency
     is not foremost, e.g.
@@ -126,10 +121,10 @@ typedef struct _p2_hashing_pair
       p2_hash_table *myfrobs = p2_hash_table__new(     \n
         0, 0, 0, STRING_DEFAULTS);                     \n */
 p2_hash_table *p2_hash_table__new(
-  int buffer_size,
+  unsigned int buffer_size,
   float expansion,
   float sparsity,
-  int (*hashing_function) (void *),
+  unsigned int (*hashing_function) (void *),
   int (*compare_to) (void *, void *));
 
 /** Copy constructor. */

@@ -19,23 +19,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_primitive.h"
 
-#include "util/p2_array.h"
-#include "util/p2_hash_table.h"
 
-#include <stdio.h>  /* sprintf */
-
-
-/******************************************************************************/
-
-
-p2_primitive *p2_primitive__new(
+p2_primitive *p2_primitive__new
+(
     void *( *cstub )( void ** ),
     char *name,
     int n_params,
     p2_type **parameter_types,
     char **parameter_names,
     char *transparency,
-    p2_type *return_type )
+    p2_type *return_type
+)
 {
     #if DEBUG__SAFE
         if ( !cstub || !name || !parameter_types )
@@ -70,6 +64,14 @@ p2_primitive *p2_primitive__new(
 
 void p2_primitive__delete( p2_primitive *prim )
 {
+    #if DEBUG__SAFE
+    if ( !prim )
+    {
+        PRINTERR( "p2_primitive__delete: null primitive" );
+        return;
+    }
+    #endif
+
     free( prim->name );
     free( prim->parameter_types );
     if ( prim->transparency )
@@ -79,9 +81,6 @@ void p2_primitive__delete( p2_primitive *prim )
 
     free(prim);
 }
-
-
-/******************************************************************************/
 
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

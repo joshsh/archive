@@ -38,7 +38,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** A namespace is a hash table with associated functions for adding, removing,
     and looking up named objects. */
-typedef p2_hash_table p2_namespace;
+typedef struct _p2_namespace
+{
+    struct _p2_namespace *parent;
+
+    p2_hash_table *children;
+
+} p2_namespace;
 
 
 /** \return  a new namespace */

@@ -1,4 +1,4 @@
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -15,16 +15,16 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #include "../xmldom.h"
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include <string.h>  // strdup, strcmp
+#include <string.h>  /* strdup, strcmp */
 
-// Note: be ready for linker errors if these macros are not defined.
+/* Note: be ready for linker errors if these macros are not defined. */
 #if defined(LIBXML_TREE_ENABLED) && defined(LIBXML_OUTPUT_ENABLED)
 
 
@@ -35,8 +35,8 @@ void xmldom__init( )
 {
     if ( !initialized )
     {
-        // This initializes the library and check potential ABI mismatches between
-        // the version it was compiled for and the actual shared library used.
+        /* This initializes the library and check potential ABI mismatches between
+           the version it was compiled for and the actual shared library used. */
         LIBXML_TEST_VERSION ;
 
         initialized = 1 ;
@@ -48,10 +48,10 @@ void xmldom__end( )
 {
     if ( initialized )
     {
-        // Free the global variables that may have been allocated by the parser.
+        /* Free the global variables that may have been allocated by the parser. */
         xmlCleanupParser( ) ;
 
-        // This is to debug memory for regression tests.
+        /* This is to debug memory for regression tests. */
         xmlMemoryDump( ) ;
 
         initialized = 0 ;
@@ -59,7 +59,7 @@ void xmldom__end( )
 }
 
 
-// dom_attr ////////////////////////////////////////////////////////////////////
+/* dom_attr *******************************************************************/
 
 
 dom_attr *dom_attr__new( dom_element *el,
@@ -108,12 +108,12 @@ dom_attr *dom_attr__next_sibling( dom_attr *attr )
 }
 
 
-// dom_document ////////////////////////////////////////////////////////////////
+/* dom_document ***************************************************************/
 
 
 dom_document *dom_document__new( )
 {
-    // Note: BAD_CAST == ( xmlChar* ) == ( unsigned char* )
+    /* Note: BAD_CAST == ( xmlChar* ) == ( unsigned char* ) */
     xmlDoc *doc = xmlNewDoc( BAD_CAST "1.0" ) ;
 
     return ( dom_document* ) doc ;
@@ -152,14 +152,14 @@ dom_document *dom_document__read_from_file( char *path )
 }
 
 
-// dom_element /////////////////////////////////////////////////////////////////
+/* dom_element ****************************************************************/
 
 
 dom_element *dom_element__new( dom_document *doc,
                                unsigned char *name,
                                dom_namespace *ns )
 {
-    // Note: apparently libxml2 makes its own copy of the element name.
+    /* Note: apparently libxml2 makes its own copy of the element name. */
     xmlNode* el = xmlNewNode( 0, name ) ;
 
     if (ns)
@@ -253,7 +253,8 @@ dom_attr *dom_element__attr( dom_element *el,
 }
 
 
-// dom_namespace ///////////////////////////////////////////////////////////////
+/* dom_namespace **************************************************************/
+
 
 dom_namespace *dom_namespace__new( dom_element *el,
                                    unsigned char *href,
@@ -281,8 +282,6 @@ const unsigned char *dom_namespace__href( dom_namespace *ns )
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+#endif  /* #if defined(LIBXML_TREE_ENABLED) && defined(LIBXML_OUTPUT_ENABLED) */
 
-
-#endif  // #if defined(LIBXML_TREE_ENABLED) && defined(LIBXML_OUTPUT_ENABLED)
-
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

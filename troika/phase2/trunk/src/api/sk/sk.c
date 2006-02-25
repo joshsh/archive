@@ -62,7 +62,6 @@ static p2_term *K_reduce( p2_term *term )
 }
 
 
-
 /* Sxyz --> xz(yz)
    [term size] [2]{S} [x_size]{x} [y_size]{y} [z_size]{z} ...
        --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ... */
@@ -86,7 +85,7 @@ static p2_term *S_reduce( p2_term *term )
     {
         term = p2_term__expand( term, newsize );
 
-        // Re-locate the head of 'x', 'y' and 'z'.
+        /* Re-locate the head of 'x', 'y' and 'z'. */
         x = term->head + 3;
         x_size = ( unsigned int ) *x;
         y = x + x_size;
@@ -128,23 +127,23 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 {
     int i;
     p2_object *o;
-    void *result, **cur = term->head + 2;
+    void *result, **args, **cur = term->head + 2;
     p2_primitive *prim = ( p2_primitive* ) ( ( p2_object* ) *cur )->value;
 
     #if PRIMS__ALLOW_NOARG_FUNCTIONS
-    void **args = ( prim->n_params )
+    args = ( prim->n_params )
         ? ( void** ) malloc( prim->n_params * sizeof( void* ) )
         : 0;
     #else
     #if DEBUG__SAFE
-    if ( !args )
+    if ( !prim->n_params )
     {
-        PRINTERR( "prim_reduce: null args" );
+        PRINTERR( "prim_reduce: no parameters" );
         p2_term__delete( term );
         return 0;
     }
     #endif
-        void **args = ( void** ) malloc( prim->n_params * sizeof( void* ) )
+        args = ( void** ) malloc( prim->n_params * sizeof( void* ) );
     #endif
 
     /* Load arguments into the array. */
@@ -171,12 +170,12 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 
         cur += 2;
 
-        #endif  /* PRIMS__CHECKS__APPLY_TO_NONATOM */
+        #endif  /* SK__CHECKS__APPLY_TO_NONATOM */
 
         /* Note: it's more efficient to do this here than in p2_primitive.c */
-        #if PRIMS__CHECKS__ARG_TYPE_MISMATCH
+        #if PRIMS__CHECKS__PARAM_TYPE
 
-        if ( *( ( p2_object** ) cur )->type != prim->parameter_types[i] )
+        if ( ( *( ( p2_object** ) cur ) )->type != prim->parameter_types[i] )
         {
             PRINTERR( "prim_reduce: argument type mismatch" );
 
@@ -188,9 +187,9 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 
         }
 
-        #endif  /* PRIMS__CHECKS__ARG_TYPE_MISMATCH */
+        #endif  /* PRIMS__CHECKS__TYPE__DYNAMIC */
 
-        args[i] = *( ( p2_object** ) cur )->value;
+        args[i] = ( *( ( p2_object** ) cur ) )->value;
     }
 
     /* Apply the primitive. */
@@ -208,7 +207,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     }
     #endif
 
-    o = p2_object__new( prim->return_type, result );
+    o = p2_object__new( prim->return_type, result, 0 );
 
     /* Caution: the object's value must be a BRAND NEW value. */
     p2_memory_manager__add( m, o );
@@ -229,8 +228,13 @@ p2_term *SK_reduce(
     p2_memory_manager *m,
     p2_type *primitive_type,
     p2_type *S_type,
-    p2_type *K_type )
+    p2_type *K_type,
+    void (*for_each_iteration)(p2_term*) )
 {
+    #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
+        int iter = 0;
+    #endif
+
     p2_object *head;
     p2_type *head_type;
 
@@ -245,9 +249,21 @@ p2_term *SK_reduce(
     #endif
 
     /* Iterate until the resulting term is in head-normal form. */
-    do
+    for (;;)
     {
-        /* debug_print_( term ); */
+        #if SK__CHECKS__MAX_TERM_SIZE > 0
+        if ( ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
+        {
+            PRINTERR( "SK_reduce: reduction aborted (term might expand indefinitely)" );
+            p2_term__delete( term );
+            return 0;
+        }
+        #endif
+
+        #if DEBUG__SK
+        if ( for_each_iteration )
+            for_each_iteration( term );
+        #endif
 
         /* Get the object at the head of the term.
            Caution: the term MUST be in left-associative form. */
@@ -257,15 +273,15 @@ p2_term *SK_reduce(
         /* If the head object is a primitive, apply it. */
         if ( head_type == primitive_type )
         {
-            if ( p2_term_length( term ) <= ( ( p2_primitive* ) head->value )->n_params )
+            if ( p2_term__length( term ) <= ( ( p2_primitive* ) head->value )->n_params )
                 return term;
             else
             {
                 term = prim_reduce( term, m );
 
-                /* Unless the application of a primitive can yield another
-                   primitive (or S or K combinator), the resulting term
-                   cannot be further reduced. */
+                /* Unless the application of a primitive is allowed to yield
+                   another primitive (or an S or K combinator), the resulting
+                   term cannot be further reduced. */
                 #if !PRIMS__ALLOW_HIGHER_ORDER
                 return term;
                 #endif
@@ -287,14 +303,14 @@ p2_term *SK_reduce(
             if ( p2_term__length( term ) < 3 )
                 return term;
             else
-                term = SK_reduce( K_reduce( term ) );
+                term = K_reduce( term );
         }
 
         /* Any object which is not an S or K combinator or a primitive is
            considered a non-redex object. */
         else
         {
-            #if SK__PERMIT_NONREDUX
+            #if SK__ALLOW_NONREDUX
 
                 /* Simply return the term as-is, without attempting to reduce it
                    further. */
@@ -313,7 +329,16 @@ p2_term *SK_reduce(
             #endif
         }
 
-    } while ( 1 );
+        #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
+        if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
+        {
+            PRINTERR( "SK_reduce: reduction aborted (possible infinite loop)" );
+            p2_term__delete( term );
+            return 0;
+        }
+        #endif
+
+    };
 }
 
 

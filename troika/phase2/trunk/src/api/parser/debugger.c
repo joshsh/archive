@@ -31,6 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_ast.h"
 #include "debug.h"
+#include "../p2_flags.h"
 
 #include "../util/p2_term.h"
 
@@ -135,21 +136,50 @@ int p2_parser__show_line_numbers()
 /******************************************************************************/
 
 
+static int active = 0;
+
 /** yyparse is invoked here. */
+enum parser_return_state parse()
+{
+    enum parser_return_state return_state;
+    int yyparse__exit_value;
+
+    if ( active )
+    {
+        return RETURN_STATE__LOCKED_OUT;
+    }
+
+    else
+    {
+        active = 1;
+        if ( ( yyparse__exit_value = yyparse( &return_state ) ) )
+            printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
+        active = 0;
+
+        return return_state;
+    }
+}
+
+
 int main()
 {
-    int yyparse__exit_value;
-    enum parser_return_state return_state;
+    printf( "Phase2 v%s command-line parser debugger.  Type '\\exit;' to quit.\n\n", VERSION );
 
-    printf( "Phase2 command-line parser debugger.  Type '\\exit;' to quit.\n\n" );
-
-    if ( ( yyparse__exit_value = yyparse( &return_state ) ) )
-        printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
-
-    else if ( return_state == RETURN_STATE__ABORTED )
-        printf( "Parser was aborted by a user action.\n" );
-    else
-        printf( "Parser reached end-of-input.\n" );
+    switch( parse() )
+    {
+        case RETURN_STATE__ABORTED:
+            printf( "Parser was aborted by a user action.\n" );
+            break;
+        case RETURN_STATE__END_OF_INPUT:
+            printf( "Parser reached end-of-input.\n" );
+            break;
+        case RETURN_STATE__LOCKED_OUT:
+            printf( "Second concurrent activation of parse is not allowed.\n" );
+            break;
+        case RETURN_STATE__PARSE_FAILURE:
+            printf( "Parse failure.\n" );
+            break;
+    }
 
     return 0;
 }

@@ -63,6 +63,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_ast.h"
 #include "debug.h"
+#include "../p2_flags.h"
 
 #include "../util/p2_term.h"
 
@@ -179,6 +180,7 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
 
 
 #if DEBUG__PARSER
+    /** Echo each production as it is matched by the parser. */
     void production( char *s )
     {
         printf( "Matched %s\n", s );

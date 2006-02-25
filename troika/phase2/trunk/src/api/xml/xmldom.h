@@ -14,7 +14,7 @@ representative of any particular DOM standard.
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
 
-/*//////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
 
@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 
-*///////////////////////////////////////////////////////////////////////////////
+*******************************************************************************/
 
 #ifndef XMLDOM_H
 #define XMLDOM_H
@@ -48,7 +48,7 @@ void xmldom__init( ) ;
 void xmldom__end( ) ;
 
 
-// dom_attr ////////////////////////////////////////////////////////////////////
+/* dom_attr *******************************************************************/
 
 /** \param el  element to which to attach the attribute
     \param name  name of the attribute
@@ -81,7 +81,7 @@ dom_namespace *dom_attr__namespace( dom_attr *attr ) ;
 dom_attr *dom_attr__next_sibling( dom_attr *attr ) ;
 
 
-// dom_document ////////////////////////////////////////////////////////////////
+/* dom_document ***************************************************************/
 
 /** \return  a new document */
 dom_document *dom_document__new( ) ;
@@ -109,7 +109,7 @@ void dom_document__write_to_file( dom_document *doc, char *path ) ;
 dom_document *dom_document__read_from_file( char *path ) ;
 
 
-// dom_element /////////////////////////////////////////////////////////////////
+/* dom_element ****************************************************************/
 
 /** \param doc  parent document.  Not needed by libxml2, but retained for
     compatibility with gSOAP.
@@ -173,7 +173,7 @@ dom_attr *dom_element__attr( dom_element *el,
                              unsigned char *namespace_uri ) ;
 
 
-// dom_namespace ///////////////////////////////////////////////////////////////
+/* dom_namespace **************************************************************/
 
 /** \param el  element to which to attach the namespace attribute
     \param href  URI reference
@@ -196,5 +196,6 @@ const unsigned char *dom_namespace__prefix( dom_namespace *ns ) ;
 const unsigned char *dom_namespace__href( dom_namespace *ns ) ;
 
 
-#endif  // XMLDOM_H
+#endif  /* XMLDOM_H */
 
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

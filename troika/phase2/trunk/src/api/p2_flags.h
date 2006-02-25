@@ -30,7 +30,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_FLAGS_H
 
 
-/* Errors / debugging *********************************************************/
+#define VERSION "0.5.0"
+
+
+/* Errors *********************************************************************/
 
 #include <stdio.h>  /* fprintf */
 
@@ -38,26 +41,60 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <stdlib.h>  /* malloc */
 
+#define STRDUP( x )  strcpy( ( char* ) malloc( 1 + strlen( x ) ), x )
 #define new( type )  ( type* ) malloc( sizeof( type ) )
 
-#define DEBUG__SAFE 1
+
+/* Debugging ******************************************************************/
+
+#define DEBUG__SAFE                             1
+
+#define DEBUG                                   1
+
+#if DEBUG
+
+    #define DEBUG__SK                           1
+
+    #define DEBUG__COMPILER                     0
+
+    #if DEBUG__COMPILER
+
+        /** Echo each token as it is matched by the lexer. */
+        #define DEBUG__LEXER                    1
+
+        /** Echo each production as it is matched by the parser. */
+        #define DEBUG__PARSER                   1
+
+        #if DEBUG__PARSER
+
+            /** Use Bison's built-in trace facility. */
+            #define DEBUG__PARSER__USE_YYDEBUG  0
+
+        #endif
+
+    #endif
+
+#endif
 
 
 /* Reduction ******************************************************************/
-
-#define PRIMS__CHECKS__ARG_TYPE_MISMATCH    1
 
 #define PRIMS__ALLOW_HIGHER_ORDER           0
 #define PRIMS__ALLOW_NOARG_FUNCTIONS        0
 #define PRIMS__ALLOW_VOID_FUNCTIONS         0
 
+#define PRIMS__CHECKS__PARAM_TYPE           1
+
+
 #define SK__CHECKS__APPLY_TO_NONATOM        1
+
+#define SK__CHECKS__MAX_TERM_SIZE           1000
+#define SK__CHECKS__MAX_REDUX_ITERATIONS    1000
+
 
 /** Allow non-redex atoms at the beginning of an expression, and simply abandon
    reduction when they are encountered. */
-#define SK__PERMIT_NONREDUX                 1
-
-#define P2FLAGS__HIGHER_ORDER_PRIMITIVES    0
+#define SK__ALLOW_NONREDUX                  1
 
 
 /* Triples / association ******************************************************/

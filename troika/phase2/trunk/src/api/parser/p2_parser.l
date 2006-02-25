@@ -50,9 +50,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "debug.h"
 
 #include "p2_parser.tab.h"
+#include "../p2_flags.h"
+#include "debug.h"
 
 #include <stdio.h>
 #include <stdlib.h>

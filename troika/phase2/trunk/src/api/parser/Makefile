@@ -12,7 +12,7 @@ CFLAGS   = -Wall \
            --ansi \
            -g # temporary...
 LEX      = flex \
-           -pp  # Get comments regarding features that lead to performance losses.
+           -p  # Get comments regarding features that lead to performance losses.
 YACC     = bison
 VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
@@ -36,7 +36,8 @@ distclean: clean
 
 .PHONY : test
 test :  debugger
-	$(VALGRIND) echo "\exit;" | ./debugger
+	$(VALGRIND) ./debugger < debugger.c
+##	$(VALGRIND) echo "\exit;" | ./debugger
 
 
 .PHONY : valgrind-session
