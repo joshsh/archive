@@ -10,7 +10,7 @@ void srand(double val){
   rval=val;
 }
 
-double random(){
+double random0(){
   rval=100*rval*rval;
   while (rval > 1) rval=rval-1;
   return rval;
@@ -25,7 +25,7 @@ int main(){
   int i, j;
   for (i=0; i<5; i++){
     for (j=0; j<5; j++){
-      zen=random();
+      zen=random0();
       if (zen < .5) setColor(1);
       else setColor(40);
       fillRectangle(win, 5+(i*5), 5+(j*5), 5+((i+1)*5), 5+((j+1)*5));

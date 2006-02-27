@@ -2,7 +2,7 @@
 # Makefile for C++ programs including graphics library #
 ########################################################
 
-CC	= /usr/local/gnu/bin/g++
+CC	= g++
 INCLUDE	= -I${OPENWINHOME}/include -I.
 
 #

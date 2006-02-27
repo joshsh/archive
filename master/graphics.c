@@ -19,6 +19,8 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include <string.h>
+
 Display *display = 0;
 int screen;
 GC gc;
@@ -31,7 +33,7 @@ GC gc;
  */
 
 
-static initialized = 0;
+static int initialized = 0;
 void initialize_colors( void );
 
 int graphicsXIOErrorHandler( Display *display ){ }
