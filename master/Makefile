@@ -2,6 +2,9 @@
 # Makefile for C++ programs including graphics library #
 ########################################################
 
+# [Josh 27.2.06]
+OPENWINHOME = /usr/X11R6/
+
 CC	= g++
 INCLUDE	= -I${OPENWINHOME}/include -I.
 
@@ -16,7 +19,7 @@ CFLAGS		= ${INCLUDE} -s
 #
 
 LIBS	=  -L${OPENWINHOME}/lib -L/usr/local/gnu/lib\
-           -lX11 -lg++ -lm
+           -lX11 -lm ## -lg++
 
 #
 # make targets
