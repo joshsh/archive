@@ -265,7 +265,7 @@ LETTER  [A-Za-z]
 ALNUM   [A-Za-z0-9]
 
 /** For lexical identifiers. */
-IDCHAR  [^\]\[[:space:]:;=(){,}\"\\]
+IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
 
 
 /** Comments and string literals have their own mini-scanners. */
@@ -328,7 +328,7 @@ IDCHAR  [^\]\[[:space:]:;=(){,}\"\\]
         TOKEN( R_BRACE, "R_BRACE" );
     }
 
-    "\\"{LETTER}{ALNUM}*  {
+    !{LETTER}{ALNUM}*  {
 
         /* Ownership of this string is conferred to the parser. */
         yylval.string_t = STRDUP( yytext + 1 );

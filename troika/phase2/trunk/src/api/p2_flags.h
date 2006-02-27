@@ -63,7 +63,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
         #define DEBUG__LEXER                    1
 
         /** Echo each production as it is matched by the parser. */
-        #define DEBUG__PARSER                   1
+        #define DEBUG__PARSER                   0
 
         #if DEBUG__PARSER
 

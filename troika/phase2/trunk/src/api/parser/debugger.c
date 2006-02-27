@@ -163,7 +163,7 @@ enum parser_return_state parse()
 
 int main()
 {
-    printf( "Phase2 v%s command-line parser debugger.  Type '\\exit;' to quit.\n\n", VERSION );
+    printf( "Phase2 v%s command-line parser debugger.  Type '!exit;' to quit.\n\n", VERSION );
 
     switch( parse() )
     {
