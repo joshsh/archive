@@ -1,0 +1,18 @@
+there should be a central system file which encodes information about the present
+  (or saved) state of the system (colors, etc.) which the user can change via
+  the interface.  In this file (or files, maybe one for each *.h that needs a
+  place in it; for example fractal.per to fractal.h, storing useful data about
+  the fractals, for instance, interesting sites in the Mandelbrot set.  There
+  should be no limit to the size of such a file, which should be built to be as
+  user-friendly as possible, e.g. allowing such things as marginal notes about
+  the Mandelbrot location, etc.  Perhaps it would be wise even to create a 
+  separate folder for each *.h needing storage space, if within these *.h
+  data of different sorts must be stored)
+  
+create a "programmer's *.h" which has to do with testing such things as the
+  running time of a function, etc.  For this I'll have to learn about that
+  function-linking, or whatever it is called. 
+  
+NEVER include strings.h (even a file consisting of nothing more than
+  "#include <strings.h>" and the main() produces a page full of errors, 
+  so there's something very wrong with it!)

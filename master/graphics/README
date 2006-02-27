@@ -1,0 +1,37 @@
+README fuer C++ Graphic Library
+
+Files zur Benutzung der Grafik (X-Windows):
+
+ - Makefile	Makefile fuer alle Programme, die unsere Grafiken benuetzen
+                (je nach Bedarf Makefile.linux oder Makefile.sun auf
+                 Makefile umbenennen)
+
+ - simple.C	Einfaches Demoprogramm fuer Grafik
+ - lines.C	Demoprogramm mit Farben und Timer
+ - demo.C	Demoprogramm fuer Grafik inkl. Refresh
+
+ - graphics.h	Headerfile fuer Grafik
+
+ - graphics.c	Implementation der Grafik
+ - graph_icon	Benoetigt zur Bildung von graphics.o
+
+Installation: Alle obigen Dateien in ein Directory kopieren.
+Compilation: Mit 'make filename', filename ohne die Endung .C
+
+Beispiel:
+
+	%make demo
+
+nimmt 'demo.C' und erzeugt die ausfuehrbare Datei 'demo'.  
+
+Bemerkung: Der Aufruf 'make demo' enspricht 'g++ -o demo demo.C' auf
+           den Studentenmaschinen.
+
+           make: make uebesetzt ein Programm nur, wenn die source
+           (also demo.C) neueren Datums ist als das target (also demo).
+           Dies erledigt normalerweise der Texteditor, explizit kann
+           das auch mit 'touch', also 
+
+                   %touch demo.C
+  
+           erreicht werden.

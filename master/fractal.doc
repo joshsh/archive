@@ -1,0 +1,36 @@
+lambda fractals:
+  lambda*Z*(1-Z)  Z0=screen pixel  (Julia - type)
+newton fractals:
+  Z^n - 1
+  this has to do with convergence
+  pixels are colored according to the iteration on which they become
+    close to a root.
+  (a variation on this is coloring the pixels according to the root they will
+    lead to.  A polynomial with n roots would give a picture with n colors. )
+complex newton fractals:
+  Z^a - b  (a and b complex)
+  same as above
+lambda FN fractals:
+  lambda*fn(Z)  (fn is a function sin, cos, ....)
+"ginger" fractals:
+  xnew= 1 - y + |x|
+  ynew = x
+unity fractals:
+  One = (x*x)+(y*y)
+  y=(2-One) * x
+  x=(2-One) * y
+halley fractals:
+  has to do with the roots of the polynomial Z(Z^a-1)
+  constant a
+  constant epsilon, which determines whether the series has converged
+     |Z(n+1)|^2 - |Z(n)|^2 < epsilon
+     ( Z(n) seems to be the value of Z(Z^a-1) after n steps. )
+  there is a "relaxation coefficient", and I'm not exactly sure what it is.
+dynamic fractals:
+  based on a cyclic system of differential equations:
+  x'(t)=-f(y(t))   y'(t)=f(x(t)).
+  Approximated with the fraction dx/dt, dy/dt:
+  x(n+1)=x(n)-dt*f(y(n)) y(n+1)=y(n)+dt*(f(x(n))
+  initial values x(0) and y(0) are set to various points in the plane....
+  example for function f:
+    f(k)=sin(k+a*fn1(b*k))
