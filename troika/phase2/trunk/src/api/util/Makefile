@@ -1,5 +1,5 @@
 ################################################################################
-## Compile utilities and run a test program under Valgrind (memcheck).
+## Compile utilities and/or run a test program under Valgrind (memcheck).
 
 CC       = gcc
 CFLAGS   = -g -Wall --ansi -D_GNU_SOURCE
@@ -26,7 +26,7 @@ test :  debugger
 
 
 debugger :  debugger.c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
-	gcc $(CFLAGS) -o debugger debugger.c \
+	$(CC) $(CFLAGS) -o debugger debugger.c \
 		p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 
 
@@ -34,22 +34,6 @@ debugger :  debugger.c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 objects :  p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o
 
 
-p2_array.o :  p2_array.c p2_array.h
-	gcc -c $(CFLAGS) p2_array.c
-
-
-p2_bunch.o :  p2_bunch.c p2_bunch.h
-	gcc -c $(CFLAGS) p2_bunch.c
-
-
-p2_hash_table.o :  p2_hash_table.c p2_hash_table.h
-	gcc -c $(CFLAGS) p2_hash_table.c
-
-
-p2_set.o :  p2_set.c p2_set.h
-	gcc -c $(CFLAGS) p2_set.c
-
-
-p2_term.o :  p2_term.c p2_term.h
-	gcc -c $(CFLAGS) p2_term.c
+p2_%.o :  p2_%.c p2_%.h ../p2_flags.h
+	$(CC) $(CFLAGS) -c p2_$*.c
 

@@ -50,13 +50,21 @@ static void *p2_free( void *p )
 
 static void *term_of_nodes__delete( p2_term *t )
 {
-    return p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );
+    p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );
+    p2_term__delete( t );
+    return t;
 }
 
 
 p2_ast *p2_ast__bag( p2_array *bag )
 {
-    return p2_ast__new( BAG_T, bag );
+    p2_ast *ast = p2_ast__new( BAG_T, bag );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__bag(%X)\n", ( int ) ast, ( int) bag );
+    #endif
+
+    return ast;
 }
 
 
@@ -64,7 +72,13 @@ p2_ast *p2_ast__char( char c )
 {
     char *p = ( char* ) malloc( sizeof( char ) );
     *p = c;
-    return p2_ast__new( CHAR_T, p );
+    p2_ast *ast = p2_ast__new( CHAR_T, p );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__char('%c')\n", ( int ) ast, c );
+    #endif
+
+    return ast;
 }
 
 
@@ -72,7 +86,13 @@ p2_ast *p2_ast__float( double f )
 {
     double *p = ( double* ) malloc( sizeof( double ) );
     *p = f;
-    return p2_ast__new( FLOAT_T, p );
+    p2_ast *ast = p2_ast__new( FLOAT_T, p );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__float(%g)\n", ( int ) ast, f );
+    #endif
+
+    return ast;
 }
 
 
@@ -80,30 +100,58 @@ p2_ast *p2_ast__int( int i )
 {
     int *p = ( int* ) malloc( sizeof( int ) );
     *p = i;
-    return p2_ast__new( INT_T, p );
+    p2_ast *ast = p2_ast__new( INT_T, p );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__int(%X)\n", ( int ) ast, i );
+    #endif
+
+    return ast;
 }
 
 
 p2_ast *p2_ast__name( p2_name *name )
 {
-    return p2_ast__new( NAME_T, name );
+    p2_ast *ast = p2_ast__new( NAME_T, name );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__name(%X)\n", ( int ) ast, ( int) name );
+    #endif
+
+    return ast;
 }
 
 
 p2_ast *p2_ast__string( char *s )
 {
-    return p2_ast__new( STRING_T, s );
+    p2_ast *ast = p2_ast__new( STRING_T, s );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__string(%X)\n", ( int ) ast, ( int) s );
+    #endif
+
+    return ast;
 }
 
 
 p2_ast *p2_ast__term( p2_term *term )
 {
-    return p2_ast__new( TERM_T, term );
+    p2_ast *ast = p2_ast__new( TERM_T, term );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__term(%X)\n", ( int ) ast, ( int) term );
+    #endif
+
+    return ast;
 }
 
 
 void *p2_ast__delete( p2_ast *ast )
 {
+    #if DEBUG__AST
+    printf( "[] p2_ast__delete(%X)\n", ( int ) ast );
+    #endif
+
     switch( ast->type )
     {
         case BAG_T:

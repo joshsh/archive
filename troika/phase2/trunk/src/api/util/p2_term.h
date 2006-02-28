@@ -46,6 +46,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_TERM_H
 
 
+#include "../p2_flags.h"
+
+
 /** By default, the size of a term's buffer will be multiplied by this factor
     when the term outgrows it. */
 #define TERM__DEFAULT_EXPANSION    2.0

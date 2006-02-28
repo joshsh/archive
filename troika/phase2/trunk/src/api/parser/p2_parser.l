@@ -75,24 +75,6 @@ extern int p2_parser__show_line_numbers();
 int line_number, column_number, last_column_number, statement_number;
 
 
-/** Decorate command-line input. */
-void print_input_prefix()
-{
-    if ( !p2_parser__suppress_output() )
-    {
-        /* Display a line number at the beginning of each new line of input. */
-        if ( p2_parser__show_line_numbers() )
-            printf( "%d ", line_number );
-
-        /* Add a prefix to each new line of input, to distinguish it from
-           output, and possibly to separate it from the line number. */
-        #ifdef INPUT_PREFIX
-            printf( INPUT_PREFIX );
-        #endif
-    }
-}
-
-
 void new_token( int length )
 {
     last_column_number = column_number;
@@ -132,6 +114,27 @@ int get_char_number()
         return 1;
     else
         return last_column_number;
+}
+
+
+/*******************************************************************************/
+
+
+/** Decorate command-line input. */
+void print_input_prefix()
+{
+    if ( !p2_parser__suppress_output() )
+    {
+        /* Display a line number at the beginning of each new line of input. */
+        if ( p2_parser__show_line_numbers() )
+            printf( "%d ", line_number );
+
+        /* Add a prefix to each new line of input, to distinguish it from
+           output, and possibly to separate it from the line number. */
+        #ifdef INPUT_PREFIX
+            printf( INPUT_PREFIX );
+        #endif
+    }
 }
 
 

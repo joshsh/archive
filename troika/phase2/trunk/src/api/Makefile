@@ -3,11 +3,12 @@
 #  Makefile for the Phase2 programming API.
 #  Author: Joshua Shinavier
 
-UTIL_PATH    = ./util
-SK_PATH      = ./sk
-PARSER_PATH  = ./parser
-XML_PATH     = ./xml
-IMPORT_PATH  = ./import
+BNF     = ./bnftool
+IMPORT  = ./import
+PARSER  = ./parser
+SK      = ./sk
+UTILS   = ./util
+XML     = ./xml
 
 
 #         |temporary  |bigger but faster  |       |
@@ -22,61 +23,57 @@ default :  phase2
 
 .PHONY : clean
 clean :
-	$(MAKE) clean -C $(IMPORT_PATH)
-	$(MAKE) clean -C $(PARSER_PATH)
-	$(MAKE) clean -C $(UTIL_PATH)
-	$(MAKE) clean -C $(XML_PATH)
+	$(MAKE) clean -C $(BNF)
+	$(MAKE) clean -C $(IMPORT)
+	$(MAKE) clean -C $(PARSER)
+	$(MAKE) clean -C $(UTILS)
+	$(MAKE) clean -C $(XML)
 	-rm -f *.o
 
 
 .PHONY : distclean
 distclean :
-	$(MAKE) distclean -C $(IMPORT_PATH)
-	$(MAKE) distclean -C $(PARSER_PATH)
-	$(MAKE) distclean -C $(UTIL_PATH)
-	$(MAKE) distclean -C $(XML_PATH)
+	$(MAKE) distclean -C $(BNF)
+	$(MAKE) distclean -C $(IMPORT)
+	$(MAKE) distclean -C $(PARSER)
+	$(MAKE) distclean -C $(UTILS)
+	$(MAKE) distclean -C $(XML)
 	-rm -f *.o phase2
 
 
 .PHONY : test
 test :
-	$(MAKE) test -C $(IMPORT_PATH)
-	$(MAKE) test -C $(PARSER_PATH)
-	$(MAKE) test -C $(UTIL_PATH)
-	$(MAKE) test -C $(XML_PATH)
+	$(MAKE) test -C $(IMPORT)
+	$(MAKE) test -C $(PARSER)
+	$(MAKE) test -C $(UTILS)
+	$(MAKE) test -C $(XML)
 
 
 ################################################################################
 # Build the parser.
 
-PARSER_OBJECTS = $(PARSER_PATH)/lex.yy.o \
-                 $(PARSER_PATH)/p2_parser.tab.o \
-                 $(PARSER_PATH)/p2_ast.o
+PARSER_OBJECTS = $(PARSER)/lex.yy.o \
+                 $(PARSER)/p2_parser.tab.o \
+                 $(PARSER)/p2_ast.o
 
 .PHONY: $(PARSER_OBJECTS)
 $(PARSER_OBJECTS) :
-	$(MAKE) -C $(PARSER_PATH)
+	$(MAKE) -C $(PARSER)
 
 
 ################################################################################
 # Compile utilities.
 
-UTIL_OBJECTS = $(UTIL_PATH)/p2_array.o \
-               $(UTIL_PATH)/p2_bunch.o \
-               $(UTIL_PATH)/p2_hash_table.o \
-               $(UTIL_PATH)/p2_set.o \
-               $(UTIL_PATH)/p2_term.o
-
-.PHONY : $(UTIL_OBJECTS)
-$(UTIL_OBJECTS) :
-	$(MAKE) -C $(UTIL_PATH)
+.PHONY : utils
+utils :
+	$(MAKE) -C $(UTILS)
 
 
 ################################################################################
 # Build the command line interface.
 
 .PHONY : phase2
-phase2 :  $(UTIL_OBJECTS) $(PARSER_OBJECTS) p2_memory_manager.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o sk.o
+phase2 :  utils $(PARSER_OBJECTS) p2_memory_manager.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o sk.o
 
 
 p2_memory_manager.o :  p2_memory_manager.c p2_flags.h

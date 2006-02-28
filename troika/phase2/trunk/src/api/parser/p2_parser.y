@@ -175,8 +175,8 @@ void yyerror( enum parser_return_state *ignored, const char *msg )
     }
 }
 
-                          /* !    */
-#define ERROK  { yyerrok; yyclearin; exit_early = 0; }
+
+#define ERROK  { yyerrok; exit_early = 0; }
 
 
 #if DEBUG__PARSER
@@ -341,6 +341,15 @@ statements:
             *return_state = RETURN_STATE__ABORTED;
             YYACCEPT;
         }
+    }
+
+    | statements error SEMICOLON
+    {
+        #if DEBUG__PARSER
+            production( "statements ::=  statements error SEMICOLON" );
+        #endif
+
+        ERROK;
     };
 
 
@@ -381,39 +390,6 @@ statement:
 
             free( $1 );
         }
-    }
-
-    /* Eat up errors until a semicolon is found. */
-    | invalid_statement SEMICOLON
-    {
-        #if DEBUG__PARSER
-            production( "statements ::=  invalid_statement SEMICOLON" );
-        #endif
-    }
-
-    /* Handle premature EOF.  The next EOF token will cause YYACCEPT. */
-    | invalid_statement E_O_F
-    {
-        #if DEBUG__PARSER
-            production( "statements ::=  invalid_statement E_O_F" );
-        #endif
-    };
-
-
-invalid_statement:
-
-    error
-    {
-        #if DEBUG__PARSER
-            production( "invalid_statement ::=  error" );
-        #endif
-    }
-
-    | invalid_statement error
-    {
-        #if DEBUG__PARSER
-            production( "invalid_statement ::=  invalid_statement error" );
-        #endif
     };
 
 
@@ -520,6 +496,8 @@ expression:
 
         if ( $1 )
             p2_ast__delete( p2_ast__term( ( p2_term* ) $1 ) );
+
+        ERROK;
     };
 
 
@@ -592,6 +570,8 @@ subterm:
         #endif
 
         $$ = 0;
+
+        ERROK;
     }
 
     | L_PAREN term error
@@ -604,6 +584,8 @@ subterm:
 
         if ( $2 )
             p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+
+        ERROK;
     };
 
 
@@ -703,6 +685,8 @@ bracketed_term:
         #endif
 
         $$ = 0;
+
+        ERROK;
     }
 
     | L_SQ_BRACKET term error
@@ -715,6 +699,8 @@ bracketed_term:
 
         if ( $2 )
             p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+
+        ERROK;
     };
 
 
@@ -743,6 +729,8 @@ bag:
 
         if ( $1 )
             p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+
+        ERROK;
     };
 
 
@@ -771,6 +759,8 @@ bag_head:
         #endif
 
         $$ = 0;
+
+        ERROK;
     }
 
     | bag_head COMMA term
@@ -806,6 +796,8 @@ bag_head:
 
         if ( $1 )
             p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+
+        ERROK;
     };
 
 
@@ -848,6 +840,8 @@ name:
 
         $$ = 0;
         p2_ast__delete( p2_ast__name( ( p2_array* ) $1 ) );
+
+        ERROK;
     };
 
 

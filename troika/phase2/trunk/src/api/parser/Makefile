@@ -77,7 +77,7 @@ $(NAME).tab.c $(NAME).tab.h : $(NAME).y debug.h ../p2_flags.h
 ##	$(CC) $(CFLAGS) -c $(NAME)-aux.c
 
 
-p2_ast.o : p2_ast.c
+p2_ast.o : p2_ast.c ../p2_flags.h
 	$(CC) $(CFLAGS) -c p2_ast.c
 
 

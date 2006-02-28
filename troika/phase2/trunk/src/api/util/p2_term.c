@@ -84,6 +84,10 @@ p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
     t->head--;
     *(t->head) = (void *) 2;
 
+    #if DEBUG__TERM
+    printf( "[%X] p2_term__new(%X, %i)\n", ( int ) t, ( int ) p, initial_buffer_size );
+    #endif
+
     return t;
 }
 
@@ -115,12 +119,20 @@ p2_term *p2_term__copy(p2_term *source)
         memcpy(t->head, source->head, size * sizeof(void *));
     }
 
+    #if DEBUG__TERM
+    printf( "[%X] p2_term__copy(%X)\n", ( int ) t, ( int ) source );
+    #endif
+
     return t;
 }
 
 
 void p2_term__delete(p2_term *t)
 {
+    #if DEBUG__TERM
+    printf( "[] p2_term__delete(%X)\n", ( int ) t );
+    #endif
+
     free(t->buffer);
     free(t);
 }

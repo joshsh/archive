@@ -55,15 +55,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define DEBUG__SK                           1
 
-    #define DEBUG__COMPILER                     0
+    #define DEBUG__COMPILER                     1
 
     #if DEBUG__COMPILER
 
+        #define DEBUG__AST                      0
+
         /** Echo each token as it is matched by the lexer. */
-        #define DEBUG__LEXER                    1
+        #define DEBUG__LEXER                    0
 
         /** Echo each production as it is matched by the parser. */
-        #define DEBUG__PARSER                   0
+        #define DEBUG__PARSER                   1
 
         #if DEBUG__PARSER
 
@@ -73,6 +75,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
         #endif
 
     #endif
+
+    #define DEBUG__ARRAY                        0
+    #define DEBUG__BAG                          0
+    #define DEBUG__HASH_TABLE                   0
+    #define DEBUG__SET                          0
+    #define DEBUG__TERM                         0
 
 #endif
 
