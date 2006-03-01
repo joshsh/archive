@@ -85,13 +85,13 @@ void p2_array__set(p2_array *a, int index, void *p);
 void *p2_array__peek(p2_array *a);
 
 /** Pushes an item onto the front of the array (as a stack). */
-void p2_array__push(p2_array *a, void *p);
+void *p2_array__push(p2_array *a, void *p);
 
 /** Removes the item at the front of the array (as a stack). */
 void *p2_array__pop(p2_array *a);
 
 /** Adds an item to the tail end of the array (as a queue). */
-void p2_array__enqueue(p2_array *a, void *p);
+void *p2_array__enqueue(p2_array *a, void *p);
 
 /** Removes an item from the tail end of the array (as a queue).
     \warning this usage is nonstandard */

@@ -34,53 +34,53 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /******************************************************************************/
 
+
+/* Flags. */
+#define PRIM__CONSTRUCTOR   0x0001
+#define PRIM__DECODER       0x0010
+#define PRIM__DESTRUCTOR    0x0100
+#define PRIM__ENCODER       0x1000
+
+
+typedef struct _p2_parameter
+{
+    /** A helpful name. */
+    char *name;
+
+    /** Data type. */
+    p2_type *type;
+
+    /** Whether the parent primitive may have a side-effect on this parameter. */
+    int transparent;
+
+} p2_parameter;
+
+
 /** A structure containing a C function pointer together with type information
     and a unique name. */
 typedef struct _p2_primitive
 {
-    /** Memory location of the C function stub. */
-    void *( *cstub )( void ** );
+    /** The primitive's return type. */
+    p2_type *return_type;
 
     /** A unique name (preferably the same as the C function stub referenced by
         the pointer, e.g. "strdup"). */
     char *name;
 
+    /** Memory location of the C function stub. */
+    void *( *cstub )( void ** );
+
     /** The number of formal parameters. */
-    int n_params;
+    int arity;
 
-    /** The data type of each parameter. */
-    p2_type **parameter_types;
-
-    /** A helpful name for each parameter. */
-    char **parameter_names;
-
-    /** An array of length {n_params} containing at each parameter index a 0
-        if the argument at that index may experience a side-effect, or a 1
-        otherwise (the primitive is said to be "referentially transparent" with
-        respect to that parameter).
-        \note  Not yet used. */
-    char *transparency;
-
-    /** The primitive's return type. */
-    p2_type *return_type;
+    /** The formal parameters. */
+    p2_parameter *parameters;
 
 } p2_primitive;
 
 
 /******************************************************************************/
 
-/** Constructor.
-    \note  The primitive assumes ownership of the arguments. */
-p2_primitive *p2_primitive__new
-(
-    void *( *cstub )( void ** ),
-    char *name,
-    int n_params,
-    p2_type **parameter_types,
-    char **parameter_names,
-    char *transparency,
-    p2_type *return_type
-);
 
 /** Destructor. */
 void p2_primitive__delete( p2_primitive *prim );

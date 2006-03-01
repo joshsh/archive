@@ -20,30 +20,31 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_namespace.h"
 
 #include <stdio.h>  /* fprintf */
-
 #include <string.h>  /* strdup */
-
-extern p2_type *p2_namespace__type;
 
 
 /******************************************************************************/
 
 
-p2_namespace *p2_namespace__new( p2_namespace *parent )
+p2_namespace *p2_namespace__new()
 {
     p2_namespace *ns = new( p2_namespace );
 
     if ( ns )
     {
-        ns->parent = parent;
-        ns->children = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS );
-
-        if ( !ns->children )
+        if ( !( ns->children = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS ) ) )
         {
             free( ns );
             ns = 0;
         }
     }
+
+    #if DEBUG__SAFE
+    if ( !ns )
+        PRINTERR( "p2_namespace__new: allocation failed" );
+    #endif
+
+    ns->constant = 0;
 
     return ns;
 }
@@ -83,9 +84,11 @@ void p2_namespace__delete( p2_namespace *ns )
 }
 
 
-p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
+p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_object *o )
 {
-    p2_object *child_ns_object, *displaced_object;
+    p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
+
+    p2_object *child_ns_obj, *displaced_object;
     p2_hashing_pair displaced_pair;
     char *key;
 
@@ -111,6 +114,12 @@ p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
 
     #endif
 
+    if ( ns->constant )
+    {
+        PRINTERR( "p2_namespace__add: namespace is write-protected" );
+        return 0;
+    }
+
     if ( name->size == 1 )
     {
         key = strdup( ( char* ) p2_array__peek( name ) );
@@ -126,9 +135,9 @@ p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_object = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
+        child_ns_obj = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
 
-        if ( child_ns_object->type != p2_namespace__type )
+        if ( child_ns_obj->type != ns_obj->type )
         {
             PRINTERR( "not a namespace" );
             displaced_object = 0;
@@ -137,7 +146,7 @@ p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
         else
         {
             displaced_object = p2_namespace__add(
-                ( p2_namespace* ) child_ns_object->value, name, o );
+                child_ns_obj, name, o );
         }
 
         p2_array__push( name, key );
@@ -147,8 +156,10 @@ p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o )
 }
 
 
-p2_object *p2_namespace__lookup( p2_namespace *ns, p2_name *name )
+p2_object *p2_namespace__lookup( p2_namespace__object *ns_obj, p2_name *name )
 {
+    p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
+
     p2_object *o;
     char *key;
 
@@ -181,7 +192,7 @@ p2_object *p2_namespace__lookup( p2_namespace *ns, p2_name *name )
     {
         /* Always check for this error, as namespace references may come directly
            from the user. */
-        if ( o->type != p2_namespace__type )
+        if ( o->type != ns_obj->type )
         {
             PRINTERR( "not a namespace" );
             o = 0;
@@ -190,7 +201,7 @@ p2_object *p2_namespace__lookup( p2_namespace *ns, p2_name *name )
         else
         {
             key = ( char* ) p2_array__pop( name );
-            o = p2_namespace__lookup( ( p2_namespace* ) o->value, name );
+            o = p2_namespace__lookup( o, name );
             p2_array__push( name, key );
         }
     }
@@ -199,9 +210,11 @@ p2_object *p2_namespace__lookup( p2_namespace *ns, p2_name *name )
 }
 
 
-p2_object *p2_namespace__remove( p2_namespace *ns, p2_name *name )
+p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
 {
-    p2_object *child_ns_object, *displaced_object;
+    p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
+
+    p2_object *child_ns_obj, *displaced_object;
     p2_hashing_pair displaced_pair;
     char *key;
 
@@ -227,6 +240,12 @@ p2_object *p2_namespace__remove( p2_namespace *ns, p2_name *name )
 
     #endif
 
+    if ( ns->constant )
+    {
+        PRINTERR( "p2_namespace__remove: namespace is write-protected" );
+        return 0;
+    }
+
     if ( name->size == 1 )
     {
         key = ( char* ) p2_array__peek( name );
@@ -242,24 +261,27 @@ p2_object *p2_namespace__remove( p2_namespace *ns, p2_name *name )
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_object = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
+        child_ns_obj = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
 
-        if ( child_ns_object->type != p2_namespace__type )
+        if ( child_ns_obj->type != ns_obj->type )
         {
             PRINTERR( "not a namespace" );
             displaced_object = 0;
         }
 
         else
-        {
-            displaced_object = p2_namespace__remove(
-                ( p2_namespace* ) child_ns_object->value, name );
-        }
+            displaced_object = p2_namespace__remove( child_ns_obj, name );
 
         p2_array__push( name, key );
     }
 
     return displaced_object;
+}
+
+
+void *p2_namespace__for_all( p2_namespace *ns, void *(*func)(void *) )
+{
+    return p2_hash_table__for_all_targets( ns->children, func );
 }
 
 

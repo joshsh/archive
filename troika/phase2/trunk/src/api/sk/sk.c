@@ -130,24 +130,24 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     void *result, **args, **cur = term->head + 2;
     p2_primitive *prim = ( p2_primitive* ) ( ( p2_object* ) *cur )->value;
 
-    #if PRIMS__ALLOW_NOARG_FUNCTIONS
-    args = ( prim->n_params )
-        ? ( void** ) malloc( prim->n_params * sizeof( void* ) )
+    #if PRIM__ALLOW_NOARG_FUNCTIONS
+    args = ( prim->arity )
+        ? ( void** ) malloc( prim->arity * sizeof( void* ) )
         : 0;
     #else
     #if DEBUG__SAFE
-    if ( !prim->n_params )
+    if ( !prim->arity )
     {
         PRINTERR( "prim_reduce: no parameters" );
         p2_term__delete( term );
         return 0;
     }
     #endif
-        args = ( void** ) malloc( prim->n_params * sizeof( void* ) );
+        args = ( void** ) malloc( prim->arity * sizeof( void* ) );
     #endif
 
     /* Load arguments into the array. */
-    for ( i = 0; i < prim->n_params; i++ )
+    for ( i = 0; i < prim->arity; i++ )
     {
         #if SK__CHECKS__APPLY_TO_NONATOM
 
@@ -173,9 +173,9 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
         #endif  /* SK__CHECKS__APPLY_TO_NONATOM */
 
         /* Note: it's more efficient to do this here than in p2_primitive.c */
-        #if PRIMS__CHECKS__PARAM_TYPE
+        #if PRIM__CHECKS__PARAM_TYPE
 
-        if ( ( *( ( p2_object** ) cur ) )->type != prim->parameter_types[i] )
+        if ( ( *( ( p2_object** ) cur ) )->type != prim->parameters[i].type )
         {
             PRINTERR( "prim_reduce: argument type mismatch" );
 
@@ -187,7 +187,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 
         }
 
-        #endif  /* PRIMS__CHECKS__TYPE__DYNAMIC */
+        #endif  /* PRIM__CHECKS__TYPE__DYNAMIC */
 
         args[i] = ( *( ( p2_object** ) cur ) )->value;
     }
@@ -198,7 +198,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     if ( args )
         free( args );
 
-    #if !PRIMS__ALLOW_VOID_FUNCTIONS
+    #if !PRIM__ALLOW_VOID_FUNCTIONS
     if ( !result )
     {
         PRINTERR( "prim_reduce: null return value from primitive" );
@@ -273,7 +273,7 @@ p2_term *SK_reduce(
         /* If the head object is a primitive, apply it. */
         if ( head_type == primitive_type )
         {
-            if ( p2_term__length( term ) <= ( ( p2_primitive* ) head->value )->n_params )
+            if ( p2_term__length( term ) <= ( ( p2_primitive* ) head->value )->arity )
                 return term;
             else
             {
@@ -282,7 +282,7 @@ p2_term *SK_reduce(
                 /* Unless the application of a primitive is allowed to yield
                    another primitive (or an S or K combinator), the resulting
                    term cannot be further reduced. */
-                #if !PRIMS__ALLOW_HIGHER_ORDER
+                #if !PRIM__ALLOW_HIGHER_ORDER
                 return term;
                 #endif
             }

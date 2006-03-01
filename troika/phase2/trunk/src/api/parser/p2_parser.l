@@ -53,11 +53,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_parser.tab.h"
 #include "../p2_flags.h"
-#include "debug.h"
+#include "p2_parser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>  /* strdup */
 
 /** Added to each row of input (if defined). */
 #define INPUT_PREFIX  ">>  "
@@ -65,14 +64,32 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Language module dependencies ***********************************************/
 
-extern int p2_parser__suppress_output();
-extern int p2_parser__show_line_numbers();
+extern int p2_compiler__suppress_output();
+extern int p2_compiler__show_line_numbers();
 
 
 /* Line and character numbers *************************************************/
 
 
 int line_number, column_number, last_column_number, statement_number;
+
+
+/** Decorate command-line input. */
+void print_input_prefix()
+{
+    if ( !p2_compiler__suppress_output() )
+    {
+        /* Display a line number at the beginning of each new line of input. */
+        if ( p2_compiler__show_line_numbers() )
+            printf( "%d ", line_number );
+
+        /* Add a prefix to each new line of input, to distinguish it from
+           output, and possibly to separate it from the line number. */
+        #ifdef INPUT_PREFIX
+            printf( INPUT_PREFIX );
+        #endif
+    }
+}
 
 
 void new_token( int length )
@@ -114,27 +131,6 @@ int get_char_number()
         return 1;
     else
         return last_column_number;
-}
-
-
-/*******************************************************************************/
-
-
-/** Decorate command-line input. */
-void print_input_prefix()
-{
-    if ( !p2_parser__suppress_output() )
-    {
-        /* Display a line number at the beginning of each new line of input. */
-        if ( p2_parser__show_line_numbers() )
-            printf( "%d ", line_number );
-
-        /* Add a prefix to each new line of input, to distinguish it from
-           output, and possibly to separate it from the line number. */
-        #ifdef INPUT_PREFIX
-            printf( INPUT_PREFIX );
-        #endif
-    }
 }
 
 

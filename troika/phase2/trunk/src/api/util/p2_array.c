@@ -152,13 +152,15 @@ void *p2_array__peek(p2_array *a)
 }
 
 
-void p2_array__push(p2_array *a, void *p)
+void *p2_array__push(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
         expand(a);  /* Note: replaces a->buffer */
     a->head = ((a->head - 1) + a->buffer_size) % a->buffer_size;
     a->buffer[a->head] = p;
     a->size++;
+
+    return p;
 }
 
 
@@ -178,12 +180,14 @@ void *p2_array__pop(p2_array *a)
 }
 
 
-void p2_array__enqueue(p2_array *a, void *p)
+void *p2_array__enqueue(p2_array *a, void *p)
 {
     if (a->size >= a->buffer_size)
         expand(a);  /* Note: replaces a->buffer */
     a->buffer[(a->head + a->size) % a->buffer_size] = p;
     a->size++;
+
+    return p;
 }
 
 

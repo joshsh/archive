@@ -62,7 +62,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_ast.h"
-#include "debug.h"
+#include "p2_parser.h"
 #include "../p2_flags.h"
 
 #include "../util/p2_term.h"
@@ -75,11 +75,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Language module dependencies ***********************************************/
 
 
-extern int p2_evaluate_command( char *name, p2_ast *args );
-extern int p2_evaluate_expression( p2_name *name, p2_ast *expr );
-extern int p2_handle_parse_error( char *msg );
+extern int p2_compiler__evaluate_command( char *name, p2_ast *args );
+extern int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr );
+extern int p2_compiler__handle_parse_error( char *msg );
 
-extern int p2_parser__suppress_output();
+extern int p2_compiler__suppress_output();
 
 
 /* Lexer dependencies *********************************************************/
@@ -148,7 +148,7 @@ int yywrap()
 
 /** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
-void yyerror( enum parser_return_state *ignored, const char *msg )
+void yyerror( p2_parser__exit_state *ignored, const char *msg )
 {
     /* Only the first error in a statement is reported. */
     if ( ! *yyerror_msg )
@@ -256,7 +256,7 @@ struct statement *new_statement( char *name, p2_ast *expr )
 %type <stmt> statement command expression
 
 
-%parse-param { enum parser_return_state *return_state }
+%parse-param { p2_parser__exit_state *return_state }
 
 /** Report more detailed parse error messages. */
 %error-verbose
@@ -279,10 +279,10 @@ input:
             handle_error();
 
         if ( exit_early )
-            *return_state = RETURN_STATE__ABORTED;
+            *return_state = exit_state__aborted;
 
         else
-            *return_state = RETURN_STATE__END_OF_INPUT;
+            *return_state = exit_state__end_of_input;
 
         /* Exit normally. */
         YYACCEPT;
@@ -297,7 +297,7 @@ statements:
             production( "statements ::=  [null]" );
         #endif
 
-        *return_state = RETURN_STATE__PARSE_FAILURE;
+        *return_state = exit_state__parse_failure;
 
         #if YYDEBUG
             yydebug = 1;
@@ -319,7 +319,7 @@ statements:
 
         if ( exit_early )
         {
-            *return_state = RETURN_STATE__ABORTED;
+            *return_state = exit_state__aborted;
             YYACCEPT;
         }
 
@@ -338,7 +338,7 @@ statements:
 
         if ( exit_early )
         {
-            *return_state = RETURN_STATE__ABORTED;
+            *return_state = exit_state__aborted;
             YYACCEPT;
         }
     }
@@ -853,7 +853,7 @@ name:
 
 void handle_command( char *name, p2_ast *args )
 {
-    if ( !p2_parser__suppress_output() )
+    if ( !p2_compiler__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -864,10 +864,10 @@ void handle_command( char *name, p2_ast *args )
     }
 
     /* Note: ownership of name and arguments are conferred to
-       p2_evaluate_command. */
-    exit_early = exit_early || p2_evaluate_command( name, args );
+       p2_compiler__evaluate_command. */
+    exit_early = exit_early || p2_compiler__evaluate_command( name, args );
 
-    if ( !p2_parser__suppress_output() )
+    if ( !p2_compiler__suppress_output() )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
             printf( COMMAND_OUTPUT_SUFFIX );
@@ -880,7 +880,7 @@ void handle_command( char *name, p2_ast *args )
 
 void handle_expression( p2_name *name, p2_ast *expr )
 {
-    if ( !p2_parser__suppress_output() )
+    if ( !p2_compiler__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -891,10 +891,10 @@ void handle_expression( p2_name *name, p2_ast *expr )
     }
 
     /* Note: ownership of name and expression are conferred to
-       p2_evaluate_expression. */
-    exit_early = exit_early || p2_evaluate_expression( name, expr );
+       p2_compiler__evaluate_expression. */
+    exit_early = exit_early || p2_compiler__evaluate_expression( name, expr );
 
-    if (!p2_parser__suppress_output())
+    if (!p2_compiler__suppress_output())
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
             printf( EXPRESSION_OUTPUT_SUFFIX );
@@ -909,7 +909,7 @@ void handle_error()
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
-    if ( !p2_parser__suppress_output() )
+    if ( !p2_compiler__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -924,9 +924,9 @@ void handle_error()
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
-    exit_early = exit_early || p2_handle_parse_error( STRDUP( error_msg ) );
+    exit_early = exit_early || p2_compiler__handle_parse_error( STRDUP( error_msg ) );
 
-    if ( !p2_parser__suppress_output() )
+    if ( !p2_compiler__suppress_output() )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
             printf( ERROR_OUTPUT_SUFFIX );

@@ -12,12 +12,7 @@ default :  objects
 
 .PHONY : clean
 clean :
-	-rm *.o
-
-
-.PHONY : distclean
-distclean :  clean
-	-rm debugger
+	-rm *.o debugger
 
 
 .PHONY : test

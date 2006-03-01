@@ -30,10 +30,6 @@ clean :
 	-rm -rf $(CXX_OUT) $(XML_OUT) $(OBJ_OUT)
 
 
-.PHONY : distclean
-distclean :  clean
-
-
 .PHONY : test
 test :  # (Does nothing for now)
 

@@ -21,12 +21,7 @@ default :  xmldom.o
 
 .PHONY : clean
 clean :
-	-rm xmldom-*.o test.xml
-
-
-.PHONY : distclean
-distclean :  clean
-	-rm xmldom.o xmldom-test
+	-rm *.o test.xml xmldom-test
 
 
 .PHONY : test

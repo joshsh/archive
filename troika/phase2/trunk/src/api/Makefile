@@ -31,16 +31,6 @@ clean :
 	-rm -f *.o
 
 
-.PHONY : distclean
-distclean :
-	$(MAKE) distclean -C $(BNF)
-	$(MAKE) distclean -C $(IMPORT)
-	$(MAKE) distclean -C $(PARSER)
-	$(MAKE) distclean -C $(UTILS)
-	$(MAKE) distclean -C $(XML)
-	-rm -f *.o phase2
-
-
 .PHONY : test
 test :
 	$(MAKE) test -C $(IMPORT)

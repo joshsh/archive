@@ -36,13 +36,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_name.h"
 
 
+typedef p2_object p2_namespace__object;
+
 /** A namespace is a hash table with associated functions for adding, removing,
     and looking up named objects. */
 typedef struct _p2_namespace
 {
-    struct _p2_namespace *parent;
-
+    /** A dictionary of objects in the namespace. */
     p2_hash_table *children;
+
+    /** If nonzero, the namespace can only be read from, not written to. */
+    int constant;
 
 } p2_namespace;
 
@@ -58,19 +62,22 @@ void p2_namespace__delete( p2_namespace *ns );
     \param name  the local part of the name to assign
     \param o  the object to add
     \return  the object displaced by the new */
-p2_object *p2_namespace__add( p2_namespace *ns, p2_name *name, p2_object *o );
+p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_object *o );
 
 /** Finds an object in a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object found */
-p2_object *p2_namespace__lookup( p2_namespace *ns, p2_name *name );
+p2_object *p2_namespace__lookup( p2_namespace__object *ns_obj, p2_name *name );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object removed */
-p2_object *p2_namespace__remove( p2_namespace *ns, p2_name *name );
+p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name );
+
+
+void *p2_namespace__for_all( p2_namespace *ns, void *(*func)(void *) );
 
 
 #endif /* P2_NAMESPACE_H */

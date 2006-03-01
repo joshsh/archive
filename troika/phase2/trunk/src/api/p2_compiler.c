@@ -1,15 +1,3 @@
-/**
-
-\file  debugger.c
-
-\brief  Example implementation of the Phase2 command line parser.
-
-\note  This is not part of the Phase2 build.
-
-\author  Joshua Shinavier   \n
-         parcour@gmail.com  \n
-         +1 509 570-6990    \n */
-
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -29,25 +17,115 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_ast.h"
-#include "p2_parser.h"
-#include "../p2_flags.h"
-
-#include "../util/p2_term.h"
-
-#include <stdio.h>  /* printf */
-#include <string.h>  /* strcmp, strlen */
-#include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
+#include "p2_compiler.h"
+#include "p2_name.h"
+#include "parser/p2_ast.h"
 
 
-/** Bison parser dependency. */
-extern int yyparse();
+/* Compiler object is global because flex/bison are not thread safe. */
+p2_compiler *compiler = 0;
 
 
-/******************************************************************************/
+p2_compiler *p2_compiler__new( p2_environment *env )
+{
+    p2_compiler *c;
+
+    if ( compiler )
+    {
+        PRINTERR( "p2_compiler__new: concurrent compiler instances not allowed" );
+        return 0;
+    }
+
+    #if DEBUG__SAFE
+    if ( !env )
+    {
+        PRINTERR( "p2_compiler__new: null environment" );
+        return 0;
+    }
+    #endif
+
+    if ( !( c = new( p2_compiler ) ) )
+    {
+        PRINTERR( "p2_compiler__new: allocation failed" );
+        return 0;
+    }
+
+    if ( !( c->commands = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS ) ) )
+    {
+        PRINTERR( "p2_compiler__new: allocation failed" );
+        free( c );
+        return 0;
+    }
+
+    c->env = env;
+    c->cur_ns = env->data;
+    c->locked = 0;
+
+    compiler = c;
+
+    return c;
+}
 
 
-/** Mock command evaluator. */
+static void *p2_free( void *p )
+{
+    free( p );
+    return p;
+}
+
+
+void p2_compiler__delete( p2_compiler *c )
+{
+    #if DEBUG__SAFE
+    if ( !c )
+    {
+        PRINTERR( "p2_compiler__delete: null compiler" );
+        return;
+    }
+    else if ( c->locked )
+    {
+        PRINTERR( "p2_compiler__delete: can't delete while parsing" );
+        return;
+    }
+    #endif
+
+    p2_hash_table__for_all_keys( c->commands, p2_free );
+    p2_hash_table__delete( c->commands );
+    free( c );
+
+    compiler = 0;
+}
+
+
+p2_parser__exit_state p2_compiler__parse( p2_compiler *c )
+{
+    p2_parser__exit_state exit_state;
+
+    #if DEBUG__SAFE
+    if ( !c )
+    {
+        PRINTERR( "p2_compiler__parse: null compiler" );
+        return 1;
+    }
+    #endif
+
+    if ( c->locked )
+        return exit_state__locked_out;
+
+    c->locked = 1;
+
+    if ( yyparse( &exit_state ) )
+        PRINTERR( "p2_compiler__parse: parser exited abnormally" );
+
+    c->locked = 0;
+
+    return exit_state;
+}
+
+
+/* Externally linked functions for the parser *********************************/
+
+
 int p2_compiler__evaluate_command( char *name, p2_ast *args )
 {
     int ret = 0;
@@ -63,8 +141,7 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
 
 
     /* Debugger recognizes just one command. */
-    if ( !strcmp( name, "quit" )
-      || !strcmp( name, "q" ) )
+    if ( !strcmp( name, "exit" ) )
         ret = 1;
 
     if ( args )
@@ -76,7 +153,6 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
 }
 
 
-/** Mock expression evaluator. */
 int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 {
     int ret = 0;
@@ -101,7 +177,6 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 }
 
 
-/** Mock parse error handler. */
 int p2_compiler__handle_parse_error( char *msg )
 {
     int ret = 0;
@@ -119,70 +194,15 @@ int p2_compiler__handle_parse_error( char *msg )
 }
 
 
-/** \return  whether the lexer and parser are to avoid printing to stdout while
-    matching input */
 int p2_compiler__suppress_output()
 {
     return 0;
 }
 
 
-/** \return  whether a line number is printed before each new line of input */
 int p2_compiler__show_line_numbers()
 {
     return 1;
-}
-
-
-/******************************************************************************/
-
-
-static int active = 0;
-
-/** yyparse is invoked here. */
-p2_parser__exit_state parse()
-{
-    p2_parser__exit_state return_state;
-    int yyparse__exit_value;
-
-    if ( active )
-    {
-        return exit_state__locked_out;
-    }
-
-    else
-    {
-        active = 1;
-        if ( ( yyparse__exit_value = yyparse( &return_state ) ) )
-            printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
-        active = 0;
-
-        return return_state;
-    }
-}
-
-
-int main()
-{
-    printf( "Phase2 v%s command-line parser debugger.  Type '!quit;' to exit.\n\n", VERSION );
-
-    switch( parse() )
-    {
-        case exit_state__aborted:
-            printf( "Parser was aborted by a user action.\n" );
-            break;
-        case exit_state__end_of_input:
-            printf( "Parser reached end-of-input.\n" );
-            break;
-        case exit_state__locked_out:
-            printf( "Second concurrent activation of parse is not allowed.\n" );
-            break;
-        case exit_state__parse_failure:
-            printf( "Parse failure.\n" );
-            break;
-    }
-
-    return 0;
 }
 
 

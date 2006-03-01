@@ -48,6 +48,14 @@ p2_memory_manager *p2_memory_manager__new( p2_object *root )
     if ( !m )
         return 0;
 
+    m->root = root;
+    if ( !p2_memory_manager__add( m, root ) )
+    {
+        PRINTERR( "p2_memory_manager__new: could not reference root object" );
+        free( m );
+        return 0;
+    }
+
     m->objects = p2_bunch__new( MEM_MANAGER__OBJECTS__BLOCK_SIZE );
 
     if ( !m->objects )
@@ -56,7 +64,6 @@ p2_memory_manager *p2_memory_manager__new( p2_object *root )
         return 0;
     }
 
-    m->root = root;
     m->clean = 1;
 
     global_f = 0;
@@ -213,7 +220,7 @@ static void *trace_through_assoc_edge( p2_object *pred, p2_object *obj )
 {
     #if TRIPLES__IMPLICATION__SP_O
 
-        ...
+        ... not yet written ...
 
     #else
 

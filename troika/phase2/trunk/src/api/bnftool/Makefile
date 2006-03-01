@@ -1,7 +1,7 @@
 ################################################################################
 ## Makefile for a simple BNF grammar analyzer tool.
 ##
-## Usage: ./bnftool < [valid Bison grammar file]
+## Usage: ./bnftool < <valid Bison grammar file>
 
 UTILS    = ../util
 
@@ -21,10 +21,6 @@ default :  bnftool
 .PHONY : clean
 clean :
 	-rm *.o *.tab.* lex.yy.c bnftool *.output
-
-
-.PHONY : distclean
-distclean :  clean
 
 
 ################################################################################

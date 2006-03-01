@@ -1,3 +1,11 @@
+/**
+
+\file  p2_parser.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
+
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -17,31 +25,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_primitive.h"
+#ifndef P2_PARSER_H
+#define P2_PARSER_H
 
 
-void p2_primitive__delete( p2_primitive *prim )
+typedef enum _p2_parser__exit_state
 {
-    int i;
+    exit_state__aborted,
+    exit_state__end_of_input,
+    exit_state__locked_out,
+    exit_state__parse_failure
 
-    #if DEBUG__SAFE
-    if ( !prim )
-    {
-        PRINTERR( "p2_primitive__delete: null primitive" );
-        return;
-    }
-    #endif
+} p2_parser__exit_state;
 
-    free( prim->name );
 
-    for ( i = 0; i < prim->arity; i++ )
-        if ( prim->parameters[i].name )
-            free( prim->parameters[i].name );
-
-    free( prim->parameters );
-
-    free( prim );
-}
-
+#endif  /* P2_PARSER_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

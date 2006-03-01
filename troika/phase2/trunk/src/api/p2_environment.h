@@ -1,78 +1,79 @@
-#include "util/p2_dictionary.h"
+/**
+    \file  p2_environment.h
+
+    \author  Joshua Shinavier   \n
+             parcour@gmail.com  \n
+             +1 509 570-6990    \n */
+
+/*******************************************************************************
+
+Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place, Suite 330, Boston, MA 02111-1307 USA
+
+*******************************************************************************/
+
+#ifndef P2_ENVIRONMENT_H
+#define P2_ENVIRONMENT_H
 
 
-/* Special, global data types. */
-p2_type *p2_namespace_t;
-p2_type *int_t, *double_t, *char_t, *cstring_t;
+#include "p2_memory_manager.h"
+#include "p2_namespace.h"
+#include "p2_primitive.h"
 
 
 /** A data structure which is equivalent to a namespace containing uniquely
     named data types, function primitives, and data sets. */
 typedef struct _p2_environment
 {
-    p2_dictionary *types;
-    p2_dictionary *primitives;
+    p2_memory_manager *manager;
 
-    p2_dictionary *datasets;
+    p2_namespace *root;
+
+    p2_namespace *data;
+    p2_namespace *primitives;
+    p2_namespace *types;
+
+    p2_type *ns__type, *prim__type, *type__type;
 
 } p2_environment;
+
 
 /** \return  a new environment */
 p2_environment *p2_environment__new();
 
+
 /** Destroys an environment. */
 void p2_environment__delete( p2_environment *env );
 
-p2_type *p2_register_type( p2_environment *env, p2_type *type );
-p2_type *p2_resolve_type( p2_environment *env, char *name );
-p2_primitive *p2_register_primitive( p2_environment *env, p2_primitive *prim );
-p2_primitive *p2_resolve_primitive( p2_environment *env, char *name );
-//p2_dataset *p2_register_dataset( p2_environment *env, p2_dataset *dataset );
-//p2_dataset *p2_resolve_dataset( p2_environment *env, char *name );
-p2_atom *p2_resolve_atom( p2_environment *env, char *dataset_name, char *atom_name );
+
+p2_object *p2_environment__register_primitive(
+    p2_environment *env,
+    p2_primitive *prim,
+    int flags );
 
 
---------------------------------------------------------------------------------
+p2_object *p2_environment__register_type(
+    p2_environment *env,
+    p2_type *type );
 
 
-#include "p2_environment.h"
-#include "p2_type.h"
-#include "p2_primitive.h"
-#include "p2_dataset.h"
+p2_type *p2_environment__resolve_type(
+    p2_environment *env,
+    const char *name );
 
 
-p2_environment *p2_environment__new()
-{
-    p2_environment *env
-        = ( p2_environment* ) malloc( sizeof( p2_environment ) );
+#endif  /* P2_ENVIRONMENT_H */
 
-    // Create data types dictionary.
-    env->types = p2_dictionary__new();
-
-    // Create function primitives dictionary.
-    env->primitives = p2_dictionary__new();
-
-    // Create data sets dictionary.
-    env->datasets = p2_dictionary__new();
-
-    return env;
-}
-
-
-void p2_environment__delete( p2_environment *env )
-{
-    // Destroy data sets dictionary and all data sets.
-    p2_dictionary__for_all( env->datasets, p2_dataset__delete );
-    p2_dictionary__delete( env->datasets );
-
-    // Destroy function primitives dictionary and all function primitives.
-    p2_dictionary__for_all( env->primitives, p2_primitive__delete );
-    p2_dictionary__delete( env->primitives );
-
-    // Destroy data types dictionary and all data types.
-    p2_dictionary__for_all( env->types, p2_type__delete );
-    p2_dictionary__delete( env->types );
-
-    free( env );
-}
-
+/* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

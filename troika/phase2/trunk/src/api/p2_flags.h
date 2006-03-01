@@ -40,6 +40,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PRINTERR( msg )  fprintf( stderr, "Error: %s.\n", msg )
 
 #include <stdlib.h>  /* malloc */
+#include <string.h>  /* strlen, strcpy */
 
 #define STRDUP( x )  strcpy( ( char* ) malloc( 1 + strlen( x ) ), x )
 #define new( type )  ( type* ) malloc( sizeof( type ) )
@@ -55,7 +56,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define DEBUG__SK                           1
 
-    #define DEBUG__COMPILER                     1
+    #define DEBUG__COMPILER                     0
 
     #if DEBUG__COMPILER
 
@@ -87,11 +88,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Reduction ******************************************************************/
 
-#define PRIMS__ALLOW_HIGHER_ORDER           0
-#define PRIMS__ALLOW_NOARG_FUNCTIONS        0
-#define PRIMS__ALLOW_VOID_FUNCTIONS         0
+#define PRIM__ALLOW_HIGHER_ORDER           0
+#define PRIM__ALLOW_NOARG_FUNCTIONS        0
+#define PRIM__ALLOW_VOID_FUNCTIONS         0
 
-#define PRIMS__CHECKS__PARAM_TYPE           1
+#define PRIM__CHECKS__PARAM_TYPE           1
 
 
 #define SK__CHECKS__APPLY_TO_NONATOM        1
