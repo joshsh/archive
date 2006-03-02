@@ -21,8 +21,7 @@ CC           = gcc $(CFLAGS)
 
 
 .PHONY : default
-default :  $(OBJ_OUT)/p2-stubs.o
-	nm $(OBJ_OUT)/p2-stubs.o
+default :  objects
 
 
 .PHONY : clean
@@ -31,7 +30,13 @@ clean :
 
 
 .PHONY : test
-test :  # (Does nothing for now)
+test :  $(OBJ_OUT)/p2-stubs.o
+	nm $(OBJ_OUT)/p2-stubs.o
+
+.PHONY : objects
+objects : $(CXX_OUT)/p2-stubs.c
+	$(CC) -c $(CXX_OUT)/*.c
+	mv *.o $(CXX_OUT)
 
 
 $(OBJ_OUT)/p2-stubs.o :  $(CXX_OUT)/p2-stubs.c

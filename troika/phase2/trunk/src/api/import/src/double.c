@@ -1,5 +1,6 @@
 #include "double.h"
-#include <stdio.h>  /* atof */
+#include <stdlib.h>  /* atof */
+#include <stdio.h>  /* sprintf */
 
 
 void double__encode( double p, char *buffer )

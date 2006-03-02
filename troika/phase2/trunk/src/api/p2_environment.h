@@ -39,11 +39,11 @@ typedef struct _p2_environment
 {
     p2_memory_manager *manager;
 
-    p2_namespace *root;
+    p2_namespace__object *root;
 
-    p2_namespace *data;
-    p2_namespace *primitives;
-    p2_namespace *types;
+    p2_namespace__object *data;
+    p2_namespace__object *primitives;
+    p2_namespace__object *types;
 
     p2_type *ns__type, *prim__type, *type__type;
 
@@ -61,17 +61,23 @@ void p2_environment__delete( p2_environment *env );
 p2_object *p2_environment__register_primitive(
     p2_environment *env,
     p2_primitive *prim,
-    int flags );
+    int flags,
+    void ( *src_f ) ( void ) );
 
 
 p2_object *p2_environment__register_type(
     p2_environment *env,
-    p2_type *type );
+    p2_type *type,
+    int flags );
 
 
 p2_type *p2_environment__resolve_type(
     p2_environment *env,
     const char *name );
+
+
+/* Externally linked function defined in p2-stubs.c */
+extern void *p2_environment__import_primitives( p2_environment *env );
 
 
 #endif  /* P2_ENVIRONMENT_H */

@@ -56,6 +56,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define DEBUG__SK                           1
 
+    #define DEBUG__OBJECT                       1
+
     #define DEBUG__COMPILER                     0
 
     #if DEBUG__COMPILER
@@ -145,10 +147,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Memory management **********************************************************/
 
-/* For p2_object's flags field. */
-#define OBJECT__IS_OBJ_COLL ( int ) 0x001
-#define OBJECT__MARKED      ( int ) 0x010
-#define OBJECT__OWNED       ( int ) 0x100
 
 #define MEM__MARK_AND_SWEEP 1
 

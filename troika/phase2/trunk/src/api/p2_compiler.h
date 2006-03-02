@@ -30,12 +30,18 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "p2_environment.h"
+#include "parser/p2_ast.h"
+#include "parser/p2_parser.h"
+
+
+/** Bison parser dependency. */
+extern int yyparse();
 
 
 typedef struct _p2_compiler
 {
     p2_environment *env;
-    p2_namespace *cur_ns;
+    p2_namespace__object *cur_ns__obj;
 
     p2_hash_table *commands;
 
@@ -54,7 +60,7 @@ void p2_compiler__delete( p2_compiler *c );
 
 
 /** yyparse is invoked here. */
-int p2_compiler__parse( p2_compiler *c );
+p2_parser__exit_state p2_compiler__parse( p2_compiler *c );
 
 
 /* Externally linked functions for the parser *********************************/

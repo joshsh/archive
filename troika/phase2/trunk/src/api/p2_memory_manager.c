@@ -29,40 +29,52 @@ static void *(*global_f)(p2_object*);
 
 p2_memory_manager *p2_memory_manager__new( p2_object *root )
 {
+    p2_memory_manager *m;
+printf( "---m 1---\n" ); fflush( stdout );
+
     #if DEBUG__SAFE
-        if ( !root )
-        {
-            PRINTERR( "p2_memory_manager__new: null root" );
-            return 0;
-        }
-
-        else if ( root->flags & OBJECT__MARKED )
-        {
-            PRINTERR( "p2_memory_manager__new: root is marked" );
-            return 0;
-        }
-    #endif
-
-    p2_memory_manager *m = new( p2_memory_manager );
-
-    if ( !m )
+    if ( !root )
+    {
+        PRINTERR( "p2_memory_manager__new: null root" );
         return 0;
+    }
+    else if ( root->flags & OBJECT__MARKED )
+    {
+        PRINTERR( "p2_memory_manager__new: root is marked" );
+        return 0;
+    }
+    #endif
+printf( "---m 2---\n" ); fflush( stdout );
+
+    if ( !( m = new( p2_memory_manager ) ) )
+    {
+        p2_object__delete( root );
+        return 0;
+    }
+printf( "---m 3---\n" ); fflush( stdout );
+
+    m->objects = p2_bunch__new( MEM_MANAGER__OBJECTS__BLOCK_SIZE );
+printf( "---m 4---\n" ); fflush( stdout );
+
+    if ( !m->objects )
+    {
+        p2_object__delete( root );
+        free( m );
+        return 0;
+    }
+printf( "---m 5---\n" ); fflush( stdout );
 
     m->root = root;
     if ( !p2_memory_manager__add( m, root ) )
     {
-        PRINTERR( "p2_memory_manager__new: could not reference root object" );
+        PRINTERR( "p2_memory_manager__new: could not add root object" );
+        p2_object__delete( root );
+        p2_bunch__delete( m->objects );
         free( m );
         return 0;
     }
 
-    m->objects = p2_bunch__new( MEM_MANAGER__OBJECTS__BLOCK_SIZE );
-
-    if ( !m->objects )
-    {
-        free( m );
-        return 0;
-    }
+printf( "---m 6---\n" ); fflush( stdout );
 
     m->clean = 1;
 
@@ -104,6 +116,8 @@ unsigned int p2_memory_manager__size( p2_memory_manager *m )
 
 p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o )
 {
+printf( "---m add 1---\n" ); fflush( stdout );
+
     #if DEBUG__SAFE
         if ( !o )
         {
@@ -125,6 +139,7 @@ p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o )
 
         o->flags = o->flags | OBJECT__OWNED;
     #endif
+printf( "---m add 2---\n" ); fflush( stdout );
 
     return ( p2_object* ) p2_bunch__add( m->objects, o );
 }
@@ -250,6 +265,7 @@ static void *trace( p2_object *o )
             return 0;
         }
     #endif
+printf( "---m trace 0x%X (0x%X)---\n", ( int ) o, ( int ) o->value ); fflush( stdout );
 
     /* If the object is not already marked... */
     if ( !( o->flags & OBJECT__MARKED ) )
@@ -261,6 +277,8 @@ static void *trace( p2_object *o )
         if ( global_f && !global_f( o ) )
             return 0;
 
+if ( o->flags & OBJECT__IS_OBJ_COLL )
+    printf( "---m trace (found collection: 0x%X)---\n", ( int ) o );
         /* If it's a collection of objects, mark its descendants. */
         if ( ( o->flags & OBJECT__IS_OBJ_COLL )
           && !p2_object__for_all( o, (void*(*)(void*)) trace ) )
@@ -319,18 +337,23 @@ void p2_memory_manager__mark_and_sweep( p2_memory_manager *m )
             return;
         }
     #endif
+printf( "---m ms 1---\n" ); fflush( stdout );
 
     if ( !m->clean )
         unmark_all( m );
+printf( "---m ms 2---\n" ); fflush( stdout );
 
     m->clean = 0;
 
     /* Mark. */
     global_f = 0;
     trace( m->root );
+printf( "---m ms 3---\n" ); fflush( stdout );
 
     /* Sweep. */
     sweep( m );
+printf( "---m ms 4---\n" ); fflush( stdout );
+
 }
 
 

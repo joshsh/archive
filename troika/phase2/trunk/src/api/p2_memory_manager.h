@@ -24,6 +24,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+#ifndef P2_MEMORY_MANAGER_H
+#define P2_MEMORY_MANAGER_H
+
 #include "p2_object.h"
 #include "util/p2_bunch.h"
 
@@ -66,4 +69,5 @@ void *p2_memory_manager__for_all_reachable(
 void p2_memory_manager__mark_and_sweep( p2_memory_manager *m );
 
 
+#endif  /* P2_MEMORY_MANAGER_H */
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

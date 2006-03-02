@@ -93,37 +93,18 @@ extern &quot;C&quot;
 
     <xsl:template name="p2__import_primitives">
 
-/* #include &quot;import-aux.h&quot; */
+#include &quot;../../../p2_primitive-import.h&quot;
 
-enum function_marker
+
+#define RT  1  /* Referentially transparent. */
+#define RO  0  /* Referentially opaque. */
+
+
+void *p2_environment__import_primitives( p2_environment *env )
 {
-    unmarked = 0,
-    encoder,
-    decoder,
-    destructor
-};
+    p2_primitive *p;
 
-extern void *p2_primdef__head(
-    void *( *cstub )( void** ),
-    char *name,
-    char *return_type_id,
-    int parameters );
-
-extern void *p2_primdef__parameter(
-    char *param_name,
-    char *param_type_id,
-    char param_transparency );
-
-extern void *p2_primdef__tail( enum function_marker marker );
-
-
-#define RT  ( char ) 1  /* Referentially transparent. */
-#define RO  ( char ) 0  /* Referentially opaque. */
-
-
-int p2__import_primitives()
-{
-    return ( 1
+    return ( void* ) ( ( void* ) 1
 <xsl:text />
 
         <xsl:for-each select="compounddef">
@@ -163,7 +144,7 @@ int p2__import_primitives()
 /** <xsl:text />
         <xsl:value-of select="definition" />
         <xsl:value-of select="argsstring" /> */<xsl:text />
-void *<xsl:text />
+static void *<xsl:text />
         <xsl:call-template name="mangle-function-name">
             <xsl:with-param name="original-name" select="$function-name" />
         </xsl:call-template>( void **args )
@@ -254,11 +235,7 @@ void *<xsl:text />
 
         <!-- Define the p2_primitive. -->
         /* <xsl:value-of select="$function-name" /> */
-        &amp;&amp; p2_primdef__head( <xsl:text />
-        <xsl:call-template name="mangle-function-name">
-            <xsl:with-param name="original-name" select="$function-name" />
-        </xsl:call-template>, &quot;<xsl:text />
-        <xsl:value-of select="$function-name" />&quot;, &quot;<xsl:text />
+        &amp;&amp; ( p = p2_primitive__new( env, &quot;<xsl:text />
         <xsl:call-template name="remove-qualifiers">
             <xsl:with-param name="type">
                 <xsl:call-template name="depointerize">
@@ -266,22 +243,26 @@ void *<xsl:text />
                 </xsl:call-template>
             </xsl:with-param>
         </xsl:call-template>&quot;, <xsl:text />
-        <xsl:value-of select="count(param)" /> )<xsl:text />
+        <xsl:text/>&quot;<xsl:value-of select="$function-name" />&quot;, <xsl:text />
+        <xsl:call-template name="mangle-function-name">
+            <xsl:with-param name="original-name" select="$function-name" />
+        </xsl:call-template>, <xsl:text />
+        <xsl:value-of select="count(param)" /> ) )<xsl:text />
 
         <!-- Define each parameter. -->
         <xsl:for-each select="param">
             <xsl:variable name="pos" select="position()" />
             <xsl:variable name="name" select="declname/text()" />
 <xsl:text />
-        &amp;&amp; p2_primdef__parameter( &quot;<xsl:text />
-            <xsl:value-of select="declname/text()" />&quot;, &quot;<xsl:text />
+        &amp;&amp; p2_primitive__add_param( env, p, &quot;<xsl:text />
             <xsl:call-template name="remove-qualifiers">
                 <xsl:with-param name="type">
                     <xsl:call-template name="depointerize">
                         <xsl:with-param name="type" select="type" />
                     </xsl:call-template>
                 </xsl:with-param>
-            </xsl:call-template>&quot;, <xsl:text />
+            </xsl:call-template>&quot;, &quot;<xsl:text />
+            <xsl:value-of select="declname/text()" />&quot;, <xsl:text />
             <xsl:call-template name="boolean-as-transparency">
                 <xsl:with-param name="arg" select="not(contains($this/detaileddescription/para/parameterlist/parameteritem[parameternamelist/parametername/text() = $name]/parameterdescription/para/text(), '$opaque'))" />
             </xsl:call-template> )<xsl:text />
@@ -290,7 +271,7 @@ void *<xsl:text />
 
         <!-- Register the primitive. -->
 <xsl:text />
-        &amp;&amp; p2_primdef__tail( <xsl:text />
+        &amp;&amp; p2_primitive__register( env, p, <xsl:text />
         <xsl:variable name="marker">
             <xsl:for-each select="detaileddescription/para">
                 <xsl:call-template name="function-marker" />
@@ -301,10 +282,10 @@ void *<xsl:text />
                 <xsl:value-of select="$marker" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:text>unmarked</xsl:text>
+                <xsl:text>0</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:text/> )
+        <xsl:text/>, ( void(*)(void) ) <xsl:value-of select="$function-name" /> )
 <xsl:text />
     </xsl:template>
 
@@ -474,13 +455,13 @@ void *<xsl:text />
 
         <xsl:choose>
             <xsl:when test="contains(text(), '$encoder')">
-                <xsl:text>encoder</xsl:text>
+                <xsl:text>PRIM__ENCODER</xsl:text>
             </xsl:when>
             <xsl:when test="contains(text(), '$decoder')">
-                <xsl:text>decoder</xsl:text>
+                <xsl:text>PRIM__DECODER</xsl:text>
             </xsl:when>
             <xsl:when test="contains(text(), '$destructor')">
-                <xsl:text>destructor</xsl:text>
+                <xsl:text>PRIM__DESTRUCTOR</xsl:text>
             </xsl:when>
         </xsl:choose>
 

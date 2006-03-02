@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Default member functions (use with caution). */
 static void *default__clone( void *p ) { return 0; }
 static void *default__decode( char *buffer ) { return 0; }
-static void default__destroy( void *p ) { }
+static void default__destroy( void *p ) { free( p ); }
 static void default__encode( void *p, char *buffer ) { *buffer = '\0'; }
 static void *default__exists( void *p, void *(*f)( void* ) ) { return 0; }
 static void *default__for_all( void *p, void *(*f)( void* ) ) { return 0; }

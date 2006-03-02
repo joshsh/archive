@@ -1,11 +1,12 @@
 /**
 
-\file  p2_void.h
+\file  p2_primitive-import.h
 
-\brief  Defines the trivial p2_void data type.
+\brief  Primitive-building functions to be referenced by the generated file
+p2-import.c.
 
-\note  It is assumed that the implementation will not call p2_void__new so
-       many times as to use up every below-range address.
+\todo  After calling p2__import_primitives, the type registry must be checked
+for incomplete types.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -30,20 +31,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_VOID_H
-#define P2_VOID_H
+#ifndef P2_PRIMITIVE_IMPORT_H
+#define P2_PRIMITIVE_IMPORT_H
+
+#include "p2_environment.h"
 
 
-/** A p2_void item is a pointer to an out-of-range memory location, which serves
-    as a unique identifier for the item but does not contain any meaningful
-    data. */
-typedef void p2_void;
+p2_primitive *p2_primitive__new(
+    p2_environment *env,
+    const char *return_type,
+    const char *name,
+    void *( *cstub )( void** ),
+    int arity );
 
 
-/** The constructor merely returns an unused out-of-range address. */
-p2_void *p2_void__new(char *dataset_id, char *local_id);
+p2_primitive *p2_primitive__add_param(
+    p2_environment *env,
+    p2_primitive *p,
+    char *type,
+    char *name,
+    int transparent );
 
 
-#endif  /* P2_VOID_H */
+p2_primitive *p2_primitive__register(
+    p2_environment *env,
+    p2_primitive *p,
+    int flags,
+    void ( *src_f ) ( void ) );
+
+
+#endif  /* P2_PRIMITIVE_IMPORT_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

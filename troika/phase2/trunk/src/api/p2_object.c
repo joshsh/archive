@@ -51,12 +51,24 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
         o->trans_edges = 0;
     #endif
 
+    #if DEBUG__OBJECT
+    printf( "p2_object__new: created object Ox%X (value 0x%X) of type '%s' (0x%X).\n",
+        ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
+if (!strcmp( o->type->name, "type"))
+    printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
+    #endif
+
     return o;
 }
 
 
 void p2_object__delete( p2_object *o )
 {
+    #if DEBUG__OBJECT
+    printf( "p2_object__delete: deleting object Ox%X (value 0x%X) of type (0x%X).\n",
+        ( int ) o, ( int ) o->value, ( int ) o->type );
+    #endif
+
     #if TRIPLES__GLOBAL__IN_EDGES
         if ( o->inbound_edges )
             p2_hash_table__delete( o->inbound_edges );

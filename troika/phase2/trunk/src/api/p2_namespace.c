@@ -41,9 +41,13 @@ p2_namespace *p2_namespace__new()
 
     #if DEBUG__SAFE
     if ( !ns )
+    {
         PRINTERR( "p2_namespace__new: allocation failed" );
+        return 0;
+    }
     #endif
 
+    /* Writable by default. */
     ns->constant = 0;
 
     return ns;
@@ -276,6 +280,29 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
     }
 
     return displaced_object;
+}
+
+
+static void *print_ns_item( char *name, p2_object *o )
+{
+    printf( "    0x%X %s (%s)\n", ( int ) o, name, o->type->name );
+    return o;
+}
+
+
+void p2_namespace__show_children( p2_namespace__object *ns_obj )
+{
+    printf( "Namespace at 0x%X", ( int ) ns_obj );
+
+    if ( ( ( p2_namespace* ) ns_obj->value )->children->size )
+    {
+        printf( "\n{\n" );
+        p2_hash_table__for_all( ( ( p2_namespace* ) ns_obj->value )->children, ( void*(*)(void*, void*) ) print_ns_item );
+        printf( "}" );
+    }
+
+    else
+        printf( " { }" );
 }
 
 

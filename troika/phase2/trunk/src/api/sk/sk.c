@@ -227,8 +227,7 @@ p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
     p2_type *primitive_type,
-    p2_type *S_type,
-    p2_type *K_type,
+    p2_type *combinator_type,
     void (*for_each_iteration)(p2_term*) )
 {
     #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
@@ -239,7 +238,7 @@ p2_term *SK_reduce(
     p2_type *head_type;
 
     #if DEBUG__SAFE
-    if ( !term || !m || !primitive_type || !S_type || !K_type )
+    if ( !term || !m || !primitive_type || !combinator_type )
     {
         PRINTERR( "SK_reduce: null argument" );
         if ( term )
@@ -267,7 +266,12 @@ p2_term *SK_reduce(
 
         /* Get the object at the head of the term.
            Caution: the term MUST be in left-associative form. */
-        head = ( p2_object* ) *( term->head + 2 );
+        if ( ( unsigned int ) *( term->head ) == 2 )
+            /* Singleton term. */
+            head = ( p2_object* ) *( term->head + 1 );
+        else
+            /* Left-associative sequence. */
+            head = ( p2_object* ) *( term->head + 2 );
         head_type = head->type;
 
         /* If the head object is a primitive, apply it. */
@@ -288,22 +292,28 @@ p2_term *SK_reduce(
             }
         }
 
-        /* Sxyz... --> xz(yz)... */
-        else if ( head_type == S_type )
+        else if ( head_type == combinator_type )
         {
-            if ( p2_term__length( term ) < 4 )
-                return term;
-            else
-                term = S_reduce( term );
-        }
+            switch ( *( ( combinator* ) head->value ) )
+            {
+                /* Sxyz... --> xz(yz)... */
+                case S_combinator:
 
-        /* Kxy... --> x... */
-        else if ( head_type == K_type )
-        {
-            if ( p2_term__length( term ) < 3 )
-                return term;
-            else
-                term = K_reduce( term );
+                    if ( p2_term__length( term ) < 4 )
+                        return term;
+                    else
+                        term = S_reduce( term );
+                    break;
+
+                /* Kxy... --> x... */
+                case K_combinator:
+
+                    if ( p2_term__length( term ) < 3 )
+                        return term;
+                    else
+                        term = K_reduce( term );
+                    break;
+            }
         }
 
         /* Any object which is not an S or K combinator or a primitive is

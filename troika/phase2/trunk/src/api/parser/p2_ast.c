@@ -28,11 +28,32 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* #define PRINT_TERM_AS_ARRAY */
 
 
+/* p2_ast__type ***************************************************************/
+
+
+const char *p2_ast__type__names[7] =
+{
+    "BAG_T",
+    "CHAR_T",
+    "FLOAT_T",
+    "INT_T",
+    "NAME_T",
+    "STRING_T",
+    "TERM_T"
+};
+
+
+const char *p2_ast__type__name( p2_ast__type type )
+{
+    return p2_ast__type__names[ type ];
+}
+
+
 /* Constructors, destructors **************************************************/
 
 
 /** \note  Ownership of the passed value is conferred to the new node. */
-static p2_ast *p2_ast__new( enum p2_ast__type type, void *value )
+static p2_ast *p2_ast__new( p2_ast__type type, void *value )
 {
     p2_ast *node = ( p2_ast* ) malloc( sizeof( p2_ast ) );
     node->type = type;
@@ -143,6 +164,20 @@ p2_ast *p2_ast__term( p2_term *term )
     #endif
 
     return ast;
+}
+
+
+int p2_ast__size( p2_ast *ast )
+{
+    switch ( ast->type )
+    {
+        case BAG_T:
+            return ( ( p2_array* ) ast->value )->size;
+        case TERM_T:
+            return p2_term__length( ( p2_term* ) ast->value );
+        default:
+            return 1;
+    }
 }
 
 

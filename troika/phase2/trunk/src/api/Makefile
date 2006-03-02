@@ -28,7 +28,7 @@ clean :
 	$(MAKE) clean -C $(PARSER)
 	$(MAKE) clean -C $(UTILS)
 	$(MAKE) clean -C $(XML)
-	-rm -f *.o
+	-rm -f *.o phase2
 
 
 .PHONY : test
@@ -52,19 +52,50 @@ $(PARSER_OBJECTS) :
 
 
 ################################################################################
+# Import primitives.
+
+IMPORT_OBJECTS = \
+	$(IMPORT)/target/cxx/p2-stubs.o \
+	$(IMPORT)/target/cxx/cstring.o \
+	$(IMPORT)/target/cxx/combinator.o \
+	$(IMPORT)/target/cxx/double.o \
+	$(IMPORT)/target/cxx/int.o
+
+.PHONY : $(IMPORT_OBJECTS)
+$(IMPORT_OBJECTS) :
+	$(MAKE) -C $(IMPORT)
+
+
+################################################################################
 # Compile utilities.
 
 .PHONY : utils
 utils :
 	$(MAKE) -C $(UTILS)
 
+UTIL_OBJECTS =	$(UTILS)/p2_array.o \
+		$(UTILS)/p2_bunch.o \
+		$(UTILS)/p2_hash_table.o \
+		$(UTILS)/p2_term.o
+
 
 ################################################################################
 # Build the command line interface.
 
-.PHONY : phase2
-phase2 :  utils $(PARSER_OBJECTS) p2_memory_manager.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o sk.o
+OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o sk.o $(IMPORT_OBJECTS) $(PARSER_OBJECTS)
 
+phase2 :  main.c utils $(OBJECTS)
+	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS)
+
+
+p2_compiler.o : p2_compiler.c p2_flags.h
+	$(CC) -c p2_compiler.c
+
+p2_environment.o :  p2_environment.c p2_flags.h
+	$(CC) -c p2_environment.c
+
+p2_primitive-import.o :  p2_primitive-import.c p2_flags.h
+	$(CC) -c p2_primitive-import.c
 
 p2_memory_manager.o :  p2_memory_manager.c p2_flags.h
 	$(CC) -c p2_memory_manager.c

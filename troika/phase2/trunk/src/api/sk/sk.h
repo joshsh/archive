@@ -39,6 +39,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../util/p2_term.h"
 
 
+typedef enum _combinator
+{
+    S_combinator,
+    K_combinator
+
+} combinator;
+
+
 /** \brief  Reduce an S,K term according to the rules of combinator expressions.
 
     \param term  the term to reduce.  It must be in strictly left-associative
@@ -67,8 +75,7 @@ p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
     p2_type *primitive_type,
-    p2_type *S_type,
-    p2_type *K_type,
+    p2_type *combinator_type,
     void (*for_each_iteration)(p2_term*) );
 
 

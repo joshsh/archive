@@ -1,6 +1,6 @@
 #include "int.h"
-#include <stdio.h>  /* atoi, sprintf */
-
+#include <stdlib.h>  /* atoi */
+#include <stdio.h>  /* sprintf */
 
 void int__encode( int p, char *buffer )
 {

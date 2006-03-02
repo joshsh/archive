@@ -37,34 +37,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../util/p2_term.h"
 
 
-enum p2_ast__type
+typedef enum _p2_ast__type
 {
-    BAG_T,      /**< A bag composed of terms. */
+    BAG_T = 0,  /**< A bag composed of terms. */
     CHAR_T,
     FLOAT_T,
     INT_T,
     NAME_T,     /**< A URN-like sequence of name fragments. */
     STRING_T,
     TERM_T      /**< A term composed of p2_asts. */
-};
+} p2_ast__type;
+
+
+const char *p2_ast__type__name( p2_ast__type type );
 
 
 /** The root node of a Phase2 abstract syntax tree. */
 typedef struct _p2_ast
 {
-    enum p2_ast__type type;
+    p2_ast__type type;
 
     void *value;
 
 } p2_ast;
-
-
-/** \return  a non-zero value indicates an error */
-int p2_ast__init();
-
-
-/** \return  a non-zero value indicates an error */
-int p2_ast__end();
 
 
 /** \param bag  a p2_array of AST nodes
@@ -86,6 +81,9 @@ p2_ast *p2_ast__string( char *s );
 /** \param term  a p2_term of AST nodes
     \return  a new AST node of type TERM */
 p2_ast *p2_ast__term( p2_term *term );
+
+
+int p2_ast__size( p2_ast *ast );
 
 
 /** \param ast  AST node to free */

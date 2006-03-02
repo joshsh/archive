@@ -37,6 +37,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
+/* For p2_object's flags field. */
+#define OBJECT__IS_OBJ_COLL ( int ) 0x001
+#define OBJECT__MARKED      ( int ) 0x010
+#define OBJECT__OWNED       ( int ) 0x100
+
+
 /** A typed constant.  This is the least addressable unit of data in a Phase2
     namespace. */
 typedef struct _p2_object
