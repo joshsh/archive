@@ -172,6 +172,19 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 
         #endif  /* SK__CHECKS__APPLY_TO_NONATOM */
 
+        #if DEBUG__SAFE
+        if ( !(*cur) )
+        {
+            PRINTERR( "prim_reduce: null argument" );
+
+            if ( args )
+                free( args );
+            p2_term__delete( term );
+
+            return 0;
+        }
+        #endif
+
         /* Note: it's more efficient to do this here than in p2_primitive.c */
         #if PRIM__CHECKS__PARAM_TYPE
 
@@ -184,7 +197,6 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
             p2_term__delete( term );
 
             return 0;
-
         }
 
         #endif  /* PRIM__CHECKS__TYPE__DYNAMIC */
@@ -272,6 +284,16 @@ p2_term *SK_reduce(
         else
             /* Left-associative sequence. */
             head = ( p2_object* ) *( term->head + 2 );
+
+        #if DEBUG__SAFE
+        if ( !head )
+        {
+            PRINTERR( "SK_reduce: null encountered at head of term" );
+            p2_term__delete( term );
+            return 0;
+        }
+        #endif
+
         head_type = head->type;
 
         /* If the head object is a primitive, apply it. */

@@ -39,7 +39,8 @@ const char *p2_ast__type__names[7] =
     "INT_T",
     "NAME_T",
     "STRING_T",
-    "TERM_T"
+    "TERM_T",
+    "VOID_T"
 };
 
 
@@ -167,6 +168,18 @@ p2_ast *p2_ast__term( p2_term *term )
 }
 
 
+p2_ast *p2_ast__void( void *p )
+{
+    p2_ast *ast = p2_ast__new( VOID_T, p );
+
+    #if DEBUG__AST
+    printf( "[%X] p2_ast__void(%X)\n", ( int ) ast, ( int ) p );
+    #endif
+
+    return ast;
+}
+
+
 int p2_ast__size( p2_ast *ast )
 {
     switch ( ast->type )
@@ -231,6 +244,11 @@ void *p2_ast__delete( p2_ast *ast )
                 ( p2_term* ) ast->value,
                 ( void*(*)(void*) ) p2_ast__delete );
             p2_term__delete( ( p2_term* ) ast->value );
+            break;
+
+        case VOID_T:
+
+            /* Do nothing. */
             break;
 
         default:
@@ -316,31 +334,6 @@ static void bag__print( p2_array *a )
 }
 
 
-/* ! Move to p2_name.c */
-static void name__print( p2_name *n )
-{
-    char *s;
-    int i, size = n->size;
-
-    for ( i = 0; i < size; i++ )
-    {
-        if ( i )
-            printf( ":" );
-
-        s = ( char* ) p2_array__get( n, i );
-
-        while ( *s )
-        {
-            if ( *s == ' ' )
-                printf( "\\" );
-
-            printf( "%c", *s );
-            s++;
-        }
-    }
-}
-
-
 void p2_ast__print( p2_ast *ast )
 {
     char *s;
@@ -369,7 +362,7 @@ void p2_ast__print( p2_ast *ast )
 
         case NAME_T:
 
-            name__print( ( p2_name* ) ast->value );
+            p2_name__print( ( p2_name* ) ast->value );
             break;
 
         case STRING_T:
@@ -392,6 +385,11 @@ void p2_ast__print( p2_ast *ast )
             printf( "[ " );
             term__print( ( p2_term* ) ast->value, 1 );
             printf( " ]" );
+            break;
+
+        case VOID_T:
+
+            printf( "0x%X", ( int ) ast->value );
             break;
 
         default:

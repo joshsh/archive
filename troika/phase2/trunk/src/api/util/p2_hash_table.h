@@ -35,22 +35,23 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 /** Default address comparison function. */
-int compare_addresses(void *key1, void *key2);
+int compare_addresses(const void *key1, const void *key2);
 
 /** Default address hashing function. */
-unsigned int hash_address(void *key);
+unsigned int hash_address(const void *key);
 
 /** Overrides the function pointer arguments in p2_hash_table__new. */
 #define ADDRESS_DEFAULTS hash_address, compare_addresses
 
 /** Default string comparison function. */
-int compare_strings(void *key1, void *key2);
+int compare_strings(const char *key1, const char *key2);
 
 /** Default string-hashing function. */
-unsigned int hash_string(void *key);
+unsigned int hash_string(const char *key);
 
 /** Overrides the function pointer arguments in p2_hash_table__new. */
-#define STRING_DEFAULTS hash_string, compare_strings
+#define STRING_DEFAULTS ( unsigned int (*)(const void*) ) hash_string, \
+    ( int (*)(const void*, const void*) ) compare_strings
 
 
 /******************************************************************************/
@@ -82,10 +83,10 @@ typedef struct _p2_hash_table
     void **buffer;
 
     /** A hashing function specific to the table's "key" type. */
-    unsigned int (*hashing_function) (void *key);
+    unsigned int (*hashing_function) (const void *key);
 
     /** A comparison function for key values. */
-    int (*compare_to) (void *key1, void *key2);
+    int (*compare_to) (const void *key1, const void *key2);
 
 } p2_hash_table;
 
@@ -124,8 +125,8 @@ p2_hash_table *p2_hash_table__new(
   unsigned int buffer_size,
   float expansion,
   float sparsity,
-  unsigned int (*hashing_function) (void *),
-  int (*compare_to) (void *, void *));
+  unsigned int (*hashing_function) (const void *),
+  int (*compare_to) (const void *, const void *));
 
 /** Copy constructor. */
 p2_hash_table *p2_hash_table__copy(p2_hash_table *h);
@@ -146,7 +147,7 @@ p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target);
     \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
     target value, else you won't be able to tell it apart from a failed lookup.
 */
-void *p2_hash_table__lookup(p2_hash_table *h, void *key);
+void *p2_hash_table__lookup(p2_hash_table *h, const void *key);
 
 /** Removes the key and its target.
     \return  the displaced key / target pair */

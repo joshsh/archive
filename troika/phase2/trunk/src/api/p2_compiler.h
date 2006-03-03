@@ -47,6 +47,8 @@ typedef struct _p2_compiler
 
     int locked;
 
+    p2_type *bag_t, *combinator_t, *char_t, *float_t, *int_t, *string_t, *term_t;
+
 } p2_compiler;
 
 

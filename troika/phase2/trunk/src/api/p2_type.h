@@ -32,6 +32,45 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_flags.h"
 
 
+/******************************************************************************/
+
+
+typedef enum _p2_action__effect
+{
+    p2_action__effect__continue = 0,
+
+    p2_action__effect__break,
+    p2_action__effect__remove
+
+} p2_action__effect;
+
+
+typedef p2_action__effect ( *action )( void *addr, void *context );
+
+
+typedef struct _p2_action
+{
+    action execute;
+
+    /* A mutable data field which is provided to the action as an argument,
+       and preserved between invocations. */
+    void *context;
+
+} p2_action;
+
+
+#define p2_action__apply( a, addr )  a->execute( addr, a->context )
+
+
+typedef void *( *decoder )( char *buffer );
+typedef void ( *destructor )( void *p );
+typedef void ( *distributor )( void* p, p2_action *a );
+typedef void ( *encoder )( void *p, char *buffer );
+
+
+/******************************************************************************/
+
+
 /** */
 typedef struct _p2_type
 {
@@ -56,6 +95,8 @@ typedef struct _p2_type
     /** "For all elements" callback distributor. */
     void *( *for_all )( void*, void *(*)( void* ) );
 
+    distributor distribute;
+
 } p2_type;
 
 
@@ -77,7 +118,8 @@ p2_type *p2_type__new
     void ( *destroy )( void* ),
     void ( *encode )( void*, char* ),
     void *( *exists )( void*, void *(*)( void* ) ),
-    void *( *for_all )( void*, void *(*)( void* ) )
+    void *( *for_all )( void*, void *(*)( void* ) ),
+    distributor distribute
 );
 
 /** Destructor. */

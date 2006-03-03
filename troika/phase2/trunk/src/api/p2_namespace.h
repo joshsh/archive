@@ -31,9 +31,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_NAMESPACE_H
 
 
-#include "util/p2_hash_table.h"
 #include "p2_object.h"
-#include "p2_name.h"
+#include "util/p2_hash_table.h"
+#include "util/p2_name.h"
 
 
 typedef p2_object p2_namespace__object;
@@ -69,6 +69,13 @@ p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_ob
     \param name  the local part of the name to look up
     \return  the object found */
 p2_object *p2_namespace__lookup( p2_namespace__object *ns_obj, p2_name *name );
+
+/** Finds an object using a simple name.
+    \param ns  the target namespace
+    \param s  the local part of the name to look up
+    \return  the object found */
+p2_object *p2_namespace__lookup_simple(
+    p2_namespace__object *ns_obj, const char *s );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace

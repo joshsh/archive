@@ -27,6 +27,7 @@ static void default__destroy( void *p ) { free( p ); }
 static void default__encode( void *p, char *buffer ) { *buffer = '\0'; }
 static void *default__exists( void *p, void *(*f)( void* ) ) { return 0; }
 static void *default__for_all( void *p, void *(*f)( void* ) ) { return 0; }
+static void default__distribute( void *p, p2_action *a ) { }
 
 
 p2_type *p2_type__new
@@ -37,7 +38,8 @@ p2_type *p2_type__new
     void ( *destroy )( void* ),
     void ( *encode )( void*, char* ),
     void *( *exists )( void*, void *(*)( void* ) ),
-    void *( *for_all )( void*, void *(*)( void* ) )
+    void *( *for_all )( void*, void *(*)( void* ) ),
+    distributor distribute
 )
 {
     #if DEBUG__SAFE
@@ -60,6 +62,7 @@ p2_type *p2_type__new
     t->encode = encode ? encode : default__encode;
     t->exists = exists ? exists : default__exists;
     t->for_all = for_all ? for_all : default__for_all;
+    t->distribute = distribute ? distribute : default__distribute;
 
     return t;
 }

@@ -140,6 +140,8 @@ void *p2_array__exists(p2_array *a, void *(*criterion)(void *));
     \note there is no special return value to indicate substitution failure. */
 p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *));
 
+/*void *p2_array__distribute( p2_array *a, p2_distributor *d );*/
+
 
 /* Miscellaneous **************************************************************/
 

@@ -42,23 +42,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Works well enough for addresses so long as there's a one-to-one correspondence
    between addresses and key values. */
-unsigned int hash_address(void *key)
+unsigned int hash_address(const void *key)
 {
     return (unsigned int) key;
 }
 
 
-int compare_addresses(void *key1, void *key2)
+int compare_addresses(const void *key1, const void *key2)
 {
     return (key1 != key2);
 }
 
 
 /** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
-unsigned int hash_string(void *key)
+unsigned int hash_string(const char *key)
 {
-    char *p;
+    char const *p;
     unsigned int h = 0, g;
+
     for ( p = key; *p != '\0'; p++ )
     {
         h = ( h << 4 ) + *p;
@@ -80,7 +81,7 @@ unsigned int hash_string(void *key)
 }
 
 
-int compare_strings(void *key1, void *key2)
+int compare_strings(const char *key1, const char *key2)
 {
     return strcmp((char *) key1, (char *) key2);
 }
@@ -166,12 +167,15 @@ static void expand(p2_hash_table *h)
 }
 
 
+/******************************************************************************/
+
+
 p2_hash_table *p2_hash_table__new(
     unsigned int buffer_size,
     float sparsity,
     float expansion,
-    unsigned int (*hashing_function) (void *),
-    int (*compare_to) (void *, void *))
+    unsigned int (*hashing_function) (const void *),
+    int (*compare_to) (const void *, const void *))
 {
     int i;
 
@@ -296,7 +300,7 @@ p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target)
 }
 
 
-void *p2_hash_table__lookup(p2_hash_table *h, void *key)
+void *p2_hash_table__lookup(p2_hash_table *h, const void *key)
 {
     unsigned int actual_size;
     void **p;

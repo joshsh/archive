@@ -18,7 +18,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_environment.h"
-#include "p2_name.h"
+#include "util/p2_name.h"
+#include "util/p2_term.h"
 
 
 /* Adds an object to a namespace using a simple name. */
@@ -40,7 +41,7 @@ static void *ns__add( p2_namespace__object *ns_obj, p2_object *o, char *s )
 }
 
 
-/* Look up a namespace item using a simple name. */
+/* Look up a namespace item using a simple name.
 static p2_object *ns__lookup( p2_namespace__object *ns_obj, const char *s )
 {
     char *s2;
@@ -66,7 +67,7 @@ static p2_object *ns__lookup( p2_namespace__object *ns_obj, const char *s )
     p2_array__delete( name );
     return o;
 }
-
+*/
 
 /* Adds an object to a memory manager. */
 /*
@@ -106,6 +107,36 @@ static p2_namespace__object *ns__new( p2_type *ns__type )
 }
 
 
+/* To be moved... *************************************************************/
+
+/*
+static void sequence_item__print
+
+typedef struct _print_format
+{
+    char *prefix, *infix, *suffix;
+
+} print_format;
+
+
+struct
+
+static char *print
+void p2_object__print( p2_object *o, char *buffer )
+{
+    if ( o & OBJECT__IS_OBJ_COLL )
+    {
+        o->type->for_all( o->value, 
+    }
+
+    else
+        o->type->encode( o->value, buffer );
+}
+*/
+
+/******************************************************************************/
+
+
 p2_environment *p2_environment__new()
 {
     p2_environment *env;
@@ -124,13 +155,13 @@ printf( "---e 3---\n" ); fflush( stdout );
     if ( !( env->ns__type = p2_type__new(
         STRDUP( "namespace" ), 0, 0,
         ( DESTROY_T ) p2_namespace__delete, 0, 0,
-        ( FOR_ALL_T ) p2_namespace__for_all ) )
+        ( FOR_ALL_T ) p2_namespace__for_all, 0 ) )
       || !( env->prim__type = p2_type__new(
         STRDUP( "primitive" ), 0, 0,
-        ( DESTROY_T ) p2_primitive__delete, 0, 0, 0 ) )
+        ( DESTROY_T ) p2_primitive__delete, 0, 0, 0, 0 ) )
       || !( env->type__type = p2_type__new(
         STRDUP( "type" ), 0, 0,
-        ( DESTROY_T ) p2_type__delete, 0, 0, 0 ) ) )
+        ( DESTROY_T ) p2_type__delete, 0, 0, 0, 0 ) ) )
         goto abort;
 printf( "---e 4---\n" ); fflush( stdout );
 
@@ -170,7 +201,17 @@ printf( "---e 8---\n" ); fflush( stdout );
     p2_environment__register_type( env, env->type__type, 0 );
 printf( "---e 9---\n" ); fflush( stdout );
 
-    /* ############################## Add other types here... */
+    /* Add other types here... */
+    p2_environment__register_type( env,
+        p2_type__new( STRDUP( "bag" ), 0, 0,
+           ( DESTROY_T ) p2_array__delete, 0,
+           ( EXISTS_T ) p2_array__exists,
+           ( FOR_ALL_T ) p2_array__for_all, 0 ), 0 );
+    p2_environment__register_type( env,
+        p2_type__new( STRDUP( "term" ), 0, 0,
+           ( DESTROY_T ) p2_term__delete, 0,
+           ( EXISTS_T ) p2_term__exists,
+           ( FOR_ALL_T ) p2_term__for_all, 0 ), 0 );
 
     if ( !p2_environment__import_primitives( env ) )
         goto abort;
@@ -285,13 +326,13 @@ p2_type *p2_environment__resolve_type(
     p2_environment *env,
     const char *name )
 {
-    p2_object *o = ns__lookup( env->types, name );
+    p2_object *o = p2_namespace__lookup_simple( env->types, name );
     p2_type *type;
 
     if ( !o )
     {
         /* If not found, create the type and hope for the best. */
-        if ( !( type = p2_type__new( STRDUP( name ), 0, 0, 0, 0, 0, 0 ) ) )
+        if ( !( type = p2_type__new( STRDUP( name ), 0, 0, 0, 0, 0, 0, 0 ) ) )
             return 0;
 
         /* Note: all object collection types are registered explicitly. */

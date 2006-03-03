@@ -1,11 +1,3 @@
-/**
-
-\file  p2_name.h
-
-\author  Joshua Shinavier   \n
-         parcour@gmail.com  \n
-         +1 509 570-6990    \n */
-
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -25,21 +17,40 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_NAME_H
-#define P2_NAME_H
+#include "p2_name.h"
+#include <stdio.h>
 
 
-#include "util/p2_array.h"
+void p2_name__print( p2_name *n )
+{
+    char *s;
+    int i, size = n->size;
 
+    #if DEBUG__SAFE
+    if ( !n )
+    {
+        PRINTERR( "p2_name__print: null name" );
+        return;
+    }
+    #endif
 
-typedef p2_array p2_name;
+    for ( i = 0; i < size; i++ )
+    {
+        if ( i )
+            printf( ":" );
 
+        s = ( char* ) p2_array__get( n, i );
 
-#define p2_name__peek( name )  ( char* ) p2_array__peek( name )
-#define p2_name__pop( name )  ( char* ) p2_array__pop( name )
-#define p2_name__push( name, s )  p2_array__push( name, s )
+        while ( *s )
+        {
+            if ( *s == ' ' )
+                printf( "\\" );
 
+            printf( "%c", *s );
+            s++;
+        }
+    }
+}
 
-#endif  /* P2_NAME_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

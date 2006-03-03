@@ -18,12 +18,30 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_compiler.h"
-#include "p2_name.h"
 
 
 /* Compiler object is global because flex/bison are not thread safe. */
 p2_compiler *compiler = 0;
 
+
+
+static p2_type *lookup_type( p2_environment *env, const char *name )
+{
+    p2_object *o = p2_namespace__lookup_simple( env->types, name );
+
+    if ( !o )
+        return 0;
+
+    #if DEBUG__SAFE
+    if ( o->type != env->type__type )
+    {
+        PRINTERR( "lookup_type: type mismatch" );
+        return 0;
+    }
+    #endif
+
+    return ( p2_type* ) o->value;
+}
 
 
 p2_compiler *p2_compiler__new( p2_environment *env )
@@ -47,6 +65,19 @@ p2_compiler *p2_compiler__new( p2_environment *env )
     if ( !( c = new( p2_compiler ) ) )
     {
         PRINTERR( "p2_compiler__new: allocation failed" );
+        return 0;
+    }
+
+    if ( !( c->bag_t = lookup_type( env, "bag" ) )
+      || !( c->char_t = lookup_type( env, "char" ) )
+      || !( c->combinator_t = lookup_type( env, "combinator" ) )
+      || !( c->float_t = lookup_type( env, "double" ) )
+      || !( c->int_t = lookup_type( env, "int" ) )
+      || !( c->string_t = lookup_type( env, "cstring" ) )
+      || !( c->term_t = lookup_type( env, "term" ) ) )
+    {
+        PRINTERR( "p2_compiler__new: basic type not found" );
+        free( c );
         return 0;
     }
 
@@ -162,6 +193,115 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
+static int bad_name;
+
+static p2_object *resolve_name( p2_compiler *c, p2_name *name )
+{
+    p2_namespace__object *ns_obj;
+    p2_object *o;
+
+    char *first = ( char* ) p2_name__pop( name );
+    if ( !strcmp( first, "root" ) )
+    {
+        ns_obj = compiler->env->root;
+        o = p2_namespace__lookup( ns_obj, name );
+        p2_name__push( name, first );
+    }
+
+    else
+    {
+        ns_obj = compiler->cur_ns__obj;
+        p2_name__push( name, first );
+        o = p2_namespace__lookup( ns_obj, name );
+    }
+
+    if ( !o )
+    {
+        printf( "Error: '" );
+        p2_name__print( name );
+        printf( "' is not defined in this namespace.\n" );
+        bad_name = 1;
+    }
+
+    return o;
+}
+
+
+static p2_object *object_for_ast( p2_ast* ast )
+{
+    p2_type *type;
+    void *value;
+    p2_object *o = 0;
+    int flags = 0;
+
+    switch ( ast->type )
+    {
+        case BAG_T:
+
+            type = compiler->bag_t;
+            value = ( void* ) p2_array__substitute_all(
+               ( p2_array* ) ast->value, ( void *(*)(void *) ) object_for_ast );
+            flags = OBJECT__IS_OBJ_COLL;
+            break;
+
+        case CHAR_T:
+
+            type = compiler->char_t;
+            value = ast->value;
+            break;
+
+        case FLOAT_T:
+
+            type = compiler->float_t;
+            value = ast->value;
+            break;
+
+        case INT_T:
+
+            type = compiler->int_t;
+            value = ast->value;
+            break;
+
+        case NAME_T:
+
+            /* Retrieve an existing object and exit. */
+            o = resolve_name( compiler, ( p2_name* ) ast->value );
+            p2_ast__delete( ast );
+            return o;
+
+        case STRING_T:
+
+            type = compiler->string_t;
+            value = ast->value;
+            break;
+
+        case TERM_T:
+
+            type = compiler->term_t;
+            value = ( void* ) p2_term__substitute_all(
+               ( p2_term* ) ast->value, ( void *(*)(void *) ) object_for_ast );
+            flags = OBJECT__IS_OBJ_COLL;
+            break;
+
+        #if DEBUG__SAFE
+        default:
+
+            PRINTERR( "object_for_ast: bad AST type" );
+            free( ast );
+            return 0;
+        #endif
+    }
+
+    free( ast );
+
+    /* Create and register a new object. */
+    o = p2_object__new( type, value, flags );
+    p2_memory_manager__add( compiler->env->manager, o );
+
+    return o;
+}
+
+
 /* Command functions **********************************************************/
 
 
@@ -178,33 +318,27 @@ printf( "args->type = %s\n", p2_ast__type__name( args->type ) ); fflush( stdout 
 /*
 printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 */
+    #if DEBUG__SAFE
     if ( arg->type != NAME_T )
-        printf( "Error: not a namespace." );
-    else
     {
-        name = ( p2_name* ) arg->value;
+        PRINTERR( "change_namespace: AST type mismatch" );
+        return;
+    }
+    #endif
 
-        if ( name->size == 1
-          && !strcmp( "root", ( char* ) p2_array__peek( name ) ) )
-        {
-            c->cur_ns__obj = c->env->root;
-            printf( "Moved to root namespace." );
-        }
+    name = ( p2_name* ) arg->value;
+
+    if ( ( o = resolve_name( c, name ) ) )
+    {
+        if ( o->type != c->cur_ns__obj->type )
+            printf( "Error: not a namespace.\n" );
 
         else
         {
-            o = p2_namespace__lookup( c->cur_ns__obj, name );
-            if ( !o )
-                printf( "Error: no such namespace." );
-            else if ( o->type != c->cur_ns__obj->type )
-                printf( "Error: not a namespace." );
-            else
-            {
-                c->cur_ns__obj = o;
-                printf( "Moved to namespace '" );
-                p2_ast__print( arg );
-                printf( "'." );
-            }
+            c->cur_ns__obj = o;
+            printf( "Moved to namespace '" );
+            p2_ast__print( arg );
+            printf( "'." );
         }
     }
 }
@@ -294,11 +428,36 @@ p2_namespace__show_children( ( p2_namespace* ) compiler->env->types->value );
 int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 {
     int ret = 0;
-    p2_ast *a;
+    p2_ast *a = 0;
+    p2_object *o;
+    char print_buffer[1000];
 
     if ( name )
-    {
         a = p2_ast__name( name );
+
+    #if DEBUG__SAFE
+    if ( !expr )
+    {
+        PRINTERR( "p2_compiler__evaluate_expression: null AST node" );
+        if ( a )
+            p2_ast__delete( a );
+        return 0;
+    }
+    else if ( expr->type != TERM_T )
+    {
+        PRINTERR( "p2_compiler__evaluate_expression: bad node type" );
+        if ( a )
+            p2_ast__delete( a );
+        return 0;
+    }
+    #endif
+
+
+
+
+
+    if ( a )
+    {
         printf( "Evaluate expression \"" );
         p2_ast__print( a );
         p2_ast__delete( a );
@@ -309,7 +468,14 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
         printf( "Evaluate anonymous expression :  " );
 
     p2_ast__print( expr );
-    p2_ast__delete( expr );
+
+
+
+
+
+printf( "\n" );
+    o = object_for_ast( expr );
+    o->type->encode( o->value, print_buffer );
 
     return ret;
 }

@@ -3,13 +3,13 @@
 #include <stdio.h>  /* sprintf */
 
 
-void cstring__encode( char *p, char *buffer )
+void cstring__encode( cstring *p, char *buffer )
 {
     sprintf(buffer, p);
 }
 
 
-char *cstring__decode( char *buffer )
+cstring *cstring__decode( char *buffer )
 {
     return strdup(buffer);
 }

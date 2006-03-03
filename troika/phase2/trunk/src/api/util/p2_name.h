@@ -1,3 +1,11 @@
+/**
+
+\file  p2_name.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
+
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -17,39 +25,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_compiler.h"
+#ifndef P2_NAME_H
+#define P2_NAME_H
 
 
-int main()
-{
-    int r = 0;
+#include "p2_array.h"
 
-    p2_environment *env;
-    p2_compiler *compiler;
 
-    if ( !( env = p2_environment__new() ) )
-        r = 1;
+typedef p2_array p2_name;
 
-    else
-    {
-        if ( ( compiler = p2_compiler__new( env ) ) )
-        {
-            /* Print GPL notice. */
-            printf( "\nPhase2 v%s, Copyright (C) 2005 Joshua Shinavier.\n", VERSION );
-            printf( "The Phase2 programming environment comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '!license;' for details.  Type '!quit;' to exit.\n\n" );
 
-            p2_compiler__parse( compiler );
-            p2_compiler__delete( compiler );
-        }
+#define p2_name__peek( name )  ( char* ) p2_array__peek( name )
+#define p2_name__pop( name )  ( char* ) p2_array__pop( name )
+#define p2_name__push( name, s )  p2_array__push( name, s )
 
-        else
-            r = 1;
 
-        p2_environment__delete( env );
-    }
+void p2_name__print( p2_name *name );
 
-    return r;
-}
 
+#endif  /* P2_NAME_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

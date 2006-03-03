@@ -76,6 +76,7 @@ utils :
 UTIL_OBJECTS =	$(UTILS)/p2_array.o \
 		$(UTILS)/p2_bunch.o \
 		$(UTILS)/p2_hash_table.o \
+		$(UTILS)/p2_name.o \
 		$(UTILS)/p2_term.o
 
 

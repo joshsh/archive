@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "../p2_flags.h"
-#include "../p2_name.h"
+#include "../util/p2_name.h"
 #include "../util/p2_array.h"
 #include "../util/p2_term.h"
 
@@ -45,7 +45,8 @@ typedef enum _p2_ast__type
     INT_T,
     NAME_T,     /**< A URN-like sequence of name fragments. */
     STRING_T,
-    TERM_T      /**< A term composed of p2_asts. */
+    TERM_T,     /**< A term composed of p2_asts. */
+    VOID_T      /**< A generic pointer to data not owned by the AST. */
 } p2_ast__type;
 
 
@@ -81,6 +82,9 @@ p2_ast *p2_ast__string( char *s );
 /** \param term  a p2_term of AST nodes
     \return  a new AST node of type TERM */
 p2_ast *p2_ast__term( p2_term *term );
+
+
+p2_ast *p2_ast__void( void *p );
 
 
 int p2_ast__size( p2_ast *ast );
