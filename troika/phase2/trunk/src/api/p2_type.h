@@ -62,10 +62,23 @@ typedef struct _p2_action
 #define p2_action__apply( a, addr )  a->execute( addr, a->context )
 
 
+typedef void *( *copy_cons )( void *p );
 typedef void *( *decoder )( char *buffer );
 typedef void ( *destructor )( void *p );
 typedef void ( *distributor )( void* p, p2_action *a );
 typedef void ( *encoder )( void *p, char *buffer );
+
+
+typedef enum _boolean
+{
+    boolean__false = 0,
+    boolean__true
+
+} boolean;
+
+
+typedef boolean ( *criterion )( void *arg );
+typedef int ( *comparator )( void *arg1, void *arg2 );
 
 
 /******************************************************************************/
@@ -77,17 +90,25 @@ typedef struct _p2_type
     /** */
     char *name;
 
+    int flags;
+
     /** Copy constructor. */
-    void *( *clone )( void* );
+    copy_cons   clone;
+
+    comparator  compare_to;
 
     /** Deserializer. */
-    void *( *decode )( char* );
+    decoder     decode;
 
     /** Destructor. */
-    void ( *destroy )( void* );
+    destructor  destroy;
+
+    distributor distribute;
 
     /** Serializer. */
-    void ( *encode )( void*, char* );
+    encoder     encode;
+
+    criterion   equals;
 
     /** "Element exists" callback distributor. */
     void *( *exists )( void*, void *(*)( void* ) );
@@ -95,8 +116,12 @@ typedef struct _p2_type
     /** "For all elements" callback distributor. */
     void *( *for_all )( void*, void *(*)( void* ) );
 
-    distributor distribute;
-
+/*
+    void *( *clone )( void* );
+    void *( *decode )( char* );
+    void ( *destroy )( void* );
+    void ( *encode )( void*, char* );
+*/
 } p2_type;
 
 

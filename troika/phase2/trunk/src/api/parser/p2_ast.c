@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* p2_ast__type ***************************************************************/
 
 
-const char *p2_ast__type__names[7] =
+const char *p2_ast__type__names[8] =
 {
     "BAG_T",
     "CHAR_T",
