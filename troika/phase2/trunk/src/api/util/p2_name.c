@@ -21,6 +21,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdio.h>
 
 
+static p2_procedure__effect delete_string( char **char_p, void *state )
+{
+    free( *char_p );
+    return p2_procedure__effect__continue;
+}
+
+
+void p2_name__delete( p2_name *name )
+{
+    p2_procedure p = { ( procedure ) delete_string, 0 };
+
+    #if DEBUG__SAFE
+    if ( !name )
+    {
+        PRINTERR( "p2_name__delete: null name" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__NAME
+    printf( "p2_name__delete(0x%X)", ( int ) name );  fflush( stdout );
+    #endif
+
+    p2_array__distribute( name, &p );
+
+    free( name );
+}
+
+
 void p2_name__print( p2_name *n )
 {
     char *s;

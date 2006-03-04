@@ -62,8 +62,17 @@ if (!strcmp( o->type->name, "type"))
 }
 
 
+static p2_procedure__effect delete_proc( void **addr, p2_type *type )
+{
+    type->destroy( *addr );
+    return p2_procedure__effect__continue;
+}
+
+
 void p2_object__delete( p2_object *o )
 {
+    p2_procedure p;
+
     #if DEBUG__OBJECT
     printf( "p2_object__delete: deleting object Ox%X (value 0x%X) of type (0x%X).\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
@@ -83,6 +92,14 @@ void p2_object__delete( p2_object *o )
         if ( o->trans_edges )
             p2_hash_table__delete( o->trans_edges );
     #endif
+
+    /* If the object owns its children (and has any), free them. */
+    if ( o->flags & OBJECT__OWNS_DESCENDANTS )
+    {
+        p.execute = ( procedure ) delete_proc;
+        p.state = o->type->type_arg;
+        o->type->distribute( o->value, &p );
+    }
 
     /* Free the object's data. */
     o->type->destroy( o->value );
@@ -111,18 +128,6 @@ p2_object *p2_object__decode( p2_type *type, char *buffer )
 void p2_object__encode( p2_object *o, char *buffer )
 {
     o->type->encode( o->value, buffer );
-}
-
-
-void *p2_object__exists( p2_object *o, void *(*f)( void* ) )
-{
-    return o->type->exists( o->value, f );
-}
-
-
-void *p2_object__for_all( p2_object *o, void *(*f)( void* ) )
-{
-    return o->type->for_all( o->value, f );
 }
 
 

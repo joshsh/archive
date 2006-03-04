@@ -227,20 +227,33 @@ static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 }
 
 
+static p2_object *object_for_ast( p2_ast* ast );
+static p2_procedure__effect substitute_object_for_ast( p2_ast **ast_p, void *state )
+{
+    *ast_p = ( p2_ast* ) object_for_ast( *ast_p );
+    return p2_procedure__effect__continue;
+}
+
+
 static p2_object *object_for_ast( p2_ast* ast )
 {
     p2_type *type;
     void *value;
     p2_object *o = 0;
     int flags = 0;
+    p2_procedure p = { ( procedure ) substitute_object_for_ast, 0 };
 
     switch ( ast->type )
     {
         case BAG_T:
 
             type = compiler->bag_t;
+            value = ast->value;
+            p2_array__distribute( ( p2_array* ) value, &p );
+/*
             value = ( void* ) p2_array__substitute_all(
                ( p2_array* ) ast->value, ( void *(*)(void *) ) object_for_ast );
+*/
             flags = OBJECT__IS_OBJ_COLL;
             break;
 
@@ -278,8 +291,10 @@ static p2_object *object_for_ast( p2_ast* ast )
         case TERM_T:
 
             type = compiler->term_t;
-            value = ( void* ) p2_term__substitute_all(
-               ( p2_term* ) ast->value, ( void *(*)(void *) ) object_for_ast );
+            value = ast->value;
+            /*value = ( void* ) p2_term__substitute_all(
+               ( p2_term* ) ast->value, ( void *(*)(void *) ) object_for_ast ); */
+            p2_term__distribute( ( p2_term* ) value, &p );
             flags = OBJECT__IS_OBJ_COLL;
             break;
 

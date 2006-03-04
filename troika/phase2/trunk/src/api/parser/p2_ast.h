@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_AST_H
 
 
-#include "../p2_flags.h"
+#include "../p2.h"
 #include "../util/p2_name.h"
 #include "../util/p2_array.h"
 #include "../util/p2_term.h"

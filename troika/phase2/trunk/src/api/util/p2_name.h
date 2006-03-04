@@ -39,6 +39,7 @@ typedef p2_array p2_name;
 #define p2_name__pop( name )  ( char* ) p2_array__pop( name )
 #define p2_name__push( name, s )  p2_array__push( name, s )
 
+void p2_name__delete( p2_name *name );
 
 void p2_name__print( p2_name *name );
 

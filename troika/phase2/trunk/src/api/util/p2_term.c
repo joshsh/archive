@@ -328,137 +328,6 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 /* Logical set functions and atom substitution ********************************/
 
 
-/* A global variable to avoid repetitive passing of the same function pointer to
-   the subterm functions. */
-static void *(*p2_term__f)(void *);
-
-
-static void *for_all(void **head)
-{
-    void **sup;
-
-    /* If the sub-term represents a leaf node, apply the criterion function.
-       Return 'true' if the result is non-zero. */
-    if ((unsigned int) *(head) == 2)
-    {
-        head++;
-        return (void *) (p2_term__f(*head) != (void *) 0);
-    }
-
-    /* If the sub-term contains further sub-terms, iterate through them.
-       Return 'true' if and only if every sub-term returns 'true'. */
-    else
-    {
-        sup = head + (unsigned int) *head;
-        head++;
-        while (head < sup)
-        {
-            if (!for_all(head))
-                return (void *) 0;
-            head += (unsigned int) *head;
-        }
-        return (void *) 1;
-    }
-}
-
-
-static void *exists(void **head)
-{
-    void **sup;
-    void *result;
-
-    /* If the sub-term represents a leaf node, apply the criterion function.
-       Return the atom itself if the result is non-zero. */
-    if ((unsigned int) *(head) == 2)
-    {
-        head++;
-        if (p2_term__f(*head) != (void *) 0)
-            return *head;
-        else
-            return (void *) 0;
-    }
-
-    /* If the sub-term contains further sub-terms, iterate through them.
-       Return the first atom encountered which meets the criterion.  If none are
-       encountered, return 'false'. */
-    else
-    {
-        sup = head + (unsigned int) *head;
-        head++;
-        while (head < sup)
-        {
-            result = exists(head);
-            if (result)
-                return result;
-            head += (unsigned int) *head;
-        }
-        return (void *) 0;
-    }
-}
-
-
-static void substitute_all(void **head)
-{
-    void **sup;
-
-    /* If the sub-term represents a leaf node, apply the substitution function. */
-    if ((unsigned int) *(head) == 2)
-    {
-        head++;
-        *head = p2_term__f(*head);
-    }
-
-    /* If the sub-term contains further sub-terms, iterate through them. */
-    else
-    {
-        sup = head + (unsigned int) *head;
-        head++;
-        while (head < sup)
-        {
-            substitute_all(head);
-            head += (unsigned int) *head;
-        }
-    }
-}
-
-
-void *p2_term__for_all(p2_term *t, void *(*criterion)(void *))
-{
-    if (!t)
-        return (void *) 0;
-    else
-    {
-        p2_term__f = criterion;
-        return for_all(t->head);
-    }
-}
-
-
-/* Caution: output may not be meaningful if the p2_term contains NULL atoms. */
-void *p2_term__exists(p2_term *t, void *(*criterion)(void *))
-{
-    if (!t)
-        return (void *) 0;
-    else
-    {
-        p2_term__f = criterion;
-        return exists(t->head);
-    }
-}
-
-
-p2_term *p2_term__substitute_all(p2_term *t, void *(*substitution)(void *))
-{
-    if (t)
-    {
-        p2_term__f = substitution;
-        substitute_all(t->head);
-    }
-
-    return t;
-}
-
-
 void p2_term__distribute( p2_term *t, p2_procedure *p )
 {
     void **sup, **head = ( void** ) t;
@@ -482,6 +351,23 @@ void p2_term__distribute( p2_term *t, p2_procedure *p )
             head += ( unsigned int ) *head;
         }
     }
+}
+
+
+/******************************************************************************/
+
+
+p2_type *p2_term__type( const char *name )
+{
+    p2_type *type = p2_type__new( name, 0 );
+
+    if ( type )
+    {
+        type->destroy = ( destructor ) p2_term__delete;
+        type->distribute = ( distributor ) p2_term__distribute;
+    }
+
+    return type;
 }
 
 

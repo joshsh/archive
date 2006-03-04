@@ -411,7 +411,7 @@ static void mergesort(int lo, int hi)
 }
 
 
-void p2_array__mergesort( p2_array *a, comparator compare )
+void p2_array__sort( p2_array *a, comparator compare )
 {
     int i;
 
@@ -440,47 +440,6 @@ void p2_array__mergesort( p2_array *a, comparator compare )
 
 
 /* Logical set functions and item substitution ********************************/
-
-
-void *p2_array__for_all(p2_array *a, void *(*criterion) (void *))
-{
-    int i;
-
-    for (i = 0; i < a->size; i++)
-        if (!criterion( elmt( a, i ) ))
-            return 0;
-
-    return (void*) 1;
-}
-
-
-void *p2_array__exists(p2_array *a, void *(*criterion)(void *))
-{
-    int i;
-
-    for (i = 0; i < a->size; i++)
-        if (criterion( elmt( a, i ) ))
-            return (void*) 1;
-
-    return 0;
-}
-
-
-p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *))
-{
-    int i, index;
-
-    for (i = 0; i < a->size; i++)
-    {
-        index = (a->head + i) % a->buffer_size;
-        a->buffer[index] = substitution(a->buffer[index]);
-    }
-
-    return a;
-}
-
-
-/******************************************************************************/
 
 
 void p2_array__distribute( p2_array *a, p2_procedure *p )
@@ -539,6 +498,23 @@ p2_array *p2_array__minimize( p2_array *a )
     a->head = 0;
 
     return a;
+}
+
+
+/******************************************************************************/
+
+
+p2_type *p2_array__type( const char *name )
+{
+    p2_type *type = p2_type__new( name, 0 );
+
+    if ( type )
+    {
+        type->destroy = ( destructor ) p2_array__delete;
+        type->distribute = ( distributor ) p2_array__distribute;
+    }
+
+    return type;
 }
 
 

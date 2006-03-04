@@ -50,6 +50,10 @@ p2_namespace *p2_namespace__new()
     /* Writable by default. */
     ns->constant = 0;
 
+    #if DEBUG__NAMESPACE
+    printf( "[0x%X] p2_namespace__new\n", ( int ) ns );
+    #endif
+
     return ns;
 }
 
@@ -77,6 +81,10 @@ void p2_namespace__delete( p2_namespace *ns )
             PRINTERR( "p2_namespace__delete: null namespace" );
             return;
         }
+    #endif
+
+    #if DEBUG__NAMESPACE
+    printf( "p2_namespace__delete(0x%X)\n", ( int ) ns ); fflush( stdout );
     #endif
 
     /* The namespace owns its hashing keys, but it does not own its targets. */
@@ -175,9 +183,15 @@ p2_object *p2_namespace__lookup( p2_namespace__object *ns_obj, p2_name *name )
     }
     #endif
 
+    #if DEBUG__NAMESPACE
+    printf( "[...] p2_namespace__lookup(0x%X, 0x%X)\n", ( int ) ns, ( int ) name );
+fflush( stdout );
+    #endif
+
     if ( !name || !name->size )
         return ns_obj;
 
+printf( "p2_namespace__lookup: p2_array__peek( name ) = 0x%X\n", ( int ) p2_array__peek( name ) ); fflush( stdout );
     o = ( p2_object* ) p2_hash_table__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
@@ -291,60 +305,7 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
 }
 
 
-static void *print_ns_item( char *name, p2_object *o )
-{
-    printf( "    0x%X '%s' : %s\n", ( int ) o, name, o->type->name );
-    return o;
-}
-
-/* ! */
-static p2_array *glob_array;
-static p2_hash_table *glob_hash_table;
-static void *add_to_array( void *p )
-{
-    return p2_array__enqueue( glob_array, p );
-}
-static void *lookup_and_print( char *s )
-{
-    return print_ns_item( s,
-        ( p2_object* ) p2_hash_table__lookup( glob_hash_table, s ) );
-}
-
-
-void p2_namespace__show_children( p2_namespace__object *ns_obj )
-{
-    int size = ( ( p2_namespace* ) ns_obj->value )->children->size;
-
-    printf( "0x%X : namespace", ( int ) ns_obj );
-
-    if ( size )
-    {
-        glob_array = p2_array__new( size, 0 );
-        p2_hash_table__for_all_keys(
-            ( ( p2_namespace* ) ns_obj->value )->children,
-            add_to_array );
-        p2_array__mergesort( glob_array, ( int(*)(void*,void*))strcmp );
-
-        printf( "\n{\n" );
-        glob_hash_table = ( ( p2_namespace* ) ns_obj->value )->children;
-        p2_array__for_all( glob_array, ( void*(*)(void*) ) lookup_and_print );
-/*
-        p2_hash_table__for_all( ( ( p2_namespace* ) ns_obj->value )->children, ( void*(*)(void*, void*) ) print_ns_item );
-*/
-        printf( "}" );
-
-        p2_array__delete( glob_array );
-    }
-
-    else
-        printf( " { }" );
-}
-
-
-void *p2_namespace__for_all( p2_namespace *ns, void *(*func)(void *) )
-{
-    return p2_hash_table__for_all_targets( ns->children, func );
-}
+/******************************************************************************/
 
 
 /* Procedure which points the argument procedure to the target value of a
@@ -364,6 +325,59 @@ void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p )
     p_alt.state = p;
 
     p2_hash_table__distribute( ns->children, &p_alt );
+}
+
+
+/******************************************************************************/
+
+
+static p2_procedure__effect add_to_array( void **addr, p2_array *a )
+{
+    p2_array__enqueue( a, *addr );
+
+    return p2_procedure__effect__continue;
+}
+static p2_procedure__effect lookup_and_print( char **addr, p2_hash_table *h )
+{
+    p2_object *o = ( p2_object* ) p2_hash_table__lookup( h, *addr );
+    printf( "    0x%X '%s' : %s\n", ( int ) o, *addr, o->type->name );
+    return p2_procedure__effect__continue;
+}
+
+
+void p2_namespace__show_children( p2_namespace__object *ns_obj )
+{
+    int size = ( ( p2_namespace* ) ns_obj->value )->children->size;
+    p2_array *a;
+    p2_procedure p;
+
+    printf( "0x%X : namespace", ( int ) ns_obj );
+
+    if ( size )
+    {
+        printf( "\n{\n" );
+
+        /* Create an array of children. */
+        a = p2_array__new( size, 0 );
+        p.execute = ( procedure ) add_to_array;
+        p.state = a;
+        p2_hash_table__distribute( ( ( p2_namespace* ) ns_obj->value )->children, &p );
+
+        /* Alphabetize children. */
+        p2_array__sort( a, ( comparator ) strcmp );
+
+        /* Print children. */
+        p.execute = ( procedure ) lookup_and_print;
+        p.state = ( ( p2_namespace* ) ns_obj->value )->children;
+        p2_array__distribute( a, &p );
+
+        p2_array__delete( a );
+
+        printf( "}" );
+    }
+
+    else
+        printf( " { }" );
 }
 
 

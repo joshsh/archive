@@ -103,21 +103,13 @@ void *p2_bunch__remove(p2_bunch *b);
 
 /******************************************************************************/
 
-/** \return 1 if the criterion evaluates to a non-zero value ("true") for each
-    item in the bunch, else 0. */
-void *p2_bunch__for_all(p2_bunch *b, void *(*criterion) (void *));
-
-/** \return the first item for which the criterion evaluates to a non-zero
-    value ("true").  If no such item exists, the return value is 0. */
-void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *));
-
-/** Excludes all items from the bunch for which criterion evaluates to a non-zero
-    value ("true").
-    \return the original bunch, but without the excluded items */
-p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *));
+void p2_bunch__distribute( p2_bunch *b, p2_procedure *p );
 
 
 /******************************************************************************/
+
+p2_type *p2_bunch__type( const char *name );
+
 
 #endif  /* P2_BUNCH_H */
 

@@ -40,6 +40,8 @@ typedef struct _p2_type
 
     int flags;
 
+    struct _p2_type *type_arg;
+
     /** Copy constructor. */
     copy_cons   clone;
 
@@ -58,34 +60,14 @@ typedef struct _p2_type
 
     criterion2  equals;
 
-    /** "Element exists" callback distributor. */
-    void *( *exists )( void*, void *(*)( void* ) );
-
-    /** "For all elements" callback distributor. */
-    void *( *for_all )( void*, void *(*)( void* ) );
-
     sort_f      sort;
 
 } p2_type;
 
 
-#define EXISTS_T    void *(*)(void *, void *(*)(void*))
-#define FOR_ALL_T   void *(*)(void *, void *(*)(void*))
-
-
 /** Constructor. */
 p2_type *p2_type__new( const char *name, int flags );
-/*
-(
-    char *name,
-    void *( *clone )( void* ),
-    void *( *decode )( char* ),
-    void ( *destroy )( void* ),
-    void ( *encode )( void*, char* ),
-    void *( *exists )( void*, void *(*)( void* ) ),
-    void *( *for_all )( void*, void *(*)( void* ) ),
-    distributor distribute
-);*/
+
 
 /** Destructor. */
 void p2_type__delete( p2_type *type );

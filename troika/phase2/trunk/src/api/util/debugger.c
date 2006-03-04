@@ -22,6 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_hash_table.h"
 #include "p2_set.h"
 #include "p2_term.h"
+#include "../p2_collection.h"
 
 #include <stdlib.h>  /* free */
 #include <stdio.h>  /* printf */
@@ -258,6 +259,7 @@ void p2_term__debug( )
     }
     term5 = p2_term__merge_ra( term1, term3 );
     p2_term__for_all( term5, p2_set__free );
+    /*p2_term__for_all( term5, p2_set__free );*/
     p2_term__delete( term5 );
 
     func_end( "p2_term__debug" );

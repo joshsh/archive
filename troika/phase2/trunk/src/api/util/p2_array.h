@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_ARRAY_H
 
 
-#include "../p2.h"
+#include "../p2_type.h"
 
 
 /** \brief An expanding array of void pointers, suitable for use as a stack,
@@ -125,23 +125,11 @@ void *p2_array__simple_remove( p2_array *a, int index );
 /* Array sorting **************************************************************/
 
 /** Sorts the array using MergeSort. */
-void p2_array__mergesort( p2_array *a, comparator compare );
+void p2_array__sort( p2_array *a, comparator compare );
 
 
 /* Logical set functions and item substitution ********************************/
 
-/** \return 1 if the criterion evaluates to a non-zero value ("true") for each
-    item in the term, else 0. */
-void *p2_array__for_all(p2_array *a, void *(*criterion) (void *));
-
-/** \return the first item for which the criterion evaluates to a non-zero
-    value ("true").  If no such item exists, the return value is 0.
-    \warning output may not be meaningful if the p2_array contains NULL atoms. */
-void *p2_array__exists(p2_array *a, void *(*criterion)(void *));
-
-/** Replaces each item in the term with a new item determined by substitution.
-    \note there is no special return value to indicate substitution failure. */
-p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *));
 
 void p2_array__distribute( p2_array *a, p2_procedure *p );
 
@@ -155,6 +143,11 @@ p2_array *p2_array__clear( p2_array *a );
     \note only call this function if the number of items in the array is at a
     maximum. */
 p2_array *p2_array__minimize( p2_array *a );
+
+
+/******************************************************************************/
+
+p2_type *p2_array__type( const char *name );
 
 
 #endif  /* P2_ARRAY_H */

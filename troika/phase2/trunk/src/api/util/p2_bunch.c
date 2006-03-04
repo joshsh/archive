@@ -120,16 +120,25 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
 }
 
 
-void p2_bunch__delete(p2_bunch *b)
+static p2_procedure__effect block__delete__proc( block **block_p, void *state )
 {
+    block__delete( *block_p );
+    return p2_procedure__effect__continue;
+}
+
+
+void p2_bunch__delete( p2_bunch *b )
+{
+    p2_procedure p = { ( procedure ) block__delete__proc, 0 };
+
     /* Free all blocks. */
-    p2_array__for_all(b->blocks, (void *(*) (void *)) block__delete);
+    p2_array__distribute( b->blocks, &p );
 
     /* Delete the blocks array. */
-    p2_array__delete(b->blocks);
+    p2_array__delete( b->blocks );
 
     /* Free the bunch structure itself. */
-    free(b);
+    free( b );
 }
 
 
@@ -209,84 +218,72 @@ void *p2_bunch__remove(p2_bunch *b)
 }
 
 
-void *p2_bunch__for_all(p2_bunch *b, void *(*criterion) (void *))
+void p2_bunch__distribute( p2_bunch *b, p2_procedure *p )
 {
     int i, j, numblocks = b->blocks->size;
     block *bl;
 
-    for (i = 0; i < numblocks; i++)
+    for ( i = 0; i < numblocks; i++ )
     {
-        bl = (block *) p2_array__get(b->blocks, i);
-        for (j = 0; j < bl->filled; j++)
-            if (!criterion(bl->buffer[j]))
-                return 0;
-    }
+        bl = ( block* ) p2_array__get( b->blocks, i );
 
-    return (void *) 1;
-}
-
-
-void *p2_bunch__exists(p2_bunch *b, void *(*criterion) (void *))
-{
-    int i, j, numblocks = b->blocks->size;
-    block *bl;
-    void *p;
-
-    for (i = 0; i < numblocks; i++)
-    {
-        bl = (block *) p2_array__get(b->blocks, i);
-        for (j = 0; j < bl->filled; j++)
+        for ( j = 0; j < bl->filled; j++ )
         {
-            p = bl->buffer[j];
-            if (criterion(p))
-                return p;
-        }
-    }
-
-    return 0;
-}
-
-
-p2_bunch *p2_bunch__exclude_if(p2_bunch *b, void *(*criterion) (void *))
-{
-    int i, j, numblocks = b->blocks->size;
-    block *bl;
-    void *p;
-
-    for (i = 0; i < numblocks; i++)
-    {
-        bl = (block *) p2_array__get(b->blocks, i);
-        for (j = 0; j < bl->filled; j++)
-        {
-            p = bl->buffer[j];
-            while (criterion(p))
+            switch ( p2_procedure__execute( p, &bl->buffer[j] ) )
             {
-                /* Replace the item with the last item in the bunch. */
-                p = bl->buffer[j] = b->last_block->buffer[--(b->last_block->filled)];
+                case p2_procedure__effect__break:
 
-                /* Remove the tail-end block if empty. */
-                if (!b->last_block->filled)
-                {
-                    block__delete((block *) p2_array__dequeue(b->blocks));
+                    return;
 
-                    if (bl == b->last_block)
+                case p2_procedure__effect__remove:
+
+                    /* Replace the item with the last item in the bunch. */
+                    bl->buffer[j] = b->last_block->buffer[--( b->last_block->filled )];
+
+                    /* Remove the tail-end block if empty. */
+                    if ( !b->last_block->filled )
                     {
-                        b->last_block = 0;
-                        /*b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1); */
-                        return b;
-                    }
+                        block__delete( ( block* ) p2_array__dequeue( b->blocks ) );
 
-                    else
-                    {
-                        numblocks--;
-                        b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+                        if ( bl == b->last_block )
+                        {
+                            b->last_block = 0;
+                            /*b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1); */
+                            return;
+                        }
+
+                        else
+                        {
+                            numblocks--;
+                            b->last_block = ( block* ) p2_array__get( b->blocks, b->blocks->size - 1 );
+                        }
                     }
-                }
+                    j--;
+
+                    break;
+
+                default:
+                    ;
             }
         }
     }
+}
 
-    return b;
+
+/******************************************************************************/
+
+
+p2_type *p2_bunch__type( const char *name )
+{
+    p2_type *type = p2_type__new( name, 0 );
+
+    if ( type )
+    {
+        type->destroy = ( destructor ) p2_bunch__delete;
+        type->distribute = ( distributor ) p2_bunch__distribute;
+    }
+
+    return type;
 }
 
 

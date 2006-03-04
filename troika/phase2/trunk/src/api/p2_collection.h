@@ -37,6 +37,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 typedef p2_object p2_collection;
 
+/*
+typedef p2_type p2_collection_type;
+
+p2_collection_type *p2_collection_type__new( 
+*/
+
 #define p2_collection__new( type, value )   p2_object__new( type, value )
 
 

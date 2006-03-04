@@ -70,11 +70,18 @@ static void *p2_free( void *p )
 }
 
 
-static void *term_of_nodes__delete( p2_term *t )
+static p2_procedure__effect p2_ast__delete__proc( p2_ast **ast_p, void *state )
 {
-    p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );
-    p2_term__delete( t );
-    return t;
+    p2_ast__delete( *ast_p );
+    return p2_procedure__effect__continue;
+}
+static p2_procedure__effect term_of_nodes__delete( p2_term **t_p, void *state )
+{
+    p2_procedure p = { ( procedure ) p2_ast__delete__proc, 0 };
+    p2_term__distribute( *t_p, &p );
+    /*p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );*/
+    p2_term__delete( *t_p );
+    return p2_procedure__effect__continue;
 }
 
 
@@ -196,66 +203,84 @@ int p2_ast__size( p2_ast *ast )
 
 void *p2_ast__delete( p2_ast *ast )
 {
+    p2_procedure p = { ( procedure) term_of_nodes__delete, 0 };
+
     #if DEBUG__AST
-    printf( "[] p2_ast__delete(%X)\n", ( int ) ast );
+    printf( "[] p2_ast__delete(0x%X)\n", ( int ) ast );
     #endif
 
     switch( ast->type )
     {
         case BAG_T:
+printf( "BAG_T \n" ); fflush( stdout );
 
-            p2_array__for_all(
+            p2_array__distribute( ( p2_array* ) ast->value, &p );
+            /*p2_array__for_all(
                 ( p2_array* ) ast->value,
-                ( void*(*)(void*) ) term_of_nodes__delete );
+                ( void*(*)(void*) ) term_of_nodes__delete );*/
             p2_array__delete( ( p2_array* ) ast->value );
             break;
 
         case CHAR_T:
+printf( "CHAR_T \n" ); fflush( stdout );
 
             free( ast->value );
             break;
 
         case FLOAT_T:
+printf( "FLOAT_T \n" ); fflush( stdout );
 
             free( ast->value );
             break;
 
         case INT_T:
+printf( "INT_T \n" ); fflush( stdout );
 
             free( ast->value );
             break;
 
         case NAME_T:
 
-            p2_array__for_all(
-                ( p2_array* ) ast->value,
-                p2_free );
-            p2_array__delete( ( p2_array* ) ast->value );
+printf( "NAME_T \n" ); fflush( stdout );
+            p2_name__delete( ( p2_name* ) ast->value );
             break;
 
         case STRING_T:
+printf( "STRING_T \n" ); fflush( stdout );
 
             free( ast->value );
             break;
 
         case TERM_T:
+printf( "TERM_T \n" ); fflush( stdout );
 
-            p2_term__for_all(
+            p.execute = ( procedure ) p2_ast__delete__proc;
+            p2_term__distribute( ast->value, &p );
+printf( "TERM_T 2\n" ); fflush( stdout );
+printf( "ast->value = %x\n", ( int ) ast->value );  fflush( stdout );
+            /*p2_term__for_all(
                 ( p2_term* ) ast->value,
-                ( void*(*)(void*) ) p2_ast__delete );
-            p2_term__delete( ( p2_term* ) ast->value );
+                ( void*(*)(void*) ) p2_ast__delete );*/
+
+/* !!!! */
+            /*p2_term__delete( ( p2_term* ) ast->value );*/
+printf( "TERM_T 3\n" ); fflush( stdout );
+
             break;
 
         case VOID_T:
+printf( "VOID_T \n" ); fflush( stdout );
 
             /* Do nothing. */
             break;
 
         default:
+printf( "default \n" ); fflush( stdout );
 
             fprintf( stderr, "p2_ast__delete: bad AST type: %i\n", ast->type );
             return 0;
     }
+printf( "asdfasdfasdsdf\n" ); fflush( stdout );
 
     return p2_free( ast );
 }

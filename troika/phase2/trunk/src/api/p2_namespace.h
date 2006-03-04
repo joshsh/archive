@@ -86,8 +86,6 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name );
 
 void p2_namespace__show_children( p2_namespace__object *ns_obj );
 
-void *p2_namespace__for_all( p2_namespace *ns, void *(*func)(void *) );
-
 void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p );
 
 

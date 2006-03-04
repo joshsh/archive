@@ -37,9 +37,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* For p2_object's flags field. */
-#define OBJECT__IS_OBJ_COLL ( int ) 0x001
-#define OBJECT__MARKED      ( int ) 0x010
-#define OBJECT__OWNED       ( int ) 0x100
+#define OBJECT__IS_OBJ_COLL         ( int ) 0x0001
+#define OBJECT__MARKED              ( int ) 0x0010
+#define OBJECT__OWNED               ( int ) 0x0100
+#define OBJECT__OWNS_DESCENDANTS    ( int ) 0x1000
 
 
 /** A typed constant.  This is the least addressable unit of data in a Phase2
@@ -100,20 +101,6 @@ p2_object *p2_object__decode( p2_type *type, char *buffer );
 /** Serializes an object to a string. */
 void p2_object__encode( p2_object *o, char *buffer );
 
-/** "Element exists" callback distributor. */
-void *p2_object__exists( p2_object *o, void *(*f)( void* ) );
-
-/** "For all elements" callback distributor. */
-void *p2_object__for_all( p2_object *o, void *(*f)( void* ) );
-
-/*
-#define clone( o )  p2_object__clone( o )
-#define decode( type, buffer )  p2_object__decode( type, buffer )
-#define destroy( o )  p2_object__destroy( o )
-#define encode( o, buffer )  p2_object__encode( o, buffer )
-#define exists( o, f )  p2_object__exists( o, f )
-#define for_all( o, f )  p2_object__for_all( o, f )
-*/
 
 /* Association ****************************************************************/
 

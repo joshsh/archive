@@ -31,6 +31,7 @@ static void *(*global_f)(p2_object*);
 p2_memory_manager *p2_memory_manager__new( p2_object *root )
 {
     p2_memory_manager *m;
+    p2_type *p2_object_t;
 printf( "---m 1---\n" ); fflush( stdout );
 
     #if DEBUG__SAFE
@@ -55,6 +56,7 @@ printf( "---m 2---\n" ); fflush( stdout );
 printf( "---m 3---\n" ); fflush( stdout );
 
     m->objects = p2_bunch__new( MEM_MANAGER__OBJECTS__BLOCK_SIZE );
+
 printf( "---m 4---\n" ); fflush( stdout );
 
     if ( !m->objects )
@@ -63,6 +65,11 @@ printf( "---m 4---\n" ); fflush( stdout );
         free( m );
         return 0;
     }
+printf( "---m 4.5---\n" ); fflush( stdout );
+    p2_object_t = p2_type__new( "object", 0 );
+    p2_object_t->destroy = ( destructor ) p2_object__delete;
+    m->objects_obj = p2_object__new( p2_bunch__type( "bunch<object>" ), m->objects, OBJECT__OWNS_DESCENDANTS );
+    m->objects_obj->type->type_arg = p2_object_t;
 printf( "---m 5---\n" ); fflush( stdout );
 
     m->root = root;
@@ -87,6 +94,7 @@ printf( "---m 6---\n" ); fflush( stdout );
 
 void p2_memory_manager__delete( p2_memory_manager *m )
 {
+    p2_type *p2_object_t, *p2_object_bunch_t;
     #if DEBUG__SAFE
         if ( !m )
         {
@@ -95,8 +103,15 @@ void p2_memory_manager__delete( p2_memory_manager *m )
         }
     #endif
 
-    p2_bunch__for_all( m->objects, (void*(*)(void*)) p2_object__delete );
-    p2_bunch__delete( m->objects );
+    p2_object_bunch_t = m->objects_obj->type;
+    p2_object_t = p2_object_bunch_t->type_arg;
+
+    p2_object__delete( m->objects_obj );
+    /*p2_bunch__for_all( m->objects, (void*(*)(void*)) p2_object__delete );
+    p2_bunch__delete( m->objects );*/
+    p2_type__delete( p2_object_bunch_t );
+    p2_type__delete( p2_object_t );
+
     free( m );
 }
 
@@ -164,7 +179,7 @@ static void *unmark( p2_object *o )
 }
 
 
-static void *unmark_for_sweep( p2_object *o )
+static boolean unmark_for_sweep( p2_object *o )
 {
     #ifdef DEBUG__SAFE
         if ( !o )
@@ -180,7 +195,7 @@ static void *unmark_for_sweep( p2_object *o )
         o->flags = o->flags & ~OBJECT__MARKED;
 
         /* Don't exclude this object. */
-        return 0;
+        return boolean__false;
     }
 
     /* If unmarked, delete. */
@@ -189,7 +204,7 @@ static void *unmark_for_sweep( p2_object *o )
         p2_object__delete( o );
 
         /* Exclude this object. */
-        return o;
+        return boolean__true;
     }
 }
 
@@ -204,7 +219,8 @@ static void unmark_all( p2_memory_manager *m )
         }
     #endif
 
-    p2_bunch__for_all( m->objects, (void*(*)(void*)) unmark );
+    p2_collection__do_for_all( m->objects_obj, ( void_f ) unmark );
+    /*p2_bunch__for_all( m->objects, (void*(*)(void*)) unmark );*/
     m->clean = 1;
 }
 
@@ -220,7 +236,8 @@ static void sweep( p2_memory_manager *m )
         }
     #endif
 
-    p2_bunch__exclude_if( m->objects, (void*(*)(void*)) unmark_for_sweep );
+    p2_collection__exclude_if( m->objects_obj, ( criterion ) unmark_for_sweep );
+    /*p2_bunch__exclude_if( m->objects, (void*(*)(void*)) unmark_for_sweep );*/
     m->clean = 1;
 }
 

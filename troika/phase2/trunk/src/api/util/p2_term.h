@@ -46,7 +46,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_TERM_H
 
 
-#include "../p2.h"
+#include "../p2_type.h"
 
 
 /** By default, the size of a term's buffer will be multiplied by this factor
@@ -133,20 +133,12 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2);
 
 /* Logical set functions and item substitution ********************************/
 
-/** \return 1 if the criterion evaluates to a non-zero value ("true") for each
-    item in the term, else 0. */
-void *p2_term__for_all(p2_term *t, void *(*criterion)(void *));
-
-/** \return the first item for which the criterion evaluates to a non-zero
-    value ("true").  If no such item exists, the return value is 0.
-    \warning output may not be meaningful if the p2_term contains NULL atoms. */
-void *p2_term__exists(p2_term *t, void *(*criterion)(void *));
-
-/** Replaces each item in the term with a new item determined by substitution.
-    \note there is no special return value to indicate substitution failure. */
-p2_term *p2_term__substitute_all(p2_term *t, void *(*substitution)(void *));
-
 void p2_term__distribute( p2_term *t, p2_procedure *p );
+
+
+/******************************************************************************/
+
+p2_type *p2_term__type( const char *name );
 
 
 #endif  /* P2_TERM_H */

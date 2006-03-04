@@ -41,54 +41,6 @@ static void *ns__add( p2_namespace__object *ns_obj, p2_object *o, char *s )
 }
 
 
-/* Look up a namespace item using a simple name.
-static p2_object *ns__lookup( p2_namespace__object *ns_obj, const char *s )
-{
-    char *s2;
-    p2_name *name;
-    p2_object *o;
-
-    if ( !( s2 = STRDUP( s ) ) )
-        return 0;
-
-    if ( !ns_obj || !( name = p2_array__new( 0, 0 ) ) )
-    {
-        free( s2 );
-        return 0;
-    }
-
-    else if ( !p2_array__enqueue( name, s2 ) )
-        o = 0;
-
-    else
-        o = p2_namespace__lookup( ns_obj, name );
-
-    free( s2 );
-    p2_array__delete( name );
-    return o;
-}
-*/
-
-/* Adds an object to a memory manager. */
-/*
-static p2_object *mm__add( p2_memory_manager *m, void *p, p2_type *type )
-{
-    p2_object *o = p2_object__new( type, p );
-
-    if ( !o )
-        return 0;
-
-    if ( !p2_memory_manager__add( m, o ) )
-    {
-        p2_object__delete( o );
-        return 0;
-    }
-
-    return o;
-}
-*/
-
-
 static p2_namespace__object *ns__new( p2_type *ns__type )
 {
     p2_object *o;
@@ -140,7 +92,6 @@ void p2_object__print( p2_object *o, char *buffer )
 p2_environment *p2_environment__new()
 {
     p2_environment *env;
-    p2_type *bag_t, *term_t;
 
 printf( "---e 1---\n" ); fflush( stdout );
 
@@ -160,7 +111,6 @@ printf( "---e 3---\n" ); fflush( stdout );
         goto abort;
 
     env->ns__type->destroy =    ( destructor )  p2_namespace__delete;
-    env->ns__type->for_all =    ( FOR_ALL_T )   p2_namespace__for_all;
     env->ns__type->distribute = ( distributor ) p2_namespace__distribute;
     env->prim__type->destroy =  ( destructor )  p2_primitive__delete;
     env->type__type->destroy =  ( destructor )  p2_type__delete;
@@ -216,29 +166,8 @@ printf( "---e 8---\n" ); fflush( stdout );
 printf( "---e 9---\n" ); fflush( stdout );
 
     /* Add other types here... */
-    p2_environment__register_type( env, bag_t   = p2_type__new( "bag", 0 ), 0 );
-    bag_t->destroy = ( destructor ) p2_array__delete;
-    bag_t->exists = ( EXISTS_T ) p2_array__exists;
-    bag_t->for_all = ( FOR_ALL_T ) p2_array__for_all;
-    bag_t->distribute = ( distributor ) p2_array__distribute;
-    p2_environment__register_type( env, term_t  = p2_type__new( "term", 0 ), 0 );
-    term_t->destroy = ( destructor ) p2_term__delete;
-    term_t->exists = ( EXISTS_T ) p2_term__exists;
-    term_t->for_all = ( FOR_ALL_T ) p2_term__for_all;
-    term_t->distribute = ( distributor ) p2_term__distribute;
-/*
-    p2_environment__register_type( env,
-        p2_type__new( STRDUP( "bag" ), 0, 0,
-           ( destructor ) p2_array__delete, 0,
-           ( EXISTS_T ) p2_array__exists,
-           ( FOR_ALL_T ) p2_array__for_all, 0 ), 0 );
-    p2_environment__register_type( env,
-        p2_type__new( STRDUP( "term" ), 0, 0,
-           ( destructor ) p2_term__delete, 0,
-           ( EXISTS_T ) p2_term__exists,
-           ( FOR_ALL_T ) p2_term__for_all, 0 ), 0 );
-*/
-
+    p2_environment__register_type( env, p2_array__type( "bag" ), 0 );
+    p2_environment__register_type( env, p2_term__type( "term" ), 0 );
 
     if ( !p2_environment__import_primitives( env ) )
         goto abort;
@@ -361,8 +290,6 @@ p2_type *p2_environment__resolve_type(
         /* If not found, create the type and hope for the best. */
         if ( !( type = p2_type__new( name, 0 ) ) )
             return 0;
-        /*if ( !( type = p2_type__new( STRDUP( name ), 0, 0, 0, 0, 0, 0, 0 ) ) )
-            return 0;*/
 
         /* Note: all object collection types are registered explicitly. */
         if ( p2_environment__register_type( env, type, 0 ) )
