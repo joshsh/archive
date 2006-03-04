@@ -40,8 +40,8 @@ valgrind-session :  $(DEBUGGER)
 	$(VALGRIND) debugger
 
 
-debugger :  objects debugger.c p2_array.o p2_term.o p2_parser.h ../p2_flags.h
-	$(CC) $(CFLAGS) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_array.o p2_term.o
+debugger :  objects debugger.c p2_array.o p2_term.o p2_parser.h p2_name.o ../p2_flags.h
+	$(CC) $(CFLAGS) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o
 
 
 ################################################################################
@@ -74,6 +74,10 @@ $(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../p2_flags.h
 
 p2_ast.o : p2_ast.c ../p2_flags.h
 	$(CC) $(CFLAGS) -c p2_ast.c
+
+
+p2_name.o : $(UTILS)/p2_name.c ../p2_flags.h
+	$(CC) $(CFLAGS) -c $(UTILS)/p2_name.c
 
 
 p2_array.o : $(UTILS)/p2_array.c

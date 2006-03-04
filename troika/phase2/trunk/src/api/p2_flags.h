@@ -37,7 +37,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <stdio.h>  /* fprintf */
 
-#define PRINTERR( msg )  fprintf( stderr, "Error: %s.\n", msg )
+#define PRINTERR( msg )  { fprintf( stderr, "Error: %s.\n", msg ); fflush( stdout ); }
 
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */

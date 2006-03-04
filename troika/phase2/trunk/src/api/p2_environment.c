@@ -140,6 +140,8 @@ void p2_object__print( p2_object *o, char *buffer )
 p2_environment *p2_environment__new()
 {
     p2_environment *env;
+    p2_type *bag_t, *term_t;
+
 printf( "---e 1---\n" ); fflush( stdout );
 
     if ( !( env = new( p2_environment ) ) )
@@ -152,17 +154,29 @@ printf( "---e 2---\n" ); fflush( stdout );
 printf( "---e 3---\n" ); fflush( stdout );
 
     /* Create the basic data types. */
+    if ( !( env->ns__type = p2_type__new( "namespace", 0 ) )
+      || !( env->prim__type = p2_type__new( "primitive", 0 ) )
+      || !( env->type__type = p2_type__new( "type", 0 ) ) )
+        goto abort;
+
+    env->ns__type->destroy =    ( destructor )  p2_namespace__delete;
+    env->ns__type->for_all =    ( FOR_ALL_T )   p2_namespace__for_all;
+    env->ns__type->distribute = ( distributor ) p2_namespace__distribute;
+    env->prim__type->destroy =  ( destructor )  p2_primitive__delete;
+    env->type__type->destroy =  ( destructor )  p2_type__delete;
+/*
     if ( !( env->ns__type = p2_type__new(
         STRDUP( "namespace" ), 0, 0,
-        ( DESTROY_T ) p2_namespace__delete, 0, 0,
+        ( destructor ) p2_namespace__delete, 0, 0,
         ( FOR_ALL_T ) p2_namespace__for_all, 0 ) )
       || !( env->prim__type = p2_type__new(
         STRDUP( "primitive" ), 0, 0,
-        ( DESTROY_T ) p2_primitive__delete, 0, 0, 0, 0 ) )
+        ( destructor ) p2_primitive__delete, 0, 0, 0, 0 ) )
       || !( env->type__type = p2_type__new(
         STRDUP( "type" ), 0, 0,
-        ( DESTROY_T ) p2_type__delete, 0, 0, 0, 0 ) ) )
+        ( destructor ) p2_type__delete, 0, 0, 0, 0 ) ) )
         goto abort;
+*/
 printf( "---e 4---\n" ); fflush( stdout );
 
     /* Create root namespace object and children. */
@@ -202,16 +216,29 @@ printf( "---e 8---\n" ); fflush( stdout );
 printf( "---e 9---\n" ); fflush( stdout );
 
     /* Add other types here... */
+    p2_environment__register_type( env, bag_t   = p2_type__new( "bag", 0 ), 0 );
+    bag_t->destroy = ( destructor ) p2_array__delete;
+    bag_t->exists = ( EXISTS_T ) p2_array__exists;
+    bag_t->for_all = ( FOR_ALL_T ) p2_array__for_all;
+    bag_t->distribute = ( distributor ) p2_array__distribute;
+    p2_environment__register_type( env, term_t  = p2_type__new( "term", 0 ), 0 );
+    term_t->destroy = ( destructor ) p2_term__delete;
+    term_t->exists = ( EXISTS_T ) p2_term__exists;
+    term_t->for_all = ( FOR_ALL_T ) p2_term__for_all;
+    term_t->distribute = ( distributor ) p2_term__distribute;
+/*
     p2_environment__register_type( env,
         p2_type__new( STRDUP( "bag" ), 0, 0,
-           ( DESTROY_T ) p2_array__delete, 0,
+           ( destructor ) p2_array__delete, 0,
            ( EXISTS_T ) p2_array__exists,
            ( FOR_ALL_T ) p2_array__for_all, 0 ), 0 );
     p2_environment__register_type( env,
         p2_type__new( STRDUP( "term" ), 0, 0,
-           ( DESTROY_T ) p2_term__delete, 0,
+           ( destructor ) p2_term__delete, 0,
            ( EXISTS_T ) p2_term__exists,
            ( FOR_ALL_T ) p2_term__for_all, 0 ), 0 );
+*/
+
 
     if ( !p2_environment__import_primitives( env ) )
         goto abort;
@@ -280,11 +307,11 @@ p2_object *p2_environment__register_primitive(
     if ( flags & PRIM__CONSTRUCTOR )
         PRINTERR( "p2_environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
     if ( flags & PRIM__DECODER )
-        prim->return_type->decode = ( DECODE_T ) src_f;
+        prim->return_type->decode = ( decoder ) src_f;
     if ( flags & PRIM__DESTRUCTOR )
-        prim->return_type->destroy = ( DESTROY_T ) src_f;
+        prim->return_type->destroy = ( destructor ) src_f;
     if ( flags & PRIM__ENCODER )
-        prim->return_type->encode = ( ENCODE_T ) src_f;
+        prim->return_type->encode = ( encoder ) src_f;
 
     if ( !( o = p2_object__new( env->prim__type, prim, 0 ) ) )
     {
@@ -332,8 +359,10 @@ p2_type *p2_environment__resolve_type(
     if ( !o )
     {
         /* If not found, create the type and hope for the best. */
-        if ( !( type = p2_type__new( STRDUP( name ), 0, 0, 0, 0, 0, 0, 0 ) ) )
+        if ( !( type = p2_type__new( name, 0 ) ) )
             return 0;
+        /*if ( !( type = p2_type__new( STRDUP( name ), 0, 0, 0, 0, 0, 0, 0 ) ) )
+            return 0;*/
 
         /* Note: all object collection types are registered explicitly. */
         if ( p2_environment__register_type( env, type, 0 ) )

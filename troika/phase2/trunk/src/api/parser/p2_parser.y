@@ -256,6 +256,10 @@ struct statement *new_statement( char *name, p2_ast *expr )
 %type <stmt> statement command expression
 
 
+/*
+%pure_parser
+*/
+
 %parse-param { p2_parser__exit_state *return_state }
 
 /** Report more detailed parse error messages. */

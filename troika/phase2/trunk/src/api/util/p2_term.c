@@ -459,4 +459,30 @@ p2_term *p2_term__substitute_all(p2_term *t, void *(*substitution)(void *))
 }
 
 
+void p2_term__distribute( p2_term *t, p2_procedure *p )
+{
+    void **sup, **head = ( void** ) t;
+
+    /* If the sub-term represents a leaf node, execute the procedure. */
+    if ( ( unsigned int ) *head == 2 )
+    {
+        head++;
+        if ( p2_procedure__execute( p, head ) )
+            return;
+    }
+
+    /* If the sub-term contains further sub-terms, recurse through them. */
+    else
+    {
+        sup = head + ( unsigned int ) *head;
+        head++;
+        while ( head < sup )
+        {
+            p2_term__distribute( ( p2_term* ) head, p );
+            head += ( unsigned int ) *head;
+        }
+    }
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

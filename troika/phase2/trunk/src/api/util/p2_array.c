@@ -26,110 +26,152 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* By default, expand() doubles the size of the array. */
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
-static void expand(p2_array *a);
+#define elmt( a, i )  a->buffer[ ( a->head + i ) % a->buffer_size ]
+#define inbounds( a, i )  ( i >= 0 ) && ( i < a->size )
+#define wrap( a, i )  ( a->head + i ) % a->buffer_size
+
+
+#define buffer_new( size )  (void **) malloc( size * sizeof( void* ) )
+
+static void **buffer_copy( p2_array *a )
+{
+    void **buffer;
+    int size = a->buffer_size * sizeof( void* );
+
+    if ( ( buffer = malloc( size ) ) )
+        memcpy( buffer, a->buffer, size );
+
+    return buffer;
+}
 
 
 /* Constructors and destructor ************************************************/
 
 
-p2_array *p2_array__new(int buffer_size, float expansion)
+p2_array *p2_array__new( int buffer_size, float expansion )
 {
-    p2_array *a = (p2_array *) malloc(sizeof(p2_array));
+    p2_array *a;
 
-    if (a)
+    if ( !( a = new( p2_array ) ) )
+        return 0;
+
+    /* Buffer size must be positive. */
+    a->buffer_size = ( buffer_size > 0 )
+        ? buffer_size : 1;
+
+    if ( !( a->buffer = buffer_new( a->buffer_size ) ) )
     {
-        /* Expansion factor must be greater than 1 for the buffer to actually
-           gain in size. */
-        if (expansion <= 1)
-            a->expansion = DEFAULT_EXPANSION_FACTOR;
-        else
-            a->expansion = expansion;
-
-        /* Buffer size must be positive. */
-        if (buffer_size < 1)
-            a->buffer_size = 1;
-        else
-            a->buffer_size = buffer_size;
-
-        a->head = 0;
-        a->size = 0;
-
-        if (!(a->buffer = (void **) malloc(a->buffer_size * sizeof(void *))))
-            a = 0;
+        free( a );
+        return 0;
     }
+
+    /* Expansion factor must be greater than 1 for the buffer to actually
+       gain in size. */
+    a->expansion = ( expansion > 1 )
+        ? expansion : DEFAULT_EXPANSION_FACTOR;
+
+    a->head = a->size = 0;
 
     return a;
 }
 
 
-p2_array *p2_array__copy(p2_array *a)
+p2_array *p2_array__copy( p2_array *a )
 {
-    int size;
+    p2_array *b;
 
-    p2_array *b = (p2_array *) malloc(sizeof(p2_array));
-    if (b)
+    if ( !( b = new( p2_array ) ) )
+        return 0;
+
+    *b = *a;
+
+    if ( !( b->buffer = buffer_copy( a ) ) )
     {
-        b->head = a->head;
-        b->size = a->size;
-        b->expansion = a->expansion;
-        b->buffer_size = a->buffer_size;
-        size = b->buffer_size * sizeof(void *);
-        if (!(b->buffer = malloc(size)))
-            b = 0;
-        else
-            memcpy(b->buffer, a->buffer, size);
+        free( b );
+        return 0;
     }
 
     return b;
 }
 
 
-void p2_array__delete(p2_array *a)
+void p2_array__delete( p2_array *a )
 {
-    free(a->buffer);
-    free(a);
+    free( a->buffer );
+    free( a );
 }
 
 
 /* Array resizing *************************************************************/
 
 
-static void expand(p2_array *a)
+static p2_array *sizeup( p2_array *a )
 {
-    void **buffer0;
-    int i, size0 = (int) (a->expansion * a->buffer_size);
+    void **buffer_new;
+    int i, buffer_size_new;
+
+    if ( a->size < a->buffer_size )
+        return a;
+
+    buffer_size_new = ( int ) ( a->expansion * a->buffer_size );
 
     /* If the the array's own exansion factor is too close to 1 to resize the
        buffer, use DEFAULT_EXPANSION_FACTOR instead. */
-    if (size0 <= a->buffer_size)
-        size0 = DEFAULT_EXPANSION_FACTOR * a->buffer_size;
+    if ( buffer_size_new <= a->buffer_size )
+        buffer_size_new = DEFAULT_EXPANSION_FACTOR * a->buffer_size;
 
-    buffer0 = (void **) malloc(size0 * sizeof(void *));
-    for (i = 0; i < a->size; i++)
-        buffer0[i] = a->buffer[(a->head + i) % a->buffer_size];
-    free(a->buffer);
-    a->buffer = buffer0;
+    if ( !( buffer_new = buffer_new( buffer_size_new ) ) )
+    {
+        PRINTERR( "p2_array__minimize: allocation failure" );
+        return 0;
+    }
+
+    for ( i = 0; i < a->size; i++ )
+        buffer_new[i] = elmt( a, i );
+
+    free( a->buffer );
+
+    a->buffer = buffer_new;
     a->head = 0;
-    a->buffer_size = size0;
+    a->buffer_size = buffer_size_new;
+
+    return a;
 }
 
 
 /* Random access **************************************************************/
 
 
-void *p2_array__get(p2_array *a, int index)
+void *p2_array__get( p2_array *a, int index )
 {
-    if ((index >= 0) && (index < a->size))
-        return a->buffer[(index + a->head) % a->buffer_size];
+    if ( inbounds( a, index ) )
+        return elmt( a, index );
+
     else
+    {
+        PRINTERR( "p2_array__get: array index out of bounds" );
         return 0;
+    }
 }
 
 
-void p2_array__set(p2_array *a, int index, void *p)
+void *p2_array__set( p2_array *a, int index, void *p )
 {
-    if ((index >=0) && (index < a->size))
-        a->buffer[(index + a->head) % a->buffer_size] = p;
+    void **addr, *displaced;
+
+    if ( inbounds( a, index ) )
+    {
+        addr = &elmt( a, index );
+        displaced = *addr;
+        *addr = p;
+        return displaced;
+    }
+
+    else
+    {
+        PRINTERR( "p2_array__set: array index out of bounds" );
+        return 0;
+    }
 }
 
 
@@ -143,20 +185,25 @@ void p2_array__set(p2_array *a, int index, void *p)
 */
 
 
-void *p2_array__peek(p2_array *a)
+void *p2_array__peek( p2_array *a )
 {
-    if (a->size)
+    if ( a->size )
         return a->buffer[a->head];
+
     else
+    {
+        PRINTERR( "p2_array__peek: empty array" );
         return 0;
+    }
 }
 
 
-void *p2_array__push(p2_array *a, void *p)
+void *p2_array__push( p2_array *a, void *p )
 {
-    if (a->size >= a->buffer_size)
-        expand(a);  /* Note: replaces a->buffer */
-    a->head = ((a->head - 1) + a->buffer_size) % a->buffer_size;
+    if ( !sizeup( a ) )
+        return 0;
+
+    a->head = wrap( a, a->buffer_size - 1 );
     a->buffer[a->head] = p;
     a->size++;
 
@@ -164,108 +211,152 @@ void *p2_array__push(p2_array *a, void *p)
 }
 
 
-void *p2_array__pop(p2_array *a)
+void *p2_array__pop( p2_array *a )
 {
     void *p;
 
-    if (a->size)
+    if ( a->size )
     {
         p = a->buffer[a->head];
-        a->head = (a->head + 1) % a->buffer_size;
+        a->head = wrap( a, 1 );
         a->size--;
         return p;
     }
+
     else
+    {
+        PRINTERR( "p2_array__pop: can't remove from empty array" );
         return 0;
+    }
 }
 
 
-void *p2_array__enqueue(p2_array *a, void *p)
+void *p2_array__enqueue( p2_array *a, void *p )
 {
-    if (a->size >= a->buffer_size)
-        expand(a);  /* Note: replaces a->buffer */
-    a->buffer[(a->head + a->size) % a->buffer_size] = p;
+    if ( !sizeup( a ) )
+        return 0;
+
+    elmt( a, a->size ) = p;
     a->size++;
 
     return p;
 }
 
 
-void *p2_array__dequeue(p2_array *a)
+void *p2_array__dequeue( p2_array *a )
 {
-    if (a->size)
+    if ( a->size )
     {
         a->size--;
-        return a->buffer[(a->head + a->size) % a->buffer_size];
+        return elmt( a, a->size );
     }
+
     else
+    {
+        PRINTERR( "p2_array__dequeue: can't remove from empty array" );
         return 0;
+    }
 }
 
 
 /* Random insertion and removal ***********************************************/
 
 
-void p2_array__insert_before(p2_array *a, int index, void *p)
+void *p2_array__insert_before( p2_array *a, int index, void *p )
 {
     int i;
 
-    if ((index >= 0) && (index < a->size))
+    if ( inbounds( a, index ) )
     {
-        if (a->size >= a->buffer_size)
-            expand(a);  /* Note: replaces a->buffer */
+        if ( !sizeup( a ) )
+            return 0;
 
-        for (i = a->size; i > index; i--)
-            a->buffer[(a->head + i) % a->buffer_size]
-                = a->buffer[(a->head + i - 1) % a->buffer_size];
+        for ( i = a->size; i > index; i-- )
+            elmt( a, i ) = elmt( a, i - 1 );
 
-        a->buffer[(a->head + index) % a->buffer_size] = p;
+        elmt( a, index ) = p;
         a->size++;
+
+        return p;
+    }
+
+    else
+    {
+        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        return 0;
     }
 }
 
 
-void p2_array__insert_after(p2_array *a, int index, void *p)
+void *p2_array__insert_after( p2_array *a, int index, void *p )
 {
     int i;
 
-    if ((index >= 0)&&(index < a->size))
+    if ( inbounds( a, index ) )
     {
-        if (a->size >= a->buffer_size)
-            expand(a);  /* Note: replaces a->buffer */
+        if ( !sizeup( a ) )
+            return 0;
 
-        for (i = a->size; i > (index + 1); i--)
-            a->buffer[(a->head + i) % a->buffer_size]
-                = a->buffer[(a->head + i - 1) % a->buffer_size];
+        for ( i = a->size; i > (index + 1); i-- )
+            elmt( a, i ) = elmt( a, i - 1 );
 
-        a->buffer[(a->head + index + 1) % a->buffer_size] = p;
+        elmt( a, index + 1 ) = p;
         a->size++;
+
+        return p;
+    }
+
+    else
+    {
+        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        return 0;
     }
 }
 
 
-void p2_array__remove(p2_array *a, int index)
+void *p2_array__remove( p2_array *a, int index )
 {
     int i;
+    void *displaced;
 
-    if ((index >= 0)&&(index < a->size))
+    if ( inbounds( a, index ) )
     {
-        for (i=index; i<(a->size-1); i++)
-            a->buffer[(a->head+i)%a->buffer_size]
-                = a->buffer[(a->head+i+1)%a->buffer_size];
+        displaced = elmt( a, index );
+
+        for ( i = index; i < ( a->size - 1 ); i++ )
+            elmt( a, i ) = elmt( a, i + 1 );
 
         a->size--;
+
+        return displaced;
+    }
+
+    else
+    {
+        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        return 0;
     }
 }
 
 
-void p2_array__simple_remove(p2_array *a, int index)
+void *p2_array__simple_remove( p2_array *a, int index )
 {
-    if ((index >= 0) && (index < a->size))
+    void **addr, *displaced;
+
+    if ( inbounds( a, index ) )
     {
-        a->buffer[(a->head + index) % a->buffer_size]
-            = a->buffer[(a->head + a->size - 1) % a->buffer_size];
+        addr = &elmt( a, index );
+        displaced = *addr;
         a->size--;
+        *addr = elmt( a, a->size );
+
+        return displaced;
+    }
+
+    else
+    {
+        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        return 0;
     }
 }
 
@@ -320,7 +411,7 @@ static void mergesort(int lo, int hi)
 }
 
 
-void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *))
+void p2_array__mergesort( p2_array *a, comparator compare )
 {
     int i;
 
@@ -356,7 +447,7 @@ void *p2_array__for_all(p2_array *a, void *(*criterion) (void *))
     int i;
 
     for (i = 0; i < a->size; i++)
-        if (!criterion(a->buffer[(a->head + i) % a->buffer_size]))
+        if (!criterion( elmt( a, i ) ))
             return 0;
 
     return (void*) 1;
@@ -368,7 +459,7 @@ void *p2_array__exists(p2_array *a, void *(*criterion)(void *))
     int i;
 
     for (i = 0; i < a->size; i++)
-        if (criterion(a->buffer[(a->head + i) % a->buffer_size]))
+        if (criterion( elmt( a, i ) ))
             return (void*) 1;
 
     return 0;
@@ -389,41 +480,72 @@ p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *))
 }
 
 
-/* Miscellaneous **************************************************************/
+/******************************************************************************/
 
 
-void p2_array__clear(p2_array *a)
-{
-    a->size = 0;
-    a->head = 0;
-}
-
-
-void p2_array__minimize(p2_array *a)
+void p2_array__distribute( p2_array *a, p2_procedure *p )
 {
     int i;
-    void **buffer0;
 
-    if (a->size < a->buffer_size)
+    for ( i = 0; i < a->size; i++ )
     {
-        if (!a->size)
+        switch ( p2_procedure__execute( p, &elmt( a, i ) ) )
         {
-            buffer0 = (void **) malloc(sizeof(void *));
-            a->buffer_size = 1;
-        }
-        else
-        {
-            buffer0 = (void **) malloc(a->size * sizeof(void *));
-            for (i = 0; i < a->size; i++)
-                buffer0[i] = a->buffer[(a->head + i) % a->buffer_size];
-            a->buffer_size = a->size;
-        }
+            case p2_procedure__effect__break:
+                return;
 
-        free(a->buffer);
-        a->buffer = buffer0;
-        a->head = 0;
+            default:
+                ;
+        }
     }
 }
 
+
+/* Miscellaneous **************************************************************/
+
+
+p2_array *p2_array__clear( p2_array *a )
+{
+    a->size = 0;
+    a->head = 0;
+    return a;
+}
+
+
+p2_array *p2_array__minimize( p2_array *a )
+{
+    int i;
+    void **buffer_new;
+    int buffer_size_new;
+
+    if ( a->size >= a->buffer_size )
+        return 0;
+
+    buffer_size_new = ( a->size )
+        ? a->size : 1;
+
+    if ( !( buffer_new = buffer_new( a->size ) ) )
+    {
+        PRINTERR( "p2_array__minimize: allocation failure" );
+        return 0;
+    }
+
+    for ( i = 0; i < a->size; i++ )
+        buffer_new[i] = elmt( a, i );
+
+    free( a->buffer );
+    a->buffer = buffer_new;
+    a->buffer_size = buffer_size_new;
+    a->head = 0;
+
+    return a;
+}
+
+
+#undef elmt
+#undef inbounds
+#undef wrap
+
+#undef buffer_new
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

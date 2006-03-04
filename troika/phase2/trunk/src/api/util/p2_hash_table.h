@@ -32,6 +32,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_HASH_TABLE_H
 
 
+#include "../p2.h"
+
+
 /******************************************************************************/
 
 /** Default address comparison function. */
@@ -164,6 +167,8 @@ void *p2_hash_table__for_all_keys(p2_hash_table *h, void *(*func)(void *));
 
 /** Applies a void function to each target value in turn. */
 void *p2_hash_table__for_all_targets(p2_hash_table *h, void *(*func)(void *));
+
+void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p );
 
 
 /******************************************************************************/

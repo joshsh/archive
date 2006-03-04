@@ -83,7 +83,7 @@ UTIL_OBJECTS =	$(UTILS)/p2_array.o \
 ################################################################################
 # Build the command line interface.
 
-OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_object.o p2_primitive.o p2_type.o sk.o $(IMPORT_OBJECTS) $(PARSER_OBJECTS)
+OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_collection.o p2_object.o p2_primitive.o p2_type.o sk.o $(IMPORT_OBJECTS) $(PARSER_OBJECTS)
 
 phase2 :  main.c utils $(OBJECTS)
 	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS)
@@ -103,6 +103,9 @@ p2_memory_manager.o :  p2_memory_manager.c p2_flags.h
 
 p2_namespace.o :  p2_namespace.c p2_flags.h
 	$(CC) -D_GNU_SOURCE -c p2_namespace.c
+
+p2_collection.o :  p2_collection.c p2_flags.h
+	$(CC) -c p2_collection.c
 
 p2_object.o :  p2_object.c p2_flags.h
 	$(CC) -c p2_object.c

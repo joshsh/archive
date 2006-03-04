@@ -261,7 +261,7 @@ p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target)
     #if DEBUG__SAFE
     if (!key || !target)
     {
-        DEBUG__SAFE__PRINT("null hashing key and/or target");
+        PRINTERR( "null hashing key and/or target" );
         displaced_pair.key = displaced_pair.target = 0;
         return displaced_pair;
     }
@@ -411,6 +411,35 @@ void *p2_hash_table__for_all_targets(p2_hash_table *h, void *(*func)(void *))
     }
 
     return (void*) 1;
+}
+
+
+void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
+{
+    void **cur = h->buffer;
+    void **sup = h->buffer + ( ENTRY_SIZE * h->buffer_size );
+
+    while ( cur < sup )
+    {
+        if ( *cur )
+        {
+            switch ( p2_procedure__execute( p, cur ) )
+            {
+                case p2_procedure__effect__continue:
+                    break;
+                case p2_procedure__effect__break:
+                    return;
+                case p2_procedure__effect__remove:
+                    *cur++ = 0;
+                    *cur-- = 0;
+                    break;
+                default:
+                    ;
+            }
+        }
+
+        cur += 2;
+    }
 }
 
 

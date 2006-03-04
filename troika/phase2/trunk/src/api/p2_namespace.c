@@ -347,4 +347,24 @@ void *p2_namespace__for_all( p2_namespace *ns, void *(*func)(void *) )
 }
 
 
+/* Procedure which points the argument procedure to the target value of a
+   hashing pair. */
+static p2_procedure__effect apply_to_target( void **addr, p2_procedure *p )
+{
+    addr++;
+    return p2_procedure__execute( p, addr );
+}
+
+
+void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p )
+{
+    p2_procedure p_alt;
+
+    p_alt.execute = ( procedure ) apply_to_target;
+    p_alt.state = p;
+
+    p2_hash_table__distribute( ns->children, &p_alt );
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

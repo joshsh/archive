@@ -31,6 +31,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_ARRAY_H
 
 
+#include "../p2.h"
+
+
 /** \brief An expanding array of void pointers, suitable for use as a stack,
     queue, or indexed array.
     You can even use it as a general ordered list, although there is memory
@@ -61,68 +64,68 @@ typedef struct _p2_array
 /* Constructors and destructor ************************************************/
 
 /** Constructor. */
-p2_array *p2_array__new(int buffer_size, float expansion);
+p2_array *p2_array__new( int buffer_size, float expansion );
 
 /** Copy constructor. */
-p2_array *p2_array__copy(p2_array *a);
+p2_array *p2_array__copy( p2_array *a );
 
 /** Destructor. */
-void p2_array__delete(p2_array *a);
+void p2_array__delete( p2_array *a );
 
 
 /* Random access **************************************************************/
 
 /** Gets the array item at a given index. */
-void *p2_array__get(p2_array *a, int index);
+void *p2_array__get( p2_array *a, int index );
 
 /** Sets the array item at a given index. */
-void p2_array__set(p2_array *a, int index, void *p);
+void *p2_array__set( p2_array *a, int index, void *p );
 
 
 /* Stack and queue operations *************************************************/
 
 /** Gets the first item in the array without removing it. */
-void *p2_array__peek(p2_array *a);
+void *p2_array__peek( p2_array *a );
 
 /** Pushes an item onto the front of the array (as a stack). */
-void *p2_array__push(p2_array *a, void *p);
+void *p2_array__push( p2_array *a, void *p );
 
 /** Removes the item at the front of the array (as a stack). */
-void *p2_array__pop(p2_array *a);
+void *p2_array__pop( p2_array *a );
 
 /** Adds an item to the tail end of the array (as a queue). */
-void *p2_array__enqueue(p2_array *a, void *p);
+void *p2_array__enqueue( p2_array *a, void *p );
 
 /** Removes an item from the tail end of the array (as a queue).
     \warning this usage is nonstandard */
-void *p2_array__dequeue(p2_array *a);
+void *p2_array__dequeue( p2_array *a );
 
 
 /* Random insertion and removal ***********************************************/
 
 /** Insert an item before the given index.
     \warning O(n) memory copying overhead */
-void p2_array__insert_before(p2_array *a, int index, void *p);
+void *p2_array__insert_before( p2_array *a, int index, void *p );
 
 /** Insert an item after the given index.
     \warning O(n) memory copying overhead */
-void p2_array__insert_after(p2_array *a, int index, void *p);
+void *p2_array__insert_after( p2_array *a, int index, void *p );
 
 /** Remove the item at the given index.
     \warning O(n) memory copying overhead */
-void p2_array__remove(p2_array *a, int index);
+void *p2_array__remove( p2_array *a, int index );
 
 /** Removes an array item and replaces it with the last item in the array,
     with no memory copying overhead.
     \warning only use this function if the order of the array elements is not
     important. */
-void p2_array__simple_remove(p2_array *a, int index);
+void *p2_array__simple_remove( p2_array *a, int index );
 
 
 /* Array sorting **************************************************************/
 
 /** Sorts the array using MergeSort. */
-void p2_array__mergesort(p2_array *a, int (*compare) (void *, void *));
+void p2_array__mergesort( p2_array *a, comparator compare );
 
 
 /* Logical set functions and item substitution ********************************/
@@ -140,18 +143,18 @@ void *p2_array__exists(p2_array *a, void *(*criterion)(void *));
     \note there is no special return value to indicate substitution failure. */
 p2_array *p2_array__substitute_all(p2_array *a, void *(*substitution)(void *));
 
-/*void *p2_array__distribute( p2_array *a, p2_distributor *d );*/
+void p2_array__distribute( p2_array *a, p2_procedure *p );
 
 
 /* Miscellaneous **************************************************************/
 
 /** Empties the array. */
-void p2_array__clear(p2_array *a);
+p2_array *p2_array__clear( p2_array *a );
 
 /** Resizes the array to occupy as little memory as possible.
     \note only call this function if the number of items in the array is at a
     maximum. */
-void p2_array__minimize(p2_array *a);
+p2_array *p2_array__minimize( p2_array *a );
 
 
 #endif  /* P2_ARRAY_H */

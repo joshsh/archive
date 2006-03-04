@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_memory_manager.h"
+#include "p2_collection.h"
 
 
 /* Warning: multithreading hazard. */
@@ -277,12 +278,22 @@ printf( "---m trace 0x%X (0x%X)---\n", ( int ) o, ( int ) o->value ); fflush( st
         if ( global_f && !global_f( o ) )
             return 0;
 
+/**/
 if ( o->flags & OBJECT__IS_OBJ_COLL )
     printf( "---m trace (found collection: 0x%X)---\n", ( int ) o );
+/**/
         /* If it's a collection of objects, mark its descendants. */
+
+/* 'trace' needs to be made into an actual criterion before this is safe... */
+if ( o->flags & OBJECT__IS_OBJ_COLL )
+    p2_collection__for_all( o, ( criterion ) trace );
+
+/*
         if ( ( o->flags & OBJECT__IS_OBJ_COLL )
           && !p2_object__for_all( o, (void*(*)(void*)) trace ) )
+          && !p2_object__for_all( o, (void*(*)(void*)) trace ) )
                 return 0;
+*/
 
         #if TRIPLES__GLOBAL
 

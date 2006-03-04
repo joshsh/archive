@@ -46,7 +46,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_TERM_H
 
 
-#include "../p2_flags.h"
+#include "../p2.h"
 
 
 /** By default, the size of a term's buffer will be multiplied by this factor
@@ -145,6 +145,8 @@ void *p2_term__exists(p2_term *t, void *(*criterion)(void *));
 /** Replaces each item in the term with a new item determined by substitution.
     \note there is no special return value to indicate substitution failure. */
 p2_term *p2_term__substitute_all(p2_term *t, void *(*substitution)(void *));
+
+void p2_term__distribute( p2_term *t, p2_procedure *p );
 
 
 #endif  /* P2_TERM_H */

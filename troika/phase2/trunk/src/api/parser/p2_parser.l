@@ -50,6 +50,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+/*
+#undef YY_DECL
+#define YY_DECL int yylex( YYSTYPE *yylval, YYLTYPE *yylloc)
+*/
 
 #include "p2_parser.tab.h"
 #include "../p2_flags.h"
@@ -270,6 +274,10 @@ IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
 /** Comments and string literals have their own mini-scanners. */
 %x SC_STRING SC_COMMENT
 
+/*
+%option reentrant
+%option bison-bridge
+*/
 
 %%
 

@@ -29,7 +29,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_OBJECT_H
 
 
-#include "p2_flags.h"
 #include "p2_type.h"
 
 #ifdef TRIPLES__GLOBAL

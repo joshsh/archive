@@ -29,59 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_TYPE_H
 
 
-#include "p2_flags.h"
-
-
-/******************************************************************************/
-
-
-typedef enum _p2_action__effect
-{
-    p2_action__effect__continue = 0,
-
-    p2_action__effect__break,
-    p2_action__effect__remove
-
-} p2_action__effect;
-
-
-typedef p2_action__effect ( *action )( void *addr, void *context );
-
-
-typedef struct _p2_action
-{
-    action execute;
-
-    /* A mutable data field which is provided to the action as an argument,
-       and preserved between invocations. */
-    void *context;
-
-} p2_action;
-
-
-#define p2_action__apply( a, addr )  a->execute( addr, a->context )
-
-
-typedef void *( *copy_cons )( void *p );
-typedef void *( *decoder )( char *buffer );
-typedef void ( *destructor )( void *p );
-typedef void ( *distributor )( void* p, p2_action *a );
-typedef void ( *encoder )( void *p, char *buffer );
-
-
-typedef enum _boolean
-{
-    boolean__false = 0,
-    boolean__true
-
-} boolean;
-
-
-typedef boolean ( *criterion )( void *arg );
-typedef int ( *comparator )( void *arg1, void *arg2 );
-
-
-/******************************************************************************/
+#include "p2.h"
 
 
 /** */
@@ -108,7 +56,7 @@ typedef struct _p2_type
     /** Serializer. */
     encoder     encode;
 
-    criterion   equals;
+    criterion2  equals;
 
     /** "Element exists" callback distributor. */
     void *( *exists )( void*, void *(*)( void* ) );
@@ -116,26 +64,18 @@ typedef struct _p2_type
     /** "For all elements" callback distributor. */
     void *( *for_all )( void*, void *(*)( void* ) );
 
-/*
-    void *( *clone )( void* );
-    void *( *decode )( char* );
-    void ( *destroy )( void* );
-    void ( *encode )( void*, char* );
-*/
+    sort_f      sort;
+
 } p2_type;
 
 
-#define CLONE_T     void *(*)(void *)
-#define DECODE_T    void *(*)(char *)
-#define DESTROY_T   void (*)(void *)
-#define ENCODE_T    void (*)(void *, char *)
 #define EXISTS_T    void *(*)(void *, void *(*)(void*))
 #define FOR_ALL_T   void *(*)(void *, void *(*)(void*))
 
 
-/** Constructor.
-    \note  The type assumes ownership if its name argument. */
-p2_type *p2_type__new
+/** Constructor. */
+p2_type *p2_type__new( const char *name, int flags );
+/*
 (
     char *name,
     void *( *clone )( void* ),
@@ -145,7 +85,7 @@ p2_type *p2_type__new
     void *( *exists )( void*, void *(*)( void* ) ),
     void *( *for_all )( void*, void *(*)( void* ) ),
     distributor distribute
-);
+);*/
 
 /** Destructor. */
 void p2_type__delete( p2_type *type );

@@ -39,6 +39,7 @@ int main()
             printf( "The Phase2 programming environment comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '!license;' for details.  Type '!quit;' to exit.\n\n" );
 
             p2_compiler__parse( compiler );
+
             p2_compiler__delete( compiler );
         }
 
