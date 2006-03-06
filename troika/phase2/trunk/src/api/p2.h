@@ -41,7 +41,7 @@ typedef enum _boolean
 
 
 typedef void *  ( *allocator )( void );
-typedef int     ( *comparator )( void *arg1, void *arg2 );
+typedef int     ( *comparator )( const void *arg1, const void *arg2 );
 typedef void *  ( *copy_cons )( void *p );
 typedef boolean ( *criterion )( void *arg );
 typedef boolean ( *criterion2 )( void *arg1, void *arg2 );

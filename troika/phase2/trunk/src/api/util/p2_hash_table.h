@@ -37,24 +37,22 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /******************************************************************************/
 
+typedef unsigned int ( *hash_f )( const void *key );
+
 /** Default address comparison function. */
-int compare_addresses(const void *key1, const void *key2);
+int compare_addresses( const void *key1, const void *key2 );
 
 /** Default address hashing function. */
-unsigned int hash_address(const void *key);
+unsigned int hash_address( const void *key );
 
 /** Overrides the function pointer arguments in p2_hash_table__new. */
 #define ADDRESS_DEFAULTS hash_address, compare_addresses
 
-/** Default string comparison function. */
-int compare_strings(const char *key1, const char *key2);
-
 /** Default string-hashing function. */
-unsigned int hash_string(const char *key);
+unsigned int hash_string( const char *key );
 
 /** Overrides the function pointer arguments in p2_hash_table__new. */
-#define STRING_DEFAULTS ( unsigned int (*)(const void*) ) hash_string, \
-    ( int (*)(const void*, const void*) ) compare_strings
+#define STRING_DEFAULTS ( hash_f ) hash_string, ( comparator ) strcmp
 
 
 /******************************************************************************/
@@ -86,17 +84,19 @@ typedef struct _p2_hash_table
     void **buffer;
 
     /** A hashing function specific to the table's "key" type. */
-    unsigned int (*hashing_function) (const void *key);
+    hash_f hash;
 
     /** A comparison function for key values. */
-    int (*compare_to) (const void *key1, const void *key2);
+    comparator compare;
 
 } p2_hash_table;
+
 
 typedef struct _p2_hashing_pair
 {
     void *key;
     void *target;
+
 } p2_hashing_pair;
 
 
@@ -128,14 +128,14 @@ p2_hash_table *p2_hash_table__new(
   unsigned int buffer_size,
   float expansion,
   float sparsity,
-  unsigned int (*hashing_function) (const void *),
-  int (*compare_to) (const void *, const void *));
+  hash_f hash,
+  comparator compare );
 
 /** Copy constructor. */
-p2_hash_table *p2_hash_table__copy(p2_hash_table *h);
+p2_hash_table *p2_hash_table__copy( p2_hash_table *h );
 
 /** Destructor. */
-void p2_hash_table__delete(p2_hash_table *h);
+void p2_hash_table__delete( p2_hash_table *h );
 
 
 /******************************************************************************/
@@ -144,29 +144,29 @@ void p2_hash_table__delete(p2_hash_table *h);
     \param key  the key value to map from.  Should not be 0/NULL.
     \param target  the target value to bind to the key
     \return  The key/target pair which is displaced by the new pair. */
-p2_hashing_pair p2_hash_table__add(p2_hash_table *h, void *key, void *target);
+p2_hashing_pair p2_hash_table__add( p2_hash_table *h, void *key, void *target );
 
 /** Looks up a key to obtain a target.
     \warning returns 0 if an entry is not found.  Beware of storing a 0 as a
     target value, else you won't be able to tell it apart from a failed lookup.
 */
-void *p2_hash_table__lookup(p2_hash_table *h, const void *key);
+void *p2_hash_table__lookup( p2_hash_table *h, const void *key );
 
 /** Removes the key and its target.
     \return  the displaced key / target pair */
-p2_hashing_pair p2_hash_table__remove(p2_hash_table *h, void *key);
+p2_hashing_pair p2_hash_table__remove( p2_hash_table *h, const void *key );
 
 
 /******************************************************************************/
 
 /** Applies a void function to each key/target pair in turn. */
-void *p2_hash_table__for_all(p2_hash_table *h, void *(*func)(void *, void *));
+void *p2_hash_table__for_all( p2_hash_table *h, void *(*func)(void *, void *) );
 
 /** Applies a void function to each key value in turn. */
-void *p2_hash_table__for_all_keys(p2_hash_table *h, void *(*func)(void *));
+void *p2_hash_table__for_all_keys( p2_hash_table *h, void *(*func)(void *) );
 
 /** Applies a void function to each target value in turn. */
-void *p2_hash_table__for_all_targets(p2_hash_table *h, void *(*func)(void *));
+void *p2_hash_table__for_all_targets( p2_hash_table *h, void *(*func)(void *) );
 
 void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p );
 

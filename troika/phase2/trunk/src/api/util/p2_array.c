@@ -19,7 +19,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_array.h"
 
-#include <stdlib.h>  /* malloc */
 #include <string.h>  /* memcpy */
 
 
@@ -364,78 +363,99 @@ void *p2_array__simple_remove( p2_array *a, int index )
 /* Array sorting **************************************************************/
 
 
-/* Some (hidden) global variables to save on argument passing */
-void **buffer_, **aux_;
-int (*compare_) (void *, void *);
-
-
-/* adapted from a MergeSort example by H.W. Lang */
-static void merge(int lo, int m, int hi)
+typedef struct _mergesort_state
 {
-    int i, j, k;
+    int lo, m, hi;
+    void **buffer, **aux;
+    comparator compare;
 
-    i = 0; j = lo;
-    /* Copy first half of target array to auxiliary array. */
-    while (j <= m)
-        aux_[i++] = buffer_[j++];
-
-    i = 0; k = lo;
-
-    /* Copy back next-greatest element at each time. */
-    while (k < j && j <= hi)
-    {
-        if (compare_(aux_[i],buffer_[j]) <= 0)
-            buffer_[k++] = aux_[i++];
-        else
-            buffer_[k++] = buffer_[j++];
-    }
-
-    /* Copy back remaining elements of first half (if any). */
-    while (k < j)
-        buffer_[k++] = aux_[i++];
-}
+} mergesort_state;
 
 
 /* Adapted from a MergeSort example by H.W. Lang */
-static void mergesort(int lo, int hi)
+static void mergesort( int lo, int hi, mergesort_state *state )
 {
     int m;
+    int i, j, k;
+    void **buffer, **aux;
+    comparator compare;
 
     if (lo < hi)
     {
+
         m = (lo + hi) / 2;
-        mergesort(lo, m);
-        mergesort(m + 1, hi);
-        merge(lo, m, hi);
+        mergesort(lo, m, state);
+        mergesort(m + 1, hi, state);
+
+        /* Merge. */
+        {
+            buffer = state->buffer;
+            aux = state->aux;
+            compare = state->compare;
+
+            i = 0; j = lo;
+
+            /* Copy first half of target array to auxiliary array. */
+            while ( j <= m )
+                aux[i++] = buffer[j++];
+
+            i = 0; k = lo;
+
+            /* Copy back next-greatest element at each time. */
+            while ( k < j && j <= hi )
+            {
+                if ( compare( aux[i], buffer[j] ) <= 0 )
+                    buffer[k++] = aux[i++];
+                else
+                    buffer[k++] = buffer[j++];
+            }
+
+            /* Copy back remaining elements of first half (if any). */
+            while ( k < j )
+                buffer[k++] = aux[i++];
+        }
     }
+}
+
+
+static p2_array *normalize( p2_array *a )
+{
+    int i, size = a->size, buffer_size = a->buffer_size, head = a->head;
+
+    void **buffer = a->buffer;
+    void **buffer_new = buffer_new( a->size );
+
+    if ( !buffer_new )
+        return 0;
+
+    for ( i = 0; i < size; i++ )
+        buffer_new[i] = buffer[ ( i + head ) % buffer_size ];
+
+    free( a->buffer );
+    a->buffer = buffer_new;
+    return a;
 }
 
 
 void p2_array__sort( p2_array *a, comparator compare )
 {
-    int i;
-
-    int size = a->size, buffer_size = a->buffer_size, head = a->head;
-    void **buffer = a->buffer;
+    mergesort_state state;
+    state.compare = compare;
 
     /* Normalize the array a so that the mergesort algorithm doesn't have to
        deal with index wrapping. */
-    buffer_ = (void **) malloc(sizeof(void*)*a->size);
-    for (i=0; i<size; i++)
-        buffer_[i] = buffer[(head+i)%buffer_size];
-    a->head = 0;
-    a->buffer = buffer_;
-    free(buffer);
+    if ( !normalize( a ) || !( state.aux = buffer_new( a->size ) ) )
+    {
+        PRINTERR( "p2_array__sort: allocation failure" );
+        return;
+    }
 
-    /* Create auxiliary array for merge. */
-    aux_ = (void **) malloc(sizeof(void*)*a->size);
+    state.buffer = a->buffer;
 
-    compare_ = compare;
-
-    mergesort(0, size - 1);
+    mergesort( 0, a->size - 1, &state );
 
     /* Destroy the auxiliary array. */
-    free(aux_);
+    free( state.aux );
 }
 
 
@@ -517,11 +537,5 @@ p2_type *p2_array__type( const char *name )
     return type;
 }
 
-
-#undef elmt
-#undef inbounds
-#undef wrap
-
-#undef buffer_new
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
