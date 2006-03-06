@@ -30,48 +30,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
    Note: the expansion factor does not need to be an integer. */
 #define DEFAULT_EXPANSION_FACTOR 2.0
 
-/* The number of void references contained in a single entry. */
-#define ENTRY_SIZE 2
 
-
-#define buffer_new( size )  ( void** ) malloc( sizeof( void* ) * ( ENTRY_SIZE * size ) )
-
-
-/******************************************************************************/
-
-
-/* Works well enough for addresses so long as there's a one-to-one correspondence
-   between addresses and key values. */
-unsigned int hash_address( const void *key )
-{
-    return ( unsigned int ) key;
-}
-
-
-int compare_addresses( const void *key1, const void *key2 )
-{
-    return ( key1 != key2 );
-}
-
-
-/** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
-unsigned int hash_string( const char *key )
-{
-    char const *p;
-    unsigned int h = 0, g;
-
-    for ( p = key; *p != '\0'; p++ )
-    {
-        h = ( h << 4 ) + *p;
-        if ( ( g = h & 0xf0000000 ) )
-        {
-            h = h ^ ( g >> 24 );
-            h = h ^ g;
-        }
-    }
-
-    return h;
-}
+#define buffer_new( size )  ( void** ) malloc( size * sizeof( void* ) )
 
 
 /******************************************************************************/
@@ -101,56 +61,38 @@ static unsigned int next_prime( unsigned int i )
 }
 
 
-/* ! Multithreading hazard. */
-p2_hash_table *rehash_dest;
-
-
-static void *rehash( void *key, void *target )
+static p2_procedure__effect rehash( void **key_p, p2_hash_table *h )
 {
-    p2_hash_table__add( rehash_dest, key, target );
-    return ( void* ) 1;
+    p2_hash_table__add( h, *key_p );
+    return p2_procedure__effect__continue;
 }
 
 
-static void rehash_all( p2_hash_table *src, p2_hash_table *dest )
+static p2_hash_table *expand( p2_hash_table *h )
 {
-    rehash_dest = dest;
-    p2_hash_table__for_all( src, ( void *(*)(void*, void *) ) rehash );
-}
+    int i;
 
+    p2_hash_table h_new = *h;
+    h_new.size = 0;
+    h_new.buffer_size = ( int ) ( h->buffer_size * h->expansion );
+    if ( h_new.buffer_size <= h->buffer_size )
+        h_new.buffer_size = ( int ) ( h->buffer_size * DEFAULT_EXPANSION_FACTOR );
+    h_new.buffer_size = next_prime( h_new.buffer_size );
+    h_new.capacity = ( int ) ( ( ( float ) h_new.buffer_size ) / h_new.sparsity);
 
-static void expand( p2_hash_table *h )
-{
-    int i, size_old, size0 = ( int ) ( h->buffer_size * h->expansion );
-    void **p, **q, **buffer_old;
+    if ( !( h_new.buffer = buffer_new( h_new.buffer_size ) ) )
+        return 0;
 
-    if ( size0 > h->buffer_size )
-    {
-        size_old = h->buffer_size;
-        buffer_old = h->buffer;
-        h->buffer_size = next_prime( size0 );
-        h->buffer = buffer_new( h->buffer_size );
-        h->capacity = ( int ) ( ( ( float ) h->buffer_size ) / h->sparsity);
+    for ( i = 0; i < h_new.buffer_size; i++ )
+        h_new.buffer[i] = 0;
 
-        for ( i = 0; i < ENTRY_SIZE * h->buffer_size; i++ )
-            h->buffer[i] = 0;
+    p2_procedure p = { ( procedure ) rehash, &h };
+    p2_hash_table__distribute( h, &p );
 
-        for ( i = 0; i < size_old; i++ )
-        {
-            p = buffer_old + ( i * ENTRY_SIZE );
-            if ( *p )
-            {
-                q = p + 1;
+    free( h->buffer );
+    *h = h_new;
 
-                /* Cancel out the incrementation for this re-hashing add(). */
-                h->size--;
-
-                p2_hash_table__add( h, *p, *q );
-            }
-        }
-
-        free( buffer_old );
-    }
+    return h;
 }
 
 
@@ -172,8 +114,8 @@ p2_hash_table *p2_hash_table__new(
     {
         h->buffer_size = next_prime( buffer_size );
 
-        h->hash = ( hash ) ? hash : hash_address;
-        h->compare = ( compare ) ? compare : ( comparator ) compare_addresses;
+        h->hash = hash;
+        h->compare = compare;
 
         /* Sparsity must be at least 1, otherwise the buffer will not resize
            even when it is completely full. */
@@ -196,7 +138,7 @@ p2_hash_table *p2_hash_table__new(
         }
 
         else
-            for ( i = 0; i < ( h->buffer_size * ENTRY_SIZE ); i++ )
+            for ( i = 0; i < h->buffer_size; i++ )
                 h->buffer[i] = 0;
     }
 
@@ -207,7 +149,7 @@ p2_hash_table *p2_hash_table__new(
 }
 
 
-p2_hash_table *p2_hash_table__copy(p2_hash_table *h)
+p2_hash_table *p2_hash_table__copy( const p2_hash_table *h )
 {
     p2_hash_table *h2;
 
@@ -222,8 +164,7 @@ p2_hash_table *p2_hash_table__copy(p2_hash_table *h)
         }
 
         else
-            /* Note: memcpy would be faster. */
-            rehash_all( h, h2 );
+            memcpy( h2->buffer, h->buffer, h->buffer_size * sizeof( void* ) );
     }
 
     if ( !h2 )
@@ -240,29 +181,27 @@ void p2_hash_table__delete( p2_hash_table *h )
 }
 
 
-p2_hashing_pair p2_hash_table__add( p2_hash_table *h, void *key, void *target )
+void *p2_hash_table__add( p2_hash_table *h, void *key )
 {
-    p2_hashing_pair displaced_pair;
-    unsigned int actual_size;
-    void **p;
+    void **cur, **buffer = h->buffer;
+    int buffer_size = h->buffer_size;
+
+    void *key_old;
 
     #if DEBUG__SAFE
-    if (!key || !target)
+    if ( !key )
     {
-        PRINTERR( "null hashing key and/or target" );
-        displaced_pair.key = displaced_pair.target = 0;
-        return displaced_pair;
+        PRINTERR( "p2_hash_table__add: null key" );
+        return 0;
     }
     #endif
 
-    p = h->buffer + (ENTRY_SIZE*(h->hash(key) % h->buffer_size));
+    cur = buffer + ( h->hash( key ) % buffer_size );
 
-    actual_size = ENTRY_SIZE * h->buffer_size;
-
-    while (*p != 0)
+    while ( *cur )
     {
-        /* No duplicate entries allowed.  Replace with new key / target pair. */
-        if (!h->compare(*p, key))
+        /* No duplicate entries allowed.  Replace with new key. */
+        if ( !h->compare( *cur, key ) )
         {
             /* Table doesn't grow. */
             h->size--;
@@ -271,141 +210,84 @@ p2_hashing_pair p2_hash_table__add( p2_hash_table *h, void *key, void *target )
         }
 
         /* Increment and wrap */
-        p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
+        cur++;
+        cur = buffer + ( ( unsigned int ) cur % buffer_size );
     }
 
-    displaced_pair.key = *p;
-    *p = key;
-    p++;
-    displaced_pair.target = *p;
-    *p = target;
+    key_old = *cur;
+    *cur = key;
 
     h->size++;
-    if (h->size >= h->capacity)
-        expand(h);
+    if ( h->size >= h->capacity )
+        /* Warning: no checking of return value. */
+        expand( h );
 
-    return displaced_pair;
+    return key_old;
 }
 
 
-void *p2_hash_table__lookup(p2_hash_table *h, const void *key)
+void *p2_hash_table__lookup( p2_hash_table *h, const void *key )
 {
-    unsigned int actual_size;
-    void **p;
-
-    if (!key)
-        return 0;
-
-    p = h->buffer + (ENTRY_SIZE * (h->hash(key) % h->buffer_size));
-
-    actual_size = ENTRY_SIZE * h->buffer_size;
-
-    for (;;)
-    {
-        if ( !*p  || ( !h->compare( *p, key ) ) )
-            break;
-
-        /* Increment and wrap. */
-        p = h->buffer + ((p + ENTRY_SIZE - h->buffer) % actual_size);
-    }
-
-    p++;
-    return *p;  /* Note: relies on the target value of empty h->buffer being NULL. */
-}
-
-
-p2_hashing_pair p2_hash_table__remove(p2_hash_table *h, const void *key)
-{
-    p2_hashing_pair displaced_pair;
-    unsigned int actual_size;
-    void **p;
+    void **cur, **buffer = h->buffer;
+    int buffer_size = h->buffer_size;
 
     #if DEBUG__SAFE
-        if (!key)
-        {
-            PRINTERR( "p2_hash_table__remove: null key" );
-            displaced_pair.key = displaced_pair.target = 0;
-            return displaced_pair;
-        }
+    if ( !key )
+    {
+        PRINTERR( "p2_hash_table__lookup: null key" );
+        return 0;
+    }
     #endif
 
-    p = h->buffer + (ENTRY_SIZE * (h->hash(key) % h->buffer_size));
+    cur = buffer + ( h->hash( key ) % buffer_size );
 
-    actual_size = ENTRY_SIZE * h->buffer_size;
-
-    while (*p != 0)
+    while ( *cur && h->compare( *cur, key ) )
     {
-        if (!h->compare(*p, key))
+        /* Increment and wrap. */
+        cur++;
+        cur = buffer + ( ( unsigned int ) cur % buffer_size );
+    }
+
+    return *cur;
+}
+
+
+void *p2_hash_table__remove(p2_hash_table *h, const void *key)
+{
+    void **cur, **buffer = h->buffer;
+    int buffer_size = h->buffer_size;
+
+    #if DEBUG__SAFE
+    if ( !key )
+    {
+        PRINTERR( "p2_hash_table__remove: null key" );
+        return 0;
+    }
+    #endif
+
+    cur = buffer + ( h->hash( key ) % buffer_size );
+
+    while ( *cur )
+    {
+        if ( !h->compare( *cur, key ) )
         {
-            displaced_pair.key = *p;
-            *p = 0;
-            p++;
-            displaced_pair.target = *p;
-            *p = 0;
             h->size--;
             break;
         }
 
         /* Increment and wrap. */
-        p = h->buffer + ((p + ENTRY_SIZE - h->buffer)%actual_size);
+        cur++;
+        cur = buffer + ( ( unsigned int ) cur % buffer_size );
     }
 
-    return displaced_pair;
-}
-
-
-void *p2_hash_table__for_all(p2_hash_table *h, void *(*func)(void *, void *))
-{
-    void **cur = h->buffer;
-    void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
-
-    while (cur < sup)
-    {
-        if (*cur && !func(*cur, *(cur + 1)))
-            return 0;
-        cur += 2;
-    }
-
-    return (void*) 1;
-}
-
-
-void *p2_hash_table__for_all_keys(p2_hash_table *h, void *(*func)(void *))
-{
-    void **cur = h->buffer;
-    void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
-
-    while (cur < sup)
-    {
-        if (*cur && !func(*cur))
-            return 0;
-        cur += 2;
-    }
-
-    return (void*) 1;
-}
-
-
-void *p2_hash_table__for_all_targets(p2_hash_table *h, void *(*func)(void *))
-{
-    void **cur = h->buffer;
-    void **sup = h->buffer + (ENTRY_SIZE * h->buffer_size);
-
-    while (cur < sup)
-    {
-        if (*cur && !func(*(cur + 1)))
-            return 0;
-        cur += 2;
-    }
-
-    return (void*) 1;
+    return *cur;
 }
 
 
 void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
 {
     void **cur = h->buffer;
-    void **sup = h->buffer + ( ENTRY_SIZE * h->buffer_size );
+    void **sup = h->buffer + h->buffer_size;
 
     while ( cur < sup )
     {

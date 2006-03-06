@@ -1,6 +1,6 @@
 /**
 
-\file  p2_dictionary.h
+\file  p2_graph.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,39 +25,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_DICTIONARY_H
-#define P2_DICTIONARY_H
+#ifndef P2_GRAPH_H
+#define P2_GRAPH_H
 
 
 #include "../p2_type.h"
 #include "p2_hash_table.h"
-#include "p2_array.h"
 
 
-typedef p2_hash_table p2_dictionary;
+typedef p2_hash_table p2_graph;
 
 
-p2_dictionary *p2_dictionary__new();
+p2_graph *p2_graph__new();
 
-void p2_dictionary__delete( p2_dictionary *dict );
-
-
-void *p2_dictionary__add
-    ( p2_dictionary *dict, const char *key, void *target );
-
-void *p2_dictionary__lookup
-    ( p2_dictionary *dict, const char *key );
-
-void *p2_dictionary__remove
-    ( p2_dictionary *dict, const char *key );
+void p2_graph__delete( p2_graph *g );
 
 
-void p2_dictionary__distribute( p2_dictionary *dict, p2_procedure *p );
+void p2_graph__connect
+    ( p2_graph *g, void * const src, void * const dest );
+
+void p2_graph__disconnect
+    ( p2_graph *g, void * const src, void * const dest );
 
 
-p2_array *p2_dictionary__keys( p2_dictionary *dict );
-
-
-#endif  /* P2_DICTIONARY_H */
+#endif  /* P2_GRAPH_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

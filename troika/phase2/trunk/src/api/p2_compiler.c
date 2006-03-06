@@ -81,7 +81,7 @@ p2_compiler *p2_compiler__new( p2_environment *env )
         return 0;
     }
 
-    if ( !( c->commands = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS ) ) )
+    if ( !( c->commands = p2_dictionary__new() ) )
     {
         PRINTERR( "p2_compiler__new: allocation failed" );
         free( c );
@@ -95,13 +95,6 @@ p2_compiler *p2_compiler__new( p2_environment *env )
     compiler = c;
 
     return c;
-}
-
-
-static void *p2_free( void *p )
-{
-    free( p );
-    return p;
 }
 
 
@@ -120,8 +113,7 @@ void p2_compiler__delete( p2_compiler *c )
     }
     #endif
 
-    p2_hash_table__for_all_keys( c->commands, p2_free );
-    p2_hash_table__delete( c->commands );
+    p2_dictionary__delete( c->commands );
     free( c );
 
     compiler = 0;

@@ -32,6 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_environment.h"
 #include "parser/p2_ast.h"
 #include "parser/p2_parser.h"
+#include "util/p2_dictionary.h"
 
 
 /** Bison parser dependency. */
@@ -43,7 +44,7 @@ typedef struct _p2_compiler
     p2_environment *env;
     p2_namespace__object *cur_ns__obj;
 
-    p2_hash_table *commands;
+    p2_dictionary *commands;
 
     int locked;
 

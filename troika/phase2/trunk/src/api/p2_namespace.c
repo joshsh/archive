@@ -19,33 +19,22 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_namespace.h"
 
-#include <stdio.h>  /* fprintf */
-#include <string.h>  /* strdup */
-
-
-/******************************************************************************/
-
 
 p2_namespace *p2_namespace__new()
 {
-    p2_namespace *ns = new( p2_namespace );
+    p2_namespace *ns;
 
-    if ( ns )
-    {
-        if ( !( ns->children = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS ) ) )
-        {
-            free( ns );
-            ns = 0;
-        }
-    }
-
-    #if DEBUG__SAFE
-    if ( !ns )
+    if ( !( ns = new( p2_namespace ) ) )
     {
         PRINTERR( "p2_namespace__new: allocation failed" );
         return 0;
     }
-    #endif
+
+    if ( !( ns->children = p2_dictionary__new() ) )
+    {
+        free( ns );
+        return 0;
+    }
 
     /* Writable by default. */
     ns->constant = 0;
@@ -55,21 +44,6 @@ p2_namespace *p2_namespace__new()
     #endif
 
     return ns;
-}
-
-
-static void *p2_free( void *p )
-{
-    #if DEBUG__SAFE
-    if ( !p )
-    {
-        PRINTERR( "p2_free in p2_namespace.c: null pointer" );
-        return 0;
-    }
-    #endif
-
-    free( p );
-    return p;
 }
 
 
@@ -87,10 +61,7 @@ void p2_namespace__delete( p2_namespace *ns )
     printf( "p2_namespace__delete(0x%X)\n", ( int ) ns ); fflush( stdout );
     #endif
 
-    /* The namespace owns its hashing keys, but it does not own its targets. */
-    p2_hash_table__for_all_keys( ns->children, p2_free );
-
-    p2_hash_table__delete( ns->children );
+    p2_dictionary__delete( ns->children );
 
     free( ns );
 }
@@ -101,29 +72,24 @@ p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_ob
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
     p2_object *child_ns_obj, *displaced_object;
-    p2_hashing_pair displaced_pair;
     char *key;
 
     #if DEBUG__SAFE
-
-        if ( !ns )
-        {
-            PRINTERR( "null namespace" );
-            return 0;
-        }
-
-        if ( !name )
-        {
-            PRINTERR( "null name" );
-            return 0;
-        }
-
-        if ( !name->size )
-        {
-            PRINTERR( "empty name" );
-            return 0;
-        }
-
+    if ( !ns )
+    {
+        PRINTERR( "null namespace" );
+        return 0;
+    }
+    if ( !name )
+    {
+        PRINTERR( "null name" );
+        return 0;
+    }
+    if ( !name->size )
+    {
+        PRINTERR( "empty name" );
+        return 0;
+    }
     #endif
 
     if ( ns->constant )
@@ -134,20 +100,15 @@ p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_ob
 
     if ( name->size == 1 )
     {
-        key = strdup( ( char* ) p2_array__peek( name ) );
-        displaced_pair = p2_hash_table__add( ns->children, key, o );
-
-        if ( displaced_pair.key )
-            free( displaced_pair.key );
-
-        displaced_object = ( p2_object* ) displaced_pair.target;
+        displaced_object = ( p2_object* ) p2_dictionary__add(
+            ns->children, ( char* ) p2_array__peek( name ), o );
     }
 
     else
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_obj = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
+        child_ns_obj = ( p2_object* ) p2_dictionary__lookup( ns->children, key );
 
         if ( child_ns_obj->type != ns_obj->type )
         {
@@ -192,7 +153,7 @@ fflush( stdout );
         return ns_obj;
 
 printf( "p2_namespace__lookup: p2_array__peek( name ) = 0x%X\n", ( int ) p2_array__peek( name ) ); fflush( stdout );
-    o = ( p2_object* ) p2_hash_table__lookup( ns->children, p2_array__peek( name ) );
+    o = ( p2_object* ) p2_dictionary__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
     if ( name->size > 1 )
@@ -231,7 +192,7 @@ p2_object *p2_namespace__lookup_simple(
     if ( !s )
         return ns_obj;
     else
-        return ( p2_object* ) p2_hash_table__lookup(
+        return ( p2_object* ) p2_dictionary__lookup(
             ( ( p2_namespace* ) ns_obj->value )->children, s );
 }
 
@@ -241,29 +202,24 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
     p2_object *child_ns_obj, *displaced_object;
-    p2_hashing_pair displaced_pair;
     char *key;
 
     #if DEBUG__SAFE
-
-        if ( !ns )
-        {
-            PRINTERR( "null namespace" );
-            return 0;
-        }
-
-        if ( !name )
-        {
-            PRINTERR( "null name" );
-            return 0;
-        }
-
-        if ( !name->size )
-        {
-            PRINTERR( "empty name" );
-            return 0;
-        }
-
+    if ( !ns )
+    {
+        PRINTERR( "null namespace" );
+        return 0;
+    }
+    if ( !name )
+    {
+        PRINTERR( "null name" );
+        return 0;
+    }
+    if ( !name->size )
+    {
+        PRINTERR( "empty name" );
+        return 0;
+    }
     #endif
 
     if ( ns->constant )
@@ -274,20 +230,15 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
 
     if ( name->size == 1 )
     {
-        key = ( char* ) p2_array__peek( name );
-        displaced_pair = p2_hash_table__remove( ns->children, key );
-
-        if ( displaced_pair.key )
-            free( displaced_pair.key );
-
-        displaced_object = ( p2_object* ) displaced_pair.target;
+        displaced_object = ( p2_object* ) p2_dictionary__remove(
+            ns->children, ( char* ) p2_array__peek( name ) );
     }
 
     else
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_obj = ( p2_object* ) p2_hash_table__lookup( ns->children, key );
+        child_ns_obj = ( p2_object* ) p2_dictionary__lookup( ns->children, key );
 
         if ( child_ns_obj->type != ns_obj->type )
         {
@@ -308,35 +259,15 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
 /******************************************************************************/
 
 
-/* Procedure which points the argument procedure to the target value of a
-   hashing pair. */
-static p2_procedure__effect apply_to_target( void **addr, p2_procedure *p )
-{
-    addr++;
-    return p2_procedure__execute( p, addr );
-}
-
-
 void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p )
 {
-    p2_procedure p_alt;
-
-    p_alt.execute = ( procedure ) apply_to_target;
-    p_alt.state = p;
-
-    p2_hash_table__distribute( ns->children, &p_alt );
+    p2_dictionary__distribute( ns->children, p );
 }
 
 
 /******************************************************************************/
 
 
-static p2_procedure__effect add_to_array( void **addr, p2_array *a )
-{
-    p2_array__enqueue( a, *addr );
-
-    return p2_procedure__effect__continue;
-}
 static p2_procedure__effect lookup_and_print( char **addr, p2_hash_table *h )
 {
     p2_object *o = ( p2_object* ) p2_hash_table__lookup( h, *addr );
@@ -357,14 +288,9 @@ void p2_namespace__show_children( p2_namespace__object *ns_obj )
     {
         printf( "\n{\n" );
 
-        /* Create an array of children. */
-        a = p2_array__new( size, 0 );
-        p.execute = ( procedure ) add_to_array;
-        p.state = a;
-        p2_hash_table__distribute( ( ( p2_namespace* ) ns_obj->value )->children, &p );
-
-        /* Alphabetize children. */
-        p2_array__sort( a, ( comparator ) strcmp );
+        /* Get alphabetized dictionary keys. */
+        a = p2_dictionary__keys(
+            ( ( p2_namespace* ) ns_obj->value )->children );
 
         /* Print children. */
         p.execute = ( procedure ) lookup_and_print;

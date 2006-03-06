@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "p2_object.h"
-#include "util/p2_hash_table.h"
+#include "util/p2_dictionary.h"
 #include "util/p2_name.h"
 
 
@@ -43,7 +43,7 @@ typedef p2_object p2_namespace__object;
 typedef struct _p2_namespace
 {
     /** A dictionary of objects in the namespace. */
-    p2_hash_table *children;
+    p2_dictionary *children;
 
     /** If nonzero, the namespace can only be read from, not written to. */
     int constant;

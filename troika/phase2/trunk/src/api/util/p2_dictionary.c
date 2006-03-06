@@ -20,9 +20,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_dictionary.h"
 
 
-/******************************************************************************/
-
-
 typedef struct _dictionary_entry
 {
     char *key;
@@ -155,6 +152,26 @@ void *p2_dictionary__remove
     }
 
     return r;
+}
+
+
+/******************************************************************************/
+
+
+/* Procedure which points the argument procedure to the target value of a
+   hashing pair. */
+static p2_procedure__effect apply_to_target
+    ( dictionary_entry **entry_p, p2_procedure *p )
+{
+    return p2_procedure__execute( p, &( ( *entry_p )->src ) );
+}
+
+
+void p2_dictionary__distribute( p2_dictionary *dict, p2_procedure *p )
+{
+    p2_procedure p_alt = { ( procedure ) apply_to_target, p };
+
+    p2_hash_table__distribute( dict, &p_alt );
 }
 
 
