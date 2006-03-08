@@ -28,16 +28,16 @@ typedef struct _graph_edge
 } graph_edge;
 
 
-p2_procedure__effect graph_edge__delete( graph_edge *edge, void *state )
+p2_action * graph_edge__delete( graph_edge *edge, void *state )
 {
     free( edge );
-    return p2_procedure__effect__continue;
+    return 0;
 }
 
 
 static unsigned int hash( const graph_edge *edge )
 {
-    return ( unsigned int ) edge->src;
+    return ( unsigned int ) edge->dest - ( unsigned int ) edge->src;
 }
 
 
@@ -45,9 +45,9 @@ static unsigned int hash( const graph_edge *edge )
    between addresses and key values. */
 static int compare(
     const graph_edge *edge1,
-    const void *src2 )
+    const graph_edge *edge2 )
 {
-    return ( edge1->src != src2 );
+    return ( edge1->src != edge2->src || edge1->dest != edge2->dest );
 }
 
 
@@ -76,15 +76,15 @@ void p2_graph__delete( p2_graph *g )
 void p2_graph__connect
     ( p2_graph *g, void * const src, void * const dest )
 {
-    graph_edge *edge, *edge_old;
+    graph_edge *edge_new, *edge_old;
 
-    if ( !( edge = new( graph_edge ) ) )
+    if ( !( edge_new = new( graph_edge ) ) )
         return;
 
-    edge->src = src;
-    edge->dest = dest;
+    edge_new->src = src;
+    edge_new->dest = dest;
 
-    if ( ( edge_old = ( graph_edge* ) p2_hash_table__add( g, edge ) ) )
+    if ( ( edge_old = ( graph_edge* ) p2_hash_table__add( g, edge_new ) ) )
         free( edge_old );
 }
 

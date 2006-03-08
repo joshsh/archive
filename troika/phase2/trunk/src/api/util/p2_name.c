@@ -21,16 +21,26 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdio.h>
 
 
-static p2_procedure__effect delete_string( char **char_p, void *state )
+p2_name *p2_name__new()
 {
-    free( *char_p );
-    return p2_procedure__effect__continue;
+    p2_name *name = p2_array__new( 0, 0 );
+    return name;
+}
+
+
+static p2_action * delete_string( char *s, void *state )
+{
+printf( "---name ds 1---\n" ); fflush( stdout );
+
+    free( s );
+    return 0;
 }
 
 
 void p2_name__delete( p2_name *name )
 {
     p2_procedure p = { ( procedure ) delete_string, 0 };
+printf( "---name d 1---\n" ); fflush( stdout );
 
     #if DEBUG__SAFE
     if ( !name )
@@ -41,12 +51,15 @@ void p2_name__delete( p2_name *name )
     #endif
 
     #if DEBUG__NAME
-    printf( "p2_name__delete(0x%X)", ( int ) name );  fflush( stdout );
+    printf( "p2_name__delete(0x%X)\n", ( int ) name );  fflush( stdout );
     #endif
-
+printf( "---name d 2---\n" ); fflush( stdout );
     p2_array__distribute( name, &p );
+printf( "---name d 3---\n" ); fflush( stdout );
 
-    free( name );
+    p2_array__delete( name );
+printf( "---name d 4---\n" ); fflush( stdout );
+
 }
 
 

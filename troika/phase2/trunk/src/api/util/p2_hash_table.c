@@ -19,16 +19,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_hash_table.h"
 
-#include <string.h>  /* strcmp */
 
+/* By default, the hash table will wait until it is 1/3 full before expanding. */
+#define DEFAULT_SPARSITY_FACTOR     3
 
-/* By default, the hash table will wait until it is 1/3 full before expanding.
-   Note: the sparsity factor does not need to be an integer. */
-#define DEFAULT_SPARSITY_FACTOR 3.0
-
-/* By default, expand() approximately floats the size of the buffer.
-   Note: the expansion factor does not need to be an integer. */
-#define DEFAULT_EXPANSION_FACTOR 2.0
+/* By default, expand() approximately doubles the size of the buffer. */
+#define DEFAULT_EXPANSION_FACTOR    2
 
 
 #define buffer_new( size )  ( void** ) malloc( size * sizeof( void* ) )
@@ -61,36 +57,46 @@ static unsigned int next_prime( unsigned int i )
 }
 
 
-static p2_procedure__effect rehash( void **key_p, p2_hash_table *h )
-{
-    p2_hash_table__add( h, *key_p );
-    return p2_procedure__effect__continue;
-}
-
-
 static p2_hash_table *expand( p2_hash_table *h )
 {
-    int i;
+    void **src, **dest, **buffer, **sup;
+printf( "h->buffer_size = %i\n", h->buffer_size ); fflush( stdout );
+printf( "h->size = %i\n", h->size ); fflush( stdout );
+printf( "h->capacity = %i\n", h->capacity ); fflush( stdout );
 
-    p2_hash_table h_new = *h;
-    h_new.size = 0;
-    h_new.buffer_size = ( int ) ( h->buffer_size * h->expansion );
-    if ( h_new.buffer_size <= h->buffer_size )
-        h_new.buffer_size = ( int ) ( h->buffer_size * DEFAULT_EXPANSION_FACTOR );
-    h_new.buffer_size = next_prime( h_new.buffer_size );
-    h_new.capacity = ( int ) ( ( ( float ) h_new.buffer_size ) / h_new.sparsity);
+    int buffer_size = next_prime(
+        ( unsigned int ) ( h->buffer_size * h->expansion ) );
+printf( "buffer_size = %i\n", buffer_size ); fflush( stdout );
 
-    if ( !( h_new.buffer = buffer_new( h_new.buffer_size ) ) )
+    if ( !( buffer = buffer_new( buffer_size ) ) )
         return 0;
 
-    for ( i = 0; i < h_new.buffer_size; i++ )
-        h_new.buffer[i] = 0;
+    sup = buffer + buffer_size;
+    for ( dest = buffer; dest < sup; dest++ )
+        *dest = 0;
 
-    p2_procedure p = { ( procedure ) rehash, &h };
-    p2_hash_table__distribute( h, &p );
+    sup = h->buffer + h->buffer_size;
+printf( "sup - h->buffer = %i\n", ( unsigned int ) ( sup - h->buffer ) );
+    for ( src = h->buffer; src < sup; src++ )
+    {
+        if ( *src )
+        {
+            dest = buffer + ( h->hash( *src ) % buffer_size );
+            while ( *dest )
+            {
+                dest++;
+                dest = buffer + ( ( unsigned int ) ( dest - buffer ) % buffer_size );
+            }
+
+            *dest = *src;
+        }
+    }
 
     free( h->buffer );
-    *h = h_new;
+    h->buffer = buffer;
+    h->buffer_size = buffer_size;
+    h->capacity = buffer_size / h->sparsity;
+printf( "h->capacity (new) = %i\n", h->capacity ); fflush( stdout );
 
     return h;
 }
@@ -101,8 +107,8 @@ static p2_hash_table *expand( p2_hash_table *h )
 
 p2_hash_table *p2_hash_table__new(
     unsigned int buffer_size,
-    float sparsity,
-    float expansion,
+    unsigned int sparsity,
+    unsigned int expansion,
     hash_f hash,
     comparator compare )
 {
@@ -128,8 +134,10 @@ p2_hash_table *p2_hash_table__new(
         /* Buffer is initially empty. */
         h->size = 0;
 
-        /* Capacity is re-calculated whenever the table resizes. */
-        h->capacity = ( int ) ( ( ( float ) h->buffer_size ) / h->sparsity );
+        /* Capacity is re-calculated whenever the table resizes.
+           Note: capacity may initially be 0, which just means that the hash
+           table will expand as soon as it is added to. */
+        h->capacity = h->buffer_size / h->sparsity;
 
         if ( !( h->buffer = buffer_new( h->buffer_size ) ) )
         {
@@ -185,7 +193,7 @@ void *p2_hash_table__add( p2_hash_table *h, void *key )
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
-
+int i=0;
     void *key_old;
 
     #if DEBUG__SAFE
@@ -200,6 +208,14 @@ void *p2_hash_table__add( p2_hash_table *h, void *key )
 
     while ( *cur )
     {
+if (++i > 10)
+{
+  printf( "cur = %i\n", ( int ) cur );
+  printf( "buffer = %i\n", ( int ) buffer );
+  printf( "buffer_size = %i\n", buffer_size );
+  printf( "h->size = %i, h->capacity = %i\n", h->size, h->capacity );
+  exit(0);
+}
         /* No duplicate entries allowed.  Replace with new key. */
         if ( !h->compare( *cur, key ) )
         {
@@ -211,7 +227,7 @@ void *p2_hash_table__add( p2_hash_table *h, void *key )
 
         /* Increment and wrap */
         cur++;
-        cur = buffer + ( ( unsigned int ) cur % buffer_size );
+        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
     }
 
     key_old = *cur;
@@ -228,6 +244,7 @@ void *p2_hash_table__add( p2_hash_table *h, void *key )
 
 void *p2_hash_table__lookup( p2_hash_table *h, const void *key )
 {
+int i=0;
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
 
@@ -243,9 +260,17 @@ void *p2_hash_table__lookup( p2_hash_table *h, const void *key )
 
     while ( *cur && h->compare( *cur, key ) )
     {
+if (++i > 10)
+{
+  printf( "cur = %i\n", ( int ) cur );
+  printf( "buffer = %i\n", ( int ) buffer );
+  printf( "buffer_size = %i\n", buffer_size );
+  printf( "h->size = %i, h->capacity = %i\n", h->size, h->capacity );
+  exit(0);
+}
         /* Increment and wrap. */
         cur++;
-        cur = buffer + ( ( unsigned int ) cur % buffer_size );
+        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
     }
 
     return *cur;
@@ -277,7 +302,7 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
 
         /* Increment and wrap. */
         cur++;
-        cur = buffer + ( ( unsigned int ) cur % buffer_size );
+        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
     }
 
     return *cur;
@@ -288,27 +313,39 @@ void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
 {
     void **cur = h->buffer;
     void **sup = h->buffer + h->buffer_size;
+    p2_action *action;
 
     while ( cur < sup )
     {
         if ( *cur )
         {
-            switch ( p2_procedure__execute( p, cur ) )
+            if ( ( action = p2_procedure__execute( p, *cur ) ) )
             {
-                case p2_procedure__effect__continue:
-                    break;
-                case p2_procedure__effect__break:
-                    return;
-                case p2_procedure__effect__remove:
-                    *cur++ = 0;
-                    *cur-- = 0;
-                    break;
-                default:
-                    ;
+                switch ( action->type )
+                {
+                    case p2_action__type__break:
+
+                        return;
+
+                    case p2_action__type__remove:
+
+                        *cur = 0;
+                        h->size--;
+                        break;
+
+                    case p2_action__type__replace:
+
+                        *cur = action->value;
+                        break;
+
+                    default:
+
+                        ;
+                }
             }
         }
 
-        cur += 2;
+        cur++;
     }
 }
 

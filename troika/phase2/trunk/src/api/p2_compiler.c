@@ -185,7 +185,7 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
-static int bad_name;
+/*static int bad_name;*/
 
 static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 {
@@ -195,14 +195,14 @@ static p2_object *resolve_name( p2_compiler *c, p2_name *name )
     char *first = ( char* ) p2_name__pop( name );
     if ( !strcmp( first, "root" ) )
     {
-        ns_obj = compiler->env->root;
+        ns_obj = c->env->root;
         o = p2_namespace__lookup( ns_obj, name );
         p2_name__push( name, first );
     }
 
     else
     {
-        ns_obj = compiler->cur_ns__obj;
+        ns_obj = c->cur_ns__obj;
         p2_name__push( name, first );
         o = p2_namespace__lookup( ns_obj, name );
     }
@@ -212,7 +212,7 @@ static p2_object *resolve_name( p2_compiler *c, p2_name *name )
         printf( "Error: '" );
         p2_name__print( name );
         printf( "' is not defined in this namespace.\n" );
-        bad_name = 1;
+        /*bad_name = 1;*/
     }
 
     return o;
@@ -220,10 +220,10 @@ static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 
 
 static p2_object *object_for_ast( p2_ast* ast );
-static p2_procedure__effect substitute_object_for_ast( p2_ast **ast_p, void *state )
+static p2_procedure__effect substitute_object_for_ast( p2_ast *ast, void *state )
 {
-    *ast_p = ( p2_ast* ) object_for_ast( *ast_p );
-    return p2_procedure__effect__continue;
+    ast = ( p2_ast* ) object_for_ast( ast );
+    return p2_procedure__effect__replace;
 }
 
 
@@ -233,7 +233,8 @@ static p2_object *object_for_ast( p2_ast* ast )
     void *value;
     p2_object *o = 0;
     int flags = 0;
-    p2_procedure p = { ( procedure ) substitute_object_for_ast, 0 };
+    p2_procedure p;
+    p.execute = ( procedure ) substitute_object_for_ast;
 
     switch ( ast->type )
     {

@@ -52,12 +52,12 @@ static dictionary_entry *dictionary__entry__new( const char *key, void *target )
 }
 
 
-static p2_procedure__effect dictionary_entry__delete
-    ( dictionary_entry **entry_p, void *state )
+static p2_action * dictionary_entry__delete
+    ( dictionary_entry *entry, void *state )
 {
-    free( ( *entry_p )->key );
-    free( *entry_p );
-    return p2_procedure__effect__continue;
+    free( entry->key );
+    free( entry );
+    return 0;
 }
 
 
@@ -83,9 +83,9 @@ static unsigned int hash( const dictionary_entry *entry )
 
 static int compare(
     const dictionary_entry *entry1,
-    const char *key2 )
+    const dictionary_entry *entry2 )
 {
-    return strcmp( entry1->key, key2 );
+    return strcmp( entry1->key, entry2->key );
 }
 
 
@@ -121,10 +121,10 @@ void *p2_dictionary__add
     void *r = 0;
 
     if ( ( new_entry = dictionary__entry__new( key, target ) )
-      || ( old_entry = ( dictionary_entry* ) p2_hash_table__add( dict, new_entry ) ) )
+      && ( old_entry = ( dictionary_entry* ) p2_hash_table__add( dict, new_entry ) ) )
     {
         r = old_entry->target;
-        dictionary__entry__delete( &old_entry, 0 );
+        dictionary_entry__delete( old_entry, 0 );
     }
 
     return r;
@@ -134,7 +134,9 @@ void *p2_dictionary__add
 void *p2_dictionary__lookup
     ( p2_dictionary *dict, const char *key )
 {
-    dictionary_entry *entry = p2_hash_table__lookup( dict, key );
+    dictionary_entry match_entry = { key, 0 };
+    dictionary_entry *entry = p2_hash_table__lookup( dict, &match_entry );
+
     return ( entry ) ? entry->target : 0;
 }
 
@@ -143,12 +145,15 @@ void *p2_dictionary__remove
     ( p2_dictionary *dict, const char *key )
 {
     void *r = 0;
+    const dictionary_entry match_entry = { key, 0 };
 
-    dictionary_entry *entry = ( dictionary_entry* ) p2_hash_table__remove( dict, key );
+    dictionary_entry *entry = ( dictionary_entry* )
+        p2_hash_table__remove( dict, &match_entry );
+
     if ( entry )
     {
         r = entry->target;
-        dictionary__entry__delete( &entry, 0 );
+        dictionary_entry__delete( entry, 0 );
     }
 
     return r;
@@ -160,10 +165,10 @@ void *p2_dictionary__remove
 
 /* Procedure which points the argument procedure to the target value of a
    hashing pair. */
-static p2_procedure__effect apply_to_target
-    ( dictionary_entry **entry_p, p2_procedure *p )
+static p2_action * apply_to_target
+    ( dictionary_entry *entry, p2_procedure *p )
 {
-    return p2_procedure__execute( p, &( ( *entry_p )->src ) );
+    return p2_procedure__execute( p, entry->target );
 }
 
 
@@ -178,12 +183,12 @@ void p2_dictionary__distribute( p2_dictionary *dict, p2_procedure *p )
 /******************************************************************************/
 
 
-static p2_procedure__effect add_to_array
-    ( dictionary_entry **entry_p, p2_array *a )
+static p2_action * add_to_array
+    ( dictionary_entry *entry, p2_array *a )
 {
-    p2_array__enqueue( a, ( *entry_p )->key );
+    p2_array__enqueue( a, entry->key );
 
-    return p2_procedure__effect__continue;
+    return 0;
 }
 
 

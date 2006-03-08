@@ -56,12 +56,12 @@ typedef struct _p2_hash_table
     /** The ratio of empty cells to occupied cells is to be at least this large.
         A more sparse hash table takes up more memory but is more time-efficient
         because collisions are less frequent. */
-    float sparsity;
+    unsigned int sparsity;
 
     /** The hash table expands by this factor whenever it becomes too dense.
         Re-hashing the into a new buffer is expensive, so beware of setting
         the expansion factor too low. */
-    float expansion;
+    unsigned int expansion;
 
     /** The hash table buffer array. */
     void **buffer;
@@ -92,8 +92,8 @@ typedef struct _p2_hash_table
     which is &lt; 0 when a &lt; b, &gt; 0 when a &gt; b, and 0 when a == b. */
 p2_hash_table *p2_hash_table__new(
   unsigned int buffer_size,
-  float expansion,
-  float sparsity,
+  unsigned int expansion,
+  unsigned int sparsity,
   hash_f hash,
   comparator compare );
 

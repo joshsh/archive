@@ -26,7 +26,7 @@ debugger :  debugger.c p2_array.o p2_bunch.o p2_hash_table.o p2_set.o p2_term.o 
 
 
 .PHONY : objects
-objects :  p2_array.o p2_bunch.o p2_hash_table.o p2_name.o p2_set.o p2_term.o
+objects :  p2_array.o p2_bunch.o p2_dictionary.o p2_graph.o p2_hash_table.o p2_lookup_table.o p2_name.o p2_set.o p2_term.o
 
 
 p2_%.o :  p2_%.c p2_%.h ../p2_flags.h

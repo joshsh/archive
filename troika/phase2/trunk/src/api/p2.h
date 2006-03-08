@@ -57,17 +57,28 @@ typedef void    ( *void_f )( void *p );
 /* Procedures (functions with state) ******************************************/
 
 
-typedef enum _p2_procedure__effect
+typedef enum _p2_action__type
 {
-    p2_procedure__effect__continue = 0,
+    p2_action__type__noop = 0,
 
-    p2_procedure__effect__break,
-    p2_procedure__effect__remove
+    p2_action__type__break,
+    p2_action__type__remove,
+    p2_action__type__replace
 
-} p2_procedure__effect;
+} p2_action__type;
 
 
-typedef p2_procedure__effect ( *procedure )( void *addr, void *state );
+typedef struct _p2_action
+{
+    p2_action__type type;
+
+    /* For p2_action__type__replace: the replacement value. */
+    void *value;
+
+} p2_action;
+
+
+typedef p2_action *( *procedure )( void *data, void *state );
 
 
 typedef struct _p2_procedure
@@ -81,9 +92,9 @@ typedef struct _p2_procedure
 } p2_procedure;
 
 
-#define p2_procedure__execute( p, addr )  p->execute( addr, p->state )
+#define p2_procedure__execute( p, data )  p->execute( data, p->state )
 
-typedef void    ( *distributor )( void* p, p2_procedure *a );
+typedef void    ( *distributor )( void *data, p2_procedure *a );
 
 
 #endif  /* P2_H */

@@ -96,8 +96,11 @@ p2_array *p2_array__copy( p2_array *a )
 
 void p2_array__delete( p2_array *a )
 {
+printf( "---array a 1---\n" ); fflush( stdout );
     free( a->buffer );
+printf( "---array a 2---\n" ); fflush( stdout );
     free( a );
+printf( "---array a 3---\n" ); fflush( stdout );
 }
 
 
@@ -465,16 +468,26 @@ void p2_array__sort( p2_array *a, comparator compare )
 void p2_array__distribute( p2_array *a, p2_procedure *p )
 {
     int i;
+    p2_action *action;
 
     for ( i = 0; i < a->size; i++ )
     {
-        switch ( p2_procedure__execute( p, &elmt( a, i ) ) )
+        if ( ( action = p2_procedure__execute( p, elmt( a, i ) ) ) )
         {
-            case p2_procedure__effect__break:
-                return;
+            switch ( action->type )
+            {
+                case p2_action__type__break:
 
-            default:
-                ;
+                    return;
+
+                case p2_action__type__replace:
+
+                    elmt( a, i ) = action->value;
+                    break;
+
+                default:
+                    ;
+            }
         }
     }
 }

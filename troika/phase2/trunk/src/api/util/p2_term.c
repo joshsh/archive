@@ -331,13 +331,26 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 void p2_term__distribute( p2_term *t, p2_procedure *p )
 {
     void **sup, **head = ( void** ) t;
+    p2_action *action;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
     if ( ( unsigned int ) *head == 2 )
     {
         head++;
-        if ( p2_procedure__execute( p, head ) )
-            return;
+        if ( ( action = p2_procedure__execute( p, *head ) ) )
+        {
+            switch ( action->type )
+            {
+                case p2_action__type__replace:
+
+                    *head = action->value;
+                    break;
+
+                default:
+
+                    ;
+            }
+        }
     }
 
     /* If the sub-term contains further sub-terms, recurse through them. */

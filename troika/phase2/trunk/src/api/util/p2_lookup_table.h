@@ -1,6 +1,6 @@
 /**
 
-\file  p2_name.h
+\file  p2_lookup_table.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,27 +25,42 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_NAME_H
-#define P2_NAME_H
+#ifndef P2_LOOKUP_TABLE_H
+#define P2_LOOKUP_TABLE_H
 
 
-#include "p2_array.h"
+#include "../p2_type.h"
+#include "p2_hash_table.h"
 
 
-typedef p2_array p2_name;
+typedef struct _p2_lookup_table__entry
+{
+    void *key;
+    void *target;
+
+} p2_lookup_table__entry;
 
 
-#define p2_name__peek( name )  ( char* ) p2_array__peek( name )
-#define p2_name__pop( name )  ( char* ) p2_array__pop( name )
-#define p2_name__push( name, s )  p2_array__push( name, s )
-
-p2_name *p2_name__new();
-
-void p2_name__delete( p2_name *name );
-
-void p2_name__print( p2_name *name );
+typedef p2_hash_table p2_lookup_table;
 
 
-#endif  /* P2_NAME_H */
+p2_lookup_table *p2_lookup_table__new();
+
+void p2_lookup_table__delete( p2_lookup_table *t );
+
+
+void p2_lookup_table__add
+    ( p2_lookup_table *t, void * const key, void * const target );
+
+void *p2_lookup_table__lookup( p2_lookup_table *t, void * const key );
+
+void p2_lookup_table__remove
+    ( p2_lookup_table *t, void * const src );
+
+
+void p2_lookup_table__distribute( p2_lookup_table *t, p2_procedure *p );
+
+
+#endif  /* P2_LOOKUP_TABLE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

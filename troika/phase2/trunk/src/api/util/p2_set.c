@@ -1,11 +1,3 @@
-/**
-
-\file  p2_name.h
-
-\author  Joshua Shinavier   \n
-         parcour@gmail.com  \n
-         +1 509 570-6990    \n */
-
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -25,27 +17,57 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_NAME_H
-#define P2_NAME_H
+#include "p2_set.h"
 
 
-#include "p2_array.h"
+static unsigned int hash( const void *el )
+{
+    return ( unsigned int ) el;
+}
 
 
-typedef p2_array p2_name;
+static int compare( const void *el1, const void *el2 )
+{
+    return ( el1 != el2 );
+}
 
 
-#define p2_name__peek( name )  ( char* ) p2_array__peek( name )
-#define p2_name__pop( name )  ( char* ) p2_array__pop( name )
-#define p2_name__push( name, s )  p2_array__push( name, s )
-
-p2_name *p2_name__new();
-
-void p2_name__delete( p2_name *name );
-
-void p2_name__print( p2_name *name );
+/******************************************************************************/
 
 
-#endif  /* P2_NAME_H */
+p2_set *p2_set__new()
+{
+    p2_hash_table *s = p2_hash_table__new( 0, 0, 0,
+        ( hash_f ) hash, ( comparator ) compare );
+
+    return s;
+}
+
+
+void p2_set__delete( p2_set *s )
+{
+    p2_hash_table__delete( s );
+}
+
+
+void p2_set__add( p2_set *s, void *el )
+{
+    p2_hash_table__add( s, el );
+}
+
+
+void p2_set__remove( p2_set *s, void *el )
+{
+    p2_hash_table__remove( s, el );
+}
+
+/******************************************************************************/
+
+
+void p2_set__distribute( p2_set *s, p2_procedure *p )
+{
+    p2_hash_table__distribute( s, p );
+}
+
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

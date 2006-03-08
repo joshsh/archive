@@ -1,6 +1,6 @@
 /**
 
-\file  p2_name.h
+\file  p2_set.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,27 +25,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_NAME_H
-#define P2_NAME_H
+#ifndef P2_SET_H
+#define P2_SET_H
 
 
-#include "p2_array.h"
+#include "../p2_type.h"
+#include "p2_hash_table.h"
 
 
-typedef p2_array p2_name;
+typedef p2_hash_table p2_set;
 
 
-#define p2_name__peek( name )  ( char* ) p2_array__peek( name )
-#define p2_name__pop( name )  ( char* ) p2_array__pop( name )
-#define p2_name__push( name, s )  p2_array__push( name, s )
+p2_set *p2_set__new();
 
-p2_name *p2_name__new();
-
-void p2_name__delete( p2_name *name );
-
-void p2_name__print( p2_name *name );
+void p2_set__delete( p2_set *s );
 
 
-#endif  /* P2_NAME_H */
+void p2_set__add( p2_set *s, void *el );
+
+void p2_set__remove( p2_set *s, void *el );
+
+void p2_set__distribute( p2_set *s, p2_procedure *p );
+
+
+#endif  /* P2_SET_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */
