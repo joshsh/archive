@@ -42,13 +42,15 @@ extern int yyparse();
 typedef struct _p2_compiler
 {
     p2_environment *env;
-    p2_namespace__object *cur_ns__obj;
+    p2_namespace__object *cur_ns_obj;
 
     p2_dictionary *commands;
 
     int locked;
 
     p2_type *bag_t, *combinator_t, *char_t, *float_t, *int_t, *string_t, *term_t;
+
+    boolean suppress_output, show_line_numbers;
 
 } p2_compiler;
 

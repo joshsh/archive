@@ -20,7 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_lookup_table.h"
 
 
-p2_action * p2_lookup_table__entry__delete( p2_lookup_table__entry *entry, void *state )
+static p2_action * p2_lookup_table__entry__delete( p2_lookup_table__entry *entry, void *state )
 {
     free( entry );
     return 0;

@@ -28,7 +28,7 @@ typedef struct _graph_edge
 } graph_edge;
 
 
-p2_action * graph_edge__delete( graph_edge *edge, void *state )
+static p2_action * graph_edge__delete( graph_edge *edge, void *state )
 {
     free( edge );
     return 0;

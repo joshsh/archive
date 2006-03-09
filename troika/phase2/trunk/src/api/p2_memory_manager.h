@@ -61,8 +61,7 @@ p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o );
 
 /* Tracing / graph traversal **************************************************/
 
-void *p2_memory_manager__for_all_reachable(
-    p2_memory_manager *m, void *(*f)(p2_object*) );
+void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p );
 
 
 /* Mark-and-sweep garbage collection ******************************************/

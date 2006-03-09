@@ -22,25 +22,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "util/p2_term.h"
 
 
-/* Adds an object to a namespace using a simple name. */
-static void *ns__add( p2_namespace__object *ns_obj, p2_object *o, char *s )
-{
-    p2_name *name;
-
-    if ( !o || !( name = p2_array__new( 0, 0 ) ) )
-        return 0;
-
-    else if ( !p2_array__enqueue( name, s ) )
-        o = 0;
-
-    else
-        p2_namespace__add( ns_obj, name, o );
-
-    p2_array__delete( name );
-    return o;
-}
-
-
 static p2_namespace__object *ns__new( p2_type *ns__type )
 {
     p2_object *o;
@@ -153,9 +134,9 @@ printf( "---e 6---\n" ); fflush( stdout );
 printf( "---e 7---\n" ); fflush( stdout );
 
     /* Nest child namespaces under root. */
-    if ( !ns__add( env->root, env->data, "data" )
-      || !ns__add( env->root, env->primitives, "primitives" )
-      || !ns__add( env->root, env->types, "types" ) )
+    if ( p2_namespace__add_simple( env->root, "data", env->data )
+      || p2_namespace__add_simple( env->root, "primitives", env->primitives )
+      || p2_namespace__add_simple( env->root, "types", env->types ) )
         goto abort;
 printf( "---e 8---\n" ); fflush( stdout );
 
@@ -254,7 +235,11 @@ p2_object *p2_environment__register_primitive(
         return 0;
     }
 
-    return ns__add( env->primitives, o, prim->name );
+    if ( p2_namespace__add_simple( env->primitives, prim->name, o ) )
+        return 0;
+
+    else
+        return o;
 }
 
 
@@ -274,7 +259,11 @@ p2_object *p2_environment__register_type(
         return 0;
     }
 
-    return ns__add( env->types, o, type->name );
+    if ( p2_namespace__add_simple( env->types, type->name, o ) )
+        return 0;
+
+    else
+        return o;
 }
 
 

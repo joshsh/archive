@@ -70,18 +70,18 @@ static void *p2_free( void *p )
 }
 
 
-static p2_procedure__effect p2_ast__delete__proc( p2_ast *ast, void *state )
+static p2_action * p2_ast__delete__proc( p2_ast *ast, void *state )
 {
     p2_ast__delete( ast );
-    return p2_procedure__effect__continue;
+    return 0;
 }
-static p2_procedure__effect term_of_nodes__delete( p2_term *t, void *state )
+static p2_action * term_of_nodes__delete( p2_term *t, void *state )
 {
     p2_procedure p = { ( procedure ) p2_ast__delete__proc, 0 };
     p2_term__distribute( t, &p );
     /*p2_term__for_all( t, ( void*(*)(void*) ) p2_ast__delete );*/
     p2_term__delete( t );
-    return p2_procedure__effect__continue;
+    return 0;
 }
 
 

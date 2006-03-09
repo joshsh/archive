@@ -89,8 +89,10 @@ p2_compiler *p2_compiler__new( p2_environment *env )
     }
 
     c->env = env;
-    c->cur_ns__obj = env->data;
+    c->cur_ns_obj = env->data;
     c->locked = 0;
+    c->suppress_output = boolean__false;
+    c->show_line_numbers = boolean__true;
 
     compiler = c;
 
@@ -185,8 +187,6 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
-/*static int bad_name;*/
-
 static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 {
     p2_namespace__object *ns_obj;
@@ -202,7 +202,7 @@ static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 
     else
     {
-        ns_obj = c->cur_ns__obj;
+        ns_obj = c->cur_ns_obj;
         p2_name__push( name, first );
         o = p2_namespace__lookup( ns_obj, name );
     }
@@ -212,29 +212,40 @@ static p2_object *resolve_name( p2_compiler *c, p2_name *name )
         printf( "Error: '" );
         p2_name__print( name );
         printf( "' is not defined in this namespace.\n" );
-        /*bad_name = 1;*/
     }
 
     return o;
 }
 
 
-static p2_object *object_for_ast( p2_ast* ast );
-static p2_procedure__effect substitute_object_for_ast( p2_ast *ast, void *state )
+typedef struct _subst_st
 {
-    ast = ( p2_ast* ) object_for_ast( ast );
-    return p2_procedure__effect__replace;
+    p2_action *action;
+    p2_procedure *subst_proc;
+    boolean sofarsogood;
+
+} subst_st;
+
+
+static p2_object *object_for_ast( p2_ast* ast, subst_st *state );
+
+static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
+{
+    p2_object *o = object_for_ast( ast, state );
+    if ( !o )
+        state->sofarsogood = boolean__false;
+
+    state->action->value = 0;
+    return state->action;
 }
 
 
-static p2_object *object_for_ast( p2_ast* ast )
+static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
 {
+    p2_object *o;
     p2_type *type;
     void *value;
-    p2_object *o = 0;
     int flags = 0;
-    p2_procedure p;
-    p.execute = ( procedure ) substitute_object_for_ast;
 
     switch ( ast->type )
     {
@@ -242,11 +253,7 @@ static p2_object *object_for_ast( p2_ast* ast )
 
             type = compiler->bag_t;
             value = ast->value;
-            p2_array__distribute( ( p2_array* ) value, &p );
-/*
-            value = ( void* ) p2_array__substitute_all(
-               ( p2_array* ) ast->value, ( void *(*)(void *) ) object_for_ast );
-*/
+            p2_array__distribute( ( p2_array* ) value, state->subst_proc );
             flags = OBJECT__IS_OBJ_COLL;
             break;
 
@@ -285,9 +292,7 @@ static p2_object *object_for_ast( p2_ast* ast )
 
             type = compiler->term_t;
             value = ast->value;
-            /*value = ( void* ) p2_term__substitute_all(
-               ( p2_term* ) ast->value, ( void *(*)(void *) ) object_for_ast ); */
-            p2_term__distribute( ( p2_term* ) value, &p );
+            p2_term__distribute( ( p2_term* ) value, state->subst_proc );
             flags = OBJECT__IS_OBJ_COLL;
             break;
 
@@ -338,12 +343,12 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 
     if ( ( o = resolve_name( c, name ) ) )
     {
-        if ( o->type != c->cur_ns__obj->type )
+        if ( o->type != c->cur_ns_obj->type )
             printf( "Error: not a namespace.\n" );
 
         else
         {
-            c->cur_ns__obj = o;
+            c->cur_ns_obj = o;
             printf( "Moved to namespace '" );
             p2_ast__print( arg );
             printf( "'." );
@@ -400,17 +405,7 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
     {
         if ( n_args( args, 0 ) )
         {
-            p2_namespace__show_children( compiler->cur_ns__obj );
-/*
-printf( "root:\n" );
-p2_namespace__show_children( ( p2_namespace* ) compiler->env->root->value );
-printf( "data:\n" );
-p2_namespace__show_children( ( p2_namespace* ) compiler->env->data->value );
-printf( "primitives:\n" );
-p2_namespace__show_children( ( p2_namespace* ) compiler->env->primitives->value );
-printf( "types:\n" );
-p2_namespace__show_children( ( p2_namespace* ) compiler->env->types->value );
-*/
+            p2_namespace__show_children( compiler->cur_ns_obj );
         }
     }
 
@@ -435,6 +430,10 @@ p2_namespace__show_children( ( p2_namespace* ) compiler->env->types->value );
 
 int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 {
+    subst_st state;
+    p2_action action;
+    p2_procedure subst_proc;
+
     int ret = 0;
     p2_ast *a = 0;
     p2_object *o;
@@ -478,12 +477,27 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     p2_ast__print( expr );
 
 
+    state.sofarsogood = boolean__true;
 
+    action.type = p2_action__type__replace;
+    state.action = &action;
+
+    subst_proc.execute = ( procedure ) substitute_object_for_ast;
+    subst_proc.state = &state;
+    state.subst_proc = &subst_proc;
 
 
 printf( "\n" );
-    o = object_for_ast( expr );
-    o->type->encode( o->value, print_buffer );
+    o = object_for_ast( expr, &state );
+
+    if ( !state.sofarsogood )
+        printf( "*** Error in term. ***\n" );
+
+    else
+    {
+        o->type->encode( o->value, print_buffer );
+        printf( "*** print_buffer = %s ***\n", print_buffer );
+    }
 
     return ret;
 }
@@ -508,13 +522,13 @@ int p2_compiler__handle_parse_error( char *msg )
 
 int p2_compiler__suppress_output()
 {
-    return 0;
+    return compiler->suppress_output;
 }
 
 
 int p2_compiler__show_line_numbers()
 {
-    return 1;
+    return compiler->show_line_numbers;
 }
 
 

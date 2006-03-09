@@ -71,6 +71,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  /* strcpy */
 #include <stdlib.h>  /* malloc */
 
+/* Avoid C99 warning: implicit declaration of function ‘yylex’ */
+int yylex( void );
+
 
 /* Language module dependencies ***********************************************/
 

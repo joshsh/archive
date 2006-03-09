@@ -40,7 +40,7 @@ p2_namespace *p2_namespace__new()
     ns->constant = 0;
 
     #if DEBUG__NAMESPACE
-    printf( "[0x%X] p2_namespace__new\n", ( int ) ns );
+    printf( "[%#x] p2_namespace__new\n", ( int ) ns );
     #endif
 
     return ns;
@@ -58,7 +58,7 @@ void p2_namespace__delete( p2_namespace *ns )
     #endif
 
     #if DEBUG__NAMESPACE
-    printf( "p2_namespace__delete(0x%X)\n", ( int ) ns ); fflush( stdout );
+    printf( "p2_namespace__delete(%#x)\n", ( int ) ns ); fflush( stdout );
     #endif
 
     p2_dictionary__delete( ns->children );
@@ -67,7 +67,8 @@ void p2_namespace__delete( p2_namespace *ns )
 }
 
 
-p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_object *o )
+p2_object *p2_namespace__add
+    ( p2_namespace__object *ns_obj, p2_name *name, p2_object *o )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
@@ -77,17 +78,17 @@ p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_ob
     #if DEBUG__SAFE
     if ( !ns )
     {
-        PRINTERR( "null namespace" );
+        PRINTERR( "p2_namespace__add: null namespace" );
         return 0;
     }
     if ( !name )
     {
-        PRINTERR( "null name" );
+        PRINTERR( "p2_namespace__add: null name" );
         return 0;
     }
     if ( !name->size )
     {
-        PRINTERR( "empty name" );
+        PRINTERR( "p2_namespace__add: empty name" );
         return 0;
     }
     #endif
@@ -112,7 +113,7 @@ p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_ob
 
         if ( child_ns_obj->type != ns_obj->type )
         {
-            PRINTERR( "not a namespace" );
+            PRINTERR( "p2_namespace__add: not a namespace" );
             displaced_object = 0;
         }
 
@@ -126,6 +127,35 @@ p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_ob
     }
 
     return displaced_object;
+}
+
+
+p2_object *p2_namespace__add_simple
+    ( p2_namespace__object *ns_obj, char *name, p2_object *o )
+{
+    p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
+
+    #if DEBUG__SAFE
+    if ( !ns )
+    {
+        PRINTERR( "p2_namespace__add_simple: null namespace" );
+        return 0;
+    }
+    if ( !name )
+    {
+        PRINTERR( "p2_namespace__add_simple: null name" );
+        return 0;
+    }
+    #endif
+
+    if ( ns->constant )
+    {
+        PRINTERR( "p2_namespace__add_simple: namespace is write-protected" );
+        return 0;
+    }
+
+    return ( p2_object* ) p2_dictionary__add
+        ( ns->children, name, o );
 }
 
 
@@ -268,11 +298,11 @@ void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p )
 /******************************************************************************/
 
 
-static p2_procedure__effect lookup_and_print( char **addr, p2_hash_table *h )
+static p2_action * lookup_and_print( char *key, p2_dictionary *dict )
 {
-    p2_object *o = ( p2_object* ) p2_hash_table__lookup( h, *addr );
-    printf( "    0x%X '%s' : %s\n", ( int ) o, *addr, o->type->name );
-    return p2_procedure__effect__continue;
+    p2_object *o = ( p2_object* ) p2_dictionary__lookup( dict, key );
+    printf( "    %#x '%s' : %s\n", ( int ) o, key, o->type->name );
+    return 0;
 }
 
 

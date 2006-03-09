@@ -7,13 +7,17 @@
 NAME     = p2_parser
 UTILS    = ../util
 
-CC       = gcc
-CFLAGS   = -Wall \
+CFLAGS   = -Wall -Werror \
            --ansi \
-           -g # temporary...
-LEX      = flex \
+           -g # temporary...      -Wstrict-prototypes -Wmissing-prototypes
+
+CC       = gcc
+
+LEX      = flex --header=foo.h \
            -p  # Get comments regarding features that lead to performance losses.
+
 YACC     = bison
+
 VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
 
@@ -40,8 +44,8 @@ valgrind-session :  $(DEBUGGER)
 	$(VALGRIND) debugger
 
 
-debugger :  objects debugger.c p2_array.o p2_term.o p2_parser.h p2_name.o ../p2_flags.h
-	$(CC) $(CFLAGS) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o
+debugger :  objects debugger.c p2_array.o p2_term.o p2_type.o p2_parser.h p2_name.o ../p2_flags.h
+	$(CC) $(CFLAGS) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o p2_type.o
 
 
 ################################################################################
@@ -51,7 +55,7 @@ objects: lex.yy.o $(NAME).tab.o p2_ast.o ##$(NAME)-aux.o
 
 
 lex.yy.o : lex.yy.c $(NAME).tab.h
-	$(CC) $(CFLAGS) -c lex.yy.c
+	$(CC) $(CFLAGS) -D_POSIX_SOURCE -c lex.yy.c
 
 
 $(NAME).tab.o : $(NAME).tab.c
@@ -75,6 +79,8 @@ $(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../p2_flags.h
 p2_ast.o : p2_ast.c ../p2_flags.h
 	$(CC) $(CFLAGS) -c p2_ast.c
 
+p2_type.o : ../p2_type.c ../p2_flags.h
+	$(CC) $(CFLAGS) -c ../p2_type.c
 
 p2_name.o : $(UTILS)/p2_name.c ../p2_flags.h
 	$(CC) $(CFLAGS) -c $(UTILS)/p2_name.c

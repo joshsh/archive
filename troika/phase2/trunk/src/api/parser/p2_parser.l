@@ -59,6 +59,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../p2_flags.h"
 #include "p2_parser.h"
 
+/*#include "foo.h"*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -79,63 +81,20 @@ int line_number, column_number, last_column_number, statement_number;
 
 
 /** Decorate command-line input. */
-void print_input_prefix()
-{
-    if ( !p2_compiler__suppress_output() )
-    {
-        /* Display a line number at the beginning of each new line of input. */
-        if ( p2_compiler__show_line_numbers() )
-            printf( "%d ", line_number );
+void print_input_prefix();
 
-        /* Add a prefix to each new line of input, to distinguish it from
-           output, and possibly to separate it from the line number. */
-        #ifdef INPUT_PREFIX
-            printf( INPUT_PREFIX );
-        #endif
-    }
-}
+void new_token( int length );
 
-
-void new_token( int length )
-{
-    last_column_number = column_number;
-    column_number += length;
-}
-
-
-void new_line()
-{
-    line_number++;
-    column_number = last_column_number = 0;
-    statement_number = 0;
-
-    print_input_prefix();
-}
-
+void new_line();
 
 /** Initialize the lexer for a new invocation of yyparse(). */
-void new_parse()
-{
-    line_number = 0;
-    new_line();
-}
-
+void new_parse();
 
 /** \return  the current line number.  Starts at 1. */
-int get_line_number()
-{
-    return line_number;
-}
-
+int get_line_number();
 
 /** \return the current "column" number, where tabs only count for one column. */
-int get_char_number()
-{
-    if ( !last_column_number )
-        return 1;
-    else
-        return last_column_number;
-}
+int get_char_number();
 
 
 /* Debugging output ***********************************************************/
@@ -445,6 +404,66 @@ IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
 
 
 %%
+
+
+/** Decorate command-line input. */
+void print_input_prefix()
+{
+    if ( !p2_compiler__suppress_output() )
+    {
+        /* Display a line number at the beginning of each new line of input. */
+        if ( p2_compiler__show_line_numbers() )
+            printf( "%d ", line_number );
+
+        /* Add a prefix to each new line of input, to distinguish it from
+           output, and possibly to separate it from the line number. */
+        #ifdef INPUT_PREFIX
+            printf( INPUT_PREFIX );
+        #endif
+    }
+}
+
+
+void new_token( int length )
+{
+    last_column_number = column_number;
+    column_number += length;
+}
+
+
+void new_line()
+{
+    line_number++;
+    column_number = last_column_number = 0;
+    statement_number = 0;
+
+    print_input_prefix();
+}
+
+
+/** Initialize the lexer for a new invocation of yyparse(). */
+void new_parse()
+{
+    line_number = 0;
+    new_line();
+}
+
+
+/** \return  the current line number.  Starts at 1. */
+int get_line_number()
+{
+    return line_number;
+}
+
+
+/** \return the current "column" number, where tabs only count for one column. */
+int get_char_number()
+{
+    if ( !last_column_number )
+        return 1;
+    else
+        return last_column_number;
+}
 
 
 /* extern YYSTYPE yylval; */

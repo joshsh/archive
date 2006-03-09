@@ -23,11 +23,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 p2_object *p2_object__new( p2_type *type, void *value, int flags )
 {
     #if DEBUG__SAFE
-        if ( !type || !value)
-        {
-            PRINTERR( "p2_object__new: null type or value" );
-            return 0;
-        }
+    if ( !type || !value)
+    {
+        PRINTERR( "p2_object__new: null type or value" );
+        return 0;
+    }
     #endif
 
     p2_object *o = new( p2_object );
@@ -40,32 +40,32 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     o->flags = flags;
 
     #if TRIPLES__GLOBAL__IN_EDGES
-        o->inbound_edges = 0;
+    o->inbound_edges = 0;
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
-        o->outbound_edges = 0;
+    o->outbound_edges = 0;
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
-        o->trans_edges = 0;
+    o->trans_edges = 0;
     #endif
 
     #if DEBUG__OBJECT
-    printf( "p2_object__new: created object Ox%X (value 0x%X) of type '%s' (0x%X).\n",
+    printf( "p2_object__new: created object %#x (value 0x%X) of type '%s' (0x%X).\n",
         ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
 if (!strcmp( o->type->name, "type"))
-    printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
+printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
     #endif
 
     return o;
 }
 
 
-static p2_procedure__effect delete_proc( void **addr, p2_type *type )
+static p2_action *delete_proc( void *p, p2_type *type )
 {
-    type->destroy( *addr );
-    return p2_procedure__effect__continue;
+    type->destroy( p );
+    return 0;
 }
 
 
@@ -74,23 +74,23 @@ void p2_object__delete( p2_object *o )
     p2_procedure p;
 
     #if DEBUG__OBJECT
-    printf( "p2_object__delete: deleting object Ox%X (value 0x%X) of type (0x%X).\n",
+    printf( "p2_object__delete(%#x): value = 0x%X, type = 0x%X.\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
     #endif
 
     #if TRIPLES__GLOBAL__IN_EDGES
-        if ( o->inbound_edges )
-            p2_hash_table__delete( o->inbound_edges );
+    if ( o->inbound_edges )
+        p2_lookup_table__delete( o->inbound_edges );
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
-        if ( o->outbound_edges )
-            p2_hash_table__delete( o->outbound_edges );
+    if ( o->outbound_edges )
+        p2_lookup_table__delete( o->outbound_edges );
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
-        if ( o->trans_edges )
-            p2_hash_table__delete( o->trans_edges );
+    if ( o->trans_edges )
+        p2_lookup_table__delete( o->trans_edges );
     #endif
 
     /* If the object owns its children (and has any), free them. */
@@ -108,26 +108,79 @@ void p2_object__delete( p2_object *o )
 }
 
 
-/* Member functions ***********************************************************/
+/* Graph traversal ************************************************************/
 
 
-p2_object *p2_object__clone( p2_object *o )
+typedef struct _trace_proc_st
 {
-    /* Caution: flags start at 0. */
-    return p2_object__new( o->type, o->type->clone( o->value ), 0 );
+    p2_procedure *outer_p;
+    p2_procedure *inner_p;
+    p2_procedure *edge_p;
+
+} trace_proc_st;
+
+
+static p2_action * apply_to_assoc_edge
+    ( p2_lookup_table__entry *entry, p2_procedure *p )
+{
+    #if TRIPLES__IMPLICATION__SP_O
+    ... not yet written ...
+    #else
+    #if TRIPLES__IMPLICATION__S_P
+    p2_procedure__execute( p, entry->key );
+    #endif
+    #if TRIPLES__IMPLICATION__S_O
+    p2_procedure__execute( p, entry->target );
+    #endif
+    #endif
+
+    return 0;
 }
 
 
-p2_object *p2_object__decode( p2_type *type, char *buffer )
+static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
 {
-    /* Caution: flags start at 0. */
-    return p2_object__new( type, type->decode( buffer ), 0 );
+    p2_action *action;
+
+    /* Execute the inner procedure.  Recurse unless instructed otherwise. */
+    if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
+    {
+        /* Traverse to children (if any). */
+        if ( o->flags & OBJECT__IS_OBJ_COLL )
+        {
+            o->type->distribute( o->value, state->outer_p );
+        }
+
+        /* Traverse to associated objects (if any). */
+        #if TRIPLES__GLOBAL__OUT_EDGES
+        if ( o->outbound_edges )
+        {
+            p2_lookup_table__distribute( o->outbound_edges, state->edge_p );
+        }
+        #endif
+    }
+
+    return 0;
 }
 
 
-void p2_object__encode( p2_object *o, char *buffer )
+void p2_object__trace( p2_object *o, p2_procedure *p )
 {
-    o->type->encode( o->value, buffer );
+    trace_proc_st state;
+    p2_procedure trace_proc;
+    p2_procedure edge_p;
+
+    edge_p.execute = ( procedure ) apply_to_assoc_edge;
+    edge_p.state = &trace_proc;
+
+    state.outer_p = &trace_proc;
+    state.inner_p = p;
+    state.edge_p = &edge_p;
+
+    trace_proc.execute = ( procedure ) trace_exec;
+    trace_proc.state = &state;
+
+    p2_procedure__execute( ( &trace_proc ), o );
 }
 
 
@@ -136,47 +189,61 @@ void p2_object__encode( p2_object *o, char *buffer )
 
 #if TRIPLES__GLOBAL
 
-    p2_object *p2_object__multiply
-        ( p2_object *subj, p2_object *pred )
+p2_object *p2_object__multiply
+    ( p2_object *subj, p2_object *pred )
+{
+    #if DEBUG__SAFE
+    if ( !subj || !pred )
     {
-        #if TRIPLES__GLOBAL__OUT_EDGES
-
-            return ( subj->outbound_edges ) ?
-                ( p2_object* ) p2_hash_table__lookup( subj->outbound_edges, pred ) : 0 ;
-
-        #else
-
-            return 0;
-
-        #endif
+        PRINTERR( "p2_object__multiply: null argument" );
+        return 0;
     }
+    #endif
+
+    #if TRIPLES__GLOBAL__OUT_EDGES
+
+    return ( subj->outbound_edges ) ?
+        ( p2_object* ) p2_lookup_table__lookup( subj->outbound_edges, pred ) : 0 ;
+
+    #else
+
+    return 0;
+
+    #endif
+}
 
 
-    /* Note: doesn't take association sets into account yet. */
-    p2_object *p2_object__associate
-        ( p2_object *subj, p2_object *pred, p2_object *obj )
+/* Note: doesn't take association sets into account yet. */
+p2_object *p2_object__associate
+    ( p2_object *subj, p2_object *pred, p2_object *obj )
+{
+    #if DEBUG__SAFE
+    if ( !subj || !pred || !obj )
     {
-        #if TRIPLES__GLOBAL__OUT_EDGES
-
-            if ( !subj->outbound_edges
-              && !( subj->outbound_edges = p2_hash_table__new(
-                    TRIPLES__GLOBAL__OBJECT_INIT_BUFFER_SIZE, 0, 0,
-                    ADDRESS_DEFAULTS ) ) )
-                return 0;
-
-            if ( obj )
-                p2_hash_table__add( subj->outbound_edges, pred, obj );
-            else
-                p2_hash_table__remove( subj->outbound_edges, pred );
-
-            return subj;
-
-        #else
-
-            return 0;
-
-        #endif
+        PRINTERR( "p2_object__associate: null argument" );
+        return 0;
     }
+    #endif
+
+    #if TRIPLES__GLOBAL__OUT_EDGES
+
+    if ( !subj->outbound_edges
+      && !( subj->outbound_edges = p2_lookup_table__new() ) )
+        return 0;
+
+    if ( obj )
+        p2_lookup_table__add( subj->outbound_edges, pred, obj );
+    else
+        p2_lookup_table__remove( subj->outbound_edges, pred );
+
+    return subj;
+
+    #else
+
+    return 0;
+
+    #endif
+}
 
 #endif  /* TRIPLES__GLOBAL */
 

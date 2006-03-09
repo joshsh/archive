@@ -26,33 +26,37 @@ typedef struct _p2_search
     p2_array *results;
     void *single_result;
 
+    p2_action action;
+
 } p2_search;
 
 
-static p2_procedure__effect break_true_if_match
-    ( void **addr, p2_search *search )
+static p2_action * break_true_if_match
+    ( void *data, p2_search *search )
 {
-    if ( search->match( *addr ) )
+    if ( search->match( data ) )
     {
-        search->single_result = *addr;
-        return p2_procedure__effect__break;
+        search->single_result = data;
+        search->action.type = p2_action__type__break;
+        return &search->action;
     }
 
     else
-        return p2_procedure__effect__continue;
+        return 0;
 }
 
 
-static p2_procedure__effect break_false_if_nomatch
-    ( void **addr, p2_search *search )
+static p2_action * break_false_if_nomatch
+    ( void *data, p2_search *search )
 {
-    if ( search->match( *addr ) )
-        return p2_procedure__effect__continue;
+    if ( search->match( data ) )
+        return 0;
 
     else
     {
         search->single_result = 0;
-        return p2_procedure__effect__break;
+        search->action.type = p2_action__type__break;
+        return &search->action;
     }
 }
 
@@ -67,12 +71,12 @@ typedef struct _void_f_wrapper
 } void_f_wrapper;
 
 
-static p2_procedure__effect void_f_procedure
-    ( void **addr, void_f_wrapper *wrapper )
+static p2_action * void_f_procedure
+    ( void *data, void_f_wrapper *wrapper )
 {
-    wrapper->f( *addr );
+    wrapper->f( data );
 
-    return p2_procedure__effect__continue;
+    return 0;
 }
 
 
@@ -93,12 +97,17 @@ void p2_collection__do_for_all( p2_collection *c, void_f f )
 /* exclude_if *****************************************************************/
 
 
-static p2_procedure__effect exclude_if_match
-    ( void **addr, p2_search *search )
+static p2_action * exclude_if_match
+    ( void *data, p2_search *search )
 {
-    return ( search->match( *addr ) )
-        ? p2_procedure__effect__remove
-        : p2_procedure__effect__continue;
+    if ( search->match( data ) )
+    {
+        search->action.type = p2_action__type__remove;
+        return &search->action;
+    }
+
+    else
+        return 0;
 }
 
 
@@ -177,14 +186,14 @@ boolean p2_collection__for_all( p2_collection *c, criterion cr )
 
 
 /* Procedure for pattern matching. */
-static p2_procedure__effect add_if_match( void **addr, p2_search *search )
+static p2_action * add_if_match( void *data, p2_search *search )
 {
-    if ( search->match( *addr ) )
+    if ( search->match( data ) )
     {
-        p2_array__enqueue( search->results, *addr );
+        p2_array__enqueue( search->results, data );
     }
 
-    return p2_procedure__effect__continue;
+    return 0;
 }
 
 
@@ -212,16 +221,17 @@ typedef struct _substitution_context
     substitution_f substitute_for;
 
     void *state;
+    p2_action action;
 
 } substitution_context;
 
 
-static p2_procedure__effect substitute
-    ( void **addr, substitution_context *context )
+static p2_action * substitute
+    ( void *data, substitution_context *context )
 {
-    *addr = context->substitute_for( *addr, context->state );
+    context->action.value = context->substitute_for( data, context->state );
 
-    return p2_procedure__effect__continue;
+    return &context->action;
 }
 
 
@@ -232,6 +242,7 @@ void p2_collection__replace_all( p2_collection *c, substitution_f f, void *state
 
     context.substitute_for = f;
     context.state = state;
+    context.action.type = p2_action__type__replace;
 
     p.execute = ( procedure ) substitute;
     p.state = &context;

@@ -21,10 +21,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_collection.h"
 
 
-/* Warning: multithreading hazard. */
-static void *(*global_f)(p2_object*);
-
-
 /******************************************************************************/
 
 
@@ -86,8 +82,6 @@ printf( "---m 6---\n" ); fflush( stdout );
 
     m->clean = 1;
 
-    global_f = 0;
-
     return m;
 }
 
@@ -95,12 +89,13 @@ printf( "---m 6---\n" ); fflush( stdout );
 void p2_memory_manager__delete( p2_memory_manager *m )
 {
     p2_type *p2_object_t, *p2_object_bunch_t;
+
     #if DEBUG__SAFE
-        if ( !m )
-        {
-            PRINTERR( "p2_memory_manager__delete: null manager" );
-            return;
-        }
+    if ( !m )
+    {
+        PRINTERR( "p2_memory_manager__delete: null manager" );
+        return;
+    }
     #endif
 
     p2_object_bunch_t = m->objects_obj->type;
@@ -119,11 +114,11 @@ void p2_memory_manager__delete( p2_memory_manager *m )
 unsigned int p2_memory_manager__size( p2_memory_manager *m )
 {
     #if DEBUG__SAFE
-        if ( !m )
-        {
-            PRINTERR( "p2_memory_manager__delete: null manager" );
-            return 0;
-        }
+    if ( !m )
+    {
+        PRINTERR( "p2_memory_manager__delete: null manager" );
+        return 0;
+    }
     #endif
 
     return p2_bunch__size( m->objects );
@@ -135,25 +130,23 @@ p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o )
 printf( "---m add 1---\n" ); fflush( stdout );
 
     #if DEBUG__SAFE
-        if ( !o )
-        {
-            PRINTERR( "p2_memory_manager__add: null object" );
-            return 0;
-        }
+    if ( !o )
+    {
+        PRINTERR( "p2_memory_manager__add: null object" );
+        return 0;
+    }
+    else if ( o->flags & OBJECT__OWNED )
+    {
+        PRINTERR( "p2_memory_manager__add: object already has a manager" );
+        return 0;
+    }
+    else if ( o->flags & OBJECT__MARKED )
+    {
+        PRINTERR( "p2_memory_manager__new: object is marked" );
+        return 0;
+    }
 
-        else if ( o->flags & OBJECT__OWNED )
-        {
-            PRINTERR( "p2_memory_manager__add: object already has a manager" );
-            return 0;
-        }
-
-        else if ( o->flags & OBJECT__MARKED )
-        {
-            PRINTERR( "p2_memory_manager__new: object is marked" );
-            return 0;
-        }
-
-        o->flags = o->flags | OBJECT__OWNED;
+    o->flags = o->flags | OBJECT__OWNED;
     #endif
 printf( "---m add 2---\n" ); fflush( stdout );
 
@@ -167,11 +160,11 @@ printf( "---m add 2---\n" ); fflush( stdout );
 static void *unmark( p2_object *o )
 {
     #ifdef DEBUG__SAFE
-        if ( !o )
-        {
-            PRINTERR( "unmark: null object" );
-            return 0;
-        }
+    if ( !o )
+    {
+        PRINTERR( "unmark: null object" );
+        return 0;
+    }
     #endif
 
     o->flags = o->flags & ~OBJECT__MARKED;
@@ -182,11 +175,11 @@ static void *unmark( p2_object *o )
 static boolean unmark_for_sweep( p2_object *o )
 {
     #ifdef DEBUG__SAFE
-        if ( !o )
-        {
-            PRINTERR( "unmark_for_sweep: null object" );
-            return 0;
-        }
+    if ( !o )
+    {
+        PRINTERR( "unmark_for_sweep: null object" );
+        return 0;
+    }
     #endif
 
     /* If marked, unmark. */
@@ -212,11 +205,11 @@ static boolean unmark_for_sweep( p2_object *o )
 static void unmark_all( p2_memory_manager *m )
 {
     #ifdef DEBUG__SAFE
-        if ( !m )
-        {
-            PRINTERR( "unmark_all: null manager" );
-            return;
-        }
+    if ( !m )
+    {
+        PRINTERR( "unmark_all: null manager" );
+        return;
+    }
     #endif
 
     p2_collection__do_for_all( m->objects_obj, ( void_f ) unmark );
@@ -229,11 +222,11 @@ static void unmark_all( p2_memory_manager *m )
 static void sweep( p2_memory_manager *m )
 {
     #ifdef DEBUG__SAFE
-        if ( !m )
-        {
-            PRINTERR( "sweep: null manager" );
-            return;
-        }
+    if ( !m )
+    {
+        PRINTERR( "sweep: null manager" );
+        return;
+    }
     #endif
 
     p2_collection__exclude_if( m->objects_obj, ( criterion ) unmark_for_sweep );
@@ -245,143 +238,70 @@ static void sweep( p2_memory_manager *m )
 /* Tracing / graph traversal **************************************************/
 
 
-/* Needed by trace_through_assoc_edge */
-static void *trace( p2_object *o );
-
-
-static void *trace_through_assoc_edge( p2_object *pred, p2_object *obj )
+static p2_action * dist_p_exec( p2_object *o, p2_procedure *p )
 {
-    #if TRIPLES__IMPLICATION__SP_O
+    /* If the object is already marked, abort. */
+    if ( o->flags & OBJECT__MARKED )
+    {
+        return ( p2_action* ) 1;
+    }
 
-        ... not yet written ...
-
-    #else
-
-        #if TRIPLES__IMPLICATION__S_P
-            if ( !trace( pred ) )
-                return 0;
-        #endif
-
-        #if TRIPLES__IMPLICATION__S_O
-            if ( !trace( obj ) )
-                return 0;
-        #endif
-
-    #endif
-
-    /* Obligatory non-zero return value. */
-    return pred;
-}
-
-
-static void *trace( p2_object *o )
-{
-    #ifdef DEBUG__SAFE
-        if ( !o )
-        {
-            PRINTERR( "trace: null object" );
-            return 0;
-        }
-    #endif
-printf( "---m trace 0x%X (0x%X)---\n", ( int ) o, ( int ) o->value ); fflush( stdout );
-
-    /* If the object is not already marked... */
-    if ( !( o->flags & OBJECT__MARKED ) )
+    else
     {
         /* Mark the object. */
         o->flags = o->flags | OBJECT__MARKED;
 
-        /* Apply the target function (if any). */
-        if ( global_f && !global_f( o ) )
-            return 0;
-
-/**/
-if ( o->flags & OBJECT__IS_OBJ_COLL )
-    printf( "---m trace (found collection: 0x%X)---\n", ( int ) o );
-/**/
-        /* If it's a collection of objects, mark its descendants. */
-
-/* 'trace' needs to be made into an actual criterion before this is safe... */
-if ( o->flags & OBJECT__IS_OBJ_COLL )
-    p2_collection__for_all( o, ( criterion ) trace );
-
-/*
-        if ( ( o->flags & OBJECT__IS_OBJ_COLL )
-          && !p2_object__for_all( o, (void*(*)(void*)) trace ) )
-          && !p2_object__for_all( o, (void*(*)(void*)) trace ) )
-                return 0;
-*/
-
-        #if TRIPLES__GLOBAL
-
-            #if TRIPLES__GLOBAL__OUT_EDGES
-
-                if ( o->outbound_edges
-                  && !p2_hash_table__for_all(
-                        o->outbound_edges,
-                        (void*(*)(void*, void*)) trace_through_assoc_edge ) )
-                    return 0;
-
-            #endif
-
-        #endif
+        /* Execute the procedure. */
+        return p2_procedure__execute( p, o );
     }
-
-    /* Perfunctory non-zero return value. */
-    return o;
 }
 
 
-void *p2_memory_manager__for_all_reachable(
-    p2_memory_manager *m, void *(*f)(p2_object*) )
+void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p )
 {
-    #ifdef DEBUG__SAFE
-        if ( !m )
-        {
-            PRINTERR( "p2_memory_manager__for_all_reachable: null manager" );
-            return 0;
-        }
-    #endif
+    p2_procedure dist_p;
+
+    dist_p.execute = ( procedure ) dist_p_exec;
+    dist_p.state = p;
 
     if ( !m->clean )
         unmark_all( m );
 
     m->clean = 0;
 
-    global_f = f;
-    return trace( m->root );
+    p2_object__trace( m->root, &dist_p );
+
+    /* Might as well sweep. */
+    sweep( m );
 }
 
 
 /* Mark-and-sweep garbage collection ******************************************/
 
 
+static p2_action * noop( void *x, void *state )
+{
+    return 0;
+}
+
+
 void p2_memory_manager__mark_and_sweep( p2_memory_manager *m )
 {
+    p2_procedure noop_p;
+
     #ifdef DEBUG__SAFE
-        if ( !m )
-        {
-            PRINTERR( "p2_memory_manager__mark_and_sweep: null manager" );
-            return;
-        }
+    if ( !m )
+    {
+        PRINTERR( "p2_memory_manager__mark_and_sweep: null manager" );
+        return;
+    }
     #endif
 printf( "---m ms 1---\n" ); fflush( stdout );
+    noop_p.execute = ( procedure ) noop;
 
-    if ( !m->clean )
-        unmark_all( m );
+    /* Mark all reachable objects. */
+    p2_memory_manager__distribute( m, &noop_p );
 printf( "---m ms 2---\n" ); fflush( stdout );
-
-    m->clean = 0;
-
-    /* Mark. */
-    global_f = 0;
-    trace( m->root );
-printf( "---m ms 3---\n" ); fflush( stdout );
-
-    /* Sweep. */
-    sweep( m );
-printf( "---m ms 4---\n" ); fflush( stdout );
-
 }
 
 

@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_type.h"
 
 #ifdef TRIPLES__GLOBAL
-    #include "util/p2_hash_table.h"
+#include "util/p2_lookup_table.h"
 #endif
 
 
@@ -58,21 +58,21 @@ typedef struct _p2_object
     int flags;
 
     #if TRIPLES__GLOBAL__IN_EDGES
-        /** Associative edges pointing towards the atom.
-            For example, (x, y, Z). */
-        p2_hash_table *inbound_edges;
+    /** Associative edges pointing towards the atom.
+        For example, (x, y) from (x, y, Z). */
+    p2_hash_table *inbound_edges;
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
-        /** Associative edges pointing away from the atom.
-            For example, (X, y, z). */
-        p2_hash_table *outbound_edges;
+    /** Associative edges pointing away from the atom.
+        For example, (y, z) from (X, y, z). */
+    p2_hash_table *outbound_edges;
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
-        /** Associative edges pointing "through" the atom.
-            For example, (x, Y, z). */
-        p2_hash_table *trans_edges;
+    /** Associative edges pointing "through" the atom.
+        For example, (x, z) from (x, Y, z). */
+    p2_hash_table *trans_edges;
     #endif
 
 } p2_object;
@@ -83,34 +83,28 @@ typedef struct _p2_object
 /** Constructor.
     \param type  the new object's data type
     \param value  the new object's data.  The object assumes ownership of this
-    data, and will deallocate it on deletion as per its data type */
+    data, and will deallocate it on deletion as per its data type. */
 p2_object *p2_object__new( p2_type *type, void *value, int flags );
 
 /** Destructor. */
 void p2_object__delete( p2_object *o );
 
 
-/* Member functions ***********************************************************/
+/* Graph traversal ************************************************************/
 
-/** Copy constructor. */
-p2_object *p2_object__clone( p2_object *o );
-
-/** Deserializes an object from a string. */
-p2_object *p2_object__decode( p2_type *type, char *buffer );
-
-/** Serializes an object to a string. */
-void p2_object__encode( p2_object *o, char *buffer );
+/* A recursive distributor. */
+void p2_object__trace( p2_object *o, p2_procedure *p );
 
 
 /* Association ****************************************************************/
 
 #if TRIPLES__GLOBAL
 
-    p2_object *p2_object__multiply
-        ( p2_object *subj, p2_object *pred );
+p2_object *p2_object__multiply
+    ( p2_object *subj, p2_object *pred );
 
-    p2_object *p2_object__associate
-        ( p2_object *subj, p2_object *pred, p2_object *obj );
+p2_object *p2_object__associate
+    ( p2_object *subj, p2_object *pred, p2_object *obj );
 
 #endif
 

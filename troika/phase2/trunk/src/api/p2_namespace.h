@@ -62,7 +62,11 @@ void p2_namespace__delete( p2_namespace *ns );
     \param name  the local part of the name to assign
     \param o  the object to add
     \return  the object displaced by the new */
-p2_object *p2_namespace__add( p2_namespace__object *ns_obj, p2_name *name, p2_object *o );
+p2_object *p2_namespace__add
+    ( p2_namespace__object *ns_obj, p2_name *name, p2_object *o );
+
+p2_object *p2_namespace__add_simple
+    ( p2_namespace__object *ns_obj, char *name, p2_object *o );
 
 /** Finds an object in a namespace.
     \param ns  the target namespace
