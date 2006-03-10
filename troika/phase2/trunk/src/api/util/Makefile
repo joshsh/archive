@@ -2,7 +2,12 @@
 ## Compile utilities and/or run a test program under Valgrind (memcheck).
 
 CC       = gcc
-CFLAGS   = -g -Wall --ansi -D_GNU_SOURCE
+
+CFLAGS   = --ansi -pedantic \
+	-W -Wall -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
+	-fshort-enums -fno-common \
+	-g # -D_GNU_SOURCE
+
 VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
 
@@ -35,3 +40,4 @@ p2_%.o :  p2_%.c p2_%.h ../p2_flags.h
 
 p2_collection.o : ../p2_collection.c ../p2_collection.h ../p2_flags.h
 	$(CC) $(CFLAGS) -c ../p2_collection.c
+

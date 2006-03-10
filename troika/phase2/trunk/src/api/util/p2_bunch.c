@@ -120,7 +120,7 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
 }
 
 
-static p2_action * block__delete__proc( block **block_p, void *state )
+static p2_action * block__delete__proc( block **block_p, void *ignored )
 {
     block__delete( *block_p );
     return 0;
@@ -166,7 +166,7 @@ void *p2_bunch__add(p2_bunch *b, void *p)
 
 void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
 {
-    int i, size;
+    unsigned int i, size;
     block *last_block = dest->last_block;
 
     /* Remove the tail-end block if it is only partially filled. */
@@ -188,8 +188,8 @@ void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
     dest->last_block = (block *) p2_array__get(dest->blocks, dest->blocks->size - 1);
 
     /* Add all items from the previous tail-end block (if any). */
-    for (i = 0; i < last_block->filled; i++)
-        p2_bunch__add(dest, last_block->buffer[i]);
+    for ( i = 0; i < last_block->filled; i++ )
+        p2_bunch__add( dest, last_block->buffer[i] );
     free(last_block);
 }
 
@@ -220,7 +220,7 @@ void *p2_bunch__remove(p2_bunch *b)
 
 void p2_bunch__distribute( p2_bunch *b, p2_procedure *p )
 {
-    int i, j, numblocks = b->blocks->size;
+    unsigned int i, j, numblocks = b->blocks->size;
     block *bl;
     p2_action *action;
 

@@ -7,9 +7,9 @@
 NAME     = p2_parser
 UTILS    = ../util
 
-CFLAGS   = -Wall -Werror \
-           --ansi \
-           -g # temporary...      -Wstrict-prototypes -Wmissing-prototypes
+CFLAGS   = -Wall \
+           --ansi -pedantic \
+           -g # temporary...     -Werror -Wstrict-prototypes -Wmissing-prototypes
 
 CC       = gcc
 

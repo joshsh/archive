@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** \return the least prime > 2 and >= i. */
 static unsigned int next_prime( unsigned int i )
 {
-    int j;
+    unsigned int j;
 
     if ( i <= 3 )
         return 3;
@@ -60,12 +60,14 @@ static unsigned int next_prime( unsigned int i )
 static p2_hash_table *expand( p2_hash_table *h )
 {
     void **src, **dest, **buffer, **sup;
+    int buffer_size;
+
+    buffer_size = next_prime(
+        ( unsigned int ) ( h->buffer_size * h->expansion ) );
+
 printf( "h->buffer_size = %i\n", h->buffer_size ); fflush( stdout );
 printf( "h->size = %i\n", h->size ); fflush( stdout );
 printf( "h->capacity = %i\n", h->capacity ); fflush( stdout );
-
-    int buffer_size = next_prime(
-        ( unsigned int ) ( h->buffer_size * h->expansion ) );
 printf( "buffer_size = %i\n", buffer_size ); fflush( stdout );
 
     if ( !( buffer = buffer_new( buffer_size ) ) )
@@ -112,7 +114,7 @@ p2_hash_table *p2_hash_table__new(
     hash_f hash,
     comparator compare )
 {
-    int i;
+    unsigned int i;
 
     p2_hash_table *h;
 

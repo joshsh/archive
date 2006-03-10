@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 void p2_primitive__delete( p2_primitive *prim )
 {
-    int i;
+    unsigned int i;
 
     #if DEBUG__SAFE
     if ( !prim )

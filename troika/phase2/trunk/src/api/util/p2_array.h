@@ -76,10 +76,10 @@ void p2_array__delete( p2_array *a );
 /* Random access **************************************************************/
 
 /** Gets the array item at a given index. */
-void *p2_array__get( p2_array *a, int index );
+void *p2_array__get( p2_array *a, int i );
 
 /** Sets the array item at a given index. */
-void *p2_array__set( p2_array *a, int index, void *p );
+void *p2_array__set( p2_array *a, int i, void *p );
 
 
 /* Stack and queue operations *************************************************/
@@ -105,21 +105,21 @@ void *p2_array__dequeue( p2_array *a );
 
 /** Insert an item before the given index.
     \warning O(n) memory copying overhead */
-void *p2_array__insert_before( p2_array *a, int index, void *p );
+void *p2_array__insert_before( p2_array *a, int i, void *p );
 
 /** Insert an item after the given index.
     \warning O(n) memory copying overhead */
-void *p2_array__insert_after( p2_array *a, int index, void *p );
+void *p2_array__insert_after( p2_array *a, int i, void *p );
 
 /** Remove the item at the given index.
     \warning O(n) memory copying overhead */
-void *p2_array__remove( p2_array *a, int index );
+void *p2_array__remove( p2_array *a, int i );
 
 /** Removes an array item and replaces it with the last item in the array,
     with no memory copying overhead.
     \warning only use this function if the order of the array elements is not
     important. */
-void *p2_array__simple_remove( p2_array *a, int index );
+void *p2_array__simple_remove( p2_array *a, int i );
 
 
 /* Array sorting **************************************************************/

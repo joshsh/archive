@@ -125,7 +125,7 @@ static p2_term *S_reduce( p2_term *term )
    checking and garbage collection of arguments. */
 static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 {
-    int i;
+    unsigned int i;
     p2_object *o;
     void *result, **args, **cur = term->head + 2;
     p2_primitive *prim = ( p2_primitive* ) ( ( p2_object* ) *cur )->value;

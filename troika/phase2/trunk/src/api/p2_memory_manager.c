@@ -279,7 +279,7 @@ void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p )
 /* Mark-and-sweep garbage collection ******************************************/
 
 
-static p2_action * noop( void *x, void *state )
+static p2_action * noop( void *ignored1, void *ignored2 )
 {
     return 0;
 }

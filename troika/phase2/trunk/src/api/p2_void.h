@@ -33,15 +33,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef P2_VOID_H
 #define P2_VOID_H
 
+#include "p2.h"
+
 
 /** A p2_void item is a pointer to an out-of-range memory location, which serves
     as a unique identifier for the item but does not contain any meaningful
     data. */
-typedef void p2_void;
+typedef unsigned int p2_void;
 
 
 /** The constructor merely returns an unused out-of-range address. */
-p2_void *p2_void__new(char *dataset_id, char *local_id);
+p2_void *p2_void__new();
 
 
 #endif  /* P2_VOID_H */

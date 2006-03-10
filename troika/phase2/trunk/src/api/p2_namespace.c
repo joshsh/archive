@@ -131,7 +131,7 @@ p2_object *p2_namespace__add
 
 
 p2_object *p2_namespace__add_simple
-    ( p2_namespace__object *ns_obj, char *name, p2_object *o )
+    ( p2_namespace__object *ns_obj, const char *name, p2_object *o )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
@@ -209,7 +209,7 @@ printf( "p2_namespace__lookup: p2_array__peek( name ) = 0x%X\n", ( int ) p2_arra
 
 
 p2_object *p2_namespace__lookup_simple(
-    p2_namespace__object *ns_obj, const char *s )
+    p2_namespace__object *ns_obj, const char *name )
 {
     #if DEBUG__SAFE
     if ( !ns_obj )
@@ -219,11 +219,11 @@ p2_object *p2_namespace__lookup_simple(
     }
     #endif
 
-    if ( !s )
+    if ( !name )
         return ns_obj;
     else
         return ( p2_object* ) p2_dictionary__lookup(
-            ( ( p2_namespace* ) ns_obj->value )->children, s );
+            ( ( p2_namespace* ) ns_obj->value )->children, name );
 }
 
 

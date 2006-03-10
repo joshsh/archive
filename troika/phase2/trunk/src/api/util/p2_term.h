@@ -49,11 +49,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../p2_type.h"
 
 
-/** By default, the size of a term's buffer will be multiplied by this factor
-    when the term outgrows it. */
-#define TERM__DEFAULT_EXPANSION    2.0
-
-
 /** \brief A data structure to represent and manipulate nested sequences.
     The implementation is not recursive.
 
@@ -73,11 +68,21 @@ typedef struct _p2_term
         It always contains an unsigned int value indicating the overall size of
         the p2_term. */
     void **head;
+
+    /** The buffer expands by this factor whenever it becomes full. */
+    unsigned int expansion;
+
 } p2_term;
 
 
+
+/** Defines a new expansion factor for terms. When the term outgrows its buffer,
+    the new buffer will be this much larger. */
+void p2_term__set_expansion( p2_term *t, unsigned int expansion );
+
+
 /** \note Needed by sk.c. */
-p2_term *p2_term__expand(p2_term *t, unsigned int minimum_buffer_size);
+p2_term *p2_term__expand( p2_term *t, unsigned int minimum_buffer_size );
 
 
 /* Constructors and destructor ************************************************/
@@ -85,13 +90,13 @@ p2_term *p2_term__expand(p2_term *t, unsigned int minimum_buffer_size);
 /** Creates a new p2_term containing a single atom.
     \note  The term does not own its atoms, which will suffer no ill effects
     when the term is deleted. */
-p2_term *p2_term__new(void *p, unsigned int initial_buffer_size);
+p2_term *p2_term__new( void *p, unsigned int initial_buffer_size );
 
 /** Copy constructor. */
-p2_term *p2_term__copy(p2_term *t);
+p2_term *p2_term__copy( p2_term *t );
 
 /** Destructor. */
-void p2_term__delete(p2_term *t);
+void p2_term__delete( p2_term *t );
 
 
 /* Accessors ******************************************************************/
@@ -101,16 +106,12 @@ void p2_term__delete(p2_term *t);
     the term (that's in p2_term->head) or its physical size in memory
     (*(p2_term->head) * sizeof(void *)).
     \warning  O(n) time overhead to count n sub-terms. */
-unsigned int p2_term__length(p2_term *t);
+unsigned int p2_term__length( p2_term *t );
 
 /** \return  a new p2_term representing the subterm at a given index */
 /** \warning  For the sake of efficiency, there is no error checking.  Make sure
     your index is in range by first calling p2_term__length. */
-p2_term *p2_term__subterm_at(p2_term *t, int index);
-
-/** Defines a new expansion factor for terms. When the term outgrows its buffer,
-    the new buffer will be this much larger. */
-void p2_term__set_expansion_factor(float expansion_factor);
+p2_term *p2_term__subterm_at( p2_term *t, int i );
 
 
 /* Normalizing functions ******************************************************/
@@ -119,19 +120,19 @@ void p2_term__set_expansion_factor(float expansion_factor);
 /* Merge functions ************************************************************/
 
 /** ((A1 ... Am) (B1 ... Bn))    simple merge */
-p2_term *p2_term__merge(p2_term *t1, p2_term *t2);
+p2_term *p2_term__merge( p2_term *t1, p2_term *t2 );
 
 /** (A1 ... Am (B1 ... Bn))      left-associative merge */
-p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2);
+p2_term *p2_term__merge_la( p2_term *t1, p2_term *t2 );
 
 /** ((A1 ... Am) B1 ... Bn)      right-associative merge */
-p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2);
+p2_term *p2_term__merge_ra( p2_term *t1, p2_term *t2 );
 
 /** (A1 ... Am B1 ... Bn)        concatenation */
-p2_term *p2_term__cat(p2_term *t1, p2_term *t2);
+p2_term *p2_term__cat( p2_term *t1, p2_term *t2 );
 
 
-/* Logical set functions and item substitution ********************************/
+/* Distributor ****************************************************************/
 
 void p2_term__distribute( p2_term *t, p2_procedure *p );
 

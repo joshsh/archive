@@ -53,7 +53,7 @@ static dictionary_entry *dictionary__entry__new( const char *key, void *target )
 
 
 static p2_action * dictionary_entry__delete
-    ( dictionary_entry *entry, void *state )
+    ( dictionary_entry *entry, void *ignored )
 {
     free( entry->key );
     free( entry );
@@ -134,8 +134,11 @@ void *p2_dictionary__add
 void *p2_dictionary__lookup
     ( p2_dictionary *dict, const char *key )
 {
-    dictionary_entry match_entry = { key, 0 };
-    dictionary_entry *entry = p2_hash_table__lookup( dict, &match_entry );
+    dictionary_entry *entry;
+    dictionary_entry match_entry;
+
+    match_entry.key = key;
+    entry = p2_hash_table__lookup( dict, &match_entry );
 
     return ( entry ) ? entry->target : 0;
 }
@@ -145,9 +148,12 @@ void *p2_dictionary__remove
     ( p2_dictionary *dict, const char *key )
 {
     void *r = 0;
-    const dictionary_entry match_entry = { key, 0 };
+    dictionary_entry *entry;
+    dictionary_entry match_entry;
 
-    dictionary_entry *entry = ( dictionary_entry* )
+    match_entry.key = key;
+
+    entry = ( dictionary_entry* )
         p2_hash_table__remove( dict, &match_entry );
 
     if ( entry )
@@ -174,7 +180,9 @@ static p2_action * apply_to_target
 
 void p2_dictionary__distribute( p2_dictionary *dict, p2_procedure *p )
 {
-    p2_procedure p_alt = { ( procedure ) apply_to_target, p };
+    p2_procedure p_alt;
+    p_alt.execute = ( procedure ) apply_to_target;
+    p_alt.state = p;
 
     p2_hash_table__distribute( dict, &p_alt );
 }
@@ -197,7 +205,9 @@ p2_array *p2_dictionary__keys( p2_dictionary *dict )
     p2_array *a = p2_array__new( dict->size, 0 );
 
     /* Fill the array with key values. */
-    p2_procedure p = { ( procedure ) add_to_array, a };
+    p2_procedure p;
+    p.execute = ( procedure ) add_to_array;
+    p.state = a;
     p2_hash_table__distribute( dict, &p );
 
     /* Alphabetize the array. */

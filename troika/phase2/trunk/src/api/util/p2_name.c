@@ -28,7 +28,7 @@ p2_name *p2_name__new()
 }
 
 
-static p2_action * delete_string( char *s, void *state )
+static p2_action * delete_string( char *s, void *ignored )
 {
 printf( "---name ds 1---\n" ); fflush( stdout );
 

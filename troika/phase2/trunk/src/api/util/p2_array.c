@@ -144,10 +144,10 @@ static p2_array *sizeup( p2_array *a )
 /* Random access **************************************************************/
 
 
-void *p2_array__get( p2_array *a, int index )
+void *p2_array__get( p2_array *a, int i )
 {
-    if ( inbounds( a, index ) )
-        return elmt( a, index );
+    if ( inbounds( a, i ) )
+        return elmt( a, i );
 
     else
     {
@@ -157,13 +157,13 @@ void *p2_array__get( p2_array *a, int index )
 }
 
 
-void *p2_array__set( p2_array *a, int index, void *p )
+void *p2_array__set( p2_array *a, int i, void *p )
 {
     void **addr, *displaced;
 
-    if ( inbounds( a, index ) )
+    if ( inbounds( a, i ) )
     {
-        addr = &elmt( a, index );
+        addr = &elmt( a, i );
         displaced = *addr;
         *addr = p;
         return displaced;
@@ -264,19 +264,19 @@ void *p2_array__dequeue( p2_array *a )
 /* Random insertion and removal ***********************************************/
 
 
-void *p2_array__insert_before( p2_array *a, int index, void *p )
+void *p2_array__insert_before( p2_array *a, int i, void *p )
 {
-    int i;
+    int j;
 
-    if ( inbounds( a, index ) )
+    if ( inbounds( a, i ) )
     {
         if ( !sizeup( a ) )
             return 0;
 
-        for ( i = a->size; i > index; i-- )
-            elmt( a, i ) = elmt( a, i - 1 );
+        for ( j = a->size; j > i; j-- )
+            elmt( a, j ) = elmt( a, j - 1 );
 
-        elmt( a, index ) = p;
+        elmt( a, i ) = p;
         a->size++;
 
         return p;
@@ -290,19 +290,19 @@ void *p2_array__insert_before( p2_array *a, int index, void *p )
 }
 
 
-void *p2_array__insert_after( p2_array *a, int index, void *p )
+void *p2_array__insert_after( p2_array *a, int i, void *p )
 {
-    int i;
+    int j;
 
-    if ( inbounds( a, index ) )
+    if ( inbounds( a, i ) )
     {
         if ( !sizeup( a ) )
             return 0;
 
-        for ( i = a->size; i > (index + 1); i-- )
-            elmt( a, i ) = elmt( a, i - 1 );
+        for ( j = a->size; j > ( i + 1 ); j-- )
+            elmt( a, j ) = elmt( a, j - 1 );
 
-        elmt( a, index + 1 ) = p;
+        elmt( a, i + 1 ) = p;
         a->size++;
 
         return p;
@@ -316,17 +316,17 @@ void *p2_array__insert_after( p2_array *a, int index, void *p )
 }
 
 
-void *p2_array__remove( p2_array *a, int index )
+void *p2_array__remove( p2_array *a, int i )
 {
-    int i;
+    int j;
     void *displaced;
 
-    if ( inbounds( a, index ) )
+    if ( inbounds( a, i ) )
     {
-        displaced = elmt( a, index );
+        displaced = elmt( a, i );
 
-        for ( i = index; i < ( a->size - 1 ); i++ )
-            elmt( a, i ) = elmt( a, i + 1 );
+        for ( j = i; j < ( a->size - 1 ); j++ )
+            elmt( a, j ) = elmt( a, j + 1 );
 
         a->size--;
 
@@ -341,13 +341,13 @@ void *p2_array__remove( p2_array *a, int index )
 }
 
 
-void *p2_array__simple_remove( p2_array *a, int index )
+void *p2_array__simple_remove( p2_array *a, int i )
 {
     void **addr, *displaced;
 
-    if ( inbounds( a, index ) )
+    if ( inbounds( a, i ) )
     {
-        addr = &elmt( a, index );
+        addr = &elmt( a, i );
         displaced = *addr;
         a->size--;
         *addr = elmt( a, a->size );

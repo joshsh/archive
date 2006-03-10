@@ -71,7 +71,7 @@ typedef struct _p2_primitive
     void *( *cstub )( void ** );
 
     /** The number of formal parameters. */
-    int arity;
+    unsigned int arity;
 
     /** The formal parameters. */
     p2_parameter *parameters;

@@ -28,7 +28,7 @@ typedef struct _graph_edge
 } graph_edge;
 
 
-static p2_action * graph_edge__delete( graph_edge *edge, void *state )
+static p2_action * graph_edge__delete( graph_edge *edge, void *ignored )
 {
     free( edge );
     return 0;
@@ -93,8 +93,11 @@ void p2_graph__disconnect
     ( p2_graph *g, void * const src, void * const dest )
 {
     graph_edge *edge_old;
+    graph_edge edge_cmp;
+    edge_cmp.src = src;
+    edge_cmp.dest = dest;
 
-    if ( ( edge_old = ( graph_edge* ) p2_hash_table__remove( g, src ) ) )
+    if ( ( edge_old = ( graph_edge* ) p2_hash_table__remove( g, &edge_cmp ) ) )
         free( edge_old );
 }
 

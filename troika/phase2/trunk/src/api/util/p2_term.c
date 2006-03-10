@@ -26,11 +26,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /*******************************************************************************/
 
 
-/* Global array expansion factor, with a default value. */
-static float expansion_factor = TERM__DEFAULT_EXPANSION;
+#ifndef TERM__DEFAULT_EXPANSION
+/** By default, the size of a term's buffer will be multiplied by this factor
+    when the term outgrows it. */
+#define TERM__DEFAULT_EXPANSION 2
+#endif
+
 
 /* Copy the term to a larger buffer. */
-p2_term *p2_term__expand(p2_term *t, unsigned int minimum_buffer_size)
+p2_term *p2_term__expand( p2_term *t, unsigned int minimum_buffer_size )
 {
     void **new_buffer, **new_head;
     unsigned int size, new_buffer_size;
@@ -38,7 +42,7 @@ p2_term *p2_term__expand(p2_term *t, unsigned int minimum_buffer_size)
     /* Ordinarily, the new buffer size will be the old buffer size times the
        p2_term expansion factor. */
     new_buffer_size = (unsigned int)
-        (t->buffer_size * expansion_factor);
+        (t->buffer_size * t->expansion);
 
     /* If the new buffer size is not large enough, use the given minimum
        buffer size instead. */
@@ -83,6 +87,9 @@ p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
     /* Set the head of the p2_term and store its size there. */
     t->head--;
     *(t->head) = (void *) 2;
+
+    /* Expansion factor starts at the default value. */
+    t->expansion = TERM__DEFAULT_EXPANSION;
 
     #if DEBUG__TERM
     printf( "[%X] p2_term__new(%X, %i)\n", ( int ) t, ( int ) p, initial_buffer_size );
@@ -164,7 +171,7 @@ unsigned int p2_term__length(p2_term *t)
 }
 
 
-p2_term *p2_term__subterm_at(p2_term *t, int index)
+p2_term *p2_term__subterm_at(p2_term *t, int i)
 {
     p2_term *subterm;
     void **cur = t->head;
@@ -176,10 +183,10 @@ p2_term *p2_term__subterm_at(p2_term *t, int index)
     {
         cur++;
 
-        while (index)
+        while (i)
         {
             cur += (unsigned int) *cur;
-            index--;
+            i--;
         }
     }
 
@@ -194,11 +201,11 @@ p2_term *p2_term__subterm_at(p2_term *t, int index)
 }
 
 
-void p2_term__set_expansion_factor(float expansion_factor)
+void p2_term__set_expansion( p2_term *t, unsigned int expansion )
 {
     /* Override the default array expansion factor. */
-    if (expansion_factor > 1)
-        expansion_factor = expansion_factor;
+    if (expansion > 1)
+        t->expansion = expansion;
 }
 
 

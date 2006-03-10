@@ -20,7 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_lookup_table.h"
 
 
-static p2_action * p2_lookup_table__entry__delete( p2_lookup_table__entry *entry, void *state )
+static p2_action * p2_lookup_table__entry__delete( p2_lookup_table__entry *entry, void *ignored )
 {
     free( entry );
     return 0;
@@ -84,7 +84,8 @@ void p2_lookup_table__add
 void *p2_lookup_table__lookup( p2_lookup_table *t, void * const key )
 {
     p2_lookup_table__entry *entry;
-    p2_lookup_table__entry match_entry = { key, 0 };
+    p2_lookup_table__entry match_entry;
+    match_entry.key = key;
 
     if ( !( entry = p2_hash_table__lookup( t, &match_entry ) ) )
         return 0;
@@ -98,7 +99,8 @@ void p2_lookup_table__remove
     ( p2_lookup_table *t, void * const key )
 {
     p2_lookup_table__entry *entry_old;
-    p2_lookup_table__entry match_entry = { key, 0 };
+    p2_lookup_table__entry match_entry;
+    match_entry.key = key;
 
     if ( ( entry_old = ( p2_lookup_table__entry* ) p2_hash_table__remove( t, &match_entry ) ) )
         free( entry_old );

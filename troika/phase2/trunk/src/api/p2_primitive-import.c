@@ -91,7 +91,7 @@ p2_primitive *p2_primitive__add_param(
     char *name,
     int transparent )
 {
-    int i;
+    unsigned int i;
     p2_parameter param;
 
     #if DEBUG__SAFE
