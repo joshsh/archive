@@ -67,7 +67,7 @@ static p2_term *K_reduce( p2_term *term )
        --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ... */
 static p2_term *S_reduce( p2_term *term )
 {
-    void **x, **y, **z;
+    void **x, **y, **z, **aux;
     unsigned int x_size, y_size, z_size, newsize;
 
     /* Locate the head of 'x', 'y' and 'z'. */
@@ -95,7 +95,7 @@ static p2_term *S_reduce( p2_term *term )
     }
 
     /* Copy 'x' to an auxiliary array. */
-    void **aux = ( void ** ) malloc( x_size * sizeof( void* ) );
+    aux = ( void ** ) malloc( x_size * sizeof( void* ) );
     memcpy( aux, x, x_size * sizeof( void* ) );
 
     /* Prepend a term head for the new sub-term 'yz'.  The data of 'y' and 'z'
@@ -344,19 +344,19 @@ p2_term *SK_reduce(
         {
             #if SK__ALLOW_NONREDUX
 
-                /* Simply return the term as-is, without attempting to reduce it
-                   further. */
-                return term;
+            /* Simply return the term as-is, without attempting to reduce it
+               further. */
+            return term;
 
             #else
 
-                ERROR( "SK_reduce: non-redex objects not permitted at the head of a term" );
+            ERROR( "SK_reduce: non-redex objects not permitted at the head of a term" );
 
-                /* Garbage-collect whatever is left of the term. */
-                p2_term__delete( term );
+            /* Garbage-collect whatever is left of the term. */
+            p2_term__delete( term );
 
-                /* Fail. */
-                return 0;
+            /* Fail. */
+            return 0;
 
             #endif
         }
@@ -369,8 +369,7 @@ p2_term *SK_reduce(
             return 0;
         }
         #endif
-
-    };
+    }
 }
 
 

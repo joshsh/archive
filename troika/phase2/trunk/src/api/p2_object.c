@@ -22,6 +22,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 p2_object *p2_object__new( p2_type *type, void *value, int flags )
 {
+    p2_object *o;
+
     #if DEBUG__SAFE
     if ( !type || !value)
     {
@@ -30,7 +32,7 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     }
     #endif
 
-    p2_object *o = new( p2_object );
+    o = new( p2_object );
 
     if ( !o )
         return 0;
@@ -184,6 +186,10 @@ static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
 
 void p2_object__trace( p2_object *o, p2_procedure *p )
 {
+    trace_proc_st state;
+    p2_procedure trace_proc;
+    p2_procedure edge_p;
+
     #if DEBUG__SAFE
     if ( !o )
     {
@@ -191,10 +197,6 @@ void p2_object__trace( p2_object *o, p2_procedure *p )
         return;
     }
     #endif
-
-    trace_proc_st state;
-    p2_procedure trace_proc;
-    p2_procedure edge_p;
 
     edge_p.execute = ( procedure ) apply_to_assoc_edge;
     edge_p.state = &trace_proc;

@@ -64,11 +64,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_ast.h"
 #include "p2_parser.h"
 
-#include "../util/p2_term.h"
+#include <util/p2_term.h>
 
-#include <stdio.h>  /* printf, sprintf */
 #include <string.h>  /* strcpy */
-#include <stdlib.h>  /* malloc */
 
 /* Avoid C99 warning: implicit declaration of function ‘yylex’ */
 int yylex( void );

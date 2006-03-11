@@ -372,10 +372,10 @@ printf( "---c gc 1---\n" ); fflush( stdout );
     size_after = p2_memory_manager__size( m );
 printf( "---c gc 2---\n" ); fflush( stdout );
 
-    printf( "Collected %i of %i objects (%i%%).",
+    printf( "Collected %i of %i objects (%.3g%%).",
         size_before - size_after,
         size_before,
-        ( ( size_before - size_after ) * 100 ) / size_before );
+        ( ( size_before - size_after ) * 100 ) / ( double ) size_before );
 }
 
 

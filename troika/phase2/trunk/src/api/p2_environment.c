@@ -298,7 +298,7 @@ p2_type *p2_environment__resolve_type(
     {
         ERROR( "p2_environment__resolve_type: type mismatch" );
 printf( "    type = '%s' (%i) rather than '%s' (%i)\n",
-    o->type->name, (int) o->type, env->ns_t->name, (int) env->ns_t );
+o->type->name, (int) o->type, env->ns_t->name, (int) env->ns_t );
         return 0;
     }
     #endif

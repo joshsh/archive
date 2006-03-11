@@ -28,7 +28,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef P2_PARSER_H
 #define P2_PARSER_H
 
-#include "../p2.h"
+#include <p2.h>
+
 
 typedef enum _p2_parser__exit_state
 {

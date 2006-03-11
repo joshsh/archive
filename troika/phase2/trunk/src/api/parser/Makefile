@@ -6,12 +6,9 @@
 
 NAME     = p2_parser
 UTILS    = ../util
+INCLUDE  = -I../
 
-CFLAGS   = -Wall \
-           --ansi -pedantic \
-           -g # temporary...     -Werror -Wstrict-prototypes -Wmissing-prototypes
-
-CC       = gcc
+CC       = gcc $(CFLAGS) $(INCLUDE)
 
 LEX      = flex --header=foo.h \
            -p  # Get comments regarding features that lead to performance losses.
@@ -45,7 +42,7 @@ valgrind-session :  $(DEBUGGER)
 
 
 debugger :  objects debugger.c p2_array.o p2_term.o p2_type.o p2_parser.h p2_name.o ../flags.h
-	$(CC) $(CFLAGS) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o p2_type.o
+	$(CC) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o p2_type.o
 
 
 ################################################################################
@@ -55,11 +52,11 @@ objects: lex.yy.o $(NAME).tab.o p2_ast.o ##$(NAME)-aux.o
 
 
 lex.yy.o : lex.yy.c $(NAME).tab.h
-	$(CC) $(CFLAGS) -D_POSIX_SOURCE -c lex.yy.c
+	$(CC) -D_POSIX_SOURCE -c lex.yy.c
 
 
 $(NAME).tab.o : $(NAME).tab.c
-	$(CC) $(CFLAGS) -c $(NAME).tab.c
+	$(CC) -c $(NAME).tab.c
 
 
 lex.yy.c : $(NAME).l p2_parser.h ../flags.h
@@ -77,19 +74,19 @@ $(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../flags.h
 
 
 p2_ast.o : p2_ast.c ../flags.h
-	$(CC) $(CFLAGS) -c p2_ast.c
+	$(CC) -c p2_ast.c
 
 p2_type.o : ../p2_type.c ../flags.h
-	$(CC) $(CFLAGS) -c ../p2_type.c
+	$(CC) -c ../p2_type.c
 
 p2_name.o : $(UTILS)/p2_name.c ../flags.h
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_name.c
+	$(CC) -c $(UTILS)/p2_name.c
 
 
 p2_array.o : $(UTILS)/p2_array.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_array.c -o p2_array.o
+	$(CC) -c $(UTILS)/p2_array.c -o p2_array.o
 
 
 p2_term.o : $(UTILS)/p2_term.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_term.c -o p2_term.o
+	$(CC) -c $(UTILS)/p2_term.c -o p2_term.o
 

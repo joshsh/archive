@@ -60,9 +60,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /*#include "foo.h"*/
 
-#include <stdio.h>
-#include <stdlib.h>
-
 /** Added to each row of input (if defined). */
 #define INPUT_PREFIX  ">>  "
 

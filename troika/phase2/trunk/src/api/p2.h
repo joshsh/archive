@@ -32,6 +32,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "flags.h"
 
 
+#include <stdlib.h>  /* malloc */
+#include <string.h>  /* strlen, strcpy */
+
+#define STRDUP( x )  strcpy( ( char* ) malloc( 1 + strlen( x ) ), x )
+#define new( type )  ( type* ) malloc( sizeof( type ) )
+
+
+/******************************************************************************/
+
+
 typedef enum _boolean
 {
     boolean__false = 0,
@@ -95,6 +105,26 @@ typedef struct _p2_procedure
 #define p2_procedure__execute( p, data )  p->execute( data, p->state )
 
 typedef void    ( *distributor )( void *data, p2_procedure *a );
+
+
+#define VERSION "0.5.0"
+
+
+/* Errors *********************************************************************/
+
+
+#include <stdio.h>  /* fprintf */
+
+#define ERROR( msg ) \
+{ \
+    fprintf( stderr, "Error: %s.\n", msg ); \
+    fflush( stdout ); \
+}
+#define WARNING( msg ) \
+{ \
+    fprintf( stderr, "Warning: %s.\n", msg ); \
+    fflush( stdout ); \
+}
 
 
 #endif  /* P2_H */

@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_ast.h"
 #include "p2_parser.h"
-#include "../p2_flags.h"
+#include <p2.h>
 
 #include "../util/p2_term.h"
 

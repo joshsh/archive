@@ -51,7 +51,7 @@ printf( "---m 2---\n" ); fflush( stdout );
     }
 printf( "---m 3---\n" ); fflush( stdout );
 
-    m->objects = p2_bunch__new( MEM_MANAGER__OBJECTS__BLOCK_SIZE );
+    m->objects = p2_bunch__new( MEM__OBJECTS__BLOCK_SIZE );
 
 printf( "---m 4---\n" ); fflush( stdout );
 
