@@ -138,7 +138,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     #if DEBUG__SAFE
     if ( !prim->arity )
     {
-        PRINTERR( "prim_reduce: no parameters" );
+        ERROR( "prim_reduce: no parameters" );
         p2_term__delete( term );
         return 0;
     }
@@ -155,7 +155,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 
         if ( ( unsigned int ) *cur != 2 )
         {
-            PRINTERR( "prim_reduce: primitive applied to non-atom" );
+            ERROR( "prim_reduce: primitive applied to non-atom" );
 
             if ( args )
                 free( args );
@@ -175,7 +175,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
         #if DEBUG__SAFE
         if ( !(*cur) )
         {
-            PRINTERR( "prim_reduce: null argument" );
+            ERROR( "prim_reduce: null argument" );
 
             if ( args )
                 free( args );
@@ -190,7 +190,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 
         if ( ( *( ( p2_object** ) cur ) )->type != prim->parameters[i].type )
         {
-            PRINTERR( "prim_reduce: argument type mismatch" );
+            ERROR( "prim_reduce: argument type mismatch" );
 
             if ( args )
                 free( args );
@@ -213,7 +213,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     #if !PRIM__ALLOW_VOID_FUNCTIONS
     if ( !result )
     {
-        PRINTERR( "prim_reduce: null return value from primitive" );
+        ERROR( "prim_reduce: null return value from primitive" );
         p2_term__delete( term );
         return 0;
     }
@@ -252,7 +252,7 @@ p2_term *SK_reduce(
     #if DEBUG__SAFE
     if ( !term || !m || !primitive_type || !combinator_type )
     {
-        PRINTERR( "SK_reduce: null argument" );
+        ERROR( "SK_reduce: null argument" );
         if ( term )
             p2_term__delete( term );
         return 0;
@@ -265,7 +265,7 @@ p2_term *SK_reduce(
         #if SK__CHECKS__MAX_TERM_SIZE > 0
         if ( ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
         {
-            PRINTERR( "SK_reduce: reduction aborted (term might expand indefinitely)" );
+            ERROR( "SK_reduce: reduction aborted (term might expand indefinitely)" );
             p2_term__delete( term );
             return 0;
         }
@@ -288,7 +288,7 @@ p2_term *SK_reduce(
         #if DEBUG__SAFE
         if ( !head )
         {
-            PRINTERR( "SK_reduce: null encountered at head of term" );
+            ERROR( "SK_reduce: null encountered at head of term" );
             p2_term__delete( term );
             return 0;
         }
@@ -350,7 +350,7 @@ p2_term *SK_reduce(
 
             #else
 
-                PRINTERR( "SK_reduce: non-redex objects not permitted at the head of a term" );
+                ERROR( "SK_reduce: non-redex objects not permitted at the head of a term" );
 
                 /* Garbage-collect whatever is left of the term. */
                 p2_term__delete( term );
@@ -364,7 +364,7 @@ p2_term *SK_reduce(
         #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
         if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
         {
-            PRINTERR( "SK_reduce: reduction aborted (possible infinite loop)" );
+            ERROR( "SK_reduce: reduction aborted (possible infinite loop)" );
             p2_term__delete( term );
             return 0;
         }

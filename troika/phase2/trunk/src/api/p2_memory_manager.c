@@ -33,12 +33,12 @@ printf( "---m 1---\n" ); fflush( stdout );
     #if DEBUG__SAFE
     if ( !root )
     {
-        PRINTERR( "p2_memory_manager__new: null root" );
+        ERROR( "p2_memory_manager__new: null root" );
         return 0;
     }
     else if ( root->flags & OBJECT__MARKED )
     {
-        PRINTERR( "p2_memory_manager__new: root is marked" );
+        ERROR( "p2_memory_manager__new: root is marked" );
         return 0;
     }
     #endif
@@ -71,7 +71,7 @@ printf( "---m 5---\n" ); fflush( stdout );
     m->root = root;
     if ( !p2_memory_manager__add( m, root ) )
     {
-        PRINTERR( "p2_memory_manager__new: could not add root object" );
+        ERROR( "p2_memory_manager__new: could not add root object" );
         p2_object__delete( root );
         p2_bunch__delete( m->objects );
         free( m );
@@ -93,7 +93,7 @@ void p2_memory_manager__delete( p2_memory_manager *m )
     #if DEBUG__SAFE
     if ( !m )
     {
-        PRINTERR( "p2_memory_manager__delete: null manager" );
+        ERROR( "p2_memory_manager__delete: null manager" );
         return;
     }
     #endif
@@ -116,7 +116,7 @@ unsigned int p2_memory_manager__size( p2_memory_manager *m )
     #if DEBUG__SAFE
     if ( !m )
     {
-        PRINTERR( "p2_memory_manager__delete: null manager" );
+        ERROR( "p2_memory_manager__delete: null manager" );
         return 0;
     }
     #endif
@@ -132,17 +132,17 @@ printf( "---m add 1---\n" ); fflush( stdout );
     #if DEBUG__SAFE
     if ( !o )
     {
-        PRINTERR( "p2_memory_manager__add: null object" );
+        ERROR( "p2_memory_manager__add: null object" );
         return 0;
     }
     else if ( o->flags & OBJECT__OWNED )
     {
-        PRINTERR( "p2_memory_manager__add: object already has a manager" );
+        ERROR( "p2_memory_manager__add: object already has a manager" );
         return 0;
     }
     else if ( o->flags & OBJECT__MARKED )
     {
-        PRINTERR( "p2_memory_manager__new: object is marked" );
+        ERROR( "p2_memory_manager__new: object is marked" );
         return 0;
     }
 
@@ -162,7 +162,7 @@ static void *unmark( p2_object *o )
     #ifdef DEBUG__SAFE
     if ( !o )
     {
-        PRINTERR( "unmark: null object" );
+        ERROR( "unmark: null object" );
         return 0;
     }
     #endif
@@ -177,7 +177,7 @@ static boolean unmark_for_sweep( p2_object *o )
     #ifdef DEBUG__SAFE
     if ( !o )
     {
-        PRINTERR( "unmark_for_sweep: null object" );
+        ERROR( "unmark_for_sweep: null object" );
         return 0;
     }
     #endif
@@ -207,7 +207,7 @@ static void unmark_all( p2_memory_manager *m )
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        PRINTERR( "unmark_all: null manager" );
+        ERROR( "unmark_all: null manager" );
         return;
     }
     #endif
@@ -224,7 +224,7 @@ static void sweep( p2_memory_manager *m )
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        PRINTERR( "sweep: null manager" );
+        ERROR( "sweep: null manager" );
         return;
     }
     #endif
@@ -292,7 +292,7 @@ void p2_memory_manager__mark_and_sweep( p2_memory_manager *m )
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        PRINTERR( "p2_memory_manager__mark_and_sweep: null manager" );
+        ERROR( "p2_memory_manager__mark_and_sweep: null manager" );
         return;
     }
     #endif
