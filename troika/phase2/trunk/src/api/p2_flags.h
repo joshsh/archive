@@ -37,7 +37,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <stdio.h>  /* fprintf */
 
-#define PRINTERR( msg )  { fprintf( stderr, "Error: %s.\n", msg ); fflush( stdout ); }
+#define PRINTERR( msg ) \
+{ \
+    fprintf( stderr, "Error: %s.\n", msg ); \
+    fflush( stdout ); \
+}
+#define ERROR( msg ) \
+{ \
+    fprintf( stderr, "Error: %s.\n", msg ); \
+    fflush( stdout ); \
+}
+#define WARNING( msg ) \
+{ \
+    fprintf( stderr, "Warning: %s.\n", msg ); \
+    fflush( stdout ); \
+}
 
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */
@@ -60,16 +74,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define DEBUG__NAMESPACE                    1
 
-    #define DEBUG__COMPILER                     1
+    #define DEBUG__COMPILER                     0
     #if DEBUG__COMPILER
 
         #define DEBUG__AST                      1
 
         /** Echo each token as it is matched by the lexer. */
-        #define DEBUG__LEXER                    0
+        #define DEBUG__LEXER                    1
 
         /** Echo each production as it is matched by the parser. */
-        #define DEBUG__PARSER                   0
+        #define DEBUG__PARSER                   1
         #if DEBUG__PARSER
 
             /** Use Bison's built-in trace facility. */
@@ -82,9 +96,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #define DEBUG__ARRAY                        0
     #define DEBUG__BAG                          0
     #define DEBUG__HASH_TABLE                   0
-    #define DEBUG__NAME                         1
+    #define DEBUG__NAME                         0
     #define DEBUG__SET                          0
-    #define DEBUG__TERM                         0
+    #define DEBUG__TERM                         1
 
 #endif
 

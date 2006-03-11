@@ -45,7 +45,7 @@ static dictionary_entry *dictionary__entry__new( const char *key, void *target )
 
     #if DEBUG__SAFE
     if ( !entry )
-        PRINTERR( "dictionary__entry__new: allocation failure" );
+        ERROR( "dictionary__entry__new: allocation failure" );
     #endif
 
     return entry;

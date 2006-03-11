@@ -28,9 +28,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 
-#include "../p2_flags.h"
 #include "../util/p2_array.h"
-#include "../util/p2_hash_table.h"
+#include "../util/p2_dictionary.h"
 
 #include <string.h>
 
@@ -43,7 +42,7 @@ extern int get_line_number();
 
 #define DEBUG__BNFTOOL__PARSER  1
 
-void production( char *s )
+static void production( char *s )
 {
     printf( "Matched %s\n", s );
 }
@@ -68,23 +67,26 @@ void yyerror( const char *msg )
 /******************************************************************************/
 
 
-void *free0( void *p )
+static p2_action *delete__proc( void *p, void *ignored )
 {
     free( p );
-    return p;
+    return 0;
 }
 
 
-void *sequence__delete( p2_array *s )
+static p2_action * sequence__delete__proc( p2_array *s, void *ignored )
 {
+    p2_procedure proc;
+
     /* Empty productions are allowed. */
     if ( s )
     {
-        p2_array__for_all( s, free0 );
+        proc.execute = ( procedure ) delete__proc;
+        p2_array__distribute( s, &proc );
         p2_array__delete( s );
     }
 
-    return ( void* ) 1;
+    return 0;
 }
 
 
@@ -95,8 +97,8 @@ typedef struct _rule
 
     int nullable;
 
-    p2_hash_table *first_set;
-    p2_hash_table *follow_set;
+    p2_dictionary *first_set;
+    p2_dictionary *follow_set;
 
 } rule;
 
@@ -107,56 +109,61 @@ rule *rule__new( char *name, p2_array *productions )
     r->name = name;
     r->productions = productions;
 
-    r->first_set = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS );
-    r->follow_set = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS );
+    r->first_set = p2_dictionary__new();
+    r->follow_set = p2_dictionary__new();
     r->nullable = 0;
 
     return r;
 }
 
 
-void *rule__delete( rule *r )
+static p2_action * rule__delete( rule *r, void *ignored )
 {
+    p2_procedure proc;
+
     if ( r->name )
         free( r->name );
 
     if ( r->productions )
     {
-         p2_array__for_all( r->productions, ( void*(*)(void*) ) sequence__delete );
-         p2_array__delete( r->productions );
+        proc.execute = ( procedure ) sequence__delete__proc;
+        p2_array__distribute( r->productions, &proc );
+
+        p2_array__delete( r->productions );
     }
 
     if ( r->first_set )
-        p2_hash_table__delete( r->first_set );
+        p2_dictionary__delete( r->first_set );
 
     if ( r->follow_set )
-        p2_hash_table__delete( r->follow_set );
+        p2_dictionary__delete( r->follow_set );
 
     free( r );
-    return r;
+
+    return 0;
 }
 
 
 /******************************************************************************/
 
 
-p2_hash_table *rule_dict;
+p2_dictionary *rule_dict;
 
 
-p2_hash_table *target;
-static void *add_to_target( void *p )
+static p2_action * add_to_dict( char *name, p2_dictionary *d )
 {
-    p2_hash_table__add( target, p, p );
-    return ( void* ) 1;
+    p2_dictionary__add( d, name, name );
+    return 0;
 }
 
 
-static void find_sets( p2_array *rules, p2_hash_table *dict )
+static void find_sets( p2_array *rules, p2_dictionary *dict )
 {
     int changed = 1, i, j, k, n, n_rules = rules->size, n_prods, nullable_old, size_old;
     rule *r, *r2, *r3;
     p2_array *production;
     char *first, *second;
+    p2_procedure proc;
 
     /* Find the "nullable" attribute for each rule. */
     while ( changed )
@@ -183,7 +190,7 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
                 else
                 {
                     char *first = ( char* ) p2_array__get( production, 0 );
-                    r2 = ( rule* ) p2_hash_table__lookup( dict, first );
+                    r2 = ( rule* ) p2_dictionary__lookup( dict, first );
 
                     /* If non-terminal and nullable... */
                     if ( r2 && r2->nullable )
@@ -206,8 +213,7 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
         for ( i = 0; i < n_rules; i++ )
         {
             r = ( rule* ) p2_array__get( rules, i );
-            target = r->first_set;
-            size_old = target->size;
+            size_old = r->first_set->size;
 
             n_prods = r->productions->size;
             for ( j = 0; j < n_prods; j++ )
@@ -221,12 +227,12 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
                     for ( k = 0; k < n; k++ )
                     {
                         first = ( char* ) p2_array__get( production, k );
-                        r2 = ( rule* ) p2_hash_table__lookup( dict, first );
+                        r2 = ( rule* ) p2_dictionary__lookup( dict, first );
                         if ( r2 )
                         {
-                            p2_hash_table__for_all_keys(
-                                r2->first_set,
-                                ( void*(*)(void*) ) add_to_target );
+                            proc.execute = ( procedure ) add_to_dict;
+                            proc.state = r->first_set;
+                            p2_dictionary__distribute( r2->first_set, &proc );
 
                             if ( !r2->nullable )
                                 break;
@@ -234,14 +240,14 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
 
                         else
                         {
-                            add_to_target( first );
+                            add_to_dict( first, r->first_set );
                             break;
                         }
                     }
                 }
             }
 
-            if ( target->size != size_old )
+            if ( r->first_set->size != size_old )
                 changed = 1;
         }
     }
@@ -269,26 +275,27 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
                     for ( k = 0; k < n - 1; k++ )
                     {
                         first = ( char* ) p2_array__get( production, k );
-                        r2 = ( rule* ) p2_hash_table__lookup( dict, first );
+                        r2 = ( rule* ) p2_dictionary__lookup( dict, first );
                         if ( r2 )
                         {
-                            target = r2->follow_set;
-                            size_old = target->size;
+                            size_old = r2->follow_set->size;
 
                             second = ( char* ) p2_array__get( production, k + 1 );
-                            r3 = ( rule* ) p2_hash_table__lookup( dict, second );
+                            r3 = ( rule* ) p2_dictionary__lookup( dict, second );
 
                             /* Add the first set of a nonterminal. */
                             if ( r3 )
-                                p2_hash_table__for_all_keys(
-                                    r3->first_set,
-                                    ( void*(*)(void*) ) add_to_target );
+                            {
+                                proc.execute = ( procedure ) add_to_dict;
+                                proc.state = r2->follow_set;
+                                p2_dictionary__distribute( r3->first_set, &proc );
+                            }
 
                             /* Add the first set of a terminal (the symbol itself). */
                             else
-                                add_to_target( second );
+                                add_to_dict( second, r2->follow_set );
 
-                            if ( target->size != size_old )
+                            if ( r2->follow_set->size != size_old )
                                 changed = 1;
                         }
                     }
@@ -296,19 +303,18 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
                     for ( k = n - 1; k >= 0; k-- )
                     {
                         first = ( char* ) p2_array__get( production, k );
-                        r2 = ( rule* ) p2_hash_table__lookup( dict, first );
+                        r2 = ( rule* ) p2_dictionary__lookup( dict, first );
 
                         if ( r2 )
                         {
-                            target = r2->follow_set;
-                            size_old = target->size;
+                            size_old = r2->follow_set->size;
 
                             /* Add the current rule's own follow set. */
-                            p2_hash_table__for_all_keys(
-                                r->follow_set,
-                                ( void*(*)(void*) ) add_to_target );
+                            proc.execute = ( procedure ) add_to_dict;
+                            proc.state = r2->follow_set;
+                            p2_dictionary__distribute( r->follow_set, &proc );
 
-                            if ( target->size != size_old )
+                            if ( r2->follow_set->size != size_old )
                                 changed = 1;
 
                             if ( !r2->nullable )
@@ -328,62 +334,68 @@ static void find_sets( p2_array *rules, p2_hash_table *dict )
 /******************************************************************************/
 
 
-void *print0( char *s )
+static p2_action * print_proc( char *s, void *ignored )
 {
     printf( " %s", s );
-    return ( void* ) 1;
+    return 0;
 }
 
 
-void *production__print( p2_array *p )
+static p2_action * production__print( p2_array *p, void *ignored )
 {
+    p2_procedure proc;
+    proc.execute = ( procedure ) print_proc;
+
     printf( "   " );
     if ( p )
-        p2_array__for_all( p, ( void*(*)(void*) ) print0 );
+        p2_array__distribute( p, &proc );
     printf( "\n" );
-    return ( void* ) 1;
+    return 0;
 }
 
 
-void *rule__print( rule *r )
+static void *rule__print( rule *r )
 {
+    p2_procedure proc;
+    proc.execute = ( procedure ) production__print;
+
     printf( "%s:\n", r->name );
-    p2_array__for_all( r->productions, ( void*(*)(void*) ) production__print );
-    return ( void* ) 1;
+    p2_array__distribute( r->productions, &proc );
+    return 0;
 }
 
 
-p2_array *target_array;
-static void *add_to_target_array( void *p )
+static p2_action * rule__print_first_set( rule *r, void *ignored )
 {
-    p2_array__enqueue( target_array, p );
-    return ( void* ) 1;
-}
+    p2_array *a;
+    p2_procedure proc;
+    proc.execute = ( procedure ) print_proc;
 
-
-void *rule__print_first_set( rule *r )
-{
     printf( "%s:  ", r->name );
-    target_array = p2_array__new( 0, 0 );
-    p2_hash_table__for_all_keys( r->first_set, ( void*(*)(void*) ) add_to_target_array );
-    p2_array__mergesort( target_array, ( int(*)(void*, void*) ) strcmp );
-    p2_array__for_all( target_array, ( void*(*)(void*) ) print0 );
-    p2_array__delete( target_array );
+    a = p2_dictionary__keys( r->first_set );
+    p2_array__sort( a, ( comparator ) strcmp );
+    p2_array__distribute( a, &proc );
+    p2_array__delete( a );
     printf( "\n" );
-    return ( void* ) 1;
+
+    return 0;
 }
 
 
-void *rule__print_follow_set( rule *r )
+static p2_action * rule__print_follow_set( rule *r )
 {
+    p2_array *a;
+    p2_procedure proc;
+    proc.execute = ( procedure ) print_proc;
+
     printf( "%s:  ", r->name );
-    target_array = p2_array__new( 0, 0 );
-    p2_hash_table__for_all_keys( r->follow_set, ( void*(*)(void*) ) add_to_target_array );
-    p2_array__mergesort( target_array, ( int(*)(void*, void*) ) strcmp );
-    p2_array__for_all( target_array, ( void*(*)(void*) ) print0 );
-    p2_array__delete( target_array );
+    a = p2_dictionary__keys( r->follow_set );
+    p2_array__sort( a, ( comparator ) strcmp );
+    p2_array__distribute( a, &proc );
+    p2_array__delete( a );
     printf( "\n" );
-    return ( void* ) 1;
+
+    return 0;
 }
 
 
@@ -418,11 +430,15 @@ input:
 
     rules E_O_F
     {
+        p2_array *rules = $1;
+
+        p2_procedure print_p;
+        p2_procedure delete_p;
+
         #if DEBUG__BNFTOOL__PARSER
         production( "input ::=  rules E_O_F" );
         #endif
 
-        p2_array *rules = $1;
         find_sets( rules, rule_dict );
 
         /******************************/
@@ -430,22 +446,26 @@ input:
         printf( "\n" );
 
         printf( "\n=== PRODUCTIONS ========================\n\n" );
-        p2_array__for_all( rules, ( void*(*)(void*) ) rule__print );
+        print_p.execute = ( procedure ) rule__print;
+        p2_array__distribute( rules, &print_p );
 
         printf( "\n=== FIRST SETS =========================\n\n" );
-        p2_array__for_all( rules, ( void*(*)(void*) ) rule__print_first_set );
+        print_p.execute = ( procedure ) rule__print_first_set;
+        p2_array__distribute( rules, &print_p );
 
         printf( "\n=== FOLLOW SETS ========================\n\n" );
-        p2_array__for_all( rules, ( void*(*)(void*) ) rule__print_follow_set );
+        print_p.execute = ( procedure ) rule__print_follow_set;
+        p2_array__distribute( rules, &print_p );
 
         printf( "\n" );
 
         /******************************/
 
-        p2_array__for_all( rules, ( void*(*)(void*) ) rule__delete );
+        delete_p.execute = ( procedure ) rule__delete;
+        p2_array__distribute( rules, &delete_p );
         p2_array__delete( rules );
 
-        p2_hash_table__delete( rule_dict );
+        p2_dictionary__delete( rule_dict );
 
         /******************************/
 
@@ -464,7 +484,7 @@ rules:
         new_parse();
 
         $$ = p2_array__new( 0, 0 );
-        rule_dict = p2_hash_table__new( 0, 0, 0, STRING_DEFAULTS );
+        rule_dict = p2_dictionary__new();
     }
 
     | rules rule
@@ -488,7 +508,7 @@ rule:
         #endif
 
         $$ = rule__new( $1, $3 );
-        p2_hash_table__add( rule_dict, $$->name, $$ );
+        p2_dictionary__add( rule_dict, $$->name, $$ );
     }
     ;
 

@@ -56,6 +56,7 @@ $(PARSER_OBJECTS) :
 
 IMPORT_OBJECTS = \
 	$(IMPORT)/target/cxx/p2-stubs.o \
+	$(IMPORT)/target/cxx/char.o \
 	$(IMPORT)/target/cxx/cstring.o \
 	$(IMPORT)/target/cxx/combinator.o \
 	$(IMPORT)/target/cxx/double.o \

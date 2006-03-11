@@ -24,14 +24,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 p2_name *p2_name__new()
 {
     p2_name *name = p2_array__new( 0, 0 );
+
+    #if DEBUG__NAME
+    printf( "[%#x] p2_name__new()\n", ( int ) name );
+    #endif
+
     return name;
 }
 
 
 static p2_action * delete_string( char *s, void *ignored )
 {
-printf( "---name ds 1---\n" ); fflush( stdout );
-
     free( s );
     return 0;
 }
@@ -40,26 +43,21 @@ printf( "---name ds 1---\n" ); fflush( stdout );
 void p2_name__delete( p2_name *name )
 {
     p2_procedure p = { ( procedure ) delete_string, 0 };
-printf( "---name d 1---\n" ); fflush( stdout );
 
     #if DEBUG__SAFE
     if ( !name )
     {
-        PRINTERR( "p2_name__delete: null name" );
+        ERROR( "p2_name__delete: null name" );
         return;
     }
     #endif
 
     #if DEBUG__NAME
-    printf( "p2_name__delete(0x%X)\n", ( int ) name );  fflush( stdout );
+    printf( "[] p2_name__delete(%#x)\n", ( int ) name );  fflush( stdout );
     #endif
-printf( "---name d 2---\n" ); fflush( stdout );
+
     p2_array__distribute( name, &p );
-printf( "---name d 3---\n" ); fflush( stdout );
-
     p2_array__delete( name );
-printf( "---name d 4---\n" ); fflush( stdout );
-
 }
 
 
@@ -71,7 +69,7 @@ void p2_name__print( p2_name *n )
     #if DEBUG__SAFE
     if ( !n )
     {
-        PRINTERR( "p2_name__print: null name" );
+        ERROR( "p2_name__print: null name" );
         return;
     }
     #endif

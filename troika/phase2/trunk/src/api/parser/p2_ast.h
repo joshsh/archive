@@ -31,7 +31,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_AST_H
 
 
-#include "../p2.h"
 #include "../util/p2_name.h"
 #include "../util/p2_array.h"
 #include "../util/p2_term.h"
@@ -91,7 +90,7 @@ int p2_ast__size( p2_ast *ast );
 
 
 /** \param ast  AST node to free */
-void *p2_ast__delete( p2_ast *ast );
+void p2_ast__delete( p2_ast *ast );
 
 
 /** \param ast  AST node to print */

@@ -5,11 +5,10 @@
 
 
 /** $encoder */
-void combinator__encode( combinator c, char *buffer );
+void combinator__encode( combinator *c, char *buffer );
 
 /** $decoder */
 combinator combinator__decode( char *buffer );
 
 
 #endif  /* COMBINATOR_H */
-

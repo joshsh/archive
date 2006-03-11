@@ -49,15 +49,17 @@ static p2_type default_t =
 
 p2_type *p2_type__new( const char *name, int flags )
 {
+    p2_type *t;
+
     #if DEBUG__SAFE
     if ( !name || !( *name ) )
     {
-        PRINTERR( "p2_type__new: null or empty name" );
+        ERROR( "p2_type__new: null or empty name" );
         return 0;
     }
     #endif
 
-    p2_type *t = new( p2_type );
+    t = new( p2_type );
     if ( !t )
         return 0;
 

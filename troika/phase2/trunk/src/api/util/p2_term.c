@@ -92,7 +92,7 @@ p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
     t->expansion = TERM__DEFAULT_EXPANSION;
 
     #if DEBUG__TERM
-    printf( "[%X] p2_term__new(%X, %i)\n", ( int ) t, ( int ) p, initial_buffer_size );
+    printf( "[%#x] p2_term__new(%#x, %i)\n", ( int ) t, ( int ) p, initial_buffer_size );
     #endif
 
     return t;
@@ -127,7 +127,7 @@ p2_term *p2_term__copy(p2_term *source)
     }
 
     #if DEBUG__TERM
-    printf( "[%X] p2_term__copy(%X)\n", ( int ) t, ( int ) source );
+    printf( "[%#x] p2_term__copy(%#x)\n", ( int ) t, ( int ) source );
     #endif
 
     return t;
@@ -137,7 +137,7 @@ p2_term *p2_term__copy(p2_term *source)
 void p2_term__delete(p2_term *t)
 {
     #if DEBUG__TERM
-    printf( "[] p2_term__delete(%X)\n", ( int ) t );
+    printf( "[] p2_term__delete(%#x)\n", ( int ) t );
     #endif
 
     free(t->buffer);
@@ -191,11 +191,11 @@ p2_term *p2_term__subterm_at(p2_term *t, int i)
     }
 
     length = (unsigned int) *cur;
-    subterm = (p2_term *) malloc(sizeof(p2_term));
+    subterm = new( p2_term );
     subterm->buffer_size = length;
     subterm->buffer = (void **) malloc(length * sizeof(void *));
+    memcpy(subterm->buffer, cur, length * sizeof(void *));
     subterm->head = subterm->buffer;
-    memcpy(subterm->head, cur, length * sizeof(void *));
 
     return subterm;
 }
@@ -217,6 +217,10 @@ void p2_term__set_expansion( p2_term *t, unsigned int expansion )
 
 p2_term *p2_term__merge(p2_term *t1, p2_term *t2)
 {
+    #if DEBUG__TERM
+    p2_term *t1_0 = t1, *t2_0 = t2;
+    #endif
+
     /* Find the size of each p2_term, as well as of the resulting p2_term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -237,12 +241,21 @@ p2_term *p2_term__merge(p2_term *t1, p2_term *t2)
     /* Destroy t1. */
     p2_term__delete( t1 );
 
+    #if DEBUG__TERM
+    printf( "[%#x] p2_term__merge(%#x, %#x)\n",
+        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
+    #endif
+
     return t2;
 }
 
 
 p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2)
 {
+    #if DEBUG__TERM
+    p2_term *t1_0 = t1, *t2_0 = t2;
+    #endif
+
     /* Find the size of each p2_term, as well as of the resulting p2_term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -265,12 +278,21 @@ p2_term *p2_term__merge_la(p2_term *t1, p2_term *t2)
     /* Destroy t1. */
     p2_term__delete( t1 );
 
+    #if DEBUG__TERM
+    printf( "[%#x] p2_term__merge_la(%#x, %#x)\n",
+        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
+    #endif
+
     return t2;
 }
 
 
 p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2)
 {
+    #if DEBUG__TERM
+    p2_term *t1_0 = t1, *t2_0 = t2;
+    #endif
+
     /* Find the size of each p2_term, as well as of the resulting p2_term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -295,12 +317,21 @@ p2_term *p2_term__merge_ra(p2_term *t1, p2_term *t2)
     /* Destroy t1. */
     p2_term__delete( t1 );
 
+    #if DEBUG__TERM
+    printf( "[%#x] p2_term__merge_ra(%#x, %#x)\n",
+        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
+    #endif
+
     return t2;
 }
 
 
 p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 {
+    #if DEBUG__TERM
+    p2_term *t1_0 = t1, *t2_0 = t2;
+    #endif
+
     /* Find the size of each p2_term, as well as of the resulting p2_term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -328,6 +359,11 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
     /* Destroy t1. */
     p2_term__delete( t1 );
 
+    #if DEBUG__TERM
+    printf( "[%#x] p2_term__cat(%#x, %#x)\n",
+        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
+    #endif
+
     return t2;
 }
 
@@ -335,22 +371,23 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 /* Logical set functions and atom substitution ********************************/
 
 
-void p2_term__distribute( p2_term *t, p2_procedure *p )
+static void distribute( void **cur, p2_procedure *p )
 {
-    void **sup, **head = ( void** ) t;
+    void **sup;
     p2_action *action;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
-    if ( ( unsigned int ) *head == 2 )
+    if ( ( unsigned int ) *cur == 2 )
     {
-        head++;
-        if ( ( action = p2_procedure__execute( p, *head ) ) )
+        cur++;
+
+        if ( ( action = p2_procedure__execute( p, *cur ) ) )
         {
             switch ( action->type )
             {
                 case p2_action__type__replace:
 
-                    *head = action->value;
+                    *cur = action->value;
                     break;
 
                 default:
@@ -363,14 +400,96 @@ void p2_term__distribute( p2_term *t, p2_procedure *p )
     /* If the sub-term contains further sub-terms, recurse through them. */
     else
     {
-        sup = head + ( unsigned int ) *head;
-        head++;
-        while ( head < sup )
+        sup = cur + ( unsigned int ) *cur;
+        cur++;
+        while ( cur < sup )
         {
-            p2_term__distribute( ( p2_term* ) head, p );
-            head += ( unsigned int ) *head;
+            distribute( cur, p );
+            cur += ( unsigned int ) *cur;
         }
     }
+}
+
+
+void p2_term__distribute( p2_term *t, p2_procedure *p )
+{
+    #if DEBUG__SAFE
+    if ( !t || !p )
+    {
+        ERROR( "p2_term__distribute: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__TERM
+    printf( "[] p2_term__distribute(%#x, %#x)\n", ( int ) t, ( int ) p );
+    #endif
+
+    distribute( t->head, p );
+}
+
+
+/******************************************************************************/
+
+
+static void encode
+    ( void **cur, char *buffer, encoder encode_child, int delimit )
+{
+    void **sup;
+
+    /* If the sub-term represents a leaf node, execute the procedure. */
+    if ( ( unsigned int ) *cur == 2 )
+    {
+        cur++;
+
+        if ( delimit )
+        {
+            sprintf( buffer, " " );
+            buffer++;
+        }
+
+        encode_child( *cur, buffer );
+    }
+
+    /* If the sub-term contains further sub-terms, recurse through them. */
+    else
+    {
+        sup = cur + ( unsigned int ) *cur;
+        cur++;
+        while ( cur < sup )
+        {
+            if ( delimit )
+            {
+                sprintf( buffer,  "(" );
+                buffer++;
+            }
+
+            encode( cur, buffer, encode_child, 1 );
+            buffer += strlen( buffer );
+
+            if ( delimit )
+            {
+                sprintf( buffer, " )" );
+                buffer += 2;
+            }
+
+            cur += ( unsigned int ) *cur;
+        }
+    }
+}
+
+
+void p2_term__encode( p2_term *t, char *buffer, encoder encode_child )
+{
+    #if DEBUG__SAFE
+    if ( !t || !buffer || !encode_child )
+    {
+        ERROR( "p2_term__encode: null argument" );
+        return;
+    }
+    #endif
+
+    encode( t->head, buffer, encode_child, 0 );
 }
 
 

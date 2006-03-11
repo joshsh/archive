@@ -42,7 +42,7 @@ extern int yyparse();
 typedef struct _p2_compiler
 {
     p2_environment *env;
-    p2_namespace__object *cur_ns_obj;
+    p2_namespace_o *cur_ns_obj;
 
     p2_dictionary *commands;
 

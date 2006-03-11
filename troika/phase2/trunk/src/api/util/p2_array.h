@@ -53,7 +53,7 @@ typedef struct _p2_array
     /** The array expands by this factor whenever it outgrows its buffer.
         Memory copying into the new buffer is expensive, so beware of setting
         the expansion factor too low. */
-    float expansion;
+    unsigned int expansion;
 
     /** The buffer array. */
     void **buffer;
@@ -64,7 +64,7 @@ typedef struct _p2_array
 /* Constructors and destructor ************************************************/
 
 /** Constructor. */
-p2_array *p2_array__new( int buffer_size, float expansion );
+p2_array *p2_array__new( int buffer_size, unsigned int expansion );
 
 /** Copy constructor. */
 p2_array *p2_array__copy( p2_array *a );

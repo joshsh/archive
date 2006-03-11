@@ -25,7 +25,7 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     #if DEBUG__SAFE
     if ( !type || !value)
     {
-        PRINTERR( "p2_object__new: null type or value" );
+        ERROR( "p2_object__new: null type or value" );
         return 0;
     }
     #endif
@@ -52,7 +52,7 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     #endif
 
     #if DEBUG__OBJECT
-    printf( "p2_object__new: created object %#x (value 0x%X) of type '%s' (0x%X).\n",
+    printf( "p2_object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
         ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
 if (!strcmp( o->type->name, "type"))
 printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
@@ -73,8 +73,16 @@ void p2_object__delete( p2_object *o )
 {
     p2_procedure p;
 
+    #if DEBUG__SAFE
+    if ( !o )
+    {
+        ERROR( "p2_object__delete: null object" );
+        return;
+    }
+    #endif
+
     #if DEBUG__OBJECT
-    printf( "p2_object__delete(%#x): value = 0x%X, type = 0x%X.\n",
+    printf( "p2_object__delete(%#x): value = %#x, type = %#x.\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
     #endif
 
@@ -142,6 +150,16 @@ static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
 {
     p2_action *action;
 
+    /* If for any reason execution has traced to a NULL, return immediately. */
+    if ( !o )
+    {
+        #if DEBUG__SAFE
+        WARNING( "trace_exec: null object" );
+        #endif
+
+        return 0;
+    }
+
     /* Execute the inner procedure.  Recurse unless instructed otherwise. */
     if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
     {
@@ -166,6 +184,14 @@ static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
 
 void p2_object__trace( p2_object *o, p2_procedure *p )
 {
+    #if DEBUG__SAFE
+    if ( !o )
+    {
+        ERROR( "p2_object__trace: null object" );
+        return;
+    }
+    #endif
+
     trace_proc_st state;
     p2_procedure trace_proc;
     p2_procedure edge_p;
@@ -195,7 +221,7 @@ p2_object *p2_object__multiply
     #if DEBUG__SAFE
     if ( !subj || !pred )
     {
-        PRINTERR( "p2_object__multiply: null argument" );
+        ERROR( "p2_object__multiply: null argument" );
         return 0;
     }
     #endif
@@ -220,7 +246,7 @@ p2_object *p2_object__associate
     #if DEBUG__SAFE
     if ( !subj || !pred || !obj )
     {
-        PRINTERR( "p2_object__associate: null argument" );
+        ERROR( "p2_object__associate: null argument" );
         return 0;
     }
     #endif

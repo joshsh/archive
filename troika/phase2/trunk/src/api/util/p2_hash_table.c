@@ -153,7 +153,7 @@ p2_hash_table *p2_hash_table__new(
     }
 
     if ( !h )
-        PRINTERR( "p2_hash_table__new: allocation failure" );
+        ERROR( "p2_hash_table__new: allocation failure" );
 
     return h;
 }
@@ -178,7 +178,7 @@ p2_hash_table *p2_hash_table__copy( const p2_hash_table *h )
     }
 
     if ( !h2 )
-        PRINTERR( "p2_hash_table__copy: allocation failure" );
+        ERROR( "p2_hash_table__copy: allocation failure" );
 
     return h2;
 }
@@ -201,7 +201,7 @@ int i=0;
     #if DEBUG__SAFE
     if ( !key )
     {
-        PRINTERR( "p2_hash_table__add: null key" );
+        ERROR( "p2_hash_table__add: null key" );
         return 0;
     }
     #endif
@@ -253,7 +253,7 @@ int i=0;
     #if DEBUG__SAFE
     if ( !key )
     {
-        PRINTERR( "p2_hash_table__lookup: null key" );
+        ERROR( "p2_hash_table__lookup: null key" );
         return 0;
     }
     #endif
@@ -287,7 +287,7 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
     #if DEBUG__SAFE
     if ( !key )
     {
-        PRINTERR( "p2_hash_table__remove: null key" );
+        ERROR( "p2_hash_table__remove: null key" );
         return 0;
     }
     #endif

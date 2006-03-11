@@ -63,6 +63,7 @@ void new_line()
 
 p2_array *sc_stack;
 
+
 /** Initialize the lexer for a new invocation of yyparse(). */
 void new_parse()
 {
@@ -70,7 +71,6 @@ void new_parse()
     new_line();
 
     sc_stack = p2_array__new( 0, 0 );
-    p2_array__push( sc_stack, ( void* ) INITIAL );
 }
 
 
@@ -128,6 +128,7 @@ NAMECHAR  [-_A-Za-z0-9]
 <INITIAL>
 {
     "%%"  {  /* Warning: very touchy */
+        p2_array__push( sc_stack, ( void* ) INITIAL );
         BEGIN( SC_GRAMMAR );
         TOKEN( 0, "grammar (begin)" );
     }
@@ -162,11 +163,13 @@ NAMECHAR  [-_A-Za-z0-9]
     }
 
     "/*"  {
+        p2_array__push( sc_stack, ( void* ) SC_GRAMMAR );
         BEGIN( SC_COMMENT );
         TOKEN( 0, "comment (begin)" );
     }
 
     "%%"  {
+        p2_array__pop( sc_stack );
         BEGIN( INITIAL );
         TOKEN( 0, "grammar (end)" );
     }
@@ -178,6 +181,7 @@ NAMECHAR  [-_A-Za-z0-9]
 
     "{" {
         braces_level = 1;
+        p2_array__push( sc_stack, ( void* ) SC_GRAMMAR );
         BEGIN( SC_ACTION );
         TOKEN( 0, "action (begin)" );
     }
@@ -208,6 +212,12 @@ NAMECHAR  [-_A-Za-z0-9]
         TOKEN( 0, ( char* ) 0 );
     }
 
+    "/*"  {
+        p2_array__push( sc_stack, ( void* ) SC_ACTION );
+        BEGIN( SC_COMMENT );
+        TOKEN( 0, "comment (begin)" );
+    }
+
     "{" {
         braces_level++;
         TOKEN( 0, ( char* ) 0 );
@@ -218,7 +228,7 @@ NAMECHAR  [-_A-Za-z0-9]
     "}"  {
         if (! --braces_level )
         {
-            BEGIN( SC_GRAMMAR );
+            BEGIN( ( int ) p2_array__pop( sc_stack ) );
             TOKEN( ACTION, "action (end)" );
         }
 
@@ -231,7 +241,7 @@ NAMECHAR  [-_A-Za-z0-9]
 <SC_COMMENT>
 {
     "*/"  {
-        BEGIN( INITIAL );
+        BEGIN( ( int ) p2_array__pop( sc_stack ) );
         TOKEN( 0, "comment (end)" );
     }
 

@@ -39,13 +39,13 @@ typedef struct _p2_environment
 {
     p2_memory_manager *manager;
 
-    p2_namespace__object *root;
+    p2_namespace_o *root;
 
-    p2_namespace__object *data;
-    p2_namespace__object *primitives;
-    p2_namespace__object *types;
+    p2_namespace_o *data;
+    p2_namespace_o *primitives;
+    p2_namespace_o *types;
 
-    p2_type *ns__type, *prim__type, *type__type;
+    p2_type *ns_t, *prim_t, *type_t;
 
 } p2_environment;
 

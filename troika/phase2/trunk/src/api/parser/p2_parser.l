@@ -103,12 +103,12 @@ int get_char_number();
 /** TOKEN macro handles debugging messages and column count as well as return
     values from rules.  It must be the last statement in a rule action. */
 #if DEBUG__LEXER
-    #define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( y ) printf( "Matched {%s}\n", y ); \
-                             if ( x ) return x; }
+#define TOKEN( x, y )  { new_token( yyleng ); \
+                         if ( y ) printf( "Matched {%s}\n", y ); \
+                         if ( x ) return x; }
 #else
-    #define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( x ) return x; }
+#define TOKEN( x, y )  { new_token( yyleng ); \
+                         if ( x ) return x; }
 #endif
 
 
@@ -308,7 +308,7 @@ IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
         TOKEN( CHAR, "CHAR" );
     }
 
-    -?(0|[1-9][0-9]*).[0-9]+  {  /* A number is interpreted as a FLOAT if it
+    -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a FLOAT if it
                                     contains a decimal point (as in Forth). */
         /* Note: atof is error-safe (it fails with a return value of 0.0). */
         yylval.float_t = atof( yytext );
@@ -418,7 +418,7 @@ void print_input_prefix()
         /* Add a prefix to each new line of input, to distinguish it from
            output, and possibly to separate it from the line number. */
         #ifdef INPUT_PREFIX
-            printf( INPUT_PREFIX );
+        printf( INPUT_PREFIX );
         #endif
     }
 }

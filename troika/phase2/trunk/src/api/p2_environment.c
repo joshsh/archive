@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "util/p2_term.h"
 
 
-static p2_namespace__object *ns__new( p2_type *ns__type )
+static p2_namespace_o *ns__new( p2_type *ns_t )
 {
     p2_object *o;
     p2_namespace *ns;
@@ -30,7 +30,7 @@ static p2_namespace__object *ns__new( p2_type *ns__type )
     if ( !( ns = p2_namespace__new() ) )
         return 0;
 
-    if ( !( o = p2_object__new( ns__type, ns, OBJECT__IS_OBJ_COLL ) ) )
+    if ( !( o = p2_object__new( ns_t, ns, OBJECT__IS_OBJ_COLL ) ) )
     {
         p2_namespace__delete( ns );
         return 0;
@@ -80,30 +80,30 @@ printf( "---e 1---\n" ); fflush( stdout );
         return 0;
 printf( "---e 2---\n" ); fflush( stdout );
 
-    env->prim__type = env->ns__type = env->type__type = 0;
+    env->prim_t = env->ns_t = env->type_t = 0;
     env->data = env->primitives = env->root = env->types = 0;
     env->manager = 0;
 printf( "---e 3---\n" ); fflush( stdout );
 
     /* Create the basic data types. */
-    if ( !( env->ns__type = p2_type__new( "namespace", 0 ) )
-      || !( env->prim__type = p2_type__new( "primitive", 0 ) )
-      || !( env->type__type = p2_type__new( "type", 0 ) ) )
+    if ( !( env->ns_t = p2_type__new( "namespace", 0 ) )
+      || !( env->prim_t = p2_type__new( "primitive", 0 ) )
+      || !( env->type_t = p2_type__new( "type", 0 ) ) )
         goto abort;
 
-    env->ns__type->destroy =    ( destructor )  p2_namespace__delete;
-    env->ns__type->distribute = ( distributor ) p2_namespace__distribute;
-    env->prim__type->destroy =  ( destructor )  p2_primitive__delete;
-    env->type__type->destroy =  ( destructor )  p2_type__delete;
+    env->ns_t->destroy =    ( destructor )  p2_namespace__delete;
+    env->ns_t->distribute = ( distributor ) p2_namespace__distribute;
+    env->prim_t->destroy =  ( destructor )  p2_primitive__delete;
+    env->type_t->destroy =  ( destructor )  p2_type__delete;
 /*
-    if ( !( env->ns__type = p2_type__new(
+    if ( !( env->ns_t = p2_type__new(
         STRDUP( "namespace" ), 0, 0,
         ( destructor ) p2_namespace__delete, 0, 0,
         ( FOR_ALL_T ) p2_namespace__for_all, 0 ) )
-      || !( env->prim__type = p2_type__new(
+      || !( env->prim_t = p2_type__new(
         STRDUP( "primitive" ), 0, 0,
         ( destructor ) p2_primitive__delete, 0, 0, 0, 0 ) )
-      || !( env->type__type = p2_type__new(
+      || !( env->type_t = p2_type__new(
         STRDUP( "type" ), 0, 0,
         ( destructor ) p2_type__delete, 0, 0, 0, 0 ) ) )
         goto abort;
@@ -111,10 +111,10 @@ printf( "---e 3---\n" ); fflush( stdout );
 printf( "---e 4---\n" ); fflush( stdout );
 
     /* Create root namespace object and children. */
-    if ( !( env->data = ns__new( env->ns__type ) )
-      || !( env->primitives = ns__new( env->ns__type ) )
-      || !( env->root = ns__new( env->ns__type ) )
-      || !( env->types = ns__new( env->ns__type ) ) )
+    if ( !( env->data = ns__new( env->ns_t ) )
+      || !( env->primitives = ns__new( env->ns_t ) )
+      || !( env->root = ns__new( env->ns_t ) )
+      || !( env->types = ns__new( env->ns_t ) ) )
         goto abort;
 printf( "---e 5---\n" ); fflush( stdout );
 
@@ -141,9 +141,9 @@ printf( "---e 7---\n" ); fflush( stdout );
 printf( "---e 8---\n" ); fflush( stdout );
 
     /* Register the basic data types. */
-    p2_environment__register_type( env, env->ns__type, 0 );
-    p2_environment__register_type( env, env->prim__type, 0 );
-    p2_environment__register_type( env, env->type__type, 0 );
+    p2_environment__register_type( env, env->ns_t, 0 );
+    p2_environment__register_type( env, env->prim_t, 0 );
+    p2_environment__register_type( env, env->type_t, 0 );
 printf( "---e 9---\n" ); fflush( stdout );
 
     /* Add other types here... */
@@ -173,8 +173,8 @@ printf( "---e abort---\n" ); fflush( stdout );
 
     else
     {
-        if ( env->ns__type )
-            p2_type__delete( env->ns__type );
+        if ( env->ns_t )
+            p2_type__delete( env->ns_t );
 
         if ( env->data )
             p2_object__delete( env->data );
@@ -196,7 +196,7 @@ void p2_environment__delete( p2_environment *env )
     #if DEBUG__SAFE
     if ( !env )
     {
-        PRINTERR( "p2_environment__delete: null environment" );
+        ERROR( "p2_environment__delete: null environment" );
         return;
     }
     #endif
@@ -214,16 +214,18 @@ p2_object *p2_environment__register_primitive(
 {
     p2_object *o;
 
-    if ( flags & PRIM__CONSTRUCTOR )
-        PRINTERR( "p2_environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
-    if ( flags & PRIM__DECODER )
-        prim->return_type->decode = ( decoder ) src_f;
-    if ( flags & PRIM__DESTRUCTOR )
-        prim->return_type->destroy = ( destructor ) src_f;
-    if ( flags & PRIM__ENCODER )
-        prim->return_type->encode = ( encoder ) src_f;
+    p2_type *first_param = prim->parameters[0].type;
 
-    if ( !( o = p2_object__new( env->prim__type, prim, 0 ) ) )
+    if ( flags & PRIM__CONSTRUCTOR )
+        ERROR( "p2_environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
+    if ( flags & PRIM__DECODER )
+        first_param->decode = ( decoder ) src_f;
+    if ( flags & PRIM__DESTRUCTOR )
+        first_param->destroy = ( destructor ) src_f;
+    if ( flags & PRIM__ENCODER )
+        first_param->encode = ( encoder ) src_f;
+
+    if ( !( o = p2_object__new( env->prim_t, prim, 0 ) ) )
     {
         p2_primitive__delete( prim );
         return 0;
@@ -248,7 +250,7 @@ p2_object *p2_environment__register_type(
     p2_type *type,
     int flags )
 {
-    p2_object *o = p2_object__new( env->type__type, type, flags );
+    p2_object *o = p2_object__new( env->type_t, type, flags );
 
     if ( !o )
         return 0;
@@ -292,11 +294,11 @@ p2_type *p2_environment__resolve_type(
     }
 
     #if DEBUG__SAFE
-    if ( o->type != env->type__type )
+    if ( o->type != env->type_t )
     {
-        PRINTERR( "p2_environment__resolve_type: type mismatch" );
+        ERROR( "p2_environment__resolve_type: type mismatch" );
 printf( "    type = '%s' (%i) rather than '%s' (%i)\n",
-    o->type->name, (int) o->type, env->ns__type->name, (int) env->ns__type );
+    o->type->name, (int) o->type, env->ns_t->name, (int) env->ns_t );
         return 0;
     }
     #endif

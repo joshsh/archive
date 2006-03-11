@@ -26,7 +26,7 @@ p2_namespace *p2_namespace__new()
 
     if ( !( ns = new( p2_namespace ) ) )
     {
-        PRINTERR( "p2_namespace__new: allocation failed" );
+        ERROR( "p2_namespace__new: allocation failed" );
         return 0;
     }
 
@@ -52,7 +52,7 @@ void p2_namespace__delete( p2_namespace *ns )
     #if DEBUG__SAFE
         if ( !ns )
         {
-            PRINTERR( "p2_namespace__delete: null namespace" );
+            ERROR( "p2_namespace__delete: null namespace" );
             return;
         }
     #endif
@@ -68,7 +68,7 @@ void p2_namespace__delete( p2_namespace *ns )
 
 
 p2_object *p2_namespace__add
-    ( p2_namespace__object *ns_obj, p2_name *name, p2_object *o )
+    ( p2_namespace_o *ns_obj, p2_name *name, p2_object *o )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
@@ -78,24 +78,24 @@ p2_object *p2_namespace__add
     #if DEBUG__SAFE
     if ( !ns )
     {
-        PRINTERR( "p2_namespace__add: null namespace" );
+        ERROR( "p2_namespace__add: null namespace" );
         return 0;
     }
     if ( !name )
     {
-        PRINTERR( "p2_namespace__add: null name" );
+        ERROR( "p2_namespace__add: null name" );
         return 0;
     }
     if ( !name->size )
     {
-        PRINTERR( "p2_namespace__add: empty name" );
+        ERROR( "p2_namespace__add: empty name" );
         return 0;
     }
     #endif
 
     if ( ns->constant )
     {
-        PRINTERR( "p2_namespace__add: namespace is write-protected" );
+        ERROR( "p2_namespace__add: namespace is write-protected" );
         return 0;
     }
 
@@ -113,7 +113,7 @@ p2_object *p2_namespace__add
 
         if ( child_ns_obj->type != ns_obj->type )
         {
-            PRINTERR( "p2_namespace__add: not a namespace" );
+            ERROR( "p2_namespace__add: not a namespace" );
             displaced_object = 0;
         }
 
@@ -131,26 +131,26 @@ p2_object *p2_namespace__add
 
 
 p2_object *p2_namespace__add_simple
-    ( p2_namespace__object *ns_obj, const char *name, p2_object *o )
+    ( p2_namespace_o *ns_obj, const char *name, p2_object *o )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
     #if DEBUG__SAFE
     if ( !ns )
     {
-        PRINTERR( "p2_namespace__add_simple: null namespace" );
+        ERROR( "p2_namespace__add_simple: null namespace" );
         return 0;
     }
     if ( !name )
     {
-        PRINTERR( "p2_namespace__add_simple: null name" );
+        ERROR( "p2_namespace__add_simple: null name" );
         return 0;
     }
     #endif
 
     if ( ns->constant )
     {
-        PRINTERR( "p2_namespace__add_simple: namespace is write-protected" );
+        ERROR( "p2_namespace__add_simple: namespace is write-protected" );
         return 0;
     }
 
@@ -159,7 +159,7 @@ p2_object *p2_namespace__add_simple
 }
 
 
-p2_object *p2_namespace__lookup( p2_namespace__object *ns_obj, p2_name *name )
+p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
@@ -169,20 +169,20 @@ p2_object *p2_namespace__lookup( p2_namespace__object *ns_obj, p2_name *name )
     #if DEBUG__SAFE
     if ( !ns )
     {
-        PRINTERR( "null namespace" );
+        ERROR( "null namespace" );
         return 0;
     }
     #endif
 
     #if DEBUG__NAMESPACE
-    printf( "[...] p2_namespace__lookup(0x%X, 0x%X)\n", ( int ) ns, ( int ) name );
+    printf( "[...] p2_namespace__lookup(%#x, %#x)\n", ( int ) ns, ( int ) name );
 fflush( stdout );
     #endif
 
     if ( !name || !name->size )
         return ns_obj;
 
-printf( "p2_namespace__lookup: p2_array__peek( name ) = 0x%X\n", ( int ) p2_array__peek( name ) ); fflush( stdout );
+printf( "p2_namespace__lookup: p2_array__peek( name ) = %#x\n", ( int ) p2_array__peek( name ) ); fflush( stdout );
     o = ( p2_object* ) p2_dictionary__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
@@ -192,7 +192,7 @@ printf( "p2_namespace__lookup: p2_array__peek( name ) = 0x%X\n", ( int ) p2_arra
            from the user. */
         if ( o->type != ns_obj->type )
         {
-            PRINTERR( "not a namespace" );
+            ERROR( "not a namespace" );
             o = 0;
         }
 
@@ -209,12 +209,12 @@ printf( "p2_namespace__lookup: p2_array__peek( name ) = 0x%X\n", ( int ) p2_arra
 
 
 p2_object *p2_namespace__lookup_simple(
-    p2_namespace__object *ns_obj, const char *name )
+    p2_namespace_o *ns_obj, const char *name )
 {
     #if DEBUG__SAFE
     if ( !ns_obj )
     {
-        PRINTERR( "p2_namespace__lookup_simple: null namespace" );
+        ERROR( "p2_namespace__lookup_simple: null namespace" );
         return 0;
     }
     #endif
@@ -227,7 +227,7 @@ p2_object *p2_namespace__lookup_simple(
 }
 
 
-p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
+p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
@@ -237,24 +237,24 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
     #if DEBUG__SAFE
     if ( !ns )
     {
-        PRINTERR( "null namespace" );
+        ERROR( "null namespace" );
         return 0;
     }
     if ( !name )
     {
-        PRINTERR( "null name" );
+        ERROR( "null name" );
         return 0;
     }
     if ( !name->size )
     {
-        PRINTERR( "empty name" );
+        ERROR( "empty name" );
         return 0;
     }
     #endif
 
     if ( ns->constant )
     {
-        PRINTERR( "p2_namespace__remove: namespace is write-protected" );
+        ERROR( "p2_namespace__remove: namespace is write-protected" );
         return 0;
     }
 
@@ -272,7 +272,7 @@ p2_object *p2_namespace__remove( p2_namespace__object *ns_obj, p2_name *name )
 
         if ( child_ns_obj->type != ns_obj->type )
         {
-            PRINTERR( "not a namespace" );
+            ERROR( "not a namespace" );
             displaced_object = 0;
         }
 
@@ -306,13 +306,13 @@ static p2_action * lookup_and_print( char *key, p2_dictionary *dict )
 }
 
 
-void p2_namespace__show_children( p2_namespace__object *ns_obj )
+void p2_namespace__show_children( p2_namespace_o *ns_obj )
 {
     int size = ( ( p2_namespace* ) ns_obj->value )->children->size;
     p2_array *a;
     p2_procedure p;
 
-    printf( "0x%X : namespace", ( int ) ns_obj );
+    printf( "%#x : namespace", ( int ) ns_obj );
 
     if ( size )
     {

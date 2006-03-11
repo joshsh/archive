@@ -33,7 +33,7 @@ p2_primitive *p2_primitive__new(
     #if DEBUG__SAFE
     if ( !name || !cstub || !return_type )
     {
-        PRINTERR( "p2_primitive__new: null argument" );
+        ERROR( "p2_primitive__new: null argument" );
         return 0;
     }
     #endif
@@ -41,7 +41,7 @@ p2_primitive *p2_primitive__new(
     if ( !( p = new( p2_primitive ) ) )
     {
         #if DEBUG__SAFE
-        PRINTERR( "p2_primitive__new: allocation failed" );
+        ERROR( "p2_primitive__new: allocation failed" );
         #endif
         return 0;
     }
@@ -51,7 +51,7 @@ p2_primitive *p2_primitive__new(
     #if DEBUG__SAFE
     if ( !p->return_type )
     {
-        PRINTERR( "p2_primitive__new: unknown type" );
+        ERROR( "p2_primitive__new: unknown type" );
         p2_primitive__delete( p );
         return 0;
     }
@@ -65,7 +65,7 @@ p2_primitive *p2_primitive__new(
     #if DEBUG__SAFE
     if ( arity <= 0 )
     {
-        PRINTERR( "p2_primitive__new: bad arity" );
+        ERROR( "p2_primitive__new: bad arity" );
         free( p->name );
         free( p );
         return 0; 
@@ -97,12 +97,12 @@ p2_primitive *p2_primitive__add_param(
     #if DEBUG__SAFE
     if ( !p )
     {
-        PRINTERR( "p2_primitive__add_param: null primitive" );
+        ERROR( "p2_primitive__add_param: null primitive" );
         return 0;
     }
     else if ( !name || !type )
     {
-        PRINTERR( "p2_primitive__add_param: null argument" );
+        ERROR( "p2_primitive__add_param: null argument" );
         p2_primitive__delete( p );
         return 0;
     }
@@ -110,7 +110,7 @@ p2_primitive *p2_primitive__add_param(
 
     if ( !( param.type = p2_environment__resolve_type( env, type ) ) )
     {
-        PRINTERR( "p2_primitive__add_param: unknown type" );
+        ERROR( "p2_primitive__add_param: unknown type" );
         p2_primitive__delete( p );
         return 0;
     }
@@ -125,7 +125,7 @@ p2_primitive *p2_primitive__add_param(
     #if DEBUG__SAFE
     if ( i == p->arity )
     {
-        PRINTERR( "p2_primitive__add_param: too many parameters" );
+        ERROR( "p2_primitive__add_param: too many parameters" );
         p2_primitive__delete( p );
         return 0;
     }
@@ -146,7 +146,7 @@ p2_primitive *p2_primitive__register(
     #if DEBUG__SAFE
     if ( !env || !p )
     {
-        PRINTERR( "p2_primitive__register: null argument" );
+        ERROR( "p2_primitive__register: null argument" );
         if ( p )
             p2_primitive__delete( p );
         return 0;

@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 p2_compiler *compiler = 0;
 
 
-
+/* Find a data type in the compiler environment's "types" namespace. */
 static p2_type *lookup_type( p2_environment *env, const char *name )
 {
     p2_object *o = p2_namespace__lookup_simple( env->types, name );
@@ -33,9 +33,9 @@ static p2_type *lookup_type( p2_environment *env, const char *name )
         return 0;
 
     #if DEBUG__SAFE
-    if ( o->type != env->type__type )
+    if ( o->type != env->type_t )
     {
-        PRINTERR( "lookup_type: type mismatch" );
+        ERROR( "lookup_type: type mismatch" );
         return 0;
     }
     #endif
@@ -50,24 +50,26 @@ p2_compiler *p2_compiler__new( p2_environment *env )
 
     if ( compiler )
     {
-        PRINTERR( "p2_compiler__new: concurrent compiler instances not allowed" );
+        ERROR( "p2_compiler__new: concurrent compiler instances not allowed" );
         return 0;
     }
 
     #if DEBUG__SAFE
     if ( !env )
     {
-        PRINTERR( "p2_compiler__new: null environment" );
+        ERROR( "p2_compiler__new: null environment" );
         return 0;
     }
     #endif
 
     if ( !( c = new( p2_compiler ) ) )
     {
-        PRINTERR( "p2_compiler__new: allocation failed" );
+        ERROR( "p2_compiler__new: allocation failed" );
         return 0;
     }
 
+    /* These basic types are indispensable for the compiler to communicate with
+       the parser. */
     if ( !( c->bag_t = lookup_type( env, "bag" ) )
       || !( c->char_t = lookup_type( env, "char" ) )
       || !( c->combinator_t = lookup_type( env, "combinator" ) )
@@ -76,14 +78,14 @@ p2_compiler *p2_compiler__new( p2_environment *env )
       || !( c->string_t = lookup_type( env, "cstring" ) )
       || !( c->term_t = lookup_type( env, "term" ) ) )
     {
-        PRINTERR( "p2_compiler__new: basic type not found" );
+        ERROR( "p2_compiler__new: basic type not found" );
         free( c );
         return 0;
     }
 
     if ( !( c->commands = p2_dictionary__new() ) )
     {
-        PRINTERR( "p2_compiler__new: allocation failed" );
+        ERROR( "p2_compiler__new: allocation failed" );
         free( c );
         return 0;
     }
@@ -105,12 +107,12 @@ void p2_compiler__delete( p2_compiler *c )
     #if DEBUG__SAFE
     if ( !c )
     {
-        PRINTERR( "p2_compiler__delete: null compiler" );
+        ERROR( "p2_compiler__delete: null compiler" );
         return;
     }
     else if ( c->locked )
     {
-        PRINTERR( "p2_compiler__delete: can't delete while parsing" );
+        ERROR( "p2_compiler__delete: can't delete while parsing" );
         return;
     }
     #endif
@@ -129,7 +131,7 @@ p2_parser__exit_state p2_compiler__parse( p2_compiler *c )
     #if DEBUG__SAFE
     if ( !c )
     {
-        PRINTERR( "p2_compiler__parse: null compiler" );
+        ERROR( "p2_compiler__parse: null compiler" );
         return 1;
     }
     #endif
@@ -140,7 +142,7 @@ p2_parser__exit_state p2_compiler__parse( p2_compiler *c )
     c->locked = 1;
 
     if ( yyparse( &exit_state ) )
-        PRINTERR( "p2_compiler__parse: parser exited abnormally" );
+        ERROR( "p2_compiler__parse: parser exited abnormally" );
 
     c->locked = 0;
 
@@ -171,7 +173,7 @@ static p2_ast *get_inner_node( p2_ast *ast )
     #if DEBUG__SAFE
     if ( ast->type != TERM_T )
     {
-        PRINTERR( "get_inner_node: wrong AST type" );
+        ERROR( "get_inner_node: wrong AST type" );
         return 0;
     }
     #endif
@@ -189,7 +191,7 @@ static p2_ast *get_inner_node( p2_ast *ast )
 
 static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 {
-    p2_namespace__object *ns_obj;
+    p2_namespace_o *ns_obj;
     p2_object *o;
 
     char *first = ( char* ) p2_name__pop( name );
@@ -240,6 +242,7 @@ static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
 }
 
 
+/* Transforms a p2_ast into a p2_object, deleting the p2_ast along the way. */
 static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
 {
     p2_object *o;
@@ -299,7 +302,7 @@ static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
         #if DEBUG__SAFE
         default:
 
-            PRINTERR( "object_for_ast: bad AST type" );
+            ERROR( "object_for_ast: bad AST type" );
             free( ast );
             return 0;
         #endif
@@ -334,7 +337,7 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )
     {
-        PRINTERR( "change_namespace: AST type mismatch" );
+        ERROR( "change_namespace: AST type mismatch" );
         return;
     }
     #endif
@@ -445,36 +448,12 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     #if DEBUG__SAFE
     if ( !expr )
     {
-        PRINTERR( "p2_compiler__evaluate_expression: null AST node" );
-        if ( a )
-            p2_ast__delete( a );
-        return 0;
-    }
-    else if ( expr->type != TERM_T )
-    {
-        PRINTERR( "p2_compiler__evaluate_expression: bad node type" );
+        ERROR( "p2_compiler__evaluate_expression: null AST node" );
         if ( a )
             p2_ast__delete( a );
         return 0;
     }
     #endif
-
-
-
-
-
-    if ( a )
-    {
-        printf( "Evaluate expression \"" );
-        p2_ast__print( a );
-        p2_ast__delete( a );
-        printf( "\" :  ");
-    }
-
-    else
-        printf( "Evaluate anonymous expression :  " );
-
-    p2_ast__print( expr );
 
 
     state.sofarsogood = boolean__true;
@@ -490,14 +469,26 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 printf( "\n" );
     o = object_for_ast( expr, &state );
 
+    printf( "%#x : %s ", ( int ) o, o->type->name );
+    if ( a )
+    {
+        p2_ast__print( a );
+        p2_ast__delete( a );
+    }
+    else
+        printf( "[]" );
+    printf( " = " );
+
     if ( !state.sofarsogood )
-        printf( "*** Error in term. ***\n" );
+        printf( "*** Error in term. ***" );
 
     else
     {
         o->type->encode( o->value, print_buffer );
-        printf( "*** print_buffer = %s ***\n", print_buffer );
+        printf( print_buffer );
     }
+
+    printf( "\n" );
 
     return ret;
 }

@@ -47,7 +47,7 @@ static void **buffer_copy( p2_array *a )
 /* Constructors and destructor ************************************************/
 
 
-p2_array *p2_array__new( int buffer_size, float expansion )
+p2_array *p2_array__new( int buffer_size, unsigned int expansion )
 {
     p2_array *a;
 
@@ -71,6 +71,10 @@ p2_array *p2_array__new( int buffer_size, float expansion )
 
     a->head = a->size = 0;
 
+    #if DEBUG__ARRAY
+    printf( "[%#x] p2_array__new(%i, %i)\n", ( int ) a, buffer_size, expansion );
+    #endif
+
     return a;
 }
 
@@ -90,17 +94,22 @@ p2_array *p2_array__copy( p2_array *a )
         return 0;
     }
 
+    #if DEBUG__ARRAY
+    printf( "[%#x] p2_array__copy(%#x)\n", ( int ) b, ( int ) a );
+    #endif
+
     return b;
 }
 
 
 void p2_array__delete( p2_array *a )
 {
-printf( "---array a 1---\n" ); fflush( stdout );
+    #if DEBUG__ARRAY
+    printf( "[] p2_array__delete(%#x)\n", ( int ) a );
+    #endif
+
     free( a->buffer );
-printf( "---array a 2---\n" ); fflush( stdout );
     free( a );
-printf( "---array a 3---\n" ); fflush( stdout );
 }
 
 
@@ -124,7 +133,7 @@ static p2_array *sizeup( p2_array *a )
 
     if ( !( buffer_new = buffer_new( buffer_size_new ) ) )
     {
-        PRINTERR( "p2_array__minimize: allocation failure" );
+        ERROR( "p2_array__minimize: allocation failure" );
         return 0;
     }
 
@@ -151,7 +160,7 @@ void *p2_array__get( p2_array *a, int i )
 
     else
     {
-        PRINTERR( "p2_array__get: array index out of bounds" );
+        ERROR( "p2_array__get: array index out of bounds" );
         return 0;
     }
 }
@@ -171,7 +180,7 @@ void *p2_array__set( p2_array *a, int i, void *p )
 
     else
     {
-        PRINTERR( "p2_array__set: array index out of bounds" );
+        ERROR( "p2_array__set: array index out of bounds" );
         return 0;
     }
 }
@@ -194,7 +203,7 @@ void *p2_array__peek( p2_array *a )
 
     else
     {
-        PRINTERR( "p2_array__peek: empty array" );
+        ERROR( "p2_array__peek: empty array" );
         return 0;
     }
 }
@@ -227,7 +236,7 @@ void *p2_array__pop( p2_array *a )
 
     else
     {
-        PRINTERR( "p2_array__pop: can't remove from empty array" );
+        ERROR( "p2_array__pop: can't remove from empty array" );
         return 0;
     }
 }
@@ -255,7 +264,7 @@ void *p2_array__dequeue( p2_array *a )
 
     else
     {
-        PRINTERR( "p2_array__dequeue: can't remove from empty array" );
+        ERROR( "p2_array__dequeue: can't remove from empty array" );
         return 0;
     }
 }
@@ -284,7 +293,7 @@ void *p2_array__insert_before( p2_array *a, int i, void *p )
 
     else
     {
-        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        ERROR( "p2_array__insert_before: array index out of bounds" );
         return 0;
     }
 }
@@ -310,7 +319,7 @@ void *p2_array__insert_after( p2_array *a, int i, void *p )
 
     else
     {
-        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        ERROR( "p2_array__insert_before: array index out of bounds" );
         return 0;
     }
 }
@@ -335,7 +344,7 @@ void *p2_array__remove( p2_array *a, int i )
 
     else
     {
-        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        ERROR( "p2_array__insert_before: array index out of bounds" );
         return 0;
     }
 }
@@ -357,7 +366,7 @@ void *p2_array__simple_remove( p2_array *a, int i )
 
     else
     {
-        PRINTERR( "p2_array__insert_before: array index out of bounds" );
+        ERROR( "p2_array__insert_before: array index out of bounds" );
         return 0;
     }
 }
@@ -449,7 +458,7 @@ void p2_array__sort( p2_array *a, comparator compare )
        deal with index wrapping. */
     if ( !normalize( a ) || !( state.aux = buffer_new( a->size ) ) )
     {
-        PRINTERR( "p2_array__sort: allocation failure" );
+        ERROR( "p2_array__sort: allocation failure" );
         return;
     }
 
@@ -518,7 +527,7 @@ p2_array *p2_array__minimize( p2_array *a )
 
     if ( !( buffer_new = buffer_new( a->size ) ) )
     {
-        PRINTERR( "p2_array__minimize: allocation failure" );
+        ERROR( "p2_array__minimize: allocation failure" );
         return 0;
     }
 

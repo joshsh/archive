@@ -2,12 +2,11 @@
 #define DOUBLE_H
 
 
-/** $encoder */
-void double__encode( double p, char *buffer );
-
 /** $decoder */
 double double__decode( char *buffer );
 
+/** $encoder */
+void double__encode( double *p, char *buffer );
+
 
 #endif  /* DOUBLE_H */
-

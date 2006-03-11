@@ -27,7 +27,7 @@ void p2_primitive__delete( p2_primitive *prim )
     #if DEBUG__SAFE
     if ( !prim )
     {
-        PRINTERR( "p2_primitive__delete: null primitive" );
+        ERROR( "p2_primitive__delete: null primitive" );
         return;
     }
     #endif
