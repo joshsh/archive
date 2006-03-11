@@ -92,13 +92,13 @@ phase2 :  main.c utils $(OBJECTS)
 	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS)
 
 
-p2_%.o :  p2_%.c p2_%.h p2_flags.h
+p2_%.o :  p2_%.c p2_%.h flags.h
 	$(CC) -c p2_$*.c
 
 
 ################################################################################
 # Compile SK semantics library.
 
-sk.o :  sk/sk.c p2_flags.h
+sk.o :  sk/sk.c flags.h
 	$(CC) -c sk/sk.c
 

@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_H
 
 
-#include "p2_flags.h"
+#include "flags.h"
 
 
 typedef enum _boolean
