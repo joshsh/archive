@@ -29,10 +29,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_COMPILER_H
 
 
-#include "p2_environment.h"
-#include "parser/p2_ast.h"
-#include "parser/p2_parser.h"
-#include "util/p2_dictionary.h"
+#include <p2_environment.h>
+#include <parser/p2_ast.h>
+#include <parser/p2_parser.h>
+#include <util/p2_dictionary.h>
 
 
 /** Bison parser dependency. */

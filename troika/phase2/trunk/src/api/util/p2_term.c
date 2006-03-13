@@ -18,9 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_term.h"
-
-#include <stdlib.h>  /* free */
-#include <string.h>  /* memcpy */
+#include <p2_object.h>
 
 
 /*******************************************************************************/
@@ -433,8 +431,9 @@ void p2_term__distribute( p2_term *t, p2_procedure *p )
 
 
 static void encode
-    ( void **cur, char *buffer, encoder encode_child, int delimit )
+    ( void **cur, char *buffer, int delimit )
 {
+    p2_object *o;
     void **sup;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
@@ -442,58 +441,71 @@ static void encode
     {
         cur++;
 
+/*
         if ( delimit )
         {
             sprintf( buffer, " " );
             buffer++;
         }
+*/
 
-        encode_child( *cur, buffer );
+        o = ( p2_object* ) *cur;
+        o->type->encode( o->value, buffer );
     }
 
     /* If the sub-term contains further sub-terms, recurse through them. */
     else
     {
+        if ( delimit )
+        {
+            sprintf( buffer,  "( " );
+            buffer += 2;
+        }
+
         sup = cur + ( unsigned int ) *cur;
         cur++;
         while ( cur < sup )
         {
-            if ( delimit )
-            {
-                sprintf( buffer,  "(" );
-                buffer++;
-            }
-
-            encode( cur, buffer, encode_child, 1 );
+            encode( cur, buffer, 1 );
             buffer += strlen( buffer );
 
-            if ( delimit )
-            {
-                sprintf( buffer, " )" );
-                buffer += 2;
-            }
-
             cur += ( unsigned int ) *cur;
+
+            if ( cur < sup )
+            {
+                sprintf( buffer, " " );
+                buffer++;
+            }
+        }
+
+        if ( delimit )
+        {
+            sprintf( buffer, " )" );
+            buffer += 2;
         }
     }
 }
 
 
-void p2_term__encode( p2_term *t, char *buffer, encoder encode_child )
+static void p2_term__encode( p2_term *t, char *buffer )
 {
+/*
+void **cur = t->head, **sup = t->buffer + t->buffer_size;
+while ( cur < sup ) {
+printf( " %i", ( int ) *cur ); cur++; }
+printf( "\n" );
+*/
     #if DEBUG__SAFE
-    if ( !t || !buffer || !encode_child )
+    if ( !t || !buffer )
     {
         ERROR( "p2_term__encode: null argument" );
         return;
     }
     #endif
 
-    encode( t->head, buffer, encode_child, 0 );
+    encode( t->head, buffer, 0 );
 }
 
-
-/******************************************************************************/
 
 
 p2_type *p2_term__type( const char *name )
@@ -504,6 +516,7 @@ p2_type *p2_term__type( const char *name )
     {
         type->destroy = ( destructor ) p2_term__delete;
         type->distribute = ( distributor ) p2_term__distribute;
+        type->encode = ( encoder ) p2_term__encode;
     }
 
     return type;

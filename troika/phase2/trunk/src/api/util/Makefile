@@ -1,7 +1,8 @@
 ################################################################################
 ## Compile utilities and/or run a test program under Valgrind (memcheck).
 
-CC       = gcc $(CFLAGS)
+INCLUDE = -I../
+CC      = gcc $(CFLAGS) $(INCLUDE)
 
 VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 

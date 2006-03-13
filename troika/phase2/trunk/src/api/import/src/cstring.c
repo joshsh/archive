@@ -1,11 +1,11 @@
 #include "cstring.h"
-#include <string.h>  /* strdup */
-#include <stdio.h>  /* sprintf */
+
+#include <p2.h>
 
 
 cstring *cstring__decode( char *buffer )
 {
-    return strdup( buffer );
+    return STRDUP( buffer );
 }
 
 

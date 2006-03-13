@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_array.h"
+#include <p2_object.h>
 
 #include <string.h>  /* memcpy */
 
@@ -546,6 +547,106 @@ p2_array *p2_array__minimize( p2_array *a )
 /******************************************************************************/
 
 
+static void encode
+    ( void **cur, char *buffer, int delimit )
+{
+    p2_object *o;
+    void **sup;
+
+    /* If the sub-term represents a leaf node, execute the procedure. */
+    if ( ( unsigned int ) *cur == 2 )
+    {
+        cur++;
+
+/*
+        if ( delimit )
+        {
+            sprintf( buffer, " " );
+            buffer++;
+        }
+*/
+
+        o = ( p2_object* ) *cur;
+        o->type->encode( o->value, buffer );
+    }
+
+    /* If the sub-term contains further sub-terms, recurse through them. */
+    else
+    {
+        if ( delimit )
+        {
+            sprintf( buffer,  "( " );
+            buffer += 2;
+        }
+
+        sup = cur + ( unsigned int ) *cur;
+        cur++;
+        while ( cur < sup )
+        {
+            encode( cur, buffer, 1 );
+            buffer += strlen( buffer );
+
+            cur += ( unsigned int ) *cur;
+
+            if ( cur < sup )
+            {
+                sprintf( buffer, " " );
+                buffer++;
+            }
+        }
+
+        if ( delimit )
+        {
+            sprintf( buffer, " )" );
+            buffer += 2;
+        }
+    }
+}
+
+
+static void p2_array__encode( p2_array *a, char *buffer )
+{
+    int i;
+    p2_object *o;
+
+    #if DEBUG__SAFE
+    if ( !a || !buffer )
+    {
+        ERROR( "p2_array__encode: null argument" );
+        return;
+    }
+    #endif
+
+    sprintf( buffer, "{" );
+    buffer++;
+
+    if ( a->size )
+    {
+        for ( i = 0; i < a->size; i++ )
+        {
+            o = ( p2_object* ) elmt( a, i );
+
+            if ( i )
+            {
+                sprintf( buffer, ", " );
+                buffer += 2;
+            }
+
+            else
+            {
+                sprintf( buffer, " " );
+                buffer++;
+            }
+
+            o->type->encode( o->value, buffer );
+            buffer += strlen( buffer );
+        }
+    }
+
+    sprintf( buffer, " }" );
+}
+
+
 p2_type *p2_array__type( const char *name )
 {
     p2_type *type = p2_type__new( name, 0 );
@@ -554,6 +655,7 @@ p2_type *p2_array__type( const char *name )
     {
         type->destroy = ( destructor ) p2_array__delete;
         type->distribute = ( distributor ) p2_array__distribute;
+        type->encode = ( encoder ) p2_array__encode;
     }
 
     return type;

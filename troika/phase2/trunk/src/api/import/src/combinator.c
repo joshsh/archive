@@ -13,7 +13,7 @@ combinator combinator__decode( char *buffer )
 
 void combinator__encode( combinator *c, char *buffer )
 {
-    if ( c == S_combinator )
+    if ( *c == S_combinator )
         sprintf( buffer, "S" );
     else
         sprintf( buffer, "K" );

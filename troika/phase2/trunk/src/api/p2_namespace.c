@@ -93,14 +93,14 @@ p2_object *p2_namespace__add
     }
     #endif
 
-    if ( ns->constant )
-    {
-        ERROR( "p2_namespace__add: namespace is write-protected" );
-        return 0;
-    }
-
     if ( name->size == 1 )
     {
+        if ( ns->constant )
+        {
+            ERROR( "p2_namespace__add: namespace is write-protected" );
+            return 0;
+        }
+
         displaced_object = ( p2_object* ) p2_dictionary__add(
             ns->children, ( char* ) p2_array__peek( name ), o );
     }
@@ -252,14 +252,14 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
     }
     #endif
 
-    if ( ns->constant )
-    {
-        ERROR( "p2_namespace__remove: namespace is write-protected" );
-        return 0;
-    }
-
     if ( name->size == 1 )
     {
+        if ( ns->constant )
+        {
+            ERROR( "p2_namespace__remove: namespace is write-protected" );
+            return 0;
+        }
+
         displaced_object = ( p2_object* ) p2_dictionary__remove(
             ns->children, ( char* ) p2_array__peek( name ) );
     }

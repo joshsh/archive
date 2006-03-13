@@ -28,9 +28,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_ENVIRONMENT_H
 
 
-#include "p2_memory_manager.h"
-#include "p2_namespace.h"
-#include "p2_primitive.h"
+#include <p2_memory_manager.h>
+#include <p2_namespace.h>
+#include <p2_primitive.h>
 
 
 /** A data structure which is equivalent to a namespace containing uniquely

@@ -17,21 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "sk.h"
-#include "../p2_primitive.h"
-
-#include <stdlib.h>  /* malloc */
-#include <string.h>  /* memcpy */
-
-
-
-
-
-/* Pointer to a function which generates output as terms are reduced. */
-void ( *debug_print_ )( p2_term* );
-
-
-
+#include <sk/sk.h>
+#include <p2_primitive.h>
 
 
 /* Kxy --> x
@@ -238,12 +225,13 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
+    p2_type *term_type,
     p2_type *primitive_type,
     p2_type *combinator_type,
     void (*for_each_iteration)(p2_term*) )
 {
     #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
-        int iter = 0;
+    int iter = 0;
     #endif
 
     p2_object *head;
@@ -336,6 +324,15 @@ p2_term *SK_reduce(
                         term = K_reduce( term );
                     break;
             }
+        }
+
+        /* If there is a term object at the head of the term being reduced,
+           expand its value. */
+        else if ( head_type == term_type )
+        {
+            term = p2_term__merge_la(
+                p2_term__copy( ( p2_term* ) head->value ),
+                term );
         }
 
         /* Any object which is not an S or K combinator or a primitive is

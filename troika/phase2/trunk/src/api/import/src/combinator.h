@@ -1,7 +1,7 @@
 #ifndef COMBINATOR_H
 #define COMBINATOR_H
 
-#include "../../../sk/sk.h"
+#include <sk/sk.h>
 
 
 /** $encoder */

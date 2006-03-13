@@ -17,7 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_compiler.h"
+#include <p2_compiler.h>
+#include <sk/sk.h>
 
 
 /* Compiler object is global because flex/bison are not thread safe. */
@@ -41,6 +42,28 @@ static p2_type *lookup_type( p2_environment *env, const char *name )
     #endif
 
     return ( p2_type* ) o->value;
+}
+
+
+static void add_combinators( p2_compiler *c )
+{
+    p2_object *o;
+    combinator *sk_s, *sk_k;
+    p2_memory_manager *m = c->env->manager;
+
+    sk_s = new( combinator );
+    sk_k = new( combinator );
+
+    *sk_s = S_combinator;
+    *sk_k = K_combinator;
+
+    o = p2_object__new( c->combinator_t, sk_s, 0 );
+    p2_memory_manager__add( m, o );
+    p2_namespace__add_simple( c->env->data, "S", o );
+
+    o = p2_object__new( c->combinator_t, sk_k, 0 );
+    p2_memory_manager__add( m, o );
+    p2_namespace__add_simple( c->env->data, "K", o );
 }
 
 
@@ -95,6 +118,8 @@ p2_compiler *p2_compiler__new( p2_environment *env )
     c->locked = 0;
     c->suppress_output = boolean__false;
     c->show_line_numbers = boolean__true;
+
+    add_combinators( c );
 
     compiler = c;
 
@@ -189,6 +214,29 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
+static p2_object *assign_name( p2_compiler *c, p2_name *name, p2_object *o )
+{
+    p2_namespace_o *ns_obj;
+
+    char *first = ( char* ) p2_name__pop( name );
+    if ( !strcmp( first, "root" ) )
+    {
+        ns_obj = c->env->root;
+        o = p2_namespace__add( ns_obj, name, o );
+        p2_name__push( name, first );
+    }
+
+    else
+    {
+        ns_obj = c->cur_ns_obj;
+        p2_name__push( name, first );
+        o = p2_namespace__add( ns_obj, name, o );
+    }
+
+    return o;
+}
+
+
 static p2_object *resolve_name( p2_compiler *c, p2_name *name )
 {
     p2_namespace_o *ns_obj;
@@ -237,7 +285,7 @@ static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
     if ( !o )
         state->sofarsogood = boolean__false;
 
-    state->action->value = 0;
+    state->action->value = o;
     return state->action;
 }
 
@@ -312,6 +360,7 @@ static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
 
     /* Create and register a new object. */
     o = p2_object__new( type, value, flags );
+printf( "o = %i\n", ( int ) o );
     p2_memory_manager__add( compiler->env->manager, o );
 
     return o;
@@ -354,7 +403,7 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
             c->cur_ns_obj = o;
             printf( "Moved to namespace '" );
             p2_ast__print( arg );
-            printf( "'." );
+            printf( "'.\n" );
         }
     }
 }
@@ -372,7 +421,7 @@ printf( "---c gc 1---\n" ); fflush( stdout );
     size_after = p2_memory_manager__size( m );
 printf( "---c gc 2---\n" ); fflush( stdout );
 
-    printf( "Collected %i of %i objects (%.3g%%).",
+    printf( "Collected %i of %i objects (%.3g%%).\n",
         size_before - size_after,
         size_before,
         ( ( size_before - size_after ) * 100 ) / ( double ) size_before );
@@ -415,12 +464,12 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
     else if ( !strcmp( name, "size" ) )
     {
         if ( n_args( args, 0 ) )
-            printf( "There are %i objects in this environment.",
+            printf( "There are %i objects in this environment.\n",
                 p2_memory_manager__size( compiler->env->manager ) );
     }
 
     else
-        printf( "Error: unknown command." );
+        printf( "Error: unknown command.\n" );
 
     if ( args )
         p2_ast__delete( args );
@@ -441,20 +490,18 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     p2_ast *a = 0;
     p2_object *o;
     char print_buffer[1000];
-
-    if ( name )
-        a = p2_ast__name( name );
+    p2_term *t;
 
     #if DEBUG__SAFE
     if ( !expr )
     {
         ERROR( "p2_compiler__evaluate_expression: null AST node" );
-        if ( a )
-            p2_ast__delete( a );
         return 0;
     }
     #endif
 
+    if ( name )
+        a = p2_ast__name( name );
 
     state.sofarsogood = boolean__true;
 
@@ -465,30 +512,45 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     subst_proc.state = &state;
     state.subst_proc = &subst_proc;
 
-
-printf( "\n" );
     o = object_for_ast( expr, &state );
 
-    printf( "%#x : %s ", ( int ) o, o->type->name );
-    if ( a )
+    /* If a term, reduce. */
+    if ( o && state.sofarsogood && o->type == compiler->term_t )
     {
-        p2_ast__print( a );
-        p2_ast__delete( a );
+        t = SK_reduce( ( p2_term* ) o->value,
+            compiler->env->manager,
+            compiler->term_t,
+            compiler->env->prim_t,
+            compiler->combinator_t, 0 );
+
+        if ( t )
+            o->value = t;
+
+        else
+            o = 0;
     }
-    else
-        printf( "[]" );
-    printf( " = " );
 
-    if ( !state.sofarsogood )
-        printf( "*** Error in term. ***" );
-
-    else
+    if ( o && state.sofarsogood )
     {
+        printf( "%#x : %s ", ( int ) o, o->type->name );
+        if ( a )
+        {
+            assign_name( compiler, name, o );
+            p2_ast__print( a );
+        }
+        else
+            printf( "[]" );
+
+        printf( " = " );
+
         o->type->encode( o->value, print_buffer );
         printf( print_buffer );
+
+        printf( "\n" );
     }
 
-    printf( "\n" );
+    if ( a )
+        p2_ast__delete( a );
 
     return ret;
 }

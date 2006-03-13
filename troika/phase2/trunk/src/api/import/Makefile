@@ -16,8 +16,10 @@ CXX_OUT = ./target/cxx
 XML_OUT = ./target/xml
 OBJ_OUT = ./target
 
-CFLAGS       = -g -Wall --pedantic-errors  # These are temporary.
-CC           = gcc $(CFLAGS)
+INCLUDE = -I../
+CFLAGS  = -g -Wall --pedantic-errors  # These are temporary.
+
+CC      = gcc $(CFLAGS) $(INCLUDE)
 
 
 .PHONY : default
