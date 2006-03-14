@@ -337,4 +337,64 @@ void p2_namespace__show_children( p2_namespace_o *ns_obj )
 }
 
 
+/******************************************************************************/
+
+/*
+static boolean equals( void *p1, void *p2 )
+{
+    if ( p1 == p2 )
+        return boolean__true;
+    else
+        return boolean__false;
+}
+
+
+    p2_object *match = ( p2_object* )
+        p2_collection__first_match( ns_obj, ( criterion ) equals );
+
+
+
+static p2_action * ns__trace_bfs( p2_object *o, trace_proc_st *state )
+{
+    p2_action *action;
+
+    if ( !o )
+    {
+        #if DEBUG__SAFE
+        WARNING( "ns__trace_bfs: null object" );
+        #endif
+
+        return 0;
+    }
+
+    if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
+    {
+        if ( o->flags & OBJECT__IS_OBJ_COLL )
+        {
+            o->type->distribute( o->value, state->outer_p );
+        }
+
+        #if TRIPLES__GLOBAL__OUT_EDGES
+        if ( o->outbound_edges )
+        {
+            p2_lookup_table__distribute( o->outbound_edges, state->edge_p );
+        }
+        #endif
+    }
+
+    return 0;
+}
+*/
+
+
+p2_name *p2_namespace__find( p2_namespace_o *ns_obj, p2_object *o )
+{
+    p2_name *name = p2_name__new();
+
+    /* ... */
+
+    return name;
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -5,7 +5,7 @@
 
 
 /** $decoder */
-cstring *cstring__decode( char *buffer );
+cstring *cstring__decode( cstring *buffer );
 
 /** $encoder */
 void cstring__encode( cstring *p, char *buffer );

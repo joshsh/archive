@@ -42,7 +42,8 @@ static p2_term *K_reduce( p2_term *term )
     memcpy( term->head, x, x_size * sizeof( void* ) );
 
     /* Reset the term head. */
-    term->head--;
+    if ( ( unsigned int ) *term->head == 2 )
+        term->head--;
     *( term->head ) = ( void * ) ( term->buffer + term->buffer_size - term->head );
 
     return term;
@@ -100,7 +101,8 @@ static p2_term *S_reduce( p2_term *term )
     free( aux );
 
     /* Prepend a term head. */
-    term->head--;
+    if ( ( unsigned int ) *term->head == 2 )
+        term->head--;
     *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
 
     return term;
@@ -222,6 +224,41 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 }
 
 
+/* Expand the subterm at the head of another term. */
+static p2_term *term_reduce( p2_term *term )
+{
+    unsigned int size, newsize;
+    p2_term *head_term;
+
+    if ( ( unsigned int ) *( term->head ) == 2 )
+    {
+        head_term = ( p2_term* ) ( ( p2_object* ) *( term->head + 1 ) )->value;
+        p2_term__delete( term );
+        return p2_term__copy( head_term );
+    }
+
+    else
+    {
+        head_term = ( p2_term* ) ( ( p2_object* ) *( term->head + 2 ) )->value;
+
+        size = ( unsigned int ) *head_term->head;
+
+        newsize = ( unsigned int ) *term->head + size - 2;
+        if ( newsize > term->buffer_size )
+            term = p2_term__expand( term, newsize );
+
+        term->head = term->buffer + term->buffer_size - ( unsigned int ) *term->head + 3 - size;
+        memcpy( term->head, head_term->buffer, size * sizeof( void* ) );
+
+        if ( ( unsigned int ) *term->head == 2 )
+            term->head--;
+        *term->head = ( void* ) ( term->buffer + term->buffer_size - term->head );
+
+        return term;
+    }
+}
+
+
 p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
@@ -250,6 +287,20 @@ p2_term *SK_reduce(
     /* Iterate until the resulting term is in head-normal form. */
     for (;;)
     {
+        #if DEBUG__SAFE
+        if ( !term )
+        {
+            ERROR( "SK_reduce: null term" );
+            return 0;
+        }
+        #endif
+
+/*
+cur = term->head; sup = term->buffer + term->buffer_size;
+while ( cur < sup ) {
+printf( " %x", ( int ) *cur ); cur++; }
+printf( "\n" );  fflush( stdout );
+*/
         #if SK__CHECKS__MAX_TERM_SIZE > 0
         if ( ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
         {
@@ -330,13 +381,45 @@ p2_term *SK_reduce(
            expand its value. */
         else if ( head_type == term_type )
         {
-            term = p2_term__merge_la(
-                p2_term__copy( ( p2_term* ) head->value ),
-                term );
+            term = term_reduce( term );
+/*
+            head_term = p2_term__copy( ( p2_term* ) head->value );
+printf( "---sk r x 2---\n" ); fflush( stdout );
+
+            size = ( unsigned int ) *term->head;
+printf( "size = %i\n", *term->head );
+            if ( size == 2 )
+            {
+printf( "---sk r x 3a---\n" ); fflush( stdout );
+                p2_term__delete( term );
+                term = head_term;
+            }
+
+            else
+            {
+printf( "---sk r x 3b---\n" ); fflush( stdout );
+                term->head += 3;
+                if ( ( unsigned int ) *term->head == 2 )
+                {
+                    if ( size > 5 )
+                    {
+                        term->head--;
+                        *term->head = ( void* ) ( size - 2 );
+printf( "size - 2 = %i\n", *term->head );
+                    }
+
+                    term = p2_term__cat( head_term, term );
+                }
+
+                else
+                    term = p2_term__merge_la( head_term, term );
+            }
+*/
+printf( "---sk r x 4---\n" ); fflush( stdout );
         }
 
-        /* Any object which is not an S or K combinator or a primitive is
-           considered a non-redex object. */
+        /* Any object which is not an S or K combinator, a term or a primitive
+           is considered a non-redex object. */
         else
         {
             #if SK__ALLOW_NONREDUX
@@ -359,6 +442,7 @@ p2_term *SK_reduce(
         }
 
         #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
+printf( "iter = %i\n", iter );
         if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
         {
             ERROR( "SK_reduce: reduction aborted (possible infinite loop)" );

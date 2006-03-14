@@ -1,12 +1,14 @@
 #ifndef CHAR_H
 #define CHAR_H
 
+#include "include/cstring-def.h"
+
 
 /** $decoder */
-char char__decode( char *buffer );
+char char__decode( cstring *buffer );
 
 /** $encoder */
-void char__encode( char *c, char *buffer );
+void char__encode( char *c, cstring *buffer );
 
 
 #endif  /* CHAR_H */

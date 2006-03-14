@@ -70,7 +70,8 @@ IMPORT_OBJECTS = \
 	$(IMPORT)/target/cxx/cstring.o \
 	$(IMPORT)/target/cxx/combinator.o \
 	$(IMPORT)/target/cxx/double.o \
-	$(IMPORT)/target/cxx/int.o
+	$(IMPORT)/target/cxx/int.o \
+	$(IMPORT)/target/cxx/toys.o
 
 .PHONY : import
 import :

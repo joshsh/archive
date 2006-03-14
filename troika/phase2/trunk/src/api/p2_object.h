@@ -92,8 +92,11 @@ void p2_object__delete( p2_object *o );
 
 /* Graph traversal ************************************************************/
 
-/* A recursive distributor. */
+/* A (depth-first) recursive distributor. */
 void p2_object__trace( p2_object *o, p2_procedure *p );
+
+/* A breadth-first recursive distributor. */
+void p2_object__trace_bfs( p2_object *o, p2_procedure *p );
 
 
 /* Association ****************************************************************/

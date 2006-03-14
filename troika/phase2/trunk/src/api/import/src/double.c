@@ -3,13 +3,13 @@
 #include <stdio.h>  /* sprintf */
 
 
-double double__decode( char *buffer )
+double double__decode( cstring *buffer )
 {
     return atof( buffer );
 }
 
 
-void double__encode( double *p, char *buffer )
+void double__encode( double *p, cstring *buffer )
 {
     sprintf( buffer, "%g", *p );
 }

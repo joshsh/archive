@@ -93,6 +93,9 @@ void p2_namespace__show_children( p2_namespace_o *ns_obj );
 void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p );
 
 
+p2_name *p2_namespace__find( p2_namespace_o *ns_obj, p2_object *o );
+
+
 #endif /* P2_NAMESPACE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

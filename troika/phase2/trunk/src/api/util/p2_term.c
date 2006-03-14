@@ -66,9 +66,19 @@ p2_term *p2_term__expand( p2_term *t, unsigned int minimum_buffer_size )
 /* Constructors and destructor ************************************************/
 
 
-p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
+p2_term *p2_term__new( void *p, unsigned int initial_buffer_size )
 {
-    p2_term *t = (p2_term *) malloc(sizeof(p2_term));
+    p2_term *t;
+
+    #if DEBUG__SAFE
+    if ( !p )
+    {
+        ERROR( "p2_term__new: null argument" );
+        return 0;
+    }
+    #endif
+
+    t = (p2_term *) malloc(sizeof(p2_term));
 
     /* Buffer starts out at this size, but may expand later. */
     if (initial_buffer_size < 2)
@@ -97,32 +107,35 @@ p2_term *p2_term__new(void *p, unsigned int initial_buffer_size)
 }
 
 
-p2_term *p2_term__copy(p2_term *source)
+p2_term *p2_term__copy( p2_term *source )
 {
     unsigned int size;
     p2_term *t;
 
-    if (!source)
-        t = 0;
-    else
+    #if DEBUG__SAFE
+    if ( !source )
     {
-        size = (unsigned int) *(source->head);
-
-        t = (p2_term *) malloc(sizeof(p2_term));
-
-        /* Buffer starts out at this size, but may expand later. */
-        t->buffer_size = source->buffer_size;
-
-        /* Create the buffer. */
-        t->buffer = (void **) malloc(t->buffer_size * sizeof(void *));
-
-        /* Set the head of the p2_term and store its size there. */
-        t->head = t->buffer + t->buffer_size - size;
-        *(t->head) = (void *) size;
-
-        /* Copy data from source buffer to new p2_term's buffer. */
-        memcpy(t->head, source->head, size * sizeof(void *));
+        ERROR( "p2_term__copy: null argument" );
+        return 0;
     }
+    #endif
+
+    size = ( unsigned int ) *( source->head );
+
+    t = new( p2_term );
+
+    /* Buffer starts out at this size, but may expand later. */
+    t->buffer_size = source->buffer_size;
+
+    /* Create the buffer. */
+    t->buffer = ( void** ) malloc( t->buffer_size * sizeof( void* ) );
+
+    /* Set the head of the p2_term and store its size there. */
+    t->head = t->buffer + t->buffer_size - size;
+    *( t->head ) = ( void* ) size;
+
+    /* Copy data from source buffer to new p2_term's buffer. */
+    memcpy( t->head, source->head, size * sizeof( void* ) );
 
     #if DEBUG__TERM
     printf( "[%#x] p2_term__copy(%#x)\n", ( int ) t, ( int ) source );
@@ -132,36 +145,44 @@ p2_term *p2_term__copy(p2_term *source)
 }
 
 
-void p2_term__delete(p2_term *t)
+void p2_term__delete( p2_term *t )
 {
+    #if DEBUG__SAFE
+    if ( !t )
+    {
+        ERROR( "p2_term__delete: null term" );
+        return;
+    }
+    #endif
+
     #if DEBUG__TERM
     printf( "[] p2_term__delete(%#x)\n", ( int ) t );
     #endif
 
-    free(t->buffer);
-    free(t);
+    free( t->buffer );
+    free( t );
 }
 
 
 /* Accessors ******************************************************************/
 
 
-unsigned int p2_term__length(p2_term *t)
+unsigned int p2_term__length( p2_term *t )
 {
     unsigned int length = 0;
     void **cur, **sup;
 
     cur = t->head;
-    if (*cur == (void *) 2)
+    if ( *cur == ( void* ) 2 )
         length = 1;
     else
     {
         cur++;
         sup = t->buffer + t->buffer_size;
-        while (cur < sup)
+        while ( cur < sup )
         {
             length++;
-            cur += (unsigned int) *cur;
+            cur += ( unsigned int ) *cur;
         }
     }
 
@@ -503,7 +524,13 @@ printf( "\n" );
     }
     #endif
 
+    sprintf( buffer, "[ " );
+    buffer += 2;
+
     encode( t->head, buffer, 0 );
+    buffer += strlen( buffer );
+
+    sprintf( buffer, " ]" );
 }
 
 

@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "p2_object.h"
+#include <util/p2_array.h>
 
 
 p2_object *p2_object__new( p2_type *type, void *value, int flags )
@@ -209,6 +210,55 @@ void p2_object__trace( p2_object *o, p2_procedure *p )
     trace_proc.state = &state;
 
     p2_procedure__execute( ( &trace_proc ), o );
+}
+
+
+static p2_action * enqueue( p2_object *o, p2_array *queue )
+{
+    p2_array__enqueue( queue, o );
+    return 0;
+}
+
+
+/* Note: untested. */
+void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
+{
+    trace_proc_st state;
+    p2_procedure trace_proc;
+    p2_procedure edge_p;
+    p2_procedure outer_p;
+
+    p2_array *queue;
+
+    #if DEBUG__SAFE
+    if ( !o )
+    {
+        ERROR( "p2_object__trace: null object" );
+        return;
+    }
+    #endif
+
+    queue = p2_array__new( 0, 0 );
+    p2_array__enqueue( queue, o );
+
+    edge_p.execute = ( procedure ) apply_to_assoc_edge;
+    edge_p.state = &trace_proc;
+
+    outer_p.execute = ( procedure ) enqueue;
+    outer_p.state = queue;
+
+    state.outer_p = &outer_p;
+    state.inner_p = p;
+    state.edge_p = &edge_p;
+
+    trace_proc.execute = ( procedure ) trace_exec;
+    trace_proc.state = &state;
+
+    while ( queue->size )
+    {
+        p2_procedure__execute( ( &trace_proc ),
+            ( p2_object* ) p2_array__pop( queue ) );
+    }
 }
 
 
