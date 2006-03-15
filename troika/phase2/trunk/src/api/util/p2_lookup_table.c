@@ -112,6 +112,18 @@ void p2_lookup_table__remove
 
 void p2_lookup_table__distribute( p2_lookup_table *t, p2_procedure *p )
 {
+    #if DEBUG__SAFE
+    if ( !t || !p )
+    {
+        ERROR( "p2_lookup_table__distribute: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__LOOKUP_TABLE
+    printf( "p2_lookup_table__distribute(%#x, %#x)\n", ( int ) t, ( int ) p );
+    #endif
+
     p2_hash_table__distribute( t, p );
 }
 

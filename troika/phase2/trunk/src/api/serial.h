@@ -1,3 +1,11 @@
+/**
+
+\file  serial.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
+
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -17,37 +25,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_primitive.h"
+#ifndef SERIAL_H
+#define SERIAL_H
+
+#include <p2_compiler.h>
 
 
-void p2_primitive__delete( p2_primitive *prim )
-{
-    unsigned int i;
-
-    #if DEBUG__SAFE
-    if ( !prim )
-    {
-        ERROR( "p2_primitive__delete: null primitive" );
-        return;
-    }
-    #endif
-
-    free( prim->name );
-
-    for ( i = 0; i < prim->arity; i++ )
-        if ( prim->parameters[i].name )
-            free( prim->parameters[i].name );
-
-    free( prim->parameters );
-
-    free( prim );
-}
+void p2_compiler__serialize( p2_compiler *c, char *path );
 
 
-void p2_primitive__encode( p2_primitive *prim, char *buffer )
-{
-    sprintf( buffer, prim->name );
-}
-
+#endif  /* SERIAL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

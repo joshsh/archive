@@ -27,8 +27,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef P2_MEMORY_MANAGER_H
 #define P2_MEMORY_MANAGER_H
 
-#include "p2_object.h"
-#include "util/p2_bunch.h"
+#include <p2_object.h>
+#include <util/p2_bunch.h>
+#include <util/p2_set.h>
 
 
 /** \note  A memory manager is a closed system.  It owns all objects passed to
@@ -62,6 +63,8 @@ p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o );
 /* Tracing / graph traversal **************************************************/
 
 void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p );
+
+p2_set *p2_memory_manager__get_multirefs( p2_memory_manager *m );
 
 
 /* Mark-and-sweep garbage collection ******************************************/

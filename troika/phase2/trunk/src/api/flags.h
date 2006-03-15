@@ -64,9 +64,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #endif
 
-    #define DEBUG__ARRAY                        0
+    #define DEBUG__ARRAY                        1
     #define DEBUG__BAG                          0
-    #define DEBUG__HASH_TABLE                   0
+    #define DEBUG__HASH_TABLE                   1
+    #define DEBUG__LOOKUP_TABLE                 1
     #define DEBUG__NAME                         0
     #define DEBUG__SET                          0
     #define DEBUG__TERM                         1

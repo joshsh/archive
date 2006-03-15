@@ -313,9 +313,23 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
 
 void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
 {
-    void **cur = h->buffer;
-    void **sup = h->buffer + h->buffer_size;
+    void **cur, **sup;
     p2_action *action;
+
+    #if DEBUG__SAFE
+    if ( !h || !p )
+    {
+        ERROR( "p2_hash_table__distribute: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__HASH_TABLE
+    printf( "p2_hash_table__distribute(%#x, %#x)\n", ( int ) h, ( int ) p );
+    #endif
+
+    cur = h->buffer;
+    sup = h->buffer + h->buffer_size;
 
     while ( cur < sup )
     {

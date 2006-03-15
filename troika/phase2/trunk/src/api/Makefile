@@ -22,9 +22,10 @@ export CFLAGS = \
 	# -fshort-enums -fno-common \
 	# -D_GNU_SOURCE
 
-CC      = gcc $(CFLAGS) $(INCLUDE)
+LIBS    = `xml2-config --libs`
 
-LIBS    =
+CC      = gcc $(CFLAGS) $(INCLUDE) $(LIBS)
+
 
 
 .PHONY : default
@@ -91,17 +92,28 @@ UTIL_OBJECTS =	$(UTILS)/p2_array.o \
 		$(UTILS)/p2_hash_table.o \
 		$(UTILS)/p2_lookup_table.o \
 		$(UTILS)/p2_name.o \
+		$(UTILS)/p2_set.o \
 		$(UTILS)/p2_term.o
+
+
+################################################################################
+# Compile XML util.
+
+$(XML)/xmldom.o :
+	$(MAKE) -C $(XML)
 
 
 ################################################################################
 # Build the command line interface.
 
-OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_collection.o p2_object.o p2_primitive.o p2_type.o sk.o
+OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_collection.o p2_object.o p2_primitive.o p2_type.o sk.o serial.o
 
-phase2 :  main.c utils $(OBJECTS) import parser
-	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS) $(IMPORT_OBJECTS) $(PARSER_OBJECTS)
+phase2 :  main.c utils $(XML)/xmldom.o $(OBJECTS) import parser
+	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o
 
+
+serial.o :  serial.c serial.h flags.h
+	$(CC) -c serial.c
 
 p2_%.o :  p2_%.c p2_%.h flags.h
 	$(CC) -c p2_$*.c

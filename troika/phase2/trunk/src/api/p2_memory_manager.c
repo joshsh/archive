@@ -276,6 +276,50 @@ void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p )
 }
 
 
+/******************************************************************************/
+
+
+static p2_action * add_if_multiref( p2_object *o, p2_set *s )
+{
+    /* If the object is already marked, abort. */
+    if ( o->flags & OBJECT__MARKED )
+    {
+        p2_set__add( s, o );
+        return ( p2_action* ) 1;
+    }
+
+    else
+    {
+        /* Mark the object. */
+        o->flags = o->flags | OBJECT__MARKED;
+
+        return 0;
+    }
+}
+
+
+p2_set *p2_memory_manager__get_multirefs( p2_memory_manager *m )
+{
+    p2_set *s = p2_set__new();
+    p2_procedure proc;
+
+    if ( !m->clean )
+        unmark_all( m );
+
+    m->clean = 0;
+
+    proc.execute = ( procedure ) add_if_multiref;
+    proc.state = s;
+
+    p2_object__trace( m->root, &proc );
+
+    /* Might as well sweep. */
+    sweep( m );
+
+    return s;
+}
+
+
 /* Mark-and-sweep garbage collection ******************************************/
 
 

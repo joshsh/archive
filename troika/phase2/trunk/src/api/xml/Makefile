@@ -12,7 +12,10 @@ FLAGS          = $(LIBXML2_FLAGS)
 LIBS           = $(LIBXML2_LIBS)
 
 CFLAGS  = -g          -O2                 --ansi  -Wall
-CC      = gcc $(CFLAGS)
+
+INCLUDE = -I../
+
+CC      = gcc $(CFLAGS) $(INCLUDE)
 
 
 .PHONY : default
@@ -40,5 +43,5 @@ xmldom.o :  xmldom-libxml2.o
 
 
 xmldom-libxml2.o :  xmldom.h libxml2/xmldom-libxml2.c
-	$(CC) -c -o xmldom-libxml2.o $(FLAGS) libxml2/xmldom-libxml2.c
+	$(CC) -c $(FLAGS) libxml2/xmldom-libxml2.c
 

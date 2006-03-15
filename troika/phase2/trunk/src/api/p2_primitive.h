@@ -85,6 +85,7 @@ typedef struct _p2_primitive
 /** Destructor. */
 void p2_primitive__delete( p2_primitive *prim );
 
+void p2_primitive__encode( p2_primitive *prim, char *buffer );
 
 /*p2_object *p2_primitive__apply( p2_primitive *prim, void **args );*/
 

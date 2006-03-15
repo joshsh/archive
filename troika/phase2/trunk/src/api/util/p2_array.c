@@ -480,6 +480,18 @@ void p2_array__distribute( p2_array *a, p2_procedure *p )
     int i;
     p2_action *action;
 
+    #if DEBUG__SAFE
+    if ( !a || !p )
+    {
+        ERROR( "p2_array__distribute: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__ARRAY
+    printf( "p2_array__distribute(%#x, %#x)\n", ( int ) a, ( int ) p );
+    #endif
+
     for ( i = 0; i < a->size; i++ )
     {
         if ( ( action = p2_procedure__execute( p, elmt( a, i ) ) ) )

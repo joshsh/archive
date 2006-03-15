@@ -94,6 +94,7 @@ printf( "---e 3---\n" ); fflush( stdout );
     env->ns_t->destroy =    ( destructor )  p2_namespace__delete;
     env->ns_t->distribute = ( distributor ) p2_namespace__distribute;
     env->prim_t->destroy =  ( destructor )  p2_primitive__delete;
+    env->prim_t->encode = ( encoder ) p2_primitive__encode;
     env->type_t->destroy =  ( destructor )  p2_type__delete;
 /*
     if ( !( env->ns_t = p2_type__new(

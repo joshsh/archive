@@ -409,6 +409,17 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 }
 
 
+static void save_as( p2_compiler *c, p2_ast *args )
+{
+    p2_ast *arg = get_inner_node( args );
+    p2_name *name = ( p2_name* ) arg->value;
+
+    char *path = ( char* ) p2_array__peek( name );
+
+    p2_compiler__serialize( c, path );
+}
+
+
 static void garbage_collect( p2_compiler *c )
 {
     p2_memory_manager *m = c->env->manager;
@@ -451,6 +462,12 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
     {
         if ( n_args( args, 0 ) )
             ret = 1;
+    }
+
+    else if ( !strcmp( name, "saveas" ) )
+    {
+        if ( n_args( args, 1 ) )
+            save_as( compiler, args );
     }
 
     else if ( !strcmp( name, "show" ) )
