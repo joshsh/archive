@@ -1,5 +1,4 @@
 #include "char.h"
-#include <stdio.h>  /* sprintf */
 
 
 char *char__decode( cstring *buffer )

@@ -260,15 +260,16 @@ static p2_term *p2_term__xml_decode( dom_element *el, xml_decode_st *state )
     else
     {
         child = dom_element__first_child( el );
-        t = p2_term__new( p2_term__xml_decode( child, state ), 0 );
+        t = p2_term__xml_decode( child, state );
 
         while (  ( child = dom_element__next_sibling( child ) ) )
         {
             t = p2_term__merge_la
-                ( t, p2_term__new( p2_term__xml_decode( child, state ), 0 ) );
+                ( t, p2_term__xml_decode( child, state ) );
         }
     }
 
+printf( "returning term %#x (length = %i)\n", ( int ) t, p2_term__length( t ) );
     return t;
 }
 

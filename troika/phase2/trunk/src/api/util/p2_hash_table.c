@@ -325,7 +325,7 @@ void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
     #endif
 
     #if DEBUG__HASH_TABLE
-    printf( "p2_hash_table__distribute(%#x, %#x)\n", ( int ) h, ( int ) p );
+    printf( "[] p2_hash_table__distribute(%#x, %#x)\n", ( int ) h, ( int ) p );
     #endif
 
     cur = h->buffer;

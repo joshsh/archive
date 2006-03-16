@@ -32,7 +32,7 @@ p2_compiler *compiler = 0;
 /* Find a data type in the compiler environment's "types" namespace. */
 static p2_type *lookup_type( p2_environment *env, const char *name )
 {
-    p2_object *o = p2_namespace__lookup_simple( ( p2_compiler* ) env->types->value, name );
+    p2_object *o = p2_namespace__lookup_simple( ( p2_namespace* ) env->types->value, name );
 
     if ( !o )
         return 0;
@@ -74,15 +74,24 @@ static void add_combinators( p2_compiler *c )
 /******************************************************************************/
 
 
-static void string__encode__alt( char *s, char *buffer )
-{
-    sprintf( buffer, "\"%s\"", s );
-}
-
-
 static void char__encode__alt( char *c, char *buffer )
 {
     sprintf( buffer, "'%c'", *c );
+}
+
+
+static void double__encode__alt( double *d, char *buffer )
+{
+    if ( *d - ( double ) ( ( int ) *d ) )
+        sprintf( buffer, "%g", *d );
+    else
+        sprintf( buffer, "%g.0", *d );
+}
+
+
+static void string__encode__alt( char *s, char *buffer )
+{
+    sprintf( buffer, "\"%s\"", s );
 }
 
 
@@ -461,6 +470,7 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 
 static void save_as( p2_compiler *c, p2_ast *args )
 {
+    char *path;
     p2_ast *arg = get_inner_node( args );
     p2_name *name = ( p2_name* ) arg->value;
 
@@ -468,7 +478,7 @@ static void save_as( p2_compiler *c, p2_ast *args )
     printf( "save_as(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    char *path = ( char* ) p2_array__peek( name );
+    path = ( char* ) p2_array__peek( name );
 
     p2_compiler__serialize( c, path );
 }
@@ -480,7 +490,7 @@ static void garbage_collect( p2_compiler *c )
     int size_before, size_after;
 
     #if DEBUG__COMPILER
-    printf( "garbage_collect(%#x, %#x)\n", ( int ) c );
+    printf( "garbage_collect(%#x)\n", ( int ) c );
     #endif
 
 printf( "---c gc 1---\n" ); fflush( stdout );
@@ -567,7 +577,7 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     char print_buffer[1000];
     p2_term *t;
 
-    encoder char__encode, string__encode, term__encode;
+    encoder char__encode, double__encode, string__encode, term__encode;
 
     #if DEBUG__SAFE
     if ( !expr )
@@ -582,9 +592,11 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     #endif
 
     char__encode = compiler->char_t->encode;
+    double__encode = compiler->float_t->encode;
     string__encode = compiler->string_t->encode;
     term__encode = compiler->term_t->encode;
     compiler->char_t->encode = ( encoder ) char__encode__alt;
+    compiler->float_t->encode = ( encoder ) double__encode__alt;
     compiler->string_t->encode = ( encoder ) string__encode__alt;
     compiler->term_t->encode = ( encoder ) term__encode__alt;
 
@@ -641,6 +653,7 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
         p2_ast__delete( a );
 
     compiler->char_t->encode = char__encode;
+    compiler->float_t->encode = double__encode;
     compiler->string_t->encode = string__encode;
     compiler->term_t->encode = term__encode;
 

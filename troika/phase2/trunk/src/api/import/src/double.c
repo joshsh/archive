@@ -1,6 +1,4 @@
 #include "double.h"
-#include <stdlib.h>  /* atof */
-#include <stdio.h>  /* sprintf */
 
 
 double *double__decode( cstring *buffer )

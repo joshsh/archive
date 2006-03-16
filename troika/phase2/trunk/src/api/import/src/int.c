@@ -1,6 +1,4 @@
 #include "int.h"
-#include <stdlib.h>  /* atoi */
-#include <stdio.h>  /* sprintf */
 
 
 int *int__decode( cstring *buffer )

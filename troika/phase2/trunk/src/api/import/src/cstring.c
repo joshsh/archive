@@ -1,11 +1,8 @@
 #include "cstring.h"
 
-#include <p2.h>
-
 
 cstring *cstring__decode( char *buffer )
 {
-printf( "---cstring: buffer = \"%s\"", buffer );
     return STRDUP( buffer );
 }
 
