@@ -508,7 +508,7 @@ static void encode
 }
 
 
-static void p2_term__encode( p2_term *t, char *buffer )
+void p2_term__encode( p2_term *t, char *buffer )
 {
 /*
 void **cur = t->head, **sup = t->buffer + t->buffer_size;
@@ -524,15 +524,8 @@ printf( "\n" );
     }
     #endif
 
-    sprintf( buffer, "[ " );
-    buffer += 2;
-
     encode( t->head, buffer, 0 );
-    buffer += strlen( buffer );
-
-    sprintf( buffer, " ]" );
 }
-
 
 
 p2_type *p2_term__type( const char *name )

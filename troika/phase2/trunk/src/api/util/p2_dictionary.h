@@ -52,6 +52,9 @@ void *p2_dictionary__remove
     ( p2_dictionary *dict, const char *key );
 
 
+void p2_dictionary__add_all( p2_dictionary *dest, p2_dictionary *src );
+
+
 void p2_dictionary__distribute( p2_dictionary *dict, p2_procedure *p );
 
 

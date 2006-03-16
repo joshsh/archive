@@ -3,9 +3,11 @@
 #include <stdio.h>  /* sprintf */
 
 
-double double__decode( cstring *buffer )
+double *double__decode( cstring *buffer )
 {
-    return atof( buffer );
+    double *d = new( double );
+    *d = atof( buffer );
+    return d;
 }
 
 

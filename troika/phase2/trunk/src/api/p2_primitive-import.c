@@ -55,7 +55,7 @@ p2_primitive *p2_primitive__new(
         p2_primitive__delete( p );
         return 0;
     }
-     #endif
+    #endif
 
     p->name = STRDUP( name );
     p->cstub = cstub;
@@ -151,6 +151,11 @@ p2_primitive *p2_primitive__register(
             p2_primitive__delete( p );
         return 0;
     }
+    #endif
+
+    #if DEBUG__PRIMS
+    printf( "[%#x] p2_primitive__register(%#x, %#x, %i, %#x) --> %s\n",
+        ( int ) p, ( int ) env, ( int ) p, flags, ( int ) src_f, p->name );
     #endif
 
     p2_environment__register_primitive( env, p, flags, src_f );

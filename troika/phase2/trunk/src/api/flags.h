@@ -40,13 +40,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #if DEBUG
 
     #define DEBUG__SK                           1
+    #define DEBUG__PRIMS                        1
 
     #define DEBUG__OBJECT                       1
 
     #define DEBUG__NAMESPACE                    1
 
-    #define DEBUG__COMPILER                     0
-    #if DEBUG__COMPILER
+    #define DEBUG__COMPILER                     1
+
+    #define DEBUG__PARSER_MODULE                0
+    #if DEBUG__PARSER_MODULE
 
         #define DEBUG__AST                      1
 
@@ -94,6 +97,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** Allow non-redex atoms at the beginning of an expression, and simply abandon
    reduction when they are encountered. */
 #define SK__ALLOW_NONREDUX                      1
+
+
+/* Serialization **************************************************************/
+
+#define ENCODING__TRIPLES_AS_OBJECTS            1
+
+#define ENCODING__ROOT__XML__NAME               "data_set"
+
+#define TRIPLES__XML__NAME                      "triple"
+#define OBJECT__XML__NAME                       "object"
+
+#define ARRAY__XML__NAME                        "list"
+#define NAMESPACE__XML__NAME                    "table"
+#define TERM__XML__NAME                         "list"
 
 
 /* Triples / association ******************************************************/

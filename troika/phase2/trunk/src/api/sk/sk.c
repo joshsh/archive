@@ -118,6 +118,8 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     p2_object *o;
     void *result, **args, **cur = term->head + 2;
     p2_primitive *prim = ( p2_primitive* ) ( ( p2_object* ) *cur )->value;
+    p2_type *param_type;
+printf( "---sk pr -2---\n" ); fflush( stdout );
 
     #if PRIM__ALLOW_NOARG_FUNCTIONS
     args = ( prim->arity )
@@ -134,10 +136,13 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     #endif
         args = ( void** ) malloc( prim->arity * sizeof( void* ) );
     #endif
+printf( "---sk pr -1---\n" ); fflush( stdout );
 
     /* Load arguments into the array. */
     for ( i = 0; i < prim->arity; i++ )
     {
+printf( "---sk pr 0---\n" ); fflush( stdout );
+
         #if SK__CHECKS__APPLY_TO_NONATOM
 
         cur++;
@@ -177,7 +182,9 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
         /* Note: it's more efficient to do this here than in p2_primitive.c */
         #if PRIM__CHECKS__PARAM_TYPE
 
-        if ( ( *( ( p2_object** ) cur ) )->type != prim->parameters[i].type )
+        param_type = prim->parameters[i].type;
+        if ( param_type != ( *( ( p2_object** ) cur ) )->type
+          && param_type != any_type )
         {
             ERROR( "prim_reduce: argument type mismatch" );
 
@@ -188,13 +195,19 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
             return 0;
         }
 
-        #endif  /* PRIM__CHECKS__TYPE__DYNAMIC */
+        #endif  /* PRIM__CHECKS__PARAM_TYPE */
 
-        args[i] = ( *( ( p2_object** ) cur ) )->value;
+        /* ~ inefficient */
+        if ( prim->parameters[i].type != any_type )
+            args[i] = ( *( ( p2_object** ) cur ) )->value;
+        else
+            args[i] = *cur;
     }
+printf( "---sk pr 0.1---\n" ); fflush( stdout );
 
     /* Apply the primitive. */
     result = prim->cstub( args );
+printf( "---sk pr 0.2---\n" ); fflush( stdout );
 
     if ( args )
         free( args );
@@ -207,11 +220,24 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
         return 0;
     }
     #endif
+printf( "---sk pr 1---\n" ); fflush( stdout );
+printf( "prim->return_type = %#x\n", ( int ) prim->return_type );
 
-    o = p2_object__new( prim->return_type, result, 0 );
+    if ( prim->return_type != any_type )
+    {
+printf( "---sk pr 2a---\n" ); fflush( stdout );
+        o = p2_object__new( prim->return_type, result, 0 );
 
-    /* Caution: the object's value must be a BRAND NEW value. */
-    p2_memory_manager__add( m, o );
+        /* Caution: the object's value must be a BRAND NEW value. */
+        p2_memory_manager__add( m, o );
+    }
+
+    else
+    {
+printf( "---sk pr 2b---\n" ); fflush( stdout );
+        o = ( p2_object* ) result;
+    }
+printf( "---sk pr 3---\n" ); fflush( stdout );
 
     /* Replace the primitive reference and its arguments with the return value. */
     *cur = o;
@@ -219,6 +245,7 @@ static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
     *cur = ( void* ) 2;
     term->head = cur - 1;
     *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
+printf( "---sk pr 4---\n" ); fflush( stdout );
 
     return term;
 }

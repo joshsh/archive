@@ -33,6 +33,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 void p2_compiler__serialize( p2_compiler *c, char *path );
 
+void p2_compiler__deserialize( p2_compiler *c, char *path );
+
 
 #endif  /* SERIAL_H */
 

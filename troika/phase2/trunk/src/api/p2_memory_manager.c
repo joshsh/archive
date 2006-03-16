@@ -293,6 +293,14 @@ static p2_action * add_if_multiref( p2_object *o, p2_set *s )
         /* Mark the object. */
         o->flags = o->flags | OBJECT__MARKED;
 
+        #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
+        /* Object references its triples, which in turn reference the object. */
+        if ( o->outbound_edges && o->outbound_edges->size )
+        {
+            p2_set__add( s, o );
+        }
+        #endif
+
         return 0;
     }
 }

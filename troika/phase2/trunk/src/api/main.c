@@ -17,10 +17,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_compiler.h"
+#include <p2_compiler.h>
+#include <serial.h>
 
 
-int main()
+int main( int argc, char *argv[] )
 {
     int r = 0;
 
@@ -34,6 +35,12 @@ int main()
     {
         if ( ( compiler = p2_compiler__new( env ) ) )
         {
+            if ( argc > 1 )
+            {
+                printf( "Loading namespace from file...\n" );
+                p2_compiler__deserialize( compiler, argv[1] );
+            }
+
             /* Print GPL notice. */
             printf( "\nPhase2 v%s, Copyright (C) 2005 Joshua Shinavier.\n", VERSION );
             printf( "The Phase2 programming environment comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '!license;' for details.  Type '!quit;' to exit.\n\n" );

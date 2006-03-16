@@ -36,10 +36,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* Flags. */
-#define PRIM__CONSTRUCTOR   0x0001
-#define PRIM__DECODER       0x0010
-#define PRIM__DESTRUCTOR    0x0100
-#define PRIM__ENCODER       0x1000
+#define PRIM__CONSTRUCTOR   0x1
+#define PRIM__DECODER       0x2
+#define PRIM__DESTRUCTOR    0x4
+#define PRIM__ENCODER       0x8
 
 
 typedef struct _p2_parameter

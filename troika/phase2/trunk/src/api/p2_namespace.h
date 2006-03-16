@@ -66,7 +66,7 @@ p2_object *p2_namespace__add
     ( p2_namespace_o *ns_obj, p2_name *name, p2_object *o );
 
 p2_object *p2_namespace__add_simple
-    ( p2_namespace_o *ns_obj, const char *name, p2_object *o );
+    ( p2_namespace *ns, const char *name, p2_object *o );
 
 /** Finds an object in a namespace.
     \param ns  the target namespace
@@ -79,7 +79,7 @@ p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name );
     \param s  the local part of the name to look up
     \return  the object found */
 p2_object *p2_namespace__lookup_simple(
-    p2_namespace_o *ns_obj, const char *name );
+    p2_namespace *ns, const char *name );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace

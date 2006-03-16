@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_object.h"
+#include <p2_object.h>
 #include <util/p2_array.h>
 
 
@@ -25,18 +25,19 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
 {
     p2_object *o;
 
-    #if DEBUG__SAFE
-    if ( !type || !value)
-    {
-        ERROR( "p2_object__new: null type or value" );
-        return 0;
-    }
+    /* Note: temporary objects with null type/value are allowed. */
+
+    #if DEBUG__OBJECT
+    printf( "[...] p2_object__new(%#x, %#x, %i )\n", ( int ) type, ( int ) value, flags );
     #endif
 
     o = new( p2_object );
 
     if ( !o )
+    {
+        ERROR( "p2_object__new: allocation failure" );
         return 0;
+    }
 
     o->type = type;
     o->value = value;
@@ -55,10 +56,13 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     #endif
 
     #if DEBUG__OBJECT
+    if ( o->type && o->value )
+    {
     printf( "p2_object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
         ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
 if (!strcmp( o->type->name, "type"))
 printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
+    }
     #endif
 
     return o;
@@ -176,6 +180,11 @@ static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
         #if TRIPLES__GLOBAL__OUT_EDGES
         if ( o->outbound_edges )
         {
+printf( "distributing to edges (o = %#x, o->outbound_edges = %#x)\n", ( int ) o, ( int ) o->outbound_edges );
+printf( "o->type = %#x\n", ( int ) o->type ); fflush( stdout );
+printf( "o->type->name = '%s'\n", o->type->name ); fflush( stdout );
+if ( !strcmp( o->type->name, "int" ) )
+printf( "value = %i\n", *( ( int* ) o->value ) );
             p2_lookup_table__distribute( o->outbound_edges, state->edge_p );
         }
         #endif
@@ -304,23 +313,34 @@ p2_object *p2_object__associate
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
+printf( "---o a 1---\n" ); fflush( stdout );
+printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
 
     if ( !subj->outbound_edges
       && !( subj->outbound_edges = p2_lookup_table__new() ) )
-        return 0;
+        subj = 0;
 
-    if ( obj )
-        p2_lookup_table__add( subj->outbound_edges, pred, obj );
     else
-        p2_lookup_table__remove( subj->outbound_edges, pred );
-
-    return subj;
+    {
+printf( "---o a 2---\n" ); fflush( stdout );
+printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
+        if ( obj )
+{printf( "---o a 2.1---\n" ); fflush( stdout );
+            p2_lookup_table__add( subj->outbound_edges, pred, obj );
+}
+        else
+            p2_lookup_table__remove( subj->outbound_edges, pred );
+printf( "---o a 3---\n" ); fflush( stdout );
+    }
 
     #else
+printf( "---o a 4---\n" ); fflush( stdout );
 
-    return 0;
+    subj = 0;
 
     #endif
+
+    return subj;
 }
 
 #endif  /* TRIPLES__GLOBAL */

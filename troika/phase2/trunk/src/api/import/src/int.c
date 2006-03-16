@@ -3,9 +3,11 @@
 #include <stdio.h>  /* sprintf */
 
 
-int int__decode( cstring *buffer )
+int *int__decode( cstring *buffer )
 {
-    return atoi( buffer );
+    int *i = new( int );
+    *i = atoi( buffer );
+    return i;
 }
 
 

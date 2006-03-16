@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <p2_compiler.h>
+#include <serial.h>
 #include <sk/sk.h>
 
 
@@ -25,10 +26,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 p2_compiler *compiler = 0;
 
 
+/******************************************************************************/
+
+
 /* Find a data type in the compiler environment's "types" namespace. */
 static p2_type *lookup_type( p2_environment *env, const char *name )
 {
-    p2_object *o = p2_namespace__lookup_simple( env->types, name );
+    p2_object *o = p2_namespace__lookup_simple( ( p2_compiler* ) env->types->value, name );
 
     if ( !o )
         return 0;
@@ -59,12 +63,42 @@ static void add_combinators( p2_compiler *c )
 
     o = p2_object__new( c->combinator_t, sk_s, 0 );
     p2_memory_manager__add( m, o );
-    p2_namespace__add_simple( c->env->data, "S", o );
+    p2_namespace__add_simple( ( p2_namespace* ) c->env->data->value, "S", o );
 
     o = p2_object__new( c->combinator_t, sk_k, 0 );
     p2_memory_manager__add( m, o );
-    p2_namespace__add_simple( c->env->data, "K", o );
+    p2_namespace__add_simple( ( p2_namespace* ) c->env->data->value, "K", o );
 }
+
+
+/******************************************************************************/
+
+
+static void string__encode__alt( char *s, char *buffer )
+{
+    sprintf( buffer, "\"%s\"", s );
+}
+
+
+static void char__encode__alt( char *c, char *buffer )
+{
+    sprintf( buffer, "'%c'", *c );
+}
+
+
+static void term__encode__alt( p2_term *t, char *buffer )
+{
+    sprintf( buffer, "[ " );
+    buffer += 2;
+
+    p2_term__encode( t, buffer );
+
+    buffer += strlen( buffer );
+    sprintf( buffer, " ]" );
+}
+
+
+/******************************************************************************/
 
 
 p2_compiler *p2_compiler__new( p2_environment *env )
@@ -90,6 +124,10 @@ p2_compiler *p2_compiler__new( p2_environment *env )
         ERROR( "p2_compiler__new: allocation failed" );
         return 0;
     }
+
+    #if DEBUG__COMPILER
+    printf( "[%#x] p2_compiler__new(%#x)\n", ( int ) c, ( int ) env );
+    #endif
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser. */
@@ -142,6 +180,10 @@ void p2_compiler__delete( p2_compiler *c )
     }
     #endif
 
+    #if DEBUG__COMPILER
+    printf( "[] p2_compiler__delete(%#x)\n", ( int ) c );
+    #endif
+
     p2_dictionary__delete( c->commands );
     free( c );
 
@@ -159,6 +201,10 @@ p2_parser__exit_state p2_compiler__parse( p2_compiler *c )
         ERROR( "p2_compiler__parse: null compiler" );
         return 1;
     }
+    #endif
+
+    #if DEBUG__COMPILER
+    printf( "[...] p2_compiler__parse(%#x)\n", ( int ) c );
     #endif
 
     if ( c->locked )
@@ -391,6 +437,10 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
     }
     #endif
 
+    #if DEBUG__COMPILER
+    printf( "change_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
     name = ( p2_name* ) arg->value;
 
     if ( ( o = resolve_name( c, name ) ) )
@@ -414,6 +464,10 @@ static void save_as( p2_compiler *c, p2_ast *args )
     p2_ast *arg = get_inner_node( args );
     p2_name *name = ( p2_name* ) arg->value;
 
+    #if DEBUG__COMPILER
+    printf( "save_as(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
     char *path = ( char* ) p2_array__peek( name );
 
     p2_compiler__serialize( c, path );
@@ -424,6 +478,10 @@ static void garbage_collect( p2_compiler *c )
 {
     p2_memory_manager *m = c->env->manager;
     int size_before, size_after;
+
+    #if DEBUG__COMPILER
+    printf( "garbage_collect(%#x, %#x)\n", ( int ) c );
+    #endif
 
 printf( "---c gc 1---\n" ); fflush( stdout );
 
@@ -509,6 +567,8 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     char print_buffer[1000];
     p2_term *t;
 
+    encoder char__encode, string__encode, term__encode;
+
     #if DEBUG__SAFE
     if ( !expr )
     {
@@ -516,6 +576,17 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
         return 0;
     }
     #endif
+
+    #if DEBUG__COMPILER
+    printf( "p2_compiler__evaluate_expression(%#x, %#x)\n", ( int ) name, ( int ) expr );
+    #endif
+
+    char__encode = compiler->char_t->encode;
+    string__encode = compiler->string_t->encode;
+    term__encode = compiler->term_t->encode;
+    compiler->char_t->encode = ( encoder ) char__encode__alt;
+    compiler->string_t->encode = ( encoder ) string__encode__alt;
+    compiler->term_t->encode = ( encoder ) term__encode__alt;
 
     if ( name )
         a = p2_ast__name( name );
@@ -568,6 +639,10 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 
     if ( a )
         p2_ast__delete( a );
+
+    compiler->char_t->encode = char__encode;
+    compiler->string_t->encode = string__encode;
+    compiler->term_t->encode = term__encode;
 
     return ret;
 }

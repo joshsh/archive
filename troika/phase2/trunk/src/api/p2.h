@@ -120,6 +120,17 @@ typedef void    ( *distributor )( void *data, p2_procedure *a );
     fprintf( stderr, "Error: %s.\n", msg ); \
     fflush( stdout ); \
 }
+
+/* Useful, but not ANSI C.
+#define ERROR( ... ) \
+{ \
+    fprintf( stderr, "Error: " ); \
+    fprintf( stderr, __VA_ARGS__ ); \
+    fprintf( stderr, ".\n" ); \
+    fflush( stdout ); \
+}
+*/
+
 #define WARNING( msg ) \
 { \
     fprintf( stderr, "Warning: %s.\n", msg ); \

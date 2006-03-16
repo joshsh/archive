@@ -2,13 +2,15 @@
 #include <stdio.h>  /* sprintf */
 
 
-char char__decode( cstring *buffer )
+char *char__decode( cstring *buffer )
 {
-    return *buffer;
+    char *c = new( char );
+    *c = *buffer;
+    return c;
 }
 
 
 void char__encode( char *c, cstring *buffer )
 {
-    sprintf( buffer, "'%c'", *c );
+    sprintf( buffer, "%c", *c );
 }

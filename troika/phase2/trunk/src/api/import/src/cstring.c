@@ -5,11 +5,12 @@
 
 cstring *cstring__decode( char *buffer )
 {
+printf( "---cstring: buffer = \"%s\"", buffer );
     return STRDUP( buffer );
 }
 
 
 void cstring__encode( cstring *p, char *buffer )
 {
-    sprintf( buffer, "\"%s\"", p );
+    sprintf( buffer, p );
 }

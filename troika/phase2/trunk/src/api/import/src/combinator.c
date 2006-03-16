@@ -2,12 +2,13 @@
 #include <stdio.h>  /* sprintf */
 
 
-combinator combinator__decode( cstring *buffer )
+combinator *combinator__decode( cstring *buffer )
 {
-    if ( *buffer == 'S' )
-        return S_combinator;
-    else
-        return K_combinator;
+    combinator *c = new( combinator );
+    *c = ( *buffer == 'S' )
+        ? S_combinator
+        : K_combinator;
+    return c;
 }
 
 

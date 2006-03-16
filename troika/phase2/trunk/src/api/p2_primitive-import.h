@@ -34,7 +34,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef P2_PRIMITIVE_IMPORT_H
 #define P2_PRIMITIVE_IMPORT_H
 
-#include "p2_environment.h"
+#include <p2_environment.h>
 
 
 p2_primitive *p2_primitive__new(

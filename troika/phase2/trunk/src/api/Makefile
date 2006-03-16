@@ -22,7 +22,7 @@ export CFLAGS = \
 	# -fshort-enums -fno-common \
 	# -D_GNU_SOURCE
 
-LIBS    = `xml2-config --libs`
+LIBS    =
 
 CC      = gcc $(CFLAGS) $(INCLUDE) $(LIBS)
 
@@ -109,7 +109,7 @@ $(XML)/xmldom.o :
 OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_collection.o p2_object.o p2_primitive.o p2_type.o sk.o serial.o
 
 phase2 :  main.c utils $(XML)/xmldom.o $(OBJECTS) import parser
-	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o
+	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
 
 
 serial.o :  serial.c serial.h flags.h

@@ -40,32 +40,43 @@ static p2_namespace_o *ns__new( p2_type *ns_t )
 }
 
 
-/* To be moved... *************************************************************/
+/******************************************************************************/
 
-/*
-static void sequence_item__print
 
-typedef struct _print_format
+#if TRIPLES__GLOBAL
+
+#include <p2_primitive-import.h>
+
+static void *assoc_stub( void **args )
 {
-    char *prefix, *infix, *suffix;
+printf( "---e m 1---\n" ); fflush( stdout );
 
-} print_format;
-
-
-struct
-
-static char *print
-void p2_object__print( p2_object *o, char *buffer )
-{
-    if ( o & OBJECT__IS_OBJ_COLL )
-    {
-        o->type->for_all( o->value, 
-    }
-
-    else
-        o->type->encode( o->value, buffer );
+    return p2_object__associate( args[0], args[1], args[2] );
 }
-*/
+
+static void *mult_stub( void **args )
+{
+    return p2_object__multiply( args[0], args[1] );
+}
+
+static int add_triples_prims( p2_environment *env )
+{
+    p2_primitive *prim;
+
+    return ( ( prim = p2_primitive__new( env, "any_type", "^+", assoc_stub, 3 ) )
+      && p2_primitive__add_param( env, prim, "any_type", "subject", 0 )
+      && p2_primitive__add_param( env, prim, "any_type", "predicate", 1 )
+      && p2_primitive__add_param( env, prim, "any_type", "object", 1 )
+      && p2_primitive__register( env, prim, 0, 0 )
+
+      && ( prim = p2_primitive__new( env, "any_type", "^", mult_stub, 2 ) )
+      && p2_primitive__add_param( env, prim, "any_type", "subject", 1 )
+      && p2_primitive__add_param( env, prim, "any_type", "predicate", 1 )
+      && p2_primitive__register( env, prim, 0, 0 ) );
+}
+
+#endif
+
 
 /******************************************************************************/
 
@@ -135,9 +146,9 @@ printf( "---e 6---\n" ); fflush( stdout );
 printf( "---e 7---\n" ); fflush( stdout );
 
     /* Nest child namespaces under root. */
-    if ( p2_namespace__add_simple( env->root, "data", env->data )
-      || p2_namespace__add_simple( env->root, "primitives", env->primitives )
-      || p2_namespace__add_simple( env->root, "types", env->types ) )
+    if ( p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "data", env->data )
+      || p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "primitives", env->primitives )
+      || p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "types", env->types ) )
         goto abort;
 printf( "---e 8---\n" ); fflush( stdout );
 
@@ -154,6 +165,14 @@ printf( "---e 9---\n" ); fflush( stdout );
     if ( !p2_environment__import_primitives( env ) )
         goto abort;
 printf( "---e 10---\n" ); fflush( stdout );
+
+    #if TRIPLES__GLOBAL
+    if ( !add_triples_prims( env ) )
+    {
+        ERROR( "p2_environment__new: failed to add triples primitives" );
+        goto abort;
+    }
+    #endif
 
     /* Set namespace permissions. */
     ( ( p2_namespace* ) env->data->value )->constant = 0;
@@ -220,7 +239,7 @@ p2_object *p2_environment__register_primitive(
     if ( flags & PRIM__CONSTRUCTOR )
         ERROR( "p2_environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
     if ( flags & PRIM__DECODER )
-        first_param->decode = ( decoder ) src_f;
+        prim->return_type->decode = ( decoder ) src_f;
     if ( flags & PRIM__DESTRUCTOR )
         first_param->destroy = ( destructor ) src_f;
     if ( flags & PRIM__ENCODER )
@@ -238,7 +257,7 @@ p2_object *p2_environment__register_primitive(
         return 0;
     }
 
-    if ( p2_namespace__add_simple( env->primitives, prim->name, o ) )
+    if ( p2_namespace__add_simple( ( p2_namespace* ) env->primitives->value, prim->name, o ) )
         return 0;
 
     else
@@ -262,7 +281,7 @@ p2_object *p2_environment__register_type(
         return 0;
     }
 
-    if ( p2_namespace__add_simple( env->types, type->name, o ) )
+    if ( p2_namespace__add_simple( ( p2_namespace* ) env->types->value, type->name, o ) )
         return 0;
 
     else
@@ -274,10 +293,13 @@ p2_type *p2_environment__resolve_type(
     p2_environment *env,
     const char *name )
 {
-    p2_object *o = p2_namespace__lookup_simple( env->types, name );
+    p2_object *o;
     p2_type *type;
 
-    if ( !o )
+    if ( !strcmp( name, "any_type" ) )
+        return any_type;
+
+    if ( !(o = p2_namespace__lookup_simple( ( p2_namespace* ) env->types->value, name ) ) )
     {
         /* If not found, create the type and hope for the best. */
         if ( !( type = p2_type__new( name, 0 ) ) )

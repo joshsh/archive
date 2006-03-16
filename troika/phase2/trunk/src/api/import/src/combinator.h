@@ -9,7 +9,7 @@
 void combinator__encode( combinator *c, cstring *buffer );
 
 /** $decoder */
-combinator combinator__decode( cstring *buffer );
+combinator *combinator__decode( cstring *buffer );
 
 
 #endif  /* COMBINATOR_H */

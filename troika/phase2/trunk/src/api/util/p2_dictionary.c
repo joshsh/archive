@@ -169,6 +169,26 @@ void *p2_dictionary__remove
 /******************************************************************************/
 
 
+p2_action * add_to_dict( dictionary_entry *entry, p2_dictionary *dest )
+{
+    p2_dictionary__add( dest, entry->key, entry->target );
+    return 0;
+}
+
+
+void p2_dictionary__add_all( p2_dictionary *dest, p2_dictionary *src )
+{
+    p2_procedure proc;
+    proc.execute = ( procedure ) add_to_dict;
+    proc.state = dest;
+
+    p2_hash_table__distribute( src, &proc );
+}
+
+
+/******************************************************************************/
+
+
 /* Procedure which points the argument procedure to the target value of a
    hashing pair. */
 static p2_action * apply_to_target

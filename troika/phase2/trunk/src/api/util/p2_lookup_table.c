@@ -70,6 +70,11 @@ void p2_lookup_table__add
 {
     p2_lookup_table__entry *entry, *entry_old;
 
+    #if DEBUG__LOOKUP_TABLE
+    printf( "p2_lookup_table__add(%#x, %#x, %#x)\n",
+        ( int ) t, ( int ) key, ( int ) target );
+    #endif
+
     if ( !( entry = new( p2_lookup_table__entry ) ) )
         return;
 

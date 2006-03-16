@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_TYPE_H
 
 
-#include "p2.h"
+#include <p2.h>
 
 
 /** */
@@ -63,6 +63,9 @@ typedef struct _p2_type
     sort_f      sort;
 
 } p2_type;
+
+
+#define any_type    ( p2_type* ) 42
 
 
 /** Constructor. */
