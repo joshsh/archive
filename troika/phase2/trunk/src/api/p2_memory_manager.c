@@ -322,7 +322,8 @@ static p2_action * add_if_multiref( p2_object *o, p2_set *s )
 }
 
 
-p2_set *p2_memory_manager__get_multirefs( p2_memory_manager *m )
+p2_set *p2_memory_manager__get_multirefs
+    ( p2_memory_manager *m, p2_object *root )
 {
     p2_set *s = p2_set__new();
     p2_procedure proc;
@@ -335,10 +336,7 @@ p2_set *p2_memory_manager__get_multirefs( p2_memory_manager *m )
     proc.execute = ( procedure ) add_if_multiref;
     proc.state = s;
 
-    p2_object__trace( m->root, &proc );
-
-    /* Might as well sweep. */
-    sweep( m );
+    p2_object__trace( root, &proc );
 
     return s;
 }

@@ -42,6 +42,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define OBJECT__MARKED              ( int ) 0x04
 #define OBJECT__OWNED               ( int ) 0x08
 #define OBJECT__OWNS_DESCENDANTS    ( int ) 0x10
+/*#define OBJECT__NATIVE              ( int ) 0x11*/
 
 
 /** A typed constant.  This is the least addressable unit of data in a Phase2

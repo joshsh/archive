@@ -65,7 +65,8 @@ p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o );
 
 void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p );
 
-p2_set *p2_memory_manager__get_multirefs( p2_memory_manager *m );
+p2_set *p2_memory_manager__get_multirefs
+    ( p2_memory_manager *m, p2_object *root );
 
 
 /* Mark-and-sweep garbage collection ******************************************/

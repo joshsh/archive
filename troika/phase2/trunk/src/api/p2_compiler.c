@@ -443,6 +443,36 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 }
 
 
+static void new_namespace( p2_compiler *c, p2_ast *args )
+{
+    p2_object *o;
+    p2_name *name;
+    char *localname;
+    p2_namespace *ns;
+
+    p2_ast *arg = get_inner_node( args );
+
+    #if DEBUG__SAFE
+    if ( arg->type != NAME_T )
+    {
+        ERROR( "new_namespace: AST type mismatch" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__COMPILER
+    printf( "new_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    name = ( p2_name* ) arg->value;
+    o = p2_object__new
+        ( c->env->ns_t, p2_namespace__new(), OBJECT__IS_OBJ_COLL );
+    p2_memory_manager__add( c->env->manager, o );
+
+    assign_name( c, name, o );
+}
+
+
 static void remove_ns_item( p2_compiler *c, p2_ast *args )
 {
     p2_name *name;
@@ -518,6 +548,12 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
             garbage_collect( compiler );
     }
 
+    else if ( !strcmp( name, "new" ) )
+    {
+        if ( n_args( args, 1 ) )
+            new_namespace( compiler, args );
+    }
+
     else if ( !strcmp( name, "ns" ) )
     {
         if ( n_args( args, 1 ) )
@@ -542,7 +578,7 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
             save_as( compiler, args );
     }
 
-    else if ( !strcmp( name, "show" ) )
+    else if ( !strcmp( name, "all" ) )
     {
         if ( n_args( args, 0 ) )
         {

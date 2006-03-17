@@ -428,68 +428,78 @@ static p2_object *p2_object__xml_decode
         }
 printf( "Deserializing object of type: %s\n", type->name );
 
-        if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
+        if ( type == state->env->combinator_t )
         {
-            id = ( unsigned int ) atoi( ( char* ) dom_attr__value( attr ) );
+            o = p2_namespace__lookup_simple(
+                ( p2_namespace* ) state->env->combinators->value,
+                ( char* ) dom_element__text( el ) );
+        }
 
-            /* Look up placeholder object. */
-            o = ( p2_object* ) p2_lookup_table__lookup
-                ( state->objects_by_id, ( void* ) id );
+        else if ( type == state->env->prim_t )
+        {
+            o = p2_namespace__lookup_simple(
+                ( p2_namespace* ) state->env->primitives->value,
+                ( char* ) dom_element__text( el ) );
+        }
 
-            /* If no entry is found, create one. */
-            if ( !o )
-            {
-                o = p2_object__new( 0, 0, 0 );
-                p2_lookup_table__add( state->objects_by_id, ( void* ) id, o );
-            }
-
-            if ( id == 1 )
-                state->root = o;
+        else if ( type == state->env->type_t )
+        {
+            o = p2_namespace__lookup_simple(
+                ( p2_namespace* ) state->env->types->value,
+                ( char* ) dom_element__text( el ) );
         }
 
         else
         {
             o = p2_object__new( 0, 0, 0 );
-        }
+            o->type = type;
 
-        o->type = type;
-
-        decode = ( xml_decoder ) p2_lookup_table__lookup
-            ( state->deserializers, type );
+            decode = ( xml_decoder ) p2_lookup_table__lookup
+                ( state->deserializers, type );
 printf( "decode = %#x\n", ( int ) decode );
 
-        /* Decode child element. */
-        if ( decode )
-        {
-            child = dom_element__first_child( el );
-            if ( !child )
+            /* Decode child element. */
+            if ( decode )
             {
-                ERROR( "p2_object__xml_decode: child element expected" );
-                return 0;
+                child = dom_element__first_child( el );
+                if ( !child )
+                {
+                    ERROR( "p2_object__xml_decode: child element expected" );
+                    return 0;
+                }
+
+                o->flags = o->flags | OBJECT__IS_OBJ_COLL;
+
+                o->value = decode( child, state );
             }
 
-            o->flags = o->flags | OBJECT__IS_OBJ_COLL;
-
-            o->value = decode( child, state );
-        }
-
-        /* Decode element text. */
-        else
-        {
+            /* Decode element text. */
+            else
+            {
 printf( "type = '%s' (%#x)\n", type->name, ( int ) type );
 printf( "type->decode = %#x\n", ( int ) type->decode );
 printf( "cstring__decode = %#x\n", ( int ) cstring__decode );
 printf( "dom_element__text( el ) = \"%s\"\n", dom_element__text( el ) );
 printf( "STRDUP( dom_element__text( el ) ) = \"%s\"\n", STRDUP( dom_element__text( el ) ) );
-            o->value = type->decode( ( char* ) dom_element__text( el ) );
+                o->value = type->decode( ( char* ) dom_element__text( el ) );
 if ( !strcmp( type->name, "cstring" ) )
 printf( "cstring value = \"%s\" (%#x)\n", ( char* ) o->value, ( int ) o->value );
 /*else if ( !strcmp( type->name, "int" ) )
 printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value );*/
+            }
+
+            /* Register the new object. */
+            p2_memory_manager__add( state->env->manager, o );
         }
 
-        /* Register the new object. */
-        p2_memory_manager__add( state->env->manager, o );
+        if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
+        {
+            id = ( unsigned int ) atoi( ( char* ) dom_attr__value( attr ) );
+            if ( id == 1 )
+                state->root = o;
+
+            p2_lookup_table__add( state->objects_by_id, ( void* ) id, o );
+        }
     }
 
     /* Reference form. */
@@ -643,7 +653,8 @@ void p2_compiler__serialize( p2_compiler *c, char *path )
     #endif
 printf( "---s s 1---\n" ); fflush( stdout );
     ids = p2_lookup_table__new();
-    multirefs = p2_memory_manager__get_multirefs( c->env->manager );
+    multirefs = p2_memory_manager__get_multirefs
+        ( c->env->manager, c->env->data );
 printf( "---s s 2---\n" ); fflush( stdout );
 
     state.table = ids;
