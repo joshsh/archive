@@ -81,6 +81,48 @@ static int add_triples_prims( p2_environment *env )
 /******************************************************************************/
 
 
+static void add_combinators( p2_environment *env )
+{
+    p2_object *o;
+    combinator *sk_s, *sk_k;
+    p2_memory_manager *m = env->manager;
+
+    sk_s = new( combinator );
+    sk_k = new( combinator );
+
+    *sk_s = S_combinator;
+    *sk_k = K_combinator;
+
+    o = p2_object__new( env->combinator_t, sk_s, 0 );
+    p2_memory_manager__add( m, o );
+    p2_namespace__add_simple( ( p2_namespace* ) env->combinators->value, "S", o );
+
+    o = p2_object__new( env->combinator_t, sk_k, 0 );
+    p2_memory_manager__add( m, o );
+    p2_namespace__add_simple( ( p2_namespace* ) env->combinators->value, "K", o );
+}
+
+
+/* Make all namespaces apart from the 'data' namespace read-only. */
+static void lock_ns( p2_environment *env )
+{
+    env->combinators->flags |= OBJECT__IMMUTABLE;
+    env->primitives->flags |= OBJECT__IMMUTABLE;
+    env->root->flags |= OBJECT__IMMUTABLE;
+    env->types->flags |= OBJECT__IMMUTABLE;
+}
+
+
+/* Remove
+static void unlock_ns( p2_environment *env )
+{
+
+}*/
+
+
+/******************************************************************************/
+
+
 p2_environment *p2_environment__new()
 {
     p2_environment *env;
@@ -92,7 +134,7 @@ printf( "---e 1---\n" ); fflush( stdout );
 printf( "---e 2---\n" ); fflush( stdout );
 
     env->prim_t = env->ns_t = env->type_t = 0;
-    env->data = env->primitives = env->root = env->types = 0;
+    env->combinators = env->data = env->primitives = env->root = env->types = 0;
     env->manager = 0;
 printf( "---e 3---\n" ); fflush( stdout );
 
@@ -107,23 +149,12 @@ printf( "---e 3---\n" ); fflush( stdout );
     env->prim_t->destroy =  ( destructor )  p2_primitive__delete;
     env->prim_t->encode = ( encoder ) p2_primitive__encode;
     env->type_t->destroy =  ( destructor )  p2_type__delete;
-/*
-    if ( !( env->ns_t = p2_type__new(
-        STRDUP( "namespace" ), 0, 0,
-        ( destructor ) p2_namespace__delete, 0, 0,
-        ( FOR_ALL_T ) p2_namespace__for_all, 0 ) )
-      || !( env->prim_t = p2_type__new(
-        STRDUP( "primitive" ), 0, 0,
-        ( destructor ) p2_primitive__delete, 0, 0, 0, 0 ) )
-      || !( env->type_t = p2_type__new(
-        STRDUP( "type" ), 0, 0,
-        ( destructor ) p2_type__delete, 0, 0, 0, 0 ) ) )
-        goto abort;
-*/
+
 printf( "---e 4---\n" ); fflush( stdout );
 
     /* Create root namespace object and children. */
-    if ( !( env->data = ns__new( env->ns_t ) )
+    if ( !( env->combinators = ns__new( env->ns_t ) )
+      || !( env->data = ns__new( env->ns_t ) )
       || !( env->primitives = ns__new( env->ns_t ) )
       || !( env->root = ns__new( env->ns_t ) )
       || !( env->types = ns__new( env->ns_t ) ) )
@@ -139,14 +170,16 @@ printf( "---e 5---\n" ); fflush( stdout );
 printf( "---e 6---\n" ); fflush( stdout );
 
     /* Add the other namespace objects to the manager. */
-    if ( !( env->data = p2_memory_manager__add( env->manager, env->data ) )
+    if ( !( env->combinators = p2_memory_manager__add( env->manager, env->combinators ) )
+      || !( env->data = p2_memory_manager__add( env->manager, env->data ) )
       || !( env->primitives = p2_memory_manager__add( env->manager, env->primitives ) )
       || !( env->types = p2_memory_manager__add( env->manager, env->types ) ) )
         goto abort;
 printf( "---e 7---\n" ); fflush( stdout );
 
     /* Nest child namespaces under root. */
-    if ( p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "data", env->data )
+    if ( p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "combinators", env->combinators )
+      || p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "data", env->data )
       || p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "primitives", env->primitives )
       || p2_namespace__add_simple( ( p2_namespace* ) env->root->value, "types", env->types ) )
         goto abort;
@@ -162,6 +195,7 @@ printf( "---e 9---\n" ); fflush( stdout );
     p2_environment__register_type( env, p2_array__type( "bag" ), 0 );
     p2_environment__register_type( env, p2_term__type( "term" ), 0 );
 
+    /* Add primitives. */
     if ( !p2_environment__import_primitives( env ) )
         goto abort;
 printf( "---e 10---\n" ); fflush( stdout );
@@ -174,11 +208,12 @@ printf( "---e 10---\n" ); fflush( stdout );
     }
     #endif
 
-    /* Set namespace permissions. */
-    ( ( p2_namespace* ) env->data->value )->constant = 0;
-    ( ( p2_namespace* ) env->primitives->value )->constant = 1;
-    ( ( p2_namespace* ) env->root->value )->constant = 1;
-    ( ( p2_namespace* ) env->types->value )->constant = 1;
+    /* Add combinators. */
+    env->combinator_t = p2_environment__resolve_type( env, "combinator" );
+    add_combinators( env );
+
+    lock_ns( env );
+
 printf( "---e 11---\n" ); fflush( stdout );
 
     return env;
@@ -221,7 +256,23 @@ void p2_environment__delete( p2_environment *env )
     }
     #endif
 
+printf( "---e d 1---\n" ); fflush( stdout );
+    /* Preserve only data type objects. */
+    env->manager->root = env->types;
+printf( "---e d 5---\n" ); fflush( stdout );
+    p2_memory_manager__mark_and_sweep( env->manager );
+
+printf( "---e d 6---\n" ); fflush( stdout );
+    /* Preserve only the 'type' type. */
+    env->manager->root = p2_namespace__lookup_simple
+        ( ( p2_namespace* ) env->types->value, "type" );
+printf( "---e d 7---\n" ); fflush( stdout );
+    p2_memory_manager__mark_and_sweep( env->manager );
+
+printf( "---e d 8---\n" ); fflush( stdout );
     p2_memory_manager__delete( env->manager );
+printf( "---e d 9---\n" ); fflush( stdout );
+
     free( env );
 }
 

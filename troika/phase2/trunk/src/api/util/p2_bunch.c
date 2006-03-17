@@ -80,6 +80,10 @@ p2_bunch *p2_bunch__new(unsigned int block_size)
 {
     p2_bunch *b = (p2_bunch *) malloc(sizeof(p2_bunch));
 
+    #if DEBUG__BUNCH
+    printf( "[%#x] p2_bunch__new(%i)\n", ( int ) b, block_size );
+    #endif
+
     if (b)
     {
         /* Block size must be at least 1. */
@@ -105,6 +109,10 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
 
     p2_bunch *b2 = (p2_bunch *) malloc(sizeof(p2_bunch));
 
+    #if DEBUG__BUNCH
+    printf( "[%#x] p2_bunch__copy(%#x)\n", ( int ) b2, ( int ) b );
+    #endif
+
     b2->block_size = size;
     b2->blocks = p2_array__new(b->blocks->size, b->blocks->expansion);
 
@@ -120,16 +128,22 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
 }
 
 
-static p2_action * block__delete__proc( block **block_p, void *ignored )
+static p2_action * block__delete__proc( block *block_p, void *ignored )
 {
-    block__delete( *block_p );
+    block__delete( block_p );
     return 0;
 }
 
 
 void p2_bunch__delete( p2_bunch *b )
 {
-    p2_procedure p = { ( procedure ) block__delete__proc, 0 };
+    p2_procedure p;
+
+    #if DEBUG__BUNCH
+    printf( "[] p2_bunch__delete(%#x)\n", ( int ) b );
+    #endif
+
+    p.execute = ( procedure ) block__delete__proc;
 
     /* Free all blocks. */
     p2_array__distribute( b->blocks, &p );
@@ -223,6 +237,10 @@ void p2_bunch__distribute( p2_bunch *b, p2_procedure *p )
     unsigned int i, j, numblocks = b->blocks->size;
     block *bl;
     p2_action *action;
+
+    #if DEBUG__BUNCH
+    printf( "[] p2_bunch__distribute(%#x, %#x)\n", ( int ) b, ( int ) p );
+    #endif
 
     for ( i = 0; i < numblocks; i++ )
     {

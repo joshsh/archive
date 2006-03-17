@@ -64,8 +64,8 @@ printf( "---m 4---\n" ); fflush( stdout );
 printf( "---m 4.5---\n" ); fflush( stdout );
     p2_object_t = p2_type__new( "object", 0 );
     p2_object_t->destroy = ( destructor ) p2_object__delete;
-    m->objects_obj = p2_object__new( p2_bunch__type( "bunch<object>" ), m->objects, OBJECT__OWNS_DESCENDANTS );
-    m->objects_obj->type->type_arg = p2_object_t;
+    m->objects_o = p2_object__new( p2_bunch__type( "bunch<object>" ), m->objects, OBJECT__OWNS_DESCENDANTS );
+    m->objects_o->type->type_arg = p2_object_t;
 printf( "---m 5---\n" ); fflush( stdout );
 
     m->root = root;
@@ -81,6 +81,10 @@ printf( "---m 5---\n" ); fflush( stdout );
 printf( "---m 6---\n" ); fflush( stdout );
 
     m->clean = 1;
+
+    #if DEBUG__MEMORY
+    printf( "[%#x] p2_memory_manager__new(%#x)\n", ( int ) m, ( int ) root );
+    #endif
 
     return m;
 }
@@ -98,14 +102,26 @@ void p2_memory_manager__delete( p2_memory_manager *m )
     }
     #endif
 
-    p2_object_bunch_t = m->objects_obj->type;
-    p2_object_t = p2_object_bunch_t->type_arg;
+    #if DEBUG__MEMORY
+    printf( "[] p2_memory_manager__delete(%#x)\n", ( int ) m );
+    #endif
 
-    p2_object__delete( m->objects_obj );
+printf( "---m d 1---\n" ); fflush( stdout );
+    p2_object_bunch_t = m->objects_o->type;
+printf( "---m d 2---\n" ); fflush( stdout );
+    p2_object_t = p2_object_bunch_t->type_arg;
+printf( "---m d 3---\n" ); fflush( stdout );
+printf( "m->objects = %#x\n", ( int ) m->objects );
+printf( "p2_bunch__size( m->objects ) = %i\n", p2_bunch__size( m->objects ) );
+
+    p2_object__delete( m->objects_o );
+printf( "---m d 4---\n" ); fflush( stdout );
     /*p2_bunch__for_all( m->objects, (void*(*)(void*)) p2_object__delete );
     p2_bunch__delete( m->objects );*/
     p2_type__delete( p2_object_bunch_t );
+printf( "---m d 5---\n" ); fflush( stdout );
     p2_type__delete( p2_object_t );
+printf( "---m d 6---\n" ); fflush( stdout );
 
     free( m );
 }
@@ -212,7 +228,7 @@ static void unmark_all( p2_memory_manager *m )
     }
     #endif
 
-    p2_collection__do_for_all( m->objects_obj, ( void_f ) unmark );
+    p2_collection__do_for_all( m->objects_o, ( void_f ) unmark );
     /*p2_bunch__for_all( m->objects, (void*(*)(void*)) unmark );*/
     m->clean = 1;
 }
@@ -229,7 +245,7 @@ static void sweep( p2_memory_manager *m )
     }
     #endif
 
-    p2_collection__exclude_if( m->objects_obj, ( criterion ) unmark_for_sweep );
+    p2_collection__exclude_if( m->objects_o, ( criterion ) unmark_for_sweep );
     /*p2_bunch__exclude_if( m->objects, (void*(*)(void*)) unmark_for_sweep );*/
     m->clean = 1;
 }

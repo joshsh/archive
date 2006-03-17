@@ -37,10 +37,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* For p2_object's flags field. */
-#define OBJECT__IS_OBJ_COLL         ( int ) 0x1
-#define OBJECT__MARKED              ( int ) 0x2
-#define OBJECT__OWNED               ( int ) 0x4
-#define OBJECT__OWNS_DESCENDANTS    ( int ) 0x8
+#define OBJECT__IMMUTABLE           ( int ) 0x01
+#define OBJECT__IS_OBJ_COLL         ( int ) 0x02
+#define OBJECT__MARKED              ( int ) 0x04
+#define OBJECT__OWNED               ( int ) 0x08
+#define OBJECT__OWNS_DESCENDANTS    ( int ) 0x10
 
 
 /** A typed constant.  This is the least addressable unit of data in a Phase2

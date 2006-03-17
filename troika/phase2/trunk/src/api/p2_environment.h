@@ -31,6 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <p2_memory_manager.h>
 #include <p2_namespace.h>
 #include <p2_primitive.h>
+#include <sk/sk.h>
 
 
 /** A data structure which is equivalent to a namespace containing uniquely
@@ -41,11 +42,12 @@ typedef struct _p2_environment
 
     p2_namespace_o *root;
 
+    p2_namespace_o *combinators;
     p2_namespace_o *data;
     p2_namespace_o *primitives;
     p2_namespace_o *types;
 
-    p2_type *ns_t, *prim_t, *type_t;
+    p2_type *combinator_t, *ns_t, *prim_t, *type_t;
 
 } p2_environment;
 

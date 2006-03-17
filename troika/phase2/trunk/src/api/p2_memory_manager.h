@@ -39,7 +39,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef struct _p2_memory_manager
 {
     p2_bunch *objects;
-        p2_object *objects_obj;
+        p2_object *objects_o;
+
     p2_object *root;
 
     /** Whether the manager contains only unmarked objects.  Any marked objects

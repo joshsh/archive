@@ -45,9 +45,6 @@ typedef struct _p2_namespace
     /** A dictionary of objects in the namespace. */
     p2_dictionary *children;
 
-    /** If nonzero, the namespace can only be read from, not written to. */
-    int constant;
-
 } p2_namespace;
 
 
@@ -86,6 +83,8 @@ p2_object *p2_namespace__lookup_simple(
     \param name  the local part of the name to look up
     \return  the object removed */
 p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name );
+
+p2_object *p2_namespace__remove_simple( p2_namespace *ns, char *name );
 
 
 void p2_namespace__show_children( p2_namespace_o *ns_obj );

@@ -49,28 +49,6 @@ static p2_type *lookup_type( p2_environment *env, const char *name )
 }
 
 
-static void add_combinators( p2_compiler *c )
-{
-    p2_object *o;
-    combinator *sk_s, *sk_k;
-    p2_memory_manager *m = c->env->manager;
-
-    sk_s = new( combinator );
-    sk_k = new( combinator );
-
-    *sk_s = S_combinator;
-    *sk_k = K_combinator;
-
-    o = p2_object__new( c->combinator_t, sk_s, 0 );
-    p2_memory_manager__add( m, o );
-    p2_namespace__add_simple( ( p2_namespace* ) c->env->data->value, "S", o );
-
-    o = p2_object__new( c->combinator_t, sk_k, 0 );
-    p2_memory_manager__add( m, o );
-    p2_namespace__add_simple( ( p2_namespace* ) c->env->data->value, "K", o );
-}
-
-
 /******************************************************************************/
 
 
@@ -142,7 +120,6 @@ p2_compiler *p2_compiler__new( p2_environment *env )
        the parser. */
     if ( !( c->bag_t = lookup_type( env, "bag" ) )
       || !( c->char_t = lookup_type( env, "char" ) )
-      || !( c->combinator_t = lookup_type( env, "combinator" ) )
       || !( c->float_t = lookup_type( env, "double" ) )
       || !( c->int_t = lookup_type( env, "int" ) )
       || !( c->string_t = lookup_type( env, "cstring" ) )
@@ -165,8 +142,6 @@ p2_compiler *p2_compiler__new( p2_environment *env )
     c->locked = 0;
     c->suppress_output = boolean__false;
     c->show_line_numbers = boolean__true;
-
-    add_combinators( c );
 
     compiler = c;
 
@@ -621,7 +596,7 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
             compiler->env->manager,
             compiler->term_t,
             compiler->env->prim_t,
-            compiler->combinator_t, 0 );
+            compiler->env->combinator_t, 0 );
 
         if ( t )
             o->value = t;

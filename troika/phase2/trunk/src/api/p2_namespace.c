@@ -36,9 +36,6 @@ p2_namespace *p2_namespace__new()
         return 0;
     }
 
-    /* Writable by default. */
-    ns->constant = 0;
-
     #if DEBUG__NAMESPACE
     printf( "[%#x] p2_namespace__new\n", ( int ) ns );
     #endif
@@ -95,7 +92,7 @@ p2_object *p2_namespace__add
 
     if ( name->size == 1 )
     {
-        if ( ns->constant )
+        if ( ns_obj->flags & OBJECT__IMMUTABLE )
         {
             ERROR( "p2_namespace__add: namespace is write-protected" );
             return 0;
@@ -146,12 +143,6 @@ p2_object *p2_namespace__add_simple
     }
     #endif
 
-    if ( ns->constant )
-    {
-        ERROR( "p2_namespace__add_simple: namespace is write-protected" );
-        return 0;
-    }
-
     return ( p2_object* ) p2_dictionary__add
         ( ns->children, name, o );
 }
@@ -174,13 +165,11 @@ p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
 
     #if DEBUG__NAMESPACE
     printf( "[...] p2_namespace__lookup(%#x, %#x)\n", ( int ) ns, ( int ) name );
-fflush( stdout );
     #endif
 
     if ( !name || !name->size )
         return ns_obj;
 
-printf( "p2_namespace__lookup: p2_array__peek( name ) = %#x\n", ( int ) p2_array__peek( name ) ); fflush( stdout );
     o = ( p2_object* ) p2_dictionary__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
@@ -210,17 +199,14 @@ p2_object *p2_namespace__lookup_simple(
     p2_namespace *ns, const char *name )
 {
     #if DEBUG__SAFE
-    if ( !ns )
+    if ( !ns | !name )
     {
         ERROR( "p2_namespace__lookup_simple: null argument" );
         return 0;
     }
     #endif
 
-    if ( !name )
-        return ns;
-    else
-        return ( p2_object* ) p2_dictionary__lookup( ns->children, name );
+    return ( p2_object* ) p2_dictionary__lookup( ns->children, name );
 }
 
 
@@ -251,7 +237,7 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
 
     if ( name->size == 1 )
     {
-        if ( ns->constant )
+        if ( ns_obj->flags & OBJECT__IMMUTABLE )
         {
             ERROR( "p2_namespace__remove: namespace is write-protected" );
             return 0;
@@ -280,6 +266,20 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
     }
 
     return displaced_object;
+}
+
+
+p2_object *p2_namespace__remove_simple( p2_namespace *ns, char *name )
+{
+    #if DEBUG__SAFE
+    if ( !ns | !name)
+    {
+        ERROR( "p2_namespace__remove_simple: null argument" );
+        return 0;
+    }
+    #endif
+
+    return ( p2_object* ) p2_dictionary__remove( ns->children, name );
 }
 
 

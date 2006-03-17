@@ -43,6 +43,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #define DEBUG__PRIMS                        1
 
     #define DEBUG__OBJECT                       1
+    #define DEBUG__MEMORY                       1
 
     #define DEBUG__NAMESPACE                    1
 
@@ -69,6 +70,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define DEBUG__ARRAY                        1
     #define DEBUG__BAG                          0
+    #define DEBUG__BUNCH                        1
     #define DEBUG__HASH_TABLE                   1
     #define DEBUG__LOOKUP_TABLE                 1
     #define DEBUG__NAME                         0
