@@ -104,7 +104,8 @@ p2_dictionary *p2_dictionary__new()
 void p2_dictionary__delete( p2_dictionary *dict )
 {
     /* Destroy dictionary entries. */
-    p2_procedure p = { ( procedure ) dictionary_entry__delete, 0 };
+    p2_procedure p;
+    p.execute = ( procedure ) dictionary_entry__delete;
     p2_hash_table__distribute( dict, &p );
 
     p2_hash_table__delete( dict );

@@ -6,6 +6,9 @@
 
 \brief  Flex input file for Phase2's command line front-end.
 
+Identifiers beginning with an underscore (e.g. _quit) are reserved for special
+commands.
+
 Comments are delimited by "(:" and ":)", and may be nested to any level.
 
 String literals are delimited by quote characters, and use the escape
@@ -219,11 +222,10 @@ char *extract_literal( char *s )
 
 
 /** For command names. */
-LETTER  [A-Za-z]
 ALNUM   [A-Za-z0-9]
 
 /** For lexical identifiers. */
-IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
+IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
 
 
 /** Comments and string literals have their own mini-scanners. */
@@ -290,7 +292,7 @@ IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
         TOKEN( R_BRACE, "R_BRACE" );
     }
 
-    !{LETTER}{ALNUM}*  {
+    _[0-9A-Za-z]+  {
 
         /* Ownership of this string is conferred to the parser. */
         yylval.string_t = STRDUP( yytext + 1 );
@@ -317,7 +319,7 @@ IDCHAR  [^\]\[![:space:]:;=(){,}\"\\]
         TOKEN( INT, "INT" );
     }
 
-    {IDCHAR}("\\ "*{IDCHAR})*  {  /* Matches a name fragment. */
+    {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
 
         /* Ownership of this string is conferred to the parser. */
         yylval.string_t = extract_id( yytext );

@@ -443,6 +443,29 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 }
 
 
+static void remove_ns_item( p2_compiler *c, p2_ast *args )
+{
+    p2_name *name;
+    p2_ast *arg = get_inner_node( args );
+
+    #if DEBUG__SAFE
+    if ( arg->type != NAME_T )
+    {
+        ERROR( "remove_ns_item: AST type mismatch" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__COMPILER
+    printf( "remove_ns_item(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    name = ( p2_name* ) arg->value;
+
+    p2_namespace__remove( c->cur_ns_obj, name );
+}
+
+
 static void save_as( p2_compiler *c, p2_ast *args )
 {
     char *path;
@@ -505,6 +528,12 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
     {
         if ( n_args( args, 0 ) )
             ret = 1;
+    }
+
+    else if ( !strcmp( name, "rm" ) )
+    {
+        if ( n_args( args, 1 ) )
+            remove_ns_item( compiler, args );
     }
 
     else if ( !strcmp( name, "saveas" ) )

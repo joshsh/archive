@@ -283,6 +283,7 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
+    void *displaced = 0;
 
     #if DEBUG__SAFE
     if ( !key )
@@ -298,6 +299,8 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
     {
         if ( !h->compare( *cur, key ) )
         {
+            displaced = *cur;
+            *cur = 0;
             h->size--;
             break;
         }
@@ -307,7 +310,7 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
         cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
     }
 
-    return *cur;
+    return displaced;
 }
 
 

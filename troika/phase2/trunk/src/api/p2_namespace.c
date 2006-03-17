@@ -234,9 +234,11 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
         return 0;
     }
     #endif
+printf( "--- ns rm 1---\n" ); fflush( stdout );
 
     if ( name->size == 1 )
     {
+printf( "--- ns rm 2a---\n" ); fflush( stdout );
         if ( ns_obj->flags & OBJECT__IMMUTABLE )
         {
             ERROR( "p2_namespace__remove: namespace is write-protected" );
@@ -249,6 +251,7 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
 
     else
     {
+printf( "--- ns rm 2b---\n" ); fflush( stdout );
         key = ( char* ) p2_array__pop( name );
 
         child_ns_obj = ( p2_object* ) p2_dictionary__lookup( ns->children, key );
@@ -264,6 +267,7 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
 
         p2_array__push( name, key );
     }
+printf( "--- ns rm 3---\n" ); fflush( stdout );
 
     return displaced_object;
 }
