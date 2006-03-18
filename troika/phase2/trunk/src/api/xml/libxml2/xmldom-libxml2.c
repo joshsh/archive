@@ -62,6 +62,24 @@ void xmldom__end( )
 /* dom_attr *******************************************************************/
 
 
+void dom_attr__delete( dom_attr *attr )
+{
+    xmlFreeProp(( xmlAttr* ) attr ) ;
+}
+
+
+const unsigned char *dom_attr__name( dom_attr *attr )
+{
+    return (( xmlAttr* ) attr )->name ;
+}
+
+
+dom_namespace *dom_attr__namespace( dom_attr *attr )
+{
+    return ( dom_namespace* ) (( xmlAttr* ) attr )->ns ;
+}
+
+
 dom_attr *dom_attr__new( dom_element *el,
                          unsigned char *name,
                          unsigned char *value,
@@ -78,15 +96,9 @@ dom_attr *dom_attr__new( dom_element *el,
 }
 
 
-void dom_attr__delete( dom_attr *attr )
+dom_attr *dom_attr__next_sibling( dom_attr *attr )
 {
-    xmlFreeProp(( xmlAttr* ) attr ) ;
-}
-
-
-const unsigned char *dom_attr__name( dom_attr *attr )
-{
-    return (( xmlAttr* ) attr )->name ;
+    return ( dom_attr* ) (( xmlAttr* ) attr )->next ;
 }
 
 
@@ -96,19 +108,13 @@ const unsigned char *dom_attr__value( dom_attr *attr )
 }
 
 
-dom_namespace *dom_attr__namespace( dom_attr *attr )
-{
-    return ( dom_namespace* ) (( xmlAttr* ) attr )->ns ;
-}
-
-
-dom_attr *dom_attr__next_sibling( dom_attr *attr )
-{
-    return ( dom_attr* ) (( xmlAttr* ) attr )->next ;
-}
-
-
 /* dom_document ***************************************************************/
+
+
+void dom_document__delete( dom_document *doc )
+{
+    xmlFreeDoc( ( xmlDoc* ) doc ) ;
+}
 
 
 dom_document *dom_document__new( )
@@ -120,9 +126,10 @@ dom_document *dom_document__new( )
 }
 
 
-void dom_document__delete( dom_document *doc )
+dom_document *dom_document__read_from_file( char *path )
 {
-    xmlFreeDoc( ( xmlDoc* ) doc ) ;
+    xmlDoc *doc = xmlReadFile( path, NULL, 0 ) ;
+    return ( dom_document * ) doc ;
 }
 
 
@@ -145,84 +152,7 @@ void dom_document__write_to_file( dom_document *doc, char *path )
 }
 
 
-dom_document *dom_document__read_from_file( char *path )
-{
-    xmlDoc *doc = xmlReadFile( path, NULL, 0 ) ;
-    return ( dom_document * ) doc ;
-}
-
-
 /* dom_element ****************************************************************/
-
-
-dom_element *dom_element__new( dom_document *doc,
-                               unsigned char *name,
-                               dom_namespace *ns )
-{
-    /* Note: apparently libxml2 makes its own copy of the element name. */
-    xmlNode* el = xmlNewNode( 0, name ) ;
-
-    if (ns)
-        xmlSetNs( el, ( xmlNs* ) ns );
-
-    return ( dom_element* ) el ;
-}
-
-
-void dom_element__delete( dom_element *el )
-{
-    xmlFreeNode(( xmlNode* ) el ) ;
-}
-
-
-const unsigned char *dom_element__name( dom_element *el )
-{
-    return (( xmlNode* ) el )->name ;
-}
-
-
-dom_namespace *dom_element__namespace( dom_element *el )
-{
-    return ( dom_namespace* ) (( xmlNode* ) el)->ns ;
-}
-
-
-const unsigned char *dom_element__text( dom_element *el )
-{
-    return xmlNodeGetContent(( xmlNode* ) el ) ;
-}
-
-
-void dom_element__set_namespace( dom_element *el, dom_namespace *ns )
-{
-    xmlSetNs( ( xmlNode* ) el, ( xmlNs* ) ns );
-}
-
-
-dom_element *dom_element__first_child( dom_element *el )
-{
-    xmlNode *node = (( xmlNode* ) el )->children ;
-    while ( node && node->type != XML_ELEMENT_NODE )
-        node = node->next ;
-
-    return ( dom_element* ) node ;
-}
-
-
-dom_attr *dom_element__first_attr( dom_element *el )
-{
-    return ( dom_attr* ) (( xmlNode* ) el )->properties ;
-}
-
-
-dom_element *dom_element__next_sibling( dom_element *el )
-{
-    xmlNode *node = (( xmlNode* ) el )->next ;
-    while ( node && node->type != XML_ELEMENT_NODE )
-        node = node->next ;
-
-    return ( dom_element* ) node ;
-}
 
 
 void dom_element__add_child( dom_element *el, dom_element *child )
@@ -253,7 +183,89 @@ dom_attr *dom_element__attr( dom_element *el,
 }
 
 
+void dom_element__delete( dom_element *el )
+{
+    xmlFreeNode(( xmlNode* ) el ) ;
+}
+
+
+dom_attr *dom_element__first_attr( dom_element *el )
+{
+    return ( dom_attr* ) (( xmlNode* ) el )->properties ;
+}
+
+
+dom_element *dom_element__first_child( dom_element *el )
+{
+    xmlNode *node = (( xmlNode* ) el )->children ;
+    while ( node && node->type != XML_ELEMENT_NODE )
+        node = node->next ;
+
+    return ( dom_element* ) node ;
+}
+
+
+const unsigned char *dom_element__name( dom_element *el )
+{
+    return (( xmlNode* ) el )->name ;
+}
+
+
+dom_namespace *dom_element__namespace( dom_element *el )
+{
+    return ( dom_namespace* ) (( xmlNode* ) el)->ns ;
+}
+
+
+dom_element *dom_element__new( dom_document *doc,
+                               unsigned char *name,
+                               dom_namespace *ns )
+{
+    /* Note: apparently libxml2 makes its own copy of the element name. */
+    xmlNode* el = xmlNewNode( 0, name ) ;
+
+    if (ns)
+        xmlSetNs( el, ( xmlNs* ) ns );
+
+    return ( dom_element* ) el ;
+}
+
+
+dom_element *dom_element__next_sibling( dom_element *el )
+{
+    xmlNode *node = (( xmlNode* ) el )->next ;
+    while ( node && node->type != XML_ELEMENT_NODE )
+        node = node->next ;
+
+    return ( dom_element* ) node ;
+}
+
+
+void dom_element__set_namespace( dom_element *el, dom_namespace *ns )
+{
+    xmlSetNs( ( xmlNode* ) el, ( xmlNs* ) ns );
+}
+
+
+const unsigned char *dom_element__text( dom_element *el )
+{
+    return xmlNodeGetContent(( xmlNode* ) el ) ;
+}
+
+
 /* dom_namespace **************************************************************/
+
+
+void dom_namespace__delete( dom_namespace *ns )
+{
+    xmlFreeNs(( xmlNs* ) ns ) ;
+}
+
+
+const unsigned char *dom_namespace__href( dom_namespace *ns )
+{
+    return (( xmlNs* ) ns )->href ;
+}
 
 
 dom_namespace *dom_namespace__new( dom_element *el,
@@ -264,21 +276,9 @@ dom_namespace *dom_namespace__new( dom_element *el,
 }
 
 
-void dom_namespace__delete( dom_namespace *ns )
-{
-    xmlFreeNs(( xmlNs* ) ns ) ;
-}
-
-
 const unsigned char *dom_namespace__prefix( dom_namespace *ns )
 {
     return (( xmlNs* ) ns )->prefix ;
-}
-
-
-const unsigned char *dom_namespace__href( dom_namespace *ns )
-{
-    return (( xmlNs* ) ns )->href ;
 }
 
 

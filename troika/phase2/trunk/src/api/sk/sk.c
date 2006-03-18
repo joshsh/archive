@@ -143,12 +143,12 @@ printf( "---sk pr -1---\n" ); fflush( stdout );
     {
 printf( "---sk pr 0---\n" ); fflush( stdout );
 
-        #if SK__CHECKS__APPLY_TO_NONATOM
-
         cur++;
 
         if ( ( unsigned int ) *cur != 2 )
         {
+            #if SK__CHECKS__APPLY_TO_NONATOM
+
             ERROR( "prim_reduce: primitive applied to non-atom" );
 
             if ( args )
@@ -156,15 +156,15 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
             p2_term__delete( term );
 
             return 0;
+
+            #endif
+
+            /*cur += ( unsigned int ) *cur;*/
         }
 
-        cur++;
+        else
+            cur++;
 
-        #else
-
-        cur += 2;
-
-        #endif  /* SK__CHECKS__APPLY_TO_NONATOM */
 
         #if DEBUG__SAFE
         if ( !(*cur) )

@@ -2,6 +2,43 @@
 #include <p2.h>
 
 
+double double__inverse( double a )
+{
+    return -a;
+}
+
+
+double double_double__add( double a, double b )
+{
+    return a + b;
+}
+
+
+double double_double__subtract( double a, double b )
+{
+    return a - b;
+}
+
+
+double double_double__multiply( double a, double b )
+{
+    return a * b;
+}
+
+
+double double_double__divide( double a, double b )
+{
+    if ( !b )
+    {
+        ERROR( "double_double__divide: division by zero" );
+        return 0;
+    }
+
+    else
+        return a / b;
+}
+
+
 int int__inverse( int a )
 {
     return -a;

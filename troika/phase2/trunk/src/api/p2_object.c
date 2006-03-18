@@ -28,7 +28,7 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     /* Note: temporary objects with null type/value are allowed. */
 
     #if DEBUG__OBJECT
-    printf( "[...] p2_object__new(%#x, %#x, %i )\n", ( int ) type, ( int ) value, flags );
+    printf( "[...] p2_object__new(%#x, %#x, %i)\n", ( int ) type, ( int ) value, flags );
     #endif
 
     o = new( p2_object );

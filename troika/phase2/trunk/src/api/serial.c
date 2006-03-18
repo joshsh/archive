@@ -17,6 +17,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+/*
+    To do:
+        [.] graceful fail when basic object (combinator / primitive / type) not found.
+*/
+
 #include <serial.h>
 #include <util/p2_set.h>
 #include <xml/xmldom.h>
@@ -163,7 +168,7 @@ static dom_element *p2_namespace__xml_encode
     p2_array *keys;
     ns_encode_st nse_st;
     p2_procedure proc;
-printf( "---s nsxe 1---\n" ); fflush( stdout );
+printf( "---s nsxe 1---\n" ); FFLUSH;
 
     #if DEBUG__SAFE
     if ( !ns || !state )
@@ -188,7 +193,7 @@ printf( "ns->children->size = %i\n", ns->children->size );
 printf( "keys->size = %i\n", keys->size );
     p2_array__distribute( keys, &proc );
     p2_array__delete( keys );
-printf( "---s nsxe 2---\n" ); fflush( stdout );
+printf( "---s nsxe 2---\n" ); FFLUSH;
 
     return el;
 }
@@ -338,16 +343,16 @@ static dom_element *p2_object__xml_encode
     char buffer[256];
     dom_element *el;
     xml_encoder encode;
-printf( "---s oe 1---\n" ); fflush( stdout );
-
+printf( "---s oe 1---\n" ); FFLUSH;
+printf( "Serializing object #%x (top_level = %i).\n", ( int ) o, top_level );
     sprintf( buffer, "%i", id );
-printf( "---s oe 2---\n" ); fflush( stdout );
+printf( "---s oe 2---\n" ); FFLUSH;
 
     /* Element reference. */
     if ( id && !top_level )
     {
         el = dom_element__new( 0, ( uc* ) "object", 0 );
-printf( "---s oe 3a---\n" ); fflush( stdout );
+printf( "---s oe 3a---\n" ); FFLUSH;
 
         if ( o->type == state->env->combinator_t
           || o->type == state->env->prim_t
@@ -367,39 +372,39 @@ printf( "---s oe 3a---\n" ); fflush( stdout );
     /* Element data. */
     else
     {
-printf( "---s oe 3b 1---\n" ); fflush( stdout );
+printf( "---s oe 3b 1---\n" ); FFLUSH;
         el = dom_element__new( 0, ( uc* ) "object", 0 );
 
         /* Only multireferenced objects have ids. */
         if ( top_level )
             dom_attr__new( el, ( uc* ) "id", ( uc* ) buffer, 0 );
-printf( "---s oe 3b 2---\n" ); fflush( stdout );
+printf( "---s oe 3b 2---\n" ); FFLUSH;
 
         dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
-printf( "---s oe 3b 3---\n" ); fflush( stdout );
+printf( "---s oe 3b 3---\n" ); FFLUSH;
 
         encode = ( xml_encoder ) p2_lookup_table__lookup
             ( state->serializers, o->type );
-printf( "---s oe 3b 4---\n" ); fflush( stdout );
+printf( "---s oe 3b 4---\n" ); FFLUSH;
 
         /* Encode contents as child element. */
         if ( encode )
         {
-printf( "---s oe 3b 5a---\n" ); fflush( stdout );
+printf( "---s oe 3b 5a---\n" ); FFLUSH;
             dom_element__add_child( el, encode( o->value, state ) );
         }
 
         /* Encode contents as text. */
         else
         {
-printf( "---s oe 3b 5b 1 (woot)---\n" ); fflush( stdout );
-printf( "o = %#x\n", ( int ) o ); fflush( stdout );
-printf( "o->type = %#x\n", ( int ) o->type ); fflush( stdout );
-printf( "o->type->name = %s\n", o->type->name ); fflush( stdout );
+printf( "---s oe 3b 5b 1 (woot)---\n" ); FFLUSH;
+printf( "o = %#x\n", ( int ) o ); FFLUSH;
+printf( "o->type = %#x\n", ( int ) o->type ); FFLUSH;
+printf( "o->type->name = %s\n", o->type->name ); FFLUSH;
             o->type->encode( o->value, buffer );
             dom_element__add_text( el, ( uc* ) buffer );
         }
-printf( "---s oe 3b 5b 2---\n" ); fflush( stdout );
+printf( "---s oe 3b 5b 2---\n" ); FFLUSH;
 
     }
 
@@ -409,8 +414,15 @@ printf( "---s oe 3b 5b 2---\n" ); fflush( stdout );
 
 /* Object deserializer ********************************************************/
 
-/* !!! */
-#include <import/src/cstring.h>
+
+/*
+static p2_object *reference__xml_decode
+    ( dom_element *el, xml_decode_st *state )
+{
+
+}
+*/
+
 
 static p2_object *p2_object__xml_decode
     ( dom_element *el, xml_decode_st *state )
@@ -479,7 +491,37 @@ printf( "Deserializing object of type: %s\n", type->name );
 
         else
         {
-            o = p2_object__new( 0, 0, 0 );
+printf( "This is an imported type.\n" ); FFLUSH;
+            if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
+            {
+                text = ( char* ) dom_attr__value( attr );
+                id = ( unsigned int ) atoi( text );
+                free( text );
+printf( "id = %i\n", id ); FFLUSH;
+
+                o = ( p2_object* ) p2_lookup_table__lookup( state->objects_by_id, ( void* ) id );
+
+                if ( !o )
+                {
+                    o = p2_object__new( 0, 0, 0 );
+
+                    /* Register the new object. */
+                    p2_memory_manager__add( state->env->manager, o );
+
+                    p2_lookup_table__add( state->objects_by_id, ( void* ) id, o );
+                }
+
+                if ( id == 1 )
+                    state->root = o;
+            }
+
+            else
+            {
+                o = p2_object__new( 0, 0, 0 );
+                /* Register the new object. */
+                p2_memory_manager__add( state->env->manager, o );
+            }
+
             o->type = type;
 
             decode = ( xml_decoder ) p2_lookup_table__lookup
@@ -499,6 +541,10 @@ printf( "decode = %#x\n", ( int ) decode );
                 o->flags = o->flags | OBJECT__IS_OBJ_COLL;
 
                 o->value = decode( child, state );
+
+                if ( !o->value )
+                    /* !!! This may cause a segfault later on. */
+                    o = 0;
             }
 
             /* Decode element text. */
@@ -506,7 +552,6 @@ printf( "decode = %#x\n", ( int ) decode );
             {
 printf( "type = '%s' (%#x)\n", type->name, ( int ) type );
 printf( "type->decode = %#x\n", ( int ) type->decode );
-printf( "cstring__decode = %#x\n", ( int ) cstring__decode );
                 text = ( char* ) dom_element__text( el );
 printf( "dom_element__text( el ) = \"%s\"\n", text );
                 o->value = type->decode( text );
@@ -516,20 +561,6 @@ printf( "cstring value = \"%s\" (%#x)\n", ( char* ) o->value, ( int ) o->value )
 /*else if ( !strcmp( type->name, "int" ) )
 printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value );*/
             }
-
-            /* Register the new object. */
-            p2_memory_manager__add( state->env->manager, o );
-        }
-
-        if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
-        {
-            text = ( char* ) dom_attr__value( attr );
-            id = ( unsigned int ) atoi( text );
-            free( text );
-            if ( id == 1 )
-                state->root = o;
-
-            p2_lookup_table__add( state->objects_by_id, ( void* ) id, o );
         }
     }
 
@@ -538,6 +569,7 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
     {
         text = ( char* ) dom_attr__value( attr );
         id = ( unsigned int ) atoi( text );
+printf( "Deserializing reference on id = %i.\n", id ); FFLUSH;
         free( text );
         o = ( p2_object* ) p2_lookup_table__lookup
             ( state->objects_by_id, ( void* ) id );
@@ -555,6 +587,7 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
         ERROR( "p2_object__xml_decode: missing attribute" );
         o = 0;
     }
+printf( "Result is object %#x.\n", ( int ) o );
 
     return o;
 }
@@ -566,6 +599,7 @@ static void triple__xml_decode
 {
     p2_object *subject, *predicate, *object;
     dom_element *subject_el, *predicate_el, *object_el;
+printf( "Deserializing triple.\n" ); FFLUSH;
 
     subject_el = dom_element__first_child( el );
     predicate_el = dom_element__next_sibling( subject_el );
@@ -594,8 +628,12 @@ typedef struct _hash_multiref_st
 
 static p2_action * hash_multiref( p2_object *o, hash_multiref_st *state )
 {
-    state->max++;
-    p2_lookup_table__add( state->table, o, ( void* ) state->max );
+    /* Working namespace has already been given an id. */
+    if ( !p2_lookup_table__lookup( state->table, o ) )
+    {
+        state->max++;
+        p2_lookup_table__add( state->table, o, ( void* ) state->max );
+    }
     return 0;
 }
 
@@ -687,40 +725,40 @@ void p2_compiler__serialize( p2_compiler *c, char *path )
 
     xmldom__init();
 
-printf( "---s s 1---\n" ); fflush( stdout );
+printf( "---s s 1---\n" ); FFLUSH;
     ids = p2_lookup_table__new();
     multirefs = p2_memory_manager__get_multirefs
         ( c->env->manager, c->env->data );
-printf( "---s s 2---\n" ); fflush( stdout );
+printf( "---s s 2---\n" ); FFLUSH;
 
     state.table = ids;
     state.max = 0;
     proc.execute = ( procedure ) hash_multiref;
     proc.state = &state;
-printf( "---s s 3---\n" ); fflush( stdout );
+printf( "---s s 3---\n" ); FFLUSH;
 
     /* Force the working name space to be at top level. */
     p2_procedure__execute( ( &proc ), c->cur_ns_obj );
-printf( "---s s 4---\n" ); fflush( stdout );
+printf( "---s s 4---\n" ); FFLUSH;
 
     /* Assign all (other) multireferenced objects their ids. */
     p2_set__distribute( multirefs, &proc );
-printf( "---s s 5---\n" ); fflush( stdout );
+printf( "---s s 5---\n" ); FFLUSH;
 
     p2_set__delete( multirefs );
-printf( "---s s 6---\n" ); fflush( stdout );
+printf( "---s s 6---\n" ); FFLUSH;
 
     doc = dom_document__new();
     el = dom_element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
     dom_attr__new( el, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
     dom_document__set_root( doc, el );
-printf( "---s s 7---\n" ); fflush( stdout );
+printf( "---s s 7---\n" ); FFLUSH;
 
     encode_state.env = c->env;
     encode_state.serializers = p2_lookup_table__new();
     encode_state.ids = ids;
     encode_state.parent = el;
-printf( "---s s 8---\n" ); fflush( stdout );
+printf( "---s s 8---\n" ); FFLUSH;
 
     p2_lookup_table__add
         ( encode_state.serializers, c->bag_t, ( void* ) p2_bag__xml_encode );
@@ -729,15 +767,15 @@ printf( "---s s 8---\n" ); fflush( stdout );
     p2_lookup_table__add
         ( encode_state.serializers, c->term_t, ( void* ) p2_term__xml_encode );
     /* ... */
-printf( "---s s 9---\n" ); fflush( stdout );
+printf( "---s s 9---\n" ); FFLUSH;
 
     proc.execute = ( procedure ) serialize;
     proc.state = &encode_state;
-printf( "---s s 10---\n" ); fflush( stdout );
+printf( "---s s 10---\n" ); FFLUSH;
 
     /* Multiref objects are serialized in no particular order. */
     p2_lookup_table__distribute( ids, &proc );
-printf( "---s s 11---\n" ); fflush( stdout );
+printf( "---s s 11---\n" ); FFLUSH;
 
     p2_lookup_table__delete( ids );
     p2_lookup_table__delete( encode_state.serializers );
@@ -745,9 +783,9 @@ printf( "---s s 11---\n" ); fflush( stdout );
     dom_document__write_to_file( doc, path );
     dom_document__delete( doc );
 
-printf( "---s s 12---\n" ); fflush( stdout );
+printf( "---s s 12---\n" ); FFLUSH;
     xmldom__end();
-printf( "---s s 13---\n" ); fflush( stdout );
+printf( "---s s 13---\n" ); FFLUSH;
 }
 
 

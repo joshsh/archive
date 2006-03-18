@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data_set p2-version="0.5.0">
+  <object id="2" type="primitive">int_int__add</object>
+  <object id="3" type="namespace">
+    <table>
+      <object ref="4" name="reflection"/>
+    </table>
+  </object>
   <object id="1" type="namespace">
     <table>
       <object type="primitive" name="+">int_int__add</object>
       <object type="cstring" name="Alfresco">open source</object>
       <object type="cstring" name="Documentum">proprietary content manager</object>
       <object type="int" name="The Answer">42</object>
+      <object type="namespace" name="days">
+        <table>
+          <object type="cstring" name="Friday">Friday</object>
+          <object type="cstring" name="Monday">Monday</object>
+          <object type="cstring" name="Saturday">Saturday</object>
+          <object type="cstring" name="Sunday">Sunday</object>
+          <object type="cstring" name="Thursday">Thursday</object>
+          <object type="cstring" name="Tuesday">Tuesday</object>
+          <object type="cstring" name="Wednesday">Wednesday</object>
+        </table>
+      </object>
       <object type="namespace" name="math">
         <table>
           <object type="namespace" name="double">
@@ -28,7 +45,13 @@
         </table>
       </object>
       <object type="int" name="myint">1331</object>
+      <object ref="3" name="test"/>
     </table>
   </object>
-  <object id="2" type="primitive">int_int__add</object>
+  <object id="4" type="namespace">
+    <table>
+      <object ref="3" name="parent"/>
+      <object ref="4" name="self"/>
+    </table>
+  </object>
 </data_set>
