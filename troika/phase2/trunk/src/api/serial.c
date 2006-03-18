@@ -27,6 +27,8 @@ typedef unsigned char uc;
 
 typedef struct _xml_encode_st
 {
+    p2_environment *env;
+
     dom_element *parent;
 
     p2_lookup_table *serializers;
@@ -281,6 +283,7 @@ static p2_namespace *p2_namespace__xml_decode
     dom_element *child;
     dom_attr *attr;
     p2_object *o;
+    char *text;
 
     #if DEBUG__SAFE
     if ( !el || !state )
@@ -312,7 +315,9 @@ static p2_namespace *p2_namespace__xml_decode
         #endif
 
         o = p2_object__xml_decode( child, state );
-        p2_namespace__add_simple( ns, ( char* ) dom_attr__value( attr ), o );
+        text = ( char* ) dom_attr__value( attr );
+        p2_namespace__add_simple( ns, text, o );
+        free( text );
 
         child = dom_element__next_sibling( child );
     }
@@ -341,9 +346,22 @@ printf( "---s oe 2---\n" ); fflush( stdout );
     /* Element reference. */
     if ( id && !top_level )
     {
-printf( "---s oe 3a---\n" ); fflush( stdout );
         el = dom_element__new( 0, ( uc* ) "object", 0 );
-        dom_attr__new( el, ( uc* ) "ref", ( uc* ) buffer, 0 );
+printf( "---s oe 3a---\n" ); fflush( stdout );
+
+        if ( o->type == state->env->combinator_t
+          || o->type == state->env->prim_t
+          || o->type == state->env->type_t )
+        {
+            dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+            o->type->encode( o->value, buffer );
+            dom_element__add_text( el, ( uc* ) buffer );
+        }
+
+        else
+        {
+            dom_attr__new( el, ( uc* ) "ref", ( uc* ) buffer, 0 );
+        }
     }
 
     /* Element data. */
@@ -403,6 +421,7 @@ static p2_object *p2_object__xml_decode
     p2_type *type;
     xml_decoder decode;
     dom_element *child;
+    char *text;
 
     #if DEBUG__SAFE
     if ( !el || !state )
@@ -420,33 +439,42 @@ static p2_object *p2_object__xml_decode
     /* Full form. */
     if ( ( attr = dom_element__attr( el, ( uc* ) "type", 0 ) ) )
     {
+        text = ( char* ) dom_attr__value( attr );
         if ( !( type = p2_environment__resolve_type
-            ( state->env, ( char* ) dom_attr__value( attr ) ) ) )
+            ( state->env, text ) ) )
         {
             ERROR( "p2_object__xml_decode: bad type" );
+            free( text );
             return 0;
         }
+        free( text );
 printf( "Deserializing object of type: %s\n", type->name );
 
         if ( type == state->env->combinator_t )
         {
+            text = ( char* ) dom_element__text( el );
             o = p2_namespace__lookup_simple(
                 ( p2_namespace* ) state->env->combinators->value,
-                ( char* ) dom_element__text( el ) );
+                text );
+            free( text );
         }
 
         else if ( type == state->env->prim_t )
         {
+            text = ( char* ) dom_element__text( el );
             o = p2_namespace__lookup_simple(
                 ( p2_namespace* ) state->env->primitives->value,
-                ( char* ) dom_element__text( el ) );
+                text );
+            free( text );
         }
 
         else if ( type == state->env->type_t )
         {
+            text = ( char* ) dom_element__text( el );
             o = p2_namespace__lookup_simple(
                 ( p2_namespace* ) state->env->types->value,
-                ( char* ) dom_element__text( el ) );
+                text );
+            free( text );
         }
 
         else
@@ -479,9 +507,10 @@ printf( "decode = %#x\n", ( int ) decode );
 printf( "type = '%s' (%#x)\n", type->name, ( int ) type );
 printf( "type->decode = %#x\n", ( int ) type->decode );
 printf( "cstring__decode = %#x\n", ( int ) cstring__decode );
-printf( "dom_element__text( el ) = \"%s\"\n", dom_element__text( el ) );
-printf( "STRDUP( dom_element__text( el ) ) = \"%s\"\n", STRDUP( dom_element__text( el ) ) );
-                o->value = type->decode( ( char* ) dom_element__text( el ) );
+                text = ( char* ) dom_element__text( el );
+printf( "dom_element__text( el ) = \"%s\"\n", text );
+                o->value = type->decode( text );
+                free( text );
 if ( !strcmp( type->name, "cstring" ) )
 printf( "cstring value = \"%s\" (%#x)\n", ( char* ) o->value, ( int ) o->value );
 /*else if ( !strcmp( type->name, "int" ) )
@@ -494,7 +523,9 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
 
         if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
         {
-            id = ( unsigned int ) atoi( ( char* ) dom_attr__value( attr ) );
+            text = ( char* ) dom_attr__value( attr );
+            id = ( unsigned int ) atoi( text );
+            free( text );
             if ( id == 1 )
                 state->root = o;
 
@@ -505,7 +536,9 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
     /* Reference form. */
     else if ( ( attr = dom_element__attr( el, ( uc* ) "ref", 0 ) ) )
     {
-        id = ( unsigned int ) atoi( ( char* ) dom_attr__value( attr ) );
+        text = ( char* ) dom_attr__value( attr );
+        id = ( unsigned int ) atoi( text );
+        free( text );
         o = ( p2_object* ) p2_lookup_table__lookup
             ( state->objects_by_id, ( void* ) id );
 
@@ -651,6 +684,9 @@ void p2_compiler__serialize( p2_compiler *c, char *path )
         return;
     }
     #endif
+
+    xmldom__init();
+
 printf( "---s s 1---\n" ); fflush( stdout );
     ids = p2_lookup_table__new();
     multirefs = p2_memory_manager__get_multirefs
@@ -680,6 +716,7 @@ printf( "---s s 6---\n" ); fflush( stdout );
     dom_document__set_root( doc, el );
 printf( "---s s 7---\n" ); fflush( stdout );
 
+    encode_state.env = c->env;
     encode_state.serializers = p2_lookup_table__new();
     encode_state.ids = ids;
     encode_state.parent = el;
@@ -707,7 +744,10 @@ printf( "---s s 11---\n" ); fflush( stdout );
 
     dom_document__write_to_file( doc, path );
     dom_document__delete( doc );
+
 printf( "---s s 12---\n" ); fflush( stdout );
+    xmldom__end();
+printf( "---s s 13---\n" ); fflush( stdout );
 }
 
 
@@ -716,9 +756,11 @@ void p2_compiler__deserialize( p2_compiler *c, char *path )
     xml_decode_st decode_state = { 0, 0, 0, 0 };
     dom_element *el, *child;
     char *el_name;
+    dom_document *doc;
 
-    dom_document *doc = dom_document__read_from_file( path );
-    if ( !doc )
+    xmldom__init();
+
+    if ( !( doc = dom_document__read_from_file( path ) ) )
     {
         ERROR( "p2_compiler__deserialize: XML read failure" );
         return;
@@ -795,10 +837,9 @@ finish:
 
     if ( decode_state.deserializers )
         p2_lookup_table__delete( decode_state.deserializers );
+
+    xmldom__end();
 }
-
-
-/******************************************************************************/
 
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

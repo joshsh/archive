@@ -353,7 +353,11 @@ static p2_action * noop( void *ignored1, void *ignored2 )
 
 void p2_memory_manager__mark_and_sweep( p2_memory_manager *m )
 {
-    p2_procedure noop_p;
+    p2_procedure proc;
+
+    #if DEBUG__MEMORY
+    int n_initial = p2_bunch__size( m->objects );
+    #endif
 
     #ifdef DEBUG__SAFE
     if ( !m )
@@ -362,12 +366,17 @@ void p2_memory_manager__mark_and_sweep( p2_memory_manager *m )
         return;
     }
     #endif
-printf( "---m ms 1---\n" ); fflush( stdout );
-    noop_p.execute = ( procedure ) noop;
+
+    proc.execute = ( procedure ) noop;
 
     /* Mark all reachable objects. */
-    p2_memory_manager__distribute( m, &noop_p );
-printf( "---m ms 2---\n" ); fflush( stdout );
+    p2_memory_manager__distribute( m, &proc );
+
+    #if DEBUG__MEMORY
+    printf( "p2_memory_manager__mark_and_sweep(%#x): deallocated %i of %i.\n",
+        ( int ) m, n_initial - p2_bunch__size( m->objects ), n_initial );
+    FFLUSH;
+    #endif
 }
 
 

@@ -248,6 +248,8 @@ printf( "---e abort---\n" ); fflush( stdout );
 
 void p2_environment__delete( p2_environment *env )
 {
+    p2_type ns_t;
+
     #if DEBUG__SAFE
     if ( !env )
     {
@@ -264,6 +266,8 @@ printf( "---e d 5---\n" ); fflush( stdout );
 
 printf( "---e d 6---\n" ); fflush( stdout );
     /* Preserve only the 'type' type. */
+    ns_t = *env->ns_t;
+    env->types->type = &ns_t;
     env->manager->root = p2_namespace__lookup_simple
         ( ( p2_namespace* ) env->types->value, "type" );
 printf( "---e d 7---\n" ); fflush( stdout );

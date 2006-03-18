@@ -97,7 +97,7 @@ UTIL_OBJECTS =	$(UTILS)/p2_array.o \
 
 
 ################################################################################
-# Compile XML util.
+# Compile XML utility.
 
 $(XML)/xmldom.o :
 	$(MAKE) -C $(XML)

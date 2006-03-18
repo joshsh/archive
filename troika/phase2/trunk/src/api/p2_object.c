@@ -80,6 +80,7 @@ void p2_object__delete( p2_object *o )
 {
     p2_procedure p;
 
+printf( "---o d 1: %#x---\n", ( int ) o ); FFLUSH;
     #if DEBUG__SAFE
     if ( !o )
     {
@@ -91,6 +92,7 @@ void p2_object__delete( p2_object *o )
     #if DEBUG__OBJECT
     printf( "p2_object__delete(%#x): value = %#x, type = %#x.\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
+FFLUSH;
     #endif
 
     #if TRIPLES__GLOBAL__IN_EDGES
@@ -107,6 +109,7 @@ void p2_object__delete( p2_object *o )
     if ( o->trans_edges )
         p2_lookup_table__delete( o->trans_edges );
     #endif
+printf( "---o d 2: %#x---\n", ( int ) o ); FFLUSH;
 
     /* If the object owns its children (and has any), free them. */
     if ( o->flags & OBJECT__OWNS_DESCENDANTS )
@@ -115,11 +118,19 @@ void p2_object__delete( p2_object *o )
         p.state = o->type->type_arg;
         o->type->distribute( o->value, &p );
     }
-
+printf( "---o d 3: %#x---\n", ( int ) o ); FFLUSH;
+printf( "o->type = %#x\n", ( int ) o->type ); FFLUSH;
+printf( "o->type->destroy = %#x\n", ( int ) o->type->destroy ); FFLUSH;
     /* Free the object's data. */
     o->type->destroy( o->value );
+printf( "---o d 4: %#x---\n", ( int ) o ); FFLUSH;
 
     free( o );
+printf( "---o d 5: %#x---\n", ( int ) o ); FFLUSH;
+
+    #if DEBUG__OBJECT
+    FFLUSH;
+    #endif
 }
 
 

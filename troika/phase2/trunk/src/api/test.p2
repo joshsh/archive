@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_set p2-version="0.5.0">
+  <object id="1" type="namespace">
+    <table>
+      <object type="primitive" name="+">int_int__add</object>
+      <object type="cstring" name="Alfresco">open source</object>
+      <object type="cstring" name="Documentum">proprietary content manager</object>
+      <object type="int" name="The Answer">42</object>
+      <object type="namespace" name="math">
+        <table>
+          <object type="namespace" name="double">
+            <table>
+              <object type="primitive" name="*">double_double__multiply</object>
+              <object type="primitive" name="+">double_double__add</object>
+              <object type="primitive" name="-">double_double__subtract</object>
+              <object type="primitive" name="/">double_double__divide</object>
+            </table>
+          </object>
+          <object type="namespace" name="int">
+            <table>
+              <object type="primitive" name="%">int_int__modulus</object>
+              <object type="primitive" name="*">int_int__multiply</object>
+              <object type="primitive" name="+">int_int__add</object>
+              <object type="primitive" name="-">int_int__subtract</object>
+              <object type="primitive" name="/">int_int__divide</object>
+            </table>
+          </object>
+        </table>
+      </object>
+      <object type="int" name="myint">1331</object>
+    </table>
+  </object>
+  <object id="2" type="primitive">int_int__add</object>
+</data_set>

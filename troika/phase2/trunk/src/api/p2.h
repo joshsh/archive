@@ -117,6 +117,8 @@ typedef void    ( *distributor )( void *data, p2_procedure *a );
 
 #include <stdio.h>  /* fprintf */
 
+#define FFLUSH  { fflush( stdout ); fflush( stderr ); }
+
 #define ERROR( msg ) \
 { \
     fprintf( stderr, "Error: %s.\n", msg ); \
