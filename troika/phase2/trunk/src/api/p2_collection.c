@@ -17,10 +17,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_collection.h"
+#include <p2_collection.h>
 
 
-typedef struct _p2_search
+typedef struct _search_ctx
 {
     criterion match;
     p2_array *results;
@@ -28,11 +28,11 @@ typedef struct _p2_search
 
     p2_action action;
 
-} p2_search;
+} search_ctx;
 
 
 static p2_action * break_true_if_match
-    ( void *data, p2_search *search )
+    ( void *data, search_ctx *search )
 {
     if ( search->match( data ) )
     {
@@ -47,7 +47,7 @@ static p2_action * break_true_if_match
 
 
 static p2_action * break_false_if_nomatch
-    ( void *data, p2_search *search )
+    ( void *data, search_ctx *search )
 {
     if ( search->match( data ) )
         return 0;
@@ -64,15 +64,15 @@ static p2_action * break_false_if_nomatch
 /* do_for_all *****************************************************************/
 
 
-typedef struct _void_f_wrapper
+typedef struct _void_f_ctx
 {
     void_f f;
 
-} void_f_wrapper;
+} void_f_ctx;
 
 
 static p2_action * void_f_procedure
-    ( void *data, void_f_wrapper *wrapper )
+    ( void *data, void_f_ctx *wrapper )
 {
     wrapper->f( data );
 
@@ -83,12 +83,12 @@ static p2_action * void_f_procedure
 void p2_collection__do_for_all( p2_collection *c, void_f f )
 {
     p2_procedure p;
-    void_f_wrapper wrapper;
+    void_f_ctx ctx;
 
-    wrapper.f = f;
+    ctx.f = f;
 
     p.execute = ( procedure ) void_f_procedure;
-    p.state = &wrapper;
+    p.state = &ctx;
 
     c->type->distribute( c->value, &p );
 }
@@ -98,7 +98,7 @@ void p2_collection__do_for_all( p2_collection *c, void_f f )
 
 
 static p2_action * exclude_if_match
-    ( void *data, p2_search *search )
+    ( void *data, search_ctx *search )
 {
     if ( search->match( data ) )
     {
@@ -114,7 +114,7 @@ static p2_action * exclude_if_match
 void p2_collection__exclude_if( p2_collection *c, criterion cr )
 {
     p2_procedure p;
-    p2_search search;
+    search_ctx search;
 
     search.match = cr;
 
@@ -131,7 +131,7 @@ void p2_collection__exclude_if( p2_collection *c, criterion cr )
 boolean p2_collection__exists( p2_collection *c, criterion cr )
 {
     p2_procedure p;
-    p2_search search;
+    search_ctx search;
 
     search.match = cr;
     search.single_result = ( void* ) 0;
@@ -150,7 +150,7 @@ boolean p2_collection__exists( p2_collection *c, criterion cr )
 void *p2_collection__first_match( p2_collection *c, criterion cr )
 {
     p2_procedure p;
-    p2_search search;
+    search_ctx search;
 
     search.match = cr;
     search.single_result = 0;
@@ -169,7 +169,7 @@ void *p2_collection__first_match( p2_collection *c, criterion cr )
 boolean p2_collection__for_all( p2_collection *c, criterion cr )
 {
     p2_procedure p;
-    p2_search search;
+    search_ctx search;
 
     search.match = cr;
     search.single_result = ( void* ) 1;
@@ -186,7 +186,7 @@ boolean p2_collection__for_all( p2_collection *c, criterion cr )
 
 
 /* Procedure for pattern matching. */
-static p2_action * add_if_match( void *data, p2_search *search )
+static p2_action * add_if_match( void *data, search_ctx *search )
 {
     if ( search->match( data ) )
     {
@@ -200,7 +200,7 @@ static p2_action * add_if_match( void *data, p2_search *search )
 p2_array *p2_collection__match( p2_collection *c, criterion cr )
 {
     p2_procedure p;
-    p2_search search;
+    search_ctx search;
 
     search.match = cr;
     search.results = p2_array__new( 0, 0 );
@@ -216,18 +216,18 @@ p2_array *p2_collection__match( p2_collection *c, criterion cr )
 /* replace_all ****************************************************************/
 
 
-typedef struct _substitution_context
+typedef struct _substitution_ctx
 {
     substitution_f substitute_for;
 
     void *state;
     p2_action action;
 
-} substitution_context;
+} substitution_ctx;
 
 
 static p2_action * substitute
-    ( void *data, substitution_context *context )
+    ( void *data, substitution_ctx *context )
 {
     context->action.value = context->substitute_for( data, context->state );
 
@@ -238,7 +238,7 @@ static p2_action * substitute
 void p2_collection__replace_all( p2_collection *c, substitution_f f, void *state )
 {
     p2_procedure p;
-    substitution_context context;
+    substitution_ctx context;
 
     context.substitute_for = f;
     context.state = state;

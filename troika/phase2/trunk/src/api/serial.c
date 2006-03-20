@@ -344,7 +344,7 @@ static dom_element *p2_object__xml_encode
     dom_element *el;
     xml_encoder encode;
 printf( "---s oe 1---\n" ); FFLUSH;
-printf( "Serializing object #%x (top_level = %i).\n", ( int ) o, top_level );
+printf( "Serializing object %#x (top_level = %i).\n", ( int ) o, top_level );
     sprintf( buffer, "%i", id );
 printf( "---s oe 2---\n" ); FFLUSH;
 
@@ -537,8 +537,6 @@ printf( "decode = %#x\n", ( int ) decode );
                     ERROR( "p2_object__xml_decode: child element expected" );
                     return 0;
                 }
-
-                o->flags = o->flags | OBJECT__IS_OBJ_COLL;
 
                 o->value = decode( child, state );
 

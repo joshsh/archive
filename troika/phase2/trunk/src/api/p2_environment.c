@@ -30,7 +30,7 @@ static p2_namespace_o *ns__new( p2_type *ns_t )
     if ( !( ns = p2_namespace__new() ) )
         return 0;
 
-    if ( !( o = p2_object__new( ns_t, ns, OBJECT__IS_OBJ_COLL ) ) )
+    if ( !( o = p2_object__new( ns_t, ns, 0 ) ) )
     {
         p2_namespace__delete( ns );
         return 0;
@@ -139,7 +139,7 @@ printf( "---e 2---\n" ); fflush( stdout );
 printf( "---e 3---\n" ); fflush( stdout );
 
     /* Create the basic data types. */
-    if ( !( env->ns_t = p2_type__new( "namespace", 0 ) )
+    if ( !( env->ns_t = p2_type__new( "namespace", TYPE__IS_OBJ_COLL ) )
       || !( env->prim_t = p2_type__new( "primitive", 0 ) )
       || !( env->type_t = p2_type__new( "type", 0 ) ) )
         goto abort;
@@ -186,14 +186,14 @@ printf( "---e 7---\n" ); fflush( stdout );
 printf( "---e 8---\n" ); fflush( stdout );
 
     /* Register the basic data types. */
-    p2_environment__register_type( env, env->ns_t, 0 );
-    p2_environment__register_type( env, env->prim_t, 0 );
-    p2_environment__register_type( env, env->type_t, 0 );
+    p2_environment__register_type( env, env->ns_t );
+    p2_environment__register_type( env, env->prim_t );
+    p2_environment__register_type( env, env->type_t );
 printf( "---e 9---\n" ); fflush( stdout );
 
     /* Add other types here... */
-    p2_environment__register_type( env, p2_array__type( "bag" ), 0 );
-    p2_environment__register_type( env, p2_term__type( "term" ), 0 );
+    p2_environment__register_type( env, p2_array__type( "bag", TYPE__IS_OBJ_COLL ) );
+    p2_environment__register_type( env, p2_term__type( "term", TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
     if ( !p2_environment__import_primitives( env ) )
@@ -322,10 +322,9 @@ p2_object *p2_environment__register_primitive(
 
 p2_object *p2_environment__register_type(
     p2_environment *env,
-    p2_type *type,
-    int flags )
+    p2_type *type )
 {
-    p2_object *o = p2_object__new( env->type_t, type, flags );
+    p2_object *o = p2_object__new( env->type_t, type, OBJECT__IMMUTABLE );
 
     if ( !o )
         return 0;
@@ -361,7 +360,7 @@ p2_type *p2_environment__resolve_type(
             return 0;
 
         /* Note: all object collection types are registered explicitly. */
-        if ( p2_environment__register_type( env, type, 0 ) )
+        if ( p2_environment__register_type( env, type ) )
             return type;
 
         else

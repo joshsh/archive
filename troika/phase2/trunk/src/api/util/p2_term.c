@@ -528,9 +528,9 @@ printf( "\n" );
 }
 
 
-p2_type *p2_term__type( const char *name )
+p2_type *p2_term__type( const char *name, int flags )
 {
-    p2_type *type = p2_type__new( name, 0 );
+    p2_type *type = p2_type__new( name, flags );
 
     if ( type )
     {

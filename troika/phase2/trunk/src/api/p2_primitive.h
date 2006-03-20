@@ -35,11 +35,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-/* Flags. */
-#define PRIM__CONSTRUCTOR   0x1
-#define PRIM__DECODER       0x2
-#define PRIM__DESTRUCTOR    0x4
-#define PRIM__ENCODER       0x8
+enum p2_primitive__flags
+{
+    PRIM__CONSTRUCTOR   = 0x1,
+    PRIM__DECODER       = 0x2,
+    PRIM__DESTRUCTOR    = 0x4,
+    PRIM__ENCODER       = 0x8
+};
 
 
 typedef struct _p2_parameter

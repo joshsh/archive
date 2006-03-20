@@ -28,8 +28,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef P2_TYPE_H
 #define P2_TYPE_H
 
-
 #include <p2.h>
+
+
+enum p2_type__flags
+{
+    TYPE__IS_OBJ_COLL         = 0x1,
+    TYPE__OWNS_DESCENDANTS    = 0x2
+};
 
 
 /** */

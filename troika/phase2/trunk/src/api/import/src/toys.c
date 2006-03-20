@@ -1,5 +1,11 @@
 #include "toys.h"
-#include <p2.h>
+
+
+cstring *system_call( cstring *s )
+{
+    system( s );
+    return STRDUP( s );
+}
 
 
 double double__inverse( double a )

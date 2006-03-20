@@ -335,7 +335,6 @@ static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
             type = compiler->bag_t;
             value = ast->value;
             p2_array__distribute( ( p2_array* ) value, state->subst_proc );
-            flags = OBJECT__IS_OBJ_COLL;
             break;
 
         case CHAR_T:
@@ -374,7 +373,6 @@ static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
             type = compiler->term_t;
             value = ast->value;
             p2_term__distribute( ( p2_term* ) value, state->subst_proc );
-            flags = OBJECT__IS_OBJ_COLL;
             break;
 
         #if DEBUG__SAFE
@@ -466,7 +464,7 @@ static void new_namespace( p2_compiler *c, p2_ast *args )
 
     name = ( p2_name* ) arg->value;
     o = p2_object__new
-        ( c->env->ns_t, p2_namespace__new(), OBJECT__IS_OBJ_COLL );
+        ( c->env->ns_t, p2_namespace__new(), 0 );
     p2_memory_manager__add( c->env->manager, o );
 
     assign_name( c, name, o );

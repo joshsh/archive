@@ -112,7 +112,7 @@ FFLUSH;
 printf( "---o d 2: %#x---\n", ( int ) o ); FFLUSH;
 
     /* If the object owns its children (and has any), free them. */
-    if ( o->flags & OBJECT__OWNS_DESCENDANTS )
+    if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
     {
         p.execute = ( procedure ) delete_proc;
         p.state = o->type->type_arg;
@@ -137,13 +137,13 @@ printf( "---o d 5: %#x---\n", ( int ) o ); FFLUSH;
 /* Graph traversal ************************************************************/
 
 
-typedef struct _trace_proc_st
+typedef struct _trace_proc_ctx
 {
     p2_procedure *outer_p;
     p2_procedure *inner_p;
     p2_procedure *edge_p;
 
-} trace_proc_st;
+} trace_proc_ctx;
 
 
 static p2_action * apply_to_assoc_edge
@@ -164,7 +164,7 @@ static p2_action * apply_to_assoc_edge
 }
 
 
-static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
+static p2_action * trace_exec( p2_object *o, trace_proc_ctx *state )
 {
     p2_action *action;
 
@@ -182,7 +182,7 @@ static p2_action * trace_exec( p2_object *o, trace_proc_st *state )
     if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
     {
         /* Traverse to children (if any). */
-        if ( o->flags & OBJECT__IS_OBJ_COLL )
+        if ( o->type->flags & TYPE__IS_OBJ_COLL )
         {
             o->type->distribute( o->value, state->outer_p );
         }
@@ -207,7 +207,7 @@ printf( "value = %i\n", *( ( int* ) o->value ) );
 
 void p2_object__trace( p2_object *o, p2_procedure *p )
 {
-    trace_proc_st state;
+    trace_proc_ctx state;
     p2_procedure trace_proc;
     p2_procedure edge_p;
 
@@ -243,7 +243,7 @@ static p2_action * enqueue( p2_object *o, p2_array *queue )
 /* Note: untested. */
 void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
 {
-    trace_proc_st state;
+    trace_proc_ctx state;
     p2_procedure trace_proc;
     p2_procedure edge_p;
     p2_procedure outer_p;

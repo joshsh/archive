@@ -659,9 +659,9 @@ static void p2_array__encode( p2_array *a, char *buffer )
 }
 
 
-p2_type *p2_array__type( const char *name )
+p2_type *p2_array__type( const char *name, int flags )
 {
-    p2_type *type = p2_type__new( name, 0 );
+    p2_type *type = p2_type__new( name, flags );
 
     if ( type )
     {

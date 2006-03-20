@@ -370,7 +370,7 @@ static p2_action * ns__trace_bfs( p2_object *o, trace_proc_st *state )
 
     if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
     {
-        if ( o->flags & OBJECT__IS_OBJ_COLL )
+        if ( o->type->flags & TYPE__IS_OBJ_COLL )
         {
             o->type->distribute( o->value, state->outer_p );
         }

@@ -31,8 +31,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_COLLECTION_H
 
 
-#include "p2_object.h"
-#include "util/p2_array.h"
+#include <p2_object.h>
+#include <util/p2_array.h>
 
 
 typedef p2_object p2_collection;

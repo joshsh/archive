@@ -1,6 +1,11 @@
 #ifndef TOYS_H
 #define TOYS_H
 
+#include <p2.h>
+
+
+cstring *system_call( cstring *s );
+
 
 double double__inverse( double a );
 

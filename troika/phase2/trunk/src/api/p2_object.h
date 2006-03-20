@@ -29,20 +29,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_OBJECT_H
 
 
-#include "p2_type.h"
+#include <p2_type.h>
 
 #ifdef TRIPLES__GLOBAL
-#include "util/p2_lookup_table.h"
+#include <util/p2_lookup_table.h>
 #endif
 
 
-/* For p2_object's flags field. */
-#define OBJECT__IMMUTABLE           ( int ) 0x01
-#define OBJECT__IS_OBJ_COLL         ( int ) 0x02
-#define OBJECT__MARKED              ( int ) 0x04
-#define OBJECT__OWNED               ( int ) 0x08
-#define OBJECT__OWNS_DESCENDANTS    ( int ) 0x10
-/*#define OBJECT__NATIVE              ( int ) 0x11*/
+enum p2_object__flags
+{
+    OBJECT__IMMUTABLE           = 0x1,
+    OBJECT__VISITED             = 0x2,
+    /*OBJECT__NATIVE*/
+    OBJECT__OWNED               = 0x4
+};
 
 
 /** A typed constant.  This is the least addressable unit of data in a Phase2
@@ -52,7 +52,7 @@ typedef struct _p2_object
     /** A reference to the object's data type. */
     p2_type *type;
 
-    /** A reference to the atom's data. */
+    /** A reference to the object's data. */
     void *value;
 
     /** A mutable value which holds tracing and state information about the
@@ -62,19 +62,19 @@ typedef struct _p2_object
     #if TRIPLES__GLOBAL__IN_EDGES
     /** Associative edges pointing towards the atom.
         For example, (x, y) from (x, y, Z). */
-    p2_hash_table *inbound_edges;
+    p2_lookup_table *inbound_edges;
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
     /** Associative edges pointing away from the atom.
         For example, (y, z) from (X, y, z). */
-    p2_hash_table *outbound_edges;
+    p2_lookup_table *outbound_edges;
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
     /** Associative edges pointing "through" the atom.
         For example, (x, z) from (x, Y, z). */
-    p2_hash_table *trans_edges;
+    p2_lookup_table *trans_edges;
     #endif
 
 } p2_object;
@@ -94,10 +94,10 @@ void p2_object__delete( p2_object *o );
 
 /* Graph traversal ************************************************************/
 
-/* A (depth-first) recursive distributor. */
+/** A (depth-first) recursive distributor. */
 void p2_object__trace( p2_object *o, p2_procedure *p );
 
-/* A breadth-first recursive distributor. */
+/** A breadth-first recursive distributor. */
 void p2_object__trace_bfs( p2_object *o, p2_procedure *p );
 
 

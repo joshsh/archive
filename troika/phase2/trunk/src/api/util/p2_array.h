@@ -147,7 +147,7 @@ p2_array *p2_array__minimize( p2_array *a );
 
 /******************************************************************************/
 
-p2_type *p2_array__type( const char *name );
+p2_type *p2_array__type( const char *name, int flags );
 
 
 #endif  /* P2_ARRAY_H */

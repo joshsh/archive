@@ -100,6 +100,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
    reduction when they are encountered. */
 #define SK__ALLOW_NONREDUX                      1
 
+#define SK__IMPLICIT_ASSOCIATION                1
+
 
 /* Serialization **************************************************************/
 

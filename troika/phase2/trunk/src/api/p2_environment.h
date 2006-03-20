@@ -69,8 +69,7 @@ p2_object *p2_environment__register_primitive(
 
 p2_object *p2_environment__register_type(
     p2_environment *env,
-    p2_type *type,
-    int flags );
+    p2_type *type );
 
 
 p2_type *p2_environment__resolve_type(

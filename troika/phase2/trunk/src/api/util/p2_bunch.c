@@ -300,9 +300,9 @@ void p2_bunch__distribute( p2_bunch *b, p2_procedure *p )
 /******************************************************************************/
 
 
-p2_type *p2_bunch__type( const char *name )
+p2_type *p2_bunch__type( const char *name, int flags )
 {
-    p2_type *type = p2_type__new( name, 0 );
+    p2_type *type = p2_type__new( name, flags );
 
     if ( type )
     {

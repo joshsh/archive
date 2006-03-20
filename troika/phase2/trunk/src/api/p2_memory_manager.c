@@ -21,6 +21,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_collection.h"
 
 
+#define visited( o )        o->flags & OBJECT__VISITED
+#define set_visited( o )    o->flags |= OBJECT__VISITED
+#define clear_visited( o )  o->flags &= ~OBJECT__VISITED
+
+#define owned( o )          o->flags & OBJECT__OWNED
+#define set_owned( o )      o->flags |= OBJECT__OWNED
+
+
 /******************************************************************************/
 
 
@@ -36,9 +44,9 @@ printf( "---m 1---\n" ); fflush( stdout );
         ERROR( "p2_memory_manager__new: null root" );
         return 0;
     }
-    else if ( root->flags & OBJECT__MARKED )
+    else if ( visited( root ) )
     {
-        ERROR( "p2_memory_manager__new: root is marked" );
+        ERROR( "p2_memory_manager__new: root is marked as visited" );
         return 0;
     }
     #endif
@@ -64,7 +72,9 @@ printf( "---m 4---\n" ); fflush( stdout );
 printf( "---m 4.5---\n" ); fflush( stdout );
     p2_object_t = p2_type__new( "object", 0 );
     p2_object_t->destroy = ( destructor ) p2_object__delete;
-    m->objects_o = p2_object__new( p2_bunch__type( "bunch<object>" ), m->objects, OBJECT__OWNS_DESCENDANTS );
+    m->objects_o = p2_object__new(
+        p2_bunch__type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS ),
+        m->objects, 0 );
     m->objects_o->type->type_arg = p2_object_t;
 printf( "---m 5---\n" ); fflush( stdout );
 
@@ -151,18 +161,18 @@ printf( "---m add 1---\n" ); fflush( stdout );
         ERROR( "p2_memory_manager__add: null object" );
         return 0;
     }
-    else if ( o->flags & OBJECT__OWNED )
+    else if ( owned( o ) )
     {
         ERROR( "p2_memory_manager__add: object already has a manager" );
         return 0;
     }
-    else if ( o->flags & OBJECT__MARKED )
+    else if ( visited( o ) )
     {
         ERROR( "p2_memory_manager__new: object is marked" );
         return 0;
     }
 
-    o->flags = o->flags | OBJECT__OWNED;
+    set_owned( o );
     #endif
 printf( "---m add 2---\n" ); fflush( stdout );
 
@@ -183,7 +193,7 @@ static void *unmark( p2_object *o )
     }
     #endif
 
-    o->flags = o->flags & ~OBJECT__MARKED;
+    clear_visited( o );
     return o;
 }
 
@@ -199,9 +209,9 @@ static boolean unmark_for_sweep( p2_object *o )
     #endif
 
     /* If marked, unmark. */
-    if ( o->flags & OBJECT__MARKED )
+    if ( visited( o ) )
     {
-        o->flags = o->flags & ~OBJECT__MARKED;
+        clear_visited( o );
 
         /* Don't exclude this object. */
         return boolean__false;
@@ -257,7 +267,7 @@ static void sweep( p2_memory_manager *m )
 static p2_action * dist_p_exec( p2_object *o, p2_procedure *p )
 {
     /* If the object is already marked, abort. */
-    if ( o->flags & OBJECT__MARKED )
+    if ( visited( o ) )
     {
         return ( p2_action* ) 1;
     }
@@ -265,7 +275,7 @@ static p2_action * dist_p_exec( p2_object *o, p2_procedure *p )
     else
     {
         /* Mark the object. */
-        o->flags = o->flags | OBJECT__MARKED;
+        set_visited( o );
 
         /* Execute the procedure. */
         return p2_procedure__execute( p, o );
@@ -298,7 +308,7 @@ void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p )
 static p2_action * add_if_multiref( p2_object *o, p2_set *s )
 {
     /* If the object is already marked, abort. */
-    if ( o->flags & OBJECT__MARKED )
+    if ( visited( o ) )
     {
         p2_set__add( s, o );
         return ( p2_action* ) 1;
@@ -307,7 +317,7 @@ static p2_action * add_if_multiref( p2_object *o, p2_set *s )
     else
     {
         /* Mark the object. */
-        o->flags = o->flags | OBJECT__MARKED;
+        set_visited( o );
 
         #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
         /* Object references its triples, which in turn reference the object. */

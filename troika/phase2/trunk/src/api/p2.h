@@ -29,6 +29,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_H
 
 
+#define VERSION "0.5.0"
+
+
 #include "flags.h"
 
 
@@ -107,9 +110,6 @@ typedef struct _p2_procedure
 #define p2_procedure__execute( p, data )  p->execute( data, p->state )
 
 typedef void    ( *distributor )( void *data, p2_procedure *a );
-
-
-#define VERSION "0.5.0"
 
 
 /* Errors *********************************************************************/
