@@ -32,9 +32,9 @@ static p2_compiler *compiler = 0;
 
 
 /* Find a data type in the compiler environment's "types" namespace. */
-static p2_type *lookup_type( p2_environment *env, const char *name )
+static Type *lookup_type( p2_environment *env, const char *name )
 {
-    p2_object *o = p2_namespace__lookup_simple( ( p2_namespace* ) env->types->value, name );
+    Object *o = p2_namespace__lookup_simple( ( p2_namespace* ) env->types->value, name );
 
     if ( !o )
         return 0;
@@ -47,7 +47,7 @@ static p2_type *lookup_type( p2_environment *env, const char *name )
     }
     #endif
 
-    return ( p2_type* ) o->value;
+    return ( Type* ) o->value;
 }
 
 
@@ -246,7 +246,7 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
-static p2_object *assign_name( p2_compiler *c, p2_name *name, p2_object *o )
+static Object *assign_name( p2_compiler *c, p2_name *name, Object *o )
 {
     p2_namespace_o *ns_obj;
 
@@ -269,10 +269,10 @@ static p2_object *assign_name( p2_compiler *c, p2_name *name, p2_object *o )
 }
 
 
-static p2_object *resolve_name( p2_compiler *c, p2_name *name )
+static Object *resolve_name( p2_compiler *c, p2_name *name )
 {
     p2_namespace_o *ns_obj;
-    p2_object *o;
+    Object *o;
 
     char *first = ( char* ) p2_name__pop( name );
     if ( !strcmp( first, "root" ) )
@@ -309,11 +309,11 @@ typedef struct _subst_st
 } subst_st;
 
 
-static p2_object *object_for_ast( p2_ast* ast, subst_st *state );
+static Object *object_for_ast( p2_ast* ast, subst_st *state );
 
 static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
 {
-    p2_object *o = object_for_ast( ast, state );
+    Object *o = object_for_ast( ast, state );
     if ( !o )
         state->sofarsogood = boolean__false;
 
@@ -322,11 +322,11 @@ static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
 }
 
 
-/* Transforms a p2_ast into a p2_object, deleting the p2_ast along the way. */
-static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
+/* Transforms a p2_ast into a Object, deleting the p2_ast along the way. */
+static Object *object_for_ast( p2_ast* ast, subst_st *state )
 {
-    p2_object *o;
-    p2_type *type;
+    Object *o;
+    Type *type;
     void *value;
     int flags = 0;
 
@@ -389,7 +389,7 @@ static p2_object *object_for_ast( p2_ast* ast, subst_st *state )
     free( ast );
 
     /* Create and register a new object. */
-    o = p2_object__new( type, value, flags );
+    o = object__new( type, value, flags );
 printf( "o = %i\n", ( int ) o );
     p2_memory_manager__add( compiler->env->manager, o );
 
@@ -405,7 +405,7 @@ static void change_namespace( p2_compiler *c, p2_ast *args )
 /*
 printf( "args->type = %s\n", p2_ast__type__name( args->type ) ); fflush( stdout );
 */
-    p2_object *o;
+    Object *o;
     p2_name *name;
 
     p2_ast *arg = get_inner_node( args );
@@ -467,7 +467,7 @@ static void show_license()
 
 static void new_namespace( p2_compiler *c, p2_ast *args )
 {
-    p2_object *o;
+    Object *o;
     p2_name *name;
     char *localname;
     p2_namespace *ns;
@@ -487,7 +487,7 @@ static void new_namespace( p2_compiler *c, p2_ast *args )
     #endif
 
     name = ( p2_name* ) arg->value;
-    o = p2_object__new
+    o = object__new
         ( c->env->ns_t, p2_namespace__new(), 0 );
     p2_memory_manager__add( c->env->manager, o );
 
@@ -647,7 +647,7 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 
     int ret = 0;
     p2_ast *a = 0;
-    p2_object *o;
+    Object *o;
     char print_buffer[1000];
     p2_term *t;
 

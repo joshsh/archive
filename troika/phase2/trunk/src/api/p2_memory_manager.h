@@ -39,9 +39,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef struct _p2_memory_manager
 {
     p2_bunch *objects;
-        p2_object *objects_o;
+        Object *objects_o;
 
-    p2_object *root;
+    Object *root;
 
     /** Whether the manager contains only unmarked objects.  Any marked objects
         need to be unmarked prior to any algorithm which relies on object
@@ -53,12 +53,12 @@ typedef struct _p2_memory_manager
 
 /******************************************************************************/
 
-p2_memory_manager *p2_memory_manager__new( p2_object *root );
+p2_memory_manager *p2_memory_manager__new( Object *root );
 void p2_memory_manager__delete( p2_memory_manager *m );
 
 unsigned int p2_memory_manager__size( p2_memory_manager *m );
 
-p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o );
+Object *p2_memory_manager__add( p2_memory_manager *m, Object *o );
 
 
 /* Tracing / graph traversal **************************************************/
@@ -66,7 +66,7 @@ p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o );
 void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p );
 
 p2_set *p2_memory_manager__get_multirefs
-    ( p2_memory_manager *m, p2_object *root );
+    ( p2_memory_manager *m, Object *root );
 
 
 /* Mark-and-sweep garbage collection ******************************************/

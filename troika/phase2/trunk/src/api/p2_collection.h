@@ -35,15 +35,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/p2_array.h>
 
 
-typedef p2_object p2_collection;
+typedef Object p2_collection;
 
 /*
-typedef p2_type p2_collection_type;
+typedef Type p2_collection_type;
 
 p2_collection_type *p2_collection_type__new( 
 */
 
-#define p2_collection__new( type, value )   p2_object__new( type, value )
+#define p2_collection__new( type, value )   object__new( type, value )
 
 
 void        p2_collection__do_for_all(  p2_collection *c, void_f f );

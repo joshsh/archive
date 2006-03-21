@@ -47,7 +47,7 @@ typedef struct _p2_environment
     p2_namespace_o *primitives;
     p2_namespace_o *types;
 
-    p2_type *combinator_t, *ns_t, *prim_t, *type_t;
+    Type *combinator_t, *ns_t, *prim_t, *type_t;
 
 } p2_environment;
 
@@ -60,15 +60,15 @@ p2_environment *p2_environment__new();
 void p2_environment__delete( p2_environment *env );
 
 
-p2_object *p2_environment__register_primitive
+Object *p2_environment__register_primitive
     ( p2_environment *env, p2_primitive *prim, int flags, generic_f src_f );
 
 
-p2_object *p2_environment__register_type
-    ( p2_environment *env, p2_type *type );
+Object *p2_environment__register_type
+    ( p2_environment *env, Type *type );
 
 
-p2_type *p2_environment__resolve_type(
+Type *p2_environment__resolve_type(
     p2_environment *env,
     const char *name );
 

@@ -22,15 +22,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/p2_term.h>
 
 
-static p2_namespace_o *ns__new( p2_type *ns_t )
+static p2_namespace_o *ns__new( Type *ns_t )
 {
-    p2_object *o;
+    Object *o;
     p2_namespace *ns;
 
     if ( !( ns = p2_namespace__new() ) )
         return 0;
 
-    if ( !( o = p2_object__new( ns_t, ns, 0 ) ) )
+    if ( !( o = object__new( ns_t, ns, 0 ) ) )
     {
         p2_namespace__delete( ns );
         return 0;
@@ -51,12 +51,12 @@ static void *assoc_stub( void **args )
 {
 printf( "---e m 1---\n" ); fflush( stdout );
 
-    return p2_object__associate( args[0], args[1], args[2] );
+    return object__associate( args[0], args[1], args[2] );
 }
 
 static void *mult_stub( void **args )
 {
-    return p2_object__multiply( args[0], args[1] );
+    return object__multiply( args[0], args[1] );
 }
 
 static int add_triples_prims( p2_environment *env )
@@ -83,7 +83,7 @@ static int add_triples_prims( p2_environment *env )
 
 static void add_combinators( p2_environment *env )
 {
-    p2_object *o;
+    Object *o;
     combinator *sk_s, *sk_k;
     p2_memory_manager *m = env->manager;
 
@@ -93,11 +93,11 @@ static void add_combinators( p2_environment *env )
     *sk_s = S_combinator;
     *sk_k = K_combinator;
 
-    o = p2_object__new( env->combinator_t, sk_s, 0 );
+    o = object__new( env->combinator_t, sk_s, 0 );
     p2_memory_manager__add( m, o );
     p2_namespace__add_simple( ( p2_namespace* ) env->combinators->value, "S", o );
 
-    o = p2_object__new( env->combinator_t, sk_k, 0 );
+    o = object__new( env->combinator_t, sk_k, 0 );
     p2_memory_manager__add( m, o );
     p2_namespace__add_simple( ( p2_namespace* ) env->combinators->value, "K", o );
 }
@@ -143,16 +143,16 @@ printf( "---e 2---\n" ); fflush( stdout );
 printf( "---e 3---\n" ); fflush( stdout );
 
     /* Create the basic data types. */
-    if ( !( env->ns_t = p2_type__new( "namespace", TYPE__IS_OBJ_COLL ) )
-      || !( env->prim_t = p2_type__new( "primitive", 0 ) )
-      || !( env->type_t = p2_type__new( "type", 0 ) ) )
+    if ( !( env->ns_t = type__new( "namespace", TYPE__IS_OBJ_COLL ) )
+      || !( env->prim_t = type__new( "primitive", 0 ) )
+      || !( env->type_t = type__new( "type", 0 ) ) )
         goto abort;
 
     env->ns_t->destroy =    ( destructor )  p2_namespace__delete;
     env->ns_t->distribute = ( distributor ) p2_namespace__distribute;
     env->prim_t->destroy =  ( destructor )  p2_primitive__delete;
     env->prim_t->encode = ( encoder ) p2_primitive__encode;
-    env->type_t->destroy =  ( destructor )  p2_type__delete;
+    env->type_t->destroy =  ( destructor )  type__delete;
 
 printf( "---e 4---\n" ); fflush( stdout );
 
@@ -233,16 +233,16 @@ printf( "---e abort---\n" ); fflush( stdout );
     else
     {
         if ( env->ns_t )
-            p2_type__delete( env->ns_t );
+            type__delete( env->ns_t );
 
         if ( env->data )
-            p2_object__delete( env->data );
+            object__delete( env->data );
         if ( env->primitives )
-            p2_object__delete( env->primitives );
+            object__delete( env->primitives );
         if ( env->root )
-            p2_object__delete( env->root );
+            object__delete( env->root );
         if ( env->types )
-            p2_object__delete( env->types );
+            object__delete( env->types );
     }
 
     free( env );
@@ -252,7 +252,7 @@ printf( "---e abort---\n" ); fflush( stdout );
 
 void p2_environment__delete( p2_environment *env )
 {
-    p2_type ns_t;
+    Type ns_t;
 
     #if DEBUG__SAFE
     if ( !env )
@@ -289,12 +289,12 @@ printf( "---e d 9---\n" ); fflush( stdout );
 }
 
 
-p2_object *p2_environment__register_primitive
+Object *p2_environment__register_primitive
     ( p2_environment *env, p2_primitive *prim, int flags, generic_f src_f )
 {
-    p2_object *o;
+    Object *o;
 
-    p2_type *first_param = prim->parameters[0].type;
+    Type *first_param = prim->parameters[0].type;
 
     if ( flags & PRIM__CONSTRUCTOR )
         ERROR( "p2_environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
@@ -305,7 +305,7 @@ p2_object *p2_environment__register_primitive
     if ( flags & PRIM__ENCODER )
         first_param->encode = ( encoder ) src_f;
 
-    if ( !( o = p2_object__new( env->prim_t, prim, OBJECT__IMMUTABLE ) ) )
+    if ( !( o = object__new( env->prim_t, prim, OBJECT__IMMUTABLE ) ) )
     {
         p2_primitive__delete( prim );
         return 0;
@@ -318,7 +318,7 @@ p2_object *p2_environment__register_primitive
 
     if ( !p2_memory_manager__add( env->manager, o ) )
     {
-        p2_object__delete( o );
+        object__delete( o );
         return 0;
     }
 
@@ -330,10 +330,10 @@ p2_object *p2_environment__register_primitive
 }
 
 
-p2_object *p2_environment__register_type
-    ( p2_environment *env, p2_type *type )
+Object *p2_environment__register_type
+    ( p2_environment *env, Type *type )
 {
-    p2_object *o = p2_object__new( env->type_t, type, OBJECT__IMMUTABLE );
+    Object *o = object__new( env->type_t, type, OBJECT__IMMUTABLE );
 
     #if DEBUG__ENV
     printf( "[%#x] p2_environment__register_type(%#x, %#x)\n",
@@ -345,7 +345,7 @@ p2_object *p2_environment__register_type
 
     if ( !p2_memory_manager__add( env->manager, o ) )
     {
-        p2_object__delete( o );
+        object__delete( o );
         return 0;
     }
 
@@ -357,12 +357,12 @@ p2_object *p2_environment__register_type
 }
 
 
-p2_type *p2_environment__resolve_type(
+Type *p2_environment__resolve_type(
     p2_environment *env,
     const char *name )
 {
-    p2_object *o;
-    p2_type *type;
+    Object *o;
+    Type *type;
 
     if ( !strcmp( name, "any_type" ) )
         return any_type;
@@ -370,7 +370,7 @@ p2_type *p2_environment__resolve_type(
     if ( !(o = p2_namespace__lookup_simple( ( p2_namespace* ) env->types->value, name ) ) )
     {
         /* If not found, create the type and hope for the best. */
-        if ( !( type = p2_type__new( name, 0 ) ) )
+        if ( !( type = type__new( name, 0 ) ) )
             return 0;
 
         /* Note: all object collection types are registered explicitly. */
@@ -379,7 +379,7 @@ p2_type *p2_environment__resolve_type(
 
         else
         {
-            p2_type__delete( type );
+            type__delete( type );
             return 0;
         }
     }
@@ -392,7 +392,7 @@ p2_type *p2_environment__resolve_type(
     }
     #endif
 
-    return ( p2_type* ) o->value;
+    return ( Type* ) o->value;
 }
 
 

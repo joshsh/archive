@@ -115,10 +115,10 @@ static p2_term *S_reduce( p2_term *term )
 static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
 {
     unsigned int i;
-    p2_object *o;
+    Object *o;
     void *result, **args, **cur = term->head + 2;
-    p2_primitive *prim = ( p2_primitive* ) ( ( p2_object* ) *cur )->value;
-    p2_type *param_type;
+    p2_primitive *prim = ( p2_primitive* ) ( ( Object* ) *cur )->value;
+    Type *param_type;
 printf( "---sk pr -2---\n" ); fflush( stdout );
 
     #if PRIM__ALLOW_NOARG_FUNCTIONS
@@ -183,7 +183,7 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
         #if PRIM__CHECKS__PARAM_TYPE
 
         param_type = prim->parameters[i].type;
-        if ( param_type != ( *( ( p2_object** ) cur ) )->type
+        if ( param_type != ( *( ( Object** ) cur ) )->type
           && param_type != any_type )
         {
             ERROR( "prim_reduce: argument type mismatch" );
@@ -199,7 +199,7 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
 
         /* ~ inefficient */
         if ( prim->parameters[i].type != any_type )
-            args[i] = ( *( ( p2_object** ) cur ) )->value;
+            args[i] = ( *( ( Object** ) cur ) )->value;
         else
             args[i] = *cur;
     }
@@ -226,7 +226,7 @@ printf( "prim->return_type = %#x\n", ( int ) prim->return_type );
     if ( prim->return_type != any_type )
     {
 printf( "---sk pr 2a---\n" ); fflush( stdout );
-        o = p2_object__new( prim->return_type, result, 0 );
+        o = object__new( prim->return_type, result, 0 );
 
         /* Caution: the object's value must be a BRAND NEW value. */
         p2_memory_manager__add( m, o );
@@ -235,7 +235,7 @@ printf( "---sk pr 2a---\n" ); fflush( stdout );
     else
     {
 printf( "---sk pr 2b---\n" ); fflush( stdout );
-        o = ( p2_object* ) result;
+        o = ( Object* ) result;
     }
 printf( "---sk pr 3---\n" ); fflush( stdout );
 
@@ -259,14 +259,14 @@ static p2_term *term_reduce( p2_term *term )
 
     if ( ( unsigned int ) *( term->head ) == 2 )
     {
-        head_term = ( p2_term* ) ( ( p2_object* ) *( term->head + 1 ) )->value;
+        head_term = ( p2_term* ) ( ( Object* ) *( term->head + 1 ) )->value;
         p2_term__delete( term );
         return p2_term__copy( head_term );
     }
 
     else
     {
-        head_term = ( p2_term* ) ( ( p2_object* ) *( term->head + 2 ) )->value;
+        head_term = ( p2_term* ) ( ( Object* ) *( term->head + 2 ) )->value;
 
         size = ( unsigned int ) *head_term->head;
 
@@ -289,17 +289,17 @@ static p2_term *term_reduce( p2_term *term )
 p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
-    p2_type *term_type,
-    p2_type *primitive_type,
-    p2_type *combinator_type,
+    Type *term_type,
+    Type *primitive_type,
+    Type *combinator_type,
     void (*for_each_iteration)(p2_term*) )
 {
     #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
     int iter = 0;
     #endif
 
-    p2_object *head;
-    p2_type *head_type;
+    Object *head;
+    Type *head_type;
 
     #if DEBUG__SAFE
     if ( !term || !m || !primitive_type || !combinator_type )
@@ -346,10 +346,10 @@ printf( "\n" );  fflush( stdout );
            Caution: the term MUST be in left-associative form. */
         if ( ( unsigned int ) *( term->head ) == 2 )
             /* Singleton term. */
-            head = ( p2_object* ) *( term->head + 1 );
+            head = ( Object* ) *( term->head + 1 );
         else
             /* Left-associative sequence. */
-            head = ( p2_object* ) *( term->head + 2 );
+            head = ( Object* ) *( term->head + 2 );
 
         #if DEBUG__SAFE
         if ( !head )

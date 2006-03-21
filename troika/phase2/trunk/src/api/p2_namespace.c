@@ -64,12 +64,12 @@ void p2_namespace__delete( p2_namespace *ns )
 }
 
 
-p2_object *p2_namespace__add
-    ( p2_namespace_o *ns_obj, p2_name *name, p2_object *o )
+Object *p2_namespace__add
+    ( p2_namespace_o *ns_obj, p2_name *name, Object *o )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
-    p2_object *child_ns_obj, *displaced_object;
+    Object *child_ns_obj, *displaced_object;
     char *key;
 
     #if DEBUG__SAFE
@@ -98,7 +98,7 @@ p2_object *p2_namespace__add
             return 0;
         }
 
-        displaced_object = ( p2_object* ) p2_dictionary__add(
+        displaced_object = ( Object* ) p2_dictionary__add(
             ns->children, ( char* ) p2_array__peek( name ), o );
     }
 
@@ -106,7 +106,7 @@ p2_object *p2_namespace__add
     {
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_obj = ( p2_object* ) p2_dictionary__lookup( ns->children, key );
+        child_ns_obj = ( Object* ) p2_dictionary__lookup( ns->children, key );
 
         if ( child_ns_obj->type != ns_obj->type )
         {
@@ -127,8 +127,8 @@ p2_object *p2_namespace__add
 }
 
 
-p2_object *p2_namespace__add_simple
-    ( p2_namespace *ns, const char *name, p2_object *o )
+Object *p2_namespace__add_simple
+    ( p2_namespace *ns, const char *name, Object *o )
 {
     #if DEBUG__SAFE
     if ( !ns )
@@ -143,16 +143,16 @@ p2_object *p2_namespace__add_simple
     }
     #endif
 
-    return ( p2_object* ) p2_dictionary__add
+    return ( Object* ) p2_dictionary__add
         ( ns->children, name, o );
 }
 
 
-p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
+Object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
-    p2_object *o;
+    Object *o;
     char *key;
 
     #if DEBUG__SAFE
@@ -170,7 +170,7 @@ p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
     if ( !name || !p2_array__size( name ) )
         return ns_obj;
 
-    o = ( p2_object* ) p2_dictionary__lookup( ns->children, p2_array__peek( name ) );
+    o = ( Object* ) p2_dictionary__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
     if ( p2_array__size( name ) > 1 )
@@ -195,7 +195,7 @@ p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
 }
 
 
-p2_object *p2_namespace__lookup_simple(
+Object *p2_namespace__lookup_simple(
     p2_namespace *ns, const char *name )
 {
     #if DEBUG__SAFE
@@ -206,15 +206,15 @@ p2_object *p2_namespace__lookup_simple(
     }
     #endif
 
-    return ( p2_object* ) p2_dictionary__lookup( ns->children, name );
+    return ( Object* ) p2_dictionary__lookup( ns->children, name );
 }
 
 
-p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
+Object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
 {
     p2_namespace *ns = ( p2_namespace* ) ns_obj->value;
 
-    p2_object *child_ns_obj, *displaced_object;
+    Object *child_ns_obj, *displaced_object;
     char *key;
 
     #if DEBUG__SAFE
@@ -245,7 +245,7 @@ printf( "--- ns rm 2a---\n" ); fflush( stdout );
             return 0;
         }
 
-        displaced_object = ( p2_object* ) p2_dictionary__remove(
+        displaced_object = ( Object* ) p2_dictionary__remove(
             ns->children, ( char* ) p2_array__peek( name ) );
     }
 
@@ -254,7 +254,7 @@ printf( "--- ns rm 2a---\n" ); fflush( stdout );
 printf( "--- ns rm 2b---\n" ); fflush( stdout );
         key = ( char* ) p2_array__pop( name );
 
-        child_ns_obj = ( p2_object* ) p2_dictionary__lookup( ns->children, key );
+        child_ns_obj = ( Object* ) p2_dictionary__lookup( ns->children, key );
 
         if ( child_ns_obj->type != ns_obj->type )
         {
@@ -273,7 +273,7 @@ printf( "--- ns rm 3---\n" ); fflush( stdout );
 }
 
 
-p2_object *p2_namespace__remove_simple( p2_namespace *ns, char *name )
+Object *p2_namespace__remove_simple( p2_namespace *ns, char *name )
 {
     #if DEBUG__SAFE
     if ( !ns | !name)
@@ -283,7 +283,7 @@ p2_object *p2_namespace__remove_simple( p2_namespace *ns, char *name )
     }
     #endif
 
-    return ( p2_object* ) p2_dictionary__remove( ns->children, name );
+    return ( Object* ) p2_dictionary__remove( ns->children, name );
 }
 
 
@@ -301,7 +301,7 @@ void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p )
 
 static p2_action * lookup_and_print( char *key, p2_dictionary *dict )
 {
-    p2_object *o = ( p2_object* ) p2_dictionary__lookup( dict, key );
+    Object *o = ( Object* ) p2_dictionary__lookup( dict, key );
     printf( "    %#x '%s' : %s\n", ( int ) o, key, o->type->name );
     return 0;
 }
@@ -350,12 +350,12 @@ static boolean equals( void *p1, void *p2 )
 }
 
 
-    p2_object *match = ( p2_object* )
+    Object *match = ( Object* )
         p2_collection__first_match( ns_obj, ( criterion ) equals );
 
 
 
-static p2_action * ns__trace_bfs( p2_object *o, trace_proc_st *state )
+static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
 {
     p2_action *action;
 
@@ -388,7 +388,7 @@ static p2_action * ns__trace_bfs( p2_object *o, trace_proc_st *state )
 */
 
 
-p2_name *p2_namespace__find( p2_namespace_o *ns_obj, p2_object *o )
+p2_name *p2_namespace__find( p2_namespace_o *ns_obj, Object *o )
 {
     p2_name *name = p2_name__new();
 

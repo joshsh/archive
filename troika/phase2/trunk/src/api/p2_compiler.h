@@ -49,7 +49,7 @@ typedef struct _p2_compiler
     int locked;
 
     /* Parser types. */
-    p2_type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
+    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
 
     boolean suppress_output, show_line_numbers;
 

@@ -32,10 +32,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-p2_memory_manager *p2_memory_manager__new( p2_object *root )
+p2_memory_manager *p2_memory_manager__new( Object *root )
 {
     p2_memory_manager *m;
-    p2_type *p2_object_t;
+    Type *Object_t;
 printf( "---m 1---\n" ); fflush( stdout );
 
     #if DEBUG__SAFE
@@ -54,7 +54,7 @@ printf( "---m 2---\n" ); fflush( stdout );
 
     if ( !( m = new( p2_memory_manager ) ) )
     {
-        p2_object__delete( root );
+        object__delete( root );
         return 0;
     }
 printf( "---m 3---\n" ); fflush( stdout );
@@ -65,24 +65,24 @@ printf( "---m 4---\n" ); fflush( stdout );
 
     if ( !m->objects )
     {
-        p2_object__delete( root );
+        object__delete( root );
         free( m );
         return 0;
     }
 printf( "---m 4.5---\n" ); fflush( stdout );
-    p2_object_t = p2_type__new( "object", 0 );
-    p2_object_t->destroy = ( destructor ) p2_object__delete;
-    m->objects_o = p2_object__new(
+    Object_t = type__new( "object", 0 );
+    Object_t->destroy = ( destructor ) object__delete;
+    m->objects_o = object__new(
         p2_bunch__type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS ),
         m->objects, 0 );
-    m->objects_o->type->type_arg = p2_object_t;
+    m->objects_o->type->type_arg = Object_t;
 printf( "---m 5---\n" ); fflush( stdout );
 
     m->root = root;
     if ( !p2_memory_manager__add( m, root ) )
     {
         ERROR( "p2_memory_manager__new: could not add root object" );
-        p2_object__delete( root );
+        object__delete( root );
         p2_bunch__delete( m->objects );
         free( m );
         return 0;
@@ -102,7 +102,7 @@ printf( "---m 6---\n" ); fflush( stdout );
 
 void p2_memory_manager__delete( p2_memory_manager *m )
 {
-    p2_type *p2_object_t, *p2_object_bunch_t;
+    Type *Object_t, *Object_bunch_t;
 
     #if DEBUG__SAFE
     if ( !m )
@@ -117,20 +117,20 @@ void p2_memory_manager__delete( p2_memory_manager *m )
     #endif
 
 printf( "---m d 1---\n" ); fflush( stdout );
-    p2_object_bunch_t = m->objects_o->type;
+    Object_bunch_t = m->objects_o->type;
 printf( "---m d 2---\n" ); fflush( stdout );
-    p2_object_t = p2_object_bunch_t->type_arg;
+    Object_t = Object_bunch_t->type_arg;
 printf( "---m d 3---\n" ); fflush( stdout );
 printf( "m->objects = %#x\n", ( int ) m->objects );
 printf( "p2_bunch__size( m->objects ) = %i\n", p2_bunch__size( m->objects ) );
 
-    p2_object__delete( m->objects_o );
+    object__delete( m->objects_o );
 printf( "---m d 4---\n" ); fflush( stdout );
-    /*p2_bunch__for_all( m->objects, (void*(*)(void*)) p2_object__delete );
+    /*p2_bunch__for_all( m->objects, (void*(*)(void*)) object__delete );
     p2_bunch__delete( m->objects );*/
-    p2_type__delete( p2_object_bunch_t );
+    type__delete( Object_bunch_t );
 printf( "---m d 5---\n" ); fflush( stdout );
-    p2_type__delete( p2_object_t );
+    type__delete( Object_t );
 printf( "---m d 6---\n" ); fflush( stdout );
 
     free( m );
@@ -151,7 +151,7 @@ unsigned int p2_memory_manager__size( p2_memory_manager *m )
 }
 
 
-p2_object *p2_memory_manager__add( p2_memory_manager *m, p2_object *o )
+Object *p2_memory_manager__add( p2_memory_manager *m, Object *o )
 {
 printf( "---m add 1---\n" ); fflush( stdout );
 
@@ -176,14 +176,14 @@ printf( "---m add 1---\n" ); fflush( stdout );
     #endif
 printf( "---m add 2---\n" ); fflush( stdout );
 
-    return ( p2_object* ) p2_bunch__add( m->objects, o );
+    return ( Object* ) p2_bunch__add( m->objects, o );
 }
 
 
 /* Unmarking / cleanup ********************************************************/
 
 
-static void *unmark( p2_object *o )
+static void *unmark( Object *o )
 {
     #ifdef DEBUG__SAFE
     if ( !o )
@@ -198,7 +198,7 @@ static void *unmark( p2_object *o )
 }
 
 
-static boolean unmark_for_sweep( p2_object *o )
+static boolean unmark_for_sweep( Object *o )
 {
     #ifdef DEBUG__SAFE
     if ( !o )
@@ -220,7 +220,7 @@ static boolean unmark_for_sweep( p2_object *o )
     /* If unmarked, delete. */
     else
     {
-        p2_object__delete( o );
+        object__delete( o );
 
         /* Exclude this object. */
         return boolean__true;
@@ -264,7 +264,7 @@ static void sweep( p2_memory_manager *m )
 /* Tracing / graph traversal **************************************************/
 
 
-static p2_action * dist_p_exec( p2_object *o, p2_procedure *p )
+static p2_action * dist_p_exec( Object *o, p2_procedure *p )
 {
     /* If the object is already marked, abort. */
     if ( visited( o ) )
@@ -295,7 +295,7 @@ void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p )
 
     m->clean = 0;
 
-    p2_object__trace( m->root, &dist_p );
+    object__trace( m->root, &dist_p );
 
     /* Might as well sweep. */
     sweep( m );
@@ -305,7 +305,7 @@ void p2_memory_manager__distribute( p2_memory_manager *m, p2_procedure *p )
 /******************************************************************************/
 
 
-static p2_action * add_if_multiref( p2_object *o, p2_set *s )
+static p2_action * add_if_multiref( Object *o, p2_set *s )
 {
     /* If the object is already marked, abort. */
     if ( visited( o ) )
@@ -333,7 +333,7 @@ static p2_action * add_if_multiref( p2_object *o, p2_set *s )
 
 
 p2_set *p2_memory_manager__get_multirefs
-    ( p2_memory_manager *m, p2_object *root )
+    ( p2_memory_manager *m, Object *root )
 {
     p2_set *s = p2_set__new();
     p2_procedure proc;
@@ -346,7 +346,7 @@ p2_set *p2_memory_manager__get_multirefs
     proc.execute = ( procedure ) add_if_multiref;
     proc.state = s;
 
-    p2_object__trace( root, &proc );
+    object__trace( root, &proc );
 
     return s;
 }

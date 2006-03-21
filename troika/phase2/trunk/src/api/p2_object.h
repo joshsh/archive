@@ -1,6 +1,6 @@
 /**
 
-\file  p2_object.h
+\file  Object.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,8 +25,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_OBJECT_H
-#define P2_OBJECT_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 
 #include <p2_type.h>
@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
-enum p2_object__flags
+enum Object__Flags
 {
     OBJECT__IMMUTABLE           = 0x1,
     OBJECT__VISITED             = 0x2,
@@ -45,14 +45,14 @@ enum p2_object__flags
 };
 
 
-typedef struct p2_object p2_object;
+typedef struct Object Object;
 
 /** A typed constant.  This is the least addressable unit of data in a Phase2
     namespace. */
-struct p2_object
+struct Object
 {
     /** A reference to the object's data type. */
-    p2_type *type;
+    Type *type;
 
     /** A reference to the object's data. */
     void *value;
@@ -80,8 +80,6 @@ struct p2_object
     #endif
 };
 
-typedef p2_object Object;
-
 
 /******************************************************************************/
 
@@ -89,10 +87,10 @@ typedef p2_object Object;
     \param type  the new object's data type
     \param value  the new object's data.  The object assumes ownership of this
     data, and will deallocate it on deletion as per its data type. */
-p2_object *p2_object__new( p2_type *type, void *value, int flags );
+extern Object *object__new( Type *type, void *value, int flags );
 
 /** Destructor. */
-void p2_object__delete( p2_object *o );
+extern void object__delete( Object *o );
 
 
 /* Accessors ******************************************************************/
@@ -105,21 +103,21 @@ extern void
 /* Graph traversal ************************************************************/
 
 /** A (depth-first) recursive distributor. */
-void p2_object__trace( p2_object *o, p2_procedure *p );
+extern void object__trace( Object *o, p2_procedure *p );
 
 /** A breadth-first recursive distributor. */
-void p2_object__trace_bfs( p2_object *o, p2_procedure *p );
+extern void object__trace_bfs( Object *o, p2_procedure *p );
 
 
 /* Association ****************************************************************/
 
 #if TRIPLES__GLOBAL
 
-p2_object *p2_object__multiply
-    ( p2_object *subj, p2_object *pred );
+extern Object *object__multiply
+    ( Object *subj, Object *pred );
 
-p2_object *p2_object__associate
-    ( p2_object *subj, p2_object *pred, p2_object *obj );
+extern Object *object__associate
+    ( Object *subj, Object *pred, Object *obj );
 
 #endif
 
@@ -127,6 +125,6 @@ p2_object *p2_object__associate
 /******************************************************************************/
 
 
-#endif  /* P2_OBJECT_H */
+#endif  /* OBJECT_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -29,7 +29,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_SET_H
 
 
-#include "../p2_type.h"
 #include "p2_hash_table.h"
 
 

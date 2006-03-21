@@ -454,7 +454,7 @@ void p2_term__distribute( p2_term *t, p2_procedure *p )
 static void encode
     ( void **cur, char *buffer, int delimit )
 {
-    p2_object *o;
+    Object *o;
     void **lim;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
@@ -470,7 +470,7 @@ static void encode
         }
 */
 
-        o = ( p2_object* ) *cur;
+        o = ( Object* ) *cur;
         o->type->encode( o->value, buffer );
     }
 
@@ -528,9 +528,9 @@ printf( "\n" );
 }
 
 
-p2_type *p2_term__type( const char *name, int flags )
+Type *p2_term__type( const char *name, int flags )
 {
-    p2_type *type = p2_type__new( name, flags );
+    Type *type = type__new( name, flags );
 
     if ( type )
     {

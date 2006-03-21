@@ -50,7 +50,7 @@ typedef struct _p2_parameter
     char *name;
 
     /** Data type. */
-    p2_type *type;
+    Type *type;
 
     /** Whether the parent primitive may have a side-effect on this parameter. */
     int transparent;
@@ -63,7 +63,7 @@ typedef struct _p2_parameter
 typedef struct _p2_primitive
 {
     /** The primitive's return type. */
-    p2_type *return_type;
+    Type *return_type;
 
     /** A unique name (preferably the same as the C function stub referenced by
         the pointer, e.g. "strdup"). */

@@ -53,7 +53,7 @@ typedef struct _xml_decode_st
 
     p2_lookup_table *objects_by_id;
 
-    p2_object *root;
+    Object *root;
 
 } xml_decode_st;
 
@@ -62,10 +62,10 @@ typedef dom_element *( *xml_encoder )( void *p, xml_encode_st *state );
 typedef void *( *xml_decoder )( dom_element *el, xml_decode_st *state );
 
 
-static dom_element *p2_object__xml_encode
-    ( p2_object *o, xml_encode_st *state, boolean top_level );
+static dom_element *object__xml_encode
+    ( Object *o, xml_encode_st *state, boolean top_level );
 
-static p2_object *p2_object__xml_decode
+static Object *object__xml_decode
     ( dom_element *el, xml_decode_st *state );
 
 
@@ -90,8 +90,8 @@ static dom_element *p2_bag__xml_encode( p2_array *a, xml_encode_st *state )
     size = p2_array__size( a );
     for ( i = 0; i < size; i++ )
     {
-        child = p2_object__xml_encode(
-            ( p2_object* ) p2_array__get( a, i ), state, 0 );
+        child = object__xml_encode(
+            ( Object* ) p2_array__get( a, i ), state, 0 );
         dom_element__add_child( el, child );
     }
 
@@ -116,7 +116,7 @@ static dom_element *p2_term__xml_encode( p2_term *t, xml_encode_st *state )
     {
         cur++;
 
-        el = p2_object__xml_encode( ( p2_object* ) *cur, state, 0 );
+        el = object__xml_encode( ( Object* ) *cur, state, 0 );
     }
 
     else
@@ -153,9 +153,9 @@ typedef struct _ns_encode_st
 
 static p2_action * ns_encode( char *name, ns_encode_st *state )
 {
-    p2_object *o = ( p2_object* ) p2_dictionary__lookup( state->dict, name );
+    Object *o = ( Object* ) p2_dictionary__lookup( state->dict, name );
 
-    dom_element *el = p2_object__xml_encode( o, state->state, 0 );
+    dom_element *el = object__xml_encode( o, state->state, 0 );
     dom_attr__new( el, ( uc* ) "name", ( uc* ) name, 0 );
 
     dom_element__add_child( state->parent, el );
@@ -209,7 +209,7 @@ static p2_array *p2_bag__xml_decode( dom_element *el, xml_decode_st *state )
 {
     p2_array *a;
     dom_element *child;
-    p2_object *o;
+    Object *o;
 
     #if DEBUG__SAFE
     if ( !el || !state )
@@ -230,7 +230,7 @@ static p2_array *p2_bag__xml_decode( dom_element *el, xml_decode_st *state )
 
     while ( child )
     {
-        o = p2_object__xml_decode( child, state );
+        o = object__xml_decode( child, state );
         p2_array__enqueue( a, o );
         child = dom_element__next_sibling( child );
     }
@@ -263,7 +263,7 @@ static p2_term *p2_term__xml_decode( dom_element *el, xml_decode_st *state )
         }
         #endif
 
-        t = p2_term__new( p2_object__xml_decode( el, state ), 0 );
+        t = p2_term__new( object__xml_decode( el, state ), 0 );
     }
 
     /* Proper term. */
@@ -290,7 +290,7 @@ static p2_namespace *p2_namespace__xml_decode
     p2_namespace *ns;
     dom_element *child;
     dom_attr *attr;
-    p2_object *o;
+    Object *o;
     char *text;
 
     #if DEBUG__SAFE
@@ -322,7 +322,7 @@ static p2_namespace *p2_namespace__xml_decode
         }
         #endif
 
-        o = p2_object__xml_decode( child, state );
+        o = object__xml_decode( child, state );
         text = ( char* ) dom_attr__value( attr );
         p2_namespace__add_simple( ns, text, o );
         free( text );
@@ -337,8 +337,8 @@ static p2_namespace *p2_namespace__xml_decode
 /* Object serializer **********************************************************/
 
 
-static dom_element *p2_object__xml_encode
-    ( p2_object *o, xml_encode_st *state, boolean top_level )
+static dom_element *object__xml_encode
+    ( Object *o, xml_encode_st *state, boolean top_level )
 {
     /* id > 0  ==>  the object is multireferenced. */
     unsigned int id = ( unsigned int ) p2_lookup_table__lookup( state->ids, o );
@@ -419,7 +419,7 @@ printf( "---s oe 3b 5b 2---\n" ); FFLUSH;
 
 
 /*
-static p2_object *reference__xml_decode
+static Object *reference__xml_decode
     ( dom_element *el, xml_decode_st *state )
 {
 
@@ -427,13 +427,13 @@ static p2_object *reference__xml_decode
 */
 
 
-static p2_object *p2_object__xml_decode
+static Object *object__xml_decode
     ( dom_element *el, xml_decode_st *state )
 {
     dom_attr *attr;
-    p2_object *o;
+    Object *o;
     unsigned int id;
-    p2_type *type;
+    Type *type;
     xml_decoder decode;
     dom_element *child;
     char *text;
@@ -441,12 +441,12 @@ static p2_object *p2_object__xml_decode
     #if DEBUG__SAFE
     if ( !el || !state )
     {
-        ERROR( "p2_object__xml_decode: null argument" );
+        ERROR( "object__xml_decode: null argument" );
         return 0;
     }
     else if ( strcmp( ( char* ) dom_element__name( el ), OBJECT__XML__NAME ) )
     {
-        ERROR( "p2_object__xml_decode: bad element name" );
+        ERROR( "object__xml_decode: bad element name" );
         return 0;
     }
     #endif
@@ -458,7 +458,7 @@ static p2_object *p2_object__xml_decode
         if ( !( type = p2_environment__resolve_type
             ( state->env, text ) ) )
         {
-            ERROR( "p2_object__xml_decode: bad type" );
+            ERROR( "object__xml_decode: bad type" );
             free( text );
             return 0;
         }
@@ -502,11 +502,11 @@ printf( "This is an imported type.\n" ); FFLUSH;
                 free( text );
 printf( "id = %i\n", id ); FFLUSH;
 
-                o = ( p2_object* ) p2_lookup_table__lookup( state->objects_by_id, ( void* ) id );
+                o = ( Object* ) p2_lookup_table__lookup( state->objects_by_id, ( void* ) id );
 
                 if ( !o )
                 {
-                    o = p2_object__new( 0, 0, 0 );
+                    o = object__new( 0, 0, 0 );
 
                     /* Register the new object. */
                     p2_memory_manager__add( state->env->manager, o );
@@ -520,7 +520,7 @@ printf( "id = %i\n", id ); FFLUSH;
 
             else
             {
-                o = p2_object__new( 0, 0, 0 );
+                o = object__new( 0, 0, 0 );
                 /* Register the new object. */
                 p2_memory_manager__add( state->env->manager, o );
             }
@@ -537,7 +537,7 @@ printf( "decode = %#x\n", ( int ) decode );
                 child = dom_element__first_child( el );
                 if ( !child )
                 {
-                    ERROR( "p2_object__xml_decode: child element expected" );
+                    ERROR( "object__xml_decode: child element expected" );
                     return 0;
                 }
 
@@ -572,20 +572,20 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
         id = ( unsigned int ) atoi( text );
 printf( "Deserializing reference on id = %i.\n", id ); FFLUSH;
         free( text );
-        o = ( p2_object* ) p2_lookup_table__lookup
+        o = ( Object* ) p2_lookup_table__lookup
             ( state->objects_by_id, ( void* ) id );
 
         /* Placeholder object must be created. */
         if ( !o )
         {
-            o = p2_object__new( 0, 0, 0 );
+            o = object__new( 0, 0, 0 );
             p2_lookup_table__add( state->objects_by_id, ( void* ) id, o );
         }
     }
 
     else
     {
-        ERROR( "p2_object__xml_decode: missing attribute" );
+        ERROR( "object__xml_decode: missing attribute" );
         o = 0;
     }
 printf( "Result is object %#x.\n", ( int ) o );
@@ -598,7 +598,7 @@ printf( "Result is object %#x.\n", ( int ) o );
 static void triple__xml_decode
     ( dom_element *el, xml_decode_st *state )
 {
-    p2_object *subject, *predicate, *object;
+    Object *subject, *predicate, *object;
     dom_element *subject_el, *predicate_el, *object_el;
 printf( "Deserializing triple.\n" ); FFLUSH;
 
@@ -606,12 +606,12 @@ printf( "Deserializing triple.\n" ); FFLUSH;
     predicate_el = dom_element__next_sibling( subject_el );
     object_el = dom_element__next_sibling( predicate_el );
 
-    subject = p2_object__xml_decode( subject_el, state );
-    predicate = p2_object__xml_decode( predicate_el, state );
-    object = p2_object__xml_decode( object_el, state );
+    subject = object__xml_decode( subject_el, state );
+    predicate = object__xml_decode( predicate_el, state );
+    object = object__xml_decode( object_el, state );
 
     /* Triples have global scope. */
-    p2_object__associate( subject, predicate, object );
+    object__associate( subject, predicate, object );
 }
 #endif
 
@@ -627,7 +627,7 @@ typedef struct _hash_multiref_st
 } hash_multiref_st;
 
 
-static p2_action * hash_multiref( p2_object *o, hash_multiref_st *state )
+static p2_action * hash_multiref( Object *o, hash_multiref_st *state )
 {
     /* Working namespace has already been given an id. */
     if ( !p2_lookup_table__lookup( state->table, o ) )
@@ -643,7 +643,7 @@ typedef struct _triple__serialize_st
 {
     xml_encode_st *xe_state;
 
-    p2_object *subject;
+    Object *subject;
 
 } triple__serialize_st;
 
@@ -652,12 +652,12 @@ static p2_action * triple__serialize
     ( p2_lookup_table__entry *entry, triple__serialize_st *state )
 {
     dom_element *el = dom_element__new( 0, ( uc* ) "triple", 0 );
-    dom_element *subject = p2_object__xml_encode
+    dom_element *subject = object__xml_encode
         ( state->subject, state->xe_state, boolean__false );
-    dom_element *predicate = p2_object__xml_encode
-        ( ( p2_object* ) entry->key, state->xe_state, boolean__false );
-    dom_element *object = p2_object__xml_encode
-        ( ( p2_object* ) entry->target, state->xe_state, boolean__false );
+    dom_element *predicate = object__xml_encode
+        ( ( Object* ) entry->key, state->xe_state, boolean__false );
+    dom_element *object = object__xml_encode
+        ( ( Object* ) entry->target, state->xe_state, boolean__false );
 
     dom_element__add_child( el, subject );
     dom_element__add_child( el, predicate );
@@ -672,7 +672,7 @@ static p2_action * triple__serialize
 static p2_action * serialize
     ( p2_lookup_table__entry *entry, xml_encode_st *state )
 {
-    p2_object *o;
+    Object *o;
     p2_procedure proc;
     triple__serialize_st triple_st;
     dom_element *el;
@@ -685,9 +685,9 @@ static p2_action * serialize
     }
     #endif
 
-    o = ( p2_object* ) entry->key;
+    o = ( Object* ) entry->key;
 
-    el = p2_object__xml_encode( o, state, boolean__true );
+    el = object__xml_encode( o, state, boolean__true );
     dom_element__add_child( state->parent, el );
 
     #if TRIPLES__GLOBAL__OUT_EDGES
@@ -857,7 +857,7 @@ void p2_compiler__deserialize( p2_compiler *c, char *path )
         /* Object element. */
         if ( !strcmp( el_name, OBJECT__XML__NAME ) )
         {
-            p2_object__xml_decode( child, &decode_state );
+            object__xml_decode( child, &decode_state );
         }
 
         #if TRIPLES__GLOBAL

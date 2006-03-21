@@ -600,7 +600,7 @@ p2_array *p2_array__minimize( p2_array *a )
 static void encode
     ( void **cur, char *buffer, int delimit )
 {
-    p2_object *o;
+    Object *o;
     void **lim;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
@@ -616,7 +616,7 @@ static void encode
         }
 */
 
-        o = ( p2_object* ) *cur;
+        o = ( Object* ) *cur;
         o->type->encode( o->value, buffer );
     }
 
@@ -657,7 +657,7 @@ static void encode
 static void p2_array__encode( p2_array *a, char *buffer )
 {
     int i;
-    p2_object *o;
+    Object *o;
 
     #if DEBUG__SAFE
     if ( !a || !buffer )
@@ -674,7 +674,7 @@ static void p2_array__encode( p2_array *a, char *buffer )
     {
         for ( i = 0; i < a->size; i++ )
         {
-            o = ( p2_object* ) ELMT( a, i );
+            o = ( Object* ) ELMT( a, i );
 
             if ( i )
             {
@@ -697,9 +697,9 @@ static void p2_array__encode( p2_array *a, char *buffer )
 }
 
 
-p2_type *p2_array__type( const char *name, int flags )
+Type *p2_array__type( const char *name, int flags )
 {
-    p2_type *type = p2_type__new( name, flags );
+    Type *type = type__new( name, flags );
 
     if ( type )
     {

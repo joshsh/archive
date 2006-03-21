@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "util/p2_name.h"
 
 
-typedef p2_object p2_namespace_o;
+typedef Object p2_namespace_o;
 
 /** A namespace is a hash table with associated functions for adding, removing,
     and looking up named objects. */
@@ -59,32 +59,32 @@ void p2_namespace__delete( p2_namespace *ns );
     \param name  the local part of the name to assign
     \param o  the object to add
     \return  the object displaced by the new */
-p2_object *p2_namespace__add
-    ( p2_namespace_o *ns_obj, p2_name *name, p2_object *o );
+Object *p2_namespace__add
+    ( p2_namespace_o *ns_obj, p2_name *name, Object *o );
 
-p2_object *p2_namespace__add_simple
-    ( p2_namespace *ns, const char *name, p2_object *o );
+Object *p2_namespace__add_simple
+    ( p2_namespace *ns, const char *name, Object *o );
 
 /** Finds an object in a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object found */
-p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name );
+Object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name );
 
 /** Finds an object using a simple name.
     \param ns  the target namespace
     \param s  the local part of the name to look up
     \return  the object found */
-p2_object *p2_namespace__lookup_simple(
+Object *p2_namespace__lookup_simple(
     p2_namespace *ns, const char *name );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object removed */
-p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name );
+Object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name );
 
-p2_object *p2_namespace__remove_simple( p2_namespace *ns, char *name );
+Object *p2_namespace__remove_simple( p2_namespace *ns, char *name );
 
 
 void p2_namespace__show_children( p2_namespace_o *ns_obj );
@@ -92,7 +92,7 @@ void p2_namespace__show_children( p2_namespace_o *ns_obj );
 void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p );
 
 
-p2_name *p2_namespace__find( p2_namespace_o *ns_obj, p2_object *o );
+p2_name *p2_namespace__find( p2_namespace_o *ns_obj, Object *o );
 
 
 #endif /* P2_NAMESPACE_H */

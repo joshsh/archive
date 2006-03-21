@@ -74,9 +74,9 @@ typedef enum _combinator
 p2_term *SK_reduce(
     p2_term *term,
     p2_memory_manager *m,
-    p2_type *term_type,
-    p2_type *primitive_type,
-    p2_type *combinator_type,
+    Type *term_type,
+    Type *primitive_type,
+    Type *combinator_type,
     void (*for_each_iteration)(p2_term*) );
 
 

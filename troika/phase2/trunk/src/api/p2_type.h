@@ -1,6 +1,6 @@
 /**
 
-\file  p2_type.h
+\file  Type.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,15 +25,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_TYPE_H
-#define P2_TYPE_H
+#ifndef TYPE_H
+#define TYPE_H
 
 #include <p2.h>
 
 
-typedef struct p2_type p2_type;
+typedef struct Type Type;
 
-enum p2_type__flags
+enum Type__Flags
 {
     TYPE__IS_OBJ_COLL         = 0x1,
     TYPE__OWNS_DESCENDANTS    = 0x2
@@ -41,14 +41,14 @@ enum p2_type__flags
 
 
 /** */
-struct p2_type
+struct Type
 {
     /** */
     char *name;
 
     int flags;
 
-    p2_type *type_arg;
+    Type *type_arg;
 
     /** Copy constructor. */
     copy_cons   clone;
@@ -72,17 +72,17 @@ struct p2_type
 };
 
 
-#define any_type    ( p2_type* ) 42
+#define any_type    ( Type* ) 42
 
 
 /** Constructor. */
-p2_type *p2_type__new( const char *name, int flags );
+extern Type *type__new( const char *name, int flags );
 
 
 /** Destructor. */
-void p2_type__delete( p2_type *type );
+extern void type__delete( Type *type );
 
 
-#endif  /* P2_TYPE_H */
+#endif  /* TYPE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -31,7 +31,7 @@ static boolean  default__equals( void *cellA, void *cellB ) { return boolean__tr
 static void     default__sort( void *cell, comparator cmp ) { }
 
 
-static p2_type default_t =
+static Type default_t =
 {
     0,
     0,
@@ -47,19 +47,19 @@ static p2_type default_t =
 };
 
 
-p2_type *p2_type__new( const char *name, int flags )
+Type *type__new( const char *name, int flags )
 {
-    p2_type *t;
+    Type *t;
 
     #if DEBUG__SAFE
     if ( !name || !( *name ) )
     {
-        ERROR( "p2_type__new: null or empty name" );
+        ERROR( "type__new: null or empty name" );
         return 0;
     }
     #endif
 
-    t = new( p2_type );
+    t = new( Type );
     if ( !t )
         return 0;
 
@@ -77,7 +77,7 @@ p2_type *p2_type__new( const char *name, int flags )
 }
 
 
-void p2_type__delete( p2_type *type)
+void type__delete( Type *type)
 {
     if ( type->name )
         free( type->name );

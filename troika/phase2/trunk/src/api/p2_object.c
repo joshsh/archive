@@ -21,22 +21,22 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/p2_array.h>
 
 
-p2_object *p2_object__new( p2_type *type, void *value, int flags )
+Object *object__new( Type *type, void *value, int flags )
 {
-    p2_object *o;
+    Object *o;
 
     /* Note: temporary objects with null type/value are allowed. */
 
-    o = new( p2_object );
+    o = new( Object );
 
     if ( !o )
     {
-        ERROR( "p2_object__new: allocation failure" );
+        ERROR( "object__new: allocation failure" );
         return 0;
     }
 
     #if DEBUG__OBJECT
-    printf( "[%#x] p2_object__new(%#x, %#x, %i)\n",
+    printf( "[%#x] object__new(%#x, %#x, %i)\n",
         ( int ) o, ( int ) type, ( int ) value, flags );
     #endif
 
@@ -59,10 +59,10 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     #if DEBUG__OBJECT
     if ( o->type && o->value )
     {
-        printf( "p2_object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
+        printf( "object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
             ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
 if (!strcmp( o->type->name, "type"))
-printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
+printf( "    This is type '%s'.\n", ( ( Type* ) o->value )->name );
     }
     #endif
 
@@ -70,27 +70,27 @@ printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
 }
 
 
-static p2_action *delete_p( void *p, p2_type *type )
+static p2_action *delete_p( void *p, Type *type )
 {
     type->destroy( p );
     return 0;
 }
 
 
-void p2_object__delete( p2_object *o )
+void object__delete( Object *o )
 {
     p2_procedure p;
 
     #if DEBUG__SAFE
     if ( !o )
     {
-        ERROR( "p2_object__delete: null object" );
+        ERROR( "object__delete: null object" );
         return;
     }
     #endif
 
     #if DEBUG__OBJECT
-    printf( "p2_object__delete(%#x): value = %#x, type = %#x.\n",
+    printf( "object__delete(%#x): value = %#x, type = %#x.\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
     #endif
 
@@ -158,7 +158,7 @@ static p2_action * apply_to_assoc_edge
 }
 
 
-static p2_action * trace_exec( p2_object *o, trace_proc_ctx *state )
+static p2_action * trace_exec( Object *o, trace_proc_ctx *state )
 {
     p2_action *action;
 
@@ -199,7 +199,7 @@ printf( "value = %i\n", *( ( int* ) o->value ) );
 }
 
 
-void p2_object__trace( p2_object *o, p2_procedure *p )
+void object__trace( Object *o, p2_procedure *p )
 {
     trace_proc_ctx state;
     p2_procedure trace_proc;
@@ -208,7 +208,7 @@ void p2_object__trace( p2_object *o, p2_procedure *p )
     #if DEBUG__SAFE
     if ( !o )
     {
-        ERROR( "p2_object__trace: null object" );
+        ERROR( "object__trace: null object" );
         return;
     }
     #endif
@@ -227,7 +227,7 @@ void p2_object__trace( p2_object *o, p2_procedure *p )
 }
 
 
-static p2_action * enqueue( p2_object *o, p2_array *queue )
+static p2_action * enqueue( Object *o, p2_array *queue )
 {
     p2_array__enqueue( queue, o );
     return 0;
@@ -235,7 +235,7 @@ static p2_action * enqueue( p2_object *o, p2_array *queue )
 
 
 /* Note: untested. */
-void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
+void object__trace_bfs( Object *o, p2_procedure *p )
 {
     trace_proc_ctx state;
     p2_procedure trace_proc;
@@ -247,7 +247,7 @@ void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
     #if DEBUG__SAFE
     if ( !o )
     {
-        ERROR( "p2_object__trace: null object" );
+        ERROR( "object__trace: null object" );
         return;
     }
     #endif
@@ -271,7 +271,7 @@ void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
     while ( p2_array__size( queue ) )
     {
         p2_procedure__execute( ( &trace_proc ),
-            ( p2_object* ) p2_array__pop( queue ) );
+            ( Object* ) p2_array__pop( queue ) );
     }
 }
 
@@ -281,13 +281,13 @@ void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
 
 #if TRIPLES__GLOBAL
 
-p2_object *p2_object__multiply
-    ( p2_object *subj, p2_object *pred )
+Object *object__multiply
+    ( Object *subj, Object *pred )
 {
     #if DEBUG__SAFE
     if ( !subj || !pred )
     {
-        ERROR( "p2_object__multiply: null argument" );
+        ERROR( "object__multiply: null argument" );
         return 0;
     }
     #endif
@@ -295,7 +295,7 @@ p2_object *p2_object__multiply
     #if TRIPLES__GLOBAL__OUT_EDGES
 
     return ( subj->outbound_edges ) ?
-        ( p2_object* ) p2_lookup_table__lookup( subj->outbound_edges, pred ) : 0 ;
+        ( Object* ) p2_lookup_table__lookup( subj->outbound_edges, pred ) : 0 ;
 
     #else
 
@@ -306,13 +306,13 @@ p2_object *p2_object__multiply
 
 
 /* Note: doesn't take association sets into account yet. */
-p2_object *p2_object__associate
-    ( p2_object *subj, p2_object *pred, p2_object *obj )
+Object *object__associate
+    ( Object *subj, Object *pred, Object *obj )
 {
     #if DEBUG__SAFE
     if ( !subj || !pred || !obj )
     {
-        ERROR( "p2_object__associate: null argument" );
+        ERROR( "object__associate: null argument" );
         return 0;
     }
     #endif

@@ -133,7 +133,7 @@ extern p2_array *p2_array__minimize( p2_array *a );
 
 /******************************************************************************/
 
-extern p2_type *p2_array__type( const char *name, int flags );
+extern Type *p2_array__type( const char *name, int flags );
 
 
 #endif  /* ARRAY_H */

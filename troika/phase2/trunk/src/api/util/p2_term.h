@@ -142,7 +142,7 @@ void p2_term__distribute( p2_term *t, p2_procedure *p );
 
 void p2_term__encode( p2_term *t, char *buffer );
 
-p2_type *p2_term__type( const char *name, int flags );
+Type *p2_term__type( const char *name, int flags );
 
 
 #endif  /* P2_TERM_H */
