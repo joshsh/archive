@@ -83,7 +83,7 @@ static p2_term *S_reduce( p2_term *term )
     }
 
     /* Copy 'x' to an auxiliary array. */
-    aux = ( void ** ) malloc( x_size * sizeof( void* ) );
+    aux = malloc( x_size * sizeof( void* ) );
     memcpy( aux, x, x_size * sizeof( void* ) );
 
     /* Prepend a term head for the new sub-term 'yz'.  The data of 'y' and 'z'
@@ -123,7 +123,7 @@ printf( "---sk pr -2---\n" ); fflush( stdout );
 
     #if PRIM__ALLOW_NOARG_FUNCTIONS
     args = ( prim->arity )
-        ? ( void** ) malloc( prim->arity * sizeof( void* ) )
+        ? malloc( prim->arity * sizeof( void* ) )
         : 0;
     #else
     #if DEBUG__SAFE
@@ -134,7 +134,7 @@ printf( "---sk pr -2---\n" ); fflush( stdout );
         return 0;
     }
     #endif
-        args = ( void** ) malloc( prim->arity * sizeof( void* ) );
+        args = malloc( prim->arity * sizeof( void* ) );
     #endif
 printf( "---sk pr -1---\n" ); fflush( stdout );
 

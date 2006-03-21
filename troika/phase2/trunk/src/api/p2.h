@@ -28,18 +28,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef P2_H
 #define P2_H
 
+#include <stdlib.h>  /* malloc */
+#include <string.h>  /* strlen, strcpy */
+
+
+#include "settings.h"
+
+
+/******************************************************************************/
+
 
 #define VERSION "0.5.0"
 
 
-#include "flags.h"
-
-
-#include <stdlib.h>  /* malloc */
-#include <string.h>  /* strlen, strcpy */
-
-#define STRDUP( x )  strcpy( ( char* ) malloc( 1 + strlen( x ) ), x )
-#define new( type )  ( type* ) malloc( sizeof( type ) )
+#define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
+#define new( type )  malloc( sizeof (type) )
 
 
 /******************************************************************************/
@@ -67,6 +70,8 @@ typedef void    ( *encoder )( void *p, char *buffer );
 typedef void    ( *sort_f )( void *p, comparator cmp );
 typedef void *  ( *substitution_f )( void *p, void *state );
 typedef void    ( *void_f )( void *p );
+
+typedef void    ( *generic_f )( void );
 
 
 /* Procedures (functions with state) ******************************************/
@@ -107,7 +112,8 @@ typedef struct _p2_procedure
 } p2_procedure;
 
 
-#define p2_procedure__execute( p, data )  p->execute( data, p->state )
+/* ~ capitalization */
+#define p2_procedure__execute( p, data )  (p)->execute( (data), (p)->state )
 
 typedef void    ( *distributor )( void *data, p2_procedure *a );
 
@@ -119,26 +125,26 @@ typedef void    ( *distributor )( void *data, p2_procedure *a );
 
 #define FFLUSH  { fflush( stdout ); fflush( stderr ); }
 
-#define ERROR( msg ) \
-{ \
-    fprintf( stderr, "Error: %s.\n", msg ); \
-    fflush( stdout ); \
+#define ERROR( msg )                                                        \
+{                                                                           \
+    fprintf( stderr, "Error: %s.\n", (msg) );                               \
+    fflush( stdout );                                                       \
 }
 
 /* Useful, but not ANSI C.
-#define ERROR( ... ) \
-{ \
-    fprintf( stderr, "Error: " ); \
-    fprintf( stderr, __VA_ARGS__ ); \
-    fprintf( stderr, ".\n" ); \
-    fflush( stdout ); \
+#define ERROR( ... )                                                        \
+{                                                                           \
+    fprintf( stderr, "Error: " );                                           \
+    fprintf( stderr, __VA_ARGS__ );                                         \
+    fprintf( stderr, ".\n" );                                               \
+    fflush( stdout );                                                       \
 }
 */
 
-#define WARNING( msg ) \
-{ \
-    fprintf( stderr, "Warning: %s.\n", msg ); \
-    fflush( stdout ); \
+#define WARNING( msg )                                                      \
+{                                                                           \
+    fprintf( stderr, "Warning: %s.\n", (msg) );                             \
+    fflush( stdout );                                                       \
 }
 
 

@@ -1,10 +1,9 @@
 #include "toys.h"
 
 
-cstring *system_call( cstring *s )
+int system_call( cstring *s )
 {
-    system( s );
-    return STRDUP( s );
+    return system( s );
 }
 
 

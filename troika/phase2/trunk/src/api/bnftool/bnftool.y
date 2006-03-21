@@ -159,7 +159,7 @@ static p2_action * add_to_dict( char *name, p2_dictionary *d )
 
 static void find_sets( p2_array *rules, p2_dictionary *dict )
 {
-    int changed = 1, i, j, k, n, n_rules = rules->size, n_prods, nullable_old, size_old;
+    int changed = 1, i, j, k, n, n_rules = p2_array__size( rules ), n_prods, nullable_old, size_old;
     rule *r, *r2, *r3;
     p2_array *production;
     char *first, *second;
@@ -176,7 +176,7 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
 
             nullable_old = r->nullable;
 
-            n_prods = r->productions->size;
+            n_prods = p2_array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
             {
                 production = ( p2_array* ) p2_array__get( r->productions, j );
@@ -215,14 +215,14 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
             r = ( rule* ) p2_array__get( rules, i );
             size_old = r->first_set->size;
 
-            n_prods = r->productions->size;
+            n_prods = p2_array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
             {
                 production = ( p2_array* ) p2_array__get( r->productions, j );
 
                 if ( production )
                 {
-                    n = production->size;
+                    n = p2_array__size( production );
 
                     for ( k = 0; k < n; k++ )
                     {
@@ -263,14 +263,14 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
         {
             r = ( rule* ) p2_array__get( rules, i );
 
-            n_prods = r->productions->size;
+            n_prods = p2_array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
             {
                 production = ( p2_array* ) p2_array__get( r->productions, j );
 
                 if ( production )
                 {
-                    n = production->size;
+                    n = p2_array__size( production );
 
                     for ( k = 0; k < n - 1; k++ )
                     {

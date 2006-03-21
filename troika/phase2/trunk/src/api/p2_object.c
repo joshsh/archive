@@ -27,10 +27,6 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
 
     /* Note: temporary objects with null type/value are allowed. */
 
-    #if DEBUG__OBJECT
-    printf( "[...] p2_object__new(%#x, %#x, %i)\n", ( int ) type, ( int ) value, flags );
-    #endif
-
     o = new( p2_object );
 
     if ( !o )
@@ -38,6 +34,11 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
         ERROR( "p2_object__new: allocation failure" );
         return 0;
     }
+
+    #if DEBUG__OBJECT
+    printf( "[%#x] p2_object__new(%#x, %#x, %i)\n",
+        ( int ) o, ( int ) type, ( int ) value, flags );
+    #endif
 
     o->type = type;
     o->value = value;
@@ -58,8 +59,8 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags )
     #if DEBUG__OBJECT
     if ( o->type && o->value )
     {
-    printf( "p2_object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
-        ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
+        printf( "p2_object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
+            ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
 if (!strcmp( o->type->name, "type"))
 printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
     }
@@ -69,7 +70,7 @@ printf( "    This is type '%s'.\n", ( ( p2_type* ) o->value )->name );
 }
 
 
-static p2_action *delete_proc( void *p, p2_type *type )
+static p2_action *delete_p( void *p, p2_type *type )
 {
     type->destroy( p );
     return 0;
@@ -80,7 +81,6 @@ void p2_object__delete( p2_object *o )
 {
     p2_procedure p;
 
-printf( "---o d 1: %#x---\n", ( int ) o ); FFLUSH;
     #if DEBUG__SAFE
     if ( !o )
     {
@@ -92,7 +92,6 @@ printf( "---o d 1: %#x---\n", ( int ) o ); FFLUSH;
     #if DEBUG__OBJECT
     printf( "p2_object__delete(%#x): value = %#x, type = %#x.\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
-FFLUSH;
     #endif
 
     #if TRIPLES__GLOBAL__IN_EDGES
@@ -109,24 +108,19 @@ FFLUSH;
     if ( o->trans_edges )
         p2_lookup_table__delete( o->trans_edges );
     #endif
-printf( "---o d 2: %#x---\n", ( int ) o ); FFLUSH;
 
     /* If the object owns its children (and has any), free them. */
     if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
     {
-        p.execute = ( procedure ) delete_proc;
+        p.execute = ( procedure ) delete_p;
         p.state = o->type->type_arg;
         o->type->distribute( o->value, &p );
     }
-printf( "---o d 3: %#x---\n", ( int ) o ); FFLUSH;
-printf( "o->type = %#x\n", ( int ) o->type ); FFLUSH;
-printf( "o->type->destroy = %#x\n", ( int ) o->type->destroy ); FFLUSH;
+
     /* Free the object's data. */
     o->type->destroy( o->value );
-printf( "---o d 4: %#x---\n", ( int ) o ); FFLUSH;
 
     free( o );
-printf( "---o d 5: %#x---\n", ( int ) o ); FFLUSH;
 
     #if DEBUG__OBJECT
     FFLUSH;
@@ -274,7 +268,7 @@ void p2_object__trace_bfs( p2_object *o, p2_procedure *p )
     trace_proc.execute = ( procedure ) trace_exec;
     trace_proc.state = &state;
 
-    while ( queue->size )
+    while ( p2_array__size( queue ) )
     {
         p2_procedure__execute( ( &trace_proc ),
             ( p2_object* ) p2_array__pop( queue ) );

@@ -60,16 +60,12 @@ p2_environment *p2_environment__new();
 void p2_environment__delete( p2_environment *env );
 
 
-p2_object *p2_environment__register_primitive(
-    p2_environment *env,
-    p2_primitive *prim,
-    int flags,
-    void ( *src_f ) ( void ) );
+p2_object *p2_environment__register_primitive
+    ( p2_environment *env, p2_primitive *prim, int flags, generic_f src_f );
 
 
-p2_object *p2_environment__register_type(
-    p2_environment *env,
-    p2_type *type );
+p2_object *p2_environment__register_type
+    ( p2_environment *env, p2_type *type );
 
 
 p2_type *p2_environment__resolve_type(

@@ -45,9 +45,11 @@ enum p2_object__flags
 };
 
 
+typedef struct p2_object p2_object;
+
 /** A typed constant.  This is the least addressable unit of data in a Phase2
     namespace. */
-typedef struct _p2_object
+struct p2_object
 {
     /** A reference to the object's data type. */
     p2_type *type;
@@ -76,8 +78,9 @@ typedef struct _p2_object
         For example, (x, z) from (x, Y, z). */
     p2_lookup_table *trans_edges;
     #endif
+};
 
-} p2_object;
+typedef p2_object Object;
 
 
 /******************************************************************************/
@@ -91,6 +94,13 @@ p2_object *p2_object__new( p2_type *type, void *value, int flags );
 /** Destructor. */
 void p2_object__delete( p2_object *o );
 
+
+/* Accessors ******************************************************************/
+/*
+extern Type *object__type( Object *o );
+
+extern void
+*/
 
 /* Graph traversal ************************************************************/
 

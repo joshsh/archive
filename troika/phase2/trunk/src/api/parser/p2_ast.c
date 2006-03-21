@@ -183,7 +183,7 @@ int p2_ast__size( p2_ast *ast )
     switch ( ast->type )
     {
         case BAG_T:
-            return ( ( p2_array* ) ast->value )->size;
+            return p2_array__size( ( p2_array* ) ast->value );
         case TERM_T:
             return p2_term__length( ( p2_term* ) ast->value );
         default:
@@ -310,7 +310,7 @@ static void term__print( p2_term *term, int top_level )
 
 static void bag__print( p2_array *a )
 {
-    int i, size = a->size;
+    int i, size = p2_array__size( a );
     if ( !size )
         printf( "{null}" );
     else

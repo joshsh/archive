@@ -17,18 +17,18 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "../xmldom.h"
-#include <p2.h>
-
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+
+#include <p2.h>
+#include "../xmldom.h"
 
 
 /* Note: be ready for linker errors if these macros are not defined. */
 #if defined(LIBXML_TREE_ENABLED) && defined(LIBXML_OUTPUT_ENABLED)
 
 
-int initialized = 0 ;
+static int initialized = 0 ;
 
 
 void xmldom__init( )

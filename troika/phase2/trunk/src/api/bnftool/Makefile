@@ -36,7 +36,7 @@ bnftool :  lex.yy.c bnftool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_
 	$(CC) $(CFLAGS) -o bnftool lex.yy.c bnftool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_type.o
 
 
-lex.yy.c : bnftool.l ../flags.h
+lex.yy.c : bnftool.l ../settings.h
 	$(LEX) bnftool.l
 
 
@@ -44,7 +44,7 @@ bnftool.tab.o : bnftool.tab.c
 	$(CC) $(CFLAGS) -c bnftool.tab.c
 
 
-bnftool.tab.c bnftool.tab.h : bnftool.y ../flags.h
+bnftool.tab.c bnftool.tab.h : bnftool.y ../settings.h
 	$(YACC) -dv bnftool.y
 
 

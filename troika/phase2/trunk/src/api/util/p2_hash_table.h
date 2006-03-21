@@ -40,8 +40,10 @@ typedef unsigned int ( *hash_f )( const void *key );
 
 /******************************************************************************/
 
+typedef struct p2_hash_table p2_hash_table;
+
 /** \brief An expanding hash table to bind pairs of generic pointers. */
-typedef struct _p2_hash_table
+struct p2_hash_table
 {
     /** The number of occupied cells in the hash table. */
     unsigned int size;
@@ -71,8 +73,7 @@ typedef struct _p2_hash_table
 
     /** A comparison function for key values. */
     comparator compare;
-
-} p2_hash_table;
+};
 
 
 /******************************************************************************/

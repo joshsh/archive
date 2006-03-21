@@ -64,7 +64,7 @@ void p2_name__delete( p2_name *name )
 void p2_name__print( p2_name *n )
 {
     char *s;
-    int i, size = n->size;
+    int i, size = p2_array__size( n );
 
     #if DEBUG__SAFE
     if ( !n )

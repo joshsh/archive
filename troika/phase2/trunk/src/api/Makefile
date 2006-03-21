@@ -112,16 +112,17 @@ phase2 :  main.c utils $(XML)/xmldom.o $(OBJECTS) import parser
 	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
 
 
-serial.o :  serial.c serial.h flags.h
+serial.o :  serial.c serial.h settings.h
 	$(CC) -c serial.c
 
-p2_%.o :  p2_%.c p2_%.h flags.h
+p2_%.o :  p2_%.c p2_%.h settings.h
 	$(CC) -c p2_$*.c
 
 
 ################################################################################
 # Compile SK semantics library.
 
-sk.o :  sk/sk.c flags.h
+sk.o :  sk/sk.c settings.h
 	$(CC) -c sk/sk.c
 
+# DO NOT DELETE

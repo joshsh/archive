@@ -40,7 +40,7 @@ logtool :  lex.yy.c logtool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_
 	$(CC) $(CFLAGS) -o logtool lex.yy.c logtool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_type.o
 
 
-lex.yy.c : logtool.l ../flags.h
+lex.yy.c : logtool.l ../settings.h
 	$(LEX) logtool.l
 
 
@@ -48,7 +48,7 @@ logtool.tab.o : logtool.tab.c
 	$(CC) $(CFLAGS) -c logtool.tab.c
 
 
-logtool.tab.c logtool.tab.h : logtool.y ../flags.h
+logtool.tab.c logtool.tab.h : logtool.y ../settings.h
 	$(YACC) -dv logtool.y
 
 

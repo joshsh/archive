@@ -1,5 +1,5 @@
 /**
-    \file  flags.h
+    \file  settings.h
 
     \brief  Configurable settings.
 
@@ -26,8 +26,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_FLAGS_H
-#define P2_FLAGS_H
+#ifndef P2_SETTINGS_H
+#define P2_SETTINGS_H
 
 
 /* Debugging ******************************************************************/
@@ -47,6 +47,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define DEBUG__NAMESPACE                    1
 
+    #define DEBUG__ENV                          1
     #define DEBUG__COMPILER                     1
 
     #define DEBUG__PARSER_MODULE                0
@@ -171,6 +172,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#endif  /* P2_FLAGS_H */
+#endif  /* P2_SETTINGS_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -27,7 +27,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DEFAULT_EXPANSION_FACTOR    2
 
 
-#define buffer_new( size )  ( void** ) malloc( size * sizeof( void* ) )
+#define buffer_new( size )  calloc( size, sizeof( void* ) )
 
 
 /******************************************************************************/
@@ -59,7 +59,7 @@ static unsigned int next_prime( unsigned int i )
 
 static p2_hash_table *expand( p2_hash_table *h )
 {
-    void **src, **dest, **buffer, **sup;
+    void **src, **dest, **buffer, **lim;
     int buffer_size;
 
     buffer_size = next_prime(
@@ -73,13 +73,13 @@ printf( "buffer_size = %i\n", buffer_size ); fflush( stdout );
     if ( !( buffer = buffer_new( buffer_size ) ) )
         return 0;
 
-    sup = buffer + buffer_size;
-    for ( dest = buffer; dest < sup; dest++ )
+    lim = buffer + buffer_size;
+    for ( dest = buffer; dest < lim; dest++ )
         *dest = 0;
 
-    sup = h->buffer + h->buffer_size;
-printf( "sup - h->buffer = %i\n", ( unsigned int ) ( sup - h->buffer ) );
-    for ( src = h->buffer; src < sup; src++ )
+    lim = h->buffer + h->buffer_size;
+printf( "lim - h->buffer = %i\n", ( unsigned int ) ( lim - h->buffer ) );
+    for ( src = h->buffer; src < lim; src++ )
     {
         if ( *src )
         {
@@ -316,7 +316,7 @@ void *p2_hash_table__remove(p2_hash_table *h, const void *key)
 
 void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
 {
-    void **cur, **sup;
+    void **cur, **lim;
     p2_action *action;
 
     #if DEBUG__SAFE
@@ -332,9 +332,9 @@ void p2_hash_table__distribute( p2_hash_table *h, p2_procedure *p )
     #endif
 
     cur = h->buffer;
-    sup = h->buffer + h->buffer_size;
+    lim = h->buffer + h->buffer_size;
 
-    while ( cur < sup )
+    while ( cur < lim )
     {
         if ( *cur )
         {

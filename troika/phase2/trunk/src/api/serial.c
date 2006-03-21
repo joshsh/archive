@@ -26,6 +26,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/p2_set.h>
 #include <xml/xmldom.h>
 
+#include <time.h>
+
 
 typedef unsigned char uc;
 
@@ -73,7 +75,7 @@ static p2_object *p2_object__xml_decode
 static dom_element *p2_bag__xml_encode( p2_array *a, xml_encode_st *state )
 {
     dom_element *el, *child;
-    int i;
+    int i, size;
 
     #if DEBUG__SAFE
     if ( !a || !state )
@@ -85,7 +87,8 @@ static dom_element *p2_bag__xml_encode( p2_array *a, xml_encode_st *state )
 
     el = dom_element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
 
-    for ( i = 0; i < a->size; i++ )
+    size = p2_array__size( a );
+    for ( i = 0; i < size; i++ )
     {
         child = p2_object__xml_encode(
             ( p2_object* ) p2_array__get( a, i ), state, 0 );
@@ -190,7 +193,7 @@ printf( "---s nsxe 1---\n" ); FFLUSH;
 printf( "ns = %#x\n", ( int ) ns );
 printf( "ns->children->size = %i\n", ns->children->size );
     keys = p2_dictionary__keys( ns->children );
-printf( "keys->size = %i\n", keys->size );
+printf( "p2_array__size( keys ) = %i\n", p2_array__size( keys ) );
     p2_array__distribute( keys, &proc );
     p2_array__delete( keys );
 printf( "---s nsxe 2---\n" ); FFLUSH;
@@ -703,6 +706,22 @@ static p2_action * serialize
 }
 
 
+static void add_timestamp( dom_element *el )
+{
+    char *s;
+    time_t t;
+
+    time( &t );
+
+    /* Note: the output of localtime and asctime are evidently pointers to
+       global variables, as you get a segfault if you try to free them. */
+    s = asctime( localtime( &t ) );
+
+    *( s + strlen( s ) - 1 ) = '\0';
+    dom_attr__new( el, ( uc* ) "time", ( uc* ) s, 0 );
+}
+
+
 void p2_compiler__serialize( p2_compiler *c, char *path )
 {
     dom_document *doc;
@@ -746,9 +765,16 @@ printf( "---s s 5---\n" ); FFLUSH;
     p2_set__delete( multirefs );
 printf( "---s s 6---\n" ); FFLUSH;
 
+    /* Root element. */
     doc = dom_document__new();
     el = dom_element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
+
+    /* Version attribute. */
     dom_attr__new( el, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
+
+    /* Time stamp attribute. */
+    add_timestamp( el );
+
     dom_document__set_root( doc, el );
 printf( "---s s 7---\n" ); FFLUSH;
 

@@ -61,23 +61,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+#include <string.h>  /* strcpy */
+
 #include "p2_ast.h"
 #include "p2_parser.h"
 
 #include <util/p2_term.h>
 
-#include <string.h>  /* strcpy */
 
-/* Avoid C99 warning: implicit declaration of function ‘yylex’ */
+/* Avoids C99 warning: implicit declaration of function ‘yylex’ */
 int yylex( void );
 
 
 /* Language module dependencies ***********************************************/
 
 
-extern int p2_compiler__evaluate_command( char *name, p2_ast *args );
-extern int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr );
-extern int p2_compiler__handle_parse_error( char *msg );
+extern int p2_compiler__evaluate_command
+    ( char * /*name*/, p2_ast * /*args*/ );
+
+extern int p2_compiler__evaluate_expression
+    ( p2_name * /*name*/, p2_ast * /*expr*/ );
+
+extern int p2_compiler__handle_parse_error
+    ( char * /*msg*/ );
 
 extern int p2_compiler__suppress_output();
 
@@ -106,10 +112,10 @@ extern int statement_number;
 
 
 /** Evaluate a command. */
-void handle_command( char *name, p2_ast *args );
+void handle_command( char * /*name*/, p2_ast * /*args*/ );
 
 /** Evaluate an expression. */
-void handle_expression( p2_name *name, p2_ast *expr );
+void handle_expression( p2_name * /*name*/, p2_ast * /*expr*/ );
 
 /** Deal gracefully with a parse error. */
 void handle_error();
@@ -208,7 +214,7 @@ struct statement
 
 struct statement *new_statement( char *name, p2_ast *expr )
 {
-    struct statement *stmt = ( struct statement* ) malloc( sizeof( struct statement ) );
+    struct statement *stmt = new( struct statement );
 
     stmt->name = name;
     stmt->expr = expr;

@@ -83,14 +83,14 @@ p2_object *p2_namespace__add
         ERROR( "p2_namespace__add: null name" );
         return 0;
     }
-    if ( !name->size )
+    if ( !p2_array__size( name ) )
     {
         ERROR( "p2_namespace__add: empty name" );
         return 0;
     }
     #endif
 
-    if ( name->size == 1 )
+    if ( p2_array__size( name ) == 1 )
     {
         if ( ns_obj->flags & OBJECT__IMMUTABLE )
         {
@@ -167,13 +167,13 @@ p2_object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name )
     printf( "[...] p2_namespace__lookup(%#x, %#x)\n", ( int ) ns, ( int ) name );
     #endif
 
-    if ( !name || !name->size )
+    if ( !name || !p2_array__size( name ) )
         return ns_obj;
 
     o = ( p2_object* ) p2_dictionary__lookup( ns->children, p2_array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
-    if ( name->size > 1 )
+    if ( p2_array__size( name ) > 1 )
     {
         /* Always check for this error, as namespace references may come directly
            from the user. */
@@ -228,7 +228,7 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
         ERROR( "null name" );
         return 0;
     }
-    if ( !name->size )
+    if ( !p2_array__size( name ) )
     {
         ERROR( "empty name" );
         return 0;
@@ -236,7 +236,7 @@ p2_object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name )
     #endif
 printf( "--- ns rm 1---\n" ); fflush( stdout );
 
-    if ( name->size == 1 )
+    if ( p2_array__size( name ) == 1 )
     {
 printf( "--- ns rm 2a---\n" ); fflush( stdout );
         if ( ns_obj->flags & OBJECT__IMMUTABLE )

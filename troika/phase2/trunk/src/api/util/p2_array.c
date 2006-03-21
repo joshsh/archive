@@ -23,15 +23,37 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  /* memcpy */
 
 
+struct p2_array
+{
+    /** A relative pointer to the first item in the array.  Stack operations
+        cause this to change. */
+    int head;
+
+    /** The number of occupied cells in the array. */
+    int size;
+
+    /** The number of cells the buffer array. */
+    int buffer_size;
+
+    /** The array expands by this factor whenever it outgrows its buffer.
+        Memory copying into the new buffer is expensive, so beware of setting
+        the expansion factor too low. */
+    unsigned int expansion;
+
+    /** The buffer array. */
+    void **buffer;
+};
+
+
 /* By default, expand() doubles the size of the array. */
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
-#define elmt( a, i )  a->buffer[ ( a->head + i ) % a->buffer_size ]
-#define inbounds( a, i )  ( i >= 0 ) && ( i < a->size )
-#define wrap( a, i )  ( a->head + i ) % a->buffer_size
+#define ELMT( a, i )  (a)->buffer[ ( (a)->head + (i) ) % (a)->buffer_size ]
+#define INBOUNDS( a, i )  ( (i) >= 0 ) && ( (i) < (a)->size )
+#define WRAP( a, i )  ( (a)->head + (i) ) % (a)->buffer_size
 
+#define BUFFER_NEW( size )  malloc( (size) * sizeof( void* ) )
 
-#define buffer_new( size )  (void **) malloc( size * sizeof( void* ) )
 
 static void **buffer_copy( p2_array *a )
 {
@@ -59,7 +81,7 @@ p2_array *p2_array__new( int buffer_size, unsigned int expansion )
     a->buffer_size = ( buffer_size > 0 )
         ? buffer_size : 1;
 
-    if ( !( a->buffer = buffer_new( a->buffer_size ) ) )
+    if ( !( a->buffer = BUFFER_NEW( a->buffer_size ) ) )
     {
         free( a );
         return 0;
@@ -114,12 +136,27 @@ void p2_array__delete( p2_array *a )
 }
 
 
+/******************************************************************************/
+
+
+int p2_array__size( p2_array *a )
+{
+    return a->size;
+}
+
+
+unsigned int p2_array__expansion( p2_array *a )
+{
+    return a->expansion;
+}
+
+
 /* Array resizing *************************************************************/
 
 
 static p2_array *sizeup( p2_array *a )
 {
-    void **buffer_new;
+    void **BUFFER_NEW;
     int i, buffer_size_new;
 
     if ( a->size < a->buffer_size )
@@ -132,18 +169,18 @@ static p2_array *sizeup( p2_array *a )
     if ( buffer_size_new <= a->buffer_size )
         buffer_size_new = DEFAULT_EXPANSION_FACTOR * a->buffer_size;
 
-    if ( !( buffer_new = buffer_new( buffer_size_new ) ) )
+    if ( !( BUFFER_NEW = BUFFER_NEW( buffer_size_new ) ) )
     {
         ERROR( "p2_array__minimize: allocation failure" );
         return 0;
     }
 
     for ( i = 0; i < a->size; i++ )
-        buffer_new[i] = elmt( a, i );
+        BUFFER_NEW[i] = ELMT( a, i );
 
     free( a->buffer );
 
-    a->buffer = buffer_new;
+    a->buffer = BUFFER_NEW;
     a->head = 0;
     a->buffer_size = buffer_size_new;
 
@@ -156,8 +193,8 @@ static p2_array *sizeup( p2_array *a )
 
 void *p2_array__get( p2_array *a, int i )
 {
-    if ( inbounds( a, i ) )
-        return elmt( a, i );
+    if ( INBOUNDS( a, i ) )
+        return ELMT( a, i );
 
     else
     {
@@ -171,9 +208,9 @@ void *p2_array__set( p2_array *a, int i, void *p )
 {
     void **addr, *displaced;
 
-    if ( inbounds( a, i ) )
+    if ( INBOUNDS( a, i ) )
     {
-        addr = &elmt( a, i );
+        addr = &ELMT( a, i );
         displaced = *addr;
         *addr = p;
         return displaced;
@@ -215,7 +252,7 @@ void *p2_array__push( p2_array *a, void *p )
     if ( !sizeup( a ) )
         return 0;
 
-    a->head = wrap( a, a->buffer_size - 1 );
+    a->head = WRAP( a, a->buffer_size - 1 );
     a->buffer[a->head] = p;
     a->size++;
 
@@ -230,7 +267,7 @@ void *p2_array__pop( p2_array *a )
     if ( a->size )
     {
         p = a->buffer[a->head];
-        a->head = wrap( a, 1 );
+        a->head = WRAP( a, 1 );
         a->size--;
         return p;
     }
@@ -248,7 +285,7 @@ void *p2_array__enqueue( p2_array *a, void *p )
     if ( !sizeup( a ) )
         return 0;
 
-    elmt( a, a->size ) = p;
+    ELMT( a, a->size ) = p;
     a->size++;
 
     return p;
@@ -260,7 +297,7 @@ void *p2_array__dequeue( p2_array *a )
     if ( a->size )
     {
         a->size--;
-        return elmt( a, a->size );
+        return ELMT( a, a->size );
     }
 
     else
@@ -278,15 +315,15 @@ void *p2_array__insert_before( p2_array *a, int i, void *p )
 {
     int j;
 
-    if ( inbounds( a, i ) )
+    if ( INBOUNDS( a, i ) )
     {
         if ( !sizeup( a ) )
             return 0;
 
         for ( j = a->size; j > i; j-- )
-            elmt( a, j ) = elmt( a, j - 1 );
+            ELMT( a, j ) = ELMT( a, j - 1 );
 
-        elmt( a, i ) = p;
+        ELMT( a, i ) = p;
         a->size++;
 
         return p;
@@ -304,15 +341,15 @@ void *p2_array__insert_after( p2_array *a, int i, void *p )
 {
     int j;
 
-    if ( inbounds( a, i ) )
+    if ( INBOUNDS( a, i ) )
     {
         if ( !sizeup( a ) )
             return 0;
 
         for ( j = a->size; j > ( i + 1 ); j-- )
-            elmt( a, j ) = elmt( a, j - 1 );
+            ELMT( a, j ) = ELMT( a, j - 1 );
 
-        elmt( a, i + 1 ) = p;
+        ELMT( a, i + 1 ) = p;
         a->size++;
 
         return p;
@@ -331,12 +368,12 @@ void *p2_array__remove( p2_array *a, int i )
     int j;
     void *displaced;
 
-    if ( inbounds( a, i ) )
+    if ( INBOUNDS( a, i ) )
     {
-        displaced = elmt( a, i );
+        displaced = ELMT( a, i );
 
         for ( j = i; j < ( a->size - 1 ); j++ )
-            elmt( a, j ) = elmt( a, j + 1 );
+            ELMT( a, j ) = ELMT( a, j + 1 );
 
         a->size--;
 
@@ -355,12 +392,12 @@ void *p2_array__simple_remove( p2_array *a, int i )
 {
     void **addr, *displaced;
 
-    if ( inbounds( a, i ) )
+    if ( INBOUNDS( a, i ) )
     {
-        addr = &elmt( a, i );
+        addr = &ELMT( a, i );
         displaced = *addr;
         a->size--;
-        *addr = elmt( a, a->size );
+        *addr = ELMT( a, a->size );
 
         return displaced;
     }
@@ -436,28 +473,29 @@ static p2_array *normalize( p2_array *a )
     int i, size = a->size, buffer_size = a->buffer_size, head = a->head;
 
     void **buffer = a->buffer;
-    void **buffer_new = buffer_new( a->size );
+    void **BUFFER_NEW = BUFFER_NEW( size );
 
-    if ( !buffer_new )
+    if ( !BUFFER_NEW )
         return 0;
 
     for ( i = 0; i < size; i++ )
-        buffer_new[i] = buffer[ ( i + head ) % buffer_size ];
+        BUFFER_NEW[i] = buffer[ ( i + head ) % buffer_size ];
 
     free( a->buffer );
-    a->buffer = buffer_new;
+    a->buffer = BUFFER_NEW;
     return a;
 }
 
 
+/* Note: compare to qsort in stdlib.h */
 void p2_array__sort( p2_array *a, comparator compare )
 {
     mergesort_state state;
     state.compare = compare;
 
     /* Normalize the array a so that the mergesort algorithm doesn't have to
-       deal with index wrapping. */
-    if ( !normalize( a ) || !( state.aux = buffer_new( a->size ) ) )
+       deal with index WRAPping. */
+    if ( !normalize( a ) || !( state.aux = BUFFER_NEW( a->size ) ) )
     {
         ERROR( "p2_array__sort: allocation failure" );
         return;
@@ -494,7 +532,7 @@ void p2_array__distribute( p2_array *a, p2_procedure *p )
 
     for ( i = 0; i < a->size; i++ )
     {
-        if ( ( action = p2_procedure__execute( p, elmt( a, i ) ) ) )
+        if ( ( action = p2_procedure__execute( p, ELMT( a, i ) ) ) )
         {
             switch ( action->type )
             {
@@ -504,7 +542,7 @@ void p2_array__distribute( p2_array *a, p2_procedure *p )
 
                 case p2_action__type__replace:
 
-                    elmt( a, i ) = action->value;
+                    ELMT( a, i ) = action->value;
                     break;
 
                 default:
@@ -529,7 +567,7 @@ p2_array *p2_array__clear( p2_array *a )
 p2_array *p2_array__minimize( p2_array *a )
 {
     int i;
-    void **buffer_new;
+    void **BUFFER_NEW;
     int buffer_size_new;
 
     if ( a->size >= a->buffer_size )
@@ -538,17 +576,17 @@ p2_array *p2_array__minimize( p2_array *a )
     buffer_size_new = ( a->size )
         ? a->size : 1;
 
-    if ( !( buffer_new = buffer_new( a->size ) ) )
+    if ( !( BUFFER_NEW = BUFFER_NEW( a->size ) ) )
     {
         ERROR( "p2_array__minimize: allocation failure" );
         return 0;
     }
 
     for ( i = 0; i < a->size; i++ )
-        buffer_new[i] = elmt( a, i );
+        BUFFER_NEW[i] = ELMT( a, i );
 
     free( a->buffer );
-    a->buffer = buffer_new;
+    a->buffer = BUFFER_NEW;
     a->buffer_size = buffer_size_new;
     a->head = 0;
 
@@ -563,7 +601,7 @@ static void encode
     ( void **cur, char *buffer, int delimit )
 {
     p2_object *o;
-    void **sup;
+    void **lim;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
     if ( ( unsigned int ) *cur == 2 )
@@ -591,16 +629,16 @@ static void encode
             buffer += 2;
         }
 
-        sup = cur + ( unsigned int ) *cur;
+        lim = cur + ( unsigned int ) *cur;
         cur++;
-        while ( cur < sup )
+        while ( cur < lim )
         {
             encode( cur, buffer, 1 );
             buffer += strlen( buffer );
 
             cur += ( unsigned int ) *cur;
 
-            if ( cur < sup )
+            if ( cur < lim )
             {
                 sprintf( buffer, " " );
                 buffer++;
@@ -636,7 +674,7 @@ static void p2_array__encode( p2_array *a, char *buffer )
     {
         for ( i = 0; i < a->size; i++ )
         {
-            o = ( p2_object* ) elmt( a, i );
+            o = ( p2_object* ) ELMT( a, i );
 
             if ( i )
             {

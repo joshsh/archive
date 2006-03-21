@@ -103,7 +103,7 @@ void p2_array__debug( )
     func_begin( "p2_array__debug" );
 
     p2_array *array = p2_array__new( 200, 2.0 );
-    int *foo = ( int* ) malloc( sizeof( int ));
+    int *foo = new( int );
     p2_array__push( array, foo );
     p2_array__for_all( array, p2_set__free );
     p2_array__delete( array );
@@ -120,16 +120,16 @@ void p2_bunch__debug( )
 
     p2_bunch *bunch = p2_bunch__new( 1000 );
     for (i = 0; i < 10000; i++ )
-        p2_bunch__add( bunch, malloc( sizeof( void* )));
+        p2_bunch__add( bunch, new( void* ));
     p2_bunch__for_all( bunch, p2_set__free );
     p2_bunch__delete( bunch );
 
     bunch = p2_bunch__new( 100 );
     for (i = 0; i < 10000; i++ )
-        p2_bunch__add( bunch, malloc( sizeof( void* )));
+        p2_bunch__add( bunch, new( void* ));
     p2_bunch__exclude_if( bunch, is_odd );
     for (i = 0; i < 10000; i++ )
-        p2_bunch__add( bunch, malloc( sizeof( void* )));
+        p2_bunch__add( bunch, new( void* ));
     p2_bunch__exclude_if( bunch, is_even );
     p2_bunch__exclude_if( bunch, is_odd );
     p2_bunch__delete( bunch );
@@ -157,7 +157,7 @@ void p2_hash_table__debug( )
 
     table = p2_hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
     for ( i = 0; i < 1000; i++ )
-        p2_hash_table__add( table, malloc( sizeof( void* )), VP 42 );
+        p2_hash_table__add( table, new( void* ), VP 42 );
     p2_hash_table__for_all_keys( table, p2_set__free );
     p2_hash_table__delete( table );
 
@@ -204,7 +204,7 @@ void p2_set__debug( )
     set = p2_set__new( 1000, 0, 0 );
     for ( i = 0; i < 500; i++ )
     {
-        p2_set__add( set, malloc( sizeof( void* )));
+        p2_set__add( set, new( void* ));
     }
     p2_set__for_all( set, p2_set__free );
     p2_set__delete( set );
@@ -248,13 +248,13 @@ void p2_term__debug( )
 
     /* Test cleanup *******************/
 
-    term1 = p2_term__new( malloc( sizeof( void * )), 0 );
-    term3 = p2_term__new( malloc( sizeof( void * )), 100 );
+    term1 = p2_term__new( new( void* ), 0 );
+    term3 = p2_term__new( new( void* ), 100 );
     for ( i = 0; i < 42; i++ )
     {
-        term2 = p2_term__new( malloc( sizeof( void * )), 100 );
+        term2 = p2_term__new( new( void* ), 100 );
         term1 = p2_term__cat( term1, term2 );
-        term4 = p2_term__new( malloc( sizeof( void * )), 100 );
+        term4 = p2_term__new( new( void* ), 100 );
         term3 = p2_term__cat( term3, term4 );
     }
     term5 = p2_term__merge_ra( term1, term3 );

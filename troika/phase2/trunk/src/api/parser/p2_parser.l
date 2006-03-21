@@ -82,7 +82,7 @@ int line_number, column_number, last_column_number, statement_number;
 /** Decorate command-line input. */
 void print_input_prefix();
 
-void new_token( int length );
+void new_token( int /* length */ );
 
 void new_line();
 

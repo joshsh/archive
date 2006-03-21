@@ -19,8 +19,38 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "p2_bunch.h"
 
-#include <stdlib.h>  /* malloc */
-#include <string.h>  /* memcpy */
+
+typedef struct block block;
+
+/** \brief A container for an array of pointers.
+    May be completely or partially full. */
+struct block
+{
+    /** The number of (void *) cells in the buffer. */
+    unsigned int size;
+
+    /** The number of cells which contain meaningful data. */
+    unsigned int filled;
+
+    /** A simple pointer array. */
+    void **buffer;
+
+};
+
+/** \brief A container for large, unordered bags of references.
+    Consists of a p2_array of "blocks" of a preferred size.
+    May contain nulls and/or repeat references. */
+struct p2_bunch
+{
+    /** An expanding array of memory blocks. */
+    p2_array *blocks;
+
+    /** The intended size of a block. */
+    unsigned int block_size;
+
+    /** Saves on array lookups. */
+    block *last_block;
+};
 
 
 /******************************************************************************/
@@ -28,7 +58,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 static block *block__new(unsigned int size)
 {
-    block *bl = (block *) malloc(sizeof(block));
+    block *bl = new( block );
 
     if (bl)
     {
@@ -37,7 +67,7 @@ static block *block__new(unsigned int size)
 
         /*~ take memory faults into account (actual block size might have to be
             smaller than the intended size). */
-        if (!(bl->buffer = (void **) malloc(size * sizeof(void *))))
+        if (!(bl->buffer = malloc(size * sizeof(void *))))
             bl = 0;
     }
 
@@ -47,14 +77,14 @@ static block *block__new(unsigned int size)
 
 static block *block__copy(block *bl)
 {
-    block *bl2 = (block *) malloc(sizeof(block));
+    block *bl2 = new( block );
 
     if (bl2)
     {
         bl2->size = bl->size;
         bl2->filled = bl->filled;
 
-        if (!(bl2->buffer = (void **) malloc(bl2->size * sizeof(void *))))
+        if (!(bl2->buffer = malloc(bl2->size * sizeof(void *))))
             bl2 = 0;
         else
             memcpy(bl2->buffer, bl->buffer, bl->filled * sizeof(void *));
@@ -78,7 +108,7 @@ static void *block__delete(block *bl)
 
 p2_bunch *p2_bunch__new(unsigned int block_size)
 {
-    p2_bunch *b = (p2_bunch *) malloc(sizeof(p2_bunch));
+    p2_bunch *b = new( p2_bunch );
 
     #if DEBUG__BUNCH
     printf( "[%#x] p2_bunch__new(%i)\n", ( int ) b, block_size );
@@ -107,14 +137,15 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
     int i, size = b->block_size;
     block *bl;
 
-    p2_bunch *b2 = (p2_bunch *) malloc(sizeof(p2_bunch));
+    p2_bunch *b2 = new( p2_bunch );
 
     #if DEBUG__BUNCH
     printf( "[%#x] p2_bunch__copy(%#x)\n", ( int ) b2, ( int ) b );
     #endif
 
     b2->block_size = size;
-    b2->blocks = p2_array__new(b->blocks->size, b->blocks->expansion);
+    b2->blocks = p2_array__new
+        (p2_array__size(b->blocks), p2_array__expansion(b->blocks));
 
     for (i = 0; i < size; i++)
     {
@@ -122,7 +153,7 @@ p2_bunch *p2_bunch__copy(p2_bunch *b)
         p2_array__enqueue(b2->blocks, (void *) bl);
     }
 
-    b2->last_block = (block *) p2_array__get(b2->blocks, b2->blocks->size - 1);
+    b2->last_block = (block *) p2_array__get(b2->blocks, p2_array__size(b2->blocks) - 1);
 
     return b2;
 }
@@ -158,7 +189,7 @@ void p2_bunch__delete( p2_bunch *b )
 
 unsigned int p2_bunch__size(p2_bunch *b)
 {
-    return (b->blocks->size * b->block_size) - (b->block_size - b->last_block->filled);
+    return (p2_array__size(b->blocks) * b->block_size) - (b->block_size - b->last_block->filled);
 }
 
 
@@ -193,13 +224,13 @@ void p2_bunch__add_all(p2_bunch *dest, p2_bunch *src)
     }
 
     /* Add all source blocks. */
-    size = src->blocks->size;
+    size = p2_array__size(src->blocks);
     for (i = 0; i < size; i++)
         p2_array__enqueue(dest->blocks,
             (void *) block__copy((block *) p2_array__get(src->blocks, i)));
 
     /* Find the new tail-end block. */
-    dest->last_block = (block *) p2_array__get(dest->blocks, dest->blocks->size - 1);
+    dest->last_block = (block *) p2_array__get(dest->blocks, p2_array__size(dest->blocks) - 1);
 
     /* Add all items from the previous tail-end block (if any). */
     for ( i = 0; i < last_block->filled; i++ )
@@ -220,12 +251,12 @@ void *p2_bunch__remove(p2_bunch *b)
 
         if (bl == b->last_block)
         {
-            b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+            b->last_block = (block *) p2_array__get(b->blocks, p2_array__size(b->blocks) - 1);
             return b;
         }
 
         else
-            b->last_block = (block *) p2_array__get(b->blocks, b->blocks->size - 1);
+            b->last_block = (block *) p2_array__get(b->blocks, p2_array__size(b->blocks) - 1);
     }
 
     return p;
@@ -234,7 +265,7 @@ void *p2_bunch__remove(p2_bunch *b)
 
 void p2_bunch__distribute( p2_bunch *b, p2_procedure *p )
 {
-    unsigned int i, j, numblocks = b->blocks->size;
+    unsigned int i, j, numblocks = p2_array__size(b->blocks);
     block *bl;
     p2_action *action;
 
@@ -276,7 +307,7 @@ void p2_bunch__distribute( p2_bunch *b, p2_procedure *p )
                             else
                             {
                                 numblocks--;
-                                b->last_block = ( block* ) p2_array__get( b->blocks, b->blocks->size - 1 );
+                                b->last_block = ( block* ) p2_array__get( b->blocks, p2_array__size(b->blocks) - 1 );
                             }
                         }
                         j--;

@@ -49,12 +49,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../p2_type.h"
 
 
+typedef struct p2_term p2_term;
+
 /** \brief A data structure to represent and manipulate nested sequences.
     The implementation is not recursive.
 
     \note An empty p2_term has no data; it is represented by the NULL.
  */
-typedef struct _p2_term
+struct p2_term
 {
     /** Number of cells the buffer can hold. */
     unsigned int buffer_size;
@@ -71,8 +73,7 @@ typedef struct _p2_term
 
     /** The buffer expands by this factor whenever it becomes full. */
     unsigned int expansion;
-
-} p2_term;
+};
 
 
 

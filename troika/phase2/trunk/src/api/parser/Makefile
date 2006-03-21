@@ -41,7 +41,7 @@ valgrind-session :  $(DEBUGGER)
 	$(VALGRIND) debugger
 
 
-debugger :  objects debugger.c p2_array.o p2_term.o p2_type.o p2_parser.h p2_name.o ../flags.h
+debugger :  objects debugger.c p2_array.o p2_term.o p2_type.o p2_parser.h p2_name.o ../settings.h
 	$(CC) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o p2_type.o
 
 
@@ -59,11 +59,11 @@ $(NAME).tab.o : $(NAME).tab.c
 	$(CC) -c $(NAME).tab.c
 
 
-lex.yy.c : $(NAME).l p2_parser.h ../flags.h
+lex.yy.c : $(NAME).l p2_parser.h ../settings.h
 	$(LEX) $(NAME).l
 
 
-$(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../flags.h
+$(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../settings.h
 	$(YACC) -dv $(NAME).y
 
 
@@ -73,13 +73,13 @@ $(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../flags.h
 ##	$(CC) $(CFLAGS) -c $(NAME)-aux.c
 
 
-p2_ast.o : p2_ast.c ../flags.h
+p2_ast.o : p2_ast.c ../settings.h
 	$(CC) -c p2_ast.c
 
-p2_type.o : ../p2_type.c ../flags.h
+p2_type.o : ../p2_type.c ../settings.h
 	$(CC) -c ../p2_type.c
 
-p2_name.o : $(UTILS)/p2_name.c ../flags.h
+p2_name.o : $(UTILS)/p2_name.c ../settings.h
 	$(CC) -c $(UTILS)/p2_name.c
 
 

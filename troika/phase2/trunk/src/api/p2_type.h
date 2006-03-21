@@ -31,6 +31,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <p2.h>
 
 
+typedef struct p2_type p2_type;
+
 enum p2_type__flags
 {
     TYPE__IS_OBJ_COLL         = 0x1,
@@ -39,14 +41,14 @@ enum p2_type__flags
 
 
 /** */
-typedef struct _p2_type
+struct p2_type
 {
     /** */
     char *name;
 
     int flags;
 
-    struct _p2_type *type_arg;
+    p2_type *type_arg;
 
     /** Copy constructor. */
     copy_cons   clone;
@@ -67,8 +69,7 @@ typedef struct _p2_type
     criterion2  equals;
 
     sort_f      sort;
-
-} p2_type;
+};
 
 
 #define any_type    ( p2_type* ) 42

@@ -17,9 +17,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_environment.h"
-#include "util/p2_name.h"
-#include "util/p2_term.h"
+#include <p2_environment.h>
+#include <util/p2_name.h>
+#include <util/p2_term.h>
 
 
 static p2_namespace_o *ns__new( p2_type *ns_t )
@@ -132,6 +132,10 @@ printf( "---e 1---\n" ); fflush( stdout );
     if ( !( env = new( p2_environment ) ) )
         return 0;
 printf( "---e 2---\n" ); fflush( stdout );
+
+    #if DEBUG__ENV
+    printf( "[%#x] p2_environment__new()\n", ( int ) env );
+    #endif
 
     env->prim_t = env->ns_t = env->type_t = 0;
     env->combinators = env->data = env->primitives = env->root = env->types = 0;
@@ -258,6 +262,10 @@ void p2_environment__delete( p2_environment *env )
     }
     #endif
 
+    #if DEBUG__ENV
+    printf( "[] p2_environment__delete(%#x)\n", ( int ) env );
+    #endif
+
 printf( "---e d 1---\n" ); fflush( stdout );
     /* Preserve only data type objects. */
     env->manager->root = env->types;
@@ -281,11 +289,8 @@ printf( "---e d 9---\n" ); fflush( stdout );
 }
 
 
-p2_object *p2_environment__register_primitive(
-    p2_environment *env,
-    p2_primitive *prim,
-    int flags,
-    void ( *src_f ) ( void ) )
+p2_object *p2_environment__register_primitive
+    ( p2_environment *env, p2_primitive *prim, int flags, generic_f src_f )
 {
     p2_object *o;
 
@@ -300,11 +305,16 @@ p2_object *p2_environment__register_primitive(
     if ( flags & PRIM__ENCODER )
         first_param->encode = ( encoder ) src_f;
 
-    if ( !( o = p2_object__new( env->prim_t, prim, 0 ) ) )
+    if ( !( o = p2_object__new( env->prim_t, prim, OBJECT__IMMUTABLE ) ) )
     {
         p2_primitive__delete( prim );
         return 0;
     }
+
+    #if DEBUG__ENV
+    printf( "[%#x] p2_environment__register_primitive(%#x, %#x, %i, %#x)\n",
+        ( int ) o, ( int ) env, ( int ) prim, flags, ( int ) src_f );
+    #endif
 
     if ( !p2_memory_manager__add( env->manager, o ) )
     {
@@ -320,11 +330,15 @@ p2_object *p2_environment__register_primitive(
 }
 
 
-p2_object *p2_environment__register_type(
-    p2_environment *env,
-    p2_type *type )
+p2_object *p2_environment__register_type
+    ( p2_environment *env, p2_type *type )
 {
     p2_object *o = p2_object__new( env->type_t, type, OBJECT__IMMUTABLE );
+
+    #if DEBUG__ENV
+    printf( "[%#x] p2_environment__register_type(%#x, %#x)\n",
+        ( int ) o, ( int ) env, ( int ) type );
+    #endif
 
     if ( !o )
         return 0;
@@ -374,8 +388,6 @@ p2_type *p2_environment__resolve_type(
     if ( o->type != env->type_t )
     {
         ERROR( "p2_environment__resolve_type: type mismatch" );
-printf( "    type = '%s' (%i) rather than '%s' (%i)\n",
-o->type->name, (int) o->type, env->ns_t->name, (int) env->ns_t );
         return 0;
     }
     #endif

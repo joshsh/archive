@@ -4,7 +4,7 @@
 #include <p2.h>
 
 
-cstring *system_call( cstring *s );
+int system_call( cstring *s );
 
 
 double double__inverse( double a );

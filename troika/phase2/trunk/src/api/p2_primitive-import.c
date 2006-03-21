@@ -72,7 +72,7 @@ p2_primitive *p2_primitive__new(
     }
     #endif
 
-    p->parameters = ( p2_parameter* ) malloc( arity * sizeof( p2_parameter ) );
+    p->parameters = malloc( arity * sizeof( p2_parameter ) );
     for ( i = 0; i < arity ; i++ )
     {
         /* Mark the parameter as "not yet defined". */

@@ -23,13 +23,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 int main( int argc, char *argv[] )
 {
-    int r = 0;
+    int status = EXIT_SUCCESS;
 
     p2_environment *env;
     p2_compiler *compiler;
 
     if ( !( env = p2_environment__new() ) )
-        r = 1;
+        status = EXIT_FAILURE;
 
     else
     {
@@ -51,12 +51,13 @@ int main( int argc, char *argv[] )
         }
 
         else
-            r = 1;
+            status = EXIT_FAILURE;
 
         p2_environment__delete( env );
     }
 
-    return r;
+    /* See: http://www.jetcafe.org/~jim/c-style.html#Expressions */
+    exit( status );
 }
 
 

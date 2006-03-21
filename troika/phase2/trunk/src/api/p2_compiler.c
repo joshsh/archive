@@ -21,9 +21,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <serial.h>
 #include <sk/sk.h>
 
+#include <time.h>
+
 
 /* Compiler object is global because flex/bison are not thread safe. */
-p2_compiler *compiler = 0;
+static p2_compiler *compiler = 0;
 
 
 /******************************************************************************/
@@ -441,6 +443,28 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 }
 
 
+static void show_license()
+{
+    FILE *license;
+    int c;
+
+    #if DEBUG__COMPILER
+    printf( "[] show_license()\n" );
+    #endif
+
+    if ( !( license = fopen( "../../LICENSE.txt", "r" ) ) )
+    {
+        ERROR( "show_licence: could not open file" );
+        return;
+    }
+
+    while ( ( c = fgetc( license ) ) != EOF )
+        fputc( c, stdout );
+
+    fclose( license );
+}
+
+
 static void new_namespace( p2_compiler *c, p2_ast *args )
 {
     p2_object *o;
@@ -459,7 +483,7 @@ static void new_namespace( p2_compiler *c, p2_ast *args )
     #endif
 
     #if DEBUG__COMPILER
-    printf( "new_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
+    printf( "[] new_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
     name = ( p2_name* ) arg->value;
@@ -485,7 +509,7 @@ static void remove_ns_item( p2_compiler *c, p2_ast *args )
     #endif
 
     #if DEBUG__COMPILER
-    printf( "remove_ns_item(%#x, %#x)\n", ( int ) c, ( int ) args );
+    printf( "[] remove_ns_item(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
     name = ( p2_name* ) arg->value;
@@ -501,7 +525,7 @@ static void save_as( p2_compiler *c, p2_ast *args )
     p2_name *name = ( p2_name* ) arg->value;
 
     #if DEBUG__COMPILER
-    printf( "save_as(%#x, %#x)\n", ( int ) c, ( int ) args );
+    printf( "[] save_as(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
     path = ( char* ) p2_array__peek( name );
@@ -515,8 +539,11 @@ static void garbage_collect( p2_compiler *c )
     p2_memory_manager *m = c->env->manager;
     int size_before, size_after;
 
+    clock_t t = clock();
+    double elapsed_time;
+
     #if DEBUG__COMPILER
-    printf( "garbage_collect(%#x)\n", ( int ) c );
+    printf( "[] garbage_collect(%#x)\n", ( int ) c );
     #endif
 
 printf( "---c gc 1---\n" ); fflush( stdout );
@@ -526,10 +553,13 @@ printf( "---c gc 1---\n" ); fflush( stdout );
     size_after = p2_memory_manager__size( m );
 printf( "---c gc 2---\n" ); fflush( stdout );
 
-    printf( "Collected %i of %i objects (%.3g%%).\n",
+    elapsed_time = difftime( clock(), t );
+
+    printf( "Collected %i of %i objects (%.3g%%) in %fus.\n",
         size_before - size_after,
         size_before,
-        ( ( size_before - size_after ) * 100 ) / ( double ) size_before );
+        ( ( size_before - size_after ) * 100 ) / ( double ) size_before,
+        elapsed_time * 1000000 );
 }
 
 
@@ -544,6 +574,12 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
     {
         if ( n_args( args, 0 ) )
             garbage_collect( compiler );
+    }
+
+    else if ( !strcmp( name, "license" ) )
+    {
+        if ( n_args( args, 0 ) )
+            show_license();
     }
 
     else if ( !strcmp( name, "new" ) )

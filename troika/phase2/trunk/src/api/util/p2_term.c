@@ -49,7 +49,7 @@ p2_term *p2_term__expand( p2_term *t, unsigned int minimum_buffer_size )
 
     /* Copy array data to the new buffer. */
     size = (unsigned int) *(t->head);
-    new_buffer = (void **) malloc(new_buffer_size * sizeof(void *));
+    new_buffer = malloc(new_buffer_size * sizeof(void *));
     new_head = new_buffer + new_buffer_size - size;
     memcpy(new_head, t->head, size * sizeof(void *));
     free(t->buffer);
@@ -78,7 +78,7 @@ p2_term *p2_term__new( void *p, unsigned int initial_buffer_size )
     }
     #endif
 
-    t = (p2_term *) malloc(sizeof(p2_term));
+    t = malloc(sizeof(p2_term));
 
     /* Buffer starts out at this size, but may expand later. */
     if (initial_buffer_size < 2)
@@ -86,7 +86,7 @@ p2_term *p2_term__new( void *p, unsigned int initial_buffer_size )
     t->buffer_size = initial_buffer_size;
 
     /* Create the buffer. */
-    t->buffer = (void **) malloc(t->buffer_size * sizeof(void *));
+    t->buffer = malloc(t->buffer_size * sizeof(void *));
 
     /* Add the atom. */
     t->head = t->buffer + t->buffer_size - 1;
@@ -128,7 +128,7 @@ p2_term *p2_term__copy( p2_term *source )
     t->buffer_size = source->buffer_size;
 
     /* Create the buffer. */
-    t->buffer = ( void** ) malloc( t->buffer_size * sizeof( void* ) );
+    t->buffer = malloc( t->buffer_size * sizeof( void* ) );
 
     /* Set the head of the p2_term and store its size there. */
     t->head = t->buffer + t->buffer_size - size;
@@ -170,7 +170,7 @@ void p2_term__delete( p2_term *t )
 unsigned int p2_term__length( p2_term *t )
 {
     unsigned int length = 0;
-    void **cur, **sup;
+    void **cur, **lim;
 
     cur = t->head;
     if ( *cur == ( void* ) 2 )
@@ -178,8 +178,8 @@ unsigned int p2_term__length( p2_term *t )
     else
     {
         cur++;
-        sup = t->buffer + t->buffer_size;
-        while ( cur < sup )
+        lim = t->buffer + t->buffer_size;
+        while ( cur < lim )
         {
             length++;
             cur += ( unsigned int ) *cur;
@@ -212,7 +212,7 @@ p2_term *p2_term__subterm_at(p2_term *t, int i)
     length = (unsigned int) *cur;
     subterm = new( p2_term );
     subterm->buffer_size = length;
-    subterm->buffer = (void **) malloc(length * sizeof(void *));
+    subterm->buffer = malloc(length * sizeof(void *));
     memcpy(subterm->buffer, cur, length * sizeof(void *));
     subterm->head = subterm->buffer;
 
@@ -392,7 +392,7 @@ p2_term *p2_term__cat(p2_term *t1, p2_term *t2)
 
 static void distribute( void **cur, p2_procedure *p )
 {
-    void **sup;
+    void **lim;
     p2_action *action;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
@@ -419,9 +419,9 @@ static void distribute( void **cur, p2_procedure *p )
     /* If the sub-term contains further sub-terms, recurse through them. */
     else
     {
-        sup = cur + ( unsigned int ) *cur;
+        lim = cur + ( unsigned int ) *cur;
         cur++;
-        while ( cur < sup )
+        while ( cur < lim )
         {
             distribute( cur, p );
             cur += ( unsigned int ) *cur;
@@ -455,7 +455,7 @@ static void encode
     ( void **cur, char *buffer, int delimit )
 {
     p2_object *o;
-    void **sup;
+    void **lim;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
     if ( ( unsigned int ) *cur == 2 )
@@ -483,16 +483,16 @@ static void encode
             buffer += 2;
         }
 
-        sup = cur + ( unsigned int ) *cur;
+        lim = cur + ( unsigned int ) *cur;
         cur++;
-        while ( cur < sup )
+        while ( cur < lim )
         {
             encode( cur, buffer, 1 );
             buffer += strlen( buffer );
 
             cur += ( unsigned int ) *cur;
 
-            if ( cur < sup )
+            if ( cur < lim )
             {
                 sprintf( buffer, " " );
                 buffer++;
@@ -511,8 +511,8 @@ static void encode
 void p2_term__encode( p2_term *t, char *buffer )
 {
 /*
-void **cur = t->head, **sup = t->buffer + t->buffer_size;
-while ( cur < sup ) {
+void **cur = t->head, **lim = t->buffer + t->buffer_size;
+while ( cur < lim ) {
 printf( " %i", ( int ) *cur ); cur++; }
 printf( "\n" );
 */
