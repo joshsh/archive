@@ -130,7 +130,7 @@ p2_ast *p2_ast__int( int i )
 }
 
 
-p2_ast *p2_ast__name( p2_name *name )
+p2_ast *p2_ast__name( Name *name )
 {
     p2_ast *ast = p2_ast__new( NAME_T, name );
 
@@ -227,7 +227,7 @@ void p2_ast__delete( p2_ast *ast )
 
         case NAME_T:
 
-            name__delete( ( p2_name* ) ast->value );
+            name__delete( ( Name* ) ast->value );
             break;
 
         case STRING_T:
@@ -359,7 +359,7 @@ void p2_ast__print( p2_ast *ast )
 
         case NAME_T:
 
-            name__print( ( p2_name* ) ast->value );
+            name__print( ( Name* ) ast->value );
             break;
 
         case STRING_T:

@@ -1,6 +1,6 @@
 /**
 
-\file  p2_namespace.h
+\file  Namespace.h
 
 \brief  A dictionary which may contain other dictionaries.
 
@@ -27,74 +27,75 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_NAMESPACE_H
-#define P2_NAMESPACE_H
+#ifndef NAMESPACE_H
+#define NAMESPACE_H
 
 
 #include "Object.h"
-#include "util/p2_dictionary.h"
-#include "util/p2_name.h"
+#include "util/Dictionary.h"
+#include "util/Name.h"
 
 
-typedef Object p2_namespace_o;
+typedef Object Namespace_o;
+
+typedef struct Namespace Namespace;
 
 /** A namespace is a hash table with associated functions for adding, removing,
     and looking up named objects. */
-typedef struct _p2_namespace
+struct Namespace
 {
     /** A dictionary of objects in the namespace. */
-    p2_dictionary *children;
-
-} p2_namespace;
+    Dictionary *children;
+};
 
 
 /** \return  a new namespace */
-p2_namespace *p2_namespace__new();
+extern Namespace *namespace__new();
 
 /** \param ns  the namespace to destroy */
-void p2_namespace__delete( p2_namespace *ns );
+extern void namespace__delete( Namespace *ns );
 
 /** Adds an object to a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to assign
     \param o  the object to add
     \return  the object displaced by the new */
-Object *p2_namespace__add
-    ( p2_namespace_o *ns_obj, p2_name *name, Object *o );
+extern Object *namespace__add
+    ( Namespace_o *ns_obj, Name *name, Object *o );
 
-Object *p2_namespace__add_simple
-    ( p2_namespace *ns, const char *name, Object *o );
+extern Object *namespace__add_simple
+    ( Namespace *ns, const char *name, Object *o );
 
 /** Finds an object in a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object found */
-Object *p2_namespace__lookup( p2_namespace_o *ns_obj, p2_name *name );
+extern Object *namespace__lookup( Namespace_o *ns_obj, Name *name );
 
 /** Finds an object using a simple name.
     \param ns  the target namespace
     \param s  the local part of the name to look up
     \return  the object found */
-Object *p2_namespace__lookup_simple(
-    p2_namespace *ns, const char *name );
+extern Object *namespace__lookup_simple(
+    Namespace *ns, const char *name );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object removed */
-Object *p2_namespace__remove( p2_namespace_o *ns_obj, p2_name *name );
+extern Object *namespace__remove( Namespace_o *ns_obj, Name *name );
 
-Object *p2_namespace__remove_simple( p2_namespace *ns, char *name );
-
-
-void p2_namespace__show_children( p2_namespace_o *ns_obj );
-
-void p2_namespace__distribute( p2_namespace *ns, p2_procedure *p );
+extern Object *namespace__remove_simple( Namespace *ns, char *name );
 
 
-p2_name *p2_namespace__find( p2_namespace_o *ns_obj, Object *o );
+extern void namespace__show_children( Namespace_o *ns_obj );
+
+extern void namespace__distribute( Namespace *ns, p2_procedure *p );
 
 
-#endif /* P2_NAMESPACE_H */
+extern Name *namespace__find( Namespace_o *ns_obj, Object *o );
+
+
+#endif /* NAMESPACE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

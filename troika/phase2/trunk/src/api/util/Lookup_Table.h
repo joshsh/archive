@@ -1,6 +1,6 @@
 /**
 
-\file  p2_lookup_table.h
+\file  Lookup_Table.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,41 +25,42 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_LOOKUP_TABLE_H
-#define P2_LOOKUP_TABLE_H
+#ifndef LOOKUP_TABLE_H
+#define LOOKUP_TABLE_H
 
 
-#include "Hash_Table.h"
+#include <util/Hash_Table.h>
 
 
-typedef struct _p2_lookup_table__entry
+typedef struct Lookup_Table__Entry Lookup_Table__Entry;
+
+struct Lookup_Table__Entry
 {
     void *key;
     void *target;
-
-} p2_lookup_table__entry;
-
-
-typedef Hash_Table p2_lookup_table;
+};
 
 
-p2_lookup_table *p2_lookup_table__new();
-
-void p2_lookup_table__delete( p2_lookup_table *t );
+typedef Hash_Table Lookup_Table;
 
 
-void p2_lookup_table__add
-    ( p2_lookup_table *t, void * const key, void * const target );
+extern Lookup_Table *lookup_table__new();
 
-void *p2_lookup_table__lookup( p2_lookup_table *t, void * const key );
-
-void p2_lookup_table__remove
-    ( p2_lookup_table *t, void * const src );
+extern void lookup_table__delete( Lookup_Table *t );
 
 
-void p2_lookup_table__distribute( p2_lookup_table *t, p2_procedure *p );
+extern void lookup_table__add
+    ( Lookup_Table *t, void * const key, void * const target );
+
+extern void *lookup_table__lookup( Lookup_Table *t, void * const key );
+
+extern void lookup_table__remove
+    ( Lookup_Table *t, void * const src );
 
 
-#endif  /* P2_LOOKUP_TABLE_H */
+extern void lookup_table__distribute( Lookup_Table *t, p2_procedure *p );
+
+
+#endif  /* LOOKUP_TABLE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

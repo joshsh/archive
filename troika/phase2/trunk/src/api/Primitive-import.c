@@ -17,11 +17,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Primitive-import.h"
+#include <Primitive-import.h>
 
 
 Primitive *primitive__new(
-    p2_environment *env,
+    Environment *env,
     const char *return_type,
     const char *name,
     void *( *cstub )( void** ),
@@ -46,7 +46,7 @@ Primitive *primitive__new(
         return 0;
     }
 
-    p->return_type = p2_environment__resolve_type( env, return_type );
+    p->return_type = environment__resolve_type( env, return_type );
 
     #if DEBUG__SAFE
     if ( !p->return_type )
@@ -85,7 +85,7 @@ Primitive *primitive__new(
 
 
 Primitive *primitive__add_param(
-    p2_environment *env,
+    Environment *env,
     Primitive *p,
     char *type,
     char *name,
@@ -108,7 +108,7 @@ Primitive *primitive__add_param(
     }
     #endif
 
-    if ( !( param.type = p2_environment__resolve_type( env, type ) ) )
+    if ( !( param.type = environment__resolve_type( env, type ) ) )
     {
         ERROR( "primitive__add_param: unknown type" );
         primitive__delete( p );
@@ -138,7 +138,7 @@ Primitive *primitive__add_param(
 
 
 Primitive *primitive__register(
-    p2_environment *env,
+    Environment *env,
     Primitive *p,
     int flags,
     void ( *src_f ) ( void ) )
@@ -158,7 +158,7 @@ Primitive *primitive__register(
         ( int ) p, ( int ) env, ( int ) p, flags, ( int ) src_f, p->name );
     #endif
 
-    p2_environment__register_primitive( env, p, flags, src_f );
+    environment__register_primitive( env, p, flags, src_f );
 
     return p;
 }

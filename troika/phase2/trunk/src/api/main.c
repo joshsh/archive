@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <p2_compiler.h>
+#include <Compiler.h>
 #include <serial.h>
 
 
@@ -25,35 +25,35 @@ int main( int argc, char *argv[] )
 {
     int status = EXIT_SUCCESS;
 
-    p2_environment *env;
-    p2_compiler *compiler;
+    Environment *env;
+    Compiler *compiler;
 
-    if ( !( env = p2_environment__new() ) )
+    if ( !( env = environment__new() ) )
         status = EXIT_FAILURE;
 
     else
     {
-        if ( ( compiler = p2_compiler__new( env ) ) )
+        if ( ( compiler = compiler__new( env ) ) )
         {
             if ( argc > 1 )
             {
                 printf( "Loading namespace from file...\n" );
-                p2_compiler__deserialize( compiler, argv[1] );
+                compiler__deserialize( compiler, argv[1] );
             }
 
             /* Print GPL notice. */
             printf( "\nPhase2 v%s, Copyright (C) 2005 Joshua Shinavier.\n", VERSION );
             printf( "The Phase2 programming environment comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type '_license;' for details.  Type '_quit;' to exit.\n\n" );
 
-            p2_compiler__parse( compiler );
+            compiler__parse( compiler );
 
-            p2_compiler__delete( compiler );
+            compiler__delete( compiler );
         }
 
         else
             status = EXIT_FAILURE;
 
-        p2_environment__delete( env );
+        environment__delete( env );
     }
 
     /* See: http://www.jetcafe.org/~jim/c-style.html#Expressions */

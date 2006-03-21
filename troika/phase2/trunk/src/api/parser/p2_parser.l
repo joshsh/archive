@@ -69,8 +69,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Language module dependencies ***********************************************/
 
-extern int p2_compiler__suppress_output();
-extern int p2_compiler__show_line_numbers();
+extern int compiler__suppress_output();
+extern int compiler__show_line_numbers();
 
 
 /* Line and character numbers *************************************************/
@@ -407,10 +407,10 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
 /** Decorate command-line input. */
 void print_input_prefix()
 {
-    if ( !p2_compiler__suppress_output() )
+    if ( !compiler__suppress_output() )
     {
         /* Display a line number at the beginning of each new line of input. */
-        if ( p2_compiler__show_line_numbers() )
+        if ( compiler__show_line_numbers() )
             printf( "%d ", line_number );
 
         /* Add a prefix to each new line of input, to distinguish it from

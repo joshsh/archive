@@ -20,19 +20,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Collection.h>
 
 
-typedef struct _search_ctx
+typedef struct Search_Ctx Search_Ctx;
+
+struct Search_Ctx
 {
     criterion match;
     Array *results;
     void *single_result;
 
     p2_action action;
-
-} search_ctx;
+};
 
 
 static p2_action * break_true_if_match
-    ( void *data, search_ctx *search )
+    ( void *data, Search_Ctx *search )
 {
     if ( search->match( data ) )
     {
@@ -47,7 +48,7 @@ static p2_action * break_true_if_match
 
 
 static p2_action * break_false_if_nomatch
-    ( void *data, search_ctx *search )
+    ( void *data, Search_Ctx *search )
 {
     if ( search->match( data ) )
         return 0;
@@ -98,7 +99,7 @@ void collection__do_for_all( Collection *c, void_f f )
 
 
 static p2_action * exclude_if_match
-    ( void *data, search_ctx *search )
+    ( void *data, Search_Ctx *search )
 {
     if ( search->match( data ) )
     {
@@ -114,7 +115,7 @@ static p2_action * exclude_if_match
 void collection__exclude_if( Collection *c, criterion cr )
 {
     p2_procedure p;
-    search_ctx search;
+    Search_Ctx search;
 
     search.match = cr;
 
@@ -131,7 +132,7 @@ void collection__exclude_if( Collection *c, criterion cr )
 boolean collection__exists( Collection *c, criterion cr )
 {
     p2_procedure p;
-    search_ctx search;
+    Search_Ctx search;
 
     search.match = cr;
     search.single_result = ( void* ) 0;
@@ -150,7 +151,7 @@ boolean collection__exists( Collection *c, criterion cr )
 void *collection__first_match( Collection *c, criterion cr )
 {
     p2_procedure p;
-    search_ctx search;
+    Search_Ctx search;
 
     search.match = cr;
     search.single_result = 0;
@@ -169,7 +170,7 @@ void *collection__first_match( Collection *c, criterion cr )
 boolean collection__for_all( Collection *c, criterion cr )
 {
     p2_procedure p;
-    search_ctx search;
+    Search_Ctx search;
 
     search.match = cr;
     search.single_result = ( void* ) 1;
@@ -186,7 +187,7 @@ boolean collection__for_all( Collection *c, criterion cr )
 
 
 /* Procedure for pattern matching. */
-static p2_action * add_if_match( void *data, search_ctx *search )
+static p2_action * add_if_match( void *data, Search_Ctx *search )
 {
     if ( search->match( data ) )
     {
@@ -200,7 +201,7 @@ static p2_action * add_if_match( void *data, search_ctx *search )
 Array *collection__match( Collection *c, criterion cr )
 {
     p2_procedure p;
-    search_ctx search;
+    Search_Ctx search;
 
     search.match = cr;
     search.results = array__new( 0, 0 );

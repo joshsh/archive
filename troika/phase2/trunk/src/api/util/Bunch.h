@@ -42,41 +42,41 @@ typedef struct Bunch Bunch;
 /******************************************************************************/
 
 /** Constructor. */
-Bunch *bunch__new(unsigned int block_size);
+extern Bunch *bunch__new(unsigned int block_size);
 
 /** Copy constructor. */
-Bunch *bunch__copy(Bunch *b);
+extern Bunch *bunch__copy(Bunch *b);
 
 /** Destructor. */
-void bunch__delete(Bunch *b);
+extern void bunch__delete(Bunch *b);
 
 
 /******************************************************************************/
 
 /** How big of a bunch is it? */
-unsigned int bunch__size(Bunch *b);
+extern unsigned int bunch__size(Bunch *b);
 
 
 /******************************************************************************/
 
 /** Adds a single item to the bunch. */
-void *bunch__add(Bunch *b, void *p);
+extern void *bunch__add(Bunch *b, void *p);
 
 /** Adds the contents of one bunch to another. */
-void bunch__add_all(Bunch *dest, Bunch *src);
+extern void bunch__add_all(Bunch *dest, Bunch *src);
 
 /** Removes a single item from the bunch. */
-void *bunch__remove(Bunch *b);
+extern void *bunch__remove(Bunch *b);
 
 
 /******************************************************************************/
 
-void bunch__distribute( Bunch *b, p2_procedure *p );
+extern void bunch__distribute( Bunch *b, p2_procedure *p );
 
 
 /******************************************************************************/
 
-Type *bunch__type( const char *name, int flags );
+extern Type *bunch__type( const char *name, int flags );
 
 
 #endif  /* BUNCH_H */

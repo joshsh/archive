@@ -32,11 +32,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/p2_set.h>
 
 
+typedef struct Memory_Manager Memory_Manager;
+
 /** \note  A memory manager is a closed system.  It owns all objects passed to
     it via memory_manager__add, and these objects are not allowed to
     reference any first-class objects which are not themselves owned by the
     manager. */
-typedef struct _Memory_Manager
+struct Memory_Manager
 {
     Bunch *objects;
         Object *objects_o;
@@ -47,31 +49,31 @@ typedef struct _Memory_Manager
         need to be unmarked prior to any algorithm which relies on object
         marking. */
     int clean;
-
-} Memory_Manager;
+};
 
 
 /******************************************************************************/
 
-Memory_Manager *memory_manager__new( Object *root );
-void memory_manager__delete( Memory_Manager *m );
+extern Memory_Manager *memory_manager__new( Object *root );
 
-unsigned int memory_manager__size( Memory_Manager *m );
+extern void memory_manager__delete( Memory_Manager *m );
 
-Object *memory_manager__add( Memory_Manager *m, Object *o );
+extern unsigned int memory_manager__size( Memory_Manager *m );
+
+extern Object *memory_manager__add( Memory_Manager *m, Object *o );
 
 
 /* Tracing / graph traversal **************************************************/
 
-void memory_manager__distribute( Memory_Manager *m, p2_procedure *p );
+extern void memory_manager__distribute( Memory_Manager *m, p2_procedure *p );
 
-p2_set *memory_manager__get_multirefs
+extern p2_set *memory_manager__get_multirefs
     ( Memory_Manager *m, Object *root );
 
 
 /* Mark-and-sweep garbage collection ******************************************/
 
-void memory_manager__mark_and_sweep( Memory_Manager *m );
+extern void memory_manager__mark_and_sweep( Memory_Manager *m );
 
 
 #endif  /* MEMORY_MANAGER_H */

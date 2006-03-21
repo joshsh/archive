@@ -112,7 +112,7 @@ static Term *S_reduce( Term *term )
 /* Assumes left-associative form.
    Note: it's probably worth trying to find a way to consolidate the type
    checking and garbage collection of arguments. */
-static Term *prim_reduce( Term *term, p2_memory_manager *m )
+static Term *prim_reduce( Term *term, Memory_Manager *m )
 {
     unsigned int i;
     Object *o;
@@ -229,7 +229,7 @@ printf( "---sk pr 2a---\n" ); fflush( stdout );
         o = object__new( prim->return_type, result, 0 );
 
         /* Caution: the object's value must be a BRAND NEW value. */
-        p2_memory_manager__add( m, o );
+        memory_manager__add( m, o );
     }
 
     else
@@ -288,7 +288,7 @@ static Term *term_reduce( Term *term )
 
 Term *SK_reduce(
     Term *term,
-    p2_memory_manager *m,
+    Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,

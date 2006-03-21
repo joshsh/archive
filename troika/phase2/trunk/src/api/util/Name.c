@@ -17,13 +17,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_name.h"
+#include "Name.h"
 #include <stdio.h>
 
 
-p2_name *name__new()
+Name *name__new()
 {
-    p2_name *name = array__new( 0, 0 );
+    Name *name = array__new( 0, 0 );
 
     #if DEBUG__NAME
     printf( "[%#x] name__new()\n", ( int ) name );
@@ -40,7 +40,7 @@ static p2_action * delete_string( char *s, void *ignored )
 }
 
 
-void name__delete( p2_name *name )
+void name__delete( Name *name )
 {
     p2_procedure p = { ( procedure ) delete_string, 0 };
 
@@ -61,7 +61,7 @@ void name__delete( p2_name *name )
 }
 
 
-void name__print( p2_name *n )
+void name__print( Name *n )
 {
     char *s;
     int i, size = array__size( n );

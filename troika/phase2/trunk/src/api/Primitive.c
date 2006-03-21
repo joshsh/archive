@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Primitive.h"
+#include <Primitive.h>
 
 
 void primitive__delete( Primitive *prim )

@@ -76,16 +76,16 @@ int yylex( void );
 /* Language module dependencies ***********************************************/
 
 
-extern int p2_compiler__evaluate_command
+extern int compiler__evaluate_command
     ( char * /*name*/, p2_ast * /*args*/ );
 
-extern int p2_compiler__evaluate_expression
-    ( p2_name * /*name*/, p2_ast * /*expr*/ );
+extern int compiler__evaluate_expression
+    ( Name * /*name*/, p2_ast * /*expr*/ );
 
-extern int p2_compiler__handle_parse_error
+extern int compiler__handle_parse_error
     ( char * /*msg*/ );
 
-extern int p2_compiler__suppress_output();
+extern int compiler__suppress_output();
 
 
 /* Lexer dependencies *********************************************************/
@@ -115,7 +115,7 @@ extern int statement_number;
 void handle_command( char * /*name*/, p2_ast * /*args*/ );
 
 /** Evaluate an expression. */
-void handle_expression( p2_name * /*name*/, p2_ast * /*expr*/ );
+void handle_expression( Name * /*name*/, p2_ast * /*expr*/ );
 
 /** Deal gracefully with a parse error. */
 void handle_error();
@@ -416,7 +416,7 @@ statement:
         {
             if ( $1->expr )
                                    /* !      */
-                handle_expression( ( p2_name* ) $1->name, $1->expr );
+                handle_expression( ( Name* ) $1->name, $1->expr );
 
             free( $1 );
         }
@@ -883,7 +883,7 @@ name:
 
 void handle_command( char *name, p2_ast *args )
 {
-    if ( !p2_compiler__suppress_output() )
+    if ( !compiler__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -894,10 +894,10 @@ void handle_command( char *name, p2_ast *args )
     }
 
     /* Note: ownership of name and arguments are conferred to
-       p2_compiler__evaluate_command. */
-    exit_early = exit_early || p2_compiler__evaluate_command( name, args );
+       compiler__evaluate_command. */
+    exit_early = exit_early || compiler__evaluate_command( name, args );
 
-    if ( !p2_compiler__suppress_output() )
+    if ( !compiler__suppress_output() )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
         printf( COMMAND_OUTPUT_SUFFIX );
@@ -908,9 +908,9 @@ void handle_command( char *name, p2_ast *args )
 }
 
 
-void handle_expression( p2_name *name, p2_ast *expr )
+void handle_expression( Name *name, p2_ast *expr )
 {
-    if ( !p2_compiler__suppress_output() )
+    if ( !compiler__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -921,10 +921,10 @@ void handle_expression( p2_name *name, p2_ast *expr )
     }
 
     /* Note: ownership of name and expression are conferred to
-       p2_compiler__evaluate_expression. */
-    exit_early = exit_early || p2_compiler__evaluate_expression( name, expr );
+       compiler__evaluate_expression. */
+    exit_early = exit_early || compiler__evaluate_expression( name, expr );
 
-    if (!p2_compiler__suppress_output())
+    if (!compiler__suppress_output())
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
         printf( EXPRESSION_OUTPUT_SUFFIX );
@@ -939,7 +939,7 @@ void handle_error()
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
-    if ( !p2_compiler__suppress_output() )
+    if ( !compiler__suppress_output() )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -954,9 +954,9 @@ void handle_error()
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
-    exit_early = exit_early || p2_compiler__handle_parse_error( STRDUP( error_msg ) );
+    exit_early = exit_early || compiler__handle_parse_error( STRDUP( error_msg ) );
 
-    if ( !p2_compiler__suppress_output() )
+    if ( !compiler__suppress_output() )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
         printf( ERROR_OUTPUT_SUFFIX );

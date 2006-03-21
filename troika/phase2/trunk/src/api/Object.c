@@ -96,17 +96,17 @@ void object__delete( Object *o )
 
     #if TRIPLES__GLOBAL__IN_EDGES
     if ( o->inbound_edges )
-        p2_lookup_table__delete( o->inbound_edges );
+        lookup_table__delete( o->inbound_edges );
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
     if ( o->outbound_edges )
-        p2_lookup_table__delete( o->outbound_edges );
+        lookup_table__delete( o->outbound_edges );
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
     if ( o->trans_edges )
-        p2_lookup_table__delete( o->trans_edges );
+        lookup_table__delete( o->trans_edges );
     #endif
 
     /* If the object owns its children (and has any), free them. */
@@ -141,7 +141,7 @@ typedef struct _trace_proc_ctx
 
 
 static p2_action * apply_to_assoc_edge
-    ( p2_lookup_table__entry *entry, p2_procedure *p )
+    ( Lookup_Table__Entry *entry, p2_procedure *p )
 {
     #if TRIPLES__IMPLICATION__SP_O
     ... not yet written ...
@@ -190,7 +190,7 @@ printf( "o->type = %#x\n", ( int ) o->type ); fflush( stdout );
 printf( "o->type->name = '%s'\n", o->type->name ); fflush( stdout );
 if ( !strcmp( o->type->name, "int" ) )
 printf( "value = %i\n", *( ( int* ) o->value ) );
-            p2_lookup_table__distribute( o->outbound_edges, state->edge_p );
+            lookup_table__distribute( o->outbound_edges, state->edge_p );
         }
         #endif
     }
@@ -295,7 +295,7 @@ Object *object__multiply
     #if TRIPLES__GLOBAL__OUT_EDGES
 
     return ( subj->outbound_edges ) ?
-        ( Object* ) p2_lookup_table__lookup( subj->outbound_edges, pred ) : 0 ;
+        ( Object* ) lookup_table__lookup( subj->outbound_edges, pred ) : 0 ;
 
     #else
 
@@ -322,7 +322,7 @@ printf( "---o a 1---\n" ); fflush( stdout );
 printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
 
     if ( !subj->outbound_edges
-      && !( subj->outbound_edges = p2_lookup_table__new() ) )
+      && !( subj->outbound_edges = lookup_table__new() ) )
         subj = 0;
 
     else
@@ -331,10 +331,10 @@ printf( "---o a 2---\n" ); fflush( stdout );
 printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
         if ( obj )
 {printf( "---o a 2.1---\n" ); fflush( stdout );
-            p2_lookup_table__add( subj->outbound_edges, pred, obj );
+            lookup_table__add( subj->outbound_edges, pred, obj );
 }
         else
-            p2_lookup_table__remove( subj->outbound_edges, pred );
+            lookup_table__remove( subj->outbound_edges, pred );
 printf( "---o a 3---\n" ); fflush( stdout );
     }
 

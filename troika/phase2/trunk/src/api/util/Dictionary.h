@@ -1,6 +1,6 @@
 /**
 
-\file  p2_dictionary.h
+\file  Dictionary.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,41 +25,41 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_DICTIONARY_H
-#define P2_DICTIONARY_H
+#ifndef DICTIONARY_H
+#define DICTIONARY_H
 
 
-#include "Hash_Table.h"
-#include "Array.h"
+#include <util/Hash_Table.h>
+#include <util/Array.h>
 
 
-typedef Hash_Table p2_dictionary;
+typedef Hash_Table Dictionary;
 
 
-p2_dictionary *dictionary__new();
+extern Dictionary *dictionary__new();
 
-void dictionary__delete( p2_dictionary *dict );
-
-
-void *dictionary__add
-    ( p2_dictionary *dict, const char *key, void *target );
-
-void *dictionary__lookup
-    ( p2_dictionary *dict, const char *key );
-
-void *dictionary__remove
-    ( p2_dictionary *dict, const char *key );
+extern void dictionary__delete( Dictionary *dict );
 
 
-void dictionary__add_all( p2_dictionary *dest, p2_dictionary *src );
+extern void *dictionary__add
+    ( Dictionary *dict, const char *key, void *target );
+
+extern void *dictionary__lookup
+    ( Dictionary *dict, const char *key );
+
+extern void *dictionary__remove
+    ( Dictionary *dict, const char *key );
 
 
-void dictionary__distribute( p2_dictionary *dict, p2_procedure *p );
+extern void dictionary__add_all( Dictionary *dest, Dictionary *src );
 
 
-Array *dictionary__keys( p2_dictionary *dict );
+extern void dictionary__distribute( Dictionary *dict, p2_procedure *p );
 
 
-#endif  /* P2_DICTIONARY_H */
+extern Array *dictionary__keys( Dictionary *dict );
+
+
+#endif  /* DICTIONARY_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

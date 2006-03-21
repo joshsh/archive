@@ -100,7 +100,7 @@ extern &quot;C&quot;
 #define RO  0  /* Referentially opaque. */
 
 
-void *p2_environment__import_primitives( p2_environment *env )
+void *environment__import_primitives( Environment *env )
 {
     Primitive *p;
 

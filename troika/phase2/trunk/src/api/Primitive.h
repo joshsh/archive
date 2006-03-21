@@ -58,9 +58,11 @@ typedef struct _p2_parameter
 } p2_parameter;
 
 
+typedef struct Primitive Primitive;
+
 /** A structure containing a C function pointer together with type information
     and a unique name. */
-typedef struct _Primitive
+struct Primitive
 {
     /** The primitive's return type. */
     Type *return_type;
@@ -77,17 +79,16 @@ typedef struct _Primitive
 
     /** The formal parameters. */
     p2_parameter *parameters;
-
-} Primitive;
+};
 
 
 /******************************************************************************/
 
 
 /** Destructor. */
-void primitive__delete( Primitive *prim );
+extern void primitive__delete( Primitive *prim );
 
-void primitive__encode( Primitive *prim, char *buffer );
+extern void primitive__encode( Primitive *prim, char *buffer );
 
 /*p2_object *primitive__apply( Primitive *prim, void **args );*/
 

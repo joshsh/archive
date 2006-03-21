@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <p2_type.h>
+#include <Type.h>
 
 
 /* Default member functions (use with caution). */

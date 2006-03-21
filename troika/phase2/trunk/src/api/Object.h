@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <p2_type.h>
 
 #ifdef TRIPLES__GLOBAL
-#include <util/p2_lookup_table.h>
+#include <util/Lookup_Table.h>
 #endif
 
 
@@ -64,19 +64,19 @@ struct Object
     #if TRIPLES__GLOBAL__IN_EDGES
     /** Associative edges pointing towards the atom.
         For example, (x, y) from (x, y, Z). */
-    p2_lookup_table *inbound_edges;
+    Lookup_Table *inbound_edges;
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
     /** Associative edges pointing away from the atom.
         For example, (y, z) from (X, y, z). */
-    p2_lookup_table *outbound_edges;
+    Lookup_Table *outbound_edges;
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
     /** Associative edges pointing "through" the atom.
         For example, (x, z) from (x, Y, z). */
-    p2_lookup_table *trans_edges;
+    Lookup_Table *trans_edges;
     #endif
 };
 

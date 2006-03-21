@@ -36,7 +36,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../util/Term.h"
 
 
-typedef enum _p2_ast__type
+typedef enum p2_ast__type p2_ast__type;
+
+enum p2_ast__type
 {
     BAG_T = 0,  /**< A bag composed of terms. */
     CHAR_T,
@@ -46,55 +48,56 @@ typedef enum _p2_ast__type
     STRING_T,
     TERM_T,     /**< A term composed of p2_asts. */
     VOID_T      /**< A generic pointer to data not owned by the AST. */
-} p2_ast__type;
+};
 
 
-const char *p2_ast__type__name( p2_ast__type type );
+extern const char *p2_ast__type__name( p2_ast__type type );
 
+
+typedef struct p2_ast p2_ast;
 
 /** The root node of a Phase2 abstract syntax tree. */
-typedef struct _p2_ast
+struct p2_ast
 {
     p2_ast__type type;
 
     void *value;
-
-} p2_ast;
+};
 
 
 /** \param bag  a Array of AST nodes
     \return  a new AST node of type BAG */
-p2_ast *p2_ast__bag( Array *bag );
+extern p2_ast *p2_ast__bag( Array *bag );
 
-p2_ast *p2_ast__char( char c );
+extern p2_ast *p2_ast__char( char c );
 
-p2_ast *p2_ast__float( double f );
+extern p2_ast *p2_ast__float( double f );
 
-p2_ast *p2_ast__int( int i );
+extern p2_ast *p2_ast__int( int i );
 
 /** \param name  a Array of C strings representing a name
     \return  a new AST node of type NAME */
-p2_ast *p2_ast__name( p2_name *name );
+extern p2_ast *p2_ast__name( p2_name *name );
 
-p2_ast *p2_ast__string( char *s );
+extern p2_ast *p2_ast__string( char *s );
 
 /** \param term  a Term of AST nodes
     \return  a new AST node of type TERM */
-p2_ast *p2_ast__term( Term *term );
+extern p2_ast *p2_ast__term( Term *term );
 
 
-p2_ast *p2_ast__void( void *p );
+extern p2_ast *p2_ast__void( void *p );
 
 
-int p2_ast__size( p2_ast *ast );
+extern int p2_ast__size( p2_ast *ast );
 
 
 /** \param ast  AST node to free */
-void p2_ast__delete( p2_ast *ast );
+extern void p2_ast__delete( p2_ast *ast );
 
 
 /** \param ast  AST node to print */
-void p2_ast__print( p2_ast *ast );
+extern void p2_ast__print( p2_ast *ast );
 
 
 #endif  /* P2_AST_H */

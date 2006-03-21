@@ -17,25 +17,26 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_graph.h"
+#include <util/Graph.h>
 
 
-typedef struct _graph_edge
+typedef struct Graph_Edge Graph_Edge;
+
+struct Graph_Edge
 {
     void *src;
     void *dest;
+};
 
-} graph_edge;
 
-
-static p2_action * graph_edge__delete( graph_edge *edge, void *ignored )
+static p2_action * graph_edge__delete( Graph_Edge *edge, void *ignored )
 {
     free( edge );
     return 0;
 }
 
 
-static unsigned int hash( const graph_edge *edge )
+static unsigned int hash( const Graph_Edge *edge )
 {
     return ( unsigned int ) edge->dest - ( unsigned int ) edge->src;
 }
@@ -44,8 +45,8 @@ static unsigned int hash( const graph_edge *edge )
 /* Works well enough for addresses so long as there's a one-to-one correspondence
    between addresses and key values. */
 static int compare(
-    const graph_edge *edge1,
-    const graph_edge *edge2 )
+    const Graph_Edge *edge1,
+    const Graph_Edge *edge2 )
 {
     return ( edge1->src != edge2->src || edge1->dest != edge2->dest );
 }
@@ -54,7 +55,7 @@ static int compare(
 /******************************************************************************/
 
 
-p2_graph *p2_graph__new()
+Graph *graph__new()
 {
     Hash_Table *h = hash_table__new( 0, 0, 0,
         ( hash_f ) hash, ( comparator ) compare );
@@ -63,7 +64,7 @@ p2_graph *p2_graph__new()
 }
 
 
-void p2_graph__delete( p2_graph *g )
+void graph__delete( Graph *g )
 {
     /* Destroy graph entries. */
     p2_procedure p = { ( procedure ) graph_edge__delete, 0 };
@@ -73,31 +74,31 @@ void p2_graph__delete( p2_graph *g )
 }
 
 
-void p2_graph__connect
-    ( p2_graph *g, void * const src, void * const dest )
+void graph__connect
+    ( Graph *g, void * const src, void * const dest )
 {
-    graph_edge *edge_new, *edge_old;
+    Graph_Edge *edge_new, *edge_old;
 
-    if ( !( edge_new = new( graph_edge ) ) )
+    if ( !( edge_new = new( Graph_Edge ) ) )
         return;
 
     edge_new->src = src;
     edge_new->dest = dest;
 
-    if ( ( edge_old = ( graph_edge* ) hash_table__add( g, edge_new ) ) )
+    if ( ( edge_old = ( Graph_Edge* ) hash_table__add( g, edge_new ) ) )
         free( edge_old );
 }
 
 
-void p2_graph__disconnect
-    ( p2_graph *g, void * const src, void * const dest )
+void graph__disconnect
+    ( Graph *g, void * const src, void * const dest )
 {
-    graph_edge *edge_old;
-    graph_edge edge_cmp;
+    Graph_Edge *edge_old;
+    Graph_Edge edge_cmp;
     edge_cmp.src = src;
     edge_cmp.dest = dest;
 
-    if ( ( edge_old = ( graph_edge* ) hash_table__remove( g, &edge_cmp ) ) )
+    if ( ( edge_old = ( Graph_Edge* ) hash_table__remove( g, &edge_cmp ) ) )
         free( edge_old );
 }
 

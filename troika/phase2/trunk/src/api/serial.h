@@ -28,12 +28,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#include <p2_compiler.h>
+#include <Compiler.h>
 
 
-void p2_compiler__serialize( p2_compiler *c, char *path );
+extern void compiler__serialize( Compiler *c, char *path );
 
-void p2_compiler__deserialize( p2_compiler *c, char *path );
+extern void compiler__deserialize( Compiler *c, char *path );
 
 
 #endif  /* SERIAL_H */

@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "../util/Array.h"
-#include "../util/p2_dictionary.h"
+#include "../util/Dictionary.h"
 
 #include <string.h>
 
@@ -97,8 +97,8 @@ typedef struct _rule
 
     int nullable;
 
-    p2_dictionary *first_set;
-    p2_dictionary *follow_set;
+    Dictionary *first_set;
+    Dictionary *follow_set;
 
 } rule;
 
@@ -147,17 +147,17 @@ static p2_action * rule__delete( rule *r, void *ignored )
 /******************************************************************************/
 
 
-p2_dictionary *rule_dict;
+Dictionary *rule_dict;
 
 
-static p2_action * add_to_dict( char *name, p2_dictionary *d )
+static p2_action * add_to_dict( char *name, Dictionary *d )
 {
     dictionary__add( d, name, name );
     return 0;
 }
 
 
-static void find_sets( Array *rules, p2_dictionary *dict )
+static void find_sets( Array *rules, Dictionary *dict )
 {
     int changed = 1, i, j, k, n, n_rules = array__size( rules ), n_prods, nullable_old, size_old;
     rule *r, *r2, *r3;

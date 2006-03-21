@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_dictionary.h"
+#include <util/Dictionary.h>
 
 
 typedef struct _dictionary_entry
@@ -92,7 +92,7 @@ static int compare(
 /******************************************************************************/
 
 
-p2_dictionary *dictionary__new()
+Dictionary *dictionary__new()
 {
     Hash_Table *h = hash_table__new( 0, 0, 0,
         ( hash_f ) hash, ( comparator ) compare );
@@ -101,7 +101,7 @@ p2_dictionary *dictionary__new()
 }
 
 
-void dictionary__delete( p2_dictionary *dict )
+void dictionary__delete( Dictionary *dict )
 {
     /* Destroy dictionary entries. */
     p2_procedure p;
@@ -116,7 +116,7 @@ void dictionary__delete( p2_dictionary *dict )
 
 
 void *dictionary__add
-    ( p2_dictionary *dict, const char *key, void *target )
+    ( Dictionary *dict, const char *key, void *target )
 {
     dictionary_entry *old_entry, *new_entry;
     void *r = 0;
@@ -133,7 +133,7 @@ void *dictionary__add
 
 
 void *dictionary__lookup
-    ( p2_dictionary *dict, const char *key )
+    ( Dictionary *dict, const char *key )
 {
     dictionary_entry *entry;
     dictionary_entry match_entry;
@@ -146,7 +146,7 @@ void *dictionary__lookup
 
 
 void *dictionary__remove
-    ( p2_dictionary *dict, const char *key )
+    ( Dictionary *dict, const char *key )
 {
     void *r = 0;
     dictionary_entry *entry;
@@ -170,14 +170,14 @@ void *dictionary__remove
 /******************************************************************************/
 
 
-p2_action * add_to_dict( dictionary_entry *entry, p2_dictionary *dest )
+p2_action * add_to_dict( dictionary_entry *entry, Dictionary *dest )
 {
     dictionary__add( dest, entry->key, entry->target );
     return 0;
 }
 
 
-void dictionary__add_all( p2_dictionary *dest, p2_dictionary *src )
+void dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
     p2_procedure proc;
     proc.execute = ( procedure ) add_to_dict;
@@ -199,7 +199,7 @@ static p2_action * apply_to_target
 }
 
 
-void dictionary__distribute( p2_dictionary *dict, p2_procedure *p )
+void dictionary__distribute( Dictionary *dict, p2_procedure *p )
 {
     p2_procedure p_alt;
     p_alt.execute = ( procedure ) apply_to_target;
@@ -221,7 +221,7 @@ static p2_action * add_to_array
 }
 
 
-Array *dictionary__keys( p2_dictionary *dict )
+Array *dictionary__keys( Dictionary *dict )
 {
     Array *a = Array__new( dict->size, 0 );
 

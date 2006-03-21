@@ -1,5 +1,5 @@
 /**
-    \file  p2_environment.h
+    \file  Environment.h
 
     \author  Joshua Shinavier   \n
              parcour@gmail.com  \n
@@ -24,59 +24,60 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_ENVIRONMENT_H
-#define P2_ENVIRONMENT_H
+#ifndef ENVIRONMENT_H
+#define ENVIRONMENT_H
 
 
 #include <Memory_Manager.h>
-#include <p2_namespace.h>
+#include <Namespace.h>
 #include <Primitive.h>
 #include <sk/sk.h>
 
 
+typedef struct Environment Environment;
+
 /** A data structure which is equivalent to a namespace containing uniquely
     named data types, function primitives, and data sets. */
-typedef struct _p2_environment
+struct Environment
 {
     Memory_Manager *manager;
 
-    p2_namespace_o *root;
+    Namespace_o *root;
 
-    p2_namespace_o *combinators;
-    p2_namespace_o *data;
-    p2_namespace_o *primitives;
-    p2_namespace_o *types;
+    Namespace_o *combinators;
+    Namespace_o *data;
+    Namespace_o *primitives;
+    Namespace_o *types;
 
     Type *combinator_t, *ns_t, *prim_t, *type_t;
-
-} p2_environment;
+};
 
 
 /** \return  a new environment */
-p2_environment *p2_environment__new();
+extern Environment *environment__new();
 
 
 /** Destroys an environment. */
-void p2_environment__delete( p2_environment *env );
+extern void environment__delete( Environment *env );
 
 
-Object *p2_environment__register_primitive
-    ( p2_environment *env, Primitive *prim, int flags, generic_f src_f );
+extern Object *environment__register_primitive
+    ( Environment *env, Primitive *prim, int flags, generic_f src_f );
 
 
-Object *p2_environment__register_type
-    ( p2_environment *env, Type *type );
+extern Object *environment__register_type
+    ( Environment *env, Type *type );
 
 
-Type *p2_environment__resolve_type(
-    p2_environment *env,
+extern Type *environment__resolve_type(
+    Environment *env,
     const char *name );
 
 
-/* Externally linked function defined in p2-stubs.c */
-extern void *p2_environment__import_primitives( p2_environment *env );
+/* Defined in p2-stubs.c */
+extern void *environment__import_primitives( Environment *env );
 
 
-#endif  /* P2_ENVIRONMENT_H */
+#endif  /* ENVIRONMENT_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

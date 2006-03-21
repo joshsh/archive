@@ -1,6 +1,6 @@
 /**
 
-\file  p2_graph.h
+\file  Graph.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,28 +25,28 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_GRAPH_H
-#define P2_GRAPH_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
 
-#include "Hash_Table.h"
+#include <util/Hash_Table.h>
 
 
-typedef Hash_Table p2_graph;
+typedef Hash_Table Graph;
 
 
-p2_graph *p2_graph__new();
+extern Graph *graph__new();
 
-void p2_graph__delete( p2_graph *g );
-
-
-void p2_graph__connect
-    ( p2_graph *g, void * const src, void * const dest );
-
-void p2_graph__disconnect
-    ( p2_graph *g, void * const src, void * const dest );
+extern void graph__delete( Graph *g );
 
 
-#endif  /* P2_GRAPH_H */
+extern void graph__connect
+    ( Graph *g, void * const src, void * const dest );
+
+extern void graph__disconnect
+    ( Graph *g, void * const src, void * const dest );
+
+
+#endif  /* GRAPH_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

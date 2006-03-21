@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Hash_Table.h"
+#include <util/Hash_Table.h>
 
 
 /* By default, the hash table will wait until it is 1/3 full before expanding. */

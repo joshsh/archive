@@ -31,35 +31,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_PRIMITIVE_IMPORT_H
-#define P2_PRIMITIVE_IMPORT_H
+#ifndef PRIMITIVE_IMPORT_H
+#define PRIMITIVE_IMPORT_H
 
-#include <p2_environment.h>
+#include <Environment.h>
 
 
-Primitive *primitive__new(
-    p2_environment *env,
+extern Primitive *primitive__new(
+    Environment *env,
     const char *return_type,
     const char *name,
     void *( *cstub )( void** ),
     int arity );
 
 
-Primitive *primitive__add_param(
-    p2_environment *env,
+extern Primitive *primitive__add_param(
+    Environment *env,
     Primitive *p,
     char *type,
     char *name,
     int transparent );
 
 
-Primitive *primitive__register(
-    p2_environment *env,
+extern Primitive *primitive__register(
+    Environment *env,
     Primitive *p,
     int flags,
     void ( *src_f ) ( void ) );
 
 
-#endif  /* P2_PRIMITIVE_IMPORT_H */
+#endif  /* PRIMITIVE_IMPORT_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

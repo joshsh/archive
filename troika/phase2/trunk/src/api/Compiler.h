@@ -1,6 +1,6 @@
 /**
 
-\file  p2_compiler.h
+\file  Compiler.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,26 +25,28 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_COMPILER_H
-#define P2_COMPILER_H
+#ifndef COMPILER_H
+#define COMPILER_H
 
 
-#include <p2_environment.h>
+#include <Environment.h>
 #include <parser/p2_ast.h>
 #include <parser/p2_parser.h>
-#include <util/p2_dictionary.h>
+#include <util/Dictionary.h>
 
 
 /** Bison parser dependency. */
 extern int yyparse();
 
 
-typedef struct _p2_compiler
-{
-    p2_environment *env;
-    p2_namespace_o *cur_ns_obj;
+typedef struct Compiler Compiler;
 
-    p2_dictionary *commands;
+struct Compiler
+{
+    Environment *env;
+    Namespace_o *cur_ns_obj;
+
+    Dictionary *commands;
 
     int locked;
 
@@ -52,40 +54,39 @@ typedef struct _p2_compiler
     Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
 
     boolean suppress_output, show_line_numbers;
-
-} p2_compiler;
+};
 
 
 /** Constructor.
     \param env  an environment for the compiler to act upon */
-p2_compiler *p2_compiler__new( p2_environment *env );
+extern Compiler *compiler__new( Environment *env );
 
 
 /** Destructor. */
-void p2_compiler__delete( p2_compiler *c );
+extern void compiler__delete( Compiler *c );
 
 
 /** yyparse is invoked here. */
-p2_parser__exit_state p2_compiler__parse( p2_compiler *c );
+extern p2_parser__exit_state compiler__parse( Compiler *c );
 
 
 /* Externally linked functions for the parser *********************************/
 
 
-int p2_compiler__evaluate_command( char *name, p2_ast *args );
+extern int compiler__evaluate_command( char *name, p2_ast *args );
 
-int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr );
+extern int compiler__evaluate_expression( Name *name, p2_ast *expr );
 
-int p2_compiler__handle_parse_error( char *msg );
+extern int compiler__handle_parse_error( char *msg );
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-int p2_compiler__suppress_output();
+extern int compiler__suppress_output();
 
 /** \return  whether a line number is printed before each new line of input */
-int p2_compiler__show_line_numbers();
+extern int compiler__show_line_numbers();
 
 
-#endif  /* P2_COMPILER_H */
+#endif  /* COMPILER_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

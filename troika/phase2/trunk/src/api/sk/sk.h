@@ -35,7 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SK_H
 
 
-#include <p2_memory_manager.h>
+#include <Memory_Manager.h>
 #include <util/Term.h>
 
 
@@ -53,7 +53,7 @@ typedef enum _combinator
     form, and is undefined once it has been passed as an argument to this
     function.
 
-    \param p2_memory_manager  memory manager which will claim ownership of any
+    \param Memory_Manager  memory manager which will claim ownership of any
     new objects
 
     \param primitive_type  type of an embedded primitive function
@@ -71,9 +71,9 @@ typedef enum _combinator
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
     which is not an S or K combinator or a primitive, is considered a
     non-redex object. */
-Term *SK_reduce(
+extern Term *SK_reduce(
     Term *term,
-    p2_memory_manager *m,
+    Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,

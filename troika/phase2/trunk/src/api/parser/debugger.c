@@ -29,15 +29,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_ast.h"
-#include "p2_parser.h"
-#include <p2.h>
-
-#include "../util/p2_term.h"
-
 #include <stdio.h>  /* printf */
 #include <string.h>  /* strcmp, strlen */
 #include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
+
+#include "p2_ast.h"
+#include "p2_parser.h"
+#include <p2.h>
 
 
 /** Bison parser dependency. */
@@ -48,7 +46,7 @@ extern int yyparse();
 
 
 /** Mock command evaluator. */
-int p2_compiler__evaluate_command( char *name, p2_ast *args )
+int compiler__evaluate_command( char *name, p2_ast *args )
 {
     int ret = 0;
 
@@ -77,7 +75,7 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
 
 
 /** Mock expression evaluator. */
-int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
+int compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 {
     int ret = 0;
     p2_ast *a;
@@ -102,7 +100,7 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 
 
 /** Mock parse error handler. */
-int p2_compiler__handle_parse_error( char *msg )
+int compiler__handle_parse_error( char *msg )
 {
     int ret = 0;
 
@@ -121,14 +119,14 @@ int p2_compiler__handle_parse_error( char *msg )
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-int p2_compiler__suppress_output()
+int compiler__suppress_output()
 {
     return 0;
 }
 
 
 /** \return  whether a line number is printed before each new line of input */
-int p2_compiler__show_line_numbers()
+int compiler__show_line_numbers()
 {
     return 1;
 }

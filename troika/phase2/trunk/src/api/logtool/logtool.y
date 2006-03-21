@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <util/Array.h>
-#include <util/p2_dictionary.h>
+#include <util/Dictionary.h>
 
 
 extern void new_parse();
@@ -46,7 +46,7 @@ static void production( char *s )
 }
 
 
-p2_dictionary *dict;
+Dictionary *dict;
 
 static void register_failed_login( const char *ip )
 {
@@ -54,7 +54,7 @@ static void register_failed_login( const char *ip )
     dictionary__add( dict, ip, ( void* ) attempts + 1 );
 }
 
-static p2_action *print_offender( char *ip, p2_dictionary *d )
+static p2_action *print_offender( char *ip, Dictionary *d )
 {
     printf( "%s (%i)\n", ip, ( int ) dictionary__lookup( dict, ip ) );
     return 0;

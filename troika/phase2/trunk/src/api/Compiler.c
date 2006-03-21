@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <p2_compiler.h>
+#include <Compiler.h>
 #include <serial.h>
 #include <sk/sk.h>
 
@@ -25,16 +25,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* Compiler object is global because flex/bison are not thread safe. */
-static p2_compiler *compiler = 0;
+static Compiler *compiler = 0;
 
 
 /******************************************************************************/
 
 
 /* Find a data type in the compiler environment's "types" namespace. */
-static Type *lookup_type( p2_environment *env, const char *name )
+static Type *lookup_type( Environment *env, const char *name )
 {
-    Object *o = p2_namespace__lookup_simple( ( p2_namespace* ) env->types->value, name );
+    Object *o = namespace__lookup_simple( ( Namespace* ) env->types->value, name );
 
     if ( !o )
         return 0;
@@ -90,32 +90,32 @@ static void term__encode__alt( Term *t, char *buffer )
 /******************************************************************************/
 
 
-p2_compiler *p2_compiler__new( p2_environment *env )
+Compiler *compiler__new( Environment *env )
 {
-    p2_compiler *c;
+    Compiler *c;
 
     if ( compiler )
     {
-        ERROR( "p2_compiler__new: concurrent compiler instances not allowed" );
+        ERROR( "compiler__new: concurrent compiler instances not allowed" );
         return 0;
     }
 
     #if DEBUG__SAFE
     if ( !env )
     {
-        ERROR( "p2_compiler__new: null environment" );
+        ERROR( "compiler__new: null environment" );
         return 0;
     }
     #endif
 
-    if ( !( c = new( p2_compiler ) ) )
+    if ( !( c = new( Compiler ) ) )
     {
-        ERROR( "p2_compiler__new: allocation failed" );
+        ERROR( "compiler__new: allocation failed" );
         return 0;
     }
 
     #if DEBUG__COMPILER
-    printf( "[%#x] p2_compiler__new(%#x)\n", ( int ) c, ( int ) env );
+    printf( "[%#x] compiler__new(%#x)\n", ( int ) c, ( int ) env );
     #endif
 
     /* These basic types are indispensable for the compiler to communicate with
@@ -127,14 +127,14 @@ p2_compiler *p2_compiler__new( p2_environment *env )
       || !( c->string_t = lookup_type( env, "cstring" ) )
       || !( c->term_t = lookup_type( env, "term" ) ) )
     {
-        ERROR( "p2_compiler__new: basic type not found" );
+        ERROR( "compiler__new: basic type not found" );
         free( c );
         return 0;
     }
 
     if ( !( c->commands = dictionary__new() ) )
     {
-        ERROR( "p2_compiler__new: allocation failed" );
+        ERROR( "compiler__new: allocation failed" );
         free( c );
         return 0;
     }
@@ -151,23 +151,23 @@ p2_compiler *p2_compiler__new( p2_environment *env )
 }
 
 
-void p2_compiler__delete( p2_compiler *c )
+void compiler__delete( Compiler *c )
 {
     #if DEBUG__SAFE
     if ( !c )
     {
-        ERROR( "p2_compiler__delete: null compiler" );
+        ERROR( "compiler__delete: null compiler" );
         return;
     }
     else if ( c->locked )
     {
-        ERROR( "p2_compiler__delete: can't delete while parsing" );
+        ERROR( "compiler__delete: can't delete while parsing" );
         return;
     }
     #endif
 
     #if DEBUG__COMPILER
-    printf( "[] p2_compiler__delete(%#x)\n", ( int ) c );
+    printf( "[] compiler__delete(%#x)\n", ( int ) c );
     #endif
 
     dictionary__delete( c->commands );
@@ -177,20 +177,20 @@ void p2_compiler__delete( p2_compiler *c )
 }
 
 
-p2_parser__exit_state p2_compiler__parse( p2_compiler *c )
+p2_parser__exit_state compiler__parse( Compiler *c )
 {
     p2_parser__exit_state exit_state;
 
     #if DEBUG__SAFE
     if ( !c )
     {
-        ERROR( "p2_compiler__parse: null compiler" );
+        ERROR( "compiler__parse: null compiler" );
         return 1;
     }
     #endif
 
     #if DEBUG__COMPILER
-    printf( "[...] p2_compiler__parse(%#x)\n", ( int ) c );
+    printf( "[...] compiler__parse(%#x)\n", ( int ) c );
     #endif
 
     if ( c->locked )
@@ -199,7 +199,7 @@ p2_parser__exit_state p2_compiler__parse( p2_compiler *c )
     c->locked = 1;
 
     if ( yyparse( &exit_state ) )
-        ERROR( "p2_compiler__parse: parser exited abnormally" );
+        ERROR( "compiler__parse: parser exited abnormally" );
 
     c->locked = 0;
 
@@ -246,15 +246,15 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
-static Object *assign_name( p2_compiler *c, p2_name *name, Object *o )
+static Object *assign_name( Compiler *c, Name *name, Object *o )
 {
-    p2_namespace_o *ns_obj;
+    Namespace_o *ns_obj;
 
     char *first = ( char* ) name__pop( name );
     if ( !strcmp( first, "root" ) )
     {
         ns_obj = c->env->root;
-        o = p2_namespace__add( ns_obj, name, o );
+        o = namespace__add( ns_obj, name, o );
         name__push( name, first );
     }
 
@@ -262,23 +262,23 @@ static Object *assign_name( p2_compiler *c, p2_name *name, Object *o )
     {
         ns_obj = c->cur_ns_obj;
         name__push( name, first );
-        o = p2_namespace__add( ns_obj, name, o );
+        o = namespace__add( ns_obj, name, o );
     }
 
     return o;
 }
 
 
-static Object *resolve_name( p2_compiler *c, p2_name *name )
+static Object *resolve_name( Compiler *c, Name *name )
 {
-    p2_namespace_o *ns_obj;
+    Namespace_o *ns_obj;
     Object *o;
 
     char *first = ( char* ) name__pop( name );
     if ( !strcmp( first, "root" ) )
     {
         ns_obj = c->env->root;
-        o = p2_namespace__lookup( ns_obj, name );
+        o = namespace__lookup( ns_obj, name );
         name__push( name, first );
     }
 
@@ -286,7 +286,7 @@ static Object *resolve_name( p2_compiler *c, p2_name *name )
     {
         ns_obj = c->cur_ns_obj;
         name__push( name, first );
-        o = p2_namespace__lookup( ns_obj, name );
+        o = namespace__lookup( ns_obj, name );
     }
 
     if ( !o )
@@ -360,7 +360,7 @@ static Object *object_for_ast( p2_ast* ast, subst_st *state )
         case NAME_T:
 
             /* Retrieve an existing object and exit. */
-            o = resolve_name( compiler, ( p2_name* ) ast->value );
+            o = resolve_name( compiler, ( Name* ) ast->value );
             p2_ast__delete( ast );
             return o;
 
@@ -400,13 +400,13 @@ printf( "o = %i\n", ( int ) o );
 /* Command functions **********************************************************/
 
 
-static void change_namespace( p2_compiler *c, p2_ast *args )
+static void change_namespace( Compiler *c, p2_ast *args )
 {
 /*
 printf( "args->type = %s\n", p2_ast__type__name( args->type ) ); fflush( stdout );
 */
     Object *o;
-    p2_name *name;
+    Name *name;
 
     p2_ast *arg = get_inner_node( args );
 
@@ -425,7 +425,7 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
     printf( "change_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    name = ( p2_name* ) arg->value;
+    name = ( Name* ) arg->value;
 
     if ( ( o = resolve_name( c, name ) ) )
     {
@@ -465,12 +465,12 @@ static void show_license()
 }
 
 
-static void new_namespace( p2_compiler *c, p2_ast *args )
+static void new_namespace( Compiler *c, p2_ast *args )
 {
     Object *o;
-    p2_name *name;
+    Name *name;
     char *localname;
-    p2_namespace *ns;
+    Namespace *ns;
 
     p2_ast *arg = get_inner_node( args );
 
@@ -486,18 +486,18 @@ static void new_namespace( p2_compiler *c, p2_ast *args )
     printf( "[] new_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    name = ( p2_name* ) arg->value;
+    name = ( Name* ) arg->value;
     o = object__new
-        ( c->env->ns_t, p2_namespace__new(), 0 );
+        ( c->env->ns_t, namespace__new(), 0 );
     memory_manager__add( c->env->manager, o );
 
     assign_name( c, name, o );
 }
 
 
-static void remove_ns_item( p2_compiler *c, p2_ast *args )
+static void remove_ns_item( Compiler *c, p2_ast *args )
 {
-    p2_name *name;
+    Name *name;
     p2_ast *arg = get_inner_node( args );
 
     #if DEBUG__SAFE
@@ -512,17 +512,17 @@ static void remove_ns_item( p2_compiler *c, p2_ast *args )
     printf( "[] remove_ns_item(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    name = ( p2_name* ) arg->value;
+    name = ( Name* ) arg->value;
 
-    p2_namespace__remove( c->cur_ns_obj, name );
+    namespace__remove( c->cur_ns_obj, name );
 }
 
 
-static void save_as( p2_compiler *c, p2_ast *args )
+static void save_as( Compiler *c, p2_ast *args )
 {
     char *path;
     p2_ast *arg = get_inner_node( args );
-    p2_name *name = ( p2_name* ) arg->value;
+    Name *name = ( Name* ) arg->value;
 
     #if DEBUG__COMPILER
     printf( "[] save_as(%#x, %#x)\n", ( int ) c, ( int ) args );
@@ -530,11 +530,11 @@ static void save_as( p2_compiler *c, p2_ast *args )
 
     path = ( char* ) array__peek( name );
 
-    p2_compiler__serialize( c, path );
+    compiler__serialize( c, path );
 }
 
 
-static void garbage_collect( p2_compiler *c )
+static void garbage_collect( Compiler *c )
 {
     Memory_Manager *m = c->env->manager;
     int size_before, size_after;
@@ -566,7 +566,7 @@ printf( "---c gc 2---\n" ); fflush( stdout );
 /* Externally linked functions for the parser *********************************/
 
 
-int p2_compiler__evaluate_command( char *name, p2_ast *args )
+int compiler__evaluate_command( char *name, p2_ast *args )
 {
     int ret = 0;
 
@@ -616,7 +616,7 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
     {
         if ( n_args( args, 0 ) )
         {
-            p2_namespace__show_children( compiler->cur_ns_obj );
+            namespace__show_children( compiler->cur_ns_obj );
         }
     }
 
@@ -639,7 +639,7 @@ int p2_compiler__evaluate_command( char *name, p2_ast *args )
 }
 
 
-int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
+int compiler__evaluate_expression( Name *name, p2_ast *expr )
 {
     subst_st state;
     p2_action action;
@@ -656,13 +656,13 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
     #if DEBUG__SAFE
     if ( !expr )
     {
-        ERROR( "p2_compiler__evaluate_expression: null AST node" );
+        ERROR( "compiler__evaluate_expression: null AST node" );
         return 0;
     }
     #endif
 
     #if DEBUG__COMPILER
-    printf( "p2_compiler__evaluate_expression(%#x, %#x)\n", ( int ) name, ( int ) expr );
+    printf( "compiler__evaluate_expression(%#x, %#x)\n", ( int ) name, ( int ) expr );
     #endif
 
     char__encode = compiler->char_t->encode;
@@ -735,7 +735,7 @@ int p2_compiler__evaluate_expression( p2_name *name, p2_ast *expr )
 }
 
 
-int p2_compiler__handle_parse_error( char *msg )
+int compiler__handle_parse_error( char *msg )
 {
     int ret = 0;
 
@@ -752,13 +752,13 @@ int p2_compiler__handle_parse_error( char *msg )
 }
 
 
-int p2_compiler__suppress_output()
+int compiler__suppress_output()
 {
     return compiler->suppress_output;
 }
 
 
-int p2_compiler__show_line_numbers()
+int compiler__show_line_numbers()
 {
     return compiler->show_line_numbers;
 }

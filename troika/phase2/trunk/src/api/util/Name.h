@@ -1,6 +1,6 @@
 /**
 
-\file  p2_name.h
+\file  Name.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,27 +25,27 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_NAME_H
-#define P2_NAME_H
+#ifndef NAME_H
+#define NAME_H
 
 
-#include "Array.h"
+#include <util/Array.h>
 
 
-typedef Array p2_name;
+typedef Array Name;
 
 
 #define name__peek( name )  ( char* ) array__peek( name )
 #define name__pop( name )  ( char* ) array__pop( name )
 #define name__push( name, s )  array__push( name, s )
 
-p2_name *name__new();
+extern Name *name__new();
 
-void name__delete( p2_name *name );
+extern void name__delete( Name *name );
 
-void name__print( p2_name *name );
+extern void name__print( Name *name );
 
 
-#endif  /* P2_NAME_H */
+#endif  /* NAME_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

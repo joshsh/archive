@@ -42,8 +42,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_TERM_H
-#define P2_TERM_H
+#ifndef TERM_H
+#define TERM_H
 
 
 #include <Type.h>
@@ -79,11 +79,11 @@ struct Term
 
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
     the new buffer will be this much larger. */
-void term__set_expansion( Term *t, unsigned int expansion );
+extern void term__set_expansion( Term *t, unsigned int expansion );
 
 
 /** \note Needed by sk.c. */
-Term *term__expand( Term *t, unsigned int minimum_buffer_size );
+extern Term *term__expand( Term *t, unsigned int minimum_buffer_size );
 
 
 /* Constructors and destructor ************************************************/
@@ -91,13 +91,13 @@ Term *term__expand( Term *t, unsigned int minimum_buffer_size );
 /** Creates a new Term containing a single atom.
     \note  The term does not own its atoms, which will suffer no ill effects
     when the term is deleted. */
-Term *term__new( void *p, unsigned int initial_buffer_size );
+extern Term *term__new( void *p, unsigned int initial_buffer_size );
 
 /** Copy constructor. */
-Term *term__copy( Term *t );
+extern Term *term__copy( Term *t );
 
 /** Destructor. */
-void term__delete( Term *t );
+extern void term__delete( Term *t );
 
 
 /* Accessors ******************************************************************/
@@ -107,12 +107,12 @@ void term__delete( Term *t );
     the term (that's in Term->head) or its physical size in memory
     (*(Term->head) * sizeof(void *)).
     \warning  O(n) time overhead to count n sub-terms. */
-unsigned int term__length( Term *t );
+extern unsigned int term__length( Term *t );
 
-/** \return  a new Term representing the subterm at a given index */
-/** \warning  For the sake of efficiency, there is no error checking.  Make sure
+/** \return  a new Term representing the subterm at a given index
+    \warning  For the sake of efficiency, there is no error checking.  Make sure
     your index is in range by first calling term__length. */
-Term *term__subterm_at( Term *t, int i );
+extern Term *term__subterm_at( Term *t, int i );
 
 
 /* Normalizing functions ******************************************************/
@@ -121,30 +121,30 @@ Term *term__subterm_at( Term *t, int i );
 /* Merge functions ************************************************************/
 
 /** ((A1 ... Am) (B1 ... Bn))    simple merge */
-Term *term__merge( Term *t1, Term *t2 );
+extern Term *term__merge( Term *t1, Term *t2 );
 
 /** (A1 ... Am (B1 ... Bn))      left-associative merge */
-Term *term__merge_la( Term *t1, Term *t2 );
+extern Term *term__merge_la( Term *t1, Term *t2 );
 
 /** ((A1 ... Am) B1 ... Bn)      right-associative merge */
-Term *term__merge_ra( Term *t1, Term *t2 );
+extern Term *term__merge_ra( Term *t1, Term *t2 );
 
 /** (A1 ... Am B1 ... Bn)        concatenation */
-Term *term__cat( Term *t1, Term *t2 );
+extern Term *term__cat( Term *t1, Term *t2 );
 
 
 /* Distributor ****************************************************************/
 
-void term__distribute( Term *t, p2_procedure *p );
+extern void term__distribute( Term *t, p2_procedure *p );
 
 
 /******************************************************************************/
 
-void term__encode( Term *t, char *buffer );
+extern void term__encode( Term *t, char *buffer );
 
-Type *term__type( const char *name, int flags );
+extern Type *term__type( const char *name, int flags );
 
 
-#endif  /* P2_TERM_H */
+#endif  /* TERM_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

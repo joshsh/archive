@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Term.h"
+#include <util/Term.h>
 #include <Object.h>
 
 
