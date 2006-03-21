@@ -20,7 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Namespace.h"
 
 
-Namespace *namespace__new()
+Namespace *
+namespace__new()
 {
     Namespace *ns;
 
@@ -44,7 +45,8 @@ Namespace *namespace__new()
 }
 
 
-void namespace__delete( Namespace *ns )
+void
+namespace__delete( Namespace *ns )
 {
     #if DEBUG__SAFE
         if ( !ns )
@@ -64,8 +66,8 @@ void namespace__delete( Namespace *ns )
 }
 
 
-Object *namespace__add
-    ( Namespace_o *ns_obj, Name *name, Object *o )
+Object *
+namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
 {
     Namespace *ns = ( Namespace* ) ns_obj->value;
 
@@ -127,8 +129,8 @@ Object *namespace__add
 }
 
 
-Object *namespace__add_simple
-    ( Namespace *ns, const char *name, Object *o )
+Object *
+namespace__add_simple( Namespace *ns, const char *name, Object *o )
 {
     #if DEBUG__SAFE
     if ( !ns )
@@ -148,7 +150,8 @@ Object *namespace__add_simple
 }
 
 
-Object *namespace__lookup( Namespace_o *ns_obj, Name *name )
+Object *
+namespace__lookup( Namespace_o *ns_obj, Name *name )
 {
     Namespace *ns = ( Namespace* ) ns_obj->value;
 
@@ -195,8 +198,8 @@ Object *namespace__lookup( Namespace_o *ns_obj, Name *name )
 }
 
 
-Object *namespace__lookup_simple(
-    Namespace *ns, const char *name )
+Object *
+namespace__lookup_simple( Namespace *ns, const char *name )
 {
     #if DEBUG__SAFE
     if ( !ns | !name )
@@ -210,7 +213,8 @@ Object *namespace__lookup_simple(
 }
 
 
-Object *namespace__remove( Namespace_o *ns_obj, Name *name )
+Object *
+namespace__remove( Namespace_o *ns_obj, Name *name )
 {
     Namespace *ns = ( Namespace* ) ns_obj->value;
 
@@ -273,7 +277,8 @@ printf( "--- ns rm 3---\n" ); fflush( stdout );
 }
 
 
-Object *namespace__remove_simple( Namespace *ns, char *name )
+Object *
+namespace__remove_simple( Namespace *ns, char *name )
 {
     #if DEBUG__SAFE
     if ( !ns | !name)
@@ -290,7 +295,8 @@ Object *namespace__remove_simple( Namespace *ns, char *name )
 /******************************************************************************/
 
 
-void namespace__distribute( Namespace *ns, p2_procedure *p )
+void
+namespace__distribute( Namespace *ns, p2_procedure *p )
 {
     dictionary__distribute( ns->children, p );
 }
@@ -299,7 +305,8 @@ void namespace__distribute( Namespace *ns, p2_procedure *p )
 /******************************************************************************/
 
 
-static p2_action * lookup_and_print( char *key, Dictionary *dict )
+static p2_action *
+lookup_and_print( char *key, Dictionary *dict )
 {
     Object *o = ( Object* ) dictionary__lookup( dict, key );
     printf( "    %#x '%s' : %s\n", ( int ) o, key, o->type->name );
@@ -307,7 +314,8 @@ static p2_action * lookup_and_print( char *key, Dictionary *dict )
 }
 
 
-void namespace__show_children( Namespace_o *ns_obj )
+void
+namespace__show_children( Namespace_o *ns_obj )
 {
     int size = ( ( Namespace* ) ns_obj->value )->children->size;
     Array *a;
@@ -388,7 +396,8 @@ static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
 */
 
 
-Name *namespace__find( Namespace_o *ns_obj, Object *o )
+Name *
+namespace__find( Namespace_o *ns_obj, Object *o )
 {
     Name *name = name__new();
 

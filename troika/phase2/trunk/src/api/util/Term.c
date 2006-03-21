@@ -32,7 +32,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* Copy the term to a larger buffer. */
-Term *term__expand( Term *t, unsigned int minimum_buffer_size )
+Term *
+term__expand( Term *t, unsigned int minimum_buffer_size )
 {
     void **new_buffer, **new_head;
     unsigned int size, new_buffer_size;
@@ -66,7 +67,8 @@ Term *term__expand( Term *t, unsigned int minimum_buffer_size )
 /* Constructors and destructor ************************************************/
 
 
-Term *term__new( void *p, unsigned int initial_buffer_size )
+Term *
+term__new( void *p, unsigned int initial_buffer_size )
 {
     Term *t;
 
@@ -107,7 +109,8 @@ Term *term__new( void *p, unsigned int initial_buffer_size )
 }
 
 
-Term *term__copy( Term *source )
+Term *
+term__copy( Term *source )
 {
     unsigned int size;
     Term *t;
@@ -145,7 +148,8 @@ Term *term__copy( Term *source )
 }
 
 
-void term__delete( Term *t )
+void
+term__delete( Term *t )
 {
     #if DEBUG__SAFE
     if ( !t )
@@ -167,7 +171,8 @@ void term__delete( Term *t )
 /* Accessors ******************************************************************/
 
 
-unsigned int term__length( Term *t )
+unsigned int
+term__length( Term *t )
 {
     unsigned int length = 0;
     void **cur, **lim;
@@ -190,7 +195,8 @@ unsigned int term__length( Term *t )
 }
 
 
-Term *term__subterm_at(Term *t, int i)
+Term *
+term__subterm_at(Term *t, int i)
 {
     Term *subterm;
     void **cur = t->head;
@@ -220,7 +226,8 @@ Term *term__subterm_at(Term *t, int i)
 }
 
 
-void term__set_expansion( Term *t, unsigned int expansion )
+void
+term__set_expansion( Term *t, unsigned int expansion )
 {
     /* Override the default array expansion factor. */
     if (expansion > 1)
@@ -234,7 +241,8 @@ void term__set_expansion( Term *t, unsigned int expansion )
 /* Merge functions ************************************************************/
 
 
-Term *term__merge(Term *t1, Term *t2)
+Term *
+term__merge(Term *t1, Term *t2)
 {
     #if DEBUG__TERM
     Term *t1_0 = t1, *t2_0 = t2;
@@ -269,7 +277,8 @@ Term *term__merge(Term *t1, Term *t2)
 }
 
 
-Term *term__merge_la(Term *t1, Term *t2)
+Term *
+term__merge_la(Term *t1, Term *t2)
 {
     #if DEBUG__TERM
     Term *t1_0 = t1, *t2_0 = t2;
@@ -306,7 +315,8 @@ Term *term__merge_la(Term *t1, Term *t2)
 }
 
 
-Term *term__merge_ra(Term *t1, Term *t2)
+Term *
+term__merge_ra(Term *t1, Term *t2)
 {
     #if DEBUG__TERM
     Term *t1_0 = t1, *t2_0 = t2;
@@ -345,7 +355,8 @@ Term *term__merge_ra(Term *t1, Term *t2)
 }
 
 
-Term *term__cat(Term *t1, Term *t2)
+Term *
+term__cat(Term *t1, Term *t2)
 {
     #if DEBUG__TERM
     Term *t1_0 = t1, *t2_0 = t2;
@@ -390,7 +401,8 @@ Term *term__cat(Term *t1, Term *t2)
 /* Logical set functions and atom substitution ********************************/
 
 
-static void distribute( void **cur, p2_procedure *p )
+static void
+distribute( void **cur, p2_procedure *p )
 {
     void **lim;
     p2_action *action;
@@ -430,7 +442,8 @@ static void distribute( void **cur, p2_procedure *p )
 }
 
 
-void term__distribute( Term *t, p2_procedure *p )
+void
+term__distribute( Term *t, p2_procedure *p )
 {
     #if DEBUG__SAFE
     if ( !t || !p )
@@ -451,8 +464,8 @@ void term__distribute( Term *t, p2_procedure *p )
 /******************************************************************************/
 
 
-static void encode
-    ( void **cur, char *buffer, int delimit )
+static void
+encode( void **cur, char *buffer, int delimit )
 {
     Object *o;
     void **lim;
@@ -508,7 +521,8 @@ static void encode
 }
 
 
-void term__encode( Term *t, char *buffer )
+void
+term__encode( Term *t, char *buffer )
 {
 /*
 void **cur = t->head, **lim = t->buffer + t->buffer_size;
@@ -528,7 +542,8 @@ printf( "\n" );
 }
 
 
-Type *term__type( const char *name, int flags )
+Type *
+term__type( const char *name, int flags )
 {
     Type *type = type__new( name, flags );
 

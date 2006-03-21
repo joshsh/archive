@@ -20,7 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive.h>
 
 
-void primitive__delete( Primitive *prim )
+void
+primitive__delete( Primitive *prim )
 {
     unsigned int i;
 
@@ -44,7 +45,8 @@ void primitive__delete( Primitive *prim )
 }
 
 
-void primitive__encode( Primitive *prim, char *buffer )
+void
+primitive__encode( Primitive *prim, char *buffer )
 {
     sprintf( buffer, prim->name );
 }

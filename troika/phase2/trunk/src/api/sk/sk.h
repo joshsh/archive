@@ -72,7 +72,8 @@ typedef enum Combinator Combinator;
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
     which is not an S or K combinator or a primitive, is considered a
     non-redex object. */
-extern Term *SK_reduce(
+extern Term *
+SK_reduce(
     Term *term,
     Memory_Manager *m,
     Type *term_type,

@@ -76,11 +76,13 @@ struct Type
 
 
 /** Constructor. */
-extern Type *type__new( const char *name, int flags );
+extern Type *
+type__new( const char *name, int flags );
 
 
 /** Destructor. */
-extern void type__delete( Type *type );
+extern void
+type__delete( Type *type );
 
 
 #endif  /* TYPE_H */

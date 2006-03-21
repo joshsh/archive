@@ -64,17 +64,18 @@ typedef dom_element *( *xml_encoder )( void *p, Xml_Encode_Ctx *state );
 typedef void *( *xml_decoder )( dom_element *el, Xml_Decode_Ctx *state );
 
 
-static dom_element *object__xml_encode
-    ( Object *o, Xml_Encode_Ctx *state, boolean top_level );
+static dom_element *
+object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level );
 
-static Object *object__xml_decode
-    ( dom_element *el, Xml_Decode_Ctx *state );
+static Object *
+object__xml_decode( dom_element *el, Xml_Decode_Ctx *state );
 
 
 /* Serializers for individual types *******************************************/
 
 
-static dom_element *p2_bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
+static dom_element *
+p2_bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
 {
     dom_element *el, *child;
     int i, size;
@@ -101,7 +102,8 @@ static dom_element *p2_bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
 }
 
 
-static dom_element *term__xml_encode( Term *t, Xml_Encode_Ctx *state )
+static dom_element *
+term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 {
     void **sup, **head, **cur = t->head;
     dom_element *el, *child;
@@ -144,16 +146,18 @@ static dom_element *term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 }
 
 
-typedef struct _ns_encode_st
+typedef struct Ns_Encode_Ctx Ns_Encode_Ctx;
+
+struct Ns_Encode_Ctx
 {
     Xml_Encode_Ctx *state;
     Dictionary *dict;
     dom_element *parent;
+};
 
-} ns_encode_st;
 
-
-static p2_action * ns_encode( char *name, ns_encode_st *state )
+static p2_action *
+ns_encode( char *name, Ns_Encode_Ctx *state )
 {
     Object *o = ( Object* ) dictionary__lookup( state->dict, name );
 
@@ -166,12 +170,12 @@ static p2_action * ns_encode( char *name, ns_encode_st *state )
 }
 
 
-static dom_element *namespace__xml_encode
-    ( Namespace *ns, Xml_Encode_Ctx *state )
+static dom_element *
+namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 {
     dom_element *el;
     Array *keys;
-    ns_encode_st nse_st;
+    Ns_Encode_Ctx nse_st;
     p2_procedure proc;
 printf( "---s nsxe 1---\n" ); FFLUSH;
 
@@ -207,7 +211,8 @@ printf( "---s nsxe 2---\n" ); FFLUSH;
 /* Deserializers for individual types *****************************************/
 
 
-static Array *p2_bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+static Array *
+p2_bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 {
     Array *a;
     dom_element *child;
@@ -241,7 +246,8 @@ static Array *p2_bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 }
 
 
-static Term *term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+static Term *
+term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 {
     Term *t;
     dom_element *child;
@@ -286,8 +292,8 @@ printf( "returning term %#x (length = %i)\n", ( int ) t, term__length( t ) );
 }
 
 
-static Namespace *namespace__xml_decode
-    ( dom_element *el, Xml_Decode_Ctx *state )
+static Namespace *
+namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 {
     Namespace *ns;
     dom_element *child;
@@ -339,8 +345,8 @@ static Namespace *namespace__xml_decode
 /* Object serializer **********************************************************/
 
 
-static dom_element *object__xml_encode
-    ( Object *o, Xml_Encode_Ctx *state, boolean top_level )
+static dom_element *
+object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 {
     /* id > 0  ==>  the object is multireferenced. */
     unsigned int id = ( unsigned int ) lookup_table__lookup( state->ids, o );
@@ -429,8 +435,8 @@ static Object *reference__xml_decode
 */
 
 
-static Object *object__xml_decode
-    ( dom_element *el, Xml_Decode_Ctx *state )
+static Object *
+object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 {
     dom_attr *attr;
     Object *o;
@@ -597,8 +603,8 @@ printf( "Result is object %#x.\n", ( int ) o );
 
 
 #if TRIPLES__GLOBAL
-static void triple__xml_decode
-    ( dom_element *el, Xml_Decode_Ctx *state )
+static void
+triple__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 {
     Object *subject, *predicate, *object;
     dom_element *subject_el, *predicate_el, *object_el;
@@ -621,15 +627,17 @@ printf( "Deserializing triple.\n" ); FFLUSH;
 /******************************************************************************/
 
 
-typedef struct _hash_multiref_st
+typedef struct Hash_Multiref_Ctx Hash_Multiref_Ctx;
+
+struct Hash_Multiref_Ctx
 {
     Lookup_Table *table;
     unsigned int max;
+};
 
-} hash_multiref_st;
 
-
-static p2_action * hash_multiref( Object *o, hash_multiref_st *state )
+static p2_action *
+hash_multiref( Object *o, Hash_Multiref_Ctx *state )
 {
     /* Working namespace has already been given an id. */
     if ( !lookup_table__lookup( state->table, o ) )
@@ -641,17 +649,18 @@ static p2_action * hash_multiref( Object *o, hash_multiref_st *state )
 }
 
 
-typedef struct _triple__serialize_st
+typedef struct Triple_Serialize_Ctx Triple_Serialize_Ctx;
+
+struct Triple_Serialize_Ctx
 {
     Xml_Encode_Ctx *xe_state;
 
     Object *subject;
+};
 
-} triple__serialize_st;
 
-
-static p2_action * triple__serialize
-    ( Lookup_Table__Entry *entry, triple__serialize_st *state )
+static p2_action *
+triple__serialize( Lookup_Table__Entry *entry, Triple_Serialize_Ctx *state )
 {
     dom_element *el = dom_element__new( 0, ( uc* ) "triple", 0 );
     dom_element *subject = object__xml_encode
@@ -671,12 +680,12 @@ static p2_action * triple__serialize
 }
 
 
-static p2_action * serialize
-    ( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
+static p2_action *
+serialize( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
 {
     Object *o;
     p2_procedure proc;
-    triple__serialize_st triple_st;
+    Triple_Serialize_Ctx triple_st;
     dom_element *el;
 
     #if DEBUG__SAFE
@@ -708,7 +717,8 @@ static p2_action * serialize
 }
 
 
-static void add_timestamp( dom_element *el )
+static void
+add_timestamp( dom_element *el )
 {
     char *s;
     time_t t;
@@ -724,14 +734,15 @@ static void add_timestamp( dom_element *el )
 }
 
 
-void compiler__serialize( Compiler *c, char *path )
+void
+compiler__serialize( Compiler *c, char *path )
 {
     dom_document *doc;
     dom_element *el;
     Lookup_Table *ids;
     Set *multirefs;
     p2_procedure proc;
-    hash_multiref_st state;
+    Hash_Multiref_Ctx state;
     Xml_Encode_Ctx encode_state;
 
     #if DEBUG__SAFE
@@ -815,7 +826,8 @@ printf( "---s s 13---\n" ); FFLUSH;
 }
 
 
-void compiler__deserialize( Compiler *c, char *path )
+void
+compiler__deserialize( Compiler *c, char *path )
 {
     Xml_Decode_Ctx decode_state = { 0, 0, 0, 0 };
     dom_element *el, *child;

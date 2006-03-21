@@ -31,9 +31,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Compiler.h>
 
 
-extern void compiler__serialize( Compiler *c, char *path );
+extern void
+compiler__serialize( Compiler *c, char *path );
 
-extern void compiler__deserialize( Compiler *c, char *path );
+extern void
+compiler__deserialize( Compiler *c, char *path );
 
 
 #endif  /* SERIAL_H */

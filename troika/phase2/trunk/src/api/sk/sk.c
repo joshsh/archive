@@ -24,7 +24,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Kxy --> x
    [term size] [2]{K} [x_size]{x} [y_size]{y} ...
        --> [term size - y_size - 2] [x_size]{x} ... */
-static Term *K_reduce( Term *term )
+static Term *
+K_reduce( Term *term )
 {
     void **x, **y;
     unsigned int x_size, y_size;
@@ -53,7 +54,8 @@ static Term *K_reduce( Term *term )
 /* Sxyz --> xz(yz)
    [term size] [2]{S} [x_size]{x} [y_size]{y} [z_size]{z} ...
        --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ... */
-static Term *S_reduce( Term *term )
+static Term *
+S_reduce( Term *term )
 {
     void **x, **y, **z, **aux;
     unsigned int x_size, y_size, z_size, newsize;
@@ -112,7 +114,8 @@ static Term *S_reduce( Term *term )
 /* Assumes left-associative form.
    Note: it's probably worth trying to find a way to consolidate the type
    checking and garbage collection of arguments. */
-static Term *prim_reduce( Term *term, Memory_Manager *m )
+static Term *
+prim_reduce( Term *term, Memory_Manager *m )
 {
     unsigned int i;
     Object *o;
@@ -252,7 +255,8 @@ printf( "---sk pr 4---\n" ); fflush( stdout );
 
 
 /* Expand the subterm at the head of another term. */
-static Term *term_reduce( Term *term )
+static Term *
+term_reduce( Term *term )
 {
     unsigned int size, newsize;
     Term *head_term;
@@ -286,7 +290,8 @@ static Term *term_reduce( Term *term )
 }
 
 
-Term *SK_reduce(
+Term *
+SK_reduce(
     Term *term,
     Memory_Manager *m,
     Type *term_type,

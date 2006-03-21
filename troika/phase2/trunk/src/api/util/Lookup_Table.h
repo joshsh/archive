@@ -44,21 +44,25 @@ struct Lookup_Table__Entry
 typedef Hash_Table Lookup_Table;
 
 
-extern Lookup_Table *lookup_table__new( void );
+extern Lookup_Table *
+lookup_table__new( void );
 
-extern void lookup_table__delete( Lookup_Table *t );
-
-
-extern void lookup_table__add
-    ( Lookup_Table *t, void * const key, void * const target );
-
-extern void *lookup_table__lookup( Lookup_Table *t, void * const key );
-
-extern void lookup_table__remove
-    ( Lookup_Table *t, void * const src );
+extern void
+lookup_table__delete( Lookup_Table *t );
 
 
-extern void lookup_table__distribute( Lookup_Table *t, p2_procedure *p );
+extern void
+lookup_table__add( Lookup_Table *t, void * const key, void * const target );
+
+extern void *
+lookup_table__lookup( Lookup_Table *t, void * const key );
+
+extern void
+lookup_table__remove( Lookup_Table *t, void * const src );
+
+
+extern void
+lookup_table__distribute( Lookup_Table *t, p2_procedure *p );
 
 
 #endif  /* LOOKUP_TABLE_H */

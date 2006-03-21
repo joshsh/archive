@@ -29,7 +29,8 @@ struct Dictionary_Entry
 };
 
 
-static Dictionary_Entry *dictionary_entry__new( const char *key, void *target )
+static Dictionary_Entry *
+dictionary_entry__new( const char *key, void *target )
 {
     Dictionary_Entry *entry = new( Dictionary_Entry );
 
@@ -53,7 +54,8 @@ static Dictionary_Entry *dictionary_entry__new( const char *key, void *target )
 }
 
 
-static p2_action * dictionary_entry__delete
+static p2_action *
+dictionary_entry__delete
     ( Dictionary_Entry *entry, void *ignored )
 {
     free( entry->key );
@@ -63,7 +65,8 @@ static p2_action * dictionary_entry__delete
 
 
 /** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
-static unsigned int hash( const Dictionary_Entry *entry )
+static unsigned int
+hash( const Dictionary_Entry *entry )
 {
     char const *p;
     unsigned int h = 0, g;
@@ -82,9 +85,8 @@ static unsigned int hash( const Dictionary_Entry *entry )
 }
 
 
-static int compare(
-    const Dictionary_Entry *entry1,
-    const Dictionary_Entry *entry2 )
+static int
+compare( const Dictionary_Entry *entry1, const Dictionary_Entry *entry2 )
 {
     return strcmp( entry1->key, entry2->key );
 }
@@ -93,7 +95,8 @@ static int compare(
 /******************************************************************************/
 
 
-Dictionary *dictionary__new( void )
+Dictionary *
+dictionary__new( void )
 {
     Hash_Table *h = hash_table__new
         ( 0, 0, 0, ( hash_f ) hash, ( comparator ) compare );
@@ -102,7 +105,8 @@ Dictionary *dictionary__new( void )
 }
 
 
-void dictionary__delete( Dictionary *dict )
+void
+dictionary__delete( Dictionary *dict )
 {
     /* Destroy dictionary entries. */
     p2_procedure p;
@@ -116,8 +120,8 @@ void dictionary__delete( Dictionary *dict )
 /******************************************************************************/
 
 
-void *dictionary__add
-    ( Dictionary *dict, const char *key, void *target )
+void *
+dictionary__add( Dictionary *dict, const char *key, void *target )
 {
     Dictionary_Entry *old_entry, *new_entry;
     void *r = 0;
@@ -133,8 +137,8 @@ void *dictionary__add
 }
 
 
-void *dictionary__lookup
-    ( Dictionary *dict, const char *key )
+void *
+dictionary__lookup( Dictionary *dict, const char *key )
 {
     Dictionary_Entry *entry;
     Dictionary_Entry match_entry;
@@ -146,8 +150,8 @@ void *dictionary__lookup
 }
 
 
-void *dictionary__remove
-    ( Dictionary *dict, const char *key )
+void *
+dictionary__remove( Dictionary *dict, const char *key )
 {
     void *r = 0;
     Dictionary_Entry *entry;
@@ -171,14 +175,16 @@ void *dictionary__remove
 /******************************************************************************/
 
 
-static p2_action * add_to_dict( Dictionary_Entry *entry, Dictionary *dest )
+static p2_action *
+add_to_dict( Dictionary_Entry *entry, Dictionary *dest )
 {
     dictionary__add( dest, entry->key, entry->target );
     return 0;
 }
 
 
-void dictionary__add_all( Dictionary *dest, Dictionary *src )
+void
+dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
     p2_procedure proc;
     proc.execute = ( procedure ) add_to_dict;
@@ -193,14 +199,15 @@ void dictionary__add_all( Dictionary *dest, Dictionary *src )
 
 /* Procedure which points the argument procedure to the target value of a
    hashing pair. */
-static p2_action * apply_to_target
-    ( Dictionary_Entry *entry, p2_procedure *p )
+static p2_action *
+apply_to_target( Dictionary_Entry *entry, p2_procedure *p )
 {
     return p2_procedure__execute( p, entry->target );
 }
 
 
-void dictionary__distribute( Dictionary *dict, p2_procedure *p )
+void
+dictionary__distribute( Dictionary *dict, p2_procedure *p )
 {
     p2_procedure p_alt;
     p_alt.execute = ( procedure ) apply_to_target;
@@ -213,8 +220,8 @@ void dictionary__distribute( Dictionary *dict, p2_procedure *p )
 /******************************************************************************/
 
 
-static p2_action * add_to_array
-    ( Dictionary_Entry *entry, Array *a )
+static p2_action *
+add_to_array( Dictionary_Entry *entry, Array *a )
 {
     array__enqueue( a, entry->key );
 
@@ -222,7 +229,8 @@ static p2_action * add_to_array
 }
 
 
-Array *dictionary__keys( Dictionary *dict )
+Array *
+dictionary__keys( Dictionary *dict )
 {
     Array *a = array__new( dict->size, 0 );
 

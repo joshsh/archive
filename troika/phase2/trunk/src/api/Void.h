@@ -43,7 +43,8 @@ typedef unsigned int Void;
 
 
 /** The constructor merely returns an unused out-of-range address. */
-Void *void__new();
+Void *
+void__new();
 
 
 #endif  /* VOID_H */

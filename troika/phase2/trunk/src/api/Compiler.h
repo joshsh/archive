@@ -36,7 +36,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** Bison parser dependency. */
-extern int yyparse();
+extern int
+yyparse();
 
 
 typedef struct Compiler Compiler;
@@ -59,32 +60,40 @@ struct Compiler
 
 /** Constructor.
     \param env  an environment for the compiler to act upon */
-extern Compiler *compiler__new( Environment *env );
+extern Compiler *
+compiler__new( Environment *env );
 
 
 /** Destructor. */
-extern void compiler__delete( Compiler *c );
+extern void
+compiler__delete( Compiler *c );
 
 
 /** yyparse is invoked here. */
-extern p2_parser__exit_state compiler__parse( Compiler *c );
+extern p2_parser__exit_state
+compiler__parse( Compiler *c );
 
 
 /* Externally linked functions for the parser *********************************/
 
 
-extern int compiler__evaluate_command( char *name, p2_ast *args );
+extern int
+compiler__evaluate_command( char *name, p2_ast *args );
 
-extern int compiler__evaluate_expression( Name *name, p2_ast *expr );
+extern int
+compiler__evaluate_expression( Name *name, p2_ast *expr );
 
-extern int compiler__handle_parse_error( char *msg );
+extern int
+compiler__handle_parse_error( char *msg );
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-extern int compiler__suppress_output();
+extern int
+compiler__suppress_output();
 
 /** \return  whether a line number is printed before each new line of input */
-extern int compiler__show_line_numbers();
+extern int
+compiler__show_line_numbers();
 
 
 #endif  /* COMPILER_H */

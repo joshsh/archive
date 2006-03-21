@@ -24,7 +24,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static Void void__maxval = ( Void ) 42;
 
 
-Void *void__new()
+Void *
+void__new()
 {
     Void *v = new( Void );
     *v = ++void__maxval;

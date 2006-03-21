@@ -70,33 +70,41 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* Avoids C99 warning: implicit declaration of function ‘yylex’ */
-int yylex( void );
+int
+yylex( void );
 
 
 /* Language module dependencies ***********************************************/
 
 
-extern int compiler__evaluate_command
-    ( char * /*name*/, p2_ast * /*args*/ );
+extern int
+compiler__evaluate_command( char * /*name*/, p2_ast * /*args*/ );
 
-extern int compiler__evaluate_expression
-    ( Name * /*name*/, p2_ast * /*expr*/ );
+extern int
+compiler__evaluate_expression( Name * /*name*/, p2_ast * /*expr*/ );
 
-extern int compiler__handle_parse_error
-    ( char * /*msg*/ );
+extern int
+compiler__handle_parse_error( char * /*msg*/ );
 
-extern int compiler__suppress_output();
+extern int
+compiler__suppress_output();
 
 
 /* Lexer dependencies *********************************************************/
 
 
-extern void new_parse();
-extern int get_char_number();
-extern int get_line_number();
+extern void
+new_parse();
+
+extern int
+get_char_number();
+
+extern int
+get_line_number();
 
 /** Current statement number.  Starts at 0 for each line of input. */
-extern int statement_number;
+extern int
+statement_number;
 
 
 /******************************************************************************/
@@ -112,13 +120,16 @@ extern int statement_number;
 
 
 /** Evaluate a command. */
-void handle_command( char * /*name*/, p2_ast * /*args*/ );
+static void
+handle_command( char * /*name*/, p2_ast * /*args*/ );
 
 /** Evaluate an expression. */
-void handle_expression( Name * /*name*/, p2_ast * /*expr*/ );
+static void
+handle_expression( Name * /*name*/, p2_ast * /*expr*/ );
 
 /** Deal gracefully with a parse error. */
-void handle_error();
+static void
+handle_error();
 
 
 /******************************************************************************/
@@ -127,12 +138,12 @@ void handle_error();
 /** Buffer size is arbitary... */
 #define ERROR_BUFFER__SIZE  0xFF
 
-int exit_early;
+static int exit_early;
 
-int error_character_number, error_line_number, invalid_statement_number;
+static int error_character_number, error_line_number, invalid_statement_number;
 
 /** Buffer for "verbose" error message received by yyerror. */
-char yyerror_msg[ ERROR_BUFFER__SIZE ];
+static char yyerror_msg[ ERROR_BUFFER__SIZE ];
 
 
 /******************************************************************************/
@@ -146,7 +157,8 @@ char yyerror_msg[ ERROR_BUFFER__SIZE ];
 
 
 /** Tells the parser to process only a single input stream. */
-int yywrap()
+int
+yywrap()
 {
     return 1;
 }
@@ -154,7 +166,8 @@ int yywrap()
 
 /** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
-void yyerror( p2_parser__exit_state *ignored, const char *msg )
+void
+yyerror( p2_parser__exit_state *ignored, const char *msg )
 {
     /* Only the first error in a statement is reported. */
     if ( ! *yyerror_msg )
@@ -187,7 +200,8 @@ void yyerror( p2_parser__exit_state *ignored, const char *msg )
 
 #if DEBUG__PARSER
 /** Echo each production as it is matched by the parser. */
-void production( char *s )
+static void
+production( char *s )
 {
     printf( "Matched %s\n", s );
 }
@@ -205,18 +219,23 @@ void production( char *s )
 /******************************************************************************/
 
 
-struct statement
+typedef struct Statement Statement;
+
+struct Statement
 {
-    char *name;
+    Name *name;
+    char *simple_name;
     p2_ast *expr;
 };
 
 
-struct statement *new_statement( char *name, p2_ast *expr )
+static Statement *
+new_statement( Name *name, char *simple_name, p2_ast *expr )
 {
-    struct statement *stmt = new( struct statement );
+    Statement *stmt = new( Statement );
 
     stmt->name = name;
+    stmt->simple_name = simple_name;
     stmt->expr = expr;
 
     return stmt;
@@ -226,7 +245,8 @@ struct statement *new_statement( char *name, p2_ast *expr )
 /******************************************************************************/
 
 
-static p2_ast *term2ast( Term *t )
+static p2_ast *
+term2ast( Term *t )
 {
     p2_ast *ast;
 
@@ -235,7 +255,7 @@ static p2_ast *term2ast( Term *t )
 
     else
     {
-        ast = ( p2_ast* ) *( t->head + 1 );
+        ast = *( t->head + 1 );
         term__delete( t );
     }
 
@@ -251,29 +271,32 @@ static p2_ast *term2ast( Term *t )
 
 %union
 {
-    char *string_t;
-
-    int int_t;
-    double float_t;
     char char_t;
+    double float_t;
+    int int_t;
+    char *string_t;
 
     /** (void *) instead of (Term *), (p2_ast *) (Array*) because
         Bison won't take an alias here. */
-    void *term, *name, *bag, *parser_node;
+    void *parser_node;
 
-    struct statement *stmt;
+    struct Array *bag, *name;
+
+    struct Statement *stmt;
+
+    struct Term *term;
 }
 
 
 %token L_PAREN R_PAREN
-%token L_SQ_BRACKET R_SQ_BRACKET;
+%token L_SQ_BRACKET R_SQ_BRACKET
 %token L_BRACE COMMA R_BRACE
 %token COLON EQUALS SEMICOLON E_O_F
 
 %token <string_t> ID STRING COMMAND_NAME
 %token <char_t> CHAR
-%token <float_t> FLOAT;
-%token <int_t> INT;
+%token <float_t> FLOAT
+%token <int_t> INT
 
 %type <term> term subterm command_args
 %type <parser_node> term_item bracketed_term
@@ -396,8 +419,8 @@ statement:
 
         if ( $1 )
         {
-            if ( $1->name )
-                handle_command( $1->name, $1->expr );
+            if ( $1->simple_name )
+                handle_command( $1->simple_name, $1->expr );
 
             free( $1 );
         }
@@ -415,8 +438,8 @@ statement:
         if ( $1 )
         {
             if ( $1->expr )
-                                   /* !      */
-                handle_expression( ( Name* ) $1->name, $1->expr );
+                                   /* !  */
+                handle_expression( $1->name, $1->expr );
 
             free( $1 );
         }
@@ -433,7 +456,7 @@ command:
         #endif
 
         if ( $1 )
-            $$ = new_statement( $1, 0 );
+            $$ = new_statement( 0, $1, 0 );
         else
             $$ = 0;
     }
@@ -446,7 +469,7 @@ command:
         #endif
 
         if ( $1 )
-            $$ = new_statement( $1, p2_ast__term( ( Term* ) $2 ) );
+            $$ = new_statement( 0, $1, p2_ast__term( $2 ) );
         else
             $$ = 0;
     };
@@ -461,7 +484,7 @@ command_args:
         #endif
 
         /* Create a singleton term containing one argument. */
-        $$ = term__new( ( void* ) p2_ast__name( ( Array* ) $1 ), 1 );
+        $$ = term__new( p2_ast__name( $1 ), 1 );
     }
 
     | command_args name
@@ -473,9 +496,7 @@ command_args:
         /* Concatenate the command command_args. */
         if ( $1 )
         {
-            $$ = term__cat(
-                ( Term* ) $1,
-                term__new( ( void* ) p2_ast__name( ( Array* ) $2 ), 1 ) );
+            $$ = term__cat( $1, term__new( p2_ast__name( $2 ), 1 ) );
         }
 
         else
@@ -497,7 +518,7 @@ expression:
         #endif
 
         if ( $1 )
-            $$ = new_statement( 0, term2ast( ( Term* ) $1 ) );
+            $$ = new_statement( 0, 0, term2ast( $1 ) );
         else
             $$ = 0;
     }
@@ -511,7 +532,7 @@ expression:
 
         if ( $1 )
                                 /* !      */
-            $$ = new_statement( ( char* ) $3, term2ast( ( Term* ) $1 ) );
+            $$ = new_statement( $3, 0, term2ast( $1 ) );
         else
             $$ = 0;
     }
@@ -525,7 +546,7 @@ expression:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__term( ( Term* ) $1 ) );
+            p2_ast__delete( p2_ast__term( $1 ) );
 
         ERROK;
     };
@@ -550,16 +571,16 @@ term:
 
         if ( $1 && $2 )
             /* Combine the terms using a left-associative merge. */
-            $$ = term__merge_la( ( Term* ) $1,  ( Term* ) $2 );
+            $$ = term__merge_la( $1, $2 );
 
         else
         {
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__term( ( Term* ) $1 ) );
+                p2_ast__delete( p2_ast__term( $1 ) );
             if ( $2 )
-                p2_ast__delete( p2_ast__term( ( Term* ) $2 ) );
+                p2_ast__delete( p2_ast__term( $2 ) );
         }
     };
 
@@ -573,7 +594,7 @@ subterm:
         #endif
 
         if ( $1 )
-            $$ = ( void* ) term__new( $1, 0 );
+            $$ = term__new( $1, 0 );
 
         else
             $$ = 0;
@@ -613,7 +634,7 @@ subterm:
         $$ = 0;
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( ( Term* ) $2 ) );
+            p2_ast__delete( p2_ast__term( $2 ) );
 
         ERROK;
     };
@@ -664,7 +685,7 @@ term_item:
         #endif
 
         if ( $1 )
-            $$ = ( void* ) p2_ast__bag( ( Array* ) $1 );
+            $$ = p2_ast__bag( $1 );
 
         else
             $$ = 0;
@@ -677,7 +698,7 @@ term_item:
         #endif
 
         if ( $1 )
-            $$ = ( void* ) p2_ast__name( ( Array* ) $1 );
+            $$ = p2_ast__name( $1 );
 
         else
             $$ = 0;
@@ -702,7 +723,7 @@ bracketed_term:
         #endif
 
         if ( $2 )
-            $$ = ( void* ) p2_ast__term( ( Term* ) $2 );
+            $$ = ( void* ) p2_ast__term( $2 );
 
         else
             $$ = 0;
@@ -728,7 +749,7 @@ bracketed_term:
         $$ = 0;
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( ( Term* ) $2 ) );
+            p2_ast__delete( p2_ast__term( $2 ) );
 
         ERROK;
     };
@@ -758,7 +779,7 @@ bag:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__bag( ( Array* ) $1 ) );
+            p2_ast__delete( p2_ast__bag( $1 ) );
 
         ERROK;
     };
@@ -775,7 +796,7 @@ bag_head:
         if ( $2 )
         {
             $$ = ( void* ) array__new( 1, 0 );
-            array__enqueue( ( Array* ) $$, term2ast( ( Term* ) $2 ) );
+            array__enqueue( $$, term2ast( $2 ) );
         }
 
         else
@@ -802,7 +823,7 @@ bag_head:
         if ( $1 && $3 )
         {
             $$ = $1;
-            array__enqueue( ( Array* ) $$, term2ast( ( Term* ) $3 ) );
+            array__enqueue( $$, term2ast( $3 ) );
         }
 
         else
@@ -810,9 +831,9 @@ bag_head:
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__bag( ( Array* ) $1 ) );
+                p2_ast__delete( p2_ast__bag( $1 ) );
             if ( $3 )
-                p2_ast__delete( ( p2_ast* ) $3 );
+                p2_ast__delete( p2_ast__term( $3 ) );
         }
     }
 
@@ -825,7 +846,7 @@ bag_head:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__bag( ( Array* ) $1 ) );
+            p2_ast__delete( p2_ast__bag( $1 ) );
 
         ERROK;
     };
@@ -840,7 +861,7 @@ name:
         #endif
 
         $$ = ( void* ) array__new( 1, 0 );
-        array__enqueue( ( Array* ) $$, $1 );
+        array__enqueue( $$, $1 );
     }
 
     | name COLON ID
@@ -852,7 +873,7 @@ name:
         if ( $1 )
         {
             $$ = $1;
-            array__enqueue( ( Array* ) $$, ( void* ) $3 );
+            array__enqueue( $$, $3 );
         }
 
         else
@@ -869,7 +890,7 @@ name:
         #endif
 
         $$ = 0;
-        p2_ast__delete( p2_ast__name( ( Array* ) $1 ) );
+        p2_ast__delete( p2_ast__name( $1 ) );
 
         ERROK;
     };
@@ -881,7 +902,8 @@ name:
 /*  main() { yyparse(); }  */
 
 
-void handle_command( char *name, p2_ast *args )
+static void
+handle_command( char *name, p2_ast *args )
 {
     if ( !compiler__suppress_output() )
     {
@@ -893,7 +915,7 @@ void handle_command( char *name, p2_ast *args )
         #endif
     }
 
-    /* Note: ownership of name and arguments are conferred to
+    /* Note: ownership of name and arguments is conferred to
        compiler__evaluate_command. */
     exit_early = exit_early || compiler__evaluate_command( name, args );
 
@@ -908,7 +930,8 @@ void handle_command( char *name, p2_ast *args )
 }
 
 
-void handle_expression( Name *name, p2_ast *expr )
+static void
+handle_expression( Name *name, p2_ast *expr )
 {
     if ( !compiler__suppress_output() )
     {
@@ -920,7 +943,7 @@ void handle_expression( Name *name, p2_ast *expr )
         #endif
     }
 
-    /* Note: ownership of name and expression are conferred to
+    /* Note: ownership of name and expression is conferred to
        compiler__evaluate_expression. */
     exit_early = exit_early || compiler__evaluate_expression( name, expr );
 
@@ -935,7 +958,8 @@ void handle_expression( Name *name, p2_ast *expr )
 }
 
 
-void handle_error()
+static void
+handle_error()
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 

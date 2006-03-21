@@ -20,11 +20,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Bunch.h>
 
 
-typedef struct block block;
+typedef struct Block Block;
 
 /** \brief A container for an array of pointers.
     May be completely or partially full. */
-struct block
+struct Block
 {
     /** The number of (void *) cells in the buffer. */
     unsigned int size;
@@ -49,16 +49,17 @@ struct Bunch
     unsigned int block_size;
 
     /** Saves on array lookups. */
-    block *last_block;
+    Block *last_block;
 };
 
 
 /******************************************************************************/
 
 
-static block *block__new(unsigned int size)
+static Block *
+block__new( unsigned int size )
 {
-    block *bl = new( block );
+    Block *bl = new( Block );
 
     if (bl)
     {
@@ -67,7 +68,7 @@ static block *block__new(unsigned int size)
 
         /*~ take memory faults into account (actual block size might have to be
             smaller than the intended size). */
-        if (!(bl->buffer = malloc(size * sizeof(void *))))
+        if ( !( bl->buffer = malloc( size * sizeof( void* ) ) ) )
             bl = 0;
     }
 
@@ -75,38 +76,39 @@ static block *block__new(unsigned int size)
 }
 
 
-static block *block__copy(block *bl)
+static Block *
+block__copy( Block *bl )
 {
-    block *bl2 = new( block );
+    Block *bl2 = new( Block );
 
     if (bl2)
     {
         bl2->size = bl->size;
         bl2->filled = bl->filled;
 
-        if (!(bl2->buffer = malloc(bl2->size * sizeof(void *))))
+        if ( !( bl2->buffer = malloc( bl2->size * sizeof ( void* ) ) ) )
             bl2 = 0;
         else
-            memcpy(bl2->buffer, bl->buffer, bl->filled * sizeof(void *));
+            memcpy( bl2->buffer, bl->buffer, bl->filled * sizeof ( void* ) );
     }
 
     return bl2;
 }
 
 
-static void *block__delete(block *bl)
+static void
+block__delete( Block *bl )
 {
-    free(bl->buffer);
-    free(bl);
-
-    return ( void* ) 1;
+    free( bl->buffer );
+    free( bl );
 }
 
 
 /******************************************************************************/
 
 
-Bunch *bunch__new(unsigned int block_size)
+Bunch *
+bunch__new( unsigned int block_size )
 {
     Bunch *b = new( Bunch );
 
@@ -114,16 +116,16 @@ Bunch *bunch__new(unsigned int block_size)
     printf( "[%#x] bunch__new(%i)\n", ( int ) b, block_size );
     #endif
 
-    if (b)
+    if ( b )
     {
         /* Block size must be at least 1. */
-        b->block_size = (block_size > 0) ? block_size : 1;
+        b->block_size = ( block_size > 0 ) ? block_size : 1;
 
         b->last_block = 0;
 
-        if (!(b->blocks = array__new(42, 2.0)))
+        if ( !( b->blocks = array__new( 42, 2.0 ) ) )
         {
-            free(b);
+            free( b );
             b = 0;
         }
     }
@@ -132,10 +134,11 @@ Bunch *bunch__new(unsigned int block_size)
 }
 
 
-Bunch *bunch__copy(Bunch *b)
+Bunch *
+bunch__copy( Bunch *b )
 {
     int i, size = b->block_size;
-    block *bl;
+    Block *bl;
 
     Bunch *b2 = new( Bunch );
 
@@ -145,28 +148,30 @@ Bunch *bunch__copy(Bunch *b)
 
     b2->block_size = size;
     b2->blocks = array__new
-        (array__size(b->blocks), array__expansion(b->blocks));
+        ( array__size( b->blocks ), array__expansion( b->blocks ) );
 
-    for (i = 0; i < size; i++)
+    for ( i = 0; i < size; i++ )
     {
-        bl = block__copy((block *) array__get(b->blocks, i));
-        array__enqueue(b2->blocks, (void *) bl);
+        bl = block__copy( array__get( b->blocks, i ) );
+        array__enqueue( b2->blocks, ( void* ) bl );
     }
 
-    b2->last_block = (block *) array__get(b2->blocks, array__size(b2->blocks) - 1);
+    b2->last_block = array__get( b2->blocks, array__size( b2->blocks ) - 1 );
 
     return b2;
 }
 
 
-static p2_action * block__delete__proc( block *block_p, void *ignored )
+static p2_action *
+block__delete__proc( Block *block_p, void *ignored )
 {
     block__delete( block_p );
     return 0;
 }
 
 
-void bunch__delete( Bunch *b )
+void
+bunch__delete( Bunch *b )
 {
     p2_procedure p;
 
@@ -187,19 +192,21 @@ void bunch__delete( Bunch *b )
 }
 
 
-unsigned int bunch__size(Bunch *b)
+unsigned int
+bunch__size( Bunch *b )
 {
-    return (array__size(b->blocks) * b->block_size) - (b->block_size - b->last_block->filled);
+    return ( array__size( b->blocks ) * b->block_size ) - ( b->block_size - b->last_block->filled );
 }
 
 
-void *bunch__add(Bunch *b, void *p)
+void *
+bunch__add( Bunch *b, void *p )
 {
     /* Get or create tail-end block. */
-    if (!b->last_block || b->last_block->filled == b->last_block->size)
+    if ( !b->last_block || b->last_block->filled == b->last_block->size )
     {
-        b->last_block = block__new(b->block_size);
-        array__enqueue(b->blocks, (void *) b->last_block);
+        b->last_block = block__new( b->block_size );
+        array__enqueue( b->blocks, ( void* ) b->last_block );
     }
 
     /* Add the item to the tail-end block. */
@@ -209,64 +216,67 @@ void *bunch__add(Bunch *b, void *p)
 }
 
 
-void bunch__add_all(Bunch *dest, Bunch *src)
+void
+bunch__add_all( Bunch *dest, Bunch *src )
 {
     unsigned int i, size;
-    block *last_block = dest->last_block;
+    Block *last_block = dest->last_block;
 
     /* Remove the tail-end block if it is only partially filled. */
-    if (last_block)
+    if ( last_block )
     {
-        if (last_block->filled < last_block->size)
-            last_block = (block *) array__dequeue(dest->blocks);
+        if ( last_block->filled < last_block->size )
+            last_block = array__dequeue( dest->blocks );
         else
             last_block = 0;
     }
 
     /* Add all source blocks. */
-    size = array__size(src->blocks);
-    for (i = 0; i < size; i++)
-        array__enqueue(dest->blocks,
-            (void *) block__copy((block *) array__get(src->blocks, i)));
+    size = array__size( src->blocks );
+    for ( i = 0; i < size; i++ )
+        array__enqueue( dest->blocks,
+            ( void* ) block__copy( array__get( src->blocks, i ) ) );
 
     /* Find the new tail-end block. */
-    dest->last_block = (block *) array__get(dest->blocks, array__size(dest->blocks) - 1);
+    dest->last_block = array__get( dest->blocks, array__size( dest->blocks ) - 1 );
 
     /* Add all items from the previous tail-end block (if any). */
     for ( i = 0; i < last_block->filled; i++ )
         bunch__add( dest, last_block->buffer[i] );
-    free(last_block);
+    free( last_block );
 }
 
 
-void *bunch__remove(Bunch *b)
+void *
+bunch__remove( Bunch *b )
 {
-    block *bl = b->last_block;
+    Block *bl = b->last_block;
     void *p = bl->buffer[--bl->filled];
 
     /* Remove the tail-end block if empty. */
-    if (!bl->filled)
+    if ( !bl->filled )
     {
-        block__delete((block *) array__dequeue(b->blocks));
+        block__delete( array__dequeue( b->blocks ) );
 
-        if (bl == b->last_block)
+        if ( bl == b->last_block )
         {
-            b->last_block = (block *) array__get(b->blocks, array__size(b->blocks) - 1);
+            b->last_block = array__get( b->blocks, array__size( b->blocks ) - 1 );
             return b;
         }
 
         else
-            b->last_block = (block *) array__get(b->blocks, array__size(b->blocks) - 1);
+            b->last_block = array__get( b->blocks, array__size( b->blocks ) - 1 );
     }
 
     return p;
 }
 
 
-void bunch__distribute( Bunch *b, p2_procedure *p )
+void
+bunch__distribute( Bunch *b, p2_procedure *p )
 {
-    unsigned int i, j, numblocks = array__size(b->blocks);
-    block *bl;
+    unsigned int i, j, numblocks = array__size( b->blocks );
+    Block *bl;
     p2_action *action;
 
     #if DEBUG__BUNCH
@@ -275,7 +285,7 @@ void bunch__distribute( Bunch *b, p2_procedure *p )
 
     for ( i = 0; i < numblocks; i++ )
     {
-        bl = ( block* ) array__get( b->blocks, i );
+        bl = array__get( b->blocks, i );
 
         for ( j = 0; j < bl->filled; j++ )
         {
@@ -295,19 +305,19 @@ void bunch__distribute( Bunch *b, p2_procedure *p )
                         /* Remove the tail-end block if empty. */
                         if ( !b->last_block->filled )
                         {
-                            block__delete( ( block* ) array__dequeue( b->blocks ) );
+                            block__delete( array__dequeue( b->blocks ) );
 
                             if ( bl == b->last_block )
                             {
                                 b->last_block = 0;
-                                /*b->last_block = (block *) array__get(b->blocks, b->blocks->size - 1); */
+                                /*b->last_block = array__get(b->blocks, b->blocks->size - 1); */
                                 return;
                             }
 
                             else
                             {
                                 numblocks--;
-                                b->last_block = ( block* ) array__get( b->blocks, array__size(b->blocks) - 1 );
+                                b->last_block = array__get( b->blocks, array__size( b->blocks ) - 1 );
                             }
                         }
                         j--;
@@ -331,7 +341,8 @@ void bunch__distribute( Bunch *b, p2_procedure *p )
 /******************************************************************************/
 
 
-Type *bunch__type( const char *name, int flags )
+Type *
+bunch__type( const char *name, int flags )
 {
     Type *type = type__new( name, flags );
 

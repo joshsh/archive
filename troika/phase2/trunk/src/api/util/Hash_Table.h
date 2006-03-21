@@ -91,7 +91,8 @@ struct Hash_Table
     \param compare_to a comparison function for key values.  The comparison
     function should accept two void pointers a, b as arguments and return an int
     which is &lt; 0 when a &lt; b, &gt; 0 when a &gt; b, and 0 when a == b. */
-extern Hash_Table *hash_table__new(
+extern Hash_Table *
+hash_table__new(
   unsigned int buffer_size,
   unsigned int expansion,
   unsigned int sparsity,
@@ -99,10 +100,12 @@ extern Hash_Table *hash_table__new(
   comparator compare );
 
 /** Copy constructor. */
-extern Hash_Table *hash_table__copy( const Hash_Table *h );
+extern Hash_Table *
+hash_table__copy( const Hash_Table *h );
 
 /** Destructor. */
-extern void hash_table__delete( Hash_Table *h );
+extern void
+hash_table__delete( Hash_Table *h );
 
 
 /******************************************************************************/
@@ -110,20 +113,24 @@ extern void hash_table__delete( Hash_Table *h );
 /** Adds an key.
     \param key  the key to add
     \return  the displaced target (if any) */
-extern void *hash_table__add( Hash_Table *h, void *key );
+extern void *
+hash_table__add( Hash_Table *h, void *key );
 
 /** Looks up a key to obtain a target.
     \warning returns 0 if an key is not found.  Beware of storing a 0 as a
     target value, else you won't be able to tell it apart from a failed lookup.
 */
-extern void *hash_table__lookup( Hash_Table *h, const void *key );
+extern void *
+hash_table__lookup( Hash_Table *h, const void *key );
 
 /** Removes the key.
     \return  the displaced target (if any) */
-extern void *hash_table__remove( Hash_Table *h, const void *key );
+extern void *
+hash_table__remove( Hash_Table *h, const void *key );
 
 
-extern void hash_table__distribute( Hash_Table *h, p2_procedure *p );
+extern void
+hash_table__distribute( Hash_Table *h, p2_procedure *p );
 
 
 /******************************************************************************/

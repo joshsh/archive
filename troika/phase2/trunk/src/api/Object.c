@@ -21,7 +21,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Array.h>
 
 
-Object *object__new( Type *type, void *value, int flags )
+Object *
+object__new( Type *type, void *value, int flags )
 {
     Object *o;
 
@@ -70,14 +71,16 @@ printf( "    This is type '%s'.\n", ( ( Type* ) o->value )->name );
 }
 
 
-static p2_action *delete_p( void *p, Type *type )
+static p2_action *
+delete_p( void *p, Type *type )
 {
     type->destroy( p );
     return 0;
 }
 
 
-void object__delete( Object *o )
+void
+object__delete( Object *o )
 {
     p2_procedure p;
 
@@ -131,17 +134,18 @@ void object__delete( Object *o )
 /* Graph traversal ************************************************************/
 
 
-typedef struct _trace_proc_ctx
+typedef struct Trace_Ctx Trace_Ctx;
+
+struct Trace_Ctx
 {
     p2_procedure *outer_p;
     p2_procedure *inner_p;
     p2_procedure *edge_p;
+};
 
-} trace_proc_ctx;
 
-
-static p2_action * apply_to_assoc_edge
-    ( Lookup_Table__Entry *entry, p2_procedure *p )
+static p2_action *
+apply_to_assoc_edge( Lookup_Table__Entry *entry, p2_procedure *p )
 {
     #if TRIPLES__IMPLICATION__SP_O
     ... not yet written ...
@@ -158,7 +162,8 @@ static p2_action * apply_to_assoc_edge
 }
 
 
-static p2_action * trace_exec( Object *o, trace_proc_ctx *state )
+static p2_action *
+trace_exec( Object *o, Trace_Ctx *state )
 {
     p2_action *action;
 
@@ -199,9 +204,10 @@ printf( "value = %i\n", *( ( int* ) o->value ) );
 }
 
 
-void object__trace( Object *o, p2_procedure *p )
+void
+object__trace( Object *o, p2_procedure *p )
 {
-    trace_proc_ctx state;
+    Trace_Ctx state;
     p2_procedure trace_proc;
     p2_procedure edge_p;
 
@@ -227,7 +233,8 @@ void object__trace( Object *o, p2_procedure *p )
 }
 
 
-static p2_action * enqueue( Object *o, Array *queue )
+static p2_action *
+enqueue( Object *o, Array *queue )
 {
     array__enqueue( queue, o );
     return 0;
@@ -235,9 +242,10 @@ static p2_action * enqueue( Object *o, Array *queue )
 
 
 /* Note: untested. */
-void object__trace_bfs( Object *o, p2_procedure *p )
+void
+object__trace_bfs( Object *o, p2_procedure *p )
 {
-    trace_proc_ctx state;
+    Trace_Ctx state;
     p2_procedure trace_proc;
     p2_procedure edge_p;
     p2_procedure outer_p;
@@ -281,8 +289,8 @@ void object__trace_bfs( Object *o, p2_procedure *p )
 
 #if TRIPLES__GLOBAL
 
-Object *object__multiply
-    ( Object *subj, Object *pred )
+Object *
+object__multiply( Object *subj, Object *pred )
 {
     #if DEBUG__SAFE
     if ( !subj || !pred )
@@ -306,8 +314,8 @@ Object *object__multiply
 
 
 /* Note: doesn't take association sets into account yet. */
-Object *object__associate
-    ( Object *subj, Object *pred, Object *obj )
+Object *
+object__associate( Object *subj, Object *pred, Object *obj )
 {
     #if DEBUG__SAFE
     if ( !subj || !pred || !obj )

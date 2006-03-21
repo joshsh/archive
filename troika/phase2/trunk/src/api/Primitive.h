@@ -44,7 +44,9 @@ enum Primitive__Flags
 };
 
 
-typedef struct _p2_parameter
+typedef struct Parameter Parameter;
+
+struct Parameter
 {
     /** A helpful name. */
     char *name;
@@ -54,8 +56,7 @@ typedef struct _p2_parameter
 
     /** Whether the parent primitive may have a side-effect on this parameter. */
     int transparent;
-
-} p2_parameter;
+};
 
 
 typedef struct Primitive Primitive;
@@ -78,7 +79,7 @@ struct Primitive
     unsigned int arity;
 
     /** The formal parameters. */
-    p2_parameter *parameters;
+    Parameter *parameters;
 };
 
 
@@ -86,9 +87,11 @@ struct Primitive
 
 
 /** Destructor. */
-extern void primitive__delete( Primitive *prim );
+extern void
+primitive__delete( Primitive *prim );
 
-extern void primitive__encode( Primitive *prim, char *buffer );
+extern void
+primitive__encode( Primitive *prim, char *buffer );
 
 /*p2_object *primitive__apply( Primitive *prim, void **args );*/
 

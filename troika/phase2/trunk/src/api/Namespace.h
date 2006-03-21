@@ -50,50 +50,58 @@ struct Namespace
 
 
 /** \return  a new namespace */
-extern Namespace *namespace__new();
+extern Namespace *
+namespace__new();
 
 /** \param ns  the namespace to destroy */
-extern void namespace__delete( Namespace *ns );
+extern void
+namespace__delete( Namespace *ns );
 
 /** Adds an object to a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to assign
     \param o  the object to add
     \return  the object displaced by the new */
-extern Object *namespace__add
-    ( Namespace_o *ns_obj, Name *name, Object *o );
+extern Object *
+namespace__add( Namespace_o *ns_obj, Name *name, Object *o );
 
-extern Object *namespace__add_simple
-    ( Namespace *ns, const char *name, Object *o );
+extern Object *
+namespace__add_simple( Namespace *ns, const char *name, Object *o );
 
 /** Finds an object in a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object found */
-extern Object *namespace__lookup( Namespace_o *ns_obj, Name *name );
+extern Object *
+namespace__lookup( Namespace_o *ns_obj, Name *name );
 
 /** Finds an object using a simple name.
     \param ns  the target namespace
     \param s  the local part of the name to look up
     \return  the object found */
-extern Object *namespace__lookup_simple(
-    Namespace *ns, const char *name );
+extern Object *
+namespace__lookup_simple( Namespace *ns, const char *name );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
     \return  the object removed */
-extern Object *namespace__remove( Namespace_o *ns_obj, Name *name );
+extern Object *
+namespace__remove( Namespace_o *ns_obj, Name *name );
 
-extern Object *namespace__remove_simple( Namespace *ns, char *name );
-
-
-extern void namespace__show_children( Namespace_o *ns_obj );
-
-extern void namespace__distribute( Namespace *ns, p2_procedure *p );
+extern Object *
+namespace__remove_simple( Namespace *ns, char *name );
 
 
-extern Name *namespace__find( Namespace_o *ns_obj, Object *o );
+extern void
+namespace__show_children( Namespace_o *ns_obj );
+
+extern void
+namespace__distribute( Namespace *ns, p2_procedure *p );
+
+
+extern Name *
+namespace__find( Namespace_o *ns_obj, Object *o );
 
 
 #endif /* NAMESPACE_H */

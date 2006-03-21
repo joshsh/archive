@@ -36,28 +36,33 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef Hash_Table Dictionary;
 
 
-extern Dictionary *dictionary__new( void );
+extern Dictionary *
+dictionary__new( void );
 
-extern void dictionary__delete( Dictionary *dict );
-
-
-extern void *dictionary__add
-    ( Dictionary *dict, const char *key, void *target );
-
-extern void *dictionary__lookup
-    ( Dictionary *dict, const char *key );
-
-extern void *dictionary__remove
-    ( Dictionary *dict, const char *key );
+extern void
+dictionary__delete( Dictionary *dict );
 
 
-extern void dictionary__add_all( Dictionary *dest, Dictionary *src );
+extern void *
+dictionary__add( Dictionary *dict, const char *key, void *target );
+
+extern void *
+dictionary__lookup( Dictionary *dict, const char *key );
+
+extern void *
+dictionary__remove( Dictionary *dict, const char *key );
 
 
-extern void dictionary__distribute( Dictionary *dict, p2_procedure *p );
+extern void
+dictionary__add_all( Dictionary *dest, Dictionary *src );
 
 
-extern Array *dictionary__keys( Dictionary *dict );
+extern void
+dictionary__distribute( Dictionary *dict, p2_procedure *p );
+
+
+extern Array *
+dictionary__keys( Dictionary *dict );
 
 
 #endif  /* DICTIONARY_H */

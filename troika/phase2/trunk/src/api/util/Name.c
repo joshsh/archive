@@ -20,7 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Name.h>
 
 
-Name *name__new( void )
+Name *
+name__new( void )
 {
     Name *name = array__new( 0, 0 );
 
@@ -32,14 +33,16 @@ Name *name__new( void )
 }
 
 
-static p2_action * delete_string( char *s, void *ignored )
+static p2_action *
+delete_string( char *s, void *ignored )
 {
     free( s );
     return 0;
 }
 
 
-void name__delete( Name *name )
+void
+name__delete( Name *name )
 {
     p2_procedure p = { ( procedure ) delete_string, 0 };
 
@@ -60,7 +63,8 @@ void name__delete( Name *name )
 }
 
 
-void name__print( Name *n )
+void
+name__print( Name *n )
 {
     char *s;
     int i, size = array__size( n );

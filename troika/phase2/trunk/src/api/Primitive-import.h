@@ -37,7 +37,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Environment.h>
 
 
-extern Primitive *primitive__new(
+extern Primitive *
+primitive__new(
     Environment *env,
     const char *return_type,
     const char *name,
@@ -45,7 +46,8 @@ extern Primitive *primitive__new(
     int arity );
 
 
-extern Primitive *primitive__add_param(
+extern Primitive *
+primitive__add_param(
     Environment *env,
     Primitive *p,
     char *type,
@@ -53,7 +55,8 @@ extern Primitive *primitive__add_param(
     int transparent );
 
 
-extern Primitive *primitive__register(
+extern Primitive *
+primitive__register(
     Environment *env,
     Primitive *p,
     int flags,

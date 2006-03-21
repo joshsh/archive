@@ -20,7 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive-import.h>
 
 
-Primitive *primitive__new(
+Primitive *
+primitive__new(
     Environment *env,
     const char *return_type,
     const char *name,
@@ -72,7 +73,7 @@ Primitive *primitive__new(
     }
     #endif
 
-    p->parameters = malloc( arity * sizeof( p2_parameter ) );
+    p->parameters = malloc( arity * sizeof( Parameter ) );
     for ( i = 0; i < arity ; i++ )
     {
         /* Mark the parameter as "not yet defined". */
@@ -84,7 +85,8 @@ Primitive *primitive__new(
 }
 
 
-Primitive *primitive__add_param(
+Primitive *
+primitive__add_param(
     Environment *env,
     Primitive *p,
     char *type,
@@ -92,7 +94,7 @@ Primitive *primitive__add_param(
     int transparent )
 {
     unsigned int i;
-    p2_parameter param;
+    Parameter param;
 
     #if DEBUG__SAFE
     if ( !p )
@@ -137,7 +139,8 @@ Primitive *primitive__add_param(
 }
 
 
-Primitive *primitive__register(
+Primitive *
+primitive__register(
     Environment *env,
     Primitive *p,
     int flags,

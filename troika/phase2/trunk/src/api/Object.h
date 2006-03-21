@@ -87,10 +87,12 @@ struct Object
     \param type  the new object's data type
     \param value  the new object's data.  The object assumes ownership of this
     data, and will deallocate it on deletion as per its data type. */
-extern Object *object__new( Type *type, void *value, int flags );
+extern Object *
+object__new( Type *type, void *value, int flags );
 
 /** Destructor. */
-extern void object__delete( Object *o );
+extern void
+object__delete( Object *o );
 
 
 /* Accessors ******************************************************************/
@@ -103,21 +105,23 @@ extern void
 /* Graph traversal ************************************************************/
 
 /** A (depth-first) recursive distributor. */
-extern void object__trace( Object *o, p2_procedure *p );
+extern void
+object__trace( Object *o, p2_procedure *p );
 
 /** A breadth-first recursive distributor. */
-extern void object__trace_bfs( Object *o, p2_procedure *p );
+extern void
+object__trace_bfs( Object *o, p2_procedure *p );
 
 
 /* Association ****************************************************************/
 
 #if TRIPLES__GLOBAL
 
-extern Object *object__multiply
-    ( Object *subj, Object *pred );
+extern Object *
+object__multiply( Object *subj, Object *pred );
 
-extern Object *object__associate
-    ( Object *subj, Object *pred, Object *obj );
+extern Object *
+object__associate( Object *subj, Object *pred, Object *obj );
 
 #endif
 

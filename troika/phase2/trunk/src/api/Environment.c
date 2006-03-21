@@ -23,7 +23,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sk/sk.h>
 
 
-static Namespace_o *ns__new( Type *ns_t )
+static Namespace_o *
+ns__new( Type *ns_t )
 {
     Object *o;
     Namespace *ns;
@@ -48,19 +49,22 @@ static Namespace_o *ns__new( Type *ns_t )
 
 #include <Primitive-import.h>
 
-static void *assoc_stub( void **args )
+static void *
+assoc_stub( void **args )
 {
 printf( "---e m 1---\n" ); fflush( stdout );
 
     return object__associate( args[0], args[1], args[2] );
 }
 
-static void *mult_stub( void **args )
+static void *
+mult_stub( void **args )
 {
     return object__multiply( args[0], args[1] );
 }
 
-static int add_triples_prims( Environment *env )
+static int
+add_triples_prims( Environment *env )
 {
     Primitive *prim;
 
@@ -82,7 +86,8 @@ static int add_triples_prims( Environment *env )
 /******************************************************************************/
 
 
-static void add_combinators( Environment *env )
+static void
+add_combinators( Environment *env )
 {
     Object *o;
     Combinator *sk_s, *sk_k;
@@ -105,7 +110,8 @@ static void add_combinators( Environment *env )
 
 
 /* Make all namespaces apart from the 'data' namespace read-only. */
-static void lock_ns( Environment *env )
+static void
+lock_ns( Environment *env )
 {
     env->combinators->flags |= OBJECT__IMMUTABLE;
     env->primitives->flags |= OBJECT__IMMUTABLE;
@@ -124,7 +130,8 @@ static void unlock_ns( Environment *env )
 /******************************************************************************/
 
 
-Environment *environment__new()
+Environment *
+environment__new()
 {
     Environment *env;
 
@@ -251,7 +258,8 @@ printf( "---e abort---\n" ); fflush( stdout );
 }
 
 
-void environment__delete( Environment *env )
+void
+environment__delete( Environment *env )
 {
     Type ns_t;
 
@@ -269,7 +277,7 @@ void environment__delete( Environment *env )
 
 printf( "---e d 1---\n" ); fflush( stdout );
     /* Preserve only data type objects. */
-    env->manager->root = env->types;
+    memory_manager__set_root( env->manager, env->types );
 printf( "---e d 5---\n" ); fflush( stdout );
     memory_manager__mark_and_sweep( env->manager );
 
@@ -277,8 +285,8 @@ printf( "---e d 6---\n" ); fflush( stdout );
     /* Preserve only the 'type' type. */
     ns_t = *env->ns_t;
     env->types->type = &ns_t;
-    env->manager->root = namespace__lookup_simple
-        ( ( Namespace* ) env->types->value, "type" );
+    memory_manager__set_root( env->manager,
+        namespace__lookup_simple( ( Namespace* ) env->types->value, "type" ) );
 printf( "---e d 7---\n" ); fflush( stdout );
     memory_manager__mark_and_sweep( env->manager );
 
@@ -290,7 +298,8 @@ printf( "---e d 9---\n" ); fflush( stdout );
 }
 
 
-Object *environment__register_primitive
+Object *
+environment__register_primitive
     ( Environment *env, Primitive *prim, int flags, generic_f src_f )
 {
     Object *o;
@@ -331,8 +340,8 @@ Object *environment__register_primitive
 }
 
 
-Object *environment__register_type
-    ( Environment *env, Type *type )
+Object *
+environment__register_type( Environment *env, Type *type )
 {
     Object *o = object__new( env->type_t, type, OBJECT__IMMUTABLE );
 
@@ -358,9 +367,8 @@ Object *environment__register_type
 }
 
 
-Type *environment__resolve_type(
-    Environment *env,
-    const char *name )
+Type *
+environment__resolve_type( Environment *env, const char *name )
 {
     Object *o;
     Type *type;

@@ -32,7 +32,8 @@ static Compiler *compiler = 0;
 
 
 /* Find a data type in the compiler environment's "types" namespace. */
-static Type *lookup_type( Environment *env, const char *name )
+static Type *
+lookup_type( Environment *env, const char *name )
 {
     Object *o = namespace__lookup_simple( ( Namespace* ) env->types->value, name );
 
@@ -54,13 +55,15 @@ static Type *lookup_type( Environment *env, const char *name )
 /******************************************************************************/
 
 
-static void char__encode__alt( char *c, char *buffer )
+static void
+char__encode__alt( char *c, char *buffer )
 {
     sprintf( buffer, "'%c'", *c );
 }
 
 
-static void double__encode__alt( double *d, char *buffer )
+static void
+double__encode__alt( double *d, char *buffer )
 {
     if ( *d - ( double ) ( ( int ) *d ) )
         sprintf( buffer, "%g", *d );
@@ -69,13 +72,15 @@ static void double__encode__alt( double *d, char *buffer )
 }
 
 
-static void string__encode__alt( char *s, char *buffer )
+static void
+string__encode__alt( char *s, char *buffer )
 {
     sprintf( buffer, "\"%s\"", s );
 }
 
 
-static void term__encode__alt( Term *t, char *buffer )
+static void
+term__encode__alt( Term *t, char *buffer )
 {
     sprintf( buffer, "[ " );
     buffer += 2;
@@ -90,7 +95,8 @@ static void term__encode__alt( Term *t, char *buffer )
 /******************************************************************************/
 
 
-Compiler *compiler__new( Environment *env )
+Compiler *
+compiler__new( Environment *env )
 {
     Compiler *c;
 
@@ -151,7 +157,8 @@ Compiler *compiler__new( Environment *env )
 }
 
 
-void compiler__delete( Compiler *c )
+void
+compiler__delete( Compiler *c )
 {
     #if DEBUG__SAFE
     if ( !c )
@@ -177,7 +184,8 @@ void compiler__delete( Compiler *c )
 }
 
 
-p2_parser__exit_state compiler__parse( Compiler *c )
+p2_parser__exit_state
+compiler__parse( Compiler *c )
 {
     p2_parser__exit_state exit_state;
 
@@ -210,7 +218,8 @@ p2_parser__exit_state compiler__parse( Compiler *c )
 /******************************************************************************/
 
 
-static int n_args( p2_ast *args, int n )
+static int
+n_args( p2_ast *args, int n )
 {
     int match = ( args )
         ? ( n == p2_ast__size( args ) )
@@ -223,7 +232,8 @@ static int n_args( p2_ast *args, int n )
 }
 
 
-static p2_ast *get_inner_node( p2_ast *ast )
+static p2_ast *
+get_inner_node( p2_ast *ast )
 {
     Term *term;
 
@@ -246,7 +256,8 @@ static p2_ast *get_inner_node( p2_ast *ast )
 }
 
 
-static Object *assign_name( Compiler *c, Name *name, Object *o )
+static Object *
+assign_name( Compiler *c, Name *name, Object *o )
 {
     Namespace_o *ns_obj;
 
@@ -269,7 +280,8 @@ static Object *assign_name( Compiler *c, Name *name, Object *o )
 }
 
 
-static Object *resolve_name( Compiler *c, Name *name )
+static Object *
+resolve_name( Compiler *c, Name *name )
 {
     Namespace_o *ns_obj;
     Object *o;
@@ -300,18 +312,21 @@ static Object *resolve_name( Compiler *c, Name *name )
 }
 
 
-typedef struct _subst_st
+typedef struct Subst_Ctx Subst_Ctx;
+
+struct Subst_Ctx
 {
     p2_action *action;
     p2_procedure *subst_proc;
     boolean sofarsogood;
+};
 
-} subst_st;
 
+static Object *
+object_for_ast( p2_ast* ast, Subst_Ctx *state );
 
-static Object *object_for_ast( p2_ast* ast, subst_st *state );
-
-static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
+static p2_action *
+substitute_object_for_ast( p2_ast *ast, Subst_Ctx *state )
 {
     Object *o = object_for_ast( ast, state );
     if ( !o )
@@ -323,7 +338,8 @@ static p2_action * substitute_object_for_ast( p2_ast *ast, subst_st *state )
 
 
 /* Transforms a p2_ast into a Object, deleting the p2_ast along the way. */
-static Object *object_for_ast( p2_ast* ast, subst_st *state )
+static Object *
+object_for_ast( p2_ast* ast, Subst_Ctx *state )
 {
     Object *o;
     Type *type;
@@ -400,7 +416,8 @@ printf( "o = %i\n", ( int ) o );
 /* Command functions **********************************************************/
 
 
-static void change_namespace( Compiler *c, p2_ast *args )
+static void
+change_namespace( Compiler *c, p2_ast *args )
 {
 /*
 printf( "args->type = %s\n", p2_ast__type__name( args->type ) ); fflush( stdout );
@@ -443,7 +460,8 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
 }
 
 
-static void show_license()
+static void
+show_license()
 {
     FILE *license;
     int c;
@@ -465,7 +483,8 @@ static void show_license()
 }
 
 
-static void new_namespace( Compiler *c, p2_ast *args )
+static void
+new_namespace( Compiler *c, p2_ast *args )
 {
     Object *o;
     Name *name;
@@ -495,7 +514,8 @@ static void new_namespace( Compiler *c, p2_ast *args )
 }
 
 
-static void remove_ns_item( Compiler *c, p2_ast *args )
+static void
+remove_ns_item( Compiler *c, p2_ast *args )
 {
     Name *name;
     p2_ast *arg = get_inner_node( args );
@@ -518,7 +538,8 @@ static void remove_ns_item( Compiler *c, p2_ast *args )
 }
 
 
-static void save_as( Compiler *c, p2_ast *args )
+static void
+save_as( Compiler *c, p2_ast *args )
 {
     char *path;
     p2_ast *arg = get_inner_node( args );
@@ -534,7 +555,8 @@ static void save_as( Compiler *c, p2_ast *args )
 }
 
 
-static void garbage_collect( Compiler *c )
+static void
+garbage_collect( Compiler *c )
 {
     Memory_Manager *m = c->env->manager;
     int size_before, size_after;
@@ -566,7 +588,8 @@ printf( "---c gc 2---\n" ); fflush( stdout );
 /* Externally linked functions for the parser *********************************/
 
 
-int compiler__evaluate_command( char *name, p2_ast *args )
+int
+compiler__evaluate_command( char *name, p2_ast *args )
 {
     int ret = 0;
 
@@ -639,9 +662,10 @@ int compiler__evaluate_command( char *name, p2_ast *args )
 }
 
 
-int compiler__evaluate_expression( Name *name, p2_ast *expr )
+int
+compiler__evaluate_expression( Name *name, p2_ast *expr )
 {
-    subst_st state;
+    Subst_Ctx state;
     p2_action action;
     p2_procedure subst_proc;
 
@@ -735,7 +759,8 @@ int compiler__evaluate_expression( Name *name, p2_ast *expr )
 }
 
 
-int compiler__handle_parse_error( char *msg )
+int
+compiler__handle_parse_error( char *msg )
 {
     int ret = 0;
 
@@ -752,13 +777,15 @@ int compiler__handle_parse_error( char *msg )
 }
 
 
-int compiler__suppress_output()
+int
+compiler__suppress_output()
 {
     return compiler->suppress_output;
 }
 
 
-int compiler__show_line_numbers()
+int
+compiler__show_line_numbers()
 {
     return compiler->show_line_numbers;
 }

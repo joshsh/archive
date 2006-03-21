@@ -34,7 +34,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** \return the least prime > 2 and >= i. */
-static unsigned int next_prime( unsigned int i )
+static unsigned int
+next_prime( unsigned int i )
 {
     unsigned int j;
 
@@ -57,7 +58,8 @@ static unsigned int next_prime( unsigned int i )
 }
 
 
-static Hash_Table *expand( Hash_Table *h )
+static Hash_Table *
+expand( Hash_Table *h )
 {
     void **src, **dest, **buffer, **lim;
     int buffer_size;
@@ -107,7 +109,8 @@ printf( "h->capacity (new) = %i\n", h->capacity ); fflush( stdout );
 /******************************************************************************/
 
 
-Hash_Table *hash_table__new(
+Hash_Table *
+hash_table__new(
     unsigned int buffer_size,
     unsigned int sparsity,
     unsigned int expansion,
@@ -159,7 +162,8 @@ Hash_Table *hash_table__new(
 }
 
 
-Hash_Table *hash_table__copy( const Hash_Table *h )
+Hash_Table *
+hash_table__copy( const Hash_Table *h )
 {
     Hash_Table *h2;
 
@@ -184,14 +188,16 @@ Hash_Table *hash_table__copy( const Hash_Table *h )
 }
 
 
-void hash_table__delete( Hash_Table *h )
+void
+hash_table__delete( Hash_Table *h )
 {
     free( h->buffer );
     free( h );
 }
 
 
-void *hash_table__add( Hash_Table *h, void *key )
+void *
+hash_table__add( Hash_Table *h, void *key )
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
@@ -244,7 +250,8 @@ if (++i > 10)
 }
 
 
-void *hash_table__lookup( Hash_Table *h, const void *key )
+void *
+hash_table__lookup( Hash_Table *h, const void *key )
 {
 int i=0;
     void **cur, **buffer = h->buffer;
@@ -279,7 +286,8 @@ if (++i > 10)
 }
 
 
-void *hash_table__remove(Hash_Table *h, const void *key)
+void *
+hash_table__remove(Hash_Table *h, const void *key)
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
@@ -314,7 +322,8 @@ void *hash_table__remove(Hash_Table *h, const void *key)
 }
 
 
-void hash_table__distribute( Hash_Table *h, p2_procedure *p )
+void
+hash_table__distribute( Hash_Table *h, p2_procedure *p )
 {
     void **cur, **lim;
     p2_action *action;

@@ -52,8 +52,8 @@ utils = $(UTILS)/Array.o $(UTILS)/Name.o $(UTILS)/Term.o
 objects = debugger.o ../Type.o p2_ast.o $(NAME).tab.o
 
 
-debugger :  $(objects) $(utils)
-	$(CC) -o debugger $(objects) $(utils) lex.yy.o 
+debugger :  $(objects) $(utils) lex.yy.o
+	$(CC) -o debugger $(objects) $(utils) lex.yy.o
 
 $(objects) $(utils) : ../defs.h ../settings.h
 

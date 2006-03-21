@@ -53,28 +53,31 @@ struct Environment
 
 
 /** \return  a new environment */
-extern Environment *environment__new();
+extern Environment *
+environment__new();
 
 
 /** Destroys an environment. */
-extern void environment__delete( Environment *env );
+extern void
+environment__delete( Environment *env );
 
 
-extern Object *environment__register_primitive
+extern Object *
+environment__register_primitive
     ( Environment *env, Primitive *prim, int flags, generic_f src_f );
 
 
-extern Object *environment__register_type
-    ( Environment *env, Type *type );
+extern Object *
+environment__register_type( Environment *env, Type *type );
 
 
-extern Type *environment__resolve_type(
-    Environment *env,
-    const char *name );
+extern Type *
+environment__resolve_type( Environment *env, const char *name );
 
 
 /* Defined in p2-stubs.c */
-extern void *environment__import_primitives( Environment *env );
+extern void *
+environment__import_primitives( Environment *env );
 
 
 #endif  /* ENVIRONMENT_H */

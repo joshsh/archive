@@ -55,7 +55,8 @@ struct Array
 #define BUFFER_NEW( size )  malloc( (size) * sizeof( void* ) )
 
 
-static void **buffer_copy( Array *a )
+static void **
+buffer_copy( Array *a )
 {
     void **buffer;
     int size = a->buffer_size * sizeof( void* );
@@ -70,7 +71,8 @@ static void **buffer_copy( Array *a )
 /* Constructors and destructor ************************************************/
 
 
-Array *array__new( int buffer_size, unsigned int expansion )
+Array *
+array__new( int buffer_size, unsigned int expansion )
 {
     Array *a;
 
@@ -102,7 +104,8 @@ Array *array__new( int buffer_size, unsigned int expansion )
 }
 
 
-Array *array__copy( Array *a )
+Array *
+array__copy( Array *a )
 {
     Array *b;
 
@@ -125,7 +128,8 @@ Array *array__copy( Array *a )
 }
 
 
-void array__delete( Array *a )
+void
+array__delete( Array *a )
 {
     #if DEBUG__ARRAY
     printf( "[] array__delete(%#x)\n", ( int ) a );
@@ -139,13 +143,15 @@ void array__delete( Array *a )
 /******************************************************************************/
 
 
-int array__size( Array *a )
+int
+array__size( Array *a )
 {
     return a->size;
 }
 
 
-unsigned int array__expansion( Array *a )
+unsigned int
+array__expansion( Array *a )
 {
     return a->expansion;
 }
@@ -154,7 +160,8 @@ unsigned int array__expansion( Array *a )
 /* Array resizing *************************************************************/
 
 
-static Array *sizeup( Array *a )
+static Array *
+sizeup( Array *a )
 {
     void **BUFFER_NEW;
     int i, buffer_size_new;
@@ -191,7 +198,8 @@ static Array *sizeup( Array *a )
 /* Random access **************************************************************/
 
 
-void *array__get( Array *a, int i )
+void *
+array__get( Array *a, int i )
 {
     if ( INBOUNDS( a, i ) )
         return ELMT( a, i );
@@ -204,7 +212,8 @@ void *array__get( Array *a, int i )
 }
 
 
-void *array__set( Array *a, int i, void *p )
+void *
+array__set( Array *a, int i, void *p )
 {
     void **addr, *displaced;
 
@@ -234,7 +243,8 @@ void *array__set( Array *a, int i, void *p )
 */
 
 
-void *array__peek( Array *a )
+void *
+array__peek( Array *a )
 {
     if ( a->size )
         return a->buffer[a->head];
@@ -247,7 +257,8 @@ void *array__peek( Array *a )
 }
 
 
-void *array__push( Array *a, void *p )
+void *
+array__push( Array *a, void *p )
 {
     if ( !sizeup( a ) )
         return 0;
@@ -260,7 +271,8 @@ void *array__push( Array *a, void *p )
 }
 
 
-void *array__pop( Array *a )
+void *
+array__pop( Array *a )
 {
     void *p;
 
@@ -280,7 +292,8 @@ void *array__pop( Array *a )
 }
 
 
-void *array__enqueue( Array *a, void *p )
+void *
+array__enqueue( Array *a, void *p )
 {
     if ( !sizeup( a ) )
         return 0;
@@ -292,7 +305,8 @@ void *array__enqueue( Array *a, void *p )
 }
 
 
-void *array__dequeue( Array *a )
+void *
+array__dequeue( Array *a )
 {
     if ( a->size )
     {
@@ -311,7 +325,8 @@ void *array__dequeue( Array *a )
 /* Random insertion and removal ***********************************************/
 
 
-void *array__insert_before( Array *a, int i, void *p )
+void *
+array__insert_before( Array *a, int i, void *p )
 {
     int j;
 
@@ -337,7 +352,8 @@ void *array__insert_before( Array *a, int i, void *p )
 }
 
 
-void *array__insert_after( Array *a, int i, void *p )
+void *
+array__insert_after( Array *a, int i, void *p )
 {
     int j;
 
@@ -363,7 +379,8 @@ void *array__insert_after( Array *a, int i, void *p )
 }
 
 
-void *array__remove( Array *a, int i )
+void *
+array__remove( Array *a, int i )
 {
     int j;
     void *displaced;
@@ -388,7 +405,8 @@ void *array__remove( Array *a, int i )
 }
 
 
-void *array__simple_remove( Array *a, int i )
+void *
+array__simple_remove( Array *a, int i )
 {
     void **addr, *displaced;
 
@@ -413,17 +431,19 @@ void *array__simple_remove( Array *a, int i )
 /* Array sorting **************************************************************/
 
 
-typedef struct _mergesort_state
+typedef struct Mergesort_Ctx Mergesort_Ctx;
+
+struct Mergesort_Ctx
 {
     int lo, m, hi;
     void **buffer, **aux;
     comparator compare;
-
-} mergesort_state;
+};
 
 
 /* Adapted from a MergeSort example by H.W. Lang */
-static void mergesort( int lo, int hi, mergesort_state *state )
+static void
+mergesort( int lo, int hi, Mergesort_Ctx *state )
 {
     int m;
     int i, j, k;
@@ -468,7 +488,8 @@ static void mergesort( int lo, int hi, mergesort_state *state )
 }
 
 
-static Array *normalize( Array *a )
+static Array *
+normalize( Array *a )
 {
     int i, size = a->size, buffer_size = a->buffer_size, head = a->head;
 
@@ -488,9 +509,10 @@ static Array *normalize( Array *a )
 
 
 /* Note: compare to qsort in stdlib.h */
-void array__sort( Array *a, comparator compare )
+void
+array__sort( Array *a, comparator compare )
 {
-    mergesort_state state;
+    Mergesort_Ctx state;
     state.compare = compare;
 
     /* Normalize the array a so that the mergesort algorithm doesn't have to
@@ -513,7 +535,8 @@ void array__sort( Array *a, comparator compare )
 /* Logical set functions and item substitution ********************************/
 
 
-void array__distribute( Array *a, p2_procedure *p )
+void
+array__distribute( Array *a, p2_procedure *p )
 {
     int i;
     p2_action *action;
@@ -556,7 +579,8 @@ void array__distribute( Array *a, p2_procedure *p )
 /* Miscellaneous **************************************************************/
 
 
-Array *array__clear( Array *a )
+Array *
+array__clear( Array *a )
 {
     a->size = 0;
     a->head = 0;
@@ -564,7 +588,8 @@ Array *array__clear( Array *a )
 }
 
 
-Array *array__minimize( Array *a )
+Array *
+array__minimize( Array *a )
 {
     int i;
     void **BUFFER_NEW;
@@ -597,7 +622,8 @@ Array *array__minimize( Array *a )
 /******************************************************************************/
 
 
-static void encode
+static void
+encode
     ( void **cur, char *buffer, int delimit )
 {
     Object *o;
@@ -654,7 +680,8 @@ static void encode
 }
 
 
-static void array__encode( Array *a, char *buffer )
+static void
+array__encode( Array *a, char *buffer )
 {
     int i;
     Object *o;
@@ -697,7 +724,8 @@ static void array__encode( Array *a, char *buffer )
 }
 
 
-Type *array__type( const char *name, int flags )
+Type *
+array__type( const char *name, int flags )
 {
     Type *type = type__new( name, flags );
 

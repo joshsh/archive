@@ -20,14 +20,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Lookup_Table.h>
 
 
-static p2_action * lookup_table__entry__delete( Lookup_Table__Entry *entry, void *ignored )
+static p2_action *
+lookup_table__entry__delete( Lookup_Table__Entry *entry, void *ignored )
 {
     free( entry );
     return 0;
 }
 
 
-static unsigned int hash( const Lookup_Table__Entry *entry )
+static unsigned int
+hash( const Lookup_Table__Entry *entry )
 {
     return ( unsigned int ) entry->key;
 }
@@ -35,9 +37,8 @@ static unsigned int hash( const Lookup_Table__Entry *entry )
 
 /* Works well enough for addresses so long as there's a one-to-one correspondence
    between addresses and key values. */
-static int compare(
-    const Lookup_Table__Entry *entry1,
-    const Lookup_Table__Entry *entry2 )
+static int
+compare( const Lookup_Table__Entry *entry1, const Lookup_Table__Entry *entry2 )
 {
     return ( entry1->key != entry2->key );
 }
@@ -46,7 +47,8 @@ static int compare(
 /******************************************************************************/
 
 
-Lookup_Table *lookup_table__new( void )
+Lookup_Table *
+lookup_table__new( void )
 {
     Hash_Table *h = hash_table__new( 0, 0, 0,
         ( hash_f ) hash, ( comparator ) compare );
@@ -55,7 +57,8 @@ Lookup_Table *lookup_table__new( void )
 }
 
 
-void lookup_table__delete( Lookup_Table *t )
+void
+lookup_table__delete( Lookup_Table *t )
 {
     /* Destroy graph entries. */
     p2_procedure p = { ( procedure ) lookup_table__entry__delete, 0 };
@@ -65,8 +68,8 @@ void lookup_table__delete( Lookup_Table *t )
 }
 
 
-void lookup_table__add
-    ( Lookup_Table *t, void * const key, void * const target )
+void
+lookup_table__add( Lookup_Table *t, void * const key, void * const target )
 {
     Lookup_Table__Entry *entry, *entry_old;
 
@@ -86,7 +89,8 @@ void lookup_table__add
 }
 
 
-void *lookup_table__lookup( Lookup_Table *t, void * const key )
+void *
+lookup_table__lookup( Lookup_Table *t, void * const key )
 {
     Lookup_Table__Entry *entry;
     Lookup_Table__Entry match_entry;
@@ -100,7 +104,8 @@ void *lookup_table__lookup( Lookup_Table *t, void * const key )
 }
 
 
-void lookup_table__remove
+void
+lookup_table__remove
     ( Lookup_Table *t, void * const key )
 {
     Lookup_Table__Entry *entry_old;
@@ -115,7 +120,8 @@ void lookup_table__remove
 /******************************************************************************/
 
 
-void lookup_table__distribute( Lookup_Table *t, p2_procedure *p )
+void
+lookup_table__distribute( Lookup_Table *t, p2_procedure *p )
 {
     #if DEBUG__SAFE
     if ( !t || !p )

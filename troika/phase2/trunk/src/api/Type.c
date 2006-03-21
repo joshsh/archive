@@ -47,7 +47,8 @@ static Type default_t =
 };
 
 
-Type *type__new( const char *name, int flags )
+Type *
+type__new( const char *name, int flags )
 {
     Type *t;
 
@@ -77,7 +78,8 @@ Type *type__new( const char *name, int flags )
 }
 
 
-void type__delete( Type *type)
+void
+type__delete( Type *type)
 {
     if ( type->name )
         free( type->name );

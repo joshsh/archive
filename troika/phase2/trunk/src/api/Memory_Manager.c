@@ -29,10 +29,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define set_owned( o )      o->flags |= OBJECT__OWNED
 
 
+/** \note  A memory manager is a closed system.  It owns all objects passed to
+    it via memory_manager__add, and these objects are not allowed to
+    reference any first-class objects which are not themselves owned by the
+    manager. */
+struct Memory_Manager
+{
+    Bunch *objects;
+        Object *objects_o;
+
+    Object *root;
+
+    /** Whether the manager contains only unmarked objects.  Any marked objects
+        need to be unmarked prior to any algorithm which relies on object
+        marking. */
+    int clean;
+};
+
+
 /******************************************************************************/
 
 
-Memory_Manager *memory_manager__new( Object *root )
+Memory_Manager *
+memory_manager__new( Object *root )
 {
     Memory_Manager *m;
     Type *Object_t;
@@ -100,7 +119,8 @@ printf( "---m 6---\n" ); fflush( stdout );
 }
 
 
-void memory_manager__delete( Memory_Manager *m )
+void
+memory_manager__delete( Memory_Manager *m )
 {
     Type *Object_t, *Object_bunch_t;
 
@@ -137,12 +157,13 @@ printf( "---m d 6---\n" ); fflush( stdout );
 }
 
 
-unsigned int memory_manager__size( Memory_Manager *m )
+unsigned int
+memory_manager__size( Memory_Manager *m )
 {
     #if DEBUG__SAFE
     if ( !m )
     {
-        ERROR( "memory_manager__delete: null manager" );
+        ERROR( "memory_manager__delete: null argument" );
         return 0;
     }
     #endif
@@ -151,7 +172,23 @@ unsigned int memory_manager__size( Memory_Manager *m )
 }
 
 
-Object *memory_manager__add( Memory_Manager *m, Object *o )
+void
+memory_manager__set_root( Memory_Manager *m, Object *o )
+{
+    #if DEBUG__SAFE
+    if ( !m || !o )
+    {
+        ERROR( "memory_manager__set_root: null argument" );
+        return 0;
+    }
+    #endif
+
+    m->root = o;
+}
+
+
+Object *
+memory_manager__add( Memory_Manager *m, Object *o )
 {
 printf( "---m add 1---\n" ); fflush( stdout );
 
@@ -183,7 +220,8 @@ printf( "---m add 2---\n" ); fflush( stdout );
 /* Unmarking / cleanup ********************************************************/
 
 
-static void *unmark( Object *o )
+static void *
+unmark( Object *o )
 {
     #ifdef DEBUG__SAFE
     if ( !o )
@@ -198,7 +236,8 @@ static void *unmark( Object *o )
 }
 
 
-static boolean unmark_for_sweep( Object *o )
+static boolean
+unmark_for_sweep( Object *o )
 {
     #ifdef DEBUG__SAFE
     if ( !o )
@@ -228,7 +267,8 @@ static boolean unmark_for_sweep( Object *o )
 }
 
 
-static void unmark_all( Memory_Manager *m )
+static void
+unmark_all( Memory_Manager *m )
 {
     #ifdef DEBUG__SAFE
     if ( !m )
@@ -245,7 +285,8 @@ static void unmark_all( Memory_Manager *m )
 
 
 /* Unmarks all marked objects in the environment, and deletes the rest.*/
-static void sweep( Memory_Manager *m )
+static void
+sweep( Memory_Manager *m )
 {
     #ifdef DEBUG__SAFE
     if ( !m )
@@ -264,7 +305,8 @@ static void sweep( Memory_Manager *m )
 /* Tracing / graph traversal **************************************************/
 
 
-static p2_action * dist_p_exec( Object *o, p2_procedure *p )
+static p2_action *
+dist_p_exec( Object *o, p2_procedure *p )
 {
     /* If the object is already marked, abort. */
     if ( visited( o ) )
@@ -283,7 +325,8 @@ static p2_action * dist_p_exec( Object *o, p2_procedure *p )
 }
 
 
-void memory_manager__distribute( Memory_Manager *m, p2_procedure *p )
+void
+memory_manager__distribute( Memory_Manager *m, p2_procedure *p )
 {
     p2_procedure dist_p;
 
@@ -305,7 +348,8 @@ void memory_manager__distribute( Memory_Manager *m, p2_procedure *p )
 /******************************************************************************/
 
 
-static p2_action * add_if_multiref( Object *o, Set *s )
+static p2_action *
+add_if_multiref( Object *o, Set *s )
 {
     /* If the object is already marked, abort. */
     if ( visited( o ) )
@@ -332,8 +376,8 @@ static p2_action * add_if_multiref( Object *o, Set *s )
 }
 
 
-Set *memory_manager__get_multirefs
-    ( Memory_Manager *m, Object *root )
+Set *
+memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 {
     Set *s = set__new();
     p2_procedure proc;
@@ -355,13 +399,15 @@ Set *memory_manager__get_multirefs
 /* Mark-and-sweep garbage collection ******************************************/
 
 
-static p2_action * noop( void *ignored1, void *ignored2 )
+static p2_action *
+noop( void *ignored1, void *ignored2 )
 {
     return 0;
 }
 
 
-void memory_manager__mark_and_sweep( Memory_Manager *m )
+void
+memory_manager__mark_and_sweep( Memory_Manager *m )
 {
     p2_procedure proc;
 

@@ -35,16 +35,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef Hash_Table Set;
 
 
-extern Set *set__new( void );
+extern Set *
+set__new( void );
 
-extern void set__delete( Set *s );
+extern void
+set__delete( Set *s );
 
 
-extern void set__add( Set *s, void *el );
+extern void
+set__add( Set *s, void *el );
 
-extern void set__remove( Set *s, void *el );
+extern void
+set__remove( Set *s, void *el );
 
-extern void set__distribute( Set *s, p2_procedure *p );
+extern void
+set__distribute( Set *s, p2_procedure *p );
 
 
 #endif  /* SET_H */
