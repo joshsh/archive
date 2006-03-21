@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef Hash_Table Dictionary;
 
 
-extern Dictionary *dictionary__new();
+extern Dictionary *dictionary__new( void );
 
 extern void dictionary__delete( Dictionary *dict );
 

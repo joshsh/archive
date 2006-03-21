@@ -31,12 +31,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_AST_H
 
 
-#include "../util/p2_name.h"
-#include "../util/Array.h"
-#include "../util/Term.h"
+#include <util/Name.h>
+#include <util/Array.h>
+#include <util/Term.h>
 
-
-typedef enum p2_ast__type p2_ast__type;
 
 enum p2_ast__type
 {
@@ -49,6 +47,8 @@ enum p2_ast__type
     TERM_T,     /**< A term composed of p2_asts. */
     VOID_T      /**< A generic pointer to data not owned by the AST. */
 };
+
+typedef enum p2_ast__type p2_ast__type;
 
 
 extern const char *p2_ast__type__name( p2_ast__type type );
@@ -77,7 +77,7 @@ extern p2_ast *p2_ast__int( int i );
 
 /** \param name  a Array of C strings representing a name
     \return  a new AST node of type NAME */
-extern p2_ast *p2_ast__name( p2_name *name );
+extern p2_ast *p2_ast__name( Name *name );
 
 extern p2_ast *p2_ast__string( char *s );
 

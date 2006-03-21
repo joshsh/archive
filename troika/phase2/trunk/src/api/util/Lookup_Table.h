@@ -44,7 +44,7 @@ struct Lookup_Table__Entry
 typedef Hash_Table Lookup_Table;
 
 
-extern Lookup_Table *lookup_table__new();
+extern Lookup_Table *lookup_table__new( void );
 
 extern void lookup_table__delete( Lookup_Table *t );
 

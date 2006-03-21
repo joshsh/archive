@@ -13,18 +13,14 @@ XML     = ./xml
 
 INCLUDE  = -I./
 
-export CFLAGS = \
-	-O2 \
-	-g \
-	--ansi -pedantic \
-	-W -Wall # -Werror \
+export CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+	# -Werror \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
-	# -fshort-enums -fno-common \
 	# -D_GNU_SOURCE
 
 LIBS    =
 
-CC      = gcc $(CFLAGS) $(INCLUDE) $(LIBS)
+CC      = gcc $(INCLUDE) $(LIBS)
 
 
 
@@ -82,47 +78,33 @@ import :
 ################################################################################
 # Compile utilities.
 
-.PHONY : utils
-utils :
-	$(MAKE) -e -C $(UTILS)
-
-UTIL_OBJECTS =	$(UTILS)/p2_array.o \
-		$(UTILS)/p2_bunch.o \
-		$(UTILS)/p2_dictionary.o \
-		$(UTILS)/p2_hash_table.o \
-		$(UTILS)/p2_lookup_table.o \
-		$(UTILS)/p2_name.o \
-		$(UTILS)/p2_set.o \
-		$(UTILS)/p2_term.o
+utils	=	$(UTILS)/Array.o \
+		$(UTILS)/Bunch.o \
+		$(UTILS)/Dictionary.o \
+		$(UTILS)/Hash_Table.o \
+		$(UTILS)/Lookup_Table.o \
+		$(UTILS)/Name.o \
+		$(UTILS)/Set.o \
+		$(UTILS)/Term.o
 
 
 ################################################################################
-# Compile XML utility.
+# XML utility
 
-$(XML)/xmldom.o :
-	$(MAKE) -C $(XML)
+$(XML)/xmldom.o  :
+	$(MAKE) -e -C $(XML)
 
 
 ################################################################################
 # Build the command line interface.
 
-OBJECTS = p2_compiler.o p2_environment.o p2_memory_manager.o p2_primitive-import.o p2_namespace.o p2_collection.o p2_object.o p2_primitive.o p2_type.o sk.o serial.o
-
-phase2 :  main.c utils $(XML)/xmldom.o $(OBJECTS) import parser
-	$(CC) -o phase2 main.c $(OBJECTS) $(UTIL_OBJECTS) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
+objects = main.o Collection.o Compiler.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
 
 
-serial.o :  serial.c serial.h settings.h
-	$(CC) -c serial.c
+phase2 :  $(utils) $(XML)/xmldom.o $(objects) import parser
+	$(CC) $(CFLAGS) -o phase2 $(objects) $(utils) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
 
-p2_%.o :  p2_%.c p2_%.h settings.h
-	$(CC) -c p2_$*.c
+$(objects) $(utils) : defs.h settings.h
 
-
-################################################################################
-# Compile SK semantics library.
-
-sk.o :  sk/sk.c settings.h
-	$(CC) -c sk/sk.c
 
 # DO NOT DELETE

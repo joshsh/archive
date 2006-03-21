@@ -382,7 +382,7 @@ printf( "\n" );  fflush( stdout );
 
         else if ( head_type == combinator_type )
         {
-            switch ( *( ( combinator* ) head->value ) )
+            switch ( *( ( Combinator* ) head->value ) )
             {
                 /* Sxyz... --> xz(yz)... */
                 case S_combinator:

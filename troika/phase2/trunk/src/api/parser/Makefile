@@ -6,9 +6,15 @@
 
 NAME     = p2_parser
 UTILS    = ../util
+
 INCLUDE  = -I../
 
-CC       = gcc $(CFLAGS) $(INCLUDE)
+CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+	# -Werror \
+	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
+	# -D_GNU_SOURCE
+
+CC       = gcc $(INCLUDE)
 
 LEX      = flex --header=foo.h \
            -p  # Get comments regarding features that lead to performance losses.
@@ -41,8 +47,15 @@ valgrind-session :  $(DEBUGGER)
 	$(VALGRIND) debugger
 
 
-debugger :  objects debugger.c p2_array.o p2_term.o p2_type.o p2_parser.h p2_name.o ../settings.h
-	$(CC) -o debugger debugger.c p2_ast.o lex.yy.o $(NAME).tab.o p2_name.o p2_array.o p2_term.o p2_type.o
+utils = $(UTILS)/Array.o $(UTILS)/Name.o $(UTILS)/Term.o
+
+objects = debugger.o ../Type.o p2_ast.o $(NAME).tab.o
+
+
+debugger :  $(objects) $(utils)
+	$(CC) -o debugger $(objects) $(utils) lex.yy.o 
+
+$(objects) $(utils) : ../defs.h ../settings.h
 
 
 ################################################################################
@@ -52,41 +65,12 @@ objects: lex.yy.o $(NAME).tab.o p2_ast.o ##$(NAME)-aux.o
 
 
 lex.yy.o : lex.yy.c $(NAME).tab.h
-	$(CC) -D_POSIX_SOURCE -c lex.yy.c
+	$(CC) $(CFLAGS) -D_POSIX_SOURCE -c lex.yy.c
 
 
-$(NAME).tab.o : $(NAME).tab.c
-	$(CC) -c $(NAME).tab.c
-
-
-lex.yy.c : $(NAME).l p2_parser.h ../settings.h
+lex.yy.c : $(NAME).l p2_parser.h ../defs.h ../settings.h
 	$(LEX) $(NAME).l
 
 
-$(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../settings.h
+$(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../defs.h ../settings.h
 	$(YACC) -dv $(NAME).y
-
-
-################################################################################
-
-##$(NAME)-aux.o : $(NAME)-aux.c $(NAME)-aux.h
-##	$(CC) $(CFLAGS) -c $(NAME)-aux.c
-
-
-p2_ast.o : p2_ast.c ../settings.h
-	$(CC) -c p2_ast.c
-
-p2_type.o : ../p2_type.c ../settings.h
-	$(CC) -c ../p2_type.c
-
-p2_name.o : $(UTILS)/p2_name.c ../settings.h
-	$(CC) -c $(UTILS)/p2_name.c
-
-
-p2_array.o : $(UTILS)/p2_array.c
-	$(CC) -c $(UTILS)/p2_array.c -o p2_array.o
-
-
-p2_term.o : $(UTILS)/p2_term.c
-	$(CC) -c $(UTILS)/p2_term.c -o p2_term.o
-

@@ -257,7 +257,7 @@ static p2_ast *term2ast( Term *t )
     double float_t;
     char char_t;
 
-    /** (void *) instead of (Term *), (p2_ast *) (p2_array*) because
+    /** (void *) instead of (Term *), (p2_ast *) (Array*) because
         Bison won't take an alias here. */
     void *term, *name, *bag, *parser_node;
 
@@ -461,7 +461,7 @@ command_args:
         #endif
 
         /* Create a singleton term containing one argument. */
-        $$ = term__new( ( void* ) p2_ast__name( ( p2_array* ) $1 ), 1 );
+        $$ = term__new( ( void* ) p2_ast__name( ( Array* ) $1 ), 1 );
     }
 
     | command_args name
@@ -475,7 +475,7 @@ command_args:
         {
             $$ = term__cat(
                 ( Term* ) $1,
-                term__new( ( void* ) p2_ast__name( ( p2_array* ) $2 ), 1 ) );
+                term__new( ( void* ) p2_ast__name( ( Array* ) $2 ), 1 ) );
         }
 
         else
@@ -664,7 +664,7 @@ term_item:
         #endif
 
         if ( $1 )
-            $$ = ( void* ) p2_ast__bag( ( p2_array* ) $1 );
+            $$ = ( void* ) p2_ast__bag( ( Array* ) $1 );
 
         else
             $$ = 0;
@@ -677,7 +677,7 @@ term_item:
         #endif
 
         if ( $1 )
-            $$ = ( void* ) p2_ast__name( ( p2_array* ) $1 );
+            $$ = ( void* ) p2_ast__name( ( Array* ) $1 );
 
         else
             $$ = 0;
@@ -758,7 +758,7 @@ bag:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+            p2_ast__delete( p2_ast__bag( ( Array* ) $1 ) );
 
         ERROK;
     };
@@ -775,7 +775,7 @@ bag_head:
         if ( $2 )
         {
             $$ = ( void* ) array__new( 1, 0 );
-            array__enqueue( ( p2_array* ) $$, term2ast( ( Term* ) $2 ) );
+            array__enqueue( ( Array* ) $$, term2ast( ( Term* ) $2 ) );
         }
 
         else
@@ -802,7 +802,7 @@ bag_head:
         if ( $1 && $3 )
         {
             $$ = $1;
-            array__enqueue( ( p2_array* ) $$, term2ast( ( Term* ) $3 ) );
+            array__enqueue( ( Array* ) $$, term2ast( ( Term* ) $3 ) );
         }
 
         else
@@ -810,7 +810,7 @@ bag_head:
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+                p2_ast__delete( p2_ast__bag( ( Array* ) $1 ) );
             if ( $3 )
                 p2_ast__delete( ( p2_ast* ) $3 );
         }
@@ -825,7 +825,7 @@ bag_head:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__bag( ( p2_array* ) $1 ) );
+            p2_ast__delete( p2_ast__bag( ( Array* ) $1 ) );
 
         ERROK;
     };
@@ -840,7 +840,7 @@ name:
         #endif
 
         $$ = ( void* ) array__new( 1, 0 );
-        array__enqueue( ( p2_array* ) $$, $1 );
+        array__enqueue( ( Array* ) $$, $1 );
     }
 
     | name COLON ID
@@ -852,7 +852,7 @@ name:
         if ( $1 )
         {
             $$ = $1;
-            array__enqueue( ( p2_array* ) $$, ( void* ) $3 );
+            array__enqueue( ( Array* ) $$, ( void* ) $3 );
         }
 
         else
@@ -869,7 +869,7 @@ name:
         #endif
 
         $$ = 0;
-        p2_ast__delete( p2_ast__name( ( p2_array* ) $1 ) );
+        p2_ast__delete( p2_ast__name( ( Array* ) $1 ) );
 
         ERROK;
     };

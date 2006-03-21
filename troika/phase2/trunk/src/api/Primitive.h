@@ -29,13 +29,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PRIMITIVE_H
 
 
-#include "p2_type.h"
+#include <Type.h>
 
 
 /******************************************************************************/
 
 
-enum primitive__flags
+enum Primitive__Flags
 {
     PRIM__CONSTRUCTOR   = 0x1,
     PRIM__DECODER       = 0x2,

@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef VOID_H
 #define VOID_H
 
-#include <p2.h>
+#include <defs.h>
 
 
 /** A Void item is a pointer to an out-of-range memory location, which serves

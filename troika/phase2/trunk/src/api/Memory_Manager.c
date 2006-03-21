@@ -310,7 +310,7 @@ static p2_action * add_if_multiref( Object *o, Set *s )
     /* If the object is already marked, abort. */
     if ( visited( o ) )
     {
-        Set__add( s, o );
+        set__add( s, o );
         return ( p2_action* ) 1;
     }
 
@@ -323,7 +323,7 @@ static p2_action * add_if_multiref( Object *o, Set *s )
         /* Object references its triples, which in turn reference the object. */
         if ( o->outbound_edges && o->outbound_edges->size )
         {
-            Set__add( s, o );
+            set__add( s, o );
         }
         #endif
 
@@ -335,7 +335,7 @@ static p2_action * add_if_multiref( Object *o, Set *s )
 Set *memory_manager__get_multirefs
     ( Memory_Manager *m, Object *root )
 {
-    Set *s = Set__new();
+    Set *s = set__new();
     p2_procedure proc;
 
     if ( !m->clean )

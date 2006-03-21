@@ -31,9 +31,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define NAMESPACE_H
 
 
-#include "Object.h"
-#include "util/Dictionary.h"
-#include "util/Name.h"
+#include <Object.h>
+#include <util/Dictionary.h>
+#include <util/Name.h>
 
 
 typedef Object Namespace_o;

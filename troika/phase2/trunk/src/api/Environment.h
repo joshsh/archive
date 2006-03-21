@@ -31,7 +31,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Memory_Manager.h>
 #include <Namespace.h>
 #include <Primitive.h>
-#include <sk/sk.h>
 
 
 typedef struct Environment Environment;

@@ -20,7 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include <p2.h>
+#include <defs.h>
 #include "../xmldom.h"
 
 

@@ -1,7 +1,7 @@
 #ifndef INT_H
 #define INT_H
 
-#include <p2.h>
+#include <defs.h>
 
 
 /** $decoder */

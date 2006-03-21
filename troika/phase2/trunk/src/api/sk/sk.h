@@ -39,12 +39,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Term.h>
 
 
-typedef enum _combinator
+enum Combinator
 {
     S_combinator,
     K_combinator
+};
 
-} combinator;
+typedef enum Combinator Combinator;
 
 
 /** \brief  Reduce an S,K term according to the rules of combinator expressions.

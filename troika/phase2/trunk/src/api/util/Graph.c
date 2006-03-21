@@ -55,7 +55,7 @@ static int compare(
 /******************************************************************************/
 
 
-Graph *graph__new()
+Graph *graph__new( void )
 {
     Hash_Table *h = hash_table__new( 0, 0, 0,
         ( hash_f ) hash, ( comparator ) compare );

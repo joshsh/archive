@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define OBJECT_H
 
 
-#include <p2_type.h>
+#include <Type.h>
 
 #ifdef TRIPLES__GLOBAL
 #include <util/Lookup_Table.h>

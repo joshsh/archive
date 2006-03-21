@@ -46,7 +46,7 @@ static int compare(
 /******************************************************************************/
 
 
-Lookup_Table *lookup_table__new()
+Lookup_Table *lookup_table__new( void )
 {
     Hash_Table *h = hash_table__new( 0, 0, 0,
         ( hash_f ) hash, ( comparator ) compare );

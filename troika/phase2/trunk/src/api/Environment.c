@@ -20,6 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Environment.h>
 #include <util/Name.h>
 #include <util/Term.h>
+#include <sk/sk.h>
 
 
 static Namespace_o *ns__new( Type *ns_t )
@@ -84,20 +85,20 @@ static int add_triples_prims( Environment *env )
 static void add_combinators( Environment *env )
 {
     Object *o;
-    combinator *sk_s, *sk_k;
+    Combinator *sk_s, *sk_k;
     Memory_Manager *m = env->manager;
 
-    sk_s = new( combinator );
-    sk_k = new( combinator );
+    sk_s = new( Combinator );
+    sk_k = new( Combinator );
 
     *sk_s = S_combinator;
     *sk_k = K_combinator;
 
-    o = object__new( env->combinator_t, sk_s, 0 );
+    o = object__new( env->combinator_t, sk_s, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
     namespace__add_simple( ( Namespace* ) env->combinators->value, "S", o );
 
-    o = object__new( env->combinator_t, sk_k, 0 );
+    o = object__new( env->combinator_t, sk_k, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
     namespace__add_simple( ( Namespace* ) env->combinators->value, "K", o );
 }
@@ -213,7 +214,7 @@ printf( "---e 10---\n" ); fflush( stdout );
     #endif
 
     /* Add combinators. */
-    env->combinator_t = environment__resolve_type( env, "combinator" );
+    env->combinator_t = environment__resolve_type( env, "Combinator" );
     add_combinators( env );
 
     lock_ns( env );

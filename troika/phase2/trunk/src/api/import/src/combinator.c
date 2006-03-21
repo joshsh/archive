@@ -2,9 +2,9 @@
 #include <stdio.h>  /* sprintf */
 
 
-combinator *combinator__decode( cstring *buffer )
+Combinator *combinator__decode( cstring *buffer )
 {
-    combinator *c = new( combinator );
+    Combinator *c = new( Combinator );
     *c = ( *buffer == 'S' )
         ? S_combinator
         : K_combinator;
@@ -12,7 +12,7 @@ combinator *combinator__decode( cstring *buffer )
 }
 
 
-void combinator__encode( combinator *c, cstring *buffer )
+void combinator__encode( Combinator *c, cstring *buffer )
 {
     if ( *c == S_combinator )
         sprintf( buffer, "S" );

@@ -39,7 +39,7 @@ typedef Array Name;
 #define name__pop( name )  ( char* ) array__pop( name )
 #define name__push( name, s )  array__push( name, s )
 
-extern Name *name__new();
+extern Name *name__new( void );
 
 extern void name__delete( Name *name );
 

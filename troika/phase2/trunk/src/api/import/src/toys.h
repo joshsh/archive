@@ -1,7 +1,7 @@
 #ifndef TOYS_H
 #define TOYS_H
 
-#include <p2.h>
+#include <defs.h>
 
 
 int system_call( cstring *s );

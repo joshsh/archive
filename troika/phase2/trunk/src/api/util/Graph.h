@@ -35,7 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef Hash_Table Graph;
 
 
-extern Graph *graph__new();
+extern Graph *graph__new( void );
 
 extern void graph__delete( Graph *g );
 

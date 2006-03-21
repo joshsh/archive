@@ -1,7 +1,7 @@
 #ifndef CSTRING_H
 #define CSTRING_H
 
-#include <p2.h>
+#include <defs.h>
 
 
 /** $decoder */

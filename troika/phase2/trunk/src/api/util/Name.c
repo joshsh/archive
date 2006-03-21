@@ -17,11 +17,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Name.h"
-#include <stdio.h>
+#include <util/Name.h>
 
 
-Name *name__new()
+Name *name__new( void )
 {
     Name *name = array__new( 0, 0 );
 

@@ -1,7 +1,7 @@
 #ifndef CHAR_H
 #define CHAR_H
 
-#include <p2.h>
+#include <defs.h>
 
 
 /** $decoder */

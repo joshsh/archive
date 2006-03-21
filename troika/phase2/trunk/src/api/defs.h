@@ -1,6 +1,6 @@
 /**
 
-\file  p2.h
+\file  defs.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -50,12 +50,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 typedef char cstring;
 
-typedef enum _boolean
+enum boolean
 {
     boolean__false = 0,
     boolean__true
+};
 
-} boolean;
+typedef enum boolean boolean;
 
 
 typedef void *  ( *allocator )( void );

@@ -20,17 +20,18 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Dictionary.h>
 
 
-typedef struct _dictionary_entry
+typedef struct Dictionary_Entry Dictionary_Entry;
+
+struct Dictionary_Entry
 {
     char *key;
     void *target;
+};
 
-} dictionary_entry;
 
-
-static dictionary_entry *dictionary__entry__new( const char *key, void *target )
+static Dictionary_Entry *dictionary_entry__new( const char *key, void *target )
 {
-    dictionary_entry *entry = new( dictionary_entry );
+    Dictionary_Entry *entry = new( Dictionary_Entry );
 
     if ( entry )
     {
@@ -45,7 +46,7 @@ static dictionary_entry *dictionary__entry__new( const char *key, void *target )
 
     #if DEBUG__SAFE
     if ( !entry )
-        ERROR( "dictionary__entry__new: allocation failure" );
+        ERROR( "dictionary_entry__new: allocation failure" );
     #endif
 
     return entry;
@@ -53,7 +54,7 @@ static dictionary_entry *dictionary__entry__new( const char *key, void *target )
 
 
 static p2_action * dictionary_entry__delete
-    ( dictionary_entry *entry, void *ignored )
+    ( Dictionary_Entry *entry, void *ignored )
 {
     free( entry->key );
     free( entry );
@@ -62,7 +63,7 @@ static p2_action * dictionary_entry__delete
 
 
 /** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
-static unsigned int hash( const dictionary_entry *entry )
+static unsigned int hash( const Dictionary_Entry *entry )
 {
     char const *p;
     unsigned int h = 0, g;
@@ -82,8 +83,8 @@ static unsigned int hash( const dictionary_entry *entry )
 
 
 static int compare(
-    const dictionary_entry *entry1,
-    const dictionary_entry *entry2 )
+    const Dictionary_Entry *entry1,
+    const Dictionary_Entry *entry2 )
 {
     return strcmp( entry1->key, entry2->key );
 }
@@ -92,10 +93,10 @@ static int compare(
 /******************************************************************************/
 
 
-Dictionary *dictionary__new()
+Dictionary *dictionary__new( void )
 {
-    Hash_Table *h = hash_table__new( 0, 0, 0,
-        ( hash_f ) hash, ( comparator ) compare );
+    Hash_Table *h = hash_table__new
+        ( 0, 0, 0, ( hash_f ) hash, ( comparator ) compare );
 
     return h;
 }
@@ -118,11 +119,11 @@ void dictionary__delete( Dictionary *dict )
 void *dictionary__add
     ( Dictionary *dict, const char *key, void *target )
 {
-    dictionary_entry *old_entry, *new_entry;
+    Dictionary_Entry *old_entry, *new_entry;
     void *r = 0;
 
-    if ( ( new_entry = dictionary__entry__new( key, target ) )
-      && ( old_entry = ( dictionary_entry* ) hash_table__add( dict, new_entry ) ) )
+    if ( ( new_entry = dictionary_entry__new( key, target ) )
+      && ( old_entry = ( Dictionary_Entry* ) hash_table__add( dict, new_entry ) ) )
     {
         r = old_entry->target;
         dictionary_entry__delete( old_entry, 0 );
@@ -135,8 +136,8 @@ void *dictionary__add
 void *dictionary__lookup
     ( Dictionary *dict, const char *key )
 {
-    dictionary_entry *entry;
-    dictionary_entry match_entry;
+    Dictionary_Entry *entry;
+    Dictionary_Entry match_entry;
 
     match_entry.key = key;
     entry = hash_table__lookup( dict, &match_entry );
@@ -149,12 +150,12 @@ void *dictionary__remove
     ( Dictionary *dict, const char *key )
 {
     void *r = 0;
-    dictionary_entry *entry;
-    dictionary_entry match_entry;
+    Dictionary_Entry *entry;
+    Dictionary_Entry match_entry;
 
     match_entry.key = key;
 
-    entry = ( dictionary_entry* )
+    entry = ( Dictionary_Entry* )
         hash_table__remove( dict, &match_entry );
 
     if ( entry )
@@ -170,7 +171,7 @@ void *dictionary__remove
 /******************************************************************************/
 
 
-p2_action * add_to_dict( dictionary_entry *entry, Dictionary *dest )
+static p2_action * add_to_dict( Dictionary_Entry *entry, Dictionary *dest )
 {
     dictionary__add( dest, entry->key, entry->target );
     return 0;
@@ -193,7 +194,7 @@ void dictionary__add_all( Dictionary *dest, Dictionary *src )
 /* Procedure which points the argument procedure to the target value of a
    hashing pair. */
 static p2_action * apply_to_target
-    ( dictionary_entry *entry, p2_procedure *p )
+    ( Dictionary_Entry *entry, p2_procedure *p )
 {
     return p2_procedure__execute( p, entry->target );
 }
@@ -213,9 +214,9 @@ void dictionary__distribute( Dictionary *dict, p2_procedure *p )
 
 
 static p2_action * add_to_array
-    ( dictionary_entry *entry, Array *a )
+    ( Dictionary_Entry *entry, Array *a )
 {
-    Array__enqueue( a, entry->key );
+    array__enqueue( a, entry->key );
 
     return 0;
 }
@@ -223,7 +224,7 @@ static p2_action * add_to_array
 
 Array *dictionary__keys( Dictionary *dict )
 {
-    Array *a = Array__new( dict->size, 0 );
+    Array *a = array__new( dict->size, 0 );
 
     /* Fill the array with key values. */
     p2_procedure p;
@@ -232,7 +233,7 @@ Array *dictionary__keys( Dictionary *dict )
     hash_table__distribute( dict, &p );
 
     /* Alphabetize the array. */
-    Array__sort( a, ( comparator ) strcmp );
+    array__sort( a, ( comparator ) strcmp );
 
     return a;
 }

@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <Object.h>
 #include <util/Bunch.h>
-#include <util/p2_set.h>
+#include <util/Set.h>
 
 
 typedef struct Memory_Manager Memory_Manager;
@@ -67,7 +67,7 @@ extern Object *memory_manager__add( Memory_Manager *m, Object *o );
 
 extern void memory_manager__distribute( Memory_Manager *m, p2_procedure *p );
 
-extern p2_set *memory_manager__get_multirefs
+extern Set *memory_manager__get_multirefs
     ( Memory_Manager *m, Object *root );
 
 

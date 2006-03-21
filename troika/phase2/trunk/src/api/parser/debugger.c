@@ -75,7 +75,7 @@ int compiler__evaluate_command( char *name, p2_ast *args )
 
 
 /** Mock expression evaluator. */
-int compiler__evaluate_expression( p2_name *name, p2_ast *expr )
+int compiler__evaluate_expression( Name *name, p2_ast *expr )
 {
     int ret = 0;
     p2_ast *a;
