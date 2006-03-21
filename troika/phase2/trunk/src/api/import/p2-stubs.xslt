@@ -93,7 +93,7 @@ extern &quot;C&quot;
 
     <xsl:template name="p2__import_primitives">
 
-#include &quot;../../../p2_primitive-import.h&quot;
+#include &quot;../../../Primitive-import.h&quot;
 
 
 #define RT  1  /* Referentially transparent. */
@@ -102,7 +102,7 @@ extern &quot;C&quot;
 
 void *p2_environment__import_primitives( p2_environment *env )
 {
-    p2_primitive *p;
+    Primitive *p;
 
     return ( void* ) ( ( void* ) 1
 <xsl:text />
@@ -110,7 +110,7 @@ void *p2_environment__import_primitives( p2_environment *env )
         <xsl:for-each select="compounddef">
             <xsl:if test="count(sectiondef) > 0">
 
-        <!-- Construct and add p2_primitives. -->
+        <!-- Construct and add Primitives. -->
         <xsl:for-each select="sectiondef">
             <xsl:for-each select="memberdef">
                 <xsl:call-template name="register-primitive" />
@@ -233,9 +233,9 @@ static void *<xsl:text />
         <xsl:variable name="returns-pointer-type" select="contains($return-type, '*')" />
         <xsl:variable name="this" select="." />
 
-        <!-- Define the p2_primitive. -->
+        <!-- Define the Primitive. -->
         /* <xsl:value-of select="$function-name" /> */
-        &amp;&amp; ( p = p2_primitive__new( env, &quot;<xsl:text />
+        &amp;&amp; ( p = primitive__new( env, &quot;<xsl:text />
         <xsl:call-template name="remove-qualifiers">
             <xsl:with-param name="type">
                 <xsl:call-template name="depointerize">
@@ -254,7 +254,7 @@ static void *<xsl:text />
             <xsl:variable name="pos" select="position()" />
             <xsl:variable name="name" select="declname/text()" />
 <xsl:text />
-        &amp;&amp; p2_primitive__add_param( env, p, &quot;<xsl:text />
+        &amp;&amp; primitive__add_param( env, p, &quot;<xsl:text />
             <xsl:call-template name="remove-qualifiers">
                 <xsl:with-param name="type">
                     <xsl:call-template name="depointerize">
@@ -271,7 +271,7 @@ static void *<xsl:text />
 
         <!-- Register the primitive. -->
 <xsl:text />
-        &amp;&amp; p2_primitive__register( env, p, <xsl:text />
+        &amp;&amp; primitive__register( env, p, <xsl:text />
         <xsl:variable name="marker">
             <xsl:for-each select="detaileddescription/para">
                 <xsl:call-template name="function-marker" />

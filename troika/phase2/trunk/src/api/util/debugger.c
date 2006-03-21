@@ -17,16 +17,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_array.h"
-#include "p2_bunch.h"
-#include "p2_hash_table.h"
-#include "p2_set.h"
-#include "p2_term.h"
-#include "../p2_collection.h"
-
 #include <stdlib.h>  /* free */
 #include <stdio.h>  /* printf */
 #include <string.h>  /* strdup */
+
+#include <util/Array.h>
+#include <util/Bunch.h>
+#include <util/Hash_Table.h>
+#include <util/Set.h>
+#include <util/Term.h>
 
 
 #define VP ( void* )
@@ -98,171 +97,171 @@ void *always( void *p )
 /******************************************************************************/
 
 
-void p2_array__debug( )
+void array__debug( )
 {
-    func_begin( "p2_array__debug" );
+    func_begin( "array__debug" );
 
-    p2_array *array = p2_array__new( 200, 2.0 );
+    Array *array = array__new( 200, 2.0 );
     int *foo = new( int );
-    p2_array__push( array, foo );
-    p2_array__for_all( array, p2_set__free );
-    p2_array__delete( array );
+    array__push( array, foo );
+    array__for_all( array, set__free );
+    array__delete( array );
 
-    func_end( "p2_array__debug" );
+    func_end( "array__debug" );
 }
 
 
-void p2_bunch__debug( )
+void bunch__debug( )
 {
     int i;
 
-    func_begin( "p2_bunch__debug" );
+    func_begin( "bunch__debug" );
 
-    p2_bunch *bunch = p2_bunch__new( 1000 );
+    Bunch *bunch = bunch__new( 1000 );
     for (i = 0; i < 10000; i++ )
-        p2_bunch__add( bunch, new( void* ));
-    p2_bunch__for_all( bunch, p2_set__free );
-    p2_bunch__delete( bunch );
+        bunch__add( bunch, new( void* ));
+    bunch__for_all( bunch, set__free );
+    bunch__delete( bunch );
 
-    bunch = p2_bunch__new( 100 );
+    bunch = bunch__new( 100 );
     for (i = 0; i < 10000; i++ )
-        p2_bunch__add( bunch, new( void* ));
-    p2_bunch__exclude_if( bunch, is_odd );
+        bunch__add( bunch, new( void* ));
+    bunch__exclude_if( bunch, is_odd );
     for (i = 0; i < 10000; i++ )
-        p2_bunch__add( bunch, new( void* ));
-    p2_bunch__exclude_if( bunch, is_even );
-    p2_bunch__exclude_if( bunch, is_odd );
-    p2_bunch__delete( bunch );
+        bunch__add( bunch, new( void* ));
+    bunch__exclude_if( bunch, is_even );
+    bunch__exclude_if( bunch, is_odd );
+    bunch__delete( bunch );
 
-    func_end( "p2_bunch__debug" );
+    func_end( "bunch__debug" );
 }
 
 
-void p2_hash_table__debug( )
+void hash_table__debug( )
 {
     int i;
 
-    func_begin( "p2_hash_table__debug" );
+    func_begin( "hash_table__debug" );
 
     /* Test expansion *****************/
 
-    p2_hash_table *table = p2_hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
-    p2_hash_table__add( table, VP -1, VP 42 );
-    p2_hash_table__add( table, VP -2, VP 42 );
+    Hash_Table *table = hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
+    hash_table__add( table, VP -1, VP 42 );
+    hash_table__add( table, VP -2, VP 42 );
     for ( i = 1; i < 1000; i++ )
-        p2_hash_table__add( table, VP i, VP i );
-    p2_hash_table__delete( table );
+        hash_table__add( table, VP i, VP i );
+    hash_table__delete( table );
 
     /* Test key cleanup ***************/
 
-    table = p2_hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
+    table = hash_table__new( 0, 0, 0, ADDRESS_DEFAULTS );
     for ( i = 0; i < 1000; i++ )
-        p2_hash_table__add( table, new( void* ), VP 42 );
-    p2_hash_table__for_all_keys( table, p2_set__free );
-    p2_hash_table__delete( table );
+        hash_table__add( table, new( void* ), VP 42 );
+    hash_table__for_all_keys( table, set__free );
+    hash_table__delete( table );
 
     /* Test target cleanup ************/
 
-    table = p2_hash_table__new( 0, 2, 1.5, STRING_DEFAULTS );
-    p2_hash_table__add( table, VP "1", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "2", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "3", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "4", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "5", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "6", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "7", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "8", VP strdup( "foo" ));
-    p2_hash_table__add( table, VP "9", VP strdup( "foo" ));
-    p2_hash_table__for_all_targets( table, p2_set__free );
-    p2_hash_table__delete( table );
+    table = hash_table__new( 0, 2, 1.5, STRING_DEFAULTS );
+    hash_table__add( table, VP "1", VP strdup( "foo" ));
+    hash_table__add( table, VP "2", VP strdup( "foo" ));
+    hash_table__add( table, VP "3", VP strdup( "foo" ));
+    hash_table__add( table, VP "4", VP strdup( "foo" ));
+    hash_table__add( table, VP "5", VP strdup( "foo" ));
+    hash_table__add( table, VP "6", VP strdup( "foo" ));
+    hash_table__add( table, VP "7", VP strdup( "foo" ));
+    hash_table__add( table, VP "8", VP strdup( "foo" ));
+    hash_table__add( table, VP "9", VP strdup( "foo" ));
+    hash_table__for_all_targets( table, set__free );
+    hash_table__delete( table );
 
     /**********************************/
 
-    func_end( "p2_hash_table__debug" );
+    func_end( "hash_table__debug" );
 }
 
 
-void p2_set__debug( )
+void set__debug( )
 {
     int i;
 
-    func_begin( "p2_set__debug" );
+    func_begin( "set__debug" );
 
     /* Test expansion *****************/
 
-    p2_set *set = p2_set__new( 100, 2.0, 3.0 );
+    Set *set = set__new( 100, 2.0, 3.0 );
     for ( i = 0; i < 500; i++ )
     {
-        p2_set__add( set, VP 1331 );
-        p2_set__add( set, VP i );
-        p2_set__add( set, VP -i );
+        set__add( set, VP 1331 );
+        set__add( set, VP i );
+        set__add( set, VP -i );
     }
-    p2_set__delete( set );
+    set__delete( set );
 
     /* Test cleanup *******************/
 
-    set = p2_set__new( 1000, 0, 0 );
+    set = set__new( 1000, 0, 0 );
     for ( i = 0; i < 500; i++ )
     {
-        p2_set__add( set, new( void* ));
+        set__add( set, new( void* ));
     }
-    p2_set__for_all( set, p2_set__free );
-    p2_set__delete( set );
+    set__for_all( set, set__free );
+    set__delete( set );
 
     /**********************************/
 
-    p2_set *S2, *S = p2_set__new(20, 2.0, 2.0);
-    p2_set__add(S, (void *) 5);
-    p2_set__add(S, (void *) 6);
-    p2_set__add(S, (void *) 7);
-    p2_set__add(S, (void *) 8);
+    Set *S2, *S = set__new(20, 2.0, 2.0);
+    set__add(S, (void *) 5);
+    set__add(S, (void *) 6);
+    set__add(S, (void *) 7);
+    set__add(S, (void *) 8);
 
-    S2 = p2_set__copy(S);
+    S2 = set__copy(S);
 
-    printf("%d, %d\n", (int) p2_set__lookup(S, (void *) 7),
-    (int) p2_set__lookup(S, (void *) 4));
+    printf("%d, %d\n", (int) set__lookup(S, (void *) 7),
+    (int) set__lookup(S, (void *) 4));
 
-    p2_set__delete(S);
-    p2_set__delete(S2);
+    set__delete(S);
+    set__delete(S2);
 
     /**********************************/
 
-    func_end( "p2_set__debug" );
+    func_end( "set__debug" );
 }
 
 
-void p2_term__debug( )
+void term__debug( )
 {
     int i;
 
-    func_begin( "p2_term__debug" );
+    func_begin( "term__debug" );
 
     /* Test merge functions ***********/
 
-    p2_term *term1 = p2_term__new( VP 42, 100 );
-    p2_term *term2 = p2_term__new( VP 137, 100 );
-    p2_term *term3 = p2_term__cat( term1, term2 );
-    p2_term *term4 = p2_term__copy( term3 );
-    p2_term *term5 = p2_term__merge_la( term3, term4 );
-    p2_term__delete( term5 );
+    Term *term1 = term__new( VP 42, 100 );
+    Term *term2 = term__new( VP 137, 100 );
+    Term *term3 = term__cat( term1, term2 );
+    Term *term4 = term__copy( term3 );
+    Term *term5 = term__merge_la( term3, term4 );
+    term__delete( term5 );
 
     /* Test cleanup *******************/
 
-    term1 = p2_term__new( new( void* ), 0 );
-    term3 = p2_term__new( new( void* ), 100 );
+    term1 = term__new( new( void* ), 0 );
+    term3 = term__new( new( void* ), 100 );
     for ( i = 0; i < 42; i++ )
     {
-        term2 = p2_term__new( new( void* ), 100 );
-        term1 = p2_term__cat( term1, term2 );
-        term4 = p2_term__new( new( void* ), 100 );
-        term3 = p2_term__cat( term3, term4 );
+        term2 = term__new( new( void* ), 100 );
+        term1 = term__cat( term1, term2 );
+        term4 = term__new( new( void* ), 100 );
+        term3 = term__cat( term3, term4 );
     }
-    term5 = p2_term__merge_ra( term1, term3 );
-    p2_term__for_all( term5, p2_set__free );
-    /*p2_term__for_all( term5, p2_set__free );*/
-    p2_term__delete( term5 );
+    term5 = term__merge_ra( term1, term3 );
+    term__for_all( term5, set__free );
+    /*term__for_all( term5, set__free );*/
+    term__delete( term5 );
 
-    func_end( "p2_term__debug" );
+    func_end( "term__debug" );
 }
 
 
@@ -273,11 +272,11 @@ int main( int argc, char **argv )
 {
     func_begin( "main" );
 
-    p2_array__debug( );
-    p2_bunch__debug( );
-    p2_hash_table__debug( );
-    p2_set__debug( );
-    p2_term__debug( );
+    array__debug( );
+    bunch__debug( );
+    hash_table__debug( );
+    set__debug( );
+    term__debug( );
 
     func_end( "main" );
 

@@ -30,7 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "bnftool.tab.h"
 
-#include "../util/p2_array.h"
+#include "../util/Array.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,7 +60,7 @@ void new_line()
 }
 
 
-p2_array *sc_stack;
+Array *sc_stack;
 
 
 /** Initialize the lexer for a new invocation of yyparse(). */
@@ -69,13 +69,13 @@ void new_parse()
     line_number = 0;
     new_line();
 
-    sc_stack = p2_array__new( 0, 0 );
+    sc_stack = array__new( 0, 0 );
 }
 
 
 void end_parse()
 {
-    p2_array__delete( sc_stack );
+    array__delete( sc_stack );
 }
 
 
@@ -127,7 +127,7 @@ NAMECHAR  [-_A-Za-z0-9]
 <INITIAL>
 {
     "%%"  {  /* Warning: very touchy */
-        p2_array__push( sc_stack, ( void* ) INITIAL );
+        array__push( sc_stack, ( void* ) INITIAL );
         BEGIN( SC_GRAMMAR );
         TOKEN( 0, "grammar (begin)" );
     }
@@ -162,13 +162,13 @@ NAMECHAR  [-_A-Za-z0-9]
     }
 
     "/*"  {
-        p2_array__push( sc_stack, ( void* ) SC_GRAMMAR );
+        array__push( sc_stack, ( void* ) SC_GRAMMAR );
         BEGIN( SC_COMMENT );
         TOKEN( 0, "comment (begin)" );
     }
 
     "%%"  {
-        p2_array__pop( sc_stack );
+        array__pop( sc_stack );
         BEGIN( INITIAL );
         TOKEN( 0, "grammar (end)" );
     }
@@ -180,7 +180,7 @@ NAMECHAR  [-_A-Za-z0-9]
 
     "{" {
         braces_level = 1;
-        p2_array__push( sc_stack, ( void* ) SC_GRAMMAR );
+        array__push( sc_stack, ( void* ) SC_GRAMMAR );
         BEGIN( SC_ACTION );
         TOKEN( 0, "action (begin)" );
     }
@@ -212,7 +212,7 @@ NAMECHAR  [-_A-Za-z0-9]
     }
 
     "/*"  {
-        p2_array__push( sc_stack, ( void* ) SC_ACTION );
+        array__push( sc_stack, ( void* ) SC_ACTION );
         BEGIN( SC_COMMENT );
         TOKEN( 0, "comment (begin)" );
     }
@@ -227,7 +227,7 @@ NAMECHAR  [-_A-Za-z0-9]
     "}"  {
         if (! --braces_level )
         {
-            BEGIN( ( int ) p2_array__pop( sc_stack ) );
+            BEGIN( ( int ) array__pop( sc_stack ) );
             TOKEN( ACTION, "action (end)" );
         }
 
@@ -240,7 +240,7 @@ NAMECHAR  [-_A-Za-z0-9]
 <SC_COMMENT>
 {
     "*/"  {
-        BEGIN( ( int ) p2_array__pop( sc_stack ) );
+        BEGIN( ( int ) array__pop( sc_stack ) );
         TOKEN( 0, "comment (end)" );
     }
 

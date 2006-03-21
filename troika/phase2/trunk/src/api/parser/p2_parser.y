@@ -33,7 +33,7 @@ to take immediate effect at parse time.
 
 Interaction with the client
 
-The role of the parser is simply to construct a p2_term to send to the client
+The role of the parser is simply to construct a Term to send to the client
 for evaluation.  The client then handles the term and eventually frees it
 after generating output.  The client cannot "talk back" to the parser except to
 tell it to terminate.
@@ -66,7 +66,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "p2_ast.h"
 #include "p2_parser.h"
 
-#include <util/p2_term.h>
+#include <util/Term.h>
 
 
 /* Avoids C99 warning: implicit declaration of function ‘yylex’ */
@@ -226,17 +226,17 @@ struct statement *new_statement( char *name, p2_ast *expr )
 /******************************************************************************/
 
 
-static p2_ast *term2ast( p2_term *t )
+static p2_ast *term2ast( Term *t )
 {
     p2_ast *ast;
 
-    if ( p2_term__length( t ) > 1 )
+    if ( term__length( t ) > 1 )
         ast = p2_ast__term( t );
 
     else
     {
         ast = ( p2_ast* ) *( t->head + 1 );
-        p2_term__delete( t );
+        term__delete( t );
     }
 
     return ast;
@@ -257,7 +257,7 @@ static p2_ast *term2ast( p2_term *t )
     double float_t;
     char char_t;
 
-    /** (void *) instead of (p2_term *), (p2_ast *) (p2_array*) because
+    /** (void *) instead of (Term *), (p2_ast *) (p2_array*) because
         Bison won't take an alias here. */
     void *term, *name, *bag, *parser_node;
 
@@ -446,7 +446,7 @@ command:
         #endif
 
         if ( $1 )
-            $$ = new_statement( $1, p2_ast__term( ( p2_term* ) $2 ) );
+            $$ = new_statement( $1, p2_ast__term( ( Term* ) $2 ) );
         else
             $$ = 0;
     };
@@ -461,7 +461,7 @@ command_args:
         #endif
 
         /* Create a singleton term containing one argument. */
-        $$ = p2_term__new( ( void* ) p2_ast__name( ( p2_array* ) $1 ), 1 );
+        $$ = term__new( ( void* ) p2_ast__name( ( p2_array* ) $1 ), 1 );
     }
 
     | command_args name
@@ -473,9 +473,9 @@ command_args:
         /* Concatenate the command command_args. */
         if ( $1 )
         {
-            $$ = p2_term__cat(
-                ( p2_term* ) $1,
-                p2_term__new( ( void* ) p2_ast__name( ( p2_array* ) $2 ), 1 ) );
+            $$ = term__cat(
+                ( Term* ) $1,
+                term__new( ( void* ) p2_ast__name( ( p2_array* ) $2 ), 1 ) );
         }
 
         else
@@ -497,7 +497,7 @@ expression:
         #endif
 
         if ( $1 )
-            $$ = new_statement( 0, term2ast( ( p2_term* ) $1 ) );
+            $$ = new_statement( 0, term2ast( ( Term* ) $1 ) );
         else
             $$ = 0;
     }
@@ -511,7 +511,7 @@ expression:
 
         if ( $1 )
                                 /* !      */
-            $$ = new_statement( ( char* ) $3, term2ast( ( p2_term* ) $1 ) );
+            $$ = new_statement( ( char* ) $3, term2ast( ( Term* ) $1 ) );
         else
             $$ = 0;
     }
@@ -525,7 +525,7 @@ expression:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__term( ( p2_term* ) $1 ) );
+            p2_ast__delete( p2_ast__term( ( Term* ) $1 ) );
 
         ERROK;
     };
@@ -550,16 +550,16 @@ term:
 
         if ( $1 && $2 )
             /* Combine the terms using a left-associative merge. */
-            $$ = p2_term__merge_la( ( p2_term* ) $1,  ( p2_term* ) $2 );
+            $$ = term__merge_la( ( Term* ) $1,  ( Term* ) $2 );
 
         else
         {
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__term( ( p2_term* ) $1 ) );
+                p2_ast__delete( p2_ast__term( ( Term* ) $1 ) );
             if ( $2 )
-                p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+                p2_ast__delete( p2_ast__term( ( Term* ) $2 ) );
         }
     };
 
@@ -573,7 +573,7 @@ subterm:
         #endif
 
         if ( $1 )
-            $$ = ( void* ) p2_term__new( $1, 0 );
+            $$ = ( void* ) term__new( $1, 0 );
 
         else
             $$ = 0;
@@ -613,7 +613,7 @@ subterm:
         $$ = 0;
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+            p2_ast__delete( p2_ast__term( ( Term* ) $2 ) );
 
         ERROK;
     };
@@ -702,7 +702,7 @@ bracketed_term:
         #endif
 
         if ( $2 )
-            $$ = ( void* ) p2_ast__term( ( p2_term* ) $2 );
+            $$ = ( void* ) p2_ast__term( ( Term* ) $2 );
 
         else
             $$ = 0;
@@ -728,7 +728,7 @@ bracketed_term:
         $$ = 0;
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( ( p2_term* ) $2 ) );
+            p2_ast__delete( p2_ast__term( ( Term* ) $2 ) );
 
         ERROK;
     };
@@ -774,8 +774,8 @@ bag_head:
 
         if ( $2 )
         {
-            $$ = ( void* ) p2_array__new( 1, 0 );
-            p2_array__enqueue( ( p2_array* ) $$, term2ast( ( p2_term* ) $2 ) );
+            $$ = ( void* ) array__new( 1, 0 );
+            array__enqueue( ( p2_array* ) $$, term2ast( ( Term* ) $2 ) );
         }
 
         else
@@ -802,7 +802,7 @@ bag_head:
         if ( $1 && $3 )
         {
             $$ = $1;
-            p2_array__enqueue( ( p2_array* ) $$, term2ast( ( p2_term* ) $3 ) );
+            array__enqueue( ( p2_array* ) $$, term2ast( ( Term* ) $3 ) );
         }
 
         else
@@ -839,8 +839,8 @@ name:
         production( "name ::=  ID" );
         #endif
 
-        $$ = ( void* ) p2_array__new( 1, 0 );
-        p2_array__enqueue( ( p2_array* ) $$, $1 );
+        $$ = ( void* ) array__new( 1, 0 );
+        array__enqueue( ( p2_array* ) $$, $1 );
     }
 
     | name COLON ID
@@ -852,7 +852,7 @@ name:
         if ( $1 )
         {
             $$ = $1;
-            p2_array__enqueue( ( p2_array* ) $$, ( void* ) $3 );
+            array__enqueue( ( p2_array* ) $$, ( void* ) $3 );
         }
 
         else

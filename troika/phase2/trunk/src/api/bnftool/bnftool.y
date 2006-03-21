@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 
-#include "../util/p2_array.h"
+#include "../util/Array.h"
 #include "../util/p2_dictionary.h"
 
 #include <string.h>
@@ -74,7 +74,7 @@ static p2_action *delete__proc( void *p, void *ignored )
 }
 
 
-static p2_action * sequence__delete__proc( p2_array *s, void *ignored )
+static p2_action * sequence__delete__proc( Array *s, void *ignored )
 {
     p2_procedure proc;
 
@@ -82,8 +82,8 @@ static p2_action * sequence__delete__proc( p2_array *s, void *ignored )
     if ( s )
     {
         proc.execute = ( procedure ) delete__proc;
-        p2_array__distribute( s, &proc );
-        p2_array__delete( s );
+        array__distribute( s, &proc );
+        array__delete( s );
     }
 
     return 0;
@@ -93,7 +93,7 @@ static p2_action * sequence__delete__proc( p2_array *s, void *ignored )
 typedef struct _rule
 {
     char *name;
-    p2_array *productions;
+    Array *productions;
 
     int nullable;
 
@@ -103,14 +103,14 @@ typedef struct _rule
 } rule;
 
 
-rule *rule__new( char *name, p2_array *productions )
+rule *rule__new( char *name, Array *productions )
 {
     rule *r = new( rule );
     r->name = name;
     r->productions = productions;
 
-    r->first_set = p2_dictionary__new();
-    r->follow_set = p2_dictionary__new();
+    r->first_set = dictionary__new();
+    r->follow_set = dictionary__new();
     r->nullable = 0;
 
     return r;
@@ -127,16 +127,16 @@ static p2_action * rule__delete( rule *r, void *ignored )
     if ( r->productions )
     {
         proc.execute = ( procedure ) sequence__delete__proc;
-        p2_array__distribute( r->productions, &proc );
+        array__distribute( r->productions, &proc );
 
-        p2_array__delete( r->productions );
+        array__delete( r->productions );
     }
 
     if ( r->first_set )
-        p2_dictionary__delete( r->first_set );
+        dictionary__delete( r->first_set );
 
     if ( r->follow_set )
-        p2_dictionary__delete( r->follow_set );
+        dictionary__delete( r->follow_set );
 
     free( r );
 
@@ -152,16 +152,16 @@ p2_dictionary *rule_dict;
 
 static p2_action * add_to_dict( char *name, p2_dictionary *d )
 {
-    p2_dictionary__add( d, name, name );
+    dictionary__add( d, name, name );
     return 0;
 }
 
 
-static void find_sets( p2_array *rules, p2_dictionary *dict )
+static void find_sets( Array *rules, p2_dictionary *dict )
 {
-    int changed = 1, i, j, k, n, n_rules = p2_array__size( rules ), n_prods, nullable_old, size_old;
+    int changed = 1, i, j, k, n, n_rules = array__size( rules ), n_prods, nullable_old, size_old;
     rule *r, *r2, *r3;
-    p2_array *production;
+    Array *production;
     char *first, *second;
     p2_procedure proc;
 
@@ -172,14 +172,14 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
 
         for ( i = 0; i < n_rules; i++ )
         {
-            r = ( rule* ) p2_array__get( rules, i );
+            r = ( rule* ) array__get( rules, i );
 
             nullable_old = r->nullable;
 
-            n_prods = p2_array__size( r->productions );
+            n_prods = array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
             {
-                production = ( p2_array* ) p2_array__get( r->productions, j );
+                production = ( Array* ) array__get( r->productions, j );
 
                 /* Null production makes the rule nullable. */
                 if ( !production )
@@ -189,8 +189,8 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
                    productions makes the rule nullable. */
                 else
                 {
-                    char *first = ( char* ) p2_array__get( production, 0 );
-                    r2 = ( rule* ) p2_dictionary__lookup( dict, first );
+                    char *first = ( char* ) array__get( production, 0 );
+                    r2 = ( rule* ) dictionary__lookup( dict, first );
 
                     /* If non-terminal and nullable... */
                     if ( r2 && r2->nullable )
@@ -212,27 +212,27 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
 
         for ( i = 0; i < n_rules; i++ )
         {
-            r = ( rule* ) p2_array__get( rules, i );
+            r = ( rule* ) array__get( rules, i );
             size_old = r->first_set->size;
 
-            n_prods = p2_array__size( r->productions );
+            n_prods = array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
             {
-                production = ( p2_array* ) p2_array__get( r->productions, j );
+                production = ( Array* ) array__get( r->productions, j );
 
                 if ( production )
                 {
-                    n = p2_array__size( production );
+                    n = array__size( production );
 
                     for ( k = 0; k < n; k++ )
                     {
-                        first = ( char* ) p2_array__get( production, k );
-                        r2 = ( rule* ) p2_dictionary__lookup( dict, first );
+                        first = ( char* ) array__get( production, k );
+                        r2 = ( rule* ) dictionary__lookup( dict, first );
                         if ( r2 )
                         {
                             proc.execute = ( procedure ) add_to_dict;
                             proc.state = r->first_set;
-                            p2_dictionary__distribute( r2->first_set, &proc );
+                            dictionary__distribute( r2->first_set, &proc );
 
                             if ( !r2->nullable )
                                 break;
@@ -261,34 +261,34 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
 
         for ( i = 0; i < n_rules; i++ )
         {
-            r = ( rule* ) p2_array__get( rules, i );
+            r = ( rule* ) array__get( rules, i );
 
-            n_prods = p2_array__size( r->productions );
+            n_prods = array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
             {
-                production = ( p2_array* ) p2_array__get( r->productions, j );
+                production = ( Array* ) array__get( r->productions, j );
 
                 if ( production )
                 {
-                    n = p2_array__size( production );
+                    n = array__size( production );
 
                     for ( k = 0; k < n - 1; k++ )
                     {
-                        first = ( char* ) p2_array__get( production, k );
-                        r2 = ( rule* ) p2_dictionary__lookup( dict, first );
+                        first = ( char* ) array__get( production, k );
+                        r2 = ( rule* ) dictionary__lookup( dict, first );
                         if ( r2 )
                         {
                             size_old = r2->follow_set->size;
 
-                            second = ( char* ) p2_array__get( production, k + 1 );
-                            r3 = ( rule* ) p2_dictionary__lookup( dict, second );
+                            second = ( char* ) array__get( production, k + 1 );
+                            r3 = ( rule* ) dictionary__lookup( dict, second );
 
                             /* Add the first set of a nonterminal. */
                             if ( r3 )
                             {
                                 proc.execute = ( procedure ) add_to_dict;
                                 proc.state = r2->follow_set;
-                                p2_dictionary__distribute( r3->first_set, &proc );
+                                dictionary__distribute( r3->first_set, &proc );
                             }
 
                             /* Add the first set of a terminal (the symbol itself). */
@@ -302,8 +302,8 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
 
                     for ( k = n - 1; k >= 0; k-- )
                     {
-                        first = ( char* ) p2_array__get( production, k );
-                        r2 = ( rule* ) p2_dictionary__lookup( dict, first );
+                        first = ( char* ) array__get( production, k );
+                        r2 = ( rule* ) dictionary__lookup( dict, first );
 
                         if ( r2 )
                         {
@@ -312,7 +312,7 @@ static void find_sets( p2_array *rules, p2_dictionary *dict )
                             /* Add the current rule's own follow set. */
                             proc.execute = ( procedure ) add_to_dict;
                             proc.state = r2->follow_set;
-                            p2_dictionary__distribute( r->follow_set, &proc );
+                            dictionary__distribute( r->follow_set, &proc );
 
                             if ( r2->follow_set->size != size_old )
                                 changed = 1;
@@ -341,14 +341,14 @@ static p2_action * print_proc( char *s, void *ignored )
 }
 
 
-static p2_action * production__print( p2_array *p, void *ignored )
+static p2_action * production__print( Array *p, void *ignored )
 {
     p2_procedure proc;
     proc.execute = ( procedure ) print_proc;
 
     printf( "   " );
     if ( p )
-        p2_array__distribute( p, &proc );
+        array__distribute( p, &proc );
     printf( "\n" );
     return 0;
 }
@@ -360,22 +360,22 @@ static void *rule__print( rule *r )
     proc.execute = ( procedure ) production__print;
 
     printf( "%s:\n", r->name );
-    p2_array__distribute( r->productions, &proc );
+    array__distribute( r->productions, &proc );
     return 0;
 }
 
 
 static p2_action * rule__print_first_set( rule *r, void *ignored )
 {
-    p2_array *a;
+    Array *a;
     p2_procedure proc;
     proc.execute = ( procedure ) print_proc;
 
     printf( "%s:  ", r->name );
-    a = p2_dictionary__keys( r->first_set );
-    p2_array__sort( a, ( comparator ) strcmp );
-    p2_array__distribute( a, &proc );
-    p2_array__delete( a );
+    a = dictionary__keys( r->first_set );
+    array__sort( a, ( comparator ) strcmp );
+    array__distribute( a, &proc );
+    array__delete( a );
     printf( "\n" );
 
     return 0;
@@ -384,15 +384,15 @@ static p2_action * rule__print_first_set( rule *r, void *ignored )
 
 static p2_action * rule__print_follow_set( rule *r )
 {
-    p2_array *a;
+    Array *a;
     p2_procedure proc;
     proc.execute = ( procedure ) print_proc;
 
     printf( "%s:  ", r->name );
-    a = p2_dictionary__keys( r->follow_set );
-    p2_array__sort( a, ( comparator ) strcmp );
-    p2_array__distribute( a, &proc );
-    p2_array__delete( a );
+    a = dictionary__keys( r->follow_set );
+    array__sort( a, ( comparator ) strcmp );
+    array__distribute( a, &proc );
+    array__delete( a );
     printf( "\n" );
 
     return 0;
@@ -405,7 +405,7 @@ static p2_action * rule__print_follow_set( rule *r )
 %union
 {
     char *string_t;
-    struct _p2_array *array_t;
+    struct _Array *array_t;
     struct _rule *rule_t;
 }
 
@@ -430,7 +430,7 @@ input:
 
     rules E_O_F
     {
-        p2_array *rules = $1;
+        Array *rules = $1;
 
         p2_procedure print_p;
         p2_procedure delete_p;
@@ -447,25 +447,25 @@ input:
 
         printf( "\n=== PRODUCTIONS ========================\n\n" );
         print_p.execute = ( procedure ) rule__print;
-        p2_array__distribute( rules, &print_p );
+        array__distribute( rules, &print_p );
 
         printf( "\n=== FIRST SETS =========================\n\n" );
         print_p.execute = ( procedure ) rule__print_first_set;
-        p2_array__distribute( rules, &print_p );
+        array__distribute( rules, &print_p );
 
         printf( "\n=== FOLLOW SETS ========================\n\n" );
         print_p.execute = ( procedure ) rule__print_follow_set;
-        p2_array__distribute( rules, &print_p );
+        array__distribute( rules, &print_p );
 
         printf( "\n" );
 
         /******************************/
 
         delete_p.execute = ( procedure ) rule__delete;
-        p2_array__distribute( rules, &delete_p );
-        p2_array__delete( rules );
+        array__distribute( rules, &delete_p );
+        array__delete( rules );
 
-        p2_dictionary__delete( rule_dict );
+        dictionary__delete( rule_dict );
 
         /******************************/
 
@@ -483,8 +483,8 @@ rules:
 
         new_parse();
 
-        $$ = p2_array__new( 0, 0 );
-        rule_dict = p2_dictionary__new();
+        $$ = array__new( 0, 0 );
+        rule_dict = dictionary__new();
     }
 
     | rules rule
@@ -494,7 +494,7 @@ rules:
         #endif
 
         $$ = $1;
-        p2_array__enqueue( $$, $2 );
+        array__enqueue( $$, $2 );
     }
     ;
 
@@ -508,7 +508,7 @@ rule:
         #endif
 
         $$ = rule__new( $1, $3 );
-        p2_dictionary__add( rule_dict, $$->name, $$ );
+        dictionary__add( rule_dict, $$->name, $$ );
     }
     ;
 
@@ -521,8 +521,8 @@ productions:
         production( "productions ::=  production" );
         #endif
 
-        $$ = p2_array__new( 0, 0 );
-        p2_array__enqueue( $$, $1 );
+        $$ = array__new( 0, 0 );
+        array__enqueue( $$, $1 );
     }
 
     | productions OR production
@@ -532,7 +532,7 @@ productions:
         #endif
 
         $$ = $1;
-        p2_array__enqueue( $$, $3 );
+        array__enqueue( $$, $3 );
     }
     ;
 
@@ -567,8 +567,8 @@ sequence:
         production( "sequence ::=  NAME" );
         #endif
 
-        $$ = p2_array__new( 0, 0 );
-        p2_array__enqueue( $$, $1 );
+        $$ = array__new( 0, 0 );
+        array__enqueue( $$, $1 );
     }
 
     | sequence NAME
@@ -578,7 +578,7 @@ sequence:
         #endif
 
         $$ = $1;
-        p2_array__enqueue( $$, $2 );
+        array__enqueue( $$, $2 );
     }
     ;
 

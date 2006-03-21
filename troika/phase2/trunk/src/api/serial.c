@@ -22,11 +22,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
         [.] graceful fail when basic object (combinator / primitive / type) not found.
 */
 
-#include <serial.h>
-#include <util/p2_set.h>
-#include <xml/xmldom.h>
-
 #include <time.h>
+
+#include <serial.h>
+#include <util/Set.h>
+#include <xml/xmldom.h>
 
 
 typedef unsigned char uc;
@@ -72,7 +72,7 @@ static Object *object__xml_decode
 /* Serializers for individual types *******************************************/
 
 
-static dom_element *p2_bag__xml_encode( p2_array *a, xml_encode_st *state )
+static dom_element *p2_bag__xml_encode( Array *a, xml_encode_st *state )
 {
     dom_element *el, *child;
     int i, size;
@@ -87,11 +87,11 @@ static dom_element *p2_bag__xml_encode( p2_array *a, xml_encode_st *state )
 
     el = dom_element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
 
-    size = p2_array__size( a );
+    size = array__size( a );
     for ( i = 0; i < size; i++ )
     {
         child = object__xml_encode(
-            ( Object* ) p2_array__get( a, i ), state, 0 );
+            ( Object* ) array__get( a, i ), state, 0 );
         dom_element__add_child( el, child );
     }
 
@@ -99,7 +99,7 @@ static dom_element *p2_bag__xml_encode( p2_array *a, xml_encode_st *state )
 }
 
 
-static dom_element *p2_term__xml_encode( p2_term *t, xml_encode_st *state )
+static dom_element *term__xml_encode( Term *t, xml_encode_st *state )
 {
     void **sup, **head, **cur = t->head;
     dom_element *el, *child;
@@ -107,7 +107,7 @@ static dom_element *p2_term__xml_encode( p2_term *t, xml_encode_st *state )
     #if DEBUG__SAFE
     if ( !t || !state )
     {
-        ERROR( "p2_term__xml_encode: null argument" );
+        ERROR( "term__xml_encode: null argument" );
         return 0;
     }
     #endif
@@ -130,7 +130,7 @@ static dom_element *p2_term__xml_encode( p2_term *t, xml_encode_st *state )
             head = t->head;
             t->head = cur;
 
-            child = p2_term__xml_encode( t, state );
+            child = term__xml_encode( t, state );
             dom_element__add_child( el, child );
 
             t->head = head;
@@ -168,7 +168,7 @@ static dom_element *p2_namespace__xml_encode
     ( p2_namespace *ns, xml_encode_st *state )
 {
     dom_element *el;
-    p2_array *keys;
+    Array *keys;
     ns_encode_st nse_st;
     p2_procedure proc;
 printf( "---s nsxe 1---\n" ); FFLUSH;
@@ -193,9 +193,9 @@ printf( "---s nsxe 1---\n" ); FFLUSH;
 printf( "ns = %#x\n", ( int ) ns );
 printf( "ns->children->size = %i\n", ns->children->size );
     keys = p2_dictionary__keys( ns->children );
-printf( "p2_array__size( keys ) = %i\n", p2_array__size( keys ) );
-    p2_array__distribute( keys, &proc );
-    p2_array__delete( keys );
+printf( "array__size( keys ) = %i\n", array__size( keys ) );
+    array__distribute( keys, &proc );
+    array__delete( keys );
 printf( "---s nsxe 2---\n" ); FFLUSH;
 
     return el;
@@ -205,9 +205,9 @@ printf( "---s nsxe 2---\n" ); FFLUSH;
 /* Deserializers for individual types *****************************************/
 
 
-static p2_array *p2_bag__xml_decode( dom_element *el, xml_decode_st *state )
+static Array *p2_bag__xml_decode( dom_element *el, xml_decode_st *state )
 {
-    p2_array *a;
+    Array *a;
     dom_element *child;
     Object *o;
 
@@ -224,14 +224,14 @@ static p2_array *p2_bag__xml_decode( dom_element *el, xml_decode_st *state )
     }
     #endif
 
-    a = p2_array__new( 0, 0 );
+    a = array__new( 0, 0 );
 
     child = dom_element__first_child( el );
 
     while ( child )
     {
         o = object__xml_decode( child, state );
-        p2_array__enqueue( a, o );
+        array__enqueue( a, o );
         child = dom_element__next_sibling( child );
     }
 
@@ -239,15 +239,15 @@ static p2_array *p2_bag__xml_decode( dom_element *el, xml_decode_st *state )
 }
 
 
-static p2_term *p2_term__xml_decode( dom_element *el, xml_decode_st *state )
+static Term *term__xml_decode( dom_element *el, xml_decode_st *state )
 {
-    p2_term *t;
+    Term *t;
     dom_element *child;
 
     #if DEBUG__SAFE
     if ( !el || !state )
     {
-        ERROR( "p2_term__xml_decode: null argument" );
+        ERROR( "term__xml_decode: null argument" );
         return 0;
     }
     #endif
@@ -258,28 +258,28 @@ static p2_term *p2_term__xml_decode( dom_element *el, xml_decode_st *state )
         #if DEBUG__SAFE
         if ( strcmp( ( char* ) dom_element__name( el ), OBJECT__XML__NAME ) )
         {
-            ERROR( "p2_term__xml_decode: bad element name" );
+            ERROR( "term__xml_decode: bad element name" );
             return 0;
         }
         #endif
 
-        t = p2_term__new( object__xml_decode( el, state ), 0 );
+        t = term__new( object__xml_decode( el, state ), 0 );
     }
 
     /* Proper term. */
     else
     {
         child = dom_element__first_child( el );
-        t = p2_term__xml_decode( child, state );
+        t = term__xml_decode( child, state );
 
         while (  ( child = dom_element__next_sibling( child ) ) )
         {
-            t = p2_term__merge_la
-                ( t, p2_term__xml_decode( child, state ) );
+            t = term__merge_la
+                ( t, term__xml_decode( child, state ) );
         }
     }
 
-printf( "returning term %#x (length = %i)\n", ( int ) t, p2_term__length( t ) );
+printf( "returning term %#x (length = %i)\n", ( int ) t, term__length( t ) );
     return t;
 }
 
@@ -509,7 +509,7 @@ printf( "id = %i\n", id ); FFLUSH;
                     o = object__new( 0, 0, 0 );
 
                     /* Register the new object. */
-                    p2_memory_manager__add( state->env->manager, o );
+                    memory_manager__add( state->env->manager, o );
 
                     p2_lookup_table__add( state->objects_by_id, ( void* ) id, o );
                 }
@@ -522,7 +522,7 @@ printf( "id = %i\n", id ); FFLUSH;
             {
                 o = object__new( 0, 0, 0 );
                 /* Register the new object. */
-                p2_memory_manager__add( state->env->manager, o );
+                memory_manager__add( state->env->manager, o );
             }
 
             o->type = type;
@@ -727,7 +727,7 @@ void p2_compiler__serialize( p2_compiler *c, char *path )
     dom_document *doc;
     dom_element *el;
     p2_lookup_table *ids;
-    p2_set *multirefs;
+    Set *multirefs;
     p2_procedure proc;
     hash_multiref_st state;
     xml_encode_st encode_state;
@@ -744,7 +744,7 @@ void p2_compiler__serialize( p2_compiler *c, char *path )
 
 printf( "---s s 1---\n" ); FFLUSH;
     ids = p2_lookup_table__new();
-    multirefs = p2_memory_manager__get_multirefs
+    multirefs = memory_manager__get_multirefs
         ( c->env->manager, c->env->data );
 printf( "---s s 2---\n" ); FFLUSH;
 
@@ -759,10 +759,10 @@ printf( "---s s 3---\n" ); FFLUSH;
 printf( "---s s 4---\n" ); FFLUSH;
 
     /* Assign all (other) multireferenced objects their ids. */
-    p2_set__distribute( multirefs, &proc );
+    set__distribute( multirefs, &proc );
 printf( "---s s 5---\n" ); FFLUSH;
 
-    p2_set__delete( multirefs );
+    set__delete( multirefs );
 printf( "---s s 6---\n" ); FFLUSH;
 
     /* Root element. */
@@ -789,7 +789,7 @@ printf( "---s s 8---\n" ); FFLUSH;
     p2_lookup_table__add
         ( encode_state.serializers, c->env->ns_t, ( void* ) p2_namespace__xml_encode );
     p2_lookup_table__add
-        ( encode_state.serializers, c->term_t, ( void* ) p2_term__xml_encode );
+        ( encode_state.serializers, c->term_t, ( void* ) term__xml_encode );
     /* ... */
 printf( "---s s 9---\n" ); FFLUSH;
 
@@ -846,7 +846,7 @@ void p2_compiler__deserialize( p2_compiler *c, char *path )
     p2_lookup_table__add
         ( decode_state.deserializers, c->env->ns_t, ( void* ) p2_namespace__xml_decode );
     p2_lookup_table__add
-        ( decode_state.deserializers, c->term_t, ( void* ) p2_term__xml_decode );
+        ( decode_state.deserializers, c->term_t, ( void* ) term__xml_decode );
 
     child = dom_element__first_child( el );
 

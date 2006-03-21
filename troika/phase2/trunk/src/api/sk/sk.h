@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <p2_memory_manager.h>
-#include <util/p2_term.h>
+#include <util/Term.h>
 
 
 typedef enum _combinator
@@ -71,13 +71,13 @@ typedef enum _combinator
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
     which is not an S or K combinator or a primitive, is considered a
     non-redex object. */
-p2_term *SK_reduce(
-    p2_term *term,
+Term *SK_reduce(
+    Term *term,
     p2_memory_manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,
-    void (*for_each_iteration)(p2_term*) );
+    void (*for_each_iteration)(Term*) );
 
 
 #endif  /* SK_H */

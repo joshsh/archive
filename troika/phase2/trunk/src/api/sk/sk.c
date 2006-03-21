@@ -18,13 +18,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <sk/sk.h>
-#include <p2_primitive.h>
+#include <Primitive.h>
 
 
 /* Kxy --> x
    [term size] [2]{K} [x_size]{x} [y_size]{y} ...
        --> [term size - y_size - 2] [x_size]{x} ... */
-static p2_term *K_reduce( p2_term *term )
+static Term *K_reduce( Term *term )
 {
     void **x, **y;
     unsigned int x_size, y_size;
@@ -53,7 +53,7 @@ static p2_term *K_reduce( p2_term *term )
 /* Sxyz --> xz(yz)
    [term size] [2]{S} [x_size]{x} [y_size]{y} [z_size]{z} ...
        --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ... */
-static p2_term *S_reduce( p2_term *term )
+static Term *S_reduce( Term *term )
 {
     void **x, **y, **z, **aux;
     unsigned int x_size, y_size, z_size, newsize;
@@ -71,7 +71,7 @@ static p2_term *S_reduce( p2_term *term )
     newsize = ( unsigned int ) *( term->head ) + z_size - 1;
     if ( newsize > term->buffer_size )
     {
-        term = p2_term__expand( term, newsize );
+        term = term__expand( term, newsize );
 
         /* Re-locate the head of 'x', 'y' and 'z'. */
         x = term->head + 3;
@@ -112,12 +112,12 @@ static p2_term *S_reduce( p2_term *term )
 /* Assumes left-associative form.
    Note: it's probably worth trying to find a way to consolidate the type
    checking and garbage collection of arguments. */
-static p2_term *prim_reduce( p2_term *term, p2_memory_manager *m )
+static Term *prim_reduce( Term *term, p2_memory_manager *m )
 {
     unsigned int i;
     Object *o;
     void *result, **args, **cur = term->head + 2;
-    p2_primitive *prim = ( p2_primitive* ) ( ( Object* ) *cur )->value;
+    Primitive *prim = ( Primitive* ) ( ( Object* ) *cur )->value;
     Type *param_type;
 printf( "---sk pr -2---\n" ); fflush( stdout );
 
@@ -130,7 +130,7 @@ printf( "---sk pr -2---\n" ); fflush( stdout );
     if ( !prim->arity )
     {
         ERROR( "prim_reduce: no parameters" );
-        p2_term__delete( term );
+        term__delete( term );
         return 0;
     }
     #endif
@@ -153,7 +153,7 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
 
             if ( args )
                 free( args );
-            p2_term__delete( term );
+            term__delete( term );
 
             return 0;
 
@@ -173,13 +173,13 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
 
             if ( args )
                 free( args );
-            p2_term__delete( term );
+            term__delete( term );
 
             return 0;
         }
         #endif
 
-        /* Note: it's more efficient to do this here than in p2_primitive.c */
+        /* Note: it's more efficient to do this here than in Primitive.c */
         #if PRIM__CHECKS__PARAM_TYPE
 
         param_type = prim->parameters[i].type;
@@ -190,7 +190,7 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
 
             if ( args )
                 free( args );
-            p2_term__delete( term );
+            term__delete( term );
 
             return 0;
         }
@@ -216,7 +216,7 @@ printf( "---sk pr 0.2---\n" ); fflush( stdout );
     if ( !result )
     {
         ERROR( "prim_reduce: null return value from primitive" );
-        p2_term__delete( term );
+        term__delete( term );
         return 0;
     }
     #endif
@@ -252,27 +252,27 @@ printf( "---sk pr 4---\n" ); fflush( stdout );
 
 
 /* Expand the subterm at the head of another term. */
-static p2_term *term_reduce( p2_term *term )
+static Term *term_reduce( Term *term )
 {
     unsigned int size, newsize;
-    p2_term *head_term;
+    Term *head_term;
 
     if ( ( unsigned int ) *( term->head ) == 2 )
     {
-        head_term = ( p2_term* ) ( ( Object* ) *( term->head + 1 ) )->value;
-        p2_term__delete( term );
-        return p2_term__copy( head_term );
+        head_term = ( Term* ) ( ( Object* ) *( term->head + 1 ) )->value;
+        term__delete( term );
+        return term__copy( head_term );
     }
 
     else
     {
-        head_term = ( p2_term* ) ( ( Object* ) *( term->head + 2 ) )->value;
+        head_term = ( Term* ) ( ( Object* ) *( term->head + 2 ) )->value;
 
         size = ( unsigned int ) *head_term->head;
 
         newsize = ( unsigned int ) *term->head + size - 2;
         if ( newsize > term->buffer_size )
-            term = p2_term__expand( term, newsize );
+            term = term__expand( term, newsize );
 
         term->head = term->buffer + term->buffer_size - ( unsigned int ) *term->head + 3 - size;
         memcpy( term->head, head_term->buffer, size * sizeof( void* ) );
@@ -286,13 +286,13 @@ static p2_term *term_reduce( p2_term *term )
 }
 
 
-p2_term *SK_reduce(
-    p2_term *term,
+Term *SK_reduce(
+    Term *term,
     p2_memory_manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,
-    void (*for_each_iteration)(p2_term*) )
+    void (*for_each_iteration)(Term*) )
 {
     #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
     int iter = 0;
@@ -306,7 +306,7 @@ p2_term *SK_reduce(
     {
         ERROR( "SK_reduce: null argument" );
         if ( term )
-            p2_term__delete( term );
+            term__delete( term );
         return 0;
     }
     #endif
@@ -332,7 +332,7 @@ printf( "\n" );  fflush( stdout );
         if ( ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
         {
             ERROR( "SK_reduce: reduction aborted (term might expand indefinitely)" );
-            p2_term__delete( term );
+            term__delete( term );
             return 0;
         }
         #endif
@@ -355,7 +355,7 @@ printf( "\n" );  fflush( stdout );
         if ( !head )
         {
             ERROR( "SK_reduce: null encountered at head of term" );
-            p2_term__delete( term );
+            term__delete( term );
             return 0;
         }
         #endif
@@ -365,7 +365,7 @@ printf( "\n" );  fflush( stdout );
         /* If the head object is a primitive, apply it. */
         if ( head_type == primitive_type )
         {
-            if ( p2_term__length( term ) <= ( ( p2_primitive* ) head->value )->arity )
+            if ( term__length( term ) <= ( ( Primitive* ) head->value )->arity )
                 return term;
             else
             {
@@ -387,7 +387,7 @@ printf( "\n" );  fflush( stdout );
                 /* Sxyz... --> xz(yz)... */
                 case S_combinator:
 
-                    if ( p2_term__length( term ) < 4 )
+                    if ( term__length( term ) < 4 )
                         return term;
                     else
                         term = S_reduce( term );
@@ -396,7 +396,7 @@ printf( "\n" );  fflush( stdout );
                 /* Kxy... --> x... */
                 case K_combinator:
 
-                    if ( p2_term__length( term ) < 3 )
+                    if ( term__length( term ) < 3 )
                         return term;
                     else
                         term = K_reduce( term );
@@ -410,7 +410,7 @@ printf( "\n" );  fflush( stdout );
         {
             term = term_reduce( term );
 /*
-            head_term = p2_term__copy( ( p2_term* ) head->value );
+            head_term = term__copy( ( Term* ) head->value );
 printf( "---sk r x 2---\n" ); fflush( stdout );
 
             size = ( unsigned int ) *term->head;
@@ -418,7 +418,7 @@ printf( "size = %i\n", *term->head );
             if ( size == 2 )
             {
 printf( "---sk r x 3a---\n" ); fflush( stdout );
-                p2_term__delete( term );
+                term__delete( term );
                 term = head_term;
             }
 
@@ -435,11 +435,11 @@ printf( "---sk r x 3b---\n" ); fflush( stdout );
 printf( "size - 2 = %i\n", *term->head );
                     }
 
-                    term = p2_term__cat( head_term, term );
+                    term = term__cat( head_term, term );
                 }
 
                 else
-                    term = p2_term__merge_la( head_term, term );
+                    term = term__merge_la( head_term, term );
             }
 */
 printf( "---sk r x 4---\n" ); fflush( stdout );
@@ -460,7 +460,7 @@ printf( "---sk r x 4---\n" ); fflush( stdout );
             ERROR( "SK_reduce: non-redex objects not permitted at the head of a term" );
 
             /* Garbage-collect whatever is left of the term. */
-            p2_term__delete( term );
+            term__delete( term );
 
             /* Fail. */
             return 0;
@@ -473,7 +473,7 @@ printf( "iter = %i\n", iter );
         if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
         {
             ERROR( "SK_reduce: reduction aborted (possible infinite loop)" );
-            p2_term__delete( term );
+            term__delete( term );
             return 0;
         }
         #endif

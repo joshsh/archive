@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 
-#include <util/p2_array.h>
+#include <util/Array.h>
 #include <util/p2_dictionary.h>
 
 
@@ -50,13 +50,13 @@ p2_dictionary *dict;
 
 static void register_failed_login( const char *ip )
 {
-    int attempts = ( int ) p2_dictionary__lookup( dict, ip );
-    p2_dictionary__add( dict, ip, ( void* ) attempts + 1 );
+    int attempts = ( int ) dictionary__lookup( dict, ip );
+    dictionary__add( dict, ip, ( void* ) attempts + 1 );
 }
 
 static p2_action *print_offender( char *ip, p2_dictionary *d )
 {
-    printf( "%s (%i)\n", ip, ( int ) p2_dictionary__lookup( dict, ip ) );
+    printf( "%s (%i)\n", ip, ( int ) dictionary__lookup( dict, ip ) );
     return 0;
 }
 
@@ -113,13 +113,13 @@ input:
     {
         p2_procedure proc;
 
-        p2_array *keys = p2_dictionary__keys( dict );
+        Array *keys = dictionary__keys( dict );
         proc.execute = ( procedure ) print_offender;
         proc.state = dict;
-        p2_array__distribute( keys, &proc );
-        p2_array__delete( keys );
+        array__distribute( keys, &proc );
+        array__delete( keys );
 
-        p2_dictionary__delete( dict );
+        dictionary__delete( dict );
         YYACCEPT;
     }
     ;
@@ -129,7 +129,7 @@ messages:
 
     /* This production precedes input. */
     {
-        dict = p2_dictionary__new();
+        dict = dictionary__new();
     }
 
     | messages message

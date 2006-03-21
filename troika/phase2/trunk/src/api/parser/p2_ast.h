@@ -32,8 +32,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include "../util/p2_name.h"
-#include "../util/p2_array.h"
-#include "../util/p2_term.h"
+#include "../util/Array.h"
+#include "../util/Term.h"
 
 
 typedef enum _p2_ast__type
@@ -62,9 +62,9 @@ typedef struct _p2_ast
 } p2_ast;
 
 
-/** \param bag  a p2_array of AST nodes
+/** \param bag  a Array of AST nodes
     \return  a new AST node of type BAG */
-p2_ast *p2_ast__bag( p2_array *bag );
+p2_ast *p2_ast__bag( Array *bag );
 
 p2_ast *p2_ast__char( char c );
 
@@ -72,15 +72,15 @@ p2_ast *p2_ast__float( double f );
 
 p2_ast *p2_ast__int( int i );
 
-/** \param name  a p2_array of C strings representing a name
+/** \param name  a Array of C strings representing a name
     \return  a new AST node of type NAME */
 p2_ast *p2_ast__name( p2_name *name );
 
 p2_ast *p2_ast__string( char *s );
 
-/** \param term  a p2_term of AST nodes
+/** \param term  a Term of AST nodes
     \return  a new AST node of type TERM */
-p2_ast *p2_ast__term( p2_term *term );
+p2_ast *p2_ast__term( Term *term );
 
 
 p2_ast *p2_ast__void( void *p );

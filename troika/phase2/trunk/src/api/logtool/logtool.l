@@ -30,7 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "logtool.tab.h"
 
-#include <util/p2_array.h>
+#include <util/Array.h>
 
 
 /* Line and character numbers *************************************************/
@@ -53,7 +53,7 @@ void new_line()
 }
 
 
-p2_array *sc_stack;
+Array *sc_stack;
 
 
 /** Initialize the lexer for a new invocation of yyparse(). */
@@ -62,13 +62,13 @@ void new_parse()
     line_number = 0;
     new_line();
 
-    sc_stack = p2_array__new( 0, 0 );
+    sc_stack = array__new( 0, 0 );
 }
 
 
 void end_parse()
 {
-    p2_array__delete( sc_stack );
+    array__delete( sc_stack );
 }
 
 

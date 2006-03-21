@@ -67,7 +67,7 @@ static p2_action * p2_ast__delete__proc( p2_ast *ast, void *ignored )
 }
 
 
-p2_ast *p2_ast__bag( p2_array *bag )
+p2_ast *p2_ast__bag( Array *bag )
 {
     p2_ast *ast = p2_ast__new( BAG_T, bag );
 
@@ -154,7 +154,7 @@ p2_ast *p2_ast__string( char *s )
 }
 
 
-p2_ast *p2_ast__term( p2_term *term )
+p2_ast *p2_ast__term( Term *term )
 {
     p2_ast *ast = p2_ast__new( TERM_T, term );
 
@@ -183,9 +183,9 @@ int p2_ast__size( p2_ast *ast )
     switch ( ast->type )
     {
         case BAG_T:
-            return p2_array__size( ( p2_array* ) ast->value );
+            return array__size( ( Array* ) ast->value );
         case TERM_T:
-            return p2_term__length( ( p2_term* ) ast->value );
+            return term__length( ( Term* ) ast->value );
         default:
             return 1;
     }
@@ -205,8 +205,8 @@ void p2_ast__delete( p2_ast *ast )
         case BAG_T:
 
             p.execute = ( procedure ) p2_ast__delete__proc;
-            p2_array__distribute( ( p2_array* ) ast->value, &p );
-            p2_array__delete( ( p2_array* ) ast->value );
+            array__distribute( ( Array* ) ast->value, &p );
+            array__delete( ( Array* ) ast->value );
 
             break;
 
@@ -227,7 +227,7 @@ void p2_ast__delete( p2_ast *ast )
 
         case NAME_T:
 
-            p2_name__delete( ( p2_name* ) ast->value );
+            name__delete( ( p2_name* ) ast->value );
             break;
 
         case STRING_T:
@@ -238,8 +238,8 @@ void p2_ast__delete( p2_ast *ast )
         case TERM_T:
 
             p.execute = ( procedure ) p2_ast__delete__proc;
-            p2_term__distribute( ast->value, &p );
-            p2_term__delete( ( p2_term* ) ast->value );
+            term__distribute( ast->value, &p );
+            term__delete( ( Term* ) ast->value );
 
             break;
 
@@ -261,9 +261,9 @@ void p2_ast__delete( p2_ast *ast )
 /* Printing *******************************************************************/
 
 
-static void term__print( p2_term *term, int top_level )
+static void term__print( Term *term, int top_level )
 {
-    p2_term *subterm;
+    Term *subterm;
 
     #ifdef PRINT_TERM_AS_ARRAY
         void **cur = term->head, **sup = term->buffer + term->buffer_size;
@@ -274,7 +274,7 @@ static void term__print( p2_term *term, int top_level )
             cur++;
         }
     #else
-        unsigned int i, length = p2_term__length( term );
+        unsigned int i, length = term__length( term );
 
         if ( length == 1 )
             p2_ast__print( ( p2_ast* ) *( term->head + 1 ) );
@@ -289,15 +289,15 @@ static void term__print( p2_term *term, int top_level )
 
             for ( i = 0; i < length - 1; i++ )
             {
-                subterm = p2_term__subterm_at( term, i );
+                subterm = term__subterm_at( term, i );
                 term__print( subterm, 0 );
-                p2_term__delete( subterm );
+                term__delete( subterm );
                 printf( " " );
             }
 
-            subterm = p2_term__subterm_at( term, length - 1 );
+            subterm = term__subterm_at( term, length - 1 );
             term__print( subterm, 0 );
-            p2_term__delete( subterm );
+            term__delete( subterm );
 
             if ( !top_level )
                 printf( " )" );
@@ -308,9 +308,9 @@ static void term__print( p2_term *term, int top_level )
 }
 
 
-static void bag__print( p2_array *a )
+static void bag__print( Array *a )
 {
-    int i, size = p2_array__size( a );
+    int i, size = array__size( a );
     if ( !size )
         printf( "{null}" );
     else
@@ -322,7 +322,7 @@ static void bag__print( p2_array *a )
         {
             if ( i )
                 printf( ", " );
-            p2_ast__print( ( p2_ast* ) p2_array__get( a, i ) );
+            p2_ast__print( ( p2_ast* ) array__get( a, i ) );
         }
 
         /*if ( size > 1 )*/
@@ -339,7 +339,7 @@ void p2_ast__print( p2_ast *ast )
     {
         case BAG_T:
 
-            bag__print( ( p2_array* ) ast->value );
+            bag__print( ( Array* ) ast->value );
             break;
 
         case CHAR_T:
@@ -359,7 +359,7 @@ void p2_ast__print( p2_ast *ast )
 
         case NAME_T:
 
-            p2_name__print( ( p2_name* ) ast->value );
+            name__print( ( p2_name* ) ast->value );
             break;
 
         case STRING_T:
@@ -380,7 +380,7 @@ void p2_ast__print( p2_ast *ast )
         case TERM_T:
 
             printf( "[ " );
-            term__print( ( p2_term* ) ast->value, 1 );
+            term__print( ( Term* ) ast->value, 1 );
             printf( " ]" );
             break;
 
