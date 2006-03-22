@@ -37,8 +37,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 int main( int argc, char **argv )
 {
-    xmldom__init( );
+    unsigned char *s;
 
+    xmldom__init( );
 
     dom_document *doc = dom_document__new( );
 
@@ -69,6 +70,7 @@ int main( int argc, char **argv )
 
     printf("----------\n");
 
+/* Caution: memory leaks.
     el = dom_document__root( doc ) ;
     printf( "child name = %s.\n", dom_element__name( el )) ;
     printf( "child text = %s.\n", dom_element__text( el )) ;
@@ -86,6 +88,7 @@ int main( int argc, char **argv )
     printf( "grandchild name = %s.\n", dom_element__name( el2 )) ;
     attr = dom_element__attr( el2, UC "programs", 0 );
     printf( "grandchild attribute \"programs\" = %s.\n", dom_attr__value( attr )) ;
+*/
 
     printf("----------\n");
 

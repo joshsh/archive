@@ -25,8 +25,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_H
-#define P2_H
+#ifndef DEFS_H
+#define DEFS_H
 
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */
@@ -38,7 +38,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#define VERSION "0.5.0"
+#define VERSION "0.6.0"
 
 
 #define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
@@ -57,22 +57,6 @@ enum boolean
 };
 
 typedef enum boolean boolean;
-
-
-typedef void *  ( *allocator )( void );
-typedef int     ( *comparator )( const void *arg1, const void *arg2 );
-typedef void *  ( *copy_cons )( void *p );
-typedef boolean ( *criterion )( void *arg );
-typedef boolean ( *criterion2 )( void *arg1, void *arg2 );
-typedef void *  ( *decoder )( char *buffer );
-typedef void    ( *destructor )( void *p );
-typedef void    ( *encoder )( void *p, char *buffer );
-
-typedef void    ( *sort_f )( void *p, comparator cmp );
-typedef void *  ( *substitution_f )( void *p, void *state );
-typedef void    ( *void_f )( void *p );
-
-typedef void    ( *generic_f )( void );
 
 
 /* Procedures (functions with state) ******************************************/
@@ -116,7 +100,25 @@ typedef struct _p2_procedure
 /* ~ capitalization */
 #define p2_procedure__execute( p, data )  (p)->execute( (data), (p)->state )
 
-typedef void    ( *distributor )( void *data, p2_procedure *a );
+
+/******************************************************************************/
+
+
+typedef void *  ( *Allocator )( void );
+typedef int     ( *Comparator )( const void *arg1, const void *arg2 );
+typedef void *  ( *Copy_Cons )( void *p );
+typedef boolean ( *Criterion )( void *arg );
+typedef boolean ( *Criterion2 )( void *arg1, void *arg2 );
+typedef void *  ( *Decoder )( char *buffer );
+typedef void    ( *Destructor )( void *p );
+typedef void    ( *Distributor )( void *data, p2_procedure *a );
+typedef void    ( *Encoder )( void *p, char *buffer );
+
+typedef void    ( *Sort )( void *p, Comparator cmp );
+typedef void *  ( *Substitution )( void *p, void *state );
+typedef void    ( *Void_f )( void *p );
+
+typedef void    ( *Generic_f )( void );
 
 
 /* Errors *********************************************************************/
@@ -149,6 +151,6 @@ typedef void    ( *distributor )( void *data, p2_procedure *a );
 }
 
 
-#endif  /* P2_H */
+#endif  /* DEFS_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -348,8 +348,8 @@ bunch__type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( destructor ) bunch__delete;
-        type->distribute = ( distributor ) bunch__distribute;
+        type->destroy = ( Destructor ) bunch__delete;
+        type->distribute = ( Distributor ) bunch__distribute;
     }
 
     return type;

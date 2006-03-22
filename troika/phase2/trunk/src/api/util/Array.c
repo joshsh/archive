@@ -437,7 +437,7 @@ struct Mergesort_Ctx
 {
     int lo, m, hi;
     void **buffer, **aux;
-    comparator compare;
+    Comparator compare;
 };
 
 
@@ -448,7 +448,7 @@ mergesort( int lo, int hi, Mergesort_Ctx *state )
     int m;
     int i, j, k;
     void **buffer, **aux;
-    comparator compare;
+    Comparator compare;
 
     if (lo < hi)
     {
@@ -510,7 +510,7 @@ normalize( Array *a )
 
 /* Note: compare to qsort in stdlib.h */
 void
-array__sort( Array *a, comparator compare )
+array__sort( Array *a, Comparator compare )
 {
     Mergesort_Ctx state;
     state.compare = compare;
@@ -731,9 +731,9 @@ array__type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( destructor ) array__delete;
-        type->distribute = ( distributor ) array__distribute;
-        type->encode = ( encoder ) array__encode;
+        type->destroy = ( Destructor ) array__delete;
+        type->distribute = ( Distributor ) array__distribute;
+        type->encode = ( Encoder ) array__encode;
     }
 
     return type;

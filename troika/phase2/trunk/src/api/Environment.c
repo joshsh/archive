@@ -156,11 +156,11 @@ printf( "---e 3---\n" ); fflush( stdout );
       || !( env->type_t = type__new( "type", 0 ) ) )
         goto abort;
 
-    env->ns_t->destroy =    ( destructor )  namespace__delete;
-    env->ns_t->distribute = ( distributor ) namespace__distribute;
-    env->prim_t->destroy =  ( destructor )  primitive__delete;
-    env->prim_t->encode = ( encoder ) primitive__encode;
-    env->type_t->destroy =  ( destructor )  type__delete;
+    env->ns_t->destroy =    ( Destructor )  namespace__delete;
+    env->ns_t->distribute = ( Distributor ) namespace__distribute;
+    env->prim_t->destroy =  ( Destructor )  primitive__delete;
+    env->prim_t->encode = ( Encoder ) primitive__encode;
+    env->type_t->destroy =  ( Destructor )  type__delete;
 
 printf( "---e 4---\n" ); fflush( stdout );
 
@@ -300,7 +300,7 @@ printf( "---e d 9---\n" ); fflush( stdout );
 
 Object *
 environment__register_primitive
-    ( Environment *env, Primitive *prim, int flags, generic_f src_f )
+    ( Environment *env, Primitive *prim, int flags, Generic_f src_f )
 {
     Object *o;
 
@@ -309,11 +309,11 @@ environment__register_primitive
     if ( flags & PRIM__CONSTRUCTOR )
         ERROR( "environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
     if ( flags & PRIM__DECODER )
-        prim->return_type->decode = ( decoder ) src_f;
+        prim->return_type->decode = ( Decoder ) src_f;
     if ( flags & PRIM__DESTRUCTOR )
-        first_param->destroy = ( destructor ) src_f;
+        first_param->destroy = ( Destructor ) src_f;
     if ( flags & PRIM__ENCODER )
-        first_param->encode = ( encoder ) src_f;
+        first_param->encode = ( Encoder ) src_f;
 
     if ( !( o = object__new( env->prim_t, prim, OBJECT__IMMUTABLE ) ) )
     {

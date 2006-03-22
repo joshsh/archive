@@ -42,21 +42,6 @@ yyparse();
 
 typedef struct Compiler Compiler;
 
-struct Compiler
-{
-    Environment *env;
-    Namespace_o *cur_ns_obj;
-
-    Dictionary *commands;
-
-    int locked;
-
-    /* Parser types. */
-    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
-
-    boolean suppress_output, show_line_numbers;
-};
-
 
 /** Constructor.
     \param env  an environment for the compiler to act upon */
@@ -67,6 +52,14 @@ compiler__new( Environment *env );
 /** Destructor. */
 extern void
 compiler__delete( Compiler *c );
+
+
+extern Environment *
+compiler__environment( Compiler *c );
+
+
+extern Namespace_o *
+compiler__working_namespace( Compiler *c );
 
 
 /** yyparse is invoked here. */

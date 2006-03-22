@@ -99,7 +99,7 @@ Dictionary *
 dictionary__new( void )
 {
     Hash_Table *h = hash_table__new
-        ( 0, 0, 0, ( hash_f ) hash, ( comparator ) compare );
+        ( 0, 0, 0, ( hash_f ) hash, ( Comparator ) compare );
 
     return h;
 }
@@ -241,7 +241,7 @@ dictionary__keys( Dictionary *dict )
     hash_table__distribute( dict, &p );
 
     /* Alphabetize the array. */
-    array__sort( a, ( comparator ) strcmp );
+    array__sort( a, ( Comparator ) strcmp );
 
     return a;
 }

@@ -127,7 +127,7 @@ array__simple_remove( Array *a, int i );
 
 /** Sorts the array using MergeSort. */
 extern void
-array__sort( Array *a, comparator compare );
+array__sort( Array *a, Comparator compare );
 
 
 /* Logical set functions and item substitution ********************************/

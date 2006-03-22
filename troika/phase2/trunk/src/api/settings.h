@@ -26,8 +26,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_SETTINGS_H
-#define P2_SETTINGS_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 
 /* Debugging ******************************************************************/
@@ -172,6 +172,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#endif  /* P2_SETTINGS_H */
+#endif  /* SETTINGS_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -90,7 +90,7 @@ printf( "---m 4---\n" ); fflush( stdout );
     }
 printf( "---m 4.5---\n" ); fflush( stdout );
     Object_t = type__new( "object", 0 );
-    Object_t->destroy = ( destructor ) object__delete;
+    Object_t->destroy = ( Destructor ) object__delete;
     m->objects_o = object__new(
         bunch__type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS ),
         m->objects, 0 );
@@ -179,7 +179,7 @@ memory_manager__set_root( Memory_Manager *m, Object *o )
     if ( !m || !o )
     {
         ERROR( "memory_manager__set_root: null argument" );
-        return 0;
+        return;
     }
     #endif
 
@@ -278,7 +278,7 @@ unmark_all( Memory_Manager *m )
     }
     #endif
 
-    collection__do_for_all( m->objects_o, ( void_f ) unmark );
+    collection__do_for_all( m->objects_o, ( Void_f ) unmark );
     /*bunch__for_all( m->objects, (void*(*)(void*)) unmark );*/
     m->clean = 1;
 }
@@ -296,7 +296,7 @@ sweep( Memory_Manager *m )
     }
     #endif
 
-    collection__exclude_if( m->objects_o, ( criterion ) unmark_for_sweep );
+    collection__exclude_if( m->objects_o, ( Criterion ) unmark_for_sweep );
     /*bunch__exclude_if( m->objects, (void*(*)(void*)) unmark_for_sweep );*/
     m->clean = 1;
 }

@@ -115,7 +115,7 @@ hash_table__new(
     unsigned int sparsity,
     unsigned int expansion,
     hash_f hash,
-    comparator compare )
+    Comparator compare )
 {
     unsigned int i;
 

@@ -24,7 +24,7 @@ typedef struct Search_Ctx Search_Ctx;
 
 struct Search_Ctx
 {
-    criterion match;
+    Criterion match;
     Array *results;
     void *single_result;
 
@@ -69,12 +69,12 @@ typedef struct Voidf_Ctx Voidf_Ctx;
 
 struct Voidf_Ctx
 {
-    void_f f;
+    Void_f f;
 };
 
 
 static p2_action *
-void_f_procedure( void *data, Voidf_Ctx *wrapper )
+Void_f_procedure( void *data, Voidf_Ctx *wrapper )
 {
     wrapper->f( data );
 
@@ -83,14 +83,14 @@ void_f_procedure( void *data, Voidf_Ctx *wrapper )
 
 
 void
-collection__do_for_all( Collection *c, void_f f )
+collection__do_for_all( Collection *c, Void_f f )
 {
     p2_procedure p;
     Voidf_Ctx ctx;
 
     ctx.f = f;
 
-    p.execute = ( procedure ) void_f_procedure;
+    p.execute = ( procedure ) Void_f_procedure;
     p.state = &ctx;
 
     c->type->distribute( c->value, &p );
@@ -115,7 +115,7 @@ exclude_if_match( void *data, Search_Ctx *search )
 
 
 void
-collection__exclude_if( Collection *c, criterion cr )
+collection__exclude_if( Collection *c, Criterion cr )
 {
     p2_procedure p;
     Search_Ctx search;
@@ -133,7 +133,7 @@ collection__exclude_if( Collection *c, criterion cr )
 
 
 boolean
-collection__exists( Collection *c, criterion cr )
+collection__exists( Collection *c, Criterion cr )
 {
     p2_procedure p;
     Search_Ctx search;
@@ -153,7 +153,7 @@ collection__exists( Collection *c, criterion cr )
 
 
 void *
-collection__first_match( Collection *c, criterion cr )
+collection__first_match( Collection *c, Criterion cr )
 {
     p2_procedure p;
     Search_Ctx search;
@@ -173,7 +173,7 @@ collection__first_match( Collection *c, criterion cr )
 
 
 boolean
-collection__for_all( Collection *c, criterion cr )
+collection__for_all( Collection *c, Criterion cr )
 {
     p2_procedure p;
     Search_Ctx search;
@@ -206,7 +206,7 @@ add_if_match( void *data, Search_Ctx *search )
 
 
 Array *
-collection__match( Collection *c, criterion cr )
+collection__match( Collection *c, Criterion cr )
 {
     p2_procedure p;
     Search_Ctx search;
@@ -229,7 +229,7 @@ typedef struct Subst_Ctx Subst_Ctx;
 
 struct Subst_Ctx
 {
-    substitution_f substitute_for;
+    Substitution substitute_for;
 
     void *state;
     p2_action action;
@@ -246,7 +246,7 @@ substitute( void *data, Subst_Ctx *context )
 
 
 void
-collection__replace_all( Collection *c, substitution_f f, void *state )
+collection__replace_all( Collection *c, Substitution f, void *state )
 {
     p2_procedure p;
     Subst_Ctx context;
@@ -266,7 +266,7 @@ collection__replace_all( Collection *c, substitution_f f, void *state )
 
 
 void
-collection__sort( Collection *c, comparator cmp )
+collection__sort( Collection *c, Comparator cmp )
 {
     c->type->sort( c->value, cmp );
 }

@@ -45,28 +45,28 @@ Collection_type *Collection_type__new(
 
 
 extern void
-collection__do_for_all(  Collection *c, void_f f );
+collection__do_for_all(  Collection *c, Void_f f );
 
 extern void
-collection__exclude_if(  Collection *c, criterion cr );
+collection__exclude_if(  Collection *c, Criterion cr );
 
 extern boolean
-collection__exists(      Collection *c, criterion cr );
+collection__exists(      Collection *c, Criterion cr );
 
 extern void *
-collection__first_match( Collection *c, criterion cr );
+collection__first_match( Collection *c, Criterion cr );
 
 extern boolean
-collection__for_all(     Collection *c, criterion cr );
+collection__for_all(     Collection *c, Criterion cr );
 
 extern Array *
-collection__match(       Collection *c, criterion cr );
+collection__match(       Collection *c, Criterion cr );
 
 extern void
-collection__replace_all( Collection *c, substitution_f f, void *state );
+collection__replace_all( Collection *c, Substitution f, void *state );
 
 extern void
-collection__sort(        Collection *c, comparator cmp );
+collection__sort(        Collection *c, Comparator cmp );
 
 
 #endif  /* COLLECTION_H */

@@ -43,7 +43,8 @@ K_reduce( Term *term )
     memcpy( term->head, x, x_size * sizeof( void* ) );
 
     /* Reset the term head. */
-    if ( ( unsigned int ) *term->head == 2 )
+    if ( ( unsigned int ) *term->head == 2
+      && ( term->buffer + term->buffer_size - term->head > 2 ) )
         term->head--;
     *( term->head ) = ( void * ) ( term->buffer + term->buffer_size - term->head );
 
@@ -58,7 +59,7 @@ static Term *
 S_reduce( Term *term )
 {
     void **x, **y, **z, **aux;
-    unsigned int x_size, y_size, z_size, newsize;
+    unsigned int x_size, y_size, z_size, newsize, temp;
 
     /* Locate the head of 'x', 'y' and 'z'. */
     x = term->head + 3;
@@ -90,8 +91,14 @@ S_reduce( Term *term )
 
     /* Prepend a term head for the new sub-term 'yz'.  The data of 'y' and 'z'
        remains where it is. */
-    term->head = y - 1;
-    *( term->head ) = ( void* ) ( y_size + z_size + 1 );
+    temp = y_size + z_size;
+    term->head = y;
+    if ( ( unsigned int ) *term->head == 2 )
+    {
+        term->head--;
+        temp++;
+    }
+    *( term->head ) = ( void* ) temp;
 
     /* Prepend a duplicate 'z'. */
     term->head -= z_size;
@@ -103,7 +110,8 @@ S_reduce( Term *term )
     free( aux );
 
     /* Prepend a term head. */
-    if ( ( unsigned int ) *term->head == 2 )
+    if ( ( unsigned int ) *term->head == 2
+      && ( term->buffer + term->buffer_size - term->head > 2 ) )
         term->head--;
     *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
 
@@ -263,14 +271,14 @@ term_reduce( Term *term )
 
     if ( ( unsigned int ) *( term->head ) == 2 )
     {
-        head_term = ( Term* ) ( ( Object* ) *( term->head + 1 ) )->value;
+        head_term = ( ( Object* ) *( term->head + 1 ) )->value;
         term__delete( term );
         return term__copy( head_term );
     }
 
     else
     {
-        head_term = ( Term* ) ( ( Object* ) *( term->head + 2 ) )->value;
+        head_term = ( ( Object* ) *( term->head + 2 ) )->value;
 
         size = ( unsigned int ) *head_term->head;
 
@@ -278,8 +286,11 @@ term_reduce( Term *term )
         if ( newsize > term->buffer_size )
             term = term__expand( term, newsize );
 
-        term->head = term->buffer + term->buffer_size - ( unsigned int ) *term->head + 3 - size;
-        memcpy( term->head, head_term->buffer, size * sizeof( void* ) );
+        /*term->head = term->buffer;*/
+        /*term->head = term->buffer + term->buffer_size - ( unsigned int ) *term->head + 3 - size;*/
+        term->head += 3 - size;
+
+        memcpy( term->head, head_term->head, size * sizeof ( void* ) );
 
         if ( ( unsigned int ) *term->head == 2 )
             term->head--;
@@ -287,6 +298,26 @@ term_reduce( Term *term )
 
         return term;
     }
+}
+
+
+static void
+print_term( Term *t )
+{
+    void **cur = t->head, **lim = cur + ( unsigned int ) *cur;
+    unsigned int i;
+
+    while ( cur < lim )
+    {
+        i = ( unsigned int ) *cur;
+        if ( i < 0x1000 )
+            printf( " %i", i );
+        else
+            printf( " %#x", i );
+        cur++;
+    }
+
+    printf( "\n" );
 }
 
 
@@ -315,6 +346,10 @@ SK_reduce(
         return 0;
     }
     #endif
+
+#if DEBUG__SK
+print_term( term );
+#endif
 
     /* Iterate until the resulting term is in head-normal form. */
     for (;;)
@@ -414,40 +449,6 @@ printf( "\n" );  fflush( stdout );
         else if ( head_type == term_type )
         {
             term = term_reduce( term );
-/*
-            head_term = term__copy( ( Term* ) head->value );
-printf( "---sk r x 2---\n" ); fflush( stdout );
-
-            size = ( unsigned int ) *term->head;
-printf( "size = %i\n", *term->head );
-            if ( size == 2 )
-            {
-printf( "---sk r x 3a---\n" ); fflush( stdout );
-                term__delete( term );
-                term = head_term;
-            }
-
-            else
-            {
-printf( "---sk r x 3b---\n" ); fflush( stdout );
-                term->head += 3;
-                if ( ( unsigned int ) *term->head == 2 )
-                {
-                    if ( size > 5 )
-                    {
-                        term->head--;
-                        *term->head = ( void* ) ( size - 2 );
-printf( "size - 2 = %i\n", *term->head );
-                    }
-
-                    term = term__cat( head_term, term );
-                }
-
-                else
-                    term = term__merge_la( head_term, term );
-            }
-*/
-printf( "---sk r x 4---\n" ); fflush( stdout );
         }
 
         /* Any object which is not an S or K combinator, a term or a primitive
@@ -472,6 +473,10 @@ printf( "---sk r x 4---\n" ); fflush( stdout );
 
             #endif
         }
+
+#if DEBUG__SK
+print_term( term );
+#endif
 
         #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
 printf( "iter = %i\n", iter );

@@ -24,6 +24,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <time.h>
 
 
+struct Compiler
+{
+    Environment *env;
+    Namespace_o *cur_ns_obj;
+
+    Dictionary *commands;
+
+    int locked;
+
+    boolean suppress_output, show_line_numbers;
+};
+
+
 /* Compiler object is global because flex/bison are not thread safe. */
 static Compiler *compiler = 0;
 
@@ -124,14 +137,20 @@ compiler__new( Environment *env )
     printf( "[%#x] compiler__new(%#x)\n", ( int ) c, ( int ) env );
     #endif
 
+    c->env = env;
+    c->cur_ns_obj = env->data;
+    c->locked = 0;
+    c->suppress_output = boolean__false;
+    c->show_line_numbers = boolean__true;
+
     /* These basic types are indispensable for the compiler to communicate with
        the parser. */
-    if ( !( c->bag_t = lookup_type( env, "bag" ) )
-      || !( c->char_t = lookup_type( env, "char" ) )
-      || !( c->float_t = lookup_type( env, "double" ) )
-      || !( c->int_t = lookup_type( env, "int" ) )
-      || !( c->string_t = lookup_type( env, "cstring" ) )
-      || !( c->term_t = lookup_type( env, "term" ) ) )
+    if ( !( c->env->bag_t = lookup_type( env, "bag" ) )
+      || !( c->env->char_t = lookup_type( env, "char" ) )
+      || !( c->env->float_t = lookup_type( env, "double" ) )
+      || !( c->env->int_t = lookup_type( env, "int" ) )
+      || !( c->env->string_t = lookup_type( env, "cstring" ) )
+      || !( c->env->term_t = lookup_type( env, "term" ) ) )
     {
         ERROR( "compiler__new: basic type not found" );
         free( c );
@@ -144,12 +163,6 @@ compiler__new( Environment *env )
         free( c );
         return 0;
     }
-
-    c->env = env;
-    c->cur_ns_obj = env->data;
-    c->locked = 0;
-    c->suppress_output = boolean__false;
-    c->show_line_numbers = boolean__true;
 
     compiler = c;
 
@@ -181,6 +194,20 @@ compiler__delete( Compiler *c )
     free( c );
 
     compiler = 0;
+}
+
+
+Environment *
+compiler__environment( Compiler *c )
+{
+    return c->env;
+}
+
+
+Namespace_o *
+compiler__working_namespace( Compiler *c )
+{
+    return c->cur_ns_obj;
 }
 
 
@@ -350,26 +377,26 @@ object_for_ast( p2_ast* ast, Subst_Ctx *state )
     {
         case BAG_T:
 
-            type = compiler->bag_t;
+            type = compiler->env->bag_t;
             value = ast->value;
             array__distribute( ( Array* ) value, state->subst_proc );
             break;
 
         case CHAR_T:
 
-            type = compiler->char_t;
+            type = compiler->env->char_t;
             value = ast->value;
             break;
 
         case FLOAT_T:
 
-            type = compiler->float_t;
+            type = compiler->env->float_t;
             value = ast->value;
             break;
 
         case INT_T:
 
-            type = compiler->int_t;
+            type = compiler->env->int_t;
             value = ast->value;
             break;
 
@@ -382,13 +409,13 @@ object_for_ast( p2_ast* ast, Subst_Ctx *state )
 
         case STRING_T:
 
-            type = compiler->string_t;
+            type = compiler->env->string_t;
             value = ast->value;
             break;
 
         case TERM_T:
 
-            type = compiler->term_t;
+            type = compiler->env->term_t;
             value = ast->value;
             term__distribute( ( Term* ) value, state->subst_proc );
             break;
@@ -675,7 +702,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     char print_buffer[1000];
     Term *t;
 
-    encoder char__encode, double__encode, string__encode, term__encode;
+    Encoder char__encode, double__encode, string__encode, term__encode;
 
     #if DEBUG__SAFE
     if ( !expr )
@@ -689,14 +716,14 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     printf( "compiler__evaluate_expression(%#x, %#x)\n", ( int ) name, ( int ) expr );
     #endif
 
-    char__encode = compiler->char_t->encode;
-    double__encode = compiler->float_t->encode;
-    string__encode = compiler->string_t->encode;
-    term__encode = compiler->term_t->encode;
-    compiler->char_t->encode = ( encoder ) char__encode__alt;
-    compiler->float_t->encode = ( encoder ) double__encode__alt;
-    compiler->string_t->encode = ( encoder ) string__encode__alt;
-    compiler->term_t->encode = ( encoder ) term__encode__alt;
+    char__encode = compiler->env->char_t->encode;
+    double__encode = compiler->env->float_t->encode;
+    string__encode = compiler->env->string_t->encode;
+    term__encode = compiler->env->term_t->encode;
+    compiler->env->char_t->encode = ( Encoder ) char__encode__alt;
+    compiler->env->float_t->encode = ( Encoder ) double__encode__alt;
+    compiler->env->string_t->encode = ( Encoder ) string__encode__alt;
+    compiler->env->term_t->encode = ( Encoder ) term__encode__alt;
 
     if ( name )
         a = p2_ast__name( name );
@@ -713,11 +740,11 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     o = object_for_ast( expr, &state );
 
     /* If a term, reduce. */
-    if ( o && state.sofarsogood && o->type == compiler->term_t )
+    if ( o && state.sofarsogood && o->type == compiler->env->term_t )
     {
         t = SK_reduce( ( Term* ) o->value,
             compiler->env->manager,
-            compiler->term_t,
+            compiler->env->term_t,
             compiler->env->prim_t,
             compiler->env->combinator_t, 0 );
 
@@ -750,10 +777,10 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     if ( a )
         p2_ast__delete( a );
 
-    compiler->char_t->encode = char__encode;
-    compiler->float_t->encode = double__encode;
-    compiler->string_t->encode = string__encode;
-    compiler->term_t->encode = term__encode;
+    compiler->env->char_t->encode = char__encode;
+    compiler->env->float_t->encode = double__encode;
+    compiler->env->string_t->encode = string__encode;
+    compiler->env->term_t->encode = term__encode;
 
     return ret;
 }

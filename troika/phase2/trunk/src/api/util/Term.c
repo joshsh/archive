@@ -549,9 +549,9 @@ term__type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( destructor ) term__delete;
-        type->distribute = ( distributor ) term__distribute;
-        type->encode = ( encoder ) term__encode;
+        type->destroy = ( Destructor ) term__delete;
+        type->distribute = ( Distributor ) term__distribute;
+        type->encode = ( Encoder ) term__encode;
     }
 
     return type;

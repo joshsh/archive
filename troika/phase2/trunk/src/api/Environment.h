@@ -49,6 +49,9 @@ struct Environment
     Namespace_o *types;
 
     Type *combinator_t, *ns_t, *prim_t, *type_t;
+
+    /* Parser types. */
+    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
 };
 
 
@@ -64,7 +67,7 @@ environment__delete( Environment *env );
 
 extern Object *
 environment__register_primitive
-    ( Environment *env, Primitive *prim, int flags, generic_f src_f );
+    ( Environment *env, Primitive *prim, int flags, Generic_f src_f );
 
 
 extern Object *

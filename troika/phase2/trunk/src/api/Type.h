@@ -51,24 +51,24 @@ struct Type
     Type *type_arg;
 
     /** Copy constructor. */
-    copy_cons   clone;
+    Copy_Cons   clone;
 
-    comparator  compare_to;
+    Comparator  compare_to;
 
     /** Deserializer. */
-    decoder     decode;
+    Decoder     decode;
 
     /** Destructor. */
-    destructor  destroy;
+    Destructor  destroy;
 
-    distributor distribute;
+    Distributor distribute;
 
     /** Serializer. */
-    encoder     encode;
+    Encoder     encode;
 
-    criterion2  equals;
+    Criterion2  equals;
 
-    sort_f      sort;
+    Sort      sort;
 };
 
 

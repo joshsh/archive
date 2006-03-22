@@ -72,7 +72,7 @@ struct Hash_Table
     hash_f hash;
 
     /** A comparison function for key values. */
-    comparator compare;
+    Comparator compare;
 };
 
 
@@ -97,7 +97,7 @@ hash_table__new(
   unsigned int expansion,
   unsigned int sparsity,
   hash_f hash,
-  comparator compare );
+  Comparator compare );
 
 /** Copy constructor. */
 extern Hash_Table *

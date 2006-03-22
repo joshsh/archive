@@ -359,7 +359,7 @@ static boolean equals( void *p1, void *p2 )
 
 
     Object *match = ( Object* )
-        collection__first_match( ns_obj, ( criterion ) equals );
+        collection__first_match( ns_obj, ( Criterion ) equals );
 
 
 
