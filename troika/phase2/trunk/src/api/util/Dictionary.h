@@ -58,7 +58,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src );
 
 
 extern void
-dictionary__distribute( Dictionary *dict, p2_procedure *p );
+dictionary__distribute( Dictionary *dict, Closure *p );
 
 
 extern Array *

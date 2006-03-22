@@ -86,19 +86,20 @@ typedef struct _p2_action
 typedef p2_action *( *procedure )( void *data, void *state );
 
 
-typedef struct _p2_procedure
+typedef struct Closure Closure;
+
+struct Closure
 {
     procedure execute;
 
     /* A mutable data field which is provided to the procedure as an argument,
        and preserved between invocations. */
     void *state;
-
-} p2_procedure;
+};
 
 
 /* ~ capitalization */
-#define p2_procedure__execute( p, data )  (p)->execute( (data), (p)->state )
+#define Closure__execute( p, data )  (p)->execute( (data), (p)->state )
 
 
 /******************************************************************************/
@@ -111,7 +112,7 @@ typedef boolean ( *Criterion )( void *arg );
 typedef boolean ( *Criterion2 )( void *arg1, void *arg2 );
 typedef void *  ( *Decoder )( char *buffer );
 typedef void    ( *Destructor )( void *p );
-typedef void    ( *Distributor )( void *data, p2_procedure *a );
+typedef void    ( *Distributor )( void *data, Closure *a );
 typedef void    ( *Encoder )( void *p, char *buffer );
 
 typedef void    ( *Sort )( void *p, Comparator cmp );

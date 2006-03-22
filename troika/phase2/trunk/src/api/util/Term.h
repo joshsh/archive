@@ -147,7 +147,7 @@ term__cat( Term *t1, Term *t2 );
 /* Distributor ****************************************************************/
 
 extern void
-term__distribute( Term *t, p2_procedure *p );
+term__distribute( Term *t, Closure *p );
 
 
 /******************************************************************************/

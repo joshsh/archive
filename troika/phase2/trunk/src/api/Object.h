@@ -106,11 +106,11 @@ extern void
 
 /** A (depth-first) recursive distributor. */
 extern void
-object__trace( Object *o, p2_procedure *p );
+object__trace( Object *o, Closure *p );
 
 /** A breadth-first recursive distributor. */
 extern void
-object__trace_bfs( Object *o, p2_procedure *p );
+object__trace_bfs( Object *o, Closure *p );
 
 
 /* Association ****************************************************************/

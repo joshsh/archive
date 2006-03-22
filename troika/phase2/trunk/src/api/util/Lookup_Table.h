@@ -62,7 +62,7 @@ lookup_table__remove( Lookup_Table *t, void * const src );
 
 
 extern void
-lookup_table__distribute( Lookup_Table *t, p2_procedure *p );
+lookup_table__distribute( Lookup_Table *t, Closure *p );
 
 
 #endif  /* LOOKUP_TABLE_H */

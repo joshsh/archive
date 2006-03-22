@@ -344,7 +344,7 @@ typedef struct Subst_Ctx Subst_Ctx;
 struct Subst_Ctx
 {
     p2_action *action;
-    p2_procedure *subst_proc;
+    Closure *subst_proc;
     boolean sofarsogood;
 };
 
@@ -694,7 +694,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
 {
     Subst_Ctx state;
     p2_action action;
-    p2_procedure subst_proc;
+    Closure subst_proc;
 
     int ret = 0;
     p2_ast *a = 0;

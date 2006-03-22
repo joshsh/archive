@@ -239,7 +239,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     dom_element *el;
     Array *keys;
     Ns_Encode_Ctx nse_st;
-    p2_procedure proc;
+    Closure proc;
 printf( "---s nsxe 1---\n" ); FFLUSH;
 
     #if DEBUG__SAFE
@@ -754,7 +754,7 @@ static p2_action *
 serialize( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
 {
     Object *o;
-    p2_procedure proc;
+    Closure proc;
     Triple_Serialize_Ctx triple_st;
     dom_element *el;
 
@@ -811,7 +811,7 @@ compiler__serialize( Compiler *c, char *path )
     dom_element *el;
     Lookup_Table *ids;
     Set *multirefs;
-    p2_procedure proc;
+    Closure proc;
     Hash_Multiref_Ctx state;
     Xml_Encode_Ctx encode_state;
     Environment *env;
@@ -841,7 +841,7 @@ printf( "---s s 2---\n" ); FFLUSH;
 printf( "---s s 3---\n" ); FFLUSH;
 
     /* Force the working name space to be at top level. */
-    p2_procedure__execute( ( &proc ), compiler__working_namespace( c ) );
+    Closure__execute( ( &proc ), compiler__working_namespace( c ) );
 printf( "---s s 4---\n" ); FFLUSH;
 
     /* Assign all (other) multireferenced objects their ids. */
@@ -907,7 +907,7 @@ compiler__deserialize( Compiler *c, char *path )
     dom_element *el, *child;
     char *el_name;
     dom_document *doc;
-    p2_procedure proc;
+    Closure proc;
     Environment *env;
 
     xmldom__init();

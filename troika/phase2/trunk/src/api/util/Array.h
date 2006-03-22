@@ -134,7 +134,7 @@ array__sort( Array *a, Comparator compare );
 
 
 extern void
-array__distribute( Array *a, p2_procedure *p );
+array__distribute( Array *a, Closure *p );
 
 
 /* Miscellaneous **************************************************************/

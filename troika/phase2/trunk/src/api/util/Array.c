@@ -536,7 +536,7 @@ array__sort( Array *a, Comparator compare )
 
 
 void
-array__distribute( Array *a, p2_procedure *p )
+array__distribute( Array *a, Closure *p )
 {
     int i;
     p2_action *action;
@@ -555,7 +555,7 @@ array__distribute( Array *a, p2_procedure *p )
 
     for ( i = 0; i < a->size; i++ )
     {
-        if ( ( action = p2_procedure__execute( p, ELMT( a, i ) ) ) )
+        if ( ( action = Closure__execute( p, ELMT( a, i ) ) ) )
         {
             switch ( action->type )
             {

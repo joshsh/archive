@@ -130,7 +130,7 @@ hash_table__remove( Hash_Table *h, const void *key );
 
 
 extern void
-hash_table__distribute( Hash_Table *h, p2_procedure *p );
+hash_table__distribute( Hash_Table *h, Closure *p );
 
 
 /******************************************************************************/

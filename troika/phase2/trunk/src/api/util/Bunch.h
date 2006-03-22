@@ -79,7 +79,7 @@ bunch__remove( Bunch *b );
 /******************************************************************************/
 
 extern void
-bunch__distribute( Bunch *b, p2_procedure *p );
+bunch__distribute( Bunch *b, Closure *p );
 
 
 /******************************************************************************/

@@ -194,7 +194,7 @@ int p2_ast__size( p2_ast *ast )
 
 void p2_ast__delete( p2_ast *ast )
 {
-    p2_procedure p;
+    Closure p;
 
     #if DEBUG__AST
     printf( "[] p2_ast__delete(%#x)\n", ( int ) ast );

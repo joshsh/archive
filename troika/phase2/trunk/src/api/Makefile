@@ -3,8 +3,9 @@
 #  Makefile for the Phase2 programming API.
 #  Author: Joshua Shinavier
 
-BNF     = ./bnftool
+BNFTOOL = ./bnftool
 IMPORT  = ./import
+LOGTOOL = ./logtool
 PARSER  = ./parser
 SK      = ./sk
 UTILS   = ./util
@@ -13,8 +14,9 @@ XML     = ./xml
 
 INCLUDE  = -I./
 
-export CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+export CFLAGS = -O2 -g --ansi -pedantic -W -Wall
 	# -Werror \
+	# -fshort-enums -fno-common \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 	# -D_GNU_SOURCE
 
@@ -30,8 +32,9 @@ default :  phase2
 
 .PHONY : clean
 clean :
-	$(MAKE) clean -C $(BNF)
+	$(MAKE) clean -C $(BNFTOOL)
 	$(MAKE) clean -C $(IMPORT)
+	$(MAKE) clean -C $(LOGTOOL)
 	$(MAKE) clean -C $(PARSER)
 	$(MAKE) clean -C $(UTILS)
 	$(MAKE) clean -C $(XML)

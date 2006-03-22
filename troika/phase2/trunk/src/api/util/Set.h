@@ -49,7 +49,7 @@ extern void
 set__remove( Set *s, void *el );
 
 extern void
-set__distribute( Set *s, p2_procedure *p );
+set__distribute( Set *s, Closure *p );
 
 
 #endif  /* SET_H */

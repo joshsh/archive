@@ -306,7 +306,7 @@ sweep( Memory_Manager *m )
 
 
 static p2_action *
-dist_p_exec( Object *o, p2_procedure *p )
+dist_p_exec( Object *o, Closure *p )
 {
     /* If the object is already marked, abort. */
     if ( visited( o ) )
@@ -320,15 +320,15 @@ dist_p_exec( Object *o, p2_procedure *p )
         set_visited( o );
 
         /* Execute the procedure. */
-        return p2_procedure__execute( p, o );
+        return Closure__execute( p, o );
     }
 }
 
 
 void
-memory_manager__distribute( Memory_Manager *m, p2_procedure *p )
+memory_manager__distribute( Memory_Manager *m, Closure *p )
 {
-    p2_procedure dist_p;
+    Closure dist_p;
 
     dist_p.execute = ( procedure ) dist_p_exec;
     dist_p.state = p;
@@ -380,7 +380,7 @@ Set *
 memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 {
     Set *s = set__new();
-    p2_procedure proc;
+    Closure proc;
 
     if ( !m->clean )
         unmark_all( m );
@@ -409,7 +409,7 @@ noop( void *ignored1, void *ignored2 )
 void
 memory_manager__mark_and_sweep( Memory_Manager *m )
 {
-    p2_procedure proc;
+    Closure proc;
 
     #if DEBUG__MEMORY
     int n_initial = bunch__size( m->objects );

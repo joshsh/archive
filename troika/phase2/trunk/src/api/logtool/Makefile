@@ -5,13 +5,14 @@
 
 UTILS    = ../util
 
-CFLAGS   = -Wall \
-           --ansi -D_GNU_SOURCE \
-           -g # temporary...
+export CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+	# -Werror \
+	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
+	# -D_GNU_SOURCE
 
 INCLUDE  = -I../
 
-CC       = gcc $(CFLAGS) $(INCLUDE)
+CC       = gcc $(INCLUDE)
 
 LEX      = flex \
            -p  # Get comments regarding features that lead to performance losses.
@@ -36,36 +37,24 @@ clean :
 ################################################################################
 
 
-logtool :  lex.yy.c logtool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_type.o
-	$(CC) $(CFLAGS) -o logtool lex.yy.c logtool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_type.o
+utils = $(UTILS)/Array.o $(UTILS)/Dictionary.o $(UTILS)/Hash_Table.o
 
 
-lex.yy.c : logtool.l ../settings.h
+logtool :  lex.yy.o logtool.tab.o $(utils) ../Type.o
+	$(CC) $(CFLAGS) -o logtool lex.yy.o logtool.tab.o $(utils) ../Type.o
+
+
+lex.yy.o : logtool.tab.h
+
+lex.yy.c : logtool.l ../defs.h ../settings.h
 	$(LEX) logtool.l
 
 
-logtool.tab.o : logtool.tab.c
-	$(CC) $(CFLAGS) -c logtool.tab.c
-
-
-logtool.tab.c logtool.tab.h : logtool.y ../settings.h
+logtool.tab.c logtool.tab.h : logtool.y ../defs.h ../settings.h
 	$(YACC) -dv logtool.y
 
 
 ################################################################################
 
 
-p2_type.o : ../p2_type.c
-	$(CC) $(CFLAGS) -c ../p2_type.c
-
-p2_array.o : $(UTILS)/p2_array.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_array.c
-
-
-p2_dictionary.o : $(UTILS)/p2_dictionary.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_dictionary.c
-
-
-p2_hash_table.o : $(UTILS)/p2_hash_table.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_hash_table.c
-
+$(utils) ../Type.o : ../defs.h ../settings.h

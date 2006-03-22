@@ -70,7 +70,7 @@ void
 graph__delete( Graph *g )
 {
     /* Destroy graph entries. */
-    p2_procedure p = { ( procedure ) graph_edge__delete, 0 };
+    Closure p = { ( procedure ) graph_edge__delete, 0 };
     hash_table__distribute( g, &p );
 
     hash_table__delete( g );

@@ -61,7 +61,7 @@ void
 lookup_table__delete( Lookup_Table *t )
 {
     /* Destroy graph entries. */
-    p2_procedure p = { ( procedure ) lookup_table__entry__delete, 0 };
+    Closure p = { ( procedure ) lookup_table__entry__delete, 0 };
     hash_table__distribute( t, &p );
 
     hash_table__delete( t );
@@ -121,7 +121,7 @@ lookup_table__remove
 
 
 void
-lookup_table__distribute( Lookup_Table *t, p2_procedure *p )
+lookup_table__distribute( Lookup_Table *t, Closure *p )
 {
     #if DEBUG__SAFE
     if ( !t || !p )

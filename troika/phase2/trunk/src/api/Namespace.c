@@ -296,7 +296,7 @@ namespace__remove_simple( Namespace *ns, char *name )
 
 
 void
-namespace__distribute( Namespace *ns, p2_procedure *p )
+namespace__distribute( Namespace *ns, Closure *p )
 {
     dictionary__distribute( ns->children, p );
 }
@@ -319,7 +319,7 @@ namespace__show_children( Namespace_o *ns_obj )
 {
     int size = ( ( Namespace* ) ns_obj->value )->children->size;
     Array *a;
-    p2_procedure p;
+    Closure p;
 
     printf( "%#x : namespace", ( int ) ns_obj );
 
@@ -376,7 +376,7 @@ static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
         return 0;
     }
 
-    if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
+    if ( !( action = Closure__execute( ( state->inner_p ), o ) ) )
     {
         if ( o->type->flags & TYPE__IS_OBJ_COLL )
         {

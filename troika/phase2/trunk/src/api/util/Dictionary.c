@@ -109,7 +109,7 @@ void
 dictionary__delete( Dictionary *dict )
 {
     /* Destroy dictionary entries. */
-    p2_procedure p;
+    Closure p;
     p.execute = ( procedure ) dictionary_entry__delete;
     hash_table__distribute( dict, &p );
 
@@ -186,7 +186,7 @@ add_to_dict( Dictionary_Entry *entry, Dictionary *dest )
 void
 dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
-    p2_procedure proc;
+    Closure proc;
     proc.execute = ( procedure ) add_to_dict;
     proc.state = dest;
 
@@ -200,16 +200,16 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
 /* Procedure which points the argument procedure to the target value of a
    hashing pair. */
 static p2_action *
-apply_to_target( Dictionary_Entry *entry, p2_procedure *p )
+apply_to_target( Dictionary_Entry *entry, Closure *p )
 {
-    return p2_procedure__execute( p, entry->target );
+    return Closure__execute( p, entry->target );
 }
 
 
 void
-dictionary__distribute( Dictionary *dict, p2_procedure *p )
+dictionary__distribute( Dictionary *dict, Closure *p )
 {
-    p2_procedure p_alt;
+    Closure p_alt;
     p_alt.execute = ( procedure ) apply_to_target;
     p_alt.state = p;
 
@@ -235,7 +235,7 @@ dictionary__keys( Dictionary *dict )
     Array *a = array__new( dict->size, 0 );
 
     /* Fill the array with key values. */
-    p2_procedure p;
+    Closure p;
     p.execute = ( procedure ) add_to_array;
     p.state = a;
     hash_table__distribute( dict, &p );

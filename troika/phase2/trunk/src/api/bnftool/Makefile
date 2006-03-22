@@ -5,10 +5,15 @@
 
 UTILS    = ../util
 
-CC       = gcc
-CFLAGS   = -Wall \
-           --ansi -D_GNU_SOURCE \
-           -g # temporary...
+INCLUDE  = -I../
+
+CC       = gcc $(INCLUDE)
+
+export CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+	# -Werror \
+	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
+	# -D_GNU_SOURCE
+
 LEX      = flex \
            -p  # Get comments regarding features that lead to performance losses.
 YACC     = bison
@@ -32,36 +37,26 @@ clean :
 ################################################################################
 
 
-bnftool :  lex.yy.c bnftool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_type.o
-	$(CC) $(CFLAGS) -o bnftool lex.yy.c bnftool.tab.o p2_array.o p2_hash_table.o p2_dictionary.o p2_type.o
+utils = $(UTILS)/Array.o $(UTILS)/Dictionary.o $(UTILS)/Hash_Table.o
+
+bnftool :  lex.yy.o bnftool.tab.o $(utils) ../Type.o
+	$(CC) $(CFLAGS) -o bnftool lex.yy.o bnftool.tab.o $(utils) ../Type.o
 
 
-lex.yy.c : bnftool.l ../settings.h
+lex.yy.o : bnftool.tab.h
+
+
+lex.yy.c : bnftool.l ../defs.h ../settings.h
 	$(LEX) bnftool.l
 
 
-bnftool.tab.o : bnftool.tab.c
-	$(CC) $(CFLAGS) -c bnftool.tab.c
-
-
-bnftool.tab.c bnftool.tab.h : bnftool.y ../settings.h
+bnftool.tab.c bnftool.tab.h : bnftool.y ../defs.h ../settings.h
 	$(YACC) -dv bnftool.y
 
 
 ################################################################################
 
 
-p2_type.o : ../p2_type.c
-	$(CC) $(CFLAGS) -c ../p2_type.c
+$(utils) ../Type.o : ../defs.h ../settings.h
 
-p2_array.o : $(UTILS)/p2_array.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_array.c
-
-
-p2_dictionary.o : $(UTILS)/p2_dictionary.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_dictionary.c
-
-
-p2_hash_table.o : $(UTILS)/p2_hash_table.c
-	$(CC) $(CFLAGS) -c $(UTILS)/p2_hash_table.c
 

@@ -323,7 +323,7 @@ hash_table__remove(Hash_Table *h, const void *key)
 
 
 void
-hash_table__distribute( Hash_Table *h, p2_procedure *p )
+hash_table__distribute( Hash_Table *h, Closure *p )
 {
     void **cur, **lim;
     p2_action *action;
@@ -347,7 +347,7 @@ hash_table__distribute( Hash_Table *h, p2_procedure *p )
     {
         if ( *cur )
         {
-            if ( ( action = p2_procedure__execute( p, *cur ) ) )
+            if ( ( action = Closure__execute( p, *cur ) ) )
             {
                 switch ( action->type )
                 {

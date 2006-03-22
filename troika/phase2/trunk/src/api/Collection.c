@@ -85,7 +85,7 @@ Void_f_procedure( void *data, Voidf_Ctx *wrapper )
 void
 collection__do_for_all( Collection *c, Void_f f )
 {
-    p2_procedure p;
+    Closure p;
     Voidf_Ctx ctx;
 
     ctx.f = f;
@@ -117,7 +117,7 @@ exclude_if_match( void *data, Search_Ctx *search )
 void
 collection__exclude_if( Collection *c, Criterion cr )
 {
-    p2_procedure p;
+    Closure p;
     Search_Ctx search;
 
     search.match = cr;
@@ -135,7 +135,7 @@ collection__exclude_if( Collection *c, Criterion cr )
 boolean
 collection__exists( Collection *c, Criterion cr )
 {
-    p2_procedure p;
+    Closure p;
     Search_Ctx search;
 
     search.match = cr;
@@ -155,7 +155,7 @@ collection__exists( Collection *c, Criterion cr )
 void *
 collection__first_match( Collection *c, Criterion cr )
 {
-    p2_procedure p;
+    Closure p;
     Search_Ctx search;
 
     search.match = cr;
@@ -175,7 +175,7 @@ collection__first_match( Collection *c, Criterion cr )
 boolean
 collection__for_all( Collection *c, Criterion cr )
 {
-    p2_procedure p;
+    Closure p;
     Search_Ctx search;
 
     search.match = cr;
@@ -208,7 +208,7 @@ add_if_match( void *data, Search_Ctx *search )
 Array *
 collection__match( Collection *c, Criterion cr )
 {
-    p2_procedure p;
+    Closure p;
     Search_Ctx search;
 
     search.match = cr;
@@ -248,7 +248,7 @@ substitute( void *data, Subst_Ctx *context )
 void
 collection__replace_all( Collection *c, Substitution f, void *state )
 {
-    p2_procedure p;
+    Closure p;
     Subst_Ctx context;
 
     context.substitute_for = f;

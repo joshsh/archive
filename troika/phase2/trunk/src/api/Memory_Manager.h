@@ -56,7 +56,7 @@ memory_manager__add( Memory_Manager *m, Object *o );
 /* Tracing / graph traversal **************************************************/
 
 extern void
-memory_manager__distribute( Memory_Manager *m, p2_procedure *p );
+memory_manager__distribute( Memory_Manager *m, Closure *p );
 
 extern Set *
 memory_manager__get_multirefs( Memory_Manager *m, Object *root );

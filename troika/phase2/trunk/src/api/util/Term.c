@@ -402,7 +402,7 @@ term__cat(Term *t1, Term *t2)
 
 
 static void
-distribute( void **cur, p2_procedure *p )
+distribute( void **cur, Closure *p )
 {
     void **lim;
     p2_action *action;
@@ -412,7 +412,7 @@ distribute( void **cur, p2_procedure *p )
     {
         cur++;
 
-        if ( ( action = p2_procedure__execute( p, *cur ) ) )
+        if ( ( action = Closure__execute( p, *cur ) ) )
         {
             switch ( action->type )
             {
@@ -443,7 +443,7 @@ distribute( void **cur, p2_procedure *p )
 
 
 void
-term__distribute( Term *t, p2_procedure *p )
+term__distribute( Term *t, Closure *p )
 {
     #if DEBUG__SAFE
     if ( !t || !p )

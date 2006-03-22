@@ -82,7 +82,7 @@ delete_p( void *p, Type *type )
 void
 object__delete( Object *o )
 {
-    p2_procedure p;
+    Closure p;
 
     #if DEBUG__SAFE
     if ( !o )
@@ -138,23 +138,23 @@ typedef struct Trace_Ctx Trace_Ctx;
 
 struct Trace_Ctx
 {
-    p2_procedure *outer_p;
-    p2_procedure *inner_p;
-    p2_procedure *edge_p;
+    Closure *outer_p;
+    Closure *inner_p;
+    Closure *edge_p;
 };
 
 
 static p2_action *
-apply_to_assoc_edge( Lookup_Table__Entry *entry, p2_procedure *p )
+apply_to_assoc_edge( Lookup_Table__Entry *entry, Closure *p )
 {
     #if TRIPLES__IMPLICATION__SP_O
     ... not yet written ...
     #else
     #if TRIPLES__IMPLICATION__S_P
-    p2_procedure__execute( p, entry->key );
+    Closure__execute( p, entry->key );
     #endif
     #if TRIPLES__IMPLICATION__S_O
-    p2_procedure__execute( p, entry->target );
+    Closure__execute( p, entry->target );
     #endif
     #endif
 
@@ -178,7 +178,7 @@ trace_exec( Object *o, Trace_Ctx *state )
     }
 
     /* Execute the inner procedure.  Recurse unless instructed otherwise. */
-    if ( !( action = p2_procedure__execute( ( state->inner_p ), o ) ) )
+    if ( !( action = Closure__execute( ( state->inner_p ), o ) ) )
     {
         /* Traverse to children (if any). */
         if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -205,11 +205,11 @@ printf( "value = %i\n", *( ( int* ) o->value ) );
 
 
 void
-object__trace( Object *o, p2_procedure *p )
+object__trace( Object *o, Closure *p )
 {
     Trace_Ctx state;
-    p2_procedure trace_proc;
-    p2_procedure edge_p;
+    Closure trace_proc;
+    Closure edge_p;
 
     #if DEBUG__SAFE
     if ( !o )
@@ -229,7 +229,7 @@ object__trace( Object *o, p2_procedure *p )
     trace_proc.execute = ( procedure ) trace_exec;
     trace_proc.state = &state;
 
-    p2_procedure__execute( ( &trace_proc ), o );
+    Closure__execute( ( &trace_proc ), o );
 }
 
 
@@ -243,12 +243,12 @@ enqueue( Object *o, Array *queue )
 
 /* Note: untested. */
 void
-object__trace_bfs( Object *o, p2_procedure *p )
+object__trace_bfs( Object *o, Closure *p )
 {
     Trace_Ctx state;
-    p2_procedure trace_proc;
-    p2_procedure edge_p;
-    p2_procedure outer_p;
+    Closure trace_proc;
+    Closure edge_p;
+    Closure outer_p;
 
     Array *queue;
 
@@ -278,7 +278,7 @@ object__trace_bfs( Object *o, p2_procedure *p )
 
     while ( array__size( queue ) )
     {
-        p2_procedure__execute( ( &trace_proc ),
+        Closure__execute( ( &trace_proc ),
             ( Object* ) array__pop( queue ) );
     }
 }

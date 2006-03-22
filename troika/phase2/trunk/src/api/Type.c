@@ -38,7 +38,7 @@ default__destroy( void *cell )
 { free( cell ); }
 
 static void
-default__distribute( void *cell, p2_procedure *p )
+default__distribute( void *cell, Closure *p )
 { }
 
 static void
@@ -102,7 +102,7 @@ type__new( const char *name, int flags )
 
 
 void
-type__delete( Type *type)
+type__delete( Type *type )
 {
     if ( type->name )
         free( type->name );

@@ -173,7 +173,7 @@ block__delete__proc( Block *block_p, void *ignored )
 void
 bunch__delete( Bunch *b )
 {
-    p2_procedure p;
+    Closure p;
 
     #if DEBUG__BUNCH
     printf( "[] bunch__delete(%#x)\n", ( int ) b );
@@ -273,7 +273,7 @@ bunch__remove( Bunch *b )
 
 
 void
-bunch__distribute( Bunch *b, p2_procedure *p )
+bunch__distribute( Bunch *b, Closure *p )
 {
     unsigned int i, j, numblocks = array__size( b->blocks );
     Block *bl;
@@ -289,7 +289,7 @@ bunch__distribute( Bunch *b, p2_procedure *p )
 
         for ( j = 0; j < bl->filled; j++ )
         {
-            if ( ( action =  p2_procedure__execute( p, bl->buffer[j] ) ) )
+            if ( ( action =  Closure__execute( p, bl->buffer[j] ) ) )
             {
                 switch ( action->type )
                 {

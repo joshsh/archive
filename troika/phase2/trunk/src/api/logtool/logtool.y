@@ -111,7 +111,7 @@ input:
 
     messages E_O_F
     {
-        p2_procedure proc;
+        Closure proc;
 
         Array *keys = dictionary__keys( dict );
         proc.execute = ( procedure ) print_offender;

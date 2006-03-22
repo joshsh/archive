@@ -44,7 +44,7 @@ delete_string( char *s, void *ignored )
 void
 name__delete( Name *name )
 {
-    p2_procedure p = { ( procedure ) delete_string, 0 };
+    Closure p = { ( procedure ) delete_string, 0 };
 
     #if DEBUG__SAFE
     if ( !name )
