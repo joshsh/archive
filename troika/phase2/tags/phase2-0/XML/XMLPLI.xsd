@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+elementFormDefault="qualified"
+attributeFormDefault="unqualified">
+
+
+
+  <!-- A PrimitiveFunction is a wrapper for a language primitive of zero or more parameters -->
+  <xs:element name="PrimitiveFunction">
+    <xs:complexType>
+
+      <xs:sequence>
+        <xs:element name="Parameter" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+            <xs:attribute name="transparency" type="xs:boolean" use="optional" default="0"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+
+      <!-- Note: restrictions on functionName are probably best left to
+      specific parser applications. -->
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="returnType" type="xs:string" use="required"/>
+
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- A PlaceHolder contains no data but may be used as an empty associational
+  node or list element.  PlaceHolder may be identified with a primitive type,
+  unlike other derived Schema types. -->
+  <xs:element name="PlaceHolder">
+    <xs:complexType/>
+  </xs:element>
+
+
+
+  <!-- A LanguageInterface identifies a language's primitive types with standard
+  XML Schema types, and contains a basic description of each of its primitive
+  functions.  Note that primitive types are drawn exclusively from XML Schema's
+  anySimpleType; SOAP constructs such as arrays may not be used as primitive types. -->
+  <xs:element name="LanguageInterface">
+    <xs:complexType>
+      <xs:sequence>
+
+        <xs:element name="PrimitiveTypes">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Type" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required"/>
+                  <xs:attribute name="XMLSchemaEquivalent" type="xs:string" use="optional">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+
+                        <!-- Enumeration of xs:anySimpleType -->
+                        <xs:enumeration value="anyURI"/>
+                        <xs:enumeration value="base64Binary"/>
+                        <xs:enumeration value="binary"/>
+                        <xs:enumeration value="boolean"/>
+                        <xs:enumeration value="byte"/>
+                        <xs:enumeration value="CDATA"/>
+                        <xs:enumeration value="century"/>
+                        <xs:enumeration value="date"/>
+                        <xs:enumeration value="double"/>
+                        <xs:enumeration value="decimal"/>
+                        <xs:enumeration value="duration"/>
+                        <xs:enumeration value="dateTime"/>
+                        <xs:enumeration value="ENTITY"/>
+                        <xs:enumeration value="ENTITIES"/>
+                        <xs:enumeration value="float"/>
+                        <xs:enumeration value="gDay"/>
+                        <xs:enumeration value="gMonth"/>
+                        <xs:enumeration value="gMonthDay"/>
+                        <xs:enumeration value="gYearMonth"/>
+                        <xs:enumeration value="gYear"/>
+                        <xs:enumeration value="hexBinary"/>
+                        <xs:enumeration value="ID"/>
+                        <xs:enumeration value="IDREF"/>
+                        <xs:enumeration value="IDREFS"/>
+                        <xs:enumeration value="int"/>
+                        <xs:enumeration value="integer"/>
+                        <xs:enumeration value="language"/>
+                        <xs:enumeration value="long"/>
+                        <xs:enumeration value="month"/>
+                        <xs:enumeration value="Name"/>
+                        <xs:enumeration value="NCName"/>
+                        <xs:enumeration value="negativeInteger"/>
+                        <xs:enumeration value="NMTOKEN"/>
+                        <xs:enumeration value="NMTOKENS"/>
+                        <xs:enumeration value="nonNegativeInteger"/>
+                        <xs:enumeration value="nonPositiveInteger"/>
+                        <xs:enumeration value="NOTATION"/>
+                        <xs:enumeration value="QName"/>
+                        <xs:enumeration value="recurringDate"/>
+                        <xs:enumeration value="recurringDay"/>
+                        <xs:enumeration value="recurringDuration"/>
+                        <xs:enumeration value="short"/>
+                        <xs:enumeration value="string"/>
+                        <xs:enumeration value="time"/>
+                        <xs:enumeration value="timeDuration"/>
+                        <xs:enumeration value="timeInstant"/>
+                        <xs:enumeration value="timePeriod"/>
+                        <xs:enumeration value="token"/>
+                        <xs:enumeration value="unsignedByte"/>
+                        <xs:enumeration value="unsignedInt"/>
+                        <xs:enumeration value="unsignedLong"/>
+                        <xs:enumeration value="unsignedShort"/>
+                        <xs:enumeration value="uriReference"/>
+                        <xs:enumeration value="year"/>
+
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="PrimitiveFunctions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Function" type="PrimitiveFunction" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+
+      <xs:attribute name="creationDate" type="xs:date" use="required"/>
+      <xs:attribute name="creationTime" type="xs:time" use="required"/>
+      <xs:attribute name="languageName" type="xs:string" use="required"/>
+
+    </xs:complexType>
+  </xs:element>
+
+
+
+</xs:schema>

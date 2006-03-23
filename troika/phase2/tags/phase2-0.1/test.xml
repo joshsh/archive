@@ -1,0 +1,7 @@
+<Sequence sequenceType="immediate">
+<Sequence sequenceType="immediate">
+<string>Token1</xs:string>
+<string>Token2</xs:string>
+</Sequence>
+<string>Token3</xs:string>
+</Sequence>

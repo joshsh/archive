@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:api="urn:GoogleSearch">
+ <SOAP-ENV:Body SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+  <api:doGoogleSearchResponse>
+   <return>
+    <documentFiltering>false</documentFiltering>
+    <searchComments></searchComments>
+    <estimatedTotalResultsCount>0</estimatedTotalResultsCount>
+    <estimateIsExact>false</estimateIsExact>
+    <resultElements SOAP-ENC:arrayType="api:ResultElement[1]">
+     <item>
+      <summary></summary>
+      <URL></URL>
+      <snippet></snippet>
+      <title></title>
+      <cachedSize></cachedSize>
+      <relatedInformationPresent>false</relatedInformationPresent>
+      <hostName></hostName>
+      <directoryCategory>
+       <fullViewableName></fullViewableName>
+       <specialEncoding></specialEncoding>
+      </directoryCategory>
+      <directoryTitle></directoryTitle>
+     </item>
+    </resultElements>
+    <searchQuery></searchQuery>
+    <startIndex>0</startIndex>
+    <endIndex>0</endIndex>
+    <searchTips></searchTips>
+    <directoryCategories SOAP-ENC:arrayType="api:DirectoryCategory[1]">
+     <item>
+      <fullViewableName></fullViewableName>
+      <specialEncoding></specialEncoding>
+     </item>
+    </directoryCategories>
+    <searchTime>0.0</searchTime>
+   </return>
+  </api:doGoogleSearchResponse>
+ </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

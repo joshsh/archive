@@ -1,0 +1,180 @@
+* element in a data set is of one of the primitive types defined by the Phase2 schema?
+* argument passed to a primitive agrees with the primitive's corresponding parameter type?
+
+[G] W3C ^ online Schema validator: http://www.w3.org/2001/03/webdata/xsv
+--[U] Lessons learned:
+----[*] complexType ^ child elements must precede attributes.
+----[*] complexType ^ child elements must be enclosed in a sequence, even if there is only one.
+----[*] "nillable" attribute ^ applies only to elements, not attributes
+
+[!] Check up on your standard Schema URIs, make sure they're up-to-date.
+
+[V] "facets" ^ type restrictions
+
+["] value, accessor
+
+[V] "targeting" ^ the message path
+[.] WS-Routing (proposed standard; SOAP has no de facto routing standard yet)
+
+[.] signature verification ^ (multiple recipients ^ which elements are intended for which recipient?)
+
+[.] indicator
+--[.] order indicator
+----[.] all  (children may appear in any order)
+----[.] choice  (either one child element or another may occur)
+----[.] sequence  (child elements must appear in a specific order)
+--[.] occurrence indicator
+----[.] maxOcurrs  (child element may occur at most this many times.  Use maxOccurs="unbounded" for infinity.)
+----[.] minOccurs  (child element must occur at least this many times)
+--[.] group indicator
+----[.] group name  (bundles several elements together)
+----[.] attributeGroup name  (bundles several attributes together)
+
+[.] xs:string
+--[.] xs:normalizedString (removes or replaces tabs, carriage returns and line feeds)
+--[.] xs:token (simplifies whitespace)
+[.] xs:date ("YYYY-MM-DD", e.g. "2004-12-30")
+[.] xs:time ("hh:mm:ss", e.g. "19:33:00")
+[.] xs:dateTime ("YYYY-MM-DDThh:mm:ss", e.g. "2004-12-30T19:33:00")
+[.] xs:duration
+[.] xs:decimal (maximum 18 digits after the decimal point)
+--[.] xs:byte (signed 8-bit integer)
+--[.] xs:int (signed 32-bit integer)
+--[.] xs:integer
+--[.] xs:long (signed 64-bit integer)
+--[.] xs:negativeInteger
+--[.] xs:nonNegativeInteger
+--[.] xs:nonPositiveInteger
+--[.] xs:positiveInteger
+--[.] xs:short (signed 16-bit integer)
+--[.] xs:unsignedLong (unsigned 64-bit integer)
+--[.] xs:unsignedInt (unsigned 32-bit integer)
+--[.] xs:unsignedShort (unsigned 16-bit integer)
+--[.] xs:unsignedByte (unsigned 8-bit integer)
+[.] xs:boolean
+[.] xs:base64Binary
+[.] xs:hexBinary
+[.] xs:anyURI (e.g. "http://www.zeep.com")
+
+[.] ability to validate well-formed XML document instances against a document model
+[*] Schema definitions can be created, edited, and viewed with tools that hide the declaration markup
+   (e.g. via a tree diagram)
+[D] a validating XML parser that includes a *schema processor* can validate a document instance against a schema definition.
+
+<xs:attribute ... fixed="foo"/>
+<xs:attribute ... default="NULL"/>
+<xs:attribute ... use="optional"/>
+<xs:attribute ... use="required"/>
+
+<x xmlns:edi='http://ecommerce.org/schema'>
+  <!-- the "edi" prefix is bound to http://ecommerce.org/schema
+       for the "x" element and contents -->
+</x> 
+
+[.] xs:extension ^ type inheritance
+
+
+
+
+################################################################################
+
+
+
+
+
+<?xml version="1.0?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="..." xmlns="..." elementFormDefault="qualified">
+
+
+
+<xs:sequence>
+  <xs:element name="mem1" type="xs:string"/>
+  <xs:element name="mem2" type="xs:integer"/>
+  <xs:any minOccurs="0"/>
+</xs:sequence>
+
+
+
+/namespace test;
+
+f1 f2 f3 = f4;
+
+/save test;
+
+/namespace test2;
+
+/save;
+
+
+
+----------------------------------------------------------------------------------------
+
+* idea of a reverse interpreter / decompiler
+
+* explore ideas of
+  * functional and ~database languages
+  * concatenative syntax
+  * distributed and component-oriented computing
+  * "S.N.P.L."
+  * GUI
+
+* self-describing programs and data
+
+----------------------------------------------------------------------------------------
+
+
+      /import ...
+
+      /export ...
+
+      /forget token4;
+
+      /exit;
+
+
+
+  2 3 + = five;
+
+      >> <int> five:    5 <<
+
+  five five *;
+
+      >> <int>:    25 <<
+
+----------------------------------------------------------------------------------------
+
+* Probably the only disadvantage of going with SOAP is the complexity of XML and the XML
+Schema standard ^ constrained to the use of standard tools, rules out the idea of writing 
+
+method calls
+
+* The SOAP encoding scheme should be as independent as possible from the inner
+  details of the language;
+  One exception: associations, but this is an optional feature.
+
+* only primitive types will be identified with schema elements, while data elements of
+ derived types will be expressed as aggregates of simple
+  types which reference each other in accordance with the grammar and type restrictions
+  of the language.  In SOAP-speak this means that there will be no single-referenced
+  accessors in a data set, making 
+  P
+
+* At there are three different ways to express the data type of an accessor in SOAP, and
+  no consensus on which to use.  
+
+[U] Can ignore:
+* routing issues
+* encoding style (oder? the Section 5 encoding rules may be a helpful convenience)
+
+* modular design process
+
+SOAP ^ passing of messages
+
+"U" ^ most effort went towards developing an encoding scheme
+
+" XML messaging
+
+XML namespace
+
+"[...] if such a markup vocabulary exists which is well-understood and for which there
+is useful software available, it is better to re-use this markup rather than re-invent it."

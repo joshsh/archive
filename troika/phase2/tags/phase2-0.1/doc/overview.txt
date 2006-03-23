@@ -1,0 +1,124 @@
+* SK terms are strictly hierarchical -- as long as I'm using the SK model,
+ "immediate" sequences should reside in a different layer than atoms, i.e.
+ should not even take part in association.
+ 
+
+
+
+
+
+
+
+
+
+
+
+SK.h ---------------------------------------------------------------------------
+
+	SK_primitive -- struct
+		. name -- char
+		. value -- PRIM_REFERENCE
+		. parameters -- int
+		+ parameter_types -- TYPE_REFERENCE
+		. return_type -- TYPE_REFERENCE
+
+	SK_atom -- struct
+		. value -- ATOM_REFERENCE
+		. type -- TYPE_REFERENCE
+
+	SK_term
+		. type -- enum {
+					S_type
+					K_type
+					atom_type
+					primitive_type
+					compound_type
+					[expired_type]
+				}
+		. value -- union {
+					ARRAY
+					SK_primitive
+					SK_atom
+				 }
+					
+	SK_atom_term(ATOM_REFERENCE, TYPE_REFERENCE) -- SK_term
+
+	SK_primitive_term(SK_primitive) -- SK_term
+
+	SK_S_term() -- SK_term
+	
+	SK_K_term() -- SK_term
+
+	SK_copy(SK_term) -- SK_term
+
+	SK_destroy_term(SK_term)
+
+	SK_apply(SK_term, SK_term) -- enum {
+		  				SUCCESS
+  						FAILURE
+  						TYPE_MISMATCH
+  						ATOM_APPLIED_AS_FUNCTION
+  						PRIMITIVE_APPLIED_TO_NONATOM
+  						TOO_MANY_PARAMETERS
+  						NULL_TERM
+  						EXPIRED_TERM
+  						PROGRAM_ERROR
+					   }			
+
+
+
+XMLPLI.xsd ---------------------------------------------------------------------
+
+	PrimitiveFunction
+		* Parameter
+			. name -- xs:string
+			. type -- xs:string
+			. transparency -- xs:boolean
+		. name -- name
+		. returnType -- xs:string
+
+	PlaceHolder
+
+	LanguageInterface
+
+		. PrimitiveTypes
+			+ Type
+				. name -- xs:string
+				- XMLSchemaEquivalent -- xs:string
+		. PrimitiveFunctions
+			+ PrimitiveFunction
+
+
+
+[lang].itf.xml -----------------------------------------------------------------
+
+	XMLPLI:LanguageInterface
+
+
+
+[lang].xsd ---------------------------------------------------------------------
+
+	K
+
+	S
+
+	PrimitiveReference
+
+	Sequence
+		* -- { any basic type }
+		. sequenceType -- xsd:string {
+						"immediate"
+						"delayed"
+				 	     }
+
+	Element
+		. -- { any basic type (but not another Element) }
+		- Association
+			. key -- Element
+			. target -- Element
+
+	DataSet
+		* -- { Element, any basic type }
+		. name -- xs:string
+		. creationDate -- xs:date
+		. creationTime -- xs:time

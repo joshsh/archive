@@ -1,0 +1,28 @@
+["] "node" : machine, "agent" : program
+
+[.] worst-case scenario ^ identical data sets at each node (N nodes --> total memory requirement is up to N times the best case scenario of no redundant data)
+--[*] perfectly acceptable for small, experimental data sets
+
+[N provisional] default ^ agent evaluating the expression draws whatever data it needs from other agents (rather than trying to determine whether some other agent is more fit to do so (e.g. by virtue of having more of the required data at hand))
+[N provisional] an agent cannot refuse a request
+
+
+
+
+Local element:
+
+  <xs:string id="quote">Imagination is more important than knowledge.</xs:string>
+
+Nonlocal element:
+
+  <xs:Element>
+    <xs:string identify_with="agent42#someDataSet#quote" value="nil"/>
+  </xs:Element>
+
+Redundant element:
+
+  <xs:Element id="quote">
+    <xs:string identify_with="agent42#someDataSet#quote">Imagination is more important than knowledge.</xs:string>
+  </xs:Element>
+
+

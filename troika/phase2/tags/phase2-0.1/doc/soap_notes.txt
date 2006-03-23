@@ -1,0 +1,243 @@
+GENERAL NOTES #################################################################
+
+
+[N] I wouldn't worry too much about header info at this point; most of the need for header blocks comes from path issues, so for a simple two-node message path I can probably do without them.  E.g. messages to and from the Google API contain no header info whatsoever.
+
+[N] use the HTTP binding (^ POST method); it's simple and well-known, and HTTP has the advantage that it implicitly correlates its request message with its response message, so I won't need the senderID/receiverID idea and its header block.
+
+[*] "one of the principles of the Web architecture is that all important resources be identified by URIs"
+--[N] Try to restrict yourself to the use of URIs for remote data access (i.e. rather than using special RPC resource locator/identifier schemes).  But is there a way of abbreviating URIs to avoid constantly restating the namespace URI?  Would URIs of the form "nameSpaceID:localPath" work?
+--[.] XMLBase [^ SOAP uses it] -- http://www.w3.org/TR/2001/REC-xmlbase-20010627/
+
+[.] RPC invocation
+--[N] the struct should be named identically to the procedure or method name and should contain an outbound edge for each [in] or [in/out] parameter.
+--[N] each outbound edge should have a label corresponding to the name of the parameter
+
+[.] RPC response
+--[N] response is a single struct containing an outbound edge for the return value and each [out] or [in/out] parameter.
+--[*] the name of the struct is not significant.
+--[N] Each outbound edge should have a label corresponding to the name of the parameter.
+--[*] There MUST be an outbound edge with a local name of "result" (corresponding to a non-void return value) and a namespace name of "http://www.w3.org/2003/05/soap-rpc" which terminates in a terminal node 
+----[*?] The type of that terminal node is a xs:QName and its value is the name of the outbound edge which terminates in the actual return value. 
+--[*] for a void result, the <result> element must be omitted.
+
+@ ^ http://www.w3.org/TR/2003/REC-soap12-part0-20030624/ ######################
+
+
+[U]
+  env : http://www.w3.org/2003/05/soap-envelope
+  enc : http://www.w3.org/2003/05/soap-encoding
+  rpc : http://www.w3.org/2003/05/soap-rpc
+[U]
+  xs  : http://www.w3.org/2001/XMLSchema
+  xsi : http://www.w3.org/2001/XMLSchema-instance
+
+["U]
+--["] SOAP message
+--["] SOAP message path
+--["] SOAP node -- SOAP sender, SOAP receiver, (SOAP intermediary)
+----["U] initial SOAP sender, ultimate SOAP receiver (ultimate recipient)
+----["] requesting SOAP node, responding SOAP node
+--["] header block (immediate child element of the SOAP header element)
+----[.] ^ use by SOAP intermediaries
+--["] SOAP application
+--["] SOAP fault
+
+
+["] XML infoset [^ SOAP body]
+["] request-response pattern
+[.] conversational message exchange
+
+[*] the env:encodingStyle attribute shows that the contents of a structure have been serialized according to the SOAP encoding rules [--> SOAP Part 2 section 3].
+
+[*] specifications of header blocks are not a part of the SOAP specifications
+
+
+SOAP HTTP BINDING #############################################################
+
+
+["] SOAP binding -- the specification of how SOAP messages may be passed from one SOAP node to another using an underlying protocol
+
+
+[.] SOAP HTTP binding
+--[.] content type header ^ "application/soap+xml"
+--[*] If an error occurs processing the request, the HTTP binding specification requires that a HTTP 500 "Internal Server Error" be used with an embedded SOAP message containing a SOAP fault indicating the server-side processing error.
+
+
+
+POST request ---------------------
+
+POST /Reservations HTTP/1.1
+Host: travelcompany.example.org
+Content-Type: application/soap+xml; charset="utf-8"
+Content-Length: nnnn
+
+<?xml version='1.0' ?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" >
+ <env:Header>
+   ...
+ </env:Header>  
+ <env:Body>
+   ...
+  </env:Body>
+</env:Envelope>
+
+Response -------------------------
+
+HTTP/1.1 200 OK
+Content-Type: application/soap+xml; charset="utf-8"
+Content-Length: nnnn
+
+<?xml version='1.0' ?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" >
+ <env:Header>
+       ...
+ </env:Header>  
+ <env:Body>
+       ...
+ </env:Body>
+</env:Envelope>
+
+Error response -------------------
+
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/soap+xml; charset="utf-8"
+Content-Length: nnnn
+
+<?xml version='1.0' ?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+  <env:Body>
+    <env:Fault>
+     <env:Code>
+       <env:Value>env:Sender</env:Value>
+       <env:Subcode>
+        <env:Value>rpc:BadArguments</env:Value>
+       </env:Subcode>
+     </env:Code>
+     <env:Reason>
+      <env:Text xml:lang="en-US">Processing error</env:Text>
+      <env:Text xml:lang="cs">Chyba zpracov��/env:Text>
+     </env:Reason>
+     <env:Detail>
+      <e:myFaultDetails 
+        xmlns:e="http://travelcompany.example.org/faults" >
+        <e:message>Name does not match card number</e:message>
+        <e:errorcode>999</e:errorcode>
+      </e:myFaultDetails>
+     </env:Detail>
+   </env:Fault>
+ </env:Body>
+</env:Envelope>
+
+
+
+SOAP processing model ##########################################################
+
+
+
+[xs:anyURI] "role" attribute [^ header blocks] -- a SOAP node is required to process a header block if it assumes the role identified by the value of the URI.
+--[U] standardized roles:
+----[.] "http://www.w3.org/2003/05/soap-envelope/role/none"
+----[.] "http://www.w3.org/2003/05/soap-envelope/role/next" -- targeted at the next node along a message path
+----[.] "http://www.w3.org/2003/05/soap-envelope/role/ultimateReceiver" -- implicit if the env:role attribute is omitted.  Note: the body element is *always* targeted at the ultimate receiver.
+
+[xs:boolean] "mustUnderstand" attribute [^ "mandatory header block"]
+
+[xs:boolean] "relay" attribute -- indicates whether a header block targeted at a SOAP intermediary must be relayed if it is not processed
+
+
+
+SOAP Request-Response Message Exchange Pattern #################################
+http://www.w3.org/TR/2003/REC-soap12-part2-20030624/#singlereqrespmep
+
+
+
+[*] "Implementations MAY choose to support multiple ongoing requests (and associated response processing) at the same time."
+
+[.] soap/mep/OutboundMessage 
+[.] soap/mep/InboundMessage 
+[xs:anyURI] soap/mep/ImmediateDestination
+[xs:anyURI] soap/mep/ImmediateSender
+
+[.] soap/bindingFramework/ExchangeContext/ExchangePatternName
+--[*] "http://www.w3.org/2003/05/soap/mep/request-response/"
+[.] soap/bindingFramework/ExchangeContext/FailureReason
+--[U] "None", "transmissionFailure", "exchangeFailure"
+[.] soap/bindingFramework/ExchangeContext/Role 
+--[8] "RequestingSOAPNode", "RespondingSOAPNode"
+[.] soap/bindingFramework/ExchangeContext/State 
+--[U] "Init", "Requesting", "Sending+Receiving", "Receiving+Sending", "Fail", "Success"
+
+
+
+SOAP TOOLKITS ##################################################################
+
+
+
+White Mesa (Robert Cunnings) [Full, C++ | COM | WinNT/2K] 2.2, 2001/06/11     
+
+   IdooXoap for C++ (Zvon.org) [Full, C++] 0.9, 2000/03/23 
+
+   C++ Library for SOAP Client (SQLData) [Client, C++ | WinNT/2K] 2.0, 
+
+   eSOAP (Rosimildo da Silva ) [Full, C++ | Linux/Windows/RTEMS/eCos] 0.4, 
+
+   SOUP (Ximian) [Full, C | Linux/Windows] 0.2, 2001/05/22    
+
+
+
+http://soapclient.com/SourceCode.html
+
+
+
+################################################################################
+
+
+
+[.] SOAP fault
+--[N] avoid custom faults; a SOAP processor that only understands the four standard fault codes will not be able to take intelligent action upon receipt of a custom fault (instead, extend one of the four standard fault codes)
+
+soap:mustUnderstand="true"
+soap:encodingStyle="http://www.w3.org/2001/06/soap-encoding"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+<env:Envelope xmlns:env="http://www.w3.org/2001/12/soap-envelope">
+  <env:Body>
+    <P2:DataSet xmlns:P2="..." env:encodingStyle="http://www.w3.org/12/soap-encoding">
+      ...
+    </P2:DataSet>
+  </soap:Body>
+</soap:Envelope>
+
+xmlns:troika="http://www.troika.org/schema"
+
+
+env:encodingStyle="http://www.w3.org/2003/05/soap-encoding"
+
+
+
+IDEAS ##########################################################################
+
+[.] transactionID attribute -- sender gives the request a unique id to unambiguously match it with a response.  E.g.
+
+  <SOAP-ENV:Header>
+    <... senderID="JoshPC" receiverID="LinuxLab"/>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body SOAP-ENV:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+    <P2:Request ... transactionID="137">
+      ...
+    </P2:Request>
+  <SOAP-ENV:Body>
+
+  <SOAP-ENV:Header>
+    <... senderID="LinuxLab" receiverID="JoshPC"/>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body SOAP-ENV:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+    <P2:Response ... transactionID="137">
+      ...
+    </P2:Response>
+    <P2:Request ... transactionID="asdf">
+      ...
+    </P2:Request>
+  <SOAP-ENV:Body>
+

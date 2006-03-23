@@ -1,0 +1,117 @@
+
+
+
+
+SK <--> XML translator
+
+XML translator for each class
+
+* Let the XML toolkit handle validation and serialization
+
+* Atoms are translated according to their type.
+
+
+
+// Phase2_v1.SK1
+
+
+
+
+typedef P2XML_Node ...;
+
+#define FIRST_CHILD(node)	node.firstChild();
+
+
+
+
+XML_object *serialize(void *p)
+
+
+[u] properties (incomplete list):
+parentNode
+previousSibling
+nextSibling
+
+attributes	-->	NamedNodeMap
+
+
+
+
+
+NamedNodeMap
+	length
+	Node getNamedItem(name)
+	Node getQualifiedItem(baseName, nameSpaceURI)
+	[item] item(index)
+	Node nextNode()
+	Node removeNamedItem(name)
+	Node removeQualifiedItem(baseName, nameSpaceURI)
+	reset()
+	setNamedItem(newItem)
+
+
+// source ^ http://www.devguru.com/Technologies/xmldom/quickref/obj_node.html
+nodeType enum:
+enum ... {
+	NODE_ELEMENT			= 1,
+	NODE_ATTRIBUTE			= 2,
+	NODE_TEXT			= 3,
+	NODE_CDATA_SECTION		= 4,
+	NODE_ENTITY_REFERENCE		= 5,
+	NODE_ENTITY			= 6,
+	NODE_PROCESSING_INSTRUCTION	= 7,
+	NODE_COMMENT			= 8,
+	NODE_DOCUMENT			= 9,
+	NODE_DOCUMENT_TYPE		= 10,
+	NODE_DOCUMENT_FRAGMENT		= 11,
+	NODE_NOTATION			= 12
+}
+
+[U] DOM node objects:
+Attr
+--[U] Text, EntityReference
+CDATASection
+--[U] No Children
+Comment
+--[U] No Children
+Document
+--[U] Element, ProcessingInstruction, Comment, DocumentType
+DocumentFragment
+--[U] Element, ProcessingInstruction, Comment, Text, CDATASection, EntityReference
+DocumentType
+--[U] No Children
+Element
+--[U] Element, ProcessingInstruction, Comment, Text, CDATASection, EntityReference
+Entity
+--[U] Element, ProcessingInstruction, Comment, Text, CDATASection, EntityReference
+EntityReference
+--[U] Element, ProcessingInstruction, Comment, Text, CDATASection, EntityReference
+Notation
+--[U] No Children
+ProcessingInstruction
+--[U] No Children
+Text
+--[U] No Children
+
+
+[U] fundamental DOM interfaces:
+Attr
+CharacterData
+Comment
+DocumentFragment
+Document
+DOMException
+DOMImplementation
+Element
+Node
+NodeList
+NamedNodeMap
+Text
+
+[U] extended interfaces
+CDATASection
+DocumentType
+Entity
+EntityReference
+Notation
+ProcessingInstruction

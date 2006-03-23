@@ -1,0 +1,31 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="EMail" type="xsd:string">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="From"/>
+        <xsd:element ref="To" maxOccurs="unbounded"/>
+        <xsd:element ref="Title" minOccurs="0"/>
+        <xsd:element ref="Date" minOccurs="0"/>
+        <xsd:element ref="Message"/>
+      </xsd:sequence>
+      <xsd:attribute name="Importance">
+
+        <!-- I had to enclose the restriction in a simpleType tag for this to validate -->
+        <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="normal"/>
+          <xsd:enumeration value="urgent"/>
+        </xsd:restriction>
+        </xsd:simpleType>
+
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="From" type="xsd:anyURI"/>
+  <xsd:element name="To" type="xsd:anyURI"/>
+  <xsd:element name="Date" type="xsd:date"/>
+  <xsd:element name="Message" type="xsd:string"/>
+
+</xsd:schema>

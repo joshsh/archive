@@ -1,0 +1,30 @@
+../../gsoap-linux-2.7/soapcpp2 -c googleapi.h
+
+**  The gSOAP Stub and Skeleton Compiler for C and C++ 2.7.1
+**  Copyright (C) 2000-2005, Robert van Engelen, Genivia Inc.
+**  All Rights Reserved. This product is provided "as is", without any warranty.
+**  The gSOAP compiler is released under one of the following three licenses:
+**  GPL, the gSOAP public license, or the commercial license by Genivia Inc.
+
+Saving soapStub.h
+Saving soapH.h
+Saving soapC.c
+Saving soapClient.c
+Saving soapServer.c
+Saving soapClientLib.c
+Saving soapServerLib.c
+Using api service name: googleapi
+Using api service style: rpc
+Using api service encoding: encoded
+Using api service location: http://api.google.com/search/beta2
+Using api schema namespace: urn:GoogleSearch
+Saving googleapi.wsdl Web Service description
+Saving googleapi.doGoogleSearch.req.xml sample SOAP/XML request
+Saving googleapi.doGoogleSearch.res.xml sample SOAP/XML response
+Saving googleapi.doGetCachedPage.req.xml sample SOAP/XML request
+Saving googleapi.doGetCachedPage.res.xml sample SOAP/XML response
+Saving googleapi.doSpellingSuggestion.req.xml sample SOAP/XML request
+Saving googleapi.doSpellingSuggestion.res.xml sample SOAP/XML response
+Saving googleapi.nsmap namespace mapping table
+Saving api.xsd XML schema
+gcc -Wall -O2 -I../..  -o googleapi googleapi.c soapC.c soapClient.c ../../gsoap-linux-2.7/stdsoap2.c 

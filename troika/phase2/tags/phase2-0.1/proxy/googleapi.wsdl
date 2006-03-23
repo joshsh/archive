@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="googleapi"
+ targetNamespace="urn:GoogleSearch"
+ xmlns:tns="urn:GoogleSearch"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:api="urn:GoogleSearch"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="urn:GoogleSearch"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:api="urn:GoogleSearch"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <simpleType name="Enum-1">
+   <restriction base="xsd:string">
+    <enumeration value="false"/>
+    <enumeration value="true"/>
+   </restriction>
+  </simpleType>
+  <complexType name="DirectoryCategory">
+   <sequence>
+     <element name="fullViewableName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="specialEncoding" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfDirectoryCategory">
+   <complexContent>
+    <restriction base="SOAP-ENC:Array">
+     <sequence>
+      <element name="item" type="api:DirectoryCategory" minOccurs="0" maxOccurs="unbounded"/>
+     </sequence>
+     <attribute ref="SOAP-ENC:arrayType" WSDL:arrayType="api:DirectoryCategory[]"/>
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="ResultElement">
+   <sequence>
+     <element name="summary" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="URL" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="snippet" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="title" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="cachedSize" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="relatedInformationPresent" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+     <element name="hostName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="directoryCategory" type="api:DirectoryCategory" minOccurs="1" maxOccurs="1"/>
+     <element name="directoryTitle" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfResultElement">
+   <complexContent>
+    <restriction base="SOAP-ENC:Array">
+     <sequence>
+      <element name="item" type="api:ResultElement" minOccurs="0" maxOccurs="unbounded"/>
+     </sequence>
+     <attribute ref="SOAP-ENC:arrayType" WSDL:arrayType="api:ResultElement[]"/>
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="GoogleSearchResult">
+   <sequence>
+     <element name="documentFiltering" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+     <element name="searchComments" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="estimatedTotalResultsCount" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="estimateIsExact" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+     <element name="resultElements" type="api:ArrayOfResultElement" minOccurs="1" maxOccurs="1" nillable="false"/>
+     <element name="searchQuery" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="startIndex" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="endIndex" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="searchTips" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="directoryCategories" type="api:ArrayOfDirectoryCategory" minOccurs="1" maxOccurs="1" nillable="false"/>
+     <element name="searchTime" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+ </schema>
+
+</types>
+
+<message name="doGoogleSearchRequest">
+ <part name="key" type="xsd:string"/>
+ <part name="q" type="xsd:string"/>
+ <part name="start" type="xsd:int"/>
+ <part name="maxResults" type="xsd:int"/>
+ <part name="filter" type="xsd:boolean"/>
+ <part name="restrict" type="xsd:string"/>
+ <part name="safeSearch" type="xsd:boolean"/>
+ <part name="lr" type="xsd:string"/>
+ <part name="ie" type="xsd:string"/>
+ <part name="oe" type="xsd:string"/>
+</message>
+
+<message name="doGoogleSearchResponse">
+ <part name="return" type="api:GoogleSearchResult"/>
+</message>
+
+<message name="doGetCachedPageRequest">
+ <part name="key" type="xsd:string"/>
+ <part name="url" type="xsd:string"/>
+</message>
+
+<message name="doGetCachedPageResponse">
+ <part name="return" type="xsd:base64Binary"/>
+</message>
+
+<message name="doSpellingSuggestionRequest">
+ <part name="key" type="xsd:string"/>
+ <part name="phrase" type="xsd:string"/>
+</message>
+
+<message name="doSpellingSuggestionResponse">
+ <part name="return" type="xsd:string"/>
+</message>
+
+<portType name="googleapiPortType">
+ <operation name="doGoogleSearch">
+  <documentation>Service definition of function api__doGoogleSearch</documentation>
+  <input message="tns:doGoogleSearchRequest"/>
+  <output message="tns:doGoogleSearchResponse"/>
+ </operation>
+ <operation name="doGetCachedPage">
+  <documentation>Service definition of function api__doGetCachedPage</documentation>
+  <input message="tns:doGetCachedPageRequest"/>
+  <output message="tns:doGetCachedPageResponse"/>
+ </operation>
+ <operation name="doSpellingSuggestion">
+  <documentation>Service definition of function api__doSpellingSuggestion</documentation>
+  <input message="tns:doSpellingSuggestionRequest"/>
+  <output message="tns:doSpellingSuggestionResponse"/>
+ </operation>
+</portType>
+
+<binding name="googleapi" type="tns:googleapiPortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="doGoogleSearch">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+   <SOAP:body use="encoded" namespace="urn:GoogleSearch" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+   <SOAP:body use="encoded" namespace="urn:GoogleSearch" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="doGetCachedPage">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+   <SOAP:body use="encoded" namespace="urn:GoogleSearch" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+   <SOAP:body use="encoded" namespace="urn:GoogleSearch" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="doSpellingSuggestion">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+   <SOAP:body use="encoded" namespace="urn:GoogleSearch" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+   <SOAP:body use="encoded" namespace="urn:GoogleSearch" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="googleapi">
+ <documentation>gSOAP 2.7.1 generated service definition</documentation>
+ <port name="googleapi" binding="tns:googleapi">
+  <SOAP:address location="http://api.google.com/search/beta2"/>
+ </port>
+</service>
+
+</definitions>

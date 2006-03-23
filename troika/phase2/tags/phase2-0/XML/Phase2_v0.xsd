@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:XMLPLI="./XMLPLI.xsd"
+elementFormDefault="qualified"
+attributeFormDefault="unqualified">
+
+
+
+  <!-- A Sequence is an ordered list of Elements, and may be of one of a number
+  of enumerated sequenceTypes.  This is the only derived type which this particular
+  schema will recognize as an Element. -->
+  <xs:element name="Sequence">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        
+            <xs:element ref="Element"/>
+        
+            <xs:element ref="Sequence"/>
+	    <xs:element ref="XMLPLI:PrimitiveFunction"/>
+	    <xs:element ref="XMLPLI:PlaceHolder"/>
+	    
+	    <xs:element ref="xs:string"/>
+	    <xs:element ref="xs:integer"/>
+            <xs:element ref="xs:byte"/>    
+            
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="sequenceType" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="immediate"/>
+            <xs:enumeration value="delayed"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- An Element is an instance of a PrimitiveType together with an unordered
+  (and possibly empty) collection of Associations
+   
+    [The "choice" list] should correspond 1:1 with the set of primitive types.  It will
+    be simplest to generate it based on lang.itf.xml. At present,
+    XMLPLI:PrimitiveFunction should always be in this list.
+    XMLPLI:PlaceHolder should be in the list if any of the types in lang.itf.xml
+    were not identified with a type.
+    Other derived types do not belong here; add them to the Element type below.
+    
+    Note that the presence of Sequence in this list means that
+            Sequences may be "associated", as far as XML validation is concerned.
+    
+  -->
+  <xs:element name="Element">
+    <xs:complexType>
+      <xs:sequence>
+
+        <xs:choice>
+
+            <xs:element ref="Sequence"/>
+	    <xs:element ref="XMLPLI:PrimitiveFunction"/>
+	    <xs:element ref="XMLPLI:PlaceHolder"/>
+	    
+	    <xs:element ref="xs:string"/>
+	    <xs:element ref="xs:integer"/>
+            <xs:element ref="xs:byte"/>
+	    	    
+        </xs:choice>
+
+        <!-- An Association is just an ordered pair of Elements, bound to a anchor
+        Element -->
+        <xs:element name="Association" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="key" type="Element"/>
+              <xs:element name="target" type="Element"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- A DataSet is a collection of language constructs in the form of Elements. -->
+  <xs:element name="DataSet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+        
+            <xs:element ref="Element"/>
+        
+            <xs:element ref="Sequence"/>
+	    <xs:element ref="XMLPLI:PrimitiveFunction"/>
+	    <xs:element ref="XMLPLI:PlaceHolder"/>
+	    
+	    <xs:element ref="xs:string"/>
+	    <xs:element ref="xs:integer"/>
+            <xs:element ref="xs:byte"/>    
+            
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="creationDate" type="xs:date" use="required"/>
+      <xs:attribute name="creationTime" type="xs:time" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+</xs:schema>

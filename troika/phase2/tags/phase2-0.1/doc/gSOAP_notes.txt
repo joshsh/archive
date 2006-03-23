@@ -1,0 +1,3 @@
+["] stub routine (implementation of a SOAP client application requires one for each remote method that the client application needs to invoke)
+
+["] marshall, demarshall (^ parameter data)
