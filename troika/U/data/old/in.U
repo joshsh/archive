@@ -1,0 +1,37 @@
+universe test
+
+classe 6 {
+	0)	item 0
+	1)	list 1
+	2)	ascii 2
+	3)	color 4
+	4)	frame 1
+	5)	grid 0
+}
+
+0)	item 0 {
+}
+
+1)	list 1 {
+	0)	2 { 2.0 2.1 }
+}
+
+2)	ascii 2 {
+	0)	Salut\20le\20Monde!
+	1)	another_list_item
+}
+
+3)	color 4 {
+	0)	7F0000
+	1)	00FF00
+	2)	FFFFFF
+	3)	000000
+}
+
+4)	frame 1 {
+	0)	0 0 10 10
+}
+
+5)	grid 0 {
+}
+

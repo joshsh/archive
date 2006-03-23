@@ -1,0 +1,38 @@
+universe test
+
+classe 6 {
+	0)	item 0
+	1)	list 2
+	2)	ascii 4
+	3)	color 2
+	4)	frame 1
+	5)	grid 0
+}
+
+0)	item 0 {
+}
+
+1)	list 2 {
+	0)	2 { 2.0 2.1 }
+	1)	2 { 2.3 2.2 }
+}
+
+2)	ascii 4 {
+	0)	Salut\20le\20Monde!
+	1)	another_list_item
+	2)	new
+	3)	Let's\20put\20these\20on\20a\20stack.
+}
+
+3)	color 2 {
+	0)	7F0000
+	1)	00FF00
+}
+
+4)	frame 1 {
+	0)	0 0 10 10
+}
+
+5)	grid 0 {
+}
+

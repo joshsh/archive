@@ -1,0 +1,59 @@
+in
+{
+	temp : cool 60, 65 warm 70, 80 hot;
+	volume : small 100, 200 medium 200, 300 large;
+	time : morning 5, 7 day 17, 20 evening;
+}
+
+
+
+out
+{
+	power : off, low, medium, high;
+	mood : contrary, obsequious, apathetic;
+}
+
+
+
+rules
+{
+	temp( cool ),	volume( small ),	time( evening )	: power( medium );
+	temp( cool ),	volume( small ),	time( day )	: power( medium );
+	temp( cool ),	volume( medium ),	time( evening )	: power( high );
+	temp( cool ),	volume( medium ),	time( day )	: power( medium );
+	temp( cool ),	volume( large ),	time( evening )	: power( high );
+	temp( cool ),	volume( large ),	time( day )	: power( medium );
+	temp( warm ),	volume( small ),	time( evening )	: power( low );
+	temp( warm ),	volume( small ),	time( day )	: power( low );
+	temp( warm ),	volume( medium ),	time( evening )	: power( medium );
+	temp( warm ),	volume( medium ),	time( day )	: power( low );
+	temp( warm ),	volume( large ),	time( evening )	: power( medium );
+	temp( warm ),	volume( large ),	time( day )	: power( medium );
+	temp( hot ),	volume( small ),	time( evening )	: power( off );
+	temp( hot ),	volume( small ),	time( day )	: power( off );
+	temp( hot ),	volume( medium ),	time( evening )	: power( low );
+	temp( hot ),	volume( medium ),	time( day )	: power( off );
+	temp( hot ),	volume( large ),	time( evening )	: power( low );
+	temp( hot ),	volume( large ),	time( day )	: power( off );
+
+	temp( warm ),	volume( medium ),	time( morning )	: power( low );
+	temp( warm ),	volume( large ),	time( morning )	: power( medium );
+	temp( warm ),	volume( large ),	time( morning )	: power( medium );
+	temp( hot ),	volume( small ),	time( morning )	: power( off );
+	temp( hot ),	volume( small ),	time( morning )	: power( off );
+	temp( hot ),	volume( medium ),	time( morning )	: power( low );
+	temp( hot ),	volume( medium ),	time( morning )	: power( off );
+	temp( hot ),	volume( large ),	time( morning )	: power( low );
+	temp( hot ),	volume( large ),	time( morning )	: power( off );
+}
+
+
+
+data
+{
+	d1 :	temp( 61.5 ),	volume( 150 ),	time( 13 );
+	d2 :	temp( 72.9 ),	volume( 150 ),	time( 2.5 );
+	d3 :	temp( 81.1 ),	volume( 421 ),	time( 17.33 );
+}
+
+

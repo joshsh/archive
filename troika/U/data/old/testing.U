@@ -1,0 +1,32 @@
+universe testing
+
+classe 6 {
+	0)	item 0
+	1)	list 1
+	2)	ascii 2
+	3)	color 0
+	4)	frame 0
+	5)	grid 0
+}
+
+0)	item 0 {
+}
+
+1)	list 1 {
+	0)	3 { 2.0 2.1 }
+}
+
+2)	ascii 3 {
+	0)	this
+	1)	that
+}
+
+3)	color 0 {
+}
+
+4)	frame 0 {
+}
+
+5)	grid 0 {
+}
+

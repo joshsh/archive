@@ -1,0 +1,175 @@
+universe first\20command-line\20universe
+
+classe 3 {
+	1)	list 17
+	5)	ascii 140
+	14)	lookup_table 1
+}
+
+1)	list 17 {
+	0)	24 { 5.0 5.1 5.2 5.3 5.4 5.5 5.6 5.7 5.8 5.9 5.10 5.11 5.14 5.15 5.91 5.92 5.93 5.98 5.99 5.100 5.101 5.102 5.103 5.128 }
+	1)	3 { 5.12 5.13 5.21 }
+	2)	1 { 5.20 }
+	3)	5 { 5.16 5.17 5.18 5.19 5.90 }
+	4)	1 { 5.22 }
+	5)	26 { 5.23 5.24 5.25 5.26 5.27 5.28 5.29 5.30 5.31 5.32 5.33 5.34 5.35 5.36 5.37 5.38 5.108 5.109 5.110 5.111 5.112 5.113 5.114 5.115 5.116 5.117 }
+	6)	12 { 5.39 5.40 5.41 5.42 5.43 5.44 5.45 5.46 5.47 5.48 5.49 5.50 }
+	7)	7 { 5.51 5.52 5.53 5.54 5.55 5.56 5.57 }
+	8)	7 { 5.58 5.59 5.60 5.61 5.62 5.63 5.64 }
+	9)	6 { 5.65 5.75 5.76 5.77 5.78 5.79 }
+	10)	19 { 5.66 5.67 5.68 5.69 5.70 5.71 5.72 5.73 5.74 5.80 5.81 5.82 5.83 5.84 5.85 5.86 5.87 5.88 5.89 }
+	11)	4 { 5.94 5.95 5.96 5.97 }
+	12)	4 { 5.104 5.105 5.106 5.107 }
+	13)	10 { 5.118 5.119 5.120 5.121 5.122 5.123 5.124 5.125 5.126 5.127 }
+	14)	5 { 5.129 5.130 5.131 5.132 5.133 }
+	15)	0 { }
+	16)	6 { 5.134 5.135 5.136 5.137 5.138 5.139 }
+}
+
+5)	ascii 140 {
+	0)	phalansterianism
+	1)	inimitable
+	2)	cryovulcanism
+	3)	pleurisy
+	4)	pilocarpine
+	5)	savoir
+	6)	faire
+	7)	incorrigible
+	8)	inveterate
+	9)	macadam
+	10)	multifariously
+	11)	boustrophedon
+	12)	in-charge
+	13)	not-in-charge
+	14)	recalcitrant
+	15)	$4.31
+	16)	ri
+	17)	[n
+	18)	-l
+	19)	}
+	20)	<>
+	21)	tokenize
+	22)	thisistotaljunk
+	23)	a
+	24)	b
+	25)	c
+	26)	d
+	27)	e
+	28)	f
+	29)	g
+	30)	h
+	31)	i
+	32)	j
+	33)	k
+	34)	l
+	35)	m
+	36)	n
+	37)	o
+	38)	p
+	39)	January
+	40)	February
+	41)	March
+	42)	April
+	43)	May
+	44)	June
+	45)	July
+	46)	August
+	47)	September
+	48)	October
+	49)	November
+	50)	December
+	51)	Sunday
+	52)	Monday
+	53)	Tuesday
+	54)	Wednesday
+	55)	Thursday
+	56)	Friday
+	57)	Saturday
+	58)	Africa
+	59)	Antarctica
+	60)	Asia
+	61)	Australia
+	62)	Europe
+	63)	North\20America
+	64)	South\20America
+	65)	Camp\20Muir
+	66)	chromosphere
+	67)	photosphere
+	68)	prominence
+	69)	granule
+	70)	corona
+	71)	high\20energy\20proton
+	72)	sun\20spot
+	73)	solar\20flare
+	74)	coronal\20mass\20ejection\20(CME)
+	75)	Mt.\20Stuart
+	76)	Dragon\20Tail\20(?)
+	77)	Mt.\20Adams
+	78)	Mt.\20St.\20Helens
+	79)	Mt.\20Hood
+	80)	convection\20zone
+	81)	radiation\20zone
+	82)	spicule
+	83)	fibril
+	84)	H-alpha
+	85)	optical\20depth
+	86)	convection\20cell
+	87)	supergranule
+	88)	solar\20wind
+	89)	coronal\20hole
+	90)	codswallop
+	91)	disambiguation
+	92)	finishing\20school
+	93)	sunglasses
+	94)	Wikipedia
+	95)	Google
+	96)	Hypertext\20Webster\20Gateway
+	97)	mathworld.wolfram.com
+	98)	/+
+	99)	suits
+	100)	spades
+	101)	hearts
+	102)	clubs
+	103)	diamonds
+	104)	north
+	105)	south
+	106)	east
+	107)	west
+	108)	q
+	109)	r
+	110)	s
+	111)	t
+	112)	u
+	113)	v
+	114)	w
+	115)	x
+	116)	y
+	117)	z
+	118)	0
+	119)	1
+	120)	2
+	121)	3
+	122)	4
+	123)	5
+	124)	6
+	125)	7
+	126)	8
+	127)	9
+	128)	Vaisya
+	129)	tetrahedron
+	130)	cube
+	131)	octahedron
+	132)	dodecahedron
+	133)	icosahedron
+	134)	red
+	135)	orange
+	136)	yellow
+	137)	green
+	138)	blue
+	139)	violet
+}
+
+14)	lookup_table 1 {
+	0)	17 { C/C++ 1.1 < Platonic\20solid 1.14 < Platonic\20solids 1.15 < Rainier 1.9 < asciis 1.0 < bogus 1.2 < cardinal_directions 1.12 < color 1.16 < continents 1.8 < days 1.7 < digits 1.13 < internet 1.11 < killit 1.4 < letters 1.5 < months 1.6 < sun 1.10 < trashit 1.3 }
+}
+

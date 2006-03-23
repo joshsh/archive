@@ -1,0 +1,74 @@
+* the focus is shifting from "items" to "objects" as the basic building blocks
+  of the universe graph.  But since there is no "object" class, "items" are
+  really objects, too.
+
+* "item" classes are all derived from a single base class, or equivalently
+  should be of a single standardized format including functions for
+  de-/serialization, construction, destruction and comparison (that is, if you
+  decide to transition to C).
+
+? should we try to suppress "direct" inter-item dependencies?  E.g. items
+  may not have other items as members, even indirectly (e.g. via a data
+  structure like a linked list).  {ba ^ copyright enforcement}
+  
+* in contrast to items, objects are abstractions without their own
+  serializers, constructors, and so on.  Instead, construction and (implicitly)
+  destruction are handled by procedures, and de-/serialization is handled
+  globally by the universe.
+
+
+"SNPL's Not a Programming Language!"
+
+SNPL_expanding_array, SNPL_expanding_hash_table
+SNPL_procedure *p = new SNPL_procedure(...);
+
+"ascii" --> "SNPL_string"
+
+  
+void serialize_objects(void **root, caste *c, ofstream &out)
+{
+  // No, use an expanding hash table, and hash by address so you can
+  // locate objects with a binary search.  That, or use a tree... just
+  // beware of degeneracy... A 2-3 tree might fit the bill.
+  //void_array *object_array = new void_array();
+  
+  hash_table *ht = new hash_table(101,0,0);
+  int index = 0;
+  void **cur = root;
+  while (true) { // exit when?
+  
+  }
+  delete ht;
+  
+  int i=0;
+  void **cur = root;
+  while (true) { //exit when?
+  /*
+    out << '\t' << i << ")\t" << array_size << " {";
+    for (int i=0; i<array_size; i++) {
+      out << " ";
+      array_head[i]->write_id(out);
+    }
+    out << " }\n";
+  */
+  }
+}
+
+
+TRASH THIS.............................................
+
+class object
+{
+  void **object_constituents;
+  
+  void serialize(ofstream &);
+
+};
+
+void object::serialize(ofstream &out)
+{
+    
+}
+
+
+

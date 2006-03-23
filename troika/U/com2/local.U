@@ -1,0 +1,27 @@
+universe second\20command-line\20universe
+
+classe 4 {
+	1)	list 1
+	5)	ascii 1
+	14)	lookup_table 1
+	16)	caste 3
+}
+
+1)	list 1 {
+	0)	0 { }
+}
+
+5)	ascii 1 {
+	0)	root
+}
+
+14)	lookup_table 1 {
+	0)	1 { asciis 1.0 }
+}
+
+16)	caste 3 {
+	0)	0
+	1)	1
+	2)	2 { 16.0 16.1 }
+}
+

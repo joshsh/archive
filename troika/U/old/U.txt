@@ -1,0 +1,181 @@
+universe test
+
+castes 7 {
+	0 item 23
+	1 universe 0
+	2 list 5
+	3 fuzzy_set 9
+	4 fuzzy_set_family 3
+	5 fuzzy_output_family 2
+	6 FLE 1  
+}
+
+0 item 23 {
+	0 my\20item
+	1 fiddle
+	2 faddle
+	3 YouCanUsePlainItemsForTextStrings
+	...
+}
+
+1 list 5 {
+	0	{	0.0	0.22	6.0	} a\20list 
+	1	{	...	} another\20list 
+	...
+}
+
+...
+
+
+
+
+
+
+//#include <typeinfo>
+
+
+
+class item
+{
+  int item_id;
+  //int caste_id;  //#############
+  char *item_name;  //~
+
+  static caste *caste_static;  //? Where is this assigned to?
+
+public:
+
+  static void set_caste(caste *);
+
+  item(int);  //Note: no name
+  item(int, char *);  //Temporary.
+
+  int id();
+
+  char *name(); //~
+  void set_name(char *);  //~
+
+  virtual void serialize(ofstream &, int);
+
+  virtual void deserialize(ifstream &in);
+
+  virtual void get_caste() //??? Virtual, static, ...?
+};
+
+caste *item::caste_static = NULL;
+
+void item::set_caste(caste *c) : caste_static^c {}
+
+item::item(int id0, char *name0) : item_id^id0, item_name^copy(name0) {}
+item::item(int id0) : item_id^id0 {}
+char *item::name()
+{
+  return item_name;
+}
+void item::set_name(char *s) : item_name^copy(s) {}
+
+
+Deserialization:
+* read universe name
+* read number of classes
+  create array of castes
+* read numbers of members of each class
+  create castes
+  array creation (1 array for each class)
+  fill the arrays with new objects of the appropriate class
+  build the lists as you do this
+* for each class, deserialize members
+  
+Creation of an item:
+* add it to the universe, as an item of a particular class list
+  (it necessarily already has one inbound link)
+
+Deletion of an item:
+* set the item's id to -1
+  (other structures should treat pointers to items with id=-1 as NULL/invalid)
+  (the item will remain in its caste list until serialization)
+  
+Serialization:
+* "refresh" all of the caste lists, numbering them sequentially and ignoring
+  nulled items (the count skips these)
+* write universe name
+* write number of castes (will not have changed since deserialization)
+* write name and size of each of the castes
+* serialize each caste 
+
+
+
+
+
+
+
+
+class universe : public item
+{
+  list *castes;
+
+public:
+
+  void declare_castes();
+
+  /* Are these definitions necessary? */
+  virtual void deserialize(ifstream &);
+  virtual void serialize(ofstream &, int);
+
+};
+
+void universe::declare_castes()
+{
+  int i=0;
+  castes->add(new caste(i++, "item", item::item, item::set_caste));
+  castes->add(new caste(i++, "list", list::list, list::set_caste));
+  //...
+}
+
+void universe::serialize(ofstream &out, int indent)
+{
+  item::serialize(out, 0);  //~
+  node *n = castes->first();
+  while (n != NULL) {
+
+
+    n = n->next();
+  }
+}
+
+void universe::deserialize(ifstream &in)
+{
+  int length;
+  char *s = new char[MAX_STRLEN]; //~
+
+  //(item::deserialize) if no braces in item entries
+  
+  /* Header for caste dimensions */
+  item *key;
+  node *n = castes->first();
+  while (n != NULL) {
+    key = n->key();
+    in >> s >> length;  //Skipping NAME, assuming correct order and number
+    for (int i=0; i<length; i++)
+      n->key()->augment();
+    //- create list_array
+    n = n->next();
+  }
+
+  //- deserialize castes
+
+  //- delete list_arrays
+
+}
+
+
+
+
+
+
+
+
+
+
+
+

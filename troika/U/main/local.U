@@ -1,0 +1,27 @@
+universe new\20test\20universe
+
+classe 4 {
+	1)	list 2
+	5)	ascii 2
+	14)	lookup_table 1
+	15)	procedure 1
+}
+
+1)	list 2 {
+	0)	2 { 5.0 5.1 }
+	1)	1 { 15.0 }
+}
+
+5)	ascii 2 {
+	0)	howdy\20ho!
+	1)	analgesic\20nephrosis
+}
+
+14)	lookup_table 1 {
+	0)	2 { asciis 1.0 < procedures 1.1 }
+}
+
+15)	procedure 1 {
+	0)	.input_new_ascii
+}
+

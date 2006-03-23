@@ -1,0 +1,104 @@
+universe fle.cpp\20output
+
+classe 13 {
+	0)	item 0
+	1)	list 7
+	2)	array 0
+	3)	integer_tensor 1
+	4)	real_tensor 2
+	5)	ascii 22
+	6)	color 0
+	7)	frame 0
+	8)	grid 0
+	9)	fuzzy_set 9
+	10)	fuzzy_set_family 3
+	11)	fuzzy_output_family 2
+	12)	FLE 1
+}
+
+0)	item 0 {
+}
+
+1)	list 7 {
+	0)	3 { 10.0 10.1 10.2 }
+	1)	2 { 11.0 11.1 }
+	2)	3 { 9.0 9.1 9.2 }
+	3)	3 { 9.3 9.4 9.5 }
+	4)	3 { 9.6 9.7 9.8 }
+	5)	4 { 5.14 5.15 5.16 5.17 }
+	6)	3 { 5.19 5.20 5.21 }
+}
+
+2)	array 0 {
+}
+
+3)	integer_tensor 1 {
+	0)	3 { 3 3 3 } { 9 8 9 9 11 9 9 11 9 4 1 8 4 7 6 9 7 9 2 0 2 2 0 2 2 0 2 }
+}
+
+4)	real_tensor 2 {
+	0)	3 { 3 3 3 } { 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 }
+	1)	2 { 4 3 } { 1 0 0 0 0 0 0 0 0 0 0 0 }
+}
+
+5)	ascii 22 {
+	0)	../hw_temp/heater
+	1)	temp
+	2)	cool
+	3)	warm
+	4)	hot
+	5)	volume
+	6)	small
+	7)	medium
+	8)	large
+	9)	time
+	10)	morning
+	11)	day
+	12)	evening
+	13)	power
+	14)	off
+	15)	low
+	16)	med
+	17)	high
+	18)	mood
+	19)	contrary
+	20)	obsequious
+	21)	apathetic
+}
+
+6)	color 0 {
+}
+
+7)	frame 0 {
+}
+
+8)	grid 0 {
+}
+
+9)	fuzzy_set 9 {
+	0)	5.2	60	60
+	1)	5.3	65	70
+	2)	5.4	80	80
+	3)	5.6	100	100
+	4)	5.7	200	200
+	5)	5.8	300	300
+	6)	5.10	5	5
+	7)	5.11	7	17
+	8)	5.12	20	20
+}
+
+10)	fuzzy_set_family 3 {
+	0)	5.1	1.2
+	1)	5.5	1.3
+	2)	5.9	1.4
+}
+
+11)	fuzzy_output_family 2 {
+	0)	5.13	1.5
+	1)	5.18	1.6
+}
+
+12)	FLE 1 {
+	0)	27	5.0	1.0	1.1	3.0
+}
+
