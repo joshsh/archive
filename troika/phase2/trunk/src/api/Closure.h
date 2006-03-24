@@ -1,6 +1,6 @@
 /**
 
-\file  Dictionary.h
+\file  Closure.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,46 +25,49 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef DICTIONARY_H
-#define DICTIONARY_H
+#ifndef CLOSURE_H
+#define CLOSURE_H
 
 
-#include <util/Hash_Table.h>
-#include <util/Array.h>
+typedef enum _p2_action__type
+{
+    p2_action__type__noop = 0,
+
+    p2_action__type__break,
+    p2_action__type__remove,
+    p2_action__type__replace
+
+} p2_action__type;
 
 
-typedef Hash_Table Dictionary;
+typedef struct _p2_action
+{
+    p2_action__type type;
+
+    /* For p2_action__type__replace: the replacement value. */
+    void *value;
+
+} p2_action;
 
 
-extern Dictionary *
-dictionary__new( void );
-
-extern void
-dictionary__delete( Dictionary *dict );
+typedef p2_action *( *procedure )( void *data, void *state );
 
 
-extern void *
-dictionary__add( Dictionary *dict, const char *key, void *target );
+typedef struct Closure Closure;
 
-extern void *
-dictionary__lookup( Dictionary *dict, char *key );
+struct Closure
+{
+    procedure execute;
 
-extern void *
-dictionary__remove( Dictionary *dict, char *key );
-
-
-extern void
-dictionary__add_all( Dictionary *dest, Dictionary *src );
+    /* A mutable data field which is provided to the procedure as an argument,
+       and preserved between invocations. */
+    void *state;
+};
 
 
-extern void
-dictionary__distribute( Dictionary *dict, Closure *p );
+#define closure__execute( p, data )  (p)->execute( (data), (p)->state )
 
 
-extern Array *
-dictionary__keys( Dictionary *dict );
-
-
-#endif  /* DICTIONARY_H */
+#endif  /* CLOSURE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

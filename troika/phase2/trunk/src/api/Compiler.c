@@ -44,30 +44,6 @@ static Compiler *compiler = 0;
 /******************************************************************************/
 
 
-/* Find a data type in the compiler environment's "types" namespace. */
-static Type *
-lookup_type( Environment *env, const char *name )
-{
-    Object *o = namespace__lookup_simple( ( Namespace* ) env->types->value, name );
-
-    if ( !o )
-        return 0;
-
-    #if DEBUG__SAFE
-    if ( o->type != env->type_t )
-    {
-        ERROR( "lookup_type: type mismatch" );
-        return 0;
-    }
-    #endif
-
-    return ( Type* ) o->value;
-}
-
-
-/******************************************************************************/
-
-
 static void
 char__encode__alt( char *c, char *buffer )
 {
@@ -140,17 +116,17 @@ compiler__new( Environment *env )
     c->env = env;
     c->cur_ns_obj = env->data;
     c->locked = 0;
-    c->suppress_output = boolean__false;
-    c->show_line_numbers = boolean__true;
+    c->suppress_output = FALSE;
+    c->show_line_numbers = TRUE;
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser. */
-    if ( !( c->env->bag_t = lookup_type( env, "bag" ) )
-      || !( c->env->char_t = lookup_type( env, "char" ) )
-      || !( c->env->float_t = lookup_type( env, "double" ) )
-      || !( c->env->int_t = lookup_type( env, "int" ) )
-      || !( c->env->string_t = lookup_type( env, "cstring" ) )
-      || !( c->env->term_t = lookup_type( env, "term" ) ) )
+    if ( !( env->bag_t = environment__resolve_type( env, "bag" ) )
+      || !( env->char_t = environment__resolve_type( env, "char" ) )
+      || !( env->string_t = environment__resolve_type( env, "cstring" ) )
+      || !( env->float_t = environment__resolve_type( env, "double" ) )
+      || !( env->int_t = environment__resolve_type( env, "int" ) )
+      || !( env->term_t = environment__resolve_type( env, "term" ) ) )
     {
         ERROR( "compiler__new: basic type not found" );
         free( c );
@@ -357,7 +333,7 @@ substitute_object_for_ast( p2_ast *ast, Subst_Ctx *state )
 {
     Object *o = object_for_ast( ast, state );
     if ( !o )
-        state->sofarsogood = boolean__false;
+        state->sofarsogood = FALSE;
 
     state->action->value = o;
     return state->action;
@@ -598,7 +574,7 @@ garbage_collect( Compiler *c )
 printf( "---c gc 1---\n" ); fflush( stdout );
 
     size_before = memory_manager__size( m );
-    memory_manager__mark_and_sweep( m );
+    memory_manager__collect( m );
     size_after = memory_manager__size( m );
 printf( "---c gc 2---\n" ); fflush( stdout );
 
@@ -728,7 +704,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     if ( name )
         a = p2_ast__name( name );
 
-    state.sofarsogood = boolean__true;
+    state.sofarsogood = TRUE;
 
     action.type = p2_action__type__replace;
     state.action = &action;

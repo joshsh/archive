@@ -94,14 +94,14 @@ namespace__remove_simple( Namespace *ns, char *name );
 
 
 extern void
-namespace__show_children( Namespace_o *ns_obj );
+namespace__show_children( const Namespace_o *ns_obj );
 
 extern void
 namespace__distribute( Namespace *ns, Closure *p );
 
 
 extern Name *
-namespace__find( Namespace_o *ns_obj, Object *o );
+namespace__find( const Namespace_o *ns_obj, const Object *o );
 
 
 #endif /* NAMESPACE_H */

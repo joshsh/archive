@@ -47,7 +47,7 @@ default__encode( void *cell, char *buffer )
 
 static boolean
 default__equals( void *cellA, void *cellB )
-{ return boolean__true; }
+{ return TRUE; }
 
 static void
 default__sort( void *cell, Comparator cmp )

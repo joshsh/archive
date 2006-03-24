@@ -289,7 +289,7 @@ bunch__distribute( Bunch *b, Closure *p )
 
         for ( j = 0; j < bl->filled; j++ )
         {
-            if ( ( action =  Closure__execute( p, bl->buffer[j] ) ) )
+            if ( ( action =  closure__execute( p, bl->buffer[j] ) ) )
             {
                 switch ( action->type )
                 {

@@ -38,7 +38,7 @@ clean :
 	$(MAKE) clean -C $(PARSER)
 	$(MAKE) clean -C $(UTILS)
 	$(MAKE) clean -C $(XML)
-	-rm -f *.o phase2
+	-rm -f *.o $(SK)/sk.o phase2
 
 
 .PHONY : test

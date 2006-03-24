@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Memory_Manager.h"
-#include "Collection.h"
+#include <Memory_Manager.h>
+#include <Collection.h>
 
 
 #define visited( o )        o->flags & OBJECT__VISITED
@@ -29,10 +29,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define set_owned( o )      o->flags |= OBJECT__OWNED
 
 
-/** \note  A memory manager is a closed system.  It owns all objects passed to
-    it via memory_manager__add, and these objects are not allowed to
-    reference any first-class objects which are not themselves owned by the
-    manager. */
 struct Memory_Manager
 {
     Bunch *objects;
@@ -253,7 +249,7 @@ unmark_for_sweep( Object *o )
         clear_visited( o );
 
         /* Don't exclude this object. */
-        return boolean__false;
+        return FALSE;
     }
 
     /* If unmarked, delete. */
@@ -262,7 +258,7 @@ unmark_for_sweep( Object *o )
         object__delete( o );
 
         /* Exclude this object. */
-        return boolean__true;
+        return TRUE;
     }
 }
 
@@ -320,7 +316,7 @@ dist_p_exec( Object *o, Closure *p )
         set_visited( o );
 
         /* Execute the procedure. */
-        return Closure__execute( p, o );
+        return closure__execute( p, o );
     }
 }
 
@@ -365,7 +361,7 @@ add_if_multiref( Object *o, Set *s )
 
         #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
         /* Object references its triples, which in turn reference the object. */
-        if ( o->outbound_edges && o->outbound_edges->size )
+        if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
         {
             set__add( s, o );
         }
@@ -407,7 +403,7 @@ noop( void *ignored1, void *ignored2 )
 
 
 void
-memory_manager__mark_and_sweep( Memory_Manager *m )
+memory_manager__collect( Memory_Manager *m )
 {
     Closure proc;
 
@@ -418,7 +414,7 @@ memory_manager__mark_and_sweep( Memory_Manager *m )
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        ERROR( "memory_manager__mark_and_sweep: null manager" );
+        ERROR( "memory_manager__collect: null manager" );
         return;
     }
     #endif
@@ -429,7 +425,7 @@ memory_manager__mark_and_sweep( Memory_Manager *m )
     memory_manager__distribute( m, &proc );
 
     #if DEBUG__MEMORY
-    printf( "memory_manager__mark_and_sweep(%#x): deallocated %i of %i.\n",
+    printf( "memory_manager__collect(%#x): deallocated %i of %i.\n",
         ( int ) m, n_initial - bunch__size( m->objects ), n_initial );
     FFLUSH;
     #endif

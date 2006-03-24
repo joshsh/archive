@@ -96,11 +96,13 @@ object__delete( Object *o );
 
 
 /* Accessors ******************************************************************/
-/*
-extern Type *object__type( Object *o );
 
-extern void
-*/
+extern boolean
+object__immutable( const Object *o );
+
+extern Type *
+object__type( const Object *o );
+
 
 /* Graph traversal ************************************************************/
 

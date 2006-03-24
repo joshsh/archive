@@ -279,7 +279,7 @@ printf( "---e d 1---\n" ); fflush( stdout );
     /* Preserve only data type objects. */
     memory_manager__set_root( env->manager, env->types );
 printf( "---e d 5---\n" ); fflush( stdout );
-    memory_manager__mark_and_sweep( env->manager );
+    memory_manager__collect( env->manager );
 
 printf( "---e d 6---\n" ); fflush( stdout );
     /* Preserve only the 'type' type. */
@@ -288,7 +288,7 @@ printf( "---e d 6---\n" ); fflush( stdout );
     memory_manager__set_root( env->manager,
         namespace__lookup_simple( ( Namespace* ) env->types->value, "type" ) );
 printf( "---e d 7---\n" ); fflush( stdout );
-    memory_manager__mark_and_sweep( env->manager );
+    memory_manager__collect( env->manager );
 
 printf( "---e d 8---\n" ); fflush( stdout );
     memory_manager__delete( env->manager );

@@ -48,58 +48,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
+typedef int boolean;
+
+#ifndef TRUE
+#define TRUE    1
+#endif
+
+#ifndef FALSE
+#define FALSE   0
+#endif
+
+
 typedef char cstring;
 
-enum boolean
-{
-    boolean__false = 0,
-    boolean__true
-};
 
-typedef enum boolean boolean;
-
-
-/* Procedures (functions with state) ******************************************/
-
-
-typedef enum _p2_action__type
-{
-    p2_action__type__noop = 0,
-
-    p2_action__type__break,
-    p2_action__type__remove,
-    p2_action__type__replace
-
-} p2_action__type;
-
-
-typedef struct _p2_action
-{
-    p2_action__type type;
-
-    /* For p2_action__type__replace: the replacement value. */
-    void *value;
-
-} p2_action;
-
-
-typedef p2_action *( *procedure )( void *data, void *state );
-
-
-typedef struct Closure Closure;
-
-struct Closure
-{
-    procedure execute;
-
-    /* A mutable data field which is provided to the procedure as an argument,
-       and preserved between invocations. */
-    void *state;
-};
-
-
-/* ~ capitalization */
-#define Closure__execute( p, data )  (p)->execute( (data), (p)->state )
+#include <Closure.h>
 
 
 /******************************************************************************/

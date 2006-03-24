@@ -260,7 +260,6 @@ printf( "---s nsxe 1---\n" ); FFLUSH;
     proc.state = &nse_st;
 
 printf( "ns = %#x\n", ( int ) ns );
-printf( "ns->children->size = %i\n", ns->children->size );
     keys = dictionary__keys( ns->children );
 printf( "array__size( keys ) = %i\n", array__size( keys ) );
     array__distribute( keys, &proc );
@@ -734,11 +733,11 @@ triple__serialize( Lookup_Table__Entry *entry, Triple_Serialize_Ctx *state )
 {
     dom_element *el = dom_element__new( 0, ( uc* ) "triple", 0 );
     dom_element *subject = object__xml_encode
-        ( state->subject, state->xe_state, boolean__false );
+        ( state->subject, state->xe_state, FALSE );
     dom_element *predicate = object__xml_encode
-        ( ( Object* ) entry->key, state->xe_state, boolean__false );
+        ( ( Object* ) entry->key, state->xe_state, FALSE );
     dom_element *object = object__xml_encode
-        ( ( Object* ) entry->target, state->xe_state, boolean__false );
+        ( ( Object* ) entry->target, state->xe_state, FALSE );
 
     dom_element__add_child( el, subject );
     dom_element__add_child( el, predicate );
@@ -768,11 +767,11 @@ serialize( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
 
     o = ( Object* ) entry->key;
 
-    el = object__xml_encode( o, state, boolean__true );
+    el = object__xml_encode( o, state, TRUE );
     dom_element__add_child( state->parent, el );
 
     #if TRIPLES__GLOBAL__OUT_EDGES
-    if ( o->outbound_edges && o->outbound_edges->size )
+    if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
     {
         triple_st.xe_state = state;
         triple_st.subject = o;
@@ -790,17 +789,17 @@ serialize( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
 static void
 add_timestamp( dom_element *el )
 {
-    char *s;
+    char *ts;
     time_t t;
 
     time( &t );
 
     /* Note: the output of localtime and asctime are evidently pointers to
        global variables, as you get a segfault if you try to free them. */
-    s = asctime( localtime( &t ) );
+    ts = asctime( localtime( &t ) );
 
-    *( s + strlen( s ) - 1 ) = '\0';
-    dom_attr__new( el, ( uc* ) "time", ( uc* ) s, 0 );
+    *( ts + strlen( ts ) - 1 ) = '\0';
+    dom_attr__new( el, ( uc* ) "time", ( uc* ) ts, 0 );
 }
 
 
@@ -841,7 +840,7 @@ printf( "---s s 2---\n" ); FFLUSH;
 printf( "---s s 3---\n" ); FFLUSH;
 
     /* Force the working name space to be at top level. */
-    Closure__execute( ( &proc ), compiler__working_namespace( c ) );
+    closure__execute( ( &proc ), compiler__working_namespace( c ) );
 printf( "---s s 4---\n" ); FFLUSH;
 
     /* Assign all (other) multireferenced objects their ids. */

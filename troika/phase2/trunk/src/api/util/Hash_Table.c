@@ -30,6 +30,32 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define buffer_new( size )  calloc( (size), sizeof( void* ) )
 
 
+struct Hash_Table
+{
+    unsigned int size;
+
+    /** The number of occupied cells the buffer can hold before the hash table
+        becomes too dense. */
+    unsigned int capacity;
+
+    unsigned int sparsity;
+
+    unsigned int expansion;
+
+    /** The hash table buffer array. */
+    void **buffer;
+
+    /** The number of cells the buffer array. */
+    unsigned int buffer_size;
+
+    /** A hashing function specific to the table's "key" type. */
+    hash_f hash;
+
+    /** A comparison function for key values. */
+    Comparator compare;
+};
+
+
 /******************************************************************************/
 
 
@@ -196,6 +222,13 @@ hash_table__delete( Hash_Table *h )
 }
 
 
+unsigned int
+hash_table__size( const Hash_Table *h )
+{
+    return h->size;
+}
+
+
 void *
 hash_table__add( Hash_Table *h, void *key )
 {
@@ -347,7 +380,7 @@ hash_table__distribute( Hash_Table *h, Closure *p )
     {
         if ( *cur )
         {
-            if ( ( action = Closure__execute( p, *cur ) ) )
+            if ( ( action = closure__execute( p, *cur ) ) )
             {
                 switch ( action->type )
                 {

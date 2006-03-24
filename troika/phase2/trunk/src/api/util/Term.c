@@ -412,7 +412,7 @@ distribute( void **cur, Closure *p )
     {
         cur++;
 
-        if ( ( action = Closure__execute( p, *cur ) ) )
+        if ( ( action = closure__execute( p, *cur ) ) )
         {
             switch ( action->type )
             {

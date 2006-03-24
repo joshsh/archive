@@ -32,35 +32,30 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <util/Array.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>  /* strdup */
 
+static Array *sc_stack;
 
-int braces_level;
+static int braces_level;
 
 
 /* Line and character numbers *************************************************/
 
 
-int line_number, column_number, last_column_number, statement_number;
+static int line_number, column_number, last_column_number, statement_number;
 
 
-void new_token( int length )
+static void new_token( int length )
 {
     last_column_number = column_number;
     column_number += length;
 }
 
 
-void new_line()
+static void new_line()
 {
     line_number++;
     column_number = last_column_number = 0;
 }
-
-
-Array *sc_stack;
 
 
 /** Initialize the lexer for a new invocation of yyparse(). */
@@ -103,12 +98,18 @@ int get_char_number()
 
 
 #if DEBUG__BNFTOOL__LEXER
-    #define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( y ) printf( "Matched {%s}\n", y ); \
-                             if ( x ) return x; }
+#define TOKEN( x, y )                                                       \
+{                                                                           \
+    new_token( yyleng );                                                    \
+    if ( y ) printf( "Matched {%s}\n", y );                                 \
+    if ( x ) return x;                                                      \
+}
 #else
-    #define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( x ) return x; }
+#define TOKEN( x, y )                                                       \
+{                                                                           \
+    new_token( yyleng );                                                    \
+    if ( x ) return x;                                                      \
+}
 #endif
 
 

@@ -20,8 +20,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Array.h>
 #include <Object.h>
 
-#include <string.h>  /* memcpy */
-
 
 struct Array
 {
@@ -555,7 +553,7 @@ array__distribute( Array *a, Closure *p )
 
     for ( i = 0; i < a->size; i++ )
     {
-        if ( ( action = Closure__execute( p, ELMT( a, i ) ) ) )
+        if ( ( action = closure__execute( p, ELMT( a, i ) ) ) )
         {
             switch ( action->type )
             {

@@ -31,8 +31,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Array.h>
 #include <util/Dictionary.h>
 
-#include <string.h>
-
 
 extern void
 new_parse();
@@ -162,7 +160,7 @@ rule__delete( Rule *r, void *ignored )
 /******************************************************************************/
 
 
-Dictionary *rule_dict;
+static Dictionary *rule_dict;
 
 
 static p2_action *

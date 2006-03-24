@@ -94,7 +94,7 @@ namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
 
     if ( array__size( name ) == 1 )
     {
-        if ( ns_obj->flags & OBJECT__IMMUTABLE )
+        if ( object__immutable( ns_obj ) )
         {
             ERROR( "namespace__add: namespace is write-protected" );
             return 0;
@@ -243,7 +243,7 @@ printf( "--- ns rm 1---\n" ); fflush( stdout );
     if ( array__size( name ) == 1 )
     {
 printf( "--- ns rm 2a---\n" ); fflush( stdout );
-        if ( ns_obj->flags & OBJECT__IMMUTABLE )
+        if ( object__immutable( ns_obj ) )
         {
             ERROR( "namespace__remove: namespace is write-protected" );
             return 0;
@@ -315,9 +315,10 @@ lookup_and_print( char *key, Dictionary *dict )
 
 
 void
-namespace__show_children( Namespace_o *ns_obj )
+namespace__show_children( const Namespace_o *ns_obj )
 {
-    int size = ( ( Namespace* ) ns_obj->value )->children->size;
+    int size = hash_table__size
+        ( ( ( Namespace* ) ns_obj->value )->children );
     Array *a;
     Closure p;
 
@@ -351,10 +352,7 @@ namespace__show_children( Namespace_o *ns_obj )
 /*
 static boolean equals( void *p1, void *p2 )
 {
-    if ( p1 == p2 )
-        return boolean__true;
-    else
-        return boolean__false;
+    return ( p1 == p2 );
 }
 
 
@@ -397,7 +395,7 @@ static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
 
 
 Name *
-namespace__find( Namespace_o *ns_obj, Object *o )
+namespace__find( const Namespace_o *ns_obj, const Object *o )
 {
     Name *name = name__new();
 

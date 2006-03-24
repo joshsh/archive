@@ -138,7 +138,7 @@ dictionary__add( Dictionary *dict, const char *key, void *target )
 
 
 void *
-dictionary__lookup( Dictionary *dict, const char *key )
+dictionary__lookup( Dictionary *dict, char *key )
 {
     Dictionary_Entry *entry;
     Dictionary_Entry match_entry;
@@ -151,7 +151,7 @@ dictionary__lookup( Dictionary *dict, const char *key )
 
 
 void *
-dictionary__remove( Dictionary *dict, const char *key )
+dictionary__remove( Dictionary *dict, char *key )
 {
     void *r = 0;
     Dictionary_Entry *entry;
@@ -202,7 +202,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
 static p2_action *
 apply_to_target( Dictionary_Entry *entry, Closure *p )
 {
-    return Closure__execute( p, entry->target );
+    return closure__execute( p, entry->target );
 }
 
 
@@ -232,7 +232,7 @@ add_to_array( Dictionary_Entry *entry, Array *a )
 Array *
 dictionary__keys( Dictionary *dict )
 {
-    Array *a = array__new( dict->size, 0 );
+    Array *a = array__new( hash_table__size( dict ), 0 );
 
     /* Fill the array with key values. */
     Closure p;

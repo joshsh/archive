@@ -20,16 +20,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Collection.h>
 
 
-typedef struct Search_Ctx Search_Ctx;
-
-struct Search_Ctx
+typedef struct Search_Ctx
 {
     Criterion match;
     Array *results;
     void *single_result;
 
     p2_action action;
-};
+
+} Search_Ctx;
 
 
 static p2_action *
@@ -145,7 +144,7 @@ collection__exists( Collection *c, Criterion cr )
     p.state = &search;
 
     c->type->distribute( c->value, &p );
-    return ( search.single_result ) ? boolean__true : boolean__false;
+    return ( search.single_result ) ? TRUE : FALSE;
 }
 
 
@@ -185,7 +184,7 @@ collection__for_all( Collection *c, Criterion cr )
     p.state = &search;
 
     c->type->distribute( c->value, &p );
-    return ( search.single_result ) ? boolean__true : boolean__false;
+    return ( search.single_result ) ? TRUE : FALSE;
 }
 
 

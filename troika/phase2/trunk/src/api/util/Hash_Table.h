@@ -40,50 +40,23 @@ typedef unsigned int ( *hash_f )( const void *key );
 
 /******************************************************************************/
 
-typedef struct Hash_Table Hash_Table;
-
 /** \brief An expanding hash table to bind pairs of generic pointers. */
-struct Hash_Table
-{
-    /** The number of occupied cells in the hash table. */
-    unsigned int size;
-
-    /** The number of cells the buffer array. */
-    unsigned int buffer_size;
-
-    /** The number of occupied cells the buffer can hold before the hash table
-        becomes too dense. */
-    unsigned int capacity;
-
-    /** The ratio of empty cells to occupied cells is to be at least this large.
-        A more sparse hash table takes up more memory but is more time-efficient
-        because collisions are less frequent. */
-    unsigned int sparsity;
-
-    /** The hash table expands by this factor whenever it becomes too dense.
-        Re-hashing the into a new buffer is expensive, so beware of setting
-        the expansion factor too low. */
-    unsigned int expansion;
-
-    /** The hash table buffer array. */
-    void **buffer;
-
-    /** A hashing function specific to the table's "key" type. */
-    hash_f hash;
-
-    /** A comparison function for key values. */
-    Comparator compare;
-};
+typedef struct Hash_Table Hash_Table;
 
 
 /******************************************************************************/
 
 /** Constructor.
-
     \param buffer_size the initial size of the hash table buffer (the actual
     buffer size is the next lowest prime number)
-    \param expansion see above.  Will be set to a default if too low.
-    \param sparsity see above.  Will be set to a default if too low.
+    \param expansion  the hash table expands by this factor whenever it becomes
+    too dense.  Re-hashing the into a new buffer is expensive, so beware of
+    setting the expansion factor too low.  Will be set to a default if
+    absolutely too low.
+    \param sparsity  the ratio of empty cells to occupied cells is to be at
+    least this large. A more sparse hash table takes up more memory but is more
+    time-efficient because collisions are less frequent. Will be set to a
+    default if absolutely too low.
     \param hashing_function a hashing function specific to the table's "key"
     type.  The hashing function should accept a single void pointer and
     return an int, the idea being to distribute values over a broad stretch of the
@@ -106,6 +79,13 @@ hash_table__copy( const Hash_Table *h );
 /** Destructor. */
 extern void
 hash_table__delete( Hash_Table *h );
+
+
+/******************************************************************************/
+
+/** \return  the number of occupied cells in the hash table. */
+extern unsigned int
+hash_table__size( const Hash_Table *h );
 
 
 /******************************************************************************/

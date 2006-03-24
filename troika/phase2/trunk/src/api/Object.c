@@ -60,8 +60,9 @@ object__new( Type *type, void *value, int flags )
     #if DEBUG__OBJECT
     if ( o->type && o->value )
     {
-        printf( "object__new: created object %#x (value %#x) of type '%s' (%#x).\n",
-            ( int ) o, ( int ) o->value, o->type->name, ( int ) o->type );
+        printf( "[%#x] object__new(%#x, %#x)\n",
+            ( int ) o, ( int ) o->type, ( int ) o->value );
+printf( "o->type->name = %s\n", o->type->name );
 if (!strcmp( o->type->name, "type"))
 printf( "    This is type '%s'.\n", ( ( Type* ) o->value )->name );
     }
@@ -131,6 +132,31 @@ object__delete( Object *o )
 }
 
 
+/* Accessors ******************************************************************/
+
+
+boolean
+object__immutable( const Object *o )
+{
+    return o->flags & OBJECT__IMMUTABLE;
+}
+
+
+Type *
+object__type( const Object *o )
+{
+    #if DEBUG__SAFE
+    if ( !o )
+    {
+        ERROR( "object__type: null argument" );
+        return 0;
+    }
+    #endif
+
+    return o->type;
+}
+
+
 /* Graph traversal ************************************************************/
 
 
@@ -151,10 +177,10 @@ apply_to_assoc_edge( Lookup_Table__Entry *entry, Closure *p )
     ... not yet written ...
     #else
     #if TRIPLES__IMPLICATION__S_P
-    Closure__execute( p, entry->key );
+    closure__execute( p, entry->key );
     #endif
     #if TRIPLES__IMPLICATION__S_O
-    Closure__execute( p, entry->target );
+    closure__execute( p, entry->target );
     #endif
     #endif
 
@@ -178,7 +204,7 @@ trace_exec( Object *o, Trace_Ctx *state )
     }
 
     /* Execute the inner procedure.  Recurse unless instructed otherwise. */
-    if ( !( action = Closure__execute( ( state->inner_p ), o ) ) )
+    if ( !( action = closure__execute( ( state->inner_p ), o ) ) )
     {
         /* Traverse to children (if any). */
         if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -229,7 +255,7 @@ object__trace( Object *o, Closure *p )
     trace_proc.execute = ( procedure ) trace_exec;
     trace_proc.state = &state;
 
-    Closure__execute( ( &trace_proc ), o );
+    closure__execute( ( &trace_proc ), o );
 }
 
 
@@ -278,7 +304,7 @@ object__trace_bfs( Object *o, Closure *p )
 
     while ( array__size( queue ) )
     {
-        Closure__execute( ( &trace_proc ),
+        closure__execute( ( &trace_proc ),
             ( Object* ) array__pop( queue ) );
     }
 }
