@@ -1,3 +1,56 @@
+# From a working directory with a Makefile:
+makedepend
+
+
+
+
+[U2] mutator, collector
+
+[Y] incremental garbage collection
+[Y] parallel garbage collection
+
+
+
+A "function" to me corresponds to code, not to a closure; neither R4RS
+Scheme nor ANSI C let you create new functions (new code) at runtime,
+(although both languages have commonly available extensions providing
+this capability). But only Scheme, not C, lets you create lexical
+closures with unlimited extent.
+
+
+["] The point in the implementation is "caveman counting".  A caveman 
+sees no objects, one object, many objects [...]
+
+
+
+boolean
+collection__exists( Collection *c, Criterion cr )
+{
+    Closure *closure1, *closure2;
+    Search_Ctx search;
+
+    void *single_result = ( void* ) 0;
+
+    void *break_true_if_match( void *p )
+    {
+        if ( cr( p ) )
+        {
+            single_result = p;
+            return ( void* ) 1;
+        }
+
+        else
+            return 0;
+    }
+
+    c->type->distribute( c->value, break_true_if_match );
+
+    return ( single_result ) ? TRUE : FALSE;
+}
+
+
+
+
 [.] Pthreads -- the only reasonably well standardized thread model
 
 typedef void *(*Genfun)(void);
@@ -41,3 +94,49 @@ void p2_term__print( p2_term *t, encoder encode_term_item )
     cur += strlen( cur );
     
 }
+
+
+
+
+
+etags
+
+[!] all names ending with _t are reserved by Posix
+
+[GP] makedepend
+
+
+The core of OO is "Dynamic Dispatch" - you don't know which function you're calling.
+
+
+    includes of system headers
+    includes of local headers
+    type and constant definitions
+    global variables
+    functions
+
+A reasonable variation might be to have several repetitions of the last three sections.
+
+Within each section, order your functions in a ``bottom up'' manner - defining functions before their use. The benefit of avoiding redundant (hence error-prone) forward declarations outweighs the minor irritation of having to jump to the bottom of the file to find the main functions.
+
+In header files, use the following organization:
+
+    type and constant definitions
+    external object declarations
+    external function declarations
+
+
+
+
+The indent utility can automatically check most of these indentation conventions. The style given here corresponds to the indent options
+
+-bap -bad -nbc -bs -ci0 -di1 -i8
+
+which can be specified in a file named indent.pro in your home directory. Note that indent tends to mess up typedef-defined identifiers unless they are explicitly given on the command line.
+
+
+
+
+Y [SKI] = S (K (S I I)) (S (S (K S) K) (K (S I I)))
+Y [SK]  = S S K (S (K (S S (S (S S K)))) K)
+
