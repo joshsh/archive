@@ -29,10 +29,17 @@ struct Graph_Edge
 };
 
 
-static p2_action *
-graph_edge__delete( Graph_Edge *edge, void *ignored )
+static void
+graph_edge__delete( Graph_Edge *edge )
 {
     free( edge );
+}
+
+
+static void *
+graph_edge__delete__proc( Graph_Edge **edge_p, void *ignored )
+{
+    graph_edge__delete( *edge_p );
     return 0;
 }
 
@@ -70,8 +77,9 @@ void
 graph__delete( Graph *g )
 {
     /* Destroy graph entries. */
-    Closure p = { ( procedure ) graph_edge__delete, 0 };
-    hash_table__distribute( g, &p );
+    Closure *c = closure__new( ( procedure ) graph_edge__delete__proc, 0 );
+    hash_table__distribute( g, c );
+    closure__delete( c );
 
     hash_table__delete( g );
 }

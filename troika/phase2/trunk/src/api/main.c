@@ -21,6 +21,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <serial.h>
 
 
+/** Instantiates an Environment and attaches a Compiler to interact with the
+    command line. */
 int main( int argc, char *argv[] )
 {
     int status = EXIT_SUCCESS;

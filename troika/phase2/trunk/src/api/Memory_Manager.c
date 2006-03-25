@@ -19,14 +19,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <Memory_Manager.h>
 #include <Collection.h>
+#include <Closure.h>
 
 
-#define visited( o )        o->flags & OBJECT__VISITED
-#define set_visited( o )    o->flags |= OBJECT__VISITED
-#define clear_visited( o )  o->flags &= ~OBJECT__VISITED
+#define visited( o )        (o)->flags & OBJECT__VISITED
+#define set_visited( o )    (o)->flags |= OBJECT__VISITED
+#define clear_visited( o )  (o)->flags &= ~OBJECT__VISITED
 
-#define owned( o )          o->flags & OBJECT__OWNED
-#define set_owned( o )      o->flags |= OBJECT__OWNED
+#define owned( o )          (o)->flags & OBJECT__OWNED
+#define set_owned( o )      (o)->flags |= OBJECT__OWNED
 
 
 struct Memory_Manager
@@ -301,40 +302,41 @@ sweep( Memory_Manager *m )
 /* Tracing / graph traversal **************************************************/
 
 
-static p2_action *
-dist_p_exec( Object *o, Closure *p )
+static void *
+dist_p_exec( Object **o_p, Closure *c )
 {
     /* If the object is already marked, abort. */
-    if ( visited( o ) )
+    if ( visited( *o_p ) )
     {
-        return ( p2_action* ) 1;
+        return ( void* ) 1;
     }
 
     else
     {
         /* Mark the object. */
-        set_visited( o );
+        set_visited( *o_p );
 
         /* Execute the procedure. */
-        return closure__execute( p, o );
+        return closure__apply( c, o_p );
     }
 }
 
 
 void
-memory_manager__distribute( Memory_Manager *m, Closure *p )
+memory_manager__distribute( Memory_Manager *m, Closure *c )
 {
-    Closure dist_p;
-
-    dist_p.execute = ( procedure ) dist_p_exec;
-    dist_p.state = p;
+    Closure *c2;
 
     if ( !m->clean )
         unmark_all( m );
 
     m->clean = 0;
+printf( "---mm d 1---\n" ); fflush( stdout );
 
-    object__trace( m->root, &dist_p );
+    c2 = closure__new( ( procedure ) dist_p_exec, c );
+    object__trace( m->root, c2 );
+    closure__delete( c2 );
+printf( "---mm d 2---\n" ); fflush( stdout );
 
     /* Might as well sweep. */
     sweep( m );
@@ -344,20 +346,27 @@ memory_manager__distribute( Memory_Manager *m, Closure *p )
 /******************************************************************************/
 
 
-static p2_action *
-add_if_multiref( Object *o, Set *s )
+static void *
+add_if_multiref( Object **opp, Set *s )
 {
+    Object *o = *opp;
+
+printf( "---mm aim 1---\n" ); FFLUSH;
+printf( "o = %#x, o->type=%#x\n", ( int ) o, ( int ) o->type ); FFLUSH;
     /* If the object is already marked, abort. */
     if ( visited( o ) )
     {
+printf( "---mm aim 2a---\n" ); FFLUSH;
         set__add( s, o );
-        return ( p2_action* ) 1;
+        return ( void* ) 1;
     }
 
     else
     {
+printf( "---mm aim 2b 1---\n" ); FFLUSH;
         /* Mark the object. */
         set_visited( o );
+printf( "---mm aim 2b 2---\n" ); FFLUSH;
 
         #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
         /* Object references its triples, which in turn reference the object. */
@@ -366,6 +375,7 @@ add_if_multiref( Object *o, Set *s )
             set__add( s, o );
         }
         #endif
+printf( "---mm aim 2b 3---\n" ); FFLUSH;
 
         return 0;
     }
@@ -376,17 +386,16 @@ Set *
 memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 {
     Set *s = set__new();
-    Closure proc;
+    Closure *c;
 
     if ( !m->clean )
         unmark_all( m );
 
     m->clean = 0;
 
-    proc.execute = ( procedure ) add_if_multiref;
-    proc.state = s;
-
-    object__trace( root, &proc );
+    c = closure__new( ( procedure ) add_if_multiref, s );
+    object__trace( root, c );
+    closure__delete( c );
 
     return s;
 }
@@ -395,7 +404,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 /* Mark-and-sweep garbage collection ******************************************/
 
 
-static p2_action *
+static void *
 noop( void *ignored1, void *ignored2 )
 {
     return 0;
@@ -405,7 +414,7 @@ noop( void *ignored1, void *ignored2 )
 void
 memory_manager__collect( Memory_Manager *m )
 {
-    Closure proc;
+    Closure *c;
 
     #if DEBUG__MEMORY
     int n_initial = bunch__size( m->objects );
@@ -418,11 +427,13 @@ memory_manager__collect( Memory_Manager *m )
         return;
     }
     #endif
-
-    proc.execute = ( procedure ) noop;
+printf( "---mm c 1---\n" ); FFLUSH;
 
     /* Mark all reachable objects. */
-    memory_manager__distribute( m, &proc );
+    c = closure__new( ( procedure ) noop, 0 );
+    memory_manager__distribute( m, c );
+    closure__delete( c );
+printf( "---mm c 2---\n" ); FFLUSH;
 
     #if DEBUG__MEMORY
     printf( "memory_manager__collect(%#x): deallocated %i of %i.\n",

@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Collection.h>
+#include <Closure.h>
 
 
 typedef struct Search_Ctx
@@ -26,27 +27,24 @@ typedef struct Search_Ctx
     Array *results;
     void *single_result;
 
-    p2_action action;
-
 } Search_Ctx;
 
 
-static p2_action *
-break_true_if_match( void *data, Search_Ctx *search )
+static void *
+apply( void *data, Search_Ctx *search )
 {
-    if ( search->match( data ) )
-    {
-        search->single_result = data;
-        search->action.type = p2_action__type__break;
-        return &search->action;
-    }
-
-    else
-        return 0;
+    return ( void* ) search->match( data );
 }
 
 
-static p2_action *
+static void *
+break_true_if_match( void *data, Search_Ctx *search )
+{
+    return ( void* ) search->match( data );
+}
+
+
+static void *
 break_false_if_nomatch( void *data, Search_Ctx *search )
 {
     if ( search->match( data ) )
@@ -55,8 +53,7 @@ break_false_if_nomatch( void *data, Search_Ctx *search )
     else
     {
         search->single_result = 0;
-        search->action.type = p2_action__type__break;
-        return &search->action;
+        return ( void* ) 1;
     }
 }
 
@@ -64,15 +61,14 @@ break_false_if_nomatch( void *data, Search_Ctx *search )
 /* do_for_all *****************************************************************/
 
 
-typedef struct Voidf_Ctx Voidf_Ctx;
-
-struct Voidf_Ctx
+typedef struct Voidf_Ctx
 {
     Void_f f;
-};
+
+} Voidf_Ctx;
 
 
-static p2_action *
+static void *
 Void_f_procedure( void *data, Voidf_Ctx *wrapper )
 {
     wrapper->f( data );
@@ -84,47 +80,35 @@ Void_f_procedure( void *data, Voidf_Ctx *wrapper )
 void
 collection__do_for_all( Collection *c, Void_f f )
 {
-    Closure p;
+    Closure *closure1, *closure2;
     Voidf_Ctx ctx;
 
     ctx.f = f;
 
-    p.execute = ( procedure ) Void_f_procedure;
-    p.state = &ctx;
-
-    c->type->distribute( c->value, &p );
+    closure1 = closure__new( ( procedure ) Void_f_procedure, &ctx );
+    closure2 = closure__cw_dereference( closure1 );
+    c->type->distribute( c->value, closure2 );
+    closure__delete( closure1 );
+    closure__delete( closure2 );
 }
 
 
-/* exclude_if *****************************************************************/
-
-
-static p2_action *
-exclude_if_match( void *data, Search_Ctx *search )
-{
-    if ( search->match( data ) )
-    {
-        search->action.type = p2_action__type__remove;
-        return &search->action;
-    }
-
-    else
-        return 0;
-}
+/* exclude if *****************************************************************/
 
 
 void
 collection__exclude_if( Collection *c, Criterion cr )
 {
-    Closure p;
+    Closure *closure1, *closure2;
     Search_Ctx search;
 
     search.match = cr;
 
-    p.execute = ( procedure ) exclude_if_match;
-    p.state = &search;
-
-    c->type->distribute( c->value, &p );
+    closure1 = closure__new( ( procedure ) apply, &search );
+    closure2 = closure__cw_dereference( closure1 );
+    c->type->distribute( c->value, closure2 );
+    closure__delete( closure1 );
+    closure__delete( closure2 );
 }
 
 
@@ -134,16 +118,18 @@ collection__exclude_if( Collection *c, Criterion cr )
 boolean
 collection__exists( Collection *c, Criterion cr )
 {
-    Closure p;
+    Closure *closure1, *closure2;
     Search_Ctx search;
 
     search.match = cr;
     search.single_result = ( void* ) 0;
 
-    p.execute = ( procedure ) break_true_if_match;
-    p.state = &search;
+    closure1 = closure__new( ( procedure ) break_true_if_match, &search );
+    closure2 = closure__cw_dereference( closure1 );
+    c->type->distribute( c->value, closure2 );
+    closure__delete( closure1 );
+    closure__delete( closure2 );
 
-    c->type->distribute( c->value, &p );
     return ( search.single_result ) ? TRUE : FALSE;
 }
 
@@ -154,16 +140,18 @@ collection__exists( Collection *c, Criterion cr )
 void *
 collection__first_match( Collection *c, Criterion cr )
 {
-    Closure p;
+    Closure *closure1, *closure2;
     Search_Ctx search;
 
     search.match = cr;
     search.single_result = 0;
 
-    p.execute = ( procedure ) break_true_if_match;
-    p.state = &search;
+    closure1 = closure__new( ( procedure ) break_true_if_match, &search );
+    closure2 = closure__cw_dereference( closure1 );
+    c->type->distribute( c->value, closure2 );
+    closure__delete( closure1 );
+    closure__delete( closure2 );
 
-    c->type->distribute( c->value, &p );
     return search.single_result;
 }
 
@@ -174,16 +162,18 @@ collection__first_match( Collection *c, Criterion cr )
 boolean
 collection__for_all( Collection *c, Criterion cr )
 {
-    Closure p;
+    Closure *closure1, *closure2;
     Search_Ctx search;
 
     search.match = cr;
     search.single_result = ( void* ) 1;
 
-    p.execute = ( procedure ) break_false_if_nomatch;
-    p.state = &search;
+    closure1 = closure__new( ( procedure ) break_false_if_nomatch, &search );
+    closure2 = closure__cw_dereference( closure1 );
+    c->type->distribute( c->value, closure2 );
+    closure__delete( closure1 );
+    closure__delete( closure2 );
 
-    c->type->distribute( c->value, &p );
     return ( search.single_result ) ? TRUE : FALSE;
 }
 
@@ -192,7 +182,7 @@ collection__for_all( Collection *c, Criterion cr )
 
 
 /* Procedure for pattern matching. */
-static p2_action *
+static void *
 add_if_match( void *data, Search_Ctx *search )
 {
     if ( search->match( data ) )
@@ -207,16 +197,18 @@ add_if_match( void *data, Search_Ctx *search )
 Array *
 collection__match( Collection *c, Criterion cr )
 {
-    Closure p;
+    Closure *closure1, *closure2;
     Search_Ctx search;
 
     search.match = cr;
     search.results = array__new( 0, 0 );
 
-    p.execute = ( procedure ) add_if_match;
-    p.state = &search;
+    closure1 = closure__new( ( procedure ) add_if_match, &search );
+    closure2 = closure__cw_dereference( closure1 );
+    c->type->distribute( c->value, closure2 );
+    closure__delete( closure1 );
+    closure__delete( closure2 );
 
-    c->type->distribute( c->value, &p );
     return search.results;
 }
 
@@ -231,33 +223,29 @@ struct Subst_Ctx
     Substitution substitute_for;
 
     void *state;
-    p2_action action;
 };
 
 
-static p2_action *
-substitute( void *data, Subst_Ctx *context )
+static void *
+substitute( void **refp, Subst_Ctx *context )
 {
-    context->action.value = context->substitute_for( data, context->state );
-
-    return &context->action;
+    *refp = context->substitute_for( *refp, context->state );
+    return 0;
 }
 
 
 void
 collection__replace_all( Collection *c, Substitution f, void *state )
 {
-    Closure p;
+    Closure *cl;
     Subst_Ctx context;
 
     context.substitute_for = f;
     context.state = state;
-    context.action.type = p2_action__type__replace;
 
-    p.execute = ( procedure ) substitute;
-    p.state = &context;
-
-    c->type->distribute( c->value, &p );
+    cl = closure__new( ( procedure ) substitute, &context );
+    c->type->distribute( c->value, cl );
+    closure__delete( cl );
 }
 
 

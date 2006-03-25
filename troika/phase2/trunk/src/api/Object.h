@@ -106,13 +106,17 @@ object__type( const Object *o );
 
 /* Graph traversal ************************************************************/
 
-/** A (depth-first) recursive distributor. */
+/** A (depth-first) recursive distributor.
+    \param c  a Closure of function type "void *(*)(Object**)" */
 extern void
-object__trace( Object *o, Closure *p );
+object__trace( Object *o, Closure *c );
 
-/** A breadth-first recursive distributor. */
+#ifdef COMMENTED_OUT_FOR_NOW
+/** A breadth-first recursive distributor.
+    \param c  a Closure of function type "void *(*)(Object**)" */
 extern void
-object__trace_bfs( Object *o, Closure *p );
+object__trace_bfs( Object *o, Closure *c );
+#endif
 
 
 /* Association ****************************************************************/

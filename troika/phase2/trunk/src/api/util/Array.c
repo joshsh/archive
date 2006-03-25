@@ -534,13 +534,12 @@ array__sort( Array *a, Comparator compare )
 
 
 void
-array__distribute( Array *a, Closure *p )
+array__distribute( Array *a, Closure *c )
 {
     int i;
-    p2_action *action;
 
     #if DEBUG__SAFE
-    if ( !a || !p )
+    if ( !a || !c )
     {
         ERROR( "array__distribute: null argument" );
         return;
@@ -548,28 +547,13 @@ array__distribute( Array *a, Closure *p )
     #endif
 
     #if DEBUG__ARRAY
-    printf( "array__distribute(%#x, %#x)\n", ( int ) a, ( int ) p );
+    printf( "array__distribute(%#x, %#x)\n", ( int ) a, ( int ) c );
     #endif
 
     for ( i = 0; i < a->size; i++ )
     {
-        if ( ( action = closure__execute( p, ELMT( a, i ) ) ) )
-        {
-            switch ( action->type )
-            {
-                case p2_action__type__break:
-
-                    return;
-
-                case p2_action__type__replace:
-
-                    ELMT( a, i ) = action->value;
-                    break;
-
-                default:
-                    ;
-            }
-        }
+        if ( closure__apply( c, &ELMT( a, i ) ) )
+            break;
     }
 }
 

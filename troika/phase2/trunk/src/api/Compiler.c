@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Compiler.h>
+#include <Closure.h>
 #include <serial.h>
 #include <sk/sk.h>
 
@@ -315,28 +316,26 @@ resolve_name( Compiler *c, Name *name )
 }
 
 
-typedef struct Subst_Ctx Subst_Ctx;
-
-struct Subst_Ctx
+typedef struct Subst_Ctx
 {
-    p2_action *action;
     Closure *subst_proc;
     boolean sofarsogood;
-};
+
+} Subst_Ctx;
 
 
 static Object *
 object_for_ast( p2_ast* ast, Subst_Ctx *state );
 
-static p2_action *
-substitute_object_for_ast( p2_ast *ast, Subst_Ctx *state )
+static void *
+substitute_object_for_ast( p2_ast **ast_p, Subst_Ctx *state )
 {
-    Object *o = object_for_ast( ast, state );
+    Object *o = object_for_ast( *ast_p, state );
     if ( !o )
         state->sofarsogood = FALSE;
+    *ast_p = ( p2_ast* ) o;
 
-    state->action->value = o;
-    return state->action;
+    return 0;
 }
 
 
@@ -409,7 +408,7 @@ object_for_ast( p2_ast* ast, Subst_Ctx *state )
 
     /* Create and register a new object. */
     o = object__new( type, value, flags );
-printf( "o = %i\n", ( int ) o );
+
     memory_manager__add( compiler->env->manager, o );
 
     return o;
@@ -491,8 +490,6 @@ new_namespace( Compiler *c, p2_ast *args )
 {
     Object *o;
     Name *name;
-    char *localname;
-    Namespace *ns;
 
     p2_ast *arg = get_inner_node( args );
 
@@ -669,8 +666,7 @@ int
 compiler__evaluate_expression( Name *name, p2_ast *expr )
 {
     Subst_Ctx state;
-    p2_action action;
-    Closure subst_proc;
+    Closure *subst_proc;
 
     int ret = 0;
     p2_ast *a = 0;
@@ -706,14 +702,11 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
 
     state.sofarsogood = TRUE;
 
-    action.type = p2_action__type__replace;
-    state.action = &action;
-
-    subst_proc.execute = ( procedure ) substitute_object_for_ast;
-    subst_proc.state = &state;
-    state.subst_proc = &subst_proc;
+    subst_proc = closure__new( ( procedure ) substitute_object_for_ast, &state );
+    state.subst_proc = subst_proc;
 
     o = object_for_ast( expr, &state );
+    closure__delete( subst_proc );
 
     /* If a term, reduce. */
     if ( o && state.sofarsogood && o->type == compiler->env->term_t )

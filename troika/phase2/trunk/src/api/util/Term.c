@@ -402,30 +402,18 @@ term__cat(Term *t1, Term *t2)
 
 
 static void
-distribute( void **cur, Closure *p )
+distribute( void **cur, Closure *c )
 {
     void **lim;
-    p2_action *action;
 
     /* If the sub-term represents a leaf node, execute the procedure. */
     if ( ( unsigned int ) *cur == 2 )
     {
         cur++;
 
-        if ( ( action = closure__execute( p, *cur ) ) )
-        {
-            switch ( action->type )
-            {
-                case p2_action__type__replace:
-
-                    *cur = action->value;
-                    break;
-
-                default:
-
-                    ;
-            }
-        }
+        if ( closure__apply( c, cur ) )
+            /* Note: this only breaks out of the subterm. */
+            return;
     }
 
     /* If the sub-term contains further sub-terms, recurse through them. */
@@ -435,7 +423,7 @@ distribute( void **cur, Closure *p )
         cur++;
         while ( cur < lim )
         {
-            distribute( cur, p );
+            distribute( cur, c );
             cur += ( unsigned int ) *cur;
         }
     }
@@ -443,10 +431,10 @@ distribute( void **cur, Closure *p )
 
 
 void
-term__distribute( Term *t, Closure *p )
+term__distribute( Term *t, Closure *c )
 {
     #if DEBUG__SAFE
-    if ( !t || !p )
+    if ( !t || !c )
     {
         ERROR( "term__distribute: null argument" );
         return;
@@ -454,10 +442,10 @@ term__distribute( Term *t, Closure *p )
     #endif
 
     #if DEBUG__TERM
-    printf( "[] term__distribute(%#x, %#x)\n", ( int ) t, ( int ) p );
+    printf( "[] term__distribute(%#x, %#x)\n", ( int ) t, ( int ) c );
     #endif
 
-    distribute( t->head, p );
+    distribute( t->head, c );
 }
 
 

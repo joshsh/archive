@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef TYPE_H
 #define TYPE_H
 
-#include <defs.h>
+#include <Closure.h>
 
 
 typedef struct Type Type;

@@ -67,37 +67,48 @@ struct p2_ast
 
 /** \param bag  a Array of AST nodes
     \return  a new AST node of type BAG */
-extern p2_ast *p2_ast__bag( Array *bag );
+extern p2_ast *
+p2_ast__bag( Array *bag );
 
-extern p2_ast *p2_ast__char( char c );
+extern p2_ast *
+p2_ast__char( char c );
 
-extern p2_ast *p2_ast__float( double f );
+extern p2_ast *
+p2_ast__float( double f );
 
-extern p2_ast *p2_ast__int( int i );
+extern p2_ast *
+p2_ast__int( int i );
 
 /** \param name  a Array of C strings representing a name
     \return  a new AST node of type NAME */
-extern p2_ast *p2_ast__name( Name *name );
+extern p2_ast *
+p2_ast__name( Name *name );
 
-extern p2_ast *p2_ast__string( char *s );
+extern p2_ast *
+p2_ast__string( char *s );
 
 /** \param term  a Term of AST nodes
     \return  a new AST node of type TERM */
-extern p2_ast *p2_ast__term( Term *term );
+extern p2_ast *
+p2_ast__term( Term *term );
 
 
-extern p2_ast *p2_ast__void( void *p );
+extern p2_ast *
+p2_ast__void( void *p );
 
 
-extern int p2_ast__size( p2_ast *ast );
+extern int
+p2_ast__size( p2_ast *ast );
 
 
 /** \param ast  AST node to free */
-extern void p2_ast__delete( p2_ast *ast );
+extern void
+p2_ast__delete( p2_ast *ast );
 
 
 /** \param ast  AST node to print */
-extern void p2_ast__print( p2_ast *ast );
+extern void
+p2_ast__print( p2_ast *ast );
 
 
 #endif  /* P2_AST_H */

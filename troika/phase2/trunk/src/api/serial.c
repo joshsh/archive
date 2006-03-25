@@ -25,6 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <time.h>
 
 #include <serial.h>
+#include <Closure.h>
 #include <util/Set.h>
 #include <xml/xmldom.h>
 
@@ -82,10 +83,10 @@ struct Function_Wrapper
 };
 
 
-static p2_action *
-function_wrapper__delete( Lookup_Table__Entry *e, void *ignored )
+static void *
+function_wrapper__delete( Lookup_Table__Entry **ppEntry, void *ignored )
 {
-    free( ( Function_Wrapper* ) e->target );
+    free( ( Function_Wrapper* ) ( *ppEntry )->target );
     return 0;
 }
 
@@ -219,13 +220,13 @@ struct Ns_Encode_Ctx
 };
 
 
-static p2_action *
-ns_encode( char *name, Ns_Encode_Ctx *state )
+static void *
+ns_encode( char **name, Ns_Encode_Ctx *state )
 {
-    Object *o = ( Object* ) dictionary__lookup( state->dict, name );
+    Object *o = ( Object* ) dictionary__lookup( state->dict, *name );
 
     dom_element *el = object__xml_encode( o, state->state, 0 );
-    dom_attr__new( el, ( uc* ) "name", ( uc* ) name, 0 );
+    dom_attr__new( el, ( uc* ) "name", ( uc* ) *name, 0 );
 
     dom_element__add_child( state->parent, el );
 
@@ -239,7 +240,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     dom_element *el;
     Array *keys;
     Ns_Encode_Ctx nse_st;
-    Closure proc;
+    Closure *c;
 printf( "---s nsxe 1---\n" ); FFLUSH;
 
     #if DEBUG__SAFE
@@ -256,13 +257,13 @@ printf( "---s nsxe 1---\n" ); FFLUSH;
     nse_st.dict = ns->children;
     nse_st.parent = el;
 
-    proc.execute = ( procedure ) ns_encode;
-    proc.state = &nse_st;
+    c = closure__new( ( procedure ) ns_encode, &nse_st );
 
 printf( "ns = %#x\n", ( int ) ns );
     keys = dictionary__keys( ns->children );
 printf( "array__size( keys ) = %i\n", array__size( keys ) );
-    array__distribute( keys, &proc );
+    array__distribute( keys, c );
+    closure__delete( c );
     array__delete( keys );
 printf( "---s nsxe 2---\n" ); FFLUSH;
 
@@ -452,6 +453,9 @@ printf( "---s oe 3b 1---\n" ); FFLUSH;
         if ( top_level )
             dom_attr__new( el, ( uc* ) "id", ( uc* ) buffer, 0 );
 printf( "---s oe 3b 2---\n" ); FFLUSH;
+printf( "o->type = %#x\n", ( int ) o->type ); FFLUSH;
+printf( "o->type->name = %#x\n", ( int ) o->type->name ); FFLUSH;
+printf( "o->type->name = '%s'\n", o->type->name ); FFLUSH;
 
         dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
 printf( "---s oe 3b 3---\n" ); FFLUSH;
@@ -705,14 +709,14 @@ struct Hash_Multiref_Ctx
 };
 
 
-static p2_action *
-hash_multiref( Object *o, Hash_Multiref_Ctx *state )
+static void *
+hash_multiref( Object **o, Hash_Multiref_Ctx *state )
 {
     /* Working namespace has already been given an id. */
-    if ( !lookup_table__lookup( state->table, o ) )
+    if ( !lookup_table__lookup( state->table, *o ) )
     {
         state->max++;
-        lookup_table__add( state->table, o, ( void* ) state->max );
+        lookup_table__add( state->table, *o, ( void* ) state->max );
     }
     return 0;
 }
@@ -728,9 +732,11 @@ struct Triple_Serialize_Ctx
 };
 
 
-static p2_action *
-triple__serialize( Lookup_Table__Entry *entry, Triple_Serialize_Ctx *state )
+static void *
+triple__serialize( Lookup_Table__Entry **ppEntry, Triple_Serialize_Ctx *state )
 {
+    Lookup_Table__Entry *entry = *ppEntry;
+
     dom_element *el = dom_element__new( 0, ( uc* ) "triple", 0 );
     dom_element *subject = object__xml_encode
         ( state->subject, state->xe_state, FALSE );
@@ -749,11 +755,12 @@ triple__serialize( Lookup_Table__Entry *entry, Triple_Serialize_Ctx *state )
 }
 
 
-static p2_action *
-serialize( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
+static void *
+serialize( Lookup_Table__Entry **ppEntry, Xml_Encode_Ctx *state )
 {
+    Lookup_Table__Entry *entry = *ppEntry;
     Object *o;
-    Closure proc;
+    Closure *c;
     Triple_Serialize_Ctx triple_st;
     dom_element *el;
 
@@ -775,10 +782,9 @@ serialize( Lookup_Table__Entry *entry, Xml_Encode_Ctx *state )
     {
         triple_st.xe_state = state;
         triple_st.subject = o;
-        proc.execute = ( procedure ) triple__serialize;
-        proc.state = &triple_st;
-
-        lookup_table__distribute( o->outbound_edges, &proc );
+        c = closure__new( ( procedure ) triple__serialize, &triple_st );
+        lookup_table__distribute( o->outbound_edges, c );
+        closure__delete( c );
     }
     #endif
 
@@ -810,10 +816,11 @@ compiler__serialize( Compiler *c, char *path )
     dom_element *el;
     Lookup_Table *ids;
     Set *multirefs;
-    Closure proc;
+    Closure *cl;
     Hash_Multiref_Ctx state;
     Xml_Encode_Ctx encode_state;
     Environment *env;
+Object **opp = new( Object* );
 
     #if DEBUG__SAFE
     if ( !c || !path )
@@ -835,16 +842,20 @@ printf( "---s s 2---\n" ); FFLUSH;
 
     state.table = ids;
     state.max = 0;
-    proc.execute = ( procedure ) hash_multiref;
-    proc.state = &state;
+    cl = closure__new( ( procedure ) hash_multiref, &state );
 printf( "---s s 3---\n" ); FFLUSH;
 
     /* Force the working name space to be at top level. */
-    closure__execute( ( &proc ), compiler__working_namespace( c ) );
+*opp = compiler__working_namespace( c );
+closure__apply( cl, opp );
+free( opp );
+    /*closure__apply( cl, compiler__working_namespace( c ) );*/
 printf( "---s s 4---\n" ); FFLUSH;
 
     /* Assign all (other) multireferenced objects their ids. */
-    set__distribute( multirefs, &proc );
+    set__distribute( multirefs, cl );
+    closure__delete( cl );
+
 printf( "---s s 5---\n" ); FFLUSH;
 
     set__delete( multirefs );
@@ -876,18 +887,21 @@ printf( "---s s 8---\n" ); FFLUSH;
     /* ... */
 printf( "---s s 9---\n" ); FFLUSH;
 
-    proc.execute = ( procedure ) serialize;
-    proc.state = &encode_state;
+    cl = closure__new( ( procedure ) serialize, &encode_state );
 printf( "---s s 10---\n" ); FFLUSH;
 
     /* Multiref objects are serialized in no particular order. */
-    lookup_table__distribute( ids, &proc );
+    lookup_table__distribute( ids, cl );
+    closure__delete( cl );
+
 printf( "---s s 11---\n" ); FFLUSH;
 
     lookup_table__delete( ids );
 
-    proc.execute = ( procedure ) function_wrapper__delete;
-    lookup_table__distribute( encode_state.serializers, &proc );
+    cl = closure__new( ( procedure ) function_wrapper__delete, 0 );
+    lookup_table__distribute( encode_state.serializers, cl );
+    closure__delete( cl );
+
     lookup_table__delete( encode_state.serializers );
 
     dom_document__write_to_file( doc, path );
@@ -906,7 +920,7 @@ compiler__deserialize( Compiler *c, char *path )
     dom_element *el, *child;
     char *el_name;
     dom_document *doc;
-    Closure proc;
+    Closure *cl;
     Environment *env;
 
     xmldom__init();
@@ -987,8 +1001,9 @@ finish:
 
     if ( decode_state.deserializers )
     {
-        proc.execute = ( procedure ) function_wrapper__delete;
-        lookup_table__distribute( decode_state.deserializers, &proc );
+        cl = closure__new( ( procedure ) function_wrapper__delete, 0 );
+        lookup_table__distribute( decode_state.deserializers, cl );
+        closure__delete( cl );
         lookup_table__delete( decode_state.deserializers );
     }
 

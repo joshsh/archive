@@ -29,43 +29,34 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define CLOSURE_H
 
 
-typedef enum _p2_action__type
-{
-    p2_action__type__noop = 0,
-
-    p2_action__type__break,
-    p2_action__type__remove,
-    p2_action__type__replace
-
-} p2_action__type;
+#include <defs.h>
 
 
-typedef struct _p2_action
-{
-    p2_action__type type;
-
-    /* For p2_action__type__replace: the replacement value. */
-    void *value;
-
-} p2_action;
-
-
-typedef p2_action *( *procedure )( void *data, void *state );
+typedef void *( *procedure )( void *p, void *state );
 
 
 typedef struct Closure Closure;
 
-struct Closure
-{
-    procedure execute;
-
-    /* A mutable data field which is provided to the procedure as an argument,
-       and preserved between invocations. */
-    void *state;
-};
+/** \param c  a Closure of function type "boolean (*)(void**)" */
+typedef void    ( *Distributor )( void *p, Closure *c );
 
 
-#define closure__execute( p, data )  (p)->execute( (data), (p)->state )
+/******************************************************************************/
+
+extern Closure *
+closure__new( procedure execute, void *state );
+
+extern void
+closure__delete( Closure *c );
+
+extern void *
+closure__apply( Closure *c, void *arg );
+
+/** \param c  Closure of function type "boolean (*)(void*)"
+    \return  Closure c2 such that c2 p = c *p.  It has function type
+    "boolean (*)(void**)". */
+extern Closure *
+closure__cw_dereference( Closure *c );
 
 
 #endif  /* CLOSURE_H */

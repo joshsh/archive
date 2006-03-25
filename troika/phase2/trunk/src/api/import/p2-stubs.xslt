@@ -93,7 +93,7 @@ extern &quot;C&quot;
 
     <xsl:template name="p2__import_primitives">
 
-#include &quot;../../../Primitive-import.h&quot;
+#include &lt;Primitive-import.h&gt;
 
 
 #define RT  1  /* Referentially transparent. */

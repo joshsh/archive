@@ -41,7 +41,8 @@ const char *p2_ast__type__names[8] =
 };
 
 
-const char *p2_ast__type__name( p2_ast__type type )
+const char *
+p2_ast__type__name( p2_ast__type type )
 {
     return p2_ast__type__names[ type ];
 }
@@ -51,7 +52,8 @@ const char *p2_ast__type__name( p2_ast__type type )
 
 
 /** \note  Ownership of the passed value is conferred to the new node. */
-static p2_ast *p2_ast__new( p2_ast__type type, void *value )
+static p2_ast *
+p2_ast__new( p2_ast__type type, void *value )
 {
     p2_ast *node = new( p2_ast );
     node->type = type;
@@ -60,14 +62,16 @@ static p2_ast *p2_ast__new( p2_ast__type type, void *value )
 }
 
 
-static p2_action * p2_ast__delete__proc( p2_ast *ast, void *ignored )
+static void *
+p2_ast__delete__proc( p2_ast **ast, void *ignored )
 {
-    p2_ast__delete( ast );
+    p2_ast__delete( *ast );
     return 0;
 }
 
 
-p2_ast *p2_ast__bag( Array *bag )
+p2_ast *
+p2_ast__bag( Array *bag )
 {
     p2_ast *ast = p2_ast__new( BAG_T, bag );
 
@@ -79,7 +83,8 @@ p2_ast *p2_ast__bag( Array *bag )
 }
 
 
-p2_ast *p2_ast__char( char c )
+p2_ast *
+p2_ast__char( char c )
 {
     p2_ast *ast;
     char *p;
@@ -96,7 +101,8 @@ p2_ast *p2_ast__char( char c )
 }
 
 
-p2_ast *p2_ast__float( double f )
+p2_ast *
+p2_ast__float( double f )
 {
     p2_ast *ast;
     double *p;
@@ -113,7 +119,8 @@ p2_ast *p2_ast__float( double f )
 }
 
 
-p2_ast *p2_ast__int( int i )
+p2_ast *
+p2_ast__int( int i )
 {
     p2_ast *ast;
     int *p;
@@ -130,7 +137,8 @@ p2_ast *p2_ast__int( int i )
 }
 
 
-p2_ast *p2_ast__name( Name *name )
+p2_ast *
+p2_ast__name( Name *name )
 {
     p2_ast *ast = p2_ast__new( NAME_T, name );
 
@@ -142,7 +150,8 @@ p2_ast *p2_ast__name( Name *name )
 }
 
 
-p2_ast *p2_ast__string( char *s )
+p2_ast *
+p2_ast__string( char *s )
 {
     p2_ast *ast = p2_ast__new( STRING_T, s );
 
@@ -154,19 +163,22 @@ p2_ast *p2_ast__string( char *s )
 }
 
 
-p2_ast *p2_ast__term( Term *term )
+p2_ast *
+p2_ast__term( Term *term )
 {
     p2_ast *ast = p2_ast__new( TERM_T, term );
 
     #if DEBUG__AST
     printf( "[%#x] p2_ast__term(%#x)\n", ( int ) ast, ( int) term );
     #endif
+printf( "TERM_T = %i\n", TERM_T );
 
     return ast;
 }
 
 
-p2_ast *p2_ast__void( void *p )
+p2_ast *
+p2_ast__void( void *p )
 {
     p2_ast *ast = p2_ast__new( VOID_T, p );
 
@@ -178,7 +190,8 @@ p2_ast *p2_ast__void( void *p )
 }
 
 
-int p2_ast__size( p2_ast *ast )
+int
+p2_ast__size( p2_ast *ast )
 {
     switch ( ast->type )
     {
@@ -192,9 +205,10 @@ int p2_ast__size( p2_ast *ast )
 }
 
 
-void p2_ast__delete( p2_ast *ast )
+void
+p2_ast__delete( p2_ast *ast )
 {
-    Closure p;
+    Closure *c;
 
     #if DEBUG__AST
     printf( "[] p2_ast__delete(%#x)\n", ( int ) ast );
@@ -204,8 +218,9 @@ void p2_ast__delete( p2_ast *ast )
     {
         case BAG_T:
 
-            p.execute = ( procedure ) p2_ast__delete__proc;
-            array__distribute( ( Array* ) ast->value, &p );
+            c = closure__new( ( procedure ) p2_ast__delete__proc, 0 );
+            array__distribute( ( Array* ) ast->value, c );
+            closure__delete( c );
             array__delete( ( Array* ) ast->value );
 
             break;
@@ -237,8 +252,9 @@ void p2_ast__delete( p2_ast *ast )
 
         case TERM_T:
 
-            p.execute = ( procedure ) p2_ast__delete__proc;
-            term__distribute( ast->value, &p );
+            c = closure__new( ( procedure ) p2_ast__delete__proc, 0 );
+            term__distribute( ast->value, c );
+            closure__delete( c );
             term__delete( ( Term* ) ast->value );
 
             break;
@@ -261,7 +277,8 @@ void p2_ast__delete( p2_ast *ast )
 /* Printing *******************************************************************/
 
 
-static void term__print( Term *term, int top_level )
+static void
+term__print( Term *term, int top_level )
 {
     Term *subterm;
 
@@ -308,7 +325,8 @@ static void term__print( Term *term, int top_level )
 }
 
 
-static void bag__print( Array *a )
+static void
+bag__print( Array *a )
 {
     int i, size = array__size( a );
     if ( !size )
@@ -331,7 +349,8 @@ static void bag__print( Array *a )
 }
 
 
-void p2_ast__print( p2_ast *ast )
+void
+p2_ast__print( p2_ast *ast )
 {
     char *s;
 

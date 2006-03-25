@@ -39,6 +39,11 @@ object__new( Type *type, void *value, int flags )
     #if DEBUG__OBJECT
     printf( "[%#x] object__new(%#x, %#x, %i)\n",
         ( int ) o, ( int ) type, ( int ) value, flags );
+if ( type && value )
+{
+if (!strcmp( type->name, "type"))
+printf( "    This is type '%s'.\n", ( ( Type* ) value )->name );
+}
     #endif
 
     o->type = type;
@@ -57,25 +62,14 @@ object__new( Type *type, void *value, int flags )
     o->trans_edges = 0;
     #endif
 
-    #if DEBUG__OBJECT
-    if ( o->type && o->value )
-    {
-        printf( "[%#x] object__new(%#x, %#x)\n",
-            ( int ) o, ( int ) o->type, ( int ) o->value );
-printf( "o->type->name = %s\n", o->type->name );
-if (!strcmp( o->type->name, "type"))
-printf( "    This is type '%s'.\n", ( ( Type* ) o->value )->name );
-    }
-    #endif
-
     return o;
 }
 
 
-static p2_action *
-delete_p( void *p, Type *type )
+static void *
+delete_p( void **p, Type *type )
 {
-    type->destroy( p );
+    type->destroy( *p );
     return 0;
 }
 
@@ -83,7 +77,7 @@ delete_p( void *p, Type *type )
 void
 object__delete( Object *o )
 {
-    Closure p;
+    Closure *c;
 
     #if DEBUG__SAFE
     if ( !o )
@@ -116,9 +110,9 @@ object__delete( Object *o )
     /* If the object owns its children (and has any), free them. */
     if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
     {
-        p.execute = ( procedure ) delete_p;
-        p.state = o->type->type_arg;
-        o->type->distribute( o->value, &p );
+        c = closure__new( ( procedure ) delete_p, o->type->type_arg );
+        o->type->distribute( o->value, c );
+        closure__delete( c );
     }
 
     /* Free the object's data. */
@@ -160,27 +154,26 @@ object__type( const Object *o )
 /* Graph traversal ************************************************************/
 
 
-typedef struct Trace_Ctx Trace_Ctx;
-
-struct Trace_Ctx
+typedef struct Trace_Ctx
 {
-    Closure *outer_p;
-    Closure *inner_p;
     Closure *edge_p;
-};
+    Closure *inner_p;
+    Closure *outer_p;
+
+} Trace_Ctx;
 
 
-static p2_action *
-apply_to_assoc_edge( Lookup_Table__Entry *entry, Closure *p )
+static void *
+apply_to_assoc_edge( Lookup_Table__Entry **ppEntry, Closure *c )
 {
     #if TRIPLES__IMPLICATION__SP_O
     ... not yet written ...
     #else
     #if TRIPLES__IMPLICATION__S_P
-    closure__execute( p, entry->key );
+    closure__apply( c, &( *ppEntry )->key );
     #endif
     #if TRIPLES__IMPLICATION__S_O
-    closure__execute( p, entry->target );
+    closure__apply( c, &( *ppEntry )->target );
     #endif
     #endif
 
@@ -188,13 +181,13 @@ apply_to_assoc_edge( Lookup_Table__Entry *entry, Closure *p )
 }
 
 
-static p2_action *
-trace_exec( Object *o, Trace_Ctx *state )
+static void *
+trace_exec( Object **opp, Trace_Ctx *state )
 {
-    p2_action *action;
+    Object *o;
 
     /* If for any reason execution has traced to a NULL, return immediately. */
-    if ( !o )
+    if ( !opp )
     {
         #if DEBUG__SAFE
         WARNING( "trace_exec: null object" );
@@ -203,8 +196,10 @@ trace_exec( Object *o, Trace_Ctx *state )
         return 0;
     }
 
+    o = *opp;
+
     /* Execute the inner procedure.  Recurse unless instructed otherwise. */
-    if ( !( action = closure__execute( ( state->inner_p ), o ) ) )
+    if ( !closure__apply( ( state->inner_p ), opp ) )
     {
         /* Traverse to children (if any). */
         if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -231,11 +226,10 @@ printf( "value = %i\n", *( ( int* ) o->value ) );
 
 
 void
-object__trace( Object *o, Closure *p )
+object__trace( Object *o, Closure *c )
 {
     Trace_Ctx state;
-    Closure trace_proc;
-    Closure edge_p;
+    Closure *trace_proc;
 
     #if DEBUG__SAFE
     if ( !o )
@@ -245,19 +239,20 @@ object__trace( Object *o, Closure *p )
     }
     #endif
 
-    edge_p.execute = ( procedure ) apply_to_assoc_edge;
-    edge_p.state = &trace_proc;
+    trace_proc = closure__new( ( procedure ) trace_exec, &state );
 
-    state.outer_p = &trace_proc;
-    state.inner_p = p;
-    state.edge_p = &edge_p;
+    state.edge_p = closure__new( ( procedure ) apply_to_assoc_edge, trace_proc );
+    state.inner_p = c;
+    state.outer_p = trace_proc;
 
-    trace_proc.execute = ( procedure ) trace_exec;
-    trace_proc.state = &state;
+    closure__apply( ( trace_proc ), &o );
 
-    closure__execute( ( &trace_proc ), o );
+    closure__delete( state.edge_p );
+    closure__delete( trace_proc );
 }
 
+
+#ifdef COMMENTED_OUT_FOR_NOW
 
 static p2_action *
 enqueue( Object *o, Array *queue )
@@ -308,6 +303,8 @@ object__trace_bfs( Object *o, Closure *p )
             ( Object* ) array__pop( queue ) );
     }
 }
+
+#endif
 
 
 /* Association ****************************************************************/

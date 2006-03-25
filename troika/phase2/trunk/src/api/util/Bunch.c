@@ -162,10 +162,10 @@ bunch__copy( Bunch *b )
 }
 
 
-static p2_action *
-block__delete__proc( Block *block_p, void *ignored )
+static void *
+block__delete__proc( Block **bl_p, void *ignored )
 {
-    block__delete( block_p );
+    block__delete( *bl_p );
     return 0;
 }
 
@@ -173,16 +173,16 @@ block__delete__proc( Block *block_p, void *ignored )
 void
 bunch__delete( Bunch *b )
 {
-    Closure p;
+    Closure *c;
 
     #if DEBUG__BUNCH
     printf( "[] bunch__delete(%#x)\n", ( int ) b );
     #endif
 
-    p.execute = ( procedure ) block__delete__proc;
-
     /* Free all blocks. */
-    array__distribute( b->blocks, &p );
+    c = closure__new( ( procedure ) block__delete__proc, 0 );
+    array__distribute( b->blocks, c );
+    closure__delete( c );
 
     /* Delete the blocks array. */
     array__delete( b->blocks );
@@ -273,65 +273,45 @@ bunch__remove( Bunch *b )
 
 
 void
-bunch__distribute( Bunch *b, Closure *p )
+bunch__distribute( Bunch *b, Closure *c )
 {
-    unsigned int i, j, numblocks = array__size( b->blocks );
+    unsigned int i, j, n = array__size( b->blocks );
     Block *bl;
-    p2_action *action;
 
     #if DEBUG__BUNCH
-    printf( "[] bunch__distribute(%#x, %#x)\n", ( int ) b, ( int ) p );
+    printf( "[] bunch__distribute(%#x, %#x)\n", ( int ) b, ( int ) c );
     #endif
 
-    for ( i = 0; i < numblocks; i++ )
+    for ( i = 0; i < n; i++ )
     {
         bl = array__get( b->blocks, i );
 
         for ( j = 0; j < bl->filled; j++ )
         {
-            if ( ( action =  closure__execute( p, bl->buffer[j] ) ) )
+            if ( closure__apply( c, &bl->buffer[j] ) )
             {
-                switch ( action->type )
+                /* Replace the item with the last item in the bunch. */
+                bl->buffer[j] = b->last_block->buffer[--( b->last_block->filled )];
+
+                /* Remove the tail-end block if empty. */
+                if ( !b->last_block->filled )
                 {
-                    case p2_action__type__break:
+                    block__delete( array__dequeue( b->blocks ) );
 
+                    if ( bl == b->last_block )
+                    {
+                        b->last_block = 0;
+                        /*b->last_block = array__get(b->blocks, b->blocks->size - 1); */
                         return;
+                    }
 
-                    case p2_action__type__remove:
-
-                        /* Replace the item with the last item in the bunch. */
-                        bl->buffer[j] = b->last_block->buffer[--( b->last_block->filled )];
-
-                        /* Remove the tail-end block if empty. */
-                        if ( !b->last_block->filled )
-                        {
-                            block__delete( array__dequeue( b->blocks ) );
-
-                            if ( bl == b->last_block )
-                            {
-                                b->last_block = 0;
-                                /*b->last_block = array__get(b->blocks, b->blocks->size - 1); */
-                                return;
-                            }
-
-                            else
-                            {
-                                numblocks--;
-                                b->last_block = array__get( b->blocks, array__size( b->blocks ) - 1 );
-                            }
-                        }
-                        j--;
-
-                        break;
-
-                    case p2_action__type__replace:
-
-                        bl->buffer[j] = action->value;
-                        break;
-
-                    default:
-                        ;
+                    else
+                    {
+                        n--;
+                        b->last_block = array__get( b->blocks, array__size( b->blocks ) - 1 );
+                    }
                 }
+                j--;
             }
         }
     }

@@ -34,6 +34,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Type.h>
+#include <Closure.h>
 
 
 typedef struct Array Array;
@@ -134,7 +135,7 @@ array__sort( Array *a, Comparator compare );
 
 
 extern void
-array__distribute( Array *a, Closure *p );
+array__distribute( Array *a, Closure *c );
 
 
 /* Miscellaneous **************************************************************/

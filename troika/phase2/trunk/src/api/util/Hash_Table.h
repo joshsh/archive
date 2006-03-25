@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define HASH_TABLE_H
 
 
-#include <defs.h>
+#include <Closure.h>
 
 
 typedef unsigned int ( *hash_f )( const void *key );

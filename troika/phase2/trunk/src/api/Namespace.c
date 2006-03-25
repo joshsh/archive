@@ -305,11 +305,11 @@ namespace__distribute( Namespace *ns, Closure *p )
 /******************************************************************************/
 
 
-static p2_action *
-lookup_and_print( char *key, Dictionary *dict )
+static void *
+lookup_and_print( char **key, Dictionary *dict )
 {
-    Object *o = ( Object* ) dictionary__lookup( dict, key );
-    printf( "    %#x '%s' : %s\n", ( int ) o, key, o->type->name );
+    Object *o = ( Object* ) dictionary__lookup( dict, *key );
+    printf( "    %#x '%s' : %s\n", ( int ) o, *key, o->type->name );
     return 0;
 }
 
@@ -320,7 +320,7 @@ namespace__show_children( const Namespace_o *ns_obj )
     int size = hash_table__size
         ( ( ( Namespace* ) ns_obj->value )->children );
     Array *a;
-    Closure p;
+    Closure *c;
 
     printf( "%#x : namespace", ( int ) ns_obj );
 
@@ -333,10 +333,10 @@ namespace__show_children( const Namespace_o *ns_obj )
             ( ( Namespace* ) ns_obj->value )->children );
 
         /* Print children. */
-        p.execute = ( procedure ) lookup_and_print;
-        p.state = ( ( Namespace* ) ns_obj->value )->children;
-        array__distribute( a, &p );
-
+        c = closure__new( ( procedure ) lookup_and_print,
+            ( ( Namespace* ) ns_obj->value )->children );
+        array__distribute( a, c );
+        closure__delete( c );
         array__delete( a );
 
         printf( "}" );

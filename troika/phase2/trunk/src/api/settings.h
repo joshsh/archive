@@ -40,6 +40,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #define DEBUG__SK                           1
     #define DEBUG__PRIMS                        1
 
+    #define DEBUG__TYPE                         1
     #define DEBUG__OBJECT                       1
     #define DEBUG__MEMORY                       1
 
@@ -48,16 +49,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #define DEBUG__ENV                          1
     #define DEBUG__COMPILER                     1
 
-    #define DEBUG__PARSER_MODULE                0
+    #define DEBUG__PARSER_MODULE                1
     #if DEBUG__PARSER_MODULE
 
         #define DEBUG__AST                      1
 
         /** Echo each token as it is matched by the lexer. */
-        #define DEBUG__LEXER                    1
+        #define DEBUG__LEXER                    0
 
         /** Echo each production as it is matched by the parser. */
-        #define DEBUG__PARSER                   1
+        #define DEBUG__PARSER                   0
         #if DEBUG__PARSER
 
             /** Use Bison's built-in trace facility. */

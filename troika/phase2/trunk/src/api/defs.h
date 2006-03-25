@@ -62,9 +62,6 @@ typedef int boolean;
 typedef char cstring;
 
 
-#include <Closure.h>
-
-
 /******************************************************************************/
 
 
@@ -75,7 +72,6 @@ typedef boolean ( *Criterion )( void *arg );
 typedef boolean ( *Criterion2 )( void *arg1, void *arg2 );
 typedef void *  ( *Decoder )( char *buffer );
 typedef void    ( *Destructor )( void *p );
-typedef void    ( *Distributor )( void *data, Closure *a );
 typedef void    ( *Encoder )( void *p, char *buffer );
 
 typedef void    ( *Sort )( void *p, Comparator cmp );

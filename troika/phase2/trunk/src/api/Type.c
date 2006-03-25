@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Type.h>
+#include <Closure.h>
 
 
 /* Default member functions (use with caution). */
@@ -94,6 +95,10 @@ type__new( const char *name, int flags )
         free( t );
         return 0;
     }
+
+    #if DEBUG__TYPE
+    printf( "[%#x] type__new(\"%s\", %i)\n", ( int ) t, name, flags );
+    #endif
 
     t->flags = flags;
 

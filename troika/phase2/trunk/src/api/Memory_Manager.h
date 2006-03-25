@@ -41,12 +41,15 @@ typedef struct Memory_Manager Memory_Manager;
 
 /******************************************************************************/
 
+/** Constructor. */
 extern Memory_Manager *
 memory_manager__new( Object *root );
 
+/** Destructor. */
 extern void
 memory_manager__delete( Memory_Manager *m );
 
+/** \return the number of objects governed by the Memory_Manager */
 extern unsigned int
 memory_manager__size( Memory_Manager *m );
 
@@ -59,8 +62,9 @@ memory_manager__add( Memory_Manager *m, Object *o );
 
 /* Tracing / graph traversal **************************************************/
 
+/** \param c  a Closure of function type "void *(*)(Object**)" */
 extern void
-memory_manager__distribute( Memory_Manager *m, Closure *p );
+memory_manager__distribute( Memory_Manager *m, Closure *c );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */

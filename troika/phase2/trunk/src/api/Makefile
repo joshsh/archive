@@ -64,17 +64,7 @@ parser :
 ################################################################################
 # Import primitives.
 
-IMPORT_OBJECTS = \
-	$(IMPORT)/target/cxx/p2-stubs.o \
-	$(IMPORT)/target/cxx/char.o \
-	$(IMPORT)/target/cxx/cstring.o \
-	$(IMPORT)/target/cxx/combinator.o \
-	$(IMPORT)/target/cxx/double.o \
-	$(IMPORT)/target/cxx/int.o \
-	$(IMPORT)/target/cxx/toys.o
-
-.PHONY : import
-import :
+import/target/imports.o :
 	$(MAKE) -e -C $(IMPORT)
 
 
@@ -101,11 +91,11 @@ $(XML)/xmldom.o  :
 ################################################################################
 # Build the command line interface.
 
-objects = main.o Collection.o Compiler.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
+objects = main.o Closure.o Collection.o Compiler.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
 
 
-phase2 :  $(utils) $(XML)/xmldom.o $(objects) import parser
-	$(CC) $(CFLAGS) -o phase2 $(objects) $(utils) $(IMPORT_OBJECTS) $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
+phase2 :  $(utils) $(XML)/xmldom.o $(objects) import/target/imports.o parser
+	$(CC) $(CFLAGS) -o phase2 $(objects) $(utils) import/target/imports.o $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
 
 $(objects) $(utils) : defs.h settings.h
 

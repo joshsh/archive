@@ -356,13 +356,12 @@ hash_table__remove(Hash_Table *h, const void *key)
 
 
 void
-hash_table__distribute( Hash_Table *h, Closure *p )
+hash_table__distribute( Hash_Table *h, Closure *c )
 {
     void **cur, **lim;
-    p2_action *action;
 
     #if DEBUG__SAFE
-    if ( !h || !p )
+    if ( !h || !c )
     {
         ERROR( "hash_table__distribute: null argument" );
         return;
@@ -370,7 +369,7 @@ hash_table__distribute( Hash_Table *h, Closure *p )
     #endif
 
     #if DEBUG__HASH_TABLE
-    printf( "[] hash_table__distribute(%#x, %#x)\n", ( int ) h, ( int ) p );
+    printf( "[] hash_table__distribute(%#x, %#x)\n", ( int ) h, ( int ) c );
     #endif
 
     cur = h->buffer;
@@ -380,30 +379,8 @@ hash_table__distribute( Hash_Table *h, Closure *p )
     {
         if ( *cur )
         {
-            if ( ( action = closure__execute( p, *cur ) ) )
-            {
-                switch ( action->type )
-                {
-                    case p2_action__type__break:
-
-                        return;
-
-                    case p2_action__type__remove:
-
-                        *cur = 0;
-                        h->size--;
-                        break;
-
-                    case p2_action__type__replace:
-
-                        *cur = action->value;
-                        break;
-
-                    default:
-
-                        ;
-                }
-            }
+            if ( closure__apply( c, cur ) )
+                break;
         }
 
         cur++;

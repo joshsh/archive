@@ -9,50 +9,65 @@
 ##
 ## Dependencies: doxygen, xsltproc
 
-NAME         = p2-import
-
 CXX_IN  = ./src
-CXX_OUT = ./target/cxx
-XML_OUT = ./target/xml
-OBJ_OUT = ./target
+OUT     = ./target
+CXX_OUT = ./$(OUT)/cxx
+XML_OUT = ./$(OUT)/xml
+OBJ_OUT = ./$(OUT)/obj
 
 INCLUDE = -I../
-CFLAGS  = -g -Wall --pedantic-errors  # These are temporary.
 
-CC      = gcc $(CFLAGS) $(INCLUDE)
+CFLAGS = -O2 -g --ansi -pedantic -W -Wall
+	# -Werror \
+	# -fshort-enums -fno-common \
+	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
+	# -D_GNU_SOURCE
+
+CC      = gcc $(INCLUDE)
 
 
 .PHONY : default
-default :  objects
+default :  $(OUT)/imports.o
 
 
 .PHONY : clean
 clean :
-	-rm -rf $(CXX_OUT) $(XML_OUT) $(OBJ_OUT)
+	-rm -rf $(OUT) $(CXX_IN)/p2-stubs.c
 
 
 .PHONY : test
-test :  $(OBJ_OUT)/p2-stubs.o
-	nm $(OBJ_OUT)/p2-stubs.o
-
-.PHONY : objects
-objects : $(CXX_OUT)/p2-stubs.c
-	$(CC) -c $(CXX_OUT)/*.c
-	mv *.o $(CXX_OUT)
+test :  $(OUT)/imports.o
+	nm $(OUT)/imports.o
 
 
-$(OBJ_OUT)/p2-stubs.o :  $(CXX_OUT)/p2-stubs.c
-	$(CC) -c $(CXX_OUT)/p2-stubs.c -o $(OBJ_OUT)/p2-stubs.o
+objects = $(OBJ_OUT)/char.o $(OBJ_OUT)/combinator.o $(OBJ_OUT)/cstring.o $(OBJ_OUT)/double.o $(OBJ_OUT)/int.o $(OBJ_OUT)/toys.o
 
 
-$(CXX_OUT)/p2-stubs.c :  $(XML_OUT)/p2-import.xml p2-stubs.xslt
-	-rm -rf $(CXX_OUT)
-	cp -r $(CXX_IN) $(CXX_OUT)
-	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(CXX_OUT)/p2-stubs.c
+$(OUT)/imports.o : $(OBJ_OUT)/p2-stubs.o $(objects)
+	ld -r -o $(OUT)/imports.o $(OBJ_OUT)/*.o
+
+
+$(OBJ_OUT)/%.o : $(CXX_IN)/%.c ../defs.h ../settings.h $(OBJ_OUT)
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+
+$(OBJ_OUT)/p2-stubs.o : $(OUT)/p2-stubs.c $(OBJ_OUT) ../defs.h ../settings.h 
+	-rm $(CXX_IN)/p2-stubs.c
+	cp $(OUT)/p2-stubs.c $(CXX_IN)/p2-stubs.c
+	$(CC) -c $(CFLAGS) -o $(OBJ_OUT)/p2-stubs.o $(CXX_IN)/p2-stubs.c
+	-rm $(CXX_IN)/p2-stubs.c
+
+
+$(OUT)/p2-stubs.c :  $(XML_OUT)/p2-import.xml p2-stubs.xslt
+	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(OUT)/p2-stubs.c
 
 
 $(XML_OUT)/p2-import.xml :  doxygen
 	xsltproc $(XML_OUT)/combine.xslt $(XML_OUT)/index.xml > $(XML_OUT)/p2-import.xml
+
+
+$(OBJ_OUT) :
+	mkdir -p $(OBJ_OUT)
 
 
 .PHONY : doxygen

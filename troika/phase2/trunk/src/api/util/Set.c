@@ -72,9 +72,9 @@ set__remove( Set *s, void *el )
 
 
 void
-set__distribute( Set *s, Closure *p )
+set__distribute( Set *s, Closure *c )
 {
-    hash_table__distribute( s, p );
+    hash_table__distribute( s, c );
 }
 
 

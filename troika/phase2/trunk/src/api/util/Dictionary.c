@@ -54,12 +54,20 @@ dictionary_entry__new( const char *key, void *target )
 }
 
 
-static p2_action *
+static void
 dictionary_entry__delete
-    ( Dictionary_Entry *entry, void *ignored )
+    ( Dictionary_Entry *entry )
 {
     free( entry->key );
     free( entry );
+}
+
+
+static void *
+dictionary_entry__delete__proc
+    ( Dictionary_Entry **entry_p, void *ignored )
+{
+    dictionary_entry__delete( *entry_p );
     return 0;
 }
 
@@ -109,9 +117,9 @@ void
 dictionary__delete( Dictionary *dict )
 {
     /* Destroy dictionary entries. */
-    Closure p;
-    p.execute = ( procedure ) dictionary_entry__delete;
-    hash_table__distribute( dict, &p );
+    Closure *c = closure__new( ( procedure ) dictionary_entry__delete__proc, 0 );
+    hash_table__distribute( dict, c );
+    closure__delete( c );
 
     hash_table__delete( dict );
 }
@@ -130,7 +138,7 @@ dictionary__add( Dictionary *dict, const char *key, void *target )
       && ( old_entry = ( Dictionary_Entry* ) hash_table__add( dict, new_entry ) ) )
     {
         r = old_entry->target;
-        dictionary_entry__delete( old_entry, 0 );
+        dictionary_entry__delete( old_entry );
     }
 
     return r;
@@ -165,7 +173,7 @@ dictionary__remove( Dictionary *dict, char *key )
     if ( entry )
     {
         r = entry->target;
-        dictionary_entry__delete( entry, 0 );
+        dictionary_entry__delete( entry );
     }
 
     return r;
@@ -175,10 +183,10 @@ dictionary__remove( Dictionary *dict, char *key )
 /******************************************************************************/
 
 
-static p2_action *
-add_to_dict( Dictionary_Entry *entry, Dictionary *dest )
+static void *
+add_to_dict( Dictionary_Entry **entry_p, Dictionary *dest )
 {
-    dictionary__add( dest, entry->key, entry->target );
+    dictionary__add( dest, ( *entry_p )->key, ( *entry_p )->target );
     return 0;
 }
 
@@ -186,45 +194,41 @@ add_to_dict( Dictionary_Entry *entry, Dictionary *dest )
 void
 dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
-    Closure proc;
-    proc.execute = ( procedure ) add_to_dict;
-    proc.state = dest;
-
-    hash_table__distribute( src, &proc );
+    Closure *c = closure__new( ( procedure ) add_to_dict, dest );
+    hash_table__distribute( src, c );
+    closure__delete( c );
 }
 
 
 /******************************************************************************/
 
 
-/* Procedure which points the argument procedure to the target value of a
-   hashing pair. */
-static p2_action *
-apply_to_target( Dictionary_Entry *entry, Closure *p )
+/* Points the argument procedure to the target value of a hashing pair. */
+static void *
+apply_to_target( Dictionary_Entry **entry_p, Closure *c )
 {
-    return closure__execute( p, entry->target );
+    return closure__apply( c, &( *entry_p )->target );
 }
 
 
 void
-dictionary__distribute( Dictionary *dict, Closure *p )
+dictionary__distribute( Dictionary *dict, Closure *c )
 {
-    Closure p_alt;
-    p_alt.execute = ( procedure ) apply_to_target;
-    p_alt.state = p;
+    Closure *alt = closure__new( ( procedure ) apply_to_target, c );
 
-    hash_table__distribute( dict, &p_alt );
+    hash_table__distribute( dict, alt );
+
+    closure__delete( alt );
 }
 
 
 /******************************************************************************/
 
 
-static p2_action *
-add_to_array( Dictionary_Entry *entry, Array *a )
+static void *
+add_to_array( Dictionary_Entry **entry_p, Array *a )
 {
-    array__enqueue( a, entry->key );
-
+    array__enqueue( a, ( *entry_p )->key );
     return 0;
 }
 
@@ -235,10 +239,9 @@ dictionary__keys( Dictionary *dict )
     Array *a = array__new( hash_table__size( dict ), 0 );
 
     /* Fill the array with key values. */
-    Closure p;
-    p.execute = ( procedure ) add_to_array;
-    p.state = a;
-    hash_table__distribute( dict, &p );
+    Closure *c = closure__new( ( procedure ) add_to_array, a );
+    hash_table__distribute( dict, c );
+    closure__delete( c );
 
     /* Alphabetize the array. */
     array__sort( a, ( Comparator ) strcmp );

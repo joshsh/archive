@@ -33,10 +33,10 @@ name__new( void )
 }
 
 
-static p2_action *
-delete_string( char *s, void *ignored )
+static void *
+delete_string( char **s_p, void *ignored )
 {
-    free( s );
+    free( *s_p );
     return 0;
 }
 
@@ -44,7 +44,7 @@ delete_string( char *s, void *ignored )
 void
 name__delete( Name *name )
 {
-    Closure p = { ( procedure ) delete_string, 0 };
+    Closure *c;
 
     #if DEBUG__SAFE
     if ( !name )
@@ -58,7 +58,10 @@ name__delete( Name *name )
     printf( "[] name__delete(%#x)\n", ( int ) name );  fflush( stdout );
     #endif
 
-    array__distribute( name, &p );
+    c = closure__new( ( procedure ) delete_string, 0 );
+    array__distribute( name, c );
+    closure__delete( c );
+
     array__delete( name );
 }
 
