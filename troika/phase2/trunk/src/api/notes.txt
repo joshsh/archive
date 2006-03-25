@@ -1,0 +1,43 @@
+[.] Pthreads -- the only reasonably well standardized thread model
+
+typedef void *(*Genfun)(void);
+
+void
+trampoline(Genfun f)
+{
+	while (f)
+		f = (Genfun) (*f)();
+}
+
+
+
+If malloc-allocated storage is distinguishable by address range from the stack/heap storage, then malloc may be used to allocate (non-relocatable) objects.[5] These objects must be enumerable, so that the GC can first trace these objects (they must have proper tags), and then sweep and explicitly free those objects which have become garbage.
+
+
+Listing 1. Delaying for n microseconds in C89
+
+
+    /* C89 */
+    {
+        struct timeval tv = { 0, n };
+        select(0, 0, 0, 0, &tv);
+    }
+
+
+
+term.print.prefix = "("
+term.print.infix = " "
+term.print.suffix = ")"
+
+
+assoc 
+assoc term formatter ( "(", " ", " )" );
+
+
+void p2_term__print( p2_term *t, encoder encode_term_item )
+{
+    char *cur = buffer;
+    encode_term_item( cell, buffer );
+    cur += strlen( cur );
+    
+}
