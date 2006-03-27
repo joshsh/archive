@@ -28,6 +28,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SETTINGS_H
 
 
+#define GNU_EXTENSIONS                          1
+
+
 /* Debugging ******************************************************************/
 
 

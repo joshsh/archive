@@ -62,14 +62,6 @@ p2_ast__new( p2_ast__type type, void *value )
 }
 
 
-static void *
-p2_ast__delete__proc( p2_ast **ast, void *ignored )
-{
-    p2_ast__delete( *ast );
-    return 0;
-}
-
-
 p2_ast *
 p2_ast__bag( Array *bag )
 {
@@ -208,7 +200,11 @@ p2_ast__size( p2_ast *ast )
 void
 p2_ast__delete( p2_ast *ast )
 {
-    Closure *c;
+    void *helper( p2_ast **ast )
+    {
+        p2_ast__delete( *ast );
+        return 0;
+    }
 
     #if DEBUG__AST
     printf( "[] p2_ast__delete(%#x)\n", ( int ) ast );
@@ -218,9 +214,7 @@ p2_ast__delete( p2_ast *ast )
     {
         case BAG_T:
 
-            c = closure__new( ( procedure ) p2_ast__delete__proc, 0 );
-            array__distribute( ( Array* ) ast->value, c );
-            closure__delete( c );
+            array__walk( ast->value, ( Dist_f ) helper );
             array__delete( ( Array* ) ast->value );
 
             break;
@@ -252,9 +246,7 @@ p2_ast__delete( p2_ast *ast )
 
         case TERM_T:
 
-            c = closure__new( ( procedure ) p2_ast__delete__proc, 0 );
-            term__distribute( ast->value, c );
-            closure__delete( c );
+            term__walk( ast->value, ( Dist_f ) helper );
             term__delete( ( Term* ) ast->value );
 
             break;

@@ -305,6 +305,45 @@ namespace__distribute( Namespace *ns, Closure *p )
 /******************************************************************************/
 
 
+#if GNU_EXTENSIONS
+
+void
+namespace__show_children( const Namespace_o *ns_obj )
+{
+    Dictionary *dict = ( ( Namespace* ) ns_obj->value )->children;
+    int size = hash_table__size( dict );
+    Array *keys;
+
+    void *helper( char **key )
+    {
+        Object *o = ( Object* ) dictionary__lookup( dict, *key );
+        printf( "    %#x '%s' : %s\n", ( int ) o, *key, o->type->name );
+        return 0;
+    }
+
+    printf( "%#x : namespace", ( int ) ns_obj );
+
+    if ( size )
+    {
+        printf( "\n{\n" );
+
+        /* Get alphabetized dictionary keys. */
+        keys = dictionary__keys(
+            ( ( Namespace* ) ns_obj->value )->children );
+
+        /* Print children. */
+        array__walk( keys, ( Dist_f ) helper );
+        array__delete( keys );
+
+        printf( "}" );
+    }
+
+    else
+        printf( " { }" );
+}
+
+#else
+
 static void *
 lookup_and_print( char **key, Dictionary *dict )
 {
@@ -345,6 +384,8 @@ namespace__show_children( const Namespace_o *ns_obj )
     else
         printf( " { }" );
 }
+
+#endif
 
 
 /******************************************************************************/

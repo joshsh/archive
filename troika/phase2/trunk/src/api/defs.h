@@ -38,7 +38,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#define VERSION "0.6.0"
+#define VERSION "0.6.1"
 
 
 #define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
@@ -65,6 +65,9 @@ typedef char cstring;
 /******************************************************************************/
 
 
+typedef void *( *Dist_f )( void **refp );
+
+
 typedef void *  ( *Allocator )( void );
 typedef int     ( *Comparator )( const void *arg1, const void *arg2 );
 typedef void *  ( *Copy_Cons )( void *p );
@@ -72,8 +75,8 @@ typedef boolean ( *Criterion )( void *arg );
 typedef boolean ( *Criterion2 )( void *arg1, void *arg2 );
 typedef void *  ( *Decoder )( char *buffer );
 typedef void    ( *Destructor )( void *p );
+typedef void    ( *Distributor_f )( void *coll, Dist_f f );
 typedef void    ( *Encoder )( void *p, char *buffer );
-
 typedef void    ( *Sort )( void *p, Comparator cmp );
 typedef void *  ( *Substitution )( void *p, void *state );
 typedef void    ( *Void_f )( void *p );

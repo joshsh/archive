@@ -558,6 +558,33 @@ array__distribute( Array *a, Closure *c )
 }
 
 
+void
+array__walk( Array *a, Dist_f f )
+{
+    int i, lim;
+
+    #if DEBUG__SAFE
+    if ( !a || !f )
+    {
+        ERROR( "array__distribute_f: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__ARRAY
+    printf( "array__distribute_f(%#x, %#x)\n", ( int ) a, ( int ) f );
+    #endif
+
+    lim = a->size;
+
+    for ( i = 0; i < lim; i++ )
+    {
+        if ( f( &ELMT( a, i ) ) )
+            break;
+    }
+}
+
+
 /* Miscellaneous **************************************************************/
 
 

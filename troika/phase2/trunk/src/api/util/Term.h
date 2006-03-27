@@ -150,6 +150,9 @@ term__cat( Term *t1, Term *t2 );
 extern void
 term__distribute( Term *t, Closure *c );
 
+extern void
+term__walk( Term *t, Dist_f f );
+
 
 /******************************************************************************/
 

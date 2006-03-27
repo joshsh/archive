@@ -137,6 +137,9 @@ array__sort( Array *a, Comparator compare );
 extern void
 array__distribute( Array *a, Closure *c );
 
+extern void
+array__walk( Array *a, Dist_f f );
+
 
 /* Miscellaneous **************************************************************/
 

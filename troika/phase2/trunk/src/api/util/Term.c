@@ -449,6 +449,84 @@ term__distribute( Term *t, Closure *c )
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+void
+term__walk( Term *t, Dist_f f )
+{
+    __label__ finish;
+
+    void walk( void **cur )
+    {
+        void **lim;
+
+        /* If the sub-term represents a leaf node, execute the procedure. */
+        if ( ( unsigned int ) *cur == 2 )
+        {
+            cur++;
+
+            if ( f( cur ) )
+                goto finish;
+        }
+
+        /* If the sub-term contains further sub-terms, recurse through them. */
+        else
+        {
+            lim = cur + ( unsigned int ) *cur;
+            cur++;
+            while ( cur < lim )
+            {
+                walk( cur );
+                cur += ( unsigned int ) *cur;
+            }
+        }
+    }
+
+    #if DEBUG__SAFE
+    if ( !t || !f )
+    {
+        ERROR( "term__distribute_f: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__TERM
+    printf( "[] term__distribute_f(%#x, %#x)\n", ( int ) t, ( int ) f );
+    #endif
+
+    walk( t->head );
+
+finish:
+
+    /* Avoids GCC's "label at end of compound statement" error. */
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /******************************************************************************/
 
 
