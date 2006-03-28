@@ -43,7 +43,7 @@ typedef struct Array Array;
 
 /** Constructor. */
 extern Array *
-array__new( int buffer_size, unsigned int expansion );
+array__new( int buffer_size, double expansion );
 
 /** Copy constructor. */
 extern Array *
@@ -59,7 +59,7 @@ array__delete( Array *a );
 extern unsigned int
 array__size( Array *a );
 
-extern unsigned int
+extern double
 array__expansion( Array *a );
 
 

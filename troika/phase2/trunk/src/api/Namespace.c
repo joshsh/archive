@@ -378,7 +378,7 @@ static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
         #if TRIPLES__GLOBAL__OUT_EDGES
         if ( o->outbound_edges )
         {
-            lookup_table__distribute( o->outbound_edges, state->edge_p );
+            hash_map__distribute( o->outbound_edges, state->edge_p );
         }
         #endif
     }

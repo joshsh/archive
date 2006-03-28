@@ -1,6 +1,6 @@
 /**
 
-\file  Lookup_Table.h
+\file  Hash_Map.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -32,37 +32,37 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Hash_Table.h>
 
 
-typedef struct Lookup_Table__Entry Lookup_Table__Entry;
+typedef struct Hash_Map__Entry Hash_Map__Entry;
 
-struct Lookup_Table__Entry
+struct Hash_Map__Entry
 {
     void *key;
     void *target;
 };
 
 
-typedef Hash_Table Lookup_Table;
+typedef Hash_Table Hash_Map;
 
 
-extern Lookup_Table *
-lookup_table__new( void );
-
-extern void
-lookup_table__delete( Lookup_Table *t );
-
+extern Hash_Map *
+hash_map__new( void );
 
 extern void
-lookup_table__add( Lookup_Table *t, void * const key, void * const target );
+hash_map__delete( Hash_Map *t );
+
+
+extern void
+hash_map__add( Hash_Map *t, void * const key, void * const target );
 
 extern void *
-lookup_table__lookup( Lookup_Table *t, void * const key );
+hash_map__lookup( Hash_Map *t, void * const key );
 
 extern void
-lookup_table__remove( Lookup_Table *t, void * const src );
+hash_map__remove( Hash_Map *t, void * const src );
 
 
 extern void
-lookup_table__walk( Lookup_Table *t, Dist_f f );
+hash_map__walk( Hash_Map *t, Dist_f f );
 
 
 #endif  /* LOOKUP_TABLE_H */

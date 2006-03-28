@@ -53,10 +53,10 @@ typedef struct Hash_Table Hash_Table;
     too dense.  Re-hashing the into a new buffer is expensive, so beware of
     setting the expansion factor too low.  Will be set to a default if
     absolutely too low.
-    \param sparsity  the ratio of empty cells to occupied cells is to be at
-    least this large. A more sparse hash table takes up more memory but is more
+    \param load  the ratio of occupied cells to total cells is to be at
+    most this large. A more sparse hash table takes up more memory but is more
     time-efficient because collisions are less frequent. Will be set to a
-    default if absolutely too low.
+    default if zero or otherwise out of range.
     \param hashing_function a hashing function specific to the table's "key"
     type.  The hashing function should accept a single void pointer and
     return an int, the idea being to distribute values over a broad stretch of the
@@ -67,8 +67,8 @@ typedef struct Hash_Table Hash_Table;
 extern Hash_Table *
 hash_table__new(
   unsigned int buffer_size,
-  unsigned int expansion,
-  unsigned int sparsity,
+  double expansion,
+  double load,
   hash_f hash,
   Comparator compare );
 
@@ -86,6 +86,12 @@ hash_table__delete( Hash_Table *h );
 /** \return  the number of occupied cells in the hash table. */
 extern unsigned int
 hash_table__size( const Hash_Table *h );
+
+extern double
+hash_table__load( const Hash_Table *h );
+
+extern double
+hash_table__expansion( const Hash_Table *h );
 
 
 /******************************************************************************/

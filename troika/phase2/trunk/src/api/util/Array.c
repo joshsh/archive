@@ -36,7 +36,7 @@ struct Array
     /** The array expands by this factor whenever it outgrows its buffer.
         Memory copying into the new buffer is expensive, so beware of setting
         the expansion factor too low. */
-    unsigned int expansion;
+    double expansion;
 
     /** The buffer array. */
     void **buffer;
@@ -70,7 +70,7 @@ buffer_copy( Array *a )
 
 
 Array *
-array__new( int buffer_size, unsigned int expansion )
+array__new( int buffer_size, double expansion )
 {
     Array *a;
 
@@ -95,7 +95,7 @@ array__new( int buffer_size, unsigned int expansion )
     a->head = a->size = 0;
 
     #if DEBUG__ARRAY
-    printf( "[%#x] array__new(%i, %i)\n", ( int ) a, buffer_size, expansion );
+    printf( "[%#x] array__new(%i, %g)\n", ( int ) a, buffer_size, expansion );
     #endif
 
     return a;
@@ -148,7 +148,7 @@ array__size( Array *a )
 }
 
 
-unsigned int
+double
 array__expansion( Array *a )
 {
     return a->expansion;
@@ -170,9 +170,9 @@ sizeup( Array *a )
     buffer_size_new = ( int ) ( a->expansion * a->buffer_size );
 
     /* If the the array's own exansion factor is too close to 1 to resize the
-       buffer, use DEFAULT_EXPANSION_FACTOR instead. */
+       buffer, make room for just one more cell. */
     if ( buffer_size_new <= a->buffer_size )
-        buffer_size_new = DEFAULT_EXPANSION_FACTOR * a->buffer_size;
+        buffer_size_new++;
 
     if ( !( BUFFER_NEW = BUFFER_NEW( buffer_size_new ) ) )
     {

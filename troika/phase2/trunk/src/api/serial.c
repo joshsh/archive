@@ -38,9 +38,9 @@ struct Xml_Encode_Ctx
 {
     Environment *env;
 
-    Lookup_Table *serializers;
+    Hash_Map *serializers;
 
-    Lookup_Table *ids;
+    Hash_Map *ids;
 };
 
 
@@ -50,9 +50,9 @@ struct Xml_Decode_Ctx
 {
     Environment *env;
 
-    Lookup_Table *deserializers;
+    Hash_Map *deserializers;
 
-    Lookup_Table *objects_by_id;
+    Hash_Map *objects_by_id;
 
     Object *root;
 };
@@ -81,7 +81,7 @@ struct Function_Wrapper
 
 
 static void *
-function_wrapper__delete( Lookup_Table__Entry **ppe )
+function_wrapper__delete( Hash_Map__Entry **ppe )
 {
     free( ( Function_Wrapper* ) ( *ppe )->target );
     return 0;
@@ -89,9 +89,9 @@ function_wrapper__delete( Lookup_Table__Entry **ppe )
 
 
 static Xml_Encoder
-get_encoder( Type *t, Lookup_Table *serializers )
+get_encoder( Type *t, Hash_Map *serializers )
 {
-    Function_Wrapper *w = lookup_table__lookup( serializers, t );
+    Function_Wrapper *w = hash_map__lookup( serializers, t );
 
     if ( !w )
         return 0;
@@ -101,19 +101,19 @@ get_encoder( Type *t, Lookup_Table *serializers )
 
 
 static void
-set_encoder( Type *t, Xml_Encoder encode, Lookup_Table *serializers )
+set_encoder( Type *t, Xml_Encoder encode, Hash_Map *serializers )
 {
     Function_Wrapper *w = new( Function_Wrapper );
     w->function = ( Generic_f ) encode;
 
-    lookup_table__add( serializers, t, w );
+    hash_map__add( serializers, t, w );
 }
 
 
 static Xml_Decoder
-get_decoder( Type *t, Lookup_Table *deserializers )
+get_decoder( Type *t, Hash_Map *deserializers )
 {
-    Function_Wrapper *w = lookup_table__lookup( deserializers, t );
+    Function_Wrapper *w = hash_map__lookup( deserializers, t );
 
     if ( !w )
         return 0;
@@ -123,12 +123,12 @@ get_decoder( Type *t, Lookup_Table *deserializers )
 
 
 static void
-set_decoder( Type *t, Xml_Decoder decode, Lookup_Table *deserializers )
+set_decoder( Type *t, Xml_Decoder decode, Hash_Map *deserializers )
 {
     Function_Wrapper *w = new( Function_Wrapper );
     w->function = ( Generic_f ) decode;
 
-    lookup_table__add( deserializers, t, w );
+    hash_map__add( deserializers, t, w );
 }
 
 
@@ -388,7 +388,7 @@ static dom_element *
 object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 {
     /* id > 0  ==>  the object is multireferenced. */
-    unsigned int id = ( unsigned int ) lookup_table__lookup( state->ids, o );
+    unsigned int id = ( unsigned int ) hash_map__lookup( state->ids, o );
 
     char buffer[256];
     dom_element *el;
@@ -438,7 +438,7 @@ printf( "---s oe 3b 3---\n" ); FFLUSH;
 
         encode = get_encoder( o->type, state->serializers );
 /*
-        encode = ( Xml_Encoder ) lookup_table__lookup
+        encode = ( Xml_Encoder ) hash_map__lookup
             ( state->serializers, o->type );
 */
 printf( "---s oe 3b 4---\n" ); FFLUSH;
@@ -555,7 +555,7 @@ printf( "This is an imported type.\n" ); FFLUSH;
                 free( text );
 printf( "id = %i\n", id ); FFLUSH;
 
-                o = ( Object* ) lookup_table__lookup( state->objects_by_id, ( void* ) id );
+                o = ( Object* ) hash_map__lookup( state->objects_by_id, ( void* ) id );
 
                 if ( !o )
                 {
@@ -564,7 +564,7 @@ printf( "id = %i\n", id ); FFLUSH;
                     /* Register the new object. */
                     memory_manager__add( state->env->manager, o );
 
-                    lookup_table__add( state->objects_by_id, ( void* ) id, o );
+                    hash_map__add( state->objects_by_id, ( void* ) id, o );
                 }
 
                 if ( id == 1 )
@@ -583,7 +583,7 @@ printf( "id = %i\n", id ); FFLUSH;
             decode = get_decoder( type, state->deserializers );
 
             /*
-            decode = ( Xml_Decoder ) lookup_table__lookup
+            decode = ( Xml_Decoder ) hash_map__lookup
                 ( state->deserializers, type );
             */
 printf( "decode = %#x\n", ( int ) decode );
@@ -629,14 +629,14 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
         id = ( unsigned int ) atoi( text );
 printf( "Deserializing reference on id = %i.\n", id ); FFLUSH;
         free( text );
-        o = ( Object* ) lookup_table__lookup
+        o = ( Object* ) hash_map__lookup
             ( state->objects_by_id, ( void* ) id );
 
         /* Placeholder object must be created. */
         if ( !o )
         {
             o = object__new( 0, 0, 0 );
-            lookup_table__add( state->objects_by_id, ( void* ) id, o );
+            hash_map__add( state->objects_by_id, ( void* ) id, o );
         }
     }
 
@@ -680,7 +680,7 @@ typedef struct Hash_Multiref_Ctx Hash_Multiref_Ctx;
 
 struct Hash_Multiref_Ctx
 {
-    Lookup_Table *table;
+    Hash_Map *table;
     unsigned int max;
 };
 
@@ -702,13 +702,13 @@ add_timestamp( dom_element *el )
 }
 
 
-static Lookup_Table *
+static Hash_Map *
 multiref_ids( Compiler *c )
 {
     Environment *env = compiler__environment( c );
     Set *multirefs  = memory_manager__get_multirefs( env->manager, env->data );
 
-    Lookup_Table *ids = lookup_table__new();
+    Hash_Map *ids = hash_map__new();
     int max_id = 0;
 
     Object **tmp;
@@ -716,10 +716,10 @@ multiref_ids( Compiler *c )
     void *hash_multiref( Object **opp )
     {
         /* Working namespace has already been given an id. */
-        if ( !lookup_table__lookup( ids, *opp ) )
+        if ( !hash_map__lookup( ids, *opp ) )
         {
             max_id++;
-            lookup_table__add( ids, *opp, ( void* ) max_id );
+            hash_map__add( ids, *opp, ( void* ) max_id );
         }
 
         return 0;
@@ -747,14 +747,14 @@ compiler__serialize( Compiler *c, char *path )
     Xml_Encode_Ctx state;
     Environment *env;
 
-    void *obj_helper( Lookup_Table__Entry **epp )
+    void *obj_helper( Hash_Map__Entry **epp )
     {
         Object *o;
         dom_element *el;
 
-        void *triple_helper( Lookup_Table__Entry **epp )
+        void *triple_helper( Hash_Map__Entry **epp )
         {
-            Lookup_Table__Entry *entry = *epp;
+            Hash_Map__Entry *entry = *epp;
 
             dom_element *triple = dom_element__new( 0, ( uc* ) "triple", 0 );
             dom_element *subject
@@ -781,7 +781,7 @@ compiler__serialize( Compiler *c, char *path )
         #if TRIPLES__GLOBAL__OUT_EDGES
         if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
         {
-            lookup_table__walk( o->outbound_edges, ( Dist_f ) triple_helper );
+            hash_map__walk( o->outbound_edges, ( Dist_f ) triple_helper );
         }
         #endif
 
@@ -816,7 +816,7 @@ printf( "---s s 6---\n" ); FFLUSH;
 printf( "---s s 7---\n" ); FFLUSH;
 
     state.env = env;
-    state.serializers = lookup_table__new();
+    state.serializers = hash_map__new();
     state.ids = multiref_ids( c );
 printf( "---s s 8---\n" ); FFLUSH;
 
@@ -828,14 +828,14 @@ printf( "---s s 8---\n" ); FFLUSH;
 printf( "---s s 9---\n" ); FFLUSH;
 
     /* Multiref objects are serialized in no particular order. */
-    lookup_table__walk( state.ids, ( Dist_f ) obj_helper );
+    hash_map__walk( state.ids, ( Dist_f ) obj_helper );
 printf( "---s s 11---\n" ); FFLUSH;
 
-    lookup_table__delete( state.ids );
+    hash_map__delete( state.ids );
 
-    lookup_table__walk( state.serializers,
+    hash_map__walk( state.serializers,
         ( Dist_f ) function_wrapper__delete );
-    lookup_table__delete( state.serializers );
+    hash_map__delete( state.serializers );
 
     dom_document__write_to_file( doc, path );
     dom_document__delete( doc );
@@ -874,8 +874,8 @@ compiler__deserialize( Compiler *c, char *path )
 
     state.env = env;
 
-    if ( !( state.deserializers = lookup_table__new() )
-      || !( state.objects_by_id = lookup_table__new() ) )
+    if ( !( state.deserializers = hash_map__new() )
+      || !( state.objects_by_id = hash_map__new() ) )
         goto finish;
 
     set_decoder( env->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
@@ -929,13 +929,13 @@ finish:
     dom_document__delete( doc );
 
     if ( state.objects_by_id )
-        lookup_table__delete( state.objects_by_id );
+        hash_map__delete( state.objects_by_id );
 
     if ( state.deserializers )
     {
-        lookup_table__walk( state.deserializers,
+        hash_map__walk( state.deserializers,
             ( Dist_f ) function_wrapper__delete );
-        lookup_table__delete( state.deserializers );
+        hash_map__delete( state.deserializers );
     }
 
     xmldom__end();

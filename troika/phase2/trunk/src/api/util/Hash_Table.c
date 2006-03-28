@@ -20,11 +20,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Hash_Table.h>
 
 
-/* By default, the hash table will wait until it is 1/3 full before expanding. */
-#define DEFAULT_SPARSITY_FACTOR     3
+/* By default, the hash table will wait until the ratio of total cells to
+   occupied cells drops to this ratio before expanding. */
+#define DEFAULT_LOAD_FACTOR         0.75
 
 /* By default, expand() approximately doubles the size of the buffer. */
-#define DEFAULT_EXPANSION_FACTOR    2
+#define DEFAULT_EXPANSION_FACTOR    2.0
 
 
 #define buffer_new( size )  calloc( (size), sizeof( void* ) )
@@ -38,9 +39,9 @@ struct Hash_Table
         becomes too dense. */
     unsigned int capacity;
 
-    unsigned int sparsity;
+    double load;
 
-    unsigned int expansion;
+    double expansion;
 
     /** The hash table buffer array. */
     void **buffer;
@@ -88,15 +89,12 @@ static Hash_Table *
 expand( Hash_Table *h )
 {
     void **src, **dest, **buffer, **lim;
-    int buffer_size;
+    unsigned int buffer_size;
 
     buffer_size = next_prime(
         ( unsigned int ) ( h->buffer_size * h->expansion ) );
-
-printf( "h->buffer_size = %i\n", h->buffer_size ); fflush( stdout );
-printf( "h->size = %i\n", h->size ); fflush( stdout );
-printf( "h->capacity = %i\n", h->capacity ); fflush( stdout );
-printf( "buffer_size = %i\n", buffer_size ); fflush( stdout );
+    if ( buffer_size <= h->buffer_size )
+        buffer_size++;
 
     if ( !( buffer = buffer_new( buffer_size ) ) )
         return 0;
@@ -125,7 +123,7 @@ printf( "lim - h->buffer = %i\n", ( unsigned int ) ( lim - h->buffer ) );
     free( h->buffer );
     h->buffer = buffer;
     h->buffer_size = buffer_size;
-    h->capacity = buffer_size / h->sparsity;
+    h->capacity = ( unsigned int ) ( buffer_size * h->load );
 printf( "h->capacity (new) = %i\n", h->capacity ); fflush( stdout );
 
     return h;
@@ -138,8 +136,8 @@ printf( "h->capacity (new) = %i\n", h->capacity ); fflush( stdout );
 Hash_Table *
 hash_table__new(
     unsigned int buffer_size,
-    unsigned int sparsity,
-    unsigned int expansion,
+    double load,
+    double expansion,
     hash_f hash,
     Comparator compare )
 {
@@ -156,7 +154,7 @@ hash_table__new(
 
         /* Sparsity must be at least 1, otherwise the buffer will not resize
            even when it is completely full. */
-        h->sparsity = ( sparsity >= 1 ) ? sparsity : DEFAULT_SPARSITY_FACTOR;
+        h->load = ( load > 0 && load < 1 ) ? load : DEFAULT_LOAD_FACTOR;
 
         /* Expansion factor must be greater than 1 for the buffer to actually
            gain in size. */
@@ -168,7 +166,7 @@ hash_table__new(
         /* Capacity is re-calculated whenever the table resizes.
            Note: capacity may initially be 0, which just means that the hash
            table will expand as soon as it is added to. */
-        h->capacity = h->buffer_size / h->sparsity;
+        h->capacity = ( unsigned int ) ( h->buffer_size * h->load );
 
         if ( !( h->buffer = buffer_new( h->buffer_size ) ) )
         {
@@ -222,11 +220,31 @@ hash_table__delete( Hash_Table *h )
 }
 
 
+/******************************************************************************/
+
+
 unsigned int
 hash_table__size( const Hash_Table *h )
 {
     return h->size;
 }
+
+
+double
+hash_table__load( const Hash_Table *h )
+{
+    return h->load;
+}
+
+
+double
+hash_table__expansion( const Hash_Table *h )
+{
+    return h->expansion;
+}
+
+
+/******************************************************************************/
 
 
 void *

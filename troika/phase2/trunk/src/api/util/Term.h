@@ -72,7 +72,7 @@ struct Term
     void **head;
 
     /** The buffer expands by this factor whenever it becomes full. */
-    unsigned int expansion;
+    double expansion;
 };
 
 
@@ -80,7 +80,7 @@ struct Term
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
     the new buffer will be this much larger. */
 extern void
-term__set_expansion( Term *t, unsigned int expansion );
+term__set_expansion( Term *t, double expansion );
 
 
 /** \note Needed by sk.c. */

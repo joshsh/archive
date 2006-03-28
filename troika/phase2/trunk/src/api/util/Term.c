@@ -27,7 +27,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef TERM__DEFAULT_EXPANSION
 /** By default, the size of a term's buffer will be multiplied by this factor
     when the term outgrows it. */
-#define TERM__DEFAULT_EXPANSION 2
+#define TERM__DEFAULT_EXPANSION 2.0
 #endif
 
 
@@ -40,8 +40,7 @@ term__expand( Term *t, unsigned int minimum_buffer_size )
 
     /* Ordinarily, the new buffer size will be the old buffer size times the
        Term expansion factor. */
-    new_buffer_size = (unsigned int)
-        (t->buffer_size * t->expansion);
+    new_buffer_size = (unsigned int) (t->buffer_size * t->expansion);
 
     /* If the new buffer size is not large enough, use the given minimum
        buffer size instead. */
@@ -227,7 +226,7 @@ term__subterm_at(Term *t, int i)
 
 
 void
-term__set_expansion( Term *t, unsigned int expansion )
+term__set_expansion( Term *t, double expansion )
 {
     /* Override the default array expansion factor. */
     if (expansion > 1)

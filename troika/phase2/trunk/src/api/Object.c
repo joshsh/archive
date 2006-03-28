@@ -92,17 +92,17 @@ object__delete( Object *o )
 
     #if TRIPLES__GLOBAL__IN_EDGES
     if ( o->inbound_edges )
-        lookup_table__delete( o->inbound_edges );
+        hash_map__delete( o->inbound_edges );
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
     if ( o->outbound_edges )
-        lookup_table__delete( o->outbound_edges );
+        hash_map__delete( o->outbound_edges );
     #endif
 
     #if TRIPLES__GLOBAL__TRANS_EDGES
     if ( o->trans_edges )
-        lookup_table__delete( o->trans_edges );
+        hash_map__delete( o->trans_edges );
     #endif
 
     /* If the object owns its children (and has any), free them. */
@@ -157,7 +157,7 @@ object__trace( Object *o, Dist_f f )
 int total = 0;
     auto void *obj_trace( Object **opp );
 
-    void *edge_trace( Lookup_Table__Entry **epp )
+    void *edge_trace( Hash_Map__Entry **epp )
     {
         #if TRIPLES__IMPLICATION__SP_O
         ... not yet written ...
@@ -212,7 +212,7 @@ printf( "o->type = %#x\n", ( int ) o->type ); fflush( stdout );
 printf( "o->type->name = '%s'\n", o->type->name ); fflush( stdout );
 if ( !strcmp( o->type->name, "int" ) )
 printf( "value = %i\n", *( ( int* ) o->value ) );
-                lookup_table__walk( o->outbound_edges, ( Dist_f ) edge_trace );
+                hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
             }
             #endif
         }
@@ -308,7 +308,7 @@ object__multiply( Object *subj, Object *pred )
     #if TRIPLES__GLOBAL__OUT_EDGES
 
     return ( subj->outbound_edges ) ?
-        ( Object* ) lookup_table__lookup( subj->outbound_edges, pred ) : 0 ;
+        ( Object* ) hash_map__lookup( subj->outbound_edges, pred ) : 0 ;
 
     #else
 
@@ -335,7 +335,7 @@ printf( "---o a 1---\n" ); fflush( stdout );
 printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
 
     if ( !subj->outbound_edges
-      && !( subj->outbound_edges = lookup_table__new() ) )
+      && !( subj->outbound_edges = hash_map__new() ) )
         subj = 0;
 
     else
@@ -344,10 +344,10 @@ printf( "---o a 2---\n" ); fflush( stdout );
 printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
         if ( obj )
 {printf( "---o a 2.1---\n" ); fflush( stdout );
-            lookup_table__add( subj->outbound_edges, pred, obj );
+            hash_map__add( subj->outbound_edges, pred, obj );
 }
         else
-            lookup_table__remove( subj->outbound_edges, pred );
+            hash_map__remove( subj->outbound_edges, pred );
 printf( "---o a 3---\n" ); fflush( stdout );
     }
 

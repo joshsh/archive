@@ -75,7 +75,7 @@ utils	=	$(UTILS)/Array.o \
 		$(UTILS)/Bunch.o \
 		$(UTILS)/Dictionary.o \
 		$(UTILS)/Hash_Table.o \
-		$(UTILS)/Lookup_Table.o \
+		$(UTILS)/Hash_Map.o \
 		$(UTILS)/Name.o \
 		$(UTILS)/Set.o \
 		$(UTILS)/Term.o

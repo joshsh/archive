@@ -17,11 +17,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <util/Lookup_Table.h>
+#include <util/Hash_Map.h>
 
 
 static unsigned int
-hash( const Lookup_Table__Entry *entry )
+hash( const Hash_Map__Entry *entry )
 {
     return ( unsigned int ) entry->key;
 }
@@ -30,7 +30,7 @@ hash( const Lookup_Table__Entry *entry )
 /* Works well enough for addresses so long as there's a one-to-one correspondence
    between addresses and key values. */
 static int
-compare( const Lookup_Table__Entry *entry1, const Lookup_Table__Entry *entry2 )
+compare( const Hash_Map__Entry *entry1, const Hash_Map__Entry *entry2 )
 {
     return ( entry1->key != entry2->key );
 }
@@ -39,8 +39,8 @@ compare( const Lookup_Table__Entry *entry1, const Lookup_Table__Entry *entry2 )
 /******************************************************************************/
 
 
-Lookup_Table *
-lookup_table__new( void )
+Hash_Map *
+hash_map__new( void )
 {
     Hash_Table *h = hash_table__new( 0, 0, 0,
         ( hash_f ) hash, ( Comparator ) compare );
@@ -50,9 +50,9 @@ lookup_table__new( void )
 
 
 void
-lookup_table__delete( Lookup_Table *t )
+hash_map__delete( Hash_Map *t )
 {
-    void *helper( Lookup_Table__Entry **epp )
+    void *helper( Hash_Map__Entry **epp )
     {
         free( *epp );
         return 0;
@@ -66,31 +66,31 @@ lookup_table__delete( Lookup_Table *t )
 
 
 void
-lookup_table__add( Lookup_Table *t, void * const key, void * const target )
+hash_map__add( Hash_Map *t, void * const key, void * const target )
 {
-    Lookup_Table__Entry *entry, *entry_old;
+    Hash_Map__Entry *entry, *entry_old;
 
     #if DEBUG__LOOKUP_TABLE
-    printf( "lookup_table__add(%#x, %#x, %#x)\n",
+    printf( "hash_map__add(%#x, %#x, %#x)\n",
         ( int ) t, ( int ) key, ( int ) target );
     #endif
 
-    if ( !( entry = new( Lookup_Table__Entry ) ) )
+    if ( !( entry = new( Hash_Map__Entry ) ) )
         return;
 
     entry->key = key;
     entry->target = target;
 
-    if ( ( entry_old = ( Lookup_Table__Entry* ) hash_table__add( t, entry ) ) )
+    if ( ( entry_old = ( Hash_Map__Entry* ) hash_table__add( t, entry ) ) )
         free( entry_old );
 }
 
 
 void *
-lookup_table__lookup( Lookup_Table *t, void * const key )
+hash_map__lookup( Hash_Map *t, void * const key )
 {
-    Lookup_Table__Entry *entry;
-    Lookup_Table__Entry match_entry;
+    Hash_Map__Entry *entry;
+    Hash_Map__Entry match_entry;
     match_entry.key = key;
 
     if ( !( entry = hash_table__lookup( t, &match_entry ) ) )
@@ -102,14 +102,14 @@ lookup_table__lookup( Lookup_Table *t, void * const key )
 
 
 void
-lookup_table__remove
-    ( Lookup_Table *t, void * const key )
+hash_map__remove
+    ( Hash_Map *t, void * const key )
 {
-    Lookup_Table__Entry *entry_old;
-    Lookup_Table__Entry match_entry;
+    Hash_Map__Entry *entry_old;
+    Hash_Map__Entry match_entry;
     match_entry.key = key;
 
-    if ( ( entry_old = ( Lookup_Table__Entry* ) hash_table__remove( t, &match_entry ) ) )
+    if ( ( entry_old = ( Hash_Map__Entry* ) hash_table__remove( t, &match_entry ) ) )
         free( entry_old );
 }
 
@@ -118,18 +118,18 @@ lookup_table__remove
 
 
 void
-lookup_table__walk( Lookup_Table *t, Dist_f f )
+hash_map__walk( Hash_Map *t, Dist_f f )
 {
     #if DEBUG__SAFE
     if ( !t || !f )
     {
-        ERROR( "lookup_table__walk: null argument" );
+        ERROR( "hash_map__walk: null argument" );
         return;
     }
     #endif
 
     #if DEBUG__LOOKUP_TABLE
-    printf( "lookup_table__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
+    printf( "hash_map__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
     #endif
 
     hash_table__walk( t, f );
