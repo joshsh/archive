@@ -162,27 +162,21 @@ bunch__copy( Bunch *b )
 }
 
 
-static void *
-block__delete__proc( Block **bl_p, void *ignored )
-{
-    block__delete( *bl_p );
-    return 0;
-}
-
-
 void
 bunch__delete( Bunch *b )
 {
-    Closure *c;
+    void *helper( Block **blp )
+    {
+        block__delete( *blp );
+        return 0;
+    }
 
     #if DEBUG__BUNCH
     printf( "[] bunch__delete(%#x)\n", ( int ) b );
     #endif
 
     /* Free all blocks. */
-    c = closure__new( ( procedure ) block__delete__proc, 0 );
-    array__distribute( b->blocks, c );
-    closure__delete( c );
+    array__walk( b->blocks, ( Dist_f ) helper );
 
     /* Delete the blocks array. */
     array__delete( b->blocks );
@@ -273,13 +267,13 @@ bunch__remove( Bunch *b )
 
 
 void
-bunch__distribute( Bunch *b, Closure *c )
+bunch__walk( Bunch *b, Dist_f f )
 {
     unsigned int i, j, n = array__size( b->blocks );
     Block *bl;
 
     #if DEBUG__BUNCH
-    printf( "[] bunch__distribute(%#x, %#x)\n", ( int ) b, ( int ) c );
+    printf( "[] bunch__walk(%#x, %#x)\n", ( int ) b, ( int ) f );
     #endif
 
     for ( i = 0; i < n; i++ )
@@ -288,7 +282,7 @@ bunch__distribute( Bunch *b, Closure *c )
 
         for ( j = 0; j < bl->filled; j++ )
         {
-            if ( closure__apply( c, &bl->buffer[j] ) )
+            if ( f( &bl->buffer[j] ) == walker__remove )
             {
                 /* Replace the item with the last item in the bunch. */
                 bl->buffer[j] = b->last_block->buffer[--( b->last_block->filled )];
@@ -329,7 +323,7 @@ bunch__type( const char *name, int flags )
     if ( type )
     {
         type->destroy = ( Destructor ) bunch__delete;
-        type->distribute = ( Distributor ) bunch__distribute;
+        type->walk = ( Walker ) bunch__walk;
     }
 
     return type;

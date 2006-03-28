@@ -296,16 +296,14 @@ namespace__remove_simple( Namespace *ns, char *name )
 
 
 void
-namespace__distribute( Namespace *ns, Closure *p )
+namespace__walk( Namespace *ns, Dist_f f )
 {
-    dictionary__distribute( ns->children, p );
+    dictionary__walk( ns->children, f );
 }
 
 
 /******************************************************************************/
 
-
-#if GNU_EXTENSIONS
 
 void
 namespace__show_children( const Namespace_o *ns_obj )
@@ -341,51 +339,6 @@ namespace__show_children( const Namespace_o *ns_obj )
     else
         printf( " { }" );
 }
-
-#else
-
-static void *
-lookup_and_print( char **key, Dictionary *dict )
-{
-    Object *o = ( Object* ) dictionary__lookup( dict, *key );
-    printf( "    %#x '%s' : %s\n", ( int ) o, *key, o->type->name );
-    return 0;
-}
-
-
-void
-namespace__show_children( const Namespace_o *ns_obj )
-{
-    int size = hash_table__size
-        ( ( ( Namespace* ) ns_obj->value )->children );
-    Array *a;
-    Closure *c;
-
-    printf( "%#x : namespace", ( int ) ns_obj );
-
-    if ( size )
-    {
-        printf( "\n{\n" );
-
-        /* Get alphabetized dictionary keys. */
-        a = dictionary__keys(
-            ( ( Namespace* ) ns_obj->value )->children );
-
-        /* Print children. */
-        c = closure__new( ( procedure ) lookup_and_print,
-            ( ( Namespace* ) ns_obj->value )->children );
-        array__distribute( a, c );
-        closure__delete( c );
-        array__delete( a );
-
-        printf( "}" );
-    }
-
-    else
-        printf( " { }" );
-}
-
-#endif
 
 
 /******************************************************************************/

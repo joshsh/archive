@@ -78,10 +78,10 @@ bunch__remove( Bunch *b );
 
 /******************************************************************************/
 
-/** \note  Removes the current item when c returns non-zero (rather than falling
+/** \note  Removes the current item when f returns non-zero (rather than falling
     out as the other collection types do). */
 extern void
-bunch__distribute( Bunch *b, Closure *c );
+bunch__walk( Bunch *b, Dist_f f );
 
 
 /******************************************************************************/

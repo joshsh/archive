@@ -72,9 +72,9 @@ set__remove( Set *s, void *el )
 
 
 void
-set__distribute( Set *s, Closure *c )
+set__walk( Set *s, Dist_f f )
 {
-    hash_table__distribute( s, c );
+    hash_table__walk( s, f );
 }
 
 

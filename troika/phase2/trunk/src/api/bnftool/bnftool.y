@@ -75,31 +75,6 @@ yyerror( const char *msg )
 /******************************************************************************/
 
 
-static p2_action *
-delete__proc( void *p, void *ignored )
-{
-    free( p );
-    return 0;
-}
-
-
-static p2_action *
-sequence__delete__proc( Array *s, void *ignored )
-{
-    Closure proc;
-
-    /* Empty productions are allowed. */
-    if ( s )
-    {
-        proc.execute = ( procedure ) delete__proc;
-        array__distribute( s, &proc );
-        array__delete( s );
-    }
-
-    return 0;
-}
-
-
 typedef struct Rule Rule;
 
 struct Rule
@@ -129,19 +104,35 @@ rule__new( char *name, Array *productions )
 }
 
 
-static p2_action *
-rule__delete( Rule *r, void *ignored )
+static void *
+rule__delete( Rule **rpp )
 {
-    Closure proc;
+    Rule *r = *rpp;
+
+    void *sequence__delete( Array **s )
+    {
+        void *helper( void **refp )
+        {
+            free( *refp );
+            return 0;
+        }
+
+        /* Empty productions are allowed. */
+        if ( *s )
+        {
+            array__walk( *s, ( Dist_f ) helper );
+            array__delete( *s );
+        }
+
+        return 0;
+    }
 
     if ( r->name )
         free( r->name );
 
     if ( r->productions )
     {
-        proc.execute = ( procedure ) sequence__delete__proc;
-        array__distribute( r->productions, &proc );
-
+        array__walk( r->productions, ( Dist_f ) sequence__delete );
         array__delete( r->productions );
     }
 
@@ -163,14 +154,6 @@ rule__delete( Rule *r, void *ignored )
 static Dictionary *rule_dict;
 
 
-static p2_action *
-add_to_dict( char *name, Dictionary *d )
-{
-    dictionary__add( d, name, name );
-    return 0;
-}
-
-
 static void
 find_sets( Array *rules, Dictionary *dict )
 {
@@ -178,7 +161,13 @@ find_sets( Array *rules, Dictionary *dict )
     Rule *r, *r2, *r3;
     Array *production;
     char *first, *second;
-    Closure proc;
+    Dictionary *d;
+
+    void *add_to_dict( char **name )
+    {
+        dictionary__add( d, *name, *name );
+        return 0;
+    }
 
     /* Find the "nullable" attribute for each Rule. */
     while ( changed )
@@ -228,7 +217,7 @@ find_sets( Array *rules, Dictionary *dict )
         for ( i = 0; i < n_rules; i++ )
         {
             r = array__get( rules, i );
-            size_old = r->first_set->size;
+            size_old = hash_table__size( r->first_set );
 
             n_prods = array__size( r->productions );
             for ( j = 0; j < n_prods; j++ )
@@ -243,11 +232,11 @@ find_sets( Array *rules, Dictionary *dict )
                     {
                         first = ( char* ) array__get( production, k );
                         r2 = dictionary__lookup( dict, first );
+                        d = r->first_set;
+
                         if ( r2 )
                         {
-                            proc.execute = ( procedure ) add_to_dict;
-                            proc.state = r->first_set;
-                            dictionary__distribute( r2->first_set, &proc );
+                            dictionary__walk( r2->first_set, ( Dist_f ) add_to_dict );
 
                             if ( !r2->nullable )
                                 break;
@@ -255,14 +244,14 @@ find_sets( Array *rules, Dictionary *dict )
 
                         else
                         {
-                            add_to_dict( first, r->first_set );
+                            add_to_dict( &first );
                             break;
                         }
                     }
                 }
             }
 
-            if ( r->first_set->size != size_old )
+            if ( hash_table__size( r->first_set ) != size_old )
                 changed = 1;
         }
     }
@@ -293,24 +282,23 @@ find_sets( Array *rules, Dictionary *dict )
                         r2 = dictionary__lookup( dict, first );
                         if ( r2 )
                         {
-                            size_old = r2->follow_set->size;
+                            size_old = hash_table__size( r2->follow_set );
 
                             second = ( char* ) array__get( production, k + 1 );
                             r3 = dictionary__lookup( dict, second );
+                            d = r2->follow_set;
 
                             /* Add the first set of a nonterminal. */
                             if ( r3 )
                             {
-                                proc.execute = ( procedure ) add_to_dict;
-                                proc.state = r2->follow_set;
-                                dictionary__distribute( r3->first_set, &proc );
+                                dictionary__walk( r3->first_set, ( Dist_f ) add_to_dict );
                             }
 
                             /* Add the first set of a terminal (the symbol itself). */
                             else
-                                add_to_dict( second, r2->follow_set );
+                                add_to_dict( &second );
 
-                            if ( r2->follow_set->size != size_old )
+                            if ( hash_table__size( r2->follow_set ) != size_old )
                                 changed = 1;
                         }
                     }
@@ -322,14 +310,13 @@ find_sets( Array *rules, Dictionary *dict )
 
                         if ( r2 )
                         {
-                            size_old = r2->follow_set->size;
+                            size_old = hash_table__size( r2->follow_set );
 
                             /* Add the current Rule's own follow set. */
-                            proc.execute = ( procedure ) add_to_dict;
-                            proc.state = r2->follow_set;
-                            dictionary__distribute( r->follow_set, &proc );
+                            d = r2->follow_set;
+                            dictionary__walk( r->follow_set, ( Dist_f ) add_to_dict );
 
-                            if ( r2->follow_set->size != size_old )
+                            if ( hash_table__size( r2->follow_set ) != size_old )
                                 changed = 1;
 
                             if ( !r2->nullable )
@@ -349,51 +336,45 @@ find_sets( Array *rules, Dictionary *dict )
 /******************************************************************************/
 
 
-static p2_action *
-print_proc( char *s, void *ignored )
+static void *
+print( char **s )
 {
-    printf( " %s", s );
-    return 0;
-}
-
-
-static p2_action *
-production__print( Array *p, void *ignored )
-{
-    Closure proc;
-    proc.execute = ( procedure ) print_proc;
-
-    printf( "   " );
-    if ( p )
-        array__distribute( p, &proc );
-    printf( "\n" );
+    printf( " %s", *s );
     return 0;
 }
 
 
 static void *
-rule__print( Rule *r )
+rule__print( Rule **rpp )
 {
-    Closure proc;
-    proc.execute = ( procedure ) production__print;
+    Rule *r = *rpp;
+
+    void *production__print( Array **p )
+    {
+        printf( "   " );
+        if ( *p )
+            array__walk( *p, ( Dist_f ) print );
+        printf( "\n" );
+        return 0;
+    }
 
     printf( "%s:\n", r->name );
-    array__distribute( r->productions, &proc );
+    array__walk( r->productions, ( Dist_f ) production__print );
     return 0;
 }
 
 
-static p2_action *
-rule__print_first_set( Rule *r, void *ignored )
+static void *
+rule__print_first_set( Rule **rpp )
 {
+    Rule *r = *rpp;
+
     Array *a;
-    Closure proc;
-    proc.execute = ( procedure ) print_proc;
 
     printf( "%s:  ", r->name );
     a = dictionary__keys( r->first_set );
     array__sort( a, ( Comparator ) strcmp );
-    array__distribute( a, &proc );
+    array__walk( a, ( Dist_f ) print );
     array__delete( a );
     printf( "\n" );
 
@@ -401,17 +382,17 @@ rule__print_first_set( Rule *r, void *ignored )
 }
 
 
-static p2_action *
-rule__print_follow_set( Rule *r )
+static void *
+rule__print_follow_set( Rule **rpp )
 {
+    Rule *r = *rpp;
+
     Array *a;
-    Closure proc;
-    proc.execute = ( procedure ) print_proc;
 
     printf( "%s:  ", r->name );
     a = dictionary__keys( r->follow_set );
     array__sort( a, ( Comparator ) strcmp );
-    array__distribute( a, &proc );
+    array__walk( a, ( Dist_f ) print );
     array__delete( a );
     printf( "\n" );
 
@@ -452,9 +433,6 @@ input:
     {
         Array *rules = $1;
 
-        Closure print_p;
-        Closure delete_p;
-
         #if DEBUG__BNFTOOL__PARSER
         production( "input ::=  rules E_O_F" );
         #endif
@@ -466,23 +444,19 @@ input:
         printf( "\n" );
 
         printf( "\n=== PRODUCTIONS ========================\n\n" );
-        print_p.execute = ( procedure ) rule__print;
-        array__distribute( rules, &print_p );
+        array__walk( rules, ( Dist_f ) rule__print );
 
         printf( "\n=== FIRST SETS =========================\n\n" );
-        print_p.execute = ( procedure ) rule__print_first_set;
-        array__distribute( rules, &print_p );
+        array__walk( rules, ( Dist_f ) rule__print_first_set );
 
         printf( "\n=== FOLLOW SETS ========================\n\n" );
-        print_p.execute = ( procedure ) rule__print_follow_set;
-        array__distribute( rules, &print_p );
+        array__walk( rules, ( Dist_f ) rule__print_follow_set );
 
         printf( "\n" );
 
         /******************************/
 
-        delete_p.execute = ( procedure ) rule__delete;
-        array__distribute( rules, &delete_p );
+        array__walk( rules, ( Dist_f ) rule__delete );
         array__delete( rules );
 
         dictionary__delete( rule_dict );

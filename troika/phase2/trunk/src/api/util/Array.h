@@ -34,7 +34,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Type.h>
-#include <Closure.h>
 
 
 typedef struct Array Array;
@@ -57,7 +56,7 @@ array__delete( Array *a );
 
 /******************************************************************************/
 
-extern int
+extern unsigned int
 array__size( Array *a );
 
 extern unsigned int
@@ -133,9 +132,6 @@ array__sort( Array *a, Comparator compare );
 
 /* Logical set functions and item substitution ********************************/
 
-
-extern void
-array__distribute( Array *a, Closure *c );
 
 extern void
 array__walk( Array *a, Dist_f f );

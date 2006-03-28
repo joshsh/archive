@@ -157,7 +157,7 @@ printf( "---e 3---\n" ); fflush( stdout );
         goto abort;
 
     env->ns_t->destroy =    ( Destructor )  namespace__delete;
-    env->ns_t->distribute = ( Distributor ) namespace__distribute;
+    env->ns_t->walk = ( Walker ) namespace__walk;
     env->prim_t->destroy =  ( Destructor )  primitive__delete;
     env->prim_t->encode = ( Encoder ) primitive__encode;
     env->type_t->destroy =  ( Destructor )  type__delete;

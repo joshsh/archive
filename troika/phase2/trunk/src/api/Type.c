@@ -18,7 +18,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Type.h>
-#include <Closure.h>
 
 
 /* Default member functions (use with caution). */
@@ -39,10 +38,6 @@ default__destroy( void *cell )
 { free( cell ); }
 
 static void
-default__distribute( void *cell, Closure *p )
-{ }
-
-static void
 default__encode( void *cell, char *buffer )
 { sprintf( buffer, "?" ); }
 
@@ -52,6 +47,10 @@ default__equals( void *cellA, void *cellB )
 
 static void
 default__sort( void *cell, Comparator cmp )
+{ }
+
+static void
+default__walk( void *coll, Dist_f f )
 { }
 
 
@@ -64,10 +63,10 @@ static Type default_t =
     default__compare_to,
     default__decode,
     default__destroy,
-    default__distribute,
     default__encode,
     default__equals,
-    default__sort
+    default__sort,
+    default__walk
 };
 
 

@@ -29,21 +29,6 @@ struct Graph_Edge
 };
 
 
-static void
-graph_edge__delete( Graph_Edge *edge )
-{
-    free( edge );
-}
-
-
-static void *
-graph_edge__delete__proc( Graph_Edge **edge_p, void *ignored )
-{
-    graph_edge__delete( *edge_p );
-    return 0;
-}
-
-
 static unsigned int
 hash( const Graph_Edge *edge )
 {
@@ -76,10 +61,14 @@ graph__new( void )
 void
 graph__delete( Graph *g )
 {
+    void *helper( Graph_Edge **ep )
+    {
+        free( *ep );
+        return 0;
+    }
+
     /* Destroy graph entries. */
-    Closure *c = closure__new( ( procedure ) graph_edge__delete__proc, 0 );
-    hash_table__distribute( g, c );
-    closure__delete( c );
+    hash_table__walk( g, ( Dist_f ) helper );
 
     hash_table__delete( g );
 }

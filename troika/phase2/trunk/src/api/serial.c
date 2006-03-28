@@ -25,7 +25,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <time.h>
 
 #include <serial.h>
-#include <Closure.h>
 #include <util/Set.h>
 #include <xml/xmldom.h>
 
@@ -38,8 +37,6 @@ typedef struct Xml_Encode_Ctx Xml_Encode_Ctx;
 struct Xml_Encode_Ctx
 {
     Environment *env;
-
-    dom_element *parent;
 
     Lookup_Table *serializers;
 
@@ -84,17 +81,17 @@ struct Function_Wrapper
 
 
 static void *
-function_wrapper__delete( Lookup_Table__Entry **ppEntry, void *ignored )
+function_wrapper__delete( Lookup_Table__Entry **ppe )
 {
-    free( ( Function_Wrapper* ) ( *ppEntry )->target );
+    free( ( Function_Wrapper* ) ( *ppe )->target );
     return 0;
 }
 
 
 static Xml_Encoder
-get_encoder( Type *t, Xml_Encode_Ctx *state )
+get_encoder( Type *t, Lookup_Table *serializers )
 {
-    Function_Wrapper *w = lookup_table__lookup( state->serializers, t );
+    Function_Wrapper *w = lookup_table__lookup( serializers, t );
 
     if ( !w )
         return 0;
@@ -104,19 +101,19 @@ get_encoder( Type *t, Xml_Encode_Ctx *state )
 
 
 static void
-set_encoder( Type *t, Xml_Encoder encode, Xml_Encode_Ctx *state )
+set_encoder( Type *t, Xml_Encoder encode, Lookup_Table *serializers )
 {
     Function_Wrapper *w = new( Function_Wrapper );
     w->function = ( Generic_f ) encode;
 
-    lookup_table__add( state->serializers, t, w );
+    lookup_table__add( serializers, t, w );
 }
 
 
 static Xml_Decoder
-get_decoder( Type *t, Xml_Decode_Ctx *state )
+get_decoder( Type *t, Lookup_Table *deserializers )
 {
-    Function_Wrapper *w = lookup_table__lookup( state->deserializers, t );
+    Function_Wrapper *w = lookup_table__lookup( deserializers, t );
 
     if ( !w )
         return 0;
@@ -126,12 +123,12 @@ get_decoder( Type *t, Xml_Decode_Ctx *state )
 
 
 static void
-set_decoder( Type *t, Xml_Decoder decode, Xml_Decode_Ctx *state )
+set_decoder( Type *t, Xml_Decoder decode, Lookup_Table *deserializers )
 {
     Function_Wrapper *w = new( Function_Wrapper );
     w->function = ( Generic_f ) decode;
 
-    lookup_table__add( state->deserializers, t, w );
+    lookup_table__add( deserializers, t, w );
 }
 
 
@@ -210,37 +207,23 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 }
 
 
-typedef struct Ns_Encode_Ctx Ns_Encode_Ctx;
-
-struct Ns_Encode_Ctx
-{
-    Xml_Encode_Ctx *state;
-    Dictionary *dict;
-    dom_element *parent;
-};
-
-
-static void *
-ns_encode( char **name, Ns_Encode_Ctx *state )
-{
-    Object *o = ( Object* ) dictionary__lookup( state->dict, *name );
-
-    dom_element *el = object__xml_encode( o, state->state, 0 );
-    dom_attr__new( el, ( uc* ) "name", ( uc* ) *name, 0 );
-
-    dom_element__add_child( state->parent, el );
-
-    return 0;
-}
-
-
 static dom_element *
 namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 {
     dom_element *el;
     Array *keys;
-    Ns_Encode_Ctx nse_st;
-    Closure *c;
+
+    void *helper( char **name )
+    {
+        Object *o = ( Object* ) dictionary__lookup( ns->children, *name );
+
+        dom_element *child = object__xml_encode( o, state, 0 );
+        dom_attr__new( child, ( uc* ) "name", ( uc* ) *name, 0 );
+
+        dom_element__add_child( el, child );
+
+        return 0;
+    }
 printf( "---s nsxe 1---\n" ); FFLUSH;
 
     #if DEBUG__SAFE
@@ -253,17 +236,10 @@ printf( "---s nsxe 1---\n" ); FFLUSH;
 
     el = dom_element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
 
-    nse_st.state = state;
-    nse_st.dict = ns->children;
-    nse_st.parent = el;
-
-    c = closure__new( ( procedure ) ns_encode, &nse_st );
-
 printf( "ns = %#x\n", ( int ) ns );
     keys = dictionary__keys( ns->children );
 printf( "array__size( keys ) = %i\n", array__size( keys ) );
-    array__distribute( keys, c );
-    closure__delete( c );
+    array__walk( keys, ( Dist_f ) helper );
     array__delete( keys );
 printf( "---s nsxe 2---\n" ); FFLUSH;
 
@@ -460,7 +436,7 @@ printf( "o->type->name = '%s'\n", o->type->name ); FFLUSH;
         dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
 printf( "---s oe 3b 3---\n" ); FFLUSH;
 
-        encode = get_encoder( o->type, state );
+        encode = get_encoder( o->type, state->serializers );
 /*
         encode = ( Xml_Encoder ) lookup_table__lookup
             ( state->serializers, o->type );
@@ -604,7 +580,7 @@ printf( "id = %i\n", id ); FFLUSH;
 
             o->type = type;
 
-            decode = get_decoder( type, state );
+            decode = get_decoder( type, state->deserializers );
 
             /*
             decode = ( Xml_Decoder ) lookup_table__lookup
@@ -709,89 +685,6 @@ struct Hash_Multiref_Ctx
 };
 
 
-static void *
-hash_multiref( Object **o, Hash_Multiref_Ctx *state )
-{
-    /* Working namespace has already been given an id. */
-    if ( !lookup_table__lookup( state->table, *o ) )
-    {
-        state->max++;
-        lookup_table__add( state->table, *o, ( void* ) state->max );
-    }
-    return 0;
-}
-
-
-typedef struct Triple_Serialize_Ctx Triple_Serialize_Ctx;
-
-struct Triple_Serialize_Ctx
-{
-    Xml_Encode_Ctx *xe_state;
-
-    Object *subject;
-};
-
-
-static void *
-triple__serialize( Lookup_Table__Entry **ppEntry, Triple_Serialize_Ctx *state )
-{
-    Lookup_Table__Entry *entry = *ppEntry;
-
-    dom_element *el = dom_element__new( 0, ( uc* ) "triple", 0 );
-    dom_element *subject = object__xml_encode
-        ( state->subject, state->xe_state, FALSE );
-    dom_element *predicate = object__xml_encode
-        ( ( Object* ) entry->key, state->xe_state, FALSE );
-    dom_element *object = object__xml_encode
-        ( ( Object* ) entry->target, state->xe_state, FALSE );
-
-    dom_element__add_child( el, subject );
-    dom_element__add_child( el, predicate );
-    dom_element__add_child( el, object );
-
-    dom_element__add_child( state->xe_state->parent, el );
-
-    return 0;
-}
-
-
-static void *
-serialize( Lookup_Table__Entry **ppEntry, Xml_Encode_Ctx *state )
-{
-    Lookup_Table__Entry *entry = *ppEntry;
-    Object *o;
-    Closure *c;
-    Triple_Serialize_Ctx triple_st;
-    dom_element *el;
-
-    #if DEBUG__SAFE
-    if ( !entry || !state )
-    {
-        ERROR( "serialize: null argument" );
-        return 0;
-    }
-    #endif
-
-    o = ( Object* ) entry->key;
-
-    el = object__xml_encode( o, state, TRUE );
-    dom_element__add_child( state->parent, el );
-
-    #if TRIPLES__GLOBAL__OUT_EDGES
-    if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
-    {
-        triple_st.xe_state = state;
-        triple_st.subject = o;
-        c = closure__new( ( procedure ) triple__serialize, &triple_st );
-        lookup_table__distribute( o->outbound_edges, c );
-        closure__delete( c );
-    }
-    #endif
-
-    return 0;
-}
-
-
 static void
 add_timestamp( dom_element *el )
 {
@@ -809,18 +702,91 @@ add_timestamp( dom_element *el )
 }
 
 
+static Lookup_Table *
+multiref_ids( Compiler *c )
+{
+    Environment *env = compiler__environment( c );
+    Set *multirefs  = memory_manager__get_multirefs( env->manager, env->data );
+
+    Lookup_Table *ids = lookup_table__new();
+    int max_id = 0;
+
+    Object **tmp;
+
+    void *hash_multiref( Object **opp )
+    {
+        /* Working namespace has already been given an id. */
+        if ( !lookup_table__lookup( ids, *opp ) )
+        {
+            max_id++;
+            lookup_table__add( ids, *opp, ( void* ) max_id );
+        }
+
+        return 0;
+    }
+
+    /* Force the working name space to be at top level. */
+    tmp = new( Object* );
+    *tmp = compiler__working_namespace( c );
+    hash_multiref( tmp );
+    free( tmp );
+
+    /* Assign all (other) multireferenced objects their ids. */
+    set__walk( multirefs, ( Dist_f ) hash_multiref );
+    set__delete( multirefs );
+
+    return ids;
+}
+
+
 void
 compiler__serialize( Compiler *c, char *path )
 {
     dom_document *doc;
-    dom_element *el;
-    Lookup_Table *ids;
-    Set *multirefs;
-    Closure *cl;
-    Hash_Multiref_Ctx state;
-    Xml_Encode_Ctx encode_state;
+    dom_element *root;
+    Xml_Encode_Ctx state;
     Environment *env;
-Object **opp = new( Object* );
+
+    void *obj_helper( Lookup_Table__Entry **epp )
+    {
+        Object *o;
+        dom_element *el;
+
+        void *triple_helper( Lookup_Table__Entry **epp )
+        {
+            Lookup_Table__Entry *entry = *epp;
+
+            dom_element *triple = dom_element__new( 0, ( uc* ) "triple", 0 );
+            dom_element *subject
+                = object__xml_encode( o, &state, FALSE );
+            dom_element *predicate
+                = object__xml_encode( entry->key, &state, FALSE );
+            dom_element *object
+                = object__xml_encode( entry->target, &state, FALSE );
+
+            dom_element__add_child( triple, subject );
+            dom_element__add_child( triple, predicate );
+            dom_element__add_child( triple, object );
+
+            dom_element__add_child( root, triple );
+
+            return 0;
+        }
+
+        o = ( Object* ) ( *epp )->key;
+
+        el = object__xml_encode( o, &state, TRUE );
+        dom_element__add_child( root, el );
+
+        #if TRIPLES__GLOBAL__OUT_EDGES
+        if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
+        {
+            lookup_table__walk( o->outbound_edges, ( Dist_f ) triple_helper );
+        }
+        #endif
+
+        return 0;
+    }
 
     #if DEBUG__SAFE
     if ( !c || !path )
@@ -834,75 +800,42 @@ Object **opp = new( Object* );
 
     xmldom__init();
 
-printf( "---s s 1---\n" ); FFLUSH;
-    ids = lookup_table__new();
-    multirefs = memory_manager__get_multirefs
-        ( env->manager, env->data );
-printf( "---s s 2---\n" ); FFLUSH;
-
-    state.table = ids;
-    state.max = 0;
-    cl = closure__new( ( procedure ) hash_multiref, &state );
-printf( "---s s 3---\n" ); FFLUSH;
-
-    /* Force the working name space to be at top level. */
-*opp = compiler__working_namespace( c );
-closure__apply( cl, opp );
-free( opp );
-    /*closure__apply( cl, compiler__working_namespace( c ) );*/
-printf( "---s s 4---\n" ); FFLUSH;
-
-    /* Assign all (other) multireferenced objects their ids. */
-    set__distribute( multirefs, cl );
-    closure__delete( cl );
-
-printf( "---s s 5---\n" ); FFLUSH;
-
-    set__delete( multirefs );
 printf( "---s s 6---\n" ); FFLUSH;
 
     /* Root element. */
     doc = dom_document__new();
-    el = dom_element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
+    root = dom_element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
 
     /* Version attribute. */
-    dom_attr__new( el, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
+    dom_attr__new( root, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
 
     /* Time stamp attribute. */
-    add_timestamp( el );
+    add_timestamp( root );
 
-    dom_document__set_root( doc, el );
+    dom_document__set_root( doc, root );
 printf( "---s s 7---\n" ); FFLUSH;
 
-    encode_state.env = env;
-    encode_state.serializers = lookup_table__new();
-    encode_state.ids = ids;
-    encode_state.parent = el;
+    state.env = env;
+    state.serializers = lookup_table__new();
+    state.ids = multiref_ids( c );
 printf( "---s s 8---\n" ); FFLUSH;
 
-    set_encoder( env->bag_t, ( Xml_Encoder ) bag__xml_encode, &encode_state );
-    set_encoder( env->ns_t, ( Xml_Encoder ) namespace__xml_encode, &encode_state );
-    set_encoder( env->term_t, ( Xml_Encoder ) term__xml_encode, &encode_state );
+    set_encoder( env->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
+    set_encoder( env->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
+    set_encoder( env->term_t, ( Xml_Encoder ) term__xml_encode, state.serializers );
 
     /* ... */
 printf( "---s s 9---\n" ); FFLUSH;
 
-    cl = closure__new( ( procedure ) serialize, &encode_state );
-printf( "---s s 10---\n" ); FFLUSH;
-
     /* Multiref objects are serialized in no particular order. */
-    lookup_table__distribute( ids, cl );
-    closure__delete( cl );
-
+    lookup_table__walk( state.ids, ( Dist_f ) obj_helper );
 printf( "---s s 11---\n" ); FFLUSH;
 
-    lookup_table__delete( ids );
+    lookup_table__delete( state.ids );
 
-    cl = closure__new( ( procedure ) function_wrapper__delete, 0 );
-    lookup_table__distribute( encode_state.serializers, cl );
-    closure__delete( cl );
-
-    lookup_table__delete( encode_state.serializers );
+    lookup_table__walk( state.serializers,
+        ( Dist_f ) function_wrapper__delete );
+    lookup_table__delete( state.serializers );
 
     dom_document__write_to_file( doc, path );
     dom_document__delete( doc );
@@ -916,11 +849,10 @@ printf( "---s s 13---\n" ); FFLUSH;
 void
 compiler__deserialize( Compiler *c, char *path )
 {
-    Xml_Decode_Ctx decode_state = { 0, 0, 0, 0 };
+    Xml_Decode_Ctx state = { 0, 0, 0, 0 };
     dom_element *el, *child;
     char *el_name;
     dom_document *doc;
-    Closure *cl;
     Environment *env;
 
     xmldom__init();
@@ -940,15 +872,15 @@ compiler__deserialize( Compiler *c, char *path )
 
     env = compiler__environment( c );
 
-    decode_state.env = env;
+    state.env = env;
 
-    if ( !( decode_state.deserializers = lookup_table__new() )
-      || !( decode_state.objects_by_id = lookup_table__new() ) )
+    if ( !( state.deserializers = lookup_table__new() )
+      || !( state.objects_by_id = lookup_table__new() ) )
         goto finish;
 
-    set_decoder( env->bag_t, ( Xml_Decoder ) bag__xml_decode, &decode_state );
-    set_decoder( env->ns_t, ( Xml_Decoder ) namespace__xml_decode, &decode_state );
-    set_decoder( env->term_t, ( Xml_Decoder ) term__xml_decode, &decode_state );
+    set_decoder( env->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
+    set_decoder( env->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
+    set_decoder( env->term_t, ( Xml_Decoder ) term__xml_decode, state.deserializers );
 
     child = dom_element__first_child( el );
 
@@ -959,14 +891,14 @@ compiler__deserialize( Compiler *c, char *path )
         /* Object element. */
         if ( !strcmp( el_name, OBJECT__XML__NAME ) )
         {
-            object__xml_decode( child, &decode_state );
+            object__xml_decode( child, &state );
         }
 
         #if TRIPLES__GLOBAL
         /* Triples element. */
         else if ( !strcmp( el_name, TRIPLES__XML__NAME ) )
         {
-            triple__xml_decode( child, &decode_state );
+            triple__xml_decode( child, &state );
         }
         #endif
 
@@ -980,7 +912,7 @@ printf( " '%s'\n", el_name );
         child = dom_element__next_sibling( child );
     }
 
-    if ( !decode_state.root || decode_state.root->type != env->ns_t )
+    if ( !state.root || state.root->type != env->ns_t )
     {
         ERROR( "compiler__deserialize: root namespace not found" );
         goto finish;
@@ -990,21 +922,20 @@ printf( " '%s'\n", el_name );
        working namespace. */
     dictionary__add_all(
         ( ( Namespace* ) compiler__working_namespace( c )->value )->children,
-        ( ( Namespace* ) decode_state.root->value )->children );
+        ( ( Namespace* ) state.root->value )->children );
 
 finish:
 
     dom_document__delete( doc );
 
-    if ( decode_state.objects_by_id )
-        lookup_table__delete( decode_state.objects_by_id );
+    if ( state.objects_by_id )
+        lookup_table__delete( state.objects_by_id );
 
-    if ( decode_state.deserializers )
+    if ( state.deserializers )
     {
-        cl = closure__new( ( procedure ) function_wrapper__delete, 0 );
-        lookup_table__distribute( decode_state.deserializers, cl );
-        closure__delete( cl );
-        lookup_table__delete( decode_state.deserializers );
+        lookup_table__walk( state.deserializers,
+            ( Dist_f ) function_wrapper__delete );
+        lookup_table__delete( state.deserializers );
     }
 
     xmldom__end();

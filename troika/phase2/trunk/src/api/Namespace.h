@@ -97,7 +97,7 @@ extern void
 namespace__show_children( const Namespace_o *ns_obj );
 
 extern void
-namespace__distribute( Namespace *ns, Closure *p );
+namespace__walk( Namespace *ns, Dist_f f );
 
 
 extern Name *

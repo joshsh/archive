@@ -62,9 +62,8 @@ memory_manager__add( Memory_Manager *m, Object *o );
 
 /* Tracing / graph traversal **************************************************/
 
-/** \param c  a Closure of function type "void *(*)(Object**)" */
 extern void
-memory_manager__distribute( Memory_Manager *m, Closure *c );
+memory_manager__walk( Memory_Manager *m, Dist_f f );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */

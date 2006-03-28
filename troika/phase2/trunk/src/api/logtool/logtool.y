@@ -32,15 +32,23 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Dictionary.h>
 
 
-extern void new_parse();
-extern void end_parse();
-extern int get_char_number();
-extern int get_line_number();
+extern void
+new_parse();
+
+extern void
+end_parse();
+
+extern int
+get_char_number();
+
+extern int
+get_line_number();
 
 
 #define DEBUG__LOGTOOL__PARSER  0
 
-static void production( char *s )
+static void
+production( char *s )
 {
     printf( "Matched %s\n", s );
 }
@@ -48,29 +56,40 @@ static void production( char *s )
 
 Dictionary *dict;
 
-static void register_failed_login( const char *ip )
+static void
+register_failed_login( const char *ip )
 {
     int attempts = ( int ) dictionary__lookup( dict, ip );
-    dictionary__add( dict, ip, ( void* ) attempts + 1 );
+    dictionary__add( dict, ip, ( void* ) ( attempts + 1 ) );
 }
 
-static p2_action *print_offender( char *ip, Dictionary *d )
+static void
+print_offenders( Dictionary *dict )
 {
-    printf( "%s (%i)\n", ip, ( int ) dictionary__lookup( dict, ip ) );
-    return 0;
+    void *helper( char **spp )
+    {
+        printf( "%s (%i)\n", *spp, ( int ) dictionary__lookup( dict, *spp ) );
+        return 0;
+    }
+
+    Array *keys = dictionary__keys( dict );
+    array__walk( keys, ( Dist_f ) helper );
+    array__delete( keys );
 }
 
 
 /******************************************************************************/
 
 
-int yywrap()
+int
+yywrap()
 {
     return 1;
 }
 
 
-void yyerror( const char *msg )
+void
+yyerror( const char *msg )
 {
     printf( "line %d, char %d: %s\n",
         get_line_number(), get_char_number(), msg );
@@ -111,15 +130,9 @@ input:
 
     messages E_O_F
     {
-        Closure proc;
-
-        Array *keys = dictionary__keys( dict );
-        proc.execute = ( procedure ) print_offender;
-        proc.state = dict;
-        array__distribute( keys, &proc );
-        array__delete( keys );
-
+        print_offenders( dict );
         dictionary__delete( dict );
+
         YYACCEPT;
     }
     ;
@@ -210,7 +223,8 @@ time:
 %%
 
 
-int main()
+int
+main()
 {
     return yyparse();
 }

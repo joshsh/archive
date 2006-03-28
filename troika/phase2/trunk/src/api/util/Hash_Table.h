@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define HASH_TABLE_H
 
 
-#include <Closure.h>
+#include <defs.h>
 
 
 typedef unsigned int ( *hash_f )( const void *key );
@@ -110,7 +110,7 @@ hash_table__remove( Hash_Table *h, const void *key );
 
 
 extern void
-hash_table__distribute( Hash_Table *h, Closure *p );
+hash_table__walk( Hash_Table *h, Dist_f f );
 
 
 /******************************************************************************/

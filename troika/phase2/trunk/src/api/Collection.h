@@ -63,7 +63,7 @@ extern Array *
 collection__match(       Collection *c, Criterion cr );
 
 extern void
-collection__replace_all( Collection *c, Substitution f, void *state );
+collection__replace_all( Collection *c, Substitution f );
 
 extern void
 collection__sort(        Collection *c, Comparator cmp );

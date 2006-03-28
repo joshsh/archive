@@ -401,67 +401,6 @@ term__cat(Term *t1, Term *t2)
 /* Logical set functions and atom substitution ********************************/
 
 
-static void
-distribute( void **cur, Closure *c )
-{
-    void **lim;
-
-    /* If the sub-term represents a leaf node, execute the procedure. */
-    if ( ( unsigned int ) *cur == 2 )
-    {
-        cur++;
-
-        if ( closure__apply( c, cur ) )
-            /* Note: this only breaks out of the subterm. */
-            return;
-    }
-
-    /* If the sub-term contains further sub-terms, recurse through them. */
-    else
-    {
-        lim = cur + ( unsigned int ) *cur;
-        cur++;
-        while ( cur < lim )
-        {
-            distribute( cur, c );
-            cur += ( unsigned int ) *cur;
-        }
-    }
-}
-
-
-void
-term__distribute( Term *t, Closure *c )
-{
-    #if DEBUG__SAFE
-    if ( !t || !c )
-    {
-        ERROR( "term__distribute: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__TERM
-    printf( "[] term__distribute(%#x, %#x)\n", ( int ) t, ( int ) c );
-    #endif
-
-    distribute( t->head, c );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void
 term__walk( Term *t, Dist_f f )
 {
@@ -496,13 +435,13 @@ term__walk( Term *t, Dist_f f )
     #if DEBUG__SAFE
     if ( !t || !f )
     {
-        ERROR( "term__distribute_f: null argument" );
+        ERROR( "term__walk: null argument" );
         return;
     }
     #endif
 
     #if DEBUG__TERM
-    printf( "[] term__distribute_f(%#x, %#x)\n", ( int ) t, ( int ) f );
+    printf( "[] term__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
     #endif
 
     walk( t->head );
@@ -512,19 +451,6 @@ finish:
     /* Avoids GCC's "label at end of compound statement" error. */
     return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /******************************************************************************/
@@ -616,8 +542,8 @@ term__type( const char *name, int flags )
     if ( type )
     {
         type->destroy = ( Destructor ) term__delete;
-        type->distribute = ( Distributor ) term__distribute;
         type->encode = ( Encoder ) term__encode;
+        type->walk = ( Walker ) term__walk;
     }
 
     return type;

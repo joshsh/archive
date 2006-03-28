@@ -141,7 +141,7 @@ array__delete( Array *a )
 /******************************************************************************/
 
 
-int
+unsigned int
 array__size( Array *a )
 {
     return a->size;
@@ -534,31 +534,6 @@ array__sort( Array *a, Comparator compare )
 
 
 void
-array__distribute( Array *a, Closure *c )
-{
-    int i;
-
-    #if DEBUG__SAFE
-    if ( !a || !c )
-    {
-        ERROR( "array__distribute: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__ARRAY
-    printf( "array__distribute(%#x, %#x)\n", ( int ) a, ( int ) c );
-    #endif
-
-    for ( i = 0; i < a->size; i++ )
-    {
-        if ( closure__apply( c, &ELMT( a, i ) ) )
-            break;
-    }
-}
-
-
-void
 array__walk( Array *a, Dist_f f )
 {
     int i, lim;
@@ -566,13 +541,13 @@ array__walk( Array *a, Dist_f f )
     #if DEBUG__SAFE
     if ( !a || !f )
     {
-        ERROR( "array__distribute_f: null argument" );
+        ERROR( "array__walk: null argument" );
         return;
     }
     #endif
 
     #if DEBUG__ARRAY
-    printf( "array__distribute_f(%#x, %#x)\n", ( int ) a, ( int ) f );
+    printf( "array__walk(%#x, %#x)\n", ( int ) a, ( int ) f );
     #endif
 
     lim = a->size;
@@ -741,8 +716,8 @@ array__type( const char *name, int flags )
     if ( type )
     {
         type->destroy = ( Destructor ) array__delete;
-        type->distribute = ( Distributor ) array__distribute;
         type->encode = ( Encoder ) array__encode;
+        type->walk = ( Walker ) array__walk;
     }
 
     return type;

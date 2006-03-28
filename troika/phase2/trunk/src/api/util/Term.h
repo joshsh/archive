@@ -47,7 +47,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Type.h>
-#include <Closure.h>
 
 
 typedef struct Term Term;
@@ -146,9 +145,6 @@ term__cat( Term *t1, Term *t2 );
 
 
 /* Distributor ****************************************************************/
-
-extern void
-term__distribute( Term *t, Closure *c );
 
 extern void
 term__walk( Term *t, Dist_f f );

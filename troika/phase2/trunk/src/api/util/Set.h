@@ -48,8 +48,9 @@ set__add( Set *s, void *el );
 extern void
 set__remove( Set *s, void *el );
 
+
 extern void
-set__distribute( Set *s, Closure *c );
+set__walk( Set *s, Dist_f f );
 
 
 #endif  /* SET_H */

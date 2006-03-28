@@ -356,20 +356,20 @@ hash_table__remove(Hash_Table *h, const void *key)
 
 
 void
-hash_table__distribute( Hash_Table *h, Closure *c )
+hash_table__walk( Hash_Table *h, Dist_f f )
 {
     void **cur, **lim;
 
     #if DEBUG__SAFE
-    if ( !h || !c )
+    if ( !h || !f )
     {
-        ERROR( "hash_table__distribute: null argument" );
+        ERROR( "hash_table__walk: null argument" );
         return;
     }
     #endif
 
     #if DEBUG__HASH_TABLE
-    printf( "[] hash_table__distribute(%#x, %#x)\n", ( int ) h, ( int ) c );
+    printf( "[] hash_table__walk(%#x, %#x)\n", ( int ) h, ( int ) f );
     #endif
 
     cur = h->buffer;
@@ -377,11 +377,8 @@ hash_table__distribute( Hash_Table *h, Closure *c )
 
     while ( cur < lim )
     {
-        if ( *cur )
-        {
-            if ( closure__apply( c, cur ) )
-                break;
-        }
+        if ( *cur && f( cur ) )
+            break;
 
         cur++;
     }

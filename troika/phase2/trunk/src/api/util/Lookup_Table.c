@@ -20,21 +20,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Lookup_Table.h>
 
 
-static void
-lookup_table__entry__delete( Lookup_Table__Entry *entry )
-{
-    free( entry );
-}
-
-
-static void *
-lookup_table__entry__delete__proc( Lookup_Table__Entry **entry_p, void *ignored )
-{
-    lookup_table__entry__delete( *entry_p );
-    return 0;
-}
-
-
 static unsigned int
 hash( const Lookup_Table__Entry *entry )
 {
@@ -67,10 +52,14 @@ lookup_table__new( void )
 void
 lookup_table__delete( Lookup_Table *t )
 {
+    void *helper( Lookup_Table__Entry **epp )
+    {
+        free( *epp );
+        return 0;
+    }
+
     /* Destroy graph entries. */
-    Closure *c = closure__new( ( procedure ) lookup_table__entry__delete__proc, 0 );
-    hash_table__distribute( t, c );
-    closure__delete( c );
+    hash_table__walk( t, ( Dist_f ) helper );
 
     hash_table__delete( t );
 }
@@ -129,21 +118,21 @@ lookup_table__remove
 
 
 void
-lookup_table__distribute( Lookup_Table *t, Closure *c )
+lookup_table__walk( Lookup_Table *t, Dist_f f )
 {
     #if DEBUG__SAFE
-    if ( !t || !c )
+    if ( !t || !f )
     {
-        ERROR( "lookup_table__distribute: null argument" );
+        ERROR( "lookup_table__walk: null argument" );
         return;
     }
     #endif
 
     #if DEBUG__LOOKUP_TABLE
-    printf( "lookup_table__distribute(%#x, %#x)\n", ( int ) t, ( int ) c );
+    printf( "lookup_table__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
     #endif
 
-    hash_table__distribute( t, c );
+    hash_table__walk( t, f );
 }
 
 

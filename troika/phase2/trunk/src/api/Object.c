@@ -66,18 +66,16 @@ printf( "    This is type '%s'.\n", ( ( Type* ) value )->name );
 }
 
 
-static void *
-delete_p( void **p, Type *type )
-{
-    type->destroy( *p );
-    return 0;
-}
-
-
 void
 object__delete( Object *o )
 {
-    Closure *c;
+    Type *t;
+
+    void *helper( void **refp )
+    {
+        t->destroy( *refp );
+        return 0;
+    }
 
     #if DEBUG__SAFE
     if ( !o )
@@ -110,9 +108,8 @@ object__delete( Object *o )
     /* If the object owns its children (and has any), free them. */
     if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
     {
-        c = closure__new( ( procedure ) delete_p, o->type->type_arg );
-        o->type->distribute( o->value, c );
-        closure__delete( c );
+        t = o->type->type_arg;
+        o->type->walk( o->value, ( Dist_f ) helper );
     }
 
     /* Free the object's data. */
@@ -154,82 +151,75 @@ object__type( const Object *o )
 /* Graph traversal ************************************************************/
 
 
-typedef struct Trace_Ctx
+void
+object__trace( Object *o, Dist_f f )
 {
-    Closure *edge_p;
-    Closure *inner_p;
-    Closure *outer_p;
+int total = 0;
+    auto void *obj_trace( Object **opp );
 
-} Trace_Ctx;
-
-
-static void *
-apply_to_assoc_edge( Lookup_Table__Entry **ppEntry, Closure *c )
-{
-    #if TRIPLES__IMPLICATION__SP_O
-    ... not yet written ...
-    #else
-    #if TRIPLES__IMPLICATION__S_P
-    closure__apply( c, &( *ppEntry )->key );
-    #endif
-    #if TRIPLES__IMPLICATION__S_O
-    closure__apply( c, &( *ppEntry )->target );
-    #endif
-    #endif
-
-    return 0;
-}
-
-
-static void *
-trace_exec( Object **opp, Trace_Ctx *state )
-{
-    Object *o;
-
-    /* If for any reason execution has traced to a NULL, return immediately. */
-    if ( !opp )
+    void *edge_trace( Lookup_Table__Entry **epp )
     {
-        #if DEBUG__SAFE
-        WARNING( "trace_exec: null object" );
+        #if TRIPLES__IMPLICATION__SP_O
+        ... not yet written ...
+        #else
+        #if TRIPLES__IMPLICATION__S_P
+        obj_trace( ( Object** ) &( *epp )->key );
+        #endif
+        #if TRIPLES__IMPLICATION__S_O
+        obj_trace( ( Object** ) &( *epp )->target );
+        #endif
         #endif
 
         return 0;
     }
 
-    o = *opp;
-
-    /* Execute the inner procedure.  Recurse unless instructed otherwise. */
-    if ( !closure__apply( ( state->inner_p ), opp ) )
+    void *obj_trace( Object **opp )
     {
-        /* Traverse to children (if any). */
-        if ( o->type->flags & TYPE__IS_OBJ_COLL )
+        Object *o;
+
+        /* If for any reason execution has traced to a NULL, return immediately. */
+        if ( !opp )
         {
-            o->type->distribute( o->value, state->outer_p );
+            #if DEBUG__SAFE
+            WARNING( "obj_trace: null object" );
+            #endif
+
+            return 0;
         }
 
-        /* Traverse to associated objects (if any). */
-        #if TRIPLES__GLOBAL__OUT_EDGES
-        if ( o->outbound_edges )
+        o = *opp;
+printf( "---o ot ---\n" ); FFLUSH;
+printf( "o = %#x, o->type = '%s'\n", ( int ) o, o->type->name );
+
+        /* Execute the inner procedure.  Recurse unless instructed otherwise. */
+        if ( !f( ( void** ) opp ) )
         {
+total++;
+printf( "---o ot 2a---\n" ); FFLUSH;
+            /* Traverse to children (if any). */
+            if ( o->type->flags & TYPE__IS_OBJ_COLL )
+            {
+printf( "---o ot 2a a---\n" ); FFLUSH;
+                o->type->walk( o->value, ( Dist_f ) obj_trace );
+            }
+
+            /* Traverse to associated objects (if any). */
+            #if TRIPLES__GLOBAL__OUT_EDGES
+            if ( o->outbound_edges )
+            {
 printf( "distributing to edges (o = %#x, o->outbound_edges = %#x)\n", ( int ) o, ( int ) o->outbound_edges );
 printf( "o->type = %#x\n", ( int ) o->type ); fflush( stdout );
 printf( "o->type->name = '%s'\n", o->type->name ); fflush( stdout );
 if ( !strcmp( o->type->name, "int" ) )
 printf( "value = %i\n", *( ( int* ) o->value ) );
-            lookup_table__distribute( o->outbound_edges, state->edge_p );
+                lookup_table__walk( o->outbound_edges, ( Dist_f ) edge_trace );
+            }
+            #endif
         }
-        #endif
+printf( "---o ot 3---\n" ); FFLUSH;
+
+        return 0;
     }
-
-    return 0;
-}
-
-
-void
-object__trace( Object *o, Closure *c )
-{
-    Trace_Ctx state;
-    Closure *trace_proc;
 
     #if DEBUG__SAFE
     if ( !o )
@@ -239,16 +229,8 @@ object__trace( Object *o, Closure *c )
     }
     #endif
 
-    trace_proc = closure__new( ( procedure ) trace_exec, &state );
-
-    state.edge_p = closure__new( ( procedure ) apply_to_assoc_edge, trace_proc );
-    state.inner_p = c;
-    state.outer_p = trace_proc;
-
-    closure__apply( ( trace_proc ), &o );
-
-    closure__delete( state.edge_p );
-    closure__delete( trace_proc );
+    obj_trace( &o );
+printf( "===total = %i===\n", total ); FFLUSH;
 }
 
 

@@ -19,7 +19,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <Memory_Manager.h>
 #include <Collection.h>
-#include <Closure.h>
 
 
 #define visited( o )        (o)->flags & OBJECT__VISITED
@@ -217,60 +216,18 @@ printf( "---m add 2---\n" ); fflush( stdout );
 /* Unmarking / cleanup ********************************************************/
 
 
-static void *
-unmark( Object *o )
-{
-    #ifdef DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "unmark: null object" );
-        return 0;
-    }
-    #endif
-
-    clear_visited( o );
-    return o;
-}
-
-
-static boolean
-unmark_for_sweep( Object *o )
-{
-    #ifdef DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "unmark_for_sweep: null object" );
-        return 0;
-    }
-    #endif
-
-    /* If marked, unmark. */
-    if ( visited( o ) )
-    {
-        clear_visited( o );
-
-        /* Don't exclude this object. */
-        return FALSE;
-    }
-
-    /* If unmarked, delete. */
-    else
-    {
-        object__delete( o );
-
-        /* Exclude this object. */
-        return TRUE;
-    }
-}
-
-
 static void
 unmark_all( Memory_Manager *m )
 {
+    void unmark( Object *o )
+    {
+        clear_visited( o );
+    }
+
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        ERROR( "unmark_all: null manager" );
+        ERROR( "unmark_all: null argument" );
         return;
     }
     #endif
@@ -285,6 +242,27 @@ unmark_all( Memory_Manager *m )
 static void
 sweep( Memory_Manager *m )
 {
+    boolean unmarked( Object *o )
+    {
+        /* If marked, unmark. */
+        if ( visited( o ) )
+        {
+            clear_visited( o );
+
+            /* Don't exclude this object. */
+            return FALSE;
+        }
+
+        /* If unmarked, delete. */
+        else
+        {
+            object__delete( o );
+
+            /* Exclude this object. */
+            return TRUE;
+        }
+    }
+
     #ifdef DEBUG__SAFE
     if ( !m )
     {
@@ -293,8 +271,7 @@ sweep( Memory_Manager *m )
     }
     #endif
 
-    collection__exclude_if( m->objects_o, ( Criterion ) unmark_for_sweep );
-    /*bunch__exclude_if( m->objects, (void*(*)(void*)) unmark_for_sweep );*/
+    collection__exclude_if( m->objects_o, ( Criterion ) unmarked );
     m->clean = 1;
 }
 
@@ -302,30 +279,26 @@ sweep( Memory_Manager *m )
 /* Tracing / graph traversal **************************************************/
 
 
-static void *
-dist_p_exec( Object **o_p, Closure *c )
-{
-    /* If the object is already marked, abort. */
-    if ( visited( *o_p ) )
-    {
-        return ( void* ) 1;
-    }
-
-    else
-    {
-        /* Mark the object. */
-        set_visited( *o_p );
-
-        /* Execute the procedure. */
-        return closure__apply( c, o_p );
-    }
-}
-
-
 void
-memory_manager__distribute( Memory_Manager *m, Closure *c )
+memory_manager__walk( Memory_Manager *m, Dist_f f )
 {
-    Closure *c2;
+    void *helper( Object **opp )
+    {
+        Object *o = *opp;
+
+        /* If the object is already marked, abort. */
+        if ( visited( o ) )
+            return walker__break;
+
+        else
+        {
+            /* Mark the object. */
+            set_visited( o );
+
+            /* Execute the procedure. */
+            return f( ( void** ) opp );
+        }
+    }
 
     if ( !m->clean )
         unmark_all( m );
@@ -333,9 +306,7 @@ memory_manager__distribute( Memory_Manager *m, Closure *c )
     m->clean = 0;
 printf( "---mm d 1---\n" ); fflush( stdout );
 
-    c2 = closure__new( ( procedure ) dist_p_exec, c );
-    object__trace( m->root, c2 );
-    closure__delete( c2 );
+    object__trace( m->root, ( Dist_f ) helper );
 printf( "---mm d 2---\n" ); fflush( stdout );
 
     /* Might as well sweep. */
@@ -346,57 +317,51 @@ printf( "---mm d 2---\n" ); fflush( stdout );
 /******************************************************************************/
 
 
-static void *
-add_if_multiref( Object **opp, Set *s )
-{
-    Object *o = *opp;
-
-printf( "---mm aim 1---\n" ); FFLUSH;
-printf( "o = %#x, o->type=%#x\n", ( int ) o, ( int ) o->type ); FFLUSH;
-    /* If the object is already marked, abort. */
-    if ( visited( o ) )
-    {
-printf( "---mm aim 2a---\n" ); FFLUSH;
-        set__add( s, o );
-        return ( void* ) 1;
-    }
-
-    else
-    {
-printf( "---mm aim 2b 1---\n" ); FFLUSH;
-        /* Mark the object. */
-        set_visited( o );
-printf( "---mm aim 2b 2---\n" ); FFLUSH;
-
-        #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
-        /* Object references its triples, which in turn reference the object. */
-        if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
-        {
-            set__add( s, o );
-        }
-        #endif
-printf( "---mm aim 2b 3---\n" ); FFLUSH;
-
-        return 0;
-    }
-}
-
-
 Set *
 memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 {
-    Set *s = set__new();
-    Closure *c;
+    Set *s;
+
+    void *helper( Object **opp )
+    {
+        Object *o = *opp;
+
+printf( "---mm aim 1---\n" ); FFLUSH;
+printf( "o = %#x, o->type=%#x\n", ( int ) o, ( int ) o->type ); FFLUSH;
+        /* If the object is already marked, abort. */
+        if ( visited( o ) )
+        {
+printf( "---mm aim 2a---\n" ); FFLUSH;
+            set__add( s, o );
+            return walker__break;
+        }
+
+        else
+        {
+printf( "---mm aim 2b 1---\n" ); FFLUSH;
+            /* Mark the object. */
+            set_visited( o );
+printf( "---mm aim 2b 2---\n" ); FFLUSH;
+
+            #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
+            /* Object references its triples, which in turn reference the object. */
+            if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
+            {
+                set__add( s, o );
+            }
+            #endif
+printf( "---mm aim 2b 3---\n" ); FFLUSH;
+
+            return 0;
+        }
+    }
 
     if ( !m->clean )
         unmark_all( m );
-
     m->clean = 0;
 
-    c = closure__new( ( procedure ) add_if_multiref, s );
-    object__trace( root, c );
-    closure__delete( c );
-
+    s = set__new();
+    object__trace( root, ( Dist_f ) helper );
     return s;
 }
 
@@ -404,17 +369,13 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 /* Mark-and-sweep garbage collection ******************************************/
 
 
-static void *
-noop( void *ignored1, void *ignored2 )
-{
-    return 0;
-}
-
-
 void
 memory_manager__collect( Memory_Manager *m )
 {
-    Closure *c;
+    void *noop( Object **opp )
+    {
+        return 0;
+    }
 
     #if DEBUG__MEMORY
     int n_initial = bunch__size( m->objects );
@@ -430,9 +391,7 @@ memory_manager__collect( Memory_Manager *m )
 printf( "---mm c 1---\n" ); FFLUSH;
 
     /* Mark all reachable objects. */
-    c = closure__new( ( procedure ) noop, 0 );
-    memory_manager__distribute( m, c );
-    closure__delete( c );
+    memory_manager__walk( m, ( Dist_f ) noop );
 printf( "---mm c 2---\n" ); FFLUSH;
 
     #if DEBUG__MEMORY

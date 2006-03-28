@@ -63,15 +63,6 @@ dictionary_entry__delete
 }
 
 
-static void *
-dictionary_entry__delete__proc
-    ( Dictionary_Entry **entry_p, void *ignored )
-{
-    dictionary_entry__delete( *entry_p );
-    return 0;
-}
-
-
 /** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
 static unsigned int
 hash( const Dictionary_Entry *entry )
@@ -116,10 +107,14 @@ dictionary__new( void )
 void
 dictionary__delete( Dictionary *dict )
 {
+    void *helper( Dictionary_Entry **epp )
+    {
+        dictionary_entry__delete( *epp );
+        return 0;
+    }
+
     /* Destroy dictionary entries. */
-    Closure *c = closure__new( ( procedure ) dictionary_entry__delete__proc, 0 );
-    hash_table__distribute( dict, c );
-    closure__delete( c );
+    hash_table__walk( dict, ( Dist_f ) helper );
 
     hash_table__delete( dict );
 }
@@ -183,65 +178,52 @@ dictionary__remove( Dictionary *dict, char *key )
 /******************************************************************************/
 
 
-static void *
-add_to_dict( Dictionary_Entry **entry_p, Dictionary *dest )
-{
-    dictionary__add( dest, ( *entry_p )->key, ( *entry_p )->target );
-    return 0;
-}
-
-
 void
 dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
-    Closure *c = closure__new( ( procedure ) add_to_dict, dest );
-    hash_table__distribute( src, c );
-    closure__delete( c );
+    void *helper( Dictionary_Entry **epp )
+    {
+        dictionary__add( dest, ( *epp )->key, ( *epp )->target );
+        return 0;
+    }
+
+    hash_table__walk( src, ( Dist_f ) helper );
 }
 
 
 /******************************************************************************/
-
-
-/* Points the argument procedure to the target value of a hashing pair. */
-static void *
-apply_to_target( Dictionary_Entry **entry_p, Closure *c )
-{
-    return closure__apply( c, &( *entry_p )->target );
-}
 
 
 void
-dictionary__distribute( Dictionary *dict, Closure *c )
+dictionary__walk( Dictionary *dict, Dist_f f )
 {
-    Closure *alt = closure__new( ( procedure ) apply_to_target, c );
+    void *helper( Dictionary_Entry **ep )
+    {
+        return f( &( *ep )->target );
+    }
 
-    hash_table__distribute( dict, alt );
-
-    closure__delete( alt );
+    hash_table__walk( dict, ( Dist_f ) helper );
 }
 
 
 /******************************************************************************/
-
-
-static void *
-add_to_array( Dictionary_Entry **entry_p, Array *a )
-{
-    array__enqueue( a, ( *entry_p )->key );
-    return 0;
-}
 
 
 Array *
 dictionary__keys( Dictionary *dict )
 {
-    Array *a = array__new( hash_table__size( dict ), 0 );
+    Array *a;
+
+    void *helper( Dictionary_Entry **epp )
+    {
+        array__enqueue( a, ( *epp )->key );
+        return 0;
+    }
+
+    a = array__new( hash_table__size( dict ), 0 );
 
     /* Fill the array with key values. */
-    Closure *c = closure__new( ( procedure ) add_to_array, a );
-    hash_table__distribute( dict, c );
-    closure__delete( c );
+    hash_table__walk( dict, ( Dist_f ) helper );
 
     /* Alphabetize the array. */
     array__sort( a, ( Comparator ) strcmp );

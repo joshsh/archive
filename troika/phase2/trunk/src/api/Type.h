@@ -28,10 +28,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef TYPE_H
 #define TYPE_H
 
-#include <Closure.h>
 
+#include <defs.h>
 
-typedef struct Type Type;
 
 enum Type__Flags
 {
@@ -39,6 +38,8 @@ enum Type__Flags
     TYPE__OWNS_DESCENDANTS    = 0x2
 };
 
+
+typedef struct Type Type;
 
 /** */
 struct Type
@@ -61,14 +62,14 @@ struct Type
     /** Destructor. */
     Destructor  destroy;
 
-    Distributor distribute;
-
     /** Serializer. */
     Encoder     encode;
 
     Criterion2  equals;
 
-    Sort      sort;
+    Sort        sort;
+
+    Walker      walk;
 };
 
 

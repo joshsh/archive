@@ -18,78 +18,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Collection.h>
-#include <Closure.h>
-
-
-typedef struct Search_Ctx
-{
-    Criterion match;
-    Array *results;
-    void *single_result;
-
-} Search_Ctx;
-
-
-static void *
-apply( void *data, Search_Ctx *search )
-{
-    return ( void* ) search->match( data );
-}
-
-
-static void *
-break_true_if_match( void *data, Search_Ctx *search )
-{
-    return ( void* ) search->match( data );
-}
-
-
-static void *
-break_false_if_nomatch( void *data, Search_Ctx *search )
-{
-    if ( search->match( data ) )
-        return 0;
-
-    else
-    {
-        search->single_result = 0;
-        return ( void* ) 1;
-    }
-}
 
 
 /* do_for_all *****************************************************************/
 
 
-typedef struct Voidf_Ctx
-{
-    Void_f f;
-
-} Voidf_Ctx;
-
-
-static void *
-Void_f_procedure( void *data, Voidf_Ctx *wrapper )
-{
-    wrapper->f( data );
-
-    return 0;
-}
-
-
 void
 collection__do_for_all( Collection *c, Void_f f )
 {
-    Closure *closure1, *closure2;
-    Voidf_Ctx ctx;
+    void *helper( void **refp )
+    {
+        f( *refp );
+        return 0;
+    }
 
-    ctx.f = f;
-
-    closure1 = closure__new( ( procedure ) Void_f_procedure, &ctx );
-    closure2 = closure__cw_dereference( closure1 );
-    c->type->distribute( c->value, closure2 );
-    closure__delete( closure1 );
-    closure__delete( closure2 );
+    c->type->walk( c->value, ( Dist_f ) helper );
 }
 
 
@@ -99,16 +42,15 @@ collection__do_for_all( Collection *c, Void_f f )
 void
 collection__exclude_if( Collection *c, Criterion cr )
 {
-    Closure *closure1, *closure2;
-    Search_Ctx search;
+    void *helper( void **refp )
+    {
+        if ( cr( *refp ) )
+            return walker__remove;
+        else
+            return 0;
+    }
 
-    search.match = cr;
-
-    closure1 = closure__new( ( procedure ) apply, &search );
-    closure2 = closure__cw_dereference( closure1 );
-    c->type->distribute( c->value, closure2 );
-    closure__delete( closure1 );
-    closure__delete( closure2 );
+    c->type->walk( c->value, ( Dist_f ) helper );
 }
 
 
@@ -118,19 +60,23 @@ collection__exclude_if( Collection *c, Criterion cr )
 boolean
 collection__exists( Collection *c, Criterion cr )
 {
-    Closure *closure1, *closure2;
-    Search_Ctx search;
+    boolean exists = FALSE;
 
-    search.match = cr;
-    search.single_result = ( void* ) 0;
+    void *helper( void **refp )
+    {
+        if ( cr( *refp ) )
+        {
+            exists = TRUE;
+            return walker__break;
+        }
 
-    closure1 = closure__new( ( procedure ) break_true_if_match, &search );
-    closure2 = closure__cw_dereference( closure1 );
-    c->type->distribute( c->value, closure2 );
-    closure__delete( closure1 );
-    closure__delete( closure2 );
+        else
+            return 0;
+    }
 
-    return ( search.single_result ) ? TRUE : FALSE;
+    c->type->walk( c->value, ( Dist_f ) helper );
+
+    return exists;
 }
 
 
@@ -140,19 +86,23 @@ collection__exists( Collection *c, Criterion cr )
 void *
 collection__first_match( Collection *c, Criterion cr )
 {
-    Closure *closure1, *closure2;
-    Search_Ctx search;
+    void *result = 0;
 
-    search.match = cr;
-    search.single_result = 0;
+    void *helper( void **refp )
+    {
+        if ( cr( *refp ) )
+        {
+            result = *refp;
+            return walker__break;
+        }
 
-    closure1 = closure__new( ( procedure ) break_true_if_match, &search );
-    closure2 = closure__cw_dereference( closure1 );
-    c->type->distribute( c->value, closure2 );
-    closure__delete( closure1 );
-    closure__delete( closure2 );
+        else
+            return 0;
+    }
 
-    return search.single_result;
+    c->type->walk( c->value, ( Dist_f ) helper );
+
+    return result;
 }
 
 
@@ -162,90 +112,60 @@ collection__first_match( Collection *c, Criterion cr )
 boolean
 collection__for_all( Collection *c, Criterion cr )
 {
-    Closure *closure1, *closure2;
-    Search_Ctx search;
+    boolean result = TRUE;
 
-    search.match = cr;
-    search.single_result = ( void* ) 1;
+    void *helper( void **refp )
+    {
+        if ( !cr( *refp ) )
+        {
+            result = FALSE;
+            return walker__break;
+        }
 
-    closure1 = closure__new( ( procedure ) break_false_if_nomatch, &search );
-    closure2 = closure__cw_dereference( closure1 );
-    c->type->distribute( c->value, closure2 );
-    closure__delete( closure1 );
-    closure__delete( closure2 );
+        else
+            return 0;
+    }
 
-    return ( search.single_result ) ? TRUE : FALSE;
+    c->type->walk( c->value, ( Dist_f ) helper );
+
+    return result;
 }
 
 
 /* match **********************************************************************/
 
 
-/* Procedure for pattern matching. */
-static void *
-add_if_match( void *data, Search_Ctx *search )
-{
-    if ( search->match( data ) )
-    {
-        array__enqueue( search->results, data );
-    }
-
-    return 0;
-}
-
-
 Array *
 collection__match( Collection *c, Criterion cr )
 {
-    Closure *closure1, *closure2;
-    Search_Ctx search;
+    Array *results = array__new( 0, 0 );
 
-    search.match = cr;
-    search.results = array__new( 0, 0 );
+    void *helper( void **refp )
+    {
+        if ( cr( *refp ) )
+            array__enqueue( results, *refp );
+        return 0;
+    }
 
-    closure1 = closure__new( ( procedure ) add_if_match, &search );
-    closure2 = closure__cw_dereference( closure1 );
-    c->type->distribute( c->value, closure2 );
-    closure__delete( closure1 );
-    closure__delete( closure2 );
+    c->type->walk( c->value, ( Dist_f ) helper );
 
-    return search.results;
+    return results;
 }
 
 
 /* replace_all ****************************************************************/
 
 
-typedef struct Subst_Ctx Subst_Ctx;
-
-struct Subst_Ctx
-{
-    Substitution substitute_for;
-
-    void *state;
-};
-
-
-static void *
-substitute( void **refp, Subst_Ctx *context )
-{
-    *refp = context->substitute_for( *refp, context->state );
-    return 0;
-}
-
-
 void
-collection__replace_all( Collection *c, Substitution f, void *state )
+collection__replace_all( Collection *c, Substitution f )
 {
-    Closure *cl;
-    Subst_Ctx context;
+    void *helper( void **refp )
+    {
+        *refp = f( *refp );
+        return 0;
+    }
 
-    context.substitute_for = f;
-    context.state = state;
-
-    cl = closure__new( ( procedure ) substitute, &context );
-    c->type->distribute( c->value, cl );
-    closure__delete( cl );
+    c->type->walk( c->value, ( Dist_f ) helper );
 }
 
 

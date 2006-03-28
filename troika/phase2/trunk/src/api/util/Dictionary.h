@@ -58,7 +58,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src );
 
 
 extern void
-dictionary__distribute( Dictionary *dict, Closure *p );
+dictionary__walk( Dictionary *dict, Dist_f f );
 
 
 extern Array *
