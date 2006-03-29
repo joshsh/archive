@@ -222,9 +222,12 @@ dom_element *dom_element__new( dom_document *doc,
                                dom_namespace *ns )
 {
     /* Note: apparently libxml2 makes its own copy of the element name. */
-    xmlNode* el = xmlNewNode( 0, name ) ;
+    xmlNode* el = xmlNewNode( 0, name );
 
-    if (ns)
+    /* Avoid "unused parameter" warning. */
+    doc = 0;
+
+    if ( ns )
         xmlSetNs( el, ( xmlNs* ) ns );
 
     return ( dom_element* ) el ;

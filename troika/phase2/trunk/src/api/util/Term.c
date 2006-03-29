@@ -414,7 +414,8 @@ term__walk( Term *t, Dist_f f )
         {
             cur++;
 
-            if ( f( cur ) )
+            /* Apply the target function.  Break out if necessary. */
+            if ( f( cur ) == walker__break )
                 goto finish;
         }
 
@@ -455,66 +456,55 @@ finish:
 /******************************************************************************/
 
 
-static void
-encode( void **cur, char *buffer, int delimit )
-{
-    Object *o;
-    void **lim;
-
-    /* If the sub-term represents a leaf node, execute the procedure. */
-    if ( ( unsigned int ) *cur == 2 )
-    {
-        cur++;
-
-/*
-        if ( delimit )
-        {
-            sprintf( buffer, " " );
-            buffer++;
-        }
-*/
-
-        o = ( Object* ) *cur;
-        o->type->encode( o->value, buffer );
-    }
-
-    /* If the sub-term contains further sub-terms, recurse through them. */
-    else
-    {
-        if ( delimit )
-        {
-            sprintf( buffer,  "( " );
-            buffer += 2;
-        }
-
-        lim = cur + ( unsigned int ) *cur;
-        cur++;
-        while ( cur < lim )
-        {
-            encode( cur, buffer, 1 );
-            buffer += strlen( buffer );
-
-            cur += ( unsigned int ) *cur;
-
-            if ( cur < lim )
-            {
-                sprintf( buffer, " " );
-                buffer++;
-            }
-        }
-
-        if ( delimit )
-        {
-            sprintf( buffer, " )" );
-            buffer += 2;
-        }
-    }
-}
-
-
 void
 term__encode( Term *t, char *buffer )
 {
+    void encode( void **cur, boolean delimit )
+    {
+        Object *o;
+        void **lim;
+
+        /* If the sub-term represents a leaf node, execute the procedure. */
+        if ( ( unsigned int ) *cur == 2 )
+        {
+            cur++;
+
+            o = ( Object* ) *cur;
+            o->type->encode( o->value, buffer );
+        }
+
+        /* If the sub-term contains further sub-terms, recurse through them. */
+        else
+        {
+            if ( delimit )
+            {
+                sprintf( buffer,  "( " );
+                buffer += 2;
+            }
+
+            lim = cur + ( unsigned int ) *cur;
+            cur++;
+            while ( cur < lim )
+            {
+                encode( cur, TRUE );
+                buffer += strlen( buffer );
+
+                cur += ( unsigned int ) *cur;
+
+                if ( cur < lim )
+                {
+                    sprintf( buffer, " " );
+                    buffer++;
+                }
+            }
+
+            if ( delimit )
+            {
+                sprintf( buffer, " )" );
+                buffer += 2;
+            }
+        }
+    }
 /*
 void **cur = t->head, **lim = t->buffer + t->buffer_size;
 while ( cur < lim ) {
@@ -529,7 +519,7 @@ printf( "\n" );
     }
     #endif
 
-    encode( t->head, buffer, 0 );
+    encode( t->head, FALSE );
 }
 
 

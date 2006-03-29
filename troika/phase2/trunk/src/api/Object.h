@@ -103,6 +103,15 @@ object__immutable( const Object *o );
 extern Type *
 object__type( const Object *o );
 
+extern void *
+object__value( const Object *o );
+
+
+/******************************************************************************/
+
+extern Type *
+object__create_type( const char *name );
+
 
 /* Graph traversal ************************************************************/
 

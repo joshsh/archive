@@ -709,7 +709,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
             compiler->env->manager,
             compiler->env->term_t,
             compiler->env->prim_t,
-            compiler->env->combinator_t, 0 );
+            compiler->env->combinator_t );
 
         if ( t )
             o->value = t;

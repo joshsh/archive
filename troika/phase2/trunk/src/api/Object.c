@@ -148,6 +148,107 @@ object__type( const Object *o )
 }
 
 
+void *
+object__value( const Object *o )
+{
+    #if DEBUG__SAFE
+    if ( !o )
+    {
+        ERROR( "object__value: null argument" );
+        return 0;
+    }
+    #endif
+
+    return o->value;
+}
+
+
+/******************************************************************************/
+
+
+static Object *
+object__clone( Object *o )
+{
+    Object *copy = new( Object );
+    *copy = *o;
+    copy->value = o->type->clone( o->value );
+    return copy;
+}
+
+
+static int
+object__compare_to( Object *o1, Object *o2 )
+{
+    #if DEBUG__SAFE
+    if ( o1->type != o2->type )
+    {
+        ERROR( "object__compare_to: type mismatch" );
+        return 0;
+    }
+    #endif
+
+    return o1->type->compare_to( o1->value, o2->value );
+}
+
+
+/* Note: there is no object decoder, as the data type of an object cannot be
+   inferred from the buffer alone. */
+
+/* Note: object destructor has external linkage (see above). */
+
+/* Note: object encoder is omitted for consistency. */
+
+
+static boolean
+object__equals( Object *o1, Object *o2 )
+{
+    #if DEBUG__SAFE
+    if ( o1->type != o2->type )
+    {
+        ERROR( "object__equals: type mismatch" );
+        return 0;
+    }
+    #endif
+
+    return o1->type->equals( o1->value, o2->value );
+}
+
+
+static void
+object__sort( Object *o, Comparator cmp )
+{
+    o->type->sort( o->value, cmp );
+}
+
+
+static void
+object__walk( Object *o, Dist_f f )
+{
+    o->type->walk( o->value, f );
+}
+
+
+Type *
+object__create_type( const char *name )
+{
+    int flags = 0;
+
+    Type *type = type__new( name, flags );
+
+    if ( type )
+    {
+        type->clone = ( Copy_Cons ) object__clone;
+        type->compare_to = ( Comparator ) object__compare_to;
+        type->destroy = ( Destructor ) object__delete;
+        type->equals = ( Criterion2 ) object__equals;
+        type->sort = ( Sort ) object__sort;
+        type->walk = ( Walker ) object__walk;
+    }
+
+    return type;
+}
+
+
 /* Graph traversal ************************************************************/
 
 

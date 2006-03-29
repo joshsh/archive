@@ -37,31 +37,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DEBUG__SAFE                             1
 
 #define DEBUG                                   1
-
 #if DEBUG
 
-    #define DEBUG__SK                           1
-    #define DEBUG__PRIMS                        1
+    #define DEBUG__CORE                         0
+    #if DEBUG__CORE
 
-    #define DEBUG__TYPE                         1
-    #define DEBUG__OBJECT                       1
-    #define DEBUG__MEMORY                       1
+        #define DEBUG__SK                       1
+        #define DEBUG__PRIMS                    1
 
-    #define DEBUG__NAMESPACE                    1
+        #define DEBUG__TYPE                     1
+        #define DEBUG__OBJECT                   1
+        #define DEBUG__MEMORY                   1
 
-    #define DEBUG__ENV                          1
-    #define DEBUG__COMPILER                     1
+        #define DEBUG__NAMESPACE                1
 
-    #define DEBUG__PARSER_MODULE                1
+        #define DEBUG__ENV                      1
+        #define DEBUG__COMPILER                 1
+
+    #endif
+
+    #define DEBUG__PARSER_MODULE                0
     #if DEBUG__PARSER_MODULE
 
         #define DEBUG__AST                      1
 
         /** Echo each token as it is matched by the lexer. */
-        #define DEBUG__LEXER                    0
+        #define DEBUG__LEXER                    1
 
         /** Echo each production as it is matched by the parser. */
-        #define DEBUG__PARSER                   0
+        #define DEBUG__PARSER                   1
         #if DEBUG__PARSER
 
             /** Use Bison's built-in trace facility. */
@@ -71,14 +75,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #endif
 
-    #define DEBUG__ARRAY                        1
-    #define DEBUG__BAG                          0
-    #define DEBUG__BUNCH                        1
-    #define DEBUG__HASH_TABLE                   1
-    #define DEBUG__LOOKUP_TABLE                 1
-    #define DEBUG__NAME                         0
-    #define DEBUG__SET                          0
-    #define DEBUG__TERM                         1
+    #define DEBUG__UTILS                        0
+    #if DEBUG__UTILS
+
+        #define DEBUG__ARRAY                    1
+        #define DEBUG__BAG                      1
+        #define DEBUG__BUNCH                    1
+        #define DEBUG__HASH_TABLE               1
+        #define DEBUG__LOOKUP_TABLE             1
+        #define DEBUG__NAME                     1
+        #define DEBUG__SET                      1
+        #define DEBUG__TERM                     1
+
+    #endif
 
 #endif
 

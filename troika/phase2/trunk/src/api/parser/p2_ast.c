@@ -163,7 +163,6 @@ p2_ast__term( Term *term )
     #if DEBUG__AST
     printf( "[%#x] p2_ast__term(%#x)\n", ( int ) ast, ( int) term );
     #endif
-printf( "TERM_T = %i\n", TERM_T );
 
     return ast;
 }

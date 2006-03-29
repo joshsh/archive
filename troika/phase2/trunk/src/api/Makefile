@@ -14,7 +14,7 @@ XML     = ./xml
 
 INCLUDE  = -I./
 
-export CFLAGS = -O2 -g --ansi -pedantic -W -Wall
+export CFLAGS = -O2 -g --ansi -W -Wall #-pedantic
 	# -Werror \
 	# -fshort-enums -fno-common \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
@@ -74,8 +74,8 @@ import/target/imports.o :
 utils	=	$(UTILS)/Array.o \
 		$(UTILS)/Bunch.o \
 		$(UTILS)/Dictionary.o \
-		$(UTILS)/Hash_Table.o \
 		$(UTILS)/Hash_Map.o \
+		$(UTILS)/Hash_Table.o \
 		$(UTILS)/Name.o \
 		$(UTILS)/Set.o \
 		$(UTILS)/Term.o

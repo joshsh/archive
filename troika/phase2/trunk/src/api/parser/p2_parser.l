@@ -173,7 +173,8 @@ char *extract_id( char *s )
 
     *s_low = '\0';
 
-    return STRDUP( s );
+    return s;
+    /*return STRDUP( s );*/
 }
 
 
@@ -211,7 +212,8 @@ char *extract_literal( char *s )
 
     *s_low = '\0';
 
-    return STRDUP( s );
+    return s;
+    /*return STRDUP( s );*/
 }
 
 
@@ -295,7 +297,8 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     _[0-9A-Za-z]+  {
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string_t = STRDUP( yytext + 1 );
+        yylval.string_t = yytext + 1;
+        /*yylval.string_t = STRDUP( yytext + 1 );*/
 
         TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }

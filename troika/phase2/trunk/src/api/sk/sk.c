@@ -301,6 +301,7 @@ term_reduce( Term *term )
 }
 
 
+#if DEBUG__SK
 static void
 print_term( Term *t )
 {
@@ -319,6 +320,7 @@ print_term( Term *t )
 
     printf( "\n" );
 }
+#endif
 
 
 Term *
@@ -327,8 +329,7 @@ SK_reduce(
     Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
-    Type *combinator_type,
-    void (*for_each_iteration)(Term*) )
+    Type *combinator_type )
 {
     #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
     int iter = 0;
@@ -347,9 +348,9 @@ SK_reduce(
     }
     #endif
 
-#if DEBUG__SK
-print_term( term );
-#endif
+    #if DEBUG__SK
+    print_term( term );
+    #endif
 
     /* Iterate until the resulting term is in head-normal form. */
     for (;;)
@@ -375,11 +376,6 @@ printf( "\n" );  fflush( stdout );
             term__delete( term );
             return 0;
         }
-        #endif
-
-        #if DEBUG__SK
-        if ( for_each_iteration )
-            for_each_iteration( term );
         #endif
 
         /* Get the object at the head of the term.
@@ -474,9 +470,9 @@ printf( "\n" );  fflush( stdout );
             #endif
         }
 
-#if DEBUG__SK
-print_term( term );
-#endif
+    #if DEBUG__SK
+    print_term( term );
+    #endif
 
         #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
 printf( "iter = %i\n", iter );

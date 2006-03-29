@@ -78,8 +78,7 @@ SK_reduce(
     Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
-    Type *combinator_type,
-    void (*for_each_iteration)(Term*) );
+    Type *combinator_type );
 
 
 #endif  /* SK_H */

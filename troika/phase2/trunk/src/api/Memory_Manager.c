@@ -374,6 +374,9 @@ memory_manager__collect( Memory_Manager *m )
 {
     void *noop( Object **opp )
     {
+        /* Avoid "unused parameter" warning. */
+        opp = 0;
+
         return 0;
     }
 

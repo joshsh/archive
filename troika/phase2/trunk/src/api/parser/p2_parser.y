@@ -143,7 +143,7 @@ static int exit_early;
 static int error_character_number, error_line_number, invalid_statement_number;
 
 /** Buffer for "verbose" error message received by yyerror. */
-static char yyerror_msg[ ERROR_BUFFER__SIZE ];
+static char yyerror_msg[ERROR_BUFFER__SIZE];
 
 
 /******************************************************************************/
@@ -169,6 +169,9 @@ yywrap()
 void
 yyerror( p2_parser__exit_state *ignored, const char *msg )
 {
+    /* Avoid "unused parameter" compiler warning. */
+    ignored = 0;
+
     /* Only the first error in a statement is reported. */
     if ( ! *yyerror_msg )
     {
@@ -276,8 +279,7 @@ term2ast( Term *t )
     int int_t;
     char *string_t;
 
-    /** (void *) instead of (Term *), (p2_ast *) (Array*) because
-        Bison won't take an alias here. */
+    /** (void *) instead of (p2_ast *) because Bison won't take an alias here. */
     void *parser_node;
 
     struct Array *bag, *name;
@@ -293,11 +295,12 @@ term2ast( Term *t )
 %token L_BRACE COMMA R_BRACE
 %token COLON EQUALS SEMICOLON E_O_F
 
-%token <string_t> ID STRING COMMAND_NAME
+%token <string_t> COMMAND_NAME ID STRING
 %token <char_t> CHAR
 %token <float_t> FLOAT
 %token <int_t> INT
 
+%type <string_t> command_name id
 %type <term> term subterm command_args
 %type <parser_node> term_item bracketed_term
 %type <bag> bag bag_head
@@ -402,6 +405,15 @@ statements:
         production( "statements ::=  statements error SEMICOLON" );
         #endif
 
+        if ( *yyerror_msg )
+            handle_error();
+
+        if ( exit_early )
+        {
+            *return_state = exit_state__aborted;
+            YYACCEPT;
+        }
+
         ERROK;
     };
 
@@ -449,29 +461,69 @@ statement:
 command:
 
     /* Command with no command_args. */
-    COMMAND_NAME
+    command_name
     {
         #if DEBUG__PARSER
-        production( "command ::=  COMMAND_NAME" );
+        production( "command ::=  command_name" );
+        #endif
+
+        $$ = new_statement( 0, $1, 0 );
+    }
+
+    | command_name error
+    {
+        #if DEBUG__PARSER
+        production( "command ::=  command_name error" );
         #endif
 
         if ( $1 )
-            $$ = new_statement( 0, $1, 0 );
-        else
-            $$ = 0;
+            free( $1 );
+
+        $$ = 0;
+
+        ERROK;
     }
 
     /* Command with command_args. */
-    | COMMAND_NAME command_args
+    | command_name command_args
     {
         #if DEBUG__PARSER
-        production( "command ::=  COMMAND_NAME command_args" );
+        production( "command ::=  command_name command_args" );
+        #endif
+
+        if ( $2 )
+            $$ = new_statement( 0, $1, p2_ast__term( $2 ) );
+    }
+
+    | command_name command_args error
+    {
+        #if DEBUG__PARSER
+        production( "command ::=  command_name command_args error" );
         #endif
 
         if ( $1 )
-            $$ = new_statement( 0, $1, p2_ast__term( $2 ) );
-        else
-            $$ = 0;
+            free( $1 );
+
+        if ( $2 )
+            p2_ast__delete( p2_ast__term( $2 ) );
+
+        $$ = 0;
+
+        ERROK;
+    };
+
+
+/* Trivial rule prevents memory leaks when non-grammatical COMMAND_NAME is
+   matched by the lexer. */
+command_name:
+
+    COMMAND_NAME
+    {
+        #if DEBUG__PARSER
+        production( "command_name ::=  COMMAND_NAME" );
+        #endif
+
+        $$ = STRDUP( $1 );
     };
 
 
@@ -523,6 +575,20 @@ expression:
             $$ = 0;
     }
 
+    | term error
+    {
+        #if DEBUG__PARSER
+        production( "expression ::=  term error" );
+        #endif
+
+        if ( $1 )
+            p2_ast__delete( p2_ast__term( $1 ) );
+
+        $$ = 0;
+
+        ERROK;
+    }
+
     /* Named expression. */
     | term EQUALS name
     {
@@ -530,11 +596,38 @@ expression:
         production( "expression ::=  term EQUALS name" );
         #endif
 
-        if ( $1 )
+        if ( $1 && $3 )
                                 /* !      */
             $$ = new_statement( $3, 0, term2ast( $1 ) );
+
         else
+        {
             $$ = 0;
+
+            if ( $1 )
+                p2_ast__delete( p2_ast__term( $1 ) );
+
+            if ( $3 )
+                p2_ast__delete( p2_ast__name( $3 ) );
+        }
+    }
+
+    /* Named expression. */
+    | term EQUALS name error
+    {
+        #if DEBUG__PARSER
+        production( "expression ::=  term EQUALS name error" );
+        #endif
+
+        $$ = 0;
+
+        if ( $1 )
+            p2_ast__delete( p2_ast__term( $1 ) );
+
+        if ( $3 )
+            p2_ast__delete( p2_ast__name( $3 ) );
+
+        ERROK;
     }
 
     | term EQUALS error
@@ -675,7 +768,7 @@ term_item:
         production( "term_item ::=  STRING" );
         #endif
 
-        $$ = p2_ast__string( $1 );
+        $$ = p2_ast__string( STRDUP( $1 ) );
     }
 
     | bag
@@ -854,23 +947,29 @@ bag_head:
 
 name:
 
-    ID
+    id
     {
         #if DEBUG__PARSER
         production( "name ::=  ID" );
         #endif
 
-        $$ = ( void* ) array__new( 1, 0 );
-        array__enqueue( $$, $1 );
+        if ( $1 )
+        {
+            $$ = array__new( 1, 0 );
+            array__enqueue( $$, $1 );
+        }
+
+        else
+            $$ = 0;
     }
 
-    | name COLON ID
+    | name COLON id
     {
         #if DEBUG__PARSER
         production( "name ::=  name COLON ID" );
         #endif
 
-        if ( $1 )
+        if ( $1 && $3 )
         {
             $$ = $1;
             array__enqueue( $$, $3 );
@@ -878,8 +977,13 @@ name:
 
         else
         {
+            if ( $1 )
+                p2_ast__delete( p2_ast__name( $1 ) );
+
+            if ( $3 )
+                free( $3 );
+
             $$ = 0;
-            free( $3 );
         }
     }
 
@@ -893,6 +997,20 @@ name:
         p2_ast__delete( p2_ast__name( $1 ) );
 
         ERROK;
+    };
+
+
+/* Trivial rule prevents memory leaks when non-grammatical ID is matched by
+   the lexer. */
+id:
+
+    ID
+    {
+        #if DEBUG__PARSER
+        production( "id ::=  ID" );
+        #endif
+
+        $$ = STRDUP( $1 );
     };
 
 
@@ -947,7 +1065,7 @@ handle_expression( Name *name, p2_ast *expr )
        compiler__evaluate_expression. */
     exit_early = exit_early || compiler__evaluate_expression( name, expr );
 
-    if (!compiler__suppress_output())
+    if ( !compiler__suppress_output() )
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
         printf( EXPRESSION_OUTPUT_SUFFIX );

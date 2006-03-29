@@ -12,7 +12,7 @@ CC      = gcc $(INCLUDE)
 VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 
 
-objects = Array.o Bunch.o Dictionary.o Graph.o Hash_Table.o Hash_Map.o Name.o Set.o Term.o ../Collection.o
+objects = Array.o Bunch.o Dictionary.o Graph.o Hash_Map.o Hash_Table.o Name.o Set.o Term.o ../Collection.o
 
 
 .PHONY : default

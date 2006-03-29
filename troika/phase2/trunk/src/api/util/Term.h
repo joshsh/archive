@@ -17,7 +17,7 @@ a length of i cells.  For instance, \n
 The term array occupies the higher-address portion of an expanding buffer and
 grows towards the lower-address end.
 
-\note  This library assumes that sizeof( void* ) == sizeof( unsigned int ).
+\note  This library assumes that sizeof ( void* ) == sizeof ( unsigned int ).
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -74,7 +74,6 @@ struct Term
     /** The buffer expands by this factor whenever it becomes full. */
     double expansion;
 };
-
 
 
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
