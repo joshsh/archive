@@ -40,6 +40,14 @@ struct Compiler
 /******************************************************************************/
 
 
+/** Bison parser dependency. */
+extern int
+yyparse( Compiler *c, p2_parser__exit_state *es );
+
+
+/******************************************************************************/
+
+
 static void
 char__encode__alt( char *c, char *buffer )
 {

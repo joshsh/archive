@@ -34,12 +34,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
 
 #include <parser/Ast.h>
-#include "p2_parser.h"
-
-
-/** Bison parser dependency. */
-extern int
-yyparse( void );
+#include <parser/p2_parser.h>
 
 
 typedef struct Compiler
@@ -47,6 +42,11 @@ typedef struct Compiler
     int bogus;
 
 } Compiler;
+
+
+/** Bison parser dependency. */
+extern int
+yyparse( Compiler *c, p2_parser__exit_state *es );
 
 
 /******************************************************************************/

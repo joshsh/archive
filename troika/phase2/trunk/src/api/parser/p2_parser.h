@@ -31,14 +31,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <defs.h>
 
 
-typedef enum _p2_parser__exit_state
+enum p2_parser__exit_state
 {
     exit_state__aborted,
     exit_state__end_of_input,
     exit_state__locked_out,
     exit_state__parse_failure
 
-} p2_parser__exit_state;
+};
+
+typedef enum p2_parser__exit_state p2_parser__exit_state;
 
 
 #endif  /* P2_PARSER_H */

@@ -35,11 +35,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Dictionary.h>
 
 
-/** Bison parser dependency. */
-extern int
-yyparse( void );
-
-
 typedef struct Compiler Compiler;
 
 
