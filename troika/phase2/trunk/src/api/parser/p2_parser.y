@@ -99,10 +99,10 @@ extern void
 new_parse( Compiler *c );
 
 extern int
-get_char_number();
+get_char_number( void );
 
 extern int
-get_line_number();
+get_line_number( void );
 
 /** Current statement number.  Starts at 0 for each line of input. */
 extern int
@@ -160,7 +160,7 @@ static char yyerror_msg[ERROR_BUFFER__SIZE];
 
 /** Tells the parser to process only a single input stream. */
 int
-yywrap()
+yywrap( void )
 {
     return 1;
 }
@@ -1018,9 +1018,6 @@ id:
 
 
 %%
-
-
-/*  main() { yyparse(); }  */
 
 
 static void

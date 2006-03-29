@@ -86,7 +86,7 @@ int line_number, column_number, last_column_number, statement_number;
 Compiler *compiler_global;
 
 /** Decorate command-line input. */
-void print_input_prefix();
+void print_input_prefix( void );
 
 void new_token( int /* length */ );
 
@@ -96,10 +96,10 @@ void new_line( Compiler *c );
 void new_parse( Compiler *c );
 
 /** \return  the current line number.  Starts at 1. */
-int get_line_number();
+int get_line_number( void );
 
 /** \return the current "column" number, where tabs only count for one column. */
-int get_char_number();
+int get_char_number( void );
 
 
 /* Debugging output ***********************************************************/
@@ -452,14 +452,14 @@ void new_parse( Compiler *c )
 
 
 /** \return  the current line number.  Starts at 1. */
-int get_line_number()
+int get_line_number( void )
 {
     return line_number;
 }
 
 
 /** \return the current "column" number, where tabs only count for one column. */
-int get_char_number()
+int get_char_number( void )
 {
     if ( !last_column_number )
         return 1;

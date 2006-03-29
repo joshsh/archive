@@ -37,7 +37,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** Bison parser dependency. */
 extern int
-yyparse();
+yyparse( void );
 
 
 typedef struct Compiler Compiler;

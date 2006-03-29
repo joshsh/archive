@@ -38,7 +38,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** Bison parser dependency. */
-extern int yyparse();
+extern int
+yyparse( void );
 
 
 typedef struct Compiler
@@ -149,7 +150,7 @@ boolean compiler__show_line_numbers( Compiler *c )
 static int active = 0;
 
 /** yyparse is invoked here. */
-p2_parser__exit_state parse()
+p2_parser__exit_state parse( void )
 {
     p2_parser__exit_state return_state;
     int yyparse__exit_value;
@@ -171,7 +172,7 @@ p2_parser__exit_state parse()
 }
 
 
-int main()
+int main( void )
 {
     printf( "Phase2 v%s command-line parser debugger.  Type '!quit;' to exit.\n\n", VERSION );
 
