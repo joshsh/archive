@@ -49,7 +49,7 @@ valgrind-session :  $(DEBUGGER)
 
 utils = $(UTILS)/Array.o $(UTILS)/Name.o $(UTILS)/Term.o
 
-objects = debugger.o ../Type.o p2_ast.o $(NAME).tab.o
+objects = debugger.o ../Type.o Ast.o $(NAME).tab.o
 
 
 debugger :  $(objects) $(utils) lex.yy.o
@@ -61,7 +61,7 @@ $(objects) $(utils) : ../defs.h ../settings.h
 ################################################################################
 
 .PHONY : objects
-objects: lex.yy.o $(NAME).tab.o p2_ast.o ##$(NAME)-aux.o
+objects: lex.yy.o $(NAME).tab.o Ast.o ##$(NAME)-aux.o
 
 
 lex.yy.o : lex.yy.c $(NAME).tab.h

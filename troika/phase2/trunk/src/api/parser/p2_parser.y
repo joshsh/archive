@@ -63,7 +63,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <string.h>  /* strcpy */
 
-#include "p2_ast.h"
+#include <parser/Ast.h>
 #include "p2_parser.h"
 
 #include <util/Term.h>
@@ -78,10 +78,10 @@ yylex( void );
 
 
 extern int
-compiler__evaluate_command( char * /*name*/, p2_ast * /*args*/ );
+compiler__evaluate_command( char * /*name*/, Ast * /*args*/ );
 
 extern int
-compiler__evaluate_expression( Name * /*name*/, p2_ast * /*expr*/ );
+compiler__evaluate_expression( Name * /*name*/, Ast * /*expr*/ );
 
 extern int
 compiler__handle_parse_error( char * /*msg*/ );
@@ -121,11 +121,11 @@ statement_number;
 
 /** Evaluate a command. */
 static void
-handle_command( char * /*name*/, p2_ast * /*args*/ );
+handle_command( char * /*name*/, Ast * /*args*/ );
 
 /** Evaluate an expression. */
 static void
-handle_expression( Name * /*name*/, p2_ast * /*expr*/ );
+handle_expression( Name * /*name*/, Ast * /*expr*/ );
 
 /** Deal gracefully with a parse error. */
 static void
@@ -228,12 +228,12 @@ struct Statement
 {
     Name *name;
     char *simple_name;
-    p2_ast *expr;
+    Ast *expr;
 };
 
 
 static Statement *
-new_statement( Name *name, char *simple_name, p2_ast *expr )
+new_statement( Name *name, char *simple_name, Ast *expr )
 {
     Statement *stmt = new( Statement );
 
@@ -248,13 +248,13 @@ new_statement( Name *name, char *simple_name, p2_ast *expr )
 /******************************************************************************/
 
 
-static p2_ast *
+static Ast *
 term2ast( Term *t )
 {
-    p2_ast *ast;
+    Ast *ast;
 
     if ( term__length( t ) > 1 )
-        ast = p2_ast__term( t );
+        ast = ast__term( t );
 
     else
     {
@@ -279,7 +279,7 @@ term2ast( Term *t )
     int int_t;
     char *string_t;
 
-    /** (void *) instead of (p2_ast *) because Bison won't take an alias here. */
+    /** (void *) instead of (Ast *) because Bison won't take an alias here. */
     void *parser_node;
 
     struct Array *bag, *name;
@@ -492,7 +492,7 @@ command:
         #endif
 
         if ( $2 )
-            $$ = new_statement( 0, $1, p2_ast__term( $2 ) );
+            $$ = new_statement( 0, $1, ast__term( $2 ) );
     }
 
     | command_name command_args error
@@ -505,7 +505,7 @@ command:
             free( $1 );
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( $2 ) );
+            ast__delete( ast__term( $2 ) );
 
         $$ = 0;
 
@@ -536,7 +536,7 @@ command_args:
         #endif
 
         /* Create a singleton term containing one argument. */
-        $$ = term__new( p2_ast__name( $1 ), 1 );
+        $$ = term__new( ast__name( $1 ), 1 );
     }
 
     | command_args name
@@ -548,7 +548,7 @@ command_args:
         /* Concatenate the command command_args. */
         if ( $1 )
         {
-            $$ = term__cat( $1, term__new( p2_ast__name( $2 ), 1 ) );
+            $$ = term__cat( $1, term__new( ast__name( $2 ), 1 ) );
         }
 
         else
@@ -582,7 +582,7 @@ expression:
         #endif
 
         if ( $1 )
-            p2_ast__delete( p2_ast__term( $1 ) );
+            ast__delete( ast__term( $1 ) );
 
         $$ = 0;
 
@@ -605,10 +605,10 @@ expression:
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__term( $1 ) );
+                ast__delete( ast__term( $1 ) );
 
             if ( $3 )
-                p2_ast__delete( p2_ast__name( $3 ) );
+                ast__delete( ast__name( $3 ) );
         }
     }
 
@@ -622,10 +622,10 @@ expression:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__term( $1 ) );
+            ast__delete( ast__term( $1 ) );
 
         if ( $3 )
-            p2_ast__delete( p2_ast__name( $3 ) );
+            ast__delete( ast__name( $3 ) );
 
         ERROK;
     }
@@ -639,7 +639,7 @@ expression:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__term( $1 ) );
+            ast__delete( ast__term( $1 ) );
 
         ERROK;
     };
@@ -671,9 +671,9 @@ term:
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__term( $1 ) );
+                ast__delete( ast__term( $1 ) );
             if ( $2 )
-                p2_ast__delete( p2_ast__term( $2 ) );
+                ast__delete( ast__term( $2 ) );
         }
     };
 
@@ -727,7 +727,7 @@ subterm:
         $$ = 0;
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( $2 ) );
+            ast__delete( ast__term( $2 ) );
 
         ERROK;
     };
@@ -741,7 +741,7 @@ term_item:
         production( "term_item ::=  CHAR" );
         #endif
 
-        $$ = p2_ast__char( $1 );
+        $$ = ast__char( $1 );
     }
 
     | FLOAT
@@ -750,7 +750,7 @@ term_item:
         production( "term_item ::=  FLOAT" );
         #endif
 
-        $$ = p2_ast__float( $1 );
+        $$ = ast__float( $1 );
     }
 
     | INT
@@ -759,7 +759,7 @@ term_item:
         production( "term_item ::=  INT" );
         #endif
 
-        $$ = p2_ast__int( $1 );
+        $$ = ast__int( $1 );
     }
 
     | STRING
@@ -768,7 +768,7 @@ term_item:
         production( "term_item ::=  STRING" );
         #endif
 
-        $$ = p2_ast__string( STRDUP( $1 ) );
+        $$ = ast__string( STRDUP( $1 ) );
     }
 
     | bag
@@ -778,7 +778,7 @@ term_item:
         #endif
 
         if ( $1 )
-            $$ = p2_ast__bag( $1 );
+            $$ = ast__bag( $1 );
 
         else
             $$ = 0;
@@ -791,7 +791,7 @@ term_item:
         #endif
 
         if ( $1 )
-            $$ = p2_ast__name( $1 );
+            $$ = ast__name( $1 );
 
         else
             $$ = 0;
@@ -816,7 +816,7 @@ bracketed_term:
         #endif
 
         if ( $2 )
-            $$ = ( void* ) p2_ast__term( $2 );
+            $$ = ( void* ) ast__term( $2 );
 
         else
             $$ = 0;
@@ -842,7 +842,7 @@ bracketed_term:
         $$ = 0;
 
         if ( $2 )
-            p2_ast__delete( p2_ast__term( $2 ) );
+            ast__delete( ast__term( $2 ) );
 
         ERROK;
     };
@@ -872,7 +872,7 @@ bag:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__bag( $1 ) );
+            ast__delete( ast__bag( $1 ) );
 
         ERROK;
     };
@@ -924,9 +924,9 @@ bag_head:
             $$ = 0;
 
             if ( $1 )
-                p2_ast__delete( p2_ast__bag( $1 ) );
+                ast__delete( ast__bag( $1 ) );
             if ( $3 )
-                p2_ast__delete( p2_ast__term( $3 ) );
+                ast__delete( ast__term( $3 ) );
         }
     }
 
@@ -939,7 +939,7 @@ bag_head:
         $$ = 0;
 
         if ( $1 )
-            p2_ast__delete( p2_ast__bag( $1 ) );
+            ast__delete( ast__bag( $1 ) );
 
         ERROK;
     };
@@ -978,7 +978,7 @@ name:
         else
         {
             if ( $1 )
-                p2_ast__delete( p2_ast__name( $1 ) );
+                ast__delete( ast__name( $1 ) );
 
             if ( $3 )
                 free( $3 );
@@ -994,7 +994,7 @@ name:
         #endif
 
         $$ = 0;
-        p2_ast__delete( p2_ast__name( $1 ) );
+        ast__delete( ast__name( $1 ) );
 
         ERROK;
     };
@@ -1021,7 +1021,7 @@ id:
 
 
 static void
-handle_command( char *name, p2_ast *args )
+handle_command( char *name, Ast *args )
 {
     if ( !compiler__suppress_output() )
     {
@@ -1049,7 +1049,7 @@ handle_command( char *name, p2_ast *args )
 
 
 static void
-handle_expression( Name *name, p2_ast *expr )
+handle_expression( Name *name, Ast *expr )
 {
     if ( !compiler__suppress_output() )
     {

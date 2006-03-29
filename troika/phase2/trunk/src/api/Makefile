@@ -54,7 +54,7 @@ test :
 
 PARSER_OBJECTS = $(PARSER)/lex.yy.o \
                  $(PARSER)/p2_parser.tab.o \
-                 $(PARSER)/p2_ast.o
+                 $(PARSER)/Ast.o
 
 .PHONY: parser
 parser :

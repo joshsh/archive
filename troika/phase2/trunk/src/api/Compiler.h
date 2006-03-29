@@ -30,7 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Environment.h>
-#include <parser/p2_ast.h>
+#include <parser/Ast.h>
 #include <parser/p2_parser.h>
 #include <util/Dictionary.h>
 
@@ -71,10 +71,10 @@ compiler__parse( Compiler *c );
 
 
 extern int
-compiler__evaluate_command( char *name, p2_ast *args );
+compiler__evaluate_command( char *name, Ast *args );
 
 extern int
-compiler__evaluate_expression( Name *name, p2_ast *expr );
+compiler__evaluate_expression( Name *name, Ast *expr );
 
 extern int
 compiler__handle_parse_error( char *msg );

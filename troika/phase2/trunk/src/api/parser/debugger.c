@@ -33,9 +33,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  /* strcmp, strlen */
 #include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
 
-#include "p2_ast.h"
+#include <parser/Ast.h>
 #include "p2_parser.h"
-#include <defs.h>
 
 
 /** Bison parser dependency. */
@@ -46,14 +45,14 @@ extern int yyparse();
 
 
 /** Mock command evaluator. */
-int compiler__evaluate_command( char *name, p2_ast *args )
+int compiler__evaluate_command( char *name, Ast *args )
 {
     int ret = 0;
 
     if ( args )
     {
         printf( "Evaluate command \"%s\" :  ", name );
-        p2_ast__print( args );
+        ast__print( args );
     }
 
     else
@@ -66,7 +65,7 @@ int compiler__evaluate_command( char *name, p2_ast *args )
         ret = 1;
 
     if ( args )
-        p2_ast__delete( args );
+        ast__delete( args );
 
     free( name );
 
@@ -75,25 +74,25 @@ int compiler__evaluate_command( char *name, p2_ast *args )
 
 
 /** Mock expression evaluator. */
-int compiler__evaluate_expression( Name *name, p2_ast *expr )
+int compiler__evaluate_expression( Name *name, Ast *expr )
 {
     int ret = 0;
-    p2_ast *a;
+    Ast *a;
 
     if ( name )
     {
-        a = p2_ast__name( name );
+        a = ast__name( name );
         printf( "Evaluate expression \"" );
-        p2_ast__print( a );
-        p2_ast__delete( a );
+        ast__print( a );
+        ast__delete( a );
         printf( "\" :  ");
     }
 
     else
         printf( "Evaluate anonymous expression :  " );
 
-    p2_ast__print( expr );
-    p2_ast__delete( expr );
+    ast__print( expr );
+    ast__delete( expr );
 
     return ret;
 }

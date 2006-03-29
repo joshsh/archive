@@ -1,6 +1,6 @@
 /**
 
-\file  p2_ast.h
+\file  Ast.h
 
 \brief  Defines a Phase2 abstract syntax tree.
 
@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Term.h>
 
 
-enum p2_ast__type
+enum ast__type
 {
     BAG_T = 0,  /**< A bag composed of terms. */
     CHAR_T,
@@ -44,22 +44,22 @@ enum p2_ast__type
     INT_T,
     NAME_T,     /**< A URN-like sequence of name fragments. */
     STRING_T,
-    TERM_T,     /**< A term composed of p2_asts. */
+    TERM_T,     /**< A term composed of Asts. */
     VOID_T      /**< A generic pointer to data not owned by the AST. */
 };
 
-typedef enum p2_ast__type p2_ast__type;
+typedef enum ast__type ast__type;
 
 
-extern const char *p2_ast__type__name( p2_ast__type type );
+extern const char *ast__type__name( ast__type type );
 
 
-typedef struct p2_ast p2_ast;
+typedef struct Ast Ast;
 
 /** The root node of a Phase2 abstract syntax tree. */
-struct p2_ast
+struct Ast
 {
-    p2_ast__type type;
+    ast__type type;
 
     void *value;
 };
@@ -67,48 +67,48 @@ struct p2_ast
 
 /** \param bag  a Array of AST nodes
     \return  a new AST node of type BAG */
-extern p2_ast *
-p2_ast__bag( Array *bag );
+extern Ast *
+ast__bag( Array *bag );
 
-extern p2_ast *
-p2_ast__char( char c );
+extern Ast *
+ast__char( char c );
 
-extern p2_ast *
-p2_ast__float( double f );
+extern Ast *
+ast__float( double f );
 
-extern p2_ast *
-p2_ast__int( int i );
+extern Ast *
+ast__int( int i );
 
 /** \param name  a Array of C strings representing a name
     \return  a new AST node of type NAME */
-extern p2_ast *
-p2_ast__name( Name *name );
+extern Ast *
+ast__name( Name *name );
 
-extern p2_ast *
-p2_ast__string( char *s );
+extern Ast *
+ast__string( char *s );
 
 /** \param term  a Term of AST nodes
     \return  a new AST node of type TERM */
-extern p2_ast *
-p2_ast__term( Term *term );
+extern Ast *
+ast__term( Term *term );
 
 
-extern p2_ast *
-p2_ast__void( void *p );
+extern Ast *
+ast__void( void *p );
 
 
 extern int
-p2_ast__size( p2_ast *ast );
+ast__size( Ast *ast );
 
 
 /** \param ast  AST node to free */
 extern void
-p2_ast__delete( p2_ast *ast );
+ast__delete( Ast *ast );
 
 
 /** \param ast  AST node to print */
 extern void
-p2_ast__print( p2_ast *ast );
+ast__print( Ast *ast );
 
 
 #endif  /* P2_AST_H */

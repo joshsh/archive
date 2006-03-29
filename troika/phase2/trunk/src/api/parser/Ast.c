@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "p2_ast.h"
+#include <parser/Ast.h>
 
 
 /** If defined, print terms as raw integer sequences, rather than as
@@ -25,10 +25,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* #define PRINT_TERM_AS_ARRAY */
 
 
-/* p2_ast__type ***************************************************************/
+/* ast__type ***************************************************************/
 
 
-const char *p2_ast__type__names[8] =
+const char *ast__type__names[8] =
 {
     "BAG_T",
     "CHAR_T",
@@ -42,9 +42,9 @@ const char *p2_ast__type__names[8] =
 
 
 const char *
-p2_ast__type__name( p2_ast__type type )
+ast__type__name( ast__type type )
 {
-    return p2_ast__type__names[ type ];
+    return ast__type__names[ type ];
 }
 
 
@@ -52,129 +52,129 @@ p2_ast__type__name( p2_ast__type type )
 
 
 /** \note  Ownership of the passed value is conferred to the new node. */
-static p2_ast *
-p2_ast__new( p2_ast__type type, void *value )
+static Ast *
+ast__new( ast__type type, void *value )
 {
-    p2_ast *node = new( p2_ast );
+    Ast *node = new( Ast );
     node->type = type;
     node->value = value;
     return node;
 }
 
 
-p2_ast *
-p2_ast__bag( Array *bag )
+Ast *
+ast__bag( Array *bag )
 {
-    p2_ast *ast = p2_ast__new( BAG_T, bag );
+    Ast *ast = ast__new( BAG_T, bag );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__bag(%#x)\n", ( int ) ast, ( int) bag );
+    printf( "[%#x] ast__bag(%#x)\n", ( int ) ast, ( int) bag );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__char( char c )
+Ast *
+ast__char( char c )
 {
-    p2_ast *ast;
+    Ast *ast;
     char *p;
 
     p = new( char );
     *p = c;
-    ast = p2_ast__new( CHAR_T, p );
+    ast = ast__new( CHAR_T, p );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__char('%c')\n", ( int ) ast, c );
+    printf( "[%#x] ast__char('%c')\n", ( int ) ast, c );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__float( double f )
+Ast *
+ast__float( double f )
 {
-    p2_ast *ast;
+    Ast *ast;
     double *p;
 
     p = new( double );
     *p = f;
-    ast = p2_ast__new( FLOAT_T, p );
+    ast = ast__new( FLOAT_T, p );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__float(%g)\n", ( int ) ast, f );
+    printf( "[%#x] ast__float(%g)\n", ( int ) ast, f );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__int( int i )
+Ast *
+ast__int( int i )
 {
-    p2_ast *ast;
+    Ast *ast;
     int *p;
 
     p = new( int );
     *p = i;
-    ast = p2_ast__new( INT_T, p );
+    ast = ast__new( INT_T, p );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__int(%i)\n", ( int ) ast, i );
+    printf( "[%#x] ast__int(%i)\n", ( int ) ast, i );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__name( Name *name )
+Ast *
+ast__name( Name *name )
 {
-    p2_ast *ast = p2_ast__new( NAME_T, name );
+    Ast *ast = ast__new( NAME_T, name );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__name(%#x)\n", ( int ) ast, ( int) name );
+    printf( "[%#x] ast__name(%#x)\n", ( int ) ast, ( int) name );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__string( char *s )
+Ast *
+ast__string( char *s )
 {
-    p2_ast *ast = p2_ast__new( STRING_T, s );
+    Ast *ast = ast__new( STRING_T, s );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__string(%#x)\n", ( int ) ast, ( int) s );
+    printf( "[%#x] ast__string(%#x)\n", ( int ) ast, ( int) s );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__term( Term *term )
+Ast *
+ast__term( Term *term )
 {
-    p2_ast *ast = p2_ast__new( TERM_T, term );
+    Ast *ast = ast__new( TERM_T, term );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__term(%#x)\n", ( int ) ast, ( int) term );
+    printf( "[%#x] ast__term(%#x)\n", ( int ) ast, ( int) term );
     #endif
 
     return ast;
 }
 
 
-p2_ast *
-p2_ast__void( void *p )
+Ast *
+ast__void( void *p )
 {
-    p2_ast *ast = p2_ast__new( VOID_T, p );
+    Ast *ast = ast__new( VOID_T, p );
 
     #if DEBUG__AST
-    printf( "[%#x] p2_ast__void(%#x)\n", ( int ) ast, ( int ) p );
+    printf( "[%#x] ast__void(%#x)\n", ( int ) ast, ( int ) p );
     #endif
 
     return ast;
@@ -182,7 +182,7 @@ p2_ast__void( void *p )
 
 
 int
-p2_ast__size( p2_ast *ast )
+ast__size( Ast *ast )
 {
     switch ( ast->type )
     {
@@ -197,16 +197,16 @@ p2_ast__size( p2_ast *ast )
 
 
 void
-p2_ast__delete( p2_ast *ast )
+ast__delete( Ast *ast )
 {
-    void *helper( p2_ast **ast )
+    void *helper( Ast **ast )
     {
-        p2_ast__delete( *ast );
+        ast__delete( *ast );
         return 0;
     }
 
     #if DEBUG__AST
-    printf( "[] p2_ast__delete(%#x)\n", ( int ) ast );
+    printf( "[] ast__delete(%#x)\n", ( int ) ast );
     #endif
 
     switch( ast->type )
@@ -257,7 +257,7 @@ p2_ast__delete( p2_ast *ast )
 
         default:
 
-            fprintf( stderr, "p2_ast__delete: bad AST type: %i\n", ast->type );
+            fprintf( stderr, "ast__delete: bad AST type: %i\n", ast->type );
             return;
     }
 
@@ -285,7 +285,7 @@ term__print( Term *term, int top_level )
         unsigned int i, length = term__length( term );
 
         if ( length == 1 )
-            p2_ast__print( ( p2_ast* ) *( term->head + 1 ) );
+            ast__print( ( Ast* ) *( term->head + 1 ) );
             /*printf((char *) *(term->head + 1)); */
 
         else
@@ -331,7 +331,7 @@ bag__print( Array *a )
         {
             if ( i )
                 printf( ", " );
-            p2_ast__print( ( p2_ast* ) array__get( a, i ) );
+            ast__print( ( Ast* ) array__get( a, i ) );
         }
 
         /*if ( size > 1 )*/
@@ -341,7 +341,7 @@ bag__print( Array *a )
 
 
 void
-p2_ast__print( p2_ast *ast )
+ast__print( Ast *ast )
 {
     char *s;
 
@@ -401,7 +401,7 @@ p2_ast__print( p2_ast *ast )
 
         default:
 
-            fprintf( stderr, "p2_ast__delete: bad AST type: %i\n", ast->type );
+            fprintf( stderr, "ast__delete: bad AST type: %i\n", ast->type );
     }
 }
 

@@ -222,10 +222,10 @@ compiler__parse( Compiler *c )
 
 
 static int
-n_args( p2_ast *args, int n )
+n_args( Ast *args, int n )
 {
     int match = ( args )
-        ? ( n == p2_ast__size( args ) )
+        ? ( n == ast__size( args ) )
         : !n;
 
     if ( !match )
@@ -235,8 +235,8 @@ n_args( p2_ast *args, int n )
 }
 
 
-static p2_ast *
-get_inner_node( p2_ast *ast )
+static Ast *
+get_inner_node( Ast *ast )
 {
     Term *term;
 
@@ -252,10 +252,10 @@ get_inner_node( p2_ast *ast )
 
     if ( ( unsigned int ) *( term->head ) == 2 )
         /* Singleton term. */
-        return ( p2_ast* ) *( term->head + 1 );
+        return ( Ast* ) *( term->head + 1 );
     else
         /* Left-associative sequence. */
-        return ( p2_ast* ) *( term->head + 2 );
+        return ( Ast* ) *( term->head + 2 );
 }
 
 
@@ -318,15 +318,15 @@ resolve_name( Compiler *c, Name *name )
 /******************************************************************************/
 
 
-/* Transforms a p2_ast into a Object, deleting the p2_ast along the way. */
+/* Transforms a Ast into a Object, deleting the Ast along the way. */
 static Object *
-object_for_ast( p2_ast* ast )
+object_for_ast( Ast* ast )
 {
     boolean ok = TRUE;
 
-    void *helper( p2_ast **astpp )
+    void *helper( Ast **astpp )
     {
-        if ( !( *astpp = ( p2_ast* ) object_for_ast( *astpp ) ) )
+        if ( !( *astpp = ( Ast* ) object_for_ast( *astpp ) ) )
         {
             ok = FALSE;
             return walker__break;
@@ -374,7 +374,7 @@ object_for_ast( p2_ast* ast )
 
             /* Retrieve an existing object and exit. */
             o = resolve_name( compiler, ( Name* ) ast->value );
-            p2_ast__delete( ast );
+            ast__delete( ast );
             return o;
 
         case STRING_T:
@@ -422,18 +422,18 @@ object_for_ast( p2_ast* ast )
 
 
 static void
-change_namespace( Compiler *c, p2_ast *args )
+change_namespace( Compiler *c, Ast *args )
 {
 /*
-printf( "args->type = %s\n", p2_ast__type__name( args->type ) ); fflush( stdout );
+printf( "args->type = %s\n", ast__type__name( args->type ) ); fflush( stdout );
 */
     Object *o;
     Name *name;
 
-    p2_ast *arg = get_inner_node( args );
+    Ast *arg = get_inner_node( args );
 
 /*
-printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
+printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
 */
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )
@@ -458,7 +458,7 @@ printf( "arg->type = %s\n", p2_ast__type__name( arg->type ) ); fflush( stdout );
         {
             c->cur_ns_obj = o;
             printf( "Moved to namespace '" );
-            p2_ast__print( arg );
+            ast__print( arg );
             printf( "'.\n" );
         }
     }
@@ -489,12 +489,12 @@ show_license()
 
 
 static void
-new_namespace( Compiler *c, p2_ast *args )
+new_namespace( Compiler *c, Ast *args )
 {
     Object *o;
     Name *name;
 
-    p2_ast *arg = get_inner_node( args );
+    Ast *arg = get_inner_node( args );
 
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )
@@ -518,10 +518,10 @@ new_namespace( Compiler *c, p2_ast *args )
 
 
 static void
-remove_ns_item( Compiler *c, p2_ast *args )
+remove_ns_item( Compiler *c, Ast *args )
 {
     Name *name;
-    p2_ast *arg = get_inner_node( args );
+    Ast *arg = get_inner_node( args );
 
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )
@@ -542,10 +542,10 @@ remove_ns_item( Compiler *c, p2_ast *args )
 
 
 static void
-save_as( Compiler *c, p2_ast *args )
+save_as( Compiler *c, Ast *args )
 {
     char *path;
-    p2_ast *arg = get_inner_node( args );
+    Ast *arg = get_inner_node( args );
     Name *name = ( Name* ) arg->value;
 
     #if DEBUG__COMPILER
@@ -592,7 +592,7 @@ printf( "---c gc 2---\n" ); fflush( stdout );
 
 
 int
-compiler__evaluate_command( char *name, p2_ast *args )
+compiler__evaluate_command( char *name, Ast *args )
 {
     int ret = 0;
 
@@ -657,7 +657,7 @@ compiler__evaluate_command( char *name, p2_ast *args )
         printf( "Error: unknown command.\n" );
 
     if ( args )
-        p2_ast__delete( args );
+        ast__delete( args );
 
     free( name );
 
@@ -666,10 +666,10 @@ compiler__evaluate_command( char *name, p2_ast *args )
 
 
 int
-compiler__evaluate_expression( Name *name, p2_ast *expr )
+compiler__evaluate_expression( Name *name, Ast *expr )
 {
     int ret = 0;
-    p2_ast *a = 0;
+    Ast *a = 0;
     Object *o;
     char print_buffer[1000];
     Term *t;
@@ -698,7 +698,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     compiler->env->term_t->encode = ( Encoder ) term__encode__alt;
 
     if ( name )
-        a = p2_ast__name( name );
+        a = ast__name( name );
 
     o = object_for_ast( expr );
 
@@ -724,7 +724,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
         if ( a )
         {
             assign_name( compiler, name, o );
-            p2_ast__print( a );
+            ast__print( a );
         }
         else
             printf( "[]" );
@@ -738,7 +738,7 @@ compiler__evaluate_expression( Name *name, p2_ast *expr )
     }
 
     if ( a )
-        p2_ast__delete( a );
+        ast__delete( a );
 
     compiler->env->char_t->encode = char__encode;
     compiler->env->float_t->encode = double__encode;
