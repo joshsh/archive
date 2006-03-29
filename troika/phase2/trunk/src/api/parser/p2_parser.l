@@ -69,8 +69,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Language module dependencies ***********************************************/
 
-extern int compiler__suppress_output();
-extern int compiler__show_line_numbers();
+typedef struct Compiler Compiler;
+
+extern boolean
+compiler__suppress_output( Compiler *c );
+
+extern boolean
+compiler__show_line_numbers( Compiler *c );
 
 
 /* Line and character numbers *************************************************/
@@ -78,16 +83,17 @@ extern int compiler__show_line_numbers();
 
 int line_number, column_number, last_column_number, statement_number;
 
+Compiler *compiler_global;
 
 /** Decorate command-line input. */
 void print_input_prefix();
 
 void new_token( int /* length */ );
 
-void new_line();
+void new_line( Compiler *c );
 
 /** Initialize the lexer for a new invocation of yyparse(). */
-void new_parse();
+void new_parse( Compiler *c );
 
 /** \return  the current line number.  Starts at 1. */
 int get_line_number();
@@ -331,7 +337,7 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     }
 
     \n  {  /* Ignore newlines, except for formatting. */
-        new_line();
+        new_line( compiler_global );
         TOKEN( 0, "newline" );
     }
 
@@ -358,7 +364,7 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
 
     \\?\n  {  /* Newlines are permitted. */
         append_to_buffer( yytext );
-        new_line();
+        new_line( compiler_global );
         TOKEN( 0, "newline in SC_STRING" );
     }
 
@@ -394,7 +400,7 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     }
 
     \n  {  /* Newlines are ignored, except for formatting. */
-        new_line();
+        new_line( compiler_global );
         TOKEN( 0, "newline in SC_COMMENT" );
     }
 
@@ -407,13 +413,24 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
 %%
 
 
-/** Decorate command-line input. */
-void print_input_prefix()
+void new_token( int length )
 {
-    if ( !compiler__suppress_output() )
+    last_column_number = column_number;
+    column_number += length;
+}
+
+
+void new_line( Compiler *c )
+{
+    line_number++;
+    column_number = last_column_number = 0;
+    statement_number = 0;
+
+    /* Decorate command-line input. */
+    if ( !compiler__suppress_output( c ) )
     {
         /* Display a line number at the beginning of each new line of input. */
-        if ( compiler__show_line_numbers() )
+        if ( compiler__show_line_numbers( c ) )
             printf( "%d ", line_number );
 
         /* Add a prefix to each new line of input, to distinguish it from
@@ -425,28 +442,12 @@ void print_input_prefix()
 }
 
 
-void new_token( int length )
-{
-    last_column_number = column_number;
-    column_number += length;
-}
-
-
-void new_line()
-{
-    line_number++;
-    column_number = last_column_number = 0;
-    statement_number = 0;
-
-    print_input_prefix();
-}
-
-
 /** Initialize the lexer for a new invocation of yyparse(). */
-void new_parse()
+void new_parse( Compiler *c )
 {
+    compiler_global = c;
     line_number = 0;
-    new_line();
+    new_line( c );
 }
 
 

@@ -39,7 +39,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DEBUG                                   1
 #if DEBUG
 
-    #define DEBUG__CORE                         0
+    #define DEBUG__CORE                         1
     #if DEBUG__CORE
 
         #define DEBUG__SK                       1

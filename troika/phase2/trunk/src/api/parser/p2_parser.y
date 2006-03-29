@@ -26,7 +26,7 @@ Special commands are indicated with a backslash plus the name of the command,
 followed by a whitespace-delimited list of command_args (no parentheses) and
 terminated by a semicolon, e.g.
 
-    \command arg1 arg2;
+    _command arg1 arg2;
 
 Commands thus indicated do not belong to the program under construction, and are
 to take immediate effect at parse time.
@@ -77,24 +77,26 @@ yylex( void );
 /* Language module dependencies ***********************************************/
 
 
-extern int
-compiler__evaluate_command( char * /*name*/, Ast * /*args*/ );
+typedef struct Compiler Compiler;
 
 extern int
-compiler__evaluate_expression( Name * /*name*/, Ast * /*expr*/ );
+compiler__evaluate_command( Compiler *c, char * /*name*/, Ast * /*args*/ );
 
 extern int
-compiler__handle_parse_error( char * /*msg*/ );
+compiler__evaluate_expression( Compiler *c, Name * /*name*/, Ast * /*expr*/ );
 
 extern int
-compiler__suppress_output();
+compiler__handle_parse_error( Compiler *c, char * /*msg*/ );
+
+extern int
+compiler__suppress_output( Compiler *c );
 
 
 /* Lexer dependencies *********************************************************/
 
 
 extern void
-new_parse();
+new_parse( Compiler *c );
 
 extern int
 get_char_number();
@@ -121,15 +123,15 @@ statement_number;
 
 /** Evaluate a command. */
 static void
-handle_command( char * /*name*/, Ast * /*args*/ );
+handle_command( Compiler *c, char * /*name*/, Ast * /*args*/ );
 
 /** Evaluate an expression. */
 static void
-handle_expression( Name * /*name*/, Ast * /*expr*/ );
+handle_expression( Compiler *c, Name * /*name*/, Ast * /*expr*/ );
 
 /** Deal gracefully with a parse error. */
 static void
-handle_error();
+handle_error( Compiler *c );
 
 
 /******************************************************************************/
@@ -167,9 +169,10 @@ yywrap()
 /** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
 void
-yyerror( p2_parser__exit_state *ignored, const char *msg )
+yyerror( Compiler *c, p2_parser__exit_state *ignored, const char *msg )
 {
     /* Avoid "unused parameter" compiler warning. */
+    c = 0;
     ignored = 0;
 
     /* Only the first error in a statement is reported. */
@@ -312,6 +315,7 @@ term2ast( Term *t )
 %pure_parser
 */
 
+%parse-param { Compiler *compiler }
 %parse-param { p2_parser__exit_state *return_state }
 
 /** Report more detailed parse error messages. */
@@ -332,7 +336,7 @@ input:
         #endif
 
         if ( *yyerror_msg )
-            handle_error();
+            handle_error( compiler );
 
         if ( exit_early )
             *return_state = exit_state__aborted;
@@ -359,7 +363,7 @@ statements:
         yydebug = 1;
         #endif
 
-        new_parse();
+        new_parse( compiler );
 
         ERROK;
     }
@@ -371,7 +375,7 @@ statements:
         #endif
 
         if ( *yyerror_msg )
-            handle_error();
+            handle_error( compiler );
 
         if ( exit_early )
         {
@@ -390,7 +394,7 @@ statements:
         #endif
 
         if ( *yyerror_msg )
-            handle_error();
+            handle_error( compiler );
 
         if ( exit_early )
         {
@@ -406,7 +410,7 @@ statements:
         #endif
 
         if ( *yyerror_msg )
-            handle_error();
+            handle_error( compiler );
 
         if ( exit_early )
         {
@@ -432,7 +436,7 @@ statement:
         if ( $1 )
         {
             if ( $1->simple_name )
-                handle_command( $1->simple_name, $1->expr );
+                handle_command( compiler, $1->simple_name, $1->expr );
 
             free( $1 );
         }
@@ -450,8 +454,7 @@ statement:
         if ( $1 )
         {
             if ( $1->expr )
-                                   /* !  */
-                handle_expression( $1->name, $1->expr );
+                handle_expression( compiler, $1->name, $1->expr );
 
             free( $1 );
         }
@@ -1021,9 +1024,9 @@ id:
 
 
 static void
-handle_command( char *name, Ast *args )
+handle_command( Compiler *c, char *name, Ast *args )
 {
-    if ( !compiler__suppress_output() )
+    if ( !compiler__suppress_output( c ) )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -1035,9 +1038,9 @@ handle_command( char *name, Ast *args )
 
     /* Note: ownership of name and arguments is conferred to
        compiler__evaluate_command. */
-    exit_early = exit_early || compiler__evaluate_command( name, args );
+    exit_early = exit_early || compiler__evaluate_command( c, name, args );
 
-    if ( !compiler__suppress_output() )
+    if ( !compiler__suppress_output( c ) )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
         printf( COMMAND_OUTPUT_SUFFIX );
@@ -1049,9 +1052,9 @@ handle_command( char *name, Ast *args )
 
 
 static void
-handle_expression( Name *name, Ast *expr )
+handle_expression( Compiler *c, Name *name, Ast *expr )
 {
-    if ( !compiler__suppress_output() )
+    if ( !compiler__suppress_output( c ) )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -1063,9 +1066,9 @@ handle_expression( Name *name, Ast *expr )
 
     /* Note: ownership of name and expression is conferred to
        compiler__evaluate_expression. */
-    exit_early = exit_early || compiler__evaluate_expression( name, expr );
+    exit_early = exit_early || compiler__evaluate_expression( c, name, expr );
 
-    if ( !compiler__suppress_output() )
+    if ( !compiler__suppress_output( c ) )
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
         printf( EXPRESSION_OUTPUT_SUFFIX );
@@ -1077,11 +1080,11 @@ handle_expression( Name *name, Ast *expr )
 
 
 static void
-handle_error()
+handle_error( Compiler *c )
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
-    if ( !compiler__suppress_output() )
+    if ( !compiler__suppress_output( c ) )
     {
         if ( !statement_number )
             printf( "\n" );
@@ -1096,9 +1099,9 @@ handle_error()
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
-    exit_early = exit_early || compiler__handle_parse_error( STRDUP( error_msg ) );
+    exit_early = exit_early || compiler__handle_parse_error( c, STRDUP( error_msg ) );
 
-    if ( !compiler__suppress_output() )
+    if ( !compiler__suppress_output( c ) )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
         printf( ERROR_OUTPUT_SUFFIX );

@@ -31,14 +31,10 @@ struct Compiler
 
     Dictionary *commands;
 
-    int locked;
+    boolean locked;
 
     boolean suppress_output, show_line_numbers;
 };
-
-
-/* Compiler object is global because flex/bison are not thread safe. */
-static Compiler *compiler = 0;
 
 
 /******************************************************************************/
@@ -84,12 +80,15 @@ term__encode__alt( Term *t, char *buffer )
 /******************************************************************************/
 
 
+static boolean instance_exists = FALSE;
+
+
 Compiler *
 compiler__new( Environment *env )
 {
     Compiler *c;
 
-    if ( compiler )
+    if ( instance_exists )
     {
         ERROR( "compiler__new: concurrent compiler instances not allowed" );
         return 0;
@@ -113,9 +112,11 @@ compiler__new( Environment *env )
     printf( "[%#x] compiler__new(%#x)\n", ( int ) c, ( int ) env );
     #endif
 
+    instance_exists = TRUE;
+
     c->env = env;
     c->cur_ns_obj = env->data;
-    c->locked = 0;
+    c->locked = FALSE;
     c->suppress_output = FALSE;
     c->show_line_numbers = TRUE;
 
@@ -130,6 +131,7 @@ compiler__new( Environment *env )
     {
         ERROR( "compiler__new: basic type not found" );
         free( c );
+        instance_exists = FALSE;
         return 0;
     }
 
@@ -137,10 +139,9 @@ compiler__new( Environment *env )
     {
         ERROR( "compiler__new: allocation failed" );
         free( c );
+        instance_exists = FALSE;
         return 0;
     }
-
-    compiler = c;
 
     return c;
 }
@@ -169,7 +170,7 @@ compiler__delete( Compiler *c )
     dictionary__delete( c->commands );
     free( c );
 
-    compiler = 0;
+    instance_exists = FALSE;
 }
 
 
@@ -195,7 +196,7 @@ compiler__parse( Compiler *c )
     #if DEBUG__SAFE
     if ( !c )
     {
-        ERROR( "compiler__parse: null compiler" );
+        ERROR( "compiler__parse: null argument" );
         return 1;
     }
     #endif
@@ -207,12 +208,12 @@ compiler__parse( Compiler *c )
     if ( c->locked )
         return exit_state__locked_out;
 
-    c->locked = 1;
+    c->locked = TRUE;
 
-    if ( yyparse( &exit_state ) )
+    if ( yyparse( c, &exit_state ) )
         ERROR( "compiler__parse: parser exited abnormally" );
 
-    c->locked = 0;
+    c->locked = FALSE;
 
     return exit_state;
 }
@@ -318,103 +319,107 @@ resolve_name( Compiler *c, Name *name )
 /******************************************************************************/
 
 
-/* Transforms a Ast into a Object, deleting the Ast along the way. */
-static Object *
-object_for_ast( Ast* ast )
+static Object *resolve( Ast *ast, Compiler *c )
 {
-    boolean ok = TRUE;
-
-    void *helper( Ast **astpp )
+    /* Transforms an Ast into an Object, deleting the Ast along the way. */
+    Object *object_for_ast( Ast* ast )
     {
-        if ( !( *astpp = ( Ast* ) object_for_ast( *astpp ) ) )
+        boolean ok = TRUE;
+
+        void *helper( Ast **astpp )
         {
-            ok = FALSE;
-            return walker__break;
+            if ( !( *astpp = ( Ast* ) object_for_ast( *astpp ) ) )
+            {
+                ok = FALSE;
+                return walker__break;
+            }
+
+            else
+                return 0;
+        }
+
+        Object *o;
+        Type *type;
+        void *value;
+        int flags = 0;
+
+        switch ( ast->type )
+        {
+            case BAG_T:
+
+                type = c->env->bag_t;
+                value = ast->value;
+                array__walk( value, ( Dist_f ) helper );
+                if ( !ok )
+                    array__delete( value );
+                break;
+
+            case CHAR_T:
+
+                type = c->env->char_t;
+                value = ast->value;
+                break;
+
+            case FLOAT_T:
+
+                type = c->env->float_t;
+                value = ast->value;
+                break;
+
+            case INT_T:
+
+                type = c->env->int_t;
+                value = ast->value;
+                break;
+
+            case NAME_T:
+
+                /* Retrieve an existing object and exit. */
+                o = resolve_name( c, ( Name* ) ast->value );
+                ast__delete( ast );
+                return o;
+
+            case STRING_T:
+
+                type = c->env->string_t;
+                value = ast->value;
+                break;
+
+            case TERM_T:
+
+                type = c->env->term_t;
+                value = ast->value;
+                term__walk( value, ( Dist_f ) helper );
+                if ( !ok )
+                    term__delete( value );
+                break;
+
+            #if DEBUG__SAFE
+            default:
+
+                ERROR( "object_for_ast: bad AST type" );
+                free( ast );
+                return 0;
+            #endif
+        }
+
+        free( ast );
+
+        if ( ok )
+        {
+            /* Create and register a new object. */
+            o = object__new( type, value, flags );
+
+            memory_manager__add( c->env->manager, o );
+
+            return o;
         }
 
         else
             return 0;
     }
 
-    Object *o;
-    Type *type;
-    void *value;
-    int flags = 0;
-
-    switch ( ast->type )
-    {
-        case BAG_T:
-
-            type = compiler->env->bag_t;
-            value = ast->value;
-            array__walk( value, ( Dist_f ) helper );
-            if ( !ok )
-                array__delete( value );
-            break;
-
-        case CHAR_T:
-
-            type = compiler->env->char_t;
-            value = ast->value;
-            break;
-
-        case FLOAT_T:
-
-            type = compiler->env->float_t;
-            value = ast->value;
-            break;
-
-        case INT_T:
-
-            type = compiler->env->int_t;
-            value = ast->value;
-            break;
-
-        case NAME_T:
-
-            /* Retrieve an existing object and exit. */
-            o = resolve_name( compiler, ( Name* ) ast->value );
-            ast__delete( ast );
-            return o;
-
-        case STRING_T:
-
-            type = compiler->env->string_t;
-            value = ast->value;
-            break;
-
-        case TERM_T:
-
-            type = compiler->env->term_t;
-            value = ast->value;
-            term__walk( value, ( Dist_f ) helper );
-            if ( !ok )
-                term__delete( value );
-            break;
-
-        #if DEBUG__SAFE
-        default:
-
-            ERROR( "object_for_ast: bad AST type" );
-            free( ast );
-            return 0;
-        #endif
-    }
-
-    free( ast );
-
-    if ( ok )
-    {
-        /* Create and register a new object. */
-        o = object__new( type, value, flags );
-
-        memory_manager__add( compiler->env->manager, o );
-
-        return o;
-    }
-
-    else
-        return 0;
+    return object_for_ast( ast );
 }
 
 
@@ -466,10 +471,11 @@ printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
 
 
 static void
-show_license()
+show_license( Compiler *c )
 {
     FILE *license;
-    int c;
+    int ch;
+    c = 0;
 
     #if DEBUG__COMPILER
     printf( "[] show_license()\n" );
@@ -481,8 +487,8 @@ show_license()
         return;
     }
 
-    while ( ( c = fgetc( license ) ) != EOF )
-        fputc( c, stdout );
+    while ( ( ch = fgetc( license ) ) != EOF )
+        fputc( ch, stdout );
 
     fclose( license );
 }
@@ -592,32 +598,32 @@ printf( "---c gc 2---\n" ); fflush( stdout );
 
 
 int
-compiler__evaluate_command( char *name, Ast *args )
+compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 {
     int ret = 0;
 
     if ( !strcmp( name, "gc" ) )
     {
         if ( n_args( args, 0 ) )
-            garbage_collect( compiler );
+            garbage_collect( c );
     }
 
     else if ( !strcmp( name, "license" ) )
     {
         if ( n_args( args, 0 ) )
-            show_license();
+            show_license( c );
     }
 
     else if ( !strcmp( name, "new" ) )
     {
         if ( n_args( args, 1 ) )
-            new_namespace( compiler, args );
+            new_namespace( c, args );
     }
 
     else if ( !strcmp( name, "ns" ) )
     {
         if ( n_args( args, 1 ) )
-            change_namespace( compiler, args );
+            change_namespace( c, args );
     }
 
     else if ( !strcmp( name, "quit" ) )
@@ -629,20 +635,20 @@ compiler__evaluate_command( char *name, Ast *args )
     else if ( !strcmp( name, "rm" ) )
     {
         if ( n_args( args, 1 ) )
-            remove_ns_item( compiler, args );
+            remove_ns_item( c, args );
     }
 
     else if ( !strcmp( name, "saveas" ) )
     {
         if ( n_args( args, 1 ) )
-            save_as( compiler, args );
+            save_as( c, args );
     }
 
     else if ( !strcmp( name, "all" ) )
     {
         if ( n_args( args, 0 ) )
         {
-            namespace__show_children( compiler->cur_ns_obj );
+            namespace__show_children( c->cur_ns_obj );
         }
     }
 
@@ -650,7 +656,7 @@ compiler__evaluate_command( char *name, Ast *args )
     {
         if ( n_args( args, 0 ) )
             printf( "There are %i objects in this environment.\n",
-                memory_manager__size( compiler->env->manager ) );
+                memory_manager__size( c->env->manager ) );
     }
 
     else
@@ -666,7 +672,7 @@ compiler__evaluate_command( char *name, Ast *args )
 
 
 int
-compiler__evaluate_expression( Name *name, Ast *expr )
+compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 {
     int ret = 0;
     Ast *a = 0;
@@ -688,28 +694,28 @@ compiler__evaluate_expression( Name *name, Ast *expr )
     printf( "compiler__evaluate_expression(%#x, %#x)\n", ( int ) name, ( int ) expr );
     #endif
 
-    char__encode = compiler->env->char_t->encode;
-    double__encode = compiler->env->float_t->encode;
-    string__encode = compiler->env->string_t->encode;
-    term__encode = compiler->env->term_t->encode;
-    compiler->env->char_t->encode = ( Encoder ) char__encode__alt;
-    compiler->env->float_t->encode = ( Encoder ) double__encode__alt;
-    compiler->env->string_t->encode = ( Encoder ) string__encode__alt;
-    compiler->env->term_t->encode = ( Encoder ) term__encode__alt;
+    char__encode = c->env->char_t->encode;
+    double__encode = c->env->float_t->encode;
+    string__encode = c->env->string_t->encode;
+    term__encode = c->env->term_t->encode;
+    c->env->char_t->encode = ( Encoder ) char__encode__alt;
+    c->env->float_t->encode = ( Encoder ) double__encode__alt;
+    c->env->string_t->encode = ( Encoder ) string__encode__alt;
+    c->env->term_t->encode = ( Encoder ) term__encode__alt;
 
     if ( name )
         a = ast__name( name );
 
-    o = object_for_ast( expr );
+    o = resolve( expr, c );
 
     /* If a term, reduce. */
-    if ( o && o->type == compiler->env->term_t )
+    if ( o && o->type == c->env->term_t )
     {
         t = SK_reduce( ( Term* ) o->value,
-            compiler->env->manager,
-            compiler->env->term_t,
-            compiler->env->prim_t,
-            compiler->env->combinator_t );
+            c->env->manager,
+            c->env->term_t,
+            c->env->prim_t,
+            c->env->combinator_t );
 
         if ( t )
             o->value = t;
@@ -723,7 +729,7 @@ compiler__evaluate_expression( Name *name, Ast *expr )
         printf( "%#x : %s ", ( int ) o, o->type->name );
         if ( a )
         {
-            assign_name( compiler, name, o );
+            assign_name( c, name, o );
             ast__print( a );
         }
         else
@@ -740,19 +746,20 @@ compiler__evaluate_expression( Name *name, Ast *expr )
     if ( a )
         ast__delete( a );
 
-    compiler->env->char_t->encode = char__encode;
-    compiler->env->float_t->encode = double__encode;
-    compiler->env->string_t->encode = string__encode;
-    compiler->env->term_t->encode = term__encode;
+    c->env->char_t->encode = char__encode;
+    c->env->float_t->encode = double__encode;
+    c->env->string_t->encode = string__encode;
+    c->env->term_t->encode = term__encode;
 
     return ret;
 }
 
 
 int
-compiler__handle_parse_error( char *msg )
+compiler__handle_parse_error( Compiler *c, char *msg )
 {
     int ret = 0;
+    c = 0;
 
     if ( msg )
     {
@@ -767,17 +774,17 @@ compiler__handle_parse_error( char *msg )
 }
 
 
-int
-compiler__suppress_output()
+boolean
+compiler__suppress_output( Compiler *c )
 {
-    return compiler->suppress_output;
+    return c->suppress_output;
 }
 
 
-int
-compiler__show_line_numbers()
+boolean
+compiler__show_line_numbers( Compiler *c )
 {
-    return compiler->show_line_numbers;
+    return c->show_line_numbers;
 }
 
 

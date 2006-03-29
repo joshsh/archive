@@ -71,22 +71,22 @@ compiler__parse( Compiler *c );
 
 
 extern int
-compiler__evaluate_command( char *name, Ast *args );
+compiler__evaluate_command( Compiler *c, char *name, Ast *args );
 
 extern int
-compiler__evaluate_expression( Name *name, Ast *expr );
+compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr );
 
 extern int
-compiler__handle_parse_error( char *msg );
+compiler__handle_parse_error( Compiler *c, char *msg );
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-extern int
-compiler__suppress_output();
+extern boolean
+compiler__suppress_output( Compiler *c );
 
 /** \return  whether a line number is printed before each new line of input */
-extern int
-compiler__show_line_numbers();
+extern boolean
+compiler__show_line_numbers( Compiler *c );
 
 
 #endif  /* COMPILER_H */

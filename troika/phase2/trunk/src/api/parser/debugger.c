@@ -41,13 +41,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 extern int yyparse();
 
 
+typedef struct Compiler
+{
+    int bogus;
+
+} Compiler;
+
+
 /******************************************************************************/
 
 
 /** Mock command evaluator. */
-int compiler__evaluate_command( char *name, Ast *args )
+int compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 {
     int ret = 0;
+    c = 0;
 
     if ( args )
     {
@@ -74,10 +82,11 @@ int compiler__evaluate_command( char *name, Ast *args )
 
 
 /** Mock expression evaluator. */
-int compiler__evaluate_expression( Name *name, Ast *expr )
+int compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 {
     int ret = 0;
     Ast *a;
+    c = 0;
 
     if ( name )
     {
@@ -99,9 +108,10 @@ int compiler__evaluate_expression( Name *name, Ast *expr )
 
 
 /** Mock parse error handler. */
-int compiler__handle_parse_error( char *msg )
+int compiler__handle_parse_error( Compiler *c, char *msg )
 {
     int ret = 0;
+    c = 0;
 
     if ( msg )
     {
@@ -118,16 +128,18 @@ int compiler__handle_parse_error( char *msg )
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-int compiler__suppress_output()
+boolean compiler__suppress_output( Compiler *c )
 {
-    return 0;
+    c = 0;
+    return FALSE;
 }
 
 
 /** \return  whether a line number is printed before each new line of input */
-int compiler__show_line_numbers()
+boolean compiler__show_line_numbers( Compiler *c )
 {
-    return 1;
+    c = 0;
+    return TRUE;
 }
 
 
@@ -150,7 +162,7 @@ p2_parser__exit_state parse()
     else
     {
         active = 1;
-        if ( ( yyparse__exit_value = yyparse( &return_state ) ) )
+        if ( ( yyparse__exit_value = yyparse( 0, &return_state ) ) )
             printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
         active = 0;
 
