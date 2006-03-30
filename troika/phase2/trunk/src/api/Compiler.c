@@ -435,7 +435,7 @@ static Object *resolve( Ast *ast, Compiler *c )
 
 
 static void
-change_namespace( Compiler *c, Ast *args )
+command_ns( Compiler *c, Ast *args )
 {
 /*
 printf( "args->type = %s\n", ast__type__name( args->type ) ); fflush( stdout );
@@ -451,13 +451,13 @@ printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )
     {
-        ERROR( "change_namespace: AST type mismatch" );
+        ERROR( "command_ns: AST type mismatch" );
         return;
     }
     #endif
 
     #if DEBUG__COMPILER
-    printf( "change_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
+    printf( "command_ns(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
     name = ( Name* ) arg->value;
@@ -479,101 +479,7 @@ printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
 
 
 static void
-show_license( Compiler *c )
-{
-    FILE *license;
-    int ch;
-    c = 0;
-
-    #if DEBUG__COMPILER
-    printf( "[] show_license()\n" );
-    #endif
-
-    if ( !( license = fopen( "../../LICENSE.txt", "r" ) ) )
-    {
-        ERROR( "show_licence: could not open file" );
-        return;
-    }
-
-    while ( ( ch = fgetc( license ) ) != EOF )
-        fputc( ch, stdout );
-
-    fclose( license );
-}
-
-
-static void
-new_namespace( Compiler *c, Ast *args )
-{
-    Object *o;
-    Name *name;
-
-    Ast *arg = get_inner_node( args );
-
-    #if DEBUG__SAFE
-    if ( arg->type != NAME_T )
-    {
-        ERROR( "new_namespace: AST type mismatch" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__COMPILER
-    printf( "[] new_namespace(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
-    name = ( Name* ) arg->value;
-    o = object__new
-        ( c->env->ns_t, namespace__new(), 0 );
-    memory_manager__add( c->env->manager, o );
-
-    assign_name( c, name, o );
-}
-
-
-static void
-remove_ns_item( Compiler *c, Ast *args )
-{
-    Name *name;
-    Ast *arg = get_inner_node( args );
-
-    #if DEBUG__SAFE
-    if ( arg->type != NAME_T )
-    {
-        ERROR( "remove_ns_item: AST type mismatch" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__COMPILER
-    printf( "[] remove_ns_item(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
-    name = ( Name* ) arg->value;
-
-    namespace__remove( c->cur_ns_obj, name );
-}
-
-
-static void
-save_as( Compiler *c, Ast *args )
-{
-    char *path;
-    Ast *arg = get_inner_node( args );
-    Name *name = ( Name* ) arg->value;
-
-    #if DEBUG__COMPILER
-    printf( "[] save_as(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
-    path = ( char* ) array__peek( name );
-
-    compiler__serialize( c, path );
-}
-
-
-static void
-garbage_collect( Compiler *c )
+command_gc( Compiler *c )
 {
     Memory_Manager *m = c->env->manager;
     int size_before, size_after;
@@ -582,7 +488,7 @@ garbage_collect( Compiler *c )
     double elapsed_time;
 
     #if DEBUG__COMPILER
-    printf( "[] garbage_collect(%#x)\n", ( int ) c );
+    printf( "[] command_gc(%#x)\n", ( int ) c );
     #endif
 
     size_before = memory_manager__size( m );
@@ -599,6 +505,102 @@ garbage_collect( Compiler *c )
 }
 
 
+static void
+command_new( Compiler *c, Ast *args )
+{
+    Object *o;
+    Name *name;
+
+    Ast *arg = get_inner_node( args );
+
+    #if DEBUG__SAFE
+    if ( arg->type != NAME_T )
+    {
+        ERROR( "command_new: AST type mismatch" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__COMPILER
+    printf( "[] command_new(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    name = ( Name* ) arg->value;
+    o = object__new
+        ( c->env->ns_t, namespace__new(), 0 );
+    memory_manager__add( c->env->manager, o );
+
+    assign_name( c, name, o );
+}
+
+
+static void
+command_rm( Compiler *c, Ast *args )
+{
+    Name *name;
+    Ast *arg = get_inner_node( args );
+
+    #if DEBUG__SAFE
+    if ( arg->type != NAME_T )
+    {
+        ERROR( "command_rm: AST type mismatch" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__COMPILER
+    printf( "[] command_rm(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    name = ( Name* ) arg->value;
+
+    namespace__remove( c->cur_ns_obj, name );
+}
+
+
+static void
+command_saveas( Compiler *c, Ast *args )
+{
+    char *path;
+    Ast *arg = get_inner_node( args );
+    Name *name = ( Name* ) arg->value;
+
+    #if DEBUG__COMPILER
+    printf( "[] command_saveas(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    path = ( char* ) array__peek( name );
+
+    compiler__serialize( c, path );
+
+    printf( "Saved root:data as \"%s\".\n", path );
+}
+
+
+static void
+command_license( Compiler *c )
+{
+    FILE *license;
+    int ch;
+    c = 0;
+
+    #if DEBUG__COMPILER
+    printf( "[] command_license()\n" );
+    #endif
+
+    if ( !( license = fopen( "../../LICENSE.txt", "r" ) ) )
+    {
+        ERROR( "show_licence: could not open file" );
+        return;
+    }
+
+    while ( ( ch = fgetc( license ) ) != EOF )
+        fputc( ch, stdout );
+
+    fclose( license );
+}
+
+
 /* Externally linked functions for the parser *********************************/
 
 
@@ -610,43 +612,46 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     if ( !strcmp( name, "gc" ) )
     {
         if ( n_args( args, 0 ) )
-            garbage_collect( c );
+            command_gc( c );
     }
 
     else if ( !strcmp( name, "license" ) )
     {
         if ( n_args( args, 0 ) )
-            show_license( c );
+            command_license( c );
     }
 
     else if ( !strcmp( name, "new" ) )
     {
         if ( n_args( args, 1 ) )
-            new_namespace( c, args );
+            command_new( c, args );
     }
 
     else if ( !strcmp( name, "ns" ) )
     {
         if ( n_args( args, 1 ) )
-            change_namespace( c, args );
+            command_ns( c, args );
     }
 
     else if ( !strcmp( name, "quit" ) )
     {
         if ( n_args( args, 0 ) )
+        {
+            printf( "Closing Phase2 session.\n" );
             ret = 1;
+        }
     }
 
     else if ( !strcmp( name, "rm" ) )
     {
         if ( n_args( args, 1 ) )
-            remove_ns_item( c, args );
+            command_rm( c, args );
     }
 
     else if ( !strcmp( name, "saveas" ) )
     {
         if ( n_args( args, 1 ) )
-            save_as( c, args );
+            command_saveas( c, args );
     }
 
     else if ( !strcmp( name, "all" ) )
@@ -665,7 +670,7 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     }
 
     else
-        printf( "Error: unknown command.\n" );
+        printf( "Error: unknown command: \"%s\".\n", name );
 
     if ( args )
         ast__delete( args );

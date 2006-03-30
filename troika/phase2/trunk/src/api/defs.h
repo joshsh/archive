@@ -94,13 +94,15 @@ typedef void    ( *Generic_f )( void );
 
 #define FFLUSH  { fflush( stdout ); fflush( stderr ); }
 
+/*
 #define ERROR( msg )                                                        \
 {                                                                           \
     fprintf( stderr, "Error: %s.\n", (msg) );                               \
     fflush( stdout );                                                       \
 }
+*/
 
-/* Useful, but not ANSI C.
+/* Useful, but not ANSI C. */
 #define ERROR( ... )                                                        \
 {                                                                           \
     fprintf( stderr, "Error: " );                                           \
@@ -108,7 +110,7 @@ typedef void    ( *Generic_f )( void );
     fprintf( stderr, ".\n" );                                               \
     fflush( stdout );                                                       \
 }
-*/
+
 
 #define WARNING( msg )                                                      \
 {                                                                           \

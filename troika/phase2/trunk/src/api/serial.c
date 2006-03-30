@@ -152,6 +152,11 @@ bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
 
     el = dom_element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
 
+    #if DEBUG__SERIAL
+    printf( "[%#x] bag__xml_encode(%#x, %#x)\n",
+        ( int ) el, ( int ) a, ( int ) state );
+    #endif
+
     size = array__size( a );
     for ( i = 0; i < size; i++ )
     {
@@ -204,6 +209,11 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
         }
     }
 
+    #if DEBUG__SERIAL
+    printf( "[%#x] term__xml_encode(%#x, %#x)\n",
+        ( int ) el, ( int ) t, ( int ) state );
+    #endif
+
     return el;
 }
 
@@ -225,7 +235,6 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 
         return 0;
     }
-printf( "---s nsxe 1---\n" ); FFLUSH;
 
     #if DEBUG__SAFE
     if ( !ns || !state )
@@ -237,12 +246,14 @@ printf( "---s nsxe 1---\n" ); FFLUSH;
 
     el = dom_element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
 
-printf( "ns = %#x\n", ( int ) ns );
+    #if DEBUG__SERIAL
+    printf( "[%#x] namespace__xml_encode(%#x, %#x)\n",
+        ( int ) el, ( int ) ns, ( int ) state );
+    #endif
+
     keys = dictionary__keys( ns->children );
-printf( "array__size( keys ) = %i\n", array__size( keys ) );
     array__walk( keys, ( Dist_f ) helper );
     array__delete( keys );
-printf( "---s nsxe 2---\n" ); FFLUSH;
 
     return el;
 }
@@ -272,6 +283,11 @@ bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
     #endif
 
     a = array__new( 0, 0 );
+
+    #if DEBUG__SERIAL
+    printf( "[%#x] bag__xml_decode(%#x, %#x)\n",
+        ( int ) a, ( int ) el, ( int ) state );
+    #endif
 
     child = dom_element__first_child( el );
 
@@ -327,7 +343,11 @@ term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         }
     }
 
-printf( "returning term %#x (length = %i)\n", ( int ) t, term__length( t ) );
+    #if DEBUG__SERIAL
+    printf( "[%#x] term__xml_decode(%#x, %#x)\n",
+        ( int ) t, ( int ) el, ( int ) state );
+    #endif
+
     return t;
 }
 
@@ -355,6 +375,11 @@ namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
     #endif
 
     ns = namespace__new();
+
+    #if DEBUG__SERIAL
+    printf( "[%#x] namespace__xml_decode(%#x, %#x)\n",
+        ( int ) ns, ( int ) el, ( int ) state );
+    #endif
 
     child = dom_element__first_child( el );
     while ( child )
@@ -394,16 +419,13 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     char buffer[256];
     dom_element *el;
     Xml_Encoder encode;
-printf( "---s oe 1---\n" ); FFLUSH;
-printf( "Serializing object %#x (top_level = %i).\n", ( int ) o, top_level );
+
     sprintf( buffer, "%i", id );
-printf( "---s oe 2---\n" ); FFLUSH;
 
     /* Element reference. */
     if ( id && !top_level )
     {
         el = dom_element__new( 0, ( uc* ) "object", 0 );
-printf( "---s oe 3a---\n" ); FFLUSH;
 
         if ( o->type == state->env->combinator_t
           || o->type == state->env->prim_t
@@ -423,62 +445,45 @@ printf( "---s oe 3a---\n" ); FFLUSH;
     /* Element data. */
     else
     {
-printf( "---s oe 3b 1---\n" ); FFLUSH;
         el = dom_element__new( 0, ( uc* ) "object", 0 );
 
         /* Only multireferenced objects have ids. */
         if ( top_level )
             dom_attr__new( el, ( uc* ) "id", ( uc* ) buffer, 0 );
-printf( "---s oe 3b 2---\n" ); FFLUSH;
-printf( "o->type = %#x\n", ( int ) o->type ); FFLUSH;
-printf( "o->type->name = %#x\n", ( int ) o->type->name ); FFLUSH;
-printf( "o->type->name = '%s'\n", o->type->name ); FFLUSH;
 
         dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
-printf( "---s oe 3b 3---\n" ); FFLUSH;
 
         encode = get_encoder( o->type, state->serializers );
 /*
         encode = ( Xml_Encoder ) hash_map__lookup
             ( state->serializers, o->type );
 */
-printf( "---s oe 3b 4---\n" ); FFLUSH;
 
         /* Encode contents as child element. */
         if ( encode )
         {
-printf( "---s oe 3b 5a---\n" ); FFLUSH;
             dom_element__add_child( el, encode( o->value, state ) );
         }
 
         /* Encode contents as text. */
         else
         {
-printf( "---s oe 3b 5b 1 (woot)---\n" ); FFLUSH;
-printf( "o = %#x\n", ( int ) o ); FFLUSH;
-printf( "o->type = %#x\n", ( int ) o->type ); FFLUSH;
-printf( "o->type->name = %s\n", o->type->name ); FFLUSH;
             o->type->encode( o->value, buffer );
             dom_element__add_text( el, ( uc* ) buffer );
         }
-printf( "---s oe 3b 5b 2---\n" ); FFLUSH;
 
     }
+
+    #if DEBUG__SERIAL
+    printf( "[%#x] object__xml_encode(%#x, %#x, %i)\n",
+        ( int ) el, ( int ) o, ( int ) state, top_level );
+    #endif
 
     return el;
 }
 
 
 /* Object deserializer ********************************************************/
-
-
-/*
-static Object *reference__xml_decode
-    ( dom_element *el, Xml_Decode_Ctx *state )
-{
-
-}
-*/
 
 
 static Object *
@@ -517,7 +522,6 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
             return 0;
         }
         free( text );
-printf( "Deserializing object of type: %s\n", type->name );
 
         if ( type == state->env->combinator_t )
         {
@@ -548,13 +552,11 @@ printf( "Deserializing object of type: %s\n", type->name );
 
         else
         {
-printf( "This is an imported type.\n" ); FFLUSH;
             if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
             {
                 text = ( char* ) dom_attr__value( attr );
                 id = ( unsigned int ) atoi( text );
                 free( text );
-printf( "id = %i\n", id ); FFLUSH;
 
                 o = ( Object* ) hash_map__lookup( state->objects_by_id, ( void* ) id );
 
@@ -583,12 +585,6 @@ printf( "id = %i\n", id ); FFLUSH;
 
             decode = get_decoder( type, state->deserializers );
 
-            /*
-            decode = ( Xml_Decoder ) hash_map__lookup
-                ( state->deserializers, type );
-            */
-printf( "decode = %#x\n", ( int ) decode );
-
             /* Decode child element. */
             if ( decode )
             {
@@ -609,16 +605,9 @@ printf( "decode = %#x\n", ( int ) decode );
             /* Decode element text. */
             else
             {
-printf( "type = '%s' (%#x)\n", type->name, ( int ) type );
-printf( "type->decode = %#x\n", ( int ) type->decode );
                 text = ( char* ) dom_element__text( el );
-printf( "dom_element__text( el ) = \"%s\"\n", text );
                 o->value = type->decode( text );
                 free( text );
-if ( !strcmp( type->name, "cstring" ) )
-printf( "cstring value = \"%s\" (%#x)\n", ( char* ) o->value, ( int ) o->value );
-/*else if ( !strcmp( type->name, "int" ) )
-printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value );*/
             }
         }
     }
@@ -628,7 +617,7 @@ printf( "int value = \"%i\" (%#x)\n", *( ( int* ) o->value ), ( int ) o->value )
     {
         text = ( char* ) dom_attr__value( attr );
         id = ( unsigned int ) atoi( text );
-printf( "Deserializing reference on id = %i.\n", id ); FFLUSH;
+
         free( text );
         o = ( Object* ) hash_map__lookup
             ( state->objects_by_id, ( void* ) id );
@@ -646,7 +635,11 @@ printf( "Deserializing reference on id = %i.\n", id ); FFLUSH;
         ERROR( "object__xml_decode: missing attribute" );
         o = 0;
     }
-printf( "Result is object %#x.\n", ( int ) o );
+
+    #if DEBUG__SERIAL
+    printf( "[%#x] object__xml_decode(%#x, %#x)\n",
+        ( int ) o, ( int ) el, ( int ) state );
+    #endif
 
     return o;
 }
@@ -658,7 +651,11 @@ triple__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 {
     Object *subject, *predicate, *object;
     dom_element *subject_el, *predicate_el, *object_el;
-printf( "Deserializing triple.\n" ); FFLUSH;
+
+    #if DEBUG__SERIAL
+    printf( "[] triple__xml_decode(%#x, %#x)\n",
+        ( int ) o, ( int ) el, ( int ) state );
+    #endif
 
     subject_el = dom_element__first_child( el );
     predicate_el = dom_element__next_sibling( subject_el );
@@ -797,11 +794,13 @@ compiler__serialize( Compiler *c, char *path )
     }
     #endif
 
+    #if DEBUG__SERIAL
+    printf( "[] compiler__serialize(%#x, %s)\n", ( int ) c, path );
+    #endif
+
     env = compiler__environment( c );
 
     xmldom__init();
-
-printf( "---s s 6---\n" ); FFLUSH;
 
     /* Root element. */
     doc = dom_document__new();
@@ -819,23 +818,19 @@ printf( "---s s 6---\n" ); FFLUSH;
     add_timestamp( root );
 
     dom_document__set_root( doc, root );
-printf( "---s s 7---\n" ); FFLUSH;
 
     state.env = env;
     state.serializers = hash_map__new();
     state.ids = multiref_ids( c );
-printf( "---s s 8---\n" ); FFLUSH;
 
     set_encoder( env->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
     set_encoder( env->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
     set_encoder( env->term_t, ( Xml_Encoder ) term__xml_encode, state.serializers );
 
     /* ... */
-printf( "---s s 9---\n" ); FFLUSH;
 
     /* Multiref objects are serialized in no particular order. */
     hash_map__walk( state.ids, ( Dist_f ) obj_helper );
-printf( "---s s 11---\n" ); FFLUSH;
 
     hash_map__delete( state.ids );
 
@@ -846,9 +841,7 @@ printf( "---s s 11---\n" ); FFLUSH;
     dom_document__write_to_file( doc, path );
     dom_document__delete( doc );
 
-printf( "---s s 12---\n" ); FFLUSH;
     xmldom__end();
-printf( "---s s 13---\n" ); FFLUSH;
 }
 
 
@@ -860,6 +853,10 @@ compiler__deserialize( Compiler *c, char *path )
     char *el_name;
     dom_document *doc;
     Environment *env;
+
+    #if DEBUG__SERIAL
+    printf( "[] compiler__deserialize(%#x, %s)\n", ( int ) c, path );
+    #endif
 
     xmldom__init();
 
@@ -910,8 +907,7 @@ compiler__deserialize( Compiler *c, char *path )
 
         else
         {
-            ERROR( "compiler__deserialize: unknown element type" );
-printf( " '%s'\n", el_name );
+            ERROR( "compiler__deserialize: unknown element type: \"%s\"", el_name );
             goto finish;
         }
 

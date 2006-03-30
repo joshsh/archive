@@ -294,7 +294,7 @@ term2ast( Term *t )
 %token L_PAREN R_PAREN
 %token L_SQ_BRACKET R_SQ_BRACKET
 %token COMMA L_BRACE R_BRACE
-%token COLON E_O_F EQUALS SEMICOLON
+%token COLON E_O_F L_ASSIGN R_ASSIGN SEMICOLON
 
 %token <character>  CHAR
 %token <integer>    INT
@@ -590,11 +590,64 @@ expression:
         ERROK;
     }
 
-    /* Named expression. */
-    | term EQUALS name
+    /* Left assignment from expression. */
+    | name L_ASSIGN term
     {
         #if DEBUG__PARSER
-        production( "expression ::=  term EQUALS name" );
+        production( "expression ::=  name L_ASSIGN term" );
+        #endif
+
+        if ( $1 && $3 )
+            $$ = new_statement( $1, 0, term2ast( $3 ) );
+
+        else
+        {
+            $$ = 0;
+
+            if ( $1 )
+                ast__delete( ast__name( $1 ) );
+
+            if ( $3 )
+                ast__delete( ast__term( $3 ) );
+        }
+    }
+
+    | name L_ASSIGN error
+    {
+        #if DEBUG__PARSER
+        production( "expression ::=  name L_ASSIGN error" );
+        #endif
+
+        $$ = 0;
+
+        if ( $1 )
+            ast__delete( ast__name( $1 ) );
+
+        ERROK;
+    }
+
+    | name L_ASSIGN term error
+    {
+        #if DEBUG__PARSER
+        production( "expression ::=  name L_ASSIGN term error" );
+        #endif
+
+        $$ = 0;
+
+        if ( $1 )
+            ast__delete( ast__name( $1 ) );
+
+        if ( $3 )
+            ast__delete( ast__term( $3 ) );
+
+        ERROK;
+    }
+
+    /* Right assignment from expression. */
+    | term R_ASSIGN name
+    {
+        #if DEBUG__PARSER
+        production( "expression ::=  term R_ASSIGN name" );
         #endif
 
         if ( $1 && $3 )
@@ -614,10 +667,10 @@ expression:
     }
 
     /* Named expression. */
-    | term EQUALS name error
+    | term R_ASSIGN name error
     {
         #if DEBUG__PARSER
-        production( "expression ::=  term EQUALS name error" );
+        production( "expression ::=  term R_ASSIGN name error" );
         #endif
 
         $$ = 0;
@@ -631,10 +684,10 @@ expression:
         ERROK;
     }
 
-    | term EQUALS error
+    | term R_ASSIGN error
     {
         #if DEBUG__PARSER
-        production( "expression ::=  term EQUALS error" );
+        production( "expression ::=  term R_ASSIGN error" );
         #endif
 
         $$ = 0;

@@ -432,8 +432,6 @@ object__associate( Object *subj, Object *pred, Object *obj )
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
-printf( "---o a 1---\n" ); fflush( stdout );
-printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
 
     if ( !subj->outbound_edges
       && !( subj->outbound_edges = hash_map__new() ) )
@@ -441,19 +439,14 @@ printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( 
 
     else
     {
-printf( "---o a 2---\n" ); fflush( stdout );
-printf( "subj->outbound_edges = %#x\n", ( int ) subj->outbound_edges ); fflush( stdout );
         if ( obj )
-{printf( "---o a 2.1---\n" ); fflush( stdout );
             hash_map__add( subj->outbound_edges, pred, obj );
-}
+
         else
             hash_map__remove( subj->outbound_edges, pred );
-printf( "---o a 3---\n" ); fflush( stdout );
     }
 
     #else
-printf( "---o a 4---\n" ); fflush( stdout );
 
     subj = 0;
 

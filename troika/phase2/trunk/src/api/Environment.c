@@ -52,8 +52,6 @@ ns__new( Type *ns_t )
 static void *
 assoc_stub( void **args )
 {
-printf( "---e m 1---\n" ); fflush( stdout );
-
     return object__associate( args[0], args[1], args[2] );
 }
 
@@ -135,11 +133,8 @@ environment__new()
 {
     Environment *env;
 
-printf( "---e 1---\n" ); fflush( stdout );
-
     if ( !( env = new( Environment ) ) )
         return 0;
-printf( "---e 2---\n" ); fflush( stdout );
 
     #if DEBUG__ENV
     printf( "[%#x] environment__new()\n", ( int ) env );
@@ -148,15 +143,13 @@ printf( "---e 2---\n" ); fflush( stdout );
     env->prim_t = env->ns_t = env->type_t = 0;
     env->combinators = env->data = env->primitives = env->root = env->types = 0;
     env->manager = 0;
-printf( "---e 3---\n" ); fflush( stdout );
 
     /* Create the basic data types. */
     if ( !( env->ns_t = namespace__create_type( "namespace", TYPE__IS_OBJ_COLL ) )
       || !( env->prim_t = primitive__create_type( "primitive" ) )
+      || !( env->set_t = set__create_type( "set", TYPE__IS_OBJ_COLL ) )
       || !( env->type_t = type__create_type( "type", 0 ) ) )
         goto abort;
-
-printf( "---e 4---\n" ); fflush( stdout );
 
     /* Create root namespace object and children. */
     if ( !( env->combinators = ns__new( env->ns_t ) )
@@ -165,7 +158,6 @@ printf( "---e 4---\n" ); fflush( stdout );
       || !( env->root = ns__new( env->ns_t ) )
       || !( env->types = ns__new( env->ns_t ) ) )
         goto abort;
-printf( "---e 5---\n" ); fflush( stdout );
 
     /* Create memory manager around root namespace object. */
     if ( !( env->manager = memory_manager__new( env->root ) ) )
@@ -173,7 +165,6 @@ printf( "---e 5---\n" ); fflush( stdout );
         env->root = 0;
         goto abort;
     }
-printf( "---e 6---\n" ); fflush( stdout );
 
     /* Add the other namespace objects to the manager. */
     if ( !memory_manager__add( env->manager, env->combinators )
@@ -181,7 +172,6 @@ printf( "---e 6---\n" ); fflush( stdout );
       || !memory_manager__add( env->manager, env->primitives )
       || !memory_manager__add( env->manager, env->types ) )
         goto abort;
-printf( "---e 7---\n" ); fflush( stdout );
 
     /* Nest child namespaces under root. */
     if ( namespace__add_simple( ( Namespace* ) env->root->value, "combinators", env->combinators )
@@ -189,23 +179,20 @@ printf( "---e 7---\n" ); fflush( stdout );
       || namespace__add_simple( ( Namespace* ) env->root->value, "primitives", env->primitives )
       || namespace__add_simple( ( Namespace* ) env->root->value, "types", env->types ) )
         goto abort;
-printf( "---e 8---\n" ); fflush( stdout );
 
     /* Register the basic data types. */
     environment__register_type( env, env->ns_t );
     environment__register_type( env, env->prim_t );
+    environment__register_type( env, env->set_t );
     environment__register_type( env, env->type_t );
-printf( "---e 9---\n" ); fflush( stdout );
 
     /* Add other types here... */
     environment__register_type( env, array__create_type( "bag", TYPE__IS_OBJ_COLL ) );
-    environment__register_type( env, set__create_type( "set", TYPE__IS_OBJ_COLL ) );
     environment__register_type( env, term__create_type( "term", TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
     if ( !environment__import_primitives( env ) )
         goto abort;
-printf( "---e 10---\n" ); fflush( stdout );
 
     #if TRIPLES__GLOBAL
     if ( !add_triples_prims( env ) )
@@ -221,12 +208,10 @@ printf( "---e 10---\n" ); fflush( stdout );
 
     lock_ns( env );
 
-printf( "---e 11---\n" ); fflush( stdout );
 
     return env;
 
 abort:
-printf( "---e abort---\n" ); fflush( stdout );
 
     if ( env->manager )
     {
@@ -270,24 +255,18 @@ environment__delete( Environment *env )
     printf( "[] environment__delete(%#x)\n", ( int ) env );
     #endif
 
-printf( "---e d 1---\n" ); fflush( stdout );
     /* Preserve only data type objects. */
     memory_manager__set_root( env->manager, env->types );
-printf( "---e d 5---\n" ); fflush( stdout );
     memory_manager__collect( env->manager );
 
-printf( "---e d 6---\n" ); fflush( stdout );
     /* Preserve only the 'type' type. */
     ns_t = *env->ns_t;
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
         namespace__lookup_simple( ( Namespace* ) env->types->value, "type" ) );
-printf( "---e d 7---\n" ); fflush( stdout );
     memory_manager__collect( env->manager );
 
-printf( "---e d 8---\n" ); fflush( stdout );
     memory_manager__delete( env->manager );
-printf( "---e d 9---\n" ); fflush( stdout );
 
     free( env );
 }

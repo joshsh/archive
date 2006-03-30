@@ -268,8 +268,12 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
         TOKEN( SEMICOLON, "SEMICOLON" );
     }
 
-    "="  {  /* Assignment operator. */
-        TOKEN( EQUALS, "EQUALS" );
+    "<-"  {  /* Leading assignment operator. */
+        TOKEN( L_ASSIGN, "L_ASSIGN" );
+    }
+
+    "->"  {  /* Trailing assignment operator. */
+        TOKEN( R_ASSIGN, "R_ASSIGN" );
     }
 
     "("  {  /* Marks the beginning of a sub-term. */
@@ -301,10 +305,7 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     }
 
     _[0-9A-Za-z]+  {
-
-        /* Ownership of this string is conferred to the parser. */
         yylval.string = yytext + 1;
-        /*yylval.string = STRDUP( yytext + 1 );*/
 
         TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }
@@ -329,8 +330,6 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     }
 
     {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
-
-        /* Ownership of this string is conferred to the parser. */
         yylval.string = extract_id( yytext );
 
         TOKEN( ID, "ID" );
@@ -369,8 +368,6 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     }
 
     \"  {  /* End quote after string literal. */
-
-        /* Ownership of this string is conferred to the parser. */
         yylval.string = extract_literal( string_buffer );
         buffer_pos = string_buffer;
 

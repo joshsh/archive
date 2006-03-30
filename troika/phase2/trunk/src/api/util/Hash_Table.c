@@ -104,7 +104,7 @@ expand( Hash_Table *h )
         *dest = 0;
 
     lim = h->buffer + h->buffer_size;
-printf( "lim - h->buffer = %i\n", ( unsigned int ) ( lim - h->buffer ) );
+
     for ( src = h->buffer; src < lim; src++ )
     {
         if ( *src )
@@ -124,7 +124,6 @@ printf( "lim - h->buffer = %i\n", ( unsigned int ) ( lim - h->buffer ) );
     h->buffer = buffer;
     h->buffer_size = buffer_size;
     h->capacity = ( unsigned int ) ( buffer_size * h->load );
-printf( "h->capacity (new) = %i\n", h->capacity ); fflush( stdout );
 
     return h;
 }
@@ -252,7 +251,6 @@ hash_table__add( Hash_Table *h, void *key )
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
-int i=0;
     void *key_old;
 
     #if DEBUG__SAFE
@@ -267,14 +265,6 @@ int i=0;
 
     while ( *cur )
     {
-if (++i > 10)
-{
-  printf( "cur = %i\n", ( int ) cur );
-  printf( "buffer = %i\n", ( int ) buffer );
-  printf( "buffer_size = %i\n", buffer_size );
-  printf( "h->size = %i, h->capacity = %i\n", h->size, h->capacity );
-  exit(0);
-}
         /* No duplicate entries allowed.  Replace with new key. */
         if ( !h->compare( *cur, key ) )
         {
@@ -304,7 +294,6 @@ if (++i > 10)
 void *
 hash_table__lookup( Hash_Table *h, const void *key )
 {
-int i=0;
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
 
@@ -320,14 +309,6 @@ int i=0;
 
     while ( *cur && h->compare( *cur, key ) )
     {
-if (++i > 10)
-{
-  printf( "cur = %i\n", ( int ) cur );
-  printf( "buffer = %i\n", ( int ) buffer );
-  printf( "buffer_size = %i\n", buffer_size );
-  printf( "h->size = %i, h->capacity = %i\n", h->size, h->capacity );
-  exit(0);
-}
         /* Increment and wrap. */
         cur++;
         cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );

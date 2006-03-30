@@ -170,7 +170,9 @@ memory_manager__set_root( Memory_Manager *m, Object *o )
 Object *
 memory_manager__add( Memory_Manager *m, Object *o )
 {
-printf( "---m add 1---\n" ); fflush( stdout );
+    #if DEBUG__MEMORY
+    Object *o2;
+    #endif
 
     #if DEBUG__SAFE
     if ( !o )
@@ -191,9 +193,16 @@ printf( "---m add 1---\n" ); fflush( stdout );
 
     set_owned( o );
     #endif
-printf( "---m add 2---\n" ); fflush( stdout );
 
-    return ( Object* ) bunch__add( m->objects, o );
+    #if DEBUG__MEMORY
+    o2 = o;
+    o = bunch__add( m->objects, o );
+    printf( "[%#x] memory_manager__add(%#x, %#x)\n",
+        ( int ) o, ( int ) m, ( int ) o2 );
+    return o;
+    #else
+    return bunch__add( m->objects, o );
+    #endif
 }
 
 
@@ -214,6 +223,10 @@ unmark_all( Memory_Manager *m )
         ERROR( "unmark_all: null argument" );
         return;
     }
+    #endif
+
+    #if DEBUG__MEMORY
+    printf( "[] unmark_all(%#x)\n", ( int ) m );
     #endif
 
     collection__do_for_all( m->objects_o, ( Void_f ) unmark );
@@ -253,6 +266,10 @@ sweep( Memory_Manager *m )
         ERROR( "sweep: null argument" );
         return;
     }
+    #endif
+
+    #if DEBUG__MEMORY
+    printf( "[] sweep(%#x)\n", ( int ) m );
     #endif
 
     collection__exclude_if( m->objects_o, ( Criterion ) unmarked );
@@ -320,22 +337,17 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
     {
         Object *o = *opp;
 
-printf( "---mm aim 1---\n" ); FFLUSH;
-printf( "o = %#x, o->type=%#x\n", ( int ) o, ( int ) o->type ); FFLUSH;
         /* If the object is already marked, abort. */
         if ( visited( o ) )
         {
-printf( "---mm aim 2a---\n" ); FFLUSH;
             set__add( s, o );
             return walker__break;
         }
 
         else
         {
-printf( "---mm aim 2b 1---\n" ); FFLUSH;
             /* Mark the object. */
             set_visited( o );
-printf( "---mm aim 2b 2---\n" ); FFLUSH;
 
             #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
             /* Object references its triples, which in turn reference the object. */
@@ -344,7 +356,6 @@ printf( "---mm aim 2b 2---\n" ); FFLUSH;
                 set__add( s, o );
             }
             #endif
-printf( "---mm aim 2b 3---\n" ); FFLUSH;
 
             return 0;
         }
@@ -355,6 +366,12 @@ printf( "---mm aim 2b 3---\n" ); FFLUSH;
     m->clean = 0;
 
     s = set__new();
+
+    #if DEBUG__MEMORY
+    printf( "[%#x] memory_manager__get_multirefs(%#x, %#x)\n",
+        ( int ) s, ( int ) m, ( int ) root );
+    #endif
+
     object__trace( root, ( Dist_f ) helper );
     return s;
 }
@@ -385,14 +402,12 @@ memory_manager__collect( Memory_Manager *m )
         return;
     }
     #endif
-printf( "---mm c 1---\n" ); FFLUSH;
 
     /* Mark all reachable objects. */
     memory_manager__walk( m, ( Dist_f ) noop );
-printf( "---mm c 2---\n" ); FFLUSH;
 
     #if DEBUG__MEMORY
-    printf( "memory_manager__collect(%#x): deallocated %i of %i.\n",
+    printf( "[] memory_manager__collect(%#x): deallocated %i of %i.\n",
         ( int ) m, n_initial - bunch__size( m->objects ), n_initial );
     FFLUSH;
     #endif
