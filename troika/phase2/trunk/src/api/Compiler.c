@@ -238,10 +238,50 @@ n_args( Ast *args, int n )
         : !n;
 
     if ( !match )
-        printf( "Error: command expects %i arguments.", n );
+        printf( "Error: command expects %i arguments.\n", n );
 
     return match;
 }
+
+
+#if NOT_FINISHED
+static void *
+arg( Ast *args, unsigned int i, Ast__Type *type )
+{
+    Term *term;
+    Ast *arg;
+
+    #if DEBUG__SAFE
+    if ( args->type != TERM_T )
+    {
+        ERROR( "arg: wrong AST type" );
+        return 0;
+    }
+    #endif
+
+    term = ( Term* ) args->value;
+
+    if ( i >= term__length( term ) )
+    {
+        printf( "Error: missing argument.\n" );
+        return 0;
+    }
+
+    term = term__subterm_at( term, i );
+
+    /* Note: expects a singleton term. */
+    arg = *( term->head + 1 );
+
+    term__delete( term );
+
+    if ( arg->type != type )
+    {
+        printf(
+    }
+
+    return arg->value;
+}
+#endif
 
 
 static Ast *
@@ -257,14 +297,14 @@ get_inner_node( Ast *ast )
     }
     #endif
 
-    term = ( Term* ) ast->value;
+    term = ast->value;
 
     if ( ( unsigned int ) *( term->head ) == 2 )
         /* Singleton term. */
-        return ( Ast* ) *( term->head + 1 );
+        return *( term->head + 1 );
     else
         /* Left-associative sequence. */
-        return ( Ast* ) *( term->head + 2 );
+        return *( term->head + 2 );
 }
 
 
@@ -435,10 +475,48 @@ static Object *resolve( Ast *ast, Compiler *c )
 
 
 static void
+copy( Compiler *c, Ast *args )
+{
+    Object *o;
+    Name *name;
+
+    Ast *arg = get_inner_node( args );
+
+    #if DEBUG__SAFE
+    if ( arg->type != NAME_T )
+    {
+        ERROR( "change_namespace: AST type mismatch" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__COMPILER
+    printf( "copy(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    name = ( Name* ) arg->value;
+
+    if ( ( o = resolve_name( c, name ) ) )
+    {
+        if ( o->type != c->cur_ns_obj->type )
+            printf( "Error: not a namespace.\n" );
+
+        else
+        {
+            c->cur_ns_obj = o;
+            printf( "Moved to namespace '" );
+            ast__print( arg );
+            printf( "'.\n" );
+        }
+    }
+}
+
+
+static void
 change_namespace( Compiler *c, Ast *args )
 {
 /*
-printf( "args->type = %s\n", ast__type__name( args->type ) ); fflush( stdout );
+printf( "args->type = %s\n", Ast__Type__name( args->type ) ); fflush( stdout );
 */
     Object *o;
     Name *name;
@@ -446,7 +524,7 @@ printf( "args->type = %s\n", ast__type__name( args->type ) ); fflush( stdout );
     Ast *arg = get_inner_node( args );
 
 /*
-printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
+printf( "arg->type = %s\n", Ast__Type__name( arg->type ) ); fflush( stdout );
 */
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )

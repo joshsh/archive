@@ -25,10 +25,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* #define PRINT_TERM_AS_ARRAY */
 
 
-/* ast__type ***************************************************************/
+/* Ast__Type ***************************************************************/
 
 
-const char *ast__type__names[8] =
+const char *Ast__Type__names[8] =
 {
     "BAG_T",
     "CHAR_T",
@@ -42,9 +42,9 @@ const char *ast__type__names[8] =
 
 
 const char *
-ast__type__name( ast__type type )
+Ast__Type__name( Ast__Type type )
 {
-    return ast__type__names[ type ];
+    return Ast__Type__names[ type ];
 }
 
 
@@ -53,7 +53,7 @@ ast__type__name( ast__type type )
 
 /** \note  Ownership of the passed value is conferred to the new node. */
 static Ast *
-ast__new( ast__type type, void *value )
+ast__new( Ast__Type type, void *value )
 {
     Ast *node = new( Ast );
     node->type = type;

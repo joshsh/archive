@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Term.h>
 
 
-enum ast__type
+enum Ast__Type
 {
     BAG_T = 0,  /**< A bag composed of terms. */
     CHAR_T,
@@ -48,10 +48,10 @@ enum ast__type
     VOID_T      /**< A generic pointer to data not owned by the AST. */
 };
 
-typedef enum ast__type ast__type;
+typedef enum Ast__Type Ast__Type;
 
 
-extern const char *ast__type__name( ast__type type );
+extern const char *Ast__Type__name( Ast__Type type );
 
 
 typedef struct Ast Ast;
@@ -59,7 +59,7 @@ typedef struct Ast Ast;
 /** The root node of a Phase2 abstract syntax tree. */
 struct Ast
 {
-    ast__type type;
+    Ast__Type type;
 
     void *value;
 };
