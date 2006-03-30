@@ -112,7 +112,7 @@ term__delete( Term *t );
     (*(Term->head) * sizeof(void *)).
     \warning  O(n) time overhead to count n sub-terms. */
 extern unsigned int
-term__length( Term *t );
+term__length( const Term *t );
 
 /** \return  a new Term representing the subterm at a given index
     \warning  For the sake of efficiency, there is no error checking.  Make sure

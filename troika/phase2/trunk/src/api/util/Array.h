@@ -57,7 +57,7 @@ array__delete( Array *a );
 /******************************************************************************/
 
 extern unsigned int
-array__size( Array *a );
+array__size( const Array *a );
 
 extern double
 array__expansion( Array *a );

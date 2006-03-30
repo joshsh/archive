@@ -58,7 +58,7 @@ bunch__delete( Bunch *b );
 
 /** How big of a bunch is it? */
 extern unsigned int
-bunch__size( Bunch *b );
+bunch__size( const Bunch *b );
 
 
 /******************************************************************************/

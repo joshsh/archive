@@ -67,6 +67,8 @@ struct Type
 
     Criterion2  equals;
 
+    Size_Of     size;
+
     Sort        sort;
 
     Walker      walk;

@@ -9,7 +9,7 @@ UTILS    = ../util
 
 INCLUDE  = -I../
 
-CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common #-pedantic
 	# -Werror \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 	# -D_GNU_SOURCE

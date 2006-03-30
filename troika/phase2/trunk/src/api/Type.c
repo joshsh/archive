@@ -45,6 +45,10 @@ static boolean
 default__equals( void *cellA, void *cellB )
 { return TRUE; }
 
+static unsigned int
+default__size( const void *self )
+{ return 0; }
+
 static void
 default__sort( void *cell, Comparator cmp )
 { }
@@ -65,6 +69,7 @@ static Type default_t =
     default__destroy,
     default__encode,
     default__equals,
+    default__size,
     default__sort,
     default__walk
 };

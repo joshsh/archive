@@ -187,7 +187,7 @@ bunch__delete( Bunch *b )
 
 
 unsigned int
-bunch__size( Bunch *b )
+bunch__size( const Bunch *b )
 {
     return ( array__size( b->blocks ) * b->block_size ) - ( b->block_size - b->last_block->filled );
 }
@@ -323,6 +323,7 @@ bunch__create_type( const char *name, int flags )
     if ( type )
     {
         type->destroy = ( Destructor ) bunch__delete;
+        type->size = ( Size_Of ) bunch__size;
         type->walk = ( Walker ) bunch__walk;
     }
 

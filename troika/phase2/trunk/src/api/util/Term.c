@@ -171,7 +171,7 @@ term__delete( Term *t )
 
 
 unsigned int
-term__length( Term *t )
+term__length( const Term *t )
 {
     unsigned int length = 0;
     void **cur, **lim;
@@ -532,6 +532,7 @@ term__create_type( const char *name, int flags )
     {
         type->destroy = ( Destructor ) term__delete;
         type->encode = ( Encoder ) term__encode;
+        type->size = ( Size_Of ) term__length;
         type->walk = ( Walker ) term__walk;
     }
 

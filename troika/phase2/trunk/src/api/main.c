@@ -46,7 +46,6 @@ int main( int argc, char *argv[] )
                 compiler__deserialize( compiler, argv[1] );
             }
 
-            /* Print GPL notice. */
             printf( "\nPhase2 v%s, Copyright (C) 2005-2006 Joshua Shinavier.\n", VERSION );
             printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n\n" );
 

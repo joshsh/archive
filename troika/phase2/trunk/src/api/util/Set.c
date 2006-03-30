@@ -122,6 +122,7 @@ set__create_type( const char *name, int flags )
     {
         type->destroy = ( Destructor ) set__delete;
         type->encode = ( Encoder ) set__encode;
+        type->size = ( Size_Of ) hash_table__size;
         type->walk = ( Walker ) set__walk;
     }
 

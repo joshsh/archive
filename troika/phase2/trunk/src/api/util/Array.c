@@ -142,7 +142,7 @@ array__delete( Array *a )
 
 
 unsigned int
-array__size( Array *a )
+array__size( const Array *a )
 {
     return a->size;
 }
@@ -717,6 +717,7 @@ array__create_type( const char *name, int flags )
     {
         type->destroy = ( Destructor ) array__delete;
         type->encode = ( Encoder ) array__encode;
+        type->size = ( Size_Of ) array__size;
         type->walk = ( Walker ) array__walk;
     }
 

@@ -71,20 +71,21 @@ typedef void *( *Dist_f )( void **refp );
 #define walker__break       ( void* ) 1
 #define walker__remove      ( void* ) 2
 
-typedef void *  ( *Allocator )( void );
-typedef int     ( *Comparator )( const void *arg1, const void *arg2 );
-typedef void *  ( *Copy_Cons )( void *p );
-typedef boolean ( *Criterion )( void *arg );
-typedef boolean ( *Criterion2 )( void *arg1, void *arg2 );
-typedef void *  ( *Decoder )( char *buffer );
-typedef void    ( *Destructor )( void *p );
-typedef void    ( *Encoder )( void *p, char *buffer );
-typedef void    ( *Sort )( void *p, Comparator cmp );
-typedef void *  ( *Substitution )( void *p );
-typedef void    ( *Void_f )( void *p );
-typedef void    ( *Walker )( void *coll, Dist_f f );
+typedef void *          ( *Allocator )( void );
+typedef int             ( *Comparator )( const void *arg1, const void *arg2 );
+typedef void *          ( *Copy_Cons )( void *p );
+typedef boolean         ( *Criterion )( void *arg );
+typedef boolean         ( *Criterion2 )( void *arg1, void *arg2 );
+typedef void *          ( *Decoder )( char *buffer );
+typedef void            ( *Destructor )( void *p );
+typedef void            ( *Encoder )( void *p, char *buffer );
+typedef unsigned int    ( *Size_Of )( const void *self );
+typedef void            ( *Sort )( void *p, Comparator cmp );
+typedef void *          ( *Substitution )( void *p );
+typedef void            ( *Void_f )( void *p );
+typedef void            ( *Walker )( void *coll, Dist_f f );
 
-typedef void    ( *Generic_f )( void );
+typedef void            ( *Generic_f )( void );
 
 
 /* Errors *********************************************************************/
