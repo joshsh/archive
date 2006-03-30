@@ -163,7 +163,7 @@ object__value( const Object *o )
 }
 
 
-/******************************************************************************/
+/* Dispatch functions *********************************************************/
 
 
 static Object *
@@ -255,7 +255,10 @@ object__create_type( const char *name )
 void
 object__trace( Object *o, Dist_f f )
 {
-int total = 0;
+    #if DEBUG__OBJECT
+    int total = 0;
+    #endif
+
     auto void *obj_trace( Object **opp );
 
     void *edge_trace( Hash_Map__Entry **epp )
@@ -289,18 +292,17 @@ int total = 0;
         }
 
         o = *opp;
-printf( "---o ot ---\n" ); FFLUSH;
-printf( "o = %#x, o->type = '%s'\n", ( int ) o, o->type->name );
 
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( !f( ( void** ) opp ) )
         {
-total++;
-printf( "---o ot 2a---\n" ); FFLUSH;
+            #if DEBUG__OBJECT
+            total++;
+            #endif
+
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
             {
-printf( "---o ot 2a a---\n" ); FFLUSH;
                 o->type->walk( o->value, ( Dist_f ) obj_trace );
             }
 
@@ -308,16 +310,10 @@ printf( "---o ot 2a a---\n" ); FFLUSH;
             #if TRIPLES__GLOBAL__OUT_EDGES
             if ( o->outbound_edges )
             {
-printf( "distributing to edges (o = %#x, o->outbound_edges = %#x)\n", ( int ) o, ( int ) o->outbound_edges );
-printf( "o->type = %#x\n", ( int ) o->type ); fflush( stdout );
-printf( "o->type->name = '%s'\n", o->type->name ); fflush( stdout );
-if ( !strcmp( o->type->name, "int" ) )
-printf( "value = %i\n", *( ( int* ) o->value ) );
                 hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
             }
             #endif
         }
-printf( "---o ot 3---\n" ); FFLUSH;
 
         return 0;
     }
@@ -331,7 +327,11 @@ printf( "---o ot 3---\n" ); FFLUSH;
     #endif
 
     obj_trace( &o );
-printf( "===total = %i===\n", total ); FFLUSH;
+
+    #if DEBUG_OBJECT
+    printf( "[] object__trace(%#x, %#x): visited %i objects.\n",
+        ( int ) o, ( int ) f, total );
+    #endif
 }
 
 

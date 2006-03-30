@@ -349,6 +349,7 @@ SK_reduce(
     #endif
 
     #if DEBUG__SK
+    printf( "%i:\t", iter );
     print_term( term );
     #endif
 
@@ -470,12 +471,12 @@ printf( "\n" );  fflush( stdout );
             #endif
         }
 
-    #if DEBUG__SK
-    print_term( term );
-    #endif
+        #if DEBUG__SK
+        printf( "%i:\t", iter );
+        print_term( term );
+        #endif
 
         #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
-printf( "iter = %i\n", iter );
         if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
         {
             ERROR( "SK_reduce: reduction aborted (possible infinite loop)" );

@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define DEBUG__SAFE                             1
 
-#define DEBUG                                   1
+#define DEBUG                                   0
 #if DEBUG
 
     #define DEBUG__CORE                         1
@@ -121,8 +121,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define ENCODING__ROOT__XML__NAME               "data_set"
 
-#define TRIPLES__XML__NAME                      "triple"
 #define OBJECT__XML__NAME                       "object"
+#define TRIPLES__XML__NAME                      "triple"
 
 #define ARRAY__XML__NAME                        "list"
 #define NAMESPACE__XML__NAME                    "table"

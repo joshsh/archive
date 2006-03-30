@@ -303,35 +303,35 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     _[0-9A-Za-z]+  {
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string_t = yytext + 1;
-        /*yylval.string_t = STRDUP( yytext + 1 );*/
+        yylval.string = yytext + 1;
+        /*yylval.string = STRDUP( yytext + 1 );*/
 
         TOKEN( COMMAND_NAME, "COMMAND_NAME" );
     }
 
     '[^']'  {  /* Matches an ASCII character in single quotes. */
         /* Note: no escaped characters yet. */
-        yylval.char_t = *( ++yytext );
+        yylval.character = *( ++yytext );
         TOKEN( CHAR, "CHAR" );
     }
 
     -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a FLOAT if it
                                     contains a decimal point (as in Forth). */
         /* Note: atof is error-safe (it fails with a return value of 0.0). */
-        yylval.float_t = atof( yytext );
+        yylval.real = atof( yytext );
         TOKEN( FLOAT, "FLOAT" );
     }
 
     0|(-?[1-9][0-9]*)  {
         /* Note: atoi is error-safe (it fails with a return value of 0). */
-        yylval.int_t = atoi( yytext );
+        yylval.integer = atoi( yytext );
         TOKEN( INT, "INT" );
     }
 
     {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string_t = extract_id( yytext );
+        yylval.string = extract_id( yytext );
 
         TOKEN( ID, "ID" );
     }
@@ -371,7 +371,7 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
     \"  {  /* End quote after string literal. */
 
         /* Ownership of this string is conferred to the parser. */
-        yylval.string_t = extract_literal( string_buffer );
+        yylval.string = extract_literal( string_buffer );
         buffer_pos = string_buffer;
 
         BEGIN( INITIAL );

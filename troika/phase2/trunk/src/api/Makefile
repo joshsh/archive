@@ -24,6 +24,7 @@ LIBS    =
 
 CC      = gcc $(INCLUDE) $(LIBS)
 
+SUBDIRS = $(BNFTOOL) $(IMPORT) $(LOGTOOL) $(PARSER) $(UTILS) $(XML)
 
 
 .PHONY : default
@@ -32,40 +33,34 @@ default :  phase2
 
 .PHONY : clean
 clean :
-	$(MAKE) clean -C $(BNFTOOL)
-	$(MAKE) clean -C $(IMPORT)
-	$(MAKE) clean -C $(LOGTOOL)
-	$(MAKE) clean -C $(PARSER)
-	$(MAKE) clean -C $(UTILS)
-	$(MAKE) clean -C $(XML)
-	-rm -f *.o $(SK)/sk.o phase2
+	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) clean; cd ..; done
+	-rm -f *.o $(SK)/sk.o phase2 revision.h
+
+
+.PHONY : recursive
+recursive :
+	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) -e; cd ..; done
 
 
 .PHONY : test
 test :
-	$(MAKE) test -C $(IMPORT)
-	$(MAKE) test -C $(PARSER)
-	$(MAKE) test -C $(UTILS)
-	$(MAKE) test -C $(XML)
+	for dir in $(SUBDIRS); do cd $$dir; -$(MAKE) test; cd ..; done
 
 
 ################################################################################
 # Build the parser.
 
-PARSER_OBJECTS = $(PARSER)/lex.yy.o \
-                 $(PARSER)/p2_parser.tab.o \
-                 $(PARSER)/Ast.o
 
 .PHONY: parser
-parser :
+parser/parser.o :
 	$(MAKE) -e -C $(PARSER)
 
 
 ################################################################################
 # Import primitives.
 
-import/target/imports.o :
-	$(MAKE) -e -C $(IMPORT)
+#import/target/imports.o :
+#	$(MAKE) -e -C $(IMPORT)
 
 
 ################################################################################
@@ -94,10 +89,21 @@ $(XML)/xmldom.o  :
 objects = main.o Closure.o Collection.o Compiler.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
 
 
-phase2 :  $(utils) $(XML)/xmldom.o $(objects) import/target/imports.o parser
-	$(CC) $(CFLAGS) -o phase2 $(objects) $(utils) import/target/imports.o $(PARSER_OBJECTS) $(XML)/xmldom.o `xml2-config --libs`
+phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) import/target/imports.o parser
+	$(CC) $(CFLAGS) -o phase2 $(objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
 
 $(objects) $(utils) : defs.h settings.h
+
+serial.o :  revision.h
+
+
+# Note: assumes that Phase2 is being built from a working copy.
+# Defines the head revision number in revision.h, prepended with a '!' if
+# serial.c differs from the repository copy.
+revision.h :  serial.c
+	svn stat -v serial.c \
+	| sed 's/^[^ ][ ]*/&!/;s/^.[ ]*//;s/[ ].*//;s/.*/\#define REVISION    "&"/' \
+	> revision.h
 
 
 # DO NOT DELETE

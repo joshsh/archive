@@ -277,38 +277,36 @@ term2ast( Term *t )
 
 %union
 {
-    char char_t;
-    double float_t;
-    int int_t;
-    char *string_t;
+    char                character;
+    double              real;
+    int                 integer;
+    char                *string;
 
     /** (void *) instead of (Ast *) because Bison won't take an alias here. */
-    void *parser_node;
+    void                *parser_node;
 
-    struct Array *bag, *name;
-
-    struct Statement *stmt;
-
-    struct Term *term;
+    struct Array        *bag, *name;
+    struct Statement    *statement;
+    struct Term         *term;
 }
 
 
 %token L_PAREN R_PAREN
 %token L_SQ_BRACKET R_SQ_BRACKET
-%token L_BRACE COMMA R_BRACE
-%token COLON EQUALS SEMICOLON E_O_F
+%token COMMA L_BRACE R_BRACE
+%token COLON E_O_F EQUALS SEMICOLON
 
-%token <string_t> COMMAND_NAME ID STRING
-%token <char_t> CHAR
-%token <float_t> FLOAT
-%token <int_t> INT
+%token <character>  CHAR
+%token <integer>    INT
+%token <real>       FLOAT
+%token <string>     COMMAND_NAME ID STRING
 
-%type <string_t> command_name id
-%type <term> term subterm command_args
-%type <parser_node> term_item bracketed_term
-%type <bag> bag bag_head
-%type <name> name
-%type <stmt> statement command expression
+%type <bag>         bag bag_head
+%type <name>        name
+%type <parser_node> bracketed_term term_item
+%type <statement>   command expression statement
+%type <string>      command_name id
+%type <term>        command_args subterm term
 
 
 /*
@@ -1043,7 +1041,7 @@ handle_command( Compiler *c, char *name, Ast *args )
         printf( COMMAND_OUTPUT_SUFFIX );
         #endif
 
-        printf( "\n\n" );
+        printf( "\n" );
     }
 }
 
@@ -1071,7 +1069,7 @@ handle_expression( Compiler *c, Name *name, Ast *expr )
         printf( EXPRESSION_OUTPUT_SUFFIX );
         #endif
 
-        printf( "\n\n" );
+        printf( "\n" );
     }
 }
 
@@ -1104,7 +1102,7 @@ handle_error( Compiler *c )
         printf( ERROR_OUTPUT_SUFFIX );
         #endif
 
-        printf( "\n\n" );
+        printf( "\n" );
     }
 }
 

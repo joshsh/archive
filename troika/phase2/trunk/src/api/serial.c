@@ -27,6 +27,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <serial.h>
 #include <util/Set.h>
 #include <xml/xmldom.h>
+#include <revision.h>
 
 
 typedef unsigned char uc;
@@ -808,6 +809,11 @@ printf( "---s s 6---\n" ); FFLUSH;
 
     /* Version attribute. */
     dom_attr__new( root, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
+
+    #ifdef REVISION
+    /* Revision attribute. */
+    dom_attr__new( root, ( uc* ) "p2-revision", ( uc* ) REVISION, 0 );
+    #endif
 
     /* Time stamp attribute. */
     add_timestamp( root );

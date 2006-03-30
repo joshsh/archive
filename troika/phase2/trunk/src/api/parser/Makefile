@@ -27,7 +27,7 @@ VALGRIND = valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes
 ################################################################################
 
 .PHONY : default
-default: objects
+default: parser.o
 
 
 .PHONY : clean
@@ -52,8 +52,13 @@ utils = $(UTILS)/Array.o $(UTILS)/Name.o $(UTILS)/Term.o
 objects = debugger.o ../Type.o Ast.o $(NAME).tab.o
 
 
+parser.o :  Ast.o lex.yy.o $(NAME).tab.o
+	ld -r -o parser.o Ast.o $(NAME).tab.o lex.yy.o
+
+
 debugger :  $(objects) $(utils) lex.yy.o
 	$(CC) -o debugger $(objects) $(utils) lex.yy.o
+
 
 $(objects) $(utils) : ../defs.h ../settings.h
 

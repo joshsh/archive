@@ -333,11 +333,11 @@ namespace__show_children( const Namespace_o *ns_obj )
         array__walk( keys, ( Dist_f ) helper );
         array__delete( keys );
 
-        printf( "}" );
+        printf( "}\n" );
     }
 
     else
-        printf( " { }" );
+        printf( " { }\n" );
 }
 
 

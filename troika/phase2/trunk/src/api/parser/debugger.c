@@ -67,6 +67,7 @@ int compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     else
         printf( "Evaluate command \"%s\"", name );
 
+    printf( "\n" );
 
     /* Debugger recognizes just one command. */
     if ( !strcmp( name, "quit" )
@@ -102,6 +103,9 @@ int compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         printf( "Evaluate anonymous expression :  " );
 
     ast__print( expr );
+
+    printf( "\n" );
+
     ast__delete( expr );
 
     return ret;
@@ -122,6 +126,8 @@ int compiler__handle_parse_error( Compiler *c, char *msg )
 
     else
         printf( "Handle parse error" );
+
+    printf( "\n" );
 
     return ret;
 }

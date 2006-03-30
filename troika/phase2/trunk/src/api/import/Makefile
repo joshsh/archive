@@ -11,7 +11,6 @@
 
 CXX_IN  = ./src
 OUT     = ./target
-CXX_OUT = ./$(OUT)/cxx
 XML_OUT = ./$(OUT)/xml
 OBJ_OUT = ./$(OUT)/obj
 
@@ -40,37 +39,40 @@ test :  $(OUT)/imports.o
 	nm $(OUT)/imports.o
 
 
-objects = $(OBJ_OUT)/char.o $(OBJ_OUT)/combinator.o $(OBJ_OUT)/cstring.o $(OBJ_OUT)/double.o $(OBJ_OUT)/int.o $(OBJ_OUT)/toys.o
+objects =			\
+	$(OBJ_OUT)/char.o	\
+	$(OBJ_OUT)/combinator.o	\
+	$(OBJ_OUT)/cstring.o	\
+	$(OBJ_OUT)/double.o	\
+	$(OBJ_OUT)/int.o	\
+	$(OBJ_OUT)/toys.o
+
+#$(objects) : ../defs.h ../settings.h
 
 
-$(OUT)/imports.o : $(OBJ_OUT)/p2-stubs.o $(objects)
-	ld -r -o $(OUT)/imports.o $(OBJ_OUT)/*.o
+$(OUT)/imports.o : $(OUT)/p2-stubs.o $(objects)
+	ld -r -o $(OUT)/imports.o $(OBJ_OUT)/*.o $(OUT)/p2-stubs.o
 
 
-$(OBJ_OUT)/%.o : $(CXX_IN)/%.c ../defs.h ../settings.h $(OBJ_OUT)
+$(OBJ_OUT)/%.o : $(CXX_IN)/%.c ../defs.h ../settings.h #$(OBJ_OUT)
+	@-mkdir -p $(OBJ_OUT)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 
-$(OBJ_OUT)/p2-stubs.o : $(OUT)/p2-stubs.c $(OBJ_OUT) ../defs.h ../settings.h 
-	-rm $(CXX_IN)/p2-stubs.c
-	cp $(OUT)/p2-stubs.c $(CXX_IN)/p2-stubs.c
-	$(CC) -c $(CFLAGS) -o $(OBJ_OUT)/p2-stubs.o $(CXX_IN)/p2-stubs.c
-	-rm $(CXX_IN)/p2-stubs.c
+$(OUT)/p2-stubs.o : $(CXX_IN)/p2-stubs.c $(OBJ_OUT) ../defs.h ../settings.h
+	$(CC) -c $(CFLAGS) -o $(OUT)/p2-stubs.o $(CXX_IN)/p2-stubs.c
 
 
-$(OUT)/p2-stubs.c :  $(XML_OUT)/p2-import.xml p2-stubs.xslt
-	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(OUT)/p2-stubs.c
+$(CXX_IN)/p2-stubs.c :  $(XML_OUT)/p2-import.xml p2-stubs.xslt
+	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(CXX_IN)/p2-stubs.c
 
 
-$(XML_OUT)/p2-import.xml :  doxygen
+$(XML_OUT)/p2-import.xml :  $(objects)
+	doxygen p2-import.cfg
 	xsltproc $(XML_OUT)/combine.xslt $(XML_OUT)/index.xml > $(XML_OUT)/p2-import.xml
 
 
-$(OBJ_OUT) :
-	mkdir -p $(OBJ_OUT)
+#$(OBJ_OUT) :
+#	mkdir -p $(OBJ_OUT)
 
-
-.PHONY : doxygen
-doxygen :
-	doxygen p2-import.cfg
 

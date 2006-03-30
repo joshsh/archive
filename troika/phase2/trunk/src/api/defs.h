@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  /* strlen, strcpy */
 
 
-#include "settings.h"
+#include <settings.h>
 
 
 /******************************************************************************/
