@@ -238,50 +238,10 @@ n_args( Ast *args, int n )
         : !n;
 
     if ( !match )
-        printf( "Error: command expects %i arguments.\n", n );
+        printf( "Error: command expects %i arguments.", n );
 
     return match;
 }
-
-
-#if NOT_FINISHED
-static void *
-arg( Ast *args, unsigned int i, Ast__Type *type )
-{
-    Term *term;
-    Ast *arg;
-
-    #if DEBUG__SAFE
-    if ( args->type != TERM_T )
-    {
-        ERROR( "arg: wrong AST type" );
-        return 0;
-    }
-    #endif
-
-    term = ( Term* ) args->value;
-
-    if ( i >= term__length( term ) )
-    {
-        printf( "Error: missing argument.\n" );
-        return 0;
-    }
-
-    term = term__subterm_at( term, i );
-
-    /* Note: expects a singleton term. */
-    arg = *( term->head + 1 );
-
-    term__delete( term );
-
-    if ( arg->type != type )
-    {
-        printf(
-    }
-
-    return arg->value;
-}
-#endif
 
 
 static Ast *
@@ -297,14 +257,14 @@ get_inner_node( Ast *ast )
     }
     #endif
 
-    term = ast->value;
+    term = ( Term* ) ast->value;
 
     if ( ( unsigned int ) *( term->head ) == 2 )
         /* Singleton term. */
-        return *( term->head + 1 );
+        return ( Ast* ) *( term->head + 1 );
     else
         /* Left-associative sequence. */
-        return *( term->head + 2 );
+        return ( Ast* ) *( term->head + 2 );
 }
 
 
@@ -355,9 +315,9 @@ resolve_name( Compiler *c, Name *name )
 
     if ( !o )
     {
-        printf( "Error: '" );
+        printf( "Error: \"" );
         name__print( name );
-        printf( "' is not defined in this namespace.\n" );
+        printf( "\" is not defined in this namespace.\n" );
     }
 
     return o;
@@ -475,48 +435,10 @@ static Object *resolve( Ast *ast, Compiler *c )
 
 
 static void
-copy( Compiler *c, Ast *args )
-{
-    Object *o;
-    Name *name;
-
-    Ast *arg = get_inner_node( args );
-
-    #if DEBUG__SAFE
-    if ( arg->type != NAME_T )
-    {
-        ERROR( "change_namespace: AST type mismatch" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__COMPILER
-    printf( "copy(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
-    name = ( Name* ) arg->value;
-
-    if ( ( o = resolve_name( c, name ) ) )
-    {
-        if ( o->type != c->cur_ns_obj->type )
-            printf( "Error: not a namespace.\n" );
-
-        else
-        {
-            c->cur_ns_obj = o;
-            printf( "Moved to namespace '" );
-            ast__print( arg );
-            printf( "'.\n" );
-        }
-    }
-}
-
-
-static void
 change_namespace( Compiler *c, Ast *args )
 {
 /*
-printf( "args->type = %s\n", Ast__Type__name( args->type ) ); fflush( stdout );
+printf( "args->type = %s\n", ast__type__name( args->type ) ); fflush( stdout );
 */
     Object *o;
     Name *name;
@@ -524,7 +446,7 @@ printf( "args->type = %s\n", Ast__Type__name( args->type ) ); fflush( stdout );
     Ast *arg = get_inner_node( args );
 
 /*
-printf( "arg->type = %s\n", Ast__Type__name( arg->type ) ); fflush( stdout );
+printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
 */
     #if DEBUG__SAFE
     if ( arg->type != NAME_T )
@@ -548,9 +470,9 @@ printf( "arg->type = %s\n", Ast__Type__name( arg->type ) ); fflush( stdout );
         else
         {
             c->cur_ns_obj = o;
-            printf( "Moved to namespace '" );
+            printf( "Moved to namespace \"" );
             ast__print( arg );
-            printf( "'.\n" );
+            printf( "\".\n" );
         }
     }
 }
@@ -663,20 +585,17 @@ garbage_collect( Compiler *c )
     printf( "[] garbage_collect(%#x)\n", ( int ) c );
     #endif
 
-printf( "---c gc 1---\n" ); fflush( stdout );
-
     size_before = memory_manager__size( m );
     memory_manager__collect( m );
     size_after = memory_manager__size( m );
-printf( "---c gc 2---\n" ); fflush( stdout );
 
     elapsed_time = difftime( clock(), t );
 
-    printf( "Collected %i of %i objects (%.3g%%) in %fus.\n",
+    printf( "Collected %i of %i objects (%.3g%%) in %fms.\n",
         size_before - size_after,
         size_before,
         ( ( size_before - size_after ) * 100 ) / ( double ) size_before,
-        elapsed_time * 1000000 );
+        elapsed_time * 1000 );
 }
 
 
@@ -818,8 +737,10 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
             assign_name( c, name, o );
             ast__print( a );
         }
+/*
         else
             printf( "[]" );
+*/
 
         printf( " = " );
 
@@ -849,12 +770,12 @@ compiler__handle_parse_error( Compiler *c, char *msg )
 
     if ( msg )
     {
-        printf( "Handle parse error :  %s", msg );
+        printf( "Error:  %s\n", msg );
         free( msg );
     }
 
     else
-        printf( "Handle parse error" );
+        printf( "Parse error\n" );
 
     return ret;
 }

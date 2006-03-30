@@ -315,7 +315,7 @@ namespace__show_children( const Namespace_o *ns_obj )
     void *helper( char **key )
     {
         Object *o = ( Object* ) dictionary__lookup( dict, *key );
-        printf( "    %#x '%s' : %s\n", ( int ) o, *key, o->type->name );
+        printf( "    %#x \"%s\" : %s\n", ( int ) o, *key, o->type->name );
         return 0;
     }
 
