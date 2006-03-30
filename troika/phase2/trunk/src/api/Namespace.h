@@ -100,6 +100,14 @@ extern void
 namespace__walk( Namespace *ns, Dist_f f );
 
 
+/******************************************************************************/
+
+extern Type *
+namespace__create_type( const char *name, int flags );
+
+
+/******************************************************************************/
+
 extern Name *
 namespace__find( const Namespace_o *ns_obj, const Object *o );
 

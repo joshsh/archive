@@ -524,7 +524,7 @@ printf( "\n" );
 
 
 Type *
-term__type( const char *name, int flags )
+term__create_type( const char *name, int flags )
 {
     Type *type = type__new( name, flags );
 

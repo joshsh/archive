@@ -50,8 +50,7 @@ Memory_Manager *
 memory_manager__new( Object *root )
 {
     Memory_Manager *m;
-    Type *Object_t;
-printf( "---m 1---\n" ); fflush( stdout );
+    Type *object_t;
 
     #if DEBUG__SAFE
     if ( !root )
@@ -65,18 +64,14 @@ printf( "---m 1---\n" ); fflush( stdout );
         return 0;
     }
     #endif
-printf( "---m 2---\n" ); fflush( stdout );
 
     if ( !( m = new( Memory_Manager ) ) )
     {
         object__delete( root );
         return 0;
     }
-printf( "---m 3---\n" ); fflush( stdout );
 
     m->objects = bunch__new( MEM__OBJECTS__BLOCK_SIZE );
-
-printf( "---m 4---\n" ); fflush( stdout );
 
     if ( !m->objects )
     {
@@ -84,14 +79,13 @@ printf( "---m 4---\n" ); fflush( stdout );
         free( m );
         return 0;
     }
-printf( "---m 4.5---\n" ); fflush( stdout );
-    Object_t = type__new( "object", 0 );
-    Object_t->destroy = ( Destructor ) object__delete;
+
+    object_t = object__create_type( "object" );
+
     m->objects_o = object__new(
-        bunch__type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS ),
+        bunch__create_type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS ),
         m->objects, 0 );
-    m->objects_o->type->type_arg = Object_t;
-printf( "---m 5---\n" ); fflush( stdout );
+    m->objects_o->type->type_arg = object_t;
 
     m->root = root;
     if ( !memory_manager__add( m, root ) )
@@ -102,8 +96,6 @@ printf( "---m 5---\n" ); fflush( stdout );
         free( m );
         return 0;
     }
-
-printf( "---m 6---\n" ); fflush( stdout );
 
     m->clean = 1;
 
@@ -118,12 +110,12 @@ printf( "---m 6---\n" ); fflush( stdout );
 void
 memory_manager__delete( Memory_Manager *m )
 {
-    Type *Object_t, *Object_bunch_t;
+    Type *object_t, *object_bunch_t;
 
     #if DEBUG__SAFE
     if ( !m )
     {
-        ERROR( "memory_manager__delete: null manager" );
+        ERROR( "memory_manager__delete: null argument" );
         return;
     }
     #endif
@@ -132,22 +124,14 @@ memory_manager__delete( Memory_Manager *m )
     printf( "[] memory_manager__delete(%#x)\n", ( int ) m );
     #endif
 
-printf( "---m d 1---\n" ); fflush( stdout );
-    Object_bunch_t = m->objects_o->type;
-printf( "---m d 2---\n" ); fflush( stdout );
-    Object_t = Object_bunch_t->type_arg;
-printf( "---m d 3---\n" ); fflush( stdout );
-printf( "m->objects = %#x\n", ( int ) m->objects );
-printf( "bunch__size( m->objects ) = %i\n", bunch__size( m->objects ) );
+    object_bunch_t = m->objects_o->type;
+    object_t = object_bunch_t->type_arg;
 
     object__delete( m->objects_o );
-printf( "---m d 4---\n" ); fflush( stdout );
     /*bunch__for_all( m->objects, (void*(*)(void*)) object__delete );
     bunch__delete( m->objects );*/
-    type__delete( Object_bunch_t );
-printf( "---m d 5---\n" ); fflush( stdout );
-    type__delete( Object_t );
-printf( "---m d 6---\n" ); fflush( stdout );
+    type__delete( object_bunch_t );
+    type__delete( object_t );
 
     free( m );
 }
@@ -266,7 +250,7 @@ sweep( Memory_Manager *m )
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        ERROR( "sweep: null manager" );
+        ERROR( "sweep: null argument" );
         return;
     }
     #endif
@@ -300,14 +284,24 @@ memory_manager__walk( Memory_Manager *m, Dist_f f )
         }
     }
 
+    #ifdef DEBUG__SAFE
+    if ( !m || !f )
+    {
+        ERROR( "memory_manager__walk: null argument" );
+        return;
+    }
+    #endif
+
+    #if DEBUG__MEMORY
+    printf( "[] memory_manager__walk(%#x, %#x)\n", ( int ) m, ( int ) f );
+    #endif
+
     if ( !m->clean )
         unmark_all( m );
 
     m->clean = 0;
-printf( "---mm d 1---\n" ); fflush( stdout );
 
     object__trace( m->root, ( Dist_f ) helper );
-printf( "---mm d 2---\n" ); fflush( stdout );
 
     /* Might as well sweep. */
     sweep( m );
@@ -387,7 +381,7 @@ memory_manager__collect( Memory_Manager *m )
     #ifdef DEBUG__SAFE
     if ( !m )
     {
-        ERROR( "memory_manager__collect: null manager" );
+        ERROR( "memory_manager__collect: null argument" );
         return;
     }
     #endif

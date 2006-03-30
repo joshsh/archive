@@ -86,6 +86,12 @@ extern void
 type__delete( Type *type );
 
 
+/******************************************************************************/
+
+extern Type *
+type__create_type( const char *name, int flags );
+
+
 #endif  /* TYPE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -316,7 +316,7 @@ bunch__walk( Bunch *b, Dist_f f )
 
 
 Type *
-bunch__type( const char *name, int flags )
+bunch__create_type( const char *name, int flags )
 {
     Type *type = type__new( name, flags );
 

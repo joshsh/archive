@@ -87,7 +87,7 @@ bunch__walk( Bunch *b, Dist_f f );
 /******************************************************************************/
 
 extern Type *
-bunch__type( const char *name, int flags );
+bunch__create_type( const char *name, int flags );
 
 
 #endif  /* BUNCH_H */

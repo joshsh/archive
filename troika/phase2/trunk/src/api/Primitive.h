@@ -98,6 +98,13 @@ primitive__encode( Primitive *prim, char *buffer );
 
 /******************************************************************************/
 
+
+extern Type *
+primitive__create_type( const char *name );
+
+
+/******************************************************************************/
+
 #endif  /* PRIMITIVE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

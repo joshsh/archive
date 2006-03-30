@@ -52,4 +52,22 @@ primitive__encode( Primitive *prim, char *buffer )
 }
 
 
+/******************************************************************************/
+
+
+Type *
+primitive__create_type( const char *name )
+{
+    Type *t = type__new( name, 0 );
+
+    if ( t )
+    {
+        t->destroy = ( Destructor ) primitive__delete;
+        t->encode = ( Encoder ) primitive__encode;
+    }
+
+    return t;
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -709,7 +709,7 @@ array__encode( Array *a, char *buffer )
 
 
 Type *
-array__type( const char *name, int flags )
+array__create_type( const char *name, int flags )
 {
     Type *type = type__new( name, flags );
 

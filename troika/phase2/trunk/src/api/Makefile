@@ -3,15 +3,6 @@
 #  Makefile for the Phase2 programming API.
 #  Author: Joshua Shinavier
 
-BNFTOOL = ./bnftool
-IMPORT  = ./import
-LOGTOOL = ./logtool
-PARSER  = ./parser
-SK      = ./sk
-UTILS   = ./util
-XML     = ./xml
-
-
 INCLUDE  = -I./
 
 export CFLAGS = -O2 -g --ansi -W -Wall #-pedantic
@@ -23,6 +14,15 @@ export CFLAGS = -O2 -g --ansi -W -Wall #-pedantic
 LIBS    =
 
 CC      = gcc $(INCLUDE) $(LIBS)
+
+
+BNFTOOL = ./bnftool
+IMPORT  = ./import
+LOGTOOL = ./logtool
+PARSER  = ./parser
+SK      = ./sk
+UTILS   = ./util
+XML     = ./xml
 
 SUBDIRS = $(BNFTOOL) $(IMPORT) $(LOGTOOL) $(PARSER) $(UTILS) $(XML)
 
@@ -45,22 +45,6 @@ recursive :
 .PHONY : test
 test :
 	for dir in $(SUBDIRS); do cd $$dir; -$(MAKE) test; cd ..; done
-
-
-################################################################################
-# Build the parser.
-
-
-.PHONY: parser
-parser/parser.o :
-	$(MAKE) -e -C $(PARSER)
-
-
-################################################################################
-# Import primitives.
-
-#import/target/imports.o :
-#	$(MAKE) -e -C $(IMPORT)
 
 
 ################################################################################

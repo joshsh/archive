@@ -30,6 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <util/Hash_Table.h>
+#include <Type.h>
 
 
 typedef Hash_Table Set;
@@ -51,6 +52,15 @@ set__remove( Set *s, void *el );
 
 extern void
 set__walk( Set *s, Dist_f f );
+
+
+/******************************************************************************/
+
+extern void
+set__encode( Set *t, char *buffer );
+
+extern Type *
+set__create_type( const char *name, int flags );
 
 
 #endif  /* SET_H */

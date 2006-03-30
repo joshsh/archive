@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <util/Set.h>
+#include <Object.h>
 
 
 static unsigned int
@@ -75,6 +76,56 @@ void
 set__walk( Set *s, Dist_f f )
 {
     hash_table__walk( s, f );
+}
+
+
+/******************************************************************************/
+
+
+void
+set__encode( Set *s, char *buffer )
+{
+    void encode( Object **opp )
+    {
+        Object *o = *opp;
+
+        sprintf( buffer, " " );
+        buffer++;
+
+        o->type->encode( o->value, buffer );
+        buffer += strlen( buffer );
+    }
+
+    #if DEBUG__SAFE
+    if ( !s || !buffer )
+    {
+        ERROR( "set__encode: null argument" );
+        return;
+    }
+    #endif
+
+    sprintf( buffer, "{" );
+    buffer++;
+
+    set__walk( s, ( Dist_f ) encode );
+
+    sprintf( buffer, " }" );
+}
+
+
+Type *
+set__create_type( const char *name, int flags )
+{
+    Type *type = type__new( name, flags );
+
+    if ( type )
+    {
+        type->destroy = ( Destructor ) set__delete;
+        type->encode = ( Encoder ) set__encode;
+        type->walk = ( Walker ) set__walk;
+    }
+
+    return type;
 }
 
 

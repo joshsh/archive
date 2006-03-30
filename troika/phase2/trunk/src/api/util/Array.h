@@ -153,7 +153,7 @@ array__minimize( Array *a );
 /******************************************************************************/
 
 extern Type *
-array__type( const char *name, int flags );
+array__create_type( const char *name, int flags );
 
 
 #endif  /* ARRAY_H */

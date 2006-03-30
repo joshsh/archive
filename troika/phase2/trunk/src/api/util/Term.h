@@ -155,7 +155,7 @@ extern void
 term__encode( Term *t, char *buffer );
 
 extern Type *
-term__type( const char *name, int flags );
+term__create_type( const char *name, int flags );
 
 
 #endif  /* TERM_H */

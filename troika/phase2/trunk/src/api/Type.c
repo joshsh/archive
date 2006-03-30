@@ -115,4 +115,37 @@ type__delete( Type *type )
 }
 
 
+/******************************************************************************/
+
+
+static void
+type__encode( Type *t, char *buffer )
+{
+    #if DEBUG__SAFE
+    if ( !t || !buffer )
+    {
+        ERROR( "type__encode: null argument" );
+        return;
+    }
+    #endif
+
+    sprintf( buffer, t->name );
+}
+
+
+Type *
+type__create_type( const char *name, int flags )
+{
+    Type *t = type__new( name, flags );
+
+    if ( t )
+    {
+        t->destroy = ( Destructor ) type__delete;
+        t->encode = ( Encoder ) type__encode;
+    }
+
+    return t;
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

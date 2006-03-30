@@ -151,16 +151,10 @@ printf( "---e 2---\n" ); fflush( stdout );
 printf( "---e 3---\n" ); fflush( stdout );
 
     /* Create the basic data types. */
-    if ( !( env->ns_t = type__new( "namespace", TYPE__IS_OBJ_COLL ) )
-      || !( env->prim_t = type__new( "primitive", 0 ) )
-      || !( env->type_t = type__new( "type", 0 ) ) )
+    if ( !( env->ns_t = namespace__create_type( "namespace", TYPE__IS_OBJ_COLL ) )
+      || !( env->prim_t = primitive__create_type( "primitive" ) )
+      || !( env->type_t = type__create_type( "type", 0 ) ) )
         goto abort;
-
-    env->ns_t->destroy =    ( Destructor )  namespace__delete;
-    env->ns_t->walk = ( Walker ) namespace__walk;
-    env->prim_t->destroy =  ( Destructor )  primitive__delete;
-    env->prim_t->encode = ( Encoder ) primitive__encode;
-    env->type_t->destroy =  ( Destructor )  type__delete;
 
 printf( "---e 4---\n" ); fflush( stdout );
 
@@ -182,10 +176,10 @@ printf( "---e 5---\n" ); fflush( stdout );
 printf( "---e 6---\n" ); fflush( stdout );
 
     /* Add the other namespace objects to the manager. */
-    if ( !( env->combinators = memory_manager__add( env->manager, env->combinators ) )
-      || !( env->data = memory_manager__add( env->manager, env->data ) )
-      || !( env->primitives = memory_manager__add( env->manager, env->primitives ) )
-      || !( env->types = memory_manager__add( env->manager, env->types ) ) )
+    if ( !memory_manager__add( env->manager, env->combinators )
+      || !memory_manager__add( env->manager, env->data )
+      || !memory_manager__add( env->manager, env->primitives )
+      || !memory_manager__add( env->manager, env->types ) )
         goto abort;
 printf( "---e 7---\n" ); fflush( stdout );
 
@@ -204,8 +198,9 @@ printf( "---e 8---\n" ); fflush( stdout );
 printf( "---e 9---\n" ); fflush( stdout );
 
     /* Add other types here... */
-    environment__register_type( env, array__type( "bag", TYPE__IS_OBJ_COLL ) );
-    environment__register_type( env, term__type( "term", TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, array__create_type( "bag", TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, set__create_type( "set", TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, term__create_type( "term", TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
     if ( !environment__import_primitives( env ) )

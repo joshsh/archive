@@ -343,6 +343,24 @@ namespace__show_children( const Namespace_o *ns_obj )
 
 /******************************************************************************/
 
+
+Type *
+namespace__create_type( const char *name, int flags )
+{
+    Type *t = type__new( name, flags );
+
+    if ( t )
+    {
+        t->destroy = ( Destructor ) namespace__delete;
+        t->walk = ( Walker ) namespace__walk;
+    }
+
+    return t;
+}
+
+
+/******************************************************************************/
+
 /*
 static boolean equals( void *p1, void *p2 )
 {
