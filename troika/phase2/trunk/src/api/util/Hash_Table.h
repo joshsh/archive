@@ -107,7 +107,7 @@ hash_table__add( Hash_Table *h, void *key );
     target value, else you won't be able to tell it apart from a failed lookup.
 */
 extern void *
-hash_table__lookup( Hash_Table *h, const void *key );
+hash_table__lookup( const Hash_Table *h, const void *key );
 
 /** Removes the key.
     \return  the displaced target (if any) */

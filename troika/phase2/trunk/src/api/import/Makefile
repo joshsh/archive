@@ -47,6 +47,9 @@ objects =			\
 	$(OBJ_OUT)/int.o	\
 	$(OBJ_OUT)/toys.o
 
+other_dependencies = $(CXX_IN)/Set-operations.h
+
+
 #$(objects) : ../defs.h ../settings.h
 
 
@@ -67,12 +70,7 @@ $(CXX_IN)/p2-stubs.c :  $(XML_OUT)/p2-import.xml p2-stubs.xslt
 	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(CXX_IN)/p2-stubs.c
 
 
-$(XML_OUT)/p2-import.xml :  $(objects)
+$(XML_OUT)/p2-import.xml :  $(objects) $(other_dependencies)
 	doxygen p2-import.cfg
 	xsltproc $(XML_OUT)/combine.xslt $(XML_OUT)/index.xml > $(XML_OUT)/p2-import.xml
-
-
-#$(OBJ_OUT) :
-#	mkdir -p $(OBJ_OUT)
-
 

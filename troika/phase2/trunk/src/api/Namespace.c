@@ -347,9 +347,9 @@ namespace__show_children( const Namespace_o *ns_obj )
     }
 
     #if COMPILER__SHOW_ADDRESS
-    printf( "%#x : namespace", ( int ) ns_obj );
+    printf( "%#x : %s", ( int ) ns_obj, ns_obj->type->name );
     #else
-    printf( "namespace" );
+    printf( "%s", ns_obj->type->name );
     #endif
 
     if ( size )

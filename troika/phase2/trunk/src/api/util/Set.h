@@ -39,9 +39,18 @@ typedef Hash_Table Set;
 extern Set *
 set__new( void );
 
+extern Set *
+set__copy( Set *s );
+
 extern void
 set__delete( Set *s );
 
+
+extern void
+set__walk( Set *s, Dist_f f );
+
+
+/******************************************************************************/
 
 extern void
 set__add( Set *s, void *el );
@@ -49,9 +58,27 @@ set__add( Set *s, void *el );
 extern void
 set__remove( Set *s, void *el );
 
+extern boolean
+set__contains( const Set *s, const void *el );
 
-extern void
-set__walk( Set *s, Dist_f f );
+
+/******************************************************************************/
+
+/** a - b */
+extern Set *
+set__exclusion( Set *a, Set *b );
+
+/** Set-theoretic equivalent of AND. */
+extern Set *
+set__intersection( Set *a, Set *b );
+
+/** Set-theoretic equivalent of XOR. */
+extern Set *
+set__symmetric_difference( Set *a, Set *b );
+
+/** Set-theoretic equivalent of OR. */
+extern Set *
+set__union( Set *a, Set *b );
 
 
 /******************************************************************************/

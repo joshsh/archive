@@ -130,12 +130,12 @@ compiler__new( Environment *env )
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser. */
-    if ( !( env->bag_t = environment__resolve_type( env, "bag" ) )
+    if ( !( env->bag_t = environment__resolve_type( env, "Bag" ) )
       || !( env->char_t = environment__resolve_type( env, "char" ) )
       || !( env->string_t = environment__resolve_type( env, "cstring" ) )
       || !( env->float_t = environment__resolve_type( env, "double" ) )
       || !( env->int_t = environment__resolve_type( env, "int" ) )
-      || !( env->term_t = environment__resolve_type( env, "term" ) ) )
+      || !( env->term_t = environment__resolve_type( env, "Term" ) ) )
     {
         ERROR( "compiler__new: basic type not found" );
         free( c );
@@ -440,13 +440,36 @@ n_args( Ast *args, int n )
         : !n;
 
     if ( !match )
-        printf( "Error: command expects %i arguments.", n );
+        printf( "Error: command expects %i arguments.\n", n );
 
     return match;
 }
 
 
-static Name *get_arg( Ast *args, unsigned int i )
+static int
+count_args( Ast *args )
+{
+    Term *term;
+
+    if ( !args )
+        return 0;
+
+    #if DEBUG__SAFE
+    if ( args->type != TERM_T )
+    {
+        ERROR( "get_arg: wrong AST type" );
+        return 0;
+    }
+    #endif
+
+    term = ( Term* ) args->value;
+
+    return term__length( term );
+}
+
+
+static Name *
+get_arg( Ast *args, unsigned int i )
 {
     Term *term, *subterm;
     Ast *a;
@@ -504,6 +527,39 @@ static Name *get_arg( Ast *args, unsigned int i )
 
 
 /* Command functions **********************************************************/
+
+
+static void
+command_all( Compiler*c, Ast *args )
+{
+    int n = count_args( args ), i;
+    Object *o;
+    Name *name;
+
+    if ( !n )
+        namespace__show_children( c->cur_ns_obj );
+
+    else
+        for ( i = 0; i < n; i++ )
+        {
+            if ( i )
+                printf( "\n" );
+
+            name = get_arg( args, i );
+            o = ns_resolve( c, name );
+
+            if ( o->type != c->env->ns_t )
+            {
+                printf( "Error: \"" );
+                name__print( name );
+                printf( "\" is not a namespace.\n" );
+            }
+
+            else
+                namespace__show_children( o );
+
+        }
+}
 
 
 static void
@@ -734,7 +790,13 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 {
     int ret = 0;
 
-    if ( !strcmp( name, "cp" ) )
+
+    if ( !strcmp( name, "all" ) )
+    {
+        command_all( c, args );
+    }
+
+    else if ( !strcmp( name, "cp" ) )
     {
         if ( n_args( args, 2 ) )
             command_cp( c, args );
@@ -789,14 +851,6 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     {
         if ( n_args( args, 1 ) )
             command_saveas( c, args );
-    }
-
-    else if ( !strcmp( name, "all" ) )
-    {
-        if ( n_args( args, 0 ) )
-        {
-            namespace__show_children( c->cur_ns_obj );
-        }
     }
 
     else if ( !strcmp( name, "size" ) )

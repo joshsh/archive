@@ -292,7 +292,7 @@ hash_table__add( Hash_Table *h, void *key )
 
 
 void *
-hash_table__lookup( Hash_Table *h, const void *key )
+hash_table__lookup( const Hash_Table *h, const void *key )
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
@@ -358,6 +358,7 @@ void
 hash_table__walk( Hash_Table *h, Dist_f f )
 {
     void **cur, **lim;
+    void *r;
 
     #if DEBUG__SAFE
     if ( !h || !f )
@@ -376,8 +377,17 @@ hash_table__walk( Hash_Table *h, Dist_f f )
 
     while ( cur < lim )
     {
-        if ( *cur && f( cur ) )
-            break;
+        if ( *cur && ( r = f( cur ) ) )
+        {
+            if ( r == walker__remove )
+            {
+                *cur = 0;
+                h->size--;
+            }
+
+            else if ( r == walker__break )
+                break;
+        }
 
         cur++;
     }

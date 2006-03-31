@@ -55,6 +55,9 @@ set__delete( Set *s )
 }
 
 
+/******************************************************************************/
+
+
 void
 set__add( Set *s, void *el )
 {
@@ -69,6 +72,13 @@ set__remove( Set *s, void *el )
 }
 
 
+boolean
+set__contains( const Set *s, const void *el )
+{
+    return ( hash_table__lookup( s, el ) != 0 );
+}
+
+
 /******************************************************************************/
 
 
@@ -76,6 +86,106 @@ void
 set__walk( Set *s, Dist_f f )
 {
     hash_table__walk( s, f );
+}
+
+
+/******************************************************************************/
+
+
+Set *
+set__exclusion( Set *a, Set *b )
+{
+    Set *c;
+
+    void *helper( void **refp )
+    {
+        if ( set__contains( b, *refp ) )
+            return walker__remove;
+        else
+            return 0;
+    }
+
+    c = hash_table__copy( a );
+    hash_table__walk( c, helper );
+
+    return c;
+}
+
+
+Set *
+set__intersection( Set *a, Set *b )
+{
+    Set *c, *d;
+
+    void *helper( void **refp )
+    {
+        if ( !set__contains( d, *refp ) )
+            return walker__remove;
+        else
+            return 0;
+    }
+
+    if ( hash_table__size( a ) < hash_table__size( b ) )
+    {
+        c = hash_table__copy( a );
+        d = b;
+    }
+
+    else
+    {
+        c = hash_table__copy( b );
+        d = a;
+    }
+
+    hash_table__walk( c, helper );
+    return c;
+}
+
+
+Set *
+set__symmetric_difference( Set *a, Set *b )
+{
+    Set *c;
+
+    void *helper( void **refp )
+    {
+        if ( set__contains( a, *refp ) && set__contains( b, *refp ) )
+            return walker__remove;
+        else
+            return 0;
+    }
+
+    c = set__union( a, b );
+    hash_table__walk( c, helper );
+
+    return c;
+}
+
+
+Set *
+set__union( Set *a, Set *b )
+{
+    Set *c;
+
+    void *helper( void **refp )
+    {
+        hash_table__add( c, *refp );
+        return 0;
+    }
+
+    if ( hash_table__size( a ) > hash_table__size( b ) )
+    {
+        c = hash_table__copy( a );
+        hash_table__walk( b, helper );
+    }
+
+    else
+    {
+        c = hash_table__copy( b );
+        hash_table__walk( a, helper );
+    }
+
+    return c;
 }
 
 
@@ -120,6 +230,7 @@ set__create_type( const char *name, int flags )
 
     if ( type )
     {
+        type->clone = ( Copy_Cons ) hash_table__copy;
         type->destroy = ( Destructor ) set__delete;
         type->encode = ( Encoder ) set__encode;
         type->size = ( Size_Of ) hash_table__size;

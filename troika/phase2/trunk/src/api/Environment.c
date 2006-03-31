@@ -145,10 +145,10 @@ environment__new()
     env->manager = 0;
 
     /* Create the basic data types. */
-    if ( !( env->ns_t = namespace__create_type( "namespace", TYPE__IS_OBJ_COLL ) )
-      || !( env->prim_t = primitive__create_type( "primitive" ) )
-      || !( env->set_t = set__create_type( "set", TYPE__IS_OBJ_COLL ) )
-      || !( env->type_t = type__create_type( "type", 0 ) ) )
+    if ( !( env->ns_t = namespace__create_type( "Namespace", TYPE__IS_OBJ_COLL ) )
+      || !( env->prim_t = primitive__create_type( "Primitive" ) )
+      || !( env->set_t = set__create_type( "Set", TYPE__IS_OBJ_COLL ) )
+      || !( env->type_t = type__create_type( "Type", 0 ) ) )
         goto abort;
 
     /* Create root namespace object and children. */
@@ -187,8 +187,8 @@ environment__new()
     environment__register_type( env, env->type_t );
 
     /* Add other types here... */
-    environment__register_type( env, array__create_type( "bag", TYPE__IS_OBJ_COLL ) );
-    environment__register_type( env, term__create_type( "term", TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, array__create_type( "Bag", TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, term__create_type( "Term", TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
     if ( !environment__import_primitives( env ) )
@@ -263,7 +263,7 @@ environment__delete( Environment *env )
     ns_t = *env->ns_t;
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
-        namespace__lookup_simple( ( Namespace* ) env->types->value, "type" ) );
+        namespace__lookup_simple( ( Namespace* ) env->types->value, "Type" ) );
     memory_manager__collect( env->manager );
 
     memory_manager__delete( env->manager );
