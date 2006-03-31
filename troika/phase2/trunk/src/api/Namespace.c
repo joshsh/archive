@@ -57,7 +57,7 @@ namespace__delete( Namespace *ns )
     #endif
 
     #if DEBUG__NAMESPACE
-    printf( "namespace__delete(%#x)\n", ( int ) ns ); fflush( stdout );
+    printf( "[] namespace__delete(%#x)\n", ( int ) ns ); fflush( stdout );
     #endif
 
     dictionary__delete( ns->children );

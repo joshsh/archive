@@ -654,7 +654,7 @@ triple__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
     #if DEBUG__SERIAL
     printf( "[] triple__xml_decode(%#x, %#x)\n",
-        ( int ) o, ( int ) el, ( int ) state );
+        ( int ) el, ( int ) state );
     #endif
 
     subject_el = dom_element__first_child( el );

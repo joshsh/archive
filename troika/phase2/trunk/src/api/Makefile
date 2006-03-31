@@ -34,7 +34,7 @@ default :  phase2
 .PHONY : clean
 clean :
 	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) clean; cd ..; done
-	-rm -f *.o $(SK)/sk.o phase2 revision.h
+	-rm -f *.o $(SK)/sk.o phase2 revision.h compiler/*.o
 
 
 .PHONY : recursive
@@ -70,11 +70,13 @@ $(XML)/xmldom.o  :
 ################################################################################
 # Build the command line interface.
 
-objects = main.o Closure.o Collection.o Compiler.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
+objects = main.o Collection.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
+
+compiler_objects = compiler/Compiler.o compiler/command.o compiler/expression.o compiler/error.o
 
 
-phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) import/target/imports.o parser
-	$(CC) $(CFLAGS) -o phase2 $(objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
+phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) import/target/imports.o parser
+	$(CC) $(CFLAGS) -o phase2 $(objects) $(compiler_objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
 
 $(objects) $(utils) : defs.h settings.h
 

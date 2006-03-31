@@ -86,7 +86,7 @@ object__delete( Object *o )
     #endif
 
     #if DEBUG__OBJECT
-    printf( "object__delete(%#x): value = %#x, type = %#x.\n",
+    printf( "[] object__delete(%#x): value = %#x, type = %#x.\n",
         ( int ) o, ( int ) o->value, ( int ) o->type );
     #endif
 
