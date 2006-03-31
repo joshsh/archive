@@ -180,7 +180,6 @@ char *extract_id( char *s )
     *s_low = '\0';
 
     return s;
-    /*return STRDUP( s );*/
 }
 
 
@@ -219,7 +218,6 @@ char *extract_literal( char *s )
     *s_low = '\0';
 
     return s;
-    /*return STRDUP( s );*/
 }
 
 
@@ -233,7 +231,7 @@ char *extract_literal( char *s )
 ALNUM   [A-Za-z0-9]
 
 /** For lexical identifiers. */
-IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
+IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 
 
 /** Comments and string literals have their own mini-scanners. */
@@ -268,11 +266,11 @@ IDCHAR  [^_\]\[[:space:]:;=(){,}\"\\]
         TOKEN( SEMICOLON, "SEMICOLON" );
     }
 
-    "<-"  {  /* Leading assignment operator. */
+    ":="  {  /* Leading assignment operator. */
         TOKEN( L_ASSIGN, "L_ASSIGN" );
     }
 
-    "->"  {  /* Trailing assignment operator. */
+    "=:"  {  /* Trailing assignment operator. */
         TOKEN( R_ASSIGN, "R_ASSIGN" );
     }
 

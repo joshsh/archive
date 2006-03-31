@@ -28,9 +28,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SETTINGS_H
 
 
-#define GNU_EXTENSIONS                          1
-
-
 /* Debugging ******************************************************************/
 
 
@@ -115,6 +112,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SK__ALLOW_NONREDUX                      1
 
 #define SK__IMPLICIT_ASSOCIATION                1
+
+
+/* Compiler interface *********************************************************/
+
+
+#define COMPILER__SHOW_ADDRESS                  1
 
 
 /* Serialization **************************************************************/

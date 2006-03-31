@@ -130,7 +130,6 @@ prim_reduce( Term *term, Memory_Manager *m )
     void *result, **args, **cur = term->head + 2;
     Primitive *prim = ( Primitive* ) ( ( Object* ) *cur )->value;
     Type *param_type;
-printf( "---sk pr -2---\n" ); fflush( stdout );
 
     #if PRIM__ALLOW_NOARG_FUNCTIONS
     args = ( prim->arity )
@@ -145,15 +144,12 @@ printf( "---sk pr -2---\n" ); fflush( stdout );
         return 0;
     }
     #endif
-        args = malloc( prim->arity * sizeof( void* ) );
+    args = malloc( prim->arity * sizeof( void* ) );
     #endif
-printf( "---sk pr -1---\n" ); fflush( stdout );
 
     /* Load arguments into the array. */
     for ( i = 0; i < prim->arity; i++ )
     {
-printf( "---sk pr 0---\n" ); fflush( stdout );
-
         cur++;
 
         if ( ( unsigned int ) *cur != 2 )
@@ -214,11 +210,9 @@ printf( "---sk pr 0---\n" ); fflush( stdout );
         else
             args[i] = *cur;
     }
-printf( "---sk pr 0.1---\n" ); fflush( stdout );
 
     /* Apply the primitive. */
     result = prim->cstub( args );
-printf( "---sk pr 0.2---\n" ); fflush( stdout );
 
     if ( args )
         free( args );
@@ -231,12 +225,9 @@ printf( "---sk pr 0.2---\n" ); fflush( stdout );
         return 0;
     }
     #endif
-printf( "---sk pr 1---\n" ); fflush( stdout );
-printf( "prim->return_type = %#x\n", ( int ) prim->return_type );
 
     if ( prim->return_type != any_type )
     {
-printf( "---sk pr 2a---\n" ); fflush( stdout );
         o = object__new( prim->return_type, result, 0 );
 
         /* Caution: the object's value must be a BRAND NEW value. */
@@ -245,10 +236,8 @@ printf( "---sk pr 2a---\n" ); fflush( stdout );
 
     else
     {
-printf( "---sk pr 2b---\n" ); fflush( stdout );
         o = ( Object* ) result;
     }
-printf( "---sk pr 3---\n" ); fflush( stdout );
 
     /* Replace the primitive reference and its arguments with the return value. */
     *cur = o;
@@ -256,7 +245,6 @@ printf( "---sk pr 3---\n" ); fflush( stdout );
     *cur = ( void* ) 2;
     term->head = cur - 1;
     *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
-printf( "---sk pr 4---\n" ); fflush( stdout );
 
     return term;
 }

@@ -66,12 +66,19 @@ namespace__delete( Namespace *ns )
 }
 
 
+unsigned int
+namespace__size( Namespace *ns )
+{
+    return hash_table__size( ns->children );
+}
+
+
 Object *
 namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
 {
-    Namespace *ns = ( Namespace* ) ns_obj->value;
+    Namespace *ns = ns_obj->value;
 
-    Object *child_ns_obj, *displaced_object;
+    Object *child_ns_obj;
     char *key;
 
     #if DEBUG__SAFE
@@ -97,35 +104,32 @@ namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
         if ( object__immutable( ns_obj ) )
         {
             ERROR( "namespace__add: namespace is write-protected" );
-            return 0;
+            o = 0;
         }
 
-        displaced_object = ( Object* ) dictionary__add(
-            ns->children, ( char* ) array__peek( name ), o );
+        else
+            dictionary__add( ns->children, array__peek( name ), o );
     }
 
     else
     {
-        key = ( char* ) array__pop( name );
+        key = array__pop( name );
 
-        child_ns_obj = ( Object* ) dictionary__lookup( ns->children, key );
+        child_ns_obj = dictionary__lookup( ns->children, key );
 
         if ( child_ns_obj->type != ns_obj->type )
         {
             ERROR( "namespace__add: not a namespace" );
-            displaced_object = 0;
+            o = 0;
         }
 
         else
-        {
-            displaced_object = namespace__add(
-                child_ns_obj, name, o );
-        }
+            o = namespace__add( child_ns_obj, name, o );
 
         array__push( name, key );
     }
 
-    return displaced_object;
+    return o;
 }
 
 
@@ -153,21 +157,22 @@ namespace__add_simple( Namespace *ns, const char *name, Object *o )
 Object *
 namespace__lookup( Namespace_o *ns_obj, Name *name )
 {
-    Namespace *ns = ( Namespace* ) ns_obj->value;
-
+    Namespace *ns;
     Object *o;
     char *key;
 
     #if DEBUG__SAFE
-    if ( !ns )
+    if ( !ns_obj )
     {
-        ERROR( "null namespace" );
+        ERROR( "namespace__lookup: null argument" );
         return 0;
     }
     #endif
 
+    ns = ( Namespace* ) ns_obj->value;
+
     #if DEBUG__NAMESPACE
-    printf( "[...] namespace__lookup(%#x, %#x)\n", ( int ) ns, ( int ) name );
+    printf( "[...] namespace__lookup(%#x, %#x)\n", ( int ) ns_obj, ( int ) name );
     #endif
 
     if ( !name || !array__size( name ) )
@@ -176,13 +181,13 @@ namespace__lookup( Namespace_o *ns_obj, Name *name )
     o = ( Object* ) dictionary__lookup( ns->children, array__peek( name ) );
 
     /* Look for the object in a nested namespace. */
-    if ( array__size( name ) > 1 )
+    if ( o && array__size( name ) > 1 )
     {
         /* Always check for this error, as namespace references may come directly
            from the user. */
         if ( o->type != ns_obj->type )
         {
-            ERROR( "not a namespace" );
+            ERROR( "namespace__lookup: not a namespace" );
             o = 0;
         }
 
@@ -216,13 +221,13 @@ namespace__lookup_simple( Namespace *ns, const char *name )
 Object *
 namespace__remove( Namespace_o *ns_obj, Name *name )
 {
-    Namespace *ns = ( Namespace* ) ns_obj->value;
+    Namespace *ns;
 
-    Object *child_ns_obj, *displaced_object;
+    Object *child_ns_obj, *o;
     char *key;
 
     #if DEBUG__SAFE
-    if ( !ns )
+    if ( !ns_obj )
     {
         ERROR( "null namespace" );
         return 0;
@@ -238,42 +243,45 @@ namespace__remove( Namespace_o *ns_obj, Name *name )
         return 0;
     }
     #endif
-printf( "--- ns rm 1---\n" ); fflush( stdout );
+
+    ns = ns_obj->value;
 
     if ( array__size( name ) == 1 )
     {
-printf( "--- ns rm 2a---\n" ); fflush( stdout );
         if ( object__immutable( ns_obj ) )
         {
             ERROR( "namespace__remove: namespace is write-protected" );
             return 0;
         }
 
-        displaced_object = ( Object* ) dictionary__remove(
-            ns->children, ( char* ) array__peek( name ) );
+        o = dictionary__remove( ns->children, ( char* ) array__peek( name ) );
     }
 
     else
     {
-printf( "--- ns rm 2b---\n" ); fflush( stdout );
         key = ( char* ) array__pop( name );
 
-        child_ns_obj = ( Object* ) dictionary__lookup( ns->children, key );
+        child_ns_obj = dictionary__lookup( ns->children, key );
 
-        if ( child_ns_obj->type != ns_obj->type )
+        if ( !child_ns_obj )
         {
-            ERROR( "not a namespace" );
-            displaced_object = 0;
+            ERROR( "namespace__remove: namespace does not exist" );
+            o = 0;
+        }
+
+        else if ( child_ns_obj->type != ns_obj->type )
+        {
+            ERROR( "namespace__remove: not a namespace" );
+            o = 0;
         }
 
         else
-            displaced_object = namespace__remove( child_ns_obj, name );
+            o = namespace__remove( child_ns_obj, name );
 
         array__push( name, key );
     }
-printf( "--- ns rm 3---\n" ); fflush( stdout );
 
-    return displaced_object;
+    return o;
 }
 
 
@@ -311,15 +319,38 @@ namespace__show_children( const Namespace_o *ns_obj )
     Dictionary *dict = ( ( Namespace* ) ns_obj->value )->children;
     int size = hash_table__size( dict );
     Array *keys;
+    int maxlen = 0;
 
-    void *helper( char **key )
+    void *find_maxlen( char **key )
     {
-        Object *o = ( Object* ) dictionary__lookup( dict, *key );
-        printf( "    %#x \"%s\" : %s\n", ( int ) o, *key, o->type->name );
+        int len = strlen( *key );
+        if ( len > maxlen )
+            maxlen = len;
         return 0;
     }
 
+    void *print( char **key )
+    {
+        Object *o = ( Object* ) dictionary__lookup( dict, *key );
+        int i, lim = maxlen - strlen( *key );
+
+        #if COMPILER__SHOW_ADDRESS
+        printf( "    %#x %s ", ( int ) o, *key );
+        #else
+        printf( "    %s ", *key );
+        #endif
+
+        for ( i = 0; i < lim; i++ )
+            printf( " " );
+        printf( ": %s\n", o->type->name );
+        return 0;
+    }
+
+    #if COMPILER__SHOW_ADDRESS
     printf( "%#x : namespace", ( int ) ns_obj );
+    #else
+    printf( "namespace" );
+    #endif
 
     if ( size )
     {
@@ -329,8 +360,10 @@ namespace__show_children( const Namespace_o *ns_obj )
         keys = dictionary__keys(
             ( ( Namespace* ) ns_obj->value )->children );
 
+        array__walk( keys, ( Dist_f ) find_maxlen );
+
         /* Print children. */
-        array__walk( keys, ( Dist_f ) helper );
+        array__walk( keys, ( Dist_f ) print );
         array__delete( keys );
 
         printf( "}\n" );
@@ -352,6 +385,7 @@ namespace__create_type( const char *name, int flags )
     if ( t )
     {
         t->destroy = ( Destructor ) namespace__delete;
+        t->size = ( Size_Of ) namespace__size;
         t->walk = ( Walker ) namespace__walk;
     }
 

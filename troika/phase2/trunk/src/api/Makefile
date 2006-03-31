@@ -90,4 +90,9 @@ revision.h :  serial.c
 	> revision.h
 
 
+.PHONY: strip
+strip :  phase2
+	strip phase2
+
+
 # DO NOT DELETE

@@ -57,11 +57,14 @@ namespace__new();
 extern void
 namespace__delete( Namespace *ns );
 
+extern unsigned int
+namespace__size( Namespace *ns );
+
 /** Adds an object to a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to assign
     \param o  the object to add
-    \return  the object displaced by the new */
+    \return  the object added, or 0 if it could not be added */
 extern Object *
 namespace__add( Namespace_o *ns_obj, Name *name, Object *o );
 
@@ -78,14 +81,14 @@ namespace__lookup( Namespace_o *ns_obj, Name *name );
 /** Finds an object using a simple name.
     \param ns  the target namespace
     \param s  the local part of the name to look up
-    \return  the object found */
+    \return  the object found, or 0 if not found */
 extern Object *
 namespace__lookup_simple( Namespace *ns, const char *name );
 
 /** Removes an object from a namespace.
     \param ns  the target namespace
     \param name  the local part of the name to look up
-    \return  the object removed */
+    \return  the object removed, or 0 if not found */
 extern Object *
 namespace__remove( Namespace_o *ns_obj, Name *name );
 

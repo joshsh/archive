@@ -230,46 +230,17 @@ compiler__parse( Compiler *c )
 /******************************************************************************/
 
 
-static int
-n_args( Ast *args, int n )
+static void
+undef_error( Name *name )
 {
-    int match = ( args )
-        ? ( n == ast__size( args ) )
-        : !n;
-
-    if ( !match )
-        printf( "Error: command expects %i arguments.", n );
-
-    return match;
-}
-
-
-static Ast *
-get_inner_node( Ast *ast )
-{
-    Term *term;
-
-    #if DEBUG__SAFE
-    if ( ast->type != TERM_T )
-    {
-        ERROR( "get_inner_node: wrong AST type" );
-        return 0;
-    }
-    #endif
-
-    term = ( Term* ) ast->value;
-
-    if ( ( unsigned int ) *( term->head ) == 2 )
-        /* Singleton term. */
-        return ( Ast* ) *( term->head + 1 );
-    else
-        /* Left-associative sequence. */
-        return ( Ast* ) *( term->head + 2 );
+    printf( "Error: \"" );
+    name__print( name );
+    printf( "\" is not defined in this namespace.\n" );
 }
 
 
 static Object *
-assign_name( Compiler *c, Name *name, Object *o )
+ns_define( Compiler *c, Name *name, Object *o )
 {
     Namespace_o *ns_obj;
 
@@ -277,7 +248,24 @@ assign_name( Compiler *c, Name *name, Object *o )
     if ( !strcmp( first, "root" ) )
     {
         ns_obj = c->env->root;
-        o = namespace__add( ns_obj, name, o );
+
+        if ( o )
+            o = namespace__add( ns_obj, name, o );
+        else
+            o = namespace__remove( ns_obj, name );
+
+        name__push( name, first );
+    }
+
+    else if ( !strcmp( first, "here" ) )
+    {
+        ns_obj = c->cur_ns_obj;
+
+        if ( o )
+            o = namespace__add( ns_obj, name, o );
+        else
+            o = namespace__remove( ns_obj, name );
+
         name__push( name, first );
     }
 
@@ -285,15 +273,22 @@ assign_name( Compiler *c, Name *name, Object *o )
     {
         ns_obj = c->cur_ns_obj;
         name__push( name, first );
-        o = namespace__add( ns_obj, name, o );
+
+        if ( o )
+            o = namespace__add( ns_obj, name, o );
+        else
+            o = namespace__remove( ns_obj, name );
     }
+
+    if ( !o )
+        undef_error( name );
 
     return o;
 }
 
 
 static Object *
-resolve_name( Compiler *c, Name *name )
+ns_resolve( Compiler *c, Name *name )
 {
     Namespace_o *ns_obj;
     Object *o;
@@ -306,6 +301,13 @@ resolve_name( Compiler *c, Name *name )
         name__push( name, first );
     }
 
+    else if ( !strcmp( first, "here" ) )
+    {
+        ns_obj = c->cur_ns_obj;
+        o = namespace__lookup( ns_obj, name );
+        name__push( name, first );
+    }
+
     else
     {
         ns_obj = c->cur_ns_obj;
@@ -314,11 +316,7 @@ resolve_name( Compiler *c, Name *name )
     }
 
     if ( !o )
-    {
-        printf( "Error: \"" );
-        name__print( name );
-        printf( "\" is not defined in this namespace.\n" );
-    }
+        undef_error( name );
 
     return o;
 }
@@ -383,7 +381,7 @@ static Object *resolve( Ast *ast, Compiler *c )
             case NAME_T:
 
                 /* Retrieve an existing object and exit. */
-                o = resolve_name( c, ( Name* ) ast->value );
+                o = ns_resolve( c, ( Name* ) ast->value );
                 ast__delete( ast );
                 return o;
 
@@ -431,48 +429,118 @@ static Object *resolve( Ast *ast, Compiler *c )
 }
 
 
+/******************************************************************************/
+
+
+static int
+n_args( Ast *args, int n )
+{
+    int match = ( args )
+        ? ( n == ast__size( args ) )
+        : !n;
+
+    if ( !match )
+        printf( "Error: command expects %i arguments.", n );
+
+    return match;
+}
+
+
+static Name *get_arg( Ast *args, unsigned int i )
+{
+    Term *term, *subterm;
+    Ast *a;
+
+    #if DEBUG__SAFE
+    if ( args->type != TERM_T )
+    {
+        ERROR( "get_arg: wrong AST type" );
+        return 0;
+    }
+    #endif
+
+    term = ( Term* ) args->value;
+
+    if ( i >= term__length( term ) )
+    {
+        printf( "Error: missing argument.\n" );
+        a = 0;
+    }
+
+    else
+    {
+        subterm = term__subterm_at( term, i );
+
+        #if DEBUG__SAFE
+        if ( ( unsigned int ) *( subterm->head ) != 2 )
+        {
+            ERROR( "get_arg: argument subterm is not a singleton" );
+            a = 0;
+        }
+        else
+        #endif
+
+        a = *( subterm->head + 1 );
+
+        term__delete( subterm );
+    }
+
+    if ( a )
+    {
+        #if DEBUG__SAFE
+        if ( a->type != NAME_T )
+        {
+            ERROR( "get_arg: type mismatch" );
+            return 0;
+        }
+        #endif
+
+        return a->value;
+    }
+
+    else
+        return 0;
+}
+
+
 /* Command functions **********************************************************/
 
 
 static void
-command_ns( Compiler *c, Ast *args )
+command_cp( Compiler *c, Ast *args )
 {
-/*
-printf( "args->type = %s\n", ast__type__name( args->type ) ); fflush( stdout );
-*/
-    Object *o;
-    Name *name;
-
-    Ast *arg = get_inner_node( args );
-
-/*
-printf( "arg->type = %s\n", ast__type__name( arg->type ) ); fflush( stdout );
-*/
-    #if DEBUG__SAFE
-    if ( arg->type != NAME_T )
-    {
-        ERROR( "command_ns: AST type mismatch" );
-        return;
-    }
-    #endif
+    Object *o, *o2;
+    Name *src, *dest;
 
     #if DEBUG__COMPILER
-    printf( "command_ns(%#x, %#x)\n", ( int ) c, ( int ) args );
+    printf( "[] command_cp(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    name = ( Name* ) arg->value;
+    if ( !( src = get_arg( args, 0 ) )
+      || !( dest = get_arg( args, 1 ) ) )
+        return;
 
-    if ( ( o = resolve_name( c, name ) ) )
+    o = ns_resolve( c, src );
+
+    if ( o )
     {
-        if ( o->type != c->cur_ns_obj->type )
-            printf( "Error: not a namespace.\n" );
-
-        else
+        if ( ( o2 = ns_resolve( c, dest ) ) )
         {
-            c->cur_ns_obj = o;
-            printf( "Moved to namespace \"" );
-            ast__print( arg );
-            printf( "\".\n" );
+            if ( o2->type == c->env->ns_t )
+            {
+                array__enqueue( dest, array__dequeue( src ) );
+                ns_define( c, dest, o );
+                array__enqueue( src, array__dequeue( dest ) );
+
+                printf( "Assignment from 1 object.\n" );
+            }
+
+            else
+            {
+                printf( "Error: \"" );
+                name__print( dest );
+                printf( "\" is not a namespace.\n" );
+            }
         }
     }
 }
@@ -506,31 +574,93 @@ command_gc( Compiler *c )
 
 
 static void
+command_mv( Compiler *c, Ast *args )
+{
+    Object *o, *o2;
+    Name *src, *dest;
+
+    #if DEBUG__COMPILER
+    printf( "[] command_mv(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    if ( !( src = get_arg( args, 0 ) )
+      || !( dest = get_arg( args, 1 ) ) )
+        return;
+
+    o = ns_resolve( c, src );
+
+    if ( o )
+    {
+        if ( ( o2 = ns_resolve( c, dest ) ) )
+        {
+            if ( o2->type == c->env->ns_t )
+            {
+                array__enqueue( dest, array__dequeue( src ) );
+                ns_define( c, dest, o );
+                array__enqueue( src, array__dequeue( dest ) );
+
+                if ( ns_define( c, src, 0 ) )
+                    printf( "Reassignment from 1 object.\n" );
+            }
+
+            else
+            {
+                printf( "Error: \"" );
+                name__print( dest );
+                printf( "\" is not a namespace.\n" );
+            }
+        }
+    }
+}
+
+
+static void
 command_new( Compiler *c, Ast *args )
 {
     Object *o;
     Name *name;
 
-    Ast *arg = get_inner_node( args );
-
-    #if DEBUG__SAFE
-    if ( arg->type != NAME_T )
-    {
-        ERROR( "command_new: AST type mismatch" );
-        return;
-    }
-    #endif
-
     #if DEBUG__COMPILER
     printf( "[] command_new(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    name = ( Name* ) arg->value;
+    if ( !( name = get_arg( args, 0 ) ) )
+        return;
+
     o = object__new
         ( c->env->ns_t, namespace__new(), 0 );
     memory_manager__add( c->env->manager, o );
 
-    assign_name( c, name, o );
+    ns_define( c, name, o );
+}
+
+
+static void
+command_ns( Compiler *c, Ast *args )
+{
+    Object *o;
+    Name *name;
+
+    #if DEBUG__COMPILER
+    printf( "command_ns(%#x, %#x)\n", ( int ) c, ( int ) args );
+    #endif
+
+    if ( !( name = get_arg( args, 0 ) ) )
+        return;
+
+    if ( ( o = ns_resolve( c, name ) ) )
+    {
+        if ( o->type != c->cur_ns_obj->type )
+            printf( "Error: not a namespace.\n" );
+
+        else
+        {
+            c->cur_ns_obj = o;
+            printf( "Moved to namespace \"" );
+            name__print( name );
+            printf( "\".\n" );
+        }
+    }
 }
 
 
@@ -538,36 +668,31 @@ static void
 command_rm( Compiler *c, Ast *args )
 {
     Name *name;
-    Ast *arg = get_inner_node( args );
-
-    #if DEBUG__SAFE
-    if ( arg->type != NAME_T )
-    {
-        ERROR( "command_rm: AST type mismatch" );
-        return;
-    }
-    #endif
 
     #if DEBUG__COMPILER
     printf( "[] command_rm(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
 
-    name = ( Name* ) arg->value;
+    if ( !( name = get_arg( args, 0 ) ) )
+        return;
 
-    namespace__remove( c->cur_ns_obj, name );
+    if ( ns_define( c, name, 0 ) )
+        printf( "Unassigned 1 object.\n" );
 }
 
 
 static void
 command_saveas( Compiler *c, Ast *args )
 {
+    Name *name;
     char *path;
-    Ast *arg = get_inner_node( args );
-    Name *name = ( Name* ) arg->value;
 
     #if DEBUG__COMPILER
     printf( "[] command_saveas(%#x, %#x)\n", ( int ) c, ( int ) args );
     #endif
+
+    if ( !( name = get_arg( args, 0 ) ) )
+        return;
 
     path = ( char* ) array__peek( name );
 
@@ -590,7 +715,7 @@ command_license( Compiler *c )
 
     if ( !( license = fopen( "../../LICENSE.txt", "r" ) ) )
     {
-        ERROR( "show_licence: could not open file" );
+        ERROR( "show_license: could not open file" );
         return;
     }
 
@@ -609,7 +734,13 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 {
     int ret = 0;
 
-    if ( !strcmp( name, "gc" ) )
+    if ( !strcmp( name, "cp" ) )
+    {
+        if ( n_args( args, 2 ) )
+            command_cp( c, args );
+    }
+
+    else if ( !strcmp( name, "gc" ) )
     {
         if ( n_args( args, 0 ) )
             command_gc( c );
@@ -619,6 +750,12 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     {
         if ( n_args( args, 0 ) )
             command_license( c );
+    }
+
+    else if ( !strcmp( name, "mv" ) )
+    {
+        if ( n_args( args, 2 ) )
+            command_mv( c, args );
     }
 
     else if ( !strcmp( name, "new" ) )
@@ -637,7 +774,7 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     {
         if ( n_args( args, 0 ) )
         {
-            printf( "Closing Phase2 session.\n" );
+            printf( "End session.\n" );
             ret = 1;
         }
     }
@@ -736,18 +873,23 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
     if ( o )
     {
-        printf( "%#x : %s ", ( int ) o, o->type->name );
+        #if COMPILER__SHOW_ADDRESS
+        printf( "%#x ", ( int ) o );
+        #endif
+
         if ( a )
         {
-            assign_name( c, name, o );
+            ns_define( c, name, o );
             ast__print( a );
+            printf( " : " );
         }
-/*
-        else
-            printf( "[]" );
-*/
 
-        printf( " = " );
+        #if COMPILER__SHOW_ADDRESS
+        else
+            printf( ": " );
+        #endif
+
+        printf( "%s  ", o->type->name );
 
         o->type->encode( o->value, print_buffer );
         printf( print_buffer );
@@ -775,12 +917,12 @@ compiler__handle_parse_error( Compiler *c, char *msg )
 
     if ( msg )
     {
-        printf( "Error:  %s\n", msg );
+        printf( "Error: %s\n", msg );
         free( msg );
     }
 
     else
-        printf( "Parse error\n" );
+        printf( "Parse error.\n" );
 
     return ret;
 }
