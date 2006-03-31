@@ -38,7 +38,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#define VERSION "0.6.1"
+#define VERSION "0.6.2"
 
 
 #define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
