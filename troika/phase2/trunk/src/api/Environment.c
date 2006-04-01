@@ -64,21 +64,45 @@ mult_stub( void **args )
 static int
 add_triples_prims( Environment *env )
 {
-    Primitive *prim;
+    Primitive *p;
 
-    return ( ( prim = primitive__new( env, "any_type", "^+", assoc_stub, 3 ) )
-      && primitive__add_param( env, prim, "any_type", "subject", 0 )
-      && primitive__add_param( env, prim, "any_type", "predicate", 1 )
-      && primitive__add_param( env, prim, "any_type", "object", 1 )
-      && primitive__register( env, prim, 0, 0 )
+    return ( ( p = primitive__new( env, "any_type", "^+", assoc_stub, 3 ) )
+      && primitive__add_param( env, p, "any_type", "subject", 0 )
+      && primitive__add_param( env, p, "any_type", "predicate", 1 )
+      && primitive__add_param( env, p, "any_type", "object", 1 )
+      && primitive__register( env, p, 0, 0 )
 
-      && ( prim = primitive__new( env, "any_type", "^", mult_stub, 2 ) )
-      && primitive__add_param( env, prim, "any_type", "subject", 1 )
-      && primitive__add_param( env, prim, "any_type", "predicate", 1 )
-      && primitive__register( env, prim, 0, 0 ) );
+      && ( p = primitive__new( env, "any_type", "^", mult_stub, 2 ) )
+      && primitive__add_param( env, p, "any_type", "subject", 1 )
+      && primitive__add_param( env, p, "any_type", "predicate", 1 )
+      && primitive__register( env, p, 0, 0 ) );
 }
 
 #endif
+
+
+static Environment *global_env;
+
+/* Note: this is a slow as it looks. */
+static void *
+type_of( void **args )
+{
+    Object *o = args[0];
+    return namespace__lookup_simple( global_env->types->value, o->type->name );
+}
+
+
+static int
+add_meta_prims( Environment *env )
+{
+    Primitive *p;
+
+    global_env = env;
+
+    return ( ( p = primitive__new( env, "any_type", "type_of", type_of, 1 ) )
+      && primitive__add_param( env, p, "any_type", "self", 1 )
+      && primitive__register( env, p, 0, 0 ) );
+}
 
 
 /******************************************************************************/
@@ -201,6 +225,12 @@ environment__new()
         goto abort;
     }
     #endif
+
+    if ( !add_meta_prims( env ) )
+    {
+        ERROR( "environment__new: failed to add \"meta\" primitives" );
+        goto abort;
+    }
 
     env->bag_t = environment__resolve_type( env, "Bag" );
     env->char_t = environment__resolve_type( env, "char" );
