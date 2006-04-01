@@ -23,20 +23,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static int
-n_args( Ast *args, int n )
-{
-    int match = ( args )
-        ? ( n == ast__size( args ) )
-        : !n;
-
-    if ( !match )
-        printf( "Error: command expects %i arguments.\n", n );
-
-    return match;
-}
-
-
-static int
 count_args( Ast *args )
 {
     Term *term;
@@ -505,82 +491,30 @@ create_commands()
 int
 compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 {
-    int ret = 0;
+    int result = 0;
+    int n = count_args( args );
+    Command *com = dictionary__lookup( c->commands, name );
 
-    if ( !strcmp( name, "all" ) )
-    {
-        command_all( c, args );
-    }
-
-    else if ( !strcmp( name, "cp" ) )
-    {
-        if ( n_args( args, 2 ) )
-            command_cp( c, args );
-    }
-
-    else if ( !strcmp( name, "gc" ) )
-    {
-        if ( n_args( args, 0 ) )
-            command_gc( c, args );
-    }
-
-    else if ( !strcmp( name, "license" ) )
-    {
-        if ( n_args( args, 0 ) )
-            command_license( c, args );
-    }
-
-    else if ( !strcmp( name, "mv" ) )
-    {
-        if ( n_args( args, 2 ) )
-            command_mv( c, args );
-    }
-
-    else if ( !strcmp( name, "new" ) )
-    {
-        if ( n_args( args, 1 ) )
-            command_new( c, args );
-    }
-
-    else if ( !strcmp( name, "ns" ) )
-    {
-        if ( n_args( args, 1 ) )
-            command_ns( c, args );
-    }
-
-    else if ( !strcmp( name, "quit" ) )
-    {
-        if ( n_args( args, 0 ) )
-            ret = command_quit( c, args );
-    }
-
-    else if ( !strcmp( name, "rm" ) )
-    {
-        if ( n_args( args, 1 ) )
-            command_rm( c, args );
-    }
-
-    else if ( !strcmp( name, "saveas" ) )
-    {
-        if ( n_args( args, 1 ) )
-            command_saveas( c, args );
-    }
-
-    else if ( !strcmp( name, "size" ) )
-    {
-        if ( n_args( args, 0 ) )
-            command_size( c, args );
-    }
-
-    else
+    if ( !com )
         printf( "Error: unknown command: \"%s\".\n", name );
+    else if ( n < com->args_min )
+        printf( "Error: missing argument(s) to command \"%s\".\n", name );
+    else if ( n > com->args_max && com->args_max >= 0 )
+        printf( "Error: too many arguments to command \"%s\".\n", name );
+    else
+        result = com->f( c, args );
+
+    #if DEBUG__COMPILER
+    printf( "[%i] compiler__evaluate_command(%#x, %#x, %#x)\n",
+        result, ( int ) c, ( int ) name, ( int ) args );
+    #endif
 
     if ( args )
         ast__delete( args );
 
     free( name );
 
-    return ret;
+    return result;
 }
 
 

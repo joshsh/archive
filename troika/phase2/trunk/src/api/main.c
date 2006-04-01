@@ -18,7 +18,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Compiler.h>
-#include <serial.h>
 
 
 /** Instantiates an Environment and attaches a Compiler to interact with the

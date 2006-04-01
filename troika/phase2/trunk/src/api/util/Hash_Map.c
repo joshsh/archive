@@ -71,7 +71,7 @@ hash_map__add( Hash_Map *t, void * const key, void * const target )
     Hash_Map__Entry *entry, *entry_old;
 
     #if DEBUG__LOOKUP_TABLE
-    printf( "hash_map__add(%#x, %#x, %#x)\n",
+    printf( "[] hash_map__add(%#x, %#x, %#x)\n",
         ( int ) t, ( int ) key, ( int ) target );
     #endif
 
@@ -129,7 +129,7 @@ hash_map__walk( Hash_Map *t, Dist_f f )
     #endif
 
     #if DEBUG__LOOKUP_TABLE
-    printf( "hash_map__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
+    printf( "[] hash_map__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
     #endif
 
     hash_table__walk( t, f );

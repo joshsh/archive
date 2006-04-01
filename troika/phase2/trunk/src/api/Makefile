@@ -70,24 +70,24 @@ $(XML)/xmldom.o  :
 ################################################################################
 # Build the command line interface.
 
-objects = main.o Collection.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o serial.o
+objects = main.o Collection.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o
 
-compiler_objects = compiler/Compiler.o compiler/command.o compiler/expression.o compiler/error.o
+compiler_objects = compiler/Compiler.o compiler/command.o compiler/expression.o compiler/error.o compiler/serial.o
 
 
 phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) import/target/imports.o parser
 	$(CC) $(CFLAGS) -o phase2 $(objects) $(compiler_objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
 
-$(objects) $(utils) : defs.h settings.h
+$(objects) $(compiler_objects) $(utils) : defs.h settings.h
 
-serial.o :  revision.h
+compiler/serial.o :  revision.h
 
 
 # Note: assumes that Phase2 is being built from a working copy.
 # Defines the head revision number in revision.h, prepended with a '!' if
 # serial.c differs from the repository copy.
-revision.h :  serial.c
-	svn stat -v serial.c \
+revision.h :  compiler/serial.c
+	svn stat -v compiler/serial.c \
 	| sed 's/^[^ ][ ]*/&!/;s/^.[ ]*//;s/[ ].*//;s/.*/\#define REVISION    "&"/' \
 	> revision.h
 

@@ -1,74 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data_set p2-version="0.6.1" p2-revision="162" time="Fri Mar 31 13:11:36 2006">
-  <object id="2" type="Primitive">int_int__add</object>
-  <object id="3" type="cstring">German</object>
-  <object id="5" type="cstring">Saturday</object>
+<data_set p2-version="0.6.2" p2-revision="!+" time="Fri Mar 31 16:12:26 2006">
+  <object id="2" type="cstring">Tuesday</object>
   <triple>
-    <object ref="5"/>
-    <object ref="3"/>
-    <object type="cstring">Samstag</object>
-  </triple>
-  <object id="4" type="cstring">Wednesday</object>
-  <triple>
-    <object ref="4"/>
-    <object ref="3"/>
-    <object type="cstring">Mittwoch</object>
-  </triple>
-  <object id="6" type="Combinator">K</object>
-  <object id="7" type="cstring">Sunday</object>
-  <triple>
-    <object ref="7"/>
-    <object ref="3"/>
-    <object type="cstring">Sonntag</object>
-  </triple>
-  <object id="8" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object ref="13"/>
-      <object ref="13"/>
-    </list>
-  </object>
-  <object id="9" type="cstring">Monday</object>
-  <triple>
-    <object ref="9"/>
-    <object ref="3"/>
-    <object type="cstring">Montag</object>
-  </triple>
-  <object id="10" type="cstring">Friday</object>
-  <triple>
-    <object ref="10"/>
-    <object ref="3"/>
-    <object type="cstring">Freitag</object>
-  </triple>
-  <object id="11" type="Combinator">S</object>
-  <object id="12" type="cstring">Tuesday</object>
-  <triple>
-    <object ref="12"/>
-    <object ref="3"/>
+    <object ref="2"/>
+    <object ref="13"/>
     <object type="cstring">Dienstag</object>
   </triple>
-  <object id="13" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object type="Combinator">K</object>
-      <object type="Combinator">K</object>
-    </list>
-  </object>
-  <object id="14" type="Namespace">
-    <table>
-      <object ref="16" name="parent"/>
-      <object ref="14" name="self"/>
-    </table>
-  </object>
-  <object id="15" type="cstring">Thursday</object>
+  <object id="3" type="cstring">Sunday</object>
   <triple>
-    <object ref="15"/>
     <object ref="3"/>
+    <object ref="13"/>
+    <object type="cstring">Sonntag</object>
+  </triple>
+  <object id="4" type="cstring">Monday</object>
+  <triple>
+    <object ref="4"/>
+    <object ref="13"/>
+    <object type="cstring">Montag</object>
+  </triple>
+  <object id="5" type="Combinator">S</object>
+  <object id="6" type="cstring">Thursday</object>
+  <triple>
+    <object ref="6"/>
+    <object ref="13"/>
     <object type="cstring">Donnerstag</object>
   </triple>
   <object id="1" type="Namespace">
     <table>
-      <object type="Primitive" name="+">int_int__add</object>
       <object type="cstring" name="Alfresco">open source</object>
       <object type="cstring" name="Documentum">proprietary content manager</object>
       <object type="int" name="The Answer">42</object>
@@ -79,19 +37,19 @@
       </object>
       <object type="Namespace" name="days">
         <table>
-          <object ref="10" name="Friday"/>
-          <object ref="9" name="Monday"/>
-          <object ref="5" name="Saturday"/>
-          <object ref="7" name="Sunday"/>
-          <object ref="15" name="Thursday"/>
-          <object ref="12" name="Tuesday"/>
-          <object ref="4" name="Wednesday"/>
+          <object ref="15" name="Friday"/>
+          <object ref="4" name="Monday"/>
+          <object ref="9" name="Saturday"/>
+          <object ref="3" name="Sunday"/>
+          <object ref="6" name="Thursday"/>
+          <object ref="2" name="Tuesday"/>
+          <object ref="10" name="Wednesday"/>
         </table>
       </object>
       <object type="Namespace" name="languages">
         <table>
           <object type="cstring" name="English">English</object>
-          <object ref="3" name="German"/>
+          <object ref="13" name="German"/>
         </table>
       </object>
       <object type="Namespace" name="math">
@@ -113,13 +71,13 @@
               <object type="Primitive" name="/">int_int__divide</object>
             </table>
           </object>
+          <object type="double" name="pi">3.1415</object>
         </table>
       </object>
       <object type="int" name="myint">1331</object>
-      <object type="double" name="pi">3.1415</object>
       <object type="Namespace" name="sk">
         <table>
-          <object ref="13" name="I"/>
+          <object ref="7" name="I"/>
           <object type="Combinator" name="K">K</object>
           <object type="Combinator" name="S">S</object>
           <object type="Term" name="Y">
@@ -202,12 +160,52 @@
           <object type="Combinator" name="true">K</object>
         </table>
       </object>
-      <object ref="16" name="test"/>
+      <object ref="14" name="test"/>
     </table>
   </object>
-  <object id="16" type="Namespace">
+  <object id="7" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object type="Combinator">K</object>
+      <object type="Combinator">K</object>
+    </list>
+  </object>
+  <object id="8" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object ref="7"/>
+      <object ref="7"/>
+    </list>
+  </object>
+  <object id="9" type="cstring">Saturday</object>
+  <triple>
+    <object ref="9"/>
+    <object ref="13"/>
+    <object type="cstring">Samstag</object>
+  </triple>
+  <object id="10" type="cstring">Wednesday</object>
+  <triple>
+    <object ref="10"/>
+    <object ref="13"/>
+    <object type="cstring">Mittwoch</object>
+  </triple>
+  <object id="11" type="Namespace">
     <table>
-      <object ref="14" name="reflection"/>
+      <object ref="14" name="parent"/>
+      <object ref="11" name="self"/>
     </table>
   </object>
+  <object id="12" type="Combinator">K</object>
+  <object id="13" type="cstring">German</object>
+  <object id="14" type="Namespace">
+    <table>
+      <object ref="11" name="reflection"/>
+    </table>
+  </object>
+  <object id="15" type="cstring">Friday</object>
+  <triple>
+    <object ref="15"/>
+    <object ref="13"/>
+    <object type="cstring">Freitag</object>
+  </triple>
 </data_set>

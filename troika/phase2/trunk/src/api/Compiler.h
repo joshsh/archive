@@ -62,6 +62,16 @@ extern p2_parser__exit_state
 compiler__parse( Compiler *c );
 
 
+/******************************************************************************/
+
+
+extern void
+compiler__serialize( Compiler *c, char *path );
+
+extern void
+compiler__deserialize( Compiler *c, char *path );
+
+
 /* Externally linked functions for the parser *********************************/
 
 

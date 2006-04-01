@@ -547,7 +547,7 @@ array__walk( Array *a, Dist_f f )
     #endif
 
     #if DEBUG__ARRAY
-    printf( "array__walk(%#x, %#x)\n", ( int ) a, ( int ) f );
+    printf( "[] array__walk(%#x, %#x)\n", ( int ) a, ( int ) f );
     #endif
 
     lim = a->size;

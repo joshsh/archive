@@ -161,7 +161,14 @@ resolve( Ast *ast, Compiler *c )
             return 0;
     }
 
-    return object_for_ast( ast );
+    Object *result = object_for_ast( ast );
+
+    #if DEBUG__COMPILER
+    printf( "[%#x] resolve(%#x, %#x)\n",
+        ( int ) result, ( int ) ast, ( int ) c );
+    #endif
+
+    return result;
 }
 
 
@@ -188,7 +195,8 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     #endif
 
     #if DEBUG__COMPILER
-    printf( "compiler__evaluate_expression(%#x, %#x)\n", ( int ) name, ( int ) expr );
+    printf( "compiler__evaluate_expression(%#x, %#x, %#x)\n",
+        ( int ) c, ( int ) name, ( int ) expr );
     #endif
 
     char__encode = c->env->char_t->encode;

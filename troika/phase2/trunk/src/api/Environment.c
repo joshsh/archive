@@ -202,6 +202,13 @@ environment__new()
     }
     #endif
 
+    env->bag_t = environment__resolve_type( env, "Bag" );
+    env->char_t = environment__resolve_type( env, "char" );
+    env->float_t = environment__resolve_type( env, "double" );
+    env->int_t = environment__resolve_type( env, "int" );
+    env->string_t = environment__resolve_type( env, "cstring" );
+    env->term_t = environment__resolve_type( env, "Term" );
+
     /* Add combinators. */
     env->combinator_t = environment__resolve_type( env, "Combinator" );
     add_combinators( env );

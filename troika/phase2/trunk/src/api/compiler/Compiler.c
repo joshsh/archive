@@ -39,26 +39,24 @@ compiler__new( Environment *env )
     if ( instance_exists )
     {
         ERROR( "compiler__new: concurrent compiler instances not allowed" );
-        return 0;
+        c = 0;
+        goto finish;
     }
 
     #if DEBUG__SAFE
     if ( !env )
     {
         ERROR( "compiler__new: null environment" );
-        return 0;
+        c = 0;
+        goto finish;
     }
     #endif
 
     if ( !( c = new( Compiler ) ) )
     {
         ERROR( "compiler__new: allocation failed" );
-        return 0;
+        goto finish;
     }
-
-    #if DEBUG__COMPILER
-    printf( "[%#x] compiler__new(%#x)\n", ( int ) c, ( int ) env );
-    #endif
 
     instance_exists = TRUE;
 
@@ -81,7 +79,8 @@ compiler__new( Environment *env )
         ERROR( "compiler__new: basic type not found" );
         free( c );
         instance_exists = FALSE;
-        return 0;
+        c = 0;
+        goto finish;
     }
     #endif
 
@@ -90,8 +89,15 @@ compiler__new( Environment *env )
         ERROR( "compiler__new: allocation failed" );
         free( c );
         instance_exists = FALSE;
-        return 0;
+        c = 0;
+        goto finish;
     }
+
+finish:
+
+    #if DEBUG__COMPILER
+    printf( "[%#x] compiler__new(%#x)\n", ( int ) c, ( int ) env );
+    #endif
 
     return c;
 }
@@ -186,7 +192,12 @@ compiler__define( Compiler *c, Name *name, Object *o )
 {
     Namespace_o *ns_obj;
 
-    char *first = ( char* ) name__pop( name );
+    #if DEBUG__COMPILER
+    Object *o_orig = o;
+    #endif
+
+    char *first = name__pop( name );
+
     if ( !strcmp( first, "root" ) )
     {
         ns_obj = c->env->root;
@@ -224,6 +235,12 @@ compiler__define( Compiler *c, Name *name, Object *o )
 
     if ( !o )
         undef_error( name );
+
+    #if DEBUG__COMPILER
+    printf( "[%#x] compiler__define(%#x, ", ( int ) o, ( int ) c );
+    name__print( name );
+    printf( ", %#x)\n", ( int ) o_orig );
+    #endif
 
     return o;
 }
@@ -259,6 +276,12 @@ compiler__resolve( Compiler *c, Name *name )
 
     if ( !o )
         undef_error( name );
+
+    #if DEBUG__COMPILER
+    printf( "[%#x] compiler__resolve(%#x, ", ( int ) o, ( int ) c );
+    name__print( name );
+    printf( ")\n" );
+    #endif
 
     return o;
 }

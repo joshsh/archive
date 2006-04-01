@@ -1074,6 +1074,11 @@ id:
 static void
 handle_command( Compiler *c, char *name, Ast *args )
 {
+    #if DEBUG__PARSER
+    printf( "[] handle_command(%#x, %#x, %#x)\n",
+        ( int ) c, ( int ) name, ( int ) args );
+    #endif
+
     if ( !compiler__suppress_output( c ) )
     {
         if ( !statement_number )
@@ -1102,6 +1107,11 @@ handle_command( Compiler *c, char *name, Ast *args )
 static void
 handle_expression( Compiler *c, Name *name, Ast *expr )
 {
+    #if DEBUG__PARSER
+    printf( "[] handle_expression(%#x, %#x, %#x)\n",
+        ( int ) c, ( int ) name, ( int ) expr );
+    #endif
+
     if ( !compiler__suppress_output( c ) )
     {
         if ( !statement_number )
@@ -1131,6 +1141,10 @@ static void
 handle_error( Compiler *c )
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
+
+    #if DEBUG__PARSER
+    printf( "[] handle_error(%#x)\n", ( int ) c );
+    #endif
 
     if ( !compiler__suppress_output( c ) )
     {
