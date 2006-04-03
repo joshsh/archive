@@ -157,7 +157,8 @@ static Dictionary *rule_dict;
 static void
 find_sets( Array *rules, Dictionary *dict )
 {
-    int changed = 1, i, j, k, n, n_rules = array__size( rules ), n_prods, nullable_old, size_old;
+    int changed = 1, i, j, k, n, n_rules = array__size( rules ), n_prods, nullable_old;
+    unsigned int size_old;
     Rule *r, *r2, *r3;
     Array *production;
     char *first, *second;

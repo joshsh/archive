@@ -63,7 +63,8 @@ memory_manager__add( Memory_Manager *m, Object *o );
 /* Tracing / graph traversal **************************************************/
 
 extern void
-memory_manager__walk( Memory_Manager *m, Dist_f f );
+memory_manager__walk
+    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */

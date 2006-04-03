@@ -37,7 +37,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define XMLDOM_H
 
 
-typedef void *dom_attr, *dom_document, *dom_element, *dom_namespace ;
+typedef void *Attr, *Document, *Element, *Namespc ;
 
 
 /** Performs any operations necessary to initialize the XML module. */
@@ -48,156 +48,151 @@ void xmldom__init( ) ;
 void xmldom__end( ) ;
 
 
-/* dom_attr *******************************************************************/
+/* Attr ***********************************************************************/
 
 /** Frees an attribute.
     \param attr  reference attribute */
-void dom_attr__delete( dom_attr *attr ) ;
+void attr__delete( Attr *attr ) ;
 
 /** \param attr  reference attribute
     \return  name of the attribute */
-const unsigned char *dom_attr__name( dom_attr *attr ) ;
+const unsigned char *attr__name( Attr *attr ) ;
 
 
 /** Gets the attribute's namespace (if any).
     \param attr  reference attribute  */
-dom_namespace *dom_attr__namespace( dom_attr *attr ) ;
+Namespc *attr__namespace( Attr *attr ) ;
 
 /** \param el  element to which to attach the attribute
     \param name  name of the attribute
     \param value  value of the attribute
     \param ns  associated namespace of the attribute (optional)
     \return  a new attribute */
-dom_attr *dom_attr__new( dom_element *el,
-                         unsigned char *name,
-                         unsigned char *value,
-                         dom_namespace *ns ) ;
+Attr *attr__new
+    ( Element *el, unsigned char *name, unsigned char *value, Namespc *ns ) ;
 
 /** Gets the attribute's next sibling (if any).
     \param attr  reference attribute  */
-dom_attr *dom_attr__next_sibling( dom_attr *attr ) ;
+Attr *attr__next_sibling( Attr *attr ) ;
 
 /** \param attr  reference attribute
     \return  value of the attribute */
-const unsigned char *dom_attr__value( dom_attr *attr ) ;
+const unsigned char *attr__value( Attr *attr ) ;
 
 
-/* dom_document ***************************************************************/
+/* Document *******************************************************************/
 
 
 /** Frees a document.
     \param doc  reference document */
-void dom_document__delete( dom_document *doc ) ;
+void document__delete( Document *doc ) ;
 
 /** \return  a new document */
-dom_document *dom_document__new( ) ;
+Document *document__new( ) ;
 
 /** \param path  system id of a file from which to read the XML-encoded document
     \return  the deserialized document */
-dom_document *dom_document__read_from_file( char *path ) ;
+Document *document__read_from_file( char *path ) ;
 
 /**  \param doc  reference document
      \return  root element of the document */
-dom_element *dom_document__root( dom_document *doc ) ;
+Element *document__root( Document *doc ) ;
 
 /** Sets the root element of a document.
     \param doc  reference document
     \param root  the element to add as root */
-void dom_document__set_root( dom_document *doc, dom_element *root ) ;
+void document__set_root( Document *doc, Element *root ) ;
 
 /** Outputs a document as serialized XML.
     \param doc  reference document
     \param path  system id of a file to which to write the document */
-void dom_document__write_to_file( dom_document *doc, char *path ) ;
+void document__write_to_file( Document *doc, char *path ) ;
 
 
-/* dom_element ****************************************************************/
+/* Element ********************************************************************/
 
 
 /** Adds a child element.
     \param el  reference element
     \param child  the child element */
-void dom_element__add_child( dom_element *el, dom_element *child ) ;
+void element__add_child( Element *el, Element *child ) ;
 
 /** Adds a text node to a parent element.
     \param el  reference element
     \param text  the text to add */
-void dom_element__add_text( dom_element *el, unsigned char *text ) ;
+void element__add_text( Element *el, unsigned char *text ) ;
 
 /** \param el  reference element
     \param attr_name  name of the target attribute
     \param namespace_uri  associated namespace of the target attribute
     (optional)
     \return  the target attribute, or NULL if not found */
-dom_attr *dom_element__attr( dom_element *el,
-                             unsigned char *attr_name,
-                             unsigned char *namespace_uri ) ;
+Attr *element__attr
+    ( Element *el, unsigned char *attr_name, unsigned char *namespace_uri ) ;
 
 /** Frees an element.
     \param el  reference element */
-void dom_element__delete( dom_element *el ) ;
+void element__delete( Element *el ) ;
 
 /** \param el  reference element
     \return  the element's first attribute (if any) */
-dom_attr *dom_element__first_attr( dom_element *el ) ;
+Attr *element__first_attr( Element *el ) ;
 
 /** \param el  reference element
     \return  the element's first child element (if any) */
-dom_element *dom_element__first_child( dom_element *el ) ;
+Element *element__first_child( Element *el ) ;
 
 /** \param el  reference element
     \return  name of the element */
-const unsigned char *dom_element__name( dom_element *el ) ;
+const unsigned char *element__name( Element *el ) ;
 
 /** \param el  reference element
     \return  the element's namespace (if any) */
-dom_namespace *dom_element__namespace( dom_element *el ) ;
+Namespc *element__namespace( Element *el ) ;
 
 /** \param doc  parent document.  Not needed by libxml2, but retained for
     compatibility with gSOAP.
     \param name  name of the element
     \param ns  associated namespace (optional)
     \return  a new element */
-dom_element *dom_element__new( dom_document *doc,
-                               unsigned char *name,
-                               dom_namespace *ns ) ;
+Element *element__new
+    ( Document *doc, unsigned char *name, Namespc *ns ) ;
 
 /** \param el  reference element
     \return  the element's next sibling (if any) */
-dom_element *dom_element__next_sibling( dom_element *el ) ;
+Element *element__next_sibling( Element *el ) ;
 
 /** Associates the element with a namespace.
     \param el  reference element
     \param ns  namespace to associate */
-void dom_element__set_namespace( dom_element *el, dom_namespace *ns );
+void element__set_namespace( Element *el, Namespc *ns );
 
 /** \param el  reference element
     \return  text contained within the element */
-const unsigned char *dom_element__text( dom_element *el ) ;
+const unsigned char *element__text( Element *el ) ;
 
 
-/* dom_namespace **************************************************************/
+/* Namespc ******************************************************************/
 
 
 /** Frees a namespace.
     \param ns  reference namespace */
-void dom_namespace__delete( dom_namespace *ns ) ;
+void namespc__delete( Namespc *ns ) ;
 
 /** \param ns  reference namespace
     \return  URI reference */
-const unsigned char *dom_namespace__href( dom_namespace *ns ) ;
+const unsigned char *namespc__href( Namespc *ns ) ;
 
 /** \param el  element to which to attach the namespace attribute
     \param href  URI reference
     \param prefix  namespace alias for QNames
     \return  a new namespace */
-dom_namespace *dom_namespace__new( dom_element *el,
-                                   unsigned char *href,
-                                   unsigned char *prefix ) ;
+Namespc *namespc__new
+    ( Element *el, unsigned char *href, unsigned char *prefix ) ;
 
 /** \param ns  reference namespace
     \return  namespace alias for QNames */
-const unsigned char *dom_namespace__prefix( dom_namespace *ns ) ;
+const unsigned char *namespc__prefix( Namespc *ns ) ;
 
 
 #endif  /* XMLDOM_H */

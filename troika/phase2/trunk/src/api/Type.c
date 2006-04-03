@@ -23,39 +23,65 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Default member functions (use with caution). */
 static void *
 default__clone( void *cell )
-{ return 0; }
+{
+    cell = 0;
+    return 0;
+}
 
 static int
 default__compare_to( const void* cellA, const void *cellB )
-{ return 0; }
+{
+    cellA = cellB = 0;
+    return 0;
+}
 
 static void *
 default__decode( char *buffer )
-{ return 0; }
+{
+    buffer = 0;
+    return 0;
+}
 
 static void
 default__destroy( void *cell )
-{ free( cell ); }
+{
+    free( cell );
+}
 
 static void
 default__encode( void *cell, char *buffer )
-{ sprintf( buffer, "?" ); }
+{
+    cell = 0;
+    sprintf( buffer, "?" );
+}
 
 static boolean
 default__equals( void *cellA, void *cellB )
-{ return TRUE; }
+{
+    cellA = cellB = 0;
+    return TRUE;
+}
 
 static unsigned int
 default__size( const void *self )
-{ return 0; }
+{
+    self = 0;
+    return 0;
+}
 
 static void
 default__sort( void *cell, Comparator cmp )
-{ }
+{
+    cell = 0;
+    cmp = 0;
+}
 
 static void
 default__walk( void *coll, Dist_f f )
-{ }
+{
+    coll = 0;
+    f = 0;
+}
 
 
 static Type default_t =

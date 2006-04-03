@@ -280,8 +280,31 @@ sweep( Memory_Manager *m )
 /* Tracing / graph traversal **************************************************/
 
 
+/* Unmark visited objects. */
+static void
+unwalk( Object *root )
+{
+    void *helper( Object **opp )
+    {
+        Object *o = *opp;
+
+        if ( visited( o ) )
+        {
+            clear_visited( o );
+            return 0;
+        }
+
+        else
+            return walker__break;
+    }
+
+    object__trace( root, ( Dist_f ) helper );
+}
+
+
 void
-memory_manager__walk( Memory_Manager *m, Dist_f f )
+memory_manager__walk
+    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs )
 {
     void *helper( Object **opp )
     {
@@ -310,18 +333,30 @@ memory_manager__walk( Memory_Manager *m, Dist_f f )
     #endif
 
     #if DEBUG__MEMORY
-    printf( "[] memory_manager__walk(%#x, %#x)\n", ( int ) m, ( int ) f );
+    printf( "[] memory_manager__walk(%#x, %#x, %#x, %i)\n",
+        ( int ) m, ( int ) root, ( int ) f, use_bfs );
     #endif
+
+    if ( !root )
+        root = m->root;
 
     if ( !m->clean )
         unmark_all( m );
 
-    m->clean = 0;
+    m->clean = FALSE;
 
-    object__trace( m->root, ( Dist_f ) helper );
+    if ( use_bfs )
+        object__trace_bfs( root, ( Dist_f ) helper );
+    else
+        object__trace( root, ( Dist_f ) helper );
 
     /* Might as well sweep. */
-    sweep( m );
+    if ( root == m->root )
+        sweep( m );
+    else
+        unwalk( root );
+
+    m->clean = TRUE;
 }
 
 
@@ -404,7 +439,7 @@ memory_manager__collect( Memory_Manager *m )
     #endif
 
     /* Mark all reachable objects. */
-    memory_manager__walk( m, ( Dist_f ) noop );
+    memory_manager__walk( m, 0, ( Dist_f ) noop, 0 );
 
     #if DEBUG__MEMORY
     printf( "[] memory_manager__collect(%#x): deallocated %i of %i.\n",

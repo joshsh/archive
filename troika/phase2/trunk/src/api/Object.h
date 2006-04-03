@@ -119,12 +119,9 @@ object__create_type( const char *name );
 extern void
 object__trace( Object *o, Dist_f f );
 
-#ifdef COMMENTED_OUT_FOR_NOW
-/** A breadth-first recursive distributor.
-    \param c  a Closure of function type "void *(*)(Object**)" */
+/** A breadth-first recursive distributor. */
 extern void
-object__trace_bfs( Object *o, Closure *c );
-#endif
+object__trace_bfs( Object *o, Dist_f f );
 
 
 /* Association ****************************************************************/

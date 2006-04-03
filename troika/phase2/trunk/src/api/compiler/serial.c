@@ -60,15 +60,15 @@ struct Xml_Decode_Ctx
 };
 
 
-typedef dom_element *( *Xml_Encoder )( void *p, Xml_Encode_Ctx *state );
-typedef void *( *Xml_Decoder )( dom_element *el, Xml_Decode_Ctx *state );
+typedef Element *( *Xml_Encoder )( void *p, Xml_Encode_Ctx *state );
+typedef void *( *Xml_Decoder )( Element *el, Xml_Decode_Ctx *state );
 
 
-static dom_element *
+static Element *
 object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level );
 
 static Object *
-object__xml_decode( dom_element *el, Xml_Decode_Ctx *state );
+object__xml_decode( Element *el, Xml_Decode_Ctx *state );
 
 
 /******************************************************************************/
@@ -137,10 +137,10 @@ set_decoder( Type *t, Xml_Decoder decode, Hash_Map *deserializers )
 /* Serializers for individual types *******************************************/
 
 
-static dom_element *
+static Element *
 bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
 {
-    dom_element *el, *child;
+    Element *el, *child;
     int i, size;
 
     #if DEBUG__SAFE
@@ -151,7 +151,7 @@ bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
     }
     #endif
 
-    el = dom_element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
+    el = element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
 
     #if DEBUG__SERIAL
     printf( "[%#x] bag__xml_encode(%#x, %#x)\n",
@@ -163,18 +163,18 @@ bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
     {
         child = object__xml_encode(
             ( Object* ) array__get( a, i ), state, 0 );
-        dom_element__add_child( el, child );
+        element__add_child( el, child );
     }
 
     return el;
 }
 
 
-static dom_element *
+static Element *
 term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 {
     void **sup, **head, **cur = t->head;
-    dom_element *el, *child;
+    Element *el, *child;
 
     #if DEBUG__SAFE
     if ( !t || !state )
@@ -193,7 +193,7 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 
     else
     {
-        el = dom_element__new( 0, ( uc* ) TERM__XML__NAME, 0 );
+        el = element__new( 0, ( uc* ) TERM__XML__NAME, 0 );
 
         sup = cur + ( unsigned int ) *cur;
         cur++;
@@ -203,7 +203,7 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
             t->head = cur;
 
             child = term__xml_encode( t, state );
-            dom_element__add_child( el, child );
+            element__add_child( el, child );
 
             t->head = head;
             cur += ( unsigned int ) *cur;
@@ -219,20 +219,20 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 }
 
 
-static dom_element *
+static Element *
 namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 {
-    dom_element *el;
+    Element *el;
     Array *keys;
 
     void *helper( char **name )
     {
         Object *o = ( Object* ) dictionary__lookup( ns->children, *name );
 
-        dom_element *child = object__xml_encode( o, state, 0 );
-        dom_attr__new( child, ( uc* ) "name", ( uc* ) *name, 0 );
+        Element *child = object__xml_encode( o, state, 0 );
+        attr__new( child, ( uc* ) "name", ( uc* ) *name, 0 );
 
-        dom_element__add_child( el, child );
+        element__add_child( el, child );
 
         return 0;
     }
@@ -245,7 +245,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     }
     #endif
 
-    el = dom_element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
+    el = element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
 
     #if DEBUG__SERIAL
     printf( "[%#x] namespace__xml_encode(%#x, %#x)\n",
@@ -264,10 +264,10 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 
 
 static Array *
-bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+bag__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Array *a;
-    dom_element *child;
+    Element *child;
     Object *o;
 
     #if DEBUG__SAFE
@@ -276,7 +276,7 @@ bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         ERROR( "bag__xml_decode: null argument" );
         return 0;
     }
-    else if ( strcmp( ( char* ) dom_element__name( el ), ARRAY__XML__NAME ) )
+    else if ( strcmp( ( char* ) element__name( el ), ARRAY__XML__NAME ) )
     {
         ERROR( "bag__xml_decode: bad element name" );
         return 0;
@@ -290,13 +290,13 @@ bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         ( int ) a, ( int ) el, ( int ) state );
     #endif
 
-    child = dom_element__first_child( el );
+    child = element__first_child( el );
 
     while ( child )
     {
         o = object__xml_decode( child, state );
         array__enqueue( a, o );
-        child = dom_element__next_sibling( child );
+        child = element__next_sibling( child );
     }
 
     return a;
@@ -304,10 +304,10 @@ bag__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
 
 static Term *
-term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+term__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Term *t;
-    dom_element *child;
+    Element *child;
 
     #if DEBUG__SAFE
     if ( !el || !state )
@@ -318,10 +318,10 @@ term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
     #endif
 
     /* Singleton term. */
-    if ( strcmp( ( char* ) dom_element__name( el ), TERM__XML__NAME ) )
+    if ( strcmp( ( char* ) element__name( el ), TERM__XML__NAME ) )
     {
         #if DEBUG__SAFE
-        if ( strcmp( ( char* ) dom_element__name( el ), OBJECT__XML__NAME ) )
+        if ( strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
         {
             ERROR( "term__xml_decode: bad element name" );
             return 0;
@@ -334,10 +334,10 @@ term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
     /* Proper term. */
     else
     {
-        child = dom_element__first_child( el );
+        child = element__first_child( el );
         t = term__xml_decode( child, state );
 
-        while (  ( child = dom_element__next_sibling( child ) ) )
+        while (  ( child = element__next_sibling( child ) ) )
         {
             t = term__merge_la
                 ( t, term__xml_decode( child, state ) );
@@ -354,11 +354,11 @@ term__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
 
 static Namespace *
-namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Namespace *ns;
-    dom_element *child;
-    dom_attr *attr;
+    Element *child;
+    Attr *attr;
     Object *o;
     char *text;
 
@@ -368,7 +368,7 @@ namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         ERROR( "namespace__xml_decode: null argument" );
         return 0;
     }
-    else if ( strcmp( ( char* ) dom_element__name( el ), NAMESPACE__XML__NAME ) )
+    else if ( strcmp( ( char* ) element__name( el ), NAMESPACE__XML__NAME ) )
     {
         ERROR( "namespace__xml_decode: bad element name" );
         return 0;
@@ -382,10 +382,10 @@ namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         ( int ) ns, ( int ) el, ( int ) state );
     #endif
 
-    child = dom_element__first_child( el );
+    child = element__first_child( el );
     while ( child )
     {
-        attr = dom_element__attr( child, ( uc* ) "name", 0 );
+        attr = element__attr( child, ( uc* ) "name", 0 );
 
         #if DEBUG__SAFE
         if ( !attr )
@@ -397,11 +397,11 @@ namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         #endif
 
         o = object__xml_decode( child, state );
-        text = ( char* ) dom_attr__value( attr );
+        text = ( char* ) attr__value( attr );
         namespace__add_simple( ns, text, o );
         free( text );
 
-        child = dom_element__next_sibling( child );
+        child = element__next_sibling( child );
     }
 
     return ns;
@@ -411,14 +411,14 @@ namespace__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 /* Object serializer **********************************************************/
 
 
-static dom_element *
+static Element *
 object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 {
     /* id > 0  ==>  the object is multireferenced. */
     unsigned int id = ( unsigned int ) hash_map__lookup( state->ids, o );
 
     char buffer[256];
-    dom_element *el;
+    Element *el;
     Xml_Encoder encode;
 
     sprintf( buffer, "%i", id );
@@ -426,33 +426,33 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     /* Element reference. */
     if ( id && !top_level )
     {
-        el = dom_element__new( 0, ( uc* ) "object", 0 );
+        el = element__new( 0, ( uc* ) "object", 0 );
 
         if ( o->type == state->env->combinator_t
           || o->type == state->env->prim_t
           || o->type == state->env->type_t )
         {
-            dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+            attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
             o->type->encode( o->value, buffer );
-            dom_element__add_text( el, ( uc* ) buffer );
+            element__add_text( el, ( uc* ) buffer );
         }
 
         else
         {
-            dom_attr__new( el, ( uc* ) "ref", ( uc* ) buffer, 0 );
+            attr__new( el, ( uc* ) "ref", ( uc* ) buffer, 0 );
         }
     }
 
     /* Element data. */
     else
     {
-        el = dom_element__new( 0, ( uc* ) "object", 0 );
+        el = element__new( 0, ( uc* ) "object", 0 );
 
         /* Only multireferenced objects have ids. */
         if ( top_level )
-            dom_attr__new( el, ( uc* ) "id", ( uc* ) buffer, 0 );
+            attr__new( el, ( uc* ) "id", ( uc* ) buffer, 0 );
 
-        dom_attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+        attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
 
         encode = get_encoder( o->type, state->serializers );
 /*
@@ -463,14 +463,14 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         /* Encode contents as child element. */
         if ( encode )
         {
-            dom_element__add_child( el, encode( o->value, state ) );
+            element__add_child( el, encode( o->value, state ) );
         }
 
         /* Encode contents as text. */
         else
         {
             o->type->encode( o->value, buffer );
-            dom_element__add_text( el, ( uc* ) buffer );
+            element__add_text( el, ( uc* ) buffer );
         }
 
     }
@@ -488,14 +488,14 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
 
 static Object *
-object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+object__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
-    dom_attr *attr;
+    Attr *attr;
     Object *o;
     unsigned int id;
     Type *type;
     Xml_Decoder decode;
-    dom_element *child;
+    Element *child;
     char *text;
 
     #if DEBUG__SAFE
@@ -504,7 +504,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         ERROR( "object__xml_decode: null argument" );
         return 0;
     }
-    else if ( strcmp( ( char* ) dom_element__name( el ), OBJECT__XML__NAME ) )
+    else if ( strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
     {
         ERROR( "object__xml_decode: bad element name" );
         return 0;
@@ -512,9 +512,9 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
     #endif
 
     /* Full form. */
-    if ( ( attr = dom_element__attr( el, ( uc* ) "type", 0 ) ) )
+    if ( ( attr = element__attr( el, ( uc* ) "type", 0 ) ) )
     {
-        text = ( char* ) dom_attr__value( attr );
+        text = ( char* ) attr__value( attr );
         if ( !( type = environment__resolve_type
             ( state->env, text ) ) )
         {
@@ -526,7 +526,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
         if ( type == state->env->combinator_t )
         {
-            text = ( char* ) dom_element__text( el );
+            text = ( char* ) element__text( el );
             o = namespace__lookup_simple(
                 ( Namespace* ) state->env->combinators->value,
                 text );
@@ -535,7 +535,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
         else if ( type == state->env->prim_t )
         {
-            text = ( char* ) dom_element__text( el );
+            text = ( char* ) element__text( el );
             o = namespace__lookup_simple(
                 ( Namespace* ) state->env->primitives->value,
                 text );
@@ -544,7 +544,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
         else if ( type == state->env->type_t )
         {
-            text = ( char* ) dom_element__text( el );
+            text = ( char* ) element__text( el );
             o = namespace__lookup_simple(
                 ( Namespace* ) state->env->types->value,
                 text );
@@ -553,9 +553,9 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
         else
         {
-            if ( ( attr = dom_element__attr( el, ( uc* ) "id", 0 ) ) )
+            if ( ( attr = element__attr( el, ( uc* ) "id", 0 ) ) )
             {
-                text = ( char* ) dom_attr__value( attr );
+                text = ( char* ) attr__value( attr );
                 id = ( unsigned int ) atoi( text );
                 free( text );
 
@@ -589,7 +589,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
             /* Decode child element. */
             if ( decode )
             {
-                child = dom_element__first_child( el );
+                child = element__first_child( el );
                 if ( !child )
                 {
                     ERROR( "object__xml_decode: child element expected" );
@@ -606,7 +606,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
             /* Decode element text. */
             else
             {
-                text = ( char* ) dom_element__text( el );
+                text = ( char* ) element__text( el );
                 o->value = type->decode( text );
                 free( text );
             }
@@ -614,9 +614,9 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
     }
 
     /* Reference form. */
-    else if ( ( attr = dom_element__attr( el, ( uc* ) "ref", 0 ) ) )
+    else if ( ( attr = element__attr( el, ( uc* ) "ref", 0 ) ) )
     {
-        text = ( char* ) dom_attr__value( attr );
+        text = ( char* ) attr__value( attr );
         id = ( unsigned int ) atoi( text );
 
         free( text );
@@ -628,6 +628,7 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
         {
             o = object__new( 0, 0, 0 );
             hash_map__add( state->objects_by_id, ( void* ) id, o );
+            memory_manager__add( state->env->manager, o );
         }
     }
 
@@ -648,19 +649,19 @@ object__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
 
 #if TRIPLES__GLOBAL
 static void
-triple__xml_decode( dom_element *el, Xml_Decode_Ctx *state )
+triple__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Object *subject, *predicate, *object;
-    dom_element *subject_el, *predicate_el, *object_el;
+    Element *subject_el, *predicate_el, *object_el;
 
     #if DEBUG__SERIAL
     printf( "[] triple__xml_decode(%#x, %#x)\n",
         ( int ) el, ( int ) state );
     #endif
 
-    subject_el = dom_element__first_child( el );
-    predicate_el = dom_element__next_sibling( subject_el );
-    object_el = dom_element__next_sibling( predicate_el );
+    subject_el = element__first_child( el );
+    predicate_el = element__next_sibling( subject_el );
+    object_el = element__next_sibling( predicate_el );
 
     subject = object__xml_decode( subject_el, state );
     predicate = object__xml_decode( predicate_el, state );
@@ -685,7 +686,7 @@ struct Hash_Multiref_Ctx
 
 
 static void
-add_timestamp( dom_element *el )
+add_timestamp( Element *el )
 {
     char *ts;
     time_t t;
@@ -697,7 +698,7 @@ add_timestamp( dom_element *el )
     ts = asctime( localtime( &t ) );
 
     *( ts + strlen( ts ) - 1 ) = '\0';
-    dom_attr__new( el, ( uc* ) "time", ( uc* ) ts, 0 );
+    attr__new( el, ( uc* ) "time", ( uc* ) ts, 0 );
 }
 
 
@@ -741,33 +742,33 @@ multiref_ids( Compiler *c )
 void
 compiler__serialize( Compiler *c, char *path )
 {
-    dom_document *doc;
-    dom_element *root;
+    Document *doc;
+    Element *root;
     Xml_Encode_Ctx state;
     Environment *env;
 
     void *obj_helper( Hash_Map__Entry **epp )
     {
         Object *o;
-        dom_element *el;
+        Element *el;
 
         void *triple_helper( Hash_Map__Entry **epp )
         {
             Hash_Map__Entry *entry = *epp;
 
-            dom_element *triple = dom_element__new( 0, ( uc* ) "triple", 0 );
-            dom_element *subject
+            Element *triple = element__new( 0, ( uc* ) "triple", 0 );
+            Element *subject
                 = object__xml_encode( o, &state, FALSE );
-            dom_element *predicate
+            Element *predicate
                 = object__xml_encode( entry->key, &state, FALSE );
-            dom_element *object
+            Element *object
                 = object__xml_encode( entry->target, &state, FALSE );
 
-            dom_element__add_child( triple, subject );
-            dom_element__add_child( triple, predicate );
-            dom_element__add_child( triple, object );
+            element__add_child( triple, subject );
+            element__add_child( triple, predicate );
+            element__add_child( triple, object );
 
-            dom_element__add_child( root, triple );
+            element__add_child( root, triple );
 
             return 0;
         }
@@ -775,7 +776,7 @@ compiler__serialize( Compiler *c, char *path )
         o = ( Object* ) ( *epp )->key;
 
         el = object__xml_encode( o, &state, TRUE );
-        dom_element__add_child( root, el );
+        element__add_child( root, el );
 
         #if TRIPLES__GLOBAL__OUT_EDGES
         if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
@@ -804,21 +805,21 @@ compiler__serialize( Compiler *c, char *path )
     xmldom__init();
 
     /* Root element. */
-    doc = dom_document__new();
-    root = dom_element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
+    doc = document__new();
+    root = element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
 
     /* Version attribute. */
-    dom_attr__new( root, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
+    attr__new( root, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
 
     #ifdef REVISION
     /* Revision attribute. */
-    dom_attr__new( root, ( uc* ) "p2-revision", ( uc* ) REVISION, 0 );
+    attr__new( root, ( uc* ) "p2-revision", ( uc* ) REVISION, 0 );
     #endif
 
     /* Time stamp attribute. */
     add_timestamp( root );
 
-    dom_document__set_root( doc, root );
+    document__set_root( doc, root );
 
     state.env = env;
     state.serializers = hash_map__new();
@@ -839,8 +840,8 @@ compiler__serialize( Compiler *c, char *path )
         ( Dist_f ) function_wrapper__delete );
     hash_map__delete( state.serializers );
 
-    dom_document__write_to_file( doc, path );
-    dom_document__delete( doc );
+    document__write_to_file( doc, path );
+    document__delete( doc );
 
     xmldom__end();
 }
@@ -850,9 +851,9 @@ void
 compiler__deserialize( Compiler *c, char *path )
 {
     Xml_Decode_Ctx state = { 0, 0, 0, 0 };
-    dom_element *el, *child;
+    Element *el, *child;
     char *el_name;
-    dom_document *doc;
+    Document *doc;
     Environment *env;
 
     #if DEBUG__SERIAL
@@ -861,14 +862,14 @@ compiler__deserialize( Compiler *c, char *path )
 
     xmldom__init();
 
-    if ( !( doc = dom_document__read_from_file( path ) ) )
+    if ( !( doc = document__read_from_file( path ) ) )
     {
         ERROR( "compiler__deserialize: XML read failure" );
         return;
     }
 
-    el = dom_document__root( doc );
-    if ( !el || strcmp( ( char* ) dom_element__name( el ), ENCODING__ROOT__XML__NAME ) )
+    el = document__root( doc );
+    if ( !el || strcmp( ( char* ) element__name( el ), ENCODING__ROOT__XML__NAME ) )
     {
         ERROR( "compiler__deserialize: bad or missing root element" );
         goto finish;
@@ -886,11 +887,11 @@ compiler__deserialize( Compiler *c, char *path )
     set_decoder( env->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
     set_decoder( env->term_t, ( Xml_Decoder ) term__xml_decode, state.deserializers );
 
-    child = dom_element__first_child( el );
+    child = element__first_child( el );
 
     while ( child )
     {
-        el_name = ( char* ) dom_element__name( child );
+        el_name = ( char* ) element__name( child );
 
         /* Object element. */
         if ( !strcmp( el_name, OBJECT__XML__NAME ) )
@@ -912,7 +913,7 @@ compiler__deserialize( Compiler *c, char *path )
             goto finish;
         }
 
-        child = dom_element__next_sibling( child );
+        child = element__next_sibling( child );
     }
 
     if ( !state.root || state.root->type != env->ns_t )
@@ -929,7 +930,7 @@ compiler__deserialize( Compiler *c, char *path )
 
 finish:
 
-    dom_document__delete( doc );
+    document__delete( doc );
 
     if ( state.objects_by_id )
         hash_map__delete( state.objects_by_id );

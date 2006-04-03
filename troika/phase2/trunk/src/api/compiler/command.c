@@ -464,7 +464,7 @@ create_commands()
     if ( !( d = dictionary__new() ) )
         return 0;
 
-    if ( !( add_command( d, "all",      command_all,        0, -1 )
+    if ( add_command( d, "all",      command_all,        0, -1 )
          && add_command( d, "cp",       command_cp,         2, 2 )
          && add_command( d, "gc",       command_gc,         0, 0 )
          && add_command( d, "license",  command_license,    0, 0 )
@@ -474,18 +474,20 @@ create_commands()
          && add_command( d, "quit",     command_quit,       0, 0 )
          && add_command( d, "rm",       command_rm,         1, -1 )
          && add_command( d, "saveas",   command_saveas,     1, 1 )
-         && add_command( d, "size",     command_size,       0, 0 ) ) )
+         && add_command( d, "size",     command_size,       0, 0 ) )
+    {
+        return d;
+    }
+
+    else
     {
         delete_commands( d );
         return 0;
     }
-
-    else
-        return d;
 }
 
 
-/* Externally linked functions for the parser *********************************/
+/************************************************8*****************************/
 
 
 int

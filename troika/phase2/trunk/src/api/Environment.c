@@ -298,6 +298,7 @@ environment__delete( Environment *env )
 
     /* Preserve only the 'type' type. */
     ns_t = *env->ns_t;
+    ns_t.name = STRDUP( ns_t.name );  /* Just so that the debugging output doesn't look weird. */
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
         namespace__lookup_simple( ( Namespace* ) env->types->value, "Type" ) );
@@ -305,6 +306,7 @@ environment__delete( Environment *env )
 
     memory_manager__delete( env->manager );
 
+    free( ns_t.name );
     free( env );
 }
 

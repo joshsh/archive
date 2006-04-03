@@ -86,8 +86,8 @@ object__delete( Object *o )
     #endif
 
     #if DEBUG__OBJECT
-    printf( "[] object__delete(%#x): value = %#x, type = %#x.\n",
-        ( int ) o, ( int ) o->value, ( int ) o->type );
+    printf( "[] object__delete(%#x): value = %#x, type = %#x (%s).\n",
+        ( int ) o, ( int ) o->value, ( int ) o->type, o->type->name );
     #endif
 
     #if TRIPLES__GLOBAL__IN_EDGES
@@ -263,6 +263,10 @@ object__trace( Object *o, Dist_f f )
 
     void *edge_trace( Hash_Map__Entry **epp )
     {
+        #if DEBUG__OBJECT__TRACE
+        printf( "[0] edge_trace(%#x)\n", ( int ) epp );
+        #endif
+
         #if TRIPLES__IMPLICATION__SP_O
         ... not yet written ...
         #else
@@ -292,6 +296,10 @@ object__trace( Object *o, Dist_f f )
         }
 
         o = *opp;
+
+        #if DEBUG__OBJECT__TRACE
+        printf( "[0] obj_trace(&%#x): %s\n", ( int ) o, o->type->name );
+        #endif
 
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( !f( ( void** ) opp ) )
@@ -328,66 +336,110 @@ object__trace( Object *o, Dist_f f )
 
     obj_trace( &o );
 
-    #if DEBUG_OBJECT
+    #if DEBUG__OBJECT
     printf( "[] object__trace(%#x, %#x): visited %i objects.\n",
         ( int ) o, ( int ) f, total );
     #endif
 }
 
 
-#ifdef COMMENTED_OUT_FOR_NOW
-
-static p2_action *
-enqueue( Object *o, Array *queue )
-{
-    array__enqueue( queue, o );
-    return 0;
-}
-
-
 /* Note: untested. */
 void
-object__trace_bfs( Object *o, Closure *p )
+object__trace_bfs( Object *o, Dist_f f )
 {
-    Trace_Ctx state;
-    Closure trace_proc;
-    Closure edge_p;
-    Closure outer_p;
-
     Array *queue;
 
-    #if DEBUG__SAFE
-    if ( !o )
+    #if DEBUG__OBJECT
+    int total = 0;
+    #endif
+
+    void *enqueue( Object **opp )
     {
-        ERROR( "object__trace: null object" );
+        array__enqueue( queue, opp );
+        return 0;
+    }
+
+    void *edge_trace( Hash_Map__Entry **epp )
+    {
+        #if TRIPLES__IMPLICATION__SP_O
+        ... not yet written ...
+        #else
+        #if TRIPLES__IMPLICATION__S_P
+        enqueue( ( Object** ) &( *epp )->key );
+        #endif
+        #if TRIPLES__IMPLICATION__S_O
+        enqueue( ( Object** ) &( *epp )->target );
+        #endif
+        #endif
+
+        return 0;
+    }
+
+    void *obj_trace( Object **opp )
+    {
+        Object *o;
+
+        /* If for any reason execution has traced to a NULL, return immediately. */
+        if ( !opp )
+        {
+            #if DEBUG__SAFE
+            WARNING( "obj_trace_bfs: null object" );
+            #endif
+
+            return 0;
+        }
+
+        o = *opp;
+
+        /* Execute the inner procedure.  Recurse unless instructed otherwise. */
+        if ( !f( ( void** ) opp ) )
+        {
+            #if DEBUG__OBJECT
+            total++;
+            #endif
+
+            /* Traverse to children (if any). */
+            if ( o->type->flags & TYPE__IS_OBJ_COLL )
+            {
+                o->type->walk( o->value, ( Dist_f ) enqueue );
+            }
+
+            /* Traverse to associated objects (if any). */
+            #if TRIPLES__GLOBAL__OUT_EDGES
+            if ( o->outbound_edges )
+            {
+                hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
+            }
+            #endif
+        }
+
+        return 0;
+    }
+
+    #if DEBUG__SAFE
+    if ( !o  || !f )
+    {
+        ERROR( "object__trace_bfs: null argument" );
         return;
     }
     #endif
 
     queue = array__new( 0, 0 );
-    array__enqueue( queue, o );
-
-    edge_p.execute = ( procedure ) apply_to_assoc_edge;
-    edge_p.state = &trace_proc;
-
-    outer_p.execute = ( procedure ) enqueue;
-    outer_p.state = queue;
-
-    state.outer_p = &outer_p;
-    state.inner_p = p;
-    state.edge_p = &edge_p;
-
-    trace_proc.execute = ( procedure ) trace_exec;
-    trace_proc.state = &state;
+    array__enqueue( queue, &o );
 
     while ( array__size( queue ) )
     {
-        closure__execute( ( &trace_proc ),
-            ( Object* ) array__pop( queue ) );
+        obj_trace( array__pop( queue ) );
     }
+
+    array__delete( queue );
+
+    #if DEBUG__OBJECT
+    printf( "[] object__trace_bfs(%#x, %#x): visited %i objects.\n",
+        ( int ) o, ( int ) f, total );
+    #endif
 }
 
-#endif
 
 
 /* Association ****************************************************************/
