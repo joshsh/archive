@@ -282,7 +282,7 @@ sweep( Memory_Manager *m )
 
 /* Unmark visited objects. */
 static void
-unwalk( Object *root )
+unwalk( Object *root, boolean follow_triples )
 {
     void *helper( Object **opp )
     {
@@ -298,13 +298,13 @@ unwalk( Object *root )
             return walker__break;
     }
 
-    object__trace( root, ( Dist_f ) helper );
+    object__trace( root, ( Dist_f ) helper, follow_triples );
 }
 
 
 void
 memory_manager__walk
-    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs )
+    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs, boolean follow_triples )
 {
     void *helper( Object **opp )
     {
@@ -346,17 +346,109 @@ memory_manager__walk
     m->clean = FALSE;
 
     if ( use_bfs )
-        object__trace_bfs( root, ( Dist_f ) helper );
+        object__trace_bfs( root, ( Dist_f ) helper, follow_triples );
     else
-        object__trace( root, ( Dist_f ) helper );
+        object__trace( root, ( Dist_f ) helper, follow_triples );
 
     /* Might as well sweep. */
     if ( root == m->root )
         sweep( m );
     else
-        unwalk( root );
+        unwalk( root, follow_triples );
 
     m->clean = TRUE;
+}
+
+
+void
+memory_manager__trace
+    ( Memory_Manager *m, Object *root, Walker walk, Dist_f dist )
+{
+    #if DEBUG__SAFE
+    int marked = 0;
+    #endif
+
+    void *trace( Object **opp )
+    {
+        Object *o = *opp;
+
+        /* If the object is already marked, abort. */
+        if ( visited( o ) )
+            return walker__break;
+
+        else
+        {
+            #if DEBUG__SAFE
+            marked++;
+            #endif
+
+            /* Mark the object. */
+            set_visited( o );
+
+            /* Execute the closure. */
+            return dist( ( void** ) opp );
+        }
+    }
+
+    void *untrace( Object **opp )
+    {
+        Object *o = *opp;
+
+        if ( visited( o ) )
+        {
+            #if DEBUG__SAFE
+            marked--;
+            #endif
+
+            clear_visited( o );
+
+            return 0;
+        }
+
+        else
+            return walker__break;
+    }
+
+    #ifdef DEBUG__SAFE
+    if ( !m || !walk || !dist )
+    {
+        ERROR( "memory_manager__trace: null argument" );
+        return;
+    }
+    #endif
+
+    if ( !root )
+        root = m->root;
+
+    if ( !m->clean )
+        unmark_all( m );
+
+    m->clean = FALSE;
+    walk( root, ( Dist_f ) trace );
+
+    #if DEBUG__MEMORY
+    printf( "[] memory_manager__trace(%#x, %#x, %#x, %#x )",
+        ( int ) m, ( int ) root, ( int ) walk, ( int ) dist );
+    #if DEBUG__SAFE
+    printf( ": %i objects visited", marked );
+    #endif
+    printf( "\n" );
+    #endif
+
+    walk( root, ( Dist_f ) untrace );
+    m->clean = TRUE;
+
+    #if DEBUG__SAFE
+    if ( marked > 0 )
+    {
+        WARNING( "memory_manager__trace: %i marked objects are still marked as visited", marked );
+    }
+
+    else if ( marked < 0 )
+    {
+        WARNING( "memory_manager__trace: %i more objects unmarked than actually visited", -marked );
+    }
+    #endif
 }
 
 
@@ -407,7 +499,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
         ( int ) s, ( int ) m, ( int ) root );
     #endif
 
-    object__trace( root, ( Dist_f ) helper );
+    object__trace( root, ( Dist_f ) helper, TRUE );
     return s;
 }
 
@@ -439,7 +531,7 @@ memory_manager__collect( Memory_Manager *m )
     #endif
 
     /* Mark all reachable objects. */
-    memory_manager__walk( m, 0, ( Dist_f ) noop, 0 );
+    memory_manager__walk( m, 0, ( Dist_f ) noop, FALSE, TRUE );
 
     #if DEBUG__MEMORY
     printf( "[] memory_manager__collect(%#x): deallocated %i of %i.\n",

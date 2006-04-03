@@ -95,29 +95,37 @@ typedef void            ( *Generic_f )( void );
 
 #define FFLUSH  { fflush( stdout ); fflush( stderr ); }
 
-/*
-#define ERROR( msg )                                                        \
-{                                                                           \
-    fprintf( stderr, "Error: %s.\n", (msg) );                               \
-    fflush( stdout );                                                       \
-}
-*/
 
-/* Useful, but not ANSI C. */
+/* Useful, although not ANSI C. */
 #define ERROR( ... )                                                        \
 {                                                                           \
     fprintf( stderr, "Error: " );                                           \
     fprintf( stderr, __VA_ARGS__ );                                         \
     fprintf( stderr, ".\n" );                                               \
-    fflush( stdout );                                                       \
+    fflush( stderr );                                                       \
 }
 
+#define WARNING( ... )                                                      \
+{                                                                           \
+    fprintf( stderr, "Warning: " );                                         \
+    fprintf( stderr, __VA_ARGS__ );                                         \
+    fprintf( stderr, ".\n" );                                               \
+    fflush( stderr );                                                       \
+}
+
+/*
+#define ERROR( msg )                                                        \
+{                                                                           \
+    fprintf( stderr, "Error: %s.\n", (msg) );                               \
+    fflush( stderr );                                                       \
+}
 
 #define WARNING( msg )                                                      \
 {                                                                           \
     fprintf( stderr, "Warning: %s.\n", (msg) );                             \
-    fflush( stdout );                                                       \
+    fflush( stderr );                                                       \
 }
+*/
 
 
 #endif  /* DEFS_H */

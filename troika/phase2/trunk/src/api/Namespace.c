@@ -457,4 +457,71 @@ namespace__find( const Namespace_o *ns_obj, const Object *o )
 }
 
 
+/* Distribute f recursively (and in a breadth-first fashion) through any child namespaces. */
+static void
+ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
+{
+    Array *queue = array__new( 0, 0 );
+
+    void *helper( Object **opp )
+    {
+        Object *o = *opp;
+
+        if ( o->type == ns_o->type )
+        {
+            if ( f( ( void** ) opp ) == walker__break )
+            {
+                array__delete( queue );
+                queue = 0;
+                return walker__break;
+            }
+
+            else
+            {
+                array__enqueue( queue, o );
+                return 0;
+            }
+        }
+
+        else
+            return 0;
+    }
+
+    array__enqueue( queue, ns_o );
+
+/*
+    if ( !helper( &ns_o ) )
+    {
+*/
+        while ( queue && ( ns_o = array__pop( queue ) ) )
+        {
+            namespace__walk( ns_o->value, ( Dist_f ) helper );
+        }
+/*
+    }
+*/
+}
+
+
+Object *
+namespace__resolve( Namespace_o *ns_obj, char *name, Memory_Manager *m )
+{
+    Object *match = 0;
+
+    void *helper( Namespace_o **ns_opp )
+    {
+        Namespace_o *ns_obj = *ns_opp;
+
+        if ( ( match = namespace__lookup_simple( ns_obj->value, name ) ) )
+            return walker__break;
+        else
+            return 0;
+    }
+
+    memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) helper );
+
+    return match;
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -64,7 +64,11 @@ memory_manager__add( Memory_Manager *m, Object *o );
 
 extern void
 memory_manager__walk
-    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs );
+    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs, boolean follow_triples );
+
+extern void
+memory_manager__trace
+    ( Memory_Manager *m, Object *root, Walker walk, Dist_f dist );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */

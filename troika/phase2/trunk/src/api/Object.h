@@ -117,11 +117,11 @@ object__create_type( const char *name );
 
 /** A (depth-first) recursive distributor. */
 extern void
-object__trace( Object *o, Dist_f f );
+object__trace( Object *o, Dist_f f, boolean follow_triples );
 
 /** A breadth-first recursive distributor. */
 extern void
-object__trace_bfs( Object *o, Dist_f f );
+object__trace_bfs( Object *o, Dist_f f, boolean follow_triples );
 
 
 /* Association ****************************************************************/

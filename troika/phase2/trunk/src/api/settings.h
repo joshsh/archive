@@ -121,6 +121,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Compiler interface *********************************************************/
 
 
+#define COMPILER__NAME_INHERITANCE              1
+
 #define COMPILER__SHOW_ADDRESS                  1
 
 

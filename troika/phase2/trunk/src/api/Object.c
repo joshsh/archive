@@ -253,7 +253,7 @@ object__create_type( const char *name )
 
 
 void
-object__trace( Object *o, Dist_f f )
+object__trace( Object *o, Dist_f f, boolean follow_triples )
 {
     #if DEBUG__OBJECT
     int total = 0;
@@ -316,7 +316,7 @@ object__trace( Object *o, Dist_f f )
 
             /* Traverse to associated objects (if any). */
             #if TRIPLES__GLOBAL__OUT_EDGES
-            if ( o->outbound_edges )
+            if ( follow_triples && o->outbound_edges )
             {
                 hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
             }
@@ -345,7 +345,7 @@ object__trace( Object *o, Dist_f f )
 
 /* Note: untested. */
 void
-object__trace_bfs( Object *o, Dist_f f )
+object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 {
     Array *queue;
 
@@ -406,7 +406,7 @@ object__trace_bfs( Object *o, Dist_f f )
 
             /* Traverse to associated objects (if any). */
             #if TRIPLES__GLOBAL__OUT_EDGES
-            if ( o->outbound_edges )
+            if ( follow_triples && o->outbound_edges )
             {
                 hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
             }

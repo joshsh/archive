@@ -32,6 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Object.h>
+#include <Memory_Manager.h>
 #include <util/Dictionary.h>
 #include <util/Name.h>
 
@@ -113,6 +114,9 @@ namespace__create_type( const char *name, int flags );
 
 extern Name *
 namespace__find( const Namespace_o *ns_obj, const Object *o );
+
+extern Object *
+namespace__resolve( Namespace_o *ns_obj, char *name, Memory_Manager *m );
 
 
 #endif /* NAMESPACE_H */
