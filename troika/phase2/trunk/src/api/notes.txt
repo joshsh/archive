@@ -1,3 +1,7 @@
+ Lists are predefined in Caml. The empty list is written [].
+
+
+
 # From a working directory with a Makefile:
 makedepend
 

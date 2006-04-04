@@ -446,29 +446,20 @@ static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
 */
 
 
-Name *
-namespace__find( const Namespace_o *ns_obj, const Object *o )
-{
-    Name *name = name__new();
-
-    /* ... */
-
-    return name;
-}
-
-
 /* Distribute f recursively (and in a breadth-first fashion) through any child namespaces. */
 static void
 ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 {
     Array *queue = array__new( 0, 0 );
 
-    void *helper( Object **opp )
+    void *distribute( Object **opp )
     {
         Object *o = *opp;
 
+        /* If we've found a namespace... */
         if ( o->type == ns_o->type )
         {
+            /* Apply the target function, and quit the traversal if so instructed. */
             if ( f( ( void** ) opp ) == walker__break )
             {
                 array__delete( queue );
@@ -476,6 +467,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
                 return walker__break;
             }
 
+            /* Extend the traversal to this namespace's children. */
             else
             {
                 array__enqueue( queue, o );
@@ -487,40 +479,54 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
             return 0;
     }
 
-    array__enqueue( queue, ns_o );
+    distribute( &ns_o );
+
+    /* Breaks out when queue is empty (search exhausted) or has been
+       destroyed (search aborted). */
+    while ( queue && ( ns_o = array__pop( queue ) ) )
+    {
+        namespace__walk( ns_o->value, ( Dist_f ) distribute );
+    }
+}
+
 
 /*
-    if ( !helper( &ns_o ) )
-    {
+typedef struct Name_Fragment
+{
+    Name *head;
+    Namespace *tail;
+
+} Name_Fragment;
 */
-        while ( queue && ( ns_o = array__pop( queue ) ) )
-        {
-            namespace__walk( ns_o->value, ( Dist_f ) helper );
-        }
-/*
-    }
-*/
+
+
+Name *
+namespace__find( const Namespace_o *ns_obj, const Object *o )
+{
+    Name *name = name__new();
+
+    /* ... */
+
+    return name;
 }
 
 
 Object *
-namespace__resolve( Namespace_o *ns_obj, char *name, Memory_Manager *m )
+namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m )
 {
-    Object *match = 0;
+    Object *result = 0;
 
-    void *helper( Namespace_o **ns_opp )
+    void *test( Namespace_o **ns_opp )
     {
-        Namespace_o *ns_obj = *ns_opp;
-
-        if ( ( match = namespace__lookup_simple( ns_obj->value, name ) ) )
+        if ( ( result = namespace__lookup_simple( ( *ns_opp )->value, name ) ) )
             return walker__break;
         else
             return 0;
     }
 
-    memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) helper );
+    memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );
 
-    return match;
+    return result;
 }
 
 
