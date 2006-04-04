@@ -483,9 +483,11 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 
     /* Breaks out when queue is empty (search exhausted) or has been
        destroyed (search aborted). */
-    while ( queue && ( ns_o = array__pop( queue ) ) )
+    while ( queue && array__size( queue ) )
     {
-        namespace__walk( ns_o->value, ( Dist_f ) distribute );
+        namespace__walk(
+            ( ( Object* ) array__pop( queue ) )->value,
+            ( Dist_f ) distribute );
     }
 }
 
@@ -512,13 +514,13 @@ namespace__find( const Namespace_o *ns_obj, const Object *o )
 
 
 Object *
-namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m )
+namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
 {
-    Object *result = 0;
+    Object *o = 0;
 
     void *test( Namespace_o **ns_opp )
     {
-        if ( ( result = namespace__lookup_simple( ( *ns_opp )->value, name ) ) )
+        if ( ( o = namespace__lookup_simple( ( *ns_opp )->value, key ) ) )
             return walker__break;
         else
             return 0;
@@ -526,7 +528,45 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m )
 
     memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );
 
-    return result;
+    return o;
+}
+
+
+Object *
+namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m )
+{
+    Object *o = ns_obj;
+    char *key;
+    int i, lim;
+
+    #if DEBUG__SAFE
+    if ( !ns_obj || !name )
+    {
+        ERROR( "namespace__resolve: null argument" );
+        return 0;
+    }
+    #endif
+
+    lim = array__size( name );
+    for ( i = 0; i < lim; i++ )
+    {
+        if ( o->type != ns_obj->type )
+        {
+            o = 0;
+            break;
+        }
+
+        key = array__get( name, i );
+
+        if ( !( o = namespace__resolve_simple( o, key, m ) ) )
+            break;
+    }
+
+    #if DEBUG__NAMESPACE
+    printf( "[%#x] namespace__resolve(%#x, %#x)\n", ( int ) o, ( int ) ns_obj, ( int ) name );
+    #endif
+
+    return o;
 }
 
 

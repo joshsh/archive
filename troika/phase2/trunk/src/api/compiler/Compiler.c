@@ -273,10 +273,7 @@ compiler__resolve( Compiler *c, Name *name )
         name__push( name, first );
 
         #if COMPILER__NAME_INHERITANCE
-        if ( array__size( name ) > 1 )
-            o = namespace__lookup( ns_obj, name );
-        else
-            o = namespace__resolve_simple( ns_obj, array__peek( name ), c->env->manager );
+        o = namespace__resolve( ns_obj, name, c->env->manager );
         #else
         o = namespace__lookup( ns_obj, name );
         #endif
