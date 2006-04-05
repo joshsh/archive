@@ -20,7 +20,6 @@ BNFTOOL = ./bnftool
 IMPORT  = ./import
 LOGTOOL = ./logtool
 PARSER  = ./parser
-SK      = ./sk
 UTILS   = ./util
 XML     = ./xml
 
@@ -34,7 +33,7 @@ default :  phase2
 .PHONY : clean
 clean :
 	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) clean; cd ..; done
-	-rm -f *.o $(SK)/sk.o phase2 revision.h compiler/*.o
+	-rm -f phase2 revision.h *.o compiler/*.o environment/*.o sk/*.o
 
 
 .PHONY : recursive
@@ -74,7 +73,7 @@ objects = main.o Collection.o Memory_Manager.o Namespace.o Object.o Primitive.o 
 
 compiler_objects = compiler/Compiler.o compiler/command.o compiler/error.o compiler/expression.o compiler/mapping.o compiler/serial.o
 
-environment_objects = environment/Environment.o environment/types.o
+environment_objects = environment/Environment.o environment/combinators.o environment/primitives.o environment/types.o
 
 
 phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) $(environment_objects) import/target/imports.o parser

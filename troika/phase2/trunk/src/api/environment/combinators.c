@@ -17,46 +17,41 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef COMPILER_IMPL_H
-#define COMPILER_IMPL_H
+#include <sk/sk.h>
+
+#include "Environment-impl.h"
 
 
-#include <Compiler.h>
-
-
-struct Compiler
+void
+add_combinators( Environment *env )
 {
-    Environment *env;
-    Namespace_o *cur_ns_obj;
+    Object *o;
+    Combinator *sk_s, *sk_k;
+    Memory_Manager *m = env->manager;
 
-    Dictionary *commands;
+    Type *t = environment__resolve_type( env, COMBINATOR__NAME )->value;
 
-    boolean locked;
+    sk_s = new( Combinator );
+    sk_k = new( Combinator );
 
-    boolean suppress_output, show_line_numbers;
+    *sk_s = S_combinator;
+    *sk_k = K_combinator;
 
-    /* Parser types. */
-    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
+    o = object__new( t, sk_s, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "S", o );
 
-    /* Other types. */
-    Type *combinator_t, *ns_t, *prim_t, *type_t;
-};
-
-
-extern Object *
-compiler__define( Compiler *c, Name *name, Object *o );
-
-extern Object *
-compiler__resolve( Compiler *c, Name *name );
+    o = object__new( t, sk_k, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "K", o );
+}
 
 
-extern Dictionary *
-create_commands( void );
+Combinator_o *
+environment__resolve_combinator( Environment *env, const char *name )
+{
+    return namespace__lookup_simple( env->combinators->value, name );
+}
 
-extern void
-delete_commands( Dictionary *commands );
-
-
-#endif  /* COMPILER_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

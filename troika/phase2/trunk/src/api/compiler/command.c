@@ -106,7 +106,7 @@ get_arg( Ast *args, unsigned int i )
 
 
 static int
-command_all( Compiler*c, Ast *args )
+command_all( Compiler *c, Ast *args )
 {
     int n = count_args( args ), i;
     Object *o;
@@ -124,7 +124,7 @@ command_all( Compiler*c, Ast *args )
             name = get_arg( args, i );
             o = compiler__resolve( c, name );
 
-            if ( o->type != c->env->ns_t )
+            if ( o->type != c->cur_ns_obj->type )
             {
                 printf( "Error: \"" );
                 name__print( name );
@@ -159,7 +159,7 @@ command_cp( Compiler *c, Ast *args )
     {
         if ( ( o2 = compiler__resolve( c, dest ) ) )
         {
-            if ( o2->type == c->env->ns_t )
+            if ( o2->type == c->cur_ns_obj->type )
             {
                 array__enqueue( dest, array__dequeue( src ) );
                 compiler__define( c, dest, o );
@@ -184,7 +184,7 @@ command_cp( Compiler *c, Ast *args )
 static int
 command_gc( Compiler *c, Ast *args )
 {
-    Memory_Manager *m = c->env->manager;
+    Memory_Manager *m = environment__manager( c->env );
     int size_before, size_after;
     args = 0;
 
@@ -258,7 +258,7 @@ command_mv( Compiler *c, Ast *args )
     {
         if ( ( o2 = compiler__resolve( c, dest ) ) )
         {
-            if ( o2->type == c->env->ns_t )
+            if ( o2->type == c->cur_ns_obj->type )
             {
                 array__enqueue( dest, array__dequeue( src ) );
                 compiler__define( c, dest, o );
@@ -295,8 +295,8 @@ command_new( Compiler *c, Ast *args )
         return 0;
 
     o = object__new
-        ( c->env->ns_t, namespace__new(), 0 );
-    memory_manager__add( c->env->manager, o );
+        ( c->cur_ns_obj->type, namespace__new(), 0 );
+    memory_manager__add( environment__manager( c->env ), o );
 
     compiler__define( c, name, o );
 
@@ -395,7 +395,7 @@ command_size( Compiler *c, Ast *args )
     args = 0;
 
     printf( "There are %i objects in this environment.\n",
-        memory_manager__size( c->env->manager ) );
+        memory_manager__size( environment__manager( c->env ) ) );
 
     return 0;
 }

@@ -17,46 +17,31 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef COMPILER_IMPL_H
-#define COMPILER_IMPL_H
+#ifndef ENVIRONMENT_IMPL_H
+#define ENVIRONMENT_IMPL_H
 
 
-#include <Compiler.h>
+#include <Environment.h>
 
 
-struct Compiler
+struct Environment
 {
-    Environment *env;
-    Namespace_o *cur_ns_obj;
+    Memory_Manager *manager;
 
-    Dictionary *commands;
+    Namespace_o *root,
+                *combinators, *data, *primitives, *types;
 
-    boolean locked;
-
-    boolean suppress_output, show_line_numbers;
-
-    /* Parser types. */
-    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
-
-    /* Other types. */
-    Type *combinator_t, *ns_t, *prim_t, *type_t;
+    Type *type_t;
 };
 
 
-extern Object *
-compiler__define( Compiler *c, Name *name, Object *o );
-
-extern Object *
-compiler__resolve( Compiler *c, Name *name );
-
-
-extern Dictionary *
-create_commands( void );
-
 extern void
-delete_commands( Dictionary *commands );
+add_combinators( Environment *env );
+
+extern int
+add_meta_prims( Environment *env );
 
 
-#endif  /* COMPILER_IMPL_H */
+#endif  /* ENVIRONMENT_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

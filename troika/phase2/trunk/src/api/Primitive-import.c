@@ -47,7 +47,7 @@ primitive__new(
         return 0;
     }
 
-    p->return_type = environment__resolve_type( env, return_type );
+    p->return_type = environment__resolve_type( env, return_type )->value;
 
     #if DEBUG__SAFE
     if ( !p->return_type )
@@ -110,9 +110,12 @@ primitive__add_param(
     }
     #endif
 
-    if ( !( param.type = environment__resolve_type( env, type ) ) )
+    if ( !strcmp( type, ANY__NAME ) )
+        param.type = any_type;
+
+    else if ( !( param.type = environment__resolve_type( env, type )->value ) )
     {
-        ERROR( "primitive__add_param: unknown type" );
+        ERROR( "primitive__add_param: unknown type: \"%s\"", type );
         primitive__delete( p );
         return 0;
     }

@@ -33,54 +33,56 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive.h>
 
 
-typedef struct Environment Environment;
-
 /** A data structure which is equivalent to a namespace containing uniquely
     named data types, function primitives, and data sets. */
-struct Environment
-{
-    Memory_Manager *manager;
+typedef struct Environment Environment;
 
-    Namespace_o *root;
-
-    Namespace_o *combinators;
-    Namespace_o *data;
-    Namespace_o *primitives;
-    Namespace_o *types;
-
-    Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;
-
-    /* Parser types. */
-    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
-};
+/* ~ */
+typedef Object Type_o;
+typedef Object Primitive_o;
+typedef Object Combinator_o;
 
 
 /** \return  a new environment */
 extern Environment *
 environment__new();
 
-
 /** Destroys an environment. */
 extern void
 environment__delete( Environment *env );
+
+
+extern Memory_Manager *
+environment__manager( const Environment *env );
+
+extern Namespace_o *
+environment__data( const Environment *env );
+
+extern Namespace_o *
+environment__root( const Environment *env );
+
+
+extern Object *
+environment__register_type( Environment *env, Type *type );
+
+extern Type_o *
+environment__resolve_type( Environment *env, const char *name );
 
 
 extern Object *
 environment__register_primitive
     ( Environment *env, Primitive *prim, int flags, Generic_f src_f );
 
-
-extern Object *
-environment__register_type( Environment *env, Type *type );
-
-
-extern Type *
-environment__resolve_type( Environment *env, const char *name );
-
+extern Primitive_o *
+environment__resolve_primitive( Environment *env, const char *name );
 
 /* Defined in p2-stubs.c */
 extern void *
 environment__import_primitives( Environment *env );
+
+
+extern Combinator_o *
+environment__resolve_combinator( Environment *env, const char *name );
 
 
 #endif  /* ENVIRONMENT_H */

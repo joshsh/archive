@@ -38,7 +38,7 @@ typedef struct Xml_Encode_Ctx Xml_Encode_Ctx;
 
 struct Xml_Encode_Ctx
 {
-    Environment *env;
+    Compiler *compiler;
 
     Hash_Map *serializers;
 
@@ -50,7 +50,7 @@ typedef struct Xml_Decode_Ctx Xml_Decode_Ctx;
 
 struct Xml_Decode_Ctx
 {
-    Environment *env;
+    Compiler *compiler;
 
     Hash_Map *deserializers;
 
@@ -428,9 +428,9 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     {
         el = element__new( 0, ( uc* ) "object", 0 );
 
-        if ( o->type == state->env->combinator_t
-          || o->type == state->env->prim_t
-          || o->type == state->env->type_t )
+        if ( o->type == state->compiler->combinator_t
+          || o->type == state->compiler->prim_t
+          || o->type == state->compiler->type_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
             o->type->encode( o->value, buffer );
@@ -497,6 +497,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Xml_Decoder decode;
     Element *child;
     char *text;
+    Environment *env;
 
     #if DEBUG__SAFE
     if ( !el || !state )
@@ -511,12 +512,14 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     }
     #endif
 
+    env = compiler__environment( state->compiler );
+
     /* Full form. */
     if ( ( attr = element__attr( el, ( uc* ) "type", 0 ) ) )
     {
         text = ( char* ) attr__value( attr );
         if ( !( type = environment__resolve_type
-            ( state->env, text ) ) )
+            ( env, text )->value ) )
         {
             ERROR( "object__xml_decode: bad type" );
             free( text );
@@ -524,30 +527,24 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         }
         free( text );
 
-        if ( type == state->env->combinator_t )
+        if ( type == state->compiler->combinator_t )
         {
             text = ( char* ) element__text( el );
-            o = namespace__lookup_simple(
-                ( Namespace* ) state->env->combinators->value,
-                text );
+            o = environment__resolve_combinator( env, text );
             free( text );
         }
 
-        else if ( type == state->env->prim_t )
+        else if ( type == state->compiler->prim_t )
         {
             text = ( char* ) element__text( el );
-            o = namespace__lookup_simple(
-                ( Namespace* ) state->env->primitives->value,
-                text );
+            o = environment__resolve_primitive( env, text );
             free( text );
         }
 
-        else if ( type == state->env->type_t )
+        else if ( type == state->compiler->type_t )
         {
             text = ( char* ) element__text( el );
-            o = namespace__lookup_simple(
-                ( Namespace* ) state->env->types->value,
-                text );
+            o = environment__resolve_type( env, text );
             free( text );
         }
 
@@ -566,7 +563,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                     o = object__new( 0, 0, 0 );
 
                     /* Register the new object. */
-                    memory_manager__add( state->env->manager, o );
+                    memory_manager__add( environment__manager( env ), o );
 
                     hash_map__add( state->objects_by_id, ( void* ) id, o );
                 }
@@ -579,7 +576,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
             {
                 o = object__new( 0, 0, 0 );
                 /* Register the new object. */
-                memory_manager__add( state->env->manager, o );
+                memory_manager__add( environment__manager( env ), o );
             }
 
             o->type = type;
@@ -628,7 +625,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         {
             o = object__new( 0, 0, 0 );
             hash_map__add( state->objects_by_id, ( void* ) id, o );
-            memory_manager__add( state->env->manager, o );
+            memory_manager__add( environment__manager( env ), o );
         }
     }
 
@@ -706,7 +703,8 @@ static Hash_Map *
 multiref_ids( Compiler *c )
 {
     Environment *env = compiler__environment( c );
-    Set *multirefs  = memory_manager__get_multirefs( env->manager, env->data );
+    Set *multirefs = memory_manager__get_multirefs
+        ( environment__manager( env ), environment__data( env ) );
 
     Hash_Map *ids = hash_map__new();
     int max_id = 0;
@@ -745,7 +743,6 @@ compiler__serialize( Compiler *c, char *path )
     Document *doc;
     Element *root;
     Xml_Encode_Ctx state;
-    Environment *env;
 
     void *obj_helper( Hash_Map__Entry **epp )
     {
@@ -800,8 +797,6 @@ compiler__serialize( Compiler *c, char *path )
     printf( "[] compiler__serialize(%#x, %s)\n", ( int ) c, path );
     #endif
 
-    env = compiler__environment( c );
-
     xmldom__init();
 
     /* Root element. */
@@ -821,13 +816,13 @@ compiler__serialize( Compiler *c, char *path )
 
     document__set_root( doc, root );
 
-    state.env = env;
+    state.compiler = c;
     state.serializers = hash_map__new();
     state.ids = multiref_ids( c );
 
-    set_encoder( env->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
-    set_encoder( env->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
-    set_encoder( env->term_t, ( Xml_Encoder ) term__xml_encode, state.serializers );
+    set_encoder( c->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
+    set_encoder( c->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
+    set_encoder( c->term_t, ( Xml_Encoder ) term__xml_encode, state.serializers );
 
     /* ... */
 
@@ -877,15 +872,15 @@ compiler__deserialize( Compiler *c, char *path )
 
     env = compiler__environment( c );
 
-    state.env = env;
+    state.compiler = c;
 
     if ( !( state.deserializers = hash_map__new() )
       || !( state.objects_by_id = hash_map__new() ) )
         goto finish;
 
-    set_decoder( env->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
-    set_decoder( env->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
-    set_decoder( env->term_t, ( Xml_Decoder ) term__xml_decode, state.deserializers );
+    set_decoder( c->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
+    set_decoder( c->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
+    set_decoder( c->term_t, ( Xml_Decoder ) term__xml_decode, state.deserializers );
 
     child = element__first_child( el );
 
@@ -916,7 +911,7 @@ compiler__deserialize( Compiler *c, char *path )
         child = element__next_sibling( child );
     }
 
-    if ( !state.root || state.root->type != env->ns_t )
+    if ( !state.root || state.root->type != c->ns_t )
     {
         ERROR( "compiler__deserialize: root namespace not found" );
         goto finish;

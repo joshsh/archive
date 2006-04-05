@@ -61,20 +61,23 @@ compiler__new( Environment *env )
     instance_exists = TRUE;
 
     c->env = env;
-    c->cur_ns_obj = env->data;
+    c->cur_ns_obj = environment__data( env );
     c->locked = FALSE;
     c->suppress_output = FALSE;
     c->show_line_numbers = TRUE;
 
-    #if DEBUG__SAFE
     /* These basic types are indispensable for the compiler to communicate with
-       the parser. */
-    if ( !( environment__resolve_type( env, BAG__NAME )
-         && environment__resolve_type( env, CHAR__NAME )
-         && environment__resolve_type( env, STRING__NAME )
-         && environment__resolve_type( env, DOUBLE__NAME )
-         && environment__resolve_type( env, INT__NAME )
-         && environment__resolve_type( env, TERM__NAME ) ) )
+       the parser and with the SK module, and to serialize and deserialize data sets. */
+    if ( !( ( c->bag_t = environment__resolve_type( env, BAG__NAME )->value )
+         && ( c->char_t = environment__resolve_type( env, CHAR__NAME )->value )
+         && ( c->combinator_t = environment__resolve_type( env, COMBINATOR__NAME )->value )
+         && ( c->float_t = environment__resolve_type( env, DOUBLE__NAME )->value )
+         && ( c->int_t = environment__resolve_type( env, INT__NAME )->value )
+         && ( c->ns_t = environment__resolve_type( env, NAMESPACE__NAME )->value )
+         && ( c->prim_t = environment__resolve_type( env, PRIMITIVE__NAME )->value )
+         && ( c->string_t = environment__resolve_type( env, STRING__NAME )->value )
+         && ( c->term_t = environment__resolve_type( env, TERM__NAME )->value )
+         && ( c->type_t = environment__resolve_type( env, TYPE__NAME )->value ) ) )
     {
         ERROR( "compiler__new: basic type not found" );
         free( c );
@@ -82,7 +85,6 @@ compiler__new( Environment *env )
         c = 0;
         goto finish;
     }
-    #endif
 
     if ( !( c->commands = create_commands() ) )
     {

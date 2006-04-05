@@ -91,7 +91,7 @@ resolve( Ast *ast, Compiler *c )
         {
             case BAG_T:
 
-                type = c->env->bag_t;
+                type = c->bag_t;
                 value = ast->value;
                 array__walk( value, ( Dist_f ) helper );
                 if ( !ok )
@@ -100,19 +100,19 @@ resolve( Ast *ast, Compiler *c )
 
             case CHAR_T:
 
-                type = c->env->char_t;
+                type = c->char_t;
                 value = ast->value;
                 break;
 
             case FLOAT_T:
 
-                type = c->env->float_t;
+                type = c->float_t;
                 value = ast->value;
                 break;
 
             case INT_T:
 
-                type = c->env->int_t;
+                type = c->int_t;
                 value = ast->value;
                 break;
 
@@ -125,13 +125,13 @@ resolve( Ast *ast, Compiler *c )
 
             case STRING_T:
 
-                type = c->env->string_t;
+                type = c->string_t;
                 value = ast->value;
                 break;
 
             case TERM_T:
 
-                type = c->env->term_t;
+                type = c->term_t;
                 value = ast->value;
                 term__walk( value, ( Dist_f ) helper );
                 if ( !ok )
@@ -154,7 +154,7 @@ resolve( Ast *ast, Compiler *c )
             /* Create and register a new object. */
             o = object__new( type, value, flags );
 
-            memory_manager__add( c->env->manager, o );
+            memory_manager__add( environment__manager( c->env ), o );
 
             return o;
         }
@@ -201,14 +201,14 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         ( int ) c, ( int ) name, ( int ) expr );
     #endif
 
-    char__encode = c->env->char_t->encode;
-    double__encode = c->env->float_t->encode;
-    string__encode = c->env->string_t->encode;
-    term__encode = c->env->term_t->encode;
-    c->env->char_t->encode = ( Encoder ) char__encode__alt;
-    c->env->float_t->encode = ( Encoder ) double__encode__alt;
-    c->env->string_t->encode = ( Encoder ) string__encode__alt;
-    c->env->term_t->encode = ( Encoder ) term__encode__alt;
+    char__encode = c->char_t->encode;
+    double__encode = c->float_t->encode;
+    string__encode = c->string_t->encode;
+    term__encode = c->term_t->encode;
+    c->char_t->encode = ( Encoder ) char__encode__alt;
+    c->float_t->encode = ( Encoder ) double__encode__alt;
+    c->string_t->encode = ( Encoder ) string__encode__alt;
+    c->term_t->encode = ( Encoder ) term__encode__alt;
 
     if ( name )
         a = ast__name( name );
@@ -216,13 +216,13 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     o = resolve( expr, c );
 
     /* If a term, reduce. */
-    if ( o && o->type == c->env->term_t )
+    if ( o && o->type == c->term_t )
     {
         t = SK_reduce( ( Term* ) o->value,
-            c->env->manager,
-            c->env->term_t,
-            c->env->prim_t,
-            c->env->combinator_t );
+            environment__manager( c->env ),
+            c->term_t,
+            c->prim_t,
+            c->combinator_t );
 
         if ( t )
             o->value = t;
@@ -260,10 +260,10 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     if ( a )
         ast__delete( a );
 
-    c->env->char_t->encode = char__encode;
-    c->env->float_t->encode = double__encode;
-    c->env->string_t->encode = string__encode;
-    c->env->term_t->encode = term__encode;
+    c->char_t->encode = char__encode;
+    c->float_t->encode = double__encode;
+    c->string_t->encode = string__encode;
+    c->term_t->encode = term__encode;
 
     return ret;
 }

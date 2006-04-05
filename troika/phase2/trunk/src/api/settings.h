@@ -52,8 +52,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
         #define DEBUG__NAMESPACE                0
 
-        #define DEBUG__ENV                      0
-        #define DEBUG__COMPILER                 0
+        #define DEBUG__ENV                      1
+        #define DEBUG__COMPILER                 1
 
         #define DEBUG__SERIAL                   1
 

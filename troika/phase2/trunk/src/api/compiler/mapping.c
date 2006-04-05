@@ -115,9 +115,9 @@ compiler__define( Compiler *c, Name *name, Object *o )
 
     if ( !strcmp( first, "root" ) )
     {
-        ns_obj = c->env->root;
+        ns_obj = environment__root( c->env );
 
-        define( ns_obj, name, o, c->env->manager );
+        define( ns_obj, name, o, environment__manager( c->env ) );
 
         name__push( name, first );
     }
@@ -126,7 +126,7 @@ compiler__define( Compiler *c, Name *name, Object *o )
     {
         ns_obj = c->cur_ns_obj;
 
-        define( ns_obj, name, o, c->env->manager );
+        define( ns_obj, name, o, environment__manager( c->env ) );
 
         name__push( name, first );
     }
@@ -136,7 +136,7 @@ compiler__define( Compiler *c, Name *name, Object *o )
         ns_obj = c->cur_ns_obj;
         name__push( name, first );
 
-        define( ns_obj, name, o, c->env->manager );
+        define( ns_obj, name, o, environment__manager( c->env ) );
     }
 
     if ( !o )
@@ -161,15 +161,15 @@ compiler__resolve( Compiler *c, Name *name )
     char *first = ( char* ) name__pop( name );
     if ( !strcmp( first, "root" ) )
     {
-        ns_obj = c->env->root;
-        o = resolve( ns_obj, name, c->env->manager );
+        ns_obj = environment__root( c->env );
+        o = resolve( ns_obj, name, environment__manager( c->env ) );
         name__push( name, first );
     }
 
     else if ( !strcmp( first, "here" ) )
     {
         ns_obj = c->cur_ns_obj;
-        o = resolve( ns_obj, name, c->env->manager );
+        o = resolve( ns_obj, name, environment__manager( c->env ) );
         name__push( name, first );
     }
 
@@ -178,7 +178,7 @@ compiler__resolve( Compiler *c, Name *name )
         ns_obj = c->cur_ns_obj;
         name__push( name, first );
 
-        o = resolve( ns_obj, name, c->env->manager );
+        o = resolve( ns_obj, name, environment__manager( c->env ) );
     }
 
     if ( !o )
