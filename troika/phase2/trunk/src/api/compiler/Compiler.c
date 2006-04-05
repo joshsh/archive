@@ -69,12 +69,12 @@ compiler__new( Environment *env )
     #if DEBUG__SAFE
     /* These basic types are indispensable for the compiler to communicate with
        the parser. */
-    if ( !( environment__resolve_type( env, "Bag" )
-         && environment__resolve_type( env, "char" )
-         && environment__resolve_type( env, "cstring" )
-         && environment__resolve_type( env, "double" )
-         && environment__resolve_type( env, "int" )
-         && environment__resolve_type( env, "Term" ) ) )
+    if ( !( environment__resolve_type( env, BAG__NAME )
+         && environment__resolve_type( env, CHAR__NAME )
+         && environment__resolve_type( env, STRING__NAME )
+         && environment__resolve_type( env, DOUBLE__NAME )
+         && environment__resolve_type( env, INT__NAME )
+         && environment__resolve_type( env, TERM__NAME ) ) )
     {
         ERROR( "compiler__new: basic type not found" );
         free( c );
@@ -172,123 +172,6 @@ compiler__parse( Compiler *c )
     c->locked = FALSE;
 
     return exit_state;
-}
-
-
-/******************************************************************************/
-
-
-static void
-undef_error( Name *name )
-{
-    printf( "Error: \"" );
-    name__print( name );
-    printf( "\" is not defined in this namespace.\n" );
-}
-
-
-Object *
-compiler__define( Compiler *c, Name *name, Object *o )
-{
-    Namespace_o *ns_obj;
-
-    #if DEBUG__COMPILER
-    Object *o_orig = o;
-    #endif
-
-    char *first = name__pop( name );
-
-    if ( !strcmp( first, "root" ) )
-    {
-        ns_obj = c->env->root;
-
-        if ( o )
-            o = namespace__add( ns_obj, name, o );
-        else
-            o = namespace__remove( ns_obj, name );
-
-        name__push( name, first );
-    }
-
-    else if ( !strcmp( first, "here" ) )
-    {
-        ns_obj = c->cur_ns_obj;
-
-        if ( o )
-            o = namespace__add( ns_obj, name, o );
-        else
-            o = namespace__remove( ns_obj, name );
-
-        name__push( name, first );
-    }
-
-    else
-    {
-        ns_obj = c->cur_ns_obj;
-        name__push( name, first );
-
-        if ( o )
-            o = namespace__add( ns_obj, name, o );
-        else
-            o = namespace__remove( ns_obj, name );
-    }
-
-    if ( !o )
-        undef_error( name );
-
-    #if DEBUG__COMPILER
-    printf( "[%#x] compiler__define(%#x, ", ( int ) o, ( int ) c );
-    name__print( name );
-    printf( ", %#x)\n", ( int ) o_orig );
-    #endif
-
-    return o;
-}
-
-
-Object *
-compiler__resolve( Compiler *c, Name *name )
-{
-    Namespace_o *ns_obj;
-    Object *o;
-
-    char *first = ( char* ) name__pop( name );
-    if ( !strcmp( first, "root" ) )
-    {
-        ns_obj = c->env->root;
-        o = namespace__lookup( ns_obj, name );
-        name__push( name, first );
-    }
-
-    else if ( !strcmp( first, "here" ) )
-    {
-        ns_obj = c->cur_ns_obj;
-        o = namespace__lookup( ns_obj, name );
-        name__push( name, first );
-    }
-
-    else
-    {
-        ns_obj = c->cur_ns_obj;
-        name__push( name, first );
-
-        #if COMPILER__NAME_INHERITANCE
-        o = namespace__resolve( ns_obj, name, c->env->manager );
-        #else
-        o = namespace__lookup( ns_obj, name );
-        #endif
-    }
-
-    if ( !o )
-        undef_error( name );
-
-    #if DEBUG__COMPILER
-    printf( "[%#x] compiler__resolve(%#x, ", ( int ) o, ( int ) c );
-    name__print( name );
-    printf( ")\n" );
-    #endif
-
-    return o;
 }
 
 

@@ -70,15 +70,17 @@ $(XML)/xmldom.o  :
 ################################################################################
 # Build the command line interface.
 
-objects = main.o Collection.o Environment.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o
+objects = main.o Collection.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o
 
-compiler_objects = compiler/Compiler.o compiler/command.o compiler/expression.o compiler/error.o compiler/serial.o
+compiler_objects = compiler/Compiler.o compiler/command.o compiler/error.o compiler/expression.o compiler/mapping.o compiler/serial.o
+
+environment_objects = environment/Environment.o
 
 
-phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) import/target/imports.o parser
-	$(CC) $(CFLAGS) -o phase2 $(objects) $(compiler_objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
+phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) $(environment_objects) import/target/imports.o parser
+	$(CC) $(CFLAGS) -o phase2 $(objects) $(compiler_objects) $(environment_objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
 
-$(objects) $(compiler_objects) $(utils) : defs.h settings.h
+$(objects) $(compiler_objects) $(environment_objects) $(utils) : defs.h settings.h
 
 compiler/serial.o :  revision.h
 

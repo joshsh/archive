@@ -95,6 +95,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
+/* Type names *****************************************************************/
+
+
+#define ANY__NAME                               "any_type"
+#define BAG__NAME                               "Bag"
+#define CHAR__NAME                              "char"
+#define COMBINATOR__NAME                        "Combinator"
+#define DOUBLE__NAME                            "double"
+#define INT__NAME                               "int"
+#define NAMESPACE__NAME                         "Namespace"
+#define PRIMITIVE__NAME                         "Primitive"
+#define SET__NAME                               "Set"
+#define STRING__NAME                            "cstring"
+#define TERM__NAME                              "Term"
+#define TYPE__NAME                              "Type"
+#define VOID__NAME                              "Void"
+
+
 /* Reduction ******************************************************************/
 
 

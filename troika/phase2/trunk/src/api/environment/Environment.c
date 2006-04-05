@@ -66,15 +66,15 @@ add_triples_prims( Environment *env )
 {
     Primitive *p;
 
-    return ( ( p = primitive__new( env, "any_type", "^+", assoc_stub, 3 ) )
-      && primitive__add_param( env, p, "any_type", "subject", 0 )
-      && primitive__add_param( env, p, "any_type", "predicate", 1 )
-      && primitive__add_param( env, p, "any_type", "object", 1 )
+    return ( ( p = primitive__new( env, ANY__NAME, "^+", assoc_stub, 3 ) )
+      && primitive__add_param( env, p, ANY__NAME, "subject", 0 )
+      && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
+      && primitive__add_param( env, p, ANY__NAME, "object", 1 )
       && primitive__register( env, p, 0, 0 )
 
-      && ( p = primitive__new( env, "any_type", "^", mult_stub, 2 ) )
-      && primitive__add_param( env, p, "any_type", "subject", 1 )
-      && primitive__add_param( env, p, "any_type", "predicate", 1 )
+      && ( p = primitive__new( env, ANY__NAME, "^", mult_stub, 2 ) )
+      && primitive__add_param( env, p, ANY__NAME, "subject", 1 )
+      && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
       && primitive__register( env, p, 0, 0 ) );
 }
 
@@ -99,8 +99,8 @@ add_meta_prims( Environment *env )
 
     global_env = env;
 
-    return ( ( p = primitive__new( env, "any_type", "type_of", type_of, 1 ) )
-      && primitive__add_param( env, p, "any_type", "self", 1 )
+    return ( ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
+      && primitive__add_param( env, p, ANY__NAME, "self", 1 )
       && primitive__register( env, p, 0, 0 ) );
 }
 
@@ -169,10 +169,10 @@ environment__new()
     env->manager = 0;
 
     /* Create the basic data types. */
-    if ( !( env->ns_t = namespace__create_type( "Namespace", TYPE__IS_OBJ_COLL ) )
-      || !( env->prim_t = primitive__create_type( "Primitive" ) )
-      || !( env->set_t = set__create_type( "Set", TYPE__IS_OBJ_COLL ) )
-      || !( env->type_t = type__create_type( "Type", 0 ) ) )
+    if ( !( env->ns_t = namespace__create_type( NAMESPACE__NAME, TYPE__IS_OBJ_COLL ) )
+      || !( env->prim_t = primitive__create_type( PRIMITIVE__NAME ) )
+      || !( env->set_t = set__create_type( SET__NAME, TYPE__IS_OBJ_COLL ) )
+      || !( env->type_t = type__create_type( TYPE__NAME, 0 ) ) )
         goto abort;
 
     /* Create root namespace object and children. */
@@ -211,8 +211,8 @@ environment__new()
     environment__register_type( env, env->type_t );
 
     /* Add other types here... */
-    environment__register_type( env, array__create_type( "Bag", TYPE__IS_OBJ_COLL ) );
-    environment__register_type( env, term__create_type( "Term", TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, array__create_type( BAG__NAME, TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, term__create_type( TERM__NAME, TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
     if ( !environment__import_primitives( env ) )
@@ -232,15 +232,15 @@ environment__new()
         goto abort;
     }
 
-    env->bag_t = environment__resolve_type( env, "Bag" );
-    env->char_t = environment__resolve_type( env, "char" );
-    env->float_t = environment__resolve_type( env, "double" );
-    env->int_t = environment__resolve_type( env, "int" );
-    env->string_t = environment__resolve_type( env, "cstring" );
-    env->term_t = environment__resolve_type( env, "Term" );
+    env->bag_t = environment__resolve_type( env, BAG__NAME );
+    env->char_t = environment__resolve_type( env, CHAR__NAME );
+    env->float_t = environment__resolve_type( env, DOUBLE__NAME );
+    env->int_t = environment__resolve_type( env, INT__NAME );
+    env->string_t = environment__resolve_type( env, STRING__NAME );
+    env->term_t = environment__resolve_type( env, TERM__NAME );
 
     /* Add combinators. */
-    env->combinator_t = environment__resolve_type( env, "Combinator" );
+    env->combinator_t = environment__resolve_type( env, COMBINATOR__NAME );
     add_combinators( env );
 
     lock_ns( env );
@@ -301,7 +301,7 @@ environment__delete( Environment *env )
     ns_t.name = STRDUP( ns_t.name );  /* Just so that the debugging output doesn't look weird. */
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
-        namespace__lookup_simple( ( Namespace* ) env->types->value, "Type" ) );
+        namespace__lookup_simple( ( Namespace* ) env->types->value, TYPE__NAME ) );
     memory_manager__collect( env->manager );
 
     memory_manager__delete( env->manager );
@@ -386,7 +386,7 @@ environment__resolve_type( Environment *env, const char *name )
     Object *o;
     Type *type;
 
-    if ( !strcmp( name, "any_type" ) )
+    if ( !strcmp( name, ANY__NAME ) )
         return any_type;
 
     if ( !(o = namespace__lookup_simple( ( Namespace* ) env->types->value, name ) ) )

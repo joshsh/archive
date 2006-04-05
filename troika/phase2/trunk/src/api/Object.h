@@ -36,6 +36,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
+/* ~ */
+extern Type set_t;
+
+
 enum Object__Flags
 {
     OBJECT__IMMUTABLE           = 0x1,
