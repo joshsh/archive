@@ -74,7 +74,7 @@ objects = main.o Collection.o Memory_Manager.o Namespace.o Object.o Primitive.o 
 
 compiler_objects = compiler/Compiler.o compiler/command.o compiler/error.o compiler/expression.o compiler/mapping.o compiler/serial.o
 
-environment_objects = environment/Environment.o
+environment_objects = environment/Environment.o environment/types.o
 
 
 phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) $(environment_objects) import/target/imports.o parser
