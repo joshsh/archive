@@ -480,7 +480,6 @@ object__multiply( Object *subj, Object *pred )
 }
 
 
-/* Note: doesn't take association sets into account yet. */
 Object *
 object__associate( Object *subj, Object *pred, Object *obj )
 {
@@ -522,86 +521,155 @@ object__associate( Object *subj, Object *pred, Object *obj )
 }
 
 
+Object *
+object__dissociate( Object *subj, Object *pred )
+{
+    #if DEBUG__OBJECT__TRIPLES
+    Object *subj_orig = subj;
+    #endif
+
+    #if DEBUG__SAFE
+    if ( !subj || !pred )
+    {
+        ERROR( "object__dissociate: null argument" );
+        return 0;
+    }
+    #endif
+
+    #if TRIPLES__GLOBAL__OUT_EDGES
+    if ( subj->outbound_edges )
+    {
+        hash_map__remove( subj->outbound_edges, pred );
+        if ( !hash_table__size( subj->outbound_edges ) )
+        {
+            hash_map__delete( subj->outbound_edges );
+            subj->outbound_edges = 0;
+        }
+    }
+    #else
+    subj = 0;
+    #endif
+
+    #if DEBUG__OBJECT__TRIPLES
+    printf( "[%#x] object__dissociate(%#x, %#x)\n",
+        ( int ) subj_orig, ( int ) subj, ( int ) pred );
+    #endif
+
+    return subj;
+}
+
+
 #ifdef NOT_FINISHED
 static Object *
 union_of( Object *o1, Object *o2 )
 {
     Set *s;
+    Object *o3;
 
-    if ( o1->type == set_t )
+    if ( o1 )
     {
-        if ( o2 )
+        if ( o1->type == set_t )
         {
-            if ( o2->type == set_t )
-                
+            if ( o2 )
+            {
+                /* A + A */
+                if ( o2->type == set_t )
+                {
+
+                }
+
+                /* A + a */
+                else
+                {
+
+                }
+            }
+
+            /* A + 0 */
+            else
+            {
+                set__remove( s, o2 );
+            }
         }
 
+        else if ( o2 )
+        {
+            /* a + A */
+            if ( o2->type == set_t )
+            {
+
+            }
+
+            /* a + a */
+            else
+            {
+                s = set__new();
+                set__add( s, o1 );
+                set__add( s, o2 );
+            }
+        }
+
+        /* a + 0 */
         else
         {
-            set__remove( s, o2 );
+
         }
-    }
-
-    else if ( o2->type == set_t )
-    {
-
     }
 
     else
     {
-        s = set__new();
-        set__add( s, o1 );
-        set__add( s, o2 );
-    }
+        if ( o2 )
+        {
+            /* 0 + A */
+            if ( o2->type == set_t )
+            {
+                s = set__copy( o2->value );
+                o3 = object__new( set_t, s, 0 );
+                memory_manager__add( environment__manager( global_env ), o3 );
+                return o3;
+            }
 
-    return s;
+            /* 0 + a */
+            else
+                return o2;
+        }
+
+        /* 0 + 0 */
+        else
+            return 0;
+    }
 }
 
 
 Object *
 object__union_associate( Object *subj, Object *pred, Object *obj )
 {
-    Object *pre;
+    Object *o;
 
     #if DEBUG__SAFE
     if ( !subj || !pred || !obj )
     {
-        ERROR( "object__associate: null argument" );
+        ERROR( "object__union_associate: null argument" );
         return 0;
     }
     #endif
 
     #if TRIPLES__GLOBAL__OUT_EDGES
-
-    if ( !subj->outbound_edges
-      && !( subj->outbound_edges = hash_map__new() ) )
+    if ( !( subj->outbound_edges || ( subj->outbound_edges = hash_map__new() ) ) )
         subj = 0;
 
     else
     {
-        if ( obj )
-        {
-            pre = hash_map__lookup( sub->outbound_edges, pred );
-            if ( pre )
-            {
-                if ( pre->type == set_t )
-                    set__add( pre->value, obj );
-
-                else
-            }
-
-            else
-              hash_map__add( subj->outbound_edges, pred, obj );
-        }
-
-        else
-            hash_map__remove( subj->outbound_edges, pred );
+        o = union_of( hash_map__lookup( subj->outbound_edges, pred ), obj );
+        hash_map__add( subj->outbound_edges, pred, o );
     }
-
     #else
-
     subj = 0;
+    #endif
 
+    #if DEBUG__OBJECT__TRIPLES
+    printf( "[%#x] object__union_associate(%#x, %#x, %#x)\n",
+        ( int ) subj_orig, ( int ) subj, ( int ) pred, ( int ) obj );
     #endif
 
     return subj;

@@ -113,7 +113,7 @@ namespace__create_type( const char *name, int flags );
 /******************************************************************************/
 
 extern Name *
-namespace__find( const Namespace_o *ns_obj, const Object *o );
+namespace__find( const Namespace_o *haystack, const Object *needle );
 
 extern Object *
 namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m );

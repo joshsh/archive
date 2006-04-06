@@ -405,50 +405,6 @@ namespace__create_type( const char *name, int flags )
 
 /******************************************************************************/
 
-/*
-static boolean equals( void *p1, void *p2 )
-{
-    return ( p1 == p2 );
-}
-
-
-    Object *match = ( Object* )
-        collection__first_match( ns_obj, ( Criterion ) equals );
-
-
-
-static p2_action * ns__trace_bfs( Object *o, trace_proc_st *state )
-{
-    p2_action *action;
-
-    if ( !o )
-    {
-        #if DEBUG__SAFE
-        WARNING( "ns__trace_bfs: null object" );
-        #endif
-
-        return 0;
-    }
-
-    if ( !( action = Closure__execute( ( state->inner_p ), o ) ) )
-    {
-        if ( o->type->flags & TYPE__IS_OBJ_COLL )
-        {
-            o->type->distribute( o->value, state->outer_p );
-        }
-
-        #if TRIPLES__GLOBAL__OUT_EDGES
-        if ( o->outbound_edges )
-        {
-            hash_map__distribute( o->outbound_edges, state->edge_p );
-        }
-        #endif
-    }
-
-    return 0;
-}
-*/
-
 
 /* Distribute f recursively (and in a breadth-first fashion) through any child namespaces. */
 static void
@@ -511,9 +467,14 @@ typedef struct Name_Fragment
 
 
 Name *
-namespace__find( const Namespace_o *ns_obj, const Object *o )
+namespace__find( const Namespace_o *haystack, const Object *needle )
 {
+#if COMMENT
+    Hash_Map *parents = hash_map__new();
+#endif
     Name *name = name__new();
+
+    
 
     /* ... */
 

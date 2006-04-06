@@ -134,6 +134,9 @@ object__multiply( Object *subj, Object *pred );
 extern Object *
 object__associate( Object *subj, Object *pred, Object *obj );
 
+extern Object *
+object__dissociate( Object *subj, Object *pred );
+
 #ifdef NOT_FINISHED
 /* ~ */
 extern Type set_t;
