@@ -1,289 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data_set p2-version="0.6.2" p2-revision="174" time="Wed Apr  5 18:21:18 2006">
-  <object id="1" type="Namespace">
+<data_set p2-version="0.6.2" p2-revision="174" time="Wed Apr  5 18:56:46 2006">
+  <object id="2" type="Namespace">
     <table>
-      <object type="Namespace" name="combinators">
-        <table>
-          <object type="Combinator" name="K">K</object>
-          <object type="Combinator" name="S">S</object>
-        </table>
-      </object>
-      <object type="Namespace" name="data">
-        <table>
-          <object type="cstring" name="Alfresco">open source</object>
-          <object type="cstring" name="Documentum">proprietary content manager</object>
-          <object type="Namespace" name="Soph-Ware">
-            <table>
-              <object ref="14" name="Sean"/>
-            </table>
-          </object>
-          <object type="int" name="The Answer">42</object>
-          <object type="Namespace" name="compilers">
-            <table>
-              <object type="cstring" name="a">diamond inheritance problem</object>
-            </table>
-          </object>
-          <object ref="17" name="days"/>
-          <object ref="16" name="e-mail"/>
-          <object type="Namespace" name="languages">
-            <table>
-              <object type="cstring" name="English">English</object>
-              <object ref="2" name="German"/>
-            </table>
-          </object>
-          <object type="Namespace" name="math">
-            <table>
-              <object type="Namespace" name="double">
-                <table>
-                  <object type="Primitive" name="*">double_double__multiply</object>
-                  <object type="Primitive" name="+">double_double__add</object>
-                  <object type="Primitive" name="-">double_double__subtract</object>
-                  <object type="Primitive" name="/">double_double__divide</object>
-                </table>
-              </object>
-              <object type="Namespace" name="int">
-                <table>
-                  <object type="Primitive" name="%">int_int__modulus</object>
-                  <object type="Primitive" name="*">int_int__multiply</object>
-                  <object type="Primitive" name="+">int_int__add</object>
-                  <object type="Primitive" name="-">int_int__subtract</object>
-                  <object type="Primitive" name="/">int_int__divide</object>
-                </table>
-              </object>
-              <object type="double" name="pi">3.1415</object>
-            </table>
-          </object>
-          <object type="int" name="myint">1331</object>
-          <object type="Namespace" name="sk">
-            <table>
-              <object ref="6" name="I"/>
-              <object type="Combinator" name="K">K</object>
-              <object type="Combinator" name="S">S</object>
-              <object type="Term" name="Y">
-                <list>
-                  <object type="Combinator">S</object>
-                  <list>
-                    <object type="Combinator">K</object>
-                    <object ref="8"/>
-                  </list>
-                  <list>
-                    <object type="Combinator">S</object>
-                    <list>
-                      <object type="Combinator">S</object>
-                      <list>
-                        <object type="Combinator">K</object>
-                        <object type="Combinator">S</object>
-                      </list>
-                      <object type="Combinator">K</object>
-                    </list>
-                    <list>
-                      <object type="Combinator">K</object>
-                      <object ref="8"/>
-                    </list>
-                  </list>
-                </list>
-              </object>
-              <object type="Term" name="Y-sk">
-                <list>
-                  <object type="Combinator">S</object>
-                  <list>
-                    <object type="Combinator">S</object>
-                    <list>
-                      <object type="Combinator">K</object>
-                      <list>
-                        <object type="Combinator">S</object>
-                        <object type="Combinator">S</object>
-                        <list>
-                          <object type="Combinator">S</object>
-                          <list>
-                            <object type="Combinator">S</object>
-                            <object type="Combinator">S</object>
-                            <object type="Combinator">K</object>
-                          </list>
-                        </list>
-                      </list>
-                    </list>
-                    <object type="Combinator">K</object>
-                  </list>
-                  <list>
-                    <object type="Combinator">K</object>
-                    <list>
-                      <object type="Combinator">S</object>
-                      <list>
-                        <object type="Combinator">K</object>
-                        <list>
-                          <object type="Combinator">S</object>
-                          <object type="Combinator">S</object>
-                          <list>
-                            <object type="Combinator">S</object>
-                            <list>
-                              <object type="Combinator">S</object>
-                              <object type="Combinator">S</object>
-                              <object type="Combinator">K</object>
-                            </list>
-                          </list>
-                        </list>
-                      </list>
-                      <object type="Combinator">K</object>
-                    </list>
-                  </list>
-                </list>
-              </object>
-              <object type="Term" name="false">
-                <list>
-                  <object type="Combinator">S</object>
-                  <object type="Combinator">K</object>
-                </list>
-              </object>
-              <object ref="8" name="omega"/>
-              <object type="Combinator" name="true">K</object>
-            </table>
-          </object>
-          <object ref="15" name="test"/>
-        </table>
-      </object>
-      <object type="Namespace" name="primitives">
-        <table>
-          <object type="Primitive" name="^">^</object>
-          <object type="Primitive" name="^+">^+</object>
-          <object type="Primitive" name="char__decode">char__decode</object>
-          <object type="Primitive" name="char__encode">char__encode</object>
-          <object type="Primitive" name="combinator__decode">combinator__decode</object>
-          <object type="Primitive" name="combinator__encode">combinator__encode</object>
-          <object type="Primitive" name="cstring__decode">cstring__decode</object>
-          <object type="Primitive" name="cstring__encode">cstring__encode</object>
-          <object type="Primitive" name="double__decode">double__decode</object>
-          <object type="Primitive" name="double__encode">double__encode</object>
-          <object type="Primitive" name="double__inverse">double__inverse</object>
-          <object type="Primitive" name="double_double__add">double_double__add</object>
-          <object type="Primitive" name="double_double__divide">double_double__divide</object>
-          <object type="Primitive" name="double_double__multiply">double_double__multiply</object>
-          <object type="Primitive" name="double_double__subtract">double_double__subtract</object>
-          <object type="Primitive" name="int__decode">int__decode</object>
-          <object type="Primitive" name="int__encode">int__encode</object>
-          <object type="Primitive" name="int__inverse">int__inverse</object>
-          <object type="Primitive" name="int_int__add">int_int__add</object>
-          <object type="Primitive" name="int_int__divide">int_int__divide</object>
-          <object type="Primitive" name="int_int__modulus">int_int__modulus</object>
-          <object type="Primitive" name="int_int__multiply">int_int__multiply</object>
-          <object type="Primitive" name="int_int__subtract">int_int__subtract</object>
-          <object type="Primitive" name="set__exclusion">set__exclusion</object>
-          <object type="Primitive" name="set__intersection">set__intersection</object>
-          <object type="Primitive" name="set__symmetric_difference">set__symmetric_difference</object>
-          <object type="Primitive" name="set__union">set__union</object>
-          <object type="Primitive" name="system_call">system_call</object>
-          <object type="Primitive" name="type_of">type_of</object>
-        </table>
-      </object>
-      <object type="Namespace" name="types">
-        <table>
-          <object type="Type" name="Bag">Bag</object>
-          <object type="Type" name="Combinator">Combinator</object>
-          <object type="Type" name="Namespace">Namespace</object>
-          <object type="Type" name="Primitive">Primitive</object>
-          <object type="Type" name="Set">Set</object>
-          <object type="Type" name="Term">Term</object>
-          <object type="Type" name="Type">Type</object>
-          <object type="Type" name="char">char</object>
-          <object type="Type" name="cstring">cstring</object>
-          <object type="Type" name="double">double</object>
-          <object type="Type" name="int">int</object>
-          <object type="Type" name="void">void</object>
-        </table>
-      </object>
-    </table>
-  </object>
-  <object id="3" type="cstring">Monday</object>
-  <triple>
-    <object ref="3"/>
-    <object ref="2"/>
-    <object type="cstring">Montag</object>
-  </triple>
-  <object id="4" type="cstring">Thursday</object>
-  <triple>
-    <object ref="4"/>
-    <object ref="2"/>
-    <object type="cstring">Donnerstag</object>
-  </triple>
-  <object id="2" type="cstring">German</object>
-  <object id="6" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object type="Combinator">K</object>
-      <object type="Combinator">K</object>
-    </list>
-  </object>
-  <object id="18" type="Combinator">K</object>
-  <object id="7" type="cstring">Saturday</object>
-  <triple>
-    <object ref="7"/>
-    <object ref="2"/>
-    <object type="cstring">Samstag</object>
-  </triple>
-  <object id="8" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object ref="6"/>
-      <object ref="6"/>
-    </list>
-  </object>
-  <object id="9" type="cstring">Tuesday</object>
-  <triple>
-    <object ref="9"/>
-    <object ref="2"/>
-    <object type="cstring">Dienstag</object>
-  </triple>
-  <object id="12" type="cstring">Friday</object>
-  <triple>
-    <object ref="12"/>
-    <object ref="2"/>
-    <object type="cstring">Freitag</object>
-  </triple>
-  <object id="10" type="Combinator">S</object>
-  <object id="11" type="cstring">Wednesday</object>
-  <triple>
-    <object ref="11"/>
-    <object ref="2"/>
-    <object type="cstring">Mittwoch</object>
-  </triple>
-  <object id="13" type="Namespace">
-    <table>
-      <object ref="15" name="parent"/>
-      <object ref="13" name="self"/>
-    </table>
-  </object>
-  <object id="14" type="cstring">Sean Drexler</object>
-  <triple>
-    <object ref="14"/>
-    <object ref="16"/>
-    <object type="cstring">seand@omnicast.net</object>
-  </triple>
-  <object id="15" type="Namespace">
-    <table>
-      <object ref="13" name="reflection"/>
-    </table>
-  </object>
-  <object id="16" type="cstring">e-mail</object>
-  <object id="17" type="Namespace">
-    <table>
-      <object ref="12" name="Friday"/>
-      <object ref="3" name="Monday"/>
-      <object ref="7" name="Saturday"/>
-      <object ref="5" name="Sunday"/>
-      <object ref="4" name="Thursday"/>
-      <object ref="9" name="Tuesday"/>
+      <object ref="7" name="Friday"/>
+      <object ref="19" name="Monday"/>
+      <object ref="16" name="Saturday"/>
+      <object ref="9" name="Sunday"/>
+      <object ref="14" name="Thursday"/>
+      <object ref="13" name="Tuesday"/>
       <object ref="11" name="Wednesday"/>
     </table>
   </object>
   <triple>
-    <object ref="17"/>
     <object ref="2"/>
-    <object type="cstring">Tage</object>
+    <object ref="6"/>
+    <object type="cstring">dagar</object>
   </triple>
-  <object id="5" type="cstring">Sunday</object>
+  <object id="3" type="cstring">German</object>
+  <object id="4" type="Namespace">
+    <table>
+      <object ref="8" name="reflection"/>
+    </table>
+  </object>
+  <object id="5" type="Combinator">K</object>
+  <object id="6" type="cstring">Swedish</object>
+  <object id="7" type="cstring">Friday</object>
   <triple>
-    <object ref="5"/>
-    <object ref="2"/>
+    <object ref="7"/>
+    <object ref="3"/>
+    <object type="cstring">Freitag</object>
+  </triple>
+  <object id="9" type="cstring">Sunday</object>
+  <triple>
+    <object ref="9"/>
+    <object ref="3"/>
     <object type="cstring">Sonntag</object>
+  </triple>
+  <object id="8" type="Namespace">
+    <table>
+      <object ref="4" name="parent"/>
+      <object ref="8" name="self"/>
+    </table>
+  </object>
+  <object id="10" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object ref="12"/>
+      <object ref="12"/>
+    </list>
+  </object>
+  <object id="11" type="cstring">Wednesday</object>
+  <triple>
+    <object ref="11"/>
+    <object ref="3"/>
+    <object type="cstring">Mittwoch</object>
+  </triple>
+  <object id="12" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object type="Combinator">K</object>
+      <object type="Combinator">K</object>
+    </list>
+  </object>
+  <object id="13" type="cstring">Tuesday</object>
+  <triple>
+    <object ref="13"/>
+    <object ref="3"/>
+    <object type="cstring">Dienstag</object>
+  </triple>
+  <object id="14" type="cstring">Thursday</object>
+  <triple>
+    <object ref="14"/>
+    <object ref="3"/>
+    <object type="cstring">Donnerstag</object>
+  </triple>
+  <object id="15" type="cstring">e-mail</object>
+  <object id="1" type="Namespace">
+    <table>
+      <object type="cstring" name="Alfresco">open source</object>
+      <object type="cstring" name="Documentum">proprietary content manager</object>
+      <object type="Namespace" name="Soph-Ware">
+        <table>
+          <object ref="17" name="Sean"/>
+        </table>
+      </object>
+      <object type="int" name="The Answer">42</object>
+      <object type="Namespace" name="compilers">
+        <table>
+          <object type="cstring" name="a">diamond inheritance problem</object>
+        </table>
+      </object>
+      <object ref="2" name="days"/>
+      <object ref="15" name="e-mail"/>
+      <object type="Namespace" name="languages">
+        <table>
+          <object type="cstring" name="English">English</object>
+          <object ref="3" name="German"/>
+          <object ref="6" name="Swedish"/>
+        </table>
+      </object>
+      <object type="Namespace" name="math">
+        <table>
+          <object type="Namespace" name="double">
+            <table>
+              <object type="Primitive" name="*">double_double__multiply</object>
+              <object type="Primitive" name="+">double_double__add</object>
+              <object type="Primitive" name="-">double_double__subtract</object>
+              <object type="Primitive" name="/">double_double__divide</object>
+            </table>
+          </object>
+          <object type="Namespace" name="int">
+            <table>
+              <object type="Primitive" name="%">int_int__modulus</object>
+              <object type="Primitive" name="*">int_int__multiply</object>
+              <object type="Primitive" name="+">int_int__add</object>
+              <object type="Primitive" name="-">int_int__subtract</object>
+              <object type="Primitive" name="/">int_int__divide</object>
+            </table>
+          </object>
+          <object type="double" name="pi">3.1415</object>
+        </table>
+      </object>
+      <object type="int" name="myint">1331</object>
+      <object type="Namespace" name="sk">
+        <table>
+          <object ref="12" name="I"/>
+          <object type="Combinator" name="K">K</object>
+          <object type="Combinator" name="S">S</object>
+          <object type="Term" name="Y">
+            <list>
+              <object type="Combinator">S</object>
+              <list>
+                <object type="Combinator">K</object>
+                <object ref="10"/>
+              </list>
+              <list>
+                <object type="Combinator">S</object>
+                <list>
+                  <object type="Combinator">S</object>
+                  <list>
+                    <object type="Combinator">K</object>
+                    <object type="Combinator">S</object>
+                  </list>
+                  <object type="Combinator">K</object>
+                </list>
+                <list>
+                  <object type="Combinator">K</object>
+                  <object ref="10"/>
+                </list>
+              </list>
+            </list>
+          </object>
+          <object type="Term" name="Y-sk">
+            <list>
+              <object type="Combinator">S</object>
+              <list>
+                <object type="Combinator">S</object>
+                <list>
+                  <object type="Combinator">K</object>
+                  <list>
+                    <object type="Combinator">S</object>
+                    <object type="Combinator">S</object>
+                    <list>
+                      <object type="Combinator">S</object>
+                      <list>
+                        <object type="Combinator">S</object>
+                        <object type="Combinator">S</object>
+                        <object type="Combinator">K</object>
+                      </list>
+                    </list>
+                  </list>
+                </list>
+                <object type="Combinator">K</object>
+              </list>
+              <list>
+                <object type="Combinator">K</object>
+                <list>
+                  <object type="Combinator">S</object>
+                  <list>
+                    <object type="Combinator">K</object>
+                    <list>
+                      <object type="Combinator">S</object>
+                      <object type="Combinator">S</object>
+                      <list>
+                        <object type="Combinator">S</object>
+                        <list>
+                          <object type="Combinator">S</object>
+                          <object type="Combinator">S</object>
+                          <object type="Combinator">K</object>
+                        </list>
+                      </list>
+                    </list>
+                  </list>
+                  <object type="Combinator">K</object>
+                </list>
+              </list>
+            </list>
+          </object>
+          <object type="Term" name="false">
+            <list>
+              <object type="Combinator">S</object>
+              <object type="Combinator">K</object>
+            </list>
+          </object>
+          <object ref="10" name="omega"/>
+          <object type="Combinator" name="true">K</object>
+        </table>
+      </object>
+      <object ref="4" name="test"/>
+    </table>
+  </object>
+  <object id="16" type="cstring">Saturday</object>
+  <triple>
+    <object ref="16"/>
+    <object ref="3"/>
+    <object type="cstring">Samstag</object>
+  </triple>
+  <object id="17" type="cstring">Sean Drexler</object>
+  <triple>
+    <object ref="17"/>
+    <object ref="15"/>
+    <object type="cstring">seand@omnicast.net</object>
+  </triple>
+  <object id="18" type="Combinator">S</object>
+  <object id="19" type="cstring">Monday</object>
+  <triple>
+    <object ref="19"/>
+    <object ref="3"/>
+    <object type="cstring">Montag</object>
   </triple>
 </data_set>

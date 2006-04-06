@@ -291,7 +291,7 @@ term__print( Term *term, int top_level )
         else
         {
             if ( !top_level )
-                printf( "( " );
+                printf( "(" );
             /*else
                   printf( "[ " ); */
 
@@ -308,7 +308,7 @@ term__print( Term *term, int top_level )
             term__delete( subterm );
 
             if ( !top_level )
-                printf( " )" );
+                printf( ")" );
             /*else
                   printf( " ]" ); */
         }
@@ -321,11 +321,11 @@ bag__print( Array *a )
 {
     int i, size = array__size( a );
     if ( !size )
-        printf( "{null}" );
+        printf( "{}" );
     else
     {
         /*if ( size > 1 )*/
-            printf( "{ " );
+            printf( "{" );
 
         for ( i = 0; i < size; i++ )
         {
@@ -335,7 +335,7 @@ bag__print( Array *a )
         }
 
         /*if ( size > 1 )*/
-            printf( " }" );
+            printf( "}" );
     }
 }
 
@@ -389,9 +389,9 @@ ast__print( Ast *ast )
 
         case TERM_T:
 
-            printf( "[ " );
+            printf( "[" );
             term__print( ( Term* ) ast->value, 1 );
-            printf( " ]" );
+            printf( "]" );
             break;
 
         case VOID_T:

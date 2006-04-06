@@ -693,18 +693,12 @@ array__encode( Array *a, char *buffer )
                 buffer += 2;
             }
 
-            else
-            {
-                sprintf( buffer, " " );
-                buffer++;
-            }
-
             o->type->encode( o->value, buffer );
             buffer += strlen( buffer );
         }
     }
 
-    sprintf( buffer, " }" );
+    sprintf( buffer, "}" );
 }
 
 

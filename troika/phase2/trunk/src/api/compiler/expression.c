@@ -49,13 +49,13 @@ string__encode__alt( char *s, char *buffer )
 static void
 term__encode__alt( Term *t, char *buffer )
 {
-    sprintf( buffer, "[ " );
-    buffer += 2;
+    sprintf( buffer, "[" );
+    buffer++;
 
     term__encode( t, buffer );
 
     buffer += strlen( buffer );
-    sprintf( buffer, " ]" );
+    sprintf( buffer, "]" );
 }
 
 

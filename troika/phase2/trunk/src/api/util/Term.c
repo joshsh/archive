@@ -478,8 +478,8 @@ term__encode( Term *t, char *buffer )
         {
             if ( delimit )
             {
-                sprintf( buffer,  "( " );
-                buffer += 2;
+                sprintf( buffer,  "(" );
+                buffer++;
             }
 
             lim = cur + ( unsigned int ) *cur;
@@ -500,8 +500,8 @@ term__encode( Term *t, char *buffer )
 
             if ( delimit )
             {
-                sprintf( buffer, " )" );
-                buffer += 2;
+                sprintf( buffer, ")" );
+                buffer++;
             }
         }
     }
