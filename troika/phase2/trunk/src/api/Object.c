@@ -441,7 +441,6 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 }
 
 
-
 /* Association ****************************************************************/
 
 
@@ -450,6 +449,8 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 Object *
 object__multiply( Object *subj, Object *pred )
 {
+    Object *obj;
+
     #if DEBUG__SAFE
     if ( !subj || !pred )
     {
@@ -460,14 +461,22 @@ object__multiply( Object *subj, Object *pred )
 
     #if TRIPLES__GLOBAL__OUT_EDGES
 
-    return ( subj->outbound_edges ) ?
-        ( Object* ) hash_map__lookup( subj->outbound_edges, pred ) : 0 ;
+    obj = ( subj->outbound_edges )
+        ? hash_map__lookup( subj->outbound_edges, pred )
+        : 0 ;
 
     #else
 
-    return 0;
+    obj = 0;
 
     #endif
+
+    #if DEBUG__OBJECT__TRIPLES
+    printf( "[%#x] object__multiply(%#x, %#x)\n",
+        ( int ) obj, ( int ) subj, ( int ) pred );
+    #endif
+
+    return obj;
 }
 
 
@@ -475,6 +484,85 @@ object__multiply( Object *subj, Object *pred )
 Object *
 object__associate( Object *subj, Object *pred, Object *obj )
 {
+    #if DEBUG__OBJECT__TRIPLES
+    Object *subj_orig = subj;
+    #endif
+
+    #if DEBUG__SAFE
+    if ( !subj || !pred || !obj )
+    {
+        ERROR( "object__associate: null argument" );
+        return 0;
+    }
+    #endif
+
+    #if TRIPLES__GLOBAL__OUT_EDGES
+    if ( !subj->outbound_edges
+      && !( subj->outbound_edges = hash_map__new() ) )
+        subj = 0;
+
+    else
+    {
+        if ( obj )
+            hash_map__add( subj->outbound_edges, pred, obj );
+
+        else
+            hash_map__remove( subj->outbound_edges, pred );
+    }
+    #else
+    subj = 0;
+    #endif
+
+    #if DEBUG__OBJECT__TRIPLES
+    printf( "[%#x] object__associate(%#x, %#x, %#x)\n",
+        ( int ) subj_orig, ( int ) subj, ( int ) pred, ( int ) obj );
+    #endif
+
+    return subj;
+}
+
+
+#ifdef NOT_FINISHED
+static Object *
+union_of( Object *o1, Object *o2 )
+{
+    Set *s;
+
+    if ( o1->type == set_t )
+    {
+        if ( o2 )
+        {
+            if ( o2->type == set_t )
+                
+        }
+
+        else
+        {
+            set__remove( s, o2 );
+        }
+    }
+
+    else if ( o2->type == set_t )
+    {
+
+    }
+
+    else
+    {
+        s = set__new();
+        set__add( s, o1 );
+        set__add( s, o2 );
+    }
+
+    return s;
+}
+
+
+Object *
+object__union_associate( Object *subj, Object *pred, Object *obj )
+{
+    Object *pre;
+
     #if DEBUG__SAFE
     if ( !subj || !pred || !obj )
     {
@@ -492,7 +580,19 @@ object__associate( Object *subj, Object *pred, Object *obj )
     else
     {
         if ( obj )
-            hash_map__add( subj->outbound_edges, pred, obj );
+        {
+            pre = hash_map__lookup( sub->outbound_edges, pred );
+            if ( pre )
+            {
+                if ( pre->type == set_t )
+                    set__add( pre->value, obj );
+
+                else
+            }
+
+            else
+              hash_map__add( subj->outbound_edges, pred, obj );
+        }
 
         else
             hash_map__remove( subj->outbound_edges, pred );
@@ -506,6 +606,7 @@ object__associate( Object *subj, Object *pred, Object *obj )
 
     return subj;
 }
+#endif
 
 #endif  /* TRIPLES__GLOBAL */
 

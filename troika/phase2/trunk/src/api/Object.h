@@ -36,10 +36,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
-/* ~ */
-extern Type set_t;
-
-
 enum Object__Flags
 {
     OBJECT__IMMUTABLE           = 0x1,
@@ -137,6 +133,14 @@ object__multiply( Object *subj, Object *pred );
 
 extern Object *
 object__associate( Object *subj, Object *pred, Object *obj );
+
+#ifdef NOT_FINISHED
+/* ~ */
+extern Type set_t;
+
+extern Object *
+object__union_associate( Object *subj, Object *pred, Object *obj );
+#endif
 
 #endif
 

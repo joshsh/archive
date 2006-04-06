@@ -1,4 +1,6 @@
 ["]  Evaluation of these expressions involves an environment that maps identifiers to values, [...]
+["] Mode flags affect __inference extending__ to the web:
+["] Reification in RDF and Jena is the ability to treat a Statement as a Resource, and hence to make assertions about that statement. A statement may be reified as many different resources, allowing different manifestations ("statings") of that statement to be treated differently if required.
 
  Lists are predefined in Caml. The empty list is written [].
 

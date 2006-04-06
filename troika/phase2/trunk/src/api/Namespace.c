@@ -327,9 +327,9 @@ namespace__show_children( const Namespace_o *ns_obj )
     Array *keys;
     int maxlen = 0;
 
-    void *find_maxlen( char **key )
+    void *find_maxlen( Object **opp )
     {
-        int len = strlen( *key );
+        int len = strlen( ( *opp )->type->name );
         if ( len > maxlen )
             maxlen = len;
         return 0;
@@ -338,25 +338,29 @@ namespace__show_children( const Namespace_o *ns_obj )
     void *print( char **key )
     {
         Object *o = ( Object* ) dictionary__lookup( dict, *key );
-        int i, lim = maxlen - strlen( *key );
+        int i, lim = maxlen - strlen( o->type->name );
+
+        printf( "    " );
 
         #if COMPILER__SHOW_ADDRESS
-        printf( "    %#x %s ", ( int ) o, *key );
-        #else
-        printf( "    %s ", *key );
+        printf( "%#x ", ( int ) o );
         #endif
+
+        printf( "<%s> ", o->type->name );
 
         for ( i = 0; i < lim; i++ )
             printf( " " );
-        printf( ": %s\n", o->type->name );
+
+        printf( "%s\n", *key );
+
         return 0;
     }
 
     #if COMPILER__SHOW_ADDRESS
-    printf( "%#x : %s", ( int ) ns_obj, ns_obj->type->name );
-    #else
-    printf( "%s", ns_obj->type->name );
+    printf( "%#x ", ( int ) ns_obj );
     #endif
+
+    printf( "<%s>", ns_obj->type->name );
 
     if ( size )
     {
@@ -366,7 +370,7 @@ namespace__show_children( const Namespace_o *ns_obj )
         keys = dictionary__keys(
             ( ( Namespace* ) ns_obj->value )->children );
 
-        array__walk( keys, ( Dist_f ) find_maxlen );
+        namespace__walk( ns_obj->value, ( Dist_f ) find_maxlen );
 
         /* Print children. */
         array__walk( keys, ( Dist_f ) print );
@@ -451,6 +455,10 @@ static void
 ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 {
     Array *queue = array__new( 0, 0 );
+
+    #if DEBUG__NAMESPACE
+    printf( "[] ns_walk_bfs(%#x, %#x)\n", ( int ) ns_o, ( int ) f );
+    #endif
 
     void *distribute( Object **opp )
     {
@@ -537,7 +545,7 @@ namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m )
 {
     Object *o = ns_obj;
     char *key;
-    int i, lim;
+    unsigned int i;
 
     #if DEBUG__SAFE
     if ( !ns_obj || !name )
@@ -547,8 +555,7 @@ namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m )
     }
     #endif
 
-    lim = array__size( name );
-    for ( i = 0; i < lim; i++ )
+    else for ( i = 0; i < array__size( name ); i++ )
     {
         if ( o->type != ns_obj->type )
         {
@@ -563,7 +570,9 @@ namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m )
     }
 
     #if DEBUG__NAMESPACE
-    printf( "[%#x] namespace__resolve(%#x, %#x)\n", ( int ) o, ( int ) ns_obj, ( int ) name );
+    printf( "[%#x] namespace__resolve(%#x, ", ( int ) o, ( int ) ns_obj );
+    name__print( name );
+    printf( ")\n" );
     #endif
 
     return o;

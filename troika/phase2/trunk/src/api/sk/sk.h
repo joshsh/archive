@@ -57,15 +57,11 @@ typedef enum Combinator Combinator;
     \param Memory_Manager  memory manager which will claim ownership of any
     new objects
 
+    \param term_type  type of impure combinator terms
+
     \param primitive_type  type of an embedded primitive function
 
-    \param S_type  type of the S combinator
-
-    \param K_type  type of the K combinator
-
-    \param for_each_iteration  a function to apply to the term (e.g. a debug
-    print function) once per iteration of the reduction algorithm.  Only has
-    effect if DEBUG__SK is nonzero.
+    \param combinator_type  type of SK combinators
 
     \return  the reduced term, or 0 if an exception has occurred
 

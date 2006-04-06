@@ -76,6 +76,7 @@ struct Type
 
 
 #define any_type    ( Type* ) 42
+/* #define dist_type   ( Type* ) 1001 */
 
 
 /** Constructor. */

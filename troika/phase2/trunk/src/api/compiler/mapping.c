@@ -51,14 +51,6 @@ define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
     void *key;
     Namespace_o *local;
 
-    Object *helper()
-    {
-        if ( o )
-            return namespace__add( nso, name, o );
-        else
-            return namespace__remove( nso, name );
-    }
-
     if ( !array__size( name ) )
     {
         nodef_error();
@@ -68,22 +60,35 @@ define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
     #if COMPILER__NAME_INHERITANCE
     key = array__dequeue( name );
     local = namespace__resolve( nso, name, m );
-    if ( local->type != nso->type )
+
+    if ( !local )
+    {
+        undef_error( name );
+        o = 0;
+    }
+
+    else if ( local->type != nso->type )
     {
         array__enqueue( name, key );
         notns_error( name );
-        return 0;
+        o = 0;
     }
     else
     {
         nso = local;
-        o = helper();
+
+        o = ( o )
+            ? namespace__add_simple( nso->value, key, o )
+            : namespace__remove_simple( nso->value, key );
+
         array__enqueue( name, key );
-        return o;
     }
     #else
-    return helper();
+        o = ( o )
+            ? namespace__add( nso, name, o )
+            : namespace__remove( nso, name );
     #endif
+    return o;
 }
 
 
@@ -112,30 +117,24 @@ compiler__define( Compiler *c, Name *name, Object *o )
     #endif
 
     char *first = name__pop( name );
+    ns_obj = c->cur_ns_obj;
 
     if ( !strcmp( first, "root" ) )
     {
         ns_obj = environment__root( c->env );
-
         define( ns_obj, name, o, environment__manager( c->env ) );
-
         name__push( name, first );
     }
 
     else if ( !strcmp( first, "here" ) )
     {
-        ns_obj = c->cur_ns_obj;
-
         define( ns_obj, name, o, environment__manager( c->env ) );
-
         name__push( name, first );
     }
 
     else
     {
-        ns_obj = c->cur_ns_obj;
         name__push( name, first );
-
         define( ns_obj, name, o, environment__manager( c->env ) );
     }
 

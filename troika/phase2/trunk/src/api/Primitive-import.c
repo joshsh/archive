@@ -20,6 +20,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive-import.h>
 
 
+static Type *
+resolve_type( Environment *env, const char *name )
+{
+    if ( !strcmp( name, ANY__NAME ) )
+        return any_type;
+    else
+        return environment__resolve_type( env, name )->value;
+}
+
+
 Primitive *
 primitive__new(
     Environment *env,
@@ -47,7 +57,7 @@ primitive__new(
         return 0;
     }
 
-    p->return_type = environment__resolve_type( env, return_type )->value;
+    p->return_type = resolve_type( env, return_type );
 
     #if DEBUG__SAFE
     if ( !p->return_type )
@@ -110,15 +120,7 @@ primitive__add_param(
     }
     #endif
 
-    if ( !strcmp( type, ANY__NAME ) )
-        param.type = any_type;
-
-    else if ( !( param.type = environment__resolve_type( env, type )->value ) )
-    {
-        ERROR( "primitive__add_param: unknown type: \"%s\"", type );
-        primitive__delete( p );
-        return 0;
-    }
+    param.type = resolve_type( env, type );
 
     param.name = STRDUP( name );
     param.transparent = transparent;

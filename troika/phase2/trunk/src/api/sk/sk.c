@@ -236,14 +236,18 @@ prim_reduce( Term *term, Memory_Manager *m )
 
     else
     {
-        o = ( Object* ) result;
+        o = result;
     }
 
     /* Replace the primitive reference and its arguments with the return value. */
     *cur = o;
     cur--;
     *cur = ( void* ) 2;
-    term->head = cur - 1;
+    if ( term->buffer + term->buffer_size - cur > 2 )
+        term->head = cur - 1;
+    else
+        term->head = cur;
+
     *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
 
     return term;

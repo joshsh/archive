@@ -196,11 +196,6 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     }
     #endif
 
-    #if DEBUG__COMPILER
-    printf( "compiler__evaluate_expression(%#x, %#x, %#x)\n",
-        ( int ) c, ( int ) name, ( int ) expr );
-    #endif
-
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;
     string__encode = c->string_t->encode;
@@ -233,23 +228,30 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
     if ( o )
     {
+        if ( o->type == c->term_t )
+        {
+            t = o->value;
+            if ( term__length( t ) == 1 )
+                o = *( t->head + 1 );
+        }
+
+        if ( a )
+            compiler__define( c, name, o );
+
         #if COMPILER__SHOW_ADDRESS
-        printf( "%#x ", ( int ) o );
+        printf( "%#x ", ( int ) o ); FFLUSH;
         #endif
+
+        printf( "<%s> ", o->type->name );
 
         if ( a )
         {
-            compiler__define( c, name, o );
             ast__print( a );
             printf( " : " );
         }
 
-        #if COMPILER__SHOW_ADDRESS
         else
             printf( ": " );
-        #endif
-
-        printf( "%s  ", o->type->name );
 
         o->type->encode( o->value, print_buffer );
         printf( print_buffer );
@@ -264,6 +266,11 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     c->float_t->encode = double__encode;
     c->string_t->encode = string__encode;
     c->term_t->encode = term__encode;
+
+    #if DEBUG__COMPILER
+    printf( "[%i] compiler__evaluate_expression(%#x, %#x, %#x)\n",
+        ret, ( int ) c, ( int ) name, ( int ) expr );
+    #endif
 
     return ret;
 }
