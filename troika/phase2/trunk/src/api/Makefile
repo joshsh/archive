@@ -5,7 +5,9 @@
 
 INCLUDE  = -I./
 
-export CFLAGS = -O2 -g --ansi -W -Wall #-pedantic
+export CFLAGS = -O2 -g --ansi -W -Wall \
+	-fpic  # Create position-independent code for the shared library.
+	#-pedantic
 	# -Werror \
 	# -fshort-enums -fno-common \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
@@ -16,14 +18,7 @@ LIBS    =
 CC      = gcc $(INCLUDE) $(LIBS)
 
 
-BNFTOOL = ./bnftool
-IMPORT  = ./import
-LOGTOOL = ./logtool
-PARSER  = ./parser
-UTILS   = ./util
-XML     = ./xml
-
-SUBDIRS = $(BNFTOOL) $(IMPORT) $(LOGTOOL) $(PARSER) $(UTILS) $(XML)
+SUBDIRS = ./import ./parser ./util ./xml
 
 
 .PHONY : default
@@ -33,7 +28,7 @@ default :  phase2
 .PHONY : clean
 clean :
 	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) clean; cd ..; done
-	-rm -f phase2 revision.h *.o compiler/*.o environment/*.o sk/*.o
+	-rm -f phase2 libphase2.* revision.h *.o compiler/*.o environment/*.o sk/*.o
 
 
 .PHONY : recursive
@@ -46,40 +41,25 @@ test :
 	for dir in $(SUBDIRS); do cd $$dir; -$(MAKE) test; cd ..; done
 
 
-################################################################################
-# Compile utilities.
+utils	=	util/Array.o \
+		util/Bunch.o \
+		util/Dictionary.o \
+		util/Hash_Map.o \
+		util/Hash_Table.o \
+		util/Name.o \
+		util/Set.o \
+		util/Term.o
 
-utils	=	$(UTILS)/Array.o \
-		$(UTILS)/Bunch.o \
-		$(UTILS)/Dictionary.o \
-		$(UTILS)/Hash_Map.o \
-		$(UTILS)/Hash_Table.o \
-		$(UTILS)/Name.o \
-		$(UTILS)/Set.o \
-		$(UTILS)/Term.o
-
-
-################################################################################
-# XML utility
-
-$(XML)/xmldom.o  :
-	$(MAKE) -e -C $(XML)
-
-
-################################################################################
-# Build the command line interface.
-
-objects = main.o Collection.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o
+core_objects = main.o Collection.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o
 
 compiler_objects = compiler/Compiler.o compiler/command.o compiler/error.o compiler/expression.o compiler/mapping.o compiler/serial.o
 
 environment_objects = environment/Environment.o environment/combinators.o environment/primitives.o environment/types.o
 
+objects = $(utils) $(core_objects) $(compiler_objects) $(environment_objects) import/target/imports.o parser/parser.o xml/xmldom.o
 
-phase2 :  recursive $(utils) $(XML)/xmldom.o $(objects) $(compiler_objects) $(environment_objects) import/target/imports.o parser
-	$(CC) $(CFLAGS) -o phase2 $(objects) $(compiler_objects) $(environment_objects) $(utils) import/target/imports.o parser/parser.o $(XML)/xmldom.o `xml2-config --libs`
 
-$(objects) $(compiler_objects) $(environment_objects) $(utils) : defs.h settings.h
+$(core_objects) $(compiler_objects) $(environment_objects) $(utils) : defs.h settings.h
 
 compiler/serial.o :  revision.h
 
@@ -93,9 +73,29 @@ revision.h :  compiler/serial.c
 	> revision.h
 
 
+################################################################################
+# Executable.
+
+phase2 :  recursive $(objects)
+	$(CC) $(CFLAGS) -o phase2  $(objects) `xml2-config --libs`
+
 .PHONY: strip
 strip :  phase2
 	strip phase2
+
+
+################################################################################
+# Libraries.
+
+.PHONY: libraries
+libraries : libphase2.a libphase2.so
+
+libphase2.a :  recursive $(objects)
+	ar rc libphase2.a $(objects)
+	ranlib libphase2.a
+
+libphase2.so :  recursive $(objects)
+	gcc -shared -o libphase2.so $(objects)
 
 
 # DO NOT DELETE

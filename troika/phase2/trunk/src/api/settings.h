@@ -38,7 +38,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #define COMPILER__SHOW_ADDRESS              1
 
-    #define DEBUG__CORE                         1
+    #define DEBUG__CORE                         0
     #if DEBUG__CORE
 
         #define DEBUG__SK                       1
@@ -64,7 +64,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
     #endif
 
-    #define DEBUG__PARSER_MODULE                0
+    #define DEBUG__PARSER_MODULE                1
     #if DEBUG__PARSER_MODULE
 
         #define DEBUG__AST                      1

@@ -31,6 +31,12 @@ assoc_stub( void **args )
 }
 
 static void *
+dissoc_stub( void **args )
+{
+    return object__dissociate( args[0], args[1] );
+}
+
+static void *
 mult_stub( void **args )
 {
     return object__multiply( args[0], args[1] );
@@ -41,10 +47,15 @@ add_triples_prims( Environment *env )
 {
     Primitive *p;
 
-    return ( ( p = primitive__new( env, ANY__NAME, "^+", assoc_stub, 3 ) )
+    return ( ( p = primitive__new( env, ANY__NAME, "^=", assoc_stub, 3 ) )
       && primitive__add_param( env, p, ANY__NAME, "subject", 0 )
       && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
       && primitive__add_param( env, p, ANY__NAME, "object", 1 )
+      && primitive__register( env, p, 0, 0 )
+
+      && ( p = primitive__new( env, ANY__NAME, "^0", dissoc_stub, 2 ) )
+      && primitive__add_param( env, p, ANY__NAME, "subject", 1 )
+      && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
       && primitive__register( env, p, 0, 0 )
 
       && ( p = primitive__new( env, ANY__NAME, "^", mult_stub, 2 ) )
@@ -56,6 +67,7 @@ add_triples_prims( Environment *env )
 #endif
 
 
+/* ! */
 static Environment *global_env;
 
 /* Note: this is as pokey as it looks. */
@@ -72,6 +84,7 @@ add_meta_prims( Environment *env )
 {
     Primitive *p;
 
+    /* ! */
     global_env = env;
 
     return ( ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
