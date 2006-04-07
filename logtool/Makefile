@@ -5,12 +5,13 @@
 
 UTILS    = ../util
 
-export CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+export CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common
 	# -Werror \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 	# -D_GNU_SOURCE
 
-INCLUDE  = -I../
+INCLUDE  = -I../troika/phase2/trunk/src/api
+LIBS     = -lphase2 `xml2-config --libs`
 
 CC       = gcc $(INCLUDE)
 
@@ -37,24 +38,16 @@ clean :
 ################################################################################
 
 
-utils = $(UTILS)/Array.o $(UTILS)/Dictionary.o $(UTILS)/Hash_Table.o
-
-
-logtool :  lex.yy.o logtool.tab.o $(utils) ../Type.o
-	$(CC) $(CFLAGS) -o logtool lex.yy.o logtool.tab.o $(utils) ../Type.o
+logtool :  lex.yy.o logtool.tab.o
+	$(CC) $(CFLAGS) $(LIBS) -o logtool lex.yy.o logtool.tab.o
 
 
 lex.yy.o : logtool.tab.h
 
-lex.yy.c : logtool.l ../defs.h ../settings.h
+lex.yy.c : logtool.l
 	$(LEX) logtool.l
 
 
-logtool.tab.c logtool.tab.h : logtool.y ../defs.h ../settings.h
+logtool.tab.c logtool.tab.h : logtool.y
 	$(YACC) -dv logtool.y
 
-
-################################################################################
-
-
-$(utils) ../Type.o : ../defs.h ../settings.h
