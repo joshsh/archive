@@ -5,11 +5,12 @@
 
 UTILS    = ../util
 
-INCLUDE  = -I../
+INCLUDE  = -I../troika/phase2/trunk/src/api
+LIBS     = -lphase2 `xml2-config --libs`
 
 CC       = gcc $(INCLUDE)
 
-export CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+export CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common
 	# -Werror \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 	# -D_GNU_SOURCE
@@ -37,26 +38,17 @@ clean :
 ################################################################################
 
 
-utils = $(UTILS)/Array.o $(UTILS)/Dictionary.o $(UTILS)/Hash_Table.o
-
-bnftool :  lex.yy.o bnftool.tab.o $(utils) ../Type.o
-	$(CC) $(CFLAGS) -o bnftool lex.yy.o bnftool.tab.o $(utils) ../Type.o
+bnftool :  lex.yy.o bnftool.tab.o
+	$(CC) $(CFLAGS) $(LIBS) -o bnftool lex.yy.o bnftool.tab.o
 
 
 lex.yy.o : bnftool.tab.h
 
 
-lex.yy.c : bnftool.l ../defs.h ../settings.h
+lex.yy.c : bnftool.l
 	$(LEX) bnftool.l
 
 
-bnftool.tab.c bnftool.tab.h : bnftool.y ../defs.h ../settings.h
+bnftool.tab.c bnftool.tab.h : bnftool.y
 	$(YACC) -dv bnftool.y
-
-
-################################################################################
-
-
-$(utils) ../Type.o : ../defs.h ../settings.h
-
 
