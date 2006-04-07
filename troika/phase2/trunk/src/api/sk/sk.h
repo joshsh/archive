@@ -69,7 +69,7 @@ typedef enum Combinator Combinator;
     which is not an S or K combinator or a primitive, is considered a
     non-redex object. */
 extern Term *
-SK_reduce(
+sk_reduce(
     Term *term,
     Memory_Manager *m,
     Type *term_type,

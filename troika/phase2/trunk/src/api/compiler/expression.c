@@ -213,7 +213,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     /* If a term, reduce. */
     if ( o && o->type == c->term_t )
     {
-        t = SK_reduce( ( Term* ) o->value,
+        t = sk_reduce( ( Term* ) o->value,
             environment__manager( c->env ),
             c->term_t,
             c->prim_t,

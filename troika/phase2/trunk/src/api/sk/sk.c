@@ -25,9 +25,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
    [term size] [2]{K} [x_size]{x} [y_size]{y} ...
        --> [term size - y_size - 2] [x_size]{x} ... */
 static Term *
-K_reduce( Term *term )
+k_reduce( Term *term )
 {
-    void **x, **y;
+    void **x, **y, **aux;
     unsigned int x_size, y_size;
 
     /* Skip the 'K' to reach the head of the 'x' sub-term. */
@@ -39,8 +39,11 @@ K_reduce( Term *term )
     y_size = ( unsigned int ) *y;
 
     /* Copy the 'x' subterm to the target position. */
+    aux = malloc( x_size * sizeof( void* ) );
+    memcpy( aux, x, x_size * sizeof( void* ) );
     term->head = y + ( y_size - x_size );
-    memcpy( term->head, x, x_size * sizeof( void* ) );
+    memcpy( term->head, aux, x_size * sizeof( void* ) );
+    free( aux );
 
     /* Reset the term head. */
     if ( ( unsigned int ) *term->head == 2
@@ -56,7 +59,7 @@ K_reduce( Term *term )
    [term size] [2]{S} [x_size]{x} [y_size]{y} [z_size]{z} ...
        --> [term size + z_size - 1] [x_size]{x} [z_size]{z} [y_size + z_size + 1] [y_size]{y} [z_size]{z} ... */
 static Term *
-S_reduce( Term *term )
+s_reduce( Term *term )
 {
     void **x, **y, **z, **aux;
     unsigned int x_size, y_size, z_size, newsize, temp;
@@ -316,7 +319,7 @@ print_term( Term *t )
 
 
 Term *
-SK_reduce(
+sk_reduce(
     Term *term,
     Memory_Manager *m,
     Type *term_type,
@@ -333,7 +336,7 @@ SK_reduce(
     #if DEBUG__SAFE
     if ( !term || !m || !primitive_type || !combinator_type )
     {
-        ERROR( "SK_reduce: null argument" );
+        ERROR( "sk_reduce: null argument" );
         if ( term )
             term__delete( term );
         return 0;
@@ -351,7 +354,7 @@ SK_reduce(
         #if DEBUG__SAFE
         if ( !term )
         {
-            ERROR( "SK_reduce: null term" );
+            ERROR( "sk_reduce: null term" );
             return 0;
         }
         #endif
@@ -365,7 +368,7 @@ printf( "\n" );  fflush( stdout );
         #if SK__CHECKS__MAX_TERM_SIZE > 0
         if ( ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
         {
-            ERROR( "SK_reduce: reduction aborted (term might expand indefinitely)" );
+            ERROR( "sk_reduce: reduction aborted (term might expand indefinitely)" );
             term__delete( term );
             return 0;
         }
@@ -383,7 +386,7 @@ printf( "\n" );  fflush( stdout );
         #if DEBUG__SAFE
         if ( !head )
         {
-            ERROR( "SK_reduce: null encountered at head of term" );
+            ERROR( "sk_reduce: null encountered at head of term" );
             term__delete( term );
             return 0;
         }
@@ -419,7 +422,7 @@ printf( "\n" );  fflush( stdout );
                     if ( term__length( term ) < 4 )
                         return term;
                     else
-                        term = S_reduce( term );
+                        term = s_reduce( term );
                     break;
 
                 /* Kxy... --> x... */
@@ -428,7 +431,7 @@ printf( "\n" );  fflush( stdout );
                     if ( term__length( term ) < 3 )
                         return term;
                     else
-                        term = K_reduce( term );
+                        term = k_reduce( term );
                     break;
             }
         }
@@ -452,7 +455,7 @@ printf( "\n" );  fflush( stdout );
 
             #else
 
-            ERROR( "SK_reduce: non-redex objects not permitted at the head of a term" );
+            ERROR( "sk_reduce: non-redex objects not permitted at the head of a term" );
 
             /* Garbage-collect whatever is left of the term. */
             term__delete( term );
@@ -471,7 +474,7 @@ printf( "\n" );  fflush( stdout );
         #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
         if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
         {
-            ERROR( "SK_reduce: reduction aborted (possible infinite loop)" );
+            ERROR( "sk_reduce: reduction aborted (possible infinite loop)" );
             term__delete( term );
             return 0;
         }
