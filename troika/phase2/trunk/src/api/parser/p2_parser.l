@@ -78,28 +78,36 @@ extern boolean
 compiler__show_line_numbers( Compiler *c );
 
 
+static Compiler *
+compiler_global;
+
+
 /* Line and character numbers *************************************************/
 
 
-int line_number, column_number, last_column_number, statement_number;
+#define TAB_CHAR    1001
 
-Compiler *compiler_global;
-
-/** Decorate command-line input. */
-void print_input_prefix( void );
-
-void new_token( int /* length */ );
-
-void new_line( Compiler *c );
+static int line_number, column_number, last_column_number;
+int statement_number;
 
 /** Initialize the lexer for a new invocation of yyparse(). */
-void new_parse( Compiler *c );
+void
+new_parse( Compiler *c );
 
 /** \return  the current line number.  Starts at 1. */
-int get_line_number( void );
+int
+get_line_number( void );
 
 /** \return the current "column" number, where tabs only count for one column. */
-int get_char_number( void );
+int
+get_char_number( void );
+
+
+static void
+new_token( int /* length */ );
+
+static void
+new_line( Compiler *c );
 
 
 /* Debugging output ***********************************************************/
@@ -121,7 +129,7 @@ int get_char_number( void );
 
 
 /** Allows nested comments. */
-int comment_level = 0;
+static int comment_level = 0;
 
 
 /* Quoted name fragments ******************************************************/
@@ -135,7 +143,8 @@ char *buffer_limit = string_buffer + STRING_BUFFER__SIZE - 1;
 char *buffer_pos = string_buffer;
 
 
-void append_to_buffer( char *s )
+static void
+append_to_buffer( char *s )
 {
     int len = strlen( s );
 
@@ -149,7 +158,8 @@ void append_to_buffer( char *s )
 
 
 /** \return  the interior of an id, with escape sequences undone */
-char *extract_id( char *s )
+static char *
+extract_id( char *s )
 {
     char *s_low = s, *s_high = s_low;
 
@@ -184,7 +194,8 @@ char *extract_id( char *s )
 
 
 /** \return  the interior of a string literal, with escape sequences undone */
-char *extract_literal( char *s )
+static char *
+extract_literal( char *s )
 {
     char *s_low = s, *s_high = s_low;
 
@@ -338,7 +349,14 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         TOKEN( 0, "newline" );
     }
 
-    [ \t]  {  /* Ignore whitespace and carriage returns. */
+    \t  {  /* Ignore tabs. */
+        /* Assuming 8-column tabs. */
+        column_number += 7;
+
+        TOKEN( 0, "whitespace" );
+    }
+
+    [ \r]  {  /* Ignore spaces and carriage returns. */
         TOKEN( 0, "whitespace" );
     }
 
@@ -354,7 +372,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 
 <SC_STRING>
 {
-    ([^"\n\\]*|\\[^\n])  {  /* Body of string literal. */
+    ([^"\n\t\\]*|\\[^\n\t])  {  /* Body of string literal. */
         append_to_buffer( yytext );
         TOKEN( 0, ( char* ) 0 );
     }
@@ -363,6 +381,15 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         append_to_buffer( yytext );
         new_line( compiler_global );
         TOKEN( 0, "newline in SC_STRING" );
+    }
+
+    \\?\t  {
+        append_to_buffer( yytext );
+
+        /* Assuming 8-column tabs. */
+        column_number += 7;
+
+        TOKEN( 0, "whitespace" );
     }
 
     \"  {  /* End quote after string literal. */
@@ -397,6 +424,13 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     \n  {  /* Newlines are ignored, except for formatting. */
         new_line( compiler_global );
         TOKEN( 0, "newline in SC_COMMENT" );
+    }
+
+    \t  {
+        /* Assuming 8-column tabs. */
+        column_number += 7;
+
+        TOKEN( 0, ( char* ) 0 );
     }
 
     .  {  /* Ignore everything else. */
@@ -438,7 +472,8 @@ void new_line( Compiler *c )
 
 
 /** Initialize the lexer for a new invocation of yyparse(). */
-void new_parse( Compiler *c )
+void
+new_parse( Compiler *c )
 {
     compiler_global = c;
     line_number = 0;
@@ -447,14 +482,16 @@ void new_parse( Compiler *c )
 
 
 /** \return  the current line number.  Starts at 1. */
-int get_line_number( void )
+int
+get_line_number( void )
 {
     return line_number;
 }
 
 
 /** \return the current "column" number, where tabs only count for one column. */
-int get_char_number( void )
+int
+get_char_number( void )
 {
     if ( !last_column_number )
         return 1;

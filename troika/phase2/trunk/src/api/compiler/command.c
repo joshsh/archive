@@ -62,7 +62,7 @@ get_arg( Ast *args, unsigned int i )
 
     if ( i >= term__length( term ) )
     {
-        printf( "Error: missing argument.\n" );
+        printf( "Error: missing argument\n" );
         a = 0;
     }
 
@@ -128,7 +128,7 @@ command_all( Compiler *c, Ast *args )
             {
                 printf( "Error: \"" );
                 name__print( name );
-                printf( "\" is not a namespace.\n" );
+                printf( "\" is not a namespace\n" );
             }
 
             else
@@ -172,7 +172,7 @@ command_cp( Compiler *c, Ast *args )
             {
                 printf( "Error: \"" );
                 name__print( dest );
-                printf( "\" is not a namespace.\n" );
+                printf( "\" is not a namespace\n" );
             }
         }
     }
@@ -272,7 +272,7 @@ command_mv( Compiler *c, Ast *args )
             {
                 printf( "Error: \"" );
                 name__print( dest );
-                printf( "\" is not a namespace.\n" );
+                printf( "\" is not a namespace\n" );
             }
         }
     }
@@ -320,7 +320,7 @@ command_ns( Compiler *c, Ast *args )
     if ( ( o = compiler__resolve( c, name ) ) )
     {
         if ( o->type != c->cur_ns_obj->type )
-            printf( "Error: not a namespace.\n" );
+            printf( "Error: not a namespace\n" );
 
         else
         {
@@ -498,11 +498,11 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     Command *com = dictionary__lookup( c->commands, name );
 
     if ( !com )
-        printf( "Error: unknown command: \"%s\".\n", name );
+        printf( "Error: unknown command: \"%s\"\n", name );
     else if ( n < com->args_min )
-        printf( "Error: missing argument(s) to command \"%s\".\n", name );
+        printf( "Error: missing argument(s) to command \"%s\"\n", name );
     else if ( n > com->args_max && com->args_max >= 0 )
-        printf( "Error: too many arguments to command \"%s\".\n", name );
+        printf( "Error: too many arguments to command \"%s\"\n", name );
     else
         result = com->f( c, args );
 

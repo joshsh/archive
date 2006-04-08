@@ -1,57 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data_set p2-version="0.6.2" p2-revision="179" time="Fri Apr  7 13:54:52 2006">
-  <object id="2" type="cstring">e-mail</object>
-  <object id="3" type="cstring">Wednesday</object>
+<data_set p2-version="0.6.2" p2-revision="179" time="Fri Apr  7 15:46:26 2006">
+  <object id="2" type="cstring">German</object>
+  <object id="3" type="cstring">Swedish</object>
+  <object id="4" type="cstring">description</object>
+  <object id="7" type="cstring">Wednesday</object>
   <triple>
-    <object ref="3"/>
-    <object ref="20"/>
+    <object ref="7"/>
+    <object ref="2"/>
     <object type="cstring">Mittwoch</object>
   </triple>
-  <object id="4" type="cstring">description</object>
-  <object id="5" type="cstring">Monday</object>
-  <triple>
-    <object ref="5"/>
-    <object ref="20"/>
-    <object type="cstring">Montag</object>
-  </triple>
-  <object id="6" type="cstring">Sean Drexler</object>
-  <triple>
-    <object ref="6"/>
-    <object ref="2"/>
-    <object type="cstring">seand@omnicast.net</object>
-  </triple>
-  <object id="7" type="cstring">Swedish</object>
-  <object id="8" type="cstring">Josh Shinavier</object>
-  <triple>
-    <object ref="8"/>
-    <object ref="2"/>
-    <object type="cstring">parcour@gmail.com</object>
-  </triple>
-  <object id="9" type="Combinator">K</object>
-  <object id="10" type="Namespace">
+  <object id="5" type="Namespace">
     <table>
-      <object ref="22" name="Friday"/>
-      <object ref="5" name="Monday"/>
-      <object ref="23" name="Saturday"/>
-      <object ref="14" name="Sunday"/>
-      <object ref="13" name="Thursday"/>
-      <object ref="21" name="Tuesday"/>
-      <object ref="3" name="Wednesday"/>
+      <object ref="15" name="parent"/>
+      <object ref="5" name="self"/>
+    </table>
+  </object>
+  <object id="10" type="cstring">Friday</object>
+  <triple>
+    <object ref="10"/>
+    <object ref="2"/>
+    <object type="cstring">Freitag</object>
+  </triple>
+  <object id="9" type="Namespace">
+    <table>
+      <object ref="10" name="Friday"/>
+      <object ref="21" name="Monday"/>
+      <object ref="18" name="Saturday"/>
+      <object ref="13" name="Sunday"/>
+      <object ref="19" name="Thursday"/>
+      <object ref="23" name="Tuesday"/>
+      <object ref="7" name="Wednesday"/>
     </table>
   </object>
   <triple>
-    <object ref="10"/>
-    <object ref="7"/>
+    <object ref="9"/>
+    <object ref="3"/>
     <object type="cstring">dagar</object>
   </triple>
+  <object id="6" type="Combinator">S</object>
+  <object id="8" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object ref="12"/>
+      <object ref="12"/>
+    </list>
+  </object>
+  <triple>
+    <object ref="8"/>
+    <object ref="4"/>
+    <object type="cstring">Oa --&gt; aa</object>
+  </triple>
+  <object id="11" type="cstring">Josh Shinavier</object>
+  <triple>
+    <object ref="11"/>
+    <object ref="22"/>
+    <object type="cstring">parcour@gmail.com</object>
+  </triple>
+  <object id="12" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object type="Combinator">K</object>
+      <object type="Combinator">K</object>
+    </list>
+  </object>
+  <object id="13" type="cstring">Sunday</object>
+  <triple>
+    <object ref="13"/>
+    <object ref="2"/>
+    <object type="cstring">Sonntag</object>
+  </triple>
+  <object id="14" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <list>
+        <object ref="16"/>
+        <object ref="16"/>
+        <object type="Combinator">S</object>
+      </list>
+      <list>
+        <object type="Combinator">K</object>
+        <object type="Combinator">K</object>
+      </list>
+    </list>
+  </object>
+  <triple>
+    <object ref="14"/>
+    <object ref="4"/>
+    <object type="cstring">Cabc --&gt; acb</object>
+  </triple>
+  <object id="15" type="Namespace">
+    <table>
+      <object ref="5" name="reflection"/>
+    </table>
+  </object>
+  <object id="16" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <list>
+        <object type="Combinator">K</object>
+        <object type="Combinator">S</object>
+      </list>
+      <object type="Combinator">K</object>
+    </list>
+  </object>
+  <triple>
+    <object ref="16"/>
+    <object ref="4"/>
+    <object type="cstring">Babc --&gt; a(bc)</object>
+  </triple>
+  <object id="17" type="cstring">Sean Drexler</object>
+  <triple>
+    <object ref="17"/>
+    <object ref="22"/>
+    <object type="cstring">seand@omnicast.net</object>
+  </triple>
+  <object id="18" type="cstring">Saturday</object>
+  <triple>
+    <object ref="18"/>
+    <object ref="2"/>
+    <object type="cstring">Samstag</object>
+  </triple>
+  <object id="19" type="cstring">Thursday</object>
+  <triple>
+    <object ref="19"/>
+    <object ref="2"/>
+    <object type="cstring">Donnerstag</object>
+  </triple>
+  <object id="20" type="Combinator">K</object>
+  <object id="21" type="cstring">Monday</object>
+  <triple>
+    <object ref="21"/>
+    <object ref="2"/>
+    <object type="cstring">Montag</object>
+  </triple>
+  <object id="22" type="cstring">e-mail</object>
   <object id="1" type="Namespace">
     <table>
       <object type="cstring" name="Alfresco">open source</object>
       <object type="cstring" name="Documentum">proprietary content manager</object>
       <object type="Namespace" name="Soph-Ware">
         <table>
-          <object ref="8" name="Josh"/>
-          <object ref="6" name="Sean"/>
+          <object ref="11" name="Josh"/>
+          <object ref="17" name="Sean"/>
         </table>
       </object>
       <object type="int" name="The Answer">42</object>
@@ -60,14 +150,14 @@
           <object type="cstring" name="a">diamond inheritance problem</object>
         </table>
       </object>
-      <object ref="10" name="days"/>
+      <object ref="9" name="days"/>
       <object ref="4" name="description"/>
-      <object ref="2" name="e-mail"/>
+      <object ref="22" name="e-mail"/>
       <object type="Namespace" name="languages">
         <table>
           <object type="cstring" name="English">English</object>
-          <object ref="20" name="German"/>
-          <object ref="7" name="Swedish"/>
+          <object ref="2" name="German"/>
+          <object ref="3" name="Swedish"/>
         </table>
       </object>
       <object type="Namespace" name="math">
@@ -92,12 +182,18 @@
           <object type="double" name="pi">3.1415</object>
         </table>
       </object>
+      <object type="Namespace" name="misc">
+        <table>
+          <object type="cstring" name="POSIX_ME_HARDER">POSIXLY_CORRECT</object>
+          <object type="cstring" name="multiline characters"></object>
+        </table>
+      </object>
       <object type="int" name="myint">1331</object>
       <object type="Namespace" name="sk">
         <table>
-          <object ref="18" name="B"/>
-          <object ref="16" name="C"/>
-          <object ref="11" name="I"/>
+          <object ref="16" name="B"/>
+          <object ref="14" name="C"/>
+          <object ref="12" name="I"/>
           <object type="Combinator" name="K">K</object>
           <object type="Combinator" name="S">S</object>
           <object type="Term" name="Y">
@@ -105,7 +201,7 @@
               <object type="Combinator">S</object>
               <list>
                 <object type="Combinator">K</object>
-                <object ref="15"/>
+                <object ref="8"/>
               </list>
               <list>
                 <object type="Combinator">S</object>
@@ -119,7 +215,7 @@
                 </list>
                 <list>
                   <object type="Combinator">K</object>
-                  <object ref="15"/>
+                  <object ref="8"/>
                 </list>
               </list>
             </list>
@@ -176,108 +272,18 @@
               <object type="Combinator">K</object>
             </list>
           </object>
-          <object ref="15" name="omega"/>
+          <object ref="8" name="omega"/>
           <object type="Combinator" name="true">K</object>
         </table>
       </object>
-      <object ref="19" name="test"/>
+      <object ref="15" name="test"/>
       <object type="cstring" name="type">type</object>
     </table>
   </object>
-  <object id="11" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object type="Combinator">K</object>
-      <object type="Combinator">K</object>
-    </list>
-  </object>
-  <object id="12" type="Namespace">
-    <table>
-      <object ref="19" name="parent"/>
-      <object ref="12" name="self"/>
-    </table>
-  </object>
-  <object id="13" type="cstring">Thursday</object>
-  <triple>
-    <object ref="13"/>
-    <object ref="20"/>
-    <object type="cstring">Donnerstag</object>
-  </triple>
-  <object id="14" type="cstring">Sunday</object>
-  <triple>
-    <object ref="14"/>
-    <object ref="20"/>
-    <object type="cstring">Sonntag</object>
-  </triple>
-  <object id="15" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object ref="11"/>
-      <object ref="11"/>
-    </list>
-  </object>
-  <triple>
-    <object ref="15"/>
-    <object ref="4"/>
-    <object type="cstring">Oa --&gt; aa</object>
-  </triple>
-  <object id="16" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <list>
-        <object ref="18"/>
-        <object ref="18"/>
-        <object type="Combinator">S</object>
-      </list>
-      <list>
-        <object type="Combinator">K</object>
-        <object type="Combinator">K</object>
-      </list>
-    </list>
-  </object>
-  <triple>
-    <object ref="16"/>
-    <object ref="4"/>
-    <object type="cstring">Cabc --&gt; acb</object>
-  </triple>
-  <object id="17" type="Combinator">S</object>
-  <object id="18" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <list>
-        <object type="Combinator">K</object>
-        <object type="Combinator">S</object>
-      </list>
-      <object type="Combinator">K</object>
-    </list>
-  </object>
-  <triple>
-    <object ref="18"/>
-    <object ref="4"/>
-    <object type="cstring">Babc --&gt; a(bc)</object>
-  </triple>
-  <object id="19" type="Namespace">
-    <table>
-      <object ref="12" name="reflection"/>
-    </table>
-  </object>
-  <object id="20" type="cstring">German</object>
-  <object id="21" type="cstring">Tuesday</object>
-  <triple>
-    <object ref="21"/>
-    <object ref="20"/>
-    <object type="cstring">Dienstag</object>
-  </triple>
-  <object id="22" type="cstring">Friday</object>
-  <triple>
-    <object ref="22"/>
-    <object ref="20"/>
-    <object type="cstring">Freitag</object>
-  </triple>
-  <object id="23" type="cstring">Saturday</object>
+  <object id="23" type="cstring">Tuesday</object>
   <triple>
     <object ref="23"/>
-    <object ref="20"/>
-    <object type="cstring">Samstag</object>
+    <object ref="2"/>
+    <object type="cstring">Dienstag</object>
   </triple>
 </data_set>

@@ -17,7 +17,119 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+#include <getopt.h>
+
 #include <Compiler.h>
+
+
+    /* Flag set by `--verbose'. */
+    static int brief_flag;
+    static int debug_flag;
+    static int help_flag;
+    static int quiet_flag;
+    static int verbose_flag;
+    static int version_flag;
+
+static void
+print_version()
+{
+    printf( "Phase2 %s\n", VERSION );
+    printf( "Copyright (C) 2006 Joshua Shinavier\n" );
+    printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
+}
+
+
+static void
+print_help()
+{
+    printf( "You expect me to help you?\n" );
+    printf( "Report bugs to parcour@gmail.com\n" );
+}
+
+
+static void
+read_options ( int argc, char **argv, char *source_file )
+{
+    int c;
+
+    for (;;)
+    {
+        static struct option long_options[] =
+        {
+            /* These options set a flag. */
+            { "brief",      no_argument,        &brief_flag,    1   },
+            { "debug",      no_argument,        &debug_flag,    1   },
+            { "file",       required_argument,  0,              'f' },
+            { "help",       no_argument,        &help_flag,     1   },
+            { "quiet",      no_argument,        &quiet_flag,    1   },
+            { "verbose",    no_argument,        &verbose_flag,  1   },
+            { "version",    no_argument,        &version_flag,  1   },
+            { 0,            0,                  0,              0   }
+        };
+
+        /* getopt_long stores the option index here. */
+        int option_index = 0;
+
+        c = getopt_long (argc, argv, "abc:d:f:", long_options, &option_index);
+
+        /* Detect the end of the options. */
+        if ( c == -1 )
+            break;
+
+        switch ( c )
+        {
+            case 0:
+                /* If this option set a flag, do nothing else now. */
+                if ( long_options[option_index].flag != 0 )
+                    break;
+
+                #if DEBUG__MAIN
+                printf ( "option %s", long_options[option_index].name );
+                if ( optarg )
+                    printf ( " with arg %s", optarg );
+                printf ( "\n" );
+                #endif
+
+                break;
+
+            case 'f':
+                #if DEBUG__MAIN
+                printf ("option -f with value `%s'\n", optarg);
+                #endif
+
+                strcpy( source_file, optarg );
+                break;
+
+            case '?':
+                /* getopt_long already printed an error message. */
+                break;
+
+            default:
+                abort ();
+        }
+    }
+
+    if ( help_flag )
+    {
+        print_help();
+        exit( 0 );
+    }
+
+    else if ( version_flag )
+    {
+        print_version();
+        exit( 0 );
+    }
+
+    /* Print any remaining command line arguments (not options). */
+    if ( optind < argc )
+    {
+        printf ( "non-option ARGV-elements: " );
+        while ( optind < argc)
+            printf ( "%s ", argv[optind++] );
+        putchar ( '\n' );
+    }
+}
 
 
 /** Instantiates an Environment and attaches a Compiler to interact with the
@@ -29,6 +141,10 @@ int main( int argc, char *argv[] )
     Environment *env;
     Compiler *compiler;
 
+    static char source_file[0x100];
+    *source_file = '\0';
+    read_options ( argc, argv, source_file );
+
     if ( !( env = environment__new() ) )
         status = EXIT_FAILURE;
 
@@ -36,17 +152,18 @@ int main( int argc, char *argv[] )
     {
         if ( ( compiler = compiler__new( env ) ) )
         {
-            if ( argc > 1 )
+            if ( *source_file )
             {
-                #if DEBUG
+                #if DEBUG__MAIN
                 printf( "Loading namespace from file...\n" );
                 #endif
 
-                compiler__deserialize( compiler, argv[1] );
+                compiler__deserialize( compiler, source_file );
             }
 
-            printf( "\nPhase2 v%s, Copyright (C) 2005-2006 Joshua Shinavier.\n", VERSION );
-            printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n\n" );
+            printf( "\n" );
+            print_version();
+            printf( "\n" );
 
             compiler__parse( compiler );
 

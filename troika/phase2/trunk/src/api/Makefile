@@ -87,8 +87,8 @@ strip :  phase2
 ################################################################################
 # Libraries.
 
-.PHONY: libraries
-libraries : libphase2.a libphase2.so
+.PHONY: libs
+libs : libphase2.a libphase2.so
 
 libphase2.a :  recursive $(objects)
 	ar rc libphase2.a $(objects)

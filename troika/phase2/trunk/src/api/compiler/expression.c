@@ -188,13 +188,12 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
     Encoder char__encode, double__encode, string__encode, term__encode;
 
-    #if DEBUG__SAFE
-    if ( !expr )
+    /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
+    if ( DEBUG__SAFE && !expr )
     {
-        ERROR( "compiler__evaluate_expression: null AST node" );
+        ERROR( "compiler__evaluate_expression: null argument" );
         return 0;
     }
-    #endif
 
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;

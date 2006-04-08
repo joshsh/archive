@@ -1156,8 +1156,7 @@ handle_error( Compiler *c )
         #endif
     }
 
-    /* Note: "char" rather than "column" on account of the tab character. */
-    sprintf( error_msg, "line %d, char %d: %s.",
+    sprintf( error_msg, "line %d, column %d: %s",
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
