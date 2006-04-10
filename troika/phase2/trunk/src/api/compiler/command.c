@@ -341,7 +341,7 @@ command_quit( Compiler *c, Ast *args )
     c = 0;
     args = 0;
 
-    printf( "End session.\n" );
+    printf( "Bye.\n" );
 
     return 1;
 }

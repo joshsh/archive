@@ -161,9 +161,7 @@ int main( int argc, char *argv[] )
                 compiler__deserialize( compiler, source_file );
             }
 
-            printf( "\n" );
             print_version();
-            printf( "\n" );
 
             compiler__parse( compiler );
 

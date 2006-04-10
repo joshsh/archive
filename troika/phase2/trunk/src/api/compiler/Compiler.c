@@ -168,6 +168,9 @@ compiler__parse( Compiler *c )
 
     c->locked = TRUE;
 
+    if ( !compiler__suppress_output( c ) )
+        printf( "\n" );
+
     if ( yyparse( c, &exit_state ) )
         ERROR( "compiler__parse: parser exited abnormally" );
 

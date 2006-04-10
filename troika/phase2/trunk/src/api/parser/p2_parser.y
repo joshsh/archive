@@ -1099,7 +1099,8 @@ handle_command( Compiler *c, char *name, Ast *args )
         printf( COMMAND_OUTPUT_SUFFIX );
         #endif
 
-        printf( "\n" );
+        if ( !exit_early )
+            printf( "\n" );
     }
 }
 
