@@ -121,6 +121,9 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m );
 extern Object *
 namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m );
 
+extern Object *
+namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m );
+
 
 #endif /* NAMESPACE_H */
 

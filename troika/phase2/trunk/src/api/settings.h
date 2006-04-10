@@ -211,9 +211,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif  /* P2FLAGS__MARK_AND_SWEEP */
 
 
-#define P2FLAGS__MANAGE_PRIMITIVES              1
-
-
 /******************************************************************************/
 
 

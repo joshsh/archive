@@ -155,8 +155,7 @@ namespace__add_simple( Namespace *ns, const char *name, Object *o )
     }
     #endif
 
-    return ( Object* ) dictionary__add
-        ( ns->children, name, o );
+    return dictionary__add( ns->children, name, o );
 }
 
 
@@ -233,17 +232,12 @@ namespace__remove( Namespace_o *ns_obj, Name *name )
     char *key;
 
     #if DEBUG__SAFE
-    if ( !ns_obj )
+    if ( !ns_obj || !name )
     {
-        ERROR( "null namespace" );
+        ERROR( "namespace__remove: null argument" );
         return 0;
     }
-    if ( !name )
-    {
-        ERROR( "null name" );
-        return 0;
-    }
-    if ( !array__size( name ) )
+    else if ( !array__size( name ) )
     {
         ERROR( "empty name" );
         return 0;
@@ -295,14 +289,14 @@ Object *
 namespace__remove_simple( Namespace *ns, char *name )
 {
     #if DEBUG__SAFE
-    if ( !ns | !name)
+    if ( !ns || !name)
     {
         ERROR( "namespace__remove_simple: null argument" );
         return 0;
     }
     #endif
 
-    return ( Object* ) dictionary__remove( ns->children, name );
+    return dictionary__remove( ns->children, name );
 }
 
 
@@ -502,23 +496,25 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
 
 
 Object *
-namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m )
+namespace__resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 {
-    Object *o = ns_obj;
+    Object *o = nso;
     char *key;
     unsigned int i;
 
     #if DEBUG__SAFE
-    if ( !ns_obj || !name )
+    if ( !nso || !name )
     {
         ERROR( "namespace__resolve: null argument" );
         return 0;
     }
+
+    else
     #endif
 
-    else for ( i = 0; i < array__size( name ); i++ )
+    for ( i = 0; i < array__size( name ); i++ )
     {
-        if ( o->type != ns_obj->type )
+        if ( o->type != nso->type )
         {
             o = 0;
             break;
@@ -531,10 +527,68 @@ namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m )
     }
 
     #if DEBUG__NAMESPACE
-    printf( "[%#x] namespace__resolve(%#x, ", ( int ) o, ( int ) ns_obj );
+    printf( "[%#x] namespace__resolve(%#x, ", ( int ) o, ( int ) nso );
     name__print( name );
     printf( ")\n" );
     #endif
+
+    return o;
+}
+
+
+Object *
+namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
+{
+    Object *o = nso;
+    unsigned int i;
+    Namespace *parent;
+    char *namekey = "";
+
+    Object *
+    resolve( Namespace_o *ns_obj, char *key, Memory_Manager *m )
+    {
+        Object *o = 0;
+
+        void *test( Namespace_o **ns_opp )
+        {
+            parent = ( *ns_opp )->value;
+            if ( ( o = namespace__lookup_simple( parent, key ) ) )
+                return walker__break;
+            else
+                return 0;
+        }
+
+        memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );
+
+        return o;
+    }
+
+    #if DEBUG__SAFE
+    if ( !nso || !name )
+    {
+        ERROR( "namespace__undefine: null argument" );
+        return 0;
+    }
+
+    else
+    #endif
+
+    for ( i = 0; i < array__size( name ); i++ )
+    {
+        if ( o->type != nso->type )
+        {
+            o = 0;
+            break;
+        }
+
+        namekey = array__get( name, i );
+
+        if ( !( o = resolve( o, namekey, m ) ) )
+            break;
+    }
+
+    if ( o )
+        namespace__remove_simple( parent, namekey );
 
     return o;
 }

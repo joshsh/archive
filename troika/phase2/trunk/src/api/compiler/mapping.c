@@ -73,21 +73,36 @@ define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
         notns_error( name );
         o = 0;
     }
+
     else
     {
         nso = local;
 
+        if ( o )
+        {
+            o = namespace__add_simple( nso->value, key, o );
+            array__enqueue( name, key );
+        }
+
+        else
+        {
+            array__enqueue( name, key );
+            o = namespace__undefine( nso, name, m );
+        }
+/*
         o = ( o )
             ? namespace__add_simple( nso->value, key, o )
             : namespace__remove_simple( nso->value, key );
 
-        array__enqueue( name, key );
+            array__enqueue( name, key );
+*/
     }
     #else
         o = ( o )
             ? namespace__add( nso, name, o )
             : namespace__remove( nso, name );
     #endif
+
     return o;
 }
 
@@ -110,32 +125,32 @@ resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 Object *
 compiler__define( Compiler *c, Name *name, Object *o )
 {
-    Namespace_o *ns_obj;
+    Namespace_o *nso;
 
     #if DEBUG__COMPILER
     Object *o_orig = o;
     #endif
 
     char *first = name__pop( name );
-    ns_obj = c->cur_ns_obj;
+    nso = c->cur_ns_obj;
 
     if ( !strcmp( first, "root" ) )
     {
-        ns_obj = environment__root( c->env );
-        define( ns_obj, name, o, environment__manager( c->env ) );
+        nso = environment__root( c->env );
+        o = define( nso, name, o, environment__manager( c->env ) );
         name__push( name, first );
     }
 
     else if ( !strcmp( first, "here" ) )
     {
-        define( ns_obj, name, o, environment__manager( c->env ) );
+        o = define( nso, name, o, environment__manager( c->env ) );
         name__push( name, first );
     }
 
     else
     {
         name__push( name, first );
-        define( ns_obj, name, o, environment__manager( c->env ) );
+        o = define( nso, name, o, environment__manager( c->env ) );
     }
 
     if ( !o )
@@ -154,30 +169,30 @@ compiler__define( Compiler *c, Name *name, Object *o )
 Object *
 compiler__resolve( Compiler *c, Name *name )
 {
-    Namespace_o *ns_obj;
+    Namespace_o *nso;
     Object *o;
 
     char *first = ( char* ) name__pop( name );
     if ( !strcmp( first, "root" ) )
     {
-        ns_obj = environment__root( c->env );
-        o = resolve( ns_obj, name, environment__manager( c->env ) );
+        nso = environment__root( c->env );
+        o = resolve( nso, name, environment__manager( c->env ) );
         name__push( name, first );
     }
 
     else if ( !strcmp( first, "here" ) )
     {
-        ns_obj = c->cur_ns_obj;
-        o = resolve( ns_obj, name, environment__manager( c->env ) );
+        nso = c->cur_ns_obj;
+        o = resolve( nso, name, environment__manager( c->env ) );
         name__push( name, first );
     }
 
     else
     {
-        ns_obj = c->cur_ns_obj;
+        nso = c->cur_ns_obj;
         name__push( name, first );
 
-        o = resolve( ns_obj, name, environment__manager( c->env ) );
+        o = resolve( nso, name, environment__manager( c->env ) );
     }
 
     if ( !o )

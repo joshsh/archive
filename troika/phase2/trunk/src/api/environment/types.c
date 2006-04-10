@@ -39,11 +39,7 @@ environment__register_type( Environment *env, Type *type )
         return 0;
     }
 
-    if ( namespace__add_simple( env->types->value, type->name, o ) )
-        return 0;
-
-    else
-        return o;
+    return namespace__add_simple( env->types->value, type->name, o );
 }
 
 

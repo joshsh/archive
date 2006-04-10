@@ -87,7 +87,7 @@ compiler__handle_parse_error( Compiler *c, char *msg );
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
 extern boolean
-compiler__suppress_output( Compiler *c );
+compiler__quiet( Compiler *c );
 
 /** \return  whether a line number is printed before each new line of input */
 extern boolean

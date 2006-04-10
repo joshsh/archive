@@ -89,7 +89,7 @@ extern int
 compiler__handle_parse_error( Compiler *c, char * /*msg*/ );
 
 extern int
-compiler__suppress_output( Compiler *c );
+compiler__quiet( Compiler *c );
 
 
 /* Lexer dependencies *********************************************************/
@@ -105,8 +105,7 @@ extern int
 get_line_number( void );
 
 /** Current statement number.  Starts at 0 for each line of input. */
-extern int
-statement_number;
+extern int pad_newline;
 
 
 /******************************************************************************/
@@ -142,7 +141,7 @@ handle_error( Compiler *c );
 
 static int exit_early;
 
-static int error_character_number, error_line_number, invalid_statement_number;
+static int error_character_number, error_line_number;
 
 /** Buffer for "verbose" error message received by yyerror. */
 static char yyerror_msg[ERROR_BUFFER__SIZE];
@@ -189,7 +188,6 @@ yyerror( Compiler *c, p2_parser__exit_state *ignored, const char *msg )
 
         error_character_number = get_char_number();
         error_line_number = get_line_number();
-        invalid_statement_number = statement_number;
     }
 
     else
@@ -211,9 +209,6 @@ production( char *s )
 {
     printf( "Matched %s\n", s );
 }
-/*#define PRODUCTION( x )  printf( "Matched %s\n", x );
-#else
-#define PRODUCTION*/
 #endif
 
 
@@ -381,7 +376,7 @@ statements:
             YYACCEPT;
         }
 
-        statement_number++;
+        pad_newline = TRUE;
     }
 
     /* Redundant semicolons are tolerated. */
@@ -1079,10 +1074,9 @@ handle_command( Compiler *c, char *name, Ast *args )
         ( int ) c, ( int ) name, ( int ) args );
     #endif
 
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
-        if ( !statement_number )
-            printf( "\n" );
+        printf( "\n" );
 
         #ifdef COMMAND_OUTPUT_PREFIX
         printf( COMMAND_OUTPUT_PREFIX );
@@ -1093,14 +1087,11 @@ handle_command( Compiler *c, char *name, Ast *args )
        compiler__evaluate_command. */
     exit_early = exit_early || compiler__evaluate_command( c, name, args );
 
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
         printf( COMMAND_OUTPUT_SUFFIX );
         #endif
-
-        if ( !exit_early )
-            printf( "\n" );
     }
 }
 
@@ -1113,10 +1104,9 @@ handle_expression( Compiler *c, Name *name, Ast *expr )
         ( int ) c, ( int ) name, ( int ) expr );
     #endif
 
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
-        if ( !statement_number )
-            printf( "\n" );
+        printf( "\n" );
 
         #ifdef EXPRESSION_OUTPUT_PREFIX
         printf( EXPRESSION_OUTPUT_PREFIX );
@@ -1127,13 +1117,11 @@ handle_expression( Compiler *c, Name *name, Ast *expr )
        compiler__evaluate_expression. */
     exit_early = exit_early || compiler__evaluate_expression( c, name, expr );
 
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
         printf( EXPRESSION_OUTPUT_SUFFIX );
         #endif
-
-        printf( "\n" );
     }
 }
 
@@ -1147,10 +1135,9 @@ handle_error( Compiler *c )
     printf( "[] handle_error(%#x)\n", ( int ) c );
     #endif
 
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
-        if ( !statement_number )
-            printf( "\n" );
+        printf( "\n" );
 
         #ifdef ERROR_OUTPUT_PREFIX
         printf( ERROR_OUTPUT_PREFIX );
@@ -1163,13 +1150,11 @@ handle_error( Compiler *c )
     *yyerror_msg = '\0';
     exit_early = exit_early || compiler__handle_parse_error( c, STRDUP( error_msg ) );
 
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
         printf( ERROR_OUTPUT_SUFFIX );
         #endif
-
-        printf( "\n" );
     }
 }
 

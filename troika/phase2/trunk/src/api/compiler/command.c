@@ -427,7 +427,6 @@ add_command( Dictionary *d, char *name, CommandFunction f, int args_min, int arg
     com->args_min = args_min;
     com->args_max = args_max;
 
-/*
     if ( !dictionary__add( d, name, com ) )
     {
         free( com );
@@ -435,9 +434,6 @@ add_command( Dictionary *d, char *name, CommandFunction f, int args_min, int arg
     }
 
     else
-*/
-    dictionary__add( d, name, com );
-
         return com;
 }
 

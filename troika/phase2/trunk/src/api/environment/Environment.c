@@ -113,10 +113,10 @@ environment__new()
         goto abort;
 
     /* Nest child namespaces under root. */
-    if ( namespace__add_simple( env->root->value, "combinators", env->combinators )
-      || namespace__add_simple( env->root->value, "data", env->data )
-      || namespace__add_simple( env->root->value, "primitives", env->primitives )
-      || namespace__add_simple( env->root->value, "types", env->types ) )
+    if ( !namespace__add_simple( env->root->value, "combinators", env->combinators )
+      || !namespace__add_simple( env->root->value, "data", env->data )
+      || !namespace__add_simple( env->root->value, "primitives", env->primitives )
+      || !namespace__add_simple( env->root->value, "types", env->types ) )
         goto abort;
 
     /* Register the basic data types. */

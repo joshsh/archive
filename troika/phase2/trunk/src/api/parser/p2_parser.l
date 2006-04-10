@@ -72,12 +72,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef struct Compiler Compiler;
 
 extern boolean
-compiler__suppress_output( Compiler *c );
+compiler__quiet( Compiler *c );
 
 extern boolean
 compiler__show_line_numbers( Compiler *c );
 
 
+/* ! */
 static Compiler *
 compiler_global;
 
@@ -88,7 +89,7 @@ compiler_global;
 #define TAB_CHAR    1001
 
 static int line_number, column_number, last_column_number;
-int statement_number;
+int pad_newline;
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
@@ -453,11 +454,16 @@ void new_line( Compiler *c )
 {
     line_number++;
     column_number = last_column_number = 0;
-    statement_number = 0;
 
     /* Decorate command-line input. */
-    if ( !compiler__suppress_output( c ) )
+    if ( !compiler__quiet( c ) )
     {
+
+        if ( pad_newline )
+            printf( "\n" );
+
+        pad_newline = FALSE;
+
         /* Display a line number at the beginning of each new line of input. */
         if ( compiler__show_line_numbers( c ) )
             printf( "%d ", line_number );
@@ -477,6 +483,7 @@ new_parse( Compiler *c )
 {
     compiler_global = c;
     line_number = 0;
+    pad_newline = TRUE;
     new_line( c );
 }
 

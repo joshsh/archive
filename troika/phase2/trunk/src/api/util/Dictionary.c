@@ -129,11 +129,19 @@ dictionary__add( Dictionary *dict, const char *key, void *target )
     Dictionary_Entry *old_entry, *new_entry;
     void *r = 0;
 
-    if ( ( new_entry = dictionary_entry__new( key, target ) )
-      && ( old_entry = ( Dictionary_Entry* ) hash_table__add( dict, new_entry ) ) )
+    if ( DEBUG__SAFE && ( !dict || !key || !target ) )
     {
-        r = old_entry->target;
-        dictionary_entry__delete( old_entry );
+        ERROR( "dictionary__add: null argument" );
+        return 0;
+    }
+
+    else if ( ( new_entry = dictionary_entry__new( key, target ) ) )
+    {
+        /* ! */
+        if ( ( old_entry = hash_table__add( dict, new_entry ) ) )
+            dictionary_entry__delete( old_entry );
+
+        r = target;
     }
 
     return r;
@@ -162,8 +170,7 @@ dictionary__remove( Dictionary *dict, char *key )
 
     match_entry.key = key;
 
-    entry = ( Dictionary_Entry* )
-        hash_table__remove( dict, &match_entry );
+    entry = hash_table__remove( dict, &match_entry );
 
     if ( entry )
     {

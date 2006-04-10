@@ -23,10 +23,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static Type *
 resolve_type( Environment *env, const char *name )
 {
+    Object *o;
+
     if ( !strcmp( name, ANY__NAME ) )
         return any_type;
     else
-        return environment__resolve_type( env, name )->value;
+    {
+        if ( ( o = environment__resolve_type( env, name ) ) )
+            return o->value;
+
+        else
+        {
+            ERROR( "resolve_type: type not found" );
+            return 0;
+        }
+    }
 }
 
 
