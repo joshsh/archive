@@ -17,8 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Namespace.h"
-
+#include <Namespace.h>
 
 
 /** A namespace is a hash table with associated functions for adding, removing,

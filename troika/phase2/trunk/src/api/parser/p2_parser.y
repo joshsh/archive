@@ -95,6 +95,8 @@ compiler__quiet( Compiler *c );
 /* Lexer dependencies *********************************************************/
 
 
+extern boolean pad_newline;
+
 extern void
 new_parse( Compiler *c );
 
@@ -103,9 +105,6 @@ get_char_number( void );
 
 extern int
 get_line_number( void );
-
-/** Current statement number.  Starts at 0 for each line of input. */
-extern int pad_newline;
 
 
 /******************************************************************************/

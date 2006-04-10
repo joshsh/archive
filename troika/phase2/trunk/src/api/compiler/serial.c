@@ -429,11 +429,17 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         el = element__new( 0, ( uc* ) "object", 0 );
 
         if ( o->type == state->compiler->combinator_t
-          || o->type == state->compiler->prim_t
           || o->type == state->compiler->type_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
             o->type->encode( o->value, buffer );
+            element__add_text( el, ( uc* ) buffer );
+        }
+
+        else if ( o->type == state->compiler->prim_t )
+        {
+            attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+            sprintf( buffer, ( ( Primitive* ) o->value )->name );
             element__add_text( el, ( uc* ) buffer );
         }
 
@@ -461,7 +467,13 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 */
 
         /* Encode contents as child element. */
-        if ( encode )
+        if ( o->type == state->compiler->prim_t )
+        {
+            sprintf( buffer, ( ( Primitive* ) o->value )->name );
+            element__add_text( el, ( uc* ) buffer );
+        }
+
+        else if ( encode )
         {
             element__add_child( el, encode( o->value, state ) );
         }

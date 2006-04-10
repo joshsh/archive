@@ -135,7 +135,7 @@ int compiler__handle_parse_error( Compiler *c, char *msg )
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-boolean compiler__suppress_output( Compiler *c )
+boolean compiler__quiet( Compiler *c )
 {
     c = 0;
     return FALSE;
@@ -180,7 +180,7 @@ p2_parser__exit_state parse( void )
 
 int main( void )
 {
-    printf( "Phase2 v%s command-line parser debugger.  Type '!quit;' to exit.\n\n", VERSION );
+    printf( "Phase2 v%s command-line parser debugger.  Type '!quit;' to exit.\n", VERSION );
 
     switch( parse() )
     {

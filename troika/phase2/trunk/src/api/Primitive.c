@@ -48,7 +48,43 @@ primitive__delete( Primitive *prim )
 void
 primitive__encode( Primitive *prim, char *buffer )
 {
-    sprintf( buffer, prim->name );
+    unsigned int i;
+    Parameter p;
+    char *name;
+
+    char *generic_name = "any";
+
+    char *type_name( Type *t )
+    {
+        if ( t == any_type )
+            return generic_name;
+        else
+            return t->name;
+    }
+
+    for ( i = 0; i < prim->arity; i++ )
+    {
+        if ( i )
+        {
+            sprintf( buffer, ", " );
+            buffer += 2;
+        }
+
+        p = prim->parameters[i];
+        sprintf( buffer, "<%s>", type_name( p.type ) );
+        buffer += strlen( buffer );
+
+        name = p.name;
+        if ( name && *name )
+        {
+            sprintf( buffer, " %s", name );
+            buffer += strlen( buffer );
+        }
+    }
+
+    sprintf( buffer, " --> <%s>", type_name( prim->return_type ) );
+
+    /*sprintf( buffer, prim->name );*/
 }
 
 

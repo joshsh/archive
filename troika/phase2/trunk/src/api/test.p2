@@ -1,48 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data_set p2-version="0.6.2" p2-revision="!184" time="Mon Apr 10 13:10:11 2006">
-  <object id="2" type="Namespace">
-    <table>
-      <object ref="10" name="Friday"/>
-      <object ref="20" name="Monday"/>
-      <object ref="15" name="Saturday"/>
-      <object ref="13" name="Sunday"/>
-      <object ref="3" name="Thursday"/>
-      <object ref="4" name="Tuesday"/>
-      <object ref="22" name="Wednesday"/>
-    </table>
-  </object>
-  <triple>
-    <object ref="2"/>
-    <object ref="11"/>
-    <object type="cstring">dagar</object>
-  </triple>
-  <object id="3" type="cstring">Thursday</object>
-  <triple>
-    <object ref="3"/>
-    <object ref="5"/>
-    <object type="cstring">Donnerstag</object>
-  </triple>
-  <object id="4" type="cstring">Tuesday</object>
-  <triple>
-    <object ref="4"/>
-    <object ref="5"/>
-    <object type="cstring">Dienstag</object>
-  </triple>
-  <object id="5" type="cstring">German</object>
-  <object id="6" type="cstring">Sean Drexler</object>
-  <triple>
-    <object ref="6"/>
-    <object ref="23"/>
-    <object type="cstring">seand@omnicast.net</object>
-  </triple>
-  <object id="7" type="cstring">description</object>
-  <object id="8" type="Combinator">K</object>
-  <object id="9" type="cstring">Josh Shinavier</object>
-  <triple>
-    <object ref="9"/>
-    <object ref="23"/>
-    <object type="cstring">parcour@gmail.com</object>
-  </triple>
   <object id="1" type="Namespace">
     <table>
       <object type="Namespace" name="Soph-Ware">
@@ -188,6 +145,49 @@
       <object type="cstring" name="type">type</object>
     </table>
   </object>
+  <object id="2" type="Namespace">
+    <table>
+      <object ref="10" name="Friday"/>
+      <object ref="20" name="Monday"/>
+      <object ref="15" name="Saturday"/>
+      <object ref="13" name="Sunday"/>
+      <object ref="3" name="Thursday"/>
+      <object ref="4" name="Tuesday"/>
+      <object ref="22" name="Wednesday"/>
+    </table>
+  </object>
+  <triple>
+    <object ref="2"/>
+    <object ref="11"/>
+    <object type="cstring">dagar</object>
+  </triple>
+  <object id="3" type="cstring">Thursday</object>
+  <triple>
+    <object ref="3"/>
+    <object ref="5"/>
+    <object type="cstring">Donnerstag</object>
+  </triple>
+  <object id="4" type="cstring">Tuesday</object>
+  <triple>
+    <object ref="4"/>
+    <object ref="5"/>
+    <object type="cstring">Dienstag</object>
+  </triple>
+  <object id="5" type="cstring">German</object>
+  <object id="6" type="cstring">Sean Drexler</object>
+  <triple>
+    <object ref="6"/>
+    <object ref="23"/>
+    <object type="cstring">seand@omnicast.net</object>
+  </triple>
+  <object id="7" type="cstring">description</object>
+  <object id="8" type="Combinator">K</object>
+  <object id="9" type="cstring">Josh Shinavier</object>
+  <triple>
+    <object ref="9"/>
+    <object ref="23"/>
+    <object type="cstring">parcour@gmail.com</object>
+  </triple>
   <object id="10" type="cstring">Friday</object>
   <triple>
     <object ref="10"/>

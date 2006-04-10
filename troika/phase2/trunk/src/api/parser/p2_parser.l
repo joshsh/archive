@@ -86,10 +86,9 @@ compiler_global;
 /* Line and character numbers *************************************************/
 
 
-#define TAB_CHAR    1001
-
 static int line_number, column_number, last_column_number;
-int pad_newline;
+
+boolean pad_newline;
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
