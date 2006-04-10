@@ -21,6 +21,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 
+/** A namespace is a hash table with associated functions for adding, removing,
+    and looking up named objects. */
+struct Namespace
+{
+    /** A dictionary of objects in the namespace. */
+    Dictionary *children;
+};
 
 
 /******************************************************************************/
@@ -156,6 +163,20 @@ namespace__add_simple( Namespace *ns, const char *name, Object *o )
     #endif
 
     return dictionary__add( ns->children, name, o );
+}
+
+
+void
+namespace__add_all( Namespace *dest, Namespace *src )
+{
+    dictionary__add_all( dest->children, src->children );
+}
+
+
+Array *
+namespace__keys( Namespace *ns )
+{
+    return dictionary__keys( ns->children );
 }
 
 
@@ -542,7 +563,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
     Object *o = nso;
     unsigned int i;
     Namespace *parent;
-    char *namekey = "";
+    char *key = "";
 
     Object *
     resolve( Namespace_o *ns_obj, char *key, Memory_Manager *m )
@@ -581,14 +602,14 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
             break;
         }
 
-        namekey = array__get( name, i );
+        key = array__get( name, i );
 
-        if ( !( o = resolve( o, namekey, m ) ) )
+        if ( !( o = resolve( o, key, m ) ) )
             break;
     }
 
     if ( o )
-        namespace__remove_simple( parent, namekey );
+        namespace__remove_simple( parent, key );
 
     return o;
 }

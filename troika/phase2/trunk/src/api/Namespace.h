@@ -41,13 +41,6 @@ typedef Object Namespace_o;
 
 typedef struct Namespace Namespace;
 
-/** A namespace is a hash table with associated functions for adding, removing,
-    and looking up named objects. */
-struct Namespace
-{
-    /** A dictionary of objects in the namespace. */
-    Dictionary *children;
-};
 
 
 /** \return  a new namespace */
@@ -71,6 +64,14 @@ namespace__add( Namespace_o *ns_obj, Name *name, Object *o );
 
 extern Object *
 namespace__add_simple( Namespace *ns, const char *name, Object *o );
+
+extern void
+namespace__add_all( Namespace *dest, Namespace *src );
+
+
+extern Array *
+namespace__keys( Namespace *ns );
+
 
 /** Finds an object in a namespace.
     \param ns  the target namespace

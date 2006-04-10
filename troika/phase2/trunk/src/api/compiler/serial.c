@@ -227,7 +227,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 
     void *helper( char **name )
     {
-        Object *o = ( Object* ) dictionary__lookup( ns->children, *name );
+        Object *o = namespace__lookup_simple( ns, *name );
 
         Element *child = object__xml_encode( o, state, 0 );
         attr__new( child, ( uc* ) "name", ( uc* ) *name, 0 );
@@ -252,7 +252,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
         ( int ) el, ( int ) ns, ( int ) state );
     #endif
 
-    keys = dictionary__keys( ns->children );
+    keys = namespace__keys( ns );
     array__walk( keys, ( Dist_f ) helper );
     array__delete( keys );
 
@@ -919,9 +919,12 @@ compiler__deserialize( Compiler *c, char *path )
 
     /* Import all objects from the document root namespace to the compiler's
        working namespace. */
+    namespace__add_all( compiler__working_namespace( c )->value, state.root->value );
+/*
     dictionary__add_all(
         ( ( Namespace* ) compiler__working_namespace( c )->value )->children,
         ( ( Namespace* ) state.root->value )->children );
+*/
 
 finish:
 
