@@ -1,9 +1,10 @@
 ################################################################################
 ## Compile utilities and/or run a test program under Valgrind (memcheck).
 
-INCLUDE = -I../
+INCLUDE = -I../../include
 
-CFLAGS = -O2 -g --ansi -pedantic -W -Wall -fshort-enums -fno-common
+CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common
+	# -pedantic
 	# -Werror \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 
@@ -33,4 +34,4 @@ debugger :  debugger.o $(objects)
 	$(CC) $(CFLAGS) -o debugger debugger.o $(objects)
 
 
-$(objects) : ../defs.h ../settings.h
+$(objects) : ../settings.h

@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <util/Hash_Table.h>
+#include "../settings.h"
 
 
 /* By default, the hash table will wait until the ratio of total cells to

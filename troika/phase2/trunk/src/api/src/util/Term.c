@@ -19,6 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <util/Term.h>
 #include <Object.h>
+#include "../settings.h"
 
 
 /*******************************************************************************/
@@ -470,7 +471,7 @@ term__encode( Term *t, char *buffer )
             cur++;
 
             o = ( Object* ) *cur;
-            o->type->encode( o->value, buffer );
+            object__type( o )->encode( object__value( o ), buffer );
         }
 
         /* If the sub-term contains further sub-terms, recurse through them. */

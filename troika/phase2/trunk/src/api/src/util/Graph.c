@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <util/Graph.h>
+#include "../settings.h"
 
 
 typedef struct Graph_Edge Graph_Edge;

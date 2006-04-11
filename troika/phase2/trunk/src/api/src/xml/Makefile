@@ -13,7 +13,7 @@ LIBS           = $(LIBXML2_LIBS)
 
 CFLAGS  = -g          -O2                 --ansi  -Wall
 
-INCLUDE = -I../
+INCLUDE = -I../../include
 
 CC      = gcc $(CFLAGS) $(INCLUDE)
 
@@ -33,7 +33,7 @@ test :  xmldom-test
 	$(VALGRIND) xmldom-test
 
 
-xmldom-test :  xmldom-test.c xmldom.h xmldom.o
+xmldom-test :  xmldom-test.c xmldom.o
 	$(CC) -o xmldom-test xmldom-test.c xmldom.o $(LIBS)
 
 
@@ -42,6 +42,6 @@ xmldom.o :  xmldom-libxml2.o
 	cp xmldom-libxml2.o xmldom.o
 
 
-xmldom-libxml2.o :  xmldom.h libxml2/xmldom-libxml2.c
+xmldom-libxml2.o :  libxml2/xmldom-libxml2.c
 	$(CC) -c $(FLAGS) libxml2/xmldom-libxml2.c
 

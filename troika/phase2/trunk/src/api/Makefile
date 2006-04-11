@@ -3,7 +3,7 @@
 #  Makefile for the Phase2 programming API.
 #  Author: Joshua Shinavier
 
-INCLUDE  = -I./
+INCLUDE  = -I./include
 
 export CFLAGS = -O2 -g --ansi -W -Wall \
 	-fpic  # Create position-independent code for the shared library.
@@ -18,7 +18,7 @@ LIBS    =
 CC      = gcc $(INCLUDE) $(LIBS)
 
 
-SUBDIRS = ./import ./parser ./util ./xml
+SUBDIRS = src/import src/parser src/util src/xml
 
 
 .PHONY : default
@@ -27,48 +27,76 @@ default :  phase2
 
 .PHONY : clean
 clean :
-	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) clean; cd ..; done
-	-rm -f phase2 libphase2.* revision.h *.o compiler/*.o environment/*.o sk/*.o
+	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
+	-rm -f phase2 libphase2.* revision.h src/*.o src/compiler/*.o src/environment/*.o src/sk/*.o
 
 
 .PHONY : recursive
 recursive :
-	for dir in $(SUBDIRS); do cd $$dir; $(MAKE) -e; cd ..; done
+	for dir in $(SUBDIRS); do $(MAKE) -e -C $$dir; done
 
 
 .PHONY : test
 test :
-	for dir in $(SUBDIRS); do cd $$dir; -$(MAKE) test; cd ..; done
+	for dir in $(SUBDIRS); do -$(MAKE) -C $$dir test; done
+##	for dir in $(SUBDIRS); do cd $$dir; -$(MAKE) test; cd ..; done
 
 
-utils	=	util/Array.o \
-		util/Bunch.o \
-		util/Dictionary.o \
-		util/Hash_Map.o \
-		util/Hash_Table.o \
-		util/Name.o \
-		util/Set.o \
-		util/Term.o
+utils	=				\
+	src/util/Array.o		\
+	src/util/Bunch.o		\
+	src/util/Dictionary.o		\
+	src/util/Hash_Map.o		\
+	src/util/Hash_Table.o		\
+	src/util/Name.o			\
+	src/util/Set.o			\
+	src/util/Term.o
 
-core_objects = main.o Collection.o Memory_Manager.o Namespace.o Object.o Primitive.o Primitive-import.o Type.o sk/sk.o
+core_objects =				\
+	src/Collection.o		\
+	src/Memory_Manager.o		\
+	src/Namespace.o			\
+	src/Object.o			\
+	src/Primitive.o			\
+	src/Primitive-import.o		\
+	src/Type.o			\
+	src/main.o			\
+	src/sk/sk.o
 
-compiler_objects = compiler/Compiler.o compiler/command.o compiler/error.o compiler/expression.o compiler/mapping.o compiler/serial.o
+compiler_objects =			\
+	src/compiler/Compiler.o		\
+	src/compiler/command.o		\
+	src/compiler/error.o		\
+	src/compiler/expression.o	\
+	src/compiler/mapping.o		\
+	src/compiler/serial.o
 
-environment_objects = environment/Environment.o environment/combinators.o environment/primitives.o environment/types.o
+environment_objects = \
+	src/environment/Environment.o	\
+	src/environment/combinators.o	\
+	src/environment/primitives.o	\
+	src/environment/types.o
 
-objects = $(utils) $(core_objects) $(compiler_objects) $(environment_objects) import/target/imports.o parser/parser.o xml/xmldom.o
+objects =				\
+	$(utils)			\
+	$(core_objects)			\
+	$(compiler_objects)		\
+	$(environment_objects)		\
+	src/import/target/imports.o	\
+	src/parser/parser.o		\
+	src/xml/xmldom.o
 
 
-$(core_objects) $(compiler_objects) $(environment_objects) $(utils) : defs.h settings.h
+$(core_objects) $(compiler_objects) $(environment_objects) $(utils) : src/settings.h
 
-compiler/serial.o :  revision.h
+src/compiler/serial.o :  revision.h
 
 
 # Note: assumes that Phase2 is being built from a working copy.
 # Defines the head revision number in revision.h, prepended with a '!' if
 # serial.c differs from the repository copy.
-revision.h :  compiler/serial.c
-	svn stat -v compiler/serial.c \
+revision.h :  src/compiler/serial.c
+	svn stat -v src/compiler/serial.c \
 	| sed 's/^[^ ][ ]*/&!/;s/^.[ ]*//;s/[ ].*//;s/.*/\#define REVISION    "&"/' \
 	> revision.h
 

@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <util/Dictionary.h>
+#include "../settings.h"
 
 
 typedef struct Dictionary_Entry Dictionary_Entry;

@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Type.h>
+#include "settings.h"
 
 
 /* Default member functions (use with caution). */

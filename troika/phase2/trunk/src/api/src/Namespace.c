@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Namespace.h>
+#include "settings.h"
 
 
 /** A namespace is a hash table with associated functions for adding, removing,
@@ -88,7 +89,7 @@ namespace__size( Namespace *ns )
 Object *
 namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
 {
-    Namespace *ns = ns_obj->value;
+    Namespace *ns = object__value( ns_obj );
 
     Object *child_ns_obj;
     char *key;
@@ -129,7 +130,7 @@ namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
 
         child_ns_obj = dictionary__lookup( ns->children, key );
 
-        if ( child_ns_obj->type != ns_obj->type )
+        if ( object__type( child_ns_obj ) != object__type( ns_obj ) )
         {
             ERROR( "namespace__add: not a namespace" );
             o = 0;
@@ -194,7 +195,7 @@ namespace__lookup( Namespace_o *ns_obj, Name *name )
     }
     #endif
 
-    ns = ( Namespace* ) ns_obj->value;
+    ns = object__value( ns_obj );
 
     #if DEBUG__NAMESPACE
     printf( "[...] namespace__lookup(%#x, %#x)\n", ( int ) ns_obj, ( int ) name );
@@ -210,7 +211,7 @@ namespace__lookup( Namespace_o *ns_obj, Name *name )
     {
         /* Always check for this error, as namespace references may come directly
            from the user. */
-        if ( o->type != ns_obj->type )
+        if ( object__type( o ) != object__type( ns_obj ) )
         {
             ERROR( "namespace__lookup: not a namespace" );
             o = 0;
@@ -264,7 +265,7 @@ namespace__remove( Namespace_o *ns_obj, Name *name )
     }
     #endif
 
-    ns = ns_obj->value;
+    ns = object__value( ns_obj );
 
     if ( array__size( name ) == 1 )
     {
@@ -289,7 +290,7 @@ namespace__remove( Namespace_o *ns_obj, Name *name )
             o = 0;
         }
 
-        else if ( child_ns_obj->type != ns_obj->type )
+        else if ( object__type( child_ns_obj ) != object__type( ns_obj ) )
         {
             ERROR( "namespace__remove: not a namespace" );
             o = 0;
@@ -336,14 +337,14 @@ namespace__walk( Namespace *ns, Dist_f f )
 void
 namespace__show_children( const Namespace_o *ns_obj )
 {
-    Dictionary *dict = ( ( Namespace* ) ns_obj->value )->children;
+    Dictionary *dict = ( ( Namespace* ) object__value( ns_obj ) )->children;
     int size = hash_table__size( dict );
     Array *keys;
     int maxlen = 0;
 
     void *find_maxlen( Object **opp )
     {
-        int len = strlen( ( *opp )->type->name );
+        int len = strlen( object__type( *opp )->name );
         if ( len > maxlen )
             maxlen = len;
         return 0;
@@ -352,7 +353,7 @@ namespace__show_children( const Namespace_o *ns_obj )
     void *print( char **key )
     {
         Object *o = ( Object* ) dictionary__lookup( dict, *key );
-        int i, lim = maxlen - strlen( o->type->name );
+        int i, lim = maxlen - strlen( object__type( o )->name );
 
         printf( "    " );
 
@@ -360,7 +361,7 @@ namespace__show_children( const Namespace_o *ns_obj )
         printf( "%#x ", ( int ) o );
         #endif
 
-        printf( "<%s> ", o->type->name );
+        printf( "<%s> ", object__type( o )->name );
 
         for ( i = 0; i < lim; i++ )
             printf( " " );
@@ -374,7 +375,7 @@ namespace__show_children( const Namespace_o *ns_obj )
     printf( "%#x ", ( int ) ns_obj );
     #endif
 
-    printf( "<%s>", ns_obj->type->name );
+    printf( "<%s>", object__type( ns_obj )->name );
 
     if ( size )
     {
@@ -382,9 +383,9 @@ namespace__show_children( const Namespace_o *ns_obj )
 
         /* Get alphabetized dictionary keys. */
         keys = dictionary__keys(
-            ( ( Namespace* ) ns_obj->value )->children );
+            ( ( Namespace* ) object__value( ns_obj ) )->children );
 
-        namespace__walk( ns_obj->value, ( Dist_f ) find_maxlen );
+        namespace__walk( object__value( ns_obj ), ( Dist_f ) find_maxlen );
 
         /* Print children. */
         array__walk( keys, ( Dist_f ) print );
@@ -435,7 +436,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
         Object *o = *opp;
 
         /* If we've found a namespace... */
-        if ( o->type == ns_o->type )
+        if ( object__type( o ) == object__type( ns_o ) )
         {
             /* Apply the target function, and quit the traversal if so instructed. */
             if ( f( ( void** ) opp ) == walker__break )
@@ -464,7 +465,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
     while ( queue && array__size( queue ) )
     {
         namespace__walk(
-            ( ( Object* ) array__pop( queue ) )->value,
+            object__value( array__pop( queue ) ),
             ( Dist_f ) distribute );
     }
 }
@@ -503,7 +504,7 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
 
     void *test( Namespace_o **ns_opp )
     {
-        if ( ( o = namespace__lookup_simple( ( *ns_opp )->value, key ) ) )
+        if ( ( o = namespace__lookup_simple( object__value( *ns_opp ), key ) ) )
             return walker__break;
         else
             return 0;
@@ -534,7 +535,7 @@ namespace__resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 
     for ( i = 0; i < array__size( name ); i++ )
     {
-        if ( o->type != nso->type )
+        if ( object__type( o ) != object__type( nso ) )
         {
             o = 0;
             break;
@@ -571,7 +572,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
 
         void *test( Namespace_o **ns_opp )
         {
-            parent = ( *ns_opp )->value;
+            parent = object__value( *ns_opp );
             if ( ( o = namespace__lookup_simple( parent, key ) ) )
                 return walker__break;
             else
@@ -595,7 +596,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
 
     for ( i = 0; i < array__size( name ); i++ )
     {
-        if ( o->type != nso->type )
+        if ( object__type( o ) != object__type( nso ) )
         {
             o = 0;
             break;

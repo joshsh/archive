@@ -22,6 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <defs.h>
 #include <xml/xmldom.h>
+#include "../../settings.h"
 
 
 /* Note: be ready for linker errors if these macros are not defined. */

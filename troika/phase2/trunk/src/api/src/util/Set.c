@@ -19,6 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <util/Set.h>
 #include <Object.h>
+#include "../settings.h"
 
 
 static unsigned int
@@ -202,7 +203,7 @@ set__encode( Set *s, char *buffer )
         sprintf( buffer, " " );
         buffer++;
 
-        o->type->encode( o->value, buffer );
+        object__type( o )->encode( object__value( o ), buffer );
         buffer += strlen( buffer );
     }
 

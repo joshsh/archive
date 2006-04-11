@@ -14,9 +14,10 @@ OUT     = ./target
 XML_OUT = ./$(OUT)/xml
 OBJ_OUT = ./$(OUT)/obj
 
-INCLUDE = -I../
+INCLUDE = -I../../include
 
-CFLAGS = -O2 -g --ansi -pedantic -W -Wall
+CFLAGS = -O2 -g --ansi -W -Wall
+	# -pedantic
 	# -Werror \
 	# -fshort-enums -fno-common \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
@@ -50,19 +51,16 @@ objects =			\
 other_dependencies = $(CXX_IN)/Set-operations.h
 
 
-#$(objects) : ../defs.h ../settings.h
-
-
 $(OUT)/imports.o : $(OUT)/p2-stubs.o $(objects)
 	ld -r -o $(OUT)/imports.o $(OBJ_OUT)/*.o $(OUT)/p2-stubs.o
 
 
-$(OBJ_OUT)/%.o : $(CXX_IN)/%.c ../defs.h ../settings.h #$(OBJ_OUT)
+$(OBJ_OUT)/%.o : $(CXX_IN)/%.c ../settings.h #$(OBJ_OUT)
 	@-mkdir -p $(OBJ_OUT)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 
-$(OUT)/p2-stubs.o : $(CXX_IN)/p2-stubs.c $(OBJ_OUT) ../defs.h ../settings.h
+$(OUT)/p2-stubs.o : $(CXX_IN)/p2-stubs.c $(OBJ_OUT) ../settings.h
 	$(CC) -c $(CFLAGS) -o $(OUT)/p2-stubs.o $(CXX_IN)/p2-stubs.c
 
 

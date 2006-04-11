@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *****************************************************************************/
 
 #include <Void.h>
+#include "settings.h"
 
 
 /** Start off with a small, out-of-range address and work upwards. */

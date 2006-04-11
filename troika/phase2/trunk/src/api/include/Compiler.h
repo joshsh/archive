@@ -30,8 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Environment.h>
-#include <parser/Ast.h>
-#include <parser/p2_parser.h>
+#include <Ast.h>
 #include <util/Dictionary.h>
 
 

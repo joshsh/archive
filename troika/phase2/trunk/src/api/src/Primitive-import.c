@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Primitive-import.h>
+#include "settings.h"
 
 
 static Type *
@@ -30,7 +31,7 @@ resolve_type( Environment *env, const char *name )
     else
     {
         if ( ( o = environment__resolve_type( env, name ) ) )
-            return o->value;
+            return object__value( o );
 
         else
         {

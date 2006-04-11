@@ -7,9 +7,10 @@
 NAME     = p2_parser
 UTILS    = ../util
 
-INCLUDE  = -I../
+INCLUDE  = -I../../include
 
-CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common #-pedantic
+CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common
+	# -pedantic
 	# -Werror \
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 	# -D_GNU_SOURCE
@@ -49,33 +50,33 @@ valgrind-session :  $(DEBUGGER)
 
 utils = $(UTILS)/Array.o $(UTILS)/Name.o $(UTILS)/Term.o
 
-objects = debugger.o ../Type.o Ast.o $(NAME).tab.o
+objects = debugger.o ../Type.o ../Ast.o $(NAME).tab.o
 
 
-parser.o :  Ast.o lex.yy.o $(NAME).tab.o
-	ld -r -o parser.o Ast.o $(NAME).tab.o lex.yy.o
+parser.o :  ../Ast.o lex.yy.o $(NAME).tab.o
+	ld -r -o parser.o ../Ast.o $(NAME).tab.o lex.yy.o
 
 
 debugger :  $(objects) $(utils) lex.yy.o
 	$(CC) -o debugger $(objects) $(utils) lex.yy.o
 
 
-$(objects) $(utils) : ../defs.h ../settings.h
+$(objects) $(utils) : ../settings.h
 
 
 ################################################################################
 
 .PHONY : objects
-objects: lex.yy.o $(NAME).tab.o Ast.o ##$(NAME)-aux.o
+objects: lex.yy.o $(NAME).tab.o ../Ast.o ##$(NAME)-aux.o
 
 
 lex.yy.o : lex.yy.c $(NAME).tab.h
 	$(CC) $(CFLAGS) -D_POSIX_SOURCE -c lex.yy.c
 
 
-lex.yy.c : $(NAME).l p2_parser.h ../defs.h ../settings.h
+lex.yy.c : $(NAME).l p2_parser.h ../settings.h
 	$(LEX) $(NAME).l
 
 
-$(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../defs.h ../settings.h
+$(NAME).tab.c $(NAME).tab.h : $(NAME).y p2_parser.h ../settings.h
 	$(YACC) -dv $(NAME).y

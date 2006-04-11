@@ -36,6 +36,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Term.h>
 
 
+
+
+
+
+
+enum p2_parser__exit_state
+{
+    exit_state__aborted,
+    exit_state__end_of_input,
+    exit_state__locked_out,
+    exit_state__parse_failure
+
+};
+
+typedef enum p2_parser__exit_state p2_parser__exit_state;
+
+
+
+
+
+
+
+
 enum Ast__Type
 {
     BAG_T = 0,  /**< A bag composed of terms. */
