@@ -57,12 +57,12 @@ static void **
 buffer_copy( Array *a )
 {
     void **buffer;
-    int size = a->buffer_size * sizeof( void* );
+    size_t size = a->buffer_size * sizeof( void* );
 
     if ( ( buffer = malloc( size ) ) )
         memcpy( buffer, a->buffer, size );
 
-    return buffer;
+    return buffer /*@null@*/;
 }
 
 

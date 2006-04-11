@@ -122,16 +122,44 @@ s_reduce( Term *term )
 }
 
 
+/*
+static void **
+prim_args( Primitive *prim, void **args )
+{
+
+}
+*/
+
+static Object *
+reduce_arg( Term *term,
+    Memory_Manager *m,
+    Type *term_type,
+    Type *primitive_type,
+    Type *combinator_type )
+{
+    term = sk_reduce( term, m, term_type, primitive_type, combinator_type );
+
+    if ( term && term__length( term ) == 1 )
+        return *( term->head + 1 );
+    else
+        return 0;
+}
+
+
 /* Assumes left-associative form.
    Note: it's probably worth trying to find a way to consolidate the type
    checking and garbage collection of arguments. */
 static Term *
-prim_reduce( Term *term, Memory_Manager *m )
+prim_reduce( Term *term,
+    Memory_Manager *m,
+    Type *term_type,
+    Type *primitive_type,
+    Type *combinator_type )
 {
     unsigned int i;
-    Object *o;
+    Object *o, *arg;
     void *result, **args, **cur = term->head + 2;
-    Primitive *prim = ( Primitive* ) ( ( Object* ) *cur )->value;
+    Primitive *prim = ( ( Object* ) *cur )->value;
     Type *param_type;
 
     #if PRIM__ALLOW_NOARG_FUNCTIONS
@@ -150,51 +178,58 @@ prim_reduce( Term *term, Memory_Manager *m )
     args = malloc( prim->arity * sizeof( void* ) );
     #endif
 
+    cur++;
+
     /* Load arguments into the array. */
     for ( i = 0; i < prim->arity; i++ )
     {
-        cur++;
-
         if ( ( unsigned int ) *cur != 2 )
         {
-            #if SK__CHECKS__APPLY_TO_NONATOM
+            arg = reduce_arg( term__subterm_at( term, i + 1 ), m, term_type, primitive_type, combinator_type );
 
-            ERROR( "prim_reduce: primitive applied to non-atom" );
+            /*#if SK__CHECKS__APPLY_TO_NONATOM*/
 
-            if ( args )
-                free( args );
-            term__delete( term );
+            if ( !arg )
+            {
+                ERROR( "prim_reduce: primitive applied to non-reducing term" );
 
-            return 0;
+                if ( args )
+                    free( args );
+                term__delete( term );
 
-            #endif
+                return 0;
+            }
 
-            /*cur += ( unsigned int ) *cur;*/
+            /*#endif*/
+
+            cur += ( unsigned int ) *cur;
         }
 
         else
+        {
+            cur++;
+            arg = *cur;
             cur++;
 
+            #if DEBUG__SAFE
+            if ( !arg )
+            {
+                ERROR( "prim_reduce: null argument" );
 
-        #if DEBUG__SAFE
-        if ( !(*cur) )
-        {
-            ERROR( "prim_reduce: null argument" );
+                if ( args )
+                    free( args );
+                term__delete( term );
 
-            if ( args )
-                free( args );
-            term__delete( term );
-
-            return 0;
+                return 0;
+            }
+            #endif
         }
-        #endif
 
         /* Note: it's more efficient to do this here than in Primitive.c */
         #if PRIM__CHECKS__PARAM_TYPE
 
         param_type = prim->parameters[i].type;
-        if ( param_type != ( *( ( Object** ) cur ) )->type
-          && param_type != any_type )
+        if ( param_type != arg->type && param_type != any_type )
         {
             ERROR( "prim_reduce: argument type mismatch" );
 
@@ -209,9 +244,9 @@ prim_reduce( Term *term, Memory_Manager *m )
 
         /* ~ inefficient */
         if ( prim->parameters[i].type != any_type )
-            args[i] = ( *( ( Object** ) cur ) )->value;
+            args[i] = arg->value;
         else
-            args[i] = *cur;
+            args[i] = arg;
     }
 
     /* Apply the primitive. */
@@ -243,6 +278,7 @@ prim_reduce( Term *term, Memory_Manager *m )
     }
 
     /* Replace the primitive reference and its arguments with the return value. */
+    cur--;
     *cur = o;
     cur--;
     *cur = ( void* ) 2;
@@ -378,10 +414,10 @@ printf( "\n" );  fflush( stdout );
            Caution: the term MUST be in left-associative form. */
         if ( ( unsigned int ) *( term->head ) == 2 )
             /* Singleton term. */
-            head = ( Object* ) *( term->head + 1 );
+            head = *( term->head + 1 );
         else
             /* Left-associative sequence. */
-            head = ( Object* ) *( term->head + 2 );
+            head = *( term->head + 2 );
 
         #if DEBUG__SAFE
         if ( !head )
@@ -399,9 +435,10 @@ printf( "\n" );  fflush( stdout );
         {
             if ( term__length( term ) <= ( ( Primitive* ) head->value )->arity )
                 return term;
+
             else
             {
-                term = prim_reduce( term, m );
+                term = prim_reduce( term, m, term_type, primitive_type, combinator_type );
 
                 /* Unless the application of a primitive is allowed to yield
                    another primitive (or an S or K combinator), the resulting
@@ -466,13 +503,16 @@ printf( "\n" );  fflush( stdout );
             #endif
         }
 
+        #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
+
+        iter++;
+
         #if DEBUG__SK
         printf( "%i:\t", iter );
         print_term( term );
         #endif
 
-        #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
-        if ( ++iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
+        if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
         {
             ERROR( "sk_reduce: reduction aborted (possible infinite loop)" );
             term__delete( term );

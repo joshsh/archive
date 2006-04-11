@@ -22,7 +22,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Compiler.h>
 
 
-    /* Flag set by `--verbose'. */
     static int brief_flag;
     static int debug_flag;
     static int help_flag;
@@ -59,7 +58,7 @@ read_options ( int argc, char **argv, char *source_file )
             /* These options set a flag. */
             { "brief",      no_argument,        &brief_flag,    1   },
             { "debug",      no_argument,        &debug_flag,    1   },
-            { "file",       required_argument,  0,              'f' },
+            { "file",       required_argument,  0,              ( int ) 'f' },
             { "help",       no_argument,        &help_flag,     1   },
             { "quiet",      no_argument,        &quiet_flag,    1   },
             { "verbose",    no_argument,        &verbose_flag,  1   },
@@ -127,7 +126,7 @@ read_options ( int argc, char **argv, char *source_file )
         printf ( "non-option ARGV-elements: " );
         while ( optind < argc)
             printf ( "%s ", argv[optind++] );
-        putchar ( '\n' );
+        printf( "\n" );
     }
 }
 
@@ -163,7 +162,8 @@ int main( int argc, char *argv[] )
 
             print_version();
 
-            compiler__parse( compiler );
+            if ( compiler__parse( compiler ) )
+                ERROR( "main: parse failed" );
 
             compiler__delete( compiler );
         }
