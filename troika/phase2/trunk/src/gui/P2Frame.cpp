@@ -1,5 +1,5 @@
 #include "P2Frame.h"
-#include "layout/P2Layout.h"
+#include "layout/P2FreeFormLayout.h"
 
 #include <QtGui>
 
@@ -16,7 +16,7 @@ P2Frame::P2Frame( const P2Environment &env )
     #endif
 
     // Note: no need to call setLayout after using this constructor.
-    P2Layout *layout = new P2Layout( this );
+    P2FreeFormLayout *layout = new P2FreeFormLayout( this );
 
     connect( layout, SIGNAL( resized() ), this, SLOT( layoutResizedEvent() ) );
 
@@ -53,7 +53,7 @@ void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 
     widget->isDependent = true;
 
-    (( P2Layout* ) layout())->addWidget( widget, position );
+    (( P2FreeFormLayout* ) layout())->addWidget( widget, position );
 
     //updateGeometry();  //~
 }
@@ -61,7 +61,7 @@ void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 
 void P2Frame::refresh( const P2Environment &env )
 {
-    P2Layout *l = ( P2Layout* ) layout();
+    P2FreeFormLayout *l = ( P2FreeFormLayout* ) layout();
 
     QPoint offset;
     int minWidth;
@@ -151,7 +151,7 @@ void P2Frame::showInfo()
     cout << "    Geometry: (" << geometry().x() << ", " << geometry().y()
          << "), " << geometry().width() << " by " << geometry().height()
          << " pixels." << endl;
-    cout << "    Children: " << ( ( P2Layout* ) layout() )->count() << endl;
+    cout << "    Children: " << ( ( P2FreeFormLayout* ) layout() )->count() << endl;
 }
 
 

@@ -16,6 +16,9 @@ P2Environment::P2Environment()
 
     frameContentsSpacing = FRAME__CONTENTS__SPACING;
     frameContentsPadding = FRAME__CONTENTS__PADDING;
+
+    env = environment__new();
+    compiler = compiler__new( env );
 }
 
 
@@ -29,7 +32,19 @@ P2Environment::P2Environment( const P2Environment &other )
 
     idleFramesAreVisible = other.idleFramesAreVisible;
     namesAreVisible = other.namesAreVisible;
+
+    env = environment__new();
 }
+
+
+P2Environment::~P2Environment()
+{
+    compiler__delete( compiler );
+    environment__delete( env );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 
 bool P2Environment::getIdleFrameVisibility() const

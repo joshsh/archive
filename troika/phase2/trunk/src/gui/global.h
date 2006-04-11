@@ -21,11 +21,11 @@ extern void newMainWindow( P2Environment &env );
 
 // Debugging ///////////////////////////////////////////////////////////////////
 
-#define DEBUG
+    #include <iostream.h>
+
+//#define DEBUG
 
 #ifdef DEBUG
-
-    #include <iostream.h>
 
     #define DEBUG__FRAME
     //#define DEBUG__LAYOUT

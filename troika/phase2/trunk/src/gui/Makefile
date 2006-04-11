@@ -1,7 +1,9 @@
 APP	=	troika
 
-INCPATH	=	-I /opt/Qtopia/sharp/include/
-LIBS	=	-L /opt/Qtopia/sharp/lib/ -lqpe -lqte -ljpeg -luuid
+INCPATH	=	-I /opt/Qtopia/sharp/include/ \
+		-I../api
+LIBS	=	-L /opt/Qtopia/sharp/lib/ -lqpe -lqte -ljpeg -luuid \
+		-lphase2
 CXXFLAGS=	-DQWS -fno-rtti -Wno-deprecated
 
 CXX	=	/opt/Embedix/tools/bin/arm-linux-g++
@@ -15,9 +17,6 @@ all: x86 arm
 
 
 clean: x86-clean arm-clean
-
-
-distclean: x86-distclean arm-distclean
 
 
 ################################################################################
@@ -46,11 +45,7 @@ $(APP).pro: $(HSRC) $(CPPSRC)
 
 
 x86-clean:
-	- rm -f Makefile_x86 $(APP).pro compile-target.h *.o moc_* qrc_resources.cpp
-
-
-x86-distclean: x86-clean
-	- rm -f $(APP)
+	- rm -f troika Makefile_x86 $(APP).pro compile-target.h *.o moc_* qrc_resources.cpp
 
 
 ################################################################################
@@ -109,7 +104,3 @@ P2BitmapEditor_moc.cpp: P2BitmapEditor.h
 
 arm-clean:
 	- rm -f compile-target.h *.o *_moc.cpp
-
-
-arm-distclean: arm-clean
-	- rm -f $(APP)_arm

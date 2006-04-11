@@ -19,7 +19,7 @@ public:
     /** Constructs an empty P2Frame. */
     P2Frame( const P2Environment &env );
 
-    /** Adds a widget to this P2Frame's P2Layout, which assumes ownership of it.
+    /** Adds a widget to this P2Frame's P2FreeFormLayout, which assumes ownership of it.
         \param widget  the child P2Widget to add
         \param position  the intended top left-hand corner of the child's
         geometry(), before collision resolution */

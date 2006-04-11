@@ -7,6 +7,12 @@
 
 #include <QtGui>
 
+extern "C"
+{
+#include <Compiler.h>
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 class P2Environment : public QObject
@@ -20,6 +26,8 @@ public:
 
     /** Copy constructor. */
     P2Environment( const P2Environment &other );
+
+    ~P2Environment();
 
     bool getIdleFrameVisibility() const;
     void setIdleFrameVisibility( bool v );
@@ -43,6 +51,9 @@ private:
 
     int frameContentsSpacing;
     int frameContentsPadding;
+
+    Environment *env;
+    Compiler *compiler;
 
 };
 

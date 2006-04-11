@@ -39,6 +39,14 @@ void newMainWindow( P2Environment &env )
 }
 
 
+static void
+delete_windows()
+{
+    while ( windows.size() )
+        delete windows.takeFirst();
+}
+
+
 /** Main function for the Phase2 GUI. */
 int main( int argc, char **argv )
 {
@@ -55,8 +63,7 @@ cout << "a.startDragTime():" << a.startDragTime() << endl;
 
     int ret = a.exec();
 
-    while ( windows.size() )
-        delete windows.takeFirst();
+    delete_windows();
 
     return ret;
 }
