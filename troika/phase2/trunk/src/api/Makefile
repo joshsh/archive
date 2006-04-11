@@ -116,7 +116,7 @@ strip :  phase2
 # Libraries.
 
 .PHONY: libs
-libs : libphase2.a libphase2.so
+libs :  libphase2.a libphase2.so
 
 libphase2.a :  recursive $(objects)
 	ar rc libphase2.a $(objects)
@@ -124,6 +124,15 @@ libphase2.a :  recursive $(objects)
 
 libphase2.so :  recursive $(objects)
 	gcc -shared -o libphase2.so $(objects)
+
+
+################################################################################
+## Installation.
+
+.PHONY: install
+install :  phase2 libs
+	cp phase2 /usr/bin
+	cp libphase2.a libphase2.so /usr/lib
 
 
 # DO NOT DELETE
