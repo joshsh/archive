@@ -53,7 +53,7 @@ void P2Frame::addChild( P2Widget *widget, const QPoint &position )
 
     widget->isDependent = true;
 
-    (( P2FreeFormLayout* ) layout())->addWidget( widget, position );
+    (( P2FreeFormLayout* ) layout())->add( widget, position );
 
     //updateGeometry();  //~
 }

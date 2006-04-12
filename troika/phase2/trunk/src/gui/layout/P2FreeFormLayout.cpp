@@ -16,93 +16,21 @@ P2FreeFormLayout::P2FreeFormLayout( QWidget *parent )
              << (int) parent << " )" << endl;
     #endif
 
-    // Frames may be (programmatically) resized, but may not be smaller than
-    // minimumSize.
-    setSizeConstraint( QLayout::SetDefaultConstraint );
-
-    // Minimum distance of 1 pixel between child widgets.
-    setSpacing( FRAME__CONTENTS__SPACING );
-
-    // Border padding of 2 pixels around content rectangle.
-    setMargin( FRAME__CONTENTS__SPACING + FRAME__CONTENTS__PADDING );
-
-    generateSpanningTree();
-
-    receivedMinimumSize = QSize( 0, 0 );
-
     // The initially empty layout has a minimal content rectangle.
     setContentOffset( QPoint( 0, 0 ) );
+
+    generateSpanningTree();
 
     //adjustGeometry();
     //justifyContents();
 }
 
 
-/*
-P2FreeFormLayout::~P2FreeFormLayout()
-{
-    // Delete all layout items.
-    for ( int i = 0; i < children.size(); i++ )
-        delete children.at( i );
-    //while ( ( item = children.takeAt( 0 ) ) )
-    //    delete item;
-}
-*/
-
-
-void P2FreeFormLayout::setContentOffset( const QPoint &offset )
-{
-    QPoint newOffset = offset;
-
-    if ( newOffset.x() < margin() )
-        newOffset.setX( margin() );
-    if ( newOffset.y() < margin() )
-        newOffset.setY( margin() );
-
-    if ( newOffset != contentOffset )
-    {
-        contentOffset = newOffset;
-        adjustGeometry();
-    }
-}
-
-
-void P2FreeFormLayout::refreshChildren( const P2Environment &env )
-{
-    // Propagate the signal to all children.
-    for ( int i = 0; i < children.size(); i++ )
-    {
-        P2Widget *child = ( P2Widget* ) children.at( i )->widget();
-        child->refresh( env );
-    }
-}
-
-
-void P2FreeFormLayout::setMinimumSize( const QSize &size )
-{
-    if ( size != receivedMinimumSize )
-    {
-        receivedMinimumSize = size;
-        adjustGeometry();
-    }
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 
-/*
-void P2FreeFormLayout::addItem( QLayoutItem *item )
-{
-    children.append( item );
-
-    adjustGeometry();
-}
-*/
-
-
 // Warning: this is NOT an efficient way to add multiple items at a time.
-void P2FreeFormLayout::addWidget( P2Widget *widget, const QPoint &position )
+void P2FreeFormLayout::add( P2Widget *widget, const QPoint &position )
 {
     // Adjust the position of the new item so it does not collide.
     QPoint adjustedPosition = findBestPosition(
@@ -110,51 +38,8 @@ void P2FreeFormLayout::addWidget( P2Widget *widget, const QPoint &position )
 
     widget->setGeometry( QRect( adjustedPosition, widget->sizeHint() ) );
 
-    addItem( new QWidgetItem( widget ) );
-
-    connect( widget, SIGNAL( resized( QResizeEvent* ) ),
-             this, SLOT( childResizeEvent( QResizeEvent* ) ) );
+    addWidget( widget );
 }
-
-
-/*
-int P2FreeFormLayout::count() const
-{
-    return children.size();
-}
-
-
-QLayoutItem *P2FreeFormLayout::itemAt( int index ) const
-{
-    return children.value(index);
-}
-
-
-QLayoutItem *P2FreeFormLayout::takeAt( int index )
-{
-    if ( index >= 0 && index < children.size() )
-        return children.takeAt( index );
-    else
-        return 0;
-}
-
-
-void P2FreeFormLayout::showChildren() const
-{
-    for ( int i = 0; i < children.size(); i++ )
-    {
-        cout << indent()
-             << i << ":\t";
-
-        P2Widget *child = ( P2Widget* ) children.at( i )->widget();
-        cout << child->className().toStdString() << "\t";
-        if ( child->objectName() != 0 )
-            cout << child->objectName().toStdString();
-
-        cout << endl;
-    }
-}
-*/
 
 
 // Size geometry ///////////////////////////////////////////////////////////////
@@ -171,32 +56,6 @@ bool P2FreeFormLayout::hasHeightForWidth() const
 {
     // P2FreeFormLayouts are rigid, with no wrapping behavior.
     return false;
-}
-
-
-QSize P2FreeFormLayout::minimumSize() const
-{
-    return cachedSizeHint;
-}
-
-
-QSize P2FreeFormLayout::sizeHint() const
-{
-    return cachedSizeHint;
-}
-
-
-void P2FreeFormLayout::setGeometry( const QRect &rect )
-{
-    QLayout::setGeometry( rect );
-
-    //...
-}
-
-
-void P2FreeFormLayout::childResizeEvent( QResizeEvent *event )
-{
-    adjustGeometry();
 }
 
 

@@ -7,3 +7,18 @@ LINK          = g++
 LFLAGS        = -Wl,-rpath,/usr/local/Trolltech/Qt-4.1.0/lib
 LIBS          = $(SUBLIBS) -L/usr/local/Trolltech/Qt-4.1.0/lib -lQtGui_debug -L/usr/X11R6/lib -L/opt/frobs/qt/qt-x11-opensource-src-4.1.0/lib -lpng -lSM -lICE -lXi -lXrender -lXrandr -lXcursor -lXinerama -lfreetype -lfontconfig -lXext -lX11 -lQtCore_debug -lz -lm -ldl -lpthread \
 -lphase2 `xml2-config --libs`
+
+
+Bag
+Combinator	P2Text
+Namespace	[VBox frame]
+Primitive	P2Text
+Set		[VBox frame]
+Term		?
+Type		P2Text
+char		P2Text
+cstring		P2Text
+double		P2Text or number widget
+int		P2Text or number widget
+void		P2Text
+
