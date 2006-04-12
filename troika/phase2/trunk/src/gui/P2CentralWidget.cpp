@@ -1,5 +1,6 @@
 #include "P2CentralWidget.h"
-#include "P2Frame.h"
+
+    #include "frame/P2FreeFormFrame.h"
 
     #include "binders/P2BitmapEditor.h"
     #include "binders/P2CheckBox.h"
@@ -62,14 +63,16 @@ P2CentralWidget::P2CentralWidget( const P2Environment &env )
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
 
     // Top-level binder.
-    P2Frame *b = centralFrame = new P2Frame( env ), *b2, *b3;
+    P2FreeFormFrame *b = new P2FreeFormFrame( env ), *b2, *b3;
+    centralFrame = b;
+
     b->setParent( this );
     b->setObjectName( "Top-level P2Frame" );
 
     QPoint p( 0, 0 );
 
 //*
-    P2Frame *togglers = new P2Frame( env );
+    P2FreeFormFrame *togglers = new P2FreeFormFrame( env );
     togglers->setObjectName( "ToggleWidgets" );
 
     // ( Really, togglers should be fully constructed before it is added )
@@ -81,7 +84,7 @@ P2CentralWidget::P2CentralWidget( const P2Environment &env )
 
     for ( int i = 0; i < 3; i++)
     {
-        b2 = new P2Frame( env );
+        b2 = new P2FreeFormFrame( env );
         tw = new ToggleWidget();
         b2->addChild( tw, QPoint( 30, 0 ) );
         togglers->addChild( b2, p );
@@ -89,33 +92,33 @@ P2CentralWidget::P2CentralWidget( const P2Environment &env )
     }
 
     // Empty binders are tolerated.
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     b->addChild( b2, p );
 
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     P2CheckBox *cbox = new P2CheckBox();
     b2->addChild( cbox, QPoint( 5, 0 ) );
     b->addChild( b2, p );
 
     P2Image *image = new P2Image( troika_xpm );
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     b2->addChild( image, QPoint( 30, 10 ) );
     b->addChild( b2, p );
 
     image = new P2Image( troika_icon_big_xpm );
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     b2->addChild( image, QPoint( 0, 0 ) );
     b->addChild( b2, QPoint( 0, 130 ) );
 
 /*
     P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     b2->addChild( text, QPoint( 0, 0 ) );
     b->addChild( b2, p );
 //*/
 
     P2Text *t = new P2Text( "Bleah.", 0 );
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     b2->addChild( t, QPoint( 0, 0 ) );
     b->addChild( b2, QPoint( 10, 0 ) );
 
@@ -123,9 +126,9 @@ P2CentralWidget::P2CentralWidget( const P2Environment &env )
     editor->setGeometry(
         QRect( editor->geometry().topLeft() + QPoint( 60, 60 ),
         editor->geometry().size() ) );
-    b2 = new P2Frame( env );
+    b2 = new P2FreeFormFrame( env );
     b2->addChild( editor, QPoint( 0, 0 ) );
-    b3 = new P2Frame( env );
+    b3 = new P2FreeFormFrame( env );
     b3->addChild( b2, QPoint( 0, 0 ) );
     b->addChild( b3, QPoint( 0, 100 ) );
     b3->setObjectName( "P2BitmapEditor" );
@@ -134,11 +137,11 @@ P2CentralWidget::P2CentralWidget( const P2Environment &env )
     b->addChild( rs, QPoint( 0, 20 ) );
 
     // Resizable widgets.
-    P2Frame *resizers = new P2Frame( env );
+    P2FreeFormFrame *resizers = new P2FreeFormFrame( env );
     for ( int i = 0; i < 4; i++)
     {
         rs = new ResizeWidget();
-        b2 = new P2Frame( env );
+        b2 = new P2FreeFormFrame( env );
         b2->addChild( rs, QPoint( 10, 0 ) );
         resizers->addChild( b2, QPoint( 0, 0 ) );
     }

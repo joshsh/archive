@@ -1,5 +1,5 @@
 #include "P2Frame.h"
-#include "layout/P2FreeFormLayout.h"
+#include "layout/P2Layout.h"
 
 #include <QtGui>
 
@@ -10,58 +10,15 @@
 P2Frame::P2Frame( const P2Environment &env )
     : P2Widget()
 {
-    #ifdef DEBUG__FRAME
-        cout << indentPlus()
-             << "P2Frame[" <<  (int) this << "]::P2Frame()" << endl;
-    #endif
-
-    // Note: no need to call setLayout after using this constructor.
-    P2FreeFormLayout *layout = new P2FreeFormLayout( this );
-
-    connect( layout, SIGNAL( resized() ), this, SLOT( layoutResizedEvent() ) );
-
     focusChild = 0;
 
     environment = &env;
-
-setAcceptDrops(true);
-
-    #ifdef DEBUG__FRAME
-        indentMinus();
-    #endif
-}
-
-
-const QString P2Frame::className()
-{
-    return QString( "P2Frame" );
-}
-
-
-void P2Frame::addChild( P2Widget *widget, const QPoint &position )
-{
-    #ifdef DEBUG__FRAME
-        cout << indent()
-             << "P2Frame[" << (int) this << "]::addChild( " << (int) widget << " )" << endl;
-    #endif
-
-    // "When you use a layout, you don't need to pass a parent when constructing
-    // the child widgets. The layout will automatically reparent the widgets
-    // (using QWidget::setParent()) so that they are children of the widget on
-    // which the layout is installed.
-    widget->setParent( this );
-
-    widget->isDependent = true;
-
-    (( P2FreeFormLayout* ) layout())->add( widget, position );
-
-    //updateGeometry();  //~
 }
 
 
 void P2Frame::refresh( const P2Environment &env )
 {
-    P2FreeFormLayout *l = ( P2FreeFormLayout* ) layout();
+    P2Layout *l = ( P2Layout* ) layout();
 
     QPoint offset;
     int minWidth;
@@ -151,7 +108,7 @@ void P2Frame::showInfo()
     cout << "    Geometry: (" << geometry().x() << ", " << geometry().y()
          << "), " << geometry().width() << " by " << geometry().height()
          << " pixels." << endl;
-    cout << "    Children: " << ( ( P2FreeFormLayout* ) layout() )->count() << endl;
+    cout << "    Children: " << ( ( P2Layout* ) layout() )->count() << endl;
 }
 
 
@@ -288,33 +245,6 @@ void P2Frame::paintEvent( QPaintEvent *event )
         painter.drawRect( borderRect );
     }
 }
-
-
-bool P2Frame::acceptDrops () const
-{
-    return true;
-}
-
-
-    void P2Frame::dragEnterEvent( QDragEnterEvent *event )
-    {
-        //if (event->mimeData()->hasFormat("text/plain"))
-            event->acceptProposedAction();
-    }
-
-
-    void P2Frame::dropEvent( QDropEvent *event )
-    {
-        cout << "Accepting a drop event: " << event->mimeData()->text().toStdString() << endl;
-
-        //textBrowser->setPlainText(event->mimeData()->text());
-        //mimeTypeCombo->clear();
-        //mimeTypeCombo->addItems(event->mimeData()->formats());
-
-        event->acceptProposedAction();
-    }
-
-    // S.a.  dragMoveEvent, dragLeaveEvent
 
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

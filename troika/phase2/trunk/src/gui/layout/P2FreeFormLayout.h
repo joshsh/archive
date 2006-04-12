@@ -3,13 +3,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <QtGui>
+
 #include "global.h"
 #include "P2Widget.h"
 #include "P2Layout.h"
 #include "P2FreeFormLayoutTree.h"
-#include "P2Environment.h"
-
-#include <QtGui>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,16 +20,7 @@ public:
 
     P2FreeFormLayout( QWidget *parent );
 
-    //~P2FreeFormLayout();
-
-    /** Mandatory overloaded method from QLayout. */
-    //void addItem( QLayoutItem *item );
-
     void add( P2Widget *widget, const QPoint &position );
-
-    //int count() const;
-    //QLayoutItem *itemAt( int index ) const;
-    //QLayoutItem *takeAt( int index );
 
     bool hasHeightForWidth() const;
     Qt::Orientations expandingDirections() const;

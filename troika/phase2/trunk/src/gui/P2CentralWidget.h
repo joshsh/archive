@@ -5,7 +5,7 @@
 
 #include "global.h"
 #include "P2BasicWidget.h"
-#include "P2Frame.h"
+#include "frame/P2Frame.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

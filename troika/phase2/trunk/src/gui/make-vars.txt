@@ -13,12 +13,12 @@ Bag
 Combinator	P2Text
 Namespace	[VBox frame]
 Primitive	P2Text
-Set		[VBox frame]
+Set		[VBox frame] or [wrapping box frame]
 Term		?
 Type		P2Text
 char		P2Text
 cstring		P2Text
-double		P2Text or number widget
-int		P2Text or number widget
+double		P2Text or [number widget]
+int		P2Text or [number widget]
 void		P2Text
 
