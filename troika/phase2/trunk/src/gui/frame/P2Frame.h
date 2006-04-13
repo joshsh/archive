@@ -3,9 +3,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "global.h"
 #include "P2Widget.h"
-#include "P2Environment.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +15,7 @@ class P2Frame : public P2Widget
 public:
 
     /** Constructs an empty P2Frame. */
-    P2Frame( const P2Environment &env );
+    P2Frame( P2Widget *widget, const P2Environment &env );
 
     //- "Reimplement QWidget::resizeEvent() to calculate the required
     // distribution of sizes and call setGeometry() on each child."
@@ -36,6 +34,8 @@ public:
 public slots:
 
     void refresh( const P2Environment &env );
+    void update();
+    void childResizeEvent( QResizeEvent *event );
 
 protected:
 
@@ -49,11 +49,18 @@ protected:
     P2Frame *focusChild;
     void unfocus();
 
+private:
+
+    P2Widget *contentWidget;
+
     const P2Environment *environment;
 
-protected slots:
+    void setContentOffset( const QPoint &offset );
+    void setMinimumSize( const QSize &size );
 
-    void layoutResizedEvent();
+    QSize cachedSizeHint;
+
+    QSize receivedMinimumSize;
 
 };
 

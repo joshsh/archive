@@ -1,5 +1,4 @@
 #include "P2Frame.h"
-#include "layout/P2Layout.h"
 
 #include <QtGui>
 
@@ -7,10 +6,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Frame::P2Frame( const P2Environment &env )
+P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
     : P2Widget()
 {
     focusChild = 0;
+
+    contentWidget = widget;
+    contentWidget->setParent( this );
+    connect(
+        this,           SIGNAL( refresh( P2Environment& ) ),
+        contentWidget,  SLOT( refresh( P2Environment& ) ) );
+    connect(
+        contentWidget,  SIGNAL( resized( QResizeEvent* ) ),
+        this,           SIGNAL( childResizeEvent( QResizeEvent* ) ) );
 
     environment = &env;
 }
@@ -18,7 +26,7 @@ P2Frame::P2Frame( const P2Environment &env )
 
 void P2Frame::refresh( const P2Environment &env )
 {
-    P2Layout *l = ( P2Layout* ) layout();
+cout << "P2Frame::refresh" << endl;
 
     QPoint offset;
     int minWidth;
@@ -39,13 +47,8 @@ void P2Frame::refresh( const P2Environment &env )
     }
 
     // Refresh label params.
-    l->setContentOffset( offset );
-    l->setMinimumSize( QSize( minWidth, 0 ) );
-
-    // Refresh minimum size.
-
-    // Propagate "refresh" signal to children.
-    l->refreshChildren( env );
+    setContentOffset( &offset );
+    setMinimumSize( QSize( minWidth, 0 ) );
 }
 
 
@@ -74,8 +77,8 @@ void P2Frame::setFocus( P2Frame *child )
     else
         focusChild = child;
 
-    if ( isDependent )
-        ( ( P2Frame* ) parentWidget() )->setFocus( this );
+    //if ( isDependent )
+    //    ( ( P2Frame* ) parentWidget() )->setFocus( this );
 }
 
 
@@ -92,9 +95,19 @@ void P2Frame::unfocus()
 }
 
 
-void P2Frame::layoutResizedEvent()
+void P2Frame::update()
 {
+//cout << "# before: (" << size().width() << ", " << size().height() << ")" << endl;
+//cout << "# sizeHint: (" << layout()->sizeHint().width() << ", " << layout()->sizeHint().height() << ")" << endl;
     resize( layout()->sizeHint() );
+    emit resized( 0 );
+//cout << "# after: (" << size().width() << ", " << size().height() << ")" << endl;
+}
+
+
+void childResizeEvent( QResizeEvent *event );
+{
+    update();
 }
 
 
@@ -243,6 +256,37 @@ void P2Frame::paintEvent( QPaintEvent *event )
         // Draw border rectangle.
         borderRect = QRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
         painter.drawRect( borderRect );
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+void P2Frame::setContentOffset( const QPoint &offset )
+{
+    QPoint newOffset = offset;
+
+    if ( newOffset.x() < margin() )
+        newOffset.setX( margin() );
+    if ( newOffset.y() < margin() )
+        newOffset.setY( margin() );
+
+    if ( newOffset != contentWidget->geometry().topLeft() )
+    {
+        contentWidget->setPosition( &newOffset );
+        update();
+    }
+}
+
+
+void P2Frame::setMinimumSize( const QSize &size )
+{
+    if ( size != cachedSizeHint )
+    {
+        cachedSizeHint = size;
+        update();
     }
 }
 

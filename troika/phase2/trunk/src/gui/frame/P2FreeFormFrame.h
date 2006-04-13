@@ -14,13 +14,13 @@ public:
     /** Constructs an empty P2FreeFormFrame. */
     P2FreeFormFrame( const P2Environment &env );
 
+    const QString className();
+
     /** Adds a widget to this P2FreeFormFrame's P2FreeFormLayout, which assumes ownership of it.
         \param widget  the child P2Widget to add
         \param position  the intended top left-hand corner of the child's
         geometry(), before collision resolution */
     void addChild( P2Widget *widget, const QPoint &position );
-
-    const QString className();
 
 protected:
 

@@ -20,15 +20,13 @@ P2FreeFormFrame::P2FreeFormFrame( const P2Environment &env )
 
     connect( layout, SIGNAL( resized() ), this, SLOT( layoutResizedEvent() ) );
 
-    focusChild = 0;
-
-    environment = &env;
-
 setAcceptDrops(true);
 
     #ifdef DEBUG__FRAME
         indentMinus();
     #endif
+
+    p2layout = layout->self();
 }
 
 
@@ -63,7 +61,6 @@ void P2FreeFormFrame::addChild( P2Widget *widget, const QPoint &position )
 
 
 // Event handling //////////////////////////////////////////////////////////////
-
 
 
 bool P2FreeFormFrame::acceptDrops () const
