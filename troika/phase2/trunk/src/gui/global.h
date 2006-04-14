@@ -67,7 +67,20 @@ const char *indentMinus();
 #define COLOR__FRAME__INACTIVE  0xBF, 0xBF, 0xFF, 0xFF
 
 
+// Phase2 bindings /////////////////////////////////////////////////////////////
+
+#define CHAR__COLOR                 0xBF, 0xBF, 0xFF, 0xFF
+#define DOUBLE__COLOR               0xBF, 0x00, 0xBF, 0xFF
+#define COMBINATOR__COLOR           0xFF, 0x00, 0x00, 0xFF
+#define INT__COLOR                  0X00, 0xFF, 0x00, 0xFF
+#define PRIM__COLOR                 0xFF, 0xBF, 0x00, 0xFF
+#define STRING__COLOR               0x3F, 0x3F, 0x3F, 0xFF
+#define TYPE__COLOR                 0x00, 0xFF, 0xFF, 0xFF
+
+
 // Layout //////////////////////////////////////////////////////////////////////
+
+#define FRAME__BORDER_THICKNESS     1
 
 /** Number of empty pixels on either side of a frame label. */
 #define FRAME__LABEL__X_PADDING     2

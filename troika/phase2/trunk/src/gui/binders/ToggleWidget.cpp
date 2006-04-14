@@ -67,7 +67,7 @@ ToggleWidget::ToggleWidget()
              << "ToggleWidget[" <<  (int) this << "]::ToggleWidget()" << endl;
     #endif
 
-    setFixedSize( 10, 11 );
+    //setFixedSize( 10, 11 );
 
     imageList = new QList<QImage>();
     imageList->append( QImage( sk_s_xpm ) );
@@ -75,12 +75,20 @@ ToggleWidget::ToggleWidget()
     imageList->append( QImage( sk_i_xpm ) );
 
     toggle = 0;
+
+    //resize( sizeHint() );
 }
 
 
 const QString ToggleWidget::className()
 {
     return QString( "ToggleWidget" );
+}
+
+
+QSize ToggleWidget::sizeHint() const
+{
+    return QSize( 10, 11 );
 }
 
 

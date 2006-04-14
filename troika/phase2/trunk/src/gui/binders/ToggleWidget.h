@@ -19,6 +19,8 @@ public:
 
     const QString className();
 
+    QSize sizeHint() const;
+
 protected:
 
     bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );

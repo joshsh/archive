@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Text::P2Text( char *text, QColor *color )
+P2Text::P2Text( QString text, QColor *color )
         : P2BasicWidget()
 {
     #ifdef DEBUG
@@ -18,7 +18,7 @@ P2Text::P2Text( char *text, QColor *color )
         ? *color
         : palette().foreground().color();
 
-    size = fontMetrics().boundingRect( text ).size();
+    cachedSizeHint = fontMetrics().boundingRect( text ).size() + QSize( 0, 2 );
 }
 
 
@@ -30,7 +30,7 @@ const QString P2Text::className()
 
 QSize P2Text::sizeHint() const
 {
-    return size;
+    return cachedSizeHint;
 }
 
 
@@ -43,7 +43,7 @@ void P2Text::paintEvent( QPaintEvent *event )
 
     // Note: assumes the same font as the one used to find the bounding
     // rectangle at construction time.
-    painter.drawText( 0, size.height(), QString( text ) );
+    painter.drawText( 0, cachedSizeHint.height() - 2, text );
 }
 
 

@@ -13,42 +13,169 @@ P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
 
     contentWidget = widget;
     contentWidget->setParent( this );
-    connect(
-        this,           SIGNAL( refresh( P2Environment& ) ),
-        contentWidget,  SLOT( refresh( P2Environment& ) ) );
+
     connect(
         contentWidget,  SIGNAL( resized( QResizeEvent* ) ),
-        this,           SIGNAL( childResizeEvent( QResizeEvent* ) ) );
+        this,           SLOT( childResizeEvent( QResizeEvent* ) ) );
 
     environment = &env;
+
+    //~
+    cachedSizeHint = QSize( 0, 0 );
+
+    // For now, frame title = name of content widget.
+    setTitle( objectName() );
+    connect(
+        this,  SIGNAL( renamed( QString ) ),
+        this,           SLOT( setTitle( QString ) ) );
+
+    // Constant for now.
+    margin = FRAME__CONTENTS__PADDING;
+    borderThickness = FRAME__BORDER_THICKNESS;
+
+    //~
+    refresh( env );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+QSize P2Frame::sizeHint() const
+{
+    return cachedSizeHint;
 }
 
 
 void P2Frame::refresh( const P2Environment &env )
 {
-cout << "P2Frame::refresh" << endl;
+cout << "P2Frame::refresh(" << ( int ) &env << ")" << endl;
 
-    QPoint offset;
-    int minWidth;
+    showBorder = env.getIdleFrameVisibility();
+    showTitle = env.getNameVisibility() && !title.isNull();
 
-    // Find label offset and minimum width.
-    if ( env.getNameVisibility() && objectName() != 0 )
+    contentWidget->refresh( env );
+
+    //~
+    update();
+}
+
+
+void P2Frame::update()
+{
+cout << "# before: (" << size().width() << ", " << size().height() << ")" << endl;
+//cout << "# sizeHint: (" << layout()->sizeHint().width() << ", " << layout()->sizeHint().height() << ")" << endl;
+//cout << "bar" << endl; cout.flush();
+//    resize( layout()->sizeHint() );
+    QSize before = cachedSizeHint;
+//cout << "contentWidget->size() = (" << contentWidget->width() << ", " << contentWidget->height() << ")" << endl;
+//cout << "contentWidget->sizeHint() = (" << contentWidget->width() << ", " << contentWidget->height() << ")" << endl;
+
+    // Note: it's important to use the content widget's sizeHint() here, rather
+    // than its size(), which may not yet be meaningful.
+    int xsize = contentWidget->sizeHint().width() + ( 2 * ( borderThickness + margin ) );
+    int ysize = contentWidget->sizeHint().height() + borderThickness + ( 2 * margin );
+
+    QSize titleSize = fontMetrics().boundingRect( title ).size()
+        + QSize( 2 * FRAME__LABEL__X_PADDING, 2 );
+
+    if ( showTitle )
     {
-        QSize labelSize = fontMetrics().boundingRect( objectName() ).size();
-        offset = QPoint( 0, labelSize.height() + FRAME__CONTENTS__PADDING );
-        minWidth = labelSize.width()
-            + ( 2 * ( FRAME__LABEL__X_PADDING + FRAME__LABEL__X_MARGIN ) );
+        ysize += titleSize.height();
+
+        int minWidth = titleSize.width()
+            + ( 2 * ( borderThickness + FRAME__LABEL__X_MARGIN ) );
+
+        if ( xsize < minWidth )
+            xsize = minWidth;
+
+        int yoffset = titleSize.height() + margin;
+        int xoffset;
+
+        switch ( FRAME__CONTENTS__ALIGNMENT )
+        {
+            case Qt::AlignLeft:
+
+                xoffset = margin + borderThickness;
+                break;
+
+            case Qt::AlignRight:
+
+                xoffset = xsize - ( margin + borderThickness + contentWidget->sizeHint().width() );
+                break;
+
+            case Qt::AlignHCenter:
+
+                xoffset = ( xsize - contentWidget->sizeHint().width() ) / 2;
+                break;
+        }
+
+cout << "1 contentWidget->setPosition(" << xoffset << ", " << yoffset << ")" << endl;
+        contentWidget->setPosition( QPoint( xoffset, yoffset ) );
+
+        yoffset = 0;
+
+        switch ( FRAME__LABEL__ALIGNMENT )
+        {
+            case Qt::AlignLeft:
+
+                xoffset = borderThickness + FRAME__LABEL__X_MARGIN;
+                break;
+
+            case Qt::AlignRight:
+
+                xoffset = xsize - ( borderThickness + FRAME__LABEL__X_MARGIN + titleSize.width() );
+                break;
+
+            case Qt::AlignHCenter:
+
+                xoffset = ( xsize - titleSize.width() ) / 2;
+                break;
+        }
+
+        titleRect = QRect( QPoint( xoffset, yoffset ), titleSize );
+
+        yoffset = titleSize.height() / 2;
+        borderRect = QRect( QPoint( 0, yoffset ), QSize( xsize, ysize ) - QSize( 1, 1 + yoffset ) );
     }
 
     else
     {
-        offset = QPoint( 0, 0 );
-        minWidth = 0;
+        ysize += borderThickness;
+
+cout << "2 contentWidget->setPosition(" << margin + borderThickness << ", " << margin + borderThickness << ")" << endl;
+        contentWidget->setPosition(
+            QPoint( margin + borderThickness, margin + borderThickness ) );
+
+        borderRect = QRect( QPoint( 0, 0 ), QSize( xsize, ysize ) - QSize( 1, 1) );
     }
 
-    // Refresh label params.
-    setContentOffset( &offset );
-    setMinimumSize( QSize( minWidth, 0 ) );
+    cachedSizeHint = QSize( xsize, ysize );
+//cachedSizeHint = QSize( 50, 50 );
+
+    if ( cachedSizeHint != before )
+    {
+        resize( cachedSizeHint );
+        //emit resized( 0 );
+    }
+cout << "# after: (" << size().width() << ", " << size().height() << ")" << endl;
+}
+
+
+void P2Frame::childResizeEvent( QResizeEvent *event )
+{
+    update();
+}
+
+
+void P2Frame::setTitle( QString s )
+{
+    if ( s != title )
+    {
+        title = s;
+
+        QWidget::update();
+    }
 }
 
 
@@ -90,24 +217,8 @@ void P2Frame::unfocus()
             focusChild->unfocus();
 
         focusChild = 0;
-        update();
+        QWidget::update();
     }
-}
-
-
-void P2Frame::update()
-{
-//cout << "# before: (" << size().width() << ", " << size().height() << ")" << endl;
-//cout << "# sizeHint: (" << layout()->sizeHint().width() << ", " << layout()->sizeHint().height() << ")" << endl;
-    resize( layout()->sizeHint() );
-    emit resized( 0 );
-//cout << "# after: (" << size().width() << ", " << size().height() << ")" << endl;
-}
-
-
-void childResizeEvent( QResizeEvent *event );
-{
-    update();
 }
 
 
@@ -117,11 +228,13 @@ void childResizeEvent( QResizeEvent *event );
 
 void P2Frame::showInfo()
 {
+/*
     cout << "P2Frame[" << (int) this << "]::showInfo():" << endl;
     cout << "    Geometry: (" << geometry().x() << ", " << geometry().y()
          << "), " << geometry().width() << " by " << geometry().height()
          << " pixels." << endl;
     cout << "    Children: " << ( ( P2Layout* ) layout() )->count() << endl;
+*/
 }
 
 
@@ -135,7 +248,7 @@ bool P2Frame::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
     else if ( event->button() == Qt::LeftButton )
     {
         setFocus( this );
-        update();
+        QWidget::update();
         return false;
     }
 
@@ -185,12 +298,19 @@ bool P2Frame::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin )
 // Note: QPaintEvent object is not used.
 void P2Frame::paintEvent( QPaintEvent *event )
 {
+/*
+cout << "paintEvent!" << endl; cout.flush();
+cout << "  borderRect.topLeft() = (" << borderRect.x() << ", " << borderRect.y() << ")" << endl;
+cout << "  borderRect.size() = (" << borderRect.width() << ", " << borderRect.height() << ")" << endl;
+cout << "  titleRect.topLeft() = (" << titleRect.x() << ", " << titleRect.y() << ")" << endl;
+cout << "  titleRect.size() = (" << titleRect.width() << ", " << titleRect.height() << ")" << endl;
+//*/
     QPainter painter( this );
     QColor activeColor( COLOR__FRAME__ACTIVE );
 
     if ( focusChild != this )
     {
-        QColor inactiveColor = environment->getIdleFrameVisibility()
+        QColor inactiveColor = showBorder
             ? QColor( COLOR__FRAME__INACTIVE )
             : Qt::white;
         painter.setPen( inactiveColor );
@@ -203,90 +323,28 @@ void P2Frame::paintEvent( QPaintEvent *event )
         painter.setPen( activePen );
     }
 
-    QRect borderRect;
-
-    // Draw border with object name as a label.
-    if ( ( objectName() != 0 ) && environment->getNameVisibility() )
+    // Draw border with title.
+    if ( showTitle )
     {
-        QSize size = fontMetrics().boundingRect( objectName() ).size();
-        int yoffset = size.height() / 2;
-        int xoffset;
-
         // Draw border rectangle.
-        borderRect = QRect( QPoint( 0, yoffset ), geometry().size() - QSize( 1, 1 + yoffset ) );
         painter.drawRect( borderRect );
-
-        switch ( FRAME__LABEL__ALIGNMENT )
-        {
-            case Qt::AlignLeft:
-
-                xoffset = FRAME__LABEL__X_MARGIN + FRAME__LABEL__X_PADDING;
-                break;
-
-            case Qt::AlignRight:
-
-                xoffset = width() - ( FRAME__LABEL__X_MARGIN + FRAME__LABEL__X_PADDING + size.width() );
-                break;
-
-            case Qt::AlignHCenter:
-
-                xoffset = ( width() - size.width() ) / 2;
-                break;
-        }
-
-        QRect textRect = QRect(
-            QPoint( xoffset - FRAME__LABEL__X_PADDING, yoffset),
-            size + QSize( 2 * FRAME__LABEL__X_PADDING, 0 ) );
 
         // Draw opaque background rectangle for text.
         painter.setPen( QColor( COLOR__BACKGROUND ) );
         painter.setBrush( QBrush( QColor( COLOR__BACKGROUND ), Qt::SolidPattern ) );
-        painter.drawRect( textRect );
+        painter.drawRect( titleRect );
 
         // Draw text.
         painter.setPen( activeColor );
         painter.setBackgroundMode( Qt::OpaqueMode );
         painter.setBackground( QBrush( QColor( COLOR__BACKGROUND ), Qt::SolidPattern ) );
-        painter.drawText( xoffset, size.height() - 2, objectName() );
+        painter.drawText( titleRect.x() + FRAME__LABEL__X_PADDING, titleRect.height() - 2, title );
     }
 
-    // Draw border with no label.
+    // Draw border with no title.
     else
     {
-        // Draw border rectangle.
-        borderRect = QRect( QPoint( 0, 0 ), geometry().size() - QSize( 1, 1) );
         painter.drawRect( borderRect );
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-void P2Frame::setContentOffset( const QPoint &offset )
-{
-    QPoint newOffset = offset;
-
-    if ( newOffset.x() < margin() )
-        newOffset.setX( margin() );
-    if ( newOffset.y() < margin() )
-        newOffset.setY( margin() );
-
-    if ( newOffset != contentWidget->geometry().topLeft() )
-    {
-        contentWidget->setPosition( &newOffset );
-        update();
-    }
-}
-
-
-void P2Frame::setMinimumSize( const QSize &size )
-{
-    if ( size != cachedSizeHint )
-    {
-        cachedSizeHint = size;
-        update();
     }
 }
 

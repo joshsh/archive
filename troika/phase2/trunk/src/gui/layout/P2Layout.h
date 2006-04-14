@@ -11,15 +11,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class P2Layout : public QLayout
+/** \note  To avoid diamond inheritance issues, P2Layout is not derived from
+    QLayout. */
+class P2Layout //: virtual public QObject //: public QLayout
 {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
 
-    P2Layout( QWidget *parent );
+    P2Layout(); // QWidget *parent );
 
-    ~P2Layout();
+    //~P2Layout();
 
     int count() const;
     QLayoutItem *itemAt( int index ) const;
@@ -28,22 +30,24 @@ public:
     /** \note  minimumSize() and sizeHint() are not distinguished for now. */
     QSize sizeHint() const;  // Must be const.
     QSize minimumSize() const;
-    void setContentOffset( const QPoint &offset );
-    void setMinimumSize( const QSize &size );
+    virtual void setContentOffset( const QPoint &offset ) = 0;
+    virtual void setMinimumSize( const QSize &size ) = 0;
 
     void refreshChildren( const P2Environment &env );
 
     void setGeometry( const QRect &rect );
 
-    virtual void adjustGeometry() = 0;
+//    virtual void adjustGeometry() = 0;
 
-public slots:
+//public slots:
 
-    void childResizeEvent( QResizeEvent *event );
+//    void childResizeEvent( QResizeEvent *event );
 
-signals:
+//signals:
 
-    void resized();
+//    void resized();
+
+    P2Layout *self() { return this; }
 
 protected:
 
@@ -52,12 +56,12 @@ protected:
     /** Create a QLayoutItem to hold a QWidget (a QWidgetItem) and add it. */
     void addWidget( P2Widget *widget );
 
-    /** Show names and types of children.  A debugging method. */
+    /** Show names and types of kinder.  A debugging method. */
     void showChildren() const;
 
     /** An auxiliary QList for quick iteration by index over this P2Layout's
         child widgets. */
-    QList<QLayoutItem *> children;
+    QList<QLayoutItem *> kinder;
 
     /** "Calling QLayoutItem::sizeHint(), etc. may be expensive, so you should
         store the value in a local variable if you need it again later in the

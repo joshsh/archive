@@ -420,11 +420,13 @@ void P2MainWindow::refresh()
     centralWidget->refresh( *environment );
     //update();
 
+/*
     //~ temporary
     QWidget cover( this, 0 );
     cover.setGeometry( contentsRect() );
     cover.setVisible( true );
     cover.setVisible( false );
+*/
 
     //show();
     //update();

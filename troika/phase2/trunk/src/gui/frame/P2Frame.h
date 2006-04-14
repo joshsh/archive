@@ -24,6 +24,8 @@ public:
     // needs to be recalculated. Reimplement QWidget::event() to handle
     // QEvent::LayoutHint events."
 
+    const QString className() { return "P2Frame"; }
+
     bool isFrame() { return true; }
 
     P2Frame *focusFrame();
@@ -31,11 +33,15 @@ public:
     //~ Only public for the sake of P2CentralWidget...
     void setFocus( P2Frame *child );
 
+    QSize sizeHint() const;
+
 public slots:
 
     void refresh( const P2Environment &env );
     void update();
     void childResizeEvent( QResizeEvent *event );
+
+    void setTitle( QString s );
 
 protected:
 
@@ -51,16 +57,17 @@ protected:
 
 private:
 
+    QString title;
+
+    int margin, borderThickness;
+    QRect titleRect, borderRect;
+    bool showTitle, showBorder;
+
     P2Widget *contentWidget;
 
     const P2Environment *environment;
 
-    void setContentOffset( const QPoint &offset );
-    void setMinimumSize( const QSize &size );
-
     QSize cachedSizeHint;
-
-    QSize receivedMinimumSize;
 
 };
 

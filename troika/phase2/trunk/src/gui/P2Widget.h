@@ -36,6 +36,9 @@ public:
     virtual bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) = 0;
     virtual bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) = 0;
 
+    /** Overloaded method which additionally emits the 'renamed' signal. */
+    void setObjectName( QString s );
+
 public slots:
 
     virtual void refresh( const P2Environment &env ) = 0;
@@ -43,6 +46,10 @@ public slots:
 signals:
 
     void resized( QResizeEvent *event );
+    void renamed( QString name );
+
+    void mousePress( QMouseEvent *event, P2Widget *origin );
+    //virtual void handleMousePress( QMouseEvent *event ) = 0;
 
 protected:
 

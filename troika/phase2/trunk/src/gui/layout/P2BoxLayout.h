@@ -10,23 +10,32 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class P2BoxLayout : public P2Layout, virtual public QBoxLayout
+// Note: P2Layout is deliberately inherited before QBoxLayout.
+class P2BoxLayout : public QBoxLayout, public P2Layout
 {
     Q_OBJECT
 
 public:
 
-    P2BoxLayout( Direction dir, QWidget *parent );
-
-    //void add( P2Widget *widget, const QPoint &position );
+    P2BoxLayout( QBoxLayout::Direction dir, QWidget *parent );
 
     bool hasHeightForWidth() const;
     Qt::Orientations expandingDirections() const;
 
-    void adjustGeometry();
+    void setContentOffset( const QPoint &offset );
+    void setMinimumSize( const QSize &size );
 
-private:
+//    void adjustGeometry();
 
+    void add( P2Widget *widget );
+
+signals:
+
+    void resized();
+
+public slots:
+
+    void childResizeEvent( QResizeEvent *event );
 
 };
 

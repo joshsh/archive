@@ -18,6 +18,16 @@ P2Widget::P2Widget()
 }
 
 
+void P2Widget::setObjectName( QString s )
+{
+    if ( s.compare( objectName() ) )
+    {
+        QObject::setObjectName( s );
+        emit renamed( s );
+    }
+}
+
+
 void P2Widget::setCenter( const QPoint &p )
 {
     setGeometry( geometry().translated( p - geometry().center() ) );
@@ -126,6 +136,8 @@ bool P2Widget::mousePressEventWrapper( QMouseEvent *event, bool childIsBinder )
 void P2Widget::mousePressEvent( QMouseEvent *event )
 {
     mousePressEventWrapper( event, SELF );
+
+    emit mousePress( event, this );
 
 /*
             QDrag *drag = new QDrag(this);

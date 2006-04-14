@@ -40,6 +40,9 @@ public:
     void setFrameContentsSpacing( int spacing );
     void setFrameContentsPadding( int padding );
 
+    Environment *getEnv() const { return env; }
+    Compiler *getCompiler() const { return compiler; }
+
 signals:
 
     void changed();

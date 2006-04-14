@@ -5,14 +5,13 @@
 
 #include <QtGui>
 
-#include "global.h"
 #include "P2Widget.h"
-#include "P2Layout.h"
+#include "../new/P2WidgetArray.h"
 #include "P2FreeFormLayoutTree.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class P2FreeFormLayout : public P2Layout
+class P2FreeFormLayout : public QLayout
 {
     Q_OBJECT
 
@@ -25,9 +24,26 @@ public:
     bool hasHeightForWidth() const;
     Qt::Orientations expandingDirections() const;
 
-    void adjustGeometry();
+    QSize sizeHint() const;
+    QSize minimumSize() const;
+
+signals:
+
+    void resized();
+
+public slots:
+
+    void refresh( const P2Environment &env );
+
+    void update();
+
+protected:
+
+    P2WidgetArray array;
 
 private:
+
+    void adjustGeometry();
 
     /** A weighted tree data structure which defines the ideal relative
         positions of this P2FreeFormLayout's child widgets. */
@@ -50,6 +66,17 @@ private:
 
     void generateSpanningTree();
     void applySpanningTree();
+
+    /** "Calling QLayoutItem::sizeHint(), etc. may be expensive, so you should
+        store the value in a local variable if you need it again later in the
+        same function." */
+    QSize cachedSizeHint;
+
+    void setGeometry(const QRect&);
+    QLayoutItem* itemAt(int) const;
+    QLayoutItem* takeAt(int);
+    int count() const;
+    void addItem( QLayoutItem *item );
 
 };
 

@@ -3,10 +3,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../global.h"
-#include "../P2BasicWidget.h"
-
 #include <QtGui>
+
+#include "../P2BasicWidget.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +17,7 @@ public:
 
     /** \param text  character string content
         \param color  text color (defaults to the foreground color) */
-    P2Text( char *text, QColor *color );
+    P2Text( QString text, QColor *color );
 
     const QString className();
 
@@ -33,8 +32,8 @@ protected:
 
 private:
 
-    char *text;
-    QSize size;
+    QString text;
+    QSize cachedSizeHint;
     QColor color;
 };
 

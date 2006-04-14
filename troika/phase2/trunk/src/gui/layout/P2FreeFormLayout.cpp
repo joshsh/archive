@@ -8,7 +8,7 @@
 
 
 P2FreeFormLayout::P2FreeFormLayout( QWidget *parent )
-    : P2Layout( parent )
+    : QLayout( parent )
 {
     #ifdef DEBUG__LAYOUT
         cout << indent()
@@ -16,13 +16,13 @@ P2FreeFormLayout::P2FreeFormLayout( QWidget *parent )
              << (int) parent << " )" << endl;
     #endif
 
-    // The initially empty layout has a minimal content rectangle.
-    setContentOffset( QPoint( 0, 0 ) );
-
     generateSpanningTree();
 
-    //adjustGeometry();
-    //justifyContents();
+    connect(    &array, SIGNAL( resized() ),
+                this,   SLOT(   update() ) );
+
+    cachedSizeHint = QSize( 0, 0 );
+    //update()
 }
 
 
@@ -32,17 +32,45 @@ P2FreeFormLayout::P2FreeFormLayout( QWidget *parent )
 // Warning: this is NOT an efficient way to add multiple items at a time.
 void P2FreeFormLayout::add( P2Widget *widget, const QPoint &position )
 {
+    // Frames may be (programmatically) resized, but may not be smaller than
+    // minimumSize.
+    setSizeConstraint( QLayout::SetDefaultConstraint );
+
+    // Minimum distance of 1 pixel between child widgets.
+    setSpacing( FRAME__CONTENTS__SPACING );
+
+    // Border padding of 2 pixels around content rectangle.
+    setMargin( FRAME__CONTENTS__SPACING + FRAME__CONTENTS__PADDING );
+
     // Adjust the position of the new item so it does not collide.
     QPoint adjustedPosition = findBestPosition(
         QRect( position, widget->sizeHint() ) );
 
     widget->setGeometry( QRect( adjustedPosition, widget->sizeHint() ) );
 
-    addWidget( widget );
+    array.add( widget );
+
+//cout << "margin() = " << margin() << ", spacing() = " << spacing() << endl;
+
+    update();
 }
 
 
 // Size geometry ///////////////////////////////////////////////////////////////
+
+
+void P2FreeFormLayout::refresh( const P2Environment &env )
+{
+    array.refresh( env );
+}
+
+
+void P2FreeFormLayout::update()
+{
+    adjustGeometry();
+    QLayout::update();
+    emit resized();
+}
 
 
 Qt::Orientations P2FreeFormLayout::expandingDirections() const
@@ -64,66 +92,37 @@ bool P2FreeFormLayout::hasHeightForWidth() const
 
 void P2FreeFormLayout::justifyContents()
 {
-    if ( !children.size() )
-        contentRectangle = QRect(
-            QPoint( 0, 0 ), QSize( 0, 0 ) );
+    //QSize sizeBefore = cachedSizeHint;
+
+    QRect r;
+
+cout << "array.count() = " << array.count() << endl;
+    if ( !array.count() )
+        // Don't let the widget vanish completely.
+        r = QRect( 0, 0, margin(), margin() );
 
     else
     {
-        contentRectangle = children.at( 0 )->geometry();
+        r = array.itemAt( 0 )->geometry();
 
-        for ( int i = 1; i < children.size(); i++ )
-            contentRectangle = contentRectangle.unite( children.at( i )->geometry() );
+        for ( int i = 1; i < array.count(); i++ )
+            r = r.unite( array.itemAt( i )->geometry() );
     }
 
-    cachedSizeHint = contentRectangle.size()
-        + QSize( contentOffset.x(), contentOffset.y() )
-        + QSize( margin(), margin() );
+    cachedSizeHint = r.size();
+cout << "cachedSizeHint = (" << cachedSizeHint.width() << ", " << cachedSizeHint.height() << ")" << endl;
 
-    QPoint actualOffset = contentOffset;
-    if ( ( receivedMinimumSize.width() > 0 )
-      && ( contentRectangle.width() + contentOffset.x() + margin() < receivedMinimumSize.width() )
-      && ( FRAME__CONTENTS__ALIGNMENT != Qt::AlignLeft ) )
+    // Undo any overall offset from the top left corner of the widget.
+    if ( r.topLeft() != QPoint( 0, 0 ) )
     {
-        int xoffset;
+        QPoint negOffset( -r.x(), -r.y() );
 
-        switch ( FRAME__CONTENTS__ALIGNMENT )
+        for ( int i = 0; i < array.count(); i++ )
         {
-            case Qt::AlignRight:
-
-                xoffset = receivedMinimumSize.width() - ( margin() + contentRectangle.width() );
-                break;
-
-            case Qt::AlignHCenter:
-
-                xoffset = ( receivedMinimumSize.width() - contentRectangle.width() ) / 2;
-                break;
-        }
-
-        actualOffset.setX( xoffset );
-
-        cachedSizeHint.setWidth( receivedMinimumSize.width() );
-    }
-    // Note: no need for special vertical alignment at this stage.
-
-    // Content origin should be at (2, 2).
-    int xoffset = contentRectangle.x() - actualOffset.x();
-    int yoffset = contentRectangle.y() - actualOffset.y();
-
-    if ( xoffset || yoffset )
-    {
-        QPoint negOffset( -xoffset, -yoffset );
-
-        for ( int i = 0; i < children.size(); i++ )
-        {
-            QLayoutItem *item = children.at( i );
+            QLayoutItem *item = array.itemAt( i );
             item->setGeometry( item->geometry().translated( negOffset ) );
         }
-
-        contentRectangle = contentRectangle.translated( negOffset );
     }
-
-    emit resized();
 }
 
 
@@ -139,7 +138,7 @@ bool P2FreeFormLayout::tooClose( const QRect &a, const QRect &b )
 
 int P2FreeFormLayout::resolveCollisions()
 {
-    int size = children.size();
+    int size = array.count();
     QSize padding( spacing(), spacing() );
 
     //expandChildrenByMargin();
@@ -148,10 +147,10 @@ int P2FreeFormLayout::resolveCollisions()
     QList<int> collisions;
     for ( int i = 0; i < size; i++ )
     {
-        QLayoutItem *a = children.at( i );
-        for ( int j = i + 1; j < children.size(); j++ )
+        QLayoutItem *a = array.itemAt( i );
+        for ( int j = i + 1; j < array.count(); j++ )
         {
-            QLayoutItem *b = children.at( j );
+            QLayoutItem *b = array.itemAt( j );
             if ( tooClose( a->geometry(), b->geometry() ) )
                 collisions.append( ( i * size ) + j );
         }
@@ -166,8 +165,8 @@ int P2FreeFormLayout::resolveCollisions()
     {
         int index = collisions.takeFirst();
 
-        QLayoutItem *a = children.at( index / size );
-        QLayoutItem *b = children.at( index % size );
+        QLayoutItem *a = array.itemAt( index / size );
+        QLayoutItem *b = array.itemAt( index % size );
 
         QRect rectA = QRect( a->geometry().topLeft(),
             a->geometry().size() + padding );
@@ -216,9 +215,9 @@ int P2FreeFormLayout::resolveCollisions()
             }
 
             // Check for new collisions resulting from the displacement.
-            for ( int i = 0; i < children.size(); i++ )
+            for ( int i = 0; i < array.count(); i++ )
             {
-                QLayoutItem *item = children.at( i );
+                QLayoutItem *item = array.itemAt( i );
 
                 // Note: a and b don't need to be checked against each other,
                 // and would cause problems if checked against themselves.
@@ -258,7 +257,7 @@ struct Displacement
 
 QPoint P2FreeFormLayout::findBestPosition( const QRect &rect )
 {
-    QList< Displacement > queue;
+    QList<Displacement> queue;
     queue.append( Displacement( 0,
         // Original rectangle with a margin.
         QRect( rect.topLeft() - QPoint( spacing(), spacing() ),
@@ -278,9 +277,9 @@ QPoint P2FreeFormLayout::findBestPosition( const QRect &rect )
         {
             bool doesIntersect = false;
 
-            for ( int i = 0; i < children.size(); i++ )
+            for ( int i = 0; i < array.count(); i++ )
             {
-                QRect r2 = children.at( i )->geometry();
+                QRect r2 = array.itemAt( i )->geometry();
 
                 // Check for collision.
                 if ( r.intersects( r2 ) )
@@ -351,11 +350,11 @@ void P2FreeFormLayout::generateSpanningTree()
     #ifdef DEBUG__LAYOUT
         cout << indentPlus()
              << "+ P2FreeFormLayout[" << (int) this << "]::generateSpanningTree()" << endl;
-        cout << indent() << "children.size() = " << children.size() << endl;
+        cout << indent() << "array.count() = " << array.count() << endl;
         showChildren();
     #endif
 
-    tree = P2FreeFormLayoutTree( children );
+    tree = P2FreeFormLayoutTree( array.list() );
 
     #ifdef DEBUG__LAYOUT
         cout << indentMinus()
@@ -369,15 +368,61 @@ void P2FreeFormLayout::applySpanningTree()
     #ifdef DEBUG__LAYOUT
         cout << indentPlus()
              << "+ P2FreeFormLayout[" << (int) this << "]::applySpanningTree()" << endl;
-        cout << indent() << "children.size() = " << children.size() << endl;
+        cout << indent() << "array.count() = " << array.list()->size() << endl;
     #endif
 
-    tree.applyTo( children );
+    tree.applyTo( array.list() );
 
     #ifdef DEBUG__LAYOUT
         cout << indentMinus()
              << "- P2FreeFormLayout[" << (int) this << "]::applySpanningTree()" << endl;
     #endif
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+QSize P2FreeFormLayout::sizeHint() const
+{
+cout << "sizeHint() = (" << cachedSizeHint.width() << ", " << cachedSizeHint.height() << ")" << endl;
+    return cachedSizeHint;
+}
+
+
+QSize P2FreeFormLayout::minimumSize() const
+{
+    return cachedSizeHint;
+}
+
+
+void P2FreeFormLayout::setGeometry( const QRect& r )
+{
+    //...
+}
+
+
+QLayoutItem* P2FreeFormLayout::itemAt( int i ) const
+{
+    return array.itemAt( i );
+}
+
+
+QLayoutItem* P2FreeFormLayout::takeAt( int i )
+{
+    return array.takeAt( i );
+}
+
+
+int P2FreeFormLayout::count() const
+{
+    return array.count();
+}
+
+
+void P2FreeFormLayout::addItem( QLayoutItem *item )
+{
+    array.addItem( item );
 }
 
 

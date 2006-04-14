@@ -4,9 +4,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2BoxLayout::P2BoxLayout( Direction dir, QWidget *parent )
-    : QBoxLayout( dir, parent ), P2Layout( parent )
+P2BoxLayout::P2BoxLayout( QBoxLayout::Direction dir, QWidget *parent )
+    : QBoxLayout( dir, parent ), P2Layout()
 {
+    // Frames may be (programmatically) resized, but may not be smaller than
+    // minimumSize.
+    setSizeConstraint( QLayout::SetDefaultConstraint );
+
+    // Minimum distance of 1 pixel between child widgets.
+    setSpacing( FRAME__CONTENTS__SPACING );
+
+    // Border padding of 2 pixels around content rectangle.
+    setMargin( FRAME__CONTENTS__SPACING + FRAME__CONTENTS__PADDING );
+
+
     // The initially empty layout has a minimal content rectangle.
     setContentOffset( QPoint( 0, 0 ) );
 }
@@ -14,21 +25,46 @@ P2BoxLayout::P2BoxLayout( Direction dir, QWidget *parent )
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/*
-// Warning: this is NOT an efficient way to add multiple items at a time.
-void P2BoxLayout::add( P2Widget *widget, const QPoint &position )
+
+void P2BoxLayout::add( P2Widget *widget )
 {
-    // Adjust the position of the new item so it does not collide.
-    QPoint adjustedPosition = findBestPosition(
-        QRect( position, widget->sizeHint() ) );
+    P2Layout::addWidget( widget );
 
-    widget->setGeometry( QRect( adjustedPosition, widget->sizeHint() ) );
+    QBoxLayout::addWidget( widget );
 
-    addWidget( widget );
+    connect( widget, SIGNAL( resized( QResizeEvent* ) ),
+             this, SLOT( childResizeEvent( QResizeEvent* ) ) );
 }
-*/
+
 
 // Size geometry ///////////////////////////////////////////////////////////////
+
+
+void P2BoxLayout::setContentOffset( const QPoint &offset )
+{
+    QPoint newOffset = offset;
+
+    if ( newOffset.x() < margin() )
+        newOffset.setX( margin() );
+    if ( newOffset.y() < margin() )
+        newOffset.setY( margin() );
+
+    if ( newOffset != contentOffset )
+    {
+        contentOffset = newOffset;
+        //adjustGeometry();
+    }
+}
+
+
+void P2BoxLayout::setMinimumSize( const QSize &size )
+{
+    if ( size != receivedMinimumSize )
+    {
+        receivedMinimumSize = size;
+        //adjustGeometry();
+    }
+}
 
 
 Qt::Orientations P2BoxLayout::expandingDirections() const
@@ -48,12 +84,23 @@ bool P2BoxLayout::hasHeightForWidth() const
 // Coordination ////////////////////////////////////////////////////////////////
 
 
+void P2BoxLayout::childResizeEvent( QResizeEvent *event )
+{
+    //adjustGeometry();
+
+    /* Tell the QBoxLayout to update its sizeHint. */
+    update();
+
+    emit resized();
+}
+
+
+/*
 void P2BoxLayout::adjustGeometry()
 {
     //...
 }
-
-
+*/
 
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
