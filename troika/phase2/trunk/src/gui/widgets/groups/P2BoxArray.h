@@ -1,7 +1,7 @@
 #ifndef P2BoxArray_h
 #define P2BoxArray_h
 
-#include "P2WidgetArray.h"
+#include <P2WidgetArray.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

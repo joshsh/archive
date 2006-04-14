@@ -1,39 +1,41 @@
-#ifndef P2Image_h
-#define P2Image_h
+#ifndef ToggleWidget_h
+#define ToggleWidget_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../global.h"
-#include "../P2BasicWidget.h"
-
-#include <QtGui>
+#include <widgets/P2BasicWidget.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/** A wrapper for QImage. */
-class P2Image : public P2BasicWidget
+class ToggleWidget : public P2BasicWidget
 {
 
 public:
 
-    P2Image( const char * const xpm[] );
+    ToggleWidget();
 
     const QString className();
 
+    QSize sizeHint() const;
+
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
     bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
     void paintEvent( QPaintEvent *event );
 
+    //void resizePixmap( QSize newSize );
+
 private:
 
-    QImage image;
+    QList<QImage> *imageList;
+
+    int toggle;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2Image_h
+#endif  // ToggleWidget_h
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

@@ -3,13 +3,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "global.h"
-#include "P2Environment.h"
-#include "P2CentralWidget.h"
-#include "P2ScrollArea.h"
-#include "dialogs/AboutDialog.h"
-
 #include <QtGui>
+
+#include <P2Environment.h>
+#include <widgets/P2CentralWidget.h>
+#include <widgets/P2ScrollArea.h>
+#include <widgets/dialogs/AboutDialog.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

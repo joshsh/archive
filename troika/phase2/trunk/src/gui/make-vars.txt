@@ -11,14 +11,14 @@ LIBS          = $(SUBLIBS) -L/usr/local/Trolltech/Qt-4.1.0/lib -lQtGui_debug -L/
 
 	Bag		[HBox frame]
 x	Combinator	P2Text
-	Namespace	[VBox frame]
+x	Namespace	[VBox frame]
 x	Primitive	P2Text
 	Set		[VBox frame] or [wrapping box frame]
 	Term		?
-	Type		P2Text
-	char		P2Text
-	cstring		P2Text
-	double		P2Text or [number widget]
-	int		P2Text or [number widget]
+x	Type		P2Text
+x	char		P2Text
+x	cstring		P2Text
+x	double		P2Text or [number widget]
+x	int		P2Text or [number widget]
 	void		P2Text
 

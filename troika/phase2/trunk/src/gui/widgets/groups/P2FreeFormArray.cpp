@@ -1,7 +1,5 @@
-#include <QtGui>
-
-#include "P2FreeFormArray.h"
-#include "layout/P2FreeFormLayout.h"
+#include <widgets/groups/P2FreeFormArray.h>
+#include <layout/P2FreeFormLayout.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////

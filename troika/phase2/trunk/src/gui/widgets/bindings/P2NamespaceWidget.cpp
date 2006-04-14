@@ -1,11 +1,12 @@
-#include "P2NamespaceWidget.h"
-#include "frame/P2Frame.h"
+#include <QtGui>
 
 extern "C"
 {
 #include <Namespace.h>
 }
 
+#include <widgets/bindings/P2NamespaceWidget.h>
+#include <widgets/P2Frame.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

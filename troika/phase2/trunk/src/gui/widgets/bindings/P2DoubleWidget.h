@@ -10,7 +10,7 @@ extern "C"
 #include <Object.h>
 }
 
-#include "../binders/P2Text.h"
+#include <widgets/basic/P2Text.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

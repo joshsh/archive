@@ -11,8 +11,8 @@ extern "C"
 #include <Namespace.h>
 }
 
-#include "../new/P2BoxArray.h"
-#include "P2EnvironmentBinder.h"
+#include <widgets/groups/P2BoxArray.h>
+#include <P2EnvironmentBinder.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

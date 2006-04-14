@@ -1,22 +1,17 @@
-#include "P2CentralWidget.h"
+#include <widgets/P2CentralWidget.h>
 
-    //#include "frame/P2Frame.h"
-    //#include "frame/P2BoxFrame.h"
-    #include "new/P2FreeFormArray.h"
-    #include "new/P2BoxArray.h"
+    #include <widgets/groups/P2FreeFormArray.h>
+    #include <widgets/groups/P2BoxArray.h>
 
-    #include "P2EnvironmentBinder.h"
-    #include "phase2/P2CombinatorWidget.h"
-    #include "phase2/P2PrimitiveWidget.h"
+    #include <P2EnvironmentBinder.h>
 
-    #include "binders/P2BitmapEditor.h"
-    #include "binders/P2CheckBox.h"
-    #include "binders/P2Text.h"
-    #include "binders/P2TextEdit.h"
-    #include "binders/P2Image.h"
-
-    #include "binders/ToggleWidget.h"
-    #include "binders/ResizeWidget.h"
+    #include <widgets/basic/P2BitmapEditor.h>
+    #include <widgets/basic/P2CheckBox.h>
+    #include <widgets/basic/P2Text.h>
+    #include <widgets/basic/P2TextEdit.h>
+    #include <widgets/basic/P2Image.h>
+    #include <widgets/basic/ToggleWidget.h>
+    #include <widgets/basic/ResizeWidget.h>
 
 
 static const char * troika_xpm[] = {

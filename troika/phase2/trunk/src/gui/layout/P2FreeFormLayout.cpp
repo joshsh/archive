@@ -1,4 +1,4 @@
-#include "P2FreeFormLayout.h"
+#include <layout/P2FreeFormLayout.h>
 
 // Abandon collision resolution after this many iterations.
 #define MAX_COLLISIONS  1000

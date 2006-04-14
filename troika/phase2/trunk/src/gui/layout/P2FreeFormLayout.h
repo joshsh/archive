@@ -5,9 +5,9 @@
 
 #include <QtGui>
 
-#include "P2Widget.h"
-#include "../new/P2WidgetArray.h"
-#include "P2FreeFormLayoutTree.h"
+#include <widgets/P2Widget.h>
+#include <P2WidgetArray.h>
+#include <layout/P2FreeFormLayoutTree.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -4,11 +4,10 @@ export PATH=$QTDIR/bin:$PATH
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 */
 
-#include "global.h"
-#include "P2MainWindow.h"
-#include "P2Environment.h"
-
 #include <QtGui>
+
+#include <widgets/P2MainWindow.h>
+#include <P2Environment.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////

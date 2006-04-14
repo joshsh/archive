@@ -1,7 +1,7 @@
 #ifndef P2FreeFormArray_h
 #define P2FreeFormArray_h
 
-#include "P2WidgetArray.h"
+#include <P2WidgetArray.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

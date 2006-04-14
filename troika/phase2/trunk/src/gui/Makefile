@@ -22,8 +22,8 @@ clean: x86-clean arm-clean
 ################################################################################
 ## x86
 
-HSRC	=	P2MainWindow.h P2CentralWidget.h
-CPPSRC	=	main.cpp P2MainWindow.cpp P2CentralWidget.cpp
+##HSRC	=	P2MainWindow.h P2CentralWidget.h
+##CPPSRC	=	main.cpp P2MainWindow.cpp P2CentralWidget.cpp
 
 
 #x86: arm-clean compile-target-x86 Makefile_x86
@@ -40,7 +40,7 @@ Makefile_x86: $(APP).pro
 	qmake -o Makefile_x86
 
 
-$(APP).pro: $(HSRC) $(CPPSRC)
+$(APP).pro: # $(HSRC) $(CPPSRC)
 	qmake -project -o $(APP).pro
 
 

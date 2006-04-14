@@ -1,5 +1,5 @@
-#include "P2MainWindow.h"
-#include "dialogs/RenameDialog.h"
+#include <widgets/P2MainWindow.h>
+#include <widgets/dialogs/RenameDialog.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
