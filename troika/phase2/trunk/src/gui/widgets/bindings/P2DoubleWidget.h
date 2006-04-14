@@ -1,0 +1,28 @@
+#ifndef P2DoubleWidget_h
+#define P2DoubleWidget_h
+
+////////////////////////////////////////////////////////////////////////////////
+
+#include <QtGui>
+
+extern "C"
+{
+#include <Object.h>
+}
+
+#include "../binders/P2Text.h"
+
+////////////////////////////////////////////////////////////////////////////////
+
+class P2DoubleWidget : public P2Text
+{
+public:
+
+    P2DoubleWidget( Object *o );
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+#endif  // P2DoubleWidget_h
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
