@@ -37,15 +37,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <Memory_Manager.h>
 #include <util/Term.h>
-
-
-enum Combinator
-{
-    S_combinator,
-    K_combinator
-};
-
-typedef enum Combinator Combinator;
+#include <sk/Combinator.h>
 
 
 /** \brief  Reduce an S,K term according to the rules of combinator expressions.

@@ -1,5 +1,5 @@
-#ifndef COMBINATOR_H
-#define COMBINATOR_H
+#ifndef COMBINATOR_IMPL_H
+#define COMBINATOR_IMPL_H
 
 #include <sk/sk.h>
 
@@ -11,4 +11,4 @@ Combinator *combinator__decode( cstring *buffer );
 void combinator__encode( Combinator *c, cstring *buffer );
 
 
-#endif  /* COMBINATOR_H */
+#endif  /* COMBINATOR_IMPL_H */

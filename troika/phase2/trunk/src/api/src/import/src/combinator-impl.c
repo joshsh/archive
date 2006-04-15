@@ -1,4 +1,4 @@
-#include "combinator.h"
+#include "combinator-impl.h"
 #include <stdio.h>  /* sprintf */
 
 

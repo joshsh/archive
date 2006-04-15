@@ -42,7 +42,7 @@ test :  $(OUT)/imports.o
 
 objects =			\
 	$(OBJ_OUT)/char.o	\
-	$(OBJ_OUT)/combinator.o	\
+	$(OBJ_OUT)/combinator-impl.o	\
 	$(OBJ_OUT)/cstring.o	\
 	$(OBJ_OUT)/double.o	\
 	$(OBJ_OUT)/int.o	\
