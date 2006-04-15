@@ -108,46 +108,46 @@ const char *indentMinus();
 
 // Tool bar ////////////////////////////////////////////////////////////////////
 
-// #define TOOLBAR__FILE_ACTIONS
-#define TOOLBAR__EDIT_ACTIONS
-#define TOOLBAR__VIEW_ACTIONS
-// #define TOOLBAR__HELP_ACTIONS
+#define TOOLBAR                             1
 
-#ifdef TOOLBAR__FILE_ACTIONS
-    #define TOOLBAR__FILE__NEW
-    #define TOOLBAR__FILE__OPEN
-    #define TOOLBAR__FILE__SAVE
-    #define TOOLBAR__FILE__SAVE_AS
-    #define TOOLBAR__FILE__CLOSE
-    #define TOOLBAR__FILE__PRINT
-    // #define TOOLBAR__FILE__QUIT
-#endif
+#define TOOLBAR__FILE                       0
 
-#ifdef TOOLBAR__EDIT_ACTIONS
-    // #define TOOLBAR__EDIT__UNDO
-    // #define TOOLBAR__EDIT__REDO
-    #define TOOLBAR__EDIT__CUT
-    #define TOOLBAR__EDIT__COPY
-    #define TOOLBAR__EDIT__PASTE
-    // #define TOOLBAR__EDIT__DELETE
-    // #define TOOLBAR__EDIT__RENAME
-    // #define TOOLBAR__EDIT__SELECT_ALL
-    // #define TOOLBAR__EDIT__FIND
-#endif
+#define TOOLBAR__FILE__NEW                  1
+#define TOOLBAR__FILE__OPEN                 1
+#define TOOLBAR__FILE__SAVE                 1
+#define TOOLBAR__FILE__SAVE_AS              1
+#define TOOLBAR__FILE__CLOSE                1
+#define TOOLBAR__FILE__PRINT                1
+#define TOOLBAR__FILE__QUIT                 0
 
-#ifdef TOOLBAR__VIEW_ACTIONS
-    #define TOOLBAR__VIEW__COMMAND_LINE
-    #define TOOLBAR__VIEW__BACK
-    #define TOOLBAR__VIEW__FORWARD
-    // #define TOOLBAR__VIEW__NEW_WINDOW
-    // #define TOOLBAR__VIEW__SHOW_FRAMES
-    // #define TOOLBAR__VIEW__SHOW_NAMES
-#endif
+#define TOOLBAR__EDIT                       1
 
-#ifdef TOOLBAR__HELP_ACTIONS
-    #define TOOLBAR__HELP__MANUAL
-    #define TOOLBAR__HELP__ABOUT_PHASE2
-#endif
+#define TOOLBAR__EDIT__UNDO                 0
+#define TOOLBAR__EDIT__REDO                 0
+#define TOOLBAR__EDIT__CUT                  1
+#define TOOLBAR__EDIT__COPY                 1
+#define TOOLBAR__EDIT__PASTE                1
+#define TOOLBAR__EDIT__DELETE               0
+#define TOOLBAR__EDIT__RENAME               0
+#define TOOLBAR__EDIT__SELECT_ALL           0
+#define TOOLBAR__EDIT__FIND                 0
+
+#define TOOLBAR__VIEW                       1
+
+#define TOOLBAR__VIEW__COMMAND_LINE         1
+#define TOOLBAR__VIEW__BACK                 1
+#define TOOLBAR__VIEW__FORWARD              1
+#define TOOLBAR__VIEW__NEW_WINDOW           0
+#define TOOLBAR__VIEW__SPLIT_HORIZONTAL     0
+#define TOOLBAR__VIEW__SPLIT_VERTICAL       0
+#define TOOLBAR__VIEW__CLOSE_CURRENT_VIEW   0
+#define TOOLBAR__VIEW__SHOW_FRAMES          0
+#define TOOLBAR__VIEW__SHOW_NAMES           0
+
+#define TOOLBAR__HELP                       0
+
+#define TOOLBAR__HELP__MANUAL               1
+#define TOOLBAR__HELP__ABOUT_PHASE2         1
 
 
 // File paths //////////////////////////////////////////////////////////////////

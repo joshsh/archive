@@ -48,6 +48,9 @@ public slots:
     void viewForward();
     void viewBack();
     void viewNewWindow();
+    void viewSplitHorizontal();
+    void viewSplitVertical();
+    void viewCloseCurrentView();
     /** Turns inactive frame visibility on or off. */
     void viewShowFrames();
     /** Turns label display on or off. */

@@ -95,7 +95,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     setMenuBar( menubar );
 //menubar->setTearOffEnabled( false );
 //menubar->setFrameStyle( QFrame::NoFrame );
-    QToolBar *toolbar = this->addToolBar( tr( "Tool Bar" ) );
+
+    QToolBar *toolbar = ( TOOLBAR )
+        ? this->addToolBar( tr( "Tool Bar" ) )
+        : 0;
 //toolbar->setTearOffEnabled( false );
 
     // File menu. //////////////////////////////////////////////////////////////
@@ -108,10 +111,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Create a new file" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_N );
+    action->setEnabled( false );
     fileMenu->addAction( action );
-    #ifdef TOOLBAR__FILE__NEW
+    if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__NEW )
         toolbar->addAction( action );
-    #endif
 
     // Open.
     icon = QIcon( ":/fileOpen.png" );
@@ -119,10 +122,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Open an existing file" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_O );
+    action->setEnabled( false );
     fileMenu->addAction( action );
-    #ifdef TOOLBAR__FILE__OPEN
+    if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__OPEN )
         toolbar->addAction( action );
-    #endif
 
     // Save.
     icon = QIcon( ":/fileSave.png" );
@@ -130,20 +133,20 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Save the current document to disk" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_S );
+    action->setEnabled( false );
     fileMenu->addAction( action );
-    #ifdef TOOLBAR__FILE__SAVE
+    if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__SAVE )
         toolbar->addAction( action );
-    #endif
 
     // Save As.
     icon = QIcon( ":/fileSaveAs.png" );
     action = new QAction( icon, tr( "Save &As..." ), this );
     action->setStatusTip( tr( "Save the current document as a new file" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
+    action->setEnabled( false );
     fileMenu->addAction( action );
-    #ifdef TOOLBAR__FILE__SAVE_AS
+    if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__SAVE_AS )
         toolbar->addAction( action );
-    #endif
 
     // Close.
     icon = QIcon( ":/fileClose.png" );
@@ -151,6 +154,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Close the current document" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( fileClose() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_W );
+    action->setEnabled( false );
     fileMenu->addAction( action );
 
     fileMenu->addSeparator();
@@ -161,10 +165,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Print the document" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_P );
+    action->setEnabled( false );
     fileMenu->addAction( action );
-    #ifdef TOOLBAR__FILE__PRINT
+    if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__PRINT )
         toolbar->addAction( action );
-    #endif
 
     fileMenu->addSeparator();
 
@@ -175,16 +179,12 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     connect( action, SIGNAL( triggered() ), this, SLOT( fileQuit() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_Q );
     fileMenu->addAction( action );
-    #ifdef TOOLBAR__FILE__QUIT
+    if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__QUIT )
         toolbar->addAction( action );
-    #endif
 
-    #if defined TOOLBAR__FILE_ACTIONS && \
-        ( defined TOOLBAR__EDIT_ACTIONS \
-       || defined TOOLBAR__VIEW_ACTIONS \
-       || defined TOOLBAR__HELP_ACTIONS )
+    if ( TOOLBAR & TOOLBAR__FILE &
+        ( TOOLBAR__EDIT | TOOLBAR__VIEW | TOOLBAR__HELP ) )
         toolbar->addSeparator();
-    #endif
 
     // Edit menu. //////////////////////////////////////////////////////////////
 
@@ -196,10 +196,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Undo the last operation" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( editUndo() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_Z );
+    action->setEnabled( false );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__UNDO
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__UNDO )
         toolbar->addAction( action );
-    #endif
 
     // Redo.
     icon = QIcon( ":/editRedo.png" );
@@ -207,10 +207,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Redo the last operation" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( editRedo() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_Y );
+    action->setEnabled( false );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__REDO
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__REDO )
         toolbar->addAction( action );
-    #endif
 
     editMenu->addSeparator();
 
@@ -221,10 +221,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
                                 "clipboard" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( editCut() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_X );
+    action->setEnabled( false );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__CUT
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__CUT )
         toolbar->addAction( action );
-    #endif
 
     // Copy.
     icon = QIcon( ":/editCopy.png" );
@@ -233,10 +233,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
                                  "clipboard" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( editCopy() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_C );
+    action->setEnabled( false );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__COPY
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__COPY )
         toolbar->addAction( action );
-    #endif
 
     // Paste.
     icon = QIcon( ":/editPaste.png" );
@@ -245,10 +245,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
                                   "selection" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( editPaste() ) );
     action->setShortcut( Qt::CTRL + Qt::Key_V );
+    action->setEnabled( false );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__PASTE
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__PASTE )
         toolbar->addAction( action );
-    #endif
 
     // Delete.
     icon = QIcon( ":/editDelete.png" );
@@ -256,10 +256,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Delete the current selection" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( editDelete() ) );
     action->setShortcut( Qt::Key_Delete );
+    action->setEnabled( false );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__DELETE
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__DELETE )
         toolbar->addAction( action );
-    #endif
 
     // Rename.
     //icon = QIcon( ":/editDelete.png" );
@@ -268,9 +268,8 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     connect( action, SIGNAL( triggered() ), this, SLOT( editRename() ) );
     action->setShortcut( Qt::Key_F2 );
     editMenu->addAction( action );
-    #ifdef TOOLBAR__EDIT__RENAME
+    if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__RENAME )
         toolbar->addAction( action );
-    #endif
 
     // editMenu->addSeparator();
 
@@ -285,11 +284,9 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     // action = editMenu->addAction(
     //     icon, "&Find", this, SLOT( edit() ), Qt::CTRL + Qt::Key_F );
 
-    #if defined TOOLBAR__EDIT_ACTIONS && \
-        ( defined TOOLBAR__VIEW_ACTIONS \
-       || defined TOOLBAR__HELP_ACTIONS )
+    if ( TOOLBAR__EDIT &
+        ( TOOLBAR__VIEW | TOOLBAR__HELP ) )
         toolbar->addSeparator();
-    #endif
 
     // View menu. //////////////////////////////////////////////////////////////
 
@@ -308,9 +305,8 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setShortcut( Qt::Key_F7 );
     action->setEnabled( false );
     viewMenu->addAction( action );
-    #ifdef TOOLBAR__VIEW__COMMAND_LINE
-        toolbar->addAction( action );
-    #endif
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__COMMAND_LINE )
+    toolbar->addAction( action );
 
     viewMenu->addSeparator();
 
@@ -321,10 +317,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     //action->setToolTip( tr( "Navigate to the previous item" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( viewBack() ) );
     action->setShortcut( Qt::ALT + Qt::Key_Left );
+    action->setEnabled( false );
     viewMenu->addAction( action );
-    #ifdef TOOLBAR__VIEW__BACK
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__BACK )
         toolbar->addAction( action );
-    #endif
 
     // Forward.
     icon = QIcon( ":/viewForward.png" );
@@ -332,10 +328,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Navigate to the next item" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( viewForward() ) );
     action->setShortcut( Qt::ALT + Qt::Key_Right );
+    action->setEnabled( false );
     viewMenu->addAction( action );
-    #ifdef TOOLBAR__VIEW__FORWARD
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__FORWARD )
         toolbar->addAction( action );
-    #endif
 
     // New Window.
     icon = QIcon( ":/viewNewWindow.png" );
@@ -344,9 +340,43 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     connect( action, SIGNAL( triggered() ), this, SLOT( viewNewWindow() ) );
     //action->setShortcut( ... );
     viewMenu->addAction( action );
-    #ifdef TOOLBAR__VIEW__NEW_WINDOW
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__NEW_WINDOW )
         toolbar->addAction( action );
-    #endif
+
+    viewMenu->addSeparator();
+
+    // Split Horizontal.
+    icon = QIcon( ":/viewSplitHorizontal.png" );
+    action = new QAction( icon, tr( "Split &Horizontal" ), this );
+    action->setStatusTip( tr( "Split the current view horizontally" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewSplitHorizontal() ) );
+    //action->setShortcut( ... );
+    action->setEnabled( false );
+    viewMenu->addAction( action );
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SPLIT_HORIZONTAL )
+        toolbar->addAction( action );
+
+    // Split Vertical.
+    icon = QIcon( ":/viewSplitVertical.png" );
+    action = new QAction( icon, tr( "Split &Vertical" ), this );
+    action->setStatusTip( tr( "Split the current view vertically" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewSplitVertical() ) );
+    //action->setShortcut( ... );
+    action->setEnabled( false );
+    viewMenu->addAction( action );
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SPLIT_VERTICAL )
+        toolbar->addAction( action );
+
+    // Close Current View.
+    icon = QIcon( ":/viewCloseCurrentView.png" );
+    action = new QAction( icon, tr( "Close Current View" ), this );
+    action->setStatusTip( tr( "Close the current view" ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( viewCloseCurrentView() ) );
+    //action->setShortcut( ... );
+    action->setEnabled( false );
+    viewMenu->addAction( action );
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__CLOSE_CURRENT_VIEW )
+        toolbar->addAction( action );
 
     viewMenu->addSeparator();
 
@@ -363,9 +393,8 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setCheckable( true );
     action->setChecked( env.getIdleFrameVisibility() );
     viewMenu->addAction( action );
-    #ifdef TOOLBAR__VIEW__SHOW_FRAMES
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SHOW_FRAMES )
         toolbar->addAction( action );
-    #endif
 
     action = viewShowNamesAction = new QAction( checkmark, tr( "Show Names" ), this );
     action->setStatusTip( tr( "Display lexical names" ) );
@@ -374,13 +403,11 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setCheckable( true );
     action->setChecked( env.getNameVisibility() );
     viewMenu->addAction( action );
-    #ifdef TOOLBAR__VIEW__SHOW_NAMES
+    if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SHOW_NAMES )
         toolbar->addAction( action );
-    #endif
 
-    #if defined TOOLBAR__VIEW_ACTIONS && ( defined TOOLBAR__HELP_ACTIONS )
+    if ( TOOLBAR__VIEW & ( TOOLBAR__HELP ) )
         toolbar->addSeparator();
-    #endif
 
     // Help menu. //////////////////////////////////////////////////////////////
 
@@ -392,10 +419,10 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Show Phase2's help manual" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( helpManual() ) );
     action->setShortcut( Qt::Key_F1 );
+    action->setEnabled( false );
     helpMenu->addAction( action );
-    #ifdef TOOLBAR__HELP__MANUAL
+    if ( TOOLBAR & TOOLBAR__HELP & TOOLBAR__HELP__MANUAL )
         toolbar->addAction( action );
-    #endif
 
     // About Phase2.
     icon = QIcon( ":/helpAboutPhase2.png" );
@@ -403,9 +430,8 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     action->setStatusTip( tr( "Show Phase2's About box" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( helpAboutPhase2() ) );
     helpMenu->addAction( action );
-    #ifdef TOOLBAR__HELP__ABOUT_PHASE2
+    if ( TOOLBAR & TOOLBAR__HELP & TOOLBAR__HELP__ABOUT_PHASE2 )
         toolbar->addAction( action );
-    #endif
 }
 
 
@@ -574,6 +600,24 @@ void P2MainWindow::viewBack()
 void P2MainWindow::viewNewWindow()
 {
     newMainWindow( *environment );
+}
+
+
+void P2MainWindow::viewSplitHorizontal()
+{
+    cout << "void P2MainWindow::viewSplitHorizontal()" << endl;
+}
+
+
+void P2MainWindow::viewSplitVertical()
+{
+    cout << "void P2MainWindow::viewSplitVertical()" << endl;
+}
+
+
+void P2MainWindow::viewCloseCurrentView()
+{
+    cout << "void P2MainWindow::viewCloseCurrentView()" << endl;
 }
 
 

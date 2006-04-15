@@ -58,6 +58,8 @@ protected:
 
 private:
 
+    bool expanded;
+
     QString title;
 
     int margin, borderThickness;

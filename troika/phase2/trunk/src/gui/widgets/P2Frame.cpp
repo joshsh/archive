@@ -9,6 +9,8 @@ P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
 {
     focusChild = 0;
 
+    expanded = false;
+
     contentWidget = widget;
     contentWidget->setParent( this );
 
@@ -19,7 +21,7 @@ P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
     environment = &env;
 
     //~
-    cachedSizeHint = QSize( 0, 0 );
+    //cachedSizeHint = QSize( 0, 0 );
 
     // For now, frame title = name of content widget.
     setTitle( objectName() );

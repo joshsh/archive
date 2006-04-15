@@ -29,6 +29,9 @@
     <file alias="viewForward.png">images/Bluecurve/actions/forward.png</file>
     <file alias="viewBack.png">images/Bluecurve/actions/back.png</file>
     <file alias="viewNewWindow.png">images/crystalsvg/actions/window_new.png</file>
+    <file alias="viewSplitHorizontal.png">images/crystalsvg/actions/view_bottom.png</file>
+    <file alias="viewSplitVertical.png">images/crystalsvg/actions/view_right.png</file>
+    <file alias="viewCloseCurrentView.png">images/crystalsvg/actions/view_remove.png</file>
 
     <file alias="helpManual.png">images/Bluecurve/actions/contents.png</file>
     <file alias="helpAboutPhase2.png">images/Bluecurve/actions/about_kde.png</file>

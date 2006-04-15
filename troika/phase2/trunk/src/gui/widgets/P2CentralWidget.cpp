@@ -104,7 +104,9 @@ cout << "centralFrame->layout() = " << ( int ) centralFrame->layout() << endl;
 
     Object *o = environment__root( e );
     P2Widget *w = eb->objectWidget( o );
-    ff->add( w, QPoint( 0, 0 ) );
+    b2 = new P2Frame( w, env );
+    b2->setObjectName( "Phase2 Namespace" );
+    ff->add( b2, QPoint( 0, 0 ) );
 
 
 
