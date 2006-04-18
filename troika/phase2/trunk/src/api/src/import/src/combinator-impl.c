@@ -1,5 +1,5 @@
+#include <settings.h>
 #include "combinator-impl.h"
-#include <stdio.h>  /* sprintf */
 
 
 Combinator *combinator__decode( cstring *buffer )

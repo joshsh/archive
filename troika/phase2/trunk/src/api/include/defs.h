@@ -28,38 +28,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef DEFS_H
 #define DEFS_H
 
-#include <stdlib.h>  /* malloc */
-#include <string.h>  /* strlen, strcpy */
-
-
-/******************************************************************************/
-
-
-#define VERSION "0.6.3"
-
-
-#define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
-#define new( type )  malloc( sizeof (type) )
-
-
-/******************************************************************************/
-
 
 typedef int boolean;
 
-#ifndef TRUE
-#define TRUE    1
-#endif
-
-#ifndef FALSE
-#define FALSE   0
-#endif
-
-
 typedef char cstring;
-
-
-/******************************************************************************/
 
 
 typedef void *( *Dist_f )( void **refp );
@@ -83,46 +55,6 @@ typedef void            ( *Void_f )( void *p );
 typedef void            ( *Walker )( void *coll, Dist_f f );
 
 typedef void            ( *Generic_f )( void );
-
-
-/* Errors *********************************************************************/
-
-
-#include <stdio.h>  /* fprintf */
-
-#define FFLUSH  { fflush( stdout ); fflush( stderr ); }
-
-
-/* Useful, although not ANSI C. */
-#define ERROR( ... )                                                        \
-{                                                                           \
-    fprintf( stderr, "Error: " );                                           \
-    fprintf( stderr, __VA_ARGS__ );                                         \
-    fprintf( stderr, ".\n" );                                               \
-    fflush( stderr );                                                       \
-}
-
-#define WARNING( ... )                                                      \
-{                                                                           \
-    fprintf( stderr, "Warning: " );                                         \
-    fprintf( stderr, __VA_ARGS__ );                                         \
-    fprintf( stderr, ".\n" );                                               \
-    fflush( stderr );                                                       \
-}
-
-/*
-#define ERROR( msg )                                                        \
-{                                                                           \
-    fprintf( stderr, "Error: %s.\n", (msg) );                               \
-    fflush( stderr );                                                       \
-}
-
-#define WARNING( msg )                                                      \
-{                                                                           \
-    fprintf( stderr, "Warning: %s.\n", (msg) );                             \
-    fflush( stderr );                                                       \
-}
-*/
 
 
 #endif  /* DEFS_H */

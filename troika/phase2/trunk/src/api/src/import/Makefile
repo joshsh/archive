@@ -14,7 +14,7 @@ OUT     = ./target
 XML_OUT = ./$(OUT)/xml
 OBJ_OUT = ./$(OUT)/obj
 
-INCLUDE = -I../../include
+INCLUDE = -I../../include -I../../src
 
 CFLAGS = -O2 -g --ansi -W -Wall
 	# -pedantic
