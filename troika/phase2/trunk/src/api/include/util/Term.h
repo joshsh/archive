@@ -126,19 +126,19 @@ term__subterm_at( Term *t, int i );
 
 /* Merge functions ************************************************************/
 
-/** ((A1 ... Am) (B1 ... Bn))    simple merge */
+/** ((A1 ... Am) (B1 ... Bn))   simple merge */
 extern Term *
 term__merge( Term *t1, Term *t2 );
 
-/** (A1 ... Am (B1 ... Bn))      left-associative merge */
+/** (A1 ... Am (B1 ... Bn))     left-associative merge */
 extern Term *
 term__merge_la( Term *t1, Term *t2 );
 
-/** ((A1 ... Am) B1 ... Bn)      right-associative merge */
+/** ((A1 ... Am) B1 ... Bn)     right-associative merge */
 extern Term *
 term__merge_ra( Term *t1, Term *t2 );
 
-/** (A1 ... Am B1 ... Bn)        concatenation */
+/** (A1 ... Am B1 ... Bn)       concatenation */
 extern Term *
 term__cat( Term *t1, Term *t2 );
 

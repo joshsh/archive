@@ -184,6 +184,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     Ast *a = 0;
     Object *o;
     char print_buffer[1000];
+    Name *oname = 0;
     Term *t;
 
     Encoder char__encode, double__encode, string__encode, term__encode;
@@ -237,17 +238,26 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         if ( a )
             compiler__define( c, name, o );
 
+        oname = namespace__find( c->cur_ns_obj, o, environment__manager( c->env ) );
+
         #if COMPILER__SHOW_ADDRESS
         printf( "%#x ", ( int ) o ); FFLUSH;
         #endif
 
         printf( "<%s> ", o->type->name );
 
+        if ( oname )
+        {
+            name__print( oname );
+            printf( " : " );
+        }
+/*
         if ( a )
         {
             ast__print( a );
             printf( " : " );
         }
+*/
 
         else
             printf( ": " );
@@ -260,6 +270,9 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
     if ( a )
         ast__delete( a );
+
+    if ( oname )
+        name__delete( oname );
 
     c->char_t->encode = char__encode;
     c->float_t->encode = double__encode;

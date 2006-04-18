@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Namespace.h>
+#include <util/Hash_Map.h>
 #include "settings.h"
 
 
@@ -471,28 +472,60 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 }
 
 
-/*
-typedef struct Name_Fragment
-{
-    Name *head;
-    Namespace *tail;
-
-} Name_Fragment;
-*/
-
-
 Name *
-namespace__find( const Namespace_o *haystack, const Object *needle )
+namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
 {
-#if COMMENT
     Hash_Map *parents = hash_map__new();
-#endif
     Name *name = name__new();
+    boolean success = FALSE;
+    Object *o, *parent;
+    char *key;
 
-    
+    void *find( Namespace_o **nsopp )
+    {
+        void *helper( Object **opp )
+        {
+            if ( !hash_map__lookup( parents, *opp ) )
+                hash_map__add( parents, *opp, *nsopp );
 
-    /* ... */
+            if ( *opp == needle )
+            {
+                success = TRUE;
+                return walker__break;
+            }
 
+            else
+                return 0;
+        }
+
+        namespace__walk( object__value( *nsopp ), ( Dist_f ) helper );
+
+        if ( success )
+            return walker__break;
+
+        else
+            return 0;
+    }
+
+    memory_manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Dist_f ) find );
+
+    if ( success )
+    {
+        name = name__new();
+        o = needle;
+
+        while ( ( parent = hash_map__lookup( parents, o ) ) )
+        {
+            key = dictionary__reverse_lookup( ( ( Namespace* ) object__value( parent ) )->children, o );
+            array__push( name, key );
+            o = parent;
+        }
+    }
+
+    else
+        name = 0;
+
+    hash_map__delete( parents );
     return name;
 }
 

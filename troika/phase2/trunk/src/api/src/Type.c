@@ -85,6 +85,7 @@ default__walk( void *coll, Dist_f f )
 }
 
 
+/* Override these default members to create a custom type. */
 static Type default_t =
 {
     0,

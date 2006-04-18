@@ -470,7 +470,7 @@ term__encode( Term *t, char *buffer )
         {
             cur++;
 
-            o = ( Object* ) *cur;
+            o = *cur;
             object__type( o )->encode( object__value( o ), buffer );
         }
 

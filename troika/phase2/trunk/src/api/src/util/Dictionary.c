@@ -162,6 +162,28 @@ dictionary__lookup( Dictionary *dict, char *key )
 }
 
 
+char *
+dictionary__reverse_lookup( Dictionary *dict, const void *target )
+{
+    char *key = 0;
+
+    void *helper( Dictionary_Entry **epp )
+    {
+        if ( ( *epp )->target == target )
+        {
+            key = STRDUP( ( *epp )->key );
+            return walker__break;
+        }
+
+        else
+            return 0;
+    }
+
+    hash_table__walk( dict, ( Dist_f ) helper );
+    return key;
+}
+
+
 void *
 dictionary__remove( Dictionary *dict, char *key )
 {

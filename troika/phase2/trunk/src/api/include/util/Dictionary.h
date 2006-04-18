@@ -49,6 +49,9 @@ dictionary__add( Dictionary *dict, const char *key, void *target );
 extern void *
 dictionary__lookup( Dictionary *dict, char *key );
 
+extern char *
+dictionary__reverse_lookup( Dictionary *dict, const void *target );
+
 extern void *
 dictionary__remove( Dictionary *dict, char *key );
 
