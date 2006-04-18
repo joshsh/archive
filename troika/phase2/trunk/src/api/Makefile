@@ -21,8 +21,8 @@ CC      = gcc $(INCLUDE) $(LIBS)
 SUBDIRS = src/import src/parser src/util src/xml
 
 
-.PHONY : default
-default :  phase2
+.PHONY : all
+all :  phase2
 
 
 .PHONY : clean
@@ -107,6 +107,7 @@ revision.h :  src/compiler/serial.c
 phase2 :  recursive $(objects)
 	$(CC) $(CFLAGS) -o phase2  $(objects) `xml2-config --libs`
 
+## standard target is: install-strip
 .PHONY: strip
 strip :  phase2
 	strip phase2

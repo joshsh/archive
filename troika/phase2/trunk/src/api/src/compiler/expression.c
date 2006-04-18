@@ -239,6 +239,12 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
             compiler__define( c, name, o );
 
         oname = namespace__find( c->cur_ns_obj, o, environment__manager( c->env ) );
+        if ( !oname )
+        {
+            oname = namespace__find( environment__root( c->env ), o, environment__manager( c->env ) );
+            if ( oname )
+                array__push( oname, STRDUP( "root" ) );
+        }
 
         #if COMPILER__SHOW_ADDRESS
         printf( "%#x ", ( int ) o ); FFLUSH;
