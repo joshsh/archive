@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
+P2Frame::P2Frame( P2Widget *widget, QString title, const P2Environment &env )
     : P2Widget()
 {
     focusChild = 0;
@@ -23,11 +23,10 @@ P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
     //~
     //cachedSizeHint = QSize( 0, 0 );
 
-    // For now, frame title = name of content widget.
-    setTitle( objectName() );
+    this->title = title;
     connect(
-        this,  SIGNAL( renamed( QString ) ),
-        this,           SLOT( setTitle( QString ) ) );
+        this,   SIGNAL( renamed( QString ) ),
+        this,   SLOT( setTitle( QString ) ) );
 
     // Constant for now.
     margin = FRAME__CONTENTS__PADDING;
@@ -35,6 +34,8 @@ P2Frame::P2Frame( P2Widget *widget, const P2Environment &env )
 
     //~
     refresh( env );
+
+    //update();
 }
 
 
@@ -52,7 +53,7 @@ void P2Frame::refresh( const P2Environment &env )
 cout << "P2Frame::refresh(" << ( int ) &env << ")" << endl;
 
     showBorder = env.getIdleFrameVisibility();
-    showTitle = env.getNameVisibility() && !title.isNull();
+    showTitle = env.getNameVisibility() && !title.isNull() && title.size() > 0;
 
     contentWidget->refresh( env );
 
@@ -110,7 +111,6 @@ cout << "# before: (" << size().width() << ", " << size().height() << ")" << end
                 break;
         }
 
-cout << "1 contentWidget->setPosition(" << xoffset << ", " << yoffset << ")" << endl;
         contentWidget->setPosition( QPoint( xoffset, yoffset ) );
 
         yoffset = 0;
@@ -143,7 +143,6 @@ cout << "1 contentWidget->setPosition(" << xoffset << ", " << yoffset << ")" << 
     {
         ysize += borderThickness;
 
-cout << "2 contentWidget->setPosition(" << margin + borderThickness << ", " << margin + borderThickness << ")" << endl;
         contentWidget->setPosition(
             QPoint( margin + borderThickness, margin + borderThickness ) );
 
@@ -156,7 +155,7 @@ cout << "2 contentWidget->setPosition(" << margin + borderThickness << ", " << m
     if ( cachedSizeHint != before )
     {
         resize( cachedSizeHint );
-        //emit resized( 0 );
+        emit resized( 0 );
     }
 cout << "# after: (" << size().width() << ", " << size().height() << ")" << endl;
 }

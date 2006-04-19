@@ -14,7 +14,7 @@ getText( Object *o )
 
 
 P2PrimitiveWidget::P2PrimitiveWidget( Object *o )
-    : P2Text( getText( o ), &QColor( PRIM__COLOR ))
+    : P2Text( getText( o ), QColor( PRIM__COLOR ))
 {
     //...
 }

@@ -14,7 +14,7 @@ getText( Object *o )
 
 
 P2CombinatorWidget::P2CombinatorWidget( Object *o )
-    : P2Text( getText( o ), &QColor( COMBINATOR__COLOR ))
+    : P2Text( getText( o ), QColor( COMBINATOR__COLOR ))
 {
     //...
 }

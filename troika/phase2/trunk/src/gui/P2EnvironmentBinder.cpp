@@ -120,7 +120,7 @@ P2Widget *P2EnvironmentBinder::objectWidget( Object *o )
 {
     objectWidgetConstructor c = constructors[ getType( o ) ];
     if ( !c )
-        return new P2Text( getText( o ), new QColor( 0x00, 0x00, 0x00, 0xFF ) );
+        return new P2Text( getText( o ), QColor( 0x00, 0x00, 0x00, 0xFF ) );
 
     else
         return c( o, this );

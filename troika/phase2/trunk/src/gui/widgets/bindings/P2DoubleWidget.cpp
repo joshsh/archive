@@ -14,7 +14,7 @@ getText( Object *o )
 
 
 P2DoubleWidget::P2DoubleWidget( Object *o )
-    : P2Text( getText( o ), &QColor( DOUBLE__COLOR ))
+    : P2Text( getText( o ), QColor( DOUBLE__COLOR ))
 {
     //...
 }

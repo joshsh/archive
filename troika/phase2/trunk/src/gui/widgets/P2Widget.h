@@ -27,7 +27,6 @@ public:
     /** A convenience method. */
     void setPosition( const QPoint &p );
 
-    virtual const QString className() = 0;
     virtual bool isFrame() = 0;
 
     enum EventOrigin { SELF, CHILD_FRAME, CHILD_NOFRAME };

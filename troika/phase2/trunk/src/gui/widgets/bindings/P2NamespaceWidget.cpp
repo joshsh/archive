@@ -6,7 +6,8 @@ extern "C"
 }
 
 #include <widgets/bindings/P2NamespaceWidget.h>
-#include <widgets/P2Frame.h>
+#include <widgets/bindings/P2ObjectFrame.h>
+//#include <widgets/P2Frame.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,8 +24,9 @@ P2NamespaceWidget::P2NamespaceWidget( Object *o, P2EnvironmentBinder *eb )
         char *key = ( char* ) array__get( keys, i );
         Object *child = namespace__lookup_simple( ns, key );
         P2Widget *w = eb->objectWidget( child );
-        P2Frame *f = new P2Frame( w, *eb->getEnv() );
-        f->setObjectName( key );
+        P2ObjectFrame *f = new P2ObjectFrame( child, QString( key ), eb );
+        //P2Frame *f = new P2Frame( w, *eb->getEnv() );
+        //f->setObjectName( key );
         add( f );
     }
     array__delete( keys );

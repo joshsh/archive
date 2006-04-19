@@ -14,7 +14,7 @@ getText( Object *o )
 
 
 P2StringWidget::P2StringWidget( Object *o )
-    : P2Text( getText( o ), &QColor( STRING__COLOR ))
+    : P2Text( getText( o ), QColor( STRING__COLOR ))
 {
     //...
 }

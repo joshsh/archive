@@ -1,5 +1,8 @@
 #include <widgets/P2CentralWidget.h>
 
+    #include <widgets/P2PlusMinus.h>
+    #include <widgets/bindings/P2ObjectFrame.h>
+
     #include <widgets/groups/P2FreeFormArray.h>
     #include <widgets/groups/P2BoxArray.h>
 
@@ -72,21 +75,20 @@ P2CentralWidget::P2CentralWidget( const P2Environment &env )
 cout << "--cw 1" << endl; cout.flush();
     ff->add( tw, QPoint( 0, 0 ) );
 cout << "--cw 2" << endl; cout.flush();
-    P2Frame *b = new P2Frame( ff, env ), *b2, *b3;
+    P2Frame *b = new P2Frame( ff, 0, env ), *b2, *b3;
 
     ResizeWidget *rs;
     P2BoxArray *ba = new P2BoxArray( QBoxLayout::TopToBottom );
     ba->add( new ResizeWidget() );
     ba->add( new ToggleWidget() );
     ba->add( new ResizeWidget() );
-    b2 = new P2Frame( ba, env );
+    b2 = new P2Frame( ba, 0, env );
     ff->add( b2, QPoint( 0, 0 ) );
 
     centralFrame = b;
 cout << "centralFrame = " << ( int ) centralFrame << endl;
 cout << "centralFrame->layout() = " << ( int ) centralFrame->layout() << endl;
 
-    b->setParent( this );
     b->setObjectName( "Top-level P2Frame" );
 
     QPoint p( 0, 0 );
@@ -100,15 +102,16 @@ cout << "centralFrame->layout() = " << ( int ) centralFrame->layout() << endl;
     P2EnvironmentBinder *eb = new P2EnvironmentBinder( env );
 
     Compiler *c = env.getCompiler();
+    //compiler__deserialize( c, "../api/test.p2" );
     compiler__deserialize( c, "guitest.p2" );
 
     Object *o = environment__root( e );
-    P2Widget *w = eb->objectWidget( o );
-    b2 = new P2Frame( w, env );
-    b2->setObjectName( "Phase2 Namespace" );
-    ff->add( b2, QPoint( 0, 0 ) );
+    //P2Widget *w = eb->objectWidget( o );
+    //b2 = new P2Frame( w, "Phase2 Namespace", env );
+    //ff->add( b2, QPoint( 0, 0 ) );
 
-
+    P2ObjectFrame *of = new P2ObjectFrame( o, "Phase2 Namespace", eb );
+    ff->add( of, QPoint( 0, 0 ) );
 
 
 
@@ -117,8 +120,7 @@ cout << "centralFrame->layout() = " << ( int ) centralFrame->layout() << endl;
 
 //*
     ff2 = new P2FreeFormArray();
-    b2 = new P2Frame( ff2, env );
-    b2->setObjectName( "ToggleWidgets" );
+    b2 = new P2Frame( ff2, "ToggleWidgets", env );
 
     // ( Really, ff2 should be fully constructed before it is added )
     ff->add( b2, QPoint( 0, 30 ) );
@@ -128,15 +130,14 @@ cout << "+ ToggleWidgets" << endl;
     {
         //b2 = new P2Frame( env );
         tw = new ToggleWidget();
-        b2 = new P2Frame( tw, env );
+        b2 = new P2Frame( tw, 0, env );
         ff2->add( b2, QPoint( 30, 5 ) );
         //togglers->addChild( b2, p );
         //p = p + QPoint( 14, 15 );
     }
 cout << "- ToggleWidgets" << endl;
 
-#if COMMENTED_OUT
-
+/*
     // Empty binders are tolerated.
     b2 = new P2Frame( env );
     b->addChild( b2, p );
@@ -156,12 +157,10 @@ cout << "- ToggleWidgets" << endl;
     b2->addChild( image, QPoint( 0, 0 ) );
     b->addChild( b2, QPoint( 0, 130 ) );
 
-/*
-    P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
-    b2 = new P2Frame( env );
-    b2->addChild( text, QPoint( 0, 0 ) );
-    b->addChild( b2, p );
-//*/
+    //P2TextEdit *text = new P2TextEdit( "Testing<FONT COLOR='#FF0000'>...</FONT>", false );
+    //b2 = new P2Frame( env );
+    //b2->addChild( text, QPoint( 0, 0 ) );
+    //b->addChild( b2, p );
 
     P2Text *t = new P2Text( "Bleah.", 0 );
     b2 = new P2Frame( env );
@@ -204,9 +203,10 @@ cout << "- ToggleWidgets" << endl;
     }
     b->addChild( bf, QPoint( 10, 0 ) );
 
-#endif
+*/
 
-
+    QWidget *w = new QWidget( this );
+    centralFrame->setParent( w );
 
     centralFrame->setPosition(
         QPoint( WINDOW__CONTENTS__PADDING, WINDOW__CONTENTS__PADDING ) );

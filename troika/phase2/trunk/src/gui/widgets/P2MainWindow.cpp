@@ -1,14 +1,16 @@
 #include <widgets/P2MainWindow.h>
 #include <widgets/dialogs/RenameDialog.h>
 
+    #include <widgets/P2TabWidget.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
+P2MainWindow::P2MainWindow( P2EnvironmenBinder &b, Qt::WFlags flags )
     : QMainWindow( 0, flags ),
       //aboutDialog( new AboutDialog( this ) ),
-      environment( &env ),
+      binder( &b ),
+      environment( &b.getEnv() ),
       viewMode( layoutMode )
 {
     #ifdef DEBUG
@@ -49,7 +51,7 @@ P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
     //~ Just testing the macros.
     #ifdef ARM_COMPILE
         #ifdef X86_COMPILE
-            setWindowTitle( "Phase2 GUI (???)" );
+            setWindowTitle( "Phase2 GUI (arch?)" );
         #else
             setWindowTitle( "Phase2 GUI (ARM)" );
         #endif
@@ -57,7 +59,7 @@ P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
         #ifdef X86_COMPILE
             setWindowTitle( "Phase2 GUI (X86)" );
         #else
-            setWindowTitle( "Phase2 GUI (???)" );
+            setWindowTitle( "Phase2 GUI (arch?)" );
         #endif
     #endif
 
@@ -69,18 +71,29 @@ P2MainWindow::P2MainWindow( P2Environment &env, Qt::WFlags flags )
         //setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
-    createMenusAndToolbar( env );
+    createMenusAndToolbar( environment );
+
+    compiler__deserialize( environment.getCompiler(), "guitest.p2" );
+    Object *o = environment__root( environment.getEnv() );
+    singleView = new P2View( o, binder );
 
     // Create the central widget.
-    centralWidget = new P2CentralWidget( env );
+    //centralWidget = new P2CentralWidget( env );
 
     // Place the central widget in a scroll area.
-    P2ScrollArea *scrollArea = new P2ScrollArea( centralWidget );
-    setCentralWidget( scrollArea );
+//    P2ScrollArea *scrollArea = new P2ScrollArea( centralWidget );
+//P2TabWidget *tw = new P2TabWidget( this );
+//tw->add( scrollArea, "root" );
+//setCentralWidget( tw );
+//QTabWidget *tw = new QTabWidget();
+//tw->addTab( scrollArea, "root" );
+//tw->setTabShape( QTabWidget::Rounded );
+//setCentralWidget( tw );
+    //setCentralWidget( scrollArea );
 
     // Changes in the environment are to have immediate effect on the window and
     // its contents.
-    connect( &env, SIGNAL( changed() ), this, SLOT( refresh() ) );
+    connect( environment, SIGNAL( changed() ), this, SLOT( refresh() ) );
 }
 
 
@@ -443,7 +456,8 @@ void P2MainWindow::refresh()
     viewShowFramesAction->setChecked( environment->getIdleFrameVisibility() );
     viewShowNamesAction->setChecked( environment->getNameVisibility() );
 
-    centralWidget->refresh( *environment );
+    singleView->refresh( environment );
+    //centralWidget->refresh( *environment );
     //update();
 
 /*

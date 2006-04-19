@@ -5,9 +5,10 @@
 
 #include <QtGui>
 
-#include <P2Environment.h>
-#include <widgets/P2CentralWidget.h>
-#include <widgets/P2ScrollArea.h>
+#include <P2EnvironmentBinder.h>
+#include <widgets/P2View.h>
+//#include <widgets/P2CentralWidget.h>
+//#include <widgets/P2ScrollArea.h>
 #include <widgets/dialogs/AboutDialog.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,8 +23,8 @@ public:
 
 public slots:
 
-    /** \note  A P2MainWindow is bound to the same P2Environment for the
-     *  duration of its existence. */
+    /** \note  A P2MainWindow is bound to the same P2Environment for its entire
+        lifetime. */
     void refresh();
 
     void fileNew();
@@ -62,7 +63,8 @@ public slots:
 private:
 
     QIcon checkmark;
-    P2CentralWidget *centralWidget;
+    P2View *singleView;
+    //P2CentralWidget *centralWidget;
     //QScrollArea *scrollArea;
 
     // Checkable actions which are bound to the environment.
@@ -70,6 +72,7 @@ private:
 
     void createMenusAndToolbar( const P2Environment &env );
 
+    P2EnvironmentBinder *binder;
     P2Environment *environment;
 
     enum ViewMode { layoutMode, commandLineMode };

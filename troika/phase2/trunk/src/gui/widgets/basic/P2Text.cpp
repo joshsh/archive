@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Text::P2Text( QString text, QColor *color )
+P2Text::P2Text( QString text, const QColor &color )
         : P2BasicWidget()
 {
     #ifdef DEBUG
@@ -14,9 +14,7 @@ P2Text::P2Text( QString text, QColor *color )
 
     this->text = text;
 
-    this->color = color
-        ? *color
-        : palette().foreground().color();
+    this->color = color;
 
     cachedSizeHint = fontMetrics().boundingRect( text ).size() + QSize( 0, 2 );
 }

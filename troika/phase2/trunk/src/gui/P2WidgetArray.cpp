@@ -70,6 +70,7 @@ QLayoutItem *P2WidgetArray::takeAt( int i )
 
 void P2WidgetArray::showChildren() const
 {
+/*
     for ( int i = 0; i < kids.size(); i++ )
     {
         cout << indent()
@@ -82,6 +83,7 @@ void P2WidgetArray::showChildren() const
 
         cout << endl;
     }
+*/
 }
 
 

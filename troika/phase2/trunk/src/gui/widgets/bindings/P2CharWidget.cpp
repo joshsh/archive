@@ -14,7 +14,7 @@ getText( Object *o )
 
 
 P2CharWidget::P2CharWidget( Object *o )
-    : P2Text( getText( o ), &QColor( CHAR__COLOR ))
+    : P2Text( getText( o ), QColor( CHAR__COLOR ))
 {
     //...
 }

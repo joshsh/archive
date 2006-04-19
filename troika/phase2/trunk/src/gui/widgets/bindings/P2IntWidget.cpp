@@ -14,7 +14,7 @@ getText( Object *o )
 
 
 P2IntWidget::P2IntWidget( Object *o )
-    : P2Text( getText( o ), &QColor( INT__COLOR ))
+    : P2Text( getText( o ), QColor( INT__COLOR ))
 {
     //...
 }

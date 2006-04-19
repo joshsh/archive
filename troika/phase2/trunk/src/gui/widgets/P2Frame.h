@@ -16,7 +16,7 @@ class P2Frame : public P2Widget
 public:
 
     /** Constructs an empty P2Frame. */
-    P2Frame( P2Widget *widget, const P2Environment &env );
+    P2Frame( P2Widget *widget, QString title, const P2Environment &env );
 
     //- "Reimplement QWidget::resizeEvent() to calculate the required
     // distribution of sizes and call setGeometry() on each child."

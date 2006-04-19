@@ -15,7 +15,7 @@ public:
 
     /** \param text  character string content
         \param color  text color (defaults to the foreground color) */
-    P2Text( QString text, QColor *color );
+    P2Text( QString text, const QColor &color );
 
     const QString className();
 

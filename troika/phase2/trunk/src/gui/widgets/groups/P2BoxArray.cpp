@@ -13,7 +13,9 @@ P2BoxArray::P2BoxArray( QBoxLayout::Direction dir )
     // For now...
     setAcceptDrops( false );
 
-    connect( &array, SIGNAL( resized() ), this, SLOT( update() ) );
+    connect(
+        &array, SIGNAL( resized() ),
+        this,   SLOT( update() ) );
 
     // For now...
     setAcceptDrops( false );
@@ -44,7 +46,13 @@ void P2BoxArray::add( P2Widget *widget )
 }
 
 
-// Event handling //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+QSize P2BoxArray::sizeHint() const
+{
+    return layout()->sizeHint();
+}
 
 
 void P2BoxArray::refresh( const P2Environment &env )
