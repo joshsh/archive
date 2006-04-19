@@ -477,49 +477,52 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
 {
     Hash_Map *parents = hash_map__new();
     Name *name = name__new();
-    boolean success = FALSE;
-    Object *o, *parent;
+    Object *o, *parent = 0;
     char *key;
+    Type *t = object__type( haystack );
 
     void *find( Namespace_o **nsopp )
     {
         void *helper( Object **opp )
         {
-            if ( !hash_map__lookup( parents, *opp ) )
-                hash_map__add( parents, *opp, *nsopp );
-
             if ( *opp == needle )
             {
-                success = TRUE;
+                parent = *nsopp;
                 return walker__break;
             }
 
-            else
-                return 0;
+            /* Only add the object to the "parents" tree if it is a namespace,
+               and is not already in the tree. */
+            else if ( object__type( *opp ) == t && !hash_map__lookup( parents, *opp ) )
+                hash_map__add( parents, *opp, *nsopp );
+
+            return 0;
         }
 
         namespace__walk( object__value( *nsopp ), ( Dist_f ) helper );
 
-        if ( success )
+        if ( parent )
             return walker__break;
 
         else
             return 0;
     }
 
+    /* Trace until 'needle' is found or all namespaces have been visited. */
     memory_manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Dist_f ) find );
 
-    if ( success )
+    if ( parent )
     {
         name = name__new();
         o = needle;
 
-        while ( ( parent = hash_map__lookup( parents, o ) ) )
+        do
         {
             key = dictionary__reverse_lookup( ( ( Namespace* ) object__value( parent ) )->children, o );
             array__push( name, key );
             o = parent;
-        }
+
+        } while ( ( parent = hash_map__lookup( parents, o ) ) );
     }
 
     else
