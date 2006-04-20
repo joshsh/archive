@@ -250,4 +250,23 @@ set__create_type( const char *name, int flags )
 }
 
 
+/******************************************************************************/
+
+
+Array *
+set__to_array( Set *s )
+{
+    Array *a = array__new( 0, 0 );
+
+    void *helper( void **refp )
+    {
+        array__enqueue( a, *refp );
+        return 0;
+    }
+
+    set__walk( s, ( Dist_f ) helper );
+    return a;
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -90,6 +90,15 @@ extern Type *
 set__create_type( const char *name, int flags );
 
 
+/******************************************************************************/
+
+#include <util/Array.h>
+
+/** A convenience function for implementing code which can't use set__walk. */
+extern Array *
+set__to_array( Set *s );
+
+
 #endif  /* SET_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

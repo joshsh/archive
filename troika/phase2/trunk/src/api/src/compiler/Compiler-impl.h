@@ -40,7 +40,7 @@ struct Compiler
     Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
 
     /* Other types. */
-    Type *combinator_t, *ns_t, *prim_t, *type_t;
+    Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;
 };
 
 

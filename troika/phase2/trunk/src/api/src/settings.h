@@ -157,6 +157,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define ARRAY__XML__NAME                        "list"
 #define NAMESPACE__XML__NAME                    "table"
+#define SET__XML_NAME                           "list"
 #define TERM__XML__NAME                         "list"
 
 

@@ -260,6 +260,32 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 }
 
 
+static Element *
+set__xml_encode( Set *s, Xml_Encode_Ctx *state )
+{
+    Element *el;
+
+    void *helper( Object **opp )
+    {
+        Object *o = *opp;
+
+        Element *child = object__xml_encode( o, state, 0 );
+        element__add_child( el, child );
+
+        return 0;
+    }
+
+    if ( DEBUG__SAFE && ( !s || !state ) )
+        abort();
+
+    el = element__new( 0, ( uc* ) SET__XML_NAME, 0 );
+
+    set__walk( s, ( Dist_f ) helper );
+
+    return el;
+}
+
+
 /* Deserializers for individual types *****************************************/
 
 
@@ -405,6 +431,31 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     }
 
     return ns;
+}
+
+
+static Set *
+set__xml_decode( Element *el, Xml_Decode_Ctx *state )
+{
+    Set *s;
+    Element *child;
+    Object *o;
+
+    if ( DEBUG__SAFE && ( !el || !state
+    || strcmp( ( char* ) element__name( el ), SET__XML_NAME ) ) )
+        abort();
+
+    s = set__new();
+
+    child = element__first_child( el );
+    while ( child )
+    {
+        o = object__xml_decode( child, state );
+        set__add( s, o );
+        child = element__next_sibling( child );
+    }
+
+    return s;
 }
 
 
@@ -834,6 +885,7 @@ compiler__serialize( Compiler *c, char *path )
 
     set_encoder( c->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
     set_encoder( c->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
+    set_encoder( c->set_t, ( Xml_Encoder ) set__xml_encode, state.serializers );
     set_encoder( c->term_t, ( Xml_Encoder ) term__xml_encode, state.serializers );
 
     /* ... */
@@ -892,6 +944,7 @@ compiler__deserialize( Compiler *c, char *path )
 
     set_decoder( c->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
     set_decoder( c->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
+    set_decoder( c->set_t, ( Xml_Decoder ) set__xml_decode, state.deserializers );
     set_decoder( c->term_t, ( Xml_Decoder ) term__xml_decode, state.deserializers );
 
     child = element__first_child( el );
