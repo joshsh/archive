@@ -1,5 +1,5 @@
-#ifndef P2NamespaceWidget_h
-#define P2NamespaceWidget_h
+#ifndef P2SetWidget_h
+#define P2SetWidget_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -15,16 +15,16 @@ extern "C"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2NamespaceWidget : public P2BoxArray
+class P2SetWidget : public P2BoxArray
 {
 public:
 
-    P2NamespaceWidget( Object *o, P2Binder *eb );
+    P2SetWidget( Object *o, P2Binder *eb );
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2NamespaceWidget_h
+#endif  // P2SetWidget_h
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

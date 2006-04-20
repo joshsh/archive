@@ -5,7 +5,8 @@
 
 
 P2Widget::P2Widget()
-    : QWidget( 0, 0 )
+    : QWidget( 0, 0 ),
+      active( false )
 {
     #ifdef DEBUG
         cout << indent()
@@ -15,6 +16,18 @@ P2Widget::P2Widget()
     isDependent = false;
 
     //setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
+}
+
+
+bool P2Widget::isActive()
+{
+    return active;
+}
+
+
+void P2Widget::setActive( bool a )
+{
+    active = a;
 }
 
 

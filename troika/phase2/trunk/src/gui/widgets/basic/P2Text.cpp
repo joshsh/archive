@@ -16,13 +16,9 @@ P2Text::P2Text( QString text, const QColor &color )
 
     this->color = color;
 
-    cachedSizeHint = fontMetrics().boundingRect( text ).size() + QSize( 0, 2 );
-}
-
-
-const QString P2Text::className()
-{
-    return QString( "P2Text" );
+    int h = fontMetrics().height();
+    //cachedSizeHint = fontMetrics().boundingRect( text ).size() + QSize( 0, 2 );
+    cachedSizeHint = QSize( fontMetrics().boundingRect( text ).width(), h );
 }
 
 
@@ -41,7 +37,8 @@ void P2Text::paintEvent( QPaintEvent *event )
 
     // Note: assumes the same font as the one used to find the bounding
     // rectangle at construction time.
-    painter.drawText( 0, cachedSizeHint.height() - 2, text );
+    painter.drawText( 0, cachedSizeHint.height() - 4, text );
+//painter.drawRect( QRect( QPoint( 0, 0 ), cachedSizeHint - QSize( 1, 1 ) ) );
 }
 
 

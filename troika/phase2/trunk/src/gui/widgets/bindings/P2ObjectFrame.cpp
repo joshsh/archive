@@ -16,7 +16,7 @@ P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initia
     plusMinus = new P2PlusMinus( this, true );
     plusMinus->setGeometry( QRect( QPoint( 0, 0 ), plusMinus->sizeHint() ) );
 
-    P2Text *titleWidget = new P2Text( title, QColor( 0xBF, 0xBF, 0xFF, 0xFF ) );
+    P2Text *titleWidget = new P2Text( title, QColor( COLOR__FRAME__INACTIVE ) );
     stackedWidget->addWidget( titleWidget );
 
     connect(    plusMinus,  SIGNAL( clickedPlus() ),
@@ -84,7 +84,7 @@ void P2ObjectFrame::contract()
     plusMinus->setGeometry( QRect( QPoint( 0, offset ), plusMinus->sizeHint() ) );
 
     stackedWidget->setGeometry( QRect(
-        QPoint( plusMinus->sizeHint().width() + 2, 0 ),
+        QPoint( plusMinus->sizeHint().width() + FRAME__CONTENTS__SPACING, 0 ),
         stackedWidget->sizeHint() ) );
 
     update( 0 );

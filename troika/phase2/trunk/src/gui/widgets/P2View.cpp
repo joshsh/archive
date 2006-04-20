@@ -14,7 +14,7 @@ P2View::P2View( Object *o, P2Binder &eb )
 
 setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
 
-    objectFrame = new P2ObjectFrame( o, "[namespace]", eb, true );
+    objectFrame = new P2ObjectFrame( o, "root", eb, true );
     objectFrame->setParent( borderWidget );
 
     scrollArea = new QScrollArea( this );

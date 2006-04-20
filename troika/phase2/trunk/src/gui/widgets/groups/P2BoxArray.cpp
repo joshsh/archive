@@ -8,7 +8,9 @@ P2BoxArray::P2BoxArray( QBoxLayout::Direction dir )
     : P2Widget()
 {
     // Note: no need to call setLayout after using this constructor.
-    new QBoxLayout( dir, this );
+    QBoxLayout *l = new QBoxLayout( dir, this );
+    l->setSpacing( FRAME__CONTENTS__SPACING );
+    l->setMargin( 0 );
 
     // For now...
     setAcceptDrops( false );

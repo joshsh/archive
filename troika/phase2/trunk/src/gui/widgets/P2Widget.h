@@ -37,6 +37,9 @@ public:
     /** Overloaded method which additionally emits the 'renamed' signal. */
     void setObjectName( QString s );
 
+    bool isActive();
+    void setActive( bool a );
+
 public slots:
 
     virtual void refresh( const P2Environment &env ) = 0;
@@ -73,6 +76,8 @@ private:
 
     bool mousePressEventWrapper( QMouseEvent *event, EventOrigin origin );
     bool mouseMoveEventWrapper( QMouseEvent *event, EventOrigin origin );
+
+    bool active;
 
 };
 

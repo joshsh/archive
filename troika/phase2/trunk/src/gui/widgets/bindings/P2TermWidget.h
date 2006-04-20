@@ -1,5 +1,5 @@
-#ifndef P2NamespaceWidget_h
-#define P2NamespaceWidget_h
+#ifndef P2TermWidget_h
+#define P2TermWidget_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -10,21 +10,19 @@ extern "C"
 #include <Object.h>
 }
 
-#include <widgets/groups/P2BoxArray.h>
-#include <P2Binder.h>
+#include <widgets/basic/P2Text.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2NamespaceWidget : public P2BoxArray
+class P2TermWidget : public P2Text
 {
 public:
 
-    P2NamespaceWidget( Object *o, P2Binder *eb );
-
+    P2TermWidget( Object *o );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2NamespaceWidget_h
+#endif  // P2TermWidget_h
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

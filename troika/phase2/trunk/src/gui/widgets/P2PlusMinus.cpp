@@ -38,7 +38,7 @@ void P2PlusMinus::paintEvent( QPaintEvent *event )
 
     //painter.setPen( QColor( 0x3F, 0x3F, 0x3F, 0xFF ) );
 
-    painter.setPen( QColor( COLOR__FRAME__ACTIVE ) );
+    painter.setPen( QColor( COLOR__FRAME__INACTIVE ) );
 
     // Text.
     painter.drawLine( 2, 2 + scale, 2 + ( 2 * scale ), 2 + scale );

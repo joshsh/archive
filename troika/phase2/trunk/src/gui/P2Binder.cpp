@@ -7,7 +7,9 @@
 #include <widgets/bindings/P2IntWidget.h>
 #include <widgets/bindings/P2NamespaceWidget.h>
 #include <widgets/bindings/P2PrimitiveWidget.h>
+#include <widgets/bindings/P2SetWidget.h>
 #include <widgets/bindings/P2StringWidget.h>
+#include <widgets/bindings/P2TermWidget.h>
 #include <widgets/bindings/P2TypeWidget.h>
 
 
@@ -55,10 +57,23 @@ static P2Widget *primitiveWidget( Object *o, P2Binder *eb )
 }
 
 
+static P2Widget *setWidget( Object *o, P2Binder *eb )
+{
+    return new P2SetWidget( o, eb );
+}
+
+
 static P2Widget *stringWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2StringWidget( o );
+}
+
+
+static P2Widget *termWidget( Object *o, P2Binder *eb )
+{
+    eb = 0;
+    return new P2TermWidget( o );
 }
 
 
@@ -97,6 +112,8 @@ P2Binder::P2Binder( P2Environment &e )
     constructors[ getType( environment, "Namespace" ) ] = namespaceWidget;
     constructors[ getType( environment, "Primitive" ) ] = primitiveWidget;
     constructors[ getType( environment, "cstring" ) ] = stringWidget;
+    constructors[ getType( environment, "Set" ) ] = setWidget;
+    constructors[ getType( environment, "Term" ) ] = termWidget;
     constructors[ getType( environment, "Type" ) ] = typeWidget;
 }
 

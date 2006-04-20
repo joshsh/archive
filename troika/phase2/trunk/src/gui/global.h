@@ -12,7 +12,7 @@ class P2Binder;
 ////////////////////////////////////////////////////////////////////////////////
 
 // Arbitrary out-of-range integer.
-#define INT__INFINITY  100000
+#define INT__INFINITY                       100000
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,52 +60,54 @@ indentMinus();
 
 // Display settings ////////////////////////////////////////////////////////////
 
-#define SL5600__DISPLAY_WIDTH  240
-#define SL5600__DISPLAY_HEIGHT  320
+#define SL5600__DISPLAY_WIDTH               240
+#define SL5600__DISPLAY_HEIGHT              320
 
 /** All child widgets inherit this background color, rather than defining their
     own. */
-#define COLOR__BACKGROUND       0xFF, 0xFF, 0xFF
+#define COLOR__BACKGROUND                   0xFF, 0xFF, 0xFF
 
 // Full blue.
-#define COLOR__FRAME__ACTIVE    0x00, 0x00, 0xFF, 0xFF
+#define COLOR__FRAME__ACTIVE                0x00, 0x00, 0xFF, 0xFF
 // Light blue.
-#define COLOR__FRAME__INACTIVE  0xBF, 0xBF, 0xFF, 0xFF
+#define COLOR__FRAME__INACTIVE              0xA0, 0xA0, 0xFF, 0xFF
+#define COLOR__TITLE__INACTIVE              0x7F, 0x7F, 0xFF, 0xFF
 
 
 // Phase2 bindings /////////////////////////////////////////////////////////////
 
-#define CHAR__COLOR                 0xBF, 0xBF, 0xFF, 0xFF
-#define DOUBLE__COLOR               0xBF, 0x00, 0xBF, 0xFF
-#define COMBINATOR__COLOR           0xFF, 0x00, 0x00, 0xFF
-#define INT__COLOR                  0X00, 0xFF, 0x00, 0xFF
-#define PRIM__COLOR                 0xFF, 0x7F, 0x00, 0xFF
-#define STRING__COLOR               0x3F, 0x3F, 0x3F, 0xFF
-#define TYPE__COLOR                 0x00, 0xFF, 0xFF, 0xFF
+#define CHAR__COLOR                         0xBF, 0xBF, 0xFF, 0xFF
+#define DOUBLE__COLOR                       0xBF, 0x00, 0xBF, 0xFF
+#define COMBINATOR__COLOR                   0xFF, 0x00, 0x00, 0xFF
+#define INT__COLOR                          0X00, 0xFF, 0x00, 0xFF
+#define PRIM__COLOR                         0xFF, 0x7F, 0x00, 0xFF
+#define STRING__COLOR                       0x3F, 0x3F, 0x3F, 0xFF
+#define TERM__COLOR                         0x3F, 0x3F, 0x3F, 0xFF
+#define TYPE__COLOR                         0x00, 0xFF, 0xFF, 0xFF
 
 
 // Layout //////////////////////////////////////////////////////////////////////
 
-#define FRAME__BORDER_THICKNESS     1
+#define FRAME__BORDER_THICKNESS             1
 
 /** Number of empty pixels on either side of a frame label. */
-#define FRAME__LABEL__X_PADDING     2
+#define FRAME__LABEL__X_PADDING             2
 
 /** Minimum x offset of a label from either side of its frame. */
-#define FRAME__LABEL__X_MARGIN      7
+#define FRAME__LABEL__X_MARGIN              7
 
 /** Horizontal alignment of frame labels. */
-#define FRAME__LABEL__ALIGNMENT     Qt::AlignLeft
-//#define FRAME__LABEL__ALIGNMENT     Qt::AlignHCenter
-//#define FRAME__LABEL__ALIGNMENT     Qt::AlignRight
+#define FRAME__LABEL__ALIGNMENT             Qt::AlignLeft
+//#define FRAME__LABEL__ALIGNMENT           Qt::AlignHCenter
+//#define FRAME__LABEL__ALIGNMENT           Qt::AlignRight
 
 /** Horizontal alignment of frame contents. */
-#define FRAME__CONTENTS__ALIGNMENT  Qt::AlignHCenter
+#define FRAME__CONTENTS__ALIGNMENT          Qt::AlignHCenter
 
-#define FRAME__CONTENTS__SPACING    1
-#define FRAME__CONTENTS__PADDING    1
+#define FRAME__CONTENTS__SPACING            3
+#define FRAME__CONTENTS__PADDING            3
 
-#define WINDOW__CONTENTS__PADDING   5
+#define WINDOW__CONTENTS__PADDING           5
 
 /** If defined, use a weighted average rather than a best fit approach to
     edge alignment. */
@@ -159,8 +161,8 @@ indentMinus();
 // File paths //////////////////////////////////////////////////////////////////
 
 /** Identifier for the Phase2 window icon. */
-#define P2GUI_ICON    ":/troika.png"
-//#define P2GUI_ICON    ":/p2gui.png"
+#define P2GUI_ICON                          ":/troika.png"
+//#define P2GUI_ICON                        ":/p2gui.png"
 
 
 #endif  // global_h

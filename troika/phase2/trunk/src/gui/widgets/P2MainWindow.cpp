@@ -73,7 +73,6 @@ P2MainWindow::P2MainWindow( P2Binder &b )
 
     createMenusAndToolbar( *environment );
 
-    compiler__deserialize( environment->getCompiler(), "guitest.p2" );
     Object *o = environment__root( environment->getEnv() );
     singleView = new P2View( o, *binder );
     setCentralWidget( singleView );
@@ -440,6 +439,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // About Phase2.
     icon = QIcon( ":/helpAboutPhase2.png" );
+//icon = QIcon( ":/rdf.png" );
     action = new QAction( icon, tr( "&About Phase2" ), this );
     action->setStatusTip( tr( "Show Phase2's About box" ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( helpAboutPhase2() ) );

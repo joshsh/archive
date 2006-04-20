@@ -6,6 +6,7 @@
     <file alias="troika.png">../../ipk/troika.png</file>
     <file alias="check.png">images/check.png</file>
     <file alias="empty.png">images/empty.png</file>
+    <file alias="rdf.png">images/rdf.png</file>
 
     <file alias="fileNew.png">images/Bluecurve/actions/filenew.png</file>
     <file alias="fileOpen.png">images/Bluecurve/actions/fileopen.png</file>

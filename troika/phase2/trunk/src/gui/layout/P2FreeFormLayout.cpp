@@ -16,6 +16,11 @@ P2FreeFormLayout::P2FreeFormLayout( QWidget *parent )
              << (int) parent << " )" << endl;
     #endif
 
+    setSpacing( FRAME__CONTENTS__SPACING );
+    setMargin( 0 );
+    // Border padding of 2 pixels around content rectangle.
+    //setMargin( FRAME__CONTENTS__SPACING + FRAME__CONTENTS__PADDING );
+
     generateSpanningTree();
 
     connect(    &array, SIGNAL( resized() ),
@@ -35,12 +40,6 @@ void P2FreeFormLayout::add( P2Widget *widget, const QPoint &position )
     // Frames may be (programmatically) resized, but may not be smaller than
     // minimumSize.
     setSizeConstraint( QLayout::SetDefaultConstraint );
-
-    // Minimum distance of 1 pixel between child widgets.
-    setSpacing( FRAME__CONTENTS__SPACING );
-
-    // Border padding of 2 pixels around content rectangle.
-    setMargin( FRAME__CONTENTS__SPACING + FRAME__CONTENTS__PADDING );
 
     // Adjust the position of the new item so it does not collide.
     QPoint adjustedPosition = findBestPosition(

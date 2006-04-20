@@ -17,8 +17,6 @@ public:
         \param color  text color (defaults to the foreground color) */
     P2Text( QString text, const QColor &color );
 
-    const QString className();
-
     QSize sizeHint() const;  // Must be const.
 
 protected:

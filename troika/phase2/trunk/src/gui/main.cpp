@@ -10,6 +10,12 @@ export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 #include <P2Environment.h>
 #include <P2Binder.h>
 
+extern "C"
+{
+#include <Compiler.h>
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 QList< P2MainWindow* > windows;
@@ -50,6 +56,9 @@ delete_windows()
 int main( int argc, char **argv )
 {
     P2Environment env;
+    //compiler__deserialize( env.getCompiler(), "guitest.p2" );
+    compiler__deserialize( env.getCompiler(), "../api/test.p2" );
+
     P2Binder binder( env );
 
     QApplication a( argc, argv );
