@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-RenameDialog::RenameDialog( QWidget *parent, P2Frame *frameToRename )
+RenameDialog::RenameDialog( QWidget *parent, QWidget *w )
     : QDialog( parent, 0 )
 {
     #ifdef DEBUG
@@ -12,7 +12,7 @@ RenameDialog::RenameDialog( QWidget *parent, P2Frame *frameToRename )
              << "RenameDialog[" << (int) this << "]::RenameDialog(...)" << endl;
     #endif
 
-    this->frameToRename = frameToRename;
+    widget = w;
 
     // Input/output in this window will not proceed until the user either
     // submits a new name for the focus frame or clicks cancel / close.
@@ -27,7 +27,7 @@ RenameDialog::RenameDialog( QWidget *parent, P2Frame *frameToRename )
     nameBox->setCheckable( false );
     nameBox->setFlat( false );
 
-    nameField = new QLineEdit( frameToRename->objectName() );
+    nameField = new QLineEdit( widget->objectName() );
     nameField->setMaxLength( 31 );
     nameField->setFixedWidth( 180 );
     //nameField = new QTextEdit( frameToRename->objectName() );
@@ -75,7 +75,7 @@ void RenameDialog::accept()
     //~ Check for name collision.
 
     // Note: this will remove an object from its dictionary if nameField is empty.
-    frameToRename->setObjectName( nameField->text() );
+    widget->setObjectName( nameField->text() );
     //frameToRename->setObjectName( nameField->toPlainText() );
 
     //emit( accepted() );

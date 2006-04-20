@@ -12,7 +12,7 @@ extern "C"
 }
 
 #include <widgets/groups/P2BoxArray.h>
-#include <P2EnvironmentBinder.h>
+#include <P2Binder.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ class P2NamespaceWidget : public P2BoxArray
 {
 public:
 
-    P2NamespaceWidget( Object *o, P2EnvironmentBinder *eb );
+    P2NamespaceWidget( Object *o, P2Binder *eb );
 
 };
 

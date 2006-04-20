@@ -6,11 +6,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2MainWindow::P2MainWindow( P2EnvironmenBinder &b, Qt::WFlags flags )
-    : QMainWindow( 0, flags ),
+P2MainWindow::P2MainWindow( P2Binder &b )
+    : QMainWindow(),
       //aboutDialog( new AboutDialog( this ) ),
       binder( &b ),
-      environment( &b.getEnv() ),
+      environment( b.getEnv() ),
       viewMode( layoutMode )
 {
     #ifdef DEBUG
@@ -71,11 +71,12 @@ P2MainWindow::P2MainWindow( P2EnvironmenBinder &b, Qt::WFlags flags )
         //setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
     #endif
 
-    createMenusAndToolbar( environment );
+    createMenusAndToolbar( *environment );
 
-    compiler__deserialize( environment.getCompiler(), "guitest.p2" );
-    Object *o = environment__root( environment.getEnv() );
-    singleView = new P2View( o, binder );
+    compiler__deserialize( environment->getCompiler(), "guitest.p2" );
+    Object *o = environment__root( environment->getEnv() );
+    singleView = new P2View( o, *binder );
+    setCentralWidget( singleView );
 
     // Create the central widget.
     //centralWidget = new P2CentralWidget( env );
@@ -456,7 +457,7 @@ void P2MainWindow::refresh()
     viewShowFramesAction->setChecked( environment->getIdleFrameVisibility() );
     viewShowNamesAction->setChecked( environment->getNameVisibility() );
 
-    singleView->refresh( environment );
+    singleView->refresh( *environment );
     //centralWidget->refresh( *environment );
     //update();
 
@@ -571,7 +572,7 @@ void P2MainWindow::editDelete()
 
 void P2MainWindow::editRename()
 {
-    RenameDialog dialog( this, centralWidget->focusFrame() );
+    RenameDialog dialog( this, singleView->focusFrame() );
     dialog.exec();
 
     refresh();
@@ -613,7 +614,7 @@ void P2MainWindow::viewBack()
 
 void P2MainWindow::viewNewWindow()
 {
-    newMainWindow( *environment );
+    newMainWindow( *binder );
 }
 
 

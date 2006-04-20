@@ -1,5 +1,5 @@
-#ifndef P2EnvironmentBinder_h
-#define P2EnvironmentBinder_h
+#ifndef P2Binder_h
+#define P2Binder_h
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -12,25 +12,25 @@ extern "C"
 
 #include <widgets/P2Widget.h>
 
-class P2EnvironmentBinder;
-typedef P2Widget *(*objectWidgetConstructor)( Object *o, P2EnvironmentBinder *eb );
+class P2Binder;
+typedef P2Widget *(*objectWidgetConstructor)( Object *o, P2Binder *eb );
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2EnvironmentBinder
+class P2Binder
 {
 
 public:
 
-    P2EnvironmentBinder( const P2Environment &e );
+    P2Binder( P2Environment &e );
 
     P2Widget *objectWidget( Object *o );
 
-    const P2Environment *getEnv();
+    P2Environment *getEnv();
 
 private:
 
-    const P2Environment *env;
+    P2Environment *env;
     Environment *environment;
 
     QHash<int, objectWidgetConstructor> constructors;
@@ -39,6 +39,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif  // P2EnvironmentBinder_h
+#endif  // P2Binder_h
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

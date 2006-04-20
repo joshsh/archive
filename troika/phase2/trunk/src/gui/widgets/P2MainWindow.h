@@ -5,7 +5,7 @@
 
 #include <QtGui>
 
-#include <P2EnvironmentBinder.h>
+#include <P2Binder.h>
 #include <widgets/P2View.h>
 //#include <widgets/P2CentralWidget.h>
 //#include <widgets/P2ScrollArea.h>
@@ -19,7 +19,7 @@ class P2MainWindow : public QMainWindow
 
 public:
 
-    P2MainWindow( P2Environment &env, Qt::WFlags flags = 0 );
+    P2MainWindow( P2Binder &b );
 
 public slots:
 
@@ -72,7 +72,7 @@ private:
 
     void createMenusAndToolbar( const P2Environment &env );
 
-    P2EnvironmentBinder *binder;
+    P2Binder *binder;
     P2Environment *environment;
 
     enum ViewMode { layoutMode, commandLineMode };

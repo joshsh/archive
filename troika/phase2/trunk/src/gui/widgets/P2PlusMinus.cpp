@@ -36,12 +36,16 @@ void P2PlusMinus::paintEvent( QPaintEvent *event )
     painter.drawRect( r );
     painter.setBrush( Qt::NoBrush );
 
-    painter.setPen( QColor( 0x3F, 0x3F, 0x3F, 0xFF ) );
+    //painter.setPen( QColor( 0x3F, 0x3F, 0x3F, 0xFF ) );
+
+    painter.setPen( QColor( COLOR__FRAME__ACTIVE ) );
 
     // Text.
     painter.drawLine( 2, 2 + scale, 2 + ( 2 * scale ), 2 + scale );
     if ( isPlus )
         painter.drawLine( 2 + scale, 2, 2 + scale, 2 + ( 2 * scale ) );
+
+    //painter.setPen( QColor( COLOR__FRAME__INACTIVE ) );
 
     // Border.
     painter.drawRect( r );

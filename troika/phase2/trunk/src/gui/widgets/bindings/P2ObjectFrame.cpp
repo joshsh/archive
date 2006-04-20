@@ -3,21 +3,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2EnvironmentBinder *eb, bool initiallyExpanded )
+P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initiallyExpanded )
     : P2Widget()
 {
     object = o;
     this->title = title;
-    binder = eb;
+    binder = &b;
     expanded = initiallyExpanded;
 
     stackedWidget = new QStackedWidget( this );
 
-    P2Text *titleWidget = new P2Text( title, QColor( 0xBF, 0xBF, 0xFF, 0xFF ) );
-    stackedWidget->addWidget( titleWidget );
-
     plusMinus = new P2PlusMinus( this, true );
     plusMinus->setGeometry( QRect( QPoint( 0, 0 ), plusMinus->sizeHint() ) );
+
+    P2Text *titleWidget = new P2Text( title, QColor( 0xBF, 0xBF, 0xFF, 0xFF ) );
+    stackedWidget->addWidget( titleWidget );
 
     connect(    plusMinus,  SIGNAL( clickedPlus() ),
                 this,       SLOT( expand() ) );
@@ -26,13 +26,25 @@ P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2EnvironmentBinder *eb,
 
     if ( expanded )
         expand();
+    else
+        contract();
+}
+
+
+void P2ObjectFrame::setTitle( QString s )
+{
+    frame->setTitle( s );
 }
 
 
 QSize P2ObjectFrame::sizeHint() const
 {
-cout << "P2ObjectFrame::sizeHint" << endl;
-    return stackedWidget->currentWidget()->sizeHint();
+    QSize s = QRect( 0, 0, 0, 0 ).unite( stackedWidget->geometry() ).size();
+    if ( !stackedWidget->currentIndex() )
+        s += QSize( 11, 0 );
+
+    return s;
+    //return stackedWidget->currentWidget()->sizeHint();
 }
 
 
@@ -52,11 +64,14 @@ void P2ObjectFrame::expand()
 
     stackedWidget->setCurrentIndex( 1 );
 
-stackedWidget->resize( stackedWidget->currentWidget()->sizeHint() );
-resize( sizeHint() );
-QWidget::update();
-//refresh( *binder->getEnv() );
-    emit resized( 0 );
+    int offset = ( ( P2Frame* ) stackedWidget->currentWidget() )->border().y()
+        - ( plusMinus->sizeHint().height() / 2 );
+    plusMinus->setGeometry( QRect( QPoint( 0, offset), plusMinus->sizeHint() ) );
+
+    stackedWidget->setGeometry( QRect(
+        QPoint( 0, 0 ), stackedWidget->sizeHint() ) );
+
+    update( 0 );
 }
 
 
@@ -64,9 +79,15 @@ void P2ObjectFrame::contract()
 {
     stackedWidget->setCurrentIndex( 0 );
 
-stackedWidget->resize( stackedWidget->currentWidget()->sizeHint() );
-resize( sizeHint() );
-    emit resized( 0 );
+    int offset = ( stackedWidget->currentWidget()->sizeHint().height()
+        - plusMinus->sizeHint().height()  ) / 2;
+    plusMinus->setGeometry( QRect( QPoint( 0, offset ), plusMinus->sizeHint() ) );
+
+    stackedWidget->setGeometry( QRect(
+        QPoint( plusMinus->sizeHint().width() + 2, 0 ),
+        stackedWidget->sizeHint() ) );
+
+    update( 0 );
 }
 
 
@@ -83,7 +104,8 @@ void P2ObjectFrame::refresh( const P2Environment &env )
 
 void P2ObjectFrame::update( QResizeEvent *e )
 {
-resize( sizeHint() );
+    stackedWidget->resize( stackedWidget->currentWidget()->sizeHint() );
+    resize( sizeHint() );
     emit resized( e );
 }
 

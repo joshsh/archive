@@ -42,6 +42,12 @@ P2Frame::P2Frame( P2Widget *widget, QString title, const P2Environment &env )
 ////////////////////////////////////////////////////////////////////////////////
 
 
+QRect P2Frame::border() const
+{
+    return borderRect;
+}
+
+
 QSize P2Frame::sizeHint() const
 {
     return cachedSizeHint;

@@ -36,6 +36,8 @@ public:
 
     QSize sizeHint() const;
 
+    QRect border() const;
+
 public slots:
 
     void refresh( const P2Environment &env );

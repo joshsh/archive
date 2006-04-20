@@ -8,7 +8,7 @@ export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 
 #include <widgets/P2MainWindow.h>
 #include <P2Environment.h>
-
+#include <P2Binder.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,9 +16,9 @@ QList< P2MainWindow* > windows;
 
 
 /** Create a new top-level widget. */
-void newMainWindow( P2Environment &env )
+void newMainWindow( P2Binder &b )
 {
-    P2MainWindow *w = new P2MainWindow( env, 0 );
+    P2MainWindow *w = new P2MainWindow( b );
 /*
             Qt::Window
             | Qt::WindowTitleHint
@@ -50,15 +50,16 @@ delete_windows()
 int main( int argc, char **argv )
 {
     P2Environment env;
+    P2Binder binder( env );
 
     QApplication a( argc, argv );
 
-cout << "a.startDragDistance():" << a.startDragDistance() << endl;
-cout << "a.startDragTime():" << a.startDragTime() << endl;
+//cout << "a.startDragDistance():" << a.startDragDistance() << endl;
+//cout << "a.startDragTime():" << a.startDragTime() << endl;
 //a.setStartDragTime( 5000 );
 
     // In the beginning there was a single top-level window.
-    newMainWindow( env );
+    newMainWindow( binder );
 
     int ret = a.exec();
 

@@ -12,7 +12,7 @@ extern "C"
 
 #include <widgets/P2Widget.h>
 #include <widgets/P2PlusMinus.h>
-#include <P2EnvironmentBinder.h>
+#include <P2Binder.h>
 #include <widgets/basic/P2Text.h>
 #include <widgets/P2Frame.h>
 
@@ -24,7 +24,7 @@ class P2ObjectFrame : public P2Widget
 
 public:
 
-    P2ObjectFrame( Object *o, QString title, P2EnvironmentBinder *eb, bool initiallyExpanded = false );
+    P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initiallyExpanded = false );
 
 const QString className() { return QString( "P2ObjectFrame" ); }
 bool isFrame() { return false; }
@@ -33,6 +33,8 @@ bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return fa
 bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
     QSize sizeHint() const;
+
+    void setTitle( QString s );
 
 public slots:
 
@@ -44,7 +46,7 @@ private:
     Object *object;
     QString title;
     bool expanded;
-    P2EnvironmentBinder *binder;
+    P2Binder *binder;
 
     P2PlusMinus *plusMinus;
 

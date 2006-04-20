@@ -4,8 +4,10 @@
 
 #include "compile-target.h"  // Macros specific to the target architecture.
 //#include "P2Environment.h"
+//#include <P2Binder.h>
 
 class P2Environment;
+class P2Binder;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +18,8 @@ class P2Environment;
 ////////////////////////////////////////////////////////////////////////////////
 
 /** \note  From main.cpp. */
-extern void newMainWindow( P2Environment &env );
+extern void
+newMainWindow( P2Binder &b );
 
 
 // Debugging ///////////////////////////////////////////////////////////////////
@@ -42,14 +45,17 @@ extern void newMainWindow( P2Environment &env );
 
 /** \return  indentation whitespace for debugging output
     \note  Indentation level is post-incremented. */
-const char *indentPlus();
+const char *
+indentPlus();
 
 /** \return  indentation whitespace for debugging output */
-const char *indent();
+const char *
+indent();
 
 /** \return  indentation whitespace for debugging output
     \note  Indentation level is pre-decremented. */
-const char *indentMinus();
+const char *
+indentMinus();
 
 
 // Display settings ////////////////////////////////////////////////////////////
@@ -73,7 +79,7 @@ const char *indentMinus();
 #define DOUBLE__COLOR               0xBF, 0x00, 0xBF, 0xFF
 #define COMBINATOR__COLOR           0xFF, 0x00, 0x00, 0xFF
 #define INT__COLOR                  0X00, 0xFF, 0x00, 0xFF
-#define PRIM__COLOR                 0xFF, 0xBF, 0x00, 0xFF
+#define PRIM__COLOR                 0xFF, 0x7F, 0x00, 0xFF
 #define STRING__COLOR               0x3F, 0x3F, 0x3F, 0xFF
 #define TYPE__COLOR                 0x00, 0xFF, 0xFF, 0xFF
 

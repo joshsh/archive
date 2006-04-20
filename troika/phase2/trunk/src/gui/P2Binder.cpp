@@ -1,4 +1,4 @@
-#include <P2EnvironmentBinder.h>
+#include <P2Binder.h>
 
 #include <widgets/basic/P2Text.h>
 #include <widgets/bindings/P2CharWidget.h>
@@ -14,55 +14,55 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-static P2Widget *charWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *charWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2CharWidget( o );
 }
 
 
-static P2Widget *combinatorWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *combinatorWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2CombinatorWidget( o );
 }
 
 
-static P2Widget *doubleWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *doubleWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2DoubleWidget( o );
 }
 
 
-static P2Widget *intWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *intWidget( Object *o, P2Binder *eb )
 {
    eb = 0;
    return new P2IntWidget( o );
 }
 
 
-static P2Widget *namespaceWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *namespaceWidget( Object *o, P2Binder *eb )
 {
     return new P2NamespaceWidget( o, eb );
 }
 
 
-static P2Widget *primitiveWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *primitiveWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2PrimitiveWidget( o );
 }
 
 
-static P2Widget *stringWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *stringWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2StringWidget( o );
 }
 
 
-static P2Widget *typeWidget( Object *o, P2EnvironmentBinder *eb )
+static P2Widget *typeWidget( Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2TypeWidget( o );
@@ -85,7 +85,7 @@ static int getType( Object *o )
 }
 
 
-P2EnvironmentBinder::P2EnvironmentBinder( const P2Environment &e )
+P2Binder::P2Binder( P2Environment &e )
 {
     env = &e;
     environment = env->getEnv();
@@ -101,7 +101,7 @@ P2EnvironmentBinder::P2EnvironmentBinder( const P2Environment &e )
 }
 
 
-const P2Environment *P2EnvironmentBinder::getEnv()
+P2Environment *P2Binder::getEnv()
 {
     return env;
 }
@@ -116,7 +116,7 @@ getText( Object *o )
 }
 
 
-P2Widget *P2EnvironmentBinder::objectWidget( Object *o )
+P2Widget *P2Binder::objectWidget( Object *o )
 {
     objectWidgetConstructor c = constructors[ getType( o ) ];
     if ( !c )

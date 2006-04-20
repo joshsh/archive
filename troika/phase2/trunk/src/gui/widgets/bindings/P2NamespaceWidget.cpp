@@ -12,7 +12,7 @@ extern "C"
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2NamespaceWidget::P2NamespaceWidget( Object *o, P2EnvironmentBinder *eb )
+P2NamespaceWidget::P2NamespaceWidget( Object *o, P2Binder *eb )
     : P2BoxArray( QBoxLayout::TopToBottom )
 {
     Namespace *ns = ( Namespace* ) object__value( o );
@@ -23,8 +23,8 @@ P2NamespaceWidget::P2NamespaceWidget( Object *o, P2EnvironmentBinder *eb )
     {
         char *key = ( char* ) array__get( keys, i );
         Object *child = namespace__lookup_simple( ns, key );
-        P2Widget *w = eb->objectWidget( child );
-        P2ObjectFrame *f = new P2ObjectFrame( child, QString( key ), eb );
+        //P2Widget *w = eb->objectWidget( child );
+        P2ObjectFrame *f = new P2ObjectFrame( child, QString( key ), *eb );
         //P2Frame *f = new P2Frame( w, *eb->getEnv() );
         //f->setObjectName( key );
         add( f );
