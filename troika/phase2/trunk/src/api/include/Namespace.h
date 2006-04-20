@@ -113,6 +113,8 @@ namespace__create_type( const char *name, int flags );
 
 /******************************************************************************/
 
+/** \return  the shortest fully-qualified Name which will resolve needle in
+    haystack */
 extern Name *
 namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m );
 
@@ -122,6 +124,12 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m );
 extern Object *
 namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m );
 
+extern Object *
+namespace__define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m );
+
+/** Removes the object resolved by this name from the last namespace in the
+    path through which it is resolved.
+    \return  the object removed */
 extern Object *
 namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m );
 

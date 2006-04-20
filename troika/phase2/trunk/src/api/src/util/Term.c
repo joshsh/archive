@@ -520,7 +520,12 @@ printf( "\n" );
     }
     #endif
 
+    sprintf( buffer, "[" );
+    buffer++;
+
     encode( t->head, FALSE );
+
+    sprintf( buffer, "]" );
 }
 
 

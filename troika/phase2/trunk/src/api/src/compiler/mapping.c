@@ -21,89 +21,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static void
-nodef_error()
-{
-    printf( "Error: trivial identifier.\n" );
-}
-
-
-static void
-notns_error( Name *name )
-{
-    printf( "Error: \"" );
-    name__print( name );
-    printf( "\" is not a namespace.\n" );
-}
-
-
-static void
 undef_error( Name *name )
 {
     printf( "Error: \"" );
     name__print( name );
     printf( "\" is not defined in this namespace.\n" );
-}
-
-
-static Object *
-define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
-{
-    void *key;
-    Namespace_o *local;
-
-    if ( !array__size( name ) )
-    {
-        nodef_error();
-        return 0;
-    }
-
-    #if COMPILER__NAME_INHERITANCE
-    key = array__dequeue( name );
-    local = namespace__resolve( nso, name, m );
-
-    if ( !local )
-    {
-        undef_error( name );
-        o = 0;
-    }
-
-    else if ( local->type != nso->type )
-    {
-        array__enqueue( name, key );
-        notns_error( name );
-        o = 0;
-    }
-
-    else
-    {
-        nso = local;
-
-        if ( o )
-        {
-            o = namespace__add_simple( nso->value, key, o );
-            array__enqueue( name, key );
-        }
-
-        else
-        {
-            array__enqueue( name, key );
-            o = namespace__undefine( nso, name, m );
-        }
-/*
-        o = ( o )
-            ? namespace__add_simple( nso->value, key, o )
-            : namespace__remove_simple( nso->value, key );
-
-            array__enqueue( name, key );
-*/
-    }
-    #else
-        o = ( o )
-            ? namespace__add( nso, name, o )
-            : namespace__remove( nso, name );
-    #endif
-
-    return o;
 }
 
 
@@ -127,40 +49,63 @@ compiler__define( Compiler *c, Name *name, Object *o )
 {
     Namespace_o *nso;
 
-    #if DEBUG__COMPILER
-    Object *o_orig = o;
-    #endif
-
-    char *first = name__pop( name );
+    char *key = name__pop( name );
     nso = c->cur_ns_obj;
 
-    if ( !strcmp( first, "root" ) )
+    if ( !strcmp( key, "root" ) )
     {
         nso = environment__root( c->env );
-        o = define( nso, name, o, environment__manager( c->env ) );
-        name__push( name, first );
+        o = namespace__define( nso, name, o, environment__manager( c->env ) );
+        name__push( name, key );
     }
 
-    else if ( !strcmp( first, "here" ) )
+    else if ( !strcmp( key, "here" ) )
     {
-        o = define( nso, name, o, environment__manager( c->env ) );
-        name__push( name, first );
+        o = namespace__define( nso, name, o, environment__manager( c->env ) );
+        name__push( name, key );
     }
 
     else
     {
-        name__push( name, first );
-        o = define( nso, name, o, environment__manager( c->env ) );
+        name__push( name, key );
+        o = namespace__define( nso, name, o, environment__manager( c->env ) );
     }
-
+/*
     if ( !o )
         undef_error( name );
+*/
 
-    #if DEBUG__COMPILER
-    printf( "[%#x] compiler__define(%#x, ", ( int ) o, ( int ) c );
-    name__print( name );
-    printf( ", %#x)\n", ( int ) o_orig );
-    #endif
+    return o;
+}
+
+
+Object *
+compiler__undefine( Compiler *c, Name *name )
+{
+    Namespace_o *nso;
+    Object *o;
+
+    char *key = name__pop( name );
+    nso = c->cur_ns_obj;
+
+    if ( !strcmp( key, "root" ) )
+    {
+        nso = environment__root( c->env );
+        o = namespace__undefine( nso, name, environment__manager( c->env ) );
+        name__push( name, key );
+    }
+
+    else if ( !strcmp( key, "here" ) )
+    {
+        o = namespace__undefine( nso, name, environment__manager( c->env ) );
+        name__push( name, key );
+    }
+
+    else
+    {
+        name__push( name, key );
+        o = namespace__undefine( nso, name, environment__manager( c->env ) );
+    }
 
     return o;
 }
@@ -172,37 +117,31 @@ compiler__resolve( Compiler *c, Name *name )
     Namespace_o *nso;
     Object *o;
 
-    char *first = ( char* ) name__pop( name );
-    if ( !strcmp( first, "root" ) )
+    char *key = ( char* ) name__pop( name );
+    if ( !strcmp( key, "root" ) )
     {
         nso = environment__root( c->env );
         o = resolve( nso, name, environment__manager( c->env ) );
-        name__push( name, first );
+        name__push( name, key );
     }
 
-    else if ( !strcmp( first, "here" ) )
+    else if ( !strcmp( key, "here" ) )
     {
         nso = c->cur_ns_obj;
         o = resolve( nso, name, environment__manager( c->env ) );
-        name__push( name, first );
+        name__push( name, key );
     }
 
     else
     {
         nso = c->cur_ns_obj;
-        name__push( name, first );
+        name__push( name, key );
 
         o = resolve( nso, name, environment__manager( c->env ) );
     }
 
     if ( !o )
         undef_error( name );
-
-    #if DEBUG__COMPILER
-    printf( "[%#x] compiler__resolve(%#x, ", ( int ) o, ( int ) c );
-    name__print( name );
-    printf( ")\n" );
-    #endif
 
     return o;
 }

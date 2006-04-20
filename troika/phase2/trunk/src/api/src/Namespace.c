@@ -17,6 +17,34 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+/*
+
+define x
+    without the final name fragment, x resolves to a namespace
+    immediate parent of x is not read-only
+
+undefine x
+    x resolves
+    immediate parent of x is not read-only
+
+_rm x
+    x resolves
+    immediate parent of x is not read-only
+
+_cp x y
+    x resolves
+    y resolves
+        y is a namespace
+        y is not read-only
+
+_mv x y
+    x resolves
+    y resolves
+        y is a namespace
+        y is not read-only
+
+*/
+
 #include <Namespace.h>
 #include <util/Hash_Map.h>
 #include "settings.h"
@@ -600,6 +628,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
     unsigned int i;
     Namespace *parent;
     char *key = "";
+    Type *t = object__type( nso );
 
     Object *
     resolve( Namespace_o *ns_obj, char *key, Memory_Manager *m )
@@ -632,7 +661,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
 
     for ( i = 0; i < array__size( name ); i++ )
     {
-        if ( object__type( o ) != object__type( nso ) )
+        if ( object__type( o ) != t )
         {
             o = 0;
             break;
@@ -650,5 +679,96 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
     return o;
 }
 
+
+/******************************************************************************/
+
+
+static void
+error__not_a_namespace( Name *name )
+{
+    printf( "Error: \"" );
+    name__print( name );
+    printf( "\" is not a namespace\n" );
+}
+
+
+static void
+error__not_defined( Name *name )
+{
+    printf( "Error: \"" );
+    name__print( name );
+    printf( "\" is not defined in this namespace\n" );
+}
+
+
+/*
+Object *
+namespace__copy( Namespace_o *nso, Name *src, Name *dest )
+{
+
+}
+*/
+
+
+Object *
+namespace__define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
+{
+    void *key;
+    Namespace_o *local;
+
+    /* Check that arguments are sound. */
+    if ( DEBUG__SAFE && ( !nso || !name || !o || !m || !array__size( name ) ) )
+        abort();
+
+    #if COMPILER__NAME_INHERITANCE
+    key = array__dequeue( name );
+    local = namespace__resolve( nso, name, m );
+
+    if ( !local )
+    {
+        error__not_defined( name );
+        array__enqueue( name, key );
+        o = 0;
+    }
+
+    else if ( object__type( local ) != object__type( nso ) )
+    {
+        error__not_a_namespace( name );
+        array__enqueue( name, key );
+        o = 0;
+    }
+
+    else
+    {
+        nso = local;
+
+        if ( o )
+        {
+            o = namespace__add_simple( object__value( nso ), key, o );
+            array__enqueue( name, key );
+        }
+
+        else
+        {
+            array__enqueue( name, key );
+            o = namespace__undefine( nso, name, m );
+        }
+    }
+    #else
+        o = ( o )
+            ? namespace__add( nso, name, o )
+            : namespace__remove( nso, name );
+    #endif
+
+    return o;
+}
+
+/*
+Object *
+namespace__move( Namespace_o *nso, Name *src, Name *dest )
+{
+
+}
+*/
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

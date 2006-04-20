@@ -32,15 +32,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Type.h>
 
 
-enum Object__Flags
-{
-    OBJECT__IMMUTABLE           = 0x1,
-    OBJECT__VISITED             = 0x2,
-    /*OBJECT__NATIVE*/
-    OBJECT__OWNED               = 0x4
-};
-
-
 typedef struct Object Object;
 
 

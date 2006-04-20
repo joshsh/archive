@@ -29,6 +29,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
+enum Object__Flags
+{
+    OBJECT__IMMUTABLE           = 0x1,
+    OBJECT__VISITED             = 0x2,
+    /*OBJECT__NATIVE*/
+    OBJECT__OWNED               = 0x4
+};
+
+
 /** A typed constant.  This is the least addressable unit of data in a Phase2
     namespace. */
 struct Object

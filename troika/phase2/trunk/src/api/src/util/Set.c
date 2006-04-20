@@ -196,24 +196,32 @@ set__union( Set *a, Set *b )
 void
 set__encode( Set *s, char *buffer )
 {
+    boolean first = TRUE;
+
     void encode( Object **opp )
     {
         Object *o = *opp;
 
-        sprintf( buffer, " " );
-        buffer++;
+        if ( first )
+        {
+            sprintf( buffer, " " );
+            buffer++;
+        }
+
+        else
+        {
+            sprintf( buffer, ", " );
+            buffer += 2;
+        }
 
         object__type( o )->encode( object__value( o ), buffer );
         buffer += strlen( buffer );
+
+        first = FALSE;
     }
 
-    #if DEBUG__SAFE
-    if ( !s || !buffer )
-    {
-        ERROR( "set__encode: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !s || !buffer ) )
+        abort();
 
     sprintf( buffer, "{" );
     buffer++;

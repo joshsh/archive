@@ -18,7 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "Environment-impl.h"
-
+    #include "../Object-impl.h"
 
 #if TRIPLES__GLOBAL
 
@@ -42,6 +42,77 @@ mult_stub( void **args )
     return object__multiply( args[0], args[1] );
 }
 
+static void *
+equals_stub( void **args )
+{
+    if ( args[0] == args[1] )
+        return args[0];
+    else
+        return 0;
+}
+
+static void *
+children_stub( void **args )
+{
+    Object *o = args[0];
+    Set *s = set__new();
+    Type *t = object__type( o );
+
+    void *helper( void **opp )
+    {
+        set__add( s, *opp );
+        return 0;
+    }
+
+    if ( t->flags & TYPE__IS_OBJ_COLL )
+        t->walk( object__value( o ), ( Dist_f ) helper );
+
+    return s;
+}
+
+
+static void *
+predicates_stub( void **args )
+{
+    Object *o = args[0];
+    Set *s = set__new();
+
+    void *helper( Hash_Map__Entry **epp )
+    {
+        set__add( s, ( *epp )->key );
+        return 0;
+    }
+
+    #if TRIPLES__GLOBAL__OUT_EDGES
+    if ( o->outbound_edges )
+        hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
+    #endif
+
+    return s;
+}
+
+
+static void *
+objects_stub( void **args )
+{
+    Object *o = args[0];
+    Set *s = set__new();
+
+    void *helper( Hash_Map__Entry **epp )
+    {
+        set__add( s, ( *epp )->target );
+        return 0;
+    }
+
+    #if TRIPLES__GLOBAL__OUT_EDGES
+    if ( o->outbound_edges )
+        hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
+    #endif
+
+    return s;
+}
+
+
 static int
 add_triples_prims( Environment *env )
 {
@@ -61,6 +132,23 @@ add_triples_prims( Environment *env )
       && ( p = primitive__new( env, ANY__NAME, "^", mult_stub, 2 ) )
       && primitive__add_param( env, p, ANY__NAME, "subject", 1 )
       && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
+      && primitive__register( env, p, 0, 0 )
+
+      && ( p = primitive__new( env, ANY__NAME, "object_object__equals", equals_stub, 2 ) )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
+      && primitive__add_param( env, p, ANY__NAME, "objectB", 1 )
+      && primitive__register( env, p, 0, 0 )
+
+      && ( p = primitive__new( env, "Set", "object__triples_predicates", predicates_stub, 1 ) )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
+      && primitive__register( env, p, 0, 0 )
+
+      && ( p = primitive__new( env, "Set", "object__triples_objects", objects_stub, 1 ) )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
+      && primitive__register( env, p, 0, 0 )
+
+      && ( p = primitive__new( env, "Set", "object__children", children_stub, 1 ) )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
       && primitive__register( env, p, 0, 0 ) );
 }
 

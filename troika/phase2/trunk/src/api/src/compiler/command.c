@@ -264,7 +264,7 @@ command_mv( Compiler *c, Ast *args )
                 compiler__define( c, dest, o );
                 array__enqueue( src, array__dequeue( dest ) );
 
-                if ( compiler__define( c, src, 0 ) )
+                if ( compiler__undefine( c, src ) )
                     printf( "Reassignment from 1 object.\n" );
             }
 
@@ -359,7 +359,7 @@ command_rm( Compiler *c, Ast *args )
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
-    if ( compiler__define( c, name, 0 ) )
+    if ( compiler__undefine( c, name ) )
         printf( "Unassigned 1 object.\n" );
 
     return 0;

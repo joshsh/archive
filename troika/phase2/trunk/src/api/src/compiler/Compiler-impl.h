@@ -48,6 +48,9 @@ extern Object *
 compiler__define( Compiler *c, Name *name, Object *o );
 
 extern Object *
+compiler__undefine( Compiler *c, Name *name );
+
+extern Object *
 compiler__resolve( Compiler *c, Name *name );
 
 
