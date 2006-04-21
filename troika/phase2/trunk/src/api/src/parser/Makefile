@@ -48,20 +48,21 @@ valgrind-session :  $(DEBUGGER)
 	$(VALGRIND) debugger
 
 
+objects = ../Ast.o $(NAME).tab.o
+
+debugger_objects = debugger.o ../Type.o ../Object.o $(UTILS)/Hash_Table.o $(UTILS)/Hash_Map.o
+
 utils = $(UTILS)/Array.o $(UTILS)/Name.o $(UTILS)/Term.o
-
-objects = debugger.o ../Type.o ../Ast.o $(NAME).tab.o
-
 
 parser.o :  ../Ast.o lex.yy.o $(NAME).tab.o
 	ld -r -o parser.o ../Ast.o $(NAME).tab.o lex.yy.o
 
 
-debugger :  $(objects) $(utils) lex.yy.o
-	$(CC) -o debugger $(objects) $(utils) lex.yy.o
+debugger :  $(objects) $(debugger_objects) $(utils) lex.yy.o
+	$(CC) -o debugger $(objects) $(debugger_objects) $(utils) lex.yy.o
 
 
-$(objects) $(utils) : ../settings.h
+$(objects) $(debugger_objects) $(utils) : ../settings.h
 
 
 ################################################################################

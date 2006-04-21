@@ -298,13 +298,8 @@ hash_table__lookup( const Hash_Table *h, const void *key )
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
 
-    #if DEBUG__SAFE
-    if ( !key )
-    {
-        ERROR( "hash_table__lookup: null key" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !h || !key ) )
+        abort();
 
     cur = buffer + ( h->hash( key ) % buffer_size );
 
@@ -319,20 +314,54 @@ hash_table__lookup( const Hash_Table *h, const void *key )
 }
 
 
+/* When a cell is removed (replaced with a NULL), adjacent cells on the
+   higher-address side may become unreachable, and need to be re-inserted into
+   the table. */
+void
+rehash_dependent_cells( Hash_Table *h, void **removed )
+{
+    void **cur = removed, **buffer = h->buffer, **aux;
+    int buffer_size = h->buffer_size;
+    int i = -1, j;
+
+    do
+    {
+        i++;
+        cur++;
+        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
+
+    } while ( *cur );
+
+    if ( i )
+    {
+        aux = ( void** ) malloc( i * sizeof( void* ) );
+
+        cur = removed;
+        for ( j = 0; j < i; j++ )
+        {
+            cur++;
+            cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
+            aux[j] = *cur;
+            *cur = 0;
+        }
+
+        for ( j = 0; j < i; j++ )
+            hash_table__add( h, aux[j] );
+
+        free( aux );
+    }
+}
+
+
 void *
-hash_table__remove(Hash_Table *h, const void *key)
+hash_table__remove( Hash_Table *h, const void *key )
 {
     void **cur, **buffer = h->buffer;
     int buffer_size = h->buffer_size;
     void *displaced = 0;
 
-    #if DEBUG__SAFE
-    if ( !key )
-    {
-        ERROR( "hash_table__remove: null key" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !h || !key ) )
+        abort();
 
     cur = buffer + ( h->hash( key ) % buffer_size );
 
@@ -343,6 +372,10 @@ hash_table__remove(Hash_Table *h, const void *key)
             displaced = *cur;
             *cur = 0;
             h->size--;
+
+            /* Re-hash dependent cells. */
+            rehash_dependent_cells( h, cur );
+
             break;
         }
 

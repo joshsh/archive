@@ -33,7 +33,12 @@ struct Dictionary_Entry
 static Dictionary_Entry *
 dictionary_entry__new( const char *key, void *target )
 {
-    Dictionary_Entry *entry = new( Dictionary_Entry );
+    Dictionary_Entry *entry;
+
+    if ( DEBUG__SAFE && ( !key || !target ) )
+        abort();
+
+    entry = new( Dictionary_Entry );
 
     if ( entry )
     {
@@ -59,6 +64,9 @@ static void
 dictionary_entry__delete
     ( Dictionary_Entry *entry )
 {
+    if ( DEBUG__SAFE && !entry )
+        abort();
+
     free( entry->key );
     free( entry );
 }
@@ -70,6 +78,9 @@ hash( const Dictionary_Entry *entry )
 {
     char const *p;
     unsigned int h = 0, g;
+
+    if ( DEBUG__SAFE && !entry )
+        abort();
 
     for ( p = entry->key; *p != '\0'; p++ )
     {
@@ -88,6 +99,9 @@ hash( const Dictionary_Entry *entry )
 static int
 compare( const Dictionary_Entry *entry1, const Dictionary_Entry *entry2 )
 {
+    if ( DEBUG__SAFE && ( !entry1 || !entry2 ) )
+        abort();
+
     return strcmp( entry1->key, entry2->key );
 }
 
@@ -114,6 +128,9 @@ dictionary__delete( Dictionary *dict )
         return 0;
     }
 
+    if ( DEBUG__SAFE && !dict )
+        abort();
+
     /* Destroy dictionary entries. */
     hash_table__walk( dict, ( Dist_f ) helper );
 
@@ -131,10 +148,7 @@ dictionary__add( Dictionary *dict, const char *key, void *target )
     void *r = 0;
 
     if ( DEBUG__SAFE && ( !dict || !key || !target ) )
-    {
-        ERROR( "dictionary__add: null argument" );
-        return 0;
-    }
+        abort();
 
     else if ( ( new_entry = dictionary_entry__new( key, target ) ) )
     {
@@ -154,6 +168,9 @@ dictionary__lookup( Dictionary *dict, char *key )
 {
     Dictionary_Entry *entry;
     Dictionary_Entry match_entry;
+
+    if ( DEBUG__SAFE && ( !dict || !key ) )
+        abort();
 
     match_entry.key = key;
     entry = hash_table__lookup( dict, &match_entry );
@@ -179,6 +196,9 @@ dictionary__reverse_lookup( Dictionary *dict, const void *target )
             return 0;
     }
 
+    if ( DEBUG__SAFE && ( !dict || !key || !target ) )
+        abort();
+
     hash_table__walk( dict, ( Dist_f ) helper );
     return key;
 }
@@ -190,6 +210,9 @@ dictionary__remove( Dictionary *dict, char *key )
     void *r = 0;
     Dictionary_Entry *entry;
     Dictionary_Entry match_entry;
+
+    if ( DEBUG__SAFE && ( !dict || !key ) )
+        abort();
 
     match_entry.key = key;
 
@@ -217,6 +240,9 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
         return 0;
     }
 
+    if ( DEBUG__SAFE && ( !dest || !src ) )
+        abort();
+
     hash_table__walk( src, ( Dist_f ) helper );
 }
 
@@ -231,6 +257,9 @@ dictionary__walk( Dictionary *dict, Dist_f f )
     {
         return f( &( *ep )->target );
     }
+
+    if ( DEBUG__SAFE && ( !dict || !f ) )
+        abort();
 
     hash_table__walk( dict, ( Dist_f ) helper );
 }
@@ -249,6 +278,9 @@ dictionary__keys( Dictionary *dict )
         array__enqueue( a, ( *epp )->key );
         return 0;
     }
+
+    if ( DEBUG__SAFE && !dict )
+        abort();
 
     a = array__new( hash_table__size( dict ), 0 );
 

@@ -281,18 +281,8 @@ namespace__remove( Namespace_o *ns_obj, Name *name )
     Object *child_ns_obj, *o;
     char *key;
 
-    #if DEBUG__SAFE
-    if ( !ns_obj || !name )
-    {
-        ERROR( "namespace__remove: null argument" );
-        return 0;
-    }
-    else if ( !array__size( name ) )
-    {
-        ERROR( "empty name" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !ns_obj || !name || !array__size( name ) ) )
+        abort();
 
     ns = object__value( ns_obj );
 
@@ -338,13 +328,8 @@ namespace__remove( Namespace_o *ns_obj, Name *name )
 Object *
 namespace__remove_simple( Namespace *ns, char *name )
 {
-    #if DEBUG__SAFE
-    if ( !ns || !name)
-    {
-        ERROR( "namespace__remove_simple: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !ns || !name) )
+        abort();
 
     return dictionary__remove( ns->children, name );
 }
@@ -381,14 +366,13 @@ namespace__show_children( const Namespace_o *ns_obj )
 
     void *print( char **key )
     {
-        Object *o = ( Object* ) dictionary__lookup( dict, *key );
+        Object *o = dictionary__lookup( dict, *key );
         int i, lim = maxlen - strlen( object__type( o )->name );
 
         printf( "    " );
 
-        #if COMPILER__SHOW_ADDRESS
-        printf( "%#x ", ( int ) o );
-        #endif
+        if ( COMPILER__SHOW_ADDRESS )
+            printf( "%#x ", ( int ) o );
 
         printf( "<%s> ", object__type( o )->name );
 
@@ -400,9 +384,8 @@ namespace__show_children( const Namespace_o *ns_obj )
         return 0;
     }
 
-    #if COMPILER__SHOW_ADDRESS
-    printf( "%#x ", ( int ) ns_obj );
-    #endif
+    if ( COMPILER__SHOW_ADDRESS )
+        printf( "%#x ", ( int ) ns_obj );
 
     printf( "<%s>", object__type( ns_obj )->name );
 
@@ -635,10 +618,12 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
     {
         Object *o = 0;
 
-        void *test( Namespace_o **ns_opp )
+        void *test( Namespace_o **nsopp )
         {
-            parent = object__value( *ns_opp );
-            if ( ( o = namespace__lookup_simple( parent, key ) ) )
+            parent = object__value( *nsopp );
+            o = namespace__lookup_simple( parent, key );
+
+            if ( o )
                 return walker__break;
             else
                 return 0;
@@ -649,15 +634,8 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
         return o;
     }
 
-    #if DEBUG__SAFE
-    if ( !nso || !name )
-    {
-        ERROR( "namespace__undefine: null argument" );
-        return 0;
-    }
-
-    else
-    #endif
+    if ( DEBUG__SAFE && ( !nso || !name || !m || !array__size( name ) ) )
+        abort();
 
     for ( i = 0; i < array__size( name ); i++ )
     {

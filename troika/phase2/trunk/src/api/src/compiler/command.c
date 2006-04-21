@@ -260,10 +260,12 @@ command_mv( Compiler *c, Ast *args )
         {
             if ( o2->type == c->cur_ns_obj->type )
             {
+                namespace__add_simple( o2->value, array__peek( src ), o );
+/*
                 array__enqueue( dest, array__dequeue( src ) );
                 compiler__define( c, dest, o );
                 array__enqueue( src, array__dequeue( dest ) );
-
+*/
                 if ( compiler__undefine( c, src ) )
                     printf( "Reassignment from 1 object.\n" );
             }
