@@ -91,7 +91,7 @@ indentMinus();
 #define FRAME__BORDER_THICKNESS             1
 
 /** Number of empty pixels on either side of a frame label. */
-#define FRAME__LABEL__X_PADDING             2
+#define FRAME__LABEL__X_PADDING             3
 
 /** Minimum x offset of a label from either side of its frame. */
 #define FRAME__LABEL__X_MARGIN              7
@@ -105,7 +105,9 @@ indentMinus();
 #define FRAME__CONTENTS__ALIGNMENT          Qt::AlignHCenter
 
 #define FRAME__CONTENTS__SPACING            3
-#define FRAME__CONTENTS__PADDING            3
+
+/** 5 pixels is the minimum if a P2PlusMinus is 5 pixels wide */
+#define FRAME__CONTENTS__PADDING            5
 
 #define WINDOW__CONTENTS__PADDING           5
 

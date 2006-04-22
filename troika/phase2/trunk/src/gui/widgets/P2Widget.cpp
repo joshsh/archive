@@ -36,7 +36,7 @@ void P2Widget::setObjectName( QString s )
     if ( s.compare( objectName() ) )
     {
         QObject::setObjectName( s );
-        emit renamed( s );
+        emit renamed();
     }
 }
 

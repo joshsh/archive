@@ -7,7 +7,7 @@
 static QString
 getText( Object *o )
 {
-    char buffer[100];
+    char buffer[1000];
     object__type( o )->encode( object__value( o ), buffer );
     return QString( buffer );
 }

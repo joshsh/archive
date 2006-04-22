@@ -26,33 +26,43 @@ public:
 
     P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initiallyExpanded = false );
 
-const QString className() { return QString( "P2ObjectFrame" ); }
-bool isFrame() { return false; }
+bool isFrame() { return true; }
 
 bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
     QSize sizeHint() const;
 
-    void setTitle( QString s );
-
 public slots:
 
     void refresh( const P2Environment &env );
     void update( QResizeEvent *e );
+    void update2();
+
+protected:
+
+    void paintEvent( QPaintEvent *event );
 
 private:
 
     Object *object;
-    QString title;
-    bool expanded;
     P2Binder *binder;
 
+    P2Widget *contentWidget;
+    P2Text *titleWidget;
     P2PlusMinus *plusMinus;
 
-    QStackedWidget *stackedWidget;
-    P2Text *titleWidget;
-    P2Frame *frame;
+    QRect borderRect;
+    QSize cachedSizeHint;
+    //QStackedWidget *stackedWidget;
+
+    // Visibility of child widgets.
+    bool showContent;
+    bool showPlusMinus;
+    bool showTitle;
+    bool showBorder;
+
+    void setTitle( QString s );
 
 private slots:
 

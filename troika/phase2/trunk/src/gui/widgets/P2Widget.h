@@ -47,7 +47,7 @@ public slots:
 signals:
 
     void resized( QResizeEvent *event );
-    void renamed( QString name );
+    void renamed();
 
     void mousePress( QMouseEvent *event, P2Widget *origin );
     //virtual void handleMousePress( QMouseEvent *event ) = 0;
