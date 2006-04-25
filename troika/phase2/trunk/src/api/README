@@ -7,7 +7,7 @@ make distclean
 
 make maintainer-clean
 rm -rf configure autom4te.cache config aclocal.m4 \
-	Makefile.in src/Makefile.in src/import/Makefile.in src/parser/Makefile.in src/xml/Makefile.in
+	Makefile.in src/Makefile.in src/import/Makefile.in src/parser/Makefile.in src/util/Makefile.in src/xml/Makefile.in
 
 
 

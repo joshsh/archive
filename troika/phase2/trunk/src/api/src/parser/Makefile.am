@@ -8,9 +8,16 @@ AM_LFLAGS = \
 	--header=foo.h \
         -p  # Get comments regarding features that lead to performance losses.
 
-debugger_SOURCES = debugger.c \
+noinst_LTLIBRARIES = libp2parser.la
+
+libp2parser_la_SOURCES = \
 	lexer.l \
-	parser.y \
+	parser.y
+
+debugger_LDADD = libp2parser.la
+
+debugger_SOURCES = \
+	debugger.c \
 	../Type.c \
 	../Object.c \
 	../Ast.c \
