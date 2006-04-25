@@ -2,15 +2,15 @@
 
 bin_PROGRAMS = debugger
 
-BUILT_SOURCES = p2_parser_parser.h
-AM_YFLAGS = -d ##-p mfg
-AM_LFLAGS = -o $(LEX_OUTPUT_ROOT).c \
+BUILT_SOURCES = parser.h
+AM_YFLAGS = -d
+AM_LFLAGS = \
 	--header=foo.h \
         -p  # Get comments regarding features that lead to performance losses.
 
 debugger_SOURCES = debugger.c \
-	p2_parser_lexer.l \
-	p2_parser_parser.y \
+	lexer.l \
+	parser.y \
 	../Type.c \
 	../Object.c \
 	../Ast.c \
