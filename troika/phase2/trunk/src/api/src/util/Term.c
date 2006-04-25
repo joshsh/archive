@@ -506,19 +506,9 @@ term__encode( Term *t, char *buffer )
             }
         }
     }
-/*
-void **cur = t->head, **lim = t->buffer + t->buffer_size;
-while ( cur < lim ) {
-printf( " %i", ( int ) *cur ); cur++; }
-printf( "\n" );
-*/
-    #if DEBUG__SAFE
-    if ( !t || !buffer )
-    {
-        ERROR( "term__encode: null argument" );
-        return;
-    }
-    #endif
+
+    if ( DEBUG__SAFE && ( !t || !buffer )
+        abort();
 
     sprintf( buffer, "[" );
     buffer++;
