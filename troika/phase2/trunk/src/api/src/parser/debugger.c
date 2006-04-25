@@ -34,7 +34,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
 
 #include <Ast.h>
-#include "p2_parser.h"
+#include <defs.h>
+#include "../settings.h"
 
 
 typedef struct Compiler
@@ -180,7 +181,7 @@ p2_parser__exit_state parse( void )
 
 int main( void )
 {
-    printf( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", VERSION );
+    printf( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", PHASE2_VERSION );
 
     switch( parse() )
     {

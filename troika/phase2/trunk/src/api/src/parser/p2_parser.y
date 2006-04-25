@@ -64,7 +64,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  /* strcpy */
 
 #include <Ast.h>
-#include "p2_parser.h"
+#include <defs.h>
+#include "../settings.h"
 
 #include <util/Term.h>
 

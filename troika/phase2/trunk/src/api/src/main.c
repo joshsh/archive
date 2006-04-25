@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static void
 print_version()
 {
-    printf( "Phase2 %s\n", VERSION );
+    printf( "Phase2 %s\n", PHASE2_VERSION );
     printf( "Copyright (C) 2006 Joshua Shinavier\n" );
     printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
 }

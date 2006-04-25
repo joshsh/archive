@@ -507,7 +507,7 @@ term__encode( Term *t, char *buffer )
         }
     }
 
-    if ( DEBUG__SAFE && ( !t || !buffer )
+    if ( DEBUG__SAFE && ( !t || !buffer ) )
         abort();
 
     sprintf( buffer, "[" );

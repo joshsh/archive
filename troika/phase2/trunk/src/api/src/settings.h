@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SETTINGS_H
 
 
-#define VERSION "0.6.3"
+#define PHASE2_VERSION "0.6.3"
 
 
 #include <stdlib.h>  /* malloc */

@@ -59,7 +59,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include "p2_parser.tab.h"
-#include "p2_parser.h"
+#include <defs.h>
+#include "../settings.h"
 
 /*#include "foo.h"*/
 
