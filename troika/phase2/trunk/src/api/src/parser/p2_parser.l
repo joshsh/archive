@@ -58,7 +58,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define YY_DECL int yylex( YYSTYPE *yylval, YYLTYPE *yylloc)
 */
 
-#include "p2_parser.tab.h"
+#include "parser.h"
 #include <defs.h>
 #include "../settings.h"
 
