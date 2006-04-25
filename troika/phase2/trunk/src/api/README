@@ -1,0 +1,19 @@
+./autogen.sh
+./configure
+make
+make install
+
+make distclean
+rm -rf configure Makefile.in autom4te.cache config aclocal.m4 src/Makefile.in
+
+
+
+make doxygen-doc
+
+
+aclocal
+
+autoconf
+automake
+
+info autoreconf
