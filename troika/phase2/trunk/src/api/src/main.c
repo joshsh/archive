@@ -30,10 +30,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     static int verbose_flag;
     static int version_flag;
 
+
 static void
 print_version()
 {
     printf( "Phase2 %s\n", VERSION );
+}
+
+
+static void
+print_copying()
+{
     printf( "Copyright (C) 2006 Joshua Shinavier\n" );
     printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
 }
@@ -58,6 +65,7 @@ print_help()
 {
     print_version();
     print_usage();
+    print_copying();
     print_bugs();
 }
 
@@ -177,6 +185,7 @@ int main( int argc, char *argv[] )
             }
 
             print_version();
+            print_copying();
 
             if ( compiler__parse( compiler ) )
                 ERROR( "main: parse failed" );

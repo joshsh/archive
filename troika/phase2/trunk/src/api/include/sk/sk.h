@@ -46,7 +46,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     form, and is undefined once it has been passed as an argument to this
     function.
 
-    \param Memory_Manager  memory manager which will claim ownership of any
+    \param m  memory manager which will claim ownership of any
     new objects
 
     \param term_type  type of impure combinator terms

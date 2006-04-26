@@ -2,7 +2,7 @@
 
 /**
 
-\file  p2_parser.l
+\file  parser.l
 
 \brief  Flex input file for Phase2's command line front-end.
 

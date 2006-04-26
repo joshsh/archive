@@ -55,7 +55,7 @@ extern unsigned int
 namespace__size( Namespace *ns );
 
 /** Adds an object to a namespace.
-    \param ns  the target namespace
+    \param ns_obj  the target namespace
     \param name  the local part of the name to assign
     \param o  the object to add
     \return  the object added, or 0 if it could not be added */
@@ -74,7 +74,7 @@ namespace__keys( Namespace *ns );
 
 
 /** Finds an object in a namespace.
-    \param ns  the target namespace
+    \param ns_obj  the target namespace
     \param name  the local part of the name to look up
     \return  the object found */
 extern Object *
@@ -82,13 +82,13 @@ namespace__lookup( Namespace_o *ns_obj, Name *name );
 
 /** Finds an object using a simple name.
     \param ns  the target namespace
-    \param s  the local part of the name to look up
+    \param name  the local part of the name to look up
     \return  the object found, or 0 if not found */
 extern Object *
 namespace__lookup_simple( Namespace *ns, const char *name );
 
 /** Removes an object from a namespace.
-    \param ns  the target namespace
+    \param ns_obj  the target namespace
     \param name  the local part of the name to look up
     \return  the object removed, or 0 if not found */
 extern Object *

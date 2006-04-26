@@ -57,11 +57,11 @@ typedef struct Hash_Table Hash_Table;
     most this large. A more sparse hash table takes up more memory but is more
     time-efficient because collisions are less frequent. Will be set to a
     default if zero or otherwise out of range.
-    \param hashing_function a hashing function specific to the table's "key"
+    \param hash a hashing function specific to the table's "key"
     type.  The hashing function should accept a single void pointer and
     return an int, the idea being to distribute values over a broad stretch of the
     32-bit range.
-    \param compare_to a comparison function for key values.  The comparison
+    \param compare a comparison function for key values.  The comparison
     function should accept two void pointers a, b as arguments and return an int
     which is &lt; 0 when a &lt; b, &gt; 0 when a &gt; b, and 0 when a == b. */
 extern Hash_Table *
@@ -97,6 +97,7 @@ hash_table__expansion( const Hash_Table *h );
 /******************************************************************************/
 
 /** Adds an key.
+    \param h  the table to augment
     \param key  the key to add
     \return  the displaced target (if any) */
 extern void *

@@ -40,7 +40,8 @@ typedef struct Object Object;
 /** Constructor.
     \param type  the new object's data type
     \param value  the new object's data.  The object assumes ownership of this
-    data, and will deallocate it on deletion as per its data type. */
+    data, and will deallocate it on deletion as per its data type.
+    \param flags  object properties */
 extern Object *
 object__new( Type *type, void *value, int flags );
 

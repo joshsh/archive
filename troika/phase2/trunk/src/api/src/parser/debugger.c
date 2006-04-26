@@ -1,10 +1,10 @@
 /**
 
-\file  debugger.c
+\file  parser/debugger.c
 
 \brief  Example implementation of the Phase2 command line parser.
 
-\note  This is not part of the Phase2 build.
+\note  The compiled program is not installed.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n

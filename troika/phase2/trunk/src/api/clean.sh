@@ -20,3 +20,5 @@ rm -rf	src/import/src/p2-stubs.c	\
 	src/import/target
 
 rm -rf	src/parser/header.h
+
+rm -rf doc doxygen.log

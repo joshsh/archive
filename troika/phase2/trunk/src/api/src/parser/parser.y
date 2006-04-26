@@ -2,7 +2,7 @@
 
 /**
 
-\file  p2_parser.y
+\file  parser.y
 
 \brief  Bison grammar file for Phase2's command line front-end.
 
