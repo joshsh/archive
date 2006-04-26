@@ -1,7 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = -I../../include
-
 noinst_LTLIBRARIES = libp2utils.la
 
 libp2utils_la_SOURCES = \

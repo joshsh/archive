@@ -181,7 +181,7 @@ p2_parser__exit_state parse( void )
 
 int main( void )
 {
-    printf( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", PHASE2_VERSION );
+    printf( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", VERSION );
 
     switch( parse() )
     {

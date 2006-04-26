@@ -1,18 +1,20 @@
 ## Process this file with automake to produce Makefile.in
 
-bin_PROGRAMS = debugger
+noinst_PROGRAMS = debugger
+noinst_LTLIBRARIES = libp2parser.la
 
 BUILT_SOURCES = parser.h
-AM_YFLAGS = -d
-AM_LFLAGS = \
-	--header=foo.h \
-        -p  # Get comments regarding features that lead to performance losses.
 
-noinst_LTLIBRARIES = libp2parser.la
+AM_YFLAGS = -d
+AM_LFLAGS = --header=header.h \
+	-p  # Get comments regarding features that lead to performance losses.
 
 libp2parser_la_SOURCES = \
 	lexer.l \
 	parser.y
+
+
+## Command-line debugger #######################################################
 
 debugger_LDADD = libp2parser.la
 
@@ -26,9 +28,3 @@ debugger_SOURCES = \
 	../util/Hash_Map.c \
 	../util/Name.c \
 	../util/Term.c
-
-INCLUDES = -I../../include
-
-
-##	p2_parser.c \
-##

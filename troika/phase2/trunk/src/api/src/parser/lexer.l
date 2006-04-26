@@ -62,7 +62,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <defs.h>
 #include "../settings.h"
 
-/*#include "foo.h"*/
+/*#include "header.h"*/
 
 /** Added to each row of input (if defined). */
 #define INPUT_PREFIX  ">>  "

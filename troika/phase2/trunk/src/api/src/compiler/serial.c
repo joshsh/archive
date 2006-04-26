@@ -867,7 +867,7 @@ compiler__serialize( Compiler *c, char *path )
     root = element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
 
     /* Version attribute. */
-    attr__new( root, ( uc* ) "p2-version", ( uc* ) PHASE2_VERSION, 0 );
+    attr__new( root, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
 
     #ifdef REVISION
     /* Revision attribute. */
