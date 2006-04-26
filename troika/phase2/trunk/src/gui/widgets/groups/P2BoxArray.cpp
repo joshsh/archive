@@ -12,21 +12,12 @@ P2BoxArray::P2BoxArray( QBoxLayout::Direction dir )
     l->setSpacing( FRAME__CONTENTS__SPACING );
     l->setMargin( 0 );
 
-    // For now...
-    setAcceptDrops( false );
-
     connect(
         &array, SIGNAL( resized() ),
         this,   SLOT( update() ) );
 
     // For now...
     setAcceptDrops( false );
-}
-
-
-const QString P2BoxArray::className()
-{
-    return QString( "P2BoxArray" );
 }
 
 

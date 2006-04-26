@@ -13,12 +13,13 @@ P2Text::P2Text( QString text, const QColor &color )
     #endif
 
     this->text = text;
+//this->text += "<FONT COLOR='#FF0000'>...</FONT>";
 
     this->color = color;
 
     int h = fontMetrics().height();
     //cachedSizeHint = fontMetrics().boundingRect( text ).size() + QSize( 0, 2 );
-    cachedSizeHint = QSize( fontMetrics().boundingRect( text ).width(), h );
+    cachedSizeHint = QSize( fontMetrics().boundingRect( this->text ).width() + 1, h );
 }
 
 

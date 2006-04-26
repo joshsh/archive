@@ -14,8 +14,6 @@ public:
     /** Constructs an empty P2BoxArray. */
     P2BoxArray( QBoxLayout::Direction dir );
 
-    const QString className();
-
     void add( P2Widget *widget );
 
     QSize sizeHint() const;

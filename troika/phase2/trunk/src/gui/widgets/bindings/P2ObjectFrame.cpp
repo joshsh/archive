@@ -238,7 +238,7 @@ void P2ObjectFrame::update2()
 
 void P2ObjectFrame::paintEvent( QPaintEvent *event )
 {
-///*
+/*
 cout << "paintEvent!" << endl; cout.flush();
 cout << "  borderRect.topLeft() = (" << borderRect.x() << ", " << borderRect.y() << ")" << endl;
 cout << "  borderRect.size() = (" << borderRect.width() << ", " << borderRect.height() << ")" << endl;

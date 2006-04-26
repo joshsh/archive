@@ -115,6 +115,17 @@ P2Binder::P2Binder( P2Environment &e )
     constructors[ getType( environment, "Set" ) ] = setWidget;
     constructors[ getType( environment, "Term" ) ] = termWidget;
     constructors[ getType( environment, "Type" ) ] = typeWidget;
+
+    colors[ getType( environment, "char" ) ] = QColor( CHAR__COLOR );
+    colors[ getType( environment, "Combinator" ) ] = QColor( COMBINATOR__COLOR );
+    colors[ getType( environment, "double" ) ] = QColor( DOUBLE__COLOR );
+    colors[ getType( environment, "int" ) ] = QColor( INT__COLOR );
+    colors[ getType( environment, "Namespace" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
+    colors[ getType( environment, "Primitive" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
+    colors[ getType( environment, "cstring" ) ] = QColor( STRING__COLOR );
+    colors[ getType( environment, "Set" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
+    colors[ getType( environment, "Term" ) ] = QColor( TERM__COLOR );
+    colors[ getType( environment, "Type" ) ] = QColor( TYPE__COLOR );
 }
 
 
@@ -141,6 +152,12 @@ P2Widget *P2Binder::objectWidget( Object *o )
 
     else
         return c( o, this );
+}
+
+
+QColor P2Binder::objectColor( Object *o )
+{
+    return colors[ getType( o ) ];
 }
 
 

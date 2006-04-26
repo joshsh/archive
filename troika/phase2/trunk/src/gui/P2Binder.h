@@ -25,6 +25,7 @@ public:
     P2Binder( P2Environment &e );
 
     P2Widget *objectWidget( Object *o );
+    QColor objectColor( Object *o );
 
     P2Environment *getEnv();
 
@@ -35,6 +36,7 @@ private:
 
     QHash<int, objectWidgetConstructor> constructors;
 
+    QHash<int, QColor> colors;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
