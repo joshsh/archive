@@ -1,9 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src
+SUBDIRS = include src
 
-export INCLUDES = -I$(PWD)/include
+export INCLUDES = -I$(PWD)/include/phase2
 export AM_CFLAGS = -O2 -g --ansi -W -Wall
 ##	-fpic
 ##	-pedantic

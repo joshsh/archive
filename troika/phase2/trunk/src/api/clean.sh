@@ -10,6 +10,7 @@ rm -rf	configure		\
 	phase2-*.tar.gz
 
 rm -rf	Makefile.in		\
+	include/Makefile.in	\
 	src/Makefile.in		\
 	src/import/Makefile.in	\
 	src/parser/Makefile.in	\
