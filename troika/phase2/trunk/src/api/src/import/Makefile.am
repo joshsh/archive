@@ -24,7 +24,8 @@ libp2prims_la_SOURCES = \
 	src/cstring.c		\
 	src/double.c		\
 	src/int.c		\
-	src/toys.c
+	src/toys.c		\
+	src/xpm.c
 
 noinst_HEADERS = \
 	src/char.h		\
@@ -33,6 +34,7 @@ noinst_HEADERS = \
 	src/double.h		\
 	src/cstring.h		\
 	src/toys.h		\
+	src/xpm.h		\
 	src/Set-operations.h
 
 
