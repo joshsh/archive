@@ -10,4 +10,5 @@ libp2utils_la_SOURCES = \
 	Hash_Table.c	\
 	Name.c		\
 	Set.c		\
+	String.c	\
 	Term.c

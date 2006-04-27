@@ -26,13 +26,13 @@ struct Array
 {
     /** A relative pointer to the first item in the array.  Stack operations
         cause this to change. */
-    int head;
+    unsigned int head;
 
     /** The number of occupied cells in the array. */
-    int size;
+    unsigned int size;
 
     /** The number of cells the buffer array. */
-    int buffer_size;
+    unsigned int buffer_size;
 
     /** The array expands by this factor whenever it outgrows its buffer.
         Memory copying into the new buffer is expensive, so beware of setting
@@ -48,7 +48,7 @@ struct Array
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
 #define ELMT( a, i )  (a)->buffer[ ( (a)->head + (i) ) % (a)->buffer_size ]
-#define INBOUNDS( a, i )  ( (i) >= 0 ) && ( (i) < (a)->size )
+#define INBOUNDS( a, i )  ( (i) < (a)->size )
 #define WRAP( a, i )  ( (a)->head + (i) ) % (a)->buffer_size
 
 #define BUFFER_NEW( size )  malloc( (size) * sizeof( void* ) )
@@ -71,7 +71,7 @@ buffer_copy( Array *a )
 
 
 Array *
-array__new( int buffer_size, double expansion )
+array__new( unsigned int buffer_size, double expansion )
 {
     Array *a;
 
@@ -163,12 +163,12 @@ static Array *
 sizeup( Array *a )
 {
     void **BUFFER_NEW;
-    int i, buffer_size_new;
+    unsigned int i, buffer_size_new;
 
     if ( a->size < a->buffer_size )
         return a;
 
-    buffer_size_new = ( int ) ( a->expansion * a->buffer_size );
+    buffer_size_new = ( unsigned int ) ( a->expansion * a->buffer_size );
 
     /* If the the array's own exansion factor is too close to 1 to resize the
        buffer, make room for just one more cell. */
@@ -177,7 +177,7 @@ sizeup( Array *a )
 
     if ( !( BUFFER_NEW = BUFFER_NEW( buffer_size_new ) ) )
     {
-        ERROR( "array__minimize: allocation failure" );
+        ERROR( "allocation failure" );
         return 0;
     }
 
@@ -198,7 +198,7 @@ sizeup( Array *a )
 
 
 void *
-array__get( Array *a, int i )
+array__get( Array *a, unsigned int i )
 {
     if ( INBOUNDS( a, i ) )
         return ELMT( a, i );
@@ -212,7 +212,7 @@ array__get( Array *a, int i )
 
 
 void *
-array__set( Array *a, int i, void *p )
+array__set( Array *a, unsigned int i, void *p )
 {
     void **addr, *displaced;
 
@@ -325,9 +325,9 @@ array__dequeue( Array *a )
 
 
 void *
-array__insert_before( Array *a, int i, void *p )
+array__insert_before( Array *a, unsigned int i, void *p )
 {
-    int j;
+    unsigned int j;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -352,9 +352,9 @@ array__insert_before( Array *a, int i, void *p )
 
 
 void *
-array__insert_after( Array *a, int i, void *p )
+array__insert_after( Array *a, unsigned int i, void *p )
 {
-    int j;
+    unsigned int j;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -379,9 +379,9 @@ array__insert_after( Array *a, int i, void *p )
 
 
 void *
-array__remove( Array *a, int i )
+array__remove( Array *a, unsigned int i )
 {
-    int j;
+    unsigned int j;
     void *displaced;
 
     if ( INBOUNDS( a, i ) )
@@ -405,7 +405,7 @@ array__remove( Array *a, int i )
 
 
 void *
-array__simple_remove( Array *a, int i )
+array__simple_remove( Array *a, unsigned int i )
 {
     void **addr, *displaced;
 
@@ -442,10 +442,10 @@ struct Mergesort_Ctx
 
 /* Adapted from a MergeSort example by H.W. Lang */
 static void
-mergesort( int lo, int hi, Mergesort_Ctx *state )
+mergesort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
 {
-    int m;
-    int i, j, k;
+    unsigned int m;
+    unsigned int i, j, k;
     void **buffer, **aux;
     Comparator compare;
 
@@ -490,7 +490,7 @@ mergesort( int lo, int hi, Mergesort_Ctx *state )
 static Array *
 normalize( Array *a )
 {
-    int i, size = a->size, buffer_size = a->buffer_size, head = a->head;
+    unsigned int i, size = a->size, buffer_size = a->buffer_size, head = a->head;
 
     void **buffer = a->buffer;
     void **BUFFER_NEW = BUFFER_NEW( size );
@@ -537,7 +537,7 @@ array__sort( Array *a, Comparator compare )
 void
 array__walk( Array *a, Dist_f f )
 {
-    int i, lim;
+    unsigned int i, lim;
 
     #if DEBUG__SAFE
     if ( !a || !f )
@@ -576,9 +576,8 @@ array__clear( Array *a )
 Array *
 array__minimize( Array *a )
 {
-    int i;
-    void **BUFFER_NEW;
-    int buffer_size_new;
+    unsigned int i, buffer_size_new;
+    void **buffer_new;
 
     if ( a->size >= a->buffer_size )
         return 0;
@@ -586,17 +585,17 @@ array__minimize( Array *a )
     buffer_size_new = ( a->size )
         ? a->size : 1;
 
-    if ( !( BUFFER_NEW = BUFFER_NEW( a->size ) ) )
+    if ( !( buffer_new = BUFFER_NEW( a->size ) ) )
     {
         ERROR( "array__minimize: allocation failure" );
         return 0;
     }
 
     for ( i = 0; i < a->size; i++ )
-        BUFFER_NEW[i] = ELMT( a, i );
+        buffer_new[i] = ELMT( a, i );
 
     free( a->buffer );
-    a->buffer = BUFFER_NEW;
+    a->buffer = buffer_new;
     a->buffer_size = buffer_size_new;
     a->head = 0;
 
@@ -668,7 +667,7 @@ encode
 static void
 array__encode( Array *a, char *buffer )
 {
-    int i;
+    unsigned int i;
     Object *o;
 
     #if DEBUG__SAFE

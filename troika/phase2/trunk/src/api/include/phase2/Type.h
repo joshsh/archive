@@ -30,6 +30,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <defs.h>
+#include <util/String.h>
+
+
+typedef void            ( *Encoder_Safe )( void *p, String *buffer );
 
 
 enum Type__Flags
@@ -64,6 +68,7 @@ struct Type
 
     /** Serializer. */
     Encoder     encode;
+    Encoder_Safe encode_safe;
 
     Criterion2  equals;
 

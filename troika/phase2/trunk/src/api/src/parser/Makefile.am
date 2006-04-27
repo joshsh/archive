@@ -19,12 +19,13 @@ libp2parser_la_SOURCES = \
 debugger_LDADD = libp2parser.la
 
 debugger_SOURCES = \
-	debugger.c \
-	../Type.c \
-	../Object.c \
-	../Ast.c \
-	../util/Array.c \
-	../util/Hash_Table.c \
-	../util/Hash_Map.c \
-	../util/Name.c \
+	debugger.c		\
+	../Type.c		\
+	../Object.c		\
+	../Ast.c		\
+	../util/Array.c		\
+	../util/Hash_Table.c	\
+	../util/Hash_Map.c	\
+	../util/Name.c		\
+	../util/String.c	\
 	../util/Term.c

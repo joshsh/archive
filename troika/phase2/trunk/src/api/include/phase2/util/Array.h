@@ -43,7 +43,7 @@ typedef struct Array Array;
 
 /** Constructor. */
 extern Array *
-array__new( int buffer_size, double expansion );
+array__new( unsigned int buffer_size, double expansion );
 
 /** Copy constructor. */
 extern Array *
@@ -67,11 +67,11 @@ array__expansion( Array *a );
 
 /** Gets the array item at a given index. */
 extern void *
-array__get( Array *a, int i );
+array__get( Array *a, unsigned int i );
 
 /** Sets the array item at a given index. */
 extern void *
-array__set( Array *a, int i, void *p );
+array__set( Array *a, unsigned int i, void *p );
 
 
 /* Stack and queue operations *************************************************/
@@ -103,24 +103,24 @@ array__dequeue( Array *a );
 /** Insert an item before the given index.
     \warning O(n) memory copying overhead */
 extern void *
-array__insert_before( Array *a, int i, void *p );
+array__insert_before( Array *a, unsigned int i, void *p );
 
 /** Insert an item after the given index.
     \warning O(n) memory copying overhead */
 extern void *
-array__insert_after( Array *a, int i, void *p );
+array__insert_after( Array *a, unsigned int i, void *p );
 
 /** Remove the item at the given index.
     \warning O(n) memory copying overhead */
 extern void *
-array__remove( Array *a, int i );
+array__remove( Array *a, unsigned int i );
 
 /** Removes an array item and replaces it with the last item in the array,
     with no memory copying overhead.
     \warning only use this function if the order of the array elements is not
     important. */
 extern void *
-array__simple_remove( Array *a, int i );
+array__simple_remove( Array *a, unsigned int i );
 
 
 /* Array sorting **************************************************************/

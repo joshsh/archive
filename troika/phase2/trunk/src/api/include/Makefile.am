@@ -8,9 +8,9 @@ nobase_include_HEADERS = \
 	phase2/Compiler.h		\
 	phase2/defs.h			\
 	phase2/Environment.h		\
-	phase2/Memory_Manager.h	\
+	phase2/Memory_Manager.h		\
 	phase2/Namespace.h		\
-	phase2/Object.h		\
+	phase2/Object.h			\
 	phase2/Primitive.h		\
 	phase2/Primitive-import.h	\
 	phase2/Type.h			\
@@ -25,5 +25,6 @@ nobase_include_HEADERS = \
 	phase2/util/Hash_Table.h	\
 	phase2/util/Name.h		\
 	phase2/util/Set.h		\
+	phase2/util/String.h		\
 	phase2/util/Term.h		\
 	phase2/xml/xmldom.h

@@ -56,6 +56,13 @@ default__encode( void *cell, char *buffer )
     sprintf( buffer, "?" );
 }
 
+static void
+default__encode_safe( void *cell, String *buffer )
+{
+    cell = 0;
+    string__append( buffer, "?" );
+}
+
 static boolean
 default__equals( void *cellA, void *cellB )
 {
@@ -96,6 +103,7 @@ static Type default_t =
     default__decode,
     default__destroy,
     default__encode,
+    default__encode_safe,
     default__equals,
     default__size,
     default__sort,
@@ -154,15 +162,19 @@ type__delete( Type *type )
 static void
 type__encode( Type *t, char *buffer )
 {
-    #if DEBUG__SAFE
-    if ( !t || !buffer )
-    {
-        ERROR( "type__encode: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !t || !buffer ) )
+        abort();
 
     sprintf( buffer, t->name );
+}
+
+static void
+type__encode_safe( Type *t, String *buffer )
+{
+    if ( DEBUG__SAFE && ( !t || !buffer ) )
+        abort();
+
+    string__append( buffer, t->name );
 }
 
 
@@ -175,6 +187,7 @@ type__create_type( const char *name, int flags )
     {
         t->destroy = ( Destructor ) type__delete;
         t->encode = ( Encoder ) type__encode;
+        t->encode_safe = ( Encoder_Safe ) type__encode_safe;
     }
 
     return t;
