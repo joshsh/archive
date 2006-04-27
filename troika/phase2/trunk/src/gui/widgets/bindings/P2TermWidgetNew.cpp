@@ -56,7 +56,7 @@ encode_static( void **cur, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
     else
     {
         if ( delimit )
-            tw->appendSyntaxWidget( "[" );
+            tw->appendSyntaxWidget( "(" );
 
         void **lim = cur + ( unsigned int ) *cur;
         cur++;
@@ -71,7 +71,7 @@ encode_static( void **cur, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
         }
 
         if ( delimit )
-            tw->appendSyntaxWidget( "]" );
+            tw->appendSyntaxWidget( ")" );
     }
 }
 
