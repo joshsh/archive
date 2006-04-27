@@ -185,7 +185,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     int ret = 0;
     Ast *a = 0;
     Object *o;
-    char print_buffer[1000];
+    char print_buffer[ENCODING__BUFFER_SIZE];
     Name *oname = 0;
     Term *t;
 

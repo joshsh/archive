@@ -136,11 +136,8 @@ static int comment_level = 0;
 /* Quoted name fragments ******************************************************/
 
 
-/** Buffer size is arbitary... */
-#define STRING_BUFFER__SIZE  0xFFF
-
-char string_buffer[ STRING_BUFFER__SIZE ];
-char *buffer_limit = string_buffer + STRING_BUFFER__SIZE - 1;
+char string_buffer[ ENCODING__BUFFER_SIZE ];
+char *buffer_limit = string_buffer + ENCODING__BUFFER_SIZE - 1;
 char *buffer_pos = string_buffer;
 
 

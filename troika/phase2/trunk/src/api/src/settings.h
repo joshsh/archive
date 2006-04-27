@@ -155,6 +155,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Serialization **************************************************************/
 
 
+#define ENCODING__BUFFER_SIZE                   0x10000
+
 #define ENCODING__TRIPLES_AS_OBJECTS            1
 
 #define ENCODING__ROOT__XML__NAME               "data_set"

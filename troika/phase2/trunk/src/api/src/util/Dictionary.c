@@ -196,7 +196,7 @@ dictionary__reverse_lookup( Dictionary *dict, const void *target )
             return 0;
     }
 
-    if ( DEBUG__SAFE && ( !dict || !key || !target ) )
+    if ( DEBUG__SAFE && ( !dict || !target ) )
         abort();
 
     hash_table__walk( dict, ( Dist_f ) helper );

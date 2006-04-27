@@ -43,6 +43,8 @@ struct Xml_Encode_Ctx
     Hash_Map *serializers;
 
     Hash_Map *ids;
+
+    char buffer[ENCODING__BUFFER_SIZE];
 };
 
 
@@ -468,11 +470,10 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     /* id > 0  ==>  the object is multireferenced. */
     unsigned int id = ( unsigned int ) hash_map__lookup( state->ids, o );
 
-    char buffer[256];
     Element *el;
     Xml_Encoder encode;
 
-    sprintf( buffer, "%i", id );
+    sprintf( state->buffer, "%i", id );
 
     /* Element reference. */
     if ( id && !top_level )
@@ -483,20 +484,20 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
           || o->type == state->compiler->type_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
-            o->type->encode( o->value, buffer );
-            element__add_text( el, ( uc* ) buffer );
+            o->type->encode( o->value, state->buffer );
+            element__add_text( el, ( uc* ) state->buffer );
         }
 
         else if ( o->type == state->compiler->prim_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
-            sprintf( buffer, ( ( Primitive* ) o->value )->name );
-            element__add_text( el, ( uc* ) buffer );
+            sprintf( state->buffer, ( ( Primitive* ) o->value )->name );
+            element__add_text( el, ( uc* ) state->buffer );
         }
 
         else
         {
-            attr__new( el, ( uc* ) "ref", ( uc* ) buffer, 0 );
+            attr__new( el, ( uc* ) "ref", ( uc* ) state->buffer, 0 );
         }
     }
 
@@ -507,7 +508,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
         /* Only multireferenced objects have ids. */
         if ( top_level )
-            attr__new( el, ( uc* ) "id", ( uc* ) buffer, 0 );
+            attr__new( el, ( uc* ) "id", ( uc* ) state->buffer, 0 );
 
         attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
 
@@ -520,8 +521,8 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         /* Encode contents as child element. */
         if ( o->type == state->compiler->prim_t )
         {
-            sprintf( buffer, ( ( Primitive* ) o->value )->name );
-            element__add_text( el, ( uc* ) buffer );
+            sprintf( state->buffer, ( ( Primitive* ) o->value )->name );
+            element__add_text( el, ( uc* ) state->buffer );
         }
 
         else if ( encode )
@@ -532,8 +533,8 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         /* Encode contents as text. */
         else
         {
-            o->type->encode( o->value, buffer );
-            element__add_text( el, ( uc* ) buffer );
+            o->type->encode( o->value, state->buffer );
+            element__add_text( el, ( uc* ) state->buffer );
         }
 
     }
@@ -848,13 +849,8 @@ compiler__serialize( Compiler *c, char *path )
         return 0;
     }
 
-    #if DEBUG__SAFE
-    if ( !c || !path )
-    {
-        ERROR( "compiler__serialize: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !c || !path ) )
+        abort();
 
     #if DEBUG__SERIAL
     printf( "[] compiler__serialize(%#x, %s)\n", ( int ) c, path );

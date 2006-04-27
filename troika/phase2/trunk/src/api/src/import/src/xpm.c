@@ -19,5 +19,5 @@ xpm__encode( xpm *p, char *buffer )
 xpm *
 cstring__to_xpm( cstring *s )
 {
-    return s;
+    return STRDUP( s );
 }
