@@ -9,7 +9,8 @@
 #include <widgets/bindings/P2PrimitiveWidget.h>
 #include <widgets/bindings/P2SetWidget.h>
 #include <widgets/bindings/P2StringWidget.h>
-#include <widgets/bindings/P2TermWidget.h>
+#include <widgets/bindings/P2TermWidgetNew.h>
+//#include <widgets/bindings/P2TermWidget.h>
 #include <widgets/bindings/P2TypeWidget.h>
 
 
@@ -72,8 +73,9 @@ static P2Widget *stringWidget( Object *o, P2Binder *eb )
 
 static P2Widget *termWidget( Object *o, P2Binder *eb )
 {
-    eb = 0;
-    return new P2TermWidget( o );
+    return new P2TermWidgetNew( o, eb );
+    //eb = 0;
+    //return new P2TermWidget( o );
 }
 
 

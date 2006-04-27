@@ -57,7 +57,7 @@ int main( int argc, char **argv )
 {
     P2Environment env;
     //compiler__deserialize( env.getCompiler(), "guitest.p2" );
-    compiler__deserialize( env.getCompiler(), "../api/test.p2" );
+    compiler__deserialize( env.getCompiler(), "../api/examples/test.p2" );
 
     P2Binder binder( env );
 

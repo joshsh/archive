@@ -44,7 +44,7 @@ $(APP).pro: # $(HSRC) $(CPPSRC)
 	qmake -project -o $(APP).pro
 	echo "CXXFLAGS += -Werror" >> troika.pro
 	echo "LIBS += -lphase2 `xml2-config --libs`" >> troika.pro
-	echo "INCPATH += ../api/include" >> troika.pro
+	echo "INCPATH += /usr/local/include/phase2" >> troika.pro
 
 
 x86-clean:
