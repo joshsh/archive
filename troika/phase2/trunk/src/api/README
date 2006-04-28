@@ -1,27 +1,9 @@
-./clean.sh
+./cleanup.sh
 
-./autogen.sh
+./bootstrap.sh
 ./configure
 make
 
 make dist
 make install
-
-
-
-
-
 make doxygen-doc
-
-
-aclocal
-
-autoconf
-automake
-
-info autoreconf
-
-
-
-libtool
-

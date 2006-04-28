@@ -195,6 +195,24 @@ string__append( String *s, char *cstring )
     }
 }
 
+/*
+extern boolean
+string__sprintf( String *s, unsigned int minlen, ... )
+{
+    va_list ap;
+
+    unsigned int len = s->size + minlen;
+
+    if ( len >= s->buffer_size && !sizeup( s, len + 1 ) )
+        return TRUE;
+
+    else
+    {
+        sprintf( s->buffer + s->size, __VA_ARGS__ );
+        return FALSE;
+    }
+}
+*/
 
 /* Miscellaneous **************************************************************/
 

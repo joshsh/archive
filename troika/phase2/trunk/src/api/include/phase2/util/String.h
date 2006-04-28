@@ -30,6 +30,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef STRING_H
 #define STRING_H
 
+#include <stdarg.h>
+
+#include <defs.h>
 
 typedef struct String String;
 
@@ -64,6 +67,13 @@ string__to_cstring( const String *s );
     \return  the appended string, or NULL if unsuccessful */
 extern char *
 string__append( String *s, char *cstring );
+
+/**
+    \return  FALSE if successful, TRUE if unsuccessful */
+/*
+extern boolean
+string__sprintf( String *s, unsigned int minlen, ... );
+*/
 
 
 /* Miscellaneous **************************************************************/

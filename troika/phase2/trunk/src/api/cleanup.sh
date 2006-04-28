@@ -1,6 +1,11 @@
 #!/bin/sh
-# Erases generated files.  Don't use this script unless all the necessary tools
-# (Lex, Yacc, doxygen, xsltproc, etc.) are available to rebuild them.
+# Erases generated files.   to rebuild them.
+
+# Remove everything that can be re-generated.  Don't use this script unless all
+# the necessary tools (Lex, Yacc, doxygen, xsltproc, etc.) are available.
+
+# Run 'bootstrap.sh' to return to a state where ./configure; make; make install
+# starts working again.
 
 make maintainer-clean
 
