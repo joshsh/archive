@@ -59,7 +59,7 @@ int main( int argc, char **argv )
     //compiler__deserialize( env.getCompiler(), "guitest.p2" );
     compiler__deserialize( env.getCompiler(), "../api/examples/test.p2" );
 
-    P2Binder binder( env );
+    P2Binder binder( &env );
 
     QApplication a( argc, argv );
 

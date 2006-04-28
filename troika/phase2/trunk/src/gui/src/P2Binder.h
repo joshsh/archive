@@ -25,7 +25,7 @@ class P2Binder : public QObject
 
 public:
 
-    P2Binder( P2Environment &e );
+    P2Binder( P2Environment *e );
 
     P2Widget *objectWidget( const Object *o );
     QColor objectColor( const Object *o );
@@ -35,11 +35,11 @@ public:
     P2Widget *getFocusWidget() const;
     void setFocusWidget( P2Widget *w );
 
-    void requestObjectView( Object *o );
+    void requestObjectView( const Object *o );
 
 signals:
 
-    void objectViewRequest( Object *o );
+    void objectViewRequest( const Object *o );
 
 private:
 

@@ -179,6 +179,11 @@ indentMinus();
 //#define P2GUI_ICON                        ":/p2gui.png"
 
 
+// View stack //////////////////////////////////////////////////////////////////
+
+#define VIEWSTACK__MAX_DEPTH                10
+
+
 #endif  // global_h
 
 

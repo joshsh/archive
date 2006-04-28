@@ -37,14 +37,11 @@ public slots:
 
 protected:
 
-    /** Shows names and types of children.  A debugging method. */
-    void showChildren() const;
-
     QList<QLayoutItem*> kids;
 
 protected slots:
 
-    void childResizeEvent(  QResizeEvent* event );
+    void childResizeEvent();
 
 };
 

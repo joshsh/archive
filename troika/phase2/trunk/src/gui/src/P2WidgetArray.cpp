@@ -42,8 +42,8 @@ void P2WidgetArray::add( P2Widget *widget )
     addItem( item );
 
     connect(
-        widget, SIGNAL( resized( QResizeEvent* ) ),
-        this,   SLOT( childResizeEvent( QResizeEvent* ) ) );
+        widget, SIGNAL( resized() ),
+        this,   SLOT( childResizeEvent() ) );
 }
 
 
@@ -68,25 +68,6 @@ QLayoutItem *P2WidgetArray::takeAt( int i )
 }
 
 
-void P2WidgetArray::showChildren() const
-{
-/*
-    for ( int i = 0; i < kids.size(); i++ )
-    {
-        cout << indent()
-             << i << ":\t";
-
-        P2Widget *child = ( P2Widget* ) kids.at( i )->widget();
-        cout << child->className().toStdString() << "\t";
-        if ( child->objectName() != 0 )
-            cout << child->objectName().toStdString();
-
-        cout << endl;
-    }
-*/
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -101,7 +82,7 @@ void P2WidgetArray::refresh( const P2Environment &env )
 }
 
 
-void P2WidgetArray::childResizeEvent(  QResizeEvent* event )
+void P2WidgetArray::childResizeEvent()
 {
     emit resized();
 }

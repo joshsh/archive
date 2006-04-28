@@ -124,11 +124,11 @@ getType( const Object *o )
 
 
 P2Binder::
-P2Binder( P2Environment &e )
+P2Binder( P2Environment *e )
   : QObject(),
     focusWidget( 0 )
 {
-    env = &e;
+    env = e;
     environment = env->getEnv();
 
     constructors[ getType( environment, "char" ) ] = charWidget;
@@ -211,9 +211,9 @@ setFocusWidget( P2Widget *w )
 
 
 void P2Binder::
-requestObjectView( Object *o )
+requestObjectView( const Object *o )
 {
-    emit objectViewRequest( o );
+    emit objectViewRequest( ( const Object* ) o );
 }
 
 
