@@ -4,8 +4,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-RenameDialog::RenameDialog( QWidget *parent, QWidget *w )
-    : QDialog( parent, 0 )
+RenameDialog::
+RenameDialog( QWidget *parent, P2Widget *w )
+  : QDialog( parent, 0 )
 {
     #ifdef DEBUG
         cout << indent()
@@ -67,7 +68,8 @@ RenameDialog::RenameDialog( QWidget *parent, QWidget *w )
 }
 
 
-void RenameDialog::accept()
+void RenameDialog::
+accept()
 {
     cout << indent()
          << "void RenameDialog::accept()" << endl;
@@ -79,24 +81,32 @@ void RenameDialog::accept()
     //frameToRename->setObjectName( nameField->toPlainText() );
 
     //emit( accepted() );
-    emit( done( 0 ) ); hide();
+    emit( done( 0 ) );
+cout << ".................1a" << endl; cout.flush();
+    hide();
+cout << ".................2a" << endl; cout.flush();
 }
 
 
-void RenameDialog::done( int r )
+void RenameDialog::
+done( int r )
 {
     cout << indent()
          << "void RenameDialog::done( int r )" << endl;
 }
 
 
-void RenameDialog::reject()
+void RenameDialog::
+reject()
 {
     cout << indent()
          << "void RenameDialog::reject()" << endl;
 
     //emit( accepted() );
-    emit( done( 0 ) ); hide();
+    emit( done( 0 ) );
+cout << ".................1b" << endl; cout.flush();
+    hide();
+cout << ".................2b" << endl; cout.flush();
 }
 
 

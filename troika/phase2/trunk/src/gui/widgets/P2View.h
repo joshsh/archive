@@ -22,15 +22,17 @@ class P2View : public P2Widget
 
 public:
 
-    P2View( Object *o, P2Binder &b );
+    P2View( Object *o, P2Environment *env );
 
-bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-bool isFrame() { return false; }
-
-    P2ObjectFrame *focusFrame();
+    P2Widget *focusWidget();
 
     //QSize sizeHint() const;
+
+    const P2Binder *binder() const;
+
+signals:
+
+    void objectViewRequest( Object *o );
 
 public slots:
 
@@ -45,27 +47,12 @@ private:
     QWidget *borderWidget;
     QScrollArea *scrollArea;
 
-    P2Binder *binder;
+    P2Binder *constBinder;
 
 private slots:
 
     void resizeScrollArea( QResizeEvent *event );
 
-/*
-    class FooScrollArea : public QScrollArea
-    {
-        FooScrollArea( QWidget *parent )
-            : QScrollArea( parent )
-        {
-
-        }
-
-        QSize sizeHint() const
-        {
-
-        }
-    };
-*/
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -5,7 +5,7 @@
 
 
 static QString
-getText( Object *o )
+getText( const Object *o )
 {
     char buffer[100];
     object__type( o )->encode( object__value( o ), buffer );
@@ -13,14 +13,10 @@ getText( Object *o )
 }
 
 
-P2CombinatorWidget::P2CombinatorWidget( Object *o )
+P2CombinatorWidget::P2CombinatorWidget( const Object *o )
     : P2Text( getText( o ), QColor( COMBINATOR__COLOR ))
 {
     //...
-
-    QFont f = font();
-    f.setBold( true );
-    setFont( f );
 }
 
 

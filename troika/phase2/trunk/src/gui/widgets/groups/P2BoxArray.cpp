@@ -34,8 +34,6 @@ void P2BoxArray::add( P2Widget *widget )
     // (using QWidget::setParent()) so that they are children of the widget on
     // which the layout is installed.
     widget->setParent( this );
-
-    widget->isDependent = true;
 }
 
 

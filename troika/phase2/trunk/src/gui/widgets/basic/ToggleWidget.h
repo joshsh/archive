@@ -14,18 +14,13 @@ public:
 
     ToggleWidget();
 
-    const QString className();
-
     QSize sizeHint() const;
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
-    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
+    void mousePressEvent( QMouseEvent *event );
 
     void paintEvent( QPaintEvent *event );
-
-    //void resizePixmap( QSize newSize );
 
 private:
 

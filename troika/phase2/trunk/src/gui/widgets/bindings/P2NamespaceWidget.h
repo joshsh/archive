@@ -19,7 +19,7 @@ class P2NamespaceWidget : public P2BoxArray
 {
 public:
 
-    P2NamespaceWidget( Object *o, P2Binder *eb );
+    P2NamespaceWidget( const Object *o, P2Binder *eb );
 
 };
 

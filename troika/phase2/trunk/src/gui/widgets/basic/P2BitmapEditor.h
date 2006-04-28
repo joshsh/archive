@@ -24,8 +24,6 @@ public:
     //P2BitmapEditor( QWidget *parent = 0, const char *name = 0 );
     //~P2BitmapEditor();
 
-    const QString className();
-
     void setPenColor( const QColor &newColor );
     QColor penColor() const { return curColor; }
     void setZoomFactor( int newZoom );
@@ -38,8 +36,8 @@ public:
 
 protected:
 
-    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
-    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin );
+    void mousePressEvent( QMouseEvent *event );
+    void mouseMoveEvent( QMouseEvent *event );
 
     void paintEvent( QPaintEvent *event );
 

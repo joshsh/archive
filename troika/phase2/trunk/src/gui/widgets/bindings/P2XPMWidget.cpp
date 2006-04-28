@@ -5,7 +5,7 @@
 
 
 static QImage
-getImage( Object *o )
+getImage( const Object *o )
 {
     char buffer[ENCODING__BUFFER_SIZE];
     object__type( o )->encode( object__value( o ), buffer );
@@ -24,7 +24,7 @@ getImage( Object *o )
 }
 
 
-P2XPMWidget::P2XPMWidget( Object *o )
+P2XPMWidget::P2XPMWidget( const Object *o )
     : P2Image( getImage( o ) )
 {
     //...

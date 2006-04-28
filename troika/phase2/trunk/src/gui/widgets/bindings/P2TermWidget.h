@@ -18,7 +18,7 @@ class P2TermWidget : public P2Text
 {
 public:
 
-    P2TermWidget( Object *o );
+    P2TermWidget( const Object *o );
 };
 
 ////////////////////////////////////////////////////////////////////////////////

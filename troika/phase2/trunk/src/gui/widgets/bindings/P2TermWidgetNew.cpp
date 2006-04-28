@@ -10,7 +10,7 @@ extern "C"
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2TermWidgetNew::P2TermWidgetNew( Object *o, P2Binder *eb )
+P2TermWidgetNew::P2TermWidgetNew( const Object *o, P2Binder *eb )
     : P2BoxArray( QBoxLayout::LeftToRight )
 {
     encode( o, eb );
@@ -18,7 +18,7 @@ P2TermWidgetNew::P2TermWidgetNew( Object *o, P2Binder *eb )
 
 
 static QString
-getText( Object *o )
+getText( const Object *o )
 {
     char buffer[1000];
     object__type( o )->encode( object__value( o ), buffer );
@@ -27,7 +27,7 @@ getText( Object *o )
 
 
 void
-P2TermWidgetNew::appendObjectWidget( Object *o, P2Binder *eb )
+P2TermWidgetNew::appendObjectWidget( const Object *o, P2Binder *eb )
 {
     P2Widget *w = eb->objectWidget( o );
     add( w );
@@ -77,7 +77,7 @@ encode_static( void **cur, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
 
 
 void
-P2TermWidgetNew::encode( Object *o, P2Binder *eb )
+P2TermWidgetNew::encode( const Object *o, P2Binder *eb )
 {
     Term *t = ( Term* ) object__value( o );
 

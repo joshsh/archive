@@ -18,7 +18,7 @@ class P2CombinatorWidget : public P2Text
 {
 public:
 
-    P2CombinatorWidget( Object *o );
+    P2CombinatorWidget( const Object *o );
 };
 
 ////////////////////////////////////////////////////////////////////////////////

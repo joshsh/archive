@@ -4,10 +4,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-P2View::P2View( Object *o, P2Binder &eb )
-    : P2Widget()
+P2View::P2View( Object *o, P2Environment *env )
+    : P2Widget(),
+      constBinder( new P2Binder( *env ) )
 {
-    binder = &eb;
+    connect(
+        constBinder,    SIGNAL( objectViewRequest( Object *o ) ),
+        this,           SLOT( objectViewRequest( Object *o ) ) );
 
     borderWidget = new QWidget();
     borderWidget->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
@@ -15,7 +18,7 @@ P2View::P2View( Object *o, P2Binder &eb )
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
     setFocusPolicy( Qt::NoFocus );
 
-    objectFrame = new P2ObjectFrame( o, "root", eb, true );
+    objectFrame = new P2ObjectFrame( o, "root", *constBinder, true );
     objectFrame->setParent( borderWidget );
 
     scrollArea = new QScrollArea( this );
@@ -41,8 +44,15 @@ P2View::P2View( Object *o, P2Binder &eb )
         this,   SLOT(   resizeScrollArea( QResizeEvent* ) ) );
 
     update( 0 );
-    refresh( *eb.getEnv() );
+    refresh( *constBinder->getEnv() );
 }
+
+
+const P2Binder *P2View::binder() const
+{
+    return constBinder;
+}
+
 
 /*
 QSize P2View::sizeHint() const
@@ -53,9 +63,10 @@ cout << "size() = (" << size().width() << ", " << size().height() << ")" << endl
 }
 */
 
-P2ObjectFrame *P2View::focusFrame()
+
+P2Widget *P2View::focusWidget()
 {
-    return objectFrame;
+    return constBinder->getFocusWidget();
 }
 
 

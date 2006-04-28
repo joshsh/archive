@@ -80,12 +80,6 @@ ToggleWidget::ToggleWidget()
 }
 
 
-const QString ToggleWidget::className()
-{
-    return QString( "ToggleWidget" );
-}
-
-
 QSize ToggleWidget::sizeHint() const
 {
     return QSize( 10, 11 );
@@ -94,16 +88,13 @@ QSize ToggleWidget::sizeHint() const
 
 // Note: the ButtonState is not used for now, as
 // LeftButton, RightButton, MidButton and NoButton are all to do the same thing.
-bool ToggleWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
+void ToggleWidget::mousePressEvent( QMouseEvent *event )
 {
     if ( event->button() == Qt::LeftButton )
     {
         toggle = ( toggle + 1 ) % 3;
         update();
     }
-
-    // Objects of this class are not meant to have dependent P2BasicWidgets.
-    return false;
 }
 
 

@@ -11,25 +11,39 @@ extern "C"
 }
 
 #include <widgets/P2Widget.h>
+//#include <widgets/P2View.h>
 
+//class P2View;
 class P2Binder;
-typedef P2Widget *(*objectWidgetConstructor)( Object *o, P2Binder *eb );
+typedef P2Widget *(*objectWidgetConstructor)( const Object *o, P2Binder *eb );
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2Binder
+class P2Binder : public QObject
 {
+    Q_OBJECT
 
 public:
 
     P2Binder( P2Environment &e );
 
-    P2Widget *objectWidget( Object *o );
-    QColor objectColor( Object *o );
+    P2Widget *objectWidget( const Object *o );
+    QColor objectColor( const Object *o );
 
     P2Environment *getEnv();
 
+    P2Widget *getFocusWidget() const;
+    void setFocusWidget( P2Widget *w );
+
+    void requestObjectView( Object *o );
+
+signals:
+
+    void objectViewRequest( Object *o );
+
 private:
+
+    P2Widget *focusWidget;
 
     P2Environment *env;
     Environment *environment;

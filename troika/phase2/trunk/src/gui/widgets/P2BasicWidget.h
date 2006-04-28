@@ -10,10 +10,7 @@
 
 class P2BasicWidget : public P2Widget
 {
-
-public:
-
-    bool isFrame();
+    Q_OBJECT
 
 public slots:
 

@@ -20,12 +20,6 @@ P2FreeFormArray::P2FreeFormArray()
 }
 
 
-const QString P2FreeFormArray::className()
-{
-    return QString( "P2FreeFormArray" );
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -38,8 +32,6 @@ void P2FreeFormArray::add( P2Widget *widget, const QPoint &position )
     // (using QWidget::setParent()) so that they are children of the widget on
     // which the layout is installed.
     widget->setParent( this );
-
-    widget->isDependent = true;
 }
 
 

@@ -18,10 +18,6 @@ public:
 
     QSize sizeHint() const;
 
-bool isFrame() { return false; }
-bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-
 public slots:
 
     void refresh( const P2Environment &env );

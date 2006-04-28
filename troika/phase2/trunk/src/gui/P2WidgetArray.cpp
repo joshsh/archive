@@ -36,8 +36,8 @@ void P2WidgetArray::addItem( QLayoutItem *item )
 void P2WidgetArray::add( P2Widget *widget )
 {
     QLayoutItem *item = new QWidgetItem( widget );
-cout << "widget.size() = (" << widget->width() << ", " << widget->height() << ")" << endl;
-cout << "widget.sizeHint() = (" << widget->sizeHint().width() << ", " << widget->sizeHint().height() << ")" << endl;
+//cout << "widget.size() = (" << widget->width() << ", " << widget->height() << ")" << endl;
+//cout << "widget.sizeHint() = (" << widget->sizeHint().width() << ", " << widget->sizeHint().height() << ")" << endl;
     //item->resize( widget->sizeHint() );
     addItem( item );
 

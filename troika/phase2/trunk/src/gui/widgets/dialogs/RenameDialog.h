@@ -3,7 +3,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <widgets/P2Frame.h>
+#include <widgets/P2Widget.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ class RenameDialog : public QDialog
 
 public:
 
-    RenameDialog( QWidget *parent, QWidget *w );
+    RenameDialog( QWidget *parent, P2Widget *w );
 
 public slots:
 
@@ -29,7 +29,7 @@ public slots:
 
 private:
 
-    QWidget *widget;
+    P2Widget *widget;
     QLineEdit *nameField;
     //QTextEdit *nameField;
 };

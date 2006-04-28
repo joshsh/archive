@@ -11,7 +11,7 @@ extern "C"
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2NamespaceWidget::P2NamespaceWidget( Object *o, P2Binder *eb )
+P2NamespaceWidget::P2NamespaceWidget( const Object *o, P2Binder *eb )
     : P2BoxArray( QBoxLayout::TopToBottom )
 {
     Namespace *ns = ( Namespace* ) object__value( o );

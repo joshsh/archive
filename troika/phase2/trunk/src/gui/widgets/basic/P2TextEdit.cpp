@@ -21,23 +21,11 @@ setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 }
 
 
-const QString P2TextEdit::className()
-{
-    return QString( "P2TextEdit" );
-}
-
-
 QSize P2TextEdit::sizeHint() const
 {
     return textEdit->sizeHint();
     //return QSize( 50, 50 );
     //return textEdit->minimumSize();
-}
-
-
-bool P2TextEdit::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
-{
-    return ( ( P2BasicWidget* ) parentWidget() )->handleMousePressEvent( event, origin );
 }
 
 

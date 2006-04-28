@@ -31,16 +31,11 @@ newMainWindow( P2Binder &b );
 //#define DEBUG
 
 #ifdef DEBUG
-
-    #define DEBUG__FRAME
+#    define DEBUG__FRAME
     //#define DEBUG__LAYOUT
-
-    #ifdef DEBUG__LAYOUT
-
-        #define DEBUG__LAYOUT__FF_LAYOUT_TREE
-
-    #endif
-
+#    ifdef DEBUG__LAYOUT
+#        define DEBUG__LAYOUT__FF_LAYOUT_TREE
+#    endif
 #endif   // DEBUG
 
 #define DISABLE_FOCUS
@@ -88,11 +83,13 @@ indentMinus();
 
 // Phase2 bindings /////////////////////////////////////////////////////////////
 
-#define CHAR__COLOR                         0xBF, 0xBF, 0xFF, 0xFF
+#define CHAR__COLOR                         0xFF, 0x40, 0x40, 0xFF
 #define DOUBLE__COLOR                       0xBF, 0x00, 0xBF, 0xFF
 #define COMBINATOR__COLOR                   0xFF, 0x00, 0x00, 0xFF
 #define INT__COLOR                          0X00, 0xFF, 0x00, 0xFF
+#define NAMESPACE__COLOR                    0X00, 0x00, 0x00, 0xFF
 #define PRIM__COLOR                         0xFF, 0x7F, 0x00, 0xFF
+#define SET__COLOR                          0X00, 0x00, 0x00, 0xFF
 #define STRING__COLOR                       0x3F, 0x3F, 0x3F, 0xFF
 #define TERM__COLOR                         0xFF, 0x00, 0x00, 0xFF
 #define TYPE__COLOR                         0x00, 0xFF, 0xFF, 0xFF
@@ -177,7 +174,7 @@ indentMinus();
 
 // File paths //////////////////////////////////////////////////////////////////
 
-/** Identifier for the Phase2 window icon. */
+/** Identifier for the Phase2 application icon. */
 #define P2GUI_ICON                          ":/troika.png"
 //#define P2GUI_ICON                        ":/p2gui.png"
 

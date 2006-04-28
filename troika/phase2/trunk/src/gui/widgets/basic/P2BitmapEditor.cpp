@@ -40,20 +40,6 @@ P2BitmapEditor::P2BitmapEditor( QImage *image0, int zoom0, bool showGridLines0 )
 }
 
 
-const QString P2BitmapEditor::className()
-{
-    return QString( "P2BitmapEditor" );
-}
-
-
-/*
-P2BitmapEditor::~P2BitmapEditor()
-{
-    //...
-}
-*/
-
-
 void P2BitmapEditor::setPenColor( const QColor &newColor )
 {
     curColor = newColor;
@@ -101,7 +87,7 @@ void P2BitmapEditor::setShowGridLines( bool newShowGridLines )
 }
 
 
-bool P2BitmapEditor::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
+void P2BitmapEditor::mousePressEvent( QMouseEvent *event )
 {
     if ( event->button() == Qt::LeftButton )
         drawMode = DRAW;
@@ -111,16 +97,12 @@ bool P2BitmapEditor::handleMousePressEvent( QMouseEvent *event, EventOrigin orig
         drawMode = NODRAW;
 
     setImagePixel( event->pos() );
-
-    return false;
 }
 
 
-bool P2BitmapEditor::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin )
+void P2BitmapEditor::mouseMoveEvent( QMouseEvent *event )
 {
     setImagePixel( event->pos() );
-
-    return false;
 }
 
 
@@ -128,6 +110,8 @@ bool P2BitmapEditor::handleMouseMoveEvent( QMouseEvent *event, EventOrigin origi
 //  grid each time.
 void P2BitmapEditor::paintEvent( QPaintEvent *event )
 {
+    event = 0;
+
     QPainter painter( this );
 
     for ( int i = 0; i < image.width(); ++i )

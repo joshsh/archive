@@ -15,16 +15,9 @@ public:
 
     P2TextEdit( char *text, bool readOnly );
 
-    const QString className();
-
     /** \note  Without an overloaded sizeHint, Qt apparently assumes
         QSize( 0, 0 ). */
     QSize sizeHint() const;  // Must be const.
-
-protected:
-
-    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
-    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
 private:
 
@@ -45,12 +38,13 @@ private:
             format.setPadding( 0 );
             frame->setFrameFormat( format );
         }
-
+/*
         void mousePressEvent( QMouseEvent *event )
         {
             if ( ( ( P2TextEdit* ) parentWidget() )->handleMousePressEvent( event, CHILD_NOFRAME ) )
                 QTextEdit::mousePressEvent( event );
         }
+*/
     };
 
     TextEditWrapper *textEdit;

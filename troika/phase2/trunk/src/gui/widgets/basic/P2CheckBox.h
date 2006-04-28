@@ -15,18 +15,9 @@ public:
 
     P2CheckBox();
 
-    const QString className();
-
     /** \note  Without an overloaded sizeHint, Qt apparently assumes
         QSize( 0, 0 ). */
     QSize sizeHint() const;  // Must be const.
-
-protected:
-
-    bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin );
-    bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-
-    //void paintEvent( QPaintEvent *event );
 
 private:
 
@@ -35,12 +26,13 @@ private:
     public:
         CheckBoxWrapper( P2CheckBox *parent )
             : QCheckBox( parent ) { }
-
+/*
         void mousePressEvent( QMouseEvent *event )
         {
             if ( ( ( P2CheckBox* ) parentWidget() )->handleMousePressEvent( event, CHILD_NOFRAME ) )
                 QCheckBox::mousePressEvent( event );
         }
+*/
     };
 
     CheckBoxWrapper *checkbox;

@@ -19,7 +19,7 @@ class P2SetWidget : public P2BoxArray
 {
 public:
 
-    P2SetWidget( Object *o, P2Binder *eb );
+    P2SetWidget( const Object *o, P2Binder *eb );
 
 };
 

@@ -74,7 +74,7 @@ P2MainWindow::P2MainWindow( P2Binder &b )
     createMenusAndToolbar( *environment );
 
     Object *o = environment__root( environment->getEnv() );
-    singleView = new P2View( o, *binder );
+    singleView = new P2View( o, environment );
     setCentralWidget( singleView );
 
     // Create the central widget.
@@ -576,7 +576,7 @@ void P2MainWindow::editDelete()
 
 void P2MainWindow::editRename()
 {
-    RenameDialog dialog( this, singleView->focusFrame() );
+    RenameDialog dialog( this, singleView->focusWidget() );
     dialog.exec();
 
     refresh();

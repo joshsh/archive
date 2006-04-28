@@ -5,7 +5,7 @@
 
 
 static QString
-getText( Object *o )
+getText( const Object *o )
 {
     char buffer[100];
     object__type( o )->encode( object__value( o ), buffer );
@@ -13,7 +13,7 @@ getText( Object *o )
 }
 
 
-P2CharWidget::P2CharWidget( Object *o )
+P2CharWidget::P2CharWidget( const Object *o )
     : P2Text( getText( o ), QColor( CHAR__COLOR ))
 {
     //...

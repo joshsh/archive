@@ -16,12 +16,6 @@ ResizeWidget::ResizeWidget()
 }
 
 
-const QString ResizeWidget::className()
-{
-    return QString( "ResizeWidget" );
-}
-
-
 QSize ResizeWidget::sizeHint() const
 {
     int len = 10 * ( toggle + 1 ) ;
@@ -29,7 +23,7 @@ QSize ResizeWidget::sizeHint() const
 }
 
 
-bool ResizeWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin )
+void ResizeWidget::mousePressEvent( QMouseEvent *event )
 {
     if ( event->button() == Qt::LeftButton )
     {
@@ -37,9 +31,6 @@ bool ResizeWidget::handleMousePressEvent( QMouseEvent *event, EventOrigin origin
         resize( sizeHint() );
         update();
     }
-
-    // Objects of this class are not meant to have dependent P2Widgets.
-    return false;
 }
 
 

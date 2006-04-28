@@ -20,9 +20,6 @@ protected:
     /** \param text  character string content */
     P2AbstractText( QString text );
 
-bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-
     void paintEvent( QPaintEvent *event );
 
 public slots:

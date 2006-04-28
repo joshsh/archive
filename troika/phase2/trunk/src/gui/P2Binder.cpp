@@ -18,61 +18,70 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-static P2Widget *charWidget( Object *o, P2Binder *eb )
+static P2Widget *
+charWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2CharWidget( o );
 }
 
 
-static P2Widget *combinatorWidget( Object *o, P2Binder *eb )
+static P2Widget *
+combinatorWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2CombinatorWidget( o );
 }
 
 
-static P2Widget *doubleWidget( Object *o, P2Binder *eb )
+static P2Widget *
+doubleWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2DoubleWidget( o );
 }
 
 
-static P2Widget *intWidget( Object *o, P2Binder *eb )
+static P2Widget *
+intWidget( const Object *o, P2Binder *eb )
 {
    eb = 0;
    return new P2IntWidget( o );
 }
 
 
-static P2Widget *namespaceWidget( Object *o, P2Binder *eb )
+static P2Widget *
+namespaceWidget( const Object *o, P2Binder *eb )
 {
     return new P2NamespaceWidget( o, eb );
 }
 
 
-static P2Widget *primitiveWidget( Object *o, P2Binder *eb )
+static P2Widget *
+primitiveWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2PrimitiveWidget( o );
 }
 
 
-static P2Widget *setWidget( Object *o, P2Binder *eb )
+static P2Widget *
+setWidget( const Object *o, P2Binder *eb )
 {
     return new P2SetWidget( o, eb );
 }
 
 
-static P2Widget *stringWidget( Object *o, P2Binder *eb )
+static P2Widget *
+stringWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2StringWidget( o );
 }
 
 
-static P2Widget *termWidget( Object *o, P2Binder *eb )
+static P2Widget *
+termWidget( const Object *o, P2Binder *eb )
 {
     return new P2TermWidgetNew( o, eb );
     //eb = 0;
@@ -80,14 +89,16 @@ static P2Widget *termWidget( Object *o, P2Binder *eb )
 }
 
 
-static P2Widget *typeWidget( Object *o, P2Binder *eb )
+static P2Widget *
+typeWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2TypeWidget( o );
 }
 
 
-static P2Widget *xpmWidget( Object *o, P2Binder *eb )
+static P2Widget *
+xpmWidget( const Object *o, P2Binder *eb )
 {
     eb = 0;
     return new P2XPMWidget( o );
@@ -97,20 +108,25 @@ static P2Widget *xpmWidget( Object *o, P2Binder *eb )
 ////////////////////////////////////////////////////////////////////////////////
 
 
-static int getType( Environment *e, const char *name )
+static int
+getType( Environment *e, const char *name )
 {
     Object *o = environment__resolve_type( e, name );
     return ( int ) object__value( o );
 }
 
 
-static int getType( Object *o )
+static int
+getType( const Object *o )
 {
     return ( int ) object__type( o );
 }
 
 
-P2Binder::P2Binder( P2Environment &e )
+P2Binder::
+P2Binder( P2Environment &e )
+  : QObject(),
+    focusWidget( 0 )
 {
     env = &e;
     environment = env->getEnv();
@@ -131,24 +147,25 @@ P2Binder::P2Binder( P2Environment &e )
     colors[ getType( environment, "Combinator" ) ] = QColor( COMBINATOR__COLOR );
     colors[ getType( environment, "double" ) ] = QColor( DOUBLE__COLOR );
     colors[ getType( environment, "int" ) ] = QColor( INT__COLOR );
-    colors[ getType( environment, "Namespace" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
-    colors[ getType( environment, "Primitive" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
+    colors[ getType( environment, "Namespace" ) ] = QColor( NAMESPACE__COLOR );
+    colors[ getType( environment, "Primitive" ) ] = QColor( PRIM__COLOR );
     colors[ getType( environment, "cstring" ) ] = QColor( STRING__COLOR );
-    colors[ getType( environment, "Set" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
+    colors[ getType( environment, "Set" ) ] = QColor( SET__COLOR );
     colors[ getType( environment, "Term" ) ] = QColor( TERM__COLOR );
     colors[ getType( environment, "Type" ) ] = QColor( TYPE__COLOR );
     colors[ getType( environment, "xpm" ) ] = QColor( XPM__COLOR );
 }
 
 
-P2Environment *P2Binder::getEnv()
+P2Environment *P2Binder::
+getEnv()
 {
     return env;
 }
 
 
 static QString
-getText( Object *o )
+getText( const Object *o )
 {
     char buffer[100];
     object__type( o )->encode( object__value( o ), buffer );
@@ -156,20 +173,47 @@ getText( Object *o )
 }
 
 
-P2Widget *P2Binder::objectWidget( Object *o )
+P2Widget *P2Binder::
+objectWidget( const Object *o )
 {
     objectWidgetConstructor c = constructors[ getType( o ) ];
     if ( !c )
-        return new P2Text( getText( o ), QColor( 0x00, 0x00, 0x00, 0xFF ) );
+        return new P2Text( getText( o ), objectColor( o ) );
+        //return new P2Text( getText( o ), QColor( 0x00, 0x00, 0x00, 0xFF ) );
 
     else
         return c( o, this );
 }
 
 
-QColor P2Binder::objectColor( Object *o )
+QColor P2Binder::
+objectColor( const Object *o )
 {
     return colors[ getType( o ) ];
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+P2Widget *P2Binder::
+getFocusWidget() const
+{
+    return focusWidget;
+}
+
+
+void P2Binder::
+setFocusWidget( P2Widget *w )
+{
+    focusWidget = w;
+}
+
+
+void P2Binder::
+requestObjectView( Object *o )
+{
+    emit objectViewRequest( o );
 }
 
 

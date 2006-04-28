@@ -4,9 +4,9 @@
 
 
 P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initiallyExpanded )
-    : P2Widget()
+    : P2Widget(),
+      constObject( o )
 {
-    object = o;
     binder = &b;
 
     contentWidget = 0;
@@ -40,6 +40,12 @@ P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initia
 }
 
 
+const Object *P2ObjectFrame::object() const
+{
+    return constObject;
+}
+
+
 void P2ObjectFrame::setTitle( QString s )
 {
     if ( s != objectName() )
@@ -56,13 +62,54 @@ QSize P2ObjectFrame::sizeHint() const
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+
+
+void P2ObjectFrame::mousePressEvent( QMouseEvent *event )
+{
+    setActive( true );
+}
+
+
+void P2ObjectFrame::mouseDoubleClickEvent( QMouseEvent *event )
+{
+cout << "Double click!" << endl;
+    binder->requestObjectView( constObject );
+}
+
+
+void P2ObjectFrame::focusInEvent( QFocusEvent *event )
+{
+    event = 0;
+//cout << "Focus is in! --------------" << endl;
+    setActive( true );
+    plusMinus->setActive( true );
+    titleWidget->setActive( true );
+
+    binder->setFocusWidget( this );
+}
+
+
+void P2ObjectFrame::focusOutEvent( QFocusEvent *event )
+{
+    event = 0;
+//cout << "Focus is out... -----------" << endl;
+    setActive( false );
+    plusMinus->setActive( false );
+    titleWidget->setActive( false );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 void P2ObjectFrame::expand()
 {
     // The object widget is not created until the frame is expanded for the
     // first time, avoiding unchecked recursion.
     if ( !contentWidget )
     {
-        contentWidget = binder->objectWidget( object );
+        contentWidget = binder->objectWidget( constObject );
         contentWidget->setParent( this );
 
         connect(    contentWidget,  SIGNAL( resized( QResizeEvent* ) ),

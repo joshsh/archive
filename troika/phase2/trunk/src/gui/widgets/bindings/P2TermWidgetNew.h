@@ -19,14 +19,14 @@ class P2TermWidgetNew : public P2BoxArray
 {
 public:
 
-    P2TermWidgetNew( Object *o, P2Binder *eb );
+    P2TermWidgetNew( const Object *o, P2Binder *eb );
 
-    void appendObjectWidget( Object *o, P2Binder *eb );
+    void appendObjectWidget( const Object *o, P2Binder *eb );
     void appendSyntaxWidget( char *s );
 
 private:
 
-    void encode( Object *o, P2Binder *eb );
+    void encode( const Object *o, P2Binder *eb );
 
 };
 

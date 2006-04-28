@@ -18,7 +18,7 @@ class P2XPMWidget : public P2Image
 {
 public:
 
-    P2XPMWidget( Object *o );
+    P2XPMWidget( const Object *o );
 
 };
 

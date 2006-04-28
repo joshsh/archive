@@ -14,13 +14,7 @@ public:
     /** Constructs an empty P2FreeFormArray. */
     P2FreeFormArray();
 
-    const QString className();
-
     void add( P2Widget *widget, const QPoint &position );
-
-bool isFrame() { return false; }
-bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
-bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return false; }
 
 public slots:
 

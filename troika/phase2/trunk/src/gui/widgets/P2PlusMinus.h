@@ -23,18 +23,7 @@ signals:
     void clickedPlus();
     void clickedMinus();
 
-
 protected:
-
-
-bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ){ return false; }
-bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ){ return false; }
-
-
-
-
-
-
 
     void paintEvent( QPaintEvent *event );
 

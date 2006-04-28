@@ -7,18 +7,7 @@
 P2BasicWidget::P2BasicWidget()
     : P2Widget()
 {
-    #ifdef DEBUG
-        cout << indent()
-             << "P2BasicWidget[" << (int) this << "]::P2BasicWidget()" << endl;
-    #endif
-
-    //setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
-}
-
-
-bool P2BasicWidget::isFrame()
-{
-    return false;
+    // Do nothing.
 }
 
 
