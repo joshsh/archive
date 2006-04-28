@@ -16,7 +16,7 @@ include aminclude.am
 
 $(DX_DOCDIR) :  doxygen-doc
 
-EXTRA_DIST = include clean.sh autogen.sh m4 \
+EXTRA_DIST = include bootstrap cleanup m4 \
 	doxygen.cfg $(DX_DOCDIR)
 
 ## Exclude any SVN version control directories from the distribution.

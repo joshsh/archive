@@ -1,7 +1,7 @@
-./cleanup.sh
-
-./bootstrap.sh
+./cleanup
+./bootstrap
 ./configure
+
 make
 
 make dist
