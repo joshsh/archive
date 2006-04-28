@@ -33,12 +33,12 @@ P2TermWidgetNew::appendObjectWidget( Object *o, P2Binder *eb )
     add( w );
 }
 
+
 void
 P2TermWidgetNew::appendSyntaxWidget( char *s )
 {
-    add( new P2Text( QString( s ), QColor( 0x00, 0x00, 0x00, 0xFF ) ) );
+    add( new P2Text( QString( s ), QColor( SYNTAX__COLOR ) ) );
 }
-
 
 
 static void

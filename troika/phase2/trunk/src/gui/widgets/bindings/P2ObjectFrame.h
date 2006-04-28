@@ -13,7 +13,7 @@ extern "C"
 #include <widgets/P2Widget.h>
 #include <widgets/P2PlusMinus.h>
 #include <P2Binder.h>
-#include <widgets/basic/P2Text.h>
+#include <widgets/basic/P2Title.h>
 #include <widgets/P2Frame.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,23 @@ bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ) { return fal
 
     QSize sizeHint() const;
 
+void focusInEvent ( QFocusEvent * event )
+{
+    event = 0;
+    cout << "Focus is in! --------------" << endl;
+    setActive( true );
+    plusMinus->setActive( true );
+    titleWidget->setActive( true );
+}
+void focusOutEvent ( QFocusEvent * event )
+{
+    event = 0;
+    cout << "Focus is out... -----------" << endl;
+    setActive( false );
+    plusMinus->setActive( false );
+    titleWidget->setActive( false );
+}
+
 public slots:
 
     void refresh( const P2Environment &env );
@@ -43,13 +60,23 @@ protected:
 
     void paintEvent( QPaintEvent *event );
 
+
+
+    void mousePressEvent( QMouseEvent *event )
+    {
+        setActive( true );
+    }
+
+
+
+
 private:
 
     Object *object;
     P2Binder *binder;
 
     P2Widget *contentWidget;
-    P2Text *titleWidget;
+    P2Title *titleWidget;
     P2PlusMinus *plusMinus;
 
     QRect borderRect;

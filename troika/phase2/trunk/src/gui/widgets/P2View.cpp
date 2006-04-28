@@ -12,7 +12,8 @@ P2View::P2View( Object *o, P2Binder &eb )
     borderWidget = new QWidget();
     borderWidget->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
 
-setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+    setFocusPolicy( Qt::NoFocus );
 
     objectFrame = new P2ObjectFrame( o, "root", eb, true );
     objectFrame->setParent( borderWidget );
@@ -20,6 +21,8 @@ setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
     scrollArea = new QScrollArea( this );
     // No frame around the scroll area, thanks.
     scrollArea->setFrameStyle( QFrame::NoFrame );
+    scrollArea->setFocusPolicy( Qt::NoFocus );
+
 //scrollArea->setBackgroundRole(QPalette::Dark);
 //scrollArea->setWidgetResizable( true );
 //scrollArea->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
@@ -58,7 +61,6 @@ P2ObjectFrame *P2View::focusFrame()
 
 void P2View::refresh( const P2Environment &env )
 {
-cout << "P2View::refresh" << endl;
     objectFrame->refresh( env );
 }
 
@@ -74,26 +76,12 @@ void P2View::update( QResizeEvent *event )
     //- Center the child widget in x if it is small enough.
     //- Center the child widget in y if it is small enough.
 
-cout << "P2View::update" << endl;
     borderWidget->resize( objectFrame->sizeHint()
         + QSize( 2 * WINDOW__CONTENTS__PADDING, 2 * WINDOW__CONTENTS__PADDING ) );
 
     QWidget::update();
 
-//scrollArea = new QScrollArea( this );
-//scrollArea->setFrameStyle( QFrame::NoFrame );
-//scrollArea->setWidget( borderWidget );
-
     resizeScrollArea( 0 );
-    //scrollArea->resize( scrollArea->widget()->size() );//+ QSize( 10, 10 ) );
-    //scrollArea->resize( scrollArea->maximumViewportSize() );
-    //scrollArea->update();
-
-//resize( scrollArea->size() );
-    //emit resized( 0 );
-cout << "### size() = (" << size().width() << ", " << size().height() << ")" << endl;
-cout << "scrollArea->sizeHint() = (" << scrollArea->sizeHint().width() << ", " << scrollArea->sizeHint().height() << ")" << endl;
-cout << "borderWidget->size() = (" << borderWidget->size().width() << ", " << borderWidget->size().height() << ")" << endl;
 }
 
 

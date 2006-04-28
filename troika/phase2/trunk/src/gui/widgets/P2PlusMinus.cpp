@@ -5,8 +5,10 @@
 
 
 P2PlusMinus::P2PlusMinus( QWidget *parent, bool initiallyPlus )
-    : QWidget( parent, 0 )
+    : P2BasicWidget()
 {
+    this->setParent( parent );
+
     isPlus = initiallyPlus;
 
     scale = 2;
@@ -38,7 +40,9 @@ void P2PlusMinus::paintEvent( QPaintEvent *event )
 
     //painter.setPen( QColor( 0x3F, 0x3F, 0x3F, 0xFF ) );
 
-    painter.setPen( QColor( COLOR__FRAME__INACTIVE ) );
+    painter.setPen( isActive()
+        ? QColor( COLOR__FRAME__ACTIVE )
+        : QColor( COLOR__FRAME__INACTIVE ) );
 
     // Text.
     painter.drawLine( 2, 2 + scale, 2 + ( 2 * scale ), 2 + scale );

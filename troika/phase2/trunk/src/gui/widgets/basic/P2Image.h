@@ -14,8 +14,10 @@ class P2Image : public P2BasicWidget
 public:
 
     P2Image( const char * const xpm[] );
+    P2Image( const QString &filename );
+    P2Image( const QImage &i );
 
-    const QString className();
+    QSize sizeHint() const;
 
 protected:
 

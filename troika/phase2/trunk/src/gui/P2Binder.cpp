@@ -12,6 +12,7 @@
 #include <widgets/bindings/P2TermWidgetNew.h>
 //#include <widgets/bindings/P2TermWidget.h>
 #include <widgets/bindings/P2TypeWidget.h>
+#include <widgets/bindings/P2XPMWidget.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,13 @@ static P2Widget *typeWidget( Object *o, P2Binder *eb )
 }
 
 
+static P2Widget *xpmWidget( Object *o, P2Binder *eb )
+{
+    eb = 0;
+    return new P2XPMWidget( o );
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -117,6 +125,7 @@ P2Binder::P2Binder( P2Environment &e )
     constructors[ getType( environment, "Set" ) ] = setWidget;
     constructors[ getType( environment, "Term" ) ] = termWidget;
     constructors[ getType( environment, "Type" ) ] = typeWidget;
+    constructors[ getType( environment, "xpm" ) ] = xpmWidget;
 
     colors[ getType( environment, "char" ) ] = QColor( CHAR__COLOR );
     colors[ getType( environment, "Combinator" ) ] = QColor( COMBINATOR__COLOR );
@@ -128,6 +137,7 @@ P2Binder::P2Binder( P2Environment &e )
     colors[ getType( environment, "Set" ) ] = QColor( QColor( 0x00, 0x00, 0x00, 0xFF ) );
     colors[ getType( environment, "Term" ) ] = QColor( TERM__COLOR );
     colors[ getType( environment, "Type" ) ] = QColor( TYPE__COLOR );
+    colors[ getType( environment, "xpm" ) ] = QColor( XPM__COLOR );
 }
 
 

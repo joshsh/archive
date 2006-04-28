@@ -3,12 +3,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <widgets/P2Widget.h>
+#include <widgets/P2BasicWidget.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2PlusMinus : public QWidget
+class P2PlusMinus : public P2BasicWidget
 {
     Q_OBJECT
 
@@ -23,7 +23,18 @@ signals:
     void clickedPlus();
     void clickedMinus();
 
+
 protected:
+
+
+bool handleMousePressEvent( QMouseEvent *event, EventOrigin origin ){ return false; }
+bool handleMouseMoveEvent( QMouseEvent *event, EventOrigin origin ){ return false; }
+
+
+
+
+
+
 
     void paintEvent( QPaintEvent *event );
 

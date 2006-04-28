@@ -52,6 +52,9 @@ signals:
     void mousePress( QMouseEvent *event, P2Widget *origin );
     //virtual void handleMousePress( QMouseEvent *event ) = 0;
 
+    void activated();
+    void deactivated();
+
 protected:
 
     /** Constructs an empty P2Widget. */

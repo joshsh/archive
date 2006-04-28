@@ -12,7 +12,10 @@ P2ObjectFrame::P2ObjectFrame( Object *o, QString title, P2Binder &b, bool initia
     contentWidget = 0;
     showContent = initiallyExpanded;
 
-    titleWidget = new P2Text( title, QColor( COLOR__FRAME__INACTIVE ) );
+    //setFocusPolicy( Qt::ClickFocus );
+    setFocusPolicy( Qt::StrongFocus );
+
+    titleWidget = new P2Title( title );
     titleWidget->setParent( this );
 
     plusMinus = new P2PlusMinus( this, !showContent );

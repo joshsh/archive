@@ -5,22 +5,35 @@
 
 
 P2Image::P2Image( const char * const xpm[] )
-        : P2BasicWidget()
+    : P2BasicWidget()
 {
-    #ifdef DEBUG
-        cout << indent()
-             << "P2Image[" <<  (int) this << "]::P2Image()" << endl;
-    #endif
-
     image = QImage( xpm );
 
     setFixedSize( image.size() );
 }
 
 
-const QString P2Image::className()
+P2Image::P2Image( const QString &filename )
+    : P2BasicWidget()
 {
-    return QString( "P2Image" );
+    image = QImage( filename );
+
+    setFixedSize( image.size() );
+}
+
+
+P2Image::P2Image( const QImage &i )
+    : P2BasicWidget()
+{
+    image = i;
+
+    setFixedSize( image.size() );
+}
+
+
+QSize P2Image::sizeHint() const
+{
+    return image.size();
 }
 
 

@@ -99,7 +99,6 @@ P2MainWindow::P2MainWindow( P2Binder &b )
 
 void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 {
-    QAction *action;
     QIcon icon;
 
     // Build the menu bar.
@@ -120,80 +119,80 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // New.
     icon = QIcon( ":/fileNew.png" );
-    action = new QAction( icon, tr( "&New" ), this );
-    action->setStatusTip( tr( "Create a new file" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_N );
-    action->setEnabled( false );
-    fileMenu->addAction( action );
+    QAction *fileNewAction = new QAction( icon, tr( "&New" ), this );
+    fileNewAction->setStatusTip( tr( "Create a new file" ) );
+    connect( fileNewAction, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
+    fileNewAction->setShortcut( Qt::CTRL + Qt::Key_N );
+    fileNewAction->setEnabled( false );
+    fileMenu->addAction( fileNewAction );
     if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__NEW )
-        toolbar->addAction( action );
+        toolbar->addAction( fileNewAction );
 
     // Open.
     icon = QIcon( ":/fileOpen.png" );
-    action = new QAction( icon, tr( "&Open" ), this );
-    action->setStatusTip( tr( "Open an existing file" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_O );
-    action->setEnabled( false );
-    fileMenu->addAction( action );
+    QAction *fileOpenAction = new QAction( icon, tr( "&Open" ), this );
+    fileOpenAction->setStatusTip( tr( "Open an existing file" ) );
+    connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
+    fileOpenAction->setShortcut( Qt::CTRL + Qt::Key_O );
+    fileOpenAction->setEnabled( false );
+    fileMenu->addAction( fileOpenAction );
     if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__OPEN )
-        toolbar->addAction( action );
+        toolbar->addAction( fileOpenAction );
 
     // Save.
     icon = QIcon( ":/fileSave.png" );
-    action = new QAction( icon, tr( "&Save" ), this );
-    action->setStatusTip( tr( "Save the current document to disk" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_S );
-    action->setEnabled( false );
-    fileMenu->addAction( action );
+    QAction *fileSaveAction = new QAction( icon, tr( "&Save" ), this );
+    fileSaveAction->setStatusTip( tr( "Save the current document to disk" ) );
+    connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
+    fileSaveAction->setShortcut( Qt::CTRL + Qt::Key_S );
+    fileSaveAction->setEnabled( false );
+    fileMenu->addAction( fileSaveAction );
     if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__SAVE )
-        toolbar->addAction( action );
+        toolbar->addAction( fileSaveAction );
 
     // Save As.
     icon = QIcon( ":/fileSaveAs.png" );
-    action = new QAction( icon, tr( "Save &As..." ), this );
-    action->setStatusTip( tr( "Save the current document as a new file" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
-    action->setEnabled( false );
-    fileMenu->addAction( action );
+    QAction *fileSaveAsAction = new QAction( icon, tr( "Save &As..." ), this );
+    fileSaveAsAction->setStatusTip( tr( "Save the current document as a new file" ) );
+    connect( fileSaveAsAction, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
+    fileSaveAsAction->setEnabled( false );
+    fileMenu->addAction( fileSaveAsAction );
     if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__SAVE_AS )
-        toolbar->addAction( action );
+        toolbar->addAction( fileSaveAsAction );
 
     // Close.
     icon = QIcon( ":/fileClose.png" );
-    action = new QAction( icon, tr( "&Close" ), this );
-    action->setStatusTip( tr( "Close the current document" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( fileClose() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_W );
-    action->setEnabled( false );
-    fileMenu->addAction( action );
+    QAction *fileCloseAction = new QAction( icon, tr( "&Close" ), this );
+    fileCloseAction->setStatusTip( tr( "Close the current document" ) );
+    connect( fileCloseAction, SIGNAL( triggered() ), this, SLOT( fileClose() ) );
+    fileCloseAction->setShortcut( Qt::CTRL + Qt::Key_W );
+    fileCloseAction->setEnabled( false );
+    fileMenu->addAction( fileCloseAction );
 
     fileMenu->addSeparator();
 
     // Print.
     icon = QIcon( ":/filePrint.png" );
-    action = new QAction( icon, tr( "&Print" ), this );
-    action->setStatusTip( tr( "Print the document" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_P );
-    action->setEnabled( false );
-    fileMenu->addAction( action );
+    QAction *filePrintAction = new QAction( icon, tr( "&Print" ), this );
+    filePrintAction->setStatusTip( tr( "Print the document" ) );
+    connect( filePrintAction, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
+    filePrintAction->setShortcut( Qt::CTRL + Qt::Key_P );
+    filePrintAction->setEnabled( false );
+    fileMenu->addAction( filePrintAction );
     if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__PRINT )
-        toolbar->addAction( action );
+        toolbar->addAction( filePrintAction );
 
     fileMenu->addSeparator();
 
     // Quit.
     icon = QIcon( ":/fileQuit.png" );
-    action = new QAction( icon, tr( "&Quit" ), this );
-    action->setStatusTip( tr( "Exit Phase2" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( fileQuit() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_Q );
-    fileMenu->addAction( action );
+    QAction *fileQuitAction = new QAction( icon, tr( "&Quit" ), this );
+    fileQuitAction->setStatusTip( tr( "Exit Phase2" ) );
+    connect( fileQuitAction, SIGNAL( triggered() ), this, SLOT( fileQuit() ) );
+    fileQuitAction->setShortcut( Qt::CTRL + Qt::Key_Q );
+    fileMenu->addAction( fileQuitAction );
     if ( TOOLBAR & TOOLBAR__FILE & TOOLBAR__FILE__QUIT )
-        toolbar->addAction( action );
+        toolbar->addAction( fileQuitAction );
 
     if ( TOOLBAR & TOOLBAR__FILE &
         ( TOOLBAR__EDIT | TOOLBAR__VIEW | TOOLBAR__HELP ) )
@@ -205,84 +204,84 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // Undo.
     icon = QIcon( ":/editUndo.png" );
-    action = new QAction( icon, tr( "&Undo" ), this );
-    action->setStatusTip( tr( "Undo the last operation" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editUndo() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_Z );
-    action->setEnabled( false );
-    editMenu->addAction( action );
+    QAction *editUndoAction = new QAction( icon, tr( "&Undo" ), this );
+    editUndoAction->setStatusTip( tr( "Undo the last operation" ) );
+    connect( editUndoAction, SIGNAL( triggered() ), this, SLOT( editUndo() ) );
+    editUndoAction->setShortcut( Qt::CTRL + Qt::Key_Z );
+    editUndoAction->setEnabled( false );
+    editMenu->addAction( editUndoAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__UNDO )
-        toolbar->addAction( action );
+        toolbar->addAction( editUndoAction );
 
     // Redo.
     icon = QIcon( ":/editRedo.png" );
-    action = new QAction( icon, tr( "&Redo" ), this );
-    action->setStatusTip( tr( "Redo the last operation" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editRedo() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_Y );
-    action->setEnabled( false );
-    editMenu->addAction( action );
+    QAction *editRedoAction = new QAction( icon, tr( "&Redo" ), this );
+    editRedoAction->setStatusTip( tr( "Redo the last operation" ) );
+    connect( editRedoAction, SIGNAL( triggered() ), this, SLOT( editRedo() ) );
+    editRedoAction->setShortcut( Qt::CTRL + Qt::Key_Y );
+    editRedoAction->setEnabled( false );
+    editMenu->addAction( editRedoAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__REDO )
-        toolbar->addAction( action );
+        toolbar->addAction( editRedoAction );
 
     editMenu->addSeparator();
 
     // Cut.
     icon = QIcon( ":/editCut.png" );
-    action = new QAction( icon, tr( "Cu&t" ), this );
-    action->setStatusTip( tr( "Cut the current selection's contents to the "
+    QAction *editCutAction = new QAction( icon, tr( "Cu&t" ), this );
+    editCutAction->setStatusTip( tr( "Cut the current selection's contents to the "
                                 "clipboard" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editCut() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_X );
-    action->setEnabled( false );
-    editMenu->addAction( action );
+    connect( editCutAction, SIGNAL( triggered() ), this, SLOT( editCut() ) );
+    editCutAction->setShortcut( Qt::CTRL + Qt::Key_X );
+    editCutAction->setEnabled( false );
+    editMenu->addAction( editCutAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__CUT )
-        toolbar->addAction( action );
+        toolbar->addAction( editCutAction );
 
     // Copy.
     icon = QIcon( ":/editCopy.png" );
-    action = new QAction( icon, tr( "&Copy" ), this );
-    action->setStatusTip( tr( "Copy the current selection's contents to the "
+    QAction *editCopyAction = new QAction( icon, tr( "&Copy" ), this );
+    editCopyAction->setStatusTip( tr( "Copy the current selection's contents to the "
                                  "clipboard" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editCopy() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_C );
-    action->setEnabled( false );
-    editMenu->addAction( action );
+    connect( editCopyAction, SIGNAL( triggered() ), this, SLOT( editCopy() ) );
+    editCopyAction->setShortcut( Qt::CTRL + Qt::Key_C );
+    editCopyAction->setEnabled( false );
+    editMenu->addAction( editCopyAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__COPY )
-        toolbar->addAction( action );
+        toolbar->addAction( editCopyAction );
 
     // Paste.
     icon = QIcon( ":/editPaste.png" );
-    action = new QAction( icon, tr( "&Paste" ), this );
-    action->setStatusTip( tr( "Paste the clipboard's contents into the current "
+    QAction *editPasteAction = new QAction( icon, tr( "&Paste" ), this );
+    editPasteAction->setStatusTip( tr( "Paste the clipboard's contents into the current "
                                   "selection" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editPaste() ) );
-    action->setShortcut( Qt::CTRL + Qt::Key_V );
-    action->setEnabled( false );
-    editMenu->addAction( action );
+    connect( editPasteAction, SIGNAL( triggered() ), this, SLOT( editPaste() ) );
+    editPasteAction->setShortcut( Qt::CTRL + Qt::Key_V );
+    editPasteAction->setEnabled( false );
+    editMenu->addAction( editPasteAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__PASTE )
-        toolbar->addAction( action );
+        toolbar->addAction( editPasteAction );
 
     // Delete.
     icon = QIcon( ":/editDelete.png" );
-    action = new QAction( icon, tr( "&Delete" ), this );
-    action->setStatusTip( tr( "Delete the current selection" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editDelete() ) );
-    action->setShortcut( Qt::Key_Delete );
-    action->setEnabled( false );
-    editMenu->addAction( action );
+    QAction *editDeleteAction = new QAction( icon, tr( "&Delete" ), this );
+    editDeleteAction->setStatusTip( tr( "Delete the current selection" ) );
+    connect( editDeleteAction, SIGNAL( triggered() ), this, SLOT( editDelete() ) );
+    editDeleteAction->setShortcut( Qt::Key_Delete );
+    editDeleteAction->setEnabled( false );
+    editMenu->addAction( editDeleteAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__DELETE )
-        toolbar->addAction( action );
+        toolbar->addAction( editDeleteAction );
 
     // Rename.
     //icon = QIcon( ":/editDelete.png" );
-    action = new QAction( tr( "&Rename" ), this );
-    action->setStatusTip( tr( "Rename the current selection" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( editRename() ) );
-    action->setShortcut( Qt::Key_F2 );
-    editMenu->addAction( action );
+    QAction *editRenameAction = new QAction( tr( "&Rename" ), this );
+    editRenameAction->setStatusTip( tr( "Rename the current selection" ) );
+    connect( editRenameAction, SIGNAL( triggered() ), this, SLOT( editRename() ) );
+    editRenameAction->setShortcut( Qt::Key_F2 );
+    editMenu->addAction( editRenameAction );
     if ( TOOLBAR & TOOLBAR__EDIT & TOOLBAR__EDIT__RENAME )
-        toolbar->addAction( action );
+        toolbar->addAction( editRenameAction );
 
     // editMenu->addSeparator();
 
@@ -312,84 +311,84 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // Command Line.
     icon = QIcon( ":/viewCommandLine.png" );
-    action = new QAction( icon, tr( "&Command Line" ), this );
-    action->setStatusTip( tr( "Switch to the command line view" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewCommandLine() ) );
-    action->setShortcut( Qt::Key_F7 );
-    action->setEnabled( false );
-    viewMenu->addAction( action );
+    QAction *viewCommandLineAction = new QAction( icon, tr( "&Command Line" ), this );
+    viewCommandLineAction->setStatusTip( tr( "Switch to the command line view" ) );
+    connect( viewCommandLineAction, SIGNAL( triggered() ), this, SLOT( viewCommandLine() ) );
+    viewCommandLineAction->setShortcut( Qt::Key_F7 );
+    viewCommandLineAction->setEnabled( false );
+    viewMenu->addAction( viewCommandLineAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__COMMAND_LINE )
-    toolbar->addAction( action );
+    toolbar->addAction( viewCommandLineAction );
 
     viewMenu->addSeparator();
 
     // Back.
     icon = QIcon( ":/viewBack.png" );
-    action = new QAction( icon, tr( "&Back" ), this );
-    action->setStatusTip( tr( "Navigate to the previous item" ) );
-    //action->setToolTip( tr( "Navigate to the previous item" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewBack() ) );
-    action->setShortcut( Qt::ALT + Qt::Key_Left );
-    action->setEnabled( false );
-    viewMenu->addAction( action );
+    QAction *viewBackAction = new QAction( icon, tr( "&Back" ), this );
+    viewBackAction->setStatusTip( tr( "Navigate to the previous item" ) );
+    //viewBackAction->setToolTip( tr( "Navigate to the previous item" ) );
+    connect( viewBackAction, SIGNAL( triggered() ), this, SLOT( viewBack() ) );
+    viewBackAction->setShortcut( Qt::ALT + Qt::Key_Left );
+    viewBackAction->setEnabled( false );
+    viewMenu->addAction( viewBackAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__BACK )
-        toolbar->addAction( action );
+        toolbar->addAction( viewBackAction );
 
     // Forward.
     icon = QIcon( ":/viewForward.png" );
-    action = new QAction( icon, tr( "&Forward" ), this );
-    action->setStatusTip( tr( "Navigate to the next item" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewForward() ) );
-    action->setShortcut( Qt::ALT + Qt::Key_Right );
-    action->setEnabled( false );
-    viewMenu->addAction( action );
+    QAction *viewForwardAction = new QAction( icon, tr( "&Forward" ), this );
+    viewForwardAction->setStatusTip( tr( "Navigate to the next item" ) );
+    connect( viewForwardAction, SIGNAL( triggered() ), this, SLOT( viewForward() ) );
+    viewForwardAction->setShortcut( Qt::ALT + Qt::Key_Right );
+    viewForwardAction->setEnabled( false );
+    viewMenu->addAction( viewForwardAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__FORWARD )
-        toolbar->addAction( action );
+        toolbar->addAction( viewForwardAction );
 
     // New Window.
     icon = QIcon( ":/viewNewWindow.png" );
-    action = new QAction( icon, tr( "&New Window" ), this );
-    action->setStatusTip( tr( "Open a new top-level window" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewNewWindow() ) );
-    //action->setShortcut( ... );
-    viewMenu->addAction( action );
+    QAction *viewNewWindowAction = new QAction( icon, tr( "&New Window" ), this );
+    viewNewWindowAction->setStatusTip( tr( "Open a new top-level window" ) );
+    connect( viewNewWindowAction, SIGNAL( triggered() ), this, SLOT( viewNewWindow() ) );
+    //viewNewWindowAction->setShortcut( ... );
+    viewMenu->addAction( viewNewWindowAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__NEW_WINDOW )
-        toolbar->addAction( action );
+        toolbar->addAction( viewNewWindowAction );
 
     viewMenu->addSeparator();
 
     // Split Horizontal.
     icon = QIcon( ":/viewSplitHorizontal.png" );
-    action = new QAction( icon, tr( "Split &Horizontal" ), this );
-    action->setStatusTip( tr( "Split the current view horizontally" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewSplitHorizontal() ) );
-    //action->setShortcut( ... );
-    action->setEnabled( false );
-    viewMenu->addAction( action );
+    QAction *viewSplitHorizontalAction = new QAction( icon, tr( "Split &Horizontal" ), this );
+    viewSplitHorizontalAction->setStatusTip( tr( "Split the current view horizontally" ) );
+    connect( viewSplitHorizontalAction, SIGNAL( triggered() ), this, SLOT( viewSplitHorizontal() ) );
+    //viewSplitHorizontalAction->setShortcut( ... );
+    viewSplitHorizontalAction->setEnabled( false );
+    viewMenu->addAction( viewSplitHorizontalAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SPLIT_HORIZONTAL )
-        toolbar->addAction( action );
+        toolbar->addAction( viewSplitHorizontalAction );
 
     // Split Vertical.
     icon = QIcon( ":/viewSplitVertical.png" );
-    action = new QAction( icon, tr( "Split &Vertical" ), this );
-    action->setStatusTip( tr( "Split the current view vertically" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewSplitVertical() ) );
-    //action->setShortcut( ... );
-    action->setEnabled( false );
-    viewMenu->addAction( action );
+    QAction *viewSplitVerticalAction = new QAction( icon, tr( "Split &Vertical" ), this );
+    viewSplitVerticalAction->setStatusTip( tr( "Split the current view vertically" ) );
+    connect( viewSplitVerticalAction, SIGNAL( triggered() ), this, SLOT( viewSplitVertical() ) );
+    //viewSplitVerticalAction->setShortcut( ... );
+    viewSplitVerticalAction->setEnabled( false );
+    viewMenu->addAction( viewSplitVerticalAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SPLIT_VERTICAL )
-        toolbar->addAction( action );
+        toolbar->addAction( viewSplitVerticalAction );
 
     // Close Current View.
     icon = QIcon( ":/viewCloseCurrentView.png" );
-    action = new QAction( icon, tr( "Close Current View" ), this );
-    action->setStatusTip( tr( "Close the current view" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewCloseCurrentView() ) );
-    //action->setShortcut( ... );
-    action->setEnabled( false );
-    viewMenu->addAction( action );
+    QAction *viewCloseCurrentViewAction = new QAction( icon, tr( "Close Current View" ), this );
+    viewCloseCurrentViewAction->setStatusTip( tr( "Close the current view" ) );
+    connect( viewCloseCurrentViewAction, SIGNAL( triggered() ), this, SLOT( viewCloseCurrentView() ) );
+    //viewCloseCurrentViewAction->setShortcut( ... );
+    viewCloseCurrentViewAction->setEnabled( false );
+    viewMenu->addAction( viewCloseCurrentViewAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__CLOSE_CURRENT_VIEW )
-        toolbar->addAction( action );
+        toolbar->addAction( viewCloseCurrentViewAction );
 
     viewMenu->addSeparator();
 
@@ -398,26 +397,26 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 //QIcon::State state;  // QIcon::On  QIcon::Off
 
     //icon = QIcon( ":/viewShowFrames.png" );
-    action = viewShowFramesAction = new QAction( checkmark, tr( "&Show Frames" ), this );
-    //action = new QAction( tr( "&Show Frames" ), this );
-    action->setStatusTip( tr( "Draw borders around all frames" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
-    action->setShortcut( Qt::Key_F6 );
-    action->setCheckable( true );
-    action->setChecked( env.getIdleFrameVisibility() );
-    viewMenu->addAction( action );
+    QAction *viewShowFramesAction = new QAction( checkmark, tr( "&Show Frames" ), this );
+    //viewShowFramesAction = new QAction( tr( "&Show Frames" ), this );
+    viewShowFramesAction->setStatusTip( tr( "Draw borders around all frames" ) );
+    connect( viewShowFramesAction, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
+    viewShowFramesAction->setShortcut( Qt::Key_F6 );
+    viewShowFramesAction->setCheckable( true );
+    viewShowFramesAction->setChecked( env.getIdleFrameVisibility() );
+    viewMenu->addAction( viewShowFramesAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SHOW_FRAMES )
-        toolbar->addAction( action );
+        toolbar->addAction( viewShowFramesAction );
 
-    action = viewShowNamesAction = new QAction( checkmark, tr( "Show Names" ), this );
-    action->setStatusTip( tr( "Display lexical names" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( viewShowNames() ) );
-    //action->setShortcut( Qt::Key_F6 );
-    action->setCheckable( true );
-    action->setChecked( env.getNameVisibility() );
-    viewMenu->addAction( action );
+    QAction *viewShowNamesAction = new QAction( checkmark, tr( "Show Names" ), this );
+    viewShowNamesAction->setStatusTip( tr( "Display lexical names" ) );
+    connect( viewShowNamesAction, SIGNAL( triggered() ), this, SLOT( viewShowNames() ) );
+    //viewShowNamesAction->setShortcut( Qt::Key_F6 );
+    viewShowNamesAction->setCheckable( true );
+    viewShowNamesAction->setChecked( env.getNameVisibility() );
+    viewMenu->addAction( viewShowNamesAction );
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SHOW_NAMES )
-        toolbar->addAction( action );
+        toolbar->addAction( viewShowNamesAction );
 
     if ( TOOLBAR__VIEW & ( TOOLBAR__HELP ) )
         toolbar->addSeparator();
@@ -428,24 +427,29 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // Manual.
     icon = QIcon( ":/helpManual.png" );
-    action = new QAction( icon, tr( "&Manual" ), this );
-    action->setStatusTip( tr( "Show Phase2's help manual" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( helpManual() ) );
-    action->setShortcut( Qt::Key_F1 );
-    action->setEnabled( false );
-    helpMenu->addAction( action );
+    QAction *helpManualAction = new QAction( icon, tr( "&Manual" ), this );
+    helpManualAction->setStatusTip( tr( "Show Phase2's help manual" ) );
+    connect( helpManualAction, SIGNAL( triggered() ), this, SLOT( helpManual() ) );
+    helpManualAction->setShortcut( Qt::Key_F1 );
+    helpManualAction->setEnabled( false );
+    helpMenu->addAction( helpManualAction );
     if ( TOOLBAR & TOOLBAR__HELP & TOOLBAR__HELP__MANUAL )
-        toolbar->addAction( action );
+        toolbar->addAction( helpManualAction );
 
     // About Phase2.
     icon = QIcon( ":/helpAboutPhase2.png" );
-//icon = QIcon( ":/rdf.png" );
-    action = new QAction( icon, tr( "&About Phase2" ), this );
-    action->setStatusTip( tr( "Show Phase2's About box" ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( helpAboutPhase2() ) );
-    helpMenu->addAction( action );
+    QAction *helpAboutPhase2Action = new QAction( icon, tr( "&About Phase2" ), this );
+    helpAboutPhase2Action->setStatusTip( tr( "Show Phase2's About box" ) );
+    connect( helpAboutPhase2Action, SIGNAL( triggered() ), this, SLOT( helpAboutPhase2() ) );
+    helpMenu->addAction( helpAboutPhase2Action );
     if ( TOOLBAR & TOOLBAR__HELP & TOOLBAR__HELP__ABOUT_PHASE2 )
-        toolbar->addAction( action );
+        toolbar->addAction( helpAboutPhase2Action );
+
+
+
+//menubar->addAction( viewBackAction );
+//menubar->addAction( viewForwardAction );
+
 }
 
 

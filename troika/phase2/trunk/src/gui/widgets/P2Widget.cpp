@@ -6,16 +6,20 @@
 
 P2Widget::P2Widget()
     : QWidget( 0, 0 ),
-      active( false )
+      active( false ),
+      isDependent( false )
 {
     #ifdef DEBUG
         cout << indent()
              << "P2Widget[" << (int) this << "]::P2Widget()" << endl;
     #endif
 
-    isDependent = false;
-
     //setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
+
+    connect(    this,   SIGNAL( activated() ),
+                this,   SLOT( update() ) );
+    connect(    this,   SIGNAL( deactivated() ),
+                this,   SLOT( update() ) );
 }
 
 
@@ -27,7 +31,15 @@ bool P2Widget::isActive()
 
 void P2Widget::setActive( bool a )
 {
+    bool before = active;
     active = a;
+    if ( active != before )
+    {
+        if ( active )
+            emit activated();
+        else
+            emit deactivated();
+    }
 }
 
 

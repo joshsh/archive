@@ -14,6 +14,8 @@ class P2Binder;
 // Arbitrary out-of-range integer.
 #define INT__INFINITY                       100000
 
+#define ENCODING__BUFFER_SIZE               0x10000
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -69,9 +71,19 @@ indentMinus();
 
 // Full blue.
 #define COLOR__FRAME__ACTIVE                0x00, 0x00, 0xFF, 0xFF
+#define COLOR__TITLE__ACTIVE                0x00, 0x00, 0xFF, 0xFF
+
 // Light blue.
 #define COLOR__FRAME__INACTIVE              0xA0, 0xA0, 0xFF, 0xFF
 #define COLOR__TITLE__INACTIVE              0x7F, 0x7F, 0xFF, 0xFF
+
+// Full orange.
+#define COLOR__FRAME__APPLY__ACTIVE         0xFF, 0x80, 0x00, 0xFF
+#define COLOR__TITLE__APPLY__ACTIVE         0xFF, 0x80, 0x00, 0xFF
+
+// Light orange.
+#define COLOR__FRAME__APPLY__INACTIVE       0xFF, 0xB0, 0x60, 0xFF
+#define COLOR__TITLE__APPLY__INACTIVE       0xFF, 0x90, 0x40, 0xFF
 
 
 // Phase2 bindings /////////////////////////////////////////////////////////////
@@ -82,8 +94,11 @@ indentMinus();
 #define INT__COLOR                          0X00, 0xFF, 0x00, 0xFF
 #define PRIM__COLOR                         0xFF, 0x7F, 0x00, 0xFF
 #define STRING__COLOR                       0x3F, 0x3F, 0x3F, 0xFF
-#define TERM__COLOR                         0x3F, 0x3F, 0x3F, 0xFF
+#define TERM__COLOR                         0xFF, 0x00, 0x00, 0xFF
 #define TYPE__COLOR                         0x00, 0xFF, 0xFF, 0xFF
+#define XPM__COLOR                          0xFF, 0x00, 0xFF, 0xFF
+
+#define SYNTAX__COLOR                       0x60, 0x60, 0x60, 0xFF
 
 
 // Layout //////////////////////////////////////////////////////////////////////

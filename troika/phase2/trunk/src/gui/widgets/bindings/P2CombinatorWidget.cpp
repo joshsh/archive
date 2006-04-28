@@ -17,6 +17,10 @@ P2CombinatorWidget::P2CombinatorWidget( Object *o )
     : P2Text( getText( o ), QColor( COMBINATOR__COLOR ))
 {
     //...
+
+    QFont f = font();
+    f.setBold( true );
+    setFont( f );
 }
 
 
