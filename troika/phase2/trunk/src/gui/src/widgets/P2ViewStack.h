@@ -24,6 +24,7 @@ public:
     P2ViewStack( P2Environment *env, QWidget *parent );
 
     P2Widget *focusWidget();
+    const Object *focusObject();
 
 signals:
 
@@ -31,6 +32,8 @@ signals:
     void backDisabled();
     void forwardEnabled();
     void forwardDisabled();
+
+    void hasFocusObject( bool b );
 
 public slots:
 

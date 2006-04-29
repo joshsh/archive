@@ -26,8 +26,10 @@ public:
 
     /** Copy constructor. */
     P2Environment( const P2Environment &other );
-
     ~P2Environment();
+
+    Environment *getEnv() const;
+    Compiler *getCompiler() const;
 
     bool getIdleFrameVisibility() const;
     void setIdleFrameVisibility( bool v );
@@ -40,12 +42,14 @@ public:
     void setFrameContentsSpacing( int spacing );
     void setFrameContentsPadding( int padding );
 
-    Environment *getEnv() const { return env; }
-    Compiler *getCompiler() const { return compiler; }
+    const Object *getClipboardObject();
+    void setClipboardObject( const Object *o );
 
 signals:
 
     void changed();
+
+    void hasClipboardObject( bool b );
 
 private:
 
@@ -58,6 +62,7 @@ private:
     Environment *env;
     Compiler *compiler;
 
+    const Object *clipboardObject;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

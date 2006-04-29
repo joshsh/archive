@@ -66,8 +66,13 @@ private:
     P2ViewStack *viewStack;
     //P2View *singleView;
 
+    QAction *editCopyAction, *editCutAction, *editPasteAction;
+
     // Checkable actions which are bound to the environment.
     QAction *viewShowNamesAction, *viewShowFramesAction;
+
+    // Actions which are bound to the view stack.
+    QAction *viewBackAction, *viewForwardAction;
 
     void createMenusAndToolbar( const P2Environment &env );
 
@@ -80,8 +85,6 @@ private:
 
     //AboutDialog *aboutDialog;
 
-    QAction *viewBackAction, *viewForwardAction;
-
 private slots:
 
     void backEnabled();
@@ -90,7 +93,6 @@ private slots:
     void forwardDisabled();
 
 //    void aboutDialogDestroyed();
-
 
 };
 

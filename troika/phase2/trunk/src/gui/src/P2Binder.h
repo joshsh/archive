@@ -34,10 +34,13 @@ public:
 
     P2Widget *getFocusWidget() const;
     void setFocusWidget( P2Widget *w );
+    void clearFocusWidget( P2Widget *w );
 
     void requestObjectView( const Object *o );
 
 signals:
+
+    void hasFocusWidget( bool b );
 
     void objectViewRequest( const Object *o );
 

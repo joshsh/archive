@@ -43,6 +43,10 @@ P2View::P2View( const Object *o, P2Environment *env )
         this,   SIGNAL( resized() ),
         this,   SLOT(   resizeScrollArea() ) );
 
+    connect(
+        constBinder,    SIGNAL( hasFocusWidget( bool ) ),
+        this,           SIGNAL( hasFocusObject( bool ) ) );
+
     update();
     refresh( *constBinder->getEnv() );
 }
@@ -67,6 +71,19 @@ cout << "size() = (" << size().width() << ", " << size().height() << ")" << endl
 P2Widget *P2View::focusWidget()
 {
     return constBinder->getFocusWidget();
+}
+
+
+const Object *P2View::focusObject()
+{
+                       /* !            */
+    P2ObjectFrame *f = ( P2ObjectFrame* ) constBinder->getFocusWidget();
+
+    if ( f )
+        return f->object();
+
+    else
+        return 0;
 }
 
 

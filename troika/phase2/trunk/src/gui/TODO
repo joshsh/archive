@@ -1,0 +1,16 @@
+[ba]
+    P2Text fails to draw entire area after a certain length
+
+[build]
+    qmake sub-project
+
+[todo]
+    event handling
+    tabs
+    split screen
+    function closures
+    drag and drop
+    load / save
+    free form layout ^ weighted alignment
+    clickable term display (i.e. don't just use term__encode)
+    command line view

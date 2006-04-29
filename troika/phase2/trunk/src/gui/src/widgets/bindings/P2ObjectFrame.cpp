@@ -96,6 +96,8 @@ void P2ObjectFrame::focusOutEvent( QFocusEvent *event )
     setActive( false );
     plusMinus->setActive( false );
     titleWidget->setActive( false );
+
+    binder->clearFocusWidget( this );
 }
 
 

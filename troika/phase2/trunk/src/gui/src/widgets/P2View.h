@@ -25,6 +25,7 @@ public:
     P2View( const Object *o, P2Environment *env );
 
     P2Widget *focusWidget();
+    const Object *focusObject();
 
     //QSize sizeHint() const;
 
@@ -33,6 +34,10 @@ public:
 //signals:
 
 //    void objectViewRequest( const Object *o );
+
+signals:
+
+    void hasFocusObject( bool b );
 
 public slots:
 

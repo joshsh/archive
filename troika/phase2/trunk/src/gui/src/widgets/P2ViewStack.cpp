@@ -25,6 +25,9 @@ goBack()
             emit backDisabled();
 
         emit forwardEnabled();
+
+        P2View *view = ( P2View* ) currentWidget();
+        emit hasFocusObject( ( view->focusObject() ) );
     }
 }
 
@@ -41,6 +44,9 @@ goForward()
             emit forwardDisabled();
 
         emit backEnabled();
+
+        P2View *view = ( P2View* ) currentWidget();
+        emit hasFocusObject( ( view->focusObject() ) );
     }
 }
 
@@ -61,6 +67,10 @@ addView( const Object *o )
         newView->binder(),    SIGNAL( objectViewRequest( const Object* ) ),
         this,               SLOT( addView( const Object* ) ) );
 
+    connect(
+        newView,    SIGNAL( hasFocusObject( bool ) ),
+        this,       SIGNAL( hasFocusObject( bool ) ) );
+
     // connect...
 
     // The new widget becomes the visible widget.
@@ -74,6 +84,8 @@ addView( const Object *o )
         emit backEnabled();
 
     emit forwardDisabled();
+
+    emit hasFocusObject( false );
 }
 
 
@@ -82,6 +94,17 @@ focusWidget()
 {
     if ( count() )
         return ( ( P2View* ) currentWidget() )->focusWidget();
+
+    else
+        return 0;
+}
+
+
+const Object *P2ViewStack::
+focusObject()
+{
+    if ( count() )
+        return ( ( P2View* ) currentWidget() )->focusObject();
 
     else
         return 0;

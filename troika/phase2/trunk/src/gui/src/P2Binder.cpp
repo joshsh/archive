@@ -207,6 +207,19 @@ void P2Binder::
 setFocusWidget( P2Widget *w )
 {
     focusWidget = w;
+    emit hasFocusWidget( true );
+}
+
+
+void P2Binder::
+clearFocusWidget( P2Widget *w )
+{
+    // Clear the focus only if it has not already been reset to another widget.
+    if ( focusWidget == w )
+    {
+        focusWidget = 0;
+        emit hasFocusWidget( false );
+    }
 }
 
 

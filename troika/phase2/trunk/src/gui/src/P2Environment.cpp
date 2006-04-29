@@ -5,7 +5,8 @@
 
 
 P2Environment::P2Environment()
-    : QObject( 0 )
+  : QObject( 0 ),
+    clipboardObject( 0 )
 {
     #ifdef DEBUG
         cout << "P2Environment[" << (int) this << "]::P2Environment()" << endl;
@@ -41,6 +42,21 @@ P2Environment::~P2Environment()
 {
     compiler__delete( compiler );
     environment__delete( env );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+Environment *P2Environment::getEnv() const
+{
+    return env;
+}
+
+
+Compiler *P2Environment::getCompiler() const
+{
+    return compiler;
 }
 
 
@@ -96,6 +112,23 @@ void P2Environment::setFrameContentsPadding( int padding )
 {
     frameContentsPadding = padding;
     emit changed();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+const Object *P2Environment::getClipboardObject()
+{
+    return clipboardObject;
+}
+
+
+void P2Environment::setClipboardObject( const Object *o )
+{
+    clipboardObject = o;
+
+    emit hasClipboardObject( ( o ) );
 }
 
 

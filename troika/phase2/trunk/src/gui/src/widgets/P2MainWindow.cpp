@@ -51,7 +51,7 @@ P2MainWindow::P2MainWindow( P2Binder &b )
     //~ Just testing the macros.
     #ifdef ARM_COMPILE
         #ifdef X86_COMPILE
-            setWindowTitle( "Phase2 GUI (arch?)" );
+            setWindowTitle( "Phase2 GUI (unk)" );
         #else
             setWindowTitle( "Phase2 GUI (ARM)" );
         #endif
@@ -59,7 +59,7 @@ P2MainWindow::P2MainWindow( P2Binder &b )
         #ifdef X86_COMPILE
             setWindowTitle( "Phase2 GUI (X86)" );
         #else
-            setWindowTitle( "Phase2 GUI (arch?)" );
+            setWindowTitle( "Phase2 GUI (unk)" );
         #endif
     #endif
 
@@ -90,6 +90,13 @@ P2MainWindow::P2MainWindow( P2Binder &b )
 
     createMenusAndToolbar( *environment );
 
+    connect(
+        viewStack,      SIGNAL( hasFocusObject( bool ) ),
+        editCopyAction, SLOT( setEnabled( bool ) ) );
+    connect(
+        viewStack,      SIGNAL( hasFocusObject( bool ) ),
+        editCutAction,  SLOT( setEnabled( bool ) ) );
+
 //    singleView = new P2View(
 //        environment__root( environment->getEnv() ),
 //        environment );
@@ -106,16 +113,19 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     QIcon icon;
 
     // Build the menu bar.
-    //QMenuBar *menubar = this->menuBar();
     QMenuBar *menubar = new QMenuBar( this );
     setMenuBar( menubar );
-//menubar->setTearOffEnabled( false );
-//menubar->setFrameStyle( QFrame::NoFrame );
+    menubar->setFocusPolicy( Qt::NoFocus );
 
-    QToolBar *toolbar = ( TOOLBAR )
-        ? this->addToolBar( tr( "Tool Bar" ) )
-        : 0;
-//toolbar->setTearOffEnabled( false );
+    QToolBar *toolbar = 0;
+
+    if ( TOOLBAR )
+    {
+        toolbar = this->addToolBar( tr( "Tool Bar" ) );
+        toolbar->setMovable( false );
+        //toolbar->setTearOffEnabled( false );
+        toolbar->setFocusPolicy( Qt::NoFocus );
+    }
 
     // File menu. //////////////////////////////////////////////////////////////
 
@@ -205,6 +215,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     // Edit menu. //////////////////////////////////////////////////////////////
 
     QMenu *editMenu = menubar->addMenu( tr( "&Edit" ) );
+    editMenu->setFocusPolicy( Qt::NoFocus );
 
     // Undo.
     icon = QIcon( ":/editUndo.png" );
@@ -232,7 +243,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // Cut.
     icon = QIcon( ":/editCut.png" );
-    QAction *editCutAction = new QAction( icon, tr( "Cu&t" ), this );
+    editCutAction = new QAction( icon, tr( "Cu&t" ), this );
     editCutAction->setStatusTip( tr( "Cut the current selection's contents to the "
                                 "clipboard" ) );
     connect( editCutAction, SIGNAL( triggered() ), this, SLOT( editCut() ) );
@@ -244,7 +255,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // Copy.
     icon = QIcon( ":/editCopy.png" );
-    QAction *editCopyAction = new QAction( icon, tr( "&Copy" ), this );
+    editCopyAction = new QAction( icon, tr( "&Copy" ), this );
     editCopyAction->setStatusTip( tr( "Copy the current selection's contents to the "
                                  "clipboard" ) );
     connect( editCopyAction, SIGNAL( triggered() ), this, SLOT( editCopy() ) );
@@ -256,10 +267,13 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     // Paste.
     icon = QIcon( ":/editPaste.png" );
-    QAction *editPasteAction = new QAction( icon, tr( "&Paste" ), this );
+    editPasteAction = new QAction( icon, tr( "&Paste" ), this );
     editPasteAction->setStatusTip( tr( "Paste the clipboard's contents into the current "
                                   "selection" ) );
     connect( editPasteAction, SIGNAL( triggered() ), this, SLOT( editPaste() ) );
+    connect(
+        environment,        SIGNAL( hasClipboardObject( bool ) ),
+        editPasteAction,    SLOT( setEnabled( bool ) ) );
     editPasteAction->setShortcut( Qt::CTRL + Qt::Key_V );
     editPasteAction->setEnabled( false );
     editMenu->addAction( editPasteAction );
@@ -449,11 +463,8 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     if ( TOOLBAR & TOOLBAR__HELP & TOOLBAR__HELP__ABOUT_PHASE2 )
         toolbar->addAction( helpAboutPhase2Action );
 
-
-
 //menubar->addAction( viewBackAction );
 //menubar->addAction( viewForwardAction );
-
 }
 
 
@@ -466,7 +477,6 @@ void P2MainWindow::refresh()
     viewShowNamesAction->setChecked( environment->getNameVisibility() );
 
     viewStack->refresh( *environment );
-    //singleView->refresh( *environment );
 
     //update();
 
@@ -563,7 +573,7 @@ void P2MainWindow::editCut()
 
 void P2MainWindow::editCopy()
 {
-    cout << "void P2MainWindow::editCopy()" << endl;
+    environment->setClipboardObject( viewStack->focusObject() );
 }
 
 
@@ -582,7 +592,6 @@ void P2MainWindow::editDelete()
 void P2MainWindow::editRename()
 {
     P2Widget *w = viewStack->focusWidget();
-    //P2Widget *w = singleView->focusWidget();
 
     if ( w )
     {
