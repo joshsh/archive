@@ -1,0 +1,22 @@
+[ba]
+    _rm root;
+    _rm here;
+    /usr/local issue
+
+[build]
+    source dependencies (settings.h, etc.)
+    tools dependencies (doxygen, xsltproc)
+    library dependencies (libxml2)
+    ./bin
+    cross-compile for ARM
+    use static libraries
+    svn log --> CHANGES
+    doxygen script --> revision # in docs
+
+[other]
+    printing ^ namespace__find
+    triples
+        sets ^ distribution
+        meta-functions
+    RDF/XML and N3 import / export
+    null handling
