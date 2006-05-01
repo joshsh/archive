@@ -138,6 +138,10 @@ compiler__resolve( Compiler *c, Name *name )
         name__push( name, key );
 
         o = resolve( nso, name, environment__manager( c->env ) );
+
+        /* Try the root namespace secondly. */
+        if ( !o )
+            o = resolve( environment__root( c->env ), name, environment__manager( c->env ) );
     }
 
     if ( !o )
