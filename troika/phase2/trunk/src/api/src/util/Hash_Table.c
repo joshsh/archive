@@ -254,13 +254,8 @@ hash_table__add( Hash_Table *h, void *key )
     int buffer_size = h->buffer_size;
     void *key_old;
 
-    #if DEBUG__SAFE
-    if ( !key )
-    {
-        ERROR( "hash_table__add: null key" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !key )
+        abort();
 
     cur = buffer + ( h->hash( key ) % buffer_size );
 

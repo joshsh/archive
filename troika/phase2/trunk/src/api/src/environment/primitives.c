@@ -155,6 +155,55 @@ add_triples_prims( Environment *env )
 #endif
 
 
+#include <util/Set.h>
+
+static void *
+set_add_stub( void **args )
+{
+    Object *o1 = args[0];
+    Object *o2 = args[1];
+
+    Set *s = ( Set* ) object__value( o1 );
+
+    /* ! No checking of return value. */
+    set__add( s, o2 );
+
+    return o1;
+}
+
+
+static void *
+set_remove_stub( void **args )
+{
+    Object *o1 = args[0];
+    Object *o2 = args[1];
+
+    Set *s = ( Set* ) object__value( o1 );
+
+    /* ! No checking of return value. */
+    set__remove( s, o2 );
+
+    return o1;
+}
+
+
+static int
+add_set_prims( Environment *env )
+{
+    Primitive *p;
+
+    return ( ( p = primitive__new( env, "Set", "set__add", set_add_stub, 2 ) )
+      && primitive__add_param( env, p, "Set", "s", 0 )
+      && primitive__add_param( env, p, ANY__NAME, "el", 1 )
+      && primitive__register( env, p, 0, 0 )
+
+      && ( p = primitive__new( env, "Set", "set__remove", set_remove_stub, 2 ) )
+      && primitive__add_param( env, p, "Set", "s", 0 )
+      && primitive__add_param( env, p, ANY__NAME, "el", 1 )
+      && primitive__register( env, p, 0, 0 ) );
+}
+
+
 /* ! */
 static Environment *global_env;
 
@@ -181,6 +230,7 @@ add_meta_prims( Environment *env )
     #if TRIPLES__GLOBAL
       && add_triples_prims( env )
     #endif
+      && add_set_prims( env )
     );
 }
 
