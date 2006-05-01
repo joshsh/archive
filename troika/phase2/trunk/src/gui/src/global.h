@@ -83,6 +83,7 @@ indentMinus();
 
 // Phase2 bindings /////////////////////////////////////////////////////////////
 
+#define BAG__COLOR                          0x00, 0x00, 0x00, 0xFF
 #define CHAR__COLOR                         0xFF, 0x40, 0x40, 0xFF
 #define DOUBLE__COLOR                       0xBF, 0x00, 0xBF, 0xFF
 #define COMBINATOR__COLOR                   0xFF, 0x00, 0x00, 0xFF

@@ -1,6 +1,8 @@
 #include <P2Binder.h>
 
 #include <widgets/basic/P2Text.h>
+
+#include <widgets/bindings/P2BagWidget.h>
 #include <widgets/bindings/P2CharWidget.h>
 #include <widgets/bindings/P2CombinatorWidget.h>
 #include <widgets/bindings/P2DoubleWidget.h>
@@ -16,6 +18,13 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+
+
+static P2Widget *
+bagWidget( const Object *o, P2Binder *eb )
+{
+    return new P2BagWidget( o, eb );
+}
 
 
 static P2Widget *
@@ -131,6 +140,7 @@ P2Binder( P2Environment *e )
     env = e;
     environment = env->getEnv();
 
+    constructors[ getType( environment, "Bag" ) ] = bagWidget;
     constructors[ getType( environment, "char" ) ] = charWidget;
     constructors[ getType( environment, "Combinator" ) ] = combinatorWidget;
     constructors[ getType( environment, "double" ) ] = doubleWidget;
@@ -143,6 +153,7 @@ P2Binder( P2Environment *e )
     constructors[ getType( environment, "Type" ) ] = typeWidget;
     constructors[ getType( environment, "xpm" ) ] = xpmWidget;
 
+    colors[ getType( environment, "Bag" ) ] = QColor( BAG__COLOR );
     colors[ getType( environment, "char" ) ] = QColor( CHAR__COLOR );
     colors[ getType( environment, "Combinator" ) ] = QColor( COMBINATOR__COLOR );
     colors[ getType( environment, "double" ) ] = QColor( DOUBLE__COLOR );
