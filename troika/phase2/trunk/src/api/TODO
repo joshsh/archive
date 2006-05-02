@@ -2,13 +2,14 @@
     _rm root;
     _rm here;
     /usr/local issue
+    resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
 
 [build]
     source dependencies (settings.h, etc.)
     tools dependencies (doxygen, xsltproc)
     library dependencies (libxml2)
-    ./bin
     cross-compile for ARM
+        cross-compile libxml2
     use static libraries
     svn log --> CHANGES
     doxygen script --> revision # in docs

@@ -17,8 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <Primitive.h>
-#include "settings.h"
+#include "Primitive-impl.h"
 
 
 void
@@ -26,13 +25,8 @@ primitive__delete( Primitive *prim )
 {
     unsigned int i;
 
-    #if DEBUG__SAFE
-    if ( !prim )
-    {
-        ERROR( "primitive__delete: null primitive" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && !prim )
+        abort();
 
     free( prim->name );
 
@@ -44,6 +38,77 @@ primitive__delete( Primitive *prim )
 
     free( prim );
 }
+
+
+/******************************************************************************/
+
+
+char *
+primitive__name( Primitive *p )
+{
+    return STRDUP( p->name );
+}
+
+
+unsigned int
+primitive__arity( Primitive *p )
+{
+    return p->arity;
+}
+
+
+Type *
+primitive__return_type( Primitive *p )
+{
+    return p->return_type;
+}
+
+
+static boolean
+out_of_bounds( unsigned int arity, unsigned int i )
+{
+    if ( i >= arity )
+    {
+        ERROR( "parameter index out of bounds" );
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+char *
+primitive__parameter_name( Primitive *p, unsigned int i )
+{
+    if ( out_of_bounds( p->arity, i ) )
+        return 0;
+
+    return STRDUP( p->parameters[i].name );
+}
+
+
+Type *
+primitive__parameter_type( Primitive *p, unsigned int i )
+{
+    if ( out_of_bounds( p->arity, i ) )
+        return 0;
+
+    return p->parameters[i].type;
+}
+
+
+boolean
+primitive__parameter_reftrans( Primitive *p, unsigned int i )
+{
+    if ( out_of_bounds( p->arity, i ) )
+        return 0;
+
+    return p->parameters[i].transparent;
+}
+
+
+/******************************************************************************/
 
 
 void
@@ -78,7 +143,18 @@ primitive__encode( Primitive *prim, char *buffer )
         name = p.name;
         if ( name && *name )
         {
-            sprintf( buffer, " %s", name );
+            sprintf( buffer, " " );
+            buffer++;
+
+            /* Prepend a '!' to the parameter name if the primitive is not
+               referentially transparent with respect to the parameter. */
+            if ( !p.transparent )
+            {
+                sprintf( buffer, "!" );
+                buffer++;
+            }
+
+            sprintf( buffer, "%s", name );
             buffer += strlen( buffer );
         }
     }
@@ -87,9 +163,6 @@ primitive__encode( Primitive *prim, char *buffer )
 
     /*sprintf( buffer, prim->name );*/
 }
-
-
-/******************************************************************************/
 
 
 Type *

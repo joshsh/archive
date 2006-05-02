@@ -62,35 +62,48 @@ name__delete( Name *name )
 
 
 void
-name__print( Name *n )
+name__encode( Name *name, char *buffer )
 {
     char *s;
-    int i, size = array__size( n );
+    int i, size = array__size( name );
 
-    #if DEBUG__SAFE
-    if ( !n )
-    {
-        ERROR( "name__print: null name" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && !name )
+        abort();
 
     for ( i = 0; i < size; i++ )
     {
         if ( i )
-            printf( ":" );
+        {
+            sprintf( buffer, ":" );
+            buffer++;
+        }
 
-        s = ( char* ) array__get( n, i );
+        s = ( char* ) array__get( name, i );
 
         while ( *s )
         {
             if ( *s == ' ' )
-                printf( "\\" );
+            {
+                sprintf( buffer, "\\" );
+                buffer++;
+            }
 
-            printf( "%c", *s );
+            sprintf( buffer, "%c", *s );
+            buffer++;
             s++;
         }
     }
+}
+
+
+void
+name__print( Name *n )
+{
+    char buffer[ENCODING__BUFFER_SIZE];
+
+    name__encode( n, buffer );
+
+    printf( buffer );
 }
 
 

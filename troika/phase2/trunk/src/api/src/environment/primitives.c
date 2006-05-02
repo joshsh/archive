@@ -23,6 +23,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #if TRIPLES__GLOBAL
 
 #include <Primitive-import.h>
+    #include "../Primitive-impl.h"
+
 
 static void *
 assoc_stub( void **args )
@@ -119,37 +121,37 @@ add_triples_prims( Environment *env )
     Primitive *p;
 
     return ( ( p = primitive__new( env, ANY__NAME, "^=", assoc_stub, 3 ) )
-      && primitive__add_param( env, p, ANY__NAME, "subject", 0 )
-      && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
-      && primitive__add_param( env, p, ANY__NAME, "object", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "subject", REF_OPQ )
+      && primitive__add_param( env, p, ANY__NAME, "predicate", REF_TRP )
+      && primitive__add_param( env, p, ANY__NAME, "object", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, ANY__NAME, "^0", dissoc_stub, 2 ) )
-      && primitive__add_param( env, p, ANY__NAME, "subject", 1 )
-      && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "subject", REF_TRP )
+      && primitive__add_param( env, p, ANY__NAME, "predicate", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, ANY__NAME, "^", mult_stub, 2 ) )
-      && primitive__add_param( env, p, ANY__NAME, "subject", 1 )
-      && primitive__add_param( env, p, ANY__NAME, "predicate", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "subject", REF_TRP )
+      && primitive__add_param( env, p, ANY__NAME, "predicate", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, ANY__NAME, "object_object__equals", equals_stub, 2 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
-      && primitive__add_param( env, p, ANY__NAME, "objectB", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__add_param( env, p, ANY__NAME, "objectB", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "object__triples_predicates", predicates_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "object__triples_objects", objects_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "object__children", children_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", 1 )
-      && primitive__register( env, p, 0, 0 ) );
+      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 ) );
 }
 
 #endif
@@ -163,7 +165,7 @@ set_add_stub( void **args )
     Object *o1 = args[0];
     Object *o2 = args[1];
 
-    Set *s = ( Set* ) object__value( o1 );
+    Set *s = object__value( o1 );
 
     /* ! No checking of return value. */
     set__add( s, o2 );
@@ -193,14 +195,14 @@ add_set_prims( Environment *env )
     Primitive *p;
 
     return ( ( p = primitive__new( env, "Set", "set__add", set_add_stub, 2 ) )
-      && primitive__add_param( env, p, "Set", "s", 0 )
-      && primitive__add_param( env, p, ANY__NAME, "el", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, "Set", "s", REF_OPQ )
+      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "set__remove", set_remove_stub, 2 ) )
-      && primitive__add_param( env, p, "Set", "s", 0 )
-      && primitive__add_param( env, p, ANY__NAME, "el", 1 )
-      && primitive__register( env, p, 0, 0 ) );
+      && primitive__add_param( env, p, "Set", "s", REF_OPQ )
+      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 ) );
 }
 
 
@@ -225,8 +227,8 @@ add_meta_prims( Environment *env )
     global_env = env;
 
     return ( ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "self", 1 )
-      && primitive__register( env, p, 0, 0 )
+      && primitive__add_param( env, p, ANY__NAME, "self", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
     #if TRIPLES__GLOBAL
       && add_triples_prims( env )
     #endif
@@ -246,7 +248,7 @@ environment__register_primitive
 
     Type *t = environment__resolve_type( env, PRIMITIVE__NAME )->value;
 
-    Type *first_param = prim->parameters[0].type;
+    Type *first_param = primitive__parameter_type( prim, 0 );
 
     if ( flags & PRIM__CONSTRUCTOR )
         ERROR( "environment__register_primitive: PRIM__CONSTRUCTOR not in use" );

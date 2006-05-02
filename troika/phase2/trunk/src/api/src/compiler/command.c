@@ -312,10 +312,6 @@ command_ns( Compiler *c, Ast *args )
     Object *o;
     Name *name;
 
-    #if DEBUG__COMPILER
-    printf( "command_ns(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
@@ -369,6 +365,27 @@ command_rm( Compiler *c, Ast *args )
 
 
 static int
+command_save( Compiler *c, Ast *args )
+{
+    Name *name;
+    char *path = c->save_to_path;
+
+    if ( !path )
+    {
+        printf( "Error: use _saveas to specify an output path\n" );
+        return 0;
+    }
+
+    else
+    {
+        compiler__serialize( c, path );
+        printf( "Saved root:data as \"%s\".\n", path );
+        return 0;
+    }
+}
+
+
+static int
 command_saveas( Compiler *c, Ast *args )
 {
     Name *name;
@@ -381,7 +398,7 @@ command_saveas( Compiler *c, Ast *args )
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
-    path = ( char* ) array__peek( name );
+    path = array__peek( name );
 
     compiler__serialize( c, path );
 
@@ -472,6 +489,7 @@ create_commands()
          && add_command( d, "quit",     command_quit,       0, 0 )
          && add_command( d, "rm",       command_rm,         1, -1 )
          && add_command( d, "saveas",   command_saveas,     1, 1 )
+         && add_command( d, "save",     command_save,       0, 0 )
          && add_command( d, "size",     command_size,       0, 0 ) )
     {
         return d;

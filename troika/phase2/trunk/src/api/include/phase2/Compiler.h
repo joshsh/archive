@@ -32,6 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Environment.h>
 #include <Ast.h>
 #include <util/Dictionary.h>
+#include <util/Name.h>
 
 
 typedef struct Compiler Compiler;
@@ -59,6 +60,12 @@ compiler__working_namespace( Compiler *c );
 /** yyparse is invoked here. */
 extern p2_parser__exit_state
 compiler__parse( Compiler *c );
+
+
+/******************************************************************************/
+
+extern Name *
+compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o );
 
 
 /******************************************************************************/

@@ -41,6 +41,8 @@ struct Compiler
 
     /* Other types. */
     Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;
+
+    char *save_to_path;
 };
 
 

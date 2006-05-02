@@ -11,7 +11,13 @@ AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_LIBTOOL
 
-dnl Doxygen stuff.
+dnl The maintainer needs xsltproc, but the user doesn't...
+dnl AC_PATH_PROG(XSLTPROC, xsltproc, no)
+dnl if test "$XSLTPROC" = "no"; then
+dnl    AC_MSG_ERROR([You need xsltproc to build Phase2 from scratch.])
+dnl fi
+
+dnl The maintainer needs doxygen as well.
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
 DX_CHI_FEATURE(OFF)

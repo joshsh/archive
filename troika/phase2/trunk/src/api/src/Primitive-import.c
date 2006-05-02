@@ -18,7 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Primitive-import.h>
-#include "settings.h"
+#include "Primitive-impl.h"
 
 
 static Type *
@@ -53,47 +53,38 @@ primitive__new(
     int i;
     Primitive *p;
 
-    #if DEBUG__SAFE
-    if ( !name || !cstub || !return_type )
-    {
-        ERROR( "primitive__new: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !name || !cstub || !return_type ) )
+        abort();
 
     if ( !( p = new( Primitive ) ) )
     {
-        #if DEBUG__SAFE
-        ERROR( "primitive__new: allocation failed" );
-        #endif
+        if ( DEBUG__SAFE )
+            ERROR( "primitive__new: allocation failed" );
+
         return 0;
     }
 
     p->return_type = resolve_type( env, return_type );
 
-    #if DEBUG__SAFE
-    if ( !p->return_type )
+    if ( DEBUG__SAFE && !p->return_type )
     {
         ERROR( "primitive__new: unknown type" );
         primitive__delete( p );
         return 0;
     }
-    #endif
 
     p->name = STRDUP( name );
     p->cstub = cstub;
 
     p->arity = arity;
 
-    #if DEBUG__SAFE
-    if ( arity <= 0 )
+    if ( DEBUG__SAFE && arity <= 0 )
     {
         ERROR( "primitive__new: bad arity" );
         free( p->name );
         free( p );
         return 0; 
     }
-    #endif
 
     p->parameters = malloc( arity * sizeof( Parameter ) );
     for ( i = 0; i < arity ; i++ )
@@ -113,24 +104,13 @@ primitive__add_param(
     Primitive *p,
     char *type,
     char *name,
-    int transparent )
+    boolean transparent )
 {
     unsigned int i;
     Parameter param;
 
-    #if DEBUG__SAFE
-    if ( !p )
-    {
-        ERROR( "primitive__add_param: null primitive" );
-        return 0;
-    }
-    else if ( !name || !type )
-    {
-        ERROR( "primitive__add_param: null argument" );
-        primitive__delete( p );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !p || !name || !type ) )
+        abort();
 
     param.type = resolve_type( env, type );
 
@@ -141,14 +121,12 @@ primitive__add_param(
         if ( !p->parameters[i].type )
             break;
 
-    #if DEBUG__SAFE
-    if ( i == p->arity )
+    if ( DEBUG__SAFE && i == p->arity )
     {
         ERROR( "primitive__add_param: too many parameters" );
         primitive__delete( p );
         return 0;
     }
-    #endif
 
     p->parameters[i] = param;
 
@@ -163,20 +141,13 @@ primitive__register(
     int flags,
     void ( *src_f ) ( void ) )
 {
-    #if DEBUG__SAFE
-    if ( !env || !p )
+    if ( DEBUG__SAFE && ( !env || !p ) )
     {
         ERROR( "primitive__register: null argument" );
         if ( p )
             primitive__delete( p );
         return 0;
     }
-    #endif
-
-    #if DEBUG__PRIMS
-    printf( "[%#x] primitive__register(%#x, %#x, %i, %#x) --> %s\n",
-        ( int ) p, ( int ) env, ( int ) p, flags, ( int ) src_f, p->name );
-    #endif
 
     environment__register_primitive( env, p, flags, src_f );
 

@@ -1,6 +1,6 @@
 /**
 
-\file  Name.h
+\file  Primitive-impl.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,33 +25,51 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef NAME_H
-#define NAME_H
+#ifndef PRIMITIVE_IMPL_H
+#define PRIMITIVE_IMPL_H
 
 
-#include <util/Array.h>
+#include <Primitive.h>
+#include "settings.h"
 
 
-typedef Array Name;
+typedef struct Parameter Parameter;
+
+struct Parameter
+{
+    /** A helpful name. */
+    char *name;
+
+    /** Data type. */
+    Type *type;
+
+    /** Whether the parent primitive may have a side-effect on this parameter. */
+    boolean transparent;
+};
 
 
-#define name__peek( name )  ( char* ) array__peek( name )
-#define name__pop( name )  ( char* ) array__pop( name )
-#define name__push( name, s )  array__push( name, s )
+/** A structure containing a C function pointer together with type information
+    and a unique name. */
+struct Primitive
+{
+    /** The primitive's return type. */
+    Type *return_type;
 
-extern Name *
-name__new( void );
+    /** A unique name (preferably the same as the C function stub referenced by
+        the pointer, e.g. "strdup"). */
+    char *name;
 
-extern void
-name__delete( Name *name );
+    /** Memory location of the C function stub. */
+    void *( *cstub )( void ** );
 
-extern void
-name__print( Name *name );
+    /** The number of formal parameters. */
+    unsigned int arity;
 
-extern void
-name__encode( Name *name, char *buffer );
+    /** The formal parameters. */
+    Parameter *parameters;
+};
 
 
-#endif  /* NAME_H */
+#endif  /* PRIMITIVE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

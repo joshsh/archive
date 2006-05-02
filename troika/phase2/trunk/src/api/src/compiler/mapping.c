@@ -151,4 +151,46 @@ compiler__resolve( Compiler *c, Name *name )
 }
 
 
+/******************************************************************************/
+
+
+Name *
+compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
+{
+    unsigned int i;
+    char *s;
+    Name *name;
+    Memory_Manager *m = environment__manager( c->env );
+
+    if ( !nso )
+        nso = environment__root( c->env );
+
+    name = namespace__find( nso, o, m );
+
+    /* Simplify the name.
+       Note: the result is not necessarily as simple as possible.  For instance,
+           an object with two possible fully-qualified names, a:b:c:d and x:y:z,
+           might yield the name x:y:z even though */
+    if ( name )
+    {
+        i = 0;
+        while ( i < array__size( name ) - 1 )
+        {
+            s = array__remove( name, i );
+
+            if ( namespace__resolve( nso, name, m ) != o )
+            {
+                array__insert_before( name, i, s );
+                i++;
+            }
+
+            else
+                free( s );
+        }
+    }
+
+    return name;
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

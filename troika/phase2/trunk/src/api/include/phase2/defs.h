@@ -58,6 +58,9 @@ typedef void            ( *Walker )( void *coll, Dist_f f );
 typedef void            ( *Generic_f )( void );
 
 
+#define NOPROPS 0
+
+
 #endif  /* DEFS_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

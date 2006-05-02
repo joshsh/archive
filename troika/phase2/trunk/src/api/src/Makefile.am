@@ -6,6 +6,7 @@ BUILT_SOURCES = revision.h
 noinst_HEADERS = revision.h		\
 	settings.h			\
 	Object-impl.h			\
+	Primitive-impl.h		\
 	compiler/Compiler-impl.h	\
 	environment/Environment-impl.h
 

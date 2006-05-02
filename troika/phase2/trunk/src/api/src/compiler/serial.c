@@ -145,20 +145,10 @@ bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
     Element *el, *child;
     int i, size;
 
-    #if DEBUG__SAFE
-    if ( !a || !state )
-    {
-        ERROR( "bag__xml_encode: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !a || !state ) )
+        abort();
 
     el = element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
-
-    #if DEBUG__SERIAL
-    printf( "[%#x] bag__xml_encode(%#x, %#x)\n",
-        ( int ) el, ( int ) a, ( int ) state );
-    #endif
 
     size = array__size( a );
     for ( i = 0; i < size; i++ )
@@ -239,20 +229,10 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
         return 0;
     }
 
-    #if DEBUG__SAFE
-    if ( !ns || !state )
-    {
-        ERROR( "namespace__xml_encode: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !ns || !state ) )
+        abort();
 
     el = element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
-
-    #if DEBUG__SERIAL
-    printf( "[%#x] namespace__xml_encode(%#x, %#x)\n",
-        ( int ) el, ( int ) ns, ( int ) state );
-    #endif
 
     keys = namespace__keys( ns );
     array__walk( keys, ( Dist_f ) helper );
@@ -337,24 +317,17 @@ term__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Term *t;
     Element *child;
 
-    #if DEBUG__SAFE
-    if ( !el || !state )
-    {
-        ERROR( "term__xml_decode: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !el || !state ) )
+        abort();
 
     /* Singleton term. */
     if ( strcmp( ( char* ) element__name( el ), TERM__XML__NAME ) )
     {
-        #if DEBUG__SAFE
-        if ( strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
+        if ( DEBUG__SAFE && strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
         {
             ERROR( "term__xml_decode: bad element name" );
             return 0;
         }
-        #endif
 
         t = term__new( object__xml_decode( el, state ), 0 );
     }
@@ -390,18 +363,14 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Object *o;
     char *text;
 
-    #if DEBUG__SAFE
-    if ( !el || !state )
-    {
-        ERROR( "namespace__xml_decode: null argument" );
-        return 0;
-    }
-    else if ( strcmp( ( char* ) element__name( el ), NAMESPACE__XML__NAME ) )
+    if ( DEBUG__SAFE && ( !el || !state ) )
+        abort();
+
+    if ( SERIAL__CHECKS && strcmp( ( char* ) element__name( el ), NAMESPACE__XML__NAME ) )
     {
         ERROR( "namespace__xml_decode: bad element name" );
         return 0;
     }
-    #endif
 
     ns = namespace__new();
 
@@ -467,6 +436,8 @@ set__xml_decode( Element *el, Xml_Decode_Ctx *state )
 static Element *
 object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 {
+    char *name;
+
     /* id > 0  ==>  the object is multireferenced. */
     unsigned int id = ( unsigned int ) hash_map__lookup( state->ids, o );
 
@@ -491,7 +462,9 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         else if ( o->type == state->compiler->prim_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
-            sprintf( state->buffer, ( ( Primitive* ) o->value )->name );
+            name = primitive__name( o->value );
+            sprintf( state->buffer, name );
+            free( name );
             element__add_text( el, ( uc* ) state->buffer );
         }
 
@@ -521,7 +494,9 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         /* Encode contents as child element. */
         if ( o->type == state->compiler->prim_t )
         {
-            sprintf( state->buffer, ( ( Primitive* ) o->value )->name );
+            name = primitive__name( o->value );
+            sprintf( state->buffer, name );
+            free( name );
             element__add_text( el, ( uc* ) state->buffer );
         }
 
@@ -899,6 +874,10 @@ compiler__serialize( Compiler *c, char *path )
     document__delete( doc );
 
     xmldom__end();
+
+    if ( c->save_to_path )
+        free( c->save_to_path );
+    c->save_to_path = STRDUP( path );
 }
 
 
@@ -911,9 +890,8 @@ compiler__deserialize( Compiler *c, char *path )
     Document *doc;
     Environment *env;
 
-    #if DEBUG__SERIAL
-    printf( "[] compiler__deserialize(%#x, %s)\n", ( int ) c, path );
-    #endif
+    if ( DEBUG__SAFE && ( !c || !path ) )
+        abort();
 
     xmldom__init();
 
@@ -1002,6 +980,10 @@ finish:
     }
 
     xmldom__end();
+
+    if ( c->save_to_path )
+        free( c->save_to_path );
+    c->save_to_path = STRDUP( path );
 }
 
 

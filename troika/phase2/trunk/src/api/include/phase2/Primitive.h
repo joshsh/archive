@@ -35,6 +35,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
+typedef struct Primitive Primitive;
+
+#define REF_OPQ 0
+#define REF_TRP 1
+
 enum Primitive__Flags
 {
     PRIM__CONSTRUCTOR   = 0x1,
@@ -43,52 +48,30 @@ enum Primitive__Flags
     PRIM__ENCODER       = 0x8
 };
 
-
-typedef struct Parameter Parameter;
-
-struct Parameter
-{
-    /** A helpful name. */
-    char *name;
-
-    /** Data type. */
-    Type *type;
-
-    /** Whether the parent primitive may have a side-effect on this parameter. */
-    int transparent;
-};
-
-
-typedef struct Primitive Primitive;
-
-/** A structure containing a C function pointer together with type information
-    and a unique name. */
-struct Primitive
-{
-    /** The primitive's return type. */
-    Type *return_type;
-
-    /** A unique name (preferably the same as the C function stub referenced by
-        the pointer, e.g. "strdup"). */
-    char *name;
-
-    /** Memory location of the C function stub. */
-    void *( *cstub )( void ** );
-
-    /** The number of formal parameters. */
-    unsigned int arity;
-
-    /** The formal parameters. */
-    Parameter *parameters;
-};
-
-
 /******************************************************************************/
 
 
 /** Destructor. */
 extern void
 primitive__delete( Primitive *prim );
+
+extern char *
+primitive__name( Primitive *p );
+
+extern unsigned int
+primitive__arity( Primitive *p );
+
+extern Type *
+primitive__return_type( Primitive *p );
+
+extern char *
+primitive__parameter_name( Primitive *p, unsigned int i );
+
+extern Type *
+primitive__parameter_type( Primitive *p, unsigned int i );
+
+extern boolean
+primitive__parameter_reftrans( Primitive *p, unsigned int i );
 
 extern void
 primitive__encode( Primitive *prim, char *buffer );

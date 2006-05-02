@@ -18,8 +18,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <sk/sk.h>
-#include <Primitive.h>
 #include "../Object-impl.h"
+#include "../Primitive-impl.h"
 
 
 /* Kxy --> x
@@ -163,21 +163,24 @@ prim_reduce( Term *term,
     Primitive *prim = ( ( Object* ) *cur )->value;
     Type *param_type;
 
-    #if PRIM__ALLOW_NOARG_FUNCTIONS
-    args = ( prim->arity )
-        ? malloc( prim->arity * sizeof( void* ) )
-        : 0;
-    #else
-    #if DEBUG__SAFE
-    if ( !prim->arity )
+    if ( PRIM__ALLOW_NOARG_FUNCTIONS )
     {
-        ERROR( "prim_reduce: no parameters" );
-        term__delete( term );
-        return 0;
+        args = ( prim->arity )
+            ? malloc( prim->arity * sizeof( void* ) )
+            : 0;
     }
-    #endif
-    args = malloc( prim->arity * sizeof( void* ) );
-    #endif
+
+    else
+    {
+        if ( DEBUG__SAFE && !prim->arity )
+        {
+            ERROR( "prim_reduce: no parameters" );
+            term__delete( term );
+            return 0;
+        }
+
+        args = malloc( prim->arity * sizeof( void* ) );
+    }
 
     cur++;
 
@@ -212,8 +215,7 @@ prim_reduce( Term *term,
             arg = *cur;
             cur++;
 
-            #if DEBUG__SAFE
-            if ( !arg )
+            if ( DEBUG__SAFE && !arg )
             {
                 ERROR( "prim_reduce: null argument" );
 
@@ -223,25 +225,23 @@ prim_reduce( Term *term,
 
                 return 0;
             }
-            #endif
         }
 
         /* Note: it's more efficient to do this here than in Primitive.c */
-        #if PRIM__CHECKS__PARAM_TYPE
-
-        param_type = prim->parameters[i].type;
-        if ( param_type != arg->type && param_type != any_type )
+        if ( PRIM__CHECKS__PARAM_TYPE )
         {
-            ERROR( "prim_reduce: argument type mismatch" );
+            param_type = prim->parameters[i].type;
+            if ( param_type != arg->type && param_type != any_type )
+            {
+                ERROR( "prim_reduce: argument type mismatch" );
 
-            if ( args )
-                free( args );
-            term__delete( term );
+                if ( args )
+                    free( args );
+                term__delete( term );
 
-            return 0;
+                return 0;
+            }
         }
-
-        #endif  /* PRIM__CHECKS__PARAM_TYPE */
 
         /* ~ inefficient */
         if ( prim->parameters[i].type != any_type )
@@ -256,14 +256,12 @@ prim_reduce( Term *term,
     if ( args )
         free( args );
 
-    #if !PRIM__ALLOW_VOID_FUNCTIONS
-    if ( !result )
+    if ( !PRIM__ALLOW_VOID_FUNCTIONS && !result )
     {
         ERROR( "prim_reduce: null return value from primitive" );
         term__delete( term );
         return 0;
     }
-    #endif
 
     if ( prim->return_type != any_type )
     {

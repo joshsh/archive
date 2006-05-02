@@ -244,6 +244,8 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         if ( !oname )
         {
             oname = namespace__find( environment__root( c->env ), o, environment__manager( c->env ) );
+
+            /* ~ */
             if ( oname )
                 array__push( oname, STRDUP( "root" ) );
         }

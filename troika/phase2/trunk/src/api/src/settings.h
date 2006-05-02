@@ -154,6 +154,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Serialization **************************************************************/
 
+#define SERIAL__CHECKS                          1
 
 #define ENCODING__BUFFER_SIZE                   0x10000
 

@@ -43,14 +43,8 @@ compiler__new( Environment *env )
         goto finish;
     }
 
-    #if DEBUG__SAFE
-    if ( !env )
-    {
-        ERROR( "compiler__new: null environment" );
-        c = 0;
-        goto finish;
-    }
-    #endif
+    if ( DEBUG__SAFE && !env )
+        abort();
 
     if ( !( c = new( Compiler ) ) )
     {
@@ -98,9 +92,7 @@ compiler__new( Environment *env )
 
 finish:
 
-    #if DEBUG__COMPILER
-    printf( "[%#x] compiler__new(%#x)\n", ( int ) c, ( int ) env );
-    #endif
+    c->save_to_path = 0;
 
     return c;
 }
@@ -109,22 +101,20 @@ finish:
 void
 compiler__delete( Compiler *c )
 {
-    #if DEBUG__SAFE
-    if ( !c )
+    if ( DEBUG__SAFE )
     {
-        ERROR( "compiler__delete: null argument" );
-        return;
-    }
-    else if ( c->locked )
-    {
-        ERROR( "compiler__delete: can't delete while parsing" );
-        return;
-    }
-    #endif
+        if ( !c )
+            abort();
 
-    #if DEBUG__COMPILER
-    printf( "[] compiler__delete(%#x)\n", ( int ) c );
-    #endif
+        else if ( c->locked )
+        {
+            ERROR( "compiler__delete: can't delete while parsing" );
+            abort();
+        }
+    }
+
+    if ( c->save_to_path )
+        free( c->save_to_path );
 
     delete_commands( c->commands );
     free( c );

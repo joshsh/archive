@@ -52,7 +52,7 @@ primitive__add_param(
     Primitive *p,
     char *type,
     char *name,
-    int transparent );
+    boolean transparent );
 
 
 extern Primitive *
