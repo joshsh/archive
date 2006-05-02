@@ -71,6 +71,8 @@ environment__new()
 {
     Environment *env;
 
+    Type *ns_t = 0, *prim_t = 0, *set_t = 0;
+
     if ( !( env = new( Environment ) ) )
         return 0;
 
@@ -78,7 +80,6 @@ environment__new()
     printf( "[%#x] environment__new()\n", ( int ) env );
     #endif
 
-    Type *ns_t = 0, *prim_t = 0, *set_t = 0;
     env->type_t = 0;
     env->combinators = env->data = env->primitives = env->root = env->types = 0;
     env->manager = 0;

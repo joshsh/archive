@@ -37,24 +37,27 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 int main( int argc, char **argv )
 {
-    unsigned char *s;
+    Document *doc;
+    Element *el, *el2;
+    Namespc *ns;
+    Attr *attr;
 
-    xmldom__init( );
+    xmldom__init();
 
-    Document *doc = document__new( );
+    doc = document__new();
 
-    Element *el = element__new( doc, UC "Root", 0 );
+    el = element__new( doc, UC "Root", 0 );
     element__add_text( el, UC "Some text..." );
-    Attr *attr = attr__new( el, UC "foo", UC "42", 0 );
+    attr = attr__new( el, UC "foo", UC "42", 0 );
     /*element__set_attr( el, "foo", "bar" );*/
-    Namespc *ns = namespc__new( el, UC "http://tempuri.org/", UC "tempuri" ) ;
+    ns = namespc__new( el, UC "http://tempuri.org/", UC "tempuri" ) ;
     attr = attr__new( el, UC "bar", UC "137", ns );
     element__set_namespace( el, ns );
     document__set_root( doc, el );
 
     ns = element__namespace( el ) ;
 
-    Element *el2 = element__new( doc, UC "ChildElement", ns );
+    el2 = element__new( doc, UC "ChildElement", ns );
     element__add_text( el2, UC "Colorless green ideas sleep furiously." );
     attr = attr__new(el2, UC "programs", UC "data", 0 );
     element__add_child( el, el2 );

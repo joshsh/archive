@@ -20,7 +20,7 @@ bin_PROGRAMS = phase2
 ##   libphase2.so.0.0.0
 lib_LTLIBRARIES = libphase2.la
 
-LIBS := $(LIBS) `xml2-config --libs`
+LIBS := $(LIBS) -lxml2 ##`xml2-config --libs`
 
 
 environment_src = \

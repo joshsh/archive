@@ -442,12 +442,14 @@ memory_manager__trace
     #if DEBUG__SAFE
     if ( marked > 0 )
     {
-        WARNING( "memory_manager__trace: %i marked objects are still marked as visited", marked );
+        WARNING( "memory_manager__trace: unreachable object(s)" );
+        /*WARNING( "memory_manager__trace: %i marked objects are still marked as visited", marked );*/
     }
 
     else if ( marked < 0 )
     {
-        WARNING( "memory_manager__trace: %i more objects unmarked than actually visited", -marked );
+        WARNING( "memory_manager__trace: more objects unmarked than actually visited" );
+        /*WARNING( "memory_manager__trace: %i more objects unmarked than actually visited", -marked );*/
     }
     #endif
 }

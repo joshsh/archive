@@ -228,6 +228,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* Useful, although not ANSI C. */
+/*
 #define ERROR( ... )                                                        \
 {                                                                           \
     fprintf( stderr, "Error: " );                                           \
@@ -243,8 +244,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     fprintf( stderr, ".\n" );                                               \
     fflush( stderr );                                                       \
 }
+*/
 
-/*
+
 #define ERROR( msg )                                                        \
 {                                                                           \
     fprintf( stderr, "Error: %s.\n", (msg) );                               \
@@ -256,7 +258,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     fprintf( stderr, "Warning: %s.\n", (msg) );                             \
     fflush( stderr );                                                       \
 }
-*/
 
 
 #endif  /* SETTINGS_H */

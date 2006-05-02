@@ -186,10 +186,11 @@ command_gc( Compiler *c, Ast *args )
 {
     Memory_Manager *m = environment__manager( c->env );
     int size_before, size_after;
-    args = 0;
+    double elapsed_time;
 
     clock_t t = clock();
-    double elapsed_time;
+
+    args = 0;
 
     #if DEBUG__COMPILER
     printf( "[] command_gc(%#x)\n", ( int ) c );

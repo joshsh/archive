@@ -943,7 +943,8 @@ compiler__deserialize( Compiler *c, char *path )
 
         else
         {
-            ERROR( "compiler__deserialize: unknown element type: \"%s\"", el_name );
+            ERROR( "compiler__deserialize: unknown element type" );
+            /*ERROR( "compiler__deserialize: unknown element type: \"%s\"", el_name );*/
             goto finish;
         }
 
