@@ -29,6 +29,8 @@ public:
 
     P2Widget *objectWidget( const Object *o );
     QColor objectColor( const Object *o );
+    QString objectName( const Object *o );
+    P2Widget *objectNameWidget( const Object *o );
 
     P2Environment *getEnv();
 

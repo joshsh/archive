@@ -55,6 +55,12 @@ delete_windows()
 /** Main function for the Phase2 GUI. */
 int main( int argc, char **argv )
 {
+//    QApplication::setStyle( new QWindowsStyle );
+//    QApplication::setStyle( new QWindowsXPStyle );
+//    QApplication::setStyle( new QMotifStyle );
+//    QApplication::setStyle( new QMacStyle );
+    QApplication::setStyle( new QPlastiqueStyle );
+
     P2Environment env;
     //compiler__deserialize( env.getCompiler(), "guitest.p2" );
     compiler__deserialize( env.getCompiler(), "../api/examples/test.p2" );

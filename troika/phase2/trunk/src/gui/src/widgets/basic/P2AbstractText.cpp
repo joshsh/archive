@@ -28,6 +28,7 @@ void P2AbstractText::paintEvent( QPaintEvent *event )
     // Note: assumes the same font as the one used to find the bounding
     // rectangle at construction time.
     painter.drawText( 0, cachedSizeHint.height() - 4, text );
+//painter.drawRect( QRect( QPoint( 0, 0 ), cachedSizeHint - QSize( 1, 1 ) ) );
 }
 
 

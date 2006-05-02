@@ -16,6 +16,11 @@
 #include <widgets/bindings/P2TypeWidget.h>
 #include <widgets/bindings/P2XPMWidget.h>
 
+extern "C"
+{
+#include <util/Name.h>
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -201,6 +206,30 @@ QColor P2Binder::
 objectColor( const Object *o )
 {
     return colors[ getType( o ) ];
+}
+
+
+QString P2Binder::
+objectName( const Object *o )
+{
+    Name *name = compiler__name_of( env->getCompiler(), 0, o );
+
+    if ( !name )
+        return QString( "" );
+
+    else
+    {
+        char buffer[ENCODING__BUFFER_SIZE];
+        name__encode( name, buffer );
+        return QString( buffer );
+    }
+}
+
+
+P2Widget *P2Binder::
+objectNameWidget( const Object *o )
+{
+    return new P2Text( objectName( o ), objectColor( o ) );
 }
 
 

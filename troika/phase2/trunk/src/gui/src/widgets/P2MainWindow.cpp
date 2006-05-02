@@ -121,7 +121,8 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 
     if ( TOOLBAR )
     {
-        toolbar = this->addToolBar( tr( "Tool Bar" ) );
+        toolbar = new QToolBar( tr( "Tool Bar" ) );
+        this->addToolBar( Qt::BottomToolBarArea, toolbar );
         toolbar->setMovable( false );
         //toolbar->setTearOffEnabled( false );
         toolbar->setFocusPolicy( Qt::NoFocus );

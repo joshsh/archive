@@ -29,7 +29,12 @@ getText( const Object *o )
 void
 P2TermWidgetNew::appendObjectWidget( const Object *o, P2Binder *eb )
 {
-    P2Widget *w = eb->objectWidget( o );
+    QString name = eb->objectName( o );
+
+    P2Widget *w = ( name.length() )
+        ? new P2Text( name, eb->objectColor( o ) )
+        : eb->objectWidget( o );
+
     add( w );
 }
 
