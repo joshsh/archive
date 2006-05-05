@@ -194,12 +194,12 @@ add_set_prims( Environment *env )
 {
     Primitive *p;
 
-    return ( ( p = primitive__new( env, "Set", "set__add", set_add_stub, 2 ) )
+    return ( ( p = primitive__new( env, ANY__NAME, "set__add", set_add_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_OPQ )
       && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
-      && ( p = primitive__new( env, "Set", "set__remove", set_remove_stub, 2 ) )
+      && ( p = primitive__new( env, ANY__NAME, "set__remove", set_remove_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_OPQ )
       && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 ) );

@@ -21,3 +21,38 @@
         meta-functions
     RDF/XML and N3 import / export
     null handling
+
+
+
+
+./textedit
+	libQtGui.so.4
+
+./p2gui, ./p2gui-lite
+	libQtGui_debug.so.4
+
+gdb...ipk
+	This package seems to depend on other packages.  Please install them, too.
+	libncurses.so.5
+
+
+compiler__delete
+	[...]
+	delete__commands
+	[...]
+
+environment__delete
+	memory_manager__set_root
+	memory_manager__walk
+		object__trace
+			namespace__walk
+				dictionary__walk
+					hash_table__walk
+	sweep
+		collection__exclude_if
+			bunch__walk
+				array__size
+				array__get
+				array__get(a=0x11480, i=1)
+					--> Error:array__get: array index out of bounds.
+				--> SIGSEGV
