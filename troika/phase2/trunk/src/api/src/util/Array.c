@@ -162,7 +162,7 @@ array__expansion( Array *a )
 static Array *
 sizeup( Array *a )
 {
-    void **BUFFER_NEW;
+    void **buffer_new;
     unsigned int i, buffer_size_new;
 
     if ( a->size < a->buffer_size )
@@ -175,18 +175,18 @@ sizeup( Array *a )
     if ( buffer_size_new <= a->buffer_size )
         buffer_size_new++;
 
-    if ( !( BUFFER_NEW = BUFFER_NEW( buffer_size_new ) ) )
+    if ( !( buffer_new = BUFFER_NEW( buffer_size_new ) ) )
     {
         ERROR( "allocation failure" );
         return 0;
     }
 
     for ( i = 0; i < a->size; i++ )
-        BUFFER_NEW[i] = ELMT( a, i );
+        buffer_new[i] = ELMT( a, i );
 
     free( a->buffer );
 
-    a->buffer = BUFFER_NEW;
+    a->buffer = buffer_new;
     a->head = 0;
     a->buffer_size = buffer_size_new;
 
@@ -493,16 +493,16 @@ normalize( Array *a )
     unsigned int i, size = a->size, buffer_size = a->buffer_size, head = a->head;
 
     void **buffer = a->buffer;
-    void **BUFFER_NEW = BUFFER_NEW( size );
+    void **buffer_new = BUFFER_NEW( size );
 
-    if ( !BUFFER_NEW )
+    if ( !buffer_new )
         return 0;
 
     for ( i = 0; i < size; i++ )
-        BUFFER_NEW[i] = buffer[ ( i + head ) % buffer_size ];
+        buffer_new[i] = buffer[ ( i + head ) % buffer_size ];
 
     free( a->buffer );
-    a->buffer = BUFFER_NEW;
+    a->buffer = buffer_new;
     return a;
 }
 
