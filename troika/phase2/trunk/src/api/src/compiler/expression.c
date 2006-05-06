@@ -167,11 +167,6 @@ resolve( Ast *ast, Compiler *c )
 
     Object *result = object_for_ast( ast );
 
-    #if DEBUG__COMPILER
-    printf( "[%#x] resolve(%#x, %#x)\n",
-        ( int ) result, ( int ) ast, ( int ) c );
-    #endif
-
     return result;
 }
 
@@ -250,9 +245,10 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
                 array__push( oname, STRDUP( "root" ) );
         }
 
-        #if COMPILER__SHOW_ADDRESS
-        printf( "%#x ", ( int ) o ); FFLUSH;
-        #endif
+        if ( COMPILER__SHOW_ADDRESS )
+        {
+            printf( "%#x ", ( int ) o ); FFLUSH;
+        }
 
         printf( "<%s> ", o->type->name );
 
@@ -288,11 +284,6 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     c->float_t->encode = double__encode;
     c->string_t->encode = string__encode;
     c->term_t->encode = term__encode;
-
-    #if DEBUG__COMPILER
-    printf( "[%i] compiler__evaluate_expression(%#x, %#x, %#x)\n",
-        ret, ( int ) c, ( int ) name, ( int ) expr );
-    #endif
 
     return ret;
 }

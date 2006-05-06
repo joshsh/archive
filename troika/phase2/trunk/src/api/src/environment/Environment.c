@@ -76,10 +76,6 @@ environment__new()
     if ( !( env = new( Environment ) ) )
         return 0;
 
-    #if DEBUG__ENV
-    printf( "[%#x] environment__new()\n", ( int ) env );
-    #endif
-
     env->type_t = 0;
     env->combinators = env->data = env->primitives = env->root = env->types = 0;
     env->manager = 0;
@@ -179,17 +175,8 @@ environment__delete( Environment *env )
 {
     Type ns_t;
 
-    #if DEBUG__SAFE
-    if ( !env )
-    {
-        ERROR( "environment__delete: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__ENV
-    printf( "[] environment__delete(%#x)\n", ( int ) env );
-    #endif
+    if ( DEBUG__SAFE && !env )
+        abort();
 
     /* Preserve only data type objects. */
     memory_manager__set_root( env->manager, env->types );
@@ -197,7 +184,10 @@ environment__delete( Environment *env )
 
     /* Preserve only the 'type' type. */
     ns_t = *( env->types->type );
+
+/* ~ */
     ns_t.name = STRDUP( ns_t.name );  /* Just so that the debugging output doesn't look weird. */
+
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
         namespace__lookup_simple( env->types->value, TYPE__NAME ) );
@@ -213,13 +203,8 @@ environment__delete( Environment *env )
 Memory_Manager *
 environment__manager( const Environment *env )
 {
-    #if DEBUG__SAFE
-    if ( !env )
-    {
-        ERROR( "environment__manager: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !env )
+        abort();
 
     return env->manager;
 }

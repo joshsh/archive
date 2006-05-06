@@ -397,7 +397,8 @@ ast__print( Ast *ast )
 
         case VOID_T:
 
-            printf( "%#x", ( int ) ast->value );
+            printf( "[void]" );
+            /*printf( "%#x", ( int ) ast->value );*/
             break;
 
         default:

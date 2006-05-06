@@ -21,22 +21,49 @@ make doxygen-doc
 ################################################################################
 # Cross-compile Phase2 for ARM.
 
-# First, cross-compile libxml2 and place the ARM libaries into:
-#     /opt/Embedix/tools/arm-linux/lib
+ARM_PREFIX=/opt/Embedix/tools/arm-linux
 
-# I haven't tested whether this is absolutely necessary.  If you leave it out,
-# the binaries won't execute on x86... but I don't know whether they do execute
-# on ARM.
-export CC=/opt/Embedix/tools/arm-linux/bin/cc
+$CROSSTOOL=/home/joshs/bin/crosstool-0.42
+ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
+
+
+# First, cross-compile libxml2 and place the ARM libraries into $ARM_PREFIX/lib
+
+# Necessary when using crosstools binaries.
+PATH=$ARM_PREFIX/bin:$PATH
 
 # Note: rationale behind also specifying --build:
 #     http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_node/autoconf_164.html
-./configure --host=arm-linux --build=i686-pc-linux-gnu --prefix=/opt/Embedix/tools/arm-linux/
+./configure --host=arm-linux --build=i686-pc-linux-gnu --prefix=$ARM_PREFIX
 
 make
 
 # Look in here for the ARM executables and libraries:
 #     src/.libs/
+
+
+################################################################################
+# Put stuff into arm-bin
+
+rm -rf arm-bin/api
+mkdir arm-bin/api
+mkdir arm-bin/api/src
+mkdir arm-bin/api/lib
+mkdir arm-bin/api/examples
+
+cp src/.libs/phase2 arm-bin/api/src
+cp src/.libs/libphase2*so* arm-bin/api/lib
+cp examples/* arm-bin/api/examples
+
+./cleanup
+rmbackup
+cp -r src/* arm-bin/api/src
+
+# Make utils available to gdb.
+mv arm-bin/api/src/util/* arm-bin/api/src
+mv arm-bin/api/src/xml/libxml2/* arm-bin/api/src
+mv arm-bin/api/src/parser/* arm-bin/api/src
+mv arm-bin/api/src/import/src/* arm-bin/api/src
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -52,6 +79,6 @@ $(LIBOBJS) and $(ALLOCA)
 
      ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
 
-./configure --host=arm-linux --with-linux=/opt/Embedix/tools/arm-linux/include
+./configure --host=arm-linux --with-linux=$ARM_PREFIX/include
 
 The linker also needs to be arm-linux-ld not ld.
