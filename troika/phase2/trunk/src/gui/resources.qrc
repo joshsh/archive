@@ -3,7 +3,7 @@
   <qresource>
 
     <file alias="p2gui.png">images/p2gui.png</file>
-    <file alias="troika.png">../../ipk/troika.png</file>
+    <file alias="troika.png">images/p2-clover.png</file>
     <file alias="check.png">images/check.png</file>
     <file alias="empty.png">images/empty.png</file>
     <file alias="rdf.png">images/rdf.png</file>

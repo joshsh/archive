@@ -1,3 +1,10 @@
+
+IPK build
+
+overall build
+    ./bin
+
+
 Things to do -- URGENT! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 [!] Abstract the graph traversal algorithm from the memory manager --> re-use it for the serializer
