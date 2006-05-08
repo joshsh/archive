@@ -245,33 +245,30 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
                 array__push( oname, STRDUP( "root" ) );
         }
 
-        if ( COMPILER__SHOW_ADDRESS )
+        /* Command-line output. */
+        if ( !c->quiet )
         {
-            printf( "%#x ", ( int ) o ); FFLUSH;
+            if ( COMPILER__SHOW_ADDRESS )
+            {
+                printf( "%#x ", ( int ) o ); FFLUSH;
+            }
+
+            printf( "<%s> ", o->type->name );
+
+            if ( oname )
+            {
+                name__print( oname );
+                printf( " : " );
+            }
+
+            else
+                printf( ": " );
+
+            o->type->encode( o->value, print_buffer );
+            printf( print_buffer );
+
+            printf( "\n" );
         }
-
-        printf( "<%s> ", o->type->name );
-
-        if ( oname )
-        {
-            name__print( oname );
-            printf( " : " );
-        }
-/*
-        if ( a )
-        {
-            ast__print( a );
-            printf( " : " );
-        }
-*/
-
-        else
-            printf( ": " );
-
-        o->type->encode( o->value, print_buffer );
-        printf( print_buffer );
-
-        printf( "\n" );
     }
 
     if ( a )

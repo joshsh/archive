@@ -34,12 +34,12 @@ compiler__handle_parse_error( Compiler *c, char *msg )
 
     if ( msg )
     {
-        printf( "Error: %s\n", msg );
+        fprintf( stderr, "Error: %s\n", msg );
         free( msg );
     }
 
     else
-        printf( "Parse error.\n" );
+        fprintf( stderr, "Parse error.\n" );
 
     return ret;
 }

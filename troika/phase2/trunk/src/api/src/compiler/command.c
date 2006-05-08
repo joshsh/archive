@@ -20,6 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <time.h>
 
 #include "Compiler-impl.h"
+#include "license.h"
 
 
 static int
@@ -62,7 +63,7 @@ get_arg( Ast *args, unsigned int i )
 
     if ( i >= term__length( term ) )
     {
-        printf( "Error: missing argument\n" );
+        fprintf( stderr, "Error: missing argument\n" );
         a = 0;
     }
 
@@ -70,14 +71,8 @@ get_arg( Ast *args, unsigned int i )
     {
         subterm = term__subterm_at( term, i );
 
-        #if DEBUG__SAFE
-        if ( ( unsigned int ) *( subterm->head ) != 2 )
-        {
-            ERROR( "get_arg: argument subterm is not a singleton" );
-            a = 0;
-        }
-        else
-        #endif
+        if ( DEBUG__SAFE && ( unsigned int ) *( subterm->head ) != 2 )
+            abort();
 
         a = *( subterm->head + 1 );
 
@@ -86,15 +81,11 @@ get_arg( Ast *args, unsigned int i )
 
     if ( a )
     {
-        #if DEBUG__SAFE
-        if ( a->type != NAME_T )
-        {
-            ERROR( "get_arg: type mismatch" );
-            return 0;
-        }
-        #endif
+        if ( DEBUG__SAFE && a->type != NAME_T )
+            abort();
 
-        return a->value;
+        else
+            return a->value;
     }
 
     else
@@ -113,27 +104,33 @@ command_all( Compiler *c, Ast *args )
     Name *name;
 
     if ( !n )
-        namespace__show_children( c->cur_ns_obj );
+    {
+        if ( !c->quiet )
+            namespace__show_children( c->cur_ns_obj );
+    }
 
     else
+    {
         for ( i = 0; i < n; i++ )
         {
-            if ( i )
+            if ( i && !c->quiet )
                 printf( "\n" );
 
             name = get_arg( args, i );
             o = compiler__resolve( c, name );
 
-            if ( o->type != c->cur_ns_obj->type )
+            if ( ( o ) && o->type != c->cur_ns_obj->type )
             {
+                /* FIXME: should print to stderr */
                 printf( "Error: \"" );
                 name__print( name );
                 printf( "\" is not a namespace\n" );
             }
 
-            else
+            else if ( !c->quiet )
                 namespace__show_children( o );
         }
+    }
 
     return 0;
 }
@@ -165,11 +162,13 @@ command_cp( Compiler *c, Ast *args )
                 compiler__define( c, dest, o );
                 array__enqueue( src, array__dequeue( dest ) );
 
-                printf( "Assignment from 1 object.\n" );
+                if ( !c->quiet )
+                    printf( "Assignment from 1 object.\n" );
             }
 
             else
             {
+                /* FIXME: should print to stderr */
                 printf( "Error: \"" );
                 name__print( dest );
                 printf( "\" is not a namespace\n" );
@@ -202,11 +201,14 @@ command_gc( Compiler *c, Ast *args )
 
     elapsed_time = difftime( clock(), t );
 
-    printf( "Collected %i of %i objects (%.3g%%) in %fms.\n",
-        size_before - size_after,
-        size_before,
-        ( ( size_before - size_after ) * 100 ) / ( double ) size_before,
-        elapsed_time * 1000 );
+    if ( !c->quiet )
+    {
+        printf( "Collected %i of %i objects (%.3g%%) in %fms.\n",
+            size_before - size_after,
+            size_before,
+            ( ( size_before - size_after ) * 100 ) / ( double ) size_before,
+            elapsed_time * 1000 );
+    }
 
     return 0;
 }
@@ -215,25 +217,10 @@ command_gc( Compiler *c, Ast *args )
 static int
 command_license( Compiler *c, Ast *args )
 {
-    FILE *license;
-    int ch;
-    c = 0;
     args = 0;
 
-    #if DEBUG__COMPILER
-    printf( "[] command_license()\n" );
-    #endif
-
-    if ( !( license = fopen( "../../LICENSE.txt", "r" ) ) )
-    {
-        ERROR( "show_license: could not open file" );
-        return 0;
-    }
-
-    while ( ( ch = fgetc( license ) ) != EOF )
-        fputc( ch, stdout );
-
-    fclose( license );
+    if ( !c->quiet )
+        printf( "%s\n", gpl_license );
 
     return 0;
 }
@@ -267,12 +254,13 @@ command_mv( Compiler *c, Ast *args )
                 compiler__define( c, dest, o );
                 array__enqueue( src, array__dequeue( dest ) );
 */
-                if ( compiler__undefine( c, src ) )
+                if ( compiler__undefine( c, src ) && !c->quiet )
                     printf( "Reassignment from 1 object.\n" );
             }
 
             else
             {
+                /* FIXME: should print to stderr */
                 printf( "Error: \"" );
                 name__print( dest );
                 printf( "\" is not a namespace\n" );
@@ -319,14 +307,18 @@ command_ns( Compiler *c, Ast *args )
     if ( ( o = compiler__resolve( c, name ) ) )
     {
         if ( o->type != c->cur_ns_obj->type )
-            printf( "Error: not a namespace\n" );
+            fprintf( stderr, "Error: not a namespace\n" );
 
         else
         {
             c->cur_ns_obj = o;
-            printf( "Moved to namespace \"" );
-            name__print( name );
-            printf( "\".\n" );
+
+            if ( !c->quiet )
+            {
+                printf( "Moved to namespace \"" );
+                name__print( name );
+                printf( "\".\n" );
+            }
         }
     }
 
@@ -337,10 +329,10 @@ command_ns( Compiler *c, Ast *args )
 static int
 command_quit( Compiler *c, Ast *args )
 {
-    c = 0;
     args = 0;
 
-    printf( "Bye.\n" );
+    if ( !c->quiet )
+        printf( "Bye.\n" );
 
     return 1;
 }
@@ -358,7 +350,7 @@ command_rm( Compiler *c, Ast *args )
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
-    if ( compiler__undefine( c, name ) )
+    if ( compiler__undefine( c, name ) && !c->quiet )
         printf( "Unassigned 1 object.\n" );
 
     return 0;
@@ -373,14 +365,15 @@ command_save( Compiler *c, Ast *args )
 
     if ( !path )
     {
-        printf( "Error: use _saveas to specify an output path\n" );
+        fprintf( stderr, "Error: use _saveas to specify an output path\n" );
         return 0;
     }
 
     else
     {
         compiler__serialize( c, path );
-        printf( "Saved root:data as \"%s\".\n", path );
+        if ( !c->quiet )
+            printf( "Saved root:data as \"%s\".\n", path );
         return 0;
     }
 }
@@ -403,7 +396,8 @@ command_saveas( Compiler *c, Ast *args )
 
     compiler__serialize( c, path );
 
-    printf( "Saved root:data as \"%s\".\n", path );
+    if ( !c->quiet )
+        printf( "Saved root:data as \"%s\".\n", path );
 
     return 0;
 }
@@ -414,8 +408,9 @@ command_size( Compiler *c, Ast *args )
 {
     args = 0;
 
-    printf( "There are %i objects in this environment.\n",
-        memory_manager__size( environment__manager( c->env ) ) );
+    if ( !c->quiet )
+        printf( "There are %i objects in this environment.\n",
+            memory_manager__size( environment__manager( c->env ) ) );
 
     return 0;
 }
@@ -515,11 +510,11 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     Command *com = dictionary__lookup( c->commands, name );
 
     if ( !com )
-        printf( "Error: unknown command: \"%s\"\n", name );
+        fprintf( stderr, "Error: unknown command: \"%s\"\n", name );
     else if ( n < com->args_min )
-        printf( "Error: missing argument(s) to command \"%s\"\n", name );
+        fprintf( stderr, "Error: missing argument(s) to command \"%s\"\n", name );
     else if ( n > com->args_max && com->args_max >= 0 )
-        printf( "Error: too many arguments to command \"%s\"\n", name );
+        fprintf( stderr, "Error: too many arguments to command \"%s\"\n", name );
     else
         result = com->f( c, args );
 

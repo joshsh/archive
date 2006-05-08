@@ -32,7 +32,7 @@ static boolean instance_exists = FALSE;
 
 
 Compiler *
-compiler__new( Environment *env )
+compiler__new( Environment *env, boolean quiet )
 {
     Compiler *c;
 
@@ -57,7 +57,7 @@ compiler__new( Environment *env )
     c->env = env;
     c->cur_ns_obj = environment__data( env );
     c->locked = FALSE;
-    c->suppress_output = FALSE;
+    c->quiet = quiet;
     c->show_line_numbers = TRUE;
 
     /* These basic types are indispensable for the compiler to communicate with
@@ -174,7 +174,7 @@ compiler__parse( Compiler *c )
 boolean
 compiler__quiet( Compiler *c )
 {
-    return c->suppress_output;
+    return c->quiet;
 }
 
 

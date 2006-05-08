@@ -59,48 +59,36 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DEBUG__SAFE                             1
 
 #define DEBUG                                   0
-#if DEBUG
-#    define DEBUG__CORE                         1
-#    if DEBUG__CORE
-#        define DEBUG__SK                       1
-#        define DEBUG__PRIMS                    1
-#        define DEBUG__TYPE                     1
-#        define DEBUG__MEMORY                   1
-#        define DEBUG__OBJECT                   1
-#        if DEBUG__OBJECT
-#            define DEBUG__OBJECT__TRACE        0
-#            define DEBUG__OBJECT__TRIPLES      1
-#        endif
-#        define DEBUG__NAMESPACE                0
-#        define DEBUG__ENV                      0
-#        define DEBUG__COMPILER                 1
-#        define DEBUG__SERIAL                   0
-#    endif
-#    define DEBUG__PARSER_MODULE                0
-#    if DEBUG__PARSER_MODULE
-#        define DEBUG__AST                      1
+#    define DEBUG__MAIN                         1 & DEBUG
+#    define DEBUG__CORE                         1 & DEBUG
+#        define DEBUG__SK                       1 & DEBUG__CORE
+#        define DEBUG__PRIMS                    1 & DEBUG__CORE
+#        define DEBUG__TYPE                     1 & DEBUG__CORE
+#        define DEBUG__MEMORY                   1 & DEBUG__CORE
+#        define DEBUG__OBJECT                   1 & DEBUG__CORE
+#            define DEBUG__OBJECT__TRACE        0 & DEBUG__OBJECT
+#            define DEBUG__OBJECT__TRIPLES      1 & DEBUG__OBJECT
+#        define DEBUG__NAMESPACE                0 & DEBUG__CORE
+#        define DEBUG__ENV                      0 & DEBUG__CORE
+#        define DEBUG__COMPILER                 1 & DEBUG__CORE
+#        define DEBUG__SERIAL                   0 & DEBUG__CORE
+#    define DEBUG__PARSER_MODULE                0 & DEBUG
+#        define DEBUG__AST                      1 & DEBUG__PARSER_MODULE
 #        /** Echo each token as it is matched by the lexer. */
-#        define DEBUG__LEXER                    1
+#        define DEBUG__LEXER                    1 & DEBUG__PARSER_MODULE
 #        /** Echo each production as it is matched by the parser. */
-#        define DEBUG__PARSER                   1
-#        if DEBUG__PARSER
+#        define DEBUG__PARSER                   1 & DEBUG__PARSER_MODULE
 #            /** Use Bison's built-in trace facility. */
-#            define DEBUG__PARSER__USE_YYDEBUG  0
-#        endif
-#    endif
-#    define DEBUG__UTILS                        0
-#    if DEBUG__UTILS
-#        define DEBUG__ARRAY                    1
-#        define DEBUG__BAG                      1
-#        define DEBUG__BUNCH                    1
-#        define DEBUG__HASH_TABLE               1
-#        define DEBUG__LOOKUP_TABLE             1
-#        define DEBUG__NAME                     1
-#        define DEBUG__SET                      1
-#        define DEBUG__TERM                     1
-#    endif
-#    define DEBUG__MAIN                         1
-#endif
+#            define DEBUG__PARSER__USE_YYDEBUG  0 & DEBUG__PARSER
+#    define DEBUG__UTILS                        0 & DEBUG
+#        define DEBUG__ARRAY                    1 & DEBUG__UTILS
+#        define DEBUG__BAG                      1 & DEBUG__UTILS
+#        define DEBUG__BUNCH                    1 & DEBUG__UTILS
+#        define DEBUG__HASH_TABLE               1 & DEBUG__UTILS
+#        define DEBUG__LOOKUP_TABLE             1 & DEBUG__UTILS
+#        define DEBUG__NAME                     1 & DEBUG__UTILS
+#        define DEBUG__SET                      1 & DEBUG__UTILS
+#        define DEBUG__TERM                     1 & DEBUG__UTILS
 
 #define COMPILER__SHOW_ADDRESS                  DEBUG
 

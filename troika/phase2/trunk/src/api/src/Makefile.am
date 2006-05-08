@@ -8,6 +8,7 @@ noinst_HEADERS = revision.h		\
 	Object-impl.h			\
 	Primitive-impl.h		\
 	compiler/Compiler-impl.h	\
+	compiler/license.h		\
 	environment/Environment-impl.h
 
 bin_PROGRAMS = phase2

@@ -173,19 +173,21 @@ int main( int argc, char *argv[] )
 
     else
     {
-        if ( ( compiler = compiler__new( env ) ) )
+        if ( ( compiler = compiler__new( env, quiet_flag ) ) )
         {
             if ( *source_file )
             {
-                #if DEBUG__MAIN
-                printf( "Loading namespace from file...\n" );
-                #endif
+                if ( DEBUG__MAIN )
+                    printf( "Loading namespace from file...\n" );
 
                 compiler__deserialize( compiler, source_file );
             }
 
-            print_version();
-            print_copying();
+            if ( !quiet_flag )
+            {
+                print_version();
+                print_copying();
+            }
 
             if ( compiler__parse( compiler ) )
                 ERROR( "main: parse failed" );

@@ -34,7 +34,7 @@ struct Compiler
 
     boolean locked;
 
-    boolean suppress_output, show_line_numbers;
+    boolean quiet, show_line_numbers;
 
     /* Parser types. */
     Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;

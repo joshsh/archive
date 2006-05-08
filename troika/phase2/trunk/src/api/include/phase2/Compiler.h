@@ -41,7 +41,7 @@ typedef struct Compiler Compiler;
 /** Constructor.
     \param env  an environment for the compiler to act upon */
 extern Compiler *
-compiler__new( Environment *env );
+compiler__new( Environment *env, boolean quiet );
 
 
 /** Destructor. */
@@ -87,6 +87,7 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args );
 extern int
 compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr );
 
+/** \note  Error messages are not suppressed by --quiet */
 extern int
 compiler__handle_parse_error( Compiler *c, char *msg );
 
