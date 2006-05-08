@@ -21,11 +21,12 @@ make doxygen-doc
 ################################################################################
 # Cross-compile Phase2 for ARM.
 
-ARM_PREFIX=/opt/Embedix/tools/arm-linux
+ARM_PREFIX=/opt/Embedix/tools/
 
-$CROSSTOOL=/home/joshs/bin/crosstool-0.42
+CROSSTOOL=/home/joshs/bin/crosstool-0.42
+CROSSTOOL=/opt/crosstool/crosstool-0.42
+
 ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
-
 
 # First, cross-compile libxml2 and place the ARM libraries into $ARM_PREFIX/lib
 
@@ -45,6 +46,22 @@ make
 ################################################################################
 # Put stuff into arm-bin
 
+QTE_PREFIX=/usr/local/Trolltech/QtopiaCore-4.1.2/
+
+rm -f arm-bin/lib/*
+cp $QTE_PREFIX/lib/libQtCore.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtGui.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtNetwork.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtCore_debug.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtGui_debug.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtNetwork_debug.so.4.1.2 arm-bin/lib
+
+#cp $ARM_PREFIX/lib/libstdc++.so.6.0.7 arm-bin/lib
+#cp $ARM_PREFIX/lib/libgcc_s.so.1 arm-bin/lib
+cp $ARM_PREFIX/lib/libxml2.so.2.6.23 arm-bin/lib
+
+#cp $ARM_PREFIX/lib/libc-2.3.2.so arm-bin/lib
+
 rm -rf arm-bin/api
 mkdir arm-bin/api
 mkdir arm-bin/api/src
@@ -52,7 +69,7 @@ mkdir arm-bin/api/lib
 mkdir arm-bin/api/examples
 
 cp src/.libs/phase2 arm-bin/api/src
-cp src/.libs/libphase2*so* arm-bin/api/lib
+cp src/.libs/libphase2*so* arm-bin/lib
 cp examples/* arm-bin/api/examples
 
 ./cleanup
@@ -64,6 +81,10 @@ mv arm-bin/api/src/util/* arm-bin/api/src
 mv arm-bin/api/src/xml/libxml2/* arm-bin/api/src
 mv arm-bin/api/src/parser/* arm-bin/api/src
 mv arm-bin/api/src/import/src/* arm-bin/api/src
+
+
+rm -f arm-bin/gui/*
+cp -f ../gui/p2gui arm-bin/gui
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

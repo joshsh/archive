@@ -1,3 +1,9 @@
+THE SECRET KLUDGE for creating an error-free, debuggable ARM phase2 executable:
+1) generate phase2.so using the (crosstool) gcc4 cross-compiler
+2) generate phase2 (with 'main') using (Embedix) gcc2 cross-compiler
+3) put phase2.so in /usr/lib and invoke phase2
+
+
 [ba]
     _rm root;
     _rm here;
@@ -23,9 +29,16 @@
     null handling
 
 
+gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libQtCore_debug.so.4)
+gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libstdc++.so.6)
+gui/p2gui: /lib/libc.so.6: version `GLIBC_2.2.4' not found (required by /usr/lib/libgcc_s.so.1)
+
+
+
 
 ./textedit
 	libQtGui.so.4
+	libQtNetwork.so.4
 
 ./p2gui, ./p2gui-lite
 	libQtGui_debug.so.4

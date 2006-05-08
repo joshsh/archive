@@ -59,7 +59,9 @@ int main( int argc, char **argv )
 //    QApplication::setStyle( new QWindowsXPStyle );
 //    QApplication::setStyle( new QMotifStyle );
 //    QApplication::setStyle( new QMacStyle );
-    QApplication::setStyle( new QPlastiqueStyle );
+//    QApplication::setStyle( new QPlastiqueStyle );
+
+    QApplication app( argc, argv );
 
     P2Environment env;
     //compiler__deserialize( env.getCompiler(), "guitest.p2" );
