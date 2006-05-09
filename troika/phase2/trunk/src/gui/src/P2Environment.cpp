@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2Environment::P2Environment()
+P2Environment::P2Environment( bool quiet )
   : QObject( 0 ),
     clipboardObject( 0 )
 {
@@ -19,7 +19,7 @@ P2Environment::P2Environment()
     frameContentsPadding = FRAME__CONTENTS__PADDING;
 
     env = environment__new();
-    compiler = compiler__new( env );
+    compiler = compiler__new( env, quiet ? 1 : 0 );
 }
 
 

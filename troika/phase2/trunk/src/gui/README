@@ -1,25 +1,52 @@
-echo "#define ARM_COMPILE" >> compile-target.h
+::: Compiling p2gui (x86) ::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+rm -f p2gui
+make clean
+rm -f Makefile
+rm -f *.pro
+rm -rf .moc .obj .rcc
 
-CROSSTOOL=/opt/crosstool/crosstool-0.42
-ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
-
-ARM_PREFIX=/opt/Embedix/tools/arm-linux
-
-QTE_PREFIX=/opt/qtopia-core/qtopia-core-opensource-src-4.1.2
-
-PATH=$ARM_PREFIX:$PATH
-
-$QTE_PREFIX/bin/qmake -project -o p2gui.pro
-	echo "CXXFLAGS += -Werror" >> p2gui.pro
-	echo "LIBS += -L$ARM_PREFIX/lib -lphase2 -lxml2" >> p2gui.pro
+# Using x86 qmake.
+qmake -project -o p2gui.pro
 	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
+	echo "LIBS += -lphase2 -lxml2" >> p2gui.pro
+	echo "QMAKE_INSTALL_FILE = p2gui" >> p2gui.pro
+#	echo "INSTALLS += p2gui" >> p2gui.pro
 
-$QTE_PREFIX/bin/qmake -spec $QTE_PREFIX/mkspecs/qws/linux-arm-g++
+qmake
 
 make
 
 
+::: Cross-compiling p2gui (arm) ::::::::::::::::::::::::::::::::::::::::::::::::
 
+Note: p2gui is best compiled with the Embedix (gcc2) cross-compiler, rather than
+the crosstools-generated (gcc4) cross-compiler.
 
-/opt/Embedix/tools/bin:/opt/crosstool/crosstool-0.42/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu//bin:/usr/local/Trolltech/Qt-4.1.0//bin:/usr/local/Trolltech/Qt-4.1.0//bin:/usr/kerberos/bin:/usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin:/home/josh/bin
+#CROSSTOOL=/opt/crosstool/crosstool-0.42
+#ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
+
+ARM_PREFIX=/opt/Embedix/tools/arm-linux
+
+QTE_PREFIX=ls /usr/local/Trolltech/Qtopia-4.1.2
+#QTE_PREFIX=/opt/qtopia-core/qtopia-core-opensource-src-4.1.2
+
+PATH=$ARM_PREFIX:$PATH
+
+echo "#define ARM_COMPILE" >> compile-target.h
+
+rm -f p2gui
+make clean
+rm -f Makefile
+rm -f *.pro
+rm -rf .moc .obj .rcc
+
+$QTE_PREFIX/bin/qmake -project -o p2gui.pro
+#	echo "CXXFLAGS += -Werror" >> p2gui.pro
+	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
+	echo "LIBS += -L$ARM_PREFIX/lib -lphase2 -lxml2" >> p2gui.pro
+	echo "QMAKE_INSTALL_FILE = p2gui" >> p2gui.pro
+
+$QTE_PREFIX/bin/qmake -spec $QTE_PREFIX/mkspecs/qws/linux-arm-g++
+
+make

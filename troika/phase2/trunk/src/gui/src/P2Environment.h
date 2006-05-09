@@ -22,7 +22,7 @@ class P2Environment : public QObject
 public:
 
     /** Initializes the P2Environment with default values. */
-    P2Environment();
+    P2Environment( bool quiet );
 
     /** Copy constructor. */
     P2Environment( const P2Environment &other );
