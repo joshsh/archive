@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Remove everything that can be re-generated.  Don't use this script unless all
+# the necessary tools are available.
+
+# Run 'bootstrap' to return to a state where ./configure; make; make install
+# starts working again.
+
+make maintainer-clean
+
