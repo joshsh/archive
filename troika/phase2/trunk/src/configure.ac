@@ -6,6 +6,7 @@ AC_CONFIG_SRCDIR([api/src/main.c])
 
 AC_CONFIG_SUBDIRS([api])
 
+dnl The GUI subproject requires a C++ compiler.
 AC_PROG_CXX
 
 AM_INIT_AUTOMAKE

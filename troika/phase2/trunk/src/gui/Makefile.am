@@ -1,32 +1,37 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = project
+EXTRA_DIST = project README TODO
 
-EXTRA_DIST = README TODO
+## Note: the moc_ files are also built sources.
+BUILT_SOURCES = project/p2gui.pro \
+		project/Makefile
 
-BUILT_SOURCES = src/p2gui.pro \
-		src/Makefile
+bin_PROGRAMS = p2gui
 
-noinst_HEADERS = revision.h		\
-	settings.h			\
-	Object-impl.h			\
-	Primitive-impl.h		\
-	compiler/Compiler-impl.h	\
-	compiler/license.h		\
-	environment/Environment-impl.h
+## Prevent automake from expecting an implicit p2gui.c.
+p2gui_SOURCES =
 
-noinst_PROGRAMS = hello
+project/p2gui.pro :
+	qmake -project -o project/p2gui.pro
+	echo "QMAKE_CXXFLAGS += -Wno-deprecated" >> project/p2gui.pro
+	echo "INCPATH += /usr/local/include/phase2" >> project/p2gui.pro
+	echo "LIBS += -lphase2 -lxml2" >> project/p2gui.pro
+##	echo "QMAKE_INSTALL_FILE = p2gui" >> project/p2gui.pro
+##	echo "INSTALLS += p2gui" >> project/p2gui.pro
+	echo $(target) > target.h
 
-hello_SOURCES = test.cpp
+project/Makefile : project/p2gui.pro
+	qmake project/p2gui.pro -o project/Makefile
 
-# Using x86 qmake.
-qmake -project -o p2gui.pro
-	echo "QMAKE_CXXFLAGS += -Wno-deprecated" >> p2gui.pro
-	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
-	echo "LIBS += -lphase2 -lxml2" >> p2gui.pro
-	echo "QMAKE_INSTALL_FILE = p2gui" >> p2gui.pro
-#	echo "INSTALLS += p2gui" >> p2gui.pro
+p2gui : project/Makefile
+	$(MAKE) -C project
+	mv project/p2gui .
 
-qmake
+## Exclude object files from the distribution.
+dist-hook:
+	-rm -f `find $(distdir) -name *.o`
 
-make
+## Note: apparently the qmake-generated Makefile does not have a target to
+## clean up object files but NOT moc_ files.
+clean-local:
+	-rm -f project/*.o

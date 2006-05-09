@@ -5,6 +5,8 @@
 # Note: specific autotools versions are used. If you use a different version
 # you'll probably also have to change the configuration files.
 
+# Note dire prognostications about autoreconf:
+#     http://lists.gnu.org/archive/html/autoconf/2003-12/msg00140.html
 autoreconf --force --install -I config
 
 #sh api/bootstrap
