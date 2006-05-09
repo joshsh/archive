@@ -1,9 +1,13 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([phase2], [0.6.4], [parcour@gmail.com])
+AC_INIT([p2tools], [0.1], [parcour@gmail.com])
 AC_CONFIG_AUX_DIR([config])
-AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_SRCDIR([api/src/main.c])
+
+AC_CONFIG_SUBDIRS([api])
+
+AC_PROG_CXX
 
 AM_INIT_AUTOMAKE
 
-AC_OUTPUT([Makefile])
+AC_OUTPUT([Makefile gui/Makefile])

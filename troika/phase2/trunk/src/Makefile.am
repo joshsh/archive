@@ -2,7 +2,7 @@
 
 SUBDIRS = api gui
 
-EXTRA_DIST = include bootstrap cleanup
+EXTRA_DIST = bin lib bootstrap cleanup
 
 ## Exclude any SVN version control directories from the distribution.
 dist-hook:

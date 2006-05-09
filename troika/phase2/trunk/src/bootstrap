@@ -6,3 +6,5 @@
 # you'll probably also have to change the configuration files.
 
 autoreconf --force --install -I config
+
+#sh api/bootstrap
