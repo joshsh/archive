@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2MainWindow::P2MainWindow( P2Binder &b )
+P2MainWindow::P2MainWindow( P2Binder &b, QString fileName )
     : QMainWindow(),
       //aboutDialog( new AboutDialog( this ) ),
       binder( &b ),
@@ -48,20 +48,16 @@ P2MainWindow::P2MainWindow( P2Binder &b )
     //setMinimumSize( 240, 320 );
     //setMaximumSize( 240, 320 );
 
-    //~ Just testing the macros.
-    #ifdef ARM_COMPILE
-        #ifdef X86_COMPILE
-            setWindowTitle( "Phase2 GUI (unk)" );
-        #else
-            setWindowTitle( "Phase2 GUI (ARM)" );
-        #endif
-    #else
-        #ifdef X86_COMPILE
-            setWindowTitle( "Phase2 GUI (X86)" );
-        #else
-            setWindowTitle( "Phase2 GUI (unk)" );
-        #endif
+    QString title( "Phase2 GUI" );
+
+    #ifdef ARM_LINUX
+    title += " (ARM)";
     #endif
+
+    if ( !fileName.isNull() )
+        title += " -- " + fileName;
+
+    setWindowTitle( title );
 
     // Only limit the size of the main window if it's to be displayed on a
     // large screen (otherwise allow the application to maximize it).

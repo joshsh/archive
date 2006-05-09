@@ -33,9 +33,9 @@ void newMainWindow( P2Binder &b )
     w->show();
 
     // If the display area is small, maximize the first main window.
-    #ifdef ARM_COMPILE
-        if ( windows.size() == 1 )
-            w->showMaximized( );
+    #ifdef ARM_LINUX
+    if ( windows.size() == 1 )
+        w->showMaximized( );
     #endif
 }
 
@@ -49,15 +49,6 @@ delete_windows()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
-#ifndef VERSION
-#define VERSION "[VERSION]"
-#endif
-
-#ifndef PACKAGE_BUGREPORT
-#define PACKAGE_BUGREPORT   "[PACKAGE_BUGREPORT]"
-#endif
 
 
 static char *alias;
@@ -220,14 +211,6 @@ main( int argc, char **argv )
         print_copying();
     }
 
-//    QApplication::setStyle( new QWindowsStyle );
-//    QApplication::setStyle( new QWindowsXPStyle );
-//    QApplication::setStyle( new QMotifStyle );
-//    QApplication::setStyle( new QMacStyle );
-//    QApplication::setStyle( new QPlastiqueStyle );
-
-    QApplication app( argc, argv );
-
     P2Environment env( ( quiet_flag ) );
 
     if ( *source_file )
@@ -239,7 +222,13 @@ main( int argc, char **argv )
 
     P2Binder binder( &env );
 
-//    QApplication a( argc, argv );
+    QApplication a( argc, argv );
+
+//    QApplication::setStyle( new QWindowsStyle );
+//    QApplication::setStyle( new QWindowsXPStyle );
+//    QApplication::setStyle( new QMotifStyle );
+//    QApplication::setStyle( new QMacStyle );
+//    QApplication::setStyle( new QPlastiqueStyle );
 
 //cout << "a.startDragDistance():" << a.startDragDistance() << endl;
 //cout << "a.startDragTime():" << a.startDragTime() << endl;
@@ -248,8 +237,8 @@ main( int argc, char **argv )
     // In the beginning there was a single top-level window.
     newMainWindow( binder );
 
-    //int ret = a.exec();
-    int ret = QApplication::exec();
+    int ret = a.exec();
+    //int ret = QApplication::exec();
 
     delete_windows();
 

@@ -2,7 +2,16 @@
 #define global_h
 
 
-#include "compile-target.h"  // Macros specific to the target architecture.
+#ifndef VERSION
+#define VERSION             "0.1"
+#endif
+
+#ifndef PACKAGE_BUGREPORT
+#define PACKAGE_BUGREPORT   "parcour@gmail.com"
+#endif
+
+
+//#include "compile-target.h"  // Macros specific to the target architecture.
 //#include "P2Environment.h"
 //#include <P2Binder.h>
 

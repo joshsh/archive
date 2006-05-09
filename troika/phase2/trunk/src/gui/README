@@ -8,6 +8,7 @@ rm -rf .moc .obj .rcc
 
 # Using x86 qmake.
 qmake -project -o p2gui.pro
+	echo "QMAKE_CXXFLAGS += -Wno-deprecated" >> p2gui.pro
 	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
 	echo "LIBS += -lphase2 -lxml2" >> p2gui.pro
 	echo "QMAKE_INSTALL_FILE = p2gui" >> p2gui.pro
@@ -20,20 +21,13 @@ make
 
 ::: Cross-compiling p2gui (arm) ::::::::::::::::::::::::::::::::::::::::::::::::
 
-Note: p2gui is best compiled with the Embedix (gcc2) cross-compiler, rather than
-the crosstools-generated (gcc4) cross-compiler.
+# p2gui is best compiled with the Embedix (gcc2) cross-compiler, rather than
+# the crosstools-generated (gcc4) cross-compiler.
+ARM_PREFIX=/opt/Embedix/tools
 
-#CROSSTOOL=/opt/crosstool/crosstool-0.42
-#ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
+QTE_PREFIX=/usr/local/Trolltech/QtopiaCore-4.1.2
 
-ARM_PREFIX=/opt/Embedix/tools/arm-linux
-
-QTE_PREFIX=ls /usr/local/Trolltech/Qtopia-4.1.2
-#QTE_PREFIX=/opt/qtopia-core/qtopia-core-opensource-src-4.1.2
-
-PATH=$ARM_PREFIX:$PATH
-
-echo "#define ARM_COMPILE" >> compile-target.h
+PATH=$ARM_PREFIX/bin:$PATH
 
 rm -f p2gui
 make clean
@@ -42,10 +36,9 @@ rm -f *.pro
 rm -rf .moc .obj .rcc
 
 $QTE_PREFIX/bin/qmake -project -o p2gui.pro
-#	echo "CXXFLAGS += -Werror" >> p2gui.pro
+	echo "QMAKE_CXXFLAGS += -Wno-deprecated -DARM_LINUX" >> p2gui.pro
 	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
 	echo "LIBS += -L$ARM_PREFIX/lib -lphase2 -lxml2" >> p2gui.pro
-	echo "QMAKE_INSTALL_FILE = p2gui" >> p2gui.pro
 
 $QTE_PREFIX/bin/qmake -spec $QTE_PREFIX/mkspecs/qws/linux-arm-g++
 

@@ -18,7 +18,7 @@ class P2MainWindow : public QMainWindow
 
 public:
 
-    P2MainWindow( P2Binder &b );
+    P2MainWindow( P2Binder &b, QString fileName = QString() );
 
 public slots:
 
