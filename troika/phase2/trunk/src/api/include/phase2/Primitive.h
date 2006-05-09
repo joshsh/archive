@@ -35,6 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
+/** Opaque type for function primitives. */
 typedef struct Primitive Primitive;
 
 #define REF_OPQ 0

@@ -119,16 +119,19 @@ command_all( Compiler *c, Ast *args )
             name = get_arg( args, i );
             o = compiler__resolve( c, name );
 
-            if ( ( o ) && o->type != c->cur_ns_obj->type )
+            if ( o )
             {
-                /* FIXME: should print to stderr */
-                printf( "Error: \"" );
-                name__print( name );
-                printf( "\" is not a namespace\n" );
-            }
+                if ( o->type != c->cur_ns_obj->type )
+                {
+                    /* FIXME: should print to stderr */
+                    printf( "Error: \"" );
+                    name__print( name );
+                    printf( "\" is not a namespace\n" );
+                }
 
-            else if ( !c->quiet )
-                namespace__show_children( o );
+                else if ( !c->quiet )
+                    namespace__show_children( o );
+            }
         }
     }
 

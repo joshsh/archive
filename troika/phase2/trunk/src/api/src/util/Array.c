@@ -434,7 +434,6 @@ typedef struct Mergesort_Ctx Mergesort_Ctx;
 
 struct Mergesort_Ctx
 {
-    int lo, m, hi;
     void **buffer, **aux;
     Comparator compare;
 };
@@ -487,6 +486,7 @@ mergesort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
 }
 
 
+/* FIXME: You could avoid using malloc() by using a simple shift algorithm */
 static Array *
 normalize( Array *a )
 {
@@ -514,20 +514,24 @@ array__sort( Array *a, Comparator compare )
     Mergesort_Ctx state;
     state.compare = compare;
 
-    /* Normalize the array a so that the mergesort algorithm doesn't have to
-       deal with index WRAPping. */
-    if ( !normalize( a ) || !( state.aux = BUFFER_NEW( a->size ) ) )
+    /* Don't try to sort a trivial array. */
+    if ( a->size > 1 )
     {
-        ERROR( "array__sort: allocation failure" );
-        return;
+        /* Normalize the array a so that the mergesort algorithm doesn't have to
+        deal with index WRAPping. */
+        if ( !normalize( a ) || !( state.aux = BUFFER_NEW( a->size ) ) )
+        {
+            ERROR( "array__sort: allocation failure" );
+            return;
+        }
+
+        state.buffer = a->buffer;
+
+        mergesort( 0, a->size - 1, &state );
+
+        /* Destroy the auxiliary array. */
+        free( state.aux );
     }
-
-    state.buffer = a->buffer;
-
-    mergesort( 0, a->size - 1, &state );
-
-    /* Destroy the auxiliary array. */
-    free( state.aux );
 }
 
 
@@ -539,13 +543,8 @@ array__walk( Array *a, Dist_f f )
 {
     unsigned int i, lim;
 
-    #if DEBUG__SAFE
-    if ( !a || !f )
-    {
-        ERROR( "array__walk: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !a || !f ) )
+        abort();
 
     #if DEBUG__ARRAY
     printf( "[] array__walk(%#x, %#x)\n", ( int ) a, ( int ) f );

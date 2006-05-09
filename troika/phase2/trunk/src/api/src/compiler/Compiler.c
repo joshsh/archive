@@ -142,13 +142,8 @@ compiler__parse( Compiler *c )
 {
     p2_parser__exit_state exit_state;
 
-    #if DEBUG__SAFE
-    if ( !c )
-    {
-        ERROR( "compiler__parse: null argument" );
-        return 1;
-    }
-    #endif
+    if ( DEBUG__SAFE && !c )
+        abort();
 
     #if DEBUG__COMPILER
     printf( "[...] compiler__parse(%#x)\n", ( int ) c );
