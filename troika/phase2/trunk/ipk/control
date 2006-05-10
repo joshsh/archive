@@ -1,10 +1,10 @@
-Package: hello3
+Package: phase2
 Installed-Size: 14k
-Filename: ./troika.ipk
-Version: 0.01
+Filename: ./phase2.ipk
+Version: 0.6.4
 Depends:
 Priority: optional
 Section: qpe
 Maintainer: Josh Shinavier <parcour@gmail.com>
 Architecture: arm
-Description: Test application
+Description: Phase2 libraries, interpreter and GUI

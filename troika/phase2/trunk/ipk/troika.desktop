@@ -1,8 +1,8 @@
 [Desktop Entry]
 Comment = Did it work?
-Exec = troika
-File = ../apps/Games/troika
-Icon = troika.png
+Exec = phase2
+File = ../apps/Games/phase2
+Icon = phase2.png
 Type = Application
-Name = Test app
-Name[de] = Testprogramm
+Name = Phase2
+Name[de] = Phase2
