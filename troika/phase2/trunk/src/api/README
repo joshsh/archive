@@ -56,11 +56,11 @@ cp $QTE_PREFIX/lib/libQtCore_debug.so.4.1.2 arm-bin/lib
 cp $QTE_PREFIX/lib/libQtGui_debug.so.4.1.2 arm-bin/lib
 cp $QTE_PREFIX/lib/libQtNetwork_debug.so.4.1.2 arm-bin/lib
 
-#cp $ARM_PREFIX/lib/libstdc++.so.6.0.7 arm-bin/lib
-#cp $ARM_PREFIX/lib/libgcc_s.so.1 arm-bin/lib
-cp $ARM_PREFIX/lib/libxml2.so.2.6.23 arm-bin/lib
+#cp $ARM_PREFIX/arm-linux/lib/libstdc++.so.6.0.7 arm-bin/lib
+#cp $ARM_PREFIX/arm-linux/lib/libgcc_s.so.1 arm-bin/lib
+cp $ARM_PREFIX/arm-linux/lib/libxml2.so.2.6.23 arm-bin/lib
 
-#cp $ARM_PREFIX/lib/libc-2.3.2.so arm-bin/lib
+#cp $ARM_PREFIX/arm-linux/lib/libc-2.3.2.so arm-bin/lib
 
 rm -rf arm-bin/api
 mkdir arm-bin/api

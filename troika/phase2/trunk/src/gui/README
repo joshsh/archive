@@ -38,7 +38,7 @@ rm -rf .moc .obj .rcc
 $QTE_PREFIX/bin/qmake -project -o p2gui.pro
 	echo "QMAKE_CXXFLAGS += -Wno-deprecated -DARM_LINUX" >> p2gui.pro
 	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
-	echo "LIBS += -L$ARM_PREFIX/lib -lphase2 -lxml2" >> p2gui.pro
+	echo "LIBS += -lqgfxtransformed_debug -L$ARM_PREFIX/lib -lphase2 -lxml2" >> p2gui.pro
 
 $QTE_PREFIX/bin/qmake -spec $QTE_PREFIX/mkspecs/qws/linux-arm-g++
 

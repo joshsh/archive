@@ -26,7 +26,7 @@ void newMainWindow( P2Binder &b )
             | Qt::WindowTitleHint
             | Qt::WindowSystemMenuHint
             | Qt::WindowMinMaxButtonsHint );
-//*/
+*/
 
     windows.append( w );
 
@@ -203,7 +203,10 @@ main( int argc, char **argv )
 {
     static char source_file[0x100];
     *source_file = '\0';
+
+#ifndef ARM_LINUX
     read_options ( argc, argv, source_file );
+#endif
 
     if ( !quiet_flag )
     {
