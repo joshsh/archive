@@ -10,6 +10,7 @@ dnl The GUI subproject requires a C++ compiler.
 AC_PROG_CXX
 
 AM_INIT_AUTOMAKE
+AM_CONDITIONAL(HOST__ARM_LINUX, test "$host" = arm-linux)
 
 dnl Note: the api subdirectory is not represented here because it has its own
 dnl configure.ac.

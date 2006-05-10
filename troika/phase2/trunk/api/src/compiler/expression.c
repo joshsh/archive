@@ -188,10 +188,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr )
-    {
-        ERROR( "compiler__evaluate_expression: null argument" );
-        return 0;
-    }
+        abort();
 
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;

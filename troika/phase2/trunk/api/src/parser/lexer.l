@@ -391,6 +391,9 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     \"  {  /* End quote after string literal. */
+        /* This is only necessary for the null string (""). */
+        *buffer_pos = '\0';
+
         yylval.string = extract_literal( string_buffer );
         buffer_pos = string_buffer;
 

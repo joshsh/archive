@@ -43,50 +43,6 @@ make
 #     src/.libs/
 
 
-################################################################################
-# Put stuff into arm-bin
-
-QTE_PREFIX=/usr/local/Trolltech/QtopiaCore-4.1.2/
-
-rm -f arm-bin/lib/*
-cp $QTE_PREFIX/lib/libQtCore.so.4.1.2 arm-bin/lib
-cp $QTE_PREFIX/lib/libQtGui.so.4.1.2 arm-bin/lib
-cp $QTE_PREFIX/lib/libQtNetwork.so.4.1.2 arm-bin/lib
-cp $QTE_PREFIX/lib/libQtCore_debug.so.4.1.2 arm-bin/lib
-cp $QTE_PREFIX/lib/libQtGui_debug.so.4.1.2 arm-bin/lib
-cp $QTE_PREFIX/lib/libQtNetwork_debug.so.4.1.2 arm-bin/lib
-
-#cp $ARM_PREFIX/arm-linux/lib/libstdc++.so.6.0.7 arm-bin/lib
-#cp $ARM_PREFIX/arm-linux/lib/libgcc_s.so.1 arm-bin/lib
-cp $ARM_PREFIX/arm-linux/lib/libxml2.so.2.6.23 arm-bin/lib
-
-#cp $ARM_PREFIX/arm-linux/lib/libc-2.3.2.so arm-bin/lib
-
-rm -rf arm-bin/api
-mkdir arm-bin/api
-mkdir arm-bin/api/src
-mkdir arm-bin/api/lib
-mkdir arm-bin/api/examples
-
-cp src/.libs/phase2 arm-bin/api/src
-cp src/.libs/libphase2*so* arm-bin/lib
-cp examples/* arm-bin/api/examples
-
-./cleanup
-rmbackup
-cp -r src/* arm-bin/api/src
-
-# Make utils available to gdb.
-mv arm-bin/api/src/util/* arm-bin/api/src
-mv arm-bin/api/src/xml/libxml2/* arm-bin/api/src
-mv arm-bin/api/src/parser/* arm-bin/api/src
-mv arm-bin/api/src/import/src/* arm-bin/api/src
-
-
-rm -f arm-bin/gui/*
-cp -f ../gui/p2gui arm-bin/gui
-
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 

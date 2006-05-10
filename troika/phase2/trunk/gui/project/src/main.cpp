@@ -204,9 +204,9 @@ main( int argc, char **argv )
     static char source_file[0x100];
     *source_file = '\0';
 
-#ifndef ARM_LINUX
+//#ifndef ARM_LINUX
     read_options ( argc, argv, source_file );
-#endif
+//#endif
 
     if ( !quiet_flag )
     {
@@ -225,7 +225,12 @@ main( int argc, char **argv )
 
     P2Binder binder( &env );
 
+#ifdef ARM_LINUX
+    // Use the virtual frame buffer.  This is equivalent to passing the -qws option.
+    QApplication a( argc, argv, QApplication::GuiServer );
+#else
     QApplication a( argc, argv );
+#endif
 
 //    QApplication::setStyle( new QWindowsStyle );
 //    QApplication::setStyle( new QWindowsXPStyle );

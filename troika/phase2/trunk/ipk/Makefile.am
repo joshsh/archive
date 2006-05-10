@@ -39,7 +39,6 @@ opt: $(EXEC) phase2.png phase2.desktop
 	mkdir -p opt/QtPalmTop/apps/Games/
 	mkdir -p opt/QtPalmTop/bin/
 	mkdir -p opt/QtPalmTop/pics/
-	
 	## Fill opt directory with the appropriate data.
 	cp phase2.png opt/QtPalmTop/pics
 	cp phase2.desktop opt/QtPalmTop/apps/Games
