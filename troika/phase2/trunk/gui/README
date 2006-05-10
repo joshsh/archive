@@ -43,3 +43,13 @@ $QTE_PREFIX/bin/qmake -project -o p2gui.pro
 $QTE_PREFIX/bin/qmake -spec $QTE_PREFIX/mkspecs/qws/linux-arm-g++
 
 make
+
+
+
+
+
+
+> /usr/include/glib-2.0/gobject/gtype.h:439: warning: `visibility' attribute
+> directive ignored
+The compiler you are using doesn't support one of the gcc extensions
+which are used in the glib headers.

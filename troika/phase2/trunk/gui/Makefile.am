@@ -29,7 +29,7 @@ project/p2gui.pro :
 	echo "INCPATH += /usr/local/include/phase2" >> project/p2gui.pro
 	echo "LIBS += -lphase2 -lxml2" >> project/p2gui.pro
 if HOST__ARM_LINUX
-	echo "QMAKE_CXXFLAGS += -DARM_LINUX" >> project/p2gui.pro
+	echo "QMAKE_CXXFLAGS += -w -DARM_LINUX" >> project/p2gui.pro
 	echo "LIBS += -lqgfxtransformed_debug" >> project/p2gui.pro
 endif
 ##	echo "QMAKE_INSTALL_FILE = p2gui" >> project/p2gui.pro
