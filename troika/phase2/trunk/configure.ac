@@ -11,4 +11,6 @@ AC_PROG_CXX
 
 AM_INIT_AUTOMAKE
 
-AC_OUTPUT([Makefile gui/Makefile])
+dnl Note: the api subdirectory is not represented here because it has its own
+dnl configure.ac.
+AC_OUTPUT([Makefile gui/Makefile ipk/Makefile])

@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = api gui
+SUBDIRS = api gui ipk
 
-EXTRA_DIST = bin lib bootstrap cleanup
+EXTRA_DIST = bootstrap cleanup
 
 ## Exclude any SVN version control directories from the distribution.
 dist-hook:
