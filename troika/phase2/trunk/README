@@ -1,6 +1,7 @@
 ################################################################################
 # Put stuff into arm-bin
 
+ARM_PREFIX=/opt/Embedix/tools
 QTE_PREFIX=/usr/local/Trolltech/QtopiaCore-4.1.2/
 
 rm -f arm-bin/lib/*
@@ -28,9 +29,13 @@ cp api/src/.libs/phase2 arm-bin/api/src
 cp api/src/.libs/libphase2*so* arm-bin/lib
 cp api/examples/* arm-bin/api/examples
 
-./cleanup
+#./cleanup
 rmbackup
 cp -r api/src/* arm-bin/api/src
+rm -f `find arm-bin/api/src -name *.o`
+rm -f `find arm-bin/api/src -name *.lo`
+rm arm-bin/api/src/phase2
+rm arm-bin/src/.libs -rf
 
 # Make utils available to gdb.
 mv arm-bin/api/src/util/* arm-bin/api/src

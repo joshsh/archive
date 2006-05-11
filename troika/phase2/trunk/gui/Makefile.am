@@ -29,6 +29,9 @@ project/p2gui.pro :
 	echo "INCPATH += /usr/local/include/phase2" >> project/p2gui.pro
 	echo "LIBS += -lphase2 -lxml2" >> project/p2gui.pro
 if HOST__ARM_LINUX
+	## Rather than -w, it would be nice to have an option which suppresses
+	## only "'visibility' attribute directive ignored" messages which bog
+	## down the build when using gcc 2.
 	echo "QMAKE_CXXFLAGS += -w -DARM_LINUX" >> project/p2gui.pro
 	echo "LIBS += -lqgfxtransformed_debug" >> project/p2gui.pro
 endif

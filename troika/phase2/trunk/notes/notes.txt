@@ -1,3 +1,49 @@
+::: FOR THE DEMO :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+GCC extensions --> lexical closure
+objects created as return values ^ implicitly typed
+approaching [visual programming] by way of ontology editing
+    [*] many visual dataflow languages. In contrast, this approach may be unique
+
+
+[!] tree layout for terms
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+http://www.csse.uwa.edu.au/~joel/vfpe/thesis.pdf
+[.] visual programming ^ representation of the state a program currently executing
+[Y] language awareness -- IDEs have it, text editors don't -- limit's the programmer's ability to perform meaningless actions
+[-] presented as more of a boon to novices
+(["] proof-of-concept research implementation)
+[*] inertia of the prevailing programming culture
+    [U3] tools, education, practice
+[*] software is essentially intangible, so there is no obvious mapping between artifact and drawing
+[ba] editor ^ common problem ^ requires a work-in-progress to be correct at each intermediate step
+    --> p2gui should not impose restrictions on syntax, only on the definiteness of identifiers
+[*] "the dataflow model appears to be innately suitable as the basis for a visual programming language"
+    [ba] difficulty expressing higher-order functions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ["]  Evaluation of these expressions involves an environment that maps identifiers to values, [...]
 ["] Mode flags affect __inference extending__ to the web:
 ["] Reification in RDF and Jena is the ability to treat a Statement as a Resource, and hence to make assertions about that statement. A statement may be reified as many different resources, allowing different manifestations ("statings") of that statement to be treated differently if required.
