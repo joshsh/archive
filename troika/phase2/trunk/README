@@ -23,11 +23,11 @@ rm -rf arm-bin/api
 mkdir arm-bin/api
 mkdir arm-bin/api/src
 mkdir arm-bin/api/lib
-mkdir arm-bin/api/examples
+mkdir arm-bin/examples
 
 cp api/src/.libs/phase2 arm-bin/api/src
 cp api/src/.libs/libphase2*so* arm-bin/lib
-cp api/examples/* arm-bin/api/examples
+cp examples/* arm-bin/examples
 
 #./cleanup
 rmbackup
