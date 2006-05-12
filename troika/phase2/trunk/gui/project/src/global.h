@@ -18,6 +18,7 @@
 class P2Environment;
 class P2Binder;
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // Arbitrary out-of-range integer.
@@ -95,7 +96,7 @@ indentMinus();
 #define BAG__COLOR                          0x00, 0x00, 0x00, 0xFF
 #define CHAR__COLOR                         0xFF, 0x40, 0x40, 0xFF
 #define DOUBLE__COLOR                       0xBF, 0x00, 0xBF, 0xFF
-#define COMBINATOR__COLOR                   0xFF, 0x00, 0x00, 0xFF
+#define COMBINATOR__COLOR                   0xFF, 0x00, 0x80, 0xFF
 #define INT__COLOR                          0X00, 0xFF, 0x00, 0xFF
 #define NAMESPACE__COLOR                    0X00, 0x00, 0x00, 0xFF
 #define PRIM__COLOR                         0xFF, 0x7F, 0x00, 0xFF

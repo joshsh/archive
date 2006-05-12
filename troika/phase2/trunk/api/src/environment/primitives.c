@@ -190,6 +190,25 @@ set_remove_stub( void **args )
 
 
 static int
+set_contains_stub( void **args )
+{
+    Set *s = args[0];
+    void *el = args[1];
+
+    return set__contains( s, el );
+}
+
+
+int
+set_size_stub( void **args )
+{
+    int *i = new( int );
+    *i = ( int ) set__size( args[0] );
+    return i;
+}
+
+
+static int
 add_set_prims( Environment *env )
 {
     Primitive *p;
@@ -201,6 +220,15 @@ add_set_prims( Environment *env )
 
       && ( p = primitive__new( env, ANY__NAME, "set__remove", set_remove_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_OPQ )
+      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
+
+      && ( p = primitive__new( env, "int", "set__size", set_size_stub, 1 ) )
+      && primitive__add_param( env, p, "Set", "s", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
+
+      && ( p = primitive__new( env, "int", "set__contains", set_contains_stub, 2 ) )
+      && primitive__add_param( env, p, "Set", "s", REF_TRP )
       && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 ) );
 }

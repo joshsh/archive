@@ -46,6 +46,10 @@ extern void
 set__delete( Set *s );
 
 
+/** \return  the number of elements in s */
+extern unsigned int
+set__size( Set *s );
+
 extern void
 set__walk( Set *s, Dist_f f );
 

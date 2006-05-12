@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data_set p2-version="0.6.4" p2-revision="269" time="Thu May 11 16:26:28 2006">
-  <object id="5" type="cstring">Tuesday</object>
-  <triple>
-    <object ref="5"/>
-    <object ref="32"/>
-    <object type="cstring">Dienstag</object>
-  </triple>
-  <object id="2" type="cstring">endianness</object>
-  <object id="4" type="Term">
+<data_set p2-version="0.6.4" p2-revision="263" time="Thu May 11 14:54:35 2006">
+  <object id="2" type="Term">
     <list>
       <object type="Combinator">S</object>
-      <list>
-        <object type="Combinator">K</object>
-        <object type="Combinator">S</object>
-      </list>
+      <object type="Combinator">K</object>
       <object type="Combinator">K</object>
     </list>
   </object>
+  <object id="3" type="cstring">Thursday</object>
   <triple>
-    <object ref="4"/>
-    <object ref="17"/>
-    <object type="cstring">Babc --&gt; a(bc)</object>
+    <object ref="3"/>
+    <object ref="6"/>
+    <object type="cstring">Donnerstag</object>
   </triple>
-  <object id="3" type="Term">
+  <object id="4" type="Primitive">int_int__add</object>
+  <object id="5" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object type="Combinator">K</object>
+    </list>
+  </object>
+  <object id="6" type="cstring">German</object>
+  <object id="7" type="cstring">Sunday</object>
+  <triple>
+    <object ref="7"/>
+    <object ref="6"/>
+    <object type="cstring">Sonntag</object>
+  </triple>
+  <object id="8" type="Primitive">set__union</object>
+  <object id="9" type="Term">
     <list>
       <object type="Combinator">S</object>
       <object type="Primitive">double_double__multiply</object>
@@ -30,37 +36,245 @@
         <object type="Combinator">K</object>
         <object type="Combinator">K</object>
         <object type="Combinator">S</object>
-        <object ref="11"/>
+        <object ref="2"/>
         <object type="Primitive">double_double__multiply</object>
       </list>
     </list>
   </object>
-  <object id="6" type="Primitive">double_double__multiply</object>
-  <object id="10" type="cstring">e-mail</object>
-  <object id="12" type="cstring">Montag</object>
-  <object id="9" type="Primitive">int_int__multiply</object>
-  <object id="7" type="Primitive">set__contains</object>
+  <object id="10" type="Namespace">
+    <table>
+      <object type="Set" name="junk">
+        <list>
+          <object ref="6"/>
+          <object ref="22"/>
+        </list>
+      </object>
+      <object ref="23" name="recursive"/>
+    </table>
+  </object>
+  <object id="12" type="cstring">Monday</object>
+  <triple>
+    <object ref="12"/>
+    <object ref="6"/>
+    <object ref="22"/>
+  </triple>
   <object id="11" type="Term">
     <list>
       <object type="Combinator">S</object>
-      <object type="Combinator">K</object>
+      <list>
+        <object type="Combinator">K</object>
+        <object type="Combinator">S</object>
+      </list>
       <object type="Combinator">K</object>
     </list>
   </object>
-  <object id="8" type="cstring">Ludwig van Beethoven</object>
-  <object id="14" type="cstring">Wednesday</object>
+  <triple>
+    <object ref="11"/>
+    <object ref="31"/>
+    <object type="cstring">Babc --&gt; a(bc)</object>
+  </triple>
+  <object id="13" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object ref="2"/>
+      <object ref="2"/>
+    </list>
+  </object>
+  <triple>
+    <object ref="13"/>
+    <object ref="31"/>
+    <object type="cstring">Oa --&gt; aa</object>
+  </triple>
+  <object id="14" type="Namespace">
+    <table>
+      <object ref="35" name="Friday"/>
+      <object ref="12" name="Monday"/>
+      <object ref="20" name="Saturday"/>
+      <object ref="7" name="Sunday"/>
+      <object ref="3" name="Thursday"/>
+      <object ref="41" name="Tuesday"/>
+      <object ref="37" name="Wednesday"/>
+    </table>
+  </object>
   <triple>
     <object ref="14"/>
-    <object ref="32"/>
-    <object type="cstring">Mittwoch</object>
+    <object ref="33"/>
+    <object type="cstring">dagar</object>
   </triple>
-  <object id="13" type="Primitive">object__children</object>
-  <object id="19" type="Term">
+  <object id="15" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <object ref="11"/>
+      <object ref="39"/>
+    </list>
+  </object>
+  <object id="16" type="cstring">e-mail</object>
+  <object id="17" type="cstring">ARM</object>
+  <triple>
+    <object ref="17"/>
+    <object ref="30"/>
+    <object type="cstring">Many ARM processors support either mode, but usually are used in little endian mode.</object>
+  </triple>
+  <object id="18" type="Term">
     <list>
       <object type="Combinator">S</object>
       <list>
-        <object ref="4"/>
-        <object ref="4"/>
+        <object ref="11"/>
+        <object type="Primitive">set__union</object>
+        <object type="Primitive">object__triples_predicates</object>
+      </list>
+      <object type="Primitive">object__triples_objects</object>
+    </list>
+  </object>
+  <object id="19" type="cstring">little-endian</object>
+  <object id="20" type="cstring">Saturday</object>
+  <triple>
+    <object ref="20"/>
+    <object ref="6"/>
+    <object type="cstring">Samstag</object>
+  </triple>
+  <object id="21" type="Namespace">
+    <table>
+      <object type="Term" name="has_cycles">
+        <list>
+          <object type="Combinator">S</object>
+          <object type="xpm">/* XPM */
+static char * Untitled_xpm[] = {
+"16 16 2 1",
+" 	c #FFFFFF",
+".	c #000000",
+"                ",
+"                ",
+"                ",
+"                ",
+"                ",
+"      .....     ",
+"     .          ",
+"    .           ",
+"    .......     ",
+"    .           ",
+"     .          ",
+"      .....     ",
+"                ",
+"                ",
+"                ",
+"                "};</object>
+          <list>
+            <object ref="5"/>
+            <object type="xpm">/* XPM */
+static char * tree_xpm[] = {
+"16 16 58 1",
+" 	c None",
+".	c #FFFFFF",
+"+	c #F5F5F5",
+"@	c #646464",
+"#	c #1C1C1C",
+"$	c #696969",
+"%	c #161616",
+"&amp;	c #8E8E8E",
+"*	c #F8F8F8",
+"=	c #060606",
+"-	c #A3A3A3",
+";	c #F2F2F2",
+"&gt;	c #020202",
+",	c #AFAFAF",
+"'	c #484848",
+")	c #343434",
+"!	c #C9C9C9",
+"~	c #333333",
+"{	c #E2E2E2",
+"]	c #121212",
+"^	c #000000",
+"/	c #A2A2A2",
+"(	c #505050",
+"_	c #303030",
+":	c #FEFEFE",
+"&lt;	c #D5D5D5",
+"[	c #010101",
+"}	c #A8A8A8",
+"|	c #F9F9F9",
+"1	c #DEDEDE",
+"2	c #585858",
+"3	c #242424",
+"4	c #FCFCFC",
+"5	c #AAAAAA",
+"6	c #0E0E0E",
+"7	c #414141",
+"8	c #E3E3E3",
+"9	c #0B0B0B",
+"0	c #6E6E6E",
+"a	c #DCDCDC",
+"b	c #A4A4A4",
+"c	c #A0A0A0",
+"d	c #9B9B9B",
+"e	c #4D4D4D",
+"f	c #A7A7A7",
+"g	c #050505",
+"h	c #4A4A4A",
+"i	c #565656",
+"j	c #F3F3F3",
+"k	c #1E1E1E",
+"l	c #3D3D3D",
+"m	c #686868",
+"n	c #C0C0C0",
+"o	c #CECECE",
+"p	c #404040",
+"q	c #141414",
+"r	c #2A2A2A",
+"s	c #9F9F9F",
+".....+@##@+.....",
+".....$%&amp;&amp;%$.....",
+"....*=-..-=*....",
+"....;&gt;,..,&gt;;....",
+".....')!!~'.....",
+".....{]^^]{.....",
+".....!^//^!.....",
+".....(_::_(.....",
+"....&lt;[}..}[&lt;....",
+"..|1234..4321|..",
+".56^^7:..:7^^65.",
+"890ab9c..c9ba098",
+"d94..2e..e2..49d",
+"fg+..hi..ih..+gf",
+"jkl-m&gt;n..n&gt;m-lkj",
+".opqrs....srqpo."};</object>
+          </list>
+        </list>
+      </object>
+      <object ref="5" name="union_Y"/>
+    </table>
+  </object>
+  <object id="22" type="cstring">Montag</object>
+  <object id="23" type="Namespace">
+    <table>
+      <object ref="10" name="parent"/>
+      <object ref="23" name="self"/>
+    </table>
+  </object>
+  <object id="24" type="cstring">Sean Drexler</object>
+  <triple>
+    <object ref="24"/>
+    <object ref="16"/>
+    <object type="cstring">seand@omnicast.net</object>
+  </triple>
+  <object id="25" type="Primitive">double_double__multiply</object>
+  <object id="26" type="double">3.14159</object>
+  <object id="27" type="Primitive">int_int__multiply</object>
+  <object id="28" type="cstring">Josh Shinavier</object>
+  <triple>
+    <object ref="28"/>
+    <object ref="16"/>
+    <object type="cstring">parcour@gmail.com</object>
+  </triple>
+  <object id="29" type="Combinator">K</object>
+  <object id="30" type="cstring">endianness</object>
+  <object id="31" type="cstring">description</object>
+  <object id="32" type="Term">
+    <list>
+      <object type="Combinator">S</object>
+      <list>
+        <object ref="11"/>
+        <object ref="11"/>
         <object type="Combinator">S</object>
       </list>
       <list>
@@ -70,46 +284,25 @@
     </list>
   </object>
   <triple>
-    <object ref="19"/>
-    <object ref="17"/>
-    <object type="cstring">Cabc --&gt; acb</object>
-  </triple>
-  <object id="16" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <list>
-        <object type="Combinator">K</object>
-        <list>
-          <object type="Combinator">S</object>
-          <object type="Primitive">set__contains</object>
-        </list>
-      </list>
-      <list>
-        <object type="Combinator">K</object>
-        <object type="Combinator">K</object>
-        <object type="Primitive">set__contains</object>
-      </list>
-    </list>
-  </object>
-  <object id="17" type="cstring">description</object>
-  <object id="15" type="Primitive">object__triples_predicates</object>
-  <object id="18" type="Primitive">object__triples_objects</object>
-  <object id="20" type="Combinator">S</object>
-  <object id="21" type="cstring">Thursday</object>
-  <triple>
-    <object ref="21"/>
     <object ref="32"/>
-    <object type="cstring">Donnerstag</object>
+    <object ref="31"/>
+    <object type="cstring">Cabc --&gt; acb</object>
   </triple>
   <object id="1" type="Namespace">
     <table>
+      <object type="Namespace" name="Soph-Ware">
+        <table>
+          <object ref="28" name="Josh"/>
+          <object ref="24" name="Sean"/>
+        </table>
+      </object>
       <object type="Namespace" name="architecture">
         <table>
-          <object ref="22" name="ARM"/>
+          <object ref="17" name="ARM"/>
           <object type="cstring" name="big-endian">big-endian</object>
-          <object ref="2" name="endianness"/>
-          <object ref="30" name="little-endian"/>
-          <object ref="44" name="x86"/>
+          <object ref="30" name="endianness"/>
+          <object ref="19" name="little-endian"/>
+          <object ref="36" name="x86"/>
         </table>
       </object>
       <object type="Namespace" name="compilers">
@@ -164,96 +357,103 @@
           <object type="cstring" name="type signature"></object>
         </table>
       </object>
+      <object ref="14" name="days"/>
       <object type="Namespace" name="graph">
         <table>
-          <object type="Namespace" name="algorithms">
-            <table>
-              <object type="Term" name="has_cycles">
-                <list>
-                  <object type="Combinator">S</object>
-                  <object ref="16"/>
-                  <list>
-                    <object ref="33"/>
-                    <object ref="31"/>
-                  </list>
-                </list>
-              </object>
-              <object type="Term" name="subgraph">
-                <list>
-                  <object type="cstring">[union_Y]</object>
-                  <object type="Primitive">object__children</object>
-                </list>
-              </object>
-            </table>
-          </object>
+          <object ref="21" name="algorithms"/>
+          <object ref="31" name="description"/>
+          <object type="cstring" name="dichotomy">dichotomy</object>
+          <object ref="16" name="e-mail"/>
           <object type="Term" name="neighbors">
             <list>
               <object type="Combinator">S</object>
               <list>
-                <object ref="4"/>
+                <object ref="11"/>
                 <object type="Primitive">set__union</object>
-                <object ref="36"/>
+                <object ref="18"/>
               </list>
               <object type="Primitive">object__children</object>
             </list>
           </object>
-          <object type="Namespace" name="primitives">
-            <table>
-              <object type="Primitive" name="objs">object__triples_objects</object>
-              <object type="Primitive" name="preds">object__triples_predicates</object>
-            </table>
-          </object>
-          <object type="Namespace" name="properties">
-            <table>
-              <object ref="17" name="description"/>
-              <object type="cstring" name="dichotomy">dichotomy</object>
-              <object ref="10" name="e-mail"/>
-              <object type="cstring" name="type">type</object>
-            </table>
-          </object>
-          <object ref="36" name="triples_neighbors"/>
+          <object type="Primitive" name="objs">object__triples_objects</object>
+          <object ref="18" name="triples_neighbors"/>
+          <object type="cstring" name="type">type</object>
         </table>
       </object>
+      <object ref="21" name="graph algorithms"/>
       <object type="Namespace" name="images">
         <table>
           <object type="Term" name="OS icon">
             <list>
               <object type="Combinator">S</object>
-              <object ref="42"/>
-              <object ref="34"/>
-            </list>
-          </object>
-          <object type="Term" name="dot_icon">
-            <list>
-              <object type="Combinator">K</object>
-              <object ref="31"/>
-            </list>
-          </object>
-          <object type="xpm" name="element_of">/* XPM */
-static char * Untitled_xpm[] = {
-"16 16 2 1",
-" 	c #FFFFFF",
+              <object type="xpm">/* XPM */
+static char * tux_xpm[] = {
+"16 16 17 1",
+" 	c None",
 ".	c #000000",
+"+	c #800000",
+"@	c #008000",
+"#	c #808000",
+"$	c #000080",
+"%	c #800080",
+"&amp;	c #008080",
+"*	c #C0C0C0",
+"=	c #808080",
+"-	c #FF0000",
+";	c #00FF00",
+"&gt;	c #FFFF00",
+",	c #0000FF",
+"'	c #FF00FF",
+")	c #00FFFF",
+"!	c #FFFFFF",
 "                ",
-"                ",
-"                ",
-"                ",
-"                ",
-"      .....     ",
-"     .          ",
-"    .           ",
-"    .......     ",
-"    .           ",
-"     .          ",
-"      .....     ",
-"                ",
-"                ",
-"                ",
-"                "};</object>
-          <object type="Term" name="mac">
-            <list>
-              <object type="Combinator">K</object>
-              <object ref="34"/>
+"      ...       ",
+"     .....      ",
+"     .*.*.      ",
+"     ..&gt;..      ",
+"     .&gt;&gt;&gt;.*     ",
+"    *.***..     ",
+"    ..!*!!.*    ",
+"   *.*!!!*..    ",
+"   *.!!*!!..*   ",
+"   ..!!*!!..=   ",
+"  =&gt;#.!*!!..*   ",
+"  =&gt;&gt;=!!!*&gt;.&gt;=  ",
+" =&gt;&gt;&gt;#!!!.&gt;&gt;&gt;&gt;= ",
+"  ##&gt;&gt;....&gt;&gt;==  ",
+"   *=#=**=#=    "};</object>
+              <object type="xpm">/* XPM */
+static char * mac2_xpm[] = {
+"16 16 13 1",
+" 	c None",
+".	c #FFFFFF",
+"+	c #7495B4",
+"@	c #0042A4",
+"#	c #85A6C5",
+"$	c #B6CBDE",
+"%	c #C7DBE7",
+"&amp;	c #4A739C",
+"*	c #A6C2D6",
+"=	c #DFEDF7",
+"-	c #95AFCD",
+";	c #648DAC",
+"&gt;	c #3A648C",
+"........+@#.....",
+".......$@@%.0....",
+".......+&amp;*......",
+"...=-;*%$-;-....",
+"..%&gt;@@@&gt;@@@@&gt;=..",
+"..&amp;@@@@@@@@@&amp;=..",
+".*@@@@@@@@@@%.0..",
+".-@@@@@@@@@&amp;....",
+".-@@@@@@@@@&gt;....",
+".-@@@@@@@@@@-...",
+".%@@@@@@@@@@@*..",
+"..&amp;@@@@@@@@@@;..",
+"..%@@@@@@@@@@=..",
+"...+@@@@@@@@-...",
+"....-&amp;;--;&amp;-....",
+".....=.........."};</object>
             </list>
           </object>
           <object type="cstring" name="mac_str">/* XPM */
@@ -338,12 +538,6 @@ static char * rdf_xpm[] = {
 "         |22222",
 "         {$2221",
 "          |12* "};</object>
-          <object type="Term" name="tux">
-            <list>
-              <object type="Combinator">K</object>
-              <object ref="42"/>
-            </list>
-          </object>
           <object type="cstring" name="tux_str">/* XPM */
 static char * tux_xpm[] = {
 "16 16 17 1",
@@ -385,8 +579,8 @@ static char * tux_xpm[] = {
       <object type="Namespace" name="languages">
         <table>
           <object type="cstring" name="English">English</object>
-          <object ref="32" name="German"/>
-          <object ref="23" name="Swedish"/>
+          <object ref="6" name="German"/>
+          <object ref="33" name="Swedish"/>
         </table>
       </object>
       <object type="Namespace" name="math">
@@ -406,10 +600,10 @@ static char * tux_xpm[] = {
                     <object type="Combinator">K</object>
                     <list>
                       <object type="Primitive">double_double__multiply</object>
-                      <object ref="25"/>
+                      <object ref="26"/>
                     </list>
                   </list>
-                  <object ref="3"/>
+                  <object ref="9"/>
                 </list>
               </object>
               <object type="Term" name="circumference">
@@ -426,7 +620,7 @@ static char * tux_xpm[] = {
               <object type="Primitive" name="+">double_double__add</object>
               <object type="Primitive" name="-">double_double__subtract</object>
               <object type="Primitive" name="/">double_double__divide</object>
-              <object ref="3" name="sq"/>
+              <object ref="9" name="sq"/>
             </table>
           </object>
           <object type="Namespace" name="int">
@@ -444,29 +638,23 @@ static char * tux_xpm[] = {
                     <object type="Combinator">K</object>
                     <object type="Combinator">K</object>
                     <object type="Combinator">S</object>
-                    <object ref="11"/>
+                    <object ref="2"/>
                     <object type="Primitive">int_int__multiply</object>
                   </list>
                 </list>
               </object>
             </table>
           </object>
-          <object ref="25" name="pi"/>
+          <object ref="26" name="pi"/>
         </table>
       </object>
       <object type="Namespace" name="misc">
         <table>
           <object type="char" name="$">$</object>
           <object type="cstring" name="Alfresco">open source</object>
-          <object ref="8" name="Beethoven"/>
+          <object ref="40" name="Beethoven"/>
           <object type="cstring" name="Documentum">proprietary content manager</object>
           <object type="cstring" name="POSIX_ME_HARDER">POSIXLY_CORRECT</object>
-          <object type="Namespace" name="Soph-Ware">
-            <table>
-              <object ref="29" name="Josh"/>
-              <object ref="27" name="Sean"/>
-            </table>
-          </object>
           <object type="int" name="The Answer">42</object>
           <object type="Namespace" name="font">
             <table>
@@ -475,19 +663,12 @@ static char * tux_xpm[] = {
             </table>
           </object>
           <object type="cstring" name="multiline characters"></object>
-          <object type="Namespace" name="parkour">
-            <table>
-              <object type="cstring" name="John"></object>
-              <object type="cstring" name="Ron">Run? Li</object>
-              <object type="cstring" name="Sean Drummond"></object>
-            </table>
-          </object>
           <object type="Namespace" name="rhythm">
             <table>
               <object type="Bag" name="a">
                 <list>
                   <object type="cstring">|.xxx|x.x.|</object>
-                  <object ref="8"/>
+                  <object ref="40"/>
                 </list>
               </object>
               <object type="Bag" name="b">
@@ -501,17 +682,34 @@ static char * tux_xpm[] = {
           <object type="cstring" name="stylized comments"></object>
         </table>
       </object>
-      <object type="Namespace" name="set">
+      <object type="Namespace" name="months">
         <table>
-          <object ref="16" name="isin"/>
-          <object ref="33" name="union_Y"/>
+          <object type="cstring" name="April"></object>
+          <object type="cstring" name="August"></object>
+          <object type="cstring" name="December"></object>
+          <object type="cstring" name="February"></object>
+          <object type="cstring" name="January"></object>
+          <object type="cstring" name="July"></object>
+          <object type="cstring" name="June"></object>
+          <object type="cstring" name="March"></object>
+          <object type="cstring" name="May"></object>
+          <object type="cstring" name="November"></object>
+          <object type="cstring" name="October"></object>
+          <object type="cstring" name="September"></object>
+        </table>
+      </object>
+      <object type="Namespace" name="parkour">
+        <table>
+          <object type="cstring" name="John"></object>
+          <object type="cstring" name="Ron">Run? Li</object>
+          <object type="cstring" name="Sean Drummond"></object>
         </table>
       </object>
       <object type="Namespace" name="sk">
         <table>
-          <object ref="4" name="B"/>
-          <object ref="19" name="C"/>
-          <object ref="11" name="I"/>
+          <object ref="11" name="B"/>
+          <object ref="32" name="C"/>
+          <object ref="2" name="I"/>
           <object type="Combinator" name="K">K</object>
           <object type="Combinator" name="S">S</object>
           <object type="Term" name="Y">
@@ -519,7 +717,7 @@ static char * tux_xpm[] = {
               <object type="Combinator">S</object>
               <list>
                 <object type="Combinator">K</object>
-                <object ref="43"/>
+                <object ref="13"/>
               </list>
               <list>
                 <object type="Combinator">S</object>
@@ -533,7 +731,7 @@ static char * tux_xpm[] = {
                 </list>
                 <list>
                   <object type="Combinator">K</object>
-                  <object ref="43"/>
+                  <object ref="13"/>
                 </list>
               </list>
             </list>
@@ -593,19 +791,19 @@ static char * tux_xpm[] = {
           <object type="Term" name="inc">
             <list>
               <object type="Combinator">S</object>
-              <object ref="4"/>
+              <object ref="11"/>
             </list>
           </object>
-          <object ref="26" name="n0"/>
-          <object ref="45" name="n1"/>
+          <object ref="39" name="n0"/>
+          <object ref="15" name="n1"/>
           <object type="Term" name="n2">
             <list>
               <object type="Combinator">S</object>
-              <object ref="4"/>
-              <object ref="45"/>
+              <object ref="11"/>
+              <object ref="15"/>
             </list>
           </object>
-          <object ref="43" name="omega"/>
+          <object ref="13" name="omega"/>
           <object type="Combinator" name="true">K</object>
           <object type="Term" name="xyy">
             <list>
@@ -615,7 +813,7 @@ static char * tux_xpm[] = {
                 <object type="Combinator">K</object>
                 <object type="Combinator">K</object>
                 <object type="Combinator">S</object>
-                <object ref="11"/>
+                <object ref="2"/>
               </list>
             </list>
           </object>
@@ -626,315 +824,53 @@ static char * tux_xpm[] = {
                 <object type="Combinator">K</object>
                 <list>
                   <object type="Combinator">S</object>
-                  <object ref="11"/>
+                  <object ref="2"/>
                 </list>
               </list>
               <list>
                 <object type="Combinator">K</object>
                 <object type="Combinator">K</object>
-                <object ref="11"/>
+                <object ref="2"/>
               </list>
             </list>
           </object>
         </table>
       </object>
-      <object ref="37" name="test"/>
-      <object type="Namespace" name="time">
-        <table>
-          <object ref="46" name="days"/>
-          <object type="Namespace" name="months">
-            <table>
-              <object type="cstring" name="April"></object>
-              <object type="cstring" name="August"></object>
-              <object type="cstring" name="December"></object>
-              <object type="cstring" name="February"></object>
-              <object type="cstring" name="January"></object>
-              <object type="cstring" name="July"></object>
-              <object type="cstring" name="June"></object>
-              <object type="cstring" name="March"></object>
-              <object type="cstring" name="May"></object>
-              <object type="cstring" name="November"></object>
-              <object type="cstring" name="October"></object>
-              <object type="cstring" name="September"></object>
-            </table>
-          </object>
-        </table>
-      </object>
+      <object ref="10" name="test"/>
     </table>
   </object>
-  <object id="22" type="cstring">ARM</object>
+  <object id="33" type="cstring">Swedish</object>
+  <object id="34" type="Primitive">object__triples_objects</object>
+  <object id="35" type="cstring">Friday</object>
   <triple>
-    <object ref="22"/>
-    <object ref="2"/>
-    <object type="cstring">Many ARM processors support either mode, but usually are used in little endian mode.</object>
-  </triple>
-  <object id="23" type="cstring">Swedish</object>
-  <object id="24" type="Namespace">
-    <table>
-      <object ref="37" name="parent"/>
-      <object ref="24" name="self"/>
-    </table>
-  </object>
-  <object id="25" type="double">3.14159</object>
-  <object id="26" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object type="Combinator">K</object>
-    </list>
-  </object>
-  <object id="27" type="cstring">Sean Drexler</object>
-  <triple>
-    <object ref="27"/>
-    <object ref="10"/>
-    <object type="cstring">seand@omnicast.net</object>
-  </triple>
-  <object id="28" type="cstring">Saturday</object>
-  <triple>
-    <object ref="28"/>
-    <object ref="32"/>
-    <object type="cstring">Samstag</object>
-  </triple>
-  <object id="29" type="cstring">Josh Shinavier</object>
-  <triple>
-    <object ref="29"/>
-    <object ref="10"/>
-    <object type="cstring">parcour@gmail.com</object>
-  </triple>
-  <object id="30" type="cstring">little-endian</object>
-  <object id="31" type="xpm">/* XPM */
-static char * tree_xpm[] = {
-"16 16 58 1",
-" 	c None",
-".	c #FFFFFF",
-"+	c #F5F5F5",
-"@	c #646464",
-"#	c #1C1C1C",
-"$	c #696969",
-"%	c #161616",
-"&amp;	c #8E8E8E",
-"*	c #F8F8F8",
-"=	c #060606",
-"-	c #A3A3A3",
-";	c #F2F2F2",
-"&gt;	c #020202",
-",	c #AFAFAF",
-"'	c #484848",
-")	c #343434",
-"!	c #C9C9C9",
-"~	c #333333",
-"{	c #E2E2E2",
-"]	c #121212",
-"^	c #000000",
-"/	c #A2A2A2",
-"(	c #505050",
-"_	c #303030",
-":	c #FEFEFE",
-"&lt;	c #D5D5D5",
-"[	c #010101",
-"}	c #A8A8A8",
-"|	c #F9F9F9",
-"1	c #DEDEDE",
-"2	c #585858",
-"3	c #242424",
-"4	c #FCFCFC",
-"5	c #AAAAAA",
-"6	c #0E0E0E",
-"7	c #414141",
-"8	c #E3E3E3",
-"9	c #0B0B0B",
-"0	c #6E6E6E",
-"a	c #DCDCDC",
-"b	c #A4A4A4",
-"c	c #A0A0A0",
-"d	c #9B9B9B",
-"e	c #4D4D4D",
-"f	c #A7A7A7",
-"g	c #050505",
-"h	c #4A4A4A",
-"i	c #565656",
-"j	c #F3F3F3",
-"k	c #1E1E1E",
-"l	c #3D3D3D",
-"m	c #686868",
-"n	c #C0C0C0",
-"o	c #CECECE",
-"p	c #404040",
-"q	c #141414",
-"r	c #2A2A2A",
-"s	c #9F9F9F",
-".....+@##@+.....",
-".....$%&amp;&amp;%$.....",
-"....*=-..-=*....",
-"....;&gt;,..,&gt;;....",
-".....')!!~'.....",
-".....{]^^]{.....",
-".....!^//^!.....",
-".....(_::_(.....",
-"....&lt;[}..}[&lt;....",
-"..|1234..4321|..",
-".56^^7:..:7^^65.",
-"890ab9c..c9ba098",
-"d94..2e..e2..49d",
-"fg+..hi..ih..+gf",
-"jkl-m&gt;n..n&gt;m-lkj",
-".opqrs....srqpo."};</object>
-  <object id="32" type="cstring">German</object>
-  <object id="33" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object type="Combinator">K</object>
-    </list>
-  </object>
-  <object id="34" type="xpm">/* XPM */
-static char * mac2_xpm[] = {
-"16 16 13 1",
-" 	c None",
-".	c #FFFFFF",
-"+	c #7495B4",
-"@	c #0042A4",
-"#	c #85A6C5",
-"$	c #B6CBDE",
-"%	c #C7DBE7",
-"&amp;	c #4A739C",
-"*	c #A6C2D6",
-"=	c #DFEDF7",
-"-	c #95AFCD",
-";	c #648DAC",
-"&gt;	c #3A648C",
-"........+@#.....",
-".......$@@%.0....",
-".......+&amp;*......",
-"...=-;*%$-;-....",
-"..%&gt;@@@&gt;@@@@&gt;=..",
-"..&amp;@@@@@@@@@&amp;=..",
-".*@@@@@@@@@@%.0..",
-".-@@@@@@@@@&amp;....",
-".-@@@@@@@@@&gt;....",
-".-@@@@@@@@@@-...",
-".%@@@@@@@@@@@*..",
-"..&amp;@@@@@@@@@@;..",
-"..%@@@@@@@@@@=..",
-"...+@@@@@@@@-...",
-"....-&amp;;--;&amp;-....",
-".....=.........."};</object>
-  <object id="35" type="Primitive">int_int__add</object>
-  <object id="36" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <list>
-        <object ref="4"/>
-        <object type="Primitive">set__union</object>
-        <object type="Primitive">object__triples_predicates</object>
-      </list>
-      <object type="Primitive">object__triples_objects</object>
-    </list>
-  </object>
-  <object id="37" type="Namespace">
-    <table>
-      <object type="Set" name="junk">
-        <list>
-          <object ref="32"/>
-          <object ref="12"/>
-        </list>
-      </object>
-      <object ref="24" name="recursive"/>
-    </table>
-  </object>
-  <object id="38" type="cstring">Sunday</object>
-  <triple>
-    <object ref="38"/>
-    <object ref="32"/>
-    <object type="cstring">Sonntag</object>
-  </triple>
-  <object id="39" type="Primitive">set__union</object>
-  <object id="40" type="cstring">Monday</object>
-  <triple>
-    <object ref="40"/>
-    <object ref="32"/>
-    <object ref="12"/>
-  </triple>
-  <object id="41" type="cstring">Friday</object>
-  <triple>
-    <object ref="41"/>
-    <object ref="32"/>
+    <object ref="35"/>
+    <object ref="6"/>
     <object type="cstring">Freitag</object>
   </triple>
-  <object id="42" type="xpm">/* XPM */
-static char * tux_xpm[] = {
-"16 16 17 1",
-" 	c None",
-".	c #000000",
-"+	c #800000",
-"@	c #008000",
-"#	c #808000",
-"$	c #000080",
-"%	c #800080",
-"&amp;	c #008080",
-"*	c #C0C0C0",
-"=	c #808080",
-"-	c #FF0000",
-";	c #00FF00",
-"&gt;	c #FFFF00",
-",	c #0000FF",
-"'	c #FF00FF",
-")	c #00FFFF",
-"!	c #FFFFFF",
-"                ",
-"      ...       ",
-"     .....      ",
-"     .*.*.      ",
-"     ..&gt;..      ",
-"     .&gt;&gt;&gt;.*     ",
-"    *.***..     ",
-"    ..!*!!.*    ",
-"   *.*!!!*..    ",
-"   *.!!*!!..*   ",
-"   ..!!*!!..=   ",
-"  =&gt;#.!*!!..*   ",
-"  =&gt;&gt;=!!!*&gt;.&gt;=  ",
-" =&gt;&gt;&gt;#!!!.&gt;&gt;&gt;&gt;= ",
-"  ##&gt;&gt;....&gt;&gt;==  ",
-"   *=#=**=#=    "};</object>
-  <object id="43" type="Term">
-    <list>
-      <object type="Combinator">S</object>
-      <object ref="11"/>
-      <object ref="11"/>
-    </list>
-  </object>
+  <object id="36" type="cstring">x86</object>
   <triple>
-    <object ref="43"/>
-    <object ref="17"/>
-    <object type="cstring">Oa --&gt; aa</object>
-  </triple>
-  <object id="44" type="cstring">x86</object>
-  <triple>
-    <object ref="44"/>
-    <object ref="2"/>
+    <object ref="36"/>
     <object ref="30"/>
+    <object ref="19"/>
   </triple>
-  <object id="45" type="Term">
+  <object id="37" type="cstring">Wednesday</object>
+  <triple>
+    <object ref="37"/>
+    <object ref="6"/>
+    <object type="cstring">Mittwoch</object>
+  </triple>
+  <object id="38" type="Combinator">S</object>
+  <object id="39" type="Term">
     <list>
       <object type="Combinator">S</object>
-      <object ref="4"/>
-      <object ref="26"/>
+      <object type="Combinator">K</object>
     </list>
   </object>
-  <object id="46" type="Namespace">
-    <table>
-      <object ref="41" name="Friday"/>
-      <object ref="40" name="Monday"/>
-      <object ref="28" name="Saturday"/>
-      <object ref="38" name="Sunday"/>
-      <object ref="21" name="Thursday"/>
-      <object ref="5" name="Tuesday"/>
-      <object ref="14" name="Wednesday"/>
-    </table>
-  </object>
+  <object id="40" type="cstring">Ludwig van Beethoven</object>
+  <object id="41" type="cstring">Tuesday</object>
   <triple>
-    <object ref="46"/>
-    <object ref="23"/>
-    <object type="cstring">dagar</object>
+    <object ref="41"/>
+    <object ref="6"/>
+    <object type="cstring">Dienstag</object>
   </triple>
-  <object id="47" type="Combinator">K</object>
 </data_set>

@@ -56,6 +56,13 @@ set__delete( Set *s )
 }
 
 
+unsigned int
+set__size( Set *s )
+{
+    return hash_table__size( s );
+}
+
+
 /******************************************************************************/
 
 

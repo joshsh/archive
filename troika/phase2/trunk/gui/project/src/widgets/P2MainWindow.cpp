@@ -412,7 +412,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
 //QIcon::State state;  // QIcon::On  QIcon::Off
 
     //icon = QIcon( ":/viewShowFrames.png" );
-    QAction *viewShowFramesAction = new QAction( checkmark, tr( "&Show Frames" ), this );
+    viewShowFramesAction = new QAction( checkmark, tr( "&Show Frames" ), this );
     //viewShowFramesAction = new QAction( tr( "&Show Frames" ), this );
     viewShowFramesAction->setStatusTip( tr( "Draw borders around all frames" ) );
     connect( viewShowFramesAction, SIGNAL( triggered() ), this, SLOT( viewShowFrames() ) );
@@ -423,7 +423,7 @@ void P2MainWindow::createMenusAndToolbar( const P2Environment &env )
     if ( TOOLBAR & TOOLBAR__VIEW & TOOLBAR__VIEW__SHOW_FRAMES )
         toolbar->addAction( viewShowFramesAction );
 
-    QAction *viewShowNamesAction = new QAction( checkmark, tr( "Show Names" ), this );
+    viewShowNamesAction = new QAction( checkmark, tr( "Show Names" ), this );
     viewShowNamesAction->setStatusTip( tr( "Display lexical names" ) );
     connect( viewShowNamesAction, SIGNAL( triggered() ), this, SLOT( viewShowNames() ) );
     //viewShowNamesAction->setShortcut( Qt::Key_F6 );
@@ -474,7 +474,6 @@ void P2MainWindow::refresh()
     viewShowNamesAction->setChecked( environment->getNameVisibility() );
 
     viewStack->refresh( *environment );
-
     //update();
 
 /*
