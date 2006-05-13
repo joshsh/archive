@@ -113,6 +113,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Reduction ******************************************************************/
 
+#define PRIM__IMPLICIT_SET_MAPPING              1
+#define PRIM__ALLOW_GENERIC_PARAMS              1
+#define PRIM__ALLOW_GENERIC_RESULTS             1
 
 #define PRIM__ALLOW_HIGHER_ORDER                0
 #define PRIM__ALLOW_NOARG_FUNCTIONS             0

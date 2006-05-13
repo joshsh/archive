@@ -41,22 +41,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** \brief  Reduce an S,K term according to the rules of combinator expressions.
-
     \param term  the term to reduce.  It must be in strictly left-associative
     form, and is undefined once it has been passed as an argument to this
     function.
-
     \param m  memory manager which will claim ownership of any
     new objects
-
     \param term_type  type of impure combinator terms
-
     \param primitive_type  type of an embedded primitive function
-
     \param combinator_type  type of SK combinators
-
+    \param set_type  type of object sets
     \return  the reduced term, or 0 if an exception has occurred
-
     \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
     which is not an S or K combinator or a primitive, is considered a
     non-redex object. */
@@ -66,7 +60,8 @@ sk_reduce(
     Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
-    Type *combinator_type );
+    Type *combinator_type,
+    Type *set_type );
 
 
 #endif  /* SK_H */

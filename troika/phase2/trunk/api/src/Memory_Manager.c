@@ -521,26 +521,11 @@ memory_manager__collect( Memory_Manager *m )
         return 0;
     }
 
-    #if DEBUG__MEMORY
-    int n_initial = bunch__size( m->objects );
-    #endif
-
-    #ifdef DEBUG__SAFE
-    if ( !m )
-    {
-        ERROR( "memory_manager__collect: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && !m )
+        abort();
 
     /* Mark all reachable objects. */
     memory_manager__walk( m, 0, ( Dist_f ) noop, FALSE, TRUE );
-
-    #if DEBUG__MEMORY
-    printf( "[] memory_manager__collect(%#x): deallocated %i of %i.\n",
-        ( int ) m, n_initial - bunch__size( m->objects ), n_initial );
-    FFLUSH;
-    #endif
 }
 
 

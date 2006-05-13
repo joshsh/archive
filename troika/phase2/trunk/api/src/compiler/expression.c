@@ -211,7 +211,8 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
             environment__manager( c->env ),
             c->term_t,
             c->prim_t,
-            c->combinator_t );
+            c->combinator_t,
+            c->set_t );
 
         if ( t )
             o->value = t;

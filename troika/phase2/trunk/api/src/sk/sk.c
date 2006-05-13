@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <sk/sk.h>
+#include <util/Set.h>
 #include "../Object-impl.h"
 #include "../Primitive-impl.h"
 
@@ -123,170 +124,241 @@ s_reduce( Term *term )
 }
 
 
-/*
-static void **
-prim_args( Primitive *prim, void **args )
-{
-
-}
-*/
-
-static Object *
-reduce_arg( Term *term,
-    Memory_Manager *m,
-    Type *term_type,
-    Type *primitive_type,
-    Type *combinator_type )
-{
-    term = sk_reduce( term, m, term_type, primitive_type, combinator_type );
-
-    if ( term && term__length( term ) == 1 )
-        return *( term->head + 1 );
-    else
-        return 0;
-}
-
-
 /* Assumes left-associative form.
    Note: it's probably worth trying to find a way to consolidate the type
    checking and garbage collection of arguments. */
 static Term *
-prim_reduce( Term *term,
+prim_reduce(
+    Term *term,
     Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
-    Type *combinator_type )
+    Type *combinator_type,
+    Type *set_type )
 {
-    unsigned int i;
-    Object *o, *arg;
-    void *result, **args, **cur = term->head + 2;
-    Primitive *prim = ( ( Object* ) *cur )->value;
-    Type *param_type;
+    Primitive *p;
+    void **args, **cur, **max;
+
+    Object *result = 0;
+    Set *result_set = 0;
+
+    Object *reduce_arg( Term *term )
+    {
+        Object *arg;
+        term = sk_reduce( term, m, term_type, primitive_type, combinator_type, set_type );
+
+        if ( term )
+        {
+            if ( term__length( term ) == 1 )
+                arg = *( term->head + 1 );
+
+            /* Fail with error message. */
+            else
+            {
+                ERROR( "primitive applied to irreducible argument" );
+                arg = 0;
+            }
+
+            term__delete( term );
+        }
+
+        /* Soft fail. */
+        else
+            arg = 0;
+
+        return arg;
+    }
+
+    /* Apply the primitive. */
+    void apply()
+    {
+        /* Caution: no exception handling at this level. */
+        void *r = p->cstub( args );
+
+        Object *robj;
+
+        max = cur;
+
+        if ( r )
+        {
+            if ( PRIM__ALLOW_GENERIC_RESULTS && p->return_type == any_type )
+                /* Return value is an existing typed object. */
+                robj = r;
+
+            else
+            {
+                /* Return type is a raw data reference which needs to be bound to a type. */
+                robj = object__new( p->return_type, r, NOPROPS );
+                memory_manager__add( m, robj );
+            }
+
+            /* Multiple return values. */
+            if ( result )
+            {
+                if ( !result_set )
+                {
+                    result_set = set__new();
+                    set__add( result_set, result );
+                    result = object__new( set_type, result_set, NOPROPS );
+                    memory_manager__add( m, result );
+                }
+
+                set__add( result_set, robj );
+            }
+
+            /* Single (or first) return value. */
+            else
+                result = robj;
+        }
+
+        /* Soft fail if r is NULL. */
+    }
+
+    /* Map arguments to parameters. */
+    void marshal( unsigned int i )
+    {
+        /* This may be one argument, or a set of arguments. */
+        Object *arg;
+
+        Type *param_type;
+        void **temp;
+
+        unsigned int j;
+
+        /* Returns FALSE for success. */
+        boolean curry( Object *a )
+        {
+            if ( PRIM__CHECKS__PARAM_TYPE )
+            {
+                if ( param_type != a->type
+                  && ( !PRIM__ALLOW_GENERIC_PARAMS || param_type != any_type ) )
+                {
+                    ERROR( "prim_reduce: argument type mismatch" );
+                    return TRUE;
+                }
+            }
+
+            if ( PRIM__ALLOW_GENERIC_PARAMS && param_type == any_type )
+                args[j] = a;
+
+            else
+                args[j] = a->value;
+
+
+            return FALSE;
+        }
+
+        void *recurse( Object **argp )
+        {
+            if ( curry( *argp ) )
+                return walker__break;
+
+            else
+            {
+                temp = cur;
+                marshal( j + 1 );
+                cur = temp;
+
+                return 0;
+            }
+        }
+
+        /* Iterate. */
+        for ( j = i; j < p->arity; j++ )
+        {
+            if ( PRIM__CHECKS__PARAM_TYPE || PRIM__ALLOW_GENERIC_PARAMS )
+                param_type = p->parameters[j].type;
+
+            if ( ( unsigned int ) *cur == 2 )
+            {
+                cur++;
+                arg = *cur;
+                cur++;
+            }
+
+            else
+            {
+                /* FIXME: creating a new term for each argument is quite a waste */
+                arg = reduce_arg( term__subterm_at( term, j + 1 ) );
+
+                cur += ( unsigned int ) *cur;
+            }
+
+            /* Abandon application along this argument path. */
+            if ( !arg )
+                return;
+
+            /* Map the arguments. */
+            /* FIXME: as it is, term references will be iterated through, rather than reduced */
+            if ( PRIM__IMPLICIT_SET_MAPPING && ( arg->type->flags & TYPE__IS_OBJ_COLL ) )
+            {
+                arg->type->walk( arg->value, ( Dist_f ) recurse );
+                return;
+            }
+
+            /* Single argument maps to itself. */
+            else if ( curry( arg ) )
+                return;
+        }
+
+        apply();
+    }
+
+    /* Pick out the primitive to be applied. */
+    cur = term->head + 2;
+    p = ( ( Object* ) *cur )->value;
 
     if ( PRIM__ALLOW_NOARG_FUNCTIONS )
     {
-        args = ( prim->arity )
-            ? malloc( prim->arity * sizeof( void* ) )
+        args = ( p->arity )
+            ? malloc( p->arity * sizeof( void* ) )
             : 0;
     }
 
     else
     {
-        if ( DEBUG__SAFE && !prim->arity )
-        {
-            ERROR( "prim_reduce: no parameters" );
-            term__delete( term );
-            return 0;
-        }
+        if ( DEBUG__SAFE && !p->arity )
+            abort();
 
-        args = malloc( prim->arity * sizeof( void* ) );
+        args = malloc( p->arity * sizeof( void* ) );
     }
 
+    /* Advance to the first argument. */
     cur++;
 
-    /* Load arguments into the array. */
-    for ( i = 0; i < prim->arity; i++ )
-    {
-        if ( ( unsigned int ) *cur != 2 )
-        {
-            arg = reduce_arg( term__subterm_at( term, i + 1 ), m, term_type, primitive_type, combinator_type );
+    marshal( 0 );
 
-            /*#if SK__CHECKS__APPLY_TO_NONATOM*/
+    if ( !result )
+        goto fail;
 
-            if ( !arg )
-            {
-                ERROR( "prim_reduce: primitive applied to non-reducing term" );
-
-                if ( args )
-                    free( args );
-                term__delete( term );
-
-                return 0;
-            }
-
-            /*#endif*/
-
-            cur += ( unsigned int ) *cur;
-        }
-
-        else
-        {
-            cur++;
-            arg = *cur;
-            cur++;
-
-            if ( DEBUG__SAFE && !arg )
-            {
-                ERROR( "prim_reduce: null argument" );
-
-                if ( args )
-                    free( args );
-                term__delete( term );
-
-                return 0;
-            }
-        }
-
-        /* Note: it's more efficient to do this here than in Primitive.c */
-        if ( PRIM__CHECKS__PARAM_TYPE )
-        {
-            param_type = prim->parameters[i].type;
-            if ( param_type != arg->type && param_type != any_type )
-            {
-                ERROR( "prim_reduce: argument type mismatch" );
-
-                if ( args )
-                    free( args );
-                term__delete( term );
-
-                return 0;
-            }
-        }
-
-        /* ~ inefficient */
-        if ( prim->parameters[i].type != any_type )
-            args[i] = arg->value;
-        else
-            args[i] = arg;
-    }
-
-    /* Apply the primitive. */
-    result = prim->cstub( args );
-
-    if ( args )
-        free( args );
-
-    if ( !PRIM__ALLOW_VOID_FUNCTIONS && !result )
-    {
-        ERROR( "prim_reduce: null return value from primitive" );
-        term__delete( term );
-        return 0;
-    }
-
-    if ( prim->return_type != any_type )
-    {
-        o = object__new( prim->return_type, result, 0 );
-
-        /* Caution: the object's value must be a BRAND NEW value. */
-        memory_manager__add( m, o );
-    }
-
-    else
-    {
-        o = result;
-    }
+    /* Note: cur is now just beyond the position of the last argument. */
+    cur = max;
 
     /* Replace the primitive reference and its arguments with the return value. */
     cur--;
-    *cur = o;
+    *cur = result;
     cur--;
     *cur = ( void* ) 2;
+
     if ( term->buffer + term->buffer_size - cur > 2 )
         term->head = cur - 1;
+
     else
         term->head = cur;
 
     *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
+
+    goto finish;
+
+fail:
+
+    term__delete( term );
+    term = 0;
+
+finish:
+
+    if ( args )
+        free( args );
 
     return term;
 }
@@ -331,7 +403,6 @@ term_reduce( Term *term )
 }
 
 
-#if DEBUG__SK
 static void
 print_term( Term *t )
 {
@@ -350,7 +421,6 @@ print_term( Term *t )
 
     printf( "\n" );
 }
-#endif
 
 
 Term *
@@ -359,40 +429,31 @@ sk_reduce(
     Memory_Manager *m,
     Type *term_type,
     Type *primitive_type,
-    Type *combinator_type )
+    Type *combinator_type,
+    Type *set_type )
 {
-    #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
-    int iter = 0;
-    #endif
+    unsigned int iter;
+
+    if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
+        iter = 0;
 
     Object *head;
     Type *head_type;
 
-    #if DEBUG__SAFE
-    if ( !term || !m || !primitive_type || !combinator_type )
-    {
-        ERROR( "sk_reduce: null argument" );
-        if ( term )
-            term__delete( term );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !term || !m || !term_type || !primitive_type || !combinator_type || !set_type ) )
+        abort();
 
-    #if DEBUG__SK
-    printf( "%i:\t", iter );
-    print_term( term );
-    #endif
+    if ( DEBUG__SK )
+    {
+        printf( "%i:\t", iter );
+        print_term( term );
+    }
 
     /* Iterate until the resulting term is in head-normal form. */
     for (;;)
     {
-        #if DEBUG__SAFE
-        if ( !term )
-        {
-            ERROR( "sk_reduce: null term" );
-            return 0;
-        }
-        #endif
+        if ( DEBUG__SAFE && !term )
+            abort();
 
 /*
 cur = term->head; sup = term->buffer + term->buffer_size;
@@ -400,51 +461,45 @@ while ( cur < sup ) {
 printf( " %x", ( int ) *cur ); cur++; }
 printf( "\n" );  fflush( stdout );
 */
-        #if SK__CHECKS__MAX_TERM_SIZE > 0
-        if ( ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
+        /* Give up if the term becomes too large. */
+        if ( SK__CHECKS__MAX_TERM_SIZE > 0
+          && ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
         {
-            ERROR( "sk_reduce: reduction aborted (term might expand indefinitely)" );
-            term__delete( term );
-            return 0;
+            ERROR( "sk_reduce: abandoned (term might expand indefinitely)" );
+            goto fail;
         }
-        #endif
 
-        /* Get the object at the head of the term.
-           Caution: the term MUST be in left-associative form. */
+        /* Singleton term. */
         if ( ( unsigned int ) *( term->head ) == 2 )
-            /* Singleton term. */
             head = *( term->head + 1 );
+
+        /* Left-associative sequence. */
         else
-            /* Left-associative sequence. */
             head = *( term->head + 2 );
 
-        #if DEBUG__SAFE
-        if ( !head )
-        {
-            ERROR( "sk_reduce: null encountered at head of term" );
-            term__delete( term );
-            return 0;
-        }
-        #endif
+        /* There should be no way for nulls to appear at the head of a term. */
+        if ( DEBUG__SAFE && !head )
+            abort();
 
         head_type = head->type;
+
+        /* TODO: put these types in a hash table for more flexibility on what is reduced and how */
 
         /* If the head object is a primitive, apply it. */
         if ( head_type == primitive_type )
         {
             if ( term__length( term ) <= ( ( Primitive* ) head->value )->arity )
-                return term;
+                goto finish;
 
             else
             {
-                term = prim_reduce( term, m, term_type, primitive_type, combinator_type );
+                term = prim_reduce( term, m, term_type, primitive_type, combinator_type, set_type );
 
                 /* Unless the application of a primitive is allowed to yield
                    another primitive (or an S or K combinator), the resulting
                    term cannot be further reduced. */
-                #if !PRIM__ALLOW_HIGHER_ORDER
-                return term;
-                #endif
+                if ( !PRIM__ALLOW_HIGHER_ORDER )
+                    goto finish;
             }
         }
 
@@ -456,18 +511,22 @@ printf( "\n" );  fflush( stdout );
                 case S_combinator:
 
                     if ( term__length( term ) < 4 )
-                        return term;
+                        goto finish;
+
                     else
                         term = s_reduce( term );
+
                     break;
 
                 /* Kxy... --> x... */
                 case K_combinator:
 
                     if ( term__length( term ) < 3 )
-                        return term;
+                        goto finish;
+
                     else
                         term = k_reduce( term );
+
                     break;
             }
         }
@@ -479,46 +538,57 @@ printf( "\n" );  fflush( stdout );
             term = term_reduce( term );
         }
 
+#ifdef NOTDEF
+        /* TODO: Distribute... */
+        else if ( head_type == set_type )
+        {
+
+        }
+#endif
+
         /* Any object which is not an S or K combinator, a term or a primitive
            is considered a non-redex object. */
         else
         {
-            #if SK__ALLOW_NONREDUX
-
             /* Simply return the term as-is, without attempting to reduce it
                further. */
-            return term;
+            if ( SK__ALLOW_NONREDUX )
+                goto finish;
 
-            #else
-
-            ERROR( "sk_reduce: non-redex objects not permitted at the head of a term" );
-
-            /* Garbage-collect whatever is left of the term. */
-            term__delete( term );
-
-            /* Fail. */
-            return 0;
-
-            #endif
+            else
+            {
+                ERROR( "sk_reduce: non-redex objects not permitted at the head of a term" );
+                goto fail;
+            }
         }
 
-        #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
-
-        iter++;
-
-        #if DEBUG__SK
-        printf( "%i:\t", iter );
-        print_term( term );
-        #endif
-
-        if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
+        /* Give up if reduction takes too long. */
+        if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
         {
-            ERROR( "sk_reduce: reduction aborted (possible infinite loop)" );
-            term__delete( term );
-            return 0;
+            iter++;
+
+            if ( DEBUG__SK )
+            {
+                printf( "%i:\t", iter );
+                print_term( term );
+            }
+
+            if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
+            {
+                ERROR( "sk_reduce: abandoned (possible infinite loop)" );
+                goto fail;
+            }
         }
-        #endif
     }
+
+fail:
+
+    term__delete( term );
+    term = 0;
+
+finish:
+
+    return term;
 }
 
 

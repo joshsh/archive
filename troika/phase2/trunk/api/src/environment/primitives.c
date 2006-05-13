@@ -73,6 +73,44 @@ children_stub( void **args )
 }
 
 
+/*
+static void *
+objects_inv_stub( void **args )
+{
+    Set *s = args[0];
+    Set *matches = set__new();
+
+    void *helper( Object **opp )
+    {
+        Object *o = *opp;
+
+        void *helper2( Hash_Map__Entry **epp )
+        {
+            Object *target = ( *epp )->target;
+
+            if ( set__contains( s, target ) )
+            {
+                set__add( matches, o );
+                return walker__break;
+            }
+
+            else
+                return 0;
+        }
+
+        if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
+            hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
+
+        return 0;
+    }
+
+    memory_manager__walk( m, 0, ( Dist_f ) helper, FALSE, TRUE );
+
+    return matches;
+}
+*/
+
+
 static void *
 predicates_stub( void **args )
 {
@@ -85,10 +123,8 @@ predicates_stub( void **args )
         return 0;
     }
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
-    if ( o->outbound_edges )
+    if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
         hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
-    #endif
 
     return s;
 }
@@ -106,10 +142,8 @@ objects_stub( void **args )
         return 0;
     }
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
-    if ( o->outbound_edges )
+    if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
         hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
-    #endif
 
     return s;
 }
@@ -189,17 +223,16 @@ set_remove_stub( void **args )
 }
 
 
-static int
+static int *
 set_contains_stub( void **args )
 {
-    Set *s = args[0];
-    void *el = args[1];
-
-    return set__contains( s, el );
+    int *i = new( int );
+    *i = set__contains( args[0], args[1] );
+    return i;
 }
 
 
-int
+int *
 set_size_stub( void **args )
 {
     int *i = new( int );
@@ -257,9 +290,9 @@ add_meta_prims( Environment *env )
     return ( ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
       && primitive__add_param( env, p, ANY__NAME, "self", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
-    #if TRIPLES__GLOBAL
+#if TRIPLES__GLOBAL
       && add_triples_prims( env )
-    #endif
+#endif
       && add_set_prims( env )
     );
 }

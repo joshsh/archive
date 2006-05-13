@@ -36,12 +36,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 typedef Hash_Table Set;
 
 
+/** Constructs an empty set. */
 extern Set *
 set__new( void );
 
+/** Copy constructor. */
 extern Set *
 set__copy( Set *s );
 
+/** Destructor. */
 extern void
 set__delete( Set *s );
 
@@ -50,18 +53,22 @@ set__delete( Set *s );
 extern unsigned int
 set__size( Set *s );
 
+/** Applies a function to each element of the set. */
 extern void
 set__walk( Set *s, Dist_f f );
 
 
 /******************************************************************************/
 
+/** Adds a single element to the set. */
 extern void
 set__add( Set *s, void *el );
 
+/** Removes an element from the set. */
 extern void
 set__remove( Set *s, void *el );
 
+/** \return  whether s contains el as an element */
 extern boolean
 set__contains( const Set *s, const void *el );
 
