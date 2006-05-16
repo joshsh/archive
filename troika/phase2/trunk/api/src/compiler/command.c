@@ -235,10 +235,6 @@ command_mv( Compiler *c, Ast *args )
     Object *o, *o2;
     Name *src, *dest;
 
-    #if DEBUG__COMPILER
-    printf( "[] command_mv(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
     if ( !( src = get_arg( args, 0 ) )
       || !( dest = get_arg( args, 1 ) ) )
         return 0;
@@ -281,10 +277,6 @@ command_new( Compiler *c, Ast *args )
     Object *o;
     Name *name;
 
-    #if DEBUG__COMPILER
-    printf( "[] command_new(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
@@ -302,7 +294,7 @@ static int
 command_ns( Compiler *c, Ast *args )
 {
     Object *o;
-    Name *name;
+    Name *name, *fullname;
 
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
@@ -314,14 +306,18 @@ command_ns( Compiler *c, Ast *args )
 
         else
         {
+            fullname = compiler__name_of__full( c, 0, o );
             c->cur_ns_obj = o;
 
             if ( !c->quiet )
             {
-                printf( "Moved to namespace \"" );
-                name__print( name );
-                printf( "\".\n" );
+                printf( "Moved to namespace " );
+                name__print( fullname );
+/*                name__print( name );*/
+                printf( ".\n" );
             }
+
+            name__delete( fullname );
         }
     }
 

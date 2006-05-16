@@ -79,10 +79,6 @@ namespace__new()
         return 0;
     }
 
-    #if DEBUG__NAMESPACE
-    printf( "[%#x] namespace__new\n", ( int ) ns );
-    #endif
-
     return ns;
 }
 
@@ -90,17 +86,8 @@ namespace__new()
 void
 namespace__delete( Namespace *ns )
 {
-    #if DEBUG__SAFE
-        if ( !ns )
-        {
-            ERROR( "namespace__delete: null namespace" );
-            return;
-        }
-    #endif
-
-    #if DEBUG__NAMESPACE
-    printf( "[] namespace__delete(%#x)\n", ( int ) ns ); fflush( stdout );
-    #endif
+    if ( DEBUG__SAFE && !ns )
+        abort();
 
     dictionary__delete( ns->children );
 
@@ -123,23 +110,8 @@ namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
     Object *child_ns_obj;
     char *key;
 
-    #if DEBUG__SAFE
-    if ( !ns )
-    {
-        ERROR( "namespace__add: null namespace" );
-        return 0;
-    }
-    if ( !name )
-    {
-        ERROR( "namespace__add: null name" );
-        return 0;
-    }
-    if ( !array__size( name ) )
-    {
-        ERROR( "namespace__add: empty name" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !ns || !name || !array__size( name ) ) )
+        abort();
 
     if ( array__size( name ) == 1 )
     {
@@ -178,18 +150,8 @@ namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
 Object *
 namespace__add_simple( Namespace *ns, const char *name, Object *o )
 {
-    #if DEBUG__SAFE
-    if ( !ns )
-    {
-        ERROR( "namespace__add_simple: null namespace" );
-        return 0;
-    }
-    if ( !name )
-    {
-        ERROR( "namespace__add_simple: null name" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !ns|| !name ) )
+        abort();
 
     return dictionary__add( ns->children, name, o );
 }
@@ -216,19 +178,10 @@ namespace__lookup( Namespace_o *ns_obj, Name *name )
     Object *o;
     char *key;
 
-    #if DEBUG__SAFE
-    if ( !ns_obj )
-    {
-        ERROR( "namespace__lookup: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !ns_obj )
+        abort();
 
     ns = object__value( ns_obj );
-
-    #if DEBUG__NAMESPACE
-    printf( "[...] namespace__lookup(%#x, %#x)\n", ( int ) ns_obj, ( int ) name );
-    #endif
 
     if ( !name || !array__size( name ) )
         return ns_obj;
@@ -261,13 +214,8 @@ namespace__lookup( Namespace_o *ns_obj, Name *name )
 Object *
 namespace__lookup_simple( Namespace *ns, const char *name )
 {
-    #if DEBUG__SAFE
-    if ( !ns | !name )
-    {
-        ERROR( "namespace__lookup_simple: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !ns | !name ) )
+        abort();
 
     return ( Object* ) dictionary__lookup( ns->children, name );
 }
@@ -570,15 +518,8 @@ namespace__resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
     char *key;
     unsigned int i;
 
-    #if DEBUG__SAFE
-    if ( !nso || !name )
-    {
-        ERROR( "namespace__resolve: null argument" );
-        return 0;
-    }
-
-    else
-    #endif
+    if ( DEBUG__SAFE && ( !nso || !name || !m ) )
+        abort();
 
     for ( i = 0; i < array__size( name ); i++ )
     {
@@ -593,12 +534,6 @@ namespace__resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
         if ( !( o = namespace__resolve_simple( o, key, m ) ) )
             break;
     }
-
-    #if DEBUG__NAMESPACE
-    printf( "[%#x] namespace__resolve(%#x, ", ( int ) o, ( int ) nso );
-    name__print( name );
-    printf( ")\n" );
-    #endif
 
     return o;
 }
@@ -698,45 +633,47 @@ namespace__define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
     if ( DEBUG__SAFE && ( !nso || !name || !o || !m || !array__size( name ) ) )
         abort();
 
-    #if COMPILER__NAME_INHERITANCE
-    key = array__dequeue( name );
-    local = namespace__resolve( nso, name, m );
-
-    if ( !local )
+    if ( COMPILER__NAME_INHERITANCE )
     {
-        error__not_defined( name );
-        array__enqueue( name, key );
-        o = 0;
-    }
+        key = array__dequeue( name );
+        local = namespace__resolve( nso, name, m );
 
-    else if ( object__type( local ) != object__type( nso ) )
-    {
-        error__not_a_namespace( name );
-        array__enqueue( name, key );
-        o = 0;
-    }
-
-    else
-    {
-        nso = local;
-
-        if ( o )
+        if ( !local )
         {
-            o = namespace__add_simple( object__value( nso ), key, o );
+            error__not_defined( name );
             array__enqueue( name, key );
+            o = 0;
+        }
+
+        else if ( object__type( local ) != object__type( nso ) )
+        {
+            error__not_a_namespace( name );
+            array__enqueue( name, key );
+            o = 0;
         }
 
         else
         {
-            array__enqueue( name, key );
-            o = namespace__undefine( nso, name, m );
+            nso = local;
+
+            if ( o )
+            {
+                o = namespace__add_simple( object__value( nso ), key, o );
+                array__enqueue( name, key );
+            }
+
+            else
+            {
+                array__enqueue( name, key );
+                o = namespace__undefine( nso, name, m );
+            }
         }
     }
-    #else
+
+    else
         o = ( o )
             ? namespace__add( nso, name, o )
             : namespace__remove( nso, name );
-    #endif
 
     return o;
 }

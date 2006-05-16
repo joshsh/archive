@@ -290,7 +290,8 @@ prim_reduce(
 
             /* Map the arguments. */
             /* FIXME: as it is, term references will be iterated through, rather than reduced */
-            if ( PRIM__IMPLICIT_SET_MAPPING && ( arg->type->flags & TYPE__IS_OBJ_COLL ) )
+            if ( PRIM__IMPLICIT_SET_MAPPING && ( arg->type->flags & TYPE__IS_OBJ_COLL )
+              && ( arg->type != param_type ) )
             {
                 arg->type->walk( arg->value, ( Dist_f ) recurse );
                 return;

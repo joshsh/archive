@@ -22,6 +22,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Compiler-impl.h"
 
 
+/* FIXME */
+static Compiler *compiler;
+
+
 static void
 char__encode__alt( char *c, char *buffer )
 {
@@ -49,15 +53,72 @@ string__encode__alt( char *s, char *buffer )
 static void
 term__encode__alt( Term *t, char *buffer )
 {
-/*
+    Name *name;
+
+    void encode( void **cur, boolean delimit )
+    {
+        Object *o;
+        void **lim;
+
+        /* If the sub-term represents a leaf node, execute the procedure. */
+        if ( ( unsigned int ) *cur == 2 )
+        {
+            cur++;
+
+            o = *cur;
+
+                                      /* FIXME */
+            name = compiler__name_of( compiler, compiler->cur_ns_obj, o );
+
+            if ( !name )
+                object__type( o )->encode( object__value( o ), buffer );
+
+            else
+                name__encode( name, buffer );
+        }
+
+        /* If the sub-term contains further sub-terms, recurse through them. */
+        else
+        {
+            if ( delimit )
+            {
+                sprintf( buffer,  "(" );
+                buffer++;
+            }
+
+            lim = cur + ( unsigned int ) *cur;
+            cur++;
+            while ( cur < lim )
+            {
+                encode( cur, TRUE );
+                buffer += strlen( buffer );
+
+                cur += ( unsigned int ) *cur;
+
+                if ( cur < lim )
+                {
+                    sprintf( buffer, " " );
+                    buffer++;
+                }
+            }
+
+            if ( delimit )
+            {
+                sprintf( buffer, ")" );
+                buffer++;
+            }
+        }
+    }
+
+    if ( DEBUG__SAFE && ( !t || !buffer ) )
+        abort();
+
     sprintf( buffer, "[" );
     buffer++;
-*/
-    term__encode( t, buffer );
-/*
-    buffer += strlen( buffer );
+
+    encode( t->head, FALSE );
+
     sprintf( buffer, "]" );
-*/
 }
 
 
@@ -190,6 +251,9 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     if ( DEBUG__SAFE && !expr )
         abort();
 
+    /* FIXME */
+    compiler = c;
+
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;
     string__encode = c->string_t->encode;
@@ -233,19 +297,11 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         if ( a )
             compiler__define( c, name, o );
 
-        oname = namespace__find( c->cur_ns_obj, o, environment__manager( c->env ) );
-        if ( !oname )
-        {
-            oname = namespace__find( environment__root( c->env ), o, environment__manager( c->env ) );
-
-            /* ~ */
-            if ( oname )
-                array__push( oname, STRDUP( "root" ) );
-        }
-
         /* Command-line output. */
         if ( !c->quiet )
         {
+            oname = compiler__name_of__full( c, c->cur_ns_obj, o );
+
             if ( COMPILER__SHOW_ADDRESS )
             {
                 printf( "%#x ", ( int ) o ); FFLUSH;

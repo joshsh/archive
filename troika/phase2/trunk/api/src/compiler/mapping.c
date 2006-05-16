@@ -32,15 +32,9 @@ undef_error( Name *name )
 static Object *
 resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 {
-    Object *o;
-
-    #if COMPILER__NAME_INHERITANCE
-    o = namespace__resolve( nso, name, m );
-    #else
-    o = namespace__lookup( nso, name );
-    #endif
-
-    return o;
+    return ( COMPILER__NAME_INHERITANCE )
+        ? namespace__resolve( nso, name, m )
+        : namespace__lookup( nso, name );
 }
 
 
@@ -154,26 +148,21 @@ compiler__resolve( Compiler *c, Name *name )
 /******************************************************************************/
 
 
+/* Simplify the name.
+   Note: the result is not necessarily as simple as possible.  For instance,
+         an object with two possible fully-qualified names, a:b:c:d and x:y:z,
+         might yield the name x:y:z even though [...] */
 Name *
 compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
 {
-    unsigned int i;
+    unsigned int i = 0;
     char *s;
-    Name *name;
+
     Memory_Manager *m = environment__manager( c->env );
+    Name *name = compiler__name_of__full( c, nso, o );
 
-    if ( !nso )
-        nso = environment__root( c->env );
-
-    name = namespace__find( nso, o, m );
-
-    /* Simplify the name.
-       Note: the result is not necessarily as simple as possible.  For instance,
-           an object with two possible fully-qualified names, a:b:c:d and x:y:z,
-           might yield the name x:y:z even though */
     if ( name )
     {
-        i = 0;
         while ( i < array__size( name ) - 1 )
         {
             s = array__remove( name, i );
@@ -186,6 +175,40 @@ compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
 
             else
                 free( s );
+        }
+    }
+
+    return name;
+}
+
+
+Name *
+compiler__name_of__full( Compiler *c, Namespace_o *nso, const Object *o )
+{
+    Name *name;
+    Object *root = environment__root( c->env );
+    Memory_Manager *m = environment__manager( c->env );
+
+    if ( !nso )
+        nso = c->cur_ns_obj;
+
+    name = namespace__find( nso, o, m );
+
+    /* If the object is not found in the current namespace, try the root
+       namespace. */
+    if ( !name )
+    {
+        name = namespace__find( root, o, m );
+
+        /* FIXME: possible collision with a namespace item "root" */
+        if ( name )
+            array__push( name, STRDUP( "root" ) );
+
+        /* FIXME: possible collision with a namespace item "root" */
+        if ( o == root )
+        {
+            name = name__new();
+            array__push( name, STRDUP( "root" ) );
         }
     }
 

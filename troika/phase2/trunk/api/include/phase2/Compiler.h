@@ -67,6 +67,9 @@ compiler__parse( Compiler *c );
 extern Name *
 compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o );
 
+extern Name *
+compiler__name_of__full( Compiler *c, Namespace_o *nso, const Object *o );
+
 
 /******************************************************************************/
 

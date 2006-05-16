@@ -188,10 +188,11 @@ add_triples_prims( Environment *env )
       && primitive__register( env, p, NOPROPS, 0 ) );
 }
 
-#endif
+#endif  /* TRIPLES_GLOBAL */
 
 
 #include <util/Set.h>
+
 
 static void *
 set_add_stub( void **args )
@@ -223,7 +224,7 @@ set_remove_stub( void **args )
 }
 
 
-static int *
+static void *
 set_contains_stub( void **args )
 {
     int *i = new( int );
@@ -232,12 +233,24 @@ set_contains_stub( void **args )
 }
 
 
-int *
+static void *
 set_size_stub( void **args )
 {
     int *i = new( int );
     *i = ( int ) set__size( args[0] );
     return i;
+}
+
+
+static void *
+set_singleton_stub( void **args )
+{
+    Object *o1 = args[0];
+
+    Set *s = set__new();
+    set__add( s, o1 );
+
+    return s;
 }
 
 
@@ -262,6 +275,10 @@ add_set_prims( Environment *env )
 
       && ( p = primitive__new( env, "int", "set__contains", set_contains_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_TRP )
+      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
+
+      && ( p = primitive__new( env, "Set", "set__singleton", set_singleton_stub, 1 ) )
       && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 ) );
 }
@@ -312,7 +329,7 @@ environment__register_primitive
     Type *first_param = primitive__parameter_type( prim, 0 );
 
     if ( flags & PRIM__CONSTRUCTOR )
-        ERROR( "environment__register_primitive: PRIM__CONSTRUCTOR not in use" );
+        ERROR( "environment__register_primitive: PRIM__CONSTRUCTOR is not in use" );
     if ( flags & PRIM__DECODER )
         prim->return_type->decode = ( Decoder ) src_f;
     if ( flags & PRIM__DESTRUCTOR )
@@ -325,11 +342,6 @@ environment__register_primitive
         primitive__delete( prim );
         return 0;
     }
-
-    #if DEBUG__ENV
-    printf( "[%#x] environment__register_primitive(%#x, %#x, %i, %#x)\n",
-        ( int ) o, ( int ) env, ( int ) prim, flags, ( int ) src_f );
-    #endif
 
     if ( !memory_manager__add( env->manager, o ) )
     {
