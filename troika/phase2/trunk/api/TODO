@@ -9,6 +9,7 @@ THE SECRET KLUDGE for creating an error-free, debuggable ARM phase2 executable:
     _rm here;
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
+    object ^ print ^ cycles
 
 [build]
     source dependencies (settings.h, etc.)
