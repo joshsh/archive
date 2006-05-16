@@ -168,13 +168,8 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
     void **sup, **head, **cur = t->head;
     Element *el, *child;
 
-    #if DEBUG__SAFE
-    if ( !t || !state )
-    {
-        ERROR( "term__xml_encode: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !t || !state ) )
+        abort();
 
     if ( ( unsigned int ) *cur == 2 )
     {
@@ -278,8 +273,7 @@ bag__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Element *child;
     Object *o;
 
-    #if DEBUG__SAFE
-    if ( !el || !state )
+    if ( DEBUG__SAFE && ( !el || !state ) )
     {
         ERROR( "bag__xml_decode: null argument" );
         return 0;
@@ -289,7 +283,6 @@ bag__xml_decode( Element *el, Xml_Decode_Ctx *state )
         ERROR( "bag__xml_decode: bad element name" );
         return 0;
     }
-    #endif
 
     a = array__new( 0, 0 );
 
@@ -384,14 +377,12 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     {
         attr = element__attr( child, ( uc* ) "name", 0 );
 
-        #if DEBUG__SAFE
-        if ( !attr )
+        if ( DEBUG__SAFE && !attr )
         {
             ERROR( "namespace__xml_decode: missing 'name' attribute" );
             namespace__delete( ns );
             return 0;
         }
-        #endif
 
         o = object__xml_decode( child, state );
         text = ( char* ) attr__value( attr );
@@ -538,8 +529,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     char *text;
     Environment *env;
 
-    #if DEBUG__SAFE
-    if ( !el || !state )
+    if ( DEBUG__SAFE && ( !el || !state ) )
     {
         ERROR( "object__xml_decode: null argument" );
         return 0;
@@ -549,7 +539,6 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         ERROR( "object__xml_decode: bad element name" );
         return 0;
     }
-    #endif
 
     env = compiler__environment( state->compiler );
 
@@ -814,12 +803,12 @@ compiler__serialize( Compiler *c, char *path )
         el = object__xml_encode( o, &state, TRUE );
         element__add_child( root, el );
 
-        #if TRIPLES__GLOBAL__OUT_EDGES
-        if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
+        if ( TRIPLES__GLOBAL__OUT_EDGES
+          && o->outbound_edges
+          && hash_table__size( o->outbound_edges ) )
         {
             hash_map__walk( o->outbound_edges, ( Dist_f ) triple_helper );
         }
-        #endif
 
         return 0;
     }

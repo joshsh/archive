@@ -33,6 +33,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/String.h>
 
 
+/*
+typedef void ( *Encoder_Safe )(
+    void *p,
+    void ( *print )( const char *s ) );
+*/
 typedef void            ( *Encoder_Safe )( void *p, String *buffer );
 
 
@@ -42,10 +47,10 @@ enum Type__Flags
     TYPE__OWNS_DESCENDANTS    = 0x2
 };
 
-
+/** A structure representing the data type of an Object, and containing
+    type-specific member functions. */
 typedef struct Type Type;
 
-/** */
 struct Type
 {
     /** */

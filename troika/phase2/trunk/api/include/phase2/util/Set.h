@@ -33,6 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Type.h>
 
 
+/** An enumerable set of elements. */
 typedef Hash_Table Set;
 
 
@@ -105,7 +106,7 @@ set__create_type( const char *name, int flags );
 
 #include <util/Array.h>
 
-/** A convenience function for implementing code which can't use set__walk. */
+/** A convenience method for implementing code which can't use set__walk. */
 extern Array *
 set__to_array( Set *s );
 

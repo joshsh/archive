@@ -27,6 +27,20 @@ static Compiler *compiler;
 
 
 static void
+encode__short( Object *o, char *buffer )
+{
+                                    /* FIXME */
+    Name *name = compiler__name_of( compiler, compiler->cur_ns_obj, o );
+
+    if ( !name )
+        object__type( o )->encode( object__value( o ), buffer );
+
+    else
+        name__encode( name, buffer );
+}
+
+
+static void
 char__encode__alt( char *c, char *buffer )
 {
     sprintf( buffer, "'%c'", *c );
@@ -51,13 +65,43 @@ string__encode__alt( char *s, char *buffer )
 
 
 static void
+set__encode__alt( Set *s, char *buffer )
+{
+    boolean first = TRUE;
+
+    void encode( Object **opp )
+    {
+        Object *o = *opp;
+
+        if ( !first )
+        {
+            sprintf( buffer, ", " );
+            buffer += 2;
+        }
+
+        encode__short( o, buffer );
+        buffer += strlen( buffer );
+
+        first = FALSE;
+    }
+
+    if ( DEBUG__SAFE && ( !s || !buffer ) )
+        abort();
+
+    sprintf( buffer, "{" );
+    buffer++;
+
+    set__walk( s, ( Dist_f ) encode );
+
+    sprintf( buffer, "}" );
+}
+
+
+static void
 term__encode__alt( Term *t, char *buffer )
 {
-    Name *name;
-
     void encode( void **cur, boolean delimit )
     {
-        Object *o;
         void **lim;
 
         /* If the sub-term represents a leaf node, execute the procedure. */
@@ -65,16 +109,7 @@ term__encode__alt( Term *t, char *buffer )
         {
             cur++;
 
-            o = *cur;
-
-                                      /* FIXME */
-            name = compiler__name_of( compiler, compiler->cur_ns_obj, o );
-
-            if ( !name )
-                object__type( o )->encode( object__value( o ), buffer );
-
-            else
-                name__encode( name, buffer );
+            encode__short( *cur, buffer );
         }
 
         /* If the sub-term contains further sub-terms, recurse through them. */
@@ -201,13 +236,9 @@ resolve( Ast *ast, Compiler *c )
                     term__delete( value );
                 break;
 
-            #if DEBUG__SAFE
             default:
 
-                ERROR( "object_for_ast: bad AST type" );
-                free( ast );
-                return 0;
-            #endif
+                abort();
         }
 
         free( ast );
@@ -245,7 +276,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     Name *oname = 0;
     Term *t;
 
-    Encoder char__encode, double__encode, string__encode, term__encode;
+    Encoder char__encode, double__encode, string__encode, set__encode, term__encode;
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr )
@@ -257,10 +288,12 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;
     string__encode = c->string_t->encode;
+    set__encode = c->set_t->encode;
     term__encode = c->term_t->encode;
     c->char_t->encode = ( Encoder ) char__encode__alt;
     c->float_t->encode = ( Encoder ) double__encode__alt;
     c->string_t->encode = ( Encoder ) string__encode__alt;
+    c->set_t->encode = ( Encoder ) set__encode__alt;
     c->term_t->encode = ( Encoder ) term__encode__alt;
 
     if ( name )
@@ -334,7 +367,10 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     c->char_t->encode = char__encode;
     c->float_t->encode = double__encode;
     c->string_t->encode = string__encode;
+    c->set_t->encode = set__encode;
     c->term_t->encode = term__encode;
+
+    memory_manager__collect_if_needed( environment__manager( c->env ) );
 
     return ret;
 }

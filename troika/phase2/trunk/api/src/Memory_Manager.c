@@ -40,7 +40,9 @@ struct Memory_Manager
     /** Whether the manager contains only unmarked objects.  Any marked objects
         need to be unmarked prior to any algorithm which relies on object
         marking. */
-    int clean;
+    boolean clean;
+
+    unsigned int size_at_last_cycle;
 };
 
 
@@ -53,18 +55,8 @@ memory_manager__new( Object *root )
     Memory_Manager *m;
     Type *object_t;
 
-    #if DEBUG__SAFE
-    if ( !root )
-    {
-        ERROR( "memory_manager__new: null root" );
-        return 0;
-    }
-    else if ( visited( root ) )
-    {
-        ERROR( "memory_manager__new: root is marked as visited" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !root || visited( root ) ) )
+        abort();
 
     if ( !( m = new( Memory_Manager ) ) )
     {
@@ -99,10 +91,7 @@ memory_manager__new( Object *root )
     }
 
     m->clean = 1;
-
-    #if DEBUG__MEMORY
-    printf( "[%#x] memory_manager__new(%#x)\n", ( int ) m, ( int ) root );
-    #endif
+    m->size_at_last_cycle = 0;
 
     return m;
 }
@@ -113,17 +102,8 @@ memory_manager__delete( Memory_Manager *m )
 {
     Type *object_t, *object_bunch_t;
 
-    #if DEBUG__SAFE
-    if ( !m )
-    {
-        ERROR( "memory_manager__delete: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__MEMORY
-    printf( "[] memory_manager__delete(%#x)\n", ( int ) m );
-    #endif
+    if ( DEBUG__SAFE && !m )
+        abort();
 
     object_bunch_t = m->objects_o->type;
     object_t = object_bunch_t->type_arg;
@@ -141,13 +121,8 @@ memory_manager__delete( Memory_Manager *m )
 unsigned int
 memory_manager__size( Memory_Manager *m )
 {
-    #if DEBUG__SAFE
-    if ( !m )
-    {
-        ERROR( "memory_manager__delete: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !m )
+        abort();
 
     return bunch__size( m->objects );
 }
@@ -156,13 +131,8 @@ memory_manager__size( Memory_Manager *m )
 void
 memory_manager__set_root( Memory_Manager *m, Object *o )
 {
-    #if DEBUG__SAFE
-    if ( !m || !o )
-    {
-        ERROR( "memory_manager__set_root: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !m || !o ) )
+        abort();
 
     m->root = o;
 }
@@ -171,39 +141,12 @@ memory_manager__set_root( Memory_Manager *m, Object *o )
 Object *
 memory_manager__add( Memory_Manager *m, Object *o )
 {
-    #if DEBUG__MEMORY
-    Object *o2;
-    #endif
-
-    #if DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "memory_manager__add: null object" );
-        return 0;
-    }
-    else if ( owned( o ) )
-    {
-        ERROR( "memory_manager__add: object already has a manager" );
-        return 0;
-    }
-    else if ( visited( o ) )
-    {
-        ERROR( "memory_manager__new: object is marked" );
-        return 0;
-    }
+    if ( DEBUG__SAFE && ( !o || owned( o) || visited( o ) ) )
+        abort();
 
     set_owned( o );
-    #endif
 
-    #if DEBUG__MEMORY
-    o2 = o;
-    o = bunch__add( m->objects, o );
-    printf( "[%#x] memory_manager__add(%#x, %#x)\n",
-        ( int ) o, ( int ) m, ( int ) o2 );
-    return o;
-    #else
     return bunch__add( m->objects, o );
-    #endif
 }
 
 
@@ -218,17 +161,8 @@ unmark_all( Memory_Manager *m )
         clear_visited( o );
     }
 
-    #ifdef DEBUG__SAFE
-    if ( !m )
-    {
-        ERROR( "unmark_all: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__MEMORY
-    printf( "[] unmark_all(%#x)\n", ( int ) m );
-    #endif
+    if ( DEBUG__SAFE && !m )
+        abort();
 
     collection__do_for_all( m->objects_o, ( Void_f ) unmark );
     /*bunch__for_all( m->objects, (void*(*)(void*)) unmark );*/
@@ -261,17 +195,8 @@ sweep( Memory_Manager *m )
         }
     }
 
-    #ifdef DEBUG__SAFE
-    if ( !m )
-    {
-        ERROR( "sweep: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__MEMORY
-    printf( "[] sweep(%#x)\n", ( int ) m );
-    #endif
+    if ( DEBUG__SAFE && !m )
+        abort();
 
     collection__exclude_if( m->objects_o, ( Criterion ) unmarked );
     m->clean = 1;
@@ -325,18 +250,8 @@ memory_manager__walk
         }
     }
 
-    #ifdef DEBUG__SAFE
-    if ( !m || !f )
-    {
-        ERROR( "memory_manager__walk: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__MEMORY
-    printf( "[] memory_manager__walk(%#x, %#x, %#x, %i)\n",
-        ( int ) m, ( int ) root, ( int ) f, use_bfs );
-    #endif
+    if ( DEBUG__SAFE && ( !m || !f ) )
+        abort();
 
     if ( !root )
         root = m->root;
@@ -365,9 +280,7 @@ void
 memory_manager__trace
     ( Memory_Manager *m, Object *root, Walker walk, Dist_f dist )
 {
-    #if DEBUG__SAFE
-    int marked = 0;
-    #endif
+    int marked;
 
     void *trace( Object **opp )
     {
@@ -379,9 +292,8 @@ memory_manager__trace
 
         else
         {
-            #if DEBUG__SAFE
-            marked++;
-            #endif
+            if ( DEBUG__SAFE )
+                marked++;
 
             /* Mark the object. */
             set_visited( o );
@@ -397,9 +309,8 @@ memory_manager__trace
 
         if ( visited( o ) )
         {
-            #if DEBUG__SAFE
-            marked--;
-            #endif
+            if ( DEBUG__SAFE )
+                marked--;
 
             clear_visited( o );
 
@@ -410,13 +321,11 @@ memory_manager__trace
             return walker__break;
     }
 
-    #ifdef DEBUG__SAFE
-    if ( !m || !walk || !dist )
-    {
-        ERROR( "memory_manager__trace: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !m || !walk || !dist ) )
+        abort();
+
+    if ( DEBUG__SAFE )
+        marked = 0;
 
     if ( !root )
         root = m->root;
@@ -426,32 +335,23 @@ memory_manager__trace
 
     m->clean = FALSE;
     walk( root, ( Dist_f ) trace );
-
-    #if DEBUG__MEMORY
-    printf( "[] memory_manager__trace(%#x, %#x, %#x, %#x )",
-        ( int ) m, ( int ) root, ( int ) walk, ( int ) dist );
-    #if DEBUG__SAFE
-    printf( ": %i objects visited", marked );
-    #endif
-    printf( "\n" );
-    #endif
-
     walk( root, ( Dist_f ) untrace );
     m->clean = TRUE;
 
-    #if DEBUG__SAFE
-    if ( marked > 0 )
+    if ( DEBUG__SAFE )
     {
-        WARNING( "memory_manager__trace: unreachable object(s)" );
-        /*WARNING( "memory_manager__trace: %i marked objects are still marked as visited", marked );*/
-    }
+        if ( marked > 0 )
+        {
+            WARNING( "memory_manager__trace: unreachable object(s)" );
+            /*WARNING( "memory_manager__trace: %i marked objects are still marked as visited", marked );*/
+        }
 
-    else if ( marked < 0 )
-    {
-        WARNING( "memory_manager__trace: more objects unmarked than actually visited" );
-        /*WARNING( "memory_manager__trace: %i more objects unmarked than actually visited", -marked );*/
+        else if ( marked < 0 )
+        {
+            WARNING( "memory_manager__trace: more objects unmarked than actually visited" );
+            /*WARNING( "memory_manager__trace: %i more objects unmarked than actually visited", -marked );*/
+        }
     }
-    #endif
 }
 
 
@@ -479,13 +379,12 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
             /* Mark the object. */
             set_visited( o );
 
-            #if ENCODING__TRIPLES_AS_OBJECTS & TRIPLES__GLOBAL__OUT_EDGES
             /* Object references its triples, which in turn reference the object. */
-            if ( o->outbound_edges && hash_table__size( o->outbound_edges ) )
+            if ( ENCODING__TRIPLES_AS_OBJECTS && TRIPLES__GLOBAL__OUT_EDGES
+              && o->outbound_edges && hash_table__size( o->outbound_edges ) )
             {
                 set__add( s, o );
             }
-            #endif
 
             return 0;
         }
@@ -496,11 +395,6 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
     m->clean = 0;
 
     s = set__new();
-
-    #if DEBUG__MEMORY
-    printf( "[%#x] memory_manager__get_multirefs(%#x, %#x)\n",
-        ( int ) s, ( int ) m, ( int ) root );
-    #endif
 
     object__trace( root, ( Dist_f ) helper, TRUE );
     return s;
@@ -526,6 +420,18 @@ memory_manager__collect( Memory_Manager *m )
 
     /* Mark all reachable objects. */
     memory_manager__walk( m, 0, ( Dist_f ) noop, FALSE, TRUE );
+
+    m->size_at_last_cycle = memory_manager__size( m );
+}
+
+
+void
+memory_manager__collect_if_needed( Memory_Manager *m )
+{
+    unsigned int size = memory_manager__size( m );
+    if ( !m->size_at_last_cycle
+      || ( double ) size / ( double ) m->size_at_last_cycle > MEM__COLLECTION_THRESHOLD )
+        memory_manager__collect( m );
 }
 
 

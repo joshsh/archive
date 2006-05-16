@@ -51,11 +51,6 @@ dictionary_entry__new( const char *key, void *target )
         }
     }
 
-    #if DEBUG__SAFE
-    if ( !entry )
-        ERROR( "dictionary_entry__new: allocation failure" );
-    #endif
-
     return entry;
 }
 

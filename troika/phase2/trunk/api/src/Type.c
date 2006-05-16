@@ -116,15 +116,11 @@ type__new( const char *name, int flags )
 {
     Type *t;
 
-    #if DEBUG__SAFE
-    if ( !name || !( *name ) )
-    {
-        ERROR( "type__new: null or empty name" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !name || !( *name ) ) )
+        abort();
 
     t = new( Type );
+
     if ( !t )
         return 0;
 

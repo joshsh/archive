@@ -55,13 +55,8 @@ closure__new( procedure execute, void *state )
 void
 closure__delete( Closure *c )
 {
-    #if DEBUG__SAFE
-    if ( !c )
-    {
-        ERROR( "closure__delete: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && !c )
+        abort();
 
     free( c );
 }
@@ -70,13 +65,8 @@ closure__delete( Closure *c )
 void *
 closure__apply( Closure *c, void *arg )
 {
-    #if DEBUG__SAFE
-    if ( !c || !arg )
-    {
-        ERROR( "closure__apply: null argument" );
-        return ( void* ) 1;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !c || !arg ) )
+        abort();
 
     return c->execute( arg, c->state );
 }

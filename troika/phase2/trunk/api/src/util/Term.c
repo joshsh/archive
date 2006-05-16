@@ -72,13 +72,8 @@ term__new( void *p, unsigned int initial_buffer_size )
 {
     Term *t;
 
-    #if DEBUG__SAFE
-    if ( !p )
-    {
-        ERROR( "term__new: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !p )
+        abort();
 
     t = malloc(sizeof(Term));
 
@@ -101,10 +96,6 @@ term__new( void *p, unsigned int initial_buffer_size )
     /* Expansion factor starts at the default value. */
     t->expansion = TERM__DEFAULT_EXPANSION;
 
-    #if DEBUG__TERM
-    printf( "[%#x] term__new(%#x, %i)\n", ( int ) t, ( int ) p, initial_buffer_size );
-    #endif
-
     return t;
 }
 
@@ -115,13 +106,8 @@ term__copy( Term *source )
     unsigned int size;
     Term *t;
 
-    #if DEBUG__SAFE
-    if ( !source )
-    {
-        ERROR( "term__copy: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !source )
+        abort();
 
     size = ( unsigned int ) *( source->head );
 
@@ -140,10 +126,6 @@ term__copy( Term *source )
     /* Copy data from source buffer to new Term's buffer. */
     memcpy( t->head, source->head, size * sizeof( void* ) );
 
-    #if DEBUG__TERM
-    printf( "[%#x] term__copy(%#x)\n", ( int ) t, ( int ) source );
-    #endif
-
     return t;
 }
 
@@ -151,17 +133,8 @@ term__copy( Term *source )
 void
 term__delete( Term *t )
 {
-    #if DEBUG__SAFE
-    if ( !t )
-    {
-        ERROR( "term__delete: null term" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__TERM
-    printf( "[] term__delete(%#x)\n", ( int ) t );
-    #endif
+    if ( DEBUG__SAFE && !t )
+        abort();
 
     free( t->buffer );
     free( t );
@@ -176,6 +149,9 @@ term__length( const Term *t )
 {
     unsigned int length = 0;
     void **cur, **lim;
+
+    if ( DEBUG__SAFE && !t )
+        abort();
 
     cur = t->head;
     if ( *cur == ( void* ) 2 )
@@ -202,13 +178,17 @@ term__subterm_at(Term *t, int i)
     void **cur = t->head;
     unsigned int length;
 
+    /* TODO: upper bounds checking */
+    if ( DEBUG__SAFE && ( !t || i < 0 ) )
+        abort();
+
     /* If the term contains a single element, skip to copy (assumes that index
        is equal to 0).  Otherwise cycle through the target index. */
     if (*cur > (void *) 2)
     {
         cur++;
 
-        while (i)
+        while ( i )
         {
             cur += (unsigned int) *cur;
             i--;
@@ -244,10 +224,6 @@ term__set_expansion( Term *t, double expansion )
 Term *
 term__merge(Term *t1, Term *t2)
 {
-    #if DEBUG__TERM
-    Term *t1_0 = t1, *t2_0 = t2;
-    #endif
-
     /* Find the size of each Term, as well as of the resulting Term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -268,11 +244,6 @@ term__merge(Term *t1, Term *t2)
     /* Destroy t1. */
     term__delete( t1 );
 
-    #if DEBUG__TERM
-    printf( "[%#x] term__merge(%#x, %#x)\n",
-        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
-    #endif
-
     return t2;
 }
 
@@ -280,10 +251,6 @@ term__merge(Term *t1, Term *t2)
 Term *
 term__merge_la(Term *t1, Term *t2)
 {
-    #if DEBUG__TERM
-    Term *t1_0 = t1, *t2_0 = t2;
-    #endif
-
     /* Find the size of each Term, as well as of the resulting Term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -306,11 +273,6 @@ term__merge_la(Term *t1, Term *t2)
     /* Destroy t1. */
     term__delete( t1 );
 
-    #if DEBUG__TERM
-    printf( "[%#x] term__merge_la(%#x, %#x)\n",
-        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
-    #endif
-
     return t2;
 }
 
@@ -318,10 +280,6 @@ term__merge_la(Term *t1, Term *t2)
 Term *
 term__merge_ra(Term *t1, Term *t2)
 {
-    #if DEBUG__TERM
-    Term *t1_0 = t1, *t2_0 = t2;
-    #endif
-
     /* Find the size of each Term, as well as of the resulting Term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -346,11 +304,6 @@ term__merge_ra(Term *t1, Term *t2)
     /* Destroy t1. */
     term__delete( t1 );
 
-    #if DEBUG__TERM
-    printf( "[%#x] term__merge_ra(%#x, %#x)\n",
-        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
-    #endif
-
     return t2;
 }
 
@@ -358,10 +311,6 @@ term__merge_ra(Term *t1, Term *t2)
 Term *
 term__cat(Term *t1, Term *t2)
 {
-    #if DEBUG__TERM
-    Term *t1_0 = t1, *t2_0 = t2;
-    #endif
-
     /* Find the size of each Term, as well as of the resulting Term. */
     unsigned int t1_size = (unsigned int) *(t1->head),
                  t2_size = (unsigned int) *(t2->head);
@@ -388,11 +337,6 @@ term__cat(Term *t1, Term *t2)
 
     /* Destroy t1. */
     term__delete( t1 );
-
-    #if DEBUG__TERM
-    printf( "[%#x] term__cat(%#x, %#x)\n",
-        ( int ) t2, ( int ) t1_0, ( int ) t2_0 );
-    #endif
 
     return t2;
 }
@@ -433,17 +377,8 @@ term__walk( Term *t, Dist_f f )
         }
     }
 
-    #if DEBUG__SAFE
-    if ( !t || !f )
-    {
-        ERROR( "term__walk: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__TERM
-    printf( "[] term__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
-    #endif
+    if ( DEBUG__SAFE && ( !t || !f ) )
+        abort();
 
     walk( t->head );
 

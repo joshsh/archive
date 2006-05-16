@@ -26,10 +26,6 @@ name__new( void )
 {
     Name *name = array__new( 0, 0 );
 
-    #if DEBUG__NAME
-    printf( "[%#x] name__new()\n", ( int ) name );
-    #endif
-
     return name;
 }
 
@@ -43,17 +39,8 @@ name__delete( Name *name )
         return 0;
     }
 
-    #if DEBUG__SAFE
-    if ( !name )
-    {
-        ERROR( "name__delete: null name" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__NAME
-    printf( "[] name__delete(%#x)\n", ( int ) name );  fflush( stdout );
-    #endif
+    if ( DEBUG__SAFE && !name )
+        abort();
 
     array__walk( name, ( Dist_f ) helper );
 

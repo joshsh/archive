@@ -669,13 +669,8 @@ array__encode( Array *a, char *buffer )
     unsigned int i;
     Object *o;
 
-    #if DEBUG__SAFE
-    if ( !a || !buffer )
-    {
-        ERROR( "array__encode: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !a || !buffer ) )
+        abort();
 
     sprintf( buffer, "{" );
     buffer++;
@@ -704,7 +699,12 @@ array__encode( Array *a, char *buffer )
 Type *
 array__create_type( const char *name, int flags )
 {
-    Type *type = type__new( name, flags );
+    Type *type;
+
+    if ( DEBUG__SAFE && ( !name ) )
+        abort();
+
+    type = type__new( name, flags );
 
     if ( type )
     {

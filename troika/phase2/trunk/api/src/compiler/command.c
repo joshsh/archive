@@ -31,13 +31,8 @@ count_args( Ast *args )
     if ( !args )
         return 0;
 
-    #if DEBUG__SAFE
-    if ( args->type != TERM_T )
-    {
-        ERROR( "get_arg: wrong AST type" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && args->type != TERM_T )
+        abort();
 
     term = ( Term* ) args->value;
 
@@ -51,13 +46,8 @@ get_arg( Ast *args, unsigned int i )
     Term *term, *subterm;
     Ast *a;
 
-    #if DEBUG__SAFE
-    if ( args->type != TERM_T )
-    {
-        ERROR( "get_arg: wrong AST type" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && args->type != TERM_T )
+        abort();
 
     term = ( Term* ) args->value;
 
@@ -517,15 +507,12 @@ compiler__evaluate_command( Compiler *c, char *name, Ast *args )
     else
         result = com->f( c, args );
 
-    #if DEBUG__COMPILER
-    printf( "[%i] compiler__evaluate_command(%#x, %#x, %#x)\n",
-        result, ( int ) c, ( int ) name, ( int ) args );
-    #endif
-
     if ( args )
         ast__delete( args );
 
     free( name );
+
+    memory_manager__collect_if_needed( environment__manager( c->env ) );
 
     return result;
 }

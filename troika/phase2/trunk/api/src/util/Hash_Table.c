@@ -389,17 +389,8 @@ hash_table__walk( Hash_Table *h, Dist_f f )
     void **cur, **lim;
     void *r;
 
-    #if DEBUG__SAFE
-    if ( !h || !f )
-    {
-        ERROR( "hash_table__walk: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__HASH_TABLE
-    printf( "[] hash_table__walk(%#x, %#x)\n", ( int ) h, ( int ) f );
-    #endif
+    if ( DEBUG__SAFE && ( !h || !f ) )
+        abort();
 
     cur = h->buffer;
     lim = h->buffer + h->buffer_size;

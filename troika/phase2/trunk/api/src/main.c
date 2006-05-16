@@ -44,7 +44,7 @@ static void
 print_copying()
 {
     printf( "Copyright (C) 2006 Joshua Shinavier\n" );
-    printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
+    printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY.  This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
 }
 
 

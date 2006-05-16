@@ -204,9 +204,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define MEM__MARK_AND_SWEEP                     1
 
 #if MEM__MARK_AND_SWEEP
-
-    #define MEM__OBJECTS__BLOCK_SIZE            1000
-
+#  define MEM__OBJECTS__BLOCK_SIZE              1000
+#  define MEM__COLLECTION_THRESHOLD             1.5
 #endif  /* P2FLAGS__MARK_AND_SWEEP */
 
 

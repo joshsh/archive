@@ -78,9 +78,14 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root );
 
 /* Mark-and-sweep garbage collection ******************************************/
 
-/** Delete all nonreachable objects. */
+/** Deletes all nonreachable objects. */
 extern void
 memory_manager__collect( Memory_Manager *m );
+
+/** Invokes memory_manager__collect if the heap has exceeded a threshold
+    determined after the last collection cycle. */
+extern void
+memory_manager__collect_if_needed( Memory_Manager *m );
 
 
 #endif  /* MEMORY_MANAGER_H */

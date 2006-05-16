@@ -37,31 +37,21 @@ object__new( Type *type, void *value, int flags )
         return 0;
     }
 
-    #if DEBUG__OBJECT
-    printf( "[%#x] object__new(%#x, %#x, %i)\n",
-        ( int ) o, ( int ) type, ( int ) value, flags );
-if ( type && value )
-{
-if (!strcmp( type->name, "type"))
-printf( "    This is type '%s'.\n", ( ( Type* ) value )->name );
-}
-    #endif
-
     o->type = type;
     o->value = value;
     o->flags = flags;
 
-    #if TRIPLES__GLOBAL__IN_EDGES
+#if TRIPLES__GLOBAL__IN_EDGES
     o->inbound_edges = 0;
-    #endif
+#endif
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
     o->outbound_edges = 0;
-    #endif
+#endif
 
-    #if TRIPLES__GLOBAL__TRANS_EDGES
+#if TRIPLES__GLOBAL__TRANS_EDGES
     o->trans_edges = 0;
-    #endif
+#endif
 
     return o;
 }
@@ -78,33 +68,23 @@ object__delete( Object *o )
         return 0;
     }
 
-    #if DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "object__delete: null object" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && !o )
+        abort();
 
-    #if DEBUG__OBJECT
-    printf( "[] object__delete(%#x): value = %#x, type = %#x (%s).\n",
-        ( int ) o, ( int ) o->value, ( int ) o->type, o->type->name );
-    #endif
-
-    #if TRIPLES__GLOBAL__IN_EDGES
+#if TRIPLES__GLOBAL__IN_EDGES
     if ( o->inbound_edges )
         hash_map__delete( o->inbound_edges );
-    #endif
+#endif
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
     if ( o->outbound_edges )
         hash_map__delete( o->outbound_edges );
-    #endif
+#endif
 
-    #if TRIPLES__GLOBAL__TRANS_EDGES
+#if TRIPLES__GLOBAL__TRANS_EDGES
     if ( o->trans_edges )
         hash_map__delete( o->trans_edges );
-    #endif
+#endif
 
     /* If the object owns its children (and has any), free them. */
     if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
@@ -117,10 +97,6 @@ object__delete( Object *o )
     o->type->destroy( o->value );
 
     free( o );
-
-    #if DEBUG__OBJECT
-    FFLUSH;
-    #endif
 }
 
 
@@ -137,13 +113,8 @@ object__immutable( const Object *o )
 Type *
 object__type( const Object *o )
 {
-    #if DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "object__type: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !o )
+        abort();
 
     return o->type;
 }
@@ -152,13 +123,8 @@ object__type( const Object *o )
 void *
 object__value( const Object *o )
 {
-    #if DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "object__value: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && !o )
+        abort();
 
     return o->value;
 }
@@ -170,7 +136,12 @@ object__value( const Object *o )
 static Object *
 object__clone( Object *o )
 {
-    Object *copy = new( Object );
+    Object *copy;
+
+    if ( DEBUG__SAFE && !o )
+        abort();
+
+    copy = new( Object );
     *copy = *o;
     copy->value = o->type->clone( o->value );
     return copy;
@@ -180,15 +151,17 @@ object__clone( Object *o )
 static int
 object__compare_to( Object *o1, Object *o2 )
 {
-    #if DEBUG__SAFE
-    if ( o1->type != o2->type )
+    if ( DEBUG__SAFE && ( !o1 || !o2 ) )
+        abort();
+
+    else if ( o1->type != o2->type )
     {
         ERROR( "object__compare_to: type mismatch" );
         return 0;
     }
-    #endif
 
-    return o1->type->compare_to( o1->value, o2->value );
+    else
+        return o1->type->compare_to( o1->value, o2->value );
 }
 
 
@@ -203,21 +176,26 @@ object__compare_to( Object *o1, Object *o2 )
 static boolean
 object__equals( Object *o1, Object *o2 )
 {
-    #if DEBUG__SAFE
-    if ( o1->type != o2->type )
+    if ( DEBUG__SAFE && ( !o1 || !o2 ) )
+        abort();
+
+    else if ( o1->type != o2->type )
     {
         ERROR( "object__equals: type mismatch" );
         return 0;
     }
-    #endif
 
-    return o1->type->equals( o1->value, o2->value );
+    else
+        return o1->type->equals( o1->value, o2->value );
 }
 
 
 static void
 object__sort( Object *o, Comparator cmp )
 {
+    if ( DEBUG__SAFE && !o )
+        abort();
+
     o->type->sort( o->value, cmp );
 }
 
@@ -225,6 +203,9 @@ object__sort( Object *o, Comparator cmp )
 static void
 object__walk( Object *o, Dist_f f )
 {
+    if ( DEBUG__SAFE && !o )
+        abort();
+
     o->type->walk( o->value, f );
 }
 
@@ -233,6 +214,9 @@ Type *
 object__create_type( const char *name )
 {
     int flags = 0;
+
+    if ( DEBUG__SAFE && !name )
+        abort();
 
     Type *type = type__new( name, flags );
 
@@ -256,28 +240,22 @@ object__create_type( const char *name )
 void
 object__trace( Object *o, Dist_f f, boolean follow_triples )
 {
-    #if DEBUG__OBJECT
-    int total = 0;
-    #endif
+    int total;
 
     auto void *obj_trace( Object **opp );
 
     void *edge_trace( Hash_Map__Entry **epp )
     {
-        #if DEBUG__OBJECT__TRACE
-        printf( "[0] edge_trace(%#x)\n", ( int ) epp );
-        #endif
-
-        #if TRIPLES__IMPLICATION__SP_O
+#if TRIPLES__IMPLICATION__SP_O
         ... not yet written ...
-        #else
-        #if TRIPLES__IMPLICATION__S_P
+#else
+#  if TRIPLES__IMPLICATION__S_P
         obj_trace( ( Object** ) &( *epp )->key );
-        #endif
-        #if TRIPLES__IMPLICATION__S_O
+#  endif
+#  if TRIPLES__IMPLICATION__S_O
         obj_trace( ( Object** ) &( *epp )->target );
-        #endif
-        #endif
+#  endif
+#endif
 
         return 0;
     }
@@ -289,25 +267,19 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
         /* If for any reason execution has traced to a NULL, return immediately. */
         if ( !opp )
         {
-            #if DEBUG__SAFE
-            WARNING( "obj_trace: null object" );
-            #endif
+            if ( DEBUG__SAFE )
+                WARNING( "obj_trace: null object" );
 
             return 0;
         }
 
         o = *opp;
 
-        #if DEBUG__OBJECT__TRACE
-        printf( "[0] obj_trace(&%#x): %s\n", ( int ) o, o->type->name );
-        #endif
-
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( !f( ( void** ) opp ) )
         {
-            #if DEBUG__OBJECT
-            total++;
-            #endif
+            if ( DEBUG__OBJECT )
+                total++;
 
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -316,31 +288,28 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
             }
 
             /* Traverse to associated objects (if any). */
-            #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
             if ( follow_triples && o->outbound_edges )
             {
                 hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
             }
-            #endif
+#endif
         }
 
         return 0;
     }
 
-    #if DEBUG__SAFE
-    if ( !o )
-    {
-        ERROR( "object__trace: null object" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && !o )
+        abort();
+
+    if ( DEBUG__OBJECT )
+        total = 0;
 
     obj_trace( &o );
 
-    #if DEBUG__OBJECT
-    printf( "[] object__trace(%#x, %#x): visited %i objects.\n",
-        ( int ) o, ( int ) f, total );
-    #endif
+    if ( DEBUG__OBJECT )
+        printf( "[] object__trace(%#x, %#x): visited %i objects.\n",
+            ( int ) o, ( int ) f, total );
 }
 
 
@@ -349,10 +318,7 @@ void
 object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 {
     Array *queue;
-
-    #if DEBUG__OBJECT
-    int total = 0;
-    #endif
+    int total;
 
     void *enqueue( Object **opp )
     {
@@ -362,16 +328,16 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 
     void *edge_trace( Hash_Map__Entry **epp )
     {
-        #if TRIPLES__IMPLICATION__SP_O
+#if TRIPLES__IMPLICATION__SP_O
         ... not yet written ...
-        #else
-        #if TRIPLES__IMPLICATION__S_P
+#else
+#  if TRIPLES__IMPLICATION__S_P
         enqueue( ( Object** ) &( *epp )->key );
-        #endif
-        #if TRIPLES__IMPLICATION__S_O
+#  endif
+#  if TRIPLES__IMPLICATION__S_O
         enqueue( ( Object** ) &( *epp )->target );
-        #endif
-        #endif
+#  endif
+#endif
 
         return 0;
     }
@@ -383,9 +349,8 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
         /* If for any reason execution has traced to a NULL, return immediately. */
         if ( !opp )
         {
-            #if DEBUG__SAFE
-            WARNING( "obj_trace_bfs: null object" );
-            #endif
+            if ( DEBUG__SAFE )
+                WARNING( "obj_trace_bfs: null object" );
 
             return 0;
         }
@@ -395,9 +360,8 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( !f( ( void** ) opp ) )
         {
-            #if DEBUG__OBJECT
-            total++;
-            #endif
+            if ( DEBUG__OBJECT )
+                total++;
 
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -406,24 +370,22 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
             }
 
             /* Traverse to associated objects (if any). */
-            #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
             if ( follow_triples && o->outbound_edges )
             {
                 hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
             }
-            #endif
+#endif
         }
 
         return 0;
     }
 
-    #if DEBUG__SAFE
-    if ( !o  || !f )
-    {
-        ERROR( "object__trace_bfs: null argument" );
-        return;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !o  || !f ) )
+        abort();
+
+    if ( DEBUG__OBJECT )
+        total = 0;
 
     queue = array__new( 0, 0 );
     array__enqueue( queue, &o );
@@ -435,10 +397,9 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 
     array__delete( queue );
 
-    #if DEBUG__OBJECT
-    printf( "[] object__trace_bfs(%#x, %#x): visited %i objects.\n",
-        ( int ) o, ( int ) f, total );
-    #endif
+    if ( DEBUG__OBJECT )
+        printf( "[] object__trace_bfs(%#x, %#x): visited %i objects.\n",
+            ( int ) o, ( int ) f, total );
 }
 
 
@@ -452,30 +413,17 @@ object__multiply( Object *subj, Object *pred )
 {
     Object *obj;
 
-    #if DEBUG__SAFE
-    if ( !subj || !pred )
-    {
-        ERROR( "object__multiply: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !subj || !pred ) )
+        abort();
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
-
+#if TRIPLES__GLOBAL__OUT_EDGES
     obj = ( subj->outbound_edges )
         ? hash_map__lookup( subj->outbound_edges, pred )
         : 0 ;
 
-    #else
-
+#else
     obj = 0;
-
-    #endif
-
-    #if DEBUG__OBJECT__TRIPLES
-    printf( "[%#x] object__multiply(%#x, %#x)\n",
-        ( int ) obj, ( int ) subj, ( int ) pred );
-    #endif
+#endif
 
     return obj;
 }
@@ -484,19 +432,10 @@ object__multiply( Object *subj, Object *pred )
 Object *
 object__associate( Object *subj, Object *pred, Object *obj )
 {
-    #if DEBUG__OBJECT__TRIPLES
-    Object *subj_orig = subj;
-    #endif
+    if ( DEBUG__SAFE && ( !subj || !pred || !obj ) )
+        abort();
 
-    #if DEBUG__SAFE
-    if ( !subj || !pred || !obj )
-    {
-        ERROR( "object__associate: null argument" );
-        return 0;
-    }
-    #endif
-
-    #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
     if ( !subj->outbound_edges
       && !( subj->outbound_edges = hash_map__new() ) )
         subj = 0;
@@ -509,14 +448,9 @@ object__associate( Object *subj, Object *pred, Object *obj )
         else
             hash_map__remove( subj->outbound_edges, pred );
     }
-    #else
+#else
     subj = 0;
-    #endif
-
-    #if DEBUG__OBJECT__TRIPLES
-    printf( "[%#x] object__associate(%#x, %#x, %#x)\n",
-        ( int ) subj_orig, ( int ) subj, ( int ) pred, ( int ) obj );
-    #endif
+#endif
 
     return subj;
 }
@@ -525,19 +459,11 @@ object__associate( Object *subj, Object *pred, Object *obj )
 Object *
 object__dissociate( Object *subj, Object *pred )
 {
-    #if DEBUG__OBJECT__TRIPLES
-    Object *subj_orig = subj;
-    #endif
 
-    #if DEBUG__SAFE
-    if ( !subj || !pred )
-    {
-        ERROR( "object__dissociate: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !subj || !pred ) )
+        abort();
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
     if ( subj->outbound_edges )
     {
         hash_map__remove( subj->outbound_edges, pred );
@@ -547,14 +473,9 @@ object__dissociate( Object *subj, Object *pred )
             subj->outbound_edges = 0;
         }
     }
-    #else
+#else
     subj = 0;
-    #endif
-
-    #if DEBUG__OBJECT__TRIPLES
-    printf( "[%#x] object__dissociate(%#x, %#x)\n",
-        ( int ) subj_orig, ( int ) subj, ( int ) pred );
-    #endif
+#endif
 
     return subj;
 }
@@ -647,15 +568,10 @@ object__union_associate( Object *subj, Object *pred, Object *obj )
 {
     Object *o;
 
-    #if DEBUG__SAFE
-    if ( !subj || !pred || !obj )
-    {
-        ERROR( "object__union_associate: null argument" );
-        return 0;
-    }
-    #endif
+    if ( DEBUG__SAFE && ( !subj || !pred || !obj )
+        abort();
 
-    #if TRIPLES__GLOBAL__OUT_EDGES
+#if TRIPLES__GLOBAL__OUT_EDGES
     if ( !( subj->outbound_edges || ( subj->outbound_edges = hash_map__new() ) ) )
         subj = 0;
 
@@ -664,14 +580,9 @@ object__union_associate( Object *subj, Object *pred, Object *obj )
         o = union_of( hash_map__lookup( subj->outbound_edges, pred ), obj );
         hash_map__add( subj->outbound_edges, pred, o );
     }
-    #else
+#else
     subj = 0;
-    #endif
-
-    #if DEBUG__OBJECT__TRIPLES
-    printf( "[%#x] object__union_associate(%#x, %#x, %#x)\n",
-        ( int ) subj_orig, ( int ) subj, ( int ) pred, ( int ) obj );
-    #endif
+#endif
 
     return subj;
 }

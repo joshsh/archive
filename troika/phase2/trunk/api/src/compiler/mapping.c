@@ -167,7 +167,8 @@ compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
         {
             s = array__remove( name, i );
 
-            if ( namespace__resolve( nso, name, m ) != o )
+            if ( compiler__resolve( c, name) != o )
+            /*if ( namespace__resolve( nso, name, m ) != o )*/
             {
                 array__insert_before( name, i, s );
                 i++;

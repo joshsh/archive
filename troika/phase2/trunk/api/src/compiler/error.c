@@ -41,6 +41,8 @@ compiler__handle_parse_error( Compiler *c, char *msg )
     else
         fprintf( stderr, "Parse error.\n" );
 
+    memory_manager__collect_if_needed( environment__manager( c->env ) );
+
     return ret;
 }
 

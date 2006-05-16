@@ -21,6 +21,12 @@ make doxygen-doc
 ################################################################################
 # Cross-compile Phase2 for ARM.
 
+THE SECRET KLUDGE for creating an error-free, debuggable ARM phase2 executable:
+1) generate phase2.so using the (crosstool) gcc4 cross-compiler
+2) generate phase2 (with 'main') using (Embedix) gcc2 cross-compiler
+3) put phase2.so in /usr/lib and invoke phase2
+
+
 ARM_PREFIX=/opt/Embedix/tools/
 
 CROSSTOOL=/home/joshs/bin/crosstool-0.42

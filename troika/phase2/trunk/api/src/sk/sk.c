@@ -177,6 +177,12 @@ prim_reduce(
 
         Object *robj;
 
+        void *add_to_result( void **refp )
+        {
+            set__add( result_set, *refp );
+            return 0;
+        }
+
         max = cur;
 
         if ( r )
@@ -198,12 +204,24 @@ prim_reduce(
                 if ( !result_set )
                 {
                     result_set = set__new();
-                    set__add( result_set, result );
+
+                    /* FIXME: this is cheating */
+                    if ( result->type == set_type )
+                        set__walk( result->value, ( Dist_f ) add_to_result );
+
+                    else
+                        set__add( result_set, result );
+
                     result = object__new( set_type, result_set, NOPROPS );
                     memory_manager__add( m, result );
                 }
 
-                set__add( result_set, robj );
+                /* FIXME: this is cheating */
+                if ( robj->type == set_type )
+                    set__walk( robj->value, ( Dist_f ) add_to_result );
+
+                else
+                    set__add( result_set, robj );
             }
 
             /* Single (or first) return value. */
