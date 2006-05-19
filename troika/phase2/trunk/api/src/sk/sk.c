@@ -451,13 +451,13 @@ sk_reduce(
     Type *combinator_type,
     Type *set_type )
 {
+    Object *head;
+    Type *head_type;
+
     unsigned int iter;
 
     if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
         iter = 0;
-
-    Object *head;
-    Type *head_type;
 
     if ( DEBUG__SAFE && ( !term || !m || !term_type || !primitive_type || !combinator_type || !set_type ) )
         abort();

@@ -214,11 +214,12 @@ Type *
 object__create_type( const char *name )
 {
     int flags = 0;
+    Type *type;
 
     if ( DEBUG__SAFE && !name )
         abort();
 
-    Type *type = type__new( name, flags );
+    type = type__new( name, flags );
 
     if ( type )
     {
