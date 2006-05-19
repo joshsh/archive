@@ -32,6 +32,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <util/Array.h>
 
+#define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
+
 
 /* Line and character numbers *************************************************/
 
@@ -148,7 +150,7 @@ int get_char_number()
         TOKEN( TIME, "TIME" );
     }
 
-    "Mar"  {
+    ("Jan"|"Feb"|"Mar"|"Apr"|"May"|"Jun"|"Jul"|"Aug"|"Sep"|"Oct"|"Nov"|"Dec")  {
         yylval.string_t = STRDUP( yytext );
         TOKEN( MONTH, "MONTH" );
     }

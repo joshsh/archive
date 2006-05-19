@@ -10,7 +10,7 @@ export CFLAGS = -O2 -g --ansi -W -Wall -fshort-enums -fno-common
 	# -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 	# -D_GNU_SOURCE
 
-INCLUDE  = -I../troika/phase2/trunk/src/api
+INCLUDE  = -I/usr/local/include/phase2
 LIBS     = -lphase2 `xml2-config --libs`
 
 CC       = gcc $(INCLUDE)

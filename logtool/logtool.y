@@ -27,9 +27,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+#include <stdio.h>
 
 #include <util/Array.h>
 #include <util/Dictionary.h>
+
+#define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
 
 
 extern void
