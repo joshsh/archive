@@ -1,6 +1,7 @@
 [ba]
     _rm root;
     _rm here;
+    _mv and _new issues (^ source namespace)
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
     object ^ print ^ cycles

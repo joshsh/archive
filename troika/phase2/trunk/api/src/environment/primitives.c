@@ -191,6 +191,9 @@ add_triples_prims( Environment *env )
 #endif  /* TRIPLES_GLOBAL */
 
 
+/******************************************************************************/
+
+
 #include <util/Set.h>
 
 
@@ -280,6 +283,9 @@ add_set_prims( Environment *env )
 }
 
 
+/******************************************************************************/
+
+
 /* ! */
 static Environment *global_env;
 
@@ -292,6 +298,14 @@ type_of( void **args )
 }
 
 
+/* A trivial function to force the reduction of its argument. */
+static void *
+object__identity( void **args )
+{
+    return args[0];
+}
+
+
 int
 add_meta_prims( Environment *env )
 {
@@ -300,9 +314,15 @@ add_meta_prims( Environment *env )
     /* ! */
     global_env = env;
 
-    return ( ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
+    return (
+         ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
       && primitive__add_param( env, p, ANY__NAME, "self", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
+
+      && ( p = primitive__new( env, ANY__NAME, "object__identity", object__identity, 1 ) )
+      && primitive__add_param( env, p, ANY__NAME, "o", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
+
 #if TRIPLES__GLOBAL
       && add_triples_prims( env )
 #endif
