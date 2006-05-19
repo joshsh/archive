@@ -67,33 +67,51 @@ string__encode__alt( char *s, char *buffer )
 static void
 set__encode__alt( Set *s, char *buffer )
 {
+/*
     boolean first = TRUE;
 
+*/
     void encode( Object **opp )
     {
         Object *o = *opp;
+
+/*
 
         if ( !first )
         {
             sprintf( buffer, ", " );
             buffer += 2;
         }
+*/
+        sprintf( buffer, "    " );
+        buffer += 4;
 
         encode__short( o, buffer );
         buffer += strlen( buffer );
 
+        sprintf( buffer, "\n" );
+        buffer++;
+/*
+
         first = FALSE;
+*/
     }
 
     if ( DEBUG__SAFE && ( !s || !buffer ) )
         abort();
 
-    sprintf( buffer, "{" );
-    buffer++;
+    if ( !set__size( s ) )
+        sprintf( buffer, "{}" );
 
-    set__walk( s, ( Dist_f ) encode );
+    else
+    {
+        sprintf( buffer, "\n{\n" );
+        buffer += 3;
 
-    sprintf( buffer, "}" );
+        set__walk( s, ( Dist_f ) encode );
+
+        sprintf( buffer, "}" );
+    }
 }
 
 

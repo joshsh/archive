@@ -72,7 +72,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #        define DEBUG__ENV                      0 & DEBUG__CORE
 #        define DEBUG__COMPILER                 1 & DEBUG__CORE
 #        define DEBUG__SERIAL                   0 & DEBUG__CORE
-#    define DEBUG__PARSER_MODULE                0 & DEBUG
+#    define DEBUG__PARSER_MODULE                1 & DEBUG
 #        define DEBUG__AST                      1 & DEBUG__PARSER_MODULE
 #        /** Echo each token as it is matched by the lexer. */
 #        define DEBUG__LEXER                    1 & DEBUG__PARSER_MODULE

@@ -87,58 +87,10 @@ get_arg( Ast *args, unsigned int i )
 
 
 static int
-command_all( Compiler *c, Ast *args )
-{
-    int n = count_args( args ), i;
-    Object *o;
-    Name *name;
-
-    if ( !n )
-    {
-        if ( !c->quiet )
-            namespace__show_children( c->cur_ns_obj );
-    }
-
-    else
-    {
-        for ( i = 0; i < n; i++ )
-        {
-            if ( i && !c->quiet )
-                printf( "\n" );
-
-            name = get_arg( args, i );
-            o = compiler__resolve( c, name );
-
-            if ( o )
-            {
-                if ( o->type != c->cur_ns_obj->type )
-                {
-                    /* FIXME: should print to stderr */
-                    printf( "Error: \"" );
-                    name__print( name );
-                    printf( "\" is not a namespace\n" );
-                }
-
-                else if ( !c->quiet )
-                    namespace__show_children( o );
-            }
-        }
-    }
-
-    return 0;
-}
-
-
-static int
 command_cp( Compiler *c, Ast *args )
 {
     Object *o, *o2;
     Name *src, *dest;
-
-    #if DEBUG__COMPILER
-    printf( "[] command_cp(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
     if ( !( src = get_arg( args, 0 ) )
       || !( dest = get_arg( args, 1 ) ) )
         return 0;
@@ -183,10 +135,6 @@ command_gc( Compiler *c, Ast *args )
     clock_t t = clock();
 
     args = 0;
-
-    #if DEBUG__COMPILER
-    printf( "[] command_gc(%#x)\n", ( int ) c );
-    #endif
 
     size_before = memory_manager__size( m );
     memory_manager__collect( m );
@@ -464,18 +412,17 @@ create_commands()
     if ( !( d = dictionary__new() ) )
         return 0;
 
-    if ( add_command( d, "all",      command_all,        0, -1 )
-         && add_command( d, "cp",       command_cp,         2, 2 )
-         && add_command( d, "gc",       command_gc,         0, 0 )
-         && add_command( d, "license",  command_license,    0, 0 )
-         && add_command( d, "mv",       command_mv,         2, 2 )
-         && add_command( d, "new",      command_new,        1, 1 )
-         && add_command( d, "ns",       command_ns,         1, 1 )
-         && add_command( d, "quit",     command_quit,       0, 0 )
-         && add_command( d, "rm",       command_rm,         1, -1 )
-         && add_command( d, "saveas",   command_saveas,     1, 1 )
-         && add_command( d, "save",     command_save,       0, 0 )
-         && add_command( d, "size",     command_size,       0, 0 ) )
+    if ( add_command( d, "cp",       command_cp,         2, 2 )
+      && add_command( d, "gc",       command_gc,         0, 0 )
+      && add_command( d, "license",  command_license,    0, 0 )
+      && add_command( d, "mv",       command_mv,         2, 2 )
+      && add_command( d, "new",      command_new,        1, 1 )
+      && add_command( d, "ns",       command_ns,         1, 1 )
+      && add_command( d, "quit",     command_quit,       0, 0 )
+      && add_command( d, "rm",       command_rm,         1, -1 )
+      && add_command( d, "saveas",   command_saveas,     1, 1 )
+      && add_command( d, "save",     command_save,       0, 0 )
+      && add_command( d, "size",     command_size,       0, 0 ) )
     {
         return d;
     }

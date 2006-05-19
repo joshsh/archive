@@ -221,6 +221,25 @@ objectName( const Object *o )
     {
         char buffer[ENCODING__BUFFER_SIZE];
         name__encode( name, buffer );
+        name__delete( name );
+        return QString( buffer );
+    }
+}
+
+
+QString P2Binder::
+objectFullName( const Object *o )
+{
+    Name *name = compiler__name_of__full( env->getCompiler(), environment__root( env->getEnv() ), o );
+
+    if ( !name )
+        return QString( "" );
+
+    else
+    {
+        char buffer[ENCODING__BUFFER_SIZE];
+        name__encode( name, buffer );
+        name__delete( name );
         return QString( buffer );
     }
 }

@@ -15,12 +15,13 @@ extern "C"
 ////////////////////////////////////////////////////////////////////////////////
 
 QList< P2MainWindow* > windows;
+static char source_file[0x100];
 
 
 /** Create a new top-level widget. */
 void newMainWindow( P2Binder &b )
 {
-    P2MainWindow *w = new P2MainWindow( b );
+    P2MainWindow *w = new P2MainWindow( b, source_file );
 /*
             Qt::Window
             | Qt::WindowTitleHint
@@ -201,7 +202,6 @@ read_options ( int argc, char **argv, char *source_file )
 int
 main( int argc, char **argv )
 {
-    static char source_file[0x100];
     *source_file = '\0';
 
 //#ifndef ARM_LINUX
@@ -236,7 +236,7 @@ main( int argc, char **argv )
 //    QApplication::setStyle( new QWindowsXPStyle );
 //    QApplication::setStyle( new QMotifStyle );
 //    QApplication::setStyle( new QMacStyle );
-//    QApplication::setStyle( new QPlastiqueStyle );
+    QApplication::setStyle( new QPlastiqueStyle );
 
 //cout << "a.startDragDistance():" << a.startDragDistance() << endl;
 //cout << "a.startDragTime():" << a.startDragTime() << endl;

@@ -9,7 +9,8 @@ noinst_HEADERS = revision.h		\
 	Primitive-impl.h		\
 	compiler/Compiler-impl.h	\
 	compiler/license.h		\
-	environment/Environment-impl.h
+	environment/Environment-impl.h	\
+	namespace/Namespace-impl.h
 
 bin_PROGRAMS = phase2
 
@@ -38,6 +39,11 @@ compiler_src = \
 	compiler/mapping.c	\
 	compiler/serial.c
 
+namespace_src = \
+	namespace/Namespace.c	\
+	namespace/io-simple.c	\
+	namespace/io-search.c
+
 primitive_src = \
 	Primitive.c		\
 	Primitive-import.c
@@ -45,12 +51,12 @@ primitive_src = \
 libphase2_la_SOURCES = \
 	$(compiler_src)		\
 	$(environment_src)	\
+	$(namespace_src)	\
 	$(primitive_src)	\
 	$(xml_src)		\
 	Ast.c \
 	Collection.c		\
 	Memory_Manager.c	\
-	Namespace.c		\
 	Object.c \
 	Type.c \
 	sk/sk.c

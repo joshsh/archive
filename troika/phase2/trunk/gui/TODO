@@ -14,3 +14,5 @@
     free form layout ^ weighted alignment
     clickable term display (i.e. don't just use term__encode)
     command line view
+
+    P2PlusMinus --> P2Expander

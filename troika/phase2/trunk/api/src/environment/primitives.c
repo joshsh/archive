@@ -197,30 +197,26 @@ add_triples_prims( Environment *env )
 static void *
 set_add_stub( void **args )
 {
-    Object *o1 = args[0];
+    Set *s = args[0];
     Object *o2 = args[1];
-
-    Set *s = object__value( o1 );
 
     /* ! No checking of return value. */
     set__add( s, o2 );
 
-    return o1;
+    return 0;
 }
 
 
 static void *
 set_remove_stub( void **args )
 {
-    Object *o1 = args[0];
+    Set *s = args[0];
     Object *o2 = args[1];
-
-    Set *s = ( Set* ) object__value( o1 );
 
     /* ! No checking of return value. */
     set__remove( s, o2 );
 
-    return o1;
+    return 0;
 }
 
 

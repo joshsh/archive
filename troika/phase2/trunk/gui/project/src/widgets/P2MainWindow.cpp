@@ -34,8 +34,8 @@ P2MainWindow::P2MainWindow( P2Binder &b, QString fileName )
 
     // Define the palette.
     setPalette( QPalette(
-        palette().foreground(),  // Foreground color.
-        palette().button(),  // Button color.
+        palette().foreground(), // Foreground color.
+        palette().button(),     // Button color.
         palette().light(),
         palette().dark(),
         palette().mid(),
@@ -50,9 +50,13 @@ P2MainWindow::P2MainWindow( P2Binder &b, QString fileName )
 
     QString title( "Phase2 GUI" );
 
-    #ifdef ARM_LINUX
+#ifdef ARM_LINUX
     title += " (ARM)";
-    #endif
+/*
+#else
+    title += " (x86)";
+*/
+#endif
 
     if ( !fileName.isNull() )
         title += " -- " + fileName;
@@ -61,11 +65,11 @@ P2MainWindow::P2MainWindow( P2Binder &b, QString fileName )
 
     // Only limit the size of the main window if it's to be displayed on a
     // large screen (otherwise allow the application to maximize it).
-    #ifndef ARM_COMPILE
-        setGeometry( QRect( 500, 500, SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
-        //setMinimumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
-        //setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
-    #endif
+#ifndef ARM_COMPILE
+    setGeometry( QRect( 500, 500, SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+    //setMinimumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+    //setMaximumSize( QSize( SL5600__DISPLAY_WIDTH, SL5600__DISPLAY_HEIGHT ) );
+#endif
 
     viewStack = new P2ViewStack( environment, this );
     viewStack->addView( environment__root( environment->getEnv() ) );

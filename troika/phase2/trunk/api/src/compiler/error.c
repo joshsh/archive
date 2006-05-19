@@ -25,21 +25,14 @@ compiler__handle_parse_error( Compiler *c, char *msg )
 {
     int ret = 0;
 
-    #if DEBUG__COMPILER
-    printf( "[%i] compiler__handle_parse_error(%#x, \"%s\")\n",
-        ret, ( int ) c, msg );
-    #endif
-
-    c = 0;
-
     if ( msg )
     {
-        fprintf( stderr, "Error: %s\n", msg );
+        fprintf( stderr, "Error: %s\n\n", msg );
         free( msg );
     }
 
     else
-        fprintf( stderr, "Parse error.\n" );
+        fprintf( stderr, "Parse error.\n\n" );
 
     memory_manager__collect_if_needed( environment__manager( c->env ) );
 

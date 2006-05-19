@@ -97,9 +97,8 @@ namespace__remove( Namespace_o *ns_obj, Name *name );
 extern Object *
 namespace__remove_simple( Namespace *ns, char *name );
 
-
 extern void
-namespace__show_children( const Namespace_o *ns_obj );
+namespace__encode( Namespace *ns, char *buffer );
 
 extern void
 namespace__walk( Namespace *ns, Dist_f f );
