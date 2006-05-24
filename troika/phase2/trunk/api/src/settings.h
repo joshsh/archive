@@ -36,20 +36,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #ifndef VERSION
-#define VERSION "X"
+#   define VERSION "X"
 #endif
 
 #ifndef PACKAGE_BUGREPORT
-#define PACKAGE_BUGREPORT   "parcour@gmail.com"
+#   define PACKAGE_BUGREPORT   "parcour@gmail.com"
 #endif
 
 
 #ifndef TRUE
-#define TRUE    1
+#   define TRUE                                 1
 #endif
 
 #ifndef FALSE
-#define FALSE   0
+#   define FALSE                                0
 #endif
 
 
@@ -168,36 +168,26 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Triples / association ******************************************************/
 
 
-#define TRIPLES 1
-
+#define TRIPLES                                 1
 #if TRIPLES
-
-    #define TRIPLES__GLOBAL                     1
-
-    #if TRIPLES__GLOBAL
-
-        #define TRIPLES__GLOBAL__IN_EDGES       0
-        #define TRIPLES__GLOBAL__OUT_EDGES      1
-        #define TRIPLES__GLOBAL__TRANS_EDGES    0
-
-    #endif
-
-    /** Subject ==> Predicate */
-    #define TRIPLES__IMPLICATION__S_P           1
-
-    #if !TRIPLES__IMPLICATION__S_P
-        /** Subject + Object ==> Predicate */
-        #define TRIPLES__IMPLICATION__SO_P      0
-    #endif
-
-    /** Subject ==> Object */
-    #define TRIPLES__IMPLICATION__S_O           1
-
-    /** Subject + Predicate ==> Object */
-    #if !TRIPLES__IMPLICATION__S_O
-        #define TRIPLES__IMPLICATION__SP_O      0
-    #endif
-
+#   define TRIPLES__GLOBAL                      1
+#   if TRIPLES__GLOBAL
+#       define TRIPLES__GLOBAL__IN_EDGES        0
+#       define TRIPLES__GLOBAL__OUT_EDGES       1
+#       define TRIPLES__GLOBAL__TRANS_EDGES     0
+#   endif
+#    /** Subject ==> Predicate */
+#   define TRIPLES__IMPLICATION__S_P            1
+#   if !TRIPLES__IMPLICATION__S_P
+#       /** Subject + Object ==> Predicate */
+#       define TRIPLES__IMPLICATION__SO_P       0
+#   endif
+#   /** Subject ==> Object */
+#   define TRIPLES__IMPLICATION__S_O            1
+#   /** Subject + Predicate ==> Object */
+#   if !TRIPLES__IMPLICATION__S_O
+#       define TRIPLES__IMPLICATION__SP_O       0
+#   endif
 #endif  /* TRIPLES__GLOBAL */
 
 
@@ -220,7 +210,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define FFLUSH  { fflush( stdout ); fflush( stderr ); }
 
 
-/* Useful, although not ANSI C. */
+/* Useful, but not supported by older (pre-C99) compilers. */
 /*
 #define ERROR( ... )                                                        \
 {                                                                           \

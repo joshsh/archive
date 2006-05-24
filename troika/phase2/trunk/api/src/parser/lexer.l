@@ -65,7 +65,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /*#include "header.h"*/
 
 /** Added to each row of input (if defined). */
-#define INPUT_PREFIX  ">>  "
+#define INPUT_PREFIX    ">>  "
 
 
 /* Language module dependencies ***********************************************/
@@ -117,12 +117,12 @@ new_line( Compiler *c );
 /** TOKEN macro handles debugging messages and column count as well as return
     values from rules.  It must be the last statement in a rule action. */
 #if DEBUG__LEXER
-#define TOKEN( x, y )  { new_token( yyleng ); \
-                         if ( y ) printf( "Matched {%s}\n", y ); \
-                         if ( x ) return x; }
+#    define TOKEN( x, y )  { new_token( yyleng ); \
+                             if ( y ) printf( "Matched {%s}\n", y ); \
+                             if ( x ) return x; }
 #else
-#define TOKEN( x, y )  { new_token( yyleng ); \
-                         if ( x ) return x; }
+#    define TOKEN( x, y )  { new_token( yyleng ); \
+                             if ( x ) return x; }
 #endif
 
 
@@ -470,9 +470,9 @@ void new_line( Compiler *c )
 
         /* Add a prefix to each new line of input, to distinguish it from
            output, and possibly to separate it from the line number. */
-        #ifdef INPUT_PREFIX
+#ifdef INPUT_PREFIX
         printf( INPUT_PREFIX );
-        #endif
+#endif
     }
 }
 
