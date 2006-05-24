@@ -129,8 +129,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define SK__CHECKS__APPLY_TO_NONATOM            1
 
-#define SK__CHECKS__MAX_TERM_SIZE               1000
-#define SK__CHECKS__MAX_REDUX_ITERATIONS        1000
+#define SK__CHECKS__MAX_TERM_SIZE               100000
+#define SK__CHECKS__MAX_REDUX_ITERATIONS        10000
 
 
 /** Allow non-redex atoms at the beginning of an expression, and simply abandon

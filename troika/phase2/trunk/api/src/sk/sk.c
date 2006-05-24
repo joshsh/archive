@@ -142,15 +142,15 @@ prim_reduce(
     Object *result = 0;
     Set *result_set = 0;
 
-    Object *reduce_arg( Term *term )
+    Object *reduce_arg( Term *t )
     {
         Object *arg;
-        term = sk_reduce( term, m, term_type, primitive_type, combinator_type, set_type );
+        t = sk_reduce( t, m, term_type, primitive_type, combinator_type, set_type );
 
         if ( term )
         {
-            if ( term__length( term ) == 1 )
-                arg = *( term->head + 1 );
+            if ( term__length( t ) == 1 )
+                arg = *( t->head + 1 );
 
             /* Fail with error message. */
             else
@@ -159,7 +159,7 @@ prim_reduce(
                 arg = 0;
             }
 
-            term__delete( term );
+            term__delete( t );
         }
 
         /* Soft fail. */
@@ -598,6 +598,10 @@ printf( "\n" );  fflush( stdout );
                 goto fail;
             }
         }
+/*
+        if ( !term )
+            return 0;
+*/
     }
 
 fail:
