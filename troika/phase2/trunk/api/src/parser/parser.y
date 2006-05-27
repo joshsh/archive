@@ -178,7 +178,7 @@ yyerror( Compiler *c, p2_parser__exit_state *ignored, const char *msg )
     if ( ! *yyerror_msg )
     {
         #if DEBUG__PARSER
-        printf( "yyerror: %s (reported)\n", msg );
+        PRINT( "yyerror: %s (reported)\n", msg );
         #endif
 
         if ( strlen( msg ) >= ERROR_BUFFER__SIZE )
@@ -193,7 +193,7 @@ yyerror( Compiler *c, p2_parser__exit_state *ignored, const char *msg )
     else
     {
         #if DEBUG__PARSER
-        printf( "yyerror: %s (not reported due to previous error)\n", msg );
+        PRINT( "yyerror: %s (not reported due to previous error)\n", msg );
         #endif
     }
 }
@@ -207,7 +207,7 @@ yyerror( Compiler *c, p2_parser__exit_state *ignored, const char *msg )
 static void
 production( char *s )
 {
-    printf( "Matched %s\n", s );
+    PRINT( "Matched %s\n", s );
 }
 #endif
 
@@ -1069,17 +1069,12 @@ id:
 static void
 handle_command( Compiler *c, char *name, Ast *args )
 {
-    #if DEBUG__PARSER
-    printf( "[] handle_command(%#x, %#x, %#x)\n",
-        ( int ) c, ( int ) name, ( int ) args );
-    #endif
-
     if ( !compiler__quiet( c ) )
     {
-        printf( "\n" );
+        PRINT( "\n" );
 
         #ifdef COMMAND_OUTPUT_PREFIX
-        printf( COMMAND_OUTPUT_PREFIX );
+        PRINT( COMMAND_OUTPUT_PREFIX );
         #endif
     }
 
@@ -1090,7 +1085,7 @@ handle_command( Compiler *c, char *name, Ast *args )
     if ( !compiler__quiet( c ) )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
-        printf( COMMAND_OUTPUT_SUFFIX );
+        PRINT( COMMAND_OUTPUT_SUFFIX );
         #endif
     }
 }
@@ -1099,17 +1094,12 @@ handle_command( Compiler *c, char *name, Ast *args )
 static void
 handle_expression( Compiler *c, Name *name, Ast *expr )
 {
-    #if DEBUG__PARSER
-    printf( "[] handle_expression(%#x, %#x, %#x)\n",
-        ( int ) c, ( int ) name, ( int ) expr );
-    #endif
-
     if ( !compiler__quiet( c ) )
     {
-        printf( "\n" );
+        PRINT( "\n" );
 
         #ifdef EXPRESSION_OUTPUT_PREFIX
-        printf( EXPRESSION_OUTPUT_PREFIX );
+        PRINT( EXPRESSION_OUTPUT_PREFIX );
         #endif
     }
 
@@ -1120,7 +1110,7 @@ handle_expression( Compiler *c, Name *name, Ast *expr )
     if ( !compiler__quiet( c ) )
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
-        printf( EXPRESSION_OUTPUT_SUFFIX );
+        PRINT( EXPRESSION_OUTPUT_SUFFIX );
         #endif
     }
 }
@@ -1131,16 +1121,12 @@ handle_error( Compiler *c )
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
-    #if DEBUG__PARSER
-    printf( "[] handle_error(%#x)\n", ( int ) c );
-    #endif
-
     if ( !compiler__quiet( c ) )
     {
-        printf( "\n" );
+        PRINT( "\n" );
 
         #ifdef ERROR_OUTPUT_PREFIX
-        printf( ERROR_OUTPUT_PREFIX );
+        PRINT( ERROR_OUTPUT_PREFIX );
         #endif
     }
 
@@ -1153,7 +1139,7 @@ handle_error( Compiler *c )
     if ( !compiler__quiet( c ) )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
-        printf( ERROR_OUTPUT_SUFFIX );
+        PRINT( ERROR_OUTPUT_SUFFIX );
         #endif
     }
 }

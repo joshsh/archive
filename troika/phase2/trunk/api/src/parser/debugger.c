@@ -61,14 +61,14 @@ int compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 
     if ( args )
     {
-        printf( "Evaluate command \"%s\" :  ", name );
+        PRINT( "Evaluate command \"%s\" :  ", name );
         ast__print( args );
     }
 
     else
-        printf( "Evaluate command \"%s\"", name );
+        PRINT( "Evaluate command \"%s\"", name );
 
-    printf( "\n" );
+    PRINT( "\n" );
 
     /* Debugger recognizes just one command. */
     if ( !strcmp( name, "quit" )
@@ -94,18 +94,18 @@ int compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     if ( name )
     {
         a = ast__name( name );
-        printf( "Evaluate expression \"" );
+        PRINT( "Evaluate expression \"" );
         ast__print( a );
         ast__delete( a );
-        printf( "\" :  ");
+        PRINT( "\" :  ");
     }
 
     else
-        printf( "Evaluate anonymous expression :  " );
+        PRINT( "Evaluate anonymous expression :  " );
 
     ast__print( expr );
 
-    printf( "\n" );
+    PRINT( "\n" );
 
     ast__delete( expr );
 
@@ -121,14 +121,14 @@ int compiler__handle_parse_error( Compiler *c, char *msg )
 
     if ( msg )
     {
-        printf( "Handle parse error :  %s", msg );
+        PRINT( "Handle parse error :  %s", msg );
         free( msg );
     }
 
     else
-        printf( "Handle parse error" );
+        PRINT( "Handle parse error" );
 
-    printf( "\n" );
+    PRINT( "\n" );
 
     return ret;
 }
@@ -171,7 +171,7 @@ p2_parser__exit_state parse( void )
     {
         active = 1;
         if ( ( yyparse__exit_value = yyparse( 0, &return_state ) ) )
-            printf( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
+            PRINT( "Parser exited abnormally (exit_value = %d).\n", yyparse__exit_value );
         active = 0;
 
         return return_state;
@@ -181,21 +181,21 @@ p2_parser__exit_state parse( void )
 
 int main( void )
 {
-    printf( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", VERSION );
+    PRINT( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", VERSION );
 
     switch( parse() )
     {
         case exit_state__aborted:
-            printf( "Parser was aborted by a user action.\n" );
+            PRINT( "Parser was aborted by a user action.\n" );
             break;
         case exit_state__end_of_input:
-            printf( "Parser reached end-of-input.\n" );
+            PRINT( "Parser reached end-of-input.\n" );
             break;
         case exit_state__locked_out:
-            printf( "Second concurrent activation of parse is not allowed.\n" );
+            PRINT( "Second concurrent activation of parse is not allowed.\n" );
             break;
         case exit_state__parse_failure:
-            printf( "Parse failure.\n" );
+            PRINT( "Parse failure.\n" );
             break;
     }
 

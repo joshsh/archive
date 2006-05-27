@@ -118,7 +118,7 @@ new_line( Compiler *c );
     values from rules.  It must be the last statement in a rule action. */
 #if DEBUG__LEXER
 #    define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( y ) printf( "Matched {%s}\n", y ); \
+                             if ( y ) PRINT( "Matched {%s}\n", y ); \
                              if ( x ) return x; }
 #else
 #    define TOKEN( x, y )  { new_token( yyleng ); \
@@ -460,18 +460,18 @@ void new_line( Compiler *c )
     {
 
         if ( pad_newline )
-            printf( "\n" );
+            PRINT( "\n" );
 
         pad_newline = FALSE;
 
         /* Display a line number at the beginning of each new line of input. */
         if ( compiler__show_line_numbers( c ) )
-            printf( "%d ", line_number );
+            PRINT( "%d ", line_number );
 
         /* Add a prefix to each new line of input, to distinguish it from
            output, and possibly to separate it from the line number. */
 #ifdef INPUT_PREFIX
-        printf( INPUT_PREFIX );
+        PRINT( INPUT_PREFIX );
 #endif
     }
 }

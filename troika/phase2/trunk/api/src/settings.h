@@ -117,6 +117,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PRIM__ALLOW_GENERIC_PARAMS              1
 #define PRIM__ALLOW_GENERIC_RESULTS             1
 
+/** An arbitary limit on the number of parameters to a built-in function. */
+#define PRIM__MAX_PARAMS                        16
+
 /** Allow the possibility of a primitive (for instance, the ^ operator )
     yielding another primitive as a return value. */
 #define PRIM__ALLOW_HIGHER_ORDER                1
@@ -126,6 +129,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define PRIM__CHECKS__PARAM_TYPE                1
 
+
+/** Whether to use graph vs. tree reduction algorithms. */
+#define SK__REDUCE_AS_GRAPH                     1
 
 #define SK__CHECKS__APPLY_TO_NONATOM            1
 
@@ -200,6 +206,20 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #  define MEM__OBJECTS__BLOCK_SIZE              1000
 #  define MEM__COLLECTION_THRESHOLD             1.5
 #endif  /* P2FLAGS__MARK_AND_SWEEP */
+
+
+/* Terminal *******************************************************************/
+
+#define USE_NCURSES                             0
+
+#if USE_NCURSES
+#    include <ncurses.h>
+#    define PRINT                               printw
+#    define REFRESH                             refresh
+#else
+#    define PRINT                               printf
+#    define REFRESH
+#endif
 
 
 /* Errors *********************************************************************/

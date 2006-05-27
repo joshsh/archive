@@ -17,9 +17,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+/*
+#if USE_NCURSES
+#    include <ncurses.h>
+#endif
+*/
+
 #include <sk/sk.h>
 
 #include "Compiler-impl.h"
+#include "sk/graph.h"
 
 
 /* FIXME */
@@ -293,6 +300,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     char print_buffer[ENCODING__BUFFER_SIZE];
     Name *oname = 0;
     Term *t;
+    Array *spine;
 
     Encoder char__encode, double__encode, string__encode, set__encode, term__encode;
 
@@ -322,18 +330,29 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     /* If a term, reduce. */
     if ( o && o->type == c->term_t )
     {
-        t = sk_reduce( ( Term* ) o->value,
-            environment__manager( c->env ),
-            c->term_t,
-            c->prim_t,
-            c->combinator_t,
-            c->set_t );
-
-        if ( t )
-            o->value = t;
+        if ( SK__REDUCE_AS_GRAPH )
+        {
+            spine = array__new( 0, 0 );
+            o = term__to_apply_tree( o->value, environment__manager( c->env ) );
+            o = reduce__graph_lazy( o, spine, environment__manager( c->env ) );
+            array__delete( spine );
+        }
 
         else
-            o = 0;
+        {
+            t = sk_reduce( o->value,
+                environment__manager( c->env ),
+                c->term_t,
+                c->prim_t,
+                c->combinator_t,
+                c->set_t );
+
+            if ( t )
+                o->value = t;
+
+            else
+                o = 0;
+        }
     }
 
     if ( o )
@@ -355,24 +374,24 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
             if ( COMPILER__SHOW_ADDRESS )
             {
-                printf( "%#x ", ( int ) o ); FFLUSH;
+                PRINT( "%#x ", ( int ) o ); FFLUSH;
             }
 
-            printf( "<%s> ", o->type->name );
+            PRINT( "<%s> ", o->type->name );
 
             if ( oname )
             {
                 name__print( oname );
-                printf( " : " );
+                PRINT( " : " );
             }
 
             else
-                printf( ": " );
+                PRINT( ": " );
 
             o->type->encode( o->value, print_buffer );
             printf( print_buffer );
 
-            printf( "\n" );
+            PRINT( "\n" );
         }
     }
 

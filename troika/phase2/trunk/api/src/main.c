@@ -19,6 +19,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <getopt.h>
 
+#if USE_NCURSES
+#    include <ncurses.h>
+#endif
+
 #include <Compiler.h>
 #include "settings.h"
 
@@ -36,34 +40,34 @@ static int version_flag;
 static void
 print_version()
 {
-    printf( "Phase2 %s\n", VERSION );
+    PRINT( "Phase2 %s\n", VERSION );
 }
 
 
 static void
 print_copying()
 {
-    printf( "Copyright (C) 2006 Joshua Shinavier\n" );
-    printf( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY.  This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
+    PRINT( "Copyright (C) 2006 Joshua Shinavier\n" );
+    PRINT( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY.  This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
 }
 
 
 static void
 print_usage()
 {
-    printf( "Usage:\t%s [options]...\n", alias );
-    printf( "Options:\n" );
-    printf( "  -f, --file <file>    load a namespace from <file>\n" );
-    printf( "  -h, --help               print this help and exit\n" );
-    printf( "  -q, --quiet              suppress output to stdout\n" );
-    printf( "  -v, --version            print version number and exit\n" );
+    PRINT( "Usage:\t%s [options]...\n", alias );
+    PRINT( "Options:\n" );
+    PRINT( "  -f, --file <file>    load a namespace from <file>\n" );
+    PRINT( "  -h, --help               print this help and exit\n" );
+    PRINT( "  -q, --quiet              suppress output to stdout\n" );
+    PRINT( "  -v, --version            print version number and exit\n" );
 }
 
 
 static void
 print_bugs()
 {
-    printf( "Report bugs to %s.\n", PACKAGE_BUGREPORT );
+    PRINT( "Report bugs to %s.\n", PACKAGE_BUGREPORT );
 }
 
 
@@ -115,10 +119,10 @@ read_options ( int argc, char **argv, char *source_file )
                     break;
 
                 #if DEBUG__MAIN
-                printf ( "option %s", long_options[option_index].name );
+                PRINT( "option %s", long_options[option_index].name );
                 if ( optarg )
-                    printf ( " with arg %s", optarg );
-                printf ( "\n" );
+                    PRINT ( " with arg %s", optarg );
+                PRINT ( "\n" );
                 #endif
 
                 break;
@@ -126,7 +130,7 @@ read_options ( int argc, char **argv, char *source_file )
             case 'f':
 
                 #if DEBUG__MAIN
-                printf ("option -f with value `%s'\n", optarg);
+                PRINT("option -f with value `%s'\n", optarg);
                 #endif
 
                 strcpy( source_file, optarg );
@@ -176,10 +180,10 @@ read_options ( int argc, char **argv, char *source_file )
     /* Print any remaining command line arguments (not options). */
     if ( optind < argc )
     {
-        printf ( "non-option ARGV-elements: " );
+        PRINT( "non-option ARGV-elements: " );
         while ( optind < argc)
-            printf ( "%s ", argv[optind++] );
-        printf( "\n" );
+            PRINT ( "%s ", argv[optind++] );
+        PRINT( "\n" );
         print_usage();
         abort();
     }
@@ -197,7 +201,12 @@ int main( int argc, char *argv[] )
 
     static char source_file[0x100];
     *source_file = '\0';
-    read_options ( argc, argv, source_file );
+
+#if USE_NCURSES
+    initscr();
+#endif
+
+    read_options( argc, argv, source_file );
 
     if ( !( env = environment__new() ) )
         status = EXIT_FAILURE;
@@ -209,7 +218,7 @@ int main( int argc, char *argv[] )
             if ( *source_file )
             {
                 if ( DEBUG__MAIN )
-                    printf( "Loading namespace from file...\n" );
+                    PRINT( "Loading namespace from file...\n" );
 
                 compiler__deserialize( compiler, source_file );
             }
@@ -218,6 +227,7 @@ int main( int argc, char *argv[] )
             {
                 print_version();
                 print_copying();
+                REFRESH;
             }
 
             if ( compiler__parse( compiler ) )
@@ -231,6 +241,10 @@ int main( int argc, char *argv[] )
 
         environment__delete( env );
     }
+
+#if USE_NCURSES
+    endwin();
+#endif
 
     /* See: http://www.jetcafe.org/~jim/c-style.html#Expressions */
     exit( status );

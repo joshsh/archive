@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "Compiler-impl.h"
+#include "sk/graph.h"
 
 
 /** Bison parser dependency. */
@@ -90,6 +91,9 @@ compiler__new( Environment *env, boolean quiet )
         goto finish;
     }
 
+    /* FIXME */
+    graph_init( c->combinator_t, c->prim_t );
+
 finish:
 
     c->save_to_path = 0;
@@ -120,6 +124,9 @@ compiler__delete( Compiler *c )
     free( c );
 
     instance_exists = FALSE;
+
+    /* FIXME */
+    graph_end();
 }
 
 

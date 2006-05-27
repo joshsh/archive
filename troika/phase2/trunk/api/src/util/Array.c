@@ -95,10 +95,6 @@ array__new( unsigned int buffer_size, double expansion )
 
     a->head = a->size = 0;
 
-    #if DEBUG__ARRAY
-    printf( "[%#x] array__new(%i, %g)\n", ( int ) a, buffer_size, expansion );
-    #endif
-
     return a;
 }
 
@@ -107,6 +103,9 @@ Array *
 array__copy( Array *a )
 {
     Array *b;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( !( b = new( Array ) ) )
         return 0;
@@ -119,10 +118,6 @@ array__copy( Array *a )
         return 0;
     }
 
-    #if DEBUG__ARRAY
-    printf( "[%#x] array__copy(%#x)\n", ( int ) b, ( int ) a );
-    #endif
-
     return b;
 }
 
@@ -130,9 +125,8 @@ array__copy( Array *a )
 void
 array__delete( Array *a )
 {
-    #if DEBUG__ARRAY
-    printf( "[] array__delete(%#x)\n", ( int ) a );
-    #endif
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     free( a->buffer );
     free( a );
@@ -145,6 +139,9 @@ array__delete( Array *a )
 unsigned int
 array__size( const Array *a )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     return a->size;
 }
 
@@ -152,6 +149,9 @@ array__size( const Array *a )
 double
 array__expansion( Array *a )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     return a->expansion;
 }
 
@@ -164,6 +164,9 @@ sizeup( Array *a )
 {
     void **buffer_new;
     unsigned int i, buffer_size_new;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( a->size < a->buffer_size )
         return a;
@@ -200,6 +203,9 @@ sizeup( Array *a )
 void *
 array__get( Array *a, unsigned int i )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     if ( INBOUNDS( a, i ) )
         return ELMT( a, i );
 
@@ -215,6 +221,9 @@ void *
 array__set( Array *a, unsigned int i, void *p )
 {
     void **addr, *displaced;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -245,6 +254,9 @@ array__set( Array *a, unsigned int i, void *p )
 void *
 array__peek( Array *a )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     if ( a->size )
         return a->buffer[a->head];
 
@@ -259,6 +271,9 @@ array__peek( Array *a )
 void *
 array__push( Array *a, void *p )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     if ( !sizeup( a ) )
         return 0;
 
@@ -274,6 +289,9 @@ void *
 array__pop( Array *a )
 {
     void *p;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( a->size )
     {
@@ -294,6 +312,9 @@ array__pop( Array *a )
 void *
 array__enqueue( Array *a, void *p )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     if ( !sizeup( a ) )
         return 0;
 
@@ -307,6 +328,9 @@ array__enqueue( Array *a, void *p )
 void *
 array__dequeue( Array *a )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     if ( a->size )
     {
         a->size--;
@@ -328,6 +352,9 @@ void *
 array__insert_before( Array *a, unsigned int i, void *p )
 {
     unsigned int j;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -355,6 +382,9 @@ void *
 array__insert_after( Array *a, unsigned int i, void *p )
 {
     unsigned int j;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -384,6 +414,9 @@ array__remove( Array *a, unsigned int i )
     unsigned int j;
     void *displaced;
 
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     if ( INBOUNDS( a, i ) )
     {
         displaced = ELMT( a, i );
@@ -408,6 +441,9 @@ void *
 array__simple_remove( Array *a, unsigned int i )
 {
     void **addr, *displaced;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -512,6 +548,10 @@ void
 array__sort( Array *a, Comparator compare )
 {
     Mergesort_Ctx state;
+
+    if ( DEBUG__SAFE && ( !a || !compare ) )
+        abort();
+
     state.compare = compare;
 
     /* Don't try to sort a trivial array. */
@@ -566,6 +606,9 @@ array__walk( Array *a, Dist_f f )
 Array *
 array__clear( Array *a )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     a->size = 0;
     a->head = 0;
     return a;
@@ -577,6 +620,9 @@ array__minimize( Array *a )
 {
     unsigned int i, buffer_size_new;
     void **buffer_new;
+
+    if ( DEBUG__SAFE && !a )
+        abort();
 
     if ( a->size >= a->buffer_size )
         return 0;

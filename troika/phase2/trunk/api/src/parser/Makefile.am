@@ -3,6 +3,8 @@
 noinst_PROGRAMS = debugger
 noinst_LTLIBRARIES = libp2parser.la
 
+LIBS := $(LIBS) -lncurses
+
 BUILT_SOURCES = parser.h
 
 AM_YFLAGS = -d

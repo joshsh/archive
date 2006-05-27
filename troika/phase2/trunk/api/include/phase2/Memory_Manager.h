@@ -59,6 +59,9 @@ memory_manager__set_root( Memory_Manager *m, Object *o );
 extern Object *
 memory_manager__add( Memory_Manager *m, Object *o );
 
+extern Object *
+memory_manager__object( Memory_Manager *m, Type *type, void *value );
+
 
 /* Tracing / graph traversal **************************************************/
 

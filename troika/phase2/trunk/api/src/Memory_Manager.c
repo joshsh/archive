@@ -150,6 +150,21 @@ memory_manager__add( Memory_Manager *m, Object *o )
 }
 
 
+Object *
+memory_manager__object( Memory_Manager *m, Type *type, void *value )
+{
+    if ( DEBUG__SAFE && ( !m || !type || !value ) )
+        abort();
+
+    Object *o = object__new( type, value, NOFLAGS );
+
+    if ( o )
+        memory_manager__add( m, o );
+
+    return o;
+}
+
+
 /* Unmarking / cleanup ********************************************************/
 
 

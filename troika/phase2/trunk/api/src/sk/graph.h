@@ -1,3 +1,11 @@
+/**
+
+\file  graph.h
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
+
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
@@ -17,49 +25,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#if USE_NCURSES
-#include <ncurses.h>
-#endif
+#ifndef GRAPH_H
+#define GRAPH_H
 
-#include "Compiler-impl.h"
+#include <Memory_Manager.h>
+#include <util/Array.h>
+
+#include "Apply.h"
+#include "../settings.h"
 
 
-int
-compiler__handle_parse_error( Compiler *c, char *msg )
-{
-    int ret = 0;
+extern Type *apply_type, *indirection_type;
 
-#if USE_NCURSES
-    /*initscr();*/
-    if( has_colors() == FALSE )
-    {
-        endwin();
-        PRINT( "Your terminal does not support color\n" );
-        exit(1);
-    }
-    start_color();
-    init_pair( 1, COLOR_RED, COLOR_WHITE );
-    attron( COLOR_PAIR(1) );
-#endif
 
-    if ( msg )
-    {
-        fprintf( stderr, "Error: %s\n\n", msg );
-        free( msg );
-    }
+extern void
+graph_init( Type *combinator_t, Type *primitive_t );
 
-    else
-        fprintf( stderr, "Parse error.\n\n" );
+extern void
+graph_end();
 
-#if USE_NCURSES
-    attroff(COLOR_PAIR(1));
-    /*endwin();*/
-#endif
+extern Object *
+reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m );
 
-    memory_manager__collect_if_needed( environment__manager( c->env ) );
 
-    return ret;
-}
-
+#endif  /* GRAPH_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

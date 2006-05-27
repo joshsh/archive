@@ -17,6 +17,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+/*
+#if USE_NCURSES
+#    include <ncurses.h>
+#endif
+*/
+
 #include <time.h>
 
 #include "Compiler-impl.h"
@@ -108,15 +114,15 @@ command_cp( Compiler *c, Ast *args )
                 array__enqueue( src, array__dequeue( dest ) );
 
                 if ( !c->quiet )
-                    printf( "Assignment from 1 object.\n" );
+                    PRINT( "Assignment from 1 object.\n" );
             }
 
             else
             {
                 /* FIXME: should print to stderr */
-                printf( "Error: \"" );
+                PRINT( "Error: \"" );
                 name__print( dest );
-                printf( "\" is not a namespace\n" );
+                PRINT( "\" is not a namespace\n" );
             }
         }
     }
@@ -144,7 +150,7 @@ command_gc( Compiler *c, Ast *args )
 
     if ( !c->quiet )
     {
-        printf( "Collected %i of %i objects (%.3g%%) in %fms.\n",
+        PRINT( "Collected %i of %i objects (%.3g%%) in %fms.\n",
             size_before - size_after,
             size_before,
             ( ( size_before - size_after ) * 100 ) / ( double ) size_before,
@@ -161,7 +167,7 @@ command_license( Compiler *c, Ast *args )
     args = 0;
 
     if ( !c->quiet )
-        printf( "%s\n", gpl_license );
+        PRINT( "%s\n", gpl_license );
 
     return 0;
 }
@@ -192,15 +198,15 @@ command_mv( Compiler *c, Ast *args )
                 array__enqueue( src, array__dequeue( dest ) );
 */
                 if ( compiler__undefine( c, src ) && !c->quiet )
-                    printf( "Reassignment from 1 object.\n" );
+                    PRINT( "Reassignment from 1 object.\n" );
             }
 
             else
             {
                 /* FIXME: should print to stderr */
-                printf( "Error: \"" );
+                PRINT( "Error: \"" );
                 name__print( dest );
-                printf( "\" is not a namespace\n" );
+                PRINT( "\" is not a namespace\n" );
             }
         }
     }
@@ -249,10 +255,10 @@ command_ns( Compiler *c, Ast *args )
 
             if ( !c->quiet )
             {
-                printf( "Moved to namespace " );
+                PRINT( "Moved to namespace " );
                 name__print( fullname );
 /*                name__print( name );*/
-                printf( ".\n" );
+                PRINT( ".\n" );
             }
 
             name__delete( fullname );
@@ -280,10 +286,6 @@ command_rm( Compiler *c, Ast *args )
 {
     Name *name;
 
-    #if DEBUG__COMPILER
-    printf( "[] command_rm(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
@@ -310,7 +312,7 @@ command_save( Compiler *c, Ast *args )
     {
         compiler__serialize( c, path );
         if ( !c->quiet )
-            printf( "Saved root:data as \"%s\".\n", path );
+            PRINT( "Saved root:data as \"%s\".\n", path );
         return 0;
     }
 }
@@ -322,10 +324,6 @@ command_saveas( Compiler *c, Ast *args )
     Name *name;
     char *path;
 
-    #if DEBUG__COMPILER
-    printf( "[] command_saveas(%#x, %#x)\n", ( int ) c, ( int ) args );
-    #endif
-
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
@@ -334,7 +332,7 @@ command_saveas( Compiler *c, Ast *args )
     compiler__serialize( c, path );
 
     if ( !c->quiet )
-        printf( "Saved root:data as \"%s\".\n", path );
+        PRINT( "Saved root:data as \"%s\".\n", path );
 
     return 0;
 }
@@ -346,7 +344,7 @@ command_size( Compiler *c, Ast *args )
     args = 0;
 
     if ( !c->quiet )
-        printf( "There are %i objects in this environment.\n",
+        PRINT( "There are %i objects in this environment.\n",
             memory_manager__size( environment__manager( c->env ) ) );
 
     return 0;
@@ -413,6 +411,7 @@ create_commands()
         return 0;
 
     if ( add_command( d, "cp",       command_cp,         2, 2 )
+      && add_command( d, "exit",     command_quit,       0, 0 )
       && add_command( d, "gc",       command_gc,         0, 0 )
       && add_command( d, "license",  command_license,    0, 0 )
       && add_command( d, "mv",       command_mv,         2, 2 )
@@ -435,7 +434,7 @@ create_commands()
 }
 
 
-/************************************************8*****************************/
+/******************************************************************************/
 
 
 int

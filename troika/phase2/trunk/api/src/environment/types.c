@@ -23,12 +23,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 Object *
 environment__register_type( Environment *env, Type *type )
 {
-    Object *o = object__new( env->type_t, type, OBJECT__IMMUTABLE );
+    Object *o;
 
-    #if DEBUG__ENV
-    printf( "[%#x] environment__register_type(%#x, %#x)\n",
-        ( int ) o, ( int ) env, ( int ) type );
-    #endif
+    if ( DEBUG__SAFE && ( !env || !type ) )
+        abort();
+
+    o = object__new( env->type_t, type, OBJECT__IMMUTABLE );
 
     if ( !o )
         return 0;
@@ -49,6 +49,9 @@ environment__resolve_type( Environment *env, const char *name )
     Object *o;
     Type *type;
 
+    if ( DEBUG__SAFE && ( !env || !name ) )
+        abort();
+
     if ( !( o = namespace__lookup_simple( ( Namespace* ) env->types->value, name ) ) )
     {
         /* If not found, create the type and hope for the best. */
@@ -61,11 +64,6 @@ environment__resolve_type( Environment *env, const char *name )
             }
         }
     }
-
-    #if DEBUG__ENVIRONMENT
-    printf( "[%#x] environment__resolve_type(%#x, %s)\n",
-        ( int ) o, ( int ) env, name );
-    #endif
 
     return o;
 }

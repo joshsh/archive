@@ -10,7 +10,9 @@ noinst_HEADERS = revision.h		\
 	compiler/Compiler-impl.h	\
 	compiler/license.h		\
 	environment/Environment-impl.h	\
-	namespace/Namespace-impl.h
+	namespace/Namespace-impl.h	\
+	sk/Apply.h			\
+	sk/graph.h
 
 bin_PROGRAMS = phase2
 
@@ -22,7 +24,7 @@ bin_PROGRAMS = phase2
 ##   libphase2.so.0.0.0
 lib_LTLIBRARIES = libphase2.la
 
-LIBS := $(LIBS) -lxml2 ##`xml2-config --libs`
+LIBS := $(LIBS) -lxml2 -lncurses ##`xml2-config --libs`
 
 
 environment_src = \
@@ -39,6 +41,11 @@ compiler_src = \
 	compiler/mapping.c	\
 	compiler/serial.c
 
+sk_src = \
+	sk/Apply.c		\
+	sk/graph.c		\
+	sk/sk.c
+
 namespace_src = \
 	namespace/Namespace.c	\
 	namespace/io-simple.c	\
@@ -53,13 +60,13 @@ libphase2_la_SOURCES = \
 	$(environment_src)	\
 	$(namespace_src)	\
 	$(primitive_src)	\
+	$(sk_src)		\
 	$(xml_src)		\
 	Ast.c \
 	Collection.c		\
 	Memory_Manager.c	\
 	Object.c \
-	Type.c \
-	sk/sk.c
+	Type.c
 
 ## Convenience libraries from each subdirectory with its own Makefile.am.
 libphase2_la_LIBADD = \
