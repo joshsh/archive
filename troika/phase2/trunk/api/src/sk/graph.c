@@ -44,6 +44,13 @@ indirection__delete( void *p )
 }
 
 
+static void
+indirection__encode( Object *o, char *buffer )
+{
+    object__type( o )->encode( object__value( o ), buffer );
+}
+
+
 /* FIXME: beware of trying to mutate this reference (it won't have any effect). */
 static void
 indirection__walk( void *p, Dist_f f )
@@ -67,8 +74,8 @@ graph_init( Type *combinator_t, Type *primitive_t )
     combinator_type = combinator_t;
     primitive_type = primitive_t;
 
-    apply_type          = type__new( "Apply", TYPE__IS_OBJ_COLL );
-    indirection_type    = type__new( "Indirection", TYPE__IS_OBJ_COLL );
+    apply_type          = type__new( APPLY__NAME, TYPE__IS_OBJ_COLL );
+    indirection_type    = type__new( INDIRECTION__NAME, TYPE__IS_OBJ_COLL );
 
     if ( !apply_type || !indirection_type )
         abort();
@@ -78,7 +85,7 @@ graph_init( Type *combinator_t, Type *primitive_t )
     apply_type->walk = ( Walker ) apply__walk;
 
     indirection_type->destroy = ( Destructor ) indirection__delete;
-    /*apply_type->encode = ( Encoder ) indirection__encode;*/
+    indirection_type->encode = ( Encoder ) indirection__encode;
     indirection_type->walk = ( Walker ) indirection__walk;
 }
 
@@ -687,11 +694,11 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
     if ( DEBUG__SAFE && !o )
         abort();
-PRINT( "---gr 0---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 0---\n" );
     /* Break out when no more reduction is possible. */
     for (;;)
     {
-PRINT( "---gr 1---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 1---\n" );
         ap = o;
         nargs = 0;
 
@@ -709,18 +716,18 @@ PRINT( "---gr 1---\n" );
                boxed value, a segfault is inevitable. */
             ap = dereference( &FUNCTION( ap ) );
         }
-PRINT( "---gr 2---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 2---\n" );
 
         if ( ap->type == combinator_type )
         {
-PRINT( "---gr 3a---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 3a---\n" );
             if ( !apply_combinator( ap, spine, nargs, m ) )
                 break;
         }
 
         else if ( ap->type == primitive_type )
         {
-PRINT( "---gr 3b---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 3b---\n" );
             if ( !apply_primitive( ap->value, spine, nargs, m ) )
                 break;
         }
@@ -728,24 +735,24 @@ PRINT( "---gr 3b---\n" );
         /* Object at tip of spine is a literal value. */
         else
         {
-PRINT( "---gr 3c---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 3c---\n" );
 /*PRINT( "type->name = %s\n", ap->type->name );*/
             if ( nargs && !SK__ALLOW_NONREDUX )
                 ERROR( "can't apply a non-redex object to an argument" );
 
             break;
         }
-PRINT( "---gr 4---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 4---\n" );
 
         rewind0();
     }
-PRINT( "---gr 5---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 5---\n" );
 
     rewind0();
 
     while ( o->type == indirection_type )
         o = o->value;
-PRINT( "---gr 6---\n" );
+if ( DEBUG__SK ) PRINT( "---gr 6---\n" );
 
     return o;
 }

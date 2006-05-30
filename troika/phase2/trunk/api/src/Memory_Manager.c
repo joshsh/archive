@@ -243,13 +243,37 @@ unwalk( Object *root, boolean follow_triples )
 }
 
 
+#include "sk/graph-types.h"
+
+
+/* Shorts out indirection nodes when they are encountered. */
+static Object *
+dereference( Object **opp )
+{
+    if ( DEBUG__SAFE && !opp )
+        abort();
+
+    /* Assumes that chains of indirection nodes are possible. */
+    while ( ( *opp )->type == indirection_type )
+        *opp = ( *opp )->value;
+
+    return *opp;
+}
+
+
 void
 memory_manager__walk
     ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs, boolean follow_triples )
 {
+    boolean dosweep;
+
     void *helper( Object **opp )
     {
-        Object *o = *opp;
+        /* If the entire object graph is to be traversed, then it is safe to
+           mutate references to indirection nodes. */
+        Object *o = ( dosweep )
+            ? dereference( opp )
+            : *opp;
 
         /* If the object is already marked, abort. */
         if ( visited( o ) )
@@ -271,6 +295,8 @@ memory_manager__walk
     if ( !root )
         root = m->root;
 
+    dosweep = ( root == m->root );
+
     if ( !m->clean )
         unmark_all( m );
 
@@ -282,7 +308,7 @@ memory_manager__walk
         object__trace( root, ( Dist_f ) helper, follow_triples );
 
     /* Might as well sweep. */
-    if ( root == m->root )
+    if ( dosweep )
         sweep( m );
     else
         unwalk( root, follow_triples );

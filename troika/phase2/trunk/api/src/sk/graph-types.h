@@ -1,6 +1,6 @@
 /**
 
-\file  graph.h
+\file  graph-types.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,27 +25,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef GRAPH_H
-#define GRAPH_H
-
-#include <Memory_Manager.h>
-#include <util/Array.h>
-
-#include "Apply.h"
-#include "../settings.h"
-#include "graph-types.h"
+#ifndef GRAPH_TYPES_H
+#define GRAPH_TYPES_H
 
 
-extern void
-graph_init( Type *combinator_t, Type *primitive_t );
+#include <Type.h>
 
-extern void
-graph_end();
-
-extern Object *
-reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m );
+extern Type *apply_type, *indirection_type;
 
 
-#endif  /* GRAPH_H */
+#endif  /* GRAPH_TYPES_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

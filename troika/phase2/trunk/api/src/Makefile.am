@@ -12,7 +12,8 @@ noinst_HEADERS = revision.h		\
 	environment/Environment-impl.h	\
 	namespace/Namespace-impl.h	\
 	sk/Apply.h			\
-	sk/graph.h
+	sk/graph.h			\
+	sk/graph-types.h
 
 bin_PROGRAMS = phase2
 

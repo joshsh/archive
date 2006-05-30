@@ -274,13 +274,16 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
             return 0;
         }
 
-        o = *opp;
-
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( !f( ( void** ) opp ) )
         {
             if ( DEBUG__OBJECT )
                 total++;
+
+            /* Note: the object is only dereferenced AFTER it has been passed to
+               the distributor function, in case the reference is mutated by
+               that operation. */
+            o = *opp;
 
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -356,13 +359,16 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
             return 0;
         }
 
-        o = *opp;
-
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( !f( ( void** ) opp ) )
         {
             if ( DEBUG__OBJECT )
                 total++;
+
+            /* Note: the object is only dereferenced AFTER it has been passed to
+               the distributor function, in case the reference is mutated by
+               that operation. */
+            o = *opp;
 
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )

@@ -97,10 +97,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #define ANY__NAME                               "any_type"
+#define APPLY__NAME                             "Apply"
 #define BAG__NAME                               "Bag"
 #define CHAR__NAME                              "char"
 #define COMBINATOR__NAME                        "Combinator"
 #define DOUBLE__NAME                            "double"
+#define INDIRECTION__NAME                       "Indirection"
 #define INT__NAME                               "int"
 #define NAMESPACE__NAME                         "Namespace"
 #define PRIMITIVE__NAME                         "Primitive"
@@ -120,7 +122,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** An arbitary limit on the number of parameters to a built-in function. */
 #define PRIM__MAX_PARAMS                        16
 
-/** Allow the possibility of a primitive (for instance, the ^ operator )
+/** Allow the possibility of a primitive (for instance, the ^ operator)
     yielding another primitive as a return value. */
 #define PRIM__ALLOW_HIGHER_ORDER                1
 
@@ -165,9 +167,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define OBJECT__XML__NAME                       "object"
 #define TRIPLES__XML__NAME                      "triple"
 
+#define APPLY__XML__NAME                        "apply"
 #define ARRAY__XML__NAME                        "list"
 #define NAMESPACE__XML__NAME                    "table"
-#define SET__XML_NAME                           "list"
+#define SET__XML__NAME                           "list"
 #define TERM__XML__NAME                         "list"
 
 

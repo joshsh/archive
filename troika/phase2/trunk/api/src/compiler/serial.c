@@ -29,6 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../revision.h"
 
 #include "Compiler-impl.h"
+#include "../sk/graph.h"
 
 
 typedef unsigned char uc;
@@ -255,9 +256,27 @@ set__xml_encode( Set *s, Xml_Encode_Ctx *state )
     if ( DEBUG__SAFE && ( !s || !state ) )
         abort();
 
-    el = element__new( 0, ( uc* ) SET__XML_NAME, 0 );
+    el = element__new( 0, ( uc* ) SET__XML__NAME, 0 );
 
     set__walk( s, ( Dist_f ) helper );
+
+    return el;
+}
+
+
+static Element *
+apply__xml_encode( Apply *a, Xml_Encode_Ctx *state )
+{
+    Element *el, *child;
+
+    if ( DEBUG__SAFE && ( !a || !state ) )
+        abort();
+
+    el = element__new( 0, ( uc* ) APPLY__XML__NAME, 0 );
+    child = object__xml_encode( a->function, state, 0 );
+    element__add_child( el, child );
+    child = object__xml_encode( a->operand, state, 0 );
+    element__add_child( el, child );
 
     return el;
 }
@@ -404,7 +423,7 @@ set__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Object *o;
 
     if ( DEBUG__SAFE && ( !el || !state
-    || strcmp( ( char* ) element__name( el ), SET__XML_NAME ) ) )
+    || strcmp( ( char* ) element__name( el ), SET__XML__NAME ) ) )
         abort();
 
     s = set__new();
@@ -421,6 +440,24 @@ set__xml_decode( Element *el, Xml_Decode_Ctx *state )
 }
 
 
+static Apply *
+apply__xml_decode( Element *el, Xml_Decode_Ctx *state )
+{
+    Element *function, *operand;
+
+    if ( DEBUG__SAFE && ( !el || !state
+    || strcmp( ( char* ) element__name( el ), APPLY__XML__NAME ) ) )
+        abort();
+
+    function = element__first_child( el );
+    operand = element__next_sibling( function );
+
+    return apply__new(
+        object__xml_decode( function, state ),
+        object__xml_decode( operand, state ) );
+}
+
+
 /* Object serializer **********************************************************/
 
 
@@ -434,6 +471,10 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
     Element *el;
     Xml_Encoder encode;
+
+    /* "Short out" indirection nodes. */
+    while ( object__type( o ) == indirection_type )
+        o = object__value( o );
 
     sprintf( state->buffer, "%i", id );
 
@@ -505,11 +546,6 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
     }
 
-    #if DEBUG__SERIAL
-    printf( "[%#x] object__xml_encode(%#x, %#x, %i)\n",
-        ( int ) el, ( int ) o, ( int ) state, top_level );
-    #endif
-
     return el;
 }
 
@@ -530,11 +566,9 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Environment *env;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-    {
-        ERROR( "object__xml_decode: null argument" );
-        return 0;
-    }
-    else if ( strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
+        abort();
+
+    if ( strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
     {
         ERROR( "object__xml_decode: bad element name" );
         return 0;
@@ -546,13 +580,20 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     if ( ( attr = element__attr( el, ( uc* ) "type", 0 ) ) )
     {
         text = ( char* ) attr__value( attr );
-        if ( !( type = environment__resolve_type
-            ( env, text )->value ) )
+
+        if ( !strcmp( text, APPLY__NAME ) )
+            type = apply_type;
+
+        else
+            type = environment__resolve_type( env, text )->value;
+
+        if ( !type )
         {
             ERROR( "object__xml_decode: bad type" );
             free( text );
             return 0;
         }
+
         free( text );
 
         if ( type == state->compiler->combinator_t )
@@ -843,6 +884,9 @@ compiler__serialize( Compiler *c, char *path )
     state.serializers = hash_map__new();
     state.ids = multiref_ids( c );
 
+    set_encoder( apply_type, ( Xml_Encoder ) apply__xml_encode, state.serializers );
+    /* Note: no encoder is needed for the indirection type, as indirection nodes are
+       "invisible" to the serializer/deserializer. */
     set_encoder( c->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
     set_encoder( c->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
     set_encoder( c->set_t, ( Xml_Encoder ) set__xml_encode, state.serializers );
@@ -905,6 +949,9 @@ compiler__deserialize( Compiler *c, char *path )
       || !( state.objects_by_id = hash_map__new() ) )
         goto finish;
 
+    set_decoder( apply_type, ( Xml_Decoder ) apply__xml_decode, state.deserializers );
+    /* Note: no decoder is needed for the indirection type, as indirection nodes are
+       "invisible" to the serializer/deserializer. */
     set_decoder( c->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
     set_decoder( c->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
     set_decoder( c->set_t, ( Xml_Decoder ) set__xml_decode, state.deserializers );

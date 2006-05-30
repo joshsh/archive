@@ -26,18 +26,25 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sk/sk.h>
 
 #include "Compiler-impl.h"
-#include "sk/graph.h"
+#include "../sk/graph.h"
 
 
 /* FIXME */
 static Compiler *compiler;
 
 
+static boolean
+encoding_name( Object *o )
+{
+                              /* FIXME */
+    return compiler__name_of( compiler, compiler->cur_ns_obj, o );
+}
+
+
 static void
 encode__short( Object *o, char *buffer )
 {
-                                    /* FIXME */
-    Name *name = compiler__name_of( compiler, compiler->cur_ns_obj, o );
+    Name *name = encoding_name( o );
 
     if ( !name )
         object__type( o )->encode( object__value( o ), buffer );
@@ -200,11 +207,17 @@ apply__encode__alt( Apply *a, char *buffer )
     o = a->operand;
     if ( object__type( o ) == apply_type )
     {
-        sprintf( buffer, "(" );
-        buffer++;
-        encode__short( o, buffer );
-        buffer += strlen( buffer );
-        sprintf( buffer, ")" );
+        if ( encoding_name( o ) )
+            encode__short( o, buffer );
+
+        else
+        {
+            sprintf( buffer, "(" );
+            buffer++;
+            encode__short( o, buffer );
+            buffer += strlen( buffer );
+            sprintf( buffer, ")" );
+        }
     }
 
     else

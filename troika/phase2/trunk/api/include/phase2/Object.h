@@ -70,11 +70,21 @@ object__create_type( const char *name );
 
 /* Graph traversal ************************************************************/
 
-/** A (depth-first) recursive distributor. */
+/** A (depth-first) recursive distributor.
+    \param o  root of the traversal
+    \param f  distributor function to apply to reachable objects
+    \param follow_triples  whether to follow links to "associated" objects
+    \param redirect  whether to "short out" indirection nodes as they are
+    encountered */
 extern void
 object__trace( Object *o, Dist_f f, boolean follow_triples );
 
-/** A breadth-first recursive distributor. */
+/** A breadth-first recursive distributor.
+    \param o  root of the traversal
+    \param f  distributor function to apply to reachable objects
+    \param follow_triples  whether to follow links to "associated" objects
+    \param redirect  whether to "short out" indirection nodes as they are
+    encountered */
 extern void
 object__trace_bfs( Object *o, Dist_f f, boolean follow_triples );
 
