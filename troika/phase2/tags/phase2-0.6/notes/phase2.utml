@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<Ontology xmlns="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/utml-weak.xsd">
+
+    <Subject id="Description">
+        <Relation>
+            <Predicate ref="Description" />
+            <Object type="xsd:string">
+                <Value>A natural language description of a Subject</Value>
+            </Object>
+        </Relation>
+    </Subject>
+
+    <Subject id="Type">
+        <Relation>
+            <Predicate ref="Description" />
+            <Object type="xsd:string">
+                <Value>A parameter expressing the immediate data type of a Subject</Value>
+            </Object>
+        </Relation>
+    </Subject>
+
+    <Subject id="Bag">
+        <Relation>
+            <Predicate ref="Description" />
+            <Object type="xsd:string">
+                <Value>The type of a Phase2 List which is to be interpreted as a simple collection (possibly with repeats)</Value>
+            </Object>
+        </Relation>
+    </Subject>
+
+    <Subject id="SKTerm">
+        <Relation>
+            <Predicate ref="Description" />
+            <Object type="xsd:string">
+                <Value>The type of a Phase2 List which is to be interpreted as a term in the SKI calculus</Value>
+            </Object>
+        </Relation>
+    </Subject>
+
+    <Subject id="S">
+        <Relation>
+            <Predicate ref="Description" />
+            <Object type="xsd:string">
+                <Value>The S combinator</Value>
+            </Object>
+        </Relation>
+    </Subject>
+
+    <Subject id="K">
+        <Relation>
+            <Predicate ref="Description" />
+            <Object type="xsd:string">
+                <Value>The K combinator</Value>
+            </Object>
+        </Relation>
+    </Subject>
+
+</Ontology>

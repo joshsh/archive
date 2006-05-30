@@ -1,0 +1,10 @@
+Package: phase2
+Installed-Size: 14k
+Filename: ./phase2.ipk
+Version: 0.6.4
+Depends:
+Priority: optional
+Section: qpe
+Maintainer: Josh Shinavier <parcour@gmail.com>
+Architecture: arm
+Description: Phase2 libraries, interpreter and GUI

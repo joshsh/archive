@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Remove everything that can be re-generated.  Don't use this script unless all
+# the necessary tools are available to do so.
+
+# Run 'bootstrap' to return to a state where ./configure; make; make install
+# starts working again.
+
+# Clean up the GUI subproject before its Makefile is deleted.
+pushd gui/project; make clean; popd
+
+# Clean up the top-level project before the API Makefile is deleted.
+make maintainer-clean
+
+pushd api; ./cleanup; popd
+
+rm -rf	configure		\
+	autom4te.cache		\
+	config aclocal.m4	\
+	*.tar.gz
+
+
+# ~
+rm -rf Makefile.in ipk/opt ipk/Makefile.in gui/Makefile.in

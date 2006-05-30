@@ -1,0 +1,137 @@
+################################################################################
+# Put stuff into arm-bin
+
+ARM_PREFIX=/opt/Embedix/tools
+QTE_PREFIX=/usr/local/Trolltech/QtopiaCore-4.1.2/
+
+rm -f arm-bin/lib/*
+cp $QTE_PREFIX/lib/libQtCore.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtGui.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtNetwork.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtCore_debug.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtGui_debug.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/lib/libQtNetwork_debug.so.4.1.2 arm-bin/lib
+cp $QTE_PREFIX/plugins/gfxdrivers/libqgfxtransformed*.so* arm-bin/lib
+
+#cp $ARM_PREFIX/arm-linux/lib/libstdc++.so.6.0.7 arm-bin/lib
+#cp $ARM_PREFIX/arm-linux/lib/libgcc_s.so.1 arm-bin/lib
+cp $ARM_PREFIX/arm-linux/lib/libxml2.so.2.6.23 arm-bin/lib
+
+#cp $ARM_PREFIX/arm-linux/lib/libc-2.3.2.so arm-bin/lib
+
+rm -rf arm-bin/api
+mkdir arm-bin/api
+mkdir arm-bin/api/src
+mkdir arm-bin/api/lib
+mkdir arm-bin/examples
+
+cp api/src/.libs/phase2 arm-bin/api/src
+cp api/src/.libs/libphase2*so* arm-bin/lib
+cp examples/* arm-bin/examples
+
+#./cleanup
+rmbackup
+cp -r api/src/* arm-bin/api/src
+rm -f `find arm-bin/api/src -name *.o`
+rm -f `find arm-bin/api/src -name *.lo`
+rm arm-bin/api/src/phase2
+rm arm-bin/src/.libs -rf
+
+# Make utils available to gdb.
+mv arm-bin/api/src/util/* arm-bin/api/src
+mv arm-bin/api/src/xml/libxml2/* arm-bin/api/src
+mv arm-bin/api/src/parser/* arm-bin/api/src
+mv arm-bin/api/src/import/src/* arm-bin/api/src
+
+
+rm -f arm-bin/gui/*
+cp -f gui/p2gui arm-bin/gui
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[U3]
+--[.] Phase2 API
+--[.] Phase2 command-line interface
+--[.] Phase2 GUI
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+//   [unrelated] Kernighan ^ 1974 C tutorial: http://www.lysator.liu.se/c/bwk-tutor.html
+// g++ -c p2_client.cpp -I../../gsoap-linux-2.7
+
+["] factory method
+
+[N] Consider sorting DOM data sets.
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[.] if A and B are marked and (A, B, C), then C is marked.
+
+    marked(A) ^ marked(B) ^ is_edge(A, B, C) ==> marked(C)
+
+[P] mark a collection (term or set)
+--[P] add all triggers to the mark queue / bunch:
+
+      for each trigger
+          pre_mark(trigger) ;
+
+--[P] 
+
+pre_mark(node)
+{
+    if (type(node) < 0)
+        return ;
+
+    else
+    {
+        [if using association]
+            add node to "mark" queue ;
+        [else]
+            if (is_collection(node))
+                add node to "mark" queue ;
+            else
+                reverse sign of type ;
+    }
+}
+
+mark(node)
+{
+    if (is_collection(node))
+    {
+        for each child node
+            pre_mark(child) ;
+    }
+
+    for each outbound edge (key, target)
+    {
+        if (!marked(target))
+        {
+            if (marked(key))
+                pre_mark(target) ;
+            else
+                set_trigger(key, target) ;
+        }
+    }
+
+    reverse sign of type ;
+}
+
+set_trigger(key, target)
+{
+
+}
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[*] Args to register a regular expression and bind it to a type:
+--[.] regular expression for recognition
+--[.] p2_type
+
+[*] Regular expressions are matched in the order in which they were registered.
+
+
+

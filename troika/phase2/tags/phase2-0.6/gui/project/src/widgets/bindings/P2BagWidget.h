@@ -1,0 +1,30 @@
+#ifndef P2BagWidget_h
+#define P2BagWidget_h
+
+////////////////////////////////////////////////////////////////////////////////
+
+#include <QtGui>
+
+extern "C"
+{
+#include <Object.h>
+}
+
+#include <widgets/groups/P2BoxArray.h>
+#include <P2Binder.h>
+
+////////////////////////////////////////////////////////////////////////////////
+
+class P2BagWidget : public P2BoxArray
+{
+public:
+
+    P2BagWidget( const Object *o, P2Binder *eb );
+
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+#endif  // P2BagWidget_h
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

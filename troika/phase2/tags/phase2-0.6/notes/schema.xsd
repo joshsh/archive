@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="schema">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="element" type="localElement" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+<!--
+  <xs:key name="element">
+   <xs:selector xpath="xs:element"/>
+   <xs:field xpath="@name"/>
+  </xs:key>
+-->
+
+ <xs:complexType name="localElement">
+  <xs:complexContent>
+   <xs:restriction base="element">
+    <xs:sequence>
+     <xs:choice minOccurs="0">
+      <xs:element name="simpleType" type="localSimpleType"/>
+      <xs:element name="complexType" type="localComplexType"/>
+     </xs:choice>
+    </xs:sequence>
+   </xs:restriction>
+  </xs:complexContent>
+ </xs:complexType>
+
+
+ <xs:complexType name="element" abstract="true">
+    <xs:sequence>
+     <xs:choice minOccurs="0">
+      <xs:element name="simpleType" type="localSimpleType"/>
+      <xs:element name="complexType" type="localComplexType"/>
+     </xs:choice>
+    </xs:sequence>
+    <xs:attributeGroup ref="defRef"/>
+    <xs:attribute name="type" type="xs:QName"/>
+ </xs:complexType>
+
+
+ <xs:attributeGroup name="defRef">
+  <xs:attribute name="name" type="xs:NCName"/>
+  <xs:attribute name="ref" type="xs:QName"/>
+ </xs:attributeGroup>
+
+
+ <xs:complexType name="localSimpleType">
+     <xs:sequence>
+         <xs:element name="foo_simple" type="xs:string" />
+     </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="localComplexType">
+     <xs:sequence>
+         <xs:element name="foo_complex" type="xs:string" />
+     </xs:sequence>
+ </xs:complexType>
+
+<!--
+ <xs:complexType name="localComplexType">
+  <xs:complexContent>
+   <xs:restriction base="complexType">
+    <xs:sequence>
+     <xs:group ref="complexTypeModel"/>
+    </xs:sequence>
+    <xs:attribute name="name" use="prohibited"/>
+   </xs:restriction>
+  </xs:complexContent>
+ </xs:complexType>
+-->
+
+</xs:schema>

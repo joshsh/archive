@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!-- Note: no type or id attributes... -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:complexType name="Atom">
+        <xsd:simpleContent />
+    </xsd:complexType>
+
+    <xsd:complexType name="List">
+        <xsd:sequence>
+            <xsd:element ref="NodeOrAtomOrList" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:group name="AtomOrList">
+        <xsd:choice>
+            <xsd:element ref="Atom" />
+            <xsd:element ref="List" />
+        </xsd:choice>
+    </xsd:group>
+
+    <xsd:complexType name="Node">
+        <xsd:sequence>
+            <xsd:group ref="AtomOrList" />
+            <xsd:element ref="Edge" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:group name="NodeOrAtomOrList">
+        <xsd:choice>
+            <xsd:element ref="Node" />
+            <xsd:element ref="AtomOrList" />
+        </xsd:choice>
+    </xsd:group>
+
+    <xsd:complexType name="Edge">
+        <xsd:sequence>
+            <xsd:group ref="NodeOrAtomOrList" />
+            <xsd:group ref="NodeOrAtomOrList" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>
