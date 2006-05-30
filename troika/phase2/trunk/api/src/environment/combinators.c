@@ -26,28 +26,94 @@ void
 add_combinators( Environment *env )
 {
     Object *o;
-    Combinator *sk_k, *sk_s, *sk_y;
+    Combinator *sk_B, *sk_C, *sk_I, *sk_K, *sk_L, *sk_O, *sk_R, *sk_S, *sk_T, *sk_U, *sk_V, *sk_W, *sk_w, *sk_Y;
     Memory_Manager *m = env->manager;
 
     Type *t = environment__resolve_type( env, COMBINATOR__NAME )->value;
 
-    sk_k = new( Combinator );
-    sk_s = new( Combinator );
-    sk_y = new( Combinator );
+    sk_B = new( Combinator );
+    sk_C = new( Combinator );
+    sk_I = new( Combinator );
+    sk_K = new( Combinator );
+    sk_L = new( Combinator );
+    sk_O = new( Combinator );
+    sk_R = new( Combinator );
+    sk_S = new( Combinator );
+    sk_T = new( Combinator );
+    sk_U = new( Combinator );
+    sk_V = new( Combinator );
+    sk_W = new( Combinator );
+    sk_w = new( Combinator );
+    sk_Y = new( Combinator );
 
-    *sk_k = K_combinator;
-    *sk_s = S_combinator;
-    *sk_y = Y_combinator;
+    *sk_B = B_combinator;
+    *sk_C = C_combinator;
+    *sk_I = I_combinator;
+    *sk_K = K_combinator;
+    *sk_L = L_combinator;
+    *sk_O = O_combinator;
+    *sk_R = R_combinator;
+    *sk_S = S_combinator;
+    *sk_T = T_combinator;
+    *sk_U = U_combinator;
+    *sk_V = V_combinator;
+    *sk_W = W_combinator;
+    *sk_w = w_combinator;
+    *sk_Y = Y_combinator;
 
-    o = object__new( t, sk_k, OBJECT__IMMUTABLE );
+    o = object__new( t, sk_B, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "B", o );
+
+    o = object__new( t, sk_C, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "C", o );
+
+    o = object__new( t, sk_I, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "I", o );
+
+    o = object__new( t, sk_K, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
     namespace__add_simple( ( Namespace* ) env->combinators->value, "K", o );
 
-    o = object__new( t, sk_s, OBJECT__IMMUTABLE );
+    o = object__new( t, sk_L, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "L", o );
+
+    o = object__new( t, sk_O, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "O", o );
+
+    o = object__new( t, sk_R, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "R", o );
+
+    o = object__new( t, sk_S, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
     namespace__add_simple( ( Namespace* ) env->combinators->value, "S", o );
 
-    o = object__new( t, sk_y, OBJECT__IMMUTABLE );
+    o = object__new( t, sk_T, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "T", o );
+
+    o = object__new( t, sk_U, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "U", o );
+
+    o = object__new( t, sk_V, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "V", o );
+
+    o = object__new( t, sk_W, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "W", o );
+
+    o = object__new( t, sk_w, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "w", o );
+
+    o = object__new( t, sk_Y, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
     namespace__add_simple( ( Namespace* ) env->combinators->value, "Y", o );
 }

@@ -130,6 +130,83 @@ substitute_unboxed( Object *o, Type *type, void *value )
 /******************************************************************************/
 
 
+/* Bxyz --> x(yz) */
+static boolean
+apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2, *a3;
+
+    if ( nargs >= 3 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+        a3 = array__pop( spine );
+
+        /* Replace the function of the Apply with x. */
+        SET_FUNCTION( a3, OPERAND( a1 ) );
+
+        /* Replace the operand of the Apply with new object @yz. */
+        SET_OPERAND( a3,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Cxyz --> xzy */
+static boolean
+apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2, *a3;
+
+    if ( nargs >= 3 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+        a3 = array__pop( spine );
+
+        /* Replace the function of the Apply with new object @xz. */
+        SET_FUNCTION( a3,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a1 ), OPERAND( a3 ) ) ) );
+
+        /* Replace the operand of the Apply y. */
+        SET_OPERAND( a3, OPERAND( a2 ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Ix --> x */
+static boolean
+apply_I( Array *spine, unsigned int nargs )
+{
+    Object *a1;
+
+    if ( nargs >= 1 )
+    {
+        a1 = array__pop( spine );
+
+        /* Replace the Apply with an indirection node to x. */
+        substitute_boxed( a1, OPERAND( a1 ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
 /* Kxy --> x */
 static boolean
 apply_K( Array *spine, unsigned int nargs )
@@ -143,6 +220,88 @@ apply_K( Array *spine, unsigned int nargs )
 
         /* Replace the top-level Apply with an indirection node to x. */
         substitute_boxed( a2, OPERAND( a1 ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Lxy --> x(yy) */
+static boolean
+apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2;
+
+    if ( nargs >= 2 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+
+        /* Replace the function of the Apply with x. */
+        SET_FUNCTION( a2, OPERAND( a1 ) );
+
+        /* Replace the operand of the Apply with new object @yy. */
+        SET_OPERAND( a2,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a2 ), OPERAND( a2 ) ) ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Oxy --> y(xy) */
+static boolean
+apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2;
+
+    if ( nargs >= 2 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+
+        /* Replace the function of the Apply with y. */
+        SET_FUNCTION( a2, OPERAND( a2 ) );
+
+        /* Replace the operand of the Apply with new object @xy. */
+        SET_OPERAND( a2,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a1 ), OPERAND( a2 ) ) ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Rxyz --> yzx */
+static boolean
+apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2, *a3;
+
+    if ( nargs >= 3 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+        a3 = array__pop( spine );
+
+        /* Replace the function of the Apply with new object @yz. */
+        SET_FUNCTION( a3,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
+
+        /* Replace the operand of the Apply with x. */
+        SET_OPERAND( a3, OPERAND( a1 ) );
 
         return TRUE;
     }
@@ -173,6 +332,137 @@ apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
         SET_OPERAND( a3,
             memory_manager__object( m, apply_type,
                 apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Txy --> yx */
+static boolean
+apply_T( Array *spine, unsigned int nargs )
+{
+    Object *a1, *a2;
+
+    if ( nargs >= 2 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+
+        /* Replace the function of the Apply with y. */
+        SET_FUNCTION( a2, OPERAND( a2 ) );
+
+        /* Replace the operand of the Apply with x. */
+        SET_OPERAND( a2, OPERAND( a1 ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Uxy --> y(xxy) */
+static boolean
+apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2;
+
+    if ( nargs >= 2 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+
+        /* Replace the function of the Apply with y. */
+        SET_FUNCTION( a2, OPERAND( a2 ) );
+
+        /* Replace the operand of the Apply with new object @(@xx)y. */
+        SET_OPERAND( a2,
+            memory_manager__object( m, apply_type,
+                apply__new(
+                    memory_manager__object( m, apply_type,
+                        apply__new( OPERAND( a1 ), OPERAND( a1 ) ) ),
+                    OPERAND( a2 ) ) ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Vxyz --> zxy */
+static boolean
+apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2, *a3;
+
+    if ( nargs >= 3 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+        a3 = array__pop( spine );
+
+        /* Replace the function of the Apply with new object @zx. */
+        SET_FUNCTION( a3,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a3 ), OPERAND( a1 ) ) ) );
+
+        /* Replace the operand of the Apply with y. */
+        SET_OPERAND( a3, OPERAND( a2 ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* Wxy --> xyy */
+static boolean
+apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
+{
+    Object *a1, *a2;
+
+    if ( nargs >= 2 )
+    {
+        a1 = array__pop( spine );
+        a2 = array__pop( spine );
+
+        /* Replace the function of the Apply with new object @xy. */
+        SET_FUNCTION( a2,
+            memory_manager__object( m, apply_type,
+                apply__new( OPERAND( a1 ), OPERAND( a2 ) ) ) );
+
+        /* Replace the operand of the Apply with new object y. */
+        SET_OPERAND( a2, OPERAND( a2 ) );
+
+        return TRUE;
+    }
+
+    else
+        return FALSE;
+}
+
+
+/* wx --> xx */
+static boolean
+apply_w( Array *spine, unsigned int nargs )
+{
+    Object *a1;
+
+    if ( nargs >= 1 )
+    {
+        a1 = array__pop( spine );
+
+        /* Replace the function of the Apply with x. */
+        SET_FUNCTION( a1, OPERAND( a1 ) );
 
         return TRUE;
     }
@@ -220,14 +510,69 @@ apply_combinator( Object *o, Array *spine, unsigned int nargs, Memory_Manager *m
 
     switch ( *( ( Combinator* ) o->value ) )
     {
+        case B_combinator:
+
+            return apply_B( spine, nargs, m );
+            break;
+
+        case C_combinator:
+
+            return apply_C( spine, nargs, m );
+            break;
+
+        case I_combinator:
+
+            return apply_I( spine, nargs );
+            break;
+
         case K_combinator:
 
             return apply_K( spine, nargs );
             break;
 
+        case L_combinator:
+
+            return apply_L( spine, nargs, m );
+            break;
+
+        case O_combinator:
+
+            return apply_O( spine, nargs, m );
+            break;
+
+        case R_combinator:
+
+            return apply_R( spine, nargs, m );
+            break;
+
         case S_combinator:
 
             return apply_S( spine, nargs, m );
+            break;
+
+        case T_combinator:
+
+            return apply_T( spine, nargs );
+            break;
+
+        case U_combinator:
+
+            return apply_U( spine, nargs, m );
+            break;
+
+        case V_combinator:
+
+            return apply_V( spine, nargs, m );
+            break;
+
+        case W_combinator:
+
+            return apply_W( spine, nargs, m );
+            break;
+
+        case w_combinator:
+
+            return apply_w( spine, nargs );
             break;
 
         case Y_combinator:
@@ -342,12 +687,16 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
     if ( DEBUG__SAFE && !o )
         abort();
-
+PRINT( "---gr 0---\n" );
     /* Break out when no more reduction is possible. */
     for (;;)
     {
+PRINT( "---gr 1---\n" );
         ap = o;
         nargs = 0;
+
+        while ( ap->type == indirection_type )
+            ap = ap->value;
 
         /* Traverse to the tip of the application spine. */
         while ( ap->type == apply_type )
@@ -360,15 +709,18 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
                boxed value, a segfault is inevitable. */
             ap = dereference( &FUNCTION( ap ) );
         }
+PRINT( "---gr 2---\n" );
 
         if ( ap->type == combinator_type )
         {
+PRINT( "---gr 3a---\n" );
             if ( !apply_combinator( ap, spine, nargs, m ) )
                 break;
         }
 
         else if ( ap->type == primitive_type )
         {
+PRINT( "---gr 3b---\n" );
             if ( !apply_primitive( ap->value, spine, nargs, m ) )
                 break;
         }
@@ -376,19 +728,24 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
         /* Object at tip of spine is a literal value. */
         else
         {
+PRINT( "---gr 3c---\n" );
+/*PRINT( "type->name = %s\n", ap->type->name );*/
             if ( nargs && !SK__ALLOW_NONREDUX )
                 ERROR( "can't apply a non-redex object to an argument" );
 
             break;
         }
+PRINT( "---gr 4---\n" );
 
         rewind0();
     }
+PRINT( "---gr 5---\n" );
 
     rewind0();
 
     while ( o->type == indirection_type )
         o = o->value;
+PRINT( "---gr 6---\n" );
 
     return o;
 }

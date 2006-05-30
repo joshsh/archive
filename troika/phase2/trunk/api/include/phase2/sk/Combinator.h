@@ -28,8 +28,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 enum Combinator
 {
+    B_combinator,
+    C_combinator,
+    I_combinator,
     K_combinator,
+    L_combinator,
+    O_combinator,
+    R_combinator,
     S_combinator,
+    T_combinator,
+    U_combinator,
+    V_combinator,
+    W_combinator,
+    w_combinator,
     Y_combinator
 };
 

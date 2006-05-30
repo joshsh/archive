@@ -547,6 +547,10 @@ printf( "\n" );  fflush( stdout );
                         term = k_reduce( term );
 
                     break;
+
+                default:
+
+                    goto finish;
             }
         }
 
