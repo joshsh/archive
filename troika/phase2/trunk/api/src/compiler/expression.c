@@ -182,6 +182,36 @@ term__encode__alt( Term *t, char *buffer )
 }
 
 
+void
+apply__encode__alt( Apply *a, char *buffer )
+{
+    Object *o;
+
+    if ( DEBUG__SAFE && ( !a || !buffer ) )
+        abort();
+
+    o = a->function;
+    encode__short( o, buffer );
+    buffer += strlen( buffer );
+
+    sprintf( buffer, " " );
+    buffer++;
+
+    o = a->operand;
+    if ( object__type( o ) == apply_type )
+    {
+        sprintf( buffer, "(" );
+        buffer++;
+        encode__short( o, buffer );
+        buffer += strlen( buffer );
+        sprintf( buffer, ")" );
+    }
+
+    else
+        encode__short( o, buffer );
+}
+
+
 /******************************************************************************/
 
 
@@ -302,7 +332,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     Term *t;
     Array *spine;
 
-    Encoder char__encode, double__encode, string__encode, set__encode, term__encode;
+    Encoder apply__encode, char__encode, double__encode, string__encode, set__encode, term__encode;
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr )
@@ -311,11 +341,13 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     /* FIXME */
     compiler = c;
 
+    apply__encode = apply_type->encode;
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;
     string__encode = c->string_t->encode;
     set__encode = c->set_t->encode;
     term__encode = c->term_t->encode;
+    apply_type->encode = ( Encoder ) apply__encode__alt;
     c->char_t->encode = ( Encoder ) char__encode__alt;
     c->float_t->encode = ( Encoder ) double__encode__alt;
     c->string_t->encode = ( Encoder ) string__encode__alt;
@@ -401,6 +433,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     if ( oname )
         name__delete( oname );
 
+    apply_type->encode = apply__encode;
     c->char_t->encode = char__encode;
     c->float_t->encode = double__encode;
     c->string_t->encode = string__encode;

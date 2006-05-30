@@ -26,24 +26,30 @@ void
 add_combinators( Environment *env )
 {
     Object *o;
-    Combinator *sk_s, *sk_k;
+    Combinator *sk_k, *sk_s, *sk_y;
     Memory_Manager *m = env->manager;
 
     Type *t = environment__resolve_type( env, COMBINATOR__NAME )->value;
 
-    sk_s = new( Combinator );
     sk_k = new( Combinator );
+    sk_s = new( Combinator );
+    sk_y = new( Combinator );
 
-    *sk_s = S_combinator;
     *sk_k = K_combinator;
+    *sk_s = S_combinator;
+    *sk_y = Y_combinator;
+
+    o = object__new( t, sk_k, OBJECT__IMMUTABLE );
+    memory_manager__add( m, o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "K", o );
 
     o = object__new( t, sk_s, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
     namespace__add_simple( ( Namespace* ) env->combinators->value, "S", o );
 
-    o = object__new( t, sk_k, OBJECT__IMMUTABLE );
+    o = object__new( t, sk_y, OBJECT__IMMUTABLE );
     memory_manager__add( m, o );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "K", o );
+    namespace__add_simple( ( Namespace* ) env->combinators->value, "Y", o );
 }
 
 

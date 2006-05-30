@@ -172,7 +172,7 @@ apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with new object @yz. */
         SET_OPERAND( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a1 ), OPERAND( a3 ) ) ) );
+                apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
 
         return TRUE;
     }
@@ -331,13 +331,21 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
        necessarily the number of available arguments. */
     unsigned int nargs;
 
+    unsigned int len = array__size( spine );
+
+    void rewind0()
+    {
+        unsigned int i;
+        for ( i = array__size( spine ); i > len; i-- )
+            array__pop( spine );
+    }
+
     if ( DEBUG__SAFE && !o )
         abort();
-PRINT( "---gr 0---\n" ); FFLUSH;
+
     /* Break out when no more reduction is possible. */
     for (;;)
     {
-PRINT( "---gr 1---\n" ); FFLUSH;
         ap = o;
         nargs = 0;
 
@@ -352,18 +360,15 @@ PRINT( "---gr 1---\n" ); FFLUSH;
                boxed value, a segfault is inevitable. */
             ap = dereference( &FUNCTION( ap ) );
         }
-PRINT( "---gr 2---\n" ); FFLUSH;
 
         if ( ap->type == combinator_type )
         {
-PRINT( "---gr 3a---\n" ); FFLUSH;
             if ( !apply_combinator( ap, spine, nargs, m ) )
                 break;
         }
 
         else if ( ap->type == primitive_type )
         {
-PRINT( "---gr 3b---\n" ); FFLUSH;
             if ( !apply_primitive( ap->value, spine, nargs, m ) )
                 break;
         }
@@ -371,19 +376,16 @@ PRINT( "---gr 3b---\n" ); FFLUSH;
         /* Object at tip of spine is a literal value. */
         else
         {
-PRINT( "---gr 4---\n" ); FFLUSH;
             if ( nargs && !SK__ALLOW_NONREDUX )
                 ERROR( "can't apply a non-redex object to an argument" );
 
             break;
         }
-PRINT( "---gr 5---\n" ); FFLUSH;
 
-        array__clear( spine );
+        rewind0();
     }
-PRINT( "---gr 6---\n" ); FFLUSH;
 
-    array__clear( spine );
+    rewind0();
 
     while ( o->type == indirection_type )
         o = o->value;

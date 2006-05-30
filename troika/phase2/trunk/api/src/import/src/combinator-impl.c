@@ -14,8 +14,18 @@ Combinator *combinator__decode( cstring *buffer )
 
 void combinator__encode( Combinator *c, cstring *buffer )
 {
-    if ( *c == S_combinator )
-        sprintf( buffer, "S" );
-    else
-        sprintf( buffer, "K" );
+    switch ( *c )
+    {
+        case K_combinator:
+            sprintf( buffer, "K" );
+            break;
+        case S_combinator:
+            sprintf( buffer, "S" );
+            break;
+        case Y_combinator:
+            sprintf( buffer, "Y" );
+            break;
+        default:
+            abort();
+    }
 }

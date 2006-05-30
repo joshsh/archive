@@ -149,6 +149,11 @@ array__clear( Array *a );
 extern Array *
 array__minimize( Array *a );
 
+/*
+extern void
+array__truncate( Array *a, unsigned int len );
+*/
+
 
 /******************************************************************************/
 
