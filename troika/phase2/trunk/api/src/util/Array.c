@@ -652,64 +652,6 @@ array__minimize( Array *a )
 
 
 static void
-encode
-    ( void **cur, char *buffer, int delimit )
-{
-    Object *o;
-    void **lim;
-
-    /* If the sub-term represents a leaf node, execute the procedure. */
-    if ( ( unsigned int ) *cur == 2 )
-    {
-        cur++;
-
-/*
-        if ( delimit )
-        {
-            sprintf( buffer, " " );
-            buffer++;
-        }
-*/
-
-        o = ( Object* ) *cur;
-        object__type( o )->encode( object__value( o ), buffer );
-    }
-
-    /* If the sub-term contains further sub-terms, recurse through them. */
-    else
-    {
-        if ( delimit )
-        {
-            sprintf( buffer,  "( " );
-            buffer += 2;
-        }
-
-        lim = cur + ( unsigned int ) *cur;
-        cur++;
-        while ( cur < lim )
-        {
-            encode( cur, buffer, 1 );
-            buffer += strlen( buffer );
-
-            cur += ( unsigned int ) *cur;
-
-            if ( cur < lim )
-            {
-                sprintf( buffer, " " );
-                buffer++;
-            }
-        }
-
-        if ( delimit )
-        {
-            sprintf( buffer, " )" );
-            buffer += 2;
-        }
-    }
-}
-
-
-static void
 array__encode( Array *a, char *buffer )
 {
     unsigned int i;

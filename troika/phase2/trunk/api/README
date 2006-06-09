@@ -65,3 +65,18 @@ $(LIBOBJS) and $(ALLOCA)
 ./configure --host=arm-linux --with-linux=$ARM_PREFIX/include
 
 The linker also needs to be arm-linux-ld not ld.
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+[*] the term "cube theory" appears to be unused
+
+[*] triples can easily express
+    [.] graphs
+        [.] lists, trees, DAGs, etc.
+        [*] a graph, in this context, is uniquely determined by a set of vertices and a single edge-relation vertex
+    [.] (finite) groups
+        [*] 3-graph ^ group without monoid properties (associativity, identity element)
+        [P?] an algorithm to check whether a 3-graph "is" a group
+        [*] as a group, a 3-graph is "complete", i.e. a^b != 0 for all a, b
+

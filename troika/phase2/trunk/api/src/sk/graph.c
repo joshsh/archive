@@ -110,9 +110,33 @@ dereference( Object **opp )
 
     /* Assumes that chains of indirection nodes are possible. */
     while ( ( *opp )->type == indirection_type )
+    {
         *opp = ( *opp )->value;
+        if ( ! *opp )
+            break;
+    }
 
     return *opp;
+}
+
+
+static Object *
+skip_indirection( Object *o )
+{
+    /* Accept a NULL argument. */
+    if ( !o )
+        return 0;
+
+    while ( o->type == indirection_type )
+    {
+        o = o->value;
+
+        /* Take indirection nodes to NULL into account. */
+        if ( !o )
+            return 0;
+    }
+
+    return o;
 }
 
 
@@ -683,6 +707,7 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
        necessarily the number of available arguments. */
     unsigned int nargs;
 
+    /* Original size of the stack. */
     unsigned int len = array__size( spine );
 
     void rewind0()
@@ -702,8 +727,10 @@ if ( DEBUG__SK ) PRINT( "---gr 1---\n" );
         ap = o;
         nargs = 0;
 
-        while ( ap->type == indirection_type )
-            ap = ap->value;
+        ap = skip_indirection( ap );
+
+        if ( !ap )
+            break;
 
         /* Traverse to the tip of the application spine. */
         while ( ap->type == apply_type )
@@ -712,9 +739,14 @@ if ( DEBUG__SK ) PRINT( "---gr 1---\n" );
             nargs++;
 
             /* FIXME: possible race condition.  If ap is initially an Apply but
-               is overwritten by another thread with an indirection node or a
+               is overwritten (by another thread) with an indirection node or a
                boxed value, a segfault is inevitable. */
             ap = dereference( &FUNCTION( ap ) );
+
+/*
+            if ( !ap )
+                break;
+*/
         }
 if ( DEBUG__SK ) PRINT( "---gr 2---\n" );
 
@@ -750,11 +782,7 @@ if ( DEBUG__SK ) PRINT( "---gr 5---\n" );
 
     rewind0();
 
-    while ( o->type == indirection_type )
-        o = o->value;
-if ( DEBUG__SK ) PRINT( "---gr 6---\n" );
-
-    return o;
+    return skip_indirection( o );
 }
 
 

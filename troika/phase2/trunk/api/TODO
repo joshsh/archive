@@ -2,9 +2,14 @@
     _rm root;
     _rm here;
     _mv and _new issues (^ source namespace)
+    depth issues ^ namespace__find (e.g. can't find Swedish from root:data)
+    _save is touchy... have to use _saveas most of the time
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
     object ^ print ^ cycles
+
+[reduction]
+    NULL-proof the new graph reducer
 
 [build]
     source dependencies (settings.h, etc.)
@@ -28,8 +33,6 @@
 gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libQtCore_debug.so.4)
 gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libstdc++.so.6)
 gui/p2gui: /lib/libc.so.6: version `GLIBC_2.2.4' not found (required by /usr/lib/libgcc_s.so.1)
-
-
 
 
 ./textedit

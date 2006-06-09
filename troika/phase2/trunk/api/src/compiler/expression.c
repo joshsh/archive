@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static Compiler *compiler;
 
 
-static boolean
+static Name *
 encoding_name( Object *o )
 {
                               /* FIXME */
@@ -186,6 +186,39 @@ term__encode__alt( Term *t, char *buffer )
     encode( t->head, FALSE );
 
     sprintf( buffer, "]" );
+}
+
+
+static void
+array__encode__alt( Array *a, char *buffer )
+{
+    unsigned int i;
+    Object *o;
+
+    if ( DEBUG__SAFE && ( !a || !buffer ) )
+        abort();
+
+    sprintf( buffer, "{" );
+    buffer++;
+
+    if ( array__size( a ) )
+    {
+        for ( i = 0; i < array__size( a ); i++ )
+        {
+            o = array__get( a, i );
+
+            if ( i )
+            {
+                sprintf( buffer, ", " );
+                buffer += 2;
+            }
+
+            encode__short( o, buffer );
+            buffer += strlen( buffer );
+        }
+    }
+
+    sprintf( buffer, "}" );
 }
 
 
@@ -345,7 +378,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     Term *t;
     Array *spine;
 
-    Encoder apply__encode, char__encode, double__encode, string__encode, set__encode, term__encode;
+    Encoder apply__encode, bag__encode, char__encode, double__encode, string__encode, set__encode, term__encode;
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr )
@@ -355,12 +388,14 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
     compiler = c;
 
     apply__encode = apply_type->encode;
+    bag__encode = c->bag_t->encode;
     char__encode = c->char_t->encode;
     double__encode = c->float_t->encode;
     string__encode = c->string_t->encode;
     set__encode = c->set_t->encode;
     term__encode = c->term_t->encode;
     apply_type->encode = ( Encoder ) apply__encode__alt;
+    c->bag_t->encode = ( Encoder ) array__encode__alt;
     c->char_t->encode = ( Encoder ) char__encode__alt;
     c->float_t->encode = ( Encoder ) double__encode__alt;
     c->string_t->encode = ( Encoder ) string__encode__alt;
@@ -447,6 +482,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         name__delete( oname );
 
     apply_type->encode = apply__encode;
+    c->bag_t->encode = bag__encode;
     c->char_t->encode = char__encode;
     c->float_t->encode = double__encode;
     c->string_t->encode = string__encode;
