@@ -6,7 +6,7 @@ extern "C"
 }
 
 #include <widgets/bindings/P2BagWidget.h>
-#include <widgets/bindings/P2ObjectFrame.h>
+#include <widgets/P2ObjectFrame.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////

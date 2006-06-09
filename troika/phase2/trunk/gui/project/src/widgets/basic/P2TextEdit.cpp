@@ -4,16 +4,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-P2TextEdit::P2TextEdit( char *text, bool readOnly )
+P2TextEdit::P2TextEdit( QString text, bool readOnly, const QColor &color )
         : P2BasicWidget()
 {
-    #ifdef DEBUG
-        cout << indent()
-             << "P2TextEdit[" <<  (int) this << "]::P2TextEdit()" << endl;
-    #endif
-
     // Note: a P2TextEdit object owns its TextEditWrapper as a child widget.
-    textEdit = new TextEditWrapper( text, this );
+    textEdit = new TextEditWrapper( text, this, color );
     textEdit->setReadOnly( readOnly );
 
 textEdit->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );

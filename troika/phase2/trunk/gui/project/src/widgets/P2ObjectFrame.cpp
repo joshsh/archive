@@ -1,4 +1,4 @@
-#include <widgets/bindings/P2ObjectFrame.h>
+#include <widgets/P2ObjectFrame.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -302,6 +302,9 @@ cout << "  borderRect.size() = (" << borderRect.width() << ", " << borderRect.he
         pen.setColor( c );
         painter.setPen( pen );
         painter.drawRect( borderRect );
+
+//painter.setPen( QColor( COLOR__FRAME__ACTIVE ) );
+//painter.drawRect( contentWidget->geometry() );
 
         // Draw opaque background rectangle for text.
         if ( showTitle )

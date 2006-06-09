@@ -7,7 +7,7 @@ extern "C"
 }
 
 #include <widgets/bindings/P2SetWidget.h>
-#include <widgets/bindings/P2ObjectFrame.h>
+#include <widgets/P2ObjectFrame.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////

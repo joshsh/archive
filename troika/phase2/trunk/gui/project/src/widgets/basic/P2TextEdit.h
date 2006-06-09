@@ -13,7 +13,7 @@ class P2TextEdit : public P2BasicWidget
 
 public:
 
-    P2TextEdit( char *text, bool readOnly );
+    P2TextEdit( QString text, bool readOnly, const QColor &color );
 
     /** \note  Without an overloaded sizeHint, Qt apparently assumes
         QSize( 0, 0 ). */
@@ -24,7 +24,7 @@ private:
     class TextEditWrapper : public QTextEdit
     {
     public:
-        TextEditWrapper( char *text, P2TextEdit *parent )
+        TextEditWrapper( QString text, P2TextEdit *parent, const QColor &color )
             : QTextEdit( text, parent )
         {
             // Prevent the 1-pixel foreground-color frame.
@@ -37,6 +37,14 @@ private:
             format.setMargin( 0 );
             format.setPadding( 0 );
             frame->setFrameFormat( format );
+
+            setLineWrapMode( QTextEdit::WidgetWidth );
+
+            setTextColor( color );
+
+            QFont f = currentFont();
+            f.setBold( true );
+            setCurrentFont( f );
         }
 /*
         void mousePressEvent( QMouseEvent *event )

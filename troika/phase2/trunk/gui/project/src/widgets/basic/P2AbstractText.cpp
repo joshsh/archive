@@ -4,10 +4,24 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
+/* FIXME: this does no good, because newlines are treated as ordinary characters
+   by QFontMetrics. */
+static QString
+wrapText( QString text )
+{
+    int l = 80;
+
+    for ( int i = l; i < text.size(); i += l + 1 )
+        text.insert( i, QChar( '\n' ) );
+
+    return text;
+}
+
+
 P2AbstractText::P2AbstractText( QString text )
         : P2BasicWidget()
 {
-    this->text = text;
+    this->text = wrapText( text );
 
     update2();
 }

@@ -10,11 +10,13 @@ extern "C"
 #include <Object.h>
 }
 
-#include <widgets/basic/P2Text.h>
+//#include <widgets/basic/P2Text.h>
+#include <widgets/basic/P2TextEdit.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class P2StringWidget : public P2Text
+//class P2StringWidget : public P2Text
+class P2StringWidget : public P2TextEdit
 {
 public:
 

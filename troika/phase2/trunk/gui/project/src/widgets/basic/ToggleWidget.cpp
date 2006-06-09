@@ -109,6 +109,8 @@ void ToggleWidget::paintEvent( QPaintEvent *event )
         0, 0,  // source origin
         -1, -1,  // source maxima
         0 );  // conversionFlags
+
+    event = 0;
 }
 
 
