@@ -26,6 +26,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #include "../Primitive-impl.h"
 
 
+/* FIXME */
+static Environment *global_env;
+
+
+/******************************************************************************/
+
+
 static void *
 assoc_stub( void **args )
 {
@@ -286,8 +293,46 @@ add_set_prims( Environment *env )
 /******************************************************************************/
 
 
-/* ! */
-static Environment *global_env;
+#include "sk/graph.h"
+
+
+static void *
+int_nonzero_stub( void **args )
+{
+    int *i = args[0];
+    Object *o;
+
+    if ( *i )
+    {
+        o = environment__resolve_combinator( global_env, "K" );
+    }
+
+    else
+    {
+        o = object__new( apply_type, apply__new(
+            environment__resolve_combinator( global_env, "S" ),
+            environment__resolve_combinator( global_env, "K" ) ), NOFLAGS );
+
+        memory_manager__add( global_env->manager, o );
+    }
+
+    return o;
+}
+
+
+static int
+add_sk_prims( Environment *env )
+{
+    Primitive *p;
+
+    return ( ( p = primitive__new( env, ANY__NAME, "int__nonzero", int_nonzero_stub, 1 ) )
+      && primitive__add_param( env, p, "int", "i", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 ) );
+}
+
+
+/******************************************************************************/
+
 
 /* Note: this is as pokey as it looks. */
 static void *
@@ -327,6 +372,7 @@ add_meta_prims( Environment *env )
       && add_triples_prims( env )
 #endif
       && add_set_prims( env )
+      && add_sk_prims( env )
     );
 }
 

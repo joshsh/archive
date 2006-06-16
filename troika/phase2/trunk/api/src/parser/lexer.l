@@ -117,12 +117,13 @@ new_line( Compiler *c );
 /** TOKEN macro handles debugging messages and column count as well as return
     values from rules.  It must be the last statement in a rule action. */
 #if DEBUG__LEXER
-#    define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( y ) PRINT( "Matched {%s}\n", y ); \
-                             if ( x ) return x; }
+#    define TOKEN( x )  { new_token( yyleng ); \
+                          if ( x ) { \
+                            PRINT( "Matched %s\n", #x ); \
+                            return x; } }
 #else
-#    define TOKEN( x, y )  { new_token( yyleng ); \
-                             if ( x ) return x; }
+#    define TOKEN( x )  { new_token( yyleng ); \
+                          if ( x ) return x; }
 #endif
 
 
@@ -259,111 +260,111 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     "(:"  {  /* Begins a comment. */
         comment_level++;
         BEGIN( SC_COMMENT );
-        TOKEN( 0, "comment (begin)" );
+        TOKEN( 0 );
     }
 
     ["]  {  /* Begins a string literal. */
         BEGIN( SC_STRING );
-        TOKEN( 0, "quoted STRING (begin)" );
+        TOKEN( 0 );
     }
 
     ":"  {  /* Namespace delimiter. */
-        TOKEN( COLON, "COLON" );
+        TOKEN( COLON );
     }
 
     ";"  {  /* Marks the end of an expression or command. */
-        TOKEN( SEMICOLON, "SEMICOLON" );
+        TOKEN( SEMICOLON );
     }
 
     ":="  {  /* Leading assignment operator. */
-        TOKEN( L_ASSIGN, "L_ASSIGN" );
+        TOKEN( L_ASSIGN );
     }
 
     "=:"  {  /* Trailing assignment operator. */
-        TOKEN( R_ASSIGN, "R_ASSIGN" );
+        TOKEN( R_ASSIGN );
     }
 
     "("  {  /* Marks the beginning of a sub-term. */
-        TOKEN( L_PAREN, "L_PAREN" );
+        TOKEN( L_PAREN );
     }
 
     ")"  {  /* Marks the end of a sub-term. */
-        TOKEN( R_PAREN, "R_PAREN" );
+        TOKEN( R_PAREN );
     }
 
     "["  {  /* Marks the beginning of a general sequence. */
-        TOKEN( L_SQ_BRACKET, "L_SQ_BRACKET" );
+        TOKEN( L_SQ_BRACKET );
     }
 
     "]"  {  /* Marks the beginning of a general sequence. */
-        TOKEN( R_SQ_BRACKET, "R_SQ_BRACKET" );
+        TOKEN( R_SQ_BRACKET );
     }
 
     "{"  {  /* Marks the beginning of a bag. */
-        TOKEN( L_BRACE, "L_BRACE" );
+        TOKEN( L_BRACE );
     }
 
     ","  {  /* Separates elements in a bag. */
-        TOKEN( COMMA, "COMMA" );
+        TOKEN( COMMA );
     }
 
     "}"  {  /* Marks the end of a bag. */
-        TOKEN( R_BRACE, "R_BRACE" );
+        TOKEN( R_BRACE );
     }
 
     _[0-9A-Za-z]+  {
         yylval.string = yytext + 1;
 
-        TOKEN( COMMAND_NAME, "COMMAND_NAME" );
+        TOKEN( COMMAND_NAME );
     }
 
     '[^']'  {  /* Matches an ASCII character in single quotes. */
         /* Note: no escaped characters yet. */
         yylval.character = *( ++yytext );
-        TOKEN( CHAR, "CHAR" );
+        TOKEN( CHAR );
     }
 
     -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a FLOAT if it
                                     contains a decimal point (as in Forth). */
         /* Note: atof is error-safe (it fails with a return value of 0.0). */
         yylval.real = atof( yytext );
-        TOKEN( FLOAT, "FLOAT" );
+        TOKEN( FLOAT );
     }
 
     0|(-?[1-9][0-9]*)  {
         /* Note: atoi is error-safe (it fails with a return value of 0). */
         yylval.integer = atoi( yytext );
-        TOKEN( INT, "INT" );
+        TOKEN( INT );
     }
 
     {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
         yylval.string = extract_id( yytext );
 
-        TOKEN( ID, "ID" );
+        TOKEN( ID );
     }
 
     \n  {  /* Ignore newlines, except for formatting. */
         new_line( compiler_global );
-        TOKEN( 0, "newline" );
+        TOKEN( 0 );
     }
 
     \t  {  /* Ignore tabs. */
         /* Assuming 8-column tabs. */
         column_number += 7;
 
-        TOKEN( 0, "whitespace" );
+        TOKEN( 0 );
     }
 
     [ \r]  {  /* Ignore spaces and carriage returns. */
-        TOKEN( 0, "whitespace" );
+        TOKEN( 0 );
     }
 
     <<EOF>>  {
-        TOKEN( E_O_F, "EOF" );
+        TOKEN( E_O_F );
     }
 
     .  {  /* Ignore unrecognized characters. */
-        TOKEN( 0, "unrecognized character" );
+        TOKEN( 0 );
     }
 }
 
@@ -372,13 +373,13 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 {
     ([^"\n\t\\]*|\\[^\n\t])  {  /* Body of string literal. */
         append_to_buffer( yytext );
-        TOKEN( 0, ( char* ) 0 );
+        TOKEN( 0 );
     }
 
     \\?\n  {  /* Newlines are permitted. */
         append_to_buffer( yytext );
         new_line( compiler_global );
-        TOKEN( 0, "newline in SC_STRING" );
+        TOKEN( 0 );
     }
 
     \\?\t  {
@@ -387,7 +388,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         /* Assuming 8-column tabs. */
         column_number += 7;
 
-        TOKEN( 0, "whitespace" );
+        TOKEN( 0 );
     }
 
     \"  {  /* End quote after string literal. */
@@ -398,8 +399,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         buffer_pos = string_buffer;
 
         BEGIN( INITIAL );
-
-        TOKEN( STRING, "quoted STRING (end)" );
+        TOKEN( STRING );
     }
 }
 
@@ -408,34 +408,34 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 {
     "(:"  {  /* Begins a comment within a comment. */
         comment_level++;
-        TOKEN( 0, "comment (begin nested)" );
+        TOKEN( 0 );
     }
 
     ":)"  {  /* Ends a comment. */
         if (! --comment_level )
         {
             BEGIN( INITIAL );
-            TOKEN( 0, "comment (end)" );
+            TOKEN( 0 );
         }
 
         else
-            TOKEN( 0, "comment (end nested)" );
+            TOKEN( 0 );
     }
 
     \n  {  /* Newlines are ignored, except for formatting. */
         new_line( compiler_global );
-        TOKEN( 0, "newline in SC_COMMENT" );
+        TOKEN( 0 );
     }
 
     \t  {
         /* Assuming 8-column tabs. */
         column_number += 7;
 
-        TOKEN( 0, ( char* ) 0 );
+        TOKEN( 0 );
     }
 
     .  {  /* Ignore everything else. */
-        TOKEN( 0, ( char* ) 0 );
+        TOKEN( 0 );
     }
 }
 

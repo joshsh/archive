@@ -703,6 +703,10 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 {
     Object *ap;
 
+#if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
+    int iter = 0;
+#endif
+
     /* Note: because spine is passed recursively, array__size( spine ) is not
        necessarily the number of available arguments. */
     unsigned int nargs;
@@ -719,11 +723,22 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
     if ( DEBUG__SAFE && !o )
         abort();
-if ( DEBUG__SK ) PRINT( "---gr 0---\n" );
+
     /* Break out when no more reduction is possible. */
     for (;;)
     {
-if ( DEBUG__SK ) PRINT( "---gr 1---\n" );
+        /* Give up if reduction takes too long. */
+        if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
+        {
+            iter++;
+
+            if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
+            {
+                ERROR( "sk_reduce: abandoned (possible infinite loop)" );
+                break;
+            }
+        }
+
         ap = o;
         nargs = 0;
 
@@ -748,18 +763,15 @@ if ( DEBUG__SK ) PRINT( "---gr 1---\n" );
                 break;
 */
         }
-if ( DEBUG__SK ) PRINT( "---gr 2---\n" );
 
         if ( ap->type == combinator_type )
         {
-if ( DEBUG__SK ) PRINT( "---gr 3a---\n" );
             if ( !apply_combinator( ap, spine, nargs, m ) )
                 break;
         }
 
         else if ( ap->type == primitive_type )
         {
-if ( DEBUG__SK ) PRINT( "---gr 3b---\n" );
             if ( !apply_primitive( ap->value, spine, nargs, m ) )
                 break;
         }
@@ -767,18 +779,15 @@ if ( DEBUG__SK ) PRINT( "---gr 3b---\n" );
         /* Object at tip of spine is a literal value. */
         else
         {
-if ( DEBUG__SK ) PRINT( "---gr 3c---\n" );
 /*PRINT( "type->name = %s\n", ap->type->name );*/
             if ( nargs && !SK__ALLOW_NONREDUX )
                 ERROR( "can't apply a non-redex object to an argument" );
 
             break;
         }
-if ( DEBUG__SK ) PRINT( "---gr 4---\n" );
 
         rewind0();
     }
-if ( DEBUG__SK ) PRINT( "---gr 5---\n" );
 
     rewind0();
 
