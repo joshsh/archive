@@ -36,6 +36,7 @@ const char *Ast__Type__names[8] =
     "FLOAT_T",
     "INT_T",
     "NAME_T",
+    "NULL_T",
     "STRING_T",
     "TERM_T",
     "VOID_T"
@@ -144,6 +145,15 @@ ast__name( Name *name )
 
 
 Ast *
+ast__null()
+{
+    Ast *ast = ast__new( NULL_T, 0 );
+
+    return ast;
+}
+
+
+Ast *
 ast__string( char *s )
 {
     Ast *ast = ast__new( STRING_T, s );
@@ -237,6 +247,10 @@ ast__delete( Ast *ast )
         case NAME_T:
 
             name__delete( ( Name* ) ast->value );
+            break;
+
+        case NULL_T:
+
             break;
 
         case STRING_T:
@@ -371,6 +385,11 @@ ast__print( Ast *ast )
         case NAME_T:
 
             name__print( ( Name* ) ast->value );
+            break;
+
+        case NULL_T:
+
+            PRINT( "()" );
             break;
 
         case STRING_T:

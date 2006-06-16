@@ -29,6 +29,14 @@ object__new( Type *type, void *value, int flags )
 
     /* Note: temporary objects with null type/value are allowed. */
 
+    if ( !type || !value )
+    {
+        if ( PERMIT_NULLS )
+            return 0;
+        else
+            abort();
+    }
+
     o = new( Object );
 
     if ( !o )
@@ -232,6 +240,19 @@ object__create_type( const char *name )
     }
 
     return type;
+}
+
+
+/******************************************************************************/
+
+void
+object__encode( const Object *o, const char *buffer )
+{
+    if ( PERMIT_NULLS && !o )
+        sprintf( buffer, "()" );
+
+    else
+        o->type->encode( o->value, buffer );
 }
 
 

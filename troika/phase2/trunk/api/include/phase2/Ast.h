@@ -66,6 +66,7 @@ enum Ast__Type
     FLOAT_T,
     INT_T,
     NAME_T,     /**< A URN-like sequence of name fragments. */
+    NULL_T,
     STRING_T,
     TERM_T,     /**< A term composed of Asts. */
     VOID_T      /**< A generic pointer to data not owned by the AST. */
@@ -106,6 +107,9 @@ ast__int( int i );
     \return  a new AST node of type NAME */
 extern Ast *
 ast__name( Name *name );
+
+extern Ast *
+ast__null();
 
 extern Ast *
 ast__string( char *s );

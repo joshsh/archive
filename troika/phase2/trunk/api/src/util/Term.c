@@ -72,8 +72,11 @@ term__new( void *p, unsigned int initial_buffer_size )
 {
     Term *t;
 
+    /* Terms may contain null atoms. */
+/*
     if ( DEBUG__SAFE && !p )
         abort();
+*/
 
     t = malloc(sizeof(Term));
 
@@ -406,7 +409,7 @@ term__encode( Term *t, char *buffer )
             cur++;
 
             o = *cur;
-            object__type( o )->encode( object__value( o ), buffer );
+            object__encode( o, buffer );
         }
 
         /* If the sub-term contains further sub-terms, recurse through them. */

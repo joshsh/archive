@@ -47,7 +47,7 @@ encode__short( Object *o, char *buffer )
     Name *name = encoding_name( o );
 
     if ( !name )
-        object__type( o )->encode( object__value( o ), buffer );
+        object__encode( o, buffer );
 
     else
         name__encode( name, buffer );
@@ -238,7 +238,7 @@ apply__encode__alt( Apply *a, char *buffer )
     buffer++;
 
     o = a->operand;
-    if ( object__type( o ) == apply_type )
+    if ( ( PERMIT_NULLS && o ) && object__type( o ) == apply_type )
     {
         if ( encoding_name( o ) )
             encode__short( o, buffer );
@@ -271,7 +271,9 @@ resolve( Ast *ast, Compiler *c )
 
         void *helper( Ast **astpp )
         {
-            if ( !( *astpp = ( Ast* ) object_for_ast( *astpp ) ) )
+            *astpp = object_for_ast( *astpp );
+
+            if ( !PERMIT_NULLS && !*astpp)
             {
                 ok = FALSE;
                 return walker__break;
@@ -322,6 +324,12 @@ resolve( Ast *ast, Compiler *c )
                 ast__delete( ast );
                 return o;
 
+            case NULL_T:
+
+                type = 0;
+                value = 0;
+                break;
+
             case STRING_T:
 
                 type = c->string_t;
@@ -346,10 +354,16 @@ resolve( Ast *ast, Compiler *c )
 
         if ( ok )
         {
-            /* Create and register a new object. */
-            o = object__new( type, value, flags );
+            if ( type )
+            {
+                /* Create and register a new object. */
+                o = object__new( type, value, flags );
 
-            memory_manager__add( environment__manager( c->env ), o );
+                memory_manager__add( environment__manager( c->env ), o );
+            }
+
+            else
+                o = 0;
 
             return o;
         }
@@ -468,7 +482,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
             else
                 PRINT( ": " );
 
-            o->type->encode( o->value, print_buffer );
+            object__encode( o, print_buffer );
             printf( print_buffer );
 
             PRINT( "\n" );

@@ -26,8 +26,13 @@ apply__new( Object *function, Object *operand )
 {
     Apply *a;
 
-    if ( DEBUG__SAFE && ( !function || !operand ) )
-        abort();
+    if ( !function || ( !PERMIT_NULLS && !operand ) )
+    {
+        if ( PERMIT_NULLS )
+            return 0;
+        else
+            abort();
+    }
 
     a = new( Apply );
 
@@ -120,24 +125,24 @@ apply__encode( Apply *a, char *buffer )
         abort();
 
     o = a->function;
-    object__type( o )->encode( object__value( o ), buffer );
+    object__encode( o, buffer );
     buffer += strlen( buffer );
 
     sprintf( buffer, " " );
     buffer++;
 
     o = a->operand;
-    if ( object__type( o ) == apply_type )
+    if ( ( PERMIT_NULLS && o ) && object__type( o ) == apply_type )
     {
         sprintf( buffer, "(" );
         buffer++;
-        object__type( o )->encode( object__value( o ), buffer );
+        object__encode( o, buffer );
         buffer += strlen( buffer );
         sprintf( buffer, ")" );
     }
 
     else
-        object__type( o )->encode( object__value( o ), buffer );
+        object__encode( o, buffer );
 }
 
 

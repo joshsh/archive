@@ -221,7 +221,7 @@ set__encode( Set *s, char *buffer )
             buffer += 2;
         }
 
-        object__type( o )->encode( object__value( o ), buffer );
+        object__encode( o, buffer );
         buffer += strlen( buffer );
 
         first = FALSE;

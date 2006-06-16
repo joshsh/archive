@@ -115,6 +115,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Reduction ******************************************************************/
 
+
+/** Tolerate null object references in various contexts. */
+#define PERMIT_NULLS                            1
+
 #define PRIM__IMPLICIT_SET_MAPPING              1
 #define PRIM__ALLOW_GENERIC_PARAMS              1
 #define PRIM__ALLOW_GENERIC_RESULTS             1

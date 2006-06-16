@@ -64,6 +64,13 @@ object__value( const Object *o );
 
 /******************************************************************************/
 
+
+extern void
+object__encode( const Object *o, const char *buffer );
+
+
+/******************************************************************************/
+
 extern Type *
 object__create_type( const char *name );
 

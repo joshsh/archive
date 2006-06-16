@@ -784,7 +784,16 @@ subterm:
 
 term_item:
 
-    CHAR
+    L_PAREN R_PAREN
+    {
+        #if DEBUG__PARSER
+        production( "term_item ::=  L_PAREN R_PAREN" );
+        #endif
+
+        $$ = ast__null();
+    }
+
+    | CHAR
     {
         #if DEBUG__PARSER
         production( "term_item ::=  CHAR" );

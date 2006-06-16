@@ -141,8 +141,16 @@ memory_manager__set_root( Memory_Manager *m, Object *o )
 Object *
 memory_manager__add( Memory_Manager *m, Object *o )
 {
-    if ( DEBUG__SAFE && ( !o || owned( o) || visited( o ) ) )
+    if ( DEBUG__SAFE && ( owned( o) || visited( o ) ) )
         abort();
+
+    if ( !o )
+    {
+        if ( PERMIT_NULLS )
+            return 0;
+        else
+            abort();
+    }
 
     set_owned( o );
 
@@ -153,8 +161,16 @@ memory_manager__add( Memory_Manager *m, Object *o )
 Object *
 memory_manager__object( Memory_Manager *m, Type *type, void *value )
 {
-    if ( DEBUG__SAFE && ( !m || !type || !value ) )
+    if ( DEBUG__SAFE && !m )
         abort();
+
+    if ( !type || !value )
+    {
+        if ( PERMIT_NULLS )
+            return 0;
+        else if ( DEBUG__SAFE )
+            abort();
+    }
 
     Object *o = object__new( type, value, NOFLAGS );
 

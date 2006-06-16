@@ -47,7 +47,7 @@ indirection__delete( void *p )
 static void
 indirection__encode( Object *o, char *buffer )
 {
-    object__type( o )->encode( object__value( o ), buffer );
+    object__encode( o, buffer );
 }
 
 
@@ -721,8 +721,13 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
             array__pop( spine );
     }
 
-    if ( DEBUG__SAFE && !o )
-        abort();
+    if ( !o )
+    {
+        if ( PERMIT_NULLS )
+            return 0;
+        else if ( DEBUG__SAFE )
+            abort();
+    }
 
     /* Break out when no more reduction is possible. */
     for (;;)
