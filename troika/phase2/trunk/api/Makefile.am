@@ -3,14 +3,19 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = include src
 
+if DEBUG
+DEBUG_FLAGS = -g -p
+endif
+
 export INCLUDES = -I$(PWD)/include/phase2
-export AM_CFLAGS = -O2 -g --ansi -W -Wall
+export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS)
 ##	-fpic
 ##	-pedantic
 ##	 -Werror \
 ##	 -fshort-enums -fno-common \
 ##	 -Wcast-align -Wcast-qual -Wmissing-prototypes -Wpointer-arith -Wshadow -Wunused -Wwrite-strings \
 ##	 -D_GNU_SOURCE
+
 
 include aminclude.am
 

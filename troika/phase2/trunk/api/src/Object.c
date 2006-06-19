@@ -27,15 +27,9 @@ object__new( Type *type, void *value, int flags )
 {
     Object *o;
 
-    /* Note: temporary objects with null type/value are allowed. */
-
-    if ( !type || !value )
-    {
-        if ( PERMIT_NULLS )
-            return 0;
-        else
-            abort();
-    }
+    /* Note: temporary objects with null type/value may be allowed. */
+    if ( ( !type || !value ) && DEBUG__SAFE && !PERMIT_TEMPORARY_OBJECTS )
+        abort();
 
     o = new( Object );
 

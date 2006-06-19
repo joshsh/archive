@@ -17,6 +17,15 @@ dnl if test "$XSLTPROC" = "no"; then
 dnl    AC_MSG_ERROR([You need xsltproc to build Phase2 from scratch])
 dnl fi
 
+AC_ARG_ENABLE(debug,
+[  --enable-debug    Turn on debugging],
+[case "${enableval}" in
+  yes) debug=true ;;
+  no)  debug=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+esac],[debug=false])
+AM_CONDITIONAL(DEBUG, test x$debug = xtrue)
+
 dnl The maintainer needs doxygen as well.
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
