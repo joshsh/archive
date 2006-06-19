@@ -12,7 +12,7 @@ AM_LFLAGS = --header=header.h \
 	-p  # Get comments regarding features that lead to performance losses.
 
 libp2parser_la_SOURCES = \
-	lexer.l \
+	lexer.l		\
 	parser.y
 
 
@@ -23,7 +23,10 @@ debugger_LDADD = libp2parser.la
 debugger_SOURCES = \
 	debugger.c		\
 	../Type.c		\
-	../Object.c		\
+	../object/Object.c	\
+	../object/association.c	\
+	../object/methods.c	\
+	../object/traversal.c	\
 	../Ast.c		\
 	../util/Array.c		\
 	../util/Hash_Table.c	\

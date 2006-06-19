@@ -18,7 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Collection.h>
-#include "Object-impl.h"
+#include "object/Object-impl.h"
 
 
 /* do_for_all *****************************************************************/

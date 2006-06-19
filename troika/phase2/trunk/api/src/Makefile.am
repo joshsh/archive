@@ -5,7 +5,7 @@ SUBDIRS = import parser util xml
 BUILT_SOURCES = revision.h
 noinst_HEADERS = revision.h		\
 	settings.h			\
-	Object-impl.h			\
+	object/Object-impl.h		\
 	Primitive-impl.h		\
 	compiler/Compiler-impl.h	\
 	compiler/license.h		\
@@ -42,31 +42,38 @@ compiler_src = \
 	compiler/mapping.c	\
 	compiler/serial.c
 
-sk_src = \
-	sk/Apply.c		\
-	sk/graph.c		\
-	sk/sk.c
-
 namespace_src = \
 	namespace/Namespace.c	\
 	namespace/io-simple.c	\
 	namespace/io-search.c
 
+object_src = \
+	object/Object.c		\
+	object/association.c	\
+	object/methods.c	\
+	object/traversal.c
+
 primitive_src = \
 	Primitive.c		\
 	Primitive-import.c
+
+sk_src = \
+	sk/Apply.c		\
+	sk/graph.c		\
+	sk/sk.c
+
 
 libphase2_la_SOURCES = \
 	$(compiler_src)		\
 	$(environment_src)	\
 	$(namespace_src)	\
+	$(object_src)		\
 	$(primitive_src)	\
 	$(sk_src)		\
 	$(xml_src)		\
 	Ast.c \
 	Collection.c		\
 	Memory_Manager.c	\
-	Object.c \
 	Type.c
 
 ## Convenience libraries from each subdirectory with its own Makefile.am.
