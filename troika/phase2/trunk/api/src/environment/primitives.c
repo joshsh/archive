@@ -309,11 +309,9 @@ int_nonzero_stub( void **args )
 
     else
     {
-        o = object__new( apply_type, apply__new(
+        o = memory_manager__object( global_env->manager, apply_type, apply__new(
             environment__resolve_combinator( global_env, "S" ),
             environment__resolve_combinator( global_env, "K" ) ), NOFLAGS );
-
-        memory_manager__add( global_env->manager, o );
     }
 
     return o;
@@ -399,15 +397,9 @@ environment__register_primitive
     if ( flags & PRIM__ENCODER )
         first_param->encode = ( Encoder ) src_f;
 
-    if ( !( o = object__new( t, prim, OBJECT__IMMUTABLE ) ) )
+    if ( !( o = memory_manager__object( env->manager, t, prim, OBJECT__IMMUTABLE ) ) )
     {
         primitive__delete( prim );
-        return 0;
-    }
-
-    if ( !memory_manager__add( env->manager, o ) )
-    {
-        object__delete( o );
         return 0;
     }
 

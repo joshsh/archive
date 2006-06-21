@@ -36,11 +36,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Term.h>
 
 
-
-
-
-
-
 enum p2_parser__exit_state
 {
     exit_state__aborted,
@@ -51,12 +46,6 @@ enum p2_parser__exit_state
 };
 
 typedef enum p2_parser__exit_state p2_parser__exit_state;
-
-
-
-
-
-
 
 
 enum Ast__Type

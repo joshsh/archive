@@ -20,6 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Apply.h"
 #include "graph.h"
 
+#include "../object/Object-impl.h"
+
 
 Apply *
 apply__new( Object *function, Object *operand )
@@ -109,7 +111,8 @@ term__to_apply_tree( Term *t, Memory_Manager *m )
 
         for ( i = 1; i < l; i++ )
             o = memory_manager__object( m, apply_type,
-                    apply__new( o, term__to_apply_tree( term__subterm_at( t, i ), m ) ) );
+                    apply__new( o, term__to_apply_tree( term__subterm_at( t, i ), m ) ),
+                    NOFLAGS );
     }
 
     return o;

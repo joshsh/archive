@@ -357,9 +357,7 @@ resolve( Ast *ast, Compiler *c )
             if ( type )
             {
                 /* Create and register a new object. */
-                o = object__new( type, value, flags );
-
-                memory_manager__add( environment__manager( c->env ), o );
+                o = memory_manager__object( environment__manager( c->env ), type, value, flags );
             }
 
             else

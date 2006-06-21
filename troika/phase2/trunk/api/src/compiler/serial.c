@@ -629,10 +629,8 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
                 if ( !o )
                 {
-                    o = object__new( 0, 0, 0 );
-
-                    /* Register the new object. */
-                    memory_manager__add( environment__manager( env ), o );
+                    /* Get a new placeholder object. */
+                    o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
 
                     hash_map__add( state->objects_by_id, ( void* ) id, o );
                 }
@@ -643,9 +641,8 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
             else
             {
-                o = object__new( 0, 0, 0 );
-                /* Register the new object. */
-                memory_manager__add( environment__manager( env ), o );
+                /* Get a new placeholder object. */
+                o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
             }
 
             o->type = type;
@@ -665,7 +662,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 o->value = decode( child, state );
 
                 if ( !o->value )
-                    /* !!! This may cause a segfault later on. */
+                    /* FIXME: This may cause a segfault later on. */
                     o = 0;
             }
 
@@ -692,9 +689,8 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         /* Placeholder object must be created. */
         if ( !o )
         {
-            o = object__new( 0, 0, 0 );
+            o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
             hash_map__add( state->objects_by_id, ( void* ) id, o );
-            memory_manager__add( environment__manager( env ), o );
         }
     }
 

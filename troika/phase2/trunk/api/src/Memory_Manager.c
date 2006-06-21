@@ -50,25 +50,18 @@ struct Memory_Manager
 
 
 Memory_Manager *
-memory_manager__new( Object *root )
+memory_manager__new()
 {
     Memory_Manager *m;
     Type *object_t;
 
-    if ( DEBUG__SAFE && ( !root || visited( root ) ) )
-        abort();
-
     if ( !( m = new( Memory_Manager ) ) )
-    {
-        object__delete( root );
         return 0;
-    }
 
     m->objects = bunch__new( MEM__OBJECTS__BLOCK_SIZE );
 
     if ( !m->objects )
     {
-        object__delete( root );
         free( m );
         return 0;
     }
@@ -80,15 +73,8 @@ memory_manager__new( Object *root )
         m->objects, 0 );
     m->objects_o->type->type_arg = object_t;
 
-    m->root = root;
-    if ( !memory_manager__add( m, root ) )
-    {
-        ERROR( "memory_manager__new: could not add root object" );
-        object__delete( root );
-        bunch__delete( m->objects );
-        free( m );
-        return 0;
-    }
+    /* The manager starts out with no root object. */
+    m->root = 0;
 
     m->clean = 1;
     m->size_at_last_cycle = 0;
@@ -139,35 +125,23 @@ memory_manager__set_root( Memory_Manager *m, Object *o )
 
 
 Object *
-memory_manager__add( Memory_Manager *m, Object *o )
-{
-    if ( DEBUG__SAFE && ( !o || owned( o ) || visited( o ) ) )
-        abort();
-
-    set_owned( o );
-
-    return bunch__add( m->objects, o );
-}
-
-
-Object *
-memory_manager__object( Memory_Manager *m, Type *type, void *value )
+memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags )
 {
     if ( DEBUG__SAFE && !m )
         abort();
 
-    if ( !type || !value )
-    {
-        if ( PERMIT_NULLS )
-            return 0;
-        else if ( DEBUG__SAFE )
-            abort();
-    }
-
-    Object *o = object__new( type, value, NOFLAGS );
+    Object *o = object__new( type, value, flags );
 
     if ( o )
-        memory_manager__add( m, o );
+    {
+        set_owned( o );
+
+        if ( !bunch__add( m->objects, o ) )
+        {
+            object__delete( o );
+            o = 0;
+        }
+    }
 
     return o;
 }
@@ -301,7 +275,15 @@ memory_manager__walk
         abort();
 
     if ( !root )
-        root = m->root;
+    {
+        if ( m->root )
+            root = m->root;
+        else
+        {
+            ERROR( "can't walk from null root" );
+            return;
+        }
+    }
 
     dosweep = ( root == m->root );
 
@@ -377,7 +359,15 @@ memory_manager__trace
         marked = 0;
 
     if ( !root )
-        root = m->root;
+    {
+        if ( m->root )
+            root = m->root;
+        else
+        {
+            ERROR( "can't trace from null root" );
+            return;
+        }
+    }
 
     if ( !m->clean )
         unmark_all( m );

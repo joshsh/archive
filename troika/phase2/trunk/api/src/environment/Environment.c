@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static Namespace_o *
-ns__new( Type *ns_t )
+ns__new( Memory_Manager *m, Type *ns_t )
 {
     Object *o;
     Namespace *ns;
@@ -32,7 +32,7 @@ ns__new( Type *ns_t )
     if ( !( ns = namespace__new() ) )
         return 0;
 
-    if ( !( o = object__new( ns_t, ns, 0 ) ) )
+    if ( !( o = memory_manager__object( m, ns_t, ns, NOFLAGS ) ) )
     {
         namespace__delete( ns );
         return 0;
@@ -87,27 +87,19 @@ environment__new()
          && ( env->type_t = type__create_type( TYPE__NAME, 0 ) ) ) )
         goto abort;
 
+    /* Create memory manager. */
+    if ( !( env->manager = memory_manager__new() ) )
+        goto abort;
+
     /* Create root namespace object and children. */
-    if ( !( env->combinators = ns__new( ns_t ) )
-      || !( env->data = ns__new( ns_t ) )
-      || !( env->primitives = ns__new( ns_t ) )
-      || !( env->root = ns__new( ns_t ) )
-      || !( env->types = ns__new( ns_t ) ) )
+    if ( !( env->combinators = ns__new( env->manager, ns_t ) )
+      || !( env->data = ns__new( env->manager, ns_t ) )
+      || !( env->primitives = ns__new( env->manager, ns_t ) )
+      || !( env->root = ns__new( env->manager, ns_t ) )
+      || !( env->types = ns__new( env->manager, ns_t ) ) )
         goto abort;
 
-    /* Create memory manager around root namespace object. */
-    if ( !( env->manager = memory_manager__new( env->root ) ) )
-    {
-        env->root = 0;
-        goto abort;
-    }
-
-    /* Add the other namespace objects to the manager. */
-    if ( !memory_manager__add( env->manager, env->combinators )
-      || !memory_manager__add( env->manager, env->data )
-      || !memory_manager__add( env->manager, env->primitives )
-      || !memory_manager__add( env->manager, env->types ) )
-        goto abort;
+    memory_manager__set_root( env->manager, env->root );
 
     /* Nest child namespaces under root. */
     if ( !namespace__add_simple( env->root->value, "combinators", env->combinators )

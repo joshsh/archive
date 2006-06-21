@@ -25,9 +25,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define BOXED_TYPE  any_type
 
-/* Accessor macros for Apply objects. */
-#define FUNCTION( o )   ( ( Apply* ) ( o )->value )->function
-#define OPERAND( o )    ( ( Apply* ) ( o )->value )->operand
+/** Accessor macros for Apply objects. */
+#if EAGER_REDIRECTION
+#    define FUNCTION( o )           skip_indirection( ( ( Apply* ) ( o )->value )->function )
+#    define OPERAND( o )            skip_indirection( ( ( Apply* ) ( o )->value )->operand )
+#else
+#    define FUNCTION( o )           ( ( Apply* ) ( o )->value )->function
+#    define OPERAND( o )            ( ( Apply* ) ( o )->value )->operand
+#endif
+
+/*
+#define FUNCTION( o )   ( o ) ? ( ( Apply* ) ( o )->value )->function : 0
+#define OPERAND( o )    ( o ) ? ( ( Apply* ) ( o )->value )->operand : 0
+*/
 #define SET_FUNCTION( o, f )    ( ( Apply* ) ( o )->value )->function = ( f )
 #define SET_OPERAND( o, op )    ( ( Apply* ) ( o )->value )->operand = ( op )
 
@@ -35,8 +45,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-/* Note: the indirection type has a trivial destructor, as it does not own
-   the object it points to. */
+/** \note  The indirection type has a trivial destructor, as an indirection node
+   does not own the object it points to. */
 static void
 indirection__delete( void *p )
 {
@@ -62,9 +72,9 @@ indirection__walk( void *p, Dist_f f )
 /******************************************************************************/
 
 
-Type *apply_type, *indirection_type;
+Type *apply_type = 0, *indirection_type = 0;
 
-/* FIXME: not thread-safe. */
+/* FIXME: use of managed objects as global variables is not thread-safe. */
 Type *combinator_type, *primitive_type;
 
 
@@ -74,19 +84,22 @@ graph_init( Type *combinator_t, Type *primitive_t )
     combinator_type = combinator_t;
     primitive_type = primitive_t;
 
-    apply_type          = type__new( APPLY__NAME, TYPE__IS_OBJ_COLL );
-    indirection_type    = type__new( INDIRECTION__NAME, TYPE__IS_OBJ_COLL );
-
     if ( !apply_type || !indirection_type )
-        abort();
+    {
+        apply_type          = type__new( APPLY__NAME, TYPE__IS_OBJ_COLL );
+        indirection_type    = type__new( INDIRECTION__NAME, TYPE__IS_OBJ_COLL );
 
-    apply_type->destroy = ( Destructor ) apply__delete;
-    apply_type->encode = ( Encoder ) apply__encode;
-    apply_type->walk = ( Walker ) apply__walk;
+        if ( !apply_type || !indirection_type )
+            abort();
 
-    indirection_type->destroy = ( Destructor ) indirection__delete;
-    indirection_type->encode = ( Encoder ) indirection__encode;
-    indirection_type->walk = ( Walker ) indirection__walk;
+        apply_type->destroy = ( Destructor ) apply__delete;
+        apply_type->encode = ( Encoder ) apply__encode;
+        apply_type->walk = ( Walker ) apply__walk;
+
+        indirection_type->destroy = ( Destructor ) indirection__delete;
+        indirection_type->encode = ( Encoder ) indirection__encode;
+        indirection_type->walk = ( Walker ) indirection__walk;
+    }
 }
 
 
@@ -108,10 +121,16 @@ dereference( Object **opp )
     if ( DEBUG__SAFE && !opp )
         abort();
 
+    /* Allow for indirection-to-null. */
+    if ( PERMIT_NULLS && !*opp )
+        return 0;
+
     /* Assumes that chains of indirection nodes are possible. */
     while ( ( *opp )->type == indirection_type )
     {
         *opp = ( *opp )->value;
+
+        /* Allow for indirection-to-null. */
         if ( ! *opp )
             break;
     }
@@ -140,10 +159,15 @@ skip_indirection( Object *o )
 }
 
 
-/* Make the argument into an indirection node to the target object. */
+/** Make the argument into an indirection node to the target object.
+    \param o  the object to replace
+    \param target  the object to point to (may be NULL) */
 static void
 substitute_boxed( Object *o, Object *target )
 {
+    if ( DEBUG__SAFE && !o )
+        abort();
+
     o->type = indirection_type;
     o->value = target;
 }
@@ -153,6 +177,9 @@ substitute_boxed( Object *o, Object *target )
 static void
 substitute_unboxed( Object *o, Type *type, void *value )
 {
+    if ( DEBUG__SAFE && ( !o || !type || !value ) )
+        abort();
+
     o->type = type;
     o->value = value;
 }
@@ -161,7 +188,7 @@ substitute_unboxed( Object *o, Type *type, void *value )
 /******************************************************************************/
 
 
-/* Bxyz --> x(yz) */
+/** Bxyz --> x(yz) */
 static boolean
 apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -179,7 +206,7 @@ apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with new object @yz. */
         SET_OPERAND( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
+                apply__new( OPERAND( a2 ), OPERAND( a3 ) ), NOFLAGS ) );
 
         return TRUE;
     }
@@ -189,7 +216,7 @@ apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Cxyz --> xzy */
+/** Cxyz --> xzy */
 static boolean
 apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -204,7 +231,7 @@ apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the function of the Apply with new object @xz. */
         SET_FUNCTION( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a1 ), OPERAND( a3 ) ) ) );
+                apply__new( OPERAND( a1 ), OPERAND( a3 ) ), NOFLAGS ) );
 
         /* Replace the operand of the Apply y. */
         SET_OPERAND( a3, OPERAND( a2 ) );
@@ -217,7 +244,7 @@ apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Ix --> x */
+/** Ix --> x */
 static boolean
 apply_I( Array *spine, unsigned int nargs )
 {
@@ -238,7 +265,7 @@ apply_I( Array *spine, unsigned int nargs )
 }
 
 
-/* Kxy --> x */
+/** Kxy --> x */
 static boolean
 apply_K( Array *spine, unsigned int nargs )
 {
@@ -260,7 +287,7 @@ apply_K( Array *spine, unsigned int nargs )
 }
 
 
-/* Lxy --> x(yy) */
+/** Lxy --> x(yy) */
 static boolean
 apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -277,7 +304,7 @@ apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with new object @yy. */
         SET_OPERAND( a2,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a2 ), OPERAND( a2 ) ) ) );
+                apply__new( OPERAND( a2 ), OPERAND( a2 ) ), NOFLAGS ) );
 
         return TRUE;
     }
@@ -287,7 +314,7 @@ apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Oxy --> y(xy) */
+/** Oxy --> y(xy) */
 static boolean
 apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -304,7 +331,7 @@ apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with new object @xy. */
         SET_OPERAND( a2,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a1 ), OPERAND( a2 ) ) ) );
+                apply__new( OPERAND( a1 ), OPERAND( a2 ) ), NOFLAGS ) );
 
         return TRUE;
     }
@@ -314,7 +341,7 @@ apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Rxyz --> yzx */
+/** Rxyz --> yzx */
 static boolean
 apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -329,7 +356,7 @@ apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the function of the Apply with new object @yz. */
         SET_FUNCTION( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
+                apply__new( OPERAND( a2 ), OPERAND( a3 ) ), NOFLAGS ) );
 
         /* Replace the operand of the Apply with x. */
         SET_OPERAND( a3, OPERAND( a1 ) );
@@ -342,7 +369,7 @@ apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Sxyz --> xz(yz) */
+/** Sxyz --> xz(yz) */
 static boolean
 apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -357,12 +384,12 @@ apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the function of the Apply with new object @xz. */
         SET_FUNCTION( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a1 ), OPERAND( a3 ) ) ) );
+                apply__new( OPERAND( a1 ), OPERAND( a3 ) ), NOFLAGS ) );
 
         /* Replace the operand of the Apply with new object @yz. */
         SET_OPERAND( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a2 ), OPERAND( a3 ) ) ) );
+                apply__new( OPERAND( a2 ), OPERAND( a3 ) ), NOFLAGS ) );
 
         return TRUE;
     }
@@ -372,7 +399,7 @@ apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Txy --> yx */
+/** Txy --> yx */
 static boolean
 apply_T( Array *spine, unsigned int nargs )
 {
@@ -397,7 +424,7 @@ apply_T( Array *spine, unsigned int nargs )
 }
 
 
-/* Uxy --> y(xxy) */
+/** Uxy --> y(xxy) */
 static boolean
 apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -416,8 +443,8 @@ apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
             memory_manager__object( m, apply_type,
                 apply__new(
                     memory_manager__object( m, apply_type,
-                        apply__new( OPERAND( a1 ), OPERAND( a1 ) ) ),
-                    OPERAND( a2 ) ) ) );
+                        apply__new( OPERAND( a1 ), OPERAND( a1 ) ), NOFLAGS ),
+                    OPERAND( a2 ) ), NOFLAGS ) );
 
         return TRUE;
     }
@@ -427,7 +454,7 @@ apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Vxyz --> zxy */
+/** Vxyz --> zxy */
 static boolean
 apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -442,7 +469,7 @@ apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the function of the Apply with new object @zx. */
         SET_FUNCTION( a3,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a3 ), OPERAND( a1 ) ) ) );
+                apply__new( OPERAND( a3 ), OPERAND( a1 ) ), NOFLAGS ) );
 
         /* Replace the operand of the Apply with y. */
         SET_OPERAND( a3, OPERAND( a2 ) );
@@ -455,7 +482,7 @@ apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* Wxy --> xyy */
+/** Wxy --> xyy */
 static boolean
 apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -469,7 +496,7 @@ apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the function of the Apply with new object @xy. */
         SET_FUNCTION( a2,
             memory_manager__object( m, apply_type,
-                apply__new( OPERAND( a1 ), OPERAND( a2 ) ) ) );
+                apply__new( OPERAND( a1 ), OPERAND( a2 ) ), NOFLAGS ) );
 
         /* Replace the operand of the Apply with new object y. */
         SET_OPERAND( a2, OPERAND( a2 ) );
@@ -482,7 +509,7 @@ apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
 }
 
 
-/* wx --> xx */
+/** wx --> xx */
 static boolean
 apply_w( Array *spine, unsigned int nargs )
 {
@@ -503,7 +530,7 @@ apply_w( Array *spine, unsigned int nargs )
 }
 
 
-/* Yf --> f(Yf) */
+/** Yf --> f(Yf) */
 static boolean
 apply_Y( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
@@ -518,7 +545,7 @@ apply_Y( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with new object @Yf. */
         SET_OPERAND( a1,
              memory_manager__object( m, apply_type,
-                 apply__new( FUNCTION( a1 ), f ) ) );
+                 apply__new( FUNCTION( a1 ), f ), NOFLAGS ) );
 
         /* Replace the function of the Apply with f. */
         SET_FUNCTION( a1, f );
@@ -539,6 +566,7 @@ apply_combinator( Object *o, Array *spine, unsigned int nargs, Memory_Manager *m
     if ( DEBUG__SAFE && ( !o || !spine || !m ) )
         abort();
 
+    /* TODO: how about a lookup table instead of a switch statement? */
     switch ( *( ( Combinator* ) o->value ) )
     {
         case B_combinator:
@@ -669,8 +697,15 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
             else
             {
                 ERROR( "primitive applied to irreducible argument" );
-                ap->flags |= OBJECT__IRREDUCIBLE;
-                return FALSE;
+
+                if ( SK__ALLOW_NONREDUX )
+                    ap->flags |= OBJECT__IRREDUCIBLE;
+
+                /* f 0 --> 0 */
+                else
+                    substitute_boxed( ap, 0 );
+
+                return TRUE;
             }
         }
 
@@ -696,7 +731,8 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
 /******************************************************************************/
 
 
-/** \return  An immediate object (i.e. not an indirection node) if successful,
+/** \param spine  a stack of Apply objects (and ONLY Apply objects)
+    \return  An immediate object (i.e. not an indirection node) if successful,
     or 0 if unsuccessful. */
 Object *
 reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
@@ -714,22 +750,31 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
     /* Original size of the stack. */
     unsigned int len = array__size( spine );
 
+    /* Remove all objects added to the stack since invocation. */
     void rewind0()
     {
         unsigned int i;
+
         for ( i = array__size( spine ); i > len; i-- )
             array__pop( spine );
     }
 
+    /* Handle a null argument.  This happens either when an external function
+       has called this function with a null argument, or when an argument to
+       a primitive is null.
+       Note: at this point, nothing has been added to the spine. */
     if ( !o )
     {
+        /* 0 --> 0 */
         if ( PERMIT_NULLS )
             return 0;
+
         else if ( DEBUG__SAFE )
             abort();
     }
 
-    /* Break out when no more reduction is possible. */
+    /* Iterate until either the expression is in head-normal form or an error is
+       encountered. */
     for (;;)
     {
         /* Give up if reduction takes too long. */
@@ -744,6 +789,7 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
             }
         }
 
+        /* Start at the root object. */
         ap = o;
         nargs = 0;
 
@@ -751,6 +797,13 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
         if ( !ap )
             break;
+
+        for (;;)
+        {
+            ap = skip_indirection( ap );
+
+            
+        }
 
         /* Traverse to the tip of the application spine. */
         while ( ap->type == apply_type )
@@ -761,20 +814,30 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
             /* FIXME: possible race condition.  If ap is initially an Apply but
                is overwritten (by another thread) with an indirection node or a
                boxed value, a segfault is inevitable. */
-            ap = dereference( &FUNCTION( ap ) );
+            if ( EAGER_REDIRECTION )
+                ap = dereference( &FUNCTION( ap ) );
+            else
+                ap = skip_indirection( FUNCTION( ap ) );
 
-/*
-            if ( !ap )
+            if ( !ap && PERMIT_NULLS )
                 break;
-*/
         }
 
-        if ( ap->type == combinator_type )
+        /* Replace o directly with an indirection to NULL. */
+        if ( !ap && PERMIT_NULLS )
+        {
+            substitute_boxed( o, 0 );
+            break;
+        }
+
+        /* Object at the tip of the spine is a combinator. */
+        else if ( ap->type == combinator_type )
         {
             if ( !apply_combinator( ap, spine, nargs, m ) )
                 break;
         }
 
+        /* Object at the tip of the spine is a primitive function. */
         else if ( ap->type == primitive_type )
         {
             if ( !apply_primitive( ap->value, spine, nargs, m ) )
@@ -786,7 +849,15 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
         {
 /*PRINT( "type->name = %s\n", ap->type->name );*/
             if ( nargs && !SK__ALLOW_NONREDUX )
+            {
                 ERROR( "can't apply a non-redex object to an argument" );
+
+                /* error --> 0 */
+                if ( !SK__ALLOW_NONREDUX )
+                    substitute_boxed( o, 0 );
+
+                break;
+            }
 
             break;
         }
@@ -798,6 +869,122 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
     return skip_indirection( o );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ifdef NOT_FINISHED
+
+NEW AND IMPROVED REDUCTION ALGORITHM (INCOMPLETE)
+
+
+    Type *t;
+
+
+
+    ap = o;
+    nargs = 0;
+
+    {
+        /* 0 x --> 0 */
+        if ( !ap )
+        {
+            if ( o )
+                /* Replace o directly with an indirection to NULL. */
+                substitute_boxed( o, 0 );
+
+            rewind0();
+
+            return 0;
+        }
+
+        else
+        {
+            /* FIXME: possible race condition.  If ap is initially an Apply but
+               is overwritten (in another thread) with an indirection node or a
+               boxed value, a segfault is inevitable. */
+            t = ap->type;
+
+            if ( t == indirection_type )
+                ap = ap->value;
+
+            /* Traverse down the spine so long as only apply and indirection
+               nodes are encountered. */
+            else if ( t == apply_type )
+            {
+                array__push( spine, ap );
+                nargs++;
+
+                if ( EAGER_REDIRECTION )
+                    ap = dereference( &FUNCTION( ap ) );
+                else
+                    ap = FUNCTION( ap );
+            }
+
+            /* Object at the tip of the spine is a combinator. */
+            else if ( t == combinator_type )
+            {
+                if ( !apply_combinator( ap, spine, nargs, m ) )
+                    break;
+
+                rewind0();
+                ap = o;
+            }
+
+            /* Object at the tip of the spine is a primitive function. */
+            else if ( t == primitive_type )
+            {
+                if ( !apply_primitive( ap->value, spine, nargs, m ) )
+                    break;
+
+                rewind0();
+                ap = o;
+            }
+
+            /* Object at tip of spine is a literal value. */
+            else
+            {
+
+            }
+        }
+
+    }
+
+    rewind0();
+
+    if ( EAGER_REDIRECTION )
+        return skip_indirection( o );
+    else
+        return o;
+}
+
+
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

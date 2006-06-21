@@ -119,6 +119,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** Tolerate null object references in various contexts. */
 #define PERMIT_NULLS                            1
 
+/** Short out indirection nodes in reduction algorithms as well as in
+    memory management algorithms. */
+#define EAGER_REDIRECTION                       0
+
 #define PERMIT_TEMPORARY_OBJECTS                1
 
 
@@ -148,9 +152,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SK__CHECKS__MAX_REDUX_ITERATIONS        10000
 
 
-/** Allow non-redex atoms at the beginning of an expression, and simply abandon
-   reduction when they are encountered. */
-#define SK__ALLOW_NONREDUX                      1
+/** Allow non-redex atoms at the beginning of an expression, (or as arguments to
+    a function) and simply abandon reduction when they are encountered. */
+#define SK__ALLOW_NONREDUX                      0
 
 #define SK__IMPLICIT_ASSOCIATION                1
 

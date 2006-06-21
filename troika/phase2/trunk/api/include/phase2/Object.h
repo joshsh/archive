@@ -41,7 +41,9 @@ typedef struct Object Object;
     \param type  the new object's data type
     \param value  the new object's data.  The object assumes ownership of this
     data, and will deallocate it on deletion as per its data type.
-    \param flags  object properties */
+    \param flags  object properties
+    \warning  don't call this function directly if you are using a memory
+    manager */
 extern Object *
 object__new( Type *type, void *value, int flags );
 

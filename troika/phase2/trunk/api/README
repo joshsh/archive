@@ -11,6 +11,9 @@ make install
 make doxygen-doc
 
 
+valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes src/.libs/lt-phase2
+
+
 ################################################################################
 # Cross-compiling libxml2
 

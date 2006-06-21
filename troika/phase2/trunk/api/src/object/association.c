@@ -160,8 +160,7 @@ union_of( Object *o1, Object *o2 )
             if ( o2->type == set_t )
             {
                 s = set__copy( o2->value );
-                o3 = object__new( set_t, s, 0 );
-                memory_manager__add( environment__manager( global_env ), o3 );
+                o3 = memory_manager__object( environment__manager( global_env ), set_t, s, 0 );
                 return o3;
             }
 

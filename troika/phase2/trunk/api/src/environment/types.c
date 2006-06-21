@@ -28,16 +28,10 @@ environment__register_type( Environment *env, Type *type )
     if ( DEBUG__SAFE && ( !env || !type ) )
         abort();
 
-    o = object__new( env->type_t, type, OBJECT__IMMUTABLE );
+    o = memory_manager__object( env->manager, env->type_t, type, OBJECT__IMMUTABLE );
 
     if ( !o )
         return 0;
-
-    if ( !memory_manager__add( env->manager, o ) )
-    {
-        object__delete( o );
-        return 0;
-    }
 
     return namespace__add_simple( env->types->value, type->name, o );
 }

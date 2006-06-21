@@ -224,9 +224,8 @@ command_new( Compiler *c, Ast *args )
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
-    o = object__new
-        ( c->cur_ns_obj->type, namespace__new(), 0 );
-    memory_manager__add( environment__manager( c->env ), o );
+    o = memory_manager__object( environment__manager( c->env ),
+        c->cur_ns_obj->type, namespace__new(), 0 );
 
     compiler__define( c, name, o );
 

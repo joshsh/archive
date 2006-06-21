@@ -43,7 +43,7 @@ typedef struct Memory_Manager Memory_Manager;
 
 /** Constructor. */
 extern Memory_Manager *
-memory_manager__new( Object *root );
+memory_manager__new();
 
 /** Destructor. */
 extern void
@@ -56,11 +56,9 @@ memory_manager__size( Memory_Manager *m );
 extern void
 memory_manager__set_root( Memory_Manager *m, Object *o );
 
+/** Requests a new object of the manager. */
 extern Object *
-memory_manager__add( Memory_Manager *m, Object *o );
-
-extern Object *
-memory_manager__object( Memory_Manager *m, Type *type, void *value );
+memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags );
 
 
 /* Tracing / graph traversal **************************************************/

@@ -194,8 +194,7 @@ prim_reduce(
             else
             {
                 /* Return type is a raw data reference which needs to be bound to a type. */
-                robj = object__new( p->return_type, r, NOPROPS );
-                memory_manager__add( m, robj );
+                robj = memory_manager__object( m, p->return_type, r, NOPROPS );
             }
 
             /* Multiple return values. */
@@ -212,8 +211,7 @@ prim_reduce(
                     else
                         set__add( result_set, result );
 
-                    result = object__new( set_type, result_set, NOPROPS );
-                    memory_manager__add( m, result );
+                    result = memory_manager__object( m, set_type, result_set, NOPROPS );
                 }
 
                 /* FIXME: this is cheating */
