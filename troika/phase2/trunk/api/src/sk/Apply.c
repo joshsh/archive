@@ -28,13 +28,9 @@ apply__new( Object *function, Object *operand )
 {
     Apply *a;
 
-    if ( !function || ( !PERMIT_NULLS && !operand ) )
-    {
-        if ( PERMIT_NULLS )
-            return 0;
-        else
-            abort();
-    }
+    /* Apply objects with null members are allowed if PERMIT_NULLS. */
+    if ( !PERMIT_NULLS && DEBUG__SAFE && ( !function || !operand ) )
+        abort();
 
     a = new( Apply );
 

@@ -120,8 +120,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PERMIT_NULLS                            1
 
 /** Short out indirection nodes in reduction algorithms as well as in
-    memory management algorithms. */
-#define EAGER_REDIRECTION                       0
+    memory management algorithms.  May be a costly feature. */
+#define EAGER_REDIRECTION                       1
+
+/** Replace any useless apply nodes (i.e. those which are equivalent to NULL)
+    with indirection nodes to NULL whenever they are encountered.  This may
+    repetitious traversals of the same null-terminated spine.  The disadvantage
+    is time wasted on expressions which will never be used again, anyway. */
+#define EAGER_PRUNING                           1
 
 #define PERMIT_TEMPORARY_OBJECTS                1
 

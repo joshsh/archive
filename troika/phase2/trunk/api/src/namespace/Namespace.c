@@ -103,7 +103,7 @@ namespace__encode( Namespace *ns, char *buffer )
 
         if ( COMPILER__SHOW_ADDRESS )
         {
-            sprintf( buffer, "%#x ", ( int ) o );
+            sprintf( buffer, "%p ", ( void* ) o );
             buffer += strlen( buffer );
         }
 

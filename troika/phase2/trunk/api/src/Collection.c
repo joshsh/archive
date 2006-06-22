@@ -33,6 +33,9 @@ collection__do_for_all( Collection *c, Void_f f )
         return 0;
     }
 
+    if ( DEBUG__SAFE && ( !c || !f ) )
+        abort();
+
     c->type->walk( c->value, ( Dist_f ) helper );
 }
 
@@ -50,6 +53,9 @@ collection__exclude_if( Collection *c, Criterion cr )
         else
             return 0;
     }
+
+    if ( DEBUG__SAFE && ( !c || !cr ) )
+        abort();
 
     c->type->walk( c->value, ( Dist_f ) helper );
 }
@@ -74,6 +80,9 @@ collection__exists( Collection *c, Criterion cr )
         else
             return 0;
     }
+
+    if ( DEBUG__SAFE && ( !c || !cr ) )
+        abort();
 
     c->type->walk( c->value, ( Dist_f ) helper );
 
@@ -101,6 +110,9 @@ collection__first_match( Collection *c, Criterion cr )
             return 0;
     }
 
+    if ( DEBUG__SAFE && ( !c || !cr ) )
+        abort();
+
     c->type->walk( c->value, ( Dist_f ) helper );
 
     return result;
@@ -127,6 +139,9 @@ collection__for_all( Collection *c, Criterion cr )
             return 0;
     }
 
+    if ( DEBUG__SAFE && ( !c || !cr ) )
+        abort();
+
     c->type->walk( c->value, ( Dist_f ) helper );
 
     return result;
@@ -148,6 +163,9 @@ collection__match( Collection *c, Criterion cr )
         return 0;
     }
 
+    if ( DEBUG__SAFE && ( !c || !cr ) )
+        abort();
+
     c->type->walk( c->value, ( Dist_f ) helper );
 
     return results;
@@ -166,6 +184,9 @@ collection__replace_all( Collection *c, Substitution f )
         return 0;
     }
 
+    if ( DEBUG__SAFE && ( !c || !f ) )
+        abort();
+
     c->type->walk( c->value, ( Dist_f ) helper );
 }
 
@@ -176,6 +197,9 @@ collection__replace_all( Collection *c, Substitution f )
 void
 collection__sort( Collection *c, Comparator cmp )
 {
+    if ( DEBUG__SAFE && ( !c || !cmp ) )
+        abort();
+
     c->type->sort( c->value, cmp );
 }
 

@@ -171,8 +171,12 @@ unmark_all( Memory_Manager *m )
 static void
 sweep( Memory_Manager *m )
 {
+char s[1000];
     boolean unmarked( Object *o )
     {
+        if ( DEBUG__SAFE && !o )
+            abort();
+
         /* If marked, unmark. */
         if ( visited( o ) )
         {

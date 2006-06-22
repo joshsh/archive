@@ -26,13 +26,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define BOXED_TYPE  any_type
 
 /** Accessor macros for Apply objects. */
-#if EAGER_REDIRECTION
-#    define FUNCTION( o )           skip_indirection( ( ( Apply* ) ( o )->value )->function )
-#    define OPERAND( o )            skip_indirection( ( ( Apply* ) ( o )->value )->operand )
-#else
-#    define FUNCTION( o )           ( ( Apply* ) ( o )->value )->function
-#    define OPERAND( o )            ( ( Apply* ) ( o )->value )->operand
-#endif
+#define FUNCTION( o )           ( ( Apply* ) ( o )->value )->function
+#define OPERAND( o )            ( ( Apply* ) ( o )->value )->operand
 
 /*
 #define FUNCTION( o )   ( o ) ? ( ( Apply* ) ( o )->value )->function : 0
@@ -189,7 +184,7 @@ substitute_unboxed( Object *o, Type *type, void *value )
 
 
 /** Bxyz --> x(yz) */
-static boolean
+static Object *
 apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2, *a3;
@@ -208,16 +203,16 @@ apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
             memory_manager__object( m, apply_type,
                 apply__new( OPERAND( a2 ), OPERAND( a3 ) ), NOFLAGS ) );
 
-        return TRUE;
+        return a3;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Cxyz --> xzy */
-static boolean
+static Object *
 apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2, *a3;
@@ -236,16 +231,16 @@ apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply y. */
         SET_OPERAND( a3, OPERAND( a2 ) );
 
-        return TRUE;
+        return a3;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Ix --> x */
-static boolean
+static Object *
 apply_I( Array *spine, unsigned int nargs )
 {
     Object *a1;
@@ -257,16 +252,16 @@ apply_I( Array *spine, unsigned int nargs )
         /* Replace the Apply with an indirection node to x. */
         substitute_boxed( a1, OPERAND( a1 ) );
 
-        return TRUE;
+        return a1;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Kxy --> x */
-static boolean
+static Object *
 apply_K( Array *spine, unsigned int nargs )
 {
     Object *a1, *a2;
@@ -279,16 +274,16 @@ apply_K( Array *spine, unsigned int nargs )
         /* Replace the top-level Apply with an indirection node to x. */
         substitute_boxed( a2, OPERAND( a1 ) );
 
-        return TRUE;
+        return a2;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Lxy --> x(yy) */
-static boolean
+static Object *
 apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2;
@@ -306,16 +301,16 @@ apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
             memory_manager__object( m, apply_type,
                 apply__new( OPERAND( a2 ), OPERAND( a2 ) ), NOFLAGS ) );
 
-        return TRUE;
+        return a2;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Oxy --> y(xy) */
-static boolean
+static Object *
 apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2;
@@ -333,16 +328,16 @@ apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
             memory_manager__object( m, apply_type,
                 apply__new( OPERAND( a1 ), OPERAND( a2 ) ), NOFLAGS ) );
 
-        return TRUE;
+        return a2;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Rxyz --> yzx */
-static boolean
+static Object *
 apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2, *a3;
@@ -361,16 +356,16 @@ apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with x. */
         SET_OPERAND( a3, OPERAND( a1 ) );
 
-        return TRUE;
+        return a3;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Sxyz --> xz(yz) */
-static boolean
+static Object *
 apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2, *a3;
@@ -391,16 +386,16 @@ apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
             memory_manager__object( m, apply_type,
                 apply__new( OPERAND( a2 ), OPERAND( a3 ) ), NOFLAGS ) );
 
-        return TRUE;
+        return a3;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Txy --> yx */
-static boolean
+static Object *
 apply_T( Array *spine, unsigned int nargs )
 {
     Object *a1, *a2;
@@ -416,16 +411,16 @@ apply_T( Array *spine, unsigned int nargs )
         /* Replace the operand of the Apply with x. */
         SET_OPERAND( a2, OPERAND( a1 ) );
 
-        return TRUE;
+        return a2;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Uxy --> y(xxy) */
-static boolean
+static Object *
 apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2;
@@ -446,16 +441,16 @@ apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
                         apply__new( OPERAND( a1 ), OPERAND( a1 ) ), NOFLAGS ),
                     OPERAND( a2 ) ), NOFLAGS ) );
 
-        return TRUE;
+        return a2;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Vxyz --> zxy */
-static boolean
+static Object *
 apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2, *a3;
@@ -474,16 +469,16 @@ apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with y. */
         SET_OPERAND( a3, OPERAND( a2 ) );
 
-        return TRUE;
+        return a3;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Wxy --> xyy */
-static boolean
+static Object *
 apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *a2;
@@ -501,16 +496,18 @@ apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the operand of the Apply with new object y. */
         SET_OPERAND( a2, OPERAND( a2 ) );
 
-        return TRUE;
+        array__push( spine, a2 );
+
+        return a2;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** wx --> xx */
-static boolean
+static Object *
 apply_w( Array *spine, unsigned int nargs )
 {
     Object *a1;
@@ -522,16 +519,16 @@ apply_w( Array *spine, unsigned int nargs )
         /* Replace the function of the Apply with x. */
         SET_FUNCTION( a1, OPERAND( a1 ) );
 
-        return TRUE;
+        return a1;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** Yf --> f(Yf) */
-static boolean
+static Object *
 apply_Y( Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     Object *a1, *f;
@@ -550,94 +547,80 @@ apply_Y( Array *spine, unsigned int nargs, Memory_Manager *m )
         /* Replace the function of the Apply with f. */
         SET_FUNCTION( a1, f );
 
-        return TRUE;
+        return a1;
     }
 
     else
-        return FALSE;
+        return 0;
 }
 
 
 /** \note  There should be no possibility of program-level errors in the
     application of the combinator functions, which simply rearrange nodes. */
-static boolean
-apply_combinator( Object *o, Array *spine, unsigned int nargs, Memory_Manager *m )
+static Object *
+apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Memory_Manager *m )
 {
-    if ( DEBUG__SAFE && ( !o || !spine || !m ) )
+    if ( DEBUG__SAFE && ( !c || !spine || !m ) )
         abort();
 
     /* TODO: how about a lookup table instead of a switch statement? */
-    switch ( *( ( Combinator* ) o->value ) )
+    switch ( *c )
     {
         case B_combinator:
 
             return apply_B( spine, nargs, m );
-            break;
 
         case C_combinator:
 
             return apply_C( spine, nargs, m );
-            break;
 
         case I_combinator:
 
             return apply_I( spine, nargs );
-            break;
 
         case K_combinator:
 
             return apply_K( spine, nargs );
-            break;
 
         case L_combinator:
 
             return apply_L( spine, nargs, m );
-            break;
 
         case O_combinator:
 
             return apply_O( spine, nargs, m );
-            break;
 
         case R_combinator:
 
             return apply_R( spine, nargs, m );
-            break;
 
         case S_combinator:
 
             return apply_S( spine, nargs, m );
-            break;
 
         case T_combinator:
 
             return apply_T( spine, nargs );
-            break;
 
         case U_combinator:
 
             return apply_U( spine, nargs, m );
-            break;
 
         case V_combinator:
 
             return apply_V( spine, nargs, m );
-            break;
 
         case W_combinator:
 
             return apply_W( spine, nargs, m );
-            break;
 
         case w_combinator:
 
             return apply_w( spine, nargs );
-            break;
 
         case Y_combinator:
 
             return apply_Y( spine, nargs, m );
-            break;
 
         default:
 
@@ -649,12 +632,13 @@ apply_combinator( Object *o, Array *spine, unsigned int nargs, Memory_Manager *m
 /******************************************************************************/
 
 
-static boolean
+static Object *
 apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager *m )
 {
     unsigned int i;
     Object *ap, *arg;
-    void *args[PRIM__MAX_PARAMS], *result;
+    void *args[PRIM__MAX_PARAMS];
+    void *result;
     Type *t;
 
     if ( DEBUG__SAFE && ( !p || !spine || !m || p->arity > PRIM__MAX_PARAMS ) )
@@ -664,11 +648,13 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
        they reduce to objects of the expected types. */
     if ( nargs >= p->arity )
     {
+        /* For each argument... */
         for ( i = 0; i < p->arity; i++ )
         {
             ap = array__pop( spine );
             arg = reduce__graph_lazy( OPERAND( ap ), spine, m );
 
+            /* Argument reduced to a non-null object. */
             if ( arg )
             {
                 t = p->parameters[i].type;
@@ -680,8 +666,8 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
                     && ( !PRIM__ALLOW_GENERIC_PARAMS || t != BOXED_TYPE ) )
                     {
                         ERROR( "prim_reduce: argument type mismatch" );
-                        ap->flags |= OBJECT__IRREDUCIBLE;
-                        return FALSE;
+
+                        goto bad_arg;
                     }
                 }
 
@@ -694,19 +680,9 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
                     args[i] = arg->value;
             }
 
+            /* Argument reduced to null. */
             else
-            {
-                ERROR( "primitive applied to irreducible argument" );
-
-                if ( SK__ALLOW_NONREDUX )
-                    ap->flags |= OBJECT__IRREDUCIBLE;
-
-                /* f 0 --> 0 */
-                else
-                    substitute_boxed( ap, 0 );
-
-                return TRUE;
-            }
+                goto bad_arg;
         }
 
         /* Caution: there is no exception handling at this level. */
@@ -720,16 +696,30 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
         else
             substitute_unboxed( ap, p->return_type, result );
 
-        return TRUE;
+        return ap;
     }
 
     else
-        return FALSE;
+        return 0;
+
+bad_arg:
+
+    /* FIXME: not used */
+    if ( SK__ALLOW_NONREDUX )
+        ap->flags |= OBJECT__IRREDUCIBLE;
+
+    /* f 0 --> 0 */
+    substitute_boxed( ap, 0 );
+
+    return ap;
 }
 
 
 /******************************************************************************/
 
+/*
+[ba] first-class algorithms ^ reduction consists a side-effect to the expression reduced.  Reducing an expression which is meant to be used as data may destroy its usefulness
+*/
 
 /** \param spine  a stack of Apply objects (and ONLY Apply objects)
     \return  An immediate object (i.e. not an indirection node) if successful,
@@ -737,46 +727,105 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
 Object *
 reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 {
-    Object *ap;
+    Type *t;
+
+    /* Start at the root object. */
+    Object *cur = o;
+
+    /* Original size of the stack. */
+    unsigned int len = array__size( spine );
 
 #if SK__CHECKS__MAX_REDUX_ITERATIONS > 0
     int iter = 0;
 #endif
 
-    /* Note: because spine is passed recursively, array__size( spine ) is not
-       necessarily the number of available arguments. */
-    unsigned int nargs;
-
-    /* Original size of the stack. */
-    unsigned int len = array__size( spine );
-
     /* Remove all objects added to the stack since invocation. */
-    void rewind0()
+    void unwind( boolean failure )
     {
         unsigned int i;
 
         for ( i = array__size( spine ); i > len; i-- )
-            array__pop( spine );
-    }
+        {
+            cur = array__pop( spine );
 
-    /* Handle a null argument.  This happens either when an external function
-       has called this function with a null argument, or when an argument to
-       a primitive is null.
-       Note: at this point, nothing has been added to the spine. */
-    if ( !o )
-    {
-        /* 0 --> 0 */
-        if ( PERMIT_NULLS )
-            return 0;
-
-        else if ( DEBUG__SAFE )
-            abort();
+            if ( failure && EAGER_PRUNING )
+                substitute_boxed( cur, 0 );
+        }
     }
 
     /* Iterate until either the expression is in head-normal form or an error is
        encountered. */
     for (;;)
     {
+        /* 0 x --> 0 */
+        if ( !cur )
+        {
+            unwind( TRUE );
+            break;
+        }
+
+        else
+        {
+            /* FIXME: possible race condition.  If ap is initially an Apply but
+               is overwritten (in another thread) with an indirection node or a
+               boxed value, a segfault is likely. */
+            t = cur->type;
+/*PRINT( "type->name = %s\n", cur->type->name );*/
+
+            if ( t == indirection_type )
+                cur = cur->value;
+
+            /* Traverse down the spine so long as only apply and indirection
+               nodes are encountered. */
+            else if ( t == apply_type )
+            {
+                array__push( spine, cur );
+
+                if ( EAGER_REDIRECTION )
+                    cur = dereference( &FUNCTION( cur ) );
+                else
+                    cur = FUNCTION( cur );
+            }
+
+            /* Object at the tip of the spine is a combinator. */
+            else if ( t == combinator_type )
+            {
+                cur = apply_combinator( cur->value, spine, array__size( spine ) - len, m );
+
+                if ( !cur )
+                {
+                    unwind( FALSE );
+                    break;
+                }
+            }
+
+            /* Object at the tip of the spine is a primitive function. */
+            else if ( t == primitive_type )
+            {
+                cur = apply_primitive( cur->value, spine, array__size( spine ) - len, m );
+
+                if ( !cur )
+                {
+                    unwind( FALSE );
+                    break;
+                }
+            }
+
+            /* Object at tip of spine is a literal value. */
+            else
+            {
+                if ( ( array__size( spine ) - len ) && !SK__ALLOW_NONREDUX )
+                {
+                    ERROR( "can't apply a non-redex object to an argument" );
+
+                    /* error --> 0 */
+                    unwind( !SK__ALLOW_NONREDUX );
+                }
+
+                break;
+            }
+        }
+
         /* Give up if reduction takes too long. */
         if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
         {
@@ -785,206 +834,21 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
             if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
             {
                 ERROR( "sk_reduce: abandoned (possible infinite loop)" );
+
+                /* Caution: the danger of NOT pruning this expression is that
+                   the program will try to reduce it again and again, leading to
+                   bad performance and/or memory problems. */
+                unwind( FALSE );
                 break;
             }
         }
-
-        /* Start at the root object. */
-        ap = o;
-        nargs = 0;
-
-        ap = skip_indirection( ap );
-
-        if ( !ap )
-            break;
-
-        for (;;)
-        {
-            ap = skip_indirection( ap );
-
-            
-        }
-
-        /* Traverse to the tip of the application spine. */
-        while ( ap->type == apply_type )
-        {
-            array__push( spine, ap );
-            nargs++;
-
-            /* FIXME: possible race condition.  If ap is initially an Apply but
-               is overwritten (by another thread) with an indirection node or a
-               boxed value, a segfault is inevitable. */
-            if ( EAGER_REDIRECTION )
-                ap = dereference( &FUNCTION( ap ) );
-            else
-                ap = skip_indirection( FUNCTION( ap ) );
-
-            if ( !ap && PERMIT_NULLS )
-                break;
-        }
-
-        /* Replace o directly with an indirection to NULL. */
-        if ( !ap && PERMIT_NULLS )
-        {
-            substitute_boxed( o, 0 );
-            break;
-        }
-
-        /* Object at the tip of the spine is a combinator. */
-        else if ( ap->type == combinator_type )
-        {
-            if ( !apply_combinator( ap, spine, nargs, m ) )
-                break;
-        }
-
-        /* Object at the tip of the spine is a primitive function. */
-        else if ( ap->type == primitive_type )
-        {
-            if ( !apply_primitive( ap->value, spine, nargs, m ) )
-                break;
-        }
-
-        /* Object at tip of spine is a literal value. */
-        else
-        {
-/*PRINT( "type->name = %s\n", ap->type->name );*/
-            if ( nargs && !SK__ALLOW_NONREDUX )
-            {
-                ERROR( "can't apply a non-redex object to an argument" );
-
-                /* error --> 0 */
-                if ( !SK__ALLOW_NONREDUX )
-                    substitute_boxed( o, 0 );
-
-                break;
-            }
-
-            break;
-        }
-
-        rewind0();
     }
-
-    rewind0();
-
-    return skip_indirection( o );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#ifdef NOT_FINISHED
-
-NEW AND IMPROVED REDUCTION ALGORITHM (INCOMPLETE)
-
-
-    Type *t;
-
-
-
-    ap = o;
-    nargs = 0;
-
-    {
-        /* 0 x --> 0 */
-        if ( !ap )
-        {
-            if ( o )
-                /* Replace o directly with an indirection to NULL. */
-                substitute_boxed( o, 0 );
-
-            rewind0();
-
-            return 0;
-        }
-
-        else
-        {
-            /* FIXME: possible race condition.  If ap is initially an Apply but
-               is overwritten (in another thread) with an indirection node or a
-               boxed value, a segfault is inevitable. */
-            t = ap->type;
-
-            if ( t == indirection_type )
-                ap = ap->value;
-
-            /* Traverse down the spine so long as only apply and indirection
-               nodes are encountered. */
-            else if ( t == apply_type )
-            {
-                array__push( spine, ap );
-                nargs++;
-
-                if ( EAGER_REDIRECTION )
-                    ap = dereference( &FUNCTION( ap ) );
-                else
-                    ap = FUNCTION( ap );
-            }
-
-            /* Object at the tip of the spine is a combinator. */
-            else if ( t == combinator_type )
-            {
-                if ( !apply_combinator( ap, spine, nargs, m ) )
-                    break;
-
-                rewind0();
-                ap = o;
-            }
-
-            /* Object at the tip of the spine is a primitive function. */
-            else if ( t == primitive_type )
-            {
-                if ( !apply_primitive( ap->value, spine, nargs, m ) )
-                    break;
-
-                rewind0();
-                ap = o;
-            }
-
-            /* Object at tip of spine is a literal value. */
-            else
-            {
-
-            }
-        }
-
-    }
-
-    rewind0();
 
     if ( EAGER_REDIRECTION )
         return skip_indirection( o );
     else
         return o;
 }
-
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

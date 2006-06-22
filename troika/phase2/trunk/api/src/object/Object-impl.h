@@ -53,7 +53,7 @@ struct Object
 
     /** A mutable value which holds tracing and state information about the
         object. */
-    int flags;
+    unsigned int flags;
 
     #if TRIPLES__GLOBAL__IN_EDGES
     /** Associative edges pointing towards the atom.

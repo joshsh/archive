@@ -61,11 +61,22 @@ object__compare_to( Object *o1, Object *o2 )
 void
 object__encode( const Object *o, const char *buffer )
 {
-    if ( PERMIT_NULLS && !o )
-        sprintf( buffer, "()" );
+    if ( !o )
+    {
+        if ( PERMIT_NULLS )
+        {
+            sprintf( buffer, "()" );
+            return;
+        }
 
-    else
-        o->type->encode( o->value, buffer );
+        else if ( DEBUG__SAFE )
+            abort();
+    }
+
+    else if ( DEBUG__SAFE && !o->value )
+        abort();
+
+    o->type->encode( o->value, buffer );
 }
 
 

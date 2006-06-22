@@ -466,7 +466,7 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
             if ( COMPILER__SHOW_ADDRESS )
             {
-                PRINT( "%#x ", ( int ) o ); FFLUSH;
+                PRINT( "%p ", ( void* ) o ); FFLUSH;
             }
 
             PRINT( "<%s> ", o->type->name );
