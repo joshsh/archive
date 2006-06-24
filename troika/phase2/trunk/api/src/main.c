@@ -192,7 +192,8 @@ read_options ( int argc, char **argv, char *source_file )
 
 /** Instantiates an Environment and attaches a Compiler to interact with the
     command line. */
-int main( int argc, char *argv[] )
+int
+main( int argc, char *argv[] )
 {
     int status = EXIT_SUCCESS;
 

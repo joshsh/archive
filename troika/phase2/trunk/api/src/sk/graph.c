@@ -19,7 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <sk/Combinator.h>
 #include "../object/Object-impl.h"
-#include "../Primitive-impl.h"
+#include "../primitive/Primitive-impl.h"
 #include "graph.h"
 
 
@@ -110,23 +110,23 @@ graph_end()
 
 
 /* Shorts out indirection nodes when they are encountered. */
-static Object *
+Object *
 dereference( Object **opp )
 {
     if ( DEBUG__SAFE && !opp )
         abort();
 
     /* Allow for indirection-to-null. */
-    if ( PERMIT_NULLS && !*opp )
+    if ( FIRST_CLASS_NULL && !*opp )
         return 0;
 
     /* Assumes that chains of indirection nodes are possible. */
-    while ( ( *opp )->type == indirection_type )
+    while ( EAGER_REDIRECTION && ( *opp )->type == indirection_type )
     {
         *opp = ( *opp )->value;
 
         /* Allow for indirection-to-null. */
-        if ( ! *opp )
+        if ( !*opp )
             break;
     }
 
@@ -782,7 +782,7 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
                 array__push( spine, cur );
 
                 if ( EAGER_REDIRECTION )
-                    cur = dereference( &FUNCTION( cur ) );
+                    cur = DEREF( &FUNCTION( cur ) );
                 else
                     cur = FUNCTION( cur );
             }
@@ -833,7 +833,7 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
             if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
             {
-                ERROR( "sk_reduce: abandoned (possible infinite loop)" );
+                ERROR( "reduction abandoned (possible non-termination)" );
 
                 /* Caution: the danger of NOT pruning this expression is that
                    the program will try to reduce it again and again, leading to

@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -24,17 +24,17 @@ Namespace *
 namespace__new()
 {
     Namespace *ns;
+    Dictionary *d = dictionary__new();
 
-    if ( !( ns = new( Namespace ) ) )
-    {
-        ERROR( "namespace__new: allocation failed" );
-        return 0;
-    }
+    if ( !d )
+        ns = 0;
 
-    if ( !( ns->children = dictionary__new() ) )
+    else
     {
-        free( ns );
-        return 0;
+        ns = new( Namespace );
+
+        if ( ns )
+            ns->children = d;
     }
 
     return ns;
@@ -56,6 +56,9 @@ namespace__delete( Namespace *ns )
 unsigned int
 namespace__size( Namespace *ns )
 {
+    if ( DEBUG__SAFE && !ns )
+        abort();
+
     return hash_table__size( ns->children );
 }
 
@@ -63,6 +66,9 @@ namespace__size( Namespace *ns )
 Array *
 namespace__keys( Namespace *ns )
 {
+    if ( DEBUG__SAFE && !ns )
+        abort();
+
     return dictionary__keys( ns->children );
 }
 
@@ -70,6 +76,9 @@ namespace__keys( Namespace *ns )
 void
 namespace__walk( Namespace *ns, Dist_f f )
 {
+    if ( DEBUG__SAFE && ( !ns || !f ) )
+        abort();
+
     dictionary__walk( ns->children, f );
 }
 

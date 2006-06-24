@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -142,12 +142,7 @@ primitive__register(
     void ( *src_f ) ( void ) )
 {
     if ( DEBUG__SAFE && ( !env || !p ) )
-    {
-        ERROR( "primitive__register: null argument" );
-        if ( p )
-            primitive__delete( p );
-        return 0;
-    }
+        abort();
 
     environment__register_primitive( env, p, flags, src_f );
 

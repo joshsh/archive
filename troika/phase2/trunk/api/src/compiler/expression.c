@@ -238,7 +238,13 @@ apply__encode__alt( Apply *a, char *buffer )
     buffer++;
 
     o = a->operand;
-    if ( ( PERMIT_NULLS && o ) && object__type( o ) == apply_type )
+
+    if ( DEBUG__SAFE && !FIRST_CLASS_NULL && !o )
+        abort();
+
+    /* If the operand is another Apply (and does not have a name),
+       enclose it in parentheses. */
+    if ( ( FIRST_CLASS_NULL && o ) && object__type( o ) == apply_type )
     {
         if ( encoding_name( o ) )
             encode__short( o, buffer );
@@ -273,7 +279,7 @@ resolve( Ast *ast, Compiler *c )
         {
             *astpp = object_for_ast( *astpp );
 
-            if ( !PERMIT_NULLS && !*astpp)
+            if ( !FIRST_CLASS_NULL && !*astpp)
             {
                 ok = FALSE;
                 return walker__break;

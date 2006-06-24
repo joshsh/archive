@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Phase2 language API, Copyright (C) 2005 Joshua Shinavier.
+Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -21,49 +21,62 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Hash_Map.h>
 
 
-/* Distribute f recursively (and in a breadth-first fashion) through any child namespaces. */
+/* Distribute f recursively (and in a breadth-first fashion) to any child
+   namespaces. */
 static void
 ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 {
-    Array *queue = array__new( 0, 0 );
+    Array *queue;
+    Type *t;
 
+    /* Distribute f over the children of the namespace which are themselves
+       namespaces. */
     void *distribute( Object **opp )
     {
-        Object *o = *opp;
+        Object *o = DEREF( opp );
 
         /* If we've found a namespace... */
-        if ( object__type( o ) == object__type( ns_o ) )
+        if ( object__type( o ) == t )
         {
             /* Apply the target function, and quit the traversal if so instructed. */
-            if ( f( ( void** ) opp ) == walker__break )
+            if ( f( ( void** ) opp ) == BREAK )
             {
-                array__delete( queue );
-                queue = 0;
-                return walker__break;
+                array__clear( queue );
+                return BREAK;
             }
 
             /* Extend the traversal to this namespace's children. */
             else
             {
                 array__enqueue( queue, o );
-                return 0;
+                return CONTINUE;
             }
         }
 
+        /* Pass over objects which are not namespaces. */
         else
-            return 0;
+            return CONTINUE;
     }
 
-    distribute( &ns_o );
+    if ( DEBUG__SAFE && ( !ns_o || !f ) )
+        abort();
 
-    /* Breaks out when queue is empty (search exhausted) or has been
-       destroyed (search aborted). */
-    while ( queue && array__size( queue ) )
+    t = object__type( ns_o );
+
+    queue = array__new( 0, 0 );
+
+    distribute( &ns_o );
+    /*array__push( queue, ns_o );*/
+
+    /* Breaks out when queue is empty (search exhausted or aborted). */
+    while ( array__size( queue ) )
     {
         namespace__walk(
             object__value( array__pop( queue ) ),
             ( Dist_f ) distribute );
     }
+
+    array__delete( queue );
 }
 
 
@@ -80,27 +93,46 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
     {
         void *helper( Object **opp )
         {
-            if ( *opp == needle )
+            Object *o = DEREF( opp );
+
+            if ( o == needle )
             {
                 parent = *nsopp;
-                return walker__break;
+                return BREAK;
             }
 
             /* Only add the object to the "parents" tree if it is a namespace,
                and is not already in the tree. */
-            else if ( object__type( *opp ) == t && !hash_map__lookup( parents, *opp ) )
-                hash_map__add( parents, *opp, *nsopp );
+            else if ( object__type( o ) == t && !hash_map__lookup( parents, o ) )
+                hash_map__add( parents, o, *nsopp );
 
-            return 0;
+            return CONTINUE;
         }
 
         namespace__walk( object__value( *nsopp ), ( Dist_f ) helper );
 
         if ( parent )
-            return walker__break;
+            return BREAK;
 
         else
-            return 0;
+            return CONTINUE;
+    }
+
+    if ( DEBUG__SAFE && ( !haystack || !m ) )
+        abort();
+
+    /* The null element always receives special treatment (when it is allowed
+       at all), so don't cover it up with a name. */
+    if ( !needle )
+    {
+        if ( FIRST_CLASS_NULL )
+        {
+            name = 0;
+            goto finish;
+        }
+
+        else if ( DEBUG__SAFE )
+            abort();
     }
 
     /* Trace until 'needle' is found or all namespaces have been visited. */
@@ -123,6 +155,8 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
     else
         name = 0;
 
+finish:
+
     hash_map__delete( parents );
     return name;
 }
@@ -135,11 +169,13 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
 
     void *test( Namespace_o **ns_opp )
     {
-        if ( ( o = namespace__lookup_simple( object__value( *ns_opp ), key ) ) )
-            return walker__break;
-        else
-            return 0;
+        o = namespace__lookup_simple( object__value( *ns_opp ), key );
+
+        return o ? BREAK : CONTINUE;
     }
+
+    if ( DEBUG__SAFE && ( !ns_obj || !key || !m ) )
+        abort();
 
     memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );
 
@@ -194,10 +230,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
             parent = object__value( *nsopp );
             o = namespace__lookup_simple( parent, key );
 
-            if ( o )
-                return walker__break;
-            else
-                return 0;
+            return o ? BREAK : CONTINUE;
         }
 
         memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );

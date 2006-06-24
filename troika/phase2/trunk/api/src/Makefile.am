@@ -6,7 +6,7 @@ BUILT_SOURCES = revision.h
 noinst_HEADERS = revision.h		\
 	settings.h			\
 	object/Object-impl.h		\
-	Primitive-impl.h		\
+	primitive/Primitive-impl.h	\
 	compiler/Compiler-impl.h	\
 	compiler/license.h		\
 	environment/Environment-impl.h	\
@@ -54,8 +54,8 @@ object_src = \
 	object/traversal.c
 
 primitive_src = \
-	Primitive.c		\
-	Primitive-import.c
+	primitive/Primitive.c		\
+	primitive/Primitive-import.c
 
 sk_src = \
 	sk/Apply.c		\

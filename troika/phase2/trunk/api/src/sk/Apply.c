@@ -28,8 +28,8 @@ apply__new( Object *function, Object *operand )
 {
     Apply *a;
 
-    /* Apply objects with null members are allowed if PERMIT_NULLS. */
-    if ( !PERMIT_NULLS && DEBUG__SAFE && ( !function || !operand ) )
+    /* Apply objects with null members are allowed if FIRST_CLASS_NULL. */
+    if ( !FIRST_CLASS_NULL && DEBUG__SAFE && ( !function || !operand ) )
         abort();
 
     a = new( Apply );
@@ -131,7 +131,7 @@ apply__encode( Apply *a, char *buffer )
     buffer++;
 
     o = a->operand;
-    if ( ( PERMIT_NULLS && o ) && object__type( o ) == apply_type )
+    if ( ( FIRST_CLASS_NULL && o ) && object__type( o ) == apply_type )
     {
         sprintf( buffer, "(" );
         buffer++;

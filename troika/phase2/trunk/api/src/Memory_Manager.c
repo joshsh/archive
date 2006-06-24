@@ -171,7 +171,6 @@ unmark_all( Memory_Manager *m )
 static void
 sweep( Memory_Manager *m )
 {
-char s[1000];
     boolean unmarked( Object *o )
     {
         if ( DEBUG__SAFE && !o )
@@ -222,28 +221,10 @@ unwalk( Object *root, boolean follow_triples )
         }
 
         else
-            return walker__break;
+            return BREAK;
     }
 
     object__trace( root, ( Dist_f ) helper, follow_triples );
-}
-
-
-#include "sk/graph-types.h"
-
-
-/* Shorts out indirection nodes when they are encountered. */
-static Object *
-dereference( Object **opp )
-{
-    if ( DEBUG__SAFE && !opp )
-        abort();
-
-    /* Assumes that chains of indirection nodes are possible. */
-    while ( ( *opp )->type == indirection_type )
-        *opp = ( *opp )->value;
-
-    return *opp;
 }
 
 
@@ -258,12 +239,12 @@ memory_manager__walk
         /* If the entire object graph is to be traversed, then it is safe to
            mutate references to indirection nodes. */
         Object *o = ( dosweep )
-            ? dereference( opp )
+            ? DEREF( opp )
             : *opp;
 
         /* If the object is already marked, abort. */
         if ( visited( o ) )
-            return walker__break;
+            return BREAK;
 
         else
         {
@@ -319,11 +300,11 @@ memory_manager__trace
 
     void *trace( Object **opp )
     {
-        Object *o = *opp;
+        Object *o = DEREF( opp );
 
-        /* If the object is already marked, abort. */
+        /* If the object is already marked, skip it. */
         if ( visited( o ) )
-            return walker__break;
+            return BREAK;
 
         else
         {
@@ -340,7 +321,7 @@ memory_manager__trace
 
     void *untrace( Object **opp )
     {
-        Object *o = *opp;
+        Object *o = DEREF( opp );
 
         if ( visited( o ) )
         {
@@ -349,11 +330,11 @@ memory_manager__trace
 
             clear_visited( o );
 
-            return 0;
+            return CONTINUE;
         }
 
         else
-            return walker__break;
+            return BREAK;
     }
 
     if ( DEBUG__SAFE && ( !m || !walk || !dist ) )
@@ -373,6 +354,7 @@ memory_manager__trace
         }
     }
 
+    /* Make sure no objects are marked to begin with. */
     if ( !m->clean )
         unmark_all( m );
 
@@ -414,7 +396,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
         if ( visited( o ) )
         {
             set__add( s, o );
-            return walker__break;
+            return BREAK;
         }
 
         else

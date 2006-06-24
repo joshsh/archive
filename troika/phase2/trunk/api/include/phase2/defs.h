@@ -37,6 +37,10 @@ typedef char xpm;
 
 typedef void *( *Dist_f )( void **refp );
 
+#define CONTINUE            0
+#define BREAK               ( void* ) 1
+#define REMOVE              ( void* ) 2
+
 #define walker__continue    0
 #define walker__break       ( void* ) 1
 #define walker__remove      ( void* ) 2

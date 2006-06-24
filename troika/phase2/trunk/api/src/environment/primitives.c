@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #if TRIPLES__GLOBAL
 
 #include <Primitive-import.h>
-    #include "../Primitive-impl.h"
+    #include "../primitive/Primitive-impl.h"
 
 
 /* FIXME */

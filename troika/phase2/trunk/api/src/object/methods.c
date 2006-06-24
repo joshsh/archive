@@ -63,7 +63,7 @@ object__encode( const Object *o, const char *buffer )
 {
     if ( !o )
     {
-        if ( PERMIT_NULLS )
+        if ( FIRST_CLASS_NULL )
         {
             sprintf( buffer, "()" );
             return;

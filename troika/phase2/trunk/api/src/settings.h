@@ -116,8 +116,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Reduction ******************************************************************/
 
 
+struct Object;
+
+extern struct Object *
+dereference( struct Object ** );
+
+#define DEREF   dereference
+
+
 /** Tolerate null object references in various contexts. */
-#define PERMIT_NULLS                            1
+#define FIRST_CLASS_NULL                        1
 
 /** Short out indirection nodes in reduction algorithms as well as in
     memory management algorithms.  May be a costly feature. */
