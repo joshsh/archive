@@ -29,6 +29,26 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "license.h"
 
 
+
+
+typedef int ( *CommandFunction )( Compiler *c, Ast *args );
+
+
+typedef struct Command
+{
+    CommandFunction f;
+    int args_min, args_max;
+
+    char *name;
+    char *args;
+    char *description;
+
+} Command;
+
+
+/******************************************************************************/
+
+
 static int
 count_args( Ast *args )
 {
@@ -162,6 +182,67 @@ command_gc( Compiler *c, Ast *args )
 
 
 static int
+command_help( Compiler *c, Ast *args )
+{
+    void *helper( char **refp )
+    {
+        Command *com = dictionary__lookup( c->commands, *refp );
+
+        PRINT( "  _%s", com->name );
+        if ( com->args )
+            PRINT( " %s", com->args );
+        PRINT( " -- %s\n", com->description );
+
+        return CONTINUE;
+    }
+
+    Array *a;
+
+    args = 0;
+
+    if ( !c->quiet )
+    {
+        PRINT( "\
+Statement syntax:\n\
+  stmt:  (cmnd | expr | name ':=' expr | expr '=:' name) ';'\n\
+  cmnd:  '_' ID {name}\n\
+  expr:  obj | expr obj\n\
+  obj:   CHAR | FLOAT | INT | STRING | bag | name | '(' [obj] ')'\n\
+  bag:   '{' [expr {',' expr}] '}'\n\
+  name:  ID {':' ID}\n" );
+
+        PRINT( "\n" );
+
+        a = dictionary__keys( c->commands );
+        array__sort( a, ( Comparator ) strcmp );
+
+        PRINT( "Commands:\n" );
+        array__walk( a, ( Dist_f ) helper );
+
+        array__delete( a );
+
+        PRINT( "\n" );
+
+        PRINT( "\
+Example:\n\
+  _new floatmath;\n\
+  floatmath:pi := 3.14159;\n\
+  _ns floatmath;\n\
+  * := double_double__multiply;\n\
+  * (* 2.0 pi) =: circumference;\n\
+  _ns root:data;\n\
+  circumference 10.0 =: c;\n\
+  floatmath;\n\
+  here;\n\
+  root;\n" );
+
+    }
+
+    return 0;
+}
+
+
+static int
 command_license( Compiler *c, Ast *args )
 {
     args = 0;
@@ -228,6 +309,13 @@ command_new( Compiler *c, Ast *args )
         c->cur_ns_obj->type, namespace__new(), 0 );
 
     compiler__define( c, name, o );
+
+    if ( !c->quiet && o )
+    {
+        PRINT( "Created namespace " );
+        name__print( name );
+        PRINT( ".\n" );
+    }
 
     return 0;
 }
@@ -298,8 +386,9 @@ command_rm( Compiler *c, Ast *args )
 static int
 command_save( Compiler *c, Ast *args )
 {
-    Name *name;
     char *path = c->save_to_path;
+
+    args = 0;
 
     if ( !path )
     {
@@ -353,37 +442,46 @@ command_size( Compiler *c, Ast *args )
 /******************************************************************************/
 
 
-typedef int ( *CommandFunction )( Compiler *c, Ast *args );
-
-
-typedef struct Command
-{
-    CommandFunction f;
-    int args_min, args_max;
-
-} Command;
-
+#define cp(to, from)  if ((from) && !(to = STRDUP(from))) goto failure;
 
 static Command *
-add_command( Dictionary *d, char *name, CommandFunction f, int args_min, int args_max )
+add_command( Dictionary *d, char *name, CommandFunction f, int args_min, int args_max, char *args, char *description )
 {
-    Command *com;
+    Command *com = 0;
+    char *n = 0, *a = 0, *s = 0;
 
-    if ( !( com = new( Command ) ) )
-        return 0;
+    cp( n, name );
+    cp( a, args );
+    cp( s, description );
+
+    com = new( Command );
+    if ( !com )
+        goto failure;
 
     com->f = f;
     com->args_min = args_min;
     com->args_max = args_max;
+    com->name = n;
+    com->args = a;
+    com->description = s;
 
     if ( !dictionary__add( d, name, com ) )
-    {
-        free( com );
-        return 0;
-    }
+        goto failure;
 
-    else
-        return com;
+    return com;
+
+failure:
+
+    if ( n )
+        free( n );
+    if ( a )
+        free( a );
+    if ( s )
+        free( s );
+    if ( com )
+        free( com );
+
+    return 0;
 }
 
 
@@ -392,8 +490,18 @@ delete_commands( Dictionary *commands )
 {
     void *helper( Command **refp )
     {
-        free( *refp );
-        return 0;
+        Command *c = *refp;
+
+        if ( c->name )
+            free( c->name );
+        if ( c->args )
+            free( c->args );
+        if ( c->description )
+            free( c->description );
+
+        free( c );
+
+        return CONTINUE;
     }
 
     dictionary__walk( commands, ( Dist_f ) helper );
@@ -404,32 +512,33 @@ delete_commands( Dictionary *commands )
 Dictionary *
 create_commands()
 {
-    Dictionary *d;
+    Dictionary *d = dictionary__new();
 
-    if ( !( d = dictionary__new() ) )
-        return 0;
+    if ( !d )
+        goto failure;
 
-    if ( add_command( d, "cp",       command_cp,         2, 2 )
-      && add_command( d, "exit",     command_quit,       0, 0 )
-      && add_command( d, "gc",       command_gc,         0, 0 )
-      && add_command( d, "license",  command_license,    0, 0 )
-      && add_command( d, "mv",       command_mv,         2, 2 )
-      && add_command( d, "new",      command_new,        1, 1 )
-      && add_command( d, "ns",       command_ns,         1, 1 )
-      && add_command( d, "quit",     command_quit,       0, 0 )
-      && add_command( d, "rm",       command_rm,         1, -1 )
-      && add_command( d, "saveas",   command_saveas,     1, 1 )
-      && add_command( d, "save",     command_save,       0, 0 )
-      && add_command( d, "size",     command_size,       0, 0 ) )
+    if ( add_command( d, "cp",       command_cp,         2, 2,  "<obj> <ns>", "copy an object to the given namespace" )
+      && add_command( d, "gc",       command_gc,         0, 0,  0, "invoke (force) the garbage collector" )
+      && add_command( d, "help",     command_help,       0, 0,  0, "display this help info" )
+      && add_command( d, "license",  command_license,    0, 0,  0, "display the GPL" )
+      && add_command( d, "mv",       command_mv,         2, 2,  "<obj> <ns>", "move an object to the given namespace" )
+      && add_command( d, "new",      command_new,        1, 1,  "<name>", "create a new namespace" )
+      && add_command( d, "ns",       command_ns,         1, 1,  "<ns>", "move to the given namespace" )
+      && add_command( d, "quit",     command_quit,       0, 0,  0, "exit the application" )
+      && add_command( d, "rm",       command_rm,         1, -1, "<obj>", "remove an object from its parent namespace" )
+      && add_command( d, "saveas",   command_saveas,     1, 1,  "<path>", "save environment to a given file" )
+      && add_command( d, "save",     command_save,       0, 0,  0, "save environment to original file" )
+      && add_command( d, "size",     command_size,       0, 0,  0, "the number of reachable objects in the environment" ) )
     {
         return d;
     }
 
-    else
-    {
+failure:
+
+    if ( d )
         delete_commands( d );
-        return 0;
-    }
+
+    return 0;
 }
 
 

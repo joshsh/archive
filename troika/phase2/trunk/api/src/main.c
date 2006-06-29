@@ -48,7 +48,7 @@ static void
 print_copying()
 {
     PRINT( "Copyright (C) 2006 Joshua Shinavier\n" );
-    PRINT( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY.  This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_quit;\" to exit.\n" );
+    PRINT( "The Phase2 programming language comes with ABSOLUTELY NO WARRANTY.  This is free software, and you are welcome to redistribute it under certain conditions; type \"_license;\" for details.  Type \"_help;\" for commands and syntax.\n" );
 }
 
 
@@ -57,10 +57,10 @@ print_usage()
 {
     PRINT( "Usage:\t%s [options]...\n", alias );
     PRINT( "Options:\n" );
-    PRINT( "  -f, --file <file>    load a namespace from <file>\n" );
-    PRINT( "  -h, --help               print this help and exit\n" );
-    PRINT( "  -q, --quiet              suppress output to stdout\n" );
-    PRINT( "  -v, --version            print version number and exit\n" );
+    PRINT( "  -f, --file <file>    load environment from <file>\n" );
+    PRINT( "  -h, --help           print this help and exit\n" );
+    PRINT( "  -q, --quiet          suppress output to stdout\n" );
+    PRINT( "  -v, --version        print version number and exit\n" );
 }
 
 
