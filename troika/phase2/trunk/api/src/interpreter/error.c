@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <ncurses.h>
 #endif
 
-#include "Compiler-impl.h"
+#include "Interpreter-impl.h"
 
 
 int

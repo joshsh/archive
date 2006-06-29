@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <xml/xmldom.h>
 #include "../revision.h"
 
-#include "Compiler-impl.h"
+#include "Interpreter-impl.h"
 #include "../sk/graph.h"
 
 

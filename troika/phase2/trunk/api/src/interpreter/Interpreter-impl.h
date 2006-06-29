@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef COMPILER_IMPL_H
-#define COMPILER_IMPL_H
+#ifndef INTERPRETER_IMPL_H
+#define INTERPRETER_IMPL_H
 
 
 #include <Interpreter.h>
@@ -63,6 +63,6 @@ extern void
 delete_commands( Dictionary *commands );
 
 
-#endif  /* COMPILER_IMPL_H */
+#endif  /* INTERPRETER_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

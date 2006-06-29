@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <time.h>
 
-#include "Compiler-impl.h"
+#include "Interpreter-impl.h"
 #include "license.h"
 
 

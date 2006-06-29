@@ -7,7 +7,7 @@ noinst_HEADERS = revision.h		\
 	settings.h			\
 	object/Object-impl.h		\
 	primitive/Primitive-impl.h	\
-	interpreter/Compiler-impl.h	\
+	interpreter/Interpreter-impl.h	\
 	interpreter/license.h		\
 	environment/Environment-impl.h	\
 	namespace/Namespace-impl.h	\
@@ -35,11 +35,11 @@ environment_src = \
 	environment/types.c
 
 interpreter_src = \
-	interpreter/Compiler.c	\
-	interpreter/command.c	\
-	interpreter/error.c	\
+	interpreter/Interpreter.c	\
+	interpreter/command.c		\
+	interpreter/error.c		\
 	interpreter/expression.c	\
-	interpreter/mapping.c	\
+	interpreter/mapping.c		\
 	interpreter/serial.c
 
 namespace_src = \
@@ -64,7 +64,7 @@ sk_src = \
 
 
 libphase2_la_SOURCES = \
-	$(interpreter_src)		\
+	$(interpreter_src)	\
 	$(environment_src)	\
 	$(namespace_src)	\
 	$(object_src)		\
