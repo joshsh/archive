@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include <Compiler.h>
+#include <Interpreter.h>
 }
 
 #include <global.h>
@@ -29,7 +29,7 @@ public:
     ~P2Environment();
 
     Environment *getEnv() const;
-    Compiler *getCompiler() const;
+    Interpreter *getInterpreter() const;
 
     bool getIdleFrameVisibility() const;
     void setIdleFrameVisibility( bool v );
@@ -60,7 +60,7 @@ private:
     int frameContentsPadding;
 
     Environment *env;
-    Compiler *compiler;
+    Interpreter *compiler;
 
     const Object *clipboardObject;
 };

@@ -8,7 +8,7 @@ extern "C"
 {
 #include <stdio.h>
 #include <getopt.h>
-#include <Compiler.h>
+#include <Interpreter.h>
 }
 
 
@@ -218,9 +218,9 @@ main( int argc, char **argv )
 
     if ( *source_file )
     {
-        compiler__deserialize( env.getCompiler(), source_file );
-        //compiler__deserialize( env.getCompiler(), "guitest.p2" );
-        //compiler__deserialize( env.getCompiler(), "../api/examples/test.p2" );
+        interpreter__deserialize( env.getInterpreter(), source_file );
+        //interpreter__deserialize( env.getInterpreter(), "guitest.p2" );
+        //interpreter__deserialize( env.getInterpreter(), "../api/examples/test.p2" );
     }
 
     P2Binder binder( &env );

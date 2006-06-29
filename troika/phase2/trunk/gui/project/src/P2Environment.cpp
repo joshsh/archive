@@ -19,7 +19,7 @@ P2Environment::P2Environment( bool quiet )
     frameContentsPadding = FRAME__CONTENTS__PADDING;
 
     env = environment__new();
-    compiler = compiler__new( env, quiet ? 1 : 0 );
+    compiler = interpreter__new( env, quiet ? 1 : 0 );
 }
 
 
@@ -40,7 +40,7 @@ P2Environment::P2Environment( const P2Environment &other )
 
 P2Environment::~P2Environment()
 {
-    compiler__delete( compiler );
+    interpreter__delete( compiler );
     environment__delete( env );
 }
 
@@ -54,7 +54,7 @@ Environment *P2Environment::getEnv() const
 }
 
 
-Compiler *P2Environment::getCompiler() const
+Interpreter *P2Environment::getInterpreter() const
 {
     return compiler;
 }

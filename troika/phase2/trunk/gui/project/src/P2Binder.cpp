@@ -212,7 +212,7 @@ objectColor( const Object *o )
 QString P2Binder::
 objectName( const Object *o )
 {
-    Name *name = compiler__name_of( env->getCompiler(), 0, o );
+    Name *name = interpreter__name_of( env->getInterpreter(), 0, o );
 
     if ( !name )
         return QString( "" );
@@ -230,7 +230,7 @@ objectName( const Object *o )
 QString P2Binder::
 objectFullName( const Object *o )
 {
-    Name *name = compiler__name_of__full( env->getCompiler(), environment__root( env->getEnv() ), o );
+    Name *name = interpreter__name_of__full( env->getInterpreter(), environment__root( env->getEnv() ), o );
 
     if ( !name )
         return QString( "" );
