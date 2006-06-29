@@ -7,8 +7,8 @@ noinst_HEADERS = revision.h		\
 	settings.h			\
 	object/Object-impl.h		\
 	primitive/Primitive-impl.h	\
-	compiler/Compiler-impl.h	\
-	compiler/license.h		\
+	interpreter/Compiler-impl.h	\
+	interpreter/license.h		\
 	environment/Environment-impl.h	\
 	namespace/Namespace-impl.h	\
 	sk/Apply.h			\
@@ -34,13 +34,13 @@ environment_src = \
 	environment/primitives.c	\
 	environment/types.c
 
-compiler_src = \
-	compiler/Compiler.c	\
-	compiler/command.c	\
-	compiler/error.c	\
-	compiler/expression.c	\
-	compiler/mapping.c	\
-	compiler/serial.c
+interpreter_src = \
+	interpreter/Compiler.c	\
+	interpreter/command.c	\
+	interpreter/error.c	\
+	interpreter/expression.c	\
+	interpreter/mapping.c	\
+	interpreter/serial.c
 
 namespace_src = \
 	namespace/Namespace.c	\
@@ -64,7 +64,7 @@ sk_src = \
 
 
 libphase2_la_SOURCES = \
-	$(compiler_src)		\
+	$(interpreter_src)		\
 	$(environment_src)	\
 	$(namespace_src)	\
 	$(object_src)		\
@@ -91,7 +91,7 @@ phase2_LDADD = libphase2.la
 ## Defines the head revision number in revision.h, prepended with a '!' if
 ## serial.c differs from the repository copy.
 ## Note: this assumes that Phase2 is being built from a Subversion working copy.
-revision.h :  compiler/serial.c
-	svn stat -v compiler/serial.c \
+revision.h :  interpreter/serial.c
+	svn stat -v interpreter/serial.c \
 	| sed 's/^[^ ][ ]*/&!/;s/^.[ ]*//;s/[ ].*//;s/.*/\#define REVISION    "&"/' \
 	> revision.h
