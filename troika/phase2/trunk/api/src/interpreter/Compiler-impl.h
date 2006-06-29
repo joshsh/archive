@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COMPILER_IMPL_H
 
 
-#include <Compiler.h>
+#include <Interpreter.h>
 #include "../object/Object-impl.h"
 
 

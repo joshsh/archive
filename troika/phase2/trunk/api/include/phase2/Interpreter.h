@@ -1,6 +1,6 @@
 /**
 
-\file  Compiler.h
+\file  Interpreter.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,8 +25,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef COMPILER_H
-#define COMPILER_H
+#ifndef INTERPRETER_H
+#define INTERPRETER_H
 
 
 #include <Environment.h>
@@ -104,6 +104,6 @@ extern boolean
 compiler__show_line_numbers( Compiler *c );
 
 
-#endif  /* COMPILER_H */
+#endif  /* INTERPRETER_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

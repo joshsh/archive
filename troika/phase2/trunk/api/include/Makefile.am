@@ -5,9 +5,9 @@ nobase_include_HEADERS = \
 	phase2/Ast.h			\
 	phase2/Closure.h		\
 	phase2/Collection.h		\
-	phase2/Compiler.h		\
 	phase2/defs.h			\
 	phase2/Environment.h		\
+	phase2/Interpreter.h		\
 	phase2/Memory_Manager.h		\
 	phase2/Namespace.h		\
 	phase2/Object.h			\
