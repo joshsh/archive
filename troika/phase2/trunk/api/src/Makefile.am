@@ -11,9 +11,9 @@ noinst_HEADERS = revision.h		\
 	interpreter/license.h		\
 	environment/Environment-impl.h	\
 	namespace/Namespace-impl.h	\
-	sk/Apply.h			\
-	sk/graph.h			\
-	sk/graph-types.h
+	compiler/Apply.h			\
+	compiler/graph.h			\
+	compiler/graph-types.h
 
 bin_PROGRAMS = phase2
 
@@ -57,10 +57,10 @@ primitive_src = \
 	primitive/Primitive.c		\
 	primitive/Primitive-import.c
 
-sk_src = \
-	sk/Apply.c		\
-	sk/graph.c		\
-	sk/sk.c
+compiler_src = \
+	compiler/Apply.c	\
+	compiler/graph.c	\
+	compiler/sk.c
 
 
 libphase2_la_SOURCES = \
@@ -69,7 +69,7 @@ libphase2_la_SOURCES = \
 	$(namespace_src)	\
 	$(object_src)		\
 	$(primitive_src)	\
-	$(sk_src)		\
+	$(compiler_src)		\
 	$(xml_src)		\
 	Ast.c \
 	Collection.c		\

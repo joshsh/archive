@@ -35,6 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Name.h>
 
 
+/** An object which serves as a user interface to a Phase2 environment. */
 typedef struct Interpreter Interpreter;
 
 

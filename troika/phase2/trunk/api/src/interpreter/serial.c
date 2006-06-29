@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../revision.h"
 
 #include "Interpreter-impl.h"
-#include "../sk/graph.h"
+#include "../compiler/graph.h"
 
 
 typedef unsigned char uc;

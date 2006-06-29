@@ -1,7 +1,7 @@
 #ifndef COMBINATOR_IMPL_H
 #define COMBINATOR_IMPL_H
 
-#include <sk/sk.h>
+#include <sk.h>
 
 
 /** $decoder */

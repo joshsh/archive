@@ -25,6 +25,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive-import.h>
     #include "../primitive/Primitive-impl.h"
 
+#include "compiler/graph.h"
+
 
 /* FIXME */
 static Environment *global_env;
@@ -291,9 +293,6 @@ add_set_prims( Environment *env )
 
 
 /******************************************************************************/
-
-
-#include "sk/graph.h"
 
 
 static void *

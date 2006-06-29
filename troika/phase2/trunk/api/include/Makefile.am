@@ -15,8 +15,8 @@ nobase_include_HEADERS = \
 	phase2/Primitive-import.h	\
 	phase2/Type.h			\
 	phase2/Void.h			\
-	phase2/sk/Combinator.h		\
-	phase2/sk/sk.h			\
+	phase2/Combinator.h		\
+	phase2/sk.h			\
 	phase2/util/Array.h		\
 	phase2/util/Bunch.h		\
 	phase2/util/Dictionary.h	\

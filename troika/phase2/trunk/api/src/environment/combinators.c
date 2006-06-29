@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <sk/sk.h>
+#include <sk.h>
 
 #include "Environment-impl.h"
 

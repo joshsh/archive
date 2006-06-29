@@ -1,10 +1,32 @@
+                                 P H A S E 2
+
+An experimental language API and interpreter which combine ideas from functional programming and the Semantic Web.  Also includes a graphical namespace browser (requires Qt4 to compile) in its early stages.
+
+
+Phase2 is the continuation of a undergraduate compiler project and is not aimed at any particular user niche.  I do not expect it compete with the likes of Scheme or Haskell as a mainstream software development or research tool.  It does, however, have some novel features which may be of interest to language developers, and the interpreter serves as a proof-of-concept for these ideas.  Although I personally use Phase2 for practical work, this is alpha software under active development.  I'm submitting the project to SourceForge solely on the basis that it is an interesting concept language.  Some details on the language follow.
+
+The motivation for Phase2 is that the same "triples" ontologies used for knowledge representation can just as well express functional programs.  Computation then takes the form of a sort of tensor reduction operating on a set of triples.  Unlike RDF, Phase2 makes no distinction between subject and predicate as classes of objects, and each vertex of a graph potentially acts as a function over the domain of all vertices (i.e. is a property).  Objects are strictly typed, and may be combined according to their type to yield new objects.  For now, combinator expressions and algorithms do most of the heavy lifting of function closures and graph reduction.  Type agreement is checked dynamically, with simple inference binding new objects to types.  A tracing memory manager keeps the size of the heap in check.
+
+Phase2 uses a network model to organize and navigate through programs and data.  A namespace is a first-class object which binds identifiers to arbitrary objects, including other namespaces.  In the interpreter, namespaces inherit the identifiers of any child namespaces as well as the root namespace which determines the set of reachable objects.  For example, the simple name "Arkansas" is equivalent to the fully-qualified name "geography:US:states:Arkansas" so long as there is not a shorter path to a different object with the same name.  In actual use, I've found name collisions to be relatively infrequent, so this "nearest match" name resolution saves on a lot of typing when working with a large, complex network of named items.  When in doubt, simply type in a name as a complete expression, e.g. "Arkansas;" and see what it binds to in the current working namespace.
+
+The Phase2 package is built with autotools and qmake.  The API and interpreter are written in C with GNU extensions, while the GUI is written in Qt/C++.  Adding new primitives to the API is as simple as dropping a C header file into a special directory and re-compiling with the appropriate options: the build process uses doxygen to pick up the function's name and type signature, and xsltproc to generate stubs and constructor calls to build the primitive at invocation time.  Most of the functions in the C standard library can be made available in this way.  You can also import new primitive data types by tagging special functions as essential methods for the type.
+
+
+
+
+
+
+
+
+
+
 ./cleanup
 ./bootstrap
 ./configure
 
 (./configure --enable-debug)
 
-make
+make 2>stderr.txt; cat stderr.txt
 
 make dist
 make install
@@ -17,10 +39,10 @@ valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes src/.libs/lt-
 ################################################################################
 # Cross-compiling libxml2
 
-   export CC=your compiler
-   ./configure with proper options
-   make
-   make install
+export CC=your compiler
+./configure with proper options
+make
+make install
 
 
 ################################################################################
@@ -74,14 +96,4 @@ The linker also needs to be arm-linux-ld not ld.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-[*] the term "cube theory" appears to be unused
-
-[*] triples can easily express
-    [.] graphs
-        [.] lists, trees, DAGs, etc.
-        [*] a graph, in this context, is uniquely determined by a set of vertices and a single edge-relation vertex
-    [.] (finite) groups
-        [*] 3-graph ^ group without monoid properties (associativity, identity element)
-        [P?] an algorithm to check whether a 3-graph "is" a group
-        [*] as a group, a 3-graph is "complete", i.e. a^b != 0 for all a, b
 
