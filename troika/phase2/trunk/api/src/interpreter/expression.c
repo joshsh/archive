@@ -30,14 +30,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* FIXME */
-static Compiler *compiler;
+static Interpreter *compiler;
 
 
 static Name *
 encoding_name( Object *o )
 {
                               /* FIXME */
-    return compiler__name_of( compiler, compiler->cur_ns_obj, o );
+    return interpreter__name_of( compiler, compiler->cur_ns_obj, o );
 }
 
 
@@ -268,7 +268,7 @@ apply__encode__alt( Apply *a, char *buffer )
 
 
 static Object *
-resolve( Ast *ast, Compiler *c )
+resolve( Ast *ast, Interpreter *c )
 {
     /* Transforms an Ast into an Object, deleting the Ast along the way. */
     Object *object_for_ast( Ast* ast )
@@ -326,7 +326,7 @@ resolve( Ast *ast, Compiler *c )
             case NAME_T:
 
                 /* Retrieve an existing object and exit. */
-                o = compiler__resolve( c, ( Name* ) ast->value );
+                o = interpreter__resolve( c, ( Name* ) ast->value );
                 ast__delete( ast );
                 return o;
 
@@ -386,7 +386,7 @@ resolve( Ast *ast, Compiler *c )
 
 
 int
-compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
+interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 {
     int ret = 0;
     Ast *a = 0;
@@ -463,12 +463,12 @@ compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
         }
 
         if ( a )
-            compiler__define( c, name, o );
+            interpreter__define( c, name, o );
 
         /* Command-line output. */
         if ( !c->quiet )
         {
-            oname = compiler__name_of__full( c, c->cur_ns_obj, o );
+            oname = interpreter__name_of__full( c, c->cur_ns_obj, o );
 
             if ( COMPILER__SHOW_ADDRESS )
             {

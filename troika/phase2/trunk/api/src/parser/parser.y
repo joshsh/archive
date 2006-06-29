@@ -78,19 +78,19 @@ yylex( void );
 /* Language module dependencies ***********************************************/
 
 
-typedef struct Compiler Compiler;
+typedef struct Interpreter Interpreter;
 
 extern int
-compiler__evaluate_command( Compiler *c, char * /*name*/, Ast * /*args*/ );
+interpreter__evaluate_command( Interpreter *c, char * /*name*/, Ast * /*args*/ );
 
 extern int
-compiler__evaluate_expression( Compiler *c, Name * /*name*/, Ast * /*expr*/ );
+interpreter__evaluate_expression( Interpreter *c, Name * /*name*/, Ast * /*expr*/ );
 
 extern int
-compiler__handle_parse_error( Compiler *c, char * /*msg*/ );
+interpreter__handle_parse_error( Interpreter *c, char * /*msg*/ );
 
 extern int
-compiler__quiet( Compiler *c );
+interpreter__quiet( Interpreter *c );
 
 
 /* Lexer dependencies *********************************************************/
@@ -99,7 +99,7 @@ compiler__quiet( Compiler *c );
 extern boolean pad_newline;
 
 extern void
-new_parse( Compiler *c );
+new_parse( Interpreter *c );
 
 extern int
 get_char_number( void );
@@ -122,15 +122,15 @@ get_line_number( void );
 
 /** Evaluate a command. */
 static void
-handle_command( Compiler *c, char * /*name*/, Ast * /*args*/ );
+handle_command( Interpreter *c, char * /*name*/, Ast * /*args*/ );
 
 /** Evaluate an expression. */
 static void
-handle_expression( Compiler *c, Name * /*name*/, Ast * /*expr*/ );
+handle_expression( Interpreter *c, Name * /*name*/, Ast * /*expr*/ );
 
 /** Deal gracefully with a parse error. */
 static void
-handle_error( Compiler *c );
+handle_error( Interpreter *c );
 
 
 /******************************************************************************/
@@ -168,7 +168,7 @@ yywrap( void )
 /** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
 void
-yyerror( Compiler *c, p2_parser__exit_state *ignored, const char *msg )
+yyerror( Interpreter *c, p2_parser__exit_state *ignored, const char *msg )
 {
     /* Avoid "unused parameter" compiler warning. */
     c = 0;
@@ -308,7 +308,7 @@ term2ast( Term *t )
 %pure_parser
 */
 
-%parse-param { Compiler *compiler }
+%parse-param { Interpreter *compiler }
 %parse-param { p2_parser__exit_state *return_state }
 
 /** Report more detailed parse error messages. */
@@ -1076,9 +1076,9 @@ id:
 
 
 static void
-handle_command( Compiler *c, char *name, Ast *args )
+handle_command( Interpreter *c, char *name, Ast *args )
 {
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
         PRINT( "\n" );
 
@@ -1088,10 +1088,10 @@ handle_command( Compiler *c, char *name, Ast *args )
     }
 
     /* Note: ownership of name and arguments is conferred to
-       compiler__evaluate_command. */
-    exit_early = exit_early || compiler__evaluate_command( c, name, args );
+       interpreter__evaluate_command. */
+    exit_early = exit_early || interpreter__evaluate_command( c, name, args );
 
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
         #ifdef COMMAND_OUTPUT_SUFFIX
         PRINT( COMMAND_OUTPUT_SUFFIX );
@@ -1101,9 +1101,9 @@ handle_command( Compiler *c, char *name, Ast *args )
 
 
 static void
-handle_expression( Compiler *c, Name *name, Ast *expr )
+handle_expression( Interpreter *c, Name *name, Ast *expr )
 {
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
         PRINT( "\n" );
 
@@ -1113,10 +1113,10 @@ handle_expression( Compiler *c, Name *name, Ast *expr )
     }
 
     /* Note: ownership of name and expression is conferred to
-       compiler__evaluate_expression. */
-    exit_early = exit_early || compiler__evaluate_expression( c, name, expr );
+       interpreter__evaluate_expression. */
+    exit_early = exit_early || interpreter__evaluate_expression( c, name, expr );
 
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
         #ifdef EXPRESSION_OUTPUT_SUFFIX
         PRINT( EXPRESSION_OUTPUT_SUFFIX );
@@ -1126,11 +1126,11 @@ handle_expression( Compiler *c, Name *name, Ast *expr )
 
 
 static void
-handle_error( Compiler *c )
+handle_error( Interpreter *c )
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
         PRINT( "\n" );
 
@@ -1143,9 +1143,9 @@ handle_error( Compiler *c )
         error_line_number, error_character_number, yyerror_msg );
 
     *yyerror_msg = '\0';
-    exit_early = exit_early || compiler__handle_parse_error( c, STRDUP( error_msg ) );
+    exit_early = exit_early || interpreter__handle_parse_error( c, STRDUP( error_msg ) );
 
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
         #ifdef ERROR_OUTPUT_SUFFIX
         PRINT( ERROR_OUTPUT_SUFFIX );

@@ -35,73 +35,73 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <util/Name.h>
 
 
-typedef struct Compiler Compiler;
+typedef struct Interpreter Interpreter;
 
 
 /** Constructor.
     \param env  an environment for the compiler to act upon */
-extern Compiler *
-compiler__new( Environment *env, boolean quiet );
+extern Interpreter *
+interpreter__new( Environment *env, boolean quiet );
 
 
 /** Destructor. */
 extern void
-compiler__delete( Compiler *c );
+interpreter__delete( Interpreter *c );
 
 
 extern Environment *
-compiler__environment( Compiler *c );
+interpreter__environment( Interpreter *c );
 
 
 extern Namespace_o *
-compiler__working_namespace( Compiler *c );
+interpreter__working_namespace( Interpreter *c );
 
 
 /** yyparse is invoked here. */
 extern p2_parser__exit_state
-compiler__parse( Compiler *c );
+interpreter__parse( Interpreter *c );
 
 
 /******************************************************************************/
 
 extern Name *
-compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o );
+interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o );
 
 extern Name *
-compiler__name_of__full( Compiler *c, Namespace_o *nso, const Object *o );
+interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o );
 
 
 /******************************************************************************/
 
 
 extern void
-compiler__serialize( Compiler *c, char *path );
+interpreter__serialize( Interpreter *c, char *path );
 
 extern void
-compiler__deserialize( Compiler *c, char *path );
+interpreter__deserialize( Interpreter *c, char *path );
 
 
 /* Externally linked functions for the parser *********************************/
 
 
 extern int
-compiler__evaluate_command( Compiler *c, char *name, Ast *args );
+interpreter__evaluate_command( Interpreter *c, char *name, Ast *args );
 
 extern int
-compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr );
+interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr );
 
 /** \note  Error messages are not suppressed by --quiet */
 extern int
-compiler__handle_parse_error( Compiler *c, char *msg );
+interpreter__handle_parse_error( Interpreter *c, char *msg );
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
 extern boolean
-compiler__quiet( Compiler *c );
+interpreter__quiet( Interpreter *c );
 
 /** \return  whether a line number is printed before each new line of input */
 extern boolean
-compiler__show_line_numbers( Compiler *c );
+interpreter__show_line_numbers( Interpreter *c );
 
 
 #endif  /* INTERPRETER_H */

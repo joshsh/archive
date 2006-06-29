@@ -39,7 +39,7 @@ resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 
 
 Object *
-compiler__define( Compiler *c, Name *name, Object *o )
+interpreter__define( Interpreter *c, Name *name, Object *o )
 {
     Namespace_o *nso;
 
@@ -74,7 +74,7 @@ compiler__define( Compiler *c, Name *name, Object *o )
 
 
 Object *
-compiler__undefine( Compiler *c, Name *name )
+interpreter__undefine( Interpreter *c, Name *name )
 {
     Namespace_o *nso;
     Object *o;
@@ -106,7 +106,7 @@ compiler__undefine( Compiler *c, Name *name )
 
 
 Object *
-compiler__resolve( Compiler *c, Name *name )
+interpreter__resolve( Interpreter *c, Name *name )
 {
     Namespace_o *nso;
     Object *o;
@@ -153,13 +153,13 @@ compiler__resolve( Compiler *c, Name *name )
          an object with two possible fully-qualified names, a:b:c:d and x:y:z,
          might yield the name x:y:z even though [...] */
 Name *
-compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
+interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o )
 {
     unsigned int i = 0;
     char *s;
 
     Memory_Manager *m = environment__manager( c->env );
-    Name *name = compiler__name_of__full( c, nso, o );
+    Name *name = interpreter__name_of__full( c, nso, o );
 
     if ( name )
     {
@@ -167,7 +167,7 @@ compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
         {
             s = array__remove( name, i );
 
-            if ( compiler__resolve( c, name) != o )
+            if ( interpreter__resolve( c, name) != o )
             /*if ( namespace__resolve( nso, name, m ) != o )*/
             {
                 array__insert_before( name, i, s );
@@ -184,7 +184,7 @@ compiler__name_of( Compiler *c, Namespace_o *nso, const Object *o )
 
 
 Name *
-compiler__name_of__full( Compiler *c, Namespace_o *nso, const Object *o )
+interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
 {
     Name *name;
     Object *root = environment__root( c->env );

@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 int
-compiler__handle_parse_error( Compiler *c, char *msg )
+interpreter__handle_parse_error( Interpreter *c, char *msg )
 {
     int ret = 0;
 

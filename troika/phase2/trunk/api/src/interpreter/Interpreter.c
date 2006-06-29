@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** Bison parser dependency. */
 extern int
-yyparse( Compiler *c, p2_parser__exit_state *es );
+yyparse( Interpreter *c, p2_parser__exit_state *es );
 
 
 /******************************************************************************/
@@ -32,14 +32,14 @@ yyparse( Compiler *c, p2_parser__exit_state *es );
 static boolean instance_exists = FALSE;
 
 
-Compiler *
-compiler__new( Environment *env, boolean quiet )
+Interpreter *
+interpreter__new( Environment *env, boolean quiet )
 {
-    Compiler *c;
+    Interpreter *c;
 
     if ( instance_exists )
     {
-        ERROR( "compiler__new: concurrent compiler instances not allowed" );
+        ERROR( "interpreter__new: concurrent compiler instances not allowed" );
         c = 0;
         goto finish;
     }
@@ -47,9 +47,9 @@ compiler__new( Environment *env, boolean quiet )
     if ( DEBUG__SAFE && !env )
         abort();
 
-    if ( !( c = new( Compiler ) ) )
+    if ( !( c = new( Interpreter ) ) )
     {
-        ERROR( "compiler__new: allocation failed" );
+        ERROR( "interpreter__new: allocation failed" );
         goto finish;
     }
 
@@ -75,7 +75,7 @@ compiler__new( Environment *env, boolean quiet )
          && ( c->term_t = environment__resolve_type( env, TERM__NAME )->value )
          && ( c->type_t = environment__resolve_type( env, TYPE__NAME )->value ) ) )
     {
-        ERROR( "compiler__new: basic type not found" );
+        ERROR( "interpreter__new: basic type not found" );
         free( c );
         instance_exists = FALSE;
         c = 0;
@@ -84,7 +84,7 @@ compiler__new( Environment *env, boolean quiet )
 
     if ( !( c->commands = create_commands() ) )
     {
-        ERROR( "compiler__new: allocation failed" );
+        ERROR( "interpreter__new: allocation failed" );
         free( c );
         instance_exists = FALSE;
         c = 0;
@@ -103,7 +103,7 @@ finish:
 
 
 void
-compiler__delete( Compiler *c )
+interpreter__delete( Interpreter *c )
 {
     if ( DEBUG__SAFE )
     {
@@ -112,7 +112,7 @@ compiler__delete( Compiler *c )
 
         else if ( c->locked )
         {
-            ERROR( "compiler__delete: can't delete while parsing" );
+            ERROR( "interpreter__delete: can't delete while parsing" );
             abort();
         }
     }
@@ -131,21 +131,21 @@ compiler__delete( Compiler *c )
 
 
 Environment *
-compiler__environment( Compiler *c )
+interpreter__environment( Interpreter *c )
 {
     return c->env;
 }
 
 
 Namespace_o *
-compiler__working_namespace( Compiler *c )
+interpreter__working_namespace( Interpreter *c )
 {
     return c->cur_ns_obj;
 }
 
 
 p2_parser__exit_state
-compiler__parse( Compiler *c )
+interpreter__parse( Interpreter *c )
 {
     p2_parser__exit_state exit_state;
 
@@ -153,7 +153,7 @@ compiler__parse( Compiler *c )
         abort();
 
     #if DEBUG__COMPILER
-    printf( "[...] compiler__parse(%#x)\n", ( int ) c );
+    printf( "[...] interpreter__parse(%#x)\n", ( int ) c );
     #endif
 
     if ( c->locked )
@@ -162,7 +162,7 @@ compiler__parse( Compiler *c )
     c->locked = TRUE;
 
     if ( yyparse( c, &exit_state ) )
-        ERROR( "compiler__parse: parser exited abnormally" );
+        ERROR( "interpreter__parse: parser exited abnormally" );
 
     c->locked = FALSE;
 
@@ -174,14 +174,14 @@ compiler__parse( Compiler *c )
 
 
 boolean
-compiler__quiet( Compiler *c )
+interpreter__quiet( Interpreter *c )
 {
     return c->quiet;
 }
 
 
 boolean
-compiler__show_line_numbers( Compiler *c )
+interpreter__show_line_numbers( Interpreter *c )
 {
     return c->show_line_numbers;
 }

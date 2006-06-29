@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../object/Object-impl.h"
 
 
-struct Compiler
+struct Interpreter
 {
     Environment *env;
     Namespace_o *cur_ns_obj;
@@ -47,13 +47,13 @@ struct Compiler
 
 
 extern Object *
-compiler__define( Compiler *c, Name *name, Object *o );
+interpreter__define( Interpreter *c, Name *name, Object *o );
 
 extern Object *
-compiler__undefine( Compiler *c, Name *name );
+interpreter__undefine( Interpreter *c, Name *name );
 
 extern Object *
-compiler__resolve( Compiler *c, Name *name );
+interpreter__resolve( Interpreter *c, Name *name );
 
 
 extern Dictionary *

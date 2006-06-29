@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 
-typedef int ( *CommandFunction )( Compiler *c, Ast *args );
+typedef int ( *CommandFunction )( Interpreter *c, Ast *args );
 
 
 typedef struct Command
@@ -113,7 +113,7 @@ get_arg( Ast *args, unsigned int i )
 
 
 static int
-command_cp( Compiler *c, Ast *args )
+command_cp( Interpreter *c, Ast *args )
 {
     Object *o, *o2;
     Name *src, *dest;
@@ -121,16 +121,16 @@ command_cp( Compiler *c, Ast *args )
       || !( dest = get_arg( args, 1 ) ) )
         return 0;
 
-    o = compiler__resolve( c, src );
+    o = interpreter__resolve( c, src );
 
     if ( o )
     {
-        if ( ( o2 = compiler__resolve( c, dest ) ) )
+        if ( ( o2 = interpreter__resolve( c, dest ) ) )
         {
             if ( o2->type == c->cur_ns_obj->type )
             {
                 array__enqueue( dest, array__dequeue( src ) );
-                compiler__define( c, dest, o );
+                interpreter__define( c, dest, o );
                 array__enqueue( src, array__dequeue( dest ) );
 
                 if ( !c->quiet )
@@ -152,7 +152,7 @@ command_cp( Compiler *c, Ast *args )
 
 
 static int
-command_gc( Compiler *c, Ast *args )
+command_gc( Interpreter *c, Ast *args )
 {
     Memory_Manager *m = environment__manager( c->env );
     int size_before, size_after;
@@ -182,7 +182,7 @@ command_gc( Compiler *c, Ast *args )
 
 
 static int
-command_help( Compiler *c, Ast *args )
+command_help( Interpreter *c, Ast *args )
 {
     void *helper( char **refp )
     {
@@ -243,7 +243,7 @@ Example:\n\
 
 
 static int
-command_license( Compiler *c, Ast *args )
+command_license( Interpreter *c, Ast *args )
 {
     args = 0;
 
@@ -255,7 +255,7 @@ command_license( Compiler *c, Ast *args )
 
 
 static int
-command_mv( Compiler *c, Ast *args )
+command_mv( Interpreter *c, Ast *args )
 {
     Object *o, *o2;
     Name *src, *dest;
@@ -264,21 +264,21 @@ command_mv( Compiler *c, Ast *args )
       || !( dest = get_arg( args, 1 ) ) )
         return 0;
 
-    o = compiler__resolve( c, src );
+    o = interpreter__resolve( c, src );
 
     if ( o )
     {
-        if ( ( o2 = compiler__resolve( c, dest ) ) )
+        if ( ( o2 = interpreter__resolve( c, dest ) ) )
         {
             if ( o2->type == c->cur_ns_obj->type )
             {
                 namespace__add_simple( o2->value, array__peek( src ), o );
 /*
                 array__enqueue( dest, array__dequeue( src ) );
-                compiler__define( c, dest, o );
+                interpreter__define( c, dest, o );
                 array__enqueue( src, array__dequeue( dest ) );
 */
-                if ( compiler__undefine( c, src ) && !c->quiet )
+                if ( interpreter__undefine( c, src ) && !c->quiet )
                     PRINT( "Reassignment from 1 object.\n" );
             }
 
@@ -297,7 +297,7 @@ command_mv( Compiler *c, Ast *args )
 
 
 static int
-command_new( Compiler *c, Ast *args )
+command_new( Interpreter *c, Ast *args )
 {
     Object *o;
     Name *name;
@@ -308,7 +308,7 @@ command_new( Compiler *c, Ast *args )
     o = memory_manager__object( environment__manager( c->env ),
         c->cur_ns_obj->type, namespace__new(), 0 );
 
-    compiler__define( c, name, o );
+    interpreter__define( c, name, o );
 
     if ( !c->quiet && o )
     {
@@ -322,7 +322,7 @@ command_new( Compiler *c, Ast *args )
 
 
 static int
-command_ns( Compiler *c, Ast *args )
+command_ns( Interpreter *c, Ast *args )
 {
     Object *o;
     Name *name, *fullname;
@@ -330,14 +330,14 @@ command_ns( Compiler *c, Ast *args )
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
-    if ( ( o = compiler__resolve( c, name ) ) )
+    if ( ( o = interpreter__resolve( c, name ) ) )
     {
         if ( o->type != c->cur_ns_obj->type )
             fprintf( stderr, "Error: not a namespace\n" );
 
         else
         {
-            fullname = compiler__name_of__full( c, 0, o );
+            fullname = interpreter__name_of__full( c, 0, o );
             c->cur_ns_obj = o;
 
             if ( !c->quiet )
@@ -357,7 +357,7 @@ command_ns( Compiler *c, Ast *args )
 
 
 static int
-command_quit( Compiler *c, Ast *args )
+command_quit( Interpreter *c, Ast *args )
 {
     args = 0;
 
@@ -369,14 +369,14 @@ command_quit( Compiler *c, Ast *args )
 
 
 static int
-command_rm( Compiler *c, Ast *args )
+command_rm( Interpreter *c, Ast *args )
 {
     Name *name;
 
     if ( !( name = get_arg( args, 0 ) ) )
         return 0;
 
-    if ( compiler__undefine( c, name ) && !c->quiet )
+    if ( interpreter__undefine( c, name ) && !c->quiet )
         printf( "Unassigned 1 object.\n" );
 
     return 0;
@@ -384,7 +384,7 @@ command_rm( Compiler *c, Ast *args )
 
 
 static int
-command_save( Compiler *c, Ast *args )
+command_save( Interpreter *c, Ast *args )
 {
     char *path = c->save_to_path;
 
@@ -398,7 +398,7 @@ command_save( Compiler *c, Ast *args )
 
     else
     {
-        compiler__serialize( c, path );
+        interpreter__serialize( c, path );
         if ( !c->quiet )
             PRINT( "Saved root:data as \"%s\".\n", path );
         return 0;
@@ -407,7 +407,7 @@ command_save( Compiler *c, Ast *args )
 
 
 static int
-command_saveas( Compiler *c, Ast *args )
+command_saveas( Interpreter *c, Ast *args )
 {
     Name *name;
     char *path;
@@ -417,7 +417,7 @@ command_saveas( Compiler *c, Ast *args )
 
     path = array__peek( name );
 
-    compiler__serialize( c, path );
+    interpreter__serialize( c, path );
 
     if ( !c->quiet )
         PRINT( "Saved root:data as \"%s\".\n", path );
@@ -427,7 +427,7 @@ command_saveas( Compiler *c, Ast *args )
 
 
 static int
-command_size( Compiler *c, Ast *args )
+command_size( Interpreter *c, Ast *args )
 {
     args = 0;
 
@@ -546,7 +546,7 @@ failure:
 
 
 int
-compiler__evaluate_command( Compiler *c, char *name, Ast *args )
+interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
 {
     int result = 0;
     int n = count_args( args );

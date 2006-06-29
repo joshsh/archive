@@ -70,17 +70,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Language module dependencies ***********************************************/
 
-typedef struct Compiler Compiler;
+typedef struct Interpreter Interpreter;
 
 extern boolean
-compiler__quiet( Compiler *c );
+interpreter__quiet( Interpreter *c );
 
 extern boolean
-compiler__show_line_numbers( Compiler *c );
+interpreter__show_line_numbers( Interpreter *c );
 
 
 /* ! */
-static Compiler *
+static Interpreter *
 compiler_global;
 
 
@@ -93,7 +93,7 @@ boolean pad_newline;
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
-new_parse( Compiler *c );
+new_parse( Interpreter *c );
 
 /** \return  the current line number.  Starts at 1. */
 int
@@ -108,7 +108,7 @@ static void
 new_token( int /* length */ );
 
 static void
-new_line( Compiler *c );
+new_line( Interpreter *c );
 
 
 /* Debugging output ***********************************************************/
@@ -450,13 +450,13 @@ void new_token( int length )
 }
 
 
-void new_line( Compiler *c )
+void new_line( Interpreter *c )
 {
     line_number++;
     column_number = last_column_number = 0;
 
     /* Decorate command-line input. */
-    if ( !compiler__quiet( c ) )
+    if ( !interpreter__quiet( c ) )
     {
 
         if ( pad_newline )
@@ -465,7 +465,7 @@ void new_line( Compiler *c )
         pad_newline = FALSE;
 
         /* Display a line number at the beginning of each new line of input. */
-        if ( compiler__show_line_numbers( c ) )
+        if ( interpreter__show_line_numbers( c ) )
             PRINT( "%d ", line_number );
 
         /* Add a prefix to each new line of input, to distinguish it from
@@ -479,7 +479,7 @@ void new_line( Compiler *c )
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
-new_parse( Compiler *c )
+new_parse( Interpreter *c )
 {
     compiler_global = c;
     line_number = 0;

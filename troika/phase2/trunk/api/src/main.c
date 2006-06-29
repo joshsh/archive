@@ -190,7 +190,7 @@ read_options ( int argc, char **argv, char *source_file )
 }
 
 
-/** Instantiates an Environment and attaches a Compiler to interact with the
+/** Instantiates an Environment and attaches an Interpreter to interact with the
     command line. */
 int
 main( int argc, char *argv[] )
@@ -198,7 +198,7 @@ main( int argc, char *argv[] )
     int status = EXIT_SUCCESS;
 
     Environment *env;
-    Compiler *compiler;
+    Interpreter *compiler;
 
     static char source_file[0x100];
     *source_file = '\0';
@@ -214,14 +214,14 @@ main( int argc, char *argv[] )
 
     else
     {
-        if ( ( compiler = compiler__new( env, quiet_flag ) ) )
+        if ( ( compiler = interpreter__new( env, quiet_flag ) ) )
         {
             if ( *source_file )
             {
                 if ( DEBUG__MAIN )
                     PRINT( "Loading namespace from file...\n" );
 
-                compiler__deserialize( compiler, source_file );
+                interpreter__deserialize( compiler, source_file );
             }
 
             if ( !quiet_flag )
@@ -231,10 +231,10 @@ main( int argc, char *argv[] )
                 REFRESH;
             }
 
-            if ( compiler__parse( compiler ) )
+            if ( interpreter__parse( compiler ) )
                 ERROR( "main: parse failed" );
 
-            compiler__delete( compiler );
+            interpreter__delete( compiler );
         }
 
         else

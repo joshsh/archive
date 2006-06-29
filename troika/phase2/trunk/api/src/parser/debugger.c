@@ -38,23 +38,23 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../settings.h"
 
 
-typedef struct Compiler
+typedef struct Interpreter
 {
     int bogus;
 
-} Compiler;
+} Interpreter;
 
 
 /** Bison parser dependency. */
 extern int
-yyparse( Compiler *c, p2_parser__exit_state *es );
+yyparse( Interpreter *c, p2_parser__exit_state *es );
 
 
 /******************************************************************************/
 
 
 /** Mock command evaluator. */
-int compiler__evaluate_command( Compiler *c, char *name, Ast *args )
+int interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
 {
     int ret = 0;
     c = 0;
@@ -85,7 +85,7 @@ int compiler__evaluate_command( Compiler *c, char *name, Ast *args )
 
 
 /** Mock expression evaluator. */
-int compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
+int interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 {
     int ret = 0;
     Ast *a;
@@ -114,7 +114,7 @@ int compiler__evaluate_expression( Compiler *c, Name *name, Ast *expr )
 
 
 /** Mock parse error handler. */
-int compiler__handle_parse_error( Compiler *c, char *msg )
+int interpreter__handle_parse_error( Interpreter *c, char *msg )
 {
     int ret = 0;
     c = 0;
@@ -136,7 +136,7 @@ int compiler__handle_parse_error( Compiler *c, char *msg )
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-boolean compiler__quiet( Compiler *c )
+boolean interpreter__quiet( Interpreter *c )
 {
     c = 0;
     return FALSE;
@@ -144,7 +144,7 @@ boolean compiler__quiet( Compiler *c )
 
 
 /** \return  whether a line number is printed before each new line of input */
-boolean compiler__show_line_numbers( Compiler *c )
+boolean interpreter__show_line_numbers( Interpreter *c )
 {
     c = 0;
     return TRUE;

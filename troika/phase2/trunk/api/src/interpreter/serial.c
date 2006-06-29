@@ -39,7 +39,7 @@ typedef struct Xml_Encode_Ctx Xml_Encode_Ctx;
 
 struct Xml_Encode_Ctx
 {
-    Compiler *compiler;
+    Interpreter *compiler;
 
     Hash_Map *serializers;
 
@@ -53,7 +53,7 @@ typedef struct Xml_Decode_Ctx Xml_Decode_Ctx;
 
 struct Xml_Decode_Ctx
 {
-    Compiler *compiler;
+    Interpreter *compiler;
 
     Hash_Map *deserializers;
 
@@ -574,7 +574,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         return 0;
     }
 
-    env = compiler__environment( state->compiler );
+    env = interpreter__environment( state->compiler );
 
     /* Full form. */
     if ( ( attr = element__attr( el, ( uc* ) "type", 0 ) ) )
@@ -765,9 +765,9 @@ add_timestamp( Element *el )
 
 
 static Hash_Map *
-multiref_ids( Compiler *c )
+multiref_ids( Interpreter *c )
 {
-    Environment *env = compiler__environment( c );
+    Environment *env = interpreter__environment( c );
     Set *multirefs = memory_manager__get_multirefs
         ( environment__manager( env ), environment__data( env ) );
 
@@ -790,7 +790,7 @@ multiref_ids( Compiler *c )
 
     /* Force the working name space to be at top level. */
     tmp = new( Object* );
-    *tmp = compiler__working_namespace( c );
+    *tmp = interpreter__working_namespace( c );
     hash_multiref( tmp );
     free( tmp );
 
@@ -803,7 +803,7 @@ multiref_ids( Compiler *c )
 
 
 void
-compiler__serialize( Compiler *c, char *path )
+interpreter__serialize( Interpreter *c, char *path )
 {
     Document *doc;
     Element *root;
@@ -854,7 +854,7 @@ compiler__serialize( Compiler *c, char *path )
         abort();
 
     #if DEBUG__SERIAL
-    printf( "[] compiler__serialize(%#x, %s)\n", ( int ) c, path );
+    printf( "[] interpreter__serialize(%#x, %s)\n", ( int ) c, path );
     #endif
 
     xmldom__init();
@@ -911,7 +911,7 @@ compiler__serialize( Compiler *c, char *path )
 
 
 void
-compiler__deserialize( Compiler *c, char *path )
+interpreter__deserialize( Interpreter *c, char *path )
 {
     Xml_Decode_Ctx state = { 0, 0, 0, 0 };
     Element *el, *child;
@@ -926,18 +926,18 @@ compiler__deserialize( Compiler *c, char *path )
 
     if ( !( doc = document__read_from_file( path ) ) )
     {
-        ERROR( "compiler__deserialize: XML read failure" );
+        ERROR( "interpreter__deserialize: XML read failure" );
         return;
     }
 
     el = document__root( doc );
     if ( !el || strcmp( ( char* ) element__name( el ), ENCODING__ROOT__XML__NAME ) )
     {
-        ERROR( "compiler__deserialize: bad or missing root element" );
+        ERROR( "interpreter__deserialize: bad or missing root element" );
         goto finish;
     }
 
-    env = compiler__environment( c );
+    env = interpreter__environment( c );
 
     state.compiler = c;
 
@@ -975,8 +975,8 @@ compiler__deserialize( Compiler *c, char *path )
 
         else
         {
-            ERROR( "compiler__deserialize: unknown element type" );
-            /*ERROR( "compiler__deserialize: unknown element type: \"%s\"", el_name );*/
+            ERROR( "interpreter__deserialize: unknown element type" );
+            /*ERROR( "interpreter__deserialize: unknown element type: \"%s\"", el_name );*/
             goto finish;
         }
 
@@ -985,16 +985,16 @@ compiler__deserialize( Compiler *c, char *path )
 
     if ( !state.root || state.root->type != c->ns_t )
     {
-        ERROR( "compiler__deserialize: root namespace not found" );
+        ERROR( "interpreter__deserialize: root namespace not found" );
         goto finish;
     }
 
     /* Import all objects from the document root namespace to the compiler's
        working namespace. */
-    namespace__add_all( compiler__working_namespace( c )->value, state.root->value );
+    namespace__add_all( interpreter__working_namespace( c )->value, state.root->value );
 /*
     dictionary__add_all(
-        ( ( Namespace* ) compiler__working_namespace( c )->value )->children,
+        ( ( Namespace* ) interpreter__working_namespace( c )->value )->children,
         ( ( Namespace* ) state.root->value )->children );
 */
 
