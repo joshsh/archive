@@ -1,3 +1,14 @@
+
+
+
+>>  CONS 1 (CONS 2 ()) =: ntl;
+
+...where CONS is an alias for the V combinator.
+
+>>  TAIL (TAIL ntl);
+
+
+
                                  P H A S E 2
 
 An experimental language API and interpreter which combine ideas from functional programming and the Semantic Web.  Also includes a graphical namespace browser (requires Qt4 to compile) in its early stages.

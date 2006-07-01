@@ -242,6 +242,10 @@ memory_manager__walk
             ? DEREF( opp )
             : *opp;
 
+        /* Don't try to walk through a null pointer. */
+        if ( FIRST_CLASS_NULL && !o )
+            return BREAK;
+
         /* If the object is already marked, abort. */
         if ( visited( o ) )
             return BREAK;

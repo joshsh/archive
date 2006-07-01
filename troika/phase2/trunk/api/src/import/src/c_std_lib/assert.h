@@ -1,0 +1,3 @@
+/*
+void assert(int expression);
+*/

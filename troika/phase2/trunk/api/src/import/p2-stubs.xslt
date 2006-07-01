@@ -34,6 +34,7 @@ extern &quot;C&quot;
 
 #include &lt;stdlib.h&gt;  /* malloc */
 
+#include &lt;defs.h&gt;
 <xsl:text />
         <xsl:for-each select="compounddef">
             <xsl:if test="count(sectiondef) > 0">

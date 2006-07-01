@@ -1,0 +1,39 @@
+_new lists;
+_ns lists;
+
+(: Note: that's the "oh" combinator, not a zero. :)
+HEAD := O (K K);
+TAIL := O (K (S K));
+CONS := V;
+
+S' := B (B S) B;
+
+(: list:map -- forms a new list by applying a function to each element of the
+               argument list :)
+
+_ns lists;
+
+_new zipper;
+zipper:t := B (C B (C B TAIL)) (B (S' CONS) (C B HEAD));
+zipper:map := B Y zipper:t;
+zipper:list := CONS 1 (CONS 2 (CONS 3 ()));
+zipper:README := "map myFunc myNullTerminatedList";
+
+_ns zipper;
+map (int_int__multiply 3) list =: result;
+
+_ns lists;
+HEAD result;
+HEAD (TAIL result);
+HEAD (TAIL (TAIL result));
+HEAD (TAIL (TAIL (TAIL result)));
+
+(: list:summation -- use a pairwise "summing" function to apply recursively
+                     to a list :)
+
+_new sum;
+sum:t := C(B(C(C S' HEAD))(C B TAIL));
+sum:summation := B Y sum:t;
+
+summation (B int_int__add putchar) =: sum:print;
+print list;

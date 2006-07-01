@@ -1,0 +1,3 @@
+/*
+offsetof(stype, m);
+*/

@@ -35,8 +35,22 @@ noinst_HEADERS = \
 	src/cstring.h		\
 	src/toys.h		\
 	src/xpm.h		\
-	src/Set-operations.h
-
+	src/Set-operations.h	\
+	src/c_std_lib/setjmp.h	\
+	src/c_std_lib/ctype.h	\
+	src/c_std_lib/float.h	\
+	src/c_std_lib/stdio.h	\
+	src/c_std_lib/assert.h	\
+	src/c_std_lib/limits.h	\
+	src/c_std_lib/time.h	\
+	src/c_std_lib/locale.h	\
+	src/c_std_lib/errno.h	\
+	src/c_std_lib/stdarg.h	\
+	src/c_std_lib/stdlib.h	\
+	src/c_std_lib/string.h	\
+	src/c_std_lib/signal.h	\
+	src/c_std_lib/math.h	\
+	src/c_std_lib/stddef.h
 
 ## Note: avoids intermediate targets which would cause the generated Makefile to
 ## try to rebuild p2-stubs.c (this requires doxygen and xsltproc).

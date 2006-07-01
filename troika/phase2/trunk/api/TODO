@@ -7,6 +7,16 @@
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
     object ^ print ^ cycles
+    serialization ^ null
+
+[coding]
+    need code review for portability
+    address GCC warnings
+    use String instead of char* for Encoders
+
+[documentation]
+    API documentation
+    install dot for dependency graphs
 
 [reduction]
     NULL-proof the new graph reducer
@@ -22,12 +32,11 @@
     doxygen script --> revision # in docs
 
 [other]
-    printing ^ namespace__find
+    _new ^ check whether object already exists
     triples
         sets ^ distribution
         meta-functions
     RDF/XML and N3 import / export
-    null handling
 
 
 gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libQtCore_debug.so.4)
@@ -46,24 +55,3 @@ gdb...ipk
 	This package seems to depend on other packages.  Please install them, too.
 	libncurses.so.5
 
-
-compiler__delete
-	[...]
-	delete__commands
-	[...]
-
-environment__delete
-	memory_manager__set_root
-	memory_manager__walk
-		object__trace
-			namespace__walk
-				dictionary__walk
-					hash_table__walk
-	sweep
-		collection__exclude_if
-			bunch__walk
-				array__size
-				array__get
-				array__get(a=0x11480, i=1)
-					--> Error:array__get: array index out of bounds.
-				--> SIGSEGV
