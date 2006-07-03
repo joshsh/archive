@@ -15,6 +15,8 @@ libp2parser_la_SOURCES = \
 	lexer.l		\
 	parser.y
 
+EXTRA_DIST = README
+
 
 ## Command-line debugger #######################################################
 

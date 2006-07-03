@@ -12,3 +12,10 @@ libp2utils_la_SOURCES = \
 	Set.c		\
 	String.c	\
 	Term.c
+
+## Test ########################################################################
+
+debugger_LDADD = libp2utils.la
+
+debugger_SOURCES = \
+	debugger.c

@@ -25,6 +25,9 @@ Combinators
 Association
 Phase2 
 
+Primitives
+importing
+r. transparency
 
 
 An experimental language API and interpreter which combine ideas from functional programming and the Semantic Web.  Also includes a graphical namespace browser (requires Qt4 to compile) in its early stages.

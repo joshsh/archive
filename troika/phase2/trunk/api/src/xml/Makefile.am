@@ -17,3 +17,9 @@ xmldom_test_SOURCES = \
 	xmldom-test.c
 
 xmldom_test_LDADD = libp2xml.la
+
+
+################################################################################
+
+## Note: gsoap subdirectory is not included in the distribution.
+EXTRA_DIST = libxml2/README

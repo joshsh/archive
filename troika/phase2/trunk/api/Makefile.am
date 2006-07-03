@@ -21,7 +21,8 @@ include aminclude.am
 
 $(DX_DOCDIR) :  doxygen-doc
 
-EXTRA_DIST = include bootstrap cleanup m4 \
+EXTRA_DIST = include bootstrap cleanup m4 aminclude.am versionfilter.sh \
+	AUTHORS COPYING INSTALL NEWS README TODO \
 	doxygen.cfg $(DX_DOCDIR)
 
 ## Exclude any SVN version control directories from the distribution.
