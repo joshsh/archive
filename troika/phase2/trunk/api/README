@@ -11,6 +11,22 @@
 
                                  P H A S E 2
 
+Namespaces
+
+Zero Element
+The zero element, represented by the empty expression "()", is a unique value
+such that for any primitive value v,
+    () v = v () = ()
+The zero element has no type, and behaves like the equivalent entity in Lisp.
+It is particularly useful for halting recursion.
+
+Combinators
+
+Association
+Phase2 
+
+
+
 An experimental language API and interpreter which combine ideas from functional programming and the Semantic Web.  Also includes a graphical namespace browser (requires Qt4 to compile) in its early stages.
 
 
