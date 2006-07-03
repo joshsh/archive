@@ -1,6 +1,8 @@
 /**
 
-\file  defs.h
+\file  common.h
+
+\brief  Data and callback type aliases.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,8 +27,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef DEFS_H
-#define DEFS_H
+#ifndef COMMON_H
+#define COMMON_H
 
 
 typedef int boolean;
@@ -65,6 +67,6 @@ typedef void            ( *Generic_f )( void );
 #define NOPROPS 0
 
 
-#endif  /* DEFS_H */
+#endif  /* COMMON_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

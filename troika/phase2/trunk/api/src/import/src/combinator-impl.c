@@ -2,7 +2,8 @@
 #include "combinator-impl.h"
 
 
-Combinator *combinator__decode( cstring *buffer )
+Combinator *
+combinator__decode( cstring *buffer )
 {
     Combinator *c = new( Combinator );
 
@@ -58,7 +59,8 @@ Combinator *combinator__decode( cstring *buffer )
 }
 
 
-void combinator__encode( Combinator *c, cstring *buffer )
+void
+combinator__encode( Combinator *c, cstring *buffer )
 {
     switch ( *c )
     {

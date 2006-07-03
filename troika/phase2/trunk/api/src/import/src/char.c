@@ -2,7 +2,8 @@
 #include "char.h"
 
 
-char *char__decode( cstring *buffer )
+char *
+char__decode( cstring *buffer )
 {
     char *c = new( char );
     *c = *buffer;
@@ -10,13 +11,15 @@ char *char__decode( cstring *buffer )
 }
 
 
-void char__encode( char *c, cstring *buffer )
+void
+char__encode( char *c, cstring *buffer )
 {
     sprintf( buffer, "%c", *c );
 }
 
 
-int char__compare_to( char c1, char c2 )
+int
+char__compare_to( char c1, char c2 )
 {
     return ( c1 == c2 ) ? 0 : c1 < c2 ? -1 : 1;
 }

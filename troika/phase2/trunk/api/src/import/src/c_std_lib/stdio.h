@@ -1,4 +1,4 @@
-#include <defs.h>
+#include <common.h>
 
 /*
 FILE* fopen(const char* filename, const char* mode);

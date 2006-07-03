@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define TYPE_H
 
 
-#include <defs.h>
+#include <common.h>
 #include <util/String.h>
 
 

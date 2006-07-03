@@ -5,10 +5,12 @@
 
 
 /** $decoder */
-Combinator *combinator__decode( cstring *buffer );
+extern Combinator *
+combinator__decode( cstring *buffer );
 
 /** $encoder */
-void combinator__encode( Combinator *c, cstring *buffer );
+extern void
+combinator__encode( Combinator *c, cstring *buffer );
 
 
 #endif  /* COMBINATOR_IMPL_H */

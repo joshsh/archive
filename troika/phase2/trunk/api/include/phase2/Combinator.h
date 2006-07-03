@@ -26,6 +26,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COMBINATOR_H
 
 
+/** A value representing any of a number of basic, built-in combinators. */
+typedef enum Combinator Combinator;
+
 enum Combinator
 {
     B_combinator,
@@ -43,8 +46,6 @@ enum Combinator
     w_combinator,
     Y_combinator
 };
-
-typedef enum Combinator Combinator;
 
 
 #endif  /* COMBINATOR_H */

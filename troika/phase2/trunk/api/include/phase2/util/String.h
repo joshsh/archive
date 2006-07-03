@@ -30,9 +30,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef STRING_H
 #define STRING_H
 
-#include <stdarg.h>
+/*#include <stdarg.h>*/
 
-#include <defs.h>
+/*#include <common.h>*/
 
 typedef struct String String;
 

@@ -59,7 +59,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include "parser.h"
-#include <defs.h>
+#include <common.h>
 #include "../settings.h"
 
 /*#include "header.h"*/

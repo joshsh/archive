@@ -20,7 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include <defs.h>
+#include <common.h>
 #include <xml/xmldom.h>
 #include "../../settings.h"
 
@@ -32,7 +32,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static int initialized = 0 ;
 
 
-void xmldom__init( )
+void
+xmldom__init( )
 {
     if ( !initialized )
     {
@@ -45,7 +46,8 @@ void xmldom__init( )
 }
 
 
-void xmldom__end( )
+void
+xmldom__end( )
 {
     if ( initialized )
     {
@@ -63,28 +65,29 @@ void xmldom__end( )
 /* Attr *******************************************************************/
 
 
-void attr__delete( Attr *attr )
+void
+attr__delete( Attr *attr )
 {
     xmlFreeProp(( xmlAttr* ) attr ) ;
 }
 
 
-const unsigned char *attr__name( Attr *attr )
+const unsigned char *
+attr__name( Attr *attr )
 {
     return (( xmlAttr* ) attr )->name ;
 }
 
 
-Namespc *attr__namespace( Attr *attr )
+Namespc *
+attr__namespace( Attr *attr )
 {
     return ( Namespc* ) (( xmlAttr* ) attr )->ns ;
 }
 
 
-Attr *attr__new( Element *el,
-                         unsigned char *name,
-                         unsigned char *value,
-                         Namespc *ns )
+Attr *
+attr__new( Element *el, unsigned char *name, unsigned char *value, Namespc *ns )
 {
     xmlAttr *attr ;
 
@@ -97,13 +100,15 @@ Attr *attr__new( Element *el,
 }
 
 
-Attr *attr__next_sibling( Attr *attr )
+Attr *
+attr__next_sibling( Attr *attr )
 {
     return ( Attr* ) (( xmlAttr* ) attr )->next ;
 }
 
 
-const unsigned char *attr__value( Attr *attr )
+const unsigned char *
+attr__value( Attr *attr )
 {
     return xmlNodeGetContent(( xmlNode* ) attr ) ;
 }
@@ -112,13 +117,15 @@ const unsigned char *attr__value( Attr *attr )
 /* Document ***************************************************************/
 
 
-void document__delete( Document *doc )
+void
+document__delete( Document *doc )
 {
     xmlFreeDoc( ( xmlDoc* ) doc ) ;
 }
 
 
-Document *document__new( )
+Document *
+document__new( )
 {
     /* Note: BAD_CAST == ( xmlChar* ) == ( unsigned char* ) */
     xmlDoc *doc = xmlNewDoc( BAD_CAST "1.0" ) ;
@@ -127,27 +134,31 @@ Document *document__new( )
 }
 
 
-Document *document__read_from_file( char *path )
+Document *
+document__read_from_file( char *path )
 {
     xmlDoc *doc = xmlReadFile( path, NULL, 0 ) ;
     return ( Document * ) doc ;
 }
 
 
-Element *document__root( Document *doc )
+Element *
+document__root( Document *doc )
 {
     xmlNode *root = xmlDocGetRootElement( ( xmlDoc* ) doc ) ;
     return ( Element* ) root ;
 }
 
 
-void document__set_root( Document *doc, Element *root )
+void
+document__set_root( Document *doc, Element *root )
 {
     xmlDocSetRootElement( ( xmlDoc* ) doc, ( xmlNode* ) root ) ;
 }
 
 
-void document__write_to_file( Document *doc, char *path )
+void
+document__write_to_file( Document *doc, char *path )
 {
     xmlSaveFormatFileEnc( path, ( xmlDoc* ) doc, "UTF-8", 1 ) ;
 }
@@ -156,22 +167,23 @@ void document__write_to_file( Document *doc, char *path )
 /* Element ****************************************************************/
 
 
-void element__add_child( Element *el, Element *child )
+void
+element__add_child( Element *el, Element *child )
 {
     xmlAddChild( ( xmlNode* ) el,  ( xmlNode* ) child ) ;
 }
 
 
-void element__add_text( Element *el, unsigned char *text )
+void
+element__add_text( Element *el, unsigned char *text )
 {
     xmlNode* child = xmlNewText( text ) ;
     xmlAddChild( ( xmlNode* ) el, child ) ;
 }
 
 
-Attr *element__attr( Element *el,
-                             unsigned char *attr_name,
-                             unsigned char *namespace_uri )
+Attr *
+element__attr( Element *el, unsigned char *attr_name, unsigned char *namespace_uri )
 {
     xmlAttr *attr;
 
@@ -184,19 +196,22 @@ Attr *element__attr( Element *el,
 }
 
 
-void element__delete( Element *el )
+void
+element__delete( Element *el )
 {
     xmlFreeNode(( xmlNode* ) el ) ;
 }
 
 
-Attr *element__first_attr( Element *el )
+Attr *
+element__first_attr( Element *el )
 {
     return ( Attr* ) (( xmlNode* ) el )->properties ;
 }
 
 
-Element *element__first_child( Element *el )
+Element *
+element__first_child( Element *el )
 {
     xmlNode *node = (( xmlNode* ) el )->children ;
     while ( node && node->type != XML_ELEMENT_NODE )
@@ -206,21 +221,22 @@ Element *element__first_child( Element *el )
 }
 
 
-const unsigned char *element__name( Element *el )
+const unsigned char *
+element__name( Element *el )
 {
     return (( xmlNode* ) el )->name ;
 }
 
 
-Namespc *element__namespace( Element *el )
+Namespc *
+element__namespace( Element *el )
 {
     return ( Namespc* ) (( xmlNode* ) el)->ns ;
 }
 
 
-Element *element__new( Document *doc,
-                               unsigned char *name,
-                               Namespc *ns )
+Element *
+element__new( Document *doc, unsigned char *name, Namespc *ns )
 {
     /* Note: apparently libxml2 makes its own copy of the element name. */
     xmlNode* el = xmlNewNode( 0, name );
@@ -235,7 +251,8 @@ Element *element__new( Document *doc,
 }
 
 
-Element *element__next_sibling( Element *el )
+Element *
+element__next_sibling( Element *el )
 {
     xmlNode *node = (( xmlNode* ) el )->next ;
     while ( node && node->type != XML_ELEMENT_NODE )
@@ -245,13 +262,15 @@ Element *element__next_sibling( Element *el )
 }
 
 
-void element__set_namespace( Element *el, Namespc *ns )
+void
+element__set_namespace( Element *el, Namespc *ns )
 {
     xmlSetNs( ( xmlNode* ) el, ( xmlNs* ) ns );
 }
 
 
-const unsigned char *element__text( Element *el )
+const unsigned char *
+element__text( Element *el )
 {
     return xmlNodeGetContent(( xmlNode* ) el ) ;
 }
@@ -260,27 +279,29 @@ const unsigned char *element__text( Element *el )
 /* Namespc **************************************************************/
 
 
-void namespc__delete( Namespc *ns )
+void
+namespc__delete( Namespc *ns )
 {
     xmlFreeNs(( xmlNs* ) ns ) ;
 }
 
 
-const unsigned char *namespc__href( Namespc *ns )
+const unsigned char *
+namespc__href( Namespc *ns )
 {
     return (( xmlNs* ) ns )->href ;
 }
 
 
-Namespc *namespc__new( Element *el,
-                                   unsigned char *href,
-                                   unsigned char *prefix )
+Namespc *
+namespc__new( Element *el, unsigned char *href, unsigned char *prefix )
 {
     return ( Namespc* ) xmlNewNs(( xmlNode* ) el, href, prefix ) ;
 }
 
 
-const unsigned char *namespc__prefix( Namespc *ns )
+const unsigned char *
+namespc__prefix( Namespc *ns )
 {
     return (( xmlNs* ) ns )->prefix ;
 }

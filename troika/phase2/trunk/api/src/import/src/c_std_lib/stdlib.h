@@ -1,4 +1,4 @@
-#include <defs.h>
+#include <common.h>
 
 int abs(int n);
 /*

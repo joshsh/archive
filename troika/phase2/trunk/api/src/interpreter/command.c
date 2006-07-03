@@ -225,25 +225,15 @@ Syntax:\n\
 
         PRINT( "\
 Example:\n\
-  (: Create a namespace. :)\n\
   _new floatmath;\n\
-  (: Put something in the namespace. :)\n\
   floatmath:pi := 3.14159;\n\
-  (: Navigate to the new namespace. :)\n\
   _ns floatmath;\n\
-  (: Give this primitive a more convenient alias. :)\n\
   * := double_double__multiply;\n\
-  (: This function is defined \"after the fact\". :)\n\
   * (* 2.0 pi) =: circumference;\n\
-  (: Break out of floatmath. :)\n\
   _ns root:data;\n\
-  (: Apply the new function. :)\n\
   circumference 10.0 =: result;\n\
-  (: Look at floatmath. :)\n\
   floatmath;\n\
-  (: Look at the working namespace. :)\n\
   here;\n\
-  (: Look at the root namespace. :)\n\
   root;\n" );
 
     }

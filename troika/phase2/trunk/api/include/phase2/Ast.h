@@ -2,7 +2,7 @@
 
 \file  Ast.h
 
-\brief  Defines a Phase2 abstract syntax tree.
+\brief  Defines an abstract syntax tree.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -57,7 +57,7 @@ enum Ast__Type
     NAME_T,     /**< A URN-like sequence of name fragments. */
     NULL_T,
     STRING_T,
-    TERM_T,     /**< A term composed of Asts. */
+    TERM_T,     /**< A term composed of ASTs. */
     VOID_T      /**< A generic pointer to data not owned by the AST. */
 };
 
@@ -76,6 +76,9 @@ struct Ast
 
     void *value;
 };
+
+
+/******************************************************************************/
 
 
 /** \param bag  a Array of AST nodes
@@ -107,6 +110,9 @@ ast__string( char *s );
     \return  a new AST node of type TERM */
 extern Ast *
 ast__term( Term *term );
+
+
+/******************************************************************************/
 
 
 extern Ast *

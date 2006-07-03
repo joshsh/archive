@@ -34,15 +34,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
 
 #include <Ast.h>
-#include <defs.h>
+#include <common.h>
 #include "../settings.h"
 
 
-typedef struct Interpreter
+typedef struct Interpreter Interpreter;
+
+struct Interpreter
 {
     int bogus;
-
-} Interpreter;
+};
 
 
 /** Bison parser dependency. */
@@ -54,7 +55,8 @@ yyparse( Interpreter *c, p2_parser__exit_state *es );
 
 
 /** Mock command evaluator. */
-int interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
+int
+interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
 {
     int ret = 0;
     c = 0;
@@ -85,7 +87,8 @@ int interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
 
 
 /** Mock expression evaluator. */
-int interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
+int
+interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 {
     int ret = 0;
     Ast *a;
@@ -114,7 +117,8 @@ int interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 
 
 /** Mock parse error handler. */
-int interpreter__handle_parse_error( Interpreter *c, char *msg )
+int
+interpreter__handle_parse_error( Interpreter *c, char *msg )
 {
     int ret = 0;
     c = 0;
@@ -136,7 +140,8 @@ int interpreter__handle_parse_error( Interpreter *c, char *msg )
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
-boolean interpreter__quiet( Interpreter *c )
+boolean
+interpreter__quiet( Interpreter *c )
 {
     c = 0;
     return FALSE;
@@ -144,7 +149,8 @@ boolean interpreter__quiet( Interpreter *c )
 
 
 /** \return  whether a line number is printed before each new line of input */
-boolean interpreter__show_line_numbers( Interpreter *c )
+boolean
+interpreter__show_line_numbers( Interpreter *c )
 {
     c = 0;
     return TRUE;
@@ -157,7 +163,8 @@ boolean interpreter__show_line_numbers( Interpreter *c )
 static int active = 0;
 
 /** yyparse is invoked here. */
-p2_parser__exit_state parse( void )
+p2_parser__exit_state
+parse( void )
 {
     p2_parser__exit_state return_state;
     int yyparse__exit_value;
@@ -179,7 +186,8 @@ p2_parser__exit_state parse( void )
 }
 
 
-int main( void )
+int
+main( int argc, char *argv[] )
 {
     PRINT( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", VERSION );
 
