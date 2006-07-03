@@ -1,7 +1,8 @@
 Download :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Get the latest release of libxml2 from:
+Get the latest version of libxml2 from:
      http://www.xmlsoft.org/downloads.html
+
 
 Install ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

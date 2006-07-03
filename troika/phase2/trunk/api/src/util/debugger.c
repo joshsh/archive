@@ -38,7 +38,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 int stack_depth = 0;
 
 
-void func_begin( char *name )
+void
+func_begin( char *name )
 {
    int i;
 
@@ -53,7 +54,8 @@ void func_begin( char *name )
 }
 
 
-void func_end( char *name )
+void
+func_end( char *name )
 {
    int i;
    stack_depth--;
@@ -70,7 +72,8 @@ void func_end( char *name )
 /******************************************************************************/
 
 
-void *is_odd( void *p )
+void *
+is_odd( void *p )
 {
     void *r = VP (( unsigned int ) p % 2 );
     if ( r )
@@ -79,7 +82,8 @@ void *is_odd( void *p )
 }
 
 
-void *is_even( void *p )
+void *
+is_even( void *p )
 {
     void *r = VP !(( unsigned int ) p % 2 );
     if ( r )
@@ -88,7 +92,8 @@ void *is_even( void *p )
 }
 
 
-void *always( void *p )
+void *
+always( void *p )
 {
     free( p );
     return VP 1;
@@ -98,7 +103,8 @@ void *always( void *p )
 /******************************************************************************/
 
 
-void array__debug( )
+void
+array__debug( )
 {
     func_begin( "array__debug" );
 
@@ -112,7 +118,8 @@ void array__debug( )
 }
 
 
-void bunch__debug( )
+void
+bunch__debug( )
 {
     int i;
 
@@ -138,7 +145,8 @@ void bunch__debug( )
 }
 
 
-void hash_table__debug( )
+void
+hash_table__debug( )
 {
     int i;
 
@@ -182,7 +190,8 @@ void hash_table__debug( )
 }
 
 
-void set__debug( )
+void
+set__debug( )
 {
     int i;
 
@@ -231,7 +240,8 @@ void set__debug( )
 }
 
 
-void term__debug( )
+void
+term__debug( )
 {
     int i;
 
@@ -269,7 +279,8 @@ void term__debug( )
 /******************************************************************************/
 
 
-int main( int argc, char **argv )
+int
+main( int argc, char *argv[] )
 {
     func_begin( "main" );
 

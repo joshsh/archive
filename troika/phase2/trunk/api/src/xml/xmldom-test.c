@@ -35,7 +35,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define UC  ( unsigned char* )
 
 
-int main( int argc, char **argv )
+int
+main( int argc, char *argv[] )
 {
     Document *doc;
     Element *el, *el2;

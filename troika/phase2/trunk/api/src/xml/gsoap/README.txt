@@ -1,6 +1,6 @@
-Note: this gSOAP toolit interface is out-of-date.  xmldom-gsoap.c should be made
-to agree with ../xmldom.h if gSOAP's DOM parser is ever drawn back into the
-project, and xmldom.h should be deleted.
+Note: this gSOAP interface is out-of-date.  xmldom-gsoap.c should be made to
+agree with ../xmldom.h if gSOAP's DOM parser is ever used again in this project,
+and xmldom.h should be deleted.
 
 
 Download :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
