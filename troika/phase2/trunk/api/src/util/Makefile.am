@@ -1,5 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
+noinst_PROGRAMS = debugger
 noinst_LTLIBRARIES = libp2utils.la
 
 libp2utils_la_SOURCES = \

@@ -28,3 +28,4 @@ EXTRA_DIST = include bootstrap cleanup m4 aminclude.am versionfilter.sh \
 ## Exclude any SVN version control directories from the distribution.
 dist-hook:
 	rm -rf `find $(distdir) -name .svn`
+	rm -f `find $(distdir) -name \*~`
