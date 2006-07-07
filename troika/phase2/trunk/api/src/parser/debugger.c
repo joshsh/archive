@@ -29,9 +29,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <stdio.h>  /* printf */
-#include <string.h>  /* strcmp, strlen */
-#include <stdlib.h>  /* exit (avoids 'implicit declaration' warning) */
+/*
+#include <string.h>
+#include <stdlib.h>
+*/
 
 #include <Ast.h>
 #include <common.h>

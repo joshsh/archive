@@ -73,7 +73,7 @@ environment__new()
 
     Type *ns_t = 0, *prim_t = 0, *set_t = 0;
 
-    if ( !( env = new( Environment ) ) )
+    if ( !( env = NEW( Environment ) ) )
         return 0;
 
     env->type_t = 0;

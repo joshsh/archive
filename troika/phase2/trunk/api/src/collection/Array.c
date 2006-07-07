@@ -75,7 +75,7 @@ array__new( unsigned int buffer_size, double expansion )
 {
     Array *a;
 
-    if ( !( a = new( Array ) ) )
+    if ( !( a = NEW( Array ) ) )
         return 0;
 
     /* Buffer size must be positive. */
@@ -107,7 +107,7 @@ array__copy( Array *a )
     if ( DEBUG__SAFE && !a )
         abort();
 
-    if ( !( b = new( Array ) ) )
+    if ( !( b = NEW( Array ) ) )
         return 0;
 
     *b = *a;

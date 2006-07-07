@@ -95,7 +95,7 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
     obj_trace( &o );
 
     if ( DEBUG__OBJECT )
-        printf( "[] object__trace(%#x, %#x): visited %i objects.\n",
+        PRINT( "[] object__trace(%#x, %#x): visited %i objects.\n",
             ( int ) o, ( int ) f, total );
 }
 
@@ -188,7 +188,7 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
     array__delete( queue );
 
     if ( DEBUG__OBJECT )
-        printf( "[] object__trace_bfs(%#x, %#x): visited %i objects.\n",
+        PRINT( "[] object__trace_bfs(%#x, %#x): visited %i objects.\n",
             ( int ) o, ( int ) f, total );
 }
 

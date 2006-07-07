@@ -233,7 +233,7 @@ struct Statement
 static Statement *
 new_statement( Name *name, char *simple_name, Ast *expr )
 {
-    Statement *stmt = new( Statement );
+    Statement *stmt = NEW( Statement );
 
     stmt->name = name;
     stmt->simple_name = simple_name;

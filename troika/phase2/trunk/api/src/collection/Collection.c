@@ -49,9 +49,9 @@ collection__exclude_if( Collection *c, Criterion cr )
     void *helper( void **refp )
     {
         if ( cr( *refp ) )
-            return walker__remove;
+            return REMOVE;
         else
-            return 0;
+            return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !cr ) )
@@ -74,11 +74,11 @@ collection__exists( Collection *c, Criterion cr )
         if ( cr( *refp ) )
         {
             exists = TRUE;
-            return walker__break;
+            return BREAK;
         }
 
         else
-            return 0;
+            return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !cr ) )
@@ -103,11 +103,11 @@ collection__first_match( Collection *c, Criterion cr )
         if ( cr( *refp ) )
         {
             result = *refp;
-            return walker__break;
+            return BREAK;
         }
 
         else
-            return 0;
+            return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !cr ) )
@@ -132,7 +132,7 @@ collection__for_all( Collection *c, Criterion cr )
         if ( !cr( *refp ) )
         {
             result = FALSE;
-            return walker__break;
+            return BREAK;
         }
 
         else

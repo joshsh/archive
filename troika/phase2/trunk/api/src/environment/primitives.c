@@ -100,11 +100,11 @@ objects_inv_stub( void **args )
             if ( set__contains( s, target ) )
             {
                 set__add( matches, o );
-                return walker__break;
+                return BREAK;
             }
 
             else
-                return 0;
+                return CONTINUE;
         }
 
         if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
@@ -235,7 +235,7 @@ set_remove_stub( void **args )
 static void *
 set_contains_stub( void **args )
 {
-    int *i = new( int );
+    int *i = NEW( int );
     *i = set__contains( args[0], args[1] );
     return i;
 }
@@ -244,7 +244,7 @@ set_contains_stub( void **args )
 static void *
 set_size_stub( void **args )
 {
-    int *i = new( int );
+    int *i = NEW( int );
     *i = ( int ) set__size( args[0] );
     return i;
 }

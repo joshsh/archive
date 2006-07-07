@@ -23,9 +23,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static void
 undef_error( Name *name )
 {
-    printf( "Error: \"" );
+    PRINT( "Error: \"" );
     name__print( name );
-    printf( "\" is not defined in this namespace.\n" );
+    PRINT( "\" is not defined in this namespace.\n" );
 }
 
 

@@ -28,7 +28,7 @@ object__clone( Object *o )
     if ( DEBUG__SAFE && !o )
         abort();
 
-    copy = new( Object );
+    copy = NEW( Object );
     *copy = *o;
     copy->value = o->type->clone( o->value );
     return copy;

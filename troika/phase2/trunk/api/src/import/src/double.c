@@ -5,7 +5,7 @@
 double *
 double__decode( cstring *buffer )
 {
-    double *d = new( double );
+    double *d = NEW( double );
     *d = atof( buffer );
     return d;
 }

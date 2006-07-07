@@ -282,11 +282,11 @@ resolve( Ast *ast, Interpreter *c )
             if ( !FIRST_CLASS_NULL && !*astpp)
             {
                 ok = FALSE;
-                return walker__break;
+                return BREAK;
             }
 
             else
-                return 0;
+                return CONTINUE;
         }
 
         Object *o;
@@ -487,7 +487,7 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
                 PRINT( ": " );
 
             object__encode( o, print_buffer );
-            printf( print_buffer );
+            PRINT( print_buffer );
 
             PRINT( "\n" );
         }

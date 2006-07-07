@@ -39,7 +39,7 @@ closure__new( procedure execute, void *state )
 {
     Closure *c;
 
-    if ( ( c = new( Closure ) ) )
+    if ( ( c = NEW( Closure ) ) )
     {
         c->execute = execute;
         c->state = state;
@@ -85,7 +85,7 @@ dereference( void **refp, Closure *c )
 Closure *
 closure__cw_dereference( Closure *c )
 {
-    Closure *c2 = new( Closure );
+    Closure *c2 = NEW( Closure );
 
     if ( c2 )
     {
@@ -109,7 +109,7 @@ returnfalse( void *p, Closure *c )
 Closure *
 closure__cw_return_false( Closure *c )
 {
-    Closure *c2 = new( Closure );
+    Closure *c2 = NEW( Closure );
 
     if ( c2 )
     {

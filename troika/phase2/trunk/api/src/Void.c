@@ -28,7 +28,7 @@ static Void void__maxval = ( Void ) 42;
 Void *
 void__new()
 {
-    Void *v = new( Void );
+    Void *v = NEW( Void );
     *v = ++void__maxval;
     return v;
 }

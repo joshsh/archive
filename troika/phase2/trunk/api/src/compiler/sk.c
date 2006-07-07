@@ -267,7 +267,7 @@ prim_reduce(
         void *recurse( Object **argp )
         {
             if ( curry( *argp ) )
-                return walker__break;
+                return BREAK;
 
             else
             {
@@ -275,7 +275,7 @@ prim_reduce(
                 marshal( j + 1 );
                 cur = temp;
 
-                return 0;
+                return CONTINUE;
             }
         }
 
@@ -430,13 +430,13 @@ print_term( Term *t )
     {
         i = ( unsigned int ) *cur;
         if ( i < 0x1000 )
-            printf( " %i", i );
+            PRINT( " %i", i );
         else
-            printf( " %#x", i );
+            PRINT( " %#x", i );
         cur++;
     }
 
-    printf( "\n" );
+    PRINT( "\n" );
 }
 
 
@@ -462,7 +462,7 @@ sk_reduce(
 
     if ( DEBUG__SK )
     {
-        printf( "%i:\t", iter );
+        PRINT( "%i:\t", iter );
         print_term( term );
     }
 
@@ -475,8 +475,8 @@ sk_reduce(
 /*
 cur = term->head; sup = term->buffer + term->buffer_size;
 while ( cur < sup ) {
-printf( " %x", ( int ) *cur ); cur++; }
-printf( "\n" );  fflush( stdout );
+PRINT( " %x", ( int ) *cur ); cur++; }
+PRINT( "\n" );  fflush( stdout );
 */
         /* Give up if the term becomes too large. */
         if ( SK__CHECKS__MAX_TERM_SIZE > 0
@@ -590,7 +590,7 @@ printf( "\n" );  fflush( stdout );
 
             if ( DEBUG__SK )
             {
-                printf( "%i:\t", iter );
+                PRINT( "%i:\t", iter );
                 print_term( term );
             }
 

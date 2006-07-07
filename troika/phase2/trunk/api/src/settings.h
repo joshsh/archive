@@ -31,13 +31,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */
 
-#define STRDUP( x ) strcpy( malloc( 1 + strlen( x ) ), (x) )
+#define STRDUP(x)   strcpy(malloc(1 + strlen(x)), (x))
 #define MALLOC      malloc
-#define new( type ) malloc( sizeof (type) )
+#define NEW(type)   malloc(sizeof (type))
 
 
 #ifndef VERSION
-#   define VERSION "X"
+#   define VERSION  "X"
 #endif
 
 #ifndef PACKAGE_BUGREPORT
@@ -52,46 +52,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef FALSE
 #   define FALSE                                0
 #endif
-
-
-/* Debugging ******************************************************************/
-
-
-#define DEBUG__SAFE                             1
-
-#define DEBUG                                   0
-#    define DEBUG__MAIN                         1 & DEBUG
-#    define DEBUG__CORE                         1 & DEBUG
-#        define DEBUG__SK                       1 & DEBUG__CORE
-#        define DEBUG__PRIMS                    1 & DEBUG__CORE
-#        define DEBUG__TYPE                     1 & DEBUG__CORE
-#        define DEBUG__MEMORY                   1 & DEBUG__CORE
-#        define DEBUG__OBJECT                   1 & DEBUG__CORE
-#            define DEBUG__OBJECT__TRACE        0 & DEBUG__OBJECT
-#            define DEBUG__OBJECT__TRIPLES      1 & DEBUG__OBJECT
-#        define DEBUG__NAMESPACE                0 & DEBUG__CORE
-#        define DEBUG__ENV                      0 & DEBUG__CORE
-#        define DEBUG__COMPILER                 1 & DEBUG__CORE
-#        define DEBUG__SERIAL                   0 & DEBUG__CORE
-#    define DEBUG__PARSER_MODULE                1 & DEBUG
-#        define DEBUG__AST                      1 & DEBUG__PARSER_MODULE
-#        /** Echo each token as it is matched by the lexer. */
-#        define DEBUG__LEXER                    1 & DEBUG__PARSER_MODULE
-#        /** Echo each production as it is matched by the parser. */
-#        define DEBUG__PARSER                   1 & DEBUG__PARSER_MODULE
-#            /** Use Bison's built-in trace facility. */
-#            define DEBUG__PARSER__USE_YYDEBUG  0 & DEBUG__PARSER
-#    define DEBUG__UTILS                        0 & DEBUG
-#        define DEBUG__ARRAY                    1 & DEBUG__UTILS
-#        define DEBUG__BAG                      1 & DEBUG__UTILS
-#        define DEBUG__BUNCH                    1 & DEBUG__UTILS
-#        define DEBUG__HASH_TABLE               1 & DEBUG__UTILS
-#        define DEBUG__LOOKUP_TABLE             1 & DEBUG__UTILS
-#        define DEBUG__NAME                     1 & DEBUG__UTILS
-#        define DEBUG__SET                      1 & DEBUG__UTILS
-#        define DEBUG__TERM                     1 & DEBUG__UTILS
-
-#define COMPILER__SHOW_ADDRESS                  DEBUG
 
 
 /* Type names *****************************************************************/
@@ -239,6 +199,7 @@ dereference( struct Object ** );
 
 /* Terminal *******************************************************************/
 
+/* TODO: USE_NCURSES is not yet supported */
 #define USE_NCURSES                             0
 
 #if USE_NCURSES
@@ -290,6 +251,47 @@ dereference( struct Object ** );
     fprintf( stderr, "Warning: %s.\n", (msg) );                             \
     fflush( stderr );                                                       \
 }
+
+
+/* Debugging ******************************************************************/
+
+
+#define DEBUG__SAFE                             1
+
+/* FIXME: these are barely used */
+#define DEBUG                                   0
+#    define DEBUG__MAIN                         1 & DEBUG
+#    define DEBUG__CORE                         1 & DEBUG
+#        define DEBUG__SK                       1 & DEBUG__CORE
+#        define DEBUG__PRIMS                    1 & DEBUG__CORE
+#        define DEBUG__TYPE                     1 & DEBUG__CORE
+#        define DEBUG__MEMORY                   1 & DEBUG__CORE
+#        define DEBUG__OBJECT                   1 & DEBUG__CORE
+#            define DEBUG__OBJECT__TRACE        0 & DEBUG__OBJECT
+#            define DEBUG__OBJECT__TRIPLES      1 & DEBUG__OBJECT
+#        define DEBUG__NAMESPACE                0 & DEBUG__CORE
+#        define DEBUG__ENV                      0 & DEBUG__CORE
+#        define DEBUG__COMPILER                 1 & DEBUG__CORE
+#        define DEBUG__SERIAL                   0 & DEBUG__CORE
+#    define DEBUG__PARSER_MODULE                1 & DEBUG
+#        define DEBUG__AST                      1 & DEBUG__PARSER_MODULE
+#        /** Echo each token as it is matched by the lexer. */
+#        define DEBUG__LEXER                    1 & DEBUG__PARSER_MODULE
+#        /** Echo each production as it is matched by the parser. */
+#        define DEBUG__PARSER                   1 & DEBUG__PARSER_MODULE
+#            /** Use Bison's built-in trace facility. */
+#            define DEBUG__PARSER__USE_YYDEBUG  0 & DEBUG__PARSER
+#    define DEBUG__UTILS                        0 & DEBUG
+#        define DEBUG__ARRAY                    1 & DEBUG__UTILS
+#        define DEBUG__BAG                      1 & DEBUG__UTILS
+#        define DEBUG__BUNCH                    1 & DEBUG__UTILS
+#        define DEBUG__HASH_TABLE               1 & DEBUG__UTILS
+#        define DEBUG__LOOKUP_TABLE             1 & DEBUG__UTILS
+#        define DEBUG__NAME                     1 & DEBUG__UTILS
+#        define DEBUG__SET                      1 & DEBUG__UTILS
+#        define DEBUG__TERM                     1 & DEBUG__UTILS
+
+#define COMPILER__SHOW_ADDRESS                  DEBUG
 
 
 #endif  /* SETTINGS_H */

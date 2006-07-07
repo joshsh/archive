@@ -107,7 +107,7 @@ string__new( unsigned int buffer_size )
 {
     String *s;
 
-    if ( !( s = new( String ) ) )
+    if ( !( s = NEW( String ) ) )
         return 0;
 
     else
@@ -138,7 +138,7 @@ string__copy( String *s )
 {
     String *s_copy;
 
-    if ( !( s_copy = new( String ) ) )
+    if ( !( s_copy = NEW( String ) ) )
         return 0;
 
     *s_copy = *s;

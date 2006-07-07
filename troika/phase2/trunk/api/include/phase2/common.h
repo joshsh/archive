@@ -37,15 +37,13 @@ typedef char cstring;
 typedef char xpm;
 
 
+typedef int ACTION;
+
 typedef void *( *Dist_f )( void **refp );
 
 #define CONTINUE            0
 #define BREAK               ( void* ) 1
 #define REMOVE              ( void* ) 2
-
-#define walker__continue    0
-#define walker__break       ( void* ) 1
-#define walker__remove      ( void* ) 2
 
 typedef void *          ( *Allocator )( void );
 typedef int             ( *Comparator )( const void *arg1, const void *arg2 );

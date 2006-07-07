@@ -114,7 +114,7 @@ term__copy( Term *source )
 
     size = ( unsigned int ) *( source->head );
 
-    t = new( Term );
+    t = NEW( Term );
 
     /* Buffer starts out at this size, but may expand later. */
     t->buffer_size = source->buffer_size;
@@ -199,7 +199,7 @@ term__subterm_at(Term *t, int i)
     }
 
     length = (unsigned int) *cur;
-    subterm = new( Term );
+    subterm = NEW( Term );
     subterm->buffer_size = length;
     subterm->buffer = MALLOC(length * sizeof(void *));
     memcpy(subterm->buffer, cur, length * sizeof(void *));
@@ -363,7 +363,7 @@ term__walk( Term *t, Dist_f f )
             cur++;
 
             /* Apply the target function.  Break out if necessary. */
-            if ( f( cur ) == walker__break )
+            if ( f( cur ) == BREAK )
                 goto finish;
         }
 

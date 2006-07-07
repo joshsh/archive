@@ -38,7 +38,7 @@ dictionary_entry__new( const char *key, void *target )
     if ( DEBUG__SAFE && ( !key || !target ) )
         abort();
 
-    entry = new( Dictionary_Entry );
+    entry = NEW( Dictionary_Entry );
 
     if ( entry )
     {
@@ -184,11 +184,11 @@ dictionary__reverse_lookup( Dictionary *dict, const void *target )
         if ( ( *epp )->target == target )
         {
             key = STRDUP( ( *epp )->key );
-            return walker__break;
+            return BREAK;
         }
 
         else
-            return 0;
+            return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !dict || !target ) )

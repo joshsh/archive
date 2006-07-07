@@ -57,7 +57,7 @@ Ast__Type__name( Ast__Type type )
 static Ast *
 ast__new( Ast__Type type, void *value )
 {
-    Ast *node = new( Ast );
+    Ast *node = NEW( Ast );
     node->type = type;
     node->value = value;
     return node;
@@ -79,7 +79,7 @@ ast__char( char c )
     Ast *ast;
     char *p;
 
-    p = new( char );
+    p = NEW( char );
     *p = c;
     ast = ast__new( CHAR_T, p );
 
@@ -93,7 +93,7 @@ ast__float( double f )
     Ast *ast;
     double *p;
 
-    p = new( double );
+    p = NEW( double );
     *p = f;
     ast = ast__new( FLOAT_T, p );
 
@@ -107,7 +107,7 @@ ast__int( int i )
     Ast *ast;
     int *p;
 
-    p = new( int );
+    p = NEW( int );
     *p = i;
     ast = ast__new( INT_T, p );
 
@@ -257,7 +257,7 @@ term__print( Term *term, int top_level )
 
         while ( cur < sup )
         {
-            printf( "%d ", ( int ) *cur );
+            PRINT( "%d ", ( int ) *cur );
             cur++;
         }
     #else
@@ -265,21 +265,21 @@ term__print( Term *term, int top_level )
 
         if ( length == 1 )
             ast__print( ( Ast* ) *( term->head + 1 ) );
-            /*printf((char *) *(term->head + 1)); */
+            /*PRINT((char *) *(term->head + 1)); */
 
         else
         {
             if ( !top_level )
-                printf( "(" );
+                PRINT( "(" );
             /*else
-                  printf( "[ " ); */
+                  PRINT( "[ " ); */
 
             for ( i = 0; i < length - 1; i++ )
             {
                 subterm = term__subterm_at( term, i );
                 term__print( subterm, 0 );
                 term__delete( subterm );
-                printf( " " );
+                PRINT( " " );
             }
 
             subterm = term__subterm_at( term, length - 1 );
@@ -287,9 +287,9 @@ term__print( Term *term, int top_level )
             term__delete( subterm );
 
             if ( !top_level )
-                printf( ")" );
+                PRINT( ")" );
             /*else
-                  printf( " ]" ); */
+                  PRINT( " ]" ); */
         }
     #endif  /* PRINT_TERM_AS_ARRAY */
 }
@@ -300,21 +300,21 @@ bag__print( Array *a )
 {
     int i, size = array__size( a );
     if ( !size )
-        printf( "{}" );
+        PRINT( "{}" );
     else
     {
         /*if ( size > 1 )*/
-            printf( "{" );
+            PRINT( "{" );
 
         for ( i = 0; i < size; i++ )
         {
             if ( i )
-                printf( ", " );
+                PRINT( ", " );
             ast__print( ( Ast* ) array__get( a, i ) );
         }
 
         /*if ( size > 1 )*/
-            printf( "}" );
+            PRINT( "}" );
     }
 }
 
@@ -333,17 +333,17 @@ ast__print( Ast *ast )
 
         case CHAR_T:
 
-            printf( "'%c'", *( ( char* ) ast->value ) );
+            PRINT( "'%c'", *( ( char* ) ast->value ) );
             break;
 
         case FLOAT_T:
 
-            printf( "%g", *( ( double* ) ast->value ) );
+            PRINT( "%g", *( ( double* ) ast->value ) );
             break;
 
         case INT_T:
 
-            printf( "%i", *( ( int* ) ast->value ) );
+            PRINT( "%i", *( ( int* ) ast->value ) );
             break;
 
         case NAME_T:
@@ -359,29 +359,29 @@ ast__print( Ast *ast )
         case STRING_T:
 
             s = ( char* ) ast->value;
-            printf( "\"" );
+            PRINT( "\"" );
             while ( *s )
             {
                 if ( *s == '"' || *s == '\\' )
-                    printf( "\\" );
+                    PRINT( "\\" );
 
-                printf( "%c", *s );
+                PRINT( "%c", *s );
                 s++;
             }
-            printf( "\"" );
+            PRINT( "\"" );
             break;
 
         case TERM_T:
 
-            printf( "[" );
+            PRINT( "[" );
             term__print( ( Term* ) ast->value, 1 );
-            printf( "]" );
+            PRINT( "]" );
             break;
 
         case VOID_T:
 
-            printf( "[void]" );
-            /*printf( "%#x", ( int ) ast->value );*/
+            PRINT( "[void]" );
+            /*PRINT( "%#x", ( int ) ast->value );*/
             break;
 
         default:

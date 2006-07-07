@@ -72,34 +72,34 @@ main( int argc, char *argv[] )
 
     doc = document__read_from_file( "test.xml" );
 
-    printf("----------\n");
+    PRINT("----------\n");
 
 /* Caution: memory leaks.
     el = document__root( doc ) ;
-    printf( "child name = %s.\n", element__name( el )) ;
-    printf( "child text = %s.\n", element__text( el )) ;
+    PRINT( "child name = %s.\n", element__name( el )) ;
+    PRINT( "child text = %s.\n", element__text( el )) ;
     attr = element__first_attr( el );
-    printf( "child attr #1 = (%s, %s).\n",
+    PRINT( "child attr #1 = (%s, %s).\n",
         attr__name( attr ),
         attr__value( attr ));
     attr = attr__next_sibling( attr );
     ns = attr__namespace( attr );
-    printf( "child attr #2 = (%s:%s, %s).\n",
+    PRINT( "child attr #2 = (%s:%s, %s).\n",
         namespc__prefix( ns ),
         attr__name( attr ),
         attr__value( attr ));
     el2 = element__first_child( el ) ;
-    printf( "grandchild name = %s.\n", element__name( el2 )) ;
+    PRINT( "grandchild name = %s.\n", element__name( el2 )) ;
     attr = element__attr( el2, UC "programs", 0 );
-    printf( "grandchild attribute \"programs\" = %s.\n", attr__value( attr )) ;
+    PRINT( "grandchild attribute \"programs\" = %s.\n", attr__value( attr )) ;
 */
 
-    printf("----------\n");
+    PRINT("----------\n");
 
     document__write_to_file( doc, "-" );
     document__delete( doc );
 
-    printf("----------\n");
+    PRINT("----------\n");
 
 
     xmldom__end( );

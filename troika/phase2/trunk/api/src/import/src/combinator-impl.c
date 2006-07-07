@@ -5,7 +5,7 @@
 Combinator *
 combinator__decode( cstring *buffer )
 {
-    Combinator *c = new( Combinator );
+    Combinator *c = NEW( Combinator );
 
     switch( *buffer )
     {

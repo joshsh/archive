@@ -29,7 +29,7 @@ object__new( Type *type, void *value, int flags )
     if ( ( !type || !value ) && DEBUG__SAFE && !PERMIT_TEMPORARY_OBJECTS )
         abort();
 
-    o = new( Object );
+    o = NEW( Object );
 
     if ( !o )
     {

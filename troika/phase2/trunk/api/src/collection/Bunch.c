@@ -60,7 +60,7 @@ struct Bunch
 static Block *
 block__new( unsigned int size )
 {
-    Block *bl = new( Block );
+    Block *bl = NEW( Block );
 
     if (bl)
     {
@@ -80,7 +80,7 @@ block__new( unsigned int size )
 static Block *
 block__copy( Block *bl )
 {
-    Block *bl2 = new( Block );
+    Block *bl2 = NEW( Block );
 
     if (bl2)
     {
@@ -111,11 +111,7 @@ block__delete( Block *bl )
 Bunch *
 bunch__new( unsigned int block_size )
 {
-    Bunch *b = new( Bunch );
-
-    #if DEBUG__BUNCH
-    printf( "[%#x] bunch__new(%i)\n", ( int ) b, block_size );
-    #endif
+    Bunch *b = NEW( Bunch );
 
     if ( b )
     {
@@ -141,11 +137,7 @@ bunch__copy( Bunch *b )
     int i, size = b->block_size;
     Block *bl;
 
-    Bunch *b2 = new( Bunch );
-
-    #if DEBUG__BUNCH
-    printf( "[%#x] bunch__copy(%#x)\n", ( int ) b2, ( int ) b );
-    #endif
+    Bunch *b2 = NEW( Bunch );
 
     b2->block_size = size;
     b2->blocks = array__new
@@ -171,10 +163,6 @@ bunch__delete( Bunch *b )
         block__delete( *blp );
         return 0;
     }
-
-    #if DEBUG__BUNCH
-    printf( "[] bunch__delete(%#x)\n", ( int ) b );
-    #endif
 
     /* Free all blocks. */
     array__walk( b->blocks, ( Dist_f ) helper );
@@ -273,17 +261,13 @@ bunch__walk( Bunch *b, Dist_f f )
     unsigned int i, j, n = array__size( b->blocks );
     Block *bl;
 
-    #if DEBUG__BUNCH
-    printf( "[] bunch__walk(%#x, %#x)\n", ( int ) b, ( int ) f );
-    #endif
-
     for ( i = 0; i < n; i++ )
     {
         bl = array__get( b->blocks, i );
 
         for ( j = 0; j < bl->filled; j++ )
         {
-            if ( f( &bl->buffer[j] ) == walker__remove )
+            if ( f( &bl->buffer[j] ) == REMOVE )
             {
                 /* Replace the item with the last item in the bunch. */
                 bl->buffer[j] = b->last_block->buffer[--( b->last_block->filled )];

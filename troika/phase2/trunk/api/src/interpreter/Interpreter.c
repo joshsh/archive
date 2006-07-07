@@ -47,7 +47,7 @@ interpreter__new( Environment *env, boolean quiet )
     if ( DEBUG__SAFE && !env )
         abort();
 
-    if ( !( c = new( Interpreter ) ) )
+    if ( !( c = NEW( Interpreter ) ) )
     {
         ERROR( "interpreter__new: allocation failed" );
         goto finish;
@@ -151,10 +151,6 @@ interpreter__parse( Interpreter *c )
 
     if ( DEBUG__SAFE && !c )
         abort();
-
-    #if DEBUG__COMPILER
-    printf( "[...] interpreter__parse(%#x)\n", ( int ) c );
-    #endif
 
     if ( c->locked )
         return exit_state__locked_out;

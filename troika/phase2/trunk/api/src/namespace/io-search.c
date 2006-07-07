@@ -268,18 +268,18 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
 static void
 error__not_a_namespace( Name *name )
 {
-    printf( "Error: \"" );
+    PRINT( "Error: \"" );
     name__print( name );
-    printf( "\" is not a namespace\n" );
+    PRINT( "\" is not a namespace\n" );
 }
 
 
 static void
 error__not_defined( Name *name )
 {
-    printf( "Error: \"" );
+    PRINT( "Error: \"" );
     name__print( name );
-    printf( "\" is not defined in this namespace\n" );
+    PRINT( "\" is not defined in this namespace\n" );
 }
 
 

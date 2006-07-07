@@ -71,12 +71,7 @@ hash_map__add( Hash_Map *t, void * const key, void * const target )
 {
     Hash_Map__Entry *entry, *entry_old;
 
-    #if DEBUG__LOOKUP_TABLE
-    printf( "[] hash_map__add(%#x, %#x, %#x)\n",
-        ( int ) t, ( int ) key, ( int ) target );
-    #endif
-
-    if ( !( entry = new( Hash_Map__Entry ) ) )
+    if ( !( entry = NEW( Hash_Map__Entry ) ) )
         return;
 
     entry->key = key;
@@ -121,17 +116,8 @@ hash_map__remove
 void
 hash_map__walk( Hash_Map *t, Dist_f f )
 {
-    #if DEBUG__SAFE
-    if ( !t || !f )
-    {
-        ERROR( "hash_map__walk: null argument" );
-        return;
-    }
-    #endif
-
-    #if DEBUG__LOOKUP_TABLE
-    printf( "[] hash_map__walk(%#x, %#x)\n", ( int ) t, ( int ) f );
-    #endif
+    if ( DEBUG__SAFE && ( !t || !f ) )
+        abort();
 
     hash_table__walk( t, f );
 }

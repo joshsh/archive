@@ -90,7 +90,7 @@ name__print( Name *n )
 
     name__encode( n, buffer );
 
-    printf( buffer );
+    PRINT( buffer );
 }
 
 

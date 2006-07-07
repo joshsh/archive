@@ -31,20 +31,20 @@ add_combinators( Environment *env )
 
     Type *t = environment__resolve_type( env, COMBINATOR__NAME )->value;
 
-    sk_B = new( Combinator );
-    sk_C = new( Combinator );
-    sk_I = new( Combinator );
-    sk_K = new( Combinator );
-    sk_L = new( Combinator );
-    sk_O = new( Combinator );
-    sk_R = new( Combinator );
-    sk_S = new( Combinator );
-    sk_T = new( Combinator );
-    sk_U = new( Combinator );
-    sk_V = new( Combinator );
-    sk_W = new( Combinator );
-    sk_w = new( Combinator );
-    sk_Y = new( Combinator );
+    sk_B = NEW( Combinator );
+    sk_C = NEW( Combinator );
+    sk_I = NEW( Combinator );
+    sk_K = NEW( Combinator );
+    sk_L = NEW( Combinator );
+    sk_O = NEW( Combinator );
+    sk_R = NEW( Combinator );
+    sk_S = NEW( Combinator );
+    sk_T = NEW( Combinator );
+    sk_U = NEW( Combinator );
+    sk_V = NEW( Combinator );
+    sk_W = NEW( Combinator );
+    sk_w = NEW( Combinator );
+    sk_Y = NEW( Combinator );
 
     *sk_B = B_combinator;
     *sk_C = C_combinator;

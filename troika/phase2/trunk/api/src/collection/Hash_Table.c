@@ -145,7 +145,7 @@ hash_table__new(
 
     Hash_Table *h;
 
-    if ( ( h = new( Hash_Table ) ) )
+    if ( ( h = NEW( Hash_Table ) ) )
     {
         h->buffer_size = next_prime( buffer_size );
 
@@ -191,7 +191,7 @@ hash_table__copy( const Hash_Table *h )
 {
     Hash_Table *h2;
 
-    if ( ( h2 = new( Hash_Table ) ) )
+    if ( ( h2 = NEW( Hash_Table ) ) )
     {
         *h2 = *h;
 
@@ -399,13 +399,13 @@ hash_table__walk( Hash_Table *h, Dist_f f )
     {
         if ( *cur && ( r = f( cur ) ) )
         {
-            if ( r == walker__remove )
+            if ( r == REMOVE )
             {
                 *cur = 0;
                 h->size--;
             }
 
-            else if ( r == walker__break )
+            else if ( r == BREAK )
                 break;
         }
 

@@ -119,7 +119,7 @@ type__new( const char *name, int flags )
     if ( DEBUG__SAFE && ( !name || !( *name ) ) )
         abort();
 
-    t = new( Type );
+    t = NEW( Type );
 
     if ( !t )
         return 0;
@@ -131,10 +131,6 @@ type__new( const char *name, int flags )
         free( t );
         return 0;
     }
-
-    #if DEBUG__TYPE
-    printf( "[%#x] type__new(\"%s\", %i)\n", ( int ) t, name, flags );
-    #endif
 
     t->flags = flags;
 

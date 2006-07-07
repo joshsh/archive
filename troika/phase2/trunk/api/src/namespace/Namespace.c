@@ -31,7 +31,7 @@ namespace__new()
 
     else
     {
-        ns = new( Namespace );
+        ns = NEW( Namespace );
 
         if ( ns )
             ns->children = d;

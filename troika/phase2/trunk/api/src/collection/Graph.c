@@ -80,7 +80,7 @@ graph__connect( Graph *g, void * const src, void * const dest )
 {
     Graph_Edge *edge_new, *edge_old;
 
-    if ( !( edge_new = new( Graph_Edge ) ) )
+    if ( !( edge_new = NEW( Graph_Edge ) ) )
         return;
 
     edge_new->src = src;

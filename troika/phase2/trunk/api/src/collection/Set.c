@@ -108,9 +108,9 @@ set__exclusion( Set *a, Set *b )
     void *helper( void **refp )
     {
         if ( set__contains( b, *refp ) )
-            return walker__remove;
+            return REMOVE;
         else
-            return 0;
+            return CONTINUE;
     }
 
     c = hash_table__copy( a );
@@ -128,9 +128,9 @@ set__intersection( Set *a, Set *b )
     void *helper( void **refp )
     {
         if ( !set__contains( d, *refp ) )
-            return walker__remove;
+            return REMOVE;
         else
-            return 0;
+            return CONTINUE;
     }
 
     if ( hash_table__size( a ) < hash_table__size( b ) )
@@ -158,7 +158,7 @@ set__symmetric_difference( Set *a, Set *b )
     void *helper( void **refp )
     {
         if ( set__contains( a, *refp ) && set__contains( b, *refp ) )
-            return walker__remove;
+            return REMOVE;
         else
             return 0;
     }

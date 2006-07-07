@@ -5,7 +5,7 @@
 char *
 char__decode( cstring *buffer )
 {
-    char *c = new( char );
+    char *c = NEW( char );
     *c = *buffer;
     return c;
 }

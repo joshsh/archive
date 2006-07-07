@@ -5,7 +5,7 @@
 int *
 int__decode( cstring *buffer )
 {
-    int *i = new( int );
+    int *i = NEW( int );
     *i = atoi( buffer );
     return i;
 }

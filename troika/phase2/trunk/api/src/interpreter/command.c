@@ -370,7 +370,7 @@ command_quit( Interpreter *c, Ast *args )
     args = 0;
 
     if ( !c->quiet )
-        printf( "Bye.\n" );
+        PRINT( "Bye.\n" );
 
     return 1;
 }
@@ -385,7 +385,7 @@ command_rm( Interpreter *c, Ast *args )
         return 0;
 
     if ( interpreter__undefine( c, name ) && !c->quiet )
-        printf( "Unassigned 1 object.\n" );
+        PRINT( "Unassigned 1 object.\n" );
 
     return 0;
 }
@@ -462,7 +462,7 @@ add_command( Dictionary *d, char *name, CommandFunction f, int args_min, int arg
     cp( a, args );
     cp( s, description );
 
-    com = new( Command );
+    com = NEW( Command );
     if ( !com )
         goto failure;
 

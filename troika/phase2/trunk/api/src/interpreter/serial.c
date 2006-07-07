@@ -108,7 +108,7 @@ get_encoder( Type *t, Hash_Map *serializers )
 static void
 set_encoder( Type *t, Xml_Encoder encode, Hash_Map *serializers )
 {
-    Function_Wrapper *w = new( Function_Wrapper );
+    Function_Wrapper *w = NEW( Function_Wrapper );
     w->function = ( Generic_f ) encode;
 
     hash_map__add( serializers, t, w );
@@ -130,7 +130,7 @@ get_decoder( Type *t, Hash_Map *deserializers )
 static void
 set_decoder( Type *t, Xml_Decoder decode, Hash_Map *deserializers )
 {
-    Function_Wrapper *w = new( Function_Wrapper );
+    Function_Wrapper *w = NEW( Function_Wrapper );
     w->function = ( Generic_f ) decode;
 
     hash_map__add( deserializers, t, w );
@@ -197,11 +197,6 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
             cur += ( unsigned int ) *cur;
         }
     }
-
-    #if DEBUG__SERIAL
-    printf( "[%#x] term__xml_encode(%#x, %#x)\n",
-        ( int ) el, ( int ) t, ( int ) state );
-    #endif
 
     return el;
 }
@@ -305,11 +300,6 @@ bag__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
     a = array__new( 0, 0 );
 
-    #if DEBUG__SERIAL
-    printf( "[%#x] bag__xml_decode(%#x, %#x)\n",
-        ( int ) a, ( int ) el, ( int ) state );
-    #endif
-
     child = element__first_child( el );
 
     while ( child )
@@ -357,11 +347,6 @@ term__xml_decode( Element *el, Xml_Decode_Ctx *state )
         }
     }
 
-    #if DEBUG__SERIAL
-    printf( "[%#x] term__xml_decode(%#x, %#x)\n",
-        ( int ) t, ( int ) el, ( int ) state );
-    #endif
-
     return t;
 }
 
@@ -385,11 +370,6 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     }
 
     ns = namespace__new();
-
-    #if DEBUG__SERIAL
-    printf( "[%#x] namespace__xml_decode(%#x, %#x)\n",
-        ( int ) ns, ( int ) el, ( int ) state );
-    #endif
 
     child = element__first_child( el );
     while ( child )
@@ -715,11 +695,6 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         o = 0;
     }
 
-    #if DEBUG__SERIAL
-    printf( "[%#x] object__xml_decode(%#x, %#x)\n",
-        ( int ) o, ( int ) el, ( int ) state );
-    #endif
-
     return o;
 }
 
@@ -730,11 +705,6 @@ triple__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Object *subject, *predicate, *object;
     Element *subject_el, *predicate_el, *object_el;
-
-    #if DEBUG__SERIAL
-    printf( "[] triple__xml_decode(%#x, %#x)\n",
-        ( int ) el, ( int ) state );
-    #endif
 
     subject_el = element__first_child( el );
     predicate_el = element__next_sibling( subject_el );
@@ -807,7 +777,7 @@ multiref_ids( Interpreter *c )
     }
 
     /* Force the working name space to be at top level. */
-    tmp = new( Object* );
+    tmp = NEW( Object* );
     *tmp = interpreter__working_namespace( c );
     hash_multiref( tmp );
     free( tmp );
@@ -870,10 +840,6 @@ interpreter__serialize( Interpreter *c, char *path )
 
     if ( DEBUG__SAFE && ( !c || !path ) )
         abort();
-
-    #if DEBUG__SERIAL
-    printf( "[] interpreter__serialize(%#x, %s)\n", ( int ) c, path );
-    #endif
 
     xmldom__init();
 

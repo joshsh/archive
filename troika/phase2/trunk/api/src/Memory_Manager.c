@@ -55,7 +55,7 @@ memory_manager__new()
     Memory_Manager *m;
     Type *object_t;
 
-    if ( !( m = new( Memory_Manager ) ) )
+    if ( !( m = NEW( Memory_Manager ) ) )
         return 0;
 
     m->objects = bunch__new( MEM__OBJECTS__BLOCK_SIZE );

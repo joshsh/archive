@@ -56,7 +56,7 @@ primitive__new(
     if ( DEBUG__SAFE && ( !name || !cstub || !return_type ) )
         abort();
 
-    if ( !( p = new( Primitive ) ) )
+    if ( !( p = NEW( Primitive ) ) )
     {
         if ( DEBUG__SAFE )
             ERROR( "primitive__new: allocation failed" );

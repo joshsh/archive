@@ -32,7 +32,7 @@ apply__new( Object *function, Object *operand )
     if ( !FIRST_CLASS_NULL && DEBUG__SAFE && ( !function || !operand ) )
         abort();
 
-    a = new( Apply );
+    a = NEW( Apply );
 
     if ( !a )
         return 0;
@@ -57,8 +57,8 @@ apply__delete( Apply *a )
 void
 apply__walk( Apply *a, Dist_f f )
 {
-    if ( f( ( void** ) &a->function ) == walker__break
-      || f( ( void** ) &a->operand ) == walker__break )
+    if ( f( ( void** ) &a->function ) == BREAK
+      || f( ( void** ) &a->operand ) == BREAK )
         return;
 }
 
