@@ -94,15 +94,15 @@ namespace__encode( Namespace *ns, char *buffer )
     Array *keys;
     int maxlen = 0;
 
-    void *find_maxlen( Object **opp )
+    ACTION find_maxlen( Object **opp )
     {
         int len = strlen( object__type( *opp )->name );
         if ( len > maxlen )
             maxlen = len;
-        return 0;
+        return CONTINUE;
     }
 
-    void *print( char **key )
+    ACTION print( char **key )
     {
         Object *o = dictionary__lookup( dict, *key );
         int i, lim = maxlen - strlen( object__type( o )->name );
@@ -128,7 +128,7 @@ namespace__encode( Namespace *ns, char *buffer )
         sprintf( buffer, "%s\n", *key );
         buffer += strlen( buffer );
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !buffer || !ns ) )

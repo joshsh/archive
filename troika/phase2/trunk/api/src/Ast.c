@@ -178,10 +178,10 @@ ast__size( Ast *ast )
 void
 ast__delete( Ast *ast )
 {
-    void *helper( Ast **ast )
+    ACTION helper( Ast **ast )
     {
         ast__delete( *ast );
-        return 0;
+        return CONTINUE;
     }
 
     switch( ast->type )

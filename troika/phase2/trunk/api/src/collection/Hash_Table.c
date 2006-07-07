@@ -387,7 +387,7 @@ void
 hash_table__walk( Hash_Table *h, Dist_f f )
 {
     void **cur, **lim;
-    void *r;
+    ACTION r;
 
     if ( DEBUG__SAFE && ( !h || !f ) )
         abort();

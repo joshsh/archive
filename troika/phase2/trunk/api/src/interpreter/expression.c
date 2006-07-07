@@ -85,7 +85,7 @@ set__encode__alt( Set *s, char *buffer )
     boolean first = TRUE;
 
 */
-    void encode( Object **opp )
+    ACTION encode( Object **opp )
     {
         Object *o = *opp;
 
@@ -109,6 +109,7 @@ set__encode__alt( Set *s, char *buffer )
 
         first = FALSE;
 */
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !s || !buffer ) )
@@ -275,7 +276,7 @@ resolve( Ast *ast, Interpreter *c )
     {
         boolean ok = TRUE;
 
-        void *helper( Ast **astpp )
+        ACTION helper( Ast **astpp )
         {
             *astpp = object_for_ast( *astpp );
 

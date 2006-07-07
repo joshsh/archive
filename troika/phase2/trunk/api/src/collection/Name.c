@@ -33,10 +33,10 @@ name__new( void )
 void
 name__delete( Name *name )
 {
-    void *helper( char **sp )
+    ACTION helper( char **sp )
     {
         free( *sp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !name )

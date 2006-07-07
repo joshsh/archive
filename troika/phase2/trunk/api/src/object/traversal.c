@@ -26,9 +26,9 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
 {
     int total;
 
-    auto void *obj_trace( Object **opp );
+    auto ACTION obj_trace( Object **opp );
 
-    void *edge_trace( Hash_Map__Entry **epp )
+    ACTION edge_trace( Hash_Map__Entry **epp )
     {
 #if TRIPLES__IMPLICATION__SP_O
         ... not yet written ...
@@ -41,10 +41,10 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
 #  endif
 #endif
 
-        return 0;
+        return CONTINUE;
     }
 
-    void *obj_trace( Object **opp )
+    ACTION obj_trace( Object **opp )
     {
         Object *o;
 
@@ -54,7 +54,7 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
             if ( DEBUG__SAFE )
                 WARNING( "obj_trace: null object" );
 
-            return 0;
+            return CONTINUE;
         }
 
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
@@ -83,7 +83,7 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
 #endif
         }
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !o )
@@ -107,13 +107,13 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
     Array *queue;
     int total;
 
-    void *enqueue( Object **opp )
+    ACTION enqueue( Object **opp )
     {
         array__enqueue( queue, opp );
-        return 0;
+        return CONTINUE;
     }
 
-    void *edge_trace( Hash_Map__Entry **epp )
+    ACTION edge_trace( Hash_Map__Entry **epp )
     {
 #if TRIPLES__IMPLICATION__SP_O
         ... not yet written ...
@@ -126,10 +126,10 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 #  endif
 #endif
 
-        return 0;
+        return CONTINUE;
     }
 
-    void *obj_trace( Object **opp )
+    ACTION obj_trace( Object **opp )
     {
         Object *o;
 
@@ -139,7 +139,7 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
             if ( DEBUG__SAFE )
                 WARNING( "obj_trace_bfs: null object" );
 
-            return 0;
+            return CONTINUE;
         }
 
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
@@ -168,7 +168,7 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 #endif
         }
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !o  || !f ) )

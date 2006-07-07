@@ -27,10 +27,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 void
 collection__do_for_all( Collection *c, Void_f f )
 {
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         f( *refp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !f ) )
@@ -46,7 +46,7 @@ collection__do_for_all( Collection *c, Void_f f )
 void
 collection__exclude_if( Collection *c, Criterion cr )
 {
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( cr( *refp ) )
             return REMOVE;
@@ -69,7 +69,7 @@ collection__exists( Collection *c, Criterion cr )
 {
     boolean exists = FALSE;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( cr( *refp ) )
         {
@@ -98,7 +98,7 @@ collection__first_match( Collection *c, Criterion cr )
 {
     void *result = 0;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( cr( *refp ) )
         {
@@ -127,7 +127,7 @@ collection__for_all( Collection *c, Criterion cr )
 {
     boolean result = TRUE;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( !cr( *refp ) )
         {
@@ -136,7 +136,7 @@ collection__for_all( Collection *c, Criterion cr )
         }
 
         else
-            return 0;
+            return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !cr ) )
@@ -156,11 +156,11 @@ collection__match( Collection *c, Criterion cr )
 {
     Array *results = array__new( 0, 0 );
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( cr( *refp ) )
             array__enqueue( results, *refp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !cr ) )
@@ -178,10 +178,10 @@ collection__match( Collection *c, Criterion cr )
 void
 collection__replace_all( Collection *c, Substitution f )
 {
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         *refp = f( *refp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !f ) )

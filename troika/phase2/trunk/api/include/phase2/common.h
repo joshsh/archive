@@ -39,11 +39,11 @@ typedef char xpm;
 
 typedef int ACTION;
 
-typedef void *( *Dist_f )( void **refp );
+typedef ACTION ( *Dist_f )( void **refp );
 
 #define CONTINUE            0
-#define BREAK               ( void* ) 1
-#define REMOVE              ( void* ) 2
+#define BREAK               1
+#define REMOVE              2
 
 typedef void *          ( *Allocator )( void );
 typedef int             ( *Comparator )( const void *arg1, const void *arg2 );

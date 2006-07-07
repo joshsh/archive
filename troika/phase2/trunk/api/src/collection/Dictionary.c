@@ -117,10 +117,10 @@ dictionary__new( void )
 void
 dictionary__delete( Dictionary *dict )
 {
-    void *helper( Dictionary_Entry **epp )
+    ACTION helper( Dictionary_Entry **epp )
     {
         dictionary_entry__delete( *epp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !dict )
@@ -179,7 +179,7 @@ dictionary__reverse_lookup( Dictionary *dict, const void *target )
 {
     char *key = 0;
 
-    void *helper( Dictionary_Entry **epp )
+    ACTION helper( Dictionary_Entry **epp )
     {
         if ( ( *epp )->target == target )
         {
@@ -229,10 +229,10 @@ dictionary__remove( Dictionary *dict, char *key )
 void
 dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
-    void *helper( Dictionary_Entry **epp )
+    ACTION helper( Dictionary_Entry **epp )
     {
         dictionary__add( dest, ( *epp )->key, ( *epp )->target );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !dest || !src ) )
@@ -248,7 +248,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
 void
 dictionary__walk( Dictionary *dict, Dist_f f )
 {
-    void *helper( Dictionary_Entry **ep )
+    ACTION helper( Dictionary_Entry **ep )
     {
         return f( &( *ep )->target );
     }
@@ -268,10 +268,10 @@ dictionary__keys( Dictionary *dict )
 {
     Array *a;
 
-    void *helper( Dictionary_Entry **epp )
+    ACTION helper( Dictionary_Entry **epp )
     {
         array__enqueue( a, ( *epp )->key );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !dict )

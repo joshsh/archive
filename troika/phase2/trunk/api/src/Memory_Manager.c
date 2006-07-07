@@ -210,14 +210,14 @@ sweep( Memory_Manager *m )
 static void
 unwalk( Object *root, boolean follow_triples )
 {
-    void *helper( Object **opp )
+    ACTION helper( Object **opp )
     {
         Object *o = *opp;
 
         if ( visited( o ) )
         {
             clear_visited( o );
-            return 0;
+            return CONTINUE;
         }
 
         else
@@ -234,7 +234,7 @@ memory_manager__walk
 {
     boolean dosweep;
 
-    void *helper( Object **opp )
+    ACTION helper( Object **opp )
     {
         /* If the entire object graph is to be traversed, then it is safe to
            mutate references to indirection nodes. */
@@ -302,7 +302,7 @@ memory_manager__trace
 {
     int marked;
 
-    void *trace( Object **opp )
+    ACTION trace( Object **opp )
     {
         Object *o = DEREF( opp );
 
@@ -323,7 +323,7 @@ memory_manager__trace
         }
     }
 
-    void *untrace( Object **opp )
+    ACTION untrace( Object **opp )
     {
         Object *o = DEREF( opp );
 
@@ -392,7 +392,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 {
     Set *s;
 
-    void *helper( Object **opp )
+    ACTION helper( Object **opp )
     {
         Object *o = *opp;
 
@@ -439,12 +439,12 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 void
 memory_manager__collect( Memory_Manager *m )
 {
-    void *noop( Object **opp )
+    ACTION noop( Object **opp )
     {
         /* Avoid "unused parameter" warning. */
         opp = 0;
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !m )

@@ -590,7 +590,7 @@ array__walk( Array *a, Dist_f f )
 
     for ( i = 0; i < lim; i++ )
     {
-        if ( f( &ELMT( a, i ) ) )
+        if ( f( &ELMT( a, i ) ) == BREAK )
             break;
     }
 }

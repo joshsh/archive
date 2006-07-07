@@ -177,10 +177,10 @@ prim_reduce(
 
         Object *robj;
 
-        void *add_to_result( void **refp )
+        ACTION add_to_result( void **refp )
         {
             set__add( result_set, *refp );
-            return 0;
+            return CONTINUE;
         }
 
         max = cur;
@@ -264,7 +264,7 @@ prim_reduce(
             return FALSE;
         }
 
-        void *recurse( Object **argp )
+        ACTION recurse( Object **argp )
         {
             if ( curry( *argp ) )
                 return BREAK;

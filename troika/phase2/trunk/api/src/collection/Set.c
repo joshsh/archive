@@ -105,7 +105,7 @@ set__exclusion( Set *a, Set *b )
 {
     Set *c;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( set__contains( b, *refp ) )
             return REMOVE;
@@ -125,7 +125,7 @@ set__intersection( Set *a, Set *b )
 {
     Set *c, *d;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( !set__contains( d, *refp ) )
             return REMOVE;
@@ -155,12 +155,12 @@ set__symmetric_difference( Set *a, Set *b )
 {
     Set *c;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         if ( set__contains( a, *refp ) && set__contains( b, *refp ) )
             return REMOVE;
         else
-            return 0;
+            return CONTINUE;
     }
 
     c = set__union( a, b );
@@ -175,10 +175,10 @@ set__union( Set *a, Set *b )
 {
     Set *c;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         hash_table__add( c, *refp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( hash_table__size( a ) > hash_table__size( b ) )
@@ -205,7 +205,7 @@ set__encode( Set *s, char *buffer )
 {
     boolean first = TRUE;
 
-    void encode( Object **opp )
+    ACTION encode( Object **opp )
     {
         Object *o = *opp;
 
@@ -225,6 +225,8 @@ set__encode( Set *s, char *buffer )
         buffer += strlen( buffer );
 
         first = FALSE;
+
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !s || !buffer ) )
@@ -265,10 +267,10 @@ set__to_array( Set *s )
 {
     Array *a = array__new( 0, 0 );
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         array__enqueue( a, *refp );
-        return 0;
+        return CONTINUE;
     }
 
     set__walk( s, ( Dist_f ) helper );

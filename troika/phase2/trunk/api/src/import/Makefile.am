@@ -49,7 +49,8 @@ noinst_HEADERS = \
 	src/c_std_lib/string.h	\
 	src/c_std_lib/signal.h	\
 	src/c_std_lib/math.h	\
-	src/c_std_lib/stddef.h
+	src/c_std_lib/stddef.h	\
+	src/c89/operators.h
 
 ## Note: avoids intermediate targets which would cause the generated Makefile to
 ## try to rebuild p2-stubs.c (this requires doxygen and xsltproc).

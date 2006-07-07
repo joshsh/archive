@@ -85,11 +85,11 @@ struct Function_Wrapper
 };
 
 
-static void *
+static ACTION
 function_wrapper__delete( Hash_Map__Entry **ppe )
 {
     free( ( Function_Wrapper* ) ( *ppe )->target );
-    return 0;
+    return CONTINUE;
 }
 
 
@@ -208,7 +208,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     Element *el;
     Array *keys;
 
-    void *helper( char **name )
+    ACTION helper( char **name )
     {
         Object *o = namespace__lookup_simple( ns, *name );
 
@@ -217,7 +217,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 
         element__add_child( el, child );
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !ns || !state ) )
@@ -238,14 +238,14 @@ set__xml_encode( Set *s, Xml_Encode_Ctx *state )
 {
     Element *el;
 
-    void *helper( Object **opp )
+    ACTION helper( Object **opp )
     {
         Object *o = *opp;
 
         Element *child = object__xml_encode( o, state, 0 );
         element__add_child( el, child );
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !s || !state ) )
@@ -761,7 +761,7 @@ multiref_ids( Interpreter *c )
 
     Object **tmp;
 
-    void *hash_multiref( Object **opp )
+    ACTION hash_multiref( Object **opp )
     {
         if ( FIRST_CLASS_NULL && !*opp )
             return CONTINUE;
@@ -797,12 +797,12 @@ interpreter__serialize( Interpreter *c, char *path )
     Element *root;
     Xml_Encode_Ctx state;
 
-    void *obj_helper( Hash_Map__Entry **epp )
+    ACTION obj_helper( Hash_Map__Entry **epp )
     {
         Object *o;
         Element *el;
 
-        void *triple_helper( Hash_Map__Entry **epp )
+        ACTION triple_helper( Hash_Map__Entry **epp )
         {
             Hash_Map__Entry *entry = *epp;
 
@@ -820,7 +820,7 @@ interpreter__serialize( Interpreter *c, char *path )
 
             element__add_child( root, triple );
 
-            return 0;
+            return CONTINUE;
         }
 
         o = ( Object* ) ( *epp )->key;
@@ -835,7 +835,7 @@ interpreter__serialize( Interpreter *c, char *path )
             hash_map__walk( o->outbound_edges, ( Dist_f ) triple_helper );
         }
 
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && ( !c || !path ) )

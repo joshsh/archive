@@ -31,7 +31,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 
     /* Distribute f over the children of the namespace which are themselves
        namespaces. */
-    void *distribute( Object **opp )
+    ACTION helper( Object **opp )
     {
         Object *o = DEREF( opp );
 
@@ -65,7 +65,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
 
     queue = array__new( 0, 0 );
 
-    distribute( &ns_o );
+    helper( &ns_o );
     /*array__push( queue, ns_o );*/
 
     /* Breaks out when queue is empty (search exhausted or aborted). */
@@ -73,7 +73,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
     {
         namespace__walk(
             object__value( array__pop( queue ) ),
-            ( Dist_f ) distribute );
+            ( Dist_f ) helper );
     }
 
     array__delete( queue );
@@ -89,9 +89,9 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
     char *key;
     Type *t = object__type( haystack );
 
-    void *find( Namespace_o **nsopp )
+    ACTION find( Namespace_o **nsopp )
     {
-        void *helper( Object **opp )
+        ACTION helper( Object **opp )
         {
             Object *o = DEREF( opp );
 
@@ -167,7 +167,7 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
 {
     Object *o = 0;
 
-    void *test( Namespace_o **ns_opp )
+    ACTION test( Namespace_o **ns_opp )
     {
         o = namespace__lookup_simple( object__value( *ns_opp ), key );
 
@@ -225,7 +225,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
     {
         Object *o = 0;
 
-        void *test( Namespace_o **nsopp )
+        ACTION test( Namespace_o **nsopp )
         {
             parent = object__value( *nsopp );
             o = namespace__lookup_simple( parent, key );

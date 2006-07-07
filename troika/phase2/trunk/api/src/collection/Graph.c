@@ -62,10 +62,10 @@ graph__new( void )
 void
 graph__delete( Graph *g )
 {
-    void *helper( Graph_Edge **ep )
+    ACTION helper( Graph_Edge **ep )
     {
         free( *ep );
-        return 0;
+        return CONTINUE;
     }
 
     /* Destroy graph entries. */

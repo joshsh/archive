@@ -184,7 +184,7 @@ command_gc( Interpreter *c, Ast *args )
 static int
 command_help( Interpreter *c, Ast *args )
 {
-    void *helper( char **refp )
+    ACTION helper( char **refp )
     {
         Command *com = dictionary__lookup( c->commands, *refp );
 
@@ -496,7 +496,7 @@ failure:
 void
 delete_commands( Dictionary *commands )
 {
-    void *helper( Command **refp )
+    ACTION helper( Command **refp )
     {
         Command *c = *refp;
 

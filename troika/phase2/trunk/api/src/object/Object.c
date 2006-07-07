@@ -62,10 +62,10 @@ object__delete( Object *o )
 {
     Type *t;
 
-    void *helper( void **refp )
+    ACTION helper( void **refp )
     {
         t->destroy( *refp );
-        return 0;
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !o )

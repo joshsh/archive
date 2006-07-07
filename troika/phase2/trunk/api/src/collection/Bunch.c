@@ -158,7 +158,7 @@ bunch__copy( Bunch *b )
 void
 bunch__delete( Bunch *b )
 {
-    void *helper( Block **blp )
+    ACTION helper( Block **blp )
     {
         block__delete( *blp );
         return 0;

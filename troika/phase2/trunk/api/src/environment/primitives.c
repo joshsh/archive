@@ -89,7 +89,7 @@ objects_inv_stub( void **args )
     Set *s = args[0];
     Set *matches = set__new();
 
-    void *helper( Object **opp )
+    ACTION helper( Object **opp )
     {
         Object *o = *opp;
 
@@ -126,10 +126,10 @@ predicates_stub( void **args )
     Object *o = args[0];
     Set *s = set__new();
 
-    void *helper( Hash_Map__Entry **epp )
+    ACTION helper( Hash_Map__Entry **epp )
     {
         set__add( s, ( *epp )->key );
-        return 0;
+        return CONTINUE;
     }
 
     if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
@@ -145,10 +145,10 @@ objects_stub( void **args )
     Object *o = args[0];
     Set *s = set__new();
 
-    void *helper( Hash_Map__Entry **epp )
+    ACTION helper( Hash_Map__Entry **epp )
     {
         set__add( s, ( *epp )->target );
-        return 0;
+        return CONTINUE;
     }
 
     if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
