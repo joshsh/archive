@@ -24,7 +24,8 @@ libp2prims_la_SOURCES = \
 	src/cstring.c		\
 	src/double.c		\
 	src/int.c		\
-	src/xpm.c
+	src/xpm.c		\
+	src/c89/operators.c
 
 noinst_HEADERS = \
 	src/char.h		\
