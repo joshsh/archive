@@ -31,8 +31,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */
 
-#define STRDUP( x )  strcpy( malloc( 1 + strlen( x ) ), (x) )
-#define new( type )  malloc( sizeof (type) )
+#define STRDUP( x ) strcpy( malloc( 1 + strlen( x ) ), (x) )
+#define MALLOC      malloc
+#define new( type ) malloc( sizeof (type) )
 
 
 #ifndef VERSION

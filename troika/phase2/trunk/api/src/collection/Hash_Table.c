@@ -329,7 +329,7 @@ rehash_dependent_cells( Hash_Table *h, void **removed )
 
     if ( i )
     {
-        aux = ( void** ) malloc( i * sizeof( void* ) );
+        aux = ( void** ) MALLOC( i * sizeof( void* ) );
 
         cur = removed;
         for ( j = 0; j < i; j++ )

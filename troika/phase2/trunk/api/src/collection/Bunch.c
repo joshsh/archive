@@ -69,7 +69,7 @@ block__new( unsigned int size )
 
         /*~ take memory faults into account (actual block size might have to be
             smaller than the intended size). */
-        if ( !( bl->buffer = malloc( size * sizeof( void* ) ) ) )
+        if ( !( bl->buffer = MALLOC( size * sizeof( void* ) ) ) )
             bl = 0;
     }
 
@@ -87,7 +87,7 @@ block__copy( Block *bl )
         bl2->size = bl->size;
         bl2->filled = bl->filled;
 
-        if ( !( bl2->buffer = malloc( bl2->size * sizeof ( void* ) ) ) )
+        if ( !( bl2->buffer = MALLOC( bl2->size * sizeof ( void* ) ) ) )
             bl2 = 0;
         else
             memcpy( bl2->buffer, bl->buffer, bl->filled * sizeof ( void* ) );

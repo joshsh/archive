@@ -51,7 +51,7 @@ struct Array
 #define INBOUNDS( a, i )  ( (i) < (a)->size )
 #define WRAP( a, i )  ( (a)->head + (i) ) % (a)->buffer_size
 
-#define BUFFER_NEW( size )  malloc( (size) * sizeof( void* ) )
+#define BUFFER_NEW( size )  MALLOC( (size) * sizeof( void* ) )
 
 
 static void **
@@ -60,7 +60,7 @@ buffer_copy( Array *a )
     void **buffer;
     size_t size = a->buffer_size * sizeof( void* );
 
-    if ( ( buffer = malloc( size ) ) )
+    if ( ( buffer = MALLOC( size ) ) )
         memcpy( buffer, a->buffer, size );
 
     return buffer /*@null@*/;
