@@ -396,6 +396,9 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
     {
         Object *o = *opp;
 
+        if ( FIRST_CLASS_NULL && !o )
+            return BREAK;
+
         /* If the object is already marked, abort. */
         if ( visited( o ) )
         {
@@ -415,7 +418,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
                 set__add( s, o );
             }
 
-            return 0;
+            return CONTINUE;
         }
     }
 

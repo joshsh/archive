@@ -6,11 +6,11 @@ XML_OUT = ./$(OUT)/xml
 OBJ_OUT = ./$(OUT)/obj
 
 
-BUILT_SOURCES = src/p2-stubs.c
+BUILT_SOURCES = p2-stubs.c
 
 ## These are included in the distribution package for completeness, but are not
 ## required in order to build phase2 from it.
-EXTRA_DIST = p2-stubs.xslt p2-import.cfg
+EXTRA_DIST = p2-stubs.xslt p2-import.cfg src/c89/operators.h.templ
 
 ## ~
 INCLUDES := $(INCLUDES) -I../../src
@@ -18,7 +18,7 @@ INCLUDES := $(INCLUDES) -I../../src
 noinst_LTLIBRARIES = libp2prims.la
 
 libp2prims_la_SOURCES = \
-	src/p2-stubs.c		\
+	p2-stubs.c		\
 	src/char.c		\
 	src/combinator-impl.c	\
 	src/cstring.c		\
@@ -53,7 +53,12 @@ noinst_HEADERS = \
 
 ## Note: avoids intermediate targets which would cause the generated Makefile to
 ## try to rebuild p2-stubs.c (this requires doxygen and xsltproc).
-src/p2-stubs.c :  $(noinst_HEADERS)
+p2-stubs.c :  $(noinst_HEADERS) $(CXX_IN)/c89/operators.h
 	doxygen p2-import.cfg
 	xsltproc $(XML_OUT)/combine.xslt $(XML_OUT)/index.xml > $(XML_OUT)/p2-import.xml
-	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(CXX_IN)/p2-stubs.c
+	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > p2-stubs.c
+
+$(CXX_IN)/c89/operators.h :
+	cp $(CXX_IN)/c89/operators.h.templ temp.h
+	$(CC) temp.h -E -o $(CXX_IN)/c89/operators.h
+	rm -f temp.h

@@ -40,11 +40,7 @@ extern &quot;C&quot;
             <xsl:if test="count(sectiondef) > 0">
 /******************************************************************************/
 
-#include &quot;<xsl:text />
-        <xsl:value-of select="compoundname/text()" />
-        <xsl:text />&quot;<xsl:text />
-
-        <xsl:text>&#xa;</xsl:text>
+        <xsl:call-template name="header-include"/>
 
         <!-- Add any includes from the source file. -->
         <xsl:for-each select="includes">
@@ -85,6 +81,29 @@ extern &quot;C&quot;
 #endif
 
 <xsl:text />
+
+    </xsl:template>
+
+
+    <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+
+    <xsl:template name="header-include">
+
+        <xsl:variable name="filename">
+            <xsl:value-of select="compoundname/text()" />
+        </xsl:variable>
+
+        <xsl:variable name="directory">
+            <xsl:value-of select="/doxygen/compounddef[innerfile/text()=$filename]/compoundname/text()"/>
+        </xsl:variable>
+
+<xsl:text />
+#include &quot;<xsl:text />
+        <xsl:value-of select="concat($directory,$filename)" />
+        <xsl:text />&quot;<xsl:text />
+
+        <xsl:text>&#xa;</xsl:text>
 
     </xsl:template>
 
@@ -473,3 +492,5 @@ static void *<xsl:text />
 
 
 </xsl:stylesheet>
+
+<!-- kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on -->

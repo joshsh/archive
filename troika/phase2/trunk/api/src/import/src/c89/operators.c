@@ -1,4 +1,4 @@
-#include "operators.h"
+#include "operators.h.templ"
 
 
 OP_PLUS( double )

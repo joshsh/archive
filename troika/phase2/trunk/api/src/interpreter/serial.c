@@ -466,11 +466,20 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 {
     char *name;
 
-    /* id > 0  ==>  the object is multireferenced. */
-    unsigned int id = ( unsigned int ) hash_map__lookup( state->ids, o );
+    unsigned int id;
 
     Element *el;
     Xml_Encoder encode;
+
+    /* id > 0  ==>  the object is multireferenced. */
+    id = ( unsigned int ) hash_map__lookup( state->ids, o );
+
+    if ( FIRST_CLASS_NULL && !o )
+    {
+        el = element__new( 0, ( uc* ) "object", 0 );
+        attr__new( el, ( uc* ) "ref", ( uc* ) "0", 0 );
+        return el;
+    }
 
     /* "Short out" indirection nodes. */
     while ( object__type( o ) == indirection_type )
@@ -682,15 +691,21 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         text = ( char* ) attr__value( attr );
         id = ( unsigned int ) atoi( text );
 
-        free( text );
-        o = ( Object* ) hash_map__lookup
-            ( state->objects_by_id, ( void* ) id );
+        if ( FIRST_CLASS_NULL && !id )
+            o = 0;
 
-        /* Placeholder object must be created. */
-        if ( !o )
+        else
         {
-            o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
-            hash_map__add( state->objects_by_id, ( void* ) id, o );
+            free( text );
+            o = ( Object* ) hash_map__lookup
+                ( state->objects_by_id, ( void* ) id );
+
+            /* Placeholder object must be created. */
+            if ( !o )
+            {
+                o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                hash_map__add( state->objects_by_id, ( void* ) id, o );
+            }
         }
     }
 
@@ -778,6 +793,9 @@ multiref_ids( Interpreter *c )
 
     void *hash_multiref( Object **opp )
     {
+        if ( FIRST_CLASS_NULL && !*opp )
+            return CONTINUE;
+
         /* Working namespace has already been given an id. */
         if ( !hash_map__lookup( ids, *opp ) )
         {
@@ -785,7 +803,7 @@ multiref_ids( Interpreter *c )
             hash_map__add( ids, *opp, ( void* ) max_id );
         }
 
-        return 0;
+        return CONTINUE;
     }
 
     /* Force the working name space to be at top level. */
