@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <Collection.h>
+#include <collection/Collection.h>
 #include "object/Object-impl.h"
 
 

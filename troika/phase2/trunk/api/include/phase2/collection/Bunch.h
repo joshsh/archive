@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef BUNCH_H
 #define BUNCH_H
 
-#include <util/Array.h>
+#include <collection/Array.h>
 
 
 typedef struct Bunch Bunch;

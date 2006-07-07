@@ -67,7 +67,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Ast.h>
 #include "../settings.h"
 
-#include <util/Term.h>
+#include <collection/Term.h>
 
 
 /* Avoids C99 warning: implicit declaration of function ‘yylex’ */

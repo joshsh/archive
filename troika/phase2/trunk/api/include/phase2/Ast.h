@@ -31,9 +31,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define P2_AST_H
 
 
-#include <util/Name.h>
-#include <util/Array.h>
-#include <util/Term.h>
+#include <collection/Name.h>
+#include <collection/Array.h>
+#include <collection/Term.h>
 
 
 enum p2_parser__exit_state

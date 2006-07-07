@@ -203,7 +203,7 @@ add_triples_prims( Environment *env )
 /******************************************************************************/
 
 
-#include <util/Set.h>
+#include <collection/Set.h>
 
 
 static void *

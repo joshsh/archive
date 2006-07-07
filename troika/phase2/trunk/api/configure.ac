@@ -37,4 +37,4 @@ DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN([phase2], [doxygen.cfg], [doc])
 
-AC_OUTPUT([Makefile include/Makefile src/Makefile src/import/Makefile src/parser/Makefile src/util/Makefile src/xml/Makefile])
+AC_OUTPUT([Makefile include/Makefile src/Makefile src/import/Makefile src/parser/Makefile src/collection/Makefile src/xml/Makefile])

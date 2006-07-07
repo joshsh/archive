@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define GRAPH_H
 
 
-#include <util/Hash_Table.h>
+#include <collection/Hash_Table.h>
 
 
 typedef Hash_Table Graph;

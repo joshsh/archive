@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../settings.h"
 
 #if TRIPLES__GLOBAL
-#include <util/Hash_Map.h>
+#include <collection/Hash_Map.h>
 #endif
 
 

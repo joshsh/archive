@@ -29,7 +29,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SET_H
 
 
-#include <util/Hash_Table.h>
+#include <collection/Hash_Table.h>
+    #include <collection/Array.h>
+
 #include <Type.h>
 
 
@@ -103,8 +105,6 @@ set__create_type( const char *name, int flags );
 
 
 /******************************************************************************/
-
-#include <util/Array.h>
 
 /** A convenience method for implementing code which can't use set__walk. */
 extern Array *

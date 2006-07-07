@@ -47,7 +47,7 @@ apply__delete( Apply *a );
 extern void
 apply__walk( Apply *a, Dist_f f );
 
-#include <util/Term.h>
+#include <collection/Term.h>
 
 extern Term *
 apply__as_term( Apply *a );

@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Ast__Type ***************************************************************/
 
 
-const char *Ast__Type__names[8] =
+const char *Ast__Type__names[9] =
 {
     "BAG_T",
     "CHAR_T",
@@ -69,10 +69,6 @@ ast__bag( Array *bag )
 {
     Ast *ast = ast__new( BAG_T, bag );
 
-    #if DEBUG__AST
-    printf( "[%#x] ast__bag(%#x)\n", ( int ) ast, ( int) bag );
-    #endif
-
     return ast;
 }
 
@@ -86,10 +82,6 @@ ast__char( char c )
     p = new( char );
     *p = c;
     ast = ast__new( CHAR_T, p );
-
-    #if DEBUG__AST
-    printf( "[%#x] ast__char('%c')\n", ( int ) ast, c );
-    #endif
 
     return ast;
 }
@@ -105,10 +97,6 @@ ast__float( double f )
     *p = f;
     ast = ast__new( FLOAT_T, p );
 
-    #if DEBUG__AST
-    printf( "[%#x] ast__float(%g)\n", ( int ) ast, f );
-    #endif
-
     return ast;
 }
 
@@ -123,10 +111,6 @@ ast__int( int i )
     *p = i;
     ast = ast__new( INT_T, p );
 
-    #if DEBUG__AST
-    printf( "[%#x] ast__int(%i)\n", ( int ) ast, i );
-    #endif
-
     return ast;
 }
 
@@ -135,10 +119,6 @@ Ast *
 ast__name( Name *name )
 {
     Ast *ast = ast__new( NAME_T, name );
-
-    #if DEBUG__AST
-    printf( "[%#x] ast__name(%#x)\n", ( int ) ast, ( int) name );
-    #endif
 
     return ast;
 }
@@ -158,10 +138,6 @@ ast__string( char *s )
 {
     Ast *ast = ast__new( STRING_T, s );
 
-    #if DEBUG__AST
-    printf( "[%#x] ast__string(%#x)\n", ( int ) ast, ( int) s );
-    #endif
-
     return ast;
 }
 
@@ -171,10 +147,6 @@ ast__term( Term *term )
 {
     Ast *ast = ast__new( TERM_T, term );
 
-    #if DEBUG__AST
-    printf( "[%#x] ast__term(%#x)\n", ( int ) ast, ( int) term );
-    #endif
-
     return ast;
 }
 
@@ -183,10 +155,6 @@ Ast *
 ast__void( void *p )
 {
     Ast *ast = ast__new( VOID_T, p );
-
-    #if DEBUG__AST
-    printf( "[%#x] ast__void(%#x)\n", ( int ) ast, ( int ) p );
-    #endif
 
     return ast;
 }
@@ -215,10 +183,6 @@ ast__delete( Ast *ast )
         ast__delete( *ast );
         return 0;
     }
-
-    #if DEBUG__AST
-    printf( "[] ast__delete(%#x)\n", ( int ) ast );
-    #endif
 
     switch( ast->type )
     {

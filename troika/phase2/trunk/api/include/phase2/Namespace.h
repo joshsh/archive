@@ -33,8 +33,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <Object.h>
 #include <Memory_Manager.h>
-#include <util/Dictionary.h>
-#include <util/Name.h>
+#include <collection/Dictionary.h>
+#include <collection/Name.h>
 
 
 typedef Object Namespace_o;

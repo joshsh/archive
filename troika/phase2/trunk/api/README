@@ -42,6 +42,42 @@ Phase2 uses a network model to organize and navigate through programs and data. 
 The Phase2 package is built with autotools and qmake.  The API and interpreter are written in C with GNU extensions, while the GUI is written in Qt/C++.  Adding new primitives to the API is as simple as dropping a C header file into a special directory and re-compiling with the appropriate options: the build process uses doxygen to pick up the function's name and type signature, and xsltproc to generate stubs and constructor calls to build the primitive at invocation time.  Most of the functions in the C standard library can be made available in this way.  You can also import new primitive data types by tagging special functions as essential methods for the type.
 
 
+Compiling Phase2
+
+IMPORTANT: Phase2 is written in GNU C and is only compatible with the GNU C
+compiler.  Specifically, it makes liberal use of nested functions.
+
+    $ ./configure
+    (./configure --enable-debug)
+
+    $ make
+
+If you're interested in compiler warnings, you might want to filter them out for
+better visibility:
+
+    $ make 2>stderr.txt; cat stderr.txt
+
+
+    $ make install
+
+See ./INSTALL for more details.
+
+
+Building Phase2 from scratch
+
+    $ ./cleanup
+
+    $ ./bootstrap
+
+    $ make doxygen-doc
+    $ make dist
+
+bison -- 
+dot -- http://www.graphviz.org/
+doxygen -- http://www.doxygen.org/
+flex -- 
+make -- 
+xsltproc -- http://xmlsoft.org/XSLT/
 
 
 
@@ -49,18 +85,6 @@ The Phase2 package is built with autotools and qmake.  The API and interpreter a
 
 
 
-
-./cleanup
-./bootstrap
-./configure
-
-(./configure --enable-debug)
-
-make 2>stderr.txt; cat stderr.txt
-
-make dist
-make install
-make doxygen-doc
 
 
 valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes src/.libs/lt-phase2

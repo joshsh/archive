@@ -30,9 +30,9 @@ debugger_SOURCES = \
 	../object/methods.c	\
 	../object/traversal.c	\
 	../Ast.c		\
-	../util/Array.c		\
-	../util/Hash_Table.c	\
-	../util/Hash_Map.c	\
-	../util/Name.c		\
-	../util/String.c	\
-	../util/Term.c
+	../collection/Array.c		\
+	../collection/Hash_Table.c	\
+	../collection/Hash_Map.c	\
+	../collection/Name.c		\
+	../collection/String.c	\
+	../collection/Term.c

@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <util/Name.h>
-#include <util/Term.h>
+#include <collection/Name.h>
+#include <collection/Term.h>
 
 #include "Environment-impl.h"
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<data_set p2-version="0.6.3" p2-revision="191" time="Fri Apr 14 15:32:07 2006">
-  <object id="1" type="Namespace">
-    <table>
-      <object type="int" name="foo">42</object>
-    </table>
-  </object>
-</data_set>

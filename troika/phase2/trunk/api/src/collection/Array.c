@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <util/Array.h>
+#include <collection/Array.h>
 #include <Object.h>
 #include "../settings.h"
 

@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define NAME_H
 
 
-#include <util/Array.h>
+#include <collection/Array.h>
 
 
 typedef Array Name;

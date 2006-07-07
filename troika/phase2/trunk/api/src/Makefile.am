@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = import parser util xml
+SUBDIRS = import parser collection xml
 
 BUILT_SOURCES = revision.h
 noinst_HEADERS = revision.h		\
@@ -71,16 +71,16 @@ libphase2_la_SOURCES = \
 	$(primitive_src)	\
 	$(compiler_src)		\
 	$(xml_src)		\
-	Ast.c \
-	Collection.c		\
+	Ast.c			\
+	collection/Collection.c	\
 	Memory_Manager.c	\
 	Type.c
 
 ## Convenience libraries from each subdirectory with its own Makefile.am.
 libphase2_la_LIBADD = \
-	import/libp2prims.la	\
-	parser/libp2parser.la	\
-	util/libp2utils.la	\
+	import/libp2prims.la		\
+	parser/libp2parser.la		\
+	collection/libp2collection.la	\
 	xml/libp2xml.la
 
 phase2_SOURCES = main.c

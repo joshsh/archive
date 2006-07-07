@@ -1,6 +1,6 @@
 /**
 
-\file  Dictionary.h
+\file  Hash_Map.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,49 +25,46 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef DICTIONARY_H
-#define DICTIONARY_H
+#ifndef LOOKUP_TABLE_H
+#define LOOKUP_TABLE_H
 
 
-#include <util/Hash_Table.h>
-#include <util/Array.h>
+#include <collection/Hash_Table.h>
 
 
-typedef Hash_Table Dictionary;
+typedef struct Hash_Map__Entry Hash_Map__Entry;
+
+struct Hash_Map__Entry
+{
+    void *key;
+    void *target;
+};
 
 
-extern Dictionary *
-dictionary__new( void );
+typedef Hash_Table Hash_Map;
+
+
+extern Hash_Map *
+hash_map__new( void );
 
 extern void
-dictionary__delete( Dictionary *dict );
-
-
-extern void *
-dictionary__add( Dictionary *dict, const char *key, void *target );
-
-extern void *
-dictionary__lookup( Dictionary *dict, char *key );
-
-extern char *
-dictionary__reverse_lookup( Dictionary *dict, const void *target );
-
-extern void *
-dictionary__remove( Dictionary *dict, char *key );
+hash_map__delete( Hash_Map *t );
 
 
 extern void
-dictionary__add_all( Dictionary *dest, Dictionary *src );
+hash_map__add( Hash_Map *t, void * const key, void * const target );
+
+extern void *
+hash_map__lookup( Hash_Map *t, void * const key );
+
+extern void
+hash_map__remove( Hash_Map *t, void * const src );
 
 
 extern void
-dictionary__walk( Dictionary *dict, Dist_f f );
+hash_map__walk( Hash_Map *t, Dist_f f );
 
 
-extern Array *
-dictionary__keys( Dictionary *dict );
-
-
-#endif  /* DICTIONARY_H */
+#endif  /* LOOKUP_TABLE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

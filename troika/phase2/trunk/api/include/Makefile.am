@@ -4,7 +4,6 @@
 nobase_include_HEADERS = \
 	phase2/Ast.h			\
 	phase2/Closure.h		\
-	phase2/Collection.h		\
 	phase2/common.h			\
 	phase2/Environment.h		\
 	phase2/Interpreter.h		\
@@ -17,14 +16,15 @@ nobase_include_HEADERS = \
 	phase2/Void.h			\
 	phase2/Combinator.h		\
 	phase2/sk.h			\
-	phase2/util/Array.h		\
-	phase2/util/Bunch.h		\
-	phase2/util/Dictionary.h	\
-	phase2/util/Graph.h		\
-	phase2/util/Hash_Map.h		\
-	phase2/util/Hash_Table.h	\
-	phase2/util/Name.h		\
-	phase2/util/Set.h		\
-	phase2/util/String.h		\
-	phase2/util/Term.h		\
+	phase2/collection/Array.h	\
+	phase2/collection/Bunch.h	\
+	phase2/collection/Collection.h	\
+	phase2/collection/Dictionary.h	\
+	phase2/collection/Graph.h	\
+	phase2/collection/Hash_Map.h	\
+	phase2/collection/Hash_Table.h	\
+	phase2/collection/Name.h	\
+	phase2/collection/Set.h		\
+	phase2/collection/String.h	\
+	phase2/collection/Term.h	\
 	phase2/xml/xmldom.h

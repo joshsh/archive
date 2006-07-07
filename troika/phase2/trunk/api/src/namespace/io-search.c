@@ -18,7 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include "Namespace-impl.h"
-#include <util/Hash_Map.h>
+#include <collection/Hash_Map.h>
 
 
 /* Distribute f recursively (and in a breadth-first fashion) to any child
