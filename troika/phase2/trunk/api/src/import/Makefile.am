@@ -6,7 +6,7 @@ XML_OUT = ./$(OUT)/xml
 OBJ_OUT = ./$(OUT)/obj
 
 
-BUILT_SOURCES = p2-stubs.c
+BUILT_SOURCES = p2-stubs.c src/c89/operators.h
 
 ## These are included in the distribution package for completeness, but are not
 ## required in order to build phase2 from it.
@@ -49,8 +49,7 @@ noinst_HEADERS = \
 	src/c_std_lib/string.h	\
 	src/c_std_lib/signal.h	\
 	src/c_std_lib/math.h	\
-	src/c_std_lib/stddef.h	\
-	src/c89/operators.h
+	src/c_std_lib/stddef.h
 
 ## Note: avoids intermediate targets which would cause the generated Makefile to
 ## try to rebuild p2-stubs.c (this requires doxygen and xsltproc).
