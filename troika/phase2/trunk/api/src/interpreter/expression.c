@@ -24,9 +24,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include <sk.h>
-
 #include "Interpreter-impl.h"
 #include "../compiler/graph.h"
+#include "../collection/Term-impl.h"
 
 
 /* FIXME */
@@ -278,7 +278,7 @@ resolve( Ast *ast, Interpreter *c )
 
         ACTION helper( Ast **astpp )
         {
-            *astpp = object_for_ast( *astpp );
+            *( ( Object** ) astpp ) = object_for_ast( *astpp );
 
             if ( !FIRST_CLASS_NULL && !*astpp)
             {

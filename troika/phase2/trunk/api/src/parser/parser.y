@@ -4,39 +4,12 @@
 
 \file  parser.y
 
-\brief  Bison grammar file for Phase2's command line front-end.
+\brief  Bison grammar file for Phase2's command line interpreter.
 
-Phase2's command-line interface is a separable feature of the language. It
-allows the user to pass command_args to either of a pair of functions defined in
-the Phase2 client: one for program construction and one for querying or
-manipulating the programming environment.
-
-Expression Syntax
-
-At the parser level, an expression is a parenthetically nested sequence of
-dictionary items or special symbols, terminated by a semicolon. To give an
-expression a name, the semicolon may be preceded by an equality symbol and
-then the name, e.g.
-
-    (token1 token2) token3 = token4;
-
-Command Syntax
-
-Special commands are indicated with a backslash plus the name of the command,
-followed by a whitespace-delimited list of command_args (no parentheses) and
-terminated by a semicolon, e.g.
-
-    _command arg1 arg2;
-
-Commands thus indicated do not belong to the program under construction, and are
-to take immediate effect at parse time.
-
-Interaction with the client
-
-The role of the parser is simply to construct a Term to send to the client
-for evaluation.  The client then handles the term and eventually frees it
-after generating output.  The client cannot "talk back" to the parser except to
-tell it to terminate.
+The role of the parser is simply to construct an expression to send to the
+interpreter for evaluation.  The interpreter then handles the expression and
+eventually frees it after generating output.  The interpreter cannot "talk back"
+to the parser except to tell it to quit.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -256,7 +229,7 @@ term2ast( Term *t )
 
     else
     {
-        ast = *( t->head + 1 );
+        ast = term__head( t );
         term__delete( t );
     }
 

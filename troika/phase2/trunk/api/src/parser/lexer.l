@@ -4,7 +4,7 @@
 
 \file  parser.l
 
-\brief  Flex input file for Phase2's command line front-end.
+\brief  Flex input file for Phase2's command line interpreter.
 
 Identifiers beginning with an underscore (e.g. _quit) are reserved for special
 commands.
@@ -14,10 +14,10 @@ Comments are delimited by "(:" and ":)", and may be nested to any level.
 String literals are delimited by quote characters, and use the escape
 sequences {\"} for the quote character and {\\} for the backslash, e.g.
 
-    system "echo \"Hello World!\"";
+    system_call "echo \"Hello World!\"";
 
-\note  White space is always relevant in Phase2 expressions.  Identifiers
-must be separated either by white space or by appropriate syntax tokens, e.g.
+\note  White space is relevant in Phase2 expressions.  Identifiers must be
+separated either by white space or by appropriate syntax tokens, e.g.
 
     + a b  or  (+ a)b  or  ((+)a)b  but not  +ab
 

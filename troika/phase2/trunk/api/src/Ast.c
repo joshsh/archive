@@ -264,7 +264,7 @@ term__print( Term *term, int top_level )
         unsigned int i, length = term__length( term );
 
         if ( length == 1 )
-            ast__print( ( Ast* ) *( term->head + 1 ) );
+            ast__print( term__head( term ) );
             /*PRINT((char *) *(term->head + 1)); */
 
         else

@@ -2,7 +2,7 @@
 
 \file  Namespace.h
 
-\brief  A dictionary which may contain other dictionaries.
+\brief  A dictionary which may reference other dictionaries.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n

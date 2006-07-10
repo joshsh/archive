@@ -28,9 +28,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SETTINGS_H
 
 
-#define NOPROPS     0
-
-
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */
 
@@ -39,12 +36,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define NEW(type)   malloc(sizeof (type))
 
 
-#ifndef VERSION
-#   define VERSION  "X"
+#define NOPROPS                                 0
+
+
+#ifndef PACKAGE_NAME
+#   define PACKAGE_NAME                         "phase2"
+#endif
+
+#ifndef PACKAGE_VERSION
+#   define PACKAGE_VERSION                      "X"
 #endif
 
 #ifndef PACKAGE_BUGREPORT
-#   define PACKAGE_BUGREPORT   "parcour@gmail.com"
+#   define PACKAGE_BUGREPORT                    "parcour@gmail.com"
 #endif
 
 
@@ -115,8 +119,8 @@ dereference( struct Object ** );
     yielding another primitive as a return value. */
 #define PRIM__ALLOW_HIGHER_ORDER                1
 
-#define PRIM__ALLOW_NOARG_FUNCTIONS             0
-#define PRIM__ALLOW_VOID_FUNCTIONS              0
+#define PRIM__ALLOW_NULLARY                     0
+#define PRIM__ALLOW_VOID                        0
 
 #define PRIM__CHECKS__PARAM_TYPE                1
 
@@ -261,7 +265,7 @@ dereference( struct Object ** );
 
 #define DEBUG__SAFE                             1
 
-/* FIXME: these are barely used */
+/* TODO: these are barely used */
 #define DEBUG                                   0
 #    define DEBUG__MAIN                         1 & DEBUG
 #    define DEBUG__CORE                         1 & DEBUG

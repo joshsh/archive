@@ -99,7 +99,7 @@ term__to_apply_tree( Term *t, Memory_Manager *m )
 
     /* Assumed: physical length of term is two cells. */
     if ( l == 1 )
-        o = *( t->head + 1 );
+        o = term__head( t );
 
     else
     {

@@ -20,6 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Set.h>
 #include <Object.h>
 #include "../settings.h"
+    #include "../type/Type-impl.h"
 
 
 static unsigned int
@@ -43,7 +44,7 @@ Set *
 set__new( void )
 {
     Hash_Table *s = hash_table__new( 0, 0, 0,
-        ( hash_f ) hash, ( Comparator ) compare );
+        ( Hash_f ) hash, ( Comparator ) compare );
 
     return s;
 }

@@ -108,7 +108,7 @@ Dictionary *
 dictionary__new( void )
 {
     Hash_Table *h = hash_table__new
-        ( 0, 0, 0, ( hash_f ) hash, ( Comparator ) compare );
+        ( 0, 0, 0, ( Hash_f ) hash, ( Comparator ) compare );
 
     return h;
 }
@@ -159,7 +159,7 @@ dictionary__add( Dictionary *dict, const char *key, void *target )
 
 
 void *
-dictionary__lookup( Dictionary *dict, char *key )
+dictionary__lookup( Dictionary *dict, const char *key )
 {
     Dictionary_Entry *entry;
     Dictionary_Entry match_entry;
@@ -167,7 +167,8 @@ dictionary__lookup( Dictionary *dict, char *key )
     if ( DEBUG__SAFE && ( !dict || !key ) )
         abort();
 
-    match_entry.key = key;
+    /* FIXME: strdup is only used to appease the compiler */
+    match_entry.key = STRDUP( key );
     entry = hash_table__lookup( dict, &match_entry );
 
     return ( entry ) ? entry->target : 0;

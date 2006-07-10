@@ -17,9 +17,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <collection/Term.h>
 #include <Object.h>
-#include "../settings.h"
+#include "Term-impl.h"
+    #include "../type/Type-impl.h"
 
 
 /*******************************************************************************/
@@ -206,6 +206,24 @@ term__subterm_at(Term *t, int i)
     subterm->head = subterm->buffer;
 
     return subterm;
+}
+
+
+void *
+term__head(Term *t)
+{
+    void **cur = t->head;
+
+    if ( DEBUG__SAFE && !t )
+        abort();
+
+    /* Find the leftmost atom. */
+    while (*cur > (void *) 2)
+        cur++;
+
+    cur++;
+
+    return *cur;
 }
 
 

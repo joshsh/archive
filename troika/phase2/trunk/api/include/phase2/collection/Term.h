@@ -2,7 +2,7 @@
 
 \file  Term.h
 
-\brief  A simple nested sequence utility.
+\brief  A simple nested sequence class.
 
 Terms are represented by arrays of 4-byte cells, each of which contains either
 a reference to an "atom" or an integer i indicating the head of a sub-term with
@@ -51,30 +51,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 typedef struct Term Term;
 
-/** \brief A data structure to represent and manipulate nested sequences.
-    The implementation is not recursive.
-
-    \note An empty Term has no data; it is represented by the NULL.
- */
-struct Term
-{
-    /** Number of cells the buffer can hold. */
-    unsigned int buffer_size;
-
-    /** An array of 4-byte cells containing both generic pointers ("atoms") and
-        unsigned int values (each one indicates the size of the sub-term in
-        which it is the first cell). */
-    void **buffer;
-
-    /** Position of the first cell of the Term representation in the buffer.
-        It always contains an unsigned int value indicating the overall size of
-        the Term. */
-    void **head;
-
-    /** The buffer expands by this factor whenever it becomes full. */
-    double expansion;
-};
-
 
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
     the new buffer will be this much larger. */
@@ -119,6 +95,11 @@ term__length( const Term *t );
     your index is in range by first calling term__length. */
 extern Term *
 term__subterm_at( Term *t, int i );
+
+
+/** \return  the leftmost item in the term */
+extern void *
+term__head(Term *t);
 
 
 /* Normalizing functions ******************************************************/

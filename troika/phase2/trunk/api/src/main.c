@@ -40,7 +40,7 @@ static int version_flag;
 static void
 print_version()
 {
-    PRINT( "Phase2 %s\n", VERSION );
+    PRINT( "%s %s\n", PACKAGE_NAME, PACKAGE_VERSION );
 }
 
 

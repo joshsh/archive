@@ -5,15 +5,16 @@ SUBDIRS = import parser collection xml
 BUILT_SOURCES = revision.h
 noinst_HEADERS = revision.h		\
 	settings.h			\
+	compiler/Apply.h		\
+	compiler/graph.h		\
+	compiler/graph-types.h		\
 	object/Object-impl.h		\
 	primitive/Primitive-impl.h	\
 	interpreter/Interpreter-impl.h	\
 	interpreter/license.h		\
 	environment/Environment-impl.h	\
 	namespace/Namespace-impl.h	\
-	compiler/Apply.h			\
-	compiler/graph.h			\
-	compiler/graph-types.h
+	type/Type-impl.h
 
 bin_PROGRAMS = phase2
 
@@ -27,6 +28,11 @@ lib_LTLIBRARIES = libphase2.la
 
 LIBS := $(LIBS) -lxml2 -lncurses ##`xml2-config --libs`
 
+
+compiler_src = \
+	compiler/Apply.c	\
+	compiler/graph.c	\
+	compiler/sk.c
 
 environment_src = \
 	environment/Environment.c	\
@@ -57,10 +63,9 @@ primitive_src = \
 	primitive/Primitive.c		\
 	primitive/Primitive-import.c
 
-compiler_src = \
-	compiler/Apply.c	\
-	compiler/graph.c	\
-	compiler/sk.c
+
+type_src = \
+	type/Type.c
 
 
 libphase2_la_SOURCES = \
@@ -70,11 +75,10 @@ libphase2_la_SOURCES = \
 	$(object_src)		\
 	$(primitive_src)	\
 	$(compiler_src)		\
-	$(xml_src)		\
+	$(type_src)		\
 	Ast.c			\
 	collection/Collection.c	\
-	Memory_Manager.c	\
-	Type.c
+	Memory_Manager.c
 
 ## Convenience libraries from each subdirectory with its own Makefile.am.
 libphase2_la_LIBADD = \

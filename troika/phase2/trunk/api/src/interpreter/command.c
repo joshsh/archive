@@ -29,8 +29,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "license.h"
 
 
-
-
 typedef int ( *CommandFunction )( Interpreter *c, Ast *args );
 
 
@@ -87,10 +85,10 @@ get_arg( Ast *args, unsigned int i )
     {
         subterm = term__subterm_at( term, i );
 
-        if ( DEBUG__SAFE && ( unsigned int ) *( subterm->head ) != 2 )
+        if ( DEBUG__SAFE && term__length( subterm ) > 1 )
             abort();
 
-        a = *( subterm->head + 1 );
+        a = term__head( subterm );
 
         term__delete( subterm );
     }

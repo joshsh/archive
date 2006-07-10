@@ -21,6 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Set.h>
 #include "../object/Object-impl.h"
 #include "../primitive/Primitive-impl.h"
+#include "../collection/Term-impl.h"
 
 
 /* Kxy --> x
@@ -325,7 +326,7 @@ prim_reduce(
     cur = term->head + 2;
     p = ( ( Object* ) *cur )->value;
 
-    if ( PRIM__ALLOW_NOARG_FUNCTIONS )
+    if ( PRIM__ALLOW_NULLARY )
     {
         args = ( p->arity )
             ? MALLOC( p->arity * sizeof( void* ) )

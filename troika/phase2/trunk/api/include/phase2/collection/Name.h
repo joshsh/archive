@@ -32,22 +32,33 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Array.h>
 
 
+/** An array of strings representing a path to an object in a particular
+    namespace. */
 typedef Array Name;
 
 
 #define name__peek( name )  ( char* ) array__peek( name )
 #define name__pop( name )  ( char* ) array__pop( name )
-#define name__push( name, s )  array__push( name, s )
+#define name__push( name, s )  array__push( (name), (s) )
 
+/** \return  an empty name */
 extern Name *
 name__new( void );
 
+/** Destructor. */
 extern void
 name__delete( Name *name );
 
+/** Extend the name by a single key. */
+extern void
+name__append( Name *name, const char *key );
+
+/** Print the name as a colon-delimited list, e.g. "root:data:newstuff:foo" */
 extern void
 name__print( Name *name );
 
+/** Encode the name as a colon-delimited list, e.g. "root:data:newstuff:foo"
+    \param buffer  the character buffer to write to */
 extern void
 name__encode( Name *name, char *buffer );
 

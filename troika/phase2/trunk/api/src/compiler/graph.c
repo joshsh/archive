@@ -644,6 +644,15 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager 
     if ( DEBUG__SAFE && ( !p || !spine || !m || p->arity > PRIM__MAX_PARAMS ) )
         abort();
 
+    if ( PRIM__ALLOW_NULLARY )
+    {
+        /* Not supported. */
+    }
+
+    else
+        /* Make the compiler happy. */
+        ap = 0;
+
     /* Apply the primitive, provided that there are enough arguments, and that
        they reduce to objects of the expected types. */
     if ( nargs >= p->arity )

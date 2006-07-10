@@ -30,6 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "Interpreter-impl.h"
 #include "../compiler/graph.h"
+#include "../collection/Term-impl.h"
 
 
 typedef unsigned char uc;
@@ -848,7 +849,7 @@ interpreter__serialize( Interpreter *c, char *path )
     root = element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
 
     /* Version attribute. */
-    attr__new( root, ( uc* ) "p2-version", ( uc* ) VERSION, 0 );
+    attr__new( root, ( uc* ) "p2-version", ( uc* ) PACKAGE_VERSION, 0 );
 
     #ifdef REVISION
     /* Revision attribute. */

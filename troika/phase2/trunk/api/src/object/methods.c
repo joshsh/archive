@@ -59,7 +59,7 @@ object__compare_to( Object *o1, Object *o2 )
 
 
 void
-object__encode( const Object *o, const char *buffer )
+object__encode( const Object *o, char *buffer )
 {
     if ( !o )
     {

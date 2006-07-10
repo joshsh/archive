@@ -19,6 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <collection/Bunch.h>
 #include "../settings.h"
+    #include "../type/Type-impl.h"
 
 
 typedef struct Block Block;

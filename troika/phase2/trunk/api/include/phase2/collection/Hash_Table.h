@@ -35,7 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <common.h>
 
 
-typedef unsigned int ( *hash_f )( const void *key );
+typedef unsigned int ( *Hash_f )( const void *key );
 
 
 /******************************************************************************/
@@ -69,7 +69,7 @@ hash_table__new(
   unsigned int buffer_size,
   double expansion,
   double load,
-  hash_f hash,
+  Hash_f hash,
   Comparator compare );
 
 /** Copy constructor. */

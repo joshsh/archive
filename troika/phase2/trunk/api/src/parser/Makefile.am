@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-noinst_PROGRAMS = test
+noinst_PROGRAMS = parser-test
 noinst_LTLIBRARIES = libp2parser.la
 
 LIBS := $(LIBS) -lncurses
@@ -20,19 +20,19 @@ EXTRA_DIST = README
 
 ## Command-line test #######################################################
 
-test_LDADD = libp2parser.la
+parser_test_LDADD = libp2parser.la
 
-test_SOURCES = \
-	test.c		\
-	../Type.c		\
-	../object/Object.c	\
-	../object/association.c	\
-	../object/methods.c	\
-	../object/traversal.c	\
-	../Ast.c		\
+parser_test_SOURCES = \
+	parser-test.c			\
+	../Ast.c			\
 	../collection/Array.c		\
 	../collection/Hash_Table.c	\
 	../collection/Hash_Map.c	\
 	../collection/Name.c		\
-	../collection/String.c	\
-	../collection/Term.c
+	../collection/String.c		\
+	../collection/Term.c		\
+	../object/Object.c		\
+	../object/association.c		\
+	../object/methods.c		\
+	../object/traversal.c		\
+	../type/Type.c

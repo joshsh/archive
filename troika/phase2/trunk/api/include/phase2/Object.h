@@ -68,7 +68,7 @@ object__value( const Object *o );
 
 
 extern void
-object__encode( const Object *o, const char *buffer );
+object__encode( const Object *o, char *buffer );
 
 
 /******************************************************************************/

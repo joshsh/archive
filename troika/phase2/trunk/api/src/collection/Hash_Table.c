@@ -29,32 +29,34 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
 
-#define buffer_new( size )  calloc( (size), sizeof( void* ) )
+#define NEWBUFFER( size )  calloc( (size), sizeof( void* ) )
 
 
 struct Hash_Table
 {
-    unsigned int size;
+    size_t          cell_size;
+
+    unsigned int    size;
 
     /** The number of occupied cells the buffer can hold before the hash table
         becomes too dense. */
-    unsigned int capacity;
+    unsigned int    capacity;
 
-    double load;
+    double          load;
 
-    double expansion;
+    double          expansion;
 
     /** The hash table buffer array. */
-    void **buffer;
+    void **         buffer;
 
     /** The number of cells the buffer array. */
-    unsigned int buffer_size;
+    unsigned int    buffer_size;
 
     /** A hashing function specific to the table's "key" type. */
-    hash_f hash;
+    Hash_f          hash;
 
     /** A comparison function for key values. */
-    Comparator compare;
+    Comparator      compare;
 };
 
 
@@ -69,6 +71,7 @@ next_prime( unsigned int i )
 
     if ( i <= 3 )
         return 3;
+
     else if ( !( i % 2 ) )
         i++;
 
@@ -97,7 +100,7 @@ expand( Hash_Table *h )
     if ( buffer_size <= h->buffer_size )
         buffer_size++;
 
-    if ( !( buffer = buffer_new( buffer_size ) ) )
+    if ( !( buffer = NEWBUFFER( buffer_size ) ) )
         return 0;
 
     lim = buffer + buffer_size;
@@ -138,7 +141,7 @@ hash_table__new(
     unsigned int buffer_size,
     double load,
     double expansion,
-    hash_f hash,
+    Hash_f hash,
     Comparator compare )
 {
     unsigned int i;
@@ -168,7 +171,7 @@ hash_table__new(
            table will expand as soon as it is added to. */
         h->capacity = ( unsigned int ) ( h->buffer_size * h->load );
 
-        if ( !( h->buffer = buffer_new( h->buffer_size ) ) )
+        if ( !( h->buffer = NEWBUFFER( h->buffer_size ) ) )
         {
             free( h );
             h = 0;
@@ -195,7 +198,7 @@ hash_table__copy( const Hash_Table *h )
     {
         *h2 = *h;
 
-        if ( !( h2->buffer = buffer_new( h->buffer_size ) ) )
+        if ( !( h2->buffer = NEWBUFFER( h->buffer_size ) ) )
         {
             free( h2 );
             h2 = 0;

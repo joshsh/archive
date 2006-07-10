@@ -1,11 +1,3 @@
-/**
-
-\file  Dictionary.h
-
-\author  Joshua Shinavier   \n
-         parcour@gmail.com  \n
-         +1 509 570-6990    \n */
-
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
@@ -25,49 +17,48 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef DICTIONARY_H
-#define DICTIONARY_H
+#ifndef TYPE_IMPL_H
+#define TYPE_IMPL_H
 
 
-#include <collection/Hash_Table.h>
-#include <collection/Array.h>
+#include <Type.h>
+#include "../settings.h"
 
 
-typedef Hash_Table Dictionary;
+struct Type
+{
+    /** */
+    char *name;
+
+    int flags;
+
+    Type *type_arg;
+
+    /** Copy constructor. */
+    Copy_Cons       clone;
+
+    Comparator      compare_to;
+
+    /** Deserializer. */
+    Decoder         decode;
+
+    /** Destructor. */
+    Destructor      destroy;
+
+    /** Serializer. */
+    Encoder         encode;
+    Encoder_Safe    encode_safe;
+
+    Criterion2      equals;
+
+    Size_Of         size;
+
+    Sort            sort;
+
+    Walker          walk;
+};
 
 
-extern Dictionary *
-dictionary__new( void );
-
-extern void
-dictionary__delete( Dictionary *dict );
-
-
-extern void *
-dictionary__add( Dictionary *dict, const char *key, void *target );
-
-extern void *
-dictionary__lookup( Dictionary *dict, const char *key );
-
-extern char *
-dictionary__reverse_lookup( Dictionary *dict, const void *target );
-
-extern void *
-dictionary__remove( Dictionary *dict, char *key );
-
-
-extern void
-dictionary__add_all( Dictionary *dest, Dictionary *src );
-
-
-extern void
-dictionary__walk( Dictionary *dict, Dist_f f );
-
-
-extern Array *
-dictionary__keys( Dictionary *dict );
-
-
-#endif  /* DICTIONARY_H */
+#endif  /* TYPE_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

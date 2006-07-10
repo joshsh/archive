@@ -20,6 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Array.h>
 #include <Object.h>
 #include "../settings.h"
+    #include "../type/Type-impl.h"
 
 
 struct Array
@@ -73,27 +74,27 @@ buffer_copy( Array *a )
 Array *
 array__new( unsigned int buffer_size, double expansion )
 {
-    Array *a;
+    Array *a = NEW( Array );
 
-    if ( !( a = NEW( Array ) ) )
-        return 0;
-
-    /* Buffer size must be positive. */
-    a->buffer_size = ( buffer_size > 0 )
-        ? buffer_size : 1;
-
-    if ( !( a->buffer = BUFFER_NEW( a->buffer_size ) ) )
+    if ( a )
     {
-        free( a );
-        return 0;
+        /* Buffer size must be positive. */
+        a->buffer_size = ( buffer_size > 0 )
+            ? buffer_size : 1;
+
+        if ( !( a->buffer = BUFFER_NEW( a->buffer_size ) ) )
+        {
+            free( a );
+            return 0;
+        }
+
+        /* Expansion factor must be greater than 1 for the buffer to actually
+        gain in size. */
+        a->expansion = ( expansion > 1 )
+            ? expansion : DEFAULT_EXPANSION_FACTOR;
+
+        a->head = a->size = 0;
     }
-
-    /* Expansion factor must be greater than 1 for the buffer to actually
-       gain in size. */
-    a->expansion = ( expansion > 1 )
-        ? expansion : DEFAULT_EXPANSION_FACTOR;
-
-    a->head = a->size = 0;
 
     return a;
 }

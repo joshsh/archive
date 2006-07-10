@@ -66,10 +66,10 @@ interpreter__parse( Interpreter *c );
 /******************************************************************************/
 
 extern Name *
-interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o );
+interpreter__name_of( Interpreter *c, Namespace_o *nso, Object *o );
 
 extern Name *
-interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o );
+interpreter__name_of__full( Interpreter *c, Namespace_o *nso, Object *o );
 
 
 /******************************************************************************/

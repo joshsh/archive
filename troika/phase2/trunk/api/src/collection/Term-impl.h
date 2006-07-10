@@ -1,11 +1,3 @@
-/**
-
-\file  Dictionary.h
-
-\author  Joshua Shinavier   \n
-         parcour@gmail.com  \n
-         +1 509 570-6990    \n */
-
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
@@ -25,49 +17,39 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef DICTIONARY_H
-#define DICTIONARY_H
+#ifndef TERM_IMPL_H
+#define TERM_IMPL_H
 
 
-#include <collection/Hash_Table.h>
-#include <collection/Array.h>
+#include <collection/Term.h>
+#include "../settings.h"
 
 
-typedef Hash_Table Dictionary;
+/** \brief A data structure to represent and manipulate nested sequences.
+    The implementation is not recursive.
+
+    \note An empty Term has no data; it is represented by the NULL.
+ */
+struct Term
+{
+    /** Number of cells the buffer can hold. */
+    unsigned int buffer_size;
+
+    /** An array of 4-byte cells containing both generic pointers ("atoms") and
+        unsigned int values (each one indicates the size of the sub-term in
+        which it is the first cell). */
+    void **buffer;
+
+    /** Position of the first cell of the Term representation in the buffer.
+        It always contains an unsigned int value indicating the overall size of
+        the Term. */
+    void **head;
+
+    /** The buffer expands by this factor whenever it becomes full. */
+    double expansion;
+};
 
 
-extern Dictionary *
-dictionary__new( void );
-
-extern void
-dictionary__delete( Dictionary *dict );
-
-
-extern void *
-dictionary__add( Dictionary *dict, const char *key, void *target );
-
-extern void *
-dictionary__lookup( Dictionary *dict, const char *key );
-
-extern char *
-dictionary__reverse_lookup( Dictionary *dict, const void *target );
-
-extern void *
-dictionary__remove( Dictionary *dict, char *key );
-
-
-extern void
-dictionary__add_all( Dictionary *dest, Dictionary *src );
-
-
-extern void
-dictionary__walk( Dictionary *dict, Dist_f f );
-
-
-extern Array *
-dictionary__keys( Dictionary *dict );
-
-
-#endif  /* DICTIONARY_H */
+#endif  /* TERM_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

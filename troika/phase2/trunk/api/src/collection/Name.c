@@ -49,6 +49,13 @@ name__delete( Name *name )
 
 
 void
+name__append( Name *name, const char *key )
+{
+    array__enqueue( name, STRDUP( key ) );
+}
+
+
+void
 name__encode( Name *name, char *buffer )
 {
     char *s;

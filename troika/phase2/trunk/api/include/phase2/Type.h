@@ -51,39 +51,6 @@ enum Type__Flags
     type-specific member functions. */
 typedef struct Type Type;
 
-struct Type
-{
-    /** */
-    char *name;
-
-    int flags;
-
-    Type *type_arg;
-
-    /** Copy constructor. */
-    Copy_Cons   clone;
-
-    Comparator  compare_to;
-
-    /** Deserializer. */
-    Decoder     decode;
-
-    /** Destructor. */
-    Destructor  destroy;
-
-    /** Serializer. */
-    Encoder     encode;
-    Encoder_Safe encode_safe;
-
-    Criterion2  equals;
-
-    Size_Of     size;
-
-    Sort        sort;
-
-    Walker      walk;
-};
-
 
 #define any_type    ( Type* ) 42
 /* #define dist_type   ( Type* ) 1001 */
@@ -92,6 +59,12 @@ struct Type
 /** Constructor. */
 extern Type *
 type__new( const char *name, int flags );
+
+
+/*
+extern void
+type__define( Type *type, const char *name, void (*f)(void) );
+*/
 
 
 /** Destructor. */
