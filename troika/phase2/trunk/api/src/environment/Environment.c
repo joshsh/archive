@@ -119,8 +119,7 @@ environment__new()
     environment__register_type( env, term__create_type( TERM__NAME, TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
-    if ( !environment__import_primitives( env ) )
-        goto abort;
+    environment__import_primitives( env );
 
     if ( !add_meta_prims( env ) )
     {

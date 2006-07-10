@@ -28,6 +28,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SETTINGS_H
 
 
+#define NOPROPS     0
+
+
 #include <stdlib.h>  /* malloc */
 #include <string.h>  /* strlen, strcpy */
 

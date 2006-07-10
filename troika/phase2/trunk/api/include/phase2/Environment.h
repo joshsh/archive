@@ -52,35 +52,44 @@ extern void
 environment__delete( Environment *env );
 
 
+/** \return  the environment's associated object manager */
 extern Memory_Manager *
 environment__manager( const Environment *env );
 
+/** \return  the "root:data" namespace */
 extern Namespace_o *
 environment__data( const Environment *env );
 
+/** \return  the "root" namespace */
 extern Namespace_o *
 environment__root( const Environment *env );
 
 
+/** \return  a type object which has been added to the "root:types" namespace */
 extern Object *
 environment__register_type( Environment *env, Type *type );
 
+/** \return  the type object with the given name, if any */
 extern Type_o *
 environment__resolve_type( Environment *env, const char *name );
 
 
+/** \return  a primitive object which has been added to the "root:primitives"
+    namespace */
 extern Object *
 environment__register_primitive
     ( Environment *env, Primitive *prim, int flags, Generic_f src_f );
 
+/** \return the primitive object with the given name, if any */
 extern Primitive_o *
 environment__resolve_primitive( Environment *env, const char *name );
 
-/* Defined in p2-stubs.c */
-extern void *
+/** Imports function primitives not hard-coded into the environment.
+    \note  Defined in p2-stubs.c */
+extern void
 environment__import_primitives( Environment *env );
 
-
+/** \return  the combinator object with the given name, if any */
 extern Combinator_o *
 environment__resolve_combinator( Environment *env, const char *name );
 

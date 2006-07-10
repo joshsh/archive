@@ -31,19 +31,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COMMON_H
 
 
-typedef int boolean;
+typedef int             boolean;
+typedef char            cstring;
+typedef char            xpm;
 
-typedef char cstring;
-typedef char xpm;
+typedef int             ACTION;
 
+#define CONTINUE        0
+#define BREAK           1
+#define REMOVE          2
 
-typedef int ACTION;
-
-typedef ACTION ( *Dist_f )( void **refp );
-
-#define CONTINUE            0
-#define BREAK               1
-#define REMOVE              2
 
 typedef void *          ( *Allocator )( void );
 typedef int             ( *Comparator )( const void *arg1, const void *arg2 );
@@ -52,6 +49,7 @@ typedef boolean         ( *Criterion )( void *arg );
 typedef boolean         ( *Criterion2 )( void *arg1, void *arg2 );
 typedef void *          ( *Decoder )( char *buffer );
 typedef void            ( *Destructor )( void *p );
+typedef ACTION          ( *Dist_f )( void **refp );
 typedef void            ( *Encoder )( void *p, char *buffer );
 typedef unsigned int    ( *Size_Of )( const void *self );
 typedef void            ( *Sort )( void *p, Comparator cmp );
@@ -60,9 +58,6 @@ typedef void            ( *Void_f )( void *p );
 typedef void            ( *Walker )( void *coll, Dist_f f );
 
 typedef void            ( *Generic_f )( void );
-
-
-#define NOPROPS 0
 
 
 #endif  /* COMMON_H */

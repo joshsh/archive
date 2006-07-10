@@ -32,9 +32,8 @@ extern &quot;C&quot;
 {
 #endif
 
-#include &lt;stdlib.h&gt;  /* malloc */
-
 #include &lt;common.h&gt;
+#include &quot;settings.h&quot;
 <xsl:text />
         <xsl:for-each select="compounddef">
             <xsl:if test="count(sectiondef) > 0">
@@ -120,11 +119,11 @@ extern &quot;C&quot;
 #define RO  0  /* Referentially opaque. */
 
 
-void *environment__import_primitives( Environment *env )
+void environment__import_primitives( Environment *env )
 {
     Primitive *p;
 
-    return ( void* ) ( ( void* ) 1
+    if ( !( ( void* ) 1
 <xsl:text />
 
         <xsl:for-each select="compounddef">
@@ -141,7 +140,8 @@ void *environment__import_primitives( Environment *env )
         </xsl:for-each>
 
 <xsl:text />
-    );
+    ) )
+        ERROR( "failed to import primitives" );
 }
 
 <xsl:text />
@@ -180,7 +180,7 @@ static void *<xsl:text />
             <xsl:choose>
                 <xsl:when test="$returns-pointer-type">;<xsl:text /></xsl:when>
                  <xsl:otherwise> = ( <xsl:text />
-                    <xsl:value-of select="$return-type" />* ) malloc( sizeof( <xsl:text />
+                    <xsl:value-of select="$return-type" />* ) MALLOC( sizeof( <xsl:text />
                     <xsl:value-of select="$return-type" /> ));<xsl:text />
                 </xsl:otherwise>
             </xsl:choose>
