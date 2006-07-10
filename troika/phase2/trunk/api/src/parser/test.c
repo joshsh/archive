@@ -1,6 +1,6 @@
 /**
 
-\file  parser/debugger.c
+\file  parser-test.c
 
 \brief  Example implementation of the Phase2 command line parser.
 
@@ -190,6 +190,10 @@ parse( void )
 int
 main( int argc, char *argv[] )
 {
+    /* Avoid compiler warnings. */
+    argc = 0;
+    argv = 0;
+
     PRINT( "Phase2 v%s command-line parser debugger.  Type '_quit;' to exit.\n", VERSION );
 
     switch( parse() )

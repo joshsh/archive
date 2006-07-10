@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-noinst_PROGRAMS = debugger
+noinst_PROGRAMS = test
 noinst_LTLIBRARIES = libp2parser.la
 
 LIBS := $(LIBS) -lncurses
@@ -18,12 +18,12 @@ libp2parser_la_SOURCES = \
 EXTRA_DIST = README
 
 
-## Command-line debugger #######################################################
+## Command-line test #######################################################
 
-debugger_LDADD = libp2parser.la
+test_LDADD = libp2parser.la
 
-debugger_SOURCES = \
-	debugger.c		\
+test_SOURCES = \
+	test.c		\
 	../Type.c		\
 	../object/Object.c	\
 	../object/association.c	\
