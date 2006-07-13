@@ -12,6 +12,7 @@
 [coding]
     need code review for portability
     use String instead of char* for Encoders
+    rework dependencies in collection, parser
 
 [docs]
     doxygen script --> revision # in docs

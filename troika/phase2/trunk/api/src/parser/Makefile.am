@@ -24,7 +24,7 @@ parser_test_LDADD = libp2parser.la
 
 parser_test_SOURCES = \
 	parser-test.c			\
-	../Ast.c			\
+	Ast.c				\
 	../collection/Array.c		\
 	../collection/Hash_Table.c	\
 	../collection/Hash_Map.c	\

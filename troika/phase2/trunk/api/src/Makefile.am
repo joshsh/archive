@@ -46,6 +46,9 @@ interpreter_src = \
 	interpreter/mapping.c		\
 	interpreter/serial.c
 
+manager_src = \
+	manager/Memory_Manager.c
+
 namespace_src = \
 	namespace/Namespace.c	\
 	namespace/io-simple.c	\
@@ -69,14 +72,14 @@ type_src = \
 libphase2_la_SOURCES = \
 	$(interpreter_src)	\
 	$(environment_src)	\
+	$(manager_src)		\
 	$(namespace_src)	\
 	$(object_src)		\
 	$(primitive_src)	\
 	$(compiler_src)		\
 	$(type_src)		\
-	Ast.c			\
-	collection/Collection.c	\
-	Memory_Manager.c
+	parser/Ast.c		\
+	collection/Collection.c
 
 ## Convenience libraries from each subdirectory with its own Makefile.am.
 libphase2_la_LIBADD = \
