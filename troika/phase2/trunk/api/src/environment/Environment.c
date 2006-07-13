@@ -84,7 +84,7 @@ environment__new()
     if ( !( ( ns_t = namespace__create_type( NAMESPACE__NAME, TYPE__IS_OBJ_COLL ) )
          && ( prim_t = primitive__create_type( PRIMITIVE__NAME ) )
          && ( set_t = set__create_type( SET__NAME, TYPE__IS_OBJ_COLL ) )
-         && ( env->type_t = type__create_type( TYPE__NAME, 0 ) ) ) )
+         && ( env->type_t = type__create_type( TYPE__NAME ) ) ) )
         goto abort;
 
     /* Create memory manager. */

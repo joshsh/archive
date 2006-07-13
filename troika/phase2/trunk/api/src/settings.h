@@ -226,38 +226,20 @@ dereference( struct Object ** );
 
 #define FFLUSH  { fflush( stdout ); fflush( stderr ); }
 
+/* Note: the GCC extension is used here instead of __VA_ARGS__ for compatibility
+   with old GCC cross-compilers. */
 
-/* Useful, but not supported by older (pre-C99) compilers. */
-/*
-#define ERROR( ... )                                                        \
-{                                                                           \
-    fprintf( stderr, "Error: " );                                           \
-    fprintf( stderr, __VA_ARGS__ );                                         \
-    fprintf( stderr, ".\n" );                                               \
-    fflush( stderr );                                                       \
-}
+#define ERROR(args...) (                                                    \
+    fprintf( stderr, "ERROR: " ),                                           \
+    fprintf( stderr , ##args ),                                             \
+    fprintf( stderr, "\n" ),                                                \
+    fflush( stderr ) )
 
-#define WARNING( ... )                                                      \
-{                                                                           \
-    fprintf( stderr, "Warning: " );                                         \
-    fprintf( stderr, __VA_ARGS__ );                                         \
-    fprintf( stderr, ".\n" );                                               \
-    fflush( stderr );                                                       \
-}
-*/
-
-
-#define ERROR( msg )                                                        \
-{                                                                           \
-    fprintf( stderr, "Error: %s.\n", (msg) );                               \
-    fflush( stderr );                                                       \
-}
-
-#define WARNING( msg )                                                      \
-{                                                                           \
-    fprintf( stderr, "Warning: %s.\n", (msg) );                             \
-    fflush( stderr );                                                       \
-}
+#define WARNING(args...) (                                                  \
+    fprintf( stderr, "WARNING: " ),                                         \
+    fprintf( stderr , ##args ),                                             \
+    fprintf( stderr, "\n" ),                                                \
+    fflush( stderr ) )
 
 
 /* Debugging ******************************************************************/

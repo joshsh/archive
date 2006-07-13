@@ -20,15 +20,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Interpreter-impl.h"
 
 
-static void
-undef_error( Name *name )
-{
-    PRINT( "Error: \"" );
-    name__print( name );
-    PRINT( "\" is not defined in this namespace.\n" );
-}
-
-
 static Object *
 resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 {
@@ -66,7 +57,7 @@ interpreter__define( Interpreter *c, Name *name, Object *o )
     }
 /*
     if ( !o )
-        undef_error( name );
+        err_notdefined( name );
 */
 
     return o;
@@ -139,7 +130,7 @@ interpreter__resolve( Interpreter *c, Name *name )
     }
 
     if ( !o )
-        undef_error( name );
+        err_notdefined( name );
 
     return o;
 }

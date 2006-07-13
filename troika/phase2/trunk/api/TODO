@@ -13,25 +13,38 @@
     need code review for portability
     use String instead of char* for Encoders
     rework dependencies in collection, parser
+    rework Bunch to hold objects by value rather than by reference
 
 [docs]
     doxygen script --> revision # in docs
 
 [compiler]
 
+[environment]
+
+[import]
+    wrap more standard library primitives
+    add reduction primitives
+
 [interpreter]
     _new ^ check whether object already exists
 
-[serial]
+[parser]
+    phase out Ast
+
+[translation]
     RDF/XML and N3 import / export
     graceful fail when basic object (combinator/primitive/type) not found
+    move the serialization stuff out of interpreter
 
 [build]
+    add "test" target
+    exclude backup files from distribution
     source dependencies (settings.h, etc.)
     tools dependencies (doxygen, xsltproc)
     library dependencies (libxml2)
     svn log --> CHANGES
-    [cross-compile for ARM]
+    [ARM cross-compile]
          use static libraries
 
 [other]

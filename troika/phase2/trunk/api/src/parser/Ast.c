@@ -236,7 +236,7 @@ ast__delete( Ast *ast )
 
         default:
 
-            fprintf( stderr, "ast__delete: bad AST type: %i\n", ast->type );
+            ERROR( "bad AST type: %i\n", ast->type );
             return;
     }
 
@@ -386,7 +386,7 @@ ast__print( Ast *ast )
 
         default:
 
-            fprintf( stderr, "ast__delete: bad AST type: %i\n", ast->type );
+            ERROR( "bad AST type: %i\n", ast->type );
     }
 }
 

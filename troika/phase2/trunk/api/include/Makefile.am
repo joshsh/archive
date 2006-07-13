@@ -3,7 +3,6 @@
 ## becomes $(includedir)/sk/Combinator.h, not $(phase2dir)/Combinator.h
 nobase_include_HEADERS = \
 	phase2/Ast.h			\
-	phase2/Closure.h		\
 	phase2/common.h			\
 	phase2/compiler.h		\
 	phase2/Environment.h		\

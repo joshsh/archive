@@ -182,4 +182,36 @@ interpreter__show_line_numbers( Interpreter *c )
 }
 
 
+/******************************************************************************/
+
+
+#define ERRBUFSIZ  1000
+
+
+void
+err_notdefined( Name *name )
+{
+    char buff[ERRBUFSIZ];
+
+    if ( DEBUG__SAFE && !name )
+        abort();
+
+    name__encode( name, buff );
+    ERROR( "\"%s\" is not defined in this namespace", buff );
+}
+
+
+void
+err_notns( Name *name )
+{
+    char buff[ERRBUFSIZ];
+
+    if ( DEBUG__SAFE && !name )
+        abort();
+
+    name__encode( name, buff );
+    ERROR( "\"%s\" is not a namespace", buff );
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

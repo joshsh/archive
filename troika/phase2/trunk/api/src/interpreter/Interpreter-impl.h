@@ -67,6 +67,13 @@ extern void
 delete_commands( Dictionary *commands );
 
 
+extern void
+err_notdefined( Name *name );
+
+extern void
+err_notns( Name *name );
+
+
 #endif  /* INTERPRETER_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

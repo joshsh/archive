@@ -43,7 +43,10 @@ typedef void            ( *Encoder_Safe )( void *p, String *buffer );
 
 enum Type__Flags
 {
+    /** Indicates that this is a collection of first-class values. */
     TYPE__IS_OBJ_COLL         = 0x1,
+
+    /** Indicates that child objects are owned, not shared. */
     TYPE__OWNS_DESCENDANTS    = 0x2
 };
 
@@ -53,7 +56,6 @@ typedef struct Type Type;
 
 
 #define any_type    ( Type* ) 42
-/* #define dist_type   ( Type* ) 1001 */
 
 
 /** Constructor. */
@@ -74,8 +76,9 @@ type__delete( Type *type );
 
 /******************************************************************************/
 
+/** \return  a new instance of the type of types */
 extern Type *
-type__create_type( const char *name, int flags );
+type__create_type( const char *name );
 
 
 #endif  /* TYPE_H */

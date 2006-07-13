@@ -170,9 +170,9 @@ type__encode_safe( Type *t, String *buffer )
 
 
 Type *
-type__create_type( const char *name, int flags )
+type__create_type( const char *name )
 {
-    Type *t = type__new( name, flags );
+    Type *t = type__new( name, NOFLAGS );
 
     if ( t )
     {

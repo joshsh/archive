@@ -174,7 +174,7 @@ extract_id( char *s )
                      break;
 
                  default:
-                     fprintf( stderr, "extract_id: bad char: %i ('%c')\n", ( int ) *s_high, *s_high );
+                     ERROR( "extract_id: bad char: %i ('%c')\n", ( int ) *s_high, *s_high );
                      return 0;
              }
         }

@@ -75,7 +75,7 @@ get_arg( Ast *args, unsigned int i )
 
     if ( i >= term__length( term ) )
     {
-        fprintf( stderr, "Error: missing argument\n" );
+        ERROR( "missing argument" );
         a = 0;
     }
 
@@ -113,6 +113,7 @@ command_cp( Interpreter *c, Ast *args )
 {
     Object *o, *o2;
     Name *src, *dest;
+
     if ( !( src = get_arg( args, 0 ) )
       || !( dest = get_arg( args, 1 ) ) )
         return 0;
@@ -134,12 +135,7 @@ command_cp( Interpreter *c, Ast *args )
             }
 
             else
-            {
-                /* FIXME: should print to stderr */
-                PRINT( "Error: \"" );
-                name__print( dest );
-                PRINT( "\" is not a namespace\n" );
-            }
+                err_notns( dest );
         }
     }
 
@@ -260,12 +256,7 @@ command_mv( Interpreter *c, Ast *args )
             }
 
             else
-            {
-                /* FIXME: should print to stderr */
-                PRINT( "Error: \"" );
-                name__print( dest );
-                PRINT( "\" is not a namespace\n" );
-            }
+                err_notns( dest );
         }
     }
 
@@ -318,7 +309,7 @@ command_ns( Interpreter *c, Ast *args )
     if ( ( o = interpreter__resolve( c, name ) ) )
     {
         if ( o->type != c->cur_ns_obj->type )
-            fprintf( stderr, "Error: not a namespace\n" );
+            err_notns( name );
 
         else
         {
@@ -377,7 +368,7 @@ command_save( Interpreter *c, Ast *args )
 
     if ( !path )
     {
-        fprintf( stderr, "Error: use _saveas to specify an output path\n" );
+        ERROR( "use _saveas to specify an output path" );
         return 0;
     }
 
@@ -538,11 +529,11 @@ interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
     Command *com = dictionary__lookup( c->commands, name );
 
     if ( !com )
-        fprintf( stderr, "Error: unknown command: \"%s\"\n", name );
+        ERROR( "unknown command: \"%s\"\n", name );
     else if ( n < com->args_min )
-        fprintf( stderr, "Error: missing argument(s) to command \"%s\"\n", name );
+        ERROR( "missing argument(s) to command \"%s\"\n", name );
     else if ( n > com->args_max && com->args_max >= 0 )
-        fprintf( stderr, "Error: too many arguments to command \"%s\"\n", name );
+        ERROR( "too many arguments to command \"%s\"\n", name );
     else
         result = com->f( c, args );
 

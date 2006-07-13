@@ -44,12 +44,12 @@ interpreter__handle_parse_error( Interpreter *c, char *msg )
 
     if ( msg )
     {
-        fprintf( stderr, "Error: %s\n\n", msg );
+        ERROR( "%s\n", msg );
         free( msg );
     }
 
     else
-        fprintf( stderr, "Parse error.\n\n" );
+        ERROR( "parse error\n" );
 
 #if USE_NCURSES
     attroff(COLOR_PAIR(1));

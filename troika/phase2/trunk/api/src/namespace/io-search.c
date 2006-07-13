@@ -265,21 +265,31 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
 /******************************************************************************/
 
 
-static void
-error__not_a_namespace( Name *name )
-{
-    PRINT( "Error: \"" );
-    name__print( name );
-    PRINT( "\" is not a namespace\n" );
-}
+#define ERRBUFSIZ  1000
 
 
 static void
 error__not_defined( Name *name )
 {
-    PRINT( "Error: \"" );
-    name__print( name );
-    PRINT( "\" is not defined in this namespace\n" );
+    char buff[ERRBUFSIZ];
+
+    if ( DEBUG__SAFE && !name )
+        abort();
+
+    name__encode( name, buff );
+    ERROR( "\"%s\" is not defined in this namespace", buff );
+}
+
+static void
+error__not_a_namespace( Name *name )
+{
+    char buff[ERRBUFSIZ];
+
+    if ( DEBUG__SAFE && !name )
+        abort();
+
+    name__encode( name, buff );
+    ERROR( "\"%s\" is not a namespace", buff );
 }
 
 
@@ -290,6 +300,9 @@ namespace__copy( Namespace_o *nso, Name *src, Name *dest )
 
 }
 */
+
+
+/******************************************************************************/
 
 
 Object *
