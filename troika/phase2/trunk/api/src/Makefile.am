@@ -6,8 +6,6 @@ BUILT_SOURCES = revision.h
 noinst_HEADERS = revision.h		\
 	settings.h			\
 	compiler/Apply.h		\
-	compiler/graph.h		\
-	compiler/graph-types.h		\
 	object/Object-impl.h		\
 	primitive/Primitive-impl.h	\
 	interpreter/Interpreter-impl.h	\
@@ -31,8 +29,8 @@ LIBS := $(LIBS) -lxml2 -lncurses ##`xml2-config --libs`
 
 compiler_src = \
 	compiler/Apply.c	\
-	compiler/graph.c	\
-	compiler/sk.c
+	compiler/graph-reduce.c	\
+	compiler/term-reduce.c
 
 environment_src = \
 	environment/Environment.c	\

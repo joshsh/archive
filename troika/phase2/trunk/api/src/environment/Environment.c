@@ -171,7 +171,7 @@ environment__delete( Environment *env )
 
     /* Preserve only data type objects. */
     memory_manager__set_root( env->manager, env->types );
-    memory_manager__collect( env->manager );
+    memory_manager__collect( env->manager, TRUE, FALSE );
 
     /* Preserve only the 'type' type. */
     ns_t = *( env->types->type );
@@ -182,7 +182,7 @@ environment__delete( Environment *env )
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
         namespace__lookup_simple( env->types->value, TYPE__NAME ) );
-    memory_manager__collect( env->manager );
+    memory_manager__collect( env->manager, TRUE, FALSE );
 
     memory_manager__delete( env->manager );
 

@@ -18,9 +18,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 *******************************************************************************/
 
 #include <Combinator.h>
+#include <compiler.h>
+
 #include "../object/Object-impl.h"
 #include "../primitive/Primitive-impl.h"
-#include "graph.h"
+#include "Apply.h"
+#include "../settings.h"
 
 
 #define BOXED_TYPE  any_type

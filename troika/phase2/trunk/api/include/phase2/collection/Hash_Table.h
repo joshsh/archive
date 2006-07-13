@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <common.h>
-
+#include <stddef.h>  /* For size_t */
 
 typedef unsigned int ( *Hash_f )( const void *key );
 
@@ -69,6 +69,7 @@ hash_table__new(
   unsigned int buffer_size,
   double expansion,
   double load,
+  size_t cell_size,
   Hash_f hash,
   Comparator compare );
 
@@ -98,9 +99,8 @@ hash_table__expansion( const Hash_Table *h );
 
 /** Adds an key.
     \param h  the table to augment
-    \param key  the key to add
-    \return  the displaced target (if any) */
-extern void *
+    \param key  the key to add */
+extern void
 hash_table__add( Hash_Table *h, void *key );
 
 /** Looks up a key to obtain a target.
@@ -110,9 +110,8 @@ hash_table__add( Hash_Table *h, void *key );
 extern void *
 hash_table__lookup( const Hash_Table *h, const void *key );
 
-/** Removes the key.
-    \return  the displaced target (if any) */
-extern void *
+/** Removes the key. */
+extern void
 hash_table__remove( Hash_Table *h, const void *key );
 
 

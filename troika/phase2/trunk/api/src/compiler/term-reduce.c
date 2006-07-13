@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <sk.h>
+#include <compiler.h>
 #include <collection/Set.h>
 #include "../object/Object-impl.h"
 #include "../primitive/Primitive-impl.h"
@@ -146,7 +146,7 @@ prim_reduce(
     Object *reduce_arg( Term *t )
     {
         Object *arg;
-        t = sk_reduce( t, m, term_type, primitive_type, combinator_type, set_type );
+        t = term__reduce( t, m, term_type, primitive_type, combinator_type, set_type );
 
         if ( term )
         {
@@ -442,7 +442,7 @@ print_term( Term *t )
 
 
 Term *
-sk_reduce(
+term__reduce(
     Term *term,
     Memory_Manager *m,
     Type *term_type,
@@ -483,7 +483,7 @@ PRINT( "\n" );  fflush( stdout );
         if ( SK__CHECKS__MAX_TERM_SIZE > 0
           && ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
         {
-            ERROR( "sk_reduce: abandoned (term might expand indefinitely)" );
+            ERROR( "term__reduce: abandoned (term might expand indefinitely)" );
             goto fail;
         }
 
@@ -579,7 +579,7 @@ PRINT( "\n" );  fflush( stdout );
 
             else
             {
-                ERROR( "sk_reduce: non-redex objects not permitted at the head of a term" );
+                ERROR( "term__reduce: non-redex objects not permitted at the head of a term" );
                 goto fail;
             }
         }
@@ -597,7 +597,7 @@ PRINT( "\n" );  fflush( stdout );
 
             if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
             {
-                ERROR( "sk_reduce: abandoned (possible infinite loop)" );
+                ERROR( "term__reduce: abandoned (possible infinite loop)" );
                 goto fail;
             }
         }

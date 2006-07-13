@@ -1,6 +1,6 @@
 /**
 
-\file  sk.h
+\file  compiler.h
 
 \brief  A simple utility to represent and reduce impure S,K terms.
 
@@ -31,13 +31,27 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef SK_H
-#define SK_H
+#ifndef COMPILER_H
+#define COMPILER_H
 
 
 #include <Memory_Manager.h>
+#include <collection/Array.h>
 #include <collection/Term.h>
 #include <Combinator.h>
+
+
+extern Type *apply_type, *indirection_type;
+
+
+extern void
+graph_init( Type *combinator_t, Type *primitive_t );
+
+extern void
+graph_end();
+
+extern Object *
+reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m );
 
 
 /** \brief  Reduce an S,K term according to the rules of combinator expressions.
@@ -48,14 +62,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     new objects
     \param term_type  type of impure combinator terms
     \param primitive_type  type of an embedded primitive function
-    \param combinator_type  type of SK combinators
+    \param combinator_type  type of S,K combinators
     \param set_type  type of object sets
     \return  the reduced term, or 0 if an exception has occurred
-    \note  Anything occurring as a leaf-node in a term passed to SK_reduce,
+    \note  Anything occurring as a leaf-node in a term passed to this function,
     which is not an S or K combinator or a primitive, is considered a
     non-redex object. */
 extern Term *
-sk_reduce(
+term__reduce(
     Term *term,
     Memory_Manager *m,
     Type *term_type,
@@ -64,6 +78,6 @@ sk_reduce(
     Type *set_type );
 
 
-#endif  /* SK_H */
+#endif  /* COMPILER_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

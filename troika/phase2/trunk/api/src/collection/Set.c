@@ -23,17 +23,26 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #include "../type/Type-impl.h"
 
 
-static unsigned int
-hash( const void *el )
+typedef struct Entry Entry;
+
+struct Entry
 {
-    return ( unsigned int ) el;
+    char    head;
+    void *  elmt;
+};
+
+
+static unsigned int
+hash( const Entry *e )
+{
+    return ( unsigned int ) e->elmt;
 }
 
 
 static int
-compare( const void *el1, const void *el2 )
+compare( const Entry *e1, const Entry *e2 )
 {
-    return ( el1 != el2 );
+    return ( e1->elmt != e2->elmt );
 }
 
 
@@ -43,7 +52,7 @@ compare( const void *el1, const void *el2 )
 Set *
 set__new( void )
 {
-    Hash_Table *s = hash_table__new( 0, 0, 0,
+    Hash_Table *s = hash_table__new( 0, 0, 0, sizeof ( Entry ),
         ( Hash_f ) hash, ( Comparator ) compare );
 
     return s;
@@ -70,21 +79,31 @@ set__size( Set *s )
 void
 set__add( Set *s, void *el )
 {
-    hash_table__add( s, el );
+    Entry e;
+    e.head = 0x1;
+    e.elmt = el;
+
+    hash_table__add( s, &e );
 }
 
 
 void
 set__remove( Set *s, void *el )
 {
-    hash_table__remove( s, el );
+    Entry e;
+    e.elmt = el;
+
+    hash_table__remove( s, &e );
 }
 
 
 boolean
-set__contains( const Set *s, const void *el )
+set__contains( const Set *s, void *el )
 {
-    return ( hash_table__lookup( s, el ) != 0 );
+    Entry e;
+    e.elmt = el;
+
+    return ( hash_table__lookup( s, &e ) != 0 );
 }
 
 
@@ -94,7 +113,12 @@ set__contains( const Set *s, const void *el )
 void
 set__walk( Set *s, Dist_f f )
 {
-    hash_table__walk( s, f );
+    ACTION helper( Entry *e )
+    {
+        return f( &e->elmt );
+    }
+
+    hash_table__walk( s, ( Dist_f ) helper );
 }
 
 
@@ -106,16 +130,16 @@ set__exclusion( Set *a, Set *b )
 {
     Set *c;
 
-    ACTION helper( void **refp )
+    ACTION helper( Entry *e )
     {
-        if ( set__contains( b, *refp ) )
+        if ( set__contains( b, e->elmt ) )
             return REMOVE;
         else
             return CONTINUE;
     }
 
     c = hash_table__copy( a );
-    hash_table__walk( c, helper );
+    hash_table__walk( c, ( Dist_f ) helper );
 
     return c;
 }
@@ -126,9 +150,9 @@ set__intersection( Set *a, Set *b )
 {
     Set *c, *d;
 
-    ACTION helper( void **refp )
+    ACTION helper( Entry *e )
     {
-        if ( !set__contains( d, *refp ) )
+        if ( !set__contains( d, e->elmt ) )
             return REMOVE;
         else
             return CONTINUE;
@@ -146,7 +170,7 @@ set__intersection( Set *a, Set *b )
         d = a;
     }
 
-    hash_table__walk( c, helper );
+    hash_table__walk( c, ( Dist_f ) helper );
     return c;
 }
 
@@ -156,16 +180,16 @@ set__symmetric_difference( Set *a, Set *b )
 {
     Set *c;
 
-    ACTION helper( void **refp )
+    ACTION helper( Entry *e )
     {
-        if ( set__contains( a, *refp ) && set__contains( b, *refp ) )
+        if ( set__contains( a, e->elmt ) && set__contains( b, e->elmt ) )
             return REMOVE;
         else
             return CONTINUE;
     }
 
     c = set__union( a, b );
-    hash_table__walk( c, helper );
+    hash_table__walk( c, ( Dist_f ) helper );
 
     return c;
 }
@@ -176,22 +200,22 @@ set__union( Set *a, Set *b )
 {
     Set *c;
 
-    ACTION helper( void **refp )
+    ACTION helper( Entry *e )
     {
-        hash_table__add( c, *refp );
+        hash_table__add( c, e->elmt );
         return CONTINUE;
     }
 
     if ( hash_table__size( a ) > hash_table__size( b ) )
     {
         c = hash_table__copy( a );
-        hash_table__walk( b, helper );
+        hash_table__walk( b, ( Dist_f ) helper );
     }
 
     else
     {
         c = hash_table__copy( b );
-        hash_table__walk( a, helper );
+        hash_table__walk( a, ( Dist_f ) helper );
     }
 
     return c;
@@ -206,9 +230,9 @@ set__encode( Set *s, char *buffer )
 {
     boolean first = TRUE;
 
-    ACTION encode( Object **opp )
+    ACTION encode( Entry *e )
     {
-        Object *o = *opp;
+        Object *o = e->elmt;
 
         if ( first )
         {
@@ -268,9 +292,9 @@ set__to_array( Set *s )
 {
     Array *a = array__new( 0, 0 );
 
-    ACTION helper( void **refp )
+    ACTION helper( Entry *e )
     {
-        array__enqueue( a, *refp );
+        array__enqueue( a, e->elmt );
         return CONTINUE;
     }
 

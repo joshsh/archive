@@ -17,20 +17,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-/*
-    To do:
-        [.] graceful fail when basic object (combinator / primitive / type) not found.
-*/
 
 #include <time.h>
 
 #include <collection/Set.h>
 #include <xml/xmldom.h>
+
 #include "../revision.h"
 
 #include "Interpreter-impl.h"
-#include "../compiler/graph.h"
 #include "../collection/Term-impl.h"
+#include "../compiler/Apply.h"
 
 
 typedef unsigned char uc;
@@ -87,9 +84,10 @@ struct Function_Wrapper
 
 
 static ACTION
-function_wrapper__delete( Hash_Map__Entry **ppe )
+function_wrapper__delete( Object **key, Object **target )
 {
-    free( ( Function_Wrapper* ) ( *ppe )->target );
+    key = 0;
+    free( ( Function_Wrapper* ) *target );
     return CONTINUE;
 }
 
@@ -452,15 +450,22 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     Element *el;
     Xml_Encoder encode;
 
+    if ( !o )
+    {
+        if ( FIRST_CLASS_NULL )
+        {
+            el = element__new( 0, ( uc* ) "object", 0 );
+            attr__new( el, ( uc* ) "ref", ( uc* ) "0", 0 );
+            return el;
+        }
+
+        else if ( DEBUG__SAFE )
+            abort();
+    }
+
     /* id > 0  ==>  the object is multireferenced. */
     id = ( unsigned int ) hash_map__lookup( state->ids, o );
 
-    if ( FIRST_CLASS_NULL && !o )
-    {
-        el = element__new( 0, ( uc* ) "object", 0 );
-        attr__new( el, ( uc* ) "ref", ( uc* ) "0", 0 );
-        return el;
-    }
 
     /* "Short out" indirection nodes. */
     while ( object__type( o ) == indirection_type )
@@ -471,6 +476,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     /* Element reference. */
     if ( id && !top_level )
     {
+
         el = element__new( 0, ( uc* ) "object", 0 );
 
         if ( o->type == state->compiler->combinator_t
@@ -523,9 +529,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         }
 
         else if ( encode )
-        {
             element__add_child( el, encode( o->value, state ) );
-        }
 
         /* Encode contents as text. */
         else
@@ -533,7 +537,6 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
             o->type->encode( o->value, state->buffer );
             element__add_text( el, ( uc* ) state->buffer );
         }
-
     }
 
     return el;
@@ -764,6 +767,9 @@ multiref_ids( Interpreter *c )
 
     ACTION hash_multiref( Object **opp )
     {
+        if ( DEBUG__SAFE && !opp )
+            abort();
+
         if ( FIRST_CLASS_NULL && !*opp )
             return CONTINUE;
 
@@ -771,13 +777,14 @@ multiref_ids( Interpreter *c )
         if ( !hash_map__lookup( ids, *opp ) )
         {
             max_id++;
+                                      /* FIXME */
             hash_map__add( ids, *opp, ( void* ) max_id );
         }
 
         return CONTINUE;
     }
 
-    /* Force the working name space to be at top level. */
+    /* Force the working namespace to be at top level. */
     tmp = NEW( Object* );
     *tmp = interpreter__working_namespace( c );
     hash_multiref( tmp );
@@ -798,22 +805,22 @@ interpreter__serialize( Interpreter *c, char *path )
     Element *root;
     Xml_Encode_Ctx state;
 
-    ACTION obj_helper( Hash_Map__Entry **epp )
+    ACTION helper( Object **opp, void **ignored )
     {
         Object *o;
         Element *el;
 
-        ACTION triple_helper( Hash_Map__Entry **epp )
+        ACTION triple_helper( Object **pred, Object **obj )
         {
-            Hash_Map__Entry *entry = *epp;
+            Element *triple, *subject, *predicate, *object;
 
-            Element *triple = element__new( 0, ( uc* ) "triple", 0 );
-            Element *subject
-                = object__xml_encode( o, &state, FALSE );
-            Element *predicate
-                = object__xml_encode( entry->key, &state, FALSE );
-            Element *object
-                = object__xml_encode( entry->target, &state, FALSE );
+            if ( DEBUG__SAFE && ( !pred || !obj ) )
+                abort();
+
+            triple = element__new( 0, ( uc* ) "triple", 0 );
+            subject = object__xml_encode( o, &state, FALSE );
+            predicate = object__xml_encode( *pred, &state, FALSE );
+            object = object__xml_encode( *obj, &state, FALSE );
 
             element__add_child( triple, subject );
             element__add_child( triple, predicate );
@@ -824,17 +831,30 @@ interpreter__serialize( Interpreter *c, char *path )
             return CONTINUE;
         }
 
-        o = ( Object* ) ( *epp )->key;
+        /* Avoid a compiler warning. */
+        ignored = 0;
 
+        if ( DEBUG__SAFE && ( !opp ) )
+            abort();
+
+        o = DEREF( opp );
+
+        if ( DEBUG__SAFE && ( !o ) )
+            abort();
+
+        /* Create element for this object. */
         el = object__xml_encode( o, &state, TRUE );
-        element__add_child( root, el );
 
+        /* If the object is the subject of any statements, serialize them. */
         if ( TRIPLES__GLOBAL__OUT_EDGES
           && o->outbound_edges
           && hash_table__size( o->outbound_edges ) )
         {
-            hash_map__walk( o->outbound_edges, ( Dist_f ) triple_helper );
+            hash_map__walk2( o->outbound_edges, ( Dist2_f ) triple_helper );
         }
+
+        /* Add the new element in at the top level. */
+        element__add_child( root, el );
 
         return CONTINUE;
     }
@@ -844,17 +864,17 @@ interpreter__serialize( Interpreter *c, char *path )
 
     xmldom__init();
 
-    /* Root element. */
+    /* Create root element. */
     doc = document__new();
     root = element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
 
-    /* Version attribute. */
+    /* Add version attribute. */
     attr__new( root, ( uc* ) "p2-version", ( uc* ) PACKAGE_VERSION, 0 );
 
-    #ifdef REVISION
-    /* Revision attribute. */
+#ifdef REVISION
+    /* Add revision attribute. */
     attr__new( root, ( uc* ) "p2-revision", ( uc* ) REVISION, 0 );
-    #endif
+#endif
 
     /* Time stamp attribute. */
     add_timestamp( root );
@@ -876,12 +896,12 @@ interpreter__serialize( Interpreter *c, char *path )
     /* ... */
 
     /* Multiref objects are serialized in no particular order. */
-    hash_map__walk( state.ids, ( Dist_f ) obj_helper );
+    hash_map__walk2( state.ids, ( Dist2_f ) helper );
 
     hash_map__delete( state.ids );
 
-    hash_map__walk( state.serializers,
-        ( Dist_f ) function_wrapper__delete );
+    hash_map__walk2( state.serializers,
+        ( Dist2_f ) function_wrapper__delete );
     hash_map__delete( state.serializers );
 
     document__write_to_file( doc, path );
@@ -950,13 +970,13 @@ interpreter__deserialize( Interpreter *c, char *path )
             object__xml_decode( child, &state );
         }
 
-        #if TRIPLES__GLOBAL
+#if TRIPLES__GLOBAL
         /* Triples element. */
         else if ( !strcmp( el_name, TRIPLES__XML__NAME ) )
         {
             triple__xml_decode( child, &state );
         }
-        #endif
+#endif
 
         else
         {
@@ -992,8 +1012,8 @@ finish:
 
     if ( state.deserializers )
     {
-        hash_map__walk( state.deserializers,
-            ( Dist_f ) function_wrapper__delete );
+        hash_map__walk2( state.deserializers,
+            ( Dist2_f ) function_wrapper__delete );
         hash_map__delete( state.deserializers );
     }
 

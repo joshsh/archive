@@ -23,8 +23,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 */
 
-#include <time.h>
-
 #include "Interpreter-impl.h"
 #include "license.h"
 
@@ -152,28 +150,9 @@ command_cp( Interpreter *c, Ast *args )
 static int
 command_gc( Interpreter *c, Ast *args )
 {
-    Memory_Manager *m = environment__manager( c->env );
-    int size_before, size_after;
-    double elapsed_time;
-
-    clock_t t = clock();
-
     args = 0;
 
-    size_before = memory_manager__size( m );
-    memory_manager__collect( m );
-    size_after = memory_manager__size( m );
-
-    elapsed_time = difftime( clock(), t );
-
-    if ( !c->quiet )
-    {
-        PRINT( "Collected %i of %i objects (%.3g%%) in %fms.\n",
-            size_before - size_after,
-            size_before,
-            ( ( size_before - size_after ) * 100 ) / ( double ) size_before,
-            elapsed_time * 1000 );
-    }
+    memory_manager__collect( environment__manager( c->env ), TRUE, !c->quiet );
 
     return 0;
 }
@@ -572,7 +551,7 @@ interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
 
     free( name );
 
-    memory_manager__collect_if_needed( environment__manager( c->env ) );
+    memory_manager__collect( environment__manager( c->env ), FALSE, FALSE );
 
     return result;
 }

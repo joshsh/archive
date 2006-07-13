@@ -40,20 +40,20 @@ extern Dictionary *
 dictionary__new( void );
 
 extern void
-dictionary__delete( Dictionary *dict );
+dictionary__delete( Dictionary *d );
 
 
 extern void *
-dictionary__add( Dictionary *dict, const char *key, void *target );
+dictionary__add( Dictionary *d, char *key, void *target );
 
 extern void *
-dictionary__lookup( Dictionary *dict, const char *key );
+dictionary__lookup( Dictionary *d, char *key );
 
 extern char *
-dictionary__reverse_lookup( Dictionary *dict, const void *target );
+dictionary__reverse_lookup( Dictionary *d, const void *target );
 
 extern void *
-dictionary__remove( Dictionary *dict, char *key );
+dictionary__remove( Dictionary *d, char *key );
 
 
 extern void
@@ -61,11 +61,11 @@ dictionary__add_all( Dictionary *dest, Dictionary *src );
 
 
 extern void
-dictionary__walk( Dictionary *dict, Dist_f f );
+dictionary__walk( Dictionary *d, Dist_f f );
 
 
 extern Array *
-dictionary__keys( Dictionary *dict );
+dictionary__keys( Dictionary *d );
 
 
 #endif  /* DICTIONARY_H */

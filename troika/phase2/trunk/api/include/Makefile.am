@@ -5,6 +5,7 @@ nobase_include_HEADERS = \
 	phase2/Ast.h			\
 	phase2/Closure.h		\
 	phase2/common.h			\
+	phase2/compiler.h		\
 	phase2/Environment.h		\
 	phase2/Interpreter.h		\
 	phase2/Memory_Manager.h		\
@@ -15,7 +16,6 @@ nobase_include_HEADERS = \
 	phase2/Type.h			\
 	phase2/Void.h			\
 	phase2/Combinator.h		\
-	phase2/sk.h			\
 	phase2/collection/Array.h	\
 	phase2/collection/Bunch.h	\
 	phase2/collection/Collection.h	\

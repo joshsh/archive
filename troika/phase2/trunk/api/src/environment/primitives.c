@@ -22,10 +22,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #if TRIPLES__GLOBAL
 
+#include <compiler.h>
+#include "../compiler/Apply.h"
+
 #include <Primitive-import.h>
     #include "../primitive/Primitive-impl.h"
-
-#include "compiler/graph.h"
 
 
 /* FIXME */
@@ -126,14 +127,15 @@ predicates_stub( void **args )
     Object *o = args[0];
     Set *s = set__new();
 
-    ACTION helper( Hash_Map__Entry **epp )
+    ACTION helper( Object **pred, Object **obj )
     {
-        set__add( s, ( *epp )->key );
+        set__add( s, DEREF( pred ) );
+        obj = 0;
         return CONTINUE;
     }
 
     if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
-        hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
+        hash_map__walk2( o->outbound_edges, ( Dist2_f ) helper );
 
     return s;
 }
@@ -145,14 +147,15 @@ objects_stub( void **args )
     Object *o = args[0];
     Set *s = set__new();
 
-    ACTION helper( Hash_Map__Entry **epp )
+    ACTION helper( Object **pred, Object **obj )
     {
-        set__add( s, ( *epp )->target );
+        set__add( s, DEREF( obj ) );
+        pred = 0;
         return CONTINUE;
     }
 
     if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
-        hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
+        hash_map__walk2( o->outbound_edges, ( Dist2_f ) helper );
 
     return s;
 }

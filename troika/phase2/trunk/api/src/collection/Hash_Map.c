@@ -21,19 +21,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../settings.h"
 
 
-static unsigned int
-hash( const Hash_Map__Entry *entry )
+typedef struct Entry Entry;
+
+struct Entry
 {
-    return ( unsigned int ) entry->key;
+    char    head;
+    void *  key;
+    void *  target;
+};
+
+
+static unsigned int
+hash( const Entry *e )
+{
+    return ( unsigned int ) e->key;
 }
 
 
 /* Works well enough for addresses so long as there's a one-to-one correspondence
    between addresses and key values. */
 static int
-compare( const Hash_Map__Entry *entry1, const Hash_Map__Entry *entry2 )
+compare( const Entry *e1, const Entry *e2 )
 {
-    return ( entry1->key != entry2->key );
+    return ( e1->key != e2->key );
 }
 
 
@@ -43,7 +53,7 @@ compare( const Hash_Map__Entry *entry1, const Hash_Map__Entry *entry2 )
 Hash_Map *
 hash_map__new( void )
 {
-    Hash_Table *h = hash_table__new( 0, 0, 0,
+    Hash_Table *h = hash_table__new( 0, 0, 0, sizeof( Entry ),
         ( Hash_f ) hash, ( Comparator ) compare );
 
     return h;
@@ -53,15 +63,6 @@ hash_map__new( void )
 void
 hash_map__delete( Hash_Map *t )
 {
-    void *helper( Hash_Map__Entry **epp )
-    {
-        free( *epp );
-        return 0;
-    }
-
-    /* Destroy graph entries. */
-    hash_table__walk( t, ( Dist_f ) helper );
-
     hash_table__delete( t );
 }
 
@@ -69,31 +70,35 @@ hash_map__delete( Hash_Map *t )
 void
 hash_map__add( Hash_Map *t, void * const key, void * const target )
 {
-    Hash_Map__Entry *entry, *entry_old;
+    Entry e;
 
-    if ( !( entry = NEW( Hash_Map__Entry ) ) )
-        return;
+/*
+char s[100];
+sprintf( s, "echo \"add(%p,%p)\" >> debug.txt", key, target );
+system( s );
+PRINT( "add(%p,%p)\n", key, target ); FFLUSH;
+*/
+    e.head = 0x1;
+    e.key = key;
+    e.target = target;
 
-    entry->key = key;
-    entry->target = target;
-
-    if ( ( entry_old = ( Hash_Map__Entry* ) hash_table__add( t, entry ) ) )
-        free( entry_old );
+    hash_table__add( t, &e );
 }
 
 
 void *
 hash_map__lookup( Hash_Map *t, void * const key )
 {
-    Hash_Map__Entry *entry;
-    Hash_Map__Entry match_entry;
-    match_entry.key = key;
+    Entry e, *match;
+    e.key = key;
 
-    if ( !( entry = hash_table__lookup( t, &match_entry ) ) )
-        return 0;
+    match = hash_table__lookup( t, &e );
+
+    if ( match )
+        return match->target;
 
     else
-        return entry->target;
+        return 0;
 }
 
 
@@ -101,12 +106,10 @@ void
 hash_map__remove
     ( Hash_Map *t, void * const key )
 {
-    Hash_Map__Entry *entry_old;
-    Hash_Map__Entry match_entry;
-    match_entry.key = key;
+    Entry e;
+    e.key = key;
 
-    if ( ( entry_old = ( Hash_Map__Entry* ) hash_table__remove( t, &match_entry ) ) )
-        free( entry_old );
+    hash_table__remove( t, &e );
 }
 
 
@@ -116,10 +119,30 @@ hash_map__remove
 void
 hash_map__walk( Hash_Map *t, Dist_f f )
 {
+    ACTION helper( Entry *e )
+    {
+        return f( &e->target );
+    }
+
     if ( DEBUG__SAFE && ( !t || !f ) )
         abort();
 
-    hash_table__walk( t, f );
+    hash_table__walk( t, ( Dist_f ) helper );
+}
+
+
+void
+hash_map__walk2( Hash_Map *t, Dist2_f f )
+{
+    ACTION helper( Entry *e )
+    {
+        return f( &e->key, &e->target );
+    }
+
+    if ( DEBUG__SAFE && ( !t || !f ) )
+        abort();
+
+    hash_table__walk( t, ( Dist_f ) helper );
 }
 
 

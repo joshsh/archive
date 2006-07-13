@@ -23,10 +23,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 */
 
-#include <sk.h>
 #include "Interpreter-impl.h"
-#include "../compiler/graph.h"
 #include "../collection/Term-impl.h"
+#include "compiler/Apply.h"
 
 
 /* FIXME */
@@ -439,7 +438,7 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 
         else
         {
-            t = sk_reduce( o->value,
+            t = term__reduce( o->value,
                 environment__manager( c->env ),
                 c->term_t,
                 c->prim_t,
@@ -508,7 +507,7 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
     c->set_t->encode = set__encode;
     c->term_t->encode = term__encode;
 
-    memory_manager__collect_if_needed( environment__manager( c->env ) );
+    memory_manager__collect( environment__manager( c->env ), FALSE, FALSE );
 
     return ret;
 }

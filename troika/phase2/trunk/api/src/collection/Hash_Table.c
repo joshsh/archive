@@ -29,7 +29,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
 
-#define NEWBUFFER( size )  calloc( (size), sizeof( void* ) )
+typedef char cell;
+
+#define OCCUPIED(c)     *(c)
+#define VACATE(c)       *(c) = 0
+#define WRAP(h,c)       (h)->buffer + (((c) - (h)->buffer) % ((h)->cell_size * (h)->buffer_size));
+#define HASH(h,k)       (h)->buffer + ((h)->cell_size * ((h)->hash(k) % (h)->buffer_size ))
 
 
 struct Hash_Table
@@ -47,7 +52,7 @@ struct Hash_Table
     double          expansion;
 
     /** The hash table buffer array. */
-    void **         buffer;
+    cell *          buffer;
 
     /** The number of cells the buffer array. */
     unsigned int    buffer_size;
@@ -92,35 +97,37 @@ next_prime( unsigned int i )
 static Hash_Table *
 expand( Hash_Table *h )
 {
-    void **src, **dest, **buffer, **lim;
+    cell *src, *dest, *buffer, *lim;
     unsigned int buffer_size;
 
     buffer_size = next_prime(
         ( unsigned int ) ( h->buffer_size * h->expansion ) );
+
     if ( buffer_size <= h->buffer_size )
-        buffer_size++;
+        buffer_size = next_prime( h->buffer_size + 2 );
 
-    if ( !( buffer = NEWBUFFER( buffer_size ) ) )
-        return 0;
-
-    lim = buffer + buffer_size;
-    for ( dest = buffer; dest < lim; dest++ )
-        *dest = 0;
-
-    lim = h->buffer + h->buffer_size;
-
-    for ( src = h->buffer; src < lim; src++ )
+    if ( !( buffer = calloc( buffer_size, h->cell_size ) ) )
     {
-        if ( *src )
+        ERROR( "Allocation failure." );
+        return 0;
+    }
+
+    lim = h->buffer + ( h->cell_size * h->buffer_size );
+
+    /* For each cell in the existing table buffer... */
+    for ( src = h->buffer; src < lim; src += h->cell_size )
+    {
+        /* If the cell is occupied, hash it into the new table. */
+        if ( OCCUPIED( src ) )
         {
-            dest = buffer + ( h->hash( *src ) % buffer_size );
+            dest = buffer + ( h->cell_size * ( h->hash( src ) % buffer_size ) );
             while ( *dest )
             {
-                dest++;
-                dest = buffer + ( ( unsigned int ) ( dest - buffer ) % buffer_size );
+                dest += h->cell_size;
+                dest = buffer + ( ( unsigned int ) ( dest - buffer ) % ( buffer_size * h->cell_size ) );
             }
 
-            *dest = *src;
+            memcpy( dest, src, h->cell_size );
         }
     }
 
@@ -141,15 +148,26 @@ hash_table__new(
     unsigned int buffer_size,
     double load,
     double expansion,
+    size_t cell_size,
     Hash_f hash,
     Comparator compare )
 {
+/*
     unsigned int i;
+*/
 
     Hash_Table *h;
 
-    if ( ( h = NEW( Hash_Table ) ) )
+    if ( DEBUG__SAFE && ( !hash || !compare ) )
+        abort();
+
+    h = NEW( Hash_Table );
+
+    if ( h )
     {
+        /* This needs to be a reasonable number. */
+        h->cell_size = cell_size;
+
         h->buffer_size = next_prime( buffer_size );
 
         h->hash = hash;
@@ -171,15 +189,11 @@ hash_table__new(
            table will expand as soon as it is added to. */
         h->capacity = ( unsigned int ) ( h->buffer_size * h->load );
 
-        if ( !( h->buffer = NEWBUFFER( h->buffer_size ) ) )
+        if ( !( h->buffer = calloc( h->buffer_size, h->cell_size ) ) )
         {
             free( h );
             h = 0;
         }
-
-        else
-            for ( i = 0; i < h->buffer_size; i++ )
-                h->buffer[i] = 0;
     }
 
     if ( !h )
@@ -194,18 +208,25 @@ hash_table__copy( const Hash_Table *h )
 {
     Hash_Table *h2;
 
-    if ( ( h2 = NEW( Hash_Table ) ) )
+    if ( DEBUG__SAFE && !h )
+        abort();
+
+    h2 = NEW( Hash_Table );
+
+    if ( h2 )
     {
+        /* Copy everything except for the buffer. */
         *h2 = *h;
 
-        if ( !( h2->buffer = NEWBUFFER( h->buffer_size ) ) )
+        /* Copy the buffer, too. */
+        if ( !( h2->buffer = MALLOC( h->buffer_size * h->cell_size ) ) )
         {
             free( h2 );
             h2 = 0;
         }
 
         else
-            memcpy( h2->buffer, h->buffer, h->buffer_size * sizeof( void* ) );
+            memcpy( h2->buffer, h->buffer, h->cell_size * h->buffer_size );
     }
 
     if ( !h2 )
@@ -250,22 +271,20 @@ hash_table__expansion( const Hash_Table *h )
 /******************************************************************************/
 
 
-void *
+void
 hash_table__add( Hash_Table *h, void *key )
 {
-    void **cur, **buffer = h->buffer;
-    int buffer_size = h->buffer_size;
-    void *key_old;
+    cell *cur;
 
-    if ( DEBUG__SAFE && !key )
+    if ( DEBUG__SAFE && ( !h || !key ) )
         abort();
 
-    cur = buffer + ( h->hash( key ) % buffer_size );
+    cur = HASH( h, key );
 
-    while ( *cur )
+    while ( OCCUPIED( cur ) )
     {
         /* No duplicate entries allowed.  Replace with new key. */
-        if ( !h->compare( *cur, key ) )
+        if ( !h->compare( cur, key ) )
         {
             /* Table doesn't grow. */
             h->size--;
@@ -274,101 +293,99 @@ hash_table__add( Hash_Table *h, void *key )
         }
 
         /* Increment and wrap */
-        cur++;
-        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
+        cur += h->cell_size;
+        cur = WRAP( h, cur );
     }
 
-    key_old = *cur;
-    *cur = key;
+    memcpy( cur, key, h->cell_size );
 
     h->size++;
     if ( h->size >= h->capacity )
+    {
         /* Warning: no checking of return value. */
         expand( h );
-
-    return key_old;
+    }
 }
 
 
 void *
 hash_table__lookup( const Hash_Table *h, const void *key )
 {
-    void **cur, **buffer = h->buffer;
-    int buffer_size = h->buffer_size;
+    cell *cur;
 
     if ( DEBUG__SAFE && ( !h || !key ) )
         abort();
 
-    cur = buffer + ( h->hash( key ) % buffer_size );
+    cur = HASH( h, key );
 
-    while ( *cur && h->compare( *cur, key ) )
+    while ( OCCUPIED( cur ) )
     {
+        if ( !h->compare( cur, key ) )
+            return cur;
+
         /* Increment and wrap. */
-        cur++;
-        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
+        cur += h->cell_size;
+        cur = WRAP( h, cur );
     }
 
-    return *cur;
+    return 0;
 }
 
 
 /* When a cell is removed (replaced with a NULL), adjacent cells on the
    higher-address side may become unreachable, and need to be re-inserted into
    the table. */
-void
-rehash_dependent_cells( Hash_Table *h, void **removed )
+static void
+rehash_dependent_cells( Hash_Table *h, cell *removed )
 {
-    void **cur = removed, **buffer = h->buffer, **aux;
-    int buffer_size = h->buffer_size;
-    int i = -1, j;
+    cell *cur = removed, *aux;
+    unsigned int i = -1, j;
 
     do
     {
         i++;
-        cur++;
-        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
+        cur += h->cell_size;
+        cur = WRAP( h, cur );
 
     } while ( *cur );
 
     if ( i )
     {
-        aux = ( void** ) MALLOC( i * sizeof( void* ) );
+        aux = MALLOC( i * h->cell_size );
 
         cur = removed;
         for ( j = 0; j < i; j++ )
         {
-            cur++;
-            cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
-            aux[j] = *cur;
-            *cur = 0;
+            cur += h->cell_size;
+            cur = WRAP( h, cur );
+            memcpy( aux + ( h->cell_size * j ), cur, h->cell_size );
+            VACATE( cur );
+            h->size--;
         }
 
         for ( j = 0; j < i; j++ )
-            hash_table__add( h, aux[j] );
+            hash_table__add( h, aux + ( h->cell_size * j ) );
 
         free( aux );
     }
 }
 
 
-void *
+void
 hash_table__remove( Hash_Table *h, const void *key )
 {
-    void **cur, **buffer = h->buffer;
-    int buffer_size = h->buffer_size;
-    void *displaced = 0;
+    cell *cur;
 
     if ( DEBUG__SAFE && ( !h || !key ) )
         abort();
 
-    cur = buffer + ( h->hash( key ) % buffer_size );
+    cur = HASH( h, key );
 
-    while ( *cur )
+    while ( OCCUPIED( cur ) )
     {
-        if ( !h->compare( *cur, key ) )
+        if ( !h->compare( cur, key ) )
         {
-            displaced = *cur;
-            *cur = 0;
+            VACATE( cur );
             h->size--;
 
             /* Re-hash dependent cells. */
@@ -378,33 +395,32 @@ hash_table__remove( Hash_Table *h, const void *key )
         }
 
         /* Increment and wrap. */
-        cur++;
-        cur = buffer + ( ( unsigned int ) ( cur - buffer ) % buffer_size );
+        cur += h->cell_size;
+        cur = WRAP( h, cur );
     }
-
-    return displaced;
 }
 
 
 void
 hash_table__walk( Hash_Table *h, Dist_f f )
 {
-    void **cur, **lim;
+    cell *cur, *lim;
     ACTION r;
 
     if ( DEBUG__SAFE && ( !h || !f ) )
         abort();
 
     cur = h->buffer;
-    lim = h->buffer + h->buffer_size;
+    lim = h->buffer + ( h->cell_size * h->buffer_size );
 
     while ( cur < lim )
     {
-        if ( *cur && ( r = f( cur ) ) )
+                                         /* FIXME */
+        if ( OCCUPIED( cur ) && ( r = f( ( void** ) cur ) ) )
         {
             if ( r == REMOVE )
             {
-                *cur = 0;
+                VACATE( cur );
                 h->size--;
             }
 
@@ -412,7 +428,7 @@ hash_table__walk( Hash_Table *h, Dist_f f )
                 break;
         }
 
-        cur++;
+        cur += h->cell_size;
     }
 }
 

@@ -25,20 +25,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef LOOKUP_TABLE_H
-#define LOOKUP_TABLE_H
+#ifndef HASH_MAP_H
+#define HASH_MAP_H
 
 
 #include <collection/Hash_Table.h>
-
-
-typedef struct Hash_Map__Entry Hash_Map__Entry;
-
-struct Hash_Map__Entry
-{
-    void *key;
-    void *target;
-};
 
 
 typedef Hash_Table Hash_Map;
@@ -51,6 +42,8 @@ extern void
 hash_map__delete( Hash_Map *t );
 
 
+#define hash_map__size  hash_table__size
+
 extern void
 hash_map__add( Hash_Map *t, void * const key, void * const target );
 
@@ -61,10 +54,16 @@ extern void
 hash_map__remove( Hash_Map *t, void * const src );
 
 
+/** Distributes f to the target value of each pair in the map. */
 extern void
 hash_map__walk( Hash_Map *t, Dist_f f );
 
+/** Distributes f_key to the key value and f_target to the target value (in that
+    order) of each pair in the map. */
+extern void
+hash_map__walk2( Hash_Map *t, Dist2_f f );
 
-#endif  /* LOOKUP_TABLE_H */
+
+#endif  /* HASH_MAP_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

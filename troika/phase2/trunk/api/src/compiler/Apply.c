@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
+#include <compiler.h>
 #include "Apply.h"
-#include "graph.h"
 
 #include "../object/Object-impl.h"
 

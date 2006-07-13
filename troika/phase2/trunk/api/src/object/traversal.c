@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include "Object-impl.h"
 #include <collection/Array.h>
+#include "Object-impl.h"
 
 
 void
@@ -26,40 +26,56 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
 {
     int total;
 
-    auto ACTION obj_trace( Object **opp );
-
-    ACTION edge_trace( Hash_Map__Entry **epp )
+    ACTION helper( Object **opp )
     {
-#if TRIPLES__IMPLICATION__SP_O
-        ... not yet written ...
-#else
-#  if TRIPLES__IMPLICATION__S_P
-        obj_trace( ( Object** ) &( *epp )->key );
-#  endif
-#  if TRIPLES__IMPLICATION__S_O
-        obj_trace( ( Object** ) &( *epp )->target );
-#  endif
-#endif
-
-        return CONTINUE;
-    }
-
-    ACTION obj_trace( Object **opp )
-    {
-        Object *o;
-
-        /* If for any reason execution has traced to a NULL, return immediately. */
-        if ( !opp )
+#if TRIPLES__IMPLICATION__S_P && TRIPLES__IMPLICATION__S_O
+        ACTION edge_helper( Object **pred, Object **obj )
         {
-            if ( DEBUG__SAFE )
-                WARNING( "obj_trace: null object" );
+            if ( DEBUG__SAFE && ( !pred || !obj ) )
+                abort();
+
+            helper( pred );
+            helper( obj );
 
             return CONTINUE;
         }
+#else
+        Fail to compile.
+#endif
+
+
+
+/*
+data(
+    bar=@(@(V())1)
+    .()
+    .()
+    .()
+)
+
+data(
+    .(.(.().).())
+    .()
+    .(.)
+    .
+
+data(cycle(cycle))
+*/
+
+        Object *o;
+
+        /* Null object references may be allowed, but null indirection to object
+           references is not. */
+        if ( DEBUG__SAFE && !opp )
+            abort();
 
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
-        if ( !f( ( void** ) opp ) )
+        if ( f( ( void** ) opp ) == CONTINUE )
         {
+#if DEBUG__OBJECT
+            putchar('(');
+#endif
+
             if ( DEBUG__OBJECT )
                 total++;
 
@@ -68,18 +84,25 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
                that operation. */
             o = *opp;
 
+            if ( DEBUG__SAFE && !o )
+                abort();
+
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
             {
-                o->type->walk( o->value, ( Dist_f ) obj_trace );
+                o->type->walk( o->value, ( Dist_f ) helper );
             }
 
             /* Traverse to associated objects (if any). */
 #if TRIPLES__GLOBAL__OUT_EDGES
             if ( follow_triples && o->outbound_edges )
             {
-                hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
+                hash_map__walk2( o->outbound_edges, ( Dist2_f ) edge_helper );
             }
+#endif
+
+#if DEBUG__OBJECT
+            putchar(')');
 #endif
         }
 
@@ -92,7 +115,7 @@ object__trace( Object *o, Dist_f f, boolean follow_triples )
     if ( DEBUG__OBJECT )
         total = 0;
 
-    obj_trace( &o );
+    helper( &o );
 
     if ( DEBUG__OBJECT )
         PRINT( "[] object__trace(%#x, %#x): visited %i objects.\n",
@@ -113,24 +136,19 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
         return CONTINUE;
     }
 
-    ACTION edge_trace( Hash_Map__Entry **epp )
+    ACTION helper( Object **opp )
     {
-#if TRIPLES__IMPLICATION__SP_O
-        ... not yet written ...
+#if TRIPLES__IMPLICATION__S_P && TRIPLES__IMPLICATION__S_O
+        ACTION edge_helper( Object **pred, Object **obj )
+        {
+            enqueue( pred );
+            enqueue( obj );
+            return CONTINUE;
+        }
 #else
-#  if TRIPLES__IMPLICATION__S_P
-        enqueue( ( Object** ) &( *epp )->key );
-#  endif
-#  if TRIPLES__IMPLICATION__S_O
-        enqueue( ( Object** ) &( *epp )->target );
-#  endif
+        Die horribly.
 #endif
 
-        return CONTINUE;
-    }
-
-    ACTION obj_trace( Object **opp )
-    {
         Object *o;
 
         /* If for any reason execution has traced to a NULL, return immediately. */
@@ -163,7 +181,7 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 #if TRIPLES__GLOBAL__OUT_EDGES
             if ( follow_triples && o->outbound_edges )
             {
-                hash_map__walk( o->outbound_edges, ( Dist_f ) edge_trace );
+                hash_map__walk( o->outbound_edges, ( Dist_f ) edge_helper );
             }
 #endif
         }
@@ -182,7 +200,7 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
 
     while ( array__size( queue ) )
     {
-        obj_trace( array__pop( queue ) );
+        helper( array__pop( queue ) );
     }
 
     array__delete( queue );

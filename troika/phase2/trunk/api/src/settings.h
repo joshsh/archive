@@ -288,15 +288,16 @@ dereference( struct Object ** );
 #        define DEBUG__PARSER                   1 & DEBUG__PARSER_MODULE
 #            /** Use Bison's built-in trace facility. */
 #            define DEBUG__PARSER__USE_YYDEBUG  0 & DEBUG__PARSER
-#    define DEBUG__UTILS                        0 & DEBUG
-#        define DEBUG__ARRAY                    1 & DEBUG__UTILS
-#        define DEBUG__BAG                      1 & DEBUG__UTILS
-#        define DEBUG__BUNCH                    1 & DEBUG__UTILS
-#        define DEBUG__HASH_TABLE               1 & DEBUG__UTILS
-#        define DEBUG__LOOKUP_TABLE             1 & DEBUG__UTILS
-#        define DEBUG__NAME                     1 & DEBUG__UTILS
-#        define DEBUG__SET                      1 & DEBUG__UTILS
-#        define DEBUG__TERM                     1 & DEBUG__UTILS
+#    define DEBUG__COLL                         1 & DEBUG
+#        define DEBUG__ARRAY                    1 & DEBUG__COLL
+#        define DEBUG__BAG                      1 & DEBUG__COLL
+#        define DEBUG__DICTIONARY               1 & DEBUG__COLL
+#        define DEBUG__BUNCH                    1 & DEBUG__COLL
+#        define DEBUG__HASH_TABLE               1 & DEBUG__COLL
+#        define DEBUG__LOOKUP_TABLE             1 & DEBUG__COLL
+#        define DEBUG__NAME                     1 & DEBUG__COLL
+#        define DEBUG__SET                      1 & DEBUG__COLL
+#        define DEBUG__TERM                     1 & DEBUG__COLL
 
 #define COMPILER__SHOW_ADDRESS                  DEBUG
 

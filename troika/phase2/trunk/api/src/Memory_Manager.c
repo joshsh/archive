@@ -21,6 +21,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Collection.h>
 #include "object/Object-impl.h"
 
+#include <time.h>
+
 
 #define visited( o )        (o)->flags & OBJECT__VISITED
 #define set_visited( o )    (o)->flags |= OBJECT__VISITED
@@ -236,9 +238,14 @@ memory_manager__walk
 
     ACTION helper( Object **opp )
     {
+        Object *o;
+
+        if ( DEBUG__SAFE && !opp )
+            abort();
+
         /* If the entire object graph is to be traversed, then it is safe to
            mutate references to indirection nodes. */
-        Object *o = ( dosweep )
+        o = ( dosweep )
             ? DEREF( opp )
             : *opp;
 
@@ -394,12 +401,17 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 
     ACTION helper( Object **opp )
     {
-        Object *o = *opp;
+        Object *o;
+
+        if ( DEBUG__SAFE && !opp )
+            abort();
+
+        o = *opp;
 
         if ( FIRST_CLASS_NULL && !o )
             return BREAK;
 
-        /* If the object is already marked, abort. */
+        /* If the object is already marked, add it and abort. */
         if ( visited( o ) )
         {
             set__add( s, o );
@@ -422,13 +434,18 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
         }
     }
 
+    if ( DEBUG__SAFE && !m )
+        abort();
+
     if ( !m->clean )
         unmark_all( m );
+
     m->clean = 0;
 
     s = set__new();
 
     object__trace( root, ( Dist_f ) helper, TRUE );
+
     return s;
 }
 
@@ -437,8 +454,13 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 
 
 void
-memory_manager__collect( Memory_Manager *m )
+memory_manager__collect( Memory_Manager *m, boolean force, boolean echo )
 {
+    unsigned int size;
+
+    clock_t t;
+    double elapsed_time;
+
     ACTION noop( Object **opp )
     {
         /* Avoid "unused parameter" warning. */
@@ -450,20 +472,41 @@ memory_manager__collect( Memory_Manager *m )
     if ( DEBUG__SAFE && !m )
         abort();
 
+#if DEBUG__MEMORY
+    echo = TRUE;
+#endif
+
+    if ( echo )
+        t = clock();
+
+    if ( echo || !force )
+        size = memory_manager__size( m );
+
+    if ( !force )
+    {
+        if ( m->size_at_last_cycle
+          && ( double ) size / ( double ) m->size_at_last_cycle <= MEM__COLLECTION_THRESHOLD )
+            return;
+    }
+
     /* Mark all reachable objects. */
     memory_manager__walk( m, 0, ( Dist_f ) noop, FALSE, TRUE );
 
     m->size_at_last_cycle = memory_manager__size( m );
-}
 
+    if ( echo )
+    {
+        elapsed_time = difftime( clock(), t );
 
-void
-memory_manager__collect_if_needed( Memory_Manager *m )
-{
-    unsigned int size = memory_manager__size( m );
-    if ( !m->size_at_last_cycle
-      || ( double ) size / ( double ) m->size_at_last_cycle > MEM__COLLECTION_THRESHOLD )
-        memory_manager__collect( m );
+        PRINT( "Collected %i of %i objects (%.3g%%)",
+            size - m->size_at_last_cycle,
+            size,
+            ( ( size - m->size_at_last_cycle ) * 100 ) / ( double ) size );
+/*
+        PRINT( " in %fms", elapsed_time * 1000 );
+*/
+        PRINT( ".\n" );
+    }
 }
 
 

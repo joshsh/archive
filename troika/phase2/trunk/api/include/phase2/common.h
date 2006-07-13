@@ -50,12 +50,14 @@ typedef boolean         ( *Criterion2 )( void *arg1, void *arg2 );
 typedef void *          ( *Decoder )( char *buffer );
 typedef void            ( *Destructor )( void *p );
 typedef ACTION          ( *Dist_f )( void **refp );
+typedef ACTION          ( *Dist2_f )( void **refp1, void **refp2 );
 typedef void            ( *Encoder )( void *p, char *buffer );
 typedef unsigned int    ( *Size_Of )( const void *self );
 typedef void            ( *Sort )( void *p, Comparator cmp );
 typedef void *          ( *Substitution )( void *p );
 typedef void            ( *Void_f )( void *p );
 typedef void            ( *Walker )( void *coll, Dist_f f );
+/*typedef void            ( *Walker2 )( void *coll, Dist2_f f );*/
 
 typedef void            ( *Generic_f )( void );
 

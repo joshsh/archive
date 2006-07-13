@@ -21,63 +21,27 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../settings.h"
 
 
-typedef struct Dictionary_Entry Dictionary_Entry;
+typedef struct Entry Entry;
 
-struct Dictionary_Entry
+struct Entry
 {
-    char *key;
-    void *target;
+    char    head;
+    char    *key;
+    void    *target;
 };
-
-
-static Dictionary_Entry *
-dictionary_entry__new( const char *key, void *target )
-{
-    Dictionary_Entry *entry;
-
-    if ( DEBUG__SAFE && ( !key || !target ) )
-        abort();
-
-    entry = NEW( Dictionary_Entry );
-
-    if ( entry )
-    {
-        entry->target = target;
-
-        if ( !( entry->key = STRDUP( key ) ) )
-        {
-            free( entry );
-            entry = 0;
-        }
-    }
-
-    return entry;
-}
-
-
-static void
-dictionary_entry__delete
-    ( Dictionary_Entry *entry )
-{
-    if ( DEBUG__SAFE && !entry )
-        abort();
-
-    free( entry->key );
-    free( entry );
-}
 
 
 /** \note  From the hashpjw example by P. J. Weinberger in Aho + Sethi + Ullman. */
 static unsigned int
-hash( const Dictionary_Entry *entry )
+hash( const Entry *e )
 {
     char const *p;
     unsigned int h = 0, g;
 
-    if ( DEBUG__SAFE && !entry )
+    if ( DEBUG__SAFE && !e )
         abort();
 
-    for ( p = entry->key; *p != '\0'; p++ )
+    for ( p = e->key; *p != '\0'; p++ )
     {
         h = ( h << 4 ) + *p;
         if ( ( g = h & 0xf0000000 ) )
@@ -87,17 +51,21 @@ hash( const Dictionary_Entry *entry )
         }
     }
 
+#if DEBUG__DICTIONARY
+    PRINT( "hash(\"%s\") = %i\n", e->key, h );
+#endif
+
     return h;
 }
 
 
 static int
-compare( const Dictionary_Entry *entry1, const Dictionary_Entry *entry2 )
+compare( const Entry *e1, const Entry *e2 )
 {
-    if ( DEBUG__SAFE && ( !entry1 || !entry2 ) )
+    if ( DEBUG__SAFE && ( !e1 || !e2 ) )
         abort();
 
-    return strcmp( entry1->key, entry2->key );
+    return strcmp( e1->key, e2->key );
 }
 
 
@@ -108,28 +76,28 @@ Dictionary *
 dictionary__new( void )
 {
     Hash_Table *h = hash_table__new
-        ( 0, 0, 0, ( Hash_f ) hash, ( Comparator ) compare );
+        ( 0, 0, 0, sizeof( Entry ), ( Hash_f ) hash, ( Comparator ) compare );
 
     return h;
 }
 
 
 void
-dictionary__delete( Dictionary *dict )
+dictionary__delete( Dictionary *d )
 {
-    ACTION helper( Dictionary_Entry **epp )
+    ACTION helper( Entry *e )
     {
-        dictionary_entry__delete( *epp );
+        free( e->key );
         return CONTINUE;
     }
 
-    if ( DEBUG__SAFE && !dict )
+    if ( DEBUG__SAFE && !d )
         abort();
 
     /* Destroy dictionary entries. */
-    hash_table__walk( dict, ( Dist_f ) helper );
+    hash_table__walk( d, ( Dist_f ) helper );
 
-    hash_table__delete( dict );
+    hash_table__delete( d );
 }
 
 
@@ -137,54 +105,62 @@ dictionary__delete( Dictionary *dict )
 
 
 void *
-dictionary__add( Dictionary *dict, const char *key, void *target )
+dictionary__add( Dictionary *d, char *key, void *target )
 {
-    Dictionary_Entry *old_entry, *new_entry;
-    void *r = 0;
+    Entry *old, new;
 
-    if ( DEBUG__SAFE && ( !dict || !key || !target ) )
+    if ( DEBUG__SAFE && ( !d || !key || !target ) )
         abort();
 
-    else if ( ( new_entry = dictionary_entry__new( key, target ) ) )
-    {
-        /* ! */
-        if ( ( old_entry = hash_table__add( dict, new_entry ) ) )
-            dictionary_entry__delete( old_entry );
+    new.key = key;
 
-        r = target;
+    old = hash_table__lookup( d, &new );
+
+    /* Entry exists --> just re-target it. */
+    if ( old )
+        old->target = target;
+
+    /* Create a new entry. */
+    else
+    {
+        new.head = 0x1;
+        new.key = STRDUP( key );
+        new.target = target;
+
+        hash_table__add( d, &new );
     }
 
-    return r;
+    /* FIXME */
+    return target;
 }
 
 
 void *
-dictionary__lookup( Dictionary *dict, const char *key )
+dictionary__lookup( Dictionary *d, char *key )
 {
-    Dictionary_Entry *entry;
-    Dictionary_Entry match_entry;
+    Entry *e, e2;
 
-    if ( DEBUG__SAFE && ( !dict || !key ) )
+    if ( DEBUG__SAFE && ( !d || !key ) )
         abort();
 
-    /* FIXME: strdup is only used to appease the compiler */
-    match_entry.key = STRDUP( key );
-    entry = hash_table__lookup( dict, &match_entry );
+    e2.key = key;
 
-    return ( entry ) ? entry->target : 0;
+    e = hash_table__lookup( d, &e2 );
+
+    return ( e ) ? e->target : 0;
 }
 
 
 char *
-dictionary__reverse_lookup( Dictionary *dict, const void *target )
+dictionary__reverse_lookup( Dictionary *d, const void *target )
 {
     char *key = 0;
 
-    ACTION helper( Dictionary_Entry **epp )
+    ACTION helper( Entry *e )
     {
-        if ( ( *epp )->target == target )
+        if ( e->target == target )
         {
-            key = STRDUP( ( *epp )->key );
+            key = STRDUP( e->key );
             return BREAK;
         }
 
@@ -192,35 +168,36 @@ dictionary__reverse_lookup( Dictionary *dict, const void *target )
             return CONTINUE;
     }
 
-    if ( DEBUG__SAFE && ( !dict || !target ) )
+    if ( DEBUG__SAFE && ( !d || !target ) )
         abort();
 
-    hash_table__walk( dict, ( Dist_f ) helper );
+    hash_table__walk( d, ( Dist_f ) helper );
     return key;
 }
 
 
 void *
-dictionary__remove( Dictionary *dict, char *key )
+dictionary__remove( Dictionary *d, char *key )
 {
-    void *r = 0;
-    Dictionary_Entry *entry;
-    Dictionary_Entry match_entry;
+    Entry *e, e2;
 
-    if ( DEBUG__SAFE && ( !dict || !key ) )
+    if ( DEBUG__SAFE && ( !d || !key ) )
         abort();
 
-    match_entry.key = key;
+    e2.key = key;
 
-    entry = hash_table__remove( dict, &match_entry );
+    e = hash_table__lookup( d, &e2 );
 
-    if ( entry )
+    if ( e )
     {
-        r = entry->target;
-        dictionary_entry__delete( entry );
+        /* TODO: this extra lookup is wasty */
+        hash_table__remove( d, &e2 );
+        free( e->key );
+        return e->target;
     }
 
-    return r;
+    else
+        return 0;
 }
 
 
@@ -230,9 +207,9 @@ dictionary__remove( Dictionary *dict, char *key )
 void
 dictionary__add_all( Dictionary *dest, Dictionary *src )
 {
-    ACTION helper( Dictionary_Entry **epp )
+    ACTION helper( Entry *e )
     {
-        dictionary__add( dest, ( *epp )->key, ( *epp )->target );
+        dictionary__add( dest, e->key, e->target );
         return CONTINUE;
     }
 
@@ -247,17 +224,24 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
 
 
 void
-dictionary__walk( Dictionary *dict, Dist_f f )
+dictionary__walk( Dictionary *d, Dist_f f )
 {
-    ACTION helper( Dictionary_Entry **ep )
+    ACTION helper( Entry *e )
     {
-        return f( &( *ep )->target );
+        if ( DEBUG__SAFE && !e )
+            abort();
+/*
+PRINT( "e = %p\n", e ); FFLUSH;
+PRINT( "e->target = %p\n", e->target ); FFLUSH;
+PRINT( "&e->target = %p\n", &e->target ); FFLUSH;
+*/
+        return f( &e->target );
     }
 
-    if ( DEBUG__SAFE && ( !dict || !f ) )
+    if ( DEBUG__SAFE && ( !d || !f ) )
         abort();
 
-    hash_table__walk( dict, ( Dist_f ) helper );
+    hash_table__walk( d, ( Dist_f ) helper );
 }
 
 
@@ -265,23 +249,23 @@ dictionary__walk( Dictionary *dict, Dist_f f )
 
 
 Array *
-dictionary__keys( Dictionary *dict )
+dictionary__keys( Dictionary *d )
 {
     Array *a;
 
-    ACTION helper( Dictionary_Entry **epp )
+    ACTION helper( Entry *e )
     {
-        array__enqueue( a, ( *epp )->key );
+        array__enqueue( a, e->key );
         return CONTINUE;
     }
 
-    if ( DEBUG__SAFE && !dict )
+    if ( DEBUG__SAFE && !d )
         abort();
 
-    a = array__new( hash_table__size( dict ), 0 );
+    a = array__new( hash_table__size( d ), 0 );
 
     /* Fill the array with key values. */
-    hash_table__walk( dict, ( Dist_f ) helper );
+    hash_table__walk( d, ( Dist_f ) helper );
 
     /* Alphabetize the array. */
     array__sort( a, ( Comparator ) strcmp );

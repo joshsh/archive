@@ -56,7 +56,7 @@ interpreter__handle_parse_error( Interpreter *c, char *msg )
     /*endwin();*/
 #endif
 
-    memory_manager__collect_if_needed( environment__manager( c->env ) );
+    memory_manager__collect( environment__manager( c->env ), FALSE, FALSE );
 
     return ret;
 }

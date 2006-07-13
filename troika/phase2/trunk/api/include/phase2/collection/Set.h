@@ -73,7 +73,7 @@ set__remove( Set *s, void *el );
 
 /** \return  whether s contains el as an element */
 extern boolean
-set__contains( const Set *s, const void *el );
+set__contains( const Set *s, void *el );
 
 
 /******************************************************************************/

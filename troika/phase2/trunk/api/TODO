@@ -1,8 +1,8 @@
-[ba]
+[bugs]
     _rm root;
     _rm here;
     _mv and _new issues (^ source namespace)
-    depth issues ^ namespace__find (e.g. can't find Swedish from root:data)
+    depth issues ^ namespace__find (e.g. can't find Swedish from root:data in test.p2)
     _save is touchy... have to use _saveas most of the time
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
@@ -11,33 +11,38 @@
 
 [coding]
     need code review for portability
-    address GCC warnings
     use String instead of char* for Encoders
 
-[documentation]
-    API documentation
-    install dot for dependency graphs
+[docs]
+    doxygen script --> revision # in docs
 
-[reduction]
-    NULL-proof the new graph reducer
+[compiler]
+
+[interpreter]
+    _new ^ check whether object already exists
+
+[serial]
+    RDF/XML and N3 import / export
+    graceful fail when basic object (combinator/primitive/type) not found
 
 [build]
     source dependencies (settings.h, etc.)
     tools dependencies (doxygen, xsltproc)
     library dependencies (libxml2)
-    cross-compile for ARM
-        cross-compile libxml2
-    use static libraries
     svn log --> CHANGES
-    doxygen script --> revision # in docs
+    [cross-compile for ARM]
+         use static libraries
 
 [other]
-    _new ^ check whether object already exists
     triples
         sets ^ distribution
         meta-functions
-    RDF/XML and N3 import / export
 
+[ongoing]
+    check up on GCC warnings
+
+
+................................................................................
 
 gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libQtCore_debug.so.4)
 gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libstdc++.so.6)
