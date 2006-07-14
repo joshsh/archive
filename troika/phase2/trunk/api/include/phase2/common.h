@@ -35,6 +35,11 @@ typedef int             boolean;
 typedef char            cstring;
 typedef char            xpm;
 
+
+/******************************************************************************/
+
+
+/** An instruction from a visitor function to a walk function. */
 typedef int             ACTION;
 
 #define CONTINUE        0
@@ -42,10 +47,18 @@ typedef int             ACTION;
 #define REMOVE          2
 
 
-typedef void *          ( *Allocator )( void );
+/******************************************************************************/
+
+
 typedef int             ( *Comparator )( const void *arg1, const void *arg2 );
+
+/** Copy constructor. */
 typedef void *          ( *Copy_Cons )( void *p );
+
+/** Unary criterion. */
 typedef boolean         ( *Criterion )( void *arg );
+
+/** Binary criterion. */
 typedef boolean         ( *Criterion2 )( void *arg1, void *arg2 );
 typedef void *          ( *Decoder )( char *buffer );
 typedef void            ( *Destructor )( void *p );
