@@ -2,7 +2,7 @@
 
 \file  Ast.h
 
-\brief  Defines an abstract syntax tree.
+\brief  Provides an abstract syntax tree class.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -27,8 +27,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef P2_AST_H
-#define P2_AST_H
+#ifndef AST_H
+#define AST_H
 
 
 #include <collection/Name.h>
@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Term.h>
 
 
-enum p2_parser__exit_state
+enum exit_state
 {
     exit_state__aborted,
     exit_state__end_of_input,
@@ -45,7 +45,7 @@ enum p2_parser__exit_state
 
 };
 
-typedef enum p2_parser__exit_state p2_parser__exit_state;
+typedef enum exit_state exit_state;
 
 
 enum Ast__Type
@@ -67,15 +67,9 @@ typedef enum Ast__Type Ast__Type;
 extern const char *Ast__Type__name( Ast__Type type );
 
 
+/** An abstract syntax tree. */
 typedef struct Ast Ast;
 
-/** The root node of a Phase2 abstract syntax tree. */
-struct Ast
-{
-    Ast__Type type;
-
-    void *value;
-};
 
 
 /******************************************************************************/
@@ -118,21 +112,16 @@ ast__term( Term *term );
 extern Ast *
 ast__void( void *p );
 
-
 extern int
 ast__size( Ast *ast );
 
-
-/** \param ast  AST node to free */
 extern void
 ast__delete( Ast *ast );
 
-
-/** \param ast  AST node to print */
 extern void
 ast__print( Ast *ast );
 
 
-#endif  /* P2_AST_H */
+#endif  /* AST_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

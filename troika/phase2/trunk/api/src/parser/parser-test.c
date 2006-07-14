@@ -35,8 +35,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include <common.h>
+#include <Ast.h>
 #include "../settings.h"
-#include "Ast.h"
 
 
 typedef struct Interpreter Interpreter;
@@ -49,7 +49,7 @@ struct Interpreter
 
 /** Bison parser dependency. */
 extern int
-yyparse( Interpreter *c, p2_parser__exit_state *es );
+yyparse( Interpreter *c, exit_state *es );
 
 
 /******************************************************************************/
@@ -164,10 +164,10 @@ interpreter__show_line_numbers( Interpreter *c )
 static int active = 0;
 
 /** yyparse is invoked here. */
-p2_parser__exit_state
+exit_state
 parse( void )
 {
-    p2_parser__exit_state return_state;
+    exit_state return_state;
     int yyparse__exit_value;
 
     if ( active )

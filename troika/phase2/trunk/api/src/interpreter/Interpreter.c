@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /** Bison parser dependency. */
 extern int
-yyparse( Interpreter *c, p2_parser__exit_state *es );
+yyparse( Interpreter *c, exit_state *es );
 
 
 /******************************************************************************/
@@ -143,10 +143,10 @@ interpreter__working_namespace( Interpreter *c )
 }
 
 
-p2_parser__exit_state
+exit_state
 interpreter__parse( Interpreter *c )
 {
-    p2_parser__exit_state exit_state;
+    exit_state exit_state;
 
     if ( DEBUG__SAFE && !c )
         abort();

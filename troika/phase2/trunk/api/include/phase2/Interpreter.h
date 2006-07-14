@@ -66,7 +66,7 @@ interpreter__working_namespace( Interpreter *c );
 
 
 /** yyparse is invoked here. */
-extern p2_parser__exit_state
+extern exit_state
 interpreter__parse( Interpreter *c );
 
 

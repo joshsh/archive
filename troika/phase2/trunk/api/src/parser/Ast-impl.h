@@ -17,64 +17,23 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef INTERPRETER_IMPL_H
-#define INTERPRETER_IMPL_H
+#ifndef AST_IMPL_H
+#define AST_IMPL_H
 
 
-#include <Interpreter.h>
-#include <compiler.h>
-
-#include "../parser/Ast-impl.h"
-#include "../object/Object-impl.h"
-
-#include <time.h>
+#include <Ast.h>
+#include "../settings.h"
 
 
-struct Interpreter
+struct Ast
 {
-    Environment *env;
-    Namespace_o *cur_ns_obj;
+    Ast__Type type;
 
-    Dictionary *commands;
-
-    boolean locked;
-
-    boolean quiet, show_line_numbers;
-
-    /* Parser types. */
-    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
-
-    /* Other types. */
-    Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;
-
-    char *save_to_path;
+    void *value;
 };
 
 
-extern Object *
-interpreter__define( Interpreter *c, Name *name, Object *o );
 
-extern Object *
-interpreter__undefine( Interpreter *c, Name *name );
-
-extern Object *
-interpreter__resolve( Interpreter *c, Name *name );
-
-
-extern Dictionary *
-create_commands( void );
-
-extern void
-delete_commands( Dictionary *commands );
-
-
-extern void
-err_notdefined( Name *name );
-
-extern void
-err_notns( Name *name );
-
-
-#endif  /* INTERPRETER_IMPL_H */
+#endif  /* AST_IMPL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

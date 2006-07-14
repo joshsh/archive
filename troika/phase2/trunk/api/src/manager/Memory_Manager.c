@@ -165,7 +165,7 @@ unmark_all( Memory_Manager *m )
     if ( DEBUG__SAFE && !m )
         abort();
 
-    bunch__walk( m->objects_o, ( Visitor ) unmark );
+    bunch__walk( m->objects_o->value, ( Visitor ) unmark );
 
     m->clean = 1;
 }

@@ -2,7 +2,7 @@
 
 \file  Hash_Table.h
 
-\brief  Provides a simple 32-bit hash table class.
+\brief  Provides a generic hash table class.
 The hashing and comparison functions used by the table are customizable.
 
 \author  Joshua Shinavier   \n

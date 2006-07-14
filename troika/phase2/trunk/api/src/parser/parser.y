@@ -38,9 +38,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <common.h>
 #include <collection/Term.h>
+#include <Ast.h>
 
 #include "../settings.h"
-#include "Ast.h"
 
 
 /* Avoids C99 warning: implicit declaration of function ‘yylex’ */
@@ -141,7 +141,7 @@ yywrap( void )
 /** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
 void
-yyerror( Interpreter *c, p2_parser__exit_state *ignored, const char *msg )
+yyerror( Interpreter *c, exit_state *ignored, const char *msg )
 {
     /* Avoid "unused parameter" compiler warning. */
     c = 0;
@@ -282,7 +282,7 @@ term2ast( Term *t )
 */
 
 %parse-param { Interpreter *compiler }
-%parse-param { p2_parser__exit_state *return_state }
+%parse-param { exit_state *return_state }
 
 /** Report more detailed parse error messages. */
 %error-verbose

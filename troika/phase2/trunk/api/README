@@ -1,99 +1,86 @@
 
-
-
->>  CONS 1 (CONS 2 ()) =: ntl;
-
-...where CONS is an alias for the V combinator.
-
->>  TAIL (TAIL ntl);
-
-
-
                                  P H A S E 2
 
-Namespaces
-
-Zero Element
-The zero element, represented by the empty expression "()", is a unique value
-such that for any primitive value v,
-    () v = v () = ()
-The zero element has no type, and behaves like the equivalent entity in Lisp.
-It is particularly useful for halting recursion.
-
-Combinators
-
-Association
-Phase2 
-
-Primitives
-importing
-r. transparency
+Phase2 is an experimental language API and interpreter which combine ideas from
+functional programming and the Semantic Web.  This is the continuation of an
+undergraduate compiler project and is not aimed at any particular user niche.
+Its purpose, beyond the learning experience of building a functional language
+"from the ground up", is as a proof-of-concept for a programming paradigm (if
+that's not too broad a term) based on the concept of triples in the sense of
+the Resource Description Framework.  Phase2 is intended not as yet another RDF
+toolkit, but as the basis for a family of languages expressed in triples and
+which use triples as their fundamental data structure.  Documentation and code
+samples are forthcoming.  Meanwhile...
 
 
-An experimental language API and interpreter which combine ideas from functional programming and the Semantic Web.  Also includes a graphical namespace browser (requires Qt4 to compile) in its early stages.
-
-
-Phase2 is the continuation of a undergraduate compiler project and is not aimed at any particular user niche.  I do not expect it compete with the likes of Scheme or Haskell as a mainstream software development or research tool.  It does, however, have some novel features which may be of interest to language developers, and the interpreter serves as a proof-of-concept for these ideas.  Although I personally use Phase2 for practical work, this is alpha software under active development.  I'm submitting the project to SourceForge solely on the basis that it is an interesting concept language.  Some details on the language follow.
-
-The motivation for Phase2 is that the same "triples" ontologies used for knowledge representation can just as well express functional programs.  Computation then takes the form of a sort of tensor reduction operating on a set of triples.  Unlike RDF, Phase2 makes no distinction between subject and predicate as classes of objects, and each vertex of a graph potentially acts as a function over the domain of all vertices (i.e. is a property).  Objects are strictly typed, and may be combined according to their type to yield new objects.  For now, combinator expressions and algorithms do most of the heavy lifting of function closures and graph reduction.  Type agreement is checked dynamically, with simple inference binding new objects to types.  A tracing memory manager keeps the size of the heap in check.
-
-Phase2 uses a network model to organize and navigate through programs and data.  A namespace is a first-class object which binds identifiers to arbitrary objects, including other namespaces.  In the interpreter, namespaces inherit the identifiers of any child namespaces as well as the root namespace which determines the set of reachable objects.  For example, the simple name "Arkansas" is equivalent to the fully-qualified name "geography:US:states:Arkansas" so long as there is not a shorter path to a different object with the same name.  In actual use, I've found name collisions to be relatively infrequent, so this "nearest match" name resolution saves on a lot of typing when working with a large, complex network of named items.  When in doubt, simply type in a name as a complete expression, e.g. "Arkansas;" and see what it binds to in the current working namespace.
-
-The Phase2 package is built with autotools and qmake.  The API and interpreter are written in C with GNU extensions, while the GUI is written in Qt/C++.  Adding new primitives to the API is as simple as dropping a C header file into a special directory and re-compiling with the appropriate options: the build process uses doxygen to pick up the function's name and type signature, and xsltproc to generate stubs and constructor calls to build the primitive at invocation time.  Most of the functions in the C standard library can be made available in this way.  You can also import new primitive data types by tagging special functions as essential methods for the type.
-
-
-
-
-
-
-
-
-Building Phase2
+                           --- Compiling Phase2 ---
 
 IMPORTANT: Phase2 is written in GNU C and is only compatible with the GNU C
 compiler.  Specifically, it makes liberal use of nested functions.
 
-    $ ./configure
-    (./configure --prefix=/usr --enable-debug)
+The Phase2 package uses autotools and is built in the usual way:
 
+    $ ./configure
     $ make
 
-If you're interested in compiler warnings, you might want to filter them out for
-better visibility:
+But I usually do something this:
 
+    $ ./configure --prefix=/usr --enable-debug
     $ make 2>stderr.txt; cat stderr.txt
 
+Now:
 
     $ make install
 
-See ./INSTALL for more details.
+If you don't want to install, you can use ./src/phase2 as the interpreter
+executable.  See ./INSTALL for more details.
 
 
-Building Phase2 from scratch
+                        --- Running the interpreter ---
+
+To invoke the interpeter with no input data set:
+
+    $ phase2
+
+To load a data set:
+
+    $ phase2 -f myfile.p2
+
+Once you're talking to the interpreter, type "_help;" (without quotes) for some
+introductory information.
+
+Also try:
+
+    $ phase2 --help
+
+
+                    --- Building Phase2 from scratch ---
+
+To build Phase2 from scratch you'll need the following tools (in addition to GCC,
+make, and libtool):
+
+    yacc or equivalent -- http://www.gnu.org/software/bison/
+    lex or equivalent -- http://www.gnu.org/software/flex/
+    dot -- http://www.graphviz.org/
+    doxygen -- http://www.doxygen.org/
+    xsltproc -- http://xmlsoft.org/XSLT/
 
     $ ./cleanup
-
     $ ./bootstrap
 
-    $ make doxygen-doc
-    $ make dist
-
-bison -- 
-dot -- http://www.graphviz.org/
-doxygen -- http://www.doxygen.org/
-flex -- 
-make -- 
-xsltproc -- http://xmlsoft.org/XSLT/
+Now ./configure and make as usual.
 
 
+                              --- Bugs ---
+
+Please report them to parcour@gmail.com.  At this point I have only built
+Phase2 for two different platforms, and welcome any comments on how it behaved
+on other machines.
 
 
+                  --- Ignore everything below this line ---
 
-
-
-
-
-valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes src/.libs/lt-phase2
+...unless you're me and you're cross-compiling.
 
 
 ################################################################################
@@ -108,10 +95,10 @@ make install
 ################################################################################
 # Cross-compile Phase2 for ARM.
 
-THE SECRET KLUDGE for creating an error-free, debuggable ARM phase2 executable:
+This yielded an error-free, debuggable ARM phase2 executable:
 1) generate phase2.so using the (crosstool) gcc4 cross-compiler
 2) generate phase2 (with 'main') using (Embedix) gcc2 cross-compiler
-3) put phase2.so in /usr/lib and invoke phase2
+3) put phase2.so in the device's /usr/lib and invoke phase2
 
 
 ARM_PREFIX=/opt/Embedix/tools/

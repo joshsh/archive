@@ -2,6 +2,8 @@
 
 noinst_LTLIBRARIES = libp2collection.la
 
+noinst_HEADERS = Term-impl.h
+
 libp2collection_la_SOURCES = \
 	Array.c		\
 	Bunch.c		\

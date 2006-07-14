@@ -7,7 +7,6 @@
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
     object ^ print ^ cycles
-    serialization ^ null
 
 [coding]
     need code review for portability
@@ -32,7 +31,7 @@
     _new ^ check whether object already exists
 
 [parser]
-    phase out Ast
+    phase out or replace Ast
 
 [translation]
     RDF/XML and N3 import / export
@@ -46,6 +45,8 @@
     tools dependencies (doxygen, xsltproc)
     library dependencies (libxml2)
     svn log --> CHANGES
+    flatten include directory
+    include examples dir in distribution
     [ARM cross-compile]
          use static libraries
 

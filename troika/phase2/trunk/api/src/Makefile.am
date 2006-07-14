@@ -12,7 +12,7 @@ noinst_HEADERS = revision.h		\
 	interpreter/license.h		\
 	environment/Environment-impl.h	\
 	namespace/Namespace-impl.h	\
-	parser/Ast.h			\
+	parser/Ast-impl.h		\
 	type/Type-impl.h
 
 bin_PROGRAMS = phase2
