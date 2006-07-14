@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Distribute f recursively (and in a breadth-first fashion) to any child
    namespaces. */
 static void
-ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
+ns_walk_bfs( Namespace_o *ns_o, Visitor f )
 {
     Array *queue;
     Type *t;
@@ -73,7 +73,7 @@ ns_walk_bfs( Namespace_o *ns_o, Dist_f f )
     {
         namespace__walk(
             object__value( array__pop( queue ) ),
-            ( Dist_f ) helper );
+            ( Visitor ) helper );
     }
 
     array__delete( queue );
@@ -109,7 +109,7 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
             return CONTINUE;
         }
 
-        namespace__walk( object__value( *nsopp ), ( Dist_f ) helper );
+        namespace__walk( object__value( *nsopp ), ( Visitor ) helper );
 
         if ( parent )
             return BREAK;
@@ -136,7 +136,7 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
     }
 
     /* Trace until 'needle' is found or all namespaces have been visited. */
-    memory_manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Dist_f ) find );
+    memory_manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Visitor ) find );
 
     if ( parent )
     {
@@ -177,7 +177,7 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
     if ( DEBUG__SAFE && ( !ns_obj || !key || !m ) )
         abort();
 
-    memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );
+    memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
 
     return o;
 }
@@ -233,7 +233,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
             return o ? BREAK : CONTINUE;
         }
 
-        memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Dist_f ) test );
+        memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
 
         return o;
     }

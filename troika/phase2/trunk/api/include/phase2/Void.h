@@ -4,7 +4,7 @@
 
 \brief  Defines the trivial Void data type.
 
-\note  It is assumed that the implementation will not call Void__new so
+\note  It is assumed that the implementation will not call void__new so
        many times as to use up every below-range address.
 
 \author  Joshua Shinavier   \n

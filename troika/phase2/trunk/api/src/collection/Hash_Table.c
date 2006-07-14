@@ -402,7 +402,7 @@ hash_table__remove( Hash_Table *h, const void *key )
 
 
 void
-hash_table__walk( Hash_Table *h, Dist_f f )
+hash_table__walk( Hash_Table *h, Visitor f )
 {
     cell *cur, *lim;
     ACTION r;

@@ -2,6 +2,8 @@
 
 \file  Type.h
 
+\brief  Provides a class which defines a data type.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -38,6 +40,8 @@ typedef void ( *Encoder_Safe )(
     void *p,
     void ( *print )( const char *s ) );
 */
+
+/** A serializer function which is immune to buffer overflow. */
 typedef void            ( *Encoder_Safe )( void *p, String *buffer );
 
 
@@ -61,12 +65,6 @@ typedef struct Type Type;
 /** Constructor. */
 extern Type *
 type__new( const char *name, int flags );
-
-
-/*
-extern void
-type__define( Type *type, const char *name, void (*f)(void) );
-*/
 
 
 /** Destructor. */

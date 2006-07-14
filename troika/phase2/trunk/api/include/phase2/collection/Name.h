@@ -2,6 +2,8 @@
 
 \file  Name.h
 
+\brief  Provides a "lexical path" class for namespaces.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */

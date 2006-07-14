@@ -1,15 +1,15 @@
 /**
-    \file  Bunch.h
 
-    \brief  A utility to keep track of large, unordered collections of pointers.
+\file  Bunch.h
 
-    Once added to a bunch, items cannot be retrieved individually, but are
-    handled en masse via the "for all" "exists" and "exclude if" functions, which
-    mimic set operations.
+\brief  Provides a class to keep track of large, unordered collections of pointers.
 
-    \author  Joshua Shinavier   \n
-             parcour@gmail.com  \n
-             +1 509 570-6990    \n */
+Once added to a bunch, items cannot be retrieved individually, but are handled
+en masse via visitor functions.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*******************************************************************************
 
@@ -36,6 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Array.h>
 
 
+/** An unordered collections of pointers. */
 typedef struct Bunch Bunch;
 
 
@@ -78,14 +79,14 @@ bunch__remove( Bunch *b );
 
 /******************************************************************************/
 
-/** \note  Removes the current item when f returns non-zero (rather than falling
-    out as the other collection types do). */
+/** \note  supports the REMOVE action */
 extern void
-bunch__walk( Bunch *b, Dist_f f );
+bunch__walk( Bunch *b, Visitor f );
 
 
 /******************************************************************************/
 
+/** \return  an instance of the "bunch" data type */
 extern Type *
 bunch__create_type( const char *name, int flags );
 

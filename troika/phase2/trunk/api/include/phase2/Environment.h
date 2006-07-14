@@ -1,9 +1,12 @@
 /**
-    \file  Environment.h
 
-    \author  Joshua Shinavier   \n
-             parcour@gmail.com  \n
-             +1 509 570-6990    \n */
+\file  Environment.h
+
+\brief  Provides a class which manages a data set as a global namespace.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*******************************************************************************
 
@@ -33,14 +36,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive.h>
 
 
+/* TODO: come up with a better naming convention than "_o" */
+typedef Object Type_o, Primitive_o, Combinator_o;
+
+
 /** A data structure which is equivalent to a namespace containing uniquely
     named data types, function primitives, and data sets. */
 typedef struct Environment Environment;
-
-/* ~ */
-typedef Object Type_o;
-typedef Object Primitive_o;
-typedef Object Combinator_o;
 
 
 /** \return  a new environment */

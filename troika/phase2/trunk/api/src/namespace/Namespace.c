@@ -75,7 +75,7 @@ namespace__keys( Namespace *ns )
 
 
 void
-namespace__walk( Namespace *ns, Dist_f f )
+namespace__walk( Namespace *ns, Visitor f )
 {
     if ( DEBUG__SAFE && ( !ns || !f ) )
         abort();
@@ -146,10 +146,10 @@ namespace__encode( Namespace *ns, char *buffer )
         /* Get alphabetized dictionary keys. */
         keys = dictionary__keys( dict );
 
-        namespace__walk( ns, ( Dist_f ) find_maxlen );
+        namespace__walk( ns, ( Visitor ) find_maxlen );
 
         /* Print children. */
-        array__walk( keys, ( Dist_f ) print );
+        array__walk( keys, ( Visitor ) print );
         array__delete( keys );
 
         sprintf( buffer, "}" );

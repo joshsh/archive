@@ -2,7 +2,7 @@
 
 \file  Namespace.h
 
-\brief  A dictionary which may reference other dictionaries.
+\brief  Defines the Namespace class.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -37,10 +37,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Name.h>
 
 
-typedef Object Namespace_o;
-
+/** A dictionary which binds names with first-class objects, including other
+    namespaces. */
 typedef struct Namespace Namespace;
 
+/** Alias for a boxed namespace object. */
+typedef Object Namespace_o;
 
 
 /** \return  a new namespace */
@@ -51,6 +53,7 @@ namespace__new();
 extern void
 namespace__delete( Namespace *ns );
 
+/** \return  the number of direct object references in the namespace */
 extern unsigned int
 namespace__size( Namespace *ns );
 
@@ -62,13 +65,21 @@ namespace__size( Namespace *ns );
 extern Object *
 namespace__add( Namespace_o *ns_obj, Name *name, Object *o );
 
+/** Adds an object to a namespace using a simple (non-recursive) name.
+    \param ns_obj  the target namespace
+    \param name  a string identifier
+    \param o  the object to add
+    \return  the object added, or 0 if it could not be added */
 extern Object *
 namespace__add_simple( Namespace *ns, const char *name, Object *o );
 
+/** Adds the contents of one namespace to another. */
 extern void
 namespace__add_all( Namespace *dest, Namespace *src );
 
 
+/** \return  an array of all of the strings which map to the child objects
+    of the namespace */
 extern Array *
 namespace__keys( Namespace *ns );
 
@@ -94,18 +105,26 @@ namespace__lookup_simple( Namespace *ns, const char *name );
 extern Object *
 namespace__remove( Namespace_o *ns_obj, Name *name );
 
+
+/** Removes an object from a namespace using a simple (non-recursive) name.
+    \param ns_obj  the target namespace
+    \param name  a string identifier
+    \return  the object removed, or 0 if not found */
 extern Object *
 namespace__remove_simple( Namespace *ns, char *name );
 
+/** Prints the immediate contents of the namespace to a string. */
 extern void
 namespace__encode( Namespace *ns, char *buffer );
 
+/** Applies a visitor function to each immediate descendant of the namespace. */
 extern void
-namespace__walk( Namespace *ns, Dist_f f );
+namespace__walk( Namespace *ns, Visitor f );
 
 
 /******************************************************************************/
 
+/** \return  an instance of the namespace type */
 extern Type *
 namespace__create_type( const char *name, int flags );
 
@@ -117,12 +136,17 @@ namespace__create_type( const char *name, int flags );
 extern Name *
 namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m );
 
+/** Retrieves an object using a simple (non-recursive) name.
+    \return  the object mapped to by the name (if any) */
 extern Object *
 namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m );
 
+/** Retrieves an object using a (recursive) name.
+    \return  the object mapped to by the name (if any) */
 extern Object *
 namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m );
 
+/** Adds a reference to the given object using the given (recursive) name. */
 extern Object *
 namespace__define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m );
 

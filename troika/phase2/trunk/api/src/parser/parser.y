@@ -37,10 +37,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string.h>  /* strcpy */
 
 #include <common.h>
-#include <Ast.h>
-#include "../settings.h"
-
 #include <collection/Term.h>
+
+#include "../settings.h"
+#include "Ast.h"
 
 
 /* Avoids C99 warning: implicit declaration of function ‘yylex’ */

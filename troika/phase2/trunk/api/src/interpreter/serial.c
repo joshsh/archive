@@ -225,7 +225,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     el = element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
 
     keys = namespace__keys( ns );
-    array__walk( keys, ( Dist_f ) helper );
+    array__walk( keys, ( Visitor ) helper );
     array__delete( keys );
 
     return el;
@@ -252,7 +252,7 @@ set__xml_encode( Set *s, Xml_Encode_Ctx *state )
 
     el = element__new( 0, ( uc* ) SET__XML__NAME, 0 );
 
-    set__walk( s, ( Dist_f ) helper );
+    set__walk( s, ( Visitor ) helper );
 
     return el;
 }
@@ -791,7 +791,7 @@ multiref_ids( Interpreter *c )
     free( tmp );
 
     /* Assign all (other) multireferenced objects their ids. */
-    set__walk( multirefs, ( Dist_f ) hash_multiref );
+    set__walk( multirefs, ( Visitor ) hash_multiref );
     set__delete( multirefs );
 
     return ids;
@@ -850,7 +850,7 @@ interpreter__serialize( Interpreter *c, char *path )
           && o->outbound_edges
           && hash_table__size( o->outbound_edges ) )
         {
-            hash_map__walk2( o->outbound_edges, ( Dist2_f ) triple_helper );
+            hash_map__walk2( o->outbound_edges, ( Visitor2 ) triple_helper );
         }
 
         /* Add the new element in at the top level. */
@@ -896,12 +896,12 @@ interpreter__serialize( Interpreter *c, char *path )
     /* ... */
 
     /* Multiref objects are serialized in no particular order. */
-    hash_map__walk2( state.ids, ( Dist2_f ) helper );
+    hash_map__walk2( state.ids, ( Visitor2 ) helper );
 
     hash_map__delete( state.ids );
 
     hash_map__walk2( state.serializers,
-        ( Dist2_f ) function_wrapper__delete );
+        ( Visitor2 ) function_wrapper__delete );
     hash_map__delete( state.serializers );
 
     document__write_to_file( doc, path );
@@ -1013,7 +1013,7 @@ finish:
     if ( state.deserializers )
     {
         hash_map__walk2( state.deserializers,
-            ( Dist2_f ) function_wrapper__delete );
+            ( Visitor2 ) function_wrapper__delete );
         hash_map__delete( state.deserializers );
     }
 

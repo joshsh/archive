@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <Ast.h>
 #include "../settings.h"
+#include "Ast.h"
 
 
 /** If defined, print terms as raw integer sequences, rather than as
@@ -188,7 +188,7 @@ ast__delete( Ast *ast )
     {
         case BAG_T:
 
-            array__walk( ast->value, ( Dist_f ) helper );
+            array__walk( ast->value, ( Visitor ) helper );
             array__delete( ( Array* ) ast->value );
 
             break;
@@ -224,7 +224,7 @@ ast__delete( Ast *ast )
 
         case TERM_T:
 
-            term__walk( ast->value, ( Dist_f ) helper );
+            term__walk( ast->value, ( Visitor ) helper );
             term__delete( ( Term* ) ast->value );
 
             break;

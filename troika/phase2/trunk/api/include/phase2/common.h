@@ -31,8 +31,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COMMON_H
 
 
+/** TRUE or FALSE. */
 typedef int             boolean;
+
+/** An alias which helps the importer distinguish a string value from a
+    character value. */
 typedef char            cstring;
+
+/** Another string type, used for graphics. */
 typedef char            xpm;
 
 
@@ -42,14 +48,23 @@ typedef char            xpm;
 /** An instruction from a visitor function to a walk function. */
 typedef int             ACTION;
 
+/** An action which tells a walk function to continue visiting objects. */
 #define CONTINUE        0
+
+/** An action which tells a walk function to halt. */
 #define BREAK           1
+
+/** An action which tells a walk function to remove the current object from
+    the collection being iterated over.  Not supported by all collection types. */
 #define REMOVE          2
 
 
 /******************************************************************************/
 
 
+/** A function which compares two objects with respect to some ordering.  The
+    return value is negative for "less than", positive for "greater than" and
+    zero for "equal". */
 typedef int             ( *Comparator )( const void *arg1, const void *arg2 );
 
 /** Copy constructor. */
@@ -60,18 +75,37 @@ typedef boolean         ( *Criterion )( void *arg );
 
 /** Binary criterion. */
 typedef boolean         ( *Criterion2 )( void *arg1, void *arg2 );
-typedef void *          ( *Decoder )( char *buffer );
-typedef void            ( *Destructor )( void *p );
-typedef ACTION          ( *Dist_f )( void **refp );
-typedef ACTION          ( *Dist2_f )( void **refp1, void **refp2 );
-typedef void            ( *Encoder )( void *p, char *buffer );
-typedef unsigned int    ( *Size_Of )( const void *self );
-typedef void            ( *Sort )( void *p, Comparator cmp );
-typedef void *          ( *Substitution )( void *p );
-typedef void            ( *Void_f )( void *p );
-typedef void            ( *Walker )( void *coll, Dist_f f );
-/*typedef void            ( *Walker2 )( void *coll, Dist2_f f );*/
 
+/** Deserializer. */
+typedef void *          ( *Decoder )( char *buffer );
+
+/** Destructor. */
+typedef void            ( *Destructor )( void *p );
+
+/** Unary visitor. */
+typedef ACTION          ( *Visitor )( void **refp );
+
+/** Binary visitor. */
+typedef ACTION          ( *Visitor2 )( void **refp1, void **refp2 );
+
+/** Serializer. */
+typedef void            ( *Encoder )( void *p, char *buffer );
+
+/** A function which yields the number of objects in a collection. */
+typedef unsigned int    ( *Size_Of )( const void *self );
+
+/** Sorting function. */
+typedef void            ( *Sort )( void *p, Comparator cmp );
+
+/** Substitution function. */
+typedef void *          ( *Substitution )( void *p );
+
+/** A function which applies a visitor function to each object of a collection.
+    It may halt when there are no more objects to visit, or when told to halt
+    by the visitor function. */
+typedef void            ( *Walker )( void *coll, Visitor f );
+
+/** Any function.  Used for type-casting of callback functions. */
 typedef void            ( *Generic_f )( void );
 
 

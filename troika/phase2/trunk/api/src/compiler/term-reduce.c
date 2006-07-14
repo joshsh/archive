@@ -207,7 +207,7 @@ prim_reduce(
 
                     /* FIXME: this is cheating */
                     if ( result->type == set_type )
-                        set__walk( result->value, ( Dist_f ) add_to_result );
+                        set__walk( result->value, ( Visitor ) add_to_result );
 
                     else
                         set__add( result_set, result );
@@ -217,7 +217,7 @@ prim_reduce(
 
                 /* FIXME: this is cheating */
                 if ( robj->type == set_type )
-                    set__walk( robj->value, ( Dist_f ) add_to_result );
+                    set__walk( robj->value, ( Visitor ) add_to_result );
 
                 else
                     set__add( result_set, robj );
@@ -310,7 +310,7 @@ prim_reduce(
             if ( PRIM__IMPLICIT_SET_MAPPING && ( arg->type->flags & TYPE__IS_OBJ_COLL )
               && ( arg->type != param_type ) )
             {
-                arg->type->walk( arg->value, ( Dist_f ) recurse );
+                arg->type->walk( arg->value, ( Visitor ) recurse );
                 return;
             }
 

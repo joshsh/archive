@@ -84,7 +84,7 @@ default__sort( void *cell, Comparator cmp )
 }
 
 static void
-default__walk( void *coll, Dist_f f )
+default__walk( void *coll, Visitor f )
 {
     coll = 0;
     f = 0;

@@ -14,6 +14,7 @@
     use String instead of char* for Encoders
     rework dependencies in collection, parser
     rework Bunch to hold objects by value rather than by reference
+    semaphores needed to eliminate global vars
 
 [docs]
     doxygen script --> revision # in docs
@@ -25,6 +26,7 @@
 [import]
     wrap more standard library primitives
     add reduction primitives
+    after importing primitives, check the type registry for incomplete types
 
 [interpreter]
     _new ^ check whether object already exists

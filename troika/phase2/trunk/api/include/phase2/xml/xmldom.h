@@ -2,7 +2,7 @@
 
 \file  xmldom.h
 
-A collection of stubs to bind DOM data types, properties and functions with the
+Provides a collection of stubs to bind DOM data types, properties and functions with the
 corresponding entities in a particular XML toolkit.  To adapt the project to a
 different toolkit, you need only write a new implementation file xmldom-xxx.c,
 then add a Makefile target xmldom-xxx.o and swap it into the build.
@@ -37,7 +37,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define XMLDOM_H
 
 
-typedef void *Attr, *Document, *Element, *Namespc ;
+/** An XML attribute. */
+typedef void *Attr;
+
+/** An XML document. */
+typedef void *Document;
+
+/** An XML element. */
+typedef void *Element;
+
+/** An XML namespace. */
+typedef void *Namespc;
 
 
 /** Performs any operations necessary to initialize the XML module. */

@@ -2,6 +2,10 @@
 
 \file  Interpreter.h
 
+\brief  Provides the means to interact with a data set, evaluating expressions
+and commands, and translating data sets into and out of specialized XML
+documents.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -50,10 +54,13 @@ extern void
 interpreter__delete( Interpreter *c );
 
 
+/** \return  the interpreter's associated environment */
 extern Environment *
 interpreter__environment( Interpreter *c );
 
 
+/** \return  the interpreter's working namespace (object names are resolved
+    relative to this namespace) */
 extern Namespace_o *
 interpreter__working_namespace( Interpreter *c );
 
@@ -65,9 +72,14 @@ interpreter__parse( Interpreter *c );
 
 /******************************************************************************/
 
+/** \return  the name of an object in a given namespace, if reachable from that
+    namespace.  The name is qualified only to the extent necessary to resolve
+    the object on a subsequent name lookup. */
 extern Name *
 interpreter__name_of( Interpreter *c, Namespace_o *nso, Object *o );
 
+/** \return  the fully-qualified name of an object in a given namespace, if
+    reachable from that namespace */
 extern Name *
 interpreter__name_of__full( Interpreter *c, Namespace_o *nso, Object *o );
 
@@ -75,9 +87,11 @@ interpreter__name_of__full( Interpreter *c, Namespace_o *nso, Object *o );
 /******************************************************************************/
 
 
+/** Serialize a data set to a file in the p2 format. */
 extern void
 interpreter__serialize( Interpreter *c, char *path );
 
+/** Deserialize a data set from a file in the p2 format. */
 extern void
 interpreter__deserialize( Interpreter *c, char *path );
 
@@ -85,13 +99,21 @@ interpreter__deserialize( Interpreter *c, char *path );
 /* Externally linked functions for the parser *********************************/
 
 
+/** Interprets and carries out a command (e.g. "_saveas temp.p2;").
+    \return  whether to end the current session */
 extern int
 interpreter__evaluate_command( Interpreter *c, char *name, Ast *args );
 
+/** Interprets and evaluates an expression in the programming environment.
+    \param name  if given, the resulting object will be bound to the working
+    namespace by this name
+    \return  whether to end the current session */
 extern int
 interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr );
 
-/** \note  Error messages are not suppressed by --quiet */
+/** Prints a parse error.
+    \return  whether to end the current session
+    \note  Error messages are not suppressed by --quiet */
 extern int
 interpreter__handle_parse_error( Interpreter *c, char *msg );
 

@@ -2,11 +2,9 @@
 
 \file  Primitive-import.h
 
-\brief  Primitive-building functions to be referenced by the generated file
-p2-import.c.
+\brief  Provies the means to build function primitives.
 
-\todo  After calling p2__import_primitives, the type registry must be checked
-for incomplete types.
+Used by the generated file p2-import.c.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -37,6 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Environment.h>
 
 
+/** \return  An incomplete function primitive */
 extern Primitive *
 primitive__new(
     Environment *env,
@@ -46,6 +45,7 @@ primitive__new(
     int arity );
 
 
+/** \return  The function primitive p after adding a parameter */
 extern Primitive *
 primitive__add_param(
     Environment *env,
@@ -55,6 +55,7 @@ primitive__add_param(
     boolean transparent );
 
 
+/** \return  The same primitive after adding it to the programming environment */
 extern Primitive *
 primitive__register(
     Environment *env,

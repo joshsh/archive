@@ -2,6 +2,8 @@
 
 \file  Primitive.h
 
+\brief  Defines a class representing function primitives.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -35,12 +37,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-/** Opaque type for function primitives. */
+/** A first-class function primitive. */
 typedef struct Primitive Primitive;
 
+/** Indicates referential opacity, i.e. the condition that a primitive may have
+    a side-effect with respect to a particular argument */
 #define REF_OPQ 0
+
+/** Indicates referential transparency, i.e. the condition that a primitive does
+    not affect a particular argument */
 #define REF_TRP 1
 
+/** These flags indicate special functions which are essential methods for a
+    given data type. */
 enum Primitive__Flags
 {
     PRIM__CONSTRUCTOR   = 0x1,
@@ -56,24 +65,32 @@ enum Primitive__Flags
 extern void
 primitive__delete( Primitive *prim );
 
+/** \return  the name of the primitive */
 extern char *
 primitive__name( Primitive *p );
 
+/** \return  the (fixed) number of parameters consumed by the primitive */
 extern unsigned int
 primitive__arity( Primitive *p );
 
+/** \return  the return type of the primitive */
 extern Type *
 primitive__return_type( Primitive *p );
 
+/** \return  the name of the given parameter of the primitive */
 extern char *
 primitive__parameter_name( Primitive *p, unsigned int i );
 
+/** \return  the data type of the given parameter of the primitive */
 extern Type *
 primitive__parameter_type( Primitive *p, unsigned int i );
 
+/** \return  whether the primitive is referentially transparent with respect to
+    the given parameter */
 extern boolean
 primitive__parameter_reftrans( Primitive *p, unsigned int i );
 
+/** Serializes the primitive (i.e. its type signature) to a string. */
 extern void
 primitive__encode( Primitive *prim, char *buffer );
 
@@ -83,6 +100,7 @@ primitive__encode( Primitive *prim, char *buffer );
 /******************************************************************************/
 
 
+/** \return  an instance of the "primitive" data type */
 extern Type *
 primitive__create_type( const char *name );
 

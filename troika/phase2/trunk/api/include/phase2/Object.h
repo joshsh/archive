@@ -2,6 +2,8 @@
 
 \file  Object.h
 
+\brief  Provides a class which handles method dispatch and graph traversal.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -32,10 +34,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Type.h>
 
 
+/** An explicitly typed value. */
 typedef struct Object Object;
 
 
 /******************************************************************************/
+
 
 /** Constructor.
     \param type  the new object's data type
@@ -54,12 +58,19 @@ object__delete( Object *o );
 
 /* Accessors ******************************************************************/
 
+
+/** \return  whether the object has been flagged as immutable.  This indicates
+    a sensitive built-in object which resists the effects of publicly-visible
+    functions */
 extern boolean
 object__immutable( const Object *o );
 
+/** \return  the data type of the object */
 extern Type *
 object__type( const Object *o );
 
+/** \return  the value of the object.  This will be an instance of the
+    object's associated data type */
 extern void *
 object__value( const Object *o );
 
@@ -67,12 +78,14 @@ object__value( const Object *o );
 /******************************************************************************/
 
 
+/** Serializes an object to a string. */
 extern void
 object__encode( const Object *o, char *buffer );
 
 
 /******************************************************************************/
 
+/** \return  an instance of the "object" type */
 extern Type *
 object__create_type( const char *name );
 
@@ -86,7 +99,7 @@ object__create_type( const char *name );
     \param redirect  whether to "short out" indirection nodes as they are
     encountered */
 extern void
-object__trace( Object *o, Dist_f f, boolean follow_triples );
+object__trace( Object *o, Visitor f, boolean follow_triples );
 
 /** A breadth-first recursive distributor.
     \param o  root of the traversal
@@ -95,7 +108,7 @@ object__trace( Object *o, Dist_f f, boolean follow_triples );
     \param redirect  whether to "short out" indirection nodes as they are
     encountered */
 extern void
-object__trace_bfs( Object *o, Dist_f f, boolean follow_triples );
+object__trace_bfs( Object *o, Visitor f, boolean follow_triples );
 
 
 /******************************************************************************/

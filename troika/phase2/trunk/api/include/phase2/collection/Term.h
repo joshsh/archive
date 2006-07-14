@@ -2,7 +2,7 @@
 
 \file  Term.h
 
-\brief  A simple nested sequence class.
+\brief  Provides a class to represent nested sequences.
 
 Terms are represented by arrays of 4-byte cells, each of which contains either
 a reference to an "atom" or an integer i indicating the head of a sub-term with
@@ -49,6 +49,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Type.h>
 
 
+/** A nested sequence of objects.  A term can be thought of as a parenthesized
+    expression. */
 typedef struct Term Term;
 
 
@@ -58,12 +60,13 @@ extern void
 term__set_expansion( Term *t, double expansion );
 
 
-/** \note Needed by sk.c. */
+/** \note Needed by term-reduce.c. */
 extern Term *
 term__expand( Term *t, unsigned int minimum_buffer_size );
 
 
 /* Constructors and destructor ************************************************/
+
 
 /** Creates a new Term containing a single atom.
     \note  The term does not own its atoms, which will suffer no ill effects
@@ -81,6 +84,7 @@ term__delete( Term *t );
 
 
 /* Accessors ******************************************************************/
+
 
 /** \return  the logical length of the term, i.e. the number of sub-terms it
     contains.  Not to be confused with the number of cells required to represent
@@ -107,6 +111,7 @@ term__head(Term *t);
 
 /* Merge functions ************************************************************/
 
+
 /** ((A1 ... Am) (B1 ... Bn))   simple merge */
 extern Term *
 term__merge( Term *t1, Term *t2 );
@@ -126,15 +131,20 @@ term__cat( Term *t1, Term *t2 );
 
 /* Distributor ****************************************************************/
 
+
+/** Applies a visitor function to each object in the term. */
 extern void
-term__walk( Term *t, Dist_f f );
+term__walk( Term *t, Visitor f );
 
 
 /******************************************************************************/
 
+
+/** Serializes the term to a string as a parenthesized expression. */
 extern void
 term__encode( Term *t, char *buffer );
 
+/** \return  an instance of the "term" data type */
 extern Type *
 term__create_type( const char *name, int flags );
 

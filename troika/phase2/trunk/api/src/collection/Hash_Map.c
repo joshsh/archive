@@ -117,7 +117,7 @@ hash_map__remove
 
 
 void
-hash_map__walk( Hash_Map *t, Dist_f f )
+hash_map__walk( Hash_Map *t, Visitor f )
 {
     ACTION helper( Entry *e )
     {
@@ -127,12 +127,12 @@ hash_map__walk( Hash_Map *t, Dist_f f )
     if ( DEBUG__SAFE && ( !t || !f ) )
         abort();
 
-    hash_table__walk( t, ( Dist_f ) helper );
+    hash_table__walk( t, ( Visitor ) helper );
 }
 
 
 void
-hash_map__walk2( Hash_Map *t, Dist2_f f )
+hash_map__walk2( Hash_Map *t, Visitor2 f )
 {
     ACTION helper( Entry *e )
     {
@@ -142,7 +142,7 @@ hash_map__walk2( Hash_Map *t, Dist2_f f )
     if ( DEBUG__SAFE && ( !t || !f ) )
         abort();
 
-    hash_table__walk( t, ( Dist_f ) helper );
+    hash_table__walk( t, ( Visitor ) helper );
 }
 
 

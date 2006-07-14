@@ -61,7 +61,7 @@ indirection__encode( Object *o, char *buffer )
 
 /* FIXME: beware of trying to mutate this reference (it won't have any effect). */
 static void
-indirection__walk( void *p, Dist_f f )
+indirection__walk( void *p, Visitor f )
 {
     f( &p );
 }

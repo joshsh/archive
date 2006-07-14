@@ -95,7 +95,7 @@ dictionary__delete( Dictionary *d )
         abort();
 
     /* Destroy dictionary entries. */
-    hash_table__walk( d, ( Dist_f ) helper );
+    hash_table__walk( d, ( Visitor ) helper );
 
     hash_table__delete( d );
 }
@@ -171,7 +171,7 @@ dictionary__reverse_lookup( Dictionary *d, const void *target )
     if ( DEBUG__SAFE && ( !d || !target ) )
         abort();
 
-    hash_table__walk( d, ( Dist_f ) helper );
+    hash_table__walk( d, ( Visitor ) helper );
     return key;
 }
 
@@ -216,7 +216,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
     if ( DEBUG__SAFE && ( !dest || !src ) )
         abort();
 
-    hash_table__walk( src, ( Dist_f ) helper );
+    hash_table__walk( src, ( Visitor ) helper );
 }
 
 
@@ -224,7 +224,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
 
 
 void
-dictionary__walk( Dictionary *d, Dist_f f )
+dictionary__walk( Dictionary *d, Visitor f )
 {
     ACTION helper( Entry *e )
     {
@@ -241,7 +241,7 @@ PRINT( "&e->target = %p\n", &e->target ); FFLUSH;
     if ( DEBUG__SAFE && ( !d || !f ) )
         abort();
 
-    hash_table__walk( d, ( Dist_f ) helper );
+    hash_table__walk( d, ( Visitor ) helper );
 }
 
 
@@ -265,7 +265,7 @@ dictionary__keys( Dictionary *d )
     a = array__new( hash_table__size( d ), 0 );
 
     /* Fill the array with key values. */
-    hash_table__walk( d, ( Dist_f ) helper );
+    hash_table__walk( d, ( Visitor ) helper );
 
     /* Alphabetize the array. */
     array__sort( a, ( Comparator ) strcmp );

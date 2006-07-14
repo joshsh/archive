@@ -2,6 +2,8 @@
 
 \file  Collection.h
 
+\brief  Defines some common visitor patterns.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -33,6 +35,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Array.h>
 
 
+/** A collection is an object with a "walk" method. */
 typedef Object Collection;
 
 /*
@@ -44,27 +47,37 @@ Collection_type *Collection_type__new(
 #define collection__new( type, value )   object__new( type, value )
 
 
-extern void
-collection__do_for_all(  Collection *c, Void_f f );
-
+/** Removes every object from a collection which satisfies the given
+    criterion. */
 extern void
 collection__exclude_if(  Collection *c, Criterion cr );
 
+/** \return  whether the collection contains an object which satisfies the
+    given criterion */
 extern boolean
 collection__exists(      Collection *c, Criterion cr );
 
+/** \return  the first object encountered in the collection which satisfies
+    the given criterion */
 extern void *
 collection__first_match( Collection *c, Criterion cr );
 
+/** \return  whether every object in the collection satisfies the given
+    criterion */
 extern boolean
 collection__for_all(     Collection *c, Criterion cr );
 
+/** \return  an array containing each object in the collection which satisfies
+    the given criterion */
 extern Array *
 collection__match(       Collection *c, Criterion cr );
 
+/** Replaces each object in the collection with the object yielded by the
+    given substitution function */
 extern void
 collection__replace_all( Collection *c, Substitution f );
 
+/** Sorts a collection according to the given comparison function. */
 extern void
 collection__sort(        Collection *c, Comparator cmp );
 

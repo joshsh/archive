@@ -166,7 +166,7 @@ bunch__delete( Bunch *b )
     }
 
     /* Free all blocks. */
-    array__walk( b->blocks, ( Dist_f ) helper );
+    array__walk( b->blocks, ( Visitor ) helper );
 
     /* Delete the blocks array. */
     array__delete( b->blocks );
@@ -257,7 +257,7 @@ bunch__remove( Bunch *b )
 
 
 void
-bunch__walk( Bunch *b, Dist_f f )
+bunch__walk( Bunch *b, Visitor f )
 {
     unsigned int i, j, n = array__size( b->blocks );
     Block *bl;

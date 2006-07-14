@@ -2,6 +2,8 @@
 
 \file  Hash_Map.h
 
+\brief  Provides an address-based lookup table class.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -32,36 +34,42 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Hash_Table.h>
 
 
+/** A hash table which binds key objects to target objects. */
 typedef Hash_Table Hash_Map;
 
 
+/** \return  a new, empty hash map */
 extern Hash_Map *
 hash_map__new( void );
 
+/** Destructor. */
 extern void
 hash_map__delete( Hash_Map *t );
 
 
 #define hash_map__size  hash_table__size
 
+/** Adds a key/target pair to the hash map. */
 extern void
 hash_map__add( Hash_Map *t, void * const key, void * const target );
 
+/** \return  the target value bound to the given key value in the hash map */
 extern void *
 hash_map__lookup( Hash_Map *t, void * const key );
 
+/** Removes the pair with the given key. */
 extern void
 hash_map__remove( Hash_Map *t, void * const src );
 
 
 /** Distributes f to the target value of each pair in the map. */
 extern void
-hash_map__walk( Hash_Map *t, Dist_f f );
+hash_map__walk( Hash_Map *t, Visitor f );
 
 /** Distributes f_key to the key value and f_target to the target value (in that
     order) of each pair in the map. */
 extern void
-hash_map__walk2( Hash_Map *t, Dist2_f f );
+hash_map__walk2( Hash_Map *t, Visitor2 f );
 
 
 #endif  /* HASH_MAP_H */

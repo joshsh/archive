@@ -122,7 +122,7 @@ set__encode__alt( Set *s, char *buffer )
         sprintf( buffer, "\n{\n" );
         buffer += 3;
 
-        set__walk( s, ( Dist_f ) encode );
+        set__walk( s, ( Visitor ) encode );
 
         sprintf( buffer, "}" );
     }
@@ -300,7 +300,7 @@ resolve( Ast *ast, Interpreter *c )
 
                 type = c->bag_t;
                 value = ast->value;
-                array__walk( value, ( Dist_f ) helper );
+                array__walk( value, ( Visitor ) helper );
                 if ( !ok )
                     array__delete( value );
                 break;
@@ -346,7 +346,7 @@ resolve( Ast *ast, Interpreter *c )
 
                 type = c->term_t;
                 value = ast->value;
-                term__walk( value, ( Dist_f ) helper );
+                term__walk( value, ( Visitor ) helper );
                 if ( !ok )
                     term__delete( value );
                 break;

@@ -2,9 +2,7 @@
 
 \file  compiler.h
 
-\brief  A simple utility to represent and reduce impure S,K terms.
-
-Completely type-safe and thread-safe.
+\brief  Provides reduction algorithms for graphs and terms.
 
 \warning  Errors occurring at the level of the imported primitives should be
 dealt with at that level.  This library contains only rudimentary exception
@@ -41,20 +39,28 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Combinator.h>
 
 
-extern Type *apply_type, *indirection_type;
+/** The type of an Apply object, i.e. the type of the "@" in "@ f x". */
+extern Type *apply_type;
+
+/** The type of an indirection node (a byproduct of graph reduction). */
+extern Type *indirection_type;
 
 
+/** Initializes the graph reducer. */
 extern void
 graph_init( Type *combinator_t, Type *primitive_t );
 
+/** Cleans up after the graph reducer. */
 extern void
 graph_end();
 
+/** Mutates an object graph according to the rules of lazy combinator reduction.
+    This is a much more powerful function than term__reduce. */
 extern Object *
 reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m );
 
 
-/** \brief  Reduce an S,K term according to the rules of combinator expressions.
+/** \brief  Reduces an S,K term according to the rules of combinator expressions.
     \param term  the term to reduce.  It must be in strictly left-associative
     form, and is undefined once it has been passed as an argument to this
     function.

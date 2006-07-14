@@ -42,7 +42,7 @@ name__delete( Name *name )
     if ( DEBUG__SAFE && !name )
         abort();
 
-    array__walk( name, ( Dist_f ) helper );
+    array__walk( name, ( Visitor ) helper );
 
     array__delete( name );
 }

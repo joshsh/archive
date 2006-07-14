@@ -108,7 +108,7 @@ object__sort( Object *o, Comparator cmp )
 
 
 static void
-object__walk( Object *o, Dist_f f )
+object__walk( Object *o, Visitor f )
 {
     if ( DEBUG__SAFE && !o )
         abort();

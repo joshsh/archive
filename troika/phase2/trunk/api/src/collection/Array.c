@@ -580,7 +580,7 @@ array__sort( Array *a, Comparator compare )
 
 
 void
-array__walk( Array *a, Dist_f f )
+array__walk( Array *a, Visitor f )
 {
     unsigned int i, lim;
 

@@ -2,6 +2,8 @@
 
 \file  Graph.h
 
+\brief  Provides a sparse graph class.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -32,19 +34,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Hash_Table.h>
 
 
+/** An object which stands in for an adjacency table.  Good for sparse graphs. */
 typedef Hash_Table Graph;
 
 
+/** \return  a new graph object */
 extern Graph *
 graph__new( void );
 
+/** Destructor. */
 extern void
 graph__delete( Graph *g );
 
 
+/** Adds an edge to the graph. */
 extern void
 graph__connect( Graph *g, void * const src, void * const dest );
 
+/** Removes an edge from the graph. */
 extern void
 graph__disconnect( Graph *g, void * const src, void * const dest );
 

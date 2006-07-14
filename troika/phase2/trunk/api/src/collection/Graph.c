@@ -69,7 +69,7 @@ graph__delete( Graph *g )
     }
 
     /* Destroy graph entries. */
-    hash_table__walk( g, ( Dist_f ) helper );
+    hash_table__walk( g, ( Visitor ) helper );
 
     hash_table__delete( g );
 }

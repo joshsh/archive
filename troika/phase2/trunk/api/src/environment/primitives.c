@@ -77,7 +77,7 @@ children_stub( void **args )
     }
 
     if ( t->flags & TYPE__IS_OBJ_COLL )
-        t->walk( object__value( o ), ( Dist_f ) helper );
+        t->walk( object__value( o ), ( Visitor ) helper );
 
     return s;
 }
@@ -109,12 +109,12 @@ objects_inv_stub( void **args )
         }
 
         if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
-            hash_map__walk( o->outbound_edges, ( Dist_f ) helper );
+            hash_map__walk( o->outbound_edges, ( Visitor ) helper );
 
         return 0;
     }
 
-    memory_manager__walk( m, 0, ( Dist_f ) helper, FALSE, TRUE );
+    memory_manager__walk( m, 0, ( Visitor ) helper, FALSE, TRUE );
 
     return matches;
 }
@@ -135,7 +135,7 @@ predicates_stub( void **args )
     }
 
     if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
-        hash_map__walk2( o->outbound_edges, ( Dist2_f ) helper );
+        hash_map__walk2( o->outbound_edges, ( Visitor2 ) helper );
 
     return s;
 }
@@ -155,7 +155,7 @@ objects_stub( void **args )
     }
 
     if ( TRIPLES__GLOBAL__OUT_EDGES && ( o->outbound_edges ) )
-        hash_map__walk2( o->outbound_edges, ( Dist2_f ) helper );
+        hash_map__walk2( o->outbound_edges, ( Visitor2 ) helper );
 
     return s;
 }

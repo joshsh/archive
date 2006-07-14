@@ -39,8 +39,6 @@ enum Object__Flags
     OBJECT__OWNED               = 0x8
 };
 
-#define NOFLAGS 0
-
 
 /** A typed constant.  This is the least addressable unit of data in a Phase2
     namespace. */

@@ -155,16 +155,18 @@ memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags )
 static void
 unmark_all( Memory_Manager *m )
 {
-    void unmark( Object *o )
+    ACTION unmark( Object **opp )
     {
-        clear_visited( o );
+        clear_visited( *opp );
+
+        return CONTINUE;
     }
 
     if ( DEBUG__SAFE && !m )
         abort();
 
-    collection__do_for_all( m->objects_o, ( Void_f ) unmark );
-    /*bunch__for_all( m->objects, (void*(*)(void*)) unmark );*/
+    bunch__walk( m->objects_o, ( Visitor ) unmark );
+
     m->clean = 1;
 }
 
@@ -226,13 +228,13 @@ unwalk( Object *root, boolean follow_triples )
             return BREAK;
     }
 
-    object__trace( root, ( Dist_f ) helper, follow_triples );
+    object__trace( root, ( Visitor ) helper, follow_triples );
 }
 
 
 void
 memory_manager__walk
-    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs, boolean follow_triples )
+    ( Memory_Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples )
 {
     boolean dosweep;
 
@@ -289,9 +291,9 @@ memory_manager__walk
     m->clean = FALSE;
 
     if ( use_bfs )
-        object__trace_bfs( root, ( Dist_f ) helper, follow_triples );
+        object__trace_bfs( root, ( Visitor ) helper, follow_triples );
     else
-        object__trace( root, ( Dist_f ) helper, follow_triples );
+        object__trace( root, ( Visitor ) helper, follow_triples );
 
     /* Might as well sweep. */
     if ( dosweep )
@@ -305,7 +307,7 @@ memory_manager__walk
 
 void
 memory_manager__trace
-    ( Memory_Manager *m, Object *root, Walker walk, Dist_f dist )
+    ( Memory_Manager *m, Object *root, Walker walk, Visitor dist )
 {
     int marked;
 
@@ -370,8 +372,8 @@ memory_manager__trace
         unmark_all( m );
 
     m->clean = FALSE;
-    walk( root, ( Dist_f ) trace );
-    walk( root, ( Dist_f ) untrace );
+    walk( root, ( Visitor ) trace );
+    walk( root, ( Visitor ) untrace );
     m->clean = TRUE;
 
     if ( DEBUG__SAFE )
@@ -438,7 +440,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 
     s = set__new();
 
-    object__trace( root, ( Dist_f ) helper, TRUE );
+    object__trace( root, ( Visitor ) helper, TRUE );
 
     return s;
 }
@@ -484,7 +486,7 @@ memory_manager__collect( Memory_Manager *m, boolean force, boolean echo )
     }
 
     /* Mark all reachable objects. */
-    memory_manager__walk( m, 0, ( Dist_f ) noop, FALSE, TRUE );
+    memory_manager__walk( m, 0, ( Visitor ) noop, FALSE, TRUE );
 
     m->size_at_last_cycle = memory_manager__size( m );
 

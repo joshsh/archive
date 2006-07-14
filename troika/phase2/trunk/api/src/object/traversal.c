@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 void
-object__trace( Object *o, Dist_f f, boolean follow_triples )
+object__trace( Object *o, Visitor f, boolean follow_triples )
 {
     int total;
 
@@ -90,14 +90,14 @@ data(cycle(cycle))
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
             {
-                o->type->walk( o->value, ( Dist_f ) helper );
+                o->type->walk( o->value, ( Visitor ) helper );
             }
 
             /* Traverse to associated objects (if any). */
 #if TRIPLES__GLOBAL__OUT_EDGES
             if ( follow_triples && o->outbound_edges )
             {
-                hash_map__walk2( o->outbound_edges, ( Dist2_f ) edge_helper );
+                hash_map__walk2( o->outbound_edges, ( Visitor2 ) edge_helper );
             }
 #endif
 
@@ -125,7 +125,7 @@ data(cycle(cycle))
 
 /* Note: untested. */
 void
-object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
+object__trace_bfs( Object *o, Visitor f, boolean follow_triples )
 {
     Array *queue;
     int total;
@@ -174,14 +174,14 @@ object__trace_bfs( Object *o, Dist_f f, boolean follow_triples )
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
             {
-                o->type->walk( o->value, ( Dist_f ) enqueue );
+                o->type->walk( o->value, ( Visitor ) enqueue );
             }
 
             /* Traverse to associated objects (if any). */
 #if TRIPLES__GLOBAL__OUT_EDGES
             if ( follow_triples && o->outbound_edges )
             {
-                hash_map__walk( o->outbound_edges, ( Dist_f ) edge_helper );
+                hash_map__walk( o->outbound_edges, ( Visitor ) edge_helper );
             }
 #endif
         }

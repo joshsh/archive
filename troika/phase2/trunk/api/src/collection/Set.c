@@ -111,14 +111,14 @@ set__contains( const Set *s, void *el )
 
 
 void
-set__walk( Set *s, Dist_f f )
+set__walk( Set *s, Visitor f )
 {
     ACTION helper( Entry *e )
     {
         return f( &e->elmt );
     }
 
-    hash_table__walk( s, ( Dist_f ) helper );
+    hash_table__walk( s, ( Visitor ) helper );
 }
 
 
@@ -139,7 +139,7 @@ set__exclusion( Set *a, Set *b )
     }
 
     c = hash_table__copy( a );
-    hash_table__walk( c, ( Dist_f ) helper );
+    hash_table__walk( c, ( Visitor ) helper );
 
     return c;
 }
@@ -170,7 +170,7 @@ set__intersection( Set *a, Set *b )
         d = a;
     }
 
-    hash_table__walk( c, ( Dist_f ) helper );
+    hash_table__walk( c, ( Visitor ) helper );
     return c;
 }
 
@@ -189,7 +189,7 @@ set__symmetric_difference( Set *a, Set *b )
     }
 
     c = set__union( a, b );
-    hash_table__walk( c, ( Dist_f ) helper );
+    hash_table__walk( c, ( Visitor ) helper );
 
     return c;
 }
@@ -209,13 +209,13 @@ set__union( Set *a, Set *b )
     if ( hash_table__size( a ) > hash_table__size( b ) )
     {
         c = hash_table__copy( a );
-        hash_table__walk( b, ( Dist_f ) helper );
+        hash_table__walk( b, ( Visitor ) helper );
     }
 
     else
     {
         c = hash_table__copy( b );
-        hash_table__walk( a, ( Dist_f ) helper );
+        hash_table__walk( a, ( Visitor ) helper );
     }
 
     return c;
@@ -260,7 +260,7 @@ set__encode( Set *s, char *buffer )
     sprintf( buffer, "{" );
     buffer++;
 
-    set__walk( s, ( Dist_f ) encode );
+    set__walk( s, ( Visitor ) encode );
 
     sprintf( buffer, " }" );
 }
@@ -298,7 +298,7 @@ set__to_array( Set *s )
         return CONTINUE;
     }
 
-    set__walk( s, ( Dist_f ) helper );
+    set__walk( s, ( Visitor ) helper );
     return a;
 }
 

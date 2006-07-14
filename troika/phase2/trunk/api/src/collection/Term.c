@@ -367,7 +367,7 @@ term__cat(Term *t1, Term *t2)
 
 
 void
-term__walk( Term *t, Dist_f f )
+term__walk( Term *t, Visitor f )
 {
     __label__ finish;
 

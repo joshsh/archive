@@ -34,9 +34,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>
 */
 
-#include <Ast.h>
 #include <common.h>
 #include "../settings.h"
+#include "Ast.h"
 
 
 typedef struct Interpreter Interpreter;

@@ -1,9 +1,13 @@
 /**
-    \file  Memory_Manager.h
 
-    \author  Joshua Shinavier   \n
-             parcour@gmail.com  \n
-             +1 509 570-6990    \n */
+\file  Memory_Manager.h
+
+\brief  Provides a class which creates, mutates and destroys object graphs.
+Includes a tracing garbage collector.
+
+\author  Joshua Shinavier   \n
+         parcour@gmail.com  \n
+         +1 509 570-6990    \n */
 
 /*******************************************************************************
 
@@ -63,13 +67,23 @@ memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags );
 
 /* Tracing / graph traversal **************************************************/
 
+/** Distributes a visitor function to each object (exactly once, or until told
+    to halt) in the graph rooted the given object.
+    \param root  the object to start at.  If NULL, the algorithm will walk from
+    the default root of the object graph
+    \param use_bfs  if TRUE, traverse the graph in a breadth-first rather than
+    a depth-first manner
+    \param follow_triples  if TRUE, visit all statements of which the visited
+    object is the subject */
 extern void
 memory_manager__walk
-    ( Memory_Manager *m, Object *root, Dist_f f, boolean use_bfs, boolean follow_triples );
+    ( Memory_Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples );
 
+/** Like memory_manager__walk, but using a customized walk function.  The
+    algorithm will not visit any object more than once. */
 extern void
 memory_manager__trace
-    ( Memory_Manager *m, Object *root, Walker walk, Dist_f dist );
+    ( Memory_Manager *m, Object *root, Walker walk, Visitor dist );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */

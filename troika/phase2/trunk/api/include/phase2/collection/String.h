@@ -2,7 +2,7 @@
 
 \file  String.h
 
-\brief An expanding string type.
+\brief Provides an expanding string class.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -34,6 +34,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /*#include <common.h>*/
 
+/** An expanding string of characters. */
 typedef struct String String;
 
 
@@ -54,6 +55,7 @@ string__delete( String *s );
 
 /******************************************************************************/
 
+/** \return  the length of the String. */
 extern unsigned int
 string__size( const String *a );
 

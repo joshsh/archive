@@ -37,6 +37,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #define NOPROPS                                 0
+#define NOFLAGS                                 0
 
 
 #ifndef PACKAGE_NAME

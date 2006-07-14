@@ -55,7 +55,7 @@ apply__delete( Apply *a )
 
 
 void
-apply__walk( Apply *a, Dist_f f )
+apply__walk( Apply *a, Visitor f )
 {
     if ( f( ( void** ) &a->function ) == BREAK
       || f( ( void** ) &a->operand ) == BREAK )

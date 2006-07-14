@@ -90,7 +90,7 @@ object__delete( Object *o )
     if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
     {
         t = o->type->type_arg;
-        o->type->walk( o->value, ( Dist_f ) helper );
+        o->type->walk( o->value, ( Visitor ) helper );
     }
 
     /* Free the object's data. */

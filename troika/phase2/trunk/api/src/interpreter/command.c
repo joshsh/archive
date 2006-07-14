@@ -190,7 +190,7 @@ Syntax:\n\
         array__sort( a, ( Comparator ) strcmp );
 
         PRINT( "Commands:\n" );
-        array__walk( a, ( Dist_f ) helper );
+        array__walk( a, ( Visitor ) helper );
 
         array__delete( a );
 
@@ -480,7 +480,7 @@ delete_commands( Dictionary *commands )
         return CONTINUE;
     }
 
-    dictionary__walk( commands, ( Dist_f ) helper );
+    dictionary__walk( commands, ( Visitor ) helper );
     dictionary__delete( commands );
 }
 

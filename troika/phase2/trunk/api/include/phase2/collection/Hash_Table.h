@@ -2,7 +2,7 @@
 
 \file  Hash_Table.h
 
-\brief  A simple 32-bit hashing utility.
+\brief  Provides a simple 32-bit hash table class.
 The hashing and comparison functions used by the table are customizable.
 
 \author  Joshua Shinavier   \n
@@ -35,12 +35,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <common.h>
 #include <stddef.h>  /* For size_t */
 
+
+/** A hashing function. */
 typedef unsigned int ( *Hash_f )( const void *key );
 
 
 /******************************************************************************/
 
-/** \brief An expanding hash table to bind pairs of generic pointers. */
+/** An expanding hash table to quickly add and retrieve objects of any given
+    type. */
 typedef struct Hash_Table Hash_Table;
 
 
@@ -88,9 +91,11 @@ hash_table__delete( Hash_Table *h );
 extern unsigned int
 hash_table__size( const Hash_Table *h );
 
+/** \return  the load factor of the hash table */
 extern double
 hash_table__load( const Hash_Table *h );
 
+/** \return  the expansion factor of the hash table */
 extern double
 hash_table__expansion( const Hash_Table *h );
 
@@ -115,8 +120,9 @@ extern void
 hash_table__remove( Hash_Table *h, const void *key );
 
 
+/** Applies a visitor function to each object in the table. */
 extern void
-hash_table__walk( Hash_Table *h, Dist_f f );
+hash_table__walk( Hash_Table *h, Visitor f );
 
 
 /******************************************************************************/

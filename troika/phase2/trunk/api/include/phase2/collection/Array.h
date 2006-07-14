@@ -2,9 +2,7 @@
 
 \file  Array.h
 
-\brief An expanding array of void pointers, suitable for use as a stack,
-queue, or indexed array.  You can even use it as a general ordered list,
-although there is memory copying overhead involved in insertions and removals.
+\brief  Provides an expanding array class.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -36,10 +34,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Type.h>
 
 
+/** An expanding array of void pointers, suitable for use as a stack,
+queue, or indexed array.  You can even use it as a general ordered list,
+although there is memory copying overhead involved in insertions and removals. */
 typedef struct Array Array;
 
 
 /* Constructors and destructor ************************************************/
+
 
 /** Constructor. */
 extern Array *
@@ -56,14 +58,18 @@ array__delete( Array *a );
 
 /******************************************************************************/
 
+
+/** \return  the number of objects in the array */
 extern unsigned int
 array__size( const Array *a );
 
+/** \return  the expansion factor of the array */
 extern double
 array__expansion( Array *a );
 
 
 /* Random access **************************************************************/
+
 
 /** Gets the array item at a given index. */
 extern void *
@@ -75,6 +81,7 @@ array__set( Array *a, unsigned int i, void *p );
 
 
 /* Stack and queue operations *************************************************/
+
 
 /** Gets the first item in the array without removing it. */
 extern void *
@@ -99,6 +106,7 @@ array__dequeue( Array *a );
 
 
 /* Random insertion and removal ***********************************************/
+
 
 /** Insert an item before the given index.
     \warning O(n) memory copying overhead */
@@ -125,6 +133,7 @@ array__simple_remove( Array *a, unsigned int i );
 
 /* Array sorting **************************************************************/
 
+
 /** Sorts the array using MergeSort. */
 extern void
 array__sort( Array *a, Comparator compare );
@@ -133,11 +142,13 @@ array__sort( Array *a, Comparator compare );
 /* Logical set functions and item substitution ********************************/
 
 
+/** Applies a visitor function to each object in the array. */
 extern void
-array__walk( Array *a, Dist_f f );
+array__walk( Array *a, Visitor f );
 
 
 /* Miscellaneous **************************************************************/
+
 
 /** Empties the array. */
 extern Array *
@@ -157,6 +168,8 @@ array__truncate( Array *a, unsigned int len );
 
 /******************************************************************************/
 
+
+/** \return  an instance of the "array" data type */
 extern Type *
 array__create_type( const char *name, int flags );
 

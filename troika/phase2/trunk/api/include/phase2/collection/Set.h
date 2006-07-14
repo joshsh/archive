@@ -2,6 +2,8 @@
 
 \file  Set.h
 
+\brief  Provides a class to simulate mathematical sets.
+
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
          +1 509 570-6990    \n */
@@ -58,7 +60,7 @@ set__size( Set *s );
 
 /** Applies a function to each element of the set. */
 extern void
-set__walk( Set *s, Dist_f f );
+set__walk( Set *s, Visitor f );
 
 
 /******************************************************************************/
@@ -97,9 +99,12 @@ set__union( Set *a, Set *b );
 
 /******************************************************************************/
 
+
+/** Serializes the set to a string.  E.g. "{1,2,3}". */
 extern void
 set__encode( Set *t, char *buffer );
 
+/** \return  an instance of the "set" data type */
 extern Type *
 set__create_type( const char *name, int flags );
 
