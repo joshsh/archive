@@ -2,8 +2,8 @@
 
 extern "C"
 {
-#include <util/Set.h>
-#include <util/Array.h>
+#include <collection/Set.h>
+#include <collection/Array.h>
 }
 
 #include <widgets/bindings/P2SetWidget.h>

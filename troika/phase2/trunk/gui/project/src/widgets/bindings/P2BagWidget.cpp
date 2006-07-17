@@ -2,7 +2,7 @@
 
 extern "C"
 {
-#include <util/Array.h>
+#include <collection/Array.h>
 }
 
 #include <widgets/bindings/P2BagWidget.h>

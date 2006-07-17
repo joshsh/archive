@@ -8,11 +8,7 @@ P2Environment::P2Environment( bool quiet )
   : QObject( 0 ),
     clipboardObject( 0 )
 {
-    #ifdef DEBUG
-        cout << "P2Environment[" << (int) this << "]::P2Environment()" << endl;
-    #endif
-
-    idleFramesAreVisible = true;
+    idleFramesAreVisible = false;
     namesAreVisible = true;
 
     frameContentsSpacing = FRAME__CONTENTS__SPACING;
@@ -26,11 +22,6 @@ P2Environment::P2Environment( bool quiet )
 P2Environment::P2Environment( const P2Environment &other )
     : QObject( 0 )
 {
-    #ifdef DEBUG
-        cout << "P2Environment[" << (int) this << "]::P2Environment("
-             << (int) &other << ")" << endl;
-    #endif
-
     idleFramesAreVisible = other.idleFramesAreVisible;
     namesAreVisible = other.namesAreVisible;
 

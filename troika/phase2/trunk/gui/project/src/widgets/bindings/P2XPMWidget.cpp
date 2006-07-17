@@ -8,7 +8,7 @@ static QImage
 getImage( const Object *o )
 {
     char buffer[ENCODING__BUFFER_SIZE];
-    object__type( o )->encode( object__value( o ), buffer );
+    object__encode( o, buffer );
 
     QTemporaryFile file;
     if ( file.open() )

@@ -3,7 +3,7 @@
 
 extern "C"
 {
-#include <util/Term.h>
+#include <collection/Term.h>
 }
 
 
@@ -21,7 +21,7 @@ static QString
 getText( const Object *o )
 {
     char buffer[1000];
-    object__type( o )->encode( object__value( o ), buffer );
+    object__encode( o, buffer );
     return QString( buffer );
 }
 
@@ -47,15 +47,19 @@ P2TermWidgetNew::appendSyntaxWidget( char *s )
 
 
 static void
-encode_static( void **cur, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
+encode_static( Term *t, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
 {
     /* If the sub-term represents a leaf node, execute the procedure. */
+    if ( term__length( t ) == 1 )
+        tw->appendObjectWidget( ( Object* ) term__head( t ), eb );
+/*
     if ( ( unsigned int ) *cur == 2 )
     {
         cur++;
 
         tw->appendObjectWidget( ( Object* ) *cur, eb );
     }
+*/
 
     /* If the sub-term contains further sub-terms, recurse through them. */
     else
@@ -63,6 +67,13 @@ encode_static( void **cur, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
         if ( delimit )
             tw->appendSyntaxWidget( "(" );
 
+        for ( unsigned int i = 0; i < term__length( t ); i++ )
+        {
+            Term *subt = term__subterm_at( t, i );
+            encode_static( subt, true, tw, eb );
+            term__delete( subt );
+        }
+/*
         void **lim = cur + ( unsigned int ) *cur;
         cur++;
         while ( cur < lim )
@@ -74,6 +85,7 @@ encode_static( void **cur, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
             //if ( cur < lim )
             //    tw->appendSyntaxWidget( " " );
         }
+*/
 
         if ( delimit )
             tw->appendSyntaxWidget( ")" );
@@ -91,7 +103,7 @@ P2TermWidgetNew::encode( const Object *o, P2Binder *eb )
 
     appendSyntaxWidget( "[" );
 
-    encode_static( t->head, false, this, eb );
+    encode_static( t, false, this, eb );
 
     appendSyntaxWidget( "]" );
 }

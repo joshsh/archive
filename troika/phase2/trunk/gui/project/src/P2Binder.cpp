@@ -18,7 +18,7 @@
 
 extern "C"
 {
-#include <util/Name.h>
+#include <collection/Name.h>
 }
 
 
@@ -184,7 +184,8 @@ static QString
 getText( const Object *o )
 {
     char buffer[100];
-    object__type( o )->encode( object__value( o ), buffer );
+    object__encode( o, buffer );
+    //object__type( o )->encode( object__value( o ), buffer );
     return QString( buffer );
 }
 
