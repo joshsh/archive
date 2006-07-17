@@ -292,9 +292,9 @@ set__to_array( Set *s )
 {
     Array *a = array__new( 0, 0 );
 
-    ACTION helper( Entry *e )
+    ACTION helper( void **refp )
     {
-        array__enqueue( a, e->elmt );
+        array__enqueue( a, *refp );
         return CONTINUE;
     }
 

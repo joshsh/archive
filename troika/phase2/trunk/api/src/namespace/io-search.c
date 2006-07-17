@@ -81,11 +81,11 @@ ns_walk_bfs( Namespace_o *ns_o, Visitor f )
 
 
 Name *
-namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
+namespace__find( Namespace_o *haystack, const Object *needle, Memory_Manager *m )
 {
     Hash_Map *parents = hash_map__new();
     Name *name = name__new();
-    Object *o, *parent = 0;
+    Object *o, *parent = 0, *needle2;
     char *key;
     Type *t = object__type( haystack );
 
@@ -98,6 +98,7 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
             if ( o == needle )
             {
                 parent = *nsopp;
+                needle2 = o;
                 return BREAK;
             }
 
@@ -141,7 +142,7 @@ namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m )
     if ( parent )
     {
         name = name__new();
-        o = needle;
+        o = needle2;
 
         do
         {

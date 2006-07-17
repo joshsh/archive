@@ -144,7 +144,7 @@ interpreter__resolve( Interpreter *c, Name *name )
          an object with two possible fully-qualified names, a:b:c:d and x:y:z,
          might yield the name x:y:z even though [...] */
 Name *
-interpreter__name_of( Interpreter *c, Namespace_o *nso, Object *o )
+interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o )
 {
     unsigned int i = 0;
     char *s;
@@ -174,7 +174,7 @@ interpreter__name_of( Interpreter *c, Namespace_o *nso, Object *o )
 
 
 Name *
-interpreter__name_of__full( Interpreter *c, Namespace_o *nso, Object *o )
+interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
 {
     Name *name;
     Object *root = environment__root( c->env );

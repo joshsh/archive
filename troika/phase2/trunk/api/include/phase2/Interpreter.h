@@ -76,12 +76,12 @@ interpreter__parse( Interpreter *c );
     namespace.  The name is qualified only to the extent necessary to resolve
     the object on a subsequent name lookup. */
 extern Name *
-interpreter__name_of( Interpreter *c, Namespace_o *nso, Object *o );
+interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o );
 
 /** \return  the fully-qualified name of an object in a given namespace, if
     reachable from that namespace */
 extern Name *
-interpreter__name_of__full( Interpreter *c, Namespace_o *nso, Object *o );
+interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o );
 
 
 /******************************************************************************/

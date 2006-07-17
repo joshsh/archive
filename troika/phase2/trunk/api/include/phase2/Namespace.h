@@ -134,7 +134,7 @@ namespace__create_type( const char *name, int flags );
 /** \return  the shortest fully-qualified Name which will resolve needle in
     haystack */
 extern Name *
-namespace__find( Namespace_o *haystack, Object *needle, Memory_Manager *m );
+namespace__find( Namespace_o *haystack, const Object *needle, Memory_Manager *m );
 
 /** Retrieves an object using a simple (non-recursive) name.
     \return  the object mapped to by the name (if any) */
