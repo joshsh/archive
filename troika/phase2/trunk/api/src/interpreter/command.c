@@ -201,7 +201,7 @@ Example:\n\
   _new floatmath;\n\
   floatmath:pi := 3.14159;\n\
   _ns floatmath;\n\
-  * := double_double__multiply;\n\
+  * := double_double__mul;\n\
   * (* 2.0 pi) =: circumference;\n\
   _ns root:data;\n\
   circumference 10.0 =: result;\n\

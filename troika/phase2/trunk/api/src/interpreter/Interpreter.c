@@ -62,17 +62,17 @@ interpreter__new( Environment *env, boolean quiet )
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser and with the SK module, and to serialize and deserialize data sets. */
-    if ( !( ( c->bag_t = environment__resolve_type( env, BAG__NAME )->value )
-         && ( c->char_t = environment__resolve_type( env, CHAR__NAME )->value )
-         && ( c->combinator_t = environment__resolve_type( env, COMBINATOR__NAME )->value )
-         && ( c->float_t = environment__resolve_type( env, DOUBLE__NAME )->value )
-         && ( c->int_t = environment__resolve_type( env, INT__NAME )->value )
-         && ( c->ns_t = environment__resolve_type( env, NAMESPACE__NAME )->value )
-         && ( c->prim_t = environment__resolve_type( env, PRIMITIVE__NAME )->value )
-         && ( c->set_t = environment__resolve_type( env, SET__NAME )->value )
-         && ( c->string_t = environment__resolve_type( env, STRING__NAME )->value )
-         && ( c->term_t = environment__resolve_type( env, TERM__NAME )->value )
-         && ( c->type_t = environment__resolve_type( env, TYPE__NAME )->value ) ) )
+    if ( !( ( c->bag_t = environment__resolve_type( env, NAMEOF( BAG ) )->value )
+         && ( c->char_t = environment__resolve_type( env, NAMEOF( CHAR ) )->value )
+         && ( c->combinator_t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value )
+         && ( c->float_t = environment__resolve_type( env, NAMEOF( DOUBLE ) )->value )
+         && ( c->int_t = environment__resolve_type( env, NAMEOF( INT ) )->value )
+         && ( c->ns_t = environment__resolve_type( env, NAMEOF( NAMESPACE ) )->value )
+         && ( c->prim_t = environment__resolve_type( env, NAMEOF( PRIMITIVE ) )->value )
+         && ( c->set_t = environment__resolve_type( env, NAMEOF( SET ) )->value )
+         && ( c->string_t = environment__resolve_type( env, NAMEOF( STRING ) )->value )
+         && ( c->term_t = environment__resolve_type( env, NAMEOF( TERM ) )->value )
+         && ( c->type_t = environment__resolve_type( env, NAMEOF( TYPE ) )->value ) ) )
     {
         ERROR( "interpreter__new: basic type not found" );
         free( c );

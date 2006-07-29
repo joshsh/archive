@@ -26,7 +26,7 @@ resolve_type( Environment *env, const char *name )
 {
     Object *o;
 
-    if ( !strcmp( name, ANY__NAME ) )
+    if ( !strcmp( name, NAMEOF( ANY ) ) )
         return any_type;
     else
     {

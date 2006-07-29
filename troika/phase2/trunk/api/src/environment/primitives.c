@@ -166,37 +166,37 @@ add_triples_prims( Environment *env )
 {
     Primitive *p;
 
-    return ( ( p = primitive__new( env, ANY__NAME, "^=", assoc_stub, 3 ) )
-      && primitive__add_param( env, p, ANY__NAME, "subject", REF_OPQ )
-      && primitive__add_param( env, p, ANY__NAME, "predicate", REF_TRP )
-      && primitive__add_param( env, p, ANY__NAME, "object", REF_TRP )
+    return ( ( p = primitive__new( env, NAMEOF( ANY ), "^=", assoc_stub, 3 ) )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "subject", REF_OPQ )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "predicate", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "object", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
-      && ( p = primitive__new( env, ANY__NAME, "^0", dissoc_stub, 2 ) )
-      && primitive__add_param( env, p, ANY__NAME, "subject", REF_TRP )
-      && primitive__add_param( env, p, ANY__NAME, "predicate", REF_TRP )
+      && ( p = primitive__new( env, NAMEOF( ANY ), "^0", dissoc_stub, 2 ) )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "subject", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "predicate", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
-      && ( p = primitive__new( env, ANY__NAME, "^", mult_stub, 2 ) )
-      && primitive__add_param( env, p, ANY__NAME, "subject", REF_TRP )
-      && primitive__add_param( env, p, ANY__NAME, "predicate", REF_TRP )
+      && ( p = primitive__new( env, NAMEOF( ANY ), "^", mult_stub, 2 ) )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "subject", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "predicate", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
-      && ( p = primitive__new( env, ANY__NAME, "object_object__equals", equals_stub, 2 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
-      && primitive__add_param( env, p, ANY__NAME, "objectB", REF_TRP )
+      && ( p = primitive__new( env, NAMEOF( ANY ), "object_object__equals", equals_stub, 2 ) )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "objectA", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "objectB", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "object__triples_predicates", predicates_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "objectA", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "object__triples_objects", objects_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "objectA", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "object__children", children_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "objectA", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "objectA", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 ) );
 }
 
@@ -270,14 +270,14 @@ add_set_prims( Environment *env )
 {
     Primitive *p;
 
-    return ( ( p = primitive__new( env, ANY__NAME, "set__add", set_add_stub, 2 ) )
+    return ( ( p = primitive__new( env, NAMEOF( ANY ), "set__add", set_add_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_OPQ )
-      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
-      && ( p = primitive__new( env, ANY__NAME, "set__remove", set_remove_stub, 2 ) )
+      && ( p = primitive__new( env, NAMEOF( ANY ), "set__remove", set_remove_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_OPQ )
-      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "int", "set__size", set_size_stub, 1 ) )
@@ -286,11 +286,11 @@ add_set_prims( Environment *env )
 
       && ( p = primitive__new( env, "int", "set__contains", set_contains_stub, 2 ) )
       && primitive__add_param( env, p, "Set", "s", REF_TRP )
-      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
       && ( p = primitive__new( env, "Set", "set__singleton", set_singleton_stub, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "el", REF_TRP )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "el", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 ) );
 }
 
@@ -325,7 +325,7 @@ add_sk_prims( Environment *env )
 {
     Primitive *p;
 
-    return ( ( p = primitive__new( env, ANY__NAME, "int__nonzero", int_nonzero_stub, 1 ) )
+    return ( ( p = primitive__new( env, NAMEOF( ANY ), "int__nonzero", int_nonzero_stub, 1 ) )
       && primitive__add_param( env, p, "int", "i", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 ) );
 }
@@ -360,12 +360,12 @@ add_meta_prims( Environment *env )
     global_env = env;
 
     return (
-         ( p = primitive__new( env, ANY__NAME, "type_of", type_of, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "self", REF_TRP )
+         ( p = primitive__new( env, NAMEOF( ANY ), "type_of", type_of, 1 ) )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "self", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
-      && ( p = primitive__new( env, ANY__NAME, "object__identity", object__identity, 1 ) )
-      && primitive__add_param( env, p, ANY__NAME, "o", REF_TRP )
+      && ( p = primitive__new( env, NAMEOF( ANY ), "object__identity", object__identity, 1 ) )
+      && primitive__add_param( env, p, NAMEOF( ANY ), "o", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
 #if TRIPLES__GLOBAL
@@ -386,7 +386,7 @@ environment__register_primitive
 {
     Object *o;
 
-    Type *t = environment__resolve_type( env, PRIMITIVE__NAME )->value;
+    Type *t = environment__resolve_type( env, NAMEOF( PRIMITIVE ) )->value;
 
     Type *first_param = primitive__parameter_type( prim, 0 );
 

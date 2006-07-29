@@ -321,20 +321,20 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     '[^']'  {  /* Matches an ASCII character in single quotes. */
         /* Note: no escaped characters yet. */
         yylval.character = *( ++yytext );
-        TOKEN( CHAR );
+        TOKEN( CHARACTER );
     }
 
-    -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a FLOAT if it
+    -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a REAL if it
                                     contains a decimal point (as in Forth). */
         /* Note: atof is error-safe (it fails with a return value of 0.0). */
         yylval.real = atof( yytext );
-        TOKEN( FLOAT );
+        TOKEN( REAL );
     }
 
     0|(-?[1-9][0-9]*)  {
         /* Note: atoi is error-safe (it fails with a return value of 0). */
         yylval.integer = atoi( yytext );
-        TOKEN( INT );
+        TOKEN( INTEGER );
     }
 
     {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
@@ -399,7 +399,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         buffer_pos = string_buffer;
 
         BEGIN( INITIAL );
-        TOKEN( STRING );
+        TOKEN( STRLIT );
     }
 }
 

@@ -30,6 +30,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
+#ifndef DEBUG__OBJECT
+#define DEBUG__OBJECT   0
+#endif
+
+
 enum Object__Flags
 {
     OBJECT__IMMUTABLE           = 0x1,

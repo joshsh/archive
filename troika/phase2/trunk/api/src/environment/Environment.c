@@ -81,10 +81,10 @@ environment__new()
     env->manager = 0;
 
     /* Create the basic data types. */
-    if ( !( ( ns_t = namespace__create_type( NAMESPACE__NAME, TYPE__IS_OBJ_COLL ) )
-         && ( prim_t = primitive__create_type( PRIMITIVE__NAME ) )
-         && ( set_t = set__create_type( SET__NAME, TYPE__IS_OBJ_COLL ) )
-         && ( env->type_t = type__create_type( TYPE__NAME ) ) ) )
+    if ( !( ( ns_t = namespace__create_type( NAMEOF( NAMESPACE ), TYPE__IS_OBJ_COLL ) )
+         && ( prim_t = primitive__create_type( NAMEOF( PRIMITIVE ) ) )
+         && ( set_t = set__create_type( NAMEOF( SET ), TYPE__IS_OBJ_COLL ) )
+         && ( env->type_t = type__create_type( NAMEOF( TYPE ) ) ) ) )
         goto abort;
 
     /* Create memory manager. */
@@ -115,8 +115,8 @@ environment__new()
     environment__register_type( env, env->type_t );
 
     /* Add other types here... */
-    environment__register_type( env, array__create_type( BAG__NAME, TYPE__IS_OBJ_COLL ) );
-    environment__register_type( env, term__create_type( TERM__NAME, TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, array__create_type( NAMEOF( BAG ), TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, term__create_type( NAMEOF( TERM ), TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
     environment__import_primitives( env );
@@ -181,7 +181,7 @@ environment__delete( Environment *env )
 
     env->types->type = &ns_t;
     memory_manager__set_root( env->manager,
-        namespace__lookup_simple( env->types->value, TYPE__NAME ) );
+        namespace__lookup_simple( env->types->value, NAMEOF( TYPE ) ) );
     memory_manager__collect( env->manager, TRUE, FALSE );
 
     memory_manager__delete( env->manager );

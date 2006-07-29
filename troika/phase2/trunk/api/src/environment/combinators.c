@@ -29,7 +29,7 @@ add_combinators( Environment *env )
     Combinator *sk_B, *sk_C, *sk_I, *sk_K, *sk_L, *sk_O, *sk_R, *sk_S, *sk_T, *sk_U, *sk_V, *sk_W, *sk_w, *sk_Y;
     Memory_Manager *m = env->manager;
 
-    Type *t = environment__resolve_type( env, COMBINATOR__NAME )->value;
+    Type *t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value;
 
     sk_B = NEW( Combinator );
     sk_C = NEW( Combinator );

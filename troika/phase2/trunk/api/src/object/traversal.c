@@ -72,9 +72,8 @@ data(cycle(cycle))
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( f( ( void** ) opp ) == CONTINUE )
         {
-#if DEBUG__OBJECT
-            putchar('(');
-#endif
+            if ( DEBUG__OBJECT )
+                putchar( '(' );
 
             if ( DEBUG__OBJECT )
                 total++;
@@ -101,9 +100,8 @@ data(cycle(cycle))
             }
 #endif
 
-#if DEBUG__OBJECT
-            putchar(')');
-#endif
+            if ( DEBUG__OBJECT )
+                putchar( ')' );
         }
 
         return CONTINUE;

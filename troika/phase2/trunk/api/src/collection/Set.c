@@ -59,6 +59,13 @@ set__new( void )
 }
 
 
+Set *
+set__copy( Set *s )
+{
+    return hash_table__copy( s );
+}
+
+
 void
 set__delete( Set *s )
 {

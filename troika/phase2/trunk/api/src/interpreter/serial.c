@@ -324,7 +324,7 @@ term__xml_decode( Element *el, Xml_Decode_Ctx *state )
     /* Singleton term. */
     if ( strcmp( ( char* ) element__name( el ), TERM__XML__NAME ) )
     {
-        if ( DEBUG__SAFE && strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
+        if ( DEBUG__SAFE && strcmp( ( char* ) element__name( el ), NAMEOF( OBJECT ) ) )
         {
             ERROR( "term__xml_decode: bad element name" );
             return 0;
@@ -561,7 +561,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     if ( DEBUG__SAFE && ( !el || !state ) )
         abort();
 
-    if ( strcmp( ( char* ) element__name( el ), OBJECT__XML__NAME ) )
+    if ( strcmp( ( char* ) element__name( el ), NAMEOF( OBJECT ) ) )
     {
         ERROR( "object__xml_decode: bad element name" );
         return 0;
@@ -574,7 +574,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     {
         text = ( char* ) attr__value( attr );
 
-        if ( !strcmp( text, APPLY__NAME ) )
+        if ( !strcmp( text, NAMEOF( APPLY ) ) )
             type = apply_type;
 
         else
@@ -866,7 +866,7 @@ interpreter__serialize( Interpreter *c, char *path )
 
     /* Create root element. */
     doc = document__new();
-    root = element__new( doc, ( uc* ) ENCODING__ROOT__XML__NAME, 0 );
+    root = element__new( doc, ( uc* ) NAMEOF( DATA_SET ), 0 );
 
     /* Add version attribute. */
     attr__new( root, ( uc* ) "p2-version", ( uc* ) PACKAGE_VERSION, 0 );
@@ -936,7 +936,7 @@ interpreter__deserialize( Interpreter *c, char *path )
     }
 
     el = document__root( doc );
-    if ( !el || strcmp( ( char* ) element__name( el ), ENCODING__ROOT__XML__NAME ) )
+    if ( !el || strcmp( ( char* ) element__name( el ), NAMEOF( DATA_SET ) ) )
     {
         ERROR( "interpreter__deserialize: bad or missing root element" );
         goto finish;
@@ -965,14 +965,14 @@ interpreter__deserialize( Interpreter *c, char *path )
         el_name = ( char* ) element__name( child );
 
         /* Object element. */
-        if ( !strcmp( el_name, OBJECT__XML__NAME ) )
+        if ( !strcmp( el_name, NAMEOF( OBJECT ) ) )
         {
             object__xml_decode( child, &state );
         }
 
 #if TRIPLES__GLOBAL
         /* Triples element. */
-        else if ( !strcmp( el_name, TRIPLES__XML__NAME ) )
+        else if ( !strcmp( el_name, NAMEOF( TRIPLE ) ) )
         {
             triple__xml_decode( child, &state );
         }

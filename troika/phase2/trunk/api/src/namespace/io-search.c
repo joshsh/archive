@@ -80,6 +80,82 @@ ns_walk_bfs( Namespace_o *ns_o, Visitor f )
 }
 
 
+#ifdef NOT_FINISHED
+struct edge
+{
+    char *name;
+    Namespace_o *parent;
+};
+
+
+void
+namespace__map_back( Namespace_o *haystack,
+                     Set *needles,
+                     Hash_Map *map,
+                     Memory_Manager *m )
+{
+    if ( DEBUG__SAFE && ( !haystack || !needles || !map || !m ) )
+        abort();
+
+    /* Parent hierarchy. */
+    Hash_Map *edges = hash_map__new();
+
+    Type *t = object__type( haystack );
+    Name *name;
+
+    Name *get_name( struct edge *e )
+    {
+        name = name__new();
+
+        while ( e )
+        {
+            array__push( name, STRDUP( e->name ) );
+            e = ( e->parent )
+                ? hash_map__lookup( edges, ;
+        }
+
+        do
+        {
+            key = dictionary__reverse_lookup( ( ( Namespace* ) object__value( parent ) )->children, o );
+            array__push( name, key );
+            o = parent;
+
+        } while ( ( parent = hash_map__lookup( parents, o ) ) );
+    }
+
+    ACTION find( Namespace_o **nsopp )
+    {
+        ACTION helper( char *name, Object **opp )
+        {
+            Object *o = DEREF( opp );
+
+            if ( set__contains( needles, o ) )
+            {
+                hash_map__add( map, 
+
+                set__remove( needles, o );
+
+                if ( !set__size( needles ) )
+                    return BREAK;
+            }
+
+            return CONTINUE;
+        }
+
+        dictionary__walk_special(
+            ( ( Namespace* ) object__value( *nsopp ) )->children,
+            ( Dictionary_Visitor ) helper );
+    }
+
+    /* So that the original set is not affected by the algorithm. */
+    needles = set__copy( needles );
+
+
+    set__delete( needles );
+}
+#endif
+
+
 Name *
 namespace__find( Namespace_o *haystack, const Object *needle, Memory_Manager *m )
 {

@@ -169,7 +169,7 @@ primitive__encode( Primitive *prim, char *buffer )
 Type *
 primitive__create_type( const char *name )
 {
-    Type *t = type__new( name, 0 );
+    Type *t = type__new( name, NOPROPS );
 
     if ( t )
     {

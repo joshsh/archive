@@ -245,6 +245,24 @@ PRINT( "&e->target = %p\n", &e->target ); FFLUSH;
 }
 
 
+void
+dictionary__walk_special( Dictionary *d, Dictionary_Visitor v )
+{
+    ACTION helper( Entry *e )
+    {
+        if ( DEBUG__SAFE && !e )
+            abort();
+
+        return v( e->key, &e->target );
+    }
+
+    if ( DEBUG__SAFE && ( !d || !v ) )
+        abort();
+
+    hash_table__walk( d, ( Visitor ) helper );
+}
+
+
 /******************************************************************************/
 
 

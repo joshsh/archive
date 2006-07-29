@@ -45,7 +45,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 #ifndef PACKAGE_VERSION
-#   define PACKAGE_VERSION                      "X"
+#   define PACKAGE_VERSION                      "?"
 #endif
 
 #ifndef PACKAGE_BUGREPORT
@@ -64,22 +64,41 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /* Type names *****************************************************************/
 
+#define NAMEOF_0(x)                             #x
+#define NAMEOF(x)                               NAMEOF_0(x)
 
-#define ANY__NAME                               "any_type"
-#define APPLY__NAME                             "Apply"
-#define BAG__NAME                               "Bag"
-#define CHAR__NAME                              "char"
-#define COMBINATOR__NAME                        "Combinator"
-#define DOUBLE__NAME                            "double"
-#define INDIRECTION__NAME                       "Indirection"
-#define INT__NAME                               "int"
-#define NAMESPACE__NAME                         "Namespace"
-#define PRIMITIVE__NAME                         "Primitive"
-#define SET__NAME                               "Set"
-#define STRING__NAME                            "cstring"
-#define TERM__NAME                              "Term"
-#define TYPE__NAME                              "Type"
-#define VOID__NAME                              "Void"
+#define ANY                                     any_type
+#define APPLY                                   Apply
+#define BAG                                     Bag
+#define CHAR                                    char
+#define COMBINATOR                              Combinator
+#define DOUBLE                                  double
+#define INDIRECTION                             Indirection
+#define INT                                     int
+#define NAMESPACE                               Namespace
+#define PRIMITIVE                               Primitive
+#define SET                                     Set
+#define STRING                                  cstring
+#define TERM                                    Term
+#define TYPE                                    Type
+#define VOID                                    Void
+
+#define DATA_SET                                data_set
+#define OBJECT                                  object
+#define TRIPLE                                  triple
+
+/*
+#define ENCODING__ROOT__XML__NAME               "data_set"
+
+#define OBJECT__XML__NAME                       "object"
+#define TRIPLES__XML__NAME                      "triple"
+
+#define APPLY__XML__NAME                        "apply"
+#define ARRAY__XML__NAME                        "list"
+#define NAMESPACE__XML__NAME                    "table"
+#define SET__XML__NAME                          "list"
+#define TERM__XML__NAME                         "list"
+*/
 
 
 /* Reduction ******************************************************************/
@@ -155,11 +174,6 @@ dereference( struct Object ** );
 #define ENCODING__BUFFER_SIZE                   0x10000
 
 #define ENCODING__TRIPLES_AS_OBJECTS            1
-
-#define ENCODING__ROOT__XML__NAME               "data_set"
-
-#define OBJECT__XML__NAME                       "object"
-#define TRIPLES__XML__NAME                      "triple"
 
 #define APPLY__XML__NAME                        "apply"
 #define ARRAY__XML__NAME                        "list"

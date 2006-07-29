@@ -84,8 +84,8 @@ graph_init( Type *combinator_t, Type *primitive_t )
 
     if ( !apply_type || !indirection_type )
     {
-        apply_type          = type__new( APPLY__NAME, TYPE__IS_OBJ_COLL );
-        indirection_type    = type__new( INDIRECTION__NAME, TYPE__IS_OBJ_COLL );
+        apply_type          = type__new( NAMEOF( APPLY ), TYPE__IS_OBJ_COLL );
+        indirection_type    = type__new( NAMEOF( INDIRECTION ), TYPE__IS_OBJ_COLL );
 
         if ( !apply_type || !indirection_type )
             abort();

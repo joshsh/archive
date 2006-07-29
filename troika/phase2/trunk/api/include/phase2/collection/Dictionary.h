@@ -35,6 +35,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Array.h>
 
 
+typedef ACTION          ( *Dictionary_Visitor )( char *name, void **refp2 );
+
+
 /** An object which binds string keys to arbitrary targets. */
 typedef Hash_Table Dictionary;
 
@@ -57,7 +60,8 @@ extern void *
 dictionary__lookup( Dictionary *d, char *key );
 
 /** \return  the key (if any) which maps to the given target in the
-    dictionary */
+    dictionary
+    \note  this is much slower than a forward lookup */
 extern char *
 dictionary__reverse_lookup( Dictionary *d, const void *target );
 
@@ -74,6 +78,10 @@ dictionary__add_all( Dictionary *dest, Dictionary *src );
 /** Applies a visitor function to each target object in the dictionary. */
 extern void
 dictionary__walk( Dictionary *d, Visitor f );
+
+/** Applies a visitor function to each name/object pair in the dictionary. */
+extern void
+dictionary__walk_special( Dictionary *d, Dictionary_Visitor v );
 
 
 /** \return  an array of all key values in the dictionary */

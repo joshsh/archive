@@ -29,14 +29,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /* FIXME */
-static Interpreter *compiler;
+static Interpreter *interpreter;
 
 
 static Name *
 encoding_name( Object *o )
 {
                               /* FIXME */
-    return interpreter__name_of( compiler, compiler->cur_ns_obj, o );
+    return interpreter__name_of( interpreter, interpreter->cur_ns_obj, o );
 }
 
 
@@ -403,7 +403,7 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
         abort();
 
     /* FIXME */
-    compiler = c;
+    interpreter = c;
 
     apply__encode = apply_type->encode;
     bag__encode = c->bag_t->encode;

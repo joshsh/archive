@@ -264,10 +264,10 @@ term2ast( Term *t )
 %token COMMA L_BRACE R_BRACE
 %token COLON E_O_F L_ASSIGN R_ASSIGN SEMICOLON
 
-%token <character>  CHAR
-%token <integer>    INT
-%token <real>       FLOAT
-%token <string>     COMMAND_NAME ID STRING
+%token <character>  CHARACTER
+%token <integer>    INTEGER
+%token <real>       REAL
+%token <string>     COMMAND_NAME ID STRLIT
 
 %type <bag>         bag bag_head
 %type <name>        name
@@ -766,37 +766,37 @@ term_item:
         $$ = ast__null();
     }
 
-    | CHAR
+    | CHARACTER
     {
         #if DEBUG__PARSER
-        production( "term_item ::=  CHAR" );
+        production( "term_item ::=  CHARACTER" );
         #endif
 
         $$ = ast__char( $1 );
     }
 
-    | FLOAT
+    | REAL
     {
         #if DEBUG__PARSER
-        production( "term_item ::=  FLOAT" );
+        production( "term_item ::=  REAL" );
         #endif
 
         $$ = ast__float( $1 );
     }
 
-    | INT
+    | INTEGER
     {
         #if DEBUG__PARSER
-        production( "term_item ::=  INT" );
+        production( "term_item ::=  INTEGER" );
         #endif
 
         $$ = ast__int( $1 );
     }
 
-    | STRING
+    | STRLIT
     {
         #if DEBUG__PARSER
-        production( "term_item ::=  STRING" );
+        production( "term_item ::=  STRLIT" );
         #endif
 
         $$ = ast__string( STRDUP( $1 ) );
