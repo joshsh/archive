@@ -83,6 +83,12 @@ interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o );
 extern Name *
 interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o );
 
+extern void
+interpreter__encode( Interpreter *c,
+                     const Object *o,
+                     char *buffer,
+                     unsigned int maxlen );
+
 
 /******************************************************************************/
 

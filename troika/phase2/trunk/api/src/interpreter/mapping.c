@@ -207,4 +207,27 @@ interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
 }
 
 
+#define LABEL__MAXLEN  32
+
+/* FIXME: maxlen does nothing.  Eventually, use a String object instead of
+   a char array to build the label */
+void
+interpreter__encode( Interpreter *c, const Object *o, char *buffer, unsigned int maxlen )
+{
+    if ( DEBUG__SAFE && ( !c || !o ) )
+        abort();
+
+    if ( !maxlen )
+        maxlen = LABEL__MAXLEN;
+
+    Name *name = interpreter__name_of( c, c->cur_ns_obj, o );
+
+    if ( !name )
+        object__encode( o, buffer );
+
+    else
+        name__encode( name, buffer );
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

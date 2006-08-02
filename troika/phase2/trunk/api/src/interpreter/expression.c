@@ -43,6 +43,8 @@ encoding_name( Object *o )
 static void
 encode__short( Object *o, char *buffer )
 {
+    interpreter__encode( interpreter, o, buffer, 0 );
+/*
     Name *name = encoding_name( o );
 
     if ( !name )
@@ -50,6 +52,7 @@ encode__short( Object *o, char *buffer )
 
     else
         name__encode( name, buffer );
+*/
 }
 
 

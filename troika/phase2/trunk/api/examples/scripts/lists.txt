@@ -6,11 +6,12 @@ HEAD := O (K K);
 TAIL := O (K (S K));
 CONS := V;
 
+list := CONS 66 (CONS 65 (CONS 68 ()));
+
 S' := B (B S) B;
 
 + := int_int__add;
-- := int_int__subtract;
-!=0 := 
+- := int_int__sub; 
 
 (: lists:summation -- use a pairwise "summing" function to apply recursively
                      to a list :)
