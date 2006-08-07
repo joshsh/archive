@@ -523,7 +523,7 @@ mergesort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
 }
 
 
-/* FIXME: You could avoid using malloc() by using a simple shift algorithm */
+/* FIXME: You could avoid using MALLOC by using a simple shift algorithm */
 static Array *
 normalize( Array *a )
 {

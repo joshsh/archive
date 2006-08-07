@@ -1,6 +1,4 @@
-/** \return  a dot graph representation of the object */
-extern char *
-object__draw( Interpreter *c, const Object *o );
+
 
 
 [bugs]

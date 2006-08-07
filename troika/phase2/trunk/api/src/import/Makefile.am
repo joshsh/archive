@@ -58,7 +58,7 @@ $(OUT)/p2-stubs.c :  $(noinst_HEADERS) $(CXX_IN)/c89/operators.h
 	xsltproc $(XML_OUT)/combine.xslt $(XML_OUT)/index.xml > $(XML_OUT)/p2-import.xml
 	xsltproc p2-stubs.xslt $(XML_OUT)/p2-import.xml > $(OUT)/p2-stubs.c
 
-$(CXX_IN)/c89/operators.h :
+$(CXX_IN)/c89/operators.h :  $(CXX_IN)/c89/operators.h.templ
 	cp $(CXX_IN)/c89/operators.h.templ temp.h
 	$(CC) temp.h -E -o $(CXX_IN)/c89/operators.h
 	rm -f temp.h

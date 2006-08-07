@@ -516,4 +516,120 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 }
 
 
+/******************************************************************************/
+
+
+#define DRAW_NAMED_OBJECTS  0
+
+char *
+interpreter__draw( Interpreter *c, const Object *o )
+{
+    int topid = 0;
+    char buffer[ENCODING__BUFFER_SIZE];
+    char *cur = buffer;
+
+    const char *function_color = "#C8C0FF";
+    const char *atom_color = "#E0E0FF";
+
+    int draw( const Object *o, boolean force )
+    {
+        int id = topid++;
+
+        Type *t;
+        Apply *a;
+        int left, right;
+        char *prefix;
+        Name *name;
+
+        sprintf( cur, "%i [label=\"", id );
+        cur += strlen( cur );
+
+        if ( !o )
+        {
+            sprintf( cur, "()" );
+            cur += 2;
+        }
+
+        else
+        {
+            t = object__type( o );
+
+            prefix = ( t == apply_type )
+                ? "@" : ( t == indirection_type )
+                ? "->" : "";
+
+            sprintf( cur, prefix );
+            cur += strlen( cur );
+
+            name = interpreter__name_of( c, 0, o );
+            if ( name )
+            {
+/*
+                sprintf( cur, " " );
+                cur++;
+*/
+
+                name__encode( name, cur );
+                cur += strlen( cur );
+
+                name__delete( name );
+            }
+
+            else if ( t != apply_type )
+            {
+                /* FIXME: beware of overflow, and of quote characters */
+                object__encode( o, cur );
+                cur += strlen( cur );
+            }
+
+            sprintf( cur, "\"" );
+            cur++;
+
+            if ( apply_type == t )
+            {
+                sprintf( cur, ", color=\"%s\"", function_color );
+                cur += strlen( cur );
+            }
+
+            sprintf( cur, "];\n" );
+            cur += strlen( cur );
+
+            if ( !name || DRAW_NAMED_OBJECTS || force )
+            {
+                if ( t == apply_type )
+                {
+                    a = object__value( o );
+                    left = draw( a->function, FALSE );
+                    right = draw( a->operand, FALSE );
+                    sprintf( cur, "%i -> %i;\n", id, left );
+                    cur += strlen( cur );
+                    sprintf( cur, "%i -> %i;\n", id, right );
+                    cur += strlen( cur );
+                }
+
+                else if ( t == indirection_type )
+                {
+                    left = draw( object__value( o ), FALSE );
+                    sprintf( cur, "%i --> %i;\n", id, left );
+                    cur += strlen( cur );
+                }
+            }
+        }
+
+        return id;
+    }
+
+    sprintf( cur, "digraph Phase2Object {\n" ); cur += strlen( cur );
+    sprintf( cur, "graph [nodesep=.3, ranksep=.3, concentrate=true]\n" ); cur += strlen( cur );
+    sprintf( cur, "node [shape=box, style=\"rounded, filled\", color=\"%s\" width=.3, height=.3, fontname=\"Times-Bold\", fontsize=10, peripheries=0, labeldistance=10]\n", atom_color ); cur += strlen( cur );
+    sprintf( cur, "edge [arrowhead=normal, arrowsize=.6];\n" ); cur += strlen( cur );
+
+    draw( o, TRUE );
+    sprintf( cur, "}\n" );
+    cur += strlen( cur );
+
+    return STRDUP( buffer );
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

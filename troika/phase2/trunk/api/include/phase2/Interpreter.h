@@ -89,6 +89,10 @@ interpreter__encode( Interpreter *c,
                      char *buffer,
                      unsigned int maxlen );
 
+/** \return  a dot graph representation of the object */
+extern char *
+interpreter__draw( Interpreter *c, const Object *o );
+
 
 /******************************************************************************/
 

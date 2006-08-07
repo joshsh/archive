@@ -180,6 +180,7 @@ interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
     Object *root = environment__root( c->env );
     Memory_Manager *m = environment__manager( c->env );
 
+    /* Default to the working namespace. */
     if ( !nso )
         nso = c->cur_ns_obj;
 

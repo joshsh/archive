@@ -143,6 +143,47 @@ command_cp( Interpreter *c, Ast *args )
 }
 
 
+#define HAS_KUICKSHOW   1
+
+static int
+command_draw( Interpreter *c, Ast *args )
+{
+    Object *o;
+    char *s;
+    Name *name;
+
+    FILE *f;
+
+    if ( !( name = get_arg( args, 0 ) ) )
+        return 0;
+
+    o = interpreter__resolve( c, name );
+
+    if ( o )
+    {
+        s = interpreter__draw( c, o );
+
+        if ( !c->quiet )
+        {
+            PRINT( "%s\n", s );
+        }
+
+        if ( HAS_KUICKSHOW )
+        {
+            f = fopen( "/tmp/p2out.dot", "w" );
+            fprintf( f, s );
+            fclose( f );
+            system( "dot -Tpng -o /tmp/p2out.png /tmp/p2out.dot" );
+            system( "kuickshow /tmp/p2out.png" );
+        }
+
+        free( s );
+    }
+
+    return 0;
+}
+
+
 static int
 command_gc( Interpreter *c, Ast *args )
 {
@@ -494,6 +535,7 @@ create_commands()
         goto failure;
 
     if ( add_command( d, "cp",       command_cp,         2, 2,  "<obj> <ns>", "copy an object to the given namespace" )
+      && add_command( d, "draw",     command_draw,       1, 1,  "<obj>", "draw an object as a dot graph" )
       && add_command( d, "gc",       command_gc,         0, 0,  0, "invoke (force) the garbage collector" )
       && add_command( d, "help",     command_help,       0, 0,  0, "display this help info" )
       && add_command( d, "license",  command_license,    0, 0,  0, "display the GPL" )
