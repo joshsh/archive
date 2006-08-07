@@ -2,7 +2,7 @@
 
 \file  Primitive-import.h
 
-\brief  Provies the means to build function primitives.
+\brief  Provides the means to build function primitives.
 
 Used by the generated file p2-import.c.
 

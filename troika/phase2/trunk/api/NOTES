@@ -1,0 +1,68 @@
+
+Ignore everything below this line
+================================================================================
+
+...unless you're me and you're cross-compiling.
+
+
+################################################################################
+# Cross-compiling libxml2
+
+export CC=your compiler
+./configure with proper options
+make
+make install
+
+
+################################################################################
+# Cross-compile Phase2 for ARM.
+
+This yielded an error-free, debuggable ARM phase2 executable:
+1) generate phase2.so using the (crosstool) gcc4 cross-compiler
+2) generate phase2 (with 'main') using (Embedix) gcc2 cross-compiler
+3) put phase2.so in the device's /usr/lib and invoke phase2
+
+
+ARM_PREFIX=/opt/Embedix/tools/
+
+CROSSTOOL=/home/joshs/bin/crosstool-0.42
+CROSSTOOL=/opt/crosstool/crosstool-0.42
+
+ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
+
+# First, cross-compile libxml2 and place the ARM libraries into $ARM_PREFIX/lib
+
+# Necessary when using crosstools binaries.
+PATH=$ARM_PREFIX/bin:$PATH
+
+# Note: rationale behind also specifying --build:
+#     http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_node/autoconf_164.html
+./configure --host=arm-linux --build=i686-pc-linux-gnu --prefix=$ARM_PREFIX
+
+make
+
+# Look in here for the ARM executables and libraries:
+#     src/.libs/
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+%destructor
+
+libtool --mode=execute gdb src/phase2
+
+Qt4/C++
+
+$(LIBOBJS) and $(ALLOCA)
+
+     ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
+
+./configure --host=arm-linux --with-linux=$ARM_PREFIX/include
+
+The linker also needs to be arm-linux-ld not ld.
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+

@@ -1,7 +1,10 @@
 
                                  P H A S E 2
 
-Phase2 is an experimental language API and interpreter which combine ideas from
+Introduction
+================================================================================
+
+Phase2 is an experimental language API and interpreter which combines ideas from
 functional programming and the Semantic Web.  This is the continuation of an
 undergraduate compiler project and is not aimed at any particular user niche.
 Its purpose, beyond the learning experience of building a functional language
@@ -13,14 +16,18 @@ which use triples as their fundamental data structure.  Documentation and code
 samples are forthcoming.  Meanwhile...
 
 
-                           --- Compiling Phase2 ---
+Requirements
+================================================================================
 
-IMPORTANT: Phase2 is written in GNU C and is only compatible with the GNU C
-compiler.  Specifically, it makes liberal use of nested functions.
+* gcc >= ?
+      IMPORTANT: Phase2 is written in GNU C and is only compatible with the GNU
+      C compiler.  Specifically, it makes liberal use of nested functions.
+* libxml2
+      http://xmlsoft.org/
 
-Prerequisites: Phase2 requires libxml2, available here:
 
-    http://xmlsoft.org/
+Compiling Phase2
+================================================================================
 
 The Phase2 package uses autotools and is built in the usual way:
 
@@ -40,7 +47,8 @@ If you don't want to install, you can use ./src/phase2 as the interpreter
 executable.  See ./INSTALL for more details.
 
 
-                        --- Running the interpreter ---
+Running the interpreter
+================================================================================
 
 To invoke the interpeter with no input data set:
 
@@ -58,7 +66,8 @@ Also try:
     $ phase2 --help
 
 
-                    --- Building Phase2 from scratch ---
+Building Phase2 from scratch
+================================================================================
 
 To build Phase2 from scratch you'll need the following tools (in addition to GCC,
 make, and libtool):
@@ -75,76 +84,11 @@ make, and libtool):
 Now ./configure and make as usual.
 
 
-                              --- Bugs ---
+Bugs
+================================================================================
 
-Please report them to parcour@gmail.com.  At this point I have only built
-Phase2 for two different platforms, and welcome any comments on how it behaved
-on other machines.
-
-
-                  --- Ignore everything below this line ---
-
-...unless you're me and you're cross-compiling.
-
-
-################################################################################
-# Cross-compiling libxml2
-
-export CC=your compiler
-./configure with proper options
-make
-make install
-
-
-################################################################################
-# Cross-compile Phase2 for ARM.
-
-This yielded an error-free, debuggable ARM phase2 executable:
-1) generate phase2.so using the (crosstool) gcc4 cross-compiler
-2) generate phase2 (with 'main') using (Embedix) gcc2 cross-compiler
-3) put phase2.so in the device's /usr/lib and invoke phase2
-
-
-ARM_PREFIX=/opt/Embedix/tools/
-
-CROSSTOOL=/home/joshs/bin/crosstool-0.42
-CROSSTOOL=/opt/crosstool/crosstool-0.42
-
-ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
-
-# First, cross-compile libxml2 and place the ARM libraries into $ARM_PREFIX/lib
-
-# Necessary when using crosstools binaries.
-PATH=$ARM_PREFIX/bin:$PATH
-
-# Note: rationale behind also specifying --build:
-#     http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_node/autoconf_164.html
-./configure --host=arm-linux --build=i686-pc-linux-gnu --prefix=$ARM_PREFIX
-
-make
-
-# Look in here for the ARM executables and libraries:
-#     src/.libs/
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
-%destructor
-
-libtool --mode=execute gdb src/phase2
-
-Qt4/C++
-
-$(LIBOBJS) and $(ALLOCA)
-
-     ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
-
-./configure --host=arm-linux --with-linux=$ARM_PREFIX/include
-
-The linker also needs to be arm-linux-ld not ld.
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
+Please report them to parcour@gmail.com or enter them in the bug tracker at:
+    http://sourceforge.net/projects/phase2/
+At this point I have only built Phase2 for two different platforms, and welcome
+any comments on how it behaved on other machines.
 
