@@ -85,10 +85,10 @@ get_line_number( void );
 
 
 /** Output decoration. */
-/* #define COMMAND_OUTPUT_PREFIX "\t>> "    */
+/* #define TOK__COMMAND_OUTPUT_PREFIX "\t>> "    */
 /* #define EXPRESSION_OUTPUT_PREFIX "\t>> " */
 /* #define ERROR_OUTPUT_PREFIX "\t>> "      */
-/* #define COMMAND_OUTPUT_SUFFIX " <<"      */
+/* #define TOK__COMMAND_OUTPUT_SUFFIX " <<"      */
 /* #define EXPRESSION_OUTPUT_SUFFIX " <<"   */
 /* #define ERROR_OUTPUT_SUFFIX " <<"        */
 
@@ -150,9 +150,9 @@ yyerror( Interpreter *c, exit_state *ignored, const char *msg )
     /* Only the first error in a statement is reported. */
     if ( ! *yyerror_msg )
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         PRINT( "yyerror: %s (reported)\n", msg );
-        #endif
+#endif
 
         if ( strlen( msg ) >= ERROR_BUFFER__SIZE )
             strcpy( yyerror_msg, "[parser error message overflows buffer]" );
@@ -165,9 +165,9 @@ yyerror( Interpreter *c, exit_state *ignored, const char *msg )
 
     else
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         PRINT( "yyerror: %s (not reported due to previous error)\n", msg );
-        #endif
+#endif
     }
 }
 
@@ -259,15 +259,17 @@ term2ast( Term *t )
 }
 
 
-%token L_PAREN R_PAREN
-%token L_SQ_BRACKET R_SQ_BRACKET
-%token COMMA L_BRACE R_BRACE
-%token COLON E_O_F L_ASSIGN R_ASSIGN SEMICOLON
+%token TOK__L_PAREN         TOK__R_PAREN
+%token TOK__L_SQ_BRACKET    TOK__R_SQ_BRACKET
+%token TOK__L_BRACE         TOK__R_BRACE
+%token TOK__L_ASSIGN        TOK__R_ASSIGN
+%token TOK__COMMA           TOK__COLON          TOK__SEMICOLON
+%token TOK__EOF
 
-%token <character>  CHARACTER
-%token <integer>    INTEGER
-%token <real>       REAL
-%token <string>     COMMAND_NAME ID STRLIT
+%token <character>  TOK__CHAR
+%token <integer>    TOK__INT
+%token <real>       TOK__REAL
+%token <string>     TOK__COMMAND_NAME   TOK__ID TOK__STRING
 
 %type <bag>         bag bag_head
 %type <name>        name
@@ -295,11 +297,11 @@ term2ast( Term *t )
 
 input:
 
-    statements E_O_F
+    statements TOK__EOF
     {
-        #if DEBUG__PARSER
-        production( "input ::=  statements E_O_F" );
-        #endif
+#if DEBUG__PARSER
+        production( "input ::=  statements TOK__EOF" );
+#endif
 
         if ( *yyerror_msg )
             handle_error( compiler );
@@ -319,15 +321,15 @@ statements:
 
     /* This production precedes input. */
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "statements ::=  [null]" );
-        #endif
+#endif
 
         *return_state = exit_state__parse_failure;
 
-        #if YYDEBUG
+#if YYDEBUG
         yydebug = 1;
-        #endif
+#endif
 
         new_parse( compiler );
 
@@ -336,9 +338,9 @@ statements:
 
     | statements statement
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "statements ::=  statements statement" );
-        #endif
+#endif
 
         if ( *yyerror_msg )
             handle_error( compiler );
@@ -353,11 +355,11 @@ statements:
     }
 
     /* Redundant semicolons are tolerated. */
-    | statements SEMICOLON
+    | statements TOK__SEMICOLON
     {
-        #if DEBUG__PARSER
-        production( "statements ::=  statements SEMICOLON" );
-        #endif
+#if DEBUG__PARSER
+        production( "statements ::=  statements TOK__SEMICOLON" );
+#endif
 
         if ( *yyerror_msg )
             handle_error( compiler );
@@ -369,11 +371,11 @@ statements:
         }
     }
 
-    | statements error SEMICOLON
+    | statements error TOK__SEMICOLON
     {
-        #if DEBUG__PARSER
-        production( "statements ::=  statements error SEMICOLON" );
-        #endif
+#if DEBUG__PARSER
+        production( "statements ::=  statements error TOK__SEMICOLON" );
+#endif
 
         if ( *yyerror_msg )
             handle_error( compiler );
@@ -391,11 +393,11 @@ statements:
 statement:
 
     /* Wait for the semicolon before executing a command. */
-    command SEMICOLON
+    command TOK__SEMICOLON
     {
-        #if DEBUG__PARSER
-        production( "statement ::=  command SEMICOLON" );
-        #endif
+#if DEBUG__PARSER
+        production( "statement ::=  command TOK__SEMICOLON" );
+#endif
 
         $$ = 0;
 
@@ -409,11 +411,11 @@ statement:
     }
 
     /* Wait for the semicolon before evaluating an expression. */
-    | expression SEMICOLON
+    | expression TOK__SEMICOLON
     {
-        #if DEBUG__PARSER
-        production( "statement ::=  expression SEMICOLON" );
-        #endif
+#if DEBUG__PARSER
+        production( "statement ::=  expression TOK__SEMICOLON" );
+#endif
 
         $$ = 0;
 
@@ -432,18 +434,18 @@ command:
     /* Command with no command_args. */
     command_name
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "command ::=  command_name" );
-        #endif
+#endif
 
         $$ = new_statement( 0, $1, 0 );
     }
 
     | command_name error
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "command ::=  command_name error" );
-        #endif
+#endif
 
         if ( $1 )
             free( $1 );
@@ -456,9 +458,9 @@ command:
     /* Command with command_args. */
     | command_name command_args
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "command ::=  command_name command_args" );
-        #endif
+#endif
 
         if ( $2 )
             $$ = new_statement( 0, $1, ast__term( $2 ) );
@@ -466,9 +468,9 @@ command:
 
     | command_name command_args error
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "command ::=  command_name command_args error" );
-        #endif
+#endif
 
         if ( $1 )
             free( $1 );
@@ -482,15 +484,15 @@ command:
     };
 
 
-/* Trivial rule prevents memory leaks when non-grammatical COMMAND_NAME is
+/* Trivial rule prevents memory leaks when non-grammatical TOK__COMMAND_NAME is
    matched by the lexer. */
 command_name:
 
-    COMMAND_NAME
+    TOK__COMMAND_NAME
     {
-        #if DEBUG__PARSER
-        production( "command_name ::=  COMMAND_NAME" );
-        #endif
+#if DEBUG__PARSER
+        production( "command_name ::=  TOK__COMMAND_NAME" );
+#endif
 
         $$ = STRDUP( $1 );
     };
@@ -500,9 +502,9 @@ command_args:
 
     name
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "command_args ::=  name" );
-        #endif
+#endif
 
         /* Create a singleton term containing one argument. */
         $$ = term__new( ast__name( $1 ), 1 );
@@ -510,9 +512,9 @@ command_args:
 
     | command_args name
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "command_args ::=  command_args name" );
-        #endif
+#endif
 
         /* Concatenate the command command_args. */
         if ( $1 )
@@ -534,9 +536,9 @@ expression:
     /* Anonymous expression. */
     term
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "expression ::=  term" );
-        #endif
+#endif
 
         if ( $1 )
             $$ = new_statement( 0, 0, term2ast( $1 ) );
@@ -546,9 +548,9 @@ expression:
 
     | term error
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "expression ::=  term error" );
-        #endif
+#endif
 
         if ( $1 )
             ast__delete( ast__term( $1 ) );
@@ -559,11 +561,11 @@ expression:
     }
 
     /* Left assignment from expression. */
-    | name L_ASSIGN term
+    | name TOK__L_ASSIGN term
     {
-        #if DEBUG__PARSER
-        production( "expression ::=  name L_ASSIGN term" );
-        #endif
+#if DEBUG__PARSER
+        production( "expression ::=  name TOK__L_ASSIGN term" );
+#endif
 
         if ( $1 && $3 )
             $$ = new_statement( $1, 0, term2ast( $3 ) );
@@ -580,11 +582,11 @@ expression:
         }
     }
 
-    | name L_ASSIGN error
+    | name TOK__L_ASSIGN error
     {
-        #if DEBUG__PARSER
-        production( "expression ::=  name L_ASSIGN error" );
-        #endif
+#if DEBUG__PARSER
+        production( "expression ::=  name TOK__L_ASSIGN error" );
+#endif
 
         $$ = 0;
 
@@ -594,11 +596,11 @@ expression:
         ERROK;
     }
 
-    | name L_ASSIGN term error
+    | name TOK__L_ASSIGN term error
     {
-        #if DEBUG__PARSER
-        production( "expression ::=  name L_ASSIGN term error" );
-        #endif
+#if DEBUG__PARSER
+        production( "expression ::=  name TOK__L_ASSIGN term error" );
+#endif
 
         $$ = 0;
 
@@ -612,11 +614,11 @@ expression:
     }
 
     /* Right assignment from expression. */
-    | term R_ASSIGN name
+    | term TOK__R_ASSIGN name
     {
-        #if DEBUG__PARSER
-        production( "expression ::=  term R_ASSIGN name" );
-        #endif
+#if DEBUG__PARSER
+        production( "expression ::=  term TOK__R_ASSIGN name" );
+#endif
 
         if ( $1 && $3 )
                                 /* !      */
@@ -635,11 +637,11 @@ expression:
     }
 
     /* Named expression. */
-    | term R_ASSIGN name error
+    | term TOK__R_ASSIGN name error
     {
-        #if DEBUG__PARSER
-        production( "expression ::=  term R_ASSIGN name error" );
-        #endif
+#if DEBUG__PARSER
+        production( "expression ::=  term TOK__R_ASSIGN name error" );
+#endif
 
         $$ = 0;
 
@@ -652,11 +654,11 @@ expression:
         ERROK;
     }
 
-    | term R_ASSIGN error
+    | term TOK__R_ASSIGN error
     {
-        #if DEBUG__PARSER
-        production( "expression ::=  term R_ASSIGN error" );
-        #endif
+#if DEBUG__PARSER
+        production( "expression ::=  term TOK__R_ASSIGN error" );
+#endif
 
         $$ = 0;
 
@@ -671,18 +673,18 @@ term:
 
     subterm
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "term ::=  subterm" );
-        #endif
+#endif
 
         $$ = $1;
     }
 
     | term subterm
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "term ::=  term subterm" );
-        #endif
+#endif
 
         if ( $1 && $2 )
             /* Combine the terms using a left-associative merge. */
@@ -704,9 +706,9 @@ subterm:
 
     term_item
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "subterm ::=  term_item" );
-        #endif
+#endif
 
         if ( $1 )
             $$ = term__new( $1, 0 );
@@ -715,11 +717,11 @@ subterm:
             $$ = 0;
     }
 
-    | L_PAREN term R_PAREN
+    | TOK__L_PAREN term TOK__R_PAREN
     {
-        #if DEBUG__PARSER
-        production( "subterm ::=  L_PAREN term R_PAREN" );
-        #endif
+#if DEBUG__PARSER
+        production( "subterm ::=  TOK__L_PAREN term TOK__R_PAREN" );
+#endif
 
         if ( $2 )
             /* "Remove the parentheses" from the term. */
@@ -729,22 +731,22 @@ subterm:
             $$ = 0;
     }
 
-    | L_PAREN error
+    | TOK__L_PAREN error
     {
-        #if DEBUG__PARSER
-        production( "subterm ::=  L_PAREN error" );
-        #endif
+#if DEBUG__PARSER
+        production( "subterm ::=  TOK__L_PAREN error" );
+#endif
 
         $$ = 0;
 
         ERROK;
     }
 
-    | L_PAREN term error
+    | TOK__L_PAREN term error
     {
-        #if DEBUG__PARSER
-        production( "subterm ::=  L_PAREN term error" );
-        #endif
+#if DEBUG__PARSER
+        production( "subterm ::=  TOK__L_PAREN term error" );
+#endif
 
         $$ = 0;
 
@@ -757,56 +759,56 @@ subterm:
 
 term_item:
 
-    L_PAREN R_PAREN
+    TOK__L_PAREN TOK__R_PAREN
     {
-        #if DEBUG__PARSER
-        production( "term_item ::=  L_PAREN R_PAREN" );
-        #endif
+#if DEBUG__PARSER
+        production( "term_item ::=  TOK__L_PAREN TOK__R_PAREN" );
+#endif
 
         $$ = ast__null();
     }
 
-    | CHARACTER
+    | TOK__CHAR
     {
-        #if DEBUG__PARSER
-        production( "term_item ::=  CHARACTER" );
-        #endif
+#if DEBUG__PARSER
+        production( "term_item ::=  TOK__CHAR" );
+#endif
 
         $$ = ast__char( $1 );
     }
 
-    | REAL
+    | TOK__REAL
     {
-        #if DEBUG__PARSER
-        production( "term_item ::=  REAL" );
-        #endif
+#if DEBUG__PARSER
+        production( "term_item ::=  TOK__REAL" );
+#endif
 
         $$ = ast__float( $1 );
     }
 
-    | INTEGER
+    | TOK__INT
     {
-        #if DEBUG__PARSER
-        production( "term_item ::=  INTEGER" );
-        #endif
+#if DEBUG__PARSER
+        production( "term_item ::=  TOK__INT" );
+#endif
 
         $$ = ast__int( $1 );
     }
 
-    | STRLIT
+    | TOK__STRING
     {
-        #if DEBUG__PARSER
-        production( "term_item ::=  STRLIT" );
-        #endif
+#if DEBUG__PARSER
+        production( "term_item ::=  TOK__STRING" );
+#endif
 
         $$ = ast__string( STRDUP( $1 ) );
     }
 
     | bag
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "term_item ::=  bag" );
-        #endif
+#endif
 
         if ( $1 )
             $$ = ast__bag( $1 );
@@ -817,9 +819,9 @@ term_item:
 
     | name
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "term_item ::=  name" );
-        #endif
+#endif
 
         if ( $1 )
             $$ = ast__name( $1 );
@@ -830,9 +832,9 @@ term_item:
 
     | bracketed_term
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "term_item ::=  bracketed_term" );
-        #endif
+#endif
 
         $$ = $1;
     };
@@ -840,11 +842,11 @@ term_item:
 
 bracketed_term:
 
-    L_SQ_BRACKET term R_SQ_BRACKET
+    TOK__L_SQ_BRACKET term TOK__R_SQ_BRACKET
     {
-        #if DEBUG__PARSER
-        production( "bracketed_term ::=  L_SQ_BRACKET term R_SQ_BRACKET" );
-        #endif
+#if DEBUG__PARSER
+        production( "bracketed_term ::=  TOK__L_SQ_BRACKET term TOK__R_SQ_BRACKET" );
+#endif
 
         if ( $2 )
             $$ = ( void* ) ast__term( $2 );
@@ -853,22 +855,22 @@ bracketed_term:
             $$ = 0;
     }
 
-    | L_SQ_BRACKET error
+    | TOK__L_SQ_BRACKET error
     {
-        #if DEBUG__PARSER
-        production( "bracketed_term ::=  L_SQ_BRACKET error" );
-        #endif
+#if DEBUG__PARSER
+        production( "bracketed_term ::=  TOK__L_SQ_BRACKET error" );
+#endif
 
         $$ = 0;
 
         ERROK;
     }
 
-    | L_SQ_BRACKET term error
+    | TOK__L_SQ_BRACKET term error
     {
-        #if DEBUG__PARSER
-        production( "bracketed_term ::=  L_SQ_BRACKET term error" );
-        #endif
+#if DEBUG__PARSER
+        production( "bracketed_term ::=  TOK__L_SQ_BRACKET term error" );
+#endif
 
         $$ = 0;
 
@@ -881,11 +883,11 @@ bracketed_term:
 
 bag:
 
-    bag_head R_BRACE
+    bag_head TOK__R_BRACE
     {
-        #if DEBUG__PARSER
-        production( "bag ::=  bag_head R_BRACE" );
-        #endif
+#if DEBUG__PARSER
+        production( "bag ::=  bag_head TOK__R_BRACE" );
+#endif
 
         if ( $1 )
             $$ = $1;
@@ -896,9 +898,9 @@ bag:
 
     | bag_head error
     {
-        #if DEBUG__PARSER
+#if DEBUG__PARSER
         production( "bag ::=  bag_head error" );
-        #endif
+#endif
 
         $$ = 0;
 
@@ -911,11 +913,11 @@ bag:
 
 bag_head:
 
-    L_BRACE term
+    TOK__L_BRACE term
     {
-        #if DEBUG__PARSER
-        production( "bag_head ::=  L_BRACE term" );
-        #endif
+#if DEBUG__PARSER
+        production( "bag_head ::=  TOK__L_BRACE term" );
+#endif
 
         if ( $2 )
         {
@@ -927,22 +929,22 @@ bag_head:
             $$ = 0;
     }
 
-    | L_BRACE error
+    | TOK__L_BRACE error
     {
-        #if DEBUG__PARSER
-        production( "bag_head ::=  L_BRACE error" );
-        #endif
+#if DEBUG__PARSER
+        production( "bag_head ::=  TOK__L_BRACE error" );
+#endif
 
         $$ = 0;
 
         ERROK;
     }
 
-    | bag_head COMMA term
+    | bag_head TOK__COMMA term
     {
-        #if DEBUG__PARSER
-        production( "bag_head ::=  bag_head COMMA term" );
-        #endif
+#if DEBUG__PARSER
+        production( "bag_head ::=  bag_head TOK__COMMA term" );
+#endif
 
         if ( $1 && $3 )
         {
@@ -961,11 +963,11 @@ bag_head:
         }
     }
 
-    | bag_head COMMA error
+    | bag_head TOK__COMMA error
     {
-        #if DEBUG__PARSER
-        production( "bag_head ::=  bag_head COMMA error" );
-        #endif
+#if DEBUG__PARSER
+        production( "bag_head ::=  bag_head TOK__COMMA error" );
+#endif
 
         $$ = 0;
 
@@ -980,9 +982,9 @@ name:
 
     id
     {
-        #if DEBUG__PARSER
-        production( "name ::=  ID" );
-        #endif
+#if DEBUG__PARSER
+        production( "name ::=  TOK__ID" );
+#endif
 
         if ( $1 )
         {
@@ -994,11 +996,11 @@ name:
             $$ = 0;
     }
 
-    | name COLON id
+    | name TOK__COLON id
     {
-        #if DEBUG__PARSER
-        production( "name ::=  name COLON ID" );
-        #endif
+#if DEBUG__PARSER
+        production( "name ::=  name TOK__COLON TOK__ID" );
+#endif
 
         if ( $1 && $3 )
         {
@@ -1018,11 +1020,11 @@ name:
         }
     }
 
-    | name COLON error
+    | name TOK__COLON error
     {
-        #if DEBUG__PARSER
-        production( "name ::=  name COLON error" );
-        #endif
+#if DEBUG__PARSER
+        production( "name ::=  name TOK__COLON error" );
+#endif
 
         $$ = 0;
         ast__delete( ast__name( $1 ) );
@@ -1031,15 +1033,15 @@ name:
     };
 
 
-/* Trivial rule prevents memory leaks when non-grammatical ID is matched by
+/* Trivial rule prevents memory leaks when non-grammatical TOK__ID is matched by
    the lexer. */
 id:
 
-    ID
+    TOK__ID
     {
-        #if DEBUG__PARSER
-        production( "id ::=  ID" );
-        #endif
+#if DEBUG__PARSER
+        production( "id ::=  TOK__ID" );
+#endif
 
         $$ = STRDUP( $1 );
     };
@@ -1055,9 +1057,9 @@ handle_command( Interpreter *c, char *name, Ast *args )
     {
         PRINT( "\n" );
 
-        #ifdef COMMAND_OUTPUT_PREFIX
-        PRINT( COMMAND_OUTPUT_PREFIX );
-        #endif
+#ifdef TOK__COMMAND_OUTPUT_PREFIX
+        PRINT( TOK__COMMAND_OUTPUT_PREFIX );
+#endif
     }
 
     /* Note: ownership of name and arguments is conferred to
@@ -1066,9 +1068,9 @@ handle_command( Interpreter *c, char *name, Ast *args )
 
     if ( !interpreter__quiet( c ) )
     {
-        #ifdef COMMAND_OUTPUT_SUFFIX
-        PRINT( COMMAND_OUTPUT_SUFFIX );
-        #endif
+#ifdef TOK__COMMAND_OUTPUT_SUFFIX
+        PRINT( TOK__COMMAND_OUTPUT_SUFFIX );
+#endif
     }
 }
 
@@ -1080,9 +1082,9 @@ handle_expression( Interpreter *c, Name *name, Ast *expr )
     {
         PRINT( "\n" );
 
-        #ifdef EXPRESSION_OUTPUT_PREFIX
+#ifdef EXPRESSION_OUTPUT_PREFIX
         PRINT( EXPRESSION_OUTPUT_PREFIX );
-        #endif
+#endif
     }
 
     /* Note: ownership of name and expression is conferred to
@@ -1091,9 +1093,9 @@ handle_expression( Interpreter *c, Name *name, Ast *expr )
 
     if ( !interpreter__quiet( c ) )
     {
-        #ifdef EXPRESSION_OUTPUT_SUFFIX
+#ifdef EXPRESSION_OUTPUT_SUFFIX
         PRINT( EXPRESSION_OUTPUT_SUFFIX );
-        #endif
+#endif
     }
 }
 
@@ -1107,9 +1109,9 @@ handle_error( Interpreter *c )
     {
         PRINT( "\n" );
 
-        #ifdef ERROR_OUTPUT_PREFIX
+#ifdef ERROR_OUTPUT_PREFIX
         PRINT( ERROR_OUTPUT_PREFIX );
-        #endif
+#endif
     }
 
     sprintf( error_msg, "line %d, column %d: %s",
@@ -1120,9 +1122,9 @@ handle_error( Interpreter *c )
 
     if ( !interpreter__quiet( c ) )
     {
-        #ifdef ERROR_OUTPUT_SUFFIX
+#ifdef ERROR_OUTPUT_SUFFIX
         PRINT( ERROR_OUTPUT_SUFFIX );
-        #endif
+#endif
     }
 }
 

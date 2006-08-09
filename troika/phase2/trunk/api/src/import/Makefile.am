@@ -8,9 +8,9 @@ OBJ_OUT = $(OUT)/obj
 
 BUILT_SOURCES = $(OUT)/p2-stubs.c $(CXX_IN)/c89/operators.h
 
-## These are included in the distribution package for completeness, but are not
-## required in order to build phase2 from it.
-EXTRA_DIST = p2-stubs.xslt p2-import.cfg src/c89/operators.h.templ
+## Note: not all of these files are necessary to build phase2 from the
+## distribution package, but all of them are necessary to build it from scratch.
+EXTRA_DIST = $(BUILT_SOURCES) p2-stubs.xslt p2-import.cfg src/c89/operators.h.templ
 
 ## ~
 INCLUDES := $(INCLUDES) -I../../src

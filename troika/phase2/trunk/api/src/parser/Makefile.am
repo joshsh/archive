@@ -3,9 +3,11 @@
 noinst_PROGRAMS = parser-test
 noinst_LTLIBRARIES = libp2parser.la
 
-LIBS := $(LIBS) -lncurses
+##LIBS := $(LIBS) -lncurses
 
 BUILT_SOURCES = parser.h
+
+EXTRA_DIST = $(BUILT_SOURCES) README
 
 AM_YFLAGS = -d
 AM_LFLAGS = --header=header.h \
@@ -14,8 +16,6 @@ AM_LFLAGS = --header=header.h \
 libp2parser_la_SOURCES = \
 	lexer.l		\
 	parser.y
-
-EXTRA_DIST = README
 
 
 ## Command-line test #######################################################

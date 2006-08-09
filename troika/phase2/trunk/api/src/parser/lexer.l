@@ -14,7 +14,7 @@ Comments are delimited by "(:" and ":)", and may be nested to any level.
 String literals are delimited by quote characters, and use the escape
 sequences {\"} for the quote character and {\\} for the backslash, e.g.
 
-    system_call "echo \"Hello World!\"";
+    system "echo \"Hello World!\"";
 
 \note  White space is relevant in Phase2 expressions.  Identifiers must be
 separated either by white space or by appropriate syntax tokens, e.g.
@@ -269,78 +269,78 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     ":"  {  /* Namespace delimiter. */
-        TOKEN( COLON );
+        TOKEN( TOK__COLON );
     }
 
     ";"  {  /* Marks the end of an expression or command. */
-        TOKEN( SEMICOLON );
+        TOKEN( TOK__SEMICOLON );
     }
 
     ":="  {  /* Leading assignment operator. */
-        TOKEN( L_ASSIGN );
+        TOKEN( TOK__L_ASSIGN );
     }
 
     "=:"  {  /* Trailing assignment operator. */
-        TOKEN( R_ASSIGN );
+        TOKEN( TOK__R_ASSIGN );
     }
 
     "("  {  /* Marks the beginning of a sub-term. */
-        TOKEN( L_PAREN );
+        TOKEN( TOK__L_PAREN );
     }
 
     ")"  {  /* Marks the end of a sub-term. */
-        TOKEN( R_PAREN );
+        TOKEN( TOK__R_PAREN );
     }
 
     "["  {  /* Marks the beginning of a general sequence. */
-        TOKEN( L_SQ_BRACKET );
+        TOKEN( TOK__L_SQ_BRACKET );
     }
 
     "]"  {  /* Marks the beginning of a general sequence. */
-        TOKEN( R_SQ_BRACKET );
+        TOKEN( TOK__R_SQ_BRACKET );
     }
 
     "{"  {  /* Marks the beginning of a bag. */
-        TOKEN( L_BRACE );
+        TOKEN( TOK__L_BRACE );
     }
 
     ","  {  /* Separates elements in a bag. */
-        TOKEN( COMMA );
+        TOKEN( TOK__COMMA );
     }
 
     "}"  {  /* Marks the end of a bag. */
-        TOKEN( R_BRACE );
+        TOKEN( TOK__R_BRACE );
     }
 
     _[0-9A-Za-z]+  {
         yylval.string = yytext + 1;
 
-        TOKEN( COMMAND_NAME );
+        TOKEN( TOK__COMMAND_NAME );
     }
 
     '[^']'  {  /* Matches an ASCII character in single quotes. */
         /* Note: no escaped characters yet. */
         yylval.character = *( ++yytext );
-        TOKEN( CHARACTER );
+        TOKEN( TOK__CHAR );
     }
 
-    -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a REAL if it
+    -?(0|([1-9][0-9]*))"."[0-9]+  {  /* A number is interpreted as a TOK__REAL if it
                                     contains a decimal point (as in Forth). */
         /* Note: atof is error-safe (it fails with a return value of 0.0). */
         yylval.real = atof( yytext );
-        TOKEN( REAL );
+        TOKEN( TOK__REAL );
     }
 
     0|(-?[1-9][0-9]*)  {
         /* Note: atoi is error-safe (it fails with a return value of 0). */
         yylval.integer = atoi( yytext );
-        TOKEN( INTEGER );
+        TOKEN( TOK__INT );
     }
 
     {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
         yylval.string = extract_id( yytext );
 
-        TOKEN( ID );
+        TOKEN( TOK__ID );
     }
 
     \n  {  /* Ignore newlines, except for formatting. */
@@ -360,7 +360,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     <<EOF>>  {
-        TOKEN( E_O_F );
+        TOKEN( TOK__EOF );
     }
 
     .  {  /* Ignore unrecognized characters. */
@@ -399,7 +399,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         buffer_pos = string_buffer;
 
         BEGIN( INITIAL );
-        TOKEN( STRLIT );
+        TOKEN( TOK__STRING );
     }
 }
 

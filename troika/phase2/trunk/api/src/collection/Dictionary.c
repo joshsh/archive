@@ -105,26 +105,31 @@ dictionary__delete( Dictionary *d )
 
 
 void *
-dictionary__add( Dictionary *d, char *key, void *target )
+dictionary__add( Dictionary *d, const char *key, void *target )
 {
     Entry *old, new;
 
     if ( DEBUG__SAFE && ( !d || !key || !target ) )
         abort();
 
-    new.key = key;
+    new.key = STRDUP( key );
 
     old = hash_table__lookup( d, &new );
 
     /* Entry exists --> just re-target it. */
     if ( old )
+    {
         old->target = target;
+        free( new.key );
+    }
 
     /* Create a new entry. */
     else
     {
         new.head = 0x1;
+/*
         new.key = STRDUP( key );
+*/
         new.target = target;
 
         hash_table__add( d, &new );
@@ -136,13 +141,15 @@ dictionary__add( Dictionary *d, char *key, void *target )
 
 
 void *
-dictionary__lookup( Dictionary *d, char *key )
+dictionary__lookup( Dictionary *d, const char *key )
 {
     Entry *e, e2;
 
     if ( DEBUG__SAFE && ( !d || !key ) )
         abort();
 
+    /* The compiler will complain about this, but hash_table__lookup is const
+       in its second argument, so this is a harmless kludge. */
     e2.key = key;
 
     e = hash_table__lookup( d, &e2 );

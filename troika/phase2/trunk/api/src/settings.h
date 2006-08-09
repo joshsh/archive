@@ -36,8 +36,23 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define NEW(type)   malloc(sizeof (type))
 
 
+/******************************************************************************/
+
+
 #define NOPROPS                                 0
 #define NOFLAGS                                 0
+
+
+#ifndef TRUE
+#   define TRUE                                 1
+#endif
+
+#ifndef FALSE
+#   define FALSE                                0
+#endif
+
+
+/* Define required macros (if not already defined via autotools) **************/
 
 
 #ifndef PACKAGE_NAME
@@ -52,17 +67,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #   define PACKAGE_BUGREPORT                    "parcour@gmail.com"
 #endif
 
-
-#ifndef TRUE
-#   define TRUE                                 1
+#ifndef HAVE_LIBNCURSES
+#   define HAVE_LIBNCURSES                      0
 #endif
 
-#ifndef FALSE
-#   define FALSE                                0
+#ifndef HAVE_LIBREADLINE
+#   define HAVE_LIBREADLINE                     0
 #endif
 
 
 /* Type names *****************************************************************/
+
 
 #define NAMEOF_0(x)                             #x
 #define NAMEOF(x)                               NAMEOF_0(x)
@@ -70,11 +85,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define ANY                                     any_type
 #define APPLY                                   Apply
 #define BAG                                     Bag
-#define CHAR                                    char
+#define CHARACTER                               char
 #define COMBINATOR                              Combinator
 #define DOUBLE                                  double
 #define INDIRECTION                             Indirection
-#define INT                                     int
+#define INTEGER                                 int
 #define NAMESPACE                               Namespace
 #define PRIMITIVE                               Primitive
 #define SET                                     Set

@@ -452,7 +452,8 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 void
 memory_manager__collect( Memory_Manager *m, boolean force, boolean echo )
 {
-    unsigned int size;
+    /* Avoid "used uninitialized" warning. */
+    unsigned int size = 0;
 
     clock_t t;
     double elapsed_time;

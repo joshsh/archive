@@ -3,6 +3,8 @@
 SUBDIRS = import parser collection xml
 
 BUILT_SOURCES = revision.h
+EXTRA_DIST = $(BUILT_SOURCES)
+
 noinst_HEADERS = revision.h		\
 	settings.h			\
 	compiler/Apply.h		\
@@ -24,8 +26,6 @@ bin_PROGRAMS = phase2
 ##   libphase2.so.0
 ##   libphase2.so.0.0.0
 lib_LTLIBRARIES = libphase2.la
-
-LIBS := $(LIBS) -lxml2 -lncurses ##`xml2-config --libs`
 
 
 compiler_src = \

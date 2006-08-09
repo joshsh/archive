@@ -53,11 +53,11 @@ dictionary__delete( Dictionary *d );
 
 /** Adds a key/target pair to the dictionary. */
 extern void *
-dictionary__add( Dictionary *d, char *key, void *target );
+dictionary__add( Dictionary *d, const char *key, void *target );
 
 /** \return  the target value bound to the given key by the dictionary */
 extern void *
-dictionary__lookup( Dictionary *d, char *key );
+dictionary__lookup( Dictionary *d, const char *key );
 
 /** \return  the key (if any) which maps to the given target in the
     dictionary

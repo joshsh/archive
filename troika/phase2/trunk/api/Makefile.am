@@ -7,8 +7,7 @@ if DEBUG
 DEBUG_FLAGS = -g -p
 endif
 
-export INCLUDES = -I$(PWD)/include/phase2
-export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS)
+export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS) -I$(PWD)/include/phase2
 ##	-fpic
 ##	-pedantic
 ##	 -Werror \

@@ -23,13 +23,9 @@ Requirements
       IMPORTANT: Phase2 is written in GNU C and is only compatible with the GNU
       C compiler.  Specifically, it makes liberal use of nested functions.
 * GNU make or equivalent
+      Tested with versions 3.80 and 3.81beta4
 * libtool
-* libxml2
-      http://xmlsoft.org/
-
-* ncurses
-* doxygen
-* xsltproc
+* libxml2 -- http://xmlsoft.org/
 
 
 Compiling Phase2
@@ -75,14 +71,15 @@ Also try:
 Building Phase2 from scratch
 ================================================================================
 
-To build Phase2 from scratch you'll need the following tools (in addition to GCC,
-make, and libtool):
+To build Phase2 from scratch you'll need the following additional tools:
 
-    yacc or equivalent -- http://www.gnu.org/software/bison/
-    lex or equivalent -- http://www.gnu.org/software/flex/
-    dot -- http://www.graphviz.org/
-    doxygen -- http://www.doxygen.org/
-    xsltproc -- http://xmlsoft.org/XSLT/
+* GNU autoconf (tested with version 2.59)
+* GNU automake (tested with version 1.9.5. Version 1.4-p6 is known to fail)
+* yacc or equivalent -- http://www.gnu.org/software/bison/
+* lex or equivalent -- http://www.gnu.org/software/flex/
+* dot -- http://www.graphviz.org/
+* doxygen -- http://www.doxygen.org/
+* xsltproc -- http://xmlsoft.org/XSLT/
 
     $ ./cleanup
     $ ./bootstrap

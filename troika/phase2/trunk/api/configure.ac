@@ -14,8 +14,21 @@ AC_PROG_LIBTOOL
 dnl The maintainer needs xsltproc, but the user doesn't...
 dnl AC_PATH_PROG(XSLTPROC, xsltproc, no)
 dnl if test "$XSLTPROC" = "no"; then
-dnl    AC_MSG_ERROR([You need xsltproc to build Phase2 from scratch])
+dnl     AC_MSG_ERROR([You need xsltproc to build Phase2 from scratch])
 dnl fi
+
+dnl Note: libxml 1.x is missing a few symbols needed by Phase2's XML wrapper,
+dnl so we really do need libxml-2.0.
+PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
+CFLAGS="$CFLAGS $LIBXML2_CFLAGS"
+LDFLAGS="$LDFLAGS $LIBXML2_LIBS"
+
+AC_CHECK_LIB([ncurses], [tgetnum],,
+    AC_MSG_WARN([ncurses not found. The interpreter will be compiled without ncurses support.]))
+
+AC_CHECK_LIB([readline], [readline],,
+    AC_MSG_WARN([readline not found. The interpreter will be compiled without readline support.]),
+    ["-lncurses"])
 
 AC_ARG_ENABLE(debug,
 [  --enable-debug    Turn on debugging],
