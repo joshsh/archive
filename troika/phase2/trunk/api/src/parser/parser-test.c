@@ -158,6 +158,13 @@ interpreter__show_line_numbers( Interpreter *c )
 }
 
 
+void
+interpreter__add_to_history( const char *s )
+{
+    /* TODO */
+}
+
+
 /******************************************************************************/
 
 

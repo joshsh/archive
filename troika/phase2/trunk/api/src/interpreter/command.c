@@ -248,8 +248,35 @@ Example:\n\
   circumference 10.0 =: result;\n\
   floatmath;\n\
   here;\n\
-  root;\n" );
+  root;\n\
+  _saveas foo.p2;\n" );
 
+    }
+
+    return 0;
+}
+
+
+static int
+command_history( Interpreter *c, Ast *args )
+{
+    char *path;
+    Name *name = get_arg( args, 0 );
+
+    if ( name )
+    {
+        path = array__peek( name );
+
+        if ( !c->quiet )
+            PRINT( "Saving history to \"%s\".\n", path );
+
+        interpreter__write_history( path );
+    }
+
+    else
+    {
+        if ( !c->quiet )
+            interpreter__print_history();
     }
 
     return 0;
@@ -546,7 +573,11 @@ create_commands()
       && add_command( d, "rm",       command_rm,         1, -1, "<obj>", "remove an object from its parent namespace" )
       && add_command( d, "saveas",   command_saveas,     1, 1,  "<path>", "save environment to a given file" )
       && add_command( d, "save",     command_save,       0, 0,  0, "save environment to original file" )
-      && add_command( d, "size",     command_size,       0, 0,  0, "the number of reachable objects in the environment" ) )
+      && add_command( d, "size",     command_size,       0, 0,  0, "the number of reachable objects in the environment" )
+#if HAVE_LIBREADLINE
+      && add_command( d, "history",  command_history,    0, 1,  "[path]", "print interpreter history" )
+#endif
+      )
     {
         return d;
     }
@@ -564,11 +595,19 @@ failure:
 
 
 int
-interpreter__evaluate_command( Interpreter *c, char *name, Ast *args )
+interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char *text )
 {
-    int result = 0;
-    int n = count_args( args );
-    Command *com = dictionary__lookup( c->commands, name );
+    int result, n;
+    Command *com;
+
+    if ( DEBUG__SAFE && !c )
+        abort();
+
+    interpreter__add_to_history( text );
+
+    result = 0;
+    n = count_args( args );
+    com = dictionary__lookup( c->commands, name );
 
     if ( !com )
         ERROR( "unknown command: \"%s\"\n", name );

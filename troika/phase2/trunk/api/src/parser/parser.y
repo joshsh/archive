@@ -54,10 +54,10 @@ yylex( void );
 typedef struct Interpreter Interpreter;
 
 extern int
-interpreter__evaluate_command( Interpreter *c, char * /*name*/, Ast * /*args*/ );
+interpreter__evaluate_command( Interpreter *c, char * /*name*/, Ast * /*args*/, const char * /*text*/ );
 
 extern int
-interpreter__evaluate_expression( Interpreter *c, Name * /*name*/, Ast * /*expr*/ );
+interpreter__evaluate_expression( Interpreter *c, Name * /*name*/, Ast * /*expr*/, const char * /*text*/ );
 
 extern int
 interpreter__handle_parse_error( Interpreter *c, char * /*msg*/ );
@@ -118,6 +118,9 @@ static int error_character_number, error_line_number;
 
 /** Buffer for "verbose" error message received by yyerror. */
 static char yyerror_msg[ERROR_BUFFER__SIZE];
+
+extern void
+lexer__clear_buffer();
 
 
 /******************************************************************************/
@@ -1050,6 +1053,8 @@ id:
 %%
 
 
+extern char *lexer_buffer;
+
 static void
 handle_command( Interpreter *c, char *name, Ast *args )
 {
@@ -1064,7 +1069,7 @@ handle_command( Interpreter *c, char *name, Ast *args )
 
     /* Note: ownership of name and arguments is conferred to
        interpreter__evaluate_command. */
-    exit_early = exit_early || interpreter__evaluate_command( c, name, args );
+    exit_early = exit_early || interpreter__evaluate_command( c, name, args, lexer__get_buffer() );
 
     if ( !interpreter__quiet( c ) )
     {
@@ -1072,6 +1077,8 @@ handle_command( Interpreter *c, char *name, Ast *args )
         PRINT( TOK__COMMAND_OUTPUT_SUFFIX );
 #endif
     }
+
+    lexer__clear_buffer();
 }
 
 
@@ -1089,7 +1096,7 @@ handle_expression( Interpreter *c, Name *name, Ast *expr )
 
     /* Note: ownership of name and expression is conferred to
        interpreter__evaluate_expression. */
-    exit_early = exit_early || interpreter__evaluate_expression( c, name, expr );
+    exit_early = exit_early || interpreter__evaluate_expression( c, name, expr, lexer__get_buffer() );
 
     if ( !interpreter__quiet( c ) )
     {
@@ -1097,6 +1104,8 @@ handle_expression( Interpreter *c, Name *name, Ast *expr )
         PRINT( EXPRESSION_OUTPUT_SUFFIX );
 #endif
     }
+
+    lexer__clear_buffer();
 }
 
 
@@ -1126,6 +1135,8 @@ handle_error( Interpreter *c )
         PRINT( ERROR_OUTPUT_SUFFIX );
 #endif
     }
+
+    lexer__clear_buffer();
 }
 
 

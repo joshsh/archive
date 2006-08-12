@@ -28,30 +28,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SETTINGS_H
 
 
-#include <stdlib.h>  /* malloc */
-#include <string.h>  /* strlen, strcpy */
-
-#define STRDUP(x)   strcpy(malloc(1 + strlen(x)), (x))
-#define MALLOC      malloc
-#define NEW(type)   malloc(sizeof (type))
-
-
-/******************************************************************************/
-
-
-#define NOPROPS                                 0
-#define NOFLAGS                                 0
-
-
-#ifndef TRUE
-#   define TRUE                                 1
-#endif
-
-#ifndef FALSE
-#   define FALSE                                0
-#endif
-
-
 /* Define required macros (if not already defined via autotools) **************/
 
 
@@ -73,6 +49,33 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #ifndef HAVE_LIBREADLINE
 #   define HAVE_LIBREADLINE                     0
+#endif
+
+
+/******************************************************************************/
+
+
+#include <stdlib.h>  /* malloc */
+#include <string.h>  /* strlen, strcpy */
+
+#define STRDUP(x)   strcpy(malloc(1 + strlen(x)), (x))
+#define MALLOC      malloc
+#define NEW(type)   malloc(sizeof (type))
+
+
+/******************************************************************************/
+
+
+#define NOPROPS                                 0
+#define NOFLAGS                                 0
+
+
+#ifndef TRUE
+#   define TRUE                                 1
+#endif
+
+#ifndef FALSE
+#   define FALSE                                0
 #endif
 
 

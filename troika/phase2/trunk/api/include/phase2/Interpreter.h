@@ -70,6 +70,20 @@ extern exit_state
 interpreter__parse( Interpreter *c );
 
 
+/** Adds a statement or command to the interpreter's history.  This is only
+    useful if readline support is enabled. */
+extern void
+interpreter__add_to_history( const char *s );
+
+/** Writes interpreter history to standard out. */
+extern void
+interpreter__print_history();
+
+/** Saves interpreter history to a file. */
+extern void
+interpreter__write_history( const char *file );
+
+
 /******************************************************************************/
 
 /** \return  the name of an object in a given namespace, if reachable from that
@@ -112,14 +126,14 @@ interpreter__deserialize( Interpreter *c, char *path );
 /** Interprets and carries out a command (e.g. "_saveas temp.p2;").
     \return  whether to end the current session */
 extern int
-interpreter__evaluate_command( Interpreter *c, char *name, Ast *args );
+interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char *text );
 
 /** Interprets and evaluates an expression in the programming environment.
     \param name  if given, the resulting object will be bound to the working
     namespace by this name
     \return  whether to end the current session */
 extern int
-interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr );
+interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr, const char *text );
 
 /** Prints a parse error.
     \return  whether to end the current session

@@ -68,6 +68,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define INPUT_PREFIX    ">>  "
 
 
+/* FIXME: not thread-safe */
+static char lexer_buffer[ENCODING__BUFFER_SIZE];
+static char *bufptr = lexer_buffer;
+void lexer__clear_buffer()
+{
+    bufptr = lexer_buffer;
+    *bufptr = '\0';
+}
+char *
+lexer__get_buffer()
+{
+    return lexer_buffer;
+}
+
+
 /* Language module dependencies ***********************************************/
 
 typedef struct Interpreter Interpreter;
@@ -93,7 +108,7 @@ boolean pad_newline;
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
-new_parse( Interpreter *c );
+new_parse( Interpreter * /* itp */ );
 
 /** \return  the current line number.  Starts at 1. */
 int
@@ -104,27 +119,16 @@ int
 get_char_number( void );
 
 
-static void
-new_token( int /* length */ );
+static int
+new_token( int /* tok */, char * /* text */, int /* length */, const char * /* name */ );
 
 static void
 new_line( Interpreter *c );
 
-
-/* Debugging output ***********************************************************/
-
-
 /** TOKEN macro handles debugging messages and column count as well as return
     values from rules.  It must be the last statement in a rule action. */
-#if DEBUG__LEXER
-#    define TOKEN( x )  { new_token( yyleng ); \
-                          if ( x ) { \
-                            PRINT( "Matched %s\n", #x ); \
-                            return x; } }
-#else
-#    define TOKEN( x )  { new_token( yyleng ); \
-                          if ( x ) return x; }
-#endif
+#define NEWTOK( x ) new_token( x, yytext, yyleng, #x )
+#define TOKEN( x )  if ( x ) return NEWTOK( x ); else NEWTOK( x );
 
 
 /* Comments *******************************************************************/
@@ -245,7 +249,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 
 
 /** Comments and string literals have their own mini-scanners. */
-%x SC_STRING SC_COMMENT
+%x SC__STRING SC__COMMENT
 
 /*
 %option reentrant
@@ -259,12 +263,12 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 {
     "(:"  {  /* Begins a comment. */
         comment_level++;
-        BEGIN( SC_COMMENT );
+        BEGIN( SC__COMMENT );
         TOKEN( 0 );
     }
 
     ["]  {  /* Begins a string literal. */
-        BEGIN( SC_STRING );
+        BEGIN( SC__STRING );
         TOKEN( 0 );
     }
 
@@ -369,7 +373,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 }
 
 
-<SC_STRING>
+<SC__STRING>
 {
     ([^"\n\t\\]*|\\[^\n\t])  {  /* Body of string literal. */
         append_to_buffer( yytext );
@@ -404,7 +408,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 }
 
 
-<SC_COMMENT>
+<SC__COMMENT>
 {
     "(:"  {  /* Begins a comment within a comment. */
         comment_level++;
@@ -443,14 +447,29 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 %%
 
 
-void new_token( int length )
+int
+new_token( int tok, char * text, int length, const char * name )
 {
+#if DEBUG__LEXER
+    if ( tok )
+        PRINT( "Matched %s\n", name );
+#endif
+
+    sprintf( bufptr, text );
+    bufptr += strlen( bufptr );
+
     last_column_number = column_number;
     column_number += length;
+
+    /* Avoid an 'unused parameter' warning. */
+    text = "bogus";
+
+    return tok;
 }
 
 
-void new_line( Interpreter *c )
+void
+new_line( Interpreter *c )
 {
     line_number++;
     column_number = last_column_number = 0;
@@ -485,6 +504,8 @@ new_parse( Interpreter *c )
     line_number = 0;
     pad_newline = TRUE;
     new_line( c );
+
+    lexer__clear_buffer();
 }
 
 

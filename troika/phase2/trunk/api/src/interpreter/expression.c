@@ -389,7 +389,7 @@ resolve( Ast *ast, Interpreter *c )
 
 
 int
-interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
+interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr, const char *text )
 {
     int ret = 0;
     Ast *a = 0;
@@ -407,6 +407,8 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr )
 
     /* FIXME */
     interpreter = c;
+
+    interpreter__add_to_history( text );
 
     apply__encode = apply_type->encode;
     bag__encode = c->bag_t->encode;

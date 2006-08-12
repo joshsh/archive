@@ -44,6 +44,7 @@ interpreter_src = \
 	interpreter/command.c		\
 	interpreter/error.c		\
 	interpreter/expression.c	\
+	interpreter/history.c		\
 	interpreter/mapping.c		\
 	interpreter/serial.c
 
