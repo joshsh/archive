@@ -27,7 +27,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "license.h"
 
 
-typedef int ( *CommandFunction )( Interpreter *c, Ast *args );
+typedef int ( *CommandFunction )( Interpreter *c, Array *args );
 
 
 typedef struct Command
@@ -42,91 +42,17 @@ typedef struct Command
 } Command;
 
 
-/******************************************************************************/
-
-
-static int
-count_args( Ast *args )
-{
-    Term *term;
-
-    if ( !args )
-        return 0;
-
-    if ( DEBUG__SAFE && args->type != TERM_T )
-        abort();
-
-    term = ( Term* ) args->value;
-
-    return term__length( term );
-}
-
-
-static Name *
-get_arg( Ast *args, unsigned int i )
-{
-    Term *term, *subterm;
-    Ast *a;
-
-    if ( !args )
-    {
-        if ( i == 0 )
-            return 0;
-        else
-        {
-            ERROR( "missing argument" );
-            return 0;
-        }
-    }
-
-    if ( DEBUG__SAFE && args->type != TERM_T )
-        abort();
-
-    term = ( Term* ) args->value;
-
-    if ( i >= term__length( term ) )
-    {
-        ERROR( "missing argument" );
-        a = 0;
-    }
-
-    else
-    {
-        subterm = term__subterm_at( term, i );
-
-        if ( DEBUG__SAFE && term__length( subterm ) > 1 )
-            abort();
-
-        a = term__head( subterm );
-
-        term__delete( subterm );
-    }
-
-    if ( a )
-    {
-        if ( DEBUG__SAFE && a->type != NAME_T )
-            abort();
-
-        else
-            return a->value;
-    }
-
-    else
-        return 0;
-}
-
-
 /* Command functions **********************************************************/
 
 
 static int
-command_cp( Interpreter *c, Ast *args )
+command_cp( Interpreter *c, Array *args )
 {
     Object *o, *o2;
     Name *src, *dest;
 
-    if ( !( src = get_arg( args, 0 ) )
-      || !( dest = get_arg( args, 1 ) ) )
+    if ( !( src = array__get( args, 0 ) )
+      || !( dest = array__get( args, 1 ) ) )
         return 0;
 
     o = interpreter__resolve( c, src );
@@ -157,7 +83,7 @@ command_cp( Interpreter *c, Ast *args )
 #define HAS_KUICKSHOW   1
 
 static int
-command_draw( Interpreter *c, Ast *args )
+command_draw( Interpreter *c, Array *args )
 {
     Object *o;
     char *s;
@@ -165,7 +91,7 @@ command_draw( Interpreter *c, Ast *args )
 
     FILE *f;
 
-    if ( !( name = get_arg( args, 0 ) ) )
+    if ( !( name = array__get( args, 0 ) ) )
         return 0;
 
     o = interpreter__resolve( c, name );
@@ -196,7 +122,7 @@ command_draw( Interpreter *c, Ast *args )
 
 
 static int
-command_gc( Interpreter *c, Ast *args )
+command_gc( Interpreter *c, Array *args )
 {
     args = 0;
 
@@ -207,7 +133,7 @@ command_gc( Interpreter *c, Ast *args )
 
 
 static int
-command_help( Interpreter *c, Ast *args )
+command_help( Interpreter *c, Array *args )
 {
     ACTION helper( char **refp )
     {
@@ -269,10 +195,11 @@ Example:\n\
 
 
 static int
-command_history( Interpreter *c, Ast *args )
+command_history( Interpreter *c, Array *args )
 {
     char *path;
-    Name *name = get_arg( args, 0 );
+    Name *name = array__size( args )
+        ? array__get( args, 0 ) : 0;
 
     if ( name )
     {
@@ -295,7 +222,7 @@ command_history( Interpreter *c, Ast *args )
 
 
 static int
-command_license( Interpreter *c, Ast *args )
+command_license( Interpreter *c, Array *args )
 {
     args = 0;
 
@@ -307,13 +234,13 @@ command_license( Interpreter *c, Ast *args )
 
 
 static int
-command_mv( Interpreter *c, Ast *args )
+command_mv( Interpreter *c, Array *args )
 {
     Object *o, *o2;
     Name *src, *dest;
 
-    if ( !( src = get_arg( args, 0 ) )
-      || !( dest = get_arg( args, 1 ) ) )
+    if ( !( src = array__get( args, 0 ) )
+      || !( dest = array__get( args, 1 ) ) )
         return 0;
 
     o = interpreter__resolve( c, src );
@@ -344,10 +271,11 @@ command_mv( Interpreter *c, Ast *args )
 
 
 static int
-command_new( Interpreter *c, Ast *args )
+command_new( Interpreter *c, Array *args )
 {
     Object *o;
-    Name *name = get_arg( args, 0 );
+    Name *name = array__size( args )
+        ? array__get( args, 0 ) : 0;
 
     if ( !name )
         return 0;
@@ -377,12 +305,12 @@ command_new( Interpreter *c, Ast *args )
 
 
 static int
-command_ns( Interpreter *c, Ast *args )
+command_ns( Interpreter *c, Array *args )
 {
     Object *o;
     Name *name, *fullname;
 
-    if ( !( name = get_arg( args, 0 ) ) )
+    if ( !( name = array__get( args, 0 ) ) )
         return 0;
 
     if ( ( o = interpreter__resolve( c, name ) ) )
@@ -412,7 +340,7 @@ command_ns( Interpreter *c, Ast *args )
 
 
 static int
-command_quit( Interpreter *c, Ast *args )
+command_quit( Interpreter *c, Array *args )
 {
     args = 0;
 
@@ -424,11 +352,11 @@ command_quit( Interpreter *c, Ast *args )
 
 
 static int
-command_rm( Interpreter *c, Ast *args )
+command_rm( Interpreter *c, Array *args )
 {
     Name *name;
 
-    if ( !( name = get_arg( args, 0 ) ) )
+    if ( !( name = array__get( args, 0 ) ) )
         return 0;
 
     if ( interpreter__undefine( c, name ) && !c->quiet )
@@ -439,7 +367,7 @@ command_rm( Interpreter *c, Ast *args )
 
 
 static int
-command_save( Interpreter *c, Ast *args )
+command_save( Interpreter *c, Array *args )
 {
     char *path = c->save_to_path;
 
@@ -462,12 +390,12 @@ command_save( Interpreter *c, Ast *args )
 
 
 static int
-command_saveas( Interpreter *c, Ast *args )
+command_saveas( Interpreter *c, Array *args )
 {
     Name *name;
     char *path;
 
-    if ( !( name = get_arg( args, 0 ) ) )
+    if ( !( name = array__get( args, 0 ) ) )
         return 0;
 
     path = array__peek( name );
@@ -482,7 +410,7 @@ command_saveas( Interpreter *c, Ast *args )
 
 
 static int
-command_size( Interpreter *c, Ast *args )
+command_size( Interpreter *c, Array *args )
 {
     args = 0;
 
@@ -605,19 +533,64 @@ failure:
 /******************************************************************************/
 
 
+/* Kludge to get the arguments as an Array instead of a Term. */
+static Array *
+get_arg_array( Ast *args )
+{
+    Array *a;
+    Term *term, *subterm;
+    int i, n;
+    Ast *arg;
+
+    if ( !args )
+        a = array__new( 0, 0 );
+
+    else
+    {
+        if ( DEBUG__SAFE && args->type != TERM_T )
+            abort();
+
+        term = ( Term* ) args->value;
+        n = term__length( term );
+        a = array__new( n, 0 );
+
+        for ( i = 0; i < n; i++ )
+        {
+            subterm = term__subterm_at( term, i );
+
+            if ( DEBUG__SAFE && term__length( subterm ) > 1 )
+                abort();
+
+            arg = term__head( subterm );
+            if ( DEBUG__SAFE && arg->type != NAME_T )
+                abort();
+            else
+                array__enqueue( a, arg->value );
+
+            term__delete( subterm );
+        }
+    }
+
+    return a;
+}
+
+
 int
 interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char *text )
 {
     int result, n;
     Command *com;
+    Array *a;
 
     if ( DEBUG__SAFE && !c )
         abort();
 
     interpreter__add_to_history( text );
 
+    a = get_arg_array( args );
+    n = array__size( a );
+
     result = 0;
-    n = count_args( args );
     com = dictionary__lookup( c->commands, name );
 
     if ( !com )
@@ -627,7 +600,7 @@ interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char
     else if ( n > com->args_max && com->args_max >= 0 )
         ERROR( "too many arguments to command \"%s\"\n", name );
     else
-        result = com->f( c, args );
+        result = com->f( c, a );
 
     if ( args )
         ast__delete( args );
@@ -635,6 +608,8 @@ interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char
     free( name );
 
     memory_manager__collect( environment__manager( c->env ), FALSE, FALSE );
+
+    array__delete( a );
 
     return result;
 }
