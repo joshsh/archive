@@ -122,6 +122,9 @@ static char yyerror_msg[ERROR_BUFFER__SIZE];
 extern void
 lexer__clear_buffer();
 
+extern char *
+lexer__get_buffer();
+
 
 /******************************************************************************/
 
@@ -1052,8 +1055,6 @@ id:
 
 %%
 
-
-extern char *lexer_buffer;
 
 static void
 handle_command( Interpreter *c, char *name, Ast *args )

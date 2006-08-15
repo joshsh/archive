@@ -68,6 +68,17 @@ get_arg( Ast *args, unsigned int i )
     Term *term, *subterm;
     Ast *a;
 
+    if ( !args )
+    {
+        if ( i == 0 )
+            return 0;
+        else
+        {
+            ERROR( "missing argument" );
+            return 0;
+        }
+    }
+
     if ( DEBUG__SAFE && args->type != TERM_T )
         abort();
 
