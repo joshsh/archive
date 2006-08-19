@@ -2,7 +2,7 @@
 
 /**
 
-\file  parser.l
+\file  lexer.l
 
 \brief  Flex input file for Phase2's command line interpreter.
 
@@ -58,6 +58,54 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define YY_DECL int yylex( YYSTYPE *yylval, YYLTYPE *yylloc)
 */
 
+
+
+
+/*
+#ifndef YY_INPUT
+#define YY_INPUT(buf,result,max_size) \
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
+		{ \
+		int c = '*'; \
+		size_t n; \
+		for ( n = 0; n < max_size && \
+			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
+{\
+putchar('\'');\
+			buf[n] = (char) c; \
+}\
+putchar('.');\
+		if ( c == '\n' ) \
+			buf[n++] = (char) c; \
+		if ( c == EOF ){ \
+            putchar('!');\
+            if ( ferror( yyin ) ) \
+			     YY_FATAL_ERROR( "input in flex scanner failed" ); \
+        } \
+		result = n; \
+		} \
+	else \
+		{ \
+		errno=0; \
+		while ( (result = fread(buf, 1, max_size, yyin))==0 && ferror(yyin)) \
+			{ \
+			if( errno != EINTR) \
+				{ \
+				YY_FATAL_ERROR( "input in flex scanner failed" ); \
+				break; \
+				} \
+			errno=0; \
+			clearerr(yyin); \
+			} \
+		}\
+\
+
+#endif
+*/
+
+
+
+
 #include "parser.h"
 #include <common.h>
 #include "../settings.h"
@@ -71,7 +119,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* FIXME: not thread-safe */
 static char lexer_buffer[ENCODING__BUFFER_SIZE];
 static char *bufptr = lexer_buffer;
-void lexer__clear_buffer()
+void
+lexer__clear_buffer()
 {
     bufptr = lexer_buffer;
     *bufptr = '\0';
@@ -428,6 +477,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 
     \n  {  /* Newlines are ignored, except for formatting. */
         new_line( compiler_global );
+
         TOKEN( 0 );
     }
 

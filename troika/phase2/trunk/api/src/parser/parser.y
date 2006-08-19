@@ -129,6 +129,13 @@ lexer__get_buffer();
 /******************************************************************************/
 
 
+void
+parser__push( const char *s )
+{
+    yy_scan_string( s );
+}
+
+
 /** This is the default value. */
 #define YYMAXDEPTH    10000
 

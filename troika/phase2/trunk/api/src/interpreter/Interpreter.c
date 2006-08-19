@@ -59,6 +59,7 @@ interpreter__new( Environment *env, boolean quiet )
     c->locked = FALSE;
     c->quiet = quiet;
     c->show_line_numbers = TRUE;
+    c->use_readline = HAVE_LIBREADLINE;
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser and with the SK module, and to serialize and deserialize data sets. */

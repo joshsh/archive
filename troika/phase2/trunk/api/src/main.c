@@ -190,6 +190,10 @@ read_options ( int argc, char **argv, char *source_file )
 }
 
 
+/* ~ */
+extern void
+parser__push( const char *s );
+
 /** Instantiates an Environment and attaches an Interpreter to interact with the
     command line. */
 int
@@ -231,8 +235,23 @@ main( int argc, char *argv[] )
                 REFRESH;
             }
 
+/*
+parser__push( "here;" );
+parser__push( "here;" );
+
             if ( interpreter__parse( compiler ) )
                 ERROR( "main: parse failed" );
+
+parser__push( "_size;" );
+
+            if ( interpreter__parse( compiler ) )
+                ERROR( "main: parse failed" );
+
+parser__push( ";here;" );
+*/
+            if ( interpreter__parse( compiler ) )
+                ERROR( "main: parse failed" );
+
 
             interpreter__delete( compiler );
         }
