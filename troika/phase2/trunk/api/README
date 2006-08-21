@@ -90,7 +90,7 @@ Now ./configure and make as usual.
 Bugs
 ================================================================================
 
-Please report them to parcour@gmail.com or enter them in the bug tracker at:
+Please send bug reports to parcour@gmail.com or use the bug tracker at:
     http://sourceforge.net/projects/phase2/
 At this point I have only built Phase2 for two different platforms, and welcome
 any comments on how it behaved on other machines.
