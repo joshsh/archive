@@ -4,6 +4,9 @@ AC_INIT([phase2], [0.8.1], [parcour@gmail.com])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_SRCDIR([src/main.c])
 
+dnl Keep DEFS simple.
+AC_CONFIG_HEADER(src/config.h)
+
 AM_INIT_AUTOMAKE
 
 AC_PROG_CC

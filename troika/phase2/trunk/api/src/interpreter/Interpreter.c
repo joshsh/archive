@@ -38,7 +38,7 @@ interpreter__new( Environment *env, boolean quiet )
 
     if ( instance_exists )
     {
-        ERROR( "interpreter__new: concurrent compiler instances not allowed" );
+        ERROR( "interpreter__new: concurrent interpreter instances are not allowed" );
         c = 0;
         goto finish;
     }
@@ -59,7 +59,11 @@ interpreter__new( Environment *env, boolean quiet )
     c->locked = FALSE;
     c->quiet = quiet;
     c->show_line_numbers = TRUE;
-    c->use_readline = HAVE_LIBREADLINE;
+#if HAVE_LIBREADLINE
+    c->use_readline = TRUE;
+#else
+    c->use_readline = FALSE;
+#endif
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser and with the SK module, and to serialize and deserialize data sets. */

@@ -19,13 +19,19 @@ samples are forthcoming.  Meanwhile...
 Requirements
 ================================================================================
 
-* gcc >= ?
-      IMPORTANT: Phase2 is written in GNU C and is only compatible with the GNU
-      C compiler.  Specifically, it makes liberal use of nested functions.
-* GNU make or equivalent
-      Tested with versions 3.80 and 3.81beta4
-* libtool
-* libxml2 -- http://xmlsoft.org/
+Note: a '+' indicates software versions which are known to be compatible with
+      this distribution.  A '-' indicates an older, incompatible version.
+
+* GNU Compiler Collection (GCC) -- http://www.gnu.org/software/gcc/
+      + 4.0.2, 4.0.3
+      IMPORTANT: Phase2 makes liberal use of the GNU C extension for nested
+                 functions, and will not compile as ANSI C.
+* GNU Make or equivalent -- http://www.gnu.org/software/make/
+      Tested with: 3.80, 3.81beta4
+* GNU Libtool -- http://www.gnu.org/software/libtool/
+      + 1.5.16, 1.5.22
+* libxml2 (with libxml-2.0.pc) -- http://xmlsoft.org/
+      For Debian users: "sudo apt-get install libxml2-dev"
 
 
 Compiling Phase2
@@ -45,8 +51,7 @@ Now:
 
     $ make install
 
-If you don't want to install, you can use ./src/phase2 as the interpreter
-executable.  See ./INSTALL for more details.
+See ./INSTALL for more details.
 
 
 Running the interpreter
@@ -55,6 +60,10 @@ Running the interpreter
 To invoke the interpeter with no input data set:
 
     $ phase2
+
+Or (if you have not installed):
+
+    $ ./src/phase2
 
 To load a data set:
 
@@ -71,15 +80,23 @@ Also try:
 Building Phase2 from scratch
 ================================================================================
 
-To build Phase2 from scratch you'll need the following additional tools:
+To build Phase2 from scratch you will need the following additional tools:
 
-* GNU autoconf (tested with version 2.59)
-* GNU automake (tested with version 1.9.5. Version 1.4-p6 is known to fail)
-* yacc or equivalent -- http://www.gnu.org/software/bison/
-* lex or equivalent -- http://www.gnu.org/software/flex/
+* GNU Autoconf -- http://www.gnu.org/software/autoconf/
+      + 2.59
+* GNU Automake -- http://www.gnu.org/software/automake/
+      + 1.9.5, 1.9.6
+      - 1.4-p6
+* GNU Bison or equivalent -- http://www.gnu.org/software/bison/
+      + 2.0, 2.1
+* GNU Flex or equivalent -- http://www.gnu.org/software/flex/
+      + 2.5.31, 2.5.33
 * dot -- http://www.graphviz.org/
+      + 2.2.1, 2.8
 * doxygen -- http://www.doxygen.org/
+      + 1.4.4
 * xsltproc -- http://xmlsoft.org/XSLT/
+      + 20620
 
     $ ./cleanup
     $ ./bootstrap
@@ -92,6 +109,7 @@ Bugs
 
 Please send bug reports to parcour@gmail.com or use the bug tracker at:
     http://sourceforge.net/projects/phase2/
+
 At this point I have only built Phase2 for two different platforms, and welcome
 any comments on how it behaved on other machines.
 
