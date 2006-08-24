@@ -1,0 +1,463 @@
+Josh Shinavier
+Project update #2
+An application of SParse
+
+
+"-- General tools (output omitted until the demo section)-----------".
+
+
+"-- Some useful shortcuts --".
+associate = ^.
+#0 (0 nix) int_to_char = new.
+new (0 (0
+    [0 (type (1 ^))]
+  ^)) = register.
+0 (dictionary remove) = forget.
+
+"-- Define a (polymorphic) addition operator {+} --".
+0 (@ (0 ?)) = +.
+
+"-- Overload {+} for int's --".
++ (int (int_add ^)).
+
+"-- Define a string concatenator and use it to overload {+} for strings --".
+0 strlen (1 strlen +) (#1 +)
+  new_cstring (0 strcpy) (1 strcat) = concatenate.
++ (cstring (concatenate ^)).
+
+"-- Some linked list procedures --".
+"-- Note: nodes are separate from values, and lists use a dummy head node --".
+node register.
+#0 (0 nix) int_to_char (new node) (value (0 ^)).
+new (node ($ ^)).
+list register.
+0 (new list)
+  [0 (last (0 ^))].
+new (list ($ ^)).
+0 (1 (new node)
+  [0 (1 (next (0 next ^)) nix)
+     (next (1 ^))
+  ]) = push.
+0 (1 (new node)
+  [0 (0 last (next (1 ^)) nix)
+     (last (1 ^))
+  ]) = enqueue.
+0 (next (1 (new node) ^)) = append.
+0 (0 value 1 nix) next @.
+apply_to_all (modify ($ ^)).
+0 (value (0 value 1 ^)) next @.
+apply_to_all (replace ($ ^)).
+
+"-- String/list formatting functions --".
+"-" = HYPHEN. " " = SPACE. "_" = UNDERSCORE.
+"\"" = QUOTE. "," = COMMA. "." = PERIOD.
+1 (0 +) (1 +) = enclose.
+0 (2 +) (1 +) = infix.
+0 (2 +) (1 value +) (1 next @).
+0 value (0 next (1 $)) = x.
+0 next (SPACE x) (QUOTE enclose) = quotate.
+0 next (UNDERSCORE x) (UNDERSCORE enclose) = underline.
+0 next (COMMA (SPACE +) x).
+list (comma-delimited ($ ^)).
+"x" forget.
+
+
+"-- Linguistic stuff -----------------------------------------------".
+
+
+"-- ... --".
+part_of_speech
+  (new list)
+  (noun enqueue)
+  (verb enqueue)
+  (adjective enqueue)
+  (adverb enqueue)
+  (article enqueue)
+  (pronoun enqueue)
+  (particle enqueue).
+number
+  (new list)
+  (singular enqueue)
+  (plural enqueue).
+case
+  (new list)
+  (nominative enqueue)
+  (accusative enqueue)
+  (genitive enqueue).
+past (perfect ("past perfect" ^)).
+past (imperfect ("past imperfect" ^)).
+tense
+  (new list)
+  (infinitive enqueue)
+  (present enqueue)
+  (future enqueue)
+  (progressive enqueue)
+  (past perfect enqueue)
+  (past imperfect enqueue).
+nominative (singular ("nominative singular" ^)).
+nominative (plural ("nominative plural" ^)).
+accusative (singular ("accusative singular" ^)).
+accusative (plural ("accusative plural" ^)).
+genitive (singular ("genitive singular" ^)).
+genitive (plural ("genitive plural" ^)).
+qualifiers
+  (new list)
+  (part_of_speech enqueue)
+  (number enqueue)
+  (case enqueue)
+  (tense enqueue).
+0 (type (1 ^)).
+0 ((0 $) (apply_to_all modify)).
+qualifiers ($ (apply_to_all modify)).
+  
+"-- Word constructors --".
+word register.
+0 (new word)
+  (part_of_speech (1 ^)).
+part_of_speech
+  ([new (0 (0 $ ^))] (apply_to_all modify)).
+new 1 (0 (0 (1 (2
+  [0 (new 2) (3 (1 ^))]
+  )) ^)) = y.
+verb (transitivity y) = x.
+intransitive x. transitive x.
+article (definiteness y) = x.
+indefinite x. definite x.
+pronoun (person y) = x.
+first_person x. second_person x. third_person x.
+"x" forget. "y" forget.
+
+"-- Noun/verb/pronoun phrase constructors --".
+phrase register.
+phrase (noun ("noun phrase" ^)).
+phrase (verb ("verb phrase" ^)).
+phrase (pronoun ("pronoun as phrase" ^)).
+0 new
+  (new phrase)
+  (root (0 ^))
+  (part_of_speech (phrase 1 ^))
+  (state (simple ^)).
+new phrase (0 (0 $ ^)) = x.
+noun x. verb x. pronoun x.
+new phrase (noun ([
+  0 (new phrase noun)
+    (person (second_person ^))
+    (case (nominative ^))
+    (has_article (false ^))
+    (number (singular ^))] ^)).
+new phrase (verb ([
+  0 (new phrase verb)
+    (tense (infinitive ^))] ^)).
+new phrase (pronoun ([
+  0 (new phrase pronoun)] ^)).
+"x" forget.
+
+"-- Morpheme binders --".
+0 ((past imperfect) (1 ^))
+  ((past perfect) (2 ^))
+  (present (0 ^)).
+tense
+  (regular ([0 (tense (regular ^))] ^))
+  (irregular ($ ^)).
+0 (plural_type (irregular ^))
+  (plural (1 ^)).
+plural
+  (regular ([0 (plural_type (regular ^))] ^))
+  (irregular ($ ^))
+  (article ([0 (plural (1 ^)) (singular (0 ^))] ^)).
+0 (comparative_type (irregular ^))
+  (comparative (1 ^))
+  (superlative (2 ^)).
+comparative
+  (regular ([0 (comparative_type (regular ^))] ^))
+  (more ([0 (comparative_type (more ^))] ^))
+  (irregular ($ ^)).
+0 (first_person (1 ^))
+  (second_person (2 ^))
+  (third person (3 ^)).
+conjugate (present ($ ^)).
+0 (nominative singular (1 ^))
+  (accusative singular (2 ^))
+  (genitive singular (3 ^)).  
+case (singular ($ ^)).
+0 (nominative plural (1 ^))
+  (accusative plural (2 ^))
+  (genitive plural (3 ^)).
+case (plural ($ ^)).
+  
+"-- Expression builders (regrettably hairy...) --".
+statement register.
+0 (1 (x (0 part_of_speech))) = y.
+z (word (y ^)).
+z (phrase (y ^)).
+0 (tense (1 ^)).
+z (tense ($ ^)).
+0 (1 (z (0 type))) = apply.
+"z" forget. "y" forget.
+y (adjective ([0 (1 (x (0 state)))] ^)).
+y (adverb ([0 (1 (x (0 state)))] ^)).
+0 (has_article (true ^))
+  (article (1 ^)).
+y (article ($ ^)).
+x (phrase (
+     [0 (1 (y (1 part_of_speech)))]
+  ^)).
+"y forget".
+0 modifiers (1 enqueue).
+x (modified ($ ^)).
+0 (state (modified ^))
+  (modifiers (0 new (new list) ^))
+  (0 modifiers (1 enqueue) nix).
+x (simple ($ ^)).
+x (phrase noun (x phrase ^)).
+x (phrase verb (x phrase ^)).
+x (phrase pronoun (x phrase ^)).
+0 (new phrase noun) (1 apply).
+x (noun ($ ^)).
+0 (new phrase verb) (1 apply).
+x (verb ($ ^)).
+0 (new phrase pronoun) (1 apply).
+x (pronoun ($ ^)),
+"x" forget. 
+
+"-- The main output formatting function --".
+0 (@ (0 type)) = express.
+
+"-- Modifier list formatting --".
+express (list ([0 (list comma-delimited)] ^)).
+
+"-- Phrase formatting --".
+  1 (0 (express (1 part_of_speech))).
+express (phrase ($ ^)).
+
+"-- Noun formatting --".
+express (singular ([0] ^)).
+0 (express_noun (0 plural_type)).
+express (plural ($ ^)).
+express_noun (regular ([0 ("s" +)] ^)).
+express_noun (irregular ([0 plural] ^)).
+express (noun ([0 (express 1)] ^)).
+
+"-- Verb formatting --".
+  0 ("ed" +) (1 nix).
+express (regular ($ ^)).
+  0 1.
+express (irregular ($ ^)).
+  have 1 (SPACE +) (0 (2 (express (0 tense))) +).
+express (past perfect ($ ^)).
+  0 (2 (express (0 tense))) (1 nix).
+express (past imperfect ($ ^)).
+  will (SPACE +) (0 +) (1 nix 2).
+express (future ($ ^)).
+  0 ("s" +).
+express
+  (second_person ($ ^))
+  (first_person ([0] ^))
+  (third_person ([0] ^)).
+  0 (express 1) (2 nix).
+express (present ($ ^)).
+  to (SPACE +) (0 +) (1 nix 2).
+express (infinitive ($ ^)).
+  0 (1 (2 (express 2))).
+express (verb ($ ^)).
+
+"-- Noun phrase formatting --".
+0 (1 nix) article (0 number)
+  (SPACE +)
+  (0 modifiers express +)
+  (SPACE +)
+  (0 root ((0 number) (express noun)) +).
+express (phrase noun ($ ^)).
+
+"-- Verb phrase formatting --".
+  0 modifiers express (SPACE +).
+express (modified ($ ^)).
+  "" (0 nix).
+express (simple ($ ^)).
+  0 (express (0 state)) (0 root (1 (0 tense (express verb))) +).
+express (phrase verb ($ ^)).
+
+"-- Statement formatting --".
+nix (0 subject express) capitalize
+  (SPACE +)
+  (0 subject person (0 verb express) +)
+  (SPACE +)
+  (nix (0 object express) +)
+  (PERIOD +).
+express (statement ($ ^)).
+
+
+"-- Application to a specific data set -----------------------------".
+
+
+"-- Build a small English word list --".
+a
+  (new article indefinite)
+  ("some" (plural article)).
+the
+  (new article definite)
+  ("the" (plural article)).
+have
+  (new verb transitive)
+  ("have" ("has" ("have" (conjugate present))))
+  ("had" ("had" (tense irregular))).
+eat
+  (new verb transitive)
+  ("ate" ("eaten" (tense irregular))).
+climb
+  (new verb intransitive)
+  (tense regular).
+old
+  (new adjective)
+  (comparative regular).
+Continental
+  (new adjective)
+  (comparative more).
+small
+  (new adjective)
+  (comparative regular).
+inexplicably
+  (new adverb).
+man
+  (new noun)
+  ("men" (plural irregular)).
+breakfast
+  (new noun)
+  (plural regular).
+I
+  (new pronoun first_person)
+  ("I" ("me" ("my" (case singular))))
+  ("we" ("us" ("our" (case plural)))).
+to
+  (new particle).
+will
+  (new particle).
+
+  
+"-- Demonstration of the program -----------------------------------".  
+
+
+"-- Build an English statement (sentence) --",
+man (the apply) (old apply) = _subject,
+eat (past_imperfect apply) (tense (past imperfect ^)) = _verb,
+breakfast (a apply) (small apply) = _object,
+_statement
+  (new statement)
+  (subject (_subject ^))
+  (verb (_verb ^))
+  (object (_object ^)),
+_statement express.
+
+        >> <cstring>:   The old man ate a small breakfast. <<
+
+"-- Modify the statement --",
+_subject (number (plural ^)),
+_object (Continental apply),
+_statement express.
+
+        >> <cstring>:   The old men ate a small, Continental breakfast. <<
+
+"-- Modify it a little more --",
+_verb (tense (past perfect ^)),
+_verb (inexplicably apply),
+_statement (subject (_object ^)),
+_statement (object (_subject ^)),
+_statement express.
+
+        >> <cstring>:   A small, Continental breakfast inexplicably has eaten the old men. <<
+
+
+"-- Serialization (export the entire dictionary) -------------------".
+
+
+dictionary ("data/demo_kernel" export).
+
+        >> <lookup_table> dictionary <<
+	
+"cat data/demo_kernel" system.
+root: 6.0
+
+0)      cpp_primitive 56 {
+        0)      ?
+        1)      GUI_ECT
+        2)      GUI_cls
+[ all primitives in the data graph ]
+        54)     strlen
+        55)     system
+}
+
+1)      cstring 124 {
+        0)      ,
+        1)      Continental
+[ all strings ]
+        122)    s
+        123)    ,\20
+}
+
+2)      data_type 18 {
+        0)      GUI
+        1)      SDL_Rect
+[ all data types ]
+        16)     lookup_table
+        17)     ternary_associative_array
+}
+
+3)      char 32 {
+        0)      0
+        1)      0
+[ all chars (this data set has only trivial chars as placeholders) ]
+        30)     0
+        31)     0
+}
+
+4)      int 18 {
+        0)      0
+        1)      0
+[ all ints ]
+        16)     1
+        17)     2
+}
+
+5)      expression 184 {
+        0)      E 14 1 ( 0 ( @ ( 0 0.0 ) ) )
+        1)      E 23 2 ( 0 ( 1.45 ( 1 5.14 0.17 ) ) )
+[ all lambda expressions ]
+        182)    S 0.30 1 { 4.17 }
+        183)    S 0.52 1 { 1.123 }
+}
+
+6)      lookup_table 3 {
+        0)      186 2 {
+                5.0     +
+                0.0     ?
+[ all dictionary entries ]
+                1.89    word
+                1.90    y
+        }
+        1)      18 2 {
+                2.0     GUI
+                2.1     SDL_Rect
+[ all entries in the data type dictionary ]
+                2.16    lookup_table
+                2.17    ternary_associative_array
+        }
+        2)      56 2 {
+                0.0     ?
+                0.1     GUI_ECT
+                0.2     GUI_cls
+[ all entries in the primitives dictionary ]
+                0.54    strlen
+                0.55    system
+        }
+}
+
+A) 3 2 285 {
+                1.8     1.87    3.2
+                1.10    1.60    1.97
+[ all associations (after pruning) ]
+                5.37    1.49    5.93
+                1.50    1.38    3.9
+        }
+
+        >> <cstring>:   cat data/demo_kernel <<
+

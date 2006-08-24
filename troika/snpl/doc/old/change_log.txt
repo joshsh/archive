@@ -1,0 +1,56 @@
+. ability to cover the U{processing, lack of pre-existing
+  code/applications} shortcomings of SNPL by co-opting
+  whatever you need from C/C++ or the OS
+
+[9/3/04]
+* Mounted my old hard drive on the new Linux box and retrieved SNPL along with my
+other data, after about a month of suspended development and Gedankenarbeit.
+This marks the dividing point between SNPL 1.0 and what will be SNPL 1.1, in
+which the "associative product" will have been made the star feature.
+* Renamed include folder "utilities" --> "util".
+* Modified SNPL_expanding_hash_table to accommodate "cartesian" associations,
+called the new class SNPL_cartesian_associative_array.
+* Noticed a bug in SNPL_expanding_hash_table (a hashing search would not have
+wrapped at the end of the array.  My test arrays were sparse enough that they
+never experienced this problem) and fixed it.
+
+[9/4/04]
+* Wrote a test routine for the cartesian arrays, found a bug in the expand() or
+resize() (the array is expanding more than it needs to) but at the moment can't
+track the error down as I'm having problems with cout (it won't print a simple
+string literal).  Earlier I had to work around some odd behavior from cin, which
+won't let me input int's (I have it taking a string and then atoi()'ing it to get
+the int).  Presumably I have some other bad code somewhere which is fouling it up.
+
+[9/15/04]
+* Adapted the older lookup_table class to create SNPL_reference_array, which I
+imagine I'll be using rather extensively as an external data type particularly,
+for string matching and for interpreting keyboard commands.  It might be more
+elegant to do this sort of thing natively in SNPL, but it would come at the cost
+of enormous space and time overhead, and would negate the readability of my save
+format.
+
+[9/17/04]
+* Adapted the older color/color24, frame and grid classes to form SNPL_color,
+SNPL_frame and SNPL_bitmap, respectively, and created interfaces for them
+(however, SNPL_bitmap does not yet have a working serializer or deserializing
+constructor).
+
+[9/20/04]
+* Split up my hairy testing program into the libraries data_type.h, external.h,
+registry.h, serial.h and SNPL.h.  I'm not bothering with the SNPL_procedure
+class at the moment; I'm more interested in being able to de-/serialize the
+associational graph.
+* Made some adjustments to the SNPL_data_type class, so that external types
+can be looked up in a registry, and so that external data types may reference
+other external items in the object graph (i.e. I introduced the preserializer
+member).
+
+[9/21/04]
+* Completely phased out the old "U" libraries.  The only remaining material which
+could still be adapted to SNPL (and I'm sure I'll get around to this at some
+point) are the tensor and fuzzy logic libraries.  I suppose I could also adapt
+the linked_list and BST classes and give them each an interface with a
+preserializer, though I doubt I'll find much use for them.
+* Got a test routine working which incorporates SDL graphics, console I/O
+and bi-associative arrays.  

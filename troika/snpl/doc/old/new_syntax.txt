@@ -1,0 +1,42 @@
+P	0 ; 1
+Q	1 ; 0
+R	0: 1
+S	1: 0
+
+P ; P	= 
+
+
+
+
+
+
+
+P := 0 1
+Q := 1 0
+R := 0: 1
+S := 1: 0
+
+P> P	= P	0 1
+Q> P	= Q	1 0
+R> P	= R	0: 1
+S> P	= S	1: 0
+
+P> Q	= 0 1 2
+Q> Q	= 1 0 2
+R> Q	= 
+
+
+0 ; 1
+
+0: 1
+
+
+
+
+Hercules> father.
+
+Hercules: father.
+
+troika> if = foo.
+
+troika: if = foo.

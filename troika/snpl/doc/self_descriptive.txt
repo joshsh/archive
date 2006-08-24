@@ -1,0 +1,66 @@
+"-- Some useful shortcuts --".
+associate = ^.
+#0 (0 nix) int_to_char = new.
+new (0 (0
+    [0 (type (1 ^))]
+  ^)) = register.
+
+"-- Some linked list procedures --".
+"-- Note: nodes are separate from values, and lists use a dummy head node --".
+node register.
+#0 (0 nix) int_to_char (new node) (value (0 ^)).
+new (node ($ ^)).
+list register.
+0 (new list)
+  [0 (last (0 ^))].
+new (list ($ ^)).
+0 (1 (new node)
+  [0 (1 (next (0 next ^)) nix)
+     (next (1 ^))
+  ]) = push.
+0 (1 (new node)
+  [0 (0 last (next (1 ^)) nix)
+     (last (1 ^))
+  ]) = enqueue.
+0 (next (1 (new node) ^)) = append.
+0 (0 value 1 nix) next @.
+apply_to_all (modify ($ ^)).
+0 (value (0 value 1 ^)) next @.
+apply_to_all (replace ($ ^)).
+
+
+
+0 (0 name (1 add)).
+all ((0 $) (apply_to_all modify)) = extract.
+
+all (new list)
+
+  (node (name ("node" ^)) enqueue)
+  (list (name ("list" ^)) enqueue)
+  
+  (modify (name ("modify" ^)) enqueue)
+  (replace (name ("replace" ^)) enqueue)
+  (type (name ("type" ^)) enqueue)
+  (next (name ("next" ^)) enqueue)
+  (name (name ("name" ^)) enqueue)
+  (value (name ("value" ^)) enqueue)
+  (nix (name ("nix" ^)) enqueue)
+  
+  (new (name ("new" ^)) enqueue)
+  (register (name ("register" ^)) enqueue)
+  (push (name ("push" ^)) enqueue)
+  (enqueue (name ("enqueue" ^)) enqueue)
+  (append (name ("append" ^)) enqueue)
+  (apply_to_all (name ("apply_to_all" ^)) enqueue)
+  (extract (name ("extract" ^)) enqueue).
+
+root (root (extract ^)).
+extract (root (next ^)).
+next (root (value ^)).
+
+
+
+root ("data/root" export).
+
+"data/root" import.
+dictionary ($ $).

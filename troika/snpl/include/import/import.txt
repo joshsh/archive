@@ -1,0 +1,167 @@
+#################################################################################
+#
+# import.txt
+# 
+# author: Josh Shinavier
+# last edited: 1/7/04
+# 
+# Caution: this is NOT a documentation file, and is format-sensitive.  It is
+# interpreted at compile time to determine which data types and primitives to
+# import to a particular implementation of SNPL.
+#
+#################################################################################
+
+
+
+Location of this file (relative to SNPL/include):
+
+	"./import"  # This is probably unneccessary.
+
+
+
+Basic data types:
+
+	"data_type" is "SNPL_data_type" in "itf_cpp/data_type_itf.h".
+	"cpp_primitive" is "SNPL_cpp_primitive" in "itf_cpp/cpp_primitive_itf.h".
+	"cstring" is "SNPL_cstring" in "itf_cpp/cstring_itf.h".
+	"bool" is "SNPL_bool" in "itf_cpp/bool_itf.h".
+	"char" is "SNPL_char" in "itf_cpp/char_itf.h".
+	"int" is "SNPL_int" in "itf_cpp/int_itf.h".
+	"double" is "SNPL_double" in "itf_cpp/double_itf.h".
+	"color" is "SNPL_color" in "itf_cpp/color_itf.h".
+	
+	##### These require the SDL binding #####
+	"SDL_Rect" is "SDL_Rect" in "itf_cpp/SDL_Rect_itf.h".
+	"SDL_Surface" is "SDL_Surface" in "itf_cpp/SDL_Surface_itf.h".
+
+
+
+Preserializing data types (list in order of rising precedence):
+
+	##### These require the SDL binding #####
+	"key_map" is "SNPL_key_map" in "itf_cpp/key_map_itf.h".
+	"bitmap" is "SNPL_bitmap" in "itf_cpp/bitmap_itf.h".
+	"GUI" is "SNPL_GUI" in "itf_cpp/GUI_itf.h".
+	
+	"array" is "SNPL_array" in "itf_cpp/array_itf.h".
+	"associative_array" is "SNPL_associative_array" in "itf_cpp/associative_array_itf.h".
+	"expression" is "SNPL_expression" in "itf_cpp/expression_itf.h".	
+	"lookup_table" is "SNPL_lookup_table" in "itf_cpp/lookup_table_itf.h".
+	"ternary_associative_array" is "SNPL_ternary_associative_array"
+		in "itf_cpp/ternary_associative_array_itf.h".
+
+
+
+Primitives:
+
+	"void scratch(void)" is "SNPL_scratch" in "snpl.h".
+
+	"int C_&(void)" is "C_address_operator" in "miscprims.h".
+	"char C_*(int)" is "C_indirection_operator" in "miscprims.h".
+	
+	##### the {^} operator #####
+	"associate(void, void, void)" is "SNPL_associate" in "snpl.h". 
+
+	##### type binding #####
+	"data_type ?(void)" is "SNPL_find_type" in "snpl.h".
+
+	##### C strings #####
+	"cstring new_cstring(int)" is "new_cstring" in "miscprims.h".
+	"println(cstring)" is "println" in "miscprims.h".
+	"printstr(cstring)" is "printstr" in "miscprims.h".
+	"printchar(char)" is "printchar" in "miscprims.h".
+	"strcat(cstring, cstring)" is "strcat" in "snpl.h".
+	"strcpy(cstring, cstring)" is "strcpy" in "snpl.h".
+	"int strlen(cstring)" is "itf_strlen" in "miscprims.h".
+	"charcat(cstring, char)" is "charcat" in "miscprims.h".
+	"capitalize(cstring)" is "capitalize" in "miscprims.h".
+	
+	##### chars #####
+	"char_print(char)" is "SNPL_char_print" in "itf_cpp/char_itf.h".
+	"char int_to_char(int)" is "int_to_char" in "miscprims.h".
+	
+	##### C basic arithmetic types #####
+	"double double_add(double, double)" is "double_add" in "itf_cpp/double_itf.h".
+	"double double_subtract(double, double)" is "double_subtract" in "itf_cpp/double_itf.h".
+	"double double_multiply(double, double)" is "double_multiply" in "itf_cpp/double_itf.h".
+	"double double_divide(double, double)" is "double_divide" in "itf_cpp/double_itf.h".
+	"int int_add(int, int)" is "int_add" in "itf_cpp/int_itf.h".
+	"int int_subtract(int, int)" is "int_subtract" in "itf_cpp/int_itf.h".
+	"int int_multiply(int, int)" is "int_multiply" in "itf_cpp/int_itf.h".
+	"int int_divide(int, int)" is "int_divide" in "itf_cpp/int_itf.h".
+	"int int_mod(int, int)" is "int_mod" in "itf_cpp/int_itf.h".
+	"bool int_greaterthan(int, int)" is "int_greaterthan" in "miscprims.h".
+	"bool int_lessthan(int, int)" is "int_lessthan" in "miscprims.h".
+	"bool int_equals(int, int)" is "int_equals" in "miscprims.h".
+
+	##### math.h imports #####
+	"double sin(double)" is "math_sin" in "miscprims.h".
+	"double cos(double)" is "math_cos" in "miscprims.h".
+	"double tan(double)" is "math_tan" in "miscprims.h".
+	"double asin(double)" is "math_asin" in "miscprims.h".
+	"double acos(double)" is "math_acos" in "miscprims.h".
+	"double atan(double)" is "math_atan" in "miscprims.h".
+	"double log(double)" is "math_log" in "miscprims.h".
+	"double exp(double)" is "math_exp" in "miscprims.h".
+	"double sqrt(double)" is "math_sqrt" in "miscprims.h".
+	
+	##### SDL graphics #####
+	"SDL_Surface IMG_Load(cstring)" is "IMG_Load" in "SDL/SDL_image.h".
+	"key_map new_key_map(void)" is "SNPL_key_map_constructor" in "type/key_map.h".
+	"char map_char(char, key_map)" is "SNPL_map_char" in "type/key_map.h".
+	"char get_next_keydown(key_map)" is "SNPL_get_next_keydown" in "type/key_map.h".
+	"color new_color(cstring)" is "new_color" in "type/color.h".
+	"SDL_Flip(SDL_Surface)" is "SDL_Flip" in "SDLprims.h".
+	"SDL_Rect new_SDL_Rect(int, int, int, int)" is "new_SDL_Rect" in "SDLprims.h".
+	"SDL_Surface new_SDL_Surface(int, int)" is "new_SDL_Surface" in "SDLprims.h".
+	"SDL_BlitSurface(SDL_Surface, SDL_Rect, SDL_Surface, SDL_Rect)" is "SDL_BlitSurface" in "SDLprims.h".
+	"GUI new_GUI(SDL_Surface, color, int, int, int)" is "new_SNPL_GUI" in "type/gui.h".
+	"bitmap GUI_copy(GUI)" is "SNPL_GUI_copy" in "type/gui.h".
+	"GUI_embed_center(bitmap, GUI)" is "SNPL_GUI_embed_center" in "type/gui.h".
+	"GUI_pen_color(color, GUI)" is "SNPL_GUI_pen_color" in "type/gui.h".
+	"color GUI_get_color(GUI)" is "SNPL_GUI_get_color" in "type/gui.h".
+	"GUI_pen_move(int, int, GUI)" is "SNPL_GUI_pen_move" in "type/gui.h".
+	"GUI_cls(GUI)" is "SNPL_GUI_cls" in "type/gui.h".
+	"GUI_ECT(GUI)" is "SNPL_GUI_ECT" in "type/gui.h".
+	"GUI_poit(int, int, GUI)" is "SNPL_GUI_poit" in "type/gui.h".
+	"GUI_draw_outline(color, GUI)" is "SNPL_GUI_draw_outline" in "type/gui.h".
+	"GUI_draw_color(GUI)" is "SNPL_GUI_draw_color" in "type/gui.h".
+	"GUI_draw_bool(color, color, GUI)" is "SNPL_GUI_draw_bool" in "type/gui.h".
+	"GUI_draw_silhouette(color, color, color, GUI)" is "SNPL_GUI_draw_silhouette" in "type/gui.h".
+	"GUI_flex(color, color, GUI)" is "SNPL_GUI_flex" in "type/gui.h".
+	"GUI_conway(color, GUI)" is "SNPL_GUI_conway" in "type/gui.h".
+
+	##### SNPL_lookup_table #####
+	"void lookup(cstring, lookup_table)" is "SNPL_lookup_table_lookup"
+		in "itf_cpp/lookup_table_itf.h".
+	"add(void, cstring, lookup_table)" is "SNPL_lookup_table_add"
+		in "itf_cpp/lookup_table_itf.h".
+	"remove(cstring, lookup_table)" is "SNPL_lookup_table_remove"
+		in "itf_cpp/lookup_table_itf.h".
+
+	##### SParse primitives (temporary) #####	
+        "export(void, cstring)" is "SParse_export" in "../SParse0/sparse.h".
+	"void import(cstring)" is "SParse_import" in "../SParse0/sparse.h".
+	"display(lookup_table)" is "display_lookup_table" in "../SParse0/sparse.h".
+	"system(cstring)" is "SParse_system_call" in "../SParse0/sparse.h".
+
+
+
+#################################################################################	
+#
+# Some notes on formatting:
+#
+# Headers (e.g. "Primitives:") may not contain hashes, quotes, or
+# supernumerary colons.
+#
+# Exactly one connecting word (e.g. "is", "in") must appear between literals,
+# and it may consist only of the letters [A-Za-z].
+#
+# Literals may contain spaces and tabs, but there are no escape sequences and
+# hence no quotes or line breaks are allowed.
+#
+# A hash character within a literal is not recognized as the start of a comment.
+#
+# A statement may span several lines, but don't forget the period "." at the end.
+#
+#################################################################################

@@ -1,0 +1,78 @@
+
+
+"SNPL" is my provisional title for a programming language I'm developing, which has grown out of a project I began last spring in Dr. Sevenic's compiler design class.  The acronym stands for "SNPL's Not a Programming Language" because it doesn't an environment or lexical syntax, but I've since learned of the idea of "concatenative" languages (FORTH is concatenative, as is SNPL, and as is Manfred von Thun's "Joy" language) which have no environment, and of anonymous functions in applicative languages such as Lisp and Haskell (and again, Joy), which allow the programmer to abstract programs from program code.  SNPL makes heavy use of two-key hash tables, or what I'm calling "ternary associative arrays", to bind each ordered pair of objects (or "items") in its data set to a unique third item.  SNPL uses this device to tie in the behaviors of any number of imported primitive functions with a simple lambda calculus.  A notable feature of the language is that not only is every function a first-class value, but moreover, every first-class value is a function (Joy seems to have beaten SNPL to the punch on that point as well, but it solves the problem in a very different way).  What follows is a session in an interpreter I wrote for SNPL, called SParse, which shows off some of its more salient features.  SNPL is written in C++, while SParse and the importing utility are an admixture of C, C++, Flex and Bison components.
+
+	Hercules (father (Kronos ^)).
+	Hercules father.
+
+SParse was inspired by FORTH, so I might as well use the FORTH convention of enclosing dictionary words, as well as syntactic tokens, in curly braces when I refer to them.
+
+two-key hash tables
+
+	associate :^.
+	a (next (b ^)). b (next (c ^)). c (next (a ^)).
+
+
+	0 1 (2 nextfunc) @.
+	list (apply_to_all ($ ^)).
+
+0 (next ()) next
+
+
+At this stage I'm not sure whether expressions involving {@} are true combinators, as the {@} does represent a sort of constant.  I expect that there must be some way to express recursion in Church notation, but I haven't gotten that far in my reading.  The following combinator-like object has the odd characteristic of responding to an argument just as that argument would respond to the combinator itself.  Its behavior is meaningful for any argument, owing to the fact that every item in SNPL is implicitly a function over the entire data set.
+
+	@ 0 :quux.
+	quux (foo (baz ^)).
+	quux foo.
+	foo quux.
+
+
+	"This is just a comment".
+	$ ($ "This comment preserves the 'last item' variable").
+
+
+
+
+
+
+
+	lists (zero index) (nextfunc (next0 ^)). lists (one index) (nextfunc (next1 ^)).
+
+
+
+So far we've used only the built-in primitive "associate" and the implicit operations of application and composition.  Now we'll tie in some imported primitives.  We can see a list of them via the primitives dictionary:
+
+	primitives display.
+
+Every item in the data set is explicitly or implicitly bound to a data type.  The {?} operator takes us from an item to its type:
+
+	#d1.0 ?.
+
+{?} provides a starting point for type-safe polymorphism, e.g. we might create an overloaded multiplication operator as follows:
+
+	0 (0 ? <type>_multiply) :*.
+	int (<type>_multiply (int_multiply ^)).
+	double (<type>_multiply (double_multiply ^)).
+
+
+	#6 (#7 *).
+
+	#3.14159 :pi.
+	0 (0 *) :sq.
+	0 sq (pi *) :circle_area.
+
+	#d2.0 circle_area.
+
+Incidentally, all the primitives imported to this application are referentially transparent.  
+As the {?} operator and all implicit operations are referentially transparent, this means that any program which we can build using this dictionary, and which does NOT contain the {associate} operator, will likewise be referentially transparent.  That goes for everything we've constructed above, since none of our expressions contained a {^} after beta-reduction.  However
+
+0 (list apply_to_all)
+
+	next strdup
+
+
+	
+
+
+Effectively we're still doing purely functional programming, even though we've 
+

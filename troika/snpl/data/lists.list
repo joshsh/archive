@@ -1,0 +1,34 @@
+root: 0.0
+
+0)	cstring 14 {
+	0)	lists.list
+	1)	continents.list
+	2)	lists.list
+	3)	next
+	4)	spokane.list
+	5)	Africa
+	6)	days.list
+	7)	Antarctica
+	8)	months.list
+	9)	Asia
+	10)	Australia
+	11)	Europe
+	12)	North\20America
+	13)	South\20America
+}
+
+A) 3 2 13 {
+		0.1	0.0	0.2
+		0.9	0.3	0.10
+		0.4	0.0	0.6
+		0.5	0.3	0.7
+		0.10	0.3	0.11
+		0.11	0.3	0.12
+		0.3	0.1	0.5
+		0.7	0.3	0.9
+		0.1	0.1	0.3
+		0.12	0.3	0.13
+		0.0	0.0	0.1
+		0.2	0.0	0.4
+		0.6	0.0	0.8
+	}

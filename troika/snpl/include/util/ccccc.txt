@@ -1,0 +1,48 @@
+struct UTIL_array;
+
+struct UTIL_array *UTIL_array_constructor(int, double);
+
+
+
+  void minimize();  
+    
+  int size();
+  
+  double expansion();
+  
+  void clear();
+  
+  void *get(int);
+  
+  void set(int, void *);
+
+  void push(void *);
+  
+  void *pop();
+  
+  void enqueue(void *);
+  
+  void *dequeue();
+    
+  void insert_before(int, void *);
+  
+  void insert_after(int, void *);
+  
+  void remove(int);
+  
+};
+
+struct UTIL_array
+{
+  int size, head_index, filled;
+  double expansion_factor;
+  void **cells;
+};
+
+
+
+  void expand();
+
+
+
+

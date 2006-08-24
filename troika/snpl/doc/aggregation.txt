@@ -1,0 +1,18 @@
+ADVENTURES IN AGGREGATION
+
+* Replacement of hash table lookups with pointer offsetting, e.g.
+    a value  -->  a + ["value" offset]
+    
+* Arrays via associational chaining
+    a prev  -->  a - [size of a's aggregate type]
+
+* Consolidating Church integers, e.g.
+    a next next  -->  a + (2*[sizeof a])
+    a (next (#16 times))  -->  a + (16*[sizeof a])
+
+* Bounds checking for "aggregated" data structures, e.g.
+    d next2 next2 next2  -->  [0] (array out-of-bounds)
+    d next1  -->  [0] (key mismatch, if this is possible)
+    
+* Cyclical data structures, e.g.
+    Sunday (next (#7 times))  -->  Sunday

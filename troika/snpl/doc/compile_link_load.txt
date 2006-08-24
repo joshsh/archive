@@ -1,0 +1,2 @@
+[*] source files >[compiler]> object files
+[*] object file contains machine code instructions that correspond to statements in the program source.

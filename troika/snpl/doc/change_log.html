@@ -1,0 +1,188 @@
+<HTML><HEAD><TITLE>SNPL Change Log</TITLE></HEAD>
+<BODY>
+SNPL's Not a Programming Language!
+<BR><BR>
+<FONT SIZE="+1">Change Log:</FONT>
+<BR><BR>
+
+<B>9/3/04</B><UL>
+<LI> Mounted my old hard drive on the new Linux box and retrieved SNPL along with my other data, after about a month of suspended development and Gedankenarbeit.  This marks the dividing point between my "U" Compiler Design project and what will be SNPL proper, in which the "associative product" will have been made the star feature.
+<LI> Renamed include folder "utilities" --> "util".
+<LI> Modified SNPL_expanding_hash_table to accommodate "cartesian" associations, called the new class SNPL_cartesian_associative_array.
+<LI> Noticed a bug in SNPL_expanding_hash_table (a hashing search would not have wrapped at the end of the array.  My test arrays were sparse enough that they never experienced this problem) and fixed it.
+</UL>
+  
+  
+<HR>
+<B>9/4/04</B><UL>
+<LI> Wrote a test routine for the cartesian arrays, found a bug in the expand() or resize() (the array is expanding more than it needs to) but at the moment can't track the error down as I'm having problems with cout (it won't print a simple string literal).  Earlier I had to work around some odd behavior from cin, which won't let me input int's (I have it taking a string and then atoi()'ing it to get the int).  Presumably I have some other bad code somewhere which is fouling it up.
+</UL>
+  
+
+<HR>
+<B>9/15/04</B><UL>
+<LI> Adapted the older lookup_table class to create SNPL_reference_array, which I imagine I'll be using rather extensively as an external data type, particularly for string matching and for interpreting keyboard commands.  It might be more elegant to do this sort of thing natively in SNPL, but it would really foul up the readability of my save format, which would be quite a handicap at this stage.
+</UL>
+  
+
+<HR>
+<B>9/17/04</B><UL>
+<LI>Adapted the older color/color24, frame and grid classes to form SNPL_color, SNPL_frame and SNPL_bitmap, respectively, and created interfaces for them (however, SNPL_bitmap does not yet have a working serializer or deserializing constructor).
+</UL>
+  
+  
+<HR>
+<B>9/20/04</B><UL>
+<LI> Split up my hairy testing program into the libraries data_type.h, external.h, registry.h, serial.h and SNPL.h.  I'm not bothering with the SNPL_procedure class at the moment; I'm more interested in being able to de-/serialize the
+associational graph.
+<LI> Made some adjustments to the SNPL_data_type class, so that external types can be looked up in a registry, and so that external data types may reference other external items in the object graph (i.e. I introduced the "preserializer" member).
+</UL>
+  
+  
+<HR>
+<B>9/21/04</B><UL>
+<LI> I've completely phased out the old "U" libraries.  The only usable material which I've not already adapted to SNPL (and I'm sure I'll get around to this at some point) are the tensor and fuzzy logic libraries.  I suppose I could also adapt the linked_list and BST classes and give them each an interface with a preserializer, though I doubt I'll find much use for them.
+<LI> Got a test routine running which incorporates SDL graphics, console I/O and bi-associative arrays, although for the moment it's synthesizing these elements "artificially".  Still to do before SNPL will be able to stand on its own:<UL>
+  <LI>finish the utility class interfaces
+  <LI>modify the graph de-/serializers and the graph destructor to allow for preserializing data types.
+  <LI>decide on a final format for SNPL_function
+  <LI>finish SNPL_procedure and its interface
+  <LI>work out exactly how SNPL_procedure is to interact with the machinery of bi...arrays.
+  </UL>
+</UL>
+
+  
+<HR>
+<B>9/22/04</B><UL>
+<LI> Wrote preserializers and serializers for SNPL_lookup_table and SNPL_bitmap
+<LI> Introduced the associative array which will link every item with its data type.  This is overkill in two distinct ways, but is a simple expedient to getting a preserializer working for the bi-associative array class.  I can always decide what to keep and what to throw away later on.  It's an important decision, if only in a conceptual sense: if I extend the associative type binding into "SNPL-space" it will make SNPL inherently polymorphic, whereas my earlier idea
+was to try and circumvent polymorphism altogether.  That idea has lost none of its appeal, although I have yet to think of a way to reconcile it with the machinery of the "associative product".  I would be very happy to find my pen sketching out a SNPL kernel (if that's an appropriate term; I mean a minimal
+stand-alone SNPL program -- something which is used as a starter to generate other programs and data sets) which would <U>internally</U> ensure strong type binding.  Something tells me that's probably not a difficult thing to make happen, but we'll see.
+</UL>
+
+<HR>
+<B>9/24/04</B><UL>
+<LI> And we have serialization!  Finished the pre-/serializer for SNPL_bi...array, modified my testing program, gave it some test data, and serialization went off without a hitch.  Now I can actually save the test kernels I write, although it will be another few hours' worth of work before I'll have the option of loading them.  Meanwhile, yesterday was the first session of Dr. Simmons's course on programming languages, which couldn't come at a better moment.  I only wish the class met more than once or twice a week.  Also, it looks as though the course will focus almost exclusively on imperative languages, but at least it will give me the opportunity to ask questions before and after class.  Apparently Dr. Inoue will be giving a talk on LISP at some point.
+<LI> Re-integrated bitmaps into my little GUI, encountered a bug in the SNPL_bitmap class and fixed it.
+<LI> Created the colorful "U to SNPL" chart below, presumably with some purpose in mind, but it eludes me now.  I think I'm burning out; I've been at this all day long with but one spaghetti break.
+<LI> Introduced the notion of "precedence" among data types, in order to ensure that a preserializing data type is always encountered (by the deserializing parser) <U>after</U> any other types it might reference.  This took a while on account of an elusive and until now dormant bug which turned out to be in the file writing portion of the graph serializer.  As a consequence, the root of the data graph no longer gets the address 0.0; instead a header now tells the graph deserializer where to look for the root (this is probably a temporary feature).
+<LI>Finished the (new and improved) graph deserializer as well as the deserializing constructors of all three preserializing data types.  Gratifyingly, after the long slog of debugging the serializer, they all worked flawlessly on the first trial. I can now save my data sets, load them and save them again, which leaves procedures as the one remaining hurdle before SNPL will be capable of working exclusively off of a single, standard executable and a text-file kernel.
+<LI>Ceremonial changing of the file extension of my save format from ".U" to ".snpl".
+</UL>
+Classes adapted from U to SNPL:<UL>
+  <LI><B><FONT COLOR="#7FBFFF">universe</FONT></B>
+    --> <FONT COLOR="#3F3FFF">serial.h</FONT>
+  <LI><B><FONT COLOR="#7FBFFF">ascii</FONT></B>
+    --> <FONT COLOR="#3F3FFF">cstring_itf.h</FONT>
+  <LI><B><FONT COLOR="#7FBFFF">color24</FONT></B>
+    --> <B><FONT COLOR="#3F3FFF">SNPL_color</FONT></B>,
+    <FONT COLOR="#3F3FFF">color_itf.h</FONT>
+  <LI><B><FONT COLOR="#7FBFFF">frame</FONT></B>
+    --> <B><FONT COLOR="#3F3FFF">SNPL_frame</FONT></B>,
+    <FONT COLOR="#3F3FFF">frame_itf.h</FONT>  
+  <LI><B><FONT COLOR="#7FBFFF">grid</FONT></B>  
+    --> <B><FONT COLOR="#3F3FFF">SNPL_bitmap</FONT></B>,
+    <FONT COLOR="#3F3FFF">bitmap_itf.h</FONT>  
+  <LI><B><FONT COLOR="#7FBFFF">paper</FONT></B>  
+    --> <B><FONT COLOR="#3F3FFF">SNPL_GUI</FONT></B>
+  <LI><B><FONT COLOR="#7FBFFF">lookup_table</FONT></B>
+    --> <B><FONT COLOR="#3F3FFF">SNPL_lookup_table</FONT></B>,
+    <FONT COLOR="#3F3FFF">lookup_table_itf.h</FONT>     
+  <LI><B><FONT COLOR="#7FBFFF">function</FONT></B>
+    --> <B><FONT COLOR="#3F3FFF">SNPL_function</B></FONT>
+  <LI><B><FONT COLOR="#7FBFFF">procedure</FONT></B>
+    --> <B><FONT COLOR="#3F3FFF">SNPL_procedure</FONT></B>,
+    <FONT COLOR="#3F3FFF">procedure_itf.h</FONT>
+<LI>Not yet adapted:
+  <B><FONT COLOR="#7FBFFF">node</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">linked_list</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">array</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">integer_tensor</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">real_tensor</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">fuzzy_set</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">fuzzy_set_family</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">fuzzy_output_family</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">FLE</FONT></B>
+<LI>Obsolete/unusable:
+  <B><FONT COLOR="#7FBFFF">item</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">list</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">classe</FONT></B>,
+  <B><FONT COLOR="#7FBfFF">caste</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">color</FONT></B>,
+  <B><FONT COLOR="#7FBFFF">argument</FONT></B>
+</UL>
+
+
+<HR>
+<B>9/25/04</B><UL>
+<LI> Tinkered with my testing interface and made a minor revision to registry.h (added a couple of new arrays to allow types and functions to be cleaned up by
+SNPL_registry_destructor, rather than individually in external.h).
+<LI> Changed the cast of the standard function pointer from void (*)(void **) to to a differential cast according to the number of arguments, so as to be able to directly wrap any C/C++ function whose arguments and return value (if any) are all pointers (i.e. without the need for a function interface).  The return value is still treated as the first "register" in an array of pointers which are passed along with the SNPL_function when it is called.
+<LI> Wrote SNPL_execute_function(), which handles those calls.  I think the idea of a SNPL_procedure has been left behind.
+<LI> Wrote a parser for function definitions, which have a new, more C-like syntax, e.g. "cstring strcat(cstring, cstring)" or "draw(GUI, bitmap)".
+</UL>
+
+<HR>
+<B>9/26/04</B><UL>
+<LI> Gave the <B>double</B> type an interface, in anticipation of wrapping/importing math functions.
+<LI> Added SNPL_construct_functions() to external.h and tested some sample primitives.
+<LI> Wrote temporary routines for filling arguments and selecting and executing functions at runtime.  I now have a hybrid kernel in which it should be possible to build just about anything I might want... now I just have to decide what to build.  I've been preoccupied with a number of mutually incompatible ideas about what direction to start off in, and consequently I'm just thinking in slow circles, waiting for the right idea to assert itself over the others.  One thing I'm sure of is that the "internal" types I spent so many hours working into serial.h are now obsolete.  They were not a bad idea, but now I see that I could implement the same architecture, among many others, natively in SNPL, without the need to hard-code it.  It will always be there as an option I can explore when the occasion arises.  Now that I've taken a look at LISP I've noticed that it has that same "syntax hierarchy" flavor of nested lists, and as I expect to be studying LISP in more detail in the near future, I'm sure I'll find an excuse to revive "internal" objects in some form.
+</UL>
+
+<HR>
+<B>12/17/04</B><UL>
+<LI>And now for something completely different.  Despite neglecting my change log for the last three months, I've made good progress on my project.  SNPL and the interpreter I've written for it, called SParse, now constitute a bona fide programming language (<A HREF="demo.doc">here</A> is a paper I wrote for Dr. Simmons last week, with minor corrections).  Maybe I'll find time to describe their evolution in detail, but for now I'm busy writing a serializer and a deserializer for the SNPL_expression structure, which represents lambda expressions in SNPL.  The syntax is temporary and will almost certainly be replaced with something a little more readable (I've recently discovered a "concatenative" language called Joy which has opened my eyes to the possibility of a syntax with no replacement policy and no "parentheses", which are represented literally in my expressions and have made for a very hairy, baroque beta-reduction algorithm).
+</UL>
+
+<HR>
+<B>12/23/04</B><UL>
+
+<LI><FONT COLOR="#FFFF00"><B>cpp_primitive.cpp</B></FONT>: the SNPL_cpp_primitive structure is handy enough, but the constructor parser will need to be replaced with something a little more general (preferably written in SParse), and I imagine I'll replace the switch statement in the calling procedure with an "associational" conditional.
+<LI><FONT COLOR="#FF0000"><B>data_type.cpp</B></FONT>: moribund.  I expect to replace my present de-/serialization scheme with a SOAP-compatible scheme. 
+<LI><FONT COLOR="#FF0000"><B>executor.cpp</B></FONT>: doomed.  I'm on the lookout for a new, even simpler expression syntax, which will invalidate everything in this module.
+<LI><FONT COLOR="#FF0000"><B>expression.cpp</B></FONT>: cursed.  Only my ideas about and experiences with my old expression syntax will be applicable to the successor language.
+<LI><FONT COLOR="#00FF00"><B>primitive_shell.cpp</B></FONT>: may survive the transition, with minor tweaks.  No syntax or serialization issues here.
+<LI><FONT COLOR="#00FF00"><B>registry.cpp</B></FONT>: safe for the immediate future.  The registry's reliance on arbitrarily large arrays is crude, dangerous for large data sets, and will need to be refined at some point, but it's adequate for now and for the immediate future.
+<LI><FONT COLOR="#FFFF00"><B>serial.cpp</B></FONT>: will probably survive, albeit in a heavily modified form.
+<LI><FONT COLOR="#FFFF00"><B>snpl.cpp</B></FONT>: some of these procedures will be salvageable, others will not.
+<LI><FONT COLOR="#FF0000"><B>import.l</B></FONT>, <FONT COLOR="#FF0000"><B>import.y</B></FONT>: probably obsolescent.  It will be easy enough to write an equivalent utility in SParse, which I can then translate into the new language.  Or I can wait and write it directly in the new language, if I don't experience too much frustration with the need to write wrappers for almost every C++ function I want to import.
+<LI><FONT COLOR="#00FF00"><B>"type" and "util" modules</B></FONT>: should be safe.  They've been designed to be independent of SNPL, and should be portable to the new language.
+<LI><FONT COLOR="#FF0000"><B>type interfaces</B></FONT>: incompatible with the SOAP-oriented scheme I have in mind.  The nice thing about my interface scheme is that it doesn't require any formal specification of or restriction on the data types you can import; you need only be able to save and re-create them via a text serializer.  The problem with this approach is that the interfaces take effort to write, debug and maintain, and require some inside knowledge of SNPL which I can't expect of a casual user; if this is to be anything but a private language, then the need to write C++ wrappers and interfaces must be done away with.  SOAP and the XML Schema provide the missing link here in that an XML-savvy developer will need only minimal knowledge of my language to import whatever data types and function primitives he's most familiar with, even define new aggregate types "externally".
+<LI><FONT COLOR="#FFFF00"><B>SParse.l</B></FONT>, <FONT COLOR="#FFFF00"><B>SParse.l</B></FONT>, etc.: SParse was intended as a takeoff point for more a more general interface, and it will probably serve that purpose.  In theory it's separate from SNPL (although I haven't written a SNPL application which operates outside of a SParse session), and it will not be part of the new language.  However I expect to write a very SParse-like interpreter for the new language, which will hopefully be written in SNPL using SParse itself.  The new syntax, whatever form it takes, should be compatible with the old insofar as it should be possible to write a translator from the latter to the former, which may allow me to do much of the development in SParse instead of C++.
+</UL>
+
+<HR>
+<B>12/30/04</B><UL>
+<LI><UL>
+  <LI>I've never been quite sure whether the final product should be written in C++ or in straight C, resulting in a mish-mash of C and C++ style code.  This is unlikely to change in the near future as I'm still undecided on that issue.
+  </UL>
+</UL>
+
+<HR>
+<B>12/31/04</B><UL>
+<LI>My New Year's Resolution: to create a new language and a new programming environment with the following properties:<UL>
+  <LI>
+  </UL>
+The working title I have in mind for the new language is "Troika".
+</UL>
+
+<HR>
+<B>1/14/05</B><UL>
+<LI>Added a couple of new primitives, {C_address_operator} and {C_indirection_operator} to my environment, unimportant except as a gesture toward the single-tier approach I have in mind for Troika.
+<LI>I've decided against carrying SNPL's "anonymous" parameters over into Troika.  Maybe it's because of all the physics homework I've been doing this week, but it seems more intuitive for a parameter to have an associational identity just like a data item; i.e. parameters should be items, too.  I don't know what form the implementation will take, but it will undoubtedly be hashing-intensive, so I need to work out some good "aggregating" algorithms if Troika is to perform at anything approaching the efficiency of a language like C.  This takes me in the direction of Lisp or Haskell and away from Joy, which I've been thinking of emulating.
+</UL>
+
+
+<HR>
+
+
+Unrelated:
+<UL>
+<LI>ability to cover the U{processing, lack of pre-existing
+  code/applications} shortcomings of SNPL by co-opting
+  whatever you need from C/C++ or the OS
+<LI>makes liberal use of void pointers
+<LI>with a particular eye toward knowledge representation
+</UL>
+</BODY>
+</HTML>

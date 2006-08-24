@@ -1,0 +1,1 @@
+This directory ("type") should probably be re-named "SDL".

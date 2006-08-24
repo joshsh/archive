@@ -1,0 +1,167 @@
+[!] Go back and look at "facets" / restrictions on values (at some point).
+
+[.] indicator
+--[.] order indicator
+----[.] all  (children may appear in any order)
+----[.] choice  (either one child element or another may occur)
+----[.] sequence  (child elements must appear in a specific order)
+--[.] occurrence indicator
+----[.] maxOcurrs  (child element may occur at most this many times.  Use maxOccurs="unbounded" for infinity.)
+----[.] minOccurs  (child element must occur at least this many times)
+--[.] group indicator
+----[.] group name  (bundles several elements together)
+----[.] attributeGroup name  (bundles several attributes together)
+
+[.] xs:string
+--[.] xs:normalizedString (removes or replaces tabs, carriage returns and line feeds)
+--[.] xs:token (simplifies whitespace)
+[.] xs:date ("YYYY-MM-DD", e.g. "2004-12-30")
+[.] xs:time ("hh:mm:ss", e.g. "19:33:00")
+[.] xs:dateTime ("YYYY-MM-DDThh:mm:ss", e.g. "2004-12-30T19:33:00")
+[.] xs:duration
+[.] xs:decimal (maximum 18 digits after the decimal point)
+--[.] xs:byte (signed 8-bit integer)
+--[.] xs:int (signed 32-bit integer)
+--[.] xs:integer
+--[.] xs:long (signed 64-bit integer)
+--[.] xs:negativeInteger
+--[.] xs:nonNegativeInteger
+--[.] xs:nonPositiveInteger
+--[.] xs:positiveInteger
+--[.] xs:short (signed 16-bit integer)
+--[.] xs:unsignedLong (unsigned 64-bit integer)
+--[.] xs:unsignedInt (unsigned 32-bit integer)
+--[.] xs:unsignedShort (unsigned 16-bit integer)
+--[.] xs:unsignedByte (unsigned 8-bit integer)
+[.] xs:boolean
+[.] xs:base64Binary
+[.] xs:hexBinary
+[.] xs:anyURI (e.g. "http://www.zeep.com")
+
+
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2001/12/soap-envelope">
+  <soap:Body>
+    <pre:Add xmlns:pre="http://www.troika.org/lists" soap:encodingStyle="http://www.w3.org/12/soap-encoding">
+      ...
+    </pre:Add>
+  </soap:Body>
+</soap:Envelope>
+
+xmlns:troika="http://www.troika.org/schema"
+
+
+
+<?xml version="1.0?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="..." xmlns="..." elementFormDefault="qualified">
+
+<xs:element name="GUI">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="screen" type="SDL_Surface"/>
+      <xs:element name="bitmap" type="bitmap"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="frame">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="width" type="xs:integer"/>
+      <xs:element name="height" type="xs:integer"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="frame_using_attributes">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:attribute name="width" type="xs:integer"/>
+      <xs:attribute name="height" type="xs:integer"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="cube" type="3Dframe"/>
+<xs:element name="3Dframe">
+  <xs:complexContent>
+    <xs:extension base="frame">
+      <xs:sequence>
+        <xs:element name="depth" type="xs:integer"/>
+	<xs:element name="color" type="color"/>
+      </xs:sequence>
+    </xs:extension>
+  </xs:complexContent>
+</xs:element>
+
+</xs:schema>
+
+
+
+<GUI xmlns="http://www.troika.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.troika.org/GUI.xsd">
+
+  <screen>...</screen>
+  <bitmap>...</bitmap>
+
+</GUI>
+
+<frame ...>
+  <width>500</width>
+  <height>300</height>
+</frame>
+
+<frame_using_attributes ... width="500" height="300" />
+
+
+
+<xs:attribute ... fixed="foo"/>
+<xs:attribute ... default="NULL"/>
+<xs:attribute ... use="optional"/>
+<xs:attribute ... use="required"/>
+
+<xs:sequence>
+  <xs:element name="mem1" type="xs:string"/>
+  <xs:element name="mem2" type="xs:integer"/>
+  <xs:any minOccurs="0"/>
+</xs:sequence>
+
+
+
+
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8" ?> 
+<SNPL_module name="myBitmap" date="11/15/2004" time="16:44">
+  <int id="0">137</int>
+  <double name="myX">10.25</double>
+  <double name="pi">3.14159</double>
+  <a key="foo" target="bar"/>
+  <double id="1">-3.75</double>
+  <cstring name="foo">Salut le monde!</cstring>
+  <bitmap name="that" width="5" height="5" bgcolor="0">
+  	3	3	3	3	3
+	3	4	4	4	3
+	3	4	4	3	0
+	3	4	3	4	3
+	3	3	0	3	3
+  </bitmap>
+  <a key="name" target="foo"/>
+  <a key="group" target="cstring.3"/>
+  <point id="0">
+    <double name="myX"/>
+    <double id="1"/>
+  </point>
+  <point id="1" attr0="myX" attr1="double[1]"/>
+  <ternary_associative_array name="taa">
+    <entry key1="that" key2="name" target="foo"/>
+  </ternary_associative_array>
+  <item id="0" group="Wednesday">
+    <bitmap width="5" height="5" bgcolor="color[0]">...</bitmap>
+    <a key="name" target="foo"/>
+  </item>
+</SNPL_module>
