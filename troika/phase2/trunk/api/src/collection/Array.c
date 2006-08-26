@@ -52,7 +52,7 @@ struct Array
 #define INBOUNDS( a, i )  ( (i) < (a)->size )
 #define WRAP( a, i )  ( (a)->head + (i) ) % (a)->buffer_size
 
-#define BUFFER_NEW( size )  MALLOC( (size) * sizeof( void* ) )
+#define BUFFER_NEW( size )  malloc( (size) * sizeof( void* ) )
 
 
 static void **
@@ -61,7 +61,7 @@ buffer_copy( Array *a )
     void **buffer;
     size_t size = a->buffer_size * sizeof( void* );
 
-    if ( ( buffer = MALLOC( size ) ) )
+    if ( ( buffer = malloc( size ) ) )
         memcpy( buffer, a->buffer, size );
 
     return buffer /*@null@*/;
@@ -523,7 +523,7 @@ mergesort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
 }
 
 
-/* FIXME: You could avoid using MALLOC by using a simple shift algorithm */
+/* FIXME: You could avoid using malloc by using a simple shift algorithm */
 static Array *
 normalize( Array *a )
 {

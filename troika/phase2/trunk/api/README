@@ -20,7 +20,7 @@ Requirements
 ================================================================================
 
 Note: a '+' indicates software versions which are known to be compatible with
-      this distribution.  A '-' indicates an older, incompatible version.
+      this distribution.  A '-' indicates incompatible (usually older) versions.
 
 * GNU Compiler Collection (GCC) -- http://www.gnu.org/software/gcc/
       + 4.0.2, 4.0.3

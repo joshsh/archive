@@ -281,7 +281,7 @@ DOM_DOMString DOM_text(DOM_Element *root)
     // temporary...
     if (root->wide && (maxlen = wcslen(root->wide) * 2))
     {
-        char *s = MALLOC(maxlen);
+        char *s = malloc(maxlen);
         wcstombs(s, root->wide, maxlen);
         return s;
     }
@@ -345,7 +345,7 @@ DOM_DOMString DOM_value(DOM_Attr *root)
     return root->data;
     /*
     int maxlen = wcslen(root->wide) * 2;
-    char *s = MALLOC(maxlen);
+    char *s = malloc(maxlen);
     wcstombs(s, root->wide, maxlen);
     return s;*/
 }

@@ -34,61 +34,37 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <string.h>  /* strcpy */
-
-#include <common.h>
 #include <collection/Term.h>
 #include <Ast.h>
 
-#include "../settings.h"
+#include "Parser-impl.h"
 
+/*
+#define YYmalloc    malloc
+#define YYFREE      free
+*/
 
-/* Avoids C99 warning: implicit declaration of function ‘yylex’ */
-int
-yylex( void );
+/*
+struct yy_buffer_state;
 
-
-/* Language module dependencies ***********************************************/
-
-
-typedef struct Interpreter Interpreter;
-
-extern int
-interpreter__evaluate_command( Interpreter *c, char * /*name*/, Ast * /*args*/, const char * /*text*/ );
-
-extern int
-interpreter__evaluate_expression( Interpreter *c, Name * /*name*/, Ast * /*expr*/, const char * /*text*/ );
-
-extern int
-interpreter__handle_parse_error( Interpreter *c, char * /*msg*/ );
-
-extern int
-interpreter__quiet( Interpreter *c );
-
-
-/* Lexer dependencies *********************************************************/
-
-
-extern boolean pad_newline;
-
-extern void
-new_parse( Interpreter *c );
-
-extern int
-get_char_number( void );
-
-extern int
-get_line_number( void );
+extern struct yy_buffer_state
+yy_scan_string( const char *yy_str );
+*/
+void
+parser__feed( Parser *p, const char *s )
+{
+    yy_scan_string( s );
+}
 
 
 /******************************************************************************/
 
 
 /** Output decoration. */
-/* #define TOK__COMMAND_OUTPUT_PREFIX "\t>> "    */
+/* #define COMMAND_OUTPUT_PREFIX "\t>> "    */
 /* #define EXPRESSION_OUTPUT_PREFIX "\t>> " */
 /* #define ERROR_OUTPUT_PREFIX "\t>> "      */
-/* #define TOK__COMMAND_OUTPUT_SUFFIX " <<"      */
+/* #define COMMAND_OUTPUT_SUFFIX " <<"      */
 /* #define EXPRESSION_OUTPUT_SUFFIX " <<"   */
 /* #define ERROR_OUTPUT_SUFFIX " <<"        */
 
@@ -127,13 +103,6 @@ lexer__get_buffer();
 
 
 /******************************************************************************/
-
-
-void
-parser__push( const char *s )
-{
-    yy_scan_string( s );
-}
 
 
 /** This is the default value. */
@@ -266,9 +235,9 @@ term2ast( Term *t )
     /** (void *) instead of (Ast *) because Bison won't take an alias here. */
     void                *parser_node;
 
-    struct Array        *bag, *name;
     struct Statement    *statement;
-    struct Term         *term;
+
+    struct Object       *object;
 }
 
 
@@ -284,12 +253,11 @@ term2ast( Term *t )
 %token <real>       TOK__REAL
 %token <string>     TOK__COMMAND_NAME   TOK__ID TOK__STRING
 
-%type <bag>         bag bag_head
-%type <name>        name
+
+%type <object>      bag name command_args subterm term
 %type <parser_node> bracketed_term term_item
 %type <statement>   command expression statement
 %type <string>      command_name id
-%type <term>        command_args subterm term
 
 
 /*
@@ -1070,8 +1038,8 @@ handle_command( Interpreter *c, char *name, Ast *args )
     {
         PRINT( "\n" );
 
-#ifdef TOK__COMMAND_OUTPUT_PREFIX
-        PRINT( TOK__COMMAND_OUTPUT_PREFIX );
+#ifdef COMMAND_OUTPUT_PREFIX
+        PRINT( COMMAND_OUTPUT_PREFIX );
 #endif
     }
 
@@ -1081,8 +1049,8 @@ handle_command( Interpreter *c, char *name, Ast *args )
 
     if ( !interpreter__quiet( c ) )
     {
-#ifdef TOK__COMMAND_OUTPUT_SUFFIX
-        PRINT( TOK__COMMAND_OUTPUT_SUFFIX );
+#ifdef COMMAND_OUTPUT_SUFFIX
+        PRINT( COMMAND_OUTPUT_SUFFIX );
 #endif
     }
 

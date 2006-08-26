@@ -33,7 +33,7 @@ object__new( Type *type, void *value, int flags )
 
     if ( !o )
     {
-        ERROR( "object__new: allocation failure" );
+        WARNING__ALLOC( "failed to allocate new object" );
         return 0;
     }
 

@@ -34,12 +34,27 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#include <stdlib.h>  /* malloc */
-#include <string.h>  /* strlen, strcpy */
+#define DEBUG__ALLOC                            1
 
-#define STRDUP(x)   strcpy(malloc(1 + strlen(x)), (x))
-#define MALLOC      malloc
+#include <stdlib.h>
+
+#if DEBUG__ALLOC
+#   define calloc                               debug__calloc
+#   define free                                 debug__free
+#   define malloc                               debug__malloc
+#   define realloc                              debug__realloc
+#endif
+
+
+#include <string.h>
+
+/*
+#define STRLEN                                  strlen
+#define STRCPY                                  strcpy
+*/
+
 #define NEW(type)   malloc(sizeof (type))
+#define STRDUP(x)   strcpy(malloc(1 + strlen(x)), (x))
 
 
 /******************************************************************************/
@@ -66,12 +81,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #define ANY                                     any_type
 #define APPLY                                   Apply
-#define BAG                                     Bag
+#define BAG                                     Array
 #define CHARACTER                               char
 #define COMBINATOR                              Combinator
 #define DOUBLE                                  double
 #define INDIRECTION                             Indirection
 #define INTEGER                                 int
+#define NAME                                    Name
 #define NAMESPACE                               Namespace
 #define PRIMITIVE                               Primitive
 #define SET                                     Set
@@ -253,8 +269,26 @@ dereference( struct Object ** );
     fprintf( stderr, "\n" ),                                                \
     fflush( stderr ) )
 
+#define WARNING__ALLOC WARNING
+
 
 /* Debugging ******************************************************************/
+
+
+extern void *
+debug__calloc( size_t nelem, size_t elsize );
+
+extern void *
+debug__malloc( size_t size );
+
+extern void *
+debug__realloc( void *ptr, size_t size );
+
+extern void
+debug__free( void *ptr );
+
+extern void
+debug__memcheck();
 
 
 #define DEBUG__SAFE                             1

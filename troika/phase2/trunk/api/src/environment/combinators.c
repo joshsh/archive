@@ -22,86 +22,59 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Environment-impl.h"
 
 
+static Object *
+add_single_combinator( Memory_Manager *m,
+                       Namespace *ns,
+                       Type *t,
+                       Combinator c,
+                       const char *name )
+{
+    Object *o;
+    Combinator *cp = NEW( Combinator );
+
+    if ( cp )
+    {
+        *cp = c;
+        o = memory_manager__object( m, t, cp, OBJECT__IMMUTABLE );
+
+        if ( o )
+            o = namespace__add_simple( ns, name, o );
+    }
+
+    else
+        o = 0;
+
+    return o;
+}
+
+
+#define add( x )  add_single_combinator( m, ns, t, x##_combinator, #x )
+
+
 void
 add_combinators( Environment *env )
 {
-    Object *o;
-    Combinator *sk_B, *sk_C, *sk_I, *sk_K, *sk_L, *sk_O, *sk_R, *sk_S, *sk_T, *sk_U, *sk_V, *sk_W, *sk_w, *sk_Y;
     Memory_Manager *m = env->manager;
-
+    Namespace *ns = env->combinators->value;
     Type *t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value;
 
-    sk_B = NEW( Combinator );
-    sk_C = NEW( Combinator );
-    sk_I = NEW( Combinator );
-    sk_K = NEW( Combinator );
-    sk_L = NEW( Combinator );
-    sk_O = NEW( Combinator );
-    sk_R = NEW( Combinator );
-    sk_S = NEW( Combinator );
-    sk_T = NEW( Combinator );
-    sk_U = NEW( Combinator );
-    sk_V = NEW( Combinator );
-    sk_W = NEW( Combinator );
-    sk_w = NEW( Combinator );
-    sk_Y = NEW( Combinator );
+    if ( !(
+            add( B )
+         && add( C )
+         && add( I )
+         && add( K )
+         && add( L )
+         && add( O )
+         && add( R )
+         && add( S )
+         && add( T )
+         && add( U )
+         && add( V )
+         && add( W )
+         && add( w )
+         && add( Y ) ) )
 
-    *sk_B = B_combinator;
-    *sk_C = C_combinator;
-    *sk_I = I_combinator;
-    *sk_K = K_combinator;
-    *sk_L = L_combinator;
-    *sk_O = O_combinator;
-    *sk_R = R_combinator;
-    *sk_S = S_combinator;
-    *sk_T = T_combinator;
-    *sk_U = U_combinator;
-    *sk_V = V_combinator;
-    *sk_W = W_combinator;
-    *sk_w = w_combinator;
-    *sk_Y = Y_combinator;
-
-    o = memory_manager__object( m, t, sk_B, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "B", o );
-
-    o = memory_manager__object( m, t, sk_C, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "C", o );
-
-    o = memory_manager__object( m, t, sk_I, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "I", o );
-
-    o = memory_manager__object( m, t, sk_K, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "K", o );
-
-    o = memory_manager__object( m, t, sk_L, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "L", o );
-
-    o = memory_manager__object( m, t, sk_O, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "O", o );
-
-    o = memory_manager__object( m, t, sk_R, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "R", o );
-
-    o = memory_manager__object( m, t, sk_S, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "S", o );
-
-    o = memory_manager__object( m, t, sk_T, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "T", o );
-
-    o = memory_manager__object( m, t, sk_U, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "U", o );
-
-    o = memory_manager__object( m, t, sk_V, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "V", o );
-
-    o = memory_manager__object( m, t, sk_W, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "W", o );
-
-    o = memory_manager__object( m, t, sk_w, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "w", o );
-
-    o = memory_manager__object( m, t, sk_Y, OBJECT__IMMUTABLE );
-    namespace__add_simple( ( Namespace* ) env->combinators->value, "Y", o );
+        WARNING__ALLOC( "failed to create combinators" );
 }
 
 

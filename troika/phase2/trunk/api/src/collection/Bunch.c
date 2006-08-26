@@ -70,7 +70,7 @@ block__new( unsigned int size )
 
         /*~ take memory faults into account (actual block size might have to be
             smaller than the intended size). */
-        if ( !( bl->buffer = MALLOC( size * sizeof( void* ) ) ) )
+        if ( !( bl->buffer = malloc( size * sizeof( void* ) ) ) )
             bl = 0;
     }
 
@@ -88,7 +88,7 @@ block__copy( Block *bl )
         bl2->size = bl->size;
         bl2->filled = bl->filled;
 
-        if ( !( bl2->buffer = MALLOC( bl2->size * sizeof ( void* ) ) ) )
+        if ( !( bl2->buffer = malloc( bl2->size * sizeof ( void* ) ) ) )
             bl2 = 0;
         else
             memcpy( bl2->buffer, bl->buffer, bl->filled * sizeof ( void* ) );
@@ -139,15 +139,32 @@ bunch__copy( Bunch *b )
     Block *bl;
 
     Bunch *b2 = NEW( Bunch );
+    if ( !b2 )
+        return 0;
 
     b2->block_size = size;
     b2->blocks = array__new
         ( array__size( b->blocks ), array__expansion( b->blocks ) );
+    if ( !b2->blocks )
+    {
+        free( b2 );
+        return 0;
+    }
 
     for ( i = 0; i < size; i++ )
     {
         bl = block__copy( array__get( b->blocks, i ) );
-        array__enqueue( b2->blocks, ( void* ) bl );
+        if ( !bl )
+        {
+            bunch__delete( b2 );
+            return 0;
+        }
+
+        if ( !array__enqueue( b2->blocks, ( void* ) bl ) )
+        {
+            bunch__delete( b2 );
+            return 0;
+        }
     }
 
     b2->last_block = array__get( b2->blocks, array__size( b2->blocks ) - 1 );
@@ -186,48 +203,26 @@ bunch__size( const Bunch *b )
 void *
 bunch__add( Bunch *b, void *p )
 {
+    Block *bl;
+
+    if ( DEBUG__SAFE && ( !b || !p ) )
+        abort();
+
     /* Get or create tail-end block. */
     if ( !b->last_block || b->last_block->filled == b->last_block->size )
     {
-        b->last_block = block__new( b->block_size );
-        array__enqueue( b->blocks, ( void* ) b->last_block );
+        bl = block__new( b->block_size );
+
+        if ( bl && array__enqueue( b->blocks, ( void* ) bl ) )
+            b->last_block = bl;
+        else
+            return 0;
     }
 
     /* Add the item to the tail-end block. */
     b->last_block->buffer[b->last_block->filled++] = p;
 
     return p;
-}
-
-
-void
-bunch__add_all( Bunch *dest, Bunch *src )
-{
-    unsigned int i, size;
-    Block *last_block = dest->last_block;
-
-    /* Remove the tail-end block if it is only partially filled. */
-    if ( last_block )
-    {
-        if ( last_block->filled < last_block->size )
-            last_block = array__dequeue( dest->blocks );
-        else
-            last_block = 0;
-    }
-
-    /* Add all source blocks. */
-    size = array__size( src->blocks );
-    for ( i = 0; i < size; i++ )
-        array__enqueue( dest->blocks,
-            ( void* ) block__copy( array__get( src->blocks, i ) ) );
-
-    /* Find the new tail-end block. */
-    dest->last_block = array__get( dest->blocks, array__size( dest->blocks ) - 1 );
-
-    /* Add all items from the previous tail-end block (if any). */
-    for ( i = 0; i < last_block->filled; i++ )
-        bunch__add( dest, last_block->buffer[i] );
-    free( last_block );
 }
 
 

@@ -5,16 +5,16 @@ SUBDIRS = import parser collection xml
 BUILT_SOURCES = revision.h
 EXTRA_DIST = $(BUILT_SOURCES)
 
-noinst_HEADERS = revision.h		\
-	settings.h			\
-	compiler/Apply.h		\
-	object/Object-impl.h		\
-	primitive/Primitive-impl.h	\
-	interpreter/Interpreter-impl.h	\
-	interpreter/license.h		\
-	environment/Environment-impl.h	\
-	namespace/Namespace-impl.h	\
-	parser/Ast-impl.h		\
+noinst_HEADERS = revision.h						\
+	settings.h							\
+	compiler/Apply.h						\
+	object/Object-impl.h						\
+	primitive/Primitive-impl.h					\
+	interpreter/Interpreter-impl.h					\
+	interpreter/license.h						\
+	environment/Environment-impl.h					\
+	namespace/Namespace-impl.h					\
+	parser/Ast-impl.h						\
 	type/Type-impl.h
 
 bin_PROGRAMS = phase2
@@ -28,15 +28,15 @@ bin_PROGRAMS = phase2
 lib_LTLIBRARIES = libphase2.la
 
 
-compiler_src = \
-	compiler/Apply.c	\
-	compiler/graph-reduce.c	\
+compiler_src =								\
+	compiler/Apply.c						\
+	compiler/graph-reduce.c						\
 	compiler/term-reduce.c
 
-environment_src = \
-	environment/Environment.c	\
-	environment/combinators.c	\
-	environment/primitives.c	\
+environment_src =							\
+	environment/Environment.c					\
+	environment/combinators.c					\
+	environment/primitives.c					\
 	environment/types.c
 
 interpreter_src = \
@@ -81,7 +81,9 @@ libphase2_la_SOURCES = \
 	$(compiler_src)		\
 	$(type_src)		\
 	parser/Ast.c		\
-	collection/Collection.c
+	parser/Parser.c		\
+	collection/Collection.c \
+	debug.c
 
 ## Convenience libraries from each subdirectory with its own Makefile.am.
 libphase2_la_LIBADD = \

@@ -35,4 +35,5 @@ parser_test_SOURCES = \
 	../object/association.c		\
 	../object/methods.c		\
 	../object/traversal.c		\
-	../type/Type.c
+	../type/Type.c			\
+	../debug.c

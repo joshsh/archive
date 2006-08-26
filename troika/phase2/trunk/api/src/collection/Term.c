@@ -50,7 +50,7 @@ term__expand( Term *t, unsigned int minimum_buffer_size )
 
     /* Copy array data to the new buffer. */
     size = (unsigned int) *(t->head);
-    new_buffer = MALLOC(new_buffer_size * sizeof(void *));
+    new_buffer = malloc(new_buffer_size * sizeof(void *));
     new_head = new_buffer + new_buffer_size - size;
     memcpy(new_head, t->head, size * sizeof(void *));
     free(t->buffer);
@@ -78,7 +78,7 @@ term__new( void *p, unsigned int initial_buffer_size )
         abort();
 */
 
-    t = MALLOC(sizeof(Term));
+    t = malloc(sizeof(Term));
 
     /* Buffer starts out at this size, but may expand later. */
     if (initial_buffer_size < 2)
@@ -86,7 +86,7 @@ term__new( void *p, unsigned int initial_buffer_size )
     t->buffer_size = initial_buffer_size;
 
     /* Create the buffer. */
-    t->buffer = MALLOC(t->buffer_size * sizeof(void *));
+    t->buffer = malloc(t->buffer_size * sizeof(void *));
 
     /* Add the atom. */
     t->head = t->buffer + t->buffer_size - 1;
@@ -120,7 +120,7 @@ term__copy( Term *source )
     t->buffer_size = source->buffer_size;
 
     /* Create the buffer. */
-    t->buffer = MALLOC( t->buffer_size * sizeof( void* ) );
+    t->buffer = malloc( t->buffer_size * sizeof( void* ) );
 
     /* Set the head of the Term and store its size there. */
     t->head = t->buffer + t->buffer_size - size;
@@ -201,7 +201,7 @@ term__subterm_at(Term *t, int i)
     length = (unsigned int) *cur;
     subterm = NEW( Term );
     subterm->buffer_size = length;
-    subterm->buffer = MALLOC(length * sizeof(void *));
+    subterm->buffer = malloc(length * sizeof(void *));
     memcpy(subterm->buffer, cur, length * sizeof(void *));
     subterm->head = subterm->buffer;
 

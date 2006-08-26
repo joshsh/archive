@@ -624,6 +624,8 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 {
                     /* Get a new placeholder object. */
                     o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                    if ( !o )
+                        return 0;
 
                     hash_map__add( state->objects_by_id, ( void* ) id, o );
                 }
@@ -636,6 +638,8 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
             {
                 /* Get a new placeholder object. */
                 o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                if ( !o )
+                    return 0;
             }
 
             o->type = type;
@@ -688,6 +692,9 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
             if ( !o )
             {
                 o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                if ( !o )
+                    return 0;
+
                 hash_map__add( state->objects_by_id, ( void* ) id, o );
             }
         }

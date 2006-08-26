@@ -42,7 +42,7 @@ k_reduce( Term *term )
     y_size = ( unsigned int ) *y;
 
     /* Copy the 'x' subterm to the target position. */
-    aux = MALLOC( x_size * sizeof( void* ) );
+    aux = malloc( x_size * sizeof( void* ) );
     memcpy( aux, x, x_size * sizeof( void* ) );
     term->head = y + ( y_size - x_size );
     memcpy( term->head, aux, x_size * sizeof( void* ) );
@@ -92,7 +92,7 @@ s_reduce( Term *term )
     }
 
     /* Copy 'x' to an auxiliary array. */
-    aux = MALLOC( x_size * sizeof( void* ) );
+    aux = malloc( x_size * sizeof( void* ) );
     memcpy( aux, x, x_size * sizeof( void* ) );
 
     /* Prepend a term head for the new sub-term 'yz'.  The data of 'y' and 'z'
@@ -329,7 +329,7 @@ prim_reduce(
     if ( PRIM__ALLOW_NULLARY )
     {
         args = ( p->arity )
-            ? MALLOC( p->arity * sizeof( void* ) )
+            ? malloc( p->arity * sizeof( void* ) )
             : 0;
     }
 
@@ -338,7 +338,7 @@ prim_reduce(
         if ( DEBUG__SAFE && !p->arity )
             abort();
 
-        args = MALLOC( p->arity * sizeof( void* ) );
+        args = malloc( p->arity * sizeof( void* ) );
     }
 
     /* Advance to the first argument. */

@@ -86,7 +86,7 @@ primitive__new(
         return 0; 
     }
 
-    p->parameters = MALLOC( arity * sizeof( Parameter ) );
+    p->parameters = malloc( arity * sizeof( Parameter ) );
     for ( i = 0; i < arity ; i++ )
     {
         /* Mark the parameter as "not yet defined". */

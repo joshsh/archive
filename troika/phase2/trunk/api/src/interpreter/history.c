@@ -22,7 +22,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #if HAVE_LIBREADLINE
 #    include <readline/history.h>
+
 static boolean history_initialized = FALSE;
+
 static void
 enable_history()
 {

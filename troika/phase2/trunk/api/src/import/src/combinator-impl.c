@@ -6,6 +6,8 @@ Combinator *
 combinator__decode( cstring *buffer )
 {
     Combinator *c = NEW( Combinator );
+    if ( !c )
+        return 0;
 
     switch( *buffer )
     {

@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #    include <ncurses.h>
 #endif
 
-#include <Interpreter.h>
+#include <Parser.h>
 #include "settings.h"
 
 
@@ -190,9 +190,16 @@ read_options ( int argc, char **argv, char *source_file )
 }
 
 
-/* ~ */
-extern void
-parser__push( const char *s );
+static void
+memtest()
+{
+debug__memcheck();
+Environment *env = environment__new();
+debug__memcheck();
+environment__delete( env );
+debug__memcheck();
+}
+
 
 /** Instantiates an Environment and attaches an Interpreter to interact with the
     command line. */
@@ -202,7 +209,8 @@ main( int argc, char *argv[] )
     int status = EXIT_SUCCESS;
 
     Environment *env;
-    Interpreter *compiler;
+    Interpreter *itp;
+    Parser *p;
 
     static char source_file[0x100];
     *source_file = '\0';
@@ -218,14 +226,16 @@ main( int argc, char *argv[] )
 
     else
     {
-        if ( ( compiler = interpreter__new( env, quiet_flag ) ) )
+        if ( ( itp = interpreter__new( env, quiet_flag ) ) )
         {
+            p = parser__new( itp );
+
             if ( *source_file )
             {
                 if ( DEBUG__MAIN )
                     PRINT( "Loading namespace from file...\n" );
 
-                interpreter__deserialize( compiler, source_file );
+                interpreter__deserialize( itp, source_file );
             }
 
             if ( !quiet_flag )
@@ -236,24 +246,25 @@ main( int argc, char *argv[] )
             }
 
 /*
-parser__push( "here;" );
-parser__push( "here;" );
+parser__feed( p, "here;" );
+parser__feed( p, "here;" );
 
-            if ( interpreter__parse( compiler ) )
+            if ( interpreter__parse( itp ) )
                 ERROR( "main: parse failed" );
 
-parser__push( "_size;" );
+parser__feed( p, "_size;" );
 
-            if ( interpreter__parse( compiler ) )
+            if ( interpreter__parse( itp ) )
                 ERROR( "main: parse failed" );
 
-parser__push( ";here;" );
+parser__feed( p, ";here;" );
 */
-            if ( interpreter__parse( compiler ) )
+            if ( interpreter__parse( itp ) )
                 ERROR( "main: parse failed" );
 
+            interpreter__delete( itp );
 
-            interpreter__delete( compiler );
+            parser__free( p );
         }
 
         else
@@ -264,6 +275,10 @@ parser__push( ";here;" );
 
 #if USE_NCURSES
     endwin();
+#endif
+
+#if DEBUG__ALLOC
+    debug__memcheck();
 #endif
 
     /* See: http://www.jetcafe.org/~jim/c-style.html#Expressions */

@@ -359,6 +359,8 @@ resolve( Ast *ast, Interpreter *c )
                 abort();
         }
 
+        /* Note: ast__delete would also free the AST's value, which is now owned
+           by the resolved object. */
         free( ast );
 
         if ( ok )
@@ -399,7 +401,14 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr, const c
     Term *t;
     Array *spine;
 
-    Encoder apply__encode, bag__encode, char__encode, double__encode, string__encode, set__encode, term__encode;
+    Encoder
+        apply__encode,
+        bag__encode,
+        char__encode,
+        double__encode,
+        string__encode,
+        set__encode,
+        term__encode;
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr )
@@ -417,6 +426,7 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr, const c
     string__encode = c->string_t->encode;
     set__encode = c->set_t->encode;
     term__encode = c->term_t->encode;
+
     apply_type->encode = ( Encoder ) apply__encode__alt;
     c->bag_t->encode = ( Encoder ) array__encode__alt;
     c->char_t->encode = ( Encoder ) char__encode__alt;
@@ -505,6 +515,7 @@ interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr, const c
         name__delete( oname );
 
     apply_type->encode = apply__encode;
+
     c->bag_t->encode = bag__encode;
     c->char_t->encode = char__encode;
     c->float_t->encode = double__encode;

@@ -219,7 +219,7 @@ hash_table__copy( const Hash_Table *h )
         *h2 = *h;
 
         /* Copy the buffer, too. */
-        if ( !( h2->buffer = MALLOC( h->buffer_size * h->cell_size ) ) )
+        if ( !( h2->buffer = malloc( h->buffer_size * h->cell_size ) ) )
         {
             free( h2 );
             h2 = 0;
@@ -351,7 +351,7 @@ rehash_dependent_cells( Hash_Table *h, cell *removed )
 
     if ( i )
     {
-        aux = MALLOC( i * h->cell_size );
+        aux = malloc( i * h->cell_size );
 
         cur = removed;
         for ( j = 0; j < i; j++ )

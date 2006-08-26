@@ -351,6 +351,15 @@ object__identity( void **args )
 }
 
 
+/* FIXME: not a meta primitive */
+static void *
+error_stub( void **args )
+{
+    ERROR( args[0] );
+    return 0;
+}
+
+
 int
 add_meta_prims( Environment *env )
 {
@@ -366,6 +375,10 @@ add_meta_prims( Environment *env )
 
       && ( p = primitive__new( env, NAMEOF( ANY ), "object__identity", object__identity, 1 ) )
       && primitive__add_param( env, p, NAMEOF( ANY ), "o", REF_TRP )
+      && primitive__register( env, p, NOPROPS, 0 )
+
+      && ( p = primitive__new( env, NAMEOF( ANY ), "error", error_stub, 1 ) )
+      && primitive__add_param( env, p, NAMEOF( STRING ), "msg", REF_TRP )
       && primitive__register( env, p, NOPROPS, 0 )
 
 #if TRIPLES__GLOBAL

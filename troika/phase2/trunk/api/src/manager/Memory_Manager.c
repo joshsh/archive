@@ -55,24 +55,25 @@ Memory_Manager *
 memory_manager__new()
 {
     Memory_Manager *m;
-    Type *object_t;
+    Type *object_t = 0, *bunch_t = 0;
 
     if ( !( m = NEW( Memory_Manager ) ) )
         return 0;
 
+    m->objects_o = 0;
     m->objects = bunch__new( MEM__OBJECTS__BLOCK_SIZE );
 
     if ( !m->objects )
-    {
-        free( m );
-        return 0;
-    }
+        goto fail;
 
+    /* Note: these are freed in memory_manager__delete */
     object_t = object__create_type( "object" );
+    bunch_t = bunch__create_type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS );
 
-    m->objects_o = object__new(
-        bunch__create_type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS ),
-        m->objects, 0 );
+    if ( !object_t || !bunch_t )
+        goto fail;
+
+    m->objects_o = object__new( bunch_t, m->objects, 0 );
     m->objects_o->type->type_arg = object_t;
 
     /* The manager starts out with no root object. */
@@ -82,6 +83,22 @@ memory_manager__new()
     m->size_at_last_cycle = 0;
 
     return m;
+
+fail:
+
+    if ( object_t )
+        type__delete( object_t );
+    if ( bunch_t )
+        type__delete( bunch_t );
+
+    if ( m->objects_o )
+        object__delete( m->objects_o );
+    else
+        bunch__delete( m->objects );
+
+    free( m );
+
+    return 0;
 }
 
 
@@ -142,6 +159,7 @@ memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags )
         {
             object__delete( o );
             o = 0;
+            WARNING__ALLOC( "failed to add new object" );
         }
     }
 

@@ -845,7 +845,7 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
 
             if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
             {
-                ERROR( "reduction abandoned (possible non-termination)" );
+                WARNING( "reduction abandoned (possible non-termination)" );
 
                 /* Caution: the danger of NOT pruning this expression is that
                    the program will try to reduce it again and again, leading to

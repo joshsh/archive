@@ -215,19 +215,25 @@ interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
 void
 interpreter__encode( Interpreter *c, const Object *o, char *buffer, unsigned int maxlen )
 {
-    if ( DEBUG__SAFE && ( !c || !o ) )
+    if ( DEBUG__SAFE && !c )
         abort();
 
-    if ( !maxlen )
-        maxlen = LABEL__MAXLEN;
+    if ( o )
+    {
+        if ( !maxlen )
+            maxlen = LABEL__MAXLEN;
 
-    Name *name = interpreter__name_of( c, c->cur_ns_obj, o );
+        Name *name = interpreter__name_of( c, c->cur_ns_obj, o );
 
-    if ( !name )
-        object__encode( o, buffer );
+        if ( !name )
+            object__encode( o, buffer );
+
+        else
+            name__encode( name, buffer );
+    }
 
     else
-        name__encode( name, buffer );
+        sprintf( buffer, "()" );
 }
 
 

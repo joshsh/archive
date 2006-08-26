@@ -38,7 +38,7 @@ struct String
 /* By default, expand() doubles the size of the array. */
 #define DEFAULT_EXPANSION_FACTOR    2.0
 
-#define BUFFER_NEW( size )  MALLOC( ( size ) * sizeof( char ) )
+#define BUFFER_NEW( size )  malloc( ( size ) * sizeof( char ) )
 
 /** The String expands by this factor whenever it outgrows its buffer.
     Memory copying into the new buffer is expensive, so beware of setting
@@ -53,7 +53,7 @@ buffer_copy( String *s )
     char *buffer;
     size_t size = s->buffer_size * sizeof( char );
 
-    if ( ( buffer = MALLOC( size ) ) )
+    if ( ( buffer = malloc( size ) ) )
         memcpy( buffer, s->buffer, size + 1 );
 
     return buffer /*@null@*/;

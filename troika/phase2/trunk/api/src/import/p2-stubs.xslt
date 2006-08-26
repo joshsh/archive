@@ -180,8 +180,8 @@ static void *<xsl:text />
             <xsl:choose>
                 <xsl:when test="$returns-pointer-type">;<xsl:text /></xsl:when>
                  <xsl:otherwise> = ( <xsl:text />
-                    <xsl:value-of select="$return-type" />* ) MALLOC( sizeof( <xsl:text />
-                    <xsl:value-of select="$return-type" /> ));<xsl:text />
+                    <xsl:value-of select="$return-type" />* ) NEW( <xsl:text />
+                    <xsl:value-of select="$return-type" /> );<xsl:text />
                 </xsl:otherwise>
             </xsl:choose>
     <xsl:text>

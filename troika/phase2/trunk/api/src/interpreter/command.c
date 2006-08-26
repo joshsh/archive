@@ -270,16 +270,21 @@ command_mv( Interpreter *c, Array *args )
 }
 
 
+#define putchar 
+
 static int
 command_new( Interpreter *c, Array *args )
 {
     Object *o;
-    Name *name = array__size( args )
+    Name *name;
+putchar('\'');FFLUSH;
+
+    name = array__size( args )
         ? array__get( args, 0 ) : 0;
 
     if ( !name )
         return 0;
-
+putchar('*');FFLUSH;
 /*
     if ( interpreter__resolve( c, name ) )
     {
@@ -291,9 +296,10 @@ command_new( Interpreter *c, Array *args )
     o = memory_manager__object( environment__manager( c->env ),
         c->cur_ns_obj->type, namespace__new(), 0 );
 
-    interpreter__define( c, name, o );
+    if ( o )
+        o = interpreter__define( c, name, o );
 
-    if ( !c->quiet && o )
+    if ( o && !c->quiet )
     {
         PRINT( "Created namespace " );
         name__print( name );
@@ -312,6 +318,7 @@ command_ns( Interpreter *c, Array *args )
 
     if ( !( name = array__get( args, 0 ) ) )
         return 0;
+putchar(',');FFLUSH;
 
     if ( ( o = interpreter__resolve( c, name ) ) )
     {
@@ -320,18 +327,21 @@ command_ns( Interpreter *c, Array *args )
 
         else
         {
-            fullname = interpreter__name_of__full( c, 0, o );
             c->cur_ns_obj = o;
 
             if ( !c->quiet )
             {
-                PRINT( "Moved to namespace " );
-                name__print( fullname );
-/*                name__print( name );*/
-                PRINT( ".\n" );
-            }
+                fullname = interpreter__name_of__full( c, 0, o );
 
-            name__delete( fullname );
+                if ( fullname )
+                {
+                    PRINT( "Moved to namespace " );
+                    name__print( fullname );
+/*                    name__print( name );*/
+                    PRINT( ".\n" );
+                    name__delete( fullname );
+                }
+            }
         }
     }
 

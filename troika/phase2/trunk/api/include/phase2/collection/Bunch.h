@@ -42,11 +42,15 @@ typedef struct Bunch Bunch;
 
 /******************************************************************************/
 
-/** Constructor. */
+/** Constructor.
+    \return  a pointer to the new Bunch, or NULL in the event of allocation
+    failure */
 extern Bunch *
 bunch__new( unsigned int block_size );
 
-/** Copy constructor. */
+/** Copy constructor.
+    \return  a pointer to the new Bunch, or NULL in the event of allocation
+    failure */
 extern Bunch *
 bunch__copy( Bunch *b );
 
@@ -57,22 +61,20 @@ bunch__delete( Bunch *b );
 
 /******************************************************************************/
 
-/** How big of a bunch is it? */
+/** \return  the number of items in the Bunch */
 extern unsigned int
 bunch__size( const Bunch *b );
 
 
 /******************************************************************************/
 
-/** Adds a single item to the bunch. */
+/** Adds a single item to the bunch.
+    \return  the item added, or NULL in the event of allocation failure */
 extern void *
 bunch__add( Bunch *b, void *p );
 
-/** Adds the contents of one bunch to another. */
-extern void
-bunch__add_all( Bunch *dest, Bunch *src );
-
-/** Removes a single item from the bunch. */
+/** Removes a single item from the bunch.
+    \return  the item removed */
 extern void *
 bunch__remove( Bunch *b );
 
@@ -86,7 +88,8 @@ bunch__walk( Bunch *b, Visitor f );
 
 /******************************************************************************/
 
-/** \return  an instance of the "bunch" data type */
+/** \return  an instance of the "bunch" data type, or NULL in the event of
+    allocation failure */
 extern Type *
 bunch__create_type( const char *name, int flags );
 

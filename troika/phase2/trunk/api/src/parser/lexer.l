@@ -300,6 +300,11 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 /** Comments and string literals have their own mini-scanners. */
 %x SC__STRING SC__COMMENT
 
+/* Wrappers provided below.  Don't use the defaults. */
+%option noyyalloc
+%option noyyrealloc
+%option noyyfree
+
 /*
 %option reentrant
 %option bison-bridge
@@ -495,6 +500,27 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 
 
 %%
+
+
+void *
+yyalloc( yy_size_t size )
+{
+    return ( void* ) malloc( size );
+}
+
+
+void *
+yyrealloc( void *ptr, yy_size_t size )
+{
+    return ( void* ) realloc( ( char* ) ptr, size );
+}
+
+
+void
+yyfree( void *ptr )
+{
+    free( ( char* ) ptr );
+}
 
 
 int
