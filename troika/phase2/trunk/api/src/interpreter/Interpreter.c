@@ -20,28 +20,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Interpreter-impl.h"
 
 
-/** Bison parser dependency. */
-extern int
-yyparse( Interpreter *c, exit_state *es );
-
-
-/******************************************************************************/
-
-
-static boolean instance_exists = FALSE;
-
-
 Interpreter *
 interpreter__new( Environment *env, boolean quiet )
 {
     Interpreter *c;
-
-    if ( instance_exists )
-    {
-        ERROR( "interpreter__new: concurrent interpreter instances are not allowed" );
-        c = 0;
-        goto finish;
-    }
 
     if ( DEBUG__SAFE && !env )
         abort();
@@ -52,11 +34,8 @@ interpreter__new( Environment *env, boolean quiet )
         goto finish;
     }
 
-    instance_exists = TRUE;
-
     c->env = env;
     c->cur_ns_obj = environment__data( env );
-    c->locked = FALSE;
     c->quiet = quiet;
     c->show_line_numbers = TRUE;
 #if HAVE_LIBREADLINE
@@ -72,6 +51,7 @@ interpreter__new( Environment *env, boolean quiet )
          && ( c->combinator_t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value )
          && ( c->float_t = environment__resolve_type( env, NAMEOF( DOUBLE ) )->value )
          && ( c->int_t = environment__resolve_type( env, NAMEOF( INTEGER ) )->value )
+         && ( c->name_t = environment__resolve_type( env, NAMEOF( NAME ) )->value )
          && ( c->ns_t = environment__resolve_type( env, NAMEOF( NAMESPACE ) )->value )
          && ( c->prim_t = environment__resolve_type( env, NAMEOF( PRIMITIVE ) )->value )
          && ( c->set_t = environment__resolve_type( env, NAMEOF( SET ) )->value )
@@ -81,7 +61,6 @@ interpreter__new( Environment *env, boolean quiet )
     {
         ERROR( "interpreter__new: basic type not found" );
         free( c );
-        instance_exists = FALSE;
         c = 0;
         goto finish;
     }
@@ -90,7 +69,6 @@ interpreter__new( Environment *env, boolean quiet )
     {
         ERROR( "interpreter__new: allocation failed" );
         free( c );
-        instance_exists = FALSE;
         c = 0;
         goto finish;
     }
@@ -107,27 +85,16 @@ finish:
 
 
 void
-interpreter__delete( Interpreter *c )
+interpreter__delete( Interpreter *itp )
 {
-    if ( DEBUG__SAFE )
-    {
-        if ( !c )
-            abort();
+    if ( DEBUG__SAFE && !itp )
+        abort();
 
-        else if ( c->locked )
-        {
-            ERROR( "interpreter__delete: can't delete while parsing" );
-            abort();
-        }
-    }
+    if ( itp->save_to_path )
+        free( itp->save_to_path );
 
-    if ( c->save_to_path )
-        free( c->save_to_path );
-
-    delete_commands( c->commands );
-    free( c );
-
-    instance_exists = FALSE;
+    delete_commands( itp->commands );
+    free( itp );
 
     /* FIXME */
     graph_end();
@@ -145,28 +112,6 @@ Namespace_o *
 interpreter__working_namespace( Interpreter *c )
 {
     return c->cur_ns_obj;
-}
-
-
-exit_state
-interpreter__parse( Interpreter *c )
-{
-    exit_state exit_state;
-
-    if ( DEBUG__SAFE && !c )
-        abort();
-
-    if ( c->locked )
-        return exit_state__locked_out;
-
-    c->locked = TRUE;
-
-    if ( yyparse( c, &exit_state ) )
-        ERROR( "interpreter__parse: parser exited abnormally" );
-
-    c->locked = FALSE;
-
-    return exit_state;
 }
 
 

@@ -109,6 +109,44 @@ typedef void            ( *Walker )( void *coll, Visitor f );
 typedef void            ( *Generic_f )( void );
 
 
+/* Type names *****************************************************************/
+
+#define ANY                                     any_type
+#define APPLY                                   Apply
+#define ARRAY                                   Array
+#define CHARACTER                               char
+#define COMBINATOR                              Combinator
+#define DOUBLE                                  double
+#define INDIRECTION                             Indirection
+#define INTEGER                                 int
+#define NAME                                    Name
+#define NAMESPACE                               Namespace
+#define PRIMITIVE                               Primitive
+#define SET                                     Set
+#define STRING                                  cstring
+#define TERM                                    Term
+#define TYPE                                    Type
+#define VOID                                    Void
+
+#define DATA_SET                                data_set
+#define OBJECT                                  object
+#define TRIPLE                                  triple
+
+
+/*
+#define ENCODING__ROOT__XML__NAME               "data_set"
+
+#define OBJECT__XML__NAME                       "object"
+#define TRIPLES__XML__NAME                      "triple"
+
+#define APPLY__XML__NAME                        "apply"
+#define ARRAY__XML__NAME                        "list"
+#define NAMESPACE__XML__NAME                    "table"
+#define SET__XML__NAME                          "list"
+#define TERM__XML__NAME                         "list"
+*/
+
+
 #endif  /* COMMON_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

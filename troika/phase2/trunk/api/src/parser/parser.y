@@ -34,10 +34,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <collection/Term.h>
-#include <Ast.h>
-
 #include "Parser-impl.h"
+
+/* FIXME */
+Parser *parser;
 
 /*
 #define YYmalloc    malloc
@@ -53,6 +53,7 @@ yy_scan_string( const char *yy_str );
 void
 parser__feed( Parser *p, const char *s )
 {
+    p = 0;
     yy_scan_string( s );
 }
 
@@ -60,46 +61,10 @@ parser__feed( Parser *p, const char *s )
 /******************************************************************************/
 
 
-/** Output decoration. */
-/* #define COMMAND_OUTPUT_PREFIX "\t>> "    */
-/* #define EXPRESSION_OUTPUT_PREFIX "\t>> " */
-/* #define ERROR_OUTPUT_PREFIX "\t>> "      */
-/* #define COMMAND_OUTPUT_SUFFIX " <<"      */
-/* #define EXPRESSION_OUTPUT_SUFFIX " <<"   */
-/* #define ERROR_OUTPUT_SUFFIX " <<"        */
-
-
-/** Evaluate a command. */
-static void
-handle_command( Interpreter *c, char * /*name*/, Ast * /*args*/ );
-
-/** Evaluate an expression. */
-static void
-handle_expression( Interpreter *c, Name * /*name*/, Ast * /*expr*/ );
-
-/** Deal gracefully with a parse error. */
-static void
-handle_error( Interpreter *c );
-
-
-/******************************************************************************/
-
-
-/** Buffer size is arbitary... */
-#define ERROR_BUFFER__SIZE  0xFF
-
-static int exit_early;
-
-static int error_character_number, error_line_number;
+int error_character_number, error_line_number;
 
 /** Buffer for "verbose" error message received by yyerror. */
 static char yyerror_msg[ERROR_BUFFER__SIZE];
-
-extern void
-lexer__clear_buffer();
-
-extern char *
-lexer__get_buffer();
 
 
 /******************************************************************************/
@@ -123,14 +88,21 @@ yywrap( void )
 /** Copies reported error messages to a string, where they wait to be passed on to
     the semantic module. */
 void
-yyerror( Interpreter *c, exit_state *ignored, const char *msg )
+yyerror( Parser *p, exit_state *ignored, const char *msg )
 {
     /* Avoid "unused parameter" compiler warning. */
-    c = 0;
+    p = 0;
     ignored = 0;
 
     /* Only the first error in a statement is reported. */
-    if ( ! *yyerror_msg )
+    if ( *yyerror_msg )
+    {
+#if DEBUG__PARSER
+        PRINT( "yyerror: %s (not reported due to previous error)\n", msg );
+#endif
+    }
+
+    else
     {
 #if DEBUG__PARSER
         PRINT( "yyerror: %s (reported)\n", msg );
@@ -144,17 +116,10 @@ yyerror( Interpreter *c, exit_state *ignored, const char *msg )
         error_character_number = get_char_number();
         error_line_number = get_line_number();
     }
-
-    else
-    {
-#if DEBUG__PARSER
-        PRINT( "yyerror: %s (not reported due to previous error)\n", msg );
-#endif
-    }
 }
 
 
-#define ERROK  { yyerrok; exit_early = 0; }
+#define ERROK  { yyerrok; parser->exit_early = FALSE; }
 
 
 #if DEBUG__PARSER
@@ -175,48 +140,18 @@ production( char *s )
 /******************************************************************************/
 
 
-typedef struct Statement Statement;
-
-struct Statement
+struct Command
 {
-    Name *name;
-    char *simple_name;
-    Ast *expr;
+    OBJ( STRING ) *name;
+    OBJ( ARRAY ) *args;
 };
 
 
-static Statement *
-new_statement( Name *name, char *simple_name, Ast *expr )
+struct Expression
 {
-    Statement *stmt = NEW( Statement );
-
-    stmt->name = name;
-    stmt->simple_name = simple_name;
-    stmt->expr = expr;
-
-    return stmt;
-}
-
-
-/******************************************************************************/
-
-
-static Ast *
-term2ast( Term *t )
-{
-    Ast *ast;
-
-    if ( term__length( t ) > 1 )
-        ast = ast__term( t );
-
-    else
-    {
-        ast = term__head( t );
-        term__delete( t );
-    }
-
-    return ast;
-}
+    Object *value;
+    OBJ( NAME ) *name;
+};
 
 
 /******************************************************************************/
@@ -232,20 +167,19 @@ term2ast( Term *t )
     int                 integer;
     char                *string;
 
-    /** (void *) instead of (Ast *) because Bison won't take an alias here. */
-    void                *parser_node;
-
-    struct Statement    *statement;
+    /* Semantic values cannot use “real” objects, but only pointers to them. */
+    struct Command      *command;
+    struct Expression   *expression;
 
     struct Object       *object;
 }
 
 
 %token TOK__L_PAREN         TOK__R_PAREN
-%token TOK__L_SQ_BRACKET    TOK__R_SQ_BRACKET
+/*%token TOK__L_SQ_BRACKET    TOK__R_SQ_BRACKET*/
 %token TOK__L_BRACE         TOK__R_BRACE
 %token TOK__L_ASSIGN        TOK__R_ASSIGN
-%token TOK__COMMA           TOK__COLON          TOK__SEMICOLON
+%token TOK__COLON           TOK__COMMA          TOK__SEMICOLON
 %token TOK__EOF
 
 %token <character>  TOK__CHAR
@@ -253,18 +187,21 @@ term2ast( Term *t )
 %token <real>       TOK__REAL
 %token <string>     TOK__COMMAND_NAME   TOK__ID TOK__STRING
 
+%type <command>     command
+%type <expression>  expression
+%type <object>      bag bag_head command_name name command_args subterm object term_item
+/*%type <parser_node> bracketed_term term_item*/
+/*%type <statement>   command expression statement*/
+%type <string>      id
 
-%type <object>      bag name command_args subterm term
-%type <parser_node> bracketed_term term_item
-%type <statement>   command expression statement
-%type <string>      command_name id
+%destructor { free ($$); } TOK__COMMAND_NAME TOK__ID TOK__STRING id command expression
 
 
 /*
 %pure_parser
 */
 
-%parse-param { Interpreter *compiler }
+%parse-param { Parser *parser }
 %parse-param { exit_state *return_state }
 
 /** Report more detailed parse error messages. */
@@ -285,9 +222,12 @@ input:
 #endif
 
         if ( *yyerror_msg )
-            handle_error( compiler );
+        {
+            parser__handle_error( parser, yyerror_msg );
+            *yyerror_msg = '\0';
+        }
 
-        if ( exit_early )
+        if ( parser->exit_early )
             *return_state = exit_state__aborted;
 
         else
@@ -312,7 +252,7 @@ statements:
         yydebug = 1;
 #endif
 
-        new_parse( compiler );
+        new_parse( parser );
 
         ERROK;
     }
@@ -324,9 +264,12 @@ statements:
 #endif
 
         if ( *yyerror_msg )
-            handle_error( compiler );
+        {
+            parser__handle_error( parser, yyerror_msg );
+            *yyerror_msg = '\0';
+        }
 
-        if ( exit_early )
+        if ( parser->exit_early )
         {
             *return_state = exit_state__aborted;
             YYACCEPT;
@@ -343,9 +286,12 @@ statements:
 #endif
 
         if ( *yyerror_msg )
-            handle_error( compiler );
+        {
+            parser__handle_error( parser, yyerror_msg );
+            *yyerror_msg = '\0';
+        }
 
-        if ( exit_early )
+        if ( parser->exit_early )
         {
             *return_state = exit_state__aborted;
             YYACCEPT;
@@ -359,9 +305,12 @@ statements:
 #endif
 
         if ( *yyerror_msg )
-            handle_error( compiler );
+        {
+            parser__handle_error( parser, yyerror_msg );
+            *yyerror_msg = '\0';
+        }
 
-        if ( exit_early )
+        if ( parser->exit_early )
         {
             *return_state = exit_state__aborted;
             YYACCEPT;
@@ -380,13 +329,9 @@ statement:
         production( "statement ::=  command TOK__SEMICOLON" );
 #endif
 
-        $$ = 0;
-
         if ( $1 )
         {
-            if ( $1->simple_name )
-                handle_command( compiler, $1->simple_name, $1->expr );
-
+            parser__handle_command( parser, $1->name, $1->args );
             free( $1 );
         }
     }
@@ -398,13 +343,9 @@ statement:
         production( "statement ::=  expression TOK__SEMICOLON" );
 #endif
 
-        $$ = 0;
-
         if ( $1 )
         {
-            if ( $1->expr )
-                handle_expression( compiler, $1->name, $1->expr );
-
+            parser__handle_expression( parser, $1->name, $1->value );
             free( $1 );
         }
     };
@@ -419,7 +360,13 @@ command:
         production( "command ::=  command_name" );
 #endif
 
-        $$ = new_statement( 0, $1, 0 );
+        $$ = NEW( struct Command );
+
+        if ( $$ )
+        {
+            $$->name = $1;
+            $$->args = 0;
+        }
     }
 
     | command_name error
@@ -427,9 +374,6 @@ command:
 #if DEBUG__PARSER
         production( "command ::=  command_name error" );
 #endif
-
-        if ( $1 )
-            free( $1 );
 
         $$ = 0;
 
@@ -443,8 +387,19 @@ command:
         production( "command ::=  command_name command_args" );
 #endif
 
-        if ( $2 )
-            $$ = new_statement( 0, $1, ast__term( $2 ) );
+        if ( $1 && $2 )
+        {
+            $$ = NEW( struct Command );
+
+            if ( $$ )
+            {
+                $$->name = $1;
+                $$->args = $2;
+            }
+        }
+
+        else
+            $$ = 0;
     }
 
     | command_name command_args error
@@ -452,12 +407,6 @@ command:
 #if DEBUG__PARSER
         production( "command ::=  command_name command_args error" );
 #endif
-
-        if ( $1 )
-            free( $1 );
-
-        if ( $2 )
-            ast__delete( ast__term( $2 ) );
 
         $$ = 0;
 
@@ -475,7 +424,7 @@ command_name:
         production( "command_name ::=  TOK__COMMAND_NAME" );
 #endif
 
-        $$ = STRDUP( $1 );
+        $$ = PARSER_REF2OBJ( STRING )( parser, STRDUP( $1 ) );
     };
 
 
@@ -483,12 +432,22 @@ command_args:
 
     name
     {
+        Array *args;
+
 #if DEBUG__PARSER
         production( "command_args ::=  name" );
 #endif
 
-        /* Create a singleton term containing one argument. */
-        $$ = term__new( ast__name( $1 ), 1 );
+        $$ = 0;
+
+        args = array__new( 1, 0 );
+        if ( args )
+        {
+            if ( array__enqueue( args, $1 ) )
+                $$ = PARSER_REF2OBJ( ARRAY )( parser, args );
+            else
+                array__delete( args );
+        }
     }
 
     | command_args name
@@ -497,17 +456,12 @@ command_args:
         production( "command_args ::=  command_args name" );
 #endif
 
-        /* Concatenate the command command_args. */
-        if ( $1 )
-        {
-            $$ = term__cat( $1, term__new( ast__name( $2 ), 1 ) );
-        }
+        $$ = $1;
 
-        else
+        if ( $$ )
         {
-            $$ = 0;
-
-            free( $2 );
+            if ( !array__enqueue( object__value( $$ ), $1 ) )
+                $$ = 0;
         }
     };
 
@@ -515,26 +469,32 @@ command_args:
 expression:
 
     /* Anonymous expression. */
-    term
+    object
     {
 #if DEBUG__PARSER
-        production( "expression ::=  term" );
+        production( "expression ::=  object" );
 #endif
 
         if ( $1 )
-            $$ = new_statement( 0, 0, term2ast( $1 ) );
+        {
+            $$ = NEW( struct Expression );
+
+            if ( $$ )
+            {
+                $$->value = $1;
+                $$->name = 0;
+            }
+        }
+
         else
             $$ = 0;
     }
 
-    | term error
+    | object error
     {
 #if DEBUG__PARSER
-        production( "expression ::=  term error" );
+        production( "expression ::=  object error" );
 #endif
-
-        if ( $1 )
-            ast__delete( ast__term( $1 ) );
 
         $$ = 0;
 
@@ -542,25 +502,25 @@ expression:
     }
 
     /* Left assignment from expression. */
-    | name TOK__L_ASSIGN term
+    | name TOK__L_ASSIGN object
     {
 #if DEBUG__PARSER
-        production( "expression ::=  name TOK__L_ASSIGN term" );
+        production( "expression ::=  name TOK__L_ASSIGN object" );
 #endif
 
-        if ( $1 && $3 )
-            $$ = new_statement( $1, 0, term2ast( $3 ) );
+        if ( $1 && ( $3 || FIRST_CLASS_NULL ) )
+        {
+            $$ = NEW( struct Expression );
+
+            if ( $$ )
+            {
+                $$->name = $1;
+                $$->value = $3;
+            }
+        }
 
         else
-        {
             $$ = 0;
-
-            if ( $1 )
-                ast__delete( ast__name( $1 ) );
-
-            if ( $3 )
-                ast__delete( ast__term( $3 ) );
-        }
     }
 
     | name TOK__L_ASSIGN error
@@ -571,71 +531,55 @@ expression:
 
         $$ = 0;
 
-        if ( $1 )
-            ast__delete( ast__name( $1 ) );
-
         ERROK;
     }
 
-    | name TOK__L_ASSIGN term error
+    | name TOK__L_ASSIGN object error
     {
 #if DEBUG__PARSER
-        production( "expression ::=  name TOK__L_ASSIGN term error" );
+        production( "expression ::=  name TOK__L_ASSIGN object error" );
 #endif
 
         $$ = 0;
-
-        if ( $1 )
-            ast__delete( ast__name( $1 ) );
-
-        if ( $3 )
-            ast__delete( ast__term( $3 ) );
 
         ERROK;
     }
 
     /* Right assignment from expression. */
-    | term TOK__R_ASSIGN name
+    | object TOK__R_ASSIGN name
     {
 #if DEBUG__PARSER
-        production( "expression ::=  term TOK__R_ASSIGN name" );
+        production( "expression ::=  object TOK__R_ASSIGN name" );
 #endif
 
-        if ( $1 && $3 )
-                                /* !      */
-            $$ = new_statement( $3, 0, term2ast( $1 ) );
+        if ( ( $1 || FIRST_CLASS_NULL ) && $3 )
+        {
+            $$ = NEW( struct Expression );
+
+            if ( $$ )
+            {
+                $$->value = $1;
+                $$->name = $3;
+            }
+        }
 
         else
-        {
             $$ = 0;
-
-            if ( $1 )
-                ast__delete( ast__term( $1 ) );
-
-            if ( $3 )
-                ast__delete( ast__name( $3 ) );
-        }
     }
 
     /* Named expression. */
-    | term TOK__R_ASSIGN name error
+    | object TOK__R_ASSIGN name error
     {
 #if DEBUG__PARSER
-        production( "expression ::=  term TOK__R_ASSIGN name error" );
+        production( "expression ::=  object TOK__R_ASSIGN name error" );
 #endif
 
         $$ = 0;
 
-        if ( $1 )
-            ast__delete( ast__term( $1 ) );
-
-        if ( $3 )
-            ast__delete( ast__name( $3 ) );
-
         ERROK;
     }
 
-    | term TOK__R_ASSIGN error
+    | object TOK__R_ASSIGN error
     {
 #if DEBUG__PARSER
         production( "expression ::=  term TOK__R_ASSIGN error" );
@@ -643,43 +587,37 @@ expression:
 
         $$ = 0;
 
-        if ( $1 )
-            ast__delete( ast__term( $1 ) );
-
         ERROK;
     };
 
 
-term:
+object:
 
     subterm
     {
 #if DEBUG__PARSER
-        production( "term ::=  subterm" );
+        production( "object ::=  subterm" );
 #endif
 
         $$ = $1;
     }
 
-    | term subterm
+    | object subterm
     {
+        Apply *a;
+
 #if DEBUG__PARSER
-        production( "term ::=  term subterm" );
+        production( "object ::=  object subterm" );
 #endif
 
-        if ( $1 && $2 )
-            /* Combine the terms using a left-associative merge. */
-            $$ = term__merge_la( $1, $2 );
+        if ( ( $1 && $2 ) || FIRST_CLASS_NULL )
+        {
+            a = apply__new( $1, $2 );
+            $$ = PARSER_REF2OBJ( APPLY )( parser, a );
+        }
 
         else
-        {
             $$ = 0;
-
-            if ( $1 )
-                ast__delete( ast__term( $1 ) );
-            if ( $2 )
-                ast__delete( ast__term( $2 ) );
-        }
     };
 
 
@@ -691,25 +629,17 @@ subterm:
         production( "subterm ::=  term_item" );
 #endif
 
-        if ( $1 )
-            $$ = term__new( $1, 0 );
-
-        else
-            $$ = 0;
+        $$ = $1;
     }
 
-    | TOK__L_PAREN term TOK__R_PAREN
+    | TOK__L_PAREN object TOK__R_PAREN
     {
 #if DEBUG__PARSER
-        production( "subterm ::=  TOK__L_PAREN term TOK__R_PAREN" );
+        production( "subterm ::=  TOK__L_PAREN object TOK__R_PAREN" );
 #endif
 
-        if ( $2 )
-            /* "Remove the parentheses" from the term. */
-            $$ = $2;
-
-        else
-            $$ = 0;
+        /* "Remove the parentheses". */
+        $$ = $2;
     }
 
     | TOK__L_PAREN error
@@ -723,16 +653,13 @@ subterm:
         ERROK;
     }
 
-    | TOK__L_PAREN term error
+    | TOK__L_PAREN object error
     {
 #if DEBUG__PARSER
-        production( "subterm ::=  TOK__L_PAREN term error" );
+        production( "subterm ::=  TOK__L_PAREN object error" );
 #endif
 
         $$ = 0;
-
-        if ( $2 )
-            ast__delete( ast__term( $2 ) );
 
         ERROK;
     };
@@ -746,7 +673,7 @@ term_item:
         production( "term_item ::=  TOK__L_PAREN TOK__R_PAREN" );
 #endif
 
-        $$ = ast__null();
+        $$ = 0;
     }
 
     | TOK__CHAR
@@ -755,7 +682,7 @@ term_item:
         production( "term_item ::=  TOK__CHAR" );
 #endif
 
-        $$ = ast__char( $1 );
+        $$ = PARSER_VAL2OBJ( CHARACTER )( parser, $1 );
     }
 
     | TOK__REAL
@@ -764,7 +691,7 @@ term_item:
         production( "term_item ::=  TOK__REAL" );
 #endif
 
-        $$ = ast__float( $1 );
+        $$ = PARSER_VAL2OBJ( DOUBLE )( parser, $1 );
     }
 
     | TOK__INT
@@ -773,7 +700,7 @@ term_item:
         production( "term_item ::=  TOK__INT" );
 #endif
 
-        $$ = ast__int( $1 );
+        $$ = PARSER_VAL2OBJ( INTEGER )( parser, $1 );
     }
 
     | TOK__STRING
@@ -782,7 +709,7 @@ term_item:
         production( "term_item ::=  TOK__STRING" );
 #endif
 
-        $$ = ast__string( STRDUP( $1 ) );
+        $$ = PARSER_REF2OBJ( STRING )( parser, STRDUP( $1 ) );
     }
 
     | bag
@@ -791,11 +718,7 @@ term_item:
         production( "term_item ::=  bag" );
 #endif
 
-        if ( $1 )
-            $$ = ast__bag( $1 );
-
-        else
-            $$ = 0;
+        $$ = $1;
     }
 
     | name
@@ -804,13 +727,10 @@ term_item:
         production( "term_item ::=  name" );
 #endif
 
-        if ( $1 )
-            $$ = ast__name( $1 );
-
-        else
-            $$ = 0;
+        $$ = $1;
     }
 
+/*
     | bracketed_term
     {
 #if DEBUG__PARSER
@@ -818,9 +738,11 @@ term_item:
 #endif
 
         $$ = $1;
-    };
+    }*/
+    ;
 
 
+/*
 bracketed_term:
 
     TOK__L_SQ_BRACKET term TOK__R_SQ_BRACKET
@@ -860,6 +782,7 @@ bracketed_term:
 
         ERROK;
     };
+*/
 
 
 bag:
@@ -885,25 +808,37 @@ bag:
 
         $$ = 0;
 
-        if ( $1 )
-            ast__delete( ast__bag( $1 ) );
-
         ERROK;
     };
 
 
 bag_head:
 
-    TOK__L_BRACE term
+    TOK__L_BRACE object
     {
+        Array *bag = 0;
+
 #if DEBUG__PARSER
-        production( "bag_head ::=  TOK__L_BRACE term" );
+        production( "bag_head ::=  TOK__L_BRACE object" );
 #endif
 
-        if ( $2 )
+        if ( $2 || FIRST_CLASS_NULL )
         {
-            $$ = ( void* ) array__new( 1, 0 );
-            array__enqueue( $$, term2ast( $2 ) );
+            bag = array__new( 1, 0 );
+            if ( bag )
+            {
+                if ( array__enqueue( bag, $2 ) )
+                    $$ = PARSER_REF2OBJ( ARRAY )( parser, bag );
+
+                else
+                {
+                    array__delete( bag );
+                    $$ = 0;
+                }
+            }
+
+            else
+                $$ = 0;
         }
 
         else
@@ -921,27 +856,21 @@ bag_head:
         ERROK;
     }
 
-    | bag_head TOK__COMMA term
+    | bag_head TOK__COMMA object
     {
 #if DEBUG__PARSER
-        production( "bag_head ::=  bag_head TOK__COMMA term" );
+        production( "bag_head ::=  bag_head TOK__COMMA object" );
 #endif
 
-        if ( $1 && $3 )
+        if ( $1 && ( $3 || FIRST_CLASS_NULL ) )
         {
             $$ = $1;
-            array__enqueue( $$, term2ast( $3 ) );
+            if ( !array__enqueue( object__value( $$ ), $3 ) )
+                $$ = 0;
         }
 
         else
-        {
             $$ = 0;
-
-            if ( $1 )
-                ast__delete( ast__bag( $1 ) );
-            if ( $3 )
-                ast__delete( ast__term( $3 ) );
-        }
     }
 
     | bag_head TOK__COMMA error
@@ -952,9 +881,6 @@ bag_head:
 
         $$ = 0;
 
-        if ( $1 )
-            ast__delete( ast__bag( $1 ) );
-
         ERROK;
     };
 
@@ -963,14 +889,23 @@ name:
 
     id
     {
+        Name *name;
+
 #if DEBUG__PARSER
         production( "name ::=  TOK__ID" );
 #endif
 
         if ( $1 )
         {
-            $$ = array__new( 1, 0 );
-            array__enqueue( $$, $1 );
+            name = array__new( 1, 0 );
+
+            if ( name )
+            {
+                if ( array__enqueue( name, $1 ) )
+                    $$ = PARSER_REF2OBJ( NAME )( parser, name );
+                else
+                    array__delete( name );
+            }
         }
 
         else
@@ -986,14 +921,17 @@ name:
         if ( $1 && $3 )
         {
             $$ = $1;
-            array__enqueue( $$, $3 );
+            if ( !array__enqueue( object__value( $$ ), $3 ) )
+            {
+                if ( $3 )
+                    free( $3 );
+
+                $$ = 0;
+            }
         }
 
         else
         {
-            if ( $1 )
-                ast__delete( ast__name( $1 ) );
-
             if ( $3 )
                 free( $3 );
 
@@ -1008,7 +946,6 @@ name:
 #endif
 
         $$ = 0;
-        ast__delete( ast__name( $1 ) );
 
         ERROK;
     };
@@ -1029,91 +966,6 @@ id:
 
 
 %%
-
-
-static void
-handle_command( Interpreter *c, char *name, Ast *args )
-{
-    if ( !interpreter__quiet( c ) )
-    {
-        PRINT( "\n" );
-
-#ifdef COMMAND_OUTPUT_PREFIX
-        PRINT( COMMAND_OUTPUT_PREFIX );
-#endif
-    }
-
-    /* Note: ownership of name and arguments is conferred to
-       interpreter__evaluate_command. */
-    exit_early = exit_early || interpreter__evaluate_command( c, name, args, lexer__get_buffer() );
-
-    if ( !interpreter__quiet( c ) )
-    {
-#ifdef COMMAND_OUTPUT_SUFFIX
-        PRINT( COMMAND_OUTPUT_SUFFIX );
-#endif
-    }
-
-    lexer__clear_buffer();
-}
-
-
-static void
-handle_expression( Interpreter *c, Name *name, Ast *expr )
-{
-    if ( !interpreter__quiet( c ) )
-    {
-        PRINT( "\n" );
-
-#ifdef EXPRESSION_OUTPUT_PREFIX
-        PRINT( EXPRESSION_OUTPUT_PREFIX );
-#endif
-    }
-
-    /* Note: ownership of name and expression is conferred to
-       interpreter__evaluate_expression. */
-    exit_early = exit_early || interpreter__evaluate_expression( c, name, expr, lexer__get_buffer() );
-
-    if ( !interpreter__quiet( c ) )
-    {
-#ifdef EXPRESSION_OUTPUT_SUFFIX
-        PRINT( EXPRESSION_OUTPUT_SUFFIX );
-#endif
-    }
-
-    lexer__clear_buffer();
-}
-
-
-static void
-handle_error( Interpreter *c )
-{
-    char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
-
-    if ( !interpreter__quiet( c ) )
-    {
-        PRINT( "\n" );
-
-#ifdef ERROR_OUTPUT_PREFIX
-        PRINT( ERROR_OUTPUT_PREFIX );
-#endif
-    }
-
-    sprintf( error_msg, "line %d, column %d: %s",
-        error_line_number, error_character_number, yyerror_msg );
-
-    *yyerror_msg = '\0';
-    exit_early = exit_early || interpreter__handle_parse_error( c, STRDUP( error_msg ) );
-
-    if ( !interpreter__quiet( c ) )
-    {
-#ifdef ERROR_OUTPUT_SUFFIX
-        PRINT( ERROR_OUTPUT_SUFFIX );
-#endif
-    }
-
-    lexer__clear_buffer();
-}
 
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

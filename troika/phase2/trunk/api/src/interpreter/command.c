@@ -51,9 +51,8 @@ command_cp( Interpreter *c, Array *args )
     Object *o, *o2;
     Name *src, *dest;
 
-    if ( !( src = array__get( args, 0 ) )
-      || !( dest = array__get( args, 1 ) ) )
-        return 0;
+    src = object__value( array__get( args, 0 ) );
+    dest = object__value( array__get( args, 1 ) );
 
     o = interpreter__resolve( c, src );
 
@@ -91,8 +90,7 @@ command_draw( Interpreter *c, Array *args )
 
     FILE *f;
 
-    if ( !( name = array__get( args, 0 ) ) )
-        return 0;
+    name = object__value( array__get( args, 0 ) );
 
     o = interpreter__resolve( c, name );
 
@@ -199,7 +197,8 @@ command_history( Interpreter *c, Array *args )
 {
     char *path;
     Name *name = array__size( args )
-        ? array__get( args, 0 ) : 0;
+        ? object__value( array__get( args, 0 ) )
+        : 0;
 
     if ( name )
     {
@@ -239,9 +238,8 @@ command_mv( Interpreter *c, Array *args )
     Object *o, *o2;
     Name *src, *dest;
 
-    if ( !( src = array__get( args, 0 ) )
-      || !( dest = array__get( args, 1 ) ) )
-        return 0;
+    src = object__value( array__get( args, 0 ) );
+    dest = object__value( array__get( args, 1 ) );
 
     o = interpreter__resolve( c, src );
 
@@ -280,7 +278,8 @@ command_new( Interpreter *c, Array *args )
 putchar('\'');FFLUSH;
 
     name = array__size( args )
-        ? array__get( args, 0 ) : 0;
+        ? object__value( array__get( args, 0 ) )
+        : 0;
 
     if ( !name )
         return 0;
@@ -316,9 +315,11 @@ command_ns( Interpreter *c, Array *args )
     Object *o;
     Name *name, *fullname;
 
-    if ( !( name = array__get( args, 0 ) ) )
-        return 0;
+    name = object__value( array__get( args, 0 ) );
+
+/*
 putchar(',');FFLUSH;
+*/
 
     if ( ( o = interpreter__resolve( c, name ) ) )
     {
@@ -366,8 +367,7 @@ command_rm( Interpreter *c, Array *args )
 {
     Name *name;
 
-    if ( !( name = array__get( args, 0 ) ) )
-        return 0;
+    name = object__value( array__get( args, 0 ) );
 
     if ( interpreter__undefine( c, name ) && !c->quiet )
         PRINT( "Unassigned 1 object.\n" );
@@ -405,8 +405,7 @@ command_saveas( Interpreter *c, Array *args )
     Name *name;
     char *path;
 
-    if ( !( name = array__get( args, 0 ) ) )
-        return 0;
+    name = object__value( array__get( args, 0 ) );
 
     path = array__peek( name );
 
@@ -543,83 +542,40 @@ failure:
 /******************************************************************************/
 
 
-/* Kludge to get the arguments as an Array instead of a Term. */
-static Array *
-get_arg_array( Ast *args )
-{
-    Array *a;
-    Term *term, *subterm;
-    int i, n;
-    Ast *arg;
-
-    if ( !args )
-        a = array__new( 0, 0 );
-
-    else
-    {
-        if ( DEBUG__SAFE && args->type != TERM_T )
-            abort();
-
-        term = ( Term* ) args->value;
-        n = term__length( term );
-        a = array__new( n, 0 );
-
-        for ( i = 0; i < n; i++ )
-        {
-            subterm = term__subterm_at( term, i );
-
-            if ( DEBUG__SAFE && term__length( subterm ) > 1 )
-                abort();
-
-            arg = term__head( subterm );
-            if ( DEBUG__SAFE && arg->type != NAME_T )
-                abort();
-            else
-                array__enqueue( a, arg->value );
-
-            term__delete( subterm );
-        }
-    }
-
-    return a;
-}
-
-
 int
-interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char *text )
+interpreter__evaluate_command( Interpreter *itp, OBJ( STRING ) *name, OBJ( ARRAY ) *args, const char *text )
 {
     int result, n;
     Command *com;
     Array *a;
+    char *nameval = object__value( name );
 
-    if ( DEBUG__SAFE && !c )
+    if ( DEBUG__SAFE && !itp )
         abort();
 
     interpreter__add_to_history( text );
 
-    a = get_arg_array( args );
-    n = array__size( a );
+    a = ( args )
+        ? object__value( args )
+        : 0;
+
+    n = ( a )
+        ? array__size( a )
+        : 0;
 
     result = 0;
-    com = dictionary__lookup( c->commands, name );
+    com = dictionary__lookup( itp->commands, nameval );
 
     if ( !com )
-        ERROR( "unknown command: \"%s\"\n", name );
+        ERROR( "unknown command: \"%s\"\n", nameval );
     else if ( n < com->args_min )
-        ERROR( "missing argument(s) to command \"%s\"\n", name );
+        ERROR( "missing argument(s) to command \"%s\"\n", nameval );
     else if ( n > com->args_max && com->args_max >= 0 )
-        ERROR( "too many arguments to command \"%s\"\n", name );
+        ERROR( "too many arguments to command \"%s\"\n", nameval );
     else
-        result = com->f( c, a );
+        result = com->f( itp, a );
 
-    if ( args )
-        ast__delete( args );
-
-    free( name );
-
-    memory_manager__collect( environment__manager( c->env ), FALSE, FALSE );
-
-    array__delete( a );
+    memory_manager__collect( environment__manager( itp->env ), FALSE, FALSE );
 
     return result;
 }

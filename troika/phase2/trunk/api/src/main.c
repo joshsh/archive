@@ -259,7 +259,7 @@ parser__feed( p, "_size;" );
 
 parser__feed( p, ";here;" );
 */
-            if ( interpreter__parse( itp ) )
+            if ( parser__parse( p ) )
                 ERROR( "main: parse failed" );
 
             interpreter__delete( itp );

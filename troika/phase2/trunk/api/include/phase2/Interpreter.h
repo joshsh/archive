@@ -34,7 +34,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Environment.h>
-#include <Ast.h>
 #include <collection/Dictionary.h>
 #include <collection/Name.h>
 
@@ -51,23 +50,18 @@ interpreter__new( Environment *env, boolean quiet );
 
 /** Destructor. */
 extern void
-interpreter__delete( Interpreter *c );
+interpreter__delete( Interpreter *itp );
 
 
 /** \return  the interpreter's associated environment */
 extern Environment *
-interpreter__environment( Interpreter *c );
+interpreter__environment( Interpreter *itp );
 
 
 /** \return  the interpreter's working namespace (object names are resolved
     relative to this namespace) */
 extern Namespace_o *
-interpreter__working_namespace( Interpreter *c );
-
-
-/** yyparse is invoked here. */
-extern exit_state
-interpreter__parse( Interpreter *c );
+interpreter__working_namespace( Interpreter *itp );
 
 
 /** Adds a statement or command to the interpreter's history.  This is only
@@ -90,22 +84,22 @@ interpreter__write_history( const char *file );
     namespace.  The name is qualified only to the extent necessary to resolve
     the object on a subsequent name lookup. */
 extern Name *
-interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o );
+interpreter__name_of( Interpreter *itp, Namespace_o *nso, const Object *o );
 
 /** \return  the fully-qualified name of an object in a given namespace, if
     reachable from that namespace */
 extern Name *
-interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o );
+interpreter__name_of__full( Interpreter *itp, Namespace_o *nso, const Object *o );
 
 extern void
-interpreter__encode( Interpreter *c,
+interpreter__encode( Interpreter *itp,
                      const Object *o,
                      char *buffer,
                      unsigned int maxlen );
 
 /** \return  a dot graph representation of the object */
 extern char *
-interpreter__draw( Interpreter *c, const Object *o );
+interpreter__draw( Interpreter *itp, const Object *o );
 
 
 /******************************************************************************/
@@ -113,11 +107,11 @@ interpreter__draw( Interpreter *c, const Object *o );
 
 /** Serialize a data set to a file in the p2 format. */
 extern void
-interpreter__serialize( Interpreter *c, char *path );
+interpreter__serialize( Interpreter *itp, char *path );
 
 /** Deserialize a data set from a file in the p2 format. */
 extern void
-interpreter__deserialize( Interpreter *c, char *path );
+interpreter__deserialize( Interpreter *itp, char *path );
 
 
 /* Externally linked functions for the parser *********************************/
@@ -126,20 +120,20 @@ interpreter__deserialize( Interpreter *c, char *path );
 /** Interprets and carries out a command (e.g. "_saveas temp.p2;").
     \return  whether to end the current session */
 extern int
-interpreter__evaluate_command( Interpreter *c, char *name, Ast *args, const char *text );
+interpreter__evaluate_command( Interpreter *itp, OBJ( STRING ) *name, OBJ( ARRAY ) *args, const char *text );
 
 /** Interprets and evaluates an expression in the programming environment.
     \param name  if given, the resulting object will be bound to the working
     namespace by this name
     \return  whether to end the current session */
 extern int
-interpreter__evaluate_expression( Interpreter *c, Name *name, Ast *expr, const char *text );
+interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, Object *expr, const char *text );
 
 /** Prints a parse error.
     \return  whether to end the current session
-    \note  Error messages are not suppressed by --quiet */
+    \note  Error messages are not suppressed by the --quiet option. */
 extern int
-interpreter__handle_parse_error( Interpreter *c, char *msg );
+interpreter__handle_parse_error( Interpreter *itp, const char *msg );
 
 /** \return  whether the lexer and parser are to avoid printing to stdout while
     matching input */
@@ -148,7 +142,7 @@ interpreter__quiet( Interpreter *c );
 
 /** \return  whether a line number is printed before each new line of input */
 extern boolean
-interpreter__show_line_numbers( Interpreter *c );
+interpreter__show_line_numbers( Interpreter *itp );
 
 
 #endif  /* INTERPRETER_H */

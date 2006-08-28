@@ -2,7 +2,6 @@
 ## Note: the nobase_ prefix circumvents path stripping, i.e. sk/Combinator.h
 ## becomes $(includedir)/sk/Combinator.h, not $(phase2dir)/Combinator.h
 nobase_include_HEADERS = \
-	phase2/Ast.h			\
 	phase2/common.h			\
 	phase2/compiler.h		\
 	phase2/Environment.h		\
@@ -10,6 +9,7 @@ nobase_include_HEADERS = \
 	phase2/Memory_Manager.h		\
 	phase2/Namespace.h		\
 	phase2/Object.h			\
+	phase2/Parser.h			\
 	phase2/Primitive.h		\
 	phase2/Primitive-import.h	\
 	phase2/Type.h			\

@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 int
-interpreter__handle_parse_error( Interpreter *c, char *msg )
+interpreter__handle_parse_error( Interpreter *c, const char *msg )
 {
     int ret = 0;
 
@@ -43,10 +43,7 @@ interpreter__handle_parse_error( Interpreter *c, char *msg )
 #endif
 
     if ( msg )
-    {
         ERROR( "%s\n", msg );
-        free( msg );
-    }
 
     else
         ERROR( "parse error\n" );

@@ -24,23 +24,72 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Parser.h>
 #include <collection/Name.h>
 #include <collection/Array.h>
-#include <collection/Term.h>
 #include "../compiler/Apply.h"
 #include "../type/Type-impl.h"
+
+
+#define TYPEOBJ0(x) ot_##x
+#define TYPEOBJ(x)  TYPEOBJ0(x)
+
+/** Buffer size is arbitary... */
+#define ERROR_BUFFER__SIZE  0xFF
+
+/** Output decoration. */
+/* #define COMMAND_OUTPUT_PREFIX "\t>> "    */
+/* #define EXPRESSION_OUTPUT_PREFIX "\t>> " */
+/* #define ERROR_OUTPUT_PREFIX "\t>> "      */
+/* #define COMMAND_OUTPUT_SUFFIX " <<"      */
+/* #define EXPRESSION_OUTPUT_SUFFIX " <<"   */
+/* #define ERROR_OUTPUT_SUFFIX " <<"        */
+
+
+struct Parser
+{
+    Object
+        *TYPEOBJ( APPLY ),
+        *TYPEOBJ( ARRAY ),
+        *TYPEOBJ( CHARACTER ),
+        *TYPEOBJ( DOUBLE ),
+        *TYPEOBJ( INTEGER ),
+        *TYPEOBJ( NAME ),
+        *TYPEOBJ( STRING ),
+        *TYPEOBJ( TERM );
+
+    Interpreter *interpreter;
+
+    /* Shortcut to the Interpreter's Environment's Memory_Manager. */
+    Memory_Manager *manager;
+
+    boolean locked;
+    boolean exit_early;
+};
+
+
+/******************************************************************************/
 
 
 /* Avoids C99 warning: implicit declaration of function ‘yylex’ */
 extern int
 yylex( void );
 
+/** Bison parser dependency. */
+extern int
+yyparse( Parser *p, exit_state *es );
+
 
 /* Lexer dependencies *********************************************************/
 
 
+extern void
+lexer__clear_buffer();
+
+extern char *
+lexer__get_buffer();
+
 extern boolean pad_newline;
 
 extern void
-new_parse( Interpreter *c );
+new_parse( Parser *p );
 
 extern int
 get_char_number( void );
@@ -52,14 +101,16 @@ get_line_number( void );
 /******************************************************************************/
 
 
-extern void
-parser__handle_command( Parser *p, char *name, Object *args );
+extern int error_character_number, error_line_number;
 
 extern void
-parser__handle_expression( Parser *p, Name *name, Object *expr );
+parser__handle_command( Parser *p, OBJ( STRING ) *name, OBJ( ARRAY ) *args );
 
 extern void
-parser__handle_error( Parser *p );
+parser__handle_expression( Parser *p, OBJ( NAME ) *name, Object *expr );
+
+extern void
+parser__handle_error( Parser *p, const char *msg );
 
 
 /******************************************************************************/
@@ -84,7 +135,7 @@ PARSER_REF2OBJ(x)( Parser *p, x *ref )
 #define PARSER_REF2OBJ_DECL(x)  PARSER_REF2OBJ_DECL0(x)
 
 PARSER_REF2OBJ_DECL( APPLY );
-PARSER_REF2OBJ_DECL( BAG );
+PARSER_REF2OBJ_DECL( ARRAY );
 PARSER_REF2OBJ_DECL( CHARACTER );
 PARSER_REF2OBJ_DECL( DOUBLE );
 PARSER_REF2OBJ_DECL( INTEGER );

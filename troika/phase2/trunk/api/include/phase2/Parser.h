@@ -36,6 +36,17 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 typedef struct Parser Parser;
 
+typedef enum exit_state exit_state;
+
+enum exit_state
+{
+    exit_state__aborted,
+    exit_state__end_of_input,
+    exit_state__locked_out,
+    exit_state__parse_failure
+
+};
+
 
 /** \param itp  the Interpreter to which the Parser will pass the expressions
     it builds
@@ -47,6 +58,10 @@ parser__new( Interpreter *itp );
 
 extern void
 parser__free( Parser *p );
+
+/** yyparse is invoked here. */
+extern exit_state
+parser__parse( Parser *p );
 
 /** Passes text input to a Parser.
     \param s  a string to add to the parser buffer.  This does not need to be

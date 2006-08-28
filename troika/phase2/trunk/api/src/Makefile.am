@@ -14,7 +14,6 @@ noinst_HEADERS = revision.h						\
 	interpreter/license.h						\
 	environment/Environment-impl.h					\
 	namespace/Namespace-impl.h					\
-	parser/Ast-impl.h						\
 	type/Type-impl.h
 
 bin_PROGRAMS = phase2
@@ -80,7 +79,6 @@ libphase2_la_SOURCES = \
 	$(primitive_src)	\
 	$(compiler_src)		\
 	$(type_src)		\
-	parser/Ast.c		\
 	parser/Parser.c		\
 	collection/Collection.c \
 	debug.c

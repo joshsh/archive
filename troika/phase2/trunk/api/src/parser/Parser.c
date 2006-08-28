@@ -20,27 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Parser-impl.h"
 
 
-#define TYPEOBJ0(x) ot_##x
-#define TYPEOBJ(x)  TYPEOBJ0(x)
-
-struct Parser
-{
-    Object
-        *TYPEOBJ( APPLY ),
-        *TYPEOBJ( BAG ),
-        *TYPEOBJ( CHARACTER ),
-        *TYPEOBJ( DOUBLE ),
-        *TYPEOBJ( INTEGER ),
-        *TYPEOBJ( NAME ),
-        *TYPEOBJ( STRING ),
-        *TYPEOBJ( TERM );
-
-
-    Interpreter *interpreter;
-
-    /* Shortcut to the Interpreter's Environment's Memory_Manager. */
-    Memory_Manager *manager;
-};
+static boolean instance_exists = FALSE;
 
 
 Parser *
@@ -48,6 +28,12 @@ parser__new( Interpreter *itp )
 {
     if ( DEBUG__SAFE && !itp )
         abort();
+
+    if ( instance_exists )
+    {
+        ERROR( "parser__new: concurrent parser instances are not allowed" );
+        return 0;
+    }
 
     Parser *p = NEW( Parser );
     if ( !p )
@@ -57,11 +43,11 @@ parser__new( Interpreter *itp )
 
     Environment *e = interpreter__environment( itp );
 
-#define BIND(x)  p->TYPEOBJ( x ) = environment__resolve_type( e, NAMEOF( x ) )
+#define BIND(x)    p->TYPEOBJ( x ) = environment__resolve_type( e, NAMEOF( x ) )
 
     if ( !(
         ( BIND( APPLY ) )
-     && ( BIND( BAG ) )
+     && ( BIND( ARRAY ) )
      && ( BIND( CHARACTER ) )
      && ( BIND( DOUBLE ) )
      && ( BIND( INTEGER ) )
@@ -76,6 +62,10 @@ parser__new( Interpreter *itp )
 #undef BIND
 
     p->manager = environment__manager( e );
+    p->locked = FALSE;
+    p->exit_early = FALSE;
+
+    instance_exists = TRUE;
 
     return p;
 }
@@ -84,14 +74,48 @@ parser__new( Interpreter *itp )
 void
 parser__free( Parser *p )
 {
+    if ( DEBUG__SAFE && !p )
+        abort();
+
+    if ( p->locked )
+    {
+        ERROR( "parser__free: can't delete while parsing" );
+        abort();
+    }
+
     free( p );
+
+    instance_exists = FALSE;
 }
 
 
-#ifdef NOT_FINISHED
+exit_state
+parser__parse( Parser *p )
+{
+    exit_state exit_state;
+
+    if ( DEBUG__SAFE && !p )
+        abort();
+
+    if ( p->locked )
+        return exit_state__locked_out;
+
+    p->locked = TRUE;
+
+    if ( yyparse( p, &exit_state ) )
+        ERROR( "parser__parse: parser exited abnormally" );
+
+    p->locked = FALSE;
+
+    return exit_state;
+}
+
+
+/******************************************************************************/
+
 
 void
-parser__handle_command( Parser *p, char *name, Object *args )
+parser__handle_command( Parser *p, OBJ( STRING ) *name, OBJ( ARRAY ) *args )
 {
     if ( !interpreter__quiet( p->interpreter ) )
     {
@@ -102,9 +126,7 @@ parser__handle_command( Parser *p, char *name, Object *args )
 #endif
     }
 
-    /* Note: ownership of name and arguments is conferred to
-       interpreter__evaluate_command. */
-    exit_early = exit_early || interpreter__evaluate_command( p->interpreter, name, args, lexer__get_buffer() );
+    p->exit_early = p->exit_early || interpreter__evaluate_command( p->interpreter, name, args, lexer__get_buffer() );
 
     if ( !interpreter__quiet( p->interpreter ) )
     {
@@ -118,7 +140,7 @@ parser__handle_command( Parser *p, char *name, Object *args )
 
 
 void
-parser__handle_expression( Parser *p, Name *name, Object *expr )
+parser__handle_expression( Parser *p, OBJ( NAME ) *name, Object *expr )
 {
     if ( !interpreter__quiet( p->interpreter ) )
     {
@@ -129,9 +151,7 @@ parser__handle_expression( Parser *p, Name *name, Object *expr )
 #endif
     }
 
-    /* Note: ownership of name and expression is conferred to
-       interpreter__evaluate_expression. */
-    exit_early = exit_early || interpreter__evaluate_expression( p->interpreter, name, expr, lexer__get_buffer() );
+    p->exit_early = p->exit_early || interpreter__evaluate_expression( p->interpreter, name, expr, lexer__get_buffer() );
 
     if ( !interpreter__quiet( p->interpreter ) )
     {
@@ -145,7 +165,7 @@ parser__handle_expression( Parser *p, Name *name, Object *expr )
 
 
 void
-parser__handle_error( Parser *p )
+parser__handle_error( Parser *p, const char *msg )
 {
     char error_msg[ ERROR_BUFFER__SIZE + 0x20 ];
 
@@ -159,10 +179,9 @@ parser__handle_error( Parser *p )
     }
 
     sprintf( error_msg, "line %d, column %d: %s",
-        error_line_number, error_character_number, yyerror_msg );
+        error_line_number, error_character_number, msg );
 
-    *yyerror_msg = '\0';
-    exit_early = exit_early || interpreter__handle_parse_error( p->interpreter, STRDUP( error_msg ) );
+    p->exit_early = p->exit_early || interpreter__handle_parse_error( p->interpreter, error_msg );
 
     if ( !interpreter__quiet( p->interpreter ) )
     {
@@ -173,8 +192,6 @@ parser__handle_error( Parser *p )
 
     lexer__clear_buffer();
 }
-
-#endif
 
 
 /******************************************************************************/
@@ -208,7 +225,7 @@ parser__Array_ref_to_object( Parser *p, Array *ref )
 #define PARSER_REF2OBJ_DEF(x)   PARSER_REF2OBJ_DEF0(x)
 
 PARSER_REF2OBJ_DEF( APPLY )
-PARSER_REF2OBJ_DEF( BAG )
+PARSER_REF2OBJ_DEF( ARRAY )
 PARSER_REF2OBJ_DEF( CHARACTER )
 PARSER_REF2OBJ_DEF( DOUBLE )
 PARSER_REF2OBJ_DEF( INTEGER )

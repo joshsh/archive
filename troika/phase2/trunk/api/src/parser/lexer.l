@@ -108,7 +108,7 @@ putchar('.');\
 
 #include "parser.h"
 #include <common.h>
-#include "../settings.h"
+#include "Parser-impl.h"
 
 /*#include "header.h"*/
 
@@ -134,18 +134,9 @@ lexer__get_buffer()
 
 /* Language module dependencies ***********************************************/
 
-typedef struct Interpreter Interpreter;
 
-extern boolean
-interpreter__quiet( Interpreter *c );
-
-extern boolean
-interpreter__show_line_numbers( Interpreter *c );
-
-
-/* ! */
-static Interpreter *
-compiler_global;
+/* FIXME */
+static Parser *parser_global;
 
 
 /* Line and character numbers *************************************************/
@@ -157,7 +148,7 @@ boolean pad_newline;
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
-new_parse( Interpreter * /* itp */ );
+new_parse( Parser * /* p */ );
 
 /** \return  the current line number.  Starts at 1. */
 int
@@ -172,7 +163,7 @@ static int
 new_token( int /* tok */, char * /* text */, int /* length */, const char * /* name */ );
 
 static void
-new_line( Interpreter *c );
+new_line( Parser *p );
 
 /** TOKEN macro handles debugging messages and column count as well as return
     values from rules.  It must be the last statement in a rule action. */
@@ -350,14 +341,6 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         TOKEN( TOK__R_PAREN );
     }
 
-    "["  {  /* Marks the beginning of a general sequence. */
-        TOKEN( TOK__L_SQ_BRACKET );
-    }
-
-    "]"  {  /* Marks the beginning of a general sequence. */
-        TOKEN( TOK__R_SQ_BRACKET );
-    }
-
     "{"  {  /* Marks the beginning of a bag. */
         TOKEN( TOK__L_BRACE );
     }
@@ -402,7 +385,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     \n  {  /* Ignore newlines, except for formatting. */
-        new_line( compiler_global );
+        new_line( parser_global );
         TOKEN( 0 );
     }
 
@@ -436,7 +419,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 
     \\?\n  {  /* Newlines are permitted. */
         append_to_buffer( yytext );
-        new_line( compiler_global );
+        new_line( parser_global );
         TOKEN( 0 );
     }
 
@@ -481,7 +464,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     \n  {  /* Newlines are ignored, except for formatting. */
-        new_line( compiler_global );
+        new_line( parser_global );
 
         TOKEN( 0 );
     }
@@ -545,13 +528,13 @@ new_token( int tok, char * text, int length, const char * name )
 
 
 void
-new_line( Interpreter *c )
+new_line( Parser *p )
 {
     line_number++;
     column_number = last_column_number = 0;
 
     /* Decorate command-line input. */
-    if ( !interpreter__quiet( c ) )
+    if ( !interpreter__quiet( p->interpreter ) )
     {
 
         if ( pad_newline )
@@ -560,7 +543,7 @@ new_line( Interpreter *c )
         pad_newline = FALSE;
 
         /* Display a line number at the beginning of each new line of input. */
-        if ( interpreter__show_line_numbers( c ) )
+        if ( interpreter__show_line_numbers( p->interpreter ) )
             PRINT( "%d ", line_number );
 
         /* Add a prefix to each new line of input, to distinguish it from
@@ -574,12 +557,12 @@ new_line( Interpreter *c )
 
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
-new_parse( Interpreter *c )
+new_parse( Parser *p )
 {
-    compiler_global = c;
+    parser_global = p;
     line_number = 0;
     pad_newline = TRUE;
-    new_line( c );
+    new_line( p );
 
     lexer__clear_buffer();
 }

@@ -24,7 +24,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Interpreter.h>
 #include <compiler.h>
 
-#include "../parser/Ast-impl.h"
 #include "../object/Object-impl.h"
 
 #include <time.h>
@@ -37,8 +36,6 @@ struct Interpreter
 
     Dictionary *commands;
 
-    boolean locked;
-
     boolean quiet, show_line_numbers;
 
     /* Parser types. */
@@ -46,6 +43,8 @@ struct Interpreter
 
     /* Other types. */
     Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;
+
+    Type *name_t;
 
     char *save_to_path;
 
