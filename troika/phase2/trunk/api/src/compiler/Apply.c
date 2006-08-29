@@ -27,7 +27,7 @@ Apply *
 apply__new( Object *function, Object *operand )
 {
     Apply *a;
-
+putchar('*');
     /* Apply objects with null members are allowed if FIRST_CLASS_NULL. */
     if ( !FIRST_CLASS_NULL && DEBUG__SAFE && ( !function || !operand ) )
         abort();
@@ -57,6 +57,7 @@ apply__delete( Apply *a )
 void
 apply__walk( Apply *a, Visitor f )
 {
+putchar('w');
     if ( f( ( void** ) &a->function ) == BREAK
       || f( ( void** ) &a->operand ) == BREAK )
         return;

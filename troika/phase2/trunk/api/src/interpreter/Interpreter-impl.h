@@ -39,7 +39,7 @@ struct Interpreter
     boolean quiet, show_line_numbers;
 
     /* Parser types. */
-    Type *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
+    Type *apply_t, *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;
 
     /* Other types. */
     Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;

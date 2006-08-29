@@ -46,7 +46,7 @@ interpreter__new( Environment *env, boolean quiet )
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser and with the SK module, and to serialize and deserialize data sets. */
-    if ( !( ( c->bag_t = environment__resolve_type( env, NAMEOF( BAG ) )->value )
+    if ( !( ( c->bag_t = environment__resolve_type( env, NAMEOF( ARRAY ) )->value )
          && ( c->char_t = environment__resolve_type( env, NAMEOF( CHARACTER ) )->value )
          && ( c->combinator_t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value )
          && ( c->float_t = environment__resolve_type( env, NAMEOF( DOUBLE ) )->value )
@@ -75,6 +75,7 @@ interpreter__new( Environment *env, boolean quiet )
 
     /* FIXME */
     graph_init( c->combinator_t, c->prim_t );
+    c->apply_t = apply_type;
 
 finish:
 

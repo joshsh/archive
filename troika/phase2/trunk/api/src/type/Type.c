@@ -133,6 +133,8 @@ type__new( const char *name, int flags )
 
     t->flags = flags;
 
+    INFO( "created type '%s' at %p", t->name, t );
+
     return t;
 }
 

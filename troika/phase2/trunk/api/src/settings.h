@@ -234,6 +234,11 @@ dereference( struct Object ** );
 
 #define WARNING__ALLOC WARNING
 
+#define INFO(args...) (                                                     \
+    fprintf( stdout, "INFO: " ),                                            \
+    fprintf( stdout, ##args ),                                              \
+    fprintf( stdout, "\n" ) )
+
 
 /* Debugging ******************************************************************/
 
@@ -281,7 +286,6 @@ debug__memcheck();
 #            define DEBUG__PARSER__USE_YYDEBUG  0 & DEBUG__PARSER
 #    define DEBUG__COLL                         1 & DEBUG
 #        define DEBUG__ARRAY                    1 & DEBUG__COLL
-#        define DEBUG__BAG                      1 & DEBUG__COLL
 #        define DEBUG__DICTIONARY               1 & DEBUG__COLL
 #        define DEBUG__BUNCH                    1 & DEBUG__COLL
 #        define DEBUG__HASH_TABLE               1 & DEBUG__COLL

@@ -225,7 +225,7 @@ array__encode__alt( Array *a, char *buffer )
 }
 
 
-void
+static void
 apply__encode__alt( Apply *a, char *buffer )
 {
     Object *o;
@@ -277,15 +277,20 @@ resolve( Interpreter *itp, Object *o )
     {
         Object *o = DEREF( opp );
         Type *t = object__type( o );
+printf( "t = %p\n", t );
 
         if ( t == itp->name_t )
         {
+putchar('@');
             o = interpreter__resolve( itp, object__value( o ) );
             *opp = o;
         }
 
         else if ( t->flags & TYPE__IS_OBJ_COLL )
+{
+putchar('W');
             t->walk( object__value( o ), ( Visitor ) helper );
+}
 
         return CONTINUE;
     }

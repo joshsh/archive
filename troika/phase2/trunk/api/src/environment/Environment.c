@@ -115,7 +115,7 @@ environment__new()
     environment__register_type( env, env->type_t );
 
     /* Add other types here... */
-    environment__register_type( env, array__create_type( NAMEOF( BAG ), TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, array__create_type( NAMEOF( ARRAY ), TYPE__IS_OBJ_COLL ) );
     environment__register_type( env, term__create_type( NAMEOF( TERM ), TYPE__IS_OBJ_COLL ) );
 
     /* Add primitives. */
