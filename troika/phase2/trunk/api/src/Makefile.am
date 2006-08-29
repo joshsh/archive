@@ -48,7 +48,7 @@ interpreter_src = \
 	interpreter/serial.c
 
 manager_src = \
-	manager/Memory_Manager.c
+	manager/Manager.c
 
 namespace_src = \
 	namespace/Namespace.c	\

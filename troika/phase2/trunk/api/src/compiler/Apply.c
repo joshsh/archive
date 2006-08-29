@@ -87,7 +87,7 @@ apply__as_term( Apply *a )
 
 
 Object *
-term__to_apply_tree( Term *t, Memory_Manager *m )
+term__to_apply_tree( Term *t, Manager *m )
 {
     unsigned int l, i;
     Object *o;

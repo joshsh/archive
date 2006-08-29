@@ -6,7 +6,7 @@ nobase_include_HEADERS = \
 	phase2/compiler.h		\
 	phase2/Environment.h		\
 	phase2/Interpreter.h		\
-	phase2/Memory_Manager.h		\
+	phase2/Manager.h		\
 	phase2/Namespace.h		\
 	phase2/Object.h			\
 	phase2/Parser.h			\

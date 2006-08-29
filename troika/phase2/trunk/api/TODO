@@ -1,6 +1,3 @@
-Memory_Manager --> Manager
-
-
 [bugs]
     _rm root;
     _rm here;
@@ -21,10 +18,6 @@ Memory_Manager --> Manager
 [docs]
     doxygen script --> revision # in docs
 
-[compiler]
-
-[environment]
-
 [import]
     wrap more standard library primitives
     add reduction primitives
@@ -32,9 +25,6 @@ Memory_Manager --> Manager
 
 [interpreter]
     _new ^ check whether object already exists
-
-[parser]
-    phase out or replace Ast
 
 [translation]
     RDF/XML and N3 import / export
@@ -57,9 +47,6 @@ Memory_Manager --> Manager
     triples
         sets ^ distribution
         meta-functions
-
-[ongoing]
-    check up on GCC warnings
 
 
 ................................................................................

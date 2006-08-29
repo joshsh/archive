@@ -57,8 +57,8 @@ struct Parser
 
     Interpreter *interpreter;
 
-    /* Shortcut to the Interpreter's Environment's Memory_Manager. */
-    Memory_Manager *manager;
+    /* Shortcut to the Interpreter's Environment's Manager. */
+    Manager *manager;
 
     boolean locked;
     boolean exit_early;

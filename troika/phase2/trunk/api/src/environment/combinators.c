@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static Object *
-add_single_combinator( Memory_Manager *m,
+add_single_combinator( Manager *m,
                        Namespace *ns,
                        Type *t,
                        Combinator c,
@@ -54,7 +54,7 @@ add_single_combinator( Memory_Manager *m,
 void
 add_combinators( Environment *env )
 {
-    Memory_Manager *m = env->manager;
+    Manager *m = env->manager;
     Namespace *ns = env->combinators->value;
     Type *t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value;
 

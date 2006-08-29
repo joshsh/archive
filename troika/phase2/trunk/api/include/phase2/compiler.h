@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COMPILER_H
 
 
-#include <Memory_Manager.h>
+#include <Manager.h>
 #include <collection/Array.h>
 #include <collection/Term.h>
 #include <Combinator.h>
@@ -57,7 +57,7 @@ graph_end();
 /** Mutates an object graph according to the rules of lazy combinator reduction.
     This is a much more powerful function than term__reduce. */
 extern Object *
-reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m );
+reduce__graph_lazy( Object *o, Array *spine, Manager *m );
 
 
 /** \brief  Reduces an S,K term according to the rules of combinator expressions.
@@ -77,7 +77,7 @@ reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m );
 extern Term *
 term__reduce(
     Term *term,
-    Memory_Manager *m,
+    Manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,

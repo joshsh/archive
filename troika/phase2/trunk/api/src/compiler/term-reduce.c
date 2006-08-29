@@ -131,7 +131,7 @@ s_reduce( Term *term )
 static Term *
 prim_reduce(
     Term *term,
-    Memory_Manager *m,
+    Manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,
@@ -444,7 +444,7 @@ print_term( Term *t )
 Term *
 term__reduce(
     Term *term,
-    Memory_Manager *m,
+    Manager *m,
     Type *term_type,
     Type *primitive_type,
     Type *combinator_type,

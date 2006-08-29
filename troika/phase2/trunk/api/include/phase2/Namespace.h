@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <Object.h>
-#include <Memory_Manager.h>
+#include <Manager.h>
 #include <collection/Dictionary.h>
 #include <collection/Name.h>
 
@@ -134,27 +134,27 @@ namespace__create_type( const char *name, int flags );
 /** \return  the shortest fully-qualified Name which will resolve needle in
     haystack */
 extern Name *
-namespace__find( Namespace_o *haystack, const Object *needle, Memory_Manager *m );
+namespace__find( Namespace_o *haystack, const Object *needle, Manager *m );
 
 /** Retrieves an object using a simple (non-recursive) name.
     \return  the object mapped to by the name (if any) */
 extern Object *
-namespace__resolve_simple( Namespace_o *ns_obj, char *name, Memory_Manager *m );
+namespace__resolve_simple( Namespace_o *ns_obj, char *name, Manager *m );
 
 /** Retrieves an object using a (recursive) name.
     \return  the object mapped to by the name (if any) */
 extern Object *
-namespace__resolve( Namespace_o *ns_obj, Name *name, Memory_Manager *m );
+namespace__resolve( Namespace_o *ns_obj, Name *name, Manager *m );
 
 /** Adds a reference to the given object using the given (recursive) name. */
 extern Object *
-namespace__define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m );
+namespace__define( Namespace_o *nso, Name *name, Object *o, Manager *m );
 
 /** Removes the object resolved by this name from the last namespace in the
     path through which it is resolved.
     \return  the object removed */
 extern Object *
-namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m );
+namespace__undefine( Namespace_o *nso, Name *name, Manager *m );
 
 
 #endif /* NAMESPACE_H */

@@ -52,10 +52,10 @@ apply__walk( Apply *a, Visitor f );
 extern Term *
 apply__as_term( Apply *a );
 
-#include <Memory_Manager.h>
+#include <Manager.h>
 
 extern Object *
-term__to_apply_tree( Term *t, Memory_Manager *m );
+term__to_apply_tree( Term *t, Manager *m );
 
 extern void
 apply__encode( Apply *a, char *buffer );

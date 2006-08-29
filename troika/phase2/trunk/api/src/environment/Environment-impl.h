@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 struct Environment
 {
-    Memory_Manager *manager;
+    Manager *manager;
 
     Namespace_o *root,
                 *combinators, *data, *primitives, *types;

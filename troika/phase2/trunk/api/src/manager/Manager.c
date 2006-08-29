@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <Memory_Manager.h>
+#include <Manager.h>
 #include <collection/Collection.h>
 #include "../object/Object-impl.h"
 
@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define set_owned( o )      (o)->flags |= OBJECT__OWNED
 
 
-struct Memory_Manager
+struct Manager
 {
     Bunch *objects;
         Object *objects_o;
@@ -51,13 +51,13 @@ struct Memory_Manager
 /******************************************************************************/
 
 
-Memory_Manager *
+Manager *
 memory_manager__new()
 {
-    Memory_Manager *m;
+    Manager *m;
     Type *object_t = 0, *bunch_t = 0;
 
-    if ( !( m = NEW( Memory_Manager ) ) )
+    if ( !( m = NEW( Manager ) ) )
         return 0;
 
     m->objects_o = 0;
@@ -103,7 +103,7 @@ fail:
 
 
 void
-memory_manager__delete( Memory_Manager *m )
+memory_manager__delete( Manager *m )
 {
     Type *object_t, *object_bunch_t;
 
@@ -124,7 +124,7 @@ memory_manager__delete( Memory_Manager *m )
 
 
 unsigned int
-memory_manager__size( Memory_Manager *m )
+memory_manager__size( Manager *m )
 {
     if ( DEBUG__SAFE && !m )
         abort();
@@ -134,7 +134,7 @@ memory_manager__size( Memory_Manager *m )
 
 
 void
-memory_manager__set_root( Memory_Manager *m, Object *o )
+memory_manager__set_root( Manager *m, Object *o )
 {
     if ( DEBUG__SAFE && ( !m || !o ) )
         abort();
@@ -144,7 +144,7 @@ memory_manager__set_root( Memory_Manager *m, Object *o )
 
 
 Object *
-memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags )
+memory_manager__object( Manager *m, Type *type, void *value, int flags )
 {
     if ( DEBUG__SAFE && !m )
         abort();
@@ -171,7 +171,7 @@ memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags )
 
 
 static void
-unmark_all( Memory_Manager *m )
+unmark_all( Manager *m )
 {
     ACTION unmark( Object **opp )
     {
@@ -191,7 +191,7 @@ unmark_all( Memory_Manager *m )
 
 /* Unmarks all marked objects in the environment, and deletes the rest.*/
 static void
-sweep( Memory_Manager *m )
+sweep( Manager *m )
 {
     boolean unmarked( Object *o )
     {
@@ -252,7 +252,7 @@ unwalk( Object *root, boolean follow_triples )
 
 void
 memory_manager__walk
-    ( Memory_Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples )
+    ( Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples )
 {
     boolean dosweep;
 
@@ -325,7 +325,7 @@ memory_manager__walk
 
 void
 memory_manager__trace
-    ( Memory_Manager *m, Object *root, Walker walk, Visitor dist )
+    ( Manager *m, Object *root, Walker walk, Visitor dist )
 {
     int marked;
 
@@ -409,7 +409,7 @@ memory_manager__trace
 
 
 Set *
-memory_manager__get_multirefs( Memory_Manager *m, Object *root )
+memory_manager__get_multirefs( Manager *m, Object *root )
 {
     Set *s;
 
@@ -468,7 +468,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root )
 
 
 void
-memory_manager__collect( Memory_Manager *m, boolean force, boolean echo )
+memory_manager__collect( Manager *m, boolean force, boolean echo )
 {
     /* Avoid "used uninitialized" warning. */
     unsigned int size = 0;

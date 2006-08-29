@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define ENVIRONMENT_H
 
 
-#include <Memory_Manager.h>
+#include <Manager.h>
 #include <Namespace.h>
 #include <Primitive.h>
 
@@ -55,7 +55,7 @@ environment__delete( Environment *env );
 
 
 /** \return  the environment's associated object manager */
-extern Memory_Manager *
+extern Manager *
 environment__manager( const Environment *env );
 
 /** \return  the "root:data" namespace */

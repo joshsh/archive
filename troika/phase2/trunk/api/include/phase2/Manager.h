@@ -1,6 +1,6 @@
 /**
 
-\file  Memory_Manager.h
+\file  Manager.h
 
 \brief  Provides a class which creates, mutates and destroys object graphs.
 Includes a tracing garbage collector.
@@ -40,29 +40,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     it via memory_manager__add, and these objects are not allowed to
     reference any first-class objects which are not themselves owned by the
     manager. */
-typedef struct Memory_Manager Memory_Manager;
+typedef struct Manager Manager;
 
 
 /******************************************************************************/
 
 /** Constructor. */
-extern Memory_Manager *
+extern Manager *
 memory_manager__new();
 
 /** Destructor. */
 extern void
-memory_manager__delete( Memory_Manager *m );
+memory_manager__delete( Manager *m );
 
-/** \return the number of objects governed by the Memory_Manager */
+/** \return the number of objects governed by the Manager */
 extern unsigned int
-memory_manager__size( Memory_Manager *m );
+memory_manager__size( Manager *m );
 
 extern void
-memory_manager__set_root( Memory_Manager *m, Object *o );
+memory_manager__set_root( Manager *m, Object *o );
 
 /** Requests a new object of the manager. */
 extern Object *
-memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags );
+memory_manager__object( Manager *m, Type *type, void *value, int flags );
 
 
 /* Tracing / graph traversal **************************************************/
@@ -77,18 +77,18 @@ memory_manager__object( Memory_Manager *m, Type *type, void *value, int flags );
     object is the subject */
 extern void
 memory_manager__walk
-    ( Memory_Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples );
+    ( Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples );
 
 /** Like memory_manager__walk, but using a customized walk function.  The
     algorithm will not visit any object more than once. */
 extern void
 memory_manager__trace
-    ( Memory_Manager *m, Object *root, Walker walk, Visitor dist );
+    ( Manager *m, Object *root, Walker walk, Visitor dist );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */
 extern Set *
-memory_manager__get_multirefs( Memory_Manager *m, Object *root );
+memory_manager__get_multirefs( Manager *m, Object *root );
 
 
 /* Mark-and-sweep garbage collection ******************************************/
@@ -98,7 +98,7 @@ memory_manager__get_multirefs( Memory_Manager *m, Object *root );
     \param force  collect even if the threshold has not been reached
     \param echo  print a message indicating what was collected */
 extern void
-memory_manager__collect( Memory_Manager *m, boolean force, boolean echo );
+memory_manager__collect( Manager *m, boolean force, boolean echo );
 
 
 #endif  /* MEMORY_MANAGER_H */

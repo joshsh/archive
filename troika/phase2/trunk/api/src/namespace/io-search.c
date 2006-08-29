@@ -92,7 +92,7 @@ void
 namespace__map_back( Namespace_o *haystack,
                      Set *needles,
                      Hash_Map *map,
-                     Memory_Manager *m )
+                     Manager *m )
 {
     if ( DEBUG__SAFE && ( !haystack || !needles || !map || !m ) )
         abort();
@@ -157,7 +157,7 @@ namespace__map_back( Namespace_o *haystack,
 
 
 Name *
-namespace__find( Namespace_o *haystack, const Object *needle, Memory_Manager *m )
+namespace__find( Namespace_o *haystack, const Object *needle, Manager *m )
 {
     Hash_Map *parents = hash_map__new();
     Name *name = name__new();
@@ -240,7 +240,7 @@ finish:
 
 
 Object *
-namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
+namespace__resolve_simple( Namespace_o *ns_obj, char *key, Manager *m )
 {
     Object *o = 0;
 
@@ -261,7 +261,7 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Memory_Manager *m )
 
 
 Object *
-namespace__resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
+namespace__resolve( Namespace_o *nso, Name *name, Manager *m )
 {
     Object *o = nso;
     char *key;
@@ -289,7 +289,7 @@ namespace__resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
 
 
 Object *
-namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
+namespace__undefine( Namespace_o *nso, Name *name, Manager *m )
 {
     Object *o = nso;
     unsigned int i;
@@ -298,7 +298,7 @@ namespace__undefine( Namespace_o *nso, Name *name, Memory_Manager *m )
     Type *t = object__type( nso );
 
     Object *
-    resolve( Namespace_o *ns_obj, char *key, Memory_Manager *m )
+    resolve( Namespace_o *ns_obj, char *key, Manager *m )
     {
         Object *o = 0;
 
@@ -383,7 +383,7 @@ namespace__copy( Namespace_o *nso, Name *src, Name *dest )
 
 
 Object *
-namespace__define( Namespace_o *nso, Name *name, Object *o, Memory_Manager *m )
+namespace__define( Namespace_o *nso, Name *name, Object *o, Manager *m )
 {
     void *key;
     Namespace_o *local;

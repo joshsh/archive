@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static Namespace_o *
-ns__new( Memory_Manager *m, Type *ns_t )
+ns__new( Manager *m, Type *ns_t )
 {
     Object *o;
     Namespace *ns;
@@ -191,7 +191,7 @@ environment__delete( Environment *env )
 }
 
 
-Memory_Manager *
+Manager *
 environment__manager( const Environment *env )
 {
     if ( DEBUG__SAFE && !env )

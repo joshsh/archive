@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static Object *
-resolve( Namespace_o *nso, Name *name, Memory_Manager *m )
+resolve( Namespace_o *nso, Name *name, Manager *m )
 {
     return ( COMPILER__NAME_INHERITANCE )
         ? namespace__resolve( nso, name, m )
@@ -178,7 +178,7 @@ interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
 {
     Name *name;
     Object *root = environment__root( c->env );
-    Memory_Manager *m = environment__manager( c->env );
+    Manager *m = environment__manager( c->env );
 
     /* Default to the working namespace. */
     if ( !nso )

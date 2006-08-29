@@ -188,7 +188,7 @@ substitute_unboxed( Object *o, Type *type, void *value )
 
 /** Bxyz --> x(yz) */
 static Object *
-apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_B( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2, *a3;
 
@@ -216,7 +216,7 @@ apply_B( Array *spine, unsigned int nargs, Memory_Manager *m )
 
 /** Cxyz --> xzy */
 static Object *
-apply_C( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_C( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2, *a3;
 
@@ -287,7 +287,7 @@ apply_K( Array *spine, unsigned int nargs )
 
 /** Lxy --> x(yy) */
 static Object *
-apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_L( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2;
 
@@ -314,7 +314,7 @@ apply_L( Array *spine, unsigned int nargs, Memory_Manager *m )
 
 /** Oxy --> y(xy) */
 static Object *
-apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_O( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2;
 
@@ -341,7 +341,7 @@ apply_O( Array *spine, unsigned int nargs, Memory_Manager *m )
 
 /** Rxyz --> yzx */
 static Object *
-apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_R( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2, *a3;
 
@@ -369,7 +369,7 @@ apply_R( Array *spine, unsigned int nargs, Memory_Manager *m )
 
 /** Sxyz --> xz(yz) */
 static Object *
-apply_S( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_S( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2, *a3;
 
@@ -424,7 +424,7 @@ apply_T( Array *spine, unsigned int nargs )
 
 /** Uxy --> y(xxy) */
 static Object *
-apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_U( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2;
 
@@ -454,7 +454,7 @@ apply_U( Array *spine, unsigned int nargs, Memory_Manager *m )
 
 /** Vxyz --> zxy */
 static Object *
-apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_V( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2, *a3;
 
@@ -482,7 +482,7 @@ apply_V( Array *spine, unsigned int nargs, Memory_Manager *m )
 
 /** Wxy --> xyy */
 static Object *
-apply_W( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_W( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *a2;
 
@@ -532,7 +532,7 @@ apply_w( Array *spine, unsigned int nargs )
 
 /** Yf --> f(Yf) */
 static Object *
-apply_Y( Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_Y( Array *spine, unsigned int nargs, Manager *m )
 {
     Object *a1, *f;
 
@@ -561,7 +561,7 @@ apply_Y( Array *spine, unsigned int nargs, Memory_Manager *m )
 /** \note  There should be no possibility of program-level errors in the
     application of the combinator functions, which simply rearrange nodes. */
 static Object *
-apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Manager *m )
 {
     if ( DEBUG__SAFE && ( !c || !spine || !m ) )
         abort();
@@ -636,7 +636,7 @@ apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Memory_Manage
 
 
 static Object *
-apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Memory_Manager *m )
+apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Manager *m )
 {
     unsigned int i;
     Object *ap, *arg;
@@ -737,7 +737,7 @@ bad_arg:
     \return  An immediate object (i.e. not an indirection node) if successful,
     or 0 if unsuccessful. */
 Object *
-reduce__graph_lazy( Object *o, Array *spine, Memory_Manager *m )
+reduce__graph_lazy( Object *o, Array *spine, Manager *m )
 {
     Type *t;
 
