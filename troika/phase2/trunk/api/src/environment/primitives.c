@@ -426,7 +426,7 @@ environment__register_primitive
 }
 
 
-Primitive_o *
+OBJ( PRIMITIVE ) *
 environment__resolve_primitive( Environment *env, const char *name )
 {
     return namespace__lookup_simple( env->primitives->value, name );

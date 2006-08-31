@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static Object *
-resolve( Namespace_o *nso, Name *name, Manager *m )
+resolve( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
 {
     return ( COMPILER__NAME_INHERITANCE )
         ? namespace__resolve( nso, name, m )
@@ -32,7 +32,7 @@ resolve( Namespace_o *nso, Name *name, Manager *m )
 Object *
 interpreter__define( Interpreter *c, Name *name, Object *o )
 {
-    Namespace_o *nso;
+    OBJ( NAMESPACE ) *nso;
 
     char *key = name__pop( name );
     nso = c->cur_ns_obj;
@@ -67,7 +67,7 @@ interpreter__define( Interpreter *c, Name *name, Object *o )
 Object *
 interpreter__undefine( Interpreter *c, Name *name )
 {
-    Namespace_o *nso;
+    OBJ( NAMESPACE ) *nso;
     Object *o;
 
     char *key = name__pop( name );
@@ -99,7 +99,7 @@ interpreter__undefine( Interpreter *c, Name *name )
 Object *
 interpreter__resolve( Interpreter *c, Name *name )
 {
-    Namespace_o *nso;
+    OBJ( NAMESPACE ) *nso;
     Object *o;
 
     char *key = ( char* ) name__pop( name );
@@ -144,7 +144,7 @@ interpreter__resolve( Interpreter *c, Name *name )
          an object with two possible fully-qualified names, a:b:c:d and x:y:z,
          might yield the name x:y:z even though [...] */
 Name *
-interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o )
+interpreter__name_of( Interpreter *c, OBJ( NAMESPACE ) *nso, const Object *o )
 {
     unsigned int i = 0;
     char *s;
@@ -174,7 +174,7 @@ interpreter__name_of( Interpreter *c, Namespace_o *nso, const Object *o )
 
 
 Name *
-interpreter__name_of__full( Interpreter *c, Namespace_o *nso, const Object *o )
+interpreter__name_of__full( Interpreter *c, OBJ( NAMESPACE ) *nso, const Object *o )
 {
     Name *name;
     Object *root = environment__root( c->env );

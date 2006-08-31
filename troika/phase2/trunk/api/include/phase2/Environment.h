@@ -36,10 +36,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Primitive.h>
 
 
-/* TODO: come up with a better naming convention than "_o" */
-typedef Object Type_o, Primitive_o, Combinator_o;
-
-
 /** A data structure which is equivalent to a namespace containing uniquely
     named data types, function primitives, and data sets. */
 typedef struct Environment Environment;
@@ -59,11 +55,11 @@ extern Manager *
 environment__manager( const Environment *env );
 
 /** \return  the "root:data" namespace */
-extern Namespace_o *
+extern OBJ( NAMESPACE ) *
 environment__data( const Environment *env );
 
 /** \return  the "root" namespace */
-extern Namespace_o *
+extern OBJ( NAMESPACE ) *
 environment__root( const Environment *env );
 
 
@@ -72,7 +68,7 @@ extern Object *
 environment__register_type( Environment *env, Type *type );
 
 /** \return  the type object with the given name, if any */
-extern Type_o *
+extern OBJ( TYPE ) *
 environment__resolve_type( Environment *env, const char *name );
 
 
@@ -83,7 +79,7 @@ environment__register_primitive
     ( Environment *env, Primitive *prim, int flags, Generic_f src_f );
 
 /** \return the primitive object with the given name, if any */
-extern Primitive_o *
+extern OBJ( PRIMITIVE ) *
 environment__resolve_primitive( Environment *env, const char *name );
 
 /** Imports function primitives not hard-coded into the environment.
@@ -92,7 +88,7 @@ extern void
 environment__import_primitives( Environment *env );
 
 /** \return  the combinator object with the given name, if any */
-extern Combinator_o *
+extern OBJ( COMBINATOR ) *
 environment__resolve_combinator( Environment *env, const char *name );
 
 

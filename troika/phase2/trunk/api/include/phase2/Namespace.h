@@ -41,9 +41,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     namespaces. */
 typedef struct Namespace Namespace;
 
-/** Alias for a boxed namespace object. */
-typedef Object Namespace_o;
-
 
 /** \return  a new namespace */
 extern Namespace *
@@ -63,7 +60,7 @@ namespace__size( Namespace *ns );
     \param o  the object to add
     \return  the object added, or 0 if it could not be added */
 extern Object *
-namespace__add( Namespace_o *ns_obj, Name *name, Object *o );
+namespace__add( OBJ( NAMESPACE ) *ns_obj, Name *name, Object *o );
 
 /** Adds an object to a namespace using a simple (non-recursive) name.
     \param ns_obj  the target namespace
@@ -89,7 +86,7 @@ namespace__keys( Namespace *ns );
     \param name  the local part of the name to look up
     \return  the object found */
 extern Object *
-namespace__lookup( Namespace_o *ns_obj, Name *name );
+namespace__lookup( OBJ( NAMESPACE ) *ns_obj, Name *name );
 
 /** Finds an object using a simple name.
     \param ns  the target namespace
@@ -103,7 +100,7 @@ namespace__lookup_simple( Namespace *ns, const char *name );
     \param name  the local part of the name to look up
     \return  the object removed, or 0 if not found */
 extern Object *
-namespace__remove( Namespace_o *ns_obj, Name *name );
+namespace__remove( OBJ( NAMESPACE ) *ns_obj, Name *name );
 
 
 /** Removes an object from a namespace using a simple (non-recursive) name.
@@ -134,27 +131,27 @@ namespace__create_type( const char *name, int flags );
 /** \return  the shortest fully-qualified Name which will resolve needle in
     haystack */
 extern Name *
-namespace__find( Namespace_o *haystack, const Object *needle, Manager *m );
+namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m );
 
 /** Retrieves an object using a simple (non-recursive) name.
     \return  the object mapped to by the name (if any) */
 extern Object *
-namespace__resolve_simple( Namespace_o *ns_obj, char *name, Manager *m );
+namespace__resolve_simple( OBJ( NAMESPACE ) *ns_obj, char *name, Manager *m );
 
 /** Retrieves an object using a (recursive) name.
     \return  the object mapped to by the name (if any) */
 extern Object *
-namespace__resolve( Namespace_o *ns_obj, Name *name, Manager *m );
+namespace__resolve( OBJ( NAMESPACE ) *ns_obj, Name *name, Manager *m );
 
 /** Adds a reference to the given object using the given (recursive) name. */
 extern Object *
-namespace__define( Namespace_o *nso, Name *name, Object *o, Manager *m );
+namespace__define( OBJ( NAMESPACE ) *nso, Name *name, Object *o, Manager *m );
 
 /** Removes the object resolved by this name from the last namespace in the
     path through which it is resolved.
     \return  the object removed */
 extern Object *
-namespace__undefine( Namespace_o *nso, Name *name, Manager *m );
+namespace__undefine( OBJ( NAMESPACE ) *nso, Name *name, Manager *m );
 
 
 #endif /* NAMESPACE_H */

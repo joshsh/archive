@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Distribute f recursively (and in a breadth-first fashion) to any child
    namespaces. */
 static void
-ns_walk_bfs( Namespace_o *ns_o, Visitor f )
+ns_walk_bfs( OBJ( NAMESPACE ) *ns_o, Visitor f )
 {
     Array *queue;
     Type *t;
@@ -84,12 +84,12 @@ ns_walk_bfs( Namespace_o *ns_o, Visitor f )
 struct edge
 {
     char *name;
-    Namespace_o *parent;
+    OBJ( NAMESPACE ) *parent;
 };
 
 
 void
-namespace__map_back( Namespace_o *haystack,
+namespace__map_back( OBJ( NAMESPACE ) *haystack,
                      Set *needles,
                      Hash_Map *map,
                      Manager *m )
@@ -123,7 +123,7 @@ namespace__map_back( Namespace_o *haystack,
         } while ( ( parent = hash_map__lookup( parents, o ) ) );
     }
 
-    ACTION find( Namespace_o **nsopp )
+    ACTION find( OBJ( NAMESPACE ) **nsopp )
     {
         ACTION helper( char *name, Object **opp )
         {
@@ -157,7 +157,7 @@ namespace__map_back( Namespace_o *haystack,
 
 
 Name *
-namespace__find( Namespace_o *haystack, const Object *needle, Manager *m )
+namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
 {
     Hash_Map *parents = hash_map__new();
     Name *name = name__new();
@@ -165,7 +165,7 @@ namespace__find( Namespace_o *haystack, const Object *needle, Manager *m )
     char *key;
     Type *t = object__type( haystack );
 
-    ACTION find( Namespace_o **nsopp )
+    ACTION find( OBJ( NAMESPACE ) **nsopp )
     {
         ACTION helper( Object **opp )
         {
@@ -240,11 +240,11 @@ finish:
 
 
 Object *
-namespace__resolve_simple( Namespace_o *ns_obj, char *key, Manager *m )
+namespace__resolve_simple( OBJ( NAMESPACE ) *ns_obj, char *key, Manager *m )
 {
     Object *o = 0;
 
-    ACTION test( Namespace_o **ns_opp )
+    ACTION test( OBJ( NAMESPACE ) **ns_opp )
     {
         o = namespace__lookup_simple( object__value( *ns_opp ), key );
 
@@ -261,7 +261,7 @@ namespace__resolve_simple( Namespace_o *ns_obj, char *key, Manager *m )
 
 
 Object *
-namespace__resolve( Namespace_o *nso, Name *name, Manager *m )
+namespace__resolve( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
 {
     Object *o = nso;
     char *key;
@@ -289,7 +289,7 @@ namespace__resolve( Namespace_o *nso, Name *name, Manager *m )
 
 
 Object *
-namespace__undefine( Namespace_o *nso, Name *name, Manager *m )
+namespace__undefine( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
 {
     Object *o = nso;
     unsigned int i;
@@ -298,11 +298,11 @@ namespace__undefine( Namespace_o *nso, Name *name, Manager *m )
     Type *t = object__type( nso );
 
     Object *
-    resolve( Namespace_o *ns_obj, char *key, Manager *m )
+    resolve( OBJ( NAMESPACE ) *ns_obj, char *key, Manager *m )
     {
         Object *o = 0;
 
-        ACTION test( Namespace_o **nsopp )
+        ACTION test( OBJ( NAMESPACE ) **nsopp )
         {
             parent = object__value( *nsopp );
             o = namespace__lookup_simple( parent, key );
@@ -372,7 +372,7 @@ error__not_a_namespace( Name *name )
 
 /*
 Object *
-namespace__copy( Namespace_o *nso, Name *src, Name *dest )
+namespace__copy( OBJ( NAMESPACE ) *nso, Name *src, Name *dest )
 {
 
 }
@@ -383,10 +383,10 @@ namespace__copy( Namespace_o *nso, Name *src, Name *dest )
 
 
 Object *
-namespace__define( Namespace_o *nso, Name *name, Object *o, Manager *m )
+namespace__define( OBJ( NAMESPACE ) *nso, Name *name, Object *o, Manager *m )
 {
     void *key;
-    Namespace_o *local;
+    OBJ( NAMESPACE ) *local;
 
     /* Check that arguments are sound. */
     if ( DEBUG__SAFE && ( !nso || !name || !o || !m || !array__size( name ) ) )
@@ -439,7 +439,7 @@ namespace__define( Namespace_o *nso, Name *name, Object *o, Manager *m )
 
 /*
 Object *
-namespace__move( Namespace_o *nso, Name *src, Name *dest )
+namespace__move( OBJ( NAMESPACE ) *nso, Name *src, Name *dest )
 {
 
 }

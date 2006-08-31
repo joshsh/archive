@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "Environment-impl.h"
 
 
-static Namespace_o *
+static OBJ( NAMESPACE ) *
 ns__new( Manager *m, Type *ns_t )
 {
     Object *o;
@@ -202,14 +202,14 @@ environment__manager( const Environment *env )
 
 
 
-Namespace_o *
+OBJ( NAMESPACE ) *
 environment__data( const Environment *env )
 {
     return env->data;
 }
 
 
-Namespace_o *
+OBJ( NAMESPACE ) *
 environment__root( const Environment *env )
 {
     return env->root;

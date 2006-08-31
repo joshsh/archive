@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 Object *
-namespace__add( Namespace_o *ns_obj, Name *name, Object *o )
+namespace__add( OBJ( NAMESPACE ) *ns_obj, Name *name, Object *o )
 {
     Namespace *ns = object__value( ns_obj );
 
@@ -83,7 +83,7 @@ namespace__add_all( Namespace *dest, Namespace *src )
 
 
 Object *
-namespace__lookup( Namespace_o *ns_obj, Name *name )
+namespace__lookup( OBJ( NAMESPACE ) *ns_obj, Name *name )
 {
     Namespace *ns;
     Object *o;
@@ -133,7 +133,7 @@ namespace__lookup_simple( Namespace *ns, const char *name )
 
 
 Object *
-namespace__remove( Namespace_o *ns_obj, Name *name )
+namespace__remove( OBJ( NAMESPACE ) *ns_obj, Name *name )
 {
     Namespace *ns;
 

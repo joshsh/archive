@@ -30,7 +30,7 @@ struct Environment
 {
     Manager *manager;
 
-    Namespace_o *root,
+    OBJ( NAMESPACE ) *root,
                 *combinators, *data, *primitives, *types;
 
     Type *type_t;

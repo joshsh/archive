@@ -37,7 +37,7 @@ environment__register_type( Environment *env, Type *type )
 }
 
 
-Type_o *
+OBJ( TYPE ) *
 environment__resolve_type( Environment *env, const char *name )
 {
     Object *o;

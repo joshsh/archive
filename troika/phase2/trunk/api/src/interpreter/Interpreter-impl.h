@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 struct Interpreter
 {
     Environment *env;
-    Namespace_o *cur_ns_obj;
+    OBJ( NAMESPACE ) *cur_ns_obj;
 
     Dictionary *commands;
 

@@ -78,7 +78,7 @@ add_combinators( Environment *env )
 }
 
 
-Combinator_o *
+OBJ( COMBINATOR ) *
 environment__resolve_combinator( Environment *env, const char *name )
 {
     return namespace__lookup_simple( env->combinators->value, name );

@@ -109,7 +109,7 @@ interpreter__environment( Interpreter *c )
 }
 
 
-Namespace_o *
+OBJ( NAMESPACE ) *
 interpreter__working_namespace( Interpreter *c )
 {
     return c->cur_ns_obj;
