@@ -1,8 +1,5 @@
 [bugs]
-    _rm root;
-    _rm here;
     _mv and _new issues (^ source namespace)
-    depth issues ^ namespace__find (e.g. can't find Swedish from root:data in test.p2)
     _save is touchy... have to use _saveas most of the time
     /usr/local issue
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
@@ -26,6 +23,9 @@
 [interpreter]
     _new ^ check whether object already exists
 
+[namespace]
+    break namespace__find into a path-building and a name-building portion
+
 [translation]
     RDF/XML and N3 import / export
     graceful fail when basic object (combinator/primitive/type) not found
@@ -36,7 +36,6 @@
     exclude backup files from distribution
     source dependencies (settings.h, etc.)
     tools dependencies (doxygen, xsltproc)
-    library dependencies (libxml2)
     svn log --> CHANGES
     flatten include directory
     include examples dir in distribution
@@ -44,6 +43,7 @@
          use static libraries
 
 [other]
+    "cstring" --> "String"
     triples
         sets ^ distribution
         meta-functions

@@ -8,7 +8,8 @@
 extern xpm *
 xpm__decode( cstring *buffer );
 
-/** $encoder */
+/** $encoder
+    \param buffer  $side-effect */
 extern void
 xpm__encode( xpm *p, cstring *buffer );
 

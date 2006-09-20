@@ -27,7 +27,7 @@ object__new( Type *type, void *value, int flags )
 
     /* Note: temporary objects with null type/value may be allowed. */
     if ( ( !type || !value ) && DEBUG__SAFE && !PERMIT_TEMPORARY_OBJECTS )
-        abort();
+        ABORT;
 
     o = NEW( Object );
 
@@ -69,7 +69,7 @@ object__delete( Object *o )
     }
 
     if ( DEBUG__SAFE && !o )
-        abort();
+        ABORT;
 
 #if TRIPLES__GLOBAL__IN_EDGES
     if ( o->inbound_edges )
@@ -86,10 +86,17 @@ object__delete( Object *o )
         hash_map__delete( o->trans_edges );
 #endif
 
+/*
+PRINT( "type=%p (%s) -- %i\n", o->type, o->type->name, o->flags && OBJECT__VISITED );
+*/
+
     /* If the object owns its children (and has any), free them. */
     if ( o->type->flags & TYPE__OWNS_DESCENDANTS )
     {
         t = o->type->type_arg;
+        if ( DEBUG__SAFE && !t )
+            ABORT;
+
         o->type->walk( o->value, ( Visitor ) helper );
     }
 
@@ -114,7 +121,7 @@ Type *
 object__type( const Object *o )
 {
     if ( DEBUG__SAFE && !o )
-        abort();
+        ABORT;
 
     return o->type;
 }
@@ -124,7 +131,7 @@ void *
 object__value( const Object *o )
 {
     if ( DEBUG__SAFE && !o )
-        abort();
+        ABORT;
 
     return o->value;
 }

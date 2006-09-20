@@ -19,13 +19,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <stdlib.h>
 
+
+#define DEBUG__ALLOC__VERBOSE                   0
+
+
 #define DEBUG__SAFE 1
-
-
-
-
-
-
+#define ABORT   printf("ABORT: [%s:%d]\n", __FILE__, __LINE__), abort()
 
 
 
@@ -106,28 +105,31 @@ static int
     n_realloc   = 0;
 
 void *
-debug__calloc( size_t nelem, size_t elsize )
+debug__calloc( size_t nelem, size_t elsize, const char *file, int line )
 {
     void *p;
 
     if ( DEBUG__SAFE && ( !nelem || !elsize ) )
-        abort();
+        ABORT;
 
     p = calloc( nelem, elsize );
 
     n_calloc++;
+
+    if ( DEBUG__ALLOC__VERBOSE )
+        PRINT( "CALLOC: %p [%s:%d]\n", p, file, line );
 
     return p;
 }
 
 
 void *
-debug__malloc( size_t size )
+debug__malloc( size_t size, const char *file, int line )
 {
     void *p;
 
     if ( DEBUG__SAFE && !size )
-        abort();
+        ABORT;
 
     p = malloc( size );
     if ( !p )
@@ -135,17 +137,20 @@ debug__malloc( size_t size )
 
     n_malloc++;
 
+    if ( DEBUG__ALLOC__VERBOSE )
+        PRINT( "MALLOC: %p [%s:%d]\n", p, file, line );
+
     return p;
 }
 
 
 void *
-debug__realloc( void *ptr, size_t size )
+debug__realloc( void *ptr, size_t size, const char *file, int line )
 {
     void *p;
 
     if ( DEBUG__SAFE && ( !ptr || !size ) )
-        abort();
+        ABORT;
 
     p = realloc( ptr, size );
     if ( !p )
@@ -153,15 +158,21 @@ debug__realloc( void *ptr, size_t size )
 
     n_realloc++;
 
+    if ( DEBUG__ALLOC__VERBOSE )
+        PRINT( "REALLOC: %p --> %p [%s:%d]\n", ptr, p, file, line );
+
     return p;
 }
 
 
 void
-debug__free( void *ptr )
+debug__free( void *ptr, const char *file, int line )
 {
+    if ( DEBUG__ALLOC__VERBOSE )
+        PRINT( "FREE: %p [%s:%d]\n", ptr, file, line );
+
     if ( DEBUG__SAFE && !ptr )
-        abort();
+        ABORT;
 
     free( ptr );
 

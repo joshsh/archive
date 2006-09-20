@@ -1,4 +1,4 @@
 /*
-void (*signal(int sig, void (*handler)(int)))(int);
-int raise(int sig);
+extern void (*signal(int sig, void (*handler)(int)))(int);
+extern int raise(int sig);
 */

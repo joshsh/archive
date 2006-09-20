@@ -6,6 +6,8 @@ noinst_LTLIBRARIES = libp2parser.la
 
 BUILT_SOURCES = parser.h
 
+noinst_HEADERS = Parser-impl.h
+
 EXTRA_DIST = $(BUILT_SOURCES) README
 
 AM_YFLAGS = -d

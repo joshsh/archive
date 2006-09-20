@@ -1,3 +1,3 @@
 /*
-void assert(int expression);
+extern void assert(int expression);
 */

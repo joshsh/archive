@@ -75,7 +75,7 @@ term__new( void *p, unsigned int initial_buffer_size )
     /* Terms may contain null atoms. */
 /*
     if ( DEBUG__SAFE && !p )
-        abort();
+        ABORT;
 */
 
     t = malloc(sizeof(Term));
@@ -110,7 +110,7 @@ term__copy( Term *source )
     Term *t;
 
     if ( DEBUG__SAFE && !source )
-        abort();
+        ABORT;
 
     size = ( unsigned int ) *( source->head );
 
@@ -137,7 +137,7 @@ void
 term__delete( Term *t )
 {
     if ( DEBUG__SAFE && !t )
-        abort();
+        ABORT;
 
     free( t->buffer );
     free( t );
@@ -154,7 +154,7 @@ term__length( const Term *t )
     void **cur, **lim;
 
     if ( DEBUG__SAFE && !t )
-        abort();
+        ABORT;
 
     cur = t->head;
     if ( *cur == ( void* ) 2 )
@@ -183,7 +183,7 @@ term__subterm_at(Term *t, int i)
 
     /* TODO: upper bounds checking */
     if ( DEBUG__SAFE && ( !t || i < 0 ) )
-        abort();
+        ABORT;
 
     /* If the term contains a single element, skip to copy (assumes that index
        is equal to 0).  Otherwise cycle through the target index. */
@@ -215,7 +215,7 @@ term__head(Term *t)
     void **cur = t->head;
 
     if ( DEBUG__SAFE && !t )
-        abort();
+        ABORT;
 
     /* Find the leftmost atom. */
     while (*cur > (void *) 2)
@@ -399,7 +399,7 @@ term__walk( Term *t, Visitor f )
     }
 
     if ( DEBUG__SAFE && ( !t || !f ) )
-        abort();
+        ABORT;
 
     walk( t->head );
 
@@ -464,7 +464,7 @@ term__encode( Term *t, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !t || !buffer ) )
-        abort();
+        ABORT;
 
     sprintf( buffer, "[" );
     buffer++;

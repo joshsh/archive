@@ -27,10 +27,10 @@ Apply *
 apply__new( Object *function, Object *operand )
 {
     Apply *a;
-putchar('*');
+
     /* Apply objects with null members are allowed if FIRST_CLASS_NULL. */
-    if ( !FIRST_CLASS_NULL && DEBUG__SAFE && ( !function || !operand ) )
-        abort();
+    if ( DEBUG__SAFE && !FIRST_CLASS_NULL && ( !function || !operand ) )
+        ABORT;
 
     a = NEW( Apply );
 
@@ -48,7 +48,7 @@ void
 apply__delete( Apply *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     free( a );
 }
@@ -57,44 +57,44 @@ apply__delete( Apply *a )
 void
 apply__walk( Apply *a, Visitor f )
 {
-putchar('w');
+    if ( DEBUG__SAFE && ( !a || !f ) )
+        ABORT;
+
     if ( f( ( void** ) &a->function ) == BREAK
       || f( ( void** ) &a->operand ) == BREAK )
         return;
 }
 
 
-static Term *
-subterm( Object *o )
-{
-    Type *t = object__type( o );
-    if ( t == apply_type )
-        return apply__as_term( object__value( o ) );
-    else if ( t == indirection_type )
-        return subterm( object__value( o ) );
-    else
-        return term__new( o, 0 );
-}
-
-
 Term *
-apply__as_term( Apply *a )
+apply__as_term( Apply *a, Type *apply_type, Type *indirection_type )
 {
+    Term *subterm( Object *o )
+    {
+        Type *t = object__type( o );
+        if ( t == apply_type )
+            return apply__as_term( object__value( o ), apply_type, indirection_type );
+        else if ( t == indirection_type )
+            return subterm( object__value( o ) );
+        else
+            return term__new( o, 0 );
+    }
+
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     return term__merge_la( subterm( a->function ), subterm( a->operand ) );
 }
 
 
 Object *
-term__to_apply_tree( Term *t, Manager *m )
+term__to_apply_tree( Term *t, Manager *m, Type *apply_type )
 {
     unsigned int l, i;
     Object *o;
 
     if ( DEBUG__SAFE && ( !t || !m ) )
-        abort();
+        ABORT;
 
     l = term__length( t );
 
@@ -104,11 +104,11 @@ term__to_apply_tree( Term *t, Manager *m )
 
     else
     {
-        o = term__to_apply_tree( term__subterm_at( t, 0 ), m );
+        o = term__to_apply_tree( term__subterm_at( t, 0 ), m, apply_type );
 
         for ( i = 1; i < l; i++ )
-            o = memory_manager__object( m, apply_type,
-                    apply__new( o, term__to_apply_tree( term__subterm_at( t, i ), m ) ),
+            o = manager__object( m, apply_type,
+                    apply__new( o, term__to_apply_tree( term__subterm_at( t, i ), m, apply_type ) ),
                     NOFLAGS );
     }
 
@@ -122,8 +122,10 @@ apply__encode( Apply *a, char *buffer )
     Object *o;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        abort();
+        ABORT;
 
+    sprintf( buffer, "!" );
+/*
     o = a->function;
     object__encode( o, buffer );
     buffer += strlen( buffer );
@@ -143,6 +145,28 @@ apply__encode( Apply *a, char *buffer )
 
     else
         object__encode( o, buffer );
+*/
+}
+
+
+Type *
+apply__create_type( const char *name, int flags )
+{
+    Type *type;
+
+    if ( DEBUG__SAFE && ( !name ) )
+        ABORT;
+
+    type = type__new( name, flags );
+
+    if ( type )
+    {
+        type->destroy = ( Destructor ) apply__delete;
+        type->encode = ( Encoder ) apply__encode;
+        type->walk = ( Walker ) apply__walk;
+    }
+
+    return type;
 }
 
 

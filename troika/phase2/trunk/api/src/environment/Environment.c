@@ -21,6 +21,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <collection/Term.h>
 
 #include "Environment-impl.h"
+    #include "../compiler/Apply.h"
+    #include "../compiler/Indirection.h"
 
 
 static OBJ( NAMESPACE ) *
@@ -32,7 +34,7 @@ ns__new( Manager *m, Type *ns_t )
     if ( !( ns = namespace__new() ) )
         return 0;
 
-    if ( !( o = memory_manager__object( m, ns_t, ns, NOFLAGS ) ) )
+    if ( !( o = manager__object( m, ns_t, ns, NOFLAGS ) ) )
     {
         namespace__delete( ns );
         return 0;
@@ -72,6 +74,7 @@ environment__new()
     Environment *env;
 
     Type *ns_t = 0, *prim_t = 0, *set_t = 0;
+    Type *string_t, *name_t;
 
     if ( !( env = NEW( Environment ) ) )
         return 0;
@@ -88,7 +91,7 @@ environment__new()
         goto abort;
 
     /* Create memory manager. */
-    if ( !( env->manager = memory_manager__new() ) )
+    if ( !( env->manager = manager__new() ) )
         goto abort;
 
     /* Create root namespace object and children. */
@@ -99,7 +102,7 @@ environment__new()
       || !( env->types = ns__new( env->manager, ns_t ) ) )
         goto abort;
 
-    memory_manager__set_root( env->manager, env->root );
+    manager__set_root( env->manager, env->root );
 
     /* Nest child namespaces under root. */
     if ( !namespace__add_simple( env->root->value, "combinators", env->combinators )
@@ -117,6 +120,14 @@ environment__new()
     /* Add other types here... */
     environment__register_type( env, array__create_type( NAMEOF( ARRAY ), TYPE__IS_OBJ_COLL ) );
     environment__register_type( env, term__create_type( NAMEOF( TERM ), TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, apply__create_type( NAMEOF( APPLY ), TYPE__IS_OBJ_COLL ) );
+    environment__register_type( env, indirection__create_type( NAMEOF( INDIRECTION ), TYPE__IS_OBJ_COLL ) );
+
+    string_t = type__new( NAMEOF( STRING ), NOFLAGS );
+    environment__register_type( env, string_t );
+    name_t = array__create_type( NAMEOF( NAME ), TYPE__OWNS_DESCENDANTS );
+    type__set_type_arg( name_t, string_t );
+    environment__register_type( env, name_t );
 
     /* Add primitives. */
     environment__import_primitives( env );
@@ -138,7 +149,7 @@ abort:
 
     if ( env->manager )
     {
-        memory_manager__delete( env->manager );
+        manager__delete( env->manager );
     }
 
     else
@@ -167,11 +178,11 @@ environment__delete( Environment *env )
     Type ns_t;
 
     if ( DEBUG__SAFE && !env )
-        abort();
+        ABORT;
 
     /* Preserve only data type objects. */
-    memory_manager__set_root( env->manager, env->types );
-    memory_manager__collect( env->manager, TRUE, FALSE );
+    manager__set_root( env->manager, env->types );
+    manager__collect( env->manager, TRUE, FALSE );
 
     /* Preserve only the 'type' type. */
     ns_t = *( env->types->type );
@@ -180,11 +191,11 @@ environment__delete( Environment *env )
     ns_t.name = STRDUP( ns_t.name );  /* Just so that the debugging output doesn't look weird. */
 
     env->types->type = &ns_t;
-    memory_manager__set_root( env->manager,
+    manager__set_root( env->manager,
         namespace__lookup_simple( env->types->value, NAMEOF( TYPE ) ) );
-    memory_manager__collect( env->manager, TRUE, FALSE );
+    manager__collect( env->manager, TRUE, FALSE );
 
-    memory_manager__delete( env->manager );
+    manager__delete( env->manager );
 
     free( ns_t.name );
     free( env );
@@ -195,7 +206,7 @@ Manager *
 environment__manager( const Environment *env )
 {
     if ( DEBUG__SAFE && !env )
-        abort();
+        ABORT;
 
     return env->manager;
 }

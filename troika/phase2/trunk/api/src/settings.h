@@ -1,6 +1,8 @@
 /**
     \file  settings.h
 
+    Macros and includes 
+
     \author  Joshua Shinavier   \n
              parcour@gmail.com  \n
              +1 509 570-6990    \n */
@@ -34,6 +36,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define NAMEOF_0(x)                             #x
 #define NAMEOF(x)                               NAMEOF_0(x)
 
+#define ECHO__INFO                              0
+#define ECHO__WARNING                           1
+#define ECHO__ERROR                             1
+
 
 /******************************************************************************/
 
@@ -43,10 +49,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdlib.h>
 
 #if DEBUG__ALLOC
-#   define calloc                               debug__calloc
-#   define free                                 debug__free
-#   define malloc                               debug__malloc
-#   define realloc                              debug__realloc
+#   define calloc(x,y)                          debug__calloc(x,y,__FILE__,__LINE__)
+#   define free(x)                              debug__free(x,__FILE__,__LINE__)
+#   define malloc(x)                            debug__malloc(x,__FILE__,__LINE__)
+#   define realloc(x,y)                         debug__realloc(x,y,__FILE__,__LINE__)
 #endif
 
 
@@ -58,6 +64,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #define NEW(type)   malloc(sizeof (type))
+/*
+#define NEW(type)   malloc(sizeof (type) + (0*printf( "NEW %s: ", #type )))
+*/
 #define STRDUP(x)   strcpy(malloc(1 + strlen(x)), (x))
 
 
@@ -92,13 +101,13 @@ dereference( struct Object ** );
 #define FIRST_CLASS_NULL                        1
 
 /** Short out indirection nodes in reduction algorithms as well as in
-    memory management algorithms.  May be a costly feature. */
+    memory management algorithms.  This may be a costly feature. */
 #define EAGER_REDIRECTION                       1
 
 /** Replace any useless apply nodes (i.e. those which are equivalent to NULL)
-    with indirection nodes to NULL whenever they are encountered.  This may
+    with indirection nodes to NULL whenever they are encountered, to prevent
     repetitious traversals of the same null-terminated spine.  The disadvantage
-    is time wasted on expressions which will never be used again, anyway. */
+    is time wasted on expressions which will never be used again. */
 #define EAGER_PRUNING                           1
 
 #define PERMIT_TEMPORARY_OBJECTS                1
@@ -112,7 +121,7 @@ dereference( struct Object ** );
 #define PRIM__MAX_PARAMS                        16
 
 /** Allow the possibility of a primitive (for instance, the ^ operator)
-    yielding another primitive as a return value. */
+    which yields another primitive as a return value. */
 #define PRIM__ALLOW_HIGHER_ORDER                1
 
 #define PRIM__ALLOW_NULLARY                     0
@@ -121,26 +130,22 @@ dereference( struct Object ** );
 #define PRIM__CHECKS__PARAM_TYPE                1
 
 
-/** Whether to use graph vs. tree reduction algorithms. */
-#define SK__REDUCE_AS_GRAPH                     1
+/** Whether to use graph reduction versus tree reduction algorithms. */
+#define COMPILER__REDUCE_AS_GRAPH               1
 
-#define SK__CHECKS__APPLY_TO_NONATOM            1
-
-#define SK__CHECKS__MAX_TERM_SIZE               100000
-#define SK__CHECKS__MAX_REDUX_ITERATIONS        10000
+#define COMPILER__MAX_TERM_SIZE                 100000
+#define COMPILER__REDUX_TIMEOUT                 10000
 
 
 /** Allow non-redex atoms at the beginning of an expression, (or as arguments to
     a function) and simply abandon reduction when they are encountered. */
-#define SK__ALLOW_NONREDUX                      0
-
-#define SK__IMPLICIT_ASSOCIATION                1
+#define COMPILER__ALLOW_NONREDUX                0
 
 
-/* Compiler interface *********************************************************/
+/* Namespaces *****************************************************************/
 
 
-#define COMPILER__NAME_INHERITANCE              1
+#define NAMESPACE__USE_INHERITANCE              1
 
 
 /* Serialization **************************************************************/
@@ -220,40 +225,55 @@ dereference( struct Object ** );
 /* Note: the GCC extension is used here instead of __VA_ARGS__ for compatibility
    with old GCC cross-compilers. */
 
+#if ECHO__ERROR
 #define ERROR(args...) (                                                    \
     fprintf( stderr, "ERROR: " ),                                           \
     fprintf( stderr , ##args ),                                             \
     fprintf( stderr, "\n" ),                                                \
     fflush( stderr ) )
+#else
+#define ERROR(args...)
+#endif
 
+#if ECHO__WARNING
 #define WARNING(args...) (                                                  \
     fprintf( stderr, "WARNING: " ),                                         \
     fprintf( stderr , ##args ),                                             \
     fprintf( stderr, "\n" ),                                                \
     fflush( stderr ) )
+#else
+#define WARNING(args...)
+#endif
 
-#define WARNING__ALLOC WARNING
+#define WARNING__ALLOC                          WARNING
 
+#if ECHO__INFO
 #define INFO(args...) (                                                     \
     fprintf( stdout, "INFO: " ),                                            \
     fprintf( stdout, ##args ),                                              \
     fprintf( stdout, "\n" ) )
+#else
+#define INFO(args...)
+#endif
+
+
+#define ABORT   PRINT("ABORT: [file %s, line %d]\n", __FILE__, __LINE__), abort()
 
 
 /* Debugging ******************************************************************/
 
 
 extern void *
-debug__calloc( size_t nelem, size_t elsize );
+debug__calloc( size_t nelem, size_t elsize, const char *file, int line );
 
 extern void *
-debug__malloc( size_t size );
+debug__malloc( size_t size, const char *file, int line );
 
 extern void *
-debug__realloc( void *ptr, size_t size );
+debug__realloc( void *ptr, size_t size, const char *file, int line );
 
 extern void
-debug__free( void *ptr );
+debug__free( void *ptr, const char *file, int line );
 
 extern void
 debug__memcheck();
@@ -277,7 +297,6 @@ debug__memcheck();
 #        define DEBUG__COMPILER                 1 & DEBUG__CORE
 #        define DEBUG__SERIAL                   0 & DEBUG__CORE
 #    define DEBUG__PARSER_MODULE                1 & DEBUG
-#        define DEBUG__AST                      1 & DEBUG__PARSER_MODULE
 #        /** Echo each token as it is matched by the lexer. */
 #        define DEBUG__LEXER                    1 & DEBUG__PARSER_MODULE
 #        /** Echo each production as it is matched by the parser. */

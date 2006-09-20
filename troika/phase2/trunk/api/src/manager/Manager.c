@@ -52,7 +52,7 @@ struct Manager
 
 
 Manager *
-memory_manager__new()
+manager__new()
 {
     Manager *m;
     Type *object_t = 0, *bunch_t = 0;
@@ -66,7 +66,7 @@ memory_manager__new()
     if ( !m->objects )
         goto fail;
 
-    /* Note: these are freed in memory_manager__delete */
+    /* Note: these are freed in manager__delete */
     object_t = object__create_type( "object" );
     bunch_t = bunch__create_type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS );
 
@@ -103,12 +103,12 @@ fail:
 
 
 void
-memory_manager__delete( Manager *m )
+manager__delete( Manager *m )
 {
     Type *object_t, *object_bunch_t;
 
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
     object_bunch_t = m->objects_o->type;
     object_t = object_bunch_t->type_arg;
@@ -124,30 +124,30 @@ memory_manager__delete( Manager *m )
 
 
 unsigned int
-memory_manager__size( Manager *m )
+manager__size( Manager *m )
 {
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
     return bunch__size( m->objects );
 }
 
 
 void
-memory_manager__set_root( Manager *m, Object *o )
+manager__set_root( Manager *m, Object *o )
 {
     if ( DEBUG__SAFE && ( !m || !o ) )
-        abort();
+        ABORT;
 
     m->root = o;
 }
 
 
 Object *
-memory_manager__object( Manager *m, Type *type, void *value, int flags )
+manager__object( Manager *m, Type *type, void *value, int flags )
 {
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
     Object *o = object__new( type, value, flags );
 
@@ -181,7 +181,7 @@ unmark_all( Manager *m )
     }
 
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
     bunch__walk( m->objects_o->value, ( Visitor ) unmark );
 
@@ -196,7 +196,7 @@ sweep( Manager *m )
     boolean unmarked( Object *o )
     {
         if ( DEBUG__SAFE && !o )
-            abort();
+            ABORT;
 
         /* If marked, unmark. */
         if ( visited( o ) )
@@ -218,7 +218,7 @@ sweep( Manager *m )
     }
 
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
     collection__exclude_if( m->objects_o, ( Criterion ) unmarked );
     m->clean = 1;
@@ -251,7 +251,7 @@ unwalk( Object *root, boolean follow_triples )
 
 
 void
-memory_manager__walk
+manager__walk
     ( Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples )
 {
     boolean dosweep;
@@ -261,7 +261,7 @@ memory_manager__walk
         Object *o;
 
         if ( DEBUG__SAFE && !opp )
-            abort();
+            ABORT;
 
         /* If the entire object graph is to be traversed, then it is safe to
            mutate references to indirection nodes. */
@@ -288,7 +288,7 @@ memory_manager__walk
     }
 
     if ( DEBUG__SAFE && ( !m || !f ) )
-        abort();
+        ABORT;
 
     if ( !root )
     {
@@ -324,32 +324,50 @@ memory_manager__walk
 
 
 void
-memory_manager__trace
-    ( Manager *m, Object *root, Walker walk, Visitor dist )
+manager__trace( Manager *m,
+                Object *root,
+                Walker walk,
+                Visitor v )
 {
     int marked;
+    Array *visited_objects;
 
     ACTION trace( Object **opp )
     {
         Object *o = DEREF( opp );
 
-        /* If the object is already marked, skip it. */
+        /* If the object is already marked, skip it (but don't abort the walk). */
         if ( visited( o ) )
-            return BREAK;
+            return CONTINUE;
 
         else
         {
+            array__enqueue( visited_objects, o );
+
             if ( DEBUG__SAFE )
                 marked++;
 
             /* Mark the object. */
             set_visited( o );
 
-            /* Execute the closure. */
-            return dist( ( void** ) opp );
+            /* Apply the closure. */
+            return v( ( void** ) opp );
         }
     }
 
+    ACTION unmark( Object **opp )
+    {
+        Object *o = DEREF( opp );
+
+        if ( DEBUG__SAFE && visited( o ) )
+            marked--;
+
+        clear_visited( o );
+
+        return CONTINUE;
+    }
+
+/*
     ACTION untrace( Object **opp )
     {
         Object *o = DEREF( opp );
@@ -367,9 +385,10 @@ memory_manager__trace
         else
             return BREAK;
     }
+*/
 
-    if ( DEBUG__SAFE && ( !m || !walk || !dist ) )
-        abort();
+    if ( DEBUG__SAFE && ( !m || !walk || !v ) )
+        ABORT;
 
     if ( DEBUG__SAFE )
         marked = 0;
@@ -378,6 +397,7 @@ memory_manager__trace
     {
         if ( m->root )
             root = m->root;
+
         else
         {
             ERROR( "can't trace from null root" );
@@ -385,23 +405,31 @@ memory_manager__trace
         }
     }
 
+    visited_objects = array__new( 0, 0 );
+
     /* Make sure no objects are marked to begin with. */
     if ( !m->clean )
         unmark_all( m );
 
     m->clean = FALSE;
     walk( root, ( Visitor ) trace );
+/*
     walk( root, ( Visitor ) untrace );
-    m->clean = TRUE;
+*/
+
+    array__walk( visited_objects, ( Visitor ) unmark );
+    array__delete( visited_objects );
 
     if ( DEBUG__SAFE )
     {
         if ( marked > 0 )
-            WARNING( "memory_manager__trace: %i marked objects are still marked as visited", marked );
+            WARNING( "manager__trace: %i objects are still marked as visited", marked );
 
         else if ( marked < 0 )
-            WARNING( "memory_manager__trace: %i more objects unmarked than actually visited", -marked );
+            WARNING( "manager__trace: %i more objects unmarked than actually visited", -marked );
     }
+
+    m->clean = TRUE;
 }
 
 
@@ -409,7 +437,7 @@ memory_manager__trace
 
 
 Set *
-memory_manager__get_multirefs( Manager *m, Object *root )
+manager__get_multirefs( Manager *m, Object *root )
 {
     Set *s;
 
@@ -418,7 +446,7 @@ memory_manager__get_multirefs( Manager *m, Object *root )
         Object *o;
 
         if ( DEBUG__SAFE && !opp )
-            abort();
+            ABORT;
 
         o = *opp;
 
@@ -449,7 +477,7 @@ memory_manager__get_multirefs( Manager *m, Object *root )
     }
 
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
     if ( !m->clean )
         unmark_all( m );
@@ -468,7 +496,7 @@ memory_manager__get_multirefs( Manager *m, Object *root )
 
 
 void
-memory_manager__collect( Manager *m, boolean force, boolean echo )
+manager__collect( Manager *m, boolean force, boolean echo )
 {
     /* Avoid "used uninitialized" warning. */
     unsigned int size = 0;
@@ -485,7 +513,7 @@ memory_manager__collect( Manager *m, boolean force, boolean echo )
     }
 
     if ( DEBUG__SAFE && !m )
-        abort();
+        ABORT;
 
 #if DEBUG__MEMORY
     echo = TRUE;
@@ -495,7 +523,7 @@ memory_manager__collect( Manager *m, boolean force, boolean echo )
         t = clock();
 
     if ( echo || !force )
-        size = memory_manager__size( m );
+        size = manager__size( m );
 
     if ( !force )
     {
@@ -505,9 +533,9 @@ memory_manager__collect( Manager *m, boolean force, boolean echo )
     }
 
     /* Mark all reachable objects. */
-    memory_manager__walk( m, 0, ( Visitor ) noop, FALSE, TRUE );
+    manager__walk( m, 0, ( Visitor ) noop, FALSE, TRUE );
 
-    m->size_at_last_cycle = memory_manager__size( m );
+    m->size_at_last_cycle = manager__size( m );
 
     if ( echo )
     {

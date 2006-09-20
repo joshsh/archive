@@ -26,9 +26,9 @@ environment__register_type( Environment *env, Type *type )
     Object *o;
 
     if ( DEBUG__SAFE && ( !env || !type ) )
-        abort();
+        ABORT;
 
-    o = memory_manager__object( env->manager, env->type_t, type, OBJECT__IMMUTABLE );
+    o = manager__object( env->manager, env->type_t, type, OBJECT__IMMUTABLE );
 
     if ( !o )
         return 0;
@@ -44,7 +44,7 @@ environment__resolve_type( Environment *env, const char *name )
     Type *type;
 
     if ( DEBUG__SAFE && ( !env || !name ) )
-        abort();
+        ABORT;
 
     if ( !( o = namespace__lookup_simple( ( Namespace* ) env->types->value, name ) ) )
     {
@@ -60,6 +60,53 @@ environment__resolve_type( Environment *env, const char *name )
     }
 
     return o;
+}
+
+
+Type *
+environment__create_type( Environment *e, const char *name, int flags )
+{
+    Type *t;
+    Object *o;
+
+    if ( DEBUG__SAFE && ( !e || !name ) )
+        ABORT;
+
+    if ( namespace__lookup_simple( e->types->value, name ) )
+    {
+        ERROR( "Type %s already exists", name );
+        return 0;
+    }
+
+    t = type__new( name, flags );
+    if ( !t )
+        return 0;
+
+    /* The "Type" type is a special case.  It MUST be created before all other
+       types. */
+    if ( !strcmp( name, NAMEOF( TYPE ) ) )
+        e->type_t = t;
+
+    o = manager__object( e->manager, e->type_t, t, OBJECT__IMMUTABLE );
+
+    if ( !o )
+        return 0;
+
+    if ( !namespace__add_simple( e->types->value, name, o ) )
+        return 0;
+
+    else
+        return t;
+}
+
+
+Object *
+environment__create_object( Environment *e, Type *type, void *value )
+{
+    if ( DEBUG__SAFE && ( !e || !type || !value ) )
+        ABORT;
+
+    return manager__object( e->manager, type, value, NOFLAGS );
 }
 
 

@@ -27,7 +27,7 @@ Parser *
 parser__new( Interpreter *itp )
 {
     if ( DEBUG__SAFE && !itp )
-        abort();
+        ABORT;
 
     if ( instance_exists )
     {
@@ -75,12 +75,12 @@ void
 parser__free( Parser *p )
 {
     if ( DEBUG__SAFE && !p )
-        abort();
+        ABORT;
 
     if ( p->locked )
     {
         ERROR( "parser__free: can't delete while parsing" );
-        abort();
+        ABORT;
     }
 
     free( p );
@@ -95,7 +95,7 @@ parser__parse( Parser *p )
     exit_state exit_state;
 
     if ( DEBUG__SAFE && !p )
-        abort();
+        ABORT;
 
     if ( p->locked )
         return exit_state__locked_out;
@@ -201,7 +201,7 @@ parser__handle_error( Parser *p, const char *msg )
 extern Object *
 parser__Array_ref_to_object( Parser *p, Array *ref )
 {
-    Object *o = memory_manager__object( p->manager, object__value( p->ot_char ), ref, NOFLAGS );
+    Object *o = manager__object( p->manager, object__value( p->ot_char ), ref, NOFLAGS );
     if ( o )
         return o;
     else
@@ -213,7 +213,7 @@ parser__Array_ref_to_object( Parser *p, Array *ref )
 */
 #define PARSER_REF2OBJ_DEF0(x)  PARSER_REF2OBJ_DECL(x)\
 {\
-    Object *o = memory_manager__object( p->manager, object__value( p->TYPEOBJ( x ) ), ref, NOFLAGS );\
+    Object *o = manager__object( p->manager, object__value( p->TYPEOBJ( x ) ), ref, NOFLAGS );\
     if ( o )\
         return o;\
     else\

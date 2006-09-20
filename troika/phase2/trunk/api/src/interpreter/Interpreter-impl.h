@@ -44,7 +44,7 @@ struct Interpreter
     /* Other types. */
     Type *combinator_t, *ns_t, *prim_t, *set_t, *type_t;
 
-    Type *name_t;
+    Type *name_t, *indirection_t;
 
     char *save_to_path;
 

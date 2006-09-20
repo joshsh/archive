@@ -1,11 +1,3 @@
-/**
-
-\file  Apply.h
-
-\author  Joshua Shinavier   \n
-         parcour@gmail.com  \n
-         +1 509 570-6990    \n */
-
 /*******************************************************************************
 
 Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
@@ -25,45 +17,58 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef APPLY_H
-#define APPLY_H
-
+#include "Indirection.h"
 #include <Object.h>
+#include "../type/Type-impl.h"
 
-typedef struct Apply Apply;
 
-struct Apply
+/** \note  The indirection type has a trivial destructor, as an indirection node
+   does not own the object it points to. */
+static void
+indirection__delete( void *p )
 {
-    Object *function;
-    Object *operand;
-};
-
-extern Apply *
-apply__new( Object *function, Object *operand );
-
-extern void
-apply__delete( Apply *a );
-
-extern void
-apply__walk( Apply *a, Visitor f );
-
-#include <collection/Term.h>
-
-extern Term *
-apply__as_term( Apply *a, Type *apply_type, Type *indirection_type );
-
-#include <Manager.h>
-
-extern Object *
-term__to_apply_tree( Term *t, Manager *m, Type *apply_type );
-
-extern void
-apply__encode( Apply *a, char *buffer );
-
-extern Type *
-apply__create_type( const char *name, int flags );
+    /* Avoid a compiler warning. */
+    p = 0;
+}
 
 
-#endif  /* APPLY_H */
+static void
+indirection__encode( Object *o, char *buffer )
+{
+    object__encode( o, buffer );
+}
+
+
+/* FIXME: beware of trying to mutate this reference (it won't have any effect). */
+static void
+indirection__walk( void *p, Visitor f )
+{
+    if ( DEBUG__SAFE && ( !p || !f ) )
+        ABORT;
+
+    f( &p );
+}
+
+
+Type *
+indirection__create_type( const char *name, int flags )
+{
+    Type *type;
+
+    if ( DEBUG__SAFE && ( !name ) )
+        ABORT;
+
+    type = type__new( name, flags );
+
+    if ( type )
+    {
+        type->destroy = ( Destructor ) indirection__delete;
+        type->encode = ( Encoder ) indirection__encode;
+        type->walk = ( Walker ) indirection__walk;
+    }
+
+    return type;
+}
+
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -39,20 +39,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <Combinator.h>
 
 
-/** The type of an Apply object, i.e. the type of the "@" in "@ f x". */
-extern Type *apply_type;
-
-/** The type of an indirection node (a byproduct of graph reduction). */
-extern Type *indirection_type;
-
-
 /** Initializes the graph reducer. */
 extern void
-graph_init( Type *combinator_t, Type *primitive_t );
+graph_init( Type *combinator_t, Type *primitive_t, Type *apply_t, Type *indirection_t );
 
-/** Cleans up after the graph reducer. */
-extern void
-graph_end();
 
 /** Mutates an object graph according to the rules of lazy combinator reduction.
     This is a much more powerful function than term__reduce. */

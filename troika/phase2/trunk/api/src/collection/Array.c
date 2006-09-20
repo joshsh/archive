@@ -106,7 +106,7 @@ array__copy( Array *a )
     Array *b;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( !( b = NEW( Array ) ) )
         return 0;
@@ -127,7 +127,7 @@ void
 array__delete( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     free( a->buffer );
     free( a );
@@ -141,7 +141,7 @@ unsigned int
 array__size( const Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     return a->size;
 }
@@ -151,7 +151,7 @@ double
 array__expansion( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     return a->expansion;
 }
@@ -167,7 +167,7 @@ sizeup( Array *a )
     unsigned int i, buffer_size_new;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( a->size < a->buffer_size )
         return a;
@@ -205,7 +205,7 @@ void *
 array__get( Array *a, unsigned int i )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( INBOUNDS( a, i ) )
         return ELMT( a, i );
@@ -224,7 +224,7 @@ array__set( Array *a, unsigned int i, void *p )
     void **addr, *displaced;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -256,7 +256,7 @@ void *
 array__peek( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( a->size )
         return a->buffer[a->head];
@@ -273,7 +273,7 @@ void *
 array__push( Array *a, void *p )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( !sizeup( a ) )
         return 0;
@@ -292,7 +292,7 @@ array__pop( Array *a )
     void *p;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( a->size )
     {
@@ -314,7 +314,7 @@ void *
 array__enqueue( Array *a, void *p )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( !sizeup( a ) )
         return 0;
@@ -330,7 +330,7 @@ void *
 array__dequeue( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( a->size )
     {
@@ -355,7 +355,7 @@ array__insert_before( Array *a, unsigned int i, void *p )
     unsigned int j;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -385,7 +385,7 @@ array__insert_after( Array *a, unsigned int i, void *p )
     unsigned int j;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -416,7 +416,7 @@ array__remove( Array *a, unsigned int i )
     void *displaced;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -444,7 +444,7 @@ array__simple_remove( Array *a, unsigned int i )
     void **addr, *displaced;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( INBOUNDS( a, i ) )
     {
@@ -476,9 +476,11 @@ struct Mergesort_Ctx
 };
 
 
-/* Adapted from a MergeSort example by H.W. Lang */
+/* Adapted from a MergeSort example by H.W. Lang
+   Renamed from "mergesort" to avoid conflict with an identically named function
+     in FreeBSD's stdlib.h */
 static void
-mergesort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
+merge_sort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
 {
     unsigned int m;
     unsigned int i, j, k;
@@ -489,8 +491,8 @@ mergesort( unsigned int lo, unsigned int hi, Mergesort_Ctx *state )
     {
 
         m = (lo + hi) / 2;
-        mergesort(lo, m, state);
-        mergesort(m + 1, hi, state);
+        merge_sort(lo, m, state);
+        merge_sort(m + 1, hi, state);
 
         /* Merge. */
         {
@@ -551,14 +553,14 @@ array__sort( Array *a, Comparator compare )
     Mergesort_Ctx state;
 
     if ( DEBUG__SAFE && ( !a || !compare ) )
-        abort();
+        ABORT;
 
     state.compare = compare;
 
     /* Don't try to sort a trivial array. */
     if ( a->size > 1 )
     {
-        /* Normalize the array a so that the mergesort algorithm doesn't have to
+        /* Normalize the array a so that the merge_sort algorithm doesn't have to
         deal with index WRAPping. */
         if ( !normalize( a ) || !( state.aux = BUFFER_NEW( a->size ) ) )
         {
@@ -568,7 +570,7 @@ array__sort( Array *a, Comparator compare )
 
         state.buffer = a->buffer;
 
-        mergesort( 0, a->size - 1, &state );
+        merge_sort( 0, a->size - 1, &state );
 
         /* Destroy the auxiliary array. */
         free( state.aux );
@@ -585,7 +587,7 @@ array__walk( Array *a, Visitor f )
     unsigned int i, lim;
 
     if ( DEBUG__SAFE && ( !a || !f ) )
-        abort();
+        ABORT;
 
     lim = a->size;
 
@@ -604,7 +606,7 @@ Array *
 array__clear( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     a->size = 0;
     a->head = 0;
@@ -619,7 +621,7 @@ array__minimize( Array *a )
     void **buffer_new;
 
     if ( DEBUG__SAFE && !a )
-        abort();
+        ABORT;
 
     if ( a->size >= a->buffer_size )
         return 0;
@@ -655,7 +657,7 @@ array__encode( Array *a, char *buffer )
     Object *o;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        abort();
+        ABORT;
 
     sprintf( buffer, "{" );
     buffer++;
@@ -687,7 +689,7 @@ array__create_type( const char *name, int flags )
     Type *type;
 
     if ( DEBUG__SAFE && ( !name ) )
-        abort();
+        ABORT;
 
     type = type__new( name, flags );
 

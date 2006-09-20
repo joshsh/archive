@@ -78,6 +78,10 @@ type__delete( Type *type );
 extern Type *
 type__create_type( const char *name );
 
+/** \param arg  the type argument for collection types */
+extern void
+type__set_type_arg( Type *type, Type *arg );
+
 
 #endif  /* TYPE_H */
 

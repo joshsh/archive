@@ -37,7 +37,7 @@ typedef struct Xml_Encode_Ctx Xml_Encode_Ctx;
 
 struct Xml_Encode_Ctx
 {
-    Interpreter *compiler;
+    Interpreter *itp;
 
     Hash_Map *serializers;
 
@@ -51,7 +51,7 @@ typedef struct Xml_Decode_Ctx Xml_Decode_Ctx;
 
 struct Xml_Decode_Ctx
 {
-    Interpreter *compiler;
+    Interpreter *itp;
 
     Hash_Map *deserializers;
 
@@ -140,13 +140,13 @@ set_decoder( Type *t, Xml_Decoder decode, Hash_Map *deserializers )
 
 
 static Element *
-bag__xml_encode( Array *a, Xml_Encode_Ctx *state )
+array__xml_encode( Array *a, Xml_Encode_Ctx *state )
 {
     Element *el, *child;
     int i, size;
 
     if ( DEBUG__SAFE && ( !a || !state ) )
-        abort();
+        ABORT;
 
     el = element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
 
@@ -169,7 +169,7 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
     Element *el, *child;
 
     if ( DEBUG__SAFE && ( !t || !state ) )
-        abort();
+        ABORT;
 
     if ( ( unsigned int ) *cur == 2 )
     {
@@ -220,7 +220,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     }
 
     if ( DEBUG__SAFE && ( !ns || !state ) )
-        abort();
+        ABORT;
 
     el = element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
 
@@ -248,7 +248,7 @@ set__xml_encode( Set *s, Xml_Encode_Ctx *state )
     }
 
     if ( DEBUG__SAFE && ( !s || !state ) )
-        abort();
+        ABORT;
 
     el = element__new( 0, ( uc* ) SET__XML__NAME, 0 );
 
@@ -264,7 +264,7 @@ apply__xml_encode( Apply *a, Xml_Encode_Ctx *state )
     Element *el, *child;
 
     if ( DEBUG__SAFE && ( !a || !state ) )
-        abort();
+        ABORT;
 
     el = element__new( 0, ( uc* ) APPLY__XML__NAME, 0 );
     child = object__xml_encode( a->function, state, 0 );
@@ -319,7 +319,7 @@ term__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Element *child;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        abort();
+        ABORT;
 
     /* Singleton term. */
     if ( strcmp( ( char* ) element__name( el ), TERM__XML__NAME ) )
@@ -360,7 +360,7 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     char *text;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        abort();
+        ABORT;
 
     if ( SERIAL__CHECKS && strcmp( ( char* ) element__name( el ), NAMESPACE__XML__NAME ) )
     {
@@ -403,7 +403,7 @@ set__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
     if ( DEBUG__SAFE && ( !el || !state
     || strcmp( ( char* ) element__name( el ), SET__XML__NAME ) ) )
-        abort();
+        ABORT;
 
     s = set__new();
 
@@ -426,7 +426,7 @@ apply__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
     if ( DEBUG__SAFE && ( !el || !state
     || strcmp( ( char* ) element__name( el ), APPLY__XML__NAME ) ) )
-        abort();
+        ABORT;
 
     function = element__first_child( el );
     operand = element__next_sibling( function );
@@ -460,7 +460,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         }
 
         else if ( DEBUG__SAFE )
-            abort();
+            ABORT;
     }
 
     /* id > 0  ==>  the object is multireferenced. */
@@ -468,7 +468,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
 
     /* "Short out" indirection nodes. */
-    while ( object__type( o ) == indirection_type )
+    while ( object__type( o ) == state->itp->indirection_t )
         o = object__value( o );
 
     sprintf( state->buffer, "%i", id );
@@ -479,15 +479,15 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
         el = element__new( 0, ( uc* ) "object", 0 );
 
-        if ( o->type == state->compiler->combinator_t
-          || o->type == state->compiler->type_t )
+        if ( o->type == state->itp->combinator_t
+          || o->type == state->itp->type_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
             o->type->encode( o->value, state->buffer );
             element__add_text( el, ( uc* ) state->buffer );
         }
 
-        else if ( o->type == state->compiler->prim_t )
+        else if ( o->type == state->itp->prim_t )
         {
             attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
             name = primitive__name( o->value );
@@ -520,7 +520,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 */
 
         /* Encode contents as child element. */
-        if ( o->type == state->compiler->prim_t )
+        if ( o->type == state->itp->prim_t )
         {
             name = primitive__name( o->value );
             sprintf( state->buffer, name );
@@ -559,7 +559,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Environment *env;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        abort();
+        ABORT;
 
     if ( strcmp( ( char* ) element__name( el ), NAMEOF( OBJECT ) ) )
     {
@@ -567,7 +567,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         return 0;
     }
 
-    env = interpreter__environment( state->compiler );
+    env = interpreter__environment( state->itp );
 
     /* Full form. */
     if ( ( attr = element__attr( el, ( uc* ) "type", 0 ) ) )
@@ -575,7 +575,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         text = ( char* ) attr__value( attr );
 
         if ( !strcmp( text, NAMEOF( APPLY ) ) )
-            type = apply_type;
+            type = state->itp->apply_t;
 
         else
             type = environment__resolve_type( env, text )->value;
@@ -589,21 +589,21 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
         free( text );
 
-        if ( type == state->compiler->combinator_t )
+        if ( type == state->itp->combinator_t )
         {
             text = ( char* ) element__text( el );
             o = environment__resolve_combinator( env, text );
             free( text );
         }
 
-        else if ( type == state->compiler->prim_t )
+        else if ( type == state->itp->prim_t )
         {
             text = ( char* ) element__text( el );
             o = environment__resolve_primitive( env, text );
             free( text );
         }
 
-        else if ( type == state->compiler->type_t )
+        else if ( type == state->itp->type_t )
         {
             text = ( char* ) element__text( el );
             o = environment__resolve_type( env, text );
@@ -623,7 +623,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 if ( !o )
                 {
                     /* Get a new placeholder object. */
-                    o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                    o = manager__object( environment__manager( env ), 0, 0, NOFLAGS );
                     if ( !o )
                         return 0;
 
@@ -637,7 +637,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
             else
             {
                 /* Get a new placeholder object. */
-                o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                o = manager__object( environment__manager( env ), 0, 0, NOFLAGS );
                 if ( !o )
                     return 0;
             }
@@ -691,7 +691,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
             /* Placeholder object must be created. */
             if ( !o )
             {
-                o = memory_manager__object( environment__manager( env ), 0, 0, NOFLAGS );
+                o = manager__object( environment__manager( env ), 0, 0, NOFLAGS );
                 if ( !o )
                     return 0;
 
@@ -764,7 +764,7 @@ static Hash_Map *
 multiref_ids( Interpreter *c )
 {
     Environment *env = interpreter__environment( c );
-    Set *multirefs = memory_manager__get_multirefs
+    Set *multirefs = manager__get_multirefs
         ( environment__manager( env ), environment__data( env ) );
 
     Hash_Map *ids = hash_map__new();
@@ -775,7 +775,7 @@ multiref_ids( Interpreter *c )
     ACTION hash_multiref( Object **opp )
     {
         if ( DEBUG__SAFE && !opp )
-            abort();
+            ABORT;
 
         if ( FIRST_CLASS_NULL && !*opp )
             return CONTINUE;
@@ -822,7 +822,7 @@ interpreter__serialize( Interpreter *c, char *path )
             Element *triple, *subject, *predicate, *object;
 
             if ( DEBUG__SAFE && ( !pred || !obj ) )
-                abort();
+                ABORT;
 
             triple = element__new( 0, ( uc* ) "triple", 0 );
             subject = object__xml_encode( o, &state, FALSE );
@@ -842,12 +842,12 @@ interpreter__serialize( Interpreter *c, char *path )
         ignored = 0;
 
         if ( DEBUG__SAFE && ( !opp ) )
-            abort();
+            ABORT;
 
         o = DEREF( opp );
 
         if ( DEBUG__SAFE && ( !o ) )
-            abort();
+            ABORT;
 
         /* Create element for this object. */
         el = object__xml_encode( o, &state, TRUE );
@@ -867,7 +867,7 @@ interpreter__serialize( Interpreter *c, char *path )
     }
 
     if ( DEBUG__SAFE && ( !c || !path ) )
-        abort();
+        ABORT;
 
     xmldom__init();
 
@@ -888,14 +888,14 @@ interpreter__serialize( Interpreter *c, char *path )
 
     document__set_root( doc, root );
 
-    state.compiler = c;
+    state.itp = c;
     state.serializers = hash_map__new();
     state.ids = multiref_ids( c );
 
-    set_encoder( apply_type, ( Xml_Encoder ) apply__xml_encode, state.serializers );
+    set_encoder( c->apply_t, ( Xml_Encoder ) apply__xml_encode, state.serializers );
     /* Note: no encoder is needed for the indirection type, as indirection nodes are
        "invisible" to the serializer/deserializer. */
-    set_encoder( c->bag_t, ( Xml_Encoder ) bag__xml_encode, state.serializers );
+    set_encoder( c->bag_t, ( Xml_Encoder ) array__xml_encode, state.serializers );
     set_encoder( c->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
     set_encoder( c->set_t, ( Xml_Encoder ) set__xml_encode, state.serializers );
     set_encoder( c->term_t, ( Xml_Encoder ) term__xml_encode, state.serializers );
@@ -932,7 +932,7 @@ interpreter__deserialize( Interpreter *c, char *path )
     Environment *env;
 
     if ( DEBUG__SAFE && ( !c || !path ) )
-        abort();
+        ABORT;
 
     xmldom__init();
 
@@ -951,13 +951,13 @@ interpreter__deserialize( Interpreter *c, char *path )
 
     env = interpreter__environment( c );
 
-    state.compiler = c;
+    state.itp = c;
 
     if ( !( state.deserializers = hash_map__new() )
       || !( state.objects_by_id = hash_map__new() ) )
         goto finish;
 
-    set_decoder( apply_type, ( Xml_Decoder ) apply__xml_decode, state.deserializers );
+    set_decoder( c->apply_t, ( Xml_Decoder ) apply__xml_decode, state.deserializers );
     /* Note: no decoder is needed for the indirection type, as indirection nodes are
        "invisible" to the serializer/deserializer. */
     set_decoder( c->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );

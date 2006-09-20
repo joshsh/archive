@@ -54,7 +54,7 @@ primitive__new(
     Primitive *p;
 
     if ( DEBUG__SAFE && ( !name || !cstub || !return_type ) )
-        abort();
+        ABORT;
 
     if ( !( p = NEW( Primitive ) ) )
     {
@@ -110,7 +110,7 @@ primitive__add_param(
     Parameter param;
 
     if ( DEBUG__SAFE && ( !p || !name || !type ) )
-        abort();
+        ABORT;
 
     param.type = resolve_type( env, type );
 
@@ -142,7 +142,7 @@ primitive__register(
     void ( *src_f ) ( void ) )
 {
     if ( DEBUG__SAFE && ( !env || !p ) )
-        abort();
+        ABORT;
 
     environment__register_primitive( env, p, flags, src_f );
 

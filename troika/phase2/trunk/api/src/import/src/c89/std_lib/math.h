@@ -1,22 +1,24 @@
-double exp(double x);
-double log(double x);
-double log10(double x);
-double pow(double x, double y);
-double sqrt(double x);
-double ceil(double x);
-double floor(double x);
-double fabs(double x);
-double ldexp(double x, int n);
-/*double frexp(double x, int* exp);*/
-/*double modf(double x, double* ip);*/
-double fmod(double x, double y);
-double sin(double x);
-double cos(double x);
-double tan(double x);
-double asin(double x);
-double acos(double x);
-double atan(double x);
-double atan2(double y, double x);
-double sinh(double x);
-double cosh(double x);
-double tanh(double x);
+extern double exp(double x);
+extern double log(double x);
+extern double log10(double x);
+extern double pow(double x, double y);
+extern double sqrt(double x);
+extern double ceil(double x);
+extern double floor(double x);
+extern double fabs(double x);
+extern double ldexp(double x, int n);
+/** \param exp  $side-effect */
+extern double frexp(double x, int* exp);
+/** \param ip  $side-effect */
+extern double modf(double x, double* ip);
+extern double fmod(double x, double y);
+extern double sin(double x);
+extern double cos(double x);
+extern double tan(double x);
+extern double asin(double x);
+extern double acos(double x);
+extern double atan(double x);
+extern double atan2(double y, double x);
+extern double sinh(double x);
+extern double cosh(double x);
+extern double tanh(double x);

@@ -18,37 +18,40 @@ INCLUDES := $(INCLUDES) -I../../src
 noinst_LTLIBRARIES = libp2prims.la
 
 libp2prims_la_SOURCES = \
-	$(OUT)/p2-stubs.c		\
-	$(CXX_IN)/combinator-impl.c	\
-	$(CXX_IN)/xpm.c			\
-	$(CXX_IN)/c89/operators.c	\
-	$(CXX_IN)/c89/types/char.c	\
-	$(CXX_IN)/c89/types/cstring.c	\
-	$(CXX_IN)/c89/types/double.c	\
+	$(OUT)/p2-stubs.c			\
+	$(CXX_IN)/combinator-impl.c		\
+	$(CXX_IN)/xpm.c				\
+	$(CXX_IN)/c89/operators.c		\
+	$(CXX_IN)/c89/std_lib/wrappers/stdio.c	\
+	$(CXX_IN)/c89/std_lib/wrappers/stdlib.c	\
+	$(CXX_IN)/c89/std_lib/wrappers/string.c	\
+	$(CXX_IN)/c89/types/char.c		\
+	$(CXX_IN)/c89/types/cstring.c		\
+	$(CXX_IN)/c89/types/double.c		\
 	$(CXX_IN)/c89/types/int.c
 
 noinst_HEADERS = \
-	$(CXX_IN)/combinator-impl.h	\
-	$(CXX_IN)/Set-operations.h	\
-	$(CXX_IN)/xpm.h			\
-	$(CXX_IN)/c89/std_lib/setjmp.h	\
-	$(CXX_IN)/c89/std_lib/ctype.h	\
-	$(CXX_IN)/c89/std_lib/float.h	\
-	$(CXX_IN)/c89/std_lib/stdio.h	\
-	$(CXX_IN)/c89/std_lib/assert.h	\
-	$(CXX_IN)/c89/std_lib/limits.h	\
-	$(CXX_IN)/c89/std_lib/time.h	\
-	$(CXX_IN)/c89/std_lib/locale.h	\
-	$(CXX_IN)/c89/std_lib/errno.h	\
-	$(CXX_IN)/c89/std_lib/stdarg.h	\
-	$(CXX_IN)/c89/std_lib/stdlib.h	\
-	$(CXX_IN)/c89/std_lib/string.h	\
-	$(CXX_IN)/c89/std_lib/signal.h	\
-	$(CXX_IN)/c89/std_lib/math.h	\
-	$(CXX_IN)/c89/std_lib/stddef.h	\
-	$(CXX_IN)/c89/types/int.h	\
-	$(CXX_IN)/c89/types/char.h	\
-	$(CXX_IN)/c89/types/double.h	\
+	$(CXX_IN)/combinator-impl.h		\
+	$(CXX_IN)/Set-operations.h		\
+	$(CXX_IN)/xpm.h				\
+	$(CXX_IN)/c89/std_lib/setjmp.h		\
+	$(CXX_IN)/c89/std_lib/ctype.h		\
+	$(CXX_IN)/c89/std_lib/float.h		\
+	$(CXX_IN)/c89/std_lib/stdio.h		\
+	$(CXX_IN)/c89/std_lib/assert.h		\
+	$(CXX_IN)/c89/std_lib/limits.h		\
+	$(CXX_IN)/c89/std_lib/time.h		\
+	$(CXX_IN)/c89/std_lib/locale.h		\
+	$(CXX_IN)/c89/std_lib/errno.h		\
+	$(CXX_IN)/c89/std_lib/stdarg.h		\
+	$(CXX_IN)/c89/std_lib/stdlib.h		\
+	$(CXX_IN)/c89/std_lib/string.h		\
+	$(CXX_IN)/c89/std_lib/signal.h		\
+	$(CXX_IN)/c89/std_lib/math.h		\
+	$(CXX_IN)/c89/std_lib/stddef.h		\
+	$(CXX_IN)/c89/types/int.h		\
+	$(CXX_IN)/c89/types/char.h		\
+	$(CXX_IN)/c89/types/double.h		\
 	$(CXX_IN)/c89/types/cstring.h
 
 ## Note: avoids intermediate targets which would cause the generated Makefile to

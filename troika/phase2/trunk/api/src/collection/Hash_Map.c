@@ -125,7 +125,7 @@ hash_map__walk( Hash_Map *t, Visitor f )
     }
 
     if ( DEBUG__SAFE && ( !t || !f ) )
-        abort();
+        ABORT;
 
     hash_table__walk( t, ( Visitor ) helper );
 }
@@ -140,7 +140,7 @@ hash_map__walk2( Hash_Map *t, Visitor2 f )
     }
 
     if ( DEBUG__SAFE && ( !t || !f ) )
-        abort();
+        ABORT;
 
     hash_table__walk( t, ( Visitor ) helper );
 }

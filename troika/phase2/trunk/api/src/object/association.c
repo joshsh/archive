@@ -28,7 +28,7 @@ object__multiply( Object *subj, Object *pred )
     Object *obj;
 
     if ( DEBUG__SAFE && ( !subj || !pred ) )
-        abort();
+        ABORT;
 
 #if TRIPLES__GLOBAL__OUT_EDGES
     obj = ( subj->outbound_edges )
@@ -47,7 +47,7 @@ Object *
 object__associate( Object *subj, Object *pred, Object *obj )
 {
     if ( DEBUG__SAFE && ( !subj || !pred || !obj ) )
-        abort();
+        ABORT;
 
 #if TRIPLES__GLOBAL__OUT_EDGES
     if ( !subj->outbound_edges
@@ -75,7 +75,7 @@ object__dissociate( Object *subj, Object *pred )
 {
 
     if ( DEBUG__SAFE && ( !subj || !pred ) )
-        abort();
+        ABORT;
 
 #if TRIPLES__GLOBAL__OUT_EDGES
     if ( subj->outbound_edges )
@@ -160,7 +160,7 @@ union_of( Object *o1, Object *o2 )
             if ( o2->type == set_t )
             {
                 s = set__copy( o2->value );
-                o3 = memory_manager__object( environment__manager( global_env ), set_t, s, 0 );
+                o3 = manager__object( environment__manager( global_env ), set_t, s, 0 );
                 return o3;
             }
 
@@ -182,7 +182,7 @@ object__union_associate( Object *subj, Object *pred, Object *obj )
     Object *o;
 
     if ( DEBUG__SAFE && ( !subj || !pred || !obj )
-        abort();
+        ABORT;
 
 #if TRIPLES__GLOBAL__OUT_EDGES
     if ( !( subj->outbound_edges || ( subj->outbound_edges = hash_map__new() ) ) )

@@ -1,4 +1,47 @@
 
+
+alpha-linux1
+	- configure -- no libxml2
+- amd64-linux1
+	+ configure
+	+ make -- note: copious "cast to integer of different size" warnings
+	- test
+		-2      not-freed object(s)
+amd64-linux2 -- unavailable
+openpower-linux1
+	+ configure
+	+ make
+- ppc-osx1 -- unavailable
+- ppc-osx2 -- unavailable
+- sparc-solaris1 -- unavailable
+- sparc-solaris2 -- unavailable
+x86-freebsd1
+	+ configure
+	- make
+		"Makefile", line 719: Need an operator
+		make: fatal errors encountered -- cannot continue
+			export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS) -I$(PWD)/include/phase2
+	+ gmake
+x86-linux1
+	- configure -- no libxml2
+x86-linux2
+	+ configure
+	+ make
+	test
+x86-netbsd1
+	- configure -- no libxml2
+x86-openbsd1
+	- configure -- no libxml2
+x86-solaris1 (slow!)
+	+ configure
+	- make --  missing 'ar' command
+		false cru .libs/libp2prims.a .libs/p2-stubs.o .libs/combinator-impl.o .libs/xpm.o .libs/operators.o .libs/stdio.o .libs/stdlib.o .libs/string.o .libs/char.o .libs/cstring.o .libs/double.o .libs/int.o
+		make[4]: *** [libp2prims.la] Error 1
+		make[4]: Leaving directory `/home/users/t/tr/troika/phase2-0.8.1/src/import'
+		make[3]: *** [all] Error 2
+		make[3]: Leaving directory `/home/users/t/tr/troika/phase2-0.8.1/src/import'
+
+
 Ignore everything below this line
 ================================================================================
 

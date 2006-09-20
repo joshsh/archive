@@ -195,7 +195,7 @@ prim_reduce(
             else
             {
                 /* Return type is a raw data reference which needs to be bound to a type. */
-                robj = memory_manager__object( m, p->return_type, r, NOPROPS );
+                robj = manager__object( m, p->return_type, r, NOPROPS );
             }
 
             /* Multiple return values. */
@@ -212,7 +212,7 @@ prim_reduce(
                     else
                         set__add( result_set, result );
 
-                    result = memory_manager__object( m, set_type, result_set, NOPROPS );
+                    result = manager__object( m, set_type, result_set, NOPROPS );
                 }
 
                 /* FIXME: this is cheating */
@@ -336,7 +336,7 @@ prim_reduce(
     else
     {
         if ( DEBUG__SAFE && !p->arity )
-            abort();
+            ABORT;
 
         args = malloc( p->arity * sizeof( void* ) );
     }
@@ -455,11 +455,11 @@ term__reduce(
 
     unsigned int iter;
 
-    if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
+    if ( COMPILER__REDUX_TIMEOUT > 0 )
         iter = 0;
 
     if ( DEBUG__SAFE && ( !term || !m || !term_type || !primitive_type || !combinator_type || !set_type ) )
-        abort();
+        ABORT;
 
     if ( DEBUG__SK )
     {
@@ -471,7 +471,7 @@ term__reduce(
     for (;;)
     {
         if ( DEBUG__SAFE && !term )
-            abort();
+            ABORT;
 
 /*
 cur = term->head; sup = term->buffer + term->buffer_size;
@@ -480,8 +480,8 @@ PRINT( " %x", ( int ) *cur ); cur++; }
 PRINT( "\n" );  fflush( stdout );
 */
         /* Give up if the term becomes too large. */
-        if ( SK__CHECKS__MAX_TERM_SIZE > 0
-          && ( unsigned int ) *( term->head ) > SK__CHECKS__MAX_TERM_SIZE )
+        if ( COMPILER__MAX_TERM_SIZE > 0
+          && ( unsigned int ) *( term->head ) > COMPILER__MAX_TERM_SIZE )
         {
             ERROR( "term__reduce: abandoned (term might expand indefinitely)" );
             goto fail;
@@ -497,7 +497,7 @@ PRINT( "\n" );  fflush( stdout );
 
         /* There should be no way for nulls to appear at the head of a term. */
         if ( DEBUG__SAFE && !head )
-            abort();
+            ABORT;
 
         head_type = head->type;
 
@@ -574,7 +574,7 @@ PRINT( "\n" );  fflush( stdout );
         {
             /* Simply return the term as-is, without attempting to reduce it
                further. */
-            if ( SK__ALLOW_NONREDUX )
+            if ( COMPILER__ALLOW_NONREDUX )
                 goto finish;
 
             else
@@ -585,7 +585,7 @@ PRINT( "\n" );  fflush( stdout );
         }
 
         /* Give up if reduction takes too long. */
-        if ( SK__CHECKS__MAX_REDUX_ITERATIONS > 0 )
+        if ( COMPILER__REDUX_TIMEOUT > 0 )
         {
             iter++;
 
@@ -595,7 +595,7 @@ PRINT( "\n" );  fflush( stdout );
                 print_term( term );
             }
 
-            if ( iter > SK__CHECKS__MAX_REDUX_ITERATIONS )
+            if ( iter > COMPILER__REDUX_TIMEOUT )
             {
                 ERROR( "term__reduce: abandoned (possible infinite loop)" );
                 goto fail;

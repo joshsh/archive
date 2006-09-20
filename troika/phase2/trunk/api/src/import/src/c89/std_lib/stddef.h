@@ -1,3 +1,3 @@
 /*
-offsetof(stype, m);
+extern offsetof(stype, m);
 */

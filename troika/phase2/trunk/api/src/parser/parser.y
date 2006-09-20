@@ -36,7 +36,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "Parser-impl.h"
 
-/* FIXME */
+/* FIXME: global variable */
 Parser *parser;
 
 /*
@@ -50,12 +50,6 @@ struct yy_buffer_state;
 extern struct yy_buffer_state
 yy_scan_string( const char *yy_str );
 */
-void
-parser__feed( Parser *p, const char *s )
-{
-    p = 0;
-    yy_scan_string( s );
-}
 
 
 /******************************************************************************/
@@ -109,7 +103,7 @@ yyerror( Parser *p, exit_state *ignored, const char *msg )
 #endif
 
         if ( strlen( msg ) >= ERROR_BUFFER__SIZE )
-            strcpy( yyerror_msg, "[parser error message overflows buffer]" );
+            strcpy( yyerror_msg, "[parse error message overflows buffer]" );
         else
             strcpy( yyerror_msg, msg );
 
@@ -190,12 +184,9 @@ struct Expression
 %type <command>     command
 %type <expression>  expression
 %type <object>      bag bag_head command_name name command_args subterm object term_item
-/*%type <parser_node> bracketed_term term_item*/
-/*%type <statement>   command expression statement*/
-%type <string>      id
 
-%destructor { free ($$); } TOK__COMMAND_NAME TOK__ID TOK__STRING id command expression
-
+%destructor { free( $$ ); } TOK__COMMAND_NAME TOK__ID TOK__STRING
+%destructor { if ( $$ ) free( $$ ); } command expression
 
 /*
 %pure_parser
@@ -424,7 +415,7 @@ command_name:
         production( "command_name ::=  TOK__COMMAND_NAME" );
 #endif
 
-        $$ = PARSER_REF2OBJ( STRING )( parser, STRDUP( $1 ) );
+        $$ = PARSER_REF2OBJ( STRING )( parser, $1 );
     };
 
 
@@ -709,7 +700,7 @@ term_item:
         production( "term_item ::=  TOK__STRING" );
 #endif
 
-        $$ = PARSER_REF2OBJ( STRING )( parser, STRDUP( $1 ) );
+        $$ = PARSER_REF2OBJ( STRING )( parser, $1 );
     }
 
     | bag
@@ -729,60 +720,6 @@ term_item:
 
         $$ = $1;
     }
-
-/*
-    | bracketed_term
-    {
-#if DEBUG__PARSER
-        production( "term_item ::=  bracketed_term" );
-#endif
-
-        $$ = $1;
-    }*/
-    ;
-
-
-/*
-bracketed_term:
-
-    TOK__L_SQ_BRACKET term TOK__R_SQ_BRACKET
-    {
-#if DEBUG__PARSER
-        production( "bracketed_term ::=  TOK__L_SQ_BRACKET term TOK__R_SQ_BRACKET" );
-#endif
-
-        if ( $2 )
-            $$ = ( void* ) ast__term( $2 );
-
-        else
-            $$ = 0;
-    }
-
-    | TOK__L_SQ_BRACKET error
-    {
-#if DEBUG__PARSER
-        production( "bracketed_term ::=  TOK__L_SQ_BRACKET error" );
-#endif
-
-        $$ = 0;
-
-        ERROK;
-    }
-
-    | TOK__L_SQ_BRACKET term error
-    {
-#if DEBUG__PARSER
-        production( "bracketed_term ::=  TOK__L_SQ_BRACKET term error" );
-#endif
-
-        $$ = 0;
-
-        if ( $2 )
-            ast__delete( ast__term( $2 ) );
-
-        ERROK;
-    };
-*/
 
 
 bag:
@@ -887,7 +824,7 @@ bag_head:
 
 name:
 
-    id
+    TOK__ID
     {
         Name *name;
 
@@ -912,7 +849,7 @@ name:
             $$ = 0;
     }
 
-    | name TOK__COLON id
+    | name TOK__COLON TOK__ID
     {
 #if DEBUG__PARSER
         production( "name ::=  name TOK__COLON TOK__ID" );
@@ -948,20 +885,6 @@ name:
         $$ = 0;
 
         ERROK;
-    };
-
-
-/* Trivial rule prevents memory leaks when non-grammatical TOK__ID is matched by
-   the lexer. */
-id:
-
-    TOK__ID
-    {
-#if DEBUG__PARSER
-        production( "id ::=  TOK__ID" );
-#endif
-
-        $$ = STRDUP( $1 );
     };
 
 

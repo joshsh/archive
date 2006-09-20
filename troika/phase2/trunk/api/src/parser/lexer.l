@@ -59,8 +59,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 
-
-
 /*
 #ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
@@ -116,6 +114,14 @@ putchar('.');\
 #define INPUT_PREFIX    ">>  "
 
 
+void
+parser__feed( Parser *p, const char *s )
+{
+    p = 0;
+    yy_scan_string( s );
+}
+
+
 /* FIXME: not thread-safe */
 static char lexer_buffer[ENCODING__BUFFER_SIZE];
 static char *bufptr = lexer_buffer;
@@ -167,8 +173,8 @@ new_line( Parser *p );
 
 /** TOKEN macro handles debugging messages and column count as well as return
     values from rules.  It must be the last statement in a rule action. */
-#define NEWTOK( x ) new_token( x, yytext, yyleng, #x )
-#define TOKEN( x )  if ( x ) return NEWTOK( x ); else NEWTOK( x );
+#define NEWTOK( x, y ) new_token( x, yytext, yyleng, y )
+#define TOKEN( x )  if ( x ) return NEWTOK( x, #x ); else NEWTOK( x, #x );
 
 
 /* Comments *******************************************************************/
@@ -292,9 +298,11 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 %x SC__STRING SC__COMMENT
 
 /* Wrappers provided below.  Don't use the defaults. */
+/*
 %option noyyalloc
 %option noyyrealloc
 %option noyyfree
+*/
 
 /*
 %option reentrant
@@ -354,7 +362,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     _[0-9A-Za-z]+  {
-        yylval.string = yytext + 1;
+        yylval.string = STRDUP( yytext + 1 );
 
         TOKEN( TOK__COMMAND_NAME );
     }
@@ -379,7 +387,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
     }
 
     {IDCHAR}("\\ "*("_"|{IDCHAR}))*  {  /* Matches a name fragment. */
-        yylval.string = extract_id( yytext );
+        yylval.string = STRDUP( extract_id( yytext ) );
 
         TOKEN( TOK__ID );
     }
@@ -436,7 +444,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
         /* This is only necessary for the null string (""). */
         *buffer_pos = '\0';
 
-        yylval.string = extract_literal( string_buffer );
+        yylval.string = STRDUP( extract_literal( string_buffer ) );
         buffer_pos = string_buffer;
 
         BEGIN( INITIAL );
@@ -485,6 +493,7 @@ IDCHAR  [^_\]\[[:space:]:;(){,}\"\\]
 %%
 
 
+/*
 void *
 yyalloc( yy_size_t size )
 {
@@ -504,6 +513,7 @@ yyfree( void *ptr )
 {
     free( ( char* ) ptr );
 }
+*/
 
 
 int

@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static Object *
 resolve( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
 {
-    return ( COMPILER__NAME_INHERITANCE )
+    return ( NAMESPACE__USE_INHERITANCE )
         ? namespace__resolve( nso, name, m )
         : namespace__lookup( nso, name );
 }
@@ -75,6 +75,13 @@ interpreter__undefine( Interpreter *c, Name *name )
 
     if ( !strcmp( key, "root" ) )
     {
+        if ( !array__size( name ) )
+        {
+            ERROR( "can't remove the root namespace" );
+            free( key );
+            return 0;
+        }
+
         nso = environment__root( c->env );
         o = namespace__undefine( nso, name, environment__manager( c->env ) );
         name__push( name, key );
@@ -82,6 +89,13 @@ interpreter__undefine( Interpreter *c, Name *name )
 
     else if ( !strcmp( key, "here" ) )
     {
+        if ( !array__size( name ) )
+        {
+            ERROR( "can't remove the working namespace" );
+            free( key );
+            return 0;
+        }
+
         o = namespace__undefine( nso, name, environment__manager( c->env ) );
         name__push( name, key );
     }
@@ -213,10 +227,13 @@ interpreter__name_of__full( Interpreter *c, OBJ( NAMESPACE ) *nso, const Object 
 /* FIXME: maxlen does nothing.  Eventually, use a String object instead of
    a char array to build the label */
 void
-interpreter__encode( Interpreter *c, const Object *o, char *buffer, unsigned int maxlen )
+interpreter__encode( Interpreter *c,
+                     const Object *o,
+                     char *buffer,
+                     unsigned int maxlen )
 {
     if ( DEBUG__SAFE && !c )
-        abort();
+        ABORT;
 
     if ( o )
     {
@@ -229,7 +246,10 @@ interpreter__encode( Interpreter *c, const Object *o, char *buffer, unsigned int
             object__encode( o, buffer );
 
         else
+        {
             name__encode( name, buffer );
+            name__delete( name );
+        }
     }
 
     else

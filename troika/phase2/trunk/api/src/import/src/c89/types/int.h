@@ -8,7 +8,8 @@
 extern int *
 int__decode( cstring *buffer );
 
-/** $encoder */
+/** $encoder
+    \param buffer  $side-effect */
 extern void
 int__encode( int *p, cstring *buffer );
 

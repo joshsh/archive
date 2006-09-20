@@ -111,26 +111,28 @@ typedef void            ( *Generic_f )( void );
 
 /* Type names *****************************************************************/
 
-#define ANY                                     any_type
-#define APPLY                                   Apply
-#define ARRAY                                   Array
-#define CHARACTER                               char
-#define COMBINATOR                              Combinator
-#define DOUBLE                                  double
-#define INDIRECTION                             Indirection
-#define INTEGER                                 int
-#define NAME                                    Name
-#define NAMESPACE                               Namespace
-#define PRIMITIVE                               Primitive
-#define SET                                     Set
-#define STRING                                  cstring
-#define TERM                                    Term
-#define TYPE                                    Type
-#define VOID                                    Void
 
-#define DATA_SET                                data_set
-#define OBJECT                                  object
-#define TRIPLE                                  triple
+#define APPLY           Apply
+#define ARRAY           Array
+#define CHARACTER       char
+#define COMBINATOR      Combinator
+#define DOUBLE          double
+#define INDIRECTION     Indirection
+#define INTEGER         int
+#define NAME            Name
+#define NAMESPACE       Namespace
+#define PRIMITIVE       Primitive
+#define SET             Set
+#define STRING          cstring
+#define TERM            Term
+#define TYPE            Type
+
+#define ANY             any_type
+#define VOID            Void
+
+#define DATA_SET        data_set
+#define OBJECT          object
+#define TRIPLE          triple
 
 
 /*

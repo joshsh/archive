@@ -114,7 +114,7 @@ objects_inv_stub( void **args )
         return 0;
     }
 
-    memory_manager__walk( m, 0, ( Visitor ) helper, FALSE, TRUE );
+    manager__walk( m, 0, ( Visitor ) helper, FALSE, TRUE );
 
     return matches;
 }
@@ -298,6 +298,7 @@ add_set_prims( Environment *env )
 /******************************************************************************/
 
 
+/* FIXME: uses dictionary lookups */
 static void *
 int_nonzero_stub( void **args )
 {
@@ -311,9 +312,11 @@ int_nonzero_stub( void **args )
 
     else
     {
-        o = memory_manager__object( global_env->manager, apply_type, apply__new(
-            environment__resolve_combinator( global_env, "S" ),
-            environment__resolve_combinator( global_env, "K" ) ), NOFLAGS );
+        o = manager__object( global_env->manager,
+                object__value( environment__resolve_type( global_env, NAMEOF( APPLY ) ) ),
+                apply__new(
+                    environment__resolve_combinator( global_env, "S" ),
+                    environment__resolve_combinator( global_env, "K" ) ), NOFLAGS );
     }
 
     return o;
@@ -412,7 +415,7 @@ environment__register_primitive
     if ( flags & PRIM__ENCODER )
         first_param->encode = ( Encoder ) src_f;
 
-    if ( !( o = memory_manager__object( env->manager, t, prim, OBJECT__IMMUTABLE ) ) )
+    if ( !( o = manager__object( env->manager, t, prim, OBJECT__IMMUTABLE ) ) )
     {
         primitive__delete( prim );
         return 0;

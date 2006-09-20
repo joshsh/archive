@@ -66,7 +66,9 @@ extern &quot;C&quot;
         <!-- Create function stubs. -->
         <xsl:for-each select="sectiondef">
             <xsl:for-each select="memberdef">
-                <xsl:call-template name="function-stub" />
+                <xsl:if test="@kind='function'">
+                    <xsl:call-template name="function-stub" />
+                </xsl:if>
             </xsl:for-each>
         </xsl:for-each>
 
@@ -132,7 +134,9 @@ void environment__import_primitives( Environment *env )
         <!-- Construct and add Primitives. -->
         <xsl:for-each select="sectiondef">
             <xsl:for-each select="memberdef">
-                <xsl:call-template name="register-primitive" />
+                <xsl:if test="@kind='function'">
+                    <xsl:call-template name="register-primitive" />
+                </xsl:if>
             </xsl:for-each>
         </xsl:for-each>
 
@@ -152,10 +156,16 @@ void environment__import_primitives( Environment *env )
     <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 
-    <!--<xsl:template match="//memberdef">-->
+    <!-- Apply to a function's "memberdef" element. -->
     <xsl:template name="function-stub">
 
-        <xsl:variable name="function-name" select="./name/text()" />
+        <xsl:variable name="function-linkername">
+            <xsl:call-template name="function-linkername"/>
+        </xsl:variable>
+        <xsl:variable name="function-name">
+            <xsl:call-template name="function-name"/>
+        </xsl:variable>
+
         <xsl:variable name="return-type" select="./type/text()" />
         <xsl:variable name="is-struct" select="contains(./definition/text(), 'struct')" />
         <xsl:variable name="returns-pointer-type" select="contains($return-type, '*')" />
@@ -164,7 +174,8 @@ void environment__import_primitives( Environment *env )
 /** <xsl:text />
         <xsl:value-of select="definition" />
         <xsl:value-of select="argsstring" /> */<xsl:text />
-static void *<xsl:text />
+static void *
+<xsl:text />
         <xsl:call-template name="mangle-function-name">
             <xsl:with-param name="original-name" select="$function-name" />
         </xsl:call-template>( void **args )
@@ -193,7 +204,7 @@ static void *<xsl:text />
             <xsl:if test="not($returns-pointer-type)">*</xsl:if>
     <xsl:text />ret = <xsl:text />
         </xsl:if>
-        <xsl:value-of select="$function-name" />(<xsl:text />
+        <xsl:value-of select="$function-linkername" />(<xsl:text />
 
         <xsl:variable name="number-of-parameters" select="count(param)" />
         <xsl:choose>
@@ -245,9 +256,12 @@ static void *<xsl:text />
     <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 
+    <!-- Apply to a function's "memberdef" element. -->
     <xsl:template name="register-primitive">
 
-        <xsl:variable name="function-name" select="./name/text()" />
+        <xsl:variable name="function-name">
+            <xsl:call-template name="function-name"/>
+        </xsl:variable>
         <xsl:variable name="return-type" select="./type/text()" />
         <xsl:variable name="is-struct" select="contains(./definition/text(), 'struct')" />
         <xsl:variable name="returns-pointer-type" select="contains($return-type, '*')" />
@@ -284,7 +298,7 @@ static void *<xsl:text />
             </xsl:call-template>&quot;, &quot;<xsl:text />
             <xsl:value-of select="declname/text()" />&quot;, <xsl:text />
             <xsl:call-template name="boolean-as-transparency">
-                <xsl:with-param name="arg" select="not(contains($this/detaileddescription/para/parameterlist/parameteritem[parameternamelist/parametername/text() = $name]/parameterdescription/para/text(), '$opaque'))" />
+                <xsl:with-param name="arg" select="not(contains($this/detaileddescription/para/parameterlist/parameteritem[parameternamelist/parametername/text() = $name]/parameterdescription/para/text(), '$side-effect'))" />
             </xsl:call-template> )<xsl:text />
 
         </xsl:for-each>
@@ -471,6 +485,7 @@ static void *<xsl:text />
     <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 
+    <!-- Apply to a function's "memberdef" element. -->
     <xsl:template name="function-marker">
 
         <xsl:choose>
@@ -483,6 +498,45 @@ static void *<xsl:text />
             <xsl:when test="contains(text(), '$destructor')">
                 <xsl:text>PRIM__DESTRUCTOR</xsl:text>
             </xsl:when>
+        </xsl:choose>
+
+    </xsl:template>
+
+
+    <xsl:template name="function-alias">
+        <xsl:param name="str"/>
+        <xsl:choose>
+            <xsl:when test="contains($str, 'alias=&quot;')">
+                <xsl:text/><xsl:value-of select="substring-before(substring-after($str, '$alias=&quot;'), '&quot;')"/><xsl:text/>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
+
+    <!-- Apply to a function's "memberdef" element. -->
+    <xsl:template name="function-linkername">
+        <xsl:text/><xsl:value-of select="./name/text()"/><xsl:text/>
+    </xsl:template>
+
+
+    <!-- Apply to a function's "memberdef" element. -->
+    <xsl:template name="function-name">
+
+        <xsl:variable name="function-alias">
+            <xsl:call-template name="function-alias">
+                <xsl:with-param name="str" select="detaileddescription/para/text()"/>
+            </xsl:call-template>
+        </xsl:variable>
+
+        <!-- If a function has an alias, use it as the Phase2 internal name of
+             the function.  Otherwise, use the name of the C function itself. -->
+        <xsl:choose>
+            <xsl:when test="string-length($function-alias) > 0">
+                <xsl:value-of select="$function-alias"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="function-linkername"/>
+            </xsl:otherwise>
         </xsl:choose>
 
     </xsl:template>

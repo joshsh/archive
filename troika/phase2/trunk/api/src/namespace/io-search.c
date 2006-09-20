@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /* Distribute f recursively (and in a breadth-first fashion) to any child
    namespaces. */
 static void
-ns_walk_bfs( OBJ( NAMESPACE ) *ns_o, Visitor f )
+ns_walk_bfs( OBJ( NAMESPACE ) *ns_o, Visitor v )
 {
     Array *queue;
     Type *t;
@@ -39,10 +39,13 @@ ns_walk_bfs( OBJ( NAMESPACE ) *ns_o, Visitor f )
         if ( object__type( o ) == t )
         {
             /* Apply the target function, and quit the traversal if so instructed. */
-            if ( f( ( void** ) opp ) == BREAK )
+            if ( BREAK == v( ( void** ) opp ) )
             {
                 array__clear( queue );
                 return BREAK;
+/*
+                return CONTINUE;
+*/
             }
 
             /* Extend the traversal to this namespace's children. */
@@ -58,8 +61,8 @@ ns_walk_bfs( OBJ( NAMESPACE ) *ns_o, Visitor f )
             return CONTINUE;
     }
 
-    if ( DEBUG__SAFE && ( !ns_o || !f ) )
-        abort();
+    if ( DEBUG__SAFE && ( !ns_o || !v ) )
+        ABORT;
 
     t = object__type( ns_o );
 
@@ -95,7 +98,7 @@ namespace__map_back( OBJ( NAMESPACE ) *haystack,
                      Manager *m )
 {
     if ( DEBUG__SAFE && ( !haystack || !needles || !map || !m ) )
-        abort();
+        ABORT;
 
     /* Parent hierarchy. */
     Hash_Map *edges = hash_map__new();
@@ -159,11 +162,11 @@ namespace__map_back( OBJ( NAMESPACE ) *haystack,
 Name *
 namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
 {
-    Hash_Map *parents = hash_map__new();
-    Name *name = name__new();
-    Object *o, *parent = 0, *needle2;
+    Hash_Map *parents;
+    Name *name;
+    Object *o, *parent, *needle2;
     char *key;
-    Type *t = object__type( haystack );
+    Type *t;
 
     ACTION find( OBJ( NAMESPACE ) **nsopp )
     {
@@ -196,7 +199,11 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
     }
 
     if ( DEBUG__SAFE && ( !haystack || !m ) )
-        abort();
+        ABORT;
+
+    parents = hash_map__new();
+    parent = 0;
+    t = object__type( haystack );
 
     /* The null element always receives special treatment (when it is allowed
        at all), so don't cover it up with a name. */
@@ -209,12 +216,13 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
         }
 
         else if ( DEBUG__SAFE )
-            abort();
+            ABORT;
     }
 
     /* Trace until 'needle' is found or all namespaces have been visited. */
-    memory_manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Visitor ) find );
+    manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Visitor ) find );
 
+    /* If 'needle' has been found, build its (relative) name. */
     if ( parent )
     {
         name = name__new();
@@ -252,9 +260,9 @@ namespace__resolve_simple( OBJ( NAMESPACE ) *ns_obj, char *key, Manager *m )
     }
 
     if ( DEBUG__SAFE && ( !ns_obj || !key || !m ) )
-        abort();
+        ABORT;
 
-    memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
+    manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
 
     return o;
 }
@@ -268,7 +276,7 @@ namespace__resolve( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
     unsigned int i;
 
     if ( DEBUG__SAFE && ( !nso || !name || !m ) )
-        abort();
+        ABORT;
 
     for ( i = 0; i < array__size( name ); i++ )
     {
@@ -310,13 +318,19 @@ namespace__undefine( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
             return o ? BREAK : CONTINUE;
         }
 
-        memory_manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
+        manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
 
         return o;
     }
 
-    if ( DEBUG__SAFE && ( !nso || !name || !m || !array__size( name ) ) )
-        abort();
+    if ( DEBUG__SAFE && ( !nso || !name || !m ) )
+        ABORT;
+
+    else if ( !array__size( name ) )
+    {
+        ERROR( "empty name" );
+        return 0;
+    }
 
     for ( i = 0; i < array__size( name ); i++ )
     {
@@ -351,7 +365,7 @@ error__not_defined( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        abort();
+        ABORT;
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not defined in this namespace", buff );
@@ -363,7 +377,7 @@ error__not_a_namespace( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        abort();
+        ABORT;
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not a namespace", buff );
@@ -390,9 +404,9 @@ namespace__define( OBJ( NAMESPACE ) *nso, Name *name, Object *o, Manager *m )
 
     /* Check that arguments are sound. */
     if ( DEBUG__SAFE && ( !nso || !name || !o || !m || !array__size( name ) ) )
-        abort();
+        ABORT;
 
-    if ( COMPILER__NAME_INHERITANCE )
+    if ( NAMESPACE__USE_INHERITANCE )
     {
         key = array__dequeue( name );
         local = namespace__resolve( nso, name, m );

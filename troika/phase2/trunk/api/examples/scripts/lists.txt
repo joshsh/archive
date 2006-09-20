@@ -40,20 +40,14 @@ find (B int__nonzero (- 66)) BAZ;
 
 
 
-
-
-
-
-
-B(BS)(S' CONS) f1 f2 (B c f1) x;
-C(B(B S)(S' CONS) f1)(B c f1)
-S(B C(B(B S)(S' CONS)))(B c) f1 f2 x
-B(S(B C(B(B S)(S' CONS)))) B c f1 f2
-
-C(B(S(B C (B (B S)(S' CONS))))B) HEAD ...
-C(C(B(S(B C(B(B S)(S' CONS))))B)HEAD)(C B TAIL find) c x
-B(C(C(B(S(B C(B(B S)(S' CONS))))B)HEAD))(C B TAIL) find c x
-C(B(C(C(B(S(B C(B(B S)(S' CONS))))B)HEAD))(C B TAIL)) c find x
-
-B(C(C(B(S(B C (B(B S)(S' CONS)))) B) HEAD)
-
+(:
+    V a b --> V b a
+    x := V a b
+        b == x (S K)
+        a == x K
+    V b a
+    V (x (S K)) (x K)
+    V (T (S K) x) (T K x)
+    B (B S) B V (T (S K)) (T K) x
+:)
+invert := B (B S) B V (T (S K)) (T K);

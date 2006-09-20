@@ -124,7 +124,7 @@ command_gc( Interpreter *c, Array *args )
 {
     args = 0;
 
-    memory_manager__collect( environment__manager( c->env ), TRUE, !c->quiet );
+    manager__collect( environment__manager( c->env ), TRUE, !c->quiet );
 
     return 0;
 }
@@ -268,14 +268,11 @@ command_mv( Interpreter *c, Array *args )
 }
 
 
-#define putchar 
-
 static int
 command_new( Interpreter *c, Array *args )
 {
     Object *o;
     Name *name;
-putchar('\'');FFLUSH;
 
     name = array__size( args )
         ? object__value( array__get( args, 0 ) )
@@ -283,7 +280,7 @@ putchar('\'');FFLUSH;
 
     if ( !name )
         return 0;
-putchar('*');FFLUSH;
+
 /*
     if ( interpreter__resolve( c, name ) )
     {
@@ -292,7 +289,7 @@ putchar('*');FFLUSH;
     }
 */
 
-    o = memory_manager__object( environment__manager( c->env ),
+    o = manager__object( environment__manager( c->env ),
         c->cur_ns_obj->type, namespace__new(), 0 );
 
     if ( o )
@@ -425,7 +422,7 @@ command_size( Interpreter *c, Array *args )
 
     if ( !c->quiet )
         PRINT( "There are %i objects in this environment.\n",
-            memory_manager__size( environment__manager( c->env ) ) );
+            manager__size( environment__manager( c->env ) ) );
 
     return 0;
 }
@@ -551,7 +548,7 @@ interpreter__evaluate_command( Interpreter *itp, OBJ( STRING ) *name, OBJ( ARRAY
     char *nameval = object__value( name );
 
     if ( DEBUG__SAFE && !itp )
-        abort();
+        ABORT;
 
     interpreter__add_to_history( text );
 
@@ -575,7 +572,7 @@ interpreter__evaluate_command( Interpreter *itp, OBJ( STRING ) *name, OBJ( ARRAY
     else
         result = com->f( itp, a );
 
-    memory_manager__collect( environment__manager( itp->env ), FALSE, FALSE );
+    manager__collect( environment__manager( itp->env ), FALSE, FALSE );
 
     return result;
 }

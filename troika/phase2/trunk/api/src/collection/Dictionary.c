@@ -39,7 +39,7 @@ hash( const Entry *e )
     unsigned int h = 0, g;
 
     if ( DEBUG__SAFE && !e )
-        abort();
+        ABORT;
 
     for ( p = e->key; *p != '\0'; p++ )
     {
@@ -63,7 +63,7 @@ static int
 compare( const Entry *e1, const Entry *e2 )
 {
     if ( DEBUG__SAFE && ( !e1 || !e2 ) )
-        abort();
+        ABORT;
 
     return strcmp( e1->key, e2->key );
 }
@@ -92,7 +92,7 @@ dictionary__delete( Dictionary *d )
     }
 
     if ( DEBUG__SAFE && !d )
-        abort();
+        ABORT;
 
     /* Destroy dictionary entries. */
     hash_table__walk( d, ( Visitor ) helper );
@@ -110,7 +110,7 @@ dictionary__add( Dictionary *d, const char *key, void *target )
     Entry *old, new;
 
     if ( DEBUG__SAFE && ( !d || !key || !target ) )
-        abort();
+        ABORT;
 
     new.key = STRDUP( key );
 
@@ -146,7 +146,7 @@ dictionary__lookup( Dictionary *d, const char *key )
     Entry *e, e2;
 
     if ( DEBUG__SAFE && ( !d || !key ) )
-        abort();
+        ABORT;
 
     /* The compiler will complain about this, but hash_table__lookup is const
        in its second argument, so this is a harmless kludge. */
@@ -176,7 +176,7 @@ dictionary__reverse_lookup( Dictionary *d, const void *target )
     }
 
     if ( DEBUG__SAFE && ( !d || !target ) )
-        abort();
+        ABORT;
 
     hash_table__walk( d, ( Visitor ) helper );
     return key;
@@ -189,7 +189,7 @@ dictionary__remove( Dictionary *d, char *key )
     Entry *e, e2;
 
     if ( DEBUG__SAFE && ( !d || !key ) )
-        abort();
+        ABORT;
 
     e2.key = key;
 
@@ -221,7 +221,7 @@ dictionary__add_all( Dictionary *dest, Dictionary *src )
     }
 
     if ( DEBUG__SAFE && ( !dest || !src ) )
-        abort();
+        ABORT;
 
     hash_table__walk( src, ( Visitor ) helper );
 }
@@ -236,7 +236,7 @@ dictionary__walk( Dictionary *d, Visitor f )
     ACTION helper( Entry *e )
     {
         if ( DEBUG__SAFE && !e )
-            abort();
+            ABORT;
 /*
 PRINT( "e = %p\n", e ); FFLUSH;
 PRINT( "e->target = %p\n", e->target ); FFLUSH;
@@ -246,7 +246,7 @@ PRINT( "&e->target = %p\n", &e->target ); FFLUSH;
     }
 
     if ( DEBUG__SAFE && ( !d || !f ) )
-        abort();
+        ABORT;
 
     hash_table__walk( d, ( Visitor ) helper );
 }
@@ -258,13 +258,13 @@ dictionary__walk_special( Dictionary *d, Dictionary_Visitor v )
     ACTION helper( Entry *e )
     {
         if ( DEBUG__SAFE && !e )
-            abort();
+            ABORT;
 
         return v( e->key, &e->target );
     }
 
     if ( DEBUG__SAFE && ( !d || !v ) )
-        abort();
+        ABORT;
 
     hash_table__walk( d, ( Visitor ) helper );
 }
@@ -285,7 +285,7 @@ dictionary__keys( Dictionary *d )
     }
 
     if ( DEBUG__SAFE && !d )
-        abort();
+        ABORT;
 
     a = array__new( hash_table__size( d ), 0 );
 

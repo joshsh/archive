@@ -1,6 +1,6 @@
 /**
 
-\file  Apply.h
+\file  Indirection.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,45 +25,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef APPLY_H
-#define APPLY_H
+#ifndef INDIRECTION_H
+#define INDIRECTION_H
 
-#include <Object.h>
+#include <Type.h>
 
-typedef struct Apply Apply;
-
-struct Apply
-{
-    Object *function;
-    Object *operand;
-};
-
-extern Apply *
-apply__new( Object *function, Object *operand );
-
-extern void
-apply__delete( Apply *a );
-
-extern void
-apply__walk( Apply *a, Visitor f );
-
-#include <collection/Term.h>
-
-extern Term *
-apply__as_term( Apply *a, Type *apply_type, Type *indirection_type );
-
-#include <Manager.h>
-
-extern Object *
-term__to_apply_tree( Term *t, Manager *m, Type *apply_type );
-
-extern void
-apply__encode( Apply *a, char *buffer );
 
 extern Type *
-apply__create_type( const char *name, int flags );
+indirection__create_type( const char *name, int flags );
 
 
-#endif  /* APPLY_H */
+#endif  /* INDIRECTION_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

@@ -155,7 +155,7 @@ read_options ( int argc, char **argv, char *source_file )
 
                 /* getopt_long already printed an error message. */
                 print_usage();
-                abort();
+                ABORT;
                 break;
 
             default:
@@ -185,19 +185,8 @@ read_options ( int argc, char **argv, char *source_file )
             PRINT ( "%s ", argv[optind++] );
         PRINT( "\n" );
         print_usage();
-        abort();
+        ABORT;
     }
-}
-
-
-static void
-memtest()
-{
-debug__memcheck();
-Environment *env = environment__new();
-debug__memcheck();
-environment__delete( env );
-debug__memcheck();
 }
 
 

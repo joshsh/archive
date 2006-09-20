@@ -26,7 +26,7 @@ interpreter__new( Environment *env, boolean quiet )
     Interpreter *c;
 
     if ( DEBUG__SAFE && !env )
-        abort();
+        ABORT;
 
     if ( !( c = NEW( Interpreter ) ) )
     {
@@ -46,10 +46,12 @@ interpreter__new( Environment *env, boolean quiet )
 
     /* These basic types are indispensable for the compiler to communicate with
        the parser and with the SK module, and to serialize and deserialize data sets. */
-    if ( !( ( c->bag_t = environment__resolve_type( env, NAMEOF( ARRAY ) )->value )
+    if ( !( ( c->apply_t = environment__resolve_type( env, NAMEOF( APPLY ) )->value )
+         && ( c->bag_t = environment__resolve_type( env, NAMEOF( ARRAY ) )->value )
          && ( c->char_t = environment__resolve_type( env, NAMEOF( CHARACTER ) )->value )
          && ( c->combinator_t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value )
          && ( c->float_t = environment__resolve_type( env, NAMEOF( DOUBLE ) )->value )
+         && ( c->indirection_t = environment__resolve_type( env, NAMEOF( INDIRECTION ) )->value )
          && ( c->int_t = environment__resolve_type( env, NAMEOF( INTEGER ) )->value )
          && ( c->name_t = environment__resolve_type( env, NAMEOF( NAME ) )->value )
          && ( c->ns_t = environment__resolve_type( env, NAMEOF( NAMESPACE ) )->value )
@@ -74,8 +76,7 @@ interpreter__new( Environment *env, boolean quiet )
     }
 
     /* FIXME */
-    graph_init( c->combinator_t, c->prim_t );
-    c->apply_t = apply_type;
+    graph_init( c->combinator_t, c->prim_t, c->apply_t, c->indirection_t );
 
 finish:
 
@@ -89,16 +90,13 @@ void
 interpreter__delete( Interpreter *itp )
 {
     if ( DEBUG__SAFE && !itp )
-        abort();
+        ABORT;
 
     if ( itp->save_to_path )
         free( itp->save_to_path );
 
     delete_commands( itp->commands );
     free( itp );
-
-    /* FIXME */
-    graph_end();
 }
 
 
@@ -145,7 +143,7 @@ err_notdefined( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        abort();
+        ABORT;
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not defined in this namespace", buff );
@@ -158,7 +156,7 @@ err_notns( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        abort();
+        ABORT;
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not a namespace", buff );

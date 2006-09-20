@@ -54,7 +54,7 @@ combinator__decode( cstring *buffer )
             *c = Y_combinator;
             break;
         default:
-            abort();
+            ABORT;
     }
 
     return c;
@@ -109,6 +109,6 @@ combinator__encode( Combinator *c, cstring *buffer )
             sprintf( buffer, "Y" );
             break;
         default:
-            abort();
+            ABORT;
     }
 }

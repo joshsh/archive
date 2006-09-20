@@ -115,7 +115,7 @@ set__encode__alt( Set *s, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !s || !buffer ) )
-        abort();
+        ABORT;
 
     if ( !set__size( s ) )
         sprintf( buffer, "{}" );
@@ -181,7 +181,7 @@ term__encode__alt( Term *t, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !t || !buffer ) )
-        abort();
+        ABORT;
 
     sprintf( buffer, "[" );
     buffer++;
@@ -199,7 +199,7 @@ array__encode__alt( Array *a, char *buffer )
     Object *o;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        abort();
+        ABORT;
 
     sprintf( buffer, "{" );
     buffer++;
@@ -229,9 +229,10 @@ static void
 apply__encode__alt( Apply *a, char *buffer )
 {
     Object *o;
+    Name *name;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        abort();
+        ABORT;
 
     o = a->function;
     encode__short( o, buffer );
@@ -243,14 +244,18 @@ apply__encode__alt( Apply *a, char *buffer )
     o = a->operand;
 
     if ( DEBUG__SAFE && !FIRST_CLASS_NULL && !o )
-        abort();
+        ABORT;
 
     /* If the operand is another Apply (and does not have a name),
        enclose it in parentheses. */
-    if ( ( FIRST_CLASS_NULL && o ) && object__type( o ) == apply_type )
+    if ( ( FIRST_CLASS_NULL && o ) && object__type( o ) == interpreter->apply_t )
     {
-        if ( encoding_name( o ) )
+        name = encoding_name( o );
+        if ( name )
+        {
+            name__delete( name );
             encode__short( o, buffer );
+        }
 
         else
         {
@@ -276,21 +281,20 @@ resolve( Interpreter *itp, Object *o )
     ACTION helper( Object **opp )
     {
         Object *o = DEREF( opp );
+
+        if ( FIRST_CLASS_NULL && !o )
+            return CONTINUE;
+
         Type *t = object__type( o );
-printf( "t = %p\n", t );
 
         if ( t == itp->name_t )
         {
-putchar('@');
             o = interpreter__resolve( itp, object__value( o ) );
             *opp = o;
         }
 
         else if ( t->flags & TYPE__IS_OBJ_COLL )
-{
-putchar('W');
             t->walk( object__value( o ), ( Visitor ) helper );
-}
 
         return CONTINUE;
     }
@@ -308,7 +312,10 @@ putchar('W');
 
 
 int
-interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, OBJ( ARRAY ) *expr, const char *text )
+interpreter__evaluate_expression( Interpreter *itp,
+                                  OBJ( NAME ) *name,
+                                  Object *expr,
+                                  const char *text )
 {
     int ret = 0;
     Object *o;
@@ -327,14 +334,14 @@ interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, OBJ( ARRA
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr )
-        abort();
+        ABORT;
 
     /* FIXME */
     interpreter = itp;
 
     interpreter__add_to_history( text );
 
-    apply__encode = apply_type->encode;
+    apply__encode = itp->apply_t->encode;
     bag__encode = itp->bag_t->encode;
     char__encode = itp->char_t->encode;
     double__encode = itp->float_t->encode;
@@ -342,7 +349,7 @@ interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, OBJ( ARRA
     set__encode = itp->set_t->encode;
     term__encode = itp->term_t->encode;
 
-    apply_type->encode = ( Encoder ) apply__encode__alt;
+    itp->apply_t->encode = ( Encoder ) apply__encode__alt;
     itp->bag_t->encode = ( Encoder ) array__encode__alt;
     itp->char_t->encode = ( Encoder ) char__encode__alt;
     itp->float_t->encode = ( Encoder ) double__encode__alt;
@@ -353,9 +360,9 @@ interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, OBJ( ARRA
     o = resolve( itp, expr );
 
     /* If a term, reduce. */
-    if ( o && object__type( o ) == apply_type )
+    if ( o && object__type( o ) == itp->apply_t )
     {
-        if ( SK__REDUCE_AS_GRAPH )
+        if ( COMPILER__REDUCE_AS_GRAPH )
         {
             spine = array__new( 0, 0 );
             o = reduce__graph_lazy( o, spine, environment__manager( itp->env ) );
@@ -402,7 +409,7 @@ interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, OBJ( ARRA
     if ( oname )
         name__delete( oname );
 
-    apply_type->encode = apply__encode;
+    itp->apply_t->encode = apply__encode;
 
     itp->bag_t->encode = bag__encode;
     itp->char_t->encode = char__encode;
@@ -411,7 +418,7 @@ interpreter__evaluate_expression( Interpreter *itp, OBJ( NAME ) *name, OBJ( ARRA
     itp->set_t->encode = set__encode;
     itp->term_t->encode = term__encode;
 
-    memory_manager__collect( environment__manager( itp->env ), FALSE, FALSE );
+    manager__collect( environment__manager( itp->env ), FALSE, FALSE );
 
     return ret;
 }
@@ -455,8 +462,8 @@ interpreter__draw( Interpreter *c, const Object *o )
         {
             t = object__type( o );
 
-            prefix = ( t == apply_type )
-                ? "@" : ( t == indirection_type )
+            prefix = ( t == c->apply_t )
+                ? "@" : ( t == c->indirection_t )
                 ? "->" : "";
 
             sprintf( cur, prefix );
@@ -476,7 +483,7 @@ interpreter__draw( Interpreter *c, const Object *o )
                 name__delete( name );
             }
 
-            else if ( t != apply_type )
+            else if ( t != c->apply_t )
             {
                 /* FIXME: beware of overflow, and of quote characters */
                 object__encode( o, cur );
@@ -486,7 +493,7 @@ interpreter__draw( Interpreter *c, const Object *o )
             sprintf( cur, "\"" );
             cur++;
 
-            if ( apply_type == t )
+            if ( c->apply_t == t )
             {
                 sprintf( cur, ", color=\"%s\"", function_color );
                 cur += strlen( cur );
@@ -497,7 +504,7 @@ interpreter__draw( Interpreter *c, const Object *o )
 
             if ( !name || DRAW_NAMED_OBJECTS || force )
             {
-                if ( t == apply_type )
+                if ( t == c->apply_t )
                 {
                     a = object__value( o );
                     left = draw( a->function, FALSE );
@@ -508,7 +515,7 @@ interpreter__draw( Interpreter *c, const Object *o )
                     cur += strlen( cur );
                 }
 
-                else if ( t == indirection_type )
+                else if ( t == c->indirection_t )
                 {
                     left = draw( object__value( o ), FALSE );
                     sprintf( cur, "%i --> %i;\n", id, left );

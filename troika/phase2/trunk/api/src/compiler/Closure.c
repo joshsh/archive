@@ -56,7 +56,7 @@ void
 closure__delete( Closure *c )
 {
     if ( DEBUG__SAFE && !c )
-        abort();
+        ABORT;
 
     free( c );
 }
@@ -66,7 +66,7 @@ void *
 closure__apply( Closure *c, void *arg )
 {
     if ( DEBUG__SAFE && ( !c || !arg ) )
-        abort();
+        ABORT;
 
     return c->execute( arg, c->state );
 }

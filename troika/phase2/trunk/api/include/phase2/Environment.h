@@ -72,6 +72,13 @@ extern OBJ( TYPE ) *
 environment__resolve_type( Environment *env, const char *name );
 
 
+extern Type *
+environment__create_type( Environment *e, const char *name, int flags );
+
+extern Object *
+environment__create_object( Environment *e, Type *type, void *value );
+
+
 /** \return  a primitive object which has been added to the "root:primitives"
     namespace */
 extern Object *

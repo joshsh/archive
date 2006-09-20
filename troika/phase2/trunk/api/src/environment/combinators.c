@@ -35,7 +35,7 @@ add_single_combinator( Manager *m,
     if ( cp )
     {
         *cp = c;
-        o = memory_manager__object( m, t, cp, OBJECT__IMMUTABLE );
+        o = manager__object( m, t, cp, OBJECT__IMMUTABLE );
 
         if ( o )
             o = namespace__add_simple( ns, name, o );

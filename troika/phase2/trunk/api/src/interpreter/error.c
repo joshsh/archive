@@ -53,7 +53,7 @@ interpreter__handle_parse_error( Interpreter *c, const char *msg )
     /*endwin();*/
 #endif
 
-    memory_manager__collect( environment__manager( c->env ), FALSE, FALSE );
+    manager__collect( environment__manager( c->env ), FALSE, FALSE );
 
     return ret;
 }

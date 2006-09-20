@@ -9,7 +9,8 @@
 extern Combinator *
 combinator__decode( cstring *buffer );
 
-/** $encoder */
+/** $encoder
+    \param buffer  $side-effect */
 extern void
 combinator__encode( Combinator *c, cstring *buffer );
 

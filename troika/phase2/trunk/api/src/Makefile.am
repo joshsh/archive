@@ -8,6 +8,7 @@ EXTRA_DIST = $(BUILT_SOURCES)
 noinst_HEADERS = revision.h						\
 	settings.h							\
 	compiler/Apply.h						\
+	compiler/Indirection.h						\
 	object/Object-impl.h						\
 	primitive/Primitive-impl.h					\
 	interpreter/Interpreter-impl.h					\
@@ -29,6 +30,7 @@ lib_LTLIBRARIES = libphase2.la
 
 compiler_src =								\
 	compiler/Apply.c						\
+	compiler/Indirection.c						\
 	compiler/graph-reduce.c						\
 	compiler/term-reduce.c
 

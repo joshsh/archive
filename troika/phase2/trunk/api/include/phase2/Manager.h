@@ -37,7 +37,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 /** \note  A memory manager is a closed system.  It owns all objects passed to
-    it via memory_manager__add, and these objects are not allowed to
+    it via manager__add, and these objects are not allowed to
     reference any first-class objects which are not themselves owned by the
     manager. */
 typedef struct Manager Manager;
@@ -47,22 +47,22 @@ typedef struct Manager Manager;
 
 /** Constructor. */
 extern Manager *
-memory_manager__new();
+manager__new();
 
 /** Destructor. */
 extern void
-memory_manager__delete( Manager *m );
+manager__delete( Manager *m );
 
 /** \return the number of objects governed by the Manager */
 extern unsigned int
-memory_manager__size( Manager *m );
+manager__size( Manager *m );
 
 extern void
-memory_manager__set_root( Manager *m, Object *o );
+manager__set_root( Manager *m, Object *o );
 
 /** Requests a new object of the manager. */
 extern Object *
-memory_manager__object( Manager *m, Type *type, void *value, int flags );
+manager__object( Manager *m, Type *type, void *value, int flags );
 
 
 /* Tracing / graph traversal **************************************************/
@@ -76,19 +76,19 @@ memory_manager__object( Manager *m, Type *type, void *value, int flags );
     \param follow_triples  if TRUE, visit all statements of which the visited
     object is the subject */
 extern void
-memory_manager__walk
+manager__walk
     ( Manager *m, Object *root, Visitor f, boolean use_bfs, boolean follow_triples );
 
-/** Like memory_manager__walk, but using a customized walk function.  The
+/** Like manager__walk, but using a customized walk function.  The
     algorithm will not visit any object more than once. */
 extern void
-memory_manager__trace
+manager__trace
     ( Manager *m, Object *root, Walker walk, Visitor dist );
 
 /** \return  the set of all objects to which there is more than one path from
     root.  Important for serialization. */
 extern Set *
-memory_manager__get_multirefs( Manager *m, Object *root );
+manager__get_multirefs( Manager *m, Object *root );
 
 
 /* Mark-and-sweep garbage collection ******************************************/
@@ -98,7 +98,7 @@ memory_manager__get_multirefs( Manager *m, Object *root );
     \param force  collect even if the threshold has not been reached
     \param echo  print a message indicating what was collected */
 extern void
-memory_manager__collect( Manager *m, boolean force, boolean echo );
+manager__collect( Manager *m, boolean force, boolean echo );
 
 
 #endif  /* MEMORY_MANAGER_H */
