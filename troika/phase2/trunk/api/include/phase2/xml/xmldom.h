@@ -113,7 +113,7 @@ document__new( void );
 /** \param path  system id of a file from which to read the XML-encoded document
     \return  the deserialized document */
 extern Document *
-document__read_from_file( char *path );
+document__read_from_file( const char *path );
 
 /**  \param doc  reference document
      \return  root element of the document */
@@ -130,7 +130,7 @@ document__set_root( Document *doc, Element *root );
     \param doc  reference document
     \param path  system id of a file to which to write the document */
 extern void
-document__write_to_file( Document *doc, char *path );
+document__write_to_file( Document *doc, const char *path );
 
 
 /* Element ********************************************************************/

@@ -107,11 +107,11 @@ interpreter__draw( Interpreter *itp, const Object *o );
 
 /** Serialize a data set to a file in the p2 format. */
 extern void
-interpreter__serialize( Interpreter *itp, char *path );
+interpreter__serialize( Interpreter *itp, const char *path );
 
 /** Deserialize a data set from a file in the p2 format. */
 extern void
-interpreter__deserialize( Interpreter *itp, char *path );
+interpreter__deserialize( Interpreter *itp, const char *path );
 
 
 /* Externally linked functions for the parser *********************************/

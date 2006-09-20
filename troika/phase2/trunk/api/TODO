@@ -1,16 +1,14 @@
 [bugs]
     _mv and _new issues (^ source namespace)
-    _save is touchy... have to use _saveas most of the time
-    /usr/local issue
-    resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root)
+    resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root in test.p2)
     object ^ print ^ cycles
+    test.p2 ^ exit ^ ABORT
 
 [coding]
-    need code review for portability
     use String instead of char* for Encoders
     rework dependencies in collection, parser
     rework Bunch to hold objects by value rather than by reference
-    semaphores needed to eliminate global vars
+    semaphores --> eliminate global variables
 
 [docs]
     doxygen script --> revision # in docs
@@ -33,7 +31,6 @@
 
 [build]
     add "test" target
-    exclude backup files from distribution
     source dependencies (settings.h, etc.)
     tools dependencies (doxygen, xsltproc)
     svn log --> CHANGES

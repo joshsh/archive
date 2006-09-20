@@ -14,8 +14,9 @@ libp2xml_la_SOURCES = \
 
 ## Test program ################################################################
 
-xmldom_test_SOURCES = \
-	xmldom-test.c
+xmldom_test_SOURCES =	\
+	xmldom-test.c	\
+	../debug.c
 
 xmldom_test_LDADD = libp2xml.la
 

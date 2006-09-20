@@ -836,8 +836,18 @@ multiref_ids( Interpreter *c )
 }
 
 
+static void
+itp__update_save_path( Interpreter *itp, const char *path )
+{
+    char *tmp = itp->save_to_path;
+    itp->save_to_path = STRDUP( path );
+    if ( tmp )
+        free( tmp );
+}
+
+
 void
-interpreter__serialize( Interpreter *c, char *path )
+interpreter__serialize( Interpreter *c, const char *path )
 {
     Document *doc;
     Element *root;
@@ -897,7 +907,7 @@ interpreter__serialize( Interpreter *c, char *path )
         return CONTINUE;
     }
 
-    if ( DEBUG__SAFE && ( !c || !path ) )
+    if ( DEBUG__SAFE && ( !c || !path || !strlen( path ) ) )
         ABORT;
 
     xmldom__init();
@@ -942,19 +952,21 @@ interpreter__serialize( Interpreter *c, char *path )
         ( Visitor2 ) function_wrapper__delete );
     hash_map__delete( state.serializers );
 
+printf( "path (1): %s\n", path );
     document__write_to_file( doc, path );
+printf( "path (2): %s\n", path );
     document__delete( doc );
 
     xmldom__end();
 
-    if ( c->save_to_path )
-        free( c->save_to_path );
-    c->save_to_path = STRDUP( path );
+printf( "path (3): %s\n", path );
+    itp__update_save_path( c, path );
+printf( "path (4): %s\n", path );
 }
 
 
 void
-interpreter__deserialize( Interpreter *c, char *path )
+interpreter__deserialize( Interpreter *c, const char *path )
 {
     Xml_Decode_Ctx state = { 0, 0, 0, 0 };
     Element *el, *child;
@@ -962,7 +974,7 @@ interpreter__deserialize( Interpreter *c, char *path )
     Document *doc;
     Environment *env;
 
-    if ( DEBUG__SAFE && ( !c || !path ) )
+    if ( DEBUG__SAFE && ( !c || !path || !strlen( path ) ) )
         ABORT;
 
     xmldom__init();
@@ -1057,9 +1069,7 @@ finish:
 
     xmldom__end();
 
-    if ( c->save_to_path )
-        free( c->save_to_path );
-    c->save_to_path = STRDUP( path );
+    itp__update_save_path( c, path );
 }
 
 

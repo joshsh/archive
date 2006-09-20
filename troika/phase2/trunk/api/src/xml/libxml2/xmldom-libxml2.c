@@ -135,7 +135,7 @@ document__new( )
 
 
 Document *
-document__read_from_file( char *path )
+document__read_from_file( const char *path )
 {
     xmlDoc *doc = xmlReadFile( path, NULL, 0 ) ;
     return ( Document * ) doc ;
@@ -158,7 +158,7 @@ document__set_root( Document *doc, Element *root )
 
 
 void
-document__write_to_file( Document *doc, char *path )
+document__write_to_file( Document *doc, const char *path )
 {
     xmlSaveFormatFileEnc( path, ( xmlDoc* ) doc, "UTF-8", 1 ) ;
 }

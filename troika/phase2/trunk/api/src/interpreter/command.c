@@ -376,11 +376,11 @@ command_rm( Interpreter *c, Array *args )
 static int
 command_save( Interpreter *c, Array *args )
 {
-    char *path = c->save_to_path;
-
     args = 0;
 
-    if ( !path )
+    /* Note: the save_to_path member will normally change before this function
+             returns, so we dereference it multiple times. */
+    if ( !c->save_to_path )
     {
         ERROR( "use _saveas to specify an output path" );
         return 0;
@@ -388,9 +388,9 @@ command_save( Interpreter *c, Array *args )
 
     else
     {
-        interpreter__serialize( c, path );
+        interpreter__serialize( c, c->save_to_path );
         if ( !c->quiet )
-            PRINT( "Saved root:data as \"%s\".\n", path );
+            PRINT( "Saved root:data as \"%s\".\n", c->save_to_path );
         return 0;
     }
 }
