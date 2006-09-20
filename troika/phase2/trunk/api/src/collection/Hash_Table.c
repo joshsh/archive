@@ -415,7 +415,7 @@ hash_table__walk( Hash_Table *h, Visitor f )
 
     while ( cur < lim )
     {
-                                         /* FIXME: ? */
+/* FIXME: ? */
         if ( OCCUPIED( cur ) && ( r = f( ( void** ) cur ) ) )
         {
             if ( r == REMOVE )

@@ -483,7 +483,7 @@ interpreter__draw( Interpreter *c, const Object *o )
 
             else if ( t != c->apply_t )
             {
-                /* FIXME: beware of overflow, and of quote characters */
+/* FIXME: beware of overflow, and of quote characters */
                 object__encode( o, cur );
                 cur += strlen( cur );
             }

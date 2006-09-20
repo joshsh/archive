@@ -206,11 +206,11 @@ interpreter__name_of__full( Interpreter *c, OBJ( NAMESPACE ) *nso, const Object 
     {
         name = namespace__find( root, o, m );
 
-        /* FIXME: possible collision with a namespace item "root" */
+/* FIXME: possible collision with a namespace item "root" */
         if ( name )
             array__push( name, STRDUP( "root" ) );
 
-        /* FIXME: possible collision with a namespace item "root" */
+/* FIXME: possible collision with a namespace item "root" */
         if ( o == root )
         {
             name = name__new();

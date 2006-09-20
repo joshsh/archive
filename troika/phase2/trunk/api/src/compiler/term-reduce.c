@@ -206,7 +206,7 @@ prim_reduce(
                 {
                     result_set = set__new();
 
-                    /* FIXME: this is cheating */
+/* FIXME: this is cheating */
                     if ( result->type == set_type )
                         set__walk( result->value, ( Visitor ) add_to_result );
 
@@ -216,7 +216,7 @@ prim_reduce(
                     result = manager__object( m, set_type, result_set, NOPROPS );
                 }
 
-                /* FIXME: this is cheating */
+/* FIXME: this is cheating */
                 if ( robj->type == set_type )
                     set__walk( robj->value, ( Visitor ) add_to_result );
 
@@ -296,7 +296,7 @@ prim_reduce(
 
             else
             {
-                /* FIXME: creating a new term for each argument is wasty */
+/* FIXME: creating a new term for each argument is wasty */
                 arg = reduce_arg( term__subterm_at( term, j + 1 ) );
 
                 cur += cur->intval;
@@ -307,7 +307,7 @@ prim_reduce(
                 return;
 
             /* Map the arguments. */
-            /* FIXME: as it is, term references will be iterated through, rather than reduced */
+/* FIXME: as it is, term references will be iterated through, rather than reduced */
             if ( PRIM__IMPLICIT_SET_MAPPING && ( arg->type->flags & TYPE__IS_OBJ_COLL )
               && ( arg->type != param_type ) )
             {

@@ -135,7 +135,7 @@ dictionary__add( Dictionary *d, const char *key, void *target )
         hash_table__add( d, &new );
     }
 
-    /* FIXME: ? */
+/* FIXME: ? */
     return target;
 }
 
