@@ -75,7 +75,6 @@ interpreter__new( Environment *env, boolean quiet )
         goto finish;
     }
 
-    /* FIXME */
     graph_init( c->combinator_t, c->prim_t, c->apply_t, c->indirection_t );
 
 finish:

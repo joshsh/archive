@@ -44,6 +44,7 @@
 
 [other]
     fix all FIXMEs
+        grep FIXME `grep FIXME * -Rl | grep c$`
     "cstring" --> "String"
     triples
         sets ^ distribution

@@ -296,7 +296,7 @@ prim_reduce(
 
             else
             {
-                /* FIXME: creating a new term for each argument is quite a waste */
+                /* FIXME: creating a new term for each argument is wasty */
                 arg = reduce_arg( term__subterm_at( term, j + 1 ) );
 
                 cur += cur->intval;

@@ -28,14 +28,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "compiler/Apply.h"
 
 
-/* FIXME */
+/* FIXME: global variable */
 static Interpreter *interpreter;
 
 
 static Name *
 encoding_name( Object *o )
 {
-                              /* FIXME */
     return interpreter__name_of( interpreter, interpreter->cur_ns_obj, o );
 }
 
@@ -336,7 +335,6 @@ interpreter__evaluate_expression( Interpreter *itp,
     if ( DEBUG__SAFE && !expr )
         ABORT;
 
-    /* FIXME */
     interpreter = itp;
 
     interpreter__add_to_history( text );

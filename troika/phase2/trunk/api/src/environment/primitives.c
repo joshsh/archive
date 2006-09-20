@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     #include "../primitive/Primitive-impl.h"
 
 
-/* FIXME */
+/* FIXME: global variable */
 static Environment *global_env;
 
 

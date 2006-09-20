@@ -224,8 +224,7 @@ interpreter__name_of__full( Interpreter *c, OBJ( NAMESPACE ) *nso, const Object 
 
 #define LABEL__MAXLEN  32
 
-/* FIXME: maxlen does nothing.  Eventually, use a String object instead of
-   a char array to build the label */
+/* FIXME: maxlen does nothing.  Eventually, use a String object instead of a char array to build the label */
 void
 interpreter__encode( Interpreter *c,
                      const Object *o,

@@ -691,7 +691,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 o->value = decode( child, state );
 
                 if ( !o->value )
-                    /* FIXME: This may cause a segfault later on. */
+                    /* FIXME: This could cause a segfault later on. */
                     o = 0;
             }
 

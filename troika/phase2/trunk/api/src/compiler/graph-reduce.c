@@ -682,7 +682,7 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Manager *m )
 
 bad_arg:
 
-    /* FIXME: not used */
+    /* FIXME: OBJECT__IRREDUCIBLE property is not used */
     if ( COMPILER__ALLOW_NONREDUX )
         ap->flags |= OBJECT__IRREDUCIBLE;
 
@@ -744,9 +744,7 @@ reduce__graph_lazy( Object *o, Array *spine, Manager *m )
 
         else
         {
-            /* FIXME: possible race condition.  If ap is initially an Apply but
-               is overwritten (in another thread) with an indirection node or a
-               boxed value, a segfault is likely. */
+            /* FIXME: possible race condition.  If ap is initially an Apply but is overwritten (in another thread) with an indirection node or a boxed value, a segfault is likely. */
             t = cur->type;
 /*PRINT( "type->name = %s\n", cur->type->name );*/
 

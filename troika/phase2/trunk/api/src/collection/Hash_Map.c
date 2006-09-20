@@ -44,8 +44,7 @@ hash( const Entry *e )
     u.intval = 0;
     u.pointerval = e->key;
 
-    /* FIXME: on a machine where sizeof ( void* ) > sizeof ( int ), high
-              addresses will hash poorly */
+    /* FIXME: on a machine where sizeof ( void* ) > sizeof ( int ), high addresses will hash poorly */
     return u.intval;
 }
 
