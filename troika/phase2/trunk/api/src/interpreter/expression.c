@@ -135,16 +135,16 @@ set__encode__alt( Set *s, char *buffer )
 static void
 term__encode__alt( Term *t, char *buffer )
 {
-    void encode( void **cur, boolean delimit )
+    void encode( term_cell *cur, boolean delimit )
     {
-        void **lim;
+        term_cell *lim;
 
         /* If the sub-term represents a leaf node, execute the procedure. */
-        if ( ( unsigned int ) *cur == 2 )
+        if ( cur->intval == 2 )
         {
             cur++;
 
-            encode__short( *cur, buffer );
+            encode__short( cur->pointerval, buffer );
         }
 
         /* If the sub-term contains further sub-terms, recurse through them. */
@@ -156,14 +156,14 @@ term__encode__alt( Term *t, char *buffer )
                 buffer++;
             }
 
-            lim = cur + ( unsigned int ) *cur;
+            lim = cur + cur->intval;
             cur++;
             while ( cur < lim )
             {
                 encode( cur, TRUE );
                 buffer += strlen( buffer );
 
-                cur += ( unsigned int ) *cur;
+                cur += cur->intval;
 
                 if ( cur < lim )
                 {

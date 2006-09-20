@@ -38,12 +38,12 @@ struct Term
     /** An array of 4-byte cells containing both generic pointers ("atoms") and
         unsigned int values (each one indicates the size of the sub-term in
         which it is the first cell). */
-    void **buffer;
+    term_cell *buffer;
 
     /** Position of the first cell of the Term representation in the buffer.
         It always contains an unsigned int value indicating the overall size of
         the Term. */
-    void **head;
+    term_cell *head;
 
     /** The buffer expands by this factor whenever it becomes full. */
     double expansion;

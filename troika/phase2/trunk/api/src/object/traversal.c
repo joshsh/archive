@@ -116,8 +116,8 @@ data(cycle(cycle))
     helper( &o );
 
     if ( DEBUG__OBJECT )
-        PRINT( "[] object__trace(%#x, %#x): visited %i objects.\n",
-            ( int ) o, ( int ) f, total );
+        PRINT( "[] object__trace(%p, %p): visited %i objects.\n",
+            o, f, total );
 }
 
 
@@ -204,8 +204,8 @@ object__trace_bfs( Object *o, Visitor f, boolean follow_triples )
     array__delete( queue );
 
     if ( DEBUG__OBJECT )
-        PRINT( "[] object__trace_bfs(%#x, %#x): visited %i objects.\n",
-            ( int ) o, ( int ) f, total );
+        PRINT( "[] object__trace_bfs(%p, %p): visited %i objects.\n",
+            o, f, total );
 }
 
 

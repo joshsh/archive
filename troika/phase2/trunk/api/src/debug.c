@@ -188,7 +188,7 @@ debug__memcheck()
     PRINT( "%i\tcalls to realloc\n", n_realloc );
     PRINT( "%i\tcalls to free\n", n_free );
     PRINT( "===========================\n" );
-    PRINT( "%i\tnot-freed object(s)\n", n_calloc + n_malloc + n_realloc - n_free );
+    PRINT( "*%i\tnot-freed object(s)\n", n_calloc + n_malloc + n_realloc - n_free );
 }
 
 

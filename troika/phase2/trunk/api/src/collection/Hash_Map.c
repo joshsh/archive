@@ -31,10 +31,22 @@ struct Entry
 };
 
 
+union pointer_or_int
+{
+    unsigned int intval;
+    void *pointerval;
+};
+
 static unsigned int
 hash( const Entry *e )
 {
-    return ( unsigned int ) e->key;
+    union pointer_or_int u;
+    u.intval = 0;
+    u.pointerval = e->key;
+
+    /* FIXME: on a machine where sizeof ( void* ) > sizeof ( int ), high
+              addresses will hash poorly */
+    return u.intval;
 }
 
 

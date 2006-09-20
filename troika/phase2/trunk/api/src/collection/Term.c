@@ -36,24 +36,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 Term *
 term__expand( Term *t, unsigned int minimum_buffer_size )
 {
-    void **new_buffer, **new_head;
+    term_cell *new_buffer, *new_head;
     unsigned int size, new_buffer_size;
 
     /* Ordinarily, the new buffer size will be the old buffer size times the
        Term expansion factor. */
-    new_buffer_size = (unsigned int) (t->buffer_size * t->expansion);
+    new_buffer_size = ( unsigned int ) ( t->buffer_size * t->expansion );
 
     /* If the new buffer size is not large enough, use the given minimum
        buffer size instead. */
-    if (new_buffer_size < minimum_buffer_size)
+    if ( new_buffer_size < minimum_buffer_size )
         new_buffer_size = minimum_buffer_size;
 
     /* Copy array data to the new buffer. */
-    size = (unsigned int) *(t->head);
-    new_buffer = malloc(new_buffer_size * sizeof(void *));
+    size = t->head->intval;
+    new_buffer = malloc( new_buffer_size * sizeof( term_cell ) );
     new_head = new_buffer + new_buffer_size - size;
-    memcpy(new_head, t->head, size * sizeof(void *));
-    free(t->buffer);
+    memcpy( new_head, t->head, size * sizeof( term_cell ) );
+    free( t->buffer );
 
     /* Update the Term's metadata. */
     t->buffer = new_buffer;
@@ -78,23 +78,23 @@ term__new( void *p, unsigned int initial_buffer_size )
         ABORT;
 */
 
-    t = malloc(sizeof(Term));
+    t = NEW( Term );
 
     /* Buffer starts out at this size, but may expand later. */
-    if (initial_buffer_size < 2)
+    if ( initial_buffer_size < 2 )
         initial_buffer_size = 2;
     t->buffer_size = initial_buffer_size;
 
     /* Create the buffer. */
-    t->buffer = malloc(t->buffer_size * sizeof(void *));
+    t->buffer = malloc( t->buffer_size * sizeof( term_cell ) );
 
     /* Add the atom. */
     t->head = t->buffer + t->buffer_size - 1;
-    *(t->head) = p;
+    t->head->pointerval = p;
 
     /* Set the head of the Term and store its size there. */
     t->head--;
-    *(t->head) = (void *) 2;
+    t->head->intval = 2;
 
     /* Expansion factor starts at the default value. */
     t->expansion = TERM__DEFAULT_EXPANSION;
@@ -112,7 +112,7 @@ term__copy( Term *source )
     if ( DEBUG__SAFE && !source )
         ABORT;
 
-    size = ( unsigned int ) *( source->head );
+    size = source->head->intval;
 
     t = NEW( Term );
 
@@ -120,14 +120,14 @@ term__copy( Term *source )
     t->buffer_size = source->buffer_size;
 
     /* Create the buffer. */
-    t->buffer = malloc( t->buffer_size * sizeof( void* ) );
+    t->buffer = malloc( t->buffer_size * sizeof( term_cell ) );
 
     /* Set the head of the Term and store its size there. */
     t->head = t->buffer + t->buffer_size - size;
-    *( t->head ) = ( void* ) size;
+    t->head->intval = size;
 
     /* Copy data from source buffer to new Term's buffer. */
-    memcpy( t->head, source->head, size * sizeof( void* ) );
+    memcpy( t->head, source->head, size * sizeof( term_cell ) );
 
     return t;
 }
@@ -151,13 +151,13 @@ unsigned int
 term__length( const Term *t )
 {
     unsigned int length = 0;
-    void **cur, **lim;
+    term_cell *cur, *lim;
 
     if ( DEBUG__SAFE && !t )
         ABORT;
 
     cur = t->head;
-    if ( *cur == ( void* ) 2 )
+    if ( cur->intval == 2 )
         length = 1;
     else
     {
@@ -166,7 +166,7 @@ term__length( const Term *t )
         while ( cur < lim )
         {
             length++;
-            cur += ( unsigned int ) *cur;
+            cur += cur->intval;
         }
     }
 
@@ -175,10 +175,10 @@ term__length( const Term *t )
 
 
 Term *
-term__subterm_at(Term *t, int i)
+term__subterm_at( Term *t, int i )
 {
     Term *subterm;
-    void **cur = t->head;
+    term_cell *cur = t->head;
     unsigned int length;
 
     /* TODO: upper bounds checking */
@@ -187,22 +187,22 @@ term__subterm_at(Term *t, int i)
 
     /* If the term contains a single element, skip to copy (assumes that index
        is equal to 0).  Otherwise cycle through the target index. */
-    if (*cur > (void *) 2)
+    if ( cur->intval > 2 )
     {
         cur++;
 
         while ( i )
         {
-            cur += (unsigned int) *cur;
+            cur += cur->intval;
             i--;
         }
     }
 
-    length = (unsigned int) *cur;
+    length = cur->intval;
     subterm = NEW( Term );
     subterm->buffer_size = length;
-    subterm->buffer = malloc(length * sizeof(void *));
-    memcpy(subterm->buffer, cur, length * sizeof(void *));
+    subterm->buffer = malloc( length * sizeof( term_cell ) );
+    memcpy( subterm->buffer, cur, length * sizeof( term_cell ) );
     subterm->head = subterm->buffer;
 
     return subterm;
@@ -210,20 +210,20 @@ term__subterm_at(Term *t, int i)
 
 
 void *
-term__head(Term *t)
+term__head( Term *t )
 {
-    void **cur = t->head;
+    term_cell *cur = t->head;
 
     if ( DEBUG__SAFE && !t )
         ABORT;
 
     /* Find the leftmost atom. */
-    while (*cur > (void *) 2)
+    while ( cur->intval > 2)
         cur++;
 
     cur++;
 
-    return *cur;
+    return cur->pointerval;
 }
 
 
@@ -243,24 +243,24 @@ term__set_expansion( Term *t, double expansion )
 
 
 Term *
-term__merge(Term *t1, Term *t2)
+term__merge( Term *t1, Term *t2 )
 {
     /* Find the size of each Term, as well as of the resulting Term. */
-    unsigned int t1_size = (unsigned int) *(t1->head),
-                 t2_size = (unsigned int) *(t2->head);
+    unsigned int t1_size = t1->head->intval,
+                 t2_size = t2->head->intval;
     unsigned int newsize = t1_size + t2_size + 1;
 
     /* Term t2 will be receiving t1's data.  Expand its buffer if necessary. */
-    if (t2->buffer_size < newsize)
-        t2 = term__expand(t2, newsize);
+    if ( t2->buffer_size < newsize )
+        t2 = term__expand( t2, newsize );
 
     /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
     t2->head -= t1_size;
-    memcpy(t2->head, t1->head, t1_size * sizeof(void *));
+    memcpy( t2->head, t1->head, t1_size * sizeof( term_cell ) );
 
     /* Add a new Term head. */
     t2->head = t2->buffer + t2->buffer_size - newsize;
-    *(t2->head) = (void *) newsize;
+    t2->head->intval = newsize;
 
     /* Destroy t1. */
     term__delete( t1 );
@@ -273,23 +273,23 @@ Term *
 term__merge_la(Term *t1, Term *t2)
 {
     /* Find the size of each Term, as well as of the resulting Term. */
-    unsigned int t1_size = (unsigned int) *(t1->head),
-                 t2_size = (unsigned int) *(t2->head);
+    unsigned int t1_size = t1->head->intval,
+                 t2_size = t2->head->intval;
     unsigned int newsize = t1_size + t2_size;
-    if (t1_size == 2)
+    if ( t1_size == 2 )
         newsize++;
 
     /* Term t2 will be receiving t1's data.  Expand its buffer if necessary. */
-    if (t2->buffer_size < newsize)
-        t2 = term__expand(t2, newsize);
+    if ( t2->buffer_size < newsize )
+        t2 = term__expand( t2, newsize );
 
     /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
     t2->head -= t1_size;
-    memcpy(t2->head, t1->head, t1_size * sizeof(void *));
+    memcpy( t2->head, t1->head, t1_size * sizeof( term_cell ) );
 
     /* Add a new Term head. */
     t2->head = t2->buffer + t2->buffer_size - newsize;
-    *(t2->head) = (void *) newsize;
+    t2->head->intval = newsize;
 
     /* Destroy t1. */
     term__delete( t1 );
@@ -299,28 +299,28 @@ term__merge_la(Term *t1, Term *t2)
 
 
 Term *
-term__merge_ra(Term *t1, Term *t2)
+term__merge_ra( Term *t1, Term *t2 )
 {
     /* Find the size of each Term, as well as of the resulting Term. */
-    unsigned int t1_size = (unsigned int) *(t1->head),
-                 t2_size = (unsigned int) *(t2->head);
+    unsigned int t1_size = t1->head->intval,
+                 t2_size = t2->head->intval;
     unsigned int newsize = t1_size + t2_size;
-    if (t2_size == 2)
+    if ( t2_size == 2 )
         newsize++;
 
     /* Term t2 will be receiving t1's data.  Expand its buffer if necessary. */
-    if (t2->buffer_size < newsize)
-        t2 = term__expand(t2, newsize);
+    if ( t2->buffer_size < newsize )
+        t2 = term__expand( t2, newsize );
 
     /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
     t2->head -= t1_size;
-    if (t2_size > 2)
+    if ( t2_size > 2 )
         t2->head++;
-    memcpy(t2->head, t1->head, t1_size * sizeof(void *));
+    memcpy( t2->head, t1->head, t1_size * sizeof( term_cell ) );
 
     /* Add a new Term head. */
     t2->head = t2->buffer + t2->buffer_size - newsize;
-    *(t2->head) = (void *) newsize;
+    t2->head->intval = newsize;
 
     /* Destroy t1. */
     term__delete( t1 );
@@ -333,28 +333,28 @@ Term *
 term__cat(Term *t1, Term *t2)
 {
     /* Find the size of each Term, as well as of the resulting Term. */
-    unsigned int t1_size = (unsigned int) *(t1->head),
-                 t2_size = (unsigned int) *(t2->head);
+    unsigned int t1_size = t1->head->intval,
+                 t2_size = t2->head->intval;
 
     unsigned int newsize = t1_size + t2_size + 1;
-    if (t1_size != 2)
+    if ( t1_size != 2 )
         newsize--;
-    if (t2_size != 2)
+    if ( t2_size != 2 )
         newsize--;
 
     /* Term t2 will be receiving t1's data.  Expand its buffer if necessary. */
-    if (t2->buffer_size < newsize)
-        t2 = term__expand(t2, newsize);
+    if ( t2->buffer_size < newsize) 
+        t2 = term__expand( t2, newsize );
 
     /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
     t2->head -= t1_size;
-    if (t2_size > 2)
+    if ( t2_size > 2 )
         t2->head++;
-    memcpy(t2->head, t1->head, t1_size * sizeof(void *));
+    memcpy( t2->head, t1->head, t1_size * sizeof( term_cell ) );
 
     /* Add a new Term head. */
     t2->head = t2->buffer + t2->buffer_size - newsize;
-    *(t2->head) = (void *) newsize;
+    t2->head->intval = newsize;
 
     /* Destroy t1. */
     term__delete( t1 );
@@ -371,29 +371,29 @@ term__walk( Term *t, Visitor f )
 {
     __label__ finish;
 
-    void walk( void **cur )
+    void walk( term_cell *cur )
     {
-        void **lim;
+        term_cell *lim;
 
         /* If the sub-term represents a leaf node, execute the procedure. */
-        if ( ( unsigned int ) *cur == 2 )
+        if ( cur->intval == 2 )
         {
             cur++;
 
             /* Apply the target function.  Break out if necessary. */
-            if ( f( cur ) == BREAK )
+            if ( f( &cur->pointerval ) == BREAK )
                 goto finish;
         }
 
         /* If the sub-term contains further sub-terms, recurse through them. */
         else
         {
-            lim = cur + ( unsigned int ) *cur;
+            lim = cur + cur->intval;
             cur++;
             while ( cur < lim )
             {
                 walk( cur );
-                cur += ( unsigned int ) *cur;
+                cur += cur->intval;
             }
         }
     }
@@ -416,17 +416,17 @@ finish:
 void
 term__encode( Term *t, char *buffer )
 {
-    void encode( void **cur, boolean delimit )
+    void encode( term_cell *cur, boolean delimit )
     {
         Object *o;
-        void **lim;
+        term_cell *lim;
 
         /* If the sub-term represents a leaf node, execute the procedure. */
-        if ( ( unsigned int ) *cur == 2 )
+        if ( cur->intval == 2 )
         {
             cur++;
 
-            o = *cur;
+            o = cur->pointerval;
             object__encode( o, buffer );
         }
 
@@ -439,14 +439,14 @@ term__encode( Term *t, char *buffer )
                 buffer++;
             }
 
-            lim = cur + ( unsigned int ) *cur;
+            lim = cur + cur->intval;
             cur++;
             while ( cur < lim )
             {
                 encode( cur, TRUE );
                 buffer += strlen( buffer );
 
-                cur += ( unsigned int ) *cur;
+                cur += cur->intval;
 
                 if ( cur < lim )
                 {

@@ -32,10 +32,28 @@ struct Entry
 };
 
 
+union pointer_or_int
+{
+    unsigned int intval;
+    void *pointerval;
+};
+
 static unsigned int
 hash( const Entry *e )
 {
-    return ( unsigned int ) e->elmt;
+    union pointer_or_int u;
+    u.intval = 0;
+    u.pointerval = e->elmt;
+
+    /* FIXME: on a machine where sizeof ( void* ) > sizeof ( int ), high
+              addresses will hash poorly */
+
+/*
+    if ( sizeof ( void* ) > sizeof ( int ) )
+        u.pointerval = u.pointerval >> ( 8 * ( sizeof ( void* ) - sizeof ( int ) ) );
+*/
+
+    return u.intval;
 }
 
 

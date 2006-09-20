@@ -75,6 +75,38 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state );
 /******************************************************************************/
 
 
+union pointer_or_int
+{
+    int intval;
+    void *pointerval;
+};
+
+
+/* FIXME: data loss may occur */
+static unsigned int
+pointer2int( void *p )
+{
+    union pointer_or_int u;
+    u.intval = 0;
+    u.pointerval = p;
+    return u.intval;
+}
+
+
+/* FIXME: data loss may occur */
+static void *
+int2pointer( unsigned int i )
+{
+    union pointer_or_int u;
+    u.pointerval = 0;
+    u.intval = i;
+    return u.pointerval;
+}
+
+
+/******************************************************************************/
+
+
 typedef struct Function_Wrapper Function_Wrapper;
 
 struct Function_Wrapper
@@ -165,24 +197,24 @@ array__xml_encode( Array *a, Xml_Encode_Ctx *state )
 static Element *
 term__xml_encode( Term *t, Xml_Encode_Ctx *state )
 {
-    void **sup, **head, **cur = t->head;
+    term_cell *sup, *head, *cur = t->head;
     Element *el, *child;
 
     if ( DEBUG__SAFE && ( !t || !state ) )
         ABORT;
 
-    if ( ( unsigned int ) *cur == 2 )
+    if ( cur->intval == 2 )
     {
         cur++;
 
-        el = object__xml_encode( ( Object* ) *cur, state, 0 );
+        el = object__xml_encode( ( Object* ) cur->pointerval, state, 0 );
     }
 
     else
     {
         el = element__new( 0, ( uc* ) TERM__XML__NAME, 0 );
 
-        sup = cur + ( unsigned int ) *cur;
+        sup = cur + cur->intval;
         cur++;
         while ( cur < sup )
         {
@@ -193,7 +225,7 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
             element__add_child( el, child );
 
             t->head = head;
-            cur += ( unsigned int ) *cur;
+            cur += cur->intval;
         }
     }
 
@@ -464,7 +496,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
     }
 
     /* id > 0  ==>  the object is multireferenced. */
-    id = ( unsigned int ) hash_map__lookup( state->ids, o );
+    id = pointer2int( hash_map__lookup( state->ids, o ) );
 
 
     /* "Short out" indirection nodes. */
@@ -618,7 +650,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 id = ( unsigned int ) atoi( text );
                 free( text );
 
-                o = ( Object* ) hash_map__lookup( state->objects_by_id, ( void* ) id );
+                o = ( Object* ) hash_map__lookup( state->objects_by_id, int2pointer( id ) );
 
                 if ( !o )
                 {
@@ -627,7 +659,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                     if ( !o )
                         return 0;
 
-                    hash_map__add( state->objects_by_id, ( void* ) id, o );
+                    hash_map__add( state->objects_by_id, int2pointer( id ), o );
                 }
 
                 if ( id == 1 )
@@ -686,7 +718,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         {
             free( text );
             o = ( Object* ) hash_map__lookup
-                ( state->objects_by_id, ( void* ) id );
+                ( state->objects_by_id, int2pointer( id ) );
 
             /* Placeholder object must be created. */
             if ( !o )
@@ -695,7 +727,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 if ( !o )
                     return 0;
 
-                hash_map__add( state->objects_by_id, ( void* ) id, o );
+                hash_map__add( state->objects_by_id, int2pointer( id ), o );
             }
         }
     }
@@ -784,8 +816,7 @@ multiref_ids( Interpreter *c )
         if ( !hash_map__lookup( ids, *opp ) )
         {
             max_id++;
-                                      /* FIXME */
-            hash_map__add( ids, *opp, ( void* ) max_id );
+            hash_map__add( ids, *opp, int2pointer( max_id ) );
         }
 
         return CONTINUE;

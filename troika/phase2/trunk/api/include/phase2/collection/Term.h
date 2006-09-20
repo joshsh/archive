@@ -53,6 +53,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
     expression. */
 typedef struct Term Term;
 
+/* Should be hidden, but needed by interpreter/expression.c */
+typedef union term_cell term_cell;
+union term_cell
+{
+    unsigned int intval;
+    void *pointerval;
+};
 
 /** Defines a new expansion factor for terms. When the term outgrows its buffer,
     the new buffer will be this much larger. */

@@ -30,29 +30,29 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static Term *
 k_reduce( Term *term )
 {
-    void **x, **y, **aux;
+    term_cell *x, *y, *aux;
     unsigned int x_size, y_size;
 
     /* Skip the 'K' to reach the head of the 'x' sub-term. */
     x = term->head + 3;
-    x_size = ( unsigned int ) *x;
+    x_size = x->intval;
 
     /* Skip the 'x' and to reach the head of the 'y' sub-term. */
     y = x + x_size;
-    y_size = ( unsigned int ) *y;
+    y_size = y->intval;
 
     /* Copy the 'x' subterm to the target position. */
-    aux = malloc( x_size * sizeof( void* ) );
-    memcpy( aux, x, x_size * sizeof( void* ) );
+    aux = malloc( x_size * sizeof( term_cell ) );
+    memcpy( aux, x, x_size * sizeof( term_cell ) );
     term->head = y + ( y_size - x_size );
-    memcpy( term->head, aux, x_size * sizeof( void* ) );
+    memcpy( term->head, aux, x_size * sizeof( term_cell ) );
     free( aux );
 
     /* Reset the term head. */
-    if ( ( unsigned int ) *term->head == 2
+    if ( term->head->intval == 2
       && ( term->buffer + term->buffer_size - term->head > 2 ) )
         term->head--;
-    *( term->head ) = ( void * ) ( term->buffer + term->buffer_size - term->head );
+    term->head->intval = term->buffer + term->buffer_size - term->head;
 
     return term;
 }
@@ -64,62 +64,62 @@ k_reduce( Term *term )
 static Term *
 s_reduce( Term *term )
 {
-    void **x, **y, **z, **aux;
+    term_cell *x, *y, *z, *aux;
     unsigned int x_size, y_size, z_size, newsize, temp;
 
     /* Locate the head of 'x', 'y' and 'z'. */
     x = term->head + 3;
-    x_size = ( unsigned int ) *x;
+    x_size = x->intval;
     y = x + x_size;
-    y_size = ( unsigned int ) *y;
+    y_size = y->intval;
     z = y + y_size;
-    z_size = ( unsigned int ) *z;
+    z_size = z->intval;
 
     /* Predict the size of the resulting array.  If necessary, copy the term to a
        larger buffer and reduce that instead. */
-    newsize = ( unsigned int ) *( term->head ) + z_size - 1;
+    newsize = term->head->intval + z_size - 1;
     if ( newsize > term->buffer_size )
     {
         term = term__expand( term, newsize );
 
         /* Re-locate the head of 'x', 'y' and 'z'. */
         x = term->head + 3;
-        x_size = ( unsigned int ) *x;
+        x_size = x->intval;
         y = x + x_size;
-        y_size = ( unsigned int ) *y;
+        y_size = y->intval;
         z = y + y_size;
-        z_size = ( unsigned int ) *z;
+        z_size = z->intval;
     }
 
     /* Copy 'x' to an auxiliary array. */
-    aux = malloc( x_size * sizeof( void* ) );
-    memcpy( aux, x, x_size * sizeof( void* ) );
+    aux = malloc( x_size * sizeof( term_cell ) );
+    memcpy( aux, x, x_size * sizeof( term_cell ) );
 
     /* Prepend a term head for the new sub-term 'yz'.  The data of 'y' and 'z'
        remains where it is. */
     temp = y_size + z_size;
     term->head = y;
-    if ( ( unsigned int ) *term->head == 2 )
+    if ( term->head->intval == 2 )
     {
         term->head--;
         temp++;
     }
-    *( term->head ) = ( void* ) temp;
+    term->head->intval = temp;
 
     /* Prepend a duplicate 'z'. */
     term->head -= z_size;
-    memcpy( term->head, z, z_size * sizeof( void* ) );
+    memcpy( term->head, z, z_size * sizeof( term_cell ) );
 
     /* Prepend an 'x'. */
     term->head -= x_size;
-    memcpy( term->head, aux, x_size * sizeof( void* ) );
+    memcpy( term->head, aux, x_size * sizeof( term_cell ) );
     free( aux );
 
     /* Prepend a term head. */
-    if ( ( unsigned int ) *term->head == 2
+    if ( term->head->intval == 2
       && ( term->buffer + term->buffer_size - term->head > 2 ) )
         term->head--;
-    *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
+    term->head->intval = term->buffer + term->buffer_size - term->head;
 
     return term;
 }
@@ -138,7 +138,8 @@ prim_reduce(
     Type *set_type )
 {
     Primitive *p;
-    void **args, **cur, **max;
+    void **args;
+    term_cell *cur, *max;
 
     Object *result = 0;
     Set *result_set = 0;
@@ -151,7 +152,7 @@ prim_reduce(
         if ( term )
         {
             if ( term__length( t ) == 1 )
-                arg = *( t->head + 1 );
+                arg = ( t->head + 1 )->pointerval;
 
             /* Fail with error message. */
             else
@@ -238,7 +239,7 @@ prim_reduce(
         Object *arg;
 
         Type *param_type;
-        void **temp;
+        term_cell *temp;
 
         unsigned int j;
 
@@ -286,10 +287,10 @@ prim_reduce(
             if ( PRIM__CHECKS__PARAM_TYPE || PRIM__ALLOW_GENERIC_PARAMS )
                 param_type = p->parameters[j].type;
 
-            if ( ( unsigned int ) *cur == 2 )
+            if ( cur->intval == 2 )
             {
                 cur++;
-                arg = *cur;
+                arg = cur->pointerval;
                 cur++;
             }
 
@@ -298,7 +299,7 @@ prim_reduce(
                 /* FIXME: creating a new term for each argument is quite a waste */
                 arg = reduce_arg( term__subterm_at( term, j + 1 ) );
 
-                cur += ( unsigned int ) *cur;
+                cur += cur->intval;
             }
 
             /* Abandon application along this argument path. */
@@ -324,12 +325,12 @@ prim_reduce(
 
     /* Pick out the primitive to be applied. */
     cur = term->head + 2;
-    p = ( ( Object* ) *cur )->value;
+    p = ( ( Object* ) cur->pointerval )->value;
 
     if ( PRIM__ALLOW_NULLARY )
     {
         args = ( p->arity )
-            ? malloc( p->arity * sizeof( void* ) )
+            ? malloc( p->arity * sizeof( term_cell ) )
             : 0;
     }
 
@@ -338,7 +339,7 @@ prim_reduce(
         if ( DEBUG__SAFE && !p->arity )
             ABORT;
 
-        args = malloc( p->arity * sizeof( void* ) );
+        args = malloc( p->arity * sizeof( term_cell ) );
     }
 
     /* Advance to the first argument. */
@@ -354,9 +355,9 @@ prim_reduce(
 
     /* Replace the primitive reference and its arguments with the return value. */
     cur--;
-    *cur = result;
+    cur->pointerval = result;
     cur--;
-    *cur = ( void* ) 2;
+    cur->intval = 2;
 
     if ( term->buffer + term->buffer_size - cur > 2 )
         term->head = cur - 1;
@@ -364,7 +365,7 @@ prim_reduce(
     else
         term->head = cur;
 
-    *( term->head ) = ( void* ) ( term->buffer + term->buffer_size - term->head );
+    term->head->intval = term->buffer + term->buffer_size - term->head;
 
     goto finish;
 
@@ -389,32 +390,32 @@ term_reduce( Term *term )
     unsigned int size, newsize;
     Term *head_term;
 
-    if ( ( unsigned int ) *( term->head ) == 2 )
+    if ( term->head->intval == 2 )
     {
-        head_term = ( ( Object* ) *( term->head + 1 ) )->value;
+        head_term = ( ( Object* ) ( term->head + 1 )->pointerval )->value;
         term__delete( term );
         return term__copy( head_term );
     }
 
     else
     {
-        head_term = ( ( Object* ) *( term->head + 2 ) )->value;
+        head_term = ( ( Object* ) ( term->head + 2 )->pointerval )->value;
 
-        size = ( unsigned int ) *head_term->head;
+        size = head_term->head->intval;
 
-        newsize = ( unsigned int ) *term->head + size - 2;
+        newsize = term->head->intval + size - 2;
         if ( newsize > term->buffer_size )
             term = term__expand( term, newsize );
 
         /*term->head = term->buffer;*/
-        /*term->head = term->buffer + term->buffer_size - ( unsigned int ) *term->head + 3 - size;*/
+        /*term->head = term->buffer + term->buffer_size - term->head->intval + 3 - size;*/
         term->head += 3 - size;
 
-        memcpy( term->head, head_term->head, size * sizeof ( void* ) );
+        memcpy( term->head, head_term->head, size * sizeof ( term_cell ) );
 
-        if ( ( unsigned int ) *term->head == 2 )
+        if ( term->head->intval == 2 )
             term->head--;
-        *term->head = ( void* ) ( term->buffer + term->buffer_size - term->head );
+        term->head->intval = term->buffer + term->buffer_size - term->head;
 
         return term;
     }
@@ -424,16 +425,14 @@ term_reduce( Term *term )
 static void
 print_term( Term *t )
 {
-    void **cur = t->head, **lim = cur + ( unsigned int ) *cur;
-    unsigned int i;
+    term_cell *cur = t->head, *lim = cur + cur->intval;
 
     while ( cur < lim )
     {
-        i = ( unsigned int ) *cur;
-        if ( i < 0x1000 )
-            PRINT( " %i", i );
+        if ( cur->intval < 0x1000 )
+            PRINT( " %i", cur->intval );
         else
-            PRINT( " %#x", i );
+            PRINT( " %p", cur->pointerval );
         cur++;
     }
 
@@ -481,19 +480,19 @@ PRINT( "\n" );  fflush( stdout );
 */
         /* Give up if the term becomes too large. */
         if ( COMPILER__MAX_TERM_SIZE > 0
-          && ( unsigned int ) *( term->head ) > COMPILER__MAX_TERM_SIZE )
+          && ( unsigned int ) term->head->intval > COMPILER__MAX_TERM_SIZE )
         {
             ERROR( "term__reduce: abandoned (term might expand indefinitely)" );
             goto fail;
         }
 
         /* Singleton term. */
-        if ( ( unsigned int ) *( term->head ) == 2 )
-            head = *( term->head + 1 );
+        if ( ( unsigned int ) term->head->intval == 2 )
+            head = ( term->head + 1 )->pointerval;
 
         /* Left-associative sequence. */
         else
-            head = *( term->head + 2 );
+            head = ( term->head + 2 )->pointerval;
 
         /* There should be no way for nulls to appear at the head of a term. */
         if ( DEBUG__SAFE && !head )

@@ -43,6 +43,7 @@
          use static libraries
 
 [other]
+    fix all FIXMEs
     "cstring" --> "String"
     triples
         sets ^ distribution
