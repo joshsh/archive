@@ -1,7 +1,7 @@
 #ifndef CSTRING_H
 #define CSTRING_H
 
-#include <common.h>
+#include <phase2/common.h>
 
 
 /** $decoder */

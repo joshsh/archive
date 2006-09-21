@@ -31,9 +31,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define ENVIRONMENT_H
 
 
-#include <Manager.h>
-#include <Namespace.h>
-#include <Primitive.h>
+#include <phase2/Manager.h>
+#include <phase2/Namespace.h>
+#include <phase2/Primitive.h>
 
 
 /** A data structure which is equivalent to a namespace containing uniquely

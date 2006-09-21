@@ -21,12 +21,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define OBJECT_IMPL_H
 
 
-#include <Object.h>
+#include <phase2/Object.h>
 #include "../type/Type-impl.h"
 
 
 #if TRIPLES__GLOBAL
-#include <collection/Hash_Map.h>
+#include <phase2/collection/Hash_Map.h>
 #endif
 
 

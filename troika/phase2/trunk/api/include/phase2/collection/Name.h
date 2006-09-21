@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define NAME_H
 
 
-#include <collection/Array.h>
+#include <phase2/collection/Array.h>
 
 
 /** An array of strings representing a path to an object in a particular

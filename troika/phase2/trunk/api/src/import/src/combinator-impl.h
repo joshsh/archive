@@ -1,8 +1,8 @@
 #ifndef COMBINATOR_IMPL_H
 #define COMBINATOR_IMPL_H
 
-#include <common.h>
-#include <Combinator.h>
+#include <phase2/common.h>
+#include <phase2/Combinator.h>
 
 
 /** $decoder */

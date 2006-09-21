@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PRIMITIVE_IMPL_H
 
 
-#include <Primitive.h>
+#include <phase2/Primitive.h>
 #include "settings.h"
 
 

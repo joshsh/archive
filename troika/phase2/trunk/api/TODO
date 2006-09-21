@@ -5,6 +5,7 @@
     bug: _new test; test:self := test; here;
 
 [general]
+    remove duplicate code in debug.c
     use String instead of char* for Encoders
     rework dependencies in collection, parser
     rework Bunch to hold objects by value rather than by reference

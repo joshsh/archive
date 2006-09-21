@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <compiler.h>
-#include <collection/Set.h>
+#include <phase2/compiler.h>
+#include <phase2/collection/Set.h>
 #include "../object/Object-impl.h"
 #include "../primitive/Primitive-impl.h"
 #include "../collection/Term-impl.h"

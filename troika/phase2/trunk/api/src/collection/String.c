@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <collection/String.h>
+#include <phase2/collection/String.h>
 #include "../settings.h"
 
 

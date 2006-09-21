@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define TERM_IMPL_H
 
 
-#include <collection/Term.h>
+#include <phase2/collection/Term.h>
 #include "../settings.h"
 
 

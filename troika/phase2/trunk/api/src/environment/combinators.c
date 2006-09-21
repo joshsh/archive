@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <Combinator.h>
+#include <phase2/Combinator.h>
 
 #include "Environment-impl.h"
 

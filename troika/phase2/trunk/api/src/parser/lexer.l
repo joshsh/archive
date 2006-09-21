@@ -105,7 +105,6 @@ putchar('.');\
 
 
 #include "parser.h"
-#include <common.h>
 #include "Parser-impl.h"
 
 /*#include "header.h"*/

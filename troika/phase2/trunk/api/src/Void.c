@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *****************************************************************************/
 
-#include <Void.h>
+#include <phase2/Void.h>
 #include "settings.h"
 
 

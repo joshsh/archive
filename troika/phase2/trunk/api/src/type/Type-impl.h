@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define TYPE_IMPL_H
 
 
-#include <Type.h>
+#include <phase2/Type.h>
 #include "../settings.h"
 
 

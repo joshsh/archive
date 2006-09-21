@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define ARRAY_H
 
 
-#include <Type.h>
+#include <phase2/Type.h>
 
 
 /** An expanding array of void pointers, suitable for use as a stack,

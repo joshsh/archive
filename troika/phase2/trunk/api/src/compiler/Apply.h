@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef APPLY_H
 #define APPLY_H
 
-#include <Object.h>
+#include <phase2/Object.h>
 
 typedef struct Apply Apply;
 
@@ -47,12 +47,12 @@ apply__delete( Apply *a );
 extern void
 apply__walk( Apply *a, Visitor f );
 
-#include <collection/Term.h>
+#include <phase2/collection/Term.h>
 
 extern Term *
 apply__as_term( Apply *a, Type *apply_type, Type *indirection_type );
 
-#include <Manager.h>
+#include <phase2/Manager.h>
 
 extern Object *
 term__to_apply_tree( Term *t, Manager *m, Type *apply_type );

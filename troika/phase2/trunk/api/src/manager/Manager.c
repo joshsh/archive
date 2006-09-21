@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <Manager.h>
-#include <collection/Collection.h>
+#include <phase2/Manager.h>
+#include <phase2/collection/Collection.h>
 #include "../object/Object-impl.h"
 
 #include <time.h>

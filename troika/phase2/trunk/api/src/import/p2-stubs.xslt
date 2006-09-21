@@ -32,7 +32,7 @@ extern &quot;C&quot;
 {
 #endif
 
-#include &lt;common.h&gt;
+#include &lt;phase2/common.h&gt;
 #include &quot;settings.h&quot;
 <xsl:text />
         <xsl:for-each select="compounddef">
@@ -114,7 +114,7 @@ extern &quot;C&quot;
 
     <xsl:template name="p2__import_primitives">
 
-#include &lt;Primitive-import.h&gt;
+#include &lt;phase2/Primitive-import.h&gt;
 
 
 #define RT  1  /* Referentially transparent. */

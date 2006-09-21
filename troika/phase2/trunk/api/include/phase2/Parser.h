@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PARSER_H
 
 
-#include <Interpreter.h>
+#include <phase2/Interpreter.h>
 
 
 typedef struct Parser Parser;

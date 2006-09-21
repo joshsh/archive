@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define HASH_TABLE_H
 
 
-#include <common.h>
+#include <phase2/common.h>
 #include <stddef.h>  /* For size_t */
 
 

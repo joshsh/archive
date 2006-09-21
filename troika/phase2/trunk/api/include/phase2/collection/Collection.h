@@ -31,8 +31,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COLLECTION_H
 
 
-#include <Object.h>
-#include <collection/Array.h>
+#include <phase2/Object.h>
+#include <phase2/collection/Array.h>
 
 
 /** A collection is an object with a "walk" method. */

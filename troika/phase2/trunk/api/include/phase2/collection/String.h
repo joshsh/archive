@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 /*#include <stdarg.h>*/
 
-/*#include <common.h>*/
+/*#include <phase2/common.h>*/
 
 /** An expanding string of characters. */
 typedef struct String String;

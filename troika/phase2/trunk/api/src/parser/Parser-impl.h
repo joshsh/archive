@@ -21,9 +21,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PARSER_IMPL_H
 
 
-#include <Parser.h>
-#include <collection/Name.h>
-#include <collection/Array.h>
+#include <phase2/Parser.h>
+#include <phase2/collection/Name.h>
+#include <phase2/collection/Array.h>
 #include "../compiler/Apply.h"
 #include "../type/Type-impl.h"
 

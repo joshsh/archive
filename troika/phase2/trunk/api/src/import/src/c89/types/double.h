@@ -1,7 +1,7 @@
 #ifndef DOUBLE_H
 #define DOUBLE_H
 
-#include <common.h>
+#include <phase2/common.h>
 
 
 /** $decoder */

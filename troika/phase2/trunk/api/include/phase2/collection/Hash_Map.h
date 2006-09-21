@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define HASH_MAP_H
 
 
-#include <collection/Hash_Table.h>
+#include <phase2/collection/Hash_Table.h>
 
 
 /** A hash table which binds key objects to target objects. */

@@ -33,10 +33,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define COMPILER_H
 
 
-#include <Manager.h>
-#include <collection/Array.h>
-#include <collection/Term.h>
-#include <Combinator.h>
+#include <phase2/Manager.h>
+#include <phase2/collection/Array.h>
+#include <phase2/collection/Term.h>
+#include <phase2/Combinator.h>
 
 
 /** Initializes the graph reducer. */

@@ -1,7 +1,7 @@
 #ifndef XPM_H
 #define XPM_H
 
-#include <common.h>
+#include <phase2/common.h>
 
 
 /** $decoder */

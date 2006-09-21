@@ -28,8 +28,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <common.h>
-#include <xml/xmldom.h>
+#include <phase2/common.h>
+#include <phase2/xml/xmldom.h>
 #include "../settings.h"
 
 #define UC  ( unsigned char* )

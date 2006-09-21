@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef INDIRECTION_H
 #define INDIRECTION_H
 
-#include <Type.h>
+#include <phase2/Type.h>
 
 
 extern Type *

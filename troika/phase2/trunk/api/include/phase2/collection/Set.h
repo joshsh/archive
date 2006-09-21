@@ -31,10 +31,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define SET_H
 
 
-#include <collection/Hash_Table.h>
-    #include <collection/Array.h>
+#include <phase2/collection/Hash_Table.h>
+    #include <phase2/collection/Array.h>
 
-#include <Type.h>
+#include <phase2/Type.h>
 
 
 /** An enumerable set of elements. */

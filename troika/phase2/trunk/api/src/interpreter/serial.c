@@ -20,8 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <time.h>
 
-#include <collection/Set.h>
-#include <xml/xmldom.h>
+#include <phase2/collection/Set.h>
+#include <phase2/xml/xmldom.h>
 
 #include "../revision.h"
 

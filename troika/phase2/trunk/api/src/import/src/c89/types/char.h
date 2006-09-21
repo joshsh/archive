@@ -1,7 +1,7 @@
 #ifndef CHAR_H
 #define CHAR_H
 
-#include <common.h>
+#include <phase2/common.h>
 
 
 /** $decoder */

@@ -46,7 +46,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define TERM_H
 
 
-#include <Type.h>
+#include <phase2/Type.h>
 
 
 /** A nested sequence of objects.  A term can be thought of as a parenthesized

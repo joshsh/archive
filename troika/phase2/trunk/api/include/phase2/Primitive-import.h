@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef PRIMITIVE_IMPORT_H
 #define PRIMITIVE_IMPORT_H
 
-#include <Environment.h>
+#include <phase2/Environment.h>
 
 
 /** \return  An incomplete function primitive */

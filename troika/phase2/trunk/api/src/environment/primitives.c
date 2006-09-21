@@ -22,10 +22,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #if TRIPLES__GLOBAL
 
-#include <compiler.h>
+#include <phase2/compiler.h>
 #include "../compiler/Apply.h"
 
-#include <Primitive-import.h>
+#include <phase2/Primitive-import.h>
     #include "../primitive/Primitive-impl.h"
 
 
@@ -206,7 +206,7 @@ add_triples_prims( Environment *env )
 /******************************************************************************/
 
 
-#include <collection/Set.h>
+#include <phase2/collection/Set.h>
 
 
 static void *

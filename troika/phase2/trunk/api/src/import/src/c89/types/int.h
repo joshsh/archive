@@ -1,7 +1,7 @@
 #ifndef INT_H
 #define INT_H
 
-#include <common.h>
+#include <phase2/common.h>
 
 
 /** $decoder */
