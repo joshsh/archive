@@ -2,13 +2,19 @@
     _mv and _new issues (^ source namespace)
     resolution of ambiguous identifiers (e.g. int:sq vs double:sq from root in test.p2)
     object ^ print ^ cycles
-    test.p2 ^ exit ^ ABORT
+    bug: _new test; test:self := test; here;
 
-[coding]
+[general]
     use String instead of char* for Encoders
     rework dependencies in collection, parser
     rework Bunch to hold objects by value rather than by reference
     semaphores --> eliminate global variables
+    fix all FIXMEs
+        grep FIXME `grep FIXME * -Rl | grep c$`
+    "cstring" --> "String"
+    triples
+        sets ^ distribution
+        meta-functions
 
 [docs]
     doxygen script --> revision # in docs
@@ -38,14 +44,6 @@
     include examples dir in distribution
     [ARM cross-compile]
          use static libraries
-
-[other]
-    fix all FIXMEs
-        grep FIXME `grep FIXME * -Rl | grep c$`
-    "cstring" --> "String"
-    triples
-        sets ^ distribution
-        meta-functions
 
 
 ................................................................................

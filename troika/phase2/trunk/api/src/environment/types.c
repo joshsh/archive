@@ -38,7 +38,7 @@ environment__register_type( Environment *env, Type *type )
 
 
 OBJ( TYPE ) *
-environment__resolve_type( Environment *env, const char *name )
+environment__resolve_type( Environment *env, const char *name, boolean create_if_absent )
 {
     Object *o;
     Type *type;
@@ -49,12 +49,15 @@ environment__resolve_type( Environment *env, const char *name )
     if ( !( o = namespace__lookup_simple( ( Namespace* ) env->types->value, name ) ) )
     {
         /* If not found, create the type and hope for the best. */
-        if ( ( type = type__new( name, 0 ) ) )
+        if ( create_if_absent )
         {
-            /* Note: all object collection types are registered explicitly. */
-            if ( !( o = environment__register_type( env, type ) ) )
+            if ( ( type = type__new( name, 0 ) ) )
             {
-                type__delete( type );
+                /* Note: all object collection types are registered explicitly. */
+                if ( !( o = environment__register_type( env, type ) ) )
+                {
+                    type__delete( type );
+                }
             }
         }
     }

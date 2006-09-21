@@ -313,7 +313,7 @@ int_nonzero_stub( void **args )
     else
     {
         o = manager__object( global_env->manager,
-                object__value( environment__resolve_type( global_env, NAMEOF( APPLY ) ) ),
+                object__value( environment__resolve_type( global_env, NAMEOF( APPLY ), FALSE ) ),
                 apply__new(
                     environment__resolve_combinator( global_env, "S" ),
                     environment__resolve_combinator( global_env, "K" ) ), NOFLAGS );
@@ -402,7 +402,7 @@ environment__register_primitive
 {
     Object *o;
 
-    Type *t = environment__resolve_type( env, NAMEOF( PRIMITIVE ) )->value;
+    Type *t = environment__resolve_type( env, NAMEOF( PRIMITIVE ), FALSE )->value;
 
     Type *first_param = primitive__parameter_type( prim, 0 );
 

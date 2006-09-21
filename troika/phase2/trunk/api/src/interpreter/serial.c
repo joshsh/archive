@@ -30,6 +30,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../compiler/Apply.h"
 
 
+#define ATTR_ID     "id"
+#define ATTR_NAME   "name"
+#define ATTR_REF    "ref"
+#define ATTR_TYPE   "type"
+
 typedef unsigned char uc;
 
 
@@ -168,6 +173,125 @@ set_decoder( Type *t, Xml_Decoder decode, Hash_Map *deserializers )
 }
 
 
+
+static unsigned int
+get_attr__id( Element *el, Xml_Decode_Ctx *state )
+{
+    Attr *attr;
+    char *text;
+    unsigned int id;
+
+    if ( DEBUG__SAFE && ( !el || !state ) )
+        ABORT;
+
+    state = 0;
+
+    attr = element__attr( el, ( uc* ) ATTR_ID, 0 );
+
+    if ( attr )
+    {
+        text = ( char* ) attr__value( attr );
+        id = ( unsigned int ) atoi( text );
+        free( text );
+    }
+
+    else
+        id = 0;
+
+    return id;
+}
+
+
+static unsigned int
+get_attr__ref( Element *el, Xml_Decode_Ctx *state )
+{
+    Attr *attr;
+    char *text;
+    unsigned int id;
+
+    if ( DEBUG__SAFE && ( !el || !state ) )
+        ABORT;
+
+    state = 0;
+
+    attr = element__attr( el, ( uc* ) ATTR_REF, 0 );
+
+    if ( attr )
+    {
+        text = ( char* ) attr__value( attr );
+        id = ( unsigned int ) atoi( text );
+        free( text );
+    }
+
+    else
+        id = 0;
+
+    return id;
+}
+
+
+static Type *
+get_attr__type( Element *el, Xml_Decode_Ctx *state )
+{
+    Attr *attr;
+    char *text;
+    Type *t;
+    Object *o;
+
+    if ( DEBUG__SAFE && ( !el || !state ) )
+        ABORT;
+
+    attr = element__attr( el, ( uc* ) ATTR_TYPE, 0 );
+
+    if ( attr )
+    {
+        text = ( char* ) attr__value( attr );
+
+        if ( !strcmp( text, NAMEOF( APPLY ) ) )
+            t = state->itp->apply_t;
+
+        else
+        {
+            o = environment__resolve_type( interpreter__environment( state->itp ), text, FALSE );
+            if ( !o )
+                WARNING( "type '%s' not found", text );
+
+            t = o ? o->value : 0;
+        }
+
+        free( text );
+    }
+
+    else
+        t = 0;
+
+    return t;
+}
+
+
+static char *
+get_attr__name( Element *el, Xml_Decode_Ctx *state )
+{
+    Attr *attr;
+    char *text;
+
+    if ( DEBUG__SAFE && ( !el || !state ) )
+        ABORT;
+
+    state = 0;
+
+    attr = element__attr( el, ( uc* ) ATTR_NAME, 0 );
+
+    if ( attr )
+        text = ( char* ) attr__value( attr );
+
+    else
+        text = 0;
+
+    return text;
+}
+
+
 /* Serializers for individual types *******************************************/
 
 
@@ -244,7 +368,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
         Object *o = namespace__lookup_simple( ns, *name );
 
         Element *child = object__xml_encode( o, state, 0 );
-        attr__new( child, ( uc* ) "name", ( uc* ) *name, 0 );
+        attr__new( child, ( uc* ) ATTR_NAME, ( uc* ) *name, 0 );
 
         element__add_child( el, child );
 
@@ -312,20 +436,18 @@ apply__xml_encode( Apply *a, Xml_Encode_Ctx *state )
 
 
 static Array *
-bag__xml_decode( Element *el, Xml_Decode_Ctx *state )
+array__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Array *a;
     Element *child;
     Object *o;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-    {
-        ERROR( "bag__xml_decode: null argument" );
-        return 0;
-    }
+        ABORT;
+
     else if ( strcmp( ( char* ) element__name( el ), ARRAY__XML__NAME ) )
     {
-        ERROR( "bag__xml_decode: bad element name" );
+        ERROR( "array__xml_decode: bad element name" );
         return 0;
     }
 
@@ -387,7 +509,6 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
     Namespace *ns;
     Element *child;
-    Attr *attr;
     Object *o;
     char *text;
 
@@ -405,9 +526,9 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     child = element__first_child( el );
     while ( child )
     {
-        attr = element__attr( child, ( uc* ) "name", 0 );
+        text = get_attr__name( child, state );
 
-        if ( DEBUG__SAFE && !attr )
+        if ( DEBUG__SAFE && !text )
         {
             ERROR( "namespace__xml_decode: missing 'name' attribute" );
             namespace__delete( ns );
@@ -415,8 +536,8 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
         }
 
         o = object__xml_decode( child, state );
-        text = ( char* ) attr__value( attr );
-        namespace__add_simple( ns, text, o );
+        if ( o )
+            namespace__add_simple( ns, text, o );
         free( text );
 
         child = element__next_sibling( child );
@@ -487,7 +608,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         if ( FIRST_CLASS_NULL )
         {
             el = element__new( 0, ( uc* ) "object", 0 );
-            attr__new( el, ( uc* ) "ref", ( uc* ) "0", 0 );
+            attr__new( el, ( uc* ) ATTR_REF, ( uc* ) "0", 0 );
             return el;
         }
 
@@ -514,14 +635,14 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         if ( o->type == state->itp->combinator_t
           || o->type == state->itp->type_t )
         {
-            attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+            attr__new( el, ( uc* ) ATTR_TYPE, ( uc* ) o->type->name, 0 );
             o->type->encode( o->value, state->buffer );
             element__add_text( el, ( uc* ) state->buffer );
         }
 
         else if ( o->type == state->itp->prim_t )
         {
-            attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+            attr__new( el, ( uc* ) ATTR_TYPE, ( uc* ) o->type->name, 0 );
             name = primitive__name( o->value );
             sprintf( state->buffer, name );
             free( name );
@@ -530,7 +651,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
         else
         {
-            attr__new( el, ( uc* ) "ref", ( uc* ) state->buffer, 0 );
+            attr__new( el, ( uc* ) ATTR_REF, ( uc* ) state->buffer, 0 );
         }
     }
 
@@ -541,9 +662,9 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 
         /* Only multireferenced objects have ids. */
         if ( top_level )
-            attr__new( el, ( uc* ) "id", ( uc* ) state->buffer, 0 );
+            attr__new( el, ( uc* ) ATTR_ID, ( uc* ) state->buffer, 0 );
 
-        attr__new( el, ( uc* ) "type", ( uc* ) o->type->name, 0 );
+        attr__new( el, ( uc* ) ATTR_TYPE, ( uc* ) o->type->name, 0 );
 
         encode = get_encoder( o->type, state->serializers );
 /*
@@ -581,7 +702,6 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
 static Object *
 object__xml_decode( Element *el, Xml_Decode_Ctx *state )
 {
-    Attr *attr;
     Object *o;
     unsigned int id;
     Type *type;
@@ -602,25 +722,10 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     env = interpreter__environment( state->itp );
 
     /* Full form. */
-    if ( ( attr = element__attr( el, ( uc* ) "type", 0 ) ) )
+    type = get_attr__type( el, state );
+
+    if ( type )
     {
-        text = ( char* ) attr__value( attr );
-
-        if ( !strcmp( text, NAMEOF( APPLY ) ) )
-            type = state->itp->apply_t;
-
-        else
-            type = environment__resolve_type( env, text )->value;
-
-        if ( !type )
-        {
-            ERROR( "object__xml_decode: bad type" );
-            free( text );
-            return 0;
-        }
-
-        free( text );
-
         if ( type == state->itp->combinator_t )
         {
             text = ( char* ) element__text( el );
@@ -638,18 +743,16 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
         else if ( type == state->itp->type_t )
         {
             text = ( char* ) element__text( el );
-            o = environment__resolve_type( env, text );
+            o = environment__resolve_type( env, text, FALSE );
             free( text );
         }
 
         else
         {
-            if ( ( attr = element__attr( el, ( uc* ) "id", 0 ) ) )
-            {
-                text = ( char* ) attr__value( attr );
-                id = ( unsigned int ) atoi( text );
-                free( text );
+            id = get_attr__id( el, state );
 
+            if ( id )
+            {
                 o = ( Object* ) hash_map__lookup( state->objects_by_id, int2pointer( id ) );
 
                 if ( !o )
@@ -691,8 +794,11 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 o->value = decode( child, state );
 
                 if ( !o->value )
+                {
 /* FIXME: This could cause a segfault later on. */
                     o = 0;
+                    WARNING( "decode() returned a null object" );
+                }
             }
 
             /* Decode element text. */
@@ -706,17 +812,15 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     }
 
     /* Reference form. */
-    else if ( ( attr = element__attr( el, ( uc* ) "ref", 0 ) ) )
+    else
     {
-        text = ( char* ) attr__value( attr );
-        id = ( unsigned int ) atoi( text );
+        id = get_attr__ref( el, state );
 
         if ( FIRST_CLASS_NULL && !id )
             o = 0;
 
         else
         {
-            free( text );
             o = ( Object* ) hash_map__lookup
                 ( state->objects_by_id, int2pointer( id ) );
 
@@ -730,12 +834,6 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
                 hash_map__add( state->objects_by_id, int2pointer( id ), o );
             }
         }
-    }
-
-    else
-    {
-        ERROR( "object__xml_decode: missing attribute" );
-        o = 0;
     }
 
     return o;
@@ -952,16 +1050,12 @@ interpreter__serialize( Interpreter *c, const char *path )
         ( Visitor2 ) function_wrapper__delete );
     hash_map__delete( state.serializers );
 
-printf( "path (1): %s\n", path );
     document__write_to_file( doc, path );
-printf( "path (2): %s\n", path );
     document__delete( doc );
 
     xmldom__end();
 
-printf( "path (3): %s\n", path );
     itp__update_save_path( c, path );
-printf( "path (4): %s\n", path );
 }
 
 
@@ -1003,7 +1097,7 @@ interpreter__deserialize( Interpreter *c, const char *path )
     set_decoder( c->apply_t, ( Xml_Decoder ) apply__xml_decode, state.deserializers );
     /* Note: no decoder is needed for the indirection type, as indirection nodes are
        "invisible" to the serializer/deserializer. */
-    set_decoder( c->bag_t, ( Xml_Decoder ) bag__xml_decode, state.deserializers );
+    set_decoder( c->bag_t, ( Xml_Decoder ) array__xml_decode, state.deserializers );
     set_decoder( c->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );
     set_decoder( c->set_t, ( Xml_Decoder ) set__xml_decode, state.deserializers );
     set_decoder( c->term_t, ( Xml_Decoder ) term__xml_decode, state.deserializers );

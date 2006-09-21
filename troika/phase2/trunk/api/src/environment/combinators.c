@@ -56,7 +56,7 @@ add_combinators( Environment *env )
 {
     Manager *m = env->manager;
     Namespace *ns = env->combinators->value;
-    Type *t = environment__resolve_type( env, NAMEOF( COMBINATOR ) )->value;
+    Type *t = environment__resolve_type( env, NAMEOF( COMBINATOR ), FALSE )->value;
 
     if ( !(
             add( B )

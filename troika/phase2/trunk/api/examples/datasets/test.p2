@@ -350,7 +350,7 @@ static char * tux_xpm[] = {
     <object ref="100"/>
   </triple>
   <object id="41" type="char">w</object>
-  <object id="42" type="Bag">
+  <object id="42" type="Array">
     <list>
       <object ref="107"/>
       <object ref="14"/>
@@ -1319,7 +1319,7 @@ static char * tux_xpm[] = {
           </object>
           <object type="Namespace" name="definitions">
             <table>
-              <object type="Bag" name="abelian group">
+              <object type="Array" name="abelian group">
                 <list>
                   <object ref="42"/>
                   <object ref="55"/>
@@ -1481,13 +1481,13 @@ k 	k 	j 	i 	1</object>
           <object ref="150" name="rabbit"/>
           <object type="Namespace" name="rhythm">
             <table>
-              <object type="Bag" name="a">
+              <object type="Array" name="a">
                 <list>
                   <object type="cstring">|.xxx|x.x.|</object>
                   <object ref="93"/>
                 </list>
               </object>
-              <object type="Bag" name="b">
+              <object type="Array" name="b">
                 <list>
                   <object type="cstring">|xxxx|x.xx|</object>
                   <object type="cstring">Sandstorm</object>
@@ -2384,7 +2384,7 @@ static char * mac2_xpm[] = {
     <object type="Primitive">int_int__add</object>
   </triple>
   <object id="106" type="Combinator">S</object>
-  <object id="107" type="Bag">
+  <object id="107" type="Array">
     <list>
       <object ref="85"/>
       <object ref="92"/>

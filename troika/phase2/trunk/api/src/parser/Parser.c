@@ -43,7 +43,7 @@ parser__new( Interpreter *itp )
 
     Environment *e = interpreter__environment( itp );
 
-#define BIND(x)    p->TYPEOBJ( x ) = environment__resolve_type( e, NAMEOF( x ) )
+#define BIND(x)    p->TYPEOBJ( x ) = environment__resolve_type( e, NAMEOF( x ), FALSE )
 
     if ( !(
         ( BIND( APPLY ) )

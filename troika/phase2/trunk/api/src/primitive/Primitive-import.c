@@ -30,7 +30,7 @@ resolve_type( Environment *env, const char *name )
         return any_type;
     else
     {
-        if ( ( o = environment__resolve_type( env, name ) ) )
+        if ( ( o = environment__resolve_type( env, name, TRUE ) ) )
             return object__value( o );
 
         else

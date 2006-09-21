@@ -69,7 +69,7 @@ environment__register_type( Environment *env, Type *type );
 
 /** \return  the type object with the given name, if any */
 extern OBJ( TYPE ) *
-environment__resolve_type( Environment *env, const char *name );
+environment__resolve_type( Environment *env, const char *name, boolean create_if_absent );
 
 
 extern Type *
