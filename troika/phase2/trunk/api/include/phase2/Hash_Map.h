@@ -1,8 +1,8 @@
 /**
 
-\file  Name.h
+\file  Hash_Map.h
 
-\brief  Provides a "lexical path" class for namespaces.
+\brief  Provides an address-based lookup table class.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -27,44 +27,51 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef NAME_H
-#define NAME_H
+#ifndef HASH_MAP_H
+#define HASH_MAP_H
 
 
-#include <phase2/collection/Array.h>
+#include <phase2/Hash_Table.h>
 
 
-/** An array of strings representing a path to an object in a particular
-    namespace. */
-typedef Array Name;
+/** A hash table which binds key objects to target objects. */
+typedef Hash_Table Hash_Map;
 
 
-#define name__peek( name )  ( char* ) array__peek( name )
-#define name__pop( name )  ( char* ) array__pop( name )
-#define name__push( name, s )  array__push( (name), (s) )
-
-/** \return  an empty name */
-extern Name *
-name__new( void );
+/** \return  a new, empty hash map */
+extern Hash_Map *
+hash_map__new( void );
 
 /** Destructor. */
 extern void
-name__delete( Name *name );
+hash_map__delete( Hash_Map *t );
 
-/** Extend the name by a single key. */
+
+#define hash_map__size  hash_table__size
+
+/** Adds a key/target pair to the hash map. */
 extern void
-name__append( Name *name, const char *key );
+hash_map__add( Hash_Map *t, void * const key, void * const target );
 
-/** Print the name as a colon-delimited list, e.g. "root:data:newstuff:foo" */
+/** \return  the target value bound to the given key value in the hash map */
+extern void *
+hash_map__lookup( Hash_Map *t, void * const key );
+
+/** Removes the pair with the given key. */
 extern void
-name__print( Name *name );
+hash_map__remove( Hash_Map *t, void * const src );
 
-/** Encode the name as a colon-delimited list, e.g. "root:data:newstuff:foo"
-    \param buffer  the character buffer to write to */
+
+/** Distributes f to the target value of each pair in the map. */
 extern void
-name__encode( Name *name, char *buffer );
+hash_map__walk( Hash_Map *t, Visitor f );
+
+/** Distributes f_key to the key value and f_target to the target value (in that
+    order) of each pair in the map. */
+extern void
+hash_map__walk2( Hash_Map *t, Visitor2 f );
 
 
-#endif  /* NAME_H */
+#endif  /* HASH_MAP_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

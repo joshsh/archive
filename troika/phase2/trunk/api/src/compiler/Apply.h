@@ -47,7 +47,7 @@ apply__delete( Apply *a );
 extern void
 apply__walk( Apply *a, Visitor f );
 
-#include <phase2/collection/Term.h>
+#include <phase2/Term.h>
 
 extern Term *
 apply__as_term( Apply *a, Type *apply_type, Type *indirection_type );

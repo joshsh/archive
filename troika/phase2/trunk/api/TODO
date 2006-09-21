@@ -41,7 +41,6 @@
     source dependencies (settings.h, etc.)
     tools dependencies (doxygen, xsltproc)
     svn log --> CHANGES
-    flatten include directory
     include examples dir in distribution
     [ARM cross-compile]
          use static libraries

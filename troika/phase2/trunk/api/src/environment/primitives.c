@@ -206,7 +206,7 @@ add_triples_prims( Environment *env )
 /******************************************************************************/
 
 
-#include <phase2/collection/Set.h>
+#include <phase2/Set.h>
 
 
 static void *

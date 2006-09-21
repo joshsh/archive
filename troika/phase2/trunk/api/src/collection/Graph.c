@@ -17,7 +17,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <phase2/collection/Graph.h>
+#include <phase2/Graph.h>
 #include "../settings.h"
 
 

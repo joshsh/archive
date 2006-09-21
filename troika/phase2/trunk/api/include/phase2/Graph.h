@@ -1,8 +1,8 @@
 /**
 
-\file  Hash_Map.h
+\file  Graph.h
 
-\brief  Provides an address-based lookup table class.
+\brief  Provides a sparse graph class.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -27,51 +27,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef HASH_MAP_H
-#define HASH_MAP_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
 
-#include <phase2/collection/Hash_Table.h>
+#include <phase2/Hash_Table.h>
 
 
-/** A hash table which binds key objects to target objects. */
-typedef Hash_Table Hash_Map;
+/** An object which stands in for an adjacency table.  Good for sparse graphs. */
+typedef Hash_Table Graph;
 
 
-/** \return  a new, empty hash map */
-extern Hash_Map *
-hash_map__new( void );
+/** \return  a new graph object */
+extern Graph *
+graph__new( void );
 
 /** Destructor. */
 extern void
-hash_map__delete( Hash_Map *t );
+graph__delete( Graph *g );
 
 
-#define hash_map__size  hash_table__size
-
-/** Adds a key/target pair to the hash map. */
+/** Adds an edge to the graph. */
 extern void
-hash_map__add( Hash_Map *t, void * const key, void * const target );
+graph__connect( Graph *g, void * const src, void * const dest );
 
-/** \return  the target value bound to the given key value in the hash map */
-extern void *
-hash_map__lookup( Hash_Map *t, void * const key );
-
-/** Removes the pair with the given key. */
+/** Removes an edge from the graph. */
 extern void
-hash_map__remove( Hash_Map *t, void * const src );
+graph__disconnect( Graph *g, void * const src, void * const dest );
 
 
-/** Distributes f to the target value of each pair in the map. */
-extern void
-hash_map__walk( Hash_Map *t, Visitor f );
-
-/** Distributes f_key to the key value and f_target to the target value (in that
-    order) of each pair in the map. */
-extern void
-hash_map__walk2( Hash_Map *t, Visitor2 f );
-
-
-#endif  /* HASH_MAP_H */
+#endif  /* GRAPH_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

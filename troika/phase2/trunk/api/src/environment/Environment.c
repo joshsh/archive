@@ -17,8 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <phase2/collection/Name.h>
-#include <phase2/collection/Term.h>
+#include <phase2/Name.h>
+#include <phase2/Term.h>
 
 #include "Environment-impl.h"
     #include "../compiler/Apply.h"

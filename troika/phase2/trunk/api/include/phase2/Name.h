@@ -1,8 +1,8 @@
 /**
 
-\file  Graph.h
+\file  Name.h
 
-\brief  Provides a sparse graph class.
+\brief  Provides a "lexical path" class for namespaces.
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -27,35 +27,44 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef GRAPH_H
-#define GRAPH_H
+#ifndef NAME_H
+#define NAME_H
 
 
-#include <phase2/collection/Hash_Table.h>
+#include <phase2/Array.h>
 
 
-/** An object which stands in for an adjacency table.  Good for sparse graphs. */
-typedef Hash_Table Graph;
+/** An array of strings representing a path to an object in a particular
+    namespace. */
+typedef Array Name;
 
 
-/** \return  a new graph object */
-extern Graph *
-graph__new( void );
+#define name__peek( name )  ( char* ) array__peek( name )
+#define name__pop( name )  ( char* ) array__pop( name )
+#define name__push( name, s )  array__push( (name), (s) )
+
+/** \return  an empty name */
+extern Name *
+name__new( void );
 
 /** Destructor. */
 extern void
-graph__delete( Graph *g );
+name__delete( Name *name );
 
-
-/** Adds an edge to the graph. */
+/** Extend the name by a single key. */
 extern void
-graph__connect( Graph *g, void * const src, void * const dest );
+name__append( Name *name, const char *key );
 
-/** Removes an edge from the graph. */
+/** Print the name as a colon-delimited list, e.g. "root:data:newstuff:foo" */
 extern void
-graph__disconnect( Graph *g, void * const src, void * const dest );
+name__print( Name *name );
+
+/** Encode the name as a colon-delimited list, e.g. "root:data:newstuff:foo"
+    \param buffer  the character buffer to write to */
+extern void
+name__encode( Name *name, char *buffer );
 
 
-#endif  /* GRAPH_H */
+#endif  /* NAME_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

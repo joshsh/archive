@@ -34,8 +34,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <phase2/Manager.h>
-#include <phase2/collection/Array.h>
-#include <phase2/collection/Term.h>
+#include <phase2/Array.h>
+#include <phase2/Term.h>
 #include <phase2/Combinator.h>
 
 

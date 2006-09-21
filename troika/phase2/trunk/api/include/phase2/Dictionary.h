@@ -31,8 +31,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define DICTIONARY_H
 
 
-#include <phase2/collection/Hash_Table.h>
-#include <phase2/collection/Array.h>
+#include <phase2/Hash_Table.h>
+#include <phase2/Array.h>
 
 
 typedef ACTION          ( *Dictionary_Visitor )( char *name, void **refp2 );

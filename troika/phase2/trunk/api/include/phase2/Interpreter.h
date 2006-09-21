@@ -34,8 +34,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 #include <phase2/Environment.h>
-#include <phase2/collection/Dictionary.h>
-#include <phase2/collection/Name.h>
+#include <phase2/Dictionary.h>
+#include <phase2/Name.h>
 
 
 /** An object which serves as a user interface to a Phase2 environment. */

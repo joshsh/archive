@@ -1,4 +1,4 @@
-#include <phase2/collection/Set.h>
+#include <phase2/Set.h>
 
 /** a - b */
 extern Set *

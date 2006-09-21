@@ -32,8 +32,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define MEMORY_MANAGER_H
 
 #include <phase2/Object.h>
-#include <phase2/collection/Bunch.h>
-#include <phase2/collection/Set.h>
+#include <phase2/Bunch.h>
+#include <phase2/Set.h>
 
 
 /** \note  A memory manager is a closed system.  It owns all objects passed to

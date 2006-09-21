@@ -15,15 +15,15 @@ nobase_include_HEADERS = \
 	phase2/Type.h			\
 	phase2/Void.h			\
 	phase2/Combinator.h		\
-	phase2/collection/Array.h	\
-	phase2/collection/Bunch.h	\
-	phase2/collection/Collection.h	\
-	phase2/collection/Dictionary.h	\
-	phase2/collection/Graph.h	\
-	phase2/collection/Hash_Map.h	\
-	phase2/collection/Hash_Table.h	\
-	phase2/collection/Name.h	\
-	phase2/collection/Set.h		\
-	phase2/collection/String.h	\
-	phase2/collection/Term.h	\
-	phase2/xml/xmldom.h
+	phase2/Array.h	\
+	phase2/Bunch.h	\
+	phase2/Collection.h	\
+	phase2/Dictionary.h	\
+	phase2/Graph.h	\
+	phase2/Hash_Map.h	\
+	phase2/Hash_Table.h	\
+	phase2/Name.h	\
+	phase2/Set.h		\
+	phase2/String.h	\
+	phase2/Term.h	\
+	phase2/xml.h

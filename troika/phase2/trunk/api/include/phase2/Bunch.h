@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef BUNCH_H
 #define BUNCH_H
 
-#include <phase2/collection/Array.h>
+#include <phase2/Array.h>
 
 
 /** An unordered collections of pointers. */
