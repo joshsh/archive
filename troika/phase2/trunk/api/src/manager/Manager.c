@@ -332,11 +332,12 @@ manager__trace( Manager *m,
     int marked;
     Array *visited_objects;
 
-    ACTION trace( Object **opp )
+    /* If an object has already been visited, do not apply the visitor function
+       a second time (but don't abort the walk). */
+    ACTION singlevisit_filter( Object **opp )
     {
         Object *o = DEREF( opp );
 
-        /* If the object is already marked, skip it (but don't abort the walk). */
         if ( visited( o ) )
             return CONTINUE;
 
@@ -412,7 +413,7 @@ manager__trace( Manager *m,
         unmark_all( m );
 
     m->clean = FALSE;
-    walk( root, ( Visitor ) trace );
+    walk( root, ( Visitor ) singlevisit_filter );
 /*
     walk( root, ( Visitor ) untrace );
 */

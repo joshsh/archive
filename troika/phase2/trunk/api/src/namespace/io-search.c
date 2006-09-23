@@ -21,142 +21,78 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <phase2/Hash_Map.h>
 
 
-/* Distribute f recursively (and in a breadth-first fashion) to any child
-   namespaces. */
 static void
-ns_walk_bfs( OBJ( NAMESPACE ) *ns_o, Visitor v )
+namespace__trace_bfs( OBJ( NAMESPACE ) *ns_o, Visitor v, Manager *m )
 {
     Array *queue;
     Type *t;
 
-    /* Distribute f over the children of the namespace which are themselves
-       namespaces. */
-    ACTION helper( Object **opp )
+    ACTION apply_visitor( Object **opp )
     {
         Object *o = DEREF( opp );
 
-        /* If we've found a namespace... */
-        if ( object__type( o ) == t )
+        if ( BREAK == v( ( void** ) opp ) )
         {
-            /* Apply the target function, and quit the traversal if so instructed. */
-            if ( BREAK == v( ( void** ) opp ) )
-            {
-                array__clear( queue );
-                return BREAK;
-/*
-                return CONTINUE;
-*/
-            }
-
-            /* Extend the traversal to this namespace's children. */
-            else
-            {
-                array__enqueue( queue, o );
-                return CONTINUE;
-            }
+            array__clear( queue );
+            return BREAK;
         }
 
-        /* Pass over objects which are not namespaces. */
+        /* Extend the traversal to this namespace's children. */
         else
+        {
+            array__enqueue( queue, o );
             return CONTINUE;
-    }
-
-    if ( DEBUG__SAFE && ( !ns_o || !v ) )
-        ABORT;
-
-    t = object__type( ns_o );
-
-    queue = array__new( 0, 0 );
-
-    helper( &ns_o );
-    /*array__push( queue, ns_o );*/
-
-    /* Breaks out when queue is empty (search exhausted or aborted). */
-    while ( array__size( queue ) )
-    {
-        namespace__walk(
-            object__value( array__pop( queue ) ),
-            ( Visitor ) helper );
-    }
-
-    array__delete( queue );
-}
-
-
-#ifdef NOT_FINISHED
-struct edge
-{
-    char *name;
-    OBJ( NAMESPACE ) *parent;
-};
-
-
-void
-namespace__map_back( OBJ( NAMESPACE ) *haystack,
-                     Set *needles,
-                     Hash_Map *map,
-                     Manager *m )
-{
-    if ( DEBUG__SAFE && ( !haystack || !needles || !map || !m ) )
-        ABORT;
-
-    /* Parent hierarchy. */
-    Hash_Map *edges = hash_map__new();
-
-    Type *t = object__type( haystack );
-    Name *name;
-
-    Name *get_name( struct edge *e )
-    {
-        name = name__new();
-
-        while ( e )
-        {
-            array__push( name, STRDUP( e->name ) );
-            e = ( e->parent )
-                ? hash_map__lookup( edges, ;
         }
-
-        do
-        {
-            key = dictionary__reverse_lookup( ( ( Namespace* ) object__value( parent ) )->children, o );
-            array__push( name, key );
-            o = parent;
-
-        } while ( ( parent = hash_map__lookup( parents, o ) ) );
     }
 
-    ACTION find( OBJ( NAMESPACE ) **nsopp )
+    /* Distribute f recursively (and in a breadth-first fashion) to any child
+    namespaces. */
+    void walk( Object *root, Visitor vis )
     {
-        ACTION helper( char *name, Object **opp )
+        /* Distribute f over the children of the namespace which are themselves
+        namespaces. */
+        ACTION visit_if_namespace( Object **opp )
         {
             Object *o = DEREF( opp );
 
-            if ( set__contains( needles, o ) )
-            {
-                hash_map__add( map, 
+            /* If we've found a namespace... */
+            if ( object__type( o ) == t )
+                /* Apply the target function, and quit the traversal if so instructed. */
+                return vis( ( void** ) opp );
 
-                set__remove( needles, o );
-
-                if ( !set__size( needles ) )
-                    return BREAK;
-            }
-
-            return CONTINUE;
+            /* Pass over objects which are not namespaces. */
+            else
+                return CONTINUE;
         }
 
-        dictionary__walk_special(
-            ( ( Namespace* ) object__value( *nsopp ) )->children,
-            ( Dictionary_Visitor ) helper );
+        if ( DEBUG__SAFE && ( !root || !v ) )
+            ABORT;
+
+        visit_if_namespace( &root );
+        /*array__push( queue, root );*/
+
+        /* Breaks out when queue is empty (search exhausted or aborted). */
+        while ( array__size( queue ) )
+        {
+            namespace__walk(
+                object__value( array__pop( queue ) ),
+                ( Visitor ) visit_if_namespace );
+        }
     }
 
-    /* So that the original set is not affected by the algorithm. */
-    needles = set__copy( needles );
+    if ( DEBUG__SAFE && ( !ns_o || !v || !m ) )
+        ABORT;
 
+    t = object__type( ns_o );
+    queue = array__new( 0, 0 );
 
-    set__delete( needles );
+    /* This function traverses the object graph in the order determined by the
+       "walk" function, and applies "apply_visitor" whenever an object is
+       visited for the first time. */
+    manager__trace( m, ns_o, ( Walker ) walk, ( Visitor ) apply_visitor );
+
+    array__delete( queue );
 }
-#endif
 
 
 Name *
@@ -202,6 +138,11 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
         ABORT;
 
     parents = hash_map__new();
+
+    /* This single, easily detectible cycle rules out the possibility of any
+       other cycles in the parent "tree". */
+    hash_map__add( parents, haystack, haystack );
+
     parent = 0;
     t = object__type( haystack );
 
@@ -220,7 +161,7 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
     }
 
     /* Trace until 'needle' is found or all namespaces have been visited. */
-    manager__trace( m, haystack, ( Walker ) ns_walk_bfs, ( Visitor ) find );
+    namespace__trace_bfs( haystack, ( Visitor ) find, m );
 
     /* If 'needle' has been found, build its (relative) name. */
     if ( parent )
@@ -234,7 +175,7 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
             array__push( name, key );
             o = parent;
 
-        } while ( ( parent = hash_map__lookup( parents, o ) ) );
+        } while ( ( parent = hash_map__lookup( parents, o ) ) && parent != o );
     }
 
     else
@@ -262,7 +203,7 @@ namespace__resolve_simple( OBJ( NAMESPACE ) *ns_obj, char *key, Manager *m )
     if ( DEBUG__SAFE && ( !ns_obj || !key || !m ) )
         ABORT;
 
-    manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
+    namespace__trace_bfs( ns_obj, ( Visitor ) test, m );
 
     return o;
 }
@@ -318,7 +259,7 @@ namespace__undefine( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
             return o ? BREAK : CONTINUE;
         }
 
-        manager__trace( m, ns_obj, ( Walker ) ns_walk_bfs, ( Visitor ) test );
+        namespace__trace_bfs( ns_obj, ( Visitor ) test, m );
 
         return o;
     }

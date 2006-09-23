@@ -922,7 +922,12 @@ multiref_ids( Interpreter *c )
 
     /* Force the working namespace to be at top level. */
     tmp = NEW( Object* );
+
+/* FIXME: it would be nice to be able to save partial data sets, depending on the working namespace */
+    *tmp = environment__data( interpreter__environment( c ) );
+/*
     *tmp = interpreter__working_namespace( c );
+*/
     hash_multiref( tmp );
     free( tmp );
 

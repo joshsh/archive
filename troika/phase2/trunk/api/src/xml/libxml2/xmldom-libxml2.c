@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #if defined(LIBXML_TREE_ENABLED) && defined(LIBXML_OUTPUT_ENABLED)
 
 
-static int initialized = 0 ;
+static boolean initialized = FALSE ;
 
 
 void
@@ -41,7 +41,7 @@ xmldom__init( )
            the version it was compiled for and the actual shared library used. */
         LIBXML_TEST_VERSION ;
 
-        initialized = 1 ;
+        initialized = TRUE ;
     }
 }
 
@@ -57,7 +57,7 @@ xmldom__end( )
         /* This is to debug memory for regression tests. */
         xmlMemoryDump( ) ;
 
-        initialized = 0 ;
+        initialized = FALSE ;
     }
 }
 
@@ -137,7 +137,11 @@ document__new( )
 Document *
 document__read_from_file( const char *path )
 {
-    xmlDoc *doc = xmlReadFile( path, NULL, 0 ) ;
+    /* Note: xmlParseFile is used rather than xmlReadFile for compatibility
+             with earlier versions of libxml2 */
+    xmlDoc *doc = xmlParseFile( path );
+
+/*    xmlDoc *doc = xmlReadFile( path, NULL, 0 ) ; */
     return ( Document * ) doc ;
 }
 

@@ -1,33 +1,35 @@
+make 2>stderr.txt; cat stderr.txt
+(with libxml-2.0.pc) 
 
 
-alpha-linux1
-	- configure -- no libxml2
-- amd64-linux1
-	+ configure
-	+ make -- note: copious "cast to integer of different size" warnings
-	- test
-		-2      not-freed object(s)
-amd64-linux2 -- unavailable
-openpower-linux1
+- alpha-linux1
+	- configure -- libxml2.so.2 is present, but neither AC_CHECK_LIB nor PKG_CHECK_MODULES detects it
+		checking for xmlParserVersion in -lxml2... no
+		configure: error: libxml2 not found. Phase2 cannot import or export data sets without it.
++ amd64-linux1
 	+ configure
 	+ make
-- ppc-osx1 -- unavailable
-- ppc-osx2 -- unavailable
+? amd64-linux2 -- unavailable
++ openpower-linux1
+	+ configure
+	+ make
+? ppc-osx1 -- unavailable
+? ppc-osx2 -- unavailable
 - sparc-solaris1 -- unavailable
 - sparc-solaris2 -- unavailable
-x86-freebsd1
++ x86-freebsd1
 	+ configure
 	- make
 		"Makefile", line 719: Need an operator
 		make: fatal errors encountered -- cannot continue
 			export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS) -I$(PWD)/include/phase2
 	+ gmake
+		manager/Manager.c:504: warning: 't' might be used uninitialized in this function
 x86-linux1
 	- configure -- no libxml2
-x86-linux2
++ x86-linux2
 	+ configure
 	+ make
-	test
 x86-netbsd1
 	- configure -- no libxml2
 x86-openbsd1
@@ -42,10 +44,16 @@ x86-solaris1 (slow!)
 		make[3]: Leaving directory `/home/users/t/tr/troika/phase2-0.8.1/src/import'
 
 
-Ignore everything below this line
+
+
+
+IGNORE EVERYTHING BELOW THIS LINE
 ================================================================================
 
-...unless you're me and you're cross-compiling.
+...unless you're me and you're cross-compiling for a Zaurus.
+
+
+
 
 
 ################################################################################

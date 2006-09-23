@@ -25,44 +25,41 @@ Note: a '+' indicates software versions which are known to be compatible with
       + 4.0.2, 4.0.3
       IMPORTANT: Phase2 makes liberal use of the GNU C extension for nested
                  functions, and will not compile as ANSI C.
-* GNU Make or equivalent -- http://www.gnu.org/software/make/
+* GNU make or equivalent -- http://www.gnu.org/software/make/
       Tested with: 3.80, 3.81beta4
-* GNU Libtool -- http://www.gnu.org/software/libtool/
+* GNU libtool -- http://www.gnu.org/software/libtool/
       + 1.5.16, 1.5.22
-* libxml2 (with libxml-2.0.pc) -- http://xmlsoft.org/
+* libxml2 -- http://xmlsoft.org/
       For Debian users: "sudo apt-get install libxml2-dev"
 
 
 Compiling Phase2
 ================================================================================
 
-The Phase2 package uses autotools and is built in the usual way:
+The Phase2 package uses GNU autotools and is built in the usual way:
 
     $ ./configure
-    $ make
+    $ gmake
+    $ gmake install
 
-But I usually do something this:
+Note: if the configure script cannot find the libxml2 library (or the optional
+ncurses and readline libraries), you will need to tell it where to look:
+
+    $ ./configure LDFLAGS=-L/dir/containing/libxml2.so
+
+Various options may be useful when configuring, e.g.
 
     $ ./configure --prefix=/usr --enable-debug
-    $ make 2>stderr.txt; cat stderr.txt
 
-Now:
-
-    $ make install
-
-See ./INSTALL for more details.
+See ./INSTALL and the output of `configure --help` for more details.
 
 
 Running the interpreter
 ================================================================================
 
-To invoke the interpeter with no input data set:
+To create a new Phase2 data set:
 
     $ phase2
-
-Or (if you have not installed):
-
-    $ ./src/phase2
 
 To load a data set:
 
@@ -81,14 +78,14 @@ Building Phase2 from scratch
 
 To build Phase2 from scratch you will need the following additional tools:
 
-* GNU Autoconf -- http://www.gnu.org/software/autoconf/
+* GNU autoconf -- http://www.gnu.org/software/autoconf/
       + 2.59
-* GNU Automake -- http://www.gnu.org/software/automake/
+* GNU automake -- http://www.gnu.org/software/automake/
       + 1.9.5, 1.9.6
       - 1.4-p6
-* GNU Bison or equivalent -- http://www.gnu.org/software/bison/
+* GNU bison or equivalent -- http://www.gnu.org/software/bison/
       + 2.0, 2.1
-* GNU Flex or equivalent -- http://www.gnu.org/software/flex/
+* GNU flex or equivalent -- http://www.gnu.org/software/flex/
       + 2.5.31, 2.5.33
 * dot -- http://www.graphviz.org/
       + 2.2.1, 2.8
@@ -97,10 +94,14 @@ To build Phase2 from scratch you will need the following additional tools:
 * xsltproc -- http://xmlsoft.org/XSLT/
       + 20620
 
+
+
+
+
     $ ./cleanup
     $ ./bootstrap
 
-Now ./configure and make as usual.
+Now ./configure and gmake as described above.
 
 
 Bugs
@@ -109,6 +110,6 @@ Bugs
 Please send bug reports to parcour@gmail.com or use the bug tracker at:
     http://sourceforge.net/projects/phase2/
 
-At this point I have only built Phase2 for two different platforms, and welcome
+At this point I have only built Phase2 on Unix-like platforms, and welcome
 any comments on how it behaved on other machines.
 

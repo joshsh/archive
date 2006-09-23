@@ -22,7 +22,10 @@ dnl fi
 
 dnl Note: libxml 1.x is missing a few symbols needed by Phase2's XML wrapper,
 dnl so we really do need libxml-2.0.
-PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
+dnl If AC_CHECK_LIB fails for an odd reason, try the libxml package instead
+AC_CHECK_LIB([xml2], [xmlParseFile],,
+    [PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])])
+
 CFLAGS="$CFLAGS $LIBXML2_CFLAGS"
 LDFLAGS="$LDFLAGS $LIBXML2_LIBS"
 
