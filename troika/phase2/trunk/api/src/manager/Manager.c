@@ -146,10 +146,12 @@ manager__set_root( Manager *m, Object *o )
 Object *
 manager__object( Manager *m, Type *type, void *value, int flags )
 {
+    Object *o;
+
     if ( DEBUG__SAFE && !m )
         ABORT;
 
-    Object *o = object__new( type, value, flags );
+    o = object__new( type, value, flags );
 
     if ( o )
     {

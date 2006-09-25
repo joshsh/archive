@@ -279,12 +279,15 @@ resolve( Interpreter *itp, Object *o )
 {
     ACTION helper( Object **opp )
     {
-        Object *o = DEREF( opp );
+        Object *o;
+        Type *t;
+
+        o = DEREF( opp );
 
         if ( FIRST_CLASS_NULL && !o )
             return CONTINUE;
 
-        Type *t = object__type( o );
+        t = object__type( o );
 
         if ( t == itp->name_t )
         {

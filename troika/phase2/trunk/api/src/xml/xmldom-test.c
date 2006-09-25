@@ -38,14 +38,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 int
 main( int argc, char *argv[] )
 {
-    /* Avoid compiler warnings. */
-    argc = 0;
-    argv = 0;
-
     Document *doc;
     Element *el, *el2;
     Namespc *ns;
     Attr *attr;
+
+    /* Avoid compiler warnings. */
+    argc = 0;
+    argv = 0;
 
     xmldom__init();
 

@@ -1,6 +1,6 @@
 /**
 
-\file  xmldom.h
+\file  xml.h
 
 Provides a collection of stubs to bind DOM data types, properties and functions with the
 corresponding entities in a particular XML toolkit.  To adapt the project to a
@@ -33,21 +33,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef XMLDOM_H
-#define XMLDOM_H
+#ifndef XML_H
+#define XML_H
 
 
 /** An XML attribute. */
-typedef void *Attr;
+typedef void Attr;
 
 /** An XML document. */
-typedef void *Document;
+typedef void Document;
 
 /** An XML element. */
-typedef void *Element;
+typedef void Element;
 
 /** An XML namespace. */
-typedef void *Namespc;
+typedef void Namespc;
 
 
 /** Performs any operations necessary to initialize the XML module. */
@@ -232,6 +232,6 @@ extern const unsigned char *
 namespc__prefix( Namespc *ns );
 
 
-#endif  /* XMLDOM_H */
+#endif  /* XML_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

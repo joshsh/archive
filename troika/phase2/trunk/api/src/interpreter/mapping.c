@@ -231,6 +231,8 @@ interpreter__encode( Interpreter *c,
                      char *buffer,
                      unsigned int maxlen )
 {
+    Name *name;
+
     if ( DEBUG__SAFE && !c )
         ABORT;
 
@@ -239,7 +241,7 @@ interpreter__encode( Interpreter *c,
         if ( !maxlen )
             maxlen = LABEL__MAXLEN;
 
-        Name *name = interpreter__name_of( c, c->cur_ns_obj, o );
+        name = interpreter__name_of( c, c->cur_ns_obj, o );
 
         if ( !name )
             object__encode( o, buffer );

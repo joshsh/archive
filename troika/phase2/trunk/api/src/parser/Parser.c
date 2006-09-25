@@ -26,6 +26,9 @@ static boolean instance_exists = FALSE;
 Parser *
 parser__new( Interpreter *itp )
 {
+    Parser *p;
+    Environment *e;
+
     if ( DEBUG__SAFE && !itp )
         ABORT;
 
@@ -35,13 +38,13 @@ parser__new( Interpreter *itp )
         return 0;
     }
 
-    Parser *p = NEW( Parser );
+    p = NEW( Parser );
     if ( !p )
         return 0;
 
     p->interpreter = itp;
 
-    Environment *e = interpreter__environment( itp );
+    e = interpreter__environment( itp );
 
 #define BIND(x)    p->TYPEOBJ( x ) = environment__resolve_type( e, NAMEOF( x ), FALSE )
 

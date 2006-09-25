@@ -92,6 +92,10 @@ libphase2_la_LIBADD = \
 	collection/libp2collection.la	\
 	xml/libp2xml.la
 
+##libphase2_la_LDFLAGS = -version-info 0:0:8
+##libphase2_la_LDFLAGS = -release 0.8.1
+
+
 phase2_SOURCES = main.c
 
 phase2_LDADD = libphase2.la
