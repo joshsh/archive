@@ -55,6 +55,16 @@ joshs (x86 Fedora Core 4)
 
 	./configure
 	make
+		[...]
+		getopt/getopt.c: In function `_getopt_initialize':
+		getopt/getopt.c:389: warning: unused parameter `argc'
+		getopt/getopt.c:390: warning: unused parameter `argv'
+		getopt/getopt.c: In function `_getopt_internal':
+		getopt/getopt.c:577: warning: implicit declaration of function `strcmp'
+		getopt/getopt.c:653: warning: implicit declaration of function `strncmp'
+		getopt/getopt.c:656: warning: implicit declaration of function `strlen'
+		getopt/getopt.c:698: warning: suggest explicit braces to avoid ambiguous `else'
+		[...]
 	echo "_saveas foo.p2; _quit;" | src/phase2
 		[...]
 		Warning: program compiled against libxml 206 using older 204
