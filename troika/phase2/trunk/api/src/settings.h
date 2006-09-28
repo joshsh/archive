@@ -44,7 +44,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /******************************************************************************/
 
 
-#define DEBUG__ALLOC                            1
+#define DEBUG__ALLOC                            0
+#define DEBUG__ALLOC__VERBOSE                   0
+
 
 #include <stdlib.h>
 
@@ -222,7 +224,7 @@ dereference( struct Object ** );
 
 #define FFLUSH  { fflush( stdout ); fflush( stderr ); }
 
-/* Note: the GCC extension is used here instead of __VA_ARGS__ for compatibility
+/* NOTE: the GCC extension is used here instead of __VA_ARGS__ for compatibility
    with old GCC cross-compilers. */
 
 #if ECHO__ERROR
@@ -283,35 +285,47 @@ debug__memcheck();
 
 /* TODO: these are barely used */
 #define DEBUG                                   0
-#    define DEBUG__MAIN                         1 & DEBUG
-#    define DEBUG__CORE                         1 & DEBUG
-#        define DEBUG__SK                       1 & DEBUG__CORE
-#        define DEBUG__PRIMS                    1 & DEBUG__CORE
-#        define DEBUG__TYPE                     1 & DEBUG__CORE
-#        define DEBUG__MEMORY                   1 & DEBUG__CORE
-#        define DEBUG__OBJECT                   1 & DEBUG__CORE
-#            define DEBUG__OBJECT__TRACE        0 & DEBUG__OBJECT
-#            define DEBUG__OBJECT__TRIPLES      1 & DEBUG__OBJECT
-#        define DEBUG__NAMESPACE                0 & DEBUG__CORE
-#        define DEBUG__ENV                      0 & DEBUG__CORE
-#        define DEBUG__COMPILER                 1 & DEBUG__CORE
-#        define DEBUG__SERIAL                   0 & DEBUG__CORE
-#    define DEBUG__PARSER_MODULE                1 & DEBUG
-#        /** Echo each token as it is matched by the lexer. */
-#        define DEBUG__LEXER                    1 & DEBUG__PARSER_MODULE
-#        /** Echo each production as it is matched by the parser. */
-#        define DEBUG__PARSER                   1 & DEBUG__PARSER_MODULE
-#            /** Use Bison's built-in trace facility. */
-#            define DEBUG__PARSER__USE_YYDEBUG  0 & DEBUG__PARSER
-#    define DEBUG__COLL                         1 & DEBUG
-#        define DEBUG__ARRAY                    1 & DEBUG__COLL
-#        define DEBUG__DICTIONARY               1 & DEBUG__COLL
-#        define DEBUG__BUNCH                    1 & DEBUG__COLL
-#        define DEBUG__HASH_TABLE               1 & DEBUG__COLL
-#        define DEBUG__LOOKUP_TABLE             1 & DEBUG__COLL
-#        define DEBUG__NAME                     1 & DEBUG__COLL
-#        define DEBUG__SET                      1 & DEBUG__COLL
-#        define DEBUG__TERM                     1 & DEBUG__COLL
+#if DEBUG
+#   define DEBUG__MAIN                          1
+#   define DEBUG__CORE                          1
+#   if  DEBUG__CORE
+#       define DEBUG__SK                        1
+#       define DEBUG__PRIMS                     1
+#       define DEBUG__TYPE                      1
+#       define DEBUG__MEMORY                    1
+#       define DEBUG__OBJECT                    1
+#       if DEBUG__OBJECT
+#           define DEBUG__OBJECT__TRACE         0
+#           define DEBUG__OBJECT__TRIPLES       1
+#       endif
+#       define DEBUG__NAMESPACE                 0
+#       define DEBUG__ENV                       0
+#       define DEBUG__COMPILER                  1
+#       define DEBUG__SERIAL                    0
+#   endif
+#   define DEBUG__PARSER_MODULE                 1
+#   if DEBUG__PARSER_MODULE
+        /** Echo each token as it is matched by the lexer. */
+#       define DEBUG__LEXER                     1
+        /** Echo each production as it is matched by the parser. */
+#       define DEBUG__PARSER                    1
+#       if DEBUG__PARSER
+            /** Use Bison's built-in trace facility. */
+#           define DEBUG__PARSER__USE_YYDEBUG   0
+#       endif
+#   endif
+#   define DEBUG__COLL                          1
+#   if DEBUG__COLL
+#       define DEBUG__ARRAY                     1
+#       define DEBUG__DICTIONARY                0
+#       define DEBUG__BUNCH                     1
+#       define DEBUG__HASH_TABLE                1
+#       define DEBUG__LOOKUP_TABLE              1
+#       define DEBUG__NAME                      1
+#       define DEBUG__SET                       1
+#       define DEBUG__TERM                      1
+#   endif
+#endif
 
 #define COMPILER__SHOW_ADDRESS                  DEBUG
 

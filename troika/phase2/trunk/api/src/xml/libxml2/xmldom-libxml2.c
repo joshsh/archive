@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../../settings.h"
 
 
-/* Note: be ready for linker errors if these macros are not defined. */
+/* NOTE: be ready for linker errors if these macros are not defined. */
 #if defined(LIBXML_TREE_ENABLED) && defined(LIBXML_OUTPUT_ENABLED)
 
 
@@ -127,7 +127,7 @@ document__delete( Document *doc )
 Document *
 document__new( )
 {
-    /* Note: BAD_CAST == ( xmlChar* ) == ( unsigned char* ) */
+    /* NOTE: BAD_CAST == ( xmlChar* ) == ( unsigned char* ) */
     xmlDoc *doc = xmlNewDoc( BAD_CAST "1.0" ) ;
 
     return ( Document* ) doc ;
@@ -137,7 +137,7 @@ document__new( )
 Document *
 document__read_from_file( const char *path )
 {
-    /* Note: xmlParseFile is used rather than xmlReadFile for compatibility
+    /* NOTE: xmlParseFile is used rather than xmlReadFile for compatibility
              with earlier versions of libxml2 */
     xmlDoc *doc = xmlParseFile( path );
 
@@ -242,7 +242,7 @@ element__namespace( Element *el )
 Element *
 element__new( Document *doc, unsigned char *name, Namespc *ns )
 {
-    /* Note: apparently libxml2 makes its own copy of the element name. */
+    /* NOTE: apparently libxml2 makes its own copy of the element name. */
     xmlNode* el = xmlNewNode( 0, name );
 
     /* Avoid "unused parameter" warning. */

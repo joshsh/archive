@@ -197,7 +197,7 @@ dictionary__remove( Dictionary *d, char *key )
 
     if ( e )
     {
-        /* TODO: this extra lookup is wasty */
+/* TODO: this extra lookup is wasty */
         hash_table__remove( d, &e2 );
         free( e->key );
         return e->target;

@@ -546,7 +546,7 @@ normalize( Array *a )
 }
 
 
-/* Note: compare to qsort in stdlib.h */
+/* NOTE: compare to qsort in stdlib.h */
 void
 array__sort( Array *a, Comparator compare )
 {

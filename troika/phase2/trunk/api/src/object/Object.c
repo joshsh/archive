@@ -25,7 +25,7 @@ object__new( Type *type, void *value, int flags )
 {
     Object *o;
 
-    /* Note: temporary objects with null type/value may be allowed. */
+    /* NOTE: temporary objects with null type/value may be allowed. */
     if ( ( !type || !value ) && DEBUG__SAFE && !PERMIT_TEMPORARY_OBJECTS )
         ABORT;
 

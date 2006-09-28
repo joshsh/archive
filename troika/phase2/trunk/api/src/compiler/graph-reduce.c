@@ -523,7 +523,7 @@ apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Manager *m )
     if ( DEBUG__SAFE && ( !c || !spine || !m ) )
         ABORT;
 
-    /* TODO: how about a lookup table instead of a switch statement? */
+/* TODO: how about a lookup table instead of a switch statement? */
     switch ( *c )
     {
         case B_combinator:

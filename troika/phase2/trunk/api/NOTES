@@ -1,21 +1,13 @@
-make 2>stderr.txt; cat stderr.txt
-(with libxml-2.0.pc) 
-
-
+Successful builds (from phase2-0.8.1.tar.gz) on various machines
 ================================================================================
 
-
-
-mkdir libfix && ln -s /usr/lib/libxml2.so.2 libfix/libxml2.so
-
-
-
-
-
-
-
-
-- alpha-linux1
+troika (x86 Ubuntu)
+	./configure
+	make
+joshs (x86 Fedora Core 4)
+	./configure
+	make
+[CF] alpha-linux1
 	# This machine has a libxml2.so.2, but no libxml2.so
 	mkdir libfix && ln -s /usr/lib/libxml2.so.2 libfix/libxml2.so
 	./configure LDFLAGS="-L/usr/lib -L$PWD/libfix"
@@ -25,44 +17,81 @@ mkdir libfix && ln -s /usr/lib/libxml2.so.2 libfix/libxml2.so
 		[...]
 		Warning: program compiled against libxml 206 using older 204
 		[...]
-+ amd64-linux1
-	+ configure
-	+ make
-+ openpower-linux1
-	+ configure
-	+ make
-+ x86-freebsd1
-	+ configure
-	- make
+[CF] amd64-linux1
+	./configure
+	make
+[CF] openpower-linux1
+	./configure
+	make
+[CF] x86-freebsd1
+	./configure
+	make
 		"Makefile", line 719: Need an operator
 		make: fatal errors encountered -- cannot continue
-			export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS) -I$(PWD)/include/phase2
-	+ gmake
+	cat Makefile
+		[...]
+		export AM_CFLAGS = -O2 --ansi -W -Wall $(DEBUG_FLAGS) -I$(PWD)/include/phase2
+		[...]
+	gmake
+		[...]
 		manager/Manager.c:504: warning: 't' might be used uninitialized in this function
-x86-linux1
-	- configure -- no libxml2
-+ x86-linux2
-	+ configure
-	+ make
-x86-netbsd1
-	- configure -- no libxml2
-x86-openbsd1
-	- configure -- no libxml2
-x86-solaris1 (slow!)
-	+ configure
-	- make --  missing 'ar' command
-		false cru .libs/libp2prims.a .libs/p2-stubs.o .libs/combinator-impl.o .libs/xpm.o .libs/operators.o .libs/stdio.o .libs/stdlib.o .libs/string.o .libs/char.o .libs/cstring.o .libs/double.o .libs/int.o
-		make[4]: *** [libp2prims.la] Error 1
-		make[4]: Leaving directory `/home/users/t/tr/troika/phase2-0.8.1/src/import'
-		make[3]: *** [all] Error 2
-		make[3]: Leaving directory `/home/users/t/tr/troika/phase2-0.8.1/src/import'
+		[...]
+[CF] x86-linux1
+	# This machine has a libxml2.so.2, but no libxml2.so
+	mkdir libfix && ln -s /usr/lib/libxml2.so.2 libfix/libxml2.so
+	./configure LDFLAGS="-L/usr/lib -L$PWD/libfix"
+	make
+[CF] x86-linux2
+	./configure
+	make
+[CF] x86-solaris1 (slow!)
+	# ar and ranlib are not on PATH by default
+	# A simple "PATH=/usr/ccs/bin/:$PATH" didn't work, on account of a macro
+        # conflict in Makefile.
+	mkdir pathfix
+	ln -s /usr/ccs/bin/ar pathfix/ar
+	ln -s /usr/ccs/bin/ranlib pathfix/ranlib
+	PATH=$PWD/pathfix:$PATH
 
-Unavailable (SourceForge) Compiler Farm servers:
-	[SF] amd64-linux2
-	[SF] ppc-osx1
-	[SF] ppc-osx2
-	[SF] sparc-solaris1
-	[SF] sparc-solaris2
+	./configure
+	make
+	echo "_saveas foo.p2; _quit;" | src/phase2
+		[...]
+		Warning: program compiled against libxml 206 using older 204
+		[...]
+
+
+Unsuccessful builds
+================================================================================
+
+[CF] x86-netbsd1 -- libxml2 is not available
+	./configure
+		[...]
+		checking for xmlParseFile in -lxml2... no
+		checking for LIBXML2... configure: error: The pkg-config script could not be found or is too old.  Make sure it
+		is in your PATH or set the PKG_CONFIG environment variable to the full
+		path to pkg-config.
+		[...]
+[CF] x86-openbsd1 -- libxml2 is not available
+	./configure
+		[...]
+		checking for xmlParseFile in -lxml2... no
+		checking for LIBXML2... Package libxml-2.0 was not found in the pkg-config search path.
+		Perhaps you should add the directory containing `libxml-2.0.pc'
+		to the PKG_CONFIG_PATH environment variable
+		No package 'libxml-2.0' found
+		configure: error: Package requirements (libxml-2.0) were not met:
+		[...]
+
+
+Unavailable (SourceForge) Compiler Farm servers
+================================================================================
+
+[CF] amd64-linux2
+[CF] ppc-osx1
+[CF] ppc-osx2
+[CF] sparc-solaris1
+[CF] sparc-solaris2
 
 
 Software versions on test platforms
@@ -71,99 +100,27 @@ Software versions on test platforms
 			GNU make	libtool		autoconf	automake
 troika			3.81beta4	1.5.22		2.59		1.9.6
 joshs			3.80		1.5.16		2.59		1.9.5
-[SF] alpha-linux1	3.79.1		1.4.2a		2.13		1.4-p4
-[SF] amd64-linux1	3.80		1.5.6		2.59		1.9.2
-[SF] openpower-linux1	3.80		1.5.2		2.59		1.8.3
-[SF] x86-freebsd1	3.80
-[SF] x86-linux1		3.80				2.59		1.4-p6
-[SF] x86-linux2		3.80				2.59		1.8.3
-[SF] x86-netbsd1	3.80		1.4a		2.57		1.7.6
-[SF] x86-openbsd1	3.80				?		1.4-p6
-[SF] x86-solaris1	3.80		1.5		2.57		1.7.2
+[CF] alpha-linux1	3.79.1		1.4.2a		2.13		1.4-p4
+[CF] amd64-linux1	3.80		1.5.6		2.59		1.9.2
+[CF] openpower-linux1	3.80		1.5.2		2.59		1.8.3
+[CF] x86-freebsd1	3.80
+[CF] x86-linux1		3.80				2.59		1.4-p6
+[CF] x86-linux2		3.80				2.59		1.8.3
+[CF] x86-netbsd1	3.80		1.4a		2.57		1.7.6
+[CF] x86-openbsd1	3.80				?		1.4-p6
+[CF] x86-solaris1	3.80		1.5		2.57		1.7.2
 
 			gcc		flex		bison		doxygen
 troika			4.0.3		2.5.31		2.1		1.4.6
 joshs			4.0.2		2.5.33		2.0		1.4.4
-[SF] alpha-linux1	2.95.4		2.5.4		1.35
-[SF] amd64-linux1	3.4.2		2.5.4		1.875c		1.3.9.1
-[SF] openpower-linux1	3.3.3
-[SF] x86-freebsd1	3.4.2		2.5.4		[yacc] ?
-[SF] x86-linux1		3.3.5		2.5.31		1.875d
-[SF] x86-linux2		3.3.3		2.5.4		1.875c		1.3.6
-[SF] x86-netbsd1	3.3.3		2.5.4		[yacc] ?
-[SF] x86-openbsd1	3.3.5		2.5.4		1.35
-[SF] x86-solaris1	3.3.2		2.5.31		1.75
+[CF] alpha-linux1	2.95.4		2.5.4		1.35
+[CF] amd64-linux1	3.4.2		2.5.4		1.875c		1.3.9.1
+[CF] openpower-linux1	3.3.3
+[CF] x86-freebsd1	3.4.2		2.5.4		[yacc] ?
+[CF] x86-linux1		3.3.5		2.5.31		1.875d
+[CF] x86-linux2		3.3.3		2.5.4		1.875c		1.3.6
+[CF] x86-netbsd1	3.3.3		2.5.4		[yacc] ?
+[CF] x86-openbsd1	3.3.5		2.5.4		1.35
+[CF] x86-solaris1	3.3.2		2.5.31		1.75
 
-Note: x86-netbsd1 will be upgraded to NetBSD 3.0 at some point.
-
-
-
-
-
-IGNORE EVERYTHING BELOW THIS LINE
-================================================================================
-
-...unless you're me and you're cross-compiling for a Zaurus.
-
-
-################################################################################
-# Cross-compiling libxml2
-
-export CC=your compiler
-./configure with proper options
-make
-make install
-
-
-################################################################################
-# Cross-compile Phase2 for ARM.
-
-This yielded an error-free, debuggable ARM phase2 executable:
-1) generate phase2.so using the (crosstool) gcc4 cross-compiler
-2) generate phase2 (with 'main') using (Embedix) gcc2 cross-compiler
-3) put phase2.so in the device's /usr/lib and invoke phase2
-
-
-ARM_PREFIX=/opt/Embedix/tools/
-
-CROSSTOOL=/home/joshs/bin/crosstool-0.42
-CROSSTOOL=/opt/crosstool/crosstool-0.42
-
-ARM_PREFIX=$CROSSTOOL/result/gcc-4.1.0-glibc-2.3.2/arm-unknown-linux-gnu/arm-unknown-linux-gnu/
-
-# First, cross-compile libxml2 and place the ARM libraries into $ARM_PREFIX/lib
-
-# Necessary when using crosstools binaries.
-PATH=$ARM_PREFIX/bin:$PATH
-
-# Note: rationale behind also specifying --build:
-#     http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_node/autoconf_164.html
-./configure --host=arm-linux --build=i686-pc-linux-gnu --prefix=$ARM_PREFIX
-
-make
-
-# Look in here for the ARM executables and libraries:
-#     src/.libs/
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
-%destructor
-
-libtool --mode=execute gdb src/phase2
-
-Qt4/C++
-
-$(LIBOBJS) and $(ALLOCA)
-
-     ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
-
-./configure --host=arm-linux --with-linux=$ARM_PREFIX/include
-
-The linker also needs to be arm-linux-ld not ld.
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
+Note: the OS on x86-netbsd1 is to be upgraded to NetBSD 3.0 at some point.

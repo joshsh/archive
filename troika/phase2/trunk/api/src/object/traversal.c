@@ -78,7 +78,7 @@ data(cycle(cycle))
             if ( DEBUG__OBJECT )
                 total++;
 
-            /* Note: the object is only dereferenced AFTER it has been passed to
+            /* NOTE: the object is only dereferenced AFTER it has been passed to
                the distributor function, in case the reference is mutated by
                that operation. */
             o = *opp;
@@ -121,7 +121,7 @@ data(cycle(cycle))
 }
 
 
-/* Note: untested. */
+/* NOTE: untested. */
 void
 object__trace_bfs( Object *o, Visitor f, boolean follow_triples )
 {
@@ -164,7 +164,7 @@ object__trace_bfs( Object *o, Visitor f, boolean follow_triples )
             if ( DEBUG__OBJECT )
                 total++;
 
-            /* Note: the object is only dereferenced AFTER it has been passed to
+            /* NOTE: the object is only dereferenced AFTER it has been passed to
                the distributor function, in case the reference is mutated by
                that operation. */
             o = *opp;

@@ -126,7 +126,7 @@ s_reduce( Term *term )
 
 
 /* Assumes left-associative form.
-   Note: it's probably worth trying to find a way to consolidate the type
+   NOTE: it's probably worth trying to find a way to consolidate the type
    checking and garbage collection of arguments. */
 static Term *
 prim_reduce(
@@ -350,7 +350,7 @@ prim_reduce(
     if ( !result )
         goto fail;
 
-    /* Note: cur is now just beyond the position of the last argument. */
+    /* NOTE: cur is now just beyond the position of the last argument. */
     cur = max;
 
     /* Replace the primitive reference and its arguments with the return value. */
@@ -460,11 +460,10 @@ term__reduce(
     if ( DEBUG__SAFE && ( !term || !m || !term_type || !primitive_type || !combinator_type || !set_type ) )
         ABORT;
 
-    if ( DEBUG__SK )
-    {
-        PRINT( "%i:\t", iter );
-        print_term( term );
-    }
+#if DEBUG__SK
+     PRINT( "%i:\t", iter );
+     print_term( term );
+#endif
 
     /* Iterate until the resulting term is in head-normal form. */
     for (;;)
@@ -500,7 +499,7 @@ PRINT( "\n" );  fflush( stdout );
 
         head_type = head->type;
 
-        /* TODO: put these types in a hash table for more flexibility on what is reduced and how */
+/* TODO: put these types in a hash table for more flexibility on what is reduced and how */
 
         /* If the head object is a primitive, apply it. */
         if ( head_type == primitive_type )
@@ -560,7 +559,7 @@ PRINT( "\n" );  fflush( stdout );
         }
 
 #ifdef NOTDEF
-        /* TODO: Distribute... */
+/* TODO: Distribute... */
         else if ( head_type == set_type )
         {
 
@@ -588,11 +587,10 @@ PRINT( "\n" );  fflush( stdout );
         {
             iter++;
 
-            if ( DEBUG__SK )
-            {
-                PRINT( "%i:\t", iter );
-                print_term( term );
-            }
+#if DEBUG__SK
+            PRINT( "%i:\t", iter );
+            print_term( term );
+#endif
 
             if ( iter > COMPILER__REDUX_TIMEOUT )
             {

@@ -52,10 +52,10 @@ object__compare_to( Object *o1, Object *o2 )
 }
 
 
-/* Note: there is no object decoder, as the data type of an object cannot be
+/* NOTE: there is no object decoder, as the data type of an object cannot be
    inferred from the buffer alone. */
 
-/* Note: object destructor has external linkage (see above). */
+/* NOTE: object destructor has external linkage (see above). */
 
 
 void

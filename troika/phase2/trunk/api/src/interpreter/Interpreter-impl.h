@@ -36,7 +36,7 @@ struct Interpreter
 
     Dictionary *commands;
 
-    boolean quiet, show_line_numbers;
+    boolean quiet, verbose, show_line_numbers;
 
     /* Parser types. */
     Type *apply_t, *bag_t, *char_t, *float_t, *int_t, *string_t, *term_t;

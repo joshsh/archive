@@ -66,7 +66,7 @@ manager__new()
     if ( !m->objects )
         goto fail;
 
-    /* Note: these are freed in manager__delete */
+    /* NOTE: these are freed in manager__delete */
     object_t = object__create_type( "object" );
     bunch_t = bunch__create_type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS );
 

@@ -1,4 +1,4 @@
-# Note: phase2 will handle a limit of 1,000,000 without error (and without
+# NOTE: phase2 will handle a limit of 1,000,000 without error (and without
 # aborting due to lack of memory), but you will become bored long before that.
 LIMIT=1000
 

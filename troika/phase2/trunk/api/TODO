@@ -1,71 +1,48 @@
-[bugs]
-    _mv and _new issues (^ source namespace)
-    object ^ print ^ cycles
+Bugs
+================================================================================
+* _mv and _new issues (^ source namespace)
+* no limit on the length of an encoded object --> Sets and other objects which
+  allow self-inclusion can take arbitrary resources to encode
 
-[general]
-    fix all FIXMEs:
-        grep FIXME `find -name \*.c` | more
-    remove duplicate code in debug.c
-    use String instead of char* for Encoders
-    rework dependencies in collection, parser
-    semaphores --> eliminate global variables
-    "cstring" --> "String"
+Build
+================================================================================
+* add version-info to the shared phase2 library
+* try to get the package to build with pmake
+* add target "test"
+* tools dependencies (doxygen, xsltproc)
+* svn log --> CHANGES
+* include examples dir in distribution
+* [ARM cross-compile] use static libraries
 
-[build]
-    try to get the package to build with pmake
-    add "test" target
-    tools dependencies (doxygen, xsltproc)
-    svn log --> CHANGES
-    include examples dir in distribution
-    [ARM cross-compile]
-         use static libraries
+Design
+================================================================================
+* need a more general and flexible "model" scheme, ability to share atomic data
+  among models
+* (if practical) eliminate boxed objects, use type inference exclusively
+* RDF/XML and N3 import / export
 
-[high-level]
-    define a canonical name ordering for objects without a unique shortest name
-        apply it to both name-to-object and object-to-name mapping
-    need a more general and flexible "model" scheme, ability to share atomic data among models
-    rework Bunch to hold objects by value rather than by reference
-    (possibly) eliminate boxed objects, use type inference exclusively
+Documentation
+================================================================================
+* doxygen script --> revision # in docs
 
-[docs]
-    doxygen script --> revision # in docs
-
-[import]
-    wrap more standard library primitives
-    add reduction primitives
-    after importing primitives, check the type registry for incomplete types
-
-[interpreter]
-    _new ^ check whether object already exists
-
-[namespace]
-    break namespace__find into a path-building and a name-building portion
-
-[parser]
-    parser.c vs. Parser.c
-
-[translation]
-    RDF/XML and N3 import / export
-    graceful fail when basic object (combinator/primitive/type) not found
-    move the serialization stuff out of interpreter
-
-
-
-................................................................................
-
-gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libQtCore_debug.so.4)
-gui/p2gui: /lib/libc.so.6: version `GLIBC_2.3' not found (required by /usr/lib/libstdc++.so.6)
-gui/p2gui: /lib/libc.so.6: version `GLIBC_2.2.4' not found (required by /usr/lib/libgcc_s.so.1)
-
-
-./textedit
-	libQtGui.so.4
-	libQtNetwork.so.4
-
-./p2gui, ./p2gui-lite
-	libQtGui_debug.so.4
-
-gdb...ipk
-	This package seems to depend on other packages.  Please install them, too.
-	libncurses.so.5
-
+Implementation
+================================================================================
+* remove getopt dependency
+* fix all FIXMEs -- grep FIXME `find src -name \*.[ch]` | more
+* do all TODOs -- grep TODO `find src -name \*.[ch]` | more
+* use String instead of char* for Encoders
+* rework dependencies in collection, parser
+* semaphores --> eliminate global variables
+* "cstring" --> "String"
+* clean up Interpreter and INFO output
+* rework Bunch to hold objects by value rather than by reference
+* graceful fail when basic object (combinator/primitive/type) not found
+* move the serialization stuff out of Interpreter
+* wrap more standard library primitives
+* add reduction primitives
+* after importing primitives, check the type registry for incomplete types
+* _new ^ check whether target already exists
+* break namespace__find into a path-building and a name-building portion
+* define a canonical name ordering for objects without a unique shortest name,
+  apply it to both name-to-object and object-to-name mapping
+* parser.c vs. Parser.c

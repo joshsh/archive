@@ -17,14 +17,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <getopt.h>
-
 #if USE_NCURSES
 #    include <ncurses.h>
 #endif
 
 #include <phase2/Parser.h>
 #include "settings.h"
+
+/* The getopt source is included in this package for better portability. */
+#include "getopt/getopt.h"
 
 
 static char *alias;
@@ -118,20 +119,20 @@ read_options ( int argc, char **argv, char *source_file )
                 if ( long_options[option_index].flag != 0 )
                     break;
 
-                #if DEBUG__MAIN
+#if DEBUG__MAIN
                 PRINT( "option %s", long_options[option_index].name );
                 if ( optarg )
                     PRINT ( " with arg %s", optarg );
                 PRINT ( "\n" );
-                #endif
+#endif
 
                 break;
 
             case 'f':
 
-                #if DEBUG__MAIN
+#if DEBUG__MAIN
                 PRINT("option -f with value `%s'\n", optarg);
-                #endif
+#endif
 
                 strcpy( source_file, optarg );
                 break;
@@ -215,14 +216,15 @@ main( int argc, char *argv[] )
 
     else
     {
-        if ( ( itp = interpreter__new( env, quiet_flag ) ) )
+        if ( ( itp = interpreter__new( env, quiet_flag, version_flag ) ) )
         {
             p = parser__new( itp );
 
             if ( *source_file )
             {
-                if ( DEBUG__MAIN )
-                    PRINT( "Loading namespace from file...\n" );
+#if DEBUG__MAIN
+                PRINT( "Loading namespace from file...\n" );
+#endif
 
                 interpreter__deserialize( itp, source_file );
             }

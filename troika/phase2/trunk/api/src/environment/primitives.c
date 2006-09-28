@@ -337,7 +337,7 @@ add_sk_prims( Environment *env )
 /******************************************************************************/
 
 
-/* Note: this is as pokey as it looks. */
+/* NOTE: this is as pokey as it looks. */
 static void *
 type_of( void **args )
 {

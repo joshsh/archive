@@ -545,7 +545,6 @@ new_line( Parser *p )
     /* Decorate command-line input. */
     if ( !interpreter__quiet( p->interpreter ) )
     {
-
         if ( pad_newline )
             PRINT( "\n" );
 

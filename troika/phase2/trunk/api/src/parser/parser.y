@@ -356,7 +356,7 @@ command:
         if ( $$ )
         {
             $$->name = $1;
-            $$->args = 0;
+            $$->args = PARSER_REF2OBJ( ARRAY )( parser, array__new( 0, 0 ) );
         }
     }
 
@@ -451,7 +451,7 @@ command_args:
 
         if ( $$ )
         {
-            if ( !array__enqueue( object__value( $$ ), $1 ) )
+            if ( !array__enqueue( object__value( $$ ), $2 ) )
                 $$ = 0;
         }
     };

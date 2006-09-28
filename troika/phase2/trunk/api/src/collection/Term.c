@@ -181,7 +181,7 @@ term__subterm_at( Term *t, int i )
     term_cell *cur = t->head;
     unsigned int length;
 
-    /* TODO: upper bounds checking */
+/* TODO: upper bounds checking */
     if ( DEBUG__SAFE && ( !t || i < 0 ) )
         ABORT;
 
@@ -254,7 +254,8 @@ term__merge( Term *t1, Term *t2 )
     if ( t2->buffer_size < newsize )
         t2 = term__expand( t2, newsize );
 
-    /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
+    /* Prepend t1 to t2 */
+    /* NOTE: pointer t2->head may have changed. */
     t2->head -= t1_size;
     memcpy( t2->head, t1->head, t1_size * sizeof( term_cell ) );
 
@@ -283,7 +284,8 @@ term__merge_la(Term *t1, Term *t2)
     if ( t2->buffer_size < newsize )
         t2 = term__expand( t2, newsize );
 
-    /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
+    /* Prepend t1 to t2. */
+    /* NOTE: pointer t2->head may have changed. */
     t2->head -= t1_size;
     memcpy( t2->head, t1->head, t1_size * sizeof( term_cell ) );
 
@@ -312,7 +314,8 @@ term__merge_ra( Term *t1, Term *t2 )
     if ( t2->buffer_size < newsize )
         t2 = term__expand( t2, newsize );
 
-    /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
+    /* Prepend t1 to t2. */
+    /* NOTE: pointer t2->head may have changed. */
     t2->head -= t1_size;
     if ( t2_size > 2 )
         t2->head++;
@@ -346,7 +349,8 @@ term__cat(Term *t1, Term *t2)
     if ( t2->buffer_size < newsize) 
         t2 = term__expand( t2, newsize );
 
-    /* Prepend t1 to t2.  Note: pointer t2->head may have changed. */
+    /* Prepend t1 to t2. */
+    /* NOTE: pointer t2->head may have changed. */
     t2->head -= t1_size;
     if ( t2_size > 2 )
         t2->head++;

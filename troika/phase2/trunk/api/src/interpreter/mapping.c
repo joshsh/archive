@@ -154,7 +154,7 @@ interpreter__resolve( Interpreter *c, Name *name )
 
 
 /* Simplify the name.
-   Note: the result is not necessarily as simple as possible.  For instance,
+   NOTE: the result is not necessarily as simple as possible.  For instance,
          an object with two possible fully-qualified names, a:b:c:d and x:y:z,
          might yield the name x:y:z even though [...] */
 Name *

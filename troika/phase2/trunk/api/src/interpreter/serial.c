@@ -881,7 +881,7 @@ add_timestamp( Element *el )
 
     time( &t );
 
-    /* Note: the output of localtime and asctime are evidently pointers to
+    /* NOTE: the output of localtime and asctime are evidently pointers to
        global variables, as you get a segfault if you try to free them. */
     ts = asctime( localtime( &t ) );
 
@@ -1037,7 +1037,7 @@ interpreter__serialize( Interpreter *c, const char *path )
     state.ids = multiref_ids( c );
 
     set_encoder( c->apply_t, ( Xml_Encoder ) apply__xml_encode, state.serializers );
-    /* Note: no encoder is needed for the indirection type, as indirection nodes are
+    /* NOTE: no encoder is needed for the indirection type, as indirection nodes are
        "invisible" to the serializer/deserializer. */
     set_encoder( c->bag_t, ( Xml_Encoder ) array__xml_encode, state.serializers );
     set_encoder( c->ns_t, ( Xml_Encoder ) namespace__xml_encode, state.serializers );
@@ -1100,7 +1100,7 @@ interpreter__deserialize( Interpreter *c, const char *path )
         goto finish;
 
     set_decoder( c->apply_t, ( Xml_Decoder ) apply__xml_decode, state.deserializers );
-    /* Note: no decoder is needed for the indirection type, as indirection nodes are
+    /* NOTE: no decoder is needed for the indirection type, as indirection nodes are
        "invisible" to the serializer/deserializer. */
     set_decoder( c->bag_t, ( Xml_Decoder ) array__xml_decode, state.deserializers );
     set_decoder( c->ns_t, ( Xml_Decoder ) namespace__xml_decode, state.deserializers );

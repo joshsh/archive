@@ -43,9 +43,9 @@ typedef struct Interpreter Interpreter;
 
 
 /** Constructor.
-    \param env  an environment for the compiler to act upon */
+    \param env  an environment for the interpreter to act upon */
 extern Interpreter *
-interpreter__new( Environment *env, boolean quiet );
+interpreter__new( Environment *env, boolean quiet, boolean verbose );
 
 
 /** Destructor. */

@@ -185,7 +185,7 @@ hash_table__new(
         h->size = 0;
 
         /* Capacity is re-calculated whenever the table resizes.
-           Note: capacity may initially be 0, which just means that the hash
+           NOTE: capacity may initially be 0, which just means that the hash
            table will expand as soon as it is added to. */
         h->capacity = ( unsigned int ) ( h->buffer_size * h->load );
 

@@ -21,7 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 Interpreter *
-interpreter__new( Environment *env, boolean quiet )
+interpreter__new( Environment *env, boolean quiet, boolean verbose )
 {
     Interpreter *c;
 
@@ -37,6 +37,7 @@ interpreter__new( Environment *env, boolean quiet )
     c->env = env;
     c->cur_ns_obj = environment__data( env );
     c->quiet = quiet;
+    c->verbose = verbose;
     c->show_line_numbers = TRUE;
 #if HAVE_LIBREADLINE
     c->use_readline = TRUE;

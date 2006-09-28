@@ -53,7 +53,7 @@ environment__resolve_type( Environment *env, const char *name, boolean create_if
         {
             if ( ( type = type__new( name, 0 ) ) )
             {
-                /* Note: all object collection types are registered explicitly. */
+                /* NOTE: all object collection types are registered explicitly. */
                 if ( !( o = environment__register_type( env, type ) ) )
                 {
                     type__delete( type );

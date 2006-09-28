@@ -27,7 +27,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "license.h"
 
 
-typedef int ( *CommandFunction )( Interpreter *c, Array *args );
+typedef int ( *CommandFunction )( Interpreter *itp, Array *args );
 
 
 typedef struct Command
@@ -42,32 +42,34 @@ typedef struct Command
 } Command;
 
 
-/* Command functions **********************************************************/
+/* Command helper functions ***************************************************/
 
 
 static int
-command_cp( Interpreter *c, Array *args )
+command_cp_helper( Interpreter *itp, Name *src, Name *dest )
 {
-    Object *o, *o2;
-    Name *src, *dest;
+    Object *o1, *o2;
 
-    src = object__value( array__get( args, 0 ) );
-    dest = object__value( array__get( args, 1 ) );
+    if ( DEBUG__SAFE && ( !itp || !src || !dest ) )
+        ABORT;
 
-    o = interpreter__resolve( c, src );
+    o1 = interpreter__resolve( itp, src );
 
-    if ( o )
+    if ( o1 )
     {
-        if ( ( o2 = interpreter__resolve( c, dest ) ) )
+        if ( ( o2 = interpreter__resolve( itp, dest ) ) )
         {
-            if ( o2->type == c->cur_ns_obj->type )
+            if ( o2->type == itp->cur_ns_obj->type )
             {
                 array__enqueue( dest, array__dequeue( src ) );
-                interpreter__define( c, dest, o );
+
+                interpreter__define( itp, dest, o1 );
                 array__enqueue( src, array__dequeue( dest ) );
 
-                if ( !c->quiet )
-                    PRINT( "Assignment from 1 object.\n" );
+/*
+                if ( itp->verbose && !itp->quiet )
+                    PRINT(
+*/
             }
 
             else
@@ -79,10 +81,41 @@ command_cp( Interpreter *c, Array *args )
 }
 
 
-#define HAS_KUICKSHOW   1
+static int
+command_rm_helper( Interpreter *itp, Name *name )
+{
+    if ( DEBUG__SAFE && ( !itp || !name ) )
+        ABORT;
+
+    interpreter__undefine( itp, name );
+
+    return 0;
+}
+
+
+/* Command functions **********************************************************/
+
 
 static int
-command_draw( Interpreter *c, Array *args )
+command_cp( Interpreter *itp, Array *args )
+{
+    Name *src, *dest;
+
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
+
+    src = object__value( array__get( args, 0 ) );
+    dest = object__value( array__get( args, 1 ) );
+
+    return command_cp_helper( itp, src, dest );
+}
+
+
+#define HAS_KUICKSHOW   1
+
+/* TODO: allow for other image viewers besides Kuickshow */
+static int
+command_draw( Interpreter *itp, Array *args )
 {
     Object *o;
     char *s;
@@ -90,15 +123,18 @@ command_draw( Interpreter *c, Array *args )
 
     FILE *f;
 
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
+
     name = object__value( array__get( args, 0 ) );
 
-    o = interpreter__resolve( c, name );
+    o = interpreter__resolve( itp, name );
 
     if ( o )
     {
-        s = interpreter__draw( c, o );
+        s = interpreter__draw( itp, o );
 
-        if ( !c->quiet )
+        if ( !itp->quiet )
         {
             PRINT( "%s\n", s );
         }
@@ -120,22 +156,23 @@ command_draw( Interpreter *c, Array *args )
 
 
 static int
-command_gc( Interpreter *c, Array *args )
+command_gc( Interpreter *itp, Array *args )
 {
-    args = 0;
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
-    manager__collect( environment__manager( c->env ), TRUE, !c->quiet );
+    manager__collect( environment__manager( itp->env ), TRUE, !itp->quiet );
 
     return 0;
 }
 
 
 static int
-command_help( Interpreter *c, Array *args )
+command_help( Interpreter *itp, Array *args )
 {
     ACTION helper( char **refp )
     {
-        Command *com = dictionary__lookup( c->commands, *refp );
+        Command *com = dictionary__lookup( itp->commands, *refp );
 
         PRINT( "  _%s", com->name );
         if ( com->args )
@@ -147,9 +184,10 @@ command_help( Interpreter *c, Array *args )
 
     Array *a;
 
-    args = 0;
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
-    if ( !c->quiet )
+    if ( !itp->quiet )
     {
         PRINT( "\
 Syntax:\n\
@@ -162,7 +200,7 @@ Syntax:\n\
 
         PRINT( "\n" );
 
-        a = dictionary__keys( c->commands );
+        a = dictionary__keys( itp->commands );
         array__sort( a, ( Comparator ) strcmp );
 
         PRINT( "Commands:\n" );
@@ -193,10 +231,15 @@ Example:\n\
 
 
 static int
-command_history( Interpreter *c, Array *args )
+command_history( Interpreter *itp, Array *args )
 {
     char *path;
-    Name *name = array__size( args )
+    Name *name;
+
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
+
+    name = array__size( args )
         ? object__value( array__get( args, 0 ) )
         : 0;
 
@@ -204,7 +247,7 @@ command_history( Interpreter *c, Array *args )
     {
         path = array__peek( name );
 
-        if ( !c->quiet )
+        if ( !itp->quiet )
             PRINT( "Saving history to \"%s\".\n", path );
 
         interpreter__write_history( path );
@@ -212,7 +255,7 @@ command_history( Interpreter *c, Array *args )
 
     else
     {
-        if ( !c->quiet )
+        if ( !itp->quiet )
             interpreter__print_history();
     }
 
@@ -221,11 +264,12 @@ command_history( Interpreter *c, Array *args )
 
 
 static int
-command_license( Interpreter *c, Array *args )
+command_license( Interpreter *itp, Array *args )
 {
-    args = 0;
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
-    if ( !c->quiet )
+    if ( !itp->quiet )
         PRINT( "%s\n", gpl_license );
 
     return 0;
@@ -233,13 +277,21 @@ command_license( Interpreter *c, Array *args )
 
 
 static int
-command_mv( Interpreter *c, Array *args )
+command_mv( Interpreter *itp, Array *args )
 {
-    Object *o, *o2;
     Name *src, *dest;
+
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
     src = object__value( array__get( args, 0 ) );
     dest = object__value( array__get( args, 1 ) );
+
+    return
+         command_cp_helper( itp, src, dest )
+      || command_rm_helper( itp, src );
+
+/*
 
     o = interpreter__resolve( c, src );
 
@@ -250,11 +302,7 @@ command_mv( Interpreter *c, Array *args )
             if ( o2->type == c->cur_ns_obj->type )
             {
                 namespace__add_simple( o2->value, array__peek( src ), o );
-/*
-                array__enqueue( dest, array__dequeue( src ) );
-                interpreter__define( c, dest, o );
-                array__enqueue( src, array__dequeue( dest ) );
-*/
+
                 if ( interpreter__undefine( c, src ) && !c->quiet )
                     PRINT( "Reassignment from 1 object.\n" );
             }
@@ -263,43 +311,32 @@ command_mv( Interpreter *c, Array *args )
                 err_notns( dest );
         }
     }
+*/
 
     return 0;
 }
 
 
 static int
-command_new( Interpreter *c, Array *args )
+command_new( Interpreter *itp, Array *args )
 {
     Object *o;
     Name *name;
+
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
     name = array__size( args )
         ? object__value( array__get( args, 0 ) )
         : 0;
 
-    if ( !name )
-        return 0;
-
-/*
-    if ( interpreter__resolve( c, name ) )
+    if ( name )
     {
-        ERROR( "name maps to an existing object" );
-        return 0;
-    }
-*/
+        o = manager__object( environment__manager( itp->env ),
+            itp->cur_ns_obj->type, namespace__new(), 0 );
 
-    o = manager__object( environment__manager( c->env ),
-        c->cur_ns_obj->type, namespace__new(), 0 );
-
-    if ( o )
-        o = interpreter__define( c, name, o );
-
-    if ( o && !c->quiet )
-    {
-        PRINT( "Created namespace " );
-        name__print( name );
-        PRINT( ".\n" );
+        if ( o )
+            o = interpreter__define( itp, name, o );
     }
 
     return 0;
@@ -307,26 +344,26 @@ command_new( Interpreter *c, Array *args )
 
 
 static int
-command_ns( Interpreter *c, Array *args )
+command_ns( Interpreter *itp, Array *args )
 {
     Object *o;
     Name *name, *fullname;
 
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
+
     name = object__value( array__get( args, 0 ) );
 
-/*
-putchar(',');FFLUSH;
-*/
-
-    if ( ( o = interpreter__resolve( c, name ) ) )
+    if ( ( o = interpreter__resolve( itp, name ) ) )
     {
-        if ( o->type != c->cur_ns_obj->type )
+        if ( o->type != itp->cur_ns_obj->type )
             err_notns( name );
 
         else
         {
-            c->cur_ns_obj = o;
+            itp->cur_ns_obj = o;
 
+/*
             if ( !c->quiet )
             {
                 fullname = interpreter__name_of__full( c, 0, o );
@@ -335,11 +372,11 @@ putchar(',');FFLUSH;
                 {
                     PRINT( "Moved to namespace " );
                     name__print( fullname );
-/*                    name__print( name );*/
                     PRINT( ".\n" );
                     name__delete( fullname );
                 }
             }
+*/
         }
     }
 
@@ -348,39 +385,43 @@ putchar(',');FFLUSH;
 
 
 static int
-command_quit( Interpreter *c, Array *args )
+command_quit( Interpreter *itp, Array *args )
 {
-    args = 0;
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
+/*
     if ( !c->quiet )
         PRINT( "Bye.\n" );
+*/
 
     return 1;
 }
 
 
 static int
-command_rm( Interpreter *c, Array *args )
+command_rm( Interpreter *itp, Array *args )
 {
     Name *name;
 
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
+
     name = object__value( array__get( args, 0 ) );
 
-    if ( interpreter__undefine( c, name ) && !c->quiet )
-        PRINT( "Unassigned 1 object.\n" );
-
-    return 0;
+    return command_rm_helper( itp, name );
 }
 
 
 static int
-command_save( Interpreter *c, Array *args )
+command_save( Interpreter *itp, Array *args )
 {
-    args = 0;
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
-    /* Note: the save_to_path member will normally change before this function
+    /* NOTE: the save_to_path member will normally change before this function
              returns, so we dereference it multiple times. */
-    if ( !c->save_to_path )
+    if ( !itp->save_to_path )
     {
         ERROR( "use _saveas to specify an output path" );
         return 0;
@@ -388,27 +429,30 @@ command_save( Interpreter *c, Array *args )
 
     else
     {
-        interpreter__serialize( c, c->save_to_path );
-        if ( !c->quiet )
-            PRINT( "Saved root:data as \"%s\".\n", c->save_to_path );
+        interpreter__serialize( itp, itp->save_to_path );
+        if ( !itp->quiet )
+            PRINT( "Saved root:data as \"%s\".\n", itp->save_to_path );
         return 0;
     }
 }
 
 
 static int
-command_saveas( Interpreter *c, Array *args )
+command_saveas( Interpreter *itp, Array *args )
 {
     Name *name;
     char *path;
+
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
     name = object__value( array__get( args, 0 ) );
 
     path = array__peek( name );
 
-    interpreter__serialize( c, path );
+    interpreter__serialize( itp, path );
 
-    if ( !c->quiet )
+    if ( !itp->quiet )
         PRINT( "Saved root:data as \"%s\".\n", path );
 
     return 0;
@@ -416,13 +460,14 @@ command_saveas( Interpreter *c, Array *args )
 
 
 static int
-command_size( Interpreter *c, Array *args )
+command_size( Interpreter *itp, Array *args )
 {
-    args = 0;
+    if ( DEBUG__SAFE && ( !itp || !args ) )
+        ABORT;
 
-    if ( !c->quiet )
+    if ( !itp->quiet )
         PRINT( "There are %i objects in this environment.\n",
-            manager__size( environment__manager( c->env ) ) );
+            manager__size( environment__manager( itp->env ) ) );
 
     return 0;
 }
@@ -540,7 +585,10 @@ failure:
 
 
 int
-interpreter__evaluate_command( Interpreter *itp, OBJ( STRING ) *name, OBJ( ARRAY ) *args, const char *text )
+interpreter__evaluate_command( Interpreter *itp,
+                               OBJ( STRING ) *name,
+                               OBJ( ARRAY ) *args,
+                               const char *text )
 {
     int result, n;
     Command *com;

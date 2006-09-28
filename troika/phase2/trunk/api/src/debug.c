@@ -17,85 +17,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <stdlib.h>
+#include "settings.h"
 
 
-#define DEBUG__ALLOC__VERBOSE                   0
-
-
-#define DEBUG__SAFE 1
-#define ABORT   printf("ABORT: [%s:%d]\n", __FILE__, __LINE__), abort()
-
-
-
-
-
-
-
-
-
-
-/* Terminal *******************************************************************/
-
-/* TODO: USE_NCURSES is not yet supported */
-#define USE_NCURSES                             0
-
-#if USE_NCURSES
-#    include <ncurses.h>
-#    define PRINT                               printw
-#    define REFRESH                             refresh
-#else
-#    define PRINT                               printf
-#    define REFRESH
+#ifdef calloc
+#   undef calloc
 #endif
-
-
-/* Errors *********************************************************************/
-
-
-#include <stdio.h>  /* fprintf */
-
-#define FFLUSH  { fflush( stdout ); fflush( stderr ); }
-
-/* Note: the GCC extension is used here instead of __VA_ARGS__ for compatibility
-   with old GCC cross-compilers. */
-
-#define ERROR(args...) (                                                    \
-    fprintf( stderr, "ERROR: " ),                                           \
-    fprintf( stderr , ##args ),                                             \
-    fprintf( stderr, "\n" ),                                                \
-    fflush( stderr ) )
-
-#define WARNING(args...) (                                                  \
-    fprintf( stderr, "WARNING: " ),                                         \
-    fprintf( stderr , ##args ),                                             \
-    fprintf( stderr, "\n" ),                                                \
-    fflush( stderr ) )
-
-#define WARNING__ALLOC WARNING
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef free
+#   undef free
+#endif
+#ifdef malloc
+#   undef malloc
+#endif
+#ifdef realloc
+#   undef realloc
+#endif
 
 
 static int
@@ -103,6 +39,7 @@ static int
     n_free      = 0,
     n_malloc    = 0,
     n_realloc   = 0;
+
 
 void *
 debug__calloc( size_t nelem, size_t elsize, const char *file, int line )

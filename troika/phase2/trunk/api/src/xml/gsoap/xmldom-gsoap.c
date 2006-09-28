@@ -54,7 +54,7 @@ parcour@gmail.com
 
   Element members
 
-  Note: firstChild, nextSibling, appendChild and removeChild are of the
+  NOTE: firstChild, nextSibling, appendChild and removeChild are of the
   Microsoft XML DOM, not W3C DOM.  They're here because they're more useful than
   getElementsByTagName and NodeLists.
 
@@ -82,8 +82,8 @@ struct soap_dom_element
 
  *//////////////////////////////////////////////////////////////////////////////
 
-// Note: you might want to use strdup() for some of these...
-// Note: namespace is not taken into account.
+// NOTE: you might want to use strdup() for some of these...
+// NOTE: namespace is not taken into account.
 
 
 
@@ -326,7 +326,7 @@ struct soap_dom_attribute
 
  *//////////////////////////////////////////////////////////////////////////////
 
-// Note: namespace is not taken into account.
+// NOTE: namespace is not taken into account.
 
 
 
