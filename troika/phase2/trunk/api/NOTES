@@ -74,7 +74,7 @@ joshs (x86 Fedora Core 4)
 Unsuccessful builds
 ================================================================================
 
-[CF] x86-netbsd1 -- libxml2 is not available
+[CF] x86-netbsd1 -- no libxml2
 	./configure
 		[...]
 		checking for xmlParseFile in -lxml2... no
@@ -82,7 +82,7 @@ Unsuccessful builds
 		is in your PATH or set the PKG_CONFIG environment variable to the full
 		path to pkg-config.
 		[...]
-[CF] x86-openbsd1 -- libxml2 is not available
+[CF] x86-openbsd1 -- no libxml2
 	./configure
 		[...]
 		checking for xmlParseFile in -lxml2... no

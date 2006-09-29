@@ -265,8 +265,6 @@ statements:
             *return_state = exit_state__aborted;
             YYACCEPT;
         }
-
-        pad_newline = TRUE;
     }
 
     /* Redundant semicolons are tolerated. */
@@ -466,19 +464,13 @@ expression:
         production( "expression ::=  object" );
 #endif
 
-        if ( $1 )
+        $$ = NEW( struct Expression );
+
+        if ( $$ )
         {
-            $$ = NEW( struct Expression );
-
-            if ( $$ )
-            {
-                $$->value = $1;
-                $$->name = 0;
-            }
+            $$->value = $1;
+            $$->name = 0;
         }
-
-        else
-            $$ = 0;
     }
 
     | object error

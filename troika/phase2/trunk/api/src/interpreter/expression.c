@@ -301,6 +301,15 @@ resolve( Interpreter *itp, Object *o )
         return CONTINUE;
     }
 
+    if ( !o )
+    {
+        if ( FIRST_CLASS_NULL )
+            return 0;
+
+        else if ( DEBUG__SAFE )
+            ABORT;
+    }
+
     Object **opp = malloc( sizeof ( Object* ) );
     *opp = o;
     helper( opp );
@@ -335,7 +344,7 @@ interpreter__evaluate_expression( Interpreter *itp,
         term__encode;
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
-    if ( DEBUG__SAFE && !expr )
+    if ( DEBUG__SAFE && !expr && !FIRST_CLASS_NULL )
         ABORT;
 
     interpreter = itp;

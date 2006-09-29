@@ -1,7 +1,7 @@
 /**
     \file  settings.h
 
-    Macros and includes 
+    Macros and includes for the internal API.
 
     \author  Joshua Shinavier   \n
              parcour@gmail.com  \n

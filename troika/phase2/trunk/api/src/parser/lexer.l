@@ -149,8 +149,6 @@ static Parser *parser_global;
 
 static int line_number, column_number, last_column_number;
 
-boolean pad_newline;
-
 /** Initialize the lexer for a new invocation of yyparse(). */
 void
 new_parse( Parser * /* p */ );
@@ -545,10 +543,7 @@ new_line( Parser *p )
     /* Decorate command-line input. */
     if ( !interpreter__quiet( p->interpreter ) )
     {
-        if ( pad_newline )
-            PRINT( "\n" );
-
-        pad_newline = FALSE;
+        PRINT( "\n" );
 
         /* Display a line number at the beginning of each new line of input. */
         if ( interpreter__show_line_numbers( p->interpreter ) )
@@ -569,7 +564,6 @@ new_parse( Parser *p )
 {
     parser_global = p;
     line_number = 0;
-    pad_newline = TRUE;
     new_line( p );
 
     lexer__clear_buffer();

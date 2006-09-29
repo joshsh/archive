@@ -7,4 +7,3 @@ svn status >/dev/null 2>&1 && which svn2cl
 if [[ "0" = $? ]]; then
         svn2cl
 fi
-

@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 int
-interpreter__handle_parse_error( Interpreter *c, const char *msg )
+interpreter__handle_parse_error( Interpreter *itp, const char *msg )
 {
     int ret = 0;
 
@@ -43,7 +43,7 @@ interpreter__handle_parse_error( Interpreter *c, const char *msg )
 #endif
 
     if ( msg )
-        ERROR( "%s\n", msg );
+        ERROR( "%s", msg );
 
     else
         ERROR( "parse error\n" );
@@ -53,7 +53,7 @@ interpreter__handle_parse_error( Interpreter *c, const char *msg )
     /*endwin();*/
 #endif
 
-    manager__collect( environment__manager( c->env ), FALSE, FALSE );
+    manager__collect( environment__manager( itp->env ), FALSE, FALSE );
 
     return ret;
 }
