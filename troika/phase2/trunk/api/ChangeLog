@@ -1,3 +1,27 @@
+2006-09-29 01:00  josh
+
+	* troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/changelog.sh,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h: Cleaned up parser
+	  newlines.
+
+2006-09-28 20:49  josh
+
+	* troika/phase2/trunk/api/ChangeLog,
+	  troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/bootstrap,
+	  troika/phase2/trunk/api/bootstrap.sh,
+	  troika/phase2/trunk/api/changelog.sh,
+	  troika/phase2/trunk/api/cleanup,
+	  troika/phase2/trunk/api/cleanup.sh: Added changelog.sh to
+	  generate GNU-style ChangeLog.
+
 2006-09-28 01:56  josh
 
 	* troika/phase2/trunk/api/AUTHORS, troika/phase2/trunk/api/NOTES,

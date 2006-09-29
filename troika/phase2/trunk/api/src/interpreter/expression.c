@@ -301,6 +301,8 @@ resolve( Interpreter *itp, Object *o )
         return CONTINUE;
     }
 
+    Object **opp;
+
     if ( !o )
     {
         if ( FIRST_CLASS_NULL )
@@ -310,7 +312,7 @@ resolve( Interpreter *itp, Object *o )
             ABORT;
     }
 
-    Object **opp = malloc( sizeof ( Object* ) );
+    opp = malloc( sizeof ( Object* ) );
     *opp = o;
     helper( opp );
     o = *opp;

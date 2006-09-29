@@ -12,6 +12,9 @@ Build
 * tools dependencies (doxygen, xsltproc)
 * include examples dir in distribution
 * [ARM cross-compile] use static libraries
+* add build times to NOTES
+* if possible, eliminate superfluous checks from generated ./configure
+* cleanup of src/config.h.in, src/collection/Makefile.in
 
 Design
 ================================================================================
