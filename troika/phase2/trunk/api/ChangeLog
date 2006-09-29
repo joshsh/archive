@@ -1,3 +1,10 @@
+2006-09-29 01:34  josh
+
+	* troika/phase2/trunk/api/ChangeLog, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/src/interpreter/expression.c: Phase2
+	  0.8.2 is ready to go.
+
 2006-09-29 01:00  josh
 
 	* troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
