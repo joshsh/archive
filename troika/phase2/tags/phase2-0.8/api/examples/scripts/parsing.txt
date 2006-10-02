@@ -1,0 +1,86 @@
+HEAD := T K;
+TAIL := T (S K);
+CONS := V;
+
+(: if x y yields y if x, otherwise () :)
+if := C (C V ());
+
+(:
+Derivation:
+
+    if (f c)
+    (
+        CONS (comp v0 c) (TAIL s)
+    );
+    B (B S) B if f (\c. CONS (comp v0 c) (TAIL s)) c;
+    B (B S) B if f (\c. C CONS (TAIL s ) (comp v0 c)) c;
+    B (B S) B if f (\c. B (C CONS (TAIL s )) (comp v0) c) c;
+    B (B S) B if f (B (C CONS (TAIL s)) (comp v0)) c;
+    B (B S) B if f (C B (comp v0) (C CONS (TAIL s))) c;
+    B (B S) B if f (C B (comp v0) (B (C CONS) TAIL s)) c;
+    B (B S) B if f (B (C B (comp v0)) (B (C CONS) TAIL) s) c;
+    B (B (B S) B if f) (B (C B (comp v0)) (B (C CONS) TAIL)) s c;
+    B (B (B S) B if f) (B (C B (comp v0)) (B (C CONS) TAIL)) s (s K);
+    B (B (B S) B if f) (B (C B (comp v0)) (B (C CONS) TAIL)) s (T K s);
+    S (B (B (B S) B if f) (B (C B (comp v0)) (B (C CONS) TAIL))) (T K) s;
+    S (B (B (B S) B if f) (B (C B (B (C CONS) TAIL)) (C B) (comp v0))) (T K) s;
+    S (B B (B (B S) B if) f (B (C B (B (C CONS) TAIL)) (C B) (comp v0))) (T K) s;
+    S (C (B B (B (B S) B if)) (B (C B (B (C CONS) TAIL)) (C B) (comp v0)) f) (T K) s;
+    S (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B)) (comp v0) f) (T K) s;
+    C S (T K) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B)) (comp v0) f) s;
+    B (C S (T K)) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B)) (comp v0)) f s;
+    B (B (C S (T K))) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B))) (comp v0) f s;
+    B (B (B (C S (T K))) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B)))) comp v0 f s;
+    C (B (B (B (C S (T K))) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B)))) comp) f v0 s;
+    B C (B (B (B (C S (T K))) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B))))) comp f v0 s;
+:)
+parse_char_abstr := B C (B (B (B (C S (T K))) (B (C (B B (B (B S) B if))) (B (C B (B (C CONS) TAIL)) (C B)))));
+
+match_char := B (B int__nonzero) char_char__equality;
+
+(:
+    parse_char_abstr CONS (match_char c) v0 s;
+    B (parse_char_abstr CONS) match_char c v0 s;
+:)
+parse_char := B (parse_char_abstr (C CONS)) match_char;
+
+parse_a := parse_char 'a';
+
+goodword := CONS 'a' ();
+badword := CONS 'b' ();
+
+parse_a () goodword;
+parse_a () badword;
+
+(:
+    pc p1 p2 v0 s;
+    x := p1 v0 s;
+        p2 (x K) (x (S K));
+        p2 (T K x) (T (S K) x);
+        B (B S) B p2 (T K) (T (S K)) x;
+    B (B S) B p2 (T K) (T (S K)) (p1 v0 s);
+    C (B (B S) B) (T K) p2 (T (S K)) (p1 v0 s);
+    C (C (B (B S) B) (T K)) (T (S K)) p2 (p1 v0 s);
+    B (C (C (B (B S) B) (T K)) (T (S K)) p2) (p1 v0) s;
+    B (B (C (C (B (B S) B) (T K)) (T (S K)) p2)) p1 v0 s;
+    B B B (C (C (B (B S) B) (T K)) (T (S K)) p2) p1 v0 s;
+    B (B B B) (C (C (B (B S) B) (T K)) (T (S K))) p2 p1 v0 s;
+    C (B (B B B) (C (C (B (B S) B) (T K)) (T (S K)))) p1 p2 v0 s;
+:)
+parsecat := C (B (B B B) (C (C (B (B S) B) (T K)) (T (S K))));
+
+parse_w := parse_char 'w';
+parse_o := parse_char 'o';
+parse_r := parse_char 'r';
+parse_d := parse_char 'd';
+
+word := V 'w' (V 'o' (V 'r' (V 'd' ())));
+nonword := V 'o' (V 'o' (V 'r' (V 'd' ())));
+
+parse_wo := parsecat parse_w parse_o;
+parse_rd := parsecat parse_r parse_d;
+parse_word := parsecat parse_wo parse_rd;
+
+parse_wo () word;
+parse_word () word;
+parse_wo () nonword;

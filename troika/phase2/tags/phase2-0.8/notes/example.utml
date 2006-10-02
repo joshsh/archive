@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<utml:Ontology xmlns:utml="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/utml-weak.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:p2="http://troika.dnsdojo.com/svn/repository/troika/phase2/trunk/src/phase2.utml" xmlns:foo="http://foo.com/foo.utml">
+
+    <utml:Subject id="ref-0" type="xsd:string" value="This is a string.">
+        <utml:Relation>
+            <utml:Predicate ref="foo:author" />
+            <utml:Object>
+                <utml:Relation>
+                    <utml:Predicate ref="foo:name" />
+                    <utml:Object type="xsd:string" value="Oolon Colluphid" />
+                </utml:Relation>
+            </utml:Object>
+        </utml:Relation>
+    </utml:Subject>
+
+    <utml:Subject id="ref-42" type="xsd:string">
+        <utml:Value>Zaphod Beeblebrox</utml:Value>
+        <utml:Relation>
+            <utml:Predicate ref="name" />
+            <utml:Object type="xsd:string" value="Josh Shinavier" />
+        </utml:Relation>
+    </utml:Subject>
+
+    <utml:Subject id="Josh">
+        <utml:Relation>
+            <utml:Predicate ref="name" />
+            <utml:Object type="xsd:string" value="Josh Shinavier" />
+        </utml:Relation>
+        <utml:Relation>
+            <utml:Predicate ref="foo:gender" />
+            <utml:Object ref="foo:male" />
+        </utml:Relation>
+        <utml:Relation>
+            <utml:Predicate type="xsd:string" value="friends" />
+            <utml:Object>
+                <utml:List memberType="xsd:string">
+                    <utml:Subject value="Larry" />
+                    <utml:Subject value="Curly" />
+                    <utml:Subject value="Moe" />
+                </utml:List>
+            </utml:Object>
+        </utml:Relation>
+    </utml:Subject>
+
+    <utml:Subject id="myList">
+        <utml:List type="p2:bag">
+            <utml:Subject type="xsd:integer" value="42" />
+            <utml:Subject type="xsd:string" value="forty-two" />
+        </utml:List>
+    </utml:Subject>
+
+    <utml:Subject id="omega">
+        <utml:List type="p2:SKTerm">
+             <utml:Subject ref="p2:S" />
+             <utml:Subject>
+                 <utml:List type="p2:SKTerm">
+                     <utml:Subject ref="p2:S" />
+                     <utml:Subject ref="p2:K" />
+                     <utml:Subject ref="p2:K" />
+                 </utml:List>
+             </utml:Subject>
+             <utml:Subject>
+                 <utml:List type="p2:SKTerm">
+                     <utml:Subject ref="p2:S" />
+                     <utml:Subject ref="p2:K" />
+                     <utml:Subject ref="p2:K" />
+                 </utml:List>
+             </utml:Subject>
+        </utml:List>
+        <utml:Relation>
+            <utml:Predicate ref="size" />
+            <utml:Object type="xsd:integer" value="1" />
+        </utml:Relation>
+    </utml:Subject>
+
+    <utml:Subject id="DaysOfWeek">
+        <utml:List memberType="xsd:string">
+            <utml:Subject value="Sunday" />
+            <utml:Subject value="Monday" />
+            <utml:Subject value="Tuesday" />
+            <utml:Subject value="Wednesday" />
+            <utml:Subject value="Thursday" />
+            <utml:Subject value="Friday" />
+            <utml:Subject value="Saturday" />
+        </utml:List>
+    </utml:Subject>
+
+</utml:Ontology>

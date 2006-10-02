@@ -1,0 +1,39 @@
+.TH "phase2" 1 "August 2006" "phase2 0.8" "phase2 0.8"
+.SH NAME
+phase2 \- interpreter for the Phase2 programming language
+.SH SYNOPSIS
+.B phase2
+[
+.B
+\-hqv] [\-f file]
+.SH DESCRIPTION
+Phase2 is an experimental language API and interpreter which combines ideas from
+functional programming and the Semantic Web.
+.PP
+Some more about Phase2.................
+.SH EXAMPLES
+.TP
+Resume a previous session:
+.B phase2
+\-f myfile.p2
+.SH OPTIONS
+.TP
+.B \-f
+load environment from <file>
+.TP
+.B \-h
+print help and exit
+.TP
+.B \-q
+suppress standard output
+.TP
+.B \-v
+print version number and exit
+.SH EXIT STATUS
+zero if the session finishes without errors, otherwise a non-zero exit code indicating the type of failure
+.SH AUTHOR
+Joshua Shinavier (parcour (at) gmail.com)
+.SH "SEE ALSO"
+p2gui
+.SH BUGS
+<known bugs if any>

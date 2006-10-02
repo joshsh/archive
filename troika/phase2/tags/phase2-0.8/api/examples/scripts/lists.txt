@@ -1,0 +1,53 @@
+_new lists;
+_ns lists;
+
+(: Note: that's the "oh" combinator, not a zero. :)
+HEAD := O (K K);
+TAIL := O (K (S K));
+CONS := V;
+
+list := CONS 66 (CONS 65 (CONS 68 ()));
+
+S' := B (B S) B;
+
++ := int_int__add;
+- := int_int__sub; 
+
+(: lists:summation -- use a pairwise "summing" function to apply recursively
+                     to a list :)
+
+_new sum;
+sum:summationBody := C (B (C (C (B (B S) B) HEAD)) (C B TAIL));
+sum:summation := B Y sum:summationBody;
+
+summation (B + putchar) =: sum:print;
+print list;
+
+(: lists:map -- forms a new list by applying a function to each element of the
+                argument list :)
+
+map := B summation (B CONS);
+
+BAZ := CONS 66 (CONS 65 (CONS 90 ()));
+print (map (+ 32) BAZ);
+
+(: lists:find -- :)
+
+findBody := C (B (C (C (B (S (B C (B (B S) (B S (B CONS))))) B) HEAD)) (C B TAIL));
+find := B Y findBody;
+
+find (B int__nonzero (- 66)) BAZ;
+
+
+
+(:
+    V a b --> V b a
+    x := V a b
+        b == x (S K)
+        a == x K
+    V b a
+    V (x (S K)) (x K)
+    V (T (S K) x) (T K x)
+    B (B S) B V (T (S K)) (T K) x
+:)
+invert := B (B S) B V (T (S K)) (T K);

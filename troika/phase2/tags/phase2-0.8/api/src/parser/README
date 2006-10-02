@@ -1,0 +1,3 @@
+Note: the names lexer.l and parser.y are a result of Automake's idiosyncratic
+support for Lex and Yacc.  By default, Automake would build phase2.o from
+phase2.l, and another phase2.o from phase2.y.

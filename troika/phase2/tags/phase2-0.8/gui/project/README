@@ -1,0 +1,124 @@
+
+                              P 2 G U I
+
+This is a graphical browser tool for Phase2.  For now, it simply lets you
+navigate within a namespace.  Planned features include editing and
+expression-building, as well as a "free form" layout which allows you to
+associate collection elements with position data (see
+./src/layout/P2FreeFormLayout.h).
+
+                        --- Prerequisites ---
+
+                              - Qt4 -
+
+You'll need the Qt4 libraries to build p2gui, as well as Trolltech qmake,
+the source for which is available here:
+
+    http://www.trolltech.com/developer/downloads/qt/index
+
+Note: installing Qt from source takes significant time and system resources.
+
+                            - Phase2 -
+
+If you have not already installed Phase2, the GUI is rather pointless (and
+more imminently, it won't compile).  So get the api/interpreter package
+here:
+
+    http://sourceforge.net/projects/phase2
+
+You should have configured Phase2 to put the headers and libraries where you
+want them, e.g.
+
+    $ ./configure --prefix=/usr
+
+...then installed (as root if necessary):
+
+    $ make install
+
+                            - libxml2 -
+
+See the Phase2 README.
+
+                        --- Compiling p2gui ---
+
+From the p2gui directory, create a qmake project file:
+
+    $ qmake -project -o p2gui.pro
+
+Now append some information which will tell the Makefile where to look for
+the libxml2 libraries and the phase2 libraries and headers.  If you've
+installed to a directory other than /usr you'll need to change this
+appropriately.
+
+    $ echo "INCPATH += /usr/include/phase2" >> p2gui.pro
+    $ echo "LIBS += -lphase2 -lxml2" >> p2gui.pro
+    $ echo "QMAKE_CXXFLAGS += -Wno-deprecated" >> p2gui.pro
+
+Now generate the Makefile:
+
+    $ qmake
+
+Finally, make the executable:
+
+    $ make
+
+                  --- Ignore everything below this line ---
+
+...unless you're me and you're cross-compiling.
+
+
+::: Compiling p2gui (x86) ::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+rm -f p2gui
+make clean
+rm -f Makefile
+rm -f *.pro
+rm -rf .moc .obj .rcc
+
+# Using x86 qmake.
+qmake -project -o p2gui.pro
+	echo "QMAKE_CXXFLAGS += -Wno-deprecated" >> p2gui.pro
+	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
+	echo "LIBS += -lphase2 -lxml2" >> p2gui.pro
+	echo "QMAKE_INSTALL_FILE = p2gui" >> p2gui.pro
+#	echo "INSTALLS += p2gui" >> p2gui.pro
+
+qmake
+
+make
+
+
+::: Cross-compiling p2gui (arm) ::::::::::::::::::::::::::::::::::::::::::::::::
+
+# p2gui is best compiled with the Embedix (gcc2) cross-compiler, rather than
+# the crosstools-generated (gcc4) cross-compiler.
+ARM_PREFIX=/opt/Embedix/tools
+
+QTE_PREFIX=/usr/local/Trolltech/QtopiaCore-4.1.2
+
+PATH=$ARM_PREFIX/bin:$PATH
+
+rm -f p2gui
+make clean
+rm -f Makefile
+rm -f *.pro
+rm -rf .moc .obj .rcc
+
+$QTE_PREFIX/bin/qmake -project -o p2gui.pro
+	echo "QMAKE_CXXFLAGS += -Wno-deprecated -DARM_LINUX" >> p2gui.pro
+	echo "INCPATH += /usr/local/include/phase2" >> p2gui.pro
+	echo "LIBS += -lqgfxtransformed_debug -L$ARM_PREFIX/lib -lphase2 -lxml2" >> p2gui.pro
+
+$QTE_PREFIX/bin/qmake -spec $QTE_PREFIX/mkspecs/qws/linux-arm-g++
+
+make
+
+
+
+
+
+
+> /usr/include/glib-2.0/gobject/gtype.h:439: warning: `visibility' attribute
+> directive ignored
+The compiler you are using doesn't support one of the gcc extensions
+which are used in the glib headers.

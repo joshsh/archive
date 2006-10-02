@@ -1,0 +1,4550 @@
+2006-09-29 01:34  josh
+
+	* troika/phase2/trunk/api/ChangeLog, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/src/interpreter/expression.c: Phase2
+	  0.8.2 is ready to go.
+
+2006-09-29 01:00  josh
+
+	* troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/changelog.sh,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h: Cleaned up parser
+	  newlines.
+
+2006-09-28 20:49  josh
+
+	* troika/phase2/trunk/api/ChangeLog,
+	  troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/bootstrap,
+	  troika/phase2/trunk/api/bootstrap.sh,
+	  troika/phase2/trunk/api/changelog.sh,
+	  troika/phase2/trunk/api/cleanup,
+	  troika/phase2/trunk/api/cleanup.sh: Added changelog.sh to
+	  generate GNU-style ChangeLog.
+
+2006-09-28 01:56  josh
+
+	* troika/phase2/trunk/api/AUTHORS, troika/phase2/trunk/api/NOTES,
+	  troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/debug.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/getopt,
+	  troika/phase2/trunk/api/src/getopt/getopt.c,
+	  troika/phase2/trunk/api/src/getopt/getopt.h,
+	  troika/phase2/trunk/api/src/getopt/getopt1.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/xml/Makefile.am,
+	  troika/phase2/trunk/api/src/xml/gsoap/xmldom-gsoap.c,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/api/test/ns_breadth.sh: Added getopt sources
+	  for better portability.
+
+2006-09-25 21:32  josh
+
+	* troika/phase2/trunk/api/NOTES,
+	  troika/phase2/trunk/api/include/phase2/xml.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/parser/Parser.c,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: Minor tweaks for
+	  compatibility with old GCCs
+
+2006-09-23 00:46  josh
+
+	* troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/README,
+	  troika/phase2/trunk/api/include/libxml,
+	  troika/phase2/trunk/api/include/libxml/COPYING,
+	  troika/phase2/trunk/api/include/libxml/DOCBparser.h,
+	  troika/phase2/trunk/api/include/libxml/HTMLparser.h,
+	  troika/phase2/trunk/api/include/libxml/HTMLtree.h,
+	  troika/phase2/trunk/api/include/libxml/SAX.h,
+	  troika/phase2/trunk/api/include/libxml/SAX2.h,
+	  troika/phase2/trunk/api/include/libxml/c14n.h,
+	  troika/phase2/trunk/api/include/libxml/catalog.h,
+	  troika/phase2/trunk/api/include/libxml/chvalid.h,
+	  troika/phase2/trunk/api/include/libxml/debugXML.h,
+	  troika/phase2/trunk/api/include/libxml/dict.h,
+	  troika/phase2/trunk/api/include/libxml/encoding.h,
+	  troika/phase2/trunk/api/include/libxml/entities.h,
+	  troika/phase2/trunk/api/include/libxml/globals.h,
+	  troika/phase2/trunk/api/include/libxml/hash.h,
+	  troika/phase2/trunk/api/include/libxml/list.h,
+	  troika/phase2/trunk/api/include/libxml/nanoftp.h,
+	  troika/phase2/trunk/api/include/libxml/nanohttp.h,
+	  troika/phase2/trunk/api/include/libxml/parser.h,
+	  troika/phase2/trunk/api/include/libxml/parserInternals.h,
+	  troika/phase2/trunk/api/include/libxml/pattern.h,
+	  troika/phase2/trunk/api/include/libxml/relaxng.h,
+	  troika/phase2/trunk/api/include/libxml/schemasInternals.h,
+	  troika/phase2/trunk/api/include/libxml/schematron.h,
+	  troika/phase2/trunk/api/include/libxml/threads.h,
+	  troika/phase2/trunk/api/include/libxml/tree.h,
+	  troika/phase2/trunk/api/include/libxml/uri.h,
+	  troika/phase2/trunk/api/include/libxml/valid.h,
+	  troika/phase2/trunk/api/include/libxml/xinclude.h,
+	  troika/phase2/trunk/api/include/libxml/xlink.h,
+	  troika/phase2/trunk/api/include/libxml/xmlIO.h,
+	  troika/phase2/trunk/api/include/libxml/xmlautomata.h,
+	  troika/phase2/trunk/api/include/libxml/xmlerror.h,
+	  troika/phase2/trunk/api/include/libxml/xmlexports.h,
+	  troika/phase2/trunk/api/include/libxml/xmlmemory.h,
+	  troika/phase2/trunk/api/include/libxml/xmlmodule.h,
+	  troika/phase2/trunk/api/include/libxml/xmlreader.h,
+	  troika/phase2/trunk/api/include/libxml/xmlregexp.h,
+	  troika/phase2/trunk/api/include/libxml/xmlsave.h,
+	  troika/phase2/trunk/api/include/libxml/xmlschemas.h,
+	  troika/phase2/trunk/api/include/libxml/xmlschemastypes.h,
+	  troika/phase2/trunk/api/include/libxml/xmlstring.h,
+	  troika/phase2/trunk/api/include/libxml/xmlunicode.h,
+	  troika/phase2/trunk/api/include/libxml/xmlversion.h,
+	  troika/phase2/trunk/api/include/libxml/xmlwriter.h,
+	  troika/phase2/trunk/api/include/libxml/xpath.h,
+	  troika/phase2/trunk/api/include/libxml/xpathInternals.h,
+	  troika/phase2/trunk/api/include/libxml/xpointer.h,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c: Added
+	  libxml2 headers, fixed the two known bugs involving namespace
+	  cycles.
+
+2006-09-21 18:10  josh
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Array.h,
+	  troika/phase2/trunk/api/include/phase2/Bunch.h,
+	  troika/phase2/trunk/api/include/phase2/Collection.h,
+	  troika/phase2/trunk/api/include/phase2/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/Graph.h,
+	  troika/phase2/trunk/api/include/phase2/Hash_Map.h,
+	  troika/phase2/trunk/api/include/phase2/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Name.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/Set.h,
+	  troika/phase2/trunk/api/include/phase2/String.h,
+	  troika/phase2/trunk/api/include/phase2/Term.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/collection,
+	  troika/phase2/trunk/api/include/phase2/compiler.h,
+	  troika/phase2/trunk/api/include/phase2/xml,
+	  troika/phase2/trunk/api/include/phase2/xml.h,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/String.c,
+	  troika/phase2/trunk/api/src/collection/Term-impl.h,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/src/Set-operations.h,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Parser-impl.h,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: Flattened include
+	  directory.
+
+2006-09-21 17:52  josh
+
+	* troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/include/phase2/Parser.h,
+	  troika/phase2/trunk/api/include/phase2/Primitive-import.h,
+	  troika/phase2/trunk/api/include/phase2/Primitive.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/Void.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Array.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Bunch.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Collection.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Graph.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Map.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Name.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Set.h,
+	  troika/phase2/trunk/api/include/phase2/collection/String.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Term.h,
+	  troika/phase2/trunk/api/include/phase2/compiler.h,
+	  troika/phase2/trunk/api/src/Void.c,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/String.c,
+	  troika/phase2/trunk/api/src/collection/Term-impl.h,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/Closure.c,
+	  troika/phase2/trunk/api/src/compiler/Closure.h,
+	  troika/phase2/trunk/api/src/compiler/Indirection.c,
+	  troika/phase2/trunk/api/src/compiler/Indirection.h,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/environment/Environment-impl.h,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/import/src/Set-operations.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/stdio.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/stdlib.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/string.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers/stdio.c,
+	  
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers/stdlib.c,
+	  
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers/string.c,
+	  troika/phase2/trunk/api/src/import/src/c89/types/char.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/double.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/int.h,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.h,
+	  troika/phase2/trunk/api/src/import/src/xpm.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace-impl.h,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Parser-impl.h,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/primitive/Primitive-impl.h,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/type/Type-impl.h,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: Qualified phase2
+	  #include directives.
+
+2006-09-21 01:42  josh
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/examples/datasets/test.p2,
+	  troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/parser/Parser.c,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c:
+
+2006-09-20 23:07  josh
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/xml/xmldom.h,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/xml/Makefile.am,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c: Fixed
+	  _save path bug.
+
+2006-09-20 21:58  josh
+
+	* troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c:
+
+2006-09-20 21:51  josh
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c: Formatted
+	  FIXME comments for greppability.
+
+2006-09-20 21:33  josh
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/phase2/collection/Term.h,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/Term-impl.h,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/debug.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/test/ns_depth.exp: Now safe (although
+	  not ideal) for 64-bit machines.
+
+2006-09-20 16:52  josh
+
+	* troika/phase2/trunk/api/INSTALL, troika/phase2/trunk/api/NOTES,
+	  troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/examples/scripts/lists.txt,
+	  troika/phase2/trunk/api/examples/scripts/parsing.txt,
+	  troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/include/phase2/compiler.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/Closure.c,
+	  troika/phase2/trunk/api/src/compiler/Indirection.c,
+	  troika/phase2/trunk/api/src/compiler/Indirection.h,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/debug.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/assert.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/ctype.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/locale.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/math.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/setjmp.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/signal.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/stdarg.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/stddef.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/stdio.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/stdlib.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/string.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/time.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers/stdio.c,
+	  
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers/stdlib.c,
+	  
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib/wrappers/string.c,
+	  troika/phase2/trunk/api/src/import/src/c89/types/char.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/double.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/int.h,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.h,
+	  troika/phase2/trunk/api/src/import/src/xpm.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/namespace/io-simple.c,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/association.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/Parser.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/primitive/Primitive.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/type/Type.c: Long-overdue commit
+	  after restoring server.
+
+2006-08-31 21:29  josh
+
+	* troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/src/environment/Environment-impl.h,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/namespace/io-simple.c:
+
+2006-08-29 06:40  josh
+
+	* troika/phase2/trunk/api/INSTALL,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/type/Type.c:
+
+2006-08-29 00:01  josh
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/compiler.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/environment/Environment-impl.h,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/manager/Manager.c,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/parser/Parser-impl.h: Renamed
+	  Memory_Manager --> Manager.
+
+2006-08-28 23:18  josh
+
+	* troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/include/phase2/Parser.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/parser/Ast-impl.h,
+	  troika/phase2/trunk/api/src/parser/Ast.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/Parser-impl.h,
+	  troika/phase2/trunk/api/src/parser/Parser.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser-test.c,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/test,
+	  troika/phase2/trunk/api/test/ns_breadth.sh,
+	  troika/phase2/trunk/api/test/ns_depth.sh,
+	  troika/phase2/trunk/api/test/triples_breadth.sh,
+	  troika/phase2/trunk/api/test/triples_depth.sh: Eliminated the
+	  Ast class. Added a Parser class which makes better use of
+	  memory management.
+
+2006-08-26 01:32  josh
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/phase2/Parser.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Bunch.h,
+	  troika/phase2/trunk/api/phase2.nro,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/String.c,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/debug.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/history.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/Parser-impl.h,
+	  troika/phase2/trunk/api/src/parser/Parser.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/xml/gsoap/xmldom-gsoap.c: ~ revising
+	  the parser
+
+2006-08-22 00:18  josh
+
+	* troika/phase2/trunk/api/INSTALL, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/settings.h: Cleaned up and improved
+	  the build.
+
+2006-08-21 22:27  josh
+
+	* troika/phase2/trunk/api/INSTALL, troika/phase2/trunk/api/README:
+
+2006-08-19 01:54  josh
+
+	* troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y:
+
+2006-08-15 00:51  josh
+
+	* troika/phase2/trunk/api/src/interpreter/command.c: Minor
+	  improvement to commands.c
+
+2006-08-15 00:18  josh
+
+	* troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/parser/parser-test.c,
+	  troika/phase2/trunk/api/src/parser/parser.y: Command/expression
+	  history fully functional.
+
+2006-08-12 01:01  josh
+
+	* troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/history.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser-test.c,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h: Added command/expression
+	  history (but interpreter__print_history needs debugging).
+
+2006-08-09 22:54  josh
+
+	* troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/xml/Makefile.am: Formalized
+	  dependencies in the build.
+
+2006-08-07 22:27  josh
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c: Added _draw
+	  command.
+
+2006-08-07 22:18  josh
+
+	* troika/phase2/trunk/api/NOTES, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/include/phase2/Primitive-import.h:
+
+2006-08-02 01:12  joshs
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/examples/datasets/test.p2,
+	  troika/phase2/trunk/api/examples/scripts/lists.txt,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/gui/project/README:
+
+2006-07-29 01:51  joshs
+
+	* troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/primitive/Primitive.c,
+	  troika/phase2/trunk/api/src/settings.h: Macro cleanup.
+
+2006-07-17 21:41  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/gui/README, troika/phase2/trunk/gui/TODO,
+	  troika/phase2/trunk/gui/project/README,
+	  troika/phase2/trunk/gui/project/TODO:
+
+2006-07-14 23:25  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Table.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/parser/Ast-impl.h,
+	  troika/phase2/trunk/api/src/parser/Ast.c,
+	  troika/phase2/trunk/api/src/parser/Ast.h,
+	  troika/phase2/trunk/api/src/parser/parser-test.c,
+	  troika/phase2/trunk/api/src/parser/parser.y: Phase2 0.8.1 --
+	  first SourceForge release
+
+2006-07-14 19:59  joshs
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/include/phase2/Primitive-import.h,
+	  troika/phase2/trunk/api/include/phase2/Primitive.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/Void.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Array.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Bunch.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Collection.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Graph.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Map.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Name.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Set.h,
+	  troika/phase2/trunk/api/include/phase2/collection/String.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Term.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/include/phase2/compiler.h,
+	  troika/phase2/trunk/api/include/phase2/xml/xmldom.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Ast.c,
+	  troika/phase2/trunk/api/src/parser/Ast.h,
+	  troika/phase2/trunk/api/src/parser/parser-test.c,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/type/Type.c: \!
+
+2006-07-14 15:44  josh
+
+	* troika/phase2/trunk/api/include/phase2/Combinator.h,
+	  troika/phase2/trunk/api/include/phase2/common.h:
+
+2006-07-13 22:32  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Closure.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/src/compiler/Closure.h,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/parser/Ast.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/type/Type.c:
+
+2006-07-13 19:24  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Closure.c,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/compiler/Closure.c,
+	  troika/phase2/trunk/api/src/manager,
+	  troika/phase2/trunk/api/src/manager/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/parser/Ast.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am:
+
+2006-07-13 19:12  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Map.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Set.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/include/phase2/compiler.h,
+	  troika/phase2/trunk/api/include/phase2/sk.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/graph-reduce.c,
+	  troika/phase2/trunk/api/src/compiler/graph-types.h,
+	  troika/phase2/trunk/api/src/compiler/graph.c,
+	  troika/phase2/trunk/api/src/compiler/graph.h,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/compiler/term-reduce.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/settings.h: Phase2 0.8.1 -- revised
+	  hash table API (entries now stored by value rather than by
+	  reference)
+
+2006-07-10 23:46  joshs
+
+	* troika/phase2/trunk/api/doxygen.cfg,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Name.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Term.h,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Type.c,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/Term-impl.h,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/graph.c,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/import/src/c89/char.c,
+	  troika/phase2/trunk/api/src/import/src/c89/char.h,
+	  troika/phase2/trunk/api/src/import/src/c89/cstring.c,
+	  troika/phase2/trunk/api/src/import/src/c89/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/c89/double.c,
+	  troika/phase2/trunk/api/src/import/src/c89/double.h,
+	  troika/phase2/trunk/api/src/import/src/c89/int.c,
+	  troika/phase2/trunk/api/src/import/src/c89/int.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/char.c,
+	  troika/phase2/trunk/api/src/import/src/c89/types/char.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/cstring.c,
+	  troika/phase2/trunk/api/src/import/src/c89/types/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/double.c,
+	  troika/phase2/trunk/api/src/import/src/c89/types/double.h,
+	  troika/phase2/trunk/api/src/import/src/c89/types/int.c,
+	  troika/phase2/trunk/api/src/import/src/c89/types/int.h,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser-test.c,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/parser/test.c,
+	  troika/phase2/trunk/api/src/primitive/Primitive.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/type,
+	  troika/phase2/trunk/api/src/type/Type-impl.h,
+	  troika/phase2/trunk/api/src/type/Type.c,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: tidying up
+
+2006-07-10 21:28  joshs
+
+	* troika/phase2/trunk/api/src/import/src/c89/char.c,
+	  troika/phase2/trunk/api/src/import/src/c89/char.h,
+	  troika/phase2/trunk/api/src/import/src/c89/cstring.c,
+	  troika/phase2/trunk/api/src/import/src/c89/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/c89/double.c,
+	  troika/phase2/trunk/api/src/import/src/c89/double.h,
+	  troika/phase2/trunk/api/src/import/src/c89/int.c,
+	  troika/phase2/trunk/api/src/import/src/c89/int.h,
+	  troika/phase2/trunk/api/src/import/src/c89/std_lib,
+	  troika/phase2/trunk/api/src/import/src/c89/types,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib,
+	  troika/phase2/trunk/api/src/import/src/char.c,
+	  troika/phase2/trunk/api/src/import/src/char.h,
+	  troika/phase2/trunk/api/src/import/src/cstring.c,
+	  troika/phase2/trunk/api/src/import/src/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/double.c,
+	  troika/phase2/trunk/api/src/import/src/double.h,
+	  troika/phase2/trunk/api/src/import/src/int.c,
+	  troika/phase2/trunk/api/src/import/src/int.h: ~
+
+2006-07-10 20:13  joshs
+
+	* troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/debugger.c,
+	  troika/phase2/trunk/api/src/parser/test.c:
+
+2006-07-10 20:04  josh
+
+	* troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/settings.h:
+
+2006-07-08 00:14  joshs
+
+	* troika/phase2/trunk/api/src/import/Makefile.am:
+
+2006-07-07 23:59  joshs
+
+	* troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/traversal.c: tidying up
+
+2006-07-07 23:22  joshs
+
+	* troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Closure.c,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Type.c,
+	  troika/phase2/trunk/api/src/Void.c,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/String.c,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/src/char.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/api/src/import/src/double.c,
+	  troika/phase2/trunk/api/src/import/src/int.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/debugger.c,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: tidying up
+
+2006-07-07 20:30  joshs
+
+	* troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/examples/datasets/test.p2,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/import/src/c89/operators.c,
+	  troika/phase2/trunk/api/src/import/src/c89/operators.h,
+	  troika/phase2/trunk/api/src/import/src/c89/operators.h.templ,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/assert.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/ctype.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/locale.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/math.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/setjmp.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/signal.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdarg.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stddef.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdlib.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/string.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/time.h,
+	  troika/phase2/trunk/api/src/interpreter/serial.c: Phase2 v0.8 --
+	  basic operators drawn from the ANSI C standard
+
+2006-07-07 17:47  joshs
+
+	* troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/import/operators.h,
+	  troika/phase2/trunk/api/src/import/src/c89,
+	  troika/phase2/trunk/api/src/import/src/c89/operators.c,
+	  troika/phase2/trunk/api/src/import/src/c89/operators.h,
+	  troika/phase2/trunk/api/src/import/src/char.c,
+	  troika/phase2/trunk/api/src/import/src/char.h,
+	  troika/phase2/trunk/api/src/import/src/double.c,
+	  troika/phase2/trunk/api/src/import/src/double.h,
+	  troika/phase2/trunk/api/src/import/src/int.c,
+	  troika/phase2/trunk/api/src/import/src/int.h: ~
+
+2006-07-07 00:50  joshs
+
+	* troika/phase2/trunk/api/examples/datasets/skos-core.rdf,
+	  troika/phase2/trunk/api/examples/skos-core.rdf,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/String.c,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/xml/gsoap/xmldom-gsoap.c: malloc -->
+	  MALLOC
+
+2006-07-07 00:25  joshs
+
+	* troika/phase2/trunk/api/Makefile_old,
+	  troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/examples/datasets,
+	  troika/phase2/trunk/api/examples/datasets/test.p2,
+	  troika/phase2/trunk/api/examples/demo.p2,
+	  troika/phase2/trunk/api/examples/guitest.p2,
+	  troika/phase2/trunk/api/examples/script.txt,
+	  troika/phase2/trunk/api/examples/scripts,
+	  troika/phase2/trunk/api/examples/scripts/lists.txt,
+	  troika/phase2/trunk/api/examples/test.p2,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Collection.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/collection,
+	  troika/phase2/trunk/api/include/phase2/collection/Array.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Bunch.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Collection.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Graph.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Map.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Name.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Set.h,
+	  troika/phase2/trunk/api/include/phase2/collection/String.h,
+	  troika/phase2/trunk/api/include/phase2/collection/Term.h,
+	  troika/phase2/trunk/api/include/phase2/sk.h,
+	  troika/phase2/trunk/api/include/phase2/util,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Collection.c,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/collection,
+	  troika/phase2/trunk/api/src/collection/Array.c,
+	  troika/phase2/trunk/api/src/collection/Bunch.c,
+	  troika/phase2/trunk/api/src/collection/Collection.c,
+	  troika/phase2/trunk/api/src/collection/Dictionary.c,
+	  troika/phase2/trunk/api/src/collection/Graph.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Map.c,
+	  troika/phase2/trunk/api/src/collection/Hash_Table.c,
+	  troika/phase2/trunk/api/src/collection/Makefile.am,
+	  troika/phase2/trunk/api/src/collection/Makefile_old,
+	  troika/phase2/trunk/api/src/collection/Name.c,
+	  troika/phase2/trunk/api/src/collection/Set.c,
+	  troika/phase2/trunk/api/src/collection/String.c,
+	  troika/phase2/trunk/api/src/collection/Term.c,
+	  troika/phase2/trunk/api/src/collection/debugger.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/graph.h,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/Makefile_old,
+	  troika/phase2/trunk/api/src/import/src/Set-operations.h,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/Makefile_old,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/util,
+	  troika/phase2/trunk/api/src/xml/Makefile_old: util --> collection
+
+2006-07-06 23:45  joshs
+
+	* troika/phase2/trunk/api/src/util/Array.c:
+
+2006-07-05 22:23  joshs
+
+	* troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/examples,
+	  troika/phase2/trunk/api/src/util/Makefile.am,
+	  troika/phase2/trunk/examples: Moved examples into ./api
+
+2006-07-03 23:51  joshs
+
+	* troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/doxygen.cfg,
+	  troika/phase2/trunk/api/src/import/operators.h,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/util/Makefile.am,
+	  troika/phase2/trunk/api/src/xml/Makefile.am,
+	  troika/phase2/trunk/api/src/xml/gsoap/README,
+	  troika/phase2/trunk/api/src/xml/gsoap/README.txt,
+	  troika/phase2/trunk/api/src/xml/libxml2/README,
+	  troika/phase2/trunk/api/src/xml/libxml2/README.txt:
+
+2006-07-03 18:39  joshs
+
+	* troika/phase2/trunk/api/README.txt,
+	  troika/phase2/trunk/api/src/import/README.txt,
+	  troika/phase2/trunk/api/src/parser/README,
+	  troika/phase2/trunk/api/src/util/debugger.c,
+	  troika/phase2/trunk/api/src/xml/gsoap/README.txt,
+	  troika/phase2/trunk/api/src/xml/libxml2/README.txt,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c:
+
+2006-07-03 18:23  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Closure.h,
+	  troika/phase2/trunk/api/include/phase2/Collection.h,
+	  troika/phase2/trunk/api/include/phase2/Combinator.h,
+	  troika/phase2/trunk/api/include/phase2/Environment.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/include/phase2/Primitive-import.h,
+	  troika/phase2/trunk/api/include/phase2/Primitive.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/Void.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/include/phase2/sk.h,
+	  troika/phase2/trunk/api/include/phase2/util/Array.h,
+	  troika/phase2/trunk/api/include/phase2/util/Bunch.h,
+	  troika/phase2/trunk/api/include/phase2/util/Dictionary.h,
+	  troika/phase2/trunk/api/include/phase2/util/Graph.h,
+	  troika/phase2/trunk/api/include/phase2/util/Hash_Map.h,
+	  troika/phase2/trunk/api/include/phase2/util/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/util/Name.h,
+	  troika/phase2/trunk/api/include/phase2/util/Set.h,
+	  troika/phase2/trunk/api/include/phase2/util/String.h,
+	  troika/phase2/trunk/api/include/phase2/util/Term.h,
+	  troika/phase2/trunk/api/include/phase2/xml/xmldom.h,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Closure.c,
+	  troika/phase2/trunk/api/src/Collection.c,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Type.c,
+	  troika/phase2/trunk/api/src/Void.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.c,
+	  troika/phase2/trunk/api/src/compiler/Apply.h,
+	  troika/phase2/trunk/api/src/compiler/graph-types.h,
+	  troika/phase2/trunk/api/src/compiler/graph.c,
+	  troika/phase2/trunk/api/src/compiler/graph.h,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/environment/Environment-impl.h,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace-impl.h,
+	  troika/phase2/trunk/api/src/namespace/io-simple.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/association.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/debugger.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/primitive/Primitive-impl.h,
+	  troika/phase2/trunk/api/src/primitive/Primitive.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/util/Array.c,
+	  troika/phase2/trunk/api/src/util/Bunch.c,
+	  troika/phase2/trunk/api/src/util/Dictionary.c,
+	  troika/phase2/trunk/api/src/util/Graph.c,
+	  troika/phase2/trunk/api/src/util/Hash_Map.c,
+	  troika/phase2/trunk/api/src/util/Hash_Table.c,
+	  troika/phase2/trunk/api/src/util/Name.c,
+	  troika/phase2/trunk/api/src/util/Set.c,
+	  troika/phase2/trunk/api/src/util/String.c,
+	  troika/phase2/trunk/api/src/util/Term.c,
+	  troika/phase2/trunk/api/src/util/debugger.c,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: (C) 2005 --> (C)
+	  2006
+
+2006-07-03 18:03  joshs
+
+	* troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Closure.h,
+	  troika/phase2/trunk/api/include/phase2/Combinator.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/Void.h,
+	  troika/phase2/trunk/api/include/phase2/common.h,
+	  troika/phase2/trunk/api/include/phase2/defs.h,
+	  troika/phase2/trunk/api/include/phase2/util/Hash_Table.h,
+	  troika/phase2/trunk/api/include/phase2/util/String.h,
+	  troika/phase2/trunk/api/include/phase2/xml/xmldom.h,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdio.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdlib.h,
+	  troika/phase2/trunk/api/src/import/src/char.c,
+	  troika/phase2/trunk/api/src/import/src/char.h,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.h,
+	  troika/phase2/trunk/api/src/import/src/cstring.c,
+	  troika/phase2/trunk/api/src/import/src/cstring.h,
+	  troika/phase2/trunk/api/src/import/src/double.c,
+	  troika/phase2/trunk/api/src/import/src/double.h,
+	  troika/phase2/trunk/api/src/import/src/int.c,
+	  troika/phase2/trunk/api/src/import/src/int.h,
+	  troika/phase2/trunk/api/src/import/src/toys.c,
+	  troika/phase2/trunk/api/src/import/src/toys.h,
+	  troika/phase2/trunk/api/src/import/src/xpm.h,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/parser/debugger.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/api/src/xml/xmldom-test.c: defs.h -->
+	  common.h
+
+2006-07-03 16:56  josh
+
+	* troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/examples/script.txt:
+
+2006-07-01 02:06  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/import/Makefile.am,
+	  troika/phase2/trunk/api/src/import/p2-import.cfg,
+	  troika/phase2/trunk/api/src/import/p2-stubs.xslt,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/assert.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/ctype.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/errno.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/float.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/limits.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/locale.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/math.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/setjmp.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/signal.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdarg.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stddef.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdio.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/stdlib.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/string.h,
+	  troika/phase2/trunk/api/src/import/src/c_std_lib/time.h,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/examples/script.txt,
+	  troika/phase2/trunk/examples/skos-core.rdf,
+	  troika/phase2/trunk/examples/test.p2: Added new c standard
+	  library primitives.
+
+2006-06-29 02:35  joshs
+
+	* troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Combinator.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/include/phase2/sk,
+	  troika/phase2/trunk/api/include/phase2/sk.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/compiler,
+	  troika/phase2/trunk/api/src/compiler/graph.c,
+	  troika/phase2/trunk/api/src/compiler/sk.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/sk: Renamed sk to compiler.
+
+2006-06-29 01:38  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/parser/debugger.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y: Compiler renamed to
+	  Interpreter.
+
+2006-06-29 01:26  joshs
+
+	* troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/interpreter/Compiler-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Compiler.c,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter-impl.h,
+	  troika/phase2/trunk/api/src/interpreter/Interpreter.c,
+	  troika/phase2/trunk/api/src/interpreter/command.c,
+	  troika/phase2/trunk/api/src/interpreter/error.c,
+	  troika/phase2/trunk/api/src/interpreter/expression.c,
+	  troika/phase2/trunk/api/src/interpreter/mapping.c,
+	  troika/phase2/trunk/api/src/interpreter/serial.c:
+
+2006-06-29 01:18  joshs
+
+	* troika/phase2/trunk/api/include/Makefile.am,
+	  troika/phase2/trunk/api/include/phase2/Compiler.h,
+	  troika/phase2/trunk/api/include/phase2/Interpreter.h,
+	  troika/phase2/trunk/api/src/interpreter/Compiler-impl.h,
+	  troika/phase2/trunk/api/src/main.c:
+
+2006-06-29 01:12  joshs
+
+	* troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/compiler,
+	  troika/phase2/trunk/api/src/interpreter,
+	  troika/phase2/trunk/api/src/interpreter/command.c:
+
+2006-06-29 01:01  joshs
+
+	* troika/phase2/trunk/api/src/compiler/command.c,
+	  troika/phase2/trunk/api/src/main.c: Added _help command.
+
+2006-06-24 01:08  joshs
+
+	* troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/include/phase2/defs.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Primitive-impl.h,
+	  troika/phase2/trunk/api/src/Primitive-import.c,
+	  troika/phase2/trunk/api/src/Primitive.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/primitive,
+	  troika/phase2/trunk/api/src/primitive/Primitive-impl.h,
+	  troika/phase2/trunk/api/src/primitive/Primitive-import.c,
+	  troika/phase2/trunk/api/src/primitive/Primitive.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/Apply.c,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/sk/sk.c: (fixme)
+
+2006-06-22 17:51  joshs
+
+	* troika/phase2/trunk/api/src/Collection.c,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/Apply.c,
+	  troika/phase2/trunk/api/src/sk/graph.c: Improved the graph
+	  reduction algorithm.
+
+2006-06-21 22:25  joshs
+
+	* troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/compiler/command.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/compiler/serial.c,
+	  troika/phase2/trunk/api/src/environment/Environment.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/object/association.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/Apply.c,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/sk/sk.c: Phased out
+	  memory_manager__add so as to more tightly control where objects
+	  are created.
+
+2006-06-19 21:52  joshs
+
+	* troika/phase2/trunk/api/src/Collection.c,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Object-impl.h,
+	  troika/phase2/trunk/api/src/Object.c,
+	  troika/phase2/trunk/api/src/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/api/src/environment/Environment-impl.h,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/object,
+	  troika/phase2/trunk/api/src/object/Object-impl.h,
+	  troika/phase2/trunk/api/src/object/Object.c,
+	  troika/phase2/trunk/api/src/object/association.c,
+	  troika/phase2/trunk/api/src/object/methods.c,
+	  troika/phase2/trunk/api/src/object/traversal.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/sk/sk.c: Modularized Object
+	  implementation.
+
+2006-06-19 21:28  joshs
+
+	* troika/phase2/trunk/api/Makefile.am,
+	  troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Object.c,
+	  troika/phase2/trunk/api/src/settings.h: Now supports
+	  --enable-debug option to configure.
+
+2006-06-16 20:14  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Ast.h,
+	  troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/src/Ast.c,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Object.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/Apply.c,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/util/Array.c,
+	  troika/phase2/trunk/api/src/util/Set.c,
+	  troika/phase2/trunk/api/src/util/Term.c: Added optional support
+	  for NULLs as first-class values (not quite finished).
+
+2006-06-16 00:35  joshs
+
+	* troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/import/src/char.c,
+	  troika/phase2/trunk/api/src/import/src/char.h,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/examples/test.p2: Added primitives useful
+	  for parsing.
+
+2006-06-09 00:03  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/util/Array.c: Added NULL-tolerance
+	  to the graph reducer.
+
+2006-05-30 22:30  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Object.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Object.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/compiler/serial.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/graph-types.h,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/sk/graph.h: Compiler can now
+	  serialize/deserialize Apply structures. Indirection nodes are
+	  shorted out by Memory_Manager.
+
+2006-05-30 18:52  joshs
+
+	* troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/include/phase2/sk/Combinator.h,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/sk/sk.c: Added new primitive
+	  combinators.
+
+2006-05-30 16:46  josh
+
+	* troika/phase2/trunk/api/include/phase2/util/Array.h,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/environment/combinators.c,
+	  troika/phase2/trunk/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/api/src/sk/graph.c:
+
+2006-05-27 00:51  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/sk/Combinator.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Object-impl.h,
+	  troika/phase2/trunk/api/src/compiler/Compiler.c,
+	  troika/phase2/trunk/api/src/compiler/command.c,
+	  troika/phase2/trunk/api/src/compiler/error.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/environment/types.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/api/src/parser/debugger.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/parser/parser.y,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/Apply.c,
+	  troika/phase2/trunk/api/src/sk/Apply.h,
+	  troika/phase2/trunk/api/src/sk/graph.c,
+	  troika/phase2/trunk/api/src/sk/graph.h,
+	  troika/phase2/trunk/api/src/util/Array.c: Compiler now uses a
+	  cookbook graph reducer instead of my Term reducer, which
+	  generates unmanageably large terms when evaluating certain
+	  recursive expressions. Not yet tested/debugged.
+
+2006-05-24 18:03  josh
+
+	* troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/api/src/settings.h:
+
+2006-05-24 16:40  joshs
+
+	* troika/phase2/trunk/api/src/Object-impl.h,
+	  troika/phase2/trunk/api/src/namespace/Namespace-impl.h,
+	  troika/phase2/trunk/api/src/namespace/io-search.c,
+	  troika/phase2/trunk/api/src/namespace/io-simple.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/sk.c,
+	  troika/phase2/trunk/examples/test.p2: Committed missing pieces.
+
+2006-05-19 23:05  joshs
+
+	* troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/settings.h:
+
+2006-05-19 16:24  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Namespace.h,
+	  troika/phase2/trunk/api/src/Makefile.am,
+	  troika/phase2/trunk/api/src/Namespace.c,
+	  troika/phase2/trunk/api/src/compiler/command.c,
+	  troika/phase2/trunk/api/src/compiler/error.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/namespace,
+	  troika/phase2/trunk/api/src/namespace/Namespace.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/examples/test.p2,
+	  troika/phase2/trunk/gui/TODO,
+	  troika/phase2/trunk/gui/project/src/P2Binder.cpp,
+	  troika/phase2/trunk/gui/project/src/P2Binder.h,
+	  troika/phase2/trunk/gui/project/src/global.h,
+	  troika/phase2/trunk/gui/project/src/main.cpp,
+	  troika/phase2/trunk/gui/project/src/widgets/P2MainWindow.cpp,
+	  troika/phase2/trunk/gui/project/src/widgets/P2View.cpp: misc.
+
+2006-05-19 04:46  josh
+
+	* troika/phase2/trunk/api/src/Object.c,
+	  troika/phase2/trunk/api/src/sk/sk.c:
+
+2006-05-16 23:01  joshs
+
+	* troika/phase2/trunk/api/README, troika/phase2/trunk/api/TODO,
+	  troika/phase2/trunk/api/include/phase2/Memory_Manager.h,
+	  troika/phase2/trunk/api/include/phase2/Type.h,
+	  troika/phase2/trunk/api/include/phase2/util/Set.h,
+	  troika/phase2/trunk/api/src/Closure.c,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/Object.c,
+	  troika/phase2/trunk/api/src/Type.c,
+	  troika/phase2/trunk/api/src/compiler/command.c,
+	  troika/phase2/trunk/api/src/compiler/error.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/compiler/mapping.c,
+	  troika/phase2/trunk/api/src/compiler/serial.c,
+	  troika/phase2/trunk/api/src/main.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/sk.c,
+	  troika/phase2/trunk/api/src/util/Array.c,
+	  troika/phase2/trunk/api/src/util/Dictionary.c,
+	  troika/phase2/trunk/api/src/util/Hash_Table.c,
+	  troika/phase2/trunk/api/src/util/Name.c,
+	  troika/phase2/trunk/api/src/util/Term.c,
+	  troika/phase2/trunk/examples/test.p2: Cleanup.
+
+2006-05-16 16:29  joshs
+
+	* troika/phase2/trunk/api/include/phase2/Compiler.h,
+	  troika/phase2/trunk/api/src/Namespace.c,
+	  troika/phase2/trunk/api/src/compiler/command.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/compiler/mapping.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/sk/sk.c,
+	  troika/phase2/trunk/examples/test.p2: Minor enhancements.
+
+2006-05-16 16:29  josh
+
+	* troika/phase2/trunk/api/TODO:
+
+2006-05-13 00:43  joshs
+
+	* troika/phase2/trunk/api/configure.ac,
+	  troika/phase2/trunk/api/include/phase2/sk/sk.h,
+	  troika/phase2/trunk/api/include/phase2/util/Set.h,
+	  troika/phase2/trunk/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/settings.h,
+	  troika/phase2/trunk/api/src/sk/sk.c,
+	  troika/phase2/trunk/examples/test.p2: Phase2 0.6.5 -- replaced
+	  prim_reduce with a stronger counterpart. Distributes over
+	  collection arguments and is tolerant of nulls.
+
+2006-05-12 04:35  josh
+
+	* troika/phase2/trunk/README, troika/phase2/trunk/api/examples,
+	  troika/phase2/trunk/examples:
+
+2006-05-12 00:12  joshs
+
+	* troika/phase2/trunk/api/examples/demo.p2,
+	  troika/phase2/trunk/api/examples/test.p2,
+	  troika/phase2/trunk/api/include/phase2/util/Set.h,
+	  troika/phase2/trunk/api/src/environment/primitives.c,
+	  troika/phase2/trunk/api/src/util/Set.c,
+	  troika/phase2/trunk/gui/project/src/global.h,
+	  troika/phase2/trunk/gui/project/src/widgets/P2MainWindow.cpp:
+
+2006-05-11 03:09  joshs
+
+	* troika/phase2/trunk/README,
+	  troika/phase2/trunk/api/examples/test.p2,
+	  troika/phase2/trunk/gui/Makefile.am,
+	  troika/phase2/trunk/notes/notes.txt:
+
+2006-05-10 23:03  joshs
+
+	* troika/phase2/trunk/README, troika/phase2/trunk/api/README,
+	  troika/phase2/trunk/api/examples/test.p2,
+	  troika/phase2/trunk/api/src/compiler/expression.c,
+	  troika/phase2/trunk/api/src/parser/lexer.l,
+	  troika/phase2/trunk/configure.ac,
+	  troika/phase2/trunk/gui/Makefile.am,
+	  troika/phase2/trunk/gui/project/src/main.cpp,
+	  troika/phase2/trunk/ipk/Makefile.am: Added an arm-linux build
+	  via --host.
+
+2006-05-10 18:16  joshs
+
+	* troika/phase2/trunk/Makefile.am,
+	  troika/phase2/trunk/api/doxygen.cfg,
+	  troika/phase2/trunk/cleanup, troika/phase2/trunk/configure.ac,
+	  troika/phase2/trunk/ipk/Makefile,
+	  troika/phase2/trunk/ipk/Makefile.am,
+	  troika/phase2/trunk/ipk/phase2.desktop,
+	  troika/phase2/trunk/ipk/phase2.png,
+	  troika/phase2/trunk/ipk/troika.desktop,
+	  troika/phase2/trunk/ipk/troika.png: Re-integrated ipk build.
+
+2006-05-10 17:16  joshs
+
+	* troika/phase2/trunk/AUTHORS, troika/phase2/trunk/COPYING,
+	  troika/phase2/trunk/ChangeLog, troika/phase2/trunk/INSTALL,
+	  troika/phase2/trunk/Makefile.am, troika/phase2/trunk/NEWS,
+	  troika/phase2/trunk/README, troika/phase2/trunk/TODO,
+	  troika/phase2/trunk/api, troika/phase2/trunk/bootstrap,
+	  troika/phase2/trunk/cleanup, troika/phase2/trunk/configure.ac,
+	  troika/phase2/trunk/gui, troika/phase2/trunk/ipk,
+	  troika/phase2/trunk/src/AUTHORS,
+	  troika/phase2/trunk/src/COPYING,
+	  troika/phase2/trunk/src/ChangeLog,
+	  troika/phase2/trunk/src/INSTALL,
+	  troika/phase2/trunk/src/Makefile.am,
+	  troika/phase2/trunk/src/NEWS, troika/phase2/trunk/src/README,
+	  troika/phase2/trunk/src/TODO, troika/phase2/trunk/src/api,
+	  troika/phase2/trunk/src/bootstrap,
+	  troika/phase2/trunk/src/cleanup,
+	  troika/phase2/trunk/src/configure.ac,
+	  troika/phase2/trunk/src/gui, troika/phase2/trunk/src/ipk: Moved
+	  everthing down one directory.
+
+2006-05-10 17:07  joshs
+
+	* troika/phase2/trunk/LICENSE.txt, troika/phase2/trunk/Makefile,
+	  troika/phase2/trunk/README.txt,
+	  troika/phase2/trunk/doxygen/phase2.cfg,
+	  troika/phase2/trunk/doxygen/versionfilter.sh,
+	  troika/phase2/trunk/ipk, troika/phase2/trunk/src/README,
+	  troika/phase2/trunk/src/api/doxygen.cfg,
+	  troika/phase2/trunk/src/api/versionfilter.sh,
+	  troika/phase2/trunk/src/ipk:
+
+2006-05-10 06:48  josh
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/gui/README,
+	  troika/phase2/trunk/src/gui/project/src/main.cpp:
+
+2006-05-09 20:05  joshs
+
+	* troika/phase2/trunk/src/ChangeLog,
+	  troika/phase2/trunk/src/INSTALL,
+	  troika/phase2/trunk/src/Makefile.am,
+	  troika/phase2/trunk/src/api/examples/guitest.p2,
+	  troika/phase2/trunk/src/bin, troika/phase2/trunk/src/bootstrap,
+	  troika/phase2/trunk/src/cleanup,
+	  troika/phase2/trunk/src/configure.ac,
+	  troika/phase2/trunk/src/gui/Makefile.am,
+	  troika/phase2/trunk/src/gui/guitest.p2,
+	  troika/phase2/trunk/src/gui/make-vars.txt,
+	  troika/phase2/trunk/src/lib: ...
+
+2006-05-09 00:58  joshs
+
+	* troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/api/include/phase2/Primitive.h,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/util/Array.c:
+
+2006-05-08 20:00  joshs
+
+	* troika/phase2/trunk/src/api/include/phase2/Compiler.h,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/compiler/error.c,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/src/compiler/license.h,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/settings.h: Added support for
+	  --quiet option.
+
+2006-05-08 04:50  josh
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/TODO,
+	  troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/gui/README,
+	  troika/phase2/trunk/src/gui/images/p2-clover.png,
+	  troika/phase2/trunk/src/gui/src/main.cpp:
+
+2006-05-06 00:39  joshs
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/TODO,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/api/src/Ast.c,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/src/environment/Environment.c:
+
+2006-05-05 07:20  josh
+
+	* troika/phase2/trunk/src/api/src/util/Array.c:
+
+2006-05-05 05:47  josh
+
+	* troika/phase2/trunk/src/api/TODO,
+	  troika/phase2/trunk/src/api/src/environment/primitives.c:
+
+2006-05-02 23:00  joshs
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/environment/Environment.c,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/xml/Makefile.am,
+	  troika/phase2/trunk/src/api/src/xml/xmldom-test.c: Modified
+	  source for ARM build.
+
+2006-05-02 00:48  joshs
+
+	* troika/phase2/trunk/src/api/TODO,
+	  troika/phase2/trunk/src/api/acinclude.m4,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/api/include/phase2/Compiler.h,
+	  troika/phase2/trunk/src/api/include/phase2/Primitive-import.h,
+	  troika/phase2/trunk/src/api/include/phase2/Primitive.h,
+	  troika/phase2/trunk/src/api/include/phase2/defs.h,
+	  troika/phase2/trunk/src/api/include/phase2/util/Name.h,
+	  troika/phase2/trunk/src/api/m4/acinclude.m4,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/Primitive-impl.h,
+	  troika/phase2/trunk/src/api/src/Primitive-import.c,
+	  troika/phase2/trunk/src/api/src/Primitive.c,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/src/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/environment/primitives.c,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/sk/sk.c,
+	  troika/phase2/trunk/src/api/src/util/Name.c: Moved Primitive
+	  definition to an implementation header. Added simplifying name
+	  lookup to compiler.
+
+2006-05-01 03:42  josh
+
+	* troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/api/src/compiler/mapping.c: Name
+	  resolution now searches root namespace for an identifier when it
+	  is not found in the current namespace.
+
+2006-05-01 02:32  josh
+
+	* troika/phase2/trunk/src/api/src/environment/primitives.c,
+	  troika/phase2/trunk/src/api/src/util/Hash_Table.c: Added simple
+	  set primitives.
+
+2006-04-29 00:35  joshs
+
+	* troika/phase2/trunk/src/api/TODO,
+	  troika/phase2/trunk/src/api/examples/test.p2:
+
+2006-04-28 06:01  josh
+
+	* troika/phase2/trunk/src/api/examples/test.p2:
+
+2006-04-28 05:07  josh
+
+	* troika/phase2/trunk/src/api/Makefile.am,
+	  troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/bootstrap,
+	  troika/phase2/trunk/src/api/bootstrap.sh,
+	  troika/phase2/trunk/src/api/cleanup,
+	  troika/phase2/trunk/src/api/cleanup.sh:
+
+2006-04-28 00:47  joshs
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/autogen.sh,
+	  troika/phase2/trunk/src/api/bootstrap.sh,
+	  troika/phase2/trunk/src/api/clean.sh,
+	  troika/phase2/trunk/src/api/cleanup.sh,
+	  troika/phase2/trunk/src/api/include/phase2/util/String.h,
+	  troika/phase2/trunk/src/api/src/util/String.c:
+
+2006-04-27 21:52  joshs
+
+	* troika/phase2/trunk/src/api/include/Makefile.am,
+	  troika/phase2/trunk/src/api/include/phase2/Type.h,
+	  troika/phase2/trunk/src/api/include/phase2/util/Array.h,
+	  troika/phase2/trunk/src/api/include/phase2/util/String.h,
+	  troika/phase2/trunk/src/api/src/Type.c,
+	  troika/phase2/trunk/src/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/src/api/src/util/Array.c,
+	  troika/phase2/trunk/src/api/src/util/Makefile.am,
+	  troika/phase2/trunk/src/api/src/util/String.c: Added an
+	  expanding string type.
+
+2006-04-27 18:52  joshs
+
+	* troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/import/src/xpm.c,
+	  troika/phase2/trunk/src/api/src/parser/lexer.l,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/util/Dictionary.c:
+
+2006-04-27 05:52  josh
+
+	* troika/phase2/trunk/src/api/include/phase2/defs.h,
+	  troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/src/import/Makefile.am,
+	  troika/phase2/trunk/src/api/src/import/src/xpm.c,
+	  troika/phase2/trunk/src/api/src/import/src/xpm.h: Added xpm
+	  primitives.
+
+2006-04-26 23:44  joshs
+
+	* troika/phase2/trunk/src/api/Makefile.am,
+	  troika/phase2/trunk/src/api/clean.sh,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/include/Makefile.am,
+	  troika/phase2/trunk/src/api/src/Namespace.c: Package now
+	  installs header files.
+
+2006-04-26 23:33  joshs
+
+	* troika/phase2/trunk/src/api/include,
+	  troika/phase2/trunk/src/api/include/phase2,
+	  troika/phase2/trunk/src/api/phase2: ...
+
+2006-04-26 23:33  joshs
+
+	* troika/phase2/trunk/src/api/include,
+	  troika/phase2/trunk/src/api/phase2: ...
+
+2006-04-26 23:32  joshs
+
+	* troika/phase2/trunk/src/api/examples/test.p2,
+	  troika/phase2/trunk/src/test.p2:
+
+2006-04-26 22:59  joshs
+
+	* troika/phase2/trunk/src/api/examples,
+	  troika/phase2/trunk/src/gui/P2Binder.cpp,
+	  troika/phase2/trunk/src/gui/P2Binder.h,
+	  troika/phase2/trunk/src/gui/widgets/basic/P2Text.cpp,
+	  troika/phase2/trunk/src/gui/widgets/bindings/P2ObjectFrame.cpp,
+	  troika/phase2/trunk/src/gui/widgets/groups/P2BoxArray.cpp,
+	  troika/phase2/trunk/src/gui/widgets/groups/P2BoxArray.h,
+	  troika/phase2/trunk/src/notes.txt,
+	  troika/phase2/trunk/src/test.p2:
+
+2006-04-26 22:56  joshs
+
+	* troika/phase2/trunk/src/api/AUTHORS,
+	  troika/phase2/trunk/src/api/Makefile.am,
+	  troika/phase2/trunk/src/api/acinclude.m4,
+	  troika/phase2/trunk/src/api/clean.sh,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/doxygen.cfg,
+	  troika/phase2/trunk/src/api/include/Namespace.h,
+	  troika/phase2/trunk/src/api/include/Object.h,
+	  troika/phase2/trunk/src/api/include/sk/sk.h,
+	  troika/phase2/trunk/src/api/include/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/parser/debugger.c,
+	  troika/phase2/trunk/src/api/src/parser/lexer.l,
+	  troika/phase2/trunk/src/api/src/parser/parser.y: Added
+	  documentation targets to build using Oren Ben-Kiki's scripts.
+
+2006-04-26 21:09  joshs
+
+	* troika/phase2/trunk/src/api/Makefile.am,
+	  troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/autogen.sh,
+	  troika/phase2/trunk/src/api/clean.sh,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/import/Makefile.am,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/src/api/src/parser/debugger.c,
+	  troika/phase2/trunk/src/api/src/parser/lexer.l,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/util/Makefile.am,
+	  troika/phase2/trunk/src/api/src/xml/Makefile.am: Autotools
+	  package builds distro capable of installing phase2 and libraries
+	  from built sources and from scratch.
+
+2006-04-25 22:46  joshs
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/src/api/src/util/Makefile.am:
+
+2006-04-25 22:23  joshs
+
+	* troika/phase2/trunk/src/api/src/import/Makefile.am:
+
+2006-04-25 22:22  joshs
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/import/Makefile,
+	  troika/phase2/trunk/src/api/src/import/Makefile_old,
+	  troika/phase2/trunk/src/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/src/api/src/parser/README,
+	  troika/phase2/trunk/src/api/src/parser/lexer.l,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/src/parser/parser.y,
+	  troika/phase2/trunk/src/api/src/util/Makefile.am,
+	  troika/phase2/trunk/src/api/src/xml/Makefile,
+	  troika/phase2/trunk/src/api/src/xml/Makefile.am,
+	  troika/phase2/trunk/src/api/src/xml/Makefile_old: Autotools
+	  project builds successfully.
+
+2006-04-25 20:11  joshs
+
+	* troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.l:
+	  --transitioning--
+
+2006-04-25 19:18  joshs
+
+	* troika/phase2/trunk/src/api/Makefile.am,
+	  troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/src/Makefile.am,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/parser/Makefile,
+	  troika/phase2/trunk/src/api/src/parser/Makefile.am,
+	  troika/phase2/trunk/src/api/src/parser/Makefile_old,
+	  troika/phase2/trunk/src/api/src/parser/debugger.c,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.h,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/util/Makefile,
+	  troika/phase2/trunk/src/api/src/util/Makefile_old,
+	  troika/phase2/trunk/src/api/src/util/Term.c: --transitioning--
+
+2006-04-25 17:17  joshs
+
+	* troika/phase2/trunk/src/api/AUTHORS,
+	  troika/phase2/trunk/src/api/COPYING,
+	  troika/phase2/trunk/src/api/ChangeLog,
+	  troika/phase2/trunk/src/api/INSTALL,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Makefile.am,
+	  troika/phase2/trunk/src/api/Makefile_old,
+	  troika/phase2/trunk/src/api/NEWS,
+	  troika/phase2/trunk/src/api/README,
+	  troika/phase2/trunk/src/api/aminclude.am,
+	  troika/phase2/trunk/src/api/autogen.sh,
+	  troika/phase2/trunk/src/api/configure.ac,
+	  troika/phase2/trunk/src/api/m4,
+	  troika/phase2/trunk/src/api/notes.txt: --transitioning--
+
+2006-04-25 17:09  joshs
+
+	* troika/phase2/trunk/src/api/src/util/Term.c,
+	  troika/phase2/trunk/src/api/test.p2:
+
+2006-04-21 19:15  joshs
+
+	* troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/parser/Makefile,
+	  troika/phase2/trunk/src/api/src/parser/debugger.c,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/src/util/Hash_Table.c: Fixed a basic
+	  flaw in hash_table__remove.
+
+2006-04-20 23:00  joshs
+
+	* troika/phase2/trunk/src/api/include/util/Set.h,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/util/Set.c,
+	  troika/phase2/trunk/src/api/test.p2: Added de/serialization for
+	  Sets.
+
+2006-04-20 21:33  joshs
+
+	* troika/phase2/trunk/src/api/include/Namespace.h,
+	  troika/phase2/trunk/src/api/include/Object.h,
+	  troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/src/Object-impl.h,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/src/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/src/environment/primitives.c,
+	  troika/phase2/trunk/src/api/src/util/Set.c,
+	  troika/phase2/trunk/src/api/src/util/Term.c,
+	  troika/phase2/trunk/src/api/test.p2: Added new meta-primitives
+	  for adjacency sets.
+
+2006-04-19 21:02  joshs
+
+	* troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/test.p2:
+
+2006-04-18 23:04  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/test.p2:
+
+2006-04-18 22:33  joshs
+
+	* troika/phase2/trunk/src/api/include/Namespace.h,
+	  troika/phase2/trunk/src/api/include/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/include/util/Term.h,
+	  troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/src/Type.c,
+	  troika/phase2/trunk/src/api/src/compiler/expression.c,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/src/util/Term.c: Added
+	  namespace__find
+
+2006-04-18 17:34  joshs
+
+	* troika/phase2/trunk/src/api/include/defs.h,
+	  troika/phase2/trunk/src/api/src/import/Makefile,
+	  troika/phase2/trunk/src/api/src/import/src/char.c,
+	  troika/phase2/trunk/src/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/src/api/src/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/src/import/src/double.c,
+	  troika/phase2/trunk/src/api/src/import/src/int.c,
+	  troika/phase2/trunk/src/api/src/import/src/toys.c,
+	  troika/phase2/trunk/src/api/src/settings.h:
+
+2006-04-15 01:09  joshs
+
+	* troika/phase2/trunk/src/api/include/defs.h,
+	  troika/phase2/trunk/src/api/include/sk/Combinator.h,
+	  troika/phase2/trunk/src/api/include/sk/sk.h,
+	  troika/phase2/trunk/src/api/src/import/Makefile,
+	  troika/phase2/trunk/src/api/src/import/src/combinator-impl.c,
+	  troika/phase2/trunk/src/api/src/import/src/combinator-impl.h,
+	  troika/phase2/trunk/src/api/src/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/src/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/test.p2:
+
+2006-04-11 20:48  joshs
+
+	* troika/phase2/trunk/src/api/Makefile: Added install target to
+	  Makefile.
+
+2006-04-11 20:36  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/include/Ast.h,
+	  troika/phase2/trunk/src/api/include/Compiler.h,
+	  troika/phase2/trunk/src/api/include/Object.h,
+	  troika/phase2/trunk/src/api/include/defs.h,
+	  troika/phase2/trunk/src/api/src/Ast.c,
+	  troika/phase2/trunk/src/api/src/Closure.c,
+	  troika/phase2/trunk/src/api/src/Collection.c,
+	  troika/phase2/trunk/src/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/src/Object-impl.h,
+	  troika/phase2/trunk/src/api/src/Object.c,
+	  troika/phase2/trunk/src/api/src/Primitive-import.c,
+	  troika/phase2/trunk/src/api/src/Primitive.c,
+	  troika/phase2/trunk/src/api/src/Type.c,
+	  troika/phase2/trunk/src/api/src/Void.c,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/environment/Environment-impl.h,
+	  troika/phase2/trunk/src/api/src/import/Makefile,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/parser/Ast.c,
+	  troika/phase2/trunk/src/api/src/parser/Makefile,
+	  troika/phase2/trunk/src/api/src/parser/debugger.c,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.h,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/src/sk/sk.c,
+	  troika/phase2/trunk/src/api/src/util/Array.c,
+	  troika/phase2/trunk/src/api/src/util/Bunch.c,
+	  troika/phase2/trunk/src/api/src/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/src/util/Graph.c,
+	  troika/phase2/trunk/src/api/src/util/Hash_Map.c,
+	  troika/phase2/trunk/src/api/src/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/src/util/Makefile,
+	  troika/phase2/trunk/src/api/src/util/Name.c,
+	  troika/phase2/trunk/src/api/src/util/Set.c,
+	  troika/phase2/trunk/src/api/src/util/Term.c,
+	  troika/phase2/trunk/src/api/src/util/debugger.c,
+	  troika/phase2/trunk/src/api/src/xml/Makefile,
+	  troika/phase2/trunk/src/api/src/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/src/api/src/xml/xmldom-test.c: Split up
+	  source from headers.
+
+2006-04-11 18:25  joshs
+
+	* troika/phase2/trunk/src/api/Closure.c,
+	  troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/Primitive.c,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Void.c,
+	  troika/phase2/trunk/src/api/compiler,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/environment,
+	  troika/phase2/trunk/src/api/import,
+	  troika/phase2/trunk/src/api/include/defs.h,
+	  troika/phase2/trunk/src/api/include/sk.h,
+	  troika/phase2/trunk/src/api/include/sk/sk.h,
+	  troika/phase2/trunk/src/api/include/util/Array.h,
+	  troika/phase2/trunk/src/api/include/util/Bunch.h,
+	  troika/phase2/trunk/src/api/include/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/include/util/Graph.h,
+	  troika/phase2/trunk/src/api/include/util/Hash_Map.h,
+	  troika/phase2/trunk/src/api/include/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/include/util/Name.h,
+	  troika/phase2/trunk/src/api/include/util/Set.h,
+	  troika/phase2/trunk/src/api/include/util/Term.h,
+	  troika/phase2/trunk/src/api/include/xml/xmldom.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk, troika/phase2/trunk/src/api/src,
+	  troika/phase2/trunk/src/api/src/Closure.c,
+	  troika/phase2/trunk/src/api/src/Collection.c,
+	  troika/phase2/trunk/src/api/src/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/src/Namespace.c,
+	  troika/phase2/trunk/src/api/src/Object.c,
+	  troika/phase2/trunk/src/api/src/Primitive-import.c,
+	  troika/phase2/trunk/src/api/src/Primitive.c,
+	  troika/phase2/trunk/src/api/src/Type.c,
+	  troika/phase2/trunk/src/api/src/Void.c,
+	  troika/phase2/trunk/src/api/src/compiler,
+	  troika/phase2/trunk/src/api/src/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/src/compiler/command.c,
+	  troika/phase2/trunk/src/api/src/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/src/compiler/serial.c,
+	  troika/phase2/trunk/src/api/src/environment,
+	  troika/phase2/trunk/src/api/src/environment/Environment.c,
+	  troika/phase2/trunk/src/api/src/environment/types.c,
+	  troika/phase2/trunk/src/api/src/import,
+	  troika/phase2/trunk/src/api/src/main.c,
+	  troika/phase2/trunk/src/api/src/parser,
+	  troika/phase2/trunk/src/api/src/parser/Ast.h,
+	  troika/phase2/trunk/src/api/src/parser/debugger.c,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/src/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/src/settings.h,
+	  troika/phase2/trunk/src/api/src/sk,
+	  troika/phase2/trunk/src/api/src/sk/sk.c,
+	  troika/phase2/trunk/src/api/src/sk/sk.h,
+	  troika/phase2/trunk/src/api/src/util,
+	  troika/phase2/trunk/src/api/src/util/Array.c,
+	  troika/phase2/trunk/src/api/src/util/Array.h,
+	  troika/phase2/trunk/src/api/src/util/Bunch.h,
+	  troika/phase2/trunk/src/api/src/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/src/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/src/util/Graph.h,
+	  troika/phase2/trunk/src/api/src/util/Hash_Map.h,
+	  troika/phase2/trunk/src/api/src/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/src/util/Name.h,
+	  troika/phase2/trunk/src/api/src/util/Set.h,
+	  troika/phase2/trunk/src/api/src/util/Term.h,
+	  troika/phase2/trunk/src/api/src/xml,
+	  troika/phase2/trunk/src/api/src/xml/xmldom.h,
+	  troika/phase2/trunk/src/api/util,
+	  troika/phase2/trunk/src/api/xml: --transitional--
+
+2006-04-11 18:04  joshs
+
+	* troika/phase2/trunk/src/api/Closure.h,
+	  troika/phase2/trunk/src/api/Collection.h,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Primitive-import.h,
+	  troika/phase2/trunk/src/api/Primitive.h,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/Void.h,
+	  troika/phase2/trunk/src/api/include,
+	  troika/phase2/trunk/src/api/include/Ast.h,
+	  troika/phase2/trunk/src/api/include/Closure.h,
+	  troika/phase2/trunk/src/api/include/Collection.h,
+	  troika/phase2/trunk/src/api/include/Compiler.h,
+	  troika/phase2/trunk/src/api/include/Environment.h,
+	  troika/phase2/trunk/src/api/include/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/include/Namespace.h,
+	  troika/phase2/trunk/src/api/include/Object.h,
+	  troika/phase2/trunk/src/api/include/Primitive-import.h,
+	  troika/phase2/trunk/src/api/include/Primitive.h,
+	  troika/phase2/trunk/src/api/include/Type.h,
+	  troika/phase2/trunk/src/api/include/Void.h,
+	  troika/phase2/trunk/src/api/include/sk,
+	  troika/phase2/trunk/src/api/include/sk.h,
+	  troika/phase2/trunk/src/api/include/util,
+	  troika/phase2/trunk/src/api/include/xml,
+	  troika/phase2/trunk/src/api/parser/Ast.h,
+	  troika/phase2/trunk/src/api/sk/sk.h: --transitional--
+
+2006-04-11 17:57  joshs
+
+	* troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/Array.c:
+
+2006-04-10 21:44  joshs
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Primitive.c,
+	  troika/phase2/trunk/src/api/compiler/serial.c,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/test.p2: Added more descriptive
+	  Primitive encoder.
+
+2006-04-10 20:00  joshs
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/compiler/serial.c,
+	  troika/phase2/trunk/src/api/test.p2: Hid Namespace structure.
+
+2006-04-10 19:46  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/environment/Environment.c,
+	  troika/phase2/trunk/src/api/environment/types.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c: Improved _rm, _mv.
+
+2006-04-10 16:44  josh
+
+	* troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y:
+
+2006-04-08 01:01  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/test.p2:
+
+2006-04-07 21:58  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/environment/primitives.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/test.p2: Added a 'libraries' target
+	  for the sake of logtool and bnftool, which have been relocated.
+
+2006-04-07 19:13  joshs
+
+	* bnftool, logtool, troika/phase2/trunk/src/api/bnftool,
+	  troika/phase2/trunk/src/api/logtool: Moved unrelated tools out
+	  of phase2 source.
+
+2006-04-07 17:37  joshs
+
+	* troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/test.p2: Fixed bug in k_reduce.
+
+2006-04-06 23:50  joshs
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/test.p2:
+
+2006-04-06 02:25  joshs
+
+	* troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/parser/Ast.c,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Term.c:
+
+2006-04-06 01:11  joshs
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/notes.txt,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/test.p2: Did some debugging (but
+	  there's more to do).
+
+2006-04-05 20:35  joshs
+
+	* troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/compiler/serial.c,
+	  troika/phase2/trunk/src/api/environment/Environment-impl.h,
+	  troika/phase2/trunk/src/api/environment/Environment.c,
+	  troika/phase2/trunk/src/api/environment/combinators.c,
+	  troika/phase2/trunk/src/api/environment/primitives.c,
+	  troika/phase2/trunk/src/api/environment/types.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/test.p2: Broke up Environment
+	  implementation, separated from Compiler.
+
+2006-04-05 17:43  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/environment/Environment.c:
+
+2006-04-05 17:40  joshs
+
+	* troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/mapping.c,
+	  troika/phase2/trunk/src/api/environment,
+	  troika/phase2/trunk/src/api/environment/Environment.c,
+	  troika/phase2/trunk/src/api/settings.h:
+
+2006-04-04 19:58  joshs
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/notes.txt: Name inheritance fully
+	  supported. May want to look into more efficient algorithms at
+	  some point.
+
+2006-04-04 18:27  joshs
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/notes.txt: Debugged simple inherited
+	  name resolution.
+
+2006-04-03 23:57  joshs
+
+	* troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/settings.h: Partially implemented
+	  name inheritance (buggy).
+
+2006-04-03 20:21  joshs
+
+	* troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/compiler/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/src/api/xml/xmldom-test.c,
+	  troika/phase2/trunk/src/api/xml/xmldom.h: Renamed XML types.
+	  Cured the memory leak from serial.c.
+
+2006-04-01 02:19  joshs
+
+	* troika/phase2/trunk/src/api/Environment.c: Added an iffy type
+	  lookup primitive.
+
+2006-04-01 01:03  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/compiler/error.c,
+	  troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/compiler/serial.c,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/serial.h,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Hash_Map.c: Moved Compiler
+	  implementation to its own subdirectory.
+
+2006-03-31 23:51  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/compiler,
+	  troika/phase2/trunk/src/api/compiler/Compiler-impl.h,
+	  troika/phase2/trunk/src/api/compiler/Compiler.c,
+	  troika/phase2/trunk/src/api/compiler/command.c,
+	  troika/phase2/trunk/src/api/compiler/error.c,
+	  troika/phase2/trunk/src/api/compiler/expression.c,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h: Transitioning...
+
+2006-03-31 22:53  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/defs.h:
+
+2006-03-31 22:02  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/src/Set-operations.h,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h: Added optional arguments
+	  to _all.
+
+2006-03-31 02:43  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c: Debugged Namespace
+	  add/remove and cleaned up display output.
+
+2006-03-30 22:14  joshs
+
+	* troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: Added 'size' member to
+	  Type. Also, the parser now supports both assignment to the left
+	  via <- and assignment to the right via ->.
+
+2006-03-30 21:22  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c: Cleaned up debug
+	  messages.
+
+2006-03-30 07:42  josh
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/main.c:
+
+2006-03-30 03:15  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/parser/Ast.c,
+	  troika/phase2/trunk/src/api/parser/Ast.h:
+
+2006-03-30 02:22  joshs
+
+	* troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Primitive.c,
+	  troika/phase2/trunk/src/api/Primitive.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: Added the Set type to
+	  the Environment.
+
+2006-03-30 01:15  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/test.p2: Improved recursive make.
+
+2006-03-29 08:47  josh
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.h:
+
+2006-03-29 04:57  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y:
+
+2006-03-29 04:40  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/settings.h: Moving towards a
+	  re-entrant parser.
+
+2006-03-29 03:08  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/parser/Ast.c,
+	  troika/phase2/trunk/src/api/parser/Ast.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y: Renamed p2_ast
+	  to Ast (probably temporary).
+
+2006-03-29 02:58  joshs
+
+	* troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c: After
+	  semi-rigorous testing (feeding it scads of C code) the parser is
+	  memory tight. The compiler is not.
+
+2006-03-28 01:54  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Hash_Map.c,
+	  troika/phase2/trunk/src/api/util/Hash_Map.h,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: Minor revisions to
+	  utilities.
+
+2006-03-28 01:20  joshs
+
+	* troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Collection.h,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/logtool/logtool.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: The deed is done.
+
+2006-03-27 05:47  josh
+
+	* troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: Moving from ISO89 C to
+	  C with GNU extensions. This will make Phase2 less portable but
+	  will allow me to do more interesting things with less
+	  development and maintenance effort.
+
+2006-03-25 01:55  joshs
+
+	* troika/phase2/trunk/src/api/notes.txt:
+
+2006-03-25 01:40  josh
+
+	* troika/phase2/trunk/src/api/notes.txt:
+
+2006-03-25 00:53  joshs
+
+	* troika/phase2/trunk/src/api/Closure.c,
+	  troika/phase2/trunk/src/api/Closure.h,
+	  troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/p2-stubs.xslt,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h,
+	  troika/phase2/trunk/src/api/xml/gsoap/xmldom-old.h,
+	  troika/phase2/trunk/src/api/xml/gsoap/xmldom.h: Revised the
+	  Closure system, but will need to revise it again. It's very
+	  awkward, and code with these Closures is not fun to maintain.
+
+2006-03-24 00:53  joshs
+
+	* troika/phase2/trunk/src/api/Closure.h,
+	  troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.l,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Term.c: About to revise the
+	  Closure system.
+
+2006-03-22 07:51  josh
+
+	* troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/bnftool/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.l,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/logtool/Makefile,
+	  troika/phase2/trunk/src/api/logtool/logtool.y,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: Learned of a better
+	  name for p2_procedures... CLOSURES.
+
+2006-03-22 03:35  joshs
+
+	* troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Collection.h,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/xml/xmldom-test.c:
+
+2006-03-21 20:55  joshs
+
+	* troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Collection.h,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/Primitive-import.h,
+	  troika/phase2/trunk/src/api/Primitive.c,
+	  troika/phase2/trunk/src/api/Primitive.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/Void.c,
+	  troika/phase2/trunk/src/api/Void.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/serial.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Graph.h,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Name.h,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: transitioning...
+
+2006-03-21 08:01  josh
+
+	* troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Primitive.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/Void.c,
+	  troika/phase2/trunk/src/api/Void.h,
+	  troika/phase2/trunk/src/api/defs.h,
+	  troika/phase2/trunk/src/api/import/src/char.h,
+	  troika/phase2/trunk/src/api/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/int.h,
+	  troika/phase2/trunk/src/api/import/src/toys.h,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Graph.h,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Name.h,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c:
+	  Compiles again, but still in transition.
+
+2006-03-21 03:06  joshs
+
+	* troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Collection.h,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/Primitive-import.h,
+	  troika/phase2/trunk/src/api/Primitive.c,
+	  troika/phase2/trunk/src/api/Primitive.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/import/p2-stubs.xslt,
+	  troika/phase2/trunk/src/api/logtool/logtool.y,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/serial.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Graph.h,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Name.h,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h: transitioning...
+
+2006-03-21 02:06  joshs
+
+	* troika/phase2/trunk/src/api/Collection.c,
+	  troika/phase2/trunk/src/api/Collection.h,
+	  troika/phase2/trunk/src/api/Compiler.c,
+	  troika/phase2/trunk/src/api/Compiler.h,
+	  troika/phase2/trunk/src/api/Environment.c,
+	  troika/phase2/trunk/src/api/Environment.h,
+	  troika/phase2/trunk/src/api/Memory_Manager.c,
+	  troika/phase2/trunk/src/api/Memory_Manager.h,
+	  troika/phase2/trunk/src/api/Namespace.c,
+	  troika/phase2/trunk/src/api/Namespace.h,
+	  troika/phase2/trunk/src/api/Object.c,
+	  troika/phase2/trunk/src/api/Object.h,
+	  troika/phase2/trunk/src/api/Primitive-import.c,
+	  troika/phase2/trunk/src/api/Primitive-import.h,
+	  troika/phase2/trunk/src/api/Primitive.c,
+	  troika/phase2/trunk/src/api/Primitive.h,
+	  troika/phase2/trunk/src/api/Type.c,
+	  troika/phase2/trunk/src/api/Type.h,
+	  troika/phase2/trunk/src/api/Void.c,
+	  troika/phase2/trunk/src/api/Void.h,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.l,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/import/p2-stubs.xslt,
+	  troika/phase2/trunk/src/api/logtool/logtool.l,
+	  troika/phase2/trunk/src/api/logtool/logtool.y,
+	  troika/phase2/trunk/src/api/p2_collection.c,
+	  troika/phase2/trunk/src/api/p2_collection.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive-import.c,
+	  troika/phase2/trunk/src/api/p2_primitive-import.h,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/p2_void.c,
+	  troika/phase2/trunk/src/api/p2_void.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/Array.c,
+	  troika/phase2/trunk/src/api/util/Array.h,
+	  troika/phase2/trunk/src/api/util/Bunch.c,
+	  troika/phase2/trunk/src/api/util/Bunch.h,
+	  troika/phase2/trunk/src/api/util/Dictionary.c,
+	  troika/phase2/trunk/src/api/util/Dictionary.h,
+	  troika/phase2/trunk/src/api/util/Graph.c,
+	  troika/phase2/trunk/src/api/util/Graph.h,
+	  troika/phase2/trunk/src/api/util/Hash_Table.c,
+	  troika/phase2/trunk/src/api/util/Hash_Table.h,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.c,
+	  troika/phase2/trunk/src/api/util/Lookup_Table.h,
+	  troika/phase2/trunk/src/api/util/Name.c,
+	  troika/phase2/trunk/src/api/util/Name.h,
+	  troika/phase2/trunk/src/api/util/Set.c,
+	  troika/phase2/trunk/src/api/util/Set.h,
+	  troika/phase2/trunk/src/api/util/Term.c,
+	  troika/phase2/trunk/src/api/util/Term.h,
+	  troika/phase2/trunk/src/api/util/debugger.c,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.h,
+	  troika/phase2/trunk/src/api/util/p2_graph.c,
+	  troika/phase2/trunk/src/api/util/p2_graph.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.c,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.h,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_name.h,
+	  troika/phase2/trunk/src/api/util/p2_set.c,
+	  troika/phase2/trunk/src/api/util/p2_set.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: transitioning...
+
+2006-03-21 01:01  joshs
+
+	* troika/phase2/trunk/src/api/p2_collection.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.h,
+	  troika/phase2/trunk/src/api/util/p2_graph.h,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.h,
+	  troika/phase2/trunk/src/api/util/p2_set.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: transitioning...
+
+2006-03-21 00:26  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/README.txt,
+	  troika/phase2/trunk/src/api/bnftool/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.l,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/import/commands.cpp,
+	  troika/phase2/trunk/src/api/import/src/toys.c,
+	  troika/phase2/trunk/src/api/import/src/toys.h,
+	  troika/phase2/trunk/src/api/logtool/Makefile,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/old,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive-import.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/settings.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/debugger.c,
+	  troika/phase2/trunk/src/api/util/old,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c: Code
+	  cleanup. Getting ready for a major revision of coding style.
+
+2006-03-20 08:03  josh
+
+	* troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/import/src/toys.c,
+	  troika/phase2/trunk/src/api/import/src/toys.h,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_collection.c,
+	  troika/phase2/trunk/src/api/p2_collection.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: ! introduced a bug
+	  fiddling with type/object flags
+
+2006-03-18 22:09  josh
+
+	* troika/phase2/trunk/src/api/import/src/toys.c,
+	  troika/phase2/trunk/src/api/import/src/toys.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/test.p2,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/src/api/xml/xmldom.h: Version 0.5.0 --
+	  stable but touchy.
+
+2006-03-18 07:17  josh
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/test.p2: Fixed xml-related memory
+	  leaks.
+
+2006-03-17 22:37  joshs
+
+	* troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/serial.c: Added a 'new namespace'
+	  command.
+
+2006-03-17 01:49  joshs
+
+	* troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c: Added a
+	  'remove' command.
+
+2006-03-17 01:10  joshs
+
+	* troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c: Straightened out
+	  order dependencies in p2_environment destructor --> no more
+	  segfault on quit.
+
+2006-03-16 23:20  joshs
+
+	* troika/phase2/trunk/src/api/import/src/char.c,
+	  troika/phase2/trunk/src/api/import/src/char.h,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/include,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/int.h,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c: Successful
+	  round-trip serialization.
+
+2006-03-16 03:12  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/import/src/char.c,
+	  troika/phase2/trunk/src/api/import/src/char.h,
+	  troika/phase2/trunk/src/api/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/int.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive-import.c,
+	  troika/phase2/trunk/src/api/p2_primitive-import.h,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/serial.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.h,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: Deserialization
+	  mostly finished.
+
+2006-03-15 04:08  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/serial.c,
+	  troika/phase2/trunk/src/api/serial.h,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.c,
+	  troika/phase2/trunk/src/api/xml/Makefile,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c:
+	  Namespaces serialize without errors (and without triples).
+
+2006-03-14 05:14  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/import/src/char.c,
+	  troika/phase2/trunk/src/api/import/src/char.h,
+	  troika/phase2/trunk/src/api/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/include/cstring-def.h,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/int.h,
+	  troika/phase2/trunk/src/api/import/src/toys.c,
+	  troika/phase2/trunk/src/api/import/src/toys.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c: Added support for
+	  delayed evaluation.
+
+2006-03-14 03:39  josh
+
+	* troika/phase2/trunk/src/api/logtool,
+	  troika/phase2/trunk/src/api/logtool/Makefile,
+	  troika/phase2/trunk/src/api/logtool/logtool.l,
+	  troika/phase2/trunk/src/api/logtool/logtool.y: Logtool counts
+	  breaking attempts in /var/log/messages. To be moved...
+
+2006-03-13 22:07  joshs
+
+	* troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c: Now reduces
+	  combinator terms.
+
+2006-03-11 03:04  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/Makefile: Cleaning up the build.
+
+2006-03-11 01:45  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/Makefile,
+	  troika/phase2/trunk/src/api/flags.h,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/p2_parser.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/Makefile: p2_flags.h --> flags.h
+
+2006-03-11 01:38  joshs
+
+	* troika/phase2/trunk/src/api/p2_flags.h:
+
+2006-03-11 01:37  joshs
+
+	* troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/sk/sk.c: PRINTERR macro --> ERROR
+	  and WARNING.
+
+2006-03-11 01:35  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.l,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y,
+	  troika/phase2/trunk/src/api/import/src/char.c,
+	  troika/phase2/trunk/src/api/import/src/char.h,
+	  troika/phase2/trunk/src/api/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/int.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_primitive-import.c,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c: Build succeeds, but
+	  more debugging needed.
+
+2006-03-10 01:08  joshs
+
+	* troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_primitive-import.c,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_void.c,
+	  troika/phase2/trunk/src/api/p2_void.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_graph.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.c,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: Applying more
+	  stringent compiler options.
+
+2006-03-09 23:27  joshs
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/old/oldstuff.txt,
+	  troika/phase2/trunk/src/api/old/p2_client.cpp,
+	  troika/phase2/trunk/src/api/old/p2_command.h,
+	  troika/phase2/trunk/src/api/old/p2_dataset.cpp,
+	  troika/phase2/trunk/src/api/old/p2_dataset.h,
+	  troika/phase2/trunk/src/api/oldstuff.txt,
+	  troika/phase2/trunk/src/api/p2_client.cpp,
+	  troika/phase2/trunk/src/api/p2_collection.c,
+	  troika/phase2/trunk/src/api/p2_command.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_dataset.cpp,
+	  troika/phase2/trunk/src/api/p2_dataset.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/p2_graph.c,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.c:
+
+2006-03-08 00:29  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/old,
+	  troika/phase2/trunk/src/api/old/p2_command.c,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_command.c,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_graph.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.c,
+	  troika/phase2/trunk/src/api/util/p2_lookup_table.h,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_name.h,
+	  troika/phase2/trunk/src/api/util/p2_set.c,
+	  troika/phase2/trunk/src/api/util/p2_set.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c: Data loss while
+	  transitioning to the p2_procedures model. Much uncommitted work
+	  is gone. Resulting build will be broken.
+
+2006-03-06 21:23  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/util/old,
+	  troika/phase2/trunk/src/api/util/old/p2_set.c,
+	  troika/phase2/trunk/src/api/util/old/p2_set.h,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.h,
+	  troika/phase2/trunk/src/api/util/p2_graph.c,
+	  troika/phase2/trunk/src/api/util/p2_graph.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_set.c,
+	  troika/phase2/trunk/src/api/util/p2_set.h:
+
+2006-03-06 05:13  
+
+	* troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.c,
+	  troika/phase2/trunk/src/api/util/p2_dictionary.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h:
+
+2006-03-04 23:32  
+
+	* troika/phase2/trunk/src/api/p2_collection.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/debugger.c,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_name.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: Object orientation
+	  is taking over...
+
+2006-03-04 02:51  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_collection.c,
+	  troika/phase2/trunk/src/api/p2_collection.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_collection.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h:
+
+2006-03-03 09:15  
+
+	* troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/util/p2_collection.h:
+
+2006-03-03 03:40  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/include,
+	  troika/phase2/trunk/src/api/import/src/include/cstring-def.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_name.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_collection.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_name.c,
+	  troika/phase2/trunk/src/api/util/p2_name.h: Reworking the typing
+	  system for collections.
+
+2006-03-02 02:59  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/import-aux.c,
+	  troika/phase2/trunk/src/api/import-aux.h,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/p2-stubs.xslt,
+	  troika/phase2/trunk/src/api/import/src/another.h,
+	  troika/phase2/trunk/src/api/import/src/combinator.c,
+	  troika/phase2/trunk/src/api/import/src/combinator.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/stubs.h,
+	  troika/phase2/trunk/src/api/main.c,
+	  troika/phase2/trunk/src/api/p2.c,
+	  troika/phase2/trunk/src/api/p2.h,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_error.c,
+	  troika/phase2/trunk/src/api/p2_error.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive-import.c,
+	  troika/phase2/trunk/src/api/p2_primitive-import.h,
+	  troika/phase2/trunk/src/api/p2_syntax.c,
+	  troika/phase2/trunk/src/api/p2_syntax.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_void.c,
+	  troika/phase2/trunk/src/api/p2_void.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h: API now compiles as a unit.
+	  Compiler recognizes a few commands, but the environment needs
+	  debugging.
+
+2006-03-01 05:21  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/Makefile,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/oldstuff.txt,
+	  troika/phase2/trunk/src/api/p2_compiler.c,
+	  troika/phase2/trunk/src/api/p2_compiler.h,
+	  troika/phase2/trunk/src/api/p2_environment.c,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debug.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/xml/Makefile:
+
+2006-02-28 18:58  
+
+	* troika/phase2/trunk/src/api/bnftool,
+	  troika/phase2/trunk/src/api/bnftool/Makefile,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.l,
+	  troika/phase2/trunk/src/api/bnftool/bnftool.y:
+
+2006-02-28 03:26  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: Created bnftool to
+	  automate first/follow set calculation for Bison grammars.
+
+2006-02-27 07:28  
+
+	* troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l:
+
+2006-02-25 23:36  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_id.c,
+	  troika/phase2/trunk/src/api/p2_id.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debug.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/xml/Makefile,
+	  troika/phase2/trunk/src/api/xml/libxml2/xmldom-libxml2.c,
+	  troika/phase2/trunk/src/api/xml/xmldom-test.c,
+	  troika/phase2/trunk/src/api/xml/xmldom.h:
+
+2006-02-24 01:26  
+
+	* troika/phase2/trunk/src/api/oldstuff.txt,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h,
+	  troika/phase2/trunk/src/api/util/p2_term.h:
+
+2006-02-23 23:48  
+
+	* troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/p2-stub-gen.xslt,
+	  troika/phase2/trunk/src/api/import/p2-stubs.xslt: ANSI-fied the
+	  import utility.
+
+2006-02-23 23:47  
+
+	* troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/header-generator.xslt,
+	  troika/phase2/trunk/src/api/import/p2-import.cfg,
+	  troika/phase2/trunk/src/api/import/p2-stub-gen.xslt,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/int.h:
+
+2006-02-23 02:46  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/p2_atom.c,
+	  troika/phase2/trunk/src/api/p2_atom.h,
+	  troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_memory_manager.c,
+	  troika/phase2/trunk/src/api/p2_memory_manager.h,
+	  troika/phase2/trunk/src/api/p2_name.h,
+	  troika/phase2/trunk/src/api/p2_namespace.c,
+	  troika/phase2/trunk/src/api/p2_namespace.h,
+	  troika/phase2/trunk/src/api/p2_object.c,
+	  troika/phase2/trunk/src/api/p2_object.h,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h:
+	  Partially-complete redesign/reimplementation of the API.
+
+2006-02-21 02:56  
+
+	* troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/p2_atom.c,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debug.h,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/debugger.c,
+	  troika/phase2/trunk/src/api/util/p2-util-debugger.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_set.c,
+	  troika/phase2/trunk/src/api/xml/Makefile:
+
+2006-02-20 19:13  
+
+	* troika/phase2/trunk/src/api/util/Makefile,
+	  troika/phase2/trunk/src/api/util/p2-util-debugger.c,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_array.h,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.h,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.h,
+	  troika/phase2/trunk/src/api/util/p2_set.c,
+	  troika/phase2/trunk/src/api/util/p2_set.h,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/api/util/p2_term.h: Made all util
+	  comments into block comments for ANSI compliance.
+
+2006-02-20 07:39  
+
+	* troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser-debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y:
+
+2006-02-18 03:01  
+
+	* troika/phase2/trunk/src/api/parser/Makefile,
+	  troika/phase2/trunk/src/api/parser/debug.h,
+	  troika/phase2/trunk/src/api/parser/p2_ast.c,
+	  troika/phase2/trunk/src/api/parser/p2_ast.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser-aux.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser-aux.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser-debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y: Almost done with
+	  the parser.
+
+2006-02-14 02:51  
+
+	* troika/phase2/trunk/src/api/parser/p2_parser-aux.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser-aux.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y:
+	  Partially-complete rewrite of parser.
+
+2006-02-13 18:28  
+
+	* troika/phase2/trunk/src/api/parser/p2_parser.l,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y:
+
+2006-02-11 02:39  
+
+	* troika/phase2/trunk/src/api/p2_environment.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser.l: Added
+	  mini-scanners to p2_parser.l (needs more work).
+
+2006-02-04 02:37  
+
+	* troika/phase2/trunk/src/api/import/src/stubs.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/parser/p2_parser-debugger.c,
+	  troika/phase2/trunk/src/api/parser/p2_parser.y,
+	  troika/phase2/trunk/src/api/xml/xmldom.h,
+	  troika/phase2/trunk/src/gui/Makefile,
+	  troika/phase2/trunk/src/gui/P2Frame.cpp,
+	  troika/phase2/trunk/src/gui/global.h,
+	  troika/phase2/trunk/src/gui/layout/P2Layout.cpp:
+
+2005-11-19 03:05  
+
+	* troika/phase2/trunk/src/api/import/p2-import.cfg,
+	  troika/phase2/trunk/src/api/p2_void.c,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c,
+	  troika/phase2/trunk/src/gui/P2CentralWidget.cpp:
+
+2005-11-18 03:14  
+
+	* troika/phase2/trunk/src/api/import,
+	  troika/phase2/trunk/src/api/import/Makefile,
+	  troika/phase2/trunk/src/api/import/commands.cpp,
+	  troika/phase2/trunk/src/api/import/header-generator.xslt,
+	  troika/phase2/trunk/src/api/import/src/cstring.c,
+	  troika/phase2/trunk/src/api/import/src/cstring.h,
+	  troika/phase2/trunk/src/api/import/src/double.c,
+	  troika/phase2/trunk/src/api/import/src/double.h,
+	  troika/phase2/trunk/src/api/import/src/int.c,
+	  troika/phase2/trunk/src/api/import/src/int.h,
+	  troika/phase2/trunk/src/api/import/src/stubs.h,
+	  troika/phase2/trunk/src/api/importer:
+
+2005-11-18 03:13  
+
+	* troika/phase2/trunk/src/api/import,
+	  troika/phase2/trunk/src/api/import-aux.c,
+	  troika/phase2/trunk/src/api/import-aux.h,
+	  troika/phase2/trunk/src/api/importer/Makefile,
+	  troika/phase2/trunk/src/api/importer/commands.cpp,
+	  troika/phase2/trunk/src/api/importer/header-generator.xslt,
+	  troika/phase2/trunk/src/api/importer/src/another.h,
+	  troika/phase2/trunk/src/api/importer/src/cstring.c,
+	  troika/phase2/trunk/src/api/importer/src/cstring.h,
+	  troika/phase2/trunk/src/api/importer/src/double.c,
+	  troika/phase2/trunk/src/api/importer/src/double.h,
+	  troika/phase2/trunk/src/api/importer/src/int.c,
+	  troika/phase2/trunk/src/api/importer/src/int.h,
+	  troika/phase2/trunk/src/api/importer/src/stubs.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.c,
+	  troika/phase2/trunk/src/api/p2_type.h: importer now builds
+	  p2_types as well as p2_primitives, but for an odd compiler error
+	  in import-aux.c
+
+2005-11-17 02:23  
+
+	* troika/phase2/trunk/src/api/import-aux.c,
+	  troika/phase2/trunk/src/api/import-aux.h,
+	  troika/phase2/trunk/src/api/importer/Makefile,
+	  troika/phase2/trunk/src/api/importer/header-generator.xslt,
+	  troika/phase2/trunk/src/api/importer/p2-import.cfg,
+	  troika/phase2/trunk/src/api/importer/src/another.h,
+	  troika/phase2/trunk/src/api/p2_primitive.c,
+	  troika/phase2/trunk/src/api/p2_primitive.h,
+	  troika/phase2/trunk/src/api/p2_type.h,
+	  troika/phase2/trunk/src/api/util/p2_array.c,
+	  troika/phase2/trunk/src/api/util/p2_bunch.c,
+	  troika/phase2/trunk/src/api/util/p2_hash_table.c,
+	  troika/phase2/trunk/src/api/util/p2_set.c,
+	  troika/phase2/trunk/src/api/util/p2_term.c: Importing utility is
+	  usable.
+
+2005-11-16 05:02  
+
+	* troika/phase2/trunk/src/api/import-aux.c,
+	  troika/phase2/trunk/src/api/import-aux.h,
+	  troika/phase2/trunk/src/api/importer/header-generator.xslt,
+	  troika/phase2/trunk/src/api/importer/p2-import.cfg,
+	  troika/phase2/trunk/src/api/importer/src/another.h,
+	  troika/phase2/trunk/src/api/importer/src/stubs.h: Importing
+	  utility is almost ready to go.
+
+2005-11-15 04:57  
+
+	* troika/phase2/trunk/Makefile,
+	  troika/phase2/trunk/doxygen/phase2.cfg,
+	  troika/phase2/trunk/src/api/Makefile,
+	  troika/phase2/trunk/src/api/importer,
+	  troika/phase2/trunk/src/api/importer/Makefile,
+	  troika/phase2/trunk/src/api/importer/README.txt,
+	  troika/phase2/trunk/src/api/importer/header-generator.xslt,
+	  troika/phase2/trunk/src/api/importer/p2-import.cfg,
+	  troika/phase2/trunk/src/api/importer/src,
+	  troika/phase2/trunk/src/api/importer/src/stubs.h,
+	  troika/phase2/trunk/src/api/p2_flags.h,
+	  troika/phase2/trunk/src/api/p2_void.h,
+	  troika/phase2/trunk/src/api/sk/sk.c,
+	  troika/phase2/trunk/src/api/sk/sk.h: Added import header
+	  generator (uses doxygen and xsltproc).
+
+2005-11-14 21:27  
+
+	* troika/phase2/trunk/README.txt, troika/phase2/trunk/TODO.txt,
+	  troika/phase2/trunk/src/api, troika/phase2/trunk/src/p2.xsd,
+	  troika/phase2/trunk/src/phase2: Re-factoring.
+
+2005-11-14 20:39  
+
+	* troika/phase2, troika/phase2/trunk, troika/trunk: Re-factoring.
+
+2005-11-14 07:29  
+
+	* troika/trunk/src/phase2/Makefile,
+	  troika/trunk/src/phase2/parser/Makefile,
+	  troika/trunk/src/phase2/parser/p2_parser-aux.h,
+	  troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser.y,
+	  troika/trunk/src/phase2/util/Makefile,
+	  troika/trunk/src/phase2/util/p2-util-debugger.c,
+	  troika/trunk/src/phase2/util/p2_array.c,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_hash_table.c,
+	  troika/trunk/src/phase2/util/p2_hash_table.h,
+	  troika/trunk/src/phase2/util/p2_set.c,
+	  troika/trunk/src/phase2/util/p2_set.h,
+	  troika/trunk/src/phase2/util/p2_term.c,
+	  troika/trunk/src/phase2/util/p2_term.h: Hunting down memory
+	  leaks, cleaning up old code.
+
+2005-11-13 08:21  
+
+	* troika/trunk/src/phase2/util/Makefile,
+	  troika/trunk/src/phase2/util/p2-util-debugger.c,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_bunch.h,
+	  troika/trunk/src/phase2/util/p2_set.h: Found and fixed a bug in
+	  p2_bunch via Valgrind.
+
+2005-11-12 01:41  joshs
+
+	* troika/trunk/TODO.txt, troika/trunk/src/phase2/parser/Makefile,
+	  troika/trunk/src/phase2/util/Makefile,
+	  troika/trunk/src/phase2/util/p2-util-debugger.c,
+	  troika/trunk/src/phase2/util/p2_array.c,
+	  troika/trunk/src/phase2/util/p2_array.h,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_bunch.h,
+	  troika/trunk/src/phase2/util/p2_hash_table.c,
+	  troika/trunk/src/phase2/util/p2_hash_table.h,
+	  troika/trunk/src/phase2/util/p2_set.c,
+	  troika/trunk/src/phase2/util/p2_term.c,
+	  troika/trunk/src/phase2/xml/xmldom-test.c: Added util debugger
+	  for use with valgrind.
+
+2005-11-11 01:50  joshs
+
+	* troika/trunk/LICENSE.txt, troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_flags.h,
+	  troika/trunk/src/phase2/p2_id.h,
+	  troika/trunk/src/phase2/p2_primitive.h,
+	  troika/trunk/src/phase2/p2_type.h,
+	  troika/trunk/src/phase2/p2_void.h,
+	  troika/trunk/src/phase2/sk/sk.h,
+	  troika/trunk/src/phase2/util/p2_array.h,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_bunch.h,
+	  troika/trunk/src/phase2/util/p2_hash_table.h,
+	  troika/trunk/src/phase2/util/p2_set.h,
+	  troika/trunk/src/phase2/util/p2_term.h,
+	  troika/trunk/src/phase2/xml/Makefile,
+	  troika/trunk/src/phase2/xml/gsoap/README.txt,
+	  troika/trunk/src/phase2/xml/gsoap/xmldom-gsoap.c,
+	  troika/trunk/src/phase2/xml/gsoap/xmldom.cpp,
+	  troika/trunk/src/phase2/xml/libxml2/xmldom-libxml2.c,
+	  troika/trunk/src/phase2/xml/xmldom-test.c,
+	  troika/trunk/src/phase2/xml/xmldom.h: libxml2 module is fully
+	  functional.
+
+2005-11-10 02:00  joshs
+
+	* troika/trunk/src/phase2/xml/Makefile,
+	  troika/trunk/src/phase2/xml/gsoap,
+	  troika/trunk/src/phase2/xml/gsoap/gsoap_header.h,
+	  troika/trunk/src/phase2/xml/gsoap/xmldom.cpp,
+	  troika/trunk/src/phase2/xml/gsoap/xmldom.h,
+	  troika/trunk/src/phase2/xml/gsoap_header.h,
+	  troika/trunk/src/phase2/xml/libxml2,
+	  troika/trunk/src/phase2/xml/libxml2/README.txt,
+	  troika/trunk/src/phase2/xml/libxml2/xmldom-libxml2.c,
+	  troika/trunk/src/phase2/xml/xmldom-test.c,
+	  troika/trunk/src/phase2/xml/xmldom.cpp,
+	  troika/trunk/src/phase2/xml/xmldom.h: Added libxml2 toolkit
+	  interface.
+
+2005-11-09 20:09  joshs
+
+	* troika/trunk/src/phase2/xml/xmldom.cpp:
+
+2005-11-07 20:58  joshs
+
+	* troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_flags.h: Added support for
+	  association.
+
+2005-11-05 02:00  joshs
+
+	* troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_flags.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_bunch.h,
+	  troika/trunk/src/phase2/util/p2_hash_table.c,
+	  troika/trunk/src/phase2/util/p2_hash_table.h,
+	  troika/trunk/src/phase2/util/p2_set.c,
+	  troika/trunk/src/phase2/util/p2_set.h: + mark-and-sweep logic to
+	  p2_atom, error handling in the parser (needs further refinement)
+
+2005-11-02 02:02  joshs
+
+	* troika/trunk/src/phase2/README.txt,
+	  troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_client.cpp,
+	  troika/trunk/src/phase2/p2_dataset.cpp,
+	  troika/trunk/src/phase2/p2_error.c,
+	  troika/trunk/src/phase2/p2_flags.h,
+	  troika/trunk/src/phase2/p2_type.h,
+	  troika/trunk/src/phase2/p2_void.c,
+	  troika/trunk/src/phase2/p2_void.h,
+	  troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_bunch.h,
+	  troika/trunk/src/phase2/xml/xmldom.h: + p2_void, misc. minor
+	  edits
+
+2005-11-01 02:24  joshs
+
+	* troika/trunk/src/phase2/parser/p2_parser-debugger.c: Added
+	  invocation of formatting functions to the example.
+
+2005-11-01 02:20  joshs
+
+	* troika/trunk/src/phase2/parser/p2_parser-aux.c: Needs this file
+	  as well.
+
+2005-11-01 02:19  joshs
+
+	* troika/trunk/src/phase2/parser/Makefile,
+	  troika/trunk/src/phase2/parser/p2_parser-aux.h,
+	  troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y: Parser is
+	  essentially finished.
+
+2005-11-01 02:08  joshs
+
+	* troika/trunk/src/phase2/parser/Makefile,
+	  troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser-macros.h,
+	  troika/trunk/src/phase2/parser/p2_parser.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y: Commit before
+	  refactor.
+
+2005-11-01 00:26  joshs
+
+	* troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser-macros.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y: Commit before
+	  refactor.
+
+2005-10-29 00:29  joshs
+
+	* troika/trunk/src/phase2/p2_client.cpp,
+	  troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser-macros.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y: Still tinkering with
+	  the parser.
+
+2005-10-28 01:08  joshs
+
+	* troika/trunk/src/phase2/Makefile,
+	  troika/trunk/src/phase2/p2_client.cpp,
+	  troika/trunk/src/phase2/p2_parse.l,
+	  troika/trunk/src/phase2/p2_parse.y,
+	  troika/trunk/src/phase2/parser/Makefile,
+	  troika/trunk/src/phase2/parser/p2_parser-debug.c,
+	  troika/trunk/src/phase2/parser/p2_parser-debugger.c,
+	  troika/trunk/src/phase2/parser/p2_parser-macros.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y,
+	  troika/trunk/src/phase2/util/p2_term.c,
+	  troika/trunk/src/phase2/util/p2_term.h: Nearly done re-vamping
+	  the command-line parser.
+
+2005-10-27 16:34  joshs
+
+	* troika/trunk/src/phase2/parser/Makefile,
+	  troika/trunk/src/phase2/parser/p2_parse.l,
+	  troika/trunk/src/phase2/parser/p2_parse.y,
+	  troika/trunk/src/phase2/parser/p2_parser-debug.c,
+	  troika/trunk/src/phase2/parser/p2_parser-macros.h,
+	  troika/trunk/src/phase2/parser/p2_parser.l,
+	  troika/trunk/src/phase2/parser/p2_parser.y: Commit before
+	  refactor.
+
+2005-10-26 19:19  joshs
+
+	* troika/trunk/src/phase2/parser/p2_parse.l,
+	  troika/trunk/src/phase2/parser/p2_parse.y: Commit before
+	  refactor.
+
+2005-10-26 19:12  joshs
+
+	* troika/trunk/src/phase2/Makefile,
+	  troika/trunk/src/phase2/p2_parse.l,
+	  troika/trunk/src/phase2/p2_parse.y,
+	  troika/trunk/src/phase2/parser: Commit before refactor.
+
+2005-10-26 01:18  joshs
+
+	* troika/trunk/src/phase2/Makefile,
+	  troika/trunk/src/phase2/README.txt,
+	  troika/trunk/src/phase2/p2.c, troika/trunk/src/phase2/p2.h,
+	  troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_client.cpp,
+	  troika/trunk/src/phase2/p2_command.c,
+	  troika/trunk/src/phase2/p2_command.h,
+	  troika/trunk/src/phase2/p2_dataset.cpp,
+	  troika/trunk/src/phase2/p2_dataset.h,
+	  troika/trunk/src/phase2/p2_error.c,
+	  troika/trunk/src/phase2/p2_error.h,
+	  troika/trunk/src/phase2/p2_id.c,
+	  troika/trunk/src/phase2/p2_id.h,
+	  troika/trunk/src/phase2/p2_parse.y,
+	  troika/trunk/src/phase2/p2_primitive.c,
+	  troika/trunk/src/phase2/p2_primitive.h,
+	  troika/trunk/src/phase2/p2_syntax.c,
+	  troika/trunk/src/phase2/p2_syntax.h,
+	  troika/trunk/src/phase2/p2_type.c,
+	  troika/trunk/src/phase2/p2_type.h,
+	  troika/trunk/src/phase2/sk/sk.c,
+	  troika/trunk/src/phase2/sk/sk.h,
+	  troika/trunk/src/phase2/util/array.c,
+	  troika/trunk/src/phase2/util/array.h,
+	  troika/trunk/src/phase2/util/bunch.c,
+	  troika/trunk/src/phase2/util/bunch.h,
+	  troika/trunk/src/phase2/util/hash_table.c,
+	  troika/trunk/src/phase2/util/hash_table.h,
+	  troika/trunk/src/phase2/util/p2_array.c,
+	  troika/trunk/src/phase2/util/p2_array.h,
+	  troika/trunk/src/phase2/util/p2_bunch.c,
+	  troika/trunk/src/phase2/util/p2_bunch.h,
+	  troika/trunk/src/phase2/util/p2_hash_table.c,
+	  troika/trunk/src/phase2/util/p2_hash_table.h,
+	  troika/trunk/src/phase2/util/p2_set.c,
+	  troika/trunk/src/phase2/util/p2_set.h,
+	  troika/trunk/src/phase2/util/p2_term.c,
+	  troika/trunk/src/phase2/util/p2_term.h,
+	  troika/trunk/src/phase2/util/set.c,
+	  troika/trunk/src/phase2/util/set.h,
+	  troika/trunk/src/phase2/util/term.c,
+	  troika/trunk/src/phase2/util/term.h: Misc. refactoring.
+
+2005-10-25 19:50  joshs
+
+	* troika/trunk/src/phase2/Makefile,
+	  troika/trunk/src/phase2/README.txt,
+	  troika/trunk/src/phase2/p2.c, troika/trunk/src/phase2/p2.h,
+	  troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_client.cpp,
+	  troika/trunk/src/phase2/p2_debug.h,
+	  troika/trunk/src/phase2/p2_error.c,
+	  troika/trunk/src/phase2/p2_error.h,
+	  troika/trunk/src/phase2/p2_flags.h,
+	  troika/trunk/src/phase2/p2_id.h,
+	  troika/trunk/src/phase2/p2_parse.l,
+	  troika/trunk/src/phase2/p2_parse.y,
+	  troika/trunk/src/phase2/p2_primitive.c,
+	  troika/trunk/src/phase2/p2_primitive.h,
+	  troika/trunk/src/phase2/p2_type.c,
+	  troika/trunk/src/phase2/p2_type.h: Backup commit before refactor.
+
+2005-10-25 05:00  joshs
+
+	* troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_command.c,
+	  troika/trunk/src/phase2/p2_dataset.cpp,
+	  troika/trunk/src/phase2/p2_dataset.h,
+	  troika/trunk/src/phase2/p2_error.c,
+	  troika/trunk/src/phase2/p2_id.c,
+	  troika/trunk/src/phase2/p2_id.h,
+	  troika/trunk/src/phase2/p2_primitive.c,
+	  troika/trunk/src/phase2/p2_type.c: Minor changes.
+
+2005-10-25 04:36  joshs
+
+	* troika/trunk/src/phase2/sk/sk.c,
+	  troika/trunk/src/phase2/sk/sk.h: Doxygenized the S,K library.
+
+2005-10-25 04:07  joshs
+
+	* troika/trunk/Makefile, troika/trunk/doxygen/versionfilter.sh,
+	  troika/trunk/src/Makefile, troika/trunk/src/P2Binder.cpp,
+	  troika/trunk/src/P2Binder.h,
+	  troika/trunk/src/P2BitmapEditor.cpp,
+	  troika/trunk/src/P2BitmapEditor.h,
+	  troika/trunk/src/P2CentralWidget.cpp,
+	  troika/trunk/src/P2CentralWidget.h, troika/trunk/src/P2Logger.h,
+	  troika/trunk/src/P2MainWindow.cpp,
+	  troika/trunk/src/P2MainWindow.h,
+	  troika/trunk/src/compile-target-arm.h,
+	  troika/trunk/src/compile-target-x86.h, troika/trunk/src/gui,
+	  troika/trunk/src/gui/Makefile,
+	  troika/trunk/src/gui/P2Binder.cpp,
+	  troika/trunk/src/gui/P2Binder.h,
+	  troika/trunk/src/gui/P2BitmapEditor.cpp,
+	  troika/trunk/src/gui/P2BitmapEditor.h,
+	  troika/trunk/src/gui/P2CentralWidget.cpp,
+	  troika/trunk/src/gui/P2CentralWidget.h,
+	  troika/trunk/src/gui/P2Logger.h,
+	  troika/trunk/src/gui/P2MainWindow.cpp,
+	  troika/trunk/src/gui/P2MainWindow.h,
+	  troika/trunk/src/gui/compile-target-arm.h,
+	  troika/trunk/src/gui/compile-target-x86.h,
+	  troika/trunk/src/gui/troika.cpp,
+	  troika/trunk/src/phase2/util/array.c,
+	  troika/trunk/src/phase2/util/array.h,
+	  troika/trunk/src/phase2/util/bunch.h,
+	  troika/trunk/src/phase2/util/hash_table.c,
+	  troika/trunk/src/phase2/util/hash_table.h,
+	  troika/trunk/src/phase2/util/set.c,
+	  troika/trunk/src/phase2/util/set.h,
+	  troika/trunk/src/phase2/util/term.c,
+	  troika/trunk/src/phase2/util/term.h,
+	  troika/trunk/src/troika.cpp: Made the phase2 utilities
+	  doxygen-correct.
+
+2005-10-25 00:23  joshs
+
+	* troika/trunk/cpp, troika/trunk/doxygen,
+	  troika/trunk/doxygen/phase2.cfg,
+	  troika/trunk/doxygen/versionfilter.sh, troika/trunk/src,
+	  troika/trunk/src/Makefile, troika/trunk/src/P2Binder.cpp,
+	  troika/trunk/src/P2Binder.h,
+	  troika/trunk/src/P2BitmapEditor.cpp,
+	  troika/trunk/src/P2BitmapEditor.h,
+	  troika/trunk/src/P2CentralWidget.cpp,
+	  troika/trunk/src/P2CentralWidget.h, troika/trunk/src/P2Logger.h,
+	  troika/trunk/src/P2MainWindow.cpp,
+	  troika/trunk/src/P2MainWindow.h,
+	  troika/trunk/src/compile-target-arm.h,
+	  troika/trunk/src/compile-target-x86.h, troika/trunk/src/phase2,
+	  troika/trunk/src/phase2/Makefile,
+	  troika/trunk/src/phase2/README.txt,
+	  troika/trunk/src/phase2/import,
+	  troika/trunk/src/phase2/import/char.c,
+	  troika/trunk/src/phase2/import/commands.cpp,
+	  troika/trunk/src/phase2/import/cstring.c,
+	  troika/trunk/src/phase2/import/double.c,
+	  troika/trunk/src/phase2/import/int.c,
+	  troika/trunk/src/phase2/import/primitives.cpp,
+	  troika/trunk/src/phase2/p2.c, troika/trunk/src/phase2/p2.h,
+	  troika/trunk/src/phase2/p2_atom.c,
+	  troika/trunk/src/phase2/p2_atom.h,
+	  troika/trunk/src/phase2/p2_client.cpp,
+	  troika/trunk/src/phase2/p2_command.c,
+	  troika/trunk/src/phase2/p2_command.h,
+	  troika/trunk/src/phase2/p2_dataset.cpp,
+	  troika/trunk/src/phase2/p2_dataset.h,
+	  troika/trunk/src/phase2/p2_debug.h,
+	  troika/trunk/src/phase2/p2_error.c,
+	  troika/trunk/src/phase2/p2_error.h,
+	  troika/trunk/src/phase2/p2_id.c,
+	  troika/trunk/src/phase2/p2_id.h,
+	  troika/trunk/src/phase2/p2_parse.l,
+	  troika/trunk/src/phase2/p2_parse.y,
+	  troika/trunk/src/phase2/p2_primitive.c,
+	  troika/trunk/src/phase2/p2_primitive.h,
+	  troika/trunk/src/phase2/p2_syntax.c,
+	  troika/trunk/src/phase2/p2_syntax.h,
+	  troika/trunk/src/phase2/p2_type.c,
+	  troika/trunk/src/phase2/p2_type.h, troika/trunk/src/phase2/sk,
+	  troika/trunk/src/phase2/sk/sk.c,
+	  troika/trunk/src/phase2/sk/sk.h, troika/trunk/src/phase2/util,
+	  troika/trunk/src/phase2/util/array.c,
+	  troika/trunk/src/phase2/util/array.h,
+	  troika/trunk/src/phase2/util/bunch.c,
+	  troika/trunk/src/phase2/util/bunch.h,
+	  troika/trunk/src/phase2/util/hash_table.c,
+	  troika/trunk/src/phase2/util/hash_table.h,
+	  troika/trunk/src/phase2/util/set.c,
+	  troika/trunk/src/phase2/util/set.h,
+	  troika/trunk/src/phase2/util/term.c,
+	  troika/trunk/src/phase2/util/term.h,
+	  troika/trunk/src/phase2/xml,
+	  troika/trunk/src/phase2/xml/gsoap_header.h,
+	  troika/trunk/src/phase2/xml/xmldom.cpp,
+	  troika/trunk/src/phase2/xml/xmldom.h,
+	  troika/trunk/src/troika.cpp: Added phase2 API (transitional).
+	  Configuring doxygen.
+

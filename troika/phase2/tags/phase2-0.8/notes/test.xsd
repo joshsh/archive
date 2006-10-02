@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <element name="foo" type="xsd:string" />
+    <element ref="blah" />
+    <element>
+        <simpleType>
+            <foo_simple>This element has only content, and no name...</foo_simple>
+        </simpleType>
+    </element>
+    <element name="foo" type="bar" ref="baz">
+        <simpleType>
+            <foo_simple>This element has everything, but it shouldn't be allowed.</foo_simple>
+        </simpleType>
+    </element>
+
+</schema>

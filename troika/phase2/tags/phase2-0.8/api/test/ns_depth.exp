@@ -1,0 +1,31 @@
+#!/usr/bin/expect
+
+set limit $argv
+
+# Silence "send" commands.
+eval stty -echo
+
+
+#set password [getpass]
+
+#if [fork] exit
+#disconnect
+
+spawn phase2
+expect "^phase2"
+
+#expect_background -re ".+"
+
+for {set i 0} {$i < $limit} {incr i +1} {
+    send "_new ns$i; _ns ns$i;\r"
+    expect "ns$i"
+}
+
+send "_gc;\r"
+expect "Collected"
+
+send "_quit;\r"
+expect "Bye"
+
+expect "*3\t" { puts "\[TEST\] memory check: passed" }
+return 0

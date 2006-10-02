@@ -1,0 +1,51 @@
+Bugs
+================================================================================
+
+Build
+================================================================================
+* add version-info to the shared phase2 library
+* try to get the package to build with pmake
+* add target "test"
+* tools dependencies (doxygen, xsltproc)
+* include examples dir in distribution
+* [ARM cross-compile] use static libraries
+* add build times to NOTES
+* if possible, eliminate superfluous checks from generated ./configure
+* cleanup of src/config.h.in, src/collection/Makefile.in
+
+Design
+================================================================================
+* need a more general and flexible "model" scheme, ability to share atomic data
+  among models
+* (if practical) eliminate boxed objects, use type inference exclusively
+* RDF/XML and N3 import / export
+
+Documentation
+================================================================================
+* doxygen script --> revision # in docs
+* Phase2 intro / overview
+
+Implementation
+================================================================================
+* fix all FIXMEs -- grep FIXME `find src -name \*.[ch]` | more
+* do all TODOs -- grep TODO `find src -name \*.[ch]` | more
+* interpreter + readline = happiness
+* commands --> script
+* use String instead of char* for Encoders
+* rework dependencies in collection, parser
+* semaphores --> eliminate global variables
+* "cstring" --> "String"
+* clean up Interpreter and INFO output
+* no limit on the length of an encoded object --> Sets and other objects which
+  allow self-inclusion could take arbitrary resources to encode
+* rework Bunch to hold objects by value rather than by reference
+* graceful fail when basic object (combinator/primitive/type) not found
+* move the serialization stuff out of Interpreter
+* wrap more standard library primitives
+* add reduction primitives
+* after importing primitives, check the type registry for incomplete types
+* _new ^ check whether target already exists
+* break namespace__find into a path-building and a name-building portion
+* define a canonical name ordering for objects without a unique shortest name,
+  apply it to both name-to-object and object-to-name mapping
+* parser.c vs. Parser.c

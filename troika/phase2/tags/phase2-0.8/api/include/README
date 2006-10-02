@@ -1,0 +1,15 @@
+./libxml
+    libxml 2.6.26 headers, for the sake of build platforms which have the
+    libxml libraries but not the headers
+
+./libxml/COPYING
+    libxml copyright notice
+
+./libxml/xmlversion.h
+    This is normally generated from an xmlversion.h.in when building libxml for
+    a specific platform.  As its contents do not directly affect the Phase2
+    build, arbitrary values have been used, avoiding the inclusion of any
+    nonstandard, non-libxml headers (specifically, iconv.h).
+
+./phase2
+    public Phase2 API headers

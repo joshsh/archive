@@ -1,0 +1,1 @@
+/usr/share/icons/Bluecurve/16x16/
