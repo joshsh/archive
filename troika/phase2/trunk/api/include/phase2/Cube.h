@@ -1,11 +1,6 @@
 /**
 
-\file  Void.h
-
-\brief  Defines the trivial "void" data type.
-
-\note  It is assumed that the implementation will not call void__new so
-       many times as to use up every below-range address.
+\file  Cube.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -30,17 +25,68 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef VOID_H
-#define VOID_H
+#ifndef CUBE_H
+#define CUBE_H
 
-#include <phase2/Type.h>
-
-
-/** \return  a trivial Type for objects with no data. */
-extern Type *
-void__create_type( const char *name, int flags );
+#include <Matrix.h>
 
 
-#endif  /* VOID_H */
+/** A sparse three-dimensional binary tensor of size N by N by N. */
+typedef struct Cube Cube;
+
+typedef struct CubeDiff CubeDiff;
+
+struct CubeDiff
+{
+    Cube *addend;
+    Cube *subtrahend;
+};
+
+
+extern Cube *
+cube__create();
+
+extern Matrix *
+cube__row_slice( Cube *a, index i );
+
+extern Matrix *
+cube__column_slice( Cube *a, index i );
+
+extern Matrix *
+cube__tube_slice( Cube *a, index i );
+
+extern Vector *
+cube__row_fiber( Cube *a, index i, index j );
+
+extern Vector *
+cube__column_fiber( Cube *a, index i, index j );
+
+extern Vector *
+cube__tube_fiber( Cube *a, index i, index j );
+
+extern boolean
+cube__component( Cube *a, index i, index j, index k );
+
+extern Cube *
+cube__add( Cube *a, Cube *b );
+
+extern Cube *
+cube__subtract( Cube *a, Cube *b );
+
+extern Cube *
+cube__cube_multiply( Cube *a, Cube *b );
+
+extern Cube *
+cube__matrix_multiply( Cube *a, Matrix *m );
+
+extern Cube *
+cube__vector_multiply( Cube *a, Vector *v );
+
+
+extern CubeDiff *
+cube__diff( Cube *a, Cube *b );
+
+
+#endif  /* CUBE_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

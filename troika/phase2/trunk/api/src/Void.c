@@ -21,17 +21,26 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "settings.h"
 
 
-/** Start off with a small, out-of-range address and work upwards. */
-static Void void__maxval = ( Void ) 42;
-
-
-Void *
-void__new()
+static void
+encode( void *p, char *buffer )
 {
-    Void *v = NEW( Void );
-    *v = ++void__maxval;
-    return v;
+    p = 0;
+
+    sprintf( buffer, "<>" );
 }
+
+
+Type *
+void__create_type( const char *name, int flags )
+{
+    Type *type = type__new( name, flags );
+
+    if ( type )
+    {
+        type->encode = ( Encoder ) encode;
+    }
+
+    return type;
 
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

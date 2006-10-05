@@ -1,11 +1,6 @@
 /**
 
-\file  Void.h
-
-\brief  Defines the trivial "void" data type.
-
-\note  It is assumed that the implementation will not call void__new so
-       many times as to use up every below-range address.
+\file  Matrix.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -30,17 +25,50 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef VOID_H
-#define VOID_H
+#ifndef MATRIX_H
+#define MATRIX_H
 
-#include <phase2/Type.h>
-
-
-/** \return  a trivial Type for objects with no data. */
-extern Type *
-void__create_type( const char *name, int flags );
+#include <Vector.h>
 
 
-#endif  /* VOID_H */
+/** A sparse binary matrix over   */
+typedef struct Matrix Matrix;
+
+typedef struct MatrixDiff MatrixDiff;
+
+struct MatrixDiff
+{
+    Matrix *addend;
+    Matrix *subtrahend;
+};
+
+
+extern Vector *
+matrix__row( Matrix *a, index i );
+
+extern Vector *
+matrix__column( Matrix *a, index i );
+
+extern boolean
+matrix__component( Matrix *a, index i, index j );
+
+extern Matrix *
+matrix__add( Matrix *a, Matrix *b );
+
+extern Matrix *
+matrix__subtract( Matrix *a, Matrix *b );
+
+extern Matrix *
+matrix__matrix_multiply( Matrix *a, Matrix *b );
+
+extern Matrix *
+matrix__vector_multiply( Matrix *a, Vector *v );
+
+
+extern MatrixDiff *
+matrix__diff( Matrix *a, Matrix *b );
+
+
+#endif  /* MATRIX_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

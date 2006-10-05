@@ -1,11 +1,6 @@
 /**
 
-\file  Void.h
-
-\brief  Defines the trivial "void" data type.
-
-\note  It is assumed that the implementation will not call void__new so
-       many times as to use up every below-range address.
+\file  Vector.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -30,17 +25,53 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef VOID_H
-#define VOID_H
+#ifndef VECTOR_H
+#define VECTOR_H
 
-#include <phase2/Type.h>
-
-
-/** \return  a trivial Type for objects with no data. */
-extern Type *
-void__create_type( const char *name, int flags );
+#include <common.h>
 
 
-#endif  /* VOID_H */
+#ifdef index
+#   undef index
+#endif
+
+typedef union index index;
+
+union index
+{
+    unsigned int intval;
+    void *pointerval;
+};
+
+
+typedef struct Vector Vector;
+
+typedef struct VectorDiff VectorDiff;
+
+struct VectorDiff
+{
+    Vector *addend;
+    Vector *subtrahend;
+};
+
+
+extern boolean
+vector__component( Vector *a, index i );
+
+extern Vector *
+vector__add( Vector *a, Vector *b );
+
+extern Vector *
+vector__subtract( Vector *a, Vector *b );
+
+extern Vector *
+vector__multiply( Vector *a, Vector *b );
+
+
+extern VectorDiff *
+vector__diff( Vector *a, Vector *b );
+
+
+#endif  /* VECTOR_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

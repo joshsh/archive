@@ -1,5 +1,6 @@
 Bugs
 ================================================================================
+* parser inserts extra line breaks into multiple-line expressions
 
 Build
 ================================================================================
@@ -27,6 +28,8 @@ Documentation
 
 Implementation
 ================================================================================
+* integrate with librdf
+* "environment" member in Type --> eliminate the need for global objects
 * fix all FIXMEs -- grep FIXME `find src -name \*.[ch]` | more
 * do all TODOs -- grep TODO `find src -name \*.[ch]` | more
 * interpreter + readline = happiness

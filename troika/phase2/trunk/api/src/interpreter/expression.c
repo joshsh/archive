@@ -324,6 +324,25 @@ resolve( Interpreter *itp, Object *o )
 /******************************************************************************/
 
 
+#include "../object/Object-impl.h"
+
+static ACTION
+print_edge( Object **op1, Object **op2 )
+{
+    char buffer[ENCODING__BUFFER_SIZE], *cur = buffer;
+
+    interpreter__encode( interpreter, DEREF( op1 ), cur, 0 );
+    cur += strlen( cur );
+    sprintf( cur, " --> " );
+    cur += strlen( cur );
+    interpreter__encode( interpreter, DEREF( op2 ), cur, 0 );
+
+    PRINT( "    %s\n", buffer );
+
+    return CONTINUE;
+}
+
+
 int
 interpreter__evaluate_expression( Interpreter *itp,
                                   OBJ( NAME ) *name,
@@ -415,6 +434,11 @@ interpreter__evaluate_expression( Interpreter *itp,
             PRINT( print_buffer );
 
             PRINT( "\n" );
+
+            if ( o->outbound_edges )
+            {
+                hash_map__walk2( o->outbound_edges, ( Visitor2 ) print_edge );
+            }
         }
     }
 

@@ -328,6 +328,7 @@ debug__memcheck();
 #endif
 
 #define COMPILER__SHOW_ADDRESS                  DEBUG
+#define INTERPERTER__SHOW_TRIPLES               1
 
 
 #endif  /* SETTINGS_H */

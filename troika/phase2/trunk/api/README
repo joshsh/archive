@@ -3,13 +3,14 @@
 Introduction
 ================================================================================
 
-Phase2 is an experimental language API and interpreter which combines ideas from
+Phase2 is an experimental programming language which combines ideas from
 functional programming and the Semantic Web.  Phase2 is quite usable as a
 simple point-free functional language, however it is intended as a proof of
-concept for a computational model based on "graphs" of subject-predicate-object
-triples, similar to the Resource Description Framework (RDF).  Imagine for a
-moment that you've been asked to express a computer program in RDF, and (before
-you :q in horror) you'll have a rough idea of what this is all about.
+concept for a computational model based on collections of subject-predicate-
+object triples, similar to labeled graphs of the Resource Description Framework
+(RDF).  Imagine for a moment that you've been asked to express a computer
+program in RDF, and (before you :q in horror) you'll have a rough idea of what
+this is all about.
 
 Note: code samples, test scripts and documentation are still on the TODO list.
 
@@ -111,9 +112,6 @@ examine the contents of ./src/import/src/ for more examples.
   pointer types are not allowed.  That is to say, if you use them, you'll have
   to be sneaky about it.
 
-* If a returned value is of a scalar type, memory will be dynamically
-  allocated for it.
-
 * A return type of "void" is allowed.  This will yield a null object when
   applied to an argument.
 
@@ -126,6 +124,9 @@ examine the contents of ./src/import/src/ for more examples.
   call a $destructor method on the value according to its type, which by
   default is the free() function.  You don't want to free() the same memory
   twice, do you?
+
+* If a returned value is of a scalar type, memory will be dynamically
+  allocated for it.
 
 * If a type is not found in the "root:types" namespace, a type object will be
   created for it and filled with default methods.  Three of those methods can
