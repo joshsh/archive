@@ -1,9 +1,12 @@
 Bugs
 ================================================================================
 * parser inserts extra line breaks into multiple-line expressions
+* data:foo := "bar";
 
 Build
 ================================================================================
+* equivalent of:
+      gcc -o example7 `redland-config --cflags` example7.c `redland-config --libs`
 * add version-info to the shared phase2 library
 * try to get the package to build with pmake
 * add target "test"
@@ -52,3 +55,7 @@ Implementation
 * define a canonical name ordering for objects without a unique shortest name,
   apply it to both name-to-object and object-to-name mapping
 * parser.c vs. Parser.c
+
+RDF
+================================================================================
+* investigate RDF ^ {literal values, value-less nodes}

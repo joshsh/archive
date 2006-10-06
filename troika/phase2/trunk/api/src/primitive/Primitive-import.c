@@ -69,7 +69,7 @@ primitive__new(
     if ( DEBUG__SAFE && !p->return_type )
     {
         ERROR( "primitive__new: unknown type" );
-        primitive__delete( p );
+        primitive__free( p );
         return 0;
     }
 
@@ -124,7 +124,7 @@ primitive__add_param(
     if ( DEBUG__SAFE && i == p->arity )
     {
         ERROR( "primitive__add_param: too many parameters" );
-        primitive__delete( p );
+        primitive__free( p );
         return 0;
     }
 

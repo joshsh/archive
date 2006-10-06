@@ -50,7 +50,7 @@ interpreter__new( Environment *env, boolean quiet, boolean verbose );
 
 /** Destructor. */
 extern void
-interpreter__delete( Interpreter *itp );
+interpreter__free( Interpreter *itp );
 
 
 /** \return  the interpreter's associated environment */

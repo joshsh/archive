@@ -99,7 +99,7 @@ block__copy( Block *bl )
 
 
 static void
-block__delete( Block *bl )
+block__free( Block *bl )
 {
     free( bl->buffer );
     free( bl );
@@ -156,13 +156,13 @@ bunch__copy( Bunch *b )
         bl = block__copy( array__get( b->blocks, i ) );
         if ( !bl )
         {
-            bunch__delete( b2 );
+            bunch__free( b2 );
             return 0;
         }
 
         if ( !array__enqueue( b2->blocks, ( void* ) bl ) )
         {
-            bunch__delete( b2 );
+            bunch__free( b2 );
             return 0;
         }
     }
@@ -174,11 +174,11 @@ bunch__copy( Bunch *b )
 
 
 void
-bunch__delete( Bunch *b )
+bunch__free( Bunch *b )
 {
     ACTION helper( Block **blp )
     {
-        block__delete( *blp );
+        block__free( *blp );
         return 0;
     }
 
@@ -186,7 +186,7 @@ bunch__delete( Bunch *b )
     array__walk( b->blocks, ( Visitor ) helper );
 
     /* Delete the blocks array. */
-    array__delete( b->blocks );
+    array__free( b->blocks );
 
     /* Free the bunch structure itself. */
     free( b );
@@ -235,7 +235,7 @@ bunch__remove( Bunch *b )
     /* Remove the tail-end block if empty. */
     if ( !bl->filled )
     {
-        block__delete( array__dequeue( b->blocks ) );
+        block__free( array__dequeue( b->blocks ) );
 
         if ( bl == b->last_block )
         {
@@ -271,7 +271,7 @@ bunch__walk( Bunch *b, Visitor f )
                 /* Remove the tail-end block if empty. */
                 if ( !b->last_block->filled )
                 {
-                    block__delete( array__dequeue( b->blocks ) );
+                    block__free( array__dequeue( b->blocks ) );
 
                     if ( bl == b->last_block )
                     {
@@ -303,7 +303,7 @@ bunch__create_type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( Destructor ) bunch__delete;
+        type->destroy = ( Destructor ) bunch__free;
         type->size = ( Size_Of ) bunch__size;
         type->walk = ( Walker ) bunch__walk;
     }

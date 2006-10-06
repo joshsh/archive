@@ -53,7 +53,7 @@ array__copy( Array *a );
 
 /** Destructor. */
 extern void
-array__delete( Array *a );
+array__free( Array *a );
 
 
 /******************************************************************************/

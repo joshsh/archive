@@ -161,7 +161,7 @@ prim_reduce(
                 arg = 0;
             }
 
-            term__delete( t );
+            term__free( t );
         }
 
         /* Soft fail. */
@@ -371,7 +371,7 @@ prim_reduce(
 
 fail:
 
-    term__delete( term );
+    term__free( term );
     term = 0;
 
 finish:
@@ -393,7 +393,7 @@ term_reduce( Term *term )
     if ( term->head->intval == 2 )
     {
         head_term = ( ( Object* ) ( term->head + 1 )->pointerval )->value;
-        term__delete( term );
+        term__free( term );
         return term__copy( head_term );
     }
 
@@ -606,7 +606,7 @@ PRINT( "\n" );  fflush( stdout );
 
 fail:
 
-    term__delete( term );
+    term__free( term );
     term = 0;
 
 finish:

@@ -135,7 +135,7 @@ object__create_type( const char *name )
     {
         type->clone = ( Copy_Cons ) object__clone;
         type->compare_to = ( Comparator ) object__compare_to;
-        type->destroy = ( Destructor ) object__delete;
+        type->destroy = ( Destructor ) object__free;
         type->equals = ( Criterion2 ) object__equals;
         type->sort = ( Sort ) object__sort;
         type->walk = ( Walker ) object__walk;

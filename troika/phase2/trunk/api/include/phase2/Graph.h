@@ -44,7 +44,7 @@ graph__new( void );
 
 /** Destructor. */
 extern void
-graph__delete( Graph *g );
+graph__free( Graph *g );
 
 
 /** Adds an edge to the graph. */

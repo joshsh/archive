@@ -417,7 +417,7 @@ environment__register_primitive
 
     if ( !( o = manager__object( env->manager, t, prim, OBJECT__IMMUTABLE ) ) )
     {
-        primitive__delete( prim );
+        primitive__free( prim );
         return 0;
     }
 

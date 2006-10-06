@@ -51,7 +51,7 @@ manager__new();
 
 /** Destructor. */
 extern void
-manager__delete( Manager *m );
+manager__free( Manager *m );
 
 /** \return the number of objects governed by the Manager */
 extern unsigned int

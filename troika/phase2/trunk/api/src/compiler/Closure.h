@@ -47,7 +47,7 @@ extern Closure *
 closure__new( procedure execute, void *state );
 
 extern void
-closure__delete( Closure *c );
+closure__free( Closure *c );
 
 extern void *
 closure__apply( Closure *c, void *arg );

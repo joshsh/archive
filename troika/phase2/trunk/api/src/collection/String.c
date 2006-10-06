@@ -154,7 +154,7 @@ string__copy( String *s )
 
 
 void
-string__delete( String *s )
+string__free( String *s )
 {
     free( s->buffer );
     free( s );

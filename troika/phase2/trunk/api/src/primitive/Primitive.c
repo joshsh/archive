@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 void
-primitive__delete( Primitive *prim )
+primitive__free( Primitive *prim )
 {
     unsigned int i;
 
@@ -173,7 +173,7 @@ primitive__create_type( const char *name )
 
     if ( t )
     {
-        t->destroy = ( Destructor ) primitive__delete;
+        t->destroy = ( Destructor ) primitive__free;
         t->encode = ( Encoder ) primitive__encode;
     }
 

@@ -60,7 +60,7 @@ graph__new( void )
 
 
 void
-graph__delete( Graph *g )
+graph__free( Graph *g )
 {
     ACTION helper( Graph_Edge **ep )
     {
@@ -71,7 +71,7 @@ graph__delete( Graph *g )
     /* Destroy graph entries. */
     hash_table__walk( g, ( Visitor ) helper );
 
-    hash_table__delete( g );
+    hash_table__free( g );
 }
 
 

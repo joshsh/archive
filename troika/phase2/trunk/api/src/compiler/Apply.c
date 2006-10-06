@@ -45,7 +45,7 @@ apply__new( Object *function, Object *operand )
 
 
 void
-apply__delete( Apply *a )
+apply__free( Apply *a )
 {
     if ( DEBUG__SAFE && !a )
         ABORT;
@@ -161,7 +161,7 @@ apply__create_type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( Destructor ) apply__delete;
+        type->destroy = ( Destructor ) apply__free;
         type->encode = ( Encoder ) apply__encode;
         type->walk = ( Walker ) apply__walk;
     }

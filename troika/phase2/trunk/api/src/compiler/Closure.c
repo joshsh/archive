@@ -53,7 +53,7 @@ closure__new( procedure execute, void *state )
 
 
 void
-closure__delete( Closure *c )
+closure__free( Closure *c )
 {
     if ( DEBUG__SAFE && !c )
         ABORT;

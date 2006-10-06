@@ -55,7 +55,7 @@ object__new( Type *type, void *value, int flags );
 
 /** Destructor. */
 extern void
-object__delete( Object *o );
+object__free( Object *o );
 
 
 /* Accessors ******************************************************************/

@@ -65,7 +65,7 @@ xmldom__end( );
 /** Frees an attribute.
     \param attr  reference attribute */
 extern void
-attr__delete( Attr *attr );
+attr__free( Attr *attr );
 
 /** \param attr  reference attribute
     \return  name of the attribute */
@@ -104,7 +104,7 @@ attr__value( Attr *attr );
 /** Frees a document.
     \param doc  reference document */
 extern void
-document__delete( Document *doc );
+document__free( Document *doc );
 
 /** \return  a new document */
 extern Document *
@@ -159,7 +159,7 @@ element__attr( Element *el, unsigned char *attr_name, unsigned char *namespace_u
 /** Frees an element.
     \param el  reference element */
 extern void
-element__delete( Element *el );
+element__free( Element *el );
 
 /** \param el  reference element
     \return  the element's first attribute (if any) */
@@ -212,7 +212,7 @@ element__text( Element *el );
 /** Frees a namespace.
     \param ns  reference namespace */
 extern void
-namespc__delete( Namespc *ns );
+namespc__free( Namespc *ns );
 
 /** \param ns  reference namespace
     \return  URI reference */

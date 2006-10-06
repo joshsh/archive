@@ -58,7 +58,7 @@ object__new( Type *type, void *value, int flags )
 
 
 void
-object__delete( Object *o )
+object__free( Object *o )
 {
     Type *t;
 
@@ -73,17 +73,17 @@ object__delete( Object *o )
 
 #if TRIPLES__GLOBAL__IN_EDGES
     if ( o->inbound_edges )
-        hash_map__delete( o->inbound_edges );
+        hash_map__free( o->inbound_edges );
 #endif
 
 #if TRIPLES__GLOBAL__OUT_EDGES
     if ( o->outbound_edges )
-        hash_map__delete( o->outbound_edges );
+        hash_map__free( o->outbound_edges );
 #endif
 
 #if TRIPLES__GLOBAL__TRANS_EDGES
     if ( o->trans_edges )
-        hash_map__delete( o->trans_edges );
+        hash_map__free( o->trans_edges );
 #endif
 
 /*

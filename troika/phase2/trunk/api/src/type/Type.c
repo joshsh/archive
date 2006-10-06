@@ -141,7 +141,7 @@ type__new( const char *name, int flags )
 
 
 void
-type__delete( Type *type )
+type__free( Type *type )
 {
     if ( type->name )
         free( type->name );
@@ -180,7 +180,7 @@ type__create_type( const char *name )
 
     if ( t )
     {
-        t->destroy = ( Destructor ) type__delete;
+        t->destroy = ( Destructor ) type__free;
         t->encode = ( Encoder ) type__encode;
         t->encode_safe = ( Encoder_Safe ) type__encode_safe;
     }

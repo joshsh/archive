@@ -48,7 +48,7 @@ namespace__new();
 
 /** \param ns  the namespace to destroy */
 extern void
-namespace__delete( Namespace *ns );
+namespace__free( Namespace *ns );
 
 /** \return  the number of direct object references in the namespace */
 extern unsigned int

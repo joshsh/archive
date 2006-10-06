@@ -87,7 +87,7 @@ term__copy( Term *t );
 
 /** Destructor. */
 extern void
-term__delete( Term *t );
+term__free( Term *t );
 
 
 /* Accessors ******************************************************************/

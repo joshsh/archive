@@ -72,9 +72,9 @@ hash_map__new( void )
 
 
 void
-hash_map__delete( Hash_Map *t )
+hash_map__free( Hash_Map *t )
 {
-    hash_table__delete( t );
+    hash_table__free( t );
 }
 
 

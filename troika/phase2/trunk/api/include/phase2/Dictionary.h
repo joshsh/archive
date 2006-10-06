@@ -48,7 +48,7 @@ dictionary__new( void );
 
 /** Destructor. */
 extern void
-dictionary__delete( Dictionary *d );
+dictionary__free( Dictionary *d );
 
 
 /** Adds a key/target pair to the dictionary. */

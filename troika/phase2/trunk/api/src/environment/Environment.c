@@ -36,7 +36,7 @@ ns__new( Manager *m, Type *ns_t )
 
     if ( !( o = manager__object( m, ns_t, ns, NOFLAGS ) ) )
     {
-        namespace__delete( ns );
+        namespace__free( ns );
         return 0;
     }
 
@@ -149,22 +149,22 @@ abort:
 
     if ( env->manager )
     {
-        manager__delete( env->manager );
+        manager__free( env->manager );
     }
 
     else
     {
         if ( ns_t )
-            type__delete( ns_t );
+            type__free( ns_t );
 
         if ( env->data )
-            object__delete( env->data );
+            object__free( env->data );
         if ( env->primitives )
-            object__delete( env->primitives );
+            object__free( env->primitives );
         if ( env->root )
-            object__delete( env->root );
+            object__free( env->root );
         if ( env->types )
-            object__delete( env->types );
+            object__free( env->types );
     }
 
     free( env );
@@ -173,7 +173,7 @@ abort:
 
 
 void
-environment__delete( Environment *env )
+environment__free( Environment *env )
 {
     Type ns_t;
 
@@ -195,7 +195,7 @@ environment__delete( Environment *env )
         namespace__lookup_simple( env->types->value, NAMEOF( TYPE ) ) );
     manager__collect( env->manager, TRUE, FALSE );
 
-    manager__delete( env->manager );
+    manager__free( env->manager );
 
     free( ns_t.name );
     free( env );

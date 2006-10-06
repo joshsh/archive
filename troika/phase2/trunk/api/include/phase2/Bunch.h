@@ -56,7 +56,7 @@ bunch__copy( Bunch *b );
 
 /** Destructor. */
 extern void
-bunch__delete( Bunch *b );
+bunch__free( Bunch *b );
 
 
 /******************************************************************************/

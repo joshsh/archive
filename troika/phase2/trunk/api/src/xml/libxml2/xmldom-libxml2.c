@@ -66,7 +66,7 @@ xmldom__end( )
 
 
 void
-attr__delete( Attr *attr )
+attr__free( Attr *attr )
 {
     xmlFreeProp(( xmlAttr* ) attr ) ;
 }
@@ -118,7 +118,7 @@ attr__value( Attr *attr )
 
 
 void
-document__delete( Document *doc )
+document__free( Document *doc )
 {
     xmlFreeDoc( ( xmlDoc* ) doc ) ;
 }
@@ -201,7 +201,7 @@ element__attr( Element *el, unsigned char *attr_name, unsigned char *namespace_u
 
 
 void
-element__delete( Element *el )
+element__free( Element *el )
 {
     xmlFreeNode(( xmlNode* ) el ) ;
 }
@@ -284,7 +284,7 @@ element__text( Element *el )
 
 
 void
-namespc__delete( Namespc *ns )
+namespc__free( Namespc *ns )
 {
     xmlFreeNs(( xmlNs* ) ns ) ;
 }

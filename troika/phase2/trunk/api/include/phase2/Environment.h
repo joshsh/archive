@@ -47,7 +47,7 @@ environment__new();
 
 /** Destroys an environment. */
 extern void
-environment__delete( Environment *env );
+environment__free( Environment *env );
 
 
 /** \return  the environment's associated object manager */

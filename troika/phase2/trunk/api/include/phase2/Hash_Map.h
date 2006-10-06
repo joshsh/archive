@@ -44,7 +44,7 @@ hash_map__new( void );
 
 /** Destructor. */
 extern void
-hash_map__delete( Hash_Map *t );
+hash_map__free( Hash_Map *t );
 
 
 #define hash_map__size  hash_table__size

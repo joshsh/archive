@@ -134,7 +134,7 @@ term__copy( Term *source )
 
 
 void
-term__delete( Term *t )
+term__free( Term *t )
 {
     if ( DEBUG__SAFE && !t )
         ABORT;
@@ -264,7 +264,7 @@ term__merge( Term *t1, Term *t2 )
     t2->head->intval = newsize;
 
     /* Destroy t1. */
-    term__delete( t1 );
+    term__free( t1 );
 
     return t2;
 }
@@ -294,7 +294,7 @@ term__merge_la(Term *t1, Term *t2)
     t2->head->intval = newsize;
 
     /* Destroy t1. */
-    term__delete( t1 );
+    term__free( t1 );
 
     return t2;
 }
@@ -326,7 +326,7 @@ term__merge_ra( Term *t1, Term *t2 )
     t2->head->intval = newsize;
 
     /* Destroy t1. */
-    term__delete( t1 );
+    term__free( t1 );
 
     return t2;
 }
@@ -361,7 +361,7 @@ term__cat(Term *t1, Term *t2)
     t2->head->intval = newsize;
 
     /* Destroy t1. */
-    term__delete( t1 );
+    term__free( t1 );
 
     return t2;
 }
@@ -486,7 +486,7 @@ term__create_type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( Destructor ) term__delete;
+        type->destroy = ( Destructor ) term__free;
         type->encode = ( Encoder ) term__encode;
         type->size = ( Size_Of ) term__length;
         type->walk = ( Walker ) term__walk;

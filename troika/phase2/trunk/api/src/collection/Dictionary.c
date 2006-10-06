@@ -83,7 +83,7 @@ dictionary__new( void )
 
 
 void
-dictionary__delete( Dictionary *d )
+dictionary__free( Dictionary *d )
 {
     ACTION helper( Entry *e )
     {
@@ -97,7 +97,7 @@ dictionary__delete( Dictionary *d )
     /* Destroy dictionary entries. */
     hash_table__walk( d, ( Visitor ) helper );
 
-    hash_table__delete( d );
+    hash_table__free( d );
 }
 
 

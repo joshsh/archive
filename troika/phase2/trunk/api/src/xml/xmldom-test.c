@@ -72,7 +72,7 @@ main( int argc, char *argv[] )
     element__add_child( el, el2 );
 
     document__write_to_file( doc, "test.xml" );
-    document__delete( doc );
+    document__free( doc );
 
     doc = document__read_from_file( "test.xml" );
 
@@ -101,7 +101,7 @@ main( int argc, char *argv[] )
     PRINT("----------\n");
 
     document__write_to_file( doc, "-" );
-    document__delete( doc );
+    document__free( doc );
 
     PRINT("----------\n");
 

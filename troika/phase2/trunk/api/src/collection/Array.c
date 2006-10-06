@@ -124,7 +124,7 @@ array__copy( Array *a )
 
 
 void
-array__delete( Array *a )
+array__free( Array *a )
 {
     if ( DEBUG__SAFE && !a )
         ABORT;
@@ -695,7 +695,7 @@ array__create_type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( Destructor ) array__delete;
+        type->destroy = ( Destructor ) array__free;
         type->encode = ( Encoder ) array__encode;
         type->size = ( Size_Of ) array__size;
         type->walk = ( Walker ) array__walk;

@@ -435,7 +435,7 @@ command_args:
             if ( array__enqueue( args, $1 ) )
                 $$ = PARSER_REF2OBJ( ARRAY )( parser, args );
             else
-                array__delete( args );
+                array__free( args );
         }
     }
 
@@ -761,7 +761,7 @@ bag_head:
 
                 else
                 {
-                    array__delete( bag );
+                    array__free( bag );
                     $$ = 0;
                 }
             }
@@ -833,7 +833,7 @@ name:
                 if ( array__enqueue( name, $1 ) )
                     $$ = PARSER_REF2OBJ( NAME )( parser, name );
                 else
-                    array__delete( name );
+                    array__free( name );
             }
         }
 

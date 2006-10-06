@@ -84,9 +84,9 @@ set__copy( Set *s )
 
 
 void
-set__delete( Set *s )
+set__free( Set *s )
 {
-    hash_table__delete( s );
+    hash_table__free( s );
 }
 
 
@@ -298,7 +298,7 @@ set__create_type( const char *name, int flags )
     if ( type )
     {
         type->clone = ( Copy_Cons ) hash_table__copy;
-        type->destroy = ( Destructor ) set__delete;
+        type->destroy = ( Destructor ) set__free;
         type->encode = ( Encoder ) set__encode;
         type->size = ( Size_Of ) hash_table__size;
         type->walk = ( Walker ) set__walk;

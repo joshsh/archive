@@ -82,7 +82,7 @@ hash_table__copy( const Hash_Table *h );
 
 /** Destructor. */
 extern void
-hash_table__delete( Hash_Table *h );
+hash_table__free( Hash_Table *h );
 
 
 /******************************************************************************/

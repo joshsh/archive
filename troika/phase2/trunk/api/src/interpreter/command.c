@@ -206,7 +206,7 @@ Syntax:\n\
         PRINT( "Commands:\n" );
         array__walk( a, ( Visitor ) helper );
 
-        array__delete( a );
+        array__free( a );
 
         PRINT( "\n" );
 
@@ -373,7 +373,7 @@ command_ns( Interpreter *itp, Array *args )
                     PRINT( "Moved to namespace " );
                     name__print( fullname );
                     PRINT( ".\n" );
-                    name__delete( fullname );
+                    name__free( fullname );
                 }
             }
 */
@@ -539,7 +539,7 @@ delete_commands( Dictionary *commands )
     }
 
     dictionary__walk( commands, ( Visitor ) helper );
-    dictionary__delete( commands );
+    dictionary__free( commands );
 }
 
 

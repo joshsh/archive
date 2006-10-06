@@ -51,7 +51,7 @@ set__copy( Set *s );
 
 /** Destructor. */
 extern void
-set__delete( Set *s );
+set__free( Set *s );
 
 
 /** \return  the number of elements in s */

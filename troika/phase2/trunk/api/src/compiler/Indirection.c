@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 /** \note  The indirection type has a trivial destructor, as an indirection node
    does not own the object it points to. */
 static void
-indirection__delete( void *p )
+indirection__free( void *p )
 {
     /* Avoid a compiler warning. */
     p = 0;
@@ -62,7 +62,7 @@ indirection__create_type( const char *name, int flags )
 
     if ( type )
     {
-        type->destroy = ( Destructor ) indirection__delete;
+        type->destroy = ( Destructor ) indirection__free;
         type->encode = ( Encoder ) indirection__encode;
         type->walk = ( Walker ) indirection__walk;
     }

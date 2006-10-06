@@ -83,7 +83,7 @@ object__dissociate( Object *subj, Object *pred )
         hash_map__remove( subj->outbound_edges, pred );
         if ( !hash_table__size( subj->outbound_edges ) )
         {
-            hash_map__delete( subj->outbound_edges );
+            hash_map__free( subj->outbound_edges );
             subj->outbound_edges = 0;
         }
     }

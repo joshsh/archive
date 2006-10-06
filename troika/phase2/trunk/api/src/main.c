@@ -253,7 +253,7 @@ parser__feed( p, ";here;" );
             if ( parser__parse( p ) )
                 ERROR( "main: parse failed" );
 
-            interpreter__delete( itp );
+            interpreter__free( itp );
 
             parser__free( p );
         }
@@ -261,7 +261,7 @@ parser__feed( p, ";here;" );
         else
             status = EXIT_FAILURE;
 
-        environment__delete( env );
+        environment__free( env );
     }
 
 #if USE_NCURSES

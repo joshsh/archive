@@ -31,7 +31,7 @@ name__new( void )
 
 
 void
-name__delete( Name *name )
+name__free( Name *name )
 {
     ACTION helper( char **sp )
     {
@@ -44,7 +44,7 @@ name__delete( Name *name )
 
     array__walk( name, ( Visitor ) helper );
 
-    array__delete( name );
+    array__free( name );
 }
 
 

@@ -91,7 +91,7 @@ namespace__trace_bfs( OBJ( NAMESPACE ) *ns_o, Visitor v, Manager *m )
        visited for the first time. */
     manager__trace( m, ns_o, ( Walker ) walk, ( Visitor ) apply_visitor );
 
-    array__delete( queue );
+    array__free( queue );
 }
 
 
@@ -183,7 +183,7 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
 
 finish:
 
-    hash_map__delete( parents );
+    hash_map__free( parents );
     return name;
 }
 

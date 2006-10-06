@@ -249,7 +249,7 @@ interpreter__encode( Interpreter *c,
         else
         {
             name__encode( name, buffer );
-            name__delete( name );
+            name__free( name );
         }
     }
 

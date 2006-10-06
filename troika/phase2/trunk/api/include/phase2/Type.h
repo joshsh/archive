@@ -69,7 +69,7 @@ type__new( const char *name, int flags );
 
 /** Destructor. */
 extern void
-type__delete( Type *type );
+type__free( Type *type );
 
 
 /******************************************************************************/

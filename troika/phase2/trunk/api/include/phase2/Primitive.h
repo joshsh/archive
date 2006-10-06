@@ -63,7 +63,7 @@ enum Primitive__Flags
 
 /** Destructor. */
 extern void
-primitive__delete( Primitive *prim );
+primitive__free( Primitive *prim );
 
 /** \return  the name of the primitive */
 extern char *

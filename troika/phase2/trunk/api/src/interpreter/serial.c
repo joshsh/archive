@@ -121,7 +121,7 @@ struct Function_Wrapper
 
 
 static ACTION
-function_wrapper__delete( Object **key, Object **target )
+function_wrapper__free( Object **key, Object **target )
 {
     key = 0;
     free( ( Function_Wrapper* ) *target );
@@ -382,7 +382,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
 
     keys = namespace__keys( ns );
     array__walk( keys, ( Visitor ) helper );
-    array__delete( keys );
+    array__free( keys );
 
     return el;
 }
@@ -531,7 +531,7 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
         if ( DEBUG__SAFE && !text )
         {
             ERROR( "namespace__xml_decode: missing 'name' attribute" );
-            namespace__delete( ns );
+            namespace__free( ns );
             return 0;
         }
 
@@ -933,7 +933,7 @@ multiref_ids( Interpreter *c )
 
     /* Assign all (other) multireferenced objects their ids. */
     set__walk( multirefs, ( Visitor ) hash_multiref );
-    set__delete( multirefs );
+    set__free( multirefs );
 
     return ids;
 }
@@ -1049,14 +1049,14 @@ interpreter__serialize( Interpreter *c, const char *path )
     /* Multiref objects are serialized in no particular order. */
     hash_map__walk2( state.ids, ( Visitor2 ) helper );
 
-    hash_map__delete( state.ids );
+    hash_map__free( state.ids );
 
     hash_map__walk2( state.serializers,
-        ( Visitor2 ) function_wrapper__delete );
-    hash_map__delete( state.serializers );
+        ( Visitor2 ) function_wrapper__free );
+    hash_map__free( state.serializers );
 
     document__write_to_file( doc, path );
-    document__delete( doc );
+    document__free( doc );
 
     xmldom__end();
 
@@ -1154,16 +1154,16 @@ interpreter__deserialize( Interpreter *c, const char *path )
 
 finish:
 
-    document__delete( doc );
+    document__free( doc );
 
     if ( state.objects_by_id )
-        hash_map__delete( state.objects_by_id );
+        hash_map__free( state.objects_by_id );
 
     if ( state.deserializers )
     {
         hash_map__walk2( state.deserializers,
-            ( Visitor2 ) function_wrapper__delete );
-        hash_map__delete( state.deserializers );
+            ( Visitor2 ) function_wrapper__free );
+        hash_map__free( state.deserializers );
     }
 
     xmldom__end();

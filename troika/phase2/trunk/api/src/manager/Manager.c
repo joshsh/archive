@@ -66,7 +66,7 @@ manager__new()
     if ( !m->objects )
         goto fail;
 
-    /* NOTE: these are freed in manager__delete */
+    /* NOTE: these are freed in manager__free */
     object_t = object__create_type( "object" );
     bunch_t = bunch__create_type( "bunch<object>", TYPE__IS_OBJ_COLL | TYPE__OWNS_DESCENDANTS );
 
@@ -87,14 +87,14 @@ manager__new()
 fail:
 
     if ( object_t )
-        type__delete( object_t );
+        type__free( object_t );
     if ( bunch_t )
-        type__delete( bunch_t );
+        type__free( bunch_t );
 
     if ( m->objects_o )
-        object__delete( m->objects_o );
+        object__free( m->objects_o );
     else
-        bunch__delete( m->objects );
+        bunch__free( m->objects );
 
     free( m );
 
@@ -103,7 +103,7 @@ fail:
 
 
 void
-manager__delete( Manager *m )
+manager__free( Manager *m )
 {
     Type *object_t, *object_bunch_t;
 
@@ -113,11 +113,11 @@ manager__delete( Manager *m )
     object_bunch_t = m->objects_o->type;
     object_t = object_bunch_t->type_arg;
 
-    object__delete( m->objects_o );
-    /*bunch__for_all( m->objects, (void*(*)(void*)) object__delete );
-    bunch__delete( m->objects );*/
-    type__delete( object_bunch_t );
-    type__delete( object_t );
+    object__free( m->objects_o );
+    /*bunch__for_all( m->objects, (void*(*)(void*)) object__free );
+    bunch__free( m->objects );*/
+    type__free( object_bunch_t );
+    type__free( object_t );
 
     free( m );
 }
@@ -159,7 +159,7 @@ manager__object( Manager *m, Type *type, void *value, int flags )
 
         if ( !bunch__add( m->objects, o ) )
         {
-            object__delete( o );
+            object__free( o );
             o = 0;
             WARNING__ALLOC( "failed to add new object" );
         }
@@ -212,7 +212,7 @@ sweep( Manager *m )
         /* If unmarked, delete. */
         else
         {
-            object__delete( o );
+            object__free( o );
 
             /* Exclude this object. */
             return TRUE;
@@ -421,7 +421,7 @@ manager__trace( Manager *m,
 */
 
     array__walk( visited_objects, ( Visitor ) unmark );
-    array__delete( visited_objects );
+    array__free( visited_objects );
 
     if ( DEBUG__SAFE )
     {

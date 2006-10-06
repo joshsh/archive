@@ -201,7 +201,7 @@ object__trace_bfs( Object *o, Visitor f, boolean follow_triples )
         helper( array__pop( queue ) );
     }
 
-    array__delete( queue );
+    array__free( queue );
 
     if ( DEBUG__OBJECT )
         PRINT( "[] object__trace_bfs(%p, %p): visited %i objects.\n",

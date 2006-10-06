@@ -56,7 +56,7 @@ environment__resolve_type( Environment *env, const char *name, boolean create_if
                 /* NOTE: all object collection types are registered explicitly. */
                 if ( !( o = environment__register_type( env, type ) ) )
                 {
-                    type__delete( type );
+                    type__free( type );
                 }
             }
         }

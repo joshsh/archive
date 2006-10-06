@@ -50,7 +50,7 @@ string__copy( String *s );
 
 /** Destructor. */
 extern void
-string__delete( String *s );
+string__free( String *s );
 
 
 /******************************************************************************/

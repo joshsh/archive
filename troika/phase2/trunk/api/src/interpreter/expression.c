@@ -252,7 +252,7 @@ apply__encode__alt( Apply *a, char *buffer )
         name = encoding_name( o );
         if ( name )
         {
-            name__delete( name );
+            name__free( name );
             encode__short( o, buffer );
         }
 
@@ -397,7 +397,7 @@ interpreter__evaluate_expression( Interpreter *itp,
         {
             spine = array__new( 0, 0 );
             o = reduce__graph_lazy( o, spine, environment__manager( itp->env ) );
-            array__delete( spine );
+            array__free( spine );
         }
 
         else
@@ -443,7 +443,7 @@ interpreter__evaluate_expression( Interpreter *itp,
     }
 
     if ( oname )
-        name__delete( oname );
+        name__free( oname );
 
     itp->apply_t->encode = apply__encode;
 
@@ -516,7 +516,7 @@ interpreter__draw( Interpreter *c, const Object *o )
                 name__encode( name, cur );
                 cur += strlen( cur );
 
-                name__delete( name );
+                name__free( name );
             }
 
             else if ( t != c->apply_t )

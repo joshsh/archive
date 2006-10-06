@@ -42,7 +42,7 @@ extern Apply *
 apply__new( Object *function, Object *operand );
 
 extern void
-apply__delete( Apply *a );
+apply__free( Apply *a );
 
 extern void
 apply__walk( Apply *a, Visitor f );

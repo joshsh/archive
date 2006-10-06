@@ -49,7 +49,7 @@ name__new( void );
 
 /** Destructor. */
 extern void
-name__delete( Name *name );
+name__free( Name *name );
 
 /** Extend the name by a single key. */
 extern void

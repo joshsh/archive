@@ -87,7 +87,7 @@ finish:
 
 
 void
-interpreter__delete( Interpreter *itp )
+interpreter__free( Interpreter *itp )
 {
     if ( DEBUG__SAFE && !itp )
         ABORT;

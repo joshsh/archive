@@ -43,12 +43,12 @@ namespace__new()
 
 
 void
-namespace__delete( Namespace *ns )
+namespace__free( Namespace *ns )
 {
     if ( DEBUG__SAFE && !ns )
         ABORT;
 
-    dictionary__delete( ns->children );
+    dictionary__free( ns->children );
 
     free( ns );
 }
@@ -150,7 +150,7 @@ namespace__encode( Namespace *ns, char *buffer )
 
         /* Print children. */
         array__walk( keys, ( Visitor ) print );
-        array__delete( keys );
+        array__free( keys );
 
         sprintf( buffer, "}" );
     }
@@ -170,7 +170,7 @@ namespace__create_type( const char *name, int flags )
 
     if ( t )
     {
-        t->destroy = ( Destructor ) namespace__delete;
+        t->destroy = ( Destructor ) namespace__free;
         t->encode = ( Encoder ) namespace__encode;
         t->size = ( Size_Of ) namespace__size;
         t->walk = ( Walker ) namespace__walk;
