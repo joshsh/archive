@@ -80,8 +80,8 @@ print_help()
 }
 
 
-static void
-read_options ( int argc, char **argv, char *source_file )
+static int
+read_options( int argc, char **argv, char *source_file )
 {
     int c;
 
@@ -156,13 +156,12 @@ read_options ( int argc, char **argv, char *source_file )
 
                 /* getopt_long already printed an error message. */
                 print_usage();
-                ABORT;
-                break;
+                return 1;
 
             default:
 
                 print_usage();
-                abort ();
+                return 1;
         }
     }
 
@@ -186,8 +185,10 @@ read_options ( int argc, char **argv, char *source_file )
             PRINT ( "%s ", argv[optind++] );
         PRINT( "\n" );
         print_usage();
-        ABORT;
+        return 1;
     }
+
+    return 0;
 }
 
 
@@ -209,9 +210,10 @@ main( int argc, char *argv[] )
     initscr();
 #endif
 
-    read_options( argc, argv, source_file );
+    if ( read_options( argc, argv, source_file ) )
+        status = EXIT_FAILURE;
 
-    if ( !( env = environment__new() ) )
+    else if ( !( env = environment__new() ) )
         status = EXIT_FAILURE;
 
     else

@@ -337,7 +337,7 @@ print_edge( Object **op1, Object **op2 )
     cur += strlen( cur );
     interpreter__encode( interpreter, DEREF( op2 ), cur, 0 );
 
-    PRINT( "    %s\n", buffer );
+    PRINT( "  -- %s\n", buffer );
 
     return CONTINUE;
 }
