@@ -1,6 +1,6 @@
 /**
 
-\file  Vector.h
+\file  ModelVector.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -44,32 +44,59 @@ union index
 };
 
 
-typedef struct Vector Vector;
+/*
+    (dadfriends & !momfriends)
+=   dadfriends - momfriends
+*/
 
-typedef struct VectorDiff VectorDiff;
 
-struct VectorDiff
+typedef struct ModelVector ModelVector;
+
+typedef struct ModelVectorDiff ModelVectorDiff;
+
+struct ModelVectorDiff
 {
-    Vector *addend;
-    Vector *subtrahend;
+    ModelVector *addend;
+    ModelVector *subtrahend;
 };
 
 
+extern ModelVector *
+modelvector__new();
+
+extern ModelVector *
+modelvector__copy( ModelVector *a );
+
+extern void
+modelvector__free( ModelVector *a );
+
+
 extern boolean
-vector__component( Vector *a, index i );
+modelvector__get_component( ModelVector *a, index i );
 
-extern Vector *
-vector__add( Vector *a, Vector *b );
-
-extern Vector *
-vector__subtract( Vector *a, Vector *b );
-
-extern Vector *
-vector__multiply( Vector *a, Vector *b );
+extern void
+modelvector__set_component( ModelVector *a, index i, boolean b );
 
 
-extern VectorDiff *
-vector__diff( Vector *a, Vector *b );
+/** \return  the Manhattan norm of the vector */
+/* Note for negated vectors, you could use a negative value to indicate
+   "infinity minus n" */
+extern unsigned int
+modelvector__manhattan_norm( ModelVector *a );
+
+
+extern ModelVector *
+modelvector__add( ModelVector *a, ModelVector *b );
+
+extern ModelVector *
+modelvector__subtract( ModelVector *a, ModelVector *b );
+
+extern ModelVector *
+modelvector__multiply( ModelVector *a, ModelVector *b );
+
+
+extern ModelVectorDiff *
+modelvector__diff( ModelVector *a, ModelVector *b );
 
 
 #endif  /* VECTOR_H */

@@ -440,6 +440,11 @@ interpreter__evaluate_expression( Interpreter *itp,
                 hash_map__walk2( o->outbound_edges, ( Visitor2 ) print_edge );
             }
         }
+
+        namespace__add_simple(
+            object__value(
+                environment__root( itp->env ) ),
+            "$last", o );
     }
 
     if ( oname )

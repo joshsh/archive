@@ -175,6 +175,7 @@ struct Expression
 %token TOK__L_ASSIGN        TOK__R_ASSIGN
 %token TOK__COLON           TOK__COMMA          TOK__SEMICOLON
 %token TOK__EOF
+%token TOK__LAST_RESULT
 
 %token <character>  TOK__CHAR
 %token <integer>    TOK__INT

@@ -1,6 +1,6 @@
 /**
 
-\file  Cube.h
+\file  Model.h
 
 \author  Joshua Shinavier   \n
          parcour@gmail.com  \n
@@ -25,68 +25,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef CUBE_H
-#define CUBE_H
-
-#include <Matrix.h>
+#ifndef MODEL_H
+#define MODEL_H
 
 
-/** A sparse three-dimensional binary tensor of size N by N by N. */
-typedef struct Cube Cube;
-
-typedef struct CubeDiff CubeDiff;
-
-struct CubeDiff
-{
-    Cube *addend;
-    Cube *subtrahend;
-};
+#include <Environment.h>
 
 
-extern Cube *
-cube__create();
+typedef struct Model Model;
 
-extern Matrix *
-cube__row_slice( Cube *a, index i );
+extern Model *
+model__new( Name *name, Environment *e );
 
-extern Matrix *
-cube__column_slice( Cube *a, index i );
+extern Model *
+model__load( Name *name, const char *url, Environment *e );
 
-extern Matrix *
-cube__tube_slice( Cube *a, index i );
+extern Environment *
+model__environment( Model *m );
 
-extern Vector *
-cube__row_fiber( Cube *a, index i, index j );
+extern void
+model__save( Model *m, const char *file );
 
-extern Vector *
-cube__column_fiber( Cube *a, index i, index j );
+extern Object *
+model__resolve_object( Model *m, Name *name );
 
-extern Vector *
-cube__tube_fiber( Cube *a, index i, index j );
-
-extern boolean
-cube__component( Cube *a, index i, index j, index k );
-
-extern Cube *
-cube__add( Cube *a, Cube *b );
-
-extern Cube *
-cube__subtract( Cube *a, Cube *b );
-
-extern Cube *
-cube__cube_multiply( Cube *a, Cube *b );
-
-extern Cube *
-cube__matrix_multiply( Cube *a, Matrix *m );
-
-extern Cube *
-cube__vector_multiply( Cube *a, Vector *v );
+extern void
+model__walk( Model *m, Visitor v );
 
 
-extern CubeDiff *
-cube__diff( Cube *a, Cube *b );
 
-
-#endif  /* CUBE_H */
+#endif  /* MODEL_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

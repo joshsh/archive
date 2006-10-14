@@ -33,7 +33,7 @@ typedef char cell;
 
 #define OCCUPIED(c)     *(c)
 #define VACATE(c)       *(c) = 0
-#define WRAP(h,c)       (h)->buffer + (((c) - (h)->buffer) % ((h)->cell_size * (h)->buffer_size));
+#define WRAP(h,c)       (h)->buffer + (((c) - (h)->buffer) % ((h)->cell_size * (h)->buffer_size))
 #define HASH(h,k)       (h)->buffer + ((h)->cell_size * ((h)->hash(k) % (h)->buffer_size ))
 
 
