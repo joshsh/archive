@@ -106,7 +106,7 @@ array__copy( Array *a )
     Array *b;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( !( b = NEW( Array ) ) )
         return 0;
@@ -127,7 +127,7 @@ void
 array__free( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     free( a->buffer );
     free( a );
@@ -141,7 +141,7 @@ unsigned int
 array__size( const Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     return a->size;
 }
@@ -151,7 +151,7 @@ double
 array__expansion( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     return a->expansion;
 }
@@ -167,7 +167,7 @@ sizeup( Array *a )
     unsigned int i, buffer_size_new;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( a->size < a->buffer_size )
         return a;
@@ -205,7 +205,7 @@ void *
 array__get( Array *a, unsigned int i )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( INBOUNDS( a, i ) )
         return ELMT( a, i );
@@ -224,7 +224,7 @@ array__set( Array *a, unsigned int i, void *p )
     void **addr, *displaced;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -256,7 +256,7 @@ void *
 array__peek( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( a->size )
         return a->buffer[a->head];
@@ -273,7 +273,7 @@ void *
 array__push( Array *a, void *p )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( !sizeup( a ) )
         return 0;
@@ -292,7 +292,7 @@ array__pop( Array *a )
     void *p;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( a->size )
     {
@@ -314,7 +314,7 @@ void *
 array__enqueue( Array *a, void *p )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( !sizeup( a ) )
         return 0;
@@ -330,7 +330,7 @@ void *
 array__dequeue( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( a->size )
     {
@@ -355,7 +355,7 @@ array__insert_before( Array *a, unsigned int i, void *p )
     unsigned int j;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -385,7 +385,7 @@ array__insert_after( Array *a, unsigned int i, void *p )
     unsigned int j;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -416,7 +416,7 @@ array__remove( Array *a, unsigned int i )
     void *displaced;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -444,7 +444,7 @@ array__simple_remove( Array *a, unsigned int i )
     void **addr, *displaced;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( INBOUNDS( a, i ) )
     {
@@ -553,7 +553,7 @@ array__sort( Array *a, Comparator compare )
     Mergesort_Ctx state;
 
     if ( DEBUG__SAFE && ( !a || !compare ) )
-        ABORT;
+        abort();
 
     state.compare = compare;
 
@@ -587,7 +587,7 @@ array__walk( Array *a, Visitor f )
     unsigned int i, lim;
 
     if ( DEBUG__SAFE && ( !a || !f ) )
-        ABORT;
+        abort();
 
     lim = a->size;
 
@@ -606,7 +606,7 @@ Array *
 array__clear( Array *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     a->size = 0;
     a->head = 0;
@@ -621,7 +621,7 @@ array__minimize( Array *a )
     void **buffer_new;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     if ( a->size >= a->buffer_size )
         return 0;
@@ -657,7 +657,7 @@ array__encode( Array *a, char *buffer )
     Object *o;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        ABORT;
+        abort();
 
     sprintf( buffer, "{" );
     buffer++;
@@ -689,7 +689,7 @@ array__create_type( const char *name, int flags )
     Type *type;
 
     if ( DEBUG__SAFE && ( !name ) )
-        ABORT;
+        abort();
 
     type = type__new( name, flags );
 

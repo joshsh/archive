@@ -66,7 +66,7 @@ namespace__trace_bfs( OBJ( NAMESPACE ) *ns_o, Visitor v, Manager *m )
         }
 
         if ( DEBUG__SAFE && ( !root || !v ) )
-            ABORT;
+            abort();
 
         visit_if_namespace( &root );
         /*array__push( queue, root );*/
@@ -81,7 +81,7 @@ namespace__trace_bfs( OBJ( NAMESPACE ) *ns_o, Visitor v, Manager *m )
     }
 
     if ( DEBUG__SAFE && ( !ns_o || !v || !m ) )
-        ABORT;
+        abort();
 
     t = object__type( ns_o );
     queue = array__new( 0, 0 );
@@ -135,7 +135,7 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
     }
 
     if ( DEBUG__SAFE && ( !haystack || !m ) )
-        ABORT;
+        abort();
 
     parents = hash_map__new();
 
@@ -157,7 +157,7 @@ namespace__find( OBJ( NAMESPACE ) *haystack, const Object *needle, Manager *m )
         }
 
         else if ( DEBUG__SAFE )
-            ABORT;
+            abort();
     }
 
     /* Trace until 'needle' is found or all namespaces have been visited. */
@@ -201,7 +201,7 @@ namespace__resolve_simple( OBJ( NAMESPACE ) *ns_obj, char *key, Manager *m )
     }
 
     if ( DEBUG__SAFE && ( !ns_obj || !key || !m ) )
-        ABORT;
+        abort();
 
     namespace__trace_bfs( ns_obj, ( Visitor ) test, m );
 
@@ -217,7 +217,7 @@ namespace__resolve( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
     unsigned int i;
 
     if ( DEBUG__SAFE && ( !nso || !name || !m ) )
-        ABORT;
+        abort();
 
     for ( i = 0; i < array__size( name ); i++ )
     {
@@ -265,7 +265,7 @@ namespace__undefine( OBJ( NAMESPACE ) *nso, Name *name, Manager *m )
     }
 
     if ( DEBUG__SAFE && ( !nso || !name || !m ) )
-        ABORT;
+        abort();
 
     else if ( !array__size( name ) )
     {
@@ -306,7 +306,7 @@ error__not_defined( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not defined in this namespace", buff );
@@ -318,7 +318,7 @@ error__not_a_namespace( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not a namespace", buff );
@@ -345,7 +345,7 @@ namespace__define( OBJ( NAMESPACE ) *nso, Name *name, Object *o, Manager *m )
 
     /* Check that arguments are sound. */
     if ( DEBUG__SAFE && ( !nso || !name || !o || !m || !array__size( name ) ) )
-        ABORT;
+        abort();
 
     if ( NAMESPACE__USE_INHERITANCE )
     {

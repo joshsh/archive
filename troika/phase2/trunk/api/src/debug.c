@@ -47,7 +47,7 @@ debug__calloc( size_t nelem, size_t elsize, const char *file, int line )
     void *p;
 
     if ( DEBUG__SAFE && ( !nelem || !elsize ) )
-        ABORT;
+        abort();
 
     p = calloc( nelem, elsize );
 
@@ -66,7 +66,7 @@ debug__malloc( size_t size, const char *file, int line )
     void *p;
 
     if ( DEBUG__SAFE && !size )
-        ABORT;
+        abort();
 
     p = malloc( size );
     if ( !p )
@@ -87,7 +87,7 @@ debug__realloc( void *ptr, size_t size, const char *file, int line )
     void *p;
 
     if ( DEBUG__SAFE && ( !ptr || !size ) )
-        ABORT;
+        abort();
 
     p = realloc( ptr, size );
     if ( !p )
@@ -109,7 +109,7 @@ debug__free( void *ptr, const char *file, int line )
         PRINT( "FREE: %p [%s:%d]\n", ptr, file, line );
 
     if ( DEBUG__SAFE && !ptr )
-        ABORT;
+        abort();
 
     free( ptr );
 

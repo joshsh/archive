@@ -26,7 +26,7 @@ environment__register_type( Environment *env, Type *type )
     Object *o;
 
     if ( DEBUG__SAFE && ( !env || !type ) )
-        ABORT;
+        abort();
 
     o = manager__object( env->manager, env->type_t, type, OBJECT__IMMUTABLE );
 
@@ -44,7 +44,7 @@ environment__resolve_type( Environment *env, const char *name, boolean create_if
     Type *type;
 
     if ( DEBUG__SAFE && ( !env || !name ) )
-        ABORT;
+        abort();
 
     if ( !( o = namespace__lookup_simple( ( Namespace* ) env->types->value, name ) ) )
     {
@@ -73,7 +73,7 @@ environment__create_type( Environment *e, const char *name, int flags )
     Object *o;
 
     if ( DEBUG__SAFE && ( !e || !name ) )
-        ABORT;
+        abort();
 
     if ( namespace__lookup_simple( e->types->value, name ) )
     {
@@ -107,7 +107,7 @@ Object *
 environment__create_object( Environment *e, Type *type, void *value )
 {
     if ( DEBUG__SAFE && ( !e || !type || !value ) )
-        ABORT;
+        abort();
 
     return manager__object( e->manager, type, value, NOFLAGS );
 }

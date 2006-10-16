@@ -33,7 +33,7 @@ ForeignObject *
 foreignobject__create( Model *m, Name *name )
 {
     if ( DEBUG__SAFE && ( !m || !name ) )
-        ABORT;
+        abort();
 
     ForeignObject *f = NEW( ForeignObject );
     if ( !f )
@@ -60,7 +60,7 @@ foreignobject__resolve( ForeignObject *f )
     Object *o;
 
     if ( DEBUG__SAFE && !f )
-        ABORT;
+        abort();
 
     o = f->cached;
 
@@ -80,7 +80,7 @@ foreignobject__walk( ForeignObject *f, Visitor v )
     Object *o;
 
     if ( DEBUG__SAFE && ( !f || !v ) )
-        ABORT;
+        abort();
 
     object__walk( foreignobject__resolve( f ), v );
 }

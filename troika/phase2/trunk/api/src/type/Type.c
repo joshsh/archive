@@ -116,7 +116,7 @@ type__new( const char *name, int flags )
     Type *t;
 
     if ( DEBUG__SAFE && ( !name || !( *name ) ) )
-        ABORT;
+        abort();
 
     t = NEW( Type );
 
@@ -157,7 +157,7 @@ static void
 type__encode( Type *t, char *buffer )
 {
     if ( DEBUG__SAFE && ( !t || !buffer ) )
-        ABORT;
+        abort();
 
     sprintf( buffer, t->name );
 }
@@ -167,7 +167,7 @@ static void
 type__encode_safe( Type *t, String *buffer )
 {
     if ( DEBUG__SAFE && ( !t || !buffer ) )
-        ABORT;
+        abort();
 
     string__append( buffer, t->name );
 }
@@ -193,7 +193,7 @@ void
 type__set_type_arg( Type *type, Type *arg )
 {
     if ( DEBUG__SAFE && ( !type || !arg ) )
-        ABORT;
+        abort();
 
     type->type_arg = arg;
 }

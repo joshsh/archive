@@ -29,7 +29,7 @@ namespace__add( OBJ( NAMESPACE ) *ns_obj, Name *name, Object *o )
     char *key;
 
     if ( DEBUG__SAFE && ( !ns || !name || !array__size( name ) ) )
-        ABORT;
+        abort();
 
     if ( array__size( name ) == 1 )
     {
@@ -69,7 +69,7 @@ Object *
 namespace__add_simple( Namespace *ns, const char *name, Object *o )
 {
     if ( DEBUG__SAFE && ( !ns|| !name ) )
-        ABORT;
+        abort();
 
     return dictionary__add( ns->children, name, o );
 }
@@ -90,7 +90,7 @@ namespace__lookup( OBJ( NAMESPACE ) *ns_obj, Name *name )
     char *key;
 
     if ( DEBUG__SAFE && !ns_obj )
-        ABORT;
+        abort();
 
     ns = object__value( ns_obj );
 
@@ -126,7 +126,7 @@ Object *
 namespace__lookup_simple( Namespace *ns, const char *name )
 {
     if ( DEBUG__SAFE && ( !ns | !name ) )
-        ABORT;
+        abort();
 
     return ( Object* ) dictionary__lookup( ns->children, name );
 }
@@ -141,7 +141,7 @@ namespace__remove( OBJ( NAMESPACE ) *ns_obj, Name *name )
     char *key;
 
     if ( DEBUG__SAFE && ( !ns_obj || !name || !array__size( name ) ) )
-        ABORT;
+        abort();
 
     ns = object__value( ns_obj );
 
@@ -188,7 +188,7 @@ Object *
 namespace__remove_simple( Namespace *ns, char *name )
 {
     if ( DEBUG__SAFE && ( !ns || !name) )
-        ABORT;
+        abort();
 
     return dictionary__remove( ns->children, name );
 }

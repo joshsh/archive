@@ -25,10 +25,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#ifndef VECTOR_H
-#define VECTOR_H
+#ifndef MODELVECTOR_H
+#define MODELVECTOR_H
 
-#include <common.h>
+#include <phase2/common.h>
 
 
 #ifdef index
@@ -74,7 +74,7 @@ modelvector__free( ModelVector *a );
 extern boolean
 modelvector__get_component( ModelVector *a, index i );
 
-extern void
+extern ModelVector *
 modelvector__set_component( ModelVector *a, index i, boolean b );
 
 
@@ -99,6 +99,14 @@ extern ModelVectorDiff *
 modelvector__diff( ModelVector *a, ModelVector *b );
 
 
-#endif  /* VECTOR_H */
+/* FIXME: rename */
+typedef ACTION          ( *VisitorNew )( index i );
+
+/* FIXME: rename */
+extern void
+modelvector__walk( ModelVector *a, VisitorNew v );
+
+
+#endif  /* MODELVECTOR_H */
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

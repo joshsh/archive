@@ -30,7 +30,7 @@ apply__new( Object *function, Object *operand )
 
     /* Apply objects with null members are allowed if FIRST_CLASS_NULL. */
     if ( DEBUG__SAFE && !FIRST_CLASS_NULL && ( !function || !operand ) )
-        ABORT;
+        abort();
 
     a = NEW( Apply );
 
@@ -48,7 +48,7 @@ void
 apply__free( Apply *a )
 {
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     free( a );
 }
@@ -58,7 +58,7 @@ void
 apply__walk( Apply *a, Visitor f )
 {
     if ( DEBUG__SAFE && ( !a || !f ) )
-        ABORT;
+        abort();
 
     if ( f( ( void** ) &a->function ) == BREAK
       || f( ( void** ) &a->operand ) == BREAK )
@@ -81,7 +81,7 @@ apply__as_term( Apply *a, Type *apply_type, Type *indirection_type )
     }
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
     return term__merge_la( subterm( a->function ), subterm( a->operand ) );
 }
@@ -94,7 +94,7 @@ term__to_apply_tree( Term *t, Manager *m, Type *apply_type )
     Object *o;
 
     if ( DEBUG__SAFE && ( !t || !m ) )
-        ABORT;
+        abort();
 
     l = term__length( t );
 
@@ -122,7 +122,7 @@ apply__encode( Apply *a, char *buffer )
     Object *o;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        ABORT;
+        abort();
 
     sprintf( buffer, "!" );
 /*
@@ -155,7 +155,7 @@ apply__create_type( const char *name, int flags )
     Type *type;
 
     if ( DEBUG__SAFE && ( !name ) )
-        ABORT;
+        abort();
 
     type = type__new( name, flags );
 

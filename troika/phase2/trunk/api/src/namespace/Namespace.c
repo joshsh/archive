@@ -46,7 +46,7 @@ void
 namespace__free( Namespace *ns )
 {
     if ( DEBUG__SAFE && !ns )
-        ABORT;
+        abort();
 
     dictionary__free( ns->children );
 
@@ -58,7 +58,7 @@ unsigned int
 namespace__size( Namespace *ns )
 {
     if ( DEBUG__SAFE && !ns )
-        ABORT;
+        abort();
 
     return hash_table__size( ns->children );
 }
@@ -68,7 +68,7 @@ Array *
 namespace__keys( Namespace *ns )
 {
     if ( DEBUG__SAFE && !ns )
-        ABORT;
+        abort();
 
     return dictionary__keys( ns->children );
 }
@@ -78,7 +78,7 @@ void
 namespace__walk( Namespace *ns, Visitor f )
 {
     if ( DEBUG__SAFE && ( !ns || !f ) )
-        ABORT;
+        abort();
 
     dictionary__walk( ns->children, f );
 }
@@ -133,7 +133,7 @@ namespace__encode( Namespace *ns, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !buffer || !ns ) )
-        ABORT;
+        abort();
 
     dict = ns->children;
     size = hash_table__size( dict );

@@ -51,7 +51,7 @@ command_cp_helper( Interpreter *itp, Name *src, Name *dest )
     Object *o1, *o2;
 
     if ( DEBUG__SAFE && ( !itp || !src || !dest ) )
-        ABORT;
+        abort();
 
     o1 = interpreter__resolve( itp, src );
 
@@ -85,7 +85,7 @@ static int
 command_rm_helper( Interpreter *itp, Name *name )
 {
     if ( DEBUG__SAFE && ( !itp || !name ) )
-        ABORT;
+        abort();
 
     interpreter__undefine( itp, name );
 
@@ -102,7 +102,7 @@ command_cp( Interpreter *itp, Array *args )
     Name *src, *dest;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     src = object__value( array__get( args, 0 ) );
     dest = object__value( array__get( args, 1 ) );
@@ -124,7 +124,7 @@ command_draw( Interpreter *itp, Array *args )
     FILE *f;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     name = object__value( array__get( args, 0 ) );
 
@@ -159,7 +159,7 @@ static int
 command_gc( Interpreter *itp, Array *args )
 {
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     manager__collect( environment__manager( itp->env ), TRUE, !itp->quiet );
 
@@ -185,7 +185,7 @@ command_help( Interpreter *itp, Array *args )
     Array *a;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     if ( !itp->quiet )
     {
@@ -237,7 +237,7 @@ command_history( Interpreter *itp, Array *args )
     Name *name;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     name = array__size( args )
         ? object__value( array__get( args, 0 ) )
@@ -267,7 +267,7 @@ static int
 command_license( Interpreter *itp, Array *args )
 {
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     if ( !itp->quiet )
         PRINT( "%s\n", gpl_license );
@@ -282,7 +282,7 @@ command_mv( Interpreter *itp, Array *args )
     Name *src, *dest;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     src = object__value( array__get( args, 0 ) );
     dest = object__value( array__get( args, 1 ) );
@@ -324,7 +324,7 @@ command_new( Interpreter *itp, Array *args )
     Name *name;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     name = array__size( args )
         ? object__value( array__get( args, 0 ) )
@@ -350,7 +350,7 @@ command_ns( Interpreter *itp, Array *args )
     Name *name, *fullname;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     name = object__value( array__get( args, 0 ) );
 
@@ -388,7 +388,7 @@ static int
 command_quit( Interpreter *itp, Array *args )
 {
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
 /*
     if ( !c->quiet )
@@ -405,7 +405,7 @@ command_rm( Interpreter *itp, Array *args )
     Name *name;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     name = object__value( array__get( args, 0 ) );
 
@@ -417,7 +417,7 @@ static int
 command_save( Interpreter *itp, Array *args )
 {
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     /* NOTE: the save_to_path member will normally change before this function
              returns, so we dereference it multiple times. */
@@ -444,7 +444,7 @@ command_saveas( Interpreter *itp, Array *args )
     char *path;
 
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     name = object__value( array__get( args, 0 ) );
 
@@ -463,7 +463,7 @@ static int
 command_size( Interpreter *itp, Array *args )
 {
     if ( DEBUG__SAFE && ( !itp || !args ) )
-        ABORT;
+        abort();
 
     if ( !itp->quiet )
         PRINT( "There are %i objects in this environment.\n",
@@ -596,7 +596,7 @@ interpreter__evaluate_command( Interpreter *itp,
     char *nameval = object__value( name );
 
     if ( DEBUG__SAFE && !itp )
-        ABORT;
+        abort();
 
     interpreter__add_to_history( text );
 

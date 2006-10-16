@@ -108,7 +108,7 @@ manager__free( Manager *m )
     Type *object_t, *object_bunch_t;
 
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
     object_bunch_t = m->objects_o->type;
     object_t = object_bunch_t->type_arg;
@@ -127,7 +127,7 @@ unsigned int
 manager__size( Manager *m )
 {
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
     return bunch__size( m->objects );
 }
@@ -137,7 +137,7 @@ void
 manager__set_root( Manager *m, Object *o )
 {
     if ( DEBUG__SAFE && ( !m || !o ) )
-        ABORT;
+        abort();
 
     m->root = o;
 }
@@ -149,7 +149,7 @@ manager__object( Manager *m, Type *type, void *value, int flags )
     Object *o;
 
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
     o = object__new( type, value, flags );
 
@@ -183,7 +183,7 @@ unmark_all( Manager *m )
     }
 
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
     bunch__walk( m->objects_o->value, ( Visitor ) unmark );
 
@@ -198,7 +198,7 @@ sweep( Manager *m )
     boolean unmarked( Object *o )
     {
         if ( DEBUG__SAFE && !o )
-            ABORT;
+            abort();
 
         /* If marked, unmark. */
         if ( visited( o ) )
@@ -220,7 +220,7 @@ sweep( Manager *m )
     }
 
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
     collection__exclude_if( m->objects_o, ( Criterion ) unmarked );
     m->clean = 1;
@@ -263,7 +263,7 @@ manager__walk
         Object *o;
 
         if ( DEBUG__SAFE && !opp )
-            ABORT;
+            abort();
 
         /* If the entire object graph is to be traversed, then it is safe to
            mutate references to indirection nodes. */
@@ -290,7 +290,7 @@ manager__walk
     }
 
     if ( DEBUG__SAFE && ( !m || !f ) )
-        ABORT;
+        abort();
 
     if ( !root )
     {
@@ -391,7 +391,7 @@ manager__trace( Manager *m,
 */
 
     if ( DEBUG__SAFE && ( !m || !walk || !v ) )
-        ABORT;
+        abort();
 
     if ( DEBUG__SAFE )
         marked = 0;
@@ -449,7 +449,7 @@ manager__get_multirefs( Manager *m, Object *root )
         Object *o;
 
         if ( DEBUG__SAFE && !opp )
-            ABORT;
+            abort();
 
         o = *opp;
 
@@ -480,7 +480,7 @@ manager__get_multirefs( Manager *m, Object *root )
     }
 
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
     if ( !m->clean )
         unmark_all( m );
@@ -516,7 +516,7 @@ manager__collect( Manager *m, boolean force, boolean echo )
     }
 
     if ( DEBUG__SAFE && !m )
-        ABORT;
+        abort();
 
 #if DEBUG__MEMORY
     echo = TRUE;

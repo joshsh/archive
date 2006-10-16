@@ -206,7 +206,7 @@ bunch__add( Bunch *b, void *p )
     Block *bl;
 
     if ( DEBUG__SAFE && ( !b || !p ) )
-        ABORT;
+        abort();
 
     /* Get or create tail-end block. */
     if ( !b->last_block || b->last_block->filled == b->last_block->size )

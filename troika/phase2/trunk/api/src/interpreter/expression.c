@@ -114,7 +114,7 @@ set__encode__alt( Set *s, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !s || !buffer ) )
-        ABORT;
+        abort();
 
     if ( !set__size( s ) )
         sprintf( buffer, "{}" );
@@ -180,7 +180,7 @@ term__encode__alt( Term *t, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !t || !buffer ) )
-        ABORT;
+        abort();
 
     sprintf( buffer, "[" );
     buffer++;
@@ -198,7 +198,7 @@ array__encode__alt( Array *a, char *buffer )
     Object *o;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        ABORT;
+        abort();
 
     sprintf( buffer, "{" );
     buffer++;
@@ -231,7 +231,7 @@ apply__encode__alt( Apply *a, char *buffer )
     Name *name;
 
     if ( DEBUG__SAFE && ( !a || !buffer ) )
-        ABORT;
+        abort();
 
     o = a->function;
     encode__short( o, buffer );
@@ -243,7 +243,7 @@ apply__encode__alt( Apply *a, char *buffer )
     o = a->operand;
 
     if ( DEBUG__SAFE && !FIRST_CLASS_NULL && !o )
-        ABORT;
+        abort();
 
     /* If the operand is another Apply (and does not have a name),
        enclose it in parentheses. */
@@ -309,7 +309,7 @@ resolve( Interpreter *itp, Object *o )
             return 0;
 
         else if ( DEBUG__SAFE )
-            ABORT;
+            abort();
     }
 
     opp = malloc( sizeof ( Object* ) );
@@ -366,7 +366,7 @@ interpreter__evaluate_expression( Interpreter *itp,
 
     /* See: http://www.gnu.org/prep/standards/standards.html#Conditional-Compilation */
     if ( DEBUG__SAFE && !expr && !FIRST_CLASS_NULL )
-        ABORT;
+        abort();
 
     interpreter = itp;
 

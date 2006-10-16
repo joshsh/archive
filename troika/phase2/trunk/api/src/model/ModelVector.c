@@ -17,20 +17,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-
 #include "Model-impl.h"
 
 
-static int cell_size = sizeof( index );
-
 /* TODO: qualify these with a sizeof() criterion. */
-#define OCCUPIED(c)     *(c).intval
-#define VACATE(c)       *(c).intval = 0
+#define OCCUPIED(c)     (c)->intval
+#define NONZERO(i)      (i).intval
+#define EQUALS(i,j)     (i).intval == (j).intval
+#define VACATE(c)       (c)->intval = 0
 /* Trivial hash should do the trick for pointers... */
 #define hash(p)         (p)->intval
 
 #define WRAP(a,c)       (a)->buffer + (((c) - (a)->buffer) % (a)->buffer_size)
-#define HASH(a,k)       (a)->buffer + hash(a) % (a)->buffer_size
+#define HASH(a,i)       (a)->buffer + (i).intval % (a)->buffer_size
 #define SET_CAPACITY(a) (a)->capacity = (unsigned int) ( (a)->buffer_size * MODELVECTOR__LOAD_FACTOR )
 
 
@@ -78,48 +77,49 @@ expand( ModelVector *a )
             buffer_size = next_prime( a->buffer_size + 2 );
     }
 
-    buffer = calloc( buffer_size, cell_size );
+    buffer = calloc( buffer_size, sizeof (index) );
 
-    if ( buffer )
+    if ( !buffer )
+        goto failure;
+
+    if ( a->size )
     {
-        if ( a->size )
+        lim = a->buffer + a->buffer_size;
+
+        for ( src = a->buffer; src < lim; src++ )
         {
-            lim = a->buffer + a->buffer_size;
-
-            for ( src = a->buffer; src < lim; src++ )
+            if ( OCCUPIED( src ) )
             {
-                if ( OCCUPIED( src ) )
+                dest = buffer + hash( src ) % buffer_size;
+
+                while ( OCCUPIED( dest ) )
                 {
-                    dest = buffer + hash( src ) % buffer_size;
-
-                    while ( OCCUPIED( dest ) )
-                    {
-                        dest++;
-                        dest = buffer + ( unsigned int ) ( dest - buffer ) % buffer_size;
-                    }
-
-                    *dest = *src;
+                    dest++;
+                    dest = buffer + ( unsigned int ) ( dest - buffer ) % buffer_size;
                 }
+
+                *dest = *src;
             }
         }
-
-        if ( MODELVECTOR__INITIAL_BUFFER_SIZE || a->buffer_size )
-            free( a->buffer );
-
-        a->buffer = buffer;
-        a->buffer_size = buffer_size;
-        a->capacity = ( unsigned int ) ( buffer_size * MODELVECTOR__LOAD_FACTOR );
-
-        return a;
     }
 
-    else
-        return 0;
+    if ( MODELVECTOR__INITIAL_BUFFER_SIZE || a->buffer_size )
+        free( a->buffer );
+
+    a->buffer = buffer;
+    a->buffer_size = buffer_size;
+    a->capacity = ( unsigned int ) ( buffer_size * MODELVECTOR__LOAD_FACTOR );
+
+    return a;
+
+failure:
+
+    return 0;
 }
 
 
 static void
-rehash_affected_cells( Hash_Table *a, index *removed )
+rehash_affected_cells( ModelVector *a, index *removed )
 {
     index *cur = removed, *aux;
     unsigned int i = -1, j;
@@ -127,26 +127,28 @@ rehash_affected_cells( Hash_Table *a, index *removed )
     do
     {
         i++;
-        cur = WRAP( a, ++cur );
+        cur++;
+        cur = WRAP( a, cur );
 
-    } while ( *cur );
+    } while ( OCCUPIED( cur ) );
 
     if ( i )
     {
 /* TODO: use a static buffer, or abuse the call stack */
-        aux = malloc( i * cell_size );
+        aux = malloc( i * sizeof (index) );
 
         cur = removed;
         for ( j = 0; j < i; j++ )
         {
-            cur = WRAP( a, ++cur );
+            cur++;
+            cur = WRAP( a, cur );
             *( aux + j ) = *cur;
             VACATE( cur );
             a->size--;
         }
 
         for ( j = 0; j < i; j++ )
-            modelvector__set_component( a, aux + j );
+            modelvector__set_component( a, *( aux + j ), TRUE );
 
         free( aux );
     }
@@ -167,10 +169,10 @@ modelvector__new()
         {
             a->buffer_size = MODELVECTOR__INITIAL_BUFFER_SIZE;
 
-            a->buffer = calloc( h->buffer_size, h->cell_size );
+            a->buffer = calloc( a->buffer_size, sizeof (index) );
             if ( !a->buffer )
             {
-                free a;
+                free( a );
                 return 0;
             }
         }
@@ -192,9 +194,9 @@ modelvector__copy( ModelVector *a )
     ModelVector *b;
 
     if ( DEBUG__SAFE && !a )
-        ABORT;
+        abort();
 
-    b = NEW( Hash_Table );
+    b = NEW( ModelVector );
 
     if ( b )
     {
@@ -202,7 +204,7 @@ modelvector__copy( ModelVector *a )
 
         if ( MODELVECTOR__INITIAL_BUFFER_SIZE || a->buffer_size )
         {
-            b->buffer = malloc( cell_size * a->buffer_size );
+            b->buffer = malloc( sizeof (index) * a->buffer_size );
 
             if ( !b->buffer )
             {
@@ -211,7 +213,7 @@ modelvector__copy( ModelVector *a )
             }
 
             else
-                memcpy( b->buffer, a->buffer, cell_size * a->buffer_size );
+                memcpy( b->buffer, a->buffer, sizeof (index) * a->buffer_size );
         }
     }
 
@@ -234,36 +236,37 @@ modelvector__get_component( ModelVector *a, index i )
 {
     index *cur;
 
-    if ( DEBUG__SAFE && ( !a || !i ) )
-        ABORT;
+    if ( DEBUG__SAFE && ( !a || !NONZERO( i ) ) )
+        abort();
 
     cur = HASH( a, i );
 
     while ( OCCUPIED( cur ) )
     {
-        if ( *cur == i )
+        if ( EQUALS( *cur, i ) )
             return TRUE;
 
-        cur = WRAP( a, ++cur );
+        cur++;
+        cur = WRAP( a, cur );
     }
 
     return FALSE;
 }
 
 
-void
+ModelVector *
 modelvector__set_component( ModelVector *a, index i, boolean b )
 {
     index *cur;
 
-    if ( DEBUG__SAFE && ( !a || !i ) )
-        ABORT;
+    if ( DEBUG__SAFE && ( !a || !NONZERO( i ) ) )
+        abort();
 
     cur = HASH( a, i );
 
     while ( OCCUPIED( cur ) )
     {
-        if ( *cur == i )
+        if ( EQUALS( *cur, i ) )
         {
             if ( !b )
             {
@@ -272,26 +275,38 @@ modelvector__set_component( ModelVector *a, index i, boolean b )
                 rehash_affected_cells( a, cur );
             }
 
-            return;
+            goto success;
         }
 
-        cur = WRAP( a, ++cur );
+        cur++;
+        cur = WRAP( a, cur );
     }
 
     if ( b )
     {
         *cur = i;
         a->size++;
-        if ( a->size >= a->capacity )
-/* TODO: check return value */
-            expand( a );
+        if ( a->size >= a->capacity
+          && !expand( a ) )
+            goto failure;
     }
+
+success:
+
+    return a;
+
+failure:
+
+    return 0;
 }
 
 
 unsigned int
 modelvector__manhattan_norm( ModelVector *a )
 {
+    if ( DEBUG__SAFE && !a )
+        abort();
+
     return a->size;
 }
 
@@ -301,25 +316,16 @@ modelvector__add( ModelVector *a, ModelVector *b )
 {
     ModelVector *c, *tmp;
 
-    if ( DEBUG__SAFE && ( !a || !b ) )
-        ABORT;
-
-    ACTION add(
+    ACTION add( index i )
     {
-...
-
-
-
-
-
-
-
-
-
-
-...
+        modelvector__set_component( c, i, TRUE );
+        return CONTINUE;
     }
 
+    if ( DEBUG__SAFE && ( !a || !b ) )
+        abort();
+
+    /* Copy the larger vector and iterate through the small one. */
     if ( b->size > a->size )
     {
         tmp = a;
@@ -330,7 +336,7 @@ modelvector__add( ModelVector *a, ModelVector *b )
     c = modelvector__copy( a );
 
     if ( c )
-        modelvector__walk( b, ( Visitor ) add );
+        modelvector__walk( b, ( VisitorNew ) add );
 
     return c;
 }
@@ -339,24 +345,133 @@ modelvector__add( ModelVector *a, ModelVector *b )
 ModelVector *
 modelvector__subtract( ModelVector *a, ModelVector *b )
 {
+    ModelVector *c;
 
+    ACTION subtract( index i )
+    {
+        modelvector__set_component( c, i, FALSE );
+        return CONTINUE;
+    }
+
+    if ( DEBUG__SAFE && ( !a || !b ) )
+        abort();
+
+    c = modelvector__copy( a );
+
+    if ( c )
+        modelvector__walk( b, subtract );
+
+    return c;
 }
 
 
 ModelVector *
 modelvector__multiply( ModelVector *a, ModelVector *b )
 {
+    ModelVector *c, *tmp;
 
+    ACTION multiply( index i )
+    {
+        if ( !modelvector__get_component( b, i ) )
+            modelvector__set_component( c, i, FALSE );
+
+        return CONTINUE;
+    }
+
+    if ( DEBUG__SAFE && ( !a || !b ) )
+        abort();
+
+    /* Copy the smaller vector and iterate through it. */
+    if ( b->size < a->size )
+    {
+        tmp = a;
+        a = b;
+        b = tmp;
+    }
+
+    c = modelvector__copy( a );
+
+    if ( c )
+        modelvector__walk( a, multiply );
+
+    return c;
 }
 
 
 ModelVectorDiff *
 modelvector__diff( ModelVector *a, ModelVector *b )
 {
+    __label__ failure;
 
+    ModelVector *cmp, *result;
+
+    ACTION diffop( index i )
+    {
+        if ( !modelvector__get_component( cmp, i )
+          && !modelvector__set_component( result, i, TRUE ) )
+            goto failure;
+
+        return CONTINUE;
+    }
+
+    ModelVectorDiff *diff = 0;
+    ModelVector *addend = 0, *subtrahend = 0;
+
+    diff = NEW( ModelVectorDiff );
+    if ( !diff )
+        goto failure;
+
+    addend = modelvector__new();
+    if ( !addend )
+        goto failure;
+
+    subtrahend = modelvector__new();
+    if ( !subtrahend )
+        goto failure;
+
+    cmp = b;
+    result = subtrahend;
+    modelvector__walk( a, ( VisitorNew ) diffop );
+
+    cmp = a;
+    result = addend;
+    modelvector__walk( b, diffop );
+
+    diff->addend = addend;
+    diff->subtrahend = subtrahend;
+    return diff;
+
+failure:
+
+    if ( addend )
+        free( addend );
+    if ( subtrahend )
+        free( subtrahend );
+    if ( diff )
+        free( diff );
+    return 0;
 }
 
 
-#endif  /* VECTOR_H */
+void
+modelvector__walk( ModelVector *a, VisitorNew v )
+{
+    index *cur, *lim;
+
+    if ( DEBUG__SAFE && ( !a || !v ) )
+        abort();
+
+    cur = a->buffer;
+    lim = a->buffer + a->buffer_size;
+
+    while ( cur < lim )
+    {
+        if ( OCCUPIED( cur ) && BREAK == v( *cur ) )
+            break;
+
+        cur++;
+    }
+}
+
 
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

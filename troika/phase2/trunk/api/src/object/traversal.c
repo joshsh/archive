@@ -32,7 +32,7 @@ object__trace( Object *o, Visitor f, boolean follow_triples )
         ACTION edge_helper( Object **pred, Object **obj )
         {
             if ( DEBUG__SAFE && ( !pred || !obj ) )
-                ABORT;
+                abort();
 
             helper( pred );
             helper( obj );
@@ -67,7 +67,7 @@ data(cycle(cycle))
         /* Null object references may be allowed, but null indirection to object
            references is not. */
         if ( DEBUG__SAFE && !opp )
-            ABORT;
+            abort();
 
         /* Execute the inner procedure.  Recurse unless instructed otherwise. */
         if ( f( ( void** ) opp ) == CONTINUE )
@@ -84,7 +84,7 @@ data(cycle(cycle))
             o = *opp;
 
             if ( DEBUG__SAFE && !o )
-                ABORT;
+                abort();
 
             /* Traverse to children (if any). */
             if ( o->type->flags & TYPE__IS_OBJ_COLL )
@@ -108,7 +108,7 @@ data(cycle(cycle))
     }
 
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     if ( DEBUG__OBJECT )
         total = 0;
@@ -188,7 +188,7 @@ object__trace_bfs( Object *o, Visitor f, boolean follow_triples )
     }
 
     if ( DEBUG__SAFE && ( !o  || !f ) )
-        ABORT;
+        abort();
 
     if ( DEBUG__OBJECT )
         total = 0;

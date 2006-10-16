@@ -66,7 +66,7 @@ Object *
 dereference( Object **opp )
 {
     if ( DEBUG__SAFE && !opp )
-        ABORT;
+        abort();
 
     /* Allow for indirection-to-null. */
     if ( FIRST_CLASS_NULL && !*opp )
@@ -113,7 +113,7 @@ static void
 substitute_boxed( Object *o, Object *target )
 {
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     /* The object's previous value becomes unreachable, so its memory must be
        freed. */
@@ -129,7 +129,7 @@ static void
 substitute_unboxed( Object *o, Type *type, void *value )
 {
     if ( DEBUG__SAFE && ( !o || !type || !value ) )
-        ABORT;
+        abort();
 
     /* The object's previous value becomes unreachable, so its memory must be
        freed. */
@@ -521,7 +521,7 @@ static Object *
 apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Manager *m )
 {
     if ( DEBUG__SAFE && ( !c || !spine || !m ) )
-        ABORT;
+        abort();
 
 /* TODO: how about a lookup table instead of a switch statement? */
     switch ( *c )
@@ -584,7 +584,7 @@ apply_combinator( Combinator *c, Array *spine, unsigned int nargs, Manager *m )
 
         default:
 
-            ABORT;
+            abort();
     }
 }
 
@@ -602,7 +602,7 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Manager *m )
     Type *t;
 
     if ( DEBUG__SAFE && ( !p || !spine || !m || p->arity > PRIM__MAX_PARAMS ) )
-        ABORT;
+        abort();
 
     if ( PRIM__ALLOW_NULLARY )
     {
@@ -671,7 +671,7 @@ apply_primitive( Primitive *p, Array *spine, unsigned int nargs, Manager *m )
                 substitute_boxed( ap, 0 );
 
             else
-                ABORT;
+                abort();
         }
 
         return ap;

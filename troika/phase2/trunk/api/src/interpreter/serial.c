@@ -182,7 +182,7 @@ get_attr__id( Element *el, Xml_Decode_Ctx *state )
     unsigned int id;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     state = 0;
 
@@ -210,7 +210,7 @@ get_attr__ref( Element *el, Xml_Decode_Ctx *state )
     unsigned int id;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     state = 0;
 
@@ -239,7 +239,7 @@ get_attr__type( Element *el, Xml_Decode_Ctx *state )
     Object *o;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     attr = element__attr( el, ( uc* ) ATTR_TYPE, 0 );
 
@@ -276,7 +276,7 @@ get_attr__name( Element *el, Xml_Decode_Ctx *state )
     char *text;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     state = 0;
 
@@ -302,7 +302,7 @@ array__xml_encode( Array *a, Xml_Encode_Ctx *state )
     int i, size;
 
     if ( DEBUG__SAFE && ( !a || !state ) )
-        ABORT;
+        abort();
 
     el = element__new( 0, ( uc* ) ARRAY__XML__NAME, 0 );
 
@@ -325,7 +325,7 @@ term__xml_encode( Term *t, Xml_Encode_Ctx *state )
     Element *el, *child;
 
     if ( DEBUG__SAFE && ( !t || !state ) )
-        ABORT;
+        abort();
 
     if ( cur->intval == 2 )
     {
@@ -376,7 +376,7 @@ namespace__xml_encode( Namespace *ns, Xml_Encode_Ctx *state )
     }
 
     if ( DEBUG__SAFE && ( !ns || !state ) )
-        ABORT;
+        abort();
 
     el = element__new( 0, ( uc* ) NAMESPACE__XML__NAME, 0 );
 
@@ -404,7 +404,7 @@ set__xml_encode( Set *s, Xml_Encode_Ctx *state )
     }
 
     if ( DEBUG__SAFE && ( !s || !state ) )
-        ABORT;
+        abort();
 
     el = element__new( 0, ( uc* ) SET__XML__NAME, 0 );
 
@@ -420,7 +420,7 @@ apply__xml_encode( Apply *a, Xml_Encode_Ctx *state )
     Element *el, *child;
 
     if ( DEBUG__SAFE && ( !a || !state ) )
-        ABORT;
+        abort();
 
     el = element__new( 0, ( uc* ) APPLY__XML__NAME, 0 );
     child = object__xml_encode( a->function, state, 0 );
@@ -443,7 +443,7 @@ array__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Object *o;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     else if ( strcmp( ( char* ) element__name( el ), ARRAY__XML__NAME ) )
     {
@@ -473,7 +473,7 @@ term__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Element *child;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     /* Singleton term. */
     if ( strcmp( ( char* ) element__name( el ), TERM__XML__NAME ) )
@@ -513,7 +513,7 @@ namespace__xml_decode( Element *el, Xml_Decode_Ctx *state )
     char *text;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     if ( SERIAL__CHECKS && strcmp( ( char* ) element__name( el ), NAMESPACE__XML__NAME ) )
     {
@@ -556,7 +556,7 @@ set__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
     if ( DEBUG__SAFE && ( !el || !state
     || strcmp( ( char* ) element__name( el ), SET__XML__NAME ) ) )
-        ABORT;
+        abort();
 
     s = set__new();
 
@@ -579,7 +579,7 @@ apply__xml_decode( Element *el, Xml_Decode_Ctx *state )
 
     if ( DEBUG__SAFE && ( !el || !state
     || strcmp( ( char* ) element__name( el ), APPLY__XML__NAME ) ) )
-        ABORT;
+        abort();
 
     function = element__first_child( el );
     operand = element__next_sibling( function );
@@ -613,7 +613,7 @@ object__xml_encode( Object *o, Xml_Encode_Ctx *state, boolean top_level )
         }
 
         else if ( DEBUG__SAFE )
-            ABORT;
+            abort();
     }
 
     /* id > 0  ==>  the object is multireferenced. */
@@ -711,7 +711,7 @@ object__xml_decode( Element *el, Xml_Decode_Ctx *state )
     Environment *env;
 
     if ( DEBUG__SAFE && ( !el || !state ) )
-        ABORT;
+        abort();
 
     if ( strcmp( ( char* ) element__name( el ), NAMEOF( OBJECT ) ) )
     {
@@ -905,7 +905,7 @@ multiref_ids( Interpreter *c )
     ACTION hash_multiref( Object **opp )
     {
         if ( DEBUG__SAFE && !opp )
-            ABORT;
+            abort();
 
         if ( FIRST_CLASS_NULL && !*opp )
             return CONTINUE;
@@ -966,7 +966,7 @@ interpreter__serialize( Interpreter *c, const char *path )
             Element *triple, *subject, *predicate, *object;
 
             if ( DEBUG__SAFE && ( !pred || !obj ) )
-                ABORT;
+                abort();
 
             triple = element__new( 0, ( uc* ) "triple", 0 );
             subject = object__xml_encode( o, &state, FALSE );
@@ -986,12 +986,12 @@ interpreter__serialize( Interpreter *c, const char *path )
         ignored = 0;
 
         if ( DEBUG__SAFE && ( !opp ) )
-            ABORT;
+            abort();
 
         o = DEREF( opp );
 
         if ( DEBUG__SAFE && ( !o ) )
-            ABORT;
+            abort();
 
         /* Create element for this object. */
         el = object__xml_encode( o, &state, TRUE );
@@ -1011,7 +1011,7 @@ interpreter__serialize( Interpreter *c, const char *path )
     }
 
     if ( DEBUG__SAFE && ( !c || !path || !strlen( path ) ) )
-        ABORT;
+        abort();
 
     xmldom__init();
 
@@ -1074,7 +1074,7 @@ interpreter__deserialize( Interpreter *c, const char *path )
     Environment *env;
 
     if ( DEBUG__SAFE && ( !c || !path || !strlen( path ) ) )
-        ABORT;
+        abort();
 
     xmldom__init();
 

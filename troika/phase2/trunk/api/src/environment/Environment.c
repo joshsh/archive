@@ -178,7 +178,7 @@ environment__free( Environment *env )
     Type ns_t;
 
     if ( DEBUG__SAFE && !env )
-        ABORT;
+        abort();
 
     /* Preserve only data type objects. */
     manager__set_root( env->manager, env->types );
@@ -206,7 +206,7 @@ Manager *
 environment__manager( const Environment *env )
 {
     if ( DEBUG__SAFE && !env )
-        ABORT;
+        abort();
 
     return env->manager;
 }

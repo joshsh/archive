@@ -27,7 +27,7 @@ primitive__free( Primitive *prim )
     unsigned int i;
 
     if ( DEBUG__SAFE && !prim )
-        ABORT;
+        abort();
 
     free( prim->name );
 

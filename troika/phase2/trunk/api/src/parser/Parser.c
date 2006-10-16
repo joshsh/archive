@@ -30,7 +30,7 @@ parser__new( Interpreter *itp )
     Environment *e;
 
     if ( DEBUG__SAFE && !itp )
-        ABORT;
+        abort();
 
     if ( instance_exists )
     {
@@ -78,12 +78,12 @@ void
 parser__free( Parser *p )
 {
     if ( DEBUG__SAFE && !p )
-        ABORT;
+        abort();
 
     if ( p->locked )
     {
         ERROR( "parser__free: can't delete while parsing" );
-        ABORT;
+        abort();
     }
 
     free( p );
@@ -98,7 +98,7 @@ parser__parse( Parser *p )
     exit_state exit_state;
 
     if ( DEBUG__SAFE && !p )
-        ABORT;
+        abort();
 
     if ( p->locked )
         return exit_state__locked_out;

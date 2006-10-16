@@ -259,7 +259,7 @@ dereference( struct Object ** );
 #endif
 
 
-#define ABORT   PRINT("ABORT: [file %s, line %d]\n", __FILE__, __LINE__), abort()
+#define abort() PRINT("ABORT: [file %s, line %d]\n", __FILE__, __LINE__), abort()
 
 
 /* Debugging ******************************************************************/

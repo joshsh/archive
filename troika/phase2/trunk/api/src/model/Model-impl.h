@@ -20,7 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef MODEL_IMPL_H
 #define MODEL_IMPL_H
 
-#include <ModelVector.h>
+#include <phase2/ModelVector.h>
 #include "../settings.h"
 
 

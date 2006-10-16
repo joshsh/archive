@@ -26,7 +26,7 @@ interpreter__new( Environment *env, boolean quiet, boolean verbose )
     Interpreter *c;
 
     if ( DEBUG__SAFE && !env )
-        ABORT;
+        abort();
 
     if ( !( c = NEW( Interpreter ) ) )
     {
@@ -90,7 +90,7 @@ void
 interpreter__free( Interpreter *itp )
 {
     if ( DEBUG__SAFE && !itp )
-        ABORT;
+        abort();
 
     if ( itp->save_to_path )
         free( itp->save_to_path );
@@ -143,7 +143,7 @@ err_notdefined( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not defined in this namespace", buff );
@@ -156,7 +156,7 @@ err_notns( Name *name )
     char buff[ERRBUFSIZ];
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     name__encode( name, buff );
     ERROR( "\"%s\" is not a namespace", buff );

@@ -27,7 +27,7 @@ object__new( Type *type, void *value, int flags )
 
     /* NOTE: temporary objects with null type/value may be allowed. */
     if ( ( !type || !value ) && DEBUG__SAFE && !PERMIT_TEMPORARY_OBJECTS )
-        ABORT;
+        abort();
 
     o = NEW( Object );
 
@@ -69,7 +69,7 @@ object__free( Object *o )
     }
 
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
 #if TRIPLES__GLOBAL__IN_EDGES
     if ( o->inbound_edges )
@@ -95,7 +95,7 @@ PRINT( "type=%p (%s) -- %i\n", o->type, o->type->name, o->flags && OBJECT__VISIT
     {
         t = o->type->type_arg;
         if ( DEBUG__SAFE && !t )
-            ABORT;
+            abort();
 
         o->type->walk( o->value, ( Visitor ) helper );
     }
@@ -121,7 +121,7 @@ Type *
 object__type( const Object *o )
 {
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     return o->type;
 }
@@ -131,7 +131,7 @@ void *
 object__value( const Object *o )
 {
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     return o->value;
 }

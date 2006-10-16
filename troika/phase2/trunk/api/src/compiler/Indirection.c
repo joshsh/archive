@@ -44,7 +44,7 @@ static void
 indirection__walk( void *p, Visitor f )
 {
     if ( DEBUG__SAFE && ( !p || !f ) )
-        ABORT;
+        abort();
 
     f( &p );
 }
@@ -56,7 +56,7 @@ indirection__create_type( const char *name, int flags )
     Type *type;
 
     if ( DEBUG__SAFE && ( !name ) )
-        ABORT;
+        abort();
 
     type = type__new( name, flags );
 

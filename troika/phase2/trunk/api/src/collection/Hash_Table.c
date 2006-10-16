@@ -159,7 +159,7 @@ hash_table__new(
     Hash_Table *h;
 
     if ( DEBUG__SAFE && ( !hash || !compare ) )
-        ABORT;
+        abort();
 
     h = NEW( Hash_Table );
 
@@ -209,7 +209,7 @@ hash_table__copy( const Hash_Table *h )
     Hash_Table *h2;
 
     if ( DEBUG__SAFE && !h )
-        ABORT;
+        abort();
 
     h2 = NEW( Hash_Table );
 
@@ -277,7 +277,7 @@ hash_table__add( Hash_Table *h, void *key )
     cell *cur;
 
     if ( DEBUG__SAFE && ( !h || !key ) )
-        ABORT;
+        abort();
 
     cur = HASH( h, key );
 
@@ -314,7 +314,7 @@ hash_table__lookup( const Hash_Table *h, const void *key )
     cell *cur;
 
     if ( DEBUG__SAFE && ( !h || !key ) )
-        ABORT;
+        abort();
 
     cur = HASH( h, key );
 
@@ -377,7 +377,7 @@ hash_table__remove( Hash_Table *h, const void *key )
     cell *cur;
 
     if ( DEBUG__SAFE && ( !h || !key ) )
-        ABORT;
+        abort();
 
     cur = HASH( h, key );
 
@@ -408,7 +408,7 @@ hash_table__walk( Hash_Table *h, Visitor f )
     ACTION r;
 
     if ( DEBUG__SAFE && ( !h || !f ) )
-        ABORT;
+        abort();
 
     cur = h->buffer;
     lim = h->buffer + ( h->cell_size * h->buffer_size );

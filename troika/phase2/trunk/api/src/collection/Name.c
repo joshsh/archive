@@ -40,7 +40,7 @@ name__free( Name *name )
     }
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     array__walk( name, ( Visitor ) helper );
 
@@ -62,7 +62,7 @@ name__encode( Name *name, char *buffer )
     int i, size = array__size( name );
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     for ( i = 0; i < size; i++ )
     {

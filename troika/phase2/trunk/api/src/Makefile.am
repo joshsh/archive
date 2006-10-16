@@ -53,6 +53,9 @@ interpreter_src =							\
 manager_src =								\
 	manager/Manager.c
 
+model_src = 								\
+	model/ModelVector.c
+
 namespace_src =								\
 	namespace/Namespace.c						\
 	namespace/io-simple.c						\
@@ -78,6 +81,7 @@ libphase2_la_SOURCES =							\
 	$(environment_src)						\
 	$(interpreter_src)						\
 	$(manager_src)							\
+	$(model_src)							\
 	$(namespace_src)						\
 	$(object_src)							\
 	$(primitive_src)						\

@@ -279,7 +279,7 @@ set__encode( Set *s, char *buffer )
     }
 
     if ( DEBUG__SAFE && ( !s || !buffer ) )
-        ABORT;
+        abort();
 
     sprintf( buffer, "{" );
     buffer++;

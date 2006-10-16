@@ -26,7 +26,7 @@ object__clone( Object *o )
     Object *copy;
 
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     copy = NEW( Object );
     *copy = *o;
@@ -39,7 +39,7 @@ static int
 object__compare_to( Object *o1, Object *o2 )
 {
     if ( DEBUG__SAFE && ( !o1 || !o2 ) )
-        ABORT;
+        abort();
 
     else if ( o1->type != o2->type )
     {
@@ -70,11 +70,11 @@ object__encode( const Object *o, char *buffer )
         }
 
         else if ( DEBUG__SAFE )
-            ABORT;
+            abort();
     }
 
     else if ( DEBUG__SAFE && !o->value )
-        ABORT;
+        abort();
 
     o->type->encode( o->value, buffer );
 }
@@ -84,7 +84,7 @@ static boolean
 object__equals( Object *o1, Object *o2 )
 {
     if ( DEBUG__SAFE && ( !o1 || !o2 ) )
-        ABORT;
+        abort();
 
     else if ( o1->type != o2->type )
     {
@@ -101,7 +101,7 @@ static void
 object__sort( Object *o, Comparator cmp )
 {
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     o->type->sort( o->value, cmp );
 }
@@ -111,7 +111,7 @@ static void
 object__walk( Object *o, Visitor f )
 {
     if ( DEBUG__SAFE && !o )
-        ABORT;
+        abort();
 
     o->type->walk( o->value, f );
 }
@@ -127,7 +127,7 @@ object__create_type( const char *name )
     Type *type;
 
     if ( DEBUG__SAFE && !name )
-        ABORT;
+        abort();
 
     type = type__new( name, flags );
 

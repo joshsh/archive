@@ -337,7 +337,7 @@ prim_reduce(
     else
     {
         if ( DEBUG__SAFE && !p->arity )
-            ABORT;
+            abort();
 
         args = malloc( p->arity * sizeof( term_cell ) );
     }
@@ -458,7 +458,7 @@ term__reduce(
         iter = 0;
 
     if ( DEBUG__SAFE && ( !term || !m || !term_type || !primitive_type || !combinator_type || !set_type ) )
-        ABORT;
+        abort();
 
 #if DEBUG__SK
      PRINT( "%i:\t", iter );
@@ -469,7 +469,7 @@ term__reduce(
     for (;;)
     {
         if ( DEBUG__SAFE && !term )
-            ABORT;
+            abort();
 
 /*
 cur = term->head; sup = term->buffer + term->buffer_size;
@@ -495,7 +495,7 @@ PRINT( "\n" );  fflush( stdout );
 
         /* There should be no way for nulls to appear at the head of a term. */
         if ( DEBUG__SAFE && !head )
-            ABORT;
+            abort();
 
         head_type = head->type;
 

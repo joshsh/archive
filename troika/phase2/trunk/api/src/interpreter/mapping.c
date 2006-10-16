@@ -234,7 +234,7 @@ interpreter__encode( Interpreter *c,
     Name *name;
 
     if ( DEBUG__SAFE && !c )
-        ABORT;
+        abort();
 
     if ( o )
     {
