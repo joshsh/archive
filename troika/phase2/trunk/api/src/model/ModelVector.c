@@ -17,24 +17,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 *******************************************************************************/
 
-#include <ModelVector.h>
-#include "../settings.h"
 
-
-struct ModelVector
-{
-    unsigned int size;
-    unsigned int capacity;
-
-    index *      buffer;
-    unsigned int buffer_size;
-};
-
-
-/* TODO: move into settings.h */
-#define MODELVECTOR__INITIAL_BUFFER_SIZE        0
-#define MODELVECTOR__LOAD_FACTOR                0.75
-#define MODELVECTOR__EXPANSION_FACTOR           2.0
+#include "Model-impl.h"
 
 
 static int cell_size = sizeof( index );
@@ -134,6 +118,41 @@ expand( ModelVector *a )
 }
 
 
+static void
+rehash_affected_cells( Hash_Table *a, index *removed )
+{
+    index *cur = removed, *aux;
+    unsigned int i = -1, j;
+
+    do
+    {
+        i++;
+        cur = WRAP( a, ++cur );
+
+    } while ( *cur );
+
+    if ( i )
+    {
+/* TODO: use a static buffer, or abuse the call stack */
+        aux = malloc( i * cell_size );
+
+        cur = removed;
+        for ( j = 0; j < i; j++ )
+        {
+            cur = WRAP( a, ++cur );
+            *( aux + j ) = *cur;
+            VACATE( cur );
+            a->size--;
+        }
+
+        for ( j = 0; j < i; j++ )
+            modelvector__set_component( a, aux + j );
+
+        free( aux );
+    }
+}
+
+
 /******************************************************************************/
 
 
@@ -213,28 +232,107 @@ modelvector__free( ModelVector *a )
 boolean
 modelvector__get_component( ModelVector *a, index i )
 {
+    index *cur;
 
+    if ( DEBUG__SAFE && ( !a || !i ) )
+        ABORT;
+
+    cur = HASH( a, i );
+
+    while ( OCCUPIED( cur ) )
+    {
+        if ( *cur == i )
+            return TRUE;
+
+        cur = WRAP( a, ++cur );
+    }
+
+    return FALSE;
 }
 
 
 void
 modelvector__set_component( ModelVector *a, index i, boolean b )
 {
+    index *cur;
 
+    if ( DEBUG__SAFE && ( !a || !i ) )
+        ABORT;
+
+    cur = HASH( a, i );
+
+    while ( OCCUPIED( cur ) )
+    {
+        if ( *cur == i )
+        {
+            if ( !b )
+            {
+                VACATE( cur );
+                a->size--;
+                rehash_affected_cells( a, cur );
+            }
+
+            return;
+        }
+
+        cur = WRAP( a, ++cur );
+    }
+
+    if ( b )
+    {
+        *cur = i;
+        a->size++;
+        if ( a->size >= a->capacity )
+/* TODO: check return value */
+            expand( a );
+    }
 }
 
 
 unsigned int
 modelvector__manhattan_norm( ModelVector *a )
 {
-
+    return a->size;
 }
 
 
 ModelVector *
 modelvector__add( ModelVector *a, ModelVector *b )
 {
+    ModelVector *c, *tmp;
 
+    if ( DEBUG__SAFE && ( !a || !b ) )
+        ABORT;
+
+    ACTION add(
+    {
+...
+
+
+
+
+
+
+
+
+
+
+...
+    }
+
+    if ( b->size > a->size )
+    {
+        tmp = a;
+        a = b;
+        b = tmp;
+    }
+
+    c = modelvector__copy( a );
+
+    if ( c )
+        modelvector__walk( b, ( Visitor ) add );
+
+    return c;
 }
 
 
