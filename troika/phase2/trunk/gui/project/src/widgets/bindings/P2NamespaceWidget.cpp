@@ -28,7 +28,7 @@ P2NamespaceWidget::P2NamespaceWidget( const Object *o, P2Binder *eb )
         //f->setObjectName( key );
         add( f );
     }
-    array__delete( keys );
+    array__free( keys );
 }
 
 

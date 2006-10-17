@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include <Interpreter.h>
+#include <phase2/Interpreter.h>
 }
 
 #include <global.h>

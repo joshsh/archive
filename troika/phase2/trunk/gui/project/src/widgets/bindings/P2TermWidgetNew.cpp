@@ -3,7 +3,7 @@
 
 extern "C"
 {
-#include <collection/Term.h>
+#include <phase2/Term.h>
 }
 
 
@@ -71,7 +71,7 @@ encode_static( Term *t, bool delimit, P2TermWidgetNew *tw, P2Binder *eb )
         {
             Term *subt = term__subterm_at( t, i );
             encode_static( subt, true, tw, eb );
-            term__delete( subt );
+            term__free( subt );
         }
 /*
         void **lim = cur + ( unsigned int ) *cur;

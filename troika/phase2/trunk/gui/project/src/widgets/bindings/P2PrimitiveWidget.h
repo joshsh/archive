@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include <Object.h>
+#include <phase2/Object.h>
 }
 
 #include <widgets/basic/P2Text.h>

@@ -18,7 +18,7 @@
 
 extern "C"
 {
-#include <collection/Name.h>
+#include <phase2/Name.h>
 }
 
 
@@ -125,14 +125,20 @@ xpmWidget( const Object *o, P2Binder *eb )
 static int
 getType( Environment *e, const char *name )
 {
-    Object *o = environment__resolve_type( e, name );
-    return ( int ) object__value( o );
+    Object *o = environment__resolve_type( e, name, FALSE );
+    if ( o )
+        return ( int ) object__value( o );
+    else
+        return 0;
 }
 
 
 static int
 getType( const Object *o )
 {
+//    if ( DEBUG__SAFE && !o )
+//        ABORT;
+
     return ( int ) object__type( o );
 }
 
@@ -222,7 +228,7 @@ objectName( const Object *o )
     {
         char buffer[ENCODING__BUFFER_SIZE];
         name__encode( name, buffer );
-        name__delete( name );
+        name__free( name );
         return QString( buffer );
     }
 }
@@ -240,7 +246,7 @@ objectFullName( const Object *o )
     {
         char buffer[ENCODING__BUFFER_SIZE];
         name__encode( name, buffer );
-        name__delete( name );
+        name__free( name );
         return QString( buffer );
     }
 }

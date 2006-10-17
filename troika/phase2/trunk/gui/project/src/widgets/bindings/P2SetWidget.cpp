@@ -2,8 +2,8 @@
 
 extern "C"
 {
-#include <collection/Set.h>
-#include <collection/Array.h>
+#include <phase2/Set.h>
+#include <phase2/Array.h>
 }
 
 #include <widgets/bindings/P2SetWidget.h>
@@ -75,7 +75,7 @@ P2SetWidget::P2SetWidget( const Object *o, P2Binder *eb )
         add( f );
     }
 
-    array__delete( a );
+    array__free( a );
 }
 
 
