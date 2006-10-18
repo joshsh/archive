@@ -474,4 +474,36 @@ modelvector__walk( ModelVector *a, VisitorNew v )
 }
 
 
+boolean
+modelvector__equals( ModelVector *a, ModelVector *b )
+{
+    boolean result;
+
+    ACTION test( index i )
+    {
+        if ( !modelvector__get_component( b, i ) )
+        {
+            result = FALSE;
+            return BREAK;
+        }
+
+        else
+            return CONTINUE;
+    }
+
+    if ( DEBUG__SAFE && ( !a || !b ) )
+        abort();
+
+    if ( a->size != b->size )
+        return FALSE;
+
+    else
+    {
+        result = TRUE;
+        modelvector__walk( a, test );
+        return result;
+    }
+}
+
+
 /* kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on */

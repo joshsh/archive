@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Phase2 language API, Copyright (C) 2006 Joshua Shinavier.
+Wurfel programming language, Copyright (C) 2006 Joshua Shinavier.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -20,7 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef MODEL_IMPL_H
 #define MODEL_IMPL_H
 
-#include <phase2/ModelVector.h>
+#include <wurfel/ModelVector.h>
 #include "../settings.h"
 
 

@@ -106,6 +106,9 @@ typedef ACTION          ( *VisitorNew )( index i );
 extern void
 modelvector__walk( ModelVector *a, VisitorNew v );
 
+extern boolean
+modelvector__equals( ModelVector *a, ModelVector *b );
+
 
 #endif  /* MODELVECTOR_H */
 
