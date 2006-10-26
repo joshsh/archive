@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../settings.h"
 
 
-#define MODELVECTOR__INITIAL_BUFFER_SIZE        0
+#define MODELVECTOR__INITIAL_BUFFER_SIZE        23
 #define MODELVECTOR__LOAD_FACTOR                0.75
 #define MODELVECTOR__EXPANSION_FACTOR           2.0
 
