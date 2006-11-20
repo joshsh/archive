@@ -1,0 +1,11 @@
+<assembly>
+  <id>bigjar</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <repositories>
+    <repository>
+      <outputDirectory>target</outputDirectory>
+    </repository>
+  </repositories>
+</assembly>

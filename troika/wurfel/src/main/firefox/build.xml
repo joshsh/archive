@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<project name="wurfel" default="createxpi">
+
+  <target name="createjar">
+    <zip destfile="wurfel.jar" basedir="." includes="content/**" />
+  </target>
+
+  <target name="createxpi" depends="createjar">
+    <zip destfile="wurfel.xpi">
+      <zipfileset dir="." includes="wurfel.jar" prefix="chrome" />
+      <zipfileset dir="." includes="install.rdf" />
+    </zip>
+  </target>
+
+</project>

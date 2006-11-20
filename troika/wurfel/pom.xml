@@ -1,0 +1,109 @@
+<!-- This is a Maven 2 Project Object Model -->
+<project  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>jline-test</groupId>
+
+    <artifactId>jline-test</artifactId>
+
+    <packaging>jar</packaging>
+
+    <version>0.1</version>
+
+    <name>JLine Test</name>
+
+    <repositories>
+        <repository>
+            <id>jline</id>
+            <name>JLine Project Repository</name>
+            <url>http://jline.sourceforge.net/m2repo</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>0.9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>2.7.2</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>./src/main/java</sourceDirectory>
+        <plugins>
+            <!-- Tells the compiler plugin to use Java 5.0 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+<!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <configLocation>x2dgWeb/src/main/webapp/WEB-INF/xml/x2dg.checkstyle.xml</configLocation>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.0-beta-1</version>
+                <configuration>
+                <descriptor>descriptor.xml</descriptor>
+                <finalName>bigjar</finalName>
+                <outputDirectory>target</outputDirectory>
+                <workDirectory>target/assembly/work</workDirectory>
+                </configuration>
+            </plugin>
+
+            <!-- Use "mvn antlr:generate" -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antlr-plugin</artifactId>
+                <configuration>
+                    <grammars>Wurfel.g</grammars>
+                    <outputDirectory>./src/main/java</outputDirectory>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+<!--
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <configLocation>${basedir}/../x2dgWeb/src/main/webapp/WEB-INF/xml/x2dg.checkstyle.xml</configLocation>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <scm>
+        <connection>scm:svn:http://192.168.1.20/svn/repository/x2dg/trunk/commandLine</connection>
+        <developerConnection>scm:svn:http://192.168.1.20/svn/repository/x2dg/trunk/commandLine</developerConnection>
+        <url>http://192.168.1.20/build/docs</url>
+    </scm>
+-->
+
+</project>
+
+<!-- kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on -->
