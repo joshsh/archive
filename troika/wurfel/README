@@ -3,4 +3,6 @@ mvn antlr:generate
 mvn install
 mvn assembly:assembly
 
+unzip -l target/firefox/wurfel.xpi
+
 java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"

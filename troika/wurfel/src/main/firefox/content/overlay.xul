@@ -10,10 +10,12 @@
         <menuitem label="Wurfel (2)" position="1" />
 -->
 
-        <menu id="wurfelToolsMenu" label="Wurfel (5)" position="1">
+        <menu id="wurfelToolsMenu" label="Wurfel (6)" position="1">
             <menupopup>
                 <menuitem label="Wurfel"/>
+<!--
 <menuitem label="&wurfel.toolsMenu.label;"/>
+-->
             </menupopup>
         </menu>
 

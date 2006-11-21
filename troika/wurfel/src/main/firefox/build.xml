@@ -9,7 +9,7 @@
 -->
     <target name="createxpi" depends="createjar">
         <zip destfile="${target}/wurfel.xpi">
-            <zipfileset dir="." includes="${target}/wurfel.jar" prefix="chrome" />
+            <zipfileset dir="${target}" includes="wurfel.jar" prefix="chrome" />
             <zipfileset dir="." includes="install.rdf" />
         </zip>
     </target>
