@@ -1,28 +1,30 @@
 <?xml version="1.0"?>
 
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+    <Description about="urn:mozilla:install-manifest">
 
-  <Description about="urn:mozilla:install-manifest">
+        <em:name>Wurfel</em:name>
+        <em:id>{9766d940-0645-473f-844d-6d10616eafaf}</em:id>
+        <em:version>0.1</em:version>
+        <em:type>2</em:type>
+        <em:creator>Joshua Shinavier</em:creator>
+        <em:description>An expeditious command-line interface for the Semantic Web surfer.</em:description>
+        <em:homepageURL>http://troika.dnsdojo.net</em:homepageURL>
+<!--
+        <em:updateURL>...</em:updateURL>
+        <em:optionsURL>...</em:optionsURL>
+        <em:iconURL>...</em:iconURL>
+-->
 
-    <em:name>Wurfel</em:name>
-    <em:id>{9766d940-0645-473f-844d-6d10616eafaf}</em:id>
-    <em:version>0.1</em:version>
+        <em:targetApplication>
+            <Description>
+                <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+                <em:minVersion>1.5</em:minVersion>
+                <em:maxVersion>2.0</em:maxVersion>
+            </Description>
+        </em:targetApplication>
 
-    <em:targetApplication>
-      <Description>
-        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-        <em:minVersion>1.5</em:minVersion>
-        <em:maxVersion>2.0</em:maxVersion>
-      </Description>
-    </em:targetApplication> 
-
-    <em:file>
-      <Description about="urn:mozilla:extension:file:wurfel.jar">
-        <em:package>content/</em:package>
-      </Description>
-    </em:file>
-
-  </Description>
-
+    </Description>
 </RDF>
+
+<!-- kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on -->

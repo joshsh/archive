@@ -6,15 +6,15 @@
 
 
     <menupopup id="menu_ToolsPopup">
-        <menu id="wurfelToolsMenu" label="W&#252;rfel (7)" position="1">
+        <menu id="wurfelToolsMenu" label="&wurfel.name;" position="1">
             <menupopup>
-                <menuitem label="this should do something"/>
-<!--
-<menuitem label="&wurfel.toolsMenu.label;"/>
--->
+                <menuitem label="&wurfel.toolsMenu.foo;"/>
+                <menuitem label="revision 10"/>
             </menupopup>
         </menu>
 
   </menupopup>
 
 </overlay>
+
+<!-- kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on -->

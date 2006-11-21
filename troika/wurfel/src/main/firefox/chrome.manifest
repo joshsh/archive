@@ -1,0 +1,13 @@
+#
+# Chrome Manifest file (for Firefox 1.1+)
+#
+
+# WARNING: don't forget the '/' at the end of the paths or it won't work!!
+
+overlay chrome://browser/content/browser.xul chrome://wurfel/content/overlay.xul
+content wurfel chrome/content/
+
+#skin    piggy-bank  classic/1.0     chrome/skin/classic/
+#style   chrome://global/content/customizeToolbar.xul    chrome://piggy-bank/skin/browser.css
+
+locale  wurfel  en-US   chrome/locale/en-US/
