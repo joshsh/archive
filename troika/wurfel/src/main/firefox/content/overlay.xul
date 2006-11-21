@@ -6,13 +6,9 @@
 
 
     <menupopup id="menu_ToolsPopup">
-<!--
-        <menuitem label="Wurfel (2)" position="1" />
--->
-
-        <menu id="wurfelToolsMenu" label="Wurfel (6)" position="1">
+        <menu id="wurfelToolsMenu" label="W&#252;rfel (7)" position="1">
             <menupopup>
-                <menuitem label="Wurfel"/>
+                <menuitem label="this should do something"/>
 <!--
 <menuitem label="&wurfel.toolsMenu.label;"/>
 -->
