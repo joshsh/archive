@@ -1,12 +1,6 @@
+mvn clean
+mvn antlr:generate
 mvn install
+mvn assembly:assembly
 
-HOME=~
-
-java -classpath target/jline-test-0.1.jar:$HOME/.m2/repository/jline/jline/0.9.9/jline-0.9.9.jar:$HOME/.m2/repository/antlr/antlr/2.7.5/antlr-2.7.5.jar wurfel.JLineTest "t"
-
-
-java -classpath jline-test-0.1.jar:$HOME/.m2/repository/jline/jline/0.9.9/jline-0.9.9.jar:/home/joshs/.m2/repository/antlr/antlr/2.7.5/antlr-2.7.5.jar jline.example.Example wurfel.JLineTest
-
-
-
-java -classpath jline-test-0.1.jar:/home/josh/.m2/repository/jline/jline/0.9.9/jline-0.9.9.jar:/home/josh/.m2/repository/antlr/antlr/2.7.5/antlr-2.7.5.jar wurfel.JLineTest "c"
+java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"

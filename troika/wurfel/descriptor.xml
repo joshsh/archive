@@ -1,11 +1,26 @@
 <assembly>
-  <id>bigjar</id>
-  <formats>
-    <format>jar</format>
-  </formats>
-  <repositories>
-    <repository>
-      <outputDirectory>target</outputDirectory>
-    </repository>
-  </repositories>
+
+    <id>with-dependencies</id>
+
+    <formats>
+        <format>jar</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/classes</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+
 </assembly>

@@ -3,15 +3,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>jline-test</groupId>
+    <groupId>wurfel</groupId>
 
-    <artifactId>jline-test</artifactId>
+    <artifactId>wurfel</artifactId>
 
     <packaging>jar</packaging>
 
     <version>0.1</version>
 
-    <name>JLine Test</name>
+    <name>Wurfel</name>
 
     <repositories>
         <repository>
@@ -63,7 +63,7 @@
                 <version>2.0-beta-1</version>
                 <configuration>
                 <descriptor>descriptor.xml</descriptor>
-                <finalName>bigjar</finalName>
+                <finalName>wurfel</finalName>
                 <outputDirectory>target</outputDirectory>
                 <workDirectory>target/assembly/work</workDirectory>
                 </configuration>
