@@ -7,7 +7,7 @@
 overlay chrome://browser/content/browser.xul chrome://wurfel/content/overlay.xul
 content wurfel chrome/content/
 
-#skin    piggy-bank  classic/1.0     chrome/skin/classic/
+skin    wurfel  classic/1.0     chrome/skin/classic/
 #style   chrome://global/content/customizeToolbar.xul    chrome://piggy-bank/skin/browser.css
 
 locale  wurfel  en-US   chrome/locale/en-US/

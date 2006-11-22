@@ -7,12 +7,12 @@
   </RDF:Seq>
 
   <RDF:Description about="urn:mozilla:package:wurfel"
-    chrome:displayName="Hello World"
-    chrome:author="Brian Duff"
+    chrome:displayName="W&#252;rfel"
+    chrome:author="Joshua Shinavier"
     chrome:authorURL="http://troika.dnsdojo.net/"
     chrome:name="wurfel"
     chrome:extension="true"
-    chrome:description="A specialized RDF query interface.">
+    chrome:description="An expeditious command-line interface for the Semantic Web surfer.">
   </RDF:Description>
 
   <RDF:Seq about="urn:mozilla:overlays">

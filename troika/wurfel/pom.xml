@@ -19,6 +19,13 @@
             <name>JLine Project Repository</name>
             <url>http://jline.sourceforge.net/m2repo</url>
         </repository>
+<!--
+        <repository>
+            <id>ibiblio</id>
+            <name>Ibiblio</name>
+            <url>http://www.ibiblio.org/maven2/plugins</url>
+        </repository>
+-->
     </repositories>
 
     <dependencies>
@@ -58,18 +65,29 @@
                 </configuration>
             </plugin>
 -->
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.0-beta-1</version>
+                <version>2.1</version>
                 <configuration>
-                <descriptor>descriptor.xml</descriptor>
+                <descriptors>
+                    <descriptor>descriptor.xml</descriptor>
+                </descriptors>
                 <finalName>wurfel</finalName>
                 <outputDirectory>target</outputDirectory>
                 <workDirectory>target/assembly/work</workDirectory>
                 </configuration>
+                <!-- Create a single JAR with all dependencies. -->
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
-            <!-- Use "mvn antlr:generate" -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antlr-plugin</artifactId>
@@ -77,13 +95,23 @@
                     <grammars>Wurfel.g</grammars>
                     <outputDirectory>./src/main/java</outputDirectory>
                 </configuration>
+                <!-- Compile the ANTLR grammar. -->
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
+                    <!-- Package the Firefox extension. -->
                     <execution>
-                        <phase>generate-sources</phase>
+                        <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <ant antfile="build.xml" dir="src/main/firefox"/>

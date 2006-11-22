@@ -7,7 +7,7 @@
 <!--
 <property name="target" value="${basedir}/../../../target/firefox"/>
 -->
-    <target name="createxpi" depends="createjar">
+    <target name="createxpi" depends="prepare-target">
         <zip destfile="${target}/wurfel.xpi">
             <zipfileset dir="." includes="chrome/**"/>
 <!--
@@ -18,9 +18,7 @@
         </zip>
     </target>
 
-    <target name="createjar" depends="prepare-target">
-        <zip destfile="${target}/wurfel.jar" basedir="." includes="content/**" />
-    </target>
+
 
     <target name="prepare-target">
         <mkdir dir="${target}"/>

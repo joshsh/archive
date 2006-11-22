@@ -1,9 +1,15 @@
 <?xml version="1.0"?>
+<?xml-stylesheet href="chrome://wurfel/skin/styles/browser.css" type="text/css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://wurfel/locale/global.dtd">
 
 <overlay id="wurfelOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+    <script type="application/x-javascript" src="chrome://wurfel/content/scripts/wurfel.js"/>
+
+    <script type="application/x-javascript">
+        Wurfel.initialize();
+    </script>
 
     <menupopup id="menu_ToolsPopup">
         <menu id="wurfelToolsMenu" label="&wurfel.name;" position="1">
