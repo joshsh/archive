@@ -1,0 +1,6 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#wurfel-toolbarButton {
+    list-style-image: url("chrome://wurfel/skin/icon.png");
+    cursor: pointer;
+}

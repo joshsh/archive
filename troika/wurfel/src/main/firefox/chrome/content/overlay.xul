@@ -9,7 +9,7 @@
         <menu id="wurfelToolsMenu" label="&wurfel.name;" position="1">
             <menupopup>
                 <menuitem label="&wurfel.toolsMenu.foo;"/>
-                <menuitem label="revision 10"/>
+                <menuitem label="build &wurfel.build;"/>
             </menupopup>
         </menu>
 

@@ -1,2 +1,10 @@
 <!ENTITY wurfel.name                   "W&#252;rfel">
+<!ENTITY wurfel.version                "0.1">
+<!ENTITY wurfel.build                  "11">
+
 <!ENTITY wurfel.toolsMenu.foo          "this should do something">
+
+
+
+<!ENTITY aboutDialog.title             "W&#252;rfel">
+
