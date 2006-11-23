@@ -1,11 +1,12 @@
 <!ENTITY wurfel.name                   "W&#252;rfel">
 <!ENTITY wurfel.version                "0.1">
-<!ENTITY wurfel.debug.tag              "19">
+<!ENTITY wurfel.debug.tag              "24">
 
 <!ENTITY wurfel.doIt.label             "Do It!">
 <!ENTITY wurfel.doIt.accessKey         "d">
 
-
+<!ENTITY wurfel.toolbarButton.label    "W&#252;rfel">
+<!ENTITY wurfel.toolbarButton.tooltip  "DoIt">
 
 <!ENTITY aboutDialog.title             "W&#252;rfel">
 

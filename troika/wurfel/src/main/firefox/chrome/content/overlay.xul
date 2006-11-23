@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <?xml-stylesheet href="chrome://wurfel/skin/styles/browser.css" type="text/css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://wurfel/locale/global.dtd">
@@ -10,6 +11,22 @@
     <script type="application/x-javascript">
         Wurfel.initialize();
     </script>
+
+    <toolbarpalette id="BrowserToolbarPalette">
+<!--
+        <toolbarbutton
+            id="wurfel-toolbarButton"
+            class="toolbarbutton-1"
+            label="&wurfel.toolbarButton.label;"
+            tooltiptext="&wurfel.toolbarButton.tooltip;"
+            oncommand="Wurfel.doIt();"
+        />
+-->
+
+  <toolbarbutton id="myextension-button" class="toolbarbutton-1"
+    label="I am Jack's label" tooltiptext="I am Jack's tooltip" onclick="Wurfel.doIt();"/>
+
+    </toolbarpalette>
 
     <menupopup id="menu_ToolsPopup">
         <menu id="wurfelToolsMenu" label="&wurfel.name;" position="1">
@@ -23,8 +40,28 @@
                 <menuitem label="tag &wurfel.debug.tag;"/>
             </menupopup>
         </menu>
+    </menupopup>
 
-  </menupopup>
+
+    <statusbar id="status-bar">
+        <statusbarpanel 
+            id="piggyBank-datacoin" 
+            collapsed="true"
+            class="statusbarpanel-menu-iconic"
+            tooltiptext="foobar"
+            onclick="Wurfel.doIt();"
+        />
+    </statusbar>
+
+
+    <vbox id="appcontent" flex="1">
+        <splitter resizeafter="farthest" collapse="after" state="collapsed"/>
+        <vbox collapsed="false" height="50">
+            <iframe src="chrome://global/content/console.xul" type="content" flex="1"/>
+        </vbox>
+    </vbox>
+
+
 
 </overlay>
 

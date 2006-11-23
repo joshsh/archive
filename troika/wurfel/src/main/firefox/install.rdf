@@ -11,10 +11,10 @@
         <em:description>An expeditious command-line interface for the Semantic Web surfer.</em:description>
         <em:homepageURL>http://troika.dnsdojo.net</em:homepageURL>
         <em:aboutURL>chrome://wurfel/content/aboutDialog.xul</em:aboutURL>
+        <em:iconURL>chrome://wurfel/skin/icon.png</em:iconURL>
 <!--
         <em:updateURL>...</em:updateURL>
         <em:optionsURL>...</em:optionsURL>
-        <em:iconURL>...</em:iconURL>
 -->
 
         <em:targetApplication>
