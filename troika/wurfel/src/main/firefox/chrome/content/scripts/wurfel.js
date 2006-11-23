@@ -6,7 +6,7 @@ Wurfel.initialize = function()
 alert( "can you see me?" );
 
 
-/*
+
     try {
         var foo = this.getFoo();
 
@@ -16,7 +16,7 @@ alert( "can you see me?" );
     } catch (e) {
         this._fail(e);
     }
-*/
+
 
 
 /*
@@ -39,8 +39,9 @@ alert( "can you see me?" );
 
 
 
-/*
+
 Wurfel.doIt = function() {
+
     try {
         var foo = this.getFoo();
 
@@ -51,19 +52,24 @@ Wurfel.doIt = function() {
     } catch (e) {
         this._fail(e);
     }
-};
+
+//alert( "You done it." );
+}
+
 
 Wurfel.getFoo = function() {
-    return Components.classes["@simile.mit.edu/java-firefox-extension;1"]
+    return Components.classes["@wurfel/wurfel;1"]
         .getService(Components.interfaces.nsIHelloWorld);
 }
+
 
 Wurfel._trace = function( msg )
 {
     Components.classes["@mozilla.org/consoleservice;1"]
-        .getService(Components.interfaces.nsIConsoleService)
-            .logStringMessage(msg);
+        .getService( Components.interfaces.nsIConsoleService )
+            .logStringMessage( msg );
 }
+
 
 Wurfel._fail = function( e )
 {
@@ -83,7 +89,7 @@ Wurfel._fail = function( e )
         msg = e;
 
     alert( msg );
-};
-*/
+}
+
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

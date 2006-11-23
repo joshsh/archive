@@ -1,27 +1,30 @@
 <?xml version="1.0"?>
 
-<project name="wurfel" default="createxpi">
+<project name="wurfel" default="xpi">
 
     <property file="${basedir}/build.properties"/>
 
-<!--
-<property name="target" value="${basedir}/../../../target/firefox"/>
--->
-    <target name="createxpi" depends="prepare-target">
-        <zip destfile="${target}/wurfel.xpi">
+    <target name="xpi" description="Create the distribution XPI">
+        <mkdir dir="${target}/firefox"/>
+        <zip destfile="${target}/firefox/wurfel.xpi">
             <zipfileset dir="." includes="chrome/**"/>
-<!--
-            <zipfileset dir="${target}" includes="wurfel.jar" prefix="chrome" />
--->
+            <zipfileset dir="." includes="components/*.js"/>
+            <zipfileset dir="." includes="components/*.xpt"/>
+            <zipfileset dir="${target}" includes="wurfel-with-dependencies.jar" prefix="components/lib/"/>
+            <zipfileset dir="." includes="components/firefoxClassLoader.jar"/>
+            <zipfileset dir="." includes="components/lib/*.jar"/>
             <zipfileset dir="." includes="install.rdf" />
             <zipfileset dir="." includes="chrome.manifest" />
         </zip>
     </target>
 
-
-
-    <target name="prepare-target">
-        <mkdir dir="${target}"/>
+    <!-- Note: you shouldn't need to do this often. -->
+    <target name="xpt" description="Build nIHelloWorld.xpt">
+        <exec dir="components" executable="${xpidl}" os="Linux">
+            <arg line="-m typelib"/>
+            <arg line="-I ${xpidlInclude}"/>
+            <arg line="nsIHelloWorld.idl"/>
+        </exec>
     </target>
 
 </project>

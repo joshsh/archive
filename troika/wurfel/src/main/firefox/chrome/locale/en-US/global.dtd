@@ -1,8 +1,9 @@
 <!ENTITY wurfel.name                   "W&#252;rfel">
 <!ENTITY wurfel.version                "0.1">
-<!ENTITY wurfel.build                  "14">
+<!ENTITY wurfel.debug.tag              "19">
 
-<!ENTITY wurfel.toolsMenu.foo          "this should do something">
+<!ENTITY wurfel.doIt.label             "Do It!">
+<!ENTITY wurfel.doIt.accessKey         "d">
 
 
 

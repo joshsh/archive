@@ -14,8 +14,13 @@
     <menupopup id="menu_ToolsPopup">
         <menu id="wurfelToolsMenu" label="&wurfel.name;" position="1">
             <menupopup>
-                <menuitem label="&wurfel.toolsMenu.foo;"/>
-                <menuitem label="build &wurfel.build;"/>
+                <menuitem
+                    id          ="wurfel.doIt.menu"
+                    label       ="&wurfel.doIt.label;"
+                    accesskey   ="&wurfel.doIt.accessKey;"
+                    oncommand   ="Wurfel.doIt();"
+                    />
+                <menuitem label="tag &wurfel.debug.tag;"/>
             </menupopup>
         </menu>
 
