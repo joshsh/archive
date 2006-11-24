@@ -16,10 +16,12 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
-
+import java.io.IOException;
 
 public class ParserRunnable extends Thread implements Runnable
 {
+    private Context context;
+
     private PipedInputStream  writeIn;
     private PipedOutputStream readOut;
 
@@ -35,19 +37,34 @@ public class ParserRunnable extends Thread implements Runnable
         completorState = state;
     }
 
-    ParserRunnable() throws Exception
+    public ParserRunnable() throws WurfelException
     {
-        reader = new ConsoleReader();
-        reader.setDebug( new PrintWriter( new FileWriter("writer.debug", true ) ) );
+        context = new Context( "anonymousContext" );
 
-        List completors = new ArrayList();
-        reader.addCompletor( new FileNameCompletor() );
-        //reader.addCompletor(new ArgumentCompletor(completors));
+        try
+        {
+            reader = new ConsoleReader();
+            reader.setDebug( new PrintWriter( new FileWriter("writer.debug", true ) ) );
 
-        writeIn = new PipedInputStream();
-        readOut = new PipedOutputStream( writeIn );
+            List completors = new ArrayList();
+            reader.addCompletor( new FileNameCompletor() );
+            //reader.addCompletor(new ArgumentCompletor(completors));
 
-        out = new PrintWriter( System.out );
+            writeIn = new PipedInputStream();
+            readOut = new PipedOutputStream( writeIn );
+
+            out = new PrintWriter( System.out );
+        }
+
+        catch ( IOException e )
+        {
+            throw new WurfelException( e );
+        }
+    }
+
+    public Context getContext()
+    {
+        return context;
     }
 
     public boolean readLine()
@@ -83,7 +100,7 @@ public class ParserRunnable extends Thread implements Runnable
         }
     }
 
-    private void runPrivate() throws Exception
+    private void runPrivate() throws Throwable
     {
         ConsoleReader reader = new ConsoleReader();
 
@@ -101,6 +118,7 @@ public class ParserRunnable extends Thread implements Runnable
             WurfelLexer lexer = new WurfelLexer( writeIn );
             lexer.initialize( this );
             WurfelParser parser = new WurfelParser( lexer );
+            parser.initialize( this );
 
             try
             {
@@ -133,6 +151,8 @@ public class ParserRunnable extends Thread implements Runnable
         catch ( Throwable t )
         {
             System.err.println( t.toString() );
+
+            new WurfelException( t );
 t.printStackTrace( System.err );
         }
     }

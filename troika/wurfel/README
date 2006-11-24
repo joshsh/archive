@@ -6,3 +6,5 @@ mvn assembly:assembly
 unzip -l target/firefox/wurfel.xpi
 
 java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
+
+	!import "http://www.kanzaki.com/ns/topic.rdf" "http://tempuri.org";

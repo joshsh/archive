@@ -1,17 +1,23 @@
 header
 {
-    package wurfel.parser;
+package wurfel.parser;
 
-    import wurfel.ParserRunnable;
-    import wurfel.CompletorState;
-    import wurfel.Node;
-    import wurfel.ApplyNode;
-    import wurfel.PrimitiveNode;
-    import wurfel.StringNode;
-    import wurfel.NameNode;
+import wurfel.ParserRunnable;
+import wurfel.CompletorState;
+import wurfel.Context;
+import wurfel.WurfelException;
 
-    import java.util.List;
-    import java.util.ArrayList;
+import wurfel.Node;
+import wurfel.ApplyNode;
+import wurfel.PrimitiveNode;
+import wurfel.StringNode;
+import wurfel.NameNode;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import java.net.URL;
+import java.net.MalformedURLException;
 }
 
 
@@ -23,7 +29,7 @@ class WurfelLexer extends Lexer;
 options
 {
     // Lookahead of 2 avoids various "lexical nondeterminism" conflicts.
-    k = 2;
+    k = 3;
 
     // Do not attempt to recover from lexer errors.
     defaultErrorHandler = false;
@@ -68,22 +74,27 @@ WS  :   (   ' '
 
 protected
 NORMAL
-      : '!' | '#' | '$' | '%' | '\'' ',' | '-' | '.' | ('0' .. '9') | ':' | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '[' | ']' | '^' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
-//    : ~( '\"' | '&' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '\\' | '_' | '|' )
+    : '#' | '$' | '%' | '\'' ',' | '-' | '.' | ('0' .. '9') | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '[' | ']' | '^' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
+//    | '\\' ( '\"' | '\\' | WS )
     ;
 
 protected
-ESC : '\\' ( '\"' | '&' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '\\' | '|' )
+SPECIAL
+    : '!' | '&' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':'
+    ;
+
+protected
+ESC : '\\' SPECIAL
     ;
 
 STRING
     : '\"'! {
         setCompletorState( CompletorState.NONE );
-      } ( NORMAL | ESC | WS )+ '\"'!
+      } ( NORMAL | SPECIAL | ESC | WS )+ '\"'!
     ;
 
 IDENTIFIER
-    : ( NORMAL )+
+    : ( NORMAL | ESC )+
     ;
 
 /*
@@ -124,6 +135,12 @@ options { paraphrase = "choice quantifier"; } : '?' ;
 SEMI
 options { paraphrase = "semicolon"; } : ';' ;
 
+COUNT   : "!count"  | "!c" ;
+IMPORT  : "!import" | "!i" ;
+PRINT   : "!print"  | "!p" ;
+QUIT    : "!quit"   | "!q"
+        | "!exit"   | "!x" ;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -137,6 +154,29 @@ options
     defaultErrorHandler = false;
 }
 
+
+{
+    private ParserRunnable parserRunnable = null;
+
+    public void initialize( ParserRunnable r )
+    {
+        parserRunnable = r;
+    }
+
+    private URL strToURL( final String s )
+        throws WurfelException
+    {
+        try
+        {
+            return new URL( s );
+        }
+
+        catch ( MalformedURLException e )
+        {
+            throw new WurfelException( e );
+        }
+    }
+}
 
 
 nt_Input
@@ -155,6 +195,10 @@ nt_Query returns [ Node r ]
       {
         System.out.println( r.toString() );
       }
+    | nt_Command SEMI
+        {
+r = null;
+        }
     ;
 
 
@@ -218,6 +262,48 @@ nt_Name returns [ NameNode r ]
       {
         r = new NameNode( t.getText() );
       }
+    ;
+
+
+nt_Command
+{
+}
+    : COUNT "statements"
+        {
+            System.out.println( "" + parserRunnable.getContext().countStatements() );
+        }
+
+    | IMPORT url:STRING baseURI:STRING
+        {
+            try
+            {
+                parserRunnable.getContext().add( strToURL( url.getText() ), baseURI.getText() );
+            }
+
+            catch ( WurfelException e )
+            {
+                System.err.println( e.getMessage() );
+            }
+        }
+
+    | PRINT "statements"
+        {
+            try
+            {
+                parserRunnable.getContext().printStatements();
+            }
+
+            catch ( WurfelException e )
+            {
+                System.err.println( e.getMessage() );
+            }
+        }
+
+    | QUIT
+        {
+            //return;
+System.out.println( "You can't give up now..." );
+        }
     ;
 
 
