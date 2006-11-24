@@ -40,6 +40,20 @@
             <version>2.7.2</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.openrdf</groupId>
+            <artifactId>sesame</artifactId>
+            <version>1.2.6</version>
+            <type>jar</type>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>org.openrdf</groupId>
+            <artifactId>rio</artifactId>
+            <version>1.0.9</version>
+            <type>jar</type>
+        </dependency>
+-->
     </dependencies>
 
     <build>
