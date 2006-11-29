@@ -84,8 +84,41 @@ SPECIAL
     ;
 
 protected
-ESC : '\\' SPECIAL
+ESC
+    : '\\' SPECIAL
     ;
+
+protected
+EXTENDED
+    : '/' | ':'
+    ;
+
+/*
+(
+  ([a-zA-Z][0-9a-zA-Z+\\-\\.]*:)?
+  /{0,2}
+  [0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+
+)?
+(
+  #
+  [0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+
+)?
+*/
+/*
+protected
+URICHAR
+    : '0'..'9' | 'a'..'z' | 'A'..'Z' | ':' | '.' | '-' | '_' | '/' //| ';' | '?'  | '@' | '&' | '=' | '+' | '$' | '!' | '~' | '*' | '\'' | '(' | ')' | '%' | ']'
+    ;
+
+IDENTIFIER
+    : //(
+        ( ( 'a'..'z' | 'A'..'Z' ) ( '0'..'9' | 'a'..'z' | 'A'..'Z' | '-' | '.' )* ':' )?
+        ( "//" )?
+        ( URICHAR )+
+      //)?
+      ( '#' ( URICHAR )+ )?
+    ;
+*/
 
 STRING
     : '\"'! {
@@ -94,8 +127,10 @@ STRING
     ;
 
 IDENTIFIER
-    : ( NORMAL | ESC )+
+    : ( NORMAL | EXTENDED | ESC )+
     ;
+
+
 
 /*
 COMMENT
@@ -108,11 +143,13 @@ options { paraphrase = "opening parenthesis"; } : '(' ;
 R_PAREN
 options { paraphrase = "closing parenthesis"; } : ')' ;
 
+/*
 OPEN_COMMENT
 options { paraphrase = "open comment"; } : "(:" ;
 
 CLOSE_COMMENT
 options { paraphrase = "close comment"; } : ":)" ;
+*/
 
 AND options
 { paraphrase = "conjunction"; } : '&' ;
@@ -120,8 +157,8 @@ AND options
 OR
 options { paraphrase = "disjunction"; } : '|' ;
 
-WITHOUT
-options { paraphrase = "exclusion"; } : '/' ;
+//WITHOUT
+//options { paraphrase = "exclusion"; } : '/' ;
 
 PLUS
 options { paraphrase = "plus quantifier"; } : '+' ;
@@ -136,8 +173,10 @@ SEMI
 options { paraphrase = "semicolon"; } : ';' ;
 
 COUNT   : "!count"  | "!c" ;
+DEFINE  : "!define" | "!d" ;
 IMPORT  : "!import" | "!i" ;
 PRINT   : "!print"  | "!p" ;
+RESOLVE : "!resolve" | "!r" ;
 QUIT    : "!quit"   | "!q"
         | "!exit"   | "!x" ;
 
@@ -230,9 +269,10 @@ nt_Sequence returns [ Node r ]
             right.add( r );
             r = new ApplyNode( left, right );
         }
-      | AND i=nt_Item
-      | OR i=nt_Item
-      | WITHOUT i=nt_Item )*
+        | AND i=nt_Item
+        | OR i=nt_Item
+//        | WITHOUT i=nt_Item
+      )*
     ;
 
 
@@ -273,11 +313,17 @@ nt_Command
             System.out.println( "" + parserRunnable.getContext().countStatements() );
         }
 
-    | IMPORT url:STRING baseURI:STRING
+    | DEFINE name:IDENTIFIER uri:IDENTIFIER
+        {
+            parserRunnable.getContext().define( name.getText(), uri.getText() );
+        }
+
+    | IMPORT url:IDENTIFIER ( baseURI:IDENTIFIER )?
         {
             try
             {
-                parserRunnable.getContext().add( strToURL( url.getText() ), baseURI.getText() );
+                String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
+                parserRunnable.getContext().add( strToURL( url.getText() ), baseUriStr );
             }
 
             catch ( WurfelException e )
@@ -303,6 +349,12 @@ nt_Command
         {
             //return;
 System.out.println( "You can't give up now..." );
+        }
+
+    | RESOLVE name0:IDENTIFIER
+        {
+            System.out.println(
+                parserRunnable.getContext().resolve( name0.getText() ) );
         }
     ;
 

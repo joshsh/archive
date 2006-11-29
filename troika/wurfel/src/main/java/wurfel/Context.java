@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Collection;
 import java.util.ArrayList;
-
+import java.util.Hashtable;
 import java.net.URL;
 
 import java.io.IOException;
@@ -33,10 +33,13 @@ public class Context
     String name;
     LocalRepository repository;
     Collection<URL> importedDataURLs;
+Hashtable<String, String> dictionary;
+Model model = null;
 
     public Context( final String name )
         throws WurfelException
     {
+dictionary = new Hashtable<String, String>();
         this.name = name;
         importedDataURLs = new ArrayList<URL>();
 
@@ -85,6 +88,29 @@ public class Context
     }
 
 
+
+
+
+
+    public void define( String name, String uri )
+    {
+        dictionary.put( name, uri );
+    }
+
+    public String resolve( String name )
+    {
+        String s = dictionary.get( name );
+        if ( null != s )
+            return s;
+        else if ( null != model )
+        {
+            URI uri = model.resolve( name );
+            if ( null != uri )
+                return uri.toString();
+        }
+
+        return null;
+    }
 
 
 
@@ -154,7 +180,7 @@ public class Context
     private void testModel( Graph myGraph )
         throws WurfelException
     {
-        Model model = new Model( myGraph );
+        model = new ModelMock( myGraph );
 
         Set<Resource> subjects = model.getSubjects();
         Iterator<Resource> subjIter = subjects.iterator();
@@ -168,6 +194,7 @@ public class Context
             while ( predIter.hasNext() )
             {
                 URI predicate = predIter.next();
+System.out.println( "    " + predicate.getNamespace() + " : " + predicate.getLocalName() );
                 System.out.println( "    " + predicate.toString() );
 
                 Set<Value> objects = model.multiply( subject, predicate );

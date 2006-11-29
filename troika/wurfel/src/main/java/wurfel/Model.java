@@ -13,9 +13,11 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-public class Model
+public abstract class Model
 {
     Graph graph;
+
+    public abstract URI resolve( final String name );
 
     public Model( Graph g )
     {

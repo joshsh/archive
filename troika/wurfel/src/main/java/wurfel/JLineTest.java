@@ -43,19 +43,6 @@ public class JLineTest
         }
 */
 
-/*
-        try
-        {
-            testSesame();
-        }
-
-        catch ( WurfelException e )
-        {
-            //...
-        }
-*/
-
-
         try
         {
             ParserRunnable r = new ParserRunnable();
