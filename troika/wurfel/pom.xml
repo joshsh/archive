@@ -107,7 +107,7 @@
                 <artifactId>maven-antlr-plugin</artifactId>
                 <configuration>
                     <grammars>Wurfel.g</grammars>
-                    <outputDirectory>./src/main/java</outputDirectory>
+                    <outputDirectory>${basedir}/target/generated-sources/main/java</outputDirectory>
                 </configuration>
                 <!-- Compile the ANTLR grammar. -->
                 <executions>
