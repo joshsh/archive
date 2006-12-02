@@ -7,6 +7,8 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.sesame.sail.StatementIterator;
 
+import jline.Completor;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,6 +20,7 @@ public abstract class Model
     Graph graph;
 
     public abstract URI resolve( final String name );
+    public abstract Completor getCompletor();
 
     public Model( Graph g )
     {

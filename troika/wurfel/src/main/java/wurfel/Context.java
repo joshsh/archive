@@ -36,6 +36,11 @@ public class Context
 Hashtable<String, String> dictionary;
 Model model = null;
 
+    public Set<String> getDictionaryKeys()
+    {
+        return dictionary.keySet();
+    }
+
     public Context( final String name )
         throws WurfelException
     {
@@ -55,6 +60,8 @@ dictionary = new Hashtable<String, String>();
         {
             throw new WurfelException( e );
         }
+
+        updateModel();
     }
 
     public void add( final URL url, final String baseURI )
@@ -119,11 +126,31 @@ dictionary = new Hashtable<String, String>();
 
 
 
+    private void updateModel()
+        throws WurfelException
+    {
+        Graph myGraph;
+
+        try
+        {
+            myGraph = repository.getGraph();
+        }
+
+        catch ( AccessDeniedException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        model = new ModelMock( myGraph );
+    }
 
 
 
-
-
+    //FIXME: temporary method
+    public Model getModel()
+    {
+        return model;
+    }
 
     //FIXME: temporary method
     public void testQuery( final String query )
@@ -177,11 +204,9 @@ dictionary = new Hashtable<String, String>();
         }
     }
 
-    private void testModel( Graph myGraph )
+    private void testModel()
         throws WurfelException
     {
-        model = new ModelMock( myGraph );
-
         Set<Resource> subjects = model.getSubjects();
         Iterator<Resource> subjIter = subjects.iterator();
         while ( subjIter.hasNext() )
@@ -208,19 +233,9 @@ System.out.println( "    " + predicate.getNamespace() + " : " + predicate.getLoc
     public void testGraph()
         throws WurfelException
     {
-        Graph myGraph;
+        updateModel();
 
-        try
-        {
-            myGraph = repository.getGraph();
-        }
-
-        catch ( AccessDeniedException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        testModel( myGraph );
+        testModel();
     }
 
     public void printStatements()

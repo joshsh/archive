@@ -4,12 +4,9 @@ import wurfel.parser.WurfelLexer;
 import wurfel.parser.WurfelParser;
 
 import jline.FileNameCompletor;
-import jline.ArgumentCompletor;
+//import jline.ArgumentCompletor;
+import jline.SimpleCompletor;
 import jline.ConsoleReader;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -17,6 +14,10 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ParserRunnable extends Thread implements Runnable
 {
@@ -30,11 +31,27 @@ public class ParserRunnable extends Thread implements Runnable
     private ConsoleReader reader;
     private int lineNumber = 0;
 
-    private CompletorState completorState = CompletorState.COMMAND;
+    private CompletorState completorState = CompletorState.NONE;
 
     public void setCompletorState( final CompletorState state )
     {
         completorState = state;
+
+        List completors = new ArrayList();
+
+        reader.addCompletor( context.getModel().getCompletor() );
+
+        SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
+            "!count",
+            "!define",
+            "!import",
+            "!print",
+            "!resolve",
+            "!quit" } );
+        reader.addCompletor( commandCompletor );
+
+        reader.addCompletor( new FileNameCompletor() );
+            //reader.addCompletor(new ArgumentCompletor(completors));
     }
 
     public ParserRunnable() throws WurfelException
@@ -46,9 +63,7 @@ public class ParserRunnable extends Thread implements Runnable
             reader = new ConsoleReader();
             reader.setDebug( new PrintWriter( new FileWriter("writer.debug", true ) ) );
 
-            List completors = new ArrayList();
-            reader.addCompletor( new FileNameCompletor() );
-            //reader.addCompletor(new ArgumentCompletor(completors));
+            setCompletorState( CompletorState.COMMAND );
 
             writeIn = new PipedInputStream();
             readOut = new PipedOutputStream( writeIn );
@@ -153,8 +168,15 @@ public class ParserRunnable extends Thread implements Runnable
             System.err.println( t.toString() );
 
             new WurfelException( t );
-t.printStackTrace( System.err );
         }
+    }
+
+    void importModel( final URL url, final String baseURI )
+        throws WurfelException
+    {
+        context.add( url, baseURI );
+
+        setCompletorState( CompletorState.COMMAND );
     }
 }
 

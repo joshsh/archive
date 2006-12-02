@@ -7,6 +7,10 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.sesame.sail.StatementIterator;
 
+import jline.Completor;
+import jline.SimpleCompletor;
+import jline.NullCompletor;
+
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -42,18 +46,23 @@ public class ModelMock extends Model
             URI uri = uriIter.next();
             dictionary.put( uri.getLocalName(), uri );
         }
+    }
 
+    public Completor getCompletor()
+    {
+        createDictionary();
+System.out.println( "1" );
+        Set<String> dictKeys = dictionary.keySet();
+        if ( dictKeys.size() > 0 )
+        {
+        String [] dictArray = dictKeys.toArray( new String[dictKeys.size()] );
+        SimpleCompletor dictionaryCompletor = new SimpleCompletor( dictArray );
+System.out.println( "2" );
+        return dictionaryCompletor;
+        }
 
-
-System.out.println("Dictionary:");
-Set<String> keys = dictionary.keySet();
-Iterator<String> keyIter = keys.iterator();
-while ( keyIter.hasNext() )
-{
-    String key = keyIter.next();
-    System.out.println( "    " + key + ": " + dictionary.get( key ).toString() );
-}
-
+        else
+            return new NullCompletor();
     }
 
     public URI resolve( final String name )

@@ -172,13 +172,18 @@ options { paraphrase = "choice quantifier"; } : '?' ;
 SEMI
 options { paraphrase = "semicolon"; } : ';' ;
 
-COUNT   : "!count"  | "!c" ;
-DEFINE  : "!define" | "!d" ;
-IMPORT  : "!import" | "!i" ;
-PRINT   : "!print"  | "!p" ;
-RESOLVE : "!resolve" | "!r" ;
-QUIT    : "!quit"   | "!q"
-        | "!exit"   | "!x" ;
+protected
+COMMAND
+    : '!'
+    ;
+
+COUNT   : COMMAND ( "count"     | "c" ) ;
+DEFINE  : COMMAND ( "define"    | "d" ) ;
+IMPORT  : COMMAND ( "import"    | "i" ) ;
+PRINT   : COMMAND ( "print"     | "p" ) ;
+RESOLVE : COMMAND ( "resolve"   | "r" ) ;
+QUIT    : COMMAND ( "quit"      | "q"
+                    | "exit"    | "x" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
