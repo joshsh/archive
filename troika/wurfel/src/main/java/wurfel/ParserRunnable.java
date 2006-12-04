@@ -3,9 +3,11 @@ package wurfel;
 import wurfel.parser.WurfelLexer;
 import wurfel.parser.WurfelParser;
 
+import jline.Completor;
 import jline.FileNameCompletor;
-//import jline.ArgumentCompletor;
+import jline.ArgumentCompletor;
 import jline.SimpleCompletor;
+import jline.MultiCompletor;
 import jline.ConsoleReader;
 
 import java.io.InputStream;
@@ -39,7 +41,8 @@ public class ParserRunnable extends Thread implements Runnable
 
         List completors = new ArrayList();
 
-        reader.addCompletor( context.getModel().getCompletor() );
+        Completor modelCompletor = context.getModel().getCompletor();
+        completors.add( modelCompletor );
 
         SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
             "!count",
@@ -48,10 +51,19 @@ public class ParserRunnable extends Thread implements Runnable
             "!print",
             "!resolve",
             "!quit" } );
-        reader.addCompletor( commandCompletor );
+        completors.add( commandCompletor );
 
-        reader.addCompletor( new FileNameCompletor() );
-            //reader.addCompletor(new ArgumentCompletor(completors));
+        Completor fileNameCompletor = new FileNameCompletor();
+        completors.add( fileNameCompletor );
+
+        // This makes multiple completors available at once.
+        Completor multiCompletor = new MultiCompletor( completors );
+
+        // This allows the user to complete an expression even when it is not
+        // the first whitespace-delimited item on the current line.
+        Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
+
+        reader.addCompletor( argumentCompletor );
     }
 
     public ParserRunnable() throws WurfelException
