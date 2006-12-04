@@ -1,5 +1,7 @@
 package wurfel;
 
+import wurfel.cli.Interpreter;
+
 import java.net.URL;
 import java.net.MalformedURLException;
 
@@ -45,7 +47,7 @@ public class JLineTest
 
         try
         {
-            ParserRunnable r = new ParserRunnable();
+            Interpreter r = new Interpreter();
             r.run();
         }
 

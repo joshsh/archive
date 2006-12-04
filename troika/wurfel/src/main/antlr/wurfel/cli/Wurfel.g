@@ -1,9 +1,7 @@
 header
 {
-package wurfel.parser;
+package wurfel.cli;
 
-import wurfel.ParserRunnable;
-import wurfel.CompletorState;
 import wurfel.Context;
 import wurfel.WurfelException;
 
@@ -38,27 +36,27 @@ options
 }
 
 {
-    private ParserRunnable parserRunnable = null;
+    private Interpreter Interpreter = null;
 
-    public void initialize( ParserRunnable r )
+    public void initialize( Interpreter r )
     {
-        parserRunnable = r;
+        Interpreter = r;
     }
 
     private void endOfLineEvent()
 //        throws Exception
     {
-        if ( null == parserRunnable )
+        if ( null == Interpreter )
 //            throw new Exception( "WurfelLexer has no caller to receive an event" );
             System.err.println( "WurfelLexer instance has not been initialized" );
 
         else
-            parserRunnable.readLine();
+            Interpreter.readLine();
     }
 
     private void setCompletorState( CompletorState state )
     {
-        parserRunnable.setCompletorState( state );
+        Interpreter.setCompletorState( state );
     }
 }
 
@@ -200,11 +198,11 @@ options
 
 
 {
-    private ParserRunnable parserRunnable = null;
+    private Interpreter Interpreter = null;
 
-    public void initialize( ParserRunnable r )
+    public void initialize( Interpreter r )
     {
-        parserRunnable = r;
+        Interpreter = r;
     }
 
     private URL strToURL( final String s )
@@ -315,12 +313,12 @@ nt_Command
 }
     : COUNT "statements"
         {
-            System.out.println( "" + parserRunnable.getContext().countStatements() );
+            System.out.println( "" + Interpreter.getContext().countStatements() );
         }
 
     | DEFINE name:IDENTIFIER uri:IDENTIFIER
         {
-            parserRunnable.getContext().define( name.getText(), uri.getText() );
+            Interpreter.getContext().define( name.getText(), uri.getText() );
         }
 
     | IMPORT url:IDENTIFIER ( baseURI:IDENTIFIER )?
@@ -328,7 +326,7 @@ nt_Command
             try
             {
                 String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
-                parserRunnable.getContext().add( strToURL( url.getText() ), baseUriStr );
+                Interpreter.getContext().add( strToURL( url.getText() ), baseUriStr );
             }
 
             catch ( WurfelException e )
@@ -341,7 +339,7 @@ nt_Command
         {
             try
             {
-                parserRunnable.getContext().printStatements();
+                Interpreter.getContext().printStatements();
             }
 
             catch ( WurfelException e )
@@ -359,7 +357,7 @@ System.out.println( "You can't give up now..." );
     | RESOLVE name0:IDENTIFIER
         {
             System.out.println(
-                parserRunnable.getContext().resolve( name0.getText() ) );
+                Interpreter.getContext().resolve( name0.getText() ) );
         }
     ;
 

@@ -1,7 +1,7 @@
-package wurfel;
+package wurfel.cli;
 
-import wurfel.parser.WurfelLexer;
-import wurfel.parser.WurfelParser;
+import wurfel.Context;
+import wurfel.WurfelException;
 
 import jline.Completor;
 import jline.FileNameCompletor;
@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
-public class ParserRunnable extends Thread implements Runnable
+public class Interpreter extends Thread implements Runnable
 {
     private Context context;
 
@@ -66,7 +66,7 @@ public class ParserRunnable extends Thread implements Runnable
         reader.addCompletor( argumentCompletor );
     }
 
-    public ParserRunnable() throws WurfelException
+    public Interpreter() throws WurfelException
     {
         context = new Context( "anonymousContext" );
 

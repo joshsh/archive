@@ -1,4 +1,4 @@
-package wurfel;
+package wurfel.cli;
 
 
 public enum CompletorState
