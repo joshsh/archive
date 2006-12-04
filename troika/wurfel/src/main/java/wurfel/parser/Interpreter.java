@@ -56,7 +56,7 @@ public class ParserRunnable extends Thread implements Runnable
         Completor fileNameCompletor = new FileNameCompletor();
         completors.add( fileNameCompletor );
 
-        // This makes multiple completors available at once.
+        // This makes candidates from multiple completors available at once.
         Completor multiCompletor = new MultiCompletor( completors );
 
         // This allows the user to complete an expression even when it is not
