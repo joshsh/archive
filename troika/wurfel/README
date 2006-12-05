@@ -11,14 +11,6 @@ java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
 	!import http://www.kanzaki.com/ns/topic.rdf;
 
 
-
-
-
-
-
-
-
-
 [ba]
 http://www.w3.org/2000/01/rdf-schema#comment
     http://www.w3.org/2000/01/rdf-schema#subPropertyOf

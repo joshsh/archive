@@ -66,7 +66,6 @@ public class Interpreter extends Thread implements Runnable
         // This allows the user to complete an expression even when it is not
         // the first whitespace-delimited item on the current line.
         Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
-System.out.println( "$$$$$$$$$$$$$$$$$$" );
 
         Collection<Completor> existingCompletors = reader.getCompletors();
         if ( existingCompletors.size() > 0 )

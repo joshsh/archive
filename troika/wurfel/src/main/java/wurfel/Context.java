@@ -225,7 +225,7 @@ aliases = new Hashtable<String, String>();
             while ( predIter.hasNext() )
             {
                 URI predicate = predIter.next();
-System.out.println( "    " + predicate.getNamespace() + " : " + predicate.getLocalName() );
+//System.out.println( "    " + predicate.getNamespace() + " : " + predicate.getLocalName() );
                 System.out.println( "    " + predicate.toString() );
 
                 Set<Value> objects = model.multiply( subject, predicate );
