@@ -38,20 +38,15 @@ public class Context
     String name;
     LocalRepository repository;
     Collection<URL> importedDataURLs;
-Hashtable<String, String> dictionary;
+Hashtable<String, String> aliases;
 Model model = null;
-
-    public Set<String> getDictionaryKeys()
-    {
-        return dictionary.keySet();
-    }
 
     public Context( final String name )
         throws WurfelException
     {
         logger.debug( "Creating new Context '" + name + "'" );
 
-dictionary = new Hashtable<String, String>();
+aliases = new Hashtable<String, String>();
         this.name = name;
         importedDataURLs = new ArrayList<URL>();
 
@@ -74,6 +69,9 @@ dictionary = new Hashtable<String, String>();
     public void importModel( final URL url, final String baseURI )
         throws WurfelException
     {
+        logger.debug( "Importing model " + url.toString() +
+            ( ( null == baseURI ) ? "" : " as " + baseURI ) );
+
         boolean verifyData = true;
         AdminListener myListener = new StdOutAdminListener();
 
@@ -109,12 +107,12 @@ dictionary = new Hashtable<String, String>();
 
     public void define( String name, String uri )
     {
-        dictionary.put( name, uri );
+        aliases.put( name, uri );
     }
 
     public String resolve( String name )
     {
-        String s = dictionary.get( name );
+        String s = aliases.get( name );
         if ( null != s )
             return s;
         else if ( null != model )

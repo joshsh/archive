@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -65,6 +66,11 @@ public class Interpreter extends Thread implements Runnable
         // This allows the user to complete an expression even when it is not
         // the first whitespace-delimited item on the current line.
         Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
+System.out.println( "$$$$$$$$$$$$$$$$$$" );
+
+        Collection<Completor> existingCompletors = reader.getCompletors();
+        if ( existingCompletors.size() > 0 )
+            reader.removeCompletor( existingCompletors.iterator().next() );
 
         reader.addCompletor( argumentCompletor );
     }
