@@ -1,16 +1,16 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 #wurfel-toolbarButton {
-    list-style-image: url("chrome://wurfel/skin/toobar-button-large.png");
+    list-style-image: url("chrome://wurfel/skin/wurfel-24x24.png");
 }
 
 toolbar[iconsize="small"] #wurfel-toolbarButton {
-  list-style-image: url("chrome://wurfel/skin/toolbar-button-small.png");
+  list-style-image: url("chrome://wurfel/skin/wurfel-16x16.png");
 }
 
 
 
 #piggyBank-datacoin {
-    list-style-image: url("chrome://wurfel/skin/toolbar-button-small.png");
+    list-style-image: url("chrome://wurfel/skin/wurfel-16x16.png");
     cursor: pointer;
 }

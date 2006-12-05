@@ -4,14 +4,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>wurfel</groupId>
-
     <artifactId>wurfel</artifactId>
-
-    <packaging>jar</packaging>
-
     <version>0.1</version>
 
     <name>W&#252;rfel</name>
+    <description>An expeditious command-line interface for the Semantic Web surfer.</description>
+    <url>http://troika.dnsdojo.net/</url>
+    <inceptionYear>2006</inceptionYear>
+    <licenses>
+    </licenses>
+    <developers>
+    </developers>
+
+<!--
+    <scm>
+        <connection>scm:svn:http://192.168.1.20/svn/repository/x2dg/trunk/commandLine</connection>
+        <developerConnection>scm:svn:http://192.168.1.20/svn/repository/x2dg/trunk/commandLine</developerConnection>
+        <url>http://192.168.1.20/build/docs</url>
+    </scm>
+-->
 
     <repositories>
         <repository>
@@ -52,18 +63,28 @@
             <version>1.2.6</version>
             <type>jar</type>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.openrdf</groupId>
-            <artifactId>rio</artifactId>
-            <version>1.0.9</version>
-            <type>jar</type>
-        </dependency>
--->
     </dependencies>
 
+    <packaging>jar</packaging>
+
     <build>
-        <sourceDirectory>./src/main/java</sourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <directory>target</directory>
+        <outputDirectory>target/classes</outputDirectory>
+        <testOutputDirectory>target/test-classes</testOutputDirectory>
+        <finalName>${artifactId}-${version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+
         <plugins>
             <!-- Tells the compiler plugin to use Java 5.0 -->
             <plugin>
@@ -161,12 +182,6 @@
             </plugin>
         </plugins>
     </reporting>
-
-    <scm>
-        <connection>scm:svn:http://192.168.1.20/svn/repository/x2dg/trunk/commandLine</connection>
-        <developerConnection>scm:svn:http://192.168.1.20/svn/repository/x2dg/trunk/commandLine</developerConnection>
-        <url>http://192.168.1.20/build/docs</url>
-    </scm>
 -->
 
 </project>
