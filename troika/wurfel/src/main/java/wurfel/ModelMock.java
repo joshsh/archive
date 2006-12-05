@@ -18,7 +18,8 @@ import java.util.Iterator;
 
 public class ModelMock extends Model
 {
-    Hashtable<String, URI> dictionary = null;
+    private Hashtable<String, URI> dictionary = null;
+
     private void createDictionary()
     {
         Set<URI> allURIs = new HashSet<URI>();
@@ -51,14 +52,13 @@ public class ModelMock extends Model
     public Completor getCompletor()
     {
         createDictionary();
-System.out.println( "1" );
         Set<String> dictKeys = dictionary.keySet();
+
         if ( dictKeys.size() > 0 )
         {
-        String [] dictArray = dictKeys.toArray( new String[dictKeys.size()] );
-        SimpleCompletor dictionaryCompletor = new SimpleCompletor( dictArray );
-System.out.println( "2" );
-        return dictionaryCompletor;
+            String [] dictArray = dictKeys.toArray( new String[dictKeys.size()] );
+            SimpleCompletor dictionaryCompletor = new SimpleCompletor( dictArray );
+            return dictionaryCompletor;
         }
 
         else

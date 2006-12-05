@@ -13,9 +13,6 @@ import wurfel.NameNode;
 
 import java.util.List;
 import java.util.ArrayList;
-
-import java.net.URL;
-import java.net.MalformedURLException;
 }
 
 
@@ -204,20 +201,6 @@ options
     {
         Interpreter = r;
     }
-
-    private URL strToURL( final String s )
-        throws WurfelException
-    {
-        try
-        {
-            return new URL( s );
-        }
-
-        catch ( MalformedURLException e )
-        {
-            throw new WurfelException( e );
-        }
-    }
 }
 
 
@@ -313,39 +296,23 @@ nt_Command
 }
     : COUNT "statements"
         {
-            System.out.println( "" + Interpreter.getContext().countStatements() );
+            System.out.println( "" + Interpreter.countStatements() );
         }
 
     | DEFINE name:IDENTIFIER uri:IDENTIFIER
         {
-            Interpreter.getContext().define( name.getText(), uri.getText() );
+            Interpreter.define( name.getText(), uri.getText() );
         }
 
     | IMPORT url:IDENTIFIER ( baseURI:IDENTIFIER )?
         {
-            try
-            {
-                String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
-                Interpreter.getContext().add( strToURL( url.getText() ), baseUriStr );
-            }
-
-            catch ( WurfelException e )
-            {
-                System.err.println( e.getMessage() );
-            }
+            String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
+            Interpreter.importModel( url.getText(), baseUriStr );
         }
 
     | PRINT "statements"
         {
-            try
-            {
-                Interpreter.getContext().printStatements();
-            }
-
-            catch ( WurfelException e )
-            {
-                System.err.println( e.getMessage() );
-            }
+            Interpreter.printStatements();
         }
 
     | QUIT
@@ -357,7 +324,7 @@ System.out.println( "You can't give up now..." );
     | RESOLVE name0:IDENTIFIER
         {
             System.out.println(
-                Interpreter.getContext().resolve( name0.getText() ) );
+                Interpreter.resolve( name0.getText() ) );
         }
     ;
 

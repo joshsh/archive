@@ -16,7 +16,10 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.net.URL;
+import java.net.MalformedURLException;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -66,9 +69,9 @@ public class Interpreter extends Thread implements Runnable
         reader.addCompletor( argumentCompletor );
     }
 
-    public Interpreter() throws WurfelException
+    public Interpreter( Context context ) throws WurfelException
     {
-        context = new Context( "anonymousContext" );
+        this.context = context;
 
         try
         {
@@ -87,11 +90,6 @@ public class Interpreter extends Thread implements Runnable
         {
             throw new WurfelException( e );
         }
-    }
-
-    public Context getContext()
-    {
-        return context;
     }
 
     public boolean readLine()
@@ -183,12 +181,55 @@ public class Interpreter extends Thread implements Runnable
         }
     }
 
-    void importModel( final URL url, final String baseURI )
-        throws WurfelException
+    ////////////////////////////////////////////////////////////////////////////
+
+    public int countStatements()
     {
-        context.add( url, baseURI );
+        return context.countStatements();
+    }
+
+    public void define( final String name, final String uri )
+    {
+        context.define( name, uri );
+    }
+
+    public String resolve( final String name )
+    {
+        return context.resolve( name );
+    }
+
+    public void importModel( final String urlStr, final String baseURI )
+    {
+        try
+        {
+            URL url = new URL( urlStr );
+            context.importModel( url, baseURI );
+        }
+
+        catch ( WurfelException e )
+        {
+            System.err.println( e.getMessage() );
+        }
+
+        catch ( MalformedURLException e )
+        {
+            System.err.println( e.getMessage() );
+        }
 
         setCompletorState( CompletorState.COMMAND );
+    }
+
+    public void printStatements()
+    {
+        try
+        {
+            context.printStatements();
+        }
+
+        catch ( WurfelException e )
+        {
+            System.err.println( e.getMessage() );
+        }
     }
 }
 

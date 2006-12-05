@@ -19,17 +19,22 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 
+import java.io.IOException;
+
+import java.net.URL;
+
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.net.URL;
 
-import java.io.IOException;
+import org.apache.log4j.Logger;
 
 public class Context
 {
+    final static Logger logger = Logger.getLogger( Context.class );
+
     String name;
     LocalRepository repository;
     Collection<URL> importedDataURLs;
@@ -44,6 +49,8 @@ Model model = null;
     public Context( final String name )
         throws WurfelException
     {
+        logger.debug( "Creating new Context '" + name + "'" );
+
 dictionary = new Hashtable<String, String>();
         this.name = name;
         importedDataURLs = new ArrayList<URL>();
@@ -64,7 +71,7 @@ dictionary = new Hashtable<String, String>();
         updateModel();
     }
 
-    public void add( final URL url, final String baseURI )
+    public void importModel( final URL url, final String baseURI )
         throws WurfelException
     {
         boolean verifyData = true;
@@ -86,6 +93,7 @@ dictionary = new Hashtable<String, String>();
         }
 
         importedDataURLs.add( url );
+        updateModel();
     }
 
     // TODO -- See: http://openrdf.org/issues/browse/SES-304
