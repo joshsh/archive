@@ -15,6 +15,19 @@ java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
 
 !import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";
 
+
+
+(: SKOS Core :)
+!import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
+
+(: SKOS Mapping :)
+!import "http://www.w3.org/2004/02/skos/mapping";
+
+(: SKOS Extensions :)
+!import "http://www.w3.org/2004/02/skos/extensions";
+
+
+
 [ba]
 http://www.w3.org/2000/01/rdf-schema#comment
     http://www.w3.org/2000/01/rdf-schema#subPropertyOf

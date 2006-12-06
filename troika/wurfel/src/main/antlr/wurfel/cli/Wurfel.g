@@ -33,27 +33,27 @@ options
 }
 
 {
-    private Interpreter Interpreter = null;
+    private Interpreter interpreter = null;
 
     public void initialize( Interpreter r )
     {
-        Interpreter = r;
+        interpreter = r;
     }
 
     private void endOfLineEvent()
 //        throws Exception
     {
-        if ( null == Interpreter )
+        if ( null == interpreter )
 //            throw new Exception( "WurfelLexer has no caller to receive an event" );
             System.err.println( "WurfelLexer instance has not been initialized" );
 
         else
-            Interpreter.readLine();
+            interpreter.readLine();
     }
 
     private void setCompletorState( CompletorState state )
     {
-        Interpreter.setCompletorState( state );
+        interpreter.setCompletorState( state );
     }
 }
 
@@ -83,10 +83,6 @@ ESC
     : '\\' SPECIAL
     ;
 
-protected
-EXTENDED
-    : '/' | ':'
-    ;
 
 /*
 (
@@ -122,7 +118,7 @@ STRING
     ;
 
 IDENTIFIER
-    : ( NORMAL | EXTENDED | ESC )+
+    : ( NORMAL | ESC )+
     ;
 
 
@@ -189,11 +185,11 @@ options
 
 
 {
-    private Interpreter Interpreter = null;
+    private Interpreter interpreter = null;
 
     public void initialize( Interpreter r )
     {
-        Interpreter = r;
+        interpreter = r;
     }
 }
 
@@ -212,7 +208,7 @@ nt_Query returns [ Node r ]
 }
     : r=nt_Sequence SEMI
       {
-        System.out.println( r.toString() );
+        interpreter.evaluate( r );
       }
     | nt_Command SEMI
         {
@@ -290,23 +286,23 @@ nt_Command
 }
     : COUNT "statements"
         {
-            System.out.println( "" + Interpreter.countStatements() );
+            System.out.println( "" + interpreter.countStatements() );
         }
 
     | DEFINE name:IDENTIFIER uri:STRING
         {
-            Interpreter.define( name.getText(), uri.getText() );
+            interpreter.define( name.getText(), uri.getText() );
         }
 
     | IMPORT url:STRING ( baseURI:STRING )?
         {
             String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
-            Interpreter.importModel( url.getText(), baseUriStr );
+            interpreter.importModel( url.getText(), baseUriStr );
         }
 
     | PRINT "statements"
         {
-            Interpreter.printStatements();
+            interpreter.printStatements();
         }
 
     | QUIT
@@ -317,9 +313,9 @@ System.out.println( "You can't give up now..." );
 
     | RESOLVE name0:IDENTIFIER
         {
-            Interpreter.show( name0.getText() );
+            interpreter.show( name0.getText() );
 //            System.out.println(
-//                Interpreter.resolve( name0.getText() ) );
+//                interpreter.resolve( name0.getText() ) );
         }
     ;
 

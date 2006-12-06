@@ -2,6 +2,8 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
+//import wurfel.model.Node;
+import wurfel.Node;
 
 import jline.Completor;
 import jline.FileNameCompletor;
@@ -248,6 +250,32 @@ public class Interpreter extends Thread implements Runnable
         {
             System.err.println( e.getMessage() );
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void evaluate( Node r )
+    {
+        try
+        {
+// TODO: the printing should be done here, rather than in the Context.
+            context.evaluate( r );
+        }
+
+        catch ( WurfelException e )
+        {
+            System.err.println( e.getMessage() );
+        }
+//        System.out.println( r.toString() );
     }
 }
 

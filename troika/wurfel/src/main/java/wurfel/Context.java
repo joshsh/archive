@@ -33,7 +33,9 @@ import org.apache.log4j.Logger;
 
 public class Context
 {
-    final static Logger logger = Logger.getLogger( Context.class );
+    private final static boolean s_useInferencing = false;
+
+    private final static Logger logger = Logger.getLogger( Context.class );
 
     String name;
     LocalRepository repository;
@@ -51,11 +53,10 @@ aliases = new Hashtable<String, String>();
         importedDataURLs = new ArrayList<URL>();
 
         LocalService service = Sesame.getService();
-        boolean inferencing = true;
 
         try
         {
-             repository = service.createRepository( name + "-repo", inferencing );
+             repository = service.createRepository( name + "-repo", s_useInferencing );
         }
 
         catch ( ConfigurationException e )
@@ -170,7 +171,18 @@ aliases = new Hashtable<String, String>();
 
 
 
+/*
+    private Node resolveIdentifers( Node expr )
+    {
+        if ( expr instanceof 
+    }
+*/
 
+    public void evaluate( Node expr )
+        throws WurfelException
+    {
+        
+    }
 
 
 

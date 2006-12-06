@@ -1,6 +1,7 @@
 package wurfel;
 
 import wurfel.cli.Interpreter;
+import wurfel.lucene.LuceneTest;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -12,6 +13,18 @@ public class JLineTest
 
         try
         {
+
+
+
+LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel phase2" );
+LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel AND phase2" );
+LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel OR phase2" );
+LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
+
+
+
+
+
             Context context = new Context( "anonymousContext" );
             Interpreter r = new Interpreter( context );
             r.run();
