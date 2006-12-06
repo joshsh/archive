@@ -112,6 +112,47 @@ System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         aliases.put( name, uri );
     }
 
+    public void show( String name )
+        throws WurfelException
+    {
+        String s = aliases.get( name );
+
+        if ( null != s )
+            System.out.println( s );
+
+        else if ( null != model )
+        {
+            URI uri = model.resolve( name );
+            if ( null != uri )
+                show( uri );
+            else
+                System.out.println( "()" );
+        }
+
+        else
+            System.out.println( "()" );
+    }
+
+    private void show( Resource subject )
+        throws WurfelException
+    {
+        System.out.println( subject.toString() );
+
+        Set<URI> predicates = model.getPredicates( subject );
+        Iterator<URI> predIter = predicates.iterator();
+        while ( predIter.hasNext() )
+        {
+            URI predicate = predIter.next();
+
+            System.out.println( "    " + predicate.toString() );
+
+            Set<Value> objects = model.multiply( subject, predicate );
+            Iterator<Value> objIter = objects.iterator();
+            while ( objIter.hasNext() )
+                System.out.println( "        " + objIter.next().toString() );
+        }
+    }
+
     public String resolve( String name )
     {
         String s = aliases.get( name );
@@ -220,21 +261,7 @@ System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         while ( subjIter.hasNext() )
         {
             Resource subject = subjIter.next();
-            System.out.println( subject.toString() );
-
-            Set<URI> predicates = model.getPredicates( subject );
-            Iterator<URI> predIter = predicates.iterator();
-            while ( predIter.hasNext() )
-            {
-                URI predicate = predIter.next();
-//System.out.println( "    " + predicate.getNamespace() + " : " + predicate.getLocalName() );
-                System.out.println( "    " + predicate.toString() );
-
-                Set<Value> objects = model.multiply( subject, predicate );
-                Iterator<Value> objIter = objects.iterator();
-                while ( objIter.hasNext() )
-                    System.out.println( "        " + objIter.next().toString() );
-            }
+            show( subject );
         }
     }
 

@@ -323,8 +323,9 @@ System.out.println( "You can't give up now..." );
 
     | RESOLVE name0:IDENTIFIER
         {
-            System.out.println(
-                Interpreter.resolve( name0.getText() ) );
+            Interpreter.show( name0.getText() );
+//            System.out.println(
+//                Interpreter.resolve( name0.getText() ) );
         }
     ;
 

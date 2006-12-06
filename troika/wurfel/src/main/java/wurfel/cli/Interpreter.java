@@ -203,6 +203,19 @@ public class Interpreter extends Thread implements Runnable
         return context.resolve( name );
     }
 
+    public void show( final String name )
+    {
+        try
+        {
+            context.show( name );
+        }
+
+        catch ( WurfelException e )
+        {
+            System.err.println( e.getMessage() );
+        }
+    }
+
     public void importModel( final String urlStr, final String baseURI )
     {
         try

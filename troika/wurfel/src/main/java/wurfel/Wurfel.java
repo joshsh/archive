@@ -12,7 +12,6 @@ public class Wurfel
     {
         PropertyConfigurator.configure(
              Wurfel.class.getResource( "log4j.properties" ) );
-//System.out.println("log4j.properties: " + Wurfel.class.getResource( "log4j.properties" ).toString() );
 
         wurfelSchemaUrl = Wurfel.class.getResource( "schema/wurfel.rdf" );
     }
