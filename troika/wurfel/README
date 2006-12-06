@@ -7,9 +7,13 @@ unzip -l target/firefox/wurfel.xpi
 
 java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
 
-	!import "http://www.kanzaki.com/ns/topic.rdf" "http://tempuri.org";
-	!import http://www.kanzaki.com/ns/topic.rdf;
+(: !import "http://www.kanzaki.com/ns/topic.rdf" "http://tempuri.org"; :)
+!import "http://www.kanzaki.com/ns/topic.rdf";
+!import "http://xmlns.com/foaf/0.1/index.rdf";
+!import "http://nlp.shef.ac.uk/abraxas/ontologies/animals.owl";
+!import "http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl";
 
+!import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";
 
 [ba]
 http://www.w3.org/2000/01/rdf-schema#comment

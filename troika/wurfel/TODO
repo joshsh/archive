@@ -1,0 +1,5 @@
+Nice-to-have
+================================================================================
+* Swoogle add-on, which performs queries like the one below, then uses the
+  result to grab potential models for importing.
+      http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&searchString=parrot&key=demo

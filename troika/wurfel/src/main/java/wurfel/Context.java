@@ -63,7 +63,7 @@ aliases = new Hashtable<String, String>();
             throw new WurfelException( e );
         }
 
-System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
+//System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         importModel( Wurfel.schemaUrl(), "urn:wurfel" );
         updateModel();
     }

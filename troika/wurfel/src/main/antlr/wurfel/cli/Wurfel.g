@@ -127,10 +127,12 @@ IDENTIFIER
 
 
 
-/*
+
 COMMENT
-   : "(:"
-*/
+   : "(:" ((~':') | (':' ~')'))* ":)"
+   { $setType(Token.SKIP); }
+   ;
+
 
 L_PAREN
 options { paraphrase = "opening parenthesis"; } : '(' ;
@@ -138,22 +140,14 @@ options { paraphrase = "opening parenthesis"; } : '(' ;
 R_PAREN
 options { paraphrase = "closing parenthesis"; } : ')' ;
 
-/*
-OPEN_COMMENT
-options { paraphrase = "open comment"; } : "(:" ;
-
-CLOSE_COMMENT
-options { paraphrase = "close comment"; } : ":)" ;
-*/
-
 AND options
 { paraphrase = "conjunction"; } : '&' ;
 
 OR
 options { paraphrase = "disjunction"; } : '|' ;
 
-//WITHOUT
-//options { paraphrase = "exclusion"; } : '/' ;
+WITHOUT
+options { paraphrase = "exclusion"; } : '/' ;
 
 PLUS
 options { paraphrase = "plus quantifier"; } : '+' ;
@@ -257,7 +251,7 @@ nt_Sequence returns [ Node r ]
         }
         | AND i=nt_Item
         | OR i=nt_Item
-//        | WITHOUT i=nt_Item
+        | WITHOUT i=nt_Item
       )*
     ;
 
@@ -299,12 +293,12 @@ nt_Command
             System.out.println( "" + Interpreter.countStatements() );
         }
 
-    | DEFINE name:IDENTIFIER uri:IDENTIFIER
+    | DEFINE name:IDENTIFIER uri:STRING
         {
             Interpreter.define( name.getText(), uri.getText() );
         }
 
-    | IMPORT url:IDENTIFIER ( baseURI:IDENTIFIER )?
+    | IMPORT url:STRING ( baseURI:STRING )?
         {
             String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
             Interpreter.importModel( url.getText(), baseUriStr );
