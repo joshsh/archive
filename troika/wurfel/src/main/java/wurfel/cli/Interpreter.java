@@ -2,8 +2,7 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
-//import wurfel.model.Node;
-import wurfel.Node;
+import wurfel.model.Node;
 
 import jline.Completor;
 import jline.FileNameCompletor;

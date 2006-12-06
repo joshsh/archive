@@ -1,4 +1,4 @@
-package wurfel;
+package wurfel.model;
 
 
 public class StringNode extends ValueNode

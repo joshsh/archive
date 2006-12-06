@@ -1,5 +1,6 @@
-package wurfel;
+package wurfel.model;
 
+import wurfel.Context;
 import java.util.Collection;
 
 
@@ -8,7 +9,7 @@ public abstract class Node
     public abstract String toString();
 
     public abstract int arity();
-    public abstract Node execute( Node args[], ReductionContext context )
+    public abstract Node execute( Node args[], Context context )
         throws Exception;
 
     public static String toString( Node n )

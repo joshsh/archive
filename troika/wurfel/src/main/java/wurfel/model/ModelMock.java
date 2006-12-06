@@ -1,4 +1,4 @@
-package wurfel;
+package wurfel.model;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Resource;

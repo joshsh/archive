@@ -1,4 +1,4 @@
-package wurfel;
+package wurfel.model;
 
 
 public abstract class ValueNode<T> extends NullaryNode

@@ -1,5 +1,9 @@
 package wurfel;
 
+import wurfel.model.Model;
+import wurfel.model.ModelMock;
+import wurfel.model.Node;
+
 import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.Sesame;

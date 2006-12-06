@@ -4,12 +4,11 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
-
-import wurfel.Node;
-import wurfel.ApplyNode;
-import wurfel.PrimitiveNode;
-import wurfel.StringNode;
-import wurfel.NameNode;
+import wurfel.model.Node;
+import wurfel.model.ApplyNode;
+import wurfel.model.PrimitiveNode;
+import wurfel.model.StringNode;
+import wurfel.model.NameNode;
 
 import java.util.List;
 import java.util.ArrayList;

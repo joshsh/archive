@@ -1,4 +1,4 @@
-package wurfel;
+package wurfel.model;
 
 import java.util.Collection;
 
