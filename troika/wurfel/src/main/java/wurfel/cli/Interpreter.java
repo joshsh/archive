@@ -29,8 +29,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 public class Interpreter extends Thread implements Runnable
 {
+    private final static Logger s_logger
+        = Logger.getLogger( Interpreter.class );
+
     private Context context;
 
     private PipedInputStream  writeIn;
@@ -134,12 +139,18 @@ public class Interpreter extends Thread implements Runnable
         }
     }
 
+    public void quit()
+    {
+        s_logger.debug( "quit() called on Interpreter" );
+        throw new ParserQuitException();
+    }
+
     private void runPrivate() throws Throwable
     {
         ConsoleReader reader = new ConsoleReader();
 
-            if ( !readLine() )
-                return;
+        if ( !readLine() )
+            return;
 
 // FIXME: this appears to work, but I need to go back and make sure it will ALWAYS work.
         while ( true )
@@ -171,6 +182,11 @@ public class Interpreter extends Thread implements Runnable
             catch ( antlr.TokenStreamRecognitionException e )
             {
                 System.err.println( "Parse error: " + e.toString() );
+            }
+
+            catch ( ParserQuitException e )
+            {
+                break;
             }
         }
     }
@@ -281,11 +297,7 @@ public class Interpreter extends Thread implements Runnable
             context.evaluate( expr );
         }
 
-        catch ( WurfelException e )
-        {
-            System.err.println( e.getMessage() );
-        }
-//        System.out.println( r.toString() );
+        catch ( WurfelException e ) {}
     }
 }
 

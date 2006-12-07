@@ -22,7 +22,6 @@ class WurfelLexer extends Lexer;
 
 options
 {
-    // Lookahead of 2 avoids various "lexical nondeterminism" conflicts.
     k = 3;
 
     // Do not attempt to recover from lexer errors.
@@ -306,8 +305,7 @@ nt_Command
 
     | QUIT
         {
-            //return;
-System.out.println( "You can't give up now..." );
+            interpreter.quit();
         }
 
     | RESOLVE name0:IDENTIFIER
