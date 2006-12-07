@@ -73,6 +73,7 @@ public abstract class Model
                         while ( stmtIter.hasNext() )
                             objects.add( ( (Statement) stmtIter.next() ).getObject() );
                     }
+
                 }
             }
         }

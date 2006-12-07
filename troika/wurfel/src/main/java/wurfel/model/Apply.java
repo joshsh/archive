@@ -7,7 +7,7 @@ import org.openrdf.model.impl.URIImpl;
 import org.openrdf.sesame.sail.StatementIterator;
 
 import java.util.Collection;
-
+import java.util.Iterator;
 
 // TODO: subclass LiteralImpl instead of Literal
 public class Apply implements Literal
@@ -96,12 +96,43 @@ public class Apply implements Literal
         return argument;
     }
 
-/*
+
+
     public String toString()
     {
-        return "@" + Node.toString( argument ) + " " + Node.toString( function );
+//        String s = ".";
+        String s = "";
+
+        Iterator<Value> funcIter = function.iterator();
+        if ( funcIter.hasNext() )
+        {
+            s += funcIter.next().toString();
+            if ( funcIter.hasNext() )
+                s += "[...]";
+        }
+        else
+            s += "()";
+
+        s += " ";
+
+        Iterator<Value> argIter = argument.iterator();
+        if ( argIter.hasNext() )
+        {
+            Value arg = argIter.next();
+            if ( arg instanceof Apply )
+                s += "(" + arg.toString() + ")";
+            else
+                s += arg.toString();
+            if ( argIter.hasNext() )
+                s += "[...]";
+        }
+        else
+            s += "()";
+
+        return s;
+//        return "@" + Node.toString( argument ) + " " + Node.toString( function );
     }
-*/
+
 /*
     Collection<Node> reduce( ReductionContext context )
     {

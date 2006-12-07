@@ -3,6 +3,7 @@ package wurfel;
 import wurfel.model.Model;
 import wurfel.model.ModelMock;
 import wurfel.model.Apply;
+import wurfel.model.NodeSet;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
@@ -249,11 +250,33 @@ aliases = new Hashtable<String, String>();
             return expr;
     }
 
+    public Set<Value> apply( Value func, Value arg )
+        throws WurfelException
+    {
+        return model.multiply( func, arg );
+    }
+
+    public Set<Value> reduce( Value expr )
+        throws WurfelException
+    {
+        if ( isApply( expr ) )
+        {
+            return model.multiply(
+                ( (Apply) expr ).getArgument(),
+                ( (Apply) expr ).getFunction() );
+        }
+
+        else
+            return new NodeSet( expr );
+    }
+
     public Set<Value> evaluate( Value expr )
         throws WurfelException
     {
         Value resolved = resolveIdentifiers( expr );
-return null;
+        return ( null == resolved )
+            ? new NodeSet()
+            : reduce( resolved );
     }
 
 

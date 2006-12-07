@@ -230,10 +230,7 @@ public class Interpreter extends Thread implements Runnable
             context.show( name );
         }
 
-        catch ( WurfelException e )
-        {
-            System.err.println( e.getMessage() );
-        }
+        catch ( WurfelException e ) {}
     }
 
     public void importModel( final String urlStr, final String baseURI )
@@ -264,10 +261,7 @@ public class Interpreter extends Thread implements Runnable
             context.printStatements();
         }
 
-        catch ( WurfelException e )
-        {
-            System.err.println( e.getMessage() );
-        }
+        catch ( WurfelException e ) {}
     }
 
 
@@ -293,8 +287,9 @@ public class Interpreter extends Thread implements Runnable
     {
         try
         {
-// TODO: the printing should be done here, rather than in the Context.
-            context.evaluate( expr );
+            Iterator<Value> resultIter = context.evaluate( expr ).iterator();
+            while ( resultIter.hasNext() )
+                System.out.println( resultIter.next().toString() );
         }
 
         catch ( WurfelException e ) {}
