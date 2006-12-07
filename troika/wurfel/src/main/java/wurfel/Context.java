@@ -49,7 +49,7 @@ public class Context
 
     private final static boolean s_useInferencing = false;
 
-    private final static Logger logger = Logger.getLogger( Context.class );
+    private final static Logger s_logger = Logger.getLogger( Context.class );
 
     String name;
     LocalRepository repository;
@@ -60,7 +60,7 @@ Model model = null;
     public Context( final String name )
         throws WurfelException
     {
-        logger.debug( "Creating new Context '" + name + "'" );
+        s_logger.debug( "Creating new Context '" + name + "'" );
 
 aliases = new Hashtable<String, String>();
         this.name = name;
@@ -86,7 +86,7 @@ aliases = new Hashtable<String, String>();
     public void importModel( final URL url, final String baseURI )
         throws WurfelException
     {
-        logger.debug( "Importing model " + url.toString() +
+        s_logger.debug( "Importing model " + url.toString() +
             ( ( null == baseURI ) ? "" : " as " + baseURI ) );
 
         boolean verifyData = true;

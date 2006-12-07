@@ -129,7 +129,7 @@ public class Interpreter extends Thread implements Runnable
 
         catch( Throwable t )
         {
-            System.err.println( t.toString() );
+            new WurfelException( t );
             return false;
         }
     }
