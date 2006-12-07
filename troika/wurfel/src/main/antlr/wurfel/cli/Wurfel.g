@@ -45,8 +45,8 @@ options
 //            throw new Exception( "WurfelLexer has no caller to receive an event" );
             System.err.println( "WurfelLexer instance has not been initialized" );
 
-        else
-            interpreter.readLine();
+        else if ( !interpreter.readLine() )
+            throw new ParserQuitException();
     }
 
     private void setCompletorState( CompletorState state )
@@ -203,15 +203,18 @@ nt_Input
 
 nt_Query returns [ Value r ]
 {
+    r = null;
 }
     : r=nt_Sequence SEMI
       {
         interpreter.evaluate( r );
       }
+
+    // Note: commands are executed greedily, before the semicolon is encountered.
     | nt_Command SEMI
-        {
-r = null;
-        }
+
+    // Empty queries are simply ignored.
+    | SEMI
     ;
 
 

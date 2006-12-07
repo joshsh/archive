@@ -123,8 +123,8 @@ public class Interpreter extends Thread implements Runnable
 
                 // Add a deliberate "end of line" character so the lexer knows
                 // to call readLine() again when it gets there.
-                bytes[0] = '\n';
-                readOut.write( bytes, 0, 1 );
+                byte[] terminator = { '\n' };
+                readOut.write( terminator, 0, 1 );
 
                 out.flush();
             }
