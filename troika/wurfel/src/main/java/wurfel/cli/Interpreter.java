@@ -4,6 +4,9 @@ import wurfel.Context;
 import wurfel.WurfelException;
 import wurfel.model.Node;
 
+import org.openrdf.model.Literal;
+import org.openrdf.model.Value;
+
 import jline.Completor;
 import jline.FileNameCompletor;
 import jline.ArgumentCompletor;
@@ -201,7 +204,7 @@ public class Interpreter extends Thread implements Runnable
 
     public String resolve( final String name )
     {
-        return context.resolve( name );
+        return context.resolveSimple( name );
     }
 
     public void show( final String name )
@@ -260,14 +263,22 @@ public class Interpreter extends Thread implements Runnable
 
 
 
+    public Literal newIdentifier( final String s )
+    {
+        return context.newIdentifier( s );
+    }
 
+    public Literal newStringLiteral( final String s )
+    {
+        return context.newStringLiteral( s );
+    }
 
-    public void evaluate( Node r )
+    public void evaluate( Value expr )
     {
         try
         {
 // TODO: the printing should be done here, rather than in the Context.
-            context.evaluate( r );
+            context.evaluate( expr );
         }
 
         catch ( WurfelException e )

@@ -5,10 +5,10 @@ package wurfel.cli;
 import wurfel.Context;
 import wurfel.WurfelException;
 import wurfel.model.Node;
-import wurfel.model.ApplyNode;
-import wurfel.model.PrimitiveNode;
-import wurfel.model.StringNode;
-import wurfel.model.NameNode;
+import wurfel.model.Apply;
+
+import org.openrdf.model.Literal;
+import org.openrdf.model.Value;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -195,14 +195,14 @@ options
 
 nt_Input
 {
-    Node q;
+    Value q;
 }
     : q=nt_Query
       ( nt_Input )?
     ;
 
 
-nt_Query returns [ Node r ]
+nt_Query returns [ Value r ]
 {
 }
     : r=nt_Sequence SEMI
@@ -216,7 +216,7 @@ r = null;
     ;
 
 
-nt_ParenthesizedExpression returns [ Node r ]
+nt_ParenthesizedExpression returns [ Value r ]
 {
 }
     : L_PAREN r=nt_Sequence R_PAREN
@@ -231,18 +231,18 @@ nt_Quantifier
     ;
 
 
-nt_Sequence returns [ Node r ]
+nt_Sequence returns [ Value r ]
 {
-    Node i;
+    Value i;
 }
     : r=nt_Item
       ( i=nt_Item
         {
-            List<Node> left = new ArrayList<Node>();
+            List<Value> left = new ArrayList<Value>();
             left.add( i );
-            List<Node> right = new ArrayList<Node>();
+            List<Value> right = new ArrayList<Value>();
             right.add( r );
-            r = new ApplyNode( left, right );
+            r = new Apply( left, right );
         }
         | AND i=nt_Item
         | OR i=nt_Item
@@ -251,7 +251,7 @@ nt_Sequence returns [ Node r ]
     ;
 
 
-nt_Item returns [ Node r ]
+nt_Item returns [ Value r ]
 {
 }
     : r=nt_Name
@@ -260,22 +260,22 @@ nt_Item returns [ Node r ]
     ;
 
 
-nt_String returns [ StringNode r ]
+nt_String returns [ Literal r ]
 {
 }
     : t:STRING
       {
-        r = new StringNode( t.getText() );
+        r = interpreter.newStringLiteral( t.getText() );
       }
     ;
 
 
-nt_Name returns [ NameNode r ]
+nt_Name returns [ Literal r ]
 {
 }
     : t:IDENTIFIER
       {
-        r = new NameNode( t.getText() );
+        r = interpreter.newIdentifier( t.getText() );
       }
     ;
 
