@@ -15,9 +15,11 @@ public class Apply implements Literal
     private static final URI s_applyClassUri
         = new URIImpl( "urn:net.dnsdojo.troika.wurfel#Apply" );
 
-    private Collection<Value> function, argument;
+    private Value function, argument;
+//    private Collection<Value> function, argument;
 
-    public Apply( final Collection<Value> function, final Collection<Value> argument )
+    public Apply( final Value function, final Value argument )
+//    public Apply( final Collection<Value> function, final Collection<Value> argument )
     {
         this.function = function;
         this.argument = argument;
@@ -86,12 +88,14 @@ public class Apply implements Literal
 
 
 
-    public Collection<Value> getFunction()
+    public Value getFunction()
+//    public Collection<Value> getFunction()
     {
         return function;
     }
 
-    public Collection<Value> getArgument()
+    public Value getArgument()
+//    public Collection<Value> getArgument()
     {
         return argument;
     }
@@ -100,6 +104,26 @@ public class Apply implements Literal
 
     public String toString()
     {
+//        String s = ".";
+        String s = "";
+
+        if ( null == function )
+            s += "()";
+        else
+            s += function.toString();
+
+        s += " ";
+
+        if ( null == argument )
+            s += "()";
+        else if ( argument instanceof Apply )
+            s += "(" + argument.toString() + ")";
+        else
+            s += argument.toString();
+
+        return s;
+
+/*
 //        String s = ".";
         String s = "";
 
@@ -131,6 +155,7 @@ public class Apply implements Literal
 
         return s;
 //        return "@" + Node.toString( argument ) + " " + Node.toString( function );
+*/
     }
 
 /*

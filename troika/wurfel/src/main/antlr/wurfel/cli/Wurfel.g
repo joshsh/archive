@@ -240,11 +240,7 @@ nt_Sequence returns [ Value r ]
     : r=nt_Item
       ( i=nt_Item
         {
-            List<Value> left = new ArrayList<Value>();
-            left.add( i );
-            List<Value> right = new ArrayList<Value>();
-            right.add( r );
-            r = new Apply( left, right );
+            r = new Apply( i, r );
         }
         | AND i=nt_Item
         | OR i=nt_Item

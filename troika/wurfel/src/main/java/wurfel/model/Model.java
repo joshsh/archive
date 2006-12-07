@@ -27,6 +27,9 @@ public abstract class Model
         graph = g;
     }
 
+    /**
+     *  @return  an unordered set of results
+     */
     public Set<Value> multiply( Value subject,
                                 Value predicate )
     {

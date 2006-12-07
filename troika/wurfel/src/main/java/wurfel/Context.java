@@ -48,7 +48,7 @@ public class Context
     private static final URI s_stringClassUri
         = new URIImpl( "http://www.w3.org/2001/XMLSchema#string" );
 
-    private final static boolean s_useInferencing = false;
+    private final static boolean s_useInferencing = true;
 
     private final static Logger s_logger = Logger.getLogger( Context.class );
 
@@ -232,18 +232,13 @@ aliases = new Hashtable<String, String>();
 
         else if ( isApply( expr ) )
         {
-            Iterator<Value> funcIter = ( (Apply) expr ).getFunction().iterator();
-            Iterator<Value> argIter = ( (Apply) expr ).getArgument().iterator();
+            Value function = resolveIdentifiers( ( (Apply) expr ).getFunction() );
+            Value argument = resolveIdentifiers( ( (Apply) expr ).getArgument() );
 
-            Set<Value> funcSet = new LinkedHashSet<Value>();
-            Set<Value> argSet = new LinkedHashSet<Value>();
-
-            while ( funcIter.hasNext() )
-                funcSet.add( resolveIdentifiers( funcIter.next() ) );
-            while ( argIter.hasNext() )
-                argSet.add( resolveIdentifiers( argIter.next() ) );
-
-            return new Apply( funcSet, argSet );
+            if ( null == function || null == argument )
+                return null;
+            else
+                return new Apply( function, argument );
         }
 
         else
@@ -253,17 +248,31 @@ aliases = new Hashtable<String, String>();
     public Set<Value> apply( Value func, Value arg )
         throws WurfelException
     {
-        return model.multiply( func, arg );
+// TODO: combinators and primitives as func will have their own, idiosyncratic ways of yielding a product
+        return model.multiply( arg, func );
     }
 
-    public Set<Value> reduce( Value expr )
+    public NodeSet reduce( Value expr )
         throws WurfelException
     {
         if ( isApply( expr ) )
         {
-            return model.multiply(
-                ( (Apply) expr ).getArgument(),
-                ( (Apply) expr ).getFunction() );
+            Iterator<Value> reducedFuncIter = reduce(
+                ( (Apply) expr ).getFunction() ).iterator();
+
+            Iterator<Value> reducedArgIter = reduce(
+                ( (Apply) expr ).getArgument() ).iterator();
+
+            NodeSet result = new NodeSet();
+            while ( reducedFuncIter.hasNext() )
+            {
+                Value function = reducedFuncIter.next();
+                while ( reducedArgIter.hasNext() )
+                    result.add(
+                        apply( function, reducedArgIter.next() ) );
+            }
+
+            return result;
         }
 
         else
