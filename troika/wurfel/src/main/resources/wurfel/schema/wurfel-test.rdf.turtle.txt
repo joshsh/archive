@@ -7,8 +7,8 @@
 
 wurfel-test:concatenateStrings
   rdfs:type wurfel:PrimitiveFunction ;
-  rdfs:returnType xsd:string ;
-  rdfs:parameters (
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
       [ wurfel:parameterName "strA" ;
         wurfel:parameterType xsd:string ;
         wurfel:parameterTransparency true ]

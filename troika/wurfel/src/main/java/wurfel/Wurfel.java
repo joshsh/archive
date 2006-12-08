@@ -46,6 +46,11 @@ public class Wurfel
         return new URIImpl( "urn:net.dnsdojo.troika.wurfel#" + localName );
     }
 
+    public static URI getWurfelTestUri( final String localName )
+    {
+        return new URIImpl( "urn:net.dnsdojo.troika.wurfel-test#" + localName );
+    }
+
     public static URI getXmlSchemaUri( final String localName )
     {
         return new URIImpl( "http://www.w3.org/2001/XMLSchema#" + localName );

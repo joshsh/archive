@@ -4,6 +4,8 @@ import wurfel.model.Model;
 import wurfel.model.ModelMock;
 import wurfel.model.Apply;
 import wurfel.model.NodeSet;
+import wurfel.model.PrimitiveFunction;
+import wurfel.model.primitives.ConcatenateStringsPrimitive;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
@@ -162,6 +164,21 @@ public class Context
 Hashtable<String, String> aliases;
 Model model = null;
 
+    private Hashtable<URI, PrimitiveFunction> primitives;
+
+    private void addPrimitive( PrimitiveFunction prim )
+    {
+        primitives.put( prim.getUri(), prim );
+    }
+
+    private void loadPrimitives()
+        throws WurfelException
+    {
+        primitives = new Hashtable<URI, PrimitiveFunction>();
+
+        addPrimitive( new ConcatenateStringsPrimitive( this ) );
+    }
+
     public Context( final String name )
         throws WurfelException
     {
@@ -187,6 +204,8 @@ aliases = new Hashtable<String, String>();
         importModel( Wurfel.schemaUrl(), "urn:wurfel" );
         importModel( Wurfel.testUrl(), "urn:wurfel-test" );
         updateModel();
+
+        loadPrimitives();
     }
 
     public void importModel( final URL url, final String baseURI )

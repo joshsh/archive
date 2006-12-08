@@ -34,9 +34,9 @@
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
-    <rdfs:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
-    <rdfs:parameters rdf:nodeID="genid4"/>
+    <wurfel:parameters rdf:nodeID="genid4"/>
   </rdf:Description>
 </rdf:RDF>

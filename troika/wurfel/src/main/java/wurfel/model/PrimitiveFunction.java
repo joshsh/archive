@@ -14,8 +14,10 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 // TODO: write a factory class.
-public abstract class PrimitiveNode implements Function
+public abstract class PrimitiveFunction implements Function
 {
+    public abstract URI getUri();
+
     class Param
     {
         public String name;
@@ -64,7 +66,7 @@ public abstract class PrimitiveNode implements Function
         return new Param( name, type, annotation, transparency );
     }
 
-    public PrimitiveNode( final URI self, Context context )
+    public PrimitiveFunction( final URI self, Context context )
         throws WurfelException
     {
 // TODO: actually use these, or get rid of them
