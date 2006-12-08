@@ -67,7 +67,15 @@ public class Context
         if ( 1 != results.size() )
         {
             if ( 0 == results.size() )
+{
+if ( arg instanceof Resource )
+{
+System.out.println( "arg:" );
+show((Resource)arg);
+}
                 throw new WurfelException( "no values resolved for " + func.toString() + " of " + arg.toString() );
+
+}
             else
                 throw new WurfelException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
         }
@@ -117,12 +125,17 @@ public class Context
     {
         Literal lit = getLiteral( arg, func );
 
+// TODO: investigate OpenRDF's apparent lack of typing of literals in whatever graph implementation this is
+/*
         URI type = lit.getDatatype();
-        if ( !type.equals( s_xsdStringUri ) )
-            throw new WurfelException( "type mismatch: expected " + s_xsdStringUri.toString() + ", found " + type.toString() );
 
-        String label = lit.getLabel();
-        return label;
+        if ( null == type )
+            throw new WurfelException( "node " + lit.toString() + " is untyped, expecting " + s_xsdStringUri );
+        else if ( !type.equals( s_xsdStringUri ) )
+            throw new WurfelException( "type mismatch: expected " + s_xsdStringUri.toString() + ", found " + type.toString() );
+*/
+
+        return lit.getLabel();
     }
 
     public boolean getBoolean( Value arg, Value func )
@@ -130,26 +143,29 @@ public class Context
     {
         Literal lit = getLiteral( arg, func );
 
+/*
         URI type = lit.getDatatype();
         if ( !type.equals( s_xsdBooleanUri ) )
             throw new WurfelException( "type mismatch: expected " + s_xsdBooleanUri.toString() + ", found " + type.toString() );
+*/
 
         String label = lit.getLabel();
 // TODO: is capitalization relevant? Can 'true' also be represented as '1'?
         return label.equals( "true" );
     }
 
-    public List<Resource> getRdfList( final Resource listHead )
+    public List<Value> getRdfList( final Resource listHead )
         throws WurfelException
     {
-        List<Resource> list = new ArrayList<Resource>();
+        List<Value> list = new ArrayList<Value>();
 
-        Resource cur = getResource( listHead, s_rdfFirstUri );
+        Resource cur = listHead;
 
 // TODO: is this 'equals' safe?
         while ( !cur.equals( s_rdfNilUri ) )
         {
-            list.add( cur );
+            Value val = getValue( cur, s_rdfFirstUri );
+            list.add( val );
             cur = getResource( cur, s_rdfRestUri );
         }
 

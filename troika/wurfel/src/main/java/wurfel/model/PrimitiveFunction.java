@@ -75,12 +75,18 @@ public abstract class PrimitiveFunction implements Function
 
         returnType = context.getUri( self, s_wurfelReturnTypeUri );
         Resource paramList = context.getResource( self, s_wurfelParametersUri );
-        Iterator<Resource> paramIter = context.getRdfList( paramList ).iterator();
+        Iterator<Value> paramIter = context.getRdfList( paramList ).iterator();
 
         params = new ArrayList<Param>();
 
         while ( paramIter.hasNext() )
-            params.add( getWurfelParameter( paramIter.next(), context ) );
+        {
+            Value val = paramIter.next();
+            if ( !( val instanceof Resource ) )
+                throw new WurfelException( "non-Resource encountered as an argument to a PrimitiveFunction" );
+            else
+                params.add( getWurfelParameter( (Resource) val, context ) );
+        }
     }
 
 
