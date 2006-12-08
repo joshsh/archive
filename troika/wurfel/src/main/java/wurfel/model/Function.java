@@ -1,17 +1,21 @@
 package wurfel.model;
 
 import wurfel.Context;
+import wurfel.WurfelException;
+
+import org.openrdf.model.Value;
+
 import java.util.Collection;
 
-
-public abstract class Node
+public interface Function
 {
-    public abstract String toString();
+//    public abstract String toString();
 
     public abstract int arity();
-    public abstract Node execute( Node args[], Context context )
-        throws Exception;
+    public abstract Collection<Value> apply( Value args[], Context context )
+        throws WurfelException;
 
+/*
     public static String toString( Node n )
     {
         if ( null == n )
@@ -29,7 +33,7 @@ public abstract class Node
         else
             return "{" + nodes.iterator().next().toString() + ", ...}";
     }
+*/
 }
-
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

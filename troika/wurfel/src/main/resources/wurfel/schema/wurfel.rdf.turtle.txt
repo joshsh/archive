@@ -27,17 +27,17 @@ wurfel:PrimitiveFunction
   rdfs:type rdfs:Class ;
   rdfs:comment "A built-in function" .
 
-wurfel:parameters
-  rdfs:type rdf:Property ;
-  rdfs:domain wurfel:PrimitiveFunction ;
-  rdfs:range wurfel:ParameterList ;
-  rdfs:comment "" .
-
 wurfel:returnType
   rdfs:type rdf:Property ;
   rdfs:domain wurfel:PrimitiveFunction ;
   rdfs:range rdfs:DataType ;
   rdfs:comment "The data type of the return value of a function" .
+
+wurfel:parameters
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:PrimitiveFunction ;
+  rdfs:range wurfel:ParameterList ;
+  rdfs:comment "" .
 
 wurfel:Parameter
   rdfs:type rdfs:Class ;
@@ -46,7 +46,13 @@ wurfel:Parameter
 # Note: I don't know how to make this a list of wurfel:Parameter's specifically.
 wurfel:ParameterList
   rdfs:type rdfs:Class ;
-  rdfs:subClassOf rdfs:List .
+  rdfs:subClassOf rdf:List .
+
+wurfel:parameterType
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Parameter ;
+  rdfs:range xsd:string ;
+  rdfs:comment "A helpful name for the parameter." .
 
 wurfel:parameterType
   rdfs:type rdf:Property ;

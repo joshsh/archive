@@ -36,18 +36,6 @@
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction">
     <rdfs:comment>A built-in function</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
-    <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
-    <rdfs:domain rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
-    <rdfs:range rdf:resource="urn:net.dnsdojo.troika.wurfel#ParameterList"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
-    <rdfs:comment></rdfs:comment>
-  </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#returnType">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
@@ -60,6 +48,18 @@
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#returnType">
     <rdfs:comment>The data type of the return value of a function</rdfs:comment>
   </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
+    <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
+    <rdfs:domain rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
+    <rdfs:range rdf:resource="urn:net.dnsdojo.troika.wurfel#ParameterList"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameters">
+    <rdfs:comment></rdfs:comment>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#Parameter">
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
@@ -70,7 +70,19 @@
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#ParameterList">
-    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#List"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameterType">
+    <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameterType">
+    <rdfs:domain rdf:resource="urn:net.dnsdojo.troika.wurfel#Parameter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameterType">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameterType">
+    <rdfs:comment>A helpful name for the parameter.</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#parameterType">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>

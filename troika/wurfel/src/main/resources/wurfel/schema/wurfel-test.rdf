@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:wurfel-test="urn:net.dnsdojo.troika.wurfel-test#" xmlns:wurfel="urn:net.dnsdojo.troika.wurfel#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterName>strA</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <wurfel:parameterName>strB</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <rdf:first rdf:nodeID="genid2"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <rdf:first rdf:nodeID="genid1"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <rdf:rest rdf:nodeID="genid3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
+    <rdfs:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
+    <rdfs:parameters rdf:nodeID="genid4"/>
+  </rdf:Description>
+</rdf:RDF>

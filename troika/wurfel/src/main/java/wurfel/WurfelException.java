@@ -12,6 +12,8 @@ public class WurfelException extends Exception
 
     public WurfelException( Throwable t )
     {
+        super();
+
         try
         {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -22,10 +24,28 @@ public class WurfelException extends Exception
             System.err.println( t.toString() );
         }
 
-        catch ( Throwable t2 )
+        catch ( Throwable secondary )
         {
-            System.err.println( "Failed to log an error passed to WurfelException. A stack trace of the secondary error follows." );
-            t.printStackTrace( System.err );
+            System.err.println( "Failed to log a WurfelException. A stack trace of the secondary error follows." );
+            secondary.printStackTrace( System.err );
+        }
+    }
+
+    public WurfelException( final String msg )
+    {
+        super( msg );
+
+        try
+        {
+            s_logger.error( msg );
+
+            System.err.println( msg );
+        }
+
+        catch ( Throwable secondary )
+        {
+            System.err.println( "Failed to log a WurfelException. A stack trace of the secondary error follows." );
+            secondary.printStackTrace( System.err );
         }
     }
 }

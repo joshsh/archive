@@ -1,0 +1,18 @@
+@prefix wurfel:       <urn:net.dnsdojo.troika.wurfel#> .
+@prefix wurfel-test:  <urn:net.dnsdojo.troika.wurfel-test#> .
+@prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
+
+
+
+wurfel-test:concatenateStrings
+  rdfs:type wurfel:PrimitiveFunction ;
+  rdfs:returnType xsd:string ;
+  rdfs:parameters (
+      [ wurfel:parameterName "strA" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "strB" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+  ) .

@@ -1,9 +1,10 @@
 package wurfel.model;
 
+import wurfel.Wurfel;
+
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.sesame.sail.StatementIterator;
 
 import java.util.Collection;
@@ -12,8 +13,8 @@ import java.util.Iterator;
 // TODO: subclass LiteralImpl instead of Literal
 public class Apply implements Literal
 {
-    private static final URI s_applyClassUri
-        = new URIImpl( "urn:net.dnsdojo.troika.wurfel#Apply" );
+    private static final URI
+        s_applyClassUri = Wurfel.getWurfelUri( "Apply" );
 
     private Value function, argument;
 //    private Collection<Value> function, argument;

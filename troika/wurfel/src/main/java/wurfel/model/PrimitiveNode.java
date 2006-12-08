@@ -1,22 +1,30 @@
 package wurfel.model;
 
+import wurfel.Wurfel;
+import wurfel.Context;
+import wurfel.WurfelException;
+
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.openrdf.model.Resource;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 // TODO: write a factory class.
-public abstract class PrimitiveNode extends Node
+public abstract class PrimitiveNode implements Function
 {
     class Param
     {
         public String name;
-        public TypeNode type;
+        public URI type;
         public String annotation;
         public boolean transparency;
 
         public Param( final String name,
-                      final TypeNode type,
+                      final URI type,
                       final String annotation,
                       final boolean transparency )
         {
@@ -28,26 +36,60 @@ public abstract class PrimitiveNode extends Node
     }
 
     private List<Param> params;
-    private TypeNode returnType;
+    private URI returnType;
     private String name;
     private String annotation;
 
-    public PrimitiveNode( final String name,
-                          final TypeNode returnType,
-                          final String annotation )
+    private static final URI
+        s_wurfelPrimitiveFunctionUri = Wurfel.getWurfelUri( "PrimitiveFunction" ),
+        s_wurfelParametersUri = Wurfel.getWurfelUri( "parameters" ),
+        s_wurfelReturnTypeUri = Wurfel.getWurfelUri( "returnType" ),
+        s_wurfelParameterUri = Wurfel.getWurfelUri( "Parameter" ),
+        s_wurfelParameterNameUri = Wurfel.getWurfelUri( "parameterName" ),
+        s_wurfelParameterListUri = Wurfel.getWurfelUri( "ParameterList" ),
+        s_wurfelParameterTypeUri = Wurfel.getWurfelUri( "parameterType" ),
+        s_wurfelParameterTransparencyUri = Wurfel.getWurfelUri( "parameterTransparency" );
+
+    private Param getWurfelParameter( final Resource head, Context context )
+        throws WurfelException
     {
-        this.name = name;
-        params = new ArrayList<Param>();
-        this.returnType = returnType;
-        this.annotation = annotation;
+        String name = context.getString( head, s_wurfelParameterNameUri );
+        URI type = context.getUri( head, s_wurfelParameterTypeUri );
+
+// TODO: actually use this, or get rid of it
+        String annotation = "";
+
+        boolean transparency = context.getBoolean( head, s_wurfelParameterTransparencyUri );
+
+        return new Param( name, type, annotation, transparency );
     }
+
+    public PrimitiveNode( final URI self, Context context )
+        throws WurfelException
+    {
+// TODO: actually use these, or get rid of them
+        name = "";
+        annotation = "";
+
+        returnType = context.getUri( self, s_wurfelReturnTypeUri );
+        Resource paramList = context.getResource( self, s_wurfelParametersUri );
+        Iterator<Resource> paramIter = context.getRdfList( paramList ).iterator();
+
+        params = new ArrayList<Param>();
+
+        while ( paramIter.hasNext() )
+            params.add( getWurfelParameter( paramIter.next(), context ) );
+    }
+
+
+
 
     public String getName()
     {
         return name;
     }
 
-    public TypeNode getReturnType()
+    public URI getReturnType()
     {
         return returnType;
     }
@@ -60,15 +102,6 @@ public abstract class PrimitiveNode extends Node
     public int parameters()
     {
         return params.size();
-    }
-
-    public void addParameter( final String name,
-                              final TypeNode type,
-                              final String annotation,
-                              final boolean transparency )
-    {
-        Param p = new Param( name, type, annotation, transparency );
-        params.add( p );
     }
 
     private Param getParam( final int index )
@@ -87,7 +120,7 @@ public abstract class PrimitiveNode extends Node
         return p.name;
     }
 
-    public TypeNode getParameterType( final int index )
+    public URI getParameterType( final int index )
         throws Exception
     {
         Param p = getParam( index );
@@ -110,7 +143,7 @@ public abstract class PrimitiveNode extends Node
 
     public String toString()
     {
-        String s = Node.toString( returnType ) + " " + name + "(";
+        String s = returnType.toString() + " " + name + "(";
         boolean first = true;
         Iterator<Param> iter = params.iterator();
         while( iter.hasNext() )
@@ -121,7 +154,7 @@ public abstract class PrimitiveNode extends Node
                 s += ", ";
 
             Param p = iter.next();
-            s += Node.toString( p.type ) + " " + p.name;
+            s += p.type.toString() + " " + p.name;
         }
 
         s += ")";

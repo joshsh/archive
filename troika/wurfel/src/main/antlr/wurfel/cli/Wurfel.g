@@ -4,7 +4,6 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
-import wurfel.model.Node;
 import wurfel.model.Apply;
 
 import org.openrdf.model.Literal;

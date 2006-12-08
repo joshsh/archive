@@ -1,24 +1,54 @@
 package wurfel;
 
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
+
 import java.net.URL;
 
 import org.apache.log4j.PropertyConfigurator;
 
 public class Wurfel
 {
-    private static URL wurfelSchemaUrl = null;
+    private static final URL
+        s_wurfelSchemaUrl = Wurfel.class.getResource( "schema/wurfel.rdf" ),
+        s_wurfelTestUrl = Wurfel.class.getResource( "schema/wurfel-test.rdf" );
 
     public static void initialize()
     {
         PropertyConfigurator.configure(
              Wurfel.class.getResource( "log4j.properties" ) );
-
-        wurfelSchemaUrl = Wurfel.class.getResource( "schema/wurfel.rdf" );
     }
 
     public static URL schemaUrl()
     {
-        return wurfelSchemaUrl;
+        return s_wurfelSchemaUrl;
+    }
+
+    public static URL testUrl()
+    {
+        return s_wurfelTestUrl;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public static URI getRdfUri( final String localName )
+    {
+        return new URIImpl( "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName );
+    }
+
+    public static URI getRdfSchemaUri( final String localName )
+    {
+        return new URIImpl( "http://www.w3.org/2000/01/rdf-schema#" + localName );
+    }
+
+    public static URI getWurfelUri( final String localName )
+    {
+        return new URIImpl( "urn:net.dnsdojo.troika.wurfel#" + localName );
+    }
+
+    public static URI getXmlSchemaUri( final String localName )
+    {
+        return new URIImpl( "http://www.w3.org/2001/XMLSchema#" + localName );
     }
 }
 

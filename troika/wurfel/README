@@ -7,15 +7,10 @@ unzip -l target/firefox/wurfel.xpi
 
 java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
 
-(: !import "http://www.kanzaki.com/ns/topic.rdf" "http://tempuri.org"; :)
-!import "http://www.kanzaki.com/ns/topic.rdf";
+(: !import "http://xmlns.com/foaf/0.1/index.rdf" "http://tempuri.org"; :)
+
+(: foaf :)
 !import "http://xmlns.com/foaf/0.1/index.rdf";
-!import "http://nlp.shef.ac.uk/abraxas/ontologies/animals.owl";
-!import "http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl";
-
-!import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";
-
-
 
 (: SKOS Core :)
 !import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
@@ -26,9 +21,49 @@ java -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
 (: SKOS Extensions :)
 !import "http://www.w3.org/2004/02/skos/extensions";
 
+(: SIOC :)
+!import "http://rdfs.org/sioc/ns";
 
+(: Miscellaneous stuff :)
+!import "http://www.kanzaki.com/ns/topic.rdf";
+!import "http://nlp.shef.ac.uk/abraxas/ontologies/animals.owl";
+!import "http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl";
+
+!import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";
+
+::::::::::::::::::::::::::::::::::::::::
 
 [ba]
 http://www.w3.org/2000/01/rdf-schema#comment
     http://www.w3.org/2000/01/rdf-schema#subPropertyOf
         http://www.w3.org/2000/01/rdf-schema#comment
+
+::::::::::::::::::::::::::::::::::::::::
+
+[.] http://www.w3.org/1999/02/22-rdf-syntax-ns -- the RDF Schema for the RDF vocabulary defined in the RDF namespace
+[.] http://www.w3.org/2000/01/rdf-schema -- The RDF Schema vocabulary (RDFS)
+
+[conflicts] ::::::::::::::::::::::::::::
+
+[ba] Oddly enough, neither "type" nor "List" are defined by the rdfs model.  Maybe this is an OpenRDF bug.
+     BUT... http://www.w3.org/2000/01/rdf-schema#List
+
+[.]
+    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+    [ba] http://www.w3.org/2000/01/rdf-schema#type
+
+[.]
+    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+    [ba] http://www.w3.org/2000/01/rdf-schema#List
+
+
+
+
+:::::::::::::::::::::::::::::;
+
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel-test.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel-test.rdf
+
+$RAPTORTRUNK/utils/rapper -q -i rdfxml -o dot ./src/main/resources/wurfel/schema/wurfel-test.rdf > ./src/main/resources/wurfel/schema/wurfel-test.dot
+dot -Tpng -o ./src/main/resources/wurfel/schema/wurfel-test.png ./src/main/resources/wurfel/schema/wurfel-test.dot
+

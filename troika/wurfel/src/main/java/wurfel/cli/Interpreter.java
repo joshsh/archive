@@ -2,7 +2,6 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
-import wurfel.model.Node;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
@@ -28,6 +27,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -287,9 +287,15 @@ public class Interpreter extends Thread implements Runnable
     {
         try
         {
-            Iterator<Value> resultIter = context.evaluate( expr ).iterator();
+            Set<Value> result = context.evaluate( expr );
+            if ( 0 < result.size() )
+                System.out.println( "" );
+
+            Iterator<Value> resultIter = result.iterator();
             while ( resultIter.hasNext() )
                 System.out.println( resultIter.next().toString() );
+
+            System.out.println( "" );
         }
 
         catch ( WurfelException e ) {}

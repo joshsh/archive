@@ -25,7 +25,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.LiteralImpl;
-import org.openrdf.model.impl.URIImpl;
 
 import java.io.IOException;
 
@@ -34,6 +33,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
@@ -42,15 +42,119 @@ import org.apache.log4j.Logger;
 
 public class Context
 {
-// TODO: this URI doesn't exist in the wurfel model.
-    private static final URI s_identifierClassUri
-        = new URIImpl( "urn:net.dnsdojo.troika.wurfel#Identifier" );
-    private static final URI s_stringClassUri
-        = new URIImpl( "http://www.w3.org/2001/XMLSchema#string" );
+    private final static Logger s_logger = Logger.getLogger( Context.class );
 
     private final static boolean s_useInferencing = true;
 
-    private final static Logger s_logger = Logger.getLogger( Context.class );
+    private static final URI
+        // TODO: this URI doesn't exist in the wurfel model.
+        s_wurfelIdentifierUri = Wurfel.getWurfelUri( "Identifier" ),
+        s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" ),
+        s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" ),
+        s_rdfFirstUri = Wurfel.getRdfUri( "first" ),
+        s_rdfRestUri = Wurfel.getRdfUri( "rest" ),
+        s_rdfNilUri = Wurfel.getRdfUri( "nil" );
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public Value getValue( Value arg, Value func )
+        throws WurfelException
+    {
+        Collection<Value> results = model.multiply( arg, func );
+
+        if ( 1 != results.size() )
+        {
+            if ( 0 == results.size() )
+                throw new WurfelException( "no values resolved for " + func.toString() + " of " + arg.toString() );
+            else
+                throw new WurfelException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
+        }
+
+        else
+            return results.iterator().next();
+    }
+
+    public Resource getResource( Value arg, Value func )
+        throws WurfelException
+    {
+        Value val = getValue( arg, func );
+
+        if ( val instanceof Resource )
+            return (Resource) val;
+
+        else
+            throw new WurfelException( "value " + val.toString() + " is not a Resource" );
+    }
+
+    public URI getUri( Value arg, Value func )
+        throws WurfelException
+    {
+        Value val = getValue( arg, func );
+
+        if ( val instanceof URI )
+            return (URI) val;
+
+        else
+            throw new WurfelException( "value " + val.toString() + " is not a URI" );
+    }
+
+    public Literal getLiteral( Value arg, Value func )
+        throws WurfelException
+    {
+        Value val = getValue( arg, func );
+
+        if ( val instanceof Literal )
+            return (Literal) val;
+
+        else
+            throw new WurfelException( "value " + val.toString() + " is not a Literal" );
+    }
+
+    public String getString( Value arg, Value func )
+        throws WurfelException
+    {
+        Literal lit = getLiteral( arg, func );
+
+        URI type = lit.getDatatype();
+        if ( !type.equals( s_xsdStringUri ) )
+            throw new WurfelException( "type mismatch: expected " + s_xsdStringUri.toString() + ", found " + type.toString() );
+
+        String label = lit.getLabel();
+        return label;
+    }
+
+    public boolean getBoolean( Value arg, Value func )
+        throws WurfelException
+    {
+        Literal lit = getLiteral( arg, func );
+
+        URI type = lit.getDatatype();
+        if ( !type.equals( s_xsdBooleanUri ) )
+            throw new WurfelException( "type mismatch: expected " + s_xsdBooleanUri.toString() + ", found " + type.toString() );
+
+        String label = lit.getLabel();
+// TODO: is capitalization relevant? Can 'true' also be represented as '1'?
+        return label.equals( "true" );
+    }
+
+    public List<Resource> getRdfList( final Resource listHead )
+        throws WurfelException
+    {
+        List<Resource> list = new ArrayList<Resource>();
+
+        Resource cur = getResource( listHead, s_rdfFirstUri );
+
+// TODO: is this 'equals' safe?
+        while ( !cur.equals( s_rdfNilUri ) )
+        {
+            list.add( cur );
+            cur = getResource( cur, s_rdfRestUri );
+        }
+
+        return list;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     String name;
     LocalRepository repository;
@@ -81,6 +185,7 @@ aliases = new Hashtable<String, String>();
 
 //System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         importModel( Wurfel.schemaUrl(), "urn:wurfel" );
+        importModel( Wurfel.testUrl(), "urn:wurfel-test" );
         updateModel();
     }
 
@@ -195,18 +300,18 @@ aliases = new Hashtable<String, String>();
 
     public Literal newIdentifier( String s )
     {
-        return new LiteralImpl( s, s_identifierClassUri );
+        return new LiteralImpl( s, s_wurfelIdentifierUri );
     }
 
     public Literal newStringLiteral( final String s )
     {
-        return new LiteralImpl( s, s_stringClassUri );
+        return new LiteralImpl( s, s_xsdStringUri );
     }
 
     private boolean isIdentifier( Value v )
     {
         if ( v instanceof Literal )
-            return ( ( (Literal) v ).getDatatype() ).equals( s_identifierClassUri );
+            return ( ( (Literal) v ).getDatatype() ).equals( s_wurfelIdentifierUri );
         else
             return false;
     }
@@ -214,6 +319,11 @@ aliases = new Hashtable<String, String>();
     private boolean isApply( Value v )
     {
         return v instanceof Apply;
+    }
+
+    private boolean isCombinator( Value v )
+    {
+return false;
     }
 
     // Note: this should throw an exception if the identifier does not resolve
