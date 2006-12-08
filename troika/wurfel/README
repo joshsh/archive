@@ -1,3 +1,11 @@
+[U] assumptions
+    [.] arity of a function (read: Apply) is constant, unaffected by reduction
+
+[U] 
+    [.] primitive functions may yield multiple values at a time
+
+::::::::::::::::::::::::::::::::::::::::
+
 mvn clean
 mvn antlr:generate
 mvn install
@@ -64,6 +72,15 @@ http://www.w3.org/2000/01/rdf-schema#comment
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel-test.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel-test.rdf
 
+RAPTORTRUNK=/home/joshs/opt/rdf_/redland_/raptor_/dot/branch_dot
+
 $RAPTORTRUNK/utils/rapper -q -i rdfxml -o dot ./src/main/resources/wurfel/schema/wurfel-test.rdf > ./src/main/resources/wurfel/schema/wurfel-test.dot
 dot -Tpng -o ./src/main/resources/wurfel/schema/wurfel-test.png ./src/main/resources/wurfel/schema/wurfel-test.dot
+
+
+
+
+$RAPTORTRUNK/utils/rapper -q -i turtle -o dot ./src/main/resources/wurfel/openrdf/openRdfValueTypes.rdf.turtle.txt > /tmp/openRdfValueTypes.dot
+dot -Tpng -o /tmp/openRdfValueTypes.png /tmp/openRdfValueTypes.dot
+kuickshow /tmp/openRdfValueTypes.png
 

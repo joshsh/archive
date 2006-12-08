@@ -4,12 +4,15 @@ import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
+import wurfel.model.NodeSet;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.model.Literal;
 
 import java.util.Collection;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class ConcatenateStringsPrimitive extends PrimitiveFunction
 {
@@ -27,10 +30,26 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
         return s_wurfeltestConcatenateStringsUri;
     }
 
-    public Collection<Value> apply( Value args[], Context context )
+    protected Collection<Value> applyInternal( LinkedList<Value> args,
+                                               Context context )
         throws WurfelException
     {
-return new ArrayList<Value>();
+        String strA, strB, result;
+
+        try
+        {
+            Iterator<Value> argIter = args.iterator();
+            strA = ( (Literal) argIter.next() ).getLabel();
+            strB = ( (Literal) argIter.next() ).getLabel();
+            result = strA + strB;
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+
+        return new NodeSet( context.toValue( result ) );
     }
 }
 

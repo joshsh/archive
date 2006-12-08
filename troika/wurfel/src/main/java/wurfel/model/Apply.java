@@ -1,6 +1,8 @@
 package wurfel.model;
 
 import wurfel.Wurfel;
+import wurfel.Context;
+import wurfel.WurfelException;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
@@ -9,9 +11,10 @@ import org.openrdf.sesame.sail.StatementIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
-// TODO: subclass LiteralImpl instead of Literal
-public class Apply implements Literal
+// TODO: subclass LiteralImpl instead of implementing Literal
+public class Apply implements Literal, Function
 {
     private static final URI
         s_applyClassUri = Wurfel.getWurfelUri( "Apply" );
@@ -19,11 +22,42 @@ public class Apply implements Literal
     private Value function, argument;
 //    private Collection<Value> function, argument;
 
+    private int arityCached;
+    public int arity()
+    {
+        return arityCached;
+    }
+
+    public void checkArguments( LinkedList<Value> args )
+        throws WurfelException
+    {
+        if ( args.size() != arity() )
+            throw new WurfelException( "attempt to apply a "
+                + arity() + "-ary function to a list of "
+                + args.size() + " arguments" );
+    }
+
+    public Collection<Value> applyTo( LinkedList<Value> args, Context context )
+        throws WurfelException
+    {
+// TODO: this is a temporary check
+checkArguments( args );
+
+        args.addFirst( argument );
+//        return function.apply( args, context );
+return null;
+    }
+
     public Apply( final Value function, final Value argument )
 //    public Apply( final Collection<Value> function, final Collection<Value> argument )
     {
         this.function = function;
         this.argument = argument;
+/*
+        if ( function instanceof Function )
+            arity = ( (Function) function ).arity() - 1;
+        else
+*/
     }
 
 

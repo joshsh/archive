@@ -3,6 +3,7 @@ package wurfel;
 import wurfel.model.Model;
 import wurfel.model.ModelMock;
 import wurfel.model.Apply;
+import wurfel.model.Property;
 import wurfel.model.NodeSet;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.primitives.ConcatenateStringsPrimitive;
@@ -170,6 +171,13 @@ show((Resource)arg);
         }
 
         return list;
+    }
+
+    public Literal toValue( final String s )
+    {
+// TODO: should I add a datatype to these literals? The imported literals don't appear to have a datatype.
+//        return new LiteralImpl( s, s_xsdStringUri );
+        return new LiteralImpl( s );
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -390,6 +398,7 @@ return false;
             return expr;
     }
 
+// FIXME: 'apply' is now a bit of a misnomer
     public Set<Value> apply( Value func, Value arg )
         throws WurfelException
     {

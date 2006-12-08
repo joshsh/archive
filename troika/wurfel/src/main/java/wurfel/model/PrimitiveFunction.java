@@ -7,6 +7,7 @@ import wurfel.WurfelException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.ArrayList;
 
 import org.openrdf.model.Resource;
@@ -17,6 +18,10 @@ import org.openrdf.model.Value;
 public abstract class PrimitiveFunction implements Function
 {
     public abstract URI getUri();
+
+    protected abstract Collection<Value> applyInternal( LinkedList<Value> args,
+                                                        Context context )
+        throws WurfelException;
 
     class Param
     {
@@ -169,9 +174,31 @@ public abstract class PrimitiveFunction implements Function
         return s;
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     public int arity()
     {
         return params.size();
+    }
+
+    public void checkArguments( LinkedList<Value> args )
+        throws WurfelException
+    {
+        if ( args.size() != arity() )
+            throw new WurfelException( "attempt to apply a "
+                + arity() + "-ary function to a list of "
+                + args.size() + " arguments" );
+    }
+
+    public Collection<Value> applyTo( LinkedList<Value> args, Context context )
+        throws WurfelException
+    {
+// TODO: this is a temporary check
+checkArguments( args );
+
+// TODO: type checking
+
+        return applyInternal( args, context );
     }
 }
 

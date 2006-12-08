@@ -6,34 +6,24 @@ import wurfel.WurfelException;
 import org.openrdf.model.Value;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 public interface Function
 {
 //    public abstract String toString();
 
-    public abstract int arity();
-    public abstract Collection<Value> apply( Value args[], Context context )
+    /**
+     *  The fixed number of arguments which this function consumes before
+     *  yielding a result.
+     */
+    public int arity();
+
+    public Collection<Value> applyTo( LinkedList<Value> args,
+                                      Context context )
         throws WurfelException;
 
-/*
-    public static String toString( Node n )
-    {
-        if ( null == n )
-            return "()";
-        else
-            return n.toString();
-    }
-
-    public static String toString( Collection<Node> nodes )
-    {
-        if ( nodes.isEmpty() )
-            return "()";
-        else if ( nodes.size() == 1 )
-            return nodes.iterator().next().toString();
-        else
-            return "{" + nodes.iterator().next().toString() + ", ...}";
-    }
-*/
+    public void checkArguments( LinkedList<Value> args )
+        throws WurfelException;
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
