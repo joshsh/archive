@@ -16,3 +16,11 @@ wurfel-test:concatenateStrings
         wurfel:parameterType xsd:string ;
         wurfel:parameterTransparency true ]
   ) .
+
+wurfel-test:S
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3 .
+
+wurfel-test:K
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 .

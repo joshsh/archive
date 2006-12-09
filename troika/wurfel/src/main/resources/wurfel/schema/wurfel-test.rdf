@@ -39,4 +39,16 @@
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
     <wurfel:parameters rdf:nodeID="genid4"/>
   </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#K">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#K">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
 </rdf:RDF>

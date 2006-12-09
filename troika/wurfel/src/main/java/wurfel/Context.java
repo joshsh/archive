@@ -4,8 +4,10 @@ import wurfel.model.Model;
 import wurfel.model.ModelMock;
 import wurfel.model.Apply;
 import wurfel.model.NodeSet;
-import wurfel.model.PrimitiveFunction;
+import wurfel.model.Function;
 import wurfel.model.primitives.ConcatenateStringsPrimitive;
+import wurfel.model.combinators.Combinator_S;
+import wurfel.model.combinators.Combinator_K;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
@@ -53,6 +55,7 @@ public class Context
         // TODO: this URI doesn't exist in the wurfel model.
         s_wurfelIdentifierUri = Wurfel.getWurfelUri( "Identifier" ),
         s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" ),
+        s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" ),
         s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" ),
         s_rdfFirstUri = Wurfel.getRdfUri( "first" ),
         s_rdfRestUri = Wurfel.getRdfUri( "rest" ),
@@ -155,6 +158,29 @@ show((Resource)arg);
         return label.equals( "true" );
     }
 
+    public int getInteger( Value arg, Value func )
+        throws WurfelException
+    {
+        Literal lit = getLiteral( arg, func );
+
+/*
+        URI type = lit.getDatatype();
+        if ( !type.equals( s_xsdIntegerUri ) )
+            throw new WurfelException( "type mismatch: expected " + s_xsdIntegerUri.toString() + ", found " + type.toString() );
+*/
+
+        String label = lit.getLabel();
+        try
+        {
+            return ( new Integer( label ) ).intValue();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+    }
+
     public List<Value> getRdfList( final Resource listHead )
         throws WurfelException
     {
@@ -188,19 +214,21 @@ show((Resource)arg);
 Hashtable<String, String> aliases;
 Model model = null;
 
-    private Hashtable<URI, PrimitiveFunction> primitives;
+    private Hashtable<URI, Function> specialFunctions;
 
-    private void addPrimitive( PrimitiveFunction prim )
+    private void addSpecialFunction( Function f )
     {
-        primitives.put( prim.getUri(), prim );
+        specialFunctions.put( f.getUri(), f );
     }
 
     private void loadPrimitives()
         throws WurfelException
     {
-        primitives = new Hashtable<URI, PrimitiveFunction>();
+        specialFunctions = new Hashtable<URI, Function>();
 
-        addPrimitive( new ConcatenateStringsPrimitive( this ) );
+        addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
+        addSpecialFunction( new Combinator_S( this ) );
+        addSpecialFunction( new Combinator_K( this ) );
     }
 
     public Context( final String name )
@@ -368,10 +396,10 @@ aliases = new Hashtable<String, String>();
     {
         if ( v instanceof URI )
         {
-            PrimitiveFunction prim = primitives.get( (URI) v );
+            Function f = specialFunctions.get( (URI) v );
 
-            if ( null != prim )
-                return prim;
+            if ( null != f )
+                return f;
             else
                 return v;
         }
@@ -382,8 +410,8 @@ aliases = new Hashtable<String, String>();
 
     private Value translateToGraph( Value v )
     {
-        if ( v instanceof PrimitiveFunction )
-            return ( (PrimitiveFunction) v ).getUri();
+        if ( v instanceof Function )
+            return ( (Function) v ).getUri();
         else
             return v;
     }
@@ -430,19 +458,7 @@ aliases = new Hashtable<String, String>();
         while ( resultIter.hasNext() )
         {
             Value v = resultIter.next();
-
-            if ( v instanceof URI )
-            {
-                PrimitiveFunction prim = primitives.get( (URI) v );
-
-                if ( null != prim )
-                    result.add( prim );
-                else
-                    result.add( v );
-            }
-
-            else
-                result.add( v );
+            result.add( translateFromGraph( v ) );
         }
 
         return result;

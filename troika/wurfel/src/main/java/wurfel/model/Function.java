@@ -4,6 +4,7 @@ import wurfel.Context;
 import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
+import org.openrdf.model.URI;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 public interface Function extends Value
 {
 //    public abstract String toString();
+    public URI getUri();
 
     /**
      *  The fixed number of arguments which this function consumes before

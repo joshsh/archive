@@ -14,11 +14,8 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-// TODO: write a factory class.
 public abstract class PrimitiveFunction extends Node implements Function
 {
-    public abstract URI getUri();
-
     protected abstract Collection<Value> applyInternal( LinkedList<Value> args,
                                                         Context context )
         throws WurfelException;

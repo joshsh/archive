@@ -64,10 +64,7 @@ http://www.w3.org/2000/01/rdf-schema#comment
     [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#List
     [ba] http://www.w3.org/2000/01/rdf-schema#List
 
-
-
-
-:::::::::::::::::::::::::::::;
+::::::::::::::::::::::::::::::::::::::::
 
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel-test.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel-test.rdf

@@ -16,6 +16,12 @@ import java.util.LinkedList;
 // TODO: subclass LiteralImpl instead of implementing Literal
 public class Apply extends Node implements Function
 {
+//FIXME
+    public URI getUri()
+{
+return null;
+}
+
     private static final URI
         s_applyClassUri = Wurfel.getWurfelUri( "Apply" );
 
