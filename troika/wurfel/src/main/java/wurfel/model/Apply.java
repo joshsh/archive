@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 // TODO: subclass LiteralImpl instead of implementing Literal
-public class Apply implements Literal, Function
+public class Apply extends Node implements Function
 {
     private static final URI
         s_applyClassUri = Wurfel.getWurfelUri( "Apply" );
@@ -43,9 +43,17 @@ public class Apply implements Literal, Function
 // TODO: this is a temporary check
 checkArguments( args );
 
-        args.addFirst( argument );
-//        return function.apply( args, context );
-return null;
+
+        if ( function instanceof Function )
+        {
+            args.addFirst( argument );
+            return ( (Function) function ).applyTo( args, context );
+        }
+
+        else
+        {
+            return context.apply( function, argument );
+        }
     }
 
     public Apply( final Value function, final Value argument )
@@ -53,11 +61,11 @@ return null;
     {
         this.function = function;
         this.argument = argument;
-/*
+
         if ( function instanceof Function )
-            arity = ( (Function) function ).arity() - 1;
+            arityCached = ( (Function) function ).arity() - 1;
         else
-*/
+            arityCached = 0;
     }
 
 

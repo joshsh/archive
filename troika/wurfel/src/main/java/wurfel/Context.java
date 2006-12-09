@@ -3,7 +3,6 @@ package wurfel;
 import wurfel.model.Model;
 import wurfel.model.ModelMock;
 import wurfel.model.Apply;
-import wurfel.model.Property;
 import wurfel.model.NodeSet;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.primitives.ConcatenateStringsPrimitive;
@@ -38,6 +37,7 @@ import java.util.Set;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
 
@@ -409,7 +409,9 @@ return false;
     public NodeSet reduce( Value expr )
         throws WurfelException
     {
-        if ( isApply( expr ) )
+//System.out.println( "isApply = " + isApply( expr ) );
+//System.out.println( "arity = " + ( (Apply) expr ).arity() );
+        if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
             Iterator<Value> reducedFuncIter = reduce(
                 ( (Apply) expr ).getFunction() ).iterator();
@@ -417,13 +419,23 @@ return false;
             Iterator<Value> reducedArgIter = reduce(
                 ( (Apply) expr ).getArgument() ).iterator();
 
+            LinkedList<Value> argList = new LinkedList<Value>();
             NodeSet result = new NodeSet();
             while ( reducedFuncIter.hasNext() )
             {
                 Value function = reducedFuncIter.next();
                 while ( reducedArgIter.hasNext() )
-                    result.add(
-                        apply( function, reducedArgIter.next() ) );
+                {
+                    Apply tmpApply = new Apply( function, reducedArgIter.next() );
+                    if ( tmpApply.arity() == 0 )
+                    {
+                        argList.clear();
+                        result.add( tmpApply.applyTo( argList, this ) );
+                    }
+
+                    else
+                        result.add( tmpApply );
+                }
             }
 
             return result;

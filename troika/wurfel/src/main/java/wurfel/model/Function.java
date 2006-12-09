@@ -8,7 +8,7 @@ import org.openrdf.model.Value;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public interface Function
+public interface Function extends Value
 {
 //    public abstract String toString();
 
