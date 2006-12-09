@@ -48,6 +48,7 @@ public abstract class Model
         return objects;
     }
 
+/*
     public Set<Value> multiply( Collection<Value> subjects,
                                 Collection<Value> predicates )
     {
@@ -83,6 +84,7 @@ public abstract class Model
 
         return objects;
     }
+*/
 
     public Set<Resource> getSubjects()
     {

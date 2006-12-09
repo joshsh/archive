@@ -364,9 +364,28 @@ aliases = new Hashtable<String, String>();
         return v instanceof Apply;
     }
 
-    private boolean isCombinator( Value v )
+    private Value translateFromGraph( Value v )
     {
-return false;
+        if ( v instanceof URI )
+        {
+            PrimitiveFunction prim = primitives.get( (URI) v );
+
+            if ( null != prim )
+                return prim;
+            else
+                return v;
+        }
+
+        else
+            return v;
+    }
+
+    private Value translateToGraph( Value v )
+    {
+        if ( v instanceof PrimitiveFunction )
+            return ( (PrimitiveFunction) v ).getUri();
+        else
+            return v;
     }
 
     // Note: this should throw an exception if the identifier does not resolve
@@ -374,7 +393,8 @@ return false;
     private Value resolve( String s )
         throws WurfelException
     {
-        return model.resolve( s );
+        Value v = model.resolve( s );
+        return ( v == null ) ? null : translateFromGraph( v );
     }
 
     public Value resolveIdentifiers( Value expr )
@@ -402,15 +422,35 @@ return false;
     public Set<Value> apply( Value func, Value arg )
         throws WurfelException
     {
+        arg = translateToGraph( arg );
+
 // TODO: combinators and primitives as func will have their own, idiosyncratic ways of yielding a product
-        return model.multiply( arg, func );
+        Iterator<Value> resultIter = model.multiply( arg, func ).iterator();
+        Set<Value> result = new NodeSet();
+        while ( resultIter.hasNext() )
+        {
+            Value v = resultIter.next();
+
+            if ( v instanceof URI )
+            {
+                PrimitiveFunction prim = primitives.get( (URI) v );
+
+                if ( null != prim )
+                    result.add( prim );
+                else
+                    result.add( v );
+            }
+
+            else
+                result.add( v );
+        }
+
+        return result;
     }
 
     public NodeSet reduce( Value expr )
         throws WurfelException
     {
-//System.out.println( "isApply = " + isApply( expr ) );
-//System.out.println( "arity = " + ( (Apply) expr ).arity() );
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
             Iterator<Value> reducedFuncIter = reduce(
@@ -426,7 +466,9 @@ return false;
                 Value function = reducedFuncIter.next();
                 while ( reducedArgIter.hasNext() )
                 {
-                    Apply tmpApply = new Apply( function, reducedArgIter.next() );
+                    Value argument = reducedArgIter.next();
+
+                    Apply tmpApply = new Apply( function, argument );
                     if ( tmpApply.arity() == 0 )
                     {
                         argList.clear();
