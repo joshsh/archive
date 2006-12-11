@@ -42,6 +42,11 @@ public abstract class Combinator extends Node implements Function
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
     }
+
+    public String toString()
+    {
+        return selfUri.toString();
+    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

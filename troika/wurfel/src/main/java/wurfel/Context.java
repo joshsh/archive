@@ -362,30 +362,14 @@ aliases = new Hashtable<String, String>();
 
 
 
-/*
-    private Node resolveIdentifers( Node expr )
-    {
-        if ( expr instanceof 
-    }
-*/
-
-    public Literal newIdentifier( String s )
-    {
-        return new LiteralImpl( s, s_wurfelIdentifierUri );
-    }
 
     public Literal newStringLiteral( final String s )
     {
         return new LiteralImpl( s, s_xsdStringUri );
     }
 
-    private boolean isIdentifier( Value v )
-    {
-        if ( v instanceof Literal )
-            return ( ( (Literal) v ).getDatatype() ).equals( s_wurfelIdentifierUri );
-        else
-            return false;
-    }
+
+
 
     private boolean isApply( Value v )
     {
@@ -416,34 +400,13 @@ aliases = new Hashtable<String, String>();
             return v;
     }
 
-    // Note: this should throw an exception if the identifier does not resolve
+    // TODO: this should throw an exception if the identifier does not resolve
     //       to a unique value.
-    private Value resolve( String s )
+    public Value resolveIdentifier( String s )
         throws WurfelException
     {
         Value v = model.resolve( s );
         return ( v == null ) ? null : translateFromGraph( v );
-    }
-
-    public Value resolveIdentifiers( Value expr )
-        throws WurfelException
-    {
-        if ( isIdentifier( expr ) )
-            return resolve( ( (Literal) expr ).getLabel() );
-
-        else if ( isApply( expr ) )
-        {
-            Value function = resolveIdentifiers( ( (Apply) expr ).getFunction() );
-            Value argument = resolveIdentifiers( ( (Apply) expr ).getArgument() );
-
-            if ( null == function || null == argument )
-                return null;
-            else
-                return new Apply( function, argument );
-        }
-
-        else
-            return expr;
     }
 
 // FIXME: 'apply' is now a bit of a misnomer
@@ -501,15 +464,6 @@ aliases = new Hashtable<String, String>();
 
         else
             return new NodeSet( expr );
-    }
-
-    public Set<Value> evaluate( Value expr )
-        throws WurfelException
-    {
-        Value resolved = resolveIdentifiers( expr );
-        return ( null == resolved )
-            ? new NodeSet()
-            : reduce( resolved );
     }
 
 

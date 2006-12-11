@@ -4,13 +4,11 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
-import wurfel.model.Apply;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.Value;
-
-import java.util.List;
-import java.util.ArrayList;
+import wurfel.cli.ast.Ast;
+import wurfel.cli.ast.StringNode;
+import wurfel.cli.ast.IdentifierNode;
+import wurfel.cli.ast.SequenceNode;
 }
 
 
@@ -174,7 +172,7 @@ QUIT    : COMMAND ( "quit"      | "q"
 class WurfelParser extends Parser;
 options
 {
-    buildAST = true;
+//    buildAST = true;
 
     // Do not attempt to recover from parser errors.
     defaultErrorHandler = false;
@@ -193,16 +191,15 @@ options
 
 nt_Input
 {
-    Value q;
 }
-    : q=nt_Query
+    : nt_Query
       ( nt_Input )?
     ;
 
 
-nt_Query returns [ Value r ]
+nt_Query
 {
-    r = null;
+    Ast r;
 }
     : r=nt_Sequence SEMI
       {
@@ -217,7 +214,7 @@ nt_Query returns [ Value r ]
     ;
 
 
-nt_ParenthesizedExpression returns [ Value r ]
+nt_ParenthesizedExpression returns [ Ast r ]
 {
 }
     : L_PAREN r=nt_Sequence R_PAREN
@@ -232,23 +229,32 @@ nt_Quantifier
     ;
 
 
-nt_Sequence returns [ Value r ]
+nt_Sequence returns [ Ast r ]
 {
-    Value i;
+    Ast i;
+    SequenceNode s;
 }
-    : r=nt_Item
+    : i=nt_Item
+        {
+            s = new SequenceNode();
+            s.add( i );
+            r = s;
+        }
       ( i=nt_Item
         {
-            r = new Apply( i, r );
+            s.add( i );
         }
+
+        // temporary.
         | AND i=nt_Item
         | OR i=nt_Item
         | WITHOUT i=nt_Item
+
       )*
     ;
 
 
-nt_Item returns [ Value r ]
+nt_Item returns [ Ast r ]
 {
 }
     : r=nt_Name
@@ -257,23 +263,23 @@ nt_Item returns [ Value r ]
     ;
 
 
-nt_String returns [ Literal r ]
+nt_String returns [ Ast r ]
 {
 }
     : t:STRING
-      {
-        r = interpreter.newStringLiteral( t.getText() );
-      }
+        {
+            r = new StringNode( t.getText() );
+        }
     ;
 
 
-nt_Name returns [ Literal r ]
+nt_Name returns [ Ast r ]
 {
 }
     : t:IDENTIFIER
-      {
-        r = interpreter.newIdentifier( t.getText() );
-      }
+        {
+            r = new IdentifierNode( t.getText() );
+        }
     ;
 
 

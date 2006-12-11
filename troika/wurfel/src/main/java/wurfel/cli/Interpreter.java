@@ -2,6 +2,7 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
+import wurfel.cli.ast.Ast;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
@@ -272,22 +273,13 @@ public class Interpreter extends Thread implements Runnable
 
 
 
-
-    public Literal newIdentifier( final String s )
-    {
-        return context.newIdentifier( s );
-    }
-
-    public Literal newStringLiteral( final String s )
-    {
-        return context.newStringLiteral( s );
-    }
-
-    public void evaluate( Value expr )
+    public void evaluate( Ast ast )
     {
         try
         {
-            Set<Value> result = context.evaluate( expr );
+            Value expr = ast.evaluate( context );
+
+            Set<Value> result = context.reduce( expr );
             if ( 0 < result.size() )
                 System.out.println( "" );
 

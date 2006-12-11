@@ -6,7 +6,7 @@ public abstract class Node extends BNodeImpl
 {
     public Node()
     {
-        super( "no id" );
+        super( "your id here" );
     }
 }
 
