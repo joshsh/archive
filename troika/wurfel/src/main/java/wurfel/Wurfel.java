@@ -13,10 +13,17 @@ public class Wurfel
         s_wurfelSchemaUrl = Wurfel.class.getResource( "schema/wurfel.rdf" ),
         s_wurfelTestUrl = Wurfel.class.getResource( "schema/wurfel-test.rdf" );
 
+    private static boolean initialized = false;
+
     public static void initialize()
     {
-        PropertyConfigurator.configure(
-             Wurfel.class.getResource( "log4j.properties" ) );
+        if ( !initialized )
+        {
+            PropertyConfigurator.configure(
+                Wurfel.class.getResource( "log4j.properties" ) );
+
+            initialized = true;
+        }
     }
 
     public static URL schemaUrl()
