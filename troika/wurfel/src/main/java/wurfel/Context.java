@@ -63,6 +63,13 @@ public class Context
 
     ////////////////////////////////////////////////////////////////////////////
 
+    public static Literal newStringLiteral( final String s )
+    {
+        return new LiteralImpl( s, s_xsdStringUri );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     public Value getValue( Value arg, Value func )
         throws WurfelException
     {
@@ -345,28 +352,9 @@ aliases = new Hashtable<String, String>();
         }
     }
 
-    public String resolveSimple( String name )
-    {
-        String s = aliases.get( name );
-        if ( null != s )
-            return s;
-        else if ( null != model )
-        {
-            URI uri = model.resolve( name );
-            if ( null != uri )
-                return uri.toString();
-        }
-
-        return null;
-    }
 
 
 
-
-    public Literal newStringLiteral( final String s )
-    {
-        return new LiteralImpl( s, s_xsdStringUri );
-    }
 
 
 
@@ -427,17 +415,26 @@ aliases = new Hashtable<String, String>();
         return result;
     }
 
+
+    /**
+     *  Carries out normal-order lazy beta reduction, distributing operations
+     *  over node sets.
+     */
     public NodeSet reduce( Value expr )
         throws WurfelException
     {
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
+            // Reduce the function.
             Iterator<Value> reducedFuncIter = reduce(
                 ( (Apply) expr ).getFunction() ).iterator();
 
+            // Reduce the function.
             Iterator<Value> reducedArgIter = reduce(
                 ( (Apply) expr ).getArgument() ).iterator();
 
+            // Iterate over the cartesian product of the reduced function(s)
+            // with the reduced argument(s).
             LinkedList<Value> argList = new LinkedList<Value>();
             NodeSet result = new NodeSet();
             while ( reducedFuncIter.hasNext() )
@@ -447,11 +444,20 @@ aliases = new Hashtable<String, String>();
                 {
                     Value argument = reducedArgIter.next();
 
+                    // Apply the function to the argument.
                     Apply tmpApply = new Apply( function, argument );
                     if ( tmpApply.arity() == 0 )
                     {
                         argList.clear();
-                        result.add( tmpApply.applyTo( argList, this ) );
+
+                        Collection<Value> itmResult = tmpApply.applyTo( argList, this );
+
+                        // Reduction is recursive; we must first iterate over
+                        // the intermediate results and reduce them before
+                        // adding them to the list of final results.
+                        Iterator<Value> itmIter = itmResult.iterator();
+                        while ( itmIter.hasNext() )
+                            result.add( reduce( itmIter.next() ) );
                     }
 
                     else

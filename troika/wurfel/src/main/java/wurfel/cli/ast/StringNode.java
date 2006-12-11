@@ -17,7 +17,7 @@ public class StringNode extends Ast
     public Value evaluate( Context context )
         throws WurfelException
     {
-        return context.newStringLiteral( value );
+        return Context.newStringLiteral( value );
     }
 }
 

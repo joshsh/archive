@@ -10,7 +10,7 @@ public abstract class WurfelTestCase extends TestCase
 {
     protected static final boolean DEBUG = true;
 
-    private int totalRunningTests = 0;
+    private int totalRunningTests;
     private Throwable error = null;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -27,16 +27,15 @@ public abstract class WurfelTestCase extends TestCase
 
             try
             {
-                startTest();
                 test();
-                finishTest();
             }
 
             catch ( Throwable t )
             {
                 error = t;
-                finishTest();
             }
+
+            finishTest();
         }
     }
 
@@ -57,17 +56,23 @@ public abstract class WurfelTestCase extends TestCase
 
     protected void testSynchronous( TestRunnable r )
     {
+        startTest();
+
         r.run();
     }
 
     protected void testAsynchronous( TestRunnable r )
     {
+        startTest();
+
         ( new Thread( r ) ).start();
     }
 
     protected void start()
     {
         Wurfel.initialize();
+
+        totalRunningTests = 0;
     }
 
     protected synchronized void finish()

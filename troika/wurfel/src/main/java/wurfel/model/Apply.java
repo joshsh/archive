@@ -49,7 +49,6 @@ return null;
 // TODO: this is a temporary check
 checkArguments( args );
 
-
         if ( function instanceof Function )
         {
             args.addFirst( argument );
@@ -73,69 +72,6 @@ checkArguments( args );
         else
             arityCached = 0;
     }
-
-
-    /**
-     *  Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
-     */
-    public int compareTo( Object other )
-    {
-// TODO
-        return -1;
-    }
-
-    /**
-     *  Gets all statements from the RDF graph for which this value is the object.
-     */
-    public StatementIterator getObjectStatements()
-    {
-        return null;
-    }
-
-    /**
-     *  Compares a literal object to another object.
-     */
-    public boolean equals( Object other )
-    {
-// TODO
-        return false;
-    }
-
-    /**
-     * Gets the datatype for this literal.
-     */
-    public URI getDatatype()
-    {
-        return s_applyClassUri;
-    }
-
-    /**
-     *  Gets the label of this literal.
-     */
-    public String getLabel()
-    {
-// TODO
-        return "Error: the value of an Apply is in its getFunction() and getArgument() members";
-    }
-
-    /**
-     *  Gets the language tag for this literal, normalized to lowercase.
-     */
-    public String getLanguage()
-    {
-// TODO
-        return "I don't know what to use for a language tag";
-    }
-
-    /**
-     *  The hash code of a literal is defined as the hash code of its label: label.hashCode()
-     */
-    public int hashCode()
-    {
-        return getLabel().hashCode();
-    }
-
-
 
     public Value getFunction()
 //    public Collection<Value> getFunction()
@@ -171,48 +107,8 @@ checkArguments( args );
             s += argument.toString();
 
         return s;
-
-/*
-//        String s = ".";
-        String s = "";
-
-        Iterator<Value> funcIter = function.iterator();
-        if ( funcIter.hasNext() )
-        {
-            s += funcIter.next().toString();
-            if ( funcIter.hasNext() )
-                s += "[...]";
-        }
-        else
-            s += "()";
-
-        s += " ";
-
-        Iterator<Value> argIter = argument.iterator();
-        if ( argIter.hasNext() )
-        {
-            Value arg = argIter.next();
-            if ( arg instanceof Apply )
-                s += "(" + arg.toString() + ")";
-            else
-                s += arg.toString();
-            if ( argIter.hasNext() )
-                s += "[...]";
-        }
-        else
-            s += "()";
-
-        return s;
-//        return "@" + Node.toString( argument ) + " " + Node.toString( function );
-*/
     }
 
-/*
-    Collection<Node> reduce( ReductionContext context )
-    {
-        
-    }
-*/
 }
 
 

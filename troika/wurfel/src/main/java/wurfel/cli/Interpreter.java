@@ -219,11 +219,6 @@ public class Interpreter extends Thread implements Runnable
         context.define( name, uri );
     }
 
-    public String resolve( final String name )
-    {
-        return context.resolveSimple( name );
-    }
-
     public void show( final String name )
     {
         try
