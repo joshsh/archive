@@ -5,6 +5,7 @@ import wurfel.WurfelException;
 import wurfel.cli.ast.Ast;
 
 import org.openrdf.model.Literal;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import jline.Completor;
@@ -274,20 +275,32 @@ public class Interpreter extends Thread implements Runnable
         {
             Value expr = ast.evaluate( context );
 
-            Set<Value> result = context.reduce( expr );
+            Collection<Value> result = ( null == expr )
+                ? new ArrayList<Value>()
+                : context.reduce( expr );
+
             if ( 0 < result.size() )
                 System.out.println( "" );
 
             Iterator<Value> resultIter = result.iterator();
             while ( resultIter.hasNext() )
-                System.out.println( resultIter.next().toString() );
+            {
+                Value v = resultIter.next();
+
+                if ( v instanceof Resource )
+                    context.show( (Resource) v );
+                else
+                    System.out.println( v.toString() );
+            }
 
             System.out.println( "" );
         }
 
-        catch ( WurfelException e ) {}
+        catch ( WurfelException e )
+        {
+            System.err.println( "\nError: " + e.toString() + "\n" );
+        }
     }
 }
-
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

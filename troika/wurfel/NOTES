@@ -1,0 +1,45 @@
+
+::: Wurfel can handle around 35,000 WordNet statements :::::::::::::::::::::::::
+
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wnfull.rdfs" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-antonym.rdf" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-attribute.rdf" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-causes.rdf" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-classifiedby.rdf" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-derivationallyrelated.rdf" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-entailment.rdf" ;
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-frame.rdf" ;
+[status ] : Processed 468 statements in 0 seconds
+[status ] : Processed 3,994 statements in 0 seconds
+[status ] : Processed 306 statements in 0 seconds
+[status ] : Processed 218 statements in 0 seconds
+[status ] : Processed 8,358 statements in 0 seconds
+[status ] : Processed 20,701 statements in 1 seconds
+[status ] : Processed 409 statements in 0 seconds
+[status ] : Processed 367 statements in 0 seconds
+
+!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-glossary.rdf" ;
+Transaction started.
+[status ] : Loading data
+[WARNING] : Unable to store data in tmp file, attempting to store it in main memory
+Transaction finished.
+java.lang.OutOfMemoryError: Java heap space
+java.lang.OutOfMemoryError: Java heap space
+
+
+::: WordNet's glossary contains more nested entity definitions than are allowed
+    by default :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+1 >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-glossary.rdf" ;
+Transaction started.
+[status ] : Loading data
+[WARNING] : Unable to store data in tmp file, attempting to store it in main memory
+[status ] : Data loaded (0 bytes)
+[status ] : Checking data for errors
+[Fatal Error] wordnet-glossary.rdf:-1:-1: The parser has encountered more than "64,000" entity expansions in this document; this is the limit imposed by the application.
+[ERROR  ] : Failed to add statements: org.openrdf.rio.ParseException: org.xml.sax.SAXParseException: The parser has encountered more than "64,000" entity expansions in this document; this is the limit imposed by the application.
+Transaction finished.
+2 >>
+
+# Override the limit like this (see http://java.sun.com/j2se/1.5.0/docs/guide/xml/jaxp/JAXP-Compatibility_150.html#JAXP_security):
+java -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"

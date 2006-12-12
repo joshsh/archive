@@ -17,7 +17,12 @@ public class IdentifierNode extends Ast
     public Value evaluate( Context context )
         throws WurfelException
     {
-        return context.resolveIdentifier( value );
+        Value v = context.resolveIdentifier( value );
+
+        if ( null == v )
+            throw new WurfelException( "'" + value + "' is undefined in this context" );
+        else
+            return v;
     }
 }
 

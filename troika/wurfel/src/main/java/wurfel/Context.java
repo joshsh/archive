@@ -78,15 +78,8 @@ public class Context
         if ( 1 != results.size() )
         {
             if ( 0 == results.size() )
-{
-if ( arg instanceof Resource )
-{
-System.out.println( "arg:" );
-show((Resource)arg);
-}
                 throw new WurfelException( "no values resolved for " + func.toString() + " of " + arg.toString() );
 
-}
             else
                 throw new WurfelException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
         }
@@ -332,7 +325,7 @@ aliases = new Hashtable<String, String>();
             System.out.println( "()" );
     }
 
-    private void show( Resource subject )
+    public void show( Resource subject )
         throws WurfelException
     {
         System.out.println( subject.toString() );
@@ -343,7 +336,7 @@ aliases = new Hashtable<String, String>();
         {
             URI predicate = predIter.next();
 
-            System.out.println( "    " + predicate.toString() );
+            System.out.println( "    " + predicate.getLocalName() );
 
             Set<Value> objects = model.multiply( subject, predicate );
             Iterator<Value> objIter = objects.iterator();
@@ -553,9 +546,11 @@ aliases = new Hashtable<String, String>();
         }
     }
 
-    private void testModel()
+    public void printStatements()
         throws WurfelException
     {
+        updateModel();
+
         Set<Resource> subjects = model.getSubjects();
         Iterator<Resource> subjIter = subjects.iterator();
         while ( subjIter.hasNext() )
@@ -563,20 +558,6 @@ aliases = new Hashtable<String, String>();
             Resource subject = subjIter.next();
             show( subject );
         }
-    }
-
-    public void testGraph()
-        throws WurfelException
-    {
-        updateModel();
-
-        testModel();
-    }
-
-    public void printStatements()
-        throws WurfelException
-    {
-        testGraph();
     }
 }
 

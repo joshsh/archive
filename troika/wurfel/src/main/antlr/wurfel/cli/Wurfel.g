@@ -315,8 +315,6 @@ nt_Command
     | RESOLVE name0:IDENTIFIER
         {
             interpreter.show( name0.getText() );
-//            System.out.println(
-//                interpreter.resolve( name0.getText() ) );
         }
     ;
 
