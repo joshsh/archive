@@ -64,13 +64,13 @@ WS  :   (   ' '
 
 protected
 NORMAL
-    : '#' | '$' | '%' | '\'' ',' | '-' | '.' | ('0' .. '9') | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '[' | ']' | '^' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
+    : '#' | '$' | '%' | '\'' ',' | '-' | ('0' .. '9') | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '[' | ']' | '^' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
 //    | '\\' ( '\"' | '\\' | WS )
     ;
 
 protected
 SPECIAL
-    : '!' | '&' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':'
+    : '!' | '&' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.'
     ;
 
 protected
@@ -116,14 +116,10 @@ IDENTIFIER
     : ( NORMAL | ESC )+
     ;
 
-
-
-
 COMMENT
    : "(:" ((~':') | (':' ~')'))* ":)"
    { $setType(Token.SKIP); }
    ;
-
 
 L_PAREN
 options { paraphrase = "opening parenthesis"; } : '(' ;
@@ -151,6 +147,9 @@ options { paraphrase = "choice quantifier"; } : '?' ;
 
 SEMI
 options { paraphrase = "semicolon"; } : ';' ;
+
+DOT
+options { paraphrase = "dot operator"; } : '.' ;
 
 protected
 COMMAND
@@ -214,21 +213,6 @@ nt_Query
     ;
 
 
-nt_ParenthesizedExpression returns [ Ast r ]
-{
-}
-    : L_PAREN r=nt_Sequence R_PAREN
-      ( nt_Quantifier )?
-    ;
-
-
-nt_Quantifier
-{
-}
-    : CHOICE | STAR | PLUS
-    ;
-
-
 nt_Sequence returns [ Ast r ]
 {
     Ast i;
@@ -260,6 +244,24 @@ nt_Item returns [ Ast r ]
     : r=nt_Name
     | r=nt_String
     | r=nt_ParenthesizedExpression
+    | r=nt_QuantifiedItem
+    ;
+
+
+nt_ParenthesizedExpression returns [ Ast r ]
+{
+}
+    : L_PAREN r=nt_Sequence R_PAREN
+    ;
+
+
+nt_QuantifiedItem returns [ Ast r ]
+{
+}
+    : DOT r=nt_Item
+    | CHOICE r=nt_Item
+    | STAR r=nt_Item
+    | PLUS r=nt_Item
     ;
 
 

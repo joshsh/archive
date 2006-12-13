@@ -43,3 +43,9 @@ Transaction finished.
 
 # Override the limit like this (see http://java.sun.com/j2se/1.5.0/docs/guide/xml/jaxp/JAXP-Compatibility_150.html#JAXP_security):
 java -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
+
+
+# These ones have even more:
+x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-hyponym.rdf" ;
+x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-wordsensesandwords.rdf" ;
+
