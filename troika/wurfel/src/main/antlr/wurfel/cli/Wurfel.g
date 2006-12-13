@@ -6,6 +6,8 @@ import wurfel.Context;
 import wurfel.WurfelException;
 
 import wurfel.cli.ast.Ast;
+import wurfel.cli.ast.DoubleNode;
+import wurfel.cli.ast.IntNode;
 import wurfel.cli.ast.StringNode;
 import wurfel.cli.ast.IdentifierNode;
 import wurfel.cli.ast.SequenceNode;
@@ -64,13 +66,18 @@ WS  :   (   ' '
 
 protected
 NORMAL
-    : '#' | '$' | '%' | '\'' ',' | '-' | ('0' .. '9') | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '[' | ']' | '^' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
+    : '#' | '$' | '%' | '\'' | '-' | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
 //    | '\\' ( '\"' | '\\' | WS )
     ;
 
 protected
+DIGIT
+    : ('0' .. '9')
+    ;
+
+protected
 SPECIAL
-    : '!' | '&' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.'
+    : '!' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
     ;
 
 protected
@@ -109,11 +116,15 @@ IDENTIFIER
 STRING
     : '\"'! {
         setCompletorState( CompletorState.NONE );
-      } ( NORMAL | SPECIAL | ESC | WS )+ '\"'!
+      } ( NORMAL | DIGIT | SPECIAL | ESC | WS )+ '\"'!
     ;
 
 IDENTIFIER
-    : ( NORMAL | ESC )+
+    : ( NORMAL | ESC ) ( NORMAL | DIGIT | ESC )*
+    ;
+
+NUMBER
+    : ( DIGIT )+ ( '.' ( DIGIT )+ )?
     ;
 
 COMMENT
@@ -127,8 +138,14 @@ options { paraphrase = "opening parenthesis"; } : '(' ;
 R_PAREN
 options { paraphrase = "closing parenthesis"; } : ')' ;
 
+L_SQ_BRACE
+options { paraphrase = "opening square bracket"; } : '[' ;
+
+R_SQ_BRACE
+options { paraphrase = "closing square bracket"; } : ']' ;
+
 AND options
-{ paraphrase = "conjunction"; } : '&' ;
+{ paraphrase = "conjunction"; } : '^' ;
 
 OR
 options { paraphrase = "disjunction"; } : '|' ;
@@ -150,6 +167,9 @@ options { paraphrase = "semicolon"; } : ';' ;
 
 DOT
 options { paraphrase = "dot operator"; } : '.' ;
+
+COMMA
+options { paraphrase = "comma"; } : ',' ;
 
 protected
 COMMAND
@@ -228,12 +248,6 @@ nt_Sequence returns [ Ast r ]
         {
             s.add( i );
         }
-
-        // temporary.
-        | AND i=nt_Item
-        | OR i=nt_Item
-        | WITHOUT i=nt_Item
-
       )*
     ;
 
@@ -242,9 +256,10 @@ nt_Item returns [ Ast r ]
 {
 }
     : r=nt_Name
-    | r=nt_String
+    | r=nt_Literal
     | r=nt_ParenthesizedExpression
     | r=nt_QuantifiedItem
+    | r=nt_IndexExpression
     ;
 
 
@@ -259,18 +274,47 @@ nt_QuantifiedItem returns [ Ast r ]
 {
 }
     : DOT r=nt_Item
+    | AND r=nt_Item
+    | OR r=nt_Item
+    | WITHOUT r=nt_Item
     | CHOICE r=nt_Item
     | STAR r=nt_Item
     | PLUS r=nt_Item
     ;
 
 
-nt_String returns [ Ast r ]
+nt_IndexExpression returns [ Ast r ]
+{
+    Ast i;
+}
+    : L_SQ_BRACE r=nt_Item ( COMMA i=nt_Item )? R_SQ_BRACE
+    ;
+
+
+nt_Literal returns [ Ast r ]
 {
 }
     : t:STRING
         {
             r = new StringNode( t.getText() );
+        }
+    | u:NUMBER
+        {
+            try
+            {
+                String s = u.getText();
+                if ( s.contains( "." ) )
+                    r = new DoubleNode( ( new Double( s ) ).doubleValue() );
+                else
+                    r = new IntNode( ( new Integer( s ) ).intValue() );
+            }
+
+            catch ( NumberFormatException e )
+            {
+                System.err.println( "a NumberFormattingException was encountered (this shouldn't happen)" );
+                r = null;
+                interpreter.quit();
+            }
         }
     ;
 

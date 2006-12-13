@@ -17,12 +17,12 @@ import java.util.LinkedList;
 public class Combinator_Y extends Combinator
 {
     private static final URI
-        s_wurfelTestYUri = Wurfel.getWurfelTestUri( "Y" );
+        s_uri = Wurfel.getWurfelTestUri( "Y" );
 
     public Combinator_Y( Context context )
         throws WurfelException
     {
-        super( s_wurfelTestYUri, context );
+        super( s_uri, context );
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,

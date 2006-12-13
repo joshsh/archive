@@ -22,11 +22,14 @@ public abstract class Combinator extends Node implements Function
         return selfUri;
     }
 
-    public Combinator( final URI self, Context context )
+    protected Combinator( final URI self, Context context )
         throws WurfelException
     {
         selfUri = self;
-        arityCached = context.getInteger( selfUri, s_wurfelCombinatorArityUri );
+        arityCached = context.intValue(
+            context.castToLiteral(
+                context.findUniqueProduct(
+                    selfUri, s_wurfelCombinatorArityUri ) ) );
     }
 
     public int arity()

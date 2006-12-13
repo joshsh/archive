@@ -16,6 +16,8 @@ import org.openrdf.model.Value;
 
 public abstract class PrimitiveFunction extends Node implements Function
 {
+    protected URI selfUri;
+
     protected abstract Collection<Value> applyInternal( LinkedList<Value> args,
                                                         Context context )
         throws WurfelException;
@@ -57,13 +59,18 @@ public abstract class PrimitiveFunction extends Node implements Function
     private Param getWurfelParameter( final Resource head, Context context )
         throws WurfelException
     {
-        String name = context.getString( head, s_wurfelParameterNameUri );
-        URI type = context.getUri( head, s_wurfelParameterTypeUri );
+        String name = context.stringValue(
+            context.castToLiteral(
+                context.findUniqueProduct( head, s_wurfelParameterNameUri ) ) );
+        URI type = context.castToUri(
+            context.findUniqueProduct( head, s_wurfelParameterTypeUri ) );
 
 // TODO: actually use this, or get rid of it
         String annotation = "";
 
-        boolean transparency = context.getBoolean( head, s_wurfelParameterTransparencyUri );
+        boolean transparency = context.booleanValue(
+            context.castToLiteral(
+                context.findUniqueProduct( head, s_wurfelParameterTransparencyUri ) ) );
 
         return new Param( name, type, annotation, transparency );
     }
@@ -71,13 +78,17 @@ public abstract class PrimitiveFunction extends Node implements Function
     public PrimitiveFunction( final URI self, Context context )
         throws WurfelException
     {
+        selfUri = self;
+
 // TODO: actually use these, or get rid of them
         name = "";
         annotation = "";
 
-        returnType = context.getUri( self, s_wurfelReturnTypeUri );
-        Resource paramList = context.getResource( self, s_wurfelParametersUri );
-        Iterator<Value> paramIter = context.getRdfList( paramList ).iterator();
+        returnType = context.castToUri(
+            context.findUniqueProduct( self, s_wurfelReturnTypeUri ) );
+        Resource paramList = context.castToResource(
+            context.findUniqueProduct( self, s_wurfelParametersUri ) );
+        Iterator<Value> paramIter = context.listValue( paramList ).iterator();
 
         params = new ArrayList<Param>();
 
@@ -91,7 +102,10 @@ public abstract class PrimitiveFunction extends Node implements Function
         }
     }
 
-
+    public URI getUri()
+    {
+        return selfUri;
+    }
 
 
     public String getName()

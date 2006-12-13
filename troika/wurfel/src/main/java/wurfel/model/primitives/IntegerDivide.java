@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ConcatenateStringsPrimitive extends PrimitiveFunction
+public class IntegerDivide extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "concatenateStrings" );
+        = Wurfel.getWurfelTestUri( "integer-divide" );
 
-    public ConcatenateStringsPrimitive( Context context )
+    public IntegerDivide( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -29,14 +29,23 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        String strA, strB, result;
+        int a, b, result;
 
         Iterator<Value> argIter = args.iterator();
-        strA = context.stringValue(
-                    context.castToLiteral( argIter.next() ) );
-        strB = context.stringValue(
-                    context.castToLiteral( argIter.next() ) );
-        result = strA + strB;
+        a = context.intValue(
+                context.castToLiteral( argIter.next() ) );
+        b = context.intValue(
+                context.castToLiteral( argIter.next() ) );
+
+        try
+        {
+            result = a / b;
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
 
         return new NodeSet( context.toLiteral( result ) );
     }

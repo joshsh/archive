@@ -3,6 +3,69 @@
 @prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
 
+### Integer arithmetic primitives ##############################################
+
+wurfel-test:integer-add
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-subtract
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-multiply
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-divide
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-mod
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+### String manipulation primitives #############################################
 
 wurfel-test:concatenateStrings
   rdfs:type wurfel:PrimitiveFunction ;
@@ -16,6 +79,7 @@ wurfel-test:concatenateStrings
         wurfel:parameterTransparency true ]
   ) .
 
+### Combinators ################################################################
 
 wurfel-test:B
   rdfs:type wurfel:Combinator ;

@@ -5,6 +5,11 @@ import wurfel.model.ModelMock;
 import wurfel.model.Apply;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
+import wurfel.model.primitives.IntegerAdd;
+import wurfel.model.primitives.IntegerSubtract;
+import wurfel.model.primitives.IntegerMultiply;
+import wurfel.model.primitives.IntegerDivide;
+import wurfel.model.primitives.IntegerMod;
 import wurfel.model.primitives.ConcatenateStringsPrimitive;
 import wurfel.model.combinators.Combinator_B;
 import wurfel.model.combinators.Combinator_C;
@@ -75,17 +80,17 @@ public class Context
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public static Literal newStringLiteral( final String s )
-    {
-        return new LiteralImpl( s, s_xsdStringUri );
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    public Value getValue( Value arg, Value func )
+    public Collection<Value> findProduct( Value arg, Value func )
         throws WurfelException
     {
-        Collection<Value> results = model.multiply( arg, func );
+        Apply a = new Apply( func, arg );
+        return reduce( a );
+    }
+
+    public Value findUniqueProduct( Value arg, Value func )
+        throws WurfelException
+    {
+        Collection<Value> results = findProduct( arg, func );
 
         if ( 1 != results.size() )
         {
@@ -100,88 +105,59 @@ public class Context
             return results.iterator().next();
     }
 
-    public Resource getResource( Value arg, Value func )
+    public Resource castToResource( Value v )
         throws WurfelException
     {
-        Value val = getValue( arg, func );
+        if ( v instanceof Resource )
+            return (Resource) v;
+        else
+            throw new WurfelException( "value " + v.toString() + " is not a Resource" );
+    }
 
-        if ( val instanceof Resource )
-            return (Resource) val;
+    public URI castToUri( Value v )
+        throws WurfelException
+    {
+        if ( v instanceof URI )
+            return (URI) v;
 
         else
-            throw new WurfelException( "value " + val.toString() + " is not a Resource" );
+            throw new WurfelException( "value " + v.toString() + " is not a URI" );
     }
 
-    public URI getUri( Value arg, Value func )
+    public Literal castToLiteral( Value v )
         throws WurfelException
     {
-        Value val = getValue( arg, func );
-
-        if ( val instanceof URI )
-            return (URI) val;
+        if ( v instanceof Literal )
+            return (Literal) v;
 
         else
-            throw new WurfelException( "value " + val.toString() + " is not a URI" );
+            throw new WurfelException( "value " + v.toString() + " is not a Literal" );
     }
 
-    public Literal getLiteral( Value arg, Value func )
+    public boolean booleanValue( Literal l )
         throws WurfelException
     {
-        Value val = getValue( arg, func );
-
-        if ( val instanceof Literal )
-            return (Literal) val;
-
-        else
-            throw new WurfelException( "value " + val.toString() + " is not a Literal" );
-    }
-
-    public String getString( Value arg, Value func )
-        throws WurfelException
-    {
-        Literal lit = getLiteral( arg, func );
-
-// TODO: investigate OpenRDF's apparent lack of typing of literals in whatever graph implementation this is
-/*
-        URI type = lit.getDatatype();
-
-        if ( null == type )
-            throw new WurfelException( "node " + lit.toString() + " is untyped, expecting " + s_xsdStringUri );
-        else if ( !type.equals( s_xsdStringUri ) )
-            throw new WurfelException( "type mismatch: expected " + s_xsdStringUri.toString() + ", found " + type.toString() );
-*/
-
-        return lit.getLabel();
-    }
-
-    public boolean getBoolean( Value arg, Value func )
-        throws WurfelException
-    {
-        Literal lit = getLiteral( arg, func );
-
 /*
         URI type = lit.getDatatype();
         if ( !type.equals( s_xsdBooleanUri ) )
             throw new WurfelException( "type mismatch: expected " + s_xsdBooleanUri.toString() + ", found " + type.toString() );
 */
 
-        String label = lit.getLabel();
+        String label = l.getLabel();
 // TODO: is capitalization relevant? Can 'true' also be represented as '1'?
         return label.equals( "true" );
     }
 
-    public int getInteger( Value arg, Value func )
+    public int intValue( Literal l )
         throws WurfelException
     {
-        Literal lit = getLiteral( arg, func );
-
 /*
-        URI type = lit.getDatatype();
+        URI type = l.getDatatype();
         if ( !type.equals( s_xsdIntegerUri ) )
             throw new WurfelException( "type mismatch: expected " + s_xsdIntegerUri.toString() + ", found " + type.toString() );
 */
 
-        String label = lit.getLabel();
+        String label = l.getLabel();
         try
         {
             return ( new Integer( label ) ).intValue();
@@ -193,7 +169,13 @@ public class Context
         }
     }
 
-    public List<Value> getRdfList( final Resource listHead )
+    public String stringValue( Literal l )
+        throws WurfelException
+    {
+        return l.getLabel();
+    }
+
+    public List<Value> listValue( final Resource listHead )
         throws WurfelException
     {
         List<Value> list = new ArrayList<Value>();
@@ -203,19 +185,33 @@ public class Context
 // TODO: is this 'equals' safe?
         while ( !cur.equals( s_rdfNilUri ) )
         {
-            Value val = getValue( cur, s_rdfFirstUri );
+            Value val = findUniqueProduct( cur, s_rdfFirstUri );
             list.add( val );
-            cur = getResource( cur, s_rdfRestUri );
+            cur = castToResource( findUniqueProduct( cur, s_rdfRestUri ) );
         }
 
         return list;
     }
 
-    public Literal toValue( final String s )
+    ////////////////////////////////////////////////////////////////////////////
+
+    public Literal toLiteral( final String s )
     {
 // TODO: should I add a datatype to these literals? The imported literals don't appear to have a datatype.
 //        return new LiteralImpl( s, s_xsdStringUri );
         return new LiteralImpl( s );
+    }
+
+    public Literal toLiteral( final int i )
+    {
+// TODO: data type
+        return new LiteralImpl( "" + i );
+    }
+
+    public Literal toLiteral( final double d )
+    {
+// TODO: data type
+        return new LiteralImpl( "" + d );
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -223,6 +219,7 @@ public class Context
     String name;
     LocalRepository repository;
     Collection<URL> importedDataURLs;
+
 Hashtable<String, String> aliases;
 Model model = null;
 
@@ -238,6 +235,11 @@ Model model = null;
     {
         specialFunctions = new Hashtable<URI, Function>();
 
+        addSpecialFunction( new IntegerAdd( this ) );
+        addSpecialFunction( new IntegerSubtract( this ) );
+        addSpecialFunction( new IntegerMultiply( this ) );
+        addSpecialFunction( new IntegerDivide( this ) );
+        addSpecialFunction( new IntegerMod( this ) );
         addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
         addSpecialFunction( new Combinator_B( this ) );
         addSpecialFunction( new Combinator_C( this ) );
@@ -440,6 +442,7 @@ aliases = new Hashtable<String, String>();
     public NodeSet reduce( Value expr )
         throws WurfelException
     {
+//System.out.println( "expr = " + expr.toString() );
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
             // Reduce the function.

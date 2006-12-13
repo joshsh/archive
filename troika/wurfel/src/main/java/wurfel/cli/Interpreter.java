@@ -282,9 +282,11 @@ public class Interpreter extends Thread implements Runnable
             if ( 0 < result.size() )
                 System.out.println( "" );
 
+            int index = 0;
             Iterator<Value> resultIter = result.iterator();
             while ( resultIter.hasNext() )
             {
+                System.out.print( "[" + index++ + "] " );
                 Value v = resultIter.next();
 
                 if ( v instanceof Resource )

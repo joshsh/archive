@@ -5,11 +5,11 @@ import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
 
-public class StringNode extends Ast
+public class IntNode extends Ast
 {
-    private String value;
+    private int value;
 
-    public StringNode( final String value )
+    public IntNode( final int value )
     {
         this.value = value;
     }
