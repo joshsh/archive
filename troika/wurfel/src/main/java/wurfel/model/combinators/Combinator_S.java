@@ -36,7 +36,7 @@ public class Combinator_S extends Combinator
         y = argIter.next();
         z = argIter.next();
 
-        Apply result = new Apply(
+        Value result = new Apply(
             new Apply( x, z ),
             new Apply( y, z ) );
 

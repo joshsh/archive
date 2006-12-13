@@ -20,13 +20,9 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 (: foaf :)
 !import "http://xmlns.com/foaf/0.1/index.rdf";
 
-(: SKOS Core :)
+(: SKOS Core, Mapping and Extensions :)
 !import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
-
-(: SKOS Mapping :)
 !import "http://www.w3.org/2004/02/skos/mapping";
-
-(: SKOS Extensions :)
 !import "http://www.w3.org/2004/02/skos/extensions";
 
 (: SIOC :)

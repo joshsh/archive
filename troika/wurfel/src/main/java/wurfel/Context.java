@@ -6,8 +6,20 @@ import wurfel.model.Apply;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
 import wurfel.model.primitives.ConcatenateStringsPrimitive;
-import wurfel.model.combinators.Combinator_S;
+import wurfel.model.combinators.Combinator_B;
+import wurfel.model.combinators.Combinator_C;
+import wurfel.model.combinators.Combinator_I;
 import wurfel.model.combinators.Combinator_K;
+import wurfel.model.combinators.Combinator_L;
+import wurfel.model.combinators.Combinator_O;
+import wurfel.model.combinators.Combinator_R;
+import wurfel.model.combinators.Combinator_S;
+import wurfel.model.combinators.Combinator_T;
+import wurfel.model.combinators.Combinator_U;
+import wurfel.model.combinators.Combinator_V;
+import wurfel.model.combinators.Combinator_W;
+import wurfel.model.combinators.Combinator_Y;
+import wurfel.model.combinators.Combinator_w;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
@@ -227,8 +239,20 @@ Model model = null;
         specialFunctions = new Hashtable<URI, Function>();
 
         addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
-        addSpecialFunction( new Combinator_S( this ) );
+        addSpecialFunction( new Combinator_B( this ) );
+        addSpecialFunction( new Combinator_C( this ) );
+        addSpecialFunction( new Combinator_I( this ) );
         addSpecialFunction( new Combinator_K( this ) );
+        addSpecialFunction( new Combinator_L( this ) );
+        addSpecialFunction( new Combinator_O( this ) );
+        addSpecialFunction( new Combinator_R( this ) );
+        addSpecialFunction( new Combinator_S( this ) );
+        addSpecialFunction( new Combinator_T( this ) );
+        addSpecialFunction( new Combinator_U( this ) );
+        addSpecialFunction( new Combinator_V( this ) );
+        addSpecialFunction( new Combinator_W( this ) );
+        addSpecialFunction( new Combinator_Y( this ) );
+        addSpecialFunction( new Combinator_w( this ) );
     }
 
     public Context( final String name )

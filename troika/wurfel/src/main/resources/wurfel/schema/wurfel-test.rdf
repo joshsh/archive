@@ -39,16 +39,130 @@
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#concatenateStrings">
     <wurfel:parameters rdf:nodeID="genid4"/>
   </rdf:Description>
-  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#B">
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
   </rdf:Description>
-  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#B">
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#B">
+    <rdfs:comment>Bxyz --&gt; x(yz)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#C">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#C">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#C">
+    <rdfs:comment>Cxyz --&gt; xzy</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#I">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#I">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#I">
+    <rdfs:comment>Ix --&gt; x</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#K">
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#K">
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#K">
+    <rdfs:comment>Kxy --&gt; x</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#L">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#L">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#L">
+    <rdfs:comment>Lxy --&gt; x(yy)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#O">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#O">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#O">
+    <rdfs:comment>Oxy --&gt; y(xy)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#R">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#R">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#R">
+    <rdfs:comment>Rxyz --&gt; yzx</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#S">
+    <rdfs:comment>Sxyz --&gt; xz(yz)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#T">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#T">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#T">
+    <rdfs:comment>Txy --&gt; yx</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#U">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#U">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#U">
+    <rdfs:comment>Uxy --&gt; y(xxy)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#V">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#V">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#V">
+    <rdfs:comment>Vxyz --&gt; zxy</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#W">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#W">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#W">
+    <rdfs:comment>Wxy --&gt; xyy</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#Y">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#Y">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#Y">
+    <rdfs:comment>Yx --&gt; x(Yx)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#w">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#w">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#w">
+    <rdfs:comment>wx --&gt; xx</rdfs:comment>
   </rdf:Description>
 </rdf:RDF>

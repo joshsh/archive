@@ -3,6 +3,7 @@ package wurfel.model.combinators;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
+import wurfel.model.Apply;
 import wurfel.model.Combinator;
 import wurfel.model.NodeSet;
 
@@ -13,28 +14,32 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Combinator_K extends Combinator
+public class Combinator_O extends Combinator
 {
     private static final URI
-        s_wurfelTestKUri = Wurfel.getWurfelTestUri( "K" );
+        s_wurfelTestOUri = Wurfel.getWurfelTestUri( "O" );
 
-    public Combinator_K( Context context )
+    public Combinator_O( Context context )
         throws WurfelException
     {
-        super( s_wurfelTestKUri, context );
+        super( s_wurfelTestOUri, context );
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,
                                       Context context )
         throws WurfelException
     {
-        Value x;
+        Value x, y;
 
         Iterator<Value> argIter = args.iterator();
         x = argIter.next();
-//        Value y = argIter.next();
+        y = argIter.next();
 
-        return new NodeSet( x );
+        Value result = new Apply(
+            y,
+            new Apply( x, y ) );
+
+        return new NodeSet( result );
     }
 }
 
