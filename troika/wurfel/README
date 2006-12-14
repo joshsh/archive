@@ -20,6 +20,9 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 (: foaf :)
 !import "http://xmlns.com/foaf/0.1/index.rdf";
 
+(: DOAP :)
+!import "http://usefulinc.com/ns/doap";
+
 (: SKOS Core, Mapping and Extensions :)
 !import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
 !import "http://www.w3.org/2004/02/skos/mapping";
@@ -35,6 +38,8 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 
 
 
+
+!import "file:///home/joshs/dev/wurfel/rdf/vcard/3.0" ;
 
 !import "file:///home/joshs/dev/wurfel/rdf/wn/wnfull.rdfs" ;
 !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-antonym.rdf" ;

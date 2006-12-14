@@ -7,6 +7,46 @@ import java.net.URL;
 
 import org.apache.log4j.PropertyConfigurator;
 
+/*
+import com.ontogon.doapamine;
+
+@Project(
+    name="DOAPExample",
+    homepage="http://www.bar.com",
+    old_homepage={},
+    category="DOAP",
+    created="2005-10-15",
+    shortdesc="DOAP Annotation Example",
+    description="An example of using DOAPamine Java annoations.",
+    mailinglist="foo@bar.com",
+    license={"http://www.gnu.org/copyleft/lesser.html"},
+    download_page="http://www.foo.com/doap",
+    download_mirror={},
+    wiki="",
+    bug_database="",
+    screenshots={},
+    programming_language="FooScript",
+    os={},
+    release=@Version(name="unstable", created="2005-10-15", revision="0.1", file-release="http://foo.com/foo.tar"),
+    maintainer={},
+    developer={
+        @Person(
+            name="John Doe",
+            mbox="jd@bar.com",
+            seeAlso="http://www.bar.com/people/jd/foaf.rdf")
+        },
+    documentor={},
+    translator={},
+    tester={},
+    helper={},
+    repository=@Repository(
+        type=Repository.RepositoryType.CVS, 
+        module="doap", 
+        location="foo", 
+        browse="bar", 
+        anon_root="foobar")
+    )
+*/
 public class Wurfel
 {
     private static final URL

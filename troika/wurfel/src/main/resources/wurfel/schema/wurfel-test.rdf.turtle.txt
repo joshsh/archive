@@ -79,6 +79,15 @@ wurfel-test:concatenateStrings
         wurfel:parameterTransparency true ]
   ) .
 
+wurfel-test:sha1SumOf
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
+      [ wurfel:parameterName "plaintext" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+  ) .
+
 ### Combinators ################################################################
 
 wurfel-test:B
