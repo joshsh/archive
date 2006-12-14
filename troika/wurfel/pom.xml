@@ -8,7 +8,6 @@
     <groupId>wurfel</groupId>
     <artifactId>wurfel</artifactId>
     <version>0.1</version>
-
     <name>W&#252;rfel</name>
     <description>An expeditious command-line interface for the Semantic Web surfer.</description>
     <url>http://troika.dnsdojo.net/</url>
@@ -16,7 +15,25 @@
     <licenses>
     </licenses>
     <developers>
+        <developer>
+            <id>josh</id>
+            <name>Joshua Shinavier</name>
+            <email>parcour@gmail.com</email>
+            <url>http://troika.dnsdojo.net</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-8</timezone>
+            <properties>
+                <picUrl>http://troika.dnsdojo.net/pics/industrial/self.jpg</picUrl>
+            </properties>
+        </developer>
     </developers>
+    <issueManagement>
+        <system>Bugzilla</system>
+        <url>http://127.0.0.1/bugzilla</url>
+    </issueManagement>
 
 <!--
     <scm>
@@ -33,11 +50,14 @@
             <url>http://jline.sourceforge.net/m2repo</url>
         </repository>
 
+<!--
         <repository>
             <id>apache-archives</id>
             <name>Apache Archives</name>
             <url>http://archive.apache.org/dist/maven-repository/</url>
         </repository>
+-->
+
 <!--
         <repository>
             <id>ibiblio</id>
@@ -180,16 +200,25 @@
             </plugin>
 
             <!-- mvn -N doap:generate -->
+            <!-- http://repo1.maven.org/maven2/org/apache/maven/plugins/maven-doap-plugin/1.0-beta-1/ -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-doap-plugin</artifactId>
                 <version>1.0-beta-1</version>
                 <configuration>
-                    <!-- Note: I'm not sure if this is a "valid" category, but the DOAP schema apparently does not define the range of doap:category, so... -->
-                    <category>programming-language</category>
                     <language>Java</language>
-                    <doapFile>${basedir}/doap_${project.artifactId}.rdf</doapFile>
+                    <doapFile>${basedir}/target/doap_${project.artifactId}.rdf</doapFile>
+                    <!-- TODO: See: http://projects.apache.org/categories.html -->
+                    <category>xml</category>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

@@ -49,3 +49,4 @@ java -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.ja
 x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-hyponym.rdf" ;
 x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-wordsensesandwords.rdf" ;
 
+java -DentityExpansionLimit=800000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
