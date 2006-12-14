@@ -32,6 +32,12 @@
             <name>JLine Project Repository</name>
             <url>http://jline.sourceforge.net/m2repo</url>
         </repository>
+
+        <repository>
+            <id>apache-archives</id>
+            <name>Apache Archives</name>
+            <url>http://archive.apache.org/dist/maven-repository/</url>
+        </repository>
 <!--
         <repository>
             <id>ibiblio</id>
@@ -171,6 +177,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- mvn -N doap:generate -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-doap-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <configuration>
+                    <!-- Note: I'm not sure if this is a "valid" category, but the DOAP schema apparently does not define the range of doap:category, so... -->
+                    <category>programming-language</category>
+                    <language>Java</language>
+                    <doapFile>${basedir}/doap_${project.artifactId}.rdf</doapFile>
+                </configuration>
             </plugin>
 
         </plugins>
