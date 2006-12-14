@@ -38,7 +38,7 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
                     context.castToLiteral( argIter.next() ) );
         result = strA + strB;
 
-        return new NodeSet( context.toLiteral( result ) );
+        return new NodeSet( context.createLiteral( result ) );
     }
 }
 

@@ -29,6 +29,10 @@ import wurfel.model.combinators.Combinator_w;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
+import org.openrdf.model.URI;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.admin.AdminListener;
 import org.openrdf.sesame.admin.StdOutAdminListener;
@@ -41,12 +45,6 @@ import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
-
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.LiteralImpl;
 
 import java.io.IOException;
 
@@ -69,10 +67,11 @@ public class Context
 
     private final static boolean s_useInferencing = true;
 
+// TODO: determine whether these URIs should really be created via the model's
+//       graph's ValueFactory.
     private static final URI
-        // TODO: this URI doesn't exist in the wurfel model.
-        s_wurfelIdentifierUri = Wurfel.getWurfelUri( "Identifier" ),
         s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" ),
+        s_xsdDoubleUri = Wurfel.getXmlSchemaUri( "double" ),
         s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" ),
         s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" ),
         s_rdfFirstUri = Wurfel.getRdfUri( "first" ),
@@ -196,23 +195,19 @@ public class Context
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public Literal toLiteral( final String s )
+    public Literal createLiteral( final String s )
     {
-// TODO: should I add a datatype to these literals? The imported literals don't appear to have a datatype.
-//        return new LiteralImpl( s, s_xsdStringUri );
-        return new LiteralImpl( s );
+        return model.getValueFactory().createLiteral( s, s_xsdStringUri );
     }
 
-    public Literal toLiteral( final int i )
+    public Literal createLiteral( final int i )
     {
-// TODO: data type
-        return new LiteralImpl( "" + i );
+        return model.getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
     }
 
-    public Literal toLiteral( final double d )
+    public Literal createLiteral( final double d )
     {
-// TODO: data type
-        return new LiteralImpl( "" + d );
+        return model.getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
     }
 
     ////////////////////////////////////////////////////////////////////////////

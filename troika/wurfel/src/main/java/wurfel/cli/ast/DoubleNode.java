@@ -17,7 +17,7 @@ public class DoubleNode extends Ast
     public Value evaluate( Context context )
         throws WurfelException
     {
-        return context.toLiteral( value );
+        return context.createLiteral( value );
     }
 }
 

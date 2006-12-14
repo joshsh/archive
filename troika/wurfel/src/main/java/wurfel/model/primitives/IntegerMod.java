@@ -47,7 +47,7 @@ public class IntegerMod extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        return new NodeSet( context.toLiteral( result ) );
+        return new NodeSet( context.createLiteral( result ) );
     }
 }
 

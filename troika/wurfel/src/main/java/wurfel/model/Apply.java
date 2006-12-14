@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-// TODO: subclass LiteralImpl instead of implementing Literal
 public class Apply extends Node implements Function
 {
 //FIXME

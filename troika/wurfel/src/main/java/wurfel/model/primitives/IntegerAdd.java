@@ -38,7 +38,7 @@ public class IntegerAdd extends PrimitiveFunction
                 context.castToLiteral( argIter.next() ) );
         result = a + b;
 
-        return new NodeSet( context.toLiteral( result ) );
+        return new NodeSet( context.createLiteral( result ) );
     }
 }
 

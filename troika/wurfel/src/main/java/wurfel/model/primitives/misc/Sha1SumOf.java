@@ -92,7 +92,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         result = encrypt( a );
 
-        return new NodeSet( context.toLiteral( result ) );
+        return new NodeSet( context.createLiteral( result ) );
     }
 }
 

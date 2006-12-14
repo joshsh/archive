@@ -5,6 +5,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.sesame.sail.StatementIterator;
 
 import jline.Completor;
@@ -25,6 +26,11 @@ public abstract class Model
     public Model( Graph g )
     {
         graph = g;
+    }
+
+    public ValueFactory getValueFactory()
+    {
+        return graph.getValueFactory();
     }
 
     /**
