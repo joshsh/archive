@@ -65,6 +65,7 @@ public class Interpreter extends Thread implements Runnable
             "!import",
             "!print",
             "!resolve",
+            "!saveas",
             "!quit" } );
         completors.add( commandCompletor );
 
@@ -261,8 +262,17 @@ public class Interpreter extends Thread implements Runnable
         catch ( WurfelException e ) {}
     }
 
+    public void saveAs( final String fileName )
+    {
+        try
+        {
+            context.saveAs( fileName );
 
+            System.out.println( "\nSaved data set as '" + fileName + "'\n" );
+        }
 
+        catch ( WurfelException e ) {}
+    }
 
 
 

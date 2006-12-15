@@ -33,6 +33,7 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.rio.rdfxml.RdfXmlWriter;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.admin.AdminListener;
 import org.openrdf.sesame.admin.StdOutAdminListener;
@@ -47,6 +48,9 @@ import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 
 import java.net.URL;
 
@@ -319,6 +323,65 @@ aliases = new Hashtable<String, String>();
         return 0;
     }
 
+
+
+
+
+    private void extractRDF( OutputStream out )
+        throws WurfelException
+    {
+        RdfXmlWriter writer = new RdfXmlWriter( out );
+
+        try
+        {
+            repository.extractRDF(
+                writer,
+                false,   // ontology -- not an ontology
+                true,    // instances -- do extract non-schema statements (that's what I want, right?)
+                false,   // explicitOnly -- extract all statements, not only explicitly added ones
+                true );  // niceOutput -- do alphabetize by subject
+        }
+
+        catch ( IOException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( AccessDeniedException e )
+        {
+            throw new WurfelException( e );
+        }
+    }
+
+    public void saveAs( String fileName )
+        throws WurfelException
+    {
+        //...
+
+        OutputStream out;
+
+        try
+        {
+            out = new FileOutputStream( fileName );
+        }
+
+        catch ( FileNotFoundException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        extractRDF( out );
+
+        try
+        {
+            out.close();
+        }
+
+        catch ( IOException e )
+        {
+            throw new WurfelException( e );
+        }
+    }
 
 
 

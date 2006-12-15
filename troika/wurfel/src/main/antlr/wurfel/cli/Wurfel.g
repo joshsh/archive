@@ -181,6 +181,7 @@ DEFINE  : COMMAND ( "define"    | "d" ) ;
 IMPORT  : COMMAND ( "import"    | "i" ) ;
 PRINT   : COMMAND ( "print"     | "p" ) ;
 RESOLVE : COMMAND ( "resolve"   | "r" ) ;
+SAVEAS  : COMMAND ( "saveas"    | "s" ) ;
 QUIT    : COMMAND ( "quit"      | "q"
                     | "exit"    | "x" ) ;
 
@@ -361,6 +362,11 @@ nt_Command
     | RESOLVE name0:IDENTIFIER
         {
             interpreter.show( name0.getText() );
+        }
+
+    | SAVEAS file:STRING
+        {
+            interpreter.saveAs( file.getText() );
         }
     ;
 
