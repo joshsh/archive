@@ -12,6 +12,8 @@ import wurfel.model.primitives.IntegerDivide;
 import wurfel.model.primitives.IntegerMod;
 import wurfel.model.primitives.ConcatenateStringsPrimitive;
 import wurfel.model.primitives.misc.Sha1SumOf;
+import wurfel.model.primitives.misc.UrlEncoding;
+import wurfel.model.primitives.misc.UrlTarget;
 import wurfel.model.combinators.Combinator_B;
 import wurfel.model.combinators.Combinator_C;
 import wurfel.model.combinators.Combinator_I;
@@ -247,6 +249,8 @@ Model model = null;
 
         addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
         addSpecialFunction( new Sha1SumOf( this ) );
+        addSpecialFunction( new UrlEncoding( this ) );
+        addSpecialFunction( new UrlTarget( this ) );
 
         addSpecialFunction( new Combinator_B( this ) );
         addSpecialFunction( new Combinator_C( this ) );

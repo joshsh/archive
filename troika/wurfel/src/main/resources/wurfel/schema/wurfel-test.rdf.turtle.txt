@@ -88,6 +88,24 @@ wurfel-test:sha1SumOf
         wurfel:parameterTransparency true ]
   ) .
 
+wurfel-test:urlEncoding
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
+      [ wurfel:parameterName "plaintext" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:urlTarget
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
+      [ wurfel:parameterName "url" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+  ) .
+
 ### Combinators ################################################################
 
 wurfel-test:B
