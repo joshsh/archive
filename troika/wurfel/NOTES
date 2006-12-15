@@ -1,3 +1,29 @@
+http://pingthesemanticweb.com/imgs/semantic_web_ready_sioc.gif
+http://pingthesemanticweb.com/imgs/semantic_web_ready_foaf.gif
+http://pingthesemanticweb.com/imgs/semantic_web_ready_doap.png
+
+
+
+org/openrdf/util/http/HttpClientUtil.java
+
+
+unzip -l ./openrdf-util/1.2.6/openrdf-util-1.2.6.jar
+	[...]
+	     5801  08-21-06 11:15   org/openrdf/util/http/HttpClientUtil.class
+	[...]
+
+http://sesame.cvs.sourceforge.net/sesame/openrdf/src/org/openrdf/util/http/HttpClientUtil.java?view=markup
+
+
+
+
+http://sesame.cvs.sourceforge.net/sesame/
+
+
+
+
+
+
 
 ::: Wurfel can handle around 35,000 WordNet statements :::::::::::::::::::::::::
 

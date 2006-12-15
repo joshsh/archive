@@ -13,7 +13,7 @@ mvn assembly:assembly
 
 unzip -l target/firefox/wurfel.xpi
 
-java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
+java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest
 
 (: !import "http://xmlns.com/foaf/0.1/index.rdf" "http://tempuri.org"; :)
 

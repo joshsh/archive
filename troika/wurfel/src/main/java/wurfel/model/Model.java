@@ -28,6 +28,12 @@ public abstract class Model
         graph = g;
     }
 
+//FIXME: temporary
+    public Graph getGraph()
+    {
+        return graph;
+    }
+
     public ValueFactory getValueFactory()
     {
         return graph.getValueFactory();

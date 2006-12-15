@@ -60,6 +60,7 @@ public class Interpreter extends Thread implements Runnable
         completors.add( modelCompletor );
 
         SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
+            "!add",
             "!count",
             "!define",
             "!import",
@@ -276,7 +277,22 @@ public class Interpreter extends Thread implements Runnable
 
 
 
+    public void addStatement( Ast subj, Ast pred, Ast obj )
+    {
+        try
+        {
+            Value subjValue = subj.evaluate( context );
+            Value predValue = pred.evaluate( context );
+            Value objValue = obj.evaluate( context );
 
+            context.addStatement( subjValue, predValue, objValue );
+        }
+
+        catch ( WurfelException e )
+        {
+            System.err.println( "\nError: " + e.toString() + "\n" );
+        }
+    }
 
 
     public void evaluate( Ast ast )

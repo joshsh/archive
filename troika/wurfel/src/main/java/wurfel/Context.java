@@ -31,6 +31,7 @@ import org.openrdf.model.Graph;
 import org.openrdf.model.Value;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.rio.rdfxml.RdfXmlWriter;
@@ -68,6 +69,9 @@ import org.apache.log4j.Logger;
 public class Context
 {
     private final static Logger s_logger = Logger.getLogger( Context.class );
+    private static final AdminListener s_adminListener
+        = new StdOutAdminListener();
+
 
     private final static boolean s_useInferencing = true;
 
@@ -296,11 +300,10 @@ aliases = new Hashtable<String, String>();
             ( ( null == baseURI ) ? "" : " as " + baseURI ) );
 
         boolean verifyData = true;
-        AdminListener myListener = new StdOutAdminListener();
 
         try
         {
-            repository.addData( url, baseURI, RDFFormat.RDFXML, verifyData, myListener );
+            repository.addData( url, baseURI, RDFFormat.RDFXML, verifyData, s_adminListener );
         }
 
         catch ( IOException e )
@@ -326,6 +329,16 @@ aliases = new Hashtable<String, String>();
 
 
 
+    public void addStatement( Value subj, Value pred, Value obj )
+        throws WurfelException
+    {
+        Resource subjResource = castToResource( subj );
+        URI predUri = castToUri( pred );
+        Statement st = model.getValueFactory().createStatement( subjResource, predUri, obj );
+
+        model.getGraph().add( st );
+    }
+
 
     private void extractRDF( OutputStream out )
         throws WurfelException
@@ -334,10 +347,17 @@ aliases = new Hashtable<String, String>();
 
         try
         {
+            // This pushes all statements added with addStatement to the repository.
+            boolean joinBlankNodes = true;
+//            repository.clear( s_adminListener );
+            repository.addGraph( model.getGraph(), joinBlankNodes );
+//            repository.addGraph( model.getGraph() );
+
             repository.extractRDF(
                 writer,
                 false,   // ontology -- not an ontology
                 true,    // instances -- do extract non-schema statements (that's what I want, right?)
+//                true,   // explicitOnly -- only save data we've created in this session
                 false,   // explicitOnly -- extract all statements, not only explicitly added ones
                 true );  // niceOutput -- do alphabetize by subject
         }
@@ -351,13 +371,13 @@ aliases = new Hashtable<String, String>();
         {
             throw new WurfelException( e );
         }
+
+//        updateModel();
     }
 
     public void saveAs( String fileName )
         throws WurfelException
     {
-        //...
-
         OutputStream out;
 
         try

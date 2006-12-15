@@ -176,6 +176,7 @@ COMMAND
     : '!'
     ;
 
+ADD     : COMMAND ( "add"       | "a" ) ;
 COUNT   : COMMAND ( "count"     | "c" ) ;
 DEFINE  : COMMAND ( "define"    | "d" ) ;
 IMPORT  : COMMAND ( "import"    | "i" ) ;
@@ -332,8 +333,14 @@ nt_Name returns [ Ast r ]
 
 nt_Command
 {
+    Ast subj, pred, obj;
 }
-    : COUNT "statements"
+    : ADD subj=nt_Item pred=nt_Item obj=nt_Item
+        {
+            interpreter.addStatement( subj, pred, obj );
+        }
+
+    | COUNT "statements"
         {
             System.out.println( "" + interpreter.countStatements() );
         }
