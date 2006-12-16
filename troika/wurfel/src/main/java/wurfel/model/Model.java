@@ -1,12 +1,17 @@
 package wurfel.model;
 
-import org.openrdf.model.Graph;
+import wurfel.WurfelException;
+
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.sesame.sail.StatementIterator;
+import org.openrdf.repository.Connection;
+//import org.openrdf.sail.SailConnection;
+import org.openrdf.repository.Repository;
+import org.openrdf.util.iterator.CloseableIterator;
+import org.openrdf.sail.SailException;
 
 import jline.Completor;
 
@@ -18,25 +23,21 @@ import java.util.LinkedHashSet;
 
 public abstract class Model
 {
-    Graph graph;
+    protected Repository repository;
+    protected Resource context;
 
-    public abstract URI resolve( final String name );
-    public abstract Completor getCompletor();
+    public abstract URI resolve( final String name ) throws WurfelException;
+    public abstract Completor getCompletor() throws WurfelException;
 
-    public Model( Graph g )
+    public Model( Repository repository, Resource context )
     {
-        graph = g;
-    }
-
-//FIXME: temporary
-    public Graph getGraph()
-    {
-        return graph;
+        this.repository = repository;
+        this.context = context;
     }
 
     public ValueFactory getValueFactory()
     {
-        return graph.getValueFactory();
+        return repository.getValueFactory();
     }
 
     /**
@@ -44,79 +45,82 @@ public abstract class Model
      */
     public Set<Value> multiply( Value subject,
                                 Value predicate )
+        throws WurfelException
     {
         Set<Value> objects = new HashSet<Value>();
 
         if ( subject instanceof Resource && predicate instanceof URI )
         {
-            Collection c
-                = graph.getStatementCollection( (Resource) subject, (URI) predicate, null );
-
-            Iterator stmtIter = c.iterator();
-            while ( stmtIter.hasNext() )
-                objects.add( ( (Statement) stmtIter.next() ).getObject() );
-        }
-
-        return objects;
-    }
-
-/*
-    public Set<Value> multiply( Collection<Value> subjects,
-                                Collection<Value> predicates )
-    {
-        Iterator<Value> subjIter = subjects.iterator();
-        Iterator<Value> predIter;
-
-        // Query results have a definite order.
-        Set<Value> objects = new LinkedHashSet<Value>();
-
-        while ( subjIter.hasNext() )
-        {
-            Value subject = subjIter.next();
-            if ( subject instanceof Resource )
+            try
             {
-                predIter = predicates.iterator();
+                Connection conn = repository.getConnection();
+                boolean includeInferred = true;
+                CloseableIterator<? extends Statement> stmtIter
+                    = conn.getStatements(
+                        (Resource) subject, (URI) predicate, null, context, includeInferred );
+                while ( stmtIter.hasNext() )
+                    objects.add( stmtIter.next().getObject() );
+                stmtIter.close();
+                conn.close();
+            }
 
-                while ( predIter.hasNext() )
-                {
-                    Value predicate = predIter.next();
-                    if ( predicate instanceof URI )
-                    {
-                        Collection c
-                            = graph.getStatementCollection( (Resource) subject, (URI) predicate, null );
-
-                        Iterator stmtIter = c.iterator();
-                        while ( stmtIter.hasNext() )
-                            objects.add( ( (Statement) stmtIter.next() ).getObject() );
-                    }
-
-                }
+            catch ( SailException e )
+            {
+                throw new WurfelException( e );
             }
         }
 
         return objects;
     }
-*/
 
     public Set<Resource> getSubjects()
+        throws WurfelException
     {
         Set<Resource> subjects = new HashSet<Resource>();
 
-        StatementIterator stmtIter = graph.getStatements();
-        while ( stmtIter.hasNext() )
-            subjects.add( stmtIter.next().getSubject() );
+        try
+        {
+            Connection conn = repository.getConnection();
+            boolean includeInferred = true;
+            CloseableIterator<? extends Statement> stmtIter
+                = conn.getStatements(
+                    null, null, null, context, includeInferred );
+            while ( stmtIter.hasNext() )
+                subjects.add( stmtIter.next().getSubject() );
+            stmtIter.close();
+            conn.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
 
         return subjects;
     }
 
     public Set<URI> getPredicates( Resource subject )
+        throws WurfelException
     {
         Set<URI> predicates = new HashSet<URI>();
 
-        Collection c = graph.getStatementCollection( subject, null, null );
-        Iterator stmtIter = c.iterator();
-        while ( stmtIter.hasNext() )
-            predicates.add( ( (Statement) stmtIter.next() ).getPredicate() );
+        try
+        {
+            Connection conn = repository.getConnection();
+            boolean includeInferred = true;
+            CloseableIterator<? extends Statement> stmtIter
+                = conn.getStatements(
+                    subject, null, null, context, includeInferred );
+            while ( stmtIter.hasNext() )
+                predicates.add( stmtIter.next().getPredicate() );
+            stmtIter.close();
+            conn.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
 
         return predicates;
     }

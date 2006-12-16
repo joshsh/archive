@@ -29,26 +29,25 @@ import wurfel.model.combinators.Combinator_W;
 import wurfel.model.combinators.Combinator_Y;
 import wurfel.model.combinators.Combinator_w;
 
-import org.openrdf.model.Graph;
+import org.openrdf.repository.Connection;
+import org.openrdf.sail.memory.MemoryStore;
+import org.openrdf.repository.Repository;
+import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
+import org.openrdf.repository.RepositoryImpl;
 import org.openrdf.model.Value;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
-import org.openrdf.rio.rdfxml.RdfXmlWriter;
-import org.openrdf.sesame.Sesame;
-import org.openrdf.sesame.admin.AdminListener;
-import org.openrdf.sesame.admin.StdOutAdminListener;
-import org.openrdf.sesame.config.AccessDeniedException;
-import org.openrdf.sesame.config.ConfigurationException;
-import org.openrdf.sesame.constants.QueryLanguage;
-import org.openrdf.sesame.constants.RDFFormat;
-import org.openrdf.sesame.query.MalformedQueryException;
-import org.openrdf.sesame.query.QueryResultsTable;
-import org.openrdf.sesame.query.QueryEvaluationException;
-import org.openrdf.sesame.repository.local.LocalRepository;
-import org.openrdf.sesame.repository.local.LocalService;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.rdfxml.RDFXMLWriter;
+import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
+import org.openrdf.sail.SailInitializationException;
+import org.openrdf.sail.SailException;
+import org.openrdf.rio.UnsupportedRDFormatException;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.RDFHandlerException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,9 +69,12 @@ import org.apache.log4j.Logger;
 
 public class Context
 {
+// FIXME
+    private Resource singleContext;
+
     private final static Logger s_logger = Logger.getLogger( Context.class );
-    private static final AdminListener s_adminListener
-        = new StdOutAdminListener();
+//    private static final AdminListener s_adminListener
+//        = new StdOutAdminListener();
 
 
     private final static boolean s_useInferencing = true;
@@ -223,7 +225,7 @@ public class Context
     ////////////////////////////////////////////////////////////////////////////
 
     String name;
-    LocalRepository repository;
+    Repository repository;
     Collection<URL> importedDataURLs;
 
 Hashtable<String, String> aliases;
@@ -277,24 +279,29 @@ aliases = new Hashtable<String, String>();
         this.name = name;
         importedDataURLs = new ArrayList<URL>();
 
-        LocalService service = Sesame.getService();
 
         try
         {
-             repository = service.createRepository( name + "-repo", s_useInferencing );
+            repository = new RepositoryImpl(
+                new MemoryStoreRDFSInferencer(
+                    new MemoryStore() ) );
+            repository.initialize();
         }
 
-        catch ( ConfigurationException e )
+        catch ( SailInitializationException e )
         {
             throw new WurfelException( e );
         }
 
+        singleContext = repository.getValueFactory().createURI( "urn:wurfel-context" );
+
 //System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         importModel( Wurfel.schemaUrl(), "urn:wurfel" );
         importModel( Wurfel.testUrl(), "urn:wurfel-test" );
-        updateModel();
 
         loadPrimitives();
+
+// FIXME
     }
 
     public void importModel( final URL url, final String baseURI )
@@ -307,7 +314,9 @@ aliases = new Hashtable<String, String>();
 
         try
         {
-            repository.addData( url, baseURI, RDFFormat.RDFXML, verifyData, s_adminListener );
+            Connection con = repository.getConnection();
+            con.add( url, baseURI, RDFFormat.RDFXML, singleContext );
+            con.close();
         }
 
         catch ( IOException e )
@@ -315,7 +324,17 @@ aliases = new Hashtable<String, String>();
             throw new WurfelException( e );
         }
 
-        catch ( AccessDeniedException e )
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( UnsupportedRDFormatException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( RDFParseException e )
         {
             throw new WurfelException( e );
         }
@@ -338,19 +357,40 @@ aliases = new Hashtable<String, String>();
     {
         Resource subjResource = castToResource( subj );
         URI predUri = castToUri( pred );
-        Statement st = model.getValueFactory().createStatement( subjResource, predUri, obj );
 
-        model.getGraph().add( st );
+        try
+        {
+            Connection con = repository.getConnection();
+            con.add( subjResource, predUri, obj, singleContext );
+            con.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
+
+/*
+        catch ( OpenRDFException e )
+        {
+            throw new WurfelException( e );
+        }
+*/
     }
 
 
     private void extractRDF( OutputStream out )
         throws WurfelException
     {
-        RdfXmlWriter writer = new RdfXmlWriter( out );
+        RDFXMLWriter writer = new RDFXMLPrettyWriter( out );
 
         try
         {
+            Connection con = repository.getConnection();
+            con.export( /*singleContext,*/ writer );
+            con.close();
+
+/*
             // This pushes all statements added with addStatement to the repository.
             boolean joinBlankNodes = true;
 //            repository.clear( s_adminListener );
@@ -364,18 +404,19 @@ aliases = new Hashtable<String, String>();
 //                true,   // explicitOnly -- only save data we've created in this session
                 false,   // explicitOnly -- extract all statements, not only explicitly added ones
                 true );  // niceOutput -- do alphabetize by subject
+
+*/
         }
 
-        catch ( IOException e )
+        catch ( SailException e )
         {
             throw new WurfelException( e );
         }
 
-        catch ( AccessDeniedException e )
+        catch ( RDFHandlerException e )
         {
             throw new WurfelException( e );
         }
-
 //        updateModel();
     }
 
@@ -580,10 +621,12 @@ aliases = new Hashtable<String, String>();
 
 
 
-
     private void updateModel()
         throws WurfelException
     {
+        model = new ModelMock( repository, singleContext );
+
+/*
         Graph myGraph;
 
         try
@@ -597,6 +640,7 @@ aliases = new Hashtable<String, String>();
         }
 
         model = new ModelMock( myGraph );
+*/
     }
 
 
@@ -607,6 +651,7 @@ aliases = new Hashtable<String, String>();
         return model;
     }
 
+/*
     //FIXME: temporary method
     public void testQuery( final String query )
         throws WurfelException
@@ -658,6 +703,7 @@ aliases = new Hashtable<String, String>();
             System.out.println();
         }
     }
+*/
 
     public void printStatements()
         throws WurfelException

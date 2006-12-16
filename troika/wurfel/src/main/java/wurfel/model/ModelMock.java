@@ -1,11 +1,16 @@
 package wurfel.model;
 
-import org.openrdf.model.Graph;
+import wurfel.WurfelException;
+
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
-import org.openrdf.sesame.sail.StatementIterator;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.Connection;
+//import org.openrdf.sail.SailConnection;
+import org.openrdf.util.iterator.CloseableIterator;
+import org.openrdf.sail.SailException;
 
 import jline.Completor;
 import jline.SimpleCompletor;
@@ -21,24 +26,39 @@ public class ModelMock extends Model
     private Hashtable<String, URI> dictionary = null;
 
     private void createDictionary()
+        throws WurfelException
     {
         Set<URI> allURIs = new HashSet<URI>();
         dictionary = new Hashtable<String, URI>();
 
-        StatementIterator stIter = graph.getStatements();
-        while ( stIter.hasNext() )
+        try
         {
-            Statement st = stIter.next();
+            Connection conn = repository.getConnection();
+            boolean includeInferred = true;
+            CloseableIterator<? extends Statement> stmtIter
+                = conn.getStatements(
+                    null, null, null, context, includeInferred );
+            while ( stmtIter.hasNext() )
+            {
+                Statement st = stmtIter.next();
 
-            Resource subj = st.getSubject();
-            URI pred = st.getPredicate();
-            Value obj = st.getObject();
+                Resource subj = st.getSubject();
+                URI pred = st.getPredicate();
+                Value obj = st.getObject();
 
-            if ( subj instanceof URI )
-                allURIs.add( (URI) subj );
-            allURIs.add( pred );
-            if ( obj instanceof URI )
-                allURIs.add( (URI) obj );
+                if ( subj instanceof URI )
+                    allURIs.add( (URI) subj );
+                allURIs.add( pred );
+                if ( obj instanceof URI )
+                    allURIs.add( (URI) obj );
+            }
+            stmtIter.close();
+            conn.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
         }
 
         Iterator<URI> uriIter = allURIs.iterator();
@@ -50,8 +70,11 @@ public class ModelMock extends Model
     }
 
     public Completor getCompletor()
+        throws WurfelException
     {
-        createDictionary();
+        if ( null == dictionary )
+            createDictionary();
+
         Set<String> dictKeys = dictionary.keySet();
 
         if ( dictKeys.size() > 0 )
@@ -66,6 +89,7 @@ public class ModelMock extends Model
     }
 
     public URI resolve( final String name )
+        throws WurfelException
     {
         if ( null == dictionary )
             createDictionary();
@@ -73,9 +97,9 @@ public class ModelMock extends Model
         return dictionary.get( name );
     }
 
-    public ModelMock( Graph g )
+    public ModelMock( Repository repository, Resource context )
     {
-        super( g );
+        super( repository, context );
     }
 }
 

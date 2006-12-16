@@ -2,6 +2,14 @@ Exception handling
 ================================================================================
 * decide on an extensible approach for exception handling and error logging
 
+Syntax
+================================================================================
+* periods for composition may not work, as the period is a valid character in the local part of a URI
+	Beau.mother.father
+	Beau:mother:*father:?neighbor
+	:  :*  :+  :?  :{x}
+	#42
+
 Nice-to-have
 ================================================================================
 * Swoogle add-on, which performs queries like the one below, then uses the

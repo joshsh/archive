@@ -56,8 +56,16 @@ public class Interpreter extends Thread implements Runnable
 
         List completors = new ArrayList();
 
-        Completor modelCompletor = context.getModel().getCompletor();
-        completors.add( modelCompletor );
+        try
+        {
+            Completor modelCompletor = context.getModel().getCompletor();
+            completors.add( modelCompletor );
+        }
+
+        catch ( WurfelException e )
+        {
+            return;
+        }
 
         SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
             "!add",

@@ -7,7 +7,6 @@ import wurfel.WurfelException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
-import org.openrdf.sesame.sail.StatementIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
