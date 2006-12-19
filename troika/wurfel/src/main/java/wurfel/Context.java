@@ -285,6 +285,7 @@ aliases = new Hashtable<String, String>();
             repository = new RepositoryImpl(
                 new MemoryStoreRDFSInferencer(
                     new MemoryStore() ) );
+//                    new MemoryStore( new java.io.File( "wurfel.tmp" ) ) ) );
             repository.initialize();
         }
 
