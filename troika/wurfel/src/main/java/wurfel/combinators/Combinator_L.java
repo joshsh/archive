@@ -1,4 +1,4 @@
-package wurfel.model.combinators;
+package wurfel.combinators;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;

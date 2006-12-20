@@ -1,4 +1,4 @@
-package wurfel.model.primitives.misc;
+package wurfel.primitives;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,19 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import java.net.URL;
-import java.net.URLConnection;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-public class UrlTarget extends PrimitiveFunction
+public class IntegerDivide extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "urlTarget" );
+        = Wurfel.getWurfelTestUri( "integer-divide" );
 
-    public UrlTarget( Context context )
+    public IntegerDivide( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -36,27 +29,17 @@ public class UrlTarget extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        String a, result;
+        int a, b, result;
 
         Iterator<Value> argIter = args.iterator();
-        a = context.stringValue(
+        a = context.intValue(
+                context.castToLiteral( argIter.next() ) );
+        b = context.intValue(
                 context.castToLiteral( argIter.next() ) );
 
         try
         {
-            URL url = new URL( a );
-            URLConnection connection = url.openConnection();
-            connection.connect();
-
-            InputStream response = connection.getInputStream();
-
-            BufferedReader br = new BufferedReader(
-                new InputStreamReader( response ) );
-            StringBuffer sb = new StringBuffer();
-            String nextLine = "";
-            while ( ( nextLine = br.readLine() ) != null )
-                 sb.append(nextLine);
-            result = sb.toString();
+            result = a / b;
         }
 
         catch ( Throwable t )

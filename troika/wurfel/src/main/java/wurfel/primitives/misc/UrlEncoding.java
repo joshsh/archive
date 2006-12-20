@@ -1,4 +1,4 @@
-package wurfel.model.primitives;
+package wurfel.primitives.misc;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,12 +14,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ConcatenateStringsPrimitive extends PrimitiveFunction
+import java.net.URLEncoder;
+
+public class UrlEncoding extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "concatenateStrings" );
+        = Wurfel.getWurfelTestUri( "urlEncoding" );
 
-    public ConcatenateStringsPrimitive( Context context )
+    public UrlEncoding( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -29,14 +31,21 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        String strA, strB, result;
+        String a, result;
 
         Iterator<Value> argIter = args.iterator();
-        strA = context.stringValue(
-                    context.castToLiteral( argIter.next() ) );
-        strB = context.stringValue(
-                    context.castToLiteral( argIter.next() ) );
-        result = strA + strB;
+        a = context.stringValue(
+                context.castToLiteral( argIter.next() ) );
+
+        try
+        {
+            result = URLEncoder.encode( a );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
 
         return new NodeSet( context.createLiteral( result ) );
     }

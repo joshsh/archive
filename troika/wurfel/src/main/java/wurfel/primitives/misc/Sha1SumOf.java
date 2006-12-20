@@ -1,4 +1,4 @@
-package wurfel.model.primitives.misc;
+package wurfel.primitives.misc;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;

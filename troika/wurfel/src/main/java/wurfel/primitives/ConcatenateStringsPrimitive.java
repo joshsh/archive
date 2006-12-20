@@ -1,4 +1,4 @@
-package wurfel.model.primitives;
+package wurfel.primitives;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class IntegerAdd extends PrimitiveFunction
+public class ConcatenateStringsPrimitive extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "integer-add" );
+        = Wurfel.getWurfelTestUri( "concatenateStrings" );
 
-    public IntegerAdd( Context context )
+    public ConcatenateStringsPrimitive( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -29,14 +29,14 @@ public class IntegerAdd extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        int a, b, result;
+        String strA, strB, result;
 
         Iterator<Value> argIter = args.iterator();
-        a = context.intValue(
-                context.castToLiteral( argIter.next() ) );
-        b = context.intValue(
-                context.castToLiteral( argIter.next() ) );
-        result = a + b;
+        strA = context.stringValue(
+                    context.castToLiteral( argIter.next() ) );
+        strB = context.stringValue(
+                    context.castToLiteral( argIter.next() ) );
+        result = strA + strB;
 
         return new NodeSet( context.createLiteral( result ) );
     }

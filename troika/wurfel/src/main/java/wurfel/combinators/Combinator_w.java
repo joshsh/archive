@@ -1,4 +1,4 @@
-package wurfel.model.combinators;
+package wurfel.combinators;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Combinator_U extends Combinator
+public class Combinator_w extends Combinator
 {
     private static final URI
-        s_uri = Wurfel.getWurfelTestUri( "U" );
+        s_uri = Wurfel.getWurfelTestUri( "w" );
 
-    public Combinator_U( Context context )
+    public Combinator_w( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -29,15 +29,14 @@ public class Combinator_U extends Combinator
                                       Context context )
         throws WurfelException
     {
-        Value x, y;
+        Value x;
 
         Iterator<Value> argIter = args.iterator();
         x = argIter.next();
-        y = argIter.next();
 
         Value result = new Apply(
-            y,
-            new Apply( new Apply( x, x ), y ) );
+            x,
+            x );
 
         return new NodeSet( result );
     }

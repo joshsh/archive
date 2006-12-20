@@ -1,4 +1,4 @@
-package wurfel.model.primitives.misc;
+package wurfel.primitives;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,14 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import java.net.URLEncoder;
-
-public class UrlEncoding extends PrimitiveFunction
+public class IntegerSubtract extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "urlEncoding" );
+        = Wurfel.getWurfelTestUri( "integer-subtract" );
 
-    public UrlEncoding( Context context )
+    public IntegerSubtract( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -31,21 +29,14 @@ public class UrlEncoding extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        String a, result;
+        int a, b, result;
 
         Iterator<Value> argIter = args.iterator();
-        a = context.stringValue(
+        a = context.intValue(
                 context.castToLiteral( argIter.next() ) );
-
-        try
-        {
-            result = URLEncoder.encode( a );
-        }
-
-        catch ( Throwable t )
-        {
-            throw new WurfelException( t );
-        }
+        b = context.intValue(
+                context.castToLiteral( argIter.next() ) );
+        result = a - b;
 
         return new NodeSet( context.createLiteral( result ) );
     }

@@ -49,7 +49,11 @@
             <name>JLine Project Repository</name>
             <url>http://jline.sourceforge.net/m2repo</url>
         </repository>
-
+        <repository>
+            <id>troika</id>
+            <name>Josh's personal m2 repository</name>
+            <url>http://troika.dnsdojo.net/maven2</url>
+        </repository>
 <!--
         <repository>
             <id>apache-archives</id>
@@ -57,7 +61,6 @@
             <url>http://archive.apache.org/dist/maven-repository/</url>
         </repository>
 -->
-
 <!--
         <repository>
             <id>ibiblio</id>

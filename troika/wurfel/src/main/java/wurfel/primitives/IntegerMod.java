@@ -1,4 +1,4 @@
-package wurfel.model.primitives;
+package wurfel.primitives;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class IntegerMultiply extends PrimitiveFunction
+public class IntegerMod extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "integer-multiply" );
+        = Wurfel.getWurfelTestUri( "integer-mod" );
 
-    public IntegerMultiply( Context context )
+    public IntegerMod( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -36,7 +36,16 @@ public class IntegerMultiply extends PrimitiveFunction
                 context.castToLiteral( argIter.next() ) );
         b = context.intValue(
                 context.castToLiteral( argIter.next() ) );
-        result = a * b;
+
+        try
+        {
+            result = a % b;
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
 
         return new NodeSet( context.createLiteral( result ) );
     }

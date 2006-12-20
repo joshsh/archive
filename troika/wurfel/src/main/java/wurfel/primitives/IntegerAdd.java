@@ -1,4 +1,4 @@
-package wurfel.model.primitives;
+package wurfel.primitives;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class IntegerSubtract extends PrimitiveFunction
+public class IntegerAdd extends PrimitiveFunction
 {
     private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "integer-subtract" );
+        = Wurfel.getWurfelTestUri( "integer-add" );
 
-    public IntegerSubtract( Context context )
+    public IntegerAdd( Context context )
         throws WurfelException
     {
         super( s_uri, context );
@@ -36,7 +36,7 @@ public class IntegerSubtract extends PrimitiveFunction
                 context.castToLiteral( argIter.next() ) );
         b = context.intValue(
                 context.castToLiteral( argIter.next() ) );
-        result = a - b;
+        result = a + b;
 
         return new NodeSet( context.createLiteral( result ) );
     }
