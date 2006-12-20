@@ -97,6 +97,8 @@ wurfel-test:urlEncoding
         wurfel:parameterTransparency true ]
   ) .
 
+### Networking primitives ######################################################
+
 wurfel-test:urlTarget
   rdfs:type wurfel:PrimitiveFunction ;
   wurfel:returnType xsd:string ;
@@ -104,6 +106,15 @@ wurfel-test:urlTarget
       [ wurfel:parameterName "url" ;
         wurfel:parameterType xsd:string ;
         wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:swoogleIt
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType rdfs:Class ;
+  wurfel:parameters (
+    [ wurfel:parameterName "searchStr" ;
+      wurfel:parameterType xsd:string ;
+      wurfel:parameterTransparency true ]
   ) .
 
 ### Combinators ################################################################

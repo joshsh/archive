@@ -102,6 +102,11 @@ public class Wurfel
     {
         return new URIImpl( "http://www.w3.org/2001/XMLSchema#" + localName );
     }
+
+    public static URI getSwoogleUri( final String localName )
+    {
+        return new URIImpl( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
+    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

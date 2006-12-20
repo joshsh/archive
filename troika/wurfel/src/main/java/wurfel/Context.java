@@ -14,6 +14,7 @@ import wurfel.model.primitives.ConcatenateStringsPrimitive;
 import wurfel.model.primitives.misc.Sha1SumOf;
 import wurfel.model.primitives.misc.UrlEncoding;
 import wurfel.model.primitives.misc.UrlTarget;
+import wurfel.model.primitives.misc.SwoogleIt;
 import wurfel.model.combinators.Combinator_B;
 import wurfel.model.combinators.Combinator_C;
 import wurfel.model.combinators.Combinator_I;
@@ -253,6 +254,7 @@ Model model = null;
         addSpecialFunction( new Sha1SumOf( this ) );
         addSpecialFunction( new UrlEncoding( this ) );
         addSpecialFunction( new UrlTarget( this ) );
+        addSpecialFunction( new SwoogleIt( this ) );
 
         addSpecialFunction( new Combinator_B( this ) );
         addSpecialFunction( new Combinator_C( this ) );
@@ -304,6 +306,11 @@ aliases = new Hashtable<String, String>();
 
 // FIXME
     }
+
+public Repository getRepository()
+{
+    return repository;
+}
 
     public void importModel( final URL url, final String baseURI )
         throws WurfelException

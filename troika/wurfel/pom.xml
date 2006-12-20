@@ -213,6 +213,7 @@
                     <doapFile>${basedir}/target/doap_${project.artifactId}.rdf</doapFile>
                     <!-- TODO: See: http://projects.apache.org/categories.html -->
                     <category>xml</category>
+                    <project>${project}</project>
                 </configuration>
                 <executions>
                     <execution>

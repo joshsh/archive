@@ -1,0 +1,78 @@
+package wurfel.model.primitives.misc;
+
+import wurfel.Wurfel;
+import wurfel.WurfelException;
+import wurfel.Context;
+import wurfel.model.PrimitiveFunction;
+import wurfel.model.NodeSet;
+
+import org.openrdf.model.Value;
+import org.openrdf.model.URI;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Statement;
+import org.openrdf.repository.Connection;
+import org.openrdf.repository.Repository;
+import org.openrdf.util.iterator.CloseableIterator;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import java.net.URL;
+import java.net.URLEncoder;
+
+public class SwoogleIt extends PrimitiveFunction
+{
+    private static final URI
+        s_uri = Wurfel.getWurfelTestUri( "swoogleIt" ),
+        s_rdfTypeUri = Wurfel.getRdfUri( "type" ),
+//        s_rdfsTypeUri = Wurfel.getRdfSchemaUri( "type" ),
+        s_swoogleQueryResponseUri = Wurfel.getSwoogleUri( "QueryResponse" );
+
+    public SwoogleIt( Context context )
+        throws WurfelException
+    {
+        super( s_uri, context );
+    }
+
+    protected Collection<Value> applyInternal( LinkedList<Value> args,
+                                               Context context )
+        throws WurfelException
+    {
+        String a;
+
+        Iterator<Value> argIter = args.iterator();
+        a = context.stringValue(
+                context.castToLiteral( argIter.next() ) );
+
+        try
+        {
+            URL url = new URL(
+                "http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&key=demo&searchString="
+                + URLEncoder.encode( a ) );
+
+            context.importModel( url, null );
+            NodeSet results = new NodeSet();
+
+            Repository repository = context.getRepository();
+                Connection conn = repository.getConnection();
+                boolean includeInferred = true;
+                CloseableIterator<? extends Statement> stmtIter
+                    = conn.getStatements(
+                        null, s_rdfTypeUri, s_swoogleQueryResponseUri, includeInferred );
+                while ( stmtIter.hasNext() )
+                    results.add( stmtIter.next().getSubject() );
+                stmtIter.close();
+                conn.close();
+
+            return results;
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+    }
+}
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

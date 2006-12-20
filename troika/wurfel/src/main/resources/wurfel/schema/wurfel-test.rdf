@@ -306,6 +306,30 @@
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#urlTarget">
     <wurfel:parameters rdf:nodeID="genid30"/>
   </rdf:Description>
+  <rdf:Description rdf:nodeID="genid31">
+    <wurfel:parameterName>searchStr</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid31">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid31">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid32">
+    <rdf:first rdf:nodeID="genid31"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid32">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#swoogleIt">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#swoogleIt">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#swoogleIt">
+    <wurfel:parameters rdf:nodeID="genid32"/>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#B">
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
   </rdf:Description>
