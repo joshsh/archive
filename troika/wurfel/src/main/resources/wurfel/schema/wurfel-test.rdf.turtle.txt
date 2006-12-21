@@ -3,6 +3,7 @@
 @prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
+@prefix swoogle:      <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 
 ### Integer arithmetic primitives ##############################################
 
@@ -77,6 +78,16 @@ wurfel-test:listElements
         wurfel:parameterTransparency true ]
   ) .
 
+# Hackish... implementation expects a URI
+wurfel-test:uriToString
+  rdfs:type rdf:Resource ;
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
+      [ wurfel:parameterName "resource" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+  ) .
+
 ### String manipulation primitives #############################################
 
 wurfel-test:concatenateStrings
@@ -128,23 +139,11 @@ wurfel-test:swoogleIt
       wurfel:parameterType xsd:string ;
       wurfel:parameterTransparency true ]
     [ wurfel:parameterName "queryType" ;
-      wurfel:parameterType xsd:string ;
+      wurfel:parameterType swoogle:SwoogleQueryType ;
       wurfel:parameterTransparency true ]
     [ wurfel:parameterName "searchString" ;
       wurfel:parameterType xsd:string ;
       wurfel:parameterTransparency true ]
-  ) .
-
-### Misc. primitives ###########################################################
-
-# Hackish... implementation expects a URI
-wurfel-test:uriToString
-  rdfs:type rdf:Resource ;
-  wurfel:returnType xsd:string ;
-  wurfel:parameters (
-      [ wurfel:parameterName "resource" ;
-        wurfel:parameterType xsd:string ;
-        wurfel:parameterTransparency true ]
   ) .
 
 ### Combinators ################################################################

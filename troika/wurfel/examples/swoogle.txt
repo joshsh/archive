@@ -1,8 +1,0 @@
-!import "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl";
-!import "http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl";
-
-"http://xmlns.com/wordnet/1.6/Parakeet" ("digest_swt" ("demo" swoogleIt)) hasResult hasDescriptionIn isUnionOf listElements;
-
-(:
-Parakeet digest_swt "demo" .swoogleIt.hasResult.hasDescriptionIn.isUnionOf.listElements ;
-:)

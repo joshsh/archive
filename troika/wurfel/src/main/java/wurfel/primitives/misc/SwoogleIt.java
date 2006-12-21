@@ -38,13 +38,13 @@ public class SwoogleIt extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        String key, queryType, searchString;
+        String key, searchString;
+        URI queryType;
 
         Iterator<Value> argIter = args.iterator();
         key = context.stringValue(
                 context.castToLiteral( argIter.next() ) );
-        queryType = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
+        queryType = context.castToUri( argIter.next() );
         searchString = context.stringValue(
                 context.castToLiteral( argIter.next() ) );
 
@@ -53,7 +53,7 @@ public class SwoogleIt extends PrimitiveFunction
             URL url = new URL(
                 "http://logos.cs.umbc.edu:8080/swoogle31/q"
                 + "?key=" + URLEncoder.encode( key )
-                + "&queryType=" + URLEncoder.encode( queryType )
+                + "&queryType=" + URLEncoder.encode( queryType.getLocalName() )
                 + "&searchString=" + URLEncoder.encode( searchString ) );
 
             URI baseUri = Wurfel.createRandomUri();
