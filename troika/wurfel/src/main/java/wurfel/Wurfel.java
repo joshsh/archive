@@ -5,7 +5,10 @@ import org.openrdf.model.impl.URIImpl;
 
 import java.net.URL;
 
+import java.util.Properties;
 import java.util.Random;
+
+import java.io.IOException;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -51,6 +54,67 @@ import com.ontogon.doapamine;
 */
 public class Wurfel
 {
+    public enum ExpressionOrder
+    {
+        DIAGRAMMATIC        ( "diagrammatic" ),
+        ANTIDIAGRAMMATIC    ( "antidiagrammatic" );
+
+        private String name;
+        private  ExpressionOrder( String n )
+        {
+            name = n;
+        }
+
+        public static ExpressionOrder find( final String name )
+            throws WurfelException
+        {
+            for ( ExpressionOrder x : ExpressionOrder.values() )
+                if ( x.name.equals( name ) )
+                    return x;
+
+            String msg = "unknown ExpressionOrder: '" + name + "'";
+            throw new WurfelException( msg );
+        }
+    }
+
+    public enum ExpressionAssociativity
+    {
+        LEFT                ( "left" ),
+        RIGHT               ( "right" );
+
+        private String name;
+        private  ExpressionAssociativity( String n )
+        {
+            name = n;
+        }
+
+        public static ExpressionAssociativity find( final String name )
+            throws WurfelException
+        {
+            for ( ExpressionAssociativity x : ExpressionAssociativity.values() )
+                if ( x.name.equals( name ) )
+                    return x;
+
+            String msg = "unknown ExpressionAssociativity: '" + name + "'";
+            throw new WurfelException( msg );
+        }
+    }
+
+    private static ExpressionOrder expressionOrder;
+    private static ExpressionAssociativity expressionAssociativity;
+
+    public static ExpressionOrder getExpressionOrder()
+    {
+        return expressionOrder;
+    }
+
+    public static ExpressionAssociativity getExpressionAssociativity()
+    {
+        return expressionAssociativity;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     private static final URL
         s_wurfelSchemaUrl = Wurfel.class.getResource( "schema/wurfel.rdf" ),
         s_wurfelTestUrl = Wurfel.class.getResource( "schema/wurfel-test.rdf" );
@@ -58,11 +122,29 @@ public class Wurfel
     private static boolean initialized = false;
 
     public static void initialize()
+        throws WurfelException
     {
         if ( !initialized )
         {
             PropertyConfigurator.configure(
                 Wurfel.class.getResource( "log4j.properties" ) );
+
+            Properties props = new Properties();
+
+            try
+            {
+                props.load( Wurfel.class.getResourceAsStream( "wurfel.properties" ) );
+            }
+
+            catch ( IOException e )
+            {
+                throw new WurfelException( "unable to load wurfel.properties" );
+            }
+
+            expressionOrder = ExpressionOrder.find(
+                props.getProperty( "wurfel.cli.syntax.order" ) );
+            expressionAssociativity = ExpressionAssociativity.find(
+                props.getProperty( "wurfel.cli.syntax.associativity" ) );
 
             initialized = true;
         }

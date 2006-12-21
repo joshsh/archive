@@ -83,28 +83,31 @@ checkArguments( args );
         return argument;
     }
 
-
-
+    // Note: assumes left associativity for now.
     public String toString()
     {
-//        String s = ".";
-        String s = "";
+        Value left = null, right = null;
 
-        if ( null == function )
-            s += "()";
-        else
-            s += function.toString();
+        switch ( Wurfel.getExpressionOrder() )
+        {
+            case DIAGRAMMATIC:
+                left = argument;
+                right = function;
+                break;
 
-        s += " ";
+            case ANTIDIAGRAMMATIC:
+                left = function;
+                right = argument;
+                break;
+        }
 
-        if ( null == argument )
-            s += "()";
-        else if ( argument instanceof Apply )
-            s += "(" + argument.toString() + ")";
-        else
-            s += argument.toString();
+        String leftStr = ( null == left )
+            ? "()" : left.toString();
+        String rightStr = ( null == right )
+            ? "()" : ( right instanceof Apply )
+                ? "(" + right.toString() + ")" : right.toString();
 
-        return s;
+        return leftStr + " " + rightStr;
     }
 
 }

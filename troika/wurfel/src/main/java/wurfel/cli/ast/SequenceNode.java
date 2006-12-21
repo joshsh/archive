@@ -1,5 +1,6 @@
 package wurfel.cli.ast;
 
+import wurfel.Wurfel;
 import wurfel.Context;
 import wurfel.WurfelException;
 import wurfel.model.Apply;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 
 public class SequenceNode extends Ast
 {
+    private static final boolean s_useDiagrammaticSyntax = true;
     private List<Ast> children;
 
     public SequenceNode()
@@ -33,9 +35,19 @@ public class SequenceNode extends Ast
         Iterator<Ast> iter = children.iterator();
         Value result = iter.next().evaluate( context );
 
-        // Note: uses left-associative, antidiagrammatic-order syntax.
-        while ( iter.hasNext() )
-            result = new Apply( result, iter.next().evaluate( context ) );
+        // Note: assuming left associativity for now.
+        switch ( Wurfel.getExpressionOrder() )
+        {
+            case DIAGRAMMATIC:
+                while ( iter.hasNext() )
+                    result = new Apply( iter.next().evaluate( context ), result );
+                break;
+
+            case ANTIDIAGRAMMATIC:
+                while ( iter.hasNext() )
+                    result = new Apply( result, iter.next().evaluate( context ) );
+                break;
+        }
 
         return result;
     }
