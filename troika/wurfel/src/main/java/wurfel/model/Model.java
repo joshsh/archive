@@ -57,7 +57,8 @@ public abstract class Model
                 boolean includeInferred = true;
                 CloseableIterator<? extends Statement> stmtIter
                     = conn.getStatements(
-                        (Resource) subject, (URI) predicate, null, context, includeInferred );
+//                        (Resource) subject, (URI) predicate, null, context, includeInferred );
+                        (Resource) subject, (URI) predicate, null, includeInferred );
                 while ( stmtIter.hasNext() )
                     objects.add( stmtIter.next().getObject() );
                 stmtIter.close();
@@ -84,7 +85,8 @@ public abstract class Model
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
-                    null, null, null, context, includeInferred );
+//                    null, null, null, context, includeInferred );
+                    null, null, null, includeInferred );
             while ( stmtIter.hasNext() )
                 subjects.add( stmtIter.next().getSubject() );
             stmtIter.close();
@@ -110,7 +112,8 @@ public abstract class Model
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
-                    subject, null, null, context, includeInferred );
+//                    subject, null, null, context, includeInferred );
+                    subject, null, null, includeInferred );
             while ( stmtIter.hasNext() )
                 predicates.add( stmtIter.next().getPredicate() );
             stmtIter.close();

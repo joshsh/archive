@@ -37,7 +37,8 @@ public class ModelMock extends Model
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
-                    null, null, null, context, includeInferred );
+//                    null, null, null, context, includeInferred );
+                    null, null, null, includeInferred );
             while ( stmtIter.hasNext() )
             {
                 Statement st = stmtIter.next();

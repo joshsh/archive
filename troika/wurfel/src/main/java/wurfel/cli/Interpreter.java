@@ -245,7 +245,10 @@ public class Interpreter extends Thread implements Runnable
         try
         {
             URL url = new URL( urlStr );
-            context.importModel( url, baseURI );
+            if ( null == baseURI || 0 == baseURI.length() )
+                context.importModel( url, null );
+            else
+                context.importModel( url, context.createUri( baseURI ) );
         }
 
         catch ( WurfelException e )

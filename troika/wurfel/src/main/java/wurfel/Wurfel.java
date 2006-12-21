@@ -5,6 +5,8 @@ import org.openrdf.model.impl.URIImpl;
 
 import java.net.URL;
 
+import java.util.Random;
+
 import org.apache.log4j.PropertyConfigurator;
 
 /*
@@ -77,6 +79,22 @@ public class Wurfel
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    private static Random rn = new Random();
+
+    private static int randomInt( int lo, int hi )
+    {
+        int n = hi - lo + 1;
+        int i = rn.nextInt() % n;
+        if (i < 0)
+            i = -i;
+        return lo + i;
+    }
+
+    public static URI createRandomUri()
+    {
+        return new URIImpl( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
+    }
 
     public static URI getRdfUri( final String localName )
     {

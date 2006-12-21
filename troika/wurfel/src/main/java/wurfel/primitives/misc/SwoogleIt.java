@@ -26,7 +26,6 @@ public class SwoogleIt extends PrimitiveFunction
     private static final URI
         s_uri = Wurfel.getWurfelTestUri( "swoogleIt" ),
         s_rdfTypeUri = Wurfel.getRdfUri( "type" ),
-//        s_rdfsTypeUri = Wurfel.getRdfSchemaUri( "type" ),
         s_swoogleQueryResponseUri = Wurfel.getSwoogleUri( "QueryResponse" );
 
     public SwoogleIt( Context context )
@@ -39,19 +38,26 @@ public class SwoogleIt extends PrimitiveFunction
                                                Context context )
         throws WurfelException
     {
-        String a;
+        String key, queryType, searchString;
 
         Iterator<Value> argIter = args.iterator();
-        a = context.stringValue(
+        key = context.stringValue(
+                context.castToLiteral( argIter.next() ) );
+        queryType = context.stringValue(
+                context.castToLiteral( argIter.next() ) );
+        searchString = context.stringValue(
                 context.castToLiteral( argIter.next() ) );
 
         try
         {
             URL url = new URL(
-                "http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&key=demo&searchString="
-                + URLEncoder.encode( a ) );
+                "http://logos.cs.umbc.edu:8080/swoogle31/q"
+                + "?key=" + URLEncoder.encode( key )
+                + "&queryType=" + URLEncoder.encode( queryType )
+                + "&searchString=" + URLEncoder.encode( searchString ) );
 
-            context.importModel( url, null );
+            URI baseUri = Wurfel.createRandomUri();
+            context.importModel( url, baseUri );
             NodeSet results = new NodeSet();
 
             Repository repository = context.getRepository();
@@ -59,7 +65,8 @@ public class SwoogleIt extends PrimitiveFunction
                 boolean includeInferred = true;
                 CloseableIterator<? extends Statement> stmtIter
                     = conn.getStatements(
-                        null, s_rdfTypeUri, s_swoogleQueryResponseUri, includeInferred );
+//                        null, s_rdfTypeUri, s_swoogleQueryResponseUri, includeInferred );
+                        null, s_rdfTypeUri, s_swoogleQueryResponseUri, baseUri, includeInferred );
                 while ( stmtIter.hasNext() )
                     results.add( stmtIter.next().getSubject() );
                 stmtIter.close();

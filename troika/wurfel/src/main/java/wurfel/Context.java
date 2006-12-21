@@ -26,6 +26,7 @@ import wurfel.primitives.IntegerDivide;
 import wurfel.primitives.IntegerMod;
 import wurfel.primitives.ConcatenateStringsPrimitive;
 import wurfel.primitives.misc.Sha1SumOf;
+import wurfel.primitives.misc.UriToString;
 import wurfel.primitives.misc.UrlEncoding;
 import wurfel.primitives.misc.UrlTarget;
 import wurfel.primitives.misc.SwoogleIt;
@@ -208,6 +209,11 @@ public class Context
 
     ////////////////////////////////////////////////////////////////////////////
 
+    public URI createUri( final String s )
+    {
+        return repository.getValueFactory().createURI( s );
+    }
+
     public Literal createLiteral( final String s )
     {
         return model.getValueFactory().createLiteral( s, s_xsdStringUri );
@@ -252,6 +258,7 @@ Model model = null;
 
         addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
         addSpecialFunction( new Sha1SumOf( this ) );
+        addSpecialFunction( new UriToString( this ) );
         addSpecialFunction( new UrlEncoding( this ) );
         addSpecialFunction( new UrlTarget( this ) );
         addSpecialFunction( new SwoogleIt( this ) );
@@ -296,11 +303,11 @@ aliases = new Hashtable<String, String>();
             throw new WurfelException( e );
         }
 
-        singleContext = repository.getValueFactory().createURI( "urn:wurfel-context" );
+        singleContext = createUri( "urn:wurfel-context" );
 
 //System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
-        importModel( Wurfel.schemaUrl(), "urn:wurfel" );
-        importModel( Wurfel.testUrl(), "urn:wurfel-test" );
+        importModel( Wurfel.schemaUrl(), createUri( "urn:wurfel" ) );
+        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
 
         loadPrimitives();
 
@@ -312,18 +319,22 @@ public Repository getRepository()
     return repository;
 }
 
-    public void importModel( final URL url, final String baseURI )
+    public void importModel( final URL url, final URI baseURI )
         throws WurfelException
     {
         s_logger.debug( "Importing model " + url.toString() +
-            ( ( null == baseURI ) ? "" : " as " + baseURI ) );
+            ( ( null == baseURI ) ? "" : " as " + baseURI.toString() ) );
 
         boolean verifyData = true;
 
         try
         {
             Connection con = repository.getConnection();
-            con.add( url, baseURI, RDFFormat.RDFXML, singleContext );
+//            con.add( url, baseURI, RDFFormat.RDFXML, singleContext );
+            if ( null == baseURI )
+                con.add( url, baseURI.toString(), RDFFormat.RDFXML );
+            else
+                con.add( url, baseURI.toString(), RDFFormat.RDFXML, baseURI );
             con.close();
         }
 

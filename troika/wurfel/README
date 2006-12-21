@@ -67,6 +67,11 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 
 !import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";
 
+
+
+swoogleIt "demo" "search_swd_ontology" "parrot";
+
+
 ::::::::::::::::::::::::::::::::::::::::
 
 [ba]

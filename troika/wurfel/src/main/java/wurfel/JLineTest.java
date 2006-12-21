@@ -29,7 +29,7 @@ LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
 
             Context context = new Context( "anonymousContext" );
             if ( args.length == 2 )
-                context.importModel( new URL( args[0] ), args[1] );
+                context.importModel( new URL( args[0] ), context.createUri( args[1] ) );
             else if ( args.length == 1 )
                 context.importModel( new URL( args[0] ), null );
 

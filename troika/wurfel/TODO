@@ -15,6 +15,10 @@ Names and namespaces
 * decide whether names are determined by URI, rdfs:label, some combination of the two, or something else entirely
 * address name collisions, scalability issues in general
 
+Command line interface
+================================================================================
+* writer.debug becomes huge.  Disable it.
+
 Nice-to-have
 ================================================================================
 * Swoogle add-on, which performs queries like the one below, then uses the
