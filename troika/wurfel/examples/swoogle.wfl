@@ -17,6 +17,7 @@
 (: digest_swt
    -- Show Swoogle metadata for the present semantic web term and list triples
       defining it :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+(: [ba] hasResult's object here is a URI, so results bunch up around it :)
 
 "http://xmlns.com/wordnet/1.6/Parakeet"
     (digest_swt ("demo" swoogleIt))
@@ -28,6 +29,7 @@ Class uriToString
 
 (: digest_ns
    -- Show Swoogle metadata for the present semantic web namespace ::::::::::::)
+(: [ba] hasResult's object here is a URI, so results bunch up around it :)
 
 "http://xmlns.com/wordnet/1.6/"
     (digest_ns ("demo" swoogleIt))
@@ -98,7 +100,6 @@ Class uriToString
 Parakeet.uriToString rel_swt_swt_from "demo" .swoogleIt.hasResult.listElements ;
 
 Parakeet/uriToString rel_swt_swt_from "demo" /swoogleIt/hasResult/listElements ;
-:)
 
 
 Beau/?sibling/parent
@@ -106,3 +107,4 @@ Beau/?sibling/parent
 Beau.?sibling.parent
 
 Beau/parent/!father  ==  Beau (/parent/!father)
+:)

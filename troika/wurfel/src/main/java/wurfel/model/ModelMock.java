@@ -11,6 +11,7 @@ import org.openrdf.repository.Connection;
 //import org.openrdf.sail.SailConnection;
 import org.openrdf.util.iterator.CloseableIterator;
 import org.openrdf.sail.SailException;
+import org.openrdf.sail.Namespace;
 
 import jline.Completor;
 import jline.SimpleCompletor;
@@ -24,16 +25,19 @@ import java.util.Iterator;
 public class ModelMock extends Model
 {
     private Hashtable<String, URI> dictionary = null;
+    private Hashtable<String, String> nsDictionary = null;
 
-    private void createDictionary()
+    private void createDictionaries()
         throws WurfelException
     {
         Set<URI> allURIs = new HashSet<URI>();
         dictionary = new Hashtable<String, URI>();
+        nsDictionary = new Hashtable<String, String>();
 
         try
         {
             Connection conn = repository.getConnection();
+
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
@@ -54,6 +58,16 @@ public class ModelMock extends Model
                     allURIs.add( (URI) obj );
             }
             stmtIter.close();
+
+            CloseableIterator<? extends Namespace> nsIter
+                 = conn.getNamespaces();
+            while ( nsIter.hasNext() )
+            {
+                Namespace ns = nsIter.next();
+                nsDictionary.put( ns.getName(), ns.getPrefix() );
+            }
+            nsIter.close();
+
             conn.close();
         }
 
@@ -74,7 +88,7 @@ public class ModelMock extends Model
         throws WurfelException
     {
         if ( null == dictionary )
-            createDictionary();
+            createDictionaries();
 
         Set<String> dictKeys = dictionary.keySet();
 
@@ -93,9 +107,18 @@ public class ModelMock extends Model
         throws WurfelException
     {
         if ( null == dictionary )
-            createDictionary();
+            createDictionaries();
 
         return dictionary.get( name );
+    }
+
+    public String nsPrefixOf( final URI uri )
+        throws WurfelException
+    {
+        if ( null == nsDictionary )
+            createDictionaries();
+
+        return nsDictionary.get( uri.getNamespace() );
     }
 
     public ModelMock( Repository repository, Resource context )

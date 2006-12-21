@@ -312,14 +312,13 @@ aliases = new Hashtable<String, String>();
         importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
 
         loadPrimitives();
-
-// FIXME
     }
 
 public Repository getRepository()
 {
     return repository;
 }
+//private boolean namespacesDefined = false;
 
     public void importModel( final URL url, final URI baseURI )
         throws WurfelException
@@ -337,6 +336,16 @@ public Repository getRepository()
                 con.add( url, null, RDFFormat.RDFXML );
             else
                 con.add( url, baseURI.toString(), RDFFormat.RDFXML, baseURI );
+/*
+if ( !namespacesDefined )
+{
+    con.setNamespace( "wurfel", "urn:net.dnsdojo.troika.wurfel#" );
+    con.setNamespace( "wurfel", "urn:net.dnsdojo.troika.wurfel#" );
+    con.setNamespace( "wurfel", "urn:net.dnsdojo.troika.wurfel#" );
+    con.setNamespace( "wurfel-test", "urn:net.dnsdojo.troika.wurfel-test#" );
+    namespacesDefined = true;
+}
+*/
             con.close();
         }
 
@@ -499,10 +508,23 @@ public Repository getRepository()
             System.out.println( "()" );
     }
 
+    private String uriAbbr( final URI uri )
+        throws WurfelException
+    {
+        String prefix = model.nsPrefixOf( uri );
+        if ( null == prefix )
+            return uri.toString();
+        else
+            return prefix + ":" + uri.getLocalName();
+    }
+
     public void show( Resource subject )
         throws WurfelException
     {
-        System.out.println( subject.toString() );
+        if ( subject instanceof URI )
+            System.out.println( uriAbbr( (URI) subject ) );
+        else
+            System.out.println( subject.toString() );
 
         Set<URI> predicates = model.getPredicates( subject );
         Iterator<URI> predIter = predicates.iterator();
@@ -510,12 +532,20 @@ public Repository getRepository()
         {
             URI predicate = predIter.next();
 
-            System.out.println( "    " + predicate.getLocalName() );
+            System.out.println( "    " + uriAbbr( predicate ) );
+//            System.out.println( "    " + predicate.getLocalName() );
 
             Set<Value> objects = model.multiply( subject, predicate );
             Iterator<Value> objIter = objects.iterator();
             while ( objIter.hasNext() )
-                System.out.println( "        " + objIter.next().toString() );
+            {
+                Value obj = objIter.next();
+                if ( obj instanceof URI )
+                    System.out.println( "        " + uriAbbr( (URI) obj ) );
+//                    System.out.println( "        " + ( (URI) obj ).getLocalName() );
+                else
+                    System.out.println( "        " + obj.toString() );
+            }
         }
     }
 

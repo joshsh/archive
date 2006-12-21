@@ -27,6 +27,8 @@ public abstract class Model
     protected Resource context;
 
     public abstract URI resolve( final String name ) throws WurfelException;
+    public abstract String nsPrefixOf( final URI uri ) throws WurfelException;
+
     public abstract Completor getCompletor() throws WurfelException;
 
     public Model( Repository repository, Resource context )
