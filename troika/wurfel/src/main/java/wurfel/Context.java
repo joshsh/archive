@@ -332,7 +332,7 @@ public Repository getRepository()
             Connection con = repository.getConnection();
 //            con.add( url, baseURI, RDFFormat.RDFXML, singleContext );
             if ( null == baseURI )
-                con.add( url, baseURI.toString(), RDFFormat.RDFXML );
+                con.add( url, null, RDFFormat.RDFXML );
             else
                 con.add( url, baseURI.toString(), RDFFormat.RDFXML, baseURI );
             con.close();

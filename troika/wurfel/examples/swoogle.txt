@@ -1,0 +1,14 @@
+!import "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl";
+!import "http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl";
+
+hasResult (swoogleIt "demo" "search_swd_ontology" "parrot");
+
+hasResult (swoogleIt "demo" "digest_swt" "http://xmlns.com/wordnet/1.6/Parakeet");
+hasDescriptionIn (hasResult (swoogleIt "demo" "digest_swt" "http://xmlns.com/wordnet/1.6/Parakeet"));
+isUnionOf (hasDescriptionIn (hasResult (swoogleIt "demo" "digest_swt" "http://xmlns.com/wordnet/1.6/Parakeet")));
+first (isUnionOf (hasDescriptionIn (hasResult (swoogleIt "demo" "digest_swt" "http://xmlns.com/wordnet/1.6/Parakeet"))));
+
+
+(:
+Parakeet digest_swt "demo" .swoogleIt.hasResult.hasDescriptionIn.isUnionOf ;
+:)

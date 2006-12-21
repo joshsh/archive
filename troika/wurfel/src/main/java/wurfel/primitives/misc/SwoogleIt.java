@@ -59,6 +59,7 @@ public class SwoogleIt extends PrimitiveFunction
             URI baseUri = Wurfel.createRandomUri();
             context.importModel( url, baseUri );
             NodeSet results = new NodeSet();
+//System.out.println( "baseUri = " + baseUri );
 
             Repository repository = context.getRepository();
                 Connection conn = repository.getConnection();
