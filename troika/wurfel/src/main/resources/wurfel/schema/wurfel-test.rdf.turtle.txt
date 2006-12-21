@@ -1,6 +1,6 @@
 @prefix wurfel:       <urn:net.dnsdojo.troika.wurfel#> .
 @prefix wurfel-test:  <urn:net.dnsdojo.troika.wurfel-test#> .
-@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
 
@@ -63,6 +63,17 @@ wurfel-test:integer-mod
         wurfel:parameterTransparency true ]
       [ wurfel:parameterName "intB" ;
         wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+### RDF primitives #############################################################
+
+wurfel-test:listElements
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType rdf:Resource ;
+  wurfel:parameters (
+      [ wurfel:parameterName "head" ;
+        wurfel:parameterType rdf:List ;
         wurfel:parameterTransparency true ]
   ) .
 

@@ -25,6 +25,7 @@ import wurfel.primitives.IntegerMultiply;
 import wurfel.primitives.IntegerDivide;
 import wurfel.primitives.IntegerMod;
 import wurfel.primitives.ConcatenateStringsPrimitive;
+import wurfel.primitives.ListElements;
 import wurfel.primitives.misc.Sha1SumOf;
 import wurfel.primitives.misc.UriToString;
 import wurfel.primitives.misc.UrlEncoding;
@@ -257,6 +258,7 @@ Model model = null;
         addSpecialFunction( new IntegerMod( this ) );
 
         addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
+        addSpecialFunction( new ListElements( this ) );
         addSpecialFunction( new Sha1SumOf( this ) );
         addSpecialFunction( new UriToString( this ) );
         addSpecialFunction( new UrlEncoding( this ) );

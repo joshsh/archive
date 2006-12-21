@@ -18,6 +18,14 @@ public class NodeSet extends LinkedHashSet<Value>
 
         add( v );
     }
+
+    public NodeSet( Collection<Value> other )
+    {
+        super();
+
+        add( other );
+    }
+
 /*
     public boolean add( Value v )
     {
