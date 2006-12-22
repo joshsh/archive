@@ -47,7 +47,9 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
 import org.openrdf.sail.SailInitializationException;
+import org.openrdf.util.iterator.CloseableIterator;
 import org.openrdf.sail.SailException;
+import org.openrdf.sail.Namespace;
 import org.openrdf.rio.UnsupportedRDFormatException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFHandlerException;
@@ -549,6 +551,46 @@ if ( !namespacesDefined )
         }
     }
 
+    public void showNamespaces()
+        throws WurfelException
+    {
+        try
+        {
+            Connection conn = repository.getConnection();
+
+            CloseableIterator<? extends Namespace> nsIter
+                 = conn.getNamespaces();
+            int maxlen = 0;
+            while ( nsIter.hasNext() )
+            {
+                Namespace ns = nsIter.next();
+                int len = ns.getPrefix().length();
+                if ( len > maxlen )
+                    maxlen = len;
+            }
+            nsIter.close();
+
+            nsIter = conn.getNamespaces();
+            while ( nsIter.hasNext() )
+            {
+                Namespace ns = nsIter.next();
+                String prefix = ns.getPrefix();
+                int len = prefix.length();
+                System.out.print( prefix + ":" );
+                for ( int i = 0; i < maxlen - len + 2; i++ )
+                    System.out.print( " " );
+                System.out.println( ns.getName() );
+            }
+            nsIter.close();
+
+            conn.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
+    }
 
 
 

@@ -72,6 +72,7 @@ public class Interpreter extends Thread implements Runnable
             "!count",
             "!define",
             "!import",
+            "!namespaces",
             "!print",
             "!resolve",
             "!saveas",
@@ -333,6 +334,19 @@ public class Interpreter extends Thread implements Runnable
             }
 
             System.out.println( "" );
+        }
+
+        catch ( WurfelException e )
+        {
+            System.err.println( "\nError: " + e.toString() + "\n" );
+        }
+    }
+
+    public void showNamespaces()
+    {
+        try
+        {
+            context.showNamespaces();
         }
 
         catch ( WurfelException e )

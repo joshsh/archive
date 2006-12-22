@@ -176,15 +176,16 @@ COMMAND
     : '!'
     ;
 
-ADD     : COMMAND ( "add"       | "a" ) ;
-COUNT   : COMMAND ( "count"     | "c" ) ;
-DEFINE  : COMMAND ( "define"    | "d" ) ;
-IMPORT  : COMMAND ( "import"    | "i" ) ;
-PRINT   : COMMAND ( "print"     | "p" ) ;
-RESOLVE : COMMAND ( "resolve"   | "r" ) ;
-SAVEAS  : COMMAND ( "saveas"    | "s" ) ;
-QUIT    : COMMAND ( "quit"      | "q"
-                    | "exit"    | "x" ) ;
+ADD         : COMMAND ( "add"       | "a" ) ;
+COUNT       : COMMAND ( "count"     | "c" ) ;
+DEFINE      : COMMAND ( "define"    | "d" ) ;
+IMPORT      : COMMAND ( "import"    | "i" ) ;
+NAMESPACES  : COMMAND( "namespaces" | "n" ) ;
+PRINT       : COMMAND ( "print"     | "p" ) ;
+RESOLVE     : COMMAND ( "resolve"   | "r" ) ;
+SAVEAS      : COMMAND ( "saveas"    | "s" ) ;
+QUIT        : COMMAND ( "quit"      | "q"
+                      | "exit"    | "x" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,6 +355,11 @@ nt_Command
         {
             String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
             interpreter.importModel( url.getText(), baseUriStr );
+        }
+
+    | NAMESPACES
+        {
+            interpreter.showNamespaces();
         }
 
     | PRINT "statements"
