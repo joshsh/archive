@@ -343,7 +343,7 @@ nt_Command
 
     | COUNT "statements"
         {
-            System.out.println( "" + interpreter.countStatements() );
+            interpreter.countStatements();
         }
 
     | DEFINE name:IDENTIFIER uri:STRING
@@ -362,10 +362,17 @@ nt_Command
             interpreter.showNamespaces();
         }
 
-    | PRINT "statements"
-        {
-            interpreter.printStatements();
-        }
+    | PRINT
+        (
+          "statements"
+            {
+                interpreter.printStatements();
+            }
+        | "contexts"
+            {
+                interpreter.showContextIds();
+            }
+        )
 
     | QUIT
         {

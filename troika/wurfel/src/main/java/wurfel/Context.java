@@ -375,15 +375,6 @@ if ( !namespacesDefined )
         updateModel();
     }
 
-    // TODO -- See: http://openrdf.org/issues/browse/SES-304
-    public int countStatements()
-    {
-        return 0;
-    }
-
-
-
-
     public void addStatement( Value subj, Value pred, Value obj )
         throws WurfelException
     {
@@ -401,15 +392,7 @@ if ( !namespacesDefined )
         {
             throw new WurfelException( e );
         }
-
-/*
-        catch ( OpenRDFException e )
-        {
-            throw new WurfelException( e );
-        }
-*/
     }
-
 
     private void extractRDF( OutputStream out )
         throws WurfelException
@@ -480,9 +463,153 @@ if ( !namespacesDefined )
         }
     }
 
+    private boolean isApply( Value v )
+    {
+        return v instanceof Apply;
+    }
 
+    private Value translateFromGraph( Value v )
+    {
+        if ( v instanceof URI )
+        {
+            Function f = specialFunctions.get( (URI) v );
 
+            if ( null != f )
+                return f;
+            else
+                return v;
+        }
 
+        else
+            return v;
+    }
+
+    private Value translateToGraph( Value v )
+    {
+        if ( v instanceof Function )
+            return ( (Function) v ).getUri();
+        else
+            return v;
+    }
+
+    // TODO: this should throw an exception if the identifier does not resolve
+    //       to a unique value.
+    public Value resolveIdentifier( String s )
+        throws WurfelException
+    {
+        Value v = model.resolve( s );
+        return ( v == null ) ? null : translateFromGraph( v );
+    }
+
+// FIXME: 'apply' is now a bit of a misnomer
+    public Set<Value> apply( Value func, Value arg )
+        throws WurfelException
+    {
+        arg = translateToGraph( arg );
+
+// TODO: combinators and primitives as func will have their own, idiosyncratic ways of yielding a product
+        Iterator<Value> resultIter = model.multiply( arg, func ).iterator();
+        Set<Value> result = new NodeSet();
+        while ( resultIter.hasNext() )
+        {
+            Value v = resultIter.next();
+            result.add( translateFromGraph( v ) );
+        }
+
+        return result;
+    }
+
+    /**
+     *  Carries out normal-order lazy beta reduction, distributing operations
+     *  over node sets.
+     */
+    public NodeSet reduce( Value expr )
+        throws WurfelException
+    {
+//System.out.println( "expr = " + expr.toString() );
+        if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
+        {
+            // Reduce the function.
+            Iterator<Value> reducedFuncIter = reduce(
+                ( (Apply) expr ).getFunction() ).iterator();
+
+            // Reduce the function.
+            Iterator<Value> reducedArgIter = reduce(
+                ( (Apply) expr ).getArgument() ).iterator();
+
+            // Iterate over the cartesian product of the reduced function(s)
+            // with the reduced argument(s).
+            LinkedList<Value> argList = new LinkedList<Value>();
+            NodeSet result = new NodeSet();
+            while ( reducedFuncIter.hasNext() )
+            {
+                Value function = reducedFuncIter.next();
+                while ( reducedArgIter.hasNext() )
+                {
+                    Value argument = reducedArgIter.next();
+
+                    // Apply the function to the argument.
+                    Apply tmpApply = new Apply( function, argument );
+                    if ( tmpApply.arity() == 0 )
+                    {
+                        argList.clear();
+
+                        Collection<Value> itmResult = tmpApply.applyTo( argList, this );
+
+                        // Reduction is recursive; we must first iterate over
+                        // the intermediate results and reduce them before
+                        // adding them to the list of final results.
+                        Iterator<Value> itmIter = itmResult.iterator();
+                        while ( itmIter.hasNext() )
+                            result.add( reduce( itmIter.next() ) );
+                    }
+
+                    else
+                        result.add( tmpApply );
+                }
+            }
+
+            return result;
+        }
+
+        else
+            return new NodeSet( expr );
+    }
+
+    private void updateModel()
+        throws WurfelException
+    {
+        model = new ModelMock( repository, singleContext );
+    }
+
+    //FIXME: temporary method
+    public Model getModel()
+    {
+        return model;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Note: this may be a very expensive operation (see Sesame API).
+    public int countStatements()
+        throws WurfelException
+    {
+        int size;
+
+        try
+        {
+            Connection con = repository.getConnection();
+            size = con.size();
+            con.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        return size;
+    }
 
     public void define( String name, String uri )
     {
@@ -592,157 +719,46 @@ if ( !namespacesDefined )
         }
     }
 
-
-
-
-
-
-
-    private boolean isApply( Value v )
-    {
-        return v instanceof Apply;
-    }
-
-    private Value translateFromGraph( Value v )
-    {
-        if ( v instanceof URI )
-        {
-            Function f = specialFunctions.get( (URI) v );
-
-            if ( null != f )
-                return f;
-            else
-                return v;
-        }
-
-        else
-            return v;
-    }
-
-    private Value translateToGraph( Value v )
-    {
-        if ( v instanceof Function )
-            return ( (Function) v ).getUri();
-        else
-            return v;
-    }
-
-    // TODO: this should throw an exception if the identifier does not resolve
-    //       to a unique value.
-    public Value resolveIdentifier( String s )
+    public void showContextIds()
         throws WurfelException
     {
-        Value v = model.resolve( s );
-        return ( v == null ) ? null : translateFromGraph( v );
-    }
-
-// FIXME: 'apply' is now a bit of a misnomer
-    public Set<Value> apply( Value func, Value arg )
-        throws WurfelException
-    {
-        arg = translateToGraph( arg );
-
-// TODO: combinators and primitives as func will have their own, idiosyncratic ways of yielding a product
-        Iterator<Value> resultIter = model.multiply( arg, func ).iterator();
-        Set<Value> result = new NodeSet();
-        while ( resultIter.hasNext() )
-        {
-            Value v = resultIter.next();
-            result.add( translateFromGraph( v ) );
-        }
-
-        return result;
-    }
-
-
-    /**
-     *  Carries out normal-order lazy beta reduction, distributing operations
-     *  over node sets.
-     */
-    public NodeSet reduce( Value expr )
-        throws WurfelException
-    {
-//System.out.println( "expr = " + expr.toString() );
-        if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
-        {
-            // Reduce the function.
-            Iterator<Value> reducedFuncIter = reduce(
-                ( (Apply) expr ).getFunction() ).iterator();
-
-            // Reduce the function.
-            Iterator<Value> reducedArgIter = reduce(
-                ( (Apply) expr ).getArgument() ).iterator();
-
-            // Iterate over the cartesian product of the reduced function(s)
-            // with the reduced argument(s).
-            LinkedList<Value> argList = new LinkedList<Value>();
-            NodeSet result = new NodeSet();
-            while ( reducedFuncIter.hasNext() )
-            {
-                Value function = reducedFuncIter.next();
-                while ( reducedArgIter.hasNext() )
-                {
-                    Value argument = reducedArgIter.next();
-
-                    // Apply the function to the argument.
-                    Apply tmpApply = new Apply( function, argument );
-                    if ( tmpApply.arity() == 0 )
-                    {
-                        argList.clear();
-
-                        Collection<Value> itmResult = tmpApply.applyTo( argList, this );
-
-                        // Reduction is recursive; we must first iterate over
-                        // the intermediate results and reduce them before
-                        // adding them to the list of final results.
-                        Iterator<Value> itmIter = itmResult.iterator();
-                        while ( itmIter.hasNext() )
-                            result.add( reduce( itmIter.next() ) );
-                    }
-
-                    else
-                        result.add( tmpApply );
-                }
-            }
-
-            return result;
-        }
-
-        else
-            return new NodeSet( expr );
-    }
-
-
-
-    private void updateModel()
-        throws WurfelException
-    {
-        model = new ModelMock( repository, singleContext );
-
-/*
-        Graph myGraph;
-
         try
         {
-            myGraph = repository.getGraph();
+            Connection conn = repository.getConnection();
+
+            CloseableIterator<? extends Resource> contextIter
+                 = conn.getContextIDs();
+            while ( contextIter.hasNext() )
+            {
+                Resource context = contextIter.next();
+                System.out.println( context.toString() );
+            }
+            contextIter.close();
+
+            conn.close();
         }
 
-        catch ( AccessDeniedException e )
+        catch ( SailException e )
         {
             throw new WurfelException( e );
         }
-
-        model = new ModelMock( myGraph );
-*/
     }
 
-
-
-    //FIXME: temporary method
-    public Model getModel()
+    public void printStatements()
+        throws WurfelException
     {
-        return model;
+        updateModel();
+
+        Set<Resource> subjects = model.getSubjects();
+        Iterator<Resource> subjIter = subjects.iterator();
+        while ( subjIter.hasNext() )
+        {
+            Resource subject = subjIter.next();
+            show( subject );
+        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
 /*
     //FIXME: temporary method
@@ -797,20 +813,6 @@ if ( !namespacesDefined )
         }
     }
 */
-
-    public void printStatements()
-        throws WurfelException
-    {
-        updateModel();
-
-        Set<Resource> subjects = model.getSubjects();
-        Iterator<Resource> subjIter = subjects.iterator();
-        while ( subjIter.hasNext() )
-        {
-            Resource subject = subjIter.next();
-            show( subject );
-        }
-    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

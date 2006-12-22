@@ -221,9 +221,14 @@ public class Interpreter extends Thread implements Runnable
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public int countStatements()
+    public void countStatements()
     {
-        return context.countStatements();
+        try
+        {
+            System.out.println( "\n" + context.countStatements() + "\n" );
+        }
+
+        catch ( WurfelException e ) {}
     }
 
     public void define( final String name, final String uri )
@@ -236,6 +241,16 @@ public class Interpreter extends Thread implements Runnable
         try
         {
             context.show( name );
+        }
+
+        catch ( WurfelException e ) {}
+    }
+
+    public void showContextIds()
+    {
+        try
+        {
+            context.showContextIds();
         }
 
         catch ( WurfelException e ) {}
