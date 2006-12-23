@@ -94,6 +94,10 @@ http://www.w3.org/2000/01/rdf-schema#comment
 
 ::::::::::::::::::::::::::::::::::::::::
 
+sudo cp src/main/resources/wurfel/cli/kate/wurfel.xml /usr/share/apps/katepart/syntax
+
+::::::::::::::::::::::::::::::::::::::::
+
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel-test.rdf.turtle.txt > ./src/main/resources/wurfel/schema/wurfel-test.rdf
 
