@@ -11,10 +11,9 @@ public class JLineTest
 {
     public static void main( final String [] args )
     {
-        Wurfel.initialize();
-
         try
         {
+            Wurfel.initialize();
 
 
 

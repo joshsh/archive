@@ -131,6 +131,15 @@ wurfel-test:urlTarget
         wurfel:parameterTransparency true ]
   ) .
 
+wurfel-test:grab
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType rdfs:Class ;
+  wurfel:parameters (
+    [ wurfel:parameterName "url" ;
+      wurfel:parameterType xsd:string ;
+      wurfel:parameterTransparency true ]
+  ) .
+
 wurfel-test:swoogleIt
   rdfs:type wurfel:PrimitiveFunction ;
   wurfel:returnType rdfs:Class ;

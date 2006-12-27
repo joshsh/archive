@@ -10,6 +10,10 @@ Syntax
 	:  :*  :+  :?  :{x}
 	#42
 
+Model
+================================================================================
+* write a primitive which imports a document as a reified graph in which all subjects are bnodes
+
 Names and namespaces
 ================================================================================
 * decide whether names are determined by URI, rdfs:label, some combination of the two, or something else entirely

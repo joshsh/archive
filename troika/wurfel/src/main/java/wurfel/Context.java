@@ -31,6 +31,7 @@ import wurfel.primitives.misc.UriToString;
 import wurfel.primitives.misc.UrlEncoding;
 import wurfel.primitives.misc.UrlTarget;
 import wurfel.primitives.misc.SwoogleIt;
+import wurfel.primitives.misc.Grab;
 
 import org.openrdf.repository.Connection;
 import org.openrdf.sail.memory.MemoryStore;
@@ -210,6 +211,34 @@ public class Context
         return list;
     }
 
+/*
+    public Collection<Value> containerValue( final Resource head )
+        throws WurfelException
+    {
+
+
+        try
+        {
+            Connection con = repository.getConnection();
+            boolean includeInferred = false;
+            CloseableIterator<? extends Statement> stmtIter
+                = con.getStatements(
+                    head, s_rdfTypeUri, s_swoogleQueryResponseUri, includeInferred );
+            while ( stmtIter.hasNext() )
+                results.add( stmtIter.next().getSubject() );
+            stmtIter.close();
+            conn.close();
+
+            con.close();
+        }
+
+        catch ( OpenRDFException e )
+        {
+            throw new WurfelException( e );
+        }
+    }
+*/
+
     ////////////////////////////////////////////////////////////////////////////
 
     public URI createUri( final String s )
@@ -266,6 +295,7 @@ Model model = null;
         addSpecialFunction( new UrlEncoding( this ) );
         addSpecialFunction( new UrlTarget( this ) );
         addSpecialFunction( new SwoogleIt( this ) );
+        addSpecialFunction( new Grab( this ) );
 
         addSpecialFunction( new Combinator_B( this ) );
         addSpecialFunction( new Combinator_C( this ) );

@@ -69,6 +69,7 @@ public abstract class WurfelTestCase extends TestCase
     }
 
     protected void start()
+        throws WurfelException
     {
         Wurfel.initialize();
 
