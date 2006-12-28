@@ -26,9 +26,22 @@ Names and namespaces
 Command line interface
 ================================================================================
 * writer.debug becomes huge.  Disable it.
+* interpreter hangs on multi-line comments
+
+Ontologies
+================================================================================
+* ontology describing SemanticWebDocuments and where to get them
 
 Nice-to-have
 ================================================================================
 * Swoogle add-on, which performs queries like the one below, then uses the
   result to grab potential models for importing.
       http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&searchString=parrot&key=demo
+* RSS reader
+* Atom reader
+  http://www.intertwingly.net/stories/2003/08/17/atom2rdf.xsl
+  Danny Ayers: http://semtext.org/atom/xslt/atom2atomrdf.xslt
+  Henry Story: http://djpowell.net/atomrdf/0.1/files/atom2rdf-06.xsl
+               http://djpowell.net/schemas/atomrdf/0.1-EXPERIMENTAL/
+* Wikipedia3 stuff
+  http://labs.systemone.at/wikipedia3
