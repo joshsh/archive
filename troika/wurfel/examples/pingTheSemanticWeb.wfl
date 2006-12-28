@@ -1,0 +1,12 @@
+
+20 ("all" pingTheSemanticWeb);
+
+20 ("foaf" pingTheSemanticWeb);
+
+20 ("sioc" pingTheSemanticWeb);
+
+20 ("doap" pingTheSemanticWeb);
+
+20 ("rdfs" pingTheSemanticWeb);
+
+20 ("owl" pingTheSemanticWeb);

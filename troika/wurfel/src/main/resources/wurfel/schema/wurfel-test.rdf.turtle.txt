@@ -155,6 +155,18 @@ wurfel-test:swoogleIt
       wurfel:parameterTransparency true ]
   ) .
 
+wurfel-test:pingTheSemanticWeb
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
+    [ wurfel:parameterName "type" ;
+      wurfel:parameterType xsd:string ;
+      wurfel:parameterTransparency true ]
+    [ wurfel:parameterName "maxResults" ;
+      wurfel:parameterType xsd:integer ;
+      wurfel:parameterTransparency true ]
+  ) .
+
 ### Combinators ################################################################
 
 wurfel-test:B

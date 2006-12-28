@@ -1,9 +1,11 @@
 !import "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl";
 !import "http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl";
 
-ContainerMembershipProperty uriToString
-    (rel_swt_swt_from ("demo" swoogleIt))
-    hasResult listElements;
+ContainerMembershipProperty
+    uriToString (rel_swt_swt_from ("demo" swoogleIt)) hasResult listElements;
+
+"Ubuntu"
+    (search_swt ("demo" swoogleIt)) hasResult member;
 
 (: search_swd_ontology
     Search semantic web documents which are classified as ontologies ::::::::::)

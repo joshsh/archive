@@ -432,6 +432,45 @@
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#swoogleIt">
     <wurfel:parameters rdf:nodeID="genid42"/>
   </rdf:Description>
+  <rdf:Description rdf:nodeID="genid43">
+    <wurfel:parameterName>type</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid43">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid43">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid44">
+    <wurfel:parameterName>maxResults</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid44">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid44">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid45">
+    <rdf:first rdf:nodeID="genid44"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid45">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid46">
+    <rdf:first rdf:nodeID="genid43"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid46">
+    <rdf:rest rdf:nodeID="genid45"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#pingTheSemanticWeb">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#pingTheSemanticWeb">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#pingTheSemanticWeb">
+    <wurfel:parameters rdf:nodeID="genid46"/>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-test#B">
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
   </rdf:Description>

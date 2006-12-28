@@ -1,3 +1,7 @@
+Build
+================================================================================
+* investigate the Maven error "Embedded error: The source must not be a directory."
+
 Exception handling
 ================================================================================
 * decide on an extensible approach for exception handling and error logging

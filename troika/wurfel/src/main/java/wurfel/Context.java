@@ -32,6 +32,7 @@ import wurfel.primitives.misc.UrlEncoding;
 import wurfel.primitives.misc.UrlTarget;
 import wurfel.primitives.misc.SwoogleIt;
 import wurfel.primitives.misc.Grab;
+import wurfel.primitives.misc.PingTheSemanticWeb;
 
 import org.openrdf.repository.Connection;
 import org.openrdf.sail.memory.MemoryStore;
@@ -296,6 +297,7 @@ Model model = null;
         addSpecialFunction( new UrlTarget( this ) );
         addSpecialFunction( new SwoogleIt( this ) );
         addSpecialFunction( new Grab( this ) );
+        addSpecialFunction( new PingTheSemanticWeb( this ) );
 
         addSpecialFunction( new Combinator_B( this ) );
         addSpecialFunction( new Combinator_C( this ) );

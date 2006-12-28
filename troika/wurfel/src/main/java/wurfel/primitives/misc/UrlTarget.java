@@ -57,6 +57,8 @@ public class UrlTarget extends PrimitiveFunction
             while ( ( nextLine = br.readLine() ) != null )
                  sb.append(nextLine);
             result = sb.toString();
+
+            response.close();
         }
 
         catch ( Throwable t )
