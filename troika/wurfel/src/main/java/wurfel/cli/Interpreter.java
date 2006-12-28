@@ -2,6 +2,7 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
+import wurfel.model.ObservableValueSet;
 import wurfel.cli.ast.Ast;
 
 import org.openrdf.model.Literal;
@@ -50,6 +51,8 @@ public class Interpreter extends Thread implements Runnable
 
     private CompletorState completorState = CompletorState.NONE;
 
+    private ObservableValueSet valueSet;
+
     public void setCompletorState( final CompletorState state )
     {
         completorState = state;
@@ -94,6 +97,10 @@ public class Interpreter extends Thread implements Runnable
             reader.removeCompletor( existingCompletors.iterator().next() );
 
         reader.addCompletor( argumentCompletor );
+
+        valueSet = new ObservableValueSet( context, null );
+        ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet );
+        valueSet.addObserver( observer );
     }
 
     public Interpreter( Context context ) throws WurfelException
@@ -302,8 +309,6 @@ public class Interpreter extends Thread implements Runnable
         catch ( WurfelException e ) {}
     }
 
-
-
     public void addStatement( Ast subj, Ast pred, Ast obj )
     {
         try
@@ -321,7 +326,6 @@ public class Interpreter extends Thread implements Runnable
         }
     }
 
-
     public void evaluate( Ast ast )
     {
         try
@@ -332,23 +336,7 @@ public class Interpreter extends Thread implements Runnable
                 ? new ArrayList<Value>()
                 : context.reduce( expr );
 
-            if ( 0 < result.size() )
-                System.out.println( "" );
-
-            int index = 0;
-            Iterator<Value> resultIter = result.iterator();
-            while ( resultIter.hasNext() )
-            {
-                System.out.print( "[" + index++ + "] " );
-                Value v = resultIter.next();
-
-                if ( v instanceof Resource )
-                    context.show( (Resource) v );
-                else
-                    System.out.println( v.toString() );
-            }
-
-            System.out.println( "" );
+            valueSet.setValues( result );
         }
 
         catch ( WurfelException e )

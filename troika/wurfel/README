@@ -17,8 +17,7 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 
 (: !import "http://xmlns.com/foaf/0.1/index.rdf" "http://tempuri.org"; :)
 
-(: foaf :)
-!import "http://xmlns.com/foaf/0.1/index.rdf";
+
 
 (: DOAP :)
 !import "http://usefulinc.com/ns/doap";

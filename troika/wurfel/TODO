@@ -27,6 +27,8 @@ Command line interface
 ================================================================================
 * writer.debug becomes huge.  Disable it.
 * interpreter hangs on multi-line comments
+* implement an as-you-type parser for tab completion
+* place multiple-line expressions in the history
 
 Ontologies
 ================================================================================
@@ -45,3 +47,9 @@ Nice-to-have
                http://djpowell.net/schemas/atomrdf/0.1-EXPERIMENTAL/
 * Wikipedia3 stuff
   http://labs.systemone.at/wikipedia3
+
+Bugs
+================================================================================
+* repository import occasionally hangs.  Time it out so you don't have to quit the application
+* forgot to close a connection somewhere:
+  [WARNING] Closing dangling connection due to garbage collection
