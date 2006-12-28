@@ -648,27 +648,6 @@ if ( !namespacesDefined )
         aliases.put( name, uri );
     }
 
-    public void show( String name )
-        throws WurfelException
-    {
-        String s = aliases.get( name );
-
-        if ( null != s )
-            System.out.println( s );
-
-        else if ( null != model )
-        {
-            URI uri = model.resolve( name );
-            if ( null != uri )
-                show( uri );
-            else
-                System.out.println( "()" );
-        }
-
-        else
-            System.out.println( "()" );
-    }
-
     private String uriAbbr( final URI uri )
         throws WurfelException
     {

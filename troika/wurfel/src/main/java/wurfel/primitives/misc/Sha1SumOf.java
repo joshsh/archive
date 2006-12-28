@@ -62,9 +62,9 @@ public class Sha1SumOf extends PrimitiveFunction
 
             String coded = "";
 
-            for  ( int i = 0; i < digest.length; i++ )
+            for  ( byte b : digest )
             {
-                String hex = Integer.toHexString( digest[i] );
+                String hex = Integer.toHexString( b );
                 if ( hex.length() == 1 )
                     hex = "0" + hex;
                 hex = hex.substring( hex.length() - 2 );

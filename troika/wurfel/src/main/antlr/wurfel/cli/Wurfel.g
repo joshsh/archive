@@ -176,16 +176,15 @@ COMMAND
     : '!'
     ;
 
-ADD         : COMMAND ( "add"       | "a" ) ;
-COUNT       : COMMAND ( "count"     | "c" ) ;
-DEFINE      : COMMAND ( "define"    | "d" ) ;
-IMPORT      : COMMAND ( "import"    | "i" ) ;
-NAMESPACES  : COMMAND( "namespaces" | "n" ) ;
-PRINT       : COMMAND ( "print"     | "p" ) ;
-RESOLVE     : COMMAND ( "resolve"   | "r" ) ;
-SAVEAS      : COMMAND ( "saveas"    | "s" ) ;
-QUIT        : COMMAND ( "quit"      | "q"
-                      | "exit"    | "x" ) ;
+ADD         : COMMAND ( "add"           | "a" ) ;
+COUNT       : COMMAND ( "count"         | "c" ) ;
+DEFINE      : COMMAND ( "define"        | "d" ) ;
+IMPORT      : COMMAND ( "import"        | "i" ) ;
+NAMESPACES  : COMMAND ( "namespaces"    | "n" ) ;
+PRINT       : COMMAND ( "print"         | "p" ) ;
+SAVEAS      : COMMAND ( "saveas"        | "s" ) ;
+QUIT        : COMMAND ( "quit"          | "q"
+                      | "exit"          | "x" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -377,11 +376,6 @@ nt_Command
     | QUIT
         {
             interpreter.quit();
-        }
-
-    | RESOLVE name0:IDENTIFIER
-        {
-            interpreter.show( name0.getText() );
         }
 
     | SAVEAS file:STRING

@@ -77,7 +77,6 @@ public class Interpreter extends Thread implements Runnable
             "!import",
             "!namespaces",
             "!print",
-            "!resolve",
             "!saveas",
             "!quit" } );
         completors.add( commandCompletor );
@@ -241,16 +240,6 @@ public class Interpreter extends Thread implements Runnable
     public void define( final String name, final String uri )
     {
         context.define( name, uri );
-    }
-
-    public void show( final String name )
-    {
-        try
-        {
-            context.show( name );
-        }
-
-        catch ( WurfelException e ) {}
     }
 
     public void showContextIds()
