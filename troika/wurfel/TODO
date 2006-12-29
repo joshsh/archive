@@ -1,3 +1,21 @@
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+**** DENTIST APPOINTMENT Jan 23 at 16:00 *****
+
 Build
 ================================================================================
 * investigate the Maven error "Embedded error: The source must not be a directory."
@@ -17,6 +35,15 @@ Syntax
 Model
 ================================================================================
 * write a primitive which imports a document as a reified graph in which all subjects are bnodes
+
+Concurrency
+================================================================================
+* explore thread pooling and concurrency
+* make all initializers thread-safe.  Make good use of the 'volatile' keyword
+
+Event handling
+================================================================================
+* investigate java.util.EventObject, java.util.EventListener
 
 Names and namespaces
 ================================================================================

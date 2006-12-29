@@ -1,3 +1,68 @@
+Design patterns which may or do apply to Wurfel
+================================================================================
+* Model-View-Controller / Observer / Event Listener
+    ObservableValueSet ^ ConsoleValueSetObserver
+* SOA
+* Client/Server
+* Three-Tier
+* Pipeline
+    Interpreter ^ WurfelLexer
+    diagrammatic syntax
+* Implicit Invocation
+    [breadth-first reduction]
+    ? relation to Active Object ?
+* Delegation
+    Context ^ Model (although this is more of a bug than a feature)
+* Functional Design -- low coupling, lack of side-effects
+    expression reduction, almost every other aspect of Wurfel except for static initializers
+* Interface
+    uses of Java interfaces and abstract classes
+* Immutable Object
+* Marker Interface -- interface with no methods indicates some property of implementing classes
+* Factory Method
+    Model ^ getCompletor() (although this is a temporary feature)
+* Builder
+    wurfel.cli.ast ^ evaluate()
+* Lazy initialization
+    lazy expression evaluation
+    various static initializers
+    [Literal memoization]
+* Aggregate
+* Bridge
+    [displaying Value={Literal,BNode,URI} in View={console,browser}
+* Composite
+    any use of an interface
+* Container, Iterator
+    any use of Java collections
+* Extensibility
+    [classloader loads primitives from an extension JAR]
+        [ba] duplicate classes in a set of extension JARs loaded together
+* Adapter
+    PrimitiveFunctions which wrap library functions
+* Command
+    [undo/redo]
+* Memento -- caretaker requests a "memento" from the originator before changing it (the originator), then may pass the memento back to the originator to restore it
+* Flyweight
+* Chain of Responsibility
+* State -- state of an object is represented explicitly by another, single, "state" object
+* Strategy -- appropriate algorithm is chosen at runtime
+* Visitor
+* Active Object -- function execution decoupled from invocation, mediated by a Scheduler
+    ? relation to Implicit Invocation ?
+
+
+* Interpreter
+    Boeing ^ model test ^ parentheses language
+* Facade
+    Phase2 ^ xmldom.h
+* Proxy
+    XpressRules ^ SQL schema deserialization
+* Singleton pattern
+    MessageHandler
+
+================================================================================
+
+
 http://pingthesemanticweb.com/imgs/semantic_web_ready_sioc.gif
 http://pingthesemanticweb.com/imgs/semantic_web_ready_foaf.gif
 http://pingthesemanticweb.com/imgs/semantic_web_ready_doap.png

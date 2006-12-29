@@ -1,38 +1,10 @@
 package wurfel;
 
-import wurfel.combinators.Combinator_B;
-import wurfel.combinators.Combinator_C;
-import wurfel.combinators.Combinator_I;
-import wurfel.combinators.Combinator_K;
-import wurfel.combinators.Combinator_L;
-import wurfel.combinators.Combinator_O;
-import wurfel.combinators.Combinator_R;
-import wurfel.combinators.Combinator_S;
-import wurfel.combinators.Combinator_T;
-import wurfel.combinators.Combinator_U;
-import wurfel.combinators.Combinator_V;
-import wurfel.combinators.Combinator_W;
-import wurfel.combinators.Combinator_Y;
-import wurfel.combinators.Combinator_w;
 import wurfel.model.Model;
 import wurfel.model.ModelMock;
 import wurfel.model.Apply;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
-import wurfel.primitives.IntegerAdd;
-import wurfel.primitives.IntegerSubtract;
-import wurfel.primitives.IntegerMultiply;
-import wurfel.primitives.IntegerDivide;
-import wurfel.primitives.IntegerMod;
-import wurfel.primitives.ConcatenateStringsPrimitive;
-import wurfel.primitives.ListElements;
-import wurfel.primitives.misc.Sha1SumOf;
-import wurfel.primitives.misc.UriToString;
-import wurfel.primitives.misc.UrlEncoding;
-import wurfel.primitives.misc.UrlTarget;
-import wurfel.primitives.misc.SwoogleIt;
-import wurfel.primitives.misc.Grab;
-import wurfel.primitives.misc.PingTheSemanticWeb;
 
 import org.openrdf.repository.Connection;
 import org.openrdf.sail.memory.MemoryStore;
@@ -273,7 +245,7 @@ Model model = null;
 
     private Hashtable<URI, Function> specialFunctions;
 
-    private void addSpecialFunction( Function f )
+    public void addSpecialFunction( Function f )
     {
         specialFunctions.put( f.getUri(), f );
     }
@@ -283,36 +255,7 @@ Model model = null;
     {
         specialFunctions = new Hashtable<URI, Function>();
 
-        addSpecialFunction( new IntegerAdd( this ) );
-        addSpecialFunction( new IntegerSubtract( this ) );
-        addSpecialFunction( new IntegerMultiply( this ) );
-        addSpecialFunction( new IntegerDivide( this ) );
-        addSpecialFunction( new IntegerMod( this ) );
-
-        addSpecialFunction( new ConcatenateStringsPrimitive( this ) );
-        addSpecialFunction( new ListElements( this ) );
-        addSpecialFunction( new Sha1SumOf( this ) );
-        addSpecialFunction( new UriToString( this ) );
-        addSpecialFunction( new UrlEncoding( this ) );
-        addSpecialFunction( new UrlTarget( this ) );
-        addSpecialFunction( new SwoogleIt( this ) );
-        addSpecialFunction( new Grab( this ) );
-        addSpecialFunction( new PingTheSemanticWeb( this ) );
-
-        addSpecialFunction( new Combinator_B( this ) );
-        addSpecialFunction( new Combinator_C( this ) );
-        addSpecialFunction( new Combinator_I( this ) );
-        addSpecialFunction( new Combinator_K( this ) );
-        addSpecialFunction( new Combinator_L( this ) );
-        addSpecialFunction( new Combinator_O( this ) );
-        addSpecialFunction( new Combinator_R( this ) );
-        addSpecialFunction( new Combinator_S( this ) );
-        addSpecialFunction( new Combinator_T( this ) );
-        addSpecialFunction( new Combinator_U( this ) );
-        addSpecialFunction( new Combinator_V( this ) );
-        addSpecialFunction( new Combinator_W( this ) );
-        addSpecialFunction( new Combinator_Y( this ) );
-        addSpecialFunction( new Combinator_w( this ) );
+        ( new wurfel.extensions.TestExtension( this ) ).load();
     }
 
     public Context( final String name )
@@ -343,7 +286,7 @@ aliases = new Hashtable<String, String>();
 
 //System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         importModel( Wurfel.schemaUrl(), createUri( "urn:wurfel" ) );
-        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
+//        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
 
         loadPrimitives();
     }
@@ -436,23 +379,6 @@ if ( !namespacesDefined )
             Connection con = repository.getConnection();
             con.export( /*singleContext,*/ writer );
             con.close();
-
-/*
-            // This pushes all statements added with addStatement to the repository.
-            boolean joinBlankNodes = true;
-//            repository.clear( s_adminListener );
-            repository.addGraph( model.getGraph(), joinBlankNodes );
-//            repository.addGraph( model.getGraph() );
-
-            repository.extractRDF(
-                writer,
-                false,   // ontology -- not an ontology
-                true,    // instances -- do extract non-schema statements (that's what I want, right?)
-//                true,   // explicitOnly -- only save data we've created in this session
-                false,   // explicitOnly -- extract all statements, not only explicitly added ones
-                true );  // niceOutput -- do alphabetize by subject
-
-*/
         }
 
         catch ( SailException e )
@@ -768,62 +694,6 @@ if ( !namespacesDefined )
             show( subject );
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-/*
-    //FIXME: temporary method
-    public void testQuery( final String query )
-        throws WurfelException
-    {
-        QueryResultsTable resultsTable;
-
-        try
-        {
-            resultsTable = repository.performTableQuery( QueryLanguage.SERQL, query );
-        }
-
-        catch( IOException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch( MalformedQueryException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( QueryEvaluationException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( AccessDeniedException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        int rowCount = resultsTable.getRowCount();
-        int columnCount = resultsTable.getColumnCount();
-
-        for (int row = 0; row < rowCount; row++) {
-            for (int column = 0; column < columnCount; column++) {
-                Value value = resultsTable.getValue(row, column);
-
-                if (value != null) {
-                    System.out.print(value.toString());
-                }
-                else {
-                    System.out.print("null");
-                }
-
-                System.out.print("\t");
-            }
-
-            System.out.println();
-        }
-    }
-*/
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
