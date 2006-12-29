@@ -1,0 +1,164 @@
+@prefix wurfel:       <urn:net.dnsdojo.troika.wurfel#> .
+@prefix wurfel-test:  <urn:net.dnsdojo.troika.wurfel-test#> .
+@prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
+
+### Integer arithmetic primitives ##############################################
+
+wurfel-test:integer-add
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-subtract
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-multiply
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-divide
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+wurfel-test:integer-mod
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:integer ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+### RDF primitives #############################################################
+
+wurfel-test:listElements
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType rdf:Resource ;
+  wurfel:parameters (
+      [ wurfel:parameterName "head" ;
+        wurfel:parameterType rdf:List ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+### String manipulation primitives #############################################
+
+wurfel-test:concatenateStrings
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType xsd:string ;
+  wurfel:parameters (
+      [ wurfel:parameterName "strA" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "strB" ;
+        wurfel:parameterType xsd:string ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+### Combinators ################################################################
+
+wurfel-test:B
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3 ;
+  rdfs:comment "Bxyz --> x(yz)" .
+
+wurfel-test:C
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3 ;
+  rdfs:comment "Cxyz --> xzy" .
+
+wurfel-test:I
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "Ix --> x" .
+
+wurfel-test:K
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Kxy --> x" .
+
+wurfel-test:L
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Lxy --> x(yy)" .
+
+wurfel-test:O
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Oxy --> y(xy)" .
+
+wurfel-test:R
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3 ;
+  rdfs:comment "Rxyz --> yzx" .
+
+wurfel-test:S
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3 ;
+  rdfs:comment "Sxyz --> xz(yz)" .
+
+wurfel-test:T
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Txy --> yx" .
+
+wurfel-test:U
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Uxy --> y(xxy)" .
+
+wurfel-test:V
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3 ;
+  rdfs:comment "Vxyz --> zxy" .
+
+wurfel-test:W
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Wxy --> xyy" .
+
+wurfel-test:Y
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "Yx --> x(Yx)" .
+
+wurfel-test:w
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "wx --> xx" .

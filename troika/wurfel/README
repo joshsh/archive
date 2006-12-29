@@ -101,8 +101,9 @@ sudo cp src/main/resources/wurfel/cli/kate/wurfel.xml /usr/share/apps/katepart/s
 
 ::::::::::::::::::::::::::::::::::::::::
 
-rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/schema/wurfel.ttl > ./src/main/resources/wurfel/schema/wurfel.rdf
-rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/wurfel-test.ttl > ./src/main/resources/wurfel/extensions/wurfel-test.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/wurfel.ttl > ./src/main/resources/wurfel/wurfel.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/test/wurfel-test.ttl > ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/misc/wurfel-misc.ttl > ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
 
 RAPTORTRUNK=/home/joshs/opt/rdf_/redland_/raptor_/dot/branch_dot
 

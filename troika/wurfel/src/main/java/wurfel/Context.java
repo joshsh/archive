@@ -250,14 +250,6 @@ Model model = null;
         specialFunctions.put( f.getUri(), f );
     }
 
-    private void loadPrimitives()
-        throws WurfelException
-    {
-        specialFunctions = new Hashtable<URI, Function>();
-
-        ( new wurfel.extensions.TestExtension( this ) ).load();
-    }
-
     public Context( final String name )
         throws WurfelException
     {
@@ -288,7 +280,10 @@ aliases = new Hashtable<String, String>();
         importModel( Wurfel.schemaUrl(), createUri( "urn:wurfel" ) );
 //        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
 
-        loadPrimitives();
+        specialFunctions = new Hashtable<URI, Function>();
+
+        ( new wurfel.extensions.test.TestExtension( this ) ).load();
+        ( new wurfel.extensions.misc.MiscExtension( this ) ).load();
     }
 
 public Repository getRepository()

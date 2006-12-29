@@ -116,8 +116,7 @@ public class Wurfel
     ////////////////////////////////////////////////////////////////////////////
 
     private static final URL
-        s_wurfelSchemaUrl = Wurfel.class.getResource( "schema/wurfel.rdf" ),
-        s_wurfelTestUrl = Wurfel.class.getResource( "schema/wurfel-test.rdf" );
+        s_wurfelSchemaUrl = Wurfel.class.getResource( "wurfel.rdf" );
 
     private static boolean initialized = false;
 
@@ -155,11 +154,6 @@ public class Wurfel
         return s_wurfelSchemaUrl;
     }
 
-    public static URL testUrl()
-    {
-        return s_wurfelTestUrl;
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     private static Random rn = new Random();
@@ -171,6 +165,11 @@ public class Wurfel
         if (i < 0)
             i = -i;
         return lo + i;
+    }
+
+    public static URI createUri( final String s )
+    {
+        return new URIImpl( s );
     }
 
     public static URI createRandomUri()

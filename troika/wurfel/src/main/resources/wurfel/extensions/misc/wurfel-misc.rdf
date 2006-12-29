@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:swoogle="http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" xmlns:wurfel-misc="urn:net.dnsdojo.troika.wurfel-misc#" xmlns:wurfel="urn:net.dnsdojo.troika.wurfel#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterName>resource</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <rdf:first rdf:nodeID="genid1"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#uriToString">
+    <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#uriToString">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#uriToString">
+    <wurfel:parameters rdf:nodeID="genid2"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <wurfel:parameterName>plaintext</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <rdf:first rdf:nodeID="genid3"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf">
+    <wurfel:parameters rdf:nodeID="genid4"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid5">
+    <wurfel:parameterName>plaintext</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid5">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid5">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid6">
+    <rdf:first rdf:nodeID="genid5"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid6">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#urlEncoding">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#urlEncoding">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#urlEncoding">
+    <wurfel:parameters rdf:nodeID="genid6"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid7">
+    <wurfel:parameterName>url</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid7">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid7">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid8">
+    <rdf:first rdf:nodeID="genid7"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid8">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#urlTarget">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#urlTarget">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#urlTarget">
+    <wurfel:parameters rdf:nodeID="genid8"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid9">
+    <wurfel:parameterName>url</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid9">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid9">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid10">
+    <rdf:first rdf:nodeID="genid9"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid10">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#grab">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#grab">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#grab">
+    <wurfel:parameters rdf:nodeID="genid10"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid11">
+    <wurfel:parameterName>key</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid11">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid11">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid12">
+    <wurfel:parameterName>queryType</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid12">
+    <wurfel:parameterType rdf:resource="http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#SwoogleQueryType"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid12">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid13">
+    <wurfel:parameterName>searchString</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid13">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid13">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid14">
+    <rdf:first rdf:nodeID="genid13"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid14">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid15">
+    <rdf:first rdf:nodeID="genid12"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid15">
+    <rdf:rest rdf:nodeID="genid14"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid16">
+    <rdf:first rdf:nodeID="genid11"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid16">
+    <rdf:rest rdf:nodeID="genid15"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#swoogleIt">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#swoogleIt">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#swoogleIt">
+    <wurfel:parameters rdf:nodeID="genid16"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid17">
+    <wurfel:parameterName>type</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid17">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid17">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid18">
+    <wurfel:parameterName>maxResults</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid18">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid18">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid19">
+    <rdf:first rdf:nodeID="genid18"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid19">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid20">
+    <rdf:first rdf:nodeID="genid17"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid20">
+    <rdf:rest rdf:nodeID="genid19"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb">
+    <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb">
+    <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb">
+    <wurfel:parameters rdf:nodeID="genid20"/>
+  </rdf:Description>
+</rdf:RDF>
