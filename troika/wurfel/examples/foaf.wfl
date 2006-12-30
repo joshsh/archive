@@ -5,3 +5,26 @@
 
 
 "http://troika.dnsdojo.net/wurfel/foaf_joshua_shinavier.rdf" grab;
+
+
+
+
+(:
+    foaf:img --> Image
+    foaf:depiction --> Image
+:)
+
+
+
+(:
+x (b (type C) W) -- dispatch function for a crawler.  For Persons, it gets their foaf:img
+<b> <Person> <img>
+
+
+x (b (x type))
+
+type x b x
+C type b x x
+W (C type b) x
+
+:)

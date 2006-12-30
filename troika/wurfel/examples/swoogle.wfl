@@ -18,7 +18,8 @@ ContainerMembershipProperty
 (: search_swt
    -- Search all semantic web terms :::::::::::::::::::::::::::::::::::::::::::)
 
-"Eider" (search_swt ("demo" swoogleIt)) hasResult;
+"Eider"
+    (search_swt ("demo" swoogleIt)) hasResult member;
 
 (: digest_swd
    -- Show Swoogle metadata for the present semantic web document and list

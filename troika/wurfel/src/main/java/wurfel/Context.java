@@ -6,27 +6,34 @@ import wurfel.model.Apply;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
 
-import org.openrdf.repository.Connection;
-import org.openrdf.sail.memory.MemoryStore;
-import org.openrdf.repository.Repository;
-import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
-import org.openrdf.repository.RepositoryImpl;
-import org.openrdf.model.Value;
+//import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.querylanguage.MalformedQueryException;
+import org.openrdf.querylanguage.UnsupportedQueryLanguageException;
+import org.openrdf.querymodel.QueryLanguage;
+import org.openrdf.queryresult.GraphQueryResult;
+import org.openrdf.queryresult.TupleQueryResult;
+import org.openrdf.queryresult.Solution;
+import org.openrdf.repository.Connection;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryImpl;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.rdfxml.RDFXMLWriter;
-import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
-import org.openrdf.sail.SailInitializationException;
-import org.openrdf.util.iterator.CloseableIterator;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.Namespace;
-import org.openrdf.rio.UnsupportedRDFormatException;
-import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.UnsupportedRDFormatException;
+import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
+import org.openrdf.rio.rdfxml.RDFXMLWriter;
+import org.openrdf.sail.Namespace;
+import org.openrdf.sail.SailException;
+import org.openrdf.sail.SailInitializationException;
+import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
+import org.openrdf.sail.memory.MemoryStore;
+import org.openrdf.util.iterator.CloseableIterator;
+
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -687,6 +694,75 @@ if ( !namespacesDefined )
         {
             Resource subject = subjIter.next();
             show( subject );
+        }
+    }
+
+    public Collection<Statement> graphQuery( final String queryStr )
+        throws WurfelException
+    {
+        Collection<Statement> statements = new ArrayList<Statement>();
+
+        try
+        {
+            Connection con = repository.getConnection();
+            GraphQueryResult result = con.evaluateGraphQuery(
+                QueryLanguage.SERQL, queryStr );
+//                QueryLanguage.SERQL, "CONSTRUCT * FROM {x} p {y}");
+
+// TODO: can I expect the Statements to remain valid after the connection is closed?
+            for ( Statement st : result )
+                statements.add( st );
+
+            result.close();
+            con.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( MalformedQueryException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( UnsupportedQueryLanguageException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        return statements;
+    }
+
+    // TODO: this method is useless, because we're not even displaying the results
+    public void query( final String queryStr )
+        throws WurfelException
+    {
+        try
+        {
+            Connection con = repository.getConnection();
+            TupleQueryResult result = con.evaluateTupleQuery(
+                QueryLanguage.SERQL, queryStr );
+//                QueryLanguage.SERQL, "SELECT x, y FROM {x} p {y}");
+
+            result.close();
+            con.close();
+        }
+
+        catch ( SailException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( MalformedQueryException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        catch ( UnsupportedQueryLanguageException e )
+        {
+            throw new WurfelException( e );
         }
     }
 }

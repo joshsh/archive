@@ -179,6 +179,7 @@ COMMAND
 ADD         : COMMAND ( "add"           | "a" ) ;
 COUNT       : COMMAND ( "count"         | "c" ) ;
 DEFINE      : COMMAND ( "define"        | "d" ) ;
+GRAPHQUERY  : COMMAND ( "graphQuery"    | "g" ) ;
 IMPORT      : COMMAND ( "import"        | "i" ) ;
 NAMESPACES  : COMMAND ( "namespaces"    | "n" ) ;
 PRINT       : COMMAND ( "print"         | "p" ) ;
@@ -348,6 +349,11 @@ nt_Command
     | DEFINE name:IDENTIFIER uri:STRING
         {
             interpreter.define( name.getText(), uri.getText() );
+        }
+
+    | GRAPHQUERY query:STRING
+        {
+            interpreter.evaluateGraphQuery( query.getText() );
         }
 
     | IMPORT url:STRING ( baseURI:STRING )?
