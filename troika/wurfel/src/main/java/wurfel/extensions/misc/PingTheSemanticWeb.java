@@ -66,7 +66,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
                     + "external-noNamespaceSchemaLocation", schemaLocation );
             }
 
-            URL url = new URL( "http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=last_day&type=" + type + "&nbresults=" + maxResults );
+            URL url = new URL( "http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );
             URLConnection connection = url.openConnection();
             connection.connect();
 

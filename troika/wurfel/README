@@ -18,10 +18,6 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 (: !import "http://xmlns.com/foaf/0.1/index.rdf" "http://tempuri.org"; :)
 
 
-
-(: DOAP :)
-!import "http://usefulinc.com/ns/doap";
-
 (: SKOS Core, Mapping and Extensions :)
 !import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
 !import "http://www.w3.org/2004/02/skos/mapping";

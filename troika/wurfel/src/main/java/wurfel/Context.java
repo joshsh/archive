@@ -493,7 +493,7 @@ if ( !namespacesDefined )
             Iterator<Value> reducedFuncIter = reduce(
                 ( (Apply) expr ).getFunction() ).iterator();
 
-            // Reduce the function.
+            // Reduce the argument.
             Iterator<Value> reducedArgIter = reduce(
                 ( (Apply) expr ).getArgument() ).iterator();
 
@@ -512,6 +512,7 @@ if ( !namespacesDefined )
                     Apply tmpApply = new Apply( function, argument );
                     if ( tmpApply.arity() == 0 )
                     {
+                        // Argument list is initially empty.
                         argList.clear();
 
                         Collection<Value> itmResult = tmpApply.applyTo( argList, this );
