@@ -8,6 +8,7 @@ import wurfel.WurfelException;
 import wurfel.cli.ast.Ast;
 import wurfel.cli.ast.DoubleNode;
 import wurfel.cli.ast.IntNode;
+import wurfel.cli.ast.NullNode;
 import wurfel.cli.ast.StringNode;
 import wurfel.cli.ast.IdentifierNode;
 import wurfel.cli.ast.SequenceNode;
@@ -268,8 +269,9 @@ nt_Item returns [ Ast r ]
 
 nt_ParenthesizedExpression returns [ Ast r ]
 {
+    r = new NullNode();
 }
-    : L_PAREN r=nt_Sequence R_PAREN
+    : L_PAREN ( r=nt_Sequence )? R_PAREN
     ;
 
 

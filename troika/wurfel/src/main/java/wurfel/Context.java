@@ -34,7 +34,6 @@ import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.util.iterator.CloseableIterator;
 
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
@@ -81,8 +80,9 @@ public class Context
     public Collection<Value> findProduct( Value arg, Value func )
         throws WurfelException
     {
-        Apply a = new Apply( func, arg );
-        return reduce( a );
+//        Apply a = new Apply( func, arg );
+//        return reduce( a );
+        return model.multiply( arg, func );
     }
 
     public Value findUniqueProduct( Value arg, Value func )
@@ -477,64 +477,6 @@ if ( !namespacesDefined )
         }
 
         return result;
-    }
-
-    /**
-     *  Carries out normal-order lazy beta reduction, distributing operations
-     *  over node sets.
-     */
-    public NodeSet reduce( Value expr )
-        throws WurfelException
-    {
-//System.out.println( "expr = " + expr.toString() );
-        if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
-        {
-            // Reduce the function.
-            Iterator<Value> reducedFuncIter = reduce(
-                ( (Apply) expr ).getFunction() ).iterator();
-
-            // Reduce the argument.
-            Iterator<Value> reducedArgIter = reduce(
-                ( (Apply) expr ).getArgument() ).iterator();
-
-            // Iterate over the cartesian product of the reduced function(s)
-            // with the reduced argument(s).
-            LinkedList<Value> argList = new LinkedList<Value>();
-            NodeSet result = new NodeSet();
-            while ( reducedFuncIter.hasNext() )
-            {
-                Value function = reducedFuncIter.next();
-                while ( reducedArgIter.hasNext() )
-                {
-                    Value argument = reducedArgIter.next();
-
-                    // Apply the function to the argument.
-                    Apply tmpApply = new Apply( function, argument );
-                    if ( tmpApply.arity() == 0 )
-                    {
-                        // Argument list is initially empty.
-                        argList.clear();
-
-                        Collection<Value> itmResult = tmpApply.applyTo( argList, this );
-
-                        // Reduction is recursive; we must first iterate over
-                        // the intermediate results and reduce them before
-                        // adding them to the list of final results.
-                        Iterator<Value> itmIter = itmResult.iterator();
-                        while ( itmIter.hasNext() )
-                            result.add( reduce( itmIter.next() ) );
-                    }
-
-                    else
-                        result.add( tmpApply );
-                }
-            }
-
-            return result;
-        }
-
-        else
-            return new NodeSet( expr );
     }
 
     private void updateModel()

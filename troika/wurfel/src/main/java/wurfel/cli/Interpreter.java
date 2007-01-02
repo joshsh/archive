@@ -2,6 +2,9 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
+import wurfel.model.Evaluator;
+import wurfel.model.LazyEvaluator;
+//import wurfel.model.DebugEvaluator;
 import wurfel.model.ObservableValueSet;
 import wurfel.cli.ast.Ast;
 
@@ -43,6 +46,7 @@ public class Interpreter extends Thread implements Runnable
         = Logger.getLogger( Interpreter.class );
 
     private Context context;
+    private Evaluator evaluator;
 
     private PipedInputStream  writeIn;
     private PipedOutputStream readOut;
@@ -109,6 +113,8 @@ public class Interpreter extends Thread implements Runnable
     public Interpreter( Context context ) throws WurfelException
     {
         this.context = context;
+        evaluator = new LazyEvaluator( context );
+//        evaluator = new DebugEvaluator( new LazyEvaluator( context ) );
 
         try
         {
@@ -327,7 +333,8 @@ public class Interpreter extends Thread implements Runnable
 
             Collection<Value> result = ( null == expr )
                 ? new ArrayList<Value>()
-                : context.reduce( expr );
+//                : context.reduce( expr );
+                : evaluator.reduce( expr );
 
             valueSet.setValues( result );
         }
