@@ -110,6 +110,37 @@ checkArguments( args );
         return leftStr + " " + rightStr;
     }
 
+    public void printTo( WurfelPrintStream p )
+        throws WurfelException
+    {
+        Value left = null, right = null;
+
+        switch ( Wurfel.getExpressionOrder() )
+        {
+            case DIAGRAMMATIC:
+                left = argument;
+                right = function;
+                break;
+
+            case ANTIDIAGRAMMATIC:
+                left = function;
+                right = argument;
+                break;
+        }
+
+        p.print( left );
+        p.print( " " );
+
+        if ( null != right && right instanceof Apply )
+        {
+            p.print( "(" );
+            p.print( right );
+            p.print( ")" );
+        }
+
+        else
+            p.print( right );
+    }
 }
 
 

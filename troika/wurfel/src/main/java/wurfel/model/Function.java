@@ -9,7 +9,7 @@ import org.openrdf.model.URI;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public interface Function extends Value
+public interface Function extends WurfelValue
 {
 //    public abstract String toString();
     public URI getUri();

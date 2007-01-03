@@ -371,11 +371,7 @@ nt_Command
 
     | PRINT
         (
-          "statements"
-            {
-                interpreter.printStatements();
-            }
-        | "contexts"
+          "contexts"
             {
                 interpreter.showContextIds();
             }

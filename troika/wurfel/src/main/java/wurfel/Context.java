@@ -519,47 +519,6 @@ if ( !namespacesDefined )
         aliases.put( name, uri );
     }
 
-    private String uriAbbr( final URI uri )
-        throws WurfelException
-    {
-        String prefix = model.nsPrefixOf( uri );
-        if ( null == prefix )
-            return uri.toString();
-        else
-            return prefix + ":" + uri.getLocalName();
-    }
-
-    public void show( Resource subject )
-        throws WurfelException
-    {
-        if ( subject instanceof URI )
-            System.out.println( uriAbbr( (URI) subject ) );
-        else
-            System.out.println( subject.toString() );
-
-        Set<URI> predicates = model.getPredicates( subject );
-        Iterator<URI> predIter = predicates.iterator();
-        while ( predIter.hasNext() )
-        {
-            URI predicate = predIter.next();
-
-            System.out.println( "    " + uriAbbr( predicate ) );
-//            System.out.println( "    " + predicate.getLocalName() );
-
-            Set<Value> objects = model.multiply( subject, predicate );
-            Iterator<Value> objIter = objects.iterator();
-            while ( objIter.hasNext() )
-            {
-                Value obj = objIter.next();
-                if ( obj instanceof URI )
-                    System.out.println( "        " + uriAbbr( (URI) obj ) );
-//                    System.out.println( "        " + ( (URI) obj ).getLocalName() );
-                else
-                    System.out.println( "        " + obj.toString() );
-            }
-        }
-    }
-
     public void showNamespaces()
         throws WurfelException
     {
@@ -623,20 +582,6 @@ if ( !namespacesDefined )
         catch ( SailException e )
         {
             throw new WurfelException( e );
-        }
-    }
-
-    public void printStatements()
-        throws WurfelException
-    {
-        updateModel();
-
-        Set<Resource> subjects = model.getSubjects();
-        Iterator<Resource> subjIter = subjects.iterator();
-        while ( subjIter.hasNext() )
-        {
-            Resource subject = subjIter.next();
-            show( subject );
         }
     }
 

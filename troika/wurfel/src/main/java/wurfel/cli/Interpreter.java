@@ -6,6 +6,7 @@ import wurfel.model.Evaluator;
 import wurfel.model.LazyEvaluator;
 //import wurfel.model.DebugEvaluator;
 import wurfel.model.ObservableValueSet;
+import wurfel.model.WurfelPrintStream;
 import wurfel.cli.ast.Ast;
 
 import org.openrdf.model.Literal;
@@ -286,16 +287,6 @@ public class Interpreter extends Thread implements Runnable
         setCompletorState( CompletorState.COMMAND );
     }
 
-    public void printStatements()
-    {
-        try
-        {
-            context.printStatements();
-        }
-
-        catch ( WurfelException e ) {}
-    }
-
     public void saveAs( final String fileName )
     {
         try
@@ -358,69 +349,26 @@ public class Interpreter extends Thread implements Runnable
         }
     }
 
+    // E.g.
+    //      CONSTRUCT * FROM {x} p {y}
     public void evaluateGraphQuery( final String query )
     {
         try
         {
+            WurfelPrintStream p = new WurfelPrintStream( System.out, context.getModel() );
+
             Iterator<Statement> stmtIter = context.graphQuery( query ).iterator();
 
-            System.out.println( "" );
-            tempPrintStatementSet( System.out, stmtIter );
-            System.out.println( "" );
+            p.println( "" );
+            p.print( stmtIter );
+            p.println( "" );
+
+//            p.close();
         }
 
         catch ( WurfelException e )
         {
             System.err.println( "\nError: " + e.toString() + "\n" );
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    private String uriAbbr( final URI uri )
-        throws WurfelException
-    {
-        String prefix = context.getModel().nsPrefixOf( uri );
-        if ( null == prefix )
-            return uri.toString();
-        else
-            return prefix + ":" + uri.getLocalName();
-    }
-
-    private void tempPrintValue( PrintStream out, Value v )
-        throws WurfelException
-    {
-        if ( v instanceof URI )
-            out.print( uriAbbr( (URI) v ) );
-        else
-            out.print( v );
-    }
-
-    private void tempPrintStatement( PrintStream out, Statement st )
-        throws WurfelException
-    {
-        out.print( "    <" );
-        tempPrintValue( out, st.getSubject() );
-        out.print( ">" );
-
-        out.print( " <" );
-        tempPrintValue( out, st.getPredicate() );
-        out.print( ">" );
-
-        out.print( " <" );
-        tempPrintValue( out, st.getObject() );
-        out.print( ">" );
-    }
-
-    private void tempPrintStatementSet( PrintStream out,
-                                        Iterator<Statement> stmtIter )
-        throws WurfelException
-    {
-        while ( stmtIter.hasNext() )
-        {
-            Statement st = stmtIter.next();
-            tempPrintStatement( out, st );
-            out.print( "\n" );
         }
     }
 }

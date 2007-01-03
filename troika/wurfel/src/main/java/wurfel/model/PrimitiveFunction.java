@@ -211,6 +211,12 @@ checkArguments( args );
 
         return applyInternal( args, context );
     }
+
+    public void printTo( WurfelPrintStream p )
+        throws WurfelException
+    {
+        p.print( selfUri );
+    }
 }
 
 
