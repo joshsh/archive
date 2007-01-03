@@ -21,6 +21,7 @@ Design patterns which may or do apply to Wurfel
     uses of Java interfaces and abstract classes
 * Immutable Object
 * Marker Interface -- interface with no methods indicates some property of implementing classes
+    WurfelValue
 * Factory Method
     Model ^ getCompletor() (although this is a temporary feature)
 * Builder
@@ -143,3 +144,35 @@ x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-hyponym.rdf" ;
 x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-wordsensesandwords.rdf" ;
 
 java -DentityExpansionLimit=800000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[" source:Longwell]
+	static public Value dupValue(Value v) {
+		return v;
+		/*
+		if (v instanceof Literal) {
+			return new LiteralImpl(((Literal) v).getLabel());
+		}
+		return dupURI((URI) v);
+		*/
+	}
+
+	static public URI dupURI(URI uri) {
+		return uri; //new URIImpl(uri.getURI());
+	}
+["]
+    static public String escape(String s, char toEscape, char escaping, char escaped) {
+    static public String unescape(String s, char toEscape, char escaping, char escaped) {

@@ -225,6 +225,7 @@ public class Interpreter extends Thread implements Runnable
     {
         try
         {
+            s_logger.debug( "running Interpreter in a new thread" );
             runPrivate();
         }
 

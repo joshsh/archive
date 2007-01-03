@@ -23,6 +23,10 @@ public class Sha1SumOf extends PrimitiveFunction
     private static final URI s_uri
         = Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf" );
 
+    private static final String
+        s_encoding = "UTF-8",
+        s_algorithm = "SHA";
+
     private static MessageDigest messageDigest = null;
 
     public Sha1SumOf( Context context )
@@ -38,7 +42,7 @@ public class Sha1SumOf extends PrimitiveFunction
         try
         {
             if ( null == messageDigest )
-                messageDigest = MessageDigest.getInstance( "SHA" );
+                messageDigest = MessageDigest.getInstance( s_algorithm );
         }
 
         catch( NoSuchAlgorithmException e )
@@ -48,7 +52,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         try
         {
-            messageDigest.update( plaintext.getBytes( "UTF-8" ) );
+            messageDigest.update( plaintext.getBytes( s_encoding ) );
         }
 
         catch( UnsupportedEncodingException e )
