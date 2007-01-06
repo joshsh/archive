@@ -54,6 +54,9 @@ Names and namespaces
 
 Command line interface
 ================================================================================
+* syntax for fully-specified URIs using brackets, e.g. <http://www.w3c.org>
+* QName syntax, e.g. foo:bar
+* blank node syntax, e.g. _:bar
 * writer.debug becomes huge.  Disable it.
 * interpreter hangs on multi-line comments
 * implement an as-you-type parser for tab completion

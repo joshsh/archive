@@ -10,12 +10,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- *  Carries out normal-order lazy beta reduction, distributing operations over
- *  node sets.
+ *
  */
-public class LazyEvaluator extends Evaluator
+public class EagerEvaluator extends Evaluator
 {
-    public LazyEvaluator( Context context )
+    public EagerEvaluator( Context context )
     {
         super( context );
     }

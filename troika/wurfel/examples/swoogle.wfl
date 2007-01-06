@@ -10,7 +10,7 @@ ContainerMembershipProperty
 (: search_swd_ontology
     Search semantic web documents which are classified as ontologies ::::::::::)
 
-"Monkey" (search_swd_ontology ("demo" swoogleIt)) hasResult;
+"Monkey" (search_swd_ontology ("demo" swoogleIt)) hasResult member;
 
 (: search_swd_all
    -- Search all semantic web documents :::::::::::::::::::::::::::::::::::::::)

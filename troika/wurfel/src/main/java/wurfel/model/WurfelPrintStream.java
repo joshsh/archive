@@ -62,7 +62,7 @@ return s;
                 URI dataTypeUri = ( (Literal) v ).getDatatype();
 
 // FIXME: is this equals() safe?
-                if ( dataTypeUri.equals( s_xsdStringUri ) )
+                if ( null != dataTypeUri && dataTypeUri.equals( s_xsdStringUri ) )
                 {
                     print( "\"" );
                     print( literalEncodingOf( v.toString() ) );
