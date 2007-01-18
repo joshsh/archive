@@ -133,7 +133,7 @@
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#and">
-    <wurfel:comment>Finds the intersection of one set with another set</wurfel:comment>
+    <rdfs:comment>Finds the intersection of one set with another set</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#or">
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
@@ -142,7 +142,7 @@
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#or">
-    <wurfel:comment>Finds the union of one set with another set</wurfel:comment>
+    <rdfs:comment>Finds the union of one set with another set</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#without">
     <rdfs:type rdf:resource="urn:net.dnsdojo.troika.wurfel#Combinator"/>
@@ -151,6 +151,6 @@
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
   </rdf:Description>
   <rdf:Description rdf:about="urn:net.dnsdojo.troika.wurfel#without">
-    <wurfel:comment>Finds the intersection of one set with the complement of another set</wurfel:comment>
+    <rdfs:comment>Finds the intersection of one set with the complement of another set</rdfs:comment>
   </rdf:Description>
 </rdf:RDF>

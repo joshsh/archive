@@ -1,10 +1,11 @@
 package wurfel;
 
-import wurfel.model.Model;
-import wurfel.model.ModelMock;
 import wurfel.model.Apply;
+import wurfel.model.Model;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
+import wurfel.model.Dereferencer;
+import wurfel.model.HttpUriDereferencer;
 
 //import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -21,7 +22,6 @@ import org.openrdf.queryresult.Solution;
 import org.openrdf.repository.Connection;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryImpl;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -57,6 +57,12 @@ public class Context
 // FIXME
     private Resource singleContext;
 
+    private Dereferencer dereferencer;
+public Dereferencer getDereferencer()
+{
+    return dereferencer;
+}
+
     private final static Logger s_logger = Logger.getLogger( Context.class );
 //    private static final AdminListener s_adminListener
 //        = new StdOutAdminListener();
@@ -82,7 +88,7 @@ public class Context
     {
 //        Apply a = new Apply( func, arg );
 //        return reduce( a );
-        return model.multiply( arg, func );
+        return multiply( arg, func );
     }
 
     public Value findUniqueProduct( Value arg, Value func )
@@ -283,6 +289,9 @@ aliases = new Hashtable<String, String>();
 
         singleContext = createUri( "urn:wurfel-context" );
 
+        model = new Model( repository, singleContext );
+        dereferencer = new HttpUriDereferencer( model, repository );
+
 //System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
         importModel( Wurfel.schemaUrl(), createUri( "urn:wurfel" ) );
 //        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
@@ -302,54 +311,8 @@ public Repository getRepository()
     public void importModel( final URL url, final URI baseURI )
         throws WurfelException
     {
-        s_logger.debug( "Importing model " + url.toString() +
-            ( ( null == baseURI ) ? "" : " as " + baseURI.toString() ) );
-
-        boolean verifyData = true;
-
-        try
-        {
-            Connection con = repository.getConnection();
-//            con.add( url, baseURI, RDFFormat.RDFXML, singleContext );
-            if ( null == baseURI )
-                con.add( url, null, RDFFormat.RDFXML );
-            else
-                con.add( url, baseURI.toString(), RDFFormat.RDFXML, baseURI );
-/*
-if ( !namespacesDefined )
-{
-    con.setNamespace( "wurfel", "urn:net.dnsdojo.troika.wurfel#" );
-    con.setNamespace( "wurfel", "urn:net.dnsdojo.troika.wurfel#" );
-    con.setNamespace( "wurfel", "urn:net.dnsdojo.troika.wurfel#" );
-    con.setNamespace( "wurfel-test", "urn:net.dnsdojo.troika.wurfel-test#" );
-    namespacesDefined = true;
-}
-*/
-            con.close();
-        }
-
-        catch ( IOException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( SailException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( UnsupportedRDFormatException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( RDFParseException e )
-        {
-            throw new WurfelException( e );
-        }
-
+        model.dereferenceGraph( url, baseURI );
         importedDataURLs.add( url );
-        updateModel();
     }
 
     public void addStatement( Value subj, Value pred, Value obj )
@@ -392,7 +355,6 @@ if ( !namespacesDefined )
         {
             throw new WurfelException( e );
         }
-//        updateModel();
     }
 
     public void saveAs( String fileName )
@@ -428,7 +390,7 @@ if ( !namespacesDefined )
         return v instanceof Apply;
     }
 
-    private Value translateFromGraph( Value v )
+    public Value translateFromGraph( Value v )
     {
         if ( v instanceof URI )
         {
@@ -452,13 +414,13 @@ if ( !namespacesDefined )
             return v;
     }
 
-    // TODO: this should throw an exception if the identifier does not resolve
-    //       to a unique value.
-    public Value resolveIdentifier( String s )
+    private Set<Value> multiply( Value arg, Value func )
         throws WurfelException
     {
-        Value v = model.resolve( s );
-        return ( v == null ) ? null : translateFromGraph( v );
+        if ( arg instanceof URI )
+            dereferencer.dereferenceSubjectUri( (URI) arg );
+
+        return model.multiply( arg, func );
     }
 
 // FIXME: 'apply' is now a bit of a misnomer
@@ -468,7 +430,7 @@ if ( !namespacesDefined )
         arg = translateToGraph( arg );
 
 // TODO: combinators and primitives as func will have their own, idiosyncratic ways of yielding a product
-        Iterator<Value> resultIter = model.multiply( arg, func ).iterator();
+        Iterator<Value> resultIter = multiply( arg, func ).iterator();
         Set<Value> result = new NodeSet();
         while ( resultIter.hasNext() )
         {
@@ -477,12 +439,6 @@ if ( !namespacesDefined )
         }
 
         return result;
-    }
-
-    private void updateModel()
-        throws WurfelException
-    {
-        model = new ModelMock( repository, singleContext );
     }
 
     //FIXME: temporary method
@@ -653,6 +609,7 @@ if ( !namespacesDefined )
             throw new WurfelException( e );
         }
     }
+
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

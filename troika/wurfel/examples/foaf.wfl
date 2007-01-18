@@ -3,11 +3,8 @@
 !import "http://xmlns.com/foaf/0.1/index.rdf";
 
 
-
-"http://troika.dnsdojo.net/wurfel/foaf_joshua_shinavier.rdf" grab;
-
-
-
+(: My foaf file :)
+"http://troika.dnsdojo.net/wurfel/joshua-shinavier.foaf.rdf" grab;
 
 (:
     foaf:img --> Image

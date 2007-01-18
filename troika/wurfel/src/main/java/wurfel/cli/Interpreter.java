@@ -2,8 +2,10 @@ package wurfel.cli;
 
 import wurfel.Context;
 import wurfel.WurfelException;
+import wurfel.model.Dereferencer;
 import wurfel.model.Evaluator;
 import wurfel.model.LazyEvaluator;
+import wurfel.model.Lexicon;
 //import wurfel.model.DebugEvaluator;
 import wurfel.model.ObservableValueSet;
 import wurfel.model.WurfelPrintStream;
@@ -38,16 +40,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
-public class Interpreter extends Thread implements Runnable
+public class Interpreter extends Thread implements Runnable, Observer
 {
     private final static Logger s_logger
         = Logger.getLogger( Interpreter.class );
 
     private Context context;
     private Evaluator evaluator;
+
+public Context getContext()
+{
+    return context;
+}
 
     private PipedInputStream  writeIn;
     private PipedOutputStream readOut;
@@ -61,15 +70,19 @@ public class Interpreter extends Thread implements Runnable
 
     private ObservableValueSet valueSet;
 
+    private Lexicon lexicon;
+
     public void setCompletorState( final CompletorState state )
     {
+try{
+System.out.println( "########## setting completor state" );
         completorState = state;
 
         List completors = new ArrayList();
 
         try
         {
-            Completor modelCompletor = context.getModel().getCompletor();
+            Completor modelCompletor = lexicon.getCompletor();
             completors.add( modelCompletor );
         }
 
@@ -107,8 +120,9 @@ public class Interpreter extends Thread implements Runnable
         reader.addCompletor( argumentCompletor );
 
         valueSet = new ObservableValueSet( context, null );
-        ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet );
+        ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon );
         valueSet.addObserver( observer );
+}catch(Throwable t){ t.printStackTrace( System.err ); }
     }
 
     public Interpreter( Context context ) throws WurfelException
@@ -117,12 +131,15 @@ public class Interpreter extends Thread implements Runnable
         evaluator = new LazyEvaluator( context );
 //        evaluator = new DebugEvaluator( new LazyEvaluator( context ) );
 
+        lexicon = new Lexicon( context.getModel() );
+        lexicon.addObserver( this );
+
         try
         {
             reader = new ConsoleReader();
             reader.setDebug( new PrintWriter( new FileWriter("writer.debug", true ) ) );
 
-            setCompletorState( CompletorState.COMMAND );
+            //setCompletorState( CompletorState.COMMAND );
 
             writeIn = new PipedInputStream();
             readOut = new PipedOutputStream( writeIn );
@@ -134,6 +151,8 @@ public class Interpreter extends Thread implements Runnable
         {
             throw new WurfelException( e );
         }
+
+        update( lexicon, null );
     }
 
     public boolean readLine()
@@ -285,7 +304,7 @@ public class Interpreter extends Thread implements Runnable
             System.err.println( e.getMessage() );
         }
 
-        setCompletorState( CompletorState.COMMAND );
+//        setCompletorState( CompletorState.COMMAND );
     }
 
     public void saveAs( final String fileName )
@@ -304,9 +323,9 @@ public class Interpreter extends Thread implements Runnable
     {
         try
         {
-            Value subjValue = subj.evaluate( context );
-            Value predValue = pred.evaluate( context );
-            Value objValue = obj.evaluate( context );
+            Value subjValue = subj.evaluate( this );
+            Value predValue = pred.evaluate( this );
+            Value objValue = obj.evaluate( this );
 
             context.addStatement( subjValue, predValue, objValue );
         }
@@ -317,16 +336,39 @@ public class Interpreter extends Thread implements Runnable
         }
     }
 
+    private void dereferenceResultSet( Collection<Value> values )
+        throws WurfelException
+    {
+        Dereferencer d = context.getDereferencer();
+
+        Iterator<Value> iter = values.iterator();
+        while ( iter.hasNext() )
+        {
+            Value value = iter.next();
+            if ( value instanceof URI )
+                d.dereferenceSubjectUri( (URI) value );
+        }
+    }
+
+    public Value resolveIdentifier( String s )
+        throws WurfelException
+    {
+        Value v = lexicon.resolve( s );
+        return ( v == null ) ? null : context.translateFromGraph( v );
+    }
+
     public void evaluate( Ast ast )
     {
         try
         {
-            Value expr = ast.evaluate( context );
+            Value expr = ast.evaluate( this );
 
             Collection<Value> result = ( null == expr )
                 ? new ArrayList<Value>()
 //                : context.reduce( expr );
                 : evaluator.reduce( expr );
+
+            dereferenceResultSet( result );
 
             valueSet.setValues( result );
         }
@@ -356,7 +398,7 @@ public class Interpreter extends Thread implements Runnable
     {
         try
         {
-            WurfelPrintStream p = new WurfelPrintStream( System.out, context.getModel() );
+            WurfelPrintStream p = new WurfelPrintStream( System.out, lexicon );
 
             Iterator<Statement> stmtIter = context.graphQuery( query ).iterator();
 
@@ -371,6 +413,14 @@ public class Interpreter extends Thread implements Runnable
         {
             System.err.println( "\nError: " + e.toString() + "\n" );
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public void update( Observable o, Object arg )
+    {
+        if ( o == lexicon )
+            setCompletorState( CompletorState.NONE );
     }
 }
 

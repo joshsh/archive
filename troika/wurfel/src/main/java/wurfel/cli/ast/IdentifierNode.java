@@ -1,6 +1,6 @@
 package wurfel.cli.ast;
 
-import wurfel.Context;
+import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
@@ -14,10 +14,10 @@ public class IdentifierNode extends Ast
         this.value = value;
     }
 
-    public Value evaluate( Context context )
+    public Value evaluate( Interpreter itp )
         throws WurfelException
     {
-        Value v = context.resolveIdentifier( value );
+        Value v = itp.resolveIdentifier( value );
 
         if ( null == v )
             throw new WurfelException( "'" + value + "' is undefined in this context" );

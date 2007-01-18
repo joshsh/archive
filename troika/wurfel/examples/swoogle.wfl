@@ -1,3 +1,10 @@
+(:
+
+Disco knows Swoogle:
+    http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=http%3A%2F%2Fdaml.umbc.edu%2Fontologies%2Fwebofbelief%2F1.4%2Fswoogle.owl%23hasTermFrequency
+
+:)
+
 !import "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl";
 !import "http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl";
 

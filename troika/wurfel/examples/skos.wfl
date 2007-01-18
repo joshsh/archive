@@ -1,0 +1,4 @@
+(: SKOS Core, Mapping and Extensions :)
+!import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
+!import "http://www.w3.org/2004/02/skos/mapping";
+!import "http://www.w3.org/2004/02/skos/extensions";

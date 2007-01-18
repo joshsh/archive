@@ -15,13 +15,6 @@ unzip -l target/firefox/wurfel.xpi
 
 java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest
 
-(: !import "http://xmlns.com/foaf/0.1/index.rdf" "http://tempuri.org"; :)
-
-
-(: SKOS Core, Mapping and Extensions :)
-!import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
-!import "http://www.w3.org/2004/02/skos/mapping";
-!import "http://www.w3.org/2004/02/skos/extensions";
 
 (: SIOC :)
 !import "http://rdfs.org/sioc/ns";
@@ -34,33 +27,9 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 !import "http://nlp.shef.ac.uk/abraxas/ontologies/animals.owl";
 !import "http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl";
 
-(: My foaf file :)
-!import "http://troika.dnsdojo.net/wurfel/foaf_joshua_shinavier.rdf";
 
 
 !import "file:///home/joshs/dev/wurfel/rdf/vcard/3.0" ;
-
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wnfull.rdfs" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-antonym.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-attribute.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-causes.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-classifiedby.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-derivationallyrelated.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-entailment.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-frame.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-glossary.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-hyponym.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-membermeronym.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-participleof.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-partmeronym.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-pertainsto.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-sameverbgroupas.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-seealso.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-similarity.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-substancemeronym.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-synset.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-wordsensesandwords.rdf" ;
-
 
 
 !import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";

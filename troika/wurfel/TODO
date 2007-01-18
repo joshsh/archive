@@ -38,6 +38,10 @@ Model
 ================================================================================
 * write a primitive which imports a document as a reified graph in which all subjects are bnodes
 
+Scuttering
+================================================================================
+* let Dereferencers remember not only the graphs they have already imported, but also those they have tried and failed to import (to avoid repetitive failure)
+
 Concurrency
 ================================================================================
 * explore thread pooling and concurrency

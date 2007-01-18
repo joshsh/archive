@@ -8,7 +8,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.Connection;
-//import org.openrdf.sail.SailConnection;
 import org.openrdf.util.iterator.CloseableIterator;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.Namespace;
@@ -21,23 +20,69 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ModelMock extends Model
+public class Lexicon extends Observable implements Observer
 {
+    private Model model;
+
     private Hashtable<String, URI> dictionary = null;
     private Hashtable<String, String> nsDictionary = null;
 
-    private void createDictionaries()
+    public Lexicon( Model model )
         throws WurfelException
     {
+        this.model = model;
+        model.addObserver( this );
+
+        refresh();
+    }
+
+    // TODO: this should throw an exception if the identifier does not resolve
+    //       to a unique value.
+    public URI resolve( final String name )
+        throws WurfelException
+    {
+        return dictionary.get( name );
+    }
+
+    public String nsPrefixOf( final URI uri )
+        throws WurfelException
+    {
+        return nsDictionary.get( uri.getNamespace() );
+    }
+
+    public Completor getCompletor()
+        throws WurfelException
+    {
+        Set<String> dictKeys = dictionary.keySet();
+
+        if ( dictKeys.size() > 0 )
+        {
+            String [] dictArray = dictKeys.toArray( new String[dictKeys.size()] );
+            SimpleCompletor dictionaryCompletor = new SimpleCompletor( dictArray );
+            return dictionaryCompletor;
+        }
+
+        else
+            return new NullCompletor();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private void refresh()
+        throws WurfelException
+    {
+        Connection conn = model.getConnection();
+
+System.out.println( "################# Rebuilding dictionaries." );
         Set<URI> allURIs = new HashSet<URI>();
         dictionary = new Hashtable<String, URI>();
         nsDictionary = new Hashtable<String, String>();
 
         try
         {
-            Connection conn = repository.getConnection();
-
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
@@ -82,48 +127,23 @@ public class ModelMock extends Model
             URI uri = uriIter.next();
             dictionary.put( uri.getLocalName(), uri );
         }
+
+        setChanged();
+        notifyObservers();
     }
 
-    public Completor getCompletor()
-        throws WurfelException
+    public void update( Observable o, Object arg )
     {
-        if ( null == dictionary )
-            createDictionaries();
-
-        Set<String> dictKeys = dictionary.keySet();
-
-        if ( dictKeys.size() > 0 )
+        try
         {
-            String [] dictArray = dictKeys.toArray( new String[dictKeys.size()] );
-            SimpleCompletor dictionaryCompletor = new SimpleCompletor( dictArray );
-            return dictionaryCompletor;
+            if ( o == model )
+                refresh();
         }
 
-        else
-            return new NullCompletor();
-    }
-
-    public URI resolve( final String name )
-        throws WurfelException
-    {
-        if ( null == dictionary )
-            createDictionaries();
-
-        return dictionary.get( name );
-    }
-
-    public String nsPrefixOf( final URI uri )
-        throws WurfelException
-    {
-        if ( null == nsDictionary )
-            createDictionaries();
-
-        return nsDictionary.get( uri.getNamespace() );
-    }
-
-    public ModelMock( Repository repository, Resource context )
-    {
-        super( repository, context );
+        catch ( WurfelException e )
+        {
+            System.err.println( "\nError: " + e.toString() + "\n" );
+        }
     }
 }
 

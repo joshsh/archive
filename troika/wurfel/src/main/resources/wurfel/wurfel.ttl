@@ -86,14 +86,14 @@ wurfel:combinatorArity
 wurfel:and
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 2 ;
-  wurfel:comment "Finds the intersection of one set with another set" .
+  rdfs:comment "Finds the intersection of one set with another set" .
 
 wurfel:or
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 2 ;
-  wurfel:comment "Finds the union of one set with another set" .
+  rdfs:comment "Finds the union of one set with another set" .
 
 wurfel:without
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 2 ;
-  wurfel:comment "Finds the intersection of one set with the complement of another set" .
+  rdfs:comment "Finds the intersection of one set with the complement of another set" .

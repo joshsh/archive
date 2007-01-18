@@ -2,6 +2,7 @@ package wurfel.cli;
 
 import wurfel.WurfelException;
 import wurfel.Context;
+import wurfel.model.Lexicon;
 import wurfel.model.Model;
 import wurfel.model.ObservableValueSet;
 import wurfel.model.WurfelPrintStream;
@@ -21,10 +22,13 @@ public class ConsoleValueSetObserver implements Observer
     private ObservableValueSet valueSet;
     private WurfelPrintStream ps;
 
-    public ConsoleValueSetObserver( ObservableValueSet valueSet )
+    private Lexicon lexicon;
+
+    public ConsoleValueSetObserver( ObservableValueSet valueSet, Lexicon lexicon )
     {
         this.valueSet = valueSet;
-        ps = new WurfelPrintStream( System.out, valueSet.getContext().getModel() );
+        this.lexicon = lexicon;
+        ps = new WurfelPrintStream( System.out, lexicon );
     }
 
     private void show( Resource subject )

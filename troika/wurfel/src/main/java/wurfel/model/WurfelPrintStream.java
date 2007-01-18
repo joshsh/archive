@@ -21,12 +21,12 @@ public class WurfelPrintStream extends PrintStream
         s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" ),
         s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" );
 
-    private Model model;
+    private Lexicon lexicon;
 
-    public WurfelPrintStream( OutputStream out, Model model )
+    public WurfelPrintStream( OutputStream out, Lexicon lexicon )
     {
         super( out );
-        this.model = model;
+        this.lexicon = lexicon;
     }
 
     private static String literalEncodingOf( final String s )
@@ -49,7 +49,7 @@ return s;
             if ( v instanceof URI )
             {
                 URI uri = (URI) v;
-                String prefix = model.nsPrefixOf( uri );
+                String prefix = lexicon.nsPrefixOf( uri );
 
                 if ( null == prefix )
                     print( uri.toString() );

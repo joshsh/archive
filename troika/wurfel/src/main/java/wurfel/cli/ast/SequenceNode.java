@@ -2,6 +2,7 @@ package wurfel.cli.ast;
 
 import wurfel.Wurfel;
 import wurfel.Context;
+import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
 import wurfel.model.Apply;
 
@@ -26,26 +27,28 @@ public class SequenceNode extends Ast
         children.add( node );
     }
 
-    public Value evaluate( Context context )
+    public Value evaluate( Interpreter itp )
         throws WurfelException
     {
+        Context context = itp.getContext();
+
         if ( children.size() < 1 )
             throw new WurfelException( "empty sequence" );
 
         Iterator<Ast> iter = children.iterator();
-        Value result = iter.next().evaluate( context );
+        Value result = iter.next().evaluate( itp );
 
         // Note: assuming left associativity for now.
         switch ( Wurfel.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 while ( iter.hasNext() )
-                    result = new Apply( iter.next().evaluate( context ), result );
+                    result = new Apply( iter.next().evaluate( itp ), result );
                 break;
 
             case ANTIDIAGRAMMATIC:
                 while ( iter.hasNext() )
-                    result = new Apply( result, iter.next().evaluate( context ) );
+                    result = new Apply( result, iter.next().evaluate( itp ) );
                 break;
         }
 

@@ -8,7 +8,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.Connection;
-//import org.openrdf.sail.SailConnection;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.repository.Repository;
 import org.openrdf.util.iterator.CloseableIterator;
 import org.openrdf.sail.SailException;
@@ -20,21 +20,37 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Observable;
 
-public abstract class Model
+import java.net.URL;
+
+import org.apache.log4j.Logger;
+
+public class Model extends Observable
 {
+    private final static Logger s_logger = Logger.getLogger( Model.class );
+
     protected Repository repository;
     protected Resource context;
-
-    public abstract URI resolve( final String name ) throws WurfelException;
-    public abstract String nsPrefixOf( final URI uri ) throws WurfelException;
-
-    public abstract Completor getCompletor() throws WurfelException;
 
     public Model( Repository repository, Resource context )
     {
         this.repository = repository;
         this.context = context;
+    }
+
+    public Connection getConnection()
+        throws WurfelException
+    {
+        try
+        {
+            return repository.getConnection();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public ValueFactory getValueFactory()
@@ -128,6 +144,36 @@ public abstract class Model
         }
 
         return predicates;
+    }
+
+    public void dereferenceGraph( final URL url, final URI baseURI )
+        throws WurfelException
+    {
+        s_logger.debug( "Importing model " + url.toString() +
+            ( ( null == baseURI ) ? "" : " as " + baseURI.toString() ) );
+
+        boolean verifyData = true;
+
+        try
+        {
+            Connection con = repository.getConnection();
+//            con.add( url, baseURI, RDFFormat.RDFXML, singleContext );
+            if ( null == baseURI )
+                con.add( url, null, RDFFormat.RDFXML );
+            else
+                con.add( url, baseURI.toString(), RDFFormat.RDFXML, baseURI );
+
+            con.close();
+        }
+
+        catch ( Throwable t  )
+        {
+            throw new WurfelException( t );
+        }
+
+System.out.println( "######## dereferencing graph in model: " + url );
+        setChanged();
+        notifyObservers();
     }
 }
 
