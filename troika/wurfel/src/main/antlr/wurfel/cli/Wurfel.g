@@ -12,6 +12,7 @@ import wurfel.cli.ast.NullNode;
 import wurfel.cli.ast.StringNode;
 import wurfel.cli.ast.IdentifierNode;
 import wurfel.cli.ast.SequenceNode;
+import wurfel.cli.ast.UriNode;
 }
 
 
@@ -67,7 +68,7 @@ WS  :   (   ' '
 
 protected
 NORMAL
-    : '#' | '$' | '%' | '\'' | '-' | '<' | '=' | '>' | '@' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
+    : '#' | '$' | '%' | '\'' | '-' | '=' | '@' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
 //    | '\\' ( '\"' | '\\' | WS )
     ;
 
@@ -77,8 +78,13 @@ DIGIT
     ;
 
 protected
-SPECIAL
+SPECIAL_0
     : '!' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
+    ;
+
+protected
+SPECIAL
+    : SPECIAL_0 | '<' | '>'
     ;
 
 protected
@@ -122,6 +128,10 @@ STRING
 
 IDENTIFIER
     : ( NORMAL | ESC ) ( NORMAL | DIGIT | ESC )*
+    ;
+
+URI
+    : '<'! ( NORMAL | DIGIT | SPECIAL_0 )+ '>'!
     ;
 
 NUMBER
@@ -320,6 +330,10 @@ nt_Literal returns [ Ast r ]
                 r = null;
                 interpreter.quit();
             }
+        }
+    | uri:URI
+        {
+            r = new UriNode( uri.getText() );
         }
     ;
 
