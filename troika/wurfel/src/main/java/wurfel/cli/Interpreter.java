@@ -350,11 +350,30 @@ System.out.println( "########## setting completor state" );
         }
     }
 
-    public Value resolveIdentifier( String s )
+    public Value resolveUnqualifiedName( final String localName )
         throws WurfelException
     {
-        Value v = lexicon.resolve( s );
-        return ( v == null ) ? null : context.translateFromGraph( v );
+        List<URI> options = lexicon.resolveUnqualifiedName( localName );
+        if ( null == options || 0 == options.size() )
+            return null;
+        else
+        {
+// TODO: this is only one way of handling name ambiguity.
+            Value choice = options.get( 0 );
+
+            return context.translateFromGraph( choice );
+        }
+    }
+
+    public Value resolveQualifiedName( final String nsPrefix,
+                                       final String localName )
+        throws WurfelException
+    {
+        Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
+
+        return ( null == v )
+            ? null
+            : context.translateFromGraph( v );
     }
 
     public void evaluate( Ast ast )

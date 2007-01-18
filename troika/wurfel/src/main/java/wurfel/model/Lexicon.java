@@ -16,6 +16,8 @@ import jline.Completor;
 import jline.SimpleCompletor;
 import jline.NullCompletor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -27,8 +29,9 @@ public class Lexicon extends Observable implements Observer
 {
     private Model model;
 
-    private Hashtable<String, URI> dictionary = null;
-    private Hashtable<String, String> nsDictionary = null;
+    private Hashtable<String, List<URI>> localNameToUrisMap = null;
+    private Hashtable<String, String> prefixToNamespaceMap = null;
+    private Hashtable<String, String> namespaceToPrefixMap = null;
 
     public Lexicon( Model model )
         throws WurfelException
@@ -39,30 +42,61 @@ public class Lexicon extends Observable implements Observer
         refresh();
     }
 
-    // TODO: this should throw an exception if the identifier does not resolve
-    //       to a unique value.
-    public URI resolve( final String name )
-        throws WurfelException
+    public List<URI> resolveUnqualifiedName( final String localName )
     {
-        return dictionary.get( name );
+        return localNameToUrisMap.get( localName );
+    }
+
+    public URI resolveQualifiedName( final String nsPrefix,
+                                     final String localName )
+    {
+        String ns = resolveNamespacePrefix( nsPrefix );
+        if ( null == ns )
+            return null;
+
+        Iterator<URI> uris = localNameToUrisMap.get( localName ).iterator();
+        while ( uris.hasNext() )
+        {
+            URI uri = uris.next();
+            if ( uri.getNamespace().equals( ns ) )
+                return uri;
+        }
+
+        return null;
+    }
+
+    public String resolveNamespacePrefix( final String nsPrefix )
+    {
+        return prefixToNamespaceMap.get( nsPrefix );
     }
 
     public String nsPrefixOf( final URI uri )
         throws WurfelException
     {
-        return nsDictionary.get( uri.getNamespace() );
+        return namespaceToPrefixMap.get( uri.getNamespace() );
     }
 
     public Completor getCompletor()
         throws WurfelException
     {
-        Set<String> dictKeys = dictionary.keySet();
+        Set<String> localNames = localNameToUrisMap.keySet();
+        Set<String> prefixes = prefixToNamespaceMap.keySet();
 
-        if ( dictKeys.size() > 0 )
+        int size = localNames.size() + prefixes.size();
+        if ( 0 < size )
         {
-            String [] dictArray = dictKeys.toArray( new String[dictKeys.size()] );
-            SimpleCompletor dictionaryCompletor = new SimpleCompletor( dictArray );
-            return dictionaryCompletor;
+            String [] alts = new String[size];
+            int index = 0;
+
+            Iterator<String> localNameIter = localNames.iterator();
+            while ( localNameIter.hasNext() )
+                alts[index++] = localNameIter.next();
+
+            Iterator<String> prefixIter = prefixes.iterator();
+            while ( prefixIter.hasNext() )
+                alts[index++] = prefixIter.next() + ":";
+
+            return new SimpleCompletor( alts );
         }
 
         else
@@ -71,15 +105,38 @@ public class Lexicon extends Observable implements Observer
 
     ////////////////////////////////////////////////////////////////////////////
 
+    private void add( final Namespace ns )
+    {
+        prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
+        namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
+    }
+
+    // Note: assumes that the same URI will not be added twice.
+    private void add( URI uri )
+    {
+        String localName = uri.getLocalName();
+        List<URI> siblings = localNameToUrisMap.get( localName );
+
+        if ( null == siblings )
+        {
+            siblings = new ArrayList<URI>();
+            localNameToUrisMap.put( localName, siblings );
+        }
+
+        siblings.add( uri );
+    }
+
     private void refresh()
         throws WurfelException
     {
-        Connection conn = model.getConnection();
-
 System.out.println( "################# Rebuilding dictionaries." );
+        localNameToUrisMap = new Hashtable<String, List<URI>>();
+        prefixToNamespaceMap = new Hashtable<String, String>();
+        namespaceToPrefixMap = new Hashtable<String, String>();
+
         Set<URI> allURIs = new HashSet<URI>();
-        dictionary = new Hashtable<String, URI>();
-        nsDictionary = new Hashtable<String, String>();
+
+        Connection conn = model.getConnection();
 
         try
         {
@@ -104,13 +161,12 @@ System.out.println( "################# Rebuilding dictionaries." );
             }
             stmtIter.close();
 
+            // Namespace prefixes are managed by OpenRDF, and are simply
+            // imported into the Lexicon.
             CloseableIterator<? extends Namespace> nsIter
                  = conn.getNamespaces();
             while ( nsIter.hasNext() )
-            {
-                Namespace ns = nsIter.next();
-                nsDictionary.put( ns.getName(), ns.getPrefix() );
-            }
+                add( nsIter.next() );
             nsIter.close();
 
             conn.close();
@@ -123,10 +179,7 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         Iterator<URI> uriIter = allURIs.iterator();
         while ( uriIter.hasNext() )
-        {
-            URI uri = uriIter.next();
-            dictionary.put( uri.getLocalName(), uri );
-        }
+            add( uriIter.next() );
 
         setChanged();
         notifyObservers();

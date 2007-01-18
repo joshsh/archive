@@ -7,20 +7,29 @@ import org.openrdf.model.Value;
 
 public class IdentifierNode extends Ast
 {
-    private String value;
+    private String nsPrefix, localName;
 
-    public IdentifierNode( final String value )
+    public IdentifierNode( final String localName )
     {
-        this.value = value;
+        nsPrefix = null;
+        this.localName = localName;
+    }
+
+    public IdentifierNode( final String nsPrefix, final String localName )
+    {
+        this.nsPrefix = nsPrefix;
+        this.localName = localName;
     }
 
     public Value evaluate( Interpreter itp )
         throws WurfelException
     {
-        Value v = itp.resolveIdentifier( value );
+        Value v = ( null == nsPrefix )
+            ? itp.resolveUnqualifiedName( localName )
+            : itp.resolveQualifiedName( nsPrefix, localName );
 
         if ( null == v )
-            throw new WurfelException( "'" + value + "' is undefined in this context" );
+            throw new WurfelException( "'" + ( ( null == nsPrefix ) ? "" : nsPrefix + "" ) + localName + "' is undefined in this context" );
         else
             return v;
     }

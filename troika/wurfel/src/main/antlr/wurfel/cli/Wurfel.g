@@ -182,6 +182,9 @@ options { paraphrase = "dot operator"; } : '.' ;
 COMMA
 options { paraphrase = "comma"; } : ',' ;
 
+COLON
+options { paraphrase = "colon"; } : ':' ;
+
 protected
 COMMAND
     : '!'
@@ -340,10 +343,18 @@ nt_Literal returns [ Ast r ]
 
 nt_Name returns [ Ast r ]
 {
+    String first = null, second = null;
 }
-    : t:IDENTIFIER
+    : ( t1:IDENTIFIER
         {
-            r = new IdentifierNode( t.getText() );
+            first = t1.getText();
+        }
+        ( COLON t2:IDENTIFIER { second = t2.getText(); } )?
+      )
+        {
+            r = ( null == second )
+                ? new IdentifierNode( first )
+                : new IdentifierNode( first, second );
         }
     ;
 
