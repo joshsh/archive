@@ -13,8 +13,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.querylanguage.MalformedQueryException;
-import org.openrdf.querylanguage.UnsupportedQueryLanguageException;
 import org.openrdf.querymodel.QueryLanguage;
 import org.openrdf.queryresult.GraphQueryResult;
 import org.openrdf.queryresult.TupleQueryResult;
@@ -22,14 +20,10 @@ import org.openrdf.queryresult.Solution;
 import org.openrdf.repository.Connection;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryImpl;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
 import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.sail.Namespace;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.SailInitializationException;
 import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.util.iterator.CloseableIterator;
@@ -300,9 +294,9 @@ aliases = new Hashtable<String, String>();
             repository.initialize();
         }
 
-        catch ( SailInitializationException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
 
         singleContext = createUri( "urn:wurfel-context" );
@@ -346,9 +340,9 @@ public Repository getRepository()
             con.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
     }
 
@@ -364,14 +358,9 @@ public Repository getRepository()
             con.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
-        }
-
-        catch ( RDFHandlerException e )
-        {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
     }
 
@@ -480,9 +469,9 @@ public Repository getRepository()
             con.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
 
         return size;
@@ -528,9 +517,9 @@ public Repository getRepository()
             conn.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
     }
 
@@ -553,9 +542,9 @@ public Repository getRepository()
             conn.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
     }
 
@@ -579,19 +568,9 @@ public Repository getRepository()
             con.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
-        }
-
-        catch ( MalformedQueryException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( UnsupportedQueryLanguageException e )
-        {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
 
         return statements;
@@ -612,19 +591,9 @@ public Repository getRepository()
             con.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
-        }
-
-        catch ( MalformedQueryException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        catch ( UnsupportedQueryLanguageException e )
-        {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
     }
 

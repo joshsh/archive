@@ -23,8 +23,7 @@ Build
 Exception handling
 ================================================================================
 * decide on an extensible approach for exception handling and error logging
-* bug: it is possible to crash the program with
-    !graphQuery "SELECT DISTINCT s FROM {s} p {}";
+* wrap calls to foreign code in strict try{...}catch(Throwable t){...} blocks for better error recovery
 
 Syntax
 ================================================================================

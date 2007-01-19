@@ -9,7 +9,6 @@ import org.openrdf.model.URI;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.Connection;
 import org.openrdf.util.iterator.CloseableIterator;
-import org.openrdf.sail.SailException;
 import org.openrdf.sail.Namespace;
 
 import jline.Completor;
@@ -172,9 +171,9 @@ System.out.println( "################# Rebuilding dictionaries." );
             conn.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
 
         Iterator<URI> uriIter = allURIs.iterator();

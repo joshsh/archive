@@ -72,57 +72,6 @@ public Context getContext()
 
     private Lexicon lexicon;
 
-    public void updateCompletors( final CompletorState state )
-    {
-System.out.println( "########## updating completors" );
-        completorState = state;
-
-        List completors = new ArrayList();
-
-        try
-        {
-            Completor modelCompletor = lexicon.getCompletor();
-            completors.add( modelCompletor );
-        }
-
-        catch ( WurfelException e )
-        {
-            return;
-        }
-
-        SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
-            "!add",
-            "!count",
-            "!define",
-            "!graphQuery",
-            "!import",
-            "!namespaces",
-            "!print",
-            "!saveas",
-            "!quit" } );
-        completors.add( commandCompletor );
-
-        Completor fileNameCompletor = new FileNameCompletor();
-        completors.add( fileNameCompletor );
-
-        // This makes candidates from multiple completors available at once.
-        Completor multiCompletor = new MultiCompletor( completors );
-
-        // This allows the user to complete an expression even when it is not
-        // the first whitespace-delimited item on the current line.
-        Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
-
-        Collection<Completor> existingCompletors = reader.getCompletors();
-        if ( existingCompletors.size() > 0 )
-            reader.removeCompletor( existingCompletors.iterator().next() );
-
-        reader.addCompletor( argumentCompletor );
-
-        valueSet = new ObservableValueSet( context, null );
-        ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon );
-        valueSet.addObserver( observer );
-    }
-
     public Interpreter( Context context ) throws WurfelException
     {
         this.context = context;
@@ -151,6 +100,59 @@ System.out.println( "########## updating completors" );
         }
 
         update( lexicon, null );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public void updateCompletors( final CompletorState state )
+    {
+System.out.println( "########## updating completors" );
+        completorState = state;
+
+        List completors = new ArrayList();
+
+        try
+        {
+            Completor modelCompletor = lexicon.getCompletor();
+            completors.add( modelCompletor );
+
+            SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
+                "!add",
+                "!count",
+                "!define",
+                "!graphQuery",
+                "!import",
+                "!namespaces",
+                "!print",
+                "!saveas",
+                "!quit" } );
+            completors.add( commandCompletor );
+
+            Completor fileNameCompletor = new FileNameCompletor();
+            completors.add( fileNameCompletor );
+
+            // This makes candidates from multiple completors available at once.
+            Completor multiCompletor = new MultiCompletor( completors );
+
+            // This allows the user to complete an expression even when it is not
+            // the first whitespace-delimited item on the current line.
+            Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
+
+            Collection<Completor> existingCompletors = reader.getCompletors();
+            if ( existingCompletors.size() > 0 )
+                reader.removeCompletor( existingCompletors.iterator().next() );
+
+            reader.addCompletor( argumentCompletor );
+
+            valueSet = new ObservableValueSet( context, null );
+            ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon );
+            valueSet.addObserver( observer );
+        }
+
+        catch ( WurfelException e )
+        {
+            s_logger.error( "Failed to update completors.  Continuing nonetheless." );
+        }
     }
 
     public boolean readLine()

@@ -11,7 +11,6 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.Connection;
 import org.openrdf.repository.Repository;
 import org.openrdf.util.iterator.CloseableIterator;
-import org.openrdf.sail.SailException;
 
 import jline.Completor;
 

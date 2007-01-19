@@ -11,7 +11,6 @@ import org.openrdf.repository.Connection;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.repository.Repository;
 import org.openrdf.util.iterator.CloseableIterator;
-import org.openrdf.sail.SailException;
 
 import jline.Completor;
 
@@ -83,9 +82,9 @@ public class Model extends Observable
                 conn.close();
             }
 
-            catch ( SailException e )
+            catch ( Throwable t )
             {
-                throw new WurfelException( e );
+                throw new WurfelException( t );
             }
         }
 
@@ -111,9 +110,9 @@ public class Model extends Observable
             conn.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
 
         return subjects;
@@ -138,9 +137,9 @@ public class Model extends Observable
             conn.close();
         }
 
-        catch ( SailException e )
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
 
         return predicates;
