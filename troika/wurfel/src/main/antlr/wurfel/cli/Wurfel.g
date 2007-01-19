@@ -57,12 +57,17 @@ options
 }
 
 
+protected
+WS_NOBREAKS
+    : ' ' | '\t'
+    ;
+
 // Ignore whitespace when it appears between tokens.
-WS  :   (   ' '
-        |   '\t'
+WS
+    : ( WS_NOBREAKS
         |   '\r' '\n' { newline(); }
         |   '\n'      { newline(); endOfLineEvent(); }
-        )
+       )
         { $setType(Token.SKIP); } //ignore this token
     ;
 
@@ -131,7 +136,7 @@ IDENTIFIER
     ;
 
 URI
-    : '<'! ( NORMAL | DIGIT | SPECIAL_0 )+ '>'!
+    : '<'! ( NORMAL | DIGIT | SPECIAL_0 | WS_NOBREAKS | "\\<" | "\\>" | "\\\\" )+ '>'!
     ;
 
 NUMBER
@@ -216,6 +221,8 @@ options
 
 
 {
+//    private boolean active = true;
+
     private Interpreter interpreter = null;
 
     public void initialize( Interpreter r )
@@ -238,9 +245,9 @@ nt_Query
     Ast r;
 }
     : r=nt_Sequence SEMI
-      {
-        interpreter.evaluate( r );
-      }
+        {
+            interpreter.evaluate( r );
+        }
 
     // Note: commands are executed greedily, before the semicolon is encountered.
     | nt_Command SEMI

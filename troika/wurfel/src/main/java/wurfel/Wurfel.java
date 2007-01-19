@@ -100,8 +100,19 @@ public class Wurfel
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    private static final URL
+        s_wurfelSchemaUrl = Wurfel.class.getResource( "wurfel.rdf" );
+
+    private static boolean initialized = false;
+
     private static ExpressionOrder expressionOrder;
     private static ExpressionAssociativity expressionAssociativity;
+
+    private static boolean s_jLineDebug;
+
+    ////////////////////////////////////////////////////////////////////////////
 
     public static ExpressionOrder getExpressionOrder()
     {
@@ -113,12 +124,23 @@ public class Wurfel
         return expressionAssociativity;
     }
 
+    public static boolean getJLineDebug()
+    {
+        return s_jLineDebug;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
-    private static final URL
-        s_wurfelSchemaUrl = Wurfel.class.getResource( "wurfel.rdf" );
+    private static boolean getBooleanProperty( final Properties props,
+                                               final String name,
+                                               boolean defaultValue )
+    {
+        String s = props.getProperty( name );
 
-    private static boolean initialized = false;
+        return ( null == s )
+            ? defaultValue
+            : s.equals( "true" );
+    }
 
     public static void initialize()
         throws WurfelException
@@ -144,6 +166,8 @@ public class Wurfel
                 props.getProperty( "wurfel.cli.syntax.order" ) );
             expressionAssociativity = ExpressionAssociativity.find(
                 props.getProperty( "wurfel.cli.syntax.associativity" ) );
+
+            s_jLineDebug = getBooleanProperty( props, "wurfel.cli.jline.debug", false );
 
             initialized = true;
         }

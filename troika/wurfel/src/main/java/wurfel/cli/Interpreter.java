@@ -1,6 +1,7 @@
 package wurfel.cli;
 
 import wurfel.Context;
+import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.Dereferencer;
 import wurfel.model.Evaluator;
@@ -84,7 +85,8 @@ public Context getContext()
         try
         {
             reader = new ConsoleReader();
-            reader.setDebug( new PrintWriter( new FileWriter("writer.debug", true ) ) );
+            if ( Wurfel.getJLineDebug() )
+                reader.setDebug( new PrintWriter( new FileWriter( "writer.debug", true ) ) );
 
             //updateCompletors( CompletorState.COMMAND );
 
@@ -208,7 +210,7 @@ System.out.println( "########## updating completors" );
             // parser, so I'm assuming that we need to create a new lexer and
             // parser instance once a parsing error puts them in a weird
             // state (unless we want to go to the trouble of recovering from
-            // it, any any rate).
+            // it, at any rate).
             WurfelLexer lexer = new WurfelLexer( writeIn );
             lexer.initialize( this );
             WurfelParser parser = new WurfelParser( lexer );

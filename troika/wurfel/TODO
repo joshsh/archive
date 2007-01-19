@@ -67,6 +67,11 @@ Ontologies
 ================================================================================
 * ontology describing SemanticWebDocuments and where to get them
 
+Testing
+================================================================================
+* syntax testing (both success and failure cases)
+* test of the context filter
+
 Use cases
 ================================================================================
 * data hiding use case
