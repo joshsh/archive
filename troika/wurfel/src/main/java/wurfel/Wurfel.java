@@ -168,43 +168,59 @@ public class Wurfel
     }
 
     public static URI createUri( final String s )
+        throws WurfelException
     {
-        return new URIImpl( s );
+        try
+        {
+            return new URIImpl( s );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public static URI createRandomUri()
+        throws WurfelException
     {
-        return new URIImpl( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
+        return createUri( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
     }
 
     public static URI getRdfUri( final String localName )
+        throws WurfelException
     {
-        return new URIImpl( "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName );
+        return createUri( "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName );
     }
 
     public static URI getRdfSchemaUri( final String localName )
+        throws WurfelException
     {
-        return new URIImpl( "http://www.w3.org/2000/01/rdf-schema#" + localName );
+        return createUri( "http://www.w3.org/2000/01/rdf-schema#" + localName );
     }
 
     public static URI getWurfelUri( final String localName )
+        throws WurfelException
     {
-        return new URIImpl( "urn:net.dnsdojo.troika.wurfel#" + localName );
+        return createUri( "urn:net.dnsdojo.troika.wurfel#" + localName );
     }
 
     public static URI getWurfelTestUri( final String localName )
+        throws WurfelException
     {
-        return new URIImpl( "urn:net.dnsdojo.troika.wurfel-test#" + localName );
+        return createUri( "urn:net.dnsdojo.troika.wurfel-test#" + localName );
     }
 
     public static URI getXmlSchemaUri( final String localName )
+        throws WurfelException
     {
-        return new URIImpl( "http://www.w3.org/2001/XMLSchema#" + localName );
+        return createUri( "http://www.w3.org/2001/XMLSchema#" + localName );
     }
 
     public static URI getSwoogleUri( final String localName )
+        throws WurfelException
     {
-        return new URIImpl( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
+        return createUri( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
     }
 }
 

@@ -23,13 +23,10 @@ import java.io.InputStreamReader;
 
 public class UrlTarget extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" );
-
     public UrlTarget( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

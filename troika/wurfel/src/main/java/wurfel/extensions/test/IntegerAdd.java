@@ -16,13 +16,10 @@ import java.util.LinkedList;
 
 public class IntegerAdd extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "integer-add" );
-
     public IntegerAdd( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.getWurfelTestUri( "integer-add" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

@@ -58,8 +58,6 @@ Names and namespaces
 
 Command line interface
 ================================================================================
-* syntax for fully-specified URIs using brackets, e.g. <http://www.w3c.org>
-* QName syntax, e.g. foo:bar
 * blank node syntax, e.g. _:bar
 * writer.debug becomes huge.  Disable it.
 * interpreter hangs on multi-line comments
@@ -69,6 +67,14 @@ Command line interface
 Ontologies
 ================================================================================
 * ontology describing SemanticWebDocuments and where to get them
+
+Use cases
+================================================================================
+* data hiding use case
+* implicit context use case
+* distributed programming use case
+* DL or other reasoning use case
+* later: concurrent programming use case
 
 Nice-to-have
 ================================================================================

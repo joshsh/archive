@@ -72,10 +72,9 @@ public Context getContext()
 
     private Lexicon lexicon;
 
-    public void setCompletorState( final CompletorState state )
+    public void updateCompletors( final CompletorState state )
     {
-try{
-System.out.println( "########## setting completor state" );
+System.out.println( "########## updating completors" );
         completorState = state;
 
         List completors = new ArrayList();
@@ -122,7 +121,6 @@ System.out.println( "########## setting completor state" );
         valueSet = new ObservableValueSet( context, null );
         ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon );
         valueSet.addObserver( observer );
-}catch(Throwable t){ t.printStackTrace( System.err ); }
     }
 
     public Interpreter( Context context ) throws WurfelException
@@ -139,7 +137,7 @@ System.out.println( "########## setting completor state" );
             reader = new ConsoleReader();
             reader.setDebug( new PrintWriter( new FileWriter("writer.debug", true ) ) );
 
-            //setCompletorState( CompletorState.COMMAND );
+            //updateCompletors( CompletorState.COMMAND );
 
             writeIn = new PipedInputStream();
             readOut = new PipedOutputStream( writeIn );
@@ -304,7 +302,7 @@ System.out.println( "########## setting completor state" );
             System.err.println( e.getMessage() );
         }
 
-//        setCompletorState( CompletorState.COMMAND );
+//        updateCompletors( CompletorState.COMMAND );
     }
 
     public void saveAs( final String fileName )
@@ -439,7 +437,7 @@ System.out.println( "########## setting completor state" );
     public void update( Observable o, Object arg )
     {
         if ( o == lexicon )
-            setCompletorState( CompletorState.NONE );
+            updateCompletors( CompletorState.NONE );
     }
 }
 

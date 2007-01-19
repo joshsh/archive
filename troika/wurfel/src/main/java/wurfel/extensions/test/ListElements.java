@@ -17,13 +17,10 @@ import java.util.LinkedList;
 
 public class ListElements extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "listElements" );
-
     public ListElements( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.getWurfelTestUri( "listElements" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

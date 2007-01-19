@@ -20,9 +20,6 @@ public class Apply extends Node implements Function
 return null;
 }
 
-    private static final URI
-        s_applyClassUri = Wurfel.getWurfelUri( "Apply" );
-
     private Value function, argument;
 //    private Collection<Value> function, argument;
 

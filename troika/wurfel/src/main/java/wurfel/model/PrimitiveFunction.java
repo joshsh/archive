@@ -46,31 +46,30 @@ public abstract class PrimitiveFunction extends Node implements Function
     private String name;
     private String annotation;
 
-    private static final URI
-        s_wurfelPrimitiveFunctionUri = Wurfel.getWurfelUri( "PrimitiveFunction" ),
-        s_wurfelParametersUri = Wurfel.getWurfelUri( "parameters" ),
-        s_wurfelReturnTypeUri = Wurfel.getWurfelUri( "returnType" ),
-        s_wurfelParameterUri = Wurfel.getWurfelUri( "Parameter" ),
-        s_wurfelParameterNameUri = Wurfel.getWurfelUri( "parameterName" ),
-        s_wurfelParameterListUri = Wurfel.getWurfelUri( "ParameterList" ),
-        s_wurfelParameterTypeUri = Wurfel.getWurfelUri( "parameterType" ),
-        s_wurfelParameterTransparencyUri = Wurfel.getWurfelUri( "parameterTransparency" );
+    private URI
+        wurfelParametersUri,
+        wurfelReturnTypeUri,
+        wurfelParameterUri,
+        wurfelParameterNameUri,
+        wurfelParameterListUri,
+        wurfelParameterTypeUri,
+        wurfelParameterTransparencyUri;
 
     private Param getWurfelParameter( final Resource head, Context context )
         throws WurfelException
     {
         String name = context.stringValue(
             context.castToLiteral(
-                context.findUniqueProduct( head, s_wurfelParameterNameUri ) ) );
+                context.findUniqueProduct( head, wurfelParameterNameUri ) ) );
         URI type = context.castToUri(
-            context.findUniqueProduct( head, s_wurfelParameterTypeUri ) );
+            context.findUniqueProduct( head, wurfelParameterTypeUri ) );
 
 // TODO: actually use this, or get rid of it
         String annotation = "";
 
         boolean transparency = context.booleanValue(
             context.castToLiteral(
-                context.findUniqueProduct( head, s_wurfelParameterTransparencyUri ) ) );
+                context.findUniqueProduct( head, wurfelParameterTransparencyUri ) ) );
 
         return new Param( name, type, annotation, transparency );
     }
@@ -84,10 +83,18 @@ public abstract class PrimitiveFunction extends Node implements Function
         name = "";
         annotation = "";
 
+        wurfelParametersUri = Wurfel.getWurfelUri( "parameters" );
+        wurfelReturnTypeUri = Wurfel.getWurfelUri( "returnType" );
+        wurfelParameterUri = Wurfel.getWurfelUri( "Parameter" );
+        wurfelParameterNameUri = Wurfel.getWurfelUri( "parameterName" );
+        wurfelParameterListUri = Wurfel.getWurfelUri( "ParameterList" );
+        wurfelParameterTypeUri = Wurfel.getWurfelUri( "parameterType" );
+        wurfelParameterTransparencyUri = Wurfel.getWurfelUri( "parameterTransparency" );
+
         returnType = context.castToUri(
-            context.findUniqueProduct( self, s_wurfelReturnTypeUri ) );
+            context.findUniqueProduct( self, wurfelReturnTypeUri ) );
         Resource paramList = context.castToResource(
-            context.findUniqueProduct( self, s_wurfelParametersUri ) );
+            context.findUniqueProduct( self, wurfelParametersUri ) );
         Iterator<Value> paramIter = context.listValue( paramList ).iterator();
 
         params = new ArrayList<Param>();

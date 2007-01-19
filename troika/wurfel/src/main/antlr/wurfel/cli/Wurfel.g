@@ -50,9 +50,9 @@ options
             throw new ParserQuitException();
     }
 
-    private void setCompletorState( CompletorState state )
+    private void updateCompletors( CompletorState state )
     {
-        interpreter.setCompletorState( state );
+        interpreter.updateCompletors( state );
     }
 }
 
@@ -122,7 +122,7 @@ IDENTIFIER
 
 STRING
     : '\"'! {
-        setCompletorState( CompletorState.NONE );
+        updateCompletors( CompletorState.NONE );
       } ( NORMAL | DIGIT | SPECIAL | ESC | WS )+ '\"'!
     ;
 

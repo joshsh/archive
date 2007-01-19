@@ -16,13 +16,10 @@ import java.util.LinkedList;
 
 public class ConcatenateStringsPrimitive extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "concatenateStrings" );
-
     public ConcatenateStringsPrimitive( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.getWurfelTestUri( "concatenateStrings" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

@@ -16,13 +16,10 @@ import java.util.LinkedList;
 
 public class IntegerSubtract extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "integer-subtract" );
-
     public IntegerSubtract( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.getWurfelTestUri( "integer-subtract" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

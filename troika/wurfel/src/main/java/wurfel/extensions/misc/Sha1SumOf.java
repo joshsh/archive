@@ -20,9 +20,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class Sha1SumOf extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf" );
-
     private static final String
         s_encoding = "UTF-8",
         s_algorithm = "SHA";
@@ -32,7 +29,7 @@ public class Sha1SumOf extends PrimitiveFunction
     public Sha1SumOf( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf" ), context );
     }
 
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java

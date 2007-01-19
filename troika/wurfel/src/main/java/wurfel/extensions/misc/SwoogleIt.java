@@ -23,15 +23,17 @@ import java.net.URLEncoder;
 
 public class SwoogleIt extends PrimitiveFunction
 {
-    private static final URI
-        s_uri = Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ),
-        s_rdfTypeUri = Wurfel.getRdfUri( "type" ),
-        s_swoogleQueryResponseUri = Wurfel.getSwoogleUri( "QueryResponse" );
+    private URI
+        rdfTypeUri,
+        swoogleQueryResponseUri;
 
     public SwoogleIt( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ), context );
+
+        rdfTypeUri = Wurfel.getRdfUri( "type" );
+        swoogleQueryResponseUri = Wurfel.getSwoogleUri( "QueryResponse" );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -66,8 +68,8 @@ public class SwoogleIt extends PrimitiveFunction
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
-//                    null, s_rdfTypeUri, s_swoogleQueryResponseUri, includeInferred );
-                    null, s_rdfTypeUri, s_swoogleQueryResponseUri, baseUri, includeInferred );
+//                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
+                    null, rdfTypeUri, swoogleQueryResponseUri, baseUri, includeInferred );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();

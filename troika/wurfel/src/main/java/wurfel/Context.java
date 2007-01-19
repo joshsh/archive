@@ -67,19 +67,34 @@ public Dereferencer getDereferencer()
 //    private static final AdminListener s_adminListener
 //        = new StdOutAdminListener();
 
-
     private final static boolean s_useInferencing = true;
 
 // TODO: determine whether these URIs should really be created via the model's
 //       graph's ValueFactory.
-    private static final URI
-        s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" ),
-        s_xsdDoubleUri = Wurfel.getXmlSchemaUri( "double" ),
-        s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" ),
-        s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" ),
-        s_rdfFirstUri = Wurfel.getRdfUri( "first" ),
-        s_rdfRestUri = Wurfel.getRdfUri( "rest" ),
+    private static URI
+        s_xsdBooleanUri = null,
+        s_xsdDoubleUri = null,
+        s_xsdIntegerUri = null,
+        s_xsdStringUri = null,
+        s_rdfFirstUri = null,
+        s_rdfRestUri = null,
+        s_rdfNilUri = null;
+
+    private static boolean s_initialized = false;
+
+    private static void initialize()
+        throws WurfelException
+    {
+        s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" );
+        s_xsdDoubleUri = Wurfel.getXmlSchemaUri( "double" );
+        s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" );
+        s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" );
+        s_rdfFirstUri = Wurfel.getRdfUri( "first" );
+        s_rdfRestUri = Wurfel.getRdfUri( "rest" );
         s_rdfNilUri = Wurfel.getRdfUri( "nil" );
+
+        s_initialized = true;
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -266,6 +281,9 @@ Model model = null;
     public Context( final String name )
         throws WurfelException
     {
+        if ( !s_initialized )
+            initialize();
+
         s_logger.debug( "Creating new Context '" + name + "'" );
 
 aliases = new Hashtable<String, String>();

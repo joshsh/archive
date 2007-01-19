@@ -25,6 +25,7 @@ public class ConsoleValueSetObserver implements Observer
     private Lexicon lexicon;
 
     public ConsoleValueSetObserver( ObservableValueSet valueSet, Lexicon lexicon )
+        throws WurfelException
     {
         this.valueSet = valueSet;
         this.lexicon = lexicon;

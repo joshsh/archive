@@ -15,18 +15,24 @@ import java.util.Iterator;
 
 public class WurfelPrintStream extends PrintStream
 {
-    private static final URI
-        s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" ),
-        s_xsdDoubleUri = Wurfel.getXmlSchemaUri( "double" ),
-        s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" ),
-        s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" );
+    private URI
+        xsdBooleanUri,
+        xsdDoubleUri,
+        xsdIntegerUri,
+        xsdStringUri;
 
     private Lexicon lexicon;
 
     public WurfelPrintStream( OutputStream out, Lexicon lexicon )
+        throws WurfelException
     {
         super( out );
         this.lexicon = lexicon;
+
+        xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" );
+        xsdDoubleUri = Wurfel.getXmlSchemaUri( "double" );
+        xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" );
+        xsdStringUri = Wurfel.getXmlSchemaUri( "string" );
     }
 
     private static String literalEncodingOf( final String s )
@@ -62,7 +68,7 @@ return s;
                 URI dataTypeUri = ( (Literal) v ).getDatatype();
 
 // FIXME: is this equals() safe?
-                if ( null != dataTypeUri && dataTypeUri.equals( s_xsdStringUri ) )
+                if ( null != dataTypeUri && dataTypeUri.equals( xsdStringUri ) )
                 {
                     print( "\"" );
                     print( literalEncodingOf( v.toString() ) );

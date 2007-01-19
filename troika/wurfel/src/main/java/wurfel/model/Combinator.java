@@ -11,9 +11,6 @@ import java.util.LinkedList;
 
 public abstract class Combinator extends Node implements Function
 {
-    private static final URI
-        s_wurfelCombinatorArityUri = Wurfel.getWurfelUri( "combinatorArity" );
-
     protected int arityCached;
 
     protected URI selfUri;
@@ -29,7 +26,7 @@ public abstract class Combinator extends Node implements Function
         arityCached = context.intValue(
             context.castToLiteral(
                 context.findUniqueProduct(
-                    selfUri, s_wurfelCombinatorArityUri ) ) );
+                    selfUri, Wurfel.getWurfelUri( "combinatorArity" ) ) ) );
     }
 
     public int arity()

@@ -16,13 +16,10 @@ import java.util.LinkedList;
 
 public class Combinator_R extends Combinator
 {
-    private static final URI
-        s_uri = Wurfel.getWurfelTestUri( "R" );
-
     public Combinator_R( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.getWurfelTestUri( "R" ), context );
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,

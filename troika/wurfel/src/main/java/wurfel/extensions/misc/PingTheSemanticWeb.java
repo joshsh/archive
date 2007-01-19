@@ -26,15 +26,12 @@ import java.io.InputStream;
 
 public class PingTheSemanticWeb extends PrimitiveFunction
 {
-    private static final URI
-        s_uri = Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" );
-
     private static SAXBuilder s_saxBuilder = null;
 
     public PingTheSemanticWeb( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

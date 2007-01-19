@@ -23,13 +23,10 @@ import java.net.URLEncoder;
 
 public class Grab extends PrimitiveFunction
 {
-    private static final URI
-        s_uri = Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" );
-
     public Grab( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

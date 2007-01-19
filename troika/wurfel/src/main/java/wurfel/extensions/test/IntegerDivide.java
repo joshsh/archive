@@ -16,13 +16,10 @@ import java.util.LinkedList;
 
 public class IntegerDivide extends PrimitiveFunction
 {
-    private static final URI s_uri
-        = Wurfel.getWurfelTestUri( "integer-divide" );
-
     public IntegerDivide( Context context )
         throws WurfelException
     {
-        super( s_uri, context );
+        super( Wurfel.getWurfelTestUri( "integer-divide" ), context );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
