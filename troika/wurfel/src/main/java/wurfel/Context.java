@@ -6,6 +6,7 @@ import wurfel.model.NodeSet;
 import wurfel.model.Function;
 import wurfel.model.Dereferencer;
 import wurfel.model.HttpUriDereferencer;
+import wurfel.model.EvaluationContext;
 
 //import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -92,18 +93,18 @@ public Dereferencer getDereferencer()
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public Collection<Value> findProduct( Value arg, Value func )
+    public Collection<Value> findProduct( Value arg, Value func, EvaluationContext evalContext )
         throws WurfelException
     {
 //        Apply a = new Apply( func, arg );
 //        return reduce( a );
-        return multiply( arg, func );
+        return multiply( arg, func, evalContext );
     }
 
-    public Value findUniqueProduct( Value arg, Value func )
+    public Value findUniqueProduct( Value arg, Value func, EvaluationContext evalContext )
         throws WurfelException
     {
-        Collection<Value> results = findProduct( arg, func );
+        Collection<Value> results = findProduct( arg, func, evalContext );
 
         if ( 1 != results.size() )
         {
@@ -421,23 +422,32 @@ public Repository getRepository()
             return v;
     }
 
-    private Set<Value> multiply( Value arg, Value func )
+    private Set<Value> multiply( Value arg, Value func, EvaluationContext evalContext )
         throws WurfelException
     {
         if ( arg instanceof URI )
-            dereferencer.dereferenceSubjectUri( (URI) arg );
+        {
+            try
+            {
+                dereferencer.dereferenceSubjectUri( (URI) arg, evalContext );
+            }
 
-        return model.multiply( arg, func );
+            catch ( WurfelException e )
+            {
+                // (soft fail)
+            }
+        }
+
+        return model.multiply( arg, func /*, evalContext*/ );
     }
 
 // FIXME: 'apply' is now a bit of a misnomer
-    public Set<Value> apply( Value func, Value arg )
+    public Set<Value> apply( Value func, Value arg, EvaluationContext evalContext )
         throws WurfelException
     {
         arg = translateToGraph( arg );
 
-// TODO: combinators and primitives as func will have their own, idiosyncratic ways of yielding a product
-        Iterator<Value> resultIter = multiply( arg, func ).iterator();
+        Iterator<Value> resultIter = multiply( arg, func, evalContext ).iterator();
         Set<Value> result = new NodeSet();
         while ( resultIter.hasNext() )
         {

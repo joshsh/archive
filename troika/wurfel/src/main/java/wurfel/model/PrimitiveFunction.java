@@ -208,7 +208,7 @@ public abstract class PrimitiveFunction extends Node implements Function
                 + args.size() + " arguments" );
     }
 
-    public Collection<Value> applyTo( LinkedList<Value> args, Context context )
+    public Collection<Value> applyTo( LinkedList<Value> args, EvaluationContext evalContext )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -216,7 +216,7 @@ checkArguments( args );
 
 // TODO: type checking
 
-        return applyInternal( args, context );
+        return applyInternal( args, evalContext );
     }
 
     public void printTo( WurfelPrintStream p )

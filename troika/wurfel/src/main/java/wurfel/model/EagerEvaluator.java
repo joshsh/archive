@@ -19,11 +19,14 @@ public class EagerEvaluator extends Evaluator
         super( context );
     }
 
-    public NodeSet reduce( Value expr )
+    public NodeSet reduce( Value expr, EvaluationContext evalContext )
         throws WurfelException
     {
+/*
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
+            NodeSet result = new NodeSet();
+
             // Reduce the function.
             Iterator<Value> reducedFuncIter = reduce(
                 ( (Apply) expr ).getFunction() ).iterator();
@@ -35,7 +38,7 @@ public class EagerEvaluator extends Evaluator
             // Iterate over the cartesian product of the reduced function(s)
             // with the reduced argument(s).
             LinkedList<Value> argList = new LinkedList<Value>();
-            NodeSet result = new NodeSet();
+
             while ( reducedFuncIter.hasNext() )
             {
                 Value function = reducedFuncIter.next();
@@ -69,6 +72,7 @@ public class EagerEvaluator extends Evaluator
         }
 
         else
+*/
             return new NodeSet( expr );
     }
 

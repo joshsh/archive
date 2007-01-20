@@ -38,7 +38,7 @@ return null;
                 + args.size() + " arguments" );
     }
 
-    public Collection<Value> applyTo( LinkedList<Value> args, Context context )
+    public Collection<Value> applyTo( LinkedList<Value> args, EvaluationContext evalContext )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -47,12 +47,12 @@ checkArguments( args );
         if ( function instanceof Function )
         {
             args.addFirst( argument );
-            return ( (Function) function ).applyTo( args, context );
+            return ( (Function) function ).applyTo( args, evalContext );
         }
 
         else
         {
-            return context.apply( function, argument );
+            return context.apply( function, argument, evalContext );
         }
     }
 

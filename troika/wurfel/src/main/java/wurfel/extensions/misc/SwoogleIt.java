@@ -5,6 +5,7 @@ import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -37,11 +38,12 @@ public class SwoogleIt extends PrimitiveFunction
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               Context context )
+                                               EvaluationContext evalContext )
         throws WurfelException
     {
         String key, searchString;
         URI queryType;
+        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
         key = context.stringValue(
@@ -63,8 +65,7 @@ public class SwoogleIt extends PrimitiveFunction
             NodeSet results = new NodeSet();
 //System.out.println( "baseUri = " + baseUri );
 
-            Repository repository = context.getRepository();
-            Connection conn = repository.getConnection();
+            Connection conn = evalContext.getConnection();
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = conn.getStatements(
@@ -73,7 +74,6 @@ public class SwoogleIt extends PrimitiveFunction
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();
-            conn.close();
 
             return results;
         }

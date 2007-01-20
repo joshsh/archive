@@ -5,6 +5,7 @@ import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.repository.Connection;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -21,7 +22,7 @@ public interface Function extends WurfelValue
     public int arity();
 
     public Collection<Value> applyTo( LinkedList<Value> args,
-                                      Context context )
+                                      EvaluationContext evalContext )
         throws WurfelException;
 
     public void checkArguments( LinkedList<Value> args )

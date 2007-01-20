@@ -4,6 +4,7 @@ import wurfel.Context;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.Dereferencer;
+import wurfel.model.EvaluationContext;
 import wurfel.model.Evaluator;
 import wurfel.model.LazyEvaluator;
 import wurfel.model.Lexicon;
@@ -66,12 +67,15 @@ public Context getContext()
 
     private ConsoleReader reader;
     private int lineNumber = 0;
+    private PrintStream errorPrintStream;
 
     private CompletorState completorState = CompletorState.NONE;
 
     private ObservableValueSet valueSet;
 
     private Lexicon lexicon;
+
+    ////////////////////////////////////////////////////////////////////////////
 
     public Interpreter( Context context ) throws WurfelException
     {
@@ -82,14 +86,24 @@ public Context getContext()
         lexicon = new Lexicon( context.getModel() );
         lexicon.addObserver( this );
 
+        String jLineDebugOutput = Wurfel.getJLineDebugOutput();
+
         try
         {
             reader = new ConsoleReader();
-            if ( Wurfel.getJLineDebug() )
-                reader.setDebug( new PrintWriter( new FileWriter( "writer.debug", true ) ) );
+            if ( null != jLineDebugOutput )
+                reader.setDebug(
+                    new PrintWriter(
+                        new FileWriter( jLineDebugOutput, true ) ) );
+        }
 
-            //updateCompletors( CompletorState.COMMAND );
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
 
+        try
+        {
             writeIn = new PipedInputStream();
             readOut = new PipedOutputStream( writeIn );
 
@@ -100,6 +114,8 @@ public Context getContext()
         {
             throw new WurfelException( e );
         }
+
+        errorPrintStream = System.err;
 
         update( lexicon, null );
     }
@@ -118,33 +134,41 @@ System.out.println( "########## updating completors" );
             Completor modelCompletor = lexicon.getCompletor();
             completors.add( modelCompletor );
 
-            SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
-                "!add",
-                "!count",
-                "!define",
-                "!graphQuery",
-                "!import",
-                "!namespaces",
-                "!print",
-                "!saveas",
-                "!quit" } );
-            completors.add( commandCompletor );
+            try
+            {
+                SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
+                    "!add",
+                    "!count",
+                    "!define",
+                    "!graphQuery",
+                    "!import",
+                    "!namespaces",
+                    "!print",
+                    "!saveas",
+                    "!quit" } );
+                completors.add( commandCompletor );
 
-            Completor fileNameCompletor = new FileNameCompletor();
-            completors.add( fileNameCompletor );
+                Completor fileNameCompletor = new FileNameCompletor();
+                completors.add( fileNameCompletor );
 
-            // This makes candidates from multiple completors available at once.
-            Completor multiCompletor = new MultiCompletor( completors );
+                // This makes candidates from multiple completors available at once.
+                Completor multiCompletor = new MultiCompletor( completors );
 
-            // This allows the user to complete an expression even when it is not
-            // the first whitespace-delimited item on the current line.
-            Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
+                // This allows the user to complete an expression even when it is not
+                // the first whitespace-delimited item on the current line.
+                Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
 
-            Collection<Completor> existingCompletors = reader.getCompletors();
-            if ( existingCompletors.size() > 0 )
-                reader.removeCompletor( existingCompletors.iterator().next() );
+                Collection<Completor> existingCompletors = reader.getCompletors();
+                if ( existingCompletors.size() > 0 )
+                    reader.removeCompletor( existingCompletors.iterator().next() );
 
-            reader.addCompletor( argumentCompletor );
+                reader.addCompletor( argumentCompletor );
+            }
+
+            catch ( Throwable t )
+            {
+                throw new WurfelException( t );
+            }
 
             valueSet = new ObservableValueSet( context, null );
             ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon );
@@ -198,8 +222,6 @@ System.out.println( "########## updating completors" );
 
     private void runPrivate() throws Throwable
     {
-        ConsoleReader reader = new ConsoleReader();
-
         if ( !readLine() )
             return;
 
@@ -227,12 +249,12 @@ System.out.println( "########## updating completors" );
             catch ( antlr.RecognitionException e )
             {
                 // Report the error, then begin parsing again.
-                System.err.println( "Parse error: " + e.toString() );
+                alert( "Parse error: " + e.toString() );
             }
 
             catch ( antlr.TokenStreamRecognitionException e )
             {
-                System.err.println( "Parse error: " + e.toString() );
+                alert( "Parse error: " + e.toString() );
             }
 
             catch ( ParserQuitException e )
@@ -252,7 +274,7 @@ System.out.println( "########## updating completors" );
 
         catch ( Throwable t )
         {
-            System.err.println( t.toString() );
+            alert( "Error: " + t.toString() );
 
             new WurfelException( t );
         }
@@ -298,15 +320,13 @@ System.out.println( "########## updating completors" );
 
         catch ( WurfelException e )
         {
-            System.err.println( e.getMessage() );
+            alert( "Error: " + e.getMessage() );
         }
 
         catch ( MalformedURLException e )
         {
-            System.err.println( e.getMessage() );
+            alert( "Error: " + e.getMessage() );
         }
-
-//        updateCompletors( CompletorState.COMMAND );
     }
 
     public void saveAs( final String fileName )
@@ -334,7 +354,7 @@ System.out.println( "########## updating completors" );
 
         catch ( WurfelException e )
         {
-            System.err.println( "\nError: " + e.toString() + "\n" );
+            alert( "Error: " + e.getMessage() );
         }
     }
 
@@ -378,16 +398,34 @@ System.out.println( "########## updating completors" );
             : context.translateFromGraph( v );
     }
 
+    private Collection<Value> reduce( Value expr )
+        throws WurfelException
+    {
+        evalContext = new EvaluationContext( context );
+
+        try
+        {
+            evaluator.reduce( expr, evalContext );
+        }
+
+        catch ( WurfelException e )
+        {
+            evalContext.close();
+            throw e;
+        }
+    }
+
     public void evaluate( Ast ast )
     {
+        EvaluationContext evalContext = null;
+
         try
         {
             Value expr = ast.evaluate( this );
 
             Collection<Value> result = ( null == expr )
                 ? new ArrayList<Value>()
-//                : context.reduce( expr );
-                : evaluator.reduce( expr );
+                : reduce( expr );
 
             dereferenceResultSet( result );
 
@@ -396,7 +434,7 @@ System.out.println( "########## updating completors" );
 
         catch ( WurfelException e )
         {
-            System.err.println( "\nError: " + e.toString() + "\n" );
+            alert( "Error: " + e.getMessage() );
         }
     }
 
@@ -409,7 +447,7 @@ System.out.println( "########## updating completors" );
 
         catch ( WurfelException e )
         {
-            System.err.println( "\nError: " + e.toString() + "\n" );
+            alert( "Error: " + e.getMessage() );
         }
     }
 
@@ -432,8 +470,13 @@ System.out.println( "########## updating completors" );
 
         catch ( WurfelException e )
         {
-            System.err.println( "\nError: " + e.toString() + "\n" );
+            alert( "Error: " + e.getMessage() );
         }
+    }
+
+    private void alert( String s )
+    {
+        errorPrintStream.println( "\n" + s + "\n" );
     }
 
     ////////////////////////////////////////////////////////////////////////////

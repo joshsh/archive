@@ -5,6 +5,7 @@ import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.Combinator;
 import wurfel.model.NodeSet;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -22,7 +23,7 @@ public class Combinator_K extends Combinator
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,
-                                      Context context )
+                                      EvaluationContext evalContext )
         throws WurfelException
     {
         Value x;

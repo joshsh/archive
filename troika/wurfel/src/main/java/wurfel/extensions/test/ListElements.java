@@ -5,6 +5,7 @@ import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -24,10 +25,11 @@ public class ListElements extends PrimitiveFunction
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               Context context )
+                                               EvaluationContext evalContext )
         throws WurfelException
     {
         Resource head;
+        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
         head = context.castToResource( argIter.next() );

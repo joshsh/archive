@@ -4,6 +4,7 @@ import wurfel.Context;
 import wurfel.Extension;
 import wurfel.WurfelException;
 import wurfel.model.Function;
+import wurfel.model.EvaluationContext;
 
 import java.net.URL;
 

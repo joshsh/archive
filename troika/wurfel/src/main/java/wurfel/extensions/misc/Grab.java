@@ -5,6 +5,7 @@ import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -30,9 +31,11 @@ public class Grab extends PrimitiveFunction
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               Context context )
+                                               EvaluationContext evalContext )
         throws WurfelException
     {
+        Context context = evalContext.getContext();
+
         String urlStr;
 
         Iterator<Value> argIter = args.iterator();
@@ -47,16 +50,13 @@ public class Grab extends PrimitiveFunction
             context.importModel( url, baseUri );
             NodeSet results = new NodeSet();
 
-            Repository repository = context.getRepository();
-            Connection conn = repository.getConnection();
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
-                = conn.getStatements(
+                = evalContext.getConnection().getStatements(
                     null, null, null, baseUri, includeInferred );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();
-            conn.close();
 
             return results;
         }

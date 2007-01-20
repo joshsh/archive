@@ -27,7 +27,7 @@ public abstract class Evaluator
         return v instanceof Apply;
     }
 
-    public abstract NodeSet reduce( Value expr )
+    public abstract NodeSet reduce( Value expr, EvaluationContext evalContext )
         throws WurfelException;
 }
 

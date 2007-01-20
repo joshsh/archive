@@ -6,7 +6,7 @@ import org.openrdf.model.URI;
 
 public interface Dereferencer
 {
-    public void dereferenceSubjectUri( URI subject )
+    public void dereferenceSubjectUri( URI subject, EvaluationContext evalContext )
         throws WurfelException;
 }
 

@@ -10,6 +10,8 @@ public class WurfelException extends Exception
     private final static Logger s_logger
         = Logger.getLogger( WurfelException.class );
 
+    private String msg;
+
     protected static int
         DEBUG = 1,
         INFO = 2,
@@ -65,7 +67,10 @@ public class WurfelException extends Exception
             t.printStackTrace( ps );
             s_logger.error( os.toString() );
 
-            System.err.println( t.toString() );
+            msg = t.toString();
+//            System.err.println( t.toString() );
+            ps.close();
+            os.close();
         }
 
         catch ( Throwable secondary )
@@ -91,6 +96,11 @@ public class WurfelException extends Exception
             System.err.println( "Failed to log a WurfelException. A stack trace of the secondary error follows." );
             secondary.printStackTrace( System.err );
         }
+    }
+
+    public String getMessage()
+    {
+        return msg;
     }
 }
 

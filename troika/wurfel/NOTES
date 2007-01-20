@@ -1,3 +1,9 @@
+Exception handling
+================================================================================
+* Try/catch blocks around calls to Wurfel methods generally expect only WurfelExceptions, and do not catch anything else.  Try/catch blocks around calls to Java methods expect the specific exceptions thrown by those methods.  Try/catch blocks around calls to methods in other libraries catch all Throwables, indiscriminately (Wurfel doesn't trust third-party code).
+
+
+
 http://troika.dnsdojo.net/wurfel/target/site/apidocs/index.html
 http://troika.dnsdojo.net/simile/longwell/docs/api/
 
