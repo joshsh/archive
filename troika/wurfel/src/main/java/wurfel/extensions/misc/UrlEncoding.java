@@ -19,10 +19,10 @@ import java.net.URLEncoder;
 
 public class UrlEncoding extends PrimitiveFunction
 {
-    public UrlEncoding( Context context )
+    public UrlEncoding( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlEncoding" ), context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlEncoding" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -30,11 +30,10 @@ public class UrlEncoding extends PrimitiveFunction
         throws WurfelException
     {
         String a, result;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        a = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
+        a = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         try
         {
@@ -46,7 +45,7 @@ public class UrlEncoding extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        return new NodeSet( context.createLiteral( result ) );
+        return new NodeSet( evalContext.createLiteral( result ) );
     }
 }
 

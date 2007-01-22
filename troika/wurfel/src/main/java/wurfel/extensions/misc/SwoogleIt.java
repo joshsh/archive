@@ -28,10 +28,10 @@ public class SwoogleIt extends PrimitiveFunction
         rdfTypeUri,
         swoogleQueryResponseUri;
 
-    public SwoogleIt( Context context )
+    public SwoogleIt( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ), context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ), evalContext );
 
         rdfTypeUri = Wurfel.getRdfUri( "type" );
         swoogleQueryResponseUri = Wurfel.getSwoogleUri( "QueryResponse" );
@@ -46,11 +46,11 @@ public class SwoogleIt extends PrimitiveFunction
         Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        key = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
-        queryType = context.castToUri( argIter.next() );
-        searchString = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
+        key = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
+        queryType = evalContext.castToUri( argIter.next() );
+        searchString = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         try
         {

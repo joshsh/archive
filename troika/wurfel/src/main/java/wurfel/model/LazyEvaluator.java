@@ -51,7 +51,7 @@ public class LazyEvaluator extends Evaluator
                         // Argument list is initially empty.
                         argList.clear();
 
-                        Collection<Value> itmResult = tmpApply.applyTo( argList, context, evalContext );
+                        Collection<Value> itmResult = tmpApply.applyTo( argList, evalContext );
 
                         // Reduction is recursive; we must first iterate over
                         // the intermediate results and reduce them before

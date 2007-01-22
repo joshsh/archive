@@ -17,10 +17,10 @@ import java.util.LinkedList;
 
 public class ConcatenateStringsPrimitive extends PrimitiveFunction
 {
-    public ConcatenateStringsPrimitive( Context context )
+    public ConcatenateStringsPrimitive( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "concatenateStrings" ), context );
+        super( Wurfel.getWurfelTestUri( "concatenateStrings" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -28,16 +28,15 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
         throws WurfelException
     {
         String strA, strB, result;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        strA = context.stringValue(
-                    context.castToLiteral( argIter.next() ) );
-        strB = context.stringValue(
-                    context.castToLiteral( argIter.next() ) );
+        strA = evalContext.stringValue(
+                    evalContext.castToLiteral( argIter.next() ) );
+        strB = evalContext.stringValue(
+                    evalContext.castToLiteral( argIter.next() ) );
         result = strA + strB;
 
-        return new NodeSet( context.createLiteral( result ) );
+        return new NodeSet( evalContext.createLiteral( result ) );
     }
 }
 

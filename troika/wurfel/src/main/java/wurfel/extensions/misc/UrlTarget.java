@@ -24,10 +24,10 @@ import java.io.InputStreamReader;
 
 public class UrlTarget extends PrimitiveFunction
 {
-    public UrlTarget( Context context )
+    public UrlTarget( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" ), context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -35,11 +35,10 @@ public class UrlTarget extends PrimitiveFunction
         throws WurfelException
     {
         String a, result;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        a = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
+        a = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         try
         {
@@ -65,7 +64,7 @@ public class UrlTarget extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        return new NodeSet( context.createLiteral( result ) );
+        return new NodeSet( evalContext.createLiteral( result ) );
     }
 }
 

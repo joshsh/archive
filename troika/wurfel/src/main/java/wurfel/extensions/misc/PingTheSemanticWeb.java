@@ -29,10 +29,10 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 {
     private static SAXBuilder s_saxBuilder = null;
 
-    public PingTheSemanticWeb( Context context )
+    public PingTheSemanticWeb( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" ), context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -42,13 +42,11 @@ public class PingTheSemanticWeb extends PrimitiveFunction
         String type;
         int maxResults;
 
-        Context context = evalContext.getContext();
-
         Iterator<Value> argIter = args.iterator();
-        type = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
-        maxResults = context.intValue(
-                context.castToLiteral( argIter.next() ) );
+        type = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
+        maxResults = evalContext.intValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         Document doc;
 
@@ -92,7 +90,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
         {
             Element child = childIter.next();
             String s = child.getAttributeValue( "url" );
-            result.add( context.createLiteral( s ) );
+            result.add( evalContext.createLiteral( s ) );
         }
 
         return result;

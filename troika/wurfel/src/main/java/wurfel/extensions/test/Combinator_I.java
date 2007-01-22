@@ -17,10 +17,10 @@ import java.util.LinkedList;
 
 public class Combinator_I extends Combinator
 {
-    public Combinator_I( Context context )
+    public Combinator_I( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "I" ), context );
+        super( Wurfel.getWurfelTestUri( "I" ), evalContext );
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,

@@ -1,30 +1,24 @@
 package wurfel;
 
+import wurfel.model.EvaluationContext;
 import wurfel.model.Function;
 
 import java.net.URL;
 
 public abstract class Extension
 {
-    protected Context context;
-
-    protected Extension( Context context )
-    {
-        this.context = context;
-    }
-
     protected abstract URL[] getResources();
 
-    protected abstract Function[] getFunctions() throws WurfelException;
+    protected abstract Function[] getFunctions( EvaluationContext evalContext ) throws WurfelException;
 
-    public void load()
+    public void load( EvaluationContext evalContext )
         throws WurfelException
     {
         for ( URL url : getResources() )
-            context.importModel( url, Wurfel.createRandomUri() );
+            evalContext.getContext().importModel( url, Wurfel.createRandomUri() );
 
-        for ( Function function : getFunctions() )
-            context.addSpecialFunction( function );
+        for ( Function function : getFunctions( evalContext ) )
+            evalContext.getContext().addSpecialFunction( function );
     }
 }
 

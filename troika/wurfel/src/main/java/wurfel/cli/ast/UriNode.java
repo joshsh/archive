@@ -3,6 +3,7 @@ package wurfel.cli.ast;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.cli.Interpreter;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 
@@ -15,7 +16,7 @@ public class UriNode extends Ast
         this.value = value;
     }
 
-    public Value evaluate( Interpreter itp )
+    public Value evaluate( Interpreter itp, EvaluationContext evalContext )
         throws WurfelException
     {
         return Wurfel.createUri( value );

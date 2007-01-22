@@ -17,10 +17,10 @@ import java.util.LinkedList;
 
 public class IntegerDivide extends PrimitiveFunction
 {
-    public IntegerDivide( Context context )
+    public IntegerDivide( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "integer-divide" ), context );
+        super( Wurfel.getWurfelTestUri( "integer-divide" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -28,13 +28,12 @@ public class IntegerDivide extends PrimitiveFunction
         throws WurfelException
     {
         int a, b, result;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        a = context.intValue(
-                context.castToLiteral( argIter.next() ) );
-        b = context.intValue(
-                context.castToLiteral( argIter.next() ) );
+        a = evalContext.intValue(
+                evalContext.castToLiteral( argIter.next() ) );
+        b = evalContext.intValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         try
         {
@@ -46,7 +45,7 @@ public class IntegerDivide extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        return new NodeSet( context.createLiteral( result ) );
+        return new NodeSet( evalContext.createLiteral( result ) );
     }
 }
 

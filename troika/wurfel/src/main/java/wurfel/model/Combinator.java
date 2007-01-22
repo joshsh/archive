@@ -19,13 +19,13 @@ public abstract class Combinator extends Node implements Function
         return selfUri;
     }
 
-    protected Combinator( final URI self, Context context )
+    protected Combinator( final URI self, EvaluationContext evalContext )
         throws WurfelException
     {
         selfUri = self;
-        arityCached = context.intValue(
-            context.castToLiteral(
-                context.findUniqueProduct(
+        arityCached = evalContext.intValue(
+            evalContext.castToLiteral(
+                evalContext.findUniqueProduct(
                     selfUri, Wurfel.getWurfelUri( "combinatorArity" ) ) ) );
     }
 

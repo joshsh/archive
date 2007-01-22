@@ -2,6 +2,7 @@ package wurfel.cli.ast;
 
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 
@@ -13,7 +14,7 @@ public class NullNode extends Ast
     public NullNode()
     { }
 
-    public Value evaluate( Interpreter itp )
+    public Value evaluate( Interpreter itp, EvaluationContext evalContext )
         throws WurfelException
     {
         return null;

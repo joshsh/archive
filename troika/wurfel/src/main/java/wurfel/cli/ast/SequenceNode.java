@@ -5,6 +5,7 @@ import wurfel.Context;
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
 import wurfel.model.Apply;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 
@@ -27,28 +28,26 @@ public class SequenceNode extends Ast
         children.add( node );
     }
 
-    public Value evaluate( Interpreter itp )
+    public Value evaluate( Interpreter itp, EvaluationContext evalContext )
         throws WurfelException
     {
-        Context context = itp.getContext();
-
         if ( children.size() < 1 )
             throw new WurfelException( "empty sequence" );
 
         Iterator<Ast> iter = children.iterator();
-        Value result = iter.next().evaluate( itp );
+        Value result = iter.next().evaluate( itp, evalContext );
 
         // Note: assuming left associativity for now.
         switch ( Wurfel.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 while ( iter.hasNext() )
-                    result = new Apply( iter.next().evaluate( itp ), result );
+                    result = new Apply( iter.next().evaluate( itp, evalContext ), result );
                 break;
 
             case ANTIDIAGRAMMATIC:
                 while ( iter.hasNext() )
-                    result = new Apply( result, iter.next().evaluate( itp ) );
+                    result = new Apply( result, iter.next().evaluate( itp, evalContext ) );
                 break;
         }
 

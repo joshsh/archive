@@ -1,6 +1,5 @@
 package wurfel.extensions.test;
 
-import wurfel.Context;
 import wurfel.Extension;
 import wurfel.WurfelException;
 import wurfel.model.Function;
@@ -10,36 +9,31 @@ import java.net.URL;
 
 public class TestExtension extends Extension
 {
-    public TestExtension( Context context )
-    {
-        super( context );
-    }
-
-    protected Function[] getFunctions()
+    protected Function[] getFunctions( EvaluationContext evalContext )
         throws WurfelException
     {
         Function[] functions = {
-            new IntegerAdd( context ),
-            new IntegerSubtract( context ),
-            new IntegerMultiply( context ),
-            new IntegerDivide( context ),
-            new IntegerMod( context ),
-            new ConcatenateStringsPrimitive( context ),
-            new ListElements( context ),
-            new Combinator_B( context ),
-            new Combinator_C( context ),
-            new Combinator_I( context ),
-            new Combinator_K( context ),
-            new Combinator_L( context ),
-            new Combinator_O( context ),
-            new Combinator_R( context ),
-            new Combinator_S( context ),
-            new Combinator_T( context ),
-            new Combinator_U( context ),
-            new Combinator_V( context ),
-            new Combinator_W( context ),
-            new Combinator_Y( context ),
-            new Combinator_w( context ) };
+            new IntegerAdd( evalContext ),
+            new IntegerSubtract( evalContext ),
+            new IntegerMultiply( evalContext ),
+            new IntegerDivide( evalContext ),
+            new IntegerMod( evalContext ),
+            new ConcatenateStringsPrimitive( evalContext ),
+            new ListElements( evalContext ),
+            new Combinator_B( evalContext ),
+            new Combinator_C( evalContext ),
+            new Combinator_I( evalContext ),
+            new Combinator_K( evalContext ),
+            new Combinator_L( evalContext ),
+            new Combinator_O( evalContext ),
+            new Combinator_R( evalContext ),
+            new Combinator_S( evalContext ),
+            new Combinator_T( evalContext ),
+            new Combinator_U( evalContext ),
+            new Combinator_V( evalContext ),
+            new Combinator_W( evalContext ),
+            new Combinator_Y( evalContext ),
+            new Combinator_w( evalContext ) };
 
         return functions;
     }

@@ -27,10 +27,10 @@ public class Sha1SumOf extends PrimitiveFunction
 
     private static MessageDigest messageDigest = null;
 
-    public Sha1SumOf( Context context )
+    public Sha1SumOf( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf" ), context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf" ), evalContext );
     }
 
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
@@ -87,15 +87,14 @@ public class Sha1SumOf extends PrimitiveFunction
         throws WurfelException
     {
         String a, result;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        a = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
+        a = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         result = encrypt( a );
 
-        return new NodeSet( context.createLiteral( result ) );
+        return new NodeSet( evalContext.createLiteral( result ) );
     }
 }
 

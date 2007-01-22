@@ -24,10 +24,10 @@ import java.net.URLEncoder;
 
 public class Grab extends PrimitiveFunction
 {
-    public Grab( Context context )
+    public Grab( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" ), context );
+        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -39,8 +39,8 @@ public class Grab extends PrimitiveFunction
         String urlStr;
 
         Iterator<Value> argIter = args.iterator();
-        urlStr = context.stringValue(
-                context.castToLiteral( argIter.next() ) );
+        urlStr = evalContext.stringValue(
+                evalContext.castToLiteral( argIter.next() ) );
 
         try
         {

@@ -315,7 +315,7 @@ System.out.println( "########## updating completors" );
             if ( null == baseURI || 0 == baseURI.length() )
                 context.importModel( url, null );
             else
-                context.importModel( url, context.createUri( baseURI ) );
+                context.importModel( url, Wurfel.createUri( baseURI ) );
         }
 
         catch ( WurfelException e )
@@ -343,22 +343,40 @@ System.out.println( "########## updating completors" );
 
     public void addStatement( Ast subj, Ast pred, Ast obj )
     {
+        EvaluationContext evalContext = null;
+
         try
         {
-            Value subjValue = subj.evaluate( this );
-            Value predValue = pred.evaluate( this );
-            Value objValue = obj.evaluate( this );
+            evalContext = new EvaluationContext( context );
 
-            context.addStatement( subjValue, predValue, objValue );
+            Value subjValue = subj.evaluate( this, evalContext );
+            Value predValue = pred.evaluate( this, evalContext );
+            Value objValue = obj.evaluate( this, evalContext );
+
+            evalContext.addStatement( subjValue, predValue, objValue );
+            evalContext.close();
         }
 
         catch ( WurfelException e )
         {
+            if ( null != evalContext )
+            {
+                try
+                {
+                    evalContext.close();
+                }
+
+                catch ( WurfelException e2 )
+                {
+                    // ...
+                }
+            }
+
             alert( "Error: " + e.getMessage() );
         }
     }
 
-    private void dereferenceResultSet( Collection<Value> values )
+    private void dereferenceResultSet( Collection<Value> values, EvaluationContext evalContext )
         throws WurfelException
     {
         Dereferencer d = context.getDereferencer();
@@ -368,7 +386,17 @@ System.out.println( "########## updating completors" );
         {
             Value value = iter.next();
             if ( value instanceof URI )
-                d.dereferenceSubjectUri( (URI) value );
+            {
+                try
+                {
+                    d.dereferenceSubjectUri( (URI) value, evalContext );
+                }
+
+                catch ( WurfelException e )
+                {
+                    // (soft fail)
+                }
+            }
         }
     }
 
@@ -398,19 +426,16 @@ System.out.println( "########## updating completors" );
             : context.translateFromGraph( v );
     }
 
-    private Collection<Value> reduce( Value expr )
+    private Collection<Value> reduce( Value expr, EvaluationContext evalContext )
         throws WurfelException
     {
-        evalContext = new EvaluationContext( context );
-
         try
         {
-            evaluator.reduce( expr, evalContext );
+            return evaluator.reduce( expr, evalContext );
         }
 
         catch ( WurfelException e )
         {
-            evalContext.close();
             throw e;
         }
     }
@@ -421,19 +446,36 @@ System.out.println( "########## updating completors" );
 
         try
         {
-            Value expr = ast.evaluate( this );
+            evalContext = new EvaluationContext( context );
+
+            Value expr = ast.evaluate( this, evalContext );
 
             Collection<Value> result = ( null == expr )
                 ? new ArrayList<Value>()
-                : reduce( expr );
+                : reduce( expr, evalContext );
 
-            dereferenceResultSet( result );
+            dereferenceResultSet( result, evalContext );
 
             valueSet.setValues( result );
+
+            evalContext.close();
         }
 
         catch ( WurfelException e )
         {
+            if ( null != evalContext )
+            {
+                try
+                {
+                    evalContext.close();
+                }
+
+                catch ( WurfelException e2 )
+                {
+                    // ...
+                }
+            }
+
             alert( "Error: " + e.getMessage() );
         }
     }

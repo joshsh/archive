@@ -52,7 +52,7 @@ checkArguments( args );
 
         else
         {
-            return context.apply( function, argument, evalContext );
+            return evalContext.getContext().apply( function, argument, evalContext );
         }
     }
 

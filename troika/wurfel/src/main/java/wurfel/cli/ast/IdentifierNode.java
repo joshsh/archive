@@ -2,6 +2,7 @@ package wurfel.cli.ast;
 
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
+import wurfel.model.EvaluationContext;
 
 import org.openrdf.model.Value;
 
@@ -21,7 +22,7 @@ public class IdentifierNode extends Ast
         this.localName = localName;
     }
 
-    public Value evaluate( Interpreter itp )
+    public Value evaluate( Interpreter itp, EvaluationContext evalContext )
         throws WurfelException
     {
         Value v = ( null == nsPrefix )

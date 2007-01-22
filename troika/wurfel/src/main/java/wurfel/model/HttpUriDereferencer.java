@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.LinkedHashSet;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpUriDereferencer implements Dereferencer
@@ -50,7 +51,7 @@ public class HttpUriDereferencer implements Dereferencer
         }
     }
 
-    private void filter( final URI contextUri, Connection conn )
+    private void filter( final String uri, final URI contextUri, Connection conn )
         throws WurfelException
     {
         boolean includeInferred = true;
@@ -87,22 +88,24 @@ public class HttpUriDereferencer implements Dereferencer
     private void dereferenceGraph( final String uri, Connection conn )
         throws WurfelException
     {
-//        try
-//        {
-            URL url = new URL( uri );
-//        }
-/*
-        catch ( Throwable t )
+        URL url;
+
+        try
         {
-            throw new WurfelException( t );
+            url = new URL( uri );
         }
-*/
+
+        catch ( MalformedURLException e )
+        {
+            throw new WurfelException( e );
+        }
+
         URI contextUri = Wurfel.createUri( uri );
 
         model.dereferenceGraph( url, contextUri );
 
         if ( s_enforceImplicitProvenance )
-            filter( contextUri, conn );
+            filter( uri, contextUri, conn );
     }
 }
 

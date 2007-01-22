@@ -18,10 +18,10 @@ import java.util.LinkedList;
 
 public class ListElements extends PrimitiveFunction
 {
-    public ListElements( Context context )
+    public ListElements( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "listElements" ), context );
+        super( Wurfel.getWurfelTestUri( "listElements" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -29,12 +29,11 @@ public class ListElements extends PrimitiveFunction
         throws WurfelException
     {
         Resource head;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        head = context.castToResource( argIter.next() );
+        head = evalContext.castToResource( argIter.next() );
 
-        return new NodeSet( context.listValue( head ) );
+        return new NodeSet( evalContext.listValue( head ) );
     }
 }
 
