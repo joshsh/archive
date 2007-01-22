@@ -6,13 +6,17 @@ import wurfel.WurfelException;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.repository.Connection;
+import org.openrdf.util.iterator.CloseableIterator;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 public class EvaluationContext
 {
@@ -243,20 +247,72 @@ public class EvaluationContext
 
     public Literal createLiteral( final String s )
     {
-        return context.getModel().getValueFactory().createLiteral( s, s_xsdStringUri );
+        return context.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
     }
 
     public Literal createLiteral( final int i )
     {
-        return context.getModel().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
+        return context.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
     }
 
     public Literal createLiteral( final double d )
     {
-        return context.getModel().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
+        return context.getRepository().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+/*
+    public Set<Resource> getSubjects()
+        throws WurfelException
+    {
+        Set<Resource> subjects = new HashSet<Resource>();
+
+        try
+        {
+            boolean includeInferred = true;
+            CloseableIterator<? extends Statement> stmtIter
+                = connection.getStatements(
+//                    null, null, null, context, includeInferred );
+                    null, null, null, includeInferred );
+            while ( stmtIter.hasNext() )
+                subjects.add( stmtIter.next().getSubject() );
+            stmtIter.close();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+
+        return subjects;
+    }
+*/
+
+    public Set<URI> getPredicates( Resource subject )
+        throws WurfelException
+    {
+        Set<URI> predicates = new HashSet<URI>();
+
+        try
+        {
+            boolean includeInferred = true;
+            CloseableIterator<? extends Statement> stmtIter
+                = connection.getStatements(
+//                    subject, null, null, context, includeInferred );
+                    subject, null, null, includeInferred );
+            while ( stmtIter.hasNext() )
+                predicates.add( stmtIter.next().getPredicate() );
+            stmtIter.close();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+
+        return predicates;
+    }
 
     public void addStatement( Value subj, Value pred, Value obj )
         throws WurfelException

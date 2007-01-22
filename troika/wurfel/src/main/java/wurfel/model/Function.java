@@ -5,7 +5,6 @@ import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
-import org.openrdf.repository.Connection;
 
 import java.util.Collection;
 import java.util.LinkedList;

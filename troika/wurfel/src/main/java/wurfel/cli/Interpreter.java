@@ -83,7 +83,7 @@ public Context getContext()
         evaluator = new LazyEvaluator( context );
 //        evaluator = new DebugEvaluator( new LazyEvaluator( context ) );
 
-        lexicon = new Lexicon( context.getModel() );
+        lexicon = new Lexicon( context );
         lexicon.addObserver( this );
 
         String jLineDebugOutput = Wurfel.getJLineDebugOutput();
@@ -141,7 +141,6 @@ System.out.println( "########## updating completors" );
                     "!count",
                     "!define",
                     "!graphQuery",
-                    "!import",
                     "!namespaces",
                     "!print",
                     "!saveas",
@@ -305,28 +304,6 @@ System.out.println( "########## updating completors" );
         }
 
         catch ( WurfelException e ) {}
-    }
-
-    public void importModel( final String urlStr, final String baseURI )
-    {
-        try
-        {
-            URL url = new URL( urlStr );
-            if ( null == baseURI || 0 == baseURI.length() )
-                context.importModel( url, null );
-            else
-                context.importModel( url, Wurfel.createUri( baseURI ) );
-        }
-
-        catch ( WurfelException e )
-        {
-            alert( "Error: " + e.getMessage() );
-        }
-
-        catch ( MalformedURLException e )
-        {
-            alert( "Error: " + e.getMessage() );
-        }
     }
 
     public void saveAs( final String fileName )

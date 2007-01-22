@@ -2,6 +2,7 @@ package wurfel.model;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
+import wurfel.Context;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -21,19 +22,23 @@ import java.util.LinkedHashSet;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
 public class HttpUriDereferencer implements Dereferencer
 {
+    private final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
+
     private static final boolean s_enforceImplicitProvenance = true;
 
-    private Model model;
+    private Context context;
 
     private Set<String> allBaseUris;
     private Set<String> dereferencedBaseUris;
     private Set<String> failedBaseUris;
 
-    public HttpUriDereferencer( Model model )
+    public HttpUriDereferencer( Context context )
     {
-        this.model = model;
+        this.context = context;
 
         allBaseUris = new LinkedHashSet<String>();
         dereferencedBaseUris = new LinkedHashSet<String>();
@@ -73,6 +78,8 @@ public class HttpUriDereferencer implements Dereferencer
 
         CloseableIterator<? extends Statement> stmtIter = null;
 
+        int count = 0;
+
         try
         {
             stmtIter = conn.getStatements(
@@ -83,7 +90,10 @@ public class HttpUriDereferencer implements Dereferencer
                 Statement st = stmtIter.next();
                 Resource subject = st.getSubject();
                 if ( subject instanceof URI && !( (URI) subject ).getNamespace().equals( uri ) )
+                {
                     conn.remove( st );
+                    count++;
+                }
             }
 
             stmtIter.close();
@@ -98,6 +108,8 @@ public class HttpUriDereferencer implements Dereferencer
 
             throw new WurfelException( t );
         }
+
+        s_logger.debug( "Removed " + count + " disallowed statement(s) from context " + uri + "." );
     }
 
     private void dereferenceGraph( final String uri, Connection conn )
@@ -117,7 +129,7 @@ public class HttpUriDereferencer implements Dereferencer
 
         URI contextUri = Wurfel.createUri( uri );
 
-        model.dereferenceGraph( url, contextUri );
+        context.dereferenceGraph( url, contextUri, conn );
 
         if ( s_enforceImplicitProvenance )
             filter( uri, contextUri, conn );

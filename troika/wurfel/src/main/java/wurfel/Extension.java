@@ -15,7 +15,7 @@ public abstract class Extension
         throws WurfelException
     {
         for ( URL url : getResources() )
-            evalContext.getContext().importModel( url, Wurfel.createRandomUri() );
+            evalContext.getContext().importModel( url, Wurfel.createRandomUri(), evalContext );
 
         for ( Function function : getFunctions( evalContext ) )
             evalContext.getContext().addSpecialFunction( function );

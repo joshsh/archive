@@ -11,8 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
-import org.openrdf.repository.Connection;
-import org.openrdf.repository.Repository;
 import org.openrdf.util.iterator.CloseableIterator;
 
 import java.util.Collection;
@@ -47,7 +45,7 @@ public class Grab extends PrimitiveFunction
             URL url = new URL( urlStr );
 
             URI baseUri = Wurfel.createRandomUri();
-            context.importModel( url, baseUri );
+            context.importModel( url, baseUri, evalContext );
             NodeSet results = new NodeSet();
 
             boolean includeInferred = true;

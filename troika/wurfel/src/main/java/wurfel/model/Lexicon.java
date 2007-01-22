@@ -1,6 +1,7 @@
 package wurfel.model;
 
 import wurfel.WurfelException;
+import wurfel.Context;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -26,17 +27,17 @@ import java.util.Observer;
 
 public class Lexicon extends Observable implements Observer
 {
-    private Model model;
+    private Context context;
 
     private Hashtable<String, List<URI>> localNameToUrisMap = null;
     private Hashtable<String, String> prefixToNamespaceMap = null;
     private Hashtable<String, String> namespaceToPrefixMap = null;
 
-    public Lexicon( Model model )
+    public Lexicon( Context context )
         throws WurfelException
     {
-        this.model = model;
-        model.addObserver( this );
+        this.context = context;
+        context.addObserver( this );
 
         refresh();
     }
@@ -135,13 +136,13 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         Set<URI> allURIs = new HashSet<URI>();
 
-        Connection conn = model.getConnection();
+        EvaluationContext evalContext = new EvaluationContext( context );
 
         try
         {
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
-                = conn.getStatements(
+                = evalContext.getConnection().getStatements(
 //                    null, null, null, context, includeInferred );
                     null, null, null, includeInferred );
             while ( stmtIter.hasNext() )
@@ -163,16 +164,15 @@ System.out.println( "################# Rebuilding dictionaries." );
             // Namespace prefixes are managed by OpenRDF, and are simply
             // imported into the Lexicon.
             CloseableIterator<? extends Namespace> nsIter
-                 = conn.getNamespaces();
+                 = evalContext.getConnection().getNamespaces();
             while ( nsIter.hasNext() )
                 add( nsIter.next() );
             nsIter.close();
-
-            conn.close();
         }
 
         catch ( Throwable t )
         {
+            evalContext.close();
             throw new WurfelException( t );
         }
 
@@ -188,7 +188,7 @@ System.out.println( "################# Rebuilding dictionaries." );
     {
         try
         {
-            if ( o == model )
+            if ( o == context )
                 refresh();
         }
 

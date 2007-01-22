@@ -11,8 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
-import org.openrdf.repository.Connection;
-import org.openrdf.repository.Repository;
 import org.openrdf.util.iterator.CloseableIterator;
 
 import java.util.Collection;
@@ -61,14 +59,13 @@ public class SwoogleIt extends PrimitiveFunction
                 + "&searchString=" + URLEncoder.encode( searchString ) );
 
             URI baseUri = Wurfel.createRandomUri();
-            context.importModel( url, baseUri );
+            context.importModel( url, baseUri, evalContext );
             NodeSet results = new NodeSet();
 //System.out.println( "baseUri = " + baseUri );
 
-            Connection conn = evalContext.getConnection();
             boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
-                = conn.getStatements(
+                = evalContext.getConnection().getStatements(
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
                     null, rdfTypeUri, swoogleQueryResponseUri, baseUri, includeInferred );
             while ( stmtIter.hasNext() )

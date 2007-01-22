@@ -2,8 +2,8 @@ package wurfel.cli;
 
 import wurfel.WurfelException;
 import wurfel.Context;
+import wurfel.model.EvaluationContext;
 import wurfel.model.Lexicon;
-import wurfel.model.Model;
 import wurfel.model.ObservableValueSet;
 import wurfel.model.WurfelPrintStream;
 
@@ -32,14 +32,13 @@ public class ConsoleValueSetObserver implements Observer
         ps = new WurfelPrintStream( System.out, lexicon );
     }
 
-    private void show( Resource subject )
+    private void show( Resource subject, EvaluationContext evalContext )
         throws WurfelException
     {
-        Model model = valueSet.getContext().getModel();
         ps.print( subject );
         ps.print( "\n" );
 
-        Set<URI> predicates = model.getPredicates( subject );
+        Set<URI> predicates = evalContext.getPredicates( subject );
         Iterator<URI> predIter = predicates.iterator();
         while ( predIter.hasNext() )
         {
@@ -49,7 +48,7 @@ public class ConsoleValueSetObserver implements Observer
             ps.print( predicate );
             ps.print( "\n" );
 
-            Set<Value> objects = model.multiply( subject, predicate );
+            Set<Value> objects = valueSet.getContext().multiply( subject, predicate, evalContext );
             Iterator<Value> objIter = objects.iterator();
             while ( objIter.hasNext() )
             {
@@ -71,23 +70,33 @@ public class ConsoleValueSetObserver implements Observer
         if ( 0 < values.size() )
             ps.println( "" );
 
-        int index = 0;
-        Iterator<Value> valuesIter = values.iterator();
-        while ( valuesIter.hasNext() )
+        EvaluationContext evalContext = new EvaluationContext( context );
+        try
         {
-            ps.print( "[" + index++ + "] " );
-            Value v = valuesIter.next();
-
-            if ( v instanceof Resource )
+            int index = 0;
+            Iterator<Value> valuesIter = values.iterator();
+            while ( valuesIter.hasNext() )
             {
-                show( (Resource) v );
-            }
+                ps.print( "[" + index++ + "] " );
+                Value v = valuesIter.next();
 
-            else
-            {
-                ps.print( v );
-                ps.print( "\n" );
+                if ( v instanceof Resource )
+                {
+                    show( (Resource) v, evalContext );
+                }
+
+                else
+                {
+                    ps.print( v );
+                    ps.print( "\n" );
+                }
             }
+        }
+
+        catch ( WurfelException e )
+        {
+            evalContext.close();
+            throw e;
         }
 
         ps.print( "\n" );

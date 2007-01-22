@@ -1,3 +1,7 @@
+[?] What happens when the default context is saved if a statement in the default context references a blank node in another context?  If the blank node is discarded, then we'll have to discard the statement.  If the blank nodes is preserved, then we'll have duplicate data when the original context is restored (there's probably no way around this).
+    [?] extreme case: a term is defined to reference a blank node outside of the default context
+
+
 Exception handling
 ================================================================================
 * Try/catch blocks around calls to Wurfel methods generally expect only WurfelExceptions, and do not catch anything else.  Try/catch blocks around calls to Java methods expect the specific exceptions thrown by those methods.  Try/catch blocks around calls to methods in other libraries catch all Throwables, indiscriminately (Wurfel doesn't trust third-party code).

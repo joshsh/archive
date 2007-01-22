@@ -199,7 +199,6 @@ ADD         : COMMAND ( "add"           | "a" ) ;
 COUNT       : COMMAND ( "count"         | "c" ) ;
 DEFINE      : COMMAND ( "define"        | "d" ) ;
 GRAPHQUERY  : COMMAND ( "graphQuery"    | "g" ) ;
-IMPORT      : COMMAND ( "import"        | "i" ) ;
 NAMESPACES  : COMMAND ( "namespaces"    | "n" ) ;
 PRINT       : COMMAND ( "print"         | "p" ) ;
 SAVEAS      : COMMAND ( "saveas"        | "s" ) ;
@@ -388,12 +387,6 @@ nt_Command
     | GRAPHQUERY query:STRING
         {
             interpreter.evaluateGraphQuery( query.getText() );
-        }
-
-    | IMPORT url:STRING ( baseURI:STRING )?
-        {
-            String baseUriStr = ( baseURI == null ) ? null : baseURI.getText();
-            interpreter.importModel( url.getText(), baseUriStr );
         }
 
     | NAMESPACES

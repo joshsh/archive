@@ -1,7 +1,6 @@
 package wurfel;
 
 import wurfel.model.Apply;
-import wurfel.model.Model;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
 import wurfel.model.Dereferencer;
@@ -21,6 +20,7 @@ import org.openrdf.queryresult.Solution;
 import org.openrdf.repository.Connection;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryImpl;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.sail.Namespace;
@@ -38,16 +38,18 @@ import java.net.URL;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
+import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
-public class Context
+public class Context extends Observable
 {
 // FIXME
     private Resource singleContext;
@@ -66,10 +68,8 @@ public Dereferencer getDereferencer()
 
     String name;
     Repository repository;
-    Collection<URL> importedDataURLs;
 
 Hashtable<String, String> aliases;
-Model model = null;
 
     private Hashtable<URI, Function> specialFunctions;
 
@@ -85,7 +85,6 @@ Model model = null;
 
 aliases = new Hashtable<String, String>();
         this.name = name;
-        importedDataURLs = new ArrayList<URL>();
 
         try
         {
@@ -103,18 +102,28 @@ aliases = new Hashtable<String, String>();
 
         singleContext = Wurfel.createUri( "urn:wurfel-context" );
 
-        model = new Model( repository, singleContext );
-        dereferencer = new HttpUriDereferencer( model );
-
-//System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
-        importModel( Wurfel.schemaUrl(), Wurfel.createUri( "urn:wurfel" ) );
-//        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
+        dereferencer = new HttpUriDereferencer( this );
 
         specialFunctions = new Hashtable<URI, Function>();
 
         EvaluationContext evalContext = new EvaluationContext( this );
-        ( new wurfel.extensions.test.TestExtension() ).load( evalContext );
-        ( new wurfel.extensions.misc.MiscExtension() ).load( evalContext );
+
+        try
+        {
+//System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
+            importModel( Wurfel.schemaUrl(), Wurfel.createUri( "urn:wurfel" ), evalContext );
+//        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
+
+            ( new wurfel.extensions.test.TestExtension() ).load( evalContext );
+            ( new wurfel.extensions.misc.MiscExtension() ).load( evalContext );
+        }
+
+        catch ( WurfelException e )
+        {
+            evalContext.close();
+            throw e;
+        }
+
         evalContext.close();
     }
 
@@ -124,11 +133,10 @@ public Repository getRepository()
 }
 //private boolean namespacesDefined = false;
 
-    public void importModel( final URL url, final URI baseURI )
+    public void importModel( final URL url, final URI baseURI, EvaluationContext evalContext )
         throws WurfelException
     {
-        model.dereferenceGraph( url, baseURI );
-        importedDataURLs.add( url );
+        dereferenceGraph( url, baseURI, evalContext.getConnection() );
     }
 
     private void extractRDF( OutputStream out )
@@ -222,7 +230,7 @@ public Repository getRepository()
             }
         }
 
-        return model.multiply( arg, func /*, evalContext*/ );
+        return rdfMultiply( arg, func, evalContext.getConnection() );
     }
 
 // FIXME: 'apply' is now a bit of a misnomer
@@ -240,12 +248,6 @@ public Repository getRepository()
         }
 
         return result;
-    }
-
-    //FIXME: temporary method
-    public Model getModel()
-    {
-        return model;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -391,6 +393,67 @@ public Repository getRepository()
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     *  @return  an unordered set of results
+     */
+    public Set<Value> rdfMultiply( Value subject,
+                                   Value predicate,
+                                   Connection conn )
+        throws WurfelException
+    {
+        Set<Value> objects = new HashSet<Value>();
+
+        if ( subject instanceof Resource && predicate instanceof URI )
+        {
+            try
+            {
+                boolean includeInferred = true;
+                CloseableIterator<? extends Statement> stmtIter
+                    = conn.getStatements(
+//                        (Resource) subject, (URI) predicate, null, context, includeInferred );
+                        (Resource) subject, (URI) predicate, null, includeInferred );
+                while ( stmtIter.hasNext() )
+                    objects.add( stmtIter.next().getObject() );
+                stmtIter.close();
+            }
+
+            catch ( Throwable t )
+            {
+                throw new WurfelException( t );
+            }
+        }
+
+        return objects;
+    }
+
+    public void dereferenceGraph( final URL url, final URI baseURI, Connection conn )
+        throws WurfelException
+    {
+        s_logger.debug( "Importing model " + url.toString() +
+            ( ( null == baseURI ) ? "" : " as " + baseURI.toString() ) );
+
+        boolean verifyData = true;
+
+        try
+        {
+//            conn.add( url, baseURI, RDFFormat.RDFXML, singleContext );
+            if ( null == baseURI )
+                conn.add( url, null, RDFFormat.RDFXML );
+            else
+                conn.add( url, baseURI.toString(), RDFFormat.RDFXML, baseURI );
+        }
+
+        catch ( Throwable t  )
+        {
+            throw new WurfelException( t );
+        }
+
+System.out.println( "######## dereferencing graph in model: " + url );
+        setChanged();
+        notifyObservers();
+    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

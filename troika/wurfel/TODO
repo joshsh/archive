@@ -40,6 +40,7 @@ Model
 Scuttering
 ================================================================================
 * look into adding a FOAF scutterer
+* build a smarter URI dereferencer which can determine the MIME type of a document (so we can grab data from other formats besides RDF/XML)
 
 Concurrency
 ================================================================================
@@ -54,6 +55,7 @@ Names and namespaces
 ================================================================================
 * decide whether names are determined by URI, rdfs:label, some combination of the two, or something else entirely
 * address name collisions, scalability issues in general
+* add ability to define terms in the default namespace, then save them
 
 Command line interface
 ================================================================================
