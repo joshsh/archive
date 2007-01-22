@@ -27,13 +27,17 @@ public class HttpUriDereferencer implements Dereferencer
 
     private Model model;
 
+    private Set<String> allBaseUris;
     private Set<String> dereferencedBaseUris;
+    private Set<String> failedBaseUris;
 
     public HttpUriDereferencer( Model model )
     {
         this.model = model;
 
+        allBaseUris = new LinkedHashSet<String>();
         dereferencedBaseUris = new LinkedHashSet<String>();
+        failedBaseUris = new LinkedHashSet<String>();
     }
 
     public void dereferenceSubjectUri( final URI subject, EvaluationContext evalContext )
@@ -43,10 +47,21 @@ public class HttpUriDereferencer implements Dereferencer
 
         // Note: I'm counting on the hash table implementation to use compareTo()
         //       rather than equals()
-        if ( !dereferencedBaseUris.contains( ns ) )
+        if ( !allBaseUris.contains( ns ) )
         {
-            dereferenceGraph( ns, evalContext.getConnection() );
+            try
+            {
+                dereferenceGraph( ns, evalContext.getConnection() );
+            }
 
+            catch ( WurfelException e )
+            {
+                allBaseUris.add( ns );
+                failedBaseUris.add( ns );
+                throw e;
+            }
+
+            allBaseUris.add( ns );
             dereferencedBaseUris.add( ns );
         }
     }

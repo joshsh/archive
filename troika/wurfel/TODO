@@ -39,7 +39,7 @@ Model
 
 Scuttering
 ================================================================================
-* let Dereferencers remember not only the graphs they have already imported, but also those they have tried and failed to import (to avoid repetitive failure)
+* look into adding a FOAF scutterer
 
 Concurrency
 ================================================================================
