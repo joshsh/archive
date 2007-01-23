@@ -170,7 +170,7 @@ System.out.println( "########## updating completors" );
             }
 
             valueSet = new ObservableValueSet( context, null );
-EvaluationContext evalContext = new EvaluationContext( context );
+EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSet constructor" );
             ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon, evalContext );
 evalContext.close();
             valueSet.addObserver( observer );
@@ -326,7 +326,7 @@ evalContext.close();
 
         try
         {
-            evalContext = new EvaluationContext( context );
+            evalContext = new EvaluationContext( context, "for addStatement" );
 
             Value subjValue = subj.evaluate( this, evalContext );
             Value predValue = pred.evaluate( this, evalContext );
@@ -425,7 +425,7 @@ evalContext.close();
 
         try
         {
-            evalContext = new EvaluationContext( context );
+            evalContext = new EvaluationContext( context, "for Interpreter evaluate()" );
 
             Value expr = ast.evaluate( this, evalContext );
 
@@ -480,7 +480,7 @@ evalContext.close();
 
         try
         {
-            evalContext = new EvaluationContext( context );
+            evalContext = new EvaluationContext( context, "for evaluateGraphQuery" );
             WurfelPrintStream p = new WurfelPrintStream( System.out, lexicon, evalContext );
 
             Iterator<Statement> stmtIter = context.graphQuery( query ).iterator();

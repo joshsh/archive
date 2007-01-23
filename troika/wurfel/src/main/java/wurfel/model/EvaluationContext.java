@@ -13,16 +13,19 @@ import org.openrdf.repository.Connection;
 import org.openrdf.util.iterator.CloseableIterator;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Random;
 
 public class EvaluationContext
 {
     private Context context;
     private Connection connection;
+    private String name = null;
 
     private static URI
         s_xsdBooleanUri = null,
@@ -35,7 +38,9 @@ public class EvaluationContext
 
     private static boolean s_initialized = false;
 
-    public EvaluationContext( Context context )
+    ////////////////////////////////////////////////////////////////////////////
+
+    private void constructPrivate( Context context )
         throws WurfelException
     {
         this.context = context;
@@ -56,12 +61,30 @@ public class EvaluationContext
         try
         {
             connection = context.getRepository().getConnection();
+//System.out.println( "Opened "
+//    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+//    + " (" + openConnections + " total)." );
         }
 
         catch ( Throwable t )
         {
             throw new WurfelException( t );
         }
+
+        add( this );
+    }
+
+    public EvaluationContext( Context context )
+        throws WurfelException
+    {
+        constructPrivate( context );
+    }
+
+    public EvaluationContext( Context context, final String name )
+        throws WurfelException
+    {
+        this.name = name;
+        constructPrivate( context );
     }
 
     public Context getContext()
@@ -80,11 +103,51 @@ public class EvaluationContext
         try
         {
             connection.close();
+//System.out.println( "Closed "
+//    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+//    + " (" + openConnections + " total)." );
         }
 
         catch ( Throwable t )
         {
             throw new WurfelException( t );
+        }
+
+        remove( this );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private static Set<EvaluationContext> openConnections
+        = new LinkedHashSet<EvaluationContext>();
+
+    private static void add( EvaluationContext evalContext )
+    {
+        synchronized( openConnections )
+        {
+            openConnections.add( evalContext );
+        }
+    }
+
+    private static void remove( EvaluationContext evalContext )
+    {
+        synchronized( openConnections )
+        {
+            openConnections.remove( evalContext );
+        }
+    }
+
+    public static List<String> listOpenConnections()
+    {
+        synchronized( openConnections )
+        {
+            List<String> names = new ArrayList<String>( openConnections.size() );
+
+            Iterator<EvaluationContext> i = openConnections.iterator();
+            while ( i.hasNext() )
+                names.add( i.next().name );
+
+            return names;
         }
     }
 

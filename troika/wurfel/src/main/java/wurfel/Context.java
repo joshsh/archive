@@ -104,7 +104,7 @@ aliases = new Hashtable<String, String>();
 
         specialFunctions = new Hashtable<URI, Function>();
 
-        EvaluationContext evalContext = new EvaluationContext( this );
+        EvaluationContext evalContext = new EvaluationContext( this, "for Context constructor" );
         singleContext = evalContext.createUri( "urn:wurfel-context" );
 
         try

@@ -70,7 +70,7 @@ public class ConsoleValueSetObserver implements Observer
         if ( 0 < values.size() )
             ps.println( "" );
 
-        EvaluationContext evalContext = new EvaluationContext( context );
+        EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSetObserver refreshView()" );
         try
         {
             int index = 0;
@@ -98,6 +98,8 @@ public class ConsoleValueSetObserver implements Observer
             evalContext.close();
             throw e;
         }
+
+        evalContext.close();
 
         ps.print( "\n" );
     }

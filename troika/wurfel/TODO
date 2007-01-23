@@ -58,6 +58,7 @@ Names and namespaces
 * decide whether names are determined by URI, rdfs:label, some combination of the two, or something else entirely
 * address name collisions, scalability issues in general
 * add ability to define terms in the default namespace, then save them
+* handle name collisions in a more flexible and configurable way
 
 Command line interface
 ================================================================================
@@ -78,6 +79,7 @@ Ontologies
 Testing
 ================================================================================
 * syntax testing (both success and failure cases)
+* test of HTTP URI dereferencing
 * test of the context filter
 
 Use cases

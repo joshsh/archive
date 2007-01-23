@@ -171,6 +171,7 @@ public class Wurfel
 
     public static URL schemaUrl()
     {
+System.out.println( "schemaUrl: " + s_wurfelSchemaUrl );
         return s_wurfelSchemaUrl;
     }
 }

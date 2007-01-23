@@ -136,7 +136,7 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         Set<URI> allURIs = new HashSet<URI>();
 
-        EvaluationContext evalContext = new EvaluationContext( context );
+        EvaluationContext evalContext = new EvaluationContext( context, "for Lexicon refresh()" );
 
         try
         {
@@ -175,6 +175,8 @@ System.out.println( "################# Rebuilding dictionaries." );
             evalContext.close();
             throw new WurfelException( t );
         }
+
+        evalContext.close();
 
         Iterator<URI> uriIter = allURIs.iterator();
         while ( uriIter.hasNext() )
