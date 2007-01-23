@@ -1,8 +1,6 @@
 package wurfel.extensions.test;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -20,7 +18,7 @@ public class IntegerMod extends PrimitiveFunction
     public IntegerMod( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "integer-mod" ), evalContext );
+        super( evalContext.createWurfelTestUri( "integer-mod" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

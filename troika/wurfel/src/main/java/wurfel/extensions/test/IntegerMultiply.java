@@ -1,8 +1,6 @@
 package wurfel.extensions.test;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -20,7 +18,7 @@ public class IntegerMultiply extends PrimitiveFunction
     public IntegerMultiply( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "integer-multiply" ), evalContext );
+        super( evalContext.createWurfelTestUri( "integer-multiply" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

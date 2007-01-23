@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Random;
 
 public class EvaluationContext
 {
@@ -34,30 +35,23 @@ public class EvaluationContext
 
     private static boolean s_initialized = false;
 
-// TODO: these URIs should really be created via the model's ValueFactory.
-    private static void initialize()
-        throws WurfelException
-    {
-        s_xsdBooleanUri = Wurfel.getXmlSchemaUri( "boolean" );
-        s_xsdDoubleUri = Wurfel.getXmlSchemaUri( "double" );
-        s_xsdIntegerUri = Wurfel.getXmlSchemaUri( "integer" );
-        s_xsdStringUri = Wurfel.getXmlSchemaUri( "string" );
-        s_rdfFirstUri = Wurfel.getRdfUri( "first" );
-        s_rdfRestUri = Wurfel.getRdfUri( "rest" );
-        s_rdfNilUri = Wurfel.getRdfUri( "nil" );
-
-        s_initialized = true;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
     public EvaluationContext( Context context )
         throws WurfelException
     {
-        if ( !s_initialized )
-            initialize();
-
         this.context = context;
+
+        if ( !s_initialized )
+        {
+            s_xsdBooleanUri = createXmlSchemaUri( "boolean" );
+            s_xsdDoubleUri = createXmlSchemaUri( "double" );
+            s_xsdIntegerUri = createXmlSchemaUri( "integer" );
+            s_xsdStringUri = createXmlSchemaUri( "string" );
+            s_rdfFirstUri = createRdfUri( "first" );
+            s_rdfRestUri = createRdfUri( "rest" );
+            s_rdfNilUri = createRdfUri( "nil" );
+
+            s_initialized = true;
+        }
 
         try
         {
@@ -240,28 +234,6 @@ public class EvaluationContext
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public URI createUri( final String s )
-    {
-        return context.getRepository().getValueFactory().createURI( s );
-    }
-
-    public Literal createLiteral( final String s )
-    {
-        return context.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
-    }
-
-    public Literal createLiteral( final int i )
-    {
-        return context.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
-    }
-
-    public Literal createLiteral( final double d )
-    {
-        return context.getRepository().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
 /*
     public Set<Resource> getSubjects()
         throws WurfelException
@@ -330,6 +302,81 @@ public class EvaluationContext
         {
             throw new WurfelException( t );
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public URI createUri( final String s )
+    {
+        return context.getRepository().getValueFactory().createURI( s );
+    }
+
+    public Literal createLiteral( final String s )
+    {
+        return context.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
+    }
+
+    public Literal createLiteral( final int i )
+    {
+        return context.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
+    }
+
+    public Literal createLiteral( final double d )
+    {
+        return context.getRepository().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
+    }
+
+    private static Random s_rn = new Random();
+
+    private static int randomInt( int lo, int hi )
+    {
+        int n = hi - lo + 1;
+        int i = s_rn.nextInt() % n;
+        if (i < 0)
+            i = -i;
+        return lo + i;
+    }
+
+    public URI createRandomUri()
+        throws WurfelException
+    {
+        return createUri( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
+    }
+
+    public URI createRdfUri( final String localName )
+        throws WurfelException
+    {
+        return createUri( "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName );
+    }
+
+    public URI createRdfSchemaUri( final String localName )
+        throws WurfelException
+    {
+        return createUri( "http://www.w3.org/2000/01/rdf-schema#" + localName );
+    }
+
+    public URI createWurfelUri( final String localName )
+        throws WurfelException
+    {
+        return createUri( "urn:net.dnsdojo.troika.wurfel#" + localName );
+    }
+
+    public URI createWurfelTestUri( final String localName )
+        throws WurfelException
+    {
+        return createUri( "urn:net.dnsdojo.troika.wurfel-test#" + localName );
+    }
+
+    public URI createXmlSchemaUri( final String localName )
+        throws WurfelException
+    {
+        return createUri( "http://www.w3.org/2001/XMLSchema#" + localName );
+    }
+
+    public URI createSwoogleUri( final String localName )
+        throws WurfelException
+    {
+        return createUri( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
     }
 }
 

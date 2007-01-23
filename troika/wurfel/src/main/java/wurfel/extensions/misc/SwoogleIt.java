@@ -1,6 +1,5 @@
 package wurfel.extensions.misc;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
@@ -29,10 +28,10 @@ public class SwoogleIt extends PrimitiveFunction
     public SwoogleIt( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ), evalContext );
+        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ), evalContext );
 
-        rdfTypeUri = Wurfel.getRdfUri( "type" );
-        swoogleQueryResponseUri = Wurfel.getSwoogleUri( "QueryResponse" );
+        rdfTypeUri = evalContext.createRdfUri( "type" );
+        swoogleQueryResponseUri = evalContext.createSwoogleUri( "QueryResponse" );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -58,7 +57,7 @@ public class SwoogleIt extends PrimitiveFunction
                 + "&queryType=" + URLEncoder.encode( queryType.getLocalName() )
                 + "&searchString=" + URLEncoder.encode( searchString ) );
 
-            URI baseUri = Wurfel.createRandomUri();
+            URI baseUri = evalContext.createRandomUri();
             context.importModel( url, baseUri, evalContext );
             NodeSet results = new NodeSet();
 //System.out.println( "baseUri = " + baseUri );

@@ -6,6 +6,7 @@
 (: My foaf file :)
 "http://troika.dnsdojo.net/wurfel/joshua-shinavier.foaf.rdf" grab;
 
+
 (:
     foaf:img --> Image
     foaf:depiction --> Image

@@ -1,8 +1,6 @@
 package wurfel.extensions.test;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -21,7 +19,7 @@ public class ListElements extends PrimitiveFunction
     public ListElements( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "listElements" ), evalContext );
+        super( evalContext.createWurfelTestUri( "listElements" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

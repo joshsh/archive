@@ -83,13 +83,13 @@ public abstract class PrimitiveFunction extends Node implements Function
         name = "";
         annotation = "";
 
-        wurfelParametersUri = Wurfel.getWurfelUri( "parameters" );
-        wurfelReturnTypeUri = Wurfel.getWurfelUri( "returnType" );
-        wurfelParameterUri = Wurfel.getWurfelUri( "Parameter" );
-        wurfelParameterNameUri = Wurfel.getWurfelUri( "parameterName" );
-        wurfelParameterListUri = Wurfel.getWurfelUri( "ParameterList" );
-        wurfelParameterTypeUri = Wurfel.getWurfelUri( "parameterType" );
-        wurfelParameterTransparencyUri = Wurfel.getWurfelUri( "parameterTransparency" );
+        wurfelParametersUri             = evalContext.createWurfelUri( "parameters" );
+        wurfelReturnTypeUri             = evalContext.createWurfelUri( "returnType" );
+        wurfelParameterUri              = evalContext.createWurfelUri( "Parameter" );
+        wurfelParameterNameUri          = evalContext.createWurfelUri( "parameterName" );
+        wurfelParameterListUri          = evalContext.createWurfelUri( "ParameterList" );
+        wurfelParameterTypeUri          = evalContext.createWurfelUri( "parameterType" );
+        wurfelParameterTransparencyUri  = evalContext.createWurfelUri( "parameterTransparency" );
 
         returnType = evalContext.castToUri(
             evalContext.findUniqueProduct( self, wurfelReturnTypeUri ) );

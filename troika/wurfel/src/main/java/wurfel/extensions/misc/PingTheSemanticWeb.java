@@ -2,7 +2,6 @@ package wurfel.extensions.misc;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -32,7 +31,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
     public PingTheSemanticWeb( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" ), evalContext );
+        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

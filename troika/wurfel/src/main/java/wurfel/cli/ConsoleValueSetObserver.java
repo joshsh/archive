@@ -24,12 +24,12 @@ public class ConsoleValueSetObserver implements Observer
 
     private Lexicon lexicon;
 
-    public ConsoleValueSetObserver( ObservableValueSet valueSet, Lexicon lexicon )
+    public ConsoleValueSetObserver( ObservableValueSet valueSet, Lexicon lexicon, EvaluationContext evalContext )
         throws WurfelException
     {
         this.valueSet = valueSet;
         this.lexicon = lexicon;
-        ps = new WurfelPrintStream( System.out, lexicon );
+        ps = new WurfelPrintStream( System.out, lexicon, evalContext );
     }
 
     private void show( Resource subject, EvaluationContext evalContext )

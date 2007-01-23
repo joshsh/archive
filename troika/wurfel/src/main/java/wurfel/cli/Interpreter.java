@@ -170,7 +170,9 @@ System.out.println( "########## updating completors" );
             }
 
             valueSet = new ObservableValueSet( context, null );
-            ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon );
+EvaluationContext evalContext = new EvaluationContext( context );
+            ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon, evalContext );
+evalContext.close();
             valueSet.addObserver( observer );
         }
 
@@ -474,9 +476,12 @@ System.out.println( "########## updating completors" );
     //      CONSTRUCT * FROM {x} p {y}
     public void evaluateGraphQuery( final String query )
     {
+        EvaluationContext evalContext = null;
+
         try
         {
-            WurfelPrintStream p = new WurfelPrintStream( System.out, lexicon );
+            evalContext = new EvaluationContext( context );
+            WurfelPrintStream p = new WurfelPrintStream( System.out, lexicon, evalContext );
 
             Iterator<Statement> stmtIter = context.graphQuery( query ).iterator();
 
@@ -485,10 +490,21 @@ System.out.println( "########## updating completors" );
             p.println( "" );
 
 //            p.close();
+            evalContext.close();
         }
 
         catch ( WurfelException e )
         {
+            try
+            {
+                evalContext.close();
+            }
+
+            catch ( WurfelException e2 )
+            {
+                // ...
+            }
+
             alert( "Error: " + e.getMessage() );
         }
     }

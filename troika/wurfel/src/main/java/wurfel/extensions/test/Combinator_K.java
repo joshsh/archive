@@ -1,8 +1,6 @@
 package wurfel.extensions.test;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.Combinator;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -19,7 +17,7 @@ public class Combinator_K extends Combinator
     public Combinator_K( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "K" ), evalContext );
+        super( evalContext.createWurfelTestUri( "K" ), evalContext );
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,

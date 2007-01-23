@@ -100,19 +100,16 @@ aliases = new Hashtable<String, String>();
             throw new WurfelException( t );
         }
 
-        singleContext = Wurfel.createUri( "urn:wurfel-context" );
-
         dereferencer = new HttpUriDereferencer( this );
 
         specialFunctions = new Hashtable<URI, Function>();
 
         EvaluationContext evalContext = new EvaluationContext( this );
+        singleContext = evalContext.createUri( "urn:wurfel-context" );
 
         try
         {
-//System.out.println( "Wurfel.schemaUrl() = " + Wurfel.schemaUrl() );
-            importModel( Wurfel.schemaUrl(), Wurfel.createUri( "urn:wurfel" ), evalContext );
-//        importModel( Wurfel.testUrl(), createUri( "urn:wurfel-test" ) );
+            importModel( Wurfel.schemaUrl(), evalContext.createUri( "urn:wurfel" ), evalContext );
 
             ( new wurfel.extensions.test.TestExtension() ).load( evalContext );
             ( new wurfel.extensions.misc.MiscExtension() ).load( evalContext );

@@ -56,7 +56,7 @@ public class HttpUriDereferencer implements Dereferencer
         {
             try
             {
-                dereferenceGraph( ns, evalContext.getConnection() );
+                dereferenceGraph( ns, evalContext );
             }
 
             catch ( WurfelException e )
@@ -112,7 +112,7 @@ public class HttpUriDereferencer implements Dereferencer
         s_logger.debug( "Removed " + count + " disallowed statement(s) from context " + uri + "." );
     }
 
-    private void dereferenceGraph( final String uri, Connection conn )
+    private void dereferenceGraph( final String uri, EvaluationContext evalContext )
         throws WurfelException
     {
         URL url;
@@ -127,12 +127,12 @@ public class HttpUriDereferencer implements Dereferencer
             throw new WurfelException( e );
         }
 
-        URI contextUri = Wurfel.createUri( uri );
+        URI contextUri = evalContext.createUri( uri );
 
-        context.dereferenceGraph( url, contextUri, conn );
+        context.dereferenceGraph( url, contextUri, evalContext.getConnection() );
 
         if ( s_enforceImplicitProvenance )
-            filter( uri, contextUri, conn );
+            filter( uri, contextUri, evalContext.getConnection() );
     }
 }
 

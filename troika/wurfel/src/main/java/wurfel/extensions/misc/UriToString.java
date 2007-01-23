@@ -1,8 +1,6 @@
 package wurfel.extensions.misc;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -20,7 +18,7 @@ public class UriToString extends PrimitiveFunction
     public UriToString( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#uriToString" ), evalContext );
+        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#uriToString" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

@@ -19,7 +19,7 @@ public class UriNode extends Ast
     public Value evaluate( Interpreter itp, EvaluationContext evalContext )
         throws WurfelException
     {
-        return Wurfel.createUri( value );
+        return evalContext.createUri( value );
     }
 }
 

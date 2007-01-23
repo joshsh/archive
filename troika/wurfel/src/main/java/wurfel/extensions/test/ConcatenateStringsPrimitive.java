@@ -1,8 +1,6 @@
 package wurfel.extensions.test;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -20,7 +18,7 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
     public ConcatenateStringsPrimitive( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.getWurfelTestUri( "concatenateStrings" ), evalContext );
+        super( evalContext.createWurfelTestUri( "concatenateStrings" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

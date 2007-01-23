@@ -1,6 +1,5 @@
 package wurfel.extensions.misc;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
@@ -25,7 +24,7 @@ public class Grab extends PrimitiveFunction
     public Grab( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" ), evalContext );
+        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -44,7 +43,7 @@ public class Grab extends PrimitiveFunction
         {
             URL url = new URL( urlStr );
 
-            URI baseUri = Wurfel.createRandomUri();
+            URI baseUri = evalContext.createRandomUri();
             context.importModel( url, baseUri, evalContext );
             NodeSet results = new NodeSet();
 

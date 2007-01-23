@@ -26,7 +26,7 @@ public abstract class Combinator extends Node implements Function
         arityCached = evalContext.intValue(
             evalContext.castToLiteral(
                 evalContext.findUniqueProduct(
-                    selfUri, Wurfel.getWurfelUri( "combinatorArity" ) ) ) );
+                    selfUri, evalContext.createWurfelUri( "combinatorArity" ) ) ) );
     }
 
     public int arity()

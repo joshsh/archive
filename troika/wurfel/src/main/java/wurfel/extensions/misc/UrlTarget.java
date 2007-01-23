@@ -1,8 +1,6 @@
 package wurfel.extensions.misc;
 
-import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
 import wurfel.model.EvaluationContext;
@@ -27,7 +25,7 @@ public class UrlTarget extends PrimitiveFunction
     public UrlTarget( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( Wurfel.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" ), evalContext );
+        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
