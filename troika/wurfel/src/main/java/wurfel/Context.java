@@ -203,6 +203,7 @@ public Repository getRepository()
             return v;
     }
 
+// FIXME: will return null if the Function is an Apply
     private Value translateToGraph( Value v )
     {
         if ( v instanceof Function )
@@ -211,9 +212,12 @@ public Repository getRepository()
             return v;
     }
 
+// TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
     public Set<Value> multiply( Value arg, Value func, EvaluationContext evalContext )
         throws WurfelException
     {
+        arg = translateToGraph( arg );
+
         if ( arg instanceof URI )
         {
             try
@@ -227,16 +231,7 @@ public Repository getRepository()
             }
         }
 
-        return rdfMultiply( arg, func, evalContext.getConnection() );
-    }
-
-// FIXME: 'apply' is now a bit of a misnomer
-    public Set<Value> apply( Value func, Value arg, EvaluationContext evalContext )
-        throws WurfelException
-    {
-        arg = translateToGraph( arg );
-
-        Iterator<Value> resultIter = multiply( arg, func, evalContext ).iterator();
+        Iterator<Value> resultIter = rdfMultiply( arg, func, evalContext.getConnection() ).iterator();
         Set<Value> result = new NodeSet();
         while ( resultIter.hasNext() )
         {
@@ -395,7 +390,7 @@ public Repository getRepository()
     /**
      *  @return  an unordered set of results
      */
-    public Set<Value> rdfMultiply( Value subject,
+    private Set<Value> rdfMultiply( Value subject,
                                    Value predicate,
                                    Connection conn )
         throws WurfelException

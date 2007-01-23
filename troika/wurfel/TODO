@@ -36,6 +36,8 @@ Syntax
 Model
 ================================================================================
 * write a primitive which imports a document as a reified graph in which all subjects are bnodes
+* investigate data mapping between OpenRDF objects and Wurfel expressions, specifically, whether there would be performance savings in wrapping OpenRDF objects so as to avoid the use of instanceof
+* make LazyEvaluator truly lazy, as well as more efficient
 
 Scuttering
 ================================================================================

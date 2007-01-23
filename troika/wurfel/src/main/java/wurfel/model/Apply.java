@@ -38,7 +38,8 @@ return null;
                 + args.size() + " arguments" );
     }
 
-    public Collection<Value> applyTo( LinkedList<Value> args, EvaluationContext evalContext )
+    public Collection<Value> applyTo( LinkedList<Value> args,
+                                      EvaluationContext evalContext )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -52,12 +53,12 @@ checkArguments( args );
 
         else
         {
-            return evalContext.getContext().apply( function, argument, evalContext );
+            return evalContext.getContext().multiply(
+                argument, function, evalContext );
         }
     }
 
     public Apply( final Value function, final Value argument )
-//    public Apply( final Collection<Value> function, final Collection<Value> argument )
     {
         this.function = function;
         this.argument = argument;
@@ -69,13 +70,11 @@ checkArguments( args );
     }
 
     public Value getFunction()
-//    public Collection<Value> getFunction()
     {
         return function;
     }
 
     public Value getArgument()
-//    public Collection<Value> getArgument()
     {
         return argument;
     }
@@ -139,6 +138,5 @@ checkArguments( args );
             p.print( right );
     }
 }
-
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
