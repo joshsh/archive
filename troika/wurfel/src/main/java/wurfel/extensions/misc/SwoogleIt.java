@@ -1,5 +1,6 @@
 package wurfel.extensions.misc;
 
+import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
@@ -62,11 +63,10 @@ public class SwoogleIt extends PrimitiveFunction
             NodeSet results = new NodeSet();
 //System.out.println( "baseUri = " + baseUri );
 
-            boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = evalContext.getConnection().getStatements(
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
-                    null, rdfTypeUri, swoogleQueryResponseUri, baseUri, includeInferred );
+                    null, rdfTypeUri, swoogleQueryResponseUri, baseUri, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();

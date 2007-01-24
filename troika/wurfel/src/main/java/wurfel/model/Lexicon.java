@@ -1,5 +1,6 @@
 package wurfel.model;
 
+import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
 
@@ -140,11 +141,10 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         try
         {
-            boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = evalContext.getConnection().getStatements(
 //                    null, null, null, context, includeInferred );
-                    null, null, null, includeInferred );
+                    null, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
             {
                 Statement st = stmtIter.next();

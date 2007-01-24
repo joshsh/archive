@@ -1,5 +1,7 @@
 package wurfel;
 
+
+import wurfel.Wurfel;
 import wurfel.model.Apply;
 import wurfel.model.NodeSet;
 import wurfel.model.Function;
@@ -401,11 +403,10 @@ public Repository getRepository()
         {
             try
             {
-                boolean includeInferred = true;
                 CloseableIterator<? extends Statement> stmtIter
                     = conn.getStatements(
 //                        (Resource) subject, (URI) predicate, null, context, includeInferred );
-                        (Resource) subject, (URI) predicate, null, includeInferred );
+                        (Resource) subject, (URI) predicate, null, Wurfel.useInference() );
                 while ( stmtIter.hasNext() )
                     objects.add( stmtIter.next().getObject() );
                 stmtIter.close();

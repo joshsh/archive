@@ -276,10 +276,9 @@ public class EvaluationContext
         try
         {
             Connection con = repository.getConnection();
-            boolean includeInferred = false;
             CloseableIterator<? extends Statement> stmtIter
                 = con.getStatements(
-                    head, s_rdfTypeUri, s_swoogleQueryResponseUri, includeInferred );
+                    head, s_rdfTypeUri, s_swoogleQueryResponseUri, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();
@@ -305,11 +304,10 @@ public class EvaluationContext
 
         try
         {
-            boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = connection.getStatements(
 //                    null, null, null, context, includeInferred );
-                    null, null, null, includeInferred );
+                    null, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 subjects.add( stmtIter.next().getSubject() );
             stmtIter.close();
@@ -331,11 +329,10 @@ public class EvaluationContext
 
         try
         {
-            boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = connection.getStatements(
 //                    subject, null, null, context, includeInferred );
-                    subject, null, null, includeInferred );
+                    subject, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 predicates.add( stmtIter.next().getPredicate() );
             stmtIter.close();

@@ -1,5 +1,6 @@
 package wurfel.extensions.misc;
 
+import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
@@ -47,10 +48,9 @@ public class Grab extends PrimitiveFunction
             context.importModel( url, baseUri, evalContext );
             NodeSet results = new NodeSet();
 
-            boolean includeInferred = true;
             CloseableIterator<? extends Statement> stmtIter
                 = evalContext.getConnection().getStatements(
-                    null, null, null, baseUri, includeInferred );
+                    null, null, null, baseUri, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();

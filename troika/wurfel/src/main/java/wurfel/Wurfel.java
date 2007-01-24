@@ -108,6 +108,8 @@ public class Wurfel
 
     private static String s_jLineDebugOutput;
 
+    private static boolean s_useInference;
+
     ////////////////////////////////////////////////////////////////////////////
 
     public static ExpressionOrder getExpressionOrder()
@@ -123,6 +125,11 @@ public class Wurfel
     public static String getJLineDebugOutput()
     {
         return s_jLineDebugOutput;
+    }
+
+    public static boolean useInference()
+    {
+        return s_useInference;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -164,6 +171,8 @@ public class Wurfel
                 props.getProperty( "wurfel.cli.syntax.associativity" ) );
 
             s_jLineDebugOutput = props.getProperty( "wurfel.cli.jline.debugOutput" );
+
+            s_useInference = getBooleanProperty( props, "wurfel.model.rdf.useInference", false );
 
             initialized = true;
         }

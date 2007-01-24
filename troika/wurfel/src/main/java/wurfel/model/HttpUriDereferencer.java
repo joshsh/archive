@@ -74,8 +74,6 @@ public class HttpUriDereferencer implements Dereferencer
     private void filter( final String uri, final URI contextUri, Connection conn )
         throws WurfelException
     {
-        boolean includeInferred = true;
-
         CloseableIterator<? extends Statement> stmtIter = null;
 
         int count = 0;
@@ -83,7 +81,7 @@ public class HttpUriDereferencer implements Dereferencer
         try
         {
             stmtIter = conn.getStatements(
-                 null, null, null, contextUri, includeInferred );
+                 null, null, null, contextUri, Wurfel.useInference() );
 
             while ( stmtIter.hasNext() )
             {
