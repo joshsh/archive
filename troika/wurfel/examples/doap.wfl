@@ -10,7 +10,7 @@
 
 (: Miscellaneous interesting projects :::::::::::::::::::::::::::::::::::::::::)
 
-(: MSpace :)
+# Mspace
 "http://triplestore.aktors.org/~das301/mspace-doap.xrdf" grab;
 
 (: http://brownsauce.sourceforge.net/ :)

@@ -73,7 +73,7 @@ WS
 
 protected
 NORMAL
-    : '#' | '$' | '%' | '\'' | '-' | '=' | '@' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
+    : '$' | '%' | '\'' | '-' | '=' | '@' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
 //    | '\\' ( '\"' | '\\' | WS )
     ;
 
@@ -84,7 +84,7 @@ DIGIT
 
 protected
 SPECIAL_0
-    : '!' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
+    : '#' | '!' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
     ;
 
 protected
@@ -144,9 +144,14 @@ NUMBER
     ;
 
 COMMENT
-   : "(:" ((~':') | (':' ~')'))* ":)"
-   { $setType(Token.SKIP); }
-   ;
+    : "(:" ((~':') | (':' ~')'))* ":)"
+        { $setType( Token.SKIP ); }
+    ;
+
+COMMENT2
+    : '#' ( ~( '\r' | '\n' ) )*
+        { $setType( Token.SKIP ); }
+    ;
 
 L_PAREN
 options { paraphrase = "opening parenthesis"; } : '(' ;
@@ -249,7 +254,7 @@ nt_Query
         }
 
     // Note: commands are executed greedily, before the semicolon is encountered.
-    | nt_Command SEMI
+    | nt_Directive SEMI
 
     // Empty queries are simply ignored.
     | SEMI
@@ -365,7 +370,7 @@ nt_Name returns [ Ast r ]
     ;
 
 
-nt_Command
+nt_Directive
 {
     Ast subj, pred, obj;
 }
@@ -393,6 +398,9 @@ nt_Command
         {
             interpreter.showNamespaces();
         }
+/*
+    | PREFIX ( pre:IDENTIFIER )? COLON nt_UriRef
+*/
 
     | PRINT
         (
