@@ -139,6 +139,12 @@ URI
     : '<'! ( NORMAL | DIGIT | SPECIAL_0 | WS_NOBREAKS | "\\<" | "\\>" | "\\\\" )+ '>'!
     ;
 
+/*
+INTEGER
+    : ('-' | '+')? ( DIGIT )+
+    ;
+*/
+
 NUMBER
     : ( DIGIT )+ ( '.' ( DIGIT )+ )?
     ;
@@ -239,12 +245,12 @@ options
 nt_Input
 {
 }
-    : nt_Query
+    : nt_Statement
       ( nt_Input )?
     ;
 
 
-nt_Query
+nt_Statement
 {
     Ast r;
 }
@@ -283,7 +289,7 @@ nt_Sequence returns [ Ast r ]
 nt_Item returns [ Ast r ]
 {
 }
-    : r=nt_Name
+    : r=nt_Resource
     | r=nt_Literal
     | r=nt_ParenthesizedExpression
     | r=nt_QuantifiedItem
@@ -345,14 +351,10 @@ nt_Literal returns [ Ast r ]
                 interpreter.quit();
             }
         }
-    | uri:URI
-        {
-            r = new UriNode( uri.getText() );
-        }
     ;
 
 
-nt_Name returns [ Ast r ]
+nt_Resource returns [ Ast r ]
 {
     String first = null, second = null;
 }
@@ -366,6 +368,10 @@ nt_Name returns [ Ast r ]
             r = ( null == second )
                 ? new IdentifierNode( first )
                 : new IdentifierNode( first, second );
+        }
+    | uri:URI
+        {
+            r = new UriNode( uri.getText() );
         }
     ;
 
@@ -399,7 +405,7 @@ nt_Directive
             interpreter.showNamespaces();
         }
 /*
-    | PREFIX ( pre:IDENTIFIER )? COLON nt_UriRef
+    | PREFIX ( pre:IDENTIFIER )? COLON nt_Resource
 */
 
     | PRINT
