@@ -4,6 +4,10 @@
 [U] 
     [.] primitive functions may yield multiple values at a time
 
+[U]
+    [*] statements about a resource outside of their context are not allowed
+    [*] "imperative" creation of statements about an existing resource is not allowed, as is deletion of statements
+
 ::::::::::::::::::::::::::::::::::::::::
 
 mvn clean
@@ -69,6 +73,9 @@ sudo cp src/main/resources/wurfel/cli/kate/wurfel.xml /usr/share/apps/katepart/s
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/wurfel.ttl > ./src/main/resources/wurfel/wurfel.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/test/wurfel-test.ttl > ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/misc/wurfel-misc.ttl > ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
+
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/file.ttl > ./src/main/resources/wurfel/misc/file.rdf
+
 
 RAPTORTRUNK=/home/joshs/opt/rdf_/redland_/raptor_/dot/branch_dot
 

@@ -163,6 +163,27 @@ java -DentityExpansionLimit=800000 -classpath target/wurfel-with-dependencies.ja
 
 
 
+::: example of a name collision ::::::::::::::::::::::::::::::::::::::::::::::::
+
+10 >>  Class type ;           (: type --> rdfs:type, but we meant rdf:type :)
+
+11 >>  Class rdf:type;
+
+[0] rdfs:Class
+    rdf:type
+        rdfs:Class
+    rdfs:comment
+        The class of classes.
+    rdfs:label
+        Class
+    rdfs:isDefinedBy
+        rdfs:
+    rdfs:subClassOf
+        rdfs:Resource
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 
 
 

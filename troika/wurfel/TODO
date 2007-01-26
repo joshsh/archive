@@ -45,10 +45,14 @@ Names and namespaces
 Command line interface
 ================================================================================
 * blank node syntax, e.g. _:bar
+* QName syntax where local name is empty, e.g.
+    rdfs:isDefinedBy
+        rdfs:
 * writer.debug becomes huge.  Disable it.
 * interpreter hangs on multi-line comments
 * implement an as-you-type parser for tab completion
 * place multiple-line expressions in the history
+* make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
 * edit grammar to more closely resemble Turtle / NTriples
 
 OpenRDF
@@ -88,6 +92,12 @@ Nice-to-have
                http://djpowell.net/schemas/atomrdf/0.1-EXPERIMENTAL/
 * Wikipedia3 stuff
   http://labs.systemone.at/wikipedia3
+* RDFizer for output of a natural language processing / information extraction tool such as Wraetlic
+* XBRL RDFizer
+* XML Schema RDFizer
+* XLink ^ RDF ?
+* file system schema --> RDFize a directory, down to the MIME type and other metadata of each file
+* RDF-to-natural-language utilities -- express RDF as plain English, to some extent
 
 Bugs
 ================================================================================

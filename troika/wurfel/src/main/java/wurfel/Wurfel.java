@@ -108,7 +108,9 @@ public class Wurfel
 
     private static String s_jLineDebugOutput;
 
-    private static boolean s_useInference;
+    private static boolean
+        s_useInference,
+        s_enforceImplicitProvenance;
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -130,6 +132,11 @@ public class Wurfel
     public static boolean useInference()
     {
         return s_useInference;
+    }
+
+    public static boolean enforceImplicitProvenance()
+    {
+        return s_enforceImplicitProvenance;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -173,6 +180,7 @@ public class Wurfel
             s_jLineDebugOutput = props.getProperty( "wurfel.cli.jline.debugOutput" );
 
             s_useInference = getBooleanProperty( props, "wurfel.model.rdf.useInference", false );
+            s_enforceImplicitProvenance = getBooleanProperty( props, "wurfel.model.rdf.enforceImplicitProvenance", true );
 
             initialized = true;
         }

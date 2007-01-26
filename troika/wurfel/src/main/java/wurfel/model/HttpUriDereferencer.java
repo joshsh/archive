@@ -28,8 +28,6 @@ public class HttpUriDereferencer implements Dereferencer
 {
     private final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
 
-    private static final boolean s_enforceImplicitProvenance = true;
-
     private Context context;
 
     private Set<String> allBaseUris;
@@ -89,6 +87,7 @@ public class HttpUriDereferencer implements Dereferencer
                 Resource subject = st.getSubject();
                 if ( subject instanceof URI && !( (URI) subject ).getNamespace().equals( uri ) )
                 {
+System.out.println( "Removing statement: " + st.getSubject().toString() + " " + st.getPredicate().toString() + " " + st.getObject().toString() + " from context " + st.getContext().toString() );
                     conn.remove( st );
                     count++;
                 }
@@ -129,7 +128,7 @@ public class HttpUriDereferencer implements Dereferencer
 
         context.dereferenceGraph( url, contextUri, evalContext.getConnection() );
 
-        if ( s_enforceImplicitProvenance )
+        if ( Wurfel.enforceImplicitProvenance() )
             filter( uri, contextUri, evalContext.getConnection() );
     }
 }
