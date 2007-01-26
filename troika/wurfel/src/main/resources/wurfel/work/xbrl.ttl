@@ -1,0 +1,72 @@
+@prefix xbrl:    <urn:tmp:xbrl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+
+
+<http://www.xbrl.org/2003/instance>
+#    xsd:schemaLocation "http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd" ;
+    xsd:import [
+        xsd:namespace <http://www.xbrl.org/2003/linkbase> ;
+        xsd:schemaLocation "http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd" ] .
+
+<http://www.xbrl.org/2003/linkbase>
+    xsd:import [
+        xsd:namespace <http://www.w3.org/1999/xlink> ;
+        xsd:schemaLocation "http://www.xbrl.org/2003/xlink-2003-12-31.xsd" ] ;
+    xsd:import [
+        xsd:namespace <http://www.xbrl.org/2003/XLink> ;
+        xsd:schemaLocation "http://www.xbrl.org/2003/xl-2003-12-31.xsd" ] .
+
+<http://www.xbrl.org/2003/XLink>
+    xsd:import [
+        xsd:namespace <http://www.w3.org/1999/xlink> ;
+        xsd:schemaLocation "http://www.xbrl.org/2003/xlink-2003-12-31.xsd" ] .
+
+
+
+xbrl:Taxonomy
+    rdfs:comment "An XBRL taxonomy is an electronic description and classification system for the contents of financial statements and other business reporting documents. XBRL taxonomies can be regarded as extensions of XML Schema, augmented with written documentation and a number of additional XML Linking (XLink) files. Taxonomies may represent hundreds or even thousands of individual business reporting concepts, mathematical and definitional relationships among them, along with text labels in multiple languages, references to authoritative literature, and information about how to display each concept to a user. (Source: XBRL International)" .
+
+xbrl:Instance
+    rdfs:comment "XBRL Instances contain the reported data with their values and "contexts" (e.g. currency or reporting period). Instances must be linked to at least one taxonomy which define their contexts, labels or references." .
+
+xbrl:Extension
+    rdfs:comment "An XBRL extension is a taxonomy extends an existing base taxonomy. The extension taxonomy may include, exclude or change information from the base taxonomy. The extension can be regarded as an overlay which modifies the structure of the taxonomy, adds and prohibits elements, their labels, linking, order of appearance and other characteristics. The main idea behind an extension is to encourage business users to tailor the taxonomy to their specific needs, while using the elements of the base taxonomy to ensure comparability." .
+
+xbrl:Schema
+    rdfs:comment "XBRL Schemas together with linkbases define an XBRL taxonomy. The purpose of XBRL schemas is to define taxonomy elements (concepts) and give each concept a name and define its characteristics. It can be regarded as a container where elements and references to “linkbases” files are defined." .
+
+xbrl:Linkbase
+    rdf:type rdfs:Class ;
+    rdfs:comment "XBRL linkbases and XBRL Schemas define together an XBRL taxonomy. Taxonomies with only the core elements (concepts) defined in an XBRL Schema would be useless. The purpose of XBRL linkbases is to combine labels and references to the concepts as well as define relationships between those concepts." .
+
+xbrl:LabelLinkbase
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf xbrl:Linkbase ;
+    rdfs:label "The label linkbase" ;
+    rdfs:comment "The XBRL Consortium aim is to create and develop a world-wide standard for electronic business reporting. This requires for the taxonomies to represent business data in multiple language. Therefore it is possible to create an element (concept) in the taxonomy with labels in different languages and or for different purposes e.g. a short label PPE compared to its long label Property, plant and equipment. Those labels are stored and linked to their respective elements in a label linkbase." .
+
+xbrl:ReferenceLinkbase
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf xbrl:Linkbase ;
+    rdfs:label "The reference linkbase" ;
+    rdfs:comment "Most of the elements appearing in taxonomies refer to particular concepts defined by authoritature literature. The reference linkbase stores the relationships between elements and the references e.g. IAS, para 68. The layer does not store the regulations themselves but the source identification names and paragraphs." .
+
+xbrl:PresentationLinkbase
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf xbrl:Linkbase ;
+    rdfs:label "The presentation linkbase" ;
+    rdfs:comment "Business reports are in general organised into identifiable data structures e.g. a Balance Sheet.  The presentation linkbase stores information about relationships between elements in order to properly organise the taxonomy content. This enables a taxonomy user to view a one dimensional representation of the elements." .
+
+xbrl:CalculationLinkbase
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf xbrl:Linkbase ;
+    rdfs:label "The calculation linkbase" ;
+    rdfs:comment "The idea of a calculation linkbase is to improve quality of an XBRL report (XBRL instance). The calculation linkbase defines basic calculation validation rules (addition/substraction), which must apply for all instances of the taxonomy. For example two elements (concepts) A, B can be summed up to a third element (concept) C, such that C = A + B."
+
+xbrl:DefinitionLinkbase
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf xbrl:Linkbase ;
+    rdfs:label "The definition linkbase" ;
+    rdfs:comment "The definition linkbase stores other pre-defined or self-defined relationships between elements. For example a relationship can be defined that the occurrence of one concept within an XBRL instance mandates the occurrence of other concepts." .

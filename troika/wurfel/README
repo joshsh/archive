@@ -19,6 +19,9 @@ unzip -l target/firefox/wurfel.xpi
 
 java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest
 
+java -classpath target/wurfel-with-dependencies.jar wurfel.tools.FileRdfizerDriver /home/joshs/dev/projects/troika/wurfel/src/main/java/ > target/fileRdfizerTest.rdf
+
+
 
 (: SIOC :)
 !import "http://rdfs.org/sioc/ns";
@@ -75,6 +78,7 @@ rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/test/wurfel
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/misc/wurfel-misc.ttl > ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
 
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/file.ttl > ./src/main/resources/wurfel/misc/file.rdf
+#rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/xbrl.ttl > ./src/main/resources/wurfel/misc/xbrl.rdf
 
 
 RAPTORTRUNK=/home/joshs/opt/rdf_/redland_/raptor_/dot/branch_dot
