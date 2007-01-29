@@ -7,6 +7,7 @@
 [U]
     [*] statements about a resource outside of their context are not allowed
     [*] "imperative" creation of statements about an existing resource is not allowed, as is deletion of statements
+    [*] context = namespace
 
 ::::::::::::::::::::::::::::::::::::::::
 

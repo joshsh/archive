@@ -115,7 +115,7 @@ URICHAR
     : '0'..'9' | 'a'..'z' | 'A'..'Z' | ':' | '.' | '-' | '_' | '/' //| ';' | '?'  | '@' | '&' | '=' | '+' | '$' | '!' | '~' | '*' | '\'' | '(' | ')' | '%' | ']'
     ;
 
-IDENTIFIER
+NAME
     : //(
         ( ( 'a'..'z' | 'A'..'Z' ) ( '0'..'9' | 'a'..'z' | 'A'..'Z' | '-' | '.' )* ':' )?
         ( "//" )?
@@ -131,7 +131,7 @@ STRING
       } ( NORMAL | DIGIT | SPECIAL | ESC | WS )+ '\"'!
     ;
 
-IDENTIFIER
+NAME
     : ( NORMAL | ESC ) ( NORMAL | DIGIT | ESC )*
     ;
 
@@ -213,6 +213,7 @@ GRAPHQUERY  : COMMAND ( "graphQuery"    | "g" ) ;
 NAMESPACES  : COMMAND ( "namespaces"    | "n" ) ;
 PRINT       : COMMAND ( "print"         | "p" ) ;
 SAVEAS      : COMMAND ( "saveas"        | "s" ) ;
+//URI         : COMMAND ( "uri"           | "u" ) ;
 QUIT        : COMMAND ( "quit"          | "q"
                       | "exit"          | "x" ) ;
 
@@ -259,8 +260,8 @@ nt_Statement
             interpreter.evaluate( r );
         }
 
-    // Note: commands are executed greedily, before the semicolon is encountered.
-    | nt_Directive SEMI
+    // Commands are executed lazily, when the semicolon is encountered.
+    | nt_Directive
 
     // Empty queries are simply ignored.
     | SEMI
@@ -358,11 +359,11 @@ nt_Resource returns [ Ast r ]
 {
     String first = null, second = null;
 }
-    : ( t1:IDENTIFIER
+    : ( t1:NAME
         {
             first = t1.getText();
         }
-        ( COLON t2:IDENTIFIER { second = t2.getText(); } )?
+        ( COLON t2:NAME { second = t2.getText(); } )?
       )
         {
             r = ( null == second )
@@ -379,36 +380,37 @@ nt_Resource returns [ Ast r ]
 nt_Directive
 {
     Ast subj, pred, obj;
+    Ast rhs;
 }
-    : ADD subj=nt_Item pred=nt_Item obj=nt_Item
+    : ADD subj=nt_Item pred=nt_Item obj=nt_Item SEMI
         {
             interpreter.addStatement( subj, pred, obj );
         }
 
-    | COUNT "statements"
+    | COUNT "statements" SEMI
         {
             interpreter.countStatements();
         }
 
-    | DEFINE name:IDENTIFIER uri:STRING
+    | DEFINE name:NAME uri:STRING SEMI
         {
             interpreter.define( name.getText(), uri.getText() );
         }
 
-    | GRAPHQUERY query:STRING
+    | GRAPHQUERY query:STRING SEMI
         {
             interpreter.evaluateGraphQuery( query.getText() );
         }
 
-    | NAMESPACES
+    | NAMESPACES SEMI
         {
             interpreter.showNamespaces();
         }
 /*
-    | PREFIX ( pre:IDENTIFIER )? COLON nt_Resource
+    | PREFIX ( pre:NAME )? COLON nt_Resource
 */
 
-    | PRINT
+    | PRINT SEMI
         (
           "contexts"
             {
@@ -416,15 +418,21 @@ nt_Directive
             }
         )
 
-    | QUIT
+    | QUIT SEMI
         {
             interpreter.quit();
         }
 
-    | SAVEAS file:STRING
+    | SAVEAS file:STRING SEMI
         {
             interpreter.saveAs( file.getText() );
         }
+/*
+    | URI uri:NAME COLON rhs=nt_Sequence SEMI
+        {
+            interpreter.evaluateAndDefine( rhs, uri.getText() );
+        }
+*/
     ;
 
 

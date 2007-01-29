@@ -48,13 +48,23 @@ public class Lexicon extends Observable implements Observer
         return localNameToUrisMap.get( localName );
     }
 
+    /**
+     *  Note: <code>nsPrefix</code> must be the prefix of a defined namespace.
+     *  <code>localName</code> is unconstrained.
+     */
     public URI resolveQualifiedName( final String nsPrefix,
                                      final String localName )
     {
+System.out.println( "resolving ( " + nsPrefix + ", " +  localName + ")" );
         String ns = resolveNamespacePrefix( nsPrefix );
         if ( null == ns )
             return null;
 
+        else
+        {
+            return context.getRepository().getValueFactory().createURI( ns, localName );
+        }
+/*
         Iterator<URI> uris = localNameToUrisMap.get( localName ).iterator();
         while ( uris.hasNext() )
         {
@@ -64,6 +74,7 @@ public class Lexicon extends Observable implements Observer
         }
 
         return null;
+*/
     }
 
     public String resolveNamespacePrefix( final String nsPrefix )

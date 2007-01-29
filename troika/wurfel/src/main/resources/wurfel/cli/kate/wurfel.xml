@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    cp ./src/main/resources/wurfel/cli/kate/wurfel.xml $KDEDIR/share/apps/katepart/syntax
+-->
+
 <!DOCTYPE language SYSTEM "language.dtd">
 
 <language name="Wurfel" version="0.1" kateversion="2.5.0" section="Sources" extensions="*.wfl" mimetype="text" author="Joshua Shinavier (parcour@gmail.com)" license="">
@@ -22,6 +27,7 @@
         <Int attribute="Decimal" context="#stay"/>
         <RegExpr attribute="Char" context="#stay" String="'.'"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
+        <DetectChar attribute="Uri" context="Uri" char="&lt;"/>
         <Detect2Chars attribute="Comment" context="Multi/inline Comment" char="(" char1=":" beginRegion="Comment"/>
         <DetectChar attribute="Symbol" context="#stay" char="{" beginRegion="Brace1" />
         <DetectChar attribute="Symbol" context="#stay" char="}" endRegion="Brace1" />
@@ -37,6 +43,9 @@
       <context attribute="String" lineEndContext="#stay" name="String">
         <DetectChar attribute="String" context="#pop" char="&quot;"/>
       </context>
+      <context attribute="Uri" lineEndContext="#stay" name="Uri">
+        <DetectChar attribute="Uri" context="#pop" char="&gt;"/>
+      </context>
       <context attribute="Comment" lineEndContext="#stay" name="Multi/inline Comment">
         <Detect2Chars attribute="Comment" context="#pop" char=":" char1=")" endRegion="Comment"/>
       </context>
@@ -50,7 +59,8 @@
       <itemData name="Char"        defStyleNum="dsChar" />
       <itemData name="String"      defStyleNum="dsString" />
       <itemData name="Comment"     defStyleNum="dsComment" />
-      <itemData name="Symbol" color="#404080" selColor="#d0d0c0"/>
+      <itemData name="Uri"         defStyleNum="dsOther"/>
+      <itemData name="Symbol"      color="#404080" selColor="#d0d0c0"/>
     </itemDatas>
   </highlighting>
   <general>

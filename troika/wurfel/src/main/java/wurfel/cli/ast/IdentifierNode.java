@@ -12,12 +12,14 @@ public class IdentifierNode extends Ast
 
     public IdentifierNode( final String localName )
     {
+System.out.println( "new IdentifierNode( " + localName + ")" );
         nsPrefix = null;
         this.localName = localName;
     }
 
     public IdentifierNode( final String nsPrefix, final String localName )
     {
+System.out.println( "new IdentifierNode( " + nsPrefix + ", " + localName + ")" );
         this.nsPrefix = nsPrefix;
         this.localName = localName;
     }

@@ -9,14 +9,16 @@ Exception handling
 
 Syntax
 ================================================================================
-* periods for composition may not work, as the period is a valid character in the local part of a URI
-	Beau.mother.father
-	Beau:mother:*father:?neighbor
-	:  :*  :+  :?  :{x}
-	#42
+* blank node syntax, e.g. _:bar
+* QName syntax where local name is empty, e.g.
+    rdfs:isDefinedBy
+        rdfs:
+* edit grammar to more closely resemble Turtle / NTriples
+* add character literal syntax, e.g. 'c'
 
 Model
 ================================================================================
+* handle translation of data between RDF and Function data structures
 * write a primitive which imports a document as a reified graph in which all subjects are bnodes
 * investigate data mapping between OpenRDF objects and Wurfel expressions, specifically, whether there would be performance savings in wrapping OpenRDF objects so as to avoid the use of instanceof
 * make LazyEvaluator truly lazy, as well as more efficient
@@ -44,16 +46,11 @@ Names and namespaces
 
 Command line interface
 ================================================================================
-* blank node syntax, e.g. _:bar
-* QName syntax where local name is empty, e.g.
-    rdfs:isDefinedBy
-        rdfs:
 * writer.debug becomes huge.  Disable it.
 * interpreter hangs on multi-line comments
 * implement an as-you-type parser for tab completion
 * place multiple-line expressions in the history
 * make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
-* edit grammar to more closely resemble Turtle / NTriples
 
 OpenRDF
 ================================================================================

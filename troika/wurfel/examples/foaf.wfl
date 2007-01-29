@@ -1,10 +1,9 @@
 
 (: foaf :)
-!import "http://xmlns.com/foaf/0.1/index.rdf";
+<http://xmlns.com/foaf/0.1/>;
 
-
-(: My foaf file :)
-"http://troika.dnsdojo.net/wurfel/joshua-shinavier.foaf.rdf" grab;
+(: My foaf data :)
+<http://troika.dnsdojo.net/rdf/joshua-shinavier#>;
 
 
 (:

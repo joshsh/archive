@@ -419,7 +419,8 @@ evalContext.close();
         }
     }
 
-    public void evaluate( Ast ast )
+    private void evaluate( Ast ast, final String name )
+        throws WurfelException
     {
         EvaluationContext evalContext = null;
 
@@ -442,19 +443,42 @@ evalContext.close();
 
         catch ( WurfelException e )
         {
-            if ( null != evalContext )
-            {
-                try
-                {
-                    evalContext.close();
-                }
+            evalContext.close();
+            throw e;
+        }
 
-                catch ( WurfelException e2 )
-                {
-                    // ...
-                }
-            }
+        if ( null != name )
+        {
+// TODO
+        }
+    }
 
+    public void evaluate( Ast ast )
+    {
+        EvaluationContext evalContext = null;
+
+        try
+        {
+            evaluate( ast, null );
+        }
+
+        catch ( WurfelException e )
+        {
+            alert( "Error: " + e.getMessage() );
+        }
+    }
+
+    public void evaluateAndDefine( Ast ast, String name )
+    {
+        EvaluationContext evalContext = null;
+
+        try
+        {
+            evaluate( ast, name );
+        }
+
+        catch ( WurfelException e )
+        {
             alert( "Error: " + e.getMessage() );
         }
     }

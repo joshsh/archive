@@ -1,3 +1,10 @@
+* periods for composition may not work, as the period is a valid character in the local part of a URI
+	Beau.mother.father
+	Beau:mother:*father:?neighbor
+	:  :*  :+  :?  :{x}
+	#42
+
+
 [?] What happens when the default context is saved if a statement in the default context references a blank node in another context?  If the blank node is discarded, then we'll have to discard the statement.  If the blank nodes is preserved, then we'll have duplicate data when the original context is restored (there's probably no way around this).
     [?] extreme case: a term is defined to reference a blank node outside of the default context
 
