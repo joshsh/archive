@@ -55,7 +55,6 @@ public class Lexicon extends Observable implements Observer
     public URI resolveQualifiedName( final String nsPrefix,
                                      final String localName )
     {
-System.out.println( "resolving ( " + nsPrefix + ", " +  localName + ")" );
         String ns = resolveNamespacePrefix( nsPrefix );
         if ( null == ns )
             return null;

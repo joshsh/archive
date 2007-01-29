@@ -36,10 +36,21 @@ public class WurfelPrintStream extends PrintStream
         xsdStringUri = evalContext.createXmlSchemaUri( "string" );
     }
 
-    private static String literalEncodingOf( final String s )
+    private void printUri( URI uri )
+        throws WurfelException
+    {
+        String prefix = lexicon.nsPrefixOf( uri );
+
+        if ( null == prefix )
+            print( "<" + uri.toString() + ">" );
+        else
+            print( prefix + ":" + uri.getLocalName() );
+    }
+
+    private void printEscapedString( final String s )
     {
 // TODO
-return s;
+print( "\"" + s + "\"" );
     }
 
     public void print( Value v )
@@ -54,30 +65,34 @@ return s;
         else
         {
             if ( v instanceof URI )
-            {
-                URI uri = (URI) v;
-                String prefix = lexicon.nsPrefixOf( uri );
-
-                if ( null == prefix )
-                    print( uri.toString() );
-                else
-                    print( prefix + ":" + uri.getLocalName() );
-            }
+                printUri( (URI) v );
 
             else if ( v instanceof Literal )
             {
                 URI dataTypeUri = ( (Literal) v ).getDatatype();
 
 // FIXME: is this equals() safe?
-                if ( null != dataTypeUri && dataTypeUri.equals( xsdStringUri ) )
+                if ( null != dataTypeUri )
                 {
-                    print( "\"" );
-                    print( literalEncodingOf( v.toString() ) );
-                    print( "\"" );
+                    if ( dataTypeUri.equals( xsdBooleanUri ) )
+                        print( v.toString() );
+                    else if ( dataTypeUri.equals( xsdDoubleUri ) )
+                        print( v.toString() );
+                    else if ( dataTypeUri.equals( xsdIntegerUri ) )
+                        print( v.toString() );
+                    else if ( dataTypeUri.equals( xsdStringUri ) )
+                        printEscapedString( v.toString() );
+                    else
+                    {
+                        printEscapedString( v.toString() );
+                        print( "^^" );
+                        printUri( dataTypeUri );
+                    }
                 }
 
                 else
-                    print( v.toString() );
+                    // For now, plain literals are printed as string-typed literals.
+                    printEscapedString( v.toString() );
             }
 
             else
