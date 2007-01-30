@@ -1,3 +1,20 @@
+This works:
+	<http://www.w3.org/People/Berners-Lee/card#i>;
+	<http://my.opera.com/sucks/xml/foaf#me>;
+This doesn't:
+	<http://www.w3.org/People/Berners-Lee/card#>;
+	<http://my.opera.com/sucks/xml/foaf#>;
+Neither do these, although these URIs are the subjects of statements once their graph has been imported:
+	<http://www.w3.org/People/Berners-Lee/card>;
+	<http://my.opera.com/sucks/xml/foaf>;
+
+Wurfel sees these as different:
+    <http://www.w3.org/People/Berners-Lee/card#i>;
+    <http://www.w3.org/People/Berners-Lee/card.rdf#i>;
+
+
+
+
 * periods for composition may not work, as the period is a valid character in the local part of a URI
 	Beau.mother.father
 	Beau:mother:*father:?neighbor

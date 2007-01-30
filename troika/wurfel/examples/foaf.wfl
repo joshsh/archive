@@ -2,7 +2,17 @@
 (: foaf :)
 <http://xmlns.com/foaf/0.1/>;
 
-(: My foaf data :)
+(: Tim Berners-Lee :)
+<http://www.w3.org/People/Berners-Lee/card#i>;
+
+# Note: after the second step or so, most if not all graphs are from my.opera.com
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/name;  # 32 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/name;  # 115 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/name;  # 692 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/name;  # 3536 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/name;  # 7028 results
+
+(: Ego :)
 <http://troika.dnsdojo.net/rdf/joshua-shinavier#>;
 
 
@@ -25,3 +35,10 @@ C type b x x
 W (C type b) x
 
 :)
+
+
+
+
+
+
+

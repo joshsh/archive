@@ -40,7 +40,7 @@ public class Lexicon extends Observable implements Observer
         this.context = context;
         context.addObserver( this );
 
-        refresh();
+        createMaps();
     }
 
     public List<URI> resolveUnqualifiedName( final String localName )
@@ -137,7 +137,7 @@ public class Lexicon extends Observable implements Observer
         siblings.add( uri );
     }
 
-    private void refresh()
+    private void createMaps()
         throws WurfelException
     {
 System.out.println( "################# Rebuilding dictionaries." );
@@ -191,6 +191,38 @@ System.out.println( "################# Rebuilding dictionaries." );
         Iterator<URI> uriIter = allURIs.iterator();
         while ( uriIter.hasNext() )
             add( uriIter.next() );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private boolean changed = false;
+    private boolean suspended = false;
+
+    public synchronized void suspendEventHandling()
+    {
+        suspended = true;
+    }
+
+    public synchronized void resumeEventHandling()
+        throws WurfelException
+    {
+        if ( suspended )
+        {
+            if ( changed )
+            {
+                refresh();
+
+                changed = false;
+            }
+
+            suspended = false;
+        }
+    }
+
+    private void refresh()
+        throws WurfelException
+    {
+        createMaps();
 
         setChanged();
         notifyObservers();
@@ -201,7 +233,13 @@ System.out.println( "################# Rebuilding dictionaries." );
         try
         {
             if ( o == context )
-                refresh();
+            {
+                if ( suspended )
+                    changed = true;
+
+                else
+                    refresh();
+            }
         }
 
         catch ( WurfelException e )

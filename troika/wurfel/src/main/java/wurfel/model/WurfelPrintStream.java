@@ -103,17 +103,14 @@ print( "\"" + s + "\"" );
     public void print( Statement st )
         throws WurfelException
     {
-        print( "    <" );
+        print( "    " );
         print( st.getSubject() );
-        print( ">" );
 
-        print( " <" );
+        print( " " );
         print( st.getPredicate() );
-        print( ">" );
 
-        print( " <" );
+        print( " " );
         print( st.getObject() );
-        print( ">" );
     }
 
     public void print( Iterator<Statement> stmtIter )

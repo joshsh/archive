@@ -459,7 +459,9 @@ evalContext.close();
 
         try
         {
+            lexicon.suspendEventHandling();
             evaluate( ast, null );
+            lexicon.resumeEventHandling();
         }
 
         catch ( WurfelException e )
@@ -474,7 +476,9 @@ evalContext.close();
 
         try
         {
+            lexicon.suspendEventHandling();
             evaluate( ast, name );
+            lexicon.resumeEventHandling();
         }
 
         catch ( WurfelException e )

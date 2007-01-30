@@ -55,6 +55,8 @@ Command line interface
 OpenRDF
 ================================================================================
 * Create and use a single Connection object for the evaluation of a single Expression, rather than one Connection object for each operation.  Look into connection pooling.
+* investigate warning (encountered while crawling foaf:knows graph starting at TBL):
+	2007-01-29 16:57:00:417 [WARNING] Rolling back transaction due to connection close
 
 Ontologies
 ================================================================================
@@ -67,6 +69,10 @@ Testing
   http://www.w3.org/2000/10/rdf-tests/rdfcore/ntriples/test.nt
 * test of HTTP URI dereferencing
 * test of the context filter
+
+Standards
+================================================================================
+* bring WurfelPrintStream into agreement with some identified set of RDF encoding practices
 
 Use cases
 ================================================================================
