@@ -6,11 +6,19 @@
 <http://www.w3.org/People/Berners-Lee/card#i>;
 
 # Note: after the second step or so, most if not all graphs are from my.opera.com
-<http://www.w3.org/People/Berners-Lee/card#i> /knows/name;  # 32 results
-<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/name;  # 115 results
-<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/name;  # 692 results
-<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/name;  # 3536 results
-<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/name;  # 7028 results
+<http://www.w3.org/People/Berners-Lee/card#i> /name;  # 1 result
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/name;  # 33 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/name;  # 116 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/name;  # 693 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/name;  # 3537 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/name;  # 7053 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/name;  # 8356 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/name;  # 8690 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/knows/name;  # 8759 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/knows/knows/name;  # 8768 results
+<http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/knows/knows/knows/name;  # 8773 results
+# No additional results after this point.
+!saveas "foaf-dump.rdf";
 
 (: Ego :)
 <http://troika.dnsdojo.net/rdf/joshua-shinavier#>;

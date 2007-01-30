@@ -46,7 +46,6 @@ Names and namespaces
 
 Command line interface
 ================================================================================
-* writer.debug becomes huge.  Disable it.
 * interpreter hangs on multi-line comments
 * implement an as-you-type parser for tab completion
 * place multiple-line expressions in the history
@@ -60,6 +59,7 @@ OpenRDF
 
 Ontologies
 ================================================================================
+* give the published ontologies a content type of "application/rdf+xml"
 * ontology describing SemanticWebDocuments and where to get them
 
 Testing

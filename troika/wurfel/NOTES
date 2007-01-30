@@ -28,6 +28,33 @@ Wurfel sees these as different:
 [*] URIs could be created at the Repository level (in fact it so happens that they can be created at any level, with no comparability problems) but we're creating them at the Connection level just because that seems most general.
 
 
+OpenRDF
+================================================================================
+
+N3 parsing is apparently not yet supported:
+	2007-01-30 12:19:51,410 [main] DEBUG - Importing model http://www.w3.org/2000/10/swap/test/s1.n3# as http://www.w3.org/2000/10/swap/test/s1.n3#
+	2007-01-30 12:19:52,025 [main] ERROR - org.openrdf.rio.UnsupportedRDFormatException: org.openrdf.util.reflect.NoSuchTypeException: No type found for key: N3 (mimeType=text/rdf+n3; ext=n3)
+		at org.openrdf.rio.Rio.createParser(Rio.java:132)
+		at org.openrdf.rio.Rio.createParser(Rio.java:149)
+		at org.openrdf.repository.ConnectionImpl._addInputStreamOrReader(ConnectionImpl.java:265)
+		at org.openrdf.repository.ConnectionImpl.add(ConnectionImpl.java:244)
+		at wurfel.Context.dereferenceGraph(Context.java:564)
+		at wurfel.model.HttpUriDereferencer.dereferenceGraph(HttpUriDereferencer.java:129)
+		at wurfel.model.HttpUriDereferencer.dereferenceSubjectUri(HttpUriDereferencer.java:57)
+		at wurfel.cli.Interpreter.dereferenceResultSet(Interpreter.java:371)
+		at wurfel.cli.Interpreter.evaluate(Interpreter.java:437)
+		at wurfel.cli.Interpreter.evaluate(Interpreter.java:463)
+		at wurfel.cli.WurfelParser.nt_Statement(WurfelParser.java:136)
+		at wurfel.cli.WurfelParser.nt_Input(WurfelParser.java:71)
+		at wurfel.cli.Interpreter.runPrivate(Interpreter.java:244)
+		at wurfel.cli.Interpreter.run(Interpreter.java:273)
+		at wurfel.JLineTest.main(JLineTest.java:46)
+	Caused by: org.openrdf.util.reflect.NoSuchTypeException: No type found for key: N3 (mimeType=text/rdf+n3; ext=n3)
+		at org.openrdf.util.reflect.KeyedObjectFactory.createInstance(KeyedObjectFactory.java:133)
+		at org.openrdf.rio.Rio.createParser(Rio.java:129)
+		... 14 more
+
+
 Exception handling
 ================================================================================
 * Try/catch blocks around calls to Wurfel methods generally expect only WurfelExceptions, and do not catch anything else.  Try/catch blocks around calls to Java methods expect the specific exceptions thrown by those methods.  Try/catch blocks around calls to methods in other libraries catch all Throwables, indiscriminately (Wurfel doesn't trust third-party code).
