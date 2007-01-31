@@ -31,7 +31,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
     public PingTheSemanticWeb( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#pingTheSemanticWeb" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "pingTheSemanticWeb" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

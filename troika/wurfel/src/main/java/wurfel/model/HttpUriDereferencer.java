@@ -126,7 +126,7 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
 
         URI contextUri = evalContext.createUri( uri );
 
-        context.dereferenceGraph( url, contextUri, evalContext.getConnection() );
+        evalContext.addGraph( url, contextUri );
 
         if ( Wurfel.enforceImplicitProvenance() )
             filter( uri, contextUri, evalContext.getConnection() );

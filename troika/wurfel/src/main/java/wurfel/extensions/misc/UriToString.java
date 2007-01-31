@@ -18,7 +18,7 @@ public class UriToString extends PrimitiveFunction
     public UriToString( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#uriToString" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "uriToString" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

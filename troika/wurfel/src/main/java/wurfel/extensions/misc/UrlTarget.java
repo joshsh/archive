@@ -25,7 +25,7 @@ public class UrlTarget extends PrimitiveFunction
     public UrlTarget( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlTarget" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "urlTarget" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

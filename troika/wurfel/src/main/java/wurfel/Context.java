@@ -22,7 +22,6 @@ import org.openrdf.queryresult.Solution;
 import org.openrdf.repository.Connection;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryImpl;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.sail.Namespace;
@@ -32,13 +31,9 @@ import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.util.iterator.CloseableIterator;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-
-import java.net.URL;
-import java.net.URLConnection;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -112,7 +107,7 @@ aliases = new Hashtable<String, String>();
 
         try
         {
-            importModel( Wurfel.schemaUrl(), evalContext.createUri( "urn:wurfel" ), evalContext );
+//            importModel( Wurfel.schemaUrl(), evalContext.createUri( "urn:wurfel" ), evalContext );
 
             ( new wurfel.extensions.test.TestExtension() ).load( evalContext );
             ( new wurfel.extensions.misc.MiscExtension() ).load( evalContext );
@@ -132,12 +127,6 @@ public Repository getRepository()
     return repository;
 }
 //private boolean namespacesDefined = false;
-
-    public void importModel( final URL url, final URI baseURI, EvaluationContext evalContext )
-        throws WurfelException
-    {
-        dereferenceGraph( url, baseURI, evalContext.getConnection() );
-    }
 
     private void extractRDF( OutputStream out )
         throws WurfelException
@@ -424,179 +413,8 @@ public Repository getRepository()
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private void close( InputStream is )
-        throws WurfelException
+    public void touch()
     {
-        try
-        {
-            is.close();
-        }
-
-        catch ( IOException e )
-        {
-            throw new WurfelException( e );
-        }
-    }
-
-    // Note: examines the content type first, then the URL extension.  If all
-    //       else fails, default to RDF/XML and hope for the best.
-    private RDFFormat guessRdfFormat( final URLConnection urlConn )
-    {
-/*
-System.out.println( RDFFormat.N3.getName() + ": " + RDFFormat.N3.getMIMEType() );
-System.out.println( RDFFormat.NTRIPLES.getName() + ": " + RDFFormat.NTRIPLES.getMIMEType() );
-System.out.println( RDFFormat.RDFXML.getName() + ": " + RDFFormat.RDFXML.getMIMEType() );
-System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType() );
-System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
-*/
-        String contentType = urlConn.getContentType();
-System.out.println( "######## contentType = " + contentType );
-
-        String file = urlConn.getURL().getFile();
-        String ext;
-        if ( null == file )
-            ext = null;
-        else
-        {
-            int lastDot = file.lastIndexOf( '.' );
-            ext = ( lastDot > 0 && lastDot < file.length() - 1 )
-                ? file.substring( lastDot + 1 )
-                : null;
-        }
-System.out.println( "######## ext = " + ext );
-
-        // Primary content type rules.
-        if ( null != contentType )
-        {
-            // See: http://www.w3.org/TR/rdf-syntax-grammar/
-            if ( contentType.contains( "application/rdf+xml" ) )
-                return RDFFormat.RDFXML;
-
-            // See: http://www.w3.org/DesignIssues/Notation3.html
-            else if ( contentType.contains( "text/rdf+n3" ) )
-                return RDFFormat.N3;
-
-// See: RDFFormat.TRIX.getMIMEType()
-            else if ( contentType.contains( "application/trix" ) )
-                return RDFFormat.TRIX;
-
-            // See: http://www.dajobe.org/2004/01/turtle/
-            else if ( contentType.contains( "application/x-turtle" ) )
-                return RDFFormat.N3;
-        }
-
-        // Primary file extension rules.
-        if ( null != ext )
-        {
-// TODO: I don't know if this is actually an N3 file extension
-            if ( ext.equals( "n3" ) )
-                return RDFFormat.N3;
-
-            else if ( ext.equals( "nt" ) )
-                return RDFFormat.NTRIPLES;
-
-            else if ( ext.equals( "rdf" )
-              || ext.equals( "rdfs" )
-              || ext.equals( "owl" ) )
-                return RDFFormat.RDFXML;
-
-// TODO: I don't know if this is actually a TriX file extension
-            else if ( ext.equals( "trix" ) )
-                return RDFFormat.TRIX;
-
-            else if ( ext.equals( "ttl" )
-              || ext.equals( "turtle" ) )
-                return RDFFormat.TURTLE;
-
-// TODO: I'm not sure just how hackish this is.
-// precedent:
-//     http://www.aaronsw.com/about.xrdf
-//     http://www.w3.org/People/karl/karl-foaf.xrdf
-            else if ( ext.equals( "xrdf" ) )
-                return RDFFormat.RDFXML;
-        }
-
-        // Secondary content type rules.
-        if ( null != contentType )
-        {
-            if ( contentType.contains( "application/xml" ) )
-                return RDFFormat.RDFXML;
-
-            // precedent: http://www.mindswap.org/2004/owl/mindswappers
-            else if ( contentType.contains( "text/xml" ) )
-                return RDFFormat.RDFXML;
-
-            // See: http://www.w3.org/TR/rdf-testcases/#ntriples)
-            // This is only a secondary rule because the text/plain MIME type
-            // is so broad, and the N-Triples format so uncommon.
-//            else if ( contentType.contains( "text/plain" ) )
-//                return RDFFormat.NTRIPLES;
-        }
-
-        // Secondary file extension rules.
-        if ( null != ext )
-        {
-            // precedent:
-            //     http://hometown.aol.com/chbussler/foaf/chbussler.foaf
-            if ( ext.equals( "foaf" ) )
-                return RDFFormat.RDFXML;
-        }
-
-        // Last-ditch rule.
-        return RDFFormat.RDFXML;
-    }
-
-    public void dereferenceGraph( final URL url, final URI baseURI, Connection conn )
-        throws WurfelException
-    {
-        s_logger.debug( "Importing model " + url.toString() +
-            ( ( null == baseURI ) ? "" : " as " + baseURI.toString() ) );
-
-        boolean verifyData = true;
-
-        URLConnection urlConn;
-        InputStream response;
-
-System.out.println( "######## dereferencing graph in model: " + url );
-
-        try
-        {
-            urlConn = url.openConnection();
-            urlConn.connect();
-            response = urlConn.getInputStream();
-        }
-
-        catch ( IOException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        RDFFormat format = guessRdfFormat( urlConn );
-        if ( null == format )
-        {
-            close( response );
-            return;
-        }
-System.out.println( "####### Guessed format is " + format.getName() );
-
-        try
-        {
-            if ( null == baseURI )
-                conn.add( response, null, format );
-            else
-                conn.add( response, baseURI.toString(), format, baseURI );
-        }
-
-        catch ( Throwable t  )
-        {
-            close( response );
-            throw new WurfelException( t );
-        }
-
-        close( response );
-
-System.out.println( "####### graph successfully imported" );
-
         setChanged();
         notifyObservers();
     }

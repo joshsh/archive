@@ -26,10 +26,13 @@ public class MiscExtension extends Extension
 
     protected URL[] getResources()
     {
+/*
         URL[] urls = {
             this.getClass().getResource( "wurfel-misc.rdf" ) };
 
         return urls;
+*/
+        return null;
     }
 }
 

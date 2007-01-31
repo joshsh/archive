@@ -20,7 +20,7 @@ public class UrlEncoding extends PrimitiveFunction
     public UrlEncoding( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#urlEncoding" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "urlEncoding" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,

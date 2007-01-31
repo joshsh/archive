@@ -29,7 +29,7 @@ public class SwoogleIt extends PrimitiveFunction
     public SwoogleIt( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#swoogleIt" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "swoogleIt" ), evalContext );
 
         rdfTypeUri = evalContext.createRdfUri( "type" );
         swoogleQueryResponseUri = evalContext.createSwoogleUri( "QueryResponse" );
@@ -52,14 +52,15 @@ public class SwoogleIt extends PrimitiveFunction
 
         try
         {
-            URL url = new URL(
-                "http://logos.cs.umbc.edu:8080/swoogle31/q"
+            String urlStr = "http://logos.cs.umbc.edu:8080/swoogle31/q"
                 + "?key=" + URLEncoder.encode( key )
                 + "&queryType=" + URLEncoder.encode( queryType.getLocalName() )
-                + "&searchString=" + URLEncoder.encode( searchString ) );
+                + "&searchString=" + URLEncoder.encode( searchString );
 
-            URI baseUri = evalContext.createRandomUri();
-            context.importModel( url, baseUri, evalContext );
+            URL url = new URL( urlStr );
+
+            URI baseUri = evalContext.createUri( urlStr );
+            evalContext.addGraph( url, baseUri );
             NodeSet results = new NodeSet();
 //System.out.println( "baseUri = " + baseUri );
 

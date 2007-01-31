@@ -14,8 +14,11 @@ public abstract class Extension
     public void load( EvaluationContext evalContext )
         throws WurfelException
     {
-        for ( URL url : getResources() )
-            evalContext.getContext().importModel( url, evalContext.createRandomUri(), evalContext );
+        URL[] resources = getResources();
+
+        if ( null != resources )
+            for ( URL url : getResources() )
+                evalContext.addGraph( url );
 
         for ( Function function : getFunctions( evalContext ) )
             evalContext.getContext().addSpecialFunction( function );

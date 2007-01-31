@@ -40,10 +40,13 @@ public class TestExtension extends Extension
 
     protected URL[] getResources()
     {
+/*
         URL[] urls = {
             this.getClass().getResource( "wurfel-test.rdf" ) };
 
         return urls;
+*/
+        return null;
     }
 }
 

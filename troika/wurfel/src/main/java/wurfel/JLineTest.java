@@ -37,9 +37,9 @@ LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
             Context context = new Context( "anonymousContext" );
             EvaluationContext evalContext = new EvaluationContext( context, "for JLineTest main" );
             if ( args.length == 2 )
-                context.importModel( new URL( args[0] ), evalContext.createUri( args[1] ), evalContext );
+                evalContext.addGraph( new URL( args[0] ), evalContext.createUri( args[1] ) );
             else if ( args.length == 1 )
-                context.importModel( new URL( args[0] ), null, evalContext );
+                evalContext.addGraph( new URL( args[0] ) );
             evalContext.close();
 
             Interpreter r = new Interpreter( context );

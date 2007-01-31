@@ -25,7 +25,7 @@ public class Grab extends PrimitiveFunction
     public Grab( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#grab" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "grab" ), evalContext );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
@@ -44,8 +44,8 @@ public class Grab extends PrimitiveFunction
         {
             URL url = new URL( urlStr );
 
-            URI baseUri = evalContext.createRandomUri();
-            context.importModel( url, baseUri, evalContext );
+            URI baseUri = evalContext.createUri( urlStr );
+            evalContext.addGraph( url, baseUri );
             NodeSet results = new NodeSet();
 
             CloseableIterator<? extends Statement> stmtIter

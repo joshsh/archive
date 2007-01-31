@@ -28,7 +28,7 @@ public class Sha1SumOf extends PrimitiveFunction
     public Sha1SumOf( EvaluationContext evalContext )
         throws WurfelException
     {
-        super( evalContext.createUri( "urn:net.dnsdojo.troika.wurfel-misc#sha1SumOf" ), evalContext );
+        super( evalContext.createWurfelMiscUri( "sha1SumOf" ), evalContext );
     }
 
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java

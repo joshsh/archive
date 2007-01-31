@@ -13,6 +13,13 @@
     [.] it appears at the head of an expression under reduction
     [.] it appears as an argument to a primitive function which is to be applied
 
+[V] names ^ command-line syntax
+    foo:bar -- qualified name
+    foo:    -- qualified name in which the local name is blank
+    :bar    -- name qualified with the default namespace
+    bar     -- name which relies on namespace inference
+    _:bar   -- blank node identified by 'bar'
+
 ::::::::::::::::::::::::::::::::::::::::
 
 mvn clean
@@ -27,9 +34,6 @@ java -Xmx512M -DentityExpansionLimit=150000 -classpath target/wurfel-with-depend
 java -classpath target/wurfel-with-dependencies.jar wurfel.tools.FileRdfizerDriver /home/joshs/dev/projects/troika/wurfel/src/main/java/ > target/fileRdfizerTest.rdf
 
 
-
-(: SIOC :)
-!import "http://rdfs.org/sioc/ns";
 
 (: foafingmusic ontology :)
 !import "http://foafing-the-music.iua.upf.edu/music-ontology/foafing-ontology-0.3.rdf";
@@ -84,6 +88,15 @@ rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/misc/wurfel
 
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/file.ttl > ./src/main/resources/wurfel/misc/file.rdf
 #rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/xbrl.ttl > ./src/main/resources/wurfel/misc/xbrl.rdf
+
+
+sfhome
+cd www/rdf
+put ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
+put ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
+put ./src/main/resources/wurfel/wurfel.rdf
+exit
+
 
 
 RAPTORTRUNK=/home/joshs/opt/rdf_/redland_/raptor_/dot/branch_dot

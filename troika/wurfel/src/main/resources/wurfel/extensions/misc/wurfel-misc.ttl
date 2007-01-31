@@ -1,5 +1,5 @@
-@prefix wurfel:       <urn:net.dnsdojo.troika.wurfel#> .
-@prefix wurfel-misc:  <urn:net.dnsdojo.troika.wurfel-misc#> .
+@prefix wurfel:       <http://troika.dnsdojo.net/rdf/wurfel#> .
+@prefix wurfel-misc:  <http://troika.dnsdojo.net/rdf/wurfel-misc#> .
 @prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
