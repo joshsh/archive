@@ -27,6 +27,8 @@ Scuttering
 ================================================================================
 * look into adding a FOAF scutterer
 * build a smarter URI dereferencer which can determine the MIME type of a document (so we can grab data from other formats besides RDF/XML)
+* add support for "blank" local names at the model level, so you can grab the root node of a graph like this one:
+    http://sws.geonames.org/3020251/about.rdf
 
 Concurrency
 ================================================================================
@@ -43,6 +45,8 @@ Names and namespaces
 * address name collisions, scalability issues in general
 * add ability to define terms in the default namespace, then save them
 * handle name collisions in a more flexible and configurable way
+* add a @prefix command to explicitly define or override namespace prefixes
+* make "prefix discovery" a configurable feature
 
 Command line interface
 ================================================================================
@@ -84,6 +88,8 @@ Use cases
 
 Nice-to-have
 ================================================================================
+* dbpedia interface
+* geonames interface
 * Swoogle add-on, which performs queries like the one below, then uses the
   result to grab potential models for importing.
       http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&searchString=parrot&key=demo

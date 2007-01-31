@@ -22,6 +22,20 @@ Wurfel sees these as different:
 	#42
 
 
+
+    <owl:InverseFunctionalProperty rdf:about="http://www.w3.org/2000/10/swap/pim/contact#emailAddress">
+        <domain rdf:resource="http://www.w3.org/2000/10/swap/pim/contact#SocialEntity"/>
+        <range rdf:resource="http://www.w3.org/2000/10/swap/pim/contact#_EmailAddress"/>
+        <con:_example rdf:parseType="Quote">
+            <rdf:Description rdf:about="http://www.w3.org/2000/10/swap/pim/contact#_Dan">
+                <con:emailAddress>connolly@w3.org</con:emailAddress>
+            </rdf:Description>
+        </con:_example>
+    </owl:InverseFunctionalProperty>
+
+
+
+
 [?] What happens when the default context is saved if a statement in the default context references a blank node in another context?  If the blank node is discarded, then we'll have to discard the statement.  If the blank nodes is preserved, then we'll have duplicate data when the original context is restored (there's probably no way around this).
     [?] extreme case: a term is defined to reference a blank node outside of the default context
 
