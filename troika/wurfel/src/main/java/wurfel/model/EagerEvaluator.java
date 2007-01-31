@@ -22,23 +22,20 @@ public class EagerEvaluator extends Evaluator
     public NodeSet reduce( Value expr, EvaluationContext evalContext )
         throws WurfelException
     {
-/*
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
-            NodeSet result = new NodeSet();
-
             // Reduce the function.
             Iterator<Value> reducedFuncIter = reduce(
-                ( (Apply) expr ).getFunction() ).iterator();
+                ( (Apply) expr ).getFunction(), evalContext ).iterator();
 
             // Reduce the argument.
             Iterator<Value> reducedArgIter = reduce(
-                ( (Apply) expr ).getArgument() ).iterator();
+                ( (Apply) expr ).getArgument(), evalContext ).iterator();
 
             // Iterate over the cartesian product of the reduced function(s)
             // with the reduced argument(s).
             LinkedList<Value> argList = new LinkedList<Value>();
-
+            NodeSet result = new NodeSet();
             while ( reducedFuncIter.hasNext() )
             {
                 Value function = reducedFuncIter.next();
@@ -53,14 +50,14 @@ public class EagerEvaluator extends Evaluator
                         // Argument list is initially empty.
                         argList.clear();
 
-                        Collection<Value> itmResult = tmpApply.applyTo( argList, context );
+                        Collection<Value> itmResult = tmpApply.applyTo( argList, evalContext );
 
                         // Reduction is recursive; we must first iterate over
                         // the intermediate results and reduce them before
                         // adding them to the list of final results.
                         Iterator<Value> itmIter = itmResult.iterator();
                         while ( itmIter.hasNext() )
-                            result.add( reduce( itmIter.next() ) );
+                            result.add( reduce( itmIter.next(), evalContext ) );
                     }
 
                     else
@@ -72,7 +69,6 @@ public class EagerEvaluator extends Evaluator
         }
 
         else
-*/
             return new NodeSet( expr );
     }
 

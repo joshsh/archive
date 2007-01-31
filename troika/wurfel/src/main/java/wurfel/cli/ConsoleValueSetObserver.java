@@ -61,7 +61,7 @@ public class ConsoleValueSetObserver implements Observer
         }
     }
 
-    private void refreshView()
+    private void refresh()
         throws WurfelException
     {
         Context context = valueSet.getContext();
@@ -70,7 +70,7 @@ public class ConsoleValueSetObserver implements Observer
         if ( 0 < values.size() )
             ps.println( "" );
 
-        EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSetObserver refreshView()" );
+        EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSetObserver refresh()" );
         try
         {
             int index = 0;
@@ -104,12 +104,44 @@ public class ConsoleValueSetObserver implements Observer
         ps.print( "\n" );
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    private boolean changed = false;
+    private boolean suspended = false;
+
+    public synchronized void suspendEventHandling()
+    {
+        suspended = true;
+    }
+
+    public synchronized void resumeEventHandling()
+        throws WurfelException
+    {
+        if ( suspended )
+        {
+            if ( changed )
+            {
+                refresh();
+
+                changed = false;
+            }
+
+            suspended = false;
+        }
+    }
+
     public void update( Observable o, Object arg )
     {
         try
         {
             if ( o == valueSet )
-                refreshView();
+            {
+                if ( suspended )
+                    changed = true;
+
+                else
+                    refresh();
+            }
         }
 
         catch ( WurfelException e )

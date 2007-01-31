@@ -9,6 +9,10 @@
     [*] "imperative" creation of statements about an existing resource is not allowed, as is deletion of statements
     [*] context = namespace
 
+[*] lazy reduction -- an expression is reduced when:
+    [.] it appears at the head of an expression under reduction
+    [.] it appears as an argument to a primitive function which is to be applied
+
 ::::::::::::::::::::::::::::::::::::::::
 
 mvn clean

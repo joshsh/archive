@@ -72,6 +72,7 @@ public Context getContext()
     private CompletorState completorState = CompletorState.NONE;
 
     private ObservableValueSet valueSet;
+    private ConsoleValueSetObserver observer;
 
     private Lexicon lexicon;
 
@@ -116,6 +117,12 @@ public Context getContext()
         }
 
         errorPrintStream = System.err;
+
+            valueSet = new ObservableValueSet( context, null );
+EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSet constructor" );
+            observer = new ConsoleValueSetObserver( valueSet, lexicon, evalContext );
+evalContext.close();
+            valueSet.addObserver( observer );
 
         update( lexicon, null );
     }
@@ -168,12 +175,6 @@ System.out.println( "########## updating completors" );
             {
                 throw new WurfelException( t );
             }
-
-            valueSet = new ObservableValueSet( context, null );
-EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSet constructor" );
-            ConsoleValueSetObserver observer = new ConsoleValueSetObserver( valueSet, lexicon, evalContext );
-evalContext.close();
-            valueSet.addObserver( observer );
         }
 
         catch ( WurfelException e )
@@ -460,8 +461,10 @@ evalContext.close();
         try
         {
             lexicon.suspendEventHandling();
+            observer.suspendEventHandling();
             evaluate( ast, null );
             lexicon.resumeEventHandling();
+            observer.resumeEventHandling();
         }
 
         catch ( WurfelException e )

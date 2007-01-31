@@ -526,8 +526,8 @@ System.out.println( "######## ext = " + ext );
             // See: http://www.w3.org/TR/rdf-testcases/#ntriples)
             // This is only a secondary rule because the text/plain MIME type
             // is so broad, and the N-Triples format so uncommon.
-            else if ( contentType.contains( "text/plain" ) )
-                return RDFFormat.NTRIPLES;
+//            else if ( contentType.contains( "text/plain" ) )
+//                return RDFFormat.NTRIPLES;
         }
 
         // Secondary file extension rules.
@@ -535,13 +535,12 @@ System.out.println( "######## ext = " + ext );
         {
             // precedent:
             //     http://hometown.aol.com/chbussler/foaf/chbussler.foaf
-            if ( ext.equals( "rdf" ) )
+            if ( ext.equals( "foaf" ) )
                 return RDFFormat.RDFXML;
         }
 
-        // For now: go ahead and try the RDF/XML format anyway.
+        // Last-ditch rule.
         return RDFFormat.RDFXML;
-//        return null;
     }
 
     public void dereferenceGraph( final URL url, final URI baseURI, Connection conn )
