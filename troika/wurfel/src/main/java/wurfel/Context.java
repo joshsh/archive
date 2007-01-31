@@ -439,7 +439,7 @@ public Repository getRepository()
     }
 
     // Note: examines the content type first, then the URL extension.  If all
-    //       else fails, try reading as RDF/XML and hope for the best.
+    //       else fails, default to RDF/XML and hope for the best.
     private RDFFormat guessRdfFormat( final URLConnection urlConn )
     {
 /*
@@ -495,14 +495,17 @@ System.out.println( "######## ext = " + ext );
             else if ( ext.equals( "nt" ) )
                 return RDFFormat.NTRIPLES;
 
-            else if ( ext.equals( "rdf" ) )
+            else if ( ext.equals( "rdf" )
+              || ext.equals( "rdfs" )
+              || ext.equals( "owl" ) )
                 return RDFFormat.RDFXML;
 
 // TODO: I don't know if this is actually a TriX file extension
             else if ( ext.equals( "trix" ) )
                 return RDFFormat.TRIX;
 
-            else if ( ext.equals( "ttl" ) )
+            else if ( ext.equals( "ttl" )
+              || ext.equals( "turtle" ) )
                 return RDFFormat.TURTLE;
 
 // TODO: I'm not sure just how hackish this is.

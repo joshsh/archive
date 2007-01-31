@@ -1,0 +1,41 @@
+# rapper -q -i turtle -o rdfxml joshua-shinavier.ttl  > joshua-shinavier.rdf
+
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix con:     <http://www.w3.org/2000/10/swap/pim/contact#> .
+
+<http://troika.dnsdojo.net/rdf/joshua-shinavier#>
+  a foaf:PersonalProfileDocument ;
+  foaf:maker _:me ;
+  foaf:primaryTopic _:me .
+
+_:me
+  a foaf:Person ;
+  a con:Male ;
+  foaf:name "Joshua Shinavier" ;
+  foaf:title "Mr." ;
+  foaf:givenname "Joshua" ;
+  foaf:family_name "Shinavier" ;
+#  foaf:nick "Ajax" ;
+  foaf:mbox_sha1sum "e9bbf0a3835f323fc4bf3a20f8f41df1b31bda6a" ;
+  foaf:mbox <mailto:parcour@gmail.com> ;
+  foaf:homepage <http://troika.dnsdojo.net> ;
+  con:homepage <http://troika.dnsdojo.net> ;
+  foaf:depiction <http://troika.dnsdojo.net/pics/industrial/self.jpg> ;
+  foaf:phone <tel:1-509-570-6990> ;
+  foaf:workplaceHomepage <http://www.soph-ware.com> ;
+# foaf:workInfoHomepage ...
+  foaf:schoolHomepage <http://www.ewu.edu> ;
+  foaf:schoolHomepage <http://www.ethz.ch> ;
+  foaf:knows [
+    a foaf:Person ;
+    foaf:name "Beau Mitchell" ;
+    foaf:mbox_sha1sum "a54738ef1204436c12c28f6add8477a730d66ad6" ;
+    rdfs:seeAlso <http://profile.myspace.com/index.cfm?fuseaction=user.viewprofile&amp;friendid=55009046> ] ;
+
+  # See: http://foafing-the-music.iua.upf.edu/draft/geolocation/geolocation.php
+  foaf:based_near [
+    geo:lat "47.659" ;
+    geo:long "-117.425" ] .
