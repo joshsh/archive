@@ -74,6 +74,9 @@ print( "\"" + s + "\"" );
 // FIXME: is this equals() safe?
                 if ( null != dataTypeUri )
                 {
+//print( "xsdDoubleUri = " );
+//print( xsdDoubleUri );
+//println( "" );
                     if ( dataTypeUri.equals( xsdBooleanUri ) )
                         print( v.toString() );
                     else if ( dataTypeUri.equals( xsdDoubleUri ) )
