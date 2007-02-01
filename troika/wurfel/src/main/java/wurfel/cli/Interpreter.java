@@ -47,6 +47,17 @@ import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
+/**
+ *  Console input:
+ *    System.in --> reader --> readOut --> writeIn --> lexer
+ *
+ *  Normal output:
+ *    valueSetObserver --> printStream --> System.out
+ *    evaluateGraphQuery() --> printStream --> System.out
+ *
+ *  Error output:
+ *    alert() --> errorPrintStream = System.err
+ */
 public class Interpreter extends Thread implements Runnable, Observer
 {
     private final static Logger s_logger
@@ -67,12 +78,14 @@ public Context getContext()
 
     private ConsoleReader reader;
     private int lineNumber = 0;
+
+    private WurfelPrintStream printStream;
     private PrintStream errorPrintStream;
 
     private CompletorState completorState = CompletorState.NONE;
 
     private ObservableValueSet valueSet;
-    private ConsoleValueSetObserver observer;
+    private ConsoleValueSetObserver valueSetObserver;
 
     private Lexicon lexicon;
 
@@ -92,6 +105,7 @@ public Context getContext()
         try
         {
             reader = new ConsoleReader();
+
             if ( null != jLineDebugOutput )
                 reader.setDebug(
                     new PrintWriter(
@@ -118,11 +132,12 @@ public Context getContext()
 
         errorPrintStream = System.err;
 
-            valueSet = new ObservableValueSet( context, null );
+        valueSet = new ObservableValueSet( context, null );
 EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSet constructor" );
-            observer = new ConsoleValueSetObserver( valueSet, lexicon, evalContext );
+        printStream = new WurfelPrintStream( System.out, lexicon, evalContext );
+        valueSetObserver = new ConsoleValueSetObserver( valueSet, printStream );
 evalContext.close();
-            valueSet.addObserver( observer );
+        valueSet.addObserver( valueSetObserver );
 
         update( lexicon, null );
     }
@@ -209,9 +224,9 @@ System.out.println( "########## updating completors" );
             return true;
         }
 
-        catch( Throwable t )
+        catch( java.io.IOException e )
         {
-            new WurfelException( t );
+            new WurfelException( e );
             return false;
         }
     }
@@ -230,6 +245,7 @@ System.out.println( "########## updating completors" );
 // FIXME: this appears to work, but I need to go back and make sure it will ALWAYS work.
         while ( true )
         {
+System.out.println( "--- 1 ---" );
             // NOTE: I didn't find a "reset" method in the generated lexer or
             // parser, so I'm assuming that we need to create a new lexer and
             // parser instance once a parsing error puts them in a weird
@@ -239,6 +255,7 @@ System.out.println( "########## updating completors" );
             lexer.initialize( this );
             WurfelParser parser = new WurfelParser( lexer );
             parser.initialize( this );
+System.out.println( "--- 2 ---" );
 
             try
             {
@@ -251,18 +268,21 @@ System.out.println( "########## updating completors" );
             catch ( antlr.RecognitionException e )
             {
                 // Report the error, then begin parsing again.
-                alert( "Parse error: " + e.toString() );
+                alert( "RecognitionException: " + e.toString() );
             }
 
             catch ( antlr.TokenStreamRecognitionException e )
             {
-                alert( "Parse error: " + e.toString() );
+                // Report the error, then begin parsing again.
+                alert( "TokenStreamRecognitionException: " + e.toString() );
             }
 
             catch ( ParserQuitException e )
             {
+                // The user has instructed the parser to quit.
                 break;
             }
+System.out.println( "--- 3 ---" );
         }
     }
 
@@ -461,10 +481,10 @@ System.out.println( "########## updating completors" );
         try
         {
             lexicon.suspendEventHandling();
-            observer.suspendEventHandling();
+            valueSetObserver.suspendEventHandling();
             evaluate( ast, null );
             lexicon.resumeEventHandling();
-            observer.resumeEventHandling();
+            valueSetObserver.resumeEventHandling();
         }
 
         catch ( WurfelException e )
@@ -512,15 +532,12 @@ System.out.println( "########## updating completors" );
         try
         {
             evalContext = new EvaluationContext( context, "for evaluateGraphQuery" );
-            WurfelPrintStream p = new WurfelPrintStream( System.out, lexicon, evalContext );
-
             Iterator<Statement> stmtIter = context.graphQuery( query ).iterator();
 
-            p.println( "" );
-            p.print( stmtIter );
-            p.println( "" );
+            printStream.println( "" );
+            printStream.print( stmtIter );
+            printStream.println( "" );
 
-//            p.close();
             evalContext.close();
         }
 

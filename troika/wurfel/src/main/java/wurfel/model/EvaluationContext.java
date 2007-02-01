@@ -387,6 +387,11 @@ public class EvaluationContext
         return context.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
     }
 
+    public Literal createLiteral( final boolean b )
+    {
+        return context.getRepository().getValueFactory().createLiteral( "" + b, s_xsdBooleanUri );
+    }
+
     public Literal createLiteral( final int i )
     {
         return context.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );

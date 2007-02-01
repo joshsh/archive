@@ -18,6 +18,7 @@
     foo:    -- qualified name in which the local name is blank
     :bar    -- name qualified with the default namespace
     bar     -- name which relies on namespace inference
+    :       -- degenerate case, but well defined, and legal in Turtle
     _:bar   -- blank node identified by 'bar'
 
 ::::::::::::::::::::::::::::::::::::::::

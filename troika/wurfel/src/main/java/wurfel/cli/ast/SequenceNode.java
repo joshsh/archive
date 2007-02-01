@@ -23,9 +23,16 @@ public class SequenceNode extends Ast
         children = new ArrayList<Ast>();
     }
 
+/*
     public void add( Ast node )
     {
         children.add( node );
+    }
+*/
+
+    public void push( Ast node )
+    {
+        children.add( 0, node );
     }
 
     public Value evaluate( Interpreter itp, EvaluationContext evalContext )

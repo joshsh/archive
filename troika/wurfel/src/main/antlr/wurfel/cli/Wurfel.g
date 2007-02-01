@@ -6,11 +6,13 @@ import wurfel.Context;
 import wurfel.WurfelException;
 
 import wurfel.cli.ast.Ast;
+import wurfel.cli.ast.BooleanNode;
 import wurfel.cli.ast.DoubleNode;
 import wurfel.cli.ast.IntNode;
+import wurfel.cli.ast.NameNode;
 import wurfel.cli.ast.NullNode;
+import wurfel.cli.ast.QNameNode;
 import wurfel.cli.ast.StringNode;
-import wurfel.cli.ast.IdentifierNode;
 import wurfel.cli.ast.SequenceNode;
 import wurfel.cli.ast.UriNode;
 }
@@ -23,7 +25,7 @@ class WurfelLexer extends Lexer;
 
 options
 {
-    k = 3;
+    k = 2;
 
     // Do not attempt to recover from lexer errors.
     defaultErrorHandler = false;
@@ -58,17 +60,22 @@ options
 
 
 protected
-WS_NOBREAKS
+WS_CHAR_NOBREAKS
     : ' ' | '\t'
+    ;
+
+protected
+WS_CHAR
+    : ( WS_CHAR_NOBREAKS
+        |   '\r' '\n' { newline(); }
+        |   '\n'      { newline(); endOfLineEvent(); }
+       )
     ;
 
 // Ignore whitespace when it appears between tokens.
 WS
-    : ( WS_NOBREAKS
-        |   '\r' '\n' { newline(); }
-        |   '\n'      { newline(); endOfLineEvent(); }
-       )
-        { $setType(Token.SKIP); } //ignore this token
+    : (WS_CHAR)+
+//        { $setType(Token.SKIP); } //ignore this token
     ;
 
 protected
@@ -128,22 +135,77 @@ NAME
 STRING
     : '\"'! {
         updateCompletors( CompletorState.NONE );
-      } ( NORMAL | DIGIT | SPECIAL | ESC | WS )+ '\"'!
+      } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )+ '\"'!
     ;
-
+/*
 NAME
     : ( NORMAL | ESC ) ( NORMAL | DIGIT | ESC )*
     ;
-
+*/
 URI
-    : '<'! ( NORMAL | DIGIT | SPECIAL_0 | WS_NOBREAKS | "\\<" | "\\>" | "\\\\" )+ '>'!
+    : '<'! ( NORMAL | DIGIT | SPECIAL_0 | WS_CHAR_NOBREAKS | "\\<" | "\\>" | "\\\\" )+ '>'!
+    ;
+
+
+
+
+protected
+LETTER
+    : ('A' .. 'Z') | ('a' .. 'z')
+    ;
+
+protected
+NAME_OR_PREFIX_START_CHAR
+    : LETTER | ('\u00C0'..'\u00D6') | ('\u00D8'..'\u00F6') | ('\u00F8'..'\u02FF') | ('\u0370'..'\u037D') | ('\u037F'..'\u1FFF') | ('\u200C'..'\u200D') | ('\u2070'..'\u218F') | ('\u2C00'..'\u2FEF') | ('\u3001'..'\uD7FF') | ('\uF900'..'\uFDCF') | ('\uFDF0'..'\uFFFD') /*| ('\u10000'..'\uEFFFF')*/
+    ;
+
+protected
+NAME_OR_PREFIX_CHAR
+    : NAME_OR_PREFIX_START_CHAR | '-' | DIGIT | '\u00B7' | ('\u0300'..'\u036F') | ('\u203F'..'\u2040')
+    ;
+
+NAME_OR_PREFIX
+    : NAME_OR_PREFIX_START_CHAR (NAME_OR_PREFIX_CHAR)*
+    ;
+
+NAME_NOT_PREFIX
+    : '_' (NAME_OR_PREFIX_CHAR)*
+    ;
+
+
+protected
+EXPONENT
+    : ('e' | 'E') ('-' | '+')? (DIGIT)+
     ;
 
 /*
+
+
 INTEGER
-    : ('-' | '+')? ( DIGIT )+
+    : ('-' | '+')? (DIGIT)+
+    ;
+
+
+
+DECIMAL
+    : ('-' | '+')?
+      (
+        (DIGIT)+ '.' (DIGIT)*
+      | '.' (DIGIT)+
+      | (DIGIT)+ )
+    ;
+
+DOUBLE
+    : ('-' | '+')?
+      ( (DIGIT)+ ( '.' (DIGIT)* )?
+      | '.' (DIGIT)+ ) EXPONENT
     ;
 */
+
+
+
+
+
 
 NUMBER
     : ( DIGIT )+ ( '.' ( DIGIT )+ )?
@@ -224,7 +286,8 @@ QUIT        : COMMAND ( "quit"          | "q"
 class WurfelParser extends Parser;
 options
 {
-//    buildAST = true;
+    k = 1;
+    buildAST = false;
 
     // Do not attempt to recover from parser errors.
     defaultErrorHandler = false;
@@ -246,8 +309,7 @@ options
 nt_Input
 {
 }
-    : nt_Statement
-      ( nt_Input )?
+    : ( (WS)? nt_Statement )*
     ;
 
 
@@ -255,40 +317,42 @@ nt_Statement
 {
     Ast r;
 }
-    : r=nt_Sequence SEMI
+    : r=nt_Sequence (WS)? SEMI
         {
             interpreter.evaluate( r );
         }
 
-    // Commands are executed lazily, when the semicolon is encountered.
+    // Directives are executed lazily, as soon as the semicolon is encountered.
     | nt_Directive
 
-    // Empty queries are simply ignored.
+    // Empty statements are simply ignored.
     | SEMI
     ;
 
 
-nt_Sequence returns [ Ast r ]
+nt_Sequence returns [ SequenceNode s ]
 {
     Ast i;
-    SequenceNode s;
+    s = null;
 }
     : i=nt_Item
+
+      ( (WS ~(SEMI)) => ( WS s=nt_Sequence )
+        {
+            s.push( i );
+        }
+      |
         {
             s = new SequenceNode();
-            s.add( i );
-            r = s;
+            s.push( i );
         }
-      ( i=nt_Item
-        {
-            s.add( i );
-        }
-      )*
+      )
     ;
 
 
 nt_Item returns [ Ast r ]
 {
+    r = null;
 }
     : r=nt_Resource
     | r=nt_Literal
@@ -302,12 +366,13 @@ nt_ParenthesizedExpression returns [ Ast r ]
 {
     r = new NullNode();
 }
-    : L_PAREN ( r=nt_Sequence )? R_PAREN
+    : L_PAREN (WS)? ( r=nt_Sequence )? R_PAREN
     ;
 
 
 nt_QuantifiedItem returns [ Ast r ]
 {
+    r = null;
 }
     : DOT r=nt_Item
     | AND r=nt_Item
@@ -322,13 +387,15 @@ nt_QuantifiedItem returns [ Ast r ]
 nt_IndexExpression returns [ Ast r ]
 {
     Ast i;
+    r = null;
 }
-    : L_SQ_BRACE r=nt_Item ( COMMA i=nt_Item )? R_SQ_BRACE
+    : L_SQ_BRACE (WS)? r=nt_Item (WS)? ( COMMA (WS)? i=nt_Item (WS)? )? R_SQ_BRACE
     ;
 
 
 nt_Literal returns [ Ast r ]
 {
+    r = null;
 }
     : t:STRING
         {
@@ -355,25 +422,78 @@ nt_Literal returns [ Ast r ]
     ;
 
 
-nt_Resource returns [ Ast r ]
+nt_URIRef returns [ Ast r ]
 {
-    String first = null, second = null;
+    r = null;
 }
-    : ( t1:NAME
-        {
-            first = t1.getText();
-        }
-        ( COLON t2:NAME { second = t2.getText(); } )?
-      )
-        {
-            r = ( null == second )
-                ? new IdentifierNode( first )
-                : new IdentifierNode( first, second );
-        }
-    | uri:URI
+    : uri:URI
         {
             r = new UriNode( uri.getText() );
         }
+    ;
+
+
+nt_Name returns [ String name ]
+{
+    name = null;
+}
+    : t1:NAME_OR_PREFIX { name = t1.getText(); }
+    | t2:NAME_NOT_PREFIX { name = t2.getText(); }
+    ;
+/*
+            if ( name.equals( "true" ) )
+                r = new BooleanNode( true );
+            else if ( name.equals( "false" ) )
+                r = new BooleanNode( false );
+            else
+*/
+
+
+nt_Prefix returns [ String prefix ]
+{
+    prefix = null;
+}
+    : t:NAME_OR_PREFIX { prefix = t.getText(); }
+    ;
+
+
+nt_SimpleName returns [ Ast r ]
+{
+    String s;
+    r = null;
+}
+    : s=nt_Name { r = new NameNode( s ); }
+    ;
+
+
+nt_QName returns [ Ast r ]
+{
+    String nsPrefix = null, localName = null;
+    r = null;
+}
+    : ( ( nsPrefix=nt_Prefix )?
+        COLON
+        ( localName=nt_Name )? )
+        {
+            r = new QNameNode( nsPrefix, localName );
+        }
+    ;
+
+/*
+nt_Identifier returns [ Ast r ]
+{
+}
+    : (
+    ;
+*/
+
+nt_Resource returns [ Ast r ]
+{
+    r = null;
+}
+    : r=nt_URIRef
+    | ( (NAME_OR_PREFIX)? COLON ) => r=nt_QName
+    | r=nt_SimpleName
     ;
 
 
@@ -382,48 +502,50 @@ nt_Directive
     Ast subj, pred, obj;
     Ast rhs;
 }
-    : ADD subj=nt_Item pred=nt_Item obj=nt_Item SEMI
+    : ADD WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
         {
             interpreter.addStatement( subj, pred, obj );
         }
 
-    | COUNT "statements" SEMI
+    | COUNT WS "statements" (WS)? SEMI
         {
             interpreter.countStatements();
         }
 
-    | DEFINE name:NAME uri:STRING SEMI
+    | DEFINE WS name:NAME WS uri:STRING (WS)? SEMI
         {
             interpreter.define( name.getText(), uri.getText() );
         }
 
-    | GRAPHQUERY query:STRING SEMI
+    | GRAPHQUERY WS query:STRING (WS)? SEMI
         {
             interpreter.evaluateGraphQuery( query.getText() );
         }
 
-    | NAMESPACES SEMI
+    | NAMESPACES (WS)? SEMI
         {
             interpreter.showNamespaces();
         }
-/*
-    | PREFIX ( pre:NAME )? COLON nt_Resource
-*/
 
-    | PRINT SEMI
+    | PREFIX WS ( pre:NAME (WS)? )? COLON (WS)? rhs=nt_URIRef (WS)? SEMI
+        {
+// TODO
+        }
+
+    | PRINT WS
         (
           "contexts"
             {
                 interpreter.showContextIds();
             }
-        )
+        ) (WS)? SEMI
 
-    | QUIT SEMI
+    | QUIT (WS)? SEMI
         {
             interpreter.quit();
         }
 
-    | SAVEAS file:STRING SEMI
+    | SAVEAS WS file:STRING (WS)? SEMI
         {
             interpreter.saveAs( file.getText() );
         }
