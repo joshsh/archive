@@ -80,7 +80,7 @@ WS
 
 protected
 NORMAL
-    : '$' | '%' | '\'' | '-' | '=' | '@' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
+    : '$' | '%' | '\'' | '-' | '=' | '!' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
 //    | '\\' ( '\"' | '\\' | WS )
     ;
 
@@ -91,7 +91,7 @@ DIGIT
 
 protected
 SPECIAL_0
-    : '#' | '!' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
+    : '#' | '@' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
     ;
 
 protected
@@ -137,11 +137,7 @@ STRING
         updateCompletors( CompletorState.NONE );
       } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )+ '\"'!
     ;
-/*
-NAME
-    : ( NORMAL | ESC ) ( NORMAL | DIGIT | ESC )*
-    ;
-*/
+
 URI
     : '<'! ( NORMAL | DIGIT | SPECIAL_0 | WS_CHAR_NOBREAKS | "\\<" | "\\>" | "\\\\" )+ '>'!
     ;
@@ -264,20 +260,20 @@ COLON
 options { paraphrase = "colon"; } : ':' ;
 
 protected
-COMMAND
-    : '!'
+DIRECTIVE_START_CHAR
+    : '@'
     ;
 
-ADD         : COMMAND ( "add"           | "a" ) ;
-COUNT       : COMMAND ( "count"         | "c" ) ;
-DEFINE      : COMMAND ( "define"        | "d" ) ;
-GRAPHQUERY  : COMMAND ( "graphQuery"    | "g" ) ;
-NAMESPACES  : COMMAND ( "namespaces"    | "n" ) ;
-PRINT       : COMMAND ( "print"         | "p" ) ;
-SAVEAS      : COMMAND ( "saveas"        | "s" ) ;
-//URI         : COMMAND ( "uri"           | "u" ) ;
-QUIT        : COMMAND ( "quit"          | "q"
-                      | "exit"          | "x" ) ;
+ADD         : DIRECTIVE_START_CHAR ( "add"           | "a" ) ;
+COUNT       : DIRECTIVE_START_CHAR ( "count"         | "c" ) ;
+DEFINE      : DIRECTIVE_START_CHAR ( "define"        | "d" ) ;
+GRAPHQUERY  : DIRECTIVE_START_CHAR ( "graphQuery"    | "g" ) ;
+LIST        : DIRECTIVE_START_CHAR ( "list"          | "l" ) ;
+PREFIX      : DIRECTIVE_START_CHAR ( "prefix"        | "p" ) ;
+QUIT        : DIRECTIVE_START_CHAR ( "quit"          | "q"
+                                   | "exit"          | "x" ) ;
+SAVEAS      : DIRECTIVE_START_CHAR ( "saveas"        | "s" ) ;
+//URI         : DIRECTIVE_START_CHAR ( "uri"           | "u" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -522,23 +518,21 @@ nt_Directive
             interpreter.evaluateGraphQuery( query.getText() );
         }
 
-    | NAMESPACES (WS)? SEMI
-        {
-            interpreter.showNamespaces();
-        }
+    | LIST WS
+        ( ( "contexts" SEMI )
+            {
+                interpreter.showContexts();
+            }
+        | ( "prefixes" SEMI )
+            {
+                interpreter.showNamespaces();
+            }
+        )
 
     | PREFIX WS ( pre:NAME (WS)? )? COLON (WS)? rhs=nt_URIRef (WS)? SEMI
         {
 // TODO
         }
-
-    | PRINT WS
-        (
-          "contexts"
-            {
-                interpreter.showContextIds();
-            }
-        ) (WS)? SEMI
 
     | QUIT (WS)? SEMI
         {

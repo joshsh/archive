@@ -303,9 +303,11 @@ public Repository getRepository()
         }
     }
 
-    public void showContextIds()
+    public Collection<Value> getContexts()
         throws WurfelException
     {
+        NodeSet contexts = new NodeSet();
+
         try
         {
             Connection conn = repository.getConnection();
@@ -313,10 +315,7 @@ public Repository getRepository()
             CloseableIterator<? extends Resource> contextIter
                  = conn.getContextIDs();
             while ( contextIter.hasNext() )
-            {
-                Resource context = contextIter.next();
-                System.out.println( context.toString() );
-            }
+                contexts.add( contextIter.next() );
             contextIter.close();
 
             conn.close();
@@ -326,6 +325,8 @@ public Repository getRepository()
         {
             throw new WurfelException( t );
         }
+
+        return contexts;
     }
 
     public Collection<Statement> graphQuery( final String queryStr )

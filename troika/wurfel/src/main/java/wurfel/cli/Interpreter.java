@@ -159,14 +159,15 @@ System.out.println( "########## updating completors" );
             try
             {
                 SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
-                    "!add",
-                    "!count",
-                    "!define",
-                    "!graphQuery",
-                    "!namespaces",
-                    "!print",
-                    "!saveas",
-                    "!quit" } );
+                    "@add",
+                    "@count",
+                    "@define",
+                    "@graphQuery",
+                    "@list",
+                    "@namespaces",
+                    "@prefix",
+                    "@saveas",
+                    "@quit" } );
                 completors.add( commandCompletor );
 
                 Completor fileNameCompletor = new FileNameCompletor();
@@ -319,11 +320,22 @@ System.out.println( "--- 3 ---" );
         context.define( name, uri );
     }
 
-    public void showContextIds()
+    public void showContexts()
     {
         try
         {
-            context.showContextIds();
+//            valueSet.setValues( context.getContexts() );
+
+// FIXME: this is a kludge to keep the print stream from using namespace prefixes instead of full URI references
+            printStream.println( "" );
+            Iterator<Value> contexts = context.getContexts().iterator();
+            int i = 0;
+            while ( contexts.hasNext() )
+            {
+                printStream.print( "[" + i++ + "] " );
+                printStream.println( contexts.next().toString() );
+            }
+            printStream.println( "" );
         }
 
         catch ( WurfelException e ) {}
