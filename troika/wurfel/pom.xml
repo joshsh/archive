@@ -141,17 +141,6 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-<!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <configLocation>x2dgWeb/src/main/webapp/WEB-INF/xml/x2dg.checkstyle.xml</configLocation>
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
--->
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -253,7 +242,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <configLocation>${basedir}/checkstyle.xml</configLocation>
+                    <configLocation>${basedir}/src/site/checkstyle.xml</configLocation>
                     <!--<aggregate>true</aggregate>-->
                 </configuration>
             </plugin>

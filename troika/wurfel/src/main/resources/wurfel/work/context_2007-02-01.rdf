@@ -1,40 +1,39 @@
 <?xml version="1.0"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:currency="http://troika.dnsdojo.net/rdf/currency.ttl#" xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns:euroxref="http://www.ecb.int/vocabulary/2002-08-01/eurofxref" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:currency="http://troika.dnsdojo.net/rdf/currency.ttl#" xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns:euroxref="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
   <currency:Context rdf:ID="now" currency:date="2007-02-01">
-    <currency:currentRate_USD rdf:datatype="xsd:double">1.3020</currency:currentRate_USD>
-    <currency:currentRate_JPY rdf:datatype="xsd:double">156.85</currency:currentRate_JPY>
-    <currency:currentRate_BGN rdf:datatype="xsd:double">1.9558</currency:currentRate_BGN>
-    <currency:currentRate_CYP rdf:datatype="xsd:double">0.5790</currency:currentRate_CYP>
-    <currency:currentRate_CZK rdf:datatype="xsd:double">28.095</currency:currentRate_CZK>
-    <currency:currentRate_DKK rdf:datatype="xsd:double">7.4548</currency:currentRate_DKK>
-    <currency:currentRate_EEK rdf:datatype="xsd:double">15.6466</currency:currentRate_EEK>
-    <currency:currentRate_GBP rdf:datatype="xsd:double">0.66130</currency:currentRate_GBP>
-    <currency:currentRate_HUF rdf:datatype="xsd:double">254.98</currency:currentRate_HUF>
-    <currency:currentRate_LTL rdf:datatype="xsd:double">3.4528</currency:currentRate_LTL>
-    <currency:currentRate_LVL rdf:datatype="xsd:double">0.6964</currency:currentRate_LVL>
-    <currency:currentRate_MTL rdf:datatype="xsd:double">0.4293</currency:currentRate_MTL>
-    <currency:currentRate_PLN rdf:datatype="xsd:double">3.8998</currency:currentRate_PLN>
-    <currency:currentRate_RON rdf:datatype="xsd:double">3.3967</currency:currentRate_RON>
-    <currency:currentRate_SEK rdf:datatype="xsd:double">9.0395</currency:currentRate_SEK>
-    <currency:currentRate_SKK rdf:datatype="xsd:double">34.910</currency:currentRate_SKK>
-    <currency:currentRate_CHF rdf:datatype="xsd:double">1.6175</currency:currentRate_CHF>
-    <currency:currentRate_ISK rdf:datatype="xsd:double">89.02</currency:currentRate_ISK>
-    <currency:currentRate_NOK rdf:datatype="xsd:double">8.1255</currency:currentRate_NOK>
-    <currency:currentRate_HRK rdf:datatype="xsd:double">7.3641</currency:currentRate_HRK>
-    <currency:currentRate_RUB rdf:datatype="xsd:double">34.4950</currency:currentRate_RUB>
-    <currency:currentRate_TRY rdf:datatype="xsd:double">1.8320</currency:currentRate_TRY>
-    <currency:currentRate_AUD rdf:datatype="xsd:double">1.6782</currency:currentRate_AUD>
-    <currency:currentRate_CAD rdf:datatype="xsd:double">1.5331</currency:currentRate_CAD>
-    <currency:currentRate_CNY rdf:datatype="xsd:double">10.1016</currency:currentRate_CNY>
-    <currency:currentRate_HKD rdf:datatype="xsd:double">10.1609</currency:currentRate_HKD>
-    <currency:currentRate_IDR rdf:datatype="xsd:double">11824.11</currency:currentRate_IDR>
-    <currency:currentRate_KRW rdf:datatype="xsd:double">1220.04</currency:currentRate_KRW>
-    <currency:currentRate_MYR rdf:datatype="xsd:double">4.5577</currency:currentRate_MYR>
-    <currency:currentRate_NZD rdf:datatype="xsd:double">1.8957</currency:currentRate_NZD>
-    <currency:currentRate_PHP rdf:datatype="xsd:double">63.407</currency:currentRate_PHP>
-    <currency:currentRate_SGD rdf:datatype="xsd:double">1.9967</currency:currentRate_SGD>
-    <currency:currentRate_THB rdf:datatype="xsd:double">45.765</currency:currentRate_THB>
-    <currency:currentRate_ZAR rdf:datatype="xsd:double">9.3605</currency:currentRate_ZAR>
+    <currency:currencyRate-USD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.3020</currency:currencyRate-USD>
+    <currency:currencyRate-JPY rdf:datatype="http://www.w3.org/2001/XMLSchema#double">156.85</currency:currencyRate-JPY>
+    <currency:currencyRate-BGN rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.9558</currency:currencyRate-BGN>
+    <currency:currencyRate-CYP rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.5790</currency:currencyRate-CYP>
+    <currency:currencyRate-CZK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">28.095</currency:currencyRate-CZK>
+    <currency:currencyRate-DKK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">7.4548</currency:currencyRate-DKK>
+    <currency:currencyRate-EEK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">15.6466</currency:currencyRate-EEK>
+    <currency:currencyRate-GBP rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.66130</currency:currencyRate-GBP>
+    <currency:currencyRate-HUF rdf:datatype="http://www.w3.org/2001/XMLSchema#double">254.98</currency:currencyRate-HUF>
+    <currency:currencyRate-LTL rdf:datatype="http://www.w3.org/2001/XMLSchema#double">3.4528</currency:currencyRate-LTL>
+    <currency:currencyRate-LVL rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.6964</currency:currencyRate-LVL>
+    <currency:currencyRate-MTL rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.4293</currency:currencyRate-MTL>
+    <currency:currencyRate-PLN rdf:datatype="http://www.w3.org/2001/XMLSchema#double">3.8998</currency:currencyRate-PLN>
+    <currency:currencyRate-RON rdf:datatype="http://www.w3.org/2001/XMLSchema#double">3.3967</currency:currencyRate-RON>
+    <currency:currencyRate-SEK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">9.0395</currency:currencyRate-SEK>
+    <currency:currencyRate-SKK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">34.910</currency:currencyRate-SKK>
+    <currency:currencyRate-CHF rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.6175</currency:currencyRate-CHF>
+    <currency:currencyRate-ISK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">89.02</currency:currencyRate-ISK>
+    <currency:currencyRate-NOK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">8.1255</currency:currencyRate-NOK>
+    <currency:currencyRate-HRK rdf:datatype="http://www.w3.org/2001/XMLSchema#double">7.3641</currency:currencyRate-HRK>
+    <currency:currencyRate-RUB rdf:datatype="http://www.w3.org/2001/XMLSchema#double">34.4950</currency:currencyRate-RUB>
+    <currency:currencyRate-TRY rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.8320</currency:currencyRate-TRY>
+    <currency:currencyRate-AUD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.6782</currency:currencyRate-AUD>
+    <currency:currencyRate-CAD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.5331</currency:currencyRate-CAD>
+    <currency:currencyRate-CNY rdf:datatype="http://www.w3.org/2001/XMLSchema#double">10.1016</currency:currencyRate-CNY>
+    <currency:currencyRate-HKD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">10.1609</currency:currencyRate-HKD>
+    <currency:currencyRate-IDR rdf:datatype="http://www.w3.org/2001/XMLSchema#double">11824.11</currency:currencyRate-IDR>
+    <currency:currencyRate-KRW rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1220.04</currency:currencyRate-KRW>
+    <currency:currencyRate-MYR rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.5577</currency:currencyRate-MYR>
+    <currency:currencyRate-NZD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.8957</currency:currencyRate-NZD>
+    <currency:currencyRate-PHP rdf:datatype="http://www.w3.org/2001/XMLSchema#double">63.407</currency:currencyRate-PHP>
+    <currency:currencyRate-SGD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.9967</currency:currencyRate-SGD>
+    <currency:currencyRate-THB rdf:datatype="http://www.w3.org/2001/XMLSchema#double">45.765</currency:currencyRate-THB>
+    <currency:currencyRate-ZAR rdf:datatype="http://www.w3.org/2001/XMLSchema#double">9.3605</currency:currencyRate-ZAR>
   </currency:Context>
 </rdf:RDF>
-

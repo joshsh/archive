@@ -32,685 +32,685 @@ currency:rateProperty
 currency:AFA
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AFA> ;
-    currency:rateProperty currency:currentRate_AFA .
-currency:currentRate_AFA
+    currency:rateProperty currency:currencyRate-AFA .
+currency:currencyRate-AFA
     a currency:RateProperty .
 
 currency:ANG
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ANG> ;
-    currency:rateProperty currency:currentRate_ANG .
-currency:currentRate_ANG
+    currency:rateProperty currency:currencyRate-ANG .
+currency:currencyRate-ANG
     a currency:RateProperty .
 
 currency:ARS
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ARS> ;
-    currency:rateProperty currency:currentRate_ARS .
-currency:currentRate_ARS
+    currency:rateProperty currency:currencyRate-ARS .
+currency:currencyRate-ARS
     a currency:RateProperty .
 
 currency:AUD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AUD> ;
-    currency:rateProperty currency:currentRate_AUD .
-currency:currentRate_AUD
+    currency:rateProperty currency:currencyRate-AUD .
+currency:currencyRate-AUD
     a currency:RateProperty .
 
 currency:AWG
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AWG> ;
-    currency:rateProperty currency:currentRate_AWG .
-currency:currentRate_AWG
+    currency:rateProperty currency:currencyRate-AWG .
+currency:currencyRate-AWG
     a currency:RateProperty .
 
 currency:AZM
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AZM> ;
-    currency:rateProperty currency:currentRate_AZM .
-currency:currentRate_AZM
+    currency:rateProperty currency:currencyRate-AZM .
+currency:currencyRate-AZM
     a currency:RateProperty .
 
 currency:BAM
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BAM> ;
-    currency:rateProperty currency:currentRate_BAM .
-currency:currentRate_BAM
+    currency:rateProperty currency:currencyRate-BAM .
+currency:currencyRate-BAM
     a currency:RateProperty .
 
 currency:BBD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BBD> ;
-    currency:rateProperty currency:currentRate_BBD .
-currency:currentRate_BBD
+    currency:rateProperty currency:currencyRate-BBD .
+currency:currencyRate-BBD
     a currency:RateProperty .
 
 currency:BIF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BIF> ;
-    currency:rateProperty currency:currentRate_BIF .
-currency:currentRate_BIF
+    currency:rateProperty currency:currencyRate-BIF .
+currency:currencyRate-BIF
     a currency:RateProperty .
 
 currency:BMD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BMD> ;
-    currency:rateProperty currency:currentRate_BMD .
-currency:currentRate_BMD
+    currency:rateProperty currency:currencyRate-BMD .
+currency:currencyRate-BMD
     a currency:RateProperty .
 
 currency:BND
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BND> ;
-    currency:rateProperty currency:currentRate_BND .
-currency:currentRate_BND
+    currency:rateProperty currency:currencyRate-BND .
+currency:currencyRate-BND
     a currency:RateProperty .
 
 currency:BRL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BRL> ;
-    currency:rateProperty currency:currentRate_BRL .
-currency:currentRate_BRL
+    currency:rateProperty currency:currencyRate-BRL .
+currency:currencyRate-BRL
     a currency:RateProperty .
 
 currency:BSD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BSD> ;
-    currency:rateProperty currency:currentRate_BSD .
-currency:currentRate_BSD
+    currency:rateProperty currency:currencyRate-BSD .
+currency:currencyRate-BSD
     a currency:RateProperty .
 
 currency:BWP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BWP> ;
-    currency:rateProperty currency:currentRate_BWP .
-currency:currentRate_BWP
+    currency:rateProperty currency:currencyRate-BWP .
+currency:currencyRate-BWP
     a currency:RateProperty .
 
 currency:BYR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BYR> ;
-    currency:rateProperty currency:currentRate_BYR .
-currency:currentRate_BYR
+    currency:rateProperty currency:currencyRate-BYR .
+currency:currencyRate-BYR
     a currency:RateProperty .
 
 currency:BZD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BZD> ;
-    currency:rateProperty currency:currentRate_BZD .
-currency:currentRate_BZD
+    currency:rateProperty currency:currencyRate-BZD .
+currency:currencyRate-BZD
     a currency:RateProperty .
 
 currency:CDF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CDF> ;
-    currency:rateProperty currency:currentRate_CDF .
-currency:currentRate_CDF
+    currency:rateProperty currency:currencyRate-CDF .
+currency:currencyRate-CDF
     a currency:RateProperty .
 
 currency:CHF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CHF> ;
-    currency:rateProperty currency:currentRate_CHF .
-currency:currentRate_CHF
+    currency:rateProperty currency:currencyRate-CHF .
+currency:currencyRate-CHF
     a currency:RateProperty .
 
 currency:CNY
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CNY> ;
-    currency:rateProperty currency:currentRate_CNY .
-currency:currentRate_CNY
+    currency:rateProperty currency:currencyRate-CNY .
+currency:currencyRate-CNY
     a currency:RateProperty .
 
 currency:CRC
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CRC> ;
-    currency:rateProperty currency:currentRate_CRC .
-currency:currentRate_CRC
+    currency:rateProperty currency:currencyRate-CRC .
+currency:currencyRate-CRC
     a currency:RateProperty .
 
 currency:CUP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CUP> ;
-    currency:rateProperty currency:currentRate_CUP .
-currency:currentRate_CUP
+    currency:rateProperty currency:currencyRate-CUP .
+currency:currencyRate-CUP
     a currency:RateProperty .
 
 currency:CYP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CYP> ;
-    currency:rateProperty currency:currentRate_CYP .
-currency:currentRate_CYP
+    currency:rateProperty currency:currencyRate-CYP .
+currency:currencyRate-CYP
     a currency:RateProperty .
 
 currency:DKK
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#DKK> ;
-    currency:rateProperty currency:currentRate_DKK .
-currency:currentRate_DKK
+    currency:rateProperty currency:currencyRate-DKK .
+currency:currencyRate-DKK
     a currency:RateProperty .
 
 currency:DZD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#DZD> ;
-    currency:rateProperty currency:currentRate_DZD .
-currency:currentRate_DZD
+    currency:rateProperty currency:currencyRate-DZD .
+currency:currencyRate-DZD
     a currency:RateProperty .
 
 currency:EGP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#EGP> ;
-    currency:rateProperty currency:currentRate_EGP .
-currency:currentRate_EGP
+    currency:rateProperty currency:currencyRate-EGP .
+currency:currencyRate-EGP
     a currency:RateProperty .
 
 currency:ERN
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ERN> ;
-    currency:rateProperty currency:currentRate_ERN .
-currency:currentRate_ERN
+    currency:rateProperty currency:currencyRate-ERN .
+currency:currencyRate-ERN
     a currency:RateProperty .
 
 currency:ETB
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ETB> ;
-    currency:rateProperty currency:currentRate_ETB .
-currency:currentRate_ETB
+    currency:rateProperty currency:currencyRate-ETB .
+currency:currencyRate-ETB
     a currency:RateProperty .
 
 currency:EUR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#EUR> ;
-    currency:rateProperty currency:currentRate_EUR .
-currency:currentRate_EUR
+    currency:rateProperty currency:currencyRate-EUR .
+currency:currencyRate-EUR
     a currency:RateProperty .
 
 currency:FJD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#FJD> ;
-    currency:rateProperty currency:currentRate_FJD .
-currency:currentRate_FJD
+    currency:rateProperty currency:currencyRate-FJD .
+currency:currencyRate-FJD
     a currency:RateProperty .
 
 currency:FKP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#FKP> ;
-    currency:rateProperty currency:currentRate_FKP .
-currency:currentRate_FKP
+    currency:rateProperty currency:currencyRate-FKP .
+currency:currencyRate-FKP
     a currency:RateProperty .
 
 currency:GBP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GBP> ;
-    currency:rateProperty currency:currentRate_GBP .
-currency:currentRate_GBP
+    currency:rateProperty currency:currencyRate-GBP .
+currency:currencyRate-GBP
     a currency:RateProperty .
 
 currency:GEL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GEL> ;
-    currency:rateProperty currency:currentRate_GEL .
-currency:currentRate_GEL
+    currency:rateProperty currency:currencyRate-GEL .
+currency:currencyRate-GEL
     a currency:RateProperty .
 
 currency:GHC
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GHC> ;
-    currency:rateProperty currency:currentRate_GHC .
-currency:currentRate_GHC
+    currency:rateProperty currency:currencyRate-GHC .
+currency:currencyRate-GHC
     a currency:RateProperty .
 
 currency:GNF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GNF> ;
-    currency:rateProperty currency:currentRate_GNF .
-currency:currentRate_GNF
+    currency:rateProperty currency:currencyRate-GNF .
+currency:currencyRate-GNF
     a currency:RateProperty .
 
 currency:GTQ
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GTQ> ;
-    currency:rateProperty currency:currentRate_GTQ .
-currency:currentRate_GTQ
+    currency:rateProperty currency:currencyRate-GTQ .
+currency:currencyRate-GTQ
     a currency:RateProperty .
 
 currency:GYD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GYD> ;
-    currency:rateProperty currency:currentRate_GYD .
-currency:currentRate_GYD
+    currency:rateProperty currency:currencyRate-GYD .
+currency:currencyRate-GYD
     a currency:RateProperty .
 
 currency:HKD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#HKD> ;
-    currency:rateProperty currency:currentRate_HKD .
-currency:currentRate_HKD
+    currency:rateProperty currency:currencyRate-HKD .
+currency:currencyRate-HKD
     a currency:RateProperty .
 
 currency:IDR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#IDR> ;
-    currency:rateProperty currency:currentRate_IDR .
-currency:currentRate_IDR
+    currency:rateProperty currency:currencyRate-IDR .
+currency:currencyRate-IDR
     a currency:RateProperty .
 
 currency:ILS
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ILS> ;
-    currency:rateProperty currency:currentRate_ILS .
-currency:currentRate_ILS
+    currency:rateProperty currency:currencyRate-ILS .
+currency:currencyRate-ILS
     a currency:RateProperty .
 
 currency:INR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#INR> ;
-    currency:rateProperty currency:currentRate_INR .
-currency:currentRate_INR
+    currency:rateProperty currency:currencyRate-INR .
+currency:currencyRate-INR
     a currency:RateProperty .
 
 currency:IRR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#IRR> ;
-    currency:rateProperty currency:currentRate_IRR .
-currency:currentRate_IRR
+    currency:rateProperty currency:currencyRate-IRR .
+currency:currencyRate-IRR
     a currency:RateProperty .
 
 currency:ISK
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ISK> ;
-    currency:rateProperty currency:currentRate_ISK .
-currency:currentRate_ISK
+    currency:rateProperty currency:currencyRate-ISK .
+currency:currencyRate-ISK
     a currency:RateProperty .
 
 currency:JMD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#JMD> ;
-    currency:rateProperty currency:currentRate_JMD .
-currency:currentRate_JMD
+    currency:rateProperty currency:currencyRate-JMD .
+currency:currencyRate-JMD
     a currency:RateProperty .
 
 currency:JOD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#JOD> ;
-    currency:rateProperty currency:currentRate_JOD .
-currency:currentRate_JOD
+    currency:rateProperty currency:currencyRate-JOD .
+currency:currencyRate-JOD
     a currency:RateProperty .
 
 currency:JPY
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#JPY> ;
-    currency:rateProperty currency:currentRate_JPY .
-currency:currentRate_JPY
+    currency:rateProperty currency:currencyRate-JPY .
+currency:currencyRate-JPY
     a currency:RateProperty .
 
 currency:KGS
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#KGS> ;
-    currency:rateProperty currency:currentRate_KGS .
-currency:currentRate_KGS
+    currency:rateProperty currency:currencyRate-KGS .
+currency:currencyRate-KGS
     a currency:RateProperty .
 
 currency:KRW
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#KRW> ;
-    currency:rateProperty currency:currentRate_KRW .
-currency:currentRate_KRW
+    currency:rateProperty currency:currencyRate-KRW .
+currency:currencyRate-KRW
     a currency:RateProperty .
 
 currency:KYD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#KYD> ;
-    currency:rateProperty currency:currentRate_KYD .
-currency:currentRate_KYD
+    currency:rateProperty currency:currencyRate-KYD .
+currency:currencyRate-KYD
     a currency:RateProperty .
 
 currency:LRD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#LRD> ;
-    currency:rateProperty currency:currentRate_LRD .
-currency:currentRate_LRD
+    currency:rateProperty currency:currencyRate-LRD .
+currency:currencyRate-LRD
     a currency:RateProperty .
 
 currency:LSL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#LSL> ;
-    currency:rateProperty currency:currentRate_LSL .
-currency:currentRate_LSL
+    currency:rateProperty currency:currencyRate-LSL .
+currency:currencyRate-LSL
     a currency:RateProperty .
 
 currency:LVL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#LVL> ;
-    currency:rateProperty currency:currentRate_LVL .
-currency:currentRate_LVL
+    currency:rateProperty currency:currencyRate-LVL .
+currency:currencyRate-LVL
     a currency:RateProperty .
 
 currency:MDL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MDL> ;
-    currency:rateProperty currency:currentRate_MDL .
-currency:currentRate_MDL
+    currency:rateProperty currency:currencyRate-MDL .
+currency:currencyRate-MDL
     a currency:RateProperty .
 
 currency:MKD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MKD> ;
-    currency:rateProperty currency:currentRate_MKD .
-currency:currentRate_MKD
+    currency:rateProperty currency:currencyRate-MKD .
+currency:currencyRate-MKD
     a currency:RateProperty .
 
 currency:MNT
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MNT> ;
-    currency:rateProperty currency:currentRate_MNT .
-currency:currentRate_MNT
+    currency:rateProperty currency:currencyRate-MNT .
+currency:currencyRate-MNT
     a currency:RateProperty .
 
 currency:MRO
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MRO> ;
-    currency:rateProperty currency:currentRate_MRO .
-currency:currentRate_MRO
+    currency:rateProperty currency:currencyRate-MRO .
+currency:currencyRate-MRO
     a currency:RateProperty .
 
 currency:MXN
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MXN> ;
-    currency:rateProperty currency:currentRate_MXN .
-currency:currentRate_MXN
+    currency:rateProperty currency:currencyRate-MXN .
+currency:currencyRate-MXN
     a currency:RateProperty .
 
 currency:MYR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MYR> ;
-    currency:rateProperty currency:currentRate_MYR .
-currency:currentRate_MYR
+    currency:rateProperty currency:currencyRate-MYR .
+currency:currencyRate-MYR
     a currency:RateProperty .
 
 currency:MZM
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MZM> ;
-    currency:rateProperty currency:currentRate_MZM .
-currency:currentRate_MZM
+    currency:rateProperty currency:currencyRate-MZM .
+currency:currencyRate-MZM
     a currency:RateProperty .
 
 currency:NAD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#NAD> ;
-    currency:rateProperty currency:currentRate_NAD .
-currency:currentRate_NAD
+    currency:rateProperty currency:currencyRate-NAD .
+currency:currencyRate-NAD
     a currency:RateProperty .
 
 currency:NOK
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#NOK> ;
-    currency:rateProperty currency:currentRate_NOK .
-currency:currentRate_NOK
+    currency:rateProperty currency:currencyRate-NOK .
+currency:currencyRate-NOK
     a currency:RateProperty .
 
 currency:NZD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#NZD> ;
-    currency:rateProperty currency:currentRate_NZD .
-currency:currentRate_NZD
+    currency:rateProperty currency:currencyRate-NZD .
+currency:currencyRate-NZD
     a currency:RateProperty .
 
 currency:OMR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#OMR> ;
-    currency:rateProperty currency:currentRate_OMR .
-currency:currentRate_OMR
+    currency:rateProperty currency:currencyRate-OMR .
+currency:currencyRate-OMR
     a currency:RateProperty .
 
 currency:PAB
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PAB> ;
-    currency:rateProperty currency:currentRate_PAB .
-currency:currentRate_PAB
+    currency:rateProperty currency:currencyRate-PAB .
+currency:currencyRate-PAB
     a currency:RateProperty .
 
 currency:PEN
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PEN> ;
-    currency:rateProperty currency:currentRate_PEN .
-currency:currentRate_PEN
+    currency:rateProperty currency:currencyRate-PEN .
+currency:currencyRate-PEN
     a currency:RateProperty .
 
 currency:PGK
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PGK> ;
-    currency:rateProperty currency:currentRate_PGK .
-currency:currentRate_PGK
+    currency:rateProperty currency:currencyRate-PGK .
+currency:currencyRate-PGK
     a currency:RateProperty .
 
 currency:PLN
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PLN> ;
-    currency:rateProperty currency:currentRate_PLN .
-currency:currentRate_PLN
+    currency:rateProperty currency:currencyRate-PLN .
+currency:currencyRate-PLN
     a currency:RateProperty .
 
 currency:QAR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#QAR> ;
-    currency:rateProperty currency:currentRate_QAR .
-currency:currentRate_QAR
+    currency:rateProperty currency:currencyRate-QAR .
+currency:currencyRate-QAR
     a currency:RateProperty .
 
 currency:ROL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ROL> ;
-    currency:rateProperty currency:currentRate_ROL .
-currency:currentRate_ROL
+    currency:rateProperty currency:currencyRate-ROL .
+currency:currencyRate-ROL
     a currency:RateProperty .
 
 currency:RUR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#RUR> ;
-    currency:rateProperty currency:currentRate_RUR .
-currency:currentRate_RUR
+    currency:rateProperty currency:currencyRate-RUR .
+currency:currencyRate-RUR
     a currency:RateProperty .
 
 currency:RWF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#RWF> ;
-    currency:rateProperty currency:currentRate_RWF .
-currency:currentRate_RWF
+    currency:rateProperty currency:currencyRate-RWF .
+currency:currencyRate-RWF
     a currency:RateProperty .
 
 currency:SAR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SAR> ;
-    currency:rateProperty currency:currentRate_SAR .
-currency:currentRate_SAR
+    currency:rateProperty currency:currencyRate-SAR .
+currency:currencyRate-SAR
     a currency:RateProperty .
 
 currency:SBD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SBD> ;
-    currency:rateProperty currency:currentRate_SBD .
-currency:currentRate_SBD
+    currency:rateProperty currency:currencyRate-SBD .
+currency:currencyRate-SBD
     a currency:RateProperty .
 
 currency:SCR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SCR> ;
-    currency:rateProperty currency:currentRate_SCR .
-currency:currentRate_SCR
+    currency:rateProperty currency:currencyRate-SCR .
+currency:currencyRate-SCR
     a currency:RateProperty .
 
 currency:SDD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SDD> ;
-    currency:rateProperty currency:currentRate_SDD .
-currency:currentRate_SDD
+    currency:rateProperty currency:currencyRate-SDD .
+currency:currencyRate-SDD
     a currency:RateProperty .
 
 currency:SEK
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SEK> ;
-    currency:rateProperty currency:currentRate_SEK .
-currency:currentRate_SEK
+    currency:rateProperty currency:currencyRate-SEK .
+currency:currencyRate-SEK
     a currency:RateProperty .
 
 currency:SKK
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SKK> ;
-    currency:rateProperty currency:currentRate_SKK .
-currency:currentRate_SKK
+    currency:rateProperty currency:currencyRate-SKK .
+currency:currencyRate-SKK
     a currency:RateProperty .
 
 currency:STD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#STD> ;
-    currency:rateProperty currency:currentRate_STD .
-currency:currentRate_STD
+    currency:rateProperty currency:currencyRate-STD .
+currency:currencyRate-STD
     a currency:RateProperty .
 
 currency:SVC
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SVC> ;
-    currency:rateProperty currency:currentRate_SVC .
-currency:currentRate_SVC
+    currency:rateProperty currency:currencyRate-SVC .
+currency:currencyRate-SVC
     a currency:RateProperty .
 
 currency:SYP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SYP> ;
-    currency:rateProperty currency:currentRate_SYP .
-currency:currentRate_SYP
+    currency:rateProperty currency:currencyRate-SYP .
+currency:currencyRate-SYP
     a currency:RateProperty .
 
 currency:TMM
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TMM> ;
-    currency:rateProperty currency:currentRate_TMM .
-currency:currentRate_TMM
+    currency:rateProperty currency:currencyRate-TMM .
+currency:currencyRate-TMM
     a currency:RateProperty .
 
 currency:TND
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TND> ;
-    currency:rateProperty currency:currentRate_TND .
-currency:currentRate_TND
+    currency:rateProperty currency:currencyRate-TND .
+currency:currencyRate-TND
     a currency:RateProperty .
 
 currency:TOP
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TOP> ;
-    currency:rateProperty currency:currentRate_TOP .
-currency:currentRate_TOP
+    currency:rateProperty currency:currencyRate-TOP .
+currency:currencyRate-TOP
     a currency:RateProperty .
 
 currency:TRL
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TRL> ;
-    currency:rateProperty currency:currentRate_TRL .
-currency:currentRate_TRL
+    currency:rateProperty currency:currencyRate-TRL .
+currency:currencyRate-TRL
     a currency:RateProperty .
 
 currency:TVD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TVD> ;
-    currency:rateProperty currency:currentRate_TVD .
-currency:currentRate_TVD
+    currency:rateProperty currency:currencyRate-TVD .
+currency:currencyRate-TVD
     a currency:RateProperty .
 
 currency:TZS
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TZS> ;
-    currency:rateProperty currency:currentRate_TZS .
-currency:currentRate_TZS
+    currency:rateProperty currency:currencyRate-TZS .
+currency:currencyRate-TZS
     a currency:RateProperty .
 
 currency:UAH
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#UAH> ;
-    currency:rateProperty currency:currentRate_UAH .
-currency:currentRate_UAH
+    currency:rateProperty currency:currencyRate-UAH .
+currency:currencyRate-UAH
     a currency:RateProperty .
 
 currency:USD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#USD> ;
-    currency:rateProperty currency:currentRate_USD .
-currency:currentRate_USD
+    currency:rateProperty currency:currencyRate-USD .
+currency:currencyRate-USD
     a currency:RateProperty .
 
 currency:VEB
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#VEB> ;
-    currency:rateProperty currency:currentRate_VEB .
-currency:currentRate_VEB
+    currency:rateProperty currency:currencyRate-VEB .
+currency:currencyRate-VEB
     a currency:RateProperty .
 
 currency:VUV
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#VUV> ;
-    currency:rateProperty currency:currentRate_VUV .
-currency:currentRate_VUV
+    currency:rateProperty currency:currencyRate-VUV .
+currency:currencyRate-VUV
     a currency:RateProperty .
 
 currency:WST
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#WST> ;
-    currency:rateProperty currency:currentRate_WST .
-currency:currentRate_WST
+    currency:rateProperty currency:currencyRate-WST .
+currency:currencyRate-WST
     a currency:RateProperty .
 
 currency:XAF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XAF> ;
-    currency:rateProperty currency:currentRate_XAF .
-currency:currentRate_XAF
+    currency:rateProperty currency:currencyRate-XAF .
+currency:currencyRate-XAF
     a currency:RateProperty .
 
 currency:XAG
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XAG> ;
-    currency:rateProperty currency:currentRate_XAG .
-currency:currentRate_XAG
+    currency:rateProperty currency:currencyRate-XAG .
+currency:currencyRate-XAG
     a currency:RateProperty .
 
 currency:XAU
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XAU> ;
-    currency:rateProperty currency:currentRate_XAU .
-currency:currentRate_XAU
+    currency:rateProperty currency:currencyRate-XAU .
+currency:currencyRate-XAU
     a currency:RateProperty .
 
 currency:XCD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XCD> ;
-    currency:rateProperty currency:currentRate_XCD .
-currency:currentRate_XCD
+    currency:rateProperty currency:currencyRate-XCD .
+currency:currencyRate-XCD
     a currency:RateProperty .
 
 currency:XPF
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XPF> ;
-    currency:rateProperty currency:currentRate_XPF .
-currency:currentRate_XPF
+    currency:rateProperty currency:currencyRate-XPF .
+currency:currencyRate-XPF
     a currency:RateProperty .
 
 currency:YUM
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#YUM> ;
-    currency:rateProperty currency:currentRate_YUM .
-currency:currentRate_YUM
+    currency:rateProperty currency:currencyRate-YUM .
+currency:currencyRate-YUM
     a currency:RateProperty .
 
 currency:ZAR
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ZAR> ;
-    currency:rateProperty currency:currentRate_ZAR .
-currency:currentRate_ZAR
+    currency:rateProperty currency:currencyRate-ZAR .
+currency:currencyRate-ZAR
     a currency:RateProperty .
 
 currency:ZWD
     a currency:Currency ;
     currency:equivalentTo <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ZWD> ;
-    currency:rateProperty currency:currentRate_ZWD .
-currency:currentRate_ZWD
+    currency:rateProperty currency:currencyRate-ZWD .
+currency:currencyRate-ZWD
     a currency:RateProperty .

@@ -36,15 +36,31 @@ public class WurfelPrintStream extends PrintStream
         xsdStringUri = evalContext.createXmlSchemaUri( "string" );
     }
 
+    private void printUriRef( URI uri )
+    {
+        print( "<" + uri.toString() + ">" );
+    }
+
+    private void printQName( final String nsPrefix, final String localName )
+    {
+        if ( null != nsPrefix )
+            print( nsPrefix );
+
+        print( ":" );
+
+        if ( null != localName )
+            print( localName );
+    }
+
     private void printUri( URI uri )
         throws WurfelException
     {
         String prefix = lexicon.nsPrefixOf( uri );
 
         if ( null == prefix )
-            print( "<" + uri.toString() + ">" );
+            printUriRef( uri );
         else
-            print( prefix + ":" + uri.getLocalName() );
+            printQName( prefix, uri.getLocalName() );
     }
 
     private void printEscapedString( final String s )
@@ -71,12 +87,11 @@ print( "\"" + s + "\"" );
             {
                 URI dataTypeUri = ( (Literal) v ).getDatatype();
 
-// FIXME: is this equals() safe?
+                // Note: URI's equals() returns "true if the other object is an
+                //       instance of URI  and their String-representations are
+                //       equal, false  otherwise"
                 if ( null != dataTypeUri )
                 {
-//print( "xsdDoubleUri = " );
-//print( xsdDoubleUri );
-//println( "" );
                     if ( dataTypeUri.equals( xsdBooleanUri ) )
                         print( v.toString() );
                     else if ( dataTypeUri.equals( xsdDoubleUri ) )

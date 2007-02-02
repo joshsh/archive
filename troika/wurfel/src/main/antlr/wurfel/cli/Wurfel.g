@@ -455,16 +455,16 @@ nt_Prefix returns [ String prefix ]
 
 nt_SimpleName returns [ Ast r ]
 {
-    String s;
+    String localName;
     r = null;
 }
-    : s=nt_Name { r = new NameNode( s ); }
+    : localName=nt_Name { r = new NameNode( localName ); }
     ;
 
 
 nt_QName returns [ Ast r ]
 {
-    String nsPrefix = null, localName = null;
+    String nsPrefix = "", localName = "";
     r = null;
 }
     : ( ( nsPrefix=nt_Prefix )?
