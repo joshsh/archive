@@ -1,3 +1,11 @@
+
+[V] organize the FortyTwo.net namespace using a Permalink format similar to WordPress, Typo and Community Server, e.g.
+    <http://FortyTwo.net/ns/2007/02/02/JoshuaShinavier#me>;
+    <http://fortytwo.net/ns/2007/02/02/JoshuaShinavier#me>;
+    Note: disallow directory listing for /ns
+[C] purl.net
+
+
 This works:
 	<http://www.w3.org/People/Berners-Lee/card#i>;
 	<http://my.opera.com/sucks/xml/foaf#me>;
