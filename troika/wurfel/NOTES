@@ -1,3 +1,5 @@
+[V"] commands --> ___ directives (e.g. @prefix), command-line directives (e.g. @saveas)
+
 
 [V] organize the FortyTwo.net namespace using a Permalink format similar to WordPress, Typo and Community Server, e.g.
     <http://FortyTwo.net/ns/2007/02/02/JoshuaShinavier#me>;
@@ -19,7 +21,6 @@ Neither do these, although these URIs are the subjects of statements once their 
 Wurfel sees these as different:
     <http://www.w3.org/People/Berners-Lee/card#i>;
     <http://www.w3.org/People/Berners-Lee/card.rdf#i>;
-
 
 
 

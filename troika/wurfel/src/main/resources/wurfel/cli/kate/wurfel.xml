@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+    KDEDIR=/usr
     cp ./src/main/resources/wurfel/cli/kate/wurfel.xml $KDEDIR/share/apps/katepart/syntax
 -->
 
