@@ -47,7 +47,7 @@ public class FileRdfizer
 		= new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
 	private static final String
-		fileNs = "http://troika.dnsdojo.net/rdf/file#",
+		fileNs = "http://fortytwo.net/2007/02/06/file#",
 		rdfNs = "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		rdfsNs = "http://www.w3.org/2000/01/rdf-schema#",
 		xsdNs = "http://www.w3.org/2001/XMLSchema#";

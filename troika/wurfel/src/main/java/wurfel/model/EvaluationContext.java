@@ -434,19 +434,19 @@ public class EvaluationContext
     public URI createWurfelUri( final String localName )
         throws WurfelException
     {
-        return createUri( "http://troika.dnsdojo.net/rdf/wurfel#" + localName );
+        return createUri( "http://fortytwo.net/2007/02/06/wurfel#" + localName );
     }
 
     public URI createWurfelTestUri( final String localName )
         throws WurfelException
     {
-        return createUri( "http://troika.dnsdojo.net/rdf/wurfel-test#" + localName );
+        return createUri( "http://fortytwo.net/2007/02/06/wurfel-test#" + localName );
     }
 
     public URI createWurfelMiscUri( final String localName )
         throws WurfelException
     {
-        return createUri( "http://troika.dnsdojo.net/rdf/wurfel-misc#" + localName );
+        return createUri( "http://fortytwo.net/2007/02/06/wurfel-misc#" + localName );
     }
 
     public URI createXmlSchemaUri( final String localName )

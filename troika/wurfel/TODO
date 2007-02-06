@@ -30,6 +30,10 @@ Scuttering
 * add support for "blank" local names at the model level, so you can grab the root node of a graph like this one:
     http://sws.geonames.org/3020251/about.rdf
 
+Server
+================================================================================
+* REST query format and service endpoint.  Returns a graph in RDF/XML... which may be simply a list of indirection nodes to results.
+
 Concurrency
 ================================================================================
 * explore thread pooling and concurrency

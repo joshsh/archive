@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:currency="http://troika.dnsdojo.net/rdf/currency.ttl#" xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns:euroxref="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:currency="http://fortytwo.net/2007/02/06/currency.ttl#" xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns:euroxref="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
   <currency:Context rdf:ID="now" currency:date="2007-02-01">
     <currency:currencyRate-USD rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.3020</currency:currencyRate-USD>
     <currency:currencyRate-JPY rdf:datatype="http://www.w3.org/2001/XMLSchema#double">156.85</currency:currencyRate-JPY>

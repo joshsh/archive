@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:swoogle="http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" xmlns:wurfel-misc="http://troika.dnsdojo.net/rdf/wurfel-misc#" xmlns:wurfel="http://troika.dnsdojo.net/rdf/wurfel#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:swoogle="http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" xmlns:wurfel-misc="http://fortytwo.net/2007/02/06/wurfel-misc#" xmlns:wurfel="http://fortytwo.net/2007/02/06/wurfel#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
   <rdf:Description rdf:nodeID="genid1">
     <wurfel:parameterName>resource</wurfel:parameterName>
   </rdf:Description>
@@ -15,13 +15,13 @@
   <rdf:Description rdf:nodeID="genid2">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#uriToString">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#uriToString">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#uriToString">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#uriToString">
     <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#uriToString">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#uriToString">
     <wurfel:parameters rdf:nodeID="genid2"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid3">
@@ -39,13 +39,13 @@
   <rdf:Description rdf:nodeID="genid4">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#sha1SumOf">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#sha1SumOf">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#sha1SumOf">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#sha1SumOf">
     <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#sha1SumOf">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#sha1SumOf">
     <wurfel:parameters rdf:nodeID="genid4"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid5">
@@ -63,13 +63,13 @@
   <rdf:Description rdf:nodeID="genid6">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#urlEncoding">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#urlEncoding">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#urlEncoding">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#urlEncoding">
     <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#urlEncoding">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#urlEncoding">
     <wurfel:parameters rdf:nodeID="genid6"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid7">
@@ -87,13 +87,13 @@
   <rdf:Description rdf:nodeID="genid8">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#urlTarget">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#urlTarget">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#urlTarget">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#urlTarget">
     <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#urlTarget">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#urlTarget">
     <wurfel:parameters rdf:nodeID="genid8"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid9">
@@ -111,13 +111,13 @@
   <rdf:Description rdf:nodeID="genid10">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#grab">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#grab">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#grab">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#grab">
     <wurfel:returnType rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#grab">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#grab">
     <wurfel:parameters rdf:nodeID="genid10"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid11">
@@ -165,13 +165,13 @@
   <rdf:Description rdf:nodeID="genid16">
     <rdf:rest rdf:nodeID="genid15"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#swoogleIt">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#swoogleIt">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#swoogleIt">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#swoogleIt">
     <wurfel:returnType rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#swoogleIt">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#swoogleIt">
     <wurfel:parameters rdf:nodeID="genid16"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid17">
@@ -204,13 +204,13 @@
   <rdf:Description rdf:nodeID="genid20">
     <rdf:rest rdf:nodeID="genid19"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#pingTheSemanticWeb">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#pingTheSemanticWeb">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#pingTheSemanticWeb">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#pingTheSemanticWeb">
     <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel-misc#pingTheSemanticWeb">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-misc#pingTheSemanticWeb">
     <wurfel:parameters rdf:nodeID="genid20"/>
   </rdf:Description>
 </rdf:RDF>

@@ -49,11 +49,13 @@
             <name>JLine Project Repository</name>
             <url>http://jline.sourceforge.net/m2repo</url>
         </repository>
+<!--
         <repository>
             <id>troika</id>
             <name>Josh's personal m2 repository</name>
             <url>http://troika.dnsdojo.net/maven2</url>
         </repository>
+-->
         <repository>
             <id>aduna-repo</id>
             <name>Aduna repository</name>

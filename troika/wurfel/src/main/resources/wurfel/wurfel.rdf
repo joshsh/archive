@@ -1,156 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:wurfel="http://troika.dnsdojo.net/rdf/wurfel#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#Apply">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:wurfel="http://fortytwo.net/2007/02/06/wurfel#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#Apply">
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#Apply">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#Apply">
     <rdfs:comment>A structure representing the application of a function to an argument</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyFunction">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyFunction">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyFunction">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Apply"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyFunction">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Apply"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyFunction">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyFunction">
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyFunction">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyFunction">
     <rdfs:comment>An applied function</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyArgument">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyArgument">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyArgument">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Apply"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyArgument">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Apply"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyArgument">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyArgument">
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#applyArgument">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#applyArgument">
     <rdfs:comment>An applied argument</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction">
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction">
     <rdfs:comment>A built-in function</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#returnType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#returnType">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#returnType">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#returnType">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#returnType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#returnType">
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#DataType"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#returnType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#returnType">
     <rdfs:comment>The data type of the return value of a function</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameters">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameters">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameters">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#PrimitiveFunction"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameters">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameters">
-    <rdfs:range rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#ParameterList"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameters">
+    <rdfs:range rdf:resource="http://fortytwo.net/2007/02/06/wurfel#ParameterList"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameters">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameters">
     <rdfs:comment></rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#Parameter">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#Parameter">
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#Parameter">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#Parameter">
     <rdfs:comment>A formal argument to a function</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#ParameterList">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#ParameterList">
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#ParameterList">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#ParameterList">
     <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Parameter"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Parameter"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
     <rdfs:comment>A helpful name for the parameter.</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Parameter"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Parameter"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#DataType"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterType">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterType">
     <rdfs:comment>The data type of a formal argument to a function</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterTransparency">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterTransparency">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterTransparency">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Parameter"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterTransparency">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Parameter"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterTransparency">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterTransparency">
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#parameterTransparency">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#parameterTransparency">
     <rdfs:comment>A condition indicating whether the application of a function may have side-effects on a particular argument</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#Combinator">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#Combinator">
     <rdfs:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#Combinator">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#Combinator">
     <rdfs:comment>A function with no free variables</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#combinatorArity">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#combinatorArity">
     <rdfs:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#combinatorArity">
-    <rdfs:domain rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Combinator"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#combinatorArity">
+    <rdfs:domain rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#combinatorArity">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#combinatorArity">
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#combinatorArity">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#combinatorArity">
     <rdfs:comment>The number of formal arguments consumed by a combinator</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#and">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Combinator"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#and">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#and">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#and">
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#and">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#and">
     <rdfs:comment>Finds the intersection of one set with another set</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#or">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Combinator"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#or">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#or">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#or">
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#or">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#or">
     <rdfs:comment>Finds the union of one set with another set</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#without">
-    <rdfs:type rdf:resource="http://troika.dnsdojo.net/rdf/wurfel#Combinator"/>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#without">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#without">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#without">
     <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
   </rdf:Description>
-  <rdf:Description rdf:about="http://troika.dnsdojo.net/rdf/wurfel#without">
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel#without">
     <rdfs:comment>Finds the intersection of one set with the complement of another set</rdfs:comment>
   </rdf:Description>
 </rdf:RDF>

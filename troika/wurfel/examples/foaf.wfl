@@ -21,7 +21,7 @@
 !saveas "foaf-dump.rdf";
 
 (: Ego :)
-<http://troika.dnsdojo.net/rdf/joshua-shinavier#>;
+<http://fortytwo.net/2007/02/06/joshua-shinavier#>;
 
 
 (:
