@@ -86,16 +86,20 @@ sudo cp src/main/resources/wurfel/cli/kate/wurfel.xml /usr/share/apps/katepart/s
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/wurfel.ttl > ./src/main/resources/wurfel/wurfel.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/test/wurfel-test.ttl > ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/misc/wurfel-misc.ttl > ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
-
-rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/file.ttl > ./src/main/resources/wurfel/misc/file.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/work/file.ttl > ./src/main/resources/wurfel/work/file.rdf
+rapper -q -i turtle -o rdfxml main/resources/wurfel/work/joshua-shinavier.ttl > main/resources/wurfel/work/joshua-shinavier.rdf
 #rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/xbrl.ttl > ./src/main/resources/wurfel/misc/xbrl.rdf
 
 
 sfhome
-cd www/rdf
+cd www/2007/02/06
 put ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
 put ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
 put ./src/main/resources/wurfel/wurfel.rdf
+put ./src/main/resources/wurfel/work/file.rdf
+put ./src/main/resources/wurfel/work/currency.ttl
+put ./src/main/resources/wurfel/work/context_2007-02-01.rdf
+put ./src/main/resources/wurfel/work/joshua-shinavier.rdf
 exit
 
 

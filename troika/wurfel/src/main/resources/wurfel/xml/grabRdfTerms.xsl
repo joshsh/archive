@@ -5,13 +5,13 @@
 	<xsl:output method="text"/>
 
 	<xsl:template match="rdf:RDF">
-		<xsl:for-each select="(*/@rdf:about) or (*/@rdf:ID)">
+		<xsl:for-each select="*/@rdf:ID">
 			<xsl:sort select="."/>
 			<xsl:value-of select="."/>
 			<xsl:text>&#10;</xsl:text>
 		</xsl:for-each>
 		<xsl:text>&#10;</xsl:text>
-		<xsl:for-each select="*/@rdf:ID">
+		<xsl:for-each select="*/@rdf:about">
 			<xsl:sort select="."/>
 			<xsl:value-of select="."/>
 			<xsl:text>&#10;</xsl:text>
