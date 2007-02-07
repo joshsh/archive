@@ -1,0 +1,7 @@
+<http://www.pipian.com/rdf/places/planet/Earth#Earth>;
+<http://www.pipian.com/rdf/places/planet/Earth#Earth> contains bagElements;
+
+
+<http://www.pipian.com/rdf/places/country/AZ>;
+
+<http://www.pipian.com/rdf/places/country/AZ#AZ> locatedIn contains;

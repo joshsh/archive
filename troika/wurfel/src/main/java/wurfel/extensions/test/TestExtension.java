@@ -13,6 +13,7 @@ public class TestExtension extends Extension
         throws WurfelException
     {
         Function[] functions = {
+            new BagElements( evalContext ),
             new IntegerAdd( evalContext ),
             new IntegerSubtract( evalContext ),
             new IntegerMultiply( evalContext ),

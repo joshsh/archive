@@ -278,32 +278,39 @@ public class EvaluationContext
         return list;
     }
 
-/*
-    public Collection<Value> containerValue( final Resource head )
+
+    public Collection<Value> bagValue( final Resource head )
         throws WurfelException
     {
-
+        Collection<Value> results = new NodeSet();
 
         try
         {
-            Connection con = repository.getConnection();
+            boolean useInference = false;
+
             CloseableIterator<? extends Statement> stmtIter
-                = con.getStatements(
-                    head, s_rdfTypeUri, s_swoogleQueryResponseUri, Wurfel.useInference() );
+                = connection.getStatements(
+                    head, null, null, useInference );
+
             while ( stmtIter.hasNext() )
-                results.add( stmtIter.next().getSubject() );
+            {
+                Statement st = stmtIter.next();
+                if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
+                    results.add( st.getObject() );
+            }
+
             stmtIter.close();
-            conn.close();
-
-            con.close();
         }
 
-        catch ( OpenRDFException e )
+        // Warning: the CloseableIterator may be left open.
+        catch ( Throwable t )
         {
-            throw new WurfelException( e );
+            throw new WurfelException( t );
         }
+
+        return results;
     }
-*/
+
 
     ////////////////////////////////////////////////////////////////////////////
 

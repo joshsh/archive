@@ -196,10 +196,10 @@
     <wurfel:parameters rdf:nodeID="genid20"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid21">
-    <wurfel:parameterName>head</wurfel:parameterName>
+    <wurfel:parameterName>bag</wurfel:parameterName>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid21">
-    <wurfel:parameterType rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+    <wurfel:parameterType rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"/>
   </rdf:Description>
   <rdf:Description rdf:nodeID="genid21">
     <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
@@ -210,6 +210,30 @@
   <rdf:Description rdf:nodeID="genid22">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#bagElements">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#bagElements">
+    <wurfel:returnType rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#bagElements">
+    <wurfel:parameters rdf:nodeID="genid22"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid23">
+    <wurfel:parameterName> listHead</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid23">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid23">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid24">
+    <rdf:first rdf:nodeID="genid23"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid24">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#listElements">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
   </rdf:Description>
@@ -217,37 +241,37 @@
     <wurfel:returnType rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#listElements">
-    <wurfel:parameters rdf:nodeID="genid22"/>
+    <wurfel:parameters rdf:nodeID="genid24"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid23">
+  <rdf:Description rdf:nodeID="genid25">
     <wurfel:parameterName>strA</wurfel:parameterName>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid23">
+  <rdf:Description rdf:nodeID="genid25">
     <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid23">
+  <rdf:Description rdf:nodeID="genid25">
     <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid24">
+  <rdf:Description rdf:nodeID="genid26">
     <wurfel:parameterName>strB</wurfel:parameterName>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid24">
+  <rdf:Description rdf:nodeID="genid26">
     <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid24">
+  <rdf:Description rdf:nodeID="genid26">
     <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid25">
-    <rdf:first rdf:nodeID="genid24"/>
+  <rdf:Description rdf:nodeID="genid27">
+    <rdf:first rdf:nodeID="genid26"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid25">
+  <rdf:Description rdf:nodeID="genid27">
     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid26">
-    <rdf:first rdf:nodeID="genid23"/>
+  <rdf:Description rdf:nodeID="genid28">
+    <rdf:first rdf:nodeID="genid25"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="genid26">
-    <rdf:rest rdf:nodeID="genid25"/>
+  <rdf:Description rdf:nodeID="genid28">
+    <rdf:rest rdf:nodeID="genid27"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#concatenateStrings">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
@@ -256,7 +280,7 @@
     <wurfel:returnType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#concatenateStrings">
-    <wurfel:parameters rdf:nodeID="genid26"/>
+    <wurfel:parameters rdf:nodeID="genid28"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/02/06/wurfel-test#B">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>

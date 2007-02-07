@@ -15,6 +15,7 @@ Syntax
         rdfs:
 * edit grammar to more closely resemble Turtle / NTriples
 * add character literal syntax, e.g. 'c'
+* add awareness of the xml:lang of literals (both in input and output grammars)
 
 Model
 ================================================================================

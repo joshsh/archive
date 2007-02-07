@@ -68,11 +68,20 @@ wurfel-test:integer-mod
 
 ### RDF primitives #############################################################
 
+wurfel-test:bagElements
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType rdf:Resource ;
+  wurfel:parameters (
+      [ wurfel:parameterName "bag" ;
+        wurfel:parameterType rdf:Bag ;
+        wurfel:parameterTransparency true ]
+  ) .
+
 wurfel-test:listElements
   rdfs:type wurfel:PrimitiveFunction ;
   wurfel:returnType rdf:Resource ;
   wurfel:parameters (
-      [ wurfel:parameterName "head" ;
+      [ wurfel:parameterName " listHead" ;
         wurfel:parameterType rdf:List ;
         wurfel:parameterTransparency true ]
   ) .
