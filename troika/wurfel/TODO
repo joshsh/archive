@@ -35,6 +35,8 @@ Server
 ================================================================================
 * REST query format and service endpoint.  Returns a graph in RDF/XML... which may be simply a list of indirection nodes to results.
 * dbpedia server (not necessarily using Wurfel)
+* RFC server
+* server for HTTP response codes
 
 Concurrency
 ================================================================================
