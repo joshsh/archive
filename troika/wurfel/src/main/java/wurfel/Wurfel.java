@@ -191,6 +191,16 @@ public class Wurfel
 System.out.println( "schemaUrl: " + s_wurfelSchemaUrl );
         return s_wurfelSchemaUrl;
     }
+
+    public static String getWurfelName()
+    {
+        return "Slinky";
+    }
+
+    public static String getWurfelVersion()
+    {
+        return "0.1";
+    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

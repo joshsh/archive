@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Map;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
@@ -574,8 +575,66 @@ System.out.println( "######## ext = " + ext );
                 return RDFFormat.RDFXML;
         }
 
+        // Blacklisting rules.  There are some common content types which are
+        // not worth trying.
+        if ( null != contentType )
+        {
+            if ( contentType.contains( "text/html" ) )
+                return null;
+        }
+
         // Last-ditch rule.
         return RDFFormat.RDFXML;
+    }
+
+    private static void showUrlConnection( URLConnection urlConn )
+    {
+        Map<String,List<String>> requestProperties
+            = urlConn.getRequestProperties();
+        Set<String> keys = requestProperties.keySet();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Request properties:\n" );
+
+        Iterator<String> keyIter = keys.iterator();
+        while ( keyIter.hasNext() )
+        {
+            String key = keyIter.next();
+            sb.append( "\t" + key + ": " );
+            Iterator<String> valueIter = requestProperties.get( key ).iterator();
+
+            boolean first = true;
+            while ( valueIter.hasNext() )
+            {
+                String value = valueIter.next();
+                if ( first )
+                    first = false;
+                else
+                    sb.append( ", " );
+                sb.append( value );
+            }
+
+            sb.append( "\n" );
+        }
+
+        System.out.println( sb.toString() );
+    }
+
+    private static void prepareUrlConnectionForRdfRequest( URLConnection urlConn )
+    {
+        urlConn.addRequestProperty( "User-Agent",
+            Wurfel.getWurfelName() + "/" + Wurfel.getWurfelVersion() );
+
+        // Add values in the reverse order in which they will appear in the header.
+        urlConn.addRequestProperty( "Accept", "text/xml;q=0.2" );
+        urlConn.addRequestProperty( "Accept", "application/xml;q=0.5" );
+        urlConn.addRequestProperty( "Accept", "text/plain" );
+        urlConn.addRequestProperty( "Accept", "application/x-turtle" );
+        urlConn.addRequestProperty( "Accept", "application/trix" );
+        urlConn.addRequestProperty( "Accept", "text/rdf+n3" );
+        urlConn.addRequestProperty( "Accept", "application/rdf+xml" );
+
+// To consider at some point: caching, authorization
     }
 
     public void addGraph( final URL url, final URI baseURI )
@@ -594,7 +653,11 @@ System.out.println( "######## dereferencing graph in model: " + url );
         try
         {
             urlConn = url.openConnection();
+            prepareUrlConnectionForRdfRequest( urlConn );
+showUrlConnection( urlConn );
+
             urlConn.connect();
+
             response = urlConn.getInputStream();
         }
 
