@@ -1,0 +1,19 @@
+# Cwm Reason Ontology
+
+<http://www.w3.org/2000/10/swap/reason#Binding> ;
+<http://www.w3.org/2000/10/swap/reason#CommandLine> ;
+<http://www.w3.org/2000/10/swap/reason#Conjunction> ;
+<http://www.w3.org/2000/10/swap/reason#Extraction> ;
+<http://www.w3.org/2000/10/swap/reason#Inference> ;
+<http://www.w3.org/2000/10/swap/reason#Parsing> ;
+<http://www.w3.org/2000/10/swap/reason#Proof> ;
+<http://www.w3.org/2000/10/swap/reason#Step> ;
+<http://www.w3.org/2000/10/swap/reason#args> ;
+<http://www.w3.org/2000/10/swap/reason#because> ;
+<http://www.w3.org/2000/10/swap/reason#boundTo> ;
+<http://www.w3.org/2000/10/swap/reason#component> ;
+<http://www.w3.org/2000/10/swap/reason#evidence> ;
+<http://www.w3.org/2000/10/swap/reason#gives> ;
+<http://www.w3.org/2000/10/swap/reason#rule> ;
+<http://www.w3.org/2000/10/swap/reason#source> ;
+<http://www.w3.org/2000/10/swap/reason#variable> ;

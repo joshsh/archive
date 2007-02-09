@@ -55,6 +55,7 @@ public class HttpUriDereferencer implements Dereferencer
             try
             {
                 dereferenceGraph( ns, evalContext );
+//                dereferenceGraph( subject.toString(), evalContext );
             }
 
             catch ( WurfelException e )

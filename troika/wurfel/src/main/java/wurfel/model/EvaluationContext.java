@@ -622,17 +622,18 @@ System.out.println( "######## ext = " + ext );
 
     private static void prepareUrlConnectionForRdfRequest( URLConnection urlConn )
     {
-        urlConn.addRequestProperty( "User-Agent",
+        urlConn.setRequestProperty( "User-Agent",
             Wurfel.getWurfelName() + "/" + Wurfel.getWurfelVersion() );
 
-        // Add values in the reverse order in which they will appear in the header.
-        urlConn.addRequestProperty( "Accept", "text/xml;q=0.2" );
-        urlConn.addRequestProperty( "Accept", "application/xml;q=0.5" );
-        urlConn.addRequestProperty( "Accept", "text/plain" );
-        urlConn.addRequestProperty( "Accept", "application/x-turtle" );
-        urlConn.addRequestProperty( "Accept", "application/trix" );
-        urlConn.addRequestProperty( "Accept", "text/rdf+n3" );
-        urlConn.addRequestProperty( "Accept", "application/rdf+xml" );
+        urlConn.setRequestProperty( "Accept",
+            "application/rdf+xml"
+            + ", text/rdf+n3"
+            + ", application/trix"
+            + ", application/x-turtle"
+            + ", text/plain"
+            + ", application/xml;q=0.5"
+            + ", text/xml;q=0.2"
+            );
 
 // To consider at some point: caching, authorization
     }
@@ -648,7 +649,7 @@ System.out.println( "######## ext = " + ext );
         URLConnection urlConn;
         InputStream response;
 
-System.out.println( "######## dereferencing graph in model: " + url );
+System.out.println( "######## dereferencing graph at URL: " + url );
 
         try
         {
