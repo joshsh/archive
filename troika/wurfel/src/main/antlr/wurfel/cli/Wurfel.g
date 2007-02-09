@@ -2,7 +2,6 @@ header
 {
 package wurfel.cli;
 
-import wurfel.Context;
 import wurfel.WurfelException;
 
 import wurfel.cli.ast.Ast;

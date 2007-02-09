@@ -3,7 +3,7 @@ package wurfel.extensions.misc;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -25,10 +25,10 @@ public class Sha1SumOf extends PrimitiveFunction
 
     private static MessageDigest messageDigest = null;
 
-    public Sha1SumOf( EvaluationContext evalContext )
+    public Sha1SumOf( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelMiscUri( "sha1SumOf" ), evalContext );
+        super( mc.createWurfelMiscUri( "sha1SumOf" ), mc );
     }
 
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
@@ -81,18 +81,18 @@ public class Sha1SumOf extends PrimitiveFunction
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
         String a, result;
 
         Iterator<Value> argIter = args.iterator();
-        a = evalContext.stringValue(
-                evalContext.castToLiteral( argIter.next() ) );
+        a = mc.stringValue(
+                mc.castToLiteral( argIter.next() ) );
 
         result = encrypt( a );
 
-        return new NodeSet( evalContext.createLiteral( result ) );
+        return new NodeSet( mc.createLiteral( result ) );
     }
 }
 

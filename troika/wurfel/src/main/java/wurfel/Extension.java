@@ -1,6 +1,6 @@
 package wurfel;
 
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 import wurfel.model.Function;
 
 import java.net.URL;
@@ -9,19 +9,19 @@ public abstract class Extension
 {
     protected abstract URL[] getResources();
 
-    protected abstract Function[] getFunctions( EvaluationContext evalContext ) throws WurfelException;
+    protected abstract Function[] getFunctions( ModelConnection mc ) throws WurfelException;
 
-    public void load( EvaluationContext evalContext )
+    public void load( ModelConnection mc )
         throws WurfelException
     {
         URL[] resources = getResources();
 
         if ( null != resources )
             for ( URL url : getResources() )
-                evalContext.addGraph( url );
+                mc.addGraph( url );
 
-        for ( Function function : getFunctions( evalContext ) )
-            evalContext.getContext().addSpecialFunction( function );
+        for ( Function function : getFunctions( mc ) )
+            mc.getModel().addSpecialFunction( function );
     }
 }
 

@@ -2,7 +2,7 @@ package wurfel.model;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -24,16 +24,16 @@ public class WurfelPrintStream extends PrintStream
 
     private Lexicon lexicon;
 
-    public WurfelPrintStream( OutputStream out, Lexicon lexicon, EvaluationContext evalContext )
+    public WurfelPrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
         throws WurfelException
     {
         super( out );
         this.lexicon = lexicon;
 
-        xsdBooleanUri = evalContext.createXmlSchemaUri( "boolean" );
-        xsdDoubleUri = evalContext.createXmlSchemaUri( "double" );
-        xsdIntegerUri = evalContext.createXmlSchemaUri( "integer" );
-        xsdStringUri = evalContext.createXmlSchemaUri( "string" );
+        xsdBooleanUri = mc.createXmlSchemaUri( "boolean" );
+        xsdDoubleUri = mc.createXmlSchemaUri( "double" );
+        xsdIntegerUri = mc.createXmlSchemaUri( "integer" );
+        xsdStringUri = mc.createXmlSchemaUri( "string" );
     }
 
     private void printUriRef( URI uri )

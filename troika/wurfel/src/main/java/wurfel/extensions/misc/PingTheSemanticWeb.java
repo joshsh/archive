@@ -4,7 +4,7 @@ import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -28,24 +28,24 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 {
     private static SAXBuilder s_saxBuilder = null;
 
-    public PingTheSemanticWeb( EvaluationContext evalContext )
+    public PingTheSemanticWeb( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelMiscUri( "pingTheSemanticWeb" ), evalContext );
+        super( mc.createWurfelMiscUri( "pingTheSemanticWeb" ), mc );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
         String type;
         int maxResults;
 
         Iterator<Value> argIter = args.iterator();
-        type = evalContext.stringValue(
-                evalContext.castToLiteral( argIter.next() ) );
-        maxResults = evalContext.intValue(
-                evalContext.castToLiteral( argIter.next() ) );
+        type = mc.stringValue(
+                mc.castToLiteral( argIter.next() ) );
+        maxResults = mc.intValue(
+                mc.castToLiteral( argIter.next() ) );
 
         Document doc;
 
@@ -89,7 +89,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
         {
             Element child = childIter.next();
             String s = child.getAttributeValue( "url" );
-            result.add( evalContext.createLiteral( s ) );
+            result.add( mc.createLiteral( s ) );
         }
 
         return result;

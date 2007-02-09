@@ -3,23 +3,23 @@ package wurfel.extensions.misc;
 import wurfel.Extension;
 import wurfel.WurfelException;
 import wurfel.model.Function;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import java.net.URL;
 
 public class MiscExtension extends Extension
 {
-    protected Function[] getFunctions( EvaluationContext evalContext )
+    protected Function[] getFunctions( ModelConnection mc )
         throws WurfelException
     {
         Function[] functions = {
-            new Sha1SumOf( evalContext ),
-            new UriToString( evalContext ),
-            new UrlEncoding( evalContext ),
-            new UrlTarget( evalContext ),
-            new SwoogleIt( evalContext ),
-            new Grab( evalContext ),
-            new PingTheSemanticWeb( evalContext ) };
+            new Sha1SumOf( mc ),
+            new UriToString( mc ),
+            new UrlEncoding( mc ),
+            new UrlTarget( mc ),
+            new SwoogleIt( mc ),
+            new Grab( mc ),
+            new PingTheSemanticWeb( mc ) };
 
         return functions;
     }

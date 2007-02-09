@@ -2,10 +2,9 @@ package wurfel.extensions.misc;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -26,29 +25,28 @@ public class SwoogleIt extends PrimitiveFunction
         rdfTypeUri,
         swoogleQueryResponseUri;
 
-    public SwoogleIt( EvaluationContext evalContext )
+    public SwoogleIt( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelMiscUri( "swoogleIt" ), evalContext );
+        super( mc.createWurfelMiscUri( "swoogleIt" ), mc );
 
-        rdfTypeUri = evalContext.createRdfUri( "type" );
-        swoogleQueryResponseUri = evalContext.createSwoogleUri( "QueryResponse" );
+        rdfTypeUri = mc.createRdfUri( "type" );
+        swoogleQueryResponseUri = mc.createSwoogleUri( "QueryResponse" );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
         String key, searchString;
         URI queryType;
-        Context context = evalContext.getContext();
 
         Iterator<Value> argIter = args.iterator();
-        key = evalContext.stringValue(
-                evalContext.castToLiteral( argIter.next() ) );
-        queryType = evalContext.castToUri( argIter.next() );
-        searchString = evalContext.stringValue(
-                evalContext.castToLiteral( argIter.next() ) );
+        key = mc.stringValue(
+                mc.castToLiteral( argIter.next() ) );
+        queryType = mc.castToUri( argIter.next() );
+        searchString = mc.stringValue(
+                mc.castToLiteral( argIter.next() ) );
 
         try
         {
@@ -59,13 +57,13 @@ public class SwoogleIt extends PrimitiveFunction
 
             URL url = new URL( urlStr );
 
-            URI baseUri = evalContext.createUri( urlStr );
-            evalContext.addGraph( url, baseUri );
+            URI baseUri = mc.createUri( urlStr );
+            mc.addGraph( url, baseUri );
             NodeSet results = new NodeSet();
 //System.out.println( "baseUri = " + baseUri );
 
             CloseableIterator<? extends Statement> stmtIter
-                = evalContext.getConnection().getStatements(
+                = mc.getConnection().getStatements(
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
                     null, rdfTypeUri, swoogleQueryResponseUri, baseUri, Wurfel.useInference() );
             while ( stmtIter.hasNext() )

@@ -2,7 +2,6 @@ package wurfel.model;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -28,17 +27,17 @@ import java.util.Observer;
 
 public class Lexicon extends Observable implements Observer
 {
-    private Context context;
+    private Model model;
 
     private Hashtable<String, List<URI>> localNameToUrisMap = null;
     private Hashtable<String, String> prefixToNamespaceMap = null;
     private Hashtable<String, String> namespaceToPrefixMap = null;
 
-    public Lexicon( Context context )
+    public Lexicon( Model model )
         throws WurfelException
     {
-        this.context = context;
-        context.addObserver( this );
+        this.model = model;
+        model.addObserver( this );
 
         createMaps();
     }
@@ -61,7 +60,7 @@ public class Lexicon extends Observable implements Observer
 
         else
         {
-            return context.getRepository().getValueFactory().createURI( ns, localName );
+            return model.getRepository().getValueFactory().createURI( ns, localName );
         }
 /*
         Iterator<URI> uris = localNameToUrisMap.get( localName ).iterator();
@@ -147,13 +146,13 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         Set<URI> allURIs = new HashSet<URI>();
 
-        EvaluationContext evalContext = new EvaluationContext( context, "for Lexicon refresh()" );
+        ModelConnection mc = new ModelConnection( model, "for Lexicon refresh()" );
 
         try
         {
             CloseableIterator<? extends Statement> stmtIter
-                = evalContext.getConnection().getStatements(
-//                    null, null, null, context, includeInferred );
+                = mc.getConnection().getStatements(
+//                    null, null, null, model, includeInferred );
                     null, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
             {
@@ -174,7 +173,7 @@ System.out.println( "################# Rebuilding dictionaries." );
             // Namespace prefixes are managed by OpenRDF, and are simply
             // imported into the Lexicon.
             CloseableIterator<? extends Namespace> nsIter
-                 = evalContext.getConnection().getNamespaces();
+                 = mc.getConnection().getNamespaces();
             while ( nsIter.hasNext() )
                 add( nsIter.next() );
             nsIter.close();
@@ -182,11 +181,11 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         catch ( Throwable t )
         {
-            evalContext.close();
+            mc.close();
             throw new WurfelException( t );
         }
 
-        evalContext.close();
+        mc.close();
 
         Iterator<URI> uriIter = allURIs.iterator();
         while ( uriIter.hasNext() )
@@ -232,7 +231,7 @@ System.out.println( "################# Rebuilding dictionaries." );
     {
         try
         {
-            if ( o == context )
+            if ( o == model )
             {
                 if ( suspended )
                     changed = true;

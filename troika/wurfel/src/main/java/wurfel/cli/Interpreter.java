@@ -1,13 +1,13 @@
 package wurfel.cli;
 
-import wurfel.Context;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.Dereferencer;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 import wurfel.model.Evaluator;
 import wurfel.model.LazyEvaluator;
 import wurfel.model.Lexicon;
+import wurfel.model.Model;
 //import wurfel.model.DebugEvaluator;
 import wurfel.model.ObservableValueSet;
 import wurfel.model.WurfelPrintStream;
@@ -63,12 +63,12 @@ public class Interpreter extends Thread implements Runnable, Observer
     private final static Logger s_logger
         = Logger.getLogger( Interpreter.class );
 
-    private Context context;
+    private Model model;
     private Evaluator evaluator;
 
-public Context getContext()
+public Model getModel()
 {
-    return context;
+    return model;
 }
 
     private PipedInputStream  writeIn;
@@ -91,13 +91,13 @@ public Context getContext()
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public Interpreter( Context context ) throws WurfelException
+    public Interpreter( Model model ) throws WurfelException
     {
-        this.context = context;
-        evaluator = new LazyEvaluator( context );
-//        evaluator = new DebugEvaluator( new LazyEvaluator( context ) );
+        this.model = model;
+        evaluator = new LazyEvaluator();
+//        evaluator = new DebugEvaluator( new LazyEvaluator( model ) );
 
-        lexicon = new Lexicon( context );
+        lexicon = new Lexicon( model );
         lexicon.addObserver( this );
 
         String jLineDebugOutput = Wurfel.getJLineDebugOutput();
@@ -132,11 +132,11 @@ public Context getContext()
 
         errorPrintStream = System.err;
 
-        valueSet = new ObservableValueSet( context, null );
-EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSet constructor" );
-        printStream = new WurfelPrintStream( System.out, lexicon, evalContext );
+        valueSet = new ObservableValueSet( model, null );
+ModelConnection mc = new ModelConnection( model, "for ConsoleValueSet constructor" );
+        printStream = new WurfelPrintStream( System.out, lexicon, mc );
         valueSetObserver = new ConsoleValueSetObserver( valueSet, printStream );
-evalContext.close();
+mc.close();
         valueSet.addObserver( valueSetObserver );
 
         update( lexicon, null );
@@ -309,7 +309,7 @@ System.out.println( "--- 3 ---" );
     {
         try
         {
-            System.out.println( "\n" + context.countStatements() + "\n" );
+            System.out.println( "\n" + model.countStatements() + "\n" );
         }
 
         catch ( WurfelException e ) {}
@@ -317,23 +317,23 @@ System.out.println( "--- 3 ---" );
 
     public void define( final String name, final String uri )
     {
-        context.define( name, uri );
+        model.define( name, uri );
     }
 
     public void showContexts()
     {
         try
         {
-//            valueSet.setValues( context.getContexts() );
+//            valueSet.setValues( model.getContexts() );
 
 // FIXME: this is a kludge to keep the print stream from using namespace prefixes instead of full URI references
             printStream.println( "" );
-            Iterator<Value> contexts = context.getContexts().iterator();
+            Iterator<Value> models = model.getContexts().iterator();
             int i = 0;
-            while ( contexts.hasNext() )
+            while ( models.hasNext() )
             {
                 printStream.print( "[" + i++ + "] " );
-                printStream.println( contexts.next().toString() );
+                printStream.println( models.next().toString() );
             }
             printStream.println( "" );
         }
@@ -345,7 +345,7 @@ System.out.println( "--- 3 ---" );
     {
         try
         {
-            context.saveAs( fileName );
+            model.saveAs( fileName );
 
             System.out.println( "\nSaved data set as '" + fileName + "'\n" );
         }
@@ -355,27 +355,27 @@ System.out.println( "--- 3 ---" );
 
     public void addStatement( Ast subj, Ast pred, Ast obj )
     {
-        EvaluationContext evalContext = null;
+        ModelConnection mc = null;
 
         try
         {
-            evalContext = new EvaluationContext( context, "for addStatement" );
+            mc = new ModelConnection( model, "for addStatement" );
 
-            Value subjValue = subj.evaluate( this, evalContext );
-            Value predValue = pred.evaluate( this, evalContext );
-            Value objValue = obj.evaluate( this, evalContext );
+            Value subjValue = subj.evaluate( this, mc );
+            Value predValue = pred.evaluate( this, mc );
+            Value objValue = obj.evaluate( this, mc );
 
-            evalContext.addStatement( subjValue, predValue, objValue );
-            evalContext.close();
+            mc.addStatement( subjValue, predValue, objValue );
+            mc.close();
         }
 
         catch ( WurfelException e )
         {
-            if ( null != evalContext )
+            if ( null != mc )
             {
                 try
                 {
-                    evalContext.close();
+                    mc.close();
                 }
 
                 catch ( WurfelException e2 )
@@ -388,10 +388,10 @@ System.out.println( "--- 3 ---" );
         }
     }
 
-    private void dereferenceResultSet( Collection<Value> values, EvaluationContext evalContext )
+    private void dereferenceResultSet( Collection<Value> values, ModelConnection mc )
         throws WurfelException
     {
-        Dereferencer d = context.getDereferencer();
+        Dereferencer d = model.getDereferencer();
 
         Iterator<Value> iter = values.iterator();
         while ( iter.hasNext() )
@@ -401,7 +401,7 @@ System.out.println( "--- 3 ---" );
             {
                 try
                 {
-                    d.dereferenceSubjectUri( (URI) value, evalContext );
+                    d.dereferenceSubjectUri( (URI) value, mc );
                 }
 
                 catch ( WurfelException e )
@@ -423,7 +423,7 @@ System.out.println( "--- 3 ---" );
 // TODO: this is only one way of handling name ambiguity.
             Value choice = options.get( 0 );
 
-            return context.translateFromGraph( choice );
+            return model.translateFromGraph( choice );
         }
     }
 
@@ -435,15 +435,15 @@ System.out.println( "--- 3 ---" );
 
         return ( null == v )
             ? null
-            : context.translateFromGraph( v );
+            : model.translateFromGraph( v );
     }
 
-    private Collection<Value> reduce( Value expr, EvaluationContext evalContext )
+    private Collection<Value> reduce( Value expr, ModelConnection mc )
         throws WurfelException
     {
         try
         {
-            return evaluator.reduce( expr, evalContext );
+            return evaluator.reduce( expr, mc );
         }
 
         catch ( WurfelException e )
@@ -455,28 +455,28 @@ System.out.println( "--- 3 ---" );
     private void evaluate( Ast ast, final String name )
         throws WurfelException
     {
-        EvaluationContext evalContext = null;
+        ModelConnection mc = null;
 
         try
         {
-            evalContext = new EvaluationContext( context, "for Interpreter evaluate()" );
+            mc = new ModelConnection( model, "for Interpreter evaluate()" );
 
-            Value expr = ast.evaluate( this, evalContext );
+            Value expr = ast.evaluate( this, mc );
 
             Collection<Value> result = ( null == expr )
                 ? new ArrayList<Value>()
-                : reduce( expr, evalContext );
+                : reduce( expr, mc );
 
-            dereferenceResultSet( result, evalContext );
+            dereferenceResultSet( result, mc );
 
             valueSet.setValues( result );
 
-            evalContext.close();
+            mc.close();
         }
 
         catch ( WurfelException e )
         {
-            evalContext.close();
+            mc.close();
             throw e;
         }
 
@@ -488,7 +488,7 @@ System.out.println( "--- 3 ---" );
 
     public void evaluate( Ast ast )
     {
-        EvaluationContext evalContext = null;
+        ModelConnection mc = null;
 
         try
         {
@@ -507,7 +507,7 @@ System.out.println( "--- 3 ---" );
 
     public void evaluateAndDefine( Ast ast, String name )
     {
-        EvaluationContext evalContext = null;
+        ModelConnection mc = null;
 
         try
         {
@@ -526,7 +526,7 @@ System.out.println( "--- 3 ---" );
     {
         try
         {
-            context.showNamespaces();
+            model.showNamespaces();
         }
 
         catch ( WurfelException e )
@@ -539,25 +539,25 @@ System.out.println( "--- 3 ---" );
     //      CONSTRUCT * FROM {x} p {y}
     public void evaluateGraphQuery( final String query )
     {
-        EvaluationContext evalContext = null;
+        ModelConnection mc = null;
 
         try
         {
-            evalContext = new EvaluationContext( context, "for evaluateGraphQuery" );
-            Iterator<Statement> stmtIter = context.graphQuery( query ).iterator();
+            mc = new ModelConnection( model, "for evaluateGraphQuery" );
+            Iterator<Statement> stmtIter = model.graphQuery( query ).iterator();
 
             printStream.println( "" );
             printStream.print( stmtIter );
             printStream.println( "" );
 
-            evalContext.close();
+            mc.close();
         }
 
         catch ( WurfelException e )
         {
             try
             {
-                evalContext.close();
+                mc.close();
             }
 
             catch ( WurfelException e2 )

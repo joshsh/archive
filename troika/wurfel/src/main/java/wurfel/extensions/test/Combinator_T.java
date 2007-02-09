@@ -4,7 +4,7 @@ import wurfel.WurfelException;
 import wurfel.model.Apply;
 import wurfel.model.Combinator;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -15,14 +15,14 @@ import java.util.LinkedList;
 
 public class Combinator_T extends Combinator
 {
-    public Combinator_T( EvaluationContext evalContext )
+    public Combinator_T( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelTestUri( "T" ), evalContext );
+        super( mc.createWurfelTestUri( "T" ), mc );
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,
-                                      EvaluationContext evalContext )
+                                      ModelConnection mc )
         throws WurfelException
     {
         Value x, y;

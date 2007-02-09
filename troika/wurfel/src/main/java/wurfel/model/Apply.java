@@ -1,7 +1,6 @@
 package wurfel.model;
 
 import wurfel.Wurfel;
-import wurfel.Context;
 import wurfel.WurfelException;
 
 import org.openrdf.model.URI;
@@ -39,7 +38,7 @@ return null;
     }
 
     public Collection<Value> applyTo( LinkedList<Value> args,
-                                      EvaluationContext evalContext )
+                                      ModelConnection mc )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -48,13 +47,13 @@ checkArguments( args );
         if ( function instanceof Function )
         {
             args.addFirst( argument );
-            return ( (Function) function ).applyTo( args, evalContext );
+            return ( (Function) function ).applyTo( args, mc );
         }
 
         else
         {
-            return evalContext.getContext().multiply(
-                argument, function, evalContext );
+            return mc.getModel().multiply(
+                argument, function, mc );
         }
     }
 

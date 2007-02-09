@@ -3,9 +3,10 @@ package wurfel;
 import org.openrdf.repository.Repository;
 
 import wurfel.JLineTest;
+import wurfel.model.Model;
 import wurfel.test.WurfelTestCase;
 
-public class ContextTest extends WurfelTestCase
+public class ModelTest extends WurfelTestCase
 {
     private class ContextConstructorTest extends TestRunnable
     {
@@ -14,7 +15,7 @@ public class ContextTest extends WurfelTestCase
         {
             Repository repository = JLineTest.createTestRepository();
 
-            Context context = new Context( repository, "Test Context" );
+            Model model = new Model( repository, "Test Model" );
 
             try
             {

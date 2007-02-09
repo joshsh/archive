@@ -3,7 +3,7 @@ package wurfel.extensions.test;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -15,23 +15,23 @@ import java.util.LinkedList;
 
 public class IntegerMod extends PrimitiveFunction
 {
-    public IntegerMod( EvaluationContext evalContext )
+    public IntegerMod( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelTestUri( "integer-mod" ), evalContext );
+        super( mc.createWurfelTestUri( "integer-mod" ), mc );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
         int a, b, result;
 
         Iterator<Value> argIter = args.iterator();
-        a = evalContext.intValue(
-                evalContext.castToLiteral( argIter.next() ) );
-        b = evalContext.intValue(
-                evalContext.castToLiteral( argIter.next() ) );
+        a = mc.intValue(
+                mc.castToLiteral( argIter.next() ) );
+        b = mc.intValue(
+                mc.castToLiteral( argIter.next() ) );
 
         try
         {
@@ -43,7 +43,7 @@ public class IntegerMod extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        return new NodeSet( evalContext.createLiteral( result ) );
+        return new NodeSet( mc.createLiteral( result ) );
     }
 }
 

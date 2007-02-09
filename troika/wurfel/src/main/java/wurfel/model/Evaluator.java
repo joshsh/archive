@@ -1,6 +1,5 @@
 package wurfel.model;
 
-import wurfel.Context;
 import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
@@ -10,24 +9,12 @@ import org.openrdf.model.Value;
  */
 public abstract class Evaluator
 {
-    protected Context context;
-
-    public Evaluator( Context context )
-    {
-        this.context = context;
-    }
-
-    public Context getContext()
-    {
-        return context;
-    }
-
     protected static boolean isApply( Value v )
     {
         return v instanceof Apply;
     }
 
-    public abstract NodeSet reduce( Value expr, EvaluationContext evalContext )
+    public abstract NodeSet reduce( Value expr, ModelConnection mc )
         throws WurfelException;
 }
 

@@ -1,13 +1,7 @@
-package wurfel;
-
+package wurfel.model;
 
 import wurfel.Wurfel;
-import wurfel.model.Apply;
-import wurfel.model.NodeSet;
-import wurfel.model.Function;
-import wurfel.model.Dereferencer;
-import wurfel.model.HttpUriDereferencer;
-import wurfel.model.EvaluationContext;
+import wurfel.WurfelException;
 
 //import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -44,7 +38,7 @@ import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
-public class Context extends Observable
+public class Model extends Observable
 {
 // FIXME
     private Resource singleContext;
@@ -55,7 +49,7 @@ public Dereferencer getDereferencer()
     return dereferencer;
 }
 
-    private final static Logger s_logger = Logger.getLogger( Context.class );
+    private final static Logger s_logger = Logger.getLogger( Model.class );
 //    private static final AdminListener s_adminListener
 //        = new StdOutAdminListener();
 
@@ -76,37 +70,37 @@ Hashtable<String, String> aliases;
     /**
      *  @param Repository  an initialized Repository
      */
-    public Context( final Repository repository, final String name )
+    public Model( final Repository repository, final String name )
         throws WurfelException
     {
-        s_logger.debug( "Creating new Context '" + name + "'" );
+        s_logger.debug( "Creating new Model '" + name + "'" );
 
         this.repository = repository;
         this.name = name;
 
 aliases = new Hashtable<String, String>();
 
-        dereferencer = new HttpUriDereferencer( this );
+        dereferencer = new HttpUriDereferencer();
 
         specialFunctions = new Hashtable<URI, Function>();
 
-        EvaluationContext evalContext = new EvaluationContext( this, "for Context constructor" );
+        ModelConnection mc = new ModelConnection( this, "for Model constructor" );
 
         try
         {
-//            importModel( Wurfel.schemaUrl(), evalContext.createUri( "urn:wurfel" ), evalContext );
+//            importModel( Wurfel.schemaUrl(), mc.createUri( "urn:wurfel" ), mc );
 
-            ( new wurfel.extensions.test.TestExtension() ).load( evalContext );
-            ( new wurfel.extensions.misc.MiscExtension() ).load( evalContext );
+            ( new wurfel.extensions.test.TestExtension() ).load( mc );
+            ( new wurfel.extensions.misc.MiscExtension() ).load( mc );
         }
 
         catch ( WurfelException e )
         {
-            evalContext.close();
+            mc.close();
             throw e;
         }
 
-        evalContext.close();
+        mc.close();
     }
 
 public Repository getRepository()
@@ -192,7 +186,7 @@ public Repository getRepository()
     }
 
 // TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
-    public Set<Value> multiply( Value arg, Value func, EvaluationContext evalContext )
+    public Set<Value> multiply( Value arg, Value func, ModelConnection mc )
         throws WurfelException
     {
         arg = translateToGraph( arg );
@@ -201,7 +195,7 @@ public Repository getRepository()
         {
             try
             {
-                dereferencer.dereferenceSubjectUri( (URI) arg, evalContext );
+                dereferencer.dereferenceSubjectUri( (URI) arg, mc );
             }
 
             catch ( WurfelException e )
@@ -210,7 +204,7 @@ public Repository getRepository()
             }
         }
 
-        Iterator<Value> resultIter = rdfMultiply( arg, func, evalContext.getConnection() ).iterator();
+        Iterator<Value> resultIter = rdfMultiply( arg, func, mc.getConnection() ).iterator();
         Set<Value> result = new NodeSet();
         while ( resultIter.hasNext() )
         {

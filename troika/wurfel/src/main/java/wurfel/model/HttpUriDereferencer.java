@@ -2,7 +2,6 @@ package wurfel.model;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -28,22 +27,18 @@ public class HttpUriDereferencer implements Dereferencer
 {
     private final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
 
-    private Context context;
-
     private Set<String> allBaseUris;
     private Set<String> dereferencedBaseUris;
     private Set<String> failedBaseUris;
 
-    public HttpUriDereferencer( Context context )
+    public HttpUriDereferencer()
     {
-        this.context = context;
-
         allBaseUris = new LinkedHashSet<String>();
         dereferencedBaseUris = new LinkedHashSet<String>();
         failedBaseUris = new LinkedHashSet<String>();
     }
 
-    public void dereferenceSubjectUri( final URI subject, EvaluationContext evalContext )
+    public void dereferenceSubjectUri( final URI subject, ModelConnection mc )
         throws WurfelException
     {
         String ns = subject.getNamespace();
@@ -54,8 +49,8 @@ public class HttpUriDereferencer implements Dereferencer
         {
             try
             {
-//                dereferenceGraph( ns, evalContext );
-                dereferenceGraph( subject.toString(), evalContext );
+//                dereferenceGraph( ns, mc );
+                dereferenceGraph( subject.toString(), mc );
             }
 
             catch ( WurfelException e )
@@ -110,7 +105,7 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
         s_logger.debug( "Removed " + count + " disallowed statement(s) from context " + uri + "." );
     }
 
-    private void dereferenceGraph( final String uri, EvaluationContext evalContext )
+    private void dereferenceGraph( final String uri, ModelConnection mc )
         throws WurfelException
     {
         URL url;
@@ -125,12 +120,12 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
             throw new WurfelException( e );
         }
 
-        URI contextUri = evalContext.createUri( uri );
+        URI contextUri = mc.createUri( uri );
 
-        evalContext.addGraph( url, contextUri );
+        mc.addGraph( url, contextUri );
 
         if ( Wurfel.enforceImplicitProvenance() )
-            filter( uri, contextUri, evalContext.getConnection() );
+            filter( uri, contextUri, mc.getConnection() );
     }
 }
 

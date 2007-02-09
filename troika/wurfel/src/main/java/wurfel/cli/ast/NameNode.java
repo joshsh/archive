@@ -2,7 +2,7 @@ package wurfel.cli.ast;
 
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 
@@ -20,7 +20,7 @@ public class NameNode extends Ast
         return localName;
     }
 
-    public Value evaluate( Interpreter itp, EvaluationContext evalContext )
+    public Value evaluate( Interpreter itp, ModelConnection mc )
         throws WurfelException
     {
         Value v = itp.resolveUnqualifiedName( localName );

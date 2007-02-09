@@ -1,7 +1,6 @@
 package wurfel.model;
 
 import wurfel.Wurfel;
-import wurfel.Context;
 import wurfel.WurfelException;
 
 import java.util.Collection;
@@ -19,7 +18,7 @@ public abstract class PrimitiveFunction extends Node implements Function
     protected URI selfUri;
 
     protected abstract Collection<Value> applyInternal( LinkedList<Value> args,
-                                                        EvaluationContext evalContext )
+                                                        ModelConnection mc )
         throws WurfelException;
 
     class Param
@@ -55,26 +54,26 @@ public abstract class PrimitiveFunction extends Node implements Function
         wurfelParameterTypeUri,
         wurfelParameterTransparencyUri;
 
-    private Param getWurfelParameter( final Resource head, EvaluationContext evalContext )
+    private Param getWurfelParameter( final Resource head, ModelConnection mc )
         throws WurfelException
     {
-        String name = evalContext.stringValue(
-            evalContext.castToLiteral(
-                evalContext.findUniqueProduct( head, wurfelParameterNameUri ) ) );
-        URI type = evalContext.castToUri(
-            evalContext.findUniqueProduct( head, wurfelParameterTypeUri ) );
+        String name = mc.stringValue(
+            mc.castToLiteral(
+                mc.findUniqueProduct( head, wurfelParameterNameUri ) ) );
+        URI type = mc.castToUri(
+            mc.findUniqueProduct( head, wurfelParameterTypeUri ) );
 
 // TODO: actually use this, or get rid of it
         String annotation = "";
 
-        boolean transparency = evalContext.booleanValue(
-            evalContext.castToLiteral(
-                evalContext.findUniqueProduct( head, wurfelParameterTransparencyUri ) ) );
+        boolean transparency = mc.booleanValue(
+            mc.castToLiteral(
+                mc.findUniqueProduct( head, wurfelParameterTransparencyUri ) ) );
 
         return new Param( name, type, annotation, transparency );
     }
 
-    public PrimitiveFunction( final URI self, EvaluationContext evalContext )
+    public PrimitiveFunction( final URI self, ModelConnection mc )
         throws WurfelException
     {
         selfUri = self;
@@ -83,19 +82,19 @@ public abstract class PrimitiveFunction extends Node implements Function
         name = "";
         annotation = "";
 
-        wurfelParametersUri             = evalContext.createWurfelUri( "parameters" );
-        wurfelReturnTypeUri             = evalContext.createWurfelUri( "returnType" );
-        wurfelParameterUri              = evalContext.createWurfelUri( "Parameter" );
-        wurfelParameterNameUri          = evalContext.createWurfelUri( "parameterName" );
-        wurfelParameterListUri          = evalContext.createWurfelUri( "ParameterList" );
-        wurfelParameterTypeUri          = evalContext.createWurfelUri( "parameterType" );
-        wurfelParameterTransparencyUri  = evalContext.createWurfelUri( "parameterTransparency" );
+        wurfelParametersUri             = mc.createWurfelUri( "parameters" );
+        wurfelReturnTypeUri             = mc.createWurfelUri( "returnType" );
+        wurfelParameterUri              = mc.createWurfelUri( "Parameter" );
+        wurfelParameterNameUri          = mc.createWurfelUri( "parameterName" );
+        wurfelParameterListUri          = mc.createWurfelUri( "ParameterList" );
+        wurfelParameterTypeUri          = mc.createWurfelUri( "parameterType" );
+        wurfelParameterTransparencyUri  = mc.createWurfelUri( "parameterTransparency" );
 
-        returnType = evalContext.castToUri(
-            evalContext.findUniqueProduct( self, wurfelReturnTypeUri ) );
-        Resource paramList = evalContext.castToResource(
-            evalContext.findUniqueProduct( self, wurfelParametersUri ) );
-        Iterator<Value> paramIter = evalContext.listValue( paramList ).iterator();
+        returnType = mc.castToUri(
+            mc.findUniqueProduct( self, wurfelReturnTypeUri ) );
+        Resource paramList = mc.castToResource(
+            mc.findUniqueProduct( self, wurfelParametersUri ) );
+        Iterator<Value> paramIter = mc.listValue( paramList ).iterator();
 
         params = new ArrayList<Param>();
 
@@ -105,7 +104,7 @@ public abstract class PrimitiveFunction extends Node implements Function
             if ( !( val instanceof Resource ) )
                 throw new WurfelException( "non-Resource encountered as an argument to a PrimitiveFunction" );
             else
-                params.add( getWurfelParameter( (Resource) val, evalContext ) );
+                params.add( getWurfelParameter( (Resource) val, mc ) );
         }
     }
 
@@ -208,7 +207,7 @@ public abstract class PrimitiveFunction extends Node implements Function
                 + args.size() + " arguments" );
     }
 
-    public Collection<Value> applyTo( LinkedList<Value> args, EvaluationContext evalContext )
+    public Collection<Value> applyTo( LinkedList<Value> args, ModelConnection mc )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -216,7 +215,7 @@ checkArguments( args );
 
 // TODO: type checking
 
-        return applyInternal( args, evalContext );
+        return applyInternal( args, mc );
     }
 
     public void printTo( WurfelPrintStream p )

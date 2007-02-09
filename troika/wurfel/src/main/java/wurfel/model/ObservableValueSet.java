@@ -1,7 +1,5 @@
 package wurfel.model;
 
-import wurfel.Context;
-
 import org.openrdf.model.Value;
 
 import java.util.Collection;
@@ -10,18 +8,18 @@ import java.util.Observable;
 public class ObservableValueSet extends Observable
 {
     private Collection<Value> values;
-    private Context context;
+    private Model model;
 
-    public ObservableValueSet( Context context,
+    public ObservableValueSet( Model model,
                                Collection<Value> initialValues )
     {
-        this.context = context;
+        this.model = model;
         values = initialValues;
     }
 
-    public Context getContext()
+    public Model getModel()
     {
-        return context;
+        return model;
     }
 
     public Collection<Value> getValues()

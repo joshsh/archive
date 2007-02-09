@@ -3,7 +3,7 @@ package wurfel.extensions.misc;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -22,21 +22,21 @@ import java.io.InputStreamReader;
 
 public class UrlTarget extends PrimitiveFunction
 {
-    public UrlTarget( EvaluationContext evalContext )
+    public UrlTarget( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelMiscUri( "urlTarget" ), evalContext );
+        super( mc.createWurfelMiscUri( "urlTarget" ), mc );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
         String a, result;
 
         Iterator<Value> argIter = args.iterator();
-        a = evalContext.stringValue(
-                evalContext.castToLiteral( argIter.next() ) );
+        a = mc.stringValue(
+                mc.castToLiteral( argIter.next() ) );
 
         try
         {
@@ -62,7 +62,7 @@ public class UrlTarget extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        return new NodeSet( evalContext.createLiteral( result ) );
+        return new NodeSet( mc.createLiteral( result ) );
     }
 }
 

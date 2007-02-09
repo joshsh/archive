@@ -2,7 +2,6 @@ package wurfel.model;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -19,14 +18,14 @@ public abstract class Combinator extends Node implements Function
         return selfUri;
     }
 
-    protected Combinator( final URI self, EvaluationContext evalContext )
+    protected Combinator( final URI self, ModelConnection mc )
         throws WurfelException
     {
         selfUri = self;
-        arityCached = evalContext.intValue(
-            evalContext.castToLiteral(
-                evalContext.findUniqueProduct(
-                    selfUri, evalContext.createWurfelUri( "combinatorArity" ) ) ) );
+        arityCached = mc.intValue(
+            mc.castToLiteral(
+                mc.findUniqueProduct(
+                    selfUri, mc.createWurfelUri( "combinatorArity" ) ) ) );
     }
 
     public int arity()

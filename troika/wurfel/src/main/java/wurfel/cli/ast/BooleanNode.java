@@ -1,9 +1,8 @@
 package wurfel.cli.ast;
 
-import wurfel.Context;
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 
@@ -16,10 +15,10 @@ public class BooleanNode extends Ast
         this.value = value;
     }
 
-    public Value evaluate( Interpreter itp, EvaluationContext evalContext )
+    public Value evaluate( Interpreter itp, ModelConnection mc )
         throws WurfelException
     {
-        return evalContext.createLiteral( value );
+        return mc.createLiteral( value );
     }
 }
 

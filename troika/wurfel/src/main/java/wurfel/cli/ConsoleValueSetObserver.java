@@ -1,9 +1,9 @@
 package wurfel.cli;
 
 import wurfel.WurfelException;
-import wurfel.Context;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 import wurfel.model.Lexicon;
+import wurfel.model.Model;
 import wurfel.model.ObservableValueSet;
 import wurfel.model.WurfelPrintStream;
 
@@ -32,13 +32,13 @@ public class ConsoleValueSetObserver implements Observer
         ps = printStream;
     }
 
-    private void show( Resource subject, EvaluationContext evalContext )
+    private void show( Resource subject, ModelConnection mc )
         throws WurfelException
     {
         ps.print( subject );
         ps.print( "\n" );
 
-        Set<URI> predicates = evalContext.getPredicates( subject );
+        Set<URI> predicates = mc.getPredicates( subject );
         Iterator<URI> predIter = predicates.iterator();
         while ( predIter.hasNext() )
         {
@@ -48,7 +48,7 @@ public class ConsoleValueSetObserver implements Observer
             ps.print( predicate );
             ps.print( "\n" );
 
-            Set<Value> objects = valueSet.getContext().multiply( subject, predicate, evalContext );
+            Set<Value> objects = valueSet.getModel().multiply( subject, predicate, mc );
             Iterator<Value> objIter = objects.iterator();
             while ( objIter.hasNext() )
             {
@@ -64,13 +64,13 @@ public class ConsoleValueSetObserver implements Observer
     private void refresh()
         throws WurfelException
     {
-        Context context = valueSet.getContext();
+        Model model = valueSet.getModel();
         Collection<Value> values = valueSet.getValues();
 
         if ( 0 < values.size() )
             ps.println( "" );
 
-        EvaluationContext evalContext = new EvaluationContext( context, "for ConsoleValueSetObserver refresh()" );
+        ModelConnection mc = new ModelConnection( model, "for ConsoleValueSetObserver refresh()" );
         try
         {
             int index = 0;
@@ -82,7 +82,7 @@ public class ConsoleValueSetObserver implements Observer
 
                 if ( v instanceof Resource )
                 {
-                    show( (Resource) v, evalContext );
+                    show( (Resource) v, mc );
                 }
 
                 else
@@ -95,11 +95,11 @@ public class ConsoleValueSetObserver implements Observer
 
         catch ( WurfelException e )
         {
-            evalContext.close();
+            mc.close();
             throw e;
         }
 
-        evalContext.close();
+        mc.close();
 
         ps.print( "\n" );
     }

@@ -3,7 +3,7 @@ package wurfel.extensions.test;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -16,22 +16,22 @@ import java.util.LinkedList;
 
 public class BagElements extends PrimitiveFunction
 {
-    public BagElements( EvaluationContext evalContext )
+    public BagElements( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelTestUri( "bagElements" ), evalContext );
+        super( mc.createWurfelTestUri( "bagElements" ), mc );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
         Resource head;
 
         Iterator<Value> argIter = args.iterator();
-        head = evalContext.castToResource( argIter.next() );
+        head = mc.castToResource( argIter.next() );
 
-        return evalContext.bagValue( head );
+        return mc.bagValue( head );
     }
 }
 

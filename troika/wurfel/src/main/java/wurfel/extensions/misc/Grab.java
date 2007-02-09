@@ -2,10 +2,9 @@ package wurfel.extensions.misc;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.Context;
 import wurfel.model.PrimitiveFunction;
 import wurfel.model.NodeSet;
-import wurfel.model.EvaluationContext;
+import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -22,34 +21,32 @@ import java.net.URLEncoder;
 
 public class Grab extends PrimitiveFunction
 {
-    public Grab( EvaluationContext evalContext )
+    public Grab( ModelConnection mc )
         throws WurfelException
     {
-        super( evalContext.createWurfelMiscUri( "grab" ), evalContext );
+        super( mc.createWurfelMiscUri( "grab" ), mc );
     }
 
     protected Collection<Value> applyInternal( LinkedList<Value> args,
-                                               EvaluationContext evalContext )
+                                               ModelConnection mc )
         throws WurfelException
     {
-        Context context = evalContext.getContext();
-
         String urlStr;
 
         Iterator<Value> argIter = args.iterator();
-        urlStr = evalContext.stringValue(
-                evalContext.castToLiteral( argIter.next() ) );
+        urlStr = mc.stringValue(
+                mc.castToLiteral( argIter.next() ) );
 
         try
         {
             URL url = new URL( urlStr );
 
-            URI baseUri = evalContext.createUri( urlStr );
-            evalContext.addGraph( url, baseUri );
+            URI baseUri = mc.createUri( urlStr );
+            mc.addGraph( url, baseUri );
             NodeSet results = new NodeSet();
 
             CloseableIterator<? extends Statement> stmtIter
-                = evalContext.getConnection().getStatements(
+                = mc.getConnection().getStatements(
                     null, null, null, baseUri, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );

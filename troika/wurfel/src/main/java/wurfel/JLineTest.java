@@ -14,7 +14,8 @@ import org.openrdf.sail.memory.MemoryStore;
 
 import wurfel.cli.Interpreter;
 import wurfel.lucene.LuceneTest;
-import wurfel.model.EvaluationContext;
+import wurfel.model.Model;
+import wurfel.model.ModelConnection;
 
 public class JLineTest
 {
@@ -54,15 +55,15 @@ LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
 
             Repository repository = createTestRepository();
 
-            Context context = new Context( repository, "anonymousContext" );
-            EvaluationContext evalContext = new EvaluationContext( context, "for JLineTest main" );
+            Model model = new Model( repository, "anonymousContext" );
+            ModelConnection mc = new ModelConnection( model, "for JLineTest main" );
             if ( args.length == 2 )
-                evalContext.addGraph( new URL( args[0] ), evalContext.createUri( args[1] ) );
+                mc.addGraph( new URL( args[0] ), mc.createUri( args[1] ) );
             else if ( args.length == 1 )
-                evalContext.addGraph( new URL( args[0] ) );
-            evalContext.close();
+                mc.addGraph( new URL( args[0] ) );
+            mc.close();
 
-            Interpreter r = new Interpreter( context );
+            Interpreter r = new Interpreter( model );
             r.run();
 
             repository.shutDown();
@@ -73,7 +74,7 @@ LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
             System.out.println( t.toString() );
         }
 
-        List<String> openConnections = EvaluationContext.listOpenConnections();
+        List<String> openConnections = ModelConnection.listOpenConnections();
         if ( openConnections.size() > 0 )
         {
             Iterator<String> i = openConnections.iterator();

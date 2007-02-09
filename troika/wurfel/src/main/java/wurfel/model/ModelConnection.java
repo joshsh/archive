@@ -27,15 +27,15 @@ import org.openrdf.repository.Connection;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.util.iterator.CloseableIterator;
 
-import wurfel.Context;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 
-public class EvaluationContext
+public class ModelConnection
 {
-    private final static Logger s_logger = Logger.getLogger( Context.class );
+    private final static Logger s_logger
+        = Logger.getLogger( ModelConnection.class );
 
-    private Context context;
+    private Model model;
     private Connection connection;
     private String name = null;
 
@@ -52,10 +52,10 @@ public class EvaluationContext
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private void constructPrivate( Context context )
+    private void constructPrivate( Model model )
         throws WurfelException
     {
-        this.context = context;
+        this.model = model;
 
         if ( !s_initialized )
         {
@@ -72,7 +72,7 @@ public class EvaluationContext
 
         try
         {
-            connection = context.getRepository().getConnection();
+            connection = model.getRepository().getConnection();
 //System.out.println( "Opened "
 //    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //    + " (" + openConnections + " total)." );
@@ -86,22 +86,22 @@ public class EvaluationContext
         add( this );
     }
 
-    public EvaluationContext( Context context )
+    public ModelConnection( Model model )
         throws WurfelException
     {
-        constructPrivate( context );
+        constructPrivate( model );
     }
 
-    public EvaluationContext( Context context, final String name )
+    public ModelConnection( Model model, final String name )
         throws WurfelException
     {
         this.name = name;
-        constructPrivate( context );
+        constructPrivate( model );
     }
 
-    public Context getContext()
+    public Model getModel()
     {
-        return context;
+        return model;
     }
 
     public Connection getConnection()
@@ -130,22 +130,22 @@ public class EvaluationContext
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private static Set<EvaluationContext> openConnections
-        = new LinkedHashSet<EvaluationContext>();
+    private static Set<ModelConnection> openConnections
+        = new LinkedHashSet<ModelConnection>();
 
-    private static void add( EvaluationContext evalContext )
+    private static void add( ModelConnection mc )
     {
         synchronized( openConnections )
         {
-            openConnections.add( evalContext );
+            openConnections.add( mc );
         }
     }
 
-    private static void remove( EvaluationContext evalContext )
+    private static void remove( ModelConnection mc )
     {
         synchronized( openConnections )
         {
-            openConnections.remove( evalContext );
+            openConnections.remove( mc );
         }
     }
 
@@ -155,7 +155,7 @@ public class EvaluationContext
         {
             List<String> names = new ArrayList<String>( openConnections.size() );
 
-            Iterator<EvaluationContext> i = openConnections.iterator();
+            Iterator<ModelConnection> i = openConnections.iterator();
             while ( i.hasNext() )
                 names.add( i.next().name );
 
@@ -170,7 +170,7 @@ public class EvaluationContext
     {
 //        Apply a = new Apply( func, arg );
 //        return reduce( a );
-        return context.multiply( arg, func, this );
+        return model.multiply( arg, func, this );
     }
 
     public Value findUniqueProduct( Value arg, Value func )
@@ -325,7 +325,7 @@ public class EvaluationContext
         {
             CloseableIterator<? extends Statement> stmtIter
                 = connection.getStatements(
-//                    null, null, null, context, includeInferred );
+//                    null, null, null, model, includeInferred );
                     null, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 subjects.add( stmtIter.next().getSubject() );
@@ -350,7 +350,7 @@ public class EvaluationContext
         {
             CloseableIterator<? extends Statement> stmtIter
                 = connection.getStatements(
-//                    subject, null, null, context, includeInferred );
+//                    subject, null, null, model, includeInferred );
                     subject, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 predicates.add( stmtIter.next().getPredicate() );
@@ -387,27 +387,27 @@ public class EvaluationContext
 
     public URI createUri( final String s )
     {
-        return context.getRepository().getValueFactory().createURI( s );
+        return model.getRepository().getValueFactory().createURI( s );
     }
 
     public Literal createLiteral( final String s )
     {
-        return context.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
+        return model.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
     }
 
     public Literal createLiteral( final boolean b )
     {
-        return context.getRepository().getValueFactory().createLiteral( "" + b, s_xsdBooleanUri );
+        return model.getRepository().getValueFactory().createLiteral( "" + b, s_xsdBooleanUri );
     }
 
     public Literal createLiteral( final int i )
     {
-        return context.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
+        return model.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
     }
 
     public Literal createLiteral( final double d )
     {
-        return context.getRepository().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
+        return model.getRepository().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
     }
 
     private static Random s_rn = new Random();
@@ -693,7 +693,7 @@ System.out.println( "####### Guessed format is " + format.getName() );
 
 System.out.println( "####### graph successfully imported" );
 
-        context.touch();
+        model.touch();
     }
 
     public void addGraph( final URL url )

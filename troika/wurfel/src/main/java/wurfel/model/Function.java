@@ -1,6 +1,5 @@
 package wurfel.model;
 
-import wurfel.Context;
 import wurfel.WurfelException;
 
 import org.openrdf.model.Value;
@@ -21,7 +20,7 @@ public interface Function extends WurfelValue
     public int arity();
 
     public Collection<Value> applyTo( LinkedList<Value> args,
-                                      EvaluationContext evalContext )
+                                      ModelConnection mc )
         throws WurfelException;
 
     public void checkArguments( LinkedList<Value> args )
