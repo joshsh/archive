@@ -21,13 +21,9 @@ import org.openrdf.queryresult.TupleQueryResult;
 import org.openrdf.queryresult.Solution;
 import org.openrdf.repository.Connection;
 import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryImpl;
 import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.sail.Namespace;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
-import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.util.iterator.CloseableIterator;
 
 import java.io.IOException;
@@ -77,27 +73,18 @@ Hashtable<String, String> aliases;
         specialFunctions.put( f.getUri(), f );
     }
 
-    public Context( final String name )
+    /**
+     *  @param Repository  an initialized Repository
+     */
+    public Context( final Repository repository, final String name )
         throws WurfelException
     {
         s_logger.debug( "Creating new Context '" + name + "'" );
 
-aliases = new Hashtable<String, String>();
+        this.repository = repository;
         this.name = name;
 
-        try
-        {
-            repository = new RepositoryImpl(
-                new MemoryStoreRDFSInferencer(
-                    new MemoryStore() ) );
-//                    new MemoryStore( new java.io.File( "wurfel.tmp" ) ) ) );
-            repository.initialize();
-        }
-
-        catch ( Throwable t )
-        {
-            throw new WurfelException( t );
-        }
+aliases = new Hashtable<String, String>();
 
         dereferencer = new HttpUriDereferencer( this );
 

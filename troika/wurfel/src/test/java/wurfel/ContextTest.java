@@ -1,5 +1,8 @@
 package wurfel;
 
+import org.openrdf.repository.Repository;
+
+import wurfel.JLineTest;
 import wurfel.test.WurfelTestCase;
 
 public class ContextTest extends WurfelTestCase
@@ -9,7 +12,19 @@ public class ContextTest extends WurfelTestCase
         public void test()
             throws WurfelException
         {
-            Context context = new Context( "Test Context" );
+            Repository repository = JLineTest.createTestRepository();
+
+            Context context = new Context( repository, "Test Context" );
+
+            try
+            {
+                repository.shutDown();
+            }
+
+            catch ( Throwable t )
+            {
+                throw new WurfelException( t );
+            }
         }
     }
 

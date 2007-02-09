@@ -1,11 +1,5 @@
 package wurfel;
 
-import wurfel.cli.Interpreter;
-import wurfel.lucene.LuceneTest;
-import wurfel.model.EvaluationContext;
-
-import org.apache.log4j.PropertyConfigurator;
-
 import java.net.URL;
 
 import java.util.List;
@@ -13,9 +7,39 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryImpl;
+import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
+import org.openrdf.sail.memory.MemoryStore;
+
+import wurfel.cli.Interpreter;
+import wurfel.lucene.LuceneTest;
+import wurfel.model.EvaluationContext;
+
 public class JLineTest
 {
     private final static Logger s_logger = Logger.getLogger( JLineTest.class );
+
+    public static Repository createTestRepository()
+        throws WurfelException
+    {
+        try
+        {
+            Repository repository = new RepositoryImpl(
+                new MemoryStoreRDFSInferencer(
+                    new MemoryStore() ) );
+//                    new MemoryStore( new java.io.File( "wurfel.tmp" ) ) ) );
+
+            repository.initialize();
+
+            return repository;
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+    }
 
     public static void main( final String [] args )
     {
@@ -23,18 +47,14 @@ public class JLineTest
         {
             Wurfel.initialize();
 
-
-
 LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel phase2" );
 LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel AND phase2" );
 LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel OR phase2" );
 LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
 
+            Repository repository = createTestRepository();
 
-
-
-
-            Context context = new Context( "anonymousContext" );
+            Context context = new Context( repository, "anonymousContext" );
             EvaluationContext evalContext = new EvaluationContext( context, "for JLineTest main" );
             if ( args.length == 2 )
                 evalContext.addGraph( new URL( args[0] ), evalContext.createUri( args[1] ) );
@@ -44,6 +64,8 @@ LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
 
             Interpreter r = new Interpreter( context );
             r.run();
+
+            repository.shutDown();
         }
 
         catch ( Throwable t )
