@@ -27,15 +27,13 @@ public class HttpUriDereferencer implements Dereferencer
 {
     private final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
 
-    private Set<String> allBaseUris;
-    private Set<String> dereferencedBaseUris;
-    private Set<String> failedBaseUris;
+    private Set<String> successMemoUris;
+    private Set<String> failureMemoUris;
 
     public HttpUriDereferencer()
     {
-        allBaseUris = new LinkedHashSet<String>();
-        dereferencedBaseUris = new LinkedHashSet<String>();
-        failedBaseUris = new LinkedHashSet<String>();
+        successMemoUris = new LinkedHashSet<String>();
+        failureMemoUris = new LinkedHashSet<String>();
     }
 
     public void dereferenceSubjectUri( final URI subject, ModelConnection mc )
@@ -43,9 +41,8 @@ public class HttpUriDereferencer implements Dereferencer
     {
         String ns = subject.getNamespace();
 
-        // Note: I'm counting on the hash table implementation to use compareTo()
-        //       rather than equals()
-        if ( !allBaseUris.contains( ns ) )
+        if ( !successMemoUris.contains( ns )
+          && !failureMemoUris.contains( ns ) )
         {
             try
             {
@@ -55,13 +52,11 @@ public class HttpUriDereferencer implements Dereferencer
 
             catch ( WurfelException e )
             {
-                allBaseUris.add( ns );
-                failedBaseUris.add( ns );
+                failureMemoUris.add( ns );
                 throw e;
             }
 
-            allBaseUris.add( ns );
-            dereferencedBaseUris.add( ns );
+            successMemoUris.add( ns );
         }
     }
 

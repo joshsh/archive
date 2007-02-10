@@ -1,6 +1,46 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
 
-(: DOAP :)
-!import "http://usefulinc.com/ns/doap";
+doap: ;
+doap:ArchRepository ;
+doap:BKRepository ;
+doap:CVSRepository ;
+doap:Project ;
+doap:Repository ;
+doap:SVNRepository ;
+doap:Version ;
+doap:anon-root ;
+doap:browse ;
+doap:bug-database ;
+doap:category ;
+doap:created ;
+doap:description ;
+doap:developer ;
+doap:documenter ;
+doap:download-mirror ;
+doap:download-page ;
+doap:file-release ;
+doap:helper ;
+doap:homepage ;
+doap:license ;
+doap:location ;
+doap:mailing-list ;
+doap:maintainer ;
+doap:module ;
+doap:name ;
+doap:old-homepage ;
+doap:os ;
+doap:programming-language ;
+doap:release ;
+doap:repository ;
+doap:revision ;
+doap:screenshots ;
+doap:shortdesc ;
+doap:tester ;
+doap:translator ;
+doap:wiki ;
+
+
+
 
 (: PRJ Project Vocabulary :)
 "http://dannyayers.com:88/xmlns/project/project.owl" grab;

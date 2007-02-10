@@ -1,10 +1,14 @@
 package wurfel.test;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
-
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
+
+import org.openrdf.repository.Repository;
+
+import wurfel.JLineTest;
+import wurfel.Wurfel;
+import wurfel.WurfelException;
+import wurfel.model.Model;
 
 public abstract class WurfelTestCase extends TestCase
 {
@@ -18,7 +22,7 @@ public abstract class WurfelTestCase extends TestCase
     protected abstract class TestRunnable implements Runnable
     {
         public abstract void test()
-            throws WurfelException;
+            throws Exception;
 
         public void run()
         {
@@ -110,6 +114,24 @@ public abstract class WurfelTestCase extends TestCase
         runTests();
 
         finish();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private static Model model = null;
+
+    protected static Model getTestModel()
+        throws Exception
+    {
+        if ( null == model )
+        {
+            // Warning: we never call shutDown() on this repository.
+            Repository repository = JLineTest.createTestRepository();
+
+            model = new Model( repository, "UnitTestModel" );
+        }
+
+        return model;
     }
 }
 

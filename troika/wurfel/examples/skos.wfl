@@ -1,4 +1,72 @@
-(: SKOS Core, Mapping and Extensions :)
-!import "http://www.w3.org/2004/02/skos/core/history/2006-04-18.rdf";
-!import "http://www.w3.org/2004/02/skos/mapping";
-!import "http://www.w3.org/2004/02/skos/extensions";
+# SKOS core ####################################################################
+
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#>;
+
+skos:CollectableProperty ;
+skos:Collection ;
+skos:Concept ;
+skos:ConceptScheme ;
+skos:OrderedCollection ;
+skos:TopConcept ;
+skos:altLabel ;
+skos:altSymbol ;
+skos:broader ;
+skos:broaderGeneric ;
+skos:broaderInstantive ;
+skos:broaderPartitive ;
+skos:changeNote ;
+skos:definition ;
+skos:editorialNote ;
+skos:example ;
+skos:externalID ;
+skos:hasTopConcept ;
+skos:hiddenLabel ;
+skos:historyNote ;
+skos:inScheme ;
+skos:isPrimarySubjectOf ;
+skos:isSubjectOf ;
+skos:member ;
+skos:memberList ;
+skos:narrower ;
+skos:narrowerGeneric ;
+skos:narrowerInstantive ;
+skos:narrowerPartitive ;
+skos:note ;
+skos:prefLabel ;
+skos:prefSymbol ;
+skos:primarySubject ;
+skos:privateNote ;
+skos:publicNote ;
+skos:related ;
+skos:relatedHasPart ;
+skos:relatedPartOf ;
+skos:scopeNote ;
+skos:semanticRelation ;
+skos:subject ;
+skos:subjectIndicator ;
+skos:symbol ;
+
+# SKOS mapping #################################################################
+
+<http://www.w3.org/2004/02/skos/mapping#AND> ;
+<http://www.w3.org/2004/02/skos/mapping#NOT> ;
+<http://www.w3.org/2004/02/skos/mapping#OR> ;
+<http://www.w3.org/2004/02/skos/mapping#broadMatch> ;
+<http://www.w3.org/2004/02/skos/mapping#exactMatch> ;
+<http://www.w3.org/2004/02/skos/mapping#majorMatch> ;
+<http://www.w3.org/2004/02/skos/mapping#mappingRelation> ;
+<http://www.w3.org/2004/02/skos/mapping#minorMatch> ;
+<http://www.w3.org/2004/02/skos/mapping#narrowMatch> ;
+
+# SKOS extensions ##############################################################
+
+<http://www.w3.org/2004/02/skos/extensions#broaderPartitive> ;
+<http://www.w3.org/2004/02/skos/extensions#narrowerGeneric> ;
+<http://www.w3.org/2004/02/skos/extensions#narrowerPartitive> ;
+<http://www.w3.org/2004/02/skos/extensions#relatedHasPart> ;
+<http://www.w3.org/2004/02/skos/extensions#relatedPartOf> ;
+
+<http://www.w3.org/2004/02/skos/extensions> ;
+<http://www.w3.org/2004/02/skos/extensions#broaderGeneric> ;
+<http://www.w3.org/2004/02/skos/extensions#broaderInstantive> ;
+<http://www.w3.org/2004/02/skos/extensions#narrowerInstantive> ;

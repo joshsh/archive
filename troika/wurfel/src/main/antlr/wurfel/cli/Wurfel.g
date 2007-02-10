@@ -234,7 +234,7 @@ AND options
 OR
 options { paraphrase = "disjunction"; } : '|' ;
 
-WITHOUT
+SLASH
 options { paraphrase = "exclusion"; } : '/' ;
 
 PLUS
@@ -372,7 +372,7 @@ nt_QuantifiedItem returns [ Ast r ]
     : DOT r=nt_Item
     | AND r=nt_Item
     | OR r=nt_Item
-    | WITHOUT r=nt_Item
+    | SLASH r=nt_Item
     | CHOICE r=nt_Item
     | STAR r=nt_Item
     | PLUS r=nt_Item

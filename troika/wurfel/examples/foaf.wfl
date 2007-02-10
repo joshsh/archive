@@ -18,7 +18,7 @@
 <http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/knows/knows/name;  # 8768 results
 <http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/knows/knows/knows/name;  # 8773 results
 # (there are no additional results after this point)
-!saveas "foaf-dump.rdf";
+@saveas "foaf-dump.rdf";
 
 (: Ego :)
 <http://fortytwo.net/2007/02/06/joshua-shinavier#>;
