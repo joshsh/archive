@@ -30,6 +30,8 @@ Scuttering
 * build a smarter URI dereferencer which can determine the MIME type of a document (so we can grab data from other formats besides RDF/XML)
 * add support for "blank" local names at the model level, so you can grab the root node of a graph like this one:
     http://sws.geonames.org/3020251/about.rdf
+* ponder the implications of purl URIs like this one:
+    http://purl.org/stuff/rev#Review
 
 Server
 ================================================================================
@@ -55,6 +57,7 @@ Names and namespaces
 * handle name collisions in a more flexible and configurable way
 * add a @prefix command to explicitly define or override namespace prefixes
 * make "prefix discovery" a configurable feature
+* investigate relative URIs for Wurfel vocabularies, so I don't have to change them every time I change the location of the vocabulary
 
 Command line interface
 ================================================================================

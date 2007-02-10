@@ -401,7 +401,7 @@ System.out.println( "--- 3 ---" );
             {
                 try
                 {
-                    d.dereferenceSubjectUri( (URI) value, mc );
+                    d.dereference( (URI) value, mc );
                 }
 
                 catch ( WurfelException e )

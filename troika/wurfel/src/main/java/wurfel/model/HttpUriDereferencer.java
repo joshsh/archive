@@ -36,33 +36,69 @@ public class HttpUriDereferencer implements Dereferencer
         failureMemoUris = new LinkedHashSet<String>();
     }
 
-    public void dereferenceSubjectUri( final URI subject, ModelConnection mc )
+    public void dereference( final URI uri, ModelConnection mc )
         throws WurfelException
     {
-        String ns = subject.getNamespace();
+        String ns = uri.getNamespace();
+        String uriStr = null;
 
-        if ( !successMemoUris.contains( ns )
-          && !failureMemoUris.contains( ns ) )
+        String memo = ( '#' == ns.charAt( ns.length() - 1 ) )
+
+            // For hash namespaces, memoize the namespace.
+            ? ns
+
+            // For slash namespaces, we're forced to memoize the specific URI,
+            // as we don't know whether to expect statements only for the
+            // specific URI or for other URIs in the namespace as well.
+            : ( uriStr = uri.toString() );
+
+        if ( successMemoUris.contains( memo )
+          || failureMemoUris.contains( memo ) )
+            return;
+
+        URL url;
+
+        try
         {
-            try
-            {
-//                dereferenceGraph( ns, mc );
-                dereferenceGraph( subject.toString(), mc );
-            }
+            if ( null == uriStr )
+                uriStr = uri.toString();
 
-            catch ( WurfelException e )
-            {
-                failureMemoUris.add( ns );
-                throw e;
-            }
-
-            successMemoUris.add( ns );
+            // We request the resource at the full URI, without trying to guess
+            // the intended namespace.
+            url = new URL( uriStr );
         }
+
+        catch ( MalformedURLException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        // Identify the context of the to-be-imported graph with its namespace.
+        URI context = mc.createUri( ns );
+
+        try
+        {
+            mc.addGraph( url, context );
+        }
+
+        catch ( WurfelException e )
+        {
+            failureMemoUris.add( memo );
+            throw e;
+        }
+
+        successMemoUris.add( memo );
+
+// TODO: this should probably be in a parent Dereferencer.
+        if ( Wurfel.enforceImplicitProvenance() )
+            filter( ns, context, mc );
     }
 
-    private void filter( final String uri, final URI contextUri, Connection conn )
+    private void filter( final String ns, final URI context, ModelConnection mc )
         throws WurfelException
     {
+        Connection conn = mc.getConnection();
+
         CloseableIterator<? extends Statement> stmtIter = null;
 
         int count = 0;
@@ -70,13 +106,13 @@ public class HttpUriDereferencer implements Dereferencer
         try
         {
             stmtIter = conn.getStatements(
-                 null, null, null, contextUri, Wurfel.useInference() );
+                 null, null, null, context, Wurfel.useInference() );
 
             while ( stmtIter.hasNext() )
             {
                 Statement st = stmtIter.next();
                 Resource subject = st.getSubject();
-                if ( subject instanceof URI && !( (URI) subject ).getNamespace().equals( uri ) )
+                if ( subject instanceof URI && !( (URI) subject ).getNamespace().equals( ns ) )
                 {
 System.out.println( "Removing statement: " + st.getSubject().toString() + " " + st.getPredicate().toString() + " " + st.getObject().toString() + " from context " + st.getContext().toString() );
                     conn.remove( st );
@@ -97,30 +133,7 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
             throw new WurfelException( t );
         }
 
-        s_logger.debug( "Removed " + count + " disallowed statement(s) from context " + uri + "." );
-    }
-
-    private void dereferenceGraph( final String uri, ModelConnection mc )
-        throws WurfelException
-    {
-        URL url;
-
-        try
-        {
-            url = new URL( uri );
-        }
-
-        catch ( MalformedURLException e )
-        {
-            throw new WurfelException( e );
-        }
-
-        URI contextUri = mc.createUri( uri );
-
-        mc.addGraph( url, contextUri );
-
-        if ( Wurfel.enforceImplicitProvenance() )
-            filter( uri, contextUri, mc.getConnection() );
+        s_logger.debug( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
     }
 }
 

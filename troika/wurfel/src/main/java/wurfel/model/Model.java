@@ -195,7 +195,7 @@ public Repository getRepository()
         {
             try
             {
-                dereferencer.dereferenceSubjectUri( (URI) arg, mc );
+                dereferencer.dereference( (URI) arg, mc );
             }
 
             catch ( WurfelException e )
