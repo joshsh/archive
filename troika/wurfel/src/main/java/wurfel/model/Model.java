@@ -112,6 +112,9 @@ public Repository getRepository()
     private void extractRDF( OutputStream out )
         throws WurfelException
     {
+        // Note: a comment by Jeen suggests that a new writer should be created
+        //       for each use:
+        //       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
         RDFXMLWriter writer = new RDFXMLPrettyWriter( out );
 
         try
@@ -201,6 +204,7 @@ public Repository getRepository()
             catch ( WurfelException e )
             {
                 // (soft fail)
+s_logger.debug( "Failed to dereference URI: " + arg.toString() );
             }
         }
 

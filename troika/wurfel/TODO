@@ -24,6 +24,10 @@ Model
 * investigate data mapping between OpenRDF objects and Wurfel expressions, specifically, whether there would be performance savings in wrapping OpenRDF objects so as to avoid the use of instanceof
 * make LazyEvaluator truly lazy, as well as more efficient
 
+Primitives
+================================================================================
+* Add a sample Primitive or two which deal with the rdf:XMLLiteral type, if OpenRDF makes this possible
+
 Scuttering
 ================================================================================
 * look into adding a FOAF scutterer
@@ -39,6 +43,7 @@ Server
 * dbpedia server (not necessarily using Wurfel)
 * RFC server
 * server for HTTP response codes
+* servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.
 
 Concurrency
 ================================================================================

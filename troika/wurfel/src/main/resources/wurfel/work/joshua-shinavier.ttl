@@ -8,22 +8,23 @@
 
 <http://fortytwo.net/2007/02/06/joshua-shinavier#>
   a foaf:PersonalProfileDocument ;
-  foaf:maker _:me ;
-  foaf:primaryTopic _:me .
+  foaf:maker <http://fortytwo.net/2007/02/06/joshua-shinavier#me> ;
+  foaf:primaryTopic <http://fortytwo.net/2007/02/06/joshua-shinavier#me> .
 
-_:me
+<http://fortytwo.net/2007/02/06/joshua-shinavier#me>
   a foaf:Person ;
   a con:Male ;
   foaf:name "Joshua Shinavier" ;
   foaf:title "Mr." ;
   foaf:givenname "Joshua" ;
   foaf:family_name "Shinavier" ;
-#  foaf:nick "Ajax" ;
+  foaf:nick "Josh" ;
   foaf:mbox_sha1sum "e9bbf0a3835f323fc4bf3a20f8f41df1b31bda6a" ;
   foaf:mbox <mailto:parcour@gmail.com> ;
-  foaf:homepage <http://troika.dnsdojo.net> ;
-  con:homepage <http://troika.dnsdojo.net> ;
-  foaf:depiction <http://troika.dnsdojo.net/pics/industrial/self.jpg> ;
+  foaf:holdsAccount <http://www.flickr.com/photos/72748463@N00/> ;
+  foaf:homepage <http://fortytwo.net> ;
+  con:homepage <http://fortytwo.net> ;
+  foaf:depiction <http://fortytwo.net/pics/industrial/self.jpg> ;
   foaf:phone <tel:1-509-570-6990> ;
   foaf:workplaceHomepage <http://www.soph-ware.com> ;
 # foaf:workInfoHomepage ...

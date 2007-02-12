@@ -25,6 +25,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.repository.Connection;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.util.iterator.CloseableIterator;
 
 import wurfel.Wurfel;
@@ -483,7 +484,7 @@ System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType
 System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
 */
         String contentType = urlConn.getContentType();
-System.out.println( "######## contentType = " + contentType );
+s_logger.debug( "######## contentType = " + contentType );
 
         String file = urlConn.getURL().getFile();
         String ext;
@@ -496,7 +497,7 @@ System.out.println( "######## contentType = " + contentType );
                 ? file.substring( lastDot + 1 )
                 : null;
         }
-System.out.println( "######## ext = " + ext );
+s_logger.debug( "######## ext = " + ext );
 
         // Primary content type rules.
         if ( null != contentType )
@@ -625,15 +626,25 @@ System.out.println( "######## ext = " + ext );
         urlConn.setRequestProperty( "User-Agent",
             Wurfel.getWurfelName() + "/" + Wurfel.getWurfelVersion() );
 
-        urlConn.setRequestProperty( "Accept",
-            "application/rdf+xml"
-            + ", text/rdf+n3"
-            + ", application/trix"
-            + ", application/x-turtle"
-            + ", text/plain"
-            + ", application/xml;q=0.5"
-            + ", text/xml;q=0.2"
-            );
+        /* Comment by arjohn in http://www.openrdf.org/forum/mvnforum/viewthread?thread=805#3234
+               Note that Sesame/Rio doesn't have a real N3 parser, but it does have a Turtle parser, which supports a much larger subset of N3. At first sight, I would say that the Turtle parser should be able to parse the data fragment that you posted. */
+        boolean n3DeserializationSupported = false;
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append( "application/rdf+xml" );
+
+        if ( n3DeserializationSupported )
+            sb.append( ", text/rdf+n3" );
+
+        sb.append( ", application/trix" );
+        sb.append( ", application/x-turtle" );
+        sb.append( ", text/plain" );
+        sb.append( ", application/xml;q=0.5" );
+        sb.append( ", text/xml;q=0.2" );
+
+        urlConn.setRequestProperty( "Accept", sb.toString() );
+
 
 // To consider at some point: caching, authorization
     }
@@ -649,7 +660,7 @@ System.out.println( "######## ext = " + ext );
         URLConnection urlConn;
         InputStream response;
 
-System.out.println( "######## dereferencing graph at URL: " + url );
+s_logger.debug( "######## dereferencing graph at URL: " + url );
 
         try
         {
@@ -673,7 +684,7 @@ showUrlConnection( urlConn );
             close( response );
             return;
         }
-System.out.println( "####### Guessed format is " + format.getName() );
+s_logger.debug( "####### Guessed format is " + format.getName() );
 
         try
         {
@@ -686,12 +697,23 @@ System.out.println( "####### Guessed format is " + format.getName() );
         catch ( Throwable t  )
         {
             close( response );
-            throw new WurfelException( t );
+
+            if ( t instanceof RDFParseException )
+            {
+                String msg = "line " + ( (RDFParseException) t ).getLineNumber()
+                    + ", column " + ( (RDFParseException) t ).getColumnNumber()
+                    + ": " + t.getMessage();
+
+                throw new WurfelException( msg );
+            }
+
+            else
+                throw new WurfelException( t );
         }
 
         close( response );
 
-System.out.println( "####### graph successfully imported" );
+s_logger.debug( "####### graph successfully imported" );
 
         model.touch();
     }
