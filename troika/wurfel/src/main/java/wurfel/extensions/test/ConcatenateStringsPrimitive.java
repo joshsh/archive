@@ -2,7 +2,7 @@ package wurfel.extensions.test;
 
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -34,7 +34,7 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
                     mc.castToLiteral( argIter.next() ) );
         result = strA + strB;
 
-        return new NodeSet( mc.createLiteral( result ) );
+        return new Container( mc.createLiteral( result ) );
     }
 }
 

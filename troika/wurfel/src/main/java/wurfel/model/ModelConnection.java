@@ -284,7 +284,7 @@ public class ModelConnection
     public Collection<Value> bagValue( final Resource head )
         throws WurfelException
     {
-        Collection<Value> results = new NodeSet();
+        Collection<Value> results = new Container();
 
         try
         {

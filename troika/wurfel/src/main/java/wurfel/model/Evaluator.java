@@ -14,7 +14,7 @@ public abstract class Evaluator
         return v instanceof Apply;
     }
 
-    public abstract NodeSet reduce( Value expr, ModelConnection mc )
+    public abstract Container reduce( Value expr, ModelConnection mc )
         throws WurfelException;
 }
 

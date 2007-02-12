@@ -2,7 +2,7 @@ package wurfel.extensions.misc;
 
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -92,7 +92,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         result = encrypt( a );
 
-        return new NodeSet( mc.createLiteral( result ) );
+        return new Container( mc.createLiteral( result ) );
     }
 }
 

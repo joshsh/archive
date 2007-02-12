@@ -3,7 +3,7 @@ package wurfel.extensions.misc;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -43,7 +43,7 @@ public class Grab extends PrimitiveFunction
 
             URI baseUri = mc.createUri( urlStr );
             mc.addGraph( url, baseUri );
-            NodeSet results = new NodeSet();
+            Container results = new Container();
 
             CloseableIterator<? extends Statement> stmtIter
                 = mc.getConnection().getStatements(

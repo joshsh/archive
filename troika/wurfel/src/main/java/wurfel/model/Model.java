@@ -209,7 +209,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
         }
 
         Iterator<Value> resultIter = rdfMultiply( arg, func, mc.getConnection() ).iterator();
-        Set<Value> result = new NodeSet();
+        Set<Value> result = new Container();
         while ( resultIter.hasNext() )
         {
             Value v = resultIter.next();
@@ -291,7 +291,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
     public Collection<Value> getContexts()
         throws WurfelException
     {
-        NodeSet contexts = new NodeSet();
+        Container contexts = new Container();
 
         try
         {

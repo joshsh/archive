@@ -5,7 +5,7 @@ import wurfel.WurfelException;
 import wurfel.model.ModelConnection;
 import wurfel.model.Lexicon;
 import wurfel.model.Model;
-import wurfel.model.ObservableValueSet;
+import wurfel.model.ObservableContainer;
 import wurfel.model.WurfelPrintStream;
 
 import org.openrdf.model.Resource;
@@ -18,9 +18,9 @@ import java.util.Observer;
 import java.util.Observable;
 import java.util.Set;
 
-public class ConsoleValueSetObserver implements Observer
+public class ContainerTreeView implements Observer
 {
-    private ObservableValueSet valueSet;
+    private ObservableContainer valueSet;
     private WurfelPrintStream ps;
 
     private Lexicon lexicon;
@@ -32,7 +32,7 @@ public class ConsoleValueSetObserver implements Observer
 
     private static final int maxDepth = Wurfel.getTreeViewDepth();
 
-    public ConsoleValueSetObserver( ObservableValueSet valueSet, WurfelPrintStream printStream )
+    public ContainerTreeView( ObservableContainer valueSet, WurfelPrintStream printStream )
         throws WurfelException
     {
         this.valueSet = valueSet;
@@ -91,7 +91,7 @@ public class ConsoleValueSetObserver implements Observer
             ps.println( "" );
 
         int treeViewDepth = Wurfel.getTreeViewDepth();
-        ModelConnection mc = new ModelConnection( model, "for ConsoleValueSetObserver refresh()" );
+        ModelConnection mc = new ModelConnection( model, "for ContainerTreeView refresh()" );
 
         try
         {

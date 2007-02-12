@@ -3,7 +3,7 @@ package wurfel.extensions.test;
 import wurfel.WurfelException;
 import wurfel.model.Apply;
 import wurfel.model.Combinator;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.URI;
@@ -30,7 +30,7 @@ public class Combinator_I extends Combinator
         Iterator<Value> argIter = args.iterator();
         x = argIter.next();
 
-        return new NodeSet( x );
+        return new Container( x );
     }
 }
 

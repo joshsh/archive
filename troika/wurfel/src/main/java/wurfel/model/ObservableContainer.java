@@ -1,17 +1,17 @@
 package wurfel.model;
 
-import org.openrdf.model.Value;
-
 import java.util.Collection;
 import java.util.Observable;
 
-public class ObservableValueSet extends Observable
+import org.openrdf.model.Value;
+
+public class ObservableContainer extends Observable
 {
-    private Collection<Value> values;
+    private Container values;
     private Model model;
 
-    public ObservableValueSet( Model model,
-                               Collection<Value> initialValues )
+    public ObservableContainer( Model model,
+                                Container initialValues )
     {
         this.model = model;
         values = initialValues;
@@ -22,12 +22,12 @@ public class ObservableValueSet extends Observable
         return model;
     }
 
-    public Collection<Value> getValues()
+    public Container getValues()
     {
         return values;
     }
 
-    public synchronized void setValues( Collection<Value> newValues )
+    public synchronized void setValues( Container newValues )
     {
         values = newValues;
         setChanged();

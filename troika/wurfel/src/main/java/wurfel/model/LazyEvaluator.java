@@ -14,7 +14,7 @@ import java.util.LinkedList;
  */
 public class LazyEvaluator extends Evaluator
 {
-    public NodeSet reduce( Value expr, ModelConnection mc )
+    public Container reduce( Value expr, ModelConnection mc )
         throws WurfelException
     {
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
@@ -30,7 +30,7 @@ public class LazyEvaluator extends Evaluator
             // Iterate over the cartesian product of the reduced function(s)
             // with the reduced argument(s).
             LinkedList<Value> argList = new LinkedList<Value>();
-            NodeSet result = new NodeSet();
+            Container result = new Container();
             while ( reducedFuncIter.hasNext() )
             {
                 Value function = reducedFuncIter.next();
@@ -64,7 +64,7 @@ public class LazyEvaluator extends Evaluator
         }
 
         else
-            return new NodeSet( expr );
+            return new Container( expr );
     }
 
 }

@@ -1,25 +1,25 @@
 package wurfel.model;
 
-import org.openrdf.model.Value;
-
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-public class NodeSet extends LinkedHashSet<Value>
+import org.openrdf.model.Value;
+
+public class Container extends LinkedHashSet<Value>
 {
-    public NodeSet()
+    public Container()
     {
         super();
     }
 
-    public NodeSet( Value v )
+    public Container( Value v )
     {
         super();
 
         add( v );
     }
 
-    public NodeSet( Collection<Value> other )
+    public Container( Collection<Value> other )
     {
         super();
 

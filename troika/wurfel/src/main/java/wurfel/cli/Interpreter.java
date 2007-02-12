@@ -1,31 +1,5 @@
 package wurfel.cli;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
-import wurfel.model.Dereferencer;
-import wurfel.model.ModelConnection;
-import wurfel.model.Evaluator;
-import wurfel.model.LazyEvaluator;
-import wurfel.model.Lexicon;
-import wurfel.model.Model;
-//import wurfel.model.DebugEvaluator;
-import wurfel.model.ObservableValueSet;
-import wurfel.model.WurfelPrintStream;
-import wurfel.cli.ast.Ast;
-
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-
-import jline.Completor;
-import jline.FileNameCompletor;
-import jline.ArgumentCompletor;
-import jline.SimpleCompletor;
-import jline.MultiCompletor;
-import jline.ConsoleReader;
-
 import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -44,6 +18,33 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.Observable;
 import java.util.Observer;
+
+import jline.Completor;
+import jline.FileNameCompletor;
+import jline.ArgumentCompletor;
+import jline.SimpleCompletor;
+import jline.MultiCompletor;
+import jline.ConsoleReader;
+
+import org.openrdf.model.Literal;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+
+import wurfel.Wurfel;
+import wurfel.WurfelException;
+import wurfel.model.Container;
+import wurfel.model.Dereferencer;
+import wurfel.model.ModelConnection;
+import wurfel.model.Evaluator;
+import wurfel.model.LazyEvaluator;
+import wurfel.model.Lexicon;
+import wurfel.model.Model;
+//import wurfel.model.DebugEvaluator;
+import wurfel.model.ObservableContainer;
+import wurfel.model.WurfelPrintStream;
+import wurfel.cli.ast.Ast;
 
 import org.apache.log4j.Logger;
 
@@ -84,8 +85,8 @@ public Model getModel()
 
     private CompletorState completorState = CompletorState.NONE;
 
-    private ObservableValueSet valueSet;
-    private ConsoleValueSetObserver valueSetObserver;
+    private ObservableContainer valueSet;
+    private ContainerTreeView valueSetObserver;
 
     private Lexicon lexicon;
 
@@ -132,10 +133,10 @@ public Model getModel()
 
         errorPrintStream = System.err;
 
-        valueSet = new ObservableValueSet( model, null );
+        valueSet = new ObservableContainer( model, null );
 ModelConnection mc = new ModelConnection( model, "for ConsoleValueSet constructor" );
         printStream = new WurfelPrintStream( System.out, lexicon, mc );
-        valueSetObserver = new ConsoleValueSetObserver( valueSet, printStream );
+        valueSetObserver = new ContainerTreeView( valueSet, printStream );
 mc.close();
         valueSet.addObserver( valueSetObserver );
 
@@ -438,7 +439,7 @@ System.out.println( "--- 3 ---" );
             : model.translateFromGraph( v );
     }
 
-    private Collection<Value> reduce( Value expr, ModelConnection mc )
+    private Container reduce( Value expr, ModelConnection mc )
         throws WurfelException
     {
         try
@@ -463,8 +464,8 @@ System.out.println( "--- 3 ---" );
 
             Value expr = ast.evaluate( this, mc );
 
-            Collection<Value> result = ( null == expr )
-                ? new ArrayList<Value>()
+            Container result = ( null == expr )
+                ? new Container()
                 : reduce( expr, mc );
 
 // TODO: this should dereference as many levels as Wurfel.getTreeViewDepth(),

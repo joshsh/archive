@@ -2,7 +2,7 @@ package wurfel.extensions.test;
 
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;

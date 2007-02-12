@@ -2,7 +2,7 @@ package wurfel.extensions.test;
 
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -31,7 +31,7 @@ public class ListElements extends PrimitiveFunction
         Iterator<Value> argIter = args.iterator();
         head = mc.castToResource( argIter.next() );
 
-        return new NodeSet( mc.listValue( head ) );
+        return new Container( mc.listValue( head ) );
     }
 }
 

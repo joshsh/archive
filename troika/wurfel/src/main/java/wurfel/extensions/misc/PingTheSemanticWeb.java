@@ -3,7 +3,7 @@ package wurfel.extensions.misc;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.PrimitiveFunction;
-import wurfel.model.NodeSet;
+import wurfel.model.Container;
 import wurfel.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -82,7 +82,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        NodeSet result = new NodeSet();
+        Container result = new Container();
         Element root = doc.getRootElement();
         Iterator<Element> childIter = root.getChildren().iterator();
         while ( childIter.hasNext() )
