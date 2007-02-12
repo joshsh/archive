@@ -53,7 +53,85 @@ W (C type b) x
 
 
 
+(: FOAF e-mail addresses:
 
+[0] <mailto:timbl@w3.org>
+[1] <mailto:dave.beckett@bristol.ac.uk>
+[2] <mailto:daniel.brickley@bristol.ac.uk>
+[3] <mailto:rael@oreilly.com>
+[4] <mailto:edd@usefulinc.com>
+[5] <mailto:libby.miller@bristol.ac.uk>
+[6] <mailto:connolly@w3.org>
+[7] <mailto:em@w3.org>
+[8] "yuhsin@mit.edu"
+[9] "alerer@mit.edu"
+[10] <mailto:jambo@mit.edu>
+[11] <mailto:swick@csail.mit.edu>
+[12] <mailto:swick@w3.org>
+[13] <mailto:joe.brickley@btopenworld.com>
+[14] <mailto:dino@grorg.org>
+[15] <mailto:dean@w3.org>
+[16] <mailto:d.m.steer@lse.ac.uk>
+[17] <mailto:libby@asemantics.com>
+[18] <mailto:mags@apocalypse.org>
+[19] <mailto:michaelm@netsol.com>
+[20] <mailto:edd@xmlhack.com>
+[21] <mailto:edd@xml.com>
+[22] <mailto:jan.grant@bristol.ac.uk>
+[23] <mailto:craig@coolstuffhere.co.uk>
+[24] <mailto:m.l.poulter@bristol.ac.uk>
+[25] <mailto:jim@jibbering.com>
+[26] <mailto:barstow@w3.org>
+[27] <mailto:ian.sealy@bristol.ac.uk>
+[28] <mailto:danbri@w3.org>
+[29] <mailto:bparsia@email.unc.edu>
+[30] <mailto:gwachob@wachob.com>
+[31] <mailto:uche.ogbuji@fourthought.com>
+[32] <mailto:ejad@debian.org>
+[33] <mailto:kendall@monkeyfist.com>
+    rdf:type
+        owl:Thing
+[34] <mailto:me@aaronsw.com>
+[35] <mailto:benkoo@ntr.net>
+[36] <mailto:brendan.quinn@bbc.co.uk>
+[37] <mailto:matt@picdiary.com>
+[38] <mailto:gcutrupi@ams.greenpeace.org>
+[39] <mailto:danbri@apocalypse.org>
+[40] <mailto:danbri@porklips.org>
+[41] <mailto:danbri@danbri.org>
+[42] <mailto:danbri@rdfweb.org>
+[43] <mailto:simonstl@simonstl.com>
+[44] <mailto:eikeon@eikeon.com>
+    rdf:type
+        owl:Thing
+[45] <mailto:space@shadowgirl.net>
+[46] <mailto:dave@dajobe.org>
+[47] <mailto:phil@chimpen.com>
+[48] <mailto:vdv@dyomedea.com>
+[49] <mailto:yoz@yoz.com>
+[50] <mailto:jason@pharmalicensing.com>
+[51] <mailto:zool@frot.org>
+[52] <mailto:robin@knowscape.com>
+[53] <mailto:claire@usefulinc.com>
+[54] <mailto:khampton@totalcinema.com>
+[55] <mailto:bob@snee.com>
+[56] <mailto:giles@gilest.org>
+[57] <mailto:paulm@husk.org>
+[58] <mailto:bparsia@isr.umd.edu>
+    rdf:type
+        owl:Thing
+[59] <mailto:amy@w3.org>
+[60] <mailto:henry.story@bblfish.net>
+[61] <mailto:henry.story@gmail.com>
+[62] <mailto:henry.story@sun.com>
+[63] <mailto:simon@w3.org>
+[64] <mailto:karl@w3.org>
+[65] <mailto:ryanlee@csail.mit.edu>
+[66] <mailto:alerer@mit.edu>
+[67] <mailto:dsheets@mit.edu>
+[68] <mailto:yuhsin@mit.edu>
+
+:)
 
 
 

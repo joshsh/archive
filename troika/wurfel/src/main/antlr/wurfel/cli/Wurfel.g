@@ -197,7 +197,11 @@ DOUBLE
     ;
 */
 
-
+/*
+LANGUAGE
+    : '@' ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)*
+    ;
+*/
 
 
 
@@ -395,7 +399,8 @@ nt_Literal returns [ Ast r ]
     : t:STRING
         {
             r = new StringNode( t.getText() );
-        }
+        }/*
+      ( AMP*/
     | u:NUMBER
         {
             try

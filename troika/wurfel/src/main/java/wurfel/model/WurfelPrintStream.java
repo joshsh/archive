@@ -111,6 +111,10 @@ print( "\"" + s + "\"" );
                 else
                     // For now, plain literals are printed as string-typed literals.
                     printEscapedString( v.toString() );
+
+                String language = ( (Literal) v ).getLanguage();
+                if ( null != language )
+                    print( "@" + language );
             }
 
             else

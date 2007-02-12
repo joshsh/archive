@@ -1,5 +1,6 @@
 package wurfel.cli;
 
+import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.ModelConnection;
 import wurfel.model.Lexicon;
@@ -24,6 +25,9 @@ public class ConsoleValueSetObserver implements Observer
 
     private Lexicon lexicon;
 
+    private static final String indent = "    ";
+    private static final int maxDepth = Wurfel.getTreeViewDepth();
+
     public ConsoleValueSetObserver( ObservableValueSet valueSet, WurfelPrintStream printStream )
         throws WurfelException
     {
@@ -32,31 +36,38 @@ public class ConsoleValueSetObserver implements Observer
         ps = printStream;
     }
 
-    private void show( Resource subject, ModelConnection mc )
+    private void printTreeView( Value subject, int depth, ModelConnection mc )
         throws WurfelException
     {
+        for ( int i = 0; i < ( maxDepth - depth ) * 2; i++ )
+            ps.print( indent );
+
         ps.print( subject );
         ps.print( "\n" );
 
-        Set<URI> predicates = mc.getPredicates( subject );
-        Iterator<URI> predIter = predicates.iterator();
-        while ( predIter.hasNext() )
+        if ( depth > 0 )
         {
-            URI predicate = predIter.next();
-
-            ps.print( "    " );
-            ps.print( predicate );
-            ps.print( "\n" );
-
-            Set<Value> objects = valueSet.getModel().multiply( subject, predicate, mc );
-            Iterator<Value> objIter = objects.iterator();
-            while ( objIter.hasNext() )
+            if ( subject instanceof Resource )
             {
-                Value object = objIter.next();
+                Set<URI> predicates = mc.getPredicates( (Resource) subject );
+                Iterator<URI> predIter = predicates.iterator();
 
-                ps.print( "        " );
-                ps.print( object );
-                ps.print( "\n" );
+                while ( predIter.hasNext() )
+                {
+                    URI predicate = predIter.next();
+
+                    for ( int i = 0; i < 1 + ( maxDepth - depth ) * 2; i++ )
+                        ps.print( indent );
+
+                    ps.print( predicate );
+                    ps.print( "\n" );
+
+                    Set<Value> objects = valueSet.getModel().multiply( subject, predicate, mc );
+                    Iterator<Value> objIter = objects.iterator();
+
+                    while ( objIter.hasNext() )
+                        printTreeView( objIter.next(), depth - 1, mc );
+                }
             }
         }
     }
@@ -70,6 +81,7 @@ public class ConsoleValueSetObserver implements Observer
         if ( 0 < values.size() )
             ps.println( "" );
 
+        int treeViewDepth = Wurfel.getTreeViewDepth();
         ModelConnection mc = new ModelConnection( model, "for ConsoleValueSetObserver refresh()" );
         try
         {
@@ -77,7 +89,11 @@ public class ConsoleValueSetObserver implements Observer
             Iterator<Value> valuesIter = values.iterator();
             while ( valuesIter.hasNext() )
             {
-                ps.print( "[" + index++ + "] " );
+                ps.print( "_" + ++index + " " );
+//                ps.print( "[" + index++ + "] " );
+
+                printTreeView( valuesIter.next(), treeViewDepth, mc );
+/*
                 Value v = valuesIter.next();
 
                 if ( v instanceof Resource )
@@ -90,6 +106,7 @@ public class ConsoleValueSetObserver implements Observer
                     ps.print( v );
                     ps.print( "\n" );
                 }
+*/
             }
         }
 

@@ -112,6 +112,8 @@ public class Wurfel
         s_useInference,
         s_enforceImplicitProvenance;
 
+    private static int s_treeViewDepth;
+
     ////////////////////////////////////////////////////////////////////////////
 
     public static ExpressionOrder getExpressionOrder()
@@ -139,6 +141,11 @@ public class Wurfel
         return s_enforceImplicitProvenance;
     }
 
+    public static int getTreeViewDepth()
+    {
+        return s_treeViewDepth;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private static boolean getBooleanProperty( final Properties props,
@@ -150,6 +157,30 @@ public class Wurfel
         return ( null == s )
             ? defaultValue
             : s.equals( "true" );
+    }
+
+    private static int getIntProperty( final Properties props,
+                                       final String name,
+                                       final int defaultValue )
+        throws WurfelException
+    {
+        String s = props.getProperty( name );
+
+        if ( null == s )
+            return defaultValue;
+
+        else
+        {
+            try
+            {
+                return ( new Integer( s ) ).intValue();
+            }
+
+            catch ( java.lang.NumberFormatException e )
+            {
+                throw new WurfelException( e );
+            }
+        }
     }
 
     public static void initialize()
@@ -181,6 +212,10 @@ public class Wurfel
 
             s_useInference = getBooleanProperty( props, "wurfel.model.rdf.useInference", false );
             s_enforceImplicitProvenance = getBooleanProperty( props, "wurfel.model.rdf.enforceImplicitProvenance", true );
+
+            s_treeViewDepth = getIntProperty( props, "wurfel.cli.treeView.depth", 1 );
+            if ( s_treeViewDepth < 0 )
+                s_treeViewDepth = 0;
 
             initialized = true;
         }

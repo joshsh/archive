@@ -467,6 +467,8 @@ System.out.println( "--- 3 ---" );
                 ? new ArrayList<Value>()
                 : reduce( expr, mc );
 
+// TODO: this should dereference as many levels as Wurfel.getTreeViewDepth(),
+//       and should probably be moved into the tree view itself if possible.
             dereferenceResultSet( result, mc );
 
             valueSet.setValues( result );
