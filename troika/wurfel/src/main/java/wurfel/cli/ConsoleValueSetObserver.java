@@ -25,7 +25,11 @@ public class ConsoleValueSetObserver implements Observer
 
     private Lexicon lexicon;
 
-    private static final String indent = "    ";
+    // A three-space-indented tree seems to be the most readable.
+    private static final String indent = "   ";
+
+    private static final String indexSeparator = "  ";
+
     private static final int maxDepth = Wurfel.getTreeViewDepth();
 
     public ConsoleValueSetObserver( ObservableValueSet valueSet, WurfelPrintStream printStream )
@@ -36,9 +40,12 @@ public class ConsoleValueSetObserver implements Observer
         ps = printStream;
     }
 
-    private void printTreeView( Value subject, int depth, ModelConnection mc )
+    private void printTreeView( Value subject, int depth, String wsPrefix, ModelConnection mc )
         throws WurfelException
     {
+        if ( depth != maxDepth )
+            ps.print( wsPrefix );
+
         for ( int i = 0; i < ( maxDepth - depth ) * 2; i++ )
             ps.print( indent );
 
@@ -56,6 +63,8 @@ public class ConsoleValueSetObserver implements Observer
                 {
                     URI predicate = predIter.next();
 
+                    ps.print( wsPrefix );
+
                     for ( int i = 0; i < 1 + ( maxDepth - depth ) * 2; i++ )
                         ps.print( indent );
 
@@ -66,7 +75,7 @@ public class ConsoleValueSetObserver implements Observer
                     Iterator<Value> objIter = objects.iterator();
 
                     while ( objIter.hasNext() )
-                        printTreeView( objIter.next(), depth - 1, mc );
+                        printTreeView( objIter.next(), depth - 1, wsPrefix, mc );
                 }
             }
         }
@@ -83,30 +92,19 @@ public class ConsoleValueSetObserver implements Observer
 
         int treeViewDepth = Wurfel.getTreeViewDepth();
         ModelConnection mc = new ModelConnection( model, "for ConsoleValueSetObserver refresh()" );
+
         try
         {
             int index = 0;
             Iterator<Value> valuesIter = values.iterator();
             while ( valuesIter.hasNext() )
             {
-                ps.print( "_" + ++index + " " );
-//                ps.print( "[" + index++ + "] " );
+                String indexPrefix = "_" + ++index + indexSeparator;
+                String wsPrefix = "          ".substring( 0, indexPrefix.length() );
 
-                printTreeView( valuesIter.next(), treeViewDepth, mc );
-/*
-                Value v = valuesIter.next();
+                ps.print( indexPrefix );
 
-                if ( v instanceof Resource )
-                {
-                    show( (Resource) v, mc );
-                }
-
-                else
-                {
-                    ps.print( v );
-                    ps.print( "\n" );
-                }
-*/
+                printTreeView( valuesIter.next(), treeViewDepth, wsPrefix, mc );
             }
         }
 

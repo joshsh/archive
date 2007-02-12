@@ -1,5 +1,6 @@
 Build
 ================================================================================
+* place the required RDF documents (wurfel, wurfel-test, wurfel-misc) into the JAR itself so that Wurfel is not dependent on network connectivity to fortytwo.net
 * investigate the Maven error "Embedded error: The source must not be a directory."
 
 Exception handling
