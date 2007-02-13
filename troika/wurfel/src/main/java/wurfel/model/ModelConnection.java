@@ -23,6 +23,8 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.repository.Connection;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
@@ -40,36 +42,12 @@ public class ModelConnection
     private Connection connection;
     private String name = null;
 
-    private static URI
-        s_xsdBooleanUri = null,
-        s_xsdDoubleUri = null,
-        s_xsdIntegerUri = null,
-        s_xsdStringUri = null,
-        s_rdfFirstUri = null,
-        s_rdfRestUri = null,
-        s_rdfNilUri = null;
-
-    private static boolean s_initialized = false;
-
     ////////////////////////////////////////////////////////////////////////////
 
     private void constructPrivate( Model model )
         throws WurfelException
     {
         this.model = model;
-
-        if ( !s_initialized )
-        {
-            s_xsdBooleanUri = createXmlSchemaUri( "boolean" );
-            s_xsdDoubleUri = createXmlSchemaUri( "double" );
-            s_xsdIntegerUri = createXmlSchemaUri( "integer" );
-            s_xsdStringUri = createXmlSchemaUri( "string" );
-            s_rdfFirstUri = createRdfUri( "first" );
-            s_rdfRestUri = createRdfUri( "rest" );
-            s_rdfNilUri = createRdfUri( "nil" );
-
-            s_initialized = true;
-        }
 
         try
         {
@@ -226,8 +204,8 @@ public class ModelConnection
     {
 /*
         URI type = lit.getDatatype();
-        if ( !type.equals( s_xsdBooleanUri ) )
-            throw new WurfelException( "type mismatch: expected " + s_xsdBooleanUri.toString() + ", found " + type.toString() );
+        if ( !type.equals( XMLSchema.BOOLEAN ) )
+            throw new WurfelException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
 */
 
         String label = l.getLabel();
@@ -240,8 +218,8 @@ public class ModelConnection
     {
 /*
         URI type = l.getDatatype();
-        if ( !type.equals( s_xsdIntegerUri ) )
-            throw new WurfelException( "type mismatch: expected " + s_xsdIntegerUri.toString() + ", found " + type.toString() );
+        if ( !type.equals( XMLSchema.INTEGER ) )
+            throw new WurfelException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
 */
 
         String label = l.getLabel();
@@ -270,11 +248,11 @@ public class ModelConnection
         Resource cur = listHead;
 
 // TODO: is this 'equals' safe?
-        while ( !cur.equals( s_rdfNilUri ) )
+        while ( !cur.equals( RDF.NIL ) )
         {
-            Value val = findUniqueProduct( cur, s_rdfFirstUri );
+            Value val = findUniqueProduct( cur, RDF.FIRST );
             list.add( val );
-            cur = castToResource( findUniqueProduct( cur, s_rdfRestUri ) );
+            cur = castToResource( findUniqueProduct( cur, RDF.REST ) );
         }
 
         return list;
@@ -393,22 +371,22 @@ public class ModelConnection
 
     public Literal createLiteral( final String s )
     {
-        return model.getRepository().getValueFactory().createLiteral( s, s_xsdStringUri );
+        return model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING );
     }
 
     public Literal createLiteral( final boolean b )
     {
-        return model.getRepository().getValueFactory().createLiteral( "" + b, s_xsdBooleanUri );
+        return model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN );
     }
 
     public Literal createLiteral( final int i )
     {
-        return model.getRepository().getValueFactory().createLiteral( "" + i, s_xsdIntegerUri );
+        return model.getRepository().getValueFactory().createLiteral( "" + i, XMLSchema.INTEGER );
     }
 
     public Literal createLiteral( final double d )
     {
-        return model.getRepository().getValueFactory().createLiteral( "" + d, s_xsdDoubleUri );
+        return model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE );
     }
 
     private static Random s_rn = new Random();
