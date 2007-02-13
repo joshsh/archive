@@ -14,6 +14,7 @@ import wurfel.cli.ast.NullNode;
 import wurfel.cli.ast.QNameNode;
 import wurfel.cli.ast.StringNode;
 import wurfel.cli.ast.SequenceNode;
+import wurfel.cli.ast.TypedLiteralNode;
 import wurfel.cli.ast.UriNode;
 }
 
@@ -202,11 +203,12 @@ DOUBLE
     ;
 */
 
-/*
+
 LANGUAGE
-    : '@' ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)*
+// FIXME
+    : '@'! '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)*
     ;
-*/
+
 
 
 
@@ -224,6 +226,9 @@ COMMENT2
     : '#' ( ~( '\r' | '\n' ) )*
         { $setType( Token.SKIP ); }
     ;
+
+DOUBLE_HAT
+options { paraphrase = "double hat"; } : "^^" ;
 
 L_PAREN
 options { paraphrase = "opening parenthesis"; } : '(' ;
@@ -400,12 +405,25 @@ nt_IndexExpression returns [ Ast r ]
 nt_Literal returns [ Ast r ]
 {
     r = null;
+    Ast dataType = null;
+    String language = null;
 }
-    : t:STRING
+    : ( t:STRING /*
+        ( AMP*/
+
+        ( /* Note: for symmetry with Turtle, the grammar allows any resource
+                   reference as the data type of a literal (i.e. a URI or a blank
+                   node).  However, the Sesame back end will only accept a URI. */
+          ( DOUBLE_HAT dataType=nt_Resource )
+
+          | l:LANGUAGE { language = l.getText(); }
+        )?
+      )
         {
-            r = new StringNode( t.getText() );
-        }/*
-      ( AMP*/
+            r = ( null == dataType )
+                ? new StringNode( t.getText(), language )
+                : new TypedLiteralNode( t.getText(), dataType );
+        }
     | u:NUMBER
         {
             try

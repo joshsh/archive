@@ -9,6 +9,7 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.XMLSchema;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -17,12 +18,6 @@ import java.util.Iterator;
 
 public class WurfelPrintStream extends PrintStream
 {
-    private URI
-        xsdBooleanUri,
-        xsdDoubleUri,
-        xsdIntegerUri,
-        xsdStringUri;
-
     private Lexicon lexicon;
 
     public WurfelPrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
@@ -30,11 +25,6 @@ public class WurfelPrintStream extends PrintStream
     {
         super( out );
         this.lexicon = lexicon;
-
-        xsdBooleanUri = mc.createXmlSchemaUri( "boolean" );
-        xsdDoubleUri = mc.createXmlSchemaUri( "double" );
-        xsdIntegerUri = mc.createXmlSchemaUri( "integer" );
-        xsdStringUri = mc.createXmlSchemaUri( "string" );
     }
 
     private void printUriRef( URI uri )
@@ -93,13 +83,13 @@ print( "\"" + s + "\"" );
                 //       equal, false  otherwise"
                 if ( null != dataTypeUri )
                 {
-                    if ( dataTypeUri.equals( xsdBooleanUri ) )
+                    if ( dataTypeUri.equals( XMLSchema.BOOLEAN ) )
                         print( v.toString() );
-                    else if ( dataTypeUri.equals( xsdDoubleUri ) )
+                    else if ( dataTypeUri.equals( XMLSchema.DOUBLE ) )
                         print( v.toString() );
-                    else if ( dataTypeUri.equals( xsdIntegerUri ) )
+                    else if ( dataTypeUri.equals( XMLSchema.INTEGER ) )
                         print( v.toString() );
-                    else if ( dataTypeUri.equals( xsdStringUri ) )
+                    else if ( dataTypeUri.equals( XMLSchema.STRING ) )
                         printEscapedString( v.toString() );
                     else
                     {

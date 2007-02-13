@@ -8,17 +8,26 @@ import org.openrdf.model.Value;
 
 public class StringNode extends Ast
 {
-    private String value;
+    private String value, language;
 
     public StringNode( final String value )
     {
         this.value = value;
+        this.language = null;
+    }
+
+    public StringNode( final String value, final String language )
+    {
+        this.value = value;
+        this.language = language;
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
         throws WurfelException
     {
-        return mc.createLiteral( value );
+        return ( null == language )
+            ? mc.createLiteral( value )
+            : mc.createLiteral( value, language );
     }
 }
 

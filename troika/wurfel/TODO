@@ -10,7 +10,6 @@ Exception handling
 
 Syntax
 ================================================================================
-* blank node syntax, e.g. _:bar
 * edit grammar to more closely resemble Turtle / NTriples
 * add character literal syntax, e.g. 'c'
 * add awareness of the xml:lang and data type of literals in input grammar

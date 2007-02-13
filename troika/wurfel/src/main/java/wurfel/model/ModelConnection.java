@@ -375,6 +375,16 @@ public class ModelConnection
         return model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING );
     }
 
+    public Literal createLiteral( final String s, final String language )
+    {
+        return model.getRepository().getValueFactory().createLiteral( s, language );
+    }
+
+    public Literal createLiteral( final String s, final URI dataType )
+    {
+        return model.getRepository().getValueFactory().createLiteral( s, dataType );
+    }
+
     public Literal createLiteral( final boolean b )
     {
         return model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN );
