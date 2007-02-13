@@ -45,6 +45,7 @@ import wurfel.model.Model;
 import wurfel.model.ObservableContainer;
 import wurfel.model.WurfelPrintStream;
 import wurfel.cli.ast.Ast;
+import wurfel.cli.ast.UriNode;
 
 import org.apache.log4j.Logger;
 
@@ -382,6 +383,38 @@ System.out.println( "--- 3 ---" );
             Value objValue = obj.evaluate( this, mc );
 
             mc.addStatement( subjValue, predValue, objValue );
+            mc.close();
+        }
+
+        catch ( WurfelException e )
+        {
+            if ( null != mc )
+            {
+                try
+                {
+                    mc.close();
+                }
+
+                catch ( WurfelException e2 )
+                {
+                    // ...
+                }
+            }
+
+            alert( "Error: " + e.getMessage() );
+        }
+    }
+
+    public void setNamespace( final String prefix, final UriNode uri )
+    {
+        ModelConnection mc = null;
+
+        try
+        {
+            mc = new ModelConnection( model, "for setNamespace" );
+
+            URI ns = (URI) uri.evaluate( this, mc );
+            mc.setNamespace( prefix, ns );
             mc.close();
         }
 

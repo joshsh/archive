@@ -467,6 +467,23 @@ public class ModelConnection
 
     ////////////////////////////////////////////////////////////////////////////
 
+    public void setNamespace( final String prefix, final URI ns )
+        throws WurfelException
+    {
+        try
+        {
+            connection.removeNamespace( prefix );
+            connection.setNamespace( prefix, ns.toString() );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     // Note: examines the content type first, then the URL extension.  If all
     //       else fails, default to RDF/XML and hope for the best.
     private static RDFFormat guessRdfFormat( final URLConnection urlConn )

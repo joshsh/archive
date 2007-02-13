@@ -417,7 +417,7 @@ nt_Literal returns [ Ast r ]
     ;
 
 
-nt_URIRef returns [ Ast r ]
+nt_URIRef returns [ UriNode r ]
 {
     r = null;
 }
@@ -501,7 +501,8 @@ nt_Resource returns [ Ast r ]
 nt_Directive
 {
     Ast subj, pred, obj;
-    Ast rhs;
+    UriNode ns;
+    String nsPrefix = "";
 }
     : ADD WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
         {
@@ -534,9 +535,9 @@ nt_Directive
             }
         )
 
-    | PREFIX WS ( pre:NAME (WS)? )? COLON (WS)? rhs=nt_URIRef (WS)? SEMI
+    | PREFIX WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? SEMI
         {
-// TODO
+            interpreter.setNamespace( nsPrefix, ns );
         }
 
     | QUIT (WS)? SEMI
