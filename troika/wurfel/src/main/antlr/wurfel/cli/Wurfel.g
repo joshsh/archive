@@ -73,7 +73,6 @@ WS_CHAR
        )
     ;
 
-// Ignore whitespace when it appears between tokens.
 WS
     : (WS_CHAR)+
 //        { $setType(Token.SKIP); } //ignore this token
@@ -106,37 +105,17 @@ ESC
     ;
 
 
-/*
-(
-  ([a-zA-Z][0-9a-zA-Z+\\-\\.]*:)?
-  /{0,2}
-  [0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+
-)?
-(
-  #
-  [0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+
-)?
-*/
-/*
 protected
-URICHAR
-    : '0'..'9' | 'a'..'z' | 'A'..'Z' | ':' | '.' | '-' | '_' | '/' //| ';' | '?'  | '@' | '&' | '=' | '+' | '$' | '!' | '~' | '*' | '\'' | '(' | ')' | '%' | ']'
+LANGUAGE
+    : ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
+        { interpreter.setLanguageTag( $getText ); }
     ;
-
-NAME
-    : //(
-        ( ( 'a'..'z' | 'A'..'Z' ) ( '0'..'9' | 'a'..'z' | 'A'..'Z' | '-' | '.' )* ':' )?
-        ( "//" )?
-        ( URICHAR )+
-      //)?
-      ( '#' ( URICHAR )+ )?
-    ;
-*/
 
 STRING
     : '\"'! {
         updateCompletors( CompletorState.NONE );
-      } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )+ '\"'!
+        interpreter.setLanguageTag( null );
+      } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )+ '\"'! ( LANGUAGE! )?
     ;
 
 URI
@@ -204,13 +183,6 @@ DOUBLE
 */
 
 
-LANGUAGE
-// FIXME
-    : '@'! '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)*
-    ;
-
-
-
 
 
 NUMBER
@@ -223,7 +195,7 @@ COMMENT
     ;
 
 COMMENT2
-    : '#' ( ~( '\r' | '\n' ) )*
+    : ( '#' ( ~('\r' | '\n') )* )
         { $setType( Token.SKIP ); }
     ;
 
@@ -273,20 +245,20 @@ COLON
 options { paraphrase = "colon"; } : ':' ;
 
 protected
-DIRECTIVE_START_CHAR
+DIRECTIVE_HEAD
     : '@'
     ;
 
-ADD         : DIRECTIVE_START_CHAR ( "add"           | "a" ) ;
-COUNT       : DIRECTIVE_START_CHAR ( "count"         | "c" ) ;
-DEFINE      : DIRECTIVE_START_CHAR ( "define"        | "d" ) ;
-GRAPHQUERY  : DIRECTIVE_START_CHAR ( "graphQuery"    | "g" ) ;
-LIST        : DIRECTIVE_START_CHAR ( "list"          | "l" ) ;
-PREFIX      : DIRECTIVE_START_CHAR ( "prefix"        | "p" ) ;
-QUIT        : DIRECTIVE_START_CHAR ( "quit"          | "q"
+ADD         : DIRECTIVE_HEAD ( "add"           | "a" ) ;
+COUNT       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
+DEFINE      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
+GRAPHQUERY  : DIRECTIVE_HEAD ( "graphQuery"    | "g" ) ;
+LIST        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
+PREFIX      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
+QUIT        : DIRECTIVE_HEAD ( "quit"          | "q"
                                    | "exit"          | "x" ) ;
-SAVEAS      : DIRECTIVE_START_CHAR ( "saveas"        | "s" ) ;
-//URI         : DIRECTIVE_START_CHAR ( "uri"           | "u" ) ;
+SAVEAS      : DIRECTIVE_HEAD ( "saveas"        | "s" ) ;
+//URI         : DIRECTIVE_HEAD ( "uri"           | "u" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -406,7 +378,7 @@ nt_Literal returns [ Ast r ]
 {
     r = null;
     Ast dataType = null;
-    String language = null;
+ //   String language = null;
 }
     : ( t:STRING /*
         ( AMP*/
@@ -416,12 +388,12 @@ nt_Literal returns [ Ast r ]
                    node).  However, the Sesame back end will only accept a URI. */
           ( DOUBLE_HAT dataType=nt_Resource )
 
-          | l:LANGUAGE { language = l.getText(); }
+    /*      | l:LANGUAGE { language = l.getText(); } */
         )?
       )
         {
             r = ( null == dataType )
-                ? new StringNode( t.getText(), language )
+                ? new StringNode( t.getText(), interpreter.getLanguageTag() )
                 : new TypedLiteralNode( t.getText(), dataType );
         }
     | u:NUMBER

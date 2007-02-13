@@ -92,6 +92,21 @@ public Model getModel()
 
     ////////////////////////////////////////////////////////////////////////////
 
+    // A helper variable for the lexer and parser.
+    private String languageTag;
+
+    public String getLanguageTag()
+    {
+        return languageTag;
+    }
+
+    public void setLanguageTag( final String tag )
+    {
+        languageTag = tag;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     public Interpreter( Model model ) throws WurfelException
     {
         this.model = model;
