@@ -1,7 +1,7 @@
 Build
 ================================================================================
 * place the required RDF documents (wurfel, wurfel-test, wurfel-misc) into the JAR itself so that Wurfel is not dependent on network connectivity to fortytwo.net
-* investigate the Maven error "Embedded error: The source must not be a directory."
+* install Trac
 
 Exception handling
 ================================================================================
@@ -28,10 +28,10 @@ Primitives
 
 Scuttering
 ================================================================================
-* look into adding a FOAF scutterer
-* build a smarter URI dereferencer which can determine the MIME type of a document (so we can grab data from other formats besides RDF/XML)
-* add support for "blank" local names at the model level, so you can grab the root node of a graph like this one:
-    http://sws.geonames.org/3020251/about.rdf
+* look into adding a FOAF scutterer which can handle:
+  * foaf:knows links
+  * owl:sameAs indirection
+  * rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
 * ponder the implications of purl URIs like this one:
     http://purl.org/stuff/rev#Review
 * dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag

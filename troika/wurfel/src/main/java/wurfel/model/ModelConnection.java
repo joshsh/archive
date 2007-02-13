@@ -18,6 +18,7 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 
+import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -387,6 +388,12 @@ public class ModelConnection
     public Literal createLiteral( final double d )
     {
         return model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE );
+    }
+
+    public BNode createBNode( final String id )
+        throws WurfelException
+    {
+        return model.getRepository().getValueFactory().createBNode( id );
     }
 
     private static Random s_rn = new Random();

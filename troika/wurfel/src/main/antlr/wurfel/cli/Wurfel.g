@@ -6,6 +6,7 @@ import wurfel.WurfelException;
 
 import wurfel.cli.ast.Ast;
 import wurfel.cli.ast.BooleanNode;
+import wurfel.cli.ast.BNodeNode;
 import wurfel.cli.ast.DoubleNode;
 import wurfel.cli.ast.IntNode;
 import wurfel.cli.ast.NameNode;
@@ -165,6 +166,10 @@ NAME_OR_PREFIX
 
 NAME_NOT_PREFIX
     : '_' (NAME_OR_PREFIX_CHAR)*
+    ;
+
+BNODE_HEAD
+    : "_:"
     ;
 
 
@@ -479,13 +484,18 @@ nt_QName returns [ Ast r ]
         }
     ;
 
-/*
-nt_Identifier returns [ Ast r ]
+
+nt_BNode returns [ Ast r ]
 {
+    r = null;
+    String localName = null;
 }
-    : (
+    : BNODE_HEAD localName=nt_Name
+        {
+            r = new BNodeNode( localName );
+        }
     ;
-*/
+
 
 nt_Resource returns [ Ast r ]
 {
@@ -494,6 +504,7 @@ nt_Resource returns [ Ast r ]
     : r=nt_URIRef
     | ( (NAME_OR_PREFIX)? COLON ) => r=nt_QName
     | r=nt_SimpleName
+    | r=nt_BNode
     ;
 
 

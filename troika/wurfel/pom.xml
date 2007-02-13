@@ -196,7 +196,7 @@
                 <!-- Create a single JAR with all dependencies. -->
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
                         </goals>

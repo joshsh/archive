@@ -4,6 +4,7 @@ import wurfel.Wurfel;
 import wurfel.WurfelException;
 import wurfel.model.ModelConnection;
 
+import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
@@ -115,6 +116,12 @@ print( "\"" + s + "\"" );
                 String language = ( (Literal) v ).getLanguage();
                 if ( null != language )
                     print( "@" + language );
+            }
+
+            else if ( v instanceof BNode )
+            {
+                print( "_:" );
+                print( ( (BNode) v ).getID() );
             }
 
             else
