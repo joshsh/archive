@@ -178,13 +178,12 @@ System.out.println( "########## updating completors" );
                 SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
                     "@add",
                     "@count",
-                    "@define",
-                    "@graphQuery",
+                    "@export",
                     "@list",
-                    "@namespaces",
                     "@prefix",
-                    "@saveas",
-                    "@quit" } );
+                    "@quit",
+                    "@serql",
+                    "@term" } );
                 completors.add( commandCompletor );
 
                 Completor fileNameCompletor = new FileNameCompletor();
@@ -384,6 +383,7 @@ System.out.println( "--- 3 ---" );
 
             mc.addStatement( subjValue, predValue, objValue );
             mc.close();
+            mc = null;
         }
 
         catch ( WurfelException e )
@@ -416,6 +416,9 @@ System.out.println( "--- 3 ---" );
             URI ns = (URI) uri.evaluate( this, mc );
             mc.setNamespace( prefix, ns );
             mc.close();
+            mc = null;
+
+            lexicon.update();
         }
 
         catch ( WurfelException e )
@@ -520,6 +523,35 @@ System.out.println( "--- 3 ---" );
 //       and should probably be moved into the tree view itself if possible.
             dereferenceResultSet( result, mc );
 
+            if ( null != name )
+            {
+                if ( 0 == result.size() )
+                    throw new WurfelException( "null value in assignment" );
+
+                else if ( 1 < result.size() )
+                    throw new WurfelException( "ambiguous value in assigment" );
+
+                else
+                {
+                    Value srcVal = result.iterator().next();
+                    String defaultNs = lexicon.resolveNamespacePrefix( "" );
+
+                    if ( null == defaultNs )
+                        throw new WurfelException( "no default namespace is defined" );
+
+// TODO: check for collision with an existing URI
+
+                    Value destVal = mc.toRdf( srcVal );
+
+// TODO
+                    URI uri = mc.createUri( defaultNs, name );
+URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
+                    mc.add( uri, owlSameAsUri, destVal );
+                }
+
+                lexicon.update();
+            }
+
             valueSet.setValues( result );
 
             mc.close();
@@ -529,11 +561,6 @@ System.out.println( "--- 3 ---" );
         {
             mc.close();
             throw e;
-        }
-
-        if ( null != name )
-        {
-// TODO
         }
     }
 

@@ -52,6 +52,12 @@ public abstract class Combinator extends Node implements Function
     {
         p.print( selfUri );
     }
+
+    public Value toRdf( ModelConnection mc )
+        throws WurfelException
+    {
+        return selfUri;
+    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

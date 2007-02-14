@@ -370,6 +370,16 @@ public class ModelConnection
         return model.getRepository().getValueFactory().createURI( s );
     }
 
+    public URI createUri( final String ns, final String s )
+    {
+        return model.getRepository().getValueFactory().createURI( ns + s );
+    }
+
+    public URI createUri( final URI ns, final String s )
+    {
+        return model.getRepository().getValueFactory().createURI( ns.toString() + s );
+    }
+
     public Literal createLiteral( final String s )
     {
         return model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING );
@@ -398,6 +408,12 @@ public class ModelConnection
     public Literal createLiteral( final double d )
     {
         return model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE );
+    }
+
+    public BNode createBNode()
+        throws WurfelException
+    {
+        return model.getRepository().getValueFactory().createBNode();
     }
 
     public BNode createBNode( final String id )
@@ -463,6 +479,32 @@ public class ModelConnection
         throws WurfelException
     {
         return createUri( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public void add( Resource subject, URI predicate, Value object )
+        throws WurfelException
+    {
+// FIXME
+Resource defaultContext = null;
+        try
+        {
+            connection.add( subject, predicate, object, defaultContext );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+    }
+
+    public Value toRdf( final Value src )
+        throws WurfelException
+    {
+        return ( src instanceof WurfelValue )
+            ? ( (WurfelValue) src ).toRdf( this )
+            : src;
     }
 
     ////////////////////////////////////////////////////////////////////////////

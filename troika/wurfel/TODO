@@ -2,6 +2,7 @@ Build
 ================================================================================
 * place the required RDF documents (wurfel, wurfel-test, wurfel-misc) into the JAR itself so that Wurfel is not dependent on network connectivity to fortytwo.net
 * install Trac
+* prevent the build from succeeding when ANTLR parser generation fails
 
 Exception handling
 ================================================================================
@@ -58,7 +59,6 @@ Names and namespaces
 * address name collisions, scalability issues in general
 * add ability to define terms in the default namespace, then save them
 * handle name collisions in a more flexible and configurable way
-* add a @prefix command to explicitly define or override namespace prefixes
 * make "prefix discovery" a configurable feature
 * investigate relative URIs for Wurfel vocabularies, so I don't have to change them every time I change the location of the vocabulary
 

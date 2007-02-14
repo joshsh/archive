@@ -223,6 +223,12 @@ checkArguments( args );
     {
         p.print( selfUri );
     }
+
+    public Value toRdf( ModelConnection mc )
+        throws WurfelException
+    {
+        return selfUri;
+    }
 }
 
 

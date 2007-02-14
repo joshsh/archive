@@ -249,16 +249,15 @@ DIRECTIVE_HEAD
     : '@'
     ;
 
-ADD         : DIRECTIVE_HEAD ( "add"           | "a" ) ;
-COUNT       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
-DEFINE      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
-GRAPHQUERY  : DIRECTIVE_HEAD ( "graphQuery"    | "g" ) ;
-LIST        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
-PREFIX      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
-QUIT        : DIRECTIVE_HEAD ( "quit"          | "q"
-                                   | "exit"          | "x" ) ;
-SAVEAS      : DIRECTIVE_HEAD ( "saveas"        | "s" ) ;
-//URI         : DIRECTIVE_HEAD ( "uri"           | "u" ) ;
+ADD_DRTV         : DIRECTIVE_HEAD ( "add"           | "a" ) ;
+COUNT_DRTV       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
+DEFINE_DRTV      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
+EXPORT_DRTV      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
+LIST_DRTV        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
+PREFIX_DRTV      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
+QUIT_DRTV        : DIRECTIVE_HEAD ( "quit"          | "q" ) ;
+SERQL_DRTV       : DIRECTIVE_HEAD ( "serql"         | "s" ) ;
+TERM_DRTV        : DIRECTIVE_HEAD ( "term"          | "t" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -378,18 +377,13 @@ nt_Literal returns [ Ast r ]
 {
     r = null;
     Ast dataType = null;
- //   String language = null;
 }
-    : ( t:STRING /*
-        ( AMP*/
+    : ( t:STRING
 
-        ( /* Note: for symmetry with Turtle, the grammar allows any resource
-                   reference as the data type of a literal (i.e. a URI or a blank
-                   node).  However, the Sesame back end will only accept a URI. */
-          ( DOUBLE_HAT dataType=nt_Resource )
-
-    /*      | l:LANGUAGE { language = l.getText(); } */
-        )?
+        /* Note: for symmetry with Turtle, the grammar allows any resource
+                 reference as the data type of a literal (i.e. a URI or a blank
+                 node).  However, the Sesame back end will only accept a URI. */
+        ( DOUBLE_HAT dataType=nt_Resource )?
       )
         {
             r = ( null == dataType )
@@ -503,58 +497,54 @@ nt_Directive
     Ast subj, pred, obj;
     UriNode ns;
     String nsPrefix = "";
+    String localName = null;
+    Ast rhs;
 }
-    : ADD WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
+    : ADD_DRTV WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
         {
             interpreter.addStatement( subj, pred, obj );
         }
 
-    | COUNT WS "statements" (WS)? SEMI
+    | COUNT_DRTV WS "statements" (WS)? SEMI
         {
             interpreter.countStatements();
         }
 
-    | DEFINE WS name:NAME WS uri:STRING (WS)? SEMI
-        {
-            interpreter.define( name.getText(), uri.getText() );
-        }
-
-    | GRAPHQUERY WS query:STRING (WS)? SEMI
+    | SERQL_DRTV WS query:STRING (WS)? SEMI
         {
             interpreter.evaluateGraphQuery( query.getText() );
         }
 
-    | LIST WS
-        ( ( "contexts" SEMI )
+    | LIST_DRTV WS
+        ( "contexts" SEMI
             {
                 interpreter.showContexts();
             }
-        | ( "prefixes" SEMI )
+        | "prefixes" SEMI
             {
                 interpreter.showNamespaces();
             }
         )
 
-    | PREFIX WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? SEMI
+    | PREFIX_DRTV WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? SEMI
         {
             interpreter.setNamespace( nsPrefix, ns );
         }
 
-    | QUIT (WS)? SEMI
+    | QUIT_DRTV (WS)? SEMI
         {
             interpreter.quit();
         }
 
-    | SAVEAS WS file:STRING (WS)? SEMI
+    | EXPORT_DRTV WS file:STRING (WS)? SEMI
         {
             interpreter.saveAs( file.getText() );
         }
-/*
-    | URI uri:NAME COLON rhs=nt_Sequence SEMI
+
+    | TERM_DRTV WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? SEMI
         {
-            interpreter.evaluateAndDefine( rhs, uri.getText() );
+            interpreter.evaluateAndDefine( rhs, localName );
         }
-*/
     ;
 
 

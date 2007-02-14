@@ -3,6 +3,7 @@ package wurfel.model;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 
+import org.openrdf.model.BNode;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
@@ -135,6 +136,22 @@ checkArguments( args );
 
         else
             p.print( right );
+    }
+
+    public Value toRdf( ModelConnection mc )
+        throws WurfelException
+    {
+        Value funcRdf = mc.toRdf( function );
+        Value argRdf = mc.toRdf( argument );
+
+        BNode selfRdf = mc.createBNode();
+URI wurfelApplyFunctionUri = mc.createWurfelUri( "applyFunction" );
+URI wurfelApplyArgumentUri = mc.createWurfelUri( "applyArgument" );
+
+        mc.add( selfRdf, wurfelApplyFunctionUri, funcRdf );
+        mc.add( selfRdf, wurfelApplyArgumentUri, argRdf );
+
+        return selfRdf;
     }
 }
 

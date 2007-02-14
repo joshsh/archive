@@ -55,6 +55,7 @@ public class Lexicon extends Observable implements Observer
                                      final String localName )
     {
         String ns = resolveNamespacePrefix( nsPrefix );
+
         if ( null == ns )
             return null;
 
@@ -117,6 +118,7 @@ public class Lexicon extends Observable implements Observer
 
     private void add( final Namespace ns )
     {
+//System.out.println( "(" + ns.getPrefix() + "=" + ns.getName() );
         prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
         namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
     }
@@ -146,7 +148,7 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         Set<URI> allURIs = new HashSet<URI>();
 
-        ModelConnection mc = new ModelConnection( model, "for Lexicon refresh()" );
+        ModelConnection mc = new ModelConnection( model, "for Lexicon update()" );
 
         try
         {
@@ -209,7 +211,7 @@ System.out.println( "################# Rebuilding dictionaries." );
         {
             if ( changed )
             {
-                refresh();
+                update();
 
                 changed = false;
             }
@@ -218,7 +220,8 @@ System.out.println( "################# Rebuilding dictionaries." );
         }
     }
 
-    private void refresh()
+    // Public access allows the Interpreter to force a refresh.
+    public void update()
         throws WurfelException
     {
         createMaps();
@@ -237,7 +240,7 @@ System.out.println( "################# Rebuilding dictionaries." );
                     changed = true;
 
                 else
-                    refresh();
+                    update();
             }
         }
 

@@ -99,8 +99,10 @@ public class ContainerTreeView implements Observer
             Iterator<Value> valuesIter = values.iterator();
             while ( valuesIter.hasNext() )
             {
-                String indexPrefix = "_" + ++index + indexSeparator;
-                String wsPrefix = "          ".substring( 0, indexPrefix.length() );
+//                String indexPrefix = "_" + ++index + indexSeparator;
+                String indexPrefix = "rdf:_" + ++index + indexSeparator;
+//                String wsPrefix = "                ".substring( 0, indexPrefix.length() );
+                String wsPrefix = "";
 
                 ps.print( indexPrefix );
 
