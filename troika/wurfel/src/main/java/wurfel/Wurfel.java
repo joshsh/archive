@@ -114,6 +114,8 @@ public class Wurfel
 
     private static int s_treeViewDepth;
 
+    private static boolean s_dereferenceByNamespace;
+
     ////////////////////////////////////////////////////////////////////////////
 
     public static ExpressionOrder getExpressionOrder()
@@ -144,6 +146,11 @@ public class Wurfel
     public static int getTreeViewDepth()
     {
         return s_treeViewDepth;
+    }
+
+    public static boolean dereferenceByNamespace()
+    {
+        return s_dereferenceByNamespace;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -212,6 +219,8 @@ public class Wurfel
 
             s_useInference = getBooleanProperty( props, "wurfel.model.rdf.useInference", false );
             s_enforceImplicitProvenance = getBooleanProperty( props, "wurfel.model.rdf.enforceImplicitProvenance", true );
+
+            s_dereferenceByNamespace = getBooleanProperty( props, "wurfel.model.uri.dereferenceByNamespace", false );
 
             s_treeViewDepth = getIntProperty( props, "wurfel.cli.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )

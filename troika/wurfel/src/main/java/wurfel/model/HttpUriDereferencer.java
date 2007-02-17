@@ -42,15 +42,26 @@ public class HttpUriDereferencer implements Dereferencer
         String ns = uri.getNamespace();
         String uriStr = null;
 
-        String memo = ( '#' == ns.charAt( ns.length() - 1 ) )
+        String memo;
 
-            // For hash namespaces, memoize the namespace.
-            ? ns
+        // For hash namespaces, memoize the namespace.
+        if ( '#' == ns.charAt( ns.length() - 1 ) )
+            memo = ns;
 
-            // For slash namespaces, we're forced to memoize the specific URI,
-            // as we don't know whether to expect statements only for the
-            // specific URI or for other URIs in the namespace as well.
-            : ( uriStr = uri.toString() );
+        // For slash namespaces, we're forced to memoize the specific URI,
+        // as we don't know whether to expect to get statements only about
+        // the target URI or about other URIs in the namespace as well.
+        else
+        {
+            uriStr = uri.toString();
+
+            // For memoization purposes, a URI with a trailing slash is no
+            // different than the same URI without the slash.
+            if ( '/' == uriStr.charAt( uriStr.length() - 1 ) )
+                memo = uriStr.substring( 0, uriStr.length() - 1 );
+            else
+                memo = uriStr;
+        }
 
         if ( successMemoUris.contains( memo )
           || failureMemoUris.contains( memo ) )
@@ -60,12 +71,23 @@ public class HttpUriDereferencer implements Dereferencer
 
         try
         {
-            if ( null == uriStr )
-                uriStr = uri.toString();
+            // Request the resource by its namespace, rather than by its full
+            // URI.
+            // Note: for hash namespaces, this doesn't make any difference.
+            if ( Wurfel.dereferenceByNamespace() )
+                url = new URL( ns );
 
-            // We request the resource at the full URI, without trying to guess
-            // the intended namespace.
-            url = new URL( uriStr );
+            // Request the resource at the full URI.  If the purpose of a slash
+            // namespace is to serve up statements about a specific URI, then
+            // this is the way to go.  However, we'll lose some documents which
+            // perhaps should be using a hash namespace instead.
+            else
+            {
+                if ( null == uriStr )
+                    uriStr = uri.toString();
+
+                url = new URL( uriStr );
+            }
         }
 
         catch ( MalformedURLException e )
