@@ -1,5 +1,6 @@
 package wurfel.model;
 
+import wurfel.UrlFactory;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 
@@ -30,8 +31,12 @@ public class HttpUriDereferencer implements Dereferencer
     private Set<String> successMemoUris;
     private Set<String> failureMemoUris;
 
-    public HttpUriDereferencer()
+    private UrlFactory urlFactory;
+
+    public HttpUriDereferencer( UrlFactory urlFactory )
     {
+        this.urlFactory = urlFactory;
+
         successMemoUris = new LinkedHashSet<String>();
         failureMemoUris = new LinkedHashSet<String>();
     }
@@ -67,32 +72,26 @@ public class HttpUriDereferencer implements Dereferencer
           || failureMemoUris.contains( memo ) )
             return;
 
+        // Note: this URL should be treated as a "black box" once created; it
+        // need not bear any relation to the URI it was created from.
         URL url;
 
-        try
+        // Request the resource by its namespace, rather than by its full
+        // URI.
+        // Note: for hash namespaces, this doesn't make any difference.
+        if ( Wurfel.dereferenceByNamespace() )
+            url = urlFactory.createUrl( ns );
+
+        // Request the resource at the full URI.  If the purpose of a slash
+        // namespace is to serve up statements about a specific URI, then
+        // this is the way to go.  However, we'll lose some documents which
+        // perhaps should be using a hash namespace instead.
+        else
         {
-            // Request the resource by its namespace, rather than by its full
-            // URI.
-            // Note: for hash namespaces, this doesn't make any difference.
-            if ( Wurfel.dereferenceByNamespace() )
-                url = new URL( ns );
+            if ( null == uriStr )
+                uriStr = uri.toString();
 
-            // Request the resource at the full URI.  If the purpose of a slash
-            // namespace is to serve up statements about a specific URI, then
-            // this is the way to go.  However, we'll lose some documents which
-            // perhaps should be using a hash namespace instead.
-            else
-            {
-                if ( null == uriStr )
-                    uriStr = uri.toString();
-
-                url = new URL( uriStr );
-            }
-        }
-
-        catch ( MalformedURLException e )
-        {
-            throw new WurfelException( e );
+            url = urlFactory.createUrl( uriStr );
         }
 
         // Identify the context of the to-be-imported graph with its namespace.

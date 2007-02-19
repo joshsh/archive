@@ -39,16 +39,6 @@ java -classpath target/wurfel-with-dependencies.jar wurfel.tools.FileRdfizerDriv
 
 
 
-(: foafingmusic ontology :)
-!import "http://foafing-the-music.iua.upf.edu/music-ontology/foafing-ontology-0.3.rdf";
-
-(: Miscellaneous stuff :)
-!import "http://www.kanzaki.com/ns/topic.rdf";
-!import "http://nlp.shef.ac.uk/abraxas/ontologies/animals.owl";
-!import "http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl";
-
-
-
 !import "file:///home/joshs/dev/wurfel/rdf/vcard/3.0" ;
 
 

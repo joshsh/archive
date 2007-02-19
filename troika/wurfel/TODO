@@ -71,13 +71,12 @@ Command line interface
 
 OpenRDF
 ================================================================================
-* Create and use a single Connection object for the evaluation of a single Expression, rather than one Connection object for each operation.  Look into connection pooling.
+* Look into connection pooling.
 * investigate warning (encountered while crawling foaf:knows graph starting at TBL):
 	2007-01-29 16:57:00:417 [WARNING] Rolling back transaction due to connection close
 
 Ontologies
 ================================================================================
-* give the published ontologies a content type of "application/rdf+xml"
 * ontology describing SemanticWebDocuments and where to get them
 
 Testing

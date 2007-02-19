@@ -1,5 +1,6 @@
 package wurfel.model;
 
+import wurfel.UrlFactory;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 
@@ -25,16 +26,16 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -67,6 +68,44 @@ Hashtable<String, String> aliases;
         specialFunctions.put( f.getUri(), f );
     }
 
+    private UrlFactory createUrlFactory()
+        throws WurfelException
+    {
+        ModelConnection mc = new ModelConnection( this, "for createUrlFactory()" );
+
+        String wurfelNs, wurfelMiscNs, wurfelTestNs;
+
+        try
+        {
+            wurfelNs = mc.createWurfelUri( "" ).toString();
+            wurfelMiscNs = mc.createWurfelMiscUri( "" ).toString();
+            wurfelTestNs = mc.createWurfelTestUri( "" ).toString();
+        }
+
+        catch ( WurfelException e )
+        {
+            mc.close();
+            throw e;
+        }
+
+        mc.close();
+//System.out.println( wurfelNs );
+//System.out.println( wurfelMiscNs );
+//System.out.println( wurfelTestNs );
+
+        Hashtable<String, String> urlMap = new Hashtable<String, String>();
+        urlMap.put( wurfelNs,
+            wurfel.Wurfel.class.getResource( "wurfel.rdf" ) + "#" );
+        urlMap.put( wurfelTestNs,
+            wurfel.extensions.test.TestExtension.class.getResource(
+                "wurfel-test.rdf" ) + "#" );
+        urlMap.put( wurfelMiscNs,
+            wurfel.extensions.misc.MiscExtension.class.getResource(
+                "wurfel-misc.rdf" ) + "#" );
+
+        return new UrlFactory( urlMap );
+    }
+
     /**
      *  @param Repository  an initialized Repository
      */
@@ -80,7 +119,7 @@ Hashtable<String, String> aliases;
 
 aliases = new Hashtable<String, String>();
 
-        dereferencer = new HttpUriDereferencer();
+        dereferencer = new HttpUriDereferencer( createUrlFactory() );
 
         specialFunctions = new Hashtable<URI, Function>();
 

@@ -707,7 +707,7 @@ s_logger.debug( "######## ext = " + ext );
         throws WurfelException
     {
         s_logger.debug( "Importing model " + url.toString() +
-            ( ( null == baseURI ) ? "" : " as " + baseURI.toString() ) );
+            ( ( null == baseURI ) ? "" : " in context " + baseURI.toString() ) );
 
         boolean verifyData = true;
 
@@ -767,7 +767,7 @@ s_logger.debug( "####### Guessed format is " + format.getName() );
 
         close( response );
 
-s_logger.debug( "####### graph successfully imported" );
+s_logger.debug( "####### graph imported without errors" );
 
         model.touch();
     }
@@ -791,7 +791,7 @@ s_logger.debug( "####### graph successfully imported" );
         addGraph( url, baseURI );
     }
 
-    private void close( InputStream is )
+    private static void close( InputStream is )
         throws WurfelException
     {
         try
