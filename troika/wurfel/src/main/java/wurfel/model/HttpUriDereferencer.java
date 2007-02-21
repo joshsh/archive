@@ -9,8 +9,8 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Connection;
-import org.openrdf.util.iterator.CloseableIterator;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryResult;
 
 import jline.Completor;
 
@@ -118,16 +118,16 @@ public class HttpUriDereferencer implements Dereferencer
     private void filter( final String ns, final URI context, ModelConnection mc )
         throws WurfelException
     {
-        Connection conn = mc.getConnection();
+        RepositoryConnection conn = mc.getRepositoryConnection();
 
-        CloseableIterator<? extends Statement> stmtIter = null;
+        RepositoryResult<Statement> stmtIter = null;
 
         int count = 0;
 
         try
         {
             stmtIter = conn.getStatements(
-                 null, null, null, context, Wurfel.useInference() );
+                 null, null, null, /*context,*/ Wurfel.useInference() );
 
             while ( stmtIter.hasNext() )
             {
@@ -148,7 +148,15 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
         {
             if ( null != stmtIter )
             {
-                stmtIter.close();
+                try
+                {
+                    stmtIter.close();
+                }
+
+                catch ( Throwable t2 )
+                {
+                    t = t2;
+                }
             }
 
             throw new WurfelException( t );

@@ -26,10 +26,10 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
-import org.openrdf.repository.Connection;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.util.iterator.CloseableIterator;
+import org.openrdf.repository.RepositoryResult;
 
 import wurfel.ThreadWrapper;
 import wurfel.Wurfel;
@@ -41,7 +41,7 @@ public class ModelConnection
         = Logger.getLogger( ModelConnection.class );
 
     private Model model;
-    private Connection connection;
+    private RepositoryConnection repoConnection;
     private String name = null;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ public class ModelConnection
 
         try
         {
-            connection = model.getRepository().getConnection();
+            repoConnection = model.getRepository().getConnection();
 //System.out.println( "Opened "
 //    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //    + " (" + openConnections + " total)." );
@@ -85,9 +85,9 @@ public class ModelConnection
         return model;
     }
 
-    public Connection getConnection()
+    public RepositoryConnection getRepositoryConnection()
     {
-        return connection;
+        return repoConnection;
     }
 
     public void close()
@@ -95,7 +95,7 @@ public class ModelConnection
     {
         try
         {
-            connection.close();
+            repoConnection.close();
 //System.out.println( "Closed "
 //    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //    + " (" + openConnections + " total)." );
@@ -270,8 +270,8 @@ public class ModelConnection
         {
             boolean useInference = false;
 
-            CloseableIterator<? extends Statement> stmtIter
-                = connection.getStatements(
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
                     head, null, null, useInference );
 
             while ( stmtIter.hasNext() )
@@ -284,7 +284,7 @@ public class ModelConnection
             stmtIter.close();
         }
 
-        // Warning: the CloseableIterator may be left open.
+        // Warning: the RepositoryResult may be left open.
         catch ( Throwable t )
         {
             throw new WurfelException( t );
@@ -304,8 +304,8 @@ public class ModelConnection
 
         try
         {
-            CloseableIterator<? extends Statement> stmtIter
-                = connection.getStatements(
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
 //                    null, null, null, model, includeInferred );
                     null, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
@@ -329,8 +329,8 @@ public class ModelConnection
 
         try
         {
-            CloseableIterator<? extends Statement> stmtIter
-                = connection.getStatements(
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
 //                    subject, null, null, model, includeInferred );
                     subject, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
@@ -354,8 +354,8 @@ public class ModelConnection
 
         try
         {
-//            connection.add( subjResource, predUri, obj, singleContext );
-            connection.add( subjResource, predUri, obj );
+//            repoConnection.add( subjResource, predUri, obj, singleContext );
+            repoConnection.add( subjResource, predUri, obj );
         }
 
         catch ( Throwable t )
@@ -588,7 +588,7 @@ public class ModelConnection
 Resource defaultContext = null;
         try
         {
-            connection.add( subject, predicate, object, defaultContext );
+            repoConnection.add( subject, predicate, object, defaultContext );
         }
 
         catch ( Throwable t )
@@ -612,8 +612,8 @@ Resource defaultContext = null;
     {
         try
         {
-            connection.removeNamespace( prefix );
-            connection.setNamespace( prefix, ns.toString() );
+            repoConnection.removeNamespace( prefix );
+            repoConnection.setNamespace( prefix, ns.toString() );
         }
 
         catch ( Throwable t )
@@ -872,9 +872,9 @@ s_logger.debug( "####### Guessed format is " + format.getName() );
         try
         {
             if ( null == baseURI )
-                connection.add( response, null, format );
+                repoConnection.add( response, null, format );
             else
-                connection.add( response, baseURI.toString(), format, baseURI );
+                repoConnection.add( response, baseURI.toString(), format, baseURI );
         }
 
         catch ( Throwable t )

@@ -8,9 +8,9 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.repository.Repository;
-import org.openrdf.repository.Connection;
-import org.openrdf.util.iterator.CloseableIterator;
-import org.openrdf.sail.Namespace;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryResult;
+import org.openrdf.model.Namespace;
 
 import jline.Completor;
 import jline.SimpleCompletor;
@@ -152,8 +152,8 @@ System.out.println( "################# Rebuilding dictionaries." );
 
         try
         {
-            CloseableIterator<? extends Statement> stmtIter
-                = mc.getConnection().getStatements(
+            RepositoryResult<Statement> stmtIter
+                = mc.getRepositoryConnection().getStatements(
 //                    null, null, null, model, includeInferred );
                     null, null, null, Wurfel.useInference() );
             while ( stmtIter.hasNext() )
@@ -174,8 +174,8 @@ System.out.println( "################# Rebuilding dictionaries." );
 
             // Namespace prefixes are managed by OpenRDF, and are simply
             // imported into the Lexicon.
-            CloseableIterator<? extends Namespace> nsIter
-                 = mc.getConnection().getNamespaces();
+            RepositoryResult<Namespace> nsIter
+                 = mc.getRepositoryConnection().getNamespaces();
             while ( nsIter.hasNext() )
                 add( nsIter.next() );
             nsIter.close();

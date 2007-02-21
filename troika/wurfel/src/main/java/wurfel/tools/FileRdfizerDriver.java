@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.OutputStream;
 
 import org.openrdf.model.URI;
-import org.openrdf.repository.Connection;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryImpl;
-import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
+import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.sail.memory.MemoryStore;
 
@@ -22,9 +22,10 @@ public class FileRdfizerDriver
 		throws
 			org.openrdf.sail.SailInitializationException,
 			org.openrdf.sail.SailException,
-			org.openrdf.rio.RDFHandlerException
+			org.openrdf.rio.RDFHandlerException,
+			org.openrdf.repository.RepositoryException
 	{
-		Repository repository = new RepositoryImpl(
+		Repository repository = new SailRepository(
 			new MemoryStore() );
 		repository.initialize();
 
@@ -34,7 +35,7 @@ public class FileRdfizerDriver
 		URI context = repository.getValueFactory().createURI( namespace );
 //		connection.setNamespace( "dir", namespace );
 
-		Connection connection = repository.getConnection();
+		RepositoryConnection connection = repository.getConnection();
 		rdfizer.addTree( file, context, namespace, connection );
 		extractRDF( connection, out );
 		connection.close();
@@ -67,8 +68,9 @@ public class FileRdfizerDriver
 		}
 	}
 
-	private static void extractRDF( Connection connection, OutputStream out )
-		throws org.openrdf.rio.RDFHandlerException
+	private static void extractRDF( RepositoryConnection connection, OutputStream out )
+		throws org.openrdf.rio.RDFHandlerException,
+		org.openrdf.repository.RepositoryException
 	{
 		RDFXMLWriter writer = new RDFXMLPrettyWriter( out );
 

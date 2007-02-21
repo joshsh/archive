@@ -68,7 +68,6 @@ public class WurfelException extends Exception
             s_logger.error( os.toString() );
 
             msg = t.toString();
-//            System.err.println( t.toString() );
             ps.close();
             os.close();
         }
@@ -87,8 +86,6 @@ public class WurfelException extends Exception
         try
         {
             s_logger.error( msg );
-
-            System.err.println( msg );
         }
 
         catch ( Throwable secondary )

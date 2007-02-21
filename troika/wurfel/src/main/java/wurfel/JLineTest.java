@@ -8,7 +8,7 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryImpl;
+import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
@@ -26,7 +26,7 @@ public class JLineTest
     {
         try
         {
-            Repository repository = new RepositoryImpl(
+            Repository repository = new SailRepository(
                 new MemoryStoreRDFSInferencer(
                     new MemoryStore() ) );
 //                    new MemoryStore( new java.io.File( "wurfel.tmp" ) ) ) );
@@ -38,6 +38,7 @@ public class JLineTest
 
         catch ( Throwable t )
         {
+t.printStackTrace( System.err );
             throw new WurfelException( t );
         }
     }

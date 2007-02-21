@@ -10,7 +10,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
-import org.openrdf.util.iterator.CloseableIterator;
+import org.openrdf.repository.RepositoryResult;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -62,10 +62,10 @@ public class SwoogleIt extends PrimitiveFunction
             Container results = new Container();
 //System.out.println( "baseUri = " + baseUri );
 
-            CloseableIterator<? extends Statement> stmtIter
-                = mc.getConnection().getStatements(
+            RepositoryResult<Statement> stmtIter
+                = mc.getRepositoryConnection().getStatements(
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
-                    null, rdfTypeUri, swoogleQueryResponseUri, baseUri, Wurfel.useInference() );
+                    null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Wurfel.useInference() );
             while ( stmtIter.hasNext() )
                 results.add( stmtIter.next().getSubject() );
             stmtIter.close();

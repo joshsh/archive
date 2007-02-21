@@ -10,16 +10,15 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.querymodel.QueryLanguage;
-import org.openrdf.queryresult.GraphQueryResult;
-import org.openrdf.queryresult.TupleQueryResult;
-import org.openrdf.queryresult.Solution;
-import org.openrdf.repository.Connection;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.GraphQueryResult;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.Repository;
-import org.openrdf.rio.rdfxml.RDFXMLPrettyWriter;
+import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
-import org.openrdf.sail.Namespace;
-import org.openrdf.util.iterator.CloseableIterator;
+import org.openrdf.model.Namespace;
+import org.openrdf.repository.RepositoryResult;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -158,7 +157,7 @@ public Repository getRepository()
 
         try
         {
-            Connection con = repository.getConnection();
+            RepositoryConnection con = repository.getConnection();
             con.export( /*singleContext,*/ writer );
             con.close();
         }
@@ -247,7 +246,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
             }
         }
 
-        Iterator<Value> resultIter = rdfMultiply( arg, func, mc.getConnection() ).iterator();
+        Iterator<Value> resultIter = rdfMultiply( arg, func, mc.getRepositoryConnection() ).iterator();
         Set<Value> result = new Container();
         while ( resultIter.hasNext() )
         {
@@ -261,14 +260,14 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
     ////////////////////////////////////////////////////////////////////////////
 
     // Note: this may be a very expensive operation (see Sesame API).
-    public int countStatements()
+    public long countStatements()
         throws WurfelException
     {
-        int size;
+        long size;
 
         try
         {
-            Connection con = repository.getConnection();
+            RepositoryConnection con = repository.getConnection();
             size = con.size();
             con.close();
         }
@@ -291,9 +290,9 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
     {
         try
         {
-            Connection conn = repository.getConnection();
+            RepositoryConnection conn = repository.getConnection();
 
-            CloseableIterator<? extends Namespace> nsIter
+            RepositoryResult<Namespace> nsIter
                  = conn.getNamespaces();
             int maxlen = 0;
             while ( nsIter.hasNext() )
@@ -334,9 +333,9 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         try
         {
-            Connection conn = repository.getConnection();
+            RepositoryConnection conn = repository.getConnection();
 
-            CloseableIterator<? extends Resource> contextIter
+            RepositoryResult<Resource> contextIter
                  = conn.getContextIDs();
             while ( contextIter.hasNext() )
                 contexts.add( contextIter.next() );
@@ -360,14 +359,14 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         try
         {
-            Connection con = repository.getConnection();
-            GraphQueryResult result = con.evaluateGraphQuery(
-                QueryLanguage.SERQL, queryStr );
+            RepositoryConnection con = repository.getConnection();
+            GraphQueryResult result = con.prepareGraphQuery(
+                QueryLanguage.SERQL, queryStr ).evaluate();
 //                QueryLanguage.SERQL, "CONSTRUCT * FROM {x} p {y}");
 
 // TODO: can I expect the Statements to remain valid after the connection is closed?
-            for ( Statement st : result )
-                statements.add( st );
+            while ( result.hasNext() )
+                statements.add( result.next() );
 
             result.close();
             con.close();
@@ -387,9 +386,9 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
     {
         try
         {
-            Connection con = repository.getConnection();
-            TupleQueryResult result = con.evaluateTupleQuery(
-                QueryLanguage.SERQL, queryStr );
+            RepositoryConnection con = repository.getConnection();
+            TupleQueryResult result = con.prepareTupleQuery(
+                QueryLanguage.SERQL, queryStr ).evaluate();
 //                QueryLanguage.SERQL, "SELECT x, y FROM {x} p {y}");
 
             result.close();
@@ -409,7 +408,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
      */
     private Set<Value> rdfMultiply( Value subject,
                                    Value predicate,
-                                   Connection conn )
+                                   RepositoryConnection conn )
         throws WurfelException
     {
         Set<Value> objects = new HashSet<Value>();
@@ -418,7 +417,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
         {
             try
             {
-                CloseableIterator<? extends Statement> stmtIter
+                RepositoryResult<Statement> stmtIter
                     = conn.getStatements(
 //                        (Resource) subject, (URI) predicate, null, context, includeInferred );
                         (Resource) subject, (URI) predicate, null, Wurfel.useInference() );

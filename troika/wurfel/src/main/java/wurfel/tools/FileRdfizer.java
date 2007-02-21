@@ -10,7 +10,7 @@ import java.util.Date;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Connection;
+import org.openrdf.repository.RepositoryConnection;
 
 public class FileRdfizer
 {
@@ -82,8 +82,9 @@ public class FileRdfizer
 		stringUri       = valueFactory.createURI( xsdNs + "string" );
 	}
 
-	public void addTree( File file, URI context, String namespace, Connection connection )
-		throws org.openrdf.sail.SailException
+	public void addTree( File file, URI context, String namespace, RepositoryConnection connection )
+		throws org.openrdf.sail.SailException,
+		org.openrdf.repository.RepositoryException
 	{
 		connection.setNamespace( "file", fileNs );
 		connection.setNamespace( "xsd", xsdNs );
@@ -91,8 +92,9 @@ public class FileRdfizer
 		add( file, context, namespace, connection );
 	}
 
-	private URI add( File file, URI context, String namespace, Connection connection )
-		throws org.openrdf.sail.SailException
+	private URI add( File file, URI context, String namespace, RepositoryConnection connection )
+		throws org.openrdf.sail.SailException,
+		org.openrdf.repository.RepositoryException
 	{
 		URI self = createFileUri( file, namespace );
 
