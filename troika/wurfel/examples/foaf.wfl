@@ -1,3 +1,4 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/>;
 
 (: foaf :)
 <http://xmlns.com/foaf/0.1/>;
@@ -19,7 +20,6 @@
 <http://www.w3.org/People/Berners-Lee/card#i> /knows/knows/knows/knows/knows/knows/knows/knows/knows/knows/name;  # 8773 results
 # (there are no additional results after this point)
 @saveas "foaf-dump.rdf";
-
 
 (:
 33
@@ -134,4 +134,151 @@ W (C type b) x
 :)
 
 
+(: foaf:img
 
+<html><body>
+1<img src="http://www.w3.org/Press/Stock/Berners-Lee/2001-europaeum-eighth.jpg" />
+2<img src="http://swiss.csail.mit.edu/gallery/cph-2005/2005_09_05_12_24_36" />
+3<img src="http://swordfish.rdfweb.org/~libby/libby.jpg" />
+4<img src="http://www.oclc.org/~emiller/capture.jpg" />
+5<img src="http://www.printchk.demon.co.uk/jpg/mrben1.jpg" />
+6<img src="http://www.w3.org/People/EM/s000782.JPG" />
+7<img src="http://www.ilrt.bristol.ac.uk/people/cmdjb/events/dc7/orig/eric.png" />
+8<img src="http://heddley.com/edd/images/edd-shoulders.jpg" />
+9<img src="http://my.opera.com/zarkoh/picture.pl" />
+10<img src="http://my.opera.com/derekfeatherstone/picture.pl" />
+11<img src="http://my.opera.com/ChiaraInThePond/picture.pl" />
+12<img src="http://my.opera.com/evamen/picture.pl" />
+13<img src="http://my.opera.com/olli/picture.pl" />
+14<img src="http://my.opera.com/malware/picture.pl" />
+15<img src="http://my.opera.com/citoyen/picture.pl" />
+16<img src="http://my.opera.com/Pecorra/picture.pl" />
+17<img src="http://my.opera.com/Moose/picture.pl" />
+18<img src="http://my.opera.com/OperaSinger/picture.pl" />
+19<img src="http://my.opera.com/yitzhaq/picture.pl" />
+20<img src="http://my.opera.com/koalie/picture.pl" />
+21<img src="http://my.opera.com/kjetilk/picture.pl" />
+22<img src="http://my.opera.com/csant/picture.pl" />
+23<img src="http://my.opera.com/howcome/picture.pl" />
+24<img src="http://my.opera.com/danigoldman/picture.pl" />
+25<img src="http://my.opera.com/toman/picture.pl" />
+26<img src="http://my.opera.com/troels/picture.pl" />
+27<img src="http://my.opera.com/bestdamntech/picture.pl" />
+28<img src="http://my.opera.com/yngve/picture.pl" />
+29<img src="http://my.opera.com/mitchman2/picture.pl" />
+30<img src="http://my.opera.com/tarquinwj/picture.pl" />
+31<img src="http://my.opera.com/danbri/picture.pl" />
+32<img src="http://my.opera.com/gnapse/picture.pl" />
+33<img src="http://my.opera.com/m2k/picture.pl" />
+34<img src="http://my.opera.com/nafmo/picture.pl" />
+35<img src="http://my.opera.com/ManneS/picture.pl" />
+36<img src="http://my.opera.com/SerbianFighter/picture.pl" />
+37<img src="http://my.opera.com/annaraj/picture.pl" />
+38<img src="http://my.opera.com/jax/picture.pl" />
+39<img src="http://my.opera.com/eskils/picture.pl" />
+40<img src="http://my.opera.com/lachralle/picture.pl" />
+41<img src="http://my.opera.com/zenya/picture.pl" />
+42<img src="http://my.opera.com/Think/picture.pl" />
+43<img src="http://my.opera.com/brianj/picture.pl" />
+44<img src="http://rdfweb.org/people/danbri/2000/01/01/Image1.gif" />
+45<img src="http://www.cs.umbc.edu/~finin/images/passport.gif" />
+46<img src="http://trust.mindswap.org/FilmTrust/images/default.jpg" />
+47<img src="http://www.w3.org/People/EM/s000782" />
+48<img src="http://www.w3.org/People/djweitzner/images/weitzner-sm.jpg" />
+49<img src="http://www.aaronsw.com/photos/misc/IMG_1407.JPG?display=xsmall" />
+50<img src="http://www.cs.umd.edu/~golbeck/images/me.jpg" />
+51<img src="http://www.mindswap.org/~bparsia/talks/uri-use/bijan.jpg" />
+52<img src="http://home.schule.at/just4fun/animeundco/stamms5.gif" />
+53<img src="http://www.mindswap.org/~evren/photo.jpg" />
+54<img src="http://www.volus.net/~ronwalf/data/ron-fork.jpg" />
+</body></html>
+
+:)
+
+(: foaf:depiction
+
+<html><body>
+1<img src="http://www.zooleika.org.uk/vids/xcom2002/trust_metrics_FOAF.mpg" />
+2<img src="http://www.w3.org/Press/Stock/Berners-Lee/2001-europaeum-eighth.jpg" />
+3<img src="http://people.csail.mit.edu/crowell/images/vader.jpg" />
+4<img src="http://dig.csail.mit.edu/2005/ajar/ajaw/people/IMG_6424.jpg" />
+5<img src="http://web.mit.edu/jambo/www/img/main.jpg" />
+6<img src="http://rdfweb.org/people/danbri/rdfweb/libby.gif" />
+7<img src="http://ioctl.org/jan/test/wizard.jpg" />
+8<img src="http://www.ilrt.bristol.ac.uk/people/cmdjb/events/dc7/orig/eric.png" />
+9<img src="http://website.lineone.net/~steve_c-t/Scientology/Pickets/10-03-2001/damien.jpg" />
+10<img src="http://heddley.com/edd/images/edd-shoulders.jpg" />
+11<img src="http://people.csail.mit.edu/crowell/images/me.jpg" />
+12<img src="http://my.opera.com/zarkoh/picture.pl" />
+13<img src="http://my.opera.com/derekfeatherstone/picture.pl" />
+14<img src="http://my.opera.com/ChiaraInThePond/picture.pl" />
+15<img src="http://my.opera.com/evamen/picture.pl" />
+16<img src="http://my.opera.com/olli/picture.pl" />
+17<img src="http://my.opera.com/malware/picture.pl" />
+18<img src="http://my.opera.com/citoyen/picture.pl" />
+19<img src="http://my.opera.com/Pecorra/picture.pl" />
+20<img src="http://my.opera.com/Moose/picture.pl" />
+21<img src="http://my.opera.com/OperaSinger/picture.pl" />
+22<img src="http://my.opera.com/yitzhaq/picture.pl" />
+23<img src="http://my.opera.com/koalie/picture.pl" />
+24<img src="http://my.opera.com/kjetilk/picture.pl" />
+25<img src="http://my.opera.com/csant/picture.pl" />
+26<img src="http://my.opera.com/howcome/picture.pl" />
+27<img src="http://my.opera.com/danigoldman/picture.pl" />
+28<img src="http://my.opera.com/toman/picture.pl" />
+29<img src="http://my.opera.com/troels/picture.pl" />
+30<img src="http://my.opera.com/bestdamntech/picture.pl" />
+31<img src="http://my.opera.com/yngve/picture.pl" />
+32<img src="http://my.opera.com/mitchman2/picture.pl" />
+33<img src="http://my.opera.com/tarquinwj/picture.pl" />
+34<img src="http://my.opera.com/danbri/picture.pl" />
+35<img src="http://my.opera.com/gnapse/picture.pl" />
+36<img src="http://my.opera.com/m2k/picture.pl" />
+37<img src="http://my.opera.com/nafmo/picture.pl" />
+38<img src="http://my.opera.com/ManneS/picture.pl" />
+39<img src="http://my.opera.com/SerbianFighter/picture.pl" />
+40<img src="http://my.opera.com/annaraj/picture.pl" />
+41<img src="http://my.opera.com/jax/picture.pl" />
+42<img src="http://my.opera.com/eskils/picture.pl" />
+43<img src="http://my.opera.com/lachralle/picture.pl" />
+44<img src="http://my.opera.com/zenya/picture.pl" />
+45<img src="http://my.opera.com/Think/picture.pl" />
+46<img src="http://my.opera.com/brianj/picture.pl" />
+47<img src="http://gilest.org/2002/xcom/bus_brendan.jpg" />
+48<img src="http://photos.heddley.com/albums/www2002/hawaii_017.sized.jpg" />
+49<img src="http://www.cs.umbc.edu/~finin/images/passport.gif" />
+50<img src="http://trust.mindswap.org/FilmTrust/images/default.jpg" />
+51<img src="http://www.w3.org/People/EM/s000782" />
+52<img src="http://www.w3.org/People/djweitzner/images/weitzner-sm.jpg" />
+53<img src="http://www.aaronsw.com/photos/misc/IMG_1407.JPG?display=xsmall" />
+54<img src="http://www.cs.umd.edu/~golbeck/images/me.jpg" />
+55<img src="http://www.mindswap.org/~bparsia/talks/uri-use/bijan.jpg" />
+56<img src="http://home.schule.at/just4fun/animeundco/stamms5.gif" />
+57<img src="http://www.mindswap.org/~evren/photo.jpg" />
+58<img src="http://inamidst.com/sbp/pool" />
+59<img src="http://www.volus.net/~ronwalf/data/ron-fork.jpg" />
+60<img src="http://www.w3.org/People/Quin/Liam10-56x72.jpeg" />
+61<img src="http://www.dajobe.org/face.png" />
+62<img src="http://inanna.ecs.soton.ac.uk/steve-crop-sml.jpg" />
+63<img src="http://www.w3c.es/Personal/Martin/img/martin_s2.jpg" />
+64<img src="http://eneumann.org/images/eneumann.jpg" />
+65<img src="http://www.w3.org/2004/10/kmyers.png" />
+66<img src="http://www.w3.org/People/ij.jpg" />
+67<img src="http://people.w3.org/amy/av.jpg" />
+68<img src="http://www.wiwiss.fu-berlin.de/suhl/ueber_uns/team/Fotos/Chris2.jpg" />
+69<img src="http://www.w3.org/People/djweitzner/public/dannyhead.jpg" />
+70<img src="http://www.la-grange.net/photos/2002/10/05.Japon/image/img_3257.jpg" />
+71<img src="http://www.cwi.nl/~steven/steven-london.jpg" />
+72<img src="http://www.w3.org/People/rs.jpg" />
+73<img src="http://richard.cyganiak.de/richard.jpg" />
+74<img src="http://www.w3.org/People/ishida.jpg" />
+75<img src="http://www.w3.org/People/Sandro/sandro-icon" />
+76<img src="http://www.w3.org/People/SteveB" />
+77<img src="http://www.w3.org/People/karl/kd.jpg" />
+78<img src="http://www.cs.vu.nl/~guus/images/guus.jpg" />
+79<img src="http://www.w3.org/People/Coralie.jpg" />
+80<img src="http://www.w3.org/People/Lafon/Yves.gif" />
+81<img src="http://www.itee.uq.edu.au/images/dave_w_0.jpg" />
+</body></html>
+
+:)

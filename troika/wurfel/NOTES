@@ -1,3 +1,8 @@
+blah/*3knows/depiction;
+    vs.
+blah/3*knows/depiction;
+
+
 [V"] commands --> ___ directives (e.g. @prefix), command-line directives (e.g. @saveas)
 
 

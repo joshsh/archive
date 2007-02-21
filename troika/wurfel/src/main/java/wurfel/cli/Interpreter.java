@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
  *  Error output:
  *    alert() --> errorPrintStream = System.err
  */
-public class Interpreter extends Thread implements Runnable, Observer
+public class Interpreter extends Thread implements Observer
 {
     private final static Logger s_logger
         = Logger.getLogger( Interpreter.class );

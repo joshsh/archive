@@ -115,6 +115,7 @@ public class Wurfel
     private static int s_treeViewDepth;
 
     private static boolean s_dereferenceByNamespace;
+    private static long s_uriDereferencingTimeout;
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -153,6 +154,11 @@ public class Wurfel
         return s_dereferenceByNamespace;
     }
 
+    public static long uriDereferencingTimeout()
+    {
+        return s_uriDereferencingTimeout;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private static boolean getBooleanProperty( final Properties props,
@@ -181,6 +187,30 @@ public class Wurfel
             try
             {
                 return ( new Integer( s ) ).intValue();
+            }
+
+            catch ( java.lang.NumberFormatException e )
+            {
+                throw new WurfelException( e );
+            }
+        }
+    }
+
+    private static long getLongProperty( final Properties props,
+                                       final String name,
+                                       final long defaultValue )
+        throws WurfelException
+    {
+        String s = props.getProperty( name );
+
+        if ( null == s )
+            return defaultValue;
+
+        else
+        {
+            try
+            {
+                return ( new Long( s ) ).longValue();
             }
 
             catch ( java.lang.NumberFormatException e )
@@ -221,6 +251,7 @@ public class Wurfel
             s_enforceImplicitProvenance = getBooleanProperty( props, "wurfel.model.rdf.enforceImplicitProvenance", true );
 
             s_dereferenceByNamespace = getBooleanProperty( props, "wurfel.model.uri.dereferenceByNamespace", false );
+            s_uriDereferencingTimeout = getLongProperty( props, "wurfel.model.uri.dereferencing.timeout", 2000 );
 
             s_treeViewDepth = getIntProperty( props, "wurfel.cli.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )

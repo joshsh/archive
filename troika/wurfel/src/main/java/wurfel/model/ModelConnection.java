@@ -31,6 +31,7 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.util.iterator.CloseableIterator;
 
+import wurfel.ThreadWrapper;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
 
@@ -703,6 +704,12 @@ s_logger.debug( "######## ext = " + ext );
 // To consider at some point: caching, authorization
     }
 
+    private void addPrivate( final URL url, final URI baseURI )
+        throws WurfelException
+    {
+        
+    }
+
     public void addGraph( final URL url, final URI baseURI )
         throws WurfelException
     {
@@ -732,7 +739,7 @@ showUrlConnection( urlConn );
             throw new WurfelException( e );
         }
 
-        RDFFormat format = guessRdfFormat( urlConn );
+        final RDFFormat format = guessRdfFormat( urlConn );
         if ( null == format )
         {
             close( response );
@@ -740,30 +747,35 @@ showUrlConnection( urlConn );
         }
 s_logger.debug( "####### Guessed format is " + format.getName() );
 
-        try
-        {
-            if ( null == baseURI )
-                connection.add( response, null, format );
-            else
-                connection.add( response, baseURI.toString(), format, baseURI );
-        }
+        final InputStream responseFinal = response;
 
-        catch ( Throwable t  )
-        {
-            close( response );
-
-            if ( t instanceof RDFParseException )
+        new ThreadWrapper() {
+            protected void run() throws WurfelException
             {
-                String msg = "line " + ( (RDFParseException) t ).getLineNumber()
-                    + ", column " + ( (RDFParseException) t ).getColumnNumber()
-                    + ": " + t.getMessage();
+                try
+                {
+                    if ( null == baseURI )
+                        connection.add( responseFinal, null, format );
+                    else
+                        connection.add( responseFinal, baseURI.toString(), format, baseURI );
+                }
 
-                throw new WurfelException( msg );
+                catch ( Throwable t )
+                {
+                    if ( t instanceof RDFParseException )
+                    {
+                        String msg = "line " + ( (RDFParseException) t ).getLineNumber()
+                            + ", column " + ( (RDFParseException) t ).getColumnNumber()
+                            + ": " + t.getMessage();
+
+                        throw new WurfelException( msg );
+                    }
+
+                    else
+                        throw new WurfelException( t );
+                }
             }
-
-            else
-                throw new WurfelException( t );
-        }
+        }.start( Wurfel.uriDereferencingTimeout() );
 
         close( response );
 
@@ -779,6 +791,7 @@ s_logger.debug( "####### graph imported without errors" );
 
         try
         {
+// FIXME: the URL should be treated as a black box.
             uriStr = url.toURI().toString();
         }
 
