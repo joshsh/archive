@@ -367,60 +367,157 @@ public class ModelConnection
     ////////////////////////////////////////////////////////////////////////////
 
     public URI createUri( final String s )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createURI( s );
+        try
+        {
+            return model.getRepository().getValueFactory().createURI( s );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public URI createUri( final String ns, final String s )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createURI( ns + s );
+        try
+        {
+            return model.getRepository().getValueFactory().createURI( ns + s );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public URI createUri( final URI ns, final String s )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createURI( ns.toString() + s );
+        try
+        {
+            return model.getRepository().getValueFactory().createURI( ns.toString() + s );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public Literal createLiteral( final String s )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING );
+        try
+        {
+            return model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public Literal createLiteral( final String s, final String language )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createLiteral( s, language );
+        try
+        {
+            return model.getRepository().getValueFactory().createLiteral( s, language );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public Literal createLiteral( final String s, final URI dataType )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createLiteral( s, dataType );
+        try
+        {
+            return model.getRepository().getValueFactory().createLiteral( s, dataType );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public Literal createLiteral( final boolean b )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN );
+        try
+        {
+            return model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public Literal createLiteral( final int i )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createLiteral( "" + i, XMLSchema.INTEGER );
+        try
+        {
+            return model.getRepository().getValueFactory().createLiteral( "" + i, XMLSchema.INTEGER );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public Literal createLiteral( final double d )
+        throws WurfelException
     {
-        return model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE );
+        try
+        {
+            return model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public BNode createBNode()
         throws WurfelException
     {
-        return model.getRepository().getValueFactory().createBNode();
+        try
+        {
+            return model.getRepository().getValueFactory().createBNode();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     public BNode createBNode( final String id )
         throws WurfelException
     {
-        return model.getRepository().getValueFactory().createBNode( id );
+        try
+        {
+            return model.getRepository().getValueFactory().createBNode( id );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
     }
 
     private static Random s_rn = new Random();
@@ -704,10 +801,41 @@ s_logger.debug( "######## ext = " + ext );
 // To consider at some point: caching, authorization
     }
 
-    private void addPrivate( final URL url, final URI baseURI )
+    private URLConnection openUrlConnection( URL url )
         throws WurfelException
     {
-        
+        URLConnection urlConn;
+
+        try
+        {
+            urlConn = url.openConnection();
+            prepareUrlConnectionForRdfRequest( urlConn );
+showUrlConnection( urlConn );
+        }
+
+        catch ( IOException e )
+        {
+            throw new WurfelException( e );
+        }
+
+        final URLConnection urlConnFinal = urlConn;
+
+        new ThreadWrapper() {
+            protected void run() throws WurfelException
+            {
+                try
+                {
+                    urlConnFinal.connect();
+                }
+
+                catch ( IOException e )
+                {
+                    throw new WurfelException( e );
+                }
+            }
+        }.start( Wurfel.uriDereferencingTimeout() );
+
+        return urlConn;
     }
 
     public void addGraph( final URL url, final URI baseURI )
@@ -717,20 +845,22 @@ s_logger.debug( "######## ext = " + ext );
             ( ( null == baseURI ) ? "" : " in context " + baseURI.toString() ) );
 
         boolean verifyData = true;
-
-        URLConnection urlConn;
-        InputStream response;
-
 s_logger.debug( "######## dereferencing graph at URL: " + url );
+
+        URLConnection urlConn = openUrlConnection( url );
+        InputStream response = null;
+
+        final RDFFormat format = guessRdfFormat( urlConn );
+        if ( null == format )
+        {
+            close( response );
+            return;
+        }
+
+s_logger.debug( "####### Guessed format is " + format.getName() );
 
         try
         {
-            urlConn = url.openConnection();
-            prepareUrlConnectionForRdfRequest( urlConn );
-showUrlConnection( urlConn );
-
-            urlConn.connect();
-
             response = urlConn.getInputStream();
         }
 
@@ -739,43 +869,30 @@ showUrlConnection( urlConn );
             throw new WurfelException( e );
         }
 
-        final RDFFormat format = guessRdfFormat( urlConn );
-        if ( null == format )
+        try
+        {
+            if ( null == baseURI )
+                connection.add( response, null, format );
+            else
+                connection.add( response, baseURI.toString(), format, baseURI );
+        }
+
+        catch ( Throwable t )
         {
             close( response );
-            return;
-        }
-s_logger.debug( "####### Guessed format is " + format.getName() );
 
-        final InputStream responseFinal = response;
-
-        new ThreadWrapper() {
-            protected void run() throws WurfelException
+            if ( t instanceof RDFParseException )
             {
-                try
-                {
-                    if ( null == baseURI )
-                        connection.add( responseFinal, null, format );
-                    else
-                        connection.add( responseFinal, baseURI.toString(), format, baseURI );
-                }
+                String msg = "line " + ( (RDFParseException) t ).getLineNumber()
+                    + ", column " + ( (RDFParseException) t ).getColumnNumber()
+                    + ": " + t.getMessage();
 
-                catch ( Throwable t )
-                {
-                    if ( t instanceof RDFParseException )
-                    {
-                        String msg = "line " + ( (RDFParseException) t ).getLineNumber()
-                            + ", column " + ( (RDFParseException) t ).getColumnNumber()
-                            + ": " + t.getMessage();
-
-                        throw new WurfelException( msg );
-                    }
-
-                    else
-                        throw new WurfelException( t );
-                }
+                throw new WurfelException( msg );
             }
-        }.start( Wurfel.uriDereferencingTimeout() );
+
+            else
+                throw new WurfelException( t );
+        }
 
         close( response );
 
