@@ -852,10 +852,7 @@ s_logger.debug( "######## dereferencing graph at URL: " + url );
 
         final RDFFormat format = guessRdfFormat( urlConn );
         if ( null == format )
-        {
-            close( response );
             return;
-        }
 
 s_logger.debug( "####### Guessed format is " + format.getName() );
 
