@@ -636,7 +636,7 @@ System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType
 System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
 */
         String contentType = urlConn.getContentType();
-s_logger.debug( "######## contentType = " + contentType );
+s_logger.info( "######## contentType = " + contentType );
 
         String file = urlConn.getURL().getFile();
         String ext;
@@ -649,7 +649,7 @@ s_logger.debug( "######## contentType = " + contentType );
                 ? file.substring( lastDot + 1 )
                 : null;
         }
-s_logger.debug( "######## ext = " + ext );
+s_logger.info( "######## ext = " + ext );
 
         // Primary content type rules.
         if ( null != contentType )
@@ -841,11 +841,11 @@ showUrlConnection( urlConn );
     public void addGraph( final URL url, final URI baseURI )
         throws WurfelException
     {
-        s_logger.debug( "Importing model " + url.toString() +
+        s_logger.info( "Importing model " + url.toString() +
             ( ( null == baseURI ) ? "" : " in context " + baseURI.toString() ) );
 
         boolean verifyData = true;
-s_logger.debug( "######## dereferencing graph at URL: " + url );
+s_logger.info( "######## dereferencing graph at URL: " + url );
 
         URLConnection urlConn = openUrlConnection( url );
         InputStream response = null;
@@ -854,7 +854,7 @@ s_logger.debug( "######## dereferencing graph at URL: " + url );
         if ( null == format )
             return;
 
-s_logger.debug( "####### Guessed format is " + format.getName() );
+s_logger.info( "####### Guessed format is " + format.getName() );
 
         try
         {
@@ -893,7 +893,7 @@ s_logger.debug( "####### Guessed format is " + format.getName() );
 
         close( response );
 
-s_logger.debug( "####### graph imported without errors" );
+s_logger.info( "####### graph imported without errors" );
 
         model.touch();
     }

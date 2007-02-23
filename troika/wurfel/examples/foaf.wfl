@@ -27,6 +27,24 @@
 699
 :)
 
+
+
+
+
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>;
+<http://www.w3.org/People/Berners-Lee/card#i>;
+<http://www.w3.org/People/Berners-Lee/card#i> foaf:name;
+<http://www.w3.org/People/Berners-Lee/card#i> foaf:knows foaf:name;
+<http://www.w3.org/People/Berners-Lee/card#i> foaf:knows foaf:knows foaf:name;
+
+
+
+
+
+
+
+
 (: Ego :)
 <http://fortytwo.net/2007/02/06/joshua-shinavier#>;
 

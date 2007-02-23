@@ -92,14 +92,13 @@
 			</repositories>
 			
 			<dependencies>
-				<!-- Temporary.  This should come with openrdf-sail-memory-2.0-beta1, but doesn't. -->
+
 				<dependency>
 					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-simple</artifactId>
-					<version>1.1.0-RC1</version>
-					<!--	<scope>provided</scope>-->
+					<artifactId>slf4j-log4j12</artifactId>
+					<version>1.0.1</version>
 				</dependency>
-
+				
 				<dependency>
 					<groupId>antlr</groupId>
 					<artifactId>antlr</artifactId>

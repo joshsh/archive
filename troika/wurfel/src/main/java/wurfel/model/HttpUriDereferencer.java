@@ -70,7 +70,13 @@ public class HttpUriDereferencer implements Dereferencer
 
         if ( successMemoUris.contains( memo )
           || failureMemoUris.contains( memo ) )
+{
+if ( successMemoUris.contains( memo ) )
+s_logger.info( "URI memo already succeeded: " + memo );
+if ( failureMemoUris.contains( memo ) )
+s_logger.info( "URI memo already failed: " + memo );
             return;
+}
 
         // Note: this URL should be treated as a "black box" once created; it
         // need not bear any relation to the URI it was created from.
@@ -104,6 +110,7 @@ public class HttpUriDereferencer implements Dereferencer
 
         catch ( WurfelException e )
         {
+s_logger.info( "##### failed to dereference URI: " + uri.toString() );
             failureMemoUris.add( memo );
             throw e;
         }
@@ -162,7 +169,7 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
             throw new WurfelException( t );
         }
 
-        s_logger.debug( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
+        s_logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
     }
 }
 
