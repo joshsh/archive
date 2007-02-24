@@ -71,10 +71,10 @@ public class HttpUriDereferencer implements Dereferencer
         if ( successMemoUris.contains( memo )
           || failureMemoUris.contains( memo ) )
 {
-if ( successMemoUris.contains( memo ) )
-s_logger.info( "URI memo already succeeded: " + memo );
-if ( failureMemoUris.contains( memo ) )
-s_logger.info( "URI memo already failed: " + memo );
+//if ( successMemoUris.contains( memo ) )
+//s_logger.info( "URI memo already succeeded: " + memo );
+//if ( failureMemoUris.contains( memo ) )
+//s_logger.info( "URI memo already failed: " + memo );
             return;
 }
 
@@ -106,6 +106,7 @@ s_logger.info( "URI memo already failed: " + memo );
         try
         {
             mc.addGraph( url, context );
+s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
         }
 
         catch ( WurfelException e )

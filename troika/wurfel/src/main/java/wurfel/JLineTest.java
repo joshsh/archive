@@ -26,9 +26,12 @@ public class JLineTest
     {
         try
         {
-            Repository repository = new SailRepository(
-                new MemoryStoreRDFSInferencer(
-                    new MemoryStore() ) );
+            Repository repository = Wurfel.useInference()
+                ? new SailRepository(
+                    new MemoryStoreRDFSInferencer(
+                        new MemoryStore() ) )
+                : new SailRepository(
+                    new MemoryStore() );
 //                    new MemoryStore( new java.io.File( "wurfel.tmp" ) ) ) );
 
             repository.initialize();

@@ -1,7 +1,17 @@
 
 <http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> ;
 <http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> reviewer;
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> reviewer made;
+@quit;
 
+
+
+# Revyu + book mashup
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869> primaryTopic sameAs;
+	# --> <http://www4.wiwiss.fu-berlin.de/bookmashup/books/0735712018>
+
+
+<http://revyu.com/things/the-fox-and-the-monk-by-john-smith>;
 
 
 (: SPARQL

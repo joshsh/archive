@@ -364,6 +364,20 @@ public class ModelConnection
         }
     }
 
+    public void addStatement( Resource subj, URI pred, Value obj, Resource context )
+        throws WurfelException
+    {
+        try
+        {
+            repoConnection.add( subj, pred, obj, context );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     public URI createUri( final String s )
@@ -930,6 +944,33 @@ s_logger.info( "####### graph imported without errors" );
         {
             throw new WurfelException( e );
         }
+    }
+
+    public long countStatements( Resource context )
+        throws WurfelException
+    {
+        int count = 0;
+
+        try
+        {
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
+                    null, null, null, Wurfel.useInference(), context );
+            while ( stmtIter.hasNext() )
+            {
+                stmtIter.next();
+                count++;
+            }
+
+            stmtIter.close();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new WurfelException( t );
+        }
+
+        return count;
     }
 }
 
