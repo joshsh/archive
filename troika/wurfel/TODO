@@ -32,7 +32,7 @@ Scuttering
   * foaf:knows links
   * owl:sameAs indirection
   * rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
-* ponder the implications of purl URIs like this one:
+* ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
     http://purl.org/stuff/rev#Review
 * dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
 
@@ -64,6 +64,7 @@ Names and namespaces
 
 Command line interface
 ================================================================================
+* make ContainerTreeView's output look like Turtle/Wurfel input
 * interpreter hangs on multi-line comments
 * implement an as-you-type parser for tab completion
 * place multiple-line expressions in the history
@@ -126,8 +127,4 @@ Bugs
 * repository import occasionally hangs.  Time it out so you don't have to quit the application
 * forgot to close a connection somewhere:
   [WARNING] Closing dangling connection due to garbage collection
-* sha1SumOf yields a different result than the foaf-a-matic
-	"parcour@gmail.com" sha1SumOf;
-		fa5fb6acf9d9965d1a3a0dbf8cbe7514bbec10e5
-	http://www.ldodds.com/foaf/foaf-a-matic.html
-		e9bbf0a3835f323fc4bf3a20f8f41df1b31bda6a
+
