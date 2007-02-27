@@ -14,9 +14,14 @@ import java.util.LinkedList;
  */
 public class LazyEvaluator extends Evaluator
 {
-    public Container reduce( Value expr, ModelConnection mc )
+    public abstract void reduce( ListNode<Value> exprList,
+                                 Sink<ListNode<Value>> sink,
+                                 ModelConnection mc )
         throws WurfelException
     {
+/*
+        Value expr = exprList.getFirst();
+
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
             // Reduce the function.
@@ -65,6 +70,7 @@ public class LazyEvaluator extends Evaluator
 
         else
             return new Container( expr );
+*/
     }
 
 }

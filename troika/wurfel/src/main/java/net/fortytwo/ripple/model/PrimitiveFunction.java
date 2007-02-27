@@ -17,8 +17,9 @@ public abstract class PrimitiveFunction extends Node implements Function
 {
     protected URI selfUri;
 
-    protected abstract Collection<Value> applyInternal( LinkedList<Value> args,
-                                                        ModelConnection mc )
+    protected abstract void applyInternal( ListNode<Value> args,
+                                           Sink<ListNode<Value>> sink,
+                                           ModelConnection mc )
         throws WurfelException;
 
     class Param
@@ -198,16 +199,20 @@ public abstract class PrimitiveFunction extends Node implements Function
         return params.size();
     }
 
-    public void checkArguments( LinkedList<Value> args )
+    public void checkArguments( ListNode<Value> args )
         throws WurfelException
     {
+/*
         if ( args.size() != arity() )
             throw new WurfelException( "attempt to apply a "
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
+*/
     }
 
-    public Collection<Value> applyTo( LinkedList<Value> args, ModelConnection mc )
+    public void applyTo( ListNode<Value> args,
+                         Sink<ListNode<Value>> sink,
+                         ModelConnection mc )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -215,7 +220,7 @@ checkArguments( args );
 
 // TODO: type checking
 
-        return applyInternal( args, mc );
+        applyInternal( args, sink, mc );
     }
 
     public void printTo( WurfelPrintStream p )

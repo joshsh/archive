@@ -14,7 +14,10 @@ public abstract class Evaluator
         return v instanceof Apply;
     }
 
-    public abstract Container reduce( Value expr, ModelConnection mc )
+// NOTE: this is identical to Function's applyTo() method.
+    public abstract void reduce( ListNode<Value> expr,
+                                 Sink<ListNode<Value>> sink,
+                                 ModelConnection mc )
         throws WurfelException;
 }
 

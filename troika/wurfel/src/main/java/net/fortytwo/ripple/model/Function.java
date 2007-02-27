@@ -5,9 +5,6 @@ import wurfel.WurfelException;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 public interface Function extends WurfelValue
 {
 //    public abstract String toString();
@@ -19,11 +16,13 @@ public interface Function extends WurfelValue
      */
     public int arity();
 
-    public Collection<Value> applyTo( LinkedList<Value> args,
-                                      ModelConnection mc )
+// NOTE: this is identical to Evaluator's evaluate() method.
+    public void applyTo( ListNode<Value> args,
+                         Sink<ListNode<Value>> sink,
+                         ModelConnection mc )
         throws WurfelException;
 
-    public void checkArguments( LinkedList<Value> args )
+    public void checkArguments( ListNode<Value> args )
         throws WurfelException;
 }
 

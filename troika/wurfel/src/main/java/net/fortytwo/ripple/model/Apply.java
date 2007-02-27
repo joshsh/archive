@@ -29,17 +29,35 @@ return null;
         return arityCached;
     }
 
-    public void checkArguments( LinkedList<Value> args )
+    public void checkArguments( ListNode<Value> args )
         throws WurfelException
     {
+/*
         if ( args.size() != arity() )
             throw new WurfelException( "attempt to apply a "
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
+*/
     }
 
-    public Collection<Value> applyTo( LinkedList<Value> args,
-                                      ModelConnection mc )
+    private class ValueSinkToListSink implements Sink<Value>
+    {
+        private Sink<ListNode<Value>> sink;
+
+        public ValueSinkToListSink( Sink<ListNode<Value>> sink )
+        {
+            this.sink = sink;
+        }
+
+        public void put( Value v ) throws WurfelException
+        {
+            sink.put( new ListNode<Value>( v ) );
+        }
+    }
+
+    public void applyTo( ListNode<Value> args,
+                         Sink<ListNode<Value>> sink,
+                         ModelConnection mc )
         throws WurfelException
     {
 // TODO: this is a temporary check
@@ -48,13 +66,16 @@ checkArguments( args );
         if ( function instanceof Function )
         {
             args.addFirst( argument );
-            return ( (Function) function ).applyTo( args, mc );
+            ( (Function) function ).applyTo(
+                new ListNode<Value>( argument, args ), sink, mc );
         }
 
         else
         {
-            return mc.getModel().multiply(
-                argument, function, mc );
+            Iterator<Value> result = mc.getModel().multiply( argument, function, mc ).iterator();
+
+            while ( result.hasNext() )
+                sink.put( new ListNode( result.next() ) );
         }
     }
 

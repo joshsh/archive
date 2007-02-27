@@ -33,13 +33,15 @@ public abstract class Combinator extends Node implements Function
         return arityCached;
     }
 
-    public void checkArguments( LinkedList<Value> args )
+    public void checkArguments( ListNode<Value> args )
         throws WurfelException
     {
+/*
         if ( args.size() != arity() )
             throw new WurfelException( "attempt to apply a "
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
+*/
     }
 
     public String toString()

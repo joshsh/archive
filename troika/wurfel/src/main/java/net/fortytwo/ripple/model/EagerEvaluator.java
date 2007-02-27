@@ -13,9 +13,12 @@ import java.util.LinkedList;
  */
 public class EagerEvaluator extends Evaluator
 {
-    public Container reduce( Value expr, ModelConnection mc )
+    public void reduce( ListNode<Value> expr,
+                        Sink<ListNode<Value>> sink,
+                        ModelConnection mc )
         throws WurfelException
     {
+/*
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )
         {
             // Reduce the function.
@@ -64,6 +67,7 @@ public class EagerEvaluator extends Evaluator
 
         else
             return new Container( expr );
+*/
     }
 
 }
