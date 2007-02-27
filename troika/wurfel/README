@@ -1,5 +1,9 @@
 cat `find src -name "*.java"`| wc
 
+V
+    @open;
+    @close;
+
 
 [U] assumptions
     [.] arity of a function (read: Apply) is constant, unaffected by reduction

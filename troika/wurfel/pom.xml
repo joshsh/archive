@@ -25,7 +25,7 @@
 			</roles>
 			<timezone>-8</timezone>
 			<properties>
-				<picUrl>http://troika.dnsdojo.net/pics/industrial/self.jpg</picUrl>
+				<picUrl>http://fortytwo.net/pics/industrial/self.jpg</picUrl>
 			</properties>
 		</developer>
 	</developers>
@@ -48,13 +48,13 @@
 			<name>JLine Project Repository</name>
 			<url>http://jline.sourceforge.net/m2repo</url>
 		</repository>
-<!--
+
 		    <repository>
 			    <id>fortytwo</id>
 			    <name>Josh's m2 repository</name>
 			    <url>http://fortytwo.net/maven2</url>
 		    </repository>
--->
+
 		<repository>
 			<id>aduna-repo</id>
 			<name>Aduna repository</name>
@@ -130,6 +130,13 @@
 				</dependency>
 				<dependency>
 					<groupId>org.openrdf</groupId>
+					<artifactId>sesame</artifactId>
+					<version>2.0-beta1</version>
+					<type>jar</type>
+				</dependency>
+				<!--
+				<dependency>
+					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-model</artifactId>
 					<version>2.0-beta1</version>
 					<type>jar</type>
@@ -166,14 +173,6 @@
 					<version>2.0-beta1</version>
 					<type>jar</type>
 				</dependency>
-				<!--
-				<dependency>
-					<groupId>org.openrdf</groupId>
-					<artifactId>openrdf-rio-trix</artifactId>
-					<version>2.0-beta1</version>
-					<type>jar</type>
-				</dependency>
-				-->
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-rio-turtle</artifactId>
@@ -186,6 +185,15 @@
 					<version>2.0-beta1</version>
 					<type>jar</type>
 				</dependency>
+				-->
+				<!--
+				    <dependency>
+					    <groupId>org.openrdf</groupId>
+					    <artifactId>openrdf-rio-trix</artifactId>
+					    <version>2.0-beta1</version>
+					    <type>jar</type>
+				    </dependency>
+				-->
 				<!--
 				<dependency>
 					<groupId>org.openrdf</groupId>
