@@ -8,7 +8,7 @@ import org.openrdf.repository.Repository;
 import wurfel.JLineTest;
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.model.Model;
+import net.fortytwo.ripple.model.Model;
 
 public abstract class WurfelTestCase extends TestCase
 {

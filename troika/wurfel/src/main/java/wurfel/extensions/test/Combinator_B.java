@@ -1,10 +1,10 @@
 package wurfel.extensions.test;
 
 import wurfel.WurfelException;
-import wurfel.model.Apply;
-import wurfel.model.Combinator;
-import wurfel.model.Container;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.Apply;
+import net.fortytwo.ripple.model.Combinator;
+import net.fortytwo.ripple.model.Container;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;

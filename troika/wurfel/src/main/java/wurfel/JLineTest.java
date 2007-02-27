@@ -14,8 +14,8 @@ import org.openrdf.sail.memory.MemoryStore;
 
 import wurfel.cli.Interpreter;
 import wurfel.lucene.LuceneTest;
-import wurfel.model.Model;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.model.ModelConnection;
 
 public class JLineTest
 {

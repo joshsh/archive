@@ -1,4 +1,4 @@
-package wurfel.model;
+package net.fortytwo.ripple.model;
 
 import wurfel.UrlFactory;
 import wurfel.Wurfel;

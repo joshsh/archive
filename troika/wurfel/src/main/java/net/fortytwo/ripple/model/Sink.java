@@ -1,5 +1,4 @@
-//package net.fortytwo.ripple.model;
-package ripple.model;
+package net.fortytwo.ripple.model;
 
 //import net.fortytwo.ripple.RippleException;
 import wurfel.WurfelException;

@@ -2,11 +2,11 @@ package wurfel.cli;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.model.ModelConnection;
-import wurfel.model.Lexicon;
-import wurfel.model.Model;
-import wurfel.model.ObservableContainer;
-import wurfel.model.WurfelPrintStream;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Lexicon;
+import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.model.ObservableContainer;
+import net.fortytwo.ripple.model.WurfelPrintStream;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;

@@ -1,4 +1,4 @@
-package wurfel.model;
+package net.fortytwo.ripple.model;
 
 import org.openrdf.model.impl.BNodeImpl;
 

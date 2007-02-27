@@ -1,8 +1,8 @@
-package wurfel.model;
+package net.fortytwo.ripple.model;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;

@@ -2,7 +2,7 @@ package wurfel.cli.ast;
 
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;

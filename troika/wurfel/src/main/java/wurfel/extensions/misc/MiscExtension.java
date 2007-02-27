@@ -2,8 +2,8 @@ package wurfel.extensions.misc;
 
 import wurfel.Extension;
 import wurfel.WurfelException;
-import wurfel.model.Function;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import java.net.URL;
 

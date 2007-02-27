@@ -1,7 +1,7 @@
 package wurfel;
 
-import wurfel.model.ModelConnection;
-import wurfel.model.Function;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Function;
 
 import java.net.URL;
 

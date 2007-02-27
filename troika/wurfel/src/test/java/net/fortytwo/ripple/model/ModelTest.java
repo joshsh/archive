@@ -1,6 +1,6 @@
-package wurfel.model;
+package net.fortytwo.ripple.model;
 
-import wurfel.model.Model;
+import net.fortytwo.ripple.model.Model;
 import wurfel.test.WurfelTestCase;
 
 public class ModelTest extends WurfelTestCase

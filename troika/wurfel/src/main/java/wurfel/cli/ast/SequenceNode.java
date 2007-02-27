@@ -3,8 +3,8 @@ package wurfel.cli.ast;
 import wurfel.Wurfel;
 import wurfel.cli.Interpreter;
 import wurfel.WurfelException;
-import wurfel.model.Apply;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.Apply;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;
 

@@ -34,16 +34,16 @@ import org.openrdf.model.URI;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.model.Container;
-import wurfel.model.Dereferencer;
-import wurfel.model.ModelConnection;
-import wurfel.model.Evaluator;
-import wurfel.model.LazyEvaluator;
-import wurfel.model.Lexicon;
-import wurfel.model.Model;
-//import wurfel.model.DebugEvaluator;
-import wurfel.model.ObservableContainer;
-import wurfel.model.WurfelPrintStream;
+import net.fortytwo.ripple.model.Container;
+import net.fortytwo.ripple.model.Dereferencer;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Evaluator;
+import net.fortytwo.ripple.model.LazyEvaluator;
+import net.fortytwo.ripple.model.Lexicon;
+import net.fortytwo.ripple.model.Model;
+//import net.fortytwo.ripple.model.DebugEvaluator;
+import net.fortytwo.ripple.model.ObservableContainer;
+import net.fortytwo.ripple.model.WurfelPrintStream;
 import wurfel.cli.ast.Ast;
 import wurfel.cli.ast.UriNode;
 

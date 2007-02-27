@@ -1,6 +1,6 @@
-package ripple.model;
+package net.fortytwo.ripple.model;
 
-import wurfel.model.Node;
+import net.fortytwo.ripple.model.Node;
 
 public class List<T> extends Node
 {

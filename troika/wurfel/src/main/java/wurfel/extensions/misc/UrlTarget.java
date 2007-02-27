@@ -1,9 +1,9 @@
 package wurfel.extensions.misc;
 
 import wurfel.WurfelException;
-import wurfel.model.PrimitiveFunction;
-import wurfel.model.Container;
-import wurfel.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.Container;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;

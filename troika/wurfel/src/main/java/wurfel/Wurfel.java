@@ -247,11 +247,11 @@ public class Wurfel
 
             s_jLineDebugOutput = props.getProperty( "wurfel.cli.jline.debugOutput" );
 
-            s_useInference = getBooleanProperty( props, "wurfel.model.rdf.useInference", false );
-            s_enforceImplicitProvenance = getBooleanProperty( props, "wurfel.model.rdf.enforceImplicitProvenance", true );
+            s_useInference = getBooleanProperty( props, "net.fortytwo.ripple.model.rdf.useInference", false );
+            s_enforceImplicitProvenance = getBooleanProperty( props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
 
-            s_dereferenceByNamespace = getBooleanProperty( props, "wurfel.model.uri.dereferenceByNamespace", false );
-            s_uriDereferencingTimeout = getLongProperty( props, "wurfel.model.uri.dereferencing.timeout", 2000 );
+            s_dereferenceByNamespace = getBooleanProperty( props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
+            s_uriDereferencingTimeout = getLongProperty( props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
 
             s_treeViewDepth = getIntProperty( props, "wurfel.cli.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )

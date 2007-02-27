@@ -1,4 +1,4 @@
-package wurfel.model;
+package net.fortytwo.ripple.model;
 
 import java.io.InputStream;
 import java.io.IOException;
