@@ -14,7 +14,7 @@ import java.util.LinkedList;
  */
 public class LazyEvaluator extends Evaluator
 {
-    public abstract void reduce( ListNode<Value> exprList,
+    public void reduce( ListNode<Value> stack,
                                  Sink<ListNode<Value>> sink,
                                  ModelConnection mc )
         throws WurfelException

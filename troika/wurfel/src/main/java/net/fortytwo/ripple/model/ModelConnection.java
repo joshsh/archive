@@ -65,6 +65,8 @@ public class ModelConnection
         }
 
         add( this );
+
+        applyOp = createUri( "http://fortytwo.net/2007/02/ripple#apply" );
     }
 
     public ModelConnection( Model model )
@@ -78,6 +80,13 @@ public class ModelConnection
     {
         this.name = name;
         constructPrivate( model );
+    }
+
+    private URI applyOp;
+
+    public URI getApplyOp()
+    {
+        return applyOp;
     }
 
     public Model getModel()

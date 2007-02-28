@@ -29,6 +29,11 @@ public class ListNode<T> extends Node
         this.rest = rest;
     }
 
+    public ListNode push( final T first )
+    {
+        return new ListNode( first, this );
+    }
+
     public boolean equals( ListNode<T> other )
     {
         ListNode thisCur = this;

@@ -15,7 +15,7 @@ public abstract class Evaluator
     }
 
 // NOTE: this is identical to Function's applyTo() method.
-    public abstract void reduce( ListNode<Value> expr,
+    public abstract void reduce( ListNode<Value> stack,
                                  Sink<ListNode<Value>> sink,
                                  ModelConnection mc )
         throws WurfelException;

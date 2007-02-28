@@ -96,10 +96,10 @@ Hashtable<String, String> aliases;
         urlMap.put( wurfelNs,
             wurfel.Wurfel.class.getResource( "wurfel.rdf" ) + "#" );
         urlMap.put( wurfelTestNs,
-            wurfel.extensions.test.TestExtension.class.getResource(
+            net.fortytwo.ripple.extensions.test.TestExtension.class.getResource(
                 "wurfel-test.rdf" ) + "#" );
         urlMap.put( wurfelMiscNs,
-            wurfel.extensions.misc.MiscExtension.class.getResource(
+            net.fortytwo.ripple.extensions.misc.MiscExtension.class.getResource(
                 "wurfel-misc.rdf" ) + "#" );
 
         return new UrlFactory( urlMap );
@@ -128,8 +128,8 @@ aliases = new Hashtable<String, String>();
         {
 //            importModel( Wurfel.schemaUrl(), mc.createUri( "urn:wurfel" ), mc );
 
-            ( new wurfel.extensions.test.TestExtension() ).load( mc );
-            ( new wurfel.extensions.misc.MiscExtension() ).load( mc );
+            ( new net.fortytwo.ripple.extensions.test.TestExtension() ).load( mc );
+            ( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
         }
 
         catch ( WurfelException e )

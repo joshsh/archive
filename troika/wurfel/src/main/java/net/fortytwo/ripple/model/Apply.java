@@ -64,11 +64,8 @@ return null;
 checkArguments( args );
 
         if ( function instanceof Function )
-        {
-            args.addFirst( argument );
             ( (Function) function ).applyTo(
-                new ListNode<Value>( argument, args ), sink, mc );
-        }
+                args.push( argument ), sink, mc );
 
         else
         {
