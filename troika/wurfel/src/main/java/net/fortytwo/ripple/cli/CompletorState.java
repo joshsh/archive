@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.ci;
+package net.fortytwo.ripple.cli;
 
 
 public enum CompletorState

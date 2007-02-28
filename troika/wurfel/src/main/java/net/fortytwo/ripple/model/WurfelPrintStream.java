@@ -54,6 +54,21 @@ public class WurfelPrintStream extends PrintStream
             printQName( prefix, uri.getLocalName() );
     }
 
+    private void printList( ListNode<Value> list )
+        throws WurfelException
+    {
+        print( "(" );
+
+        while ( null != list )
+        {
+            print( " " );
+            print( list.getFirst() );
+            list = list.getRest();
+        }
+
+        print( " )" );
+    }
+
     private void printEscapedString( final String s )
     {
 // TODO
@@ -73,6 +88,9 @@ print( "\"" + s + "\"" );
         {
             if ( v instanceof URI )
                 printUri( (URI) v );
+
+            else if ( v instanceof ListNode )
+                printList( (ListNode<Value>) v );
 
             else if ( v instanceof Literal )
             {

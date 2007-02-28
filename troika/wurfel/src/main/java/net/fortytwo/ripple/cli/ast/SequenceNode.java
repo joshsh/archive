@@ -1,10 +1,11 @@
-package net.fortytwo.ripple.ci.ast;
+package net.fortytwo.ripple.cli.ast;
 
 import wurfel.Wurfel;
-import net.fortytwo.ripple.ci.Interpreter;
+import net.fortytwo.ripple.cli.Interpreter;
 import wurfel.WurfelException;
 import net.fortytwo.ripple.model.Apply;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.ListNode;
 
 import org.openrdf.model.Value;
 
@@ -42,22 +43,34 @@ public class SequenceNode extends Ast
 
         Iterator<Ast> iter = children.iterator();
         Value result = iter.next().evaluate( itp, mc );
+        ListNode<Value> stack = new ListNode<Value>( result );
+
+        boolean comp = ( Wurfel.getEvaluationStyle() == Wurfel.EvaluationStyle.COMPOSITIONAL );
 
         // Note: assuming left associativity for now.
         switch ( Wurfel.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 while ( iter.hasNext() )
-                    result = new Apply( iter.next().evaluate( itp, mc ), result );
+                    if ( comp )
+                        stack = stack.push( iter.next().evaluate( itp, mc ) );
+                    else
+                        result = new Apply( iter.next().evaluate( itp, mc ), result );
                 break;
 
             case ANTIDIAGRAMMATIC:
                 while ( iter.hasNext() )
-                    result = new Apply( result, iter.next().evaluate( itp, mc ) );
+                    if ( comp )
+System.err.println( "not yet implemented" );
+                    else
+                        result = new Apply( result, iter.next().evaluate( itp, mc ) );
                 break;
         }
 
-        return result;
+        if ( comp )
+            return stack;
+        else
+            return result;
     }
 }
 

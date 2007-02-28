@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.ci;
+package net.fortytwo.ripple.cli;
 
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -39,13 +39,16 @@ import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.LazyEvaluator;
+import net.fortytwo.ripple.model.LazyStackEvaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
 import net.fortytwo.ripple.model.ObservableContainer;
 import net.fortytwo.ripple.model.WurfelPrintStream;
-import net.fortytwo.ripple.ci.ast.Ast;
-import net.fortytwo.ripple.ci.ast.UriNode;
+import net.fortytwo.ripple.model.ListContainerSink;
+import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.cli.ast.Ast;
+import net.fortytwo.ripple.cli.ast.UriNode;
 
 import org.apache.log4j.Logger;
 
@@ -106,13 +109,28 @@ public Model getModel()
         languageTag = tag;
     }
 
+    private void chooseEvaluator()
+    {
+        switch ( Wurfel.getEvaluationStyle() )
+        {
+            case APPLICATIVE:
+                evaluator = new LazyEvaluator();
+                break;
+
+            case COMPOSITIONAL:
+                evaluator = new LazyStackEvaluator();
+                break;
+        }
+//        evaluator = new DebugEvaluator( new LazyEvaluator( model ) );
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     public Interpreter( Model model ) throws WurfelException
     {
         this.model = model;
-        evaluator = new LazyEvaluator();
-//        evaluator = new DebugEvaluator( new LazyEvaluator( model ) );
+
+        chooseEvaluator();
 
         lexicon = new Lexicon( model );
         lexicon.addObserver( this );
@@ -495,7 +513,14 @@ System.out.println( "--- 3 ---" );
     {
         try
         {
-            return evaluator.reduce( expr, mc );
+            ListContainerSink sink = new ListContainerSink();
+// FIXME: awkward
+            if ( expr instanceof ListNode )
+                evaluator.reduce( (ListNode<Value>) expr, sink, mc );
+            else
+                evaluator.reduce( new ListNode<Value>( expr ), sink, mc );
+
+            return sink;
         }
 
         catch ( WurfelException e )

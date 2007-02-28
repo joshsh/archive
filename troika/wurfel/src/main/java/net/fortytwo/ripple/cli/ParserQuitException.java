@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.ci;
+package net.fortytwo.ripple.cli;
 
 /**
  *  A trivial exception which is used to break out of the ANTLR-generated lexer

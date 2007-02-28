@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.ci;
+package net.fortytwo.ripple.cli;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;

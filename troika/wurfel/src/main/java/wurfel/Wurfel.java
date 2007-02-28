@@ -96,17 +96,7 @@ public class Wurfel
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    private static final URL
-        s_wurfelSchemaUrl = Wurfel.class.getResource( "wurfel.rdf" );
-
-    private static boolean initialized = false;
-
-    private static ExpressionOrder expressionOrder;
-    private static ExpressionAssociativity expressionAssociativity;
-
-    enum EvaluationOrder
+    public enum EvaluationOrder
     {
         EAGER   ( "eager" ),
         LAZY    ( "lazy" );
@@ -129,9 +119,7 @@ public class Wurfel
         }
     }
 
-    private static EvaluationOrder s_evaluationOrder;
-
-    enum EvaluationStyle
+    public enum EvaluationStyle
     {
         APPLICATIVE     ( "applicative" ),
         COMPOSITIONAL   ( "compositional" );
@@ -154,6 +142,17 @@ public class Wurfel
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    private static final URL
+        s_wurfelSchemaUrl = Wurfel.class.getResource( "wurfel.rdf" );
+
+    private static boolean initialized = false;
+
+    private static ExpressionOrder expressionOrder;
+    private static ExpressionAssociativity expressionAssociativity;
+
+    private static EvaluationOrder s_evaluationOrder;
     private static EvaluationStyle s_evaluationStyle;
 
     private static String s_jLineDebugOutput;
@@ -329,11 +328,11 @@ public class Wurfel
             }
 
             expressionOrder = ExpressionOrder.find(
-                props.getProperty( "net.fortytwo.ripple.ci.syntax.order" ) );
+                props.getProperty( "net.fortytwo.ripple.cli.syntax.order" ) );
             expressionAssociativity = ExpressionAssociativity.find(
-                props.getProperty( "net.fortytwo.ripple.ci.syntax.associativity" ) );
+                props.getProperty( "net.fortytwo.ripple.cli.syntax.associativity" ) );
 
-            s_jLineDebugOutput = props.getProperty( "net.fortytwo.ripple.ci.jline.debugOutput" );
+            s_jLineDebugOutput = props.getProperty( "net.fortytwo.ripple.cli.jline.debugOutput" );
 
             s_evaluationOrder = getEvaluationOrderProperty( props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
             s_evaluationStyle = getEvaluationStyleProperty( props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
@@ -344,7 +343,7 @@ public class Wurfel
             s_dereferenceByNamespace = getBooleanProperty( props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
             s_uriDereferencingTimeout = getLongProperty( props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
 
-            s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.ci.treeView.depth", 1 );
+            s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.cli.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )
                 s_treeViewDepth = 0;
 
@@ -360,7 +359,7 @@ System.out.println( "schemaUrl: " + s_wurfelSchemaUrl );
 
     public static String getWurfelName()
     {
-        return "Slinky";
+        return "Ripple";
     }
 
     public static String getWurfelVersion()

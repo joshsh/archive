@@ -7,7 +7,7 @@ import wurfel.WurfelException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class LazyStackEvaluator
+public class LazyStackEvaluator extends Evaluator
 {
     private Model model;
     private ModelConnection modelConnection;
@@ -42,17 +42,24 @@ public class LazyStackEvaluator
         {
             this.property = property;
             this.sink = sink;
+System.out.println( "public PropertySink -- " + property );
+System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
+System.out.println( "( (PropertySink) " + property + " ).put()" );
+System.out.flush();
             Value first = stack.getFirst();
             ListNode<Value> rest = stack.getRest();
 
             Iterator<Value> objects = model.multiply( first, property, modelConnection ).iterator();
             while ( objects.hasNext() )
-                sink.put( rest.push( objects.next() ) );
+                if ( null == rest )
+                    sink.put( new ListNode<Value>( objects.next() ) );
+                else
+                    sink.put( rest.push( objects.next() ) );
         }
     }
 
@@ -71,6 +78,8 @@ public class LazyStackEvaluator
             this.sink = sink;
             arity = function.arity();
             this.arguments = null;
+System.out.println( "public FunctionSink( Function function, Sink<ListNode<Value>> sink ) -- " + function + ", " + arity );
+System.out.flush();
         }
 
         public FunctionSink( FunctionSink other, Value first )
@@ -79,23 +88,32 @@ public class LazyStackEvaluator
             sink = other.sink;
             arity = other.arity - 1;
             arguments = new ListNode<Value>( first, other.arguments );
+System.out.println( "public FunctionSink( FunctionSink other, Value first ) -- " + function + ", " + arity );
+System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
+System.out.println( "( (FunctionSink) " + this + " ).put() -- " + function + ", " + arity );
+System.out.flush();
             Value first = stack.getFirst();
+System.out.println( "first = " + first );
+System.out.flush();
             ListNode<Value> rest = stack.getRest();
 
             if ( 1 == arity )
             {
 // TODO: this work should only be done once, not once for each application.
-                while ( null != arguments )
+                ListNode<Value> args = arguments;
+                while ( null != args )
                 {
-                    ListNode<Value> args = arguments;
+System.out.println( "move arg" );
+System.out.flush();
                     stack = stack.push( args.getFirst() );
                     args = args.getRest();
                 }
+                stack = stack.push( first );
 
                 function.applyTo( stack, sink, modelConnection );
             }
@@ -113,11 +131,15 @@ public class LazyStackEvaluator
         public ApplySink( Sink<ListNode<Value>> sink )
         {
             this.sink = sink;
+System.out.println( "public ApplySink" );
+System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
+System.out.println( "( (ApplySink) " + this + " ).put()" );
+System.out.flush();
 //        if ( null == stack )
 //            return;
 
@@ -178,6 +200,8 @@ public class LazyStackEvaluator
                         ModelConnection mc )
         throws WurfelException
     {
+System.out.println( "public void reduce" );
+System.out.flush();
         modelConnection = mc;
         model = modelConnection.getModel();
         applyOp = mc.getApplyOp();
@@ -190,7 +214,11 @@ public class LazyStackEvaluator
     protected void reduce( ListNode<Value> stack, Sink<ListNode<Value>> sink )
         throws WurfelException
     {
+System.out.println( "private void reduce" );
+System.out.flush();
         Value first = stack.getFirst();
+System.out.println( "   first = " + first );
+System.out.flush();
 
         if ( first.equals( applyOp ) )
         {
