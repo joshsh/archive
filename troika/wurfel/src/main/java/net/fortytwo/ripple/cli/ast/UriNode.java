@@ -1,8 +1,8 @@
-package wurfel.cli.ast;
+package net.fortytwo.ripple.ci.ast;
 
 import wurfel.Wurfel;
 import wurfel.WurfelException;
-import wurfel.cli.Interpreter;
+import net.fortytwo.ripple.ci.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;

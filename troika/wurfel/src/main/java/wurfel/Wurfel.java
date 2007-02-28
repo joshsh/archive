@@ -106,6 +106,56 @@ public class Wurfel
     private static ExpressionOrder expressionOrder;
     private static ExpressionAssociativity expressionAssociativity;
 
+    enum EvaluationOrder
+    {
+        EAGER   ( "eager" ),
+        LAZY    ( "lazy" );
+
+        private String name;
+
+        private EvaluationOrder( String name )
+        {
+            this.name = name;
+        }
+
+        public static EvaluationOrder lookup( String name )
+            throws WurfelException
+        {
+            for ( EvaluationOrder order : EvaluationOrder.values() )
+                if ( order.name.equals( name ) )
+                    return order;
+
+            throw new WurfelException( "unknown EvaluationOrder: " + name );
+        }
+    }
+
+    private static EvaluationOrder s_evaluationOrder;
+
+    enum EvaluationStyle
+    {
+        APPLICATIVE     ( "applicative" ),
+        COMPOSITIONAL   ( "compositional" );
+
+        private String name;
+
+        private EvaluationStyle( String name )
+        {
+            this.name = name;
+        }
+
+        public static EvaluationStyle lookup( String name )
+             throws WurfelException
+       {
+            for ( EvaluationStyle style : EvaluationStyle.values() )
+                if ( style.name.equals( name ) )
+                    return style;
+
+            throw new WurfelException( "unknown EvaluationStyle: " + name );
+        }
+    }
+
+    private static EvaluationStyle s_evaluationStyle;
+
     private static String s_jLineDebugOutput;
 
     private static boolean
@@ -127,6 +177,16 @@ public class Wurfel
     public static ExpressionAssociativity getExpressionAssociativity()
     {
         return expressionAssociativity;
+    }
+
+    public static EvaluationOrder getEvaluationOrder()
+    {
+        return s_evaluationOrder;
+    }
+
+    public static EvaluationStyle getEvaluationStyle()
+    {
+        return s_evaluationStyle;
     }
 
     public static String getJLineDebugOutput()
@@ -220,6 +280,34 @@ public class Wurfel
         }
     }
 
+    private static EvaluationOrder getEvaluationOrderProperty(
+        final Properties props,
+        final String name,
+        final EvaluationOrder defaultValue ) throws WurfelException
+    {
+        String s = props.getProperty( name );
+
+        if ( null == s )
+            return defaultValue;
+
+        else
+            return EvaluationOrder.lookup( s );
+    }
+
+    private static EvaluationStyle getEvaluationStyleProperty(
+        final Properties props,
+        final String name,
+        final EvaluationStyle defaultValue ) throws WurfelException
+    {
+        String s = props.getProperty( name );
+
+        if ( null == s )
+            return defaultValue;
+
+        else
+            return EvaluationStyle.lookup( s );
+    }
+
     public static void initialize()
         throws WurfelException
     {
@@ -241,11 +329,14 @@ public class Wurfel
             }
 
             expressionOrder = ExpressionOrder.find(
-                props.getProperty( "wurfel.cli.syntax.order" ) );
+                props.getProperty( "net.fortytwo.ripple.ci.syntax.order" ) );
             expressionAssociativity = ExpressionAssociativity.find(
-                props.getProperty( "wurfel.cli.syntax.associativity" ) );
+                props.getProperty( "net.fortytwo.ripple.ci.syntax.associativity" ) );
 
-            s_jLineDebugOutput = props.getProperty( "wurfel.cli.jline.debugOutput" );
+            s_jLineDebugOutput = props.getProperty( "net.fortytwo.ripple.ci.jline.debugOutput" );
+
+            s_evaluationOrder = getEvaluationOrderProperty( props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
+            s_evaluationStyle = getEvaluationStyleProperty( props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
 
             s_useInference = getBooleanProperty( props, "net.fortytwo.ripple.model.rdf.useInference", false );
             s_enforceImplicitProvenance = getBooleanProperty( props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
@@ -253,7 +344,7 @@ public class Wurfel
             s_dereferenceByNamespace = getBooleanProperty( props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
             s_uriDereferencingTimeout = getLongProperty( props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
 
-            s_treeViewDepth = getIntProperty( props, "wurfel.cli.treeView.depth", 1 );
+            s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.ci.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )
                 s_treeViewDepth = 0;
 

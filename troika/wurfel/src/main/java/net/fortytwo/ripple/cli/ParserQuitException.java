@@ -1,4 +1,4 @@
-package wurfel.cli;
+package net.fortytwo.ripple.ci;
 
 /**
  *  A trivial exception which is used to break out of the ANTLR-generated lexer

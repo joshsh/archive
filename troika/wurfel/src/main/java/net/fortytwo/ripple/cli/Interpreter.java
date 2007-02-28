@@ -1,4 +1,4 @@
-package wurfel.cli;
+package net.fortytwo.ripple.ci;
 
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -44,8 +44,8 @@ import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
 import net.fortytwo.ripple.model.ObservableContainer;
 import net.fortytwo.ripple.model.WurfelPrintStream;
-import wurfel.cli.ast.Ast;
-import wurfel.cli.ast.UriNode;
+import net.fortytwo.ripple.ci.ast.Ast;
+import net.fortytwo.ripple.ci.ast.UriNode;
 
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package wurfel.cli;
+package net.fortytwo.ripple.ci;
 
 
 public enum CompletorState

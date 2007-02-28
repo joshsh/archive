@@ -1,6 +1,6 @@
-package wurfel.cli.ast;
+package net.fortytwo.ripple.ci.ast;
 
-import wurfel.cli.Interpreter;
+import net.fortytwo.ripple.ci.Interpreter;
 import wurfel.WurfelException;
 import net.fortytwo.ripple.model.ModelConnection;
 

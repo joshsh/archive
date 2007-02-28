@@ -1,16 +1,16 @@
-package wurfel.cli.ast;
+package net.fortytwo.ripple.ci.ast;
 
-import wurfel.cli.Interpreter;
+import net.fortytwo.ripple.ci.Interpreter;
 import wurfel.WurfelException;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;
 
-public class BooleanNode extends Ast
+public class IntNode extends Ast
 {
-    private boolean value;
+    private int value;
 
-    public BooleanNode( final boolean value )
+    public IntNode( final int value )
     {
         this.value = value;
     }

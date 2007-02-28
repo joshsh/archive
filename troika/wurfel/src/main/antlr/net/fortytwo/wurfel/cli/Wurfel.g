@@ -1,21 +1,21 @@
 header
 {
-package wurfel.cli;
+package net.fortytwo.ripple.cli;
 
 import wurfel.WurfelException;
 
-import wurfel.cli.ast.Ast;
-import wurfel.cli.ast.BooleanNode;
-import wurfel.cli.ast.BNodeNode;
-import wurfel.cli.ast.DoubleNode;
-import wurfel.cli.ast.IntNode;
-import wurfel.cli.ast.NameNode;
-import wurfel.cli.ast.NullNode;
-import wurfel.cli.ast.QNameNode;
-import wurfel.cli.ast.StringNode;
-import wurfel.cli.ast.SequenceNode;
-import wurfel.cli.ast.TypedLiteralNode;
-import wurfel.cli.ast.UriNode;
+import net.fortytwo.ripple.cli.ast.Ast;
+import net.fortytwo.ripple.cli.ast.BooleanNode;
+import net.fortytwo.ripple.cli.ast.BNodeNode;
+import net.fortytwo.ripple.cli.ast.DoubleNode;
+import net.fortytwo.ripple.cli.ast.IntNode;
+import net.fortytwo.ripple.cli.ast.NameNode;
+import net.fortytwo.ripple.cli.ast.NullNode;
+import net.fortytwo.ripple.cli.ast.QNameNode;
+import net.fortytwo.ripple.cli.ast.StringNode;
+import net.fortytwo.ripple.cli.ast.SequenceNode;
+import net.fortytwo.ripple.cli.ast.TypedLiteralNode;
+import net.fortytwo.ripple.cli.ast.UriNode;
 }
 
 
