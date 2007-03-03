@@ -51,7 +51,7 @@ public class Grab extends PrimitiveFunction
                 = mc.getRepositoryConnection().getStatements(
                     null, null, null, /*baseUri,*/ Wurfel.useInference() );
             while ( stmtIter.hasNext() )
-                sink.put( stack.push( stmtIter.next().getSubject() ) );
+                sink.put( new ListNode<Value>( stmtIter.next().getSubject(), stack ) );
             stmtIter.close();
         }
 

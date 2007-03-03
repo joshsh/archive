@@ -14,6 +14,11 @@ public class LazyStackEvaluator extends Evaluator
     private URI applyOp;
 
 
+    boolean isApplyOp( Value v )
+    {
+        return v.equals( applyOp );
+    }
+
     boolean isFunction( Value v )
     {
         return ( v instanceof Function );
@@ -66,6 +71,38 @@ System.out.flush();
 
     protected class FunctionSink implements Sink<ListNode<Value>>
     {
+        private Function function;
+        Sink<ListNode<Value>> sink;
+
+        public FunctionSink( Function function, Sink<ListNode<Value>> sink )
+        {
+            this.function = function;
+            this.sink = sink;
+System.out.println( "public FunctionSink( " + function + ", " + sink + ")" );
+System.out.flush();
+        }
+
+        public void put( ListNode<Value> stack )
+            throws WurfelException
+        {
+            if ( function.arity() == 1 )
+                function.applyTo( stack, sink, modelConnection );
+
+            else
+            {
+                Value first = stack.getFirst();
+                ListNode<Value> rest = stack.getRest();
+
+                Closure c = new Closure( function, first );
+
+                sink.put( new ListNode<Value>( c, rest ) );
+            }
+        }
+    }
+
+/*
+    protected class FunctionSink implements Sink<ListNode<Value>>
+    {
         private Sink<ListNode<Value>> sink;
 
         private Function function;
@@ -113,15 +150,17 @@ System.out.flush();
                     stack = stack.push( args.getFirst() );
                     args = args.getRest();
                 }
-                stack = stack.push( first );
+//                stack = stack.push( first );
 
                 function.applyTo( stack, sink, modelConnection );
             }
 
             else
-                reduce( rest, new FunctionSink( this, first ) );
+                sink.put( new ListNode<Value>( new FunctionSink(
+//                evalSink.put( rest, new FunctionSink( this, first ) );
         }
     }
+*/
 
 
     protected class ApplySink implements Sink<ListNode<Value>>
@@ -145,18 +184,20 @@ System.out.flush();
 
             Value first = stack.getFirst();
 
-            if ( first.equals( applyOp ) )
+            if ( isApplyOp( first ) )
             {
                 ListNode<Value> rest = stack.getRest();
 
                 if ( null == rest )
+                    return;
+/*
                 {
                     stack = new ListNode<Value>( first, stack );
                     sink.put( stack );
                 }
-
+*/
                 else
-                    reduce( stack.getRest(), new ApplySink( sink ) );
+                    ( new EvaluatorSink( new ApplySink( sink ) ) ).put( stack.getRest() );
             }
 
             else if ( isFunction( first ) )
@@ -164,10 +205,11 @@ System.out.flush();
                 ListNode<Value> rest = stack.getRest();
 
                 if ( null == rest )
-                    sink.put( stack );
+                    return;
+//                    sink.put( stack );
 
                 else
-                    reduce( rest, new FunctionSink( (Function) first, sink ) );
+                    ( new EvaluatorSink( new FunctionSink( (Function) first, sink ) ) ).put( rest );
             }
 
             else if ( isList( first ) )
@@ -180,10 +222,11 @@ System.out.flush();
                 ListNode<Value> rest = stack.getRest();
 
                 if ( null == rest )
-                    sink.put( stack );
+                    return;
+//                    sink.put( stack );
 
                 else
-                    reduce( rest, new PropertySink( (URI) first, sink ) );
+                    ( new EvaluatorSink( new PropertySink( (URI) first, sink ) ) ).put( rest );
             }
 
             else
@@ -194,6 +237,42 @@ System.out.flush();
 
     ////////////////////////////////////////////////////////////////////////////
 
+
+// TODO: merge this with ApplySink, if possible.
+    protected class EvaluatorSink implements Sink<ListNode<Value>>
+    {
+        Sink<ListNode<Value>> sink;
+
+        public EvaluatorSink( Sink<ListNode<Value>> sink )
+        {
+            this.sink = sink;
+        }
+
+        public void put( ListNode<Value> stack )
+            throws WurfelException
+        {
+System.out.println( "EvaluatorSink put()" );
+System.out.flush();
+            Value first = stack.getFirst();
+System.out.println( "   first = " + first );
+System.out.flush();
+
+            if ( isApplyOp( first ) )
+            {
+                ListNode<Value> rest = stack.getRest();
+
+                if ( null == rest )
+                    return;
+//                    sink.put( stack );
+
+                else
+                    ( new EvaluatorSink( new ApplySink( this ) ) ).put( stack.getRest() );
+            }
+
+            else
+                sink.put( stack );
+        }
+    }
 
     public void reduce( ListNode<Value> stack,
                         Sink<ListNode<Value>> sink,
@@ -206,33 +285,10 @@ System.out.flush();
         model = modelConnection.getModel();
         applyOp = mc.getApplyOp();
 
-        reduce( stack, sink );
+        EvaluatorSink evalSink = new EvaluatorSink( sink );
+        evalSink.put( stack );
     }
 
-// TODO: merge reduce() with ApplySink, if possible.
-// TODO: make reduce() into the put() of a Sink.
-    protected void reduce( ListNode<Value> stack, Sink<ListNode<Value>> sink )
-        throws WurfelException
-    {
-System.out.println( "private void reduce" );
-System.out.flush();
-        Value first = stack.getFirst();
-System.out.println( "   first = " + first );
-System.out.flush();
-
-        if ( first.equals( applyOp ) )
-        {
-            ListNode<Value> rest = stack.getRest();
-
-            if ( null == rest )
-                sink.put( stack );
-            else
-                reduce( stack.getRest(), new ApplySink( sink ) );
-        }
-
-        else
-            sink.put( stack );
-    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

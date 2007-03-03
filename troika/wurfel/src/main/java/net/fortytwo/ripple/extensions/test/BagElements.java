@@ -36,7 +36,7 @@ public class BagElements extends PrimitiveFunction
 
         Iterator<Value> iter = mc.bagValue( head ).iterator();
         while ( iter.hasNext() )
-            sink.put( stack.push( iter.next() ) );
+            sink.put( new ListNode<Value>( iter.next(), stack ) );
     }
 }
 

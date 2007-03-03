@@ -37,8 +37,7 @@ public class Combinator_R extends Combinator
         z = stack.getFirst();
         stack = stack.getRest();
 
-        sink.put( stack
-            .push( x )
+        sink.put( new ListNode<Value>( x, stack )
             .push( z )
             .push( y )
             .push( mc.getApplyOp() )

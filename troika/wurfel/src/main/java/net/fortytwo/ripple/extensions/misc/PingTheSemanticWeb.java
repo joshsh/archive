@@ -92,7 +92,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
         {
             Element child = childIter.next();
             String s = child.getAttributeValue( "url" );
-            sink.put( stack.push( mc.createLiteral( s ) ) );
+            sink.put( new ListNode<Value>( mc.createLiteral( s ), stack ) );
         }
     }
 }

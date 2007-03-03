@@ -1,16 +1,58 @@
+Beau brother Josh .
+
+Beau brother Josh assert/// 
+
+Beau brother Josh assert @@ .
+
+Beau brother @.
+
+Beau mother @ father @.
+
+Beau sister@ mother@.
+
+Beau sister/mother/.
+
+Beau rel:father/ rel:brother/ ?
+
+Beau foaf:knows*2/.
+
+2 3 add//.         --          2 3 //add.
+
+2 3 add!! .
+
+2 3 add$$ .
+
+Beau foaf:knows*2$.
+
+Beau rel:sister p
+
+
+
 
 @prefix rpl:  <http://fortytwo.net/2007/02/ripple#>;
 rdfs:Class rdfs:label rpl:apply;
+
+2 3 K rpl:apply rpl:apply;
+2 3 K S rpl:apply rpl:apply rpl:apply;
+
+
+# rdf:nil /rdfs:type /rdfs:label ?
+# nil/type/label;
+rdf:nil rdf:type rpl:apply rdfs:label rpl:apply;
 
 rpl:apply;
 rpl:apply rpl:apply;
 
 # [ba]
-rpl:apply rpl:apply rpl:apply;
+    rpl:apply rpl:apply rpl:apply;
+    rdf:type rpl:apply rdfs:label rpl:apply;
+
+
+ Class uriToString rpl:apply;
 
 
 
-2 3 K rpl:apply rpl:apply;
+
 
 
 

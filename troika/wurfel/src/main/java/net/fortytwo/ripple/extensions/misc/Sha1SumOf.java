@@ -95,7 +95,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         result = encrypt( a );
 
-        sink.put( stack.push( mc.createLiteral( result ) ) );
+        sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );
     }
 }
 

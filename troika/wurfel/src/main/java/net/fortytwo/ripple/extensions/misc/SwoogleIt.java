@@ -71,7 +71,7 @@ public class SwoogleIt extends PrimitiveFunction
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
                     null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Wurfel.useInference() );
             while ( stmtIter.hasNext() )
-                sink.put( stack.push( stmtIter.next().getSubject() ) );
+                sink.put( new ListNode<Value>( stmtIter.next().getSubject(), stack ) );
             stmtIter.close();
         }
 

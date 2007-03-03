@@ -34,8 +34,7 @@ public class Combinator_K extends Combinator
         y = stack.getFirst();
         stack = stack.getRest();
 
-        sink.put( stack
-            .push( x ) );
+        sink.put( new ListNode<Value>( x, stack ) );
     }
 }
 

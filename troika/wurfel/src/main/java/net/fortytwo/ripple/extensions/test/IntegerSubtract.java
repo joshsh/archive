@@ -39,7 +39,7 @@ public class IntegerSubtract extends PrimitiveFunction
 
         result = a - b;
 
-        sink.put( stack.push( mc.createLiteral( result ) ) );
+        sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );
     }
 }
 

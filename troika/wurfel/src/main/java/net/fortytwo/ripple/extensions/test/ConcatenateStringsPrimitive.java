@@ -39,7 +39,7 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
 
         result = strA + strB;
 
-        sink.put( stack.push( mc.createLiteral( result ) ) );
+        sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );
     }
 }
 

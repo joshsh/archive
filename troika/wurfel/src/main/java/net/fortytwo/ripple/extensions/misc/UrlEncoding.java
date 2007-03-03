@@ -46,7 +46,7 @@ public class UrlEncoding extends PrimitiveFunction
             throw new WurfelException( t );
         }
 
-        sink.put( stack.push( mc.createLiteral( result ) ) );
+        sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );
     }
 }
 

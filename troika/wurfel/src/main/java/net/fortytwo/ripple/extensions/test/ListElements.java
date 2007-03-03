@@ -36,7 +36,7 @@ public class ListElements extends PrimitiveFunction
 
         Iterator<Value> iter = mc.listValue( head ).iterator();
         while ( iter.hasNext() )
-            sink.put( stack.push( iter.next() ) );
+            sink.put( new ListNode<Value>( iter.next(), stack ) );
     }
 }
 

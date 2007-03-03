@@ -137,3 +137,9 @@ time:month ;
 time:second ;
 time:timeZone ;
 time:year ;
+
+
+################################################################################
+
+# Regression tests, e.g.
+<http://www.w3.org/2000/10/swap/test/regression.rdf#t1001>;
