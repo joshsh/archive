@@ -100,68 +100,6 @@ System.out.flush();
         }
     }
 
-/*
-    protected class FunctionSink implements Sink<ListNode<Value>>
-    {
-        private Sink<ListNode<Value>> sink;
-
-        private Function function;
-        private ListNode<Value> arguments;
-        private int arity;
-
-        public FunctionSink( Function function, Sink<ListNode<Value>> sink )
-        {
-            this.function = function;
-            this.sink = sink;
-            arity = function.arity();
-            this.arguments = null;
-System.out.println( "public FunctionSink( Function function, Sink<ListNode<Value>> sink ) -- " + function + ", " + arity );
-System.out.flush();
-        }
-
-        public FunctionSink( FunctionSink other, Value first )
-        {
-            function = other.function;
-            sink = other.sink;
-            arity = other.arity - 1;
-            arguments = new ListNode<Value>( first, other.arguments );
-System.out.println( "public FunctionSink( FunctionSink other, Value first ) -- " + function + ", " + arity );
-System.out.flush();
-        }
-
-        public void put( ListNode<Value> stack )
-            throws WurfelException
-        {
-System.out.println( "( (FunctionSink) " + this + " ).put() -- " + function + ", " + arity );
-System.out.flush();
-            Value first = stack.getFirst();
-System.out.println( "first = " + first );
-System.out.flush();
-            ListNode<Value> rest = stack.getRest();
-
-            if ( 1 == arity )
-            {
-// TODO: this work should only be done once, not once for each application.
-                ListNode<Value> args = arguments;
-                while ( null != args )
-                {
-System.out.println( "move arg" );
-System.out.flush();
-                    stack = stack.push( args.getFirst() );
-                    args = args.getRest();
-                }
-//                stack = stack.push( first );
-
-                function.applyTo( stack, sink, modelConnection );
-            }
-
-            else
-                sink.put( new ListNode<Value>( new FunctionSink(
-//                evalSink.put( rest, new FunctionSink( this, first ) );
-        }
-    }
-*/
-
 
     protected class ApplySink implements Sink<ListNode<Value>>
     {
