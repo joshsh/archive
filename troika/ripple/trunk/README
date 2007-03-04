@@ -92,8 +92,9 @@ sudo cp src/main/resources/wurfel/cli/kate/wurfel.xml /usr/share/apps/katepart/s
 ::::::::::::::::::::::::::::::::::::::::
 
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/wurfel.ttl > ./src/main/resources/wurfel/wurfel.rdf
-rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/test/wurfel-test.ttl > ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
-rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/extensions/misc/wurfel-misc.ttl > ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/test/wurfel-test.ttl > ./src/main/resources/net/fortytwo/ripple/extensions/test/wurfel-test.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/misc/wurfel-misc.ttl > ./src/main/resources/net/fortytwo/ripple/extensions/misc/wurfel-misc.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/newstuff/rpl-new.ttl > ./src/main/resources/net/fortytwo/ripple/extensions/newstuff/rpl-new.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/work/file.ttl > ./src/main/resources/wurfel/work/file.rdf
 rapper -q -i turtle -o rdfxml main/resources/wurfel/work/joshua-shinavier.ttl > main/resources/wurfel/work/joshua-shinavier.rdf
 #rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/xbrl.ttl > ./src/main/resources/wurfel/misc/xbrl.rdf

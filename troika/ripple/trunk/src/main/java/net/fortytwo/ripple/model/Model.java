@@ -72,13 +72,14 @@ Hashtable<String, String> aliases;
     {
         ModelConnection mc = new ModelConnection( this, "for createUrlFactory()" );
 
-        String wurfelNs, wurfelMiscNs, wurfelTestNs;
+        String wurfelNs, wurfelMiscNs, wurfelTestNs, rplNewNs;
 
         try
         {
             wurfelNs = mc.createWurfelUri( "" ).toString();
             wurfelMiscNs = mc.createWurfelMiscUri( "" ).toString();
             wurfelTestNs = mc.createWurfelTestUri( "" ).toString();
+            rplNewNs = "http://fortytwo.net/2007/03/04/rpl-new#";
         }
 
         catch ( WurfelException e )
@@ -101,6 +102,9 @@ Hashtable<String, String> aliases;
         urlMap.put( wurfelMiscNs,
             net.fortytwo.ripple.extensions.misc.MiscExtension.class.getResource(
                 "wurfel-misc.rdf" ) + "#" );
+        urlMap.put( rplNewNs,
+            net.fortytwo.ripple.extensions.newstuff.NewExtension.class.getResource(
+                "rpl-new.rdf" ) + "#" );
 
         return new UrlFactory( urlMap );
     }
@@ -130,6 +134,7 @@ aliases = new Hashtable<String, String>();
 
             ( new net.fortytwo.ripple.extensions.test.TestExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
+            ( new net.fortytwo.ripple.extensions.newstuff.NewExtension() ).load( mc );
         }
 
         catch ( WurfelException e )

@@ -1,0 +1,27 @@
+@prefix wurfel:   <http://fortytwo.net/2007/02/06/wurfel#> .
+@prefix rpl-new:  <http://fortytwo.net/2007/03/04/rpl-new#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+### Integer arithmetic primitives ##############################################
+
+rpl-new:or
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Or{x}{y} --> {x,y}" .
+
+rpl-new:dup
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "/dup x --> x x" .
+
+rpl-new:zap
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "/zap x -->" .
+
+rpl-new:swap
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "//swap x y --> y x" .
