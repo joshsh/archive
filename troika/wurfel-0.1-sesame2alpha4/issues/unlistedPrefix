@@ -1,0 +1,37 @@
+[0] foaf:name
+    rdf:type
+        rdf:Property
+        owl:DatatypeProperty
+    s:subPropertyOf
+        s:label
+    s:range
+        s:Literal
+    s:domain
+        owl:Thing
+    s:comment
+        "A name for some thing."
+    <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status>
+        "testing"
+    s:label
+        "name"
+    s:isDefinedBy
+        foaf:
+
+################# Rebuilding dictionaries.
+########## updating completors
+10 >>  !namespaces ;
+xsd:          http://www.w3.org/2001/XMLSchema#
+wurfel:       urn:net.dnsdojo.troika.wurfel#
+rdfs:         http://www.w3.org/2000/01/rdf-schema#
+rdf:          http://www.w3.org/1999/02/22-rdf-syntax-ns#
+wurfel-test:  urn:net.dnsdojo.troika.wurfel-test#
+swoogle:      http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#
+wurfel-misc:  urn:net.dnsdojo.troika.wurfel-misc#
+dc:           http://purl.org/dc/elements/1.1/
+owl:          http://www.w3.org/2002/07/owl#
+geo:          http://www.w3.org/2003/01/geo/wgs84_pos#
+con:          http://www.w3.org/2000/10/swap/pim/contact#
+foaf:         http://xmlns.com/foaf/0.1/
+wot:          http://xmlns.com/wot/0.1/
+vs:           http://www.w3.org/2003/06/sw-vocab-status/ns#
+11 >>

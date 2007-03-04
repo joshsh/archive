@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="wurfel" default="xpi">
+
+    <property file="${basedir}/build.properties"/>
+
+    <target name="xpi" description="Create the distribution XPI">
+        <mkdir dir="${target}/firefox"/>
+        <zip destfile="${target}/firefox/wurfel.xpi">
+            <zipfileset dir="." includes="chrome/**"/>
+            <zipfileset dir="." includes="components/*.js"/>
+            <zipfileset dir="." includes="components/*.xpt"/>
+            <zipfileset dir="${target}" includes="wurfel-with-dependencies.jar" prefix="components/lib/"/>
+            <zipfileset dir="." includes="components/firefoxClassLoader.jar"/>
+            <zipfileset dir="." includes="components/lib/*.jar"/>
+            <zipfileset dir="." includes="install.rdf" />
+            <zipfileset dir="." includes="chrome.manifest" />
+        </zip>
+    </target>
+
+    <!-- Note: you shouldn't need to do this often. -->
+    <target name="xpt" description="Build nIHelloWorld.xpt">
+        <exec dir="components" executable="${xpidl}" os="Linux">
+            <arg line="-m typelib"/>
+            <arg line="-I ${xpidlInclude}"/>
+            <arg line="nsIHelloWorld.idl"/>
+        </exec>
+    </target>
+
+</project>
+
+<!-- kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on -->

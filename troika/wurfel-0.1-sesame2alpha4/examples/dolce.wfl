@@ -1,0 +1,4 @@
+(: http://wiki.loa-cnr.it/index.php/LoaWiki:Ontologies
+   http://sunsite.informatik.rwth-aachen.de/Publications/CEUR-WS//Vol-201/43.pdf 
+:)
+"http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl" grab;

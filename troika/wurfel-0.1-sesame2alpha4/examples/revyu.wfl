@@ -1,0 +1,39 @@
+
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> ;
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> reviewer;
+
+
+
+(: SPARQL
+
+PREFIX rev: <http://purl.org/stuff/rev#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?thing ?name ?review ?createdOn
+WHERE
+{
+ ?thing rdfs:label ?name .
+ ?thing rev:hasReview ?review .
+ ?review rev:reviewer <people/tom> .
+ ?review rev:createdOn ?createdOn
+}
+
+
+PREFIX rev: <http://purl.org/stuff/rev#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+CONSTRUCT {  ?review rev:reviewer <people/tom> }
+WHERE
+{
+ ?thing rdfs:label ?name .
+ ?thing rev:hasReview ?review .
+ ?review rev:reviewer <people/tom> .
+ ?review rev:createdOn ?createdOn
+}
+
+:)
+
+
+
+
+ba  has no type:
+	tag:associatedTag
+	<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> primaryTopic  tag;

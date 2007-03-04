@@ -1,0 +1,128 @@
+(:
+
+Disco knows Swoogle:
+    http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=http%3A%2F%2Fdaml.umbc.edu%2Fontologies%2Fwebofbelief%2F1.4%2Fswoogle.owl%23hasTermFrequency
+
+:)
+
+!import "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl";
+!import "http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl";
+
+ContainerMembershipProperty
+    uriToString (rel_swt_swt_from ("demo" swoogleIt)) hasResult listElements;
+
+"Ubuntu"
+    (search_swt ("demo" swoogleIt)) hasResult member;
+
+(: search_swd_ontology
+    Search semantic web documents which are classified as ontologies ::::::::::)
+
+"Monkey" (search_swd_ontology ("demo" swoogleIt)) hasResult member;
+
+(: search_swd_all
+   -- Search all semantic web documents :::::::::::::::::::::::::::::::::::::::)
+
+(: search_swt
+   -- Search all semantic web terms :::::::::::::::::::::::::::::::::::::::::::)
+
+"Eider"
+    (search_swt ("demo" swoogleIt)) hasResult member;
+
+(: digest_swd
+   -- Show Swoogle metadata for the present semantic web document and list
+      triples annotating it :::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+(: digest_swt
+   -- Show Swoogle metadata for the present semantic web term and list triples
+      defining it :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+(: [ba] hasResult's object here is a URI, so results bunch up around it :)
+
+"http://xmlns.com/wordnet/1.6/Parakeet"
+    (digest_swt ("demo" swoogleIt))
+    hasResult hasDescriptionIn isUnionOf listElements;
+
+Class uriToString
+    (digest_swt ("demo" swoogleIt))
+    hasResult hasDescriptionIn isUnionOf listElements;
+
+(: digest_ns
+   -- Show Swoogle metadata for the present semantic web namespace ::::::::::::)
+(: [ba] hasResult's object here is a URI, so results bunch up around it :)
+
+"http://xmlns.com/wordnet/1.6/"
+    (digest_ns ("demo" swoogleIt))
+    hasResult hasDescriptionIn isUnionOf listElements;
+
+(: rel_swd_swd_from
+   -- List semantic web documents linked by the present semantic web document :)
+
+(: rel_swd_swd_to
+   -- List semantic web documents linking to the present semantic web document
+      :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+(: rel_swd_swt
+   -- List semantic web terms defined/referenced/populated by the present
+      semantic web document :::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+(: rel_swd_ns
+   -- List semantic web namespaces used by the present semantic web document ::)
+
+(: rel_ns_swt
+   -- List semantic web terms using  the present namespace ::::::::::::::::::::)
+
+(: rel_ns_swd
+   -- List semantic web documents using the present namespace :::::::::::::::::)
+
+(: rel_swt_swd
+   -- List semantic web documents defining/referencing/populating the present
+      semantic web term :::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+(: rel_swt_swt_from
+   -- List triples contributing definition of the present semantic web term :::)
+
+"http://xmlns.com/wordnet/1.6/Parakeet"
+    (rel_swt_swt_from ("demo" swoogleIt))
+    hasResult listElements;
+
+(: rel_swt_swt_to
+   -- List semantic web terms whose definition depends on the present semantic
+      web term ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+"http://xmlns.com/wordnet/1.6/Parakeet"
+    (rel_swt_swt_to ("demo" swoogleIt))
+    hasResult listElements;
+
+(: rel_swd_instance_domain_p2c
+   -- List semantic web terms which are used as the "rdfs:domain" of the present
+      semantic web in class-instances :::::::::::::::::::::::::::::::::::::::::)
+
+(: rel_swd_instance_domain_c2p
+   -- List semantic web terms which use the present semantic web term as their
+      "rdfs:domain" in class-instances ::::::::::::::::::::::::::::::::::::::::)
+
+(: rel_swd_instance_range_p2c
+   -- List semantic web terms which are used as the "rdfs:range" of the present
+      semantic web in class-instances :::::::::::::::::::::::::::::::::::::::::)
+
+(: rel_swd_instance_range_c2p
+   -- List semantic web terms which use the present semantic web term as their
+      "rdfs:range" in class-instances :::::::::::::::::::::::::::::::::::::::::)
+
+(::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+
+
+
+
+(:
+Parakeet.uriToString rel_swt_swt_from "demo" .swoogleIt.hasResult.listElements ;
+
+Parakeet/uriToString rel_swt_swt_from "demo" /swoogleIt/hasResult/listElements ;
+
+
+Beau/?sibling/parent
+
+Beau.?sibling.parent
+
+Beau/parent/!father  ==  Beau (/parent/!father)
+:)
