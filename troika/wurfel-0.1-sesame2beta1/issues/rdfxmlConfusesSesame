@@ -1,0 +1,15 @@
+The offending FOAF file:
+    <http://web.mit.edu/hmslydia/Public/foaf.rdf#hmslydia>
+
+He knows her, but as soon as her graph is dereferenced, the parser is useless (with the same ModelConnection):
+	<http://people.csail.mit.edu/crowell/foaf.rdf#crowell>
+
+
+We never see his info:
+	<http://web.mit.edu/dsheets/www/foaf.rdf#dsheets>
+
+When querying:
+	<http://people.csail.mit.edu/crowell/foaf.rdf#crowell>;
+	<http://people.csail.mit.edu/crowell/foaf.rdf#crowell> knows;
+	@serql "CONSTRUCT * FROM {x} p {y}";
+	@quit;

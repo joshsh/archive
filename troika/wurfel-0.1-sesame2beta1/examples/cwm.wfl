@@ -1,0 +1,139 @@
+(: See: http://www.w3.org/2000/10/swap/doc/ :)
+
+# Cwm Reason Ontology ##########################################################
+
+<http://www.w3.org/2000/10/swap/reason#Binding> ;
+<http://www.w3.org/2000/10/swap/reason#CommandLine> ;
+<http://www.w3.org/2000/10/swap/reason#Conjunction> ;
+<http://www.w3.org/2000/10/swap/reason#Extraction> ;
+<http://www.w3.org/2000/10/swap/reason#Inference> ;
+<http://www.w3.org/2000/10/swap/reason#Parsing> ;
+<http://www.w3.org/2000/10/swap/reason#Proof> ;
+<http://www.w3.org/2000/10/swap/reason#Step> ;
+<http://www.w3.org/2000/10/swap/reason#args> ;
+<http://www.w3.org/2000/10/swap/reason#because> ;
+<http://www.w3.org/2000/10/swap/reason#boundTo> ;
+<http://www.w3.org/2000/10/swap/reason#component> ;
+<http://www.w3.org/2000/10/swap/reason#evidence> ;
+<http://www.w3.org/2000/10/swap/reason#gives> ;
+<http://www.w3.org/2000/10/swap/reason#rule> ;
+<http://www.w3.org/2000/10/swap/reason#source> ;
+<http://www.w3.org/2000/10/swap/reason#variable> ;
+
+# Cwm built-in functions #######################################################
+
+@prefix crypto: <http://www.w3.org/2000/10/swap/crypto#>;
+
+crypto:CanEncrypt ;
+crypto:CanSign ;
+crypto:HasPrivate ;
+crypto:HashFunction ;
+crypto:PublicKeyObject ;
+crypto:md5 ;
+crypto:publicKey ;
+crypto:sha ;
+crypto:sign ;
+crypto:verify ;
+crypto:verifyBoolean ;
+
+@prefix list: <http://www.w3.org/2000/10/swap/list#>;
+
+list:in ;
+list:last ;
+
+@prefix log: <http://www.w3.org/2000/10/swap/log#>;
+
+log:Chaff ;
+log:N3Document ;
+log:Truth ;
+log:conclusion ;
+log:conjunction ;
+log:content ;
+log:definitiveDocument ;
+log:definitiveService ;
+log:dtlit ;
+log:equalTo ;
+log:implies ;
+log:includes ;
+log:n3String ;
+log:notEqualTo ;
+log:notIncludes ;
+log:outputString ;
+log:parsedAsN3 ;
+log:rawType ;
+log:rawUri ;
+log:semantics ;
+log:semanticsOrError ;
+log:uri ;
+
+@prefix math: <http://www.w3.org/2000/10/swap/math#>;
+
+math:Function ;
+math:List ;
+math:LogicalOperator ;
+math:ReverseFunction ;
+math:TwoMemberedList ;
+math:Value ;
+math:absoluteValue ;
+math:atan2 ;
+math:cos ;
+math:degrees ;
+math:difference ;
+math:equalTo ;
+math:exponentiation ;
+math:greaterThan ;
+math:integerQuotient ;
+math:lessThan ;
+math:memberCount ;
+math:negation ;
+math:notEqualTo ;
+math:notGreaterThan ;
+math:notlessThan ;
+math:product ;
+math:quotient ;
+math:remainder ;
+math:rounded ;
+math:sin ;
+math:sinh ;
+math:sum ;
+math:tan ;
+math:tanh ;
+
+@prefix os: <http://www.w3.org/2000/10/swap/os#>;
+
+os:argv ;
+os:baseAbsolute ;
+os:baseRelative ;
+os:environ ;
+
+@prefix string: <http://www.w3.org/2000/10/swap/string#>;
+
+string:concat ;
+string:concatenation ;
+string:contains ;
+string:containsIgnoringCase ;
+string:endsWith ;
+string:equalIgnoringCase ;
+string:greaterThan ;
+string:lessThan ;
+string:matches ;
+string:notEqualIgnoringCase ;
+string:notGreaterThan ;
+string:notLessThan ;
+string:notMatches ;
+string:scrape ;
+string:startsWith ;
+
+@prefix time: <http://www.w3.org/2000/10/swap/time#>;
+
+time:day ;
+time:dayOfWeek ;
+time:gmTime ;
+time:hour ;
+time:inSeconds ;
+time:localTime ;
+time:minute ;
+time:month ;
+time:second ;
+time:timeZone ;
+time:year ;

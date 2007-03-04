@@ -1,0 +1,20 @@
+"http://kashori.com/ontology/indexicals.owl" grab;
+
+(:
+[from: Bernard Vatant]
+The URI is the signifier.
+The RDF description (of the resource identified by this URI) is the
+signified.
+The thing identified by the URI, and/or described by a RDF description,
+is the referent.
+
+[from: Joshua Tauberer]
+I think one of the major benefits of RDF is that applications completely
+oblivious to any schemas can still at least make one conclusion about
+URIs, which is that if two documents use the same URI, they are
+referring to the same thing.  Context-dependent URIs break this.  It
+might be fine in some cases, but in general it would break the principle
+that <indexicals.owl#I> refers to the very same thing no matter where it
+appears.
+
+:)

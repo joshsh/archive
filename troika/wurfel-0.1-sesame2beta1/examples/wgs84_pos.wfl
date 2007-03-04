@@ -1,0 +1,9 @@
+@prefix wgs84_pos:  <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+
+wgs84_pos: ;
+wgs84_pos:Point ;
+wgs84_pos:SpatialThing ;
+wgs84_pos:alt ;
+wgs84_pos:lat ;
+wgs84_pos:lat_long ;
+wgs84_pos:long ;

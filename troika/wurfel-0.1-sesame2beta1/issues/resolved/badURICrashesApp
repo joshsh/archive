@@ -1,0 +1,5 @@
+1 >>  <sws.geonames.org/3213806/>;
+
+Error: java.lang.IllegalArgumentException: Not a valid (absolute) URI: sws.geonames.org/3213806/
+
+[joshs@localhost wurfel]$ 
