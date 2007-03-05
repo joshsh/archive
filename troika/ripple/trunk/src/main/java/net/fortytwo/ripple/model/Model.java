@@ -232,7 +232,7 @@ public Repository getRepository()
     }
 
 // TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
-    public Set<Value> multiply( Value arg, Value func, ModelConnection mc )
+    public Collection<Value> multiply( Value arg, Value func, ModelConnection mc )
         throws WurfelException
     {
         arg = translateToGraph( arg );
@@ -252,7 +252,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
         }
 
         Iterator<Value> resultIter = rdfMultiply( arg, func, mc.getRepositoryConnection() ).iterator();
-        Set<Value> result = new Container();
+        Collection<Value> result = new Container();
         while ( resultIter.hasNext() )
         {
             Value v = resultIter.next();

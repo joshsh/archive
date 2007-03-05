@@ -7,7 +7,7 @@ import wurfel.WurfelException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class LazyStackEvaluator extends Evaluator
+public class EagerStackEvaluator extends Evaluator
 {
     private Model model;
     private ModelConnection modelConnection;
@@ -47,24 +47,23 @@ public class LazyStackEvaluator extends Evaluator
         {
             this.property = property;
             this.sink = sink;
-System.out.println( "public PropertySink -- " + property );
-System.out.flush();
+System.out.println( this + "( " + property + ", " + sink + " )" );
+//System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
-System.out.println( "( (PropertySink) " + property + " ).put()" );
-System.out.flush();
+System.out.println( this + ".put( " + stack + " )" );
+//System.out.flush();
+System.out.println( "   first = " + stack.getFirst() );
+//System.out.flush();
             Value first = stack.getFirst();
             ListNode<Value> rest = stack.getRest();
 
             Iterator<Value> objects = model.multiply( first, property, modelConnection ).iterator();
             while ( objects.hasNext() )
-                if ( null == rest )
-                    sink.put( new ListNode<Value>( objects.next() ) );
-                else
-                    sink.put( rest.push( objects.next() ) );
+                sink.put( new ListNode<Value>( objects.next(), rest ) );
         }
     }
 
@@ -78,13 +77,18 @@ System.out.flush();
         {
             this.function = function;
             this.sink = sink;
-System.out.println( "public FunctionSink( " + function + ", " + sink + ")" );
-System.out.flush();
+System.out.println( this + "( " + function + ", " + sink + ")" );
+System.out.println( "function.arity() = " + function.arity() );
+//System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
+System.out.println( this + ".put( " + stack + " )" );
+//System.out.flush();
+System.out.println( "   first = " + stack.getFirst() );
+//System.out.flush();
             if ( function.arity() == 1 )
                 function.applyTo( stack, sink, modelConnection );
 
@@ -108,15 +112,17 @@ System.out.flush();
         public ApplySink( Sink<ListNode<Value>> sink )
         {
             this.sink = sink;
-System.out.println( "public ApplySink" );
-System.out.flush();
+System.out.println( this + "( " + sink + ")" );
+//System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
-System.out.println( "( (ApplySink) " + this + " ).put()" );
-System.out.flush();
+System.out.println( this + ".put( " + stack + " )" );
+//System.out.flush();
+System.out.println( "   first = " + stack.getFirst() );
+//System.out.flush();
 //        if ( null == stack )
 //            return;
 
@@ -183,17 +189,19 @@ System.out.flush();
 
         public EvaluatorSink( Sink<ListNode<Value>> sink )
         {
-            this.sink = sink;
+           this.sink = sink;
+System.out.println( this + "( " + sink + ")" );
+//System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws WurfelException
         {
-System.out.println( "EvaluatorSink put()" );
-System.out.flush();
+System.out.println( this + ".put( " + stack + " )" );
+//System.out.flush();
             Value first = stack.getFirst();
-System.out.println( "   first = " + first );
-System.out.flush();
+System.out.println( "   first = " + stack.getFirst() );
+//System.out.flush();
 
             if ( isApplyOp( first ) )
             {
@@ -218,7 +226,7 @@ System.out.flush();
         throws WurfelException
     {
 System.out.println( "public void reduce" );
-System.out.flush();
+//System.out.flush();
         modelConnection = mc;
         model = modelConnection.getModel();
         applyOp = mc.getApplyOp();

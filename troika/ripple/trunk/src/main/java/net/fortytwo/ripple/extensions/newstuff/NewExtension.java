@@ -21,9 +21,14 @@ public class NewExtension extends Extension
         throws WurfelException
     {
         Function[] functions = {
+            new IntegerGreaterThan( mc ),
+            new IntegerLessThan( mc ),
+            new True( mc ),
+            new False( mc ),
             new Or( mc ),
             new Dup( mc ),
             new Zap( mc ),
+            new Scrap( mc ),
             new Swap( mc ) };
 
         return functions;

@@ -9,6 +9,24 @@
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#or">
     <rdfs:comment>Or{x}{y} --&gt; {x,y}</rdfs:comment>
   </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#true">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#true">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#true">
+    <rdfs:comment>b a true// --&gt; a</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#false">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#false">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#false">
+    <rdfs:comment>b a false// --&gt; b</rdfs:comment>
+  </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#dup">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
@@ -17,6 +35,24 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#dup">
     <rdfs:comment>/dup x --&gt; x x</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
+    <rdfs:comment>/scrap x --&gt;</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
+    <rdfs:comment>//swap x y --&gt; y x</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#zap">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
@@ -27,13 +63,82 @@
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#zap">
     <rdfs:comment>/zap x --&gt;</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
-    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterName>intA</wurfel:parameterName>
   </rdf:Description>
-  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
-    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
-    <rdfs:comment>//swap x y --&gt; y x</rdfs:comment>
+  <rdf:Description rdf:nodeID="genid1">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <wurfel:parameterName>intB</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid2">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <rdf:first rdf:nodeID="genid2"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <rdf:first rdf:nodeID="genid1"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <rdf:rest rdf:nodeID="genid3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#integer-greaterThan">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#integer-greaterThan">
+    <wurfel:returnType rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#integer-greaterThan">
+    <wurfel:parameters rdf:nodeID="genid4"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid5">
+    <wurfel:parameterName>intA</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid5">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid5">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid6">
+    <wurfel:parameterName>intB</wurfel:parameterName>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid6">
+    <wurfel:parameterType rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid6">
+    <wurfel:parameterTransparency rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</wurfel:parameterTransparency>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid7">
+    <rdf:first rdf:nodeID="genid6"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid7">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid8">
+    <rdf:first rdf:nodeID="genid5"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid8">
+    <rdf:rest rdf:nodeID="genid7"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#integer-lessThan">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#PrimitiveFunction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#integer-lessThan">
+    <wurfel:returnType rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#integer-lessThan">
+    <wurfel:parameters rdf:nodeID="genid8"/>
   </rdf:Description>
 </rdf:RDF>

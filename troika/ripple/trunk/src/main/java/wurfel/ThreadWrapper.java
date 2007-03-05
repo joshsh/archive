@@ -16,7 +16,7 @@ public abstract class ThreadWrapper
         final Object monitorObj = "";
         final ThreadWrapper tw = this;
 
-        new Thread( new Runnable() {
+        Thread t = new Thread( new Runnable() {
             public void run()
             {
                 try
@@ -35,23 +35,37 @@ public abstract class ThreadWrapper
                     monitorObj.notify();
                 }
             }
-        } ).start();
+        } );
+
+        t.start();
 
         try
         {
             synchronized( monitorObj )
             {
                 if ( timeout > 0 )
+{
+System.out.println( "wait(" + timeout + ")" );
                     monitorObj.wait( timeout );
+}
                 else
+{
                     monitorObj.wait();
+System.out.println( "wait()" );
+}
+System.out.println( "done! #####################" ); System.out.flush();
             }
+
+            if ( !finished )
+                t.interrupt();
         }
 
         catch ( InterruptedException e )
         {
+System.out.println( "catch ( InterruptedException e )" ); System.out.flush();
             throw new WurfelException( e );
         }
+System.out.println( "finished = " + finished );
 
         if ( !finished )
             throw new WurfelException( "operation timed out" );

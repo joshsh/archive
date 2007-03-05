@@ -28,6 +28,8 @@ Beau rel:sister p
 
 
 
+2 dup/ integer-add//;
+
 
 @prefix rpl:  <http://fortytwo.net/2007/02/ripple#>;
 rdfs:Class rdfs:label rpl:apply;

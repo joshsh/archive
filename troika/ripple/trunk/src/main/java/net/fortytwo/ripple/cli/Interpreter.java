@@ -39,7 +39,7 @@ import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.LazyEvaluator;
-import net.fortytwo.ripple.model.LazyStackEvaluator;
+import net.fortytwo.ripple.model.EagerStackEvaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
@@ -118,7 +118,7 @@ public Model getModel()
                 break;
 
             case COMPOSITIONAL:
-                evaluator = new LazyStackEvaluator();
+                evaluator = new EagerStackEvaluator();
                 break;
         }
 //        evaluator = new DebugEvaluator( new LazyEvaluator( model ) );
@@ -286,9 +286,9 @@ System.out.println( "--- 1 ---" );
             // parser instance once a parsing error puts them in a weird
             // state (unless we want to go to the trouble of recovering from
             // it, at any rate).
-            WurfelLexer lexer = new WurfelLexer( writeIn );
+            RippleLexer lexer = new RippleLexer( writeIn );
             lexer.initialize( this );
-            WurfelParser parser = new WurfelParser( lexer );
+            RippleParser parser = new RippleParser( lexer );
             parser.initialize( this );
 System.out.println( "--- 2 ---" );
 
@@ -467,6 +467,9 @@ System.out.println( "--- 3 ---" );
         while ( iter.hasNext() )
         {
             Value value = iter.next();
+if ( value instanceof ListNode )
+value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
+
             if ( value instanceof URI )
             {
                 try

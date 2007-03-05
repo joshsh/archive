@@ -36,6 +36,7 @@ public class ListNode<T> extends Node
 
     public boolean equals( ListNode<T> other )
     {
+System.out.println( this + ".equals( " + other + " )" );
         ListNode thisCur = this;
         ListNode otherCur = other;
 

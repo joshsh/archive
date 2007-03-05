@@ -54,6 +54,9 @@ public class ContainerTreeView implements Observer
 
         if ( depth > 0 )
         {
+if ( subject instanceof net.fortytwo.ripple.model.ListNode )
+subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
+
             if ( subject instanceof Resource )
             {
                 Set<URI> predicates = mc.getPredicates( (Resource) subject );
@@ -71,8 +74,7 @@ public class ContainerTreeView implements Observer
                     ps.print( predicate );
                     ps.print( "\n" );
 
-                    Set<Value> objects = valueSet.getModel().multiply( subject, predicate, mc );
-                    Iterator<Value> objIter = objects.iterator();
+                    Iterator<Value> objIter = valueSet.getModel().multiply( subject, predicate, mc ).iterator();
 
                     while ( objIter.hasNext() )
                         printTreeView( objIter.next(), depth - 1, wsPrefix, mc );

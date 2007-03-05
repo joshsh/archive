@@ -841,27 +841,37 @@ showUrlConnection( urlConn );
             throw new WurfelException( e );
         }
 
-        final URLConnection urlConnFinal = urlConn;
+        try
+        {
+            urlConn.connect();
+        }
 
-        new ThreadWrapper() {
-            protected void run() throws WurfelException
-            {
-                try
-                {
-                    urlConnFinal.connect();
-                }
-
-                catch ( IOException e )
-                {
-                    throw new WurfelException( e );
-                }
-            }
-        }.start( Wurfel.uriDereferencingTimeout() );
+        catch ( IOException e )
+        {
+            throw new WurfelException( e );
+        }
 
         return urlConn;
     }
 
+
     public void addGraph( final URL url, final URI baseURI )
+        throws WurfelException
+    {
+        // Wrap the entire operation in the timeout wrapper, as there are various
+        // pieces which are capable of hanging:
+        //     urlConn.connect()
+        //     urlConn.getContentType()
+        new ThreadWrapper() {
+            protected void run() throws WurfelException
+            {
+                addGraphPrivate( url, baseURI );
+            }
+        }.start( Wurfel.uriDereferencingTimeout() );
+    }
+
+
+    private void addGraphPrivate( final URL url, final URI baseURI )
         throws WurfelException
     {
         s_logger.info( "Importing model " + url.toString() +

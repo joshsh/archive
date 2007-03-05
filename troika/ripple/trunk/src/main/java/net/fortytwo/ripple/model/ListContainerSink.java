@@ -16,6 +16,8 @@ public class ListContainerSink extends Container implements Sink<ListNode<Value>
     public void put( ListNode<Value> v )
         throws WurfelException
     {
+System.out.println( this + ".put( " + v + " )" );
+//System.out.flush();
         add( v );
     }
 }

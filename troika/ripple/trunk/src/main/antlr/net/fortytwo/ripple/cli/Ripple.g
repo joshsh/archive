@@ -11,18 +11,21 @@ import net.fortytwo.ripple.cli.ast.DoubleNode;
 import net.fortytwo.ripple.cli.ast.IntNode;
 import net.fortytwo.ripple.cli.ast.NameNode;
 import net.fortytwo.ripple.cli.ast.NullNode;
+import net.fortytwo.ripple.cli.ast.OperatorNode;
 import net.fortytwo.ripple.cli.ast.QNameNode;
 import net.fortytwo.ripple.cli.ast.StringNode;
 import net.fortytwo.ripple.cli.ast.SequenceNode;
 import net.fortytwo.ripple.cli.ast.TypedLiteralNode;
 import net.fortytwo.ripple.cli.ast.UriNode;
+import net.fortytwo.ripple.model.Operator;
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-class WurfelLexer extends Lexer;
+class RippleLexer extends Lexer;
 
 options
 {
@@ -46,8 +49,8 @@ options
 //        throws Exception
     {
         if ( null == interpreter )
-//            throw new Exception( "WurfelLexer has no caller to receive an event" );
-            System.err.println( "WurfelLexer instance has not been initialized" );
+//            throw new Exception( "RippleLexer has no caller to receive an event" );
+            System.err.println( "RippleLexer instance has not been initialized" );
 
         else if ( !interpreter.readLine() )
             throw new ParserQuitException();
@@ -123,6 +126,9 @@ URI
     ;
 
 
+OP_APPLY
+    : '/'
+    ;
 
 
 protected
@@ -220,8 +226,8 @@ AND options
 OR
 options { paraphrase = "disjunction"; } : '|' ;
 
-SLASH
-options { paraphrase = "exclusion"; } : '/' ;
+//SLASH
+//options { paraphrase = "exclusion"; } : '/' ;
 
 PLUS
 options { paraphrase = "plus quantifier"; } : '+' ;
@@ -263,7 +269,7 @@ TERM_DRTV        : DIRECTIVE_HEAD ( "term"          | "t" ) ;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-class WurfelParser extends Parser;
+class RippleParser extends Parser;
 options
 {
     k = 1;
@@ -317,16 +323,21 @@ nt_Sequence returns [ SequenceNode s ]
 }
     : i=nt_Item
 
-      ( (WS ~(SEMI)) => ( WS s=nt_Sequence )
-        {
-            s.push( i );
-        }
-      |
-        {
-            s = new SequenceNode();
-            s.push( i );
-        }
+      ( ( WS ~(SEMI) ) => ( WS s=nt_Sequence )
+      | ( L_PAREN | OP_APPLY ) => ( s=nt_Sequence )
+      | { s = new SequenceNode(); }
       )
+        {
+            s.push( i );
+        }
+    ;
+
+
+nt_Operator returns [ OperatorNode r ]
+{
+    r = null;
+}
+    : OP_APPLY { r = new OperatorNode( Operator.APPLY ); }
     ;
 
 
@@ -339,6 +350,7 @@ nt_Item returns [ Ast r ]
     | r=nt_ParenthesizedExpression
     | r=nt_QuantifiedItem
     | r=nt_IndexExpression
+    | r=nt_Operator
     ;
 
 
@@ -357,7 +369,7 @@ nt_QuantifiedItem returns [ Ast r ]
     : DOT r=nt_Item
     | AND r=nt_Item
     | OR r=nt_Item
-    | SLASH r=nt_Item
+//    | SLASH r=nt_Item
     | CHOICE r=nt_Item
     | STAR r=nt_Item
     | PLUS r=nt_Item

@@ -1,11 +1,12 @@
 package net.fortytwo.ripple.model;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
+//import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import org.openrdf.model.Value;
 
-public class Container extends LinkedHashSet<Value>
+public class Container extends LinkedList<Value>//LinkedHashSet<Value>
 {
     public Container()
     {

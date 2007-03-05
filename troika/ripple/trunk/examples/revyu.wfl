@@ -47,3 +47,48 @@ WHERE
 ba  has no type:
 	tag:associatedTag
 	<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> primaryTopic  tag;
+
+
+
+
+
+
+
+
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> rev:reviewer/ made/ rev:rating/;
+
+# Tom's 5-star reviews:
+<http://revyu.com/people/tom> made/ dup/ rev:rating/ 4 integer-lessThan// scrap I V/// /;
+
+# Just the labels:
+<http://revyu.com/people/tom> made/ dup/ rev:rating/ 4 integer-lessThan// scrap I V/// / rdfs:label/;
+
+# turkeysOnly :=
+dup/ rev:rating/ 2 integer-greaterThan// scrap I V/// /;
+<http://revyu.com/people/tom> made/ dup/ rev:rating/ 2 integer-greaterThan// scrap I V/// /;
+
+dup/ rev:rating/ 4 integer-lessThan// scrap I V/// /
+
+stars := 
+
+4 dup //swap
+dup 4 
+dup / 4 swap //
+
+x x 4 swap//
+x 4 x rev:rating/ integer-greaterThan// scrap I V/// /
+
+
+
+x (4 integer-lessThan//) screen//
+
+
+x 5 minStars//;
+
+
+
+########################################
+
+x 3 /minStars 4 /maxStars /label.
+
+<http://revyu.com/people/tom> /made/dup/rev:rating 4 /integer-lessThan scrap I /V / /rdfs:label;

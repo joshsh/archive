@@ -4,24 +4,69 @@
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
-### Integer arithmetic primitives ##############################################
+################################################################################
 
 rpl-new:or
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 2 ;
   rdfs:comment "Or{x}{y} --> {x,y}" .
 
+################################################################################
+
+rpl-new:true
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "b a true// --> a" .
+
+rpl-new:false
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "b a false// --> b" .
+
+################################################################################
+
 rpl-new:dup
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 1 ;
   rdfs:comment "/dup x --> x x" .
+
+rpl-new:scrap
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "/scrap x -->" .
+
+rpl-new:swap
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "//swap x y --> y x" .
 
 rpl-new:zap
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 1 ;
   rdfs:comment "/zap x -->" .
 
-rpl-new:swap
-  rdfs:type wurfel:Combinator ;
-  wurfel:combinatorArity 2 ;
-  rdfs:comment "//swap x y --> y x" .
+################################################################################
+
+rpl-new:integer-greaterThan
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType wurfel:Combinator ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
+
+rpl-new:integer-lessThan
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType wurfel:Combinator ;
+  wurfel:parameters (
+      [ wurfel:parameterName "intA" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+      [ wurfel:parameterName "intB" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+  ) .
