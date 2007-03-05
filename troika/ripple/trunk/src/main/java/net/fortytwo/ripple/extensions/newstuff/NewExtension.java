@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
-import wurfel.Extension;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Extension;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
@@ -18,7 +18,7 @@ public class NewExtension extends Extension
     }
 
     protected Function[] getFunctions( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Function[] functions = {
             new IntegerGreaterThan( mc ),

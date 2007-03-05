@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.URI;
@@ -19,11 +19,11 @@ public class TypedLiteralNode extends Ast
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Value typeValue = type.evaluate( itp, mc );
         if ( null == typeValue || !( typeValue instanceof URI ) )
-            throw new WurfelException( "badly typed literal" );
+            throw new RippleException( "badly typed literal" );
 
         return mc.createLiteral( value, (URI) typeValue );
     }

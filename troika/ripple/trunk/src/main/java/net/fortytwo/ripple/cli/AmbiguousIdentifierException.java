@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.cli;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Value;
 

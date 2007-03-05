@@ -31,9 +31,9 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.repository.RepositoryResult;
 
-import wurfel.ThreadWrapper;
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.ThreadWrapper;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 public class ModelConnection
 {
@@ -47,7 +47,7 @@ public class ModelConnection
     ////////////////////////////////////////////////////////////////////////////
 
     private void constructPrivate( Model model )
-        throws WurfelException
+        throws RippleException
     {
         this.model = model;
 
@@ -61,7 +61,7 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         add( this );
@@ -70,13 +70,13 @@ public class ModelConnection
     }
 
     public ModelConnection( Model model )
-        throws WurfelException
+        throws RippleException
     {
         constructPrivate( model );
     }
 
     public ModelConnection( Model model, final String name )
-        throws WurfelException
+        throws RippleException
     {
         this.name = name;
         constructPrivate( model );
@@ -100,7 +100,7 @@ public class ModelConnection
     }
 
     public void close()
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -112,7 +112,7 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         remove( this );
@@ -156,7 +156,7 @@ public class ModelConnection
     ////////////////////////////////////////////////////////////////////////////
 
     public Collection<Value> findProduct( Value arg, Value func )
-        throws WurfelException
+        throws RippleException
     {
 //        Apply a = new Apply( func, arg );
 //        return reduce( a );
@@ -164,17 +164,17 @@ public class ModelConnection
     }
 
     public Value findUniqueProduct( Value arg, Value func )
-        throws WurfelException
+        throws RippleException
     {
         Collection<Value> results = findProduct( arg, func );
 
         if ( 1 != results.size() )
         {
             if ( 0 == results.size() )
-                throw new WurfelException( "no values resolved for " + func.toString() + " of " + arg.toString() );
+                throw new RippleException( "no values resolved for " + func.toString() + " of " + arg.toString() );
 
             else
-                throw new WurfelException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
+                throw new RippleException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
         }
 
         else
@@ -182,41 +182,41 @@ public class ModelConnection
     }
 
     public Resource castToResource( Value v )
-        throws WurfelException
+        throws RippleException
     {
         if ( v instanceof Resource )
             return (Resource) v;
         else
-            throw new WurfelException( "value " + v.toString() + " is not a Resource" );
+            throw new RippleException( "value " + v.toString() + " is not a Resource" );
     }
 
     public URI castToUri( Value v )
-        throws WurfelException
+        throws RippleException
     {
         if ( v instanceof URI )
             return (URI) v;
 
         else
-            throw new WurfelException( "value " + v.toString() + " is not a URI" );
+            throw new RippleException( "value " + v.toString() + " is not a URI" );
     }
 
     public Literal castToLiteral( Value v )
-        throws WurfelException
+        throws RippleException
     {
         if ( v instanceof Literal )
             return (Literal) v;
 
         else
-            throw new WurfelException( "value " + v.toString() + " is not a Literal" );
+            throw new RippleException( "value " + v.toString() + " is not a Literal" );
     }
 
     public boolean booleanValue( Literal l )
-        throws WurfelException
+        throws RippleException
     {
 /*
         URI type = lit.getDatatype();
         if ( !type.equals( XMLSchema.BOOLEAN ) )
-            throw new WurfelException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
+            throw new RippleException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
 */
 
         String label = l.getLabel();
@@ -225,12 +225,12 @@ public class ModelConnection
     }
 
     public int intValue( Literal l )
-        throws WurfelException
+        throws RippleException
     {
 /*
         URI type = l.getDatatype();
         if ( !type.equals( XMLSchema.INTEGER ) )
-            throw new WurfelException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
+            throw new RippleException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
 */
 
         String label = l.getLabel();
@@ -241,18 +241,18 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public String stringValue( Literal l )
-        throws WurfelException
+        throws RippleException
     {
         return l.getLabel();
     }
 
     public List<Value> listValue( final Resource listHead )
-        throws WurfelException
+        throws RippleException
     {
         List<Value> list = new ArrayList<Value>();
 
@@ -271,7 +271,7 @@ public class ModelConnection
 
 
     public Collection<Value> bagValue( final Resource head )
-        throws WurfelException
+        throws RippleException
     {
         Collection<Value> results = new Container();
 
@@ -296,7 +296,7 @@ public class ModelConnection
         // Warning: the RepositoryResult may be left open.
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return results;
@@ -307,7 +307,7 @@ public class ModelConnection
 
 /*
     public Set<Resource> getSubjects()
-        throws WurfelException
+        throws RippleException
     {
         Set<Resource> subjects = new HashSet<Resource>();
 
@@ -316,7 +316,7 @@ public class ModelConnection
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
 //                    null, null, null, model, includeInferred );
-                    null, null, null, Wurfel.useInference() );
+                    null, null, null, Ripple.useInference() );
             while ( stmtIter.hasNext() )
                 subjects.add( stmtIter.next().getSubject() );
             stmtIter.close();
@@ -324,7 +324,7 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return subjects;
@@ -332,7 +332,7 @@ public class ModelConnection
 */
 
     public Set<URI> getPredicates( Resource subject )
-        throws WurfelException
+        throws RippleException
     {
         Set<URI> predicates = new HashSet<URI>();
 
@@ -341,7 +341,7 @@ public class ModelConnection
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
 //                    subject, null, null, model, includeInferred );
-                    subject, null, null, Wurfel.useInference() );
+                    subject, null, null, Ripple.useInference() );
             while ( stmtIter.hasNext() )
                 predicates.add( stmtIter.next().getPredicate() );
             stmtIter.close();
@@ -349,14 +349,14 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return predicates;
     }
 
     public void addStatement( Value subj, Value pred, Value obj )
-        throws WurfelException
+        throws RippleException
     {
         Resource subjResource = castToResource( subj );
         URI predUri = castToUri( pred );
@@ -369,12 +369,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public void addStatement( Resource subj, URI pred, Value obj, Resource context )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -383,14 +383,14 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     public URI createUri( final String s )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -399,12 +399,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public URI createUri( final String ns, final String s )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -413,12 +413,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public URI createUri( final URI ns, final String s )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -427,12 +427,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Literal createLiteral( final String s )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -441,12 +441,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Literal createLiteral( final String s, final String language )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -455,12 +455,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Literal createLiteral( final String s, final URI dataType )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -469,12 +469,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Literal createLiteral( final boolean b )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -483,12 +483,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Literal createLiteral( final int i )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -497,12 +497,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Literal createLiteral( final double d )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -511,12 +511,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public BNode createBNode()
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -525,12 +525,12 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public BNode createBNode( final String id )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -539,7 +539,7 @@ public class ModelConnection
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
@@ -555,49 +555,49 @@ public class ModelConnection
     }
 
     public URI createRandomUri()
-        throws WurfelException
+        throws RippleException
     {
         return createUri( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
     }
 
     public URI createRdfUri( final String localName )
-        throws WurfelException
+        throws RippleException
     {
         return createUri( "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName );
     }
 
     public URI createRdfSchemaUri( final String localName )
-        throws WurfelException
+        throws RippleException
     {
         return createUri( "http://www.w3.org/2000/01/rdf-schema#" + localName );
     }
 
-    public URI createWurfelUri( final String localName )
-        throws WurfelException
+    public URI createRippleUri( final String localName )
+        throws RippleException
     {
         return createUri( "http://fortytwo.net/2007/02/06/wurfel#" + localName );
     }
 
-    public URI createWurfelTestUri( final String localName )
-        throws WurfelException
+    public URI createRippleTestUri( final String localName )
+        throws RippleException
     {
         return createUri( "http://fortytwo.net/2007/02/06/wurfel-test#" + localName );
     }
 
-    public URI createWurfelMiscUri( final String localName )
-        throws WurfelException
+    public URI createRippleMiscUri( final String localName )
+        throws RippleException
     {
         return createUri( "http://fortytwo.net/2007/02/06/wurfel-misc#" + localName );
     }
 
     public URI createXmlSchemaUri( final String localName )
-        throws WurfelException
+        throws RippleException
     {
         return createUri( "http://www.w3.org/2001/XMLSchema#" + localName );
     }
 
     public URI createSwoogleUri( final String localName )
-        throws WurfelException
+        throws RippleException
     {
         return createUri( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
     }
@@ -605,7 +605,7 @@ public class ModelConnection
     ////////////////////////////////////////////////////////////////////////////
 
     public void add( Resource subject, URI predicate, Value object )
-        throws WurfelException
+        throws RippleException
     {
 // FIXME
 Resource defaultContext = null;
@@ -616,22 +616,22 @@ Resource defaultContext = null;
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Value toRdf( final Value src )
-        throws WurfelException
+        throws RippleException
     {
-        return ( src instanceof WurfelValue )
-            ? ( (WurfelValue) src ).toRdf( this )
+        return ( src instanceof RippleValue )
+            ? ( (RippleValue) src ).toRdf( this )
             : src;
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     public void setNamespace( final String prefix, final URI ns )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -641,7 +641,7 @@ Resource defaultContext = null;
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
@@ -799,7 +799,7 @@ s_logger.info( "######## ext = " + ext );
     private static void prepareUrlConnectionForRdfRequest( URLConnection urlConn )
     {
         urlConn.setRequestProperty( "User-Agent",
-            Wurfel.getWurfelName() + "/" + Wurfel.getWurfelVersion() );
+            Ripple.getRippleName() + "/" + Ripple.getRippleVersion() );
 
         /* Comment by arjohn in http://www.openrdf.org/forum/mvnforum/viewthread?thread=805#3234
                Note that Sesame/Rio doesn't have a real N3 parser, but it does have a Turtle parser, which supports a much larger subset of N3. At first sight, I would say that the Turtle parser should be able to parse the data fragment that you posted. */
@@ -825,7 +825,7 @@ s_logger.info( "######## ext = " + ext );
     }
 
     private URLConnection openUrlConnection( URL url )
-        throws WurfelException
+        throws RippleException
     {
         URLConnection urlConn;
 
@@ -838,7 +838,7 @@ showUrlConnection( urlConn );
 
         catch ( IOException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         try
@@ -848,7 +848,7 @@ showUrlConnection( urlConn );
 
         catch ( IOException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         return urlConn;
@@ -856,23 +856,23 @@ showUrlConnection( urlConn );
 
 
     public void addGraph( final URL url, final URI baseURI )
-        throws WurfelException
+        throws RippleException
     {
         // Wrap the entire operation in the timeout wrapper, as there are various
         // pieces which are capable of hanging:
         //     urlConn.connect()
         //     urlConn.getContentType()
         new ThreadWrapper() {
-            protected void run() throws WurfelException
+            protected void run() throws RippleException
             {
                 addGraphPrivate( url, baseURI );
             }
-        }.start( Wurfel.uriDereferencingTimeout() );
+        }.start( Ripple.uriDereferencingTimeout() );
     }
 
 
     private void addGraphPrivate( final URL url, final URI baseURI )
-        throws WurfelException
+        throws RippleException
     {
         s_logger.info( "Importing model " + url.toString() +
             ( ( null == baseURI ) ? "" : " in context " + baseURI.toString() ) );
@@ -896,7 +896,7 @@ s_logger.info( "####### Guessed format is " + format.getName() );
 
         catch ( IOException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         try
@@ -917,11 +917,11 @@ s_logger.info( "####### Guessed format is " + format.getName() );
                     + ", column " + ( (RDFParseException) t ).getColumnNumber()
                     + ": " + t.getMessage();
 
-                throw new WurfelException( msg );
+                throw new RippleException( msg );
             }
 
             else
-                throw new WurfelException( t );
+                throw new RippleException( t );
         }
 
         close( response );
@@ -932,7 +932,7 @@ s_logger.info( "####### graph imported without errors" );
     }
 
     public void addGraph( final URL url )
-        throws WurfelException
+        throws RippleException
     {
         String uriStr;
 
@@ -944,7 +944,7 @@ s_logger.info( "####### graph imported without errors" );
 
         catch ( java.net.URISyntaxException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         URI baseURI = createUri( uriStr );
@@ -952,7 +952,7 @@ s_logger.info( "####### graph imported without errors" );
     }
 
     private static void close( InputStream is )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -961,12 +961,12 @@ s_logger.info( "####### graph imported without errors" );
 
         catch ( IOException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
     }
 
     public long countStatements( Resource context )
-        throws WurfelException
+        throws RippleException
     {
         int count = 0;
 
@@ -974,7 +974,7 @@ s_logger.info( "####### graph imported without errors" );
         {
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
-                    null, null, null, Wurfel.useInference(), context );
+                    null, null, null, Ripple.useInference(), context );
             while ( stmtIter.hasNext() )
             {
                 stmtIter.next();
@@ -986,7 +986,7 @@ s_logger.info( "####### graph imported without errors" );
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return count;

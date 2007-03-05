@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -25,15 +25,15 @@ import java.io.InputStreamReader;
 public class UrlTarget extends PrimitiveFunction
 {
     public UrlTarget( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelMiscUri( "urlTarget" ), mc );
+        super( mc.createRippleMiscUri( "urlTarget" ), mc );
     }
 
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         String a, result;
 
@@ -62,7 +62,7 @@ public class UrlTarget extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );

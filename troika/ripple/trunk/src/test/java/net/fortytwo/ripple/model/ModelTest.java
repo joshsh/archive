@@ -1,9 +1,9 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.model.Model;
-import wurfel.test.WurfelTestCase;
+import net.fortytwo.ripple.test.RippleTestCase;
 
-public class ModelTest extends WurfelTestCase
+public class ModelTest extends RippleTestCase
 {
     private class ModelConstructorTest extends TestRunnable
     {

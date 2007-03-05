@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -34,7 +34,7 @@ public class Lexicon extends Observable implements Observer
     private Hashtable<String, String> namespaceToPrefixMap = null;
 
     public Lexicon( Model model )
-        throws WurfelException
+        throws RippleException
     {
         this.model = model;
         model.addObserver( this );
@@ -82,13 +82,13 @@ public class Lexicon extends Observable implements Observer
     }
 
     public String nsPrefixOf( final URI uri )
-        throws WurfelException
+        throws RippleException
     {
         return namespaceToPrefixMap.get( uri.getNamespace() );
     }
 
     public Completor getCompletor()
-        throws WurfelException
+        throws RippleException
     {
         Set<String> localNames = localNameToUrisMap.keySet();
         Set<String> prefixes = prefixToNamespaceMap.keySet();
@@ -139,7 +139,7 @@ public class Lexicon extends Observable implements Observer
     }
 
     private void createMaps()
-        throws WurfelException
+        throws RippleException
     {
 System.out.println( "################# Rebuilding dictionaries." );
         localNameToUrisMap = new Hashtable<String, List<URI>>();
@@ -155,7 +155,7 @@ System.out.println( "################# Rebuilding dictionaries." );
             RepositoryResult<Statement> stmtIter
                 = mc.getRepositoryConnection().getStatements(
 //                    null, null, null, model, includeInferred );
-                    null, null, null, Wurfel.useInference() );
+                    null, null, null, Ripple.useInference() );
             while ( stmtIter.hasNext() )
             {
                 Statement st = stmtIter.next();
@@ -184,7 +184,7 @@ System.out.println( "################# Rebuilding dictionaries." );
         catch ( Throwable t )
         {
             mc.close();
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         mc.close();
@@ -205,7 +205,7 @@ System.out.println( "################# Rebuilding dictionaries." );
     }
 
     public synchronized void resumeEventHandling()
-        throws WurfelException
+        throws RippleException
     {
         if ( suspended )
         {
@@ -222,7 +222,7 @@ System.out.println( "################# Rebuilding dictionaries." );
 
     // Public access allows the Interpreter to force a refresh.
     public void update()
-        throws WurfelException
+        throws RippleException
     {
         createMaps();
 
@@ -244,7 +244,7 @@ System.out.println( "################# Rebuilding dictionaries." );
             }
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             System.err.println( "\nError: " + e.toString() + "\n" );
         }

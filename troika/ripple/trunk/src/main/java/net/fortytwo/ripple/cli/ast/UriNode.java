@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.cli.ast;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 
@@ -17,7 +17,7 @@ public class UriNode extends Ast
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         return mc.createUri( value );
     }

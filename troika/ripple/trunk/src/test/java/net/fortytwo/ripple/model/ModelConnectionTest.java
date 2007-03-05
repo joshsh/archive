@@ -4,9 +4,9 @@ import java.net.URL;
 
 import org.openrdf.model.URI;
 
-import wurfel.test.WurfelTestCase;
+import net.fortytwo.ripple.test.RippleTestCase;
 
-public class ModelConnectionTest extends WurfelTestCase
+public class ModelConnectionTest extends RippleTestCase
 {
     private class CreateUriTest extends TestRunnable
     {

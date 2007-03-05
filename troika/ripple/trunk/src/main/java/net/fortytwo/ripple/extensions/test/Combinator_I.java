@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.test;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Apply;
 import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.Container;
@@ -18,15 +18,15 @@ import java.util.LinkedList;
 public class Combinator_I extends Combinator
 {
     public Combinator_I( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelTestUri( "I" ), mc );
+        super( mc.createRippleTestUri( "I" ), mc );
     }
 
     public void applyTo( ListNode<Value> stack,
                          Sink<ListNode<Value>> sink,
                          ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         sink.put( stack );
 /*

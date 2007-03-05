@@ -1,13 +1,13 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.URI;
 
 public interface Dereferencer
 {
     public void dereference( URI uri, ModelConnection mc )
-        throws WurfelException;
+        throws RippleException;
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

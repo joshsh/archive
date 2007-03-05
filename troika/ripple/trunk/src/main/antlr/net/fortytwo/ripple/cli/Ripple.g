@@ -2,8 +2,6 @@ header
 {
 package net.fortytwo.ripple.cli;
 
-import wurfel.WurfelException;
-
 import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.BooleanNode;
 import net.fortytwo.ripple.cli.ast.BNodeNode;

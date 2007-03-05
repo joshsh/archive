@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -32,15 +32,15 @@ return null;
     }
 
 public void checkArguments( ListNode<Value> args )
-    throws WurfelException
+    throws RippleException
 {}
 
-public void printTo( WurfelPrintStream p )
-    throws WurfelException
+public void printTo( RipplePrintStream p )
+    throws RippleException
 {}
 
 public Value toRdf( ModelConnection mc )
-    throws WurfelException
+    throws RippleException
 {
 return null;
 }
@@ -50,7 +50,7 @@ return null;
     public void applyTo( ListNode<Value> stack,
                          Sink<ListNode<Value>> sink,
                          ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         function.applyTo( new ListNode<Value>( argument, stack ), sink,  mc );
     }

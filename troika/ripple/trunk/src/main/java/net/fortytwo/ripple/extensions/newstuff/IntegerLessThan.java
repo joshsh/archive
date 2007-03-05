@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
@@ -19,7 +19,7 @@ import java.util.LinkedList;
 public class IntegerLessThan extends PrimitiveFunction
 {
     public IntegerLessThan( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         super( mc.createUri( NewExtension.getBaseUri() + "integer-lessThan" ), mc );
     }
@@ -27,7 +27,7 @@ public class IntegerLessThan extends PrimitiveFunction
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         int a, b;
         Combinator result;

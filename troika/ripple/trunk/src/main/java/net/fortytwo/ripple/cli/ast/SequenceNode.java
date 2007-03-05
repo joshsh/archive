@@ -1,8 +1,8 @@
 package net.fortytwo.ripple.cli.ast;
 
-import wurfel.Wurfel;
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Apply;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
@@ -36,19 +36,19 @@ public class SequenceNode extends Ast
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         if ( children.size() < 1 )
-            throw new WurfelException( "empty sequence" );
+            throw new RippleException( "empty sequence" );
 
         Iterator<Ast> iter = children.iterator();
         Value result = iter.next().evaluate( itp, mc );
         ListNode<Value> stack = new ListNode<Value>( result );
 
-        boolean comp = ( Wurfel.getEvaluationStyle() == Wurfel.EvaluationStyle.COMPOSITIONAL );
+        boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 
         // Note: assuming left associativity for now.
-        switch ( Wurfel.getExpressionOrder() )
+        switch ( Ripple.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 while ( iter.hasNext() )

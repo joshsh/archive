@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.BNode;
@@ -16,12 +16,12 @@ import java.io.PrintStream;
 
 import java.util.Iterator;
 
-public class WurfelPrintStream extends PrintStream
+public class RipplePrintStream extends PrintStream
 {
     private Lexicon lexicon;
 
-    public WurfelPrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
-        throws WurfelException
+    public RipplePrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
+        throws RippleException
     {
         super( out );
         this.lexicon = lexicon;
@@ -44,7 +44,7 @@ public class WurfelPrintStream extends PrintStream
     }
 
     private void printUri( URI uri )
-        throws WurfelException
+        throws RippleException
     {
         String prefix = lexicon.nsPrefixOf( uri );
 
@@ -55,7 +55,7 @@ public class WurfelPrintStream extends PrintStream
     }
 
     private void printList( ListNode<Value> list )
-        throws WurfelException
+        throws RippleException
     {
         print( "(" );
 
@@ -76,13 +76,13 @@ print( "\"" + s + "\"" );
     }
 
     public void print( Value v )
-        throws WurfelException
+        throws RippleException
     {
         if ( null == v )
             print( "()" );
 
-        else if ( v instanceof WurfelValue )
-            ( (WurfelValue) v ).printTo( this );
+        else if ( v instanceof RippleValue )
+            ( (RippleValue) v ).printTo( this );
 
         else
         {
@@ -138,7 +138,7 @@ print( "\"" + s + "\"" );
     }
 
     public void print( Statement st )
-        throws WurfelException
+        throws RippleException
     {
         print( "    " );
         print( st.getSubject() );
@@ -151,7 +151,7 @@ print( "\"" + s + "\"" );
     }
 
     public void print( Iterator<Statement> stmtIter )
-        throws WurfelException
+        throws RippleException
     {
         while ( stmtIter.hasNext() )
         {

@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
 	
-	<groupId>ripple</groupId>
+	<groupId>net.fortytwo</groupId>
 	<artifactId>ripple</artifactId>
 	<version>0.1</version>
 	<name>Ripple</name>
@@ -123,12 +123,14 @@
 					<version>1.2.14</version>
 					<type>jar</type>
 				</dependency>
+				<!--
 				<dependency>
 					<groupId>org.apache.lucene</groupId>
 					<artifactId>lucene-core</artifactId>
 					<version>2.0.0</version>
 					<type>jar</type>
 				</dependency>
+				-->
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>sesame</artifactId>
@@ -241,7 +243,7 @@
 							<descriptors>
 								<descriptor>descriptor.xml</descriptor>
 							</descriptors>
-							<finalName>wurfel</finalName>
+							<finalName>ripple</finalName>
 							<outputDirectory>target</outputDirectory>
 							<workDirectory>target/assembly/work</workDirectory>
 						</configuration>

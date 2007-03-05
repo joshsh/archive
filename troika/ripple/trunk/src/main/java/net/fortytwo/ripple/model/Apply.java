@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.URI;
@@ -30,11 +30,11 @@ return null;
     }
 
     public void checkArguments( ListNode<Value> args )
-        throws WurfelException
+        throws RippleException
     {
 /*
         if ( args.size() != arity() )
-            throw new WurfelException( "attempt to apply a "
+            throw new RippleException( "attempt to apply a "
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
 */
@@ -49,7 +49,7 @@ return null;
             this.sink = sink;
         }
 
-        public void put( Value v ) throws WurfelException
+        public void put( Value v ) throws RippleException
         {
             sink.put( new ListNode<Value>( v ) );
         }
@@ -58,7 +58,7 @@ return null;
     public void applyTo( ListNode<Value> args,
                          Sink<ListNode<Value>> sink,
                          ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
 // TODO: this is a temporary check
 checkArguments( args );
@@ -102,7 +102,7 @@ checkArguments( args );
     {
         Value left = null, right = null;
 
-        switch ( Wurfel.getExpressionOrder() )
+        switch ( Ripple.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 left = argument;
@@ -124,12 +124,12 @@ checkArguments( args );
         return leftStr + " " + rightStr;
     }
 
-    public void printTo( WurfelPrintStream p )
-        throws WurfelException
+    public void printTo( RipplePrintStream p )
+        throws RippleException
     {
         Value left = null, right = null;
 
-        switch ( Wurfel.getExpressionOrder() )
+        switch ( Ripple.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 left = argument;
@@ -157,14 +157,14 @@ checkArguments( args );
     }
 
     public Value toRdf( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Value funcRdf = mc.toRdf( function );
         Value argRdf = mc.toRdf( argument );
 
         BNode selfRdf = mc.createBNode();
-URI wurfelApplyFunctionUri = mc.createWurfelUri( "applyFunction" );
-URI wurfelApplyArgumentUri = mc.createWurfelUri( "applyArgument" );
+URI wurfelApplyFunctionUri = mc.createRippleUri( "applyFunction" );
+URI wurfelApplyArgumentUri = mc.createRippleUri( "applyArgument" );
 
         mc.add( selfRdf, wurfelApplyFunctionUri, funcRdf );
         mc.add( selfRdf, wurfelApplyArgumentUri, argRdf );

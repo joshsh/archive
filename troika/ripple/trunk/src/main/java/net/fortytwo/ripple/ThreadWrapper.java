@@ -1,14 +1,14 @@
-package wurfel;
+package net.fortytwo.ripple;
 
 public abstract class ThreadWrapper
 {
-    protected abstract void run() throws WurfelException;
+    protected abstract void run() throws RippleException;
 
     private boolean finished;
-    private WurfelException error;
+    private RippleException error;
 
     public void start( final long timeout )
-        throws WurfelException
+        throws RippleException
     {
         finished = false;
         error = null;
@@ -24,7 +24,7 @@ public abstract class ThreadWrapper
                     tw.run();
                 }
 
-                catch ( WurfelException e )
+                catch ( RippleException e )
                 {
                     error = e;
                 }
@@ -63,19 +63,19 @@ System.out.println( "done! #####################" ); System.out.flush();
         catch ( InterruptedException e )
         {
 System.out.println( "catch ( InterruptedException e )" ); System.out.flush();
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 System.out.println( "finished = " + finished );
 
         if ( !finished )
-            throw new WurfelException( "operation timed out" );
+            throw new RippleException( "operation timed out" );
 
         else if ( null != error )
             throw error;
     }
 
     public void start()
-        throws WurfelException
+        throws RippleException
     {
         start( -1 );
     }

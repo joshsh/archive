@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -15,7 +15,7 @@ public class NullNode extends Ast
     { }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         return null;
     }

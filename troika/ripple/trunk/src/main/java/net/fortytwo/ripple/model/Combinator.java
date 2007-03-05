@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -19,13 +19,13 @@ public abstract class Combinator extends Node implements Function
     }
 
     protected Combinator( final URI self, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         selfUri = self;
         arityCached = mc.intValue(
             mc.castToLiteral(
                 mc.findUniqueProduct(
-                    selfUri, mc.createWurfelUri( "combinatorArity" ) ) ) );
+                    selfUri, mc.createRippleUri( "combinatorArity" ) ) ) );
     }
 
     public int arity()
@@ -34,11 +34,11 @@ public abstract class Combinator extends Node implements Function
     }
 
     public void checkArguments( ListNode<Value> args )
-        throws WurfelException
+        throws RippleException
     {
 /*
         if ( args.size() != arity() )
-            throw new WurfelException( "attempt to apply a "
+            throw new RippleException( "attempt to apply a "
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
 */
@@ -49,14 +49,14 @@ public abstract class Combinator extends Node implements Function
         return selfUri.toString();
     }
 
-    public void printTo( WurfelPrintStream p )
-        throws WurfelException
+    public void printTo( RipplePrintStream p )
+        throws RippleException
     {
         p.print( selfUri );
     }
 
     public Value toRdf( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         return selfUri;
     }

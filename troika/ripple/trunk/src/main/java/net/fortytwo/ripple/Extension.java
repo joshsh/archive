@@ -1,4 +1,4 @@
-package wurfel;
+package net.fortytwo.ripple;
 
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
@@ -9,10 +9,10 @@ public abstract class Extension
 {
     protected abstract URL[] getResources();
 
-    protected abstract Function[] getFunctions( ModelConnection mc ) throws WurfelException;
+    protected abstract Function[] getFunctions( ModelConnection mc ) throws RippleException;
 
     public void load( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         URL[] resources = getResources();
 

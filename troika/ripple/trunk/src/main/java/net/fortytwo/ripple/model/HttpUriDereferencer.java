@@ -1,8 +1,8 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.UrlFactory;
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.UrlFactory;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -42,7 +42,7 @@ public class HttpUriDereferencer implements Dereferencer
     }
 
     public void dereference( final URI uri, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         String ns = uri.getNamespace();
         String uriStr = null;
@@ -85,7 +85,7 @@ public class HttpUriDereferencer implements Dereferencer
         // Request the resource by its namespace, rather than by its full
         // URI.
         // Note: for hash namespaces, this doesn't make any difference.
-        if ( Wurfel.dereferenceByNamespace() )
+        if ( Ripple.dereferenceByNamespace() )
             url = urlFactory.createUrl( ns );
 
         // Request the resource at the full URI.  If the purpose of a slash
@@ -109,7 +109,7 @@ public class HttpUriDereferencer implements Dereferencer
 s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
 s_logger.info( "##### failed to dereference URI: " + uri.toString() );
             failureMemoUris.add( memo );
@@ -119,12 +119,12 @@ s_logger.info( "##### failed to dereference URI: " + uri.toString() );
         successMemoUris.add( memo );
 
 // TODO: this should probably be in a parent Dereferencer.
-        if ( Wurfel.enforceImplicitProvenance() )
+        if ( Ripple.enforceImplicitProvenance() )
             filter( ns, context, mc );
     }
 
     private void filter( final String ns, final URI context, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         RepositoryConnection conn = mc.getRepositoryConnection();
 
@@ -135,7 +135,7 @@ s_logger.info( "##### failed to dereference URI: " + uri.toString() );
         try
         {
             stmtIter = conn.getStatements(
-                 null, null, null, /*context,*/ Wurfel.useInference() );
+                 null, null, null, /*context,*/ Ripple.useInference() );
 
             while ( stmtIter.hasNext() )
             {
@@ -167,7 +167,7 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
                 }
             }
 
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         s_logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );

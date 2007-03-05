@@ -1,11 +1,11 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 
-public interface Function extends WurfelValue
+public interface Function extends RippleValue
 {
 //    public abstract String toString();
     public URI getUri();
@@ -20,10 +20,10 @@ public interface Function extends WurfelValue
     public void applyTo( ListNode<Value> args,
                          Sink<ListNode<Value>> sink,
                          ModelConnection mc )
-        throws WurfelException;
+        throws RippleException;
 
     public void checkArguments( ListNode<Value> args )
-        throws WurfelException;
+        throws RippleException;
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

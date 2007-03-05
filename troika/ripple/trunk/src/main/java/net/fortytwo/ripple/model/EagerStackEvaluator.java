@@ -2,7 +2,7 @@ package net.fortytwo.ripple.model;
 
 import java.util.Iterator;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -47,16 +47,16 @@ public class EagerStackEvaluator extends Evaluator
         {
             this.property = property;
             this.sink = sink;
-System.out.println( this + "( " + property + ", " + sink + " )" );
+////System.out.println( this + "( " + property + ", " + sink + " )" );
 //System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
-            throws WurfelException
+            throws RippleException
         {
-System.out.println( this + ".put( " + stack + " )" );
+//System.out.println( this + ".put( " + stack + " )" );
 //System.out.flush();
-System.out.println( "   first = " + stack.getFirst() );
+//System.out.println( "   first = " + stack.getFirst() );
 //System.out.flush();
             Value first = stack.getFirst();
             ListNode<Value> rest = stack.getRest();
@@ -77,17 +77,17 @@ System.out.println( "   first = " + stack.getFirst() );
         {
             this.function = function;
             this.sink = sink;
-System.out.println( this + "( " + function + ", " + sink + ")" );
-System.out.println( "function.arity() = " + function.arity() );
+//System.out.println( this + "( " + function + ", " + sink + ")" );
+//System.out.println( "function.arity() = " + function.arity() );
 //System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
-            throws WurfelException
+            throws RippleException
         {
-System.out.println( this + ".put( " + stack + " )" );
+//System.out.println( this + ".put( " + stack + " )" );
 //System.out.flush();
-System.out.println( "   first = " + stack.getFirst() );
+//System.out.println( "   first = " + stack.getFirst() );
 //System.out.flush();
             if ( function.arity() == 1 )
                 function.applyTo( stack, sink, modelConnection );
@@ -112,16 +112,16 @@ System.out.println( "   first = " + stack.getFirst() );
         public ApplySink( Sink<ListNode<Value>> sink )
         {
             this.sink = sink;
-System.out.println( this + "( " + sink + ")" );
+//System.out.println( this + "( " + sink + ")" );
 //System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
-            throws WurfelException
+            throws RippleException
         {
-System.out.println( this + ".put( " + stack + " )" );
+//System.out.println( this + ".put( " + stack + " )" );
 //System.out.flush();
-System.out.println( "   first = " + stack.getFirst() );
+//System.out.println( "   first = " + stack.getFirst() );
 //System.out.flush();
 //        if ( null == stack )
 //            return;
@@ -174,7 +174,7 @@ System.out.println( "   first = " + stack.getFirst() );
             }
 
             else
-                throw new WurfelException( "value cannot be applied: " + first.toString() );
+                throw new RippleException( "value cannot be applied: " + first.toString() );
         }
     }
 
@@ -190,17 +190,17 @@ System.out.println( "   first = " + stack.getFirst() );
         public EvaluatorSink( Sink<ListNode<Value>> sink )
         {
            this.sink = sink;
-System.out.println( this + "( " + sink + ")" );
+//System.out.println( this + "( " + sink + ")" );
 //System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
-            throws WurfelException
+            throws RippleException
         {
-System.out.println( this + ".put( " + stack + " )" );
+//System.out.println( this + ".put( " + stack + " )" );
 //System.out.flush();
             Value first = stack.getFirst();
-System.out.println( "   first = " + stack.getFirst() );
+//System.out.println( "   first = " + stack.getFirst() );
 //System.out.flush();
 
             if ( isApplyOp( first ) )
@@ -223,9 +223,9 @@ System.out.println( "   first = " + stack.getFirst() );
     public void reduce( ListNode<Value> stack,
                         Sink<ListNode<Value>> sink,
                         ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-System.out.println( "public void reduce" );
+//System.out.println( "public void reduce" );
 //System.out.flush();
         modelConnection = mc;
         model = modelConnection.getModel();

@@ -1,8 +1,8 @@
 package net.fortytwo.ripple.cli;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
-public class UndefinedIdentifierException extends WurfelException
+public class UndefinedIdentifierException extends RippleException
 {
     private String identifier;
 

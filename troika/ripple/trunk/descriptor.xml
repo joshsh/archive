@@ -1,6 +1,6 @@
 <assembly>
 
-    <id>with-dependencies</id>
+    <id>full</id>
 
     <formats>
         <format>jar</format>

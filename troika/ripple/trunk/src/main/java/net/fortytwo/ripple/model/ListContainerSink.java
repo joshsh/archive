@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.openrdf.model.Value;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 public class ListContainerSink extends Container implements Sink<ListNode<Value>>
 {
@@ -14,7 +14,7 @@ public class ListContainerSink extends Container implements Sink<ListNode<Value>
     }
 
     public void put( ListNode<Value> v )
-        throws WurfelException
+        throws RippleException
     {
 System.out.println( this + ".put( " + v + " )" );
 //System.out.flush();

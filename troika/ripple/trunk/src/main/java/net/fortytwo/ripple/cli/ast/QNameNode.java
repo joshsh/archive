@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -24,12 +24,12 @@ public class QNameNode extends Ast
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Value v = itp.resolveQualifiedName( nsPrefix, localName );
 
         if ( null == v )
-            throw new WurfelException( "'" + toString() + "' is undefined in this context" );
+            throw new RippleException( "'" + toString() + "' is undefined in this context" );
         else
             return v;
     }

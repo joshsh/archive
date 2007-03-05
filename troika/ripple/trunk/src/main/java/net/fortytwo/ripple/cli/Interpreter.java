@@ -32,8 +32,8 @@ import org.openrdf.model.Value;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -44,7 +44,7 @@ import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
 import net.fortytwo.ripple.model.ObservableContainer;
-import net.fortytwo.ripple.model.WurfelPrintStream;
+import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.ListNode;
 import net.fortytwo.ripple.cli.ast.Ast;
@@ -84,7 +84,7 @@ public Model getModel()
     private ConsoleReader reader;
     private int lineNumber = 0;
 
-    private WurfelPrintStream printStream;
+    private RipplePrintStream printStream;
     private PrintStream errorPrintStream;
 
     private CompletorState completorState = CompletorState.NONE;
@@ -111,7 +111,7 @@ public Model getModel()
 
     private void chooseEvaluator()
     {
-        switch ( Wurfel.getEvaluationStyle() )
+        switch ( Ripple.getEvaluationStyle() )
         {
             case APPLICATIVE:
                 evaluator = new LazyEvaluator();
@@ -126,7 +126,7 @@ public Model getModel()
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public Interpreter( Model model ) throws WurfelException
+    public Interpreter( Model model ) throws RippleException
     {
         this.model = model;
 
@@ -135,7 +135,7 @@ public Model getModel()
         lexicon = new Lexicon( model );
         lexicon.addObserver( this );
 
-        String jLineDebugOutput = Wurfel.getJLineDebugOutput();
+        String jLineDebugOutput = Ripple.getJLineDebugOutput();
 
         try
         {
@@ -149,7 +149,7 @@ public Model getModel()
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         try
@@ -162,14 +162,14 @@ public Model getModel()
 
         catch ( IOException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         errorPrintStream = System.err;
 
         valueSet = new ObservableContainer( model, null );
 ModelConnection mc = new ModelConnection( model, "for ConsoleValueSet constructor" );
-        printStream = new WurfelPrintStream( System.out, lexicon, mc );
+        printStream = new RipplePrintStream( System.out, lexicon, mc );
         valueSetObserver = new ContainerTreeView( valueSet, printStream );
 mc.close();
         valueSet.addObserver( valueSetObserver );
@@ -223,11 +223,11 @@ System.out.println( "########## updating completors" );
 
             catch ( Throwable t )
             {
-                throw new WurfelException( t );
+                throw new RippleException( t );
             }
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             s_logger.error( "Failed to update completors.  Continuing nonetheless." );
         }
@@ -261,7 +261,7 @@ System.out.println( "########## updating completors" );
 
         catch( java.io.IOException e )
         {
-            new WurfelException( e );
+            new RippleException( e );
             return false;
         }
     }
@@ -333,7 +333,7 @@ System.out.println( "--- 3 ---" );
         {
             alert( "Error: " + t.toString() );
 
-            new WurfelException( t );
+            new RippleException( t );
         }
     }
 
@@ -346,7 +346,7 @@ System.out.println( "--- 3 ---" );
             System.out.println( "\n" + model.countStatements() + "\n" );
         }
 
-        catch ( WurfelException e ) {}
+        catch ( RippleException e ) {}
     }
 
     public void define( final String name, final String uri )
@@ -372,7 +372,7 @@ System.out.println( "--- 3 ---" );
             printStream.println( "" );
         }
 
-        catch ( WurfelException e ) {}
+        catch ( RippleException e ) {}
     }
 
     public void saveAs( final String fileName )
@@ -384,7 +384,7 @@ System.out.println( "--- 3 ---" );
             System.out.println( "\nSaved data set as '" + fileName + "'\n" );
         }
 
-        catch ( WurfelException e ) {}
+        catch ( RippleException e ) {}
     }
 
     public void addStatement( Ast subj, Ast pred, Ast obj )
@@ -404,7 +404,7 @@ System.out.println( "--- 3 ---" );
             mc = null;
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             if ( null != mc )
             {
@@ -413,7 +413,7 @@ System.out.println( "--- 3 ---" );
                     mc.close();
                 }
 
-                catch ( WurfelException e2 )
+                catch ( RippleException e2 )
                 {
                     // ...
                 }
@@ -439,7 +439,7 @@ System.out.println( "--- 3 ---" );
             lexicon.update();
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             if ( null != mc )
             {
@@ -448,7 +448,7 @@ System.out.println( "--- 3 ---" );
                     mc.close();
                 }
 
-                catch ( WurfelException e2 )
+                catch ( RippleException e2 )
                 {
                     // ...
                 }
@@ -459,7 +459,7 @@ System.out.println( "--- 3 ---" );
     }
 
     private void dereferenceResultSet( Collection<Value> values, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Dereferencer d = model.getDereferencer();
 
@@ -477,7 +477,7 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
                     d.dereference( (URI) value, mc );
                 }
 
-                catch ( WurfelException e )
+                catch ( RippleException e )
                 {
                     // (soft fail)
                 }
@@ -486,7 +486,7 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
     }
 
     public Value resolveUnqualifiedName( final String localName )
-        throws WurfelException
+        throws RippleException
     {
         List<URI> options = lexicon.resolveUnqualifiedName( localName );
         if ( null == options || 0 == options.size() )
@@ -502,7 +502,7 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
 
     public Value resolveQualifiedName( final String nsPrefix,
                                        final String localName )
-        throws WurfelException
+        throws RippleException
     {
         Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
 
@@ -512,7 +512,7 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
     }
 
     private Container reduce( Value expr, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -526,14 +526,14 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
             return sink;
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             throw e;
         }
     }
 
     private void evaluate( Ast ast, final String name )
-        throws WurfelException
+        throws RippleException
     {
         ModelConnection mc = null;
 
@@ -547,17 +547,17 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
                 ? new Container()
                 : reduce( expr, mc );
 
-// TODO: this should dereference as many levels as Wurfel.getTreeViewDepth(),
+// TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
             dereferenceResultSet( result, mc );
 
             if ( null != name )
             {
                 if ( 0 == result.size() )
-                    throw new WurfelException( "null value in assignment" );
+                    throw new RippleException( "null value in assignment" );
 
                 else if ( 1 < result.size() )
-                    throw new WurfelException( "ambiguous value in assigment" );
+                    throw new RippleException( "ambiguous value in assigment" );
 
                 else
                 {
@@ -565,7 +565,7 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
                     String defaultNs = lexicon.resolveNamespacePrefix( "" );
 
                     if ( null == defaultNs )
-                        throw new WurfelException( "no default namespace is defined" );
+                        throw new RippleException( "no default namespace is defined" );
 
 // TODO: check for collision with an existing URI
 
@@ -585,7 +585,7 @@ URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
             mc.close();
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             mc.close();
             throw e;
@@ -605,7 +605,7 @@ URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
             valueSetObserver.resumeEventHandling();
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             alert( "Error: " + e.getMessage() );
         }
@@ -622,7 +622,7 @@ URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
             lexicon.resumeEventHandling();
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             alert( "Error: " + e.getMessage() );
         }
@@ -635,7 +635,7 @@ URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
             model.showNamespaces();
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             alert( "Error: " + e.getMessage() );
         }
@@ -659,14 +659,14 @@ URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
             mc.close();
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             try
             {
                 mc.close();
             }
 
-            catch ( WurfelException e2 )
+            catch ( RippleException e2 )
             {
                 // ...
             }

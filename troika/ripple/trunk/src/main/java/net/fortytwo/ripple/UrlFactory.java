@@ -1,6 +1,6 @@
-package wurfel;
+package net.fortytwo.ripple;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,7 +32,7 @@ public class UrlFactory
     }
 
     private URL createUrlPrivate( final String urlStr )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -41,12 +41,12 @@ public class UrlFactory
 
         catch ( MalformedURLException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
     }
 
     public URL createUrl( final String urlStr )
-        throws WurfelException
+        throws RippleException
     {
         int fromIndex = 0, toIndex = sourceUrls.length - 1;
         int mid = 0, cmp = 0;

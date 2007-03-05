@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +20,7 @@ public abstract class PrimitiveFunction extends Node implements Function
     protected abstract void applyInternal( ListNode<Value> args,
                                            Sink<ListNode<Value>> sink,
                                            ModelConnection mc )
-        throws WurfelException;
+        throws RippleException;
 
     class Param
     {
@@ -55,8 +55,8 @@ public abstract class PrimitiveFunction extends Node implements Function
         wurfelParameterTypeUri,
         wurfelParameterTransparencyUri;
 
-    private Param getWurfelParameter( final Resource head, ModelConnection mc )
-        throws WurfelException
+    private Param getRippleParameter( final Resource head, ModelConnection mc )
+        throws RippleException
     {
         String name = mc.stringValue(
             mc.castToLiteral(
@@ -75,7 +75,7 @@ public abstract class PrimitiveFunction extends Node implements Function
     }
 
     public PrimitiveFunction( final URI self, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         selfUri = self;
 
@@ -83,13 +83,13 @@ public abstract class PrimitiveFunction extends Node implements Function
         name = "";
         annotation = "";
 
-        wurfelParametersUri             = mc.createWurfelUri( "parameters" );
-        wurfelReturnTypeUri             = mc.createWurfelUri( "returnType" );
-        wurfelParameterUri              = mc.createWurfelUri( "Parameter" );
-        wurfelParameterNameUri          = mc.createWurfelUri( "parameterName" );
-        wurfelParameterListUri          = mc.createWurfelUri( "ParameterList" );
-        wurfelParameterTypeUri          = mc.createWurfelUri( "parameterType" );
-        wurfelParameterTransparencyUri  = mc.createWurfelUri( "parameterTransparency" );
+        wurfelParametersUri             = mc.createRippleUri( "parameters" );
+        wurfelReturnTypeUri             = mc.createRippleUri( "returnType" );
+        wurfelParameterUri              = mc.createRippleUri( "Parameter" );
+        wurfelParameterNameUri          = mc.createRippleUri( "parameterName" );
+        wurfelParameterListUri          = mc.createRippleUri( "ParameterList" );
+        wurfelParameterTypeUri          = mc.createRippleUri( "parameterType" );
+        wurfelParameterTransparencyUri  = mc.createRippleUri( "parameterTransparency" );
 
         returnType = mc.castToUri(
             mc.findUniqueProduct( self, wurfelReturnTypeUri ) );
@@ -103,9 +103,9 @@ public abstract class PrimitiveFunction extends Node implements Function
         {
             Value val = paramIter.next();
             if ( !( val instanceof Resource ) )
-                throw new WurfelException( "non-Resource encountered as an argument to a PrimitiveFunction" );
+                throw new RippleException( "non-Resource encountered as an argument to a PrimitiveFunction" );
             else
-                params.add( getWurfelParameter( (Resource) val, mc ) );
+                params.add( getRippleParameter( (Resource) val, mc ) );
         }
     }
 
@@ -200,11 +200,11 @@ public abstract class PrimitiveFunction extends Node implements Function
     }
 
     public void checkArguments( ListNode<Value> args )
-        throws WurfelException
+        throws RippleException
     {
 /*
         if ( args.size() != arity() )
-            throw new WurfelException( "attempt to apply a "
+            throw new RippleException( "attempt to apply a "
                 + arity() + "-ary function to a list of "
                 + args.size() + " arguments" );
 */
@@ -213,7 +213,7 @@ public abstract class PrimitiveFunction extends Node implements Function
     public void applyTo( ListNode<Value> args,
                          Sink<ListNode<Value>> sink,
                          ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
 // TODO: this is a temporary check
 checkArguments( args );
@@ -223,14 +223,14 @@ checkArguments( args );
         applyInternal( args, sink, mc );
     }
 
-    public void printTo( WurfelPrintStream p )
-        throws WurfelException
+    public void printTo( RipplePrintStream p )
+        throws RippleException
     {
         p.print( selfUri );
     }
 
     public Value toRdf( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         return selfUri;
     }

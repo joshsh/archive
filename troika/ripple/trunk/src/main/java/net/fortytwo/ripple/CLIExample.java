@@ -1,4 +1,4 @@
-package wurfel;
+package net.fortytwo.ripple;
 
 import java.net.URL;
 
@@ -13,26 +13,26 @@ import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.lucene.LuceneTest;
+//import net.fortytwo.ripple.lucene.LuceneTest;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class JLineTest
+public class CLIExample
 {
-    private final static Logger s_logger = Logger.getLogger( JLineTest.class );
+    private final static Logger s_logger = Logger.getLogger( CLIExample.class );
 
     public static Repository createTestRepository()
-        throws WurfelException
+        throws RippleException
     {
         try
         {
-            Repository repository = Wurfel.useInference()
+            Repository repository = Ripple.useInference()
                 ? new SailRepository(
                     new MemoryStoreRDFSInferencer(
                         new MemoryStore() ) )
                 : new SailRepository(
                     new MemoryStore() );
-//                    new MemoryStore( new java.io.File( "wurfel.tmp" ) ) ) );
+//                    new MemoryStore( new java.io.File( "net.fortytwo.ripple.tmp" ) ) ) );
 
             repository.initialize();
 
@@ -42,7 +42,7 @@ public class JLineTest
         catch ( Throwable t )
         {
 t.printStackTrace( System.err );
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
@@ -50,17 +50,12 @@ t.printStackTrace( System.err );
     {
         try
         {
-            Wurfel.initialize();
-
-LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel phase2" );
-LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel AND phase2" );
-LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel OR phase2" );
-LuceneTest.search( new java.io.File("/home/joshs/tmp"), "wurfel~" );
+            Ripple.initialize();
 
             Repository repository = createTestRepository();
 
             Model model = new Model( repository, "anonymousContext" );
-            ModelConnection mc = new ModelConnection( model, "for JLineTest main" );
+            ModelConnection mc = new ModelConnection( model, "for CLIExample main" );
             if ( args.length == 2 )
                 mc.addGraph( new URL( args[0] ), mc.createUri( args[1] ) );
             else if ( args.length == 1 )

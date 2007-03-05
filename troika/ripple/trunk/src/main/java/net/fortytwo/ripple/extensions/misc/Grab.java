@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -24,15 +24,15 @@ import java.net.URLEncoder;
 public class Grab extends PrimitiveFunction
 {
     public Grab( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelMiscUri( "grab" ), mc );
+        super( mc.createRippleMiscUri( "grab" ), mc );
     }
 
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         String urlStr;
 
@@ -49,7 +49,7 @@ public class Grab extends PrimitiveFunction
 
             RepositoryResult<Statement> stmtIter
                 = mc.getRepositoryConnection().getStatements(
-                    null, null, null, /*baseUri,*/ Wurfel.useInference() );
+                    null, null, null, /*baseUri,*/ Ripple.useInference() );
             while ( stmtIter.hasNext() )
                 sink.put( new ListNode<Value>( stmtIter.next().getSubject(), stack ) );
             stmtIter.close();
@@ -57,7 +57,7 @@ public class Grab extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 }

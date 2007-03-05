@@ -1,4 +1,4 @@
-package wurfel;
+package net.fortytwo.ripple;
 
 import java.net.URL;
 
@@ -48,7 +48,7 @@ import com.ontogon.doapamine;
         anon_root="foobar")
     )
 */
-public class Wurfel
+public class Ripple
 {
     public enum ExpressionOrder
     {
@@ -62,14 +62,14 @@ public class Wurfel
         }
 
         public static ExpressionOrder find( final String name )
-            throws WurfelException
+            throws RippleException
         {
             for ( ExpressionOrder x : ExpressionOrder.values() )
                 if ( x.name.equals( name ) )
                     return x;
 
             String msg = "unknown ExpressionOrder: '" + name + "'";
-            throw new WurfelException( msg );
+            throw new RippleException( msg );
         }
     }
 
@@ -85,14 +85,14 @@ public class Wurfel
         }
 
         public static ExpressionAssociativity find( final String name )
-            throws WurfelException
+            throws RippleException
         {
             for ( ExpressionAssociativity x : ExpressionAssociativity.values() )
                 if ( x.name.equals( name ) )
                     return x;
 
             String msg = "unknown ExpressionAssociativity: '" + name + "'";
-            throw new WurfelException( msg );
+            throw new RippleException( msg );
         }
     }
 
@@ -109,13 +109,13 @@ public class Wurfel
         }
 
         public static EvaluationOrder lookup( String name )
-            throws WurfelException
+            throws RippleException
         {
             for ( EvaluationOrder order : EvaluationOrder.values() )
                 if ( order.name.equals( name ) )
                     return order;
 
-            throw new WurfelException( "unknown EvaluationOrder: " + name );
+            throw new RippleException( "unknown EvaluationOrder: " + name );
         }
     }
 
@@ -132,20 +132,20 @@ public class Wurfel
         }
 
         public static EvaluationStyle lookup( String name )
-             throws WurfelException
+             throws RippleException
        {
             for ( EvaluationStyle style : EvaluationStyle.values() )
                 if ( style.name.equals( name ) )
                     return style;
 
-            throw new WurfelException( "unknown EvaluationStyle: " + name );
+            throw new RippleException( "unknown EvaluationStyle: " + name );
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     private static final URL
-        s_wurfelSchemaUrl = Wurfel.class.getResource( "wurfel.rdf" );
+        s_wurfelSchemaUrl = Ripple.class.getResource( "wurfel.rdf" );
 
     private static boolean initialized = false;
 
@@ -234,7 +234,7 @@ public class Wurfel
     private static int getIntProperty( final Properties props,
                                        final String name,
                                        final int defaultValue )
-        throws WurfelException
+        throws RippleException
     {
         String s = props.getProperty( name );
 
@@ -250,7 +250,7 @@ public class Wurfel
 
             catch ( java.lang.NumberFormatException e )
             {
-                throw new WurfelException( e );
+                throw new RippleException( e );
             }
         }
     }
@@ -258,7 +258,7 @@ public class Wurfel
     private static long getLongProperty( final Properties props,
                                        final String name,
                                        final long defaultValue )
-        throws WurfelException
+        throws RippleException
     {
         String s = props.getProperty( name );
 
@@ -274,7 +274,7 @@ public class Wurfel
 
             catch ( java.lang.NumberFormatException e )
             {
-                throw new WurfelException( e );
+                throw new RippleException( e );
             }
         }
     }
@@ -282,7 +282,7 @@ public class Wurfel
     private static EvaluationOrder getEvaluationOrderProperty(
         final Properties props,
         final String name,
-        final EvaluationOrder defaultValue ) throws WurfelException
+        final EvaluationOrder defaultValue ) throws RippleException
     {
         String s = props.getProperty( name );
 
@@ -296,7 +296,7 @@ public class Wurfel
     private static EvaluationStyle getEvaluationStyleProperty(
         final Properties props,
         final String name,
-        final EvaluationStyle defaultValue ) throws WurfelException
+        final EvaluationStyle defaultValue ) throws RippleException
     {
         String s = props.getProperty( name );
 
@@ -308,23 +308,23 @@ public class Wurfel
     }
 
     public static void initialize()
-        throws WurfelException
+        throws RippleException
     {
         if ( !initialized )
         {
             PropertyConfigurator.configure(
-                Wurfel.class.getResource( "log4j.properties" ) );
+                Ripple.class.getResource( "log4j.properties" ) );
 
             Properties props = new Properties();
 
             try
             {
-                props.load( Wurfel.class.getResourceAsStream( "wurfel.properties" ) );
+                props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
             }
 
             catch ( IOException e )
             {
-                throw new WurfelException( "unable to load wurfel.properties" );
+                throw new RippleException( "unable to load ripple.properties" );
             }
 
             expressionOrder = ExpressionOrder.find(
@@ -357,12 +357,12 @@ System.out.println( "schemaUrl: " + s_wurfelSchemaUrl );
         return s_wurfelSchemaUrl;
     }
 
-    public static String getWurfelName()
+    public static String getRippleName()
     {
         return "Ripple";
     }
 
-    public static String getWurfelVersion()
+    public static String getRippleVersion()
     {
         return "0.1";
     }

@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
@@ -12,7 +12,7 @@ import org.openrdf.model.Value;
 public class False extends Combinator
 {
     public False( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         super( mc.createUri( NewExtension.getBaseUri() + "false" ), mc );
     }
@@ -20,7 +20,7 @@ public class False extends Combinator
     public void applyTo( ListNode<Value> stack,
                          Sink<ListNode<Value>> sink,
                          ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Value x, y;
 

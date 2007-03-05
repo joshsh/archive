@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 
@@ -17,7 +17,7 @@ public class OperatorNode extends Ast
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         switch ( value )
         {

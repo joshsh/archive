@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -28,14 +28,14 @@ public class Sha1SumOf extends PrimitiveFunction
     private static MessageDigest messageDigest = null;
 
     public Sha1SumOf( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelMiscUri( "sha1SumOf" ), mc );
+        super( mc.createRippleMiscUri( "sha1SumOf" ), mc );
     }
 
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
     private synchronized String encrypt( final String plaintext )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -45,7 +45,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         catch( NoSuchAlgorithmException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         try
@@ -55,7 +55,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         catch( UnsupportedEncodingException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         try
@@ -78,14 +78,14 @@ public class Sha1SumOf extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         String a, result;
 

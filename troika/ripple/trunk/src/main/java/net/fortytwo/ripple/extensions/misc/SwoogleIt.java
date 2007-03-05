@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -28,9 +28,9 @@ public class SwoogleIt extends PrimitiveFunction
         swoogleQueryResponseUri;
 
     public SwoogleIt( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelMiscUri( "swoogleIt" ), mc );
+        super( mc.createRippleMiscUri( "swoogleIt" ), mc );
 
         rdfTypeUri = mc.createRdfUri( "type" );
         swoogleQueryResponseUri = mc.createSwoogleUri( "QueryResponse" );
@@ -39,7 +39,7 @@ public class SwoogleIt extends PrimitiveFunction
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         String key, searchString;
         URI queryType;
@@ -69,7 +69,7 @@ public class SwoogleIt extends PrimitiveFunction
             RepositoryResult<Statement> stmtIter
                 = mc.getRepositoryConnection().getStatements(
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
-                    null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Wurfel.useInference() );
+                    null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
             while ( stmtIter.hasNext() )
                 sink.put( new ListNode<Value>( stmtIter.next().getSubject(), stack ) );
             stmtIter.close();
@@ -77,7 +77,7 @@ public class SwoogleIt extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 }

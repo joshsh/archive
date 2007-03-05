@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.test;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -18,15 +18,15 @@ import java.util.LinkedList;
 public class IntegerDivide extends PrimitiveFunction
 {
     public IntegerDivide( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelTestUri( "integer-divide" ), mc );
+        super( mc.createRippleTestUri( "integer-divide" ), mc );
     }
 
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         int a, b, result;
 
@@ -44,7 +44,7 @@ public class IntegerDivide extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );

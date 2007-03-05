@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.openrdf.model.Value;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 public class ContainerSink extends Container implements Sink<Value>
 {
@@ -24,7 +24,7 @@ public class ContainerSink extends Container implements Sink<Value>
     }
 
     public void put( Value v )
-        throws WurfelException
+        throws RippleException
     {
         add( v );
     }

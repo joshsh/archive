@@ -1,8 +1,8 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.UrlFactory;
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.UrlFactory;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 //import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -68,7 +68,7 @@ Hashtable<String, String> aliases;
     }
 
     private UrlFactory createUrlFactory()
-        throws WurfelException
+        throws RippleException
     {
         ModelConnection mc = new ModelConnection( this, "for createUrlFactory()" );
 
@@ -76,13 +76,13 @@ Hashtable<String, String> aliases;
 
         try
         {
-            wurfelNs = mc.createWurfelUri( "" ).toString();
-            wurfelMiscNs = mc.createWurfelMiscUri( "" ).toString();
-            wurfelTestNs = mc.createWurfelTestUri( "" ).toString();
+            wurfelNs = mc.createRippleUri( "" ).toString();
+            wurfelMiscNs = mc.createRippleMiscUri( "" ).toString();
+            wurfelTestNs = mc.createRippleTestUri( "" ).toString();
             rplNewNs = "http://fortytwo.net/2007/03/04/rpl-new#";
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             mc.close();
             throw e;
@@ -95,7 +95,7 @@ Hashtable<String, String> aliases;
 
         Hashtable<String, String> urlMap = new Hashtable<String, String>();
         urlMap.put( wurfelNs,
-            wurfel.Wurfel.class.getResource( "wurfel.rdf" ) + "#" );
+            net.fortytwo.ripple.Ripple.class.getResource( "net.fortytwo.ripple.rdf" ) + "#" );
         urlMap.put( wurfelTestNs,
             net.fortytwo.ripple.extensions.test.TestExtension.class.getResource(
                 "wurfel-test.rdf" ) + "#" );
@@ -113,7 +113,7 @@ Hashtable<String, String> aliases;
      *  @param Repository  an initialized Repository
      */
     public Model( final Repository repository, final String name )
-        throws WurfelException
+        throws RippleException
     {
         s_logger.debug( "Creating new Model '" + name + "'" );
 
@@ -130,14 +130,14 @@ aliases = new Hashtable<String, String>();
 
         try
         {
-//            importModel( Wurfel.schemaUrl(), mc.createUri( "urn:wurfel" ), mc );
+//            importModel( Ripple.schemaUrl(), mc.createUri( "urn:wurfel" ), mc );
 
             ( new net.fortytwo.ripple.extensions.test.TestExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.newstuff.NewExtension() ).load( mc );
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             mc.close();
             throw e;
@@ -153,7 +153,7 @@ public Repository getRepository()
 //private boolean namespacesDefined = false;
 
     private void extractRDF( OutputStream out )
-        throws WurfelException
+        throws RippleException
     {
         // Note: a comment by Jeen suggests that a new writer should be created
         //       for each use:
@@ -169,12 +169,12 @@ public Repository getRepository()
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public void saveAs( String fileName )
-        throws WurfelException
+        throws RippleException
     {
         OutputStream out;
 
@@ -185,7 +185,7 @@ public Repository getRepository()
 
         catch ( FileNotFoundException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
 
         extractRDF( out );
@@ -197,7 +197,7 @@ public Repository getRepository()
 
         catch ( IOException e )
         {
-            throw new WurfelException( e );
+            throw new RippleException( e );
         }
     }
 
@@ -233,7 +233,7 @@ public Repository getRepository()
 
 // TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
     public Collection<Value> multiply( Value arg, Value func, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         arg = translateToGraph( arg );
 
@@ -244,7 +244,7 @@ public Repository getRepository()
                 dereferencer.dereference( (URI) arg, mc );
             }
 
-            catch ( WurfelException e )
+            catch ( RippleException e )
             {
                 // (soft fail)
 s_logger.debug( "Failed to dereference URI: " + arg.toString() );
@@ -266,7 +266,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
     // Note: this may be a very expensive operation (see Sesame API).
     public long countStatements()
-        throws WurfelException
+        throws RippleException
     {
         long size;
 
@@ -279,7 +279,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return size;
@@ -291,7 +291,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
     }
 
     public void showNamespaces()
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -327,12 +327,12 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
     public Collection<Value> getContexts()
-        throws WurfelException
+        throws RippleException
     {
         Container contexts = new Container();
 
@@ -351,14 +351,14 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return contexts;
     }
 
     public Collection<Statement> graphQuery( final String queryStr )
-        throws WurfelException
+        throws RippleException
     {
         Collection<Statement> statements = new ArrayList<Statement>();
 
@@ -379,7 +379,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         return statements;
@@ -387,7 +387,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
     // TODO: this method is useless, because we're not even displaying the results
     public void query( final String queryStr )
-        throws WurfelException
+        throws RippleException
     {
         try
         {
@@ -402,7 +402,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
     }
 
@@ -414,7 +414,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
     private Set<Value> rdfMultiply( Value subject,
                                    Value predicate,
                                    RepositoryConnection conn )
-        throws WurfelException
+        throws RippleException
     {
         Set<Value> objects = new HashSet<Value>();
 
@@ -425,7 +425,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
                 RepositoryResult<Statement> stmtIter
                     = conn.getStatements(
 //                        (Resource) subject, (URI) predicate, null, context, includeInferred );
-                        (Resource) subject, (URI) predicate, null, Wurfel.useInference() );
+                        (Resource) subject, (URI) predicate, null, Ripple.useInference() );
                 while ( stmtIter.hasNext() )
                     objects.add( stmtIter.next().getObject() );
                 stmtIter.close();
@@ -433,7 +433,7 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
 
             catch ( Throwable t )
             {
-                throw new WurfelException( t );
+                throw new RippleException( t );
             }
         }
 

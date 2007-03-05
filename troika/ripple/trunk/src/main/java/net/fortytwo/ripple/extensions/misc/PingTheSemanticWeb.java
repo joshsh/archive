@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -31,15 +31,15 @@ public class PingTheSemanticWeb extends PrimitiveFunction
     private static SAXBuilder s_saxBuilder = null;
 
     public PingTheSemanticWeb( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelMiscUri( "pingTheSemanticWeb" ), mc );
+        super( mc.createRippleMiscUri( "pingTheSemanticWeb" ), mc );
     }
 
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         String type;
         int maxResults;
@@ -60,7 +60,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
                 s_saxBuilder = new SAXBuilder( true );
                 s_saxBuilder.setReuseParser( true );
 
-                String schemaLocation = Wurfel.class.getResource( "xml/ptsw.xsd" ).toString();
+                String schemaLocation = Ripple.class.getResource( "xml/ptsw.xsd" ).toString();
                 s_saxBuilder.setFeature(
                     "http://apache.org/xml/features/validation/schema", true );
                 s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
@@ -83,7 +83,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         Element root = doc.getRootElement();

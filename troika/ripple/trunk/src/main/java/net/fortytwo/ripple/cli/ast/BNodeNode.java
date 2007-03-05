@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.cli.Interpreter;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Value;
@@ -21,12 +21,12 @@ public class BNodeNode extends Ast
     }
 
     public Value evaluate( Interpreter itp, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         Value v = mc.createBNode( id );
 
         if ( null == v )
-            throw new WurfelException( "blank node '" + toString() + "' does not exist" );
+            throw new RippleException( "blank node '" + toString() + "' does not exist" );
         else
             return v;
     }

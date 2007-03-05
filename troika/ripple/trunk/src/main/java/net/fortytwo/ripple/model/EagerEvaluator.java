@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Value;
 
@@ -16,7 +16,7 @@ public class EagerEvaluator extends Evaluator
     public void reduce( ListNode<Value> expr,
                         Sink<ListNode<Value>> sink,
                         ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
 /*
         if ( isApply( expr ) && ( (Apply) expr ).arity() == 0 )

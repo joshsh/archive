@@ -1,16 +1,16 @@
-package wurfel.test;
+package net.fortytwo.ripple.test;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
 import org.openrdf.repository.Repository;
 
-import wurfel.JLineTest;
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.CLIExample;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
 
-public abstract class WurfelTestCase extends TestCase
+public abstract class RippleTestCase extends TestCase
 {
     protected static final boolean DEBUG = true;
 
@@ -73,9 +73,9 @@ public abstract class WurfelTestCase extends TestCase
     }
 
     protected void start()
-        throws WurfelException
+        throws RippleException
     {
-        Wurfel.initialize();
+        Ripple.initialize();
 
         totalRunningTests = 0;
     }
@@ -126,7 +126,7 @@ public abstract class WurfelTestCase extends TestCase
         if ( null == model )
         {
             // Warning: we never call shutDown() on this repository.
-            Repository repository = JLineTest.createTestRepository();
+            Repository repository = CLIExample.createTestRepository();
 
             model = new Model( repository, "UnitTestModel" );
         }

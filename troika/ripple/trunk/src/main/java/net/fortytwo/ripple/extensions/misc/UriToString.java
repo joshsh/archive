@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -18,15 +18,15 @@ import java.util.LinkedList;
 public class UriToString extends PrimitiveFunction
 {
     public UriToString( ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
-        super( mc.createWurfelMiscUri( "uriToString" ), mc );
+        super( mc.createRippleMiscUri( "uriToString" ), mc );
     }
 
     protected void applyInternal( ListNode<Value> stack,
                                   Sink<ListNode<Value>> sink,
                                   ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         URI a;
         String result;
@@ -41,7 +41,7 @@ public class UriToString extends PrimitiveFunction
 
         catch ( Throwable t )
         {
-            throw new WurfelException( t );
+            throw new RippleException( t );
         }
 
         sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );

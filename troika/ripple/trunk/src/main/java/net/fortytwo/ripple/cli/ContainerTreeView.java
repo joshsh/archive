@@ -1,12 +1,12 @@
 package net.fortytwo.ripple.cli;
 
-import wurfel.Wurfel;
-import wurfel.WurfelException;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ObservableContainer;
-import net.fortytwo.ripple.model.WurfelPrintStream;
+import net.fortytwo.ripple.model.RipplePrintStream;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class ContainerTreeView implements Observer
 {
     private ObservableContainer valueSet;
-    private WurfelPrintStream ps;
+    private RipplePrintStream ps;
 
     private Lexicon lexicon;
 
@@ -30,10 +30,10 @@ public class ContainerTreeView implements Observer
 
     private static final String indexSeparator = "  ";
 
-    private static final int maxDepth = Wurfel.getTreeViewDepth();
+    private static final int maxDepth = Ripple.getTreeViewDepth();
 
-    public ContainerTreeView( ObservableContainer valueSet, WurfelPrintStream printStream )
-        throws WurfelException
+    public ContainerTreeView( ObservableContainer valueSet, RipplePrintStream printStream )
+        throws RippleException
     {
         this.valueSet = valueSet;
         this.lexicon = lexicon;
@@ -41,7 +41,7 @@ public class ContainerTreeView implements Observer
     }
 
     private void printTreeView( Value subject, int depth, String wsPrefix, ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
         if ( depth != maxDepth )
             ps.print( wsPrefix );
@@ -84,7 +84,7 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
     }
 
     private void refresh()
-        throws WurfelException
+        throws RippleException
     {
         Model model = valueSet.getModel();
         Collection<Value> values = valueSet.getValues();
@@ -92,7 +92,7 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
         if ( 0 < values.size() )
             ps.println( "" );
 
-        int treeViewDepth = Wurfel.getTreeViewDepth();
+        int treeViewDepth = Ripple.getTreeViewDepth();
         ModelConnection mc = new ModelConnection( model, "for ContainerTreeView refresh()" );
 
         try
@@ -112,7 +112,7 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
             }
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             mc.close();
             throw e;
@@ -134,7 +134,7 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
     }
 
     public synchronized void resumeEventHandling()
-        throws WurfelException
+        throws RippleException
     {
         if ( suspended )
         {
@@ -163,7 +163,7 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
             }
         }
 
-        catch ( WurfelException e )
+        catch ( RippleException e )
         {
             System.err.println( "\nError: " + e.toString() + "\n" );
         }

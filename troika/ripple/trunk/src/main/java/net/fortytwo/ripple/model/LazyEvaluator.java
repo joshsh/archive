@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.model;
 
-import wurfel.WurfelException;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Value;
 
@@ -17,7 +17,7 @@ public class LazyEvaluator extends Evaluator
     public void reduce( ListNode<Value> stack,
                                  Sink<ListNode<Value>> sink,
                                  ModelConnection mc )
-        throws WurfelException
+        throws RippleException
     {
 /*
         Value expr = exprList.getFirst();

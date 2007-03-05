@@ -1,14 +1,14 @@
-package wurfel;
+package net.fortytwo.ripple;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.apache.log4j.Logger;
 
-public class WurfelException extends Exception
+public class RippleException extends Exception
 {
     private final static Logger s_logger
-        = Logger.getLogger( WurfelException.class );
+        = Logger.getLogger( RippleException.class );
 
     private String msg;
 
@@ -19,7 +19,7 @@ public class WurfelException extends Exception
         ERROR = 4;
 
 /*
-    protected WurfelException( Throwable t, int logLevel )
+    protected RippleException( Throwable t, int logLevel )
     {
         try
         {
@@ -50,13 +50,13 @@ public class WurfelException extends Exception
 
         catch ( Throwable secondary )
         {
-            System.err.println( "Failed to log a WurfelException. A stack trace of the secondary error follows." );
+            System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
             secondary.printStackTrace( System.err );
         }
     }
 */
 
-    public WurfelException( Throwable t )
+    public RippleException( Throwable t )
     {
         super();
 
@@ -74,12 +74,12 @@ public class WurfelException extends Exception
 
         catch ( Throwable secondary )
         {
-            System.err.println( "Failed to log a WurfelException. A stack trace of the secondary error follows." );
+            System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
             secondary.printStackTrace( System.err );
         }
     }
 
-    public WurfelException( final String msg )
+    public RippleException( final String msg )
     {
         super( msg );
 
@@ -90,7 +90,7 @@ public class WurfelException extends Exception
 
         catch ( Throwable secondary )
         {
-            System.err.println( "Failed to log a WurfelException. A stack trace of the secondary error follows." );
+            System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
             secondary.printStackTrace( System.err );
         }
     }
