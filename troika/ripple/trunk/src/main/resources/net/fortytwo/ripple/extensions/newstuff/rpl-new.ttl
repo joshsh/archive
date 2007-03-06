@@ -11,6 +11,16 @@ rpl-new:or
   wurfel:combinatorArity 2 ;
   rdfs:comment "Or{x}{y} --> {x,y}" .
 
+rpl-new:scrap
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "/scrap x -->" .
+
+rpl-new:unique
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 1 ;
+  rdfs:comment "..." .
+
 ################################################################################
 
 rpl-new:true
@@ -29,11 +39,6 @@ rpl-new:dup
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 1 ;
   rdfs:comment "/dup x --> x x" .
-
-rpl-new:scrap
-  rdfs:type wurfel:Combinator ;
-  wurfel:combinatorArity 1 ;
-  rdfs:comment "/scrap x -->" .
 
 rpl-new:swap
   rdfs:type wurfel:Combinator ;

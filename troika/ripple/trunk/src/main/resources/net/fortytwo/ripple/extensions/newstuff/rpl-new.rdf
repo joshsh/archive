@@ -9,6 +9,24 @@
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#or">
     <rdfs:comment>Or{x}{y} --&gt; {x,y}</rdfs:comment>
   </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
+    <rdfs:comment>/scrap x --&gt;</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#unique">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#unique">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#unique">
+    <rdfs:comment>...</rdfs:comment>
+  </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#true">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
@@ -35,15 +53,6 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#dup">
     <rdfs:comment>/dup x --&gt; x x</rdfs:comment>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
-    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
-    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</wurfel:combinatorArity>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#scrap">
-    <rdfs:comment>/scrap x --&gt;</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#swap">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>

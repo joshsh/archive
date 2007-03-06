@@ -7,6 +7,9 @@
 <http://www.pipian.com/rdf/places/country/AZ#AZ> locatedIn contains;
 
 
+<http://www.pipian.com/rdf/places/planet/Earth#Earth> sweet:contains/ bagElements/ sweet:contains/ bagElements/ rdf:type/;
+
+
 
 *) Some bad requests give you an RDF error response.  Others give you something less friendly.
 
