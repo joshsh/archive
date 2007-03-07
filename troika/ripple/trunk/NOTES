@@ -13,7 +13,7 @@ rpl-new:unique
 
 "foo" unique/;
 
-2 2 or// unique/;
+2 dup/ or// unique/;
 2 3 or// unique/;
 
 
@@ -24,13 +24,57 @@ rpl-new:unique
 rpl-new:limit
 ========================================
 
- 2 3 or// 4 or// 2 limit// ;
- 2 3 or// 4 or// 2 limit/ ;
+2 3 or// 4 or// 2 limit// ;
+2 3 or// 4 or// 2 limit/ ;
+
+
+========================================
+rpl-new:equal
+========================================
+
+2 2 equal//;
+2 3 equal//;
+
+
+========================================
+rpl-new:scrap
+========================================
+
+2 scrap/;
+Property dup/ rdf:type/ "this won't work" equal// scrap I V/// /;
+Property dup/ rdf:type/ Class equal// scrap I V/// /;
+
+
+========================================
+rpl-new:assert
+========================================
+
+# Note: Sesame will not add the redundant statement.
+rdfs:Class rdfs:label "foo" assert///;
+rdfs:Class rdfs:label "foo" assert///;
+rdfs:Class rdfs:label/;
+
+
+
+V
+    Property/dup/rdf:type Class /equal scrap I /V /cat.
+
+
+
+_:funRef42
+    a rpl:FunctionReference ;
+    rpl:body rpl:dup .
 
 
 
 V  * as a function which consumes an integer, then another function:
     $ ("earth" "air" "water" or 3*)
+      ("earth" "air" "water" or 3 times)
+
+
+
+
+Property/dup/rdf:type "blah"
 
 
 

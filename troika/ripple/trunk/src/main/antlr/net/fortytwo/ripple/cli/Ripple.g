@@ -253,7 +253,7 @@ DIRECTIVE_HEAD
     : '@'
     ;
 
-ADD_DRTV         : DIRECTIVE_HEAD ( "add"           | "a" ) ;
+ASSERT_DRTV      : DIRECTIVE_HEAD ( "assert"        | "a" ) ;
 COUNT_DRTV       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
 DEFINE_DRTV      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
 EXPORT_DRTV      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
@@ -510,7 +510,7 @@ nt_Directive
     String localName = null;
     Ast rhs;
 }
-    : ADD_DRTV WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
+    : ASSERT_DRTV WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
         {
             interpreter.addStatement( subj, pred, obj );
         }

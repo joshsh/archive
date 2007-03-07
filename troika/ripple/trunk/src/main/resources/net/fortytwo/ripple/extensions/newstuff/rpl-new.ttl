@@ -32,6 +32,18 @@ rpl-new:limit
 
 ################################################################################
 
+rpl-new:assert
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3;
+  rdfs:comment "..." .
+
+rpl-new:deny
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 3;
+  rdfs:comment "..." .
+
+################################################################################
+
 rpl-new:true
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 2 ;
@@ -41,6 +53,11 @@ rpl-new:false
   rdfs:type wurfel:Combinator ;
   wurfel:combinatorArity 2 ;
   rdfs:comment "b a false// --> b" .
+
+rpl-new:equal
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "..." .
 
 ################################################################################
 

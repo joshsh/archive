@@ -51,6 +51,24 @@
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#limit">
     <wurfel:parameters rdf:nodeID="genid2"/>
   </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#assert">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#assert">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#assert">
+    <rdfs:comment>...</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#deny">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#deny">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#deny">
+    <rdfs:comment>...</rdfs:comment>
+  </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#true">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
   </rdf:Description>
@@ -68,6 +86,15 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#false">
     <rdfs:comment>b a false// --&gt; b</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#equal">
+    <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#equal">
+    <wurfel:combinatorArity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</wurfel:combinatorArity>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#equal">
+    <rdfs:comment>...</rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://fortytwo.net/2007/03/04/rpl-new#dup">
     <rdfs:type rdf:resource="http://fortytwo.net/2007/02/06/wurfel#Combinator"/>

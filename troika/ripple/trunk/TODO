@@ -3,6 +3,7 @@ Build
 * place the required RDF documents (wurfel, wurfel-test, wurfel-misc) into the JAR itself so that Wurfel is not dependent on network connectivity to fortytwo.net
 * install Trac
 * prevent the build from succeeding when ANTLR parser generation fails
+* build and test on Windows
 
 Exception handling
 ================================================================================

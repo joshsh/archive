@@ -194,7 +194,7 @@ System.out.println( "########## updating completors" );
             try
             {
                 SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
-                    "@add",
+                    "@assert",
                     "@count",
                     "@export",
                     "@list",
@@ -399,7 +399,7 @@ System.out.println( "--- 3 ---" );
             Value predValue = pred.evaluate( this, mc );
             Value objValue = obj.evaluate( this, mc );
 
-            mc.addStatement( subjValue, predValue, objValue );
+            mc.add( subjValue, predValue, objValue );
             mc.close();
             mc = null;
         }

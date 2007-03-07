@@ -355,7 +355,9 @@ public class ModelConnection
         return predicates;
     }
 
-    public void addStatement( Value subj, Value pred, Value obj )
+    ////////////////////////////////////////////////////////////////////////////
+
+    public void add( Value subj, Value pred, Value obj )
         throws RippleException
     {
         Resource subjResource = castToResource( subj );
@@ -373,12 +375,29 @@ public class ModelConnection
         }
     }
 
-    public void addStatement( Resource subj, URI pred, Value obj, Resource context )
+    public void add( Resource subj, URI pred, Value obj, Resource context )
         throws RippleException
     {
         try
         {
             repoConnection.add( subj, pred, obj, context );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
+    public void remove( Value subj, Value pred, Value obj )
+        throws RippleException
+    {
+        Resource subjResource = castToResource( subj );
+        URI predUri = castToUri( pred );
+
+        try
+        {
+            repoConnection.remove( subjResource, predUri, obj );
         }
 
         catch ( Throwable t )
