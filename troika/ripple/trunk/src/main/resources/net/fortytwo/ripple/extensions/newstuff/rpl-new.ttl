@@ -21,6 +21,15 @@ rpl-new:unique
   wurfel:combinatorArity 1 ;
   rdfs:comment "..." .
 
+rpl-new:limit
+  rdfs:type wurfel:PrimitiveFunction ;
+  wurfel:returnType wurfel:Combinator ;  # not strictly true...
+  wurfel:parameters (
+      [ wurfel:parameterName "lim" ;
+        wurfel:parameterType xsd:integer ;
+        wurfel:parameterTransparency true ]
+    ) .
+
 ################################################################################
 
 rpl-new:true

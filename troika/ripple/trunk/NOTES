@@ -1,3 +1,40 @@
+# EagerStackEvaluator is only partially eager:
+1 2 or// 3 4 unique/;
+	rdf:_1  ( 4 3 <http://fortytwo.net/2007/02/ripple#apply> <http://fortytwo.net/2007/02/ripple#apply> rpl-new:or 2 1 )
+
+
+EagerStackEvaluator:
+    (2 dup/ 3)  -->  (2 dup/ 3)
+
+
+========================================
+rpl-new:unique
+========================================
+
+"foo" unique/;
+
+2 2 or// unique/;
+2 3 or// unique/;
+
+
+1 2 3 4 or// unique/;
+
+
+========================================
+rpl-new:limit
+========================================
+
+ 2 3 or// 4 or// 2 limit// ;
+ 2 3 or// 4 or// 2 limit/ ;
+
+
+
+V  * as a function which consumes an integer, then another function:
+    $ ("earth" "air" "water" or 3*)
+
+
+
+
 Beau brother Josh .
 
 Beau brother Josh assert/// 

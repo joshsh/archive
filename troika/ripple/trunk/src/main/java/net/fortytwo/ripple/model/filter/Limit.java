@@ -11,13 +11,14 @@ import net.fortytwo.ripple.model.Sink;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class Unique extends Filter
+public class Limit extends Filter
 {
-    private static String memo = "memo";
-    private ListMemoizer<Value,String> memoizer = null;
+    long count, limit;
 
-    public Unique()
+    public Limit( long lim )
     {
+        limit = lim;
+        count = 0;
 //System.out.println( "" + this + "()" );
     }
 
@@ -26,22 +27,11 @@ public class Unique extends Filter
                          ModelConnection mc )
         throws RippleException
     {
-        if ( null == memoizer )
+        if ( count < limit )
         {
-            memoizer = new ListMemoizer<Value,String>( stack, memo );
+            count++;
             sink.put( stack );
-//System.out.println( "put first: " + stack.getFirst() );
         }
-
-        else if ( memoizer.add( stack, memo ) )
-//{
-            sink.put( stack );
-//System.out.println( "put another: " + stack.getFirst() );
-//}
-//else
-//{
-//System.out.println( "rejected this: " + stack.getFirst() );
-//}
     }
 }
 
