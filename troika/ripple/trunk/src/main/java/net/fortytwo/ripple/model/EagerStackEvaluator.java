@@ -3,12 +3,15 @@ package net.fortytwo.ripple.model;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+    import net.fortytwo.ripple.model.filter.Unique;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 public class EagerStackEvaluator extends Evaluator
 {
+private URI uniqueFilterUri;
+
     private Model model;
     private ModelConnection modelConnection;
     private URI applyOp;
@@ -144,6 +147,17 @@ public class EagerStackEvaluator extends Evaluator
                     ( new EvaluatorSink( new ApplySink( sink ) ) ).put( stack.getRest() );
             }
 
+else if ( first.equals( uniqueFilterUri ) )
+{
+    ListNode<Value> rest = stack.getRest();
+
+    if ( null == rest )
+        return;
+
+    else
+        ( new EvaluatorSink( new FunctionSink( new Unique(), sink ) ) ).put( stack.getRest() );
+}
+
             else if ( isFunction( first ) )
             {
                 ListNode<Value> rest = stack.getRest();
@@ -227,6 +241,7 @@ public class EagerStackEvaluator extends Evaluator
     {
 //System.out.println( "public void reduce" );
 //System.out.flush();
+uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/04/rpl-new#unique" );
         modelConnection = mc;
         model = modelConnection.getModel();
         applyOp = mc.getApplyOp();

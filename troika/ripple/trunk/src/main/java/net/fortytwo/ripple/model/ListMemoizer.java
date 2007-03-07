@@ -70,7 +70,7 @@ public class ListMemoizer<T,M>
 				if ( null == left )
 				{
 					left = new ListMemoizer<T,M>( list, memo );
-					return false;
+					return true;
 				}
 
 				else
@@ -82,7 +82,7 @@ public class ListMemoizer<T,M>
 				if ( null == right )
 				{
 					right = new ListMemoizer<T,M>( list, memo );
-					return false;
+					return true;
 				}
 
 				else

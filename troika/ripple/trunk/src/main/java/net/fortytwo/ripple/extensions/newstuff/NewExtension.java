@@ -29,7 +29,7 @@ public class NewExtension extends Extension
             new Dup( mc ),
             new Zap( mc ),
             new Scrap( mc ),
-            new Unique( mc ),
+//            new Unique( mc ),
             new Swap( mc ) };
 
         return functions;
