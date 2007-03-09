@@ -50,7 +50,7 @@ unzip -l target/firefox/wurfel.xpi
 
 java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
 
-java -classpath target/wurfel-with-dependencies.jar wurfel.tools.FileRdfizerDriver /home/joshs/dev/projects/troika/wurfel/src/main/java/ > target/fileRdfizerTest.rdf
+java -classpath target/ripple-full.jar wurfel.tools.FileRdfizerDriver /home/joshs/dev/projects/troika/wurfel/src/main/java/ > target/fileRdfizerTest.rdf
 
 
 

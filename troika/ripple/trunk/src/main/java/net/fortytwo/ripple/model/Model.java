@@ -152,7 +152,7 @@ public Repository getRepository()
 }
 //private boolean namespacesDefined = false;
 
-    private void extractRDF( OutputStream out )
+    public void writeTo( OutputStream out )
         throws RippleException
     {
         // Note: a comment by Jeen suggests that a new writer should be created
@@ -188,7 +188,7 @@ public Repository getRepository()
             throw new RippleException( e );
         }
 
-        extractRDF( out );
+        writeTo( out );
 
         try
         {
