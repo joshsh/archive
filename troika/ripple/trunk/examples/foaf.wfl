@@ -50,8 +50,8 @@
 
 
 (: Ego :)
-<http://fortytwo.net/2007/02/24/josh#me>;
-<http://fortytwo.net/2007/02/24/josh#me> foaf:interest/;
+<http://fortytwo.net/2007/03/06/josh#me>;
+<http://fortytwo.net/2007/03/06/josh#me> foaf:interest/;
 
 
 # Cheat to grab the actual FOAF vocabulary:

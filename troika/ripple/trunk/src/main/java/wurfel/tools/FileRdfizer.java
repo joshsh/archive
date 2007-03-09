@@ -161,7 +161,8 @@ public class FileRdfizer
 				connection.add( valueFactory.createStatement(
 					self,
 					parentOfUri,
-					createFileUri( child, namespace ),
+					childUri,
+					//createFileUri( child, namespace ),
 					context ) );
 				connection.add( valueFactory.createStatement(
 					childUri,
