@@ -123,77 +123,79 @@
 					<version>1.2.14</version>
 					<type>jar</type>
 				</dependency>
+
 				<!--
-				<dependency>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-core</artifactId>
-					<version>2.0.0</version>
-					<type>jar</type>
-				</dependency>
-				-->
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>sesame</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
-				<!--
+				-->
+				
+				<!---->
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-model</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-repository-api</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-repository-http</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-repository-sail</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-rio-n3</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-rio-rdfxml</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-rio-turtle</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-sail-inferencer</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
-				-->
+				<dependency>
+					<groupId>org.openrdf</groupId>
+					<artifactId>openrdf-sail-memory</artifactId>
+					<version>2.0-beta2</version>
+					<type>jar</type>
+				</dependency>
+				<!---->
 				<!--
 				    <dependency>
 					    <groupId>org.openrdf</groupId>
 					    <artifactId>openrdf-rio-trix</artifactId>
-					    <version>2.0-beta1</version>
+					    <version>2.0-beta2</version>
 					    <type>jar</type>
 				    </dependency>
 				-->
@@ -201,7 +203,7 @@
 				<dependency>
 					<groupId>org.openrdf</groupId>
 					<artifactId>openrdf-util</artifactId>
-					<version>2.0-beta1</version>
+					<version>2.0-beta2</version>
 					<type>jar</type>
 				</dependency>
 				-->

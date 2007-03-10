@@ -9,7 +9,8 @@ import org.apache.log4j.Logger;
 
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
+import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
+//import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
 import net.fortytwo.ripple.cli.Interpreter;

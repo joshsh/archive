@@ -874,7 +874,7 @@ showUrlConnection( urlConn );
     }
 
 
-    public void addGraph( final URL url, final URI baseURI )
+    public void addGraph( final URL url, final URI context )
         throws RippleException
     {
         // Wrap the entire operation in the timeout wrapper, as there are various
@@ -884,17 +884,47 @@ showUrlConnection( urlConn );
         new ThreadWrapper() {
             protected void run() throws RippleException
             {
-                addGraphPrivate( url, baseURI );
+                addGraphPrivate( url, context );
             }
         }.start( Ripple.uriDereferencingTimeout() );
     }
 
 
-    private void addGraphPrivate( final URL url, final URI baseURI )
+    public void addGraph( final InputStream is, final URI context, RDFFormat format )
+        throws RippleException
+    {
+        try
+        {
+            if ( null == context )
+                repoConnection.add( is, null, format );
+            else
+            {
+                String baseUri = context.toString();
+                repoConnection.add( is, baseUri, format, context );
+            }
+        }
+
+        catch ( Throwable t )
+        {
+            if ( t instanceof RDFParseException )
+            {
+                String msg = "line " + ( (RDFParseException) t ).getLineNumber()
+                    + ", column " + ( (RDFParseException) t ).getColumnNumber()
+                    + ": " + t.getMessage();
+
+                throw new RippleException( msg );
+            }
+
+            else
+                throw new RippleException( t );
+        }
+    }
+
+    private void addGraphPrivate( final URL url, final URI context )
         throws RippleException
     {
         s_logger.info( "Importing model " + url.toString() +
-            ( ( null == baseURI ) ? "" : " in context " + baseURI.toString() ) );
+            ( ( null == context ) ? "" : " in context " + context.toString() ) );
 
         boolean verifyData = true;
 s_logger.info( "######## dereferencing graph at URL: " + url );
@@ -920,27 +950,13 @@ s_logger.info( "####### Guessed format is " + format.getName() );
 
         try
         {
-            if ( null == baseURI )
-                repoConnection.add( response, null, format );
-            else
-                repoConnection.add( response, baseURI.toString(), format, baseURI );
+            addGraph( response, context, format );
         }
 
-        catch ( Throwable t )
+        catch ( RippleException e )
         {
             close( response );
-
-            if ( t instanceof RDFParseException )
-            {
-                String msg = "line " + ( (RDFParseException) t ).getLineNumber()
-                    + ", column " + ( (RDFParseException) t ).getColumnNumber()
-                    + ": " + t.getMessage();
-
-                throw new RippleException( msg );
-            }
-
-            else
-                throw new RippleException( t );
+            throw e;
         }
 
         close( response );
@@ -1007,7 +1023,7 @@ s_logger.info( "####### graph imported without errors" );
         {
             throw new RippleException( t );
         }
-
+System.out.println( "########################### Count = " + count );
         return count;
     }
 }
