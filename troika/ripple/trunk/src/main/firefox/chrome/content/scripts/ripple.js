@@ -1,7 +1,7 @@
-var Wurfel = new Object();
+var Ripple = new Object();
 
 
-Wurfel.initialize = function()
+Ripple.initialize = function()
 {
 alert( "can you see me?" );
 
@@ -40,7 +40,7 @@ alert( "can you see me?" );
 
 
 
-Wurfel.doIt = function() {
+Ripple.doIt = function() {
 
     try {
         var foo = this.getFoo();
@@ -57,13 +57,13 @@ Wurfel.doIt = function() {
 }
 
 
-Wurfel.getFoo = function() {
-    return Components.classes["@wurfel/wurfel;1"]
+Ripple.getFoo = function() {
+    return Components.classes["@ripple/ripple;1"]
         .getService(Components.interfaces.nsIHelloWorld);
 }
 
 
-Wurfel._trace = function( msg )
+Ripple._trace = function( msg )
 {
     Components.classes["@mozilla.org/consoleservice;1"]
         .getService( Components.interfaces.nsIConsoleService )
@@ -71,7 +71,7 @@ Wurfel._trace = function( msg )
 }
 
 
-Wurfel._fail = function( e )
+Ripple._fail = function( e )
 {
     var msg;
 

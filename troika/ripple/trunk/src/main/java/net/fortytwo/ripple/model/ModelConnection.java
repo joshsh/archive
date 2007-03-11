@@ -118,6 +118,25 @@ public class ModelConnection
         remove( this );
     }
 
+    /**
+     *  Returns the ModelConnection to a normal state after an Exception has
+     *  been thrown.
+     */
+    public void reset()
+        throws RippleException
+    {
+        try
+        {
+            repoConnection.close();
+            repoConnection = model.getRepository().getConnection();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private static Set<ModelConnection> openConnections

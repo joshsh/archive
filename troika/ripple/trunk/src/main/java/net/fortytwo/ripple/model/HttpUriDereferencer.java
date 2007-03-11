@@ -111,6 +111,7 @@ s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to c
 
         catch ( RippleException e )
         {
+            mc.reset();
 s_logger.info( "##### failed to dereference URI: " + uri.toString() );
             failureMemoUris.add( memo );
             throw e;

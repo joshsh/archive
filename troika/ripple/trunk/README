@@ -11,6 +11,8 @@
 
 cat `find src -name "*.java"`| wc
 
+grep rfel * -Rl
+
 V
     @open;
     @close;
@@ -50,14 +52,7 @@ unzip -l target/firefox/wurfel.xpi
 
 java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
 
-java -classpath target/ripple-full.jar wurfel.tools.FileRdfizerDriver /home/joshs/dev/projects/troika/wurfel/src/main/java/ > target/fileRdfizerTest.rdf
-
-
-
-!import "file:///home/joshs/dev/wurfel/rdf/vcard/3.0" ;
-
-
-!import "http://www.apps.ag-nbi.de/makna/semwebexport?language=rdf&model=inferenced";
+java -classpath target/ripple-full.jar net.forytwo.ripple.tools.FileRdfizerDriver $SRC > target/fileRdfizerTest.rdf
 
 
 ::::::::::::::::::::::::::::::::::::::::
@@ -98,19 +93,6 @@ rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extension
 rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/work/file.ttl > ./src/main/resources/wurfel/work/file.rdf
 rapper -q -i turtle -o rdfxml main/resources/wurfel/work/joshua-shinavier.ttl > main/resources/wurfel/work/joshua-shinavier.rdf
 #rapper -q -i turtle -o rdfxml ./src/main/resources/wurfel/misc/xbrl.ttl > ./src/main/resources/wurfel/misc/xbrl.rdf
-
-
-sfhome
-cd www/2007/02/06
-put ./src/main/resources/wurfel/extensions/misc/wurfel-misc.rdf
-put ./src/main/resources/wurfel/extensions/test/wurfel-test.rdf
-put ./src/main/resources/wurfel/wurfel.rdf
-put ./src/main/resources/wurfel/work/file.rdf
-put ./src/main/resources/wurfel/work/currency.ttl
-put ./src/main/resources/wurfel/work/context_2007-02-01.rdf
-put ./src/main/resources/wurfel/work/joshua-shinavier.rdf
-exit
-
 
 
 RAPTORTRUNK=/home/joshs/opt/rdf_/redland_/raptor_/dot/branch_dot

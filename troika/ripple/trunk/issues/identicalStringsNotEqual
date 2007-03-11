@@ -1,0 +1,7 @@
+
+"Dan Smith" "Dan Smith" equal//;
+	rdf:_1  ( rpl-new:true )
+<http://dan.smith.name/who#dan> foaf:name/;
+	rdf:_1  ( "Dan Smith" )
+<http://dan.smith.name/who#dan> foaf:name/ "Dan Smith" equal//;
+	rdf:_1  ( rpl-new:false )

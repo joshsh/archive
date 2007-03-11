@@ -1,4 +1,4 @@
-package wurfel;
+package net.fortytwo.ripple;
 
 public class XPComTest {
     static public String getGreetings() {

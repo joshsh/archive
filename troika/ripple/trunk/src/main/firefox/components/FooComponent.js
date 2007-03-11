@@ -39,7 +39,7 @@ var FooModule = {
      */
     _myComponentID : Components.ID("{DDB81F4C-87CC-40d3-BA17-48CA1FB74890}"),
     _myName :        "The Foo component of the Java Firefox Extension",
-    _myContractID :  "@wurfel/wurfel;1",
+    _myContractID :  "@ripple/ripple;1",
     
     /*
      *  This flag specifies whether this factory will create only a
@@ -168,7 +168,7 @@ FooComponent.prototype.initialize = function (java, trace) {
     
     this._trace("FooComponent.initialize {");
     try {
-        var extensionPath = this._getExtensionPath("wurfel");
+        var extensionPath = this._getExtensionPath("ripple");
         
         /*
          *  Bootstrap our class loading mechanism
@@ -182,7 +182,7 @@ FooComponent.prototype.initialize = function (java, trace) {
         var jarFilenames = [
 //            "classes/", // our own classes
 //            "javax.servlet-5.1.4.jar", // a sample JAR
-            "wurfel-with-dependencies.jar"
+            "ripple-with-dependencies.jar"
         ];
         
         var jarFilepaths = [];
@@ -199,13 +199,13 @@ FooComponent.prototype.initialize = function (java, trace) {
          *  Test out a static method
          */
         this._trace("Greetings: " + 
-            this._packages.getClass("wurfel.XPComTest").m("getGreetings")()
+            this._packages.getClass("net.fortytwo.ripple.XPComTest").m("getGreetings")()
         );
         
         /*
          *  Create a sample Java object
          */
-        this._test = this._packages.getClass("wurfel.XPComTest").n(42);
+        this._test = this._packages.getClass("net.fortytwo.ripple.XPComTest").n(42);
          
         this._initialized = true;
     } catch (e) {

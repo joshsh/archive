@@ -130,8 +130,6 @@ aliases = new Hashtable<String, String>();
 
         try
         {
-//            importModel( Ripple.schemaUrl(), mc.createUri( "urn:wurfel" ), mc );
-
             ( new net.fortytwo.ripple.extensions.test.TestExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.newstuff.NewExtension() ).load( mc );

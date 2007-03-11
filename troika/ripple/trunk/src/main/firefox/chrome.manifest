@@ -4,10 +4,10 @@
 
 # WARNING: don't forget the '/' at the end of the paths or it won't work!!
 
-overlay chrome://browser/content/browser.xul chrome://wurfel/content/overlay.xul
-content wurfel chrome/content/
+overlay chrome://browser/content/browser.xul chrome://ripple/content/overlay.xul
+content ripple chrome/content/
 
-skin    wurfel  classic/1.0     chrome/skin/classic/
-style   chrome://global/content/customizeToolbar.xul    chrome://wurfel/skin/browser.css
+skin    ripple  classic/1.0     chrome/skin/classic/
+style   chrome://global/content/customizeToolbar.xul    chrome://ripple/skin/browser.css
 
-locale  wurfel  en-US   chrome/locale/en-US/
+locale  ripple  en-US   chrome/locale/en-US/

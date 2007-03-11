@@ -4,7 +4,7 @@
 <?xml-stylesheet href="chrome://piggy-bank/skin/about/aboutDialog.css" type="text/css"?>
 -->
 
-<!DOCTYPE globalDTD SYSTEM "chrome://wurfel/locale/global.dtd">
+<!DOCTYPE globalDTD SYSTEM "chrome://ripple/locale/global.dtd">
 
 <dialog xmlns:html="http://www.w3.org/1999/xhtml"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -25,8 +25,8 @@
 
   <deck id="modes" flex="1">
     <vbox flex="1" id="clientBox">
-      <label id="version" value="&wurfel.version;"/>
-      <label id="build" value="&wurfel.build;"/>
+      <label id="version" value="&ripple.version;"/>
+      <label id="build" value="&ripple.build;"/>
     </vbox>
 <!--
     <vbox flex="1" id="creditsBox">

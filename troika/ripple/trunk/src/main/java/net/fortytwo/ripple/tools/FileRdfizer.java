@@ -1,4 +1,4 @@
-package wurfel.tools;
+package net.fortytwo.ripple.tools;
 
 import java.io.File;
 
