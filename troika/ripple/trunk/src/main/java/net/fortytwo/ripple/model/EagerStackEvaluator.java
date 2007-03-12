@@ -27,6 +27,11 @@ private URI uniqueFilterUri;
         return ( v instanceof Function );
     }
 
+    boolean isFunctionEnvelope( Value v )
+    {
+        return ( v instanceof FunctionEnvelope );
+    }
+
     boolean isProperty( Value v )
     {
         return ( v instanceof URI );
@@ -50,16 +55,16 @@ private URI uniqueFilterUri;
         {
             this.property = property;
             this.sink = sink;
-////System.out.println( this + "( " + property + ", " + sink + " )" );
+System.out.println( this + "( " + property + ", " + sink + " )" );
 //System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws RippleException
         {
-//System.out.println( this + ".put( " + stack + " )" );
+System.out.println( this + ".put( " + stack + " )" );
 //System.out.flush();
-//System.out.println( "   first = " + stack.getFirst() );
+System.out.println( "   first = " + stack.getFirst() );
 //System.out.flush();
             Value first = stack.getFirst();
             ListNode<Value> rest = stack.getRest();
@@ -80,8 +85,8 @@ private URI uniqueFilterUri;
         {
             this.function = function;
             this.sink = sink;
-//System.out.println( this + "( " + function + ", " + sink + ")" );
-//System.out.println( "function.arity() = " + function.arity() );
+System.out.println( this + "( " + function + ", " + sink + ")" );
+System.out.println( "function.arity() = " + function.arity() );
 //System.out.flush();
         }
 
@@ -102,93 +107,8 @@ private URI uniqueFilterUri;
 
                 Closure c = new Closure( function, first );
 
-                sink.put( new ListNode<Value>( c, rest ) );
+                sink.put( new ListNode<Value>( new FunctionEnvelope( c ), rest ) );
             }
-        }
-    }
-
-
-    protected class ApplySink implements Sink<ListNode<Value>>
-    {
-        Sink<ListNode<Value>> sink;
-
-        public ApplySink( Sink<ListNode<Value>> sink )
-        {
-            this.sink = sink;
-//System.out.println( this + "( " + sink + ")" );
-//System.out.flush();
-        }
-
-        public void put( ListNode<Value> stack )
-            throws RippleException
-        {
-//System.out.println( this + ".put( " + stack + " )" );
-//System.out.flush();
-//System.out.println( "   first = " + stack.getFirst() );
-//System.out.flush();
-//        if ( null == stack )
-//            return;
-
-            Value first = stack.getFirst();
-
-            if ( isApplyOp( first ) )
-            {
-                ListNode<Value> rest = stack.getRest();
-
-                if ( null == rest )
-                    return;
-/*
-                {
-                    stack = new ListNode<Value>( first, stack );
-                    sink.put( stack );
-                }
-*/
-                else
-                    ( new EvaluatorSink( new ApplySink( sink ) ) ).put( stack.getRest() );
-            }
-
-else if ( first.equals( uniqueFilterUri ) )
-{
-    ListNode<Value> rest = stack.getRest();
-
-    if ( null == rest )
-        return;
-
-    else
-        ( new EvaluatorSink( new FunctionSink( new Unique(), sink ) ) ).put( stack.getRest() );
-}
-
-            else if ( isFunction( first ) )
-            {
-                ListNode<Value> rest = stack.getRest();
-
-                if ( null == rest )
-                    return;
-//                    sink.put( stack );
-
-                else
-                    ( new EvaluatorSink( new FunctionSink( (Function) first, sink ) ) ).put( rest );
-            }
-
-            else if ( isList( first ) )
-            {
-// ...
-            }
-
-            else if ( isProperty( first ) )
-            {
-                ListNode<Value> rest = stack.getRest();
-
-                if ( null == rest )
-                    return;
-//                    sink.put( stack );
-
-                else
-                    ( new EvaluatorSink( new PropertySink( (URI) first, sink ) ) ).put( rest );
-            }
-
-            else
-                throw new RippleException( "value cannot be applied: " + first.toString() );
         }
     }
 
@@ -204,19 +124,54 @@ else if ( first.equals( uniqueFilterUri ) )
         public EvaluatorSink( Sink<ListNode<Value>> sink )
         {
            this.sink = sink;
-//System.out.println( this + "( " + sink + ")" );
+System.out.println( this + "( " + sink + ")" );
 //System.out.flush();
         }
 
         public void put( ListNode<Value> stack )
             throws RippleException
         {
-//System.out.println( this + ".put( " + stack + " )" );
+System.out.println( this + ".put( " + stack + " )" );
 //System.out.flush();
             Value first = stack.getFirst();
-//System.out.println( "   first = " + stack.getFirst() );
+System.out.println( "   first = " + stack.getFirst() );
 //System.out.flush();
 
+            if ( isFunctionEnvelope( first ) )
+            {
+                // prim[]
+                if ( null != ( (FunctionEnvelope) first ).getFunction() )
+                {
+System.out.println( "prim[" + ( (FunctionEnvelope) first ).getFunction() + "]" );
+                    ListNode<Value> rest = stack.getRest();
+    
+                    if ( null == rest )
+                        return;
+    //                    sink.put( stack );
+    
+                    else
+                        ( new EvaluatorSink( new FunctionSink( ((FunctionEnvelope) first).getFunction(), this ) ) ).put( rest );
+                }
+
+                // pred[]
+                else
+                {
+System.out.println( "pred[" + ( (FunctionEnvelope) first ).getPredicate() + "]" );
+                    ListNode<Value> rest = stack.getRest();
+    
+                    if ( null == rest )
+                        return;
+    //                    sink.put( stack );
+    
+                    else
+                        ( new EvaluatorSink( new PropertySink( ((FunctionEnvelope) first).getPredicate(), this ) ) ).put( rest );
+                }
+            }
+
+            // arg[]
+            else
+                sink.put( stack );
+/*
             if ( isApplyOp( first ) )
             {
                 ListNode<Value> rest = stack.getRest();
@@ -231,6 +186,7 @@ else if ( first.equals( uniqueFilterUri ) )
 
             else
                 sink.put( stack );
+*/
         }
     }
 
@@ -239,7 +195,7 @@ else if ( first.equals( uniqueFilterUri ) )
                         ModelConnection mc )
         throws RippleException
     {
-//System.out.println( "public void reduce" );
+System.out.println( "public void reduce" );
 //System.out.flush();
 uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/04/rpl-new#unique" );
         modelConnection = mc;

@@ -41,10 +41,10 @@
 
 @prefix foaf: <http://xmlns.com/foaf/0.1/>;
 <http://www.w3.org/People/Berners-Lee/card#i>;
-<http://www.w3.org/People/Berners-Lee/card#i> foaf:name/;
-<http://www.w3.org/People/Berners-Lee/card#i> foaf:knows/ unique/ foaf:name/;
-<http://www.w3.org/People/Berners-Lee/card#i> foaf:knows/ unique/ foaf:knows/ unique/ foaf:name/;
-<http://www.w3.org/People/Berners-Lee/card#i> foaf:knows/ unique/ foaf:knows/ unique/ foaf:knows/ unique/ foaf:name/;
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:name;
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:name;
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:knows /unique /foaf:name;
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:knows /unique /foaf:knows /unique /foaf:name;
 
 
 

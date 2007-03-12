@@ -2,6 +2,7 @@ header
 {
 package net.fortytwo.ripple.cli;
 
+import net.fortytwo.ripple.cli.ast.ApplyNode;
 import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.BooleanNode;
 import net.fortytwo.ripple.cli.ast.BNodeNode;
@@ -322,7 +323,7 @@ nt_Sequence returns [ SequenceNode s ]
     : i=nt_Item
 
       ( ( WS ~(SEMI) ) => ( WS s=nt_Sequence )
-      | ( L_PAREN | OP_APPLY ) => ( s=nt_Sequence )
+      | ( L_PAREN /*| OP_APPLY*/ ) => ( s=nt_Sequence )
       | { s = new SequenceNode(); }
       )
         {
@@ -331,24 +332,41 @@ nt_Sequence returns [ SequenceNode s ]
     ;
 
 
+/*
 nt_Operator returns [ OperatorNode r ]
 {
     r = null;
 }
     : OP_APPLY { r = new OperatorNode( Operator.APPLY ); }
     ;
+*/
 
 
-nt_Item returns [ Ast r ]
+nt_UnmodifiedItem returns [ Ast r ]
 {
     r = null;
 }
     : r=nt_Resource
     | r=nt_Literal
     | r=nt_ParenthesizedExpression
-    | r=nt_QuantifiedItem
-    | r=nt_IndexExpression
-    | r=nt_Operator
+//    | r=nt_QuantifiedItem
+//    | r=nt_IndexExpression
+//    | r=nt_Operator
+    ;
+
+
+nt_Item returns [ Ast r ]
+{
+    r = null;
+    Ast a = null;
+    boolean modified = false;
+}
+    : ( OP_APPLY { modified = true; } )? a=nt_UnmodifiedItem
+        {
+            r = modified
+                ? new ApplyNode( a )
+                : a;
+        }
     ;
 
 
@@ -360,6 +378,7 @@ nt_ParenthesizedExpression returns [ Ast r ]
     ;
 
 
+/*
 nt_QuantifiedItem returns [ Ast r ]
 {
     r = null;
@@ -372,8 +391,10 @@ nt_QuantifiedItem returns [ Ast r ]
     | STAR r=nt_Item
     | PLUS r=nt_Item
     ;
+*/
 
 
+/*
 nt_IndexExpression returns [ Ast r ]
 {
     Ast i;
@@ -381,6 +402,7 @@ nt_IndexExpression returns [ Ast r ]
 }
     : L_SQ_BRACE (WS)? r=nt_Item (WS)? ( COMMA (WS)? i=nt_Item (WS)? )? R_SQ_BRACE
     ;
+*/
 
 
 nt_Literal returns [ Ast r ]
