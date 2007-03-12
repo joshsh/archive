@@ -1,0 +1,99 @@
+@prefix wurfel:  <http://fortytwo.net/2007/02/06/wurfel#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+
+
+wurfel:Apply
+  rdfs:type rdfs:Class ;
+  rdfs:comment "A structure representing the application of a function to an argument" .
+
+wurfel:applyFunction
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Apply ;
+  rdfs:range rdfs:Resource ;
+  rdfs:comment "An applied function" .
+
+wurfel:applyArgument
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Apply ;
+  rdfs:range rdfs:Resource ;
+  rdfs:comment "An applied argument" .
+
+
+
+wurfel:PrimitiveFunction
+  rdfs:type rdfs:Class ;
+  rdfs:comment "A built-in function" .
+
+wurfel:returnType
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:PrimitiveFunction ;
+  rdfs:range rdfs:DataType ;
+  rdfs:comment "The data type of the return value of a function" .
+
+wurfel:parameters
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:PrimitiveFunction ;
+  rdfs:range wurfel:ParameterList ;
+  rdfs:comment "" .
+
+wurfel:Parameter
+  rdfs:type rdfs:Class ;
+  rdfs:comment "A formal argument to a function" .
+
+# Note: I don't know how to make this a list of wurfel:Parameter's specifically.
+wurfel:ParameterList
+  rdfs:type rdfs:Class ;
+  rdfs:subClassOf rdf:List .
+
+wurfel:parameterType
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Parameter ;
+  rdfs:range xsd:string ;
+  rdfs:comment "A helpful name for the parameter." .
+
+wurfel:parameterType
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Parameter ;
+  rdfs:range rdfs:DataType ;
+  rdfs:comment "The data type of a formal argument to a function" .
+
+wurfel:parameterTransparency
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Parameter ;
+  rdfs:range xsd:boolean ;
+  rdfs:comment "A condition indicating whether the application of a function may have side-effects on a particular argument" .
+
+
+
+wurfel:Combinator
+  rdfs:type rdfs:Class ;
+  rdfs:comment "A function with no free variables" .
+
+wurfel:combinatorArity
+  rdfs:type rdf:Property ;
+  rdfs:domain wurfel:Combinator ;
+  rdfs:range xsd:integer ;
+  rdfs:comment "The number of formal arguments consumed by a combinator" .
+
+
+
+# Note: for now, these container functions are considered combinators, as they
+#       are applied on the same level as combinators.  Renaming them, along with
+#       the combinators, to something like "MetaFunction" might be a good idea.
+wurfel:and
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Finds the intersection of one set with another set" .
+
+wurfel:or
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Finds the union of one set with another set" .
+
+wurfel:without
+  rdfs:type wurfel:Combinator ;
+  wurfel:combinatorArity 2 ;
+  rdfs:comment "Finds the intersection of one set with the complement of another set" .

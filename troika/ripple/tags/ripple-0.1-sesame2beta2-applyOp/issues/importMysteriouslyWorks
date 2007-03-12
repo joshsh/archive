@@ -1,0 +1,42 @@
+######## dereferencing graph in model: http://id.ecs.soton.ac.uk/person/
+######## contentType = text/html; charset=utf-8
+######## ext = null
+####### Guessed format is RDF/XML
+[Fatal Error] :2:2: The markup in the document following the root element must be well-formed.
+
+
+######## dereferencing graph in model: http://norman.walsh.name/knows/who#
+######## contentType = text/html; charset=utf-8
+######## ext = null
+####### Guessed format is RDF/XML
+####### graph successfully imported
+
+
+######## dereferencing graph in model: http://dig.csail.mit.edu/People/
+######## contentType = text/html; charset=iso-8859-1
+######## ext = null
+####### Guessed format is RDF/XML
+####### graph successfully imported
+
+
+######## dereferencing graph in model: http://www.w3.org/People/Connolly/#
+######## contentType = text/html; charset=utf-8
+######## ext = null
+####### Guessed format is RDF/XML
+####### graph successfully imported
+
+
+######## dereferencing graph in model: http://ebiquity.umbc.edu/person/foaf/Lalana/Kagal/foaf#
+######## contentType = text/html; charset=UTF-8
+######## ext = null
+####### Guessed format is RDF/XML
+[Fatal Error] foaf#:20:86: The element type "img" must be terminated by the matching end-tag "</img>".
+
+
+
+######## dereferencing graph in model: http://www.ivan-herman.net/foaf.rdf#
+######## contentType = application/rdf+xml
+######## ext = rdf
+####### Guessed format is RDF/XML
+[no success message]
+

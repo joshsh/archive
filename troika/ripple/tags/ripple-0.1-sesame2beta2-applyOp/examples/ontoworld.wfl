@@ -1,0 +1,19 @@
+
+(:
+wget "http://ontoworld.org/RDF/attributes.xml"
+wget "http://ontoworld.org/RDF/categories.xml"
+wget "http://ontoworld.org/RDF/ontoworld.xml"
+wget "http://ontoworld.org/RDF/relations.xml"
+wget "http://ontoworld.org/RDF/types.xml"
+:)
+
+
+!import "http://ontoworld.org/RDF/attributes.xml";
+!import "http://ontoworld.org/RDF/categories.xml";
+!import "http://ontoworld.org/RDF/relations.xml";
+!import "http://ontoworld.org/RDF/types.xml";
+	org.openrdf.rio.RDFParseException: '11526176723.1' is not a valid value for datatype http://www.w3.org/2001/XMLSchema#float
+	null
+!import "http://ontoworld.org/RDF/ontoworld.xml";
+	org.openrdf.rio.RDFParseException: '411000000000' is not a valid value for datatype http://www.w3.org/2001/XMLSchema#float
+	null

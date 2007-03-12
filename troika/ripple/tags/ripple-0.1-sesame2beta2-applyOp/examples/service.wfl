@@ -1,0 +1,17 @@
+@prefix service:  <http://www.daml.org/services/daml-s/0.7/Service.daml#> .
+
+service:Service ;
+service:ServiceGrounding ;
+service:ServiceModel ;
+service:ServiceProfile ;
+service:describedBy ;
+service:describes ;
+service:isDescribedBy ;
+service:isPresentedBy ;
+service:isSupportedBy ;
+service:presentedBy ;
+service:presents ;
+service:providedBy ;
+service:provides ;
+service:supportedBy ;
+service:supports ;

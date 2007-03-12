@@ -1,0 +1,12 @@
+<!ENTITY ripple.name                   "Ripple">
+<!ENTITY ripple.version                "0.1">
+<!ENTITY ripple.debug.tag              "24">
+
+<!ENTITY ripple.doIt.label             "Do It!">
+<!ENTITY ripple.doIt.accessKey         "d">
+
+<!ENTITY ripple.toolbarButton.label    "Ripple">
+<!ENTITY ripple.toolbarButton.tooltip  "DoIt">
+
+<!ENTITY aboutDialog.title             "Ripple">
+

@@ -1,0 +1,7 @@
+(:
+
+Note: like Wurfel expressions, RDFQ queries are expressed in RDF
+
+:)
+
+"http://swdev.nokia.com/rdfq/schemas/RDFQ-1.0.rdf" grab;

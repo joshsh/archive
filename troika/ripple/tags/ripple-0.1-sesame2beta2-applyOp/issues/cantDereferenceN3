@@ -1,0 +1,29 @@
+2007-02-11 13:22:09,350 [main] DEBUG - Importing model http://bblfish.net/people/henry/card#me as http://bblfish.net/people/henry/card#
+2007-02-11 13:22:09,350 [main] DEBUG - ######## dereferencing graph at URL: http://bblfish.net/people/henry/card#me
+2007-02-11 13:22:09,707 [main] DEBUG - ######## contentType = text/rdf+n3; charset=utf-8
+2007-02-11 13:22:09,707 [main] DEBUG - ######## ext = n3
+2007-02-11 13:22:09,707 [main] DEBUG - ####### Guessed format is N3
+2007-02-11 13:22:09,713 [main] ERROR - org.openrdf.rio.UnsupportedRDFormatException: org.openrdf.util.reflect.NoSuchTypeException: No type found for key: N3 (mimeType=text/rdf+n3; ext=n3)
+        at org.openrdf.rio.Rio.createParser(Rio.java:132)
+        at org.openrdf.rio.Rio.createParser(Rio.java:149)
+        at org.openrdf.repository.ConnectionImpl._addInputStreamOrReader(ConnectionImpl.java:265)
+        at org.openrdf.repository.ConnectionImpl.add(ConnectionImpl.java:244)
+        at wurfel.model.ModelConnection.addGraph(ModelConnection.java:683)
+        at wurfel.model.HttpUriDereferencer.dereference(HttpUriDereferencer.java:81)
+        at wurfel.cli.Interpreter.dereferenceResultSet(Interpreter.java:404)
+        at wurfel.cli.Interpreter.evaluate(Interpreter.java:470)
+        at wurfel.cli.Interpreter.evaluate(Interpreter.java:497)
+        at wurfel.cli.WurfelParser.nt_Statement(WurfelParser.java:170)
+        at wurfel.cli.WurfelParser.nt_Input(WurfelParser.java:116)
+        at wurfel.cli.Interpreter.runPrivate(Interpreter.java:263)
+        at wurfel.cli.Interpreter.run(Interpreter.java:295)
+        at wurfel.JLineTest.main(JLineTest.java:67)
+Caused by: org.openrdf.util.reflect.NoSuchTypeException: No type found for key: N3 (mimeType=text/rdf+n3; ext=n3)
+        at org.openrdf.util.reflect.KeyedObjectFactory.createInstance(KeyedObjectFactory.java:133)
+        at org.openrdf.rio.Rio.createParser(Rio.java:129)
+        ... 13 more
+
+
+
+Comment by arjohn in http://www.openrdf.org/forum/mvnforum/viewthread?thread=805#3234
+	Note that Sesame/Rio doesn't have a real N3 parser, but it does have a Turtle parser, which supports a much larger subset of N3. At first sight, I would say that the Turtle parser should be able to parse the data fragment that you posted.

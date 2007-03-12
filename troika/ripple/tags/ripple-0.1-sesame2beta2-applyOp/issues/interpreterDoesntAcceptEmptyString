@@ -1,0 +1,12 @@
+36 >>  "" sha1SumOf;
+########## updating completors
+
+TokenStreamRecognitionException: line 13:2: unexpected char: '"'
+
+--- 3 ---
+--- 1 ---
+--- 2 ---
+
+rdf:_1  wurfel-misc:sha1SumOf
+
+37 >>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<--
+<?xml-stylesheet href="chrome://piggy-bank/skin/about/aboutDialog.css" type="text/css"?>
+-->
+
+<!DOCTYPE globalDTD SYSTEM "chrome://ripple/locale/global.dtd">
+
+<dialog xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        id="aboutDialog"
+        style="width: 300px ; height: 330px"
+        title="&aboutDialog.title;">
+<!--
+        buttons="accept,extra2"
+        onload="init(event);" onunload="uninit(event);"
+        creditslabel="&copyright;"
+        aboutlabel="&aboutLink;"
+>
+-->
+
+<!--
+  <script type="application/x-javascript" src="chrome://piggy-bank/content/scripts/dialogs/about-dialog.js"/>
+-->
+
+  <deck id="modes" flex="1">
+    <vbox flex="1" id="clientBox">
+      <label id="version" value="&ripple.version;"/>
+      <label id="build" value="&ripple.build;"/>
+    </vbox>
+<!--
+    <vbox flex="1" id="creditsBox">
+      <html:iframe style="border: 0px;" id="creditsIframe" src="chrome://piggy-bank/locale/about/credits.xhtml" flex="1"/>
+    </vbox>
+-->
+  </deck>
+  <separator class="groove" id="groove"/>
+
+</dialog>
+

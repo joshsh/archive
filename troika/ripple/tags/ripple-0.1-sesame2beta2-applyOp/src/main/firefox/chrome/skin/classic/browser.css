@@ -1,0 +1,16 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#ripple-toolbarButton {
+    list-style-image: url("chrome://ripple/skin/ripple-24x24.png");
+}
+
+toolbar[iconsize="small"] #ripple-toolbarButton {
+  list-style-image: url("chrome://ripple/skin/ripple-16x16.png");
+}
+
+
+
+#piggyBank-datacoin {
+    list-style-image: url("chrome://ripple/skin/ripple-16x16.png");
+    cursor: pointer;
+}

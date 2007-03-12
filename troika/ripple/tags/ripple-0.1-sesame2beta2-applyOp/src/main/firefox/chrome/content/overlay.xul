@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://ripple/skin/styles/browser.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://ripple/locale/global.dtd">
+
+<overlay id="rippleOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <script type="application/x-javascript" src="chrome://ripple/content/scripts/ripple.js"/>
+
+    <script type="application/x-javascript">
+        Ripple.initialize();
+    </script>
+
+    <toolbarpalette id="BrowserToolbarPalette">
+<!--
+        <toolbarbutton
+            id="ripple-toolbarButton"
+            class="toolbarbutton-1"
+            label="&ripple.toolbarButton.label;"
+            tooltiptext="&ripple.toolbarButton.tooltip;"
+            oncommand="Ripple.doIt();"
+        />
+-->
+
+  <toolbarbutton id="myextension-button" class="toolbarbutton-1"
+    label="I am Jack's label" tooltiptext="I am Jack's tooltip" onclick="Ripple.doIt();"/>
+
+    </toolbarpalette>
+
+    <menupopup id="menu_ToolsPopup">
+        <menu id="rippleToolsMenu" label="&ripple.name;" position="1">
+            <menupopup>
+                <menuitem
+                    id          ="ripple.doIt.menu"
+                    label       ="&ripple.doIt.label;"
+                    accesskey   ="&ripple.doIt.accessKey;"
+                    oncommand   ="Ripple.doIt();"
+                    />
+                <menuitem label="tag &ripple.debug.tag;"/>
+            </menupopup>
+        </menu>
+    </menupopup>
+
+
+    <statusbar id="status-bar">
+        <statusbarpanel 
+            id="piggyBank-datacoin" 
+            collapsed="true"
+            class="statusbarpanel-menu-iconic"
+            tooltiptext="foobar"
+            onclick="Ripple.doIt();"
+        />
+    </statusbar>
+
+
+    <vbox id="appcontent" flex="1">
+        <splitter resizeafter="farthest" collapse="after" state="collapsed"/>
+        <vbox collapsed="false" height="50">
+            <iframe src="chrome://global/content/console.xul" type="content" flex="1"/>
+        </vbox>
+    </vbox>
+
+
+
+</overlay>
+
+<!-- kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on -->

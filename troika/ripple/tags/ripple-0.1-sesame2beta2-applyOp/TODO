@@ -1,0 +1,136 @@
+Build
+================================================================================
+* place the required RDF documents (wurfel, wurfel-test, wurfel-misc) into the JAR itself so that Wurfel is not dependent on network connectivity to fortytwo.net
+* install Trac
+* prevent the build from succeeding when ANTLR parser generation fails
+* build and test on Windows
+
+Exception handling
+================================================================================
+* decide on an extensible approach for exception handling and error logging
+* wrap calls to foreign code in strict try{...}catch(Throwable t){...} blocks for better error recovery
+
+Syntax
+================================================================================
+* edit grammar to more closely resemble Turtle / NTriples
+* add character literal syntax, e.g. 'c'
+* add awareness of the xml:lang and data type of literals in input grammar
+
+Model
+================================================================================
+* handle translation of data between RDF and Function data structures
+* write a primitive which imports a document as a reified graph in which all subjects are bnodes
+* investigate data mapping between OpenRDF objects and Wurfel expressions, specifically, whether there would be performance savings in wrapping OpenRDF objects so as to avoid the use of instanceof
+* make LazyEvaluator truly lazy, as well as more efficient
+
+Primitives
+================================================================================
+* Add a sample Primitive or two which deal with the rdf:XMLLiteral type, if OpenRDF makes this possible
+
+Scuttering
+================================================================================
+* look into adding a FOAF scutterer which can handle:
+  * foaf:knows links
+  * owl:sameAs indirection
+  * rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
+* ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
+    http://purl.org/stuff/rev#Review
+* dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
+
+Server
+================================================================================
+* REST query format and service endpoint.  Returns a graph in RDF/XML... which may be simply a list of indirection nodes to results.
+* dbpedia server (not necessarily using Wurfel)
+* RFC server
+* server for HTTP response codes
+* servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.
+
+Concurrency
+================================================================================
+* explore thread pooling and concurrency
+* make all initializers thread-safe.  Make good use of the 'volatile' keyword
+
+Event handling
+================================================================================
+* investigate java.util.EventObject, java.util.EventListener
+
+Names and namespaces
+================================================================================
+* decide whether names are determined by URI, rdfs:label, some combination of the two, or something else entirely
+* address name collisions, scalability issues in general
+* add ability to define terms in the default namespace, then save them
+* handle name collisions in a more flexible and configurable way
+* make "prefix discovery" a configurable feature
+* investigate relative URIs for Wurfel vocabularies, so I don't have to change them every time I change the location of the vocabulary
+
+Command line interface
+================================================================================
+* make ContainerTreeView's output look like Turtle/Wurfel input
+* interpreter hangs on multi-line comments
+* implement an as-you-type parser for tab completion
+* place multiple-line expressions in the history
+* make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
+
+OpenRDF
+================================================================================
+* Look into connection pooling.
+* investigate warning (encountered while crawling foaf:knows graph starting at TBL):
+	2007-01-29 16:57:00:417 [WARNING] Rolling back transaction due to connection close
+
+Ontologies
+================================================================================
+* ontology describing SemanticWebDocuments and where to get them
+
+Testing
+================================================================================
+* syntax testing (both success and failure cases).  See:
+  http://www.dajobe.org/2004/01/turtle/tests/
+  http://www.w3.org/2000/10/rdf-tests/rdfcore/ntriples/test.nt
+* test of HTTP URI dereferencing
+* test of the context filter
+
+Standards
+================================================================================
+* bring WurfelPrintStream into agreement with some identified set of RDF encoding practices
+
+Use cases
+================================================================================
+* data hiding use case
+* implicit context use case
+* distributed programming use case
+* DL or other reasoning use case
+* later: concurrent programming use case
+
+Demo / public web service
+================================================================================
+* buy more RAM for the server
+* ask Chris Bizer about Jetty ^ dbpedia
+
+Nice-to-have
+================================================================================
+* dbpedia interface
+* geonames interface
+* Swoogle add-on, which performs queries like the one below, then uses the
+  result to grab potential models for importing.
+      http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&searchString=parrot&key=demo
+* RSS reader
+* Atom reader
+  http://www.intertwingly.net/stories/2003/08/17/atom2rdf.xsl
+  Danny Ayers: http://semtext.org/atom/xslt/atom2atomrdf.xslt
+  Henry Story: http://djpowell.net/atomrdf/0.1/files/atom2rdf-06.xsl
+               http://djpowell.net/schemas/atomrdf/0.1-EXPERIMENTAL/
+* Wikipedia3 stuff
+  http://labs.systemone.at/wikipedia3
+* RDFizer for output of a natural language processing / information extraction tool such as Wraetlic
+* XBRL RDFizer
+* XML Schema RDFizer
+* XLink ^ RDF ?
+* file system schema --> RDFize a directory, down to the MIME type and other metadata of each file
+* RDF-to-natural-language utilities -- express RDF as plain English, to some extent
+
+Bugs
+================================================================================
+* repository import occasionally hangs.  Time it out so you don't have to quit the application
+* forgot to close a connection somewhere:
+  [WARNING] Closing dangling connection due to garbage collection
+
