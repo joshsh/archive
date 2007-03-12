@@ -323,7 +323,7 @@ nt_Sequence returns [ SequenceNode s ]
     : i=nt_Item
 
       ( ( WS ~(SEMI) ) => ( WS s=nt_Sequence )
-      | ( L_PAREN /*| OP_APPLY*/ ) => ( s=nt_Sequence )
+      | ( L_PAREN | OP_APPLY ) => ( s=nt_Sequence )
       | { s = new SequenceNode(); }
       )
         {

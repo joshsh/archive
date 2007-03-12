@@ -18,6 +18,11 @@ V
     @close;
 
 
+*  tab completor deals with:
+   .  qualified names
+   .  ~unqualified names
+   .  directives
+
 [U] assumptions
     [.] arity of a function (read: Apply) is constant, unaffected by reduction
 

@@ -16,7 +16,7 @@ public class Closure implements Function
         this.function = function;
         this.argument = argument;
         cachedArity = function.arity() - 1;
-System.out.println( "" + this + ": (" + function + ", " + argument + ")" );
+//System.out.println( "" + this + ": (" + function + ", " + argument + ")" );
     }
 
     ////////////////////////////////////////////////////////////////////////////

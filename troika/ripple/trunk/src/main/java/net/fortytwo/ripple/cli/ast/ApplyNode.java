@@ -6,6 +6,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.FunctionEnvelope;
+import net.fortytwo.ripple.model.ListNode;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -28,6 +29,8 @@ public class ApplyNode extends Ast
             return new FunctionEnvelope( (URI) v );
         else if ( v instanceof Function )
             return new FunctionEnvelope( (Function) v );
+        else if ( v instanceof ListNode )
+            return new FunctionEnvelope( (ListNode<Value>) v );
         else
             throw new RippleException( "bad Value in ApplyNode evaluate()" );
     }
