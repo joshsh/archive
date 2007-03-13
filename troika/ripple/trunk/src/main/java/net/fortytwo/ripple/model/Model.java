@@ -60,12 +60,13 @@ public Dereferencer getDereferencer()
 
 Hashtable<String, String> aliases;
 
-    private Hashtable<URI, Function> specialFunctions;
-
-    public void addSpecialFunction( Function f )
+    private ModelBridge bridge;
+    public ModelBridge getBridge()
     {
-        specialFunctions.put( f.getUri(), f );
+        return bridge;
     }
+
+    private Hashtable<URI, Function> specialFunctions;
 
     private UrlFactory createUrlFactory()
         throws RippleException
@@ -124,7 +125,7 @@ aliases = new Hashtable<String, String>();
 
         dereferencer = new HttpUriDereferencer( createUrlFactory() );
 
-        specialFunctions = new Hashtable<URI, Function>();
+        bridge = new ModelBridge();
 
         ModelConnection mc = new ModelConnection( this, "for Model constructor" );
 
@@ -204,36 +205,12 @@ public Repository getRepository()
         return v instanceof Apply;
     }
 
-    public Value translateFromGraph( Value v )
-    {
-        if ( v instanceof URI )
-        {
-            Function f = specialFunctions.get( (URI) v );
-
-            if ( null != f )
-                return f;
-            else
-                return v;
-        }
-
-        else
-            return v;
-    }
-
-// FIXME: will return null if the Function is an Apply
-    private Value translateToGraph( Value v )
-    {
-        if ( v instanceof Function )
-            return ( (Function) v ).getUri();
-        else
-            return v;
-    }
-
 // TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
     public Collection<Value> multiply( Value arg, Value func, ModelConnection mc )
         throws RippleException
     {
-        arg = translateToGraph( arg );
+        if ( arg instanceof RippleValue )
+            arg = bridge.getRdfEquivalentOf( (RippleValue) arg );
 
         if ( arg instanceof URI )
         {
@@ -254,7 +231,8 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
         while ( resultIter.hasNext() )
         {
             Value v = resultIter.next();
-            result.add( translateFromGraph( v ) );
+            RippleValue rv = bridge.getNativeEquivalentOf( v );
+            result.add( ( null == rv ) ? v : rv );
         }
 
         return result;

@@ -176,12 +176,16 @@ public class ModelConnection
 
 
 /*
-    public void forwardPredicateQuery( Value subj, Value pred, Sink<ListNode<Value>> sink )
+    public void forwardPredicateQuery( RippleValue subj, RippleValue pred, Sink<RippleValue> sink )
         throws RippleException
     {
-        
+        Value rdfSubj = subj.rdfEquivalent();
+        Value rdfPred = 
     }
 */
+
+
+
 
     public Collection<Value> findProduct( Value arg, Value func )
         throws RippleException

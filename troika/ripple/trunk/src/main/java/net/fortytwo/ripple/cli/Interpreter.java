@@ -45,6 +45,7 @@ import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
 import net.fortytwo.ripple.model.ObservableContainer;
 import net.fortytwo.ripple.model.RipplePrintStream;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.ListNode;
 import net.fortytwo.ripple.cli.ast.Ast;
@@ -496,7 +497,10 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
 // TODO: this is only one way of handling name ambiguity.
             Value choice = options.get( 0 );
 
-            return model.translateFromGraph( choice );
+            RippleValue rv = model.getBridge().getNativeEquivalentOf( choice );
+            return ( null == rv )
+                ? choice
+                : rv;
         }
     }
 
@@ -505,10 +509,16 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
         throws RippleException
     {
         Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
+        if ( null == v )
+            return null;
 
-        return ( null == v )
-            ? null
-            : model.translateFromGraph( v );
+        else
+        {
+            RippleValue rv = model.getBridge().getNativeEquivalentOf( v );
+            return ( null == rv )
+                ? v
+                : rv;
+        }
     }
 
     private Container reduce( Value expr, ModelConnection mc )

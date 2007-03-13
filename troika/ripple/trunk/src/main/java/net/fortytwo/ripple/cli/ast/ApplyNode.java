@@ -7,6 +7,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.FunctionEnvelope;
 import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleValue;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -23,7 +24,10 @@ public class ApplyNode extends Ast
     public Value evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
-        Value v = mc.getModel().translateFromGraph( arg.evaluate( itp, mc ) );
+        Value v = arg.evaluate( itp, mc );
+        RippleValue rv = mc.getModel().getBridge().getNativeEquivalentOf( v );
+        if ( null != rv )
+            v = rv;
 
         return FunctionEnvelope.createEnvelope( v );
     }

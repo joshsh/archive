@@ -21,7 +21,7 @@ public abstract class Extension
                 mc.addGraph( url );
 
         for ( Function function : getFunctions( mc ) )
-            mc.getModel().addSpecialFunction( function );
+            mc.getModel().getBridge().add( function );
     }
 }
 
