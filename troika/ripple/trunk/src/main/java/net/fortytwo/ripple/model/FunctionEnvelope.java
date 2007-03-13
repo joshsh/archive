@@ -15,17 +15,17 @@ public class FunctionEnvelope implements RippleValue
 {
     Function func;
 
-    public FunctionEnvelope( URI uri )
+    private FunctionEnvelope( URI uri )
     {
         func = new ForwardPredicateQuery( uri );
     }
 
-    public FunctionEnvelope( Function function )
+    private FunctionEnvelope( Function function )
     {
         func = function;
     }
 
-    public FunctionEnvelope( ListNode<Value> list )
+    private FunctionEnvelope( ListNode<Value> list )
     {
         func = new ListDequotation( list );
     }
@@ -40,6 +40,19 @@ public class FunctionEnvelope implements RippleValue
     {
         p.print( "/" );
         p.print( func );
+    }
+
+    public static FunctionEnvelope createEnvelope( Value v )
+        throws RippleException
+    {
+        if ( v instanceof URI )
+            return new FunctionEnvelope( (URI) v );
+        else if ( v instanceof Function )
+            return new FunctionEnvelope( (Function) v );
+        else if ( v instanceof ListNode )
+            return new FunctionEnvelope( (ListNode<Value>) v );
+        else
+            throw new RippleException( "bad Value in FunctionEnvelope createEnvelope()" );
     }
 
 public Value toRdf( ModelConnection mc )

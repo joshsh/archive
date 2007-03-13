@@ -237,11 +237,13 @@ options { paraphrase = "star quantifier"; } : '*' ;
 CHOICE
 options { paraphrase = "choice quantifier"; } : '?' ;
 
-SEMI
-options { paraphrase = "semicolon"; } : ';' ;
+EOS
+options { paraphrase = "end-of-statement"; } : '.' ;
 
+/*
 DOT
 options { paraphrase = "dot operator"; } : '.' ;
+*/
 
 COMMA
 options { paraphrase = "comma"; } : ',' ;
@@ -302,7 +304,7 @@ nt_Statement
 {
     Ast r;
 }
-    : r=nt_Sequence (WS)? SEMI
+    : r=nt_Sequence (WS)? EOS
         {
             interpreter.evaluate( r );
         }
@@ -311,7 +313,7 @@ nt_Statement
     | nt_Directive
 
     // Empty statements are simply ignored.
-    | SEMI
+    | EOS
     ;
 
 
@@ -322,7 +324,7 @@ nt_Sequence returns [ SequenceNode s ]
 }
     : i=nt_Item
 
-      ( ( WS ~(SEMI) ) => ( WS s=nt_Sequence )
+      ( ( WS ~(EOS) ) => ( WS s=nt_Sequence )
       | ( L_PAREN | OP_APPLY ) => ( s=nt_Sequence )
       | { s = new SequenceNode(); }
       )
@@ -532,48 +534,48 @@ nt_Directive
     String localName = null;
     Ast rhs;
 }
-    : ASSERT_DRTV WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? SEMI
+    : ASSERT_DRTV WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? EOS
         {
             interpreter.addStatement( subj, pred, obj );
         }
 
-    | COUNT_DRTV WS "statements" (WS)? SEMI
+    | COUNT_DRTV WS "statements" (WS)? EOS
         {
             interpreter.countStatements();
         }
 
-    | SERQL_DRTV WS query:STRING (WS)? SEMI
+    | SERQL_DRTV WS query:STRING (WS)? EOS
         {
             interpreter.evaluateGraphQuery( query.getText() );
         }
 
     | LIST_DRTV WS
-        ( "contexts" SEMI
+        ( "contexts" EOS
             {
                 interpreter.showContexts();
             }
-        | "prefixes" SEMI
+        | "prefixes" EOS
             {
                 interpreter.showNamespaces();
             }
         )
 
-    | PREFIX_DRTV WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? SEMI
+    | PREFIX_DRTV WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
         {
             interpreter.setNamespace( nsPrefix, ns );
         }
 
-    | QUIT_DRTV (WS)? SEMI
+    | QUIT_DRTV (WS)? EOS
         {
             interpreter.quit();
         }
 
-    | EXPORT_DRTV WS file:STRING (WS)? SEMI
+    | EXPORT_DRTV WS file:STRING (WS)? EOS
         {
             interpreter.saveAs( file.getText() );
         }
 
-    | TERM_DRTV WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? SEMI
+    | TERM_DRTV WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
         {
             interpreter.evaluateAndDefine( rhs, localName );
         }

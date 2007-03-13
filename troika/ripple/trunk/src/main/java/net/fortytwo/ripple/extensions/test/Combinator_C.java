@@ -1,12 +1,11 @@
 package net.fortytwo.ripple.extensions.test;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Apply;
 import net.fortytwo.ripple.model.Combinator;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
 import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.model.FunctionEnvelope;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -39,9 +38,7 @@ public class Combinator_C extends Combinator
 
         sink.put( new ListNode<Value>( y, stack )
             .push( z )
-            .push( x )
-            .push( mc.getApplyOp() )
-            .push( mc.getApplyOp() ) );
+            .push( FunctionEnvelope.createEnvelope( x ) ) );
     }
 }
 

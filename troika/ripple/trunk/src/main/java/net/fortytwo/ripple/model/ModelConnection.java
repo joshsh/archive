@@ -174,6 +174,15 @@ public class ModelConnection
 
     ////////////////////////////////////////////////////////////////////////////
 
+
+/*
+    public void forwardPredicateQuery( Value subj, Value pred, Sink<ListNode<Value>> sink )
+        throws RippleException
+    {
+        
+    }
+*/
+
     public Collection<Value> findProduct( Value arg, Value func )
         throws RippleException
     {

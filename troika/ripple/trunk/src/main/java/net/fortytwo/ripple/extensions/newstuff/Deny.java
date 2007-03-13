@@ -22,6 +22,7 @@ public class Deny extends Combinator
                          ModelConnection mc )
         throws RippleException
     {
+System.out.println( "Denied!" );
         Value subj, pred, obj;
 
         obj = stack.getFirst();

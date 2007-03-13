@@ -166,6 +166,8 @@ public class Ripple
     private static boolean s_dereferenceByNamespace;
     private static long s_uriDereferencingTimeout;
 
+    private static boolean s_listPadding;
+
     ////////////////////////////////////////////////////////////////////////////
 
     public static ExpressionOrder getExpressionOrder()
@@ -216,6 +218,11 @@ public class Ripple
     public static long uriDereferencingTimeout()
     {
         return s_uriDereferencingTimeout;
+    }
+
+    public static boolean listPadding()
+    {
+        return s_listPadding;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -346,6 +353,8 @@ public class Ripple
             s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.cli.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )
                 s_treeViewDepth = 0;
+
+            s_listPadding = getBooleanProperty( props, "net.fortytwo.ripple.printing.listPadding", false );
 
             initialized = true;
         }

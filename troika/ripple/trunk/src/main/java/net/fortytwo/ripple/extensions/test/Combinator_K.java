@@ -2,10 +2,10 @@ package net.fortytwo.ripple.extensions.test;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Combinator;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
 import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.model.FunctionEnvelope;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;

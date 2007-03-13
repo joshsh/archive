@@ -1,12 +1,11 @@
 package net.fortytwo.ripple.extensions.test;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Apply;
 import net.fortytwo.ripple.model.Combinator;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
 import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.model.FunctionEnvelope;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -15,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+// Note: arity should probably be 2 rather than 3.
 public class Combinator_B extends Combinator
 {
     public Combinator_B( ModelConnection mc )
@@ -38,10 +38,8 @@ public class Combinator_B extends Combinator
         stack = stack.getRest();
 
         sink.put( new ListNode<Value>( z, stack )
-            .push( y )
-            .push( mc.getApplyOp() )
-            .push( x )
-            .push( mc.getApplyOp() ) );
+            .push( FunctionEnvelope.createEnvelope( y ) )
+            .push( FunctionEnvelope.createEnvelope( x ) ) );
     }
 }
 

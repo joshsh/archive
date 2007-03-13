@@ -25,14 +25,7 @@ public class ApplyNode extends Ast
     {
         Value v = mc.getModel().translateFromGraph( arg.evaluate( itp, mc ) );
 
-        if ( v instanceof URI )
-            return new FunctionEnvelope( (URI) v );
-        else if ( v instanceof Function )
-            return new FunctionEnvelope( (Function) v );
-        else if ( v instanceof ListNode )
-            return new FunctionEnvelope( (ListNode<Value>) v );
-        else
-            throw new RippleException( "bad Value in ApplyNode evaluate()" );
+        return FunctionEnvelope.createEnvelope( v );
     }
 }
 

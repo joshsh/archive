@@ -28,6 +28,8 @@ public class ForwardPredicateQuery implements Function
         Value first = stack.getFirst();
         ListNode<Value> rest = stack.getRest();
 
+//        mc.multiply( first, pred, sink );
+
 // TODO: do we need a call to "toGraph" around "first"?
         Iterator<Value> objects = mc.getModel().multiply( first, pred, mc ).iterator();
         while ( objects.hasNext() )

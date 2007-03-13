@@ -14,6 +14,11 @@ public interface RippleValue extends Value
 
     public Value toRdf( ModelConnection mc )
         throws RippleException;
+
+    /**
+     *  @return  the Value
+    public Value proxy();
+*/
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

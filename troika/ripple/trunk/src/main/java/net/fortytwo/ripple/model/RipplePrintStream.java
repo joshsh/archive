@@ -57,16 +57,24 @@ public class RipplePrintStream extends PrintStream
     private void printList( ListNode<Value> list )
         throws RippleException
     {
-        print( "(" );
+        boolean padding = Ripple.listPadding();
 
+        print( padding ? "( " : "(" );
+
+        boolean first = true;
         while ( null != list )
         {
-            print( " " );
+            if ( first )
+                first = false;
+            else
+                print( " " );
+
             print( list.getFirst() );
+
             list = list.getRest();
         }
 
-        print( " )" );
+        print( padding ? " )" : ")" );
     }
 
     private void printEscapedString( final String s )

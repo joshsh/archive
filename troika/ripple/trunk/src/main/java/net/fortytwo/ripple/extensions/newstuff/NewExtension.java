@@ -24,7 +24,7 @@ public class NewExtension extends Extension
             new IntegerGreaterThan( mc ),
             new IntegerLessThan( mc ),
             new Assert( mc ),
-//            new Deny( mc ),
+            new Deny( mc ),
             new Equal( mc ),
             new True( mc ),
             new False( mc ),
