@@ -74,7 +74,7 @@ private URI uniqueFilterUri;
 
                 Closure c = new Closure( function, first );
 
-                sink.put( new ListNode<Value>( new FunctionEnvelope( c ), rest ) );
+                sink.put( new ListNode<Value>( FunctionEnvelope.createEnvelope( c ), rest ) );
             }
         }
     }

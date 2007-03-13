@@ -161,7 +161,7 @@ public class Ripple
         s_useInference,
         s_enforceImplicitProvenance;
 
-    private static int s_treeViewDepth;
+    private static int s_treeViewDepth, s_treeViewMaxBreadth;
 
     private static boolean s_dereferenceByNamespace;
     private static long s_uriDereferencingTimeout;
@@ -210,6 +210,11 @@ public class Ripple
         return s_treeViewDepth;
     }
 
+	public static int getTreeViewMaxBreadth()
+    {
+		return s_treeViewMaxBreadth;
+	}
+	
     public static boolean dereferenceByNamespace()
     {
         return s_dereferenceByNamespace;
@@ -353,6 +358,10 @@ public class Ripple
             s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.cli.treeView.depth", 1 );
             if ( s_treeViewDepth < 0 )
                 s_treeViewDepth = 0;
+
+			s_treeViewMaxBreadth = getIntProperty( props, "net.fortytwo.ripple.cli.treeView.maxBreadth", 32 );
+			if ( s_treeViewMaxBreadth < 0 )
+                s_treeViewMaxBreadth = 0;
 
             s_listPadding = getBooleanProperty( props, "net.fortytwo.ripple.printing.listPadding", false );
 

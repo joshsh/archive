@@ -36,6 +36,7 @@ Scuttering
 * ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
     http://purl.org/stuff/rev#Review
 * dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
+* uncache / decache / refresh filter to take a context out of cache
 
 Server
 ================================================================================

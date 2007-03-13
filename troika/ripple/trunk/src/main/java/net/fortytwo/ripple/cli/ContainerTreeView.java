@@ -62,6 +62,7 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
                 Set<URI> predicates = mc.getPredicates( (Resource) subject );
                 Iterator<URI> predIter = predicates.iterator();
 
+				int predCount = 0, lim = Ripple.getTreeViewMaxBreadth();
                 while ( predIter.hasNext() )
                 {
                     URI predicate = predIter.next();
@@ -71,13 +72,31 @@ subject = ( (net.fortytwo.ripple.model.ListNode<Value>) subject ).getFirst();
                     for ( int i = 0; i < 1 + ( maxDepth - depth ) * 2; i++ )
                         ps.print( indent );
 
+					if ( ++predCount > lim )
+					{
+						ps.print( "[...]\n" );
+						break;
+					}
+					
                     ps.print( predicate );
                     ps.print( "\n" );
 
                     Iterator<Value> objIter = valueSet.getModel().multiply( subject, predicate, mc ).iterator();
 
+					int objCount = 0;
                     while ( objIter.hasNext() )
-                        printTreeView( objIter.next(), depth - 1, wsPrefix, mc );
+					{
+						if ( ++objCount > lim )
+						{
+							for ( int i = 0; i < 2 + ( maxDepth - depth ) * 2; i++ )
+								ps.print( indent );
+							ps.print( "[...]\n" );
+							break;
+						}
+						
+						else
+                        	printTreeView( objIter.next(), depth - 1, wsPrefix, mc );
+					}
                 }
             }
         }
