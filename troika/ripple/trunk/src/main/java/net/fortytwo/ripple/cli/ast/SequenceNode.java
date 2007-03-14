@@ -3,7 +3,6 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Apply;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
 
@@ -54,16 +53,16 @@ public class SequenceNode extends Ast
                 while ( iter.hasNext() )
                     if ( comp )
                         stack = stack.push( iter.next().evaluate( itp, mc ) );
-                    else
-                        result = new Apply( iter.next().evaluate( itp, mc ), result );
+//                    else
+//                        result = new Apply( iter.next().evaluate( itp, mc ), result );
                 break;
 
             case ANTIDIAGRAMMATIC:
                 while ( iter.hasNext() )
                     if ( comp )
 System.err.println( "not yet implemented" );
-                    else
-                        result = new Apply( result, iter.next().evaluate( itp, mc ) );
+//                    else
+//                        result = new Apply( result, iter.next().evaluate( itp, mc ) );
                 break;
         }
 

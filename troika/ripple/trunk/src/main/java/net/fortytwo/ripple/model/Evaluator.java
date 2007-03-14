@@ -9,11 +9,6 @@ import org.openrdf.model.Value;
  */
 public abstract class Evaluator
 {
-    protected static boolean isApply( Value v )
-    {
-        return v instanceof Apply;
-    }
-
 // NOTE: this is identical to Function's applyTo() method.
     public abstract void reduce( ListNode<Value> stack,
                                  Sink<ListNode<Value>> sink,

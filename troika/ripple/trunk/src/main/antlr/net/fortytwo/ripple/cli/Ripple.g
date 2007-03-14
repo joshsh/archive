@@ -10,7 +10,6 @@ import net.fortytwo.ripple.cli.ast.DoubleNode;
 import net.fortytwo.ripple.cli.ast.IntNode;
 import net.fortytwo.ripple.cli.ast.NameNode;
 import net.fortytwo.ripple.cli.ast.NullNode;
-import net.fortytwo.ripple.cli.ast.OperatorNode;
 import net.fortytwo.ripple.cli.ast.QNameNode;
 import net.fortytwo.ripple.cli.ast.StringNode;
 import net.fortytwo.ripple.cli.ast.SequenceNode;

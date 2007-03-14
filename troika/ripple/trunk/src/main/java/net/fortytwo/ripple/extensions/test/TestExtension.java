@@ -22,7 +22,8 @@ public class TestExtension extends Extension
             new IntegerDivide( mc ),
             new IntegerMod( mc ),
             new ConcatenateStringsPrimitive( mc ),
-            new ListElements( mc ),
+            new ListElements( mc )
+/*
             new Combinator_B( mc ),
             new Combinator_C( mc ),
             new Combinator_I( mc ),
@@ -36,7 +37,7 @@ public class TestExtension extends Extension
             new Combinator_V( mc ),
             new Combinator_W( mc ),
             new Combinator_Y( mc ),
-            new Combinator_w( mc ) };
+            new Combinator_w( mc )*/ };
 
         return functions;
     }

@@ -5,6 +5,7 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ListNode;
 import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.model.FunctionEnvelope;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -28,8 +29,10 @@ public class Limit extends PrimitiveFunction
             mc.castToLiteral( stack.getFirst() ) );
         stack = stack.getRest();
 
-        sink.put( new ListNode<Value>( new net.fortytwo.ripple.model.filter.Limit( (long) lim ), stack )
-            .push( mc.getApplyOp() ) );
+        sink.put(
+            new ListNode<Value>(
+                FunctionEnvelope.createEnvelope(
+                    new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
     }
 }
 

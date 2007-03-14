@@ -14,32 +14,10 @@ private URI uniqueFilterUri;
 
     private Model model;
     private ModelConnection modelConnection;
-    private URI applyOp;
-
-
-    boolean isApplyOp( Value v )
-    {
-        return v.equals( applyOp );
-    }
-
-    boolean isFunction( Value v )
-    {
-        return ( v instanceof Function );
-    }
 
     boolean isFunctionEnvelope( Value v )
     {
         return ( v instanceof FunctionEnvelope );
-    }
-
-    boolean isProperty( Value v )
-    {
-        return ( v instanceof URI );
-    }
-
-    boolean isList( Value v )
-    {
-        return ( v instanceof ListNode );
     }
 
 
@@ -128,7 +106,6 @@ private URI uniqueFilterUri;
 uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/04/rpl-new#unique" );
         modelConnection = mc;
         model = modelConnection.getModel();
-        applyOp = mc.getApplyOp();
 
         EvaluatorSink evalSink = new EvaluatorSink( sink );
         evalSink.put( stack );

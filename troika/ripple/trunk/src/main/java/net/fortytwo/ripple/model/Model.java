@@ -200,17 +200,12 @@ public Repository getRepository()
         }
     }
 
-    private boolean isApply( Value v )
-    {
-        return v instanceof Apply;
-    }
-
 // TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
     public Collection<Value> multiply( Value arg, Value func, ModelConnection mc )
         throws RippleException
     {
         if ( arg instanceof RippleValue )
-            arg = bridge.getRdfEquivalentOf( (RippleValue) arg );
+            arg = bridge.getRdfEquivalentOf( (RippleValue) arg, mc );
 
         if ( arg instanceof URI )
         {
