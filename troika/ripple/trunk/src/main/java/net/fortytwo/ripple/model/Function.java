@@ -17,12 +17,12 @@ public interface Function extends RippleValue
     public int arity();
 
 // NOTE: this is identical to Evaluator's evaluate() method.
-    public void applyTo( ListNode<Value> args,
-                         Sink<ListNode<Value>> sink,
+    public void applyTo( RippleStack args,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException;
 
-    public void checkArguments( ListNode<Value> args )
+    public void checkArguments( RippleStack args )
         throws RippleException;
 }
 

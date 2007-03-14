@@ -3,7 +3,7 @@ package net.fortytwo.ripple.extensions.newstuff;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.Sink;
 
 import org.openrdf.model.URI;
@@ -17,8 +17,8 @@ public class Or extends Combinator
         super( mc.createUri( NewExtension.getBaseUri() + "or" ), mc );
     }
 
-    public void applyTo( ListNode<Value> stack,
-                         Sink<ListNode<Value>> sink,
+    public void applyTo( RippleStack stack,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {
@@ -29,8 +29,8 @@ public class Or extends Combinator
         y = stack.getFirst();
         stack = stack.getRest();
 
-        sink.put( new ListNode<Value>( x, stack ) );
-        sink.put( new ListNode<Value>( y, stack ) );
+        sink.put( new RippleStack( x, stack ) );
+        sink.put( new RippleStack( y, stack ) );
     }
 }
 

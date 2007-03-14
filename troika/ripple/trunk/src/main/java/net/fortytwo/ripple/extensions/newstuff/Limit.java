@@ -3,7 +3,7 @@ package net.fortytwo.ripple.extensions.newstuff;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.Sink;
 import net.fortytwo.ripple.model.FunctionEnvelope;
 
@@ -18,8 +18,8 @@ public class Limit extends PrimitiveFunction
         super( mc.createUri( NewExtension.getBaseUri() + "limit" ), mc );
     }
 
-    public void applyInternal( ListNode<Value> stack,
-                         Sink<ListNode<Value>> sink,
+    public void applyInternal( RippleStack stack,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {
@@ -30,7 +30,7 @@ public class Limit extends PrimitiveFunction
         stack = stack.getRest();
 
         sink.put(
-            new ListNode<Value>(
+            new RippleStack(
                 FunctionEnvelope.createEnvelope(
                     new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
     }

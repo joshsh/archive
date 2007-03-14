@@ -3,7 +3,7 @@ package net.fortytwo.ripple.model.filter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ListMemoizer;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.Sink;
@@ -23,7 +23,7 @@ public URI getUri()
 return null;
 }
 
-public void checkArguments( ListNode<Value> args )
+public void checkArguments( RippleStack args )
     throws RippleException
 {}
 

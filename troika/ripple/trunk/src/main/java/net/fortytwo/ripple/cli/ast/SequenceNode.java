@@ -4,7 +4,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 
 import org.openrdf.model.Value;
 
@@ -42,7 +42,7 @@ public class SequenceNode extends Ast
 
         Iterator<Ast> iter = children.iterator();
         Value result = iter.next().evaluate( itp, mc );
-        ListNode<Value> stack = new ListNode<Value>( result );
+        RippleStack stack = new RippleStack( result );
 
         boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 

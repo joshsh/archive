@@ -6,7 +6,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.FunctionEnvelope;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.RippleValue;
 
 import org.openrdf.model.URI;

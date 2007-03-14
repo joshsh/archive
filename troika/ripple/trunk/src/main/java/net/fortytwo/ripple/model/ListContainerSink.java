@@ -6,14 +6,14 @@ import org.openrdf.model.Value;
 
 import net.fortytwo.ripple.RippleException;
 
-public class ListContainerSink extends Container implements Sink<ListNode<Value>>
+public class ListContainerSink extends Container implements Sink<RippleStack>
 {
     public ListContainerSink()
     {
         super();
     }
 
-    public void put( ListNode<Value> v )
+    public void put( RippleStack v )
         throws RippleException
     {
 //System.out.println( this + ".put( " + v + " )" );

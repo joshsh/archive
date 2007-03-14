@@ -5,7 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.Sink;
 
 import org.openrdf.model.Value;
@@ -36,8 +36,8 @@ public class SwoogleIt extends PrimitiveFunction
         swoogleQueryResponseUri = mc.createSwoogleUri( "QueryResponse" );
     }
 
-    protected void applyInternal( ListNode<Value> stack,
-                                  Sink<ListNode<Value>> sink,
+    protected void applyInternal( RippleStack stack,
+                                  Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException
     {
@@ -71,7 +71,7 @@ public class SwoogleIt extends PrimitiveFunction
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
                     null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
             while ( stmtIter.hasNext() )
-                sink.put( new ListNode<Value>( stmtIter.next().getSubject(), stack ) );
+                sink.put( new RippleStack( stmtIter.next().getSubject(), stack ) );
             stmtIter.close();
         }
 

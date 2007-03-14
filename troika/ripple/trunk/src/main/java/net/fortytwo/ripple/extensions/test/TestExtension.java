@@ -4,7 +4,7 @@ import net.fortytwo.ripple.Extension;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.Sink;
 
 import java.net.URL;

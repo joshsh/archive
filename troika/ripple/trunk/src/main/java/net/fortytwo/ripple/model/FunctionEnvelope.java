@@ -3,7 +3,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ListMemoizer;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.Sink;
@@ -25,7 +25,7 @@ public class FunctionEnvelope implements RippleValue
         func = function;
     }
 
-    private FunctionEnvelope( ListNode<Value> list )
+    private FunctionEnvelope( RippleStack list )
     {
         func = new ListDequotation( list );
     }
@@ -50,7 +50,7 @@ public class FunctionEnvelope implements RippleValue
         else if ( v instanceof Function )
             return new FunctionEnvelope( (Function) v );
         else if ( v instanceof ListNode )
-            return new FunctionEnvelope( (ListNode<Value>) v );
+            return new FunctionEnvelope( (RippleStack) v );
         else
             throw new RippleException( "bad Value in FunctionEnvelope createEnvelope()" );
     }

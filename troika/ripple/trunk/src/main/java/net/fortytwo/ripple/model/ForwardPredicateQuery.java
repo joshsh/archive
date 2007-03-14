@@ -20,20 +20,20 @@ public class ForwardPredicateQuery implements Function
         return 1;
     }
 
-    public void applyTo( ListNode<Value> stack,
-                         Sink<ListNode<Value>> sink,
+    public void applyTo( RippleStack stack,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {
         Value first = stack.getFirst();
-        ListNode<Value> rest = stack.getRest();
+        RippleStack rest = stack.getRest();
 
 //        mc.multiply( first, pred, sink );
 
 // TODO: do we need a call to "toGraph" around "first"?
         Iterator<Value> objects = mc.getModel().multiply( first, pred, mc ).iterator();
         while ( objects.hasNext() )
-            sink.put( new ListNode<Value>( objects.next(), rest ) );
+            sink.put( new RippleStack( objects.next(), rest ) );
     }
 
     public void printTo( RipplePrintStream p )
@@ -47,7 +47,7 @@ public URI getUri()
 return null;
 }
 
-public void checkArguments( ListNode<Value> args )
+public void checkArguments( RippleStack args )
     throws RippleException
 {}
 

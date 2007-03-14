@@ -1,38 +1,9 @@
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.model.Node;
-
-public class ListNode<T> extends Node
+public abstract class ListNode<T>
 {
-    private T first;
-    private ListNode<T> rest;
-
-    public T getFirst()
-    {
-        return first;
-    }
-
-    public ListNode<T> getRest()
-    {
-        return rest;
-    }
-
-    public ListNode( final T first )
-    {
-        this.first = first;
-        rest = null;
-    }
-
-    public ListNode( final T first, final ListNode<T> rest )
-    {
-        this.first = first;
-        this.rest = rest;
-    }
-
-    public ListNode push( final T first )
-    {
-        return new ListNode( first, this );
-    }
+    public abstract T getFirst();
+    public abstract ListNode<T> getRest();
 
     public boolean equals( ListNode<T> other )
     {
@@ -45,11 +16,11 @@ System.out.println( this + ".equals( " + other + " )" );
             if ( null == otherCur )
                 return false;
 
-            if ( !thisCur.first.equals( otherCur ) )
+            if ( !thisCur.getFirst().equals( otherCur ) )
                 return false;
 
-            thisCur = thisCur.rest;
-            otherCur = otherCur.rest;
+            thisCur = thisCur.getRest();
+            otherCur = otherCur.getRest();
         }
 
         if ( null != otherCur )

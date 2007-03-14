@@ -4,7 +4,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.Sink;
 
 import org.openrdf.model.Value;
@@ -82,8 +82,8 @@ public class Sha1SumOf extends PrimitiveFunction
         }
     }
 
-    protected void applyInternal( ListNode<Value> stack,
-                                  Sink<ListNode<Value>> sink,
+    protected void applyInternal( RippleStack stack,
+                                  Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException
     {
@@ -95,7 +95,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
         result = encrypt( a );
 
-        sink.put( new ListNode<Value>( mc.createLiteral( result ), stack ) );
+        sink.put( new RippleStack( mc.createLiteral( result ), stack ) );
     }
 }
 

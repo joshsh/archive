@@ -47,7 +47,7 @@ import net.fortytwo.ripple.model.ObservableContainer;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.UriNode;
 
@@ -468,8 +468,8 @@ System.out.println( "--- 3 ---" );
         while ( iter.hasNext() )
         {
             Value value = iter.next();
-if ( value instanceof ListNode )
-value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
+if ( value instanceof RippleStack )
+value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 
             if ( value instanceof URI )
             {
@@ -528,10 +528,10 @@ value = ( (net.fortytwo.ripple.model.ListNode<Value>) value ).getFirst();
         {
             ListContainerSink sink = new ListContainerSink();
 // FIXME: awkward
-            if ( expr instanceof ListNode )
-                evaluator.reduce( (ListNode<Value>) expr, sink, mc );
+            if ( expr instanceof RippleStack )
+                evaluator.reduce( (RippleStack) expr, sink, mc );
             else
-                evaluator.reduce( new ListNode<Value>( expr ), sink, mc );
+                evaluator.reduce( new RippleStack( expr ), sink, mc );
 
             return sink;
         }

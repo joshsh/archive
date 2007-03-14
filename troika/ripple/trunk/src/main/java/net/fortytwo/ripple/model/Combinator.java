@@ -33,7 +33,7 @@ public abstract class Combinator extends Node implements Function
         return arityCached;
     }
 
-    public void checkArguments( ListNode<Value> args )
+    public void checkArguments( RippleStack args )
         throws RippleException
     {
 /*

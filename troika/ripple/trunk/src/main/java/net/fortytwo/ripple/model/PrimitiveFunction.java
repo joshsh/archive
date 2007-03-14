@@ -17,8 +17,8 @@ public abstract class PrimitiveFunction extends Node implements Function
 {
     protected URI selfUri;
 
-    protected abstract void applyInternal( ListNode<Value> args,
-                                           Sink<ListNode<Value>> sink,
+    protected abstract void applyInternal( RippleStack args,
+                                           Sink<RippleStack> sink,
                                            ModelConnection mc )
         throws RippleException;
 
@@ -199,7 +199,7 @@ public abstract class PrimitiveFunction extends Node implements Function
         return params.size();
     }
 
-    public void checkArguments( ListNode<Value> args )
+    public void checkArguments( RippleStack args )
         throws RippleException
     {
 /*
@@ -210,8 +210,8 @@ public abstract class PrimitiveFunction extends Node implements Function
 */
     }
 
-    public void applyTo( ListNode<Value> args,
-                         Sink<ListNode<Value>> sink,
+    public void applyTo( RippleStack args,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {

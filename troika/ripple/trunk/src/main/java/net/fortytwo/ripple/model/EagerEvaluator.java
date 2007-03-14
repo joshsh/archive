@@ -13,8 +13,8 @@ import java.util.LinkedList;
  */
 public class EagerEvaluator extends Evaluator
 {
-    public void reduce( ListNode<Value> expr,
-                        Sink<ListNode<Value>> sink,
+    public void reduce( RippleStack expr,
+                        Sink<RippleStack> sink,
                         ModelConnection mc )
         throws RippleException
     {

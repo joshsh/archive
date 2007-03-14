@@ -31,7 +31,7 @@ return null;
         return cachedArity;
     }
 
-public void checkArguments( ListNode<Value> args )
+public void checkArguments( RippleStack args )
     throws RippleException
 {}
 
@@ -47,12 +47,12 @@ return null;
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public void applyTo( ListNode<Value> stack,
-                         Sink<ListNode<Value>> sink,
+    public void applyTo( RippleStack stack,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {
-        function.applyTo( new ListNode<Value>( argument, stack ), sink,  mc );
+        function.applyTo( new RippleStack( argument, stack ), sink,  mc );
     }
 }
 

@@ -8,22 +8,22 @@ import org.openrdf.model.Value;
 
 public class ListDequotation implements Function
 {
-    ListNode<Value> reversedList;
+    RippleStack reversedList;
 
-    private static ListNode<Value> reverse( final ListNode<Value> list )
+    private static RippleStack reverse( final RippleStack list )
     {
-        ListNode<Value> in = list;
-        ListNode<Value> out = null;
+        RippleStack in = list;
+        RippleStack out = null;
         while ( null != in )
         {
-            out = new ListNode<Value>( in.getFirst(), out );
+            out = new RippleStack( in.getFirst(), out );
             in = in.getRest();
         }
 
         return out;
     }
 
-    public ListDequotation( ListNode<Value> list )
+    public ListDequotation( RippleStack list )
     {
         reversedList = reverse( list );
     }
@@ -33,17 +33,17 @@ public class ListDequotation implements Function
 return 1;
     }
 
-    public void applyTo( ListNode<Value> stack,
-                         Sink<ListNode<Value>> sink,
+    public void applyTo( RippleStack stack,
+                         Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {
-        ListNode<Value> in = reversedList;
-        ListNode<Value> out = stack;
+        RippleStack in = reversedList;
+        RippleStack out = stack;
 
         while ( null != in )
         {
-            out = new ListNode<Value>( in.getFirst(), out );
+            out = new RippleStack( in.getFirst(), out );
             in = in.getRest();
         }
 
@@ -61,7 +61,7 @@ public URI getUri()
 return null;
 }
 
-public void checkArguments( ListNode<Value> args )
+public void checkArguments( RippleStack args )
     throws RippleException
 {}
 

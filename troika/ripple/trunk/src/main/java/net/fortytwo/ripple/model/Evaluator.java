@@ -10,8 +10,8 @@ import org.openrdf.model.Value;
 public abstract class Evaluator
 {
 // NOTE: this is identical to Function's applyTo() method.
-    public abstract void reduce( ListNode<Value> stack,
-                                 Sink<ListNode<Value>> sink,
+    public abstract void reduce( RippleStack stack,
+                                 Sink<RippleStack> sink,
                                  ModelConnection mc )
         throws RippleException;
 }

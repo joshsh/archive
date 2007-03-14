@@ -24,12 +24,12 @@ private URI uniqueFilterUri;
     ////////////////////////////////////////////////////////////////////////////
 
 
-    protected class FunctionSink implements Sink<ListNode<Value>>
+    protected class FunctionSink implements Sink<RippleStack>
     {
         private Function function;
-        Sink<ListNode<Value>> sink;
+        Sink<RippleStack> sink;
 
-        public FunctionSink( Function function, Sink<ListNode<Value>> sink )
+        public FunctionSink( Function function, Sink<RippleStack> sink )
         {
             this.function = function;
             this.sink = sink;
@@ -37,7 +37,7 @@ private URI uniqueFilterUri;
 //System.out.println( "function.arity() = " + function.arity() );
         }
 
-        public void put( ListNode<Value> stack )
+        public void put( RippleStack stack )
             throws RippleException
         {
 ////System.out.println( this + ".put( " + stack + " )" );
@@ -48,11 +48,11 @@ private URI uniqueFilterUri;
             else
             {
                 Value first = stack.getFirst();
-                ListNode<Value> rest = stack.getRest();
+                RippleStack rest = stack.getRest();
 
                 Closure c = new Closure( function, first );
 
-                sink.put( new ListNode<Value>( FunctionEnvelope.createEnvelope( c ), rest ) );
+                sink.put( new RippleStack( FunctionEnvelope.createEnvelope( c ), rest ) );
             }
         }
     }
@@ -61,17 +61,17 @@ private URI uniqueFilterUri;
     ////////////////////////////////////////////////////////////////////////////
 
 
-    protected class EvaluatorSink implements Sink<ListNode<Value>>
+    protected class EvaluatorSink implements Sink<RippleStack>
     {
-        Sink<ListNode<Value>> sink;
+        Sink<RippleStack> sink;
 
-        public EvaluatorSink( Sink<ListNode<Value>> sink )
+        public EvaluatorSink( Sink<RippleStack> sink )
         {
            this.sink = sink;
 //System.out.println( this + "( " + sink + ")" );
         }
 
-        public void put( ListNode<Value> stack )
+        public void put( RippleStack stack )
             throws RippleException
         {
 //System.out.println( this + ".put( " + stack + " )" );
@@ -81,7 +81,7 @@ private URI uniqueFilterUri;
             // prim[] and pred[]
             if ( isFunctionEnvelope( first ) )
             {
-                ListNode<Value> rest = stack.getRest();
+                RippleStack rest = stack.getRest();
 
                 if ( null == rest )
                     return;
@@ -97,8 +97,8 @@ private URI uniqueFilterUri;
         }
     }
 
-    public void reduce( ListNode<Value> stack,
-                        Sink<ListNode<Value>> sink,
+    public void reduce( RippleStack stack,
+                        Sink<RippleStack> sink,
                         ModelConnection mc )
         throws RippleException
     {

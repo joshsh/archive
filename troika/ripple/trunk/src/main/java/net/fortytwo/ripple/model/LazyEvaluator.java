@@ -14,8 +14,8 @@ import java.util.LinkedList;
  */
 public class LazyEvaluator extends Evaluator
 {
-    public void reduce( ListNode<Value> stack,
-                                 Sink<ListNode<Value>> sink,
+    public void reduce( RippleStack stack,
+                                 Sink<RippleStack> sink,
                                  ModelConnection mc )
         throws RippleException
     {

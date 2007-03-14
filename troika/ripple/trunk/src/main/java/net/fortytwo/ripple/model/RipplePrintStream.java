@@ -54,29 +54,6 @@ public class RipplePrintStream extends PrintStream
             printQName( prefix, uri.getLocalName() );
     }
 
-    private void printList( ListNode<Value> list )
-        throws RippleException
-    {
-        boolean padding = Ripple.listPadding();
-
-        print( padding ? "( " : "(" );
-
-        boolean first = true;
-        while ( null != list )
-        {
-            if ( first )
-                first = false;
-            else
-                print( " " );
-
-            print( list.getFirst() );
-
-            list = list.getRest();
-        }
-
-        print( padding ? " )" : ")" );
-    }
-
     private void printEscapedString( final String s )
     {
 // TODO
@@ -96,9 +73,6 @@ print( "\"" + s + "\"" );
         {
             if ( v instanceof URI )
                 printUri( (URI) v );
-
-            else if ( v instanceof ListNode )
-                printList( (ListNode<Value>) v );
 
             else if ( v instanceof Literal )
             {

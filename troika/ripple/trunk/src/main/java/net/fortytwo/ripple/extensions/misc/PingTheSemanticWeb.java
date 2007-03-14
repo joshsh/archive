@@ -5,7 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.ListNode;
+import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.Sink;
 
 import org.openrdf.model.Value;
@@ -36,8 +36,8 @@ public class PingTheSemanticWeb extends PrimitiveFunction
         super( mc.createRippleMiscUri( "pingTheSemanticWeb" ), mc );
     }
 
-    protected void applyInternal( ListNode<Value> stack,
-                                  Sink<ListNode<Value>> sink,
+    protected void applyInternal( RippleStack stack,
+                                  Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException
     {
@@ -92,7 +92,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
         {
             Element child = childIter.next();
             String s = child.getAttributeValue( "url" );
-            sink.put( new ListNode<Value>( mc.createLiteral( s ), stack ) );
+            sink.put( new RippleStack( mc.createLiteral( s ), stack ) );
         }
     }
 }
