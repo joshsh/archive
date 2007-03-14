@@ -2,7 +2,6 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ListMemoizer;
 import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
@@ -49,7 +48,7 @@ public class FunctionEnvelope implements RippleValue
             return new FunctionEnvelope( (URI) v );
         else if ( v instanceof Function )
             return new FunctionEnvelope( (Function) v );
-        else if ( v instanceof ListNode )
+        else if ( v instanceof RippleStack )
             return new FunctionEnvelope( (RippleStack) v );
         else
             throw new RippleException( "bad Value in FunctionEnvelope createEnvelope()" );

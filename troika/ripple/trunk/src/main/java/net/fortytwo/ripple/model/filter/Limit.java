@@ -2,7 +2,6 @@ package net.fortytwo.ripple.model.filter;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ListMemoizer;
 import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;

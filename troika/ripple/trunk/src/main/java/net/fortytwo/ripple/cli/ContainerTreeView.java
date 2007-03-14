@@ -54,7 +54,7 @@ public class ContainerTreeView implements Observer
 
         if ( depth > 0 )
         {
-if ( subject instanceof net.fortytwo.ripple.model.ListNode )
+if ( subject instanceof net.fortytwo.ripple.model.RippleStack )
 subject = ( (net.fortytwo.ripple.model.RippleStack) subject ).getFirst();
 
             if ( subject instanceof Resource )
