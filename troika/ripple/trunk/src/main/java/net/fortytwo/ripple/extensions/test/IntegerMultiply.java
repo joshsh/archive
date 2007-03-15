@@ -11,10 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 public class IntegerMultiply extends PrimitiveFunction
 {
     public IntegerMultiply( ModelConnection mc )
@@ -30,16 +26,14 @@ public class IntegerMultiply extends PrimitiveFunction
     {
         int a, b, result;
 
-        a = mc.intValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        a = mc.intValue( stack.getFirst() );
         stack = stack.getRest();
-        b = mc.intValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        b = mc.intValue( stack.getFirst() );
         stack = stack.getRest();
 
         result = a * b;
 
-        sink.put( new RippleStack( mc.createLiteral( result ), stack ) );
+        sink.put( new RippleStack( mc.createValue( result ), stack ) );
     }
 }
 

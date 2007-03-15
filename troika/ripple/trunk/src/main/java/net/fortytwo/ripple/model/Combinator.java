@@ -55,6 +55,11 @@ public abstract class Combinator extends Node implements Function
         p.print( selfUri );
     }
 
+    public boolean isFunctionEnvelope()
+    {
+        return false;
+    }
+
     public Value toRdf( ModelConnection mc )
         throws RippleException
     {

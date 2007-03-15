@@ -12,9 +12,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class ListElements extends PrimitiveFunction
 {
@@ -29,14 +27,13 @@ public class ListElements extends PrimitiveFunction
                                   ModelConnection mc )
         throws RippleException
     {
-        Resource head;
+        Iterator<RippleValue> values;
 
-        head = mc.castToResource( stack.getFirst() );
+        values = mc.listValue( stack.getFirst() );
         stack = stack.getRest();
 
-        Iterator<Value> iter = mc.listValue( head ).iterator();
-        while ( iter.hasNext() )
-            sink.put( new RippleStack( iter.next(), stack ) );
+        while ( values.hasNext() )
+            sink.put( new RippleStack( values.next(), stack ) );
     }
 }
 

@@ -6,7 +6,10 @@ import org.openrdf.model.URI;
 
 public interface Dereferencer
 {
-    public void dereference( URI uri, ModelConnection mc )
+public void dereference( URI uri, ModelConnection mc )
+    throws RippleException;
+
+    public void dereference( RippleValue rv, ModelConnection mc )
         throws RippleException;
 }
 

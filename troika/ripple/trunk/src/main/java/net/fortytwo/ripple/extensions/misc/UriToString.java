@@ -31,7 +31,7 @@ public class UriToString extends PrimitiveFunction
         URI a;
         String result;
 
-        a = mc.castToUri( stack.getFirst() );
+        a = mc.uriValue( stack.getFirst() );
         stack = stack.getRest();
 
         try

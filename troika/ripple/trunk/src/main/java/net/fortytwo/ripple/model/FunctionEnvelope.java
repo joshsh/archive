@@ -54,6 +54,11 @@ public class FunctionEnvelope implements RippleValue
             throw new RippleException( "bad Value in FunctionEnvelope createEnvelope()" );
     }
 
+    public boolean isFunctionEnvelope()
+    {
+        return true;
+    }
+
 public Value toRdf( ModelConnection mc )
     throws RippleException
 {

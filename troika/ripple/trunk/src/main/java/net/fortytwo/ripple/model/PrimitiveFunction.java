@@ -229,6 +229,11 @@ checkArguments( args );
         p.print( selfUri );
     }
 
+    public boolean isFunctionEnvelope()
+    {
+        return false;
+    }
+
     public Value toRdf( ModelConnection mc )
         throws RippleException
     {

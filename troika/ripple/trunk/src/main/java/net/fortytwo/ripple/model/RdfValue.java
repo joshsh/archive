@@ -13,6 +13,11 @@ public class RdfValue implements RippleValue
 		this.value = value;
 	}
 
+	public Value getRdfValue()
+	{
+		return value;
+	}
+
 	public Value toRdf( ModelConnection mc )
 	{
 		return value;
@@ -26,8 +31,14 @@ return null;
     public void printTo( RipplePrintStream p )
         throws RippleException
 {
+p.print( value );
 }
 
+	public boolean isFunctionEnvelope()
+	{
+// TODO: this may proxy for a value which IS a FunctionEnvelope.
+return false;
+	}
 
 /*
 	private static Literal toLiteral( Value v )

@@ -6,12 +6,12 @@ import net.fortytwo.ripple.util.ListNode;
 
 import org.openrdf.model.Value;
 
-public class RippleStack extends ListNode<Value> implements RippleValue
+public class RippleStack extends ListNode<RippleValue> implements RippleValue
 {
-	private Value first;
+	private RippleValue first;
 	private RippleStack rest;
 	
-	public Value getFirst()
+	public RippleValue getFirst()
 	{
 		return first;
 	}
@@ -21,26 +21,26 @@ public class RippleStack extends ListNode<Value> implements RippleValue
 		return rest;
 	}
 	
-	public RippleStack( final Value first )
+	public RippleStack( final RippleValue first )
 	{
 		this.first = first;
 		rest = null;
 	}
 	
-	public RippleStack( final Value first, final RippleStack rest )
+	public RippleStack( final RippleValue first, final RippleStack rest )
 	{
 		this.first = first;
 		this.rest = rest;
 	}
 	
-	public RippleStack push( final Value first )
+	public RippleStack push( final RippleValue first )
 	{
 		return new RippleStack( first, this );
 	}
 
-	private static RippleStack invert( ListNode<Value> rs )
+	private static RippleStack invert( ListNode<RippleValue> rs )
 	{
-		ListNode<Value> in = rs;
+		ListNode<RippleValue> in = rs;
 		RippleStack out = null;
 
 		while ( null != in )
@@ -76,6 +76,11 @@ public class RippleStack extends ListNode<Value> implements RippleValue
 		}
 		
 		p.print( padding ? " )" : ")" );
+	}
+
+	public boolean isFunctionEnvelope()
+	{
+		return false;
 	}
 
 	public Value toRdf( ModelConnection mc )

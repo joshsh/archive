@@ -200,37 +200,43 @@ public Repository getRepository()
         }
     }
 
-// TODO: this operation is a little counterintuitive, in that it does not apply primitive functions
-    public Collection<Value> multiply( Value arg, Value func, ModelConnection mc )
+    ////////////////////////////////////////////////////////////////////////////
+
+    public void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink )
         throws RippleException
     {
-        if ( arg instanceof RippleValue )
-            arg = bridge.getRdfEquivalentOf( (RippleValue) arg, mc );
+        Value rdfSubj = bridge.getRdfEquivalentOf( subj, mc ).getRdfValue();
+        Value rdfPred = bridge.getRdfEquivalentOf( pred, mc ).getRdfValue();
 
-        if ( arg instanceof URI )
+if ( null == rdfSubj || null == rdfPred )
+return;
+        try
+        {
+            dereferencer.dereference( subj );
+        }
+
+        catch ( RippleException e )
+        {
+            // (soft fail)
+s_logger.debug( "Failed to dereference URI: " + rdfSubj.toString() );
+        }
+
+        if ( rdfSubj instanceof Resource && rdfPred instanceof URI )
         {
             try
             {
-                dereferencer.dereference( (URI) arg, mc );
+                RepositoryResult<Statement> stmtIter
+                    = conn.getStatements(
+                        (Resource) subject, (URI) rdfPred, null, Ripple.useInference() );
+                while ( stmtIter.rdfSubj() )
+                    sink.put( new RdfValue( stmtIter.next().getObject() ) );
             }
 
-            catch ( RippleException e )
+            catch ( Throwable t )
             {
-                // (soft fail)
-s_logger.debug( "Failed to dereference URI: " + arg.toString() );
+                throw new RippleException( t );
             }
         }
-
-        Iterator<Value> resultIter = rdfMultiply( arg, func, mc.getRepositoryConnection() ).iterator();
-        Collection<Value> result = new Container();
-        while ( resultIter.hasNext() )
-        {
-            Value v = resultIter.next();
-            RippleValue rv = bridge.getNativeEquivalentOf( v );
-            result.add( ( null == rv ) ? v : rv );
-        }
-
-        return result;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -354,61 +360,6 @@ s_logger.debug( "Failed to dereference URI: " + arg.toString() );
         }
 
         return statements;
-    }
-
-    // TODO: this method is useless, because we're not even displaying the results
-    public void query( final String queryStr )
-        throws RippleException
-    {
-        try
-        {
-            RepositoryConnection con = repository.getConnection();
-            TupleQueryResult result = con.prepareTupleQuery(
-                QueryLanguage.SERQL, queryStr ).evaluate();
-//                QueryLanguage.SERQL, "SELECT x, y FROM {x} p {y}");
-
-            result.close();
-            con.close();
-        }
-
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    /**
-     *  @return  an unordered set of results
-     */
-    private Set<Value> rdfMultiply( Value subject,
-                                   Value predicate,
-                                   RepositoryConnection conn )
-        throws RippleException
-    {
-        Set<Value> objects = new HashSet<Value>();
-
-        if ( subject instanceof Resource && predicate instanceof URI )
-        {
-            try
-            {
-                RepositoryResult<Statement> stmtIter
-                    = conn.getStatements(
-//                        (Resource) subject, (URI) predicate, null, context, includeInferred );
-                        (Resource) subject, (URI) predicate, null, Ripple.useInference() );
-                while ( stmtIter.hasNext() )
-                    objects.add( stmtIter.next().getObject() );
-                stmtIter.close();
-            }
-
-            catch ( Throwable t )
-            {
-                throw new RippleException( t );
-            }
-        }
-
-        return objects;
     }
 
     ////////////////////////////////////////////////////////////////////////////

@@ -11,10 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 public class ConcatenateStringsPrimitive extends PrimitiveFunction
 {
     public ConcatenateStringsPrimitive( ModelConnection mc )
@@ -30,16 +26,14 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
     {
         String strA, strB, result;
 
-        strA = mc.stringValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        strA = mc.stringValue( stack.getFirst() );
         stack = stack.getRest();
-        strB = mc.stringValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        strB = mc.stringValue( stack.getFirst() );
         stack = stack.getRest();
 
         result = strA + strB;
 
-        sink.put( new RippleStack( mc.createLiteral( result ), stack ) );
+        sink.put( new RippleStack( mc.createValue( result ), stack ) );
     }
 }
 

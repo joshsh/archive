@@ -15,6 +15,8 @@ public interface RippleValue extends Value
     public Value toRdf( ModelConnection mc )
         throws RippleException;
 
+    public boolean isFunctionEnvelope();
+
     /**
      *  @return  the Value
     public Value proxy();

@@ -11,10 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 public class IntegerDivide extends PrimitiveFunction
 {
     public IntegerDivide( ModelConnection mc )
@@ -30,11 +26,9 @@ public class IntegerDivide extends PrimitiveFunction
     {
         int a, b, result;
 
-        a = mc.intValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        a = mc.intValue( stack.getFirst() );
         stack = stack.getRest();
-        b = mc.intValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        b = mc.intValue( stack.getFirst() );
         stack = stack.getRest();
 
         try
@@ -47,7 +41,7 @@ public class IntegerDivide extends PrimitiveFunction
             throw new RippleException( t );
         }
 
-        sink.put( new RippleStack( mc.createLiteral( result ), stack ) );
+        sink.put( new RippleStack( mc.createValue( result ), stack ) );
     }
 }
 

@@ -78,8 +78,10 @@ private URI uniqueFilterUri;
             Value first = stack.getFirst();
 //System.out.println( "   first = " + stack.getFirst() );
 
+
+
             // prim[] and pred[]
-            if ( isFunctionEnvelope( first ) )
+            if ( first.isFunctionEnvelope() )
             {
                 RippleStack rest = stack.getRest();
 
@@ -88,7 +90,8 @@ private URI uniqueFilterUri;
 //                    sink.put( stack );
 
                 else
-                    ( new EvaluatorSink( new FunctionSink( ((FunctionEnvelope) first).getFunction(), this ) ) ).put( rest );
+                    ( new EvaluatorSink(
+                        new FunctionSink( ((FunctionEnvelope) first).getFunction(), this ) ) ).put( rest );
             }
 
             // arg[]

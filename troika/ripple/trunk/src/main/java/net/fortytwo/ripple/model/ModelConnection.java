@@ -178,85 +178,123 @@ public class ModelConnection
 
 
 
-    public Collection<Value> findProduct( Value arg, Value func )
-        throws RippleException
-    {
+public Collection<Value> findProduct( Value arg, Value func )
+    throws RippleException
+{
 //        Apply a = new Apply( func, arg );
 //        return reduce( a );
-        return model.multiply( arg, func, this );
-    }
+    return model.multiply( arg, func, this );
+}
 
-    public Value findUniqueProduct( Value arg, Value func )
-        throws RippleException
+public Value findUniqueProduct( Value arg, Value func )
+    throws RippleException
+{
+    Collection<Value> results = findProduct( arg, func );
+
+    if ( 1 != results.size() )
     {
-        Collection<Value> results = findProduct( arg, func );
-
-        if ( 1 != results.size() )
-        {
-            if ( 0 == results.size() )
-                throw new RippleException( "no values resolved for " + func.toString() + " of " + arg.toString() );
-
-            else
-                throw new RippleException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
-        }
+        if ( 0 == results.size() )
+            throw new RippleException( "no values resolved for " + func.toString() + " of " + arg.toString() );
 
         else
-            return results.iterator().next();
+            throw new RippleException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
     }
 
-    public Resource castToResource( Value v )
-        throws RippleException
-    {
-        if ( v instanceof Resource )
-            return (Resource) v;
-        else
-            throw new RippleException( "value " + v.toString() + " is not a Resource" );
-    }
+    else
+        return results.iterator().next();
+}
 
-    public URI castToUri( Value v )
-        throws RippleException
-    {
-        if ( v instanceof URI )
-            return (URI) v;
+public Resource castToResource( Value v )
+    throws RippleException
+{
+    if ( v instanceof Resource )
+        return (Resource) v;
+    else
+        throw new RippleException( "value " + v.toString() + " is not a Resource" );
+}
 
-        else
-            throw new RippleException( "value " + v.toString() + " is not a URI" );
-    }
+public URI castToUri( Value v )
+    throws RippleException
+{
+    if ( v instanceof URI )
+        return (URI) v;
 
-    public Literal castToLiteral( Value v )
-        throws RippleException
-    {
-        if ( v instanceof Literal )
-            return (Literal) v;
+    else
+        throw new RippleException( "value " + v.toString() + " is not a URI" );
+}
 
-        else
-            throw new RippleException( "value " + v.toString() + " is not a Literal" );
-    }
+public Literal castToLiteral( Value v )
+    throws RippleException
+{
+    if ( v instanceof Literal )
+        return (Literal) v;
 
-    public boolean booleanValue( Literal l )
-        throws RippleException
-    {
-/*
-        URI type = lit.getDatatype();
-        if ( !type.equals( XMLSchema.BOOLEAN ) )
-            throw new RippleException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
-*/
+    else
+        throw new RippleException( "value " + v.toString() + " is not a Literal" );
+}
+
+public boolean booleanValue( Literal l )
+    throws RippleException
+{
+//        URI type = lit.getDatatype();
+//        if ( !type.equals( XMLSchema.BOOLEAN ) )
+//            throw new RippleException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
 
         String label = l.getLabel();
 // TODO: is capitalization relevant? Can 'true' also be represented as '1'?
         return label.equals( "true" );
     }
 
-    public int intValue( Literal l )
-        throws RippleException
-    {
+    ////////////////////////////////////////////////////////////////////////////
+
 /*
-        URI type = l.getDatatype();
-        if ( !type.equals( XMLSchema.INTEGER ) )
-            throw new RippleException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
+public Value findUniqueProduct( Value arg, Value func )
+    throws RippleException
+{
+    Collection<Value> results = findProduct( arg, func );
+
+    if ( 1 != results.size() )
+    {
+        if ( 0 == results.size() )
+            throw new RippleException( "no values resolved for " + func.toString() + " of " + arg.toString() );
+
+        else
+            throw new RippleException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
+    }
+
+    else
+        return results.iterator().next();
+}
+
+public URI uriValue( RippleValue rv )
+{
+    Value v = rdfValue( rv ).getRdfValue();
+    if ( v instanceof URI )
+        return (URI) v;
+    else
+        throw new RippleException( "value " + v.toString() + " is not a URI" );
+}
 */
 
+    private RdfValue rdfValue( RippleValue rv )
+        throws RippleException
+    {
+        if ( v instanceof RdfValue )
+            return (RdfValue) rv;
+        else
+            throw new RippleException( "RippleValue " + rv.toString() + " is not an RdfValue" );
+    }
+
+    public int intValue( RippleValue rv )
+    {
+        Literal l = rdfValue( rv ).getRdfValue().castToLiteral();
+
+//        URI type = l.getDatatype();
+//        if ( !type.equals( XMLSchema.INTEGER ) )
+//            throw new RippleException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
+
         String label = l.getLabel();
+
         try
         {
             return ( new Integer( label ) ).intValue();
@@ -268,27 +306,29 @@ public class ModelConnection
         }
     }
 
-    public String stringValue( Literal l )
+    public String stringValue( RippleValue rv )
         throws RippleException
     {
+        Literal l = rdfValue( rv ).getRdfValue().castToLiteral();
+
         return l.getLabel();
     }
 
-    public List<Value> listValue( final Resource listHead )
+/*
+    public List<RippleValue> listValue( final RippleValue listHead )
         throws RippleException
     {
-        List<Value> list = new ArrayList<Value>();
-
+        List<RippleValue> list = new ArrayList<RippleValue>();
+    
         Resource cur = listHead;
-
-// TODO: is this 'equals' safe?
+    
         while ( !cur.equals( RDF.NIL ) )
         {
             Value val = findUniqueProduct( cur, RDF.FIRST );
             list.add( val );
             cur = castToResource( findUniqueProduct( cur, RDF.REST ) );
         }
-
+    
         return list;
     }
 
@@ -297,33 +337,110 @@ public class ModelConnection
         throws RippleException
     {
         Collection<Value> results = new Container();
-
+    
         try
         {
             boolean useInference = false;
-
+    
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
                     head, null, null, useInference );
-
+    
             while ( stmtIter.hasNext() )
             {
                 Statement st = stmtIter.next();
                 if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
                     results.add( st.getObject() );
             }
-
+    
             stmtIter.close();
         }
-
+    
         // Warning: the RepositoryResult may be left open.
         catch ( Throwable t )
         {
             throw new RippleException( t );
         }
-
+    
         return results;
     }
+*/
+
+    ////////////////////////////////////////////////////////////////////////////
+
+public int intValue( Literal l )
+    throws RippleException
+{
+
+
+    String label = l.getLabel();
+    try
+    {
+        return ( new Integer( label ) ).intValue();
+    }
+
+    catch ( Throwable t )
+    {
+        throw new RippleException( t );
+    }
+}
+
+public String stringValue( Literal l )
+    throws RippleException
+{
+    return l.getLabel();
+}
+
+public List<Value> listValue( final Resource listHead )
+    throws RippleException
+{
+    List<Value> list = new ArrayList<Value>();
+
+    Resource cur = listHead;
+
+// TODO: is this 'equals' safe?
+    while ( !cur.equals( RDF.NIL ) )
+    {
+        Value val = findUniqueProduct( cur, RDF.FIRST );
+        list.add( val );
+        cur = castToResource( findUniqueProduct( cur, RDF.REST ) );
+    }
+
+    return list;
+}
+
+
+public Collection<Value> bagValue( final Resource head )
+    throws RippleException
+{
+    Collection<Value> results = new Container();
+
+    try
+    {
+        boolean useInference = false;
+
+        RepositoryResult<Statement> stmtIter
+            = repoConnection.getStatements(
+                head, null, null, useInference );
+
+        while ( stmtIter.hasNext() )
+        {
+            Statement st = stmtIter.next();
+            if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
+                results.add( st.getObject() );
+        }
+
+        stmtIter.close();
+    }
+
+    // Warning: the RepositoryResult may be left open.
+    catch ( Throwable t )
+    {
+        throw new RippleException( t );
+    }
+
+    return results;
+}
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -642,6 +759,98 @@ public class ModelConnection
         throws RippleException
     {
         return createUri( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public RippleValue createValue( final String s )
+        throws RippleException
+    {
+        try
+        {
+            return new RdfValue(
+                model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING ) );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
+    public RippleValue createValue( final String s, final String language )
+        throws RippleException
+    {
+        try
+        {
+            return new RdfValue(
+                model.getRepository().getValueFactory().createLiteral( s, language ) );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
+    public RippleValue createValue( final String s, final URI dataType )
+        throws RippleException
+    {
+        try
+        {
+            return new RdfValue(
+                model.getRepository().getValueFactory().createLiteral( s, dataType ) );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
+    public RippleValue createValue( final boolean b )
+        throws RippleException
+    {
+        try
+        {
+            return new RdfValue(
+                model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN ) );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
+    public RippleValue createValue( final int i )
+        throws RippleException
+    {
+        try
+        {
+            return new RdfValue(
+                model.getRepository().getValueFactory().createLiteral( "" + i, XMLSchema.INTEGER ) );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
+    public RippleValue createValue( final double d )
+        throws RippleException
+    {
+        try
+        {
+            return new RdfValue(
+                model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE ) );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
