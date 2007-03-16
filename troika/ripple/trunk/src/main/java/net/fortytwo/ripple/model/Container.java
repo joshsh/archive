@@ -6,21 +6,21 @@ import java.util.LinkedList;
 
 import org.openrdf.model.Value;
 
-public class Container extends LinkedList<Value>//LinkedHashSet<Value>
+public class Container extends LinkedList<RippleValue>//LinkedHashSet<Value>
 {
     public Container()
     {
         super();
     }
 
-    public Container( Value v )
+    public Container( RippleValue v )
     {
         super();
 
         add( v );
     }
 
-    public Container( Collection<Value> other )
+    public Container( Collection<RippleValue> other )
     {
         super();
 
@@ -35,7 +35,7 @@ public class Container extends LinkedList<Value>//LinkedHashSet<Value>
     }
 */
 
-    public boolean add( Collection<Value> other )
+    public boolean add( Collection<RippleValue> other )
     {
         return addAll( other );
     }

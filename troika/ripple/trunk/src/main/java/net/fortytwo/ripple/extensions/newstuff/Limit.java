@@ -4,7 +4,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleStack;
-import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.model.FunctionEnvelope;
 
 import org.openrdf.model.URI;

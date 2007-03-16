@@ -4,14 +4,14 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleStack;
-import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 public class Assert extends Combinator
 {
-    public Assert( ModelConnection mc )
+    public Assert( ModelConnection mc, final URI uri )
         throws RippleException
     {
         super( mc.createUri( NewExtension.getBaseUri() + "assert" ), mc );

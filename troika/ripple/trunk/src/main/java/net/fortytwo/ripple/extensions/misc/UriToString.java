@@ -5,7 +5,7 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleStack;
-import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
@@ -44,7 +44,7 @@ public class UriToString extends PrimitiveFunction
             throw new RippleException( t );
         }
 
-        sink.put( new RippleStack( mc.createLiteral( result ), stack ) );
+        sink.put( new RippleStack( mc.createValue( result ), stack ) );
     }
 }
 

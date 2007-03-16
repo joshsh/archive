@@ -497,7 +497,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 // TODO: this is only one way of handling name ambiguity.
             Value choice = options.get( 0 );
 
-            RippleValue rv = model.getBridge().getNativeEquivalentOf( choice );
+            RippleValue rv = model.getBridge().toNative( choice );
             return ( null == rv )
                 ? choice
                 : rv;
@@ -514,7 +514,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 
         else
         {
-            RippleValue rv = model.getBridge().getNativeEquivalentOf( v );
+            RippleValue rv = model.getBridge().toNative( v );
             return ( null == rv )
                 ? v
                 : rv;

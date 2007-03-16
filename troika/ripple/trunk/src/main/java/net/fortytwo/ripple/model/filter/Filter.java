@@ -5,7 +5,7 @@ import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
-import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;

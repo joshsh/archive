@@ -6,24 +6,24 @@ import org.openrdf.model.Value;
 
 import net.fortytwo.ripple.RippleException;
 
-public class ContainerSink extends Container implements Sink<Value>
+public class ContainerSink extends Container implements Sink<RippleValue>
 {
     public ContainerSink()
     {
         super();
     }
 
-    public ContainerSink( Value v )
+    public ContainerSink( RippleValue v )
     {
         super( v );
     }
 
-    public ContainerSink( Collection<Value> other )
+    public ContainerSink( Collection<RippleValue> other )
     {
         super( other );
     }
 
-    public void put( Value v )
+    public void put( RippleValue v )
         throws RippleException
     {
         add( v );

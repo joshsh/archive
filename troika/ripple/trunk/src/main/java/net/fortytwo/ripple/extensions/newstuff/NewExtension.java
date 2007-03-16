@@ -5,49 +5,33 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleStack;
-import net.fortytwo.ripple.model.Sink;
+import net.fortytwo.ripple.util.Sink;
 
 import java.net.URL;
 
 public class NewExtension extends Extension
 {
     private static String baseUri = "http://fortytwo.net/2007/03/04/rpl-new#";
-    public static String getBaseUri()
-    {
-        return baseUri;
-    }
 
-    protected Function[] getFunctions( ModelConnection mc )
+    public void load( ModelConnection mc )
         throws RippleException
     {
-        Function[] functions = {
-            new IntegerGreaterThan( mc ),
-            new IntegerLessThan( mc ),
-            new Assert( mc ),
-            new Deny( mc ),
-            new Equal( mc ),
-            new True( mc ),
-            new False( mc ),
-            new Or( mc ),
-            new Dup( mc ),
-            new Zap( mc ),
-            new Scrap( mc ),
-            new Limit( mc ),
-//            new Unique( mc ),
-            new Swap( mc ) };
+        ModelBridge bridge = mc.getModel().getBridge();
 
-        return functions;
-    }
-
-    protected URL[] getResources()
-    {
-/*
-        URL[] urls = {
-            this.getClass().getResource( "wurfel-test.rdf" ) };
-
-        return urls;
-*/
-        return null;
+        bridge.add( new IntegerGreaterThan( baseUri + "integer-greaterThan", mc );
+        bridge.add( new IntegerLessThan(    baseUri + "integer-lessThan", mc );
+        bridge.add( new Assert(             baseUri + "assert", mc );
+        bridge.add( new Deny(               baseUri + "deny", mc );
+        bridge.add( new Equal(              baseUri + "equal", mc );
+        bridge.add( new True(               baseUri + "true", mc );
+        bridge.add( new False(              baseUri + "false", mc );
+        bridge.add( new Or(                 baseUri + "or", mc );
+        bridge.add( new Dup(                baseUri + "dup", mc );
+        bridge.add( new Zap(                baseUri + "zap", mc );
+        bridge.add( new Scrap(              baseUri + "scrap", mc );
+        bridge.add( new Limit(              baseUri + "limit", mc );
+//        bridge.add( new Unique( baseUri + "unique", mc );
+        bridge.add( new Swap(               baseUri + "swap", mc );
     }
 }
 

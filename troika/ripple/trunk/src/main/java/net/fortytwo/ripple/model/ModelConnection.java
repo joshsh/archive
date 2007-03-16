@@ -176,34 +176,6 @@ public class ModelConnection
 */
 
 
-
-
-public Collection<Value> findProduct( Value arg, Value func )
-    throws RippleException
-{
-//        Apply a = new Apply( func, arg );
-//        return reduce( a );
-    return model.multiply( arg, func, this );
-}
-
-public Value findUniqueProduct( Value arg, Value func )
-    throws RippleException
-{
-    Collection<Value> results = findProduct( arg, func );
-
-    if ( 1 != results.size() )
-    {
-        if ( 0 == results.size() )
-            throw new RippleException( "no values resolved for " + func.toString() + " of " + arg.toString() );
-
-        else
-            throw new RippleException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
-    }
-
-    else
-        return results.iterator().next();
-}
-
 public Resource castToResource( Value v )
     throws RippleException
 {
@@ -276,6 +248,7 @@ public URI uriValue( RippleValue rv )
 }
 */
 
+/*
     private RdfValue rdfValue( RippleValue rv )
         throws RippleException
     {
@@ -284,20 +257,19 @@ public URI uriValue( RippleValue rv )
         else
             throw new RippleException( "RippleValue " + rv.toString() + " is not an RdfValue" );
     }
+*/
 
     public int intValue( RippleValue rv )
     {
-        Literal l = rdfValue( rv ).getRdfValue().castToLiteral();
+        Literal l = rv.toRdf( this ).castToLiteral();
 
 //        URI type = l.getDatatype();
 //        if ( !type.equals( XMLSchema.INTEGER ) )
 //            throw new RippleException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
 
-        String label = l.getLabel();
-
         try
         {
-            return ( new Integer( label ) ).intValue();
+            return ( new Integer( l.getLabel() ) ).intValue();
         }
 
         catch ( Throwable t )
@@ -309,62 +281,115 @@ public URI uriValue( RippleValue rv )
     public String stringValue( RippleValue rv )
         throws RippleException
     {
-        Literal l = rdfValue( rv ).getRdfValue().castToLiteral();
+        Literal l = rv.toRdf( this ).castToLiteral();
 
         return l.getLabel();
     }
 
-/*
+    public URI uriValue( RippleValue rv )
+        throws RippleException
+    {
+        return castToUri( rv.toRdf( this ) );
+    }
+
+    /**
+     *  A <code>Sink</code> which remembers how many times it has received a
+     *  value, as well as the last value received.
+     */
+    private class SingleValueSink<T> implements Sink
+    {
+        T value = null;
+        int valuesReceived = 0;
+
+        public void put( T v )
+            throws RippleException
+        {
+            value = v;
+            countReceived++;
+        }
+
+        public T getValue()
+        {
+            return value;
+        }
+
+        public int countReceived()
+        {
+            return valuesReceived;
+        }
+    }
+
+    public RippleValue findUniqueProduct( RippleValue subj, RippleValue pred )
+    {
+        SingleValueSink<RippleValue> sink = new SingleValueSink<RippleValue>();
+
+        model.multiply( subj, pred, sink );
+
+        int count = sink.countReceived();
+
+        if ( 0 == count )
+            throw new RippleException( "no values resolved for " + pred.toString() + " of " + subj.toString() );
+        else if ( 1 < count )
+            throw new RippleException( pred.toString() + " of " + subj.toString() + " resolved to more than one value" );
+        else
+            return sink.getValue();
+    }
+
+    static RippleValue rdfFirst = new RdfValue( RDF.FIRST );
+    static RippleValue rdfRest = new RdfValue( RDF.REST );
+
     public List<RippleValue> listValue( final RippleValue listHead )
         throws RippleException
     {
         List<RippleValue> list = new ArrayList<RippleValue>();
-    
-        Resource cur = listHead;
-    
+
+        RippleValue cur = listHead;
+
         while ( !cur.equals( RDF.NIL ) )
         {
-            Value val = findUniqueProduct( cur, RDF.FIRST );
-            list.add( val );
-            cur = castToResource( findUniqueProduct( cur, RDF.REST ) );
+            RippleValue v = findUniqueProduct( cur, rdfFirst );
+            list.add( v );
+            cur = castToResource( findUniqueProduct( cur, rdfRest ) );
         }
-    
+
         return list;
     }
 
-
-    public Collection<Value> bagValue( final Resource head )
+    // Note: this is a bit of a hack.  Ideally, the Model should handle all RDF queries.
+    public Collection<RippleValue> bagValue( final RippleValue head )
         throws RippleException
     {
-        Collection<Value> results = new Container();
-    
+        Collection<RippleValue> results = new Container();
+
+        ModelBridge bridge = model.getBridge();
+
         try
         {
             boolean useInference = false;
-    
+
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
-                    head, null, null, useInference );
-    
+                    head.toRdf(), null, null, useInference );
+
             while ( stmtIter.hasNext() )
             {
                 Statement st = stmtIter.next();
                 if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
-                    results.add( st.getObject() );
+                    results.add( bridge.toNative( st.getObject() ) );
             }
-    
+
             stmtIter.close();
         }
-    
+
         // Warning: the RepositoryResult may be left open.
         catch ( Throwable t )
         {
             throw new RippleException( t );
         }
-    
+
         return results;
     }
-*/
+
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -407,39 +432,6 @@ public List<Value> listValue( final Resource listHead )
     }
 
     return list;
-}
-
-
-public Collection<Value> bagValue( final Resource head )
-    throws RippleException
-{
-    Collection<Value> results = new Container();
-
-    try
-    {
-        boolean useInference = false;
-
-        RepositoryResult<Statement> stmtIter
-            = repoConnection.getStatements(
-                head, null, null, useInference );
-
-        while ( stmtIter.hasNext() )
-        {
-            Statement st = stmtIter.next();
-            if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
-                results.add( st.getObject() );
-        }
-
-        stmtIter.close();
-    }
-
-    // Warning: the RepositoryResult may be left open.
-    catch ( Throwable t )
-    {
-        throw new RippleException( t );
-    }
-
-    return results;
 }
 
 

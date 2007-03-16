@@ -20,7 +20,7 @@ public class ModelBridge
 	 *  Note: not every RDF Value has a native equivalent (in other words,
 	 *  this function MAY return <code>null</code>.
 	 */
-	public RippleValue getNativeEquivalentOf( Value sesameValue )
+	public RippleValue toNative( Value sesameValue )
 	{
 		if ( sesameValue instanceof RippleValue )
 			return (RippleValue) sesameValue;

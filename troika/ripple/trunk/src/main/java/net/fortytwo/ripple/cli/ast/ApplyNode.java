@@ -25,7 +25,7 @@ public class ApplyNode extends Ast
         throws RippleException
     {
         Value v = arg.evaluate( itp, mc );
-        RippleValue rv = mc.getModel().getBridge().getNativeEquivalentOf( v );
+        RippleValue rv = mc.getModel().getBridge().toNative( v );
         if ( null != rv )
             v = rv;
 

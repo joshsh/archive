@@ -1,6 +1,5 @@
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.util;
 
-//import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleException;
 
 public interface Sink<T>
