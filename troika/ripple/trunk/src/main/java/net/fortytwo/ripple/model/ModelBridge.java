@@ -43,10 +43,15 @@ return v.toRdf( mc );
 		rdfToNativeMap.put( sesameValue, nativeValue );
 	}
 
-	public void add( Function f )
+	public void add( RippleValue v )
 	{
-		setNativeEquivalentOf( f.getUri(), f );
+//...
 	}
+
+//	public void add( Function f )
+//	{
+//		setNativeEquivalentOf( f.getUri(), f );
+//	}
 }
 
 // kate: tab-width 4
