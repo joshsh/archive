@@ -8,7 +8,7 @@ public class RdfValue implements RippleValue
 {
 	private Value value;
 	
-	public RdfValue( Value value )
+	public RdfValue( Value value, ModelConnection mc )
 	{
 		this.value = value;
 	}
@@ -18,57 +18,21 @@ public class RdfValue implements RippleValue
 		return value;
 	}
 
-	public Value toRdf( ModelConnection mc )
+	public RippleValue toRdf( ModelConnection mc )
 	{
-		return value;
+		return this;
 	}
 
-	public RippleValue toNative()
+	public void printTo( RipplePrintStream p )
+		throws RippleException
 	{
-return null;
+		p.print( value );
 	}
-
-    public void printTo( RipplePrintStream p )
-        throws RippleException
-{
-p.print( value );
-}
 
 	public boolean isFunctionEnvelope()
 	{
-// TODO: this may proxy for a value which IS a FunctionEnvelope.
-return false;
+		return false;
 	}
-
-/*
-	private static Literal toLiteral( Value v )
-        throws RippleException
-    {
-        if ( v instanceof Literal )
-            return (Literal) v;
-
-        else
-            throw new RippleException( "value " + v.toString() + " is not a Literal" );
-	}
-
-	public static int toInt( RippleValue v, ModelConnection mc )
-	{
-		RdfValue rdfValue = v.toRdf( mc );
-		Literal l = toLiteral( rdfValue.value );
-
-        String label = l.getLabel();
-        try
-        {
-            return ( new Integer( label ) ).intValue();
-        }
-
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
-	}
-*/
-
 }
 
 // kate: tab-width 4

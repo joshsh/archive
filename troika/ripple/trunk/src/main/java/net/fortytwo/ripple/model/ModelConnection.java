@@ -24,6 +24,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.repository.RepositoryConnection;
@@ -42,6 +43,7 @@ public class ModelConnection
 
     private Model model;
     private RepositoryConnection repoConnection;
+    private ValueFactory valueFactory;
     private String name = null;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -54,6 +56,7 @@ public class ModelConnection
         try
         {
             repoConnection = model.getRepository().getConnection();
+            valueFactory = model.getRepository().getValueFactory();
 //System.out.println( "Opened "
 //    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //    + " (" + openConnections + " total)." );
@@ -278,18 +281,18 @@ public URI uriValue( RippleValue rv )
         }
     }
 
-    public String stringValue( RippleValue rv )
+    public String stringValue( RdfValue v )
         throws RippleException
     {
-        Literal l = rv.toRdf( this ).castToLiteral();
+        Literal l = v.castToLiteral();
 
         return l.getLabel();
     }
 
-    public URI uriValue( RippleValue rv )
+    public URI uriValue( RdfValue v )
         throws RippleException
     {
-        return castToUri( rv.toRdf( this ) );
+        return castToUri( v );
     }
 
     /**
@@ -319,9 +322,10 @@ public URI uriValue( RippleValue rv )
         }
     }
 
-    public RippleValue findUniqueProduct( RippleValue subj, RippleValue pred )
+    public RippleValue findUniqueProduct( RdfValue subj, RdfValue pred )
+        throws RippleException
     {
-        SingleValueSink<RippleValue> sink = new SingleValueSink<RippleValue>();
+        SingleValueSink<RdfValue> sink = new SingleValueSink<RdfValue>();
 
         model.multiply( subj, pred, sink );
 
@@ -335,19 +339,19 @@ public URI uriValue( RippleValue rv )
             return sink.getValue();
     }
 
-    static RippleValue rdfFirst = new RdfValue( RDF.FIRST );
-    static RippleValue rdfRest = new RdfValue( RDF.REST );
+    private static RippleValue rdfFirst = new RdfValue( RDF.FIRST );
+    private static RippleValue rdfRest = new RdfValue( RDF.REST );
 
-    public List<RippleValue> listValue( final RippleValue listHead )
+    public List<RdfValue> listValue( final RdfValue listHead )
         throws RippleException
     {
-        List<RippleValue> list = new ArrayList<RippleValue>();
+        List<RdfValue> list = new ArrayList<RdfValue>();
 
-        RippleValue cur = listHead;
+        RdfValue cur = listHead;
 
         while ( !cur.equals( RDF.NIL ) )
         {
-            RippleValue v = findUniqueProduct( cur, rdfFirst );
+            RdfValue v = findUniqueProduct( cur, rdfFirst );
             list.add( v );
             cur = castToResource( findUniqueProduct( cur, rdfRest ) );
         }
@@ -410,11 +414,6 @@ public int intValue( Literal l )
     }
 }
 
-public String stringValue( Literal l )
-    throws RippleException
-{
-    return l.getLabel();
-}
 
 public List<Value> listValue( final Resource listHead )
     throws RippleException
@@ -489,16 +488,17 @@ public List<Value> listValue( final Resource listHead )
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public void add( Value subj, Value pred, Value obj )
+    public void add( RippleValue subj, RippleValue pred, RippleValue obj )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj );
-        URI predUri = castToUri( pred );
+        Resource subjResource = castToResource( subj.toRdf() );
+        URI predUri = castToUri( pred.toRdf() );
+        Value objValue = obj.toRdf();
 
         try
         {
 //            repoConnection.add( subjResource, predUri, obj, singleContext );
-            repoConnection.add( subjResource, predUri, obj );
+            repoConnection.add( subjResource, predUri, objValue );
         }
 
         catch ( Throwable t )
@@ -507,12 +507,17 @@ public List<Value> listValue( final Resource listHead )
         }
     }
 
-    public void add( Resource subj, URI pred, Value obj, Resource context )
+    public void add( RippleValue subj, RippleValue pred, RippleValue obj, Resource context )
         throws RippleException
     {
+        Resource subjResource = castToResource( subj.toRdf() );
+        URI predUri = castToUri( pred.toRdf() );
+        Value objValue = obj.toRdf();
+
         try
         {
-            repoConnection.add( subj, pred, obj, context );
+//            repoConnection.add( subjResource, predUri, obj, singleContext );
+            repoConnection.add( subjResource, predUri, objValue, context );
         }
 
         catch ( Throwable t )
@@ -521,15 +526,17 @@ public List<Value> listValue( final Resource listHead )
         }
     }
 
-    public void remove( Value subj, Value pred, Value obj )
+    public void remove( RippleValue subj, RippleValue pred, RippleValue obj )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj );
-        URI predUri = castToUri( pred );
+        Resource subjResource = castToResource( subj.toRdf() );
+        URI predUri = castToUri( pred.toRdf() );
+        Value objValue = obj.toRdf();
 
         try
         {
-            repoConnection.remove( subjResource, predUri, obj );
+// Does this remove the statement from ALL contexts?
+            repoConnection.remove( subjResource, predUri, objValue );
         }
 
         catch ( Throwable t )
@@ -545,7 +552,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createURI( s );
+            return valueFactory.createURI( s );
         }
 
         catch ( Throwable t )
@@ -559,7 +566,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createURI( ns + s );
+            return valueFactory.createURI( ns + s );
         }
 
         catch ( Throwable t )
@@ -573,7 +580,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createURI( ns.toString() + s );
+            return valueFactory.createURI( ns.toString() + s );
         }
 
         catch ( Throwable t )
@@ -587,7 +594,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING );
+            return valueFactory.createLiteral( s, XMLSchema.STRING );
         }
 
         catch ( Throwable t )
@@ -601,7 +608,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createLiteral( s, language );
+            return valueFactory.createLiteral( s, language );
         }
 
         catch ( Throwable t )
@@ -615,7 +622,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createLiteral( s, dataType );
+            return valueFactory.createLiteral( s, dataType );
         }
 
         catch ( Throwable t )
@@ -629,7 +636,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN );
+            return valueFactory.createLiteral( "" + b, XMLSchema.BOOLEAN );
         }
 
         catch ( Throwable t )
@@ -643,7 +650,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createLiteral( "" + i, XMLSchema.INTEGER );
+            return valueFactory.createLiteral( "" + i, XMLSchema.INTEGER );
         }
 
         catch ( Throwable t )
@@ -657,7 +664,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE );
+            return valueFactory.createLiteral( "" + d, XMLSchema.DOUBLE );
         }
 
         catch ( Throwable t )
@@ -671,7 +678,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createBNode();
+            return valueFactory.createBNode();
         }
 
         catch ( Throwable t )
@@ -685,7 +692,7 @@ public List<Value> listValue( final Resource listHead )
     {
         try
         {
-            return model.getRepository().getValueFactory().createBNode( id );
+            return valueFactory.createBNode( id );
         }
 
         catch ( Throwable t )
@@ -747,12 +754,6 @@ public List<Value> listValue( final Resource listHead )
         return createUri( "http://www.w3.org/2001/XMLSchema#" + localName );
     }
 
-    public URI createSwoogleUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#" + localName );
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     public RippleValue createValue( final String s )
@@ -761,7 +762,7 @@ public List<Value> listValue( final Resource listHead )
         try
         {
             return new RdfValue(
-                model.getRepository().getValueFactory().createLiteral( s, XMLSchema.STRING ) );
+                valueFactory.createLiteral( s, XMLSchema.STRING ) );
         }
 
         catch ( Throwable t )
@@ -776,7 +777,7 @@ public List<Value> listValue( final Resource listHead )
         try
         {
             return new RdfValue(
-                model.getRepository().getValueFactory().createLiteral( s, language ) );
+                valueFactory.createLiteral( s, language ) );
         }
 
         catch ( Throwable t )
@@ -791,7 +792,7 @@ public List<Value> listValue( final Resource listHead )
         try
         {
             return new RdfValue(
-                model.getRepository().getValueFactory().createLiteral( s, dataType ) );
+                valueFactory.createLiteral( s, dataType ) );
         }
 
         catch ( Throwable t )
@@ -806,7 +807,7 @@ public List<Value> listValue( final Resource listHead )
         try
         {
             return new RdfValue(
-                model.getRepository().getValueFactory().createLiteral( "" + b, XMLSchema.BOOLEAN ) );
+                valueFactory.createLiteral( "" + b, XMLSchema.BOOLEAN ) );
         }
 
         catch ( Throwable t )
@@ -821,7 +822,7 @@ public List<Value> listValue( final Resource listHead )
         try
         {
             return new RdfValue(
-                model.getRepository().getValueFactory().createLiteral( "" + i, XMLSchema.INTEGER ) );
+                valueFactory.createLiteral( "" + i, XMLSchema.INTEGER ) );
         }
 
         catch ( Throwable t )
@@ -836,7 +837,7 @@ public List<Value> listValue( final Resource listHead )
         try
         {
             return new RdfValue(
-                model.getRepository().getValueFactory().createLiteral( "" + d, XMLSchema.DOUBLE ) );
+                valueFactory.createLiteral( "" + d, XMLSchema.DOUBLE ) );
         }
 
         catch ( Throwable t )

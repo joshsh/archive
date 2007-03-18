@@ -1,39 +1,42 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.model.FunctionEnvelope;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 
 public class Limit extends PrimitiveFunction
 {
-    public Limit( ModelConnection mc )
-        throws RippleException
-    {
-        super( mc.createUri( NewExtension.getBaseUri() + "limit" ), mc );
-    }
+	public Limit( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
-    public void applyInternal( RippleStack stack,
-                         Sink<RippleStack> sink,
-                         ModelConnection mc )
-        throws RippleException
-    {
-        int lim;
+	public int arity()
+	{
+		return 1;
+	}
 
-        lim = mc.intValue(
-            mc.castToLiteral( stack.getFirst() ) );
-        stack = stack.getRest();
+	public void applyInternal( RippleStack stack,
+						Sink<RippleStack> sink,
+						ModelConnection mc )
+		throws RippleException
+	{
+		int lim;
 
-        sink.put(
-            new RippleStack(
-                FunctionEnvelope.createEnvelope(
-                    new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
-    }
+		lim = mc.intValue(
+			mc.castToLiteral( stack.getFirst() ) );
+		stack = stack.getRest();
+
+		sink.put(
+			new RippleStack(
+				FunctionEnvelope.createEnvelope(
+					new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

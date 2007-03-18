@@ -2,18 +2,37 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 
-import org.openrdf.model.Value;
-
 /**
  *  A ... which reduces arbitrary expressions to a particular normal form.
  */
-public abstract class Evaluator
+public abstract class Evaluator implements Function
 {
-// NOTE: this is identical to Function's applyTo() method.
-    public abstract void reduce( RippleStack stack,
-                                 Sink<RippleStack> sink,
-                                 ModelConnection mc )
-        throws RippleException;
+    private RdfValue rdfEquivalent = null;
+
+    public int arity()
+    {
+        return 1;
+    }
+
+    public boolean isFunctionEnvelope()
+    {
+        return false;
+    }
+
+    public void printTo( RipplePrintStream p )
+        throws RippleException
+    {
+p.print( "[Evaluator]" );
+    }
+
+    public Value toRdf( ModelConnection mc )
+        throws RippleException
+    {
+if ( null == rdfEquivalent )
+    rdfEquivalent = mc.createBNode();
+
+return rdfEquivalent;
+    }
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

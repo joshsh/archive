@@ -1,0 +1,71 @@
+@prefix rpl:   <http://fortytwo.net/2007/03/ripple#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+########################################
+# operators
+########################################
+
+rpl:Operator
+	a rdfs:Class ;
+	rdfs:comment "" .
+
+rpl:pred
+	a rpl:Operator ;
+	rdfs:comment "" .
+
+rpl:prim
+	a rpl:Operator ;
+	rdfs:comment "" .
+
+rpl:prog
+	a rpl:Operator ;
+	rdfs:comment "" .
+
+########################################
+# primitive functions
+########################################
+
+rpl:PrimitiveFunction
+	a rdfs:Class ;
+	rdfs:comment "a built-in function" .
+
+rpl:arity
+	a rdfs:Property ;
+	rdfs:domain rpl:PrimitiveFunction ;
+	rpl:range xsd:integer ;
+	rdfs:comment "the number of formal arguments consumed by a PrimitiveFunction" .
+
+rpl:returnType
+	a rdf:Property ;
+	rdfs:domain rpl:PrimitiveFunction ;
+	rdfs:range rdfs:DataType ;
+	rdfs:comment "the data type of the returned value of a function" .
+
+rpl:parameters
+	a rdf:Property ;
+	rdfs:domain rpl:PrimitiveFunction ;
+	rdfs:range rpl:ParameterList ;
+	rdfs:comment "" .
+
+rpl:Parameter
+	rdfs:type rdfs:Class ;
+	rdfs:comment "a formal argument to a function" .
+
+rpl:ParameterList
+	a rdfs:Class ;
+	rdfs:subClassOf rdf:List ;
+	rdfs:comment "" .
+
+rpl:parameterType
+	a rdf:Property ;
+	rdfs:domain rpl:Parameter ;
+	rdfs:range rdfs:DataType ;
+	rdfs:comment "The data type of a formal argument to a function" .
+
+rpl:parameterTransparency
+	a rdf:Property ;
+	rdfs:domain rpl:Parameter ;
+	rdfs:range xsd:boolean ;
+	rdfs:comment "A condition indicating whether the application of a function may have side-effects on a particular argument" .

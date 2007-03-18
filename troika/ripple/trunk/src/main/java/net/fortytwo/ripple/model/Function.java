@@ -7,9 +7,6 @@ import org.openrdf.model.URI;
 
 public interface Function extends RippleValue
 {
-//    public abstract String toString();
-    public URI getUri();
-
     /**
      *  The fixed number of arguments which this function consumes before
      *  yielding a result.
@@ -20,9 +17,6 @@ public interface Function extends RippleValue
     public void applyTo( RippleStack args,
                          Sink<RippleStack> sink,
                          ModelConnection mc )
-        throws RippleException;
-
-    public void checkArguments( RippleStack args )
         throws RippleException;
 }
 

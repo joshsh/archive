@@ -60,14 +60,21 @@ public class RipplePrintStream extends PrintStream
 print( "\"" + s + "\"" );
     }
 
-    public void print( Value v )
+    public void print( RippleValue v )
         throws RippleException
     {
         if ( null == v )
             print( "()" );
 
-        else if ( v instanceof RippleValue )
-            ( (RippleValue) v ).printTo( this );
+        else
+            v.printTo( this );
+    }
+
+    public void print( Value v )
+        throws RippleException
+    {
+        if ( null == v )
+            print( "()" );
 
         else
         {

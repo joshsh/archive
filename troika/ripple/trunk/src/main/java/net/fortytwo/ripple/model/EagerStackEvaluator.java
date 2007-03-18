@@ -15,14 +15,7 @@ private URI uniqueFilterUri;
     private Model model;
     private ModelConnection modelConnection;
 
-    boolean isFunctionEnvelope( Value v )
-    {
-        return ( v instanceof FunctionEnvelope );
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////
-
 
     protected class FunctionSink implements Sink<RippleStack>
     {
@@ -57,9 +50,7 @@ private URI uniqueFilterUri;
         }
     }
 
-
     ////////////////////////////////////////////////////////////////////////////
-
 
     protected class EvaluatorSink implements Sink<RippleStack>
     {
@@ -100,12 +91,12 @@ private URI uniqueFilterUri;
         }
     }
 
-    public void reduce( RippleStack stack,
+    public void applyTo( RippleStack stack,
                         Sink<RippleStack> sink,
                         ModelConnection mc )
         throws RippleException
     {
-//System.out.println( "public void reduce" );
+//System.out.println( "public void applyTo" );
 uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/04/rpl-new#unique" );
         modelConnection = mc;
         model = modelConnection.getModel();

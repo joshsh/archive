@@ -16,6 +16,12 @@ Syntax
 * add character literal syntax, e.g. 'c'
 * add awareness of the xml:lang and data type of literals in input grammar
 
+Schema
+================================================================================
+* make rpl:ParameterList into a list of rpl:Parameters, specifically
+* fill in the comments of rpl: terms
+* actual values for rpl:returnType and rpl:parameterType imply that types such as xsd:integer have a type of rdfs:DataType.  Is that reasonable?
+
 Model
 ================================================================================
 * handle translation of data between RDF and Function data structures
@@ -82,6 +88,11 @@ Ontologies
 ================================================================================
 * ontology describing SemanticWebDocuments and where to get them
 
+Coding
+================================================================================
+* decide on tabs or spaces
+* decide on convention for static members
+
 Testing
 ================================================================================
 * syntax testing (both success and failure cases).  See:
@@ -104,8 +115,7 @@ Use cases
 
 Demo / public web service
 ================================================================================
-* buy more RAM for the server
-* ask Chris Bizer about Jetty ^ dbpedia
+* create one
 
 Nice-to-have
 ================================================================================

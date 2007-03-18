@@ -2,57 +2,66 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-
 public class Closure implements Function
 {
-    private Function function;
-    private Value argument;
+    private Function innerFunction;
+    private RippleValue argument;
     private int cachedArity;
 
-    public Closure( Function function, Value argument )
+    private RdfValue rdfEquivalent = null;
+
+    public Closure( Function innerFunction, RippleValue argument )
     {
-        this.function = function;
+        this.innerFunction = innerFunction;
         this.argument = argument;
-        cachedArity = function.arity() - 1;
-//System.out.println( "" + this + ": (" + function + ", " + argument + ")" );
+        cachedArity = innerFunction.arity() - 1;
+//System.out.println( "" + this + ": (" + innerFunction + ", " + argument + ")" );
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-public URI getUri()
-{
-return null;
-}
 
     public int arity()
     {
         return cachedArity;
     }
 
-public void checkArguments( RippleStack args )
-    throws RippleException
-{}
+// TODO: does not indicate application
+    public void printTo( RipplePrintStream p )
+        throws RippleException
+    {
+        select ( Ripple.getExpressionOrder() )
+        {
+            case DIAGRAMMATIC:
+                p.print( innerFunction );
+                p.print( " " );
+                p.print( argument );
+                break;
 
-public void printTo( RipplePrintStream p )
-    throws RippleException
-{}
+            case ANTIDIAGRAMMATIC:
+                p.print( argument );
+                p.print( " " );
+                p.print( innerFunction );
+                break;
+        }
+    }
 
-public Value toRdf( ModelConnection mc )
-    throws RippleException
-{
-return null;
-}
+    public Value toRdf( ModelConnection mc )
+        throws RippleException
+    {
+        if ( null == rdfEquivalent )
+        {
+            rdfEquivalent = mc.createBNode();
 
-    ////////////////////////////////////////////////////////////////////////////
+            mc.add( rdfEquivalent, 
+        }
+
+        return rdfEquivalent;
+    }
 
     public void applyTo( RippleStack stack,
                          Sink<RippleStack> sink,
                          ModelConnection mc )
         throws RippleException
     {
-        function.applyTo( new RippleStack( argument, stack ), sink,  mc );
+        innerFunction.applyTo( new RippleStack( argument, stack ), sink,  mc );
     }
 }
 

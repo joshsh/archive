@@ -1,36 +1,40 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-
-public class False extends Combinator
+public class False extends PrimitiveFunction
 {
-    public False( ModelConnection mc )
-        throws RippleException
-    {
-        super( mc.createUri( NewExtension.getBaseUri() + "false" ), mc );
-    }
+	public False( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
-    public void applyTo( RippleStack stack,
-                         Sink<RippleStack> sink,
-                         ModelConnection mc )
-        throws RippleException
-    {
-        Value x, y;
+	public int arity()
+	{
+		return 2;
+	}
 
-        x = stack.getFirst();
-        stack = stack.getRest();
-        y = stack.getFirst();
-        stack = stack.getRest();
+	public void applyTo( RippleStack stack,
+						Sink<RippleStack> sink,
+						ModelConnection mc )
+		throws RippleException
+	{
+		Value x, y;
 
-        sink.put( new RippleStack( y, stack ) );
-    }
+		x = stack.getFirst();
+		stack = stack.getRest();
+		y = stack.getFirst();
+		stack = stack.getRest();
+
+		sink.put( new RippleStack( y, stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

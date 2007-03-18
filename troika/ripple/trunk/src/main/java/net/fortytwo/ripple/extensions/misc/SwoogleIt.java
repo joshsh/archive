@@ -27,13 +27,15 @@ public class SwoogleIt extends PrimitiveFunction
         rdfTypeUri,
         swoogleQueryResponseUri;
 
+	private static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
+	
     public SwoogleIt( ModelConnection mc )
         throws RippleException
     {
         super( mc.createRippleMiscUri( "swoogleIt" ), mc );
 
         rdfTypeUri = mc.createRdfUri( "type" );
-        swoogleQueryResponseUri = mc.createSwoogleUri( "QueryResponse" );
+        swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
     }
 
     protected void applyInternal( RippleStack stack,

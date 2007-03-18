@@ -1,40 +1,44 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Combinator;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-
-public class Assert extends Combinator
+public class Assert extends PrimitiveFunction
 {
-    public Assert( ModelConnection mc, final URI uri )
-        throws RippleException
-    {
-        super( mc.createUri( NewExtension.getBaseUri() + "assert" ), mc );
-    }
+	public Assert( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
-    public void applyTo( RippleStack stack,
-                         Sink<RippleStack> sink,
-                         ModelConnection mc )
-        throws RippleException
-    {
-        Value subj, pred, obj;
+	public int arity()
+	{
+		return 3;
+	}
 
-        obj = stack.getFirst();
-        stack = stack.getRest();
-        pred = stack.getFirst();
-        stack = stack.getRest();
-        subj = stack.getFirst();
-        stack = stack.getRest();
+	public void applyTo( RippleStack stack,
+						Sink<RippleStack> sink,
+						ModelConnection mc )
+		throws RippleException
+	{
+		RippleValue subj, pred, obj;
 
-        mc.add( subj, pred, obj );
+		obj = stack.getFirst();
+		stack = stack.getRest();
+		pred = stack.getFirst();
+		stack = stack.getRest();
+		subj = stack.getFirst();
+		stack = stack.getRest();
 
-        sink.put( new RippleStack( subj, stack ) );
-    }
+		mc.add( subj, pred, obj );
+
+		sink.put( new RippleStack( subj, stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4
