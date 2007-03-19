@@ -323,7 +323,7 @@ public URI uriValue( RippleValue rv )
     {
         SingleValueSink sink = new SingleValueSink();
 
-        model.multiply( subj, pred, sink );
+        model.multiply( subj, pred, sink, this );
 
         int count = sink.countReceived();
 
@@ -395,22 +395,27 @@ public URI uriValue( RippleValue rv )
         throws RippleException
     {
         Set<RdfValue> predicates = new HashSet<RdfValue>();
-        Resource subjRdf = castToResource( subject.toRdf( this ).getRdfValue() );
+        Value v = subject.toRdf( this ).getRdfValue();
 
-        try
+        if ( v instanceof Resource )
         {
-            RepositoryResult<Statement> stmtIter
-                = repoConnection.getStatements(
+            Resource subjRdf = (Resource) v;
+
+            try
+            {
+                RepositoryResult<Statement> stmtIter
+                    = repoConnection.getStatements(
 //                    subject, null, null, model, includeInferred );
-                    subjRdf, null, null, Ripple.useInference() );
-            while ( stmtIter.hasNext() )
-                predicates.add( new RdfValue( stmtIter.next().getPredicate() ) );
-            stmtIter.close();
-        }
+                        subjRdf, null, null, Ripple.useInference() );
+                while ( stmtIter.hasNext() )
+                    predicates.add( new RdfValue( stmtIter.next().getPredicate() ) );
+                stmtIter.close();
+            }
 
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
+            catch ( Throwable t )
+            {
+                throw new RippleException( t );
+            }
         }
 
         return predicates;

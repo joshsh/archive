@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class FunctionTypeAnnotation
 {
-/*
     class Param
     {
         public String label;
@@ -44,6 +43,8 @@ public class FunctionTypeAnnotation
         rplParametersUri,
         rplReturnTypeUri;
 
+/*
+
     private Param getRippleParameter( final RippleValue head, ModelConnection mc )
         throws RippleException
     {
@@ -63,26 +64,24 @@ public class FunctionTypeAnnotation
         return new Param( label, type, comment, transparency );
     }
 */
+    private static String rplNs = "http://fortytwo.net/2007/03/rpl#";
+
     public FunctionTypeAnnotation( final RdfValue self, ModelConnection mc )
         throws RippleException
     {
-/*
-        selfUri = self;
-
 // TODO: actually use these, or get rid of them
         label = "";
         comment = "";
 
-        rplParametersUri             = mc.createRippleUri( "parameters" );
-        rplReturnTypeUri             = mc.createRippleUri( "returnType" );
-        rplParameterUri              = mc.createRippleUri( "Parameter" );
-        rplParameterNameUri          = mc.createRippleUri( "parameterName" );
-        rplParameterListUri          = mc.createRippleUri( "ParameterList" );
-        rplParameterTypeUri          = mc.createRippleUri( "parameterType" );
-        rplParameterTransparencyUri  = mc.createRippleUri( "parameterTransparency" );
+        rplParametersUri             = new RdfValue( mc.createUri( rplNs + "parameters" ) );
+        rplReturnTypeUri             = new RdfValue( mc.createUri( rplNs + "returnType" ) );
+        rplParameterUri              = new RdfValue( mc.createUri( rplNs + "Parameter" ) );
+        rplParameterListUri          = new RdfValue( mc.createUri( rplNs + "ParameterList" ) );
+        rplParameterTypeUri          = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
+        rplParameterTransparencyUri  = new RdfValue( mc.createUri( rplNs + "parameterTransparency" ) );
 
-        returnType = mc.castToUri(
-            mc.findUniqueProduct( self, rplReturnTypeUri ) );
+        returnType = mc.findUniqueProduct( self, rplReturnTypeUri );
+/*
         Resource paramList = mc.castToResource(
             mc.findUniqueProduct( self, rplParametersUri ) );
         Iterator<Value> paramIter = mc.listValue( paramList ).iterator();
@@ -101,12 +100,6 @@ public class FunctionTypeAnnotation
     }
 
 /*
-    public URI getUri()
-    {
-        return selfUri;
-    }
-
-
     public String getLabel()
     {
         return label;

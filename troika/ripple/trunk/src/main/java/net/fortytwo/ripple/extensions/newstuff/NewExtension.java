@@ -16,6 +16,7 @@ public class NewExtension extends Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 		True truePrim;
 		False falsePrim;
+System.out.println( "foo" );
 		bridge.add( truePrim = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
 		bridge.add( falsePrim = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new IntegerGreaterThan( new RdfValue( mc.createUri( ns + "integer-greaterThan" ) ), mc, truePrim, falsePrim ), mc );
