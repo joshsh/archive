@@ -41,12 +41,12 @@ private URI uniqueFilterUri;
 
             else
             {
-                Value first = stack.getFirst();
+                RippleValue first = stack.getFirst();
                 RippleStack rest = stack.getRest();
 
                 Closure c = new Closure( function, first );
 
-                sink.put( new RippleStack( Operator.createOperator( c ), rest ) );
+                sink.put( new RippleStack( new Operator( c ), rest ) );
             }
         }
     }
@@ -67,7 +67,7 @@ private URI uniqueFilterUri;
             throws RippleException
         {
 //System.out.println( this + ".put( " + stack + " )" );
-            Value first = stack.getFirst();
+            RippleValue first = stack.getFirst();
 //System.out.println( "   first = " + stack.getFirst() );
 
 

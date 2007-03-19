@@ -32,7 +32,7 @@ public class IntegerGreaterThan extends PrimitiveFunction
 		throws RippleException
 	{
 		int a, b;
-		Combinator result;
+		PrimitiveFunction result;
 
 		a = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();

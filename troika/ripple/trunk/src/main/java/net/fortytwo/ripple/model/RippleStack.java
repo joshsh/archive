@@ -5,13 +5,14 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.ListNode;
 
 import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.RDF;
 
 public class RippleStack extends ListNode<RippleValue> implements RippleValue
 {
 	private RippleValue first;
 	private RippleStack rest;
 
-	private Value rdfEquivalent = null;
+	private RdfValue rdfEquivalent = null;
 
 	public RippleValue getFirst()
 	{
@@ -35,15 +36,15 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		this.rest = rest;
 	}
 
-	public RippleStack RippleStack( RippleValue v, ModelConnection mc )
+	public RippleStack( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
-//		if ( v.equals( RDF.NIL ) )
+//		if ( v.equals( rdfNil ) )
 //			return null;
 
-		first = mc.findUniqueProduct( v, RDF.FIRST );
+		first = mc.findUniqueProduct( v, rdfFirst );
 		rest = new RippleStack(
-			mc.findUniqueProduct( v, RDF.REST ).toRdf(), mc );
+			mc.findUniqueProduct( v, rdfRest ), mc );
 
 		rdfEquivalent = v;
 	}
@@ -71,7 +72,7 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		throws RippleException
 	{
 		boolean padding = Ripple.listPadding();
-		ListNode<Value> cur =
+		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.getExpressionOrder() )
 			? this : invert( this );
 
@@ -98,18 +99,22 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		return false;
 	}
 
-	public Value toRdf( ModelConnection mc )
+	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
+	private static RdfValue rdfRest = new RdfValue( RDF.REST );
+	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
+
+	public RdfValue toRdf( ModelConnection mc )
 		throws RippleException
 	{
 		if ( null == rdfEquivalent )
 		{
-			rdfEquivalent = mc.createBNode();
+			rdfEquivalent = new RdfValue( mc.createBNode() );
 
-			mc.add( rdfEquivalent, RDF.FIRST, first.toRdf() );
+			mc.add( rdfEquivalent, rdfFirst, first.toRdf( mc ) );
 			if ( null == rest )
-				mc.add( rdfEquivalent, RDF.REST, RDF.NIL );
+				mc.add( rdfEquivalent, rdfRest, rdfNil );
 			else
-				mc.add( rdfEquivalent, RDF.REST, rest.toRdf() );
+				mc.add( rdfEquivalent, rdfRest, rest.toRdf( mc ) );
 		}
 
 		return rdfEquivalent;

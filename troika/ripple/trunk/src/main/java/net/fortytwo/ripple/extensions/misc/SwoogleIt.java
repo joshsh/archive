@@ -1,5 +1,7 @@
 package net.fortytwo.ripple.extensions.misc;
 
+
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
@@ -13,6 +15,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.RepositoryResult;
+import org.openrdf.model.vocabulary.RDF;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,7 +27,6 @@ import java.net.URLEncoder;
 public class SwoogleIt extends PrimitiveFunction
 {
     private URI
-        rdfTypeUri,
         swoogleQueryResponseUri;
 
 	private static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
@@ -34,9 +36,13 @@ public class SwoogleIt extends PrimitiveFunction
     {
         super( v, mc );
 
-        rdfTypeUri = mc.createRdfUri( "type" );
         swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
     }
+
+	public int arity()
+	{
+		return 3;
+	}
 
     public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
@@ -68,8 +74,7 @@ public class SwoogleIt extends PrimitiveFunction
 
             RepositoryResult<Statement> stmtIter
                 = mc.getRepositoryConnection().getStatements(
-//                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
-                    null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
+                    null, RDF.TYPE, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
             while ( stmtIter.hasNext() )
                 sink.put( new RippleStack( new RdfValue( stmtIter.next().getSubject() ), stack ) );
             stmtIter.close();

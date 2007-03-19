@@ -26,7 +26,7 @@ public class Dup extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		Value x;
+		RippleValue x;
 
 		x = stack.getFirst();
 		stack = stack.getRest();

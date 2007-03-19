@@ -25,7 +25,7 @@ public abstract class Evaluator implements Function
 p.print( "[Evaluator]" );
     }
 
-    public RippleValue toRdf( ModelConnection mc )
+    public RdfValue toRdf( ModelConnection mc )
         throws RippleException
     {
 if ( null == rdfEquivalent )

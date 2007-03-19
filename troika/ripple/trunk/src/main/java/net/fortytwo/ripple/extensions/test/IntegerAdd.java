@@ -16,6 +16,11 @@ public class IntegerAdd extends PrimitiveFunction
         super( v, mc );
     }
 
+	public int arity()
+	{
+		return 1;
+	}
+
     public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )

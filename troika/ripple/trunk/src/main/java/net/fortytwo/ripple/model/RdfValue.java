@@ -8,7 +8,7 @@ public class RdfValue implements RippleValue
 {
 	private Value value;
 	
-	public RdfValue( Value value, ModelConnection mc )
+	public RdfValue( Value value )
 	{
 		this.value = value;
 	}

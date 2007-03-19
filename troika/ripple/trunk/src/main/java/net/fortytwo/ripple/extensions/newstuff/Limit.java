@@ -2,6 +2,7 @@ package net.fortytwo.ripple.extensions.newstuff;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
@@ -28,13 +29,12 @@ public class Limit extends PrimitiveFunction
 	{
 		int lim;
 
-		lim = mc.intValue(
-			mc.castToLiteral( stack.getFirst() ) );
+		lim = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		sink.put(
 			new RippleStack(
-				Operator.createOperator(
+				new Operator(
 					new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
 	}
 }

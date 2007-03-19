@@ -18,6 +18,11 @@ public class ListElements extends PrimitiveFunction
         super( v, mc );
     }
 
+	public int arity()
+	{
+		return 1;
+	}
+
     public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )
@@ -25,7 +30,7 @@ public class ListElements extends PrimitiveFunction
     {
         Iterator<RippleValue> values;
 
-        values = mc.listValue( stack.getFirst() );
+        values = mc.listValue( stack.getFirst() ).iterator();
         stack = stack.getRest();
 
         while ( values.hasNext() )

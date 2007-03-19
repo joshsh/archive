@@ -1,5 +1,6 @@
 package net.fortytwo.ripple.extensions.misc;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
@@ -31,6 +32,11 @@ public class PingTheSemanticWeb extends PrimitiveFunction
     {
         super( v, mc );
     }
+
+	public int arity()
+	{
+		return 2;
+	}
 
     public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,

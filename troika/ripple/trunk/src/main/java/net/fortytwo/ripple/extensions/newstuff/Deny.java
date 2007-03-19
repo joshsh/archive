@@ -27,7 +27,7 @@ public class Deny extends PrimitiveFunction
 		throws RippleException
 	{
 System.out.println( "Denied!" );
-		Value subj, pred, obj;
+		RippleValue subj, pred, obj;
 
 		obj = stack.getFirst();
 		stack = stack.getRest();

@@ -5,6 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RdfValue;
 
 public class UriNode extends Ast
 {
@@ -19,7 +20,7 @@ public class UriNode extends Ast
         throws RippleException
     {
         return mc.getModel().getBridge().get(
-            mc.createUri( value ) );
+            new RdfValue( mc.createUri( value ) ) );
     }
 }
 

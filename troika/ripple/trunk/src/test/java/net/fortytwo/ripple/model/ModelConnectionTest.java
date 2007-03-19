@@ -83,7 +83,10 @@ public class ModelConnectionTest extends RippleTestCase
             for ( int i = 0; i < 3; i++ )
                 for ( int j = 0; j < 3; j++ )
                     for ( int k = 0; k < 3; k++ )
-                        mc.add( uris[i], uris[j], uris[k], context );
+                        mc.add(
+				new RdfValue( uris[i] ),
+				new RdfValue( uris[j] ),
+				new RdfValue( uris[k] ), context );
 
             long count = mc.countStatements( context );
             assertEquals( count, 27 );
@@ -102,7 +105,10 @@ public class ModelConnectionTest extends RippleTestCase
             URI ctxA = mc.createUri( "urn:org.example.test.addStatementsTest.ctxA#" );
             URI uri1 = mc.createUri( "urn:org.example.test.addStatementsTest.ctxA#uri1" );
             assertEquals( mc.countStatements( ctxA ), 0 );
-            mc.add( uri1, uri1, uri1 );
+            mc.add(
+		new RdfValue( uri1 ),
+		new RdfValue( uri1 ),
+		new RdfValue( uri1 ) );
             assertEquals( mc.countStatements( ctxA ), 1 );
         }
     }

@@ -43,6 +43,7 @@ import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
 import net.fortytwo.ripple.model.ObservableContainer;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
@@ -357,12 +358,12 @@ System.out.println( "--- 3 ---" );
 
 // FIXME: this is a kludge to keep the print stream from using namespace prefixes instead of full URI references
             printStream.println( "" );
-            Iterator<Value> models = model.getContexts().iterator();
+            Iterator<RippleValue> models = model.getContexts().iterator();
             int i = 0;
             while ( models.hasNext() )
             {
                 printStream.print( "[" + i++ + "] " );
-                printStream.println( models.next().toString() );
+                printStream.println( models.next() );
             }
             printStream.println( "" );
         }
@@ -467,7 +468,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 
             try
             {
-                d.dereference( value, mc );
+                d.dereference( value.toRdf( mc ), mc );
             }
 
             catch ( RippleException e )
@@ -477,7 +478,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
         }
     }
 
-    public Value resolveUnqualifiedName( final String localName )
+    public RippleValue resolveUnqualifiedName( final String localName )
         throws RippleException
     {
         List<URI> options = lexicon.resolveUnqualifiedName( localName );
@@ -495,7 +496,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
         }
     }
 
-    public Value resolveQualifiedName( final String nsPrefix,
+    public RippleValue resolveQualifiedName( final String nsPrefix,
                                        final String localName )
         throws RippleException
     {

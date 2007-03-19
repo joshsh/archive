@@ -16,6 +16,11 @@ public class ConcatenateStringsPrimitive extends PrimitiveFunction
         super( v, mc );
     }
 
+	public int arity()
+	{
+		return 2;
+	}
+
     public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )

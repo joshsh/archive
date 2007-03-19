@@ -1,6 +1,7 @@
 package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.util.Sink;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 
 public class Closure implements Function
@@ -24,6 +25,11 @@ public class Closure implements Function
         return cachedArity;
     }
 
+	public boolean isOperator()
+	{
+		return false;
+	}
+
 // TODO: does not indicate application
     public void printTo( RipplePrintStream p )
         throws RippleException
@@ -44,7 +50,7 @@ public class Closure implements Function
         }
     }
 
-    public RippleValue toRdf( ModelConnection mc )
+    public RdfValue toRdf( ModelConnection mc )
         throws RippleException
     {
 /*

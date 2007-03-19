@@ -5,6 +5,9 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+
 public class TypedLiteralNode extends Ast
 {
     private String value;
@@ -22,8 +25,10 @@ public class TypedLiteralNode extends Ast
         RippleValue typeValue = type.evaluate( itp, mc );
         if ( null == typeValue )
             throw new RippleException( "badly typed literal" );
-
-        return mc.createLiteral( value, typeValue );
+	Value v = typeValue.toRdf( mc ).getRdfValue();
+	if ( !( v instanceof URI ) )
+		throw new RippleException( "literal type is not a URI" );
+        return mc.createValue( value, (URI) v );
     }
 }
 

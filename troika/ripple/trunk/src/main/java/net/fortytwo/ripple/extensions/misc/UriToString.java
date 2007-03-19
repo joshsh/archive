@@ -8,6 +8,8 @@ import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+import org.openrdf.model.URI;
+
 public class UriToString extends PrimitiveFunction
 {
     public UriToString( RdfValue v, ModelConnection mc )
@@ -15,6 +17,11 @@ public class UriToString extends PrimitiveFunction
     {
         super( v, mc );
     }
+
+	public int arity()
+	{
+		return 1;
+	}
 
     public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,

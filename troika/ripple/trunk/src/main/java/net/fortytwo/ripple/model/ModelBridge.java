@@ -29,9 +29,10 @@ public class ModelBridge
 		return rpl;
 	}
 
-	public void put( RippleValue v )
+	public void add( RippleValue v, ModelConnection mc )
+		throws RippleException
 	{
-		rdfToNativeMap.put( v.toRdf().getRdfValue(), v );
+		rdfToNativeMap.put( v.toRdf( mc ).getRdfValue(), v );
 	}
 }
 

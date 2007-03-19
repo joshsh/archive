@@ -30,6 +30,11 @@ public class ListDequotation implements Function
 return 1;
     }
 
+	public boolean isOperator()
+	{
+		return false;
+	}
+
     public void applyTo( RippleStack stack,
                          Sink<RippleStack> sink,
                          ModelConnection mc )

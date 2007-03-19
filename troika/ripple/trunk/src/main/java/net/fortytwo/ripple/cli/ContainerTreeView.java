@@ -107,7 +107,7 @@ subject = ( (net.fortytwo.ripple.model.RippleStack) subject ).getFirst();
                 ps.print( "\n" );
 
                 RdfValueCollector c = new RdfValueCollector( mc.getModel().getBridge() );
-                mc.getModel().multiply( subject.toRdf( mc ), predicate, c );
+                mc.getModel().multiply( subject.toRdf( mc ), predicate, c, mc );
                 Iterator<RippleValue> objIter = c.iterator();
 
                 int objCount = 0;

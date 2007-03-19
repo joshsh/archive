@@ -3,6 +3,8 @@ package net.fortytwo.ripple.extensions.test;
 import net.fortytwo.ripple.Extension;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.ModelBridge;
+import net.fortytwo.ripple.model.RdfValue;
 
 public class TestExtension extends Extension
 {
@@ -13,14 +15,14 @@ public class TestExtension extends Extension
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
 
-		bridge.add( new BagElements( ns + "bagElements" ) );
-		bridge.add( new IntegerAdd( ns + "integer-add" ) );
-		bridge.add( new IntegerSubtract( ns + "integer-subtract" ) );
-		bridge.add( new IntegerMultiply( ns + "integer-multiply" ) );
-		bridge.add( new IntegerDivide( ns + "integer-divide" ) );
-		bridge.add( new IntegerMod( ns + "integer-mod" ) );
-		bridge.add( new ConcatenateStringsPrimitive( ns + "concatenateStrings" ) );
-		bridge.add( new ListElements( ns + "listElements" ) );
+		bridge.add( new BagElements( new RdfValue( mc.createUri( ns + "bagElements" ) ), mc ), mc );
+		bridge.add( new IntegerAdd( new RdfValue( mc.createUri( ns + "integer-add" ) ), mc ), mc );
+		bridge.add( new IntegerSubtract( new RdfValue( mc.createUri( ns + "integer-subtract" ) ), mc ), mc );
+		bridge.add( new IntegerMultiply( new RdfValue( mc.createUri( ns + "integer-multiply" ) ), mc ), mc );
+		bridge.add( new IntegerDivide( new RdfValue( mc.createUri( ns + "integer-divide" ) ), mc ), mc );
+		bridge.add( new IntegerMod( new RdfValue( mc.createUri( ns + "integer-mod" ) ), mc ), mc );
+		bridge.add( new ConcatenateStringsPrimitive( new RdfValue( mc.createUri( ns + "concatenateStrings" ) ), mc ), mc );
+		bridge.add( new ListElements( new RdfValue( mc.createUri( ns + "listElements" ) ), mc ), mc );
 /*
 			new Combinator_B( mc ),
 			new Combinator_C( mc ),

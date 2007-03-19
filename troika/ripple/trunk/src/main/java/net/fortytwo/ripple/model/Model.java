@@ -172,20 +172,20 @@ public Repository getRepository()
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
+    public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink, ModelConnection mc )
         throws RippleException
     {
 //        Value rdfSubj = bridge.getRdfEquivalentOf( subj, mc ).getRdfValue();
 //        Value rdfPred = bridge.getRdfEquivalentOf( pred, mc ).getRdfValue();
 
-        Value rdfSubj = subj.toRdf();
-        Value rdfPred = pred.toRdf();
+        Value rdfSubj = subj.getRdfValue();
+        Value rdfPred = pred.getRdfValue();
 
 //if ( null == rdfSubj || null == rdfPred )
 //return;
         try
         {
-            dereferencer.dereference( subj );
+            dereferencer.dereference( subj, mc );
         }
 
         catch ( RippleException e )
@@ -198,11 +198,15 @@ s_logger.debug( "Failed to dereference URI: " + rdfSubj );
         {
             try
             {
+		RepositoryConnection conn = repository.getConnection();
+
                 RepositoryResult<Statement> stmtIter
                     = conn.getStatements(
-                        (Resource) subject, (URI) rdfPred, null, Ripple.useInference() );
-                while ( stmtIter.rdfSubj() )
+                        (Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
+                while ( stmtIter.hasNext() )
                     sink.put( new RdfValue( stmtIter.next().getObject() ) );
+
+		conn.close();
             }
 
             catch ( Throwable t )
@@ -276,7 +280,7 @@ s_logger.debug( "Failed to dereference URI: " + rdfSubj );
         }
     }
 
-    public Collection<Value> getContexts()
+    public Collection<RippleValue> getContexts()
         throws RippleException
     {
         Container contexts = new Container();
@@ -288,7 +292,7 @@ s_logger.debug( "Failed to dereference URI: " + rdfSubj );
             RepositoryResult<Resource> contextIter
                  = conn.getContextIDs();
             while ( contextIter.hasNext() )
-                contexts.add( contextIter.next() );
+                contexts.add( new RdfValue( contextIter.next() ) );
             contextIter.close();
 
             conn.close();

@@ -6,15 +6,13 @@ import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 
 public class Unique extends Filter
 {
     private static String memo = "memo";
-    private ListMemoizer<Value,String> memoizer = null;
+    private ListMemoizer<RippleValue,String> memoizer = null;
 
     public Unique()
     {
@@ -28,7 +26,7 @@ public class Unique extends Filter
     {
         if ( null == memoizer )
         {
-            memoizer = new ListMemoizer<Value,String>( stack, memo );
+            memoizer = new ListMemoizer<RippleValue,String>( stack, memo );
             sink.put( stack );
 //System.out.println( "put first: " + stack.getFirst() );
         }

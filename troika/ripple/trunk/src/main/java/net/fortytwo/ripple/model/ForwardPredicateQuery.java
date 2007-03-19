@@ -39,6 +39,11 @@ public class ForwardPredicateQuery implements Function
         return 1;
     }
 
+	public boolean isOperator()
+	{
+		return false;
+	}
+
     public void applyTo( RippleStack stack,
                          Sink<RippleStack> sink,
                          ModelConnection mc )
@@ -51,7 +56,7 @@ public class ForwardPredicateQuery implements Function
 
         Sink<RdfValue> querySink = new ForwardPredicateQueryResultSink( rest, sink );
 
-        mc.multiply( first.toRdf(), pred, querySink );
+        mc.getModel().multiply( first.toRdf( mc ), pred, querySink, mc );
     }
 
     public void printTo( RipplePrintStream p )

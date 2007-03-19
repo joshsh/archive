@@ -23,7 +23,7 @@ public class ApplyNode extends Ast
     {
         RippleValue v = arg.evaluate( itp, mc );
 
-        return Operator.createOperator( v );
+        return Operator.createOperator( v, mc );
     }
 }
 

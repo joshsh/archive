@@ -174,12 +174,12 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
         s_logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
     }
 
-    public void dereference( RippleValue rv, ModelConnection mc )
+    public void dereference( RdfValue rv, ModelConnection mc )
         throws RippleException
     {
-Value v = rv.toRdf();
+Value v = rv.getRdfValue();
 if ( null != v && v instanceof URI )
-    dereference( (URI) v );
+    dereference( (URI) v, mc );
     }
 }
 

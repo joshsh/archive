@@ -246,7 +246,7 @@ public URI uriValue( RippleValue rv )
     public boolean booleanValue( RippleValue rv )
         throws RippleException
     {
-        Literal l = castToLiteral( rv.toRdf( this ).rdfValue() );
+        Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
 //        URI type = lit.getDatatype();
 //        if ( !type.equals( XMLSchema.BOOLEAN ) )
@@ -258,8 +258,9 @@ public URI uriValue( RippleValue rv )
     }
 
     public int intValue( RippleValue rv )
+		throws RippleException
     {
-        Literal l = castToLiteral( rv.toRdf( this ).rdfValue() );
+        Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
 //        URI type = l.getDatatype();
 //        if ( !type.equals( XMLSchema.INTEGER ) )
@@ -279,34 +280,34 @@ public URI uriValue( RippleValue rv )
     public String stringValue( RippleValue v )
         throws RippleException
     {
-        Literal l = castToLiteral( rv.toRdf( this ).rdfValue() );
+        Literal l = castToLiteral( v.toRdf( this ).getRdfValue() );
 
         return l.getLabel();
     }
 
-    public URI uriValue( RdfValue v )
+    public URI uriValue( RippleValue v )
         throws RippleException
     {
-        return castToUri( v.toRdf( this ).rdfValue() );
+        return castToUri( v.toRdf( this ).getRdfValue() );
     }
 
     /**
      *  A <code>Sink</code> which remembers how many times it has received a
      *  value, as well as the last value received.
      */
-    private class SingleValueSink<T> implements Sink
+    private class SingleValueSink implements Sink<RdfValue>
     {
-        T value = null;
+        RdfValue value = null;
         int valuesReceived = 0;
 
-        public void put( T v )
+        public void put( RdfValue v )
             throws RippleException
         {
             value = v;
-            countReceived++;
+            valuesReceived++;
         }
 
-        public T getValue()
+        public RdfValue getValue()
         {
             return value;
         }
@@ -317,10 +318,10 @@ public URI uriValue( RippleValue rv )
         }
     }
 
-    public RippleValue findUniqueProduct( RdfValue subj, RdfValue pred )
+    public RdfValue findUniqueProduct( RdfValue subj, RdfValue pred )
         throws RippleException
     {
-        SingleValueSink<RdfValue> sink = new SingleValueSink<RdfValue>();
+        SingleValueSink sink = new SingleValueSink();
 
         model.multiply( subj, pred, sink );
 
@@ -334,9 +335,9 @@ public URI uriValue( RippleValue rv )
             return sink.getValue();
     }
 
-    private static RippleValue rdfFirst = new RdfValue( RDF.FIRST );
-    private static RippleValue rdfNil = new RdfValue( RDF.NIL );
-    private static RippleValue rdfRest = new RdfValue( RDF.REST );
+    private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
+    private static RdfValue rdfNil = new RdfValue( RDF.NIL );
+    private static RdfValue rdfRest = new RdfValue( RDF.REST );
 
     public List<RippleValue> listValue( final RippleValue listHead )
         throws RippleException
@@ -367,7 +368,7 @@ public URI uriValue( RippleValue rv )
 
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
-                    head.toRdf(), null, null, useInference );
+                    castToResource( head.toRdf( this ).getRdfValue() ), null, null, useInference );
 
             while ( stmtIter.hasNext() )
             {
@@ -394,7 +395,7 @@ public URI uriValue( RippleValue rv )
         throws RippleException
     {
         Set<RdfValue> predicates = new HashSet<RdfValue>();
-        Resource subjRdf = castToResource( subject.toRdf( this ) );
+        Resource subjRdf = castToResource( subject.toRdf( this ).getRdfValue() );
 
         try
         {
@@ -420,9 +421,9 @@ public URI uriValue( RippleValue rv )
     public void add( RippleValue subj, RippleValue pred, RippleValue obj )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj.toRdf( this ) );
-        URI predUri = castToUri( pred.toRdf( this ) );
-        Value objValue = obj.toRdf( this );
+        Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
+        URI predUri = castToUri( pred.toRdf( this ).getRdfValue() );
+        Value objValue = obj.toRdf( this ).getRdfValue();
 
         try
         {
@@ -439,9 +440,9 @@ public URI uriValue( RippleValue rv )
     public void add( RippleValue subj, RippleValue pred, RippleValue obj, Resource context )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj.toRdf( this ) );
-        URI predUri = castToUri( pred.toRdf( this ) );
-        Value objValue = obj.toRdf( this );
+        Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
+        URI predUri = castToUri( pred.toRdf( this ).getRdfValue() );
+        Value objValue = obj.toRdf( this ).getRdfValue();
 
         try
         {
@@ -458,9 +459,9 @@ public URI uriValue( RippleValue rv )
     public void remove( RippleValue subj, RippleValue pred, RippleValue obj )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj.toRdf( this ) );
-        URI predUri = castToUri( pred.toRdf( this ) );
-        Value objValue = obj.toRdf( this );
+        Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
+        URI predUri = castToUri( pred.toRdf( this ).getRdfValue() );
+        Value objValue = obj.toRdf( this ).getRdfValue();
 
         try
         {

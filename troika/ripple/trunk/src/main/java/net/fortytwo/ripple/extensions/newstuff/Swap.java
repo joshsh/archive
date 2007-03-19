@@ -16,12 +16,17 @@ public class Swap extends PrimitiveFunction
 		super( v, mc );
 	}
 
+	public int arity()
+	{
+		return 2;
+	}
+
 	public void applyTo( RippleStack stack,
 						Sink<RippleStack> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
-		Value x, y;
+		RippleValue x, y;
 
 		x = stack.getFirst();
 		stack = stack.getRest();

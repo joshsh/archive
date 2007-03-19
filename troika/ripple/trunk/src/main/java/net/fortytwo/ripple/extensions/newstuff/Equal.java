@@ -10,10 +10,16 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Equal extends PrimitiveFunction
 {
-	public Equal( RdfValue v, ModelConnection mc )
+	private True truePrim;
+	private False falsePrim;
+
+	public Equal( RdfValue v, ModelConnection mc, True truePrim, False falsePrim )
 		throws RippleException
 	{
 		super( v, mc );
+
+		this.truePrim = truePrim;
+		this.falsePrim = falsePrim;
 	}
 
 	public int arity()
@@ -26,18 +32,17 @@ public class Equal extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		Value a, b;
-		Combinator result;
+		RippleValue a, b;
+		PrimitiveFunction result;
 
 		a = stack.getFirst();
 		stack = stack.getRest();
 		b = stack.getFirst();
 		stack = stack.getRest();
 
-// TODO: we shouldn't need to create a new Combinator instance for each result.
 		result = ( a.equals( b ) )
-			? new True( mc )
-			: new False( mc );
+			? truePrim
+			: falsePrim;
 
 		sink.put( new RippleStack( result, stack ) );
 	}

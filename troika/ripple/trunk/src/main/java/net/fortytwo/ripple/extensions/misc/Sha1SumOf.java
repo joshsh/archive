@@ -26,6 +26,11 @@ public class Sha1SumOf extends PrimitiveFunction
         super( v, mc );
     }
 
+	public int arity()
+	{
+		return 1;
+	}
+
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
     private synchronized String encrypt( final String plaintext )
         throws RippleException

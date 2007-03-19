@@ -9,17 +9,17 @@ public class Operator implements RippleValue
 {
     Function func;
 
-    private Operator( RdfValue pred )
+    public Operator( RdfValue pred )
     {
         func = new ForwardPredicateQuery( pred );
     }
 
-    private Operator( Function function )
+    public Operator( Function function )
     {
         func = function;
     }
 
-    private Operator( RippleStack list )
+    public Operator( RippleStack list )
     {
         func = new ListDequotation( list );
     }

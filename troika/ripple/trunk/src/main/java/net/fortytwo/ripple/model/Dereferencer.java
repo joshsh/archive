@@ -9,7 +9,7 @@ public interface Dereferencer
 public void dereference( URI uri, ModelConnection mc )
     throws RippleException;
 
-    public void dereference( RippleValue rv, ModelConnection mc )
+    public void dereference( RdfValue rv, ModelConnection mc )
         throws RippleException;
 }
 
