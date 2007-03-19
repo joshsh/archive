@@ -21,7 +21,7 @@ public class Limit extends PrimitiveFunction
 		return 1;
 	}
 
-	public void applyInternal( RippleStack stack,
+	public void applyTo( RippleStack stack,
 						Sink<RippleStack> sink,
 						ModelConnection mc )
 		throws RippleException
@@ -34,7 +34,7 @@ public class Limit extends PrimitiveFunction
 
 		sink.put(
 			new RippleStack(
-				FunctionEnvelope.createEnvelope(
+				Operator.createOperator(
 					new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
 	}
 }

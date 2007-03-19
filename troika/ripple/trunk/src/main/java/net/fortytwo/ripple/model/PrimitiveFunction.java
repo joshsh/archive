@@ -12,8 +12,7 @@ public abstract class PrimitiveFunction implements Function
 	{
 		rdfEquivalent = v;
 
-//		typeAnnotation = new FunctionTypeAnnotation( v, mc );
-typeAnnotation = null;
+		typeAnnotation = new FunctionTypeAnnotation( v, mc );
 	}
 
 	public void printTo( RipplePrintStream p )
@@ -33,7 +32,7 @@ typeAnnotation = null;
 		return rdfEquivalent.toString();
 	}
 
-	public boolean isFunctionEnvelope()
+	public boolean isOperator()
 	{
 		return false;
 	}

@@ -1,29 +1,22 @@
 package net.fortytwo.ripple.extensions.misc;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-
-import org.openrdf.model.Value;
-import org.openrdf.model.URI;
-import org.openrdf.model.Literal;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 public class UriToString extends PrimitiveFunction
 {
-    public UriToString( ModelConnection mc )
+    public UriToString( RdfValue v, ModelConnection mc )
         throws RippleException
     {
-        super( mc.createRippleMiscUri( "uriToString" ), mc );
+        super( v, mc );
     }
 
-    protected void applyInternal( RippleStack stack,
+    public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException

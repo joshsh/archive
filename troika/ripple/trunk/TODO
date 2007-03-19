@@ -24,6 +24,7 @@ Schema
 
 Model
 ================================================================================
+* add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
 * handle translation of data between RDF and Function data structures
 * write a primitive which imports a document as a reified graph in which all subjects are bnodes
 * investigate data mapping between OpenRDF objects and Wurfel expressions, specifically, whether there would be performance savings in wrapping OpenRDF objects so as to avoid the use of instanceof
@@ -32,6 +33,7 @@ Model
 Primitives
 ================================================================================
 * Add a sample Primitive or two which deal with the rdf:XMLLiteral type, if OpenRDF makes this possible
+* Decide what to do with the SwoogleIt primitive
 
 Scuttering
 ================================================================================
@@ -47,7 +49,7 @@ Scuttering
 Server
 ================================================================================
 * REST query format and service endpoint.  Returns a graph in RDF/XML... which may be simply a list of indirection nodes to results.
-* dbpedia server (not necessarily using Wurfel)
+* dbpedia server (not necessarily using Ripple)
 * RFC server
 * server for HTTP response codes
 * servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.
@@ -92,6 +94,10 @@ Coding
 ================================================================================
 * decide on tabs or spaces
 * decide on convention for static members
+
+Distribution
+================================================================================
+* clean out the 'work' resources directory
 
 Testing
 ================================================================================

@@ -26,7 +26,7 @@ public class False extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		Value x, y;
+		RippleValue x, y;
 
 		x = stack.getFirst();
 		stack = stack.getRest();

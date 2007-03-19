@@ -1,19 +1,12 @@
 package net.fortytwo.ripple.extensions.misc;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-
-import org.openrdf.model.Value;
-import org.openrdf.model.URI;
-import org.openrdf.model.Literal;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -27,10 +20,10 @@ public class Sha1SumOf extends PrimitiveFunction
 
     private static MessageDigest messageDigest = null;
 
-    public Sha1SumOf( ModelConnection mc )
+    public Sha1SumOf( RdfValue v, ModelConnection mc )
         throws RippleException
     {
-        super( mc.createRippleMiscUri( "sha1SumOf" ), mc );
+        super( v, mc );
     }
 
     // See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
@@ -82,20 +75,19 @@ public class Sha1SumOf extends PrimitiveFunction
         }
     }
 
-    protected void applyInternal( RippleStack stack,
+    public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException
     {
         String a, result;
 
-        a = mc.stringValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        a = mc.stringValue( stack.getFirst() );
         stack = stack.getRest();
 
         result = encrypt( a );
 
-        sink.put( new RippleStack( mc.createLiteral( result ), stack ) );
+        sink.put( new RippleStack( mc.createValue( result ), stack ) );
     }
 }
 

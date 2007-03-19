@@ -7,7 +7,7 @@ public interface RippleValue
     public RdfValue toRdf( ModelConnection mc )
         throws RippleException;
 
-    public boolean isFunctionEnvelope();
+    public boolean isOperator();
 
     public void printTo( RipplePrintStream p )
         throws RippleException;

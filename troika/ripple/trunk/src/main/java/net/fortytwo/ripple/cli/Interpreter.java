@@ -38,7 +38,6 @@ import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Evaluator;
-import net.fortytwo.ripple.model.LazyEvaluator;
 import net.fortytwo.ripple.model.EagerStackEvaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
@@ -115,14 +114,14 @@ public Model getModel()
         switch ( Ripple.getEvaluationStyle() )
         {
             case APPLICATIVE:
-                evaluator = new LazyEvaluator();
+// TODO: not implemented
                 break;
 
             case COMPOSITIONAL:
                 evaluator = new EagerStackEvaluator();
                 break;
         }
-//        evaluator = new DebugEvaluator( new LazyEvaluator( model ) );
+//        evaluator = new DebugEvaluator( new EagerStackEvaluator( model ) );
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -350,11 +349,6 @@ System.out.println( "--- 3 ---" );
         catch ( RippleException e ) {}
     }
 
-    public void define( final String name, final String uri )
-    {
-        model.define( name, uri );
-    }
-
     public void showContexts()
     {
         try
@@ -396,9 +390,9 @@ System.out.println( "--- 3 ---" );
         {
             mc = new ModelConnection( model, "for addStatement" );
 
-            Value subjValue = subj.evaluate( this, mc );
-            Value predValue = pred.evaluate( this, mc );
-            Value objValue = obj.evaluate( this, mc );
+            RippleValue subjValue = subj.evaluate( this, mc );
+            RippleValue predValue = pred.evaluate( this, mc );
+            RippleValue objValue = obj.evaluate( this, mc );
 
             mc.add( subjValue, predValue, objValue );
             mc.close();
@@ -432,7 +426,7 @@ System.out.println( "--- 3 ---" );
         {
             mc = new ModelConnection( model, "for setNamespace" );
 
-            URI ns = (URI) uri.evaluate( this, mc );
+            URI ns = mc.uriValue( uri.evaluate( this, mc ) );
             mc.setNamespace( prefix, ns );
             mc.close();
             mc = null;
@@ -459,29 +453,26 @@ System.out.println( "--- 3 ---" );
         }
     }
 
-    private void dereferenceResultSet( Collection<Value> values, ModelConnection mc )
+    private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
         throws RippleException
     {
         Dereferencer d = model.getDereferencer();
 
-        Iterator<Value> iter = values.iterator();
+        Iterator<RippleValue> iter = values.iterator();
         while ( iter.hasNext() )
         {
-            Value value = iter.next();
+            RippleValue value = iter.next();
 if ( value instanceof RippleStack )
 value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 
-            if ( value instanceof URI )
+            try
             {
-                try
-                {
-                    d.dereference( (URI) value, mc );
-                }
+                d.dereference( value, mc );
+            }
 
-                catch ( RippleException e )
-                {
-                    // (soft fail)
-                }
+            catch ( RippleException e )
+            {
+                // (soft fail)
             }
         }
     }
@@ -495,9 +486,9 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
         else
         {
 // TODO: this is only one way of handling name ambiguity.
-            Value choice = options.get( 0 );
+            RdfValue choice = new RdfValue( options.get( 0 ) );
 
-            RippleValue rv = model.getBridge().toNative( choice );
+            RippleValue rv = model.getBridge().get( choice );
             return ( null == rv )
                 ? choice
                 : rv;
@@ -514,24 +505,28 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 
         else
         {
-            RippleValue rv = model.getBridge().toNative( v );
+            RdfValue choice = new RdfValue( v );
+
+            RippleValue rv = model.getBridge().get( choice );
             return ( null == rv )
-                ? v
+                ? choice
                 : rv;
         }
     }
 
-    private Container reduce( Value expr, ModelConnection mc )
+    private Container reduce( RippleValue expr, ModelConnection mc )
         throws RippleException
     {
         try
         {
             ListContainerSink sink = new ListContainerSink();
 // FIXME: awkward
-            if ( expr instanceof RippleStack )
-                evaluator.reduce( (RippleStack) expr, sink, mc );
-            else
-                evaluator.reduce( new RippleStack( expr ), sink, mc );
+
+            RippleStack list = ( expr instanceof RippleStack )
+                ? (RippleStack) expr
+                : new RippleStack( expr );
+
+                evaluator.applyTo( list, sink, mc );
 
             return sink;
         }
@@ -551,7 +546,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
         {
             mc = new ModelConnection( model, "for Interpreter evaluate()" );
 
-            Value expr = ast.evaluate( this, mc );
+            RippleValue expr = ast.evaluate( this, mc );
 
             Container result = ( null == expr )
                 ? new Container()
@@ -561,6 +556,7 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 //       and should probably be moved into the tree view itself if possible.
             dereferenceResultSet( result, mc );
 
+/*
             if ( null != name )
             {
                 if ( 0 == result.size() )
@@ -589,6 +585,7 @@ URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
 
                 lexicon.update();
             }
+*/
 
             valueSet.setValues( result );
 

@@ -3,8 +3,6 @@ package net.fortytwo.ripple.model;
 import java.util.Collection;
 import java.util.Observable;
 
-import org.openrdf.model.Value;
-
 public class ObservableContainer extends Observable
 {
     private Container values;

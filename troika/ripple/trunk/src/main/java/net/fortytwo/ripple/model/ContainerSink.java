@@ -2,9 +2,8 @@ package net.fortytwo.ripple.model;
 
 import java.util.Collection;
 
-import org.openrdf.model.Value;
-
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
 
 public class ContainerSink extends Container implements Sink<RippleValue>
 {

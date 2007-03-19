@@ -1,4 +1,5 @@
 package net.fortytwo.ripple.model;
+import net.fortytwo.ripple.util.Sink;
 
 import net.fortytwo.ripple.RippleException;
 
@@ -27,7 +28,7 @@ public class Closure implements Function
     public void printTo( RipplePrintStream p )
         throws RippleException
     {
-        select ( Ripple.getExpressionOrder() )
+        switch ( Ripple.getExpressionOrder() )
         {
             case DIAGRAMMATIC:
                 p.print( innerFunction );
@@ -43,16 +44,17 @@ public class Closure implements Function
         }
     }
 
-    public Value toRdf( ModelConnection mc )
+    public RippleValue toRdf( ModelConnection mc )
         throws RippleException
     {
+/*
         if ( null == rdfEquivalent )
         {
             rdfEquivalent = mc.createBNode();
 
             mc.add( rdfEquivalent, 
         }
-
+*/
         return rdfEquivalent;
     }
 

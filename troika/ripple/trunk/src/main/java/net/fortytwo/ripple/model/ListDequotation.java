@@ -1,10 +1,7 @@
 package net.fortytwo.ripple.model;
 
-import java.util.Iterator;
-
 import net.fortytwo.ripple.RippleException;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.util.Sink;
 
 public class ListDequotation implements Function
 {
@@ -56,16 +53,7 @@ return 1;
 p.print( reversedList );
     }
 
-public URI getUri()
-{
-return null;
-}
-
-public void checkArguments( RippleStack args )
-    throws RippleException
-{}
-
-public Value toRdf( ModelConnection mc )
+public RdfValue toRdf( ModelConnection mc )
     throws RippleException
 {
 return null;

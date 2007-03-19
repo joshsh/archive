@@ -3,8 +3,7 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.model.RippleValue;
 
 public class StringNode extends Ast
 {
@@ -22,12 +21,12 @@ public class StringNode extends Ast
         this.language = language;
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
         return ( null == language )
-            ? mc.createLiteral( value )
-            : mc.createLiteral( value, language );
+            ? mc.createValue( value )
+            : mc.createValue( value, language );
     }
 }
 

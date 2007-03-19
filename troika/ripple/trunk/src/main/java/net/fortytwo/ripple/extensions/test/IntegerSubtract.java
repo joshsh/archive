@@ -1,25 +1,22 @@
 package net.fortytwo.ripple.extensions.test;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-
-import org.openrdf.model.Value;
-import org.openrdf.model.URI;
-import org.openrdf.model.Literal;
 
 public class IntegerSubtract extends PrimitiveFunction
 {
-    public IntegerSubtract( ModelConnection mc )
+    public IntegerSubtract( RdfValue v, ModelConnection mc )
         throws RippleException
     {
-        super( mc.createRippleTestUri( "integer-subtract" ), mc );
+        super( v, mc );
     }
 
-    protected void applyInternal( RippleStack stack,
+    public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException

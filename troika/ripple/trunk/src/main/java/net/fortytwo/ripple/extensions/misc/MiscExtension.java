@@ -2,38 +2,24 @@ package net.fortytwo.ripple.extensions.misc;
 
 import net.fortytwo.ripple.Extension;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
-
-import java.net.URL;
 
 public class MiscExtension extends Extension
 {
-    protected Function[] getFunctions( ModelConnection mc )
-        throws RippleException
-    {
-        Function[] functions = {
-            new Sha1SumOf( mc ),
-            new UriToString( mc ),
-            new UrlEncoding( mc ),
-            new UrlTarget( mc ),
-            new SwoogleIt( mc ),
-            new Grab( mc ),
-            new PingTheSemanticWeb( mc ) };
+	private static String ns = "http://fortytwo.net/2007/03/rpl-misc#";
 
-        return functions;
-    }
+	public void load( ModelConnection mc )
+		throws RippleException
+	{
+		ModelBridge bridge = mc.getModel().getBridge();
 
-    protected URL[] getResources()
-    {
-/*
-        URL[] urls = {
-            this.getClass().getResource( "wurfel-misc.rdf" ) };
-
-        return urls;
-*/
-        return null;
-    }
+		bridge.add( new Sha1SumOf( ns + "sha1SumOf" ) );
+		bridge.add( new UriToString( ns + "uriToString" ) );
+		bridge.add( new UrlEncoding( ns + "urlEncoding" ) );
+		bridge.add( new UrlTarget( ns + "urlTarget" ) );
+		bridge.add( new SwoogleIt( ns + "swoogleIt" ) );
+		bridge.add( new PingTheSemanticWeb( ns + "pingTheSemanticWeb" ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

@@ -10,10 +10,15 @@ import net.fortytwo.ripple.util.Sink;
 
 public class IntegerGreaterThan extends PrimitiveFunction
 {
-	public IntegerGreaterThan( RdfValue v, ModelConnection mc )
+	private True truePrim;
+	private False falsePrim;
+	
+	public IntegerGreaterThan( RdfValue v, ModelConnection mc, True truePrim, False falsePrim )
 		throws RippleException
 	{
 		super( v, mc );
+		this.truePrim = truePrim;
+		this.falsePrim = falsePrim;
 	}
 
 	public int arity()
@@ -21,7 +26,7 @@ public class IntegerGreaterThan extends PrimitiveFunction
 		return 2;
 	}
 
-	protected void applyInternal( RippleStack stack,
+	public void applyTo( RippleStack stack,
 								Sink<RippleStack> sink,
 								ModelConnection mc )
 		throws RippleException
@@ -29,17 +34,15 @@ public class IntegerGreaterThan extends PrimitiveFunction
 		int a, b;
 		Combinator result;
 
-		a = mc.intValue(
-			mc.castToLiteral( stack.getFirst() ) );
+		a = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
-		b = mc.intValue(
-			mc.castToLiteral( stack.getFirst() ) );
+		b = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
 // TODO: we shouldn't need to create a new Combinator instance for each result.
 		result = ( a > b )
-			? new True( mc )
-			: new False( mc );
+			? truePrim
+			: falsePrim;
 
 		sink.put( new RippleStack( result, stack ) );
 	}

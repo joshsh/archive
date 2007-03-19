@@ -1,0 +1,77 @@
+@prefix rpl:       <http://fortytwo.net/2007/03/rpl#> .
+@prefix rpl-misc:  <http://fortytwo.net/2007/03/rpl-misc#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix swoogle:   <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
+
+### RDF primitives #############################################################
+
+# Hackish... implementation expects a URI
+rpl-misc:uriToString
+  rdfs:type rdf:Resource ;
+  rpl:returnType xsd:string ;
+  rpl:parameters (
+      [ rpl:parameterName "resource" ;
+        rpl:parameterType xsd:string ;
+        rpl:parameterTransparency true ]
+  ) .
+
+### String manipulation primitives #############################################
+
+rpl-misc:sha1SumOf
+  rdfs:type rpl:PrimitiveFunction ;
+  rpl:returnType xsd:string ;
+  rpl:parameters (
+      [ rpl:parameterName "plaintext" ;
+        rpl:parameterType xsd:string ;
+        rpl:parameterTransparency true ]
+  ) .
+
+rpl-misc:urlEncoding
+  rdfs:type rpl:PrimitiveFunction ;
+  rpl:returnType xsd:string ;
+  rpl:parameters (
+      [ rpl:parameterName "plaintext" ;
+        rpl:parameterType xsd:string ;
+        rpl:parameterTransparency true ]
+  ) .
+
+### Networking primitives ######################################################
+
+rpl-misc:urlTarget
+  rdfs:type rpl:PrimitiveFunction ;
+  rpl:returnType xsd:string ;
+  rpl:parameters (
+      [ rpl:parameterName "url" ;
+        rpl:parameterType xsd:string ;
+        rpl:parameterTransparency true ]
+  ) .
+
+rpl-misc:swoogleIt
+  rdfs:type rpl:PrimitiveFunction ;
+  rpl:returnType rdfs:Class ;
+  rpl:parameters (
+    [ rpl:parameterName "key" ;
+      rpl:parameterType xsd:string ;
+      rpl:parameterTransparency true ]
+    [ rpl:parameterName "queryType" ;
+      rpl:parameterType swoogle:SwoogleQueryType ;
+      rpl:parameterTransparency true ]
+    [ rpl:parameterName "searchString" ;
+      rpl:parameterType xsd:string ;
+      rpl:parameterTransparency true ]
+  ) .
+
+rpl-misc:pingTheSemanticWeb
+  rdfs:type rpl:PrimitiveFunction ;
+  rpl:returnType xsd:string ;
+  rpl:parameters (
+    [ rpl:parameterName "type" ;
+      rpl:parameterType xsd:string ;
+      rpl:parameterTransparency true ]
+    [ rpl:parameterName "maxResults" ;
+      rpl:parameterType xsd:integer ;
+      rpl:parameterTransparency true ]
+  ) .
+

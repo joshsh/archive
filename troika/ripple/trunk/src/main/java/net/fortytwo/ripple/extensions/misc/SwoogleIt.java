@@ -1,11 +1,11 @@
 package net.fortytwo.ripple.extensions.misc;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.Container;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
@@ -29,16 +29,16 @@ public class SwoogleIt extends PrimitiveFunction
 
 	private static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
 	
-    public SwoogleIt( ModelConnection mc )
+    public SwoogleIt( RdfValue v, ModelConnection mc )
         throws RippleException
     {
-        super( mc.createRippleMiscUri( "swoogleIt" ), mc );
+        super( v, mc );
 
         rdfTypeUri = mc.createRdfUri( "type" );
         swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
     }
 
-    protected void applyInternal( RippleStack stack,
+    public void applyTo( RippleStack stack,
                                   Sink<RippleStack> sink,
                                   ModelConnection mc )
         throws RippleException
@@ -46,13 +46,11 @@ public class SwoogleIt extends PrimitiveFunction
         String key, searchString;
         URI queryType;
 
-        key = mc.stringValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        key = mc.stringValue( stack.getFirst() );
         stack = stack.getRest();
-        queryType = mc.castToUri( stack.getFirst() );
+        queryType = mc.uriValue( stack.getFirst() );
         stack = stack.getRest();
-        searchString = mc.stringValue(
-            mc.castToLiteral( stack.getFirst() ) );
+        searchString = mc.stringValue( stack.getFirst() );
         stack = stack.getRest();
 
         try
@@ -73,7 +71,7 @@ public class SwoogleIt extends PrimitiveFunction
 //                    null, rdfTypeUri, swoogleQueryResponseUri, includeInferred );
                     null, rdfTypeUri, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
             while ( stmtIter.hasNext() )
-                sink.put( new RippleStack( stmtIter.next().getSubject(), stack ) );
+                sink.put( new RippleStack( new RdfValue( stmtIter.next().getSubject() ), stack ) );
             stmtIter.close();
         }
 

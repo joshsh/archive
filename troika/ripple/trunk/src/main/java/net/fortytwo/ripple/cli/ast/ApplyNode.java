@@ -5,12 +5,9 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.FunctionEnvelope;
+import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleStack;
 import net.fortytwo.ripple.model.RippleValue;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 
 public class ApplyNode extends Ast
 {
@@ -21,15 +18,12 @@ public class ApplyNode extends Ast
         arg = argument;
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
-        Value v = arg.evaluate( itp, mc );
-        RippleValue rv = mc.getModel().getBridge().toNative( v );
-        if ( null != rv )
-            v = rv;
+        RippleValue v = arg.evaluate( itp, mc );
 
-        return FunctionEnvelope.createEnvelope( v );
+        return Operator.createOperator( v );
     }
 }
 

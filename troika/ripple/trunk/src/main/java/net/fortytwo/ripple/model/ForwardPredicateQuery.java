@@ -3,14 +3,33 @@ package net.fortytwo.ripple.model;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.util.Sink;
 
 public class ForwardPredicateQuery implements Function
 {
-    URI pred;
+    private RdfValue pred;
+    private ModelBridge bridge;
 
-    public ForwardPredicateQuery( URI predicate )
+    private class ForwardPredicateQueryResultSink implements Sink<RdfValue>
+    {
+        private Sink<RippleStack> sink;
+        private RippleStack stack;
+
+        public ForwardPredicateQueryResultSink( RippleStack stack, Sink<RippleStack> sink )
+        {
+            this.stack = stack;
+            this.sink = sink;
+        }
+
+        public void put( RdfValue v )
+            throws RippleException
+        {
+            sink.put(
+                new RippleStack( bridge.get( v ), stack ) );
+        }
+    }
+
+    public ForwardPredicateQuery( RdfValue predicate )
     {
         pred = predicate;
     }
@@ -25,15 +44,14 @@ public class ForwardPredicateQuery implements Function
                          ModelConnection mc )
         throws RippleException
     {
-        Value first = stack.getFirst();
+        bridge = mc.getModel().getBridge();
+
+        RippleValue first = stack.getFirst();
         RippleStack rest = stack.getRest();
 
-//        mc.multiply( first, pred, sink );
+        Sink<RdfValue> querySink = new ForwardPredicateQueryResultSink( rest, sink );
 
-// TODO: do we need a call to "toGraph" around "first"?
-        Iterator<Value> objects = mc.getModel().multiply( first, pred, mc ).iterator();
-        while ( objects.hasNext() )
-            sink.put( new RippleStack( objects.next(), rest ) );
+        mc.multiply( first.toRdf(), pred, querySink );
     }
 
     public void printTo( RipplePrintStream p )
@@ -42,16 +60,7 @@ public class ForwardPredicateQuery implements Function
         p.print( pred );
     }
 
-public URI getUri()
-{
-return null;
-}
-
-public void checkArguments( RippleStack args )
-    throws RippleException
-{}
-
-public Value toRdf( ModelConnection mc )
+public RdfValue toRdf( ModelConnection mc )
     throws RippleException
 {
 return null;

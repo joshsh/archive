@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
     import net.fortytwo.ripple.model.filter.Unique;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -45,7 +46,7 @@ private URI uniqueFilterUri;
 
                 Closure c = new Closure( function, first );
 
-                sink.put( new RippleStack( FunctionEnvelope.createEnvelope( c ), rest ) );
+                sink.put( new RippleStack( Operator.createOperator( c ), rest ) );
             }
         }
     }
@@ -72,7 +73,7 @@ private URI uniqueFilterUri;
 
 
             // prim[] and pred[]
-            if ( first.isFunctionEnvelope() )
+            if ( first.isOperator() )
             {
                 RippleStack rest = stack.getRest();
 
@@ -82,7 +83,7 @@ private URI uniqueFilterUri;
 
                 else
                     ( new EvaluatorSink(
-                        new FunctionSink( ((FunctionEnvelope) first).getFunction(), this ) ) ).put( rest );
+                        new FunctionSink( ((Operator) first).getFunction(), this ) ) ).put( rest );
             }
 
             // arg[]

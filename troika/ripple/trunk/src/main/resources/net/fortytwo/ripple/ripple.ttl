@@ -13,20 +13,24 @@ rpl:Operator
 
 rpl:pred
 	a rpl:Operator ;
-	rdfs:comment "" .
+	rdfs:comment "an operator which applies a predicate to a subject to produce an object" .
 
 rpl:prim
 	a rpl:Operator ;
-	rdfs:comment "" .
+	rdfs:comment "an operator which applies a primitive function" .
 
 rpl:prog
 	a rpl:Operator ;
-	rdfs:comment "" .
+	rdfs:comment "an operator which interprets an rdf:List as a Ripple program" .
 
 ########################################
 # primitive functions
 ########################################
 
+rpl:Function
+	a rdfs:Class ;
+	rdfs:comment "an an abstraction which takes an rdf:List as input and produces zero or more rdf:Lists as output" .
+	
 rpl:PrimitiveFunction
 	a rdfs:Class ;
 	rdfs:comment "a built-in function" .

@@ -3,6 +3,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
 
 //import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -40,9 +41,6 @@ import org.apache.log4j.Logger;
 
 public class Model extends Observable
 {
-// FIXME
-    private Resource singleContext;
-
     private Dereferencer dereferencer;
 public Dereferencer getDereferencer()
 {
@@ -50,15 +48,9 @@ public Dereferencer getDereferencer()
 }
 
     private final static Logger s_logger = Logger.getLogger( Model.class );
-//    private static final AdminListener s_adminListener
-//        = new StdOutAdminListener();
-
-    private final static boolean s_useInferencing = true;
 
     String name;
     Repository repository;
-
-Hashtable<String, String> aliases;
 
     private ModelBridge bridge;
     public ModelBridge getBridge()
@@ -66,46 +58,27 @@ Hashtable<String, String> aliases;
         return bridge;
     }
 
-    private Hashtable<URI, Function> specialFunctions;
-
     private UrlFactory createUrlFactory()
         throws RippleException
     {
-        ModelConnection mc = new ModelConnection( this, "for createUrlFactory()" );
-
-        String wurfelNs, wurfelMiscNs, wurfelTestNs, rplNewNs;
-
-        try
-        {
-            wurfelNs = mc.createRippleUri( "" ).toString();
-            wurfelMiscNs = mc.createRippleMiscUri( "" ).toString();
-            wurfelTestNs = mc.createRippleTestUri( "" ).toString();
-            rplNewNs = "http://fortytwo.net/2007/03/04/rpl-new#";
-        }
-
-        catch ( RippleException e )
-        {
-            mc.close();
-            throw e;
-        }
-
-        mc.close();
-//System.out.println( wurfelNs );
-//System.out.println( wurfelMiscNs );
-//System.out.println( wurfelTestNs );
+        String
+            rplNs = "http://fortytwo.net/2007/03/rpl#",
+            rplMiscNs = "http://fortytwo.net/2007/03/rpl-misc#",
+            rplTestNs = "http://fortytwo.net/2007/03/rpl-test#",
+            rplNewNs = "http://fortytwo.net/2007/03/rpl-new#";
 
         Hashtable<String, String> urlMap = new Hashtable<String, String>();
-        urlMap.put( wurfelNs,
-            net.fortytwo.ripple.Ripple.class.getResource( "net.fortytwo.ripple.rdf" ) + "#" );
-        urlMap.put( wurfelTestNs,
+        urlMap.put( rplNs,
+            net.fortytwo.ripple.Ripple.class.getResource( "ripple.ttl" ) + "#" );
+        urlMap.put( rplTestNs,
             net.fortytwo.ripple.extensions.test.TestExtension.class.getResource(
-                "wurfel-test.rdf" ) + "#" );
-        urlMap.put( wurfelMiscNs,
+                "rpl-test.ttl" ) + "#" );
+        urlMap.put( rplMiscNs,
             net.fortytwo.ripple.extensions.misc.MiscExtension.class.getResource(
-                "wurfel-misc.rdf" ) + "#" );
+                "rpl-misc.ttl" ) + "#" );
         urlMap.put( rplNewNs,
             net.fortytwo.ripple.extensions.newstuff.NewExtension.class.getResource(
-                "rpl-new.rdf" ) + "#" );
+                "rpl-new.ttl" ) + "#" );
 
         return new UrlFactory( urlMap );
     }
@@ -120,8 +93,6 @@ Hashtable<String, String> aliases;
 
         this.repository = repository;
         this.name = name;
-
-aliases = new Hashtable<String, String>();
 
         dereferencer = new HttpUriDereferencer( createUrlFactory() );
 
@@ -149,7 +120,6 @@ public Repository getRepository()
 {
     return repository;
 }
-//private boolean namespacesDefined = false;
 
     public void writeTo( OutputStream out )
         throws RippleException
@@ -162,7 +132,7 @@ public Repository getRepository()
         try
         {
             RepositoryConnection con = repository.getConnection();
-            con.export( /*singleContext,*/ writer );
+            con.export( writer );
             con.close();
         }
 
@@ -202,14 +172,17 @@ public Repository getRepository()
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink )
+    public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
         throws RippleException
     {
-        Value rdfSubj = bridge.getRdfEquivalentOf( subj, mc ).getRdfValue();
-        Value rdfPred = bridge.getRdfEquivalentOf( pred, mc ).getRdfValue();
+//        Value rdfSubj = bridge.getRdfEquivalentOf( subj, mc ).getRdfValue();
+//        Value rdfPred = bridge.getRdfEquivalentOf( pred, mc ).getRdfValue();
 
-if ( null == rdfSubj || null == rdfPred )
-return;
+        Value rdfSubj = subj.toRdf();
+        Value rdfPred = pred.toRdf();
+
+//if ( null == rdfSubj || null == rdfPred )
+//return;
         try
         {
             dereferencer.dereference( subj );
@@ -218,7 +191,7 @@ return;
         catch ( RippleException e )
         {
             // (soft fail)
-s_logger.debug( "Failed to dereference URI: " + rdfSubj.toString() );
+s_logger.debug( "Failed to dereference URI: " + rdfSubj );
         }
 
         if ( rdfSubj instanceof Resource && rdfPred instanceof URI )
@@ -260,11 +233,6 @@ s_logger.debug( "Failed to dereference URI: " + rdfSubj.toString() );
         }
 
         return size;
-    }
-
-    public void define( String name, String uri )
-    {
-        aliases.put( name, uri );
     }
 
     public void showNamespaces()

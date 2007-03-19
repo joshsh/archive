@@ -3,9 +3,7 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.model.RippleValue;
 
 public class TypedLiteralNode extends Ast
 {
@@ -18,14 +16,14 @@ public class TypedLiteralNode extends Ast
         this.type = type;
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
-        Value typeValue = type.evaluate( itp, mc );
-        if ( null == typeValue || !( typeValue instanceof URI ) )
+        RippleValue typeValue = type.evaluate( itp, mc );
+        if ( null == typeValue )
             throw new RippleException( "badly typed literal" );
 
-        return mc.createLiteral( value, (URI) typeValue );
+        return mc.createLiteral( value, typeValue );
     }
 }
 

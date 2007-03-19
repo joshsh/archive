@@ -3,8 +3,7 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.model.RippleValue;
 
 public class NameNode extends Ast
 {
@@ -20,10 +19,10 @@ public class NameNode extends Ast
         return localName;
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
-        Value v = itp.resolveUnqualifiedName( localName );
+        RippleValue v = itp.resolveUnqualifiedName( localName );
 
         if ( null == v )
             throw new RippleException( "'" + localName + "' is undefined in this context" );

@@ -93,7 +93,7 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		p.print( padding ? " )" : ")" );
 	}
 
-	public boolean isFunctionEnvelope()
+	public boolean isOperator()
 	{
 		return false;
 	}

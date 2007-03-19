@@ -16,6 +16,11 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
 
+import net.fortytwo.ripple.ThreadWrapper;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
+
 import org.apache.log4j.Logger;
 
 import org.openrdf.model.BNode;
@@ -32,10 +37,6 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.repository.RepositoryResult;
 
-import net.fortytwo.ripple.ThreadWrapper;
-import net.fortytwo.ripple.Ripple;
-import net.fortytwo.ripple.RippleException;
-
 public class ModelConnection
 {
     private final static Logger s_logger
@@ -44,6 +45,7 @@ public class ModelConnection
     private Model model;
     private RepositoryConnection repoConnection;
     private ValueFactory valueFactory;
+    private ModelBridge bridge;
     private String name = null;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -66,6 +68,8 @@ public class ModelConnection
         {
             throw new RippleException( t );
         }
+
+        bridge = model.getBridge();
 
         add( this );
     }
@@ -168,56 +172,33 @@ public class ModelConnection
 
     ////////////////////////////////////////////////////////////////////////////
 
-
-/*
-    public void forwardPredicateQuery( RippleValue subj, RippleValue pred, Sink<RippleValue> sink )
+    private Resource castToResource( Value v )
         throws RippleException
     {
-        Value rdfSubj = subj.rdfEquivalent();
-        Value rdfPred = 
+        if ( v instanceof Resource )
+            return (Resource) v;
+        else
+            throw new RippleException( "value " + v.toString() + " is not a Resource" );
     }
-*/
 
+    private URI castToUri( Value v )
+        throws RippleException
+    {
+        if ( v instanceof URI )
+            return (URI) v;
 
-public Resource castToResource( Value v )
-    throws RippleException
-{
-    if ( v instanceof Resource )
-        return (Resource) v;
-    else
-        throw new RippleException( "value " + v.toString() + " is not a Resource" );
-}
+        else
+            throw new RippleException( "value " + v.toString() + " is not a URI" );
+    }
 
-public URI castToUri( Value v )
-    throws RippleException
-{
-    if ( v instanceof URI )
-        return (URI) v;
+    private Literal castToLiteral( Value v )
+        throws RippleException
+    {
+        if ( v instanceof Literal )
+            return (Literal) v;
 
-    else
-        throw new RippleException( "value " + v.toString() + " is not a URI" );
-}
-
-public Literal castToLiteral( Value v )
-    throws RippleException
-{
-    if ( v instanceof Literal )
-        return (Literal) v;
-
-    else
-        throw new RippleException( "value " + v.toString() + " is not a Literal" );
-}
-
-public boolean booleanValue( Literal l )
-    throws RippleException
-{
-//        URI type = lit.getDatatype();
-//        if ( !type.equals( XMLSchema.BOOLEAN ) )
-//            throw new RippleException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
-
-        String label = l.getLabel();
-// TODO: is capitalization relevant? Can 'true' also be represented as '1'?
-        return label.equals( "true" );
+        else
+            throw new RippleException( "value " + v.toString() + " is not a Literal" );
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -262,9 +243,23 @@ public URI uriValue( RippleValue rv )
     }
 */
 
+    public boolean booleanValue( RippleValue rv )
+        throws RippleException
+    {
+        Literal l = castToLiteral( rv.toRdf( this ).rdfValue() );
+
+//        URI type = lit.getDatatype();
+//        if ( !type.equals( XMLSchema.BOOLEAN ) )
+//            throw new RippleException( "type mismatch: expected " + XMLSchema.BOOLEAN.toString() + ", found " + type.toString() );
+
+        String label = l.getLabel();
+// TODO: is capitalization relevant? Can 'true' also be represented as '1'?
+        return label.equals( "true" );
+    }
+
     public int intValue( RippleValue rv )
     {
-        Literal l = rv.toRdf( this ).castToLiteral();
+        Literal l = castToLiteral( rv.toRdf( this ).rdfValue() );
 
 //        URI type = l.getDatatype();
 //        if ( !type.equals( XMLSchema.INTEGER ) )
@@ -281,10 +276,10 @@ public URI uriValue( RippleValue rv )
         }
     }
 
-    public String stringValue( RdfValue v )
+    public String stringValue( RippleValue v )
         throws RippleException
     {
-        Literal l = v.castToLiteral();
+        Literal l = castToLiteral( rv.toRdf( this ).rdfValue() );
 
         return l.getLabel();
     }
@@ -292,7 +287,7 @@ public URI uriValue( RippleValue rv )
     public URI uriValue( RdfValue v )
         throws RippleException
     {
-        return castToUri( v );
+        return castToUri( v.toRdf( this ).rdfValue() );
     }
 
     /**
@@ -340,20 +335,21 @@ public URI uriValue( RippleValue rv )
     }
 
     private static RippleValue rdfFirst = new RdfValue( RDF.FIRST );
+    private static RippleValue rdfNil = new RdfValue( RDF.NIL );
     private static RippleValue rdfRest = new RdfValue( RDF.REST );
 
-    public List<RdfValue> listValue( final RdfValue listHead )
+    public List<RippleValue> listValue( final RippleValue listHead )
         throws RippleException
     {
-        List<RdfValue> list = new ArrayList<RdfValue>();
+        List<RippleValue> list = new ArrayList<RippleValue>();
 
-        RdfValue cur = listHead;
+        RdfValue cur = listHead.toRdf( this );
 
-        while ( !cur.equals( RDF.NIL ) )
+        while ( !cur.equals( rdfNil ) )
         {
             RdfValue v = findUniqueProduct( cur, rdfFirst );
-            list.add( v );
-            cur = castToResource( findUniqueProduct( cur, rdfRest ) );
+            list.add( bridge.get( v ) );
+            cur = findUniqueProduct( cur, rdfRest );
         }
 
         return list;
@@ -364,8 +360,6 @@ public URI uriValue( RippleValue rv )
         throws RippleException
     {
         Collection<RippleValue> results = new Container();
-
-        ModelBridge bridge = model.getBridge();
 
         try
         {
@@ -379,7 +373,7 @@ public URI uriValue( RippleValue rv )
             {
                 Statement st = stmtIter.next();
                 if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
-                    results.add( bridge.toNative( st.getObject() ) );
+                    results.add( bridge.get( new RdfValue( st.getObject() ) ) );
             }
 
             stmtIter.close();
@@ -394,87 +388,22 @@ public URI uriValue( RippleValue rv )
         return results;
     }
 
-
     ////////////////////////////////////////////////////////////////////////////
 
-public int intValue( Literal l )
-    throws RippleException
-{
-
-
-    String label = l.getLabel();
-    try
-    {
-        return ( new Integer( label ) ).intValue();
-    }
-
-    catch ( Throwable t )
-    {
-        throw new RippleException( t );
-    }
-}
-
-
-public List<Value> listValue( final Resource listHead )
-    throws RippleException
-{
-    List<Value> list = new ArrayList<Value>();
-
-    Resource cur = listHead;
-
-// TODO: is this 'equals' safe?
-    while ( !cur.equals( RDF.NIL ) )
-    {
-        Value val = findUniqueProduct( cur, RDF.FIRST );
-        list.add( val );
-        cur = castToResource( findUniqueProduct( cur, RDF.REST ) );
-    }
-
-    return list;
-}
-
-
-    ////////////////////////////////////////////////////////////////////////////
-
-/*
-    public Set<Resource> getSubjects()
+    public Set<RdfValue> getPredicates( RippleValue subject )
         throws RippleException
     {
-        Set<Resource> subjects = new HashSet<Resource>();
-
-        try
-        {
-            RepositoryResult<Statement> stmtIter
-                = repoConnection.getStatements(
-//                    null, null, null, model, includeInferred );
-                    null, null, null, Ripple.useInference() );
-            while ( stmtIter.hasNext() )
-                subjects.add( stmtIter.next().getSubject() );
-            stmtIter.close();
-        }
-
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
-
-        return subjects;
-    }
-*/
-
-    public Set<URI> getPredicates( Resource subject )
-        throws RippleException
-    {
-        Set<URI> predicates = new HashSet<URI>();
+        Set<RdfValue> predicates = new HashSet<RdfValue>();
+        Resource subjRdf = castToResource( subject.toRdf( this ) );
 
         try
         {
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
 //                    subject, null, null, model, includeInferred );
-                    subject, null, null, Ripple.useInference() );
+                    subjRdf, null, null, Ripple.useInference() );
             while ( stmtIter.hasNext() )
-                predicates.add( stmtIter.next().getPredicate() );
+                predicates.add( new RdfValue( stmtIter.next().getPredicate() ) );
             stmtIter.close();
         }
 
@@ -491,9 +420,9 @@ public List<Value> listValue( final Resource listHead )
     public void add( RippleValue subj, RippleValue pred, RippleValue obj )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj.toRdf() );
-        URI predUri = castToUri( pred.toRdf() );
-        Value objValue = obj.toRdf();
+        Resource subjResource = castToResource( subj.toRdf( this ) );
+        URI predUri = castToUri( pred.toRdf( this ) );
+        Value objValue = obj.toRdf( this );
 
         try
         {
@@ -510,9 +439,9 @@ public List<Value> listValue( final Resource listHead )
     public void add( RippleValue subj, RippleValue pred, RippleValue obj, Resource context )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj.toRdf() );
-        URI predUri = castToUri( pred.toRdf() );
-        Value objValue = obj.toRdf();
+        Resource subjResource = castToResource( subj.toRdf( this ) );
+        URI predUri = castToUri( pred.toRdf( this ) );
+        Value objValue = obj.toRdf( this );
 
         try
         {
@@ -529,9 +458,9 @@ public List<Value> listValue( final Resource listHead )
     public void remove( RippleValue subj, RippleValue pred, RippleValue obj )
         throws RippleException
     {
-        Resource subjResource = castToResource( subj.toRdf() );
-        URI predUri = castToUri( pred.toRdf() );
-        Value objValue = obj.toRdf();
+        Resource subjResource = castToResource( subj.toRdf( this ) );
+        URI predUri = castToUri( pred.toRdf( this ) );
+        Value objValue = obj.toRdf( this );
 
         try
         {
@@ -718,42 +647,6 @@ public List<Value> listValue( final Resource listHead )
         return createUri( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
     }
 
-    public URI createRdfUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName );
-    }
-
-    public URI createRdfSchemaUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://www.w3.org/2000/01/rdf-schema#" + localName );
-    }
-
-    public URI createRippleUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://fortytwo.net/2007/02/06/wurfel#" + localName );
-    }
-
-    public URI createRippleTestUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://fortytwo.net/2007/02/06/wurfel-test#" + localName );
-    }
-
-    public URI createRippleMiscUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://fortytwo.net/2007/02/06/wurfel-misc#" + localName );
-    }
-
-    public URI createXmlSchemaUri( final String localName )
-        throws RippleException
-    {
-        return createUri( "http://www.w3.org/2001/XMLSchema#" + localName );
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     public RippleValue createValue( final String s )
@@ -844,32 +737,6 @@ public List<Value> listValue( final Resource listHead )
         {
             throw new RippleException( t );
         }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    public void add( Resource subject, URI predicate, Value object )
-        throws RippleException
-    {
-// FIXME
-Resource defaultContext = null;
-        try
-        {
-            repoConnection.add( subject, predicate, object, defaultContext );
-        }
-
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
-    }
-
-    public Value toRdf( final Value src )
-        throws RippleException
-    {
-        return ( src instanceof RippleValue )
-            ? ( (RippleValue) src ).toRdf( this )
-            : src;
     }
 
     ////////////////////////////////////////////////////////////////////////////

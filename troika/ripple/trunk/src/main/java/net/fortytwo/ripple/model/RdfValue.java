@@ -18,7 +18,7 @@ public class RdfValue implements RippleValue
 		return value;
 	}
 
-	public RippleValue toRdf( ModelConnection mc )
+	public RdfValue toRdf( ModelConnection mc )
 	{
 		return this;
 	}
@@ -29,7 +29,7 @@ public class RdfValue implements RippleValue
 		p.print( value );
 	}
 
-	public boolean isFunctionEnvelope()
+	public boolean isOperator()
 	{
 		return false;
 	}

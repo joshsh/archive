@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class FunctionTypeAnnotation
 {
+/*
     class Param
     {
         public String label;
@@ -61,10 +62,11 @@ public class FunctionTypeAnnotation
 
         return new Param( label, type, comment, transparency );
     }
-
-    public FunctionTypeAnnotation( final URI self, ModelConnection mc )
+*/
+    public FunctionTypeAnnotation( final RdfValue self, ModelConnection mc )
         throws RippleException
     {
+/*
         selfUri = self;
 
 // TODO: actually use these, or get rid of them
@@ -95,8 +97,10 @@ public class FunctionTypeAnnotation
             else
                 params.add( getRippleParameter( (Resource) val, mc ) );
         }
+*/
     }
 
+/*
     public URI getUri()
     {
         return selfUri;
@@ -179,6 +183,7 @@ public class FunctionTypeAnnotation
         s += ")";
         return s;
     }
+*/
 }
 
 

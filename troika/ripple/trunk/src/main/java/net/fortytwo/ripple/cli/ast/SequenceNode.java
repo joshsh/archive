@@ -5,8 +5,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleStack;
-
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.model.RippleValue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 
 public class SequenceNode extends Ast
 {
-    private static final boolean s_useDiagrammaticSyntax = true;
     private List<Ast> children;
 
     public SequenceNode()
@@ -22,26 +20,19 @@ public class SequenceNode extends Ast
         children = new ArrayList<Ast>();
     }
 
-/*
-    public void add( Ast node )
-    {
-        children.add( node );
-    }
-*/
-
     public void push( Ast node )
     {
         children.add( 0, node );
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
         if ( children.size() < 1 )
             throw new RippleException( "empty sequence" );
 
         Iterator<Ast> iter = children.iterator();
-        Value result = iter.next().evaluate( itp, mc );
+        RippleValue result = iter.next().evaluate( itp, mc );
         RippleStack stack = new RippleStack( result );
 
         boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );

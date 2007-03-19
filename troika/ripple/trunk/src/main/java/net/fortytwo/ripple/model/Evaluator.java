@@ -3,7 +3,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 
 /**
- *  A ... which reduces arbitrary expressions to a particular normal form.
+ *  A function which reduces arbitrary expressions to a particular normal form.
  */
 public abstract class Evaluator implements Function
 {
@@ -14,7 +14,7 @@ public abstract class Evaluator implements Function
         return 1;
     }
 
-    public boolean isFunctionEnvelope()
+    public boolean isOperator()
     {
         return false;
     }
@@ -25,11 +25,11 @@ public abstract class Evaluator implements Function
 p.print( "[Evaluator]" );
     }
 
-    public Value toRdf( ModelConnection mc )
+    public RippleValue toRdf( ModelConnection mc )
         throws RippleException
     {
 if ( null == rdfEquivalent )
-    rdfEquivalent = mc.createBNode();
+    rdfEquivalent = new RdfValue( mc.createBNode() );
 
 return rdfEquivalent;
     }

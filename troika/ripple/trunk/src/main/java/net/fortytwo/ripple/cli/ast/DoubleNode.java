@@ -3,8 +3,7 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.model.RippleValue;
 
 public class DoubleNode extends Ast
 {
@@ -15,10 +14,10 @@ public class DoubleNode extends Ast
         this.value = value;
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
-        return mc.createLiteral( value );
+        return mc.createValue( value );
     }
 }
 

@@ -3,8 +3,8 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-
-import org.openrdf.model.Value;
+import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleValue;
 
 public class BNodeNode extends Ast
 {
@@ -20,13 +20,13 @@ public class BNodeNode extends Ast
         return "_:" + id;
     }
 
-    public Value evaluate( Interpreter itp, ModelConnection mc )
+    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
         throws RippleException
     {
-        Value v = mc.createBNode( id );
+        RippleValue v = new RdfValue( mc.createBNode( id ) );
 
         if ( null == v )
-            throw new RippleException( "blank node '" + toString() + "' does not exist" );
+            throw new RippleException( "blank node '" + this + "' does not exist" );
         else
             return v;
     }
