@@ -98,7 +98,7 @@ private URI uniqueFilterUri;
         throws RippleException
     {
 //System.out.println( "public void applyTo" );
-uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/04/rpl-new#unique" );
+uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/rpl-new#unique" );
         modelConnection = mc;
         model = modelConnection.getModel();
 
