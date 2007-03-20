@@ -37,9 +37,7 @@ public class Unique extends Filter
 //System.out.println( "put another: " + stack.getFirst() );
 //}
 //else
-//{
 //System.out.println( "rejected this: " + stack.getFirst() );
-//}
     }
 }
 

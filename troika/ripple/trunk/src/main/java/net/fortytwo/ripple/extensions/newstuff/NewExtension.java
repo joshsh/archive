@@ -16,7 +16,11 @@ public class NewExtension extends Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 		True truePrim;
 		False falsePrim;
-System.out.println( "foo" );
+
+		bridge.add( new Pred( new RdfValue( mc.createUri( ns + "pred" ) ), mc ), mc );
+		bridge.add( new Prim( new RdfValue( mc.createUri( ns + "prim" ) ), mc ), mc );
+		bridge.add( new Prog( new RdfValue( mc.createUri( ns + "prog" ) ), mc ), mc );
+
 		bridge.add( truePrim = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
 		bridge.add( falsePrim = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new IntegerGreaterThan( new RdfValue( mc.createUri( ns + "integer-greaterThan" ) ), mc, truePrim, falsePrim ), mc );
@@ -29,7 +33,7 @@ System.out.println( "foo" );
 		bridge.add( new Zap( new RdfValue( mc.createUri( ns + "zap" ) ), mc ), mc );
 		bridge.add( new Scrap( new RdfValue( mc.createUri( ns + "scrap" ) ), mc ), mc );
 		bridge.add( new Limit( new RdfValue( mc.createUri( ns + "limit" ) ), mc ), mc );
-//        bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
+        bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
 	}
 }

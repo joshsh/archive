@@ -1,6 +1,5 @@
 @prefix rpl:       <http://fortytwo.net/2007/03/rpl#> .
 @prefix rpl-misc:  <http://fortytwo.net/2007/03/rpl-misc#> .
-@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
 @prefix swoogle:   <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
@@ -9,7 +8,8 @@
 
 # Hackish... implementation expects a URI
 rpl-misc:uriToString
-	rdfs:type rdf:Resource ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
@@ -21,7 +21,8 @@ rpl-misc:uriToString
 ### String manipulation primitives #############################################
 
 rpl-misc:sha1SumOf
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
@@ -31,7 +32,8 @@ rpl-misc:sha1SumOf
 	) .
 
 rpl-misc:urlEncoding
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
@@ -43,7 +45,8 @@ rpl-misc:urlEncoding
 ### Networking primitives ######################################################
 
 rpl-misc:urlTarget
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
@@ -53,7 +56,8 @@ rpl-misc:urlTarget
 	) .
 
 rpl-misc:swoogleIt
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 3 ;
 	rpl:returnType rdfs:Class ;
 	rpl:parameters (
 		[
@@ -71,7 +75,8 @@ rpl-misc:swoogleIt
 	) .
 
 rpl-misc:pingTheSemanticWeb
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[

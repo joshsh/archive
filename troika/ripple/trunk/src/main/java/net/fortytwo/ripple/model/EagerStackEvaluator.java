@@ -70,9 +70,7 @@ private URI uniqueFilterUri;
             RippleValue first = stack.getFirst();
 //System.out.println( "   first = " + stack.getFirst() );
 
-
-
-            // prim[] and pred[]
+            // prim[], pred[], deq[]
             if ( first.isOperator() )
             {
                 RippleStack rest = stack.getRest();
@@ -82,8 +80,16 @@ private URI uniqueFilterUri;
 //                    sink.put( stack );
 
                 else
-                    ( new EvaluatorSink(
-                        new FunctionSink( ((Operator) first).getFunction(), this ) ) ).put( rest );
+                {
+                    Function f = ((Operator) first).getFunction();
+
+                    if ( f.arity() == 0 )
+                        f.applyTo( rest, this, modelConnection );
+
+                    else
+                        ( new EvaluatorSink(
+                            new FunctionSink( f, this ) ) ).put( rest );
+                }
             }
 
             // arg[]

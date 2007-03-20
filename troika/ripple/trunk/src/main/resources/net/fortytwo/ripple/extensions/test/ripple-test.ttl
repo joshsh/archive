@@ -7,7 +7,8 @@
 ### Integer arithmetic primitives ##############################################
 
 rpl-test:integer-add
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
@@ -21,7 +22,8 @@ rpl-test:integer-add
 	) .
 
 rpl-test:integer-subtract
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
@@ -35,7 +37,8 @@ rpl-test:integer-subtract
 	) .
 
 rpl-test:integer-multiply
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
@@ -49,7 +52,8 @@ rpl-test:integer-multiply
 	) .
 
 rpl-test:integer-divide
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
@@ -63,7 +67,8 @@ rpl-test:integer-divide
 	) .
 
 rpl-test:integer-mod
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
@@ -79,7 +84,8 @@ rpl-test:integer-mod
 ### RDF primitives #############################################################
 
 rpl-test:bagElements
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType rdf:Resource ;
 	rpl:parameters (
 		[
@@ -89,7 +95,8 @@ rpl-test:bagElements
 	) .
 
 rpl-test:listElements
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType rdf:Resource ;
 	rpl:parameters (
 		[ rdfs:label " listHead" ;
@@ -100,7 +107,8 @@ rpl-test:listElements
 ### String manipulation primitives #############################################
 
 rpl-test:concatenateStrings
-	rdfs:type rpl:PrimitiveFunction ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[

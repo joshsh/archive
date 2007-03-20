@@ -11,7 +11,9 @@ public abstract class Evaluator implements Function
 
     public int arity()
     {
-        return 1;
+        // An Evaluator performs reduction; it does not need the stack to be
+        // reduced to any level before it is received as input.
+        return 0;
     }
 
     public boolean isOperator()
