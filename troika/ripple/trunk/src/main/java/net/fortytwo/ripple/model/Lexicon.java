@@ -17,6 +17,7 @@ import jline.SimpleCompletor;
 import jline.NullCompletor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ public class Lexicon extends Observable implements Observer
     private Hashtable<String, List<URI>> localNameToUrisMap = null;
     private Hashtable<String, String> prefixToNamespaceMap = null;
     private Hashtable<String, String> namespaceToPrefixMap = null;
+    private Collection<String> qNamesCollection = null;
 
     public Lexicon( Model model )
         throws RippleException
@@ -93,7 +95,7 @@ public class Lexicon extends Observable implements Observer
         Set<String> localNames = localNameToUrisMap.keySet();
         Set<String> prefixes = prefixToNamespaceMap.keySet();
 
-        int size = localNames.size() + prefixes.size();
+        int size = localNames.size() + prefixes.size() + qNamesCollection.size();
         if ( 0 < size )
         {
             String [] alts = new String[size];
@@ -106,6 +108,10 @@ public class Lexicon extends Observable implements Observer
             Iterator<String> prefixIter = prefixes.iterator();
             while ( prefixIter.hasNext() )
                 alts[index++] = prefixIter.next() + ":";
+
+            Iterator<String> qNameIter = qNamesCollection.iterator();
+            while( qNameIter.hasNext() )
+                alts[index++] = qNameIter.next();
 
             return new SimpleCompletor( alts );
         }
@@ -125,6 +131,7 @@ public class Lexicon extends Observable implements Observer
 
     // Note: assumes that the same URI will not be added twice.
     private void add( URI uri )
+        throws RippleException
     {
         String localName = uri.getLocalName();
         List<URI> siblings = localNameToUrisMap.get( localName );
@@ -136,6 +143,14 @@ public class Lexicon extends Observable implements Observer
         }
 
         siblings.add( uri );
+
+        // If possible add a qualified name as well.
+        String prefix = nsPrefixOf( uri );
+        if ( null != prefix )
+        {
+            String qName = prefix + ":" + localName;
+            qNamesCollection.add( qName );
+        }
     }
 
     private void createMaps()
@@ -145,6 +160,7 @@ System.out.println( "################# Rebuilding dictionaries." );
         localNameToUrisMap = new Hashtable<String, List<URI>>();
         prefixToNamespaceMap = new Hashtable<String, String>();
         namespaceToPrefixMap = new Hashtable<String, String>();
+        qNamesCollection = new ArrayList<String>();
 
         Set<URI> allURIs = new HashSet<URI>();
 
