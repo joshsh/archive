@@ -72,9 +72,10 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		throws RippleException
 	{
 		boolean padding = Ripple.listPadding();
+
 		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.getExpressionOrder() )
-			? this : invert( this );
+			? invert( this ) : this;
 
 		p.print( padding ? "( " : "(" );
 		

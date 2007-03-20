@@ -2,6 +2,8 @@ package net.fortytwo.ripple;
 
 import net.fortytwo.ripple.RippleException;
 
+import org.apache.log4j.Logger;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -12,6 +14,9 @@ import java.util.Set;
 
 public class UrlFactory
 {
+    private final static Logger s_logger
+        = Logger.getLogger( UrlFactory.class );
+
     private String [] sourceUrls;
     private String [] targetUrls;
 
@@ -28,7 +33,10 @@ public class UrlFactory
 
         targetUrls = new String[ sourceUrls.length ];
         for ( int i = 0; i < sourceUrls.length; i++ )
+        {
             targetUrls[i] = map.get( sourceUrls[i] );
+            s_logger.debug( "map " + sourceUrls[i] + " to " + targetUrls[i] );
+        }
     }
 
     private URL createUrlPrivate( final String urlStr )

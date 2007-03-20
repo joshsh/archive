@@ -2,6 +2,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.NullSink;
 
 import java.util.Iterator;
 import java.util.List;
@@ -80,8 +81,12 @@ public class FunctionTypeAnnotation
         rplParameterTypeUri          = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
         rplParameterTransparencyUri  = new RdfValue( mc.createUri( rplNs + "parameterTransparency" ) );
 
-        returnType = mc.findUniqueProduct( self, rplReturnTypeUri );
+// Hack: this merely forces the model to dereference the primitive's URI so it
+//       shows up in the Lexicon.
+mc.getModel().multiply( self, rplReturnTypeUri, new NullSink<RdfValue>(), mc );
 /*
+        returnType = mc.findUniqueProduct( self, rplReturnTypeUri );
+
         Resource paramList = mc.castToResource(
             mc.findUniqueProduct( self, rplParametersUri ) );
         Iterator<Value> paramIter = mc.listValue( paramList ).iterator();

@@ -1,0 +1,108 @@
+@prefix rpl:      <http://fortytwo.net/2007/03/rpl#> .
+@prefix rpl-new:  <http://fortytwo.net/2007/03/rpl-new#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+################################################################################
+
+rpl-new:or
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "Or{x}{y} --> {x,y}" .
+
+rpl-new:scrap
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rdfs:comment "x /scrap -->" .
+
+rpl-new:unique
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rdfs:comment "..." .
+
+rpl-new:limit
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType rpl:PrimitiveFunction ;  # not strictly true...
+	rpl:parameters (
+		[
+			rdfs:label "lim" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+################################################################################
+
+rpl-new:assert
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 3;
+	rdfs:comment "..." .
+
+rpl-new:deny
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 3;
+	rdfs:comment "..." .
+
+################################################################################
+
+rpl-new:true
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "y x /true --> x" .
+
+rpl-new:false
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "y x /false --> y" .
+
+rpl-new:equal
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "y x /equal --> rpl:true if x and y are equal, otherwise rpl:false" .
+
+################################################################################
+
+rpl-new:dup
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rdfs:comment "x /dup --> x x" .
+
+rpl-new:swap
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "x y /swap --> y x" .
+
+rpl-new:zap
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rdfs:comment "y x /zap --> y" .
+
+################################################################################
+
+rpl-new:integer-greaterThan
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType rpl:PrimitiveFunction ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+rpl-new:integer-lessThan
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType rpl:PrimitiveFunction ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .

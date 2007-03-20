@@ -42,7 +42,7 @@ public class ContainerTreeView implements Observer
         ps = printStream;
     }
 
-    private class RdfValueCollector implements Sink<RdfValue>
+    private class RdfValueCollector<T> implements Sink<RdfValue>
     {
         private Collection<RippleValue> collectedValues;
         private RippleStack stack;
@@ -59,6 +59,11 @@ public class ContainerTreeView implements Observer
         {
             collectedValues.add(
                 bridge.get( v ) );
+        }
+
+        public int size()
+        {
+            return collectedValues.size();
         }
 
         public Iterator<RippleValue> iterator()
@@ -84,7 +89,9 @@ public class ContainerTreeView implements Observer
 if ( subject instanceof net.fortytwo.ripple.model.RippleStack )
 subject = ( (net.fortytwo.ripple.model.RippleStack) subject ).getFirst();
 
-            Set<RdfValue> predicates = mc.getPredicates( subject );
+            RdfValueCollector predicates = new RdfValueCollector( mc.getModel().getBridge() );
+            mc.findPredicates( subject, predicates );
+//System.out.println( "" + predicates.size() + " predicates found." );
             Iterator<RdfValue> predIter = predicates.iterator();
 
             int predCount = 0, lim = Ripple.getTreeViewMaxBreadth();

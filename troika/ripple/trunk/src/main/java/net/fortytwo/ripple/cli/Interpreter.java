@@ -549,6 +549,27 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 
             RippleValue expr = ast.evaluate( this, mc );
 
+            // Define the term *before* reduction.
+            if ( null != name )
+            {
+                String defaultNs = lexicon.resolveNamespacePrefix( "" );
+
+                if ( null == defaultNs )
+                    throw new RippleException( "no default namespace is defined" );
+
+                if ( !( expr instanceof RippleStack ) )
+                    throw new RippleException( "term assignment for non-lists is not implemented" );
+
+                RippleStack exprList = (RippleStack) expr;
+
+// TODO: check for collision with an existing URI
+                URI uri = mc.createUri( defaultNs + name );
+
+                mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
+
+                lexicon.update();
+            }
+
             Container result = ( null == expr )
                 ? new Container()
                 : reduce( expr, mc );
@@ -556,37 +577,6 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
 // TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
             dereferenceResultSet( result, mc );
-
-/*
-            if ( null != name )
-            {
-                if ( 0 == result.size() )
-                    throw new RippleException( "null value in assignment" );
-
-                else if ( 1 < result.size() )
-                    throw new RippleException( "ambiguous value in assigment" );
-
-                else
-                {
-                    Value srcVal = result.iterator().next();
-                    String defaultNs = lexicon.resolveNamespacePrefix( "" );
-
-                    if ( null == defaultNs )
-                        throw new RippleException( "no default namespace is defined" );
-
-// TODO: check for collision with an existing URI
-
-                    Value destVal = mc.toRdf( srcVal );
-
-// TODO
-                    URI uri = mc.createUri( defaultNs, name );
-URI owlSameAsUri = mc.createUri( "http://www.w3.org/2002/07/owl#sameAs" );
-                    mc.add( uri, owlSameAsUri, destVal );
-                }
-
-                lexicon.update();
-            }
-*/
 
             valueSet.setValues( result );
 

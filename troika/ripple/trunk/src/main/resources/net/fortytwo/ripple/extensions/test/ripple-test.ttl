@@ -7,95 +7,108 @@
 ### Integer arithmetic primitives ##############################################
 
 rpl-test:integer-add
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType xsd:integer ;
-  rpl:parameters (
-      [ rpl:parameterName "intA" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-      [ rpl:parameterName "intB" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
 
 rpl-test:integer-subtract
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType xsd:integer ;
-  rpl:parameters (
-      [ rpl:parameterName "intA" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-      [ rpl:parameterName "intB" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
 
 rpl-test:integer-multiply
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType xsd:integer ;
-  rpl:parameters (
-      [ rpl:parameterName "intA" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-      [ rpl:parameterName "intB" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
 
 rpl-test:integer-divide
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType xsd:integer ;
-  rpl:parameters (
-      [ rpl:parameterName "intA" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-      [ rpl:parameterName "intB" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
 
 rpl-test:integer-mod
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType xsd:integer ;
-  rpl:parameters (
-      [ rpl:parameterName "intA" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-      [ rpl:parameterName "intB" ;
-        rpl:parameterType xsd:integer ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "intA" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "intB" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
 
 ### RDF primitives #############################################################
 
 rpl-test:bagElements
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType rdf:Resource ;
-  rpl:parameters (
-      [ rpl:parameterName "bag" ;
-        rpl:parameterType rdf:Bag ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType rdf:Resource ;
+	rpl:parameters (
+		[
+			rdfs:label "bag" ;
+			rpl:parameterType rdf:Bag ;
+			rpl:parameterTransparency true ]
+	) .
 
 rpl-test:listElements
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType rdf:Resource ;
-  rpl:parameters (
-      [ rpl:parameterName " listHead" ;
-        rpl:parameterType rdf:List ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType rdf:Resource ;
+	rpl:parameters (
+		[ rdfs:label " listHead" ;
+		rpl:parameterType rdf:List ;
+		rpl:parameterTransparency true ]
+	) .
 
 ### String manipulation primitives #############################################
 
 rpl-test:concatenateStrings
-  rdfs:type rpl:PrimitiveFunction ;
-  rpl:returnType xsd:string ;
-  rpl:parameters (
-      [ rpl:parameterName "strA" ;
-        rpl:parameterType xsd:string ;
-        rpl:parameterTransparency true ]
-      [ rpl:parameterName "strB" ;
-        rpl:parameterType xsd:string ;
-        rpl:parameterTransparency true ]
-  ) .
+	rdfs:type rpl:PrimitiveFunction ;
+	rpl:returnType xsd:string ;
+	rpl:parameters (
+		[
+			rdfs:label "strA" ;
+			rpl:parameterType xsd:string ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "strB" ;
+			rpl:parameterType xsd:string ;
+			rpl:parameterTransparency true ]
+	) .

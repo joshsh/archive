@@ -33,6 +33,17 @@ public class RdfValue implements RippleValue
 	{
 		return false;
 	}
+
+	public boolean equals( RdfValue other )
+	{
+		return value.equals( other.value );
+	}
+
+	public String toString()
+	{
+		// Use Sesame's toString() methods.
+		return value.toString();
+	}
 }
 
 // kate: tab-width 4

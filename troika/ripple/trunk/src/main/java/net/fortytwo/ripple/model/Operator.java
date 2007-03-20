@@ -56,8 +56,8 @@ public class Operator implements RippleValue
         if ( v instanceof RdfValue )
         {
 // TODO: do some type inference instead of a dumb, single type lookup.
-            RdfValue type = mc.findUniqueProduct( (RdfValue) v, rdfType );
-            if ( type.getRdfValue().equals( RDF.PROPERTY ) )
+            RdfValue type = mc.findAtMostOneObject( (RdfValue) v, rdfType );
+            if ( null == type || type.getRdfValue().equals( RDF.PROPERTY ) )
                 return new Operator( (RdfValue) v );
             else if ( type.getRdfValue().equals( RDF.LIST ) )
                 return new Operator( new RippleStack( (RdfValue) v, mc ) );

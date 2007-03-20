@@ -72,13 +72,13 @@ public Dereferencer getDereferencer()
             net.fortytwo.ripple.Ripple.class.getResource( "ripple.ttl" ) + "#" );
         urlMap.put( rplTestNs,
             net.fortytwo.ripple.extensions.test.TestExtension.class.getResource(
-                "rpl-test.ttl" ) + "#" );
+                "ripple-test.ttl" ) + "#" );
         urlMap.put( rplMiscNs,
             net.fortytwo.ripple.extensions.misc.MiscExtension.class.getResource(
-                "rpl-misc.ttl" ) + "#" );
+                "ripple-misc.ttl" ) + "#" );
         urlMap.put( rplNewNs,
             net.fortytwo.ripple.extensions.newstuff.NewExtension.class.getResource(
-                "rpl-new.ttl" ) + "#" );
+                "ripple-new.ttl" ) + "#" );
 
         return new UrlFactory( urlMap );
     }

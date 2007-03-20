@@ -203,46 +203,6 @@ public class ModelConnection
 
     ////////////////////////////////////////////////////////////////////////////
 
-/*
-public Value findUniqueProduct( Value arg, Value func )
-    throws RippleException
-{
-    Collection<Value> results = findProduct( arg, func );
-
-    if ( 1 != results.size() )
-    {
-        if ( 0 == results.size() )
-            throw new RippleException( "no values resolved for " + func.toString() + " of " + arg.toString() );
-
-        else
-            throw new RippleException( func.toString() + " of " + arg.toString() + " resolved to more than one value" );
-    }
-
-    else
-        return results.iterator().next();
-}
-
-public URI uriValue( RippleValue rv )
-{
-    Value v = rdfValue( rv ).getRdfValue();
-    if ( v instanceof URI )
-        return (URI) v;
-    else
-        throw new RippleException( "value " + v.toString() + " is not a URI" );
-}
-*/
-
-/*
-    private RdfValue rdfValue( RippleValue rv )
-        throws RippleException
-    {
-        if ( v instanceof RdfValue )
-            return (RdfValue) rv;
-        else
-            throw new RippleException( "RippleValue " + rv.toString() + " is not an RdfValue" );
-    }
-*/
-
     public boolean booleanValue( RippleValue rv )
         throws RippleException
     {
@@ -318,7 +278,7 @@ public URI uriValue( RippleValue rv )
         }
     }
 
-    public RdfValue findUniqueProduct( RdfValue subj, RdfValue pred )
+    public RdfValue findAtMostOneObject( RdfValue subj, RdfValue pred )
         throws RippleException
     {
         SingleValueSink sink = new SingleValueSink();
@@ -327,12 +287,56 @@ public URI uriValue( RippleValue rv )
 
         int count = sink.countReceived();
 
-        if ( 0 == count )
-            throw new RippleException( "no values resolved for " + pred.toString() + " of " + subj.toString() );
-        else if ( 1 < count )
+        if ( 1 < count )
             throw new RippleException( pred.toString() + " of " + subj.toString() + " resolved to more than one value" );
         else
             return sink.getValue();
+    }
+
+    public RdfValue findUniqueProduct( RdfValue subj, RdfValue pred )
+        throws RippleException
+    {
+        RdfValue v = findAtMostOneObject( subj, pred );
+
+        if ( null == v )
+            throw new RippleException( "no values resolved for " + pred.toString() + " of " + subj.toString() );
+        else
+            return v;
+    }
+
+    // Note: context is ignored.
+    // Another note: the source value is not (yet) dereferenced
+    public void copyStatements( RdfValue src, RdfValue dest )
+        throws RippleException
+    {
+        Resource srcResource = castToResource( src.getRdfValue() );
+        Resource destResource = castToResource( dest.getRdfValue() );
+System.out.println( "srcResource = " + srcResource );
+System.out.println( "destResource = " + destResource );
+
+        try
+        {
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
+                    srcResource, null, null, Ripple.useInference() );
+
+            while ( stmtIter.hasNext() )
+            {
+                Statement st = stmtIter.next();
+System.out.println( "reading statement: (" + st.getSubject() + ", " + st.getPredicate() + ", " + st.getObject() + ")" ); System.out.flush();
+System.out.println( "adding statement: (" + destResource + ", " + st.getPredicate() + ", " + st.getObject() + ")" ); System.out.flush();
+                repoConnection.add( destResource, st.getPredicate(), st.getObject() );
+            }
+
+            stmtIter.close();
+        }
+
+        catch ( Throwable t )
+        {
+            reset();
+            throw new RippleException( t );
+        }
+System.out.println( "done" );
     }
 
     private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
@@ -391,10 +395,10 @@ public URI uriValue( RippleValue rv )
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public Set<RdfValue> getPredicates( RippleValue subject )
+    public void findPredicates( RippleValue subject, Sink<RdfValue> sink )
         throws RippleException
     {
-        Set<RdfValue> predicates = new HashSet<RdfValue>();
+        Set<Value> predicates = new HashSet<Value>();
         Value v = subject.toRdf( this ).getRdfValue();
 
         if ( v instanceof Resource )
@@ -408,7 +412,7 @@ public URI uriValue( RippleValue rv )
 //                    subject, null, null, model, includeInferred );
                         subjRdf, null, null, Ripple.useInference() );
                 while ( stmtIter.hasNext() )
-                    predicates.add( new RdfValue( stmtIter.next().getPredicate() ) );
+                    predicates.add( stmtIter.next().getPredicate() );
                 stmtIter.close();
             }
 
@@ -418,7 +422,9 @@ public URI uriValue( RippleValue rv )
             }
         }
 
-        return predicates;
+        Iterator<Value> iter = predicates.iterator();
+        while ( iter.hasNext() )
+            sink.put( new RdfValue( iter.next() ) );
     }
 
     ////////////////////////////////////////////////////////////////////////////
