@@ -5,8 +5,9 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
 
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -161,7 +162,7 @@ public Model getModel()
             out = new PrintWriter( System.out );
         }
 
-        catch ( IOException e )
+        catch ( java.io.IOException e )
         {
             throw new RippleException( e );
         }
@@ -363,11 +364,39 @@ System.out.println( "--- 3 ---" );
         catch ( RippleException e ) {}
     }
 
+    private void saveAsPrivate( String fileName )
+        throws RippleException
+    {
+        OutputStream out;
+
+        try
+        {
+            out = new FileOutputStream( fileName );
+        }
+
+        catch ( java.io.FileNotFoundException e )
+        {
+            throw new RippleException( e );
+        }
+
+        model.writeTrix( out );
+
+        try
+        {
+            out.close();
+        }
+
+        catch ( java.io.IOException e )
+        {
+            throw new RippleException( e );
+        }
+    }
+
     public void saveAs( final String fileName )
     {
         try
         {
-            model.saveAs( fileName );
+            saveAsPrivate( fileName );
 
             System.out.println( "\nSaved data set as '" + fileName + "'\n" );
         }

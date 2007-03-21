@@ -1,5 +1,5 @@
-<http://www.pipian.com/rdf/places/planet/Earth#Earth>;
-<http://www.pipian.com/rdf/places/planet/Earth#Earth> contains bagElements wail:name;
+<http://www.pipian.com/rdf/places/planet/Earth#Earth>.
+<http://www.pipian.com/rdf/places/planet/Earth#Earth> /contains /bagElements /wail:name.
 
 
 <http://www.pipian.com/rdf/places/country/AZ>;

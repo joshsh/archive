@@ -1,30 +1,6 @@
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.UrlFactory;
-import net.fortytwo.ripple.Ripple;
-import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
-
-//import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.Repository;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
-import org.openrdf.rio.rdfxml.RDFXMLWriter;
-import org.openrdf.model.Namespace;
-import org.openrdf.repository.RepositoryResult;
-
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +13,27 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
+import net.fortytwo.ripple.UrlFactory;
+import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
+
 import org.apache.log4j.Logger;
+
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.GraphQueryResult;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.Repository;
+import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
+import org.openrdf.rio.trix.TriXWriter;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.model.Namespace;
+import org.openrdf.repository.RepositoryResult;
 
 public class Model extends Observable
 {
@@ -121,13 +117,13 @@ public Repository getRepository()
     return repository;
 }
 
-    public void writeTo( OutputStream out )
+    public void writeTrix( OutputStream out )
         throws RippleException
     {
         // Note: a comment by Jeen suggests that a new writer should be created
         //       for each use:
         //       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
-        RDFXMLWriter writer = new RDFXMLPrettyWriter( out );
+        RDFWriter writer = new TriXWriter( out );
 
         try
         {
@@ -142,31 +138,24 @@ public Repository getRepository()
         }
     }
 
-    public void saveAs( String fileName )
+    public void writeTo( OutputStream out )
         throws RippleException
     {
-        OutputStream out;
+        // Note: a comment by Jeen suggests that a new writer should be created
+        //       for each use:
+        //       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
+        RDFWriter writer = new RDFXMLPrettyWriter( out );
 
         try
         {
-            out = new FileOutputStream( fileName );
+            RepositoryConnection con = repository.getConnection();
+            con.export( writer );
+            con.close();
         }
 
-        catch ( FileNotFoundException e )
+        catch ( Throwable t )
         {
-            throw new RippleException( e );
-        }
-
-        writeTo( out );
-
-        try
-        {
-            out.close();
-        }
-
-        catch ( IOException e )
-        {
-            throw new RippleException( e );
+            throw new RippleException( t );
         }
     }
 

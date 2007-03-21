@@ -5,6 +5,10 @@
 (: Tim Berners-Lee :)
 <http://www.w3.org/People/Berners-Lee/card#i>;
 
+<http://my.opera.com/fred/xml/foaf#me>/knows/unique/knows/unique/knows/unique/name/unique.
+	33325 results, if you can believe that
+	What's even odder is that I get a slightly different result each time I execute the query (after all of the crawling has already been done).
+
 # Note: after the second step or so, most if not all graphs are from my.opera.com
 <http://www.w3.org/People/Berners-Lee/card#i> /name;  # 1 result
 <http://www.w3.org/People/Berners-Lee/card#i> /knows/name;  # 33 results
@@ -36,6 +40,7 @@
 
 # This gives us more results, because (apparently) many of the above are not typed as foaf:Person.
 <http://www.w3.org/People/Berners-Lee/card#i> knows/ unique/;
+
 
 
 
