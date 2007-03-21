@@ -62,7 +62,7 @@ public Dereferencer getDereferencer()
         throws RippleException
     {
         String
-            rplNs = "http://fortytwo.net/2007/03/rpl#",
+            rplNs = "http://fortytwo.net/2007/03/ripple#",
             rplMiscNs = "http://fortytwo.net/2007/03/rpl-misc#",
             rplTestNs = "http://fortytwo.net/2007/03/rpl-test#",
             rplNewNs = "http://fortytwo.net/2007/03/rpl-new#";

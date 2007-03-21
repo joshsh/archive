@@ -35,6 +35,7 @@ public class NewExtension extends Extension
 		bridge.add( new Limit( new RdfValue( mc.createUri( ns + "limit" ) ), mc ), mc );
         bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
+		bridge.add( new Forget( new RdfValue( mc.createUri( ns + "forget" ) ), mc ), mc );
 	}
 }
 

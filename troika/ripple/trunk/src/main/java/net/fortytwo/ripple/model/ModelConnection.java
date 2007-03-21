@@ -486,6 +486,22 @@ System.out.println( "done" );
         }
     }
 
+    public void removeStatementsAbout( RdfValue subj, URI context )
+        throws RippleException
+    {
+        Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
+
+        try
+        {
+            repoConnection.remove( subjResource, null, null, context );
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     public URI createUri( final String s )

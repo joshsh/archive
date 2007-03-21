@@ -1,4 +1,4 @@
-@prefix rpl:      <http://fortytwo.net/2007/03/rpl#> .
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple#> .
 @prefix rpl-new:  <http://fortytwo.net/2007/03/rpl-new#> .
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
@@ -51,6 +51,16 @@ rpl-new:scrap
 	rpl:arity 0 ;
 	rdfs:comment "x /scrap -->" .
 
+rpl-new:forget
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterTransparency false ]
+	) ;
+	rdfs:comment "..." .
+
 rpl-new:unique
 	a rpl:PrimitiveFunction ;
 	rpl:arity 0 ;
@@ -58,6 +68,7 @@ rpl-new:unique
 
 rpl-new:limit
 	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
 	rpl:returnType rpl:PrimitiveFunction ;  # not strictly true...
 	rpl:parameters (
 		[

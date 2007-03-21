@@ -41,32 +41,41 @@ public class HttpUriDereferencer implements Dereferencer
         failureMemoUris = new LinkedHashSet<String>();
     }
 
-    public void dereference( final URI uri, ModelConnection mc )
-        throws RippleException
+    private String findMemo( final URI uri )
     {
         String ns = uri.getNamespace();
-        String uriStr = null;
 
-        String memo;
-
-        // For hash namespaces, memoize the namespace.
+        // For hash namespaces, the namespace is memoized.
         if ( '#' == ns.charAt( ns.length() - 1 ) )
-            memo = ns;
+            return ns;
 
         // For slash namespaces, we're forced to memoize the specific URI,
         // as we don't know whether to expect to get statements only about
         // the target URI or about other URIs in the namespace as well.
         else
         {
-            uriStr = uri.toString();
+            String uriStr = uri.toString();
 
             // For memoization purposes, a URI with a trailing slash is no
             // different than the same URI without the slash.
             if ( '/' == uriStr.charAt( uriStr.length() - 1 ) )
-                memo = uriStr.substring( 0, uriStr.length() - 1 );
+                return uriStr.substring( 0, uriStr.length() - 1 );
             else
-                memo = uriStr;
+                return uriStr;
         }
+    }
+
+    private URI findContext( final String ns, ModelConnection mc )
+        throws RippleException
+    {
+        return mc.createUri( ns );
+    }
+
+    public void dereference( final URI uri, ModelConnection mc )
+        throws RippleException
+    {
+        String ns = uri.getNamespace();
+        String memo = findMemo( uri );
 
         if ( successMemoUris.contains( memo )
           || failureMemoUris.contains( memo ) )
@@ -93,15 +102,10 @@ public class HttpUriDereferencer implements Dereferencer
         // this is the way to go.  However, we'll lose some documents which
         // perhaps should be using a hash namespace instead.
         else
-        {
-            if ( null == uriStr )
-                uriStr = uri.toString();
-
-            url = urlFactory.createUrl( uriStr );
-        }
+            url = urlFactory.createUrl( uri.toString() );
 
         // Identify the context of the to-be-imported graph with its namespace.
-        URI context = mc.createUri( ns );
+        URI context = findContext( ns, mc );
 
         try
         {
@@ -178,8 +182,36 @@ System.out.println( "Removing statement: " + st.getSubject().toString() + " " + 
         throws RippleException
     {
 Value v = rv.getRdfValue();
-if ( null != v && v instanceof URI )
+if ( v instanceof URI )
     dereference( (URI) v, mc );
+    }
+
+    // Caution: since several URIs may share a memo (e.g. in a hash namespace),
+    //          statements may bunch up around these URIs when one of them is
+    //          subsequently dereferenced.  For instance, you may get
+    //          "redundant" statements with the same subject and predicate, and
+    //          distinct but equivalent blank nodes as object.
+    public void forget( RdfValue rv, ModelConnection mc )
+        throws RippleException
+    {
+        Value v = rv.getRdfValue();
+        if ( v instanceof URI )
+        {
+            String memo = findMemo( (URI) v );
+
+            if ( failureMemoUris.contains( memo ) )
+                failureMemoUris.remove( memo );
+
+            // If resolution previously succeeded, remove all statements about
+            // the value in the appropriate context.
+            if ( successMemoUris.contains( memo ) )
+            {
+                URI context = findContext( ( (URI) v ).getNamespace(), mc );
+                mc.removeStatementsAbout( rv, context );
+
+                successMemoUris.remove( memo );
+            }
+        }
     }
 }
 

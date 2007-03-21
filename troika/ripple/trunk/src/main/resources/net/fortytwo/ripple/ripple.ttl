@@ -37,9 +37,9 @@ rpl:PrimitiveFunction
 
 rpl:arity
 	a rdfs:Property ;
-	rdfs:domain rpl:PrimitiveFunction ;
+	rdfs:domain rpl:Function ;
 	rpl:range xsd:integer ;
-	rdfs:comment "the number of formal arguments consumed by a PrimitiveFunction" .
+	rdfs:comment "the number of formal arguments consumed by a Function" .
 
 rpl:returnType
 	a rdf:Property ;
@@ -66,10 +66,10 @@ rpl:parameterType
 	a rdf:Property ;
 	rdfs:domain rpl:Parameter ;
 	rdfs:range rdfs:DataType ;
-	rdfs:comment "The data type of a formal argument to a function" .
+	rdfs:comment "the data type of a formal argument to a function" .
 
 rpl:parameterTransparency
 	a rdf:Property ;
 	rdfs:domain rpl:Parameter ;
 	rdfs:range xsd:boolean ;
-	rdfs:comment "A condition indicating whether the application of a function may have side-effects on a particular argument" .
+	rdfs:comment "a condition indicating whether the application of a function may have side-effects on a particular argument" .

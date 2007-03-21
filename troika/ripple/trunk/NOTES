@@ -77,6 +77,16 @@ rpl-new:false
 
 
 ========================================
+rpl-new:forget
+========================================
+
+rpl:arity.
+@count statements.
+rpl:arity/forget "don't resolve rpl:arity again" /swap/swap.
+@count statements.
+
+
+========================================
 rpl-new:integer-greaterThan
 ========================================
 
