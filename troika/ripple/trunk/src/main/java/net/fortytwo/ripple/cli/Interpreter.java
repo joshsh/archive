@@ -192,34 +192,26 @@ System.out.println( "########## updating completors" );
             Completor modelCompletor = lexicon.getCompletor();
             completors.add( modelCompletor );
 
+            ArrayList<String> directives = new ArrayList<String>();
+            directives.add( "@assert" );
+            directives.add( "@count" );
+            directives.add( "@export" );
+            directives.add( "@list" );
+            directives.add( "@prefix" );
+            directives.add( "@quit" );
+            directives.add( "@serql" );
+            directives.add( "@term" );
+
+            completors.add(
+                new net.fortytwo.ripple.cli.jline.DirectiveCompletor(
+                    directives ) );
+
             try
             {
-                SimpleCompletor commandCompletor = new SimpleCompletor( new String [] {
-                    "@assert",
-                    "@count",
-                    "@export",
-                    "@list",
-                    "@prefix",
-                    "@quit",
-                    "@serql",
-                    "@term" } );
-                completors.add( commandCompletor );
-
-                Completor fileNameCompletor = new FileNameCompletor();
-                completors.add( fileNameCompletor );
-
                 // This makes candidates from multiple completors available at once.
                 Completor multiCompletor = new MultiCompletor( completors );
 
-                // This allows the user to complete an expression even when it is not
-                // the first whitespace-delimited item on the current line.
-                Completor argumentCompletor = new ArgumentCompletor( multiCompletor );
-
-                Collection<Completor> existingCompletors = reader.getCompletors();
-                if ( existingCompletors.size() > 0 )
-                    reader.removeCompletor( existingCompletors.iterator().next() );
-
-                reader.addCompletor( argumentCompletor );
+reader.addCompletor( multiCompletor );
             }
 
             catch ( Throwable t )

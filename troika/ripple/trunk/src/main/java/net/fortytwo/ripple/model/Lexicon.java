@@ -2,6 +2,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.cli.jline.LexicalCompletor;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -98,22 +99,22 @@ public class Lexicon extends Observable implements Observer
         int size = localNames.size() + prefixes.size() + qNamesCollection.size();
         if ( 0 < size )
         {
-            String [] alts = new String[size];
-            int index = 0;
+            Collection<String> alts = new ArrayList<String>();
 
             Iterator<String> localNameIter = localNames.iterator();
             while ( localNameIter.hasNext() )
-                alts[index++] = localNameIter.next();
+                alts.add( localNameIter.next() );
 
             Iterator<String> prefixIter = prefixes.iterator();
             while ( prefixIter.hasNext() )
-                alts[index++] = prefixIter.next() + ":";
+                alts.add( prefixIter.next() + ":" );
 
             Iterator<String> qNameIter = qNamesCollection.iterator();
             while( qNameIter.hasNext() )
-                alts[index++] = qNameIter.next();
+                alts.add( qNameIter.next() );
 
-            return new SimpleCompletor( alts );
+            return new LexicalCompletor( alts );
+//            return new SimpleCompletor( alts );
         }
 
         else
