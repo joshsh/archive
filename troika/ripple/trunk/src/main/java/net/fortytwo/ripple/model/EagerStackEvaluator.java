@@ -1,18 +1,10 @@
 package net.fortytwo.ripple.model;
 
-import java.util.Iterator;
-
 import net.fortytwo.ripple.RippleException;
-    import net.fortytwo.ripple.model.filter.Unique;
 import net.fortytwo.ripple.util.Sink;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 
 public class EagerStackEvaluator extends Evaluator
 {
-private URI uniqueFilterUri;
-
     private Model model;
     private ModelConnection modelConnection;
 
@@ -98,13 +90,14 @@ private URI uniqueFilterUri;
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     public void applyTo( RippleStack stack,
                         Sink<RippleStack> sink,
                         ModelConnection mc )
         throws RippleException
     {
 //System.out.println( "public void applyTo" );
-uniqueFilterUri = mc.createUri( "http://fortytwo.net/2007/03/rpl-new#unique" );
         modelConnection = mc;
         model = modelConnection.getModel();
 

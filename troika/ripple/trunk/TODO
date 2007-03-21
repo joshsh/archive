@@ -1,50 +1,43 @@
 Build
 ================================================================================
-* place the required RDF documents (wurfel, wurfel-test, wurfel-misc) into the JAR itself so that Wurfel is not dependent on network connectivity to fortytwo.net
-* install Trac
-* prevent the build from succeeding when ANTLR parser generation fails
-* build and test on Windows
+* Install Trac
+* Prevent the build from succeeding when ANTLR parser generation fails
+* Build and test on Windows
 
 Exception handling
 ================================================================================
-* decide on an extensible approach for exception handling and error logging
-* wrap calls to foreign code in strict try{...}catch(Throwable t){...} blocks for better error recovery
+* Decide on an extensible approach for exception handling and error logging
 
 Syntax
 ================================================================================
-* edit grammar to more closely resemble Turtle / NTriples
-* add character literal syntax, e.g. 'c'
-* add awareness of the xml:lang and data type of literals in input grammar
+* Edit grammar to more closely resemble Turtle / NTriples
+* Add character literal syntax, e.g. 'c'
+* Add awareness of the xml:lang and data type of literals in input grammar
 
 Schema
 ================================================================================
-* make rpl:ParameterList into a list of rpl:Parameters, specifically
-* fill in the comments of rpl: terms
-* actual values for rpl:returnType and rpl:parameterType imply that types such as xsd:integer have a type of rdfs:DataType.  Is that reasonable?
+* Make rpl:ParameterList into a list of rpl:Parameters, specifically
+* Fill in the comments of rpl: terms
+* Actual values for rpl:returnType and rpl:parameterType imply that types such as xsd:integer have a type of rdfs:DataType.  Is that reasonable?
 
 Model
 ================================================================================
-* add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
-* handle translation of data between RDF and Function data structures
-* write a primitive which imports a document as a reified graph in which all subjects are bnodes
-* investigate data mapping between OpenRDF objects and Wurfel expressions, specifically, whether there would be performance savings in wrapping OpenRDF objects so as to avoid the use of instanceof
-* make LazyEvaluator truly lazy, as well as more efficient
+* Add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
 
 Primitives
 ================================================================================
 * Add a sample Primitive or two which deal with the rdf:XMLLiteral type, if OpenRDF makes this possible
 * Decide what to do with the SwoogleIt primitive
 
-Scuttering
+Crawling
 ================================================================================
-* look into adding a FOAF scutterer which can handle:
+* Look into adding a FOAF scutterer which can handle:
   * foaf:knows links
   * owl:sameAs indirection
   * rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
-* ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
+* Ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
     http://purl.org/stuff/rev#Review
-* dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
-* uncache / decache / refresh filter to take a context out of cache
+* Dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
 
 Server
 ================================================================================
@@ -65,18 +58,14 @@ Event handling
 
 Names and namespaces
 ================================================================================
-* decide whether names are determined by URI, rdfs:label, some combination of the two, or something else entirely
 * address name collisions, scalability issues in general
-* add ability to define terms in the default namespace, then save them
 * handle name collisions in a more flexible and configurable way
 * make "prefix discovery" a configurable feature
-* investigate relative URIs for Wurfel vocabularies, so I don't have to change them every time I change the location of the vocabulary
+* investigate relative URIs for Ripple vocabularies, so I don't have to change them every time I change the location of the vocabulary
 
 Command line interface
 ================================================================================
-* make ContainerTreeView's output look like Turtle/Wurfel input
-* interpreter hangs on multi-line comments
-* implement an as-you-type parser for tab completion
+* make ContainerTreeView's output look like Turtle/Ripple input
 * place multiple-line expressions in the history
 * make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
 
@@ -86,11 +75,7 @@ OpenRDF
 * investigate warning (encountered while crawling foaf:knows graph starting at TBL):
 	2007-01-29 16:57:00:417 [WARNING] Rolling back transaction due to connection close
 
-Ontologies
-================================================================================
-* ontology describing SemanticWebDocuments and where to get them
-
-Coding
+Coding standards
 ================================================================================
 * decide on tabs or spaces
 * decide on convention for static members
@@ -109,7 +94,7 @@ Testing
 
 Standards
 ================================================================================
-* bring WurfelPrintStream into agreement with some identified set of RDF encoding practices
+* bring RipplePrintStream into agreement with some identified set of RDF encoding practices
 
 Use cases
 ================================================================================
@@ -125,11 +110,6 @@ Demo / public web service
 
 Nice-to-have
 ================================================================================
-* dbpedia interface
-* geonames interface
-* Swoogle add-on, which performs queries like the one below, then uses the
-  result to grab potential models for importing.
-      http://logos.cs.umbc.edu:8080/swoogle31/q?queryType=search_swd_ontology&searchString=parrot&key=demo
 * RSS reader
 * Atom reader
   http://www.intertwingly.net/stories/2003/08/17/atom2rdf.xsl
@@ -138,12 +118,11 @@ Nice-to-have
                http://djpowell.net/schemas/atomrdf/0.1-EXPERIMENTAL/
 * Wikipedia3 stuff
   http://labs.systemone.at/wikipedia3
-* RDFizer for output of a natural language processing / information extraction tool such as Wraetlic
 * XBRL RDFizer
 * XML Schema RDFizer
 * XLink ^ RDF ?
-* file system schema --> RDFize a directory, down to the MIME type and other metadata of each file
 * RDF-to-natural-language utilities -- express RDF as plain English, to some extent
+* RDFizer for output of a natural language processing / information extraction tool such as Wraetlic
 
 Bugs
 ================================================================================

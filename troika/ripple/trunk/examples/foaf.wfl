@@ -39,20 +39,20 @@
 
 
 
-@prefix foaf: <http://xmlns.com/foaf/0.1/>;
-<http://www.w3.org/People/Berners-Lee/card#i>;
-<http://www.w3.org/People/Berners-Lee/card#i> /foaf:name;
-<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:name;
-<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:knows /unique /foaf:name;
-<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:knows /unique /foaf:knows /unique /foaf:name;
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+<http://www.w3.org/People/Berners-Lee/card#i>.
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:name.
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:name.
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:knows /unique /foaf:name.
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows /unique /foaf:knows /unique /foaf:knows /unique /foaf:name.
 
 
 
 
 
 (: Ego :)
-<http://fortytwo.net/2007/03/06/josh#me>;
-<http://fortytwo.net/2007/03/06/josh#me> foaf:interest/;
+<http://fortytwo.net/2007/03/06/josh#me>.
+<http://fortytwo.net/2007/03/06/josh#me> /foaf:interest.
 
 
 # Cheat to grab the actual FOAF vocabulary:

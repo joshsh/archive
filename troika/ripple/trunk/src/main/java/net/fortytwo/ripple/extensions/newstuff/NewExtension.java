@@ -2,8 +2,8 @@ package net.fortytwo.ripple.extensions.newstuff;
 
 import net.fortytwo.ripple.Extension;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.ModelBridge;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 
 public class NewExtension extends Extension
@@ -32,6 +32,7 @@ public class NewExtension extends Extension
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new Zap( new RdfValue( mc.createUri( ns + "zap" ) ), mc ), mc );
 		bridge.add( new Scrap( new RdfValue( mc.createUri( ns + "scrap" ) ), mc ), mc );
+//		bridge.add( new Count( new RdfValue( mc.createUri( ns + "count" ) ), mc ), mc );
 		bridge.add( new Limit( new RdfValue( mc.createUri( ns + "limit" ) ), mc ), mc );
         bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );

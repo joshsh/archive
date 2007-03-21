@@ -1,6 +1,7 @@
 package net.fortytwo.ripple.extensions.newstuff;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.filter.Filter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
@@ -35,7 +36,33 @@ public class Limit extends PrimitiveFunction
 		sink.put(
 			new RippleStack(
 				new Operator(
-					new net.fortytwo.ripple.model.filter.Limit( (long) lim ) ), stack ) );
+					new LimitInner( (long) lim ) ), stack ) );
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	protected class LimitInner extends Filter
+	{
+		long count, limit;
+	
+		public LimitInner( long lim )
+		{
+			limit = lim;
+			count = 0;
+	//System.out.println( "" + this + "()" );
+		}
+	
+		public void applyTo( RippleStack stack,
+							Sink<RippleStack> sink,
+							ModelConnection mc )
+			throws RippleException
+		{
+			if ( count < limit )
+			{
+				count++;
+				sink.put( stack );
+			}
+		}
 	}
 }
 
