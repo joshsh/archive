@@ -54,8 +54,8 @@ ba  has no type:
 
 
 
-
-<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> rev:reviewer/ made/ rev:rating/;
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738>.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /rev:reviewer /made /rev:rating /unique.
 
 # Tom's 5-star reviews:
 <http://revyu.com/people/tom> made/ dup/ rev:rating/ 4 integer-lessThan// scrap I V/// /;

@@ -196,6 +196,22 @@ Property/dup/rdf:type "blah"
 
 
 
+========================================
+features
+========================================
+
+Command line
+	jline
+		tab completion
+			directives
+			lexical terms
+		command history
+
+
+
+
+
+
 
 Beau brother Josh .
 

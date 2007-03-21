@@ -58,6 +58,7 @@ Event handling
 
 Names and namespaces
 ================================================================================
+* use a default empty prefix, like N3 does
 * address name collisions, scalability issues in general
 * handle name collisions in a more flexible and configurable way
 * make "prefix discovery" a configurable feature
