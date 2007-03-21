@@ -282,7 +282,7 @@ Neither do these, although these URIs are the subjects of statements once their 
 	<http://www.w3.org/People/Berners-Lee/card>;
 	<http://my.opera.com/sucks/xml/foaf>;
 
-Wurfel sees these as different:
+Ripple sees these as different:
     <http://www.w3.org/People/Berners-Lee/card#i>;
     <http://www.w3.org/People/Berners-Lee/card.rdf#i>;
 
@@ -315,45 +315,18 @@ Wurfel sees these as different:
 [*] URIs could be created at the Repository level (in fact it so happens that they can be created at any level, with no comparability problems) but we're creating them at the Connection level just because that seems most general.
 
 
-OpenRDF
-================================================================================
-
-N3 parsing is apparently not yet supported:
-	2007-01-30 12:19:51,410 [main] DEBUG - Importing model http://www.w3.org/2000/10/swap/test/s1.n3# as http://www.w3.org/2000/10/swap/test/s1.n3#
-	2007-01-30 12:19:52,025 [main] ERROR - org.openrdf.rio.UnsupportedRDFormatException: org.openrdf.util.reflect.NoSuchTypeException: No type found for key: N3 (mimeType=text/rdf+n3; ext=n3)
-		at org.openrdf.rio.Rio.createParser(Rio.java:132)
-		at org.openrdf.rio.Rio.createParser(Rio.java:149)
-		at org.openrdf.repository.ConnectionImpl._addInputStreamOrReader(ConnectionImpl.java:265)
-		at org.openrdf.repository.ConnectionImpl.add(ConnectionImpl.java:244)
-		at wurfel.Context.dereferenceGraph(Context.java:564)
-		at wurfel.model.HttpUriDereferencer.dereferenceGraph(HttpUriDereferencer.java:129)
-		at wurfel.model.HttpUriDereferencer.dereferenceSubjectUri(HttpUriDereferencer.java:57)
-		at wurfel.cli.Interpreter.dereferenceResultSet(Interpreter.java:371)
-		at wurfel.cli.Interpreter.evaluate(Interpreter.java:437)
-		at wurfel.cli.Interpreter.evaluate(Interpreter.java:463)
-		at wurfel.cli.WurfelParser.nt_Statement(WurfelParser.java:136)
-		at wurfel.cli.WurfelParser.nt_Input(WurfelParser.java:71)
-		at wurfel.cli.Interpreter.runPrivate(Interpreter.java:244)
-		at wurfel.cli.Interpreter.run(Interpreter.java:273)
-		at wurfel.JLineTest.main(JLineTest.java:46)
-	Caused by: org.openrdf.util.reflect.NoSuchTypeException: No type found for key: N3 (mimeType=text/rdf+n3; ext=n3)
-		at org.openrdf.util.reflect.KeyedObjectFactory.createInstance(KeyedObjectFactory.java:133)
-		at org.openrdf.rio.Rio.createParser(Rio.java:129)
-		... 14 more
-
-
 Exception handling
 ================================================================================
-* Try/catch blocks around calls to Wurfel methods generally expect only WurfelExceptions, and do not catch anything else.  Try/catch blocks around calls to Java methods expect the specific exceptions thrown by those methods.  Try/catch blocks around calls to methods in other libraries catch all Throwables, indiscriminately (Wurfel doesn't trust third-party code).
+* Try/catch blocks around calls to Ripple methods generally expect only RippleExceptions, and do not catch anything else.  Try/catch blocks around calls to Java methods expect the specific exceptions thrown by those methods.  Try/catch blocks around calls to methods in other libraries catch all Throwables, indiscriminately (Ripple doesn't trust third-party code).
 
 
 
-http://troika.dnsdojo.net/wurfel/target/site/apidocs/index.html
+http://troika.dnsdojo.net/ripple/target/site/apidocs/index.html
 http://troika.dnsdojo.net/simile/longwell/docs/api/
 
 http://w3future.com/weblog/gems/rss2rdf.xsl
 
-Design patterns which may or do apply to Wurfel
+Design patterns which may or do apply to Ripple
 ================================================================================
 * Model-View-Controller / Observer / Event Listener
     ObservableValueSet ^ ConsoleValueSetObserver
@@ -361,7 +334,7 @@ Design patterns which may or do apply to Wurfel
 * Client/Server
 * Three-Tier
 * Pipeline
-    Interpreter ^ WurfelLexer
+    Interpreter ^ RippleLexer
     diagrammatic syntax
 * Implicit Invocation
     [breadth-first reduction]
@@ -369,16 +342,16 @@ Design patterns which may or do apply to Wurfel
 * Delegation
     Context ^ Model (although this is more of a bug than a feature)
 * Functional Design -- low coupling, lack of side-effects
-    expression reduction, almost every other aspect of Wurfel except for static initializers
+    expression reduction, almost every other aspect of Ripple except for static initializers
 * Interface
     uses of Java interfaces and abstract classes
 * Immutable Object
 * Marker Interface -- interface with no methods indicates some property of implementing classes
-    WurfelValue
+    RippleValue
 * Factory Method
     Model ^ getCompletor() (although this is a temporary feature)
 * Builder
-    wurfel.cli.ast ^ evaluate()
+    ripple.cli.ast ^ evaluate()
 * Lazy initialization
     lazy expression evaluation
     various static initializers
@@ -446,16 +419,16 @@ http://sesame.cvs.sourceforge.net/sesame/
 
 
 
-::: Wurfel can handle around 35,000 WordNet statements :::::::::::::::::::::::::
+::: Ripple can handle around 35,000 WordNet statements :::::::::::::::::::::::::
 
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wnfull.rdfs" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-antonym.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-attribute.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-causes.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-classifiedby.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-derivationallyrelated.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-entailment.rdf" ;
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-frame.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wnfull.rdfs" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-antonym.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-attribute.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-causes.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-classifiedby.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-derivationallyrelated.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-entailment.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-frame.rdf" ;
 [status ] : Processed 468 statements in 0 seconds
 [status ] : Processed 3,994 statements in 0 seconds
 [status ] : Processed 306 statements in 0 seconds
@@ -465,7 +438,7 @@ http://sesame.cvs.sourceforge.net/sesame/
 [status ] : Processed 409 statements in 0 seconds
 [status ] : Processed 367 statements in 0 seconds
 
-!import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-glossary.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-glossary.rdf" ;
 Transaction started.
 [status ] : Loading data
 [WARNING] : Unable to store data in tmp file, attempting to store it in main memory
@@ -477,7 +450,7 @@ java.lang.OutOfMemoryError: Java heap space
 ::: WordNet's glossary contains more nested entity definitions than are allowed
     by default :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-1 >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-glossary.rdf" ;
+1 >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-glossary.rdf" ;
 Transaction started.
 [status ] : Loading data
 [WARNING] : Unable to store data in tmp file, attempting to store it in main memory
@@ -489,14 +462,14 @@ Transaction finished.
 2 >>
 
 # Override the limit like this (see http://java.sun.com/j2se/1.5.0/docs/guide/xml/jaxp/JAXP-Compatibility_150.html#JAXP_security):
-java -DentityExpansionLimit=150000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
+java -DentityExpansionLimit=150000 -classpath target/ripple-with-dependencies.jar ripple.JLineTest "t"
 
 
 # These ones have even more:
-x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-hyponym.rdf" ;
-x >>  !import "file:///home/joshs/dev/wurfel/rdf/wn/wordnet-wordsensesandwords.rdf" ;
+x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-hyponym.rdf" ;
+x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-wordsensesandwords.rdf" ;
 
-java -DentityExpansionLimit=800000 -classpath target/wurfel-with-dependencies.jar wurfel.JLineTest "t"
+java -DentityExpansionLimit=800000 -classpath target/ripple-with-dependencies.jar ripple.JLineTest "t"
 
 
 

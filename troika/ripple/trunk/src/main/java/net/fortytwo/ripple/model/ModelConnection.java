@@ -938,7 +938,7 @@ s_logger.info( "######## ext = " + ext );
     private static void prepareUrlConnectionForRdfRequest( URLConnection urlConn )
     {
         urlConn.setRequestProperty( "User-Agent",
-            Ripple.getRippleName() + "/" + Ripple.getRippleVersion() );
+            Ripple.getName() + "/" + Ripple.getVersion() );
 
         /* Comment by arjohn in http://www.openrdf.org/forum/mvnforum/viewthread?thread=805#3234
                Note that Sesame/Rio doesn't have a real N3 parser, but it does have a Turtle parser, which supports a much larger subset of N3. At first sight, I would say that the Turtle parser should be able to parse the data fragment that you posted. */

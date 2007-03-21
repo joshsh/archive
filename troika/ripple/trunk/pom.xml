@@ -37,9 +37,9 @@
 	
 	<!--
 	<scm>
-		<connection>scm:svn:http://troika.dnsdojo.net/svn/repository/troika/wurfel/trunk</connection>
-		<developerConnection>scm:svn:http://troika.dnsdojo.net/svn/repository/troika/wurfel/trunk</developerConnection>
-		<url>http://tempuri.org/build/docs</url>
+		<connection>scm:svn:http://...</connection>
+		<developerConnection>scm:svn:http://...</developerConnection>
+		<url>http://...</url>
 	</scm>
 	-->
 	

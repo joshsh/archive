@@ -104,9 +104,6 @@ public class Ripple
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private static final URL
-        s_wurfelSchemaUrl = Ripple.class.getResource( "wurfel.rdf" );
-
     private static boolean initialized = false;
 
     private static ExpressionOrder expressionOrder;
@@ -329,18 +326,12 @@ public class Ripple
         }
     }
 
-    public static URL schemaUrl()
-    {
-System.out.println( "schemaUrl: " + s_wurfelSchemaUrl );
-        return s_wurfelSchemaUrl;
-    }
-
-    public static String getRippleName()
+    public static String getName()
     {
         return "Ripple";
     }
 
-    public static String getRippleVersion()
+    public static String getVersion()
     {
         return "0.1";
     }

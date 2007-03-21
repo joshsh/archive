@@ -19,7 +19,7 @@
 
 
 
-[Wurfel]
+[Ripple]
 
 * define the default namespace with an empty prefix:
     @prefix : <http://example.org/> .
