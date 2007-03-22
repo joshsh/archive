@@ -67,16 +67,20 @@ public class EagerStackEvaluator extends Evaluator
             {
                 RippleStack rest = stack.getRest();
 
-                if ( null == rest )
-                    return;
-//                    sink.put( stack );
+                Function f = ((Operator) first).getFunction();
 
+                // Nullary functions don't need their argument stacks reduced.
+                // They shouldn't even care if the stack is null.
+                if ( f.arity() == 0 )
+                    f.applyTo( rest, this, modelConnection );
+
+                // Functions with positive arity do require the stack to be
+                // reduced, to one level per argument.
                 else
                 {
-                    Function f = ((Operator) first).getFunction();
-
-                    if ( f.arity() == 0 )
-                        f.applyTo( rest, this, modelConnection );
+                    if ( null == rest )
+                        return;
+//                    sink.put( stack );
 
                     else
                         ( new EvaluatorSink(

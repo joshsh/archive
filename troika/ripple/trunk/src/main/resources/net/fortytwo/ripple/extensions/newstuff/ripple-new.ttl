@@ -81,14 +81,19 @@ rpl-new:limit
 
 ################################################################################
 
+rpl-new:new
+	a rpl:PrimitiveFunction ;
+	rpl:arity 0 ;
+	rdfs:comment "creates a new blank node" .
+
 rpl-new:assert
 	a rpl:PrimitiveFunction ;
-	rpl:arity 3;
+	rpl:arity 3 ;
 	rdfs:comment "..." .
 
 rpl-new:deny
 	a rpl:PrimitiveFunction ;
-	rpl:arity 3;
+	rpl:arity 3 ;
 	rdfs:comment "..." .
 
 ################################################################################
@@ -107,6 +112,21 @@ rpl-new:equal
 	a rpl:PrimitiveFunction ;
 	rpl:arity 2 ;
 	rdfs:comment "y x /equal --> rpl:true if x and y are equal, otherwise rpl:false" .
+
+rpl-new:times
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "t" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "prog" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+	) ;
+	rdfs:comment "" .
 
 ################################################################################
 

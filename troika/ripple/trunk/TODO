@@ -50,7 +50,6 @@ Server
 Modules
 ================================================================================
 * eliminate listElements as a primitive function -- use a derived expression
-* add 'new' and 'times' primitives
 
 Concurrency
 ================================================================================

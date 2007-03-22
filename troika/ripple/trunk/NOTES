@@ -108,6 +108,13 @@ rpl-new:limit
 
 
 ========================================
+rpl-new:new
+========================================
+
+/new rdf:type rdfs:Property /assert.
+
+
+========================================
 rpl-new:or
 ========================================
 
@@ -130,6 +137,13 @@ rpl-new:swap
 ========================================
 
 2 3 /swap.
+
+
+========================================
+rpl-new:times
+========================================
+
+42 (/dup) 3 /times.
 
 
 ========================================
@@ -256,10 +270,15 @@ linked data
 			swoogleIt
 			urlTarget
 command line
-	N3-like grammar
+	syntax
+		N3-like grammar
+		comments
+			single line
+			multi-line
+		directives
 	interactive interpreter
 		advantages over GUI
-		directives
+		commands via directives
 			@count, @export, @list, @prefix, @quit, @serql, @term
 	output
 		tree view
