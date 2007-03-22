@@ -223,11 +223,13 @@ Property/dup/rdf:type "blah"
 features
 ========================================
 
-programs = data
+
 linked data
 	dereferenceable URIs
 	forward traversal
 	crawling / aggregating RDF
+	programs = data
+		dereference a program
 ...
 	concatenative syntax
 	compositional pipeline
@@ -304,16 +306,54 @@ implementation
 	Java
 	Sesame
 	JLine
+	(Log4j)
 	Maven
 		Javadoc
 		Checkstyle
 		JUnit
 		Cobertura
-build from source
+	build from source
+	usage
+		launching the interpreter
+		log files
 applications
 	...
 
 ! introduce RDF and Joy in x words or less
+
+
+
+
+
+
+# qualified name
+rdfs:Class.
+
+# "unqualified" name
+Class.
+
+# Integer-typed literal
+"42"^^xsd:integer.
+
+# String-typed literal with a language tag.
+"foo"@en.
+
+# Language tag and data type are not mutually exclusive, but if both are
+# present, the language tag will be ignored.
+"42"@en^^xsd:integer.
+
+
+# Blank node named "foo".
+_:foo.
+
+
+# The RDFS namespace.
+rdfs:.
+
+# The default namespace.
+@prefix : <http://example.org/foo#>.
+:.
+
 
 
 
