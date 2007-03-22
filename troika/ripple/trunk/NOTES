@@ -200,15 +200,91 @@ Property/dup/rdf:type "blah"
 features
 ========================================
 
-Command line
+linked data
+	dereferenceable URIs
+	forward traversal
+	crawling / aggregating RDF
+...
+	concatenative syntax
+	compositional pipeline
+		lists / stacks
+		multiple return values ^ distributive
+			appropriateness for a query language
+		arity
+		evaluator
+	operators
+		list dequotation
+		predicate query
+		primitive function application
+	extensible / modules
+		special values
+	RDF equivalence
+		of lists
+	primitive functions
+		rpl
+			pred
+			prim
+			prog
+			equal
+		rpl-math
+			integer-add
+			integer-subtract
+			integer-multiply
+			integer-divide
+			integer-mod
+		rpl-strings
+			urlEncoding
+			sha1Sum
+			strCat
+			uriToString
+		Joy
+			dup, swap, zap
+			true, false
+		"filter"
+			unique
+				list memoizing
+			limit
+			scrap
+				null sink
+			or
+		rpl-rdf
+			assert
+			deny
+			forget
+		rpl-web
+			pingTheSemanticWeb
+			swoogleIt
+			urlTarget
+command line
+	N3-like grammar
+	interactive interpreter
+		advantages over GUI
+		directives
+			@count, @export, @list, @prefix, @quit, @serql, @term
+	output
+		tree view
+	lexicon
 	jline
 		tab completion
 			directives
 			lexical terms
+				qualified names
+				~unqualified names
 		command history
+implementation
+	Java
+	Sesame
+	JLine
+	Maven
+		Javadoc
+		Checkstyle
+		JUnit
+		Cobertura
+build from source
+applications
+	...
 
-
-
+! introduce RDF and Joy in x words or less
 
 
 

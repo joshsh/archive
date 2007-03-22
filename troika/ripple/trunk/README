@@ -11,17 +11,11 @@
 
 cat `find src -name "*.java"`| wc
 
-grep rfel * -Rl
 
 V
     @open;
     @close;
 
-
-*  tab completor deals with:
-   .  qualified names
-   .  ~unqualified names
-   .  directives
 
 [U] assumptions
     [.] arity of a function (read: Apply) is constant, unaffected by reduction
@@ -55,7 +49,6 @@ mvn assembly:assembly
 
 unzip -l target/firefox/ripple.xpi
 
-java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
 
 java -classpath target/ripple-full.jar net.forytwo.ripple.tools.FileRdfizerDriver $SRC > target/fileRdfizerTest.rdf
 
@@ -85,11 +78,26 @@ http://www.w3.org/2000/01/rdf-schema#comment
     [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#List
     [ba] http://www.w3.org/2000/01/rdf-schema#List
 
+
+
+svn propset svn:keywords "Id LastChangedDate Revision Author" myfile
+
+
+
+
+========================================
+launch the interpreter
+========================================
+
+java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
+
+
 ========================================
 update the syntax highlighter
 ========================================
 
 sudo cp ./src/main/resources/net/fortytwo/ripple/cli/kate/ripple.xml /usr/share/apps/katepart/syntax
+
 
 ========================================
 create RDF/XML for the server
@@ -99,6 +107,7 @@ rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/ripple.tt
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/misc/ripple-misc.ttl > tmp/ripple-misc.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/newstuff/ripple-new.ttl > tmp/ripple-new.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/test/ripple-test.ttl > tmp/ripple-test.rdf
+
 
 ========================================
 create a visualization of the rpl namespace

@@ -47,6 +47,11 @@ Server
 * server for HTTP response codes
 * servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.
 
+Modules
+================================================================================
+* eliminate listElements as a primitive function -- use a derived expression
+* add 'new' and 'times' primitives
+
 Concurrency
 ================================================================================
 * explore thread pooling and concurrency
@@ -55,6 +60,7 @@ Concurrency
 Event handling
 ================================================================================
 * investigate java.util.EventObject, java.util.EventListener
+* add interrupt handling / ability to terminate a query without quitting the application
 
 Names and namespaces
 ================================================================================

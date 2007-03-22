@@ -1,4 +1,14 @@
+/**
+ *  $Id$
+ *  $LastChangedDate$
+ *  $Revision$
+ *  $Author$
+ */
+
 package net.fortytwo.ripple;
+
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 
 import java.net.URL;
 
@@ -47,8 +57,62 @@ t.printStackTrace( System.err );
         }
     }
 
+    private static LongOpt [] longOptions = {
+        new LongOpt( "format", LongOpt.REQUIRED_ARGUMENT, null, 'f' ),
+        new LongOpt( "quiet", LongOpt.NO_ARGUMENT, null, 'q' ),
+        new LongOpt( "version", LongOpt.NO_ARGUMENT, null, 'v' ) };
+
+    private static void printUsage()
+    {
+        System.out.println( "usage:  ripple [-f FORMAT] [STORE]" );
+    }
+
     public static void main( final String [] args )
     {
+
+
+
+
+/*
+ Getopt g = new Getopt( Ripple.getName(), args, "ab:c::d" );
+ //
+ int c;
+ String arg;
+ while ((c = g.getopt()) != -1)
+   {
+     switch(c)
+       {
+          case 'a':
+          case 'd':
+            System.out.print("You picked " + (char)c + "\n");
+            break;
+            //
+          case 'b':
+          case 'c':
+            arg = g.getOptarg();
+            System.out.print("You picked " + (char)c + 
+                             " with an argument of " +
+                             ((arg != null) ? arg : "null") + "\n");
+            break;
+            //
+          case '?':
+            break; // getopt() already printed an error
+            //
+          default:
+            System.out.print("getopt() returned " + c + "\n");
+       }
+   }
+System.exit( 0 );
+*/
+
+
+
+
+
+
+
+
+
         try
         {
             Ripple.initialize();
