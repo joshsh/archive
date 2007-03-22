@@ -116,7 +116,7 @@ STRING
     : '\"'! {
         updateCompletors( CompletorState.NONE );
         interpreter.setLanguageTag( null );
-      } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )+ '\"'! ( LANGUAGE! )?
+      } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )* '\"'! ( LANGUAGE! )?
     ;
 
 URI
