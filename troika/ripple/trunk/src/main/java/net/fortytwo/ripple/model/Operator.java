@@ -19,7 +19,7 @@ public class Operator implements RippleValue
         func = function;
     }
 
-    public Operator( RippleStack list )
+    public Operator( RippleList list )
     {
         func = new ListDequotation( list );
     }
@@ -48,8 +48,8 @@ public class Operator implements RippleValue
         if ( v instanceof Function )
             return new Operator( (Function) v );
 
-        else if ( v instanceof RippleStack )
-            return new Operator( (RippleStack) v );
+        else if ( v instanceof RippleList )
+            return new Operator( (RippleList) v );
 
         // This is the messy part.  Attempt to guess the type of the object from
         // the available RDF statements, and create the appropriate object.
@@ -60,7 +60,7 @@ public class Operator implements RippleValue
             if ( null == type || type.getRdfValue().equals( RDF.PROPERTY ) )
                 return new Operator( (RdfValue) v );
             else if ( type.getRdfValue().equals( RDF.LIST ) )
-                return new Operator( new RippleStack( (RdfValue) v, mc ) );
+                return new Operator( new RippleList( (RdfValue) v, mc ) );
             else
                 throw new RippleException( "bad type in Operator createEnvelope(): "
                     + type );

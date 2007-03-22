@@ -12,10 +12,10 @@ public class ForwardPredicateQuery implements Function
 
     private class ForwardPredicateQueryResultSink implements Sink<RdfValue>
     {
-        private Sink<RippleStack> sink;
-        private RippleStack stack;
+        private Sink<RippleList> sink;
+        private RippleList stack;
 
-        public ForwardPredicateQueryResultSink( RippleStack stack, Sink<RippleStack> sink )
+        public ForwardPredicateQueryResultSink( RippleList stack, Sink<RippleList> sink )
         {
             this.stack = stack;
             this.sink = sink;
@@ -25,7 +25,7 @@ public class ForwardPredicateQuery implements Function
             throws RippleException
         {
             sink.put(
-                new RippleStack( bridge.get( v ), stack ) );
+                new RippleList( bridge.get( v ), stack ) );
         }
     }
 
@@ -44,15 +44,15 @@ public class ForwardPredicateQuery implements Function
 		return false;
 	}
 
-    public void applyTo( RippleStack stack,
-                         Sink<RippleStack> sink,
+    public void applyTo( RippleList stack,
+                         Sink<RippleList> sink,
                          ModelConnection mc )
         throws RippleException
     {
         bridge = mc.getModel().getBridge();
 
         RippleValue first = stack.getFirst();
-        RippleStack rest = stack.getRest();
+        RippleList rest = stack.getRest();
 
         Sink<RdfValue> querySink = new ForwardPredicateQueryResultSink( rest, sink );
 

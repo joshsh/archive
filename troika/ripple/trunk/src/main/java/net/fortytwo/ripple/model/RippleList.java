@@ -7,10 +7,10 @@ import net.fortytwo.ripple.util.ListNode;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 
-public class RippleStack extends ListNode<RippleValue> implements RippleValue
+public class RippleList extends ListNode<RippleValue> implements RippleValue
 {
 	private RippleValue first;
-	private RippleStack rest;
+	private RippleList rest;
 
 	private RdfValue rdfEquivalent = null;
 
@@ -19,25 +19,25 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		return first;
 	}
 
-	public RippleStack getRest()
+	public RippleList getRest()
 	{
 		return rest;
 	}
 	
-	public RippleStack( final RippleValue first )
+	public RippleList( final RippleValue first )
 	{
 		this.first = first;
 		rest = null;
 	}
 	
-	public RippleStack( final RippleValue first, final RippleStack rest )
+	public RippleList( final RippleValue first, final RippleList rest )
 	{
 		this.first = first;
 		this.rest = rest;
 	}
 
 /*
-	public static RippleStack fromRdf( RdfValue v, ModelConnection mc )
+	public static RippleList fromRdf( RdfValue v, ModelConnection mc )
 	{
 		
 	}
@@ -45,7 +45,7 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 
 	// Note: this constructor does not allow you to create a null list from
 	//       rdf:nil.
-	public RippleStack( RdfValue v, ModelConnection mc )
+	public RippleList( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 //		if ( v.equals( rdfNil ) )
@@ -69,26 +69,26 @@ System.out.println( "first = " + first );
 
 			else
 			{
-				rest = new RippleStack( first, rest );
+				rest = new RippleList( first, rest );
 				rest.rdfEquivalent = rdfEquivalent;
 			}
 		}
 System.out.println( "resulting list: " + toString() );
 	}
 
-	public RippleStack push( final RippleValue first )
+	public RippleList push( final RippleValue first )
 	{
-		return new RippleStack( first, this );
+		return new RippleList( first, this );
 	}
 
-	private static RippleStack invert( ListNode<RippleValue> rs )
+	private static RippleList invert( ListNode<RippleValue> rs )
 	{
 		ListNode<RippleValue> in = rs;
-		RippleStack out = null;
+		RippleList out = null;
 
 		while ( null != in )
 		{
-			out = new RippleStack( in.getFirst(), out );
+			out = new RippleList( in.getFirst(), out );
 			in = in.getRest();
 		}
 
@@ -175,12 +175,12 @@ System.out.println( "resulting list: " + toString() );
 			// annotating every node in the list.
 			mc.add( curRdf, rdfType, rdfList );
 
-			RippleStack cur = invert( this );
+			RippleList cur = invert( this );
 
 			while ( cur != null )
 			{
 				mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
-				RippleStack rest = cur.rest;
+				RippleList rest = cur.rest;
 				RdfValue restRdf = ( null == cur.rest )
 					? rdfNil : new RdfValue( mc.createBNode() );
 				mc.add( curRdf, rdfRest, restRdf );

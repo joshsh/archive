@@ -5,22 +5,22 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ListDequotation implements Function
 {
-    RippleStack reversedList;
+    RippleList reversedList;
 
-    private static RippleStack reverse( final RippleStack list )
+    private static RippleList reverse( final RippleList list )
     {
-        RippleStack in = list;
-        RippleStack out = null;
+        RippleList in = list;
+        RippleList out = null;
         while ( null != in )
         {
-            out = new RippleStack( in.getFirst(), out );
+            out = new RippleList( in.getFirst(), out );
             in = in.getRest();
         }
 
         return out;
     }
 
-    public ListDequotation( RippleStack list )
+    public ListDequotation( RippleList list )
     {
         reversedList = reverse( list );
     }
@@ -35,17 +35,17 @@ public class ListDequotation implements Function
 		return false;
 	}
 
-    public void applyTo( RippleStack stack,
-                         Sink<RippleStack> sink,
+    public void applyTo( RippleList stack,
+                         Sink<RippleList> sink,
                          ModelConnection mc )
         throws RippleException
     {
-        RippleStack in = reversedList;
-        RippleStack out = stack;
+        RippleList in = reversedList;
+        RippleList out = stack;
 
         while ( null != in )
         {
-            out = new RippleStack( in.getFirst(), out );
+            out = new RippleList( in.getFirst(), out );
             in = in.getRest();
         }
 

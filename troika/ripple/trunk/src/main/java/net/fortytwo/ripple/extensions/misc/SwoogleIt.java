@@ -6,7 +6,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -44,8 +44,8 @@ public class SwoogleIt extends PrimitiveFunction
 		return 3;
 	}
 
-    public void applyTo( RippleStack stack,
-                                  Sink<RippleStack> sink,
+    public void applyTo( RippleList stack,
+                                  Sink<RippleList> sink,
                                   ModelConnection mc )
         throws RippleException
     {
@@ -76,7 +76,7 @@ public class SwoogleIt extends PrimitiveFunction
                 = mc.getRepositoryConnection().getStatements(
                     null, RDF.TYPE, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
             while ( stmtIter.hasNext() )
-                sink.put( new RippleStack( new RdfValue( stmtIter.next().getSubject() ), stack ) );
+                sink.put( new RippleList( new RdfValue( stmtIter.next().getSubject() ), stack ) );
             stmtIter.close();
         }
 

@@ -4,7 +4,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -23,8 +23,8 @@ public class UriToString extends PrimitiveFunction
 		return 1;
 	}
 
-    public void applyTo( RippleStack stack,
-                                  Sink<RippleStack> sink,
+    public void applyTo( RippleList stack,
+                                  Sink<RippleList> sink,
                                   ModelConnection mc )
         throws RippleException
     {
@@ -44,7 +44,7 @@ public class UriToString extends PrimitiveFunction
             throw new RippleException( t );
         }
 
-        sink.put( new RippleStack( mc.createValue( result ), stack ) );
+        sink.put( new RippleList( mc.createValue( result ), stack ) );
     }
 }
 

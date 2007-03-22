@@ -6,7 +6,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 
 public class ApplyNode extends Ast

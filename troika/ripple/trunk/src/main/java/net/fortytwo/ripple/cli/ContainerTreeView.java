@@ -9,7 +9,7 @@ import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ObservableContainer;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -45,7 +45,7 @@ public class ContainerTreeView implements Observer
     private class RdfValueCollector<T> implements Sink<RdfValue>
     {
         private Collection<RippleValue> collectedValues;
-        private RippleStack stack;
+        private RippleList stack;
         private ModelBridge bridge;
 
         public RdfValueCollector( ModelBridge bridge )
@@ -86,8 +86,8 @@ public class ContainerTreeView implements Observer
 
         if ( depth > 0 )
         {
-if ( subject instanceof net.fortytwo.ripple.model.RippleStack )
-subject = ( (net.fortytwo.ripple.model.RippleStack) subject ).getFirst();
+if ( subject instanceof net.fortytwo.ripple.model.RippleList )
+subject = ( (net.fortytwo.ripple.model.RippleList) subject ).getFirst();
 
             RdfValueCollector predicates = new RdfValueCollector( mc.getModel().getBridge() );
             mc.findPredicates( subject, predicates );

@@ -6,7 +6,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.util.Sink;
@@ -24,13 +24,13 @@ public class Unique extends PrimitiveFunction
 		return 0;
 	}
 
-	public void applyTo( RippleStack stack,
-						Sink<RippleStack> sink,
+	public void applyTo( RippleList stack,
+						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
 		sink.put(
-			new RippleStack(
+			new RippleList(
 				new Operator(
 					new UniqueInner() ), stack ) );
 	}
@@ -48,8 +48,8 @@ public class Unique extends PrimitiveFunction
 //System.out.println( "" + this + "()" );
 		}
 	
-		public void applyTo( RippleStack stack,
-							Sink<RippleStack> sink,
+		public void applyTo( RippleList stack,
+							Sink<RippleList> sink,
 							ModelConnection mc )
 			throws RippleException
 		{

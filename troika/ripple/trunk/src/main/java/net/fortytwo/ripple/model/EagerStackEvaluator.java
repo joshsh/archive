@@ -10,12 +10,12 @@ public class EagerStackEvaluator extends Evaluator
 
     ////////////////////////////////////////////////////////////////////////////
 
-    protected class FunctionSink implements Sink<RippleStack>
+    protected class FunctionSink implements Sink<RippleList>
     {
         private Function function;
-        Sink<RippleStack> sink;
+        Sink<RippleList> sink;
 
-        public FunctionSink( Function function, Sink<RippleStack> sink )
+        public FunctionSink( Function function, Sink<RippleList> sink )
         {
             this.function = function;
             this.sink = sink;
@@ -23,7 +23,7 @@ public class EagerStackEvaluator extends Evaluator
 //System.out.println( "function.arity() = " + function.arity() );
         }
 
-        public void put( RippleStack stack )
+        public void put( RippleList stack )
             throws RippleException
         {
 ////System.out.println( this + ".put( " + stack + " )" );
@@ -34,28 +34,28 @@ public class EagerStackEvaluator extends Evaluator
             else
             {
                 RippleValue first = stack.getFirst();
-                RippleStack rest = stack.getRest();
+                RippleList rest = stack.getRest();
 
                 Closure c = new Closure( function, first );
 
-                sink.put( new RippleStack( new Operator( c ), rest ) );
+                sink.put( new RippleList( new Operator( c ), rest ) );
             }
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    protected class EvaluatorSink implements Sink<RippleStack>
+    protected class EvaluatorSink implements Sink<RippleList>
     {
-        Sink<RippleStack> sink;
+        Sink<RippleList> sink;
 
-        public EvaluatorSink( Sink<RippleStack> sink )
+        public EvaluatorSink( Sink<RippleList> sink )
         {
            this.sink = sink;
 //System.out.println( this + "( " + sink + ")" );
         }
 
-        public void put( RippleStack stack )
+        public void put( RippleList stack )
             throws RippleException
         {
 //System.out.println( this + ".put( " + stack + " )" );
@@ -65,7 +65,7 @@ public class EagerStackEvaluator extends Evaluator
             // prim[], pred[], deq[]
             if ( first.isOperator() )
             {
-                RippleStack rest = stack.getRest();
+                RippleList rest = stack.getRest();
 
                 Function f = ((Operator) first).getFunction();
 
@@ -96,8 +96,8 @@ public class EagerStackEvaluator extends Evaluator
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public void applyTo( RippleStack stack,
-                        Sink<RippleStack> sink,
+    public void applyTo( RippleList stack,
+                        Sink<RippleList> sink,
                         ModelConnection mc )
         throws RippleException
     {

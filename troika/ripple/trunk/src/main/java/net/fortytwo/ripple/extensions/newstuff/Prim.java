@@ -6,7 +6,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -23,8 +23,8 @@ public class Prim extends PrimitiveFunction
 		return 1;
 	}
 
-	public void applyTo( RippleStack stack,
-						Sink<RippleStack> sink,
+	public void applyTo( RippleList stack,
+						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
@@ -38,7 +38,7 @@ public class Prim extends PrimitiveFunction
 		if ( !( p instanceof PrimitiveFunction ) )
 			throw new RippleException( "argument to rpl-new:prim is not a primitive function" );
 
-		sink.put( new RippleStack(
+		sink.put( new RippleList(
 			new Operator( (Function) p ), stack ) );
 	}
 }

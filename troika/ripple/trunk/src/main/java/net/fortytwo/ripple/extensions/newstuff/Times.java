@@ -5,7 +5,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -22,22 +22,22 @@ public class Times extends PrimitiveFunction
 		return 2;
 	}
 
-	public void applyTo( RippleStack stack,
-						Sink<RippleStack> sink,
+	public void applyTo( RippleList stack,
+						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
 		int times;
-		RippleStack prog;
+		RippleList prog;
 
 		times = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 		RippleValue p = stack.getFirst();
 		stack = stack.getRest();
 
-		prog = ( p instanceof RippleStack )
-			? (RippleStack) p
-			: new RippleStack( p.toRdf( mc ), mc );
+		prog = ( p instanceof RippleList )
+			? (RippleList) p
+			: new RippleList( p.toRdf( mc ), mc );
 
 		if ( times < 0 )
 			throw new RippleException( "first argument to Times must be a positive integer" );
@@ -45,7 +45,7 @@ public class Times extends PrimitiveFunction
 		Operator progOp = new Operator( prog );
 
 		for ( int i = 0; i < times; i++ )
-			stack = new RippleStack( progOp, stack );
+			stack = new RippleList( progOp, stack );
 
 		sink.put( stack );
 	}

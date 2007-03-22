@@ -4,7 +4,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 
 import java.util.Iterator;
@@ -33,7 +33,7 @@ public class SequenceNode extends Ast
 
         Iterator<Ast> iter = children.iterator();
         RippleValue result = iter.next().evaluate( itp, mc );
-        RippleStack stack = new RippleStack( result );
+        RippleList stack = new RippleList( result );
 
         boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 

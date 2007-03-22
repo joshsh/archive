@@ -48,7 +48,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.UriNode;
 
@@ -484,8 +484,8 @@ System.out.println( "--- 3 ---" );
         while ( iter.hasNext() )
         {
             RippleValue value = iter.next();
-if ( value instanceof RippleStack )
-value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
+if ( value instanceof RippleList )
+value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 
             try
             {
@@ -544,9 +544,9 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
             ListContainerSink sink = new ListContainerSink();
 // FIXME: awkward
 
-            RippleStack list = ( expr instanceof RippleStack )
-                ? (RippleStack) expr
-                : new RippleStack( expr );
+            RippleList list = ( expr instanceof RippleList )
+                ? (RippleList) expr
+                : new RippleList( expr );
 
                 evaluator.applyTo( list, sink, mc );
 
@@ -578,10 +578,10 @@ value = ( (net.fortytwo.ripple.model.RippleStack) value ).getFirst();
                 if ( null == defaultNs )
                     throw new RippleException( "no default namespace is defined" );
 
-                if ( !( expr instanceof RippleStack ) )
+                if ( !( expr instanceof RippleList ) )
                     throw new RippleException( "term assignment for non-lists is not implemented" );
 
-                RippleStack exprList = (RippleStack) expr;
+                RippleList exprList = (RippleList) expr;
 
 // TODO: check for collision with an existing URI
                 URI uri = mc.createUri( defaultNs + name );

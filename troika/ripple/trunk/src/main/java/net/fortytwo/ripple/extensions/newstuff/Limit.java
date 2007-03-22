@@ -6,7 +6,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -23,8 +23,8 @@ public class Limit extends PrimitiveFunction
 		return 1;
 	}
 
-	public void applyTo( RippleStack stack,
-						Sink<RippleStack> sink,
+	public void applyTo( RippleList stack,
+						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
@@ -34,7 +34,7 @@ public class Limit extends PrimitiveFunction
 		stack = stack.getRest();
 
 		sink.put(
-			new RippleStack(
+			new RippleList(
 				new Operator(
 					new LimitInner( (long) lim ) ), stack ) );
 	}
@@ -52,8 +52,8 @@ public class Limit extends PrimitiveFunction
 	//System.out.println( "" + this + "()" );
 		}
 	
-		public void applyTo( RippleStack stack,
-							Sink<RippleStack> sink,
+		public void applyTo( RippleList stack,
+							Sink<RippleList> sink,
 							ModelConnection mc )
 			throws RippleException
 		{

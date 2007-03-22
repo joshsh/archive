@@ -64,12 +64,12 @@ public class Closure implements Function
         return rdfEquivalent;
     }
 
-    public void applyTo( RippleStack stack,
-                         Sink<RippleStack> sink,
+    public void applyTo( RippleList stack,
+                         Sink<RippleList> sink,
                          ModelConnection mc )
         throws RippleException
     {
-        innerFunction.applyTo( new RippleStack( argument, stack ), sink,  mc );
+        innerFunction.applyTo( new RippleList( argument, stack ), sink,  mc );
     }
 }
 

@@ -4,7 +4,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleStack;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
@@ -21,8 +21,8 @@ public class Assert extends PrimitiveFunction
 		return 3;
 	}
 
-	public void applyTo( RippleStack stack,
-						Sink<RippleStack> sink,
+	public void applyTo( RippleList stack,
+						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
@@ -37,7 +37,7 @@ public class Assert extends PrimitiveFunction
 
 		mc.add( subj, pred, obj );
 
-		sink.put( new RippleStack( subj, stack ) );
+		sink.put( new RippleList( subj, stack ) );
 	}
 }
 
