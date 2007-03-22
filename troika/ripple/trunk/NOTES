@@ -1,10 +1,7 @@
 # EagerStackEvaluator is only partially eager:
-1 2 or// 3 4 unique/;
-	rdf:_1  ( 4 3 <http://fortytwo.net/2007/02/ripple#apply> <http://fortytwo.net/2007/02/ripple#apply> rpl-new:or 2 1 )
+2 /dup 3 .
+	rdf:_1  (2 /rpl-new:dup 3)
 
-
-EagerStackEvaluator:
-    (2 dup/ 3)  -->  (2 dup/ 3)
 
 
 
@@ -152,6 +149,9 @@ rpl-new:true
 
 2 3 /true.
 
+ba
+	(/new) 3 /times.
+
 
 ========================================
 rpl-new:unique
@@ -185,6 +185,15 @@ rdfs:Class /bagElements.
 
 @prefix : <http://example.org/foo#>.
 @term woot: 2 3 .
+:woot /prog.
+/woot.
+
+(2 3)/rdf:first.
+(2 3)/rdf:rest.
+
+
+ba
+	().
 
 
 
@@ -214,6 +223,7 @@ Property/dup/rdf:type "blah"
 features
 ========================================
 
+programs = data
 linked data
 	dereferenceable URIs
 	forward traversal

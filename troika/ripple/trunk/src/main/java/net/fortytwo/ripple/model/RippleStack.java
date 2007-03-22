@@ -36,17 +36,44 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		this.rest = rest;
 	}
 
+/*
+	public static RippleStack fromRdf( RdfValue v, ModelConnection mc )
+	{
+		
+	}
+*/
+
+	// Note: this constructor does not allow you to create a null list from
+	//       rdf:nil.
 	public RippleStack( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 //		if ( v.equals( rdfNil ) )
 //			return null;
+		RdfValue curRdf = v;
+		rest = null;
 
-		first = mc.findUniqueProduct( v, rdfFirst );
-		rest = new RippleStack(
-			mc.findUniqueProduct( v, rdfRest ), mc );
+		for (;;)  // break out when we get to rdf:nil
+		{
+			rdfEquivalent = curRdf;
+System.out.println( "rdfEquivalent = " + rdfEquivalent );
 
-		rdfEquivalent = v;
+			// lazy initialization (we point first at an RdfValue directly,
+			// rather than using ModelBridge)
+			first = mc.findUniqueProduct( curRdf, rdfFirst );
+System.out.println( "first = " + first );
+
+			curRdf = mc.findUniqueProduct( curRdf, rdfRest );
+			if ( curRdf.equals( rdfNil ) )
+				break;
+
+			else
+			{
+				rest = new RippleStack( first, rest );
+				rest.rdfEquivalent = rdfEquivalent;
+			}
+		}
+System.out.println( "resulting list: " + toString() );
 	}
 
 	public RippleStack push( final RippleValue first )
@@ -66,6 +93,36 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		}
 
 		return out;
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+
+		boolean padding = Ripple.listPadding();
+
+		ListNode<RippleValue> cur =
+			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.getExpressionOrder() )
+			? invert( this ) : this;
+
+		sb.append( padding ? "( " : "(" );
+		
+		boolean isFirst = true;
+		while ( null != cur )
+		{
+			if ( isFirst )
+				isFirst = false;
+			else
+				sb.append( " " );
+		
+			sb.append( cur.getFirst().toString() );
+		
+			cur = cur.getRest();
+		}
+		
+		sb.append( padding ? " )" : ")" );
+
+		return sb.toString();
 	}
 
 	public void printTo( RipplePrintStream p )
@@ -100,6 +157,8 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		return false;
 	}
 
+	private static RdfValue rdfType = new RdfValue( RDF.TYPE );
+	private static RdfValue rdfList = new RdfValue( RDF.LIST );
 	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
 	private static RdfValue rdfRest = new RdfValue( RDF.REST );
 	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
@@ -110,12 +169,24 @@ public class RippleStack extends ListNode<RippleValue> implements RippleValue
 		if ( null == rdfEquivalent )
 		{
 			rdfEquivalent = new RdfValue( mc.createBNode() );
+			RdfValue curRdf = rdfEquivalent;
 
-			mc.add( rdfEquivalent, rdfFirst, first.toRdf( mc ) );
-			if ( null == rest )
-				mc.add( rdfEquivalent, rdfRest, rdfNil );
-			else
-				mc.add( rdfEquivalent, rdfRest, rest.toRdf( mc ) );
+			// Annotate the head of the list with a type, but don't bother
+			// annotating every node in the list.
+			mc.add( curRdf, rdfType, rdfList );
+
+			RippleStack cur = invert( this );
+
+			while ( cur != null )
+			{
+				mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
+				RippleStack rest = cur.rest;
+				RdfValue restRdf = ( null == cur.rest )
+					? rdfNil : new RdfValue( mc.createBNode() );
+				mc.add( curRdf, rdfRest, restRdf );
+				curRdf = restRdf;
+				cur = cur.rest;
+			}
 		}
 
 		return rdfEquivalent;

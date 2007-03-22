@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
@@ -316,19 +317,26 @@ System.out.println( "destResource = " + destResource );
 
         try
         {
+            // Note: 
+            Collection<Statement> stmts = new LinkedList<Statement>();
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
                     srcResource, null, null, Ripple.useInference() );
-
+//                    RDF.LIST, null, null, Ripple.useInference() );
             while ( stmtIter.hasNext() )
+                stmts.add( stmtIter.next() );
+            stmtIter.close();
+
+            for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
             {
-                Statement st = stmtIter.next();
+                Statement st = iter.next();
 System.out.println( "reading statement: (" + st.getSubject() + ", " + st.getPredicate() + ", " + st.getObject() + ")" ); System.out.flush();
 System.out.println( "adding statement: (" + destResource + ", " + st.getPredicate() + ", " + st.getObject() + ")" ); System.out.flush();
                 repoConnection.add( destResource, st.getPredicate(), st.getObject() );
+//                repoConnection.add( RDF.NIL, RDF.TYPE, RDF.LIST );
+System.out.println( "done." );
+System.out.flush();
             }
-
-            stmtIter.close();
         }
 
         catch ( Throwable t )

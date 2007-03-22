@@ -27,7 +27,7 @@ public class ListDequotation implements Function
 
     public int arity()
     {
-return 1;
+        return 0;
     }
 
 	public boolean isOperator()
