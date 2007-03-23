@@ -1,3 +1,36 @@
+V"  Sink --> Consumer
+
+
+========================================
+@export directive
+========================================
+
+@prefix : <file:///tmp/tmp.rdf#>.
+@term mylist: 2 3 .
+@export : "/tmp/tmp.rdf".
+
+[quit and re-start ripple]
+
+@prefix tmp: <file:///tmp/tmp.rdf#>.
+tmp:mylist.
+
+
+rpl:PrimitiveFunction.
+@export rpl: "rpl.rdf".
+
+
+========================================
+@saveas directive
+========================================
+
+@saveas "/tmp/store.rdf".
+
+
+
+
+
+
+
 # EagerStackEvaluator is only partially eager:
 2 /dup 3 .
 	rdf:_1  (2 /rpl-new:dup 3)

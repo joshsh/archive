@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.model;
 
 import java.io.InputStream;
-import java.io.IOException;
+import java.io.OutputStream;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -35,7 +35,9 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.openrdf.repository.RepositoryResult;
 
 public class ModelConnection
@@ -983,7 +985,7 @@ s_logger.info( "######## ext = " + ext );
 showUrlConnection( urlConn );
         }
 
-        catch ( IOException e )
+        catch ( java.io.IOException e )
         {
             throw new RippleException( e );
         }
@@ -993,7 +995,7 @@ showUrlConnection( urlConn );
             urlConn.connect();
         }
 
-        catch ( IOException e )
+        catch ( java.io.IOException e )
         {
             throw new RippleException( e );
         }
@@ -1071,7 +1073,7 @@ s_logger.info( "####### Guessed format is " + format.getName() );
             response = urlConn.getInputStream();
         }
 
-        catch ( IOException e )
+        catch ( java.io.IOException e )
         {
             throw new RippleException( e );
         }
@@ -1122,7 +1124,7 @@ s_logger.info( "####### graph imported without errors" );
             is.close();
         }
 
-        catch ( IOException e )
+        catch ( java.io.IOException e )
         {
             throw new RippleException( e );
         }
@@ -1153,6 +1155,127 @@ s_logger.info( "####### graph imported without errors" );
         }
 System.out.println( "########################### Count = " + count );
         return count;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Hackishly find all terms in the given namespace which are the subject
+    // of statements.
+    private Set<URI> findSubjectsInNamespace( final String ns )
+        throws RippleException
+    {
+        Set<URI> subjects = new HashSet<URI>();
+
+        try
+        {
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
+                    null, null, null, false );
+
+            while ( stmtIter.hasNext() )
+            {
+                Resource subj = stmtIter.next().getSubject();
+                if ( subj instanceof URI
+                    && subj.toString().startsWith( ns ) )
+                {
+System.out.println( "found subject in namespace " + ns + ": " + subj );
+                    subjects.add( (URI) subj );
+                }
+            }
+
+            stmtIter.close();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+
+        return subjects;
+    }
+
+    private class SpecialSubgraphHandler implements Sink<Resource>
+    {
+        private Set<Resource> visited;
+        private RDFHandler handler;
+
+        public SpecialSubgraphHandler( final RDFHandler handler )
+        {
+            this.handler = handler;
+            visited = new HashSet<Resource>();
+        }
+
+        public void put( Resource r )
+            throws RippleException
+        {
+System.out.println( "putting Resource: " + r );
+            if ( visited.contains( r ) )
+                return;
+            else
+                visited.add( r );
+
+            try
+            {
+                RepositoryResult<Statement> stmtIter
+                    = repoConnection.getStatements(
+                        r, null, null, false );
+
+                while ( stmtIter.hasNext() )
+                {
+                    Statement st = stmtIter.next();
+
+                    // Add all statement about this Resource to the result graph.
+                    handler.handleStatement( st );
+
+                    // Traverse to any neighboring blank nodes (but not to URIs).
+                    Value obj = st.getObject();
+                    if ( obj instanceof Resource
+                        && !( obj instanceof URI ) )
+                        put( (Resource) obj );
+                }
+
+                stmtIter.close();
+            }
+
+            catch ( Throwable t )
+            {
+                throw new RippleException( t );
+            }
+        }
+    }
+
+    public void exportNs( final String nsPrefix, OutputStream out )
+        throws RippleException
+    {
+        Set<URI> subjects = findSubjectsInNamespace( nsPrefix );
+
+        RDFHandler handler;
+
+        try
+        {
+            handler = new RDFXMLPrettyWriter( out );
+            handler.startRDF();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
+
+        SpecialSubgraphHandler ssh = new SpecialSubgraphHandler( handler );
+
+        for ( Iterator<URI> subjIter = subjects.iterator(); subjIter.hasNext(); )
+            ssh.put( subjIter.next() );
+
+        try
+        {
+            handler.endRDF();
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
     }
 }
 

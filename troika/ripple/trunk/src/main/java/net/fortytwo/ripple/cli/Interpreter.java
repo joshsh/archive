@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 
 import java.net.URL;
-import java.net.MalformedURLException;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,9 +20,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import jline.Completor;
-import jline.FileNameCompletor;
-import jline.ArgumentCompletor;
-import jline.SimpleCompletor;
 import jline.MultiCompletor;
 import jline.ConsoleReader;
 
@@ -88,8 +84,6 @@ public Model getModel()
 
     private RipplePrintStream printStream;
     private PrintStream errorPrintStream;
-
-    private CompletorState completorState = CompletorState.NONE;
 
     private ObservableContainer valueSet;
     private ContainerTreeView valueSetObserver;
@@ -181,25 +175,22 @@ mc.close();
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public void updateCompletors( final CompletorState state )
+    public void updateCompletors()
     {
 System.out.println( "########## updating completors" );
-        completorState = state;
-
         List completors = new ArrayList();
 
         try
         {
-            Completor modelCompletor = lexicon.getCompletor();
-            completors.add( modelCompletor );
+            completors.add( lexicon.getCompletor() );
 
             ArrayList<String> directives = new ArrayList<String>();
-            directives.add( "@assert" );
             directives.add( "@count" );
             directives.add( "@export" );
             directives.add( "@list" );
             directives.add( "@prefix" );
             directives.add( "@quit" );
+            directives.add( "@saveas" );
             directives.add( "@serql" );
             directives.add( "@term" );
 
@@ -212,7 +203,7 @@ System.out.println( "########## updating completors" );
                 // This makes candidates from multiple completors available at once.
                 Completor multiCompletor = new MultiCompletor( completors );
 
-reader.addCompletor( multiCompletor );
+                reader.addCompletor( multiCompletor );
             }
 
             catch ( Throwable t )
@@ -392,13 +383,70 @@ System.out.println( "--- 3 ---" );
         }
     }
 
+    private void exportNsPrivate( String nsPrefix, String fileName )
+        throws RippleException
+    {
+        OutputStream out;
+
+        String ns = lexicon.resolveNamespacePrefix( nsPrefix );
+        if ( null == ns )
+            throw new RippleException( "namespace prefix '" + nsPrefix + "' is not defined" );
+
+        try
+        {
+            out = new FileOutputStream( fileName );
+        }
+
+        catch ( java.io.FileNotFoundException e )
+        {
+            throw new RippleException( e );
+        }
+
+        ModelConnection mc = new ModelConnection( model );
+
+        try
+        {
+            mc.exportNs( ns, out );
+        }
+
+        catch ( RippleException e )
+        {
+            mc.close();
+            throw e;
+        }
+
+        mc.close();
+
+        try
+        {
+            out.close();
+        }
+
+        catch ( java.io.IOException e )
+        {
+            throw new RippleException( e );
+        }
+    }
+
     public void saveAs( final String fileName )
     {
         try
         {
             saveAsPrivate( fileName );
 
-            System.out.println( "\nSaved data set as '" + fileName + "'\n" );
+            System.out.println( "\nSaved data set as " + fileName + "\n" );
+        }
+
+        catch ( RippleException e ) {}
+    }
+
+    public void exportNs( final String nsPrefix, final String fileName )
+    {
+        try
+        {
+            exportNsPrivate( nsPrefix, fileName );
+
+            System.out.println( "\nExported namespace " + nsPrefix + " to " + fileName + "\n" );
         }
 
         catch ( RippleException e ) {}
@@ -704,7 +752,7 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
     public void update( Observable o, Object arg )
     {
         if ( o == lexicon )
-            updateCompletors( CompletorState.NONE );
+            updateCompletors();
     }
 }
 

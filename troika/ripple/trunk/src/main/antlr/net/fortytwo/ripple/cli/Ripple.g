@@ -27,7 +27,7 @@ class RippleLexer extends Lexer;
 
 options
 {
-    k = 2;
+    k = 3;
 
     // Do not attempt to recover from lexer errors.
     defaultErrorHandler = false;
@@ -47,16 +47,10 @@ options
 //        throws Exception
     {
         if ( null == interpreter )
-//            throw new Exception( "RippleLexer has no caller to receive an event" );
             System.err.println( "RippleLexer instance has not been initialized" );
 
         else if ( !interpreter.readLine() )
             throw new ParserQuitException();
-    }
-
-    private void updateCompletors( CompletorState state )
-    {
-        interpreter.updateCompletors( state );
     }
 }
 
@@ -114,7 +108,6 @@ LANGUAGE
 
 STRING
     : '\"'! {
-        updateCompletors( CompletorState.NONE );
         interpreter.setLanguageTag( null );
       } ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )* '\"'! ( LANGUAGE! )?
     ;
@@ -124,7 +117,7 @@ URI
     ;
 
 
-OP_APPLY
+OPER
     : '/'
     ;
 
@@ -212,40 +205,8 @@ options { paraphrase = "opening parenthesis"; } : '(' ;
 R_PAREN
 options { paraphrase = "closing parenthesis"; } : ')' ;
 
-L_SQ_BRACE
-options { paraphrase = "opening square bracket"; } : '[' ;
-
-R_SQ_BRACE
-options { paraphrase = "closing square bracket"; } : ']' ;
-
-AND options
-{ paraphrase = "conjunction"; } : '^' ;
-
-OR
-options { paraphrase = "disjunction"; } : '|' ;
-
-//SLASH
-//options { paraphrase = "exclusion"; } : '/' ;
-
-PLUS
-options { paraphrase = "plus quantifier"; } : '+' ;
-
-STAR
-options { paraphrase = "star quantifier"; } : '*' ;
-
-CHOICE
-options { paraphrase = "choice quantifier"; } : '?' ;
-
 EOS
 options { paraphrase = "end-of-statement"; } : '.' ;
-
-/*
-DOT
-options { paraphrase = "dot operator"; } : '.' ;
-*/
-
-COMMA
-options { paraphrase = "comma"; } : ',' ;
 
 COLON
 options { paraphrase = "colon"; } : ':' ;
@@ -255,15 +216,14 @@ DIRECTIVE_HEAD
     : '@'
     ;
 
-ASSERT_DRTV      : DIRECTIVE_HEAD ( "assert"        | "a" ) ;
-COUNT_DRTV       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
-DEFINE_DRTV      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
-EXPORT_DRTV      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
-LIST_DRTV        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
-PREFIX_DRTV      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
-QUIT_DRTV        : DIRECTIVE_HEAD ( "quit"          | "q" ) ;
-SERQL_DRTV       : DIRECTIVE_HEAD ( "serql"         | "s" ) ;
-TERM_DRTV        : DIRECTIVE_HEAD ( "term"          | "t" ) ;
+DRCTV_COUNT       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
+DRCTV_EXPORT      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
+DRCTV_LIST        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
+DRCTV_PREFIX      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
+DRCTV_QUIT        : DIRECTIVE_HEAD ( "quit"          | "q" ) ;
+DRCTV_SAVEAS      : DIRECTIVE_HEAD ( "saveas"        | "sa" ) ;
+DRCTV_SERQL       : DIRECTIVE_HEAD ( "serql"         | "sr" ) ;
+DRCTV_TERM        : DIRECTIVE_HEAD ( "term"          | "t" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -324,7 +284,7 @@ nt_Sequence returns [ SequenceNode s ]
     : i=nt_Item
 
       ( ( WS ~(EOS) ) => ( WS s=nt_Sequence )
-      | ( L_PAREN | OP_APPLY ) => ( s=nt_Sequence )
+      | ( L_PAREN | OPER ) => ( s=nt_Sequence )
       | { s = new SequenceNode(); }
       )
         {
@@ -338,7 +298,7 @@ nt_Operator returns [ OperatorNode r ]
 {
     r = null;
 }
-    : OP_APPLY { r = new OperatorNode( Operator.APPLY ); }
+    : OPER { r = new OperatorNode( Operator.APPLY ); }
     ;
 */
 
@@ -362,7 +322,7 @@ nt_Item returns [ Ast r ]
     Ast a = null;
     boolean modified = false;
 }
-    : ( OP_APPLY { modified = true; } )? a=nt_UnmodifiedItem
+    : ( OPER { modified = true; } )? a=nt_UnmodifiedItem
         {
             r = modified
                 ? new ApplyNode( a )
@@ -529,26 +489,24 @@ nt_Directive
 {
     Ast subj, pred, obj;
     UriNode ns;
+
+    // Defaults to the empty (not null) prefix.
     String nsPrefix = "";
+
     String localName = null;
     Ast rhs;
 }
-    : ASSERT_DRTV WS subj=nt_Item WS pred=nt_Item WS obj=nt_Item (WS)? EOS
-        {
-            interpreter.addStatement( subj, pred, obj );
-        }
-
-    | COUNT_DRTV WS "statements" (WS)? EOS
+    : DRCTV_COUNT WS "statements" (WS)? EOS
         {
             interpreter.countStatements();
         }
 
-    | SERQL_DRTV WS query:STRING (WS)? EOS
+    | DRCTV_SERQL WS query:STRING (WS)? EOS
         {
             interpreter.evaluateGraphQuery( query.getText() );
         }
 
-    | LIST_DRTV WS
+    | DRCTV_LIST WS
         ( "contexts" EOS
             {
                 interpreter.showContexts();
@@ -559,22 +517,27 @@ nt_Directive
             }
         )
 
-    | PREFIX_DRTV WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
+    | DRCTV_PREFIX WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
         {
             interpreter.setNamespace( nsPrefix, ns );
         }
 
-    | QUIT_DRTV (WS)? EOS
+    | DRCTV_QUIT (WS)? EOS
         {
             interpreter.quit();
         }
 
-    | EXPORT_DRTV WS file:STRING (WS)? EOS
+    | DRCTV_EXPORT ( WS ( nsPrefix=nt_Prefix (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
         {
-            interpreter.saveAs( file.getText() );
+            interpreter.exportNs( nsPrefix, exFile.getText() );
         }
 
-    | TERM_DRTV WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
+    | DRCTV_SAVEAS WS saFile:STRING (WS)? EOS
+        {
+            interpreter.saveAs( saFile.getText() );
+        }
+
+    | DRCTV_TERM WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
         {
             interpreter.evaluateAndDefine( rhs, localName );
         }

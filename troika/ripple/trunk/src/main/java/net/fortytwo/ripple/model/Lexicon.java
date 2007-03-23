@@ -125,7 +125,7 @@ public class Lexicon extends Observable implements Observer
 
     private void add( final Namespace ns )
     {
-//System.out.println( "(" + ns.getPrefix() + "=" + ns.getName() );
+System.out.println( "(" + ns.getPrefix() + "=" + ns.getName() );
         prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
         namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
     }
