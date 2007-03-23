@@ -632,6 +632,9 @@ prog(rec2)
 factorial  ==  [0 =] [pop 1] [dup 1 - factorial *] ifte
 
 
+@def fibonacci:  1/sub/dup/:fibonacci/swap 1/sub/:fibonacci /add.
+
+
 Ripple gets recursive definition for free ...
 there is no special trick...
 

@@ -166,32 +166,3 @@ rpl-new:ifte
 
 ################################################################################
 
-rpl-new:integer-greaterThan
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rpl:returnType rpl:PrimitiveFunction ;
-	rpl:parameters (
-		[
-			rdfs:label "intA" ;
-			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "intB" ;
-			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
-	) .
-
-rpl-new:integer-lessThan
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rpl:returnType rpl:PrimitiveFunction ;
-	rpl:parameters (
-		[
-			rdfs:label "intA" ;
-			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "intB" ;
-			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
-	) .

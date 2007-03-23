@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.intmath;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -10,11 +10,12 @@ import net.fortytwo.ripple.util.Sink;
 
 public class IntegerLessThan extends PrimitiveFunction
 {
-	// TODO: this is slightly awkward
-	private True truePrim;
-	private False falsePrim;
+	private static String tfNs = "http://fortytwo.net/2007/03/rpl-new#";
+
+	private RippleValue truePrim = null;
+	private RippleValue falsePrim = null;
 	
-	public IntegerLessThan( RdfValue v, ModelConnection mc, True truePrim, False falsePrim )
+	public IntegerLessThan( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -28,17 +29,27 @@ public class IntegerLessThan extends PrimitiveFunction
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						Sink<RippleList> sink,
+						ModelConnection mc )
 		throws RippleException
 	{
 		int a, b;
-		PrimitiveFunction result;
+		RippleValue result;
 
-		a = mc.intValue( stack.getFirst() );
-		stack = stack.getRest();
 		b = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
+		a = mc.intValue( stack.getFirst() );
+		stack = stack.getRest();
+
+		if ( null == truePrim )
+		{
+			truePrim = mc.getModel().getBridge().get(
+				new RdfValue( mc.createUri( tfNs + "true" ) ) );
+			falsePrim = mc.getModel().getBridge().get(
+				new RdfValue( mc.createUri( tfNs + "false" ) ) );
+			if ( null == truePrim || null == falsePrim )
+				throw new RippleException( "boolean primitives not found" );
+		}
 
 		result = ( a < b )
 			? truePrim

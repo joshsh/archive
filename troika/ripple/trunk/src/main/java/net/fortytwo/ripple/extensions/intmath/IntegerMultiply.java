@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.test;
+package net.fortytwo.ripple.extensions.intmath;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -28,9 +28,9 @@ public class IntegerMultiply extends PrimitiveFunction
     {
         int a, b, result;
 
-        a = mc.intValue( stack.getFirst() );
-        stack = stack.getRest();
         b = mc.intValue( stack.getFirst() );
+        stack = stack.getRest();
+        a = mc.intValue( stack.getFirst() );
         stack = stack.getRest();
 
         result = a * b;

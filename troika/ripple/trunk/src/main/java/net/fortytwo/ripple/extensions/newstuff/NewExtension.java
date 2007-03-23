@@ -23,8 +23,6 @@ public class NewExtension extends Extension
 
 		bridge.add( truePrim = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
 		bridge.add( falsePrim = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
-		bridge.add( new IntegerGreaterThan( new RdfValue( mc.createUri( ns + "integer-greaterThan" ) ), mc, truePrim, falsePrim ), mc );
-		bridge.add( new IntegerLessThan( new RdfValue( mc.createUri( ns + "integer-lessThan" ) ), mc, truePrim, falsePrim ), mc );
 		bridge.add( new Assert( new RdfValue( mc.createUri( ns + "assert" ) ), mc ), mc );
 		bridge.add( new Deny( new RdfValue( mc.createUri( ns + "deny" ) ), mc ), mc );
 		bridge.add( new Equal( new RdfValue( mc.createUri( ns + "equal" ) ), mc, truePrim, falsePrim ), mc );

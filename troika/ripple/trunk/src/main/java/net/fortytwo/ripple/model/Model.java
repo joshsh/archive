@@ -59,6 +59,7 @@ public Dereferencer getDereferencer()
     {
         String
             rplNs = "http://fortytwo.net/2007/03/ripple#",
+            rplIntMathNs = "http://fortytwo.net/2007/03/ripple/intmath#",
             rplMiscNs = "http://fortytwo.net/2007/03/rpl-misc#",
             rplTestNs = "http://fortytwo.net/2007/03/rpl-test#",
             rplNewNs = "http://fortytwo.net/2007/03/rpl-new#";
@@ -66,6 +67,9 @@ public Dereferencer getDereferencer()
         Hashtable<String, String> urlMap = new Hashtable<String, String>();
         urlMap.put( rplNs,
             net.fortytwo.ripple.Ripple.class.getResource( "ripple.ttl" ) + "#" );
+        urlMap.put( rplIntMathNs,
+            net.fortytwo.ripple.extensions.intmath.IntMathExtension.class.getResource(
+                "intmath.ttl" ) + "#" );
         urlMap.put( rplTestNs,
             net.fortytwo.ripple.extensions.test.TestExtension.class.getResource(
                 "ripple-test.ttl" ) + "#" );
@@ -101,6 +105,7 @@ public Dereferencer getDereferencer()
             ( new net.fortytwo.ripple.extensions.test.TestExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
             ( new net.fortytwo.ripple.extensions.newstuff.NewExtension() ).load( mc );
+            ( new net.fortytwo.ripple.extensions.intmath.IntMathExtension() ).load( mc );
         }
 
         catch ( RippleException e )

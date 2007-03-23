@@ -16,11 +16,6 @@ public class TestExtension extends Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 
 		bridge.add( new BagElements( new RdfValue( mc.createUri( ns + "bagElements" ) ), mc ), mc );
-		bridge.add( new IntegerAdd( new RdfValue( mc.createUri( ns + "integer-add" ) ), mc ), mc );
-		bridge.add( new IntegerSubtract( new RdfValue( mc.createUri( ns + "integer-subtract" ) ), mc ), mc );
-		bridge.add( new IntegerMultiply( new RdfValue( mc.createUri( ns + "integer-multiply" ) ), mc ), mc );
-		bridge.add( new IntegerDivide( new RdfValue( mc.createUri( ns + "integer-divide" ) ), mc ), mc );
-		bridge.add( new IntegerMod( new RdfValue( mc.createUri( ns + "integer-mod" ) ), mc ), mc );
 		bridge.add( new ConcatenateStringsPrimitive( new RdfValue( mc.createUri( ns + "concatenateStrings" ) ), mc ), mc );
 		bridge.add( new ListElements( new RdfValue( mc.createUri( ns + "listElements" ) ), mc ), mc );
 /*

@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.test;
+package net.fortytwo.ripple.extensions.intmath;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class IntegerAdd extends PrimitiveFunction
+public class IntegerDivide extends PrimitiveFunction
 {
-    public IntegerAdd( RdfValue v, ModelConnection mc )
+    public IntegerDivide( RdfValue v, ModelConnection mc )
         throws RippleException
     {
         super( v, mc );
@@ -18,7 +18,7 @@ public class IntegerAdd extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 2;
 	}
 
     public void applyTo( RippleList stack,
@@ -28,12 +28,20 @@ public class IntegerAdd extends PrimitiveFunction
     {
         int a, b, result;
 
-        a = mc.intValue( stack.getFirst() );
-        stack = stack.getRest();
         b = mc.intValue( stack.getFirst() );
         stack = stack.getRest();
+        a = mc.intValue( stack.getFirst() );
+        stack = stack.getRest();
 
-        result = a + b;
+        try
+        {
+            result = a / b;
+        }
+
+        catch ( Throwable t )
+        {
+            throw new RippleException( t );
+        }
 
         sink.put( new RippleList( mc.createValue( result ), stack ) );
     }

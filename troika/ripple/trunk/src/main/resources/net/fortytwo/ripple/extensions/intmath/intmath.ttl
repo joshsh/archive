@@ -1,0 +1,117 @@
+@prefix rpl:       <http://fortytwo.net/2007/03/ripple#> .
+@prefix intmath:   <http://fortytwo.net/2007/03/ripple/intmath#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+
+intmath:add
+	rdfs:label "integer-add" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+intmath:sub
+	rdfs:label "integer-subtract" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+intmath:mul
+	rdfs:label "integer-multiply" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+intmath:div
+	rdfs:label "integer-divide" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+intmath:mod
+	rdfs:label "integer-mod" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+intmath:gt
+	rdfs:label "integer-greater-than" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType rpl:PrimitiveFunction ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
+intmath:lt
+	rdfs:label "integer-lessThan" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:returnType rpl:PrimitiveFunction ;
+	rpl:parameters (
+		[
+			rdfs:label "y" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
