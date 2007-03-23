@@ -145,6 +145,25 @@ rpl-new:zap
 	rpl:arity 1 ;
 	rdfs:comment "y x /zap --> y" .
 
+rpl-new:ifte
+	a rpl:PrimitiveFunction ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "b" ;
+			rpl:parameterType xsd:PrimitiveFunction ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "ifPart" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "elsePart" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+	) ;
+	rdfs:comment "true y x /ifte --> y; false y x /ifte --> x" .
+
 ################################################################################
 
 rpl-new:integer-greaterThan

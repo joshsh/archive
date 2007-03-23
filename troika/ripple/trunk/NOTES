@@ -5,15 +5,15 @@ V"  Sink --> Consumer
 @export directive
 ========================================
 
+$ ripple
 @prefix : <file:///tmp/tmp.rdf#>.
 @term mylist: 2 3 .
 @export : "/tmp/tmp.rdf".
-
-[quit and re-start ripple]
-
+@quit.
+$ ripple
 @prefix tmp: <file:///tmp/tmp.rdf#>.
 tmp:mylist.
-
+/tmp:mylist /swap.
 
 rpl:PrimitiveFunction.
 @export rpl: "rpl.rdf".
@@ -114,6 +114,14 @@ rpl:arity.
 @count statements.
 rpl:arity/forget "don't resolve rpl:arity again" /swap/swap.
 @count statements.
+
+
+========================================
+rpl-new:ifte
+========================================
+
+true 3 4 /ifte.
+false 3 4 /ifte.
 
 
 ========================================
@@ -608,8 +616,24 @@ http://sesame.cvs.sourceforge.net/sesame/openrdf/src/org/openrdf/util/http/HttpC
 http://sesame.cvs.sourceforge.net/sesame/
 
 
+prim(dup)
+prog(if)
+then
+(prog(rec1) prog(SELF))
+prim(ifte)
+prog(rec2)
 
 
+/dup /[if] [then] [rec1 /[self]] /ifte /rec2
+
+
+
+@def factorial:  (0 /equal) (/pop 1) (/dup 1 /sub :factorial /mul) /ifte.
+factorial  ==  [0 =] [pop 1] [dup 1 - factorial *] ifte
+
+
+Ripple gets recursive definition for free ...
+there is no special trick...
 
 
 
