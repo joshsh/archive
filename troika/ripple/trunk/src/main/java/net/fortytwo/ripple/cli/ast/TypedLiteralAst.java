@@ -12,12 +12,12 @@ import net.fortytwo.ripple.util.Sink;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class TypedLiteralNode implements Ast
+public class TypedLiteralAst implements Ast
 {
     private String value;
     private Ast type;
 
-    public TypedLiteralNode( final String value, Ast type )
+    public TypedLiteralAst( final String value, Ast type )
     {
         this.value = value;
         this.type = type;

@@ -10,7 +10,7 @@ import net.fortytwo.ripple.util.Sink;
 
 public class IntegerLessThan extends PrimitiveFunction
 {
-	private static String tfNs = "http://fortytwo.net/2007/03/rpl-new#";
+	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
 
 	private RippleValue truePrim = null;
 	private RippleValue falsePrim = null;

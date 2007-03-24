@@ -2,19 +2,18 @@ header
 {
 package net.fortytwo.ripple.cli;
 
-import net.fortytwo.ripple.cli.ast.ApplyNode;
 import net.fortytwo.ripple.cli.ast.Ast;
-import net.fortytwo.ripple.cli.ast.BooleanNode;
-import net.fortytwo.ripple.cli.ast.BNodeNode;
-import net.fortytwo.ripple.cli.ast.DoubleNode;
-import net.fortytwo.ripple.cli.ast.IntNode;
-import net.fortytwo.ripple.cli.ast.NameNode;
-import net.fortytwo.ripple.cli.ast.QNameNode;
-import net.fortytwo.ripple.cli.ast.StringNode;
-import net.fortytwo.ripple.cli.ast.TypedLiteralNode;
-import net.fortytwo.ripple.cli.ast.UriNode;
-
+import net.fortytwo.ripple.cli.ast.BooleanAst;
+import net.fortytwo.ripple.cli.ast.BlankNodeAst;
+import net.fortytwo.ripple.cli.ast.DoubleAst;
+import net.fortytwo.ripple.cli.ast.IntegerAst;
 import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.NameAst;
+import net.fortytwo.ripple.cli.ast.OperatorAst;
+import net.fortytwo.ripple.cli.ast.QNameAst;
+import net.fortytwo.ripple.cli.ast.StringAst;
+import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
+import net.fortytwo.ripple.cli.ast.UriAst;
 }
 
 
@@ -314,7 +313,7 @@ nt_Item returns [ Ast r ]
     : ( OPER { modified = true; } )? a=nt_UnmodifiedItem
         {
             r = modified
-                ? new ApplyNode( a )
+                ? new OperatorAst( a )
                 : a;
         }
     ;
@@ -369,8 +368,8 @@ nt_Literal returns [ Ast r ]
       )
         {
             r = ( null == dataType )
-                ? new StringNode( t.getText(), interpreter.getLanguageTag() )
-                : new TypedLiteralNode( t.getText(), dataType );
+                ? new StringAst( t.getText(), interpreter.getLanguageTag() )
+                : new TypedLiteralAst( t.getText(), dataType );
         }
     | u:NUMBER
         {
@@ -378,9 +377,9 @@ nt_Literal returns [ Ast r ]
             {
                 String s = u.getText();
                 if ( s.contains( "." ) )
-                    r = new DoubleNode( ( new Double( s ) ).doubleValue() );
+                    r = new DoubleAst( ( new Double( s ) ).doubleValue() );
                 else
-                    r = new IntNode( ( new Integer( s ) ).intValue() );
+                    r = new IntegerAst( ( new Integer( s ) ).intValue() );
             }
 
             catch ( NumberFormatException e )
@@ -393,13 +392,13 @@ nt_Literal returns [ Ast r ]
     ;
 
 
-nt_URIRef returns [ UriNode r ]
+nt_URIRef returns [ UriAst r ]
 {
     r = null;
 }
     : uri:URI
         {
-            r = new UriNode( uri.getText() );
+            r = new UriAst( uri.getText() );
         }
     ;
 
@@ -413,9 +412,9 @@ nt_Name returns [ String name ]
     ;
 /*
             if ( name.equals( "true" ) )
-                r = new BooleanNode( true );
+                r = new BooleanAst( true );
             else if ( name.equals( "false" ) )
-                r = new BooleanNode( false );
+                r = new BooleanAst( false );
             else
 */
 
@@ -433,7 +432,7 @@ nt_SimpleName returns [ Ast r ]
     String localName;
     r = null;
 }
-    : localName=nt_Name { r = new NameNode( localName ); }
+    : localName=nt_Name { r = new NameAst( localName ); }
     ;
 
 
@@ -446,7 +445,7 @@ nt_QName returns [ Ast r ]
         COLON
         ( localName=nt_Name )? )
         {
-            r = new QNameNode( nsPrefix, localName );
+            r = new QNameAst( nsPrefix, localName );
         }
     ;
 
@@ -458,7 +457,7 @@ nt_BNode returns [ Ast r ]
 }
     : BNODE_HEAD localName=nt_Name
         {
-            r = new BNodeNode( localName );
+            r = new BlankNodeAst( localName );
         }
     ;
 
@@ -476,7 +475,7 @@ nt_Resource returns [ Ast r ]
 
 nt_Directive
 {
-    UriNode ns;
+    UriAst ns;
 
     // Defaults to the empty (but not null) prefix.
     String nsPrefix = "";

@@ -1,20 +1,25 @@
 package net.fortytwo.ripple.cli.ast;
 
+import java.util.Iterator;
+
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.Interpreter;
+import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class UriNode implements Ast
+public class OperatorAst implements Ast
 {
-    private String value;
+    private Ast arg;
 
-    public UriNode( final String value )
+    public OperatorAst( final Ast argument )
     {
-        this.value = value;
+        arg = argument;
     }
 
     public void evaluate( Sink<RippleValue> sink,
@@ -22,13 +27,15 @@ public class UriNode implements Ast
                           ModelConnection mc )
         throws RippleException
     {
-        sink.put( mc.getModel().getBridge().get(
-            new RdfValue( mc.createUri( value ) ) ) );
+        ContainerSink values = new ContainerSink();
+        arg.evaluate( values, itp, mc );
+        for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
+            sink.put( Operator.createOperator( iter.next(), mc ) );
     }
 
     public String toString()
     {
-        return "<" + value + ">";
+        return "/" + arg;
     }
 }
 

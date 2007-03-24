@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Zap extends PrimitiveFunction
+public class False extends PrimitiveFunction
 {
-	public Zap( RdfValue v, ModelConnection mc )
+	public False( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -18,7 +18,7 @@ public class Zap extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 2;
 	}
 
 	public void applyTo( RippleList stack,
@@ -26,12 +26,14 @@ public class Zap extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue x;
+		RippleValue x, y;
 
 		x = stack.getFirst();
 		stack = stack.getRest();
+		y = stack.getFirst();
+		stack = stack.getRest();
 
-		sink.put( stack );
+		sink.put( new RippleList( y, stack ) );
 	}
 }
 

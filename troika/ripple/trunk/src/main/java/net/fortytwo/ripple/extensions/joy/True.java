@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Or extends PrimitiveFunction
+public class True extends PrimitiveFunction
 {
-	public Or( RdfValue v, ModelConnection mc )
+	public True( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -34,7 +34,6 @@ public class Or extends PrimitiveFunction
 		stack = stack.getRest();
 
 		sink.put( new RippleList( x, stack ) );
-		sink.put( new RippleList( y, stack ) );
 	}
 }
 

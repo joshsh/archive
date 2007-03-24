@@ -6,13 +6,20 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class DoubleNode implements Ast
+public class StringAst implements Ast
 {
-    private double value;
+    private String value, language;
 
-    public DoubleNode( final double value )
+    public StringAst( final String value )
     {
         this.value = value;
+        this.language = null;
+    }
+
+    public StringAst( final String value, final String language )
+    {
+        this.value = value;
+        this.language = language;
     }
 
     public void evaluate( Sink<RippleValue> sink,
@@ -20,12 +27,14 @@ public class DoubleNode implements Ast
                           ModelConnection mc )
         throws RippleException
     {
-        sink.put( mc.createValue( value ) );
+        sink.put( ( null == language )
+            ? mc.createValue( value )
+            : mc.createValue( value, language ) );
     }
 
     public String toString()
     {
-        return "" + value;
+        return "\"" + value + "\"" + ( ( null == language ) ? "" : ( "@" + language ) );
     }
 }
 

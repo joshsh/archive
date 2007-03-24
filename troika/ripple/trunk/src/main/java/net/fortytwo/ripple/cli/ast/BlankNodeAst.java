@@ -3,26 +3,22 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.Value;
-
-public class QNameNode implements Ast
+public class BlankNodeAst implements Ast
 {
-    private String nsPrefix, localName;
+    private String id;
 
-    public QNameNode( final String nsPrefix, final String localName )
+    public BlankNodeAst( final String id )
     {
-        this.nsPrefix = nsPrefix;
-        this.localName = localName;
+        this.id = id;
     }
 
     public String toString()
     {
-        return ( ( null == nsPrefix ) ? "" : nsPrefix )
-            + ":"
-            + ( ( null == localName ) ? "" : localName );
+        return "_:" + id;
     }
 
     public void evaluate( Sink<RippleValue> sink,
@@ -30,7 +26,12 @@ public class QNameNode implements Ast
                           ModelConnection mc )
         throws RippleException
     {
-        itp.resolveQualifiedName( nsPrefix, localName, sink );
+        RippleValue v = new RdfValue( mc.createBNode( id ) );
+
+        if ( null == v )
+            throw new RippleException( "blank node '" + this + "' does not exist" );
+        else
+            sink.put( v );
     }
 }
 

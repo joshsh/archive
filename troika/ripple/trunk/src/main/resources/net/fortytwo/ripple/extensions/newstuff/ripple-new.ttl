@@ -41,25 +41,16 @@ rpl-new:prog
 
 ################################################################################
 
-rpl-new:or
+rpl-new:union
 	a rpl:PrimitiveFunction ;
 	rpl:arity 2 ;
-	rdfs:comment "Or{x}{y} --> {x,y}" .
+	rdfs:comment "union{x}{y} --> {x,y}" .
 
 rpl-new:scrap
 	a rpl:PrimitiveFunction ;
 	rpl:arity 0 ;
 	rdfs:comment "x /scrap -->" .
 
-rpl-new:forget
-	a rpl:PrimitiveFunction ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "x" ;
-			rpl:parameterTransparency false ]
-	) ;
-	rdfs:comment "..." .
 
 ################################################################################
 
@@ -96,17 +87,17 @@ rpl-new:deny
 	rpl:arity 3 ;
 	rdfs:comment "..." .
 
+rpl-new:forget
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterTransparency false ]
+	) ;
+	rdfs:comment "..." .
+
 ################################################################################
-
-rpl-new:true
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rdfs:comment "y x /true --> x" .
-
-rpl-new:false
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rdfs:comment "y x /false --> y" .
 
 rpl-new:equal
 	a rpl:PrimitiveFunction ;
@@ -129,78 +120,3 @@ rpl-new:times
 	rdfs:comment "" .
 
 ################################################################################
-
-rpl-new:dup
-	a rpl:PrimitiveFunction ;
-	rpl:arity 1 ;
-	rdfs:comment "x /dup --> x x" .
-
-rpl-new:swap
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rdfs:comment "x y /swap --> y x" .
-
-rpl-new:zap
-	a rpl:PrimitiveFunction ;
-	rpl:arity 1 ;
-	rdfs:comment "y x /zap --> y" .
-
-rpl-new:fold
-	a rpl:PrimitiveFunction ;
-	rpl:arity 3 ;
-	rpl:parameters (
-		[
-			rdfs:label "f" ;
-			rdfs:comment "a quoted function" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "v" ;
-			rdfs:comment "tail value" ;
-			rpl:parameterTransparency "true" ]
-		[
-			rdfs:label "l" ;
-			rdfs:comment "a list through which to fold f" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
-	) ;
-	rdfs:comment "" .
-
-rpl-new:map
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "f" ;
-			rdfs:comment "a quoted function" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "l" ;
-			rdfs:comment "a list over which to distribute f" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
-	) ;
-	rdfs:comment "" .
-
-rpl-new:ifte
-	a rpl:PrimitiveFunction ;
-	rpl:arity 3 ;
-	rpl:parameters (
-		[
-			rdfs:label "elsePart" ;
-			rpl:parameterType xsd:PrimitiveFunction ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "ifPart" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "b" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
-	) ;
-	rdfs:comment "true y x /ifte --> y; false y x /ifte --> x" .
-
-################################################################################
-

@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Dup extends PrimitiveFunction
+public class Swap extends PrimitiveFunction
 {
-	public Dup( RdfValue v, ModelConnection mc )
+	public Swap( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -18,7 +18,7 @@ public class Dup extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 2;
 	}
 
 	public void applyTo( RippleList stack,
@@ -26,12 +26,14 @@ public class Dup extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue x;
+		RippleValue x, y;
 
 		x = stack.getFirst();
 		stack = stack.getRest();
+		y = stack.getFirst();
+		stack = stack.getRest();
 
-		sink.put( new RippleList( x, stack ).push( x ) );
+		sink.put( new RippleList( x, stack ).push ( y ) );
 	}
 }
 

@@ -133,17 +133,17 @@ false 3 4 /ifte.
 
 
 ========================================
-rpl-new:integer-greaterThan
+rpl-new:gt
 ========================================
 
-2 3 /integer-greaterThan.
+2 3 /gt.
 
 
 ========================================
-rpl-new:integer-lessThan
+rpl-new:lt
 ========================================
 
-2 3 /integer-lessThan.
+2 3 /lt.
 
 
 ========================================
@@ -161,12 +161,12 @@ rpl-new:new
 
 
 ========================================
-rpl-new:or
+rpl-new:union
 ========================================
 
-1 2 /or.
-1 2 /or 3 /or.
-1 2 3 /or /or.
+1 2 /union.
+1 2 /union 3 /union.
+1 2 3 /union /union.
 
 
 ========================================
@@ -174,7 +174,7 @@ rpl-new:scrap
 ========================================
 
 2 /scrap.
-rdf:Property /dup /rdf:type "this won't work" equal// scrap I V/// /;
+rdf:Property /dup /rdf:type "this won't work" /equal scrap I V/// /;
 rdf:Property /dup /rdf:type rdfs:Class /equal scrap I V/// /;
 
 

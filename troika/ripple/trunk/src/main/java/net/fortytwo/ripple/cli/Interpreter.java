@@ -47,7 +47,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.cli.ast.UriNode;
+import net.fortytwo.ripple.cli.ast.UriAst;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
@@ -455,7 +455,7 @@ System.out.println( "--- 3 ---" );
         catch ( RippleException e ) {}
     }
 
-    public void setNamespace( final String prefix, final UriNode uri )
+    public void setNamespace( final String prefix, final UriAst uri )
     {
         ModelConnection mc = null;
 

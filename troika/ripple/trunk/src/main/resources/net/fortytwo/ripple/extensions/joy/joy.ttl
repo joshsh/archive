@@ -1,0 +1,90 @@
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple#> .
+@prefix joy:      <http://fortytwo.net/2007/03/ripple/joy#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+joy:true
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "y x /true --> x" .
+
+joy:false
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "y x /false --> y" .
+
+################################################################################
+
+joy:dup
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rdfs:comment "x /dup --> x x" .
+
+joy:swap
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rdfs:comment "x y /swap --> y x" .
+
+joy:zap
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rdfs:comment "y x /zap --> y" .
+
+joy:fold
+	a rpl:PrimitiveFunction ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "f" ;
+			rdfs:comment "a quoted function" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "v" ;
+			rdfs:comment "tail value" ;
+			rpl:parameterTransparency "true" ]
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a list through which to fold f" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
+joy:map
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "f" ;
+			rdfs:comment "a quoted function" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a list over which to distribute f" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
+joy:ifte
+	a rpl:PrimitiveFunction ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "elsePart" ;
+			rpl:parameterType xsd:PrimitiveFunction ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "ifPart" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "b" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+	) ;
+	rdfs:comment "true y x /ifte --> y; false y x /ifte --> x" .
+

@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class False extends PrimitiveFunction
+public class Union extends PrimitiveFunction
 {
-	public False( RdfValue v, ModelConnection mc )
+	public Union( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -33,6 +33,7 @@ public class False extends PrimitiveFunction
 		y = stack.getFirst();
 		stack = stack.getRest();
 
+		sink.put( new RippleList( x, stack ) );
 		sink.put( new RippleList( y, stack ) );
 	}
 }

@@ -6,11 +6,11 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class NameNode implements Ast
+public class NameAst implements Ast
 {
     private String localName;
 
-    public NameNode( final String localName )
+    public NameAst( final String localName )
     {
         this.localName = localName;
     }

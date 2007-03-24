@@ -24,6 +24,7 @@ Schema
 Model
 ================================================================================
 * Add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
+* add support for null lists -- ()
 
 Primitives
 ================================================================================

@@ -150,6 +150,7 @@ return null;
 		public void put( RippleList list )
 			throws RippleException
 		{
+//System.out.println( "ast = " + ast );
 			InnerSink innerSink = new InnerSink( list );
 			ast.evaluate( innerSink, interpreter, modelConnection );
 		}

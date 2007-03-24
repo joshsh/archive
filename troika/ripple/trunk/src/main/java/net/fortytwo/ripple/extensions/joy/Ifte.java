@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -10,15 +10,15 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Ifte extends PrimitiveFunction
 {
-	private True truePrim;
-	private False falsePrim;
+	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
 
-	public Ifte( RdfValue v, ModelConnection mc, True truePrim, False falsePrim )
+	private RippleValue truePrim = null;
+	private RippleValue falsePrim = null;
+
+	public Ifte( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
-		this.truePrim = truePrim;
-		this.falsePrim = falsePrim;
 	}
 
 	public int arity()
@@ -39,6 +39,16 @@ public class Ifte extends PrimitiveFunction
 		stack = stack.getRest();
 		b = stack.getFirst();
 		stack = stack.getRest();
+
+		if ( null == truePrim )
+		{
+			truePrim = mc.getModel().getBridge().get(
+				new RdfValue( mc.createUri( tfNs + "true" ) ) );
+			falsePrim = mc.getModel().getBridge().get(
+				new RdfValue( mc.createUri( tfNs + "false" ) ) );
+			if ( null == truePrim || null == falsePrim )
+				throw new RippleException( "boolean primitives not found" );
+		}
 
 		RippleValue result;
 		if ( b.equals( truePrim ) )

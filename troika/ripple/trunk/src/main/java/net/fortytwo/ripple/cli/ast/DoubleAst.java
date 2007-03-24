@@ -6,11 +6,11 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class BooleanNode implements Ast
+public class DoubleAst implements Ast
 {
-    private boolean value;
+    private double value;
 
-    public BooleanNode( final boolean value )
+    public DoubleAst( final double value )
     {
         this.value = value;
     }
