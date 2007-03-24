@@ -5,7 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class IntNode extends Ast
+public class IntNode implements Ast
 {
     private int value;
 
@@ -18,6 +18,11 @@ public class IntNode extends Ast
         throws RippleException
     {
         return mc.createValue( value );
+    }
+
+    public String toString()
+    {
+        return "" + value;
     }
 }
 

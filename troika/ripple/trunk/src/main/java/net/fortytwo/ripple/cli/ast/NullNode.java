@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RippleValue;
 /**
  *  Warning: use this class with caution.
  */
-public class NullNode extends Ast
+public class NullNode implements Ast
 {
     public NullNode()
     { }
@@ -17,6 +17,11 @@ public class NullNode extends Ast
         throws RippleException
     {
         return null;
+    }
+
+    public String toString()
+    {
+        return "[null]";
     }
 }
 

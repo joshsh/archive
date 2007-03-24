@@ -12,11 +12,10 @@ import net.fortytwo.ripple.cli.ast.NameNode;
 import net.fortytwo.ripple.cli.ast.NullNode;
 import net.fortytwo.ripple.cli.ast.QNameNode;
 import net.fortytwo.ripple.cli.ast.StringNode;
-import net.fortytwo.ripple.cli.ast.SequenceNode;
 import net.fortytwo.ripple.cli.ast.TypedLiteralNode;
 import net.fortytwo.ripple.cli.ast.UriNode;
-import net.fortytwo.ripple.model.Operator;
 
+import net.fortytwo.ripple.cli.ast.ListAst;
 }
 
 
@@ -276,7 +275,7 @@ nt_Statement
     ;
 
 
-nt_Sequence returns [ SequenceNode s ]
+nt_Sequence returns [ ListAst s ]
 {
     Ast i;
     s = null;
@@ -285,22 +284,13 @@ nt_Sequence returns [ SequenceNode s ]
 
       ( ( WS ~(EOS) ) => ( WS s=nt_Sequence )
       | ( L_PAREN | OPER ) => ( s=nt_Sequence )
-      | { s = new SequenceNode(); }
+      | {}
       )
         {
-            s.push( i );
+            // Note: the resulting list will be in the same order as the input.
+            s = new ListAst( i, s );
         }
     ;
-
-
-/*
-nt_Operator returns [ OperatorNode r ]
-{
-    r = null;
-}
-    : OPER { r = new OperatorNode( Operator.APPLY ); }
-    ;
-*/
 
 
 nt_UnmodifiedItem returns [ Ast r ]
@@ -312,7 +302,6 @@ nt_UnmodifiedItem returns [ Ast r ]
     | r=nt_ParenthesizedExpression
 //    | r=nt_QuantifiedItem
 //    | r=nt_IndexExpression
-//    | r=nt_Operator
     ;
 
 

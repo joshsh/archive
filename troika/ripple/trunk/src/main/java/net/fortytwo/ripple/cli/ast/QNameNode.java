@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.RippleValue;
 
 import org.openrdf.model.Value;
 
-public class QNameNode extends Ast
+public class QNameNode implements Ast
 {
     private String nsPrefix, localName;
 

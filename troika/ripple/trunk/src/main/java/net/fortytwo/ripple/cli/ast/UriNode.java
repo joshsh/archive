@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RdfValue;
 
-public class UriNode extends Ast
+public class UriNode implements Ast
 {
     private String value;
 
@@ -21,6 +21,11 @@ public class UriNode extends Ast
     {
         return mc.getModel().getBridge().get(
             new RdfValue( mc.createUri( value ) ) );
+    }
+
+    public String toString()
+    {
+        return "<" + value + ">";
     }
 }
 

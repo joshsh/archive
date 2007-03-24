@@ -9,7 +9,7 @@ import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class ApplyNode extends Ast
+public class ApplyNode implements Ast
 {
     private Ast arg;
 
@@ -23,7 +23,14 @@ public class ApplyNode extends Ast
     {
         RippleValue v = arg.evaluate( itp, mc );
 
+//        Operator op = Operator.guessOperator( v, mc );
+
         return Operator.createOperator( v, mc );
+    }
+
+    public String toString()
+    {
+        return "/" + arg;
     }
 }
 

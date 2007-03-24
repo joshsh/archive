@@ -1,7 +1,6 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.filter.Filter;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.vocabulary.RDF;
@@ -9,9 +8,9 @@ import org.openrdf.model.vocabulary.RDF;
 public class Operator implements RippleValue
 {
     public static Operator
-        PRIM = new Operator( (Function) null ),
-        PRED = new Operator( (Function) null ),
-        PROG = new Operator( (Function) null );
+        PRIM = new Operator( new PrimOpConstructor() ),
+        PRED = new Operator( new PredOpConstructor() ),
+        PROG = new Operator( new ProgOpConstructor() );
 
     Function func;
 
@@ -117,12 +116,6 @@ public RdfValue toRdf( ModelConnection mc )
 return null;
 }
 
-/*
-    private class PrimFunc extends Filter
-    {
-        
-    }
-*/
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

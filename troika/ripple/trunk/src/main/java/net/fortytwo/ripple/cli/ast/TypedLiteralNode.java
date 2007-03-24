@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class TypedLiteralNode extends Ast
+public class TypedLiteralNode implements Ast
 {
     private String value;
     private Ast type;
@@ -29,6 +29,11 @@ public class TypedLiteralNode extends Ast
 	if ( !( v instanceof URI ) )
 		throw new RippleException( "literal type is not a URI" );
         return mc.createValue( value, (URI) v );
+    }
+
+    public String toString()
+    {
+        return "\"" + value + "\"^^" + type;
     }
 }
 

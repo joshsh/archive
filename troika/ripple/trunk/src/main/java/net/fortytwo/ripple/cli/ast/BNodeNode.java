@@ -6,7 +6,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class BNodeNode extends Ast
+public class BNodeNode implements Ast
 {
     private String id;
 

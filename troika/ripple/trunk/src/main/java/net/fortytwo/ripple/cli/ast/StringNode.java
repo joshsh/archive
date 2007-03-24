@@ -5,7 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class StringNode extends Ast
+public class StringNode implements Ast
 {
     private String value, language;
 
@@ -27,6 +27,11 @@ public class StringNode extends Ast
         return ( null == language )
             ? mc.createValue( value )
             : mc.createValue( value, language );
+    }
+
+    public String toString()
+    {
+        return "\"" + value + "\"" + ( ( null == language ) ? "" : ( "@" + language ) );
     }
 }
 

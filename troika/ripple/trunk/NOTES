@@ -122,6 +122,7 @@ rpl-new:ifte
 
 true 3 4 /ifte.
 false 3 4 /ifte.
+2 3 /gt "yes" "no" /ifte.
 
 
 ========================================

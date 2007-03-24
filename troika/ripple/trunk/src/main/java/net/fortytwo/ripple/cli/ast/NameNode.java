@@ -5,7 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class NameNode extends Ast
+public class NameNode implements Ast
 {
     private String localName;
 

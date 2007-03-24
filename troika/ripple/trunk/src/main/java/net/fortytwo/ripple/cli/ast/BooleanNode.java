@@ -5,7 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class BooleanNode extends Ast
+public class BooleanNode implements Ast
 {
     private boolean value;
 
@@ -18,6 +18,11 @@ public class BooleanNode extends Ast
         throws RippleException
     {
         return mc.createValue( value );
+    }
+
+    public String toString()
+    {
+        return "" + value;
     }
 }
 
