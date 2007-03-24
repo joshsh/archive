@@ -29,7 +29,7 @@ public class ListAst extends ListNode<Ast> implements Ast
 
 	public ListAst( Ast first, ListNode<Ast> rest )
 	{
-System.out.println( "first = " + first + ", rest = " + rest );
+//System.out.println( "first = " + first + ", rest = " + rest );
 		this.first = first;
 		this.rest = rest;
 	}

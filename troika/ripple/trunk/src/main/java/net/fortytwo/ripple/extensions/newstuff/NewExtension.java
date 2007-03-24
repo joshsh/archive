@@ -38,6 +38,8 @@ public class NewExtension extends Extension
 		bridge.add( new New( new RdfValue( mc.createUri( ns + "new" ) ), mc ), mc );
 		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
 		bridge.add( new Ifte( new RdfValue( mc.createUri( ns + "ifte" ) ), mc, truePrim, falsePrim ), mc );
+		bridge.add( new Map( new RdfValue( mc.createUri( ns + "map" ) ), mc ), mc );
+		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
 	}
 }
 

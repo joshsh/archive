@@ -81,7 +81,7 @@ System.out.println( "resulting list: " + toString() );
 		return new RippleList( first, this );
 	}
 
-	private static RippleList invert( ListNode<RippleValue> rs )
+	public static RippleList invert( ListNode<RippleValue> rs )
 	{
 		ListNode<RippleValue> in = rs;
 		RippleList out = null;

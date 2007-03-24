@@ -11,11 +11,11 @@ intmath:add
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .
@@ -27,11 +27,11 @@ intmath:sub
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .
@@ -43,11 +43,11 @@ intmath:mul
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .
@@ -59,11 +59,11 @@ intmath:div
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .
@@ -75,11 +75,11 @@ intmath:mod
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .
@@ -91,11 +91,11 @@ intmath:gt
 	rpl:returnType rpl:PrimitiveFunction ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .
@@ -107,11 +107,11 @@ intmath:lt
 	rpl:returnType rpl:PrimitiveFunction ;
 	rpl:parameters (
 		[
-			rdfs:label "y" ;
+			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:parameterTransparency true ]
 	) .

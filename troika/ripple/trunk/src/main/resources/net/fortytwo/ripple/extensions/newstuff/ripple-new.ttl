@@ -145,12 +145,50 @@ rpl-new:zap
 	rpl:arity 1 ;
 	rdfs:comment "y x /zap --> y" .
 
+rpl-new:fold
+	a rpl:PrimitiveFunction ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "f" ;
+			rdfs:comment "a quoted function" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "v" ;
+			rdfs:comment "tail value" ;
+			rpl:parameterTransparency "true" ]
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a list through which to fold f" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
+rpl-new:map
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "f" ;
+			rdfs:comment "a quoted function" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a list over which to distribute f" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
 rpl-new:ifte
 	a rpl:PrimitiveFunction ;
 	rpl:arity 3 ;
 	rpl:parameters (
 		[
-			rdfs:label "b" ;
+			rdfs:label "elsePart" ;
 			rpl:parameterType xsd:PrimitiveFunction ;
 			rpl:parameterTransparency true ]
 		[
@@ -158,7 +196,7 @@ rpl-new:ifte
 			rpl:parameterType rdf:List ;
 			rpl:parameterTransparency true ]
 		[
-			rdfs:label "elsePart" ;
+			rdfs:label "b" ;
 			rpl:parameterType rdf:List ;
 			rpl:parameterTransparency true ]
 	) ;

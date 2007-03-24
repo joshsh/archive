@@ -1,0 +1,9 @@
+1 >>  0 2 /add 3 /add.
+--- 1 ---
+--- 2 ---
+intValue(3
+intValue(net.fortytwo.ripple.model.Operator@1df073d
+
+Error: java.lang.NullPointerException
+
+
