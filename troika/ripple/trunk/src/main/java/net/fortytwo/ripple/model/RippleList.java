@@ -191,6 +191,25 @@ System.out.println( "resulting list: " + toString() );
 
 		return rdfEquivalent;
 	}
+
+	public static RippleList from( RippleValue v, ModelConnection mc )
+		throws RippleException
+	{
+		if ( v instanceof RippleList )
+			return (RippleList) v;
+
+		// If not (already) a list...
+		else
+		{
+			// If the argument is an RDF value, try to convert it to a native list.
+			if ( v instanceof RdfValue )
+				return new RippleList( (RdfValue) v, mc );
+
+			// Otherwise, fail.
+			else
+				throw new RippleException( "expecting " + RippleList.class + ", found " + v );
+		}
+	}
 }
 
 // kate: tab-width 4

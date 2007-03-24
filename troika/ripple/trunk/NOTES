@@ -7,7 +7,7 @@ V"  Sink --> Consumer
 
 $ ripple
 @prefix : <file:///tmp/tmp.rdf#>.
-@term mylist: 2 3 .
+@define mylist: 2 3 .
 @export : "/tmp/tmp.rdf".
 @quit.
 $ ripple
@@ -61,6 +61,15 @@ rpl-new:prog
 
 ba
 	3 /prog.
+
+
+========================================
+joy:i
+========================================
+
+1 (2 3 4) /i.
+
+
 
 
 ========================================
@@ -233,7 +242,7 @@ rdfs:Class /bagElements.
 
 
 @prefix : <http://example.org/foo#>.
-@term woot: 2 3 .
+@define woot: 2 3 .
 :woot /prog.
 /woot.
 
@@ -345,7 +354,7 @@ command line
 		advantages over GUI
 		error output, recovery
 		commands via directives
-			@count, @export, @list, @prefix, @quit, @serql, @term
+			@count, @export, @list, @prefix, @quit, @serql, @define
 	output
 		tree view
 	lexicon
