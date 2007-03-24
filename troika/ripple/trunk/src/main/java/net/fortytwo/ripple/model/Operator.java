@@ -34,6 +34,11 @@ public class Operator implements RippleValue
         return func;
     }
 
+	public String toString()
+	{
+		return "/" + func;
+	}
+
     public void printTo( RipplePrintStream p )
         throws RippleException
     {

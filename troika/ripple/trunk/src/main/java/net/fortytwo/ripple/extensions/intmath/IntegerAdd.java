@@ -18,7 +18,7 @@ public class IntegerAdd extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 2;
 	}
 
     public void applyTo( RippleList stack,

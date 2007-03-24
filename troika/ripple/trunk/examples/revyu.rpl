@@ -7,8 +7,9 @@
 
 
 # Revyu + book mashup
-<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869> primaryTopic sameAs;
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869> /primaryTopic /sameAs.
 	# --> <http://www4.wiwiss.fu-berlin.de/bookmashup/books/0735712018>
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869>/primaryTopic/sameAs/hasOffer/scom:hasPrice/unique.
 
 
 <http://revyu.com/things/the-fox-and-the-monk-by-john-smith>;

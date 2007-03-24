@@ -26,8 +26,8 @@ public class EagerStackEvaluator extends Evaluator
         public void put( RippleList stack )
             throws RippleException
         {
-////System.out.println( this + ".put( " + stack + " )" );
-////System.out.println( "   first = " + stack.getFirst() );
+//System.out.println( this + ".put( " + stack + " )" );
+//System.out.println( "   first = " + stack.getFirst() );
             if ( function.arity() == 1 )
                 function.applyTo( stack, sink, modelConnection );
 

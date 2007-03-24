@@ -223,7 +223,7 @@ public class ModelConnection
     public int intValue( RippleValue rv )
 		throws RippleException
     {
-System.out.println( "intValue(" + rv );
+//System.out.println( "intValue(" + rv );
         Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
 //        URI type = l.getDatatype();

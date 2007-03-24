@@ -7,6 +7,7 @@ Build
 Exception handling
 ================================================================================
 * Decide on an extensible approach for exception handling and error logging
+* crash-test the evaluator and the interpreter with bad and weird expressions
 
 Syntax
 ================================================================================
