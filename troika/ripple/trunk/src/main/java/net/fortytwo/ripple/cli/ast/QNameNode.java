@@ -4,6 +4,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
 
@@ -24,15 +25,12 @@ public class QNameNode implements Ast
             + ( ( null == localName ) ? "" : localName );
     }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
     {
-        RippleValue v = itp.resolveQualifiedName( nsPrefix, localName );
-
-        if ( null == v )
-            throw new RippleException( "'" + this + "' is undefined in this context" );
-        else
-            return v;
+        itp.resolveQualifiedName( nsPrefix, localName, sink );
     }
 }
 

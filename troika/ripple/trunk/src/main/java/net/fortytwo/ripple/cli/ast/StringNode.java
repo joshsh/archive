@@ -4,6 +4,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Sink;
 
 public class StringNode implements Ast
 {
@@ -21,12 +22,14 @@ public class StringNode implements Ast
         this.language = language;
     }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
     {
-        return ( null == language )
+        sink.put( ( null == language )
             ? mc.createValue( value )
-            : mc.createValue( value, language );
+            : mc.createValue( value, language ) );
     }
 
     public String toString()

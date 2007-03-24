@@ -6,6 +6,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.util.Sink;
 
 public class UriNode implements Ast
 {
@@ -16,11 +17,13 @@ public class UriNode implements Ast
         this.value = value;
     }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
     {
-        return mc.getModel().getBridge().get(
-            new RdfValue( mc.createUri( value ) ) );
+        sink.put( mc.getModel().getBridge().get(
+            new RdfValue( mc.createUri( value ) ) ) );
     }
 
     public String toString()

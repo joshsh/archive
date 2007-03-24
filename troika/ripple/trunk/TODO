@@ -90,6 +90,7 @@ Coding standards
 Distribution
 ================================================================================
 * clean out the 'work' resources directory
+* tweak ripple.sh and ripple.bat so that they yield the same return value as the program
 
 Testing
 ================================================================================

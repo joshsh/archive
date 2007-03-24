@@ -4,6 +4,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Sink;
 
 public class NameNode implements Ast
 {
@@ -19,15 +20,12 @@ public class NameNode implements Ast
         return localName;
     }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
     {
-        RippleValue v = itp.resolveUnqualifiedName( localName );
-
-        if ( null == v )
-            throw new RippleException( "'" + localName + "' is undefined in this context" );
-        else
-            return v;
+        itp.resolveUnqualifiedName( localName, sink );
     }
 }
 

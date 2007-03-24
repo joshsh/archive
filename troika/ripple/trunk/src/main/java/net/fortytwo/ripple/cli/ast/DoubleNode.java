@@ -4,6 +4,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Sink;
 
 public class DoubleNode implements Ast
 {
@@ -14,10 +15,12 @@ public class DoubleNode implements Ast
         this.value = value;
     }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
     {
-        return mc.createValue( value );
+        sink.put( mc.createValue( value ) );
     }
 
     public String toString()

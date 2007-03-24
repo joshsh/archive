@@ -4,6 +4,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Sink;
 
 /**
  *  Warning: use this class with caution.
@@ -13,11 +14,11 @@ public class NullNode implements Ast
     public NullNode()
     { }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
-    {
-        return null;
-    }
+    {}
 
     public String toString()
     {

@@ -1,13 +1,17 @@
 package net.fortytwo.ripple.cli.ast;
 
+import java.util.Iterator;
+
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.Interpreter;
+import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Sink;
 
 public class ApplyNode implements Ast
 {
@@ -18,14 +22,15 @@ public class ApplyNode implements Ast
         arg = argument;
     }
 
-    public RippleValue evaluate( Interpreter itp, ModelConnection mc )
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
         throws RippleException
     {
-        RippleValue v = arg.evaluate( itp, mc );
-
-//        Operator op = Operator.guessOperator( v, mc );
-
-        return Operator.createOperator( v, mc );
+        ContainerSink values = new ContainerSink();
+        arg.evaluate( values, itp, mc );
+        for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
+            sink.put( Operator.createOperator( iter.next(), mc ) );
     }
 
     public String toString()

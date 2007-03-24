@@ -9,7 +9,6 @@ import net.fortytwo.ripple.cli.ast.BNodeNode;
 import net.fortytwo.ripple.cli.ast.DoubleNode;
 import net.fortytwo.ripple.cli.ast.IntNode;
 import net.fortytwo.ripple.cli.ast.NameNode;
-import net.fortytwo.ripple.cli.ast.NullNode;
 import net.fortytwo.ripple.cli.ast.QNameNode;
 import net.fortytwo.ripple.cli.ast.StringNode;
 import net.fortytwo.ripple.cli.ast.TypedLiteralNode;
@@ -216,13 +215,14 @@ DIRECTIVE_HEAD
     ;
 
 DRCTV_COUNT       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
+DRCTV_DEFINE      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
 DRCTV_EXPORT      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
 DRCTV_LIST        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
 DRCTV_PREFIX      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
 DRCTV_QUIT        : DIRECTIVE_HEAD ( "quit"          | "q" ) ;
 DRCTV_SAVEAS      : DIRECTIVE_HEAD ( "saveas"        | "sa" ) ;
 DRCTV_SERQL       : DIRECTIVE_HEAD ( "serql"         | "sr" ) ;
-DRCTV_TERM        : DIRECTIVE_HEAD ( "term"          | "t" ) ;
+DRCTV_UNDEFINE    : DIRECTIVE_HEAD ( "undefine"      | "u" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -260,7 +260,7 @@ nt_Input
 
 nt_Statement
 {
-    Ast r;
+    ListAst r;
 }
     : r=nt_Sequence (WS)? EOS
         {
@@ -320,9 +320,9 @@ nt_Item returns [ Ast r ]
     ;
 
 
-nt_ParenthesizedExpression returns [ Ast r ]
+nt_ParenthesizedExpression returns [ ListAst r ]
 {
-    r = new NullNode();
+    r = null;
 }
     : L_PAREN (WS)? ( r=nt_Sequence )? R_PAREN
     ;
@@ -476,14 +476,13 @@ nt_Resource returns [ Ast r ]
 
 nt_Directive
 {
-    Ast subj, pred, obj;
     UriNode ns;
 
-    // Defaults to the empty (not null) prefix.
+    // Defaults to the empty (but not null) prefix.
     String nsPrefix = "";
 
     String localName = null;
-    Ast rhs;
+    ListAst rhs;
 }
     : DRCTV_COUNT WS "statements" (WS)? EOS
         {
@@ -526,9 +525,14 @@ nt_Directive
             interpreter.saveAs( saFile.getText() );
         }
 
-    | DRCTV_TERM WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
+    | DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
         {
             interpreter.evaluateAndDefine( rhs, localName );
+        }
+
+    | DRCTV_UNDEFINE WS localName=nt_Name (WS)? EOS
+        {
+            interpreter.undefine( localName );
         }
     ;
 

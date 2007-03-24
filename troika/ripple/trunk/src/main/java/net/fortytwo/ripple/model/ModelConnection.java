@@ -325,7 +325,6 @@ System.out.println( "destResource = " + destResource );
             RepositoryResult<Statement> stmtIter
                 = repoConnection.getStatements(
                     srcResource, null, null, Ripple.useInference() );
-//                    RDF.LIST, null, null, Ripple.useInference() );
             while ( stmtIter.hasNext() )
                 stmts.add( stmtIter.next() );
             stmtIter.close();
@@ -348,6 +347,30 @@ System.out.flush();
             throw new RippleException( t );
         }
 System.out.println( "done" );
+    }
+
+    public void removeStatementsAbout( final URI subj )
+        throws RippleException
+    {
+        try
+        {
+            Collection<Statement> stmts = new LinkedList<Statement>();
+            RepositoryResult<Statement> stmtIter
+                = repoConnection.getStatements(
+                    subj, null, null, Ripple.useInference() );
+            while ( stmtIter.hasNext() )
+                stmts.add( stmtIter.next() );
+            stmtIter.close();
+
+            for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+                repoConnection.remove( iter.next() );
+        }
+
+        catch ( Throwable t )
+        {
+            reset();
+            throw new RippleException( t );
+        }
     }
 
     private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );

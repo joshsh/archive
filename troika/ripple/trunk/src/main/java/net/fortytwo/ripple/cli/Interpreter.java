@@ -32,6 +32,7 @@ import org.openrdf.model.URI;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Container;
+import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Evaluator;
@@ -45,8 +46,9 @@ import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.cli.ast.Ast;
+import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.ast.UriNode;
+import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
@@ -186,13 +188,14 @@ System.out.println( "########## updating completors" );
 
             ArrayList<String> directives = new ArrayList<String>();
             directives.add( "@count" );
+            directives.add( "@define" );
             directives.add( "@export" );
             directives.add( "@list" );
             directives.add( "@prefix" );
             directives.add( "@quit" );
             directives.add( "@saveas" );
             directives.add( "@serql" );
-            directives.add( "@term" );
+            directives.add( "@undefine" );
 
             completors.add(
                 new net.fortytwo.ripple.cli.jline.DirectiveCompletor(
@@ -452,42 +455,6 @@ System.out.println( "--- 3 ---" );
         catch ( RippleException e ) {}
     }
 
-    public void addStatement( Ast subj, Ast pred, Ast obj )
-    {
-        ModelConnection mc = null;
-
-        try
-        {
-            mc = new ModelConnection( model, "for addStatement" );
-
-            RippleValue subjValue = subj.evaluate( this, mc );
-            RippleValue predValue = pred.evaluate( this, mc );
-            RippleValue objValue = obj.evaluate( this, mc );
-
-            mc.add( subjValue, predValue, objValue );
-            mc.close();
-            mc = null;
-        }
-
-        catch ( RippleException e )
-        {
-            if ( null != mc )
-            {
-                try
-                {
-                    mc.close();
-                }
-
-                catch ( RippleException e2 )
-                {
-                    // ...
-                }
-            }
-
-            alert( "Error: " + e.getMessage() );
-        }
-    }
-
     public void setNamespace( final String prefix, final UriNode uri )
     {
         ModelConnection mc = null;
@@ -495,8 +462,14 @@ System.out.println( "--- 3 ---" );
         try
         {
             mc = new ModelConnection( model, "for setNamespace" );
+            ContainerSink sink = new ContainerSink();
+            uri.evaluate( sink, this, mc );
+            if ( sink.size() == 0 )
+                throw new RippleException( "URI could not be constructed from " + uri );
+            else if ( sink.size() > 1 )
+                throw new RippleException( "multiple values constructed from " + uri );
 
-            URI ns = mc.uriValue( uri.evaluate( this, mc ) );
+            URI ns = mc.uriValue( sink.iterator().next() );
             mc.setNamespace( prefix, ns );
             mc.close();
             mc = null;
@@ -547,67 +520,56 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
         }
     }
 
-    public RippleValue resolveUnqualifiedName( final String localName )
+    public void resolveUnqualifiedName( final String localName, Sink<RippleValue> sink )
         throws RippleException
     {
-        List<URI> options = lexicon.resolveUnqualifiedName( localName );
-        if ( null == options || 0 == options.size() )
-            return null;
-        else
+        Collection<URI> options = lexicon.resolveUnqualifiedName( localName );
+        if ( 0 == options.size() )
+            errorPrintStream.println( "Warning: no values resolved for " + localName );
+        else if ( 1 < options.size() )
+            errorPrintStream.println( "Warning: multiple values resolved for " + localName );
+
+        for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
         {
-// TODO: this is only one way of handling name ambiguity.
-            RdfValue choice = new RdfValue( options.get( 0 ) );
+            RdfValue choice = new RdfValue( optIter.next() );
 
             RippleValue rv = model.getBridge().get( choice );
-            return ( null == rv )
+            sink.put( ( null == rv )
                 ? choice
-                : rv;
+                : rv );
         }
     }
 
-    public RippleValue resolveQualifiedName( final String nsPrefix,
-                                       final String localName )
+    public void resolveQualifiedName( final String nsPrefix,
+                                      final String localName,
+                                      final Sink<RippleValue> sink )
         throws RippleException
     {
         Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
-        if ( null == v )
-            return null;
 
-        else
+        if ( null != v )
         {
             RdfValue choice = new RdfValue( v );
 
             RippleValue rv = model.getBridge().get( choice );
-            return ( null == rv )
+            sink.put( ( null == rv )
                 ? choice
-                : rv;
+                : rv );
         }
     }
 
-    private Container reduce( RippleValue expr, ModelConnection mc )
+    private String getDefaultNamespace()
         throws RippleException
     {
-        try
-        {
-            ListContainerSink sink = new ListContainerSink();
-// FIXME: awkward
+        String defaultNs = lexicon.resolveNamespacePrefix( "" );
 
-            RippleList list = ( expr instanceof RippleList )
-                ? (RippleList) expr
-                : new RippleList( expr );
+        if ( null == defaultNs )
+            throw new RippleException( "no default namespace is defined" );
 
-                evaluator.applyTo( list, sink, mc );
-
-            return sink;
-        }
-
-        catch ( RippleException e )
-        {
-            throw e;
-        }
+        return defaultNs;
     }
 
-    private void evaluate( Ast ast, final String name )
+    private void evaluate( ListAst ast, final String name )
         throws RippleException
     {
         ModelConnection mc = null;
@@ -616,15 +578,16 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
         {
             mc = new ModelConnection( model, "for Interpreter evaluate()" );
 
-            RippleValue expr = ast.evaluate( this, mc );
+            ContainerSink expressions = new ContainerSink();
+            ast.evaluate( expressions, this, mc );
 
             // Define the term *before* reduction.
-            if ( null != name )
+            if ( null != name && expressions.size() > 0 )
             {
-                String defaultNs = lexicon.resolveNamespacePrefix( "" );
+                if ( expressions.size() > 1 )
+                    errorPrintStream.println( "Warning: expression has multiple values.  Choosing the first value for assignment." );
 
-                if ( null == defaultNs )
-                    throw new RippleException( "no default namespace is defined" );
+                RippleValue expr = expressions.iterator().next();
 
                 if ( !( expr instanceof RippleList ) )
                     throw new RippleException( "term assignment for non-lists is not implemented" );
@@ -632,22 +595,30 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
                 RippleList exprList = (RippleList) expr;
 
 // TODO: check for collision with an existing URI
-                URI uri = mc.createUri( defaultNs + name );
+                URI uri = mc.createUri( getDefaultNamespace() + name );
 
                 mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
 
                 lexicon.update();
             }
 
-            Container result = ( null == expr )
-                ? new Container()
-                : reduce( expr, mc );
+            ListContainerSink evaluatedExpressions = new ListContainerSink();
+            for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
+            {
+                RippleValue expr = iter.next();
+                RippleList list = ( expr instanceof RippleList )
+                    ? (RippleList) expr
+                    : new RippleList( expr );
+//System.out.println( "applying to: " + list );
+
+                evaluator.applyTo( list, evaluatedExpressions, mc );
+            }
 
 // TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
-            dereferenceResultSet( result, mc );
+            dereferenceResultSet( evaluatedExpressions, mc );
 
-            valueSet.setValues( result );
+            valueSet.setValues( evaluatedExpressions );
 
             mc.close();
         }
@@ -659,10 +630,27 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
         }
     }
 
-    public void evaluate( Ast ast )
+    public void undefine( final String localName )
     {
-        ModelConnection mc = null;
+        try
+        {
+            ModelConnection mc = new ModelConnection( model, "for Interpreter undefine()" );
 
+            mc.removeStatementsAbout(
+                mc.createUri( getDefaultNamespace() + localName ) );
+
+// TODO: close on Exception
+            mc.close();
+        }
+
+        catch ( RippleException e )
+        {
+            alert( "Error: " + e.getMessage() );
+        }
+    }
+
+    public void evaluate( ListAst ast )
+    {
         try
         {
             lexicon.suspendEventHandling();
@@ -678,10 +666,8 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
         }
     }
 
-    public void evaluateAndDefine( Ast ast, String name )
+    public void evaluateAndDefine( ListAst ast, String name )
     {
-        ModelConnection mc = null;
-
         try
         {
             lexicon.suspendEventHandling();
