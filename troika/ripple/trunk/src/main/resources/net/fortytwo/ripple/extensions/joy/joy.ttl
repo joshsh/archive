@@ -4,6 +4,23 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
+joy:and
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rdfs:comment "a boolean value (joy:true or joy:false)" ;
+			rpl:parameterType rpl:PrimitiveFunction ;
+			rpl:parameterTransparency "true" ]
+		[
+			rdfs:label "y" ;
+			rdfs:comment "a boolean value (joy:true or joy:false)" ;
+			rpl:parameterType rpl:PrimitiveFunction ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
 joy:dup
 	a rpl:PrimitiveFunction ;
 	rpl:arity 1 ;
@@ -79,6 +96,35 @@ joy:map
 			rdfs:label "l" ;
 			rdfs:comment "a list over which to distribute f" ;
 			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
+joy:not
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rdfs:comment "a boolean value (joy:true or joy:false)" ;
+			rpl:parameterType rpl:PrimitiveFunction ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
+joy:or
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rdfs:comment "a boolean value (joy:true or joy:false)" ;
+			rpl:parameterType rpl:PrimitiveFunction ;
+			rpl:parameterTransparency "true" ]
+		[
+			rdfs:label "y" ;
+			rdfs:comment "a boolean value (joy:true or joy:false)" ;
+			rpl:parameterType rpl:PrimitiveFunction ;
 			rpl:parameterTransparency "true" ]
 	) ;
 	rdfs:comment "" .
