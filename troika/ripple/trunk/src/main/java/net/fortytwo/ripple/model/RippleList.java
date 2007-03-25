@@ -192,6 +192,13 @@ System.out.println( "resulting list: " + toString() );
 		return rdfEquivalent;
 	}
 
+	public static RippleList concat( RippleList head, RippleList tail )
+	{
+		return ( null == head )
+			? tail
+			: new RippleList( head.first, concat( head.rest, tail ) );
+	}
+
 	public static RippleList from( RippleValue v, ModelConnection mc )
 		throws RippleException
 	{

@@ -47,7 +47,12 @@ public class Lexicon extends Observable implements Observer
 
     public List<URI> resolveUnqualifiedName( final String localName )
     {
-        return localNameToUrisMap.get( localName );
+        List<URI> result = localNameToUrisMap.get( localName );
+
+        // If there are no results, return an empty list instead of null.
+        return ( null == result )
+            ? new ArrayList<URI>()
+            : result;
     }
 
     /**

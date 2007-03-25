@@ -16,6 +16,7 @@ public class JoyExtension extends Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 
 		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
+		bridge.add( new Concat( new RdfValue( mc.createUri( ns + "concat" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );

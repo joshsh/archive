@@ -28,6 +28,17 @@ rpl:PrimitiveFunction.
 
 
 
+2 3 thisisnotdefined.
+"foo" rdfs:thisisnotarealterm.
+
+@prefix : <http://example.org/foo#>.
+@define ambiguousTerm: "definition in foo namespace".
+@prefix : <http://example.org/bar#>.
+@define ambiguousTerm: "definition in bar namespace".
+ambiguousTerm.
+
+
+
 
 
 

@@ -21,6 +21,23 @@ joy:and
 	) ;
 	rdfs:comment "" .
 
+joy:concat
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "l1" ;
+			rdfs:comment "head of the new list" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+		[
+			rdfs:label "l2" ;
+			rdfs:comment "tail of the new list" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency "true" ]
+	) ;
+	rdfs:comment "" .
+
 joy:dup
 	a rpl:PrimitiveFunction ;
 	rpl:arity 1 ;
