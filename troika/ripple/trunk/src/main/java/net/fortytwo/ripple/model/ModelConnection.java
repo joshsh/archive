@@ -527,7 +527,10 @@ System.out.println( "done" );
 
         try
         {
-            repoConnection.remove( subjResource, null, null, context );
+            if ( null == context )
+                repoConnection.remove( subjResource, null, null );
+            else
+                repoConnection.remove( subjResource, null, null, context );
         }
 
         catch ( Throwable t )
@@ -711,7 +714,7 @@ System.out.println( "done" );
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public RippleValue createValue( final String s )
+    public RdfValue createValue( final String s )
         throws RippleException
     {
         try
@@ -726,7 +729,7 @@ System.out.println( "done" );
         }
     }
 
-    public RippleValue createValue( final String s, final String language )
+    public RdfValue createValue( final String s, final String language )
         throws RippleException
     {
         try
@@ -741,7 +744,7 @@ System.out.println( "done" );
         }
     }
 
-    public RippleValue createValue( final String s, final URI dataType )
+    public RdfValue createValue( final String s, final URI dataType )
         throws RippleException
     {
         try
@@ -756,7 +759,7 @@ System.out.println( "done" );
         }
     }
 
-    public RippleValue createValue( final boolean b )
+    public RdfValue createValue( final boolean b )
         throws RippleException
     {
         try
@@ -771,7 +774,7 @@ System.out.println( "done" );
         }
     }
 
-    public RippleValue createValue( final int i )
+    public RdfValue createValue( final int i )
         throws RippleException
     {
         try
@@ -786,7 +789,7 @@ System.out.println( "done" );
         }
     }
 
-    public RippleValue createValue( final double d )
+    public RdfValue createValue( final double d )
         throws RippleException
     {
         try

@@ -54,7 +54,7 @@ rpl:parameters
 	rdfs:comment "" .
 
 rpl:Parameter
-	rdfs:type rdfs:Class ;
+	a rdfs:Class ;
 	rdfs:comment "a formal argument to a function" .
 
 rpl:ParameterList

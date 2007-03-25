@@ -373,7 +373,8 @@ System.out.println( "--- 3 ---" );
             throw new RippleException( e );
         }
 
-        model.writeTrix( out );
+        model.writeTo( out );
+//        model.writeTrix( out );
 
         try
         {

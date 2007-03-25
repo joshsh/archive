@@ -10,6 +10,10 @@ package net.fortytwo.ripple;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+
 import java.net.URL;
 
 import java.util.List;
@@ -110,25 +114,32 @@ System.exit( 0 );
 
 
 
-
-
-
         try
         {
+            File store = ( args.length > 0 ) ? new File( args[0] ) : null;
+
             Ripple.initialize();
 
             Repository repository = createTestRepository();
 
-            Model model = new Model( repository, "anonymousContext" );
-            ModelConnection mc = new ModelConnection( model, "for CLIExample main" );
-            if ( args.length == 2 )
-                mc.addGraph( new URL( args[0] ), mc.createUri( args[1] ) );
-            else if ( args.length == 1 )
-                mc.addGraph( new URL( args[0] ) );
-            mc.close();
+            Model model = new Model( repository, "Demo Model" );
+
+            if ( null != store )
+            {
+                s_logger.info( "loading state from " + store );
+                model.load( store.toURL() );
+            }
 
             Interpreter r = new Interpreter( model );
             r.run();
+
+            if ( null != store )
+            {
+                s_logger.info( "saving state to " + store );
+                OutputStream out = new FileOutputStream( store );
+                model.writeTo( out );
+                out.close();
+            }
 
             repository.shutDown();
         }

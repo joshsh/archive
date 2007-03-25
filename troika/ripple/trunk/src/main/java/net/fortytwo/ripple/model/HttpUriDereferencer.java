@@ -1,8 +1,20 @@
 package net.fortytwo.ripple.model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.LinkedHashSet;
+
+import jline.Completor;
+
 import net.fortytwo.ripple.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+
+import org.apache.log4j.Logger;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -12,24 +24,12 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 
-import jline.Completor;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.LinkedHashSet;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.log4j.Logger;
-
 public class HttpUriDereferencer implements Dereferencer
 {
     private final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
 
-    private Set<String> successMemoUris;
-    private Set<String> failureMemoUris;
+    private Set<String> successMemos;
+    private Set<String> failureMemos;
 
     private UrlFactory urlFactory;
 
@@ -37,8 +37,8 @@ public class HttpUriDereferencer implements Dereferencer
     {
         this.urlFactory = urlFactory;
 
-        successMemoUris = new LinkedHashSet<String>();
-        failureMemoUris = new LinkedHashSet<String>();
+        successMemos = new LinkedHashSet<String>();
+        failureMemos = new LinkedHashSet<String>();
     }
 
     private String findMemo( final URI uri )
@@ -77,38 +77,38 @@ public class HttpUriDereferencer implements Dereferencer
         String ns = uri.getNamespace();
         String memo = findMemo( uri );
 
-        if ( successMemoUris.contains( memo )
-          || failureMemoUris.contains( memo ) )
+        if ( successMemos.contains( memo )
+          || failureMemos.contains( memo ) )
 {
-//if ( successMemoUris.contains( memo ) )
+//if ( successMemos.contains( memo ) )
 //s_logger.info( "URI memo already succeeded: " + memo );
-//if ( failureMemoUris.contains( memo ) )
+//if ( failureMemos.contains( memo ) )
 //s_logger.info( "URI memo already failed: " + memo );
             return;
 }
-
-        // Note: this URL should be treated as a "black box" once created; it
-        // need not bear any relation to the URI it was created from.
-        URL url;
-
-        // Request the resource by its namespace, rather than by its full
-        // URI.
-        // Note: for hash namespaces, this doesn't make any difference.
-        if ( Ripple.dereferenceByNamespace() )
-            url = urlFactory.createUrl( ns );
-
-        // Request the resource at the full URI.  If the purpose of a slash
-        // namespace is to serve up statements about a specific URI, then
-        // this is the way to go.  However, we'll lose some documents which
-        // perhaps should be using a hash namespace instead.
-        else
-            url = urlFactory.createUrl( uri.toString() );
 
         // Identify the context of the to-be-imported graph with its namespace.
         URI context = findContext( ns, mc );
 
         try
         {
+            // Note: this URL should be treated as a "black box" once created; it
+            // need not bear any relation to the URI it was created from.
+            URL url;
+
+            // Request the resource by its namespace, rather than by its full
+            // URI.
+            // Note: for hash namespaces, this doesn't make any difference.
+            if ( Ripple.dereferenceByNamespace() )
+                url = urlFactory.createUrl( ns );
+
+            // Request the resource at the full URI.  If the purpose of a slash
+            // namespace is to serve up statements about a specific URI, then
+            // this is the way to go.  However, we'll lose some documents which
+            // perhaps should be using a hash namespace instead.
+            else
+                url = urlFactory.createUrl( uri.toString() );
+
             mc.addGraph( url, context );
 s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
         }
@@ -117,11 +117,11 @@ s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to c
         {
             mc.reset();
 s_logger.info( "##### failed to dereference URI: " + uri.toString() );
-            failureMemoUris.add( memo );
+            failureMemos.add( memo );
             throw e;
         }
 
-        successMemoUris.add( memo );
+        successMemos.add( memo );
 
 // TODO: this should probably be in a parent Dereferencer.
         if ( Ripple.enforceImplicitProvenance() )
@@ -199,19 +199,43 @@ if ( v instanceof URI )
         {
             String memo = findMemo( (URI) v );
 
-            if ( failureMemoUris.contains( memo ) )
-                failureMemoUris.remove( memo );
+            if ( failureMemos.contains( memo ) )
+                failureMemos.remove( memo );
 
             // If resolution previously succeeded, remove all statements about
             // the value in the appropriate context.
-            if ( successMemoUris.contains( memo ) )
+            if ( successMemos.contains( memo ) )
             {
                 URI context = findContext( ( (URI) v ).getNamespace(), mc );
                 mc.removeStatementsAbout( rv, context );
 
-                successMemoUris.remove( memo );
+                successMemos.remove( memo );
             }
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public void addSuccessMemo( final String memo )
+    {
+System.out.println( "adding success memo: " + memo );
+        successMemos.add( memo );
+    }
+
+    public void addFailureMemo( final String memo )
+    {
+System.out.println( "adding failure memo: " + memo );
+        failureMemos.add( memo );
+    }
+
+    public Collection<String> getSuccessMemos()
+    {
+        return successMemos;
+    }
+
+    public Collection<String> getFailureMemos()
+    {
+        return failureMemos;
     }
 }
 
