@@ -21,6 +21,22 @@ joy:and
 	) ;
 	rdfs:comment "" .
 
+joy:at
+	rdfs:label "at" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "i" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+		[
+			rdfs:label "list" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+	) ;
+	rdfs:comment "Note: as in Joy, lists are 1-indexed" .
+
 joy:concat
 	a rpl:PrimitiveFunction ;
 	rpl:arity 2 ;
@@ -146,10 +162,24 @@ joy:or
 	) ;
 	rdfs:comment "" .
 
+joy:size
+	rdfs:label "size" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "list" ;
+			rpl:parameterType rdf:List ;
+			rpl:parameterTransparency true ]
+	) ;
+	rdfs:comment "finds the number of items in a List" .
+
 joy:swap
 	a rpl:PrimitiveFunction ;
 	rpl:arity 2 ;
 	rdfs:comment "x y /swap --> y x" .
+
 joy:true
 	a rpl:PrimitiveFunction ;
 	rpl:arity 2 ;

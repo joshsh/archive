@@ -4,6 +4,18 @@
 @prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
 
+intmath:abs
+	rdfs:label "integer-abs" ;
+	a rpl:PrimitiveFunction ;
+	rpl:arity 1 ;
+	rpl:returnType xsd:integer ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:parameterTransparency true ]
+	) .
+
 intmath:add
 	rdfs:label "integer-add" ;
 	a rpl:PrimitiveFunction ;

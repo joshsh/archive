@@ -16,17 +16,19 @@ public class JoyExtension extends Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 
 		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
+		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
 		bridge.add( new Concat( new RdfValue( mc.createUri( ns + "concat" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
+		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
 		bridge.add( new Ifte( new RdfValue( mc.createUri( ns + "ifte" ) ), mc ), mc );
 		bridge.add( new Map( new RdfValue( mc.createUri( ns + "map" ) ), mc ), mc );
 		bridge.add( new Not( new RdfValue( mc.createUri( ns + "not" ) ), mc ), mc );
 		bridge.add( new Or( new RdfValue( mc.createUri( ns + "or" ) ), mc ), mc );
-		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
-		bridge.add( new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
+		bridge.add( new Size( new RdfValue( mc.createUri( ns + "size" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
+		bridge.add( new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
 		bridge.add( new Zap( new RdfValue( mc.createUri( ns + "zap" ) ), mc ), mc );
 	}
 }

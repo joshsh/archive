@@ -1,3 +1,12 @@
+Comparison with Joy
+* Ripple's implementation of joy's list operators (e.g. concat) currently only work on rdf:Lists, and not on strings or other aggregate objects.
+* Ripple doesn't need to implement joy:first and joy:rest for lists, as it gets the same functionality out of rdf:first and rdf:rest as predicates.
+* Ripple doesn't implement joy:get or joy:put as I'm not interested in I/O for now
+* Ripple MAY not need set operations, as they can be achieved with the stream primitives
+* not YET implemented: joy:map, joy:step, joy:filter, joy:linrec, joy:binrec, joy:treerec, joy:unitlist, joy:powerlist, joy:cleave, joy:succ, joy:pred, joy:small
+	joy:pop, joy:cons, joy:swons, joy:uncons, joy:dip
+
+
 V"  Sink --> Consumer
 
 
@@ -47,6 +56,36 @@ ambiguousTerm.
 	rdf:_1  (2 /rpl-new:dup 3)
 
 
+
+========================================
+intmath:abs
+========================================
+
+-1 /abs.
+0 /abs.
+42/abs.
+
+
+========================================
+joy:at
+========================================
+
+("one" "two" "three") 1 /at.
+("one" "two" "three") 3 /at.
+
+
+========================================
+joy:concat
+========================================
+
+(2 3 4) (5 6) /concat.
+
+
+========================================
+joy:size
+========================================
+
+("one" "two" "three")/size.
 
 
 

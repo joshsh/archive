@@ -180,7 +180,7 @@ DOUBLE
 
 
 NUMBER
-    : ( DIGIT )+ ( '.' ( DIGIT )+ )?
+    : ('-')? ( DIGIT )+ ( '.' ( DIGIT )+ )?
     ;
 
 COMMENT
@@ -216,6 +216,7 @@ DIRECTIVE_HEAD
 DRCTV_COUNT       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
 DRCTV_DEFINE      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
 DRCTV_EXPORT      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
+DRCTV_HELP        : DIRECTIVE_HEAD ( "help"          | "h" ) ;
 DRCTV_LIST        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
 DRCTV_PREFIX      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
 DRCTV_QUIT        : DIRECTIVE_HEAD ( "quit"          | "q" ) ;
@@ -488,9 +489,19 @@ nt_Directive
             interpreter.countStatements();
         }
 
-    | DRCTV_SERQL WS query:STRING (WS)? EOS
+    | DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
         {
-            interpreter.evaluateGraphQuery( query.getText() );
+            interpreter.evaluateAndDefine( rhs, localName );
+        }
+
+    | DRCTV_EXPORT ( WS ( nsPrefix=nt_Prefix (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
+        {
+            interpreter.exportNs( nsPrefix, exFile.getText() );
+        }
+
+    | DRCTV_HELP (WS)? EOS
+        {
+            System.out.println( "\nSorry, the @help directive is just a placeholder for now.\n" );
         }
 
     | DRCTV_LIST WS
@@ -514,19 +525,14 @@ nt_Directive
             interpreter.quit();
         }
 
-    | DRCTV_EXPORT ( WS ( nsPrefix=nt_Prefix (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
-        {
-            interpreter.exportNs( nsPrefix, exFile.getText() );
-        }
-
     | DRCTV_SAVEAS WS saFile:STRING (WS)? EOS
         {
             interpreter.saveAs( saFile.getText() );
         }
 
-    | DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
+    | DRCTV_SERQL WS query:STRING (WS)? EOS
         {
-            interpreter.evaluateAndDefine( rhs, localName );
+            interpreter.evaluateGraphQuery( query.getText() );
         }
 
     | DRCTV_UNDEFINE WS localName=nt_Name (WS)? EOS
@@ -534,6 +540,5 @@ nt_Directive
             interpreter.undefine( localName );
         }
     ;
-
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on

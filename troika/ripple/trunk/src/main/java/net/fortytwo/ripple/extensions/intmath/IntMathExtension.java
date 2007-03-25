@@ -20,6 +20,7 @@ public class IntMathExtension extends Extension
 		bridge.add( new IntegerLessThan( new RdfValue( mc.createUri( ns + "lt" ) ), mc ), mc );
 
 		// Integer arithmetic primitives
+		bridge.add( new IntegerAbs( new RdfValue( mc.createUri( ns + "abs" ) ), mc ), mc );
 		bridge.add( new IntegerAdd( new RdfValue( mc.createUri( ns + "add" ) ), mc ), mc );
 		bridge.add( new IntegerSubtract( new RdfValue( mc.createUri( ns + "sub" ) ), mc ), mc );
 		bridge.add( new IntegerMultiply( new RdfValue( mc.createUri( ns + "mul" ) ), mc ), mc );
