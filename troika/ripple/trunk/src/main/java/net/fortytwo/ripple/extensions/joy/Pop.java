@@ -2,16 +2,15 @@ package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-	import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class I extends PrimitiveFunction
+public class Pop extends PrimitiveFunction
 {
-	public I( RdfValue v, ModelConnection mc )
+	public Pop( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -22,36 +21,17 @@ public class I extends PrimitiveFunction
 		return 1;
 	}
 
-	private RippleList pushReversed( RippleList in, RippleList out )
-	{
-		return ( null == in )
-			? out
-			: new RippleList( in.getFirst(), pushReversed( in.getRest(), out ) );
-	}
-
 	public void applyTo( RippleList stack,
 						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue v;
+		RippleValue x;
 
-// hack...
-		{
-			v = stack.getFirst();
-			stack = stack.getRest();
-	
-			Operator o = Operator.createOperator( v, mc );
-			sink.put( new RippleList( o, stack ) );
-		}
-/*
-		RippleList l;
-
-		l = RippleList.from( stack.getFirst(), mc );
+		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( pushReversed( l, stack ) );
-*/
+		sink.put( stack );
 	}
 }
 

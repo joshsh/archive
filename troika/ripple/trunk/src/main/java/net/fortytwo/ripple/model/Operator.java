@@ -8,11 +8,13 @@ import org.openrdf.model.vocabulary.RDF;
 public class Operator implements RippleValue
 {
     public static Operator
+        OP = new Operator( new Op() ),
         PRIM = new Operator( new PrimOpConstructor() ),
         PRED = new Operator( new PredOpConstructor() ),
         PROG = new Operator( new ProgOpConstructor() );
 
     Function func;
+    RdfValue rdfEquivalent = null;
 
     public Operator( RdfValue pred )
     {
@@ -62,21 +64,19 @@ public class Operator implements RippleValue
         // the available RDF statements, and create the appropriate object.
         if ( v instanceof RdfValue )
         {
-// TODO: do some type inference instead of a dumb, single type lookup.
-            RdfValue type = mc.findAtMostOneObject( (RdfValue) v, rdfType );
-            if ( null == type || type.getRdfValue().equals( RDF.PROPERTY ) )
-                return PRED;
-            else if ( type.getRdfValue().equals( RDF.LIST ) )
+// TODO: do some type inference instead of a dumb, single lookup.
+            if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
                 return PROG;
             else
-                throw new RippleException( "bad type in guessOperator(): "
-                    + type );
+                return PRED;
         }
 
         else
             throw new RippleException( "bad RippleValue in guessOperator(): "
                 + v );
     }
+
+    private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
 
     /**
      *  Guesses the type of a node and creates an appropriate wrapper.
@@ -94,15 +94,11 @@ public class Operator implements RippleValue
         // the available RDF statements, and create the appropriate object.
         if ( v instanceof RdfValue )
         {
-// TODO: do some type inference instead of a dumb, single type lookup.
-            RdfValue type = mc.findAtMostOneObject( (RdfValue) v, rdfType );
-            if ( null == type || type.getRdfValue().equals( RDF.PROPERTY ) )
-                return new Operator( (RdfValue) v );
-            else if ( type.getRdfValue().equals( RDF.LIST ) )
+// TODO: do some type inference instead of a dumb, single lookup.
+            if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
                 return new Operator( new RippleList( (RdfValue) v, mc ) );
             else
-                throw new RippleException( "bad type in createOperator(): "
-                    + type );
+                return new Operator( (RdfValue) v );
         }
 
         else
@@ -118,7 +114,10 @@ public class Operator implements RippleValue
 public RdfValue toRdf( ModelConnection mc )
     throws RippleException
 {
-return null;
+// Note: only correct for OP, but I expect this method only to be used with OP anyway
+if ( null == rdfEquivalent )
+    rdfEquivalent = new RdfValue( mc.createUri( "http://troika.dnsdojo.net/2007/03/ripple#op" ) );
+return rdfEquivalent;
 }
 
 }

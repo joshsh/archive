@@ -1,9 +1,9 @@
 
 (: foaf :)
-<http://xmlns.com/foaf/0.1/>;
+<http://xmlns.com/foaf/0.1/>.
 
 (: Tim Berners-Lee :)
-<http://www.w3.org/People/Berners-Lee/card#i>;
+<http://www.w3.org/People/Berners-Lee/card#i>.
 
 <http://my.opera.com/fred/xml/foaf#me>/knows/unique/knows/unique/knows/unique/name/unique.
 	33325 results, if you can believe that
@@ -33,7 +33,7 @@
 
 
 # TBL is indeed a Person.
-<http://www.w3.org/People/Berners-Lee/card#i> dup/ rdf:type/ foaf:Person equal// scrap I V/// /;
+<http://www.w3.org/People/Berners-Lee/card#i> /dup /rdf:type foaf:Person /equal scrap I V/// /;
 
 # He knows a few other Persons.
 <http://www.w3.org/People/Berners-Lee/card#i> knows seeAlso or// / dup/ rdf:type/ foaf:Person equal// scrap I V/// /;

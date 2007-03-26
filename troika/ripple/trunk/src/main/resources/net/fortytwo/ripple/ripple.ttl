@@ -4,26 +4,6 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 ########################################
-# operators
-########################################
-
-rpl:Operator
-	a rdfs:Class ;
-	rdfs:comment "" .
-
-rpl:pred
-	a rpl:Operator ;
-	rdfs:comment "an operator which applies a predicate to a subject to produce an object" .
-
-rpl:prim
-	a rpl:Operator ;
-	rdfs:comment "an operator which applies a primitive function" .
-
-rpl:prog
-	a rpl:Operator ;
-	rdfs:comment "an operator which interprets an rdf:List as a Ripple program" .
-
-########################################
 # primitive functions
 ########################################
 

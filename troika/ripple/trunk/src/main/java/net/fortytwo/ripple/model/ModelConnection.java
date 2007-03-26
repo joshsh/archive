@@ -282,6 +282,16 @@ public class ModelConnection
         }
     }
 
+    public RdfValue findSingleObject( RdfValue subj, RdfValue pred )
+        throws RippleException
+    {
+        SingleValueSink sink = new SingleValueSink();
+
+        model.multiply( subj, pred, sink, this );
+
+        return sink.getValue();
+    }
+
     public RdfValue findAtMostOneObject( RdfValue subj, RdfValue pred )
         throws RippleException
     {

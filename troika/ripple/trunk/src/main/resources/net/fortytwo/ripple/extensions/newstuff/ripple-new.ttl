@@ -28,17 +28,6 @@ rpl-new:prim
 	) ;
 	rdfs:comment "p /prim --> PRIM[p]" .
 
-rpl-new:prog
-	a rpl:PrimitiveFunction ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "p" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
-	) ;
-	rdfs:comment "p /prog --> PROG[p]" .
-
 ################################################################################
 
 rpl-new:union
@@ -103,20 +92,5 @@ rpl-new:equal
 	a rpl:PrimitiveFunction ;
 	rpl:arity 2 ;
 	rdfs:comment "y x /equal --> rpl:true if x and y are equal, otherwise rpl:false" .
-
-rpl-new:times
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "t" ;
-			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
-		[
-			rdfs:label "prog" ;
-			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
-	) ;
-	rdfs:comment "" .
 
 ################################################################################

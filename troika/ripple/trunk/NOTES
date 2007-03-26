@@ -4,6 +4,7 @@ Comparison with Joy
 * Ripple doesn't implement joy:get or joy:put as I'm not interested in I/O for now
 * Ripple MAY not need set operations, as they can be achieved with the stream primitives
 * not YET implemented: joy:map, joy:step, joy:filter, joy:linrec, joy:binrec, joy:treerec, joy:unitlist, joy:powerlist, joy:cleave, joy:succ, joy:pred, joy:small
+	joy:time, joy:rand
 	joy:pop, joy:cons, joy:swons, joy:uncons, joy:dip
 
 
@@ -88,29 +89,11 @@ joy:size
 ("one" "two" "three")/size.
 
 
-
 ========================================
-rpl-new:pred
-========================================
-
-rdfs:Class rdfs:label /pred.
-
-
-========================================
-rpl-new:prim
+joy:stack
 ========================================
 
-2 dup /prim.
-
-
-========================================
-rpl-new:prog
-========================================
-
-2 (3) /prog.
-
-ba
-	3 /prog.
+1 2 3 /stack.
 
 
 ========================================
@@ -118,6 +101,13 @@ joy:i
 ========================================
 
 1 (2 3 4) /i.
+
+
+========================================
+joy:dip
+========================================
+
+2 dup 3 /dip.
 
 
 ========================================
@@ -145,6 +135,52 @@ joy:or
 true false /or.
 42 true /or.
 false false /or.
+
+========================================
+joy:times
+========================================
+
+42 (/dup) 3 /times.
+
+
+========================================
+joy:xor
+========================================
+
+true true /xor.
+true false /xor.
+42 true /xor.
+false false /xor.
+
+
+
+
+
+
+
+
+========================================
+rpl-new:pred
+========================================
+
+rdfs:Class rdfs:label /pred.
+
+
+========================================
+rpl-new:prim
+========================================
+
+2 dup /prim.
+
+
+========================================
+rpl-new:prog
+========================================
+
+2 (3) /prog.
+
+ba
+	3 /prog.
 
 
 ========================================
@@ -269,11 +305,6 @@ rpl-new:swap
 2 3 /swap.
 
 
-========================================
-rpl-new:times
-========================================
-
-42 (/dup) 3 /times.
 
 
 ========================================
@@ -296,10 +327,10 @@ rpl-new:unique
 
 
 ========================================
-rpl-new:zap
+rpl-new:pop
 ========================================
 
-2 3 4 /zap.
+2 3 4 /pop.
 
 
 

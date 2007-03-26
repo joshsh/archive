@@ -68,7 +68,8 @@ public class ForwardPredicateQuery implements Function
 public RdfValue toRdf( ModelConnection mc )
     throws RippleException
 {
-return null;
+    return pred;
+//return null;
 }
 
 }

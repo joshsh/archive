@@ -58,9 +58,13 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			rdfEquivalent = curRdf;
 System.out.println( "rdfEquivalent = " + rdfEquivalent );
 
-			// lazy initialization (we point first at an RdfValue directly,
-			// rather than using ModelBridge)
-			first = mc.findUniqueProduct( curRdf, rdfFirst );
+			// Note: it might be more efficient to use ModelBridge only
+			//       lazily, binding RDF to generic RippleValues on an
+			//       as-needed basis.  However, for now there is no better
+			//       place to do this when we're coming from an rdf:List.
+			//       Consider a list containing operators.
+			first = mc.getModel().getBridge().get(
+				mc.findUniqueProduct( curRdf, rdfFirst ) );
 System.out.println( "first = " + first );
 
 			curRdf = mc.findUniqueProduct( curRdf, rdfRest );
@@ -179,7 +183,19 @@ System.out.println( "resulting list: " + toString() );
 
 			while ( cur != null )
 			{
-				mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
+				if ( cur.first.isOperator() )
+				{
+					System.out.println( "it's an operator!" );
+					mc.add( curRdf, rdfFirst, ( (Operator) cur.first ).getFunction().toRdf( mc ) );
+					RdfValue restRdf = new RdfValue( mc.createBNode() );
+					mc.add( curRdf, rdfRest, restRdf );
+					curRdf = restRdf;
+
+					// hack...
+					mc.add( curRdf, rdfFirst, ((Operator) cur.first).toRdf( mc ) );
+				}
+				else
+					mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
 				RippleList rest = cur.rest;
 				RdfValue restRdf = ( null == cur.rest )
 					? rdfNil : new RdfValue( mc.createBNode() );

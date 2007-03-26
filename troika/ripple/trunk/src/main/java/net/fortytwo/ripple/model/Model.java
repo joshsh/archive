@@ -104,8 +104,8 @@ public Dereferencer getDereferencer()
 		dereferencer = new HttpUriDereferencer( createUrlFactory() );
 
 		bridge = new ModelBridge();
-
 		ModelConnection mc = new ModelConnection( this, "for Model constructor" );
+		bridge.add( Operator.OP, mc );
 
 		try
 		{

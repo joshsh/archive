@@ -1,10 +1,8 @@
 
-<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> ;
-<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> reviewer;
-<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> reviewer made;
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738>.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /reviewer.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /reviewer/made.
 @quit;
-
-
 
 # Revyu + book mashup
 <http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869> /primaryTopic /sameAs.
@@ -52,7 +50,26 @@ ba  has no type:
 
 
 
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@define only:  /equal id scrap /ifte/rpl-new:prim.
+@define onlyBooks:  /dup/owl:sameAs /rdf:type scom:Book /equal id scrap /ifte/rpl-new:prim.
+/tomsReviews/foaf:primaryTopic/onlyBooks/rdfs:label.
 
+
+
+(...) only
+/dup /(...) id scrap /ifte/rpl-new:prim.
+
+@prefix : <file:///tmp/stuff.rdf#>.
+@define tomsReviews: <http://revyu.com/people/tom> /made.
+
+@define only:  dup/swap/dip id scrap /ifte/rpl:i.
+@define booksOnly:  (/owl:sameAs/rdf:type scom:Book /equal) /:only.
+/:tomsReviews/foaf:primaryTopic/:booksOnly/rdfs:label.
+
+
+
+<http://revyu.com/people/tom> /made.
 
 
 <http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738>.
