@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.filter.Filter;
@@ -8,12 +8,11 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.util.Sink;
 
-public class Unique extends PrimitiveFunction
+public class Limit extends PrimitiveFunction
 {
-	public Unique( RdfValue v, ModelConnection mc )
+	public Limit( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -21,7 +20,7 @@ public class Unique extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 0;
+		return 1;
 	}
 
 	public void applyTo( RippleList stack,
@@ -29,23 +28,28 @@ public class Unique extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
+		int lim;
+
+		lim = mc.intValue( stack.getFirst() );
+		stack = stack.getRest();
+
 		sink.put(
 			new RippleList(
 				new Operator(
-					new UniqueInner() ), stack ) );
+					new LimitInner( (long) lim ) ), stack ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private static String memo = "memo";
-
-	protected class UniqueInner extends Filter
+	protected class LimitInner extends Filter
 	{
-		private ListMemoizer<RippleValue,String> memoizer = null;
+		long count, limit;
 	
-		public UniqueInner()
+		public LimitInner( long lim )
 		{
-//System.out.println( "" + this + "()" );
+			limit = lim;
+			count = 0;
+	//System.out.println( "" + this + "()" );
 		}
 	
 		public void applyTo( RippleList stack,
@@ -53,20 +57,11 @@ public class Unique extends PrimitiveFunction
 							ModelConnection mc )
 			throws RippleException
 		{
-			if ( null == memoizer )
+			if ( count < limit )
 			{
-				memoizer = new ListMemoizer<RippleValue,String>( stack, memo );
+				count++;
 				sink.put( stack );
-//System.out.println( "put first: " + stack.getFirst() );
 			}
-	
-			else if ( memoizer.add( stack, memo ) )
-//{
-				sink.put( stack );
-//System.out.println( "put another: " + stack.getFirst() );
-//}
-//else
-//System.out.println( "rejected this: " + stack.getFirst() );
 		}
 	}
 }

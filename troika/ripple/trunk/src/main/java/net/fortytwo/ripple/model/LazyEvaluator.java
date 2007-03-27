@@ -3,7 +3,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
-public class EagerStackEvaluator extends Evaluator
+public class LazyEvaluator extends Evaluator
 {
 	private Model model;
 	private ModelConnection modelConnection;

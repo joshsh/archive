@@ -1,55 +1,76 @@
-@prefix rpl:   <http://fortytwo.net/2007/03/ripple#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:   <http://fortytwo.net/2007/03/ripple#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-########################################
-# primitive functions
-########################################
+rpl:
+	a owl:Ontology ;
+	dc:title "Ripple vocabulary" ;
+	dc:description "RDFS vocabulary for Ripple expressions" ;
+	rdfs:isDefinedBy rpl: .
 
 rpl:Function
 	a rdfs:Class ;
-	rdfs:comment "an an abstraction which takes an rdf:List as input and produces zero or more rdf:Lists as output" .
-	
-rpl:PrimitiveFunction
+	rdfs:comment "an abstraction which takes a series of rdf:Lists as input and produces a series of rdf:Lists as output" ;
+	rdfs:label "Function" ;
+	rdfs:isDefinedBy rpl: .
+
+rpl:Parameter
 	a rdfs:Class ;
-	rdfs:comment "a built-in function" .
+	rdfs:comment "a formal argument to a function" ;
+	rdfs:label "Parameter" ;
+	rdfs:isDefinedBy rpl: .
+
+rpl:ParameterList
+	a rdfs:Class ;
+	rdfs:subClassOf rdf:List ;
+	rdfs:comment "a list of formal arguments" ;
+	rdfs:label "ParameterList" ;
+	rdfs:isDefinedBy rpl: .
 
 rpl:arity
 	a rdfs:Property ;
 	rdfs:domain rpl:Function ;
 	rpl:range xsd:integer ;
-	rdfs:comment "the number of formal arguments consumed by a Function" .
+	rdfs:comment "the number of formal arguments consumed by a Function" ;
+	rdfs:label "arity" ;
+	rdfs:isDefinedBy rpl: .
 
-rpl:returnType
-	a rdf:Property ;
-	rdfs:domain rpl:PrimitiveFunction ;
-	rdfs:range rdfs:DataType ;
-	rdfs:comment "the data type of the returned value of a function" .
+rpl:op
+	rdfs:comment "an application operator" ;
+	rdfs:label "op" ;
+	rdfs:isDefinedBy rpl: .
 
 rpl:parameters
 	a rdf:Property ;
-	rdfs:domain rpl:PrimitiveFunction ;
+	rdfs:domain rpl:Function ;
 	rdfs:range rpl:ParameterList ;
-	rdfs:comment "" .
+	rdfs:comment "the list of formal arguments of a function" ;
+	rdfs:label "parameters" ;
+	rdfs:isDefinedBy rpl: .
 
-rpl:Parameter
-	a rdfs:Class ;
-	rdfs:comment "a formal argument to a function" .
-
-rpl:ParameterList
-	a rdfs:Class ;
-	rdfs:subClassOf rdf:List ;
-	rdfs:comment "" .
+rpl:isTransparent
+	a rdf:Property ;
+	rdfs:domain rpl:Parameter ;
+	rdfs:range xsd:boolean ;
+	rdfs:comment "property of a function whose application has no side-effects upon a particular argument" ;
+	rdfs:label "isTransparent" ;
+	rdfs:isDefinedBy rpl: .
 
 rpl:parameterType
 	a rdf:Property ;
 	rdfs:domain rpl:Parameter ;
 	rdfs:range rdfs:DataType ;
-	rdfs:comment "the data type of a formal argument to a function" .
+	rdfs:comment "the data type of a formal argument" ;
+	rdfs:label "parameterType" ;
+	rdfs:isDefinedBy rpl: .
 
-rpl:parameterTransparency
+rpl:returnType
 	a rdf:Property ;
-	rdfs:domain rpl:Parameter ;
-	rdfs:range xsd:boolean ;
-	rdfs:comment "a condition indicating whether the application of a function may have side-effects on a particular argument" .
+	rdfs:domain rpl:Function ;
+	rdfs:range rdfs:DataType ;
+	rdfs:comment "the data type of the returned value of a function" ;
+	rdfs:label "returnType" ;
+	rdfs:isDefinedBy rpl: .

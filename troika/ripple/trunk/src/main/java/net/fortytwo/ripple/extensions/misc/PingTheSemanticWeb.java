@@ -60,7 +60,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 				s_saxBuilder = new SAXBuilder( true );
 				s_saxBuilder.setReuseParser( true );
 
-				String schemaLocation = Ripple.class.getResource( "xml/ptsw.xsd" ).toString();
+				String schemaLocation = PingTheSemanticWeb.class.getResource( "ptsw.xsd" ).toString();
 				s_saxBuilder.setFeature(
 					"http://apache.org/xml/features/validation/schema", true );
 				s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"

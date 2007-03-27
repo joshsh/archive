@@ -1,95 +1,64 @@
-@prefix rpl:      <http://fortytwo.net/2007/03/ripple#> .
-@prefix rpl-new:  <http://fortytwo.net/2007/03/rpl-new#> .
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple#> .
+@prefix rpl-new:  <http://fortytwo.net/2007/03/rpl-new#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
 ################################################################################
 
 rpl-new:pred
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
 			rdfs:label "p" ;
 			rpl:parameterType rdf:Property ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 	) ;
 	rdfs:comment "p /pred --> PRED[p]" .
 
 rpl-new:prim
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
 			rdfs:label "p" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency true ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent true ]
 	) ;
 	rdfs:comment "p /prim --> PRIM[p]" .
 
 ################################################################################
 
-rpl-new:union
-	a rpl:PrimitiveFunction ;
-	rpl:arity 2 ;
-	rdfs:comment "union{x}{y} --> {x,y}" .
-
-rpl-new:scrap
-	a rpl:PrimitiveFunction ;
-	rpl:arity 0 ;
-	rdfs:comment "x /scrap -->" .
-
-
-################################################################################
-
-rpl-new:unique
-	a rpl:PrimitiveFunction ;
-	rpl:arity 0 ;
-	rdfs:comment "..." .
-
-rpl-new:limit
-	a rpl:PrimitiveFunction ;
-	rpl:arity 1 ;
-	rpl:returnType rpl:PrimitiveFunction ;  # not strictly true...
-	rpl:parameters (
-		[
-			rdfs:label "lim" ;
-			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
-	) .
-
-################################################################################
-
 rpl-new:new
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 0 ;
 	rdfs:comment "creates a new blank node" .
 
 rpl-new:assert
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 3 ;
 	rdfs:comment "..." .
 
 rpl-new:deny
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 3 ;
 	rdfs:comment "..." .
 
 rpl-new:forget
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
-			rpl:parameterTransparency false ]
+			rpl:isTransparent false ]
 	) ;
 	rdfs:comment "..." .
 
 ################################################################################
 
 rpl-new:equal
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rdfs:comment "y x /equal --> rpl:true if x and y are equal, otherwise rpl:false" .
 

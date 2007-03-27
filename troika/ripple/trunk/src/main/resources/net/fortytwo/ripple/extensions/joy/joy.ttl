@@ -1,252 +1,252 @@
-@prefix rpl:   <http://fortytwo.net/2007/03/ripple#> .
 @prefix joy:   <http://fortytwo.net/2007/03/ripple/joy#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:   <http://fortytwo.net/2007/03/ripple#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 joy:and
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 		[
 			rdfs:label "y" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:at
 	rdfs:label "at" ;
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "i" ;
 			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 		[
 			rdfs:label "list" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 	) ;
 	rdfs:comment "Note: as in Joy, lists are 1-indexed" .
 
 joy:concat
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "l1" ;
 			rdfs:comment "head of the new list" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 		[
 			rdfs:label "l2" ;
 			rdfs:comment "tail of the new list" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:dip
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "c" ;
 			rdfs:comment "remains at the top of the stack" ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 		[
 			rdfs:label "l" ;
 			rdfs:comment "the list to be dequoted" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:dup
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rdfs:comment "x /dup --> x x" .
 
 joy:false
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rdfs:comment "y x /false --> y" .
 
 joy:fold
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:parameters (
 		[
 			rdfs:label "f" ;
 			rdfs:comment "a quoted function" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 		[
 			rdfs:label "v" ;
 			rdfs:comment "tail value" ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 		[
 			rdfs:label "l" ;
 			rdfs:comment "a list through which to fold f" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:i
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
 			rdfs:label "l" ;
 			rdfs:comment "the list to be dequoted" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:id
 	rdfs:label "id" ;
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 0 ;
 	rdfs:comment "the trivial 'identity' function" .
 
 joy:ifte
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:parameters (
 		[
 			rdfs:label "elsePart" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency true ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent true ]
 		[
 			rdfs:label "ifPart" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 		[
 			rdfs:label "b" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 	) ;
 	rdfs:comment "true y x /ifte --> y; false y x /ifte --> x" .
 
 joy:map
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "f" ;
 			rdfs:comment "a quoted function" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 		[
 			rdfs:label "l" ;
 			rdfs:comment "a list over which to distribute f" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency "true" ]
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:not
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:or
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 		[
 			rdfs:label "y" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .
 
 joy:pop
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rdfs:comment "y x /pop --> y" .
 
 joy:size
 	rdfs:label "size" ;
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "list" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 	) ;
 	rdfs:comment "finds the number of items in a List" .
 
 joy:stack
 	rdfs:label "stack" ;
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:returnType rdf:List ;
 	rdfs:comment "" .
 
 joy:swap
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rdfs:comment "x y /swap --> y x" .
 
 joy:times
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "i" ;
 			rpl:parameterType xsd:integer ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 		[
 			rdfs:label "list" ;
 			rpl:parameterType rdf:List ;
-			rpl:parameterTransparency true ]
+			rpl:isTransparent true ]
 	) ;
 	rdfs:comment "" .
 
 joy:true
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rdfs:comment "y x /true --> x" .
 
 joy:xor
-	a rpl:PrimitiveFunction ;
+	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 		[
 			rdfs:label "y" ;
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
-			rpl:parameterType rpl:PrimitiveFunction ;
-			rpl:parameterTransparency "true" ]
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent "true" ]
 	) ;
 	rdfs:comment "" .

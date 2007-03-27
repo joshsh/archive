@@ -1,0 +1,31 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:     <http://fortytwo.net/2007/03/ripple#> .
+@prefix stream:  <http://fortytwo.net/2007/03/ripple/stream#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+stream:limit
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rpl:Function ;  # not strictly true...
+	rpl:parameters (
+		[
+			rdfs:label "lim" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+	) .
+
+stream:scrap
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rdfs:comment "x /scrap -->" .
+
+stream:union
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rdfs:comment "union{x}{y} --> {x,y}" .
+
+stream:unique
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rdfs:comment "..." .

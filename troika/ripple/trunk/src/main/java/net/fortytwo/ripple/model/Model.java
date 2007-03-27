@@ -65,6 +65,7 @@ public Dereferencer getDereferencer()
 			rplIntMathNs    = "http://fortytwo.net/2007/03/ripple/intmath#",
 			rplJoyNs        = "http://fortytwo.net/2007/03/ripple/joy#",
 			rplMiscNs       = "http://fortytwo.net/2007/03/rpl-misc#",
+			rplStreamNs       = "http://fortytwo.net/2007/03/ripple/stream#",
 			rplTestNs       = "http://fortytwo.net/2007/03/rpl-test#",
 			rplNewNs        = "http://fortytwo.net/2007/03/rpl-new#";
 
@@ -86,6 +87,9 @@ public Dereferencer getDereferencer()
 		urlMap.put( rplNewNs,
 			net.fortytwo.ripple.extensions.newstuff.NewExtension.class.getResource(
 				"ripple-new.ttl" ) + "#" );
+		urlMap.put( rplStreamNs,
+			net.fortytwo.ripple.extensions.stream.StreamExtension.class.getResource(
+				"stream.ttl" ) + "#" );
 
 		return new UrlFactory( urlMap );
 	}
@@ -113,6 +117,7 @@ public Dereferencer getDereferencer()
 			( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.newstuff.NewExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.intmath.IntMathExtension() ).load( mc );
+			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.joy.JoyExtension() ).load( mc );
 		}
 
@@ -157,7 +162,7 @@ System.out.println( "loading from URL: " + url );
 
 			if ( null != succ )
 			{
-System.out.println( "loading success memos" );
+				s_logger.debug( "reading success memos" );
 				List<RippleValue> successMemos = mc.listValue( succ );
 
 				for ( Iterator<RippleValue> iter = successMemos.iterator(); iter.hasNext(); )
@@ -166,7 +171,7 @@ System.out.println( "loading success memos" );
 
 			if ( null != fail )
 			{
-System.out.println( "loading failure memos" );
+				s_logger.debug( "reading failure memos" );
 				List<RippleValue> failureMemos = mc.listValue( fail );
 
 				for ( Iterator<RippleValue> iter = failureMemos.iterator(); iter.hasNext(); )

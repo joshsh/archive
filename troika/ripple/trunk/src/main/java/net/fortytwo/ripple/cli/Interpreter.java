@@ -36,7 +36,7 @@ import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Evaluator;
-import net.fortytwo.ripple.model.EagerStackEvaluator;
+import net.fortytwo.ripple.model.LazyEvaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 //import net.fortytwo.ripple.model.DebugEvaluator;
@@ -116,10 +116,10 @@ public Model getModel()
 				break;
 
 			case COMPOSITIONAL:
-				evaluator = new EagerStackEvaluator();
+				evaluator = new LazyEvaluator();
 				break;
 		}
-//        evaluator = new DebugEvaluator( new EagerStackEvaluator( model ) );
+//        evaluator = new DebugEvaluator( new LazyEvaaluator( model ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
