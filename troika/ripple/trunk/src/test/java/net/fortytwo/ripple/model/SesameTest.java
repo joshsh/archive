@@ -18,104 +18,104 @@ import org.openrdf.sail.memory.MemoryStore;
 
 public class SesameTest extends RippleTestCase
 {
-    private final static Logger s_logger = Logger.getLogger( SesameTest.class );
+	private final static Logger s_logger = Logger.getLogger( SesameTest.class );
 
-    static int countStatements( RepositoryConnection rc, URI context )
-        throws Exception
-    {
-        int count = 0;
+	static int countStatements( RepositoryConnection rc, URI context )
+		throws Exception
+	{
+		int count = 0;
 
-        RepositoryResult<Statement> stmtIter
-            = ( null == context )
-                ? rc.getStatements( null, null, null, false )
-                : rc.getStatements( null, null, null, false, context );
+		RepositoryResult<Statement> stmtIter
+			= ( null == context )
+				? rc.getStatements( null, null, null, false )
+				: rc.getStatements( null, null, null, false, context );
 
-        while ( stmtIter.hasNext() )
-        {
-            stmtIter.next();
-            count++;
-        }
+		while ( stmtIter.hasNext() )
+		{
+			stmtIter.next();
+			count++;
+		}
 
-        stmtIter.close();
+		stmtIter.close();
 
-        return count;
-    }
+		return count;
+	}
 
-    private class RecoverFromParseErrorTest extends TestRunnable
-    {
-        public void test()
-            throws Exception
-        {
-            Repository repo = new SailRepository(
-                new MemoryStore() );
-            repo.initialize();
-            RepositoryConnection rc = repo.getConnection();
+	private class RecoverFromParseErrorTest extends TestRunnable
+	{
+		public void test()
+			throws Exception
+		{
+			Repository repo = new SailRepository(
+				new MemoryStore() );
+			repo.initialize();
+			RepositoryConnection rc = repo.getConnection();
 
-            String bad = "bad" ;
-            String good = "@prefix foo:  <http://example.org/foo#>.\n"
-                + "foo:a foo:b foo:c." ;
+			String bad = "bad" ;
+			String good = "@prefix foo:  <http://example.org/foo#>.\n"
+				+ "foo:a foo:b foo:c." ;
 
-            InputStream is;
+			InputStream is;
 
 s_logger.debug( "### start" );
-            try {
-                is = new ByteArrayInputStream( bad.getBytes() );
-                rc.add( is, "", RDFFormat.TURTLE );
-            } catch ( Exception e ) {}
+			try {
+				is = new ByteArrayInputStream( bad.getBytes() );
+				rc.add( is, "", RDFFormat.TURTLE );
+			} catch ( Exception e ) {}
 s_logger.debug( "### mid" );
-            try {
-                is = new ByteArrayInputStream( good.getBytes() );
-                rc.add( is, "", RDFFormat.TURTLE );
-            } catch ( Exception e ) {}
+			try {
+				is = new ByteArrayInputStream( good.getBytes() );
+				rc.add( is, "", RDFFormat.TURTLE );
+			} catch ( Exception e ) {}
 s_logger.debug( "### stop" );
 
-            assertEquals( 1, countStatements( rc, null ) );
+			assertEquals( 1, countStatements( rc, null ) );
 
-            rc.close();
-            repo.shutDown();
-        }
-    }
+			rc.close();
+			repo.shutDown();
+		}
+	}
 
-    private class AddFromInputStreamTest extends TestRunnable
-    {
-        public void test()
-            throws Exception
-        {
-            Repository repo = new SailRepository(
-                new MemoryStore() );
-            repo.initialize();
-            RepositoryConnection rc = repo.getConnection();
+	private class AddFromInputStreamTest extends TestRunnable
+	{
+		public void test()
+			throws Exception
+		{
+			Repository repo = new SailRepository(
+				new MemoryStore() );
+			repo.initialize();
+			RepositoryConnection rc = repo.getConnection();
 
-            URI ctxA = repo.getValueFactory().createURI( "urn:test.AddFromInputStreamTest.ctxA#" );
+			URI ctxA = repo.getValueFactory().createURI( "urn:test.AddFromInputStreamTest.ctxA#" );
 
-            String s = "@prefix foo:  <http://example.org/foo#>.\n"
-                + "foo:a foo:b foo:c." ;
-            InputStream is = new ByteArrayInputStream( s.getBytes() );
+			String s = "@prefix foo:  <http://example.org/foo#>.\n"
+				+ "foo:a foo:b foo:c." ;
+			InputStream is = new ByteArrayInputStream( s.getBytes() );
 
-            rc.add( is, ctxA.toString(), RDFFormat.TURTLE, ctxA );
+			rc.add( is, ctxA.toString(), RDFFormat.TURTLE, ctxA );
 
-            assertEquals( 1, countStatements( rc, null ) );
+			assertEquals( 1, countStatements( rc, null ) );
 /* 60 */    assertEquals( 1, countStatements( rc, ctxA ) );
 
-            rc.close();
-            repo.shutDown();
-        }
-    }
+			rc.close();
+			repo.shutDown();
+		}
+	}
 
-    public void runTests()
-        throws Throwable
-    {
+	public void runTests()
+		throws Throwable
+	{
 /* RESTORE ME:
 See: http://www.openrdf.org/issues/browse/SES-358?watch=true
 net.fortytwo.ripple.model.SesameTest$AddFromInputStreamTest
-        testSynchronous( new AddFromInputStreamTest() );
+		testSynchronous( new AddFromInputStreamTest() );
 */
 
 /* RESTORE ME:
 http://www.openrdf.org/forum/mvnforum/viewthread?thread=1229
-        testSynchronous( new RecoverFromParseErrorTest() );
+		testSynchronous( new RecoverFromParseErrorTest() );
 */
-    }
+	}
 }
 
 // kate: tab-width 4
