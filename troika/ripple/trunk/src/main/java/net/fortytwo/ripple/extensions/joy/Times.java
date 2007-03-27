@@ -35,17 +35,14 @@ public class Times extends PrimitiveFunction
 		RippleValue p = stack.getFirst();
 		stack = stack.getRest();
 
-		prog = ( p instanceof RippleList )
-			? (RippleList) p
-			: new RippleList( p.toRdf( mc ), mc );
-
 		if ( times < 0 )
 			throw new RippleException( "first argument to Times must be a positive integer" );
 
-		Operator progOp = new Operator( prog );
-
 		for ( int i = 0; i < times; i++ )
-			stack = new RippleList( progOp, stack );
+		{
+			stack = new RippleList( p, stack );
+			stack = new RippleList( Operator.OP, stack );
+		}
 
 		sink.put( stack );
 	}

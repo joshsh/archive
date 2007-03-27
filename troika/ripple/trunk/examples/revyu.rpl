@@ -10,7 +10,18 @@
 <http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869>/primaryTopic/sameAs/hasOffer/scom:hasPrice/unique.
 
 
-<http://revyu.com/things/the-fox-and-the-monk-by-john-smith>;
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix :  <file:///tmp/stuff.rdf#>.
+
+@define filter:  dup/swap/dip/joy:i id scrap /ifte/joy:i.
+@define booksReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:filter.
+
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+/:tomsReviews /:booksReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
+
 
 
 (: SPARQL
@@ -49,64 +60,3 @@ ba  has no type:
 
 
 
-
-@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
-@define only:  /equal id scrap /ifte/rpl-new:prim.
-@define onlyBooks:  /dup/owl:sameAs /rdf:type scom:Book /equal id scrap /ifte/rpl-new:prim.
-/tomsReviews/foaf:primaryTopic/onlyBooks/rdfs:label.
-
-
-
-(...) only
-/dup /(...) id scrap /ifte/rpl-new:prim.
-
-@prefix : <file:///tmp/stuff.rdf#>.
-@define tomsReviews: <http://revyu.com/people/tom> /made.
-
-@define only:  dup/swap/dip id scrap /ifte/rpl:i.
-@define booksOnly:  (/owl:sameAs/rdf:type scom:Book /equal) /:only.
-/:tomsReviews/foaf:primaryTopic/:booksOnly/rdfs:label.
-
-
-
-<http://revyu.com/people/tom> /made.
-
-
-<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738>.
-<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /rev:reviewer /made /rev:rating /unique.
-
-# Tom's 5-star reviews:
-<http://revyu.com/people/tom> made/ dup/ rev:rating/ 4 integer-lessThan// scrap I V/// /;
-
-# Just the labels:
-<http://revyu.com/people/tom> made/ dup/ rev:rating/ 4 integer-lessThan// scrap I V/// / rdfs:label/;
-
-# turkeysOnly :=
-dup/ rev:rating/ 2 integer-greaterThan// scrap I V/// /;
-<http://revyu.com/people/tom> made/ dup/ rev:rating/ 2 integer-greaterThan// scrap I V/// /;
-
-dup/ rev:rating/ 4 integer-lessThan// scrap I V/// /
-
-stars := 
-
-4 dup //swap
-dup 4 
-dup / 4 swap //
-
-x x 4 swap//
-x 4 x rev:rating/ integer-greaterThan// scrap I V/// /
-
-
-
-x (4 integer-lessThan//) screen//
-
-
-x 5 minStars//;
-
-
-
-########################################
-
-x 3 /minStars 4 /maxStars /label.
-
-<http://revyu.com/people/tom> /made/dup/rev:rating 4 /integer-lessThan scrap I /V / /rdfs:label;

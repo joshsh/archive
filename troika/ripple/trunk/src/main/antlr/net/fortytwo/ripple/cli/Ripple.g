@@ -279,15 +279,20 @@ nt_Sequence returns [ ListAst s ]
 {
     Ast i;
     s = null;
+    boolean modified = false;
 }
+/*
     : i=nt_Item
-
+*/
+    : ( OPER { modified = true; } )? i=nt_UnmodifiedItem
       ( ( WS ~(EOS) ) => ( WS s=nt_Sequence )
       | ( L_PAREN | OPER ) => ( s=nt_Sequence )
       | {}
       )
         {
             // Note: the resulting list will be in the same order as the input.
+            if ( modified )
+                s = new ListAst( new OperatorAst(), s );
             s = new ListAst( i, s );
         }
     ;
@@ -304,7 +309,7 @@ nt_UnmodifiedItem returns [ Ast r ]
 //    | r=nt_IndexExpression
     ;
 
-
+/*
 nt_Item returns [ Ast r ]
 {
     r = null;
@@ -318,7 +323,7 @@ nt_Item returns [ Ast r ]
                 : a;
         }
     ;
-
+*/
 
 nt_ParenthesizedExpression returns [ ListAst r ]
 {

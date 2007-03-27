@@ -61,7 +61,9 @@ p.print( reversedList );
 public RdfValue toRdf( ModelConnection mc )
     throws RippleException
 {
-return null;
+System.out.println( "first = " + reversedList.getFirst() );
+System.out.println( "whole list = " + reversedList );
+return reverse( reversedList ).toRdf( mc );
 }
 
 }

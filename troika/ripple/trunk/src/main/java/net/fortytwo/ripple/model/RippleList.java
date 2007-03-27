@@ -183,9 +183,10 @@ System.out.println( "resulting list: " + toString() );
 
 			while ( cur != null )
 			{
+/*
 				if ( cur.first.isOperator() )
 				{
-					System.out.println( "it's an operator!" );
+System.out.println( "it's an operator! -- " + cur.first );
 					mc.add( curRdf, rdfFirst, ( (Operator) cur.first ).getFunction().toRdf( mc ) );
 					RdfValue restRdf = new RdfValue( mc.createBNode() );
 					mc.add( curRdf, rdfRest, restRdf );
@@ -195,6 +196,7 @@ System.out.println( "resulting list: " + toString() );
 					mc.add( curRdf, rdfFirst, ((Operator) cur.first).toRdf( mc ) );
 				}
 				else
+*/
 					mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
 				RippleList rest = cur.rest;
 				RdfValue restRdf = ( null == cur.rest )

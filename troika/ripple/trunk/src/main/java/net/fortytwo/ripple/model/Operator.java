@@ -23,11 +23,13 @@ public class Operator implements RippleValue
 
     public Operator( Function function )
     {
+System.out.println( "Operator[" + this + "](" + function + ")" );
         func = function;
     }
 
     public Operator( RippleList list )
     {
+System.out.println( "Operator[" + this + "](" + list + ")" );
         func = new ListDequotation( list );
     }
 
@@ -38,6 +40,7 @@ public class Operator implements RippleValue
 
 	public String toString()
 	{
+//System.out.println( "[func of this operator is: " + func + "]" );
 		return "/" + func;
 	}
 

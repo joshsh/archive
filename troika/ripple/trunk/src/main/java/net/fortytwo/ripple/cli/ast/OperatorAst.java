@@ -15,6 +15,22 @@ import net.fortytwo.ripple.util.Sink;
 
 public class OperatorAst implements Ast
 {
+    public OperatorAst()
+    {}
+
+    public void evaluate( Sink<RippleValue> sink,
+                          Interpreter itp,
+                          ModelConnection mc )
+        throws RippleException
+    {
+        sink.put( Operator.OP );
+    }
+
+    public String toString()
+    {
+        return "[op]";
+    }
+/*
     private Ast arg;
 
     public OperatorAst( final Ast argument )
@@ -37,6 +53,7 @@ public class OperatorAst implements Ast
     {
         return "/" + arg;
     }
+*/
 }
 
 // kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
