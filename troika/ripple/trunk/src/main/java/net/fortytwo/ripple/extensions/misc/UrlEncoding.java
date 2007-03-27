@@ -12,39 +12,39 @@ import java.net.URLEncoder;
 
 public class UrlEncoding extends PrimitiveFunction
 {
-    public UrlEncoding( RdfValue v, ModelConnection mc )
-        throws RippleException
-    {
-        super( v, mc );
-    }
+	public UrlEncoding( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
 	public int arity()
 	{
 		return 1;
 	}
 
-    public void applyTo( RippleList stack,
-                                  Sink<RippleList> sink,
-                                  ModelConnection mc )
-        throws RippleException
-    {
-        String a, result;
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		String a, result;
 
-        a = mc.stringValue( stack.getFirst() );
-        stack = stack.getRest();
+		a = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
 
-        try
-        {
-            result = URLEncoder.encode( a );
-        }
+		try
+		{
+			result = URLEncoder.encode( a );
+		}
 
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
-        sink.put( new RippleList( mc.createValue( result ), stack ) );
-    }
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

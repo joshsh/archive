@@ -22,204 +22,204 @@ import java.util.Set;
 
 public class ContainerTreeView implements Observer
 {
-    private ObservableContainer valueSet;
-    private RipplePrintStream ps;
+	private ObservableContainer valueSet;
+	private RipplePrintStream ps;
 
-    private Lexicon lexicon;
+	private Lexicon lexicon;
 
-    // A three-space-indented tree seems to be the most readable.
-    private static final String indent = "   ";
+	// A three-space-indented tree seems to be the most readable.
+	private static final String indent = "   ";
 
-    private static final String indexSeparator = "  ";
+	private static final String indexSeparator = "  ";
 
-    private static final int maxDepth = Ripple.getTreeViewDepth();
+	private static final int maxDepth = Ripple.getTreeViewDepth();
 
-    public ContainerTreeView( ObservableContainer valueSet, RipplePrintStream printStream )
-        throws RippleException
-    {
-        this.valueSet = valueSet;
-        this.lexicon = lexicon;
-        ps = printStream;
-    }
+	public ContainerTreeView( ObservableContainer valueSet, RipplePrintStream printStream )
+		throws RippleException
+	{
+		this.valueSet = valueSet;
+		this.lexicon = lexicon;
+		ps = printStream;
+	}
 
-    private class RdfValueCollector<T> implements Sink<RdfValue>
-    {
-        private Collection<RippleValue> collectedValues;
-        private RippleList stack;
-        private ModelBridge bridge;
+	private class RdfValueCollector<T> implements Sink<RdfValue>
+	{
+		private Collection<RippleValue> collectedValues;
+		private RippleList stack;
+		private ModelBridge bridge;
 
-        public RdfValueCollector( ModelBridge bridge )
-        {
-            this.bridge = bridge;
-            collectedValues = new LinkedList<RippleValue>();
-        }
+		public RdfValueCollector( ModelBridge bridge )
+		{
+			this.bridge = bridge;
+			collectedValues = new LinkedList<RippleValue>();
+		}
 
-        public void put( RdfValue v )
-            throws RippleException
-        {
-            collectedValues.add(
-                bridge.get( v ) );
-        }
+		public void put( RdfValue v )
+			throws RippleException
+		{
+			collectedValues.add(
+				bridge.get( v ) );
+		}
 
-        public int size()
-        {
-            return collectedValues.size();
-        }
+		public int size()
+		{
+			return collectedValues.size();
+		}
 
-        public Iterator<RippleValue> iterator()
-        {
-            return collectedValues.iterator();
-        }
-    }
+		public Iterator<RippleValue> iterator()
+		{
+			return collectedValues.iterator();
+		}
+	}
 
-    private void printTreeView( RippleValue subject, int depth, String wsPrefix, ModelConnection mc )
-        throws RippleException
-    {
-        if ( depth != maxDepth )
-            ps.print( wsPrefix );
+	private void printTreeView( RippleValue subject, int depth, String wsPrefix, ModelConnection mc )
+		throws RippleException
+	{
+		if ( depth != maxDepth )
+			ps.print( wsPrefix );
 
-        for ( int i = 0; i < ( maxDepth - depth ) * 2; i++ )
-            ps.print( indent );
+		for ( int i = 0; i < ( maxDepth - depth ) * 2; i++ )
+			ps.print( indent );
 
-        ps.print( subject );
-        ps.print( "\n" );
+		ps.print( subject );
+		ps.print( "\n" );
 
-        if ( depth > 0 )
-        {
+		if ( depth > 0 )
+		{
 if ( subject instanceof net.fortytwo.ripple.model.RippleList )
 subject = ( (net.fortytwo.ripple.model.RippleList) subject ).getFirst();
 
-            RdfValueCollector predicates = new RdfValueCollector( mc.getModel().getBridge() );
-            mc.findPredicates( subject, predicates );
+			RdfValueCollector predicates = new RdfValueCollector( mc.getModel().getBridge() );
+			mc.findPredicates( subject, predicates );
 //System.out.println( "" + predicates.size() + " predicates found." );
-            Iterator<RdfValue> predIter = predicates.iterator();
+			Iterator<RdfValue> predIter = predicates.iterator();
 
-            int predCount = 0, lim = Ripple.getTreeViewMaxBreadth();
-            while ( predIter.hasNext() )
-            {
-                RdfValue predicate = predIter.next();
+			int predCount = 0, lim = Ripple.getTreeViewMaxBreadth();
+			while ( predIter.hasNext() )
+			{
+				RdfValue predicate = predIter.next();
 
-                ps.print( wsPrefix );
+				ps.print( wsPrefix );
 
-                for ( int i = 0; i < 1 + ( maxDepth - depth ) * 2; i++ )
-                    ps.print( indent );
+				for ( int i = 0; i < 1 + ( maxDepth - depth ) * 2; i++ )
+					ps.print( indent );
 
-                if ( ++predCount > lim )
-                {
-                    ps.print( "[...]\n" );
-                    break;
-                }
+				if ( ++predCount > lim )
+				{
+					ps.print( "[...]\n" );
+					break;
+				}
 
-                ps.print( predicate );
-                ps.print( "\n" );
+				ps.print( predicate );
+				ps.print( "\n" );
 
-                RdfValueCollector c = new RdfValueCollector( mc.getModel().getBridge() );
-                mc.getModel().multiply( subject.toRdf( mc ), predicate, c, mc );
-                Iterator<RippleValue> objIter = c.iterator();
+				RdfValueCollector c = new RdfValueCollector( mc.getModel().getBridge() );
+				mc.getModel().multiply( subject.toRdf( mc ), predicate, c, mc );
+				Iterator<RippleValue> objIter = c.iterator();
 
-                int objCount = 0;
-                while ( objIter.hasNext() )
-                {
-                    if ( ++objCount > lim )
-                    {
-                        for ( int i = 0; i < 2 + ( maxDepth - depth ) * 2; i++ )
-                            ps.print( indent );
-                        ps.print( "[...]\n" );
-                        break;
-                    }
+				int objCount = 0;
+				while ( objIter.hasNext() )
+				{
+					if ( ++objCount > lim )
+					{
+						for ( int i = 0; i < 2 + ( maxDepth - depth ) * 2; i++ )
+							ps.print( indent );
+						ps.print( "[...]\n" );
+						break;
+					}
 
-                    else
-                        printTreeView( objIter.next(), depth - 1, wsPrefix, mc );
-                }
-            }
-        }
-    }
+					else
+						printTreeView( objIter.next(), depth - 1, wsPrefix, mc );
+				}
+			}
+		}
+	}
 
-    private void refresh()
-        throws RippleException
-    {
-        Model model = valueSet.getModel();
-        Collection<RippleValue> values = valueSet.getValues();
+	private void refresh()
+		throws RippleException
+	{
+		Model model = valueSet.getModel();
+		Collection<RippleValue> values = valueSet.getValues();
 
-        if ( 0 < values.size() )
-            ps.println( "" );
+		if ( 0 < values.size() )
+			ps.println( "" );
 
-        int treeViewDepth = Ripple.getTreeViewDepth();
-        ModelConnection mc = new ModelConnection( model, "for ContainerTreeView refresh()" );
+		int treeViewDepth = Ripple.getTreeViewDepth();
+		ModelConnection mc = new ModelConnection( model, "for ContainerTreeView refresh()" );
 
-        try
-        {
-            int index = 0;
-            Iterator<RippleValue> valuesIter = values.iterator();
-            while ( valuesIter.hasNext() )
-            {
+		try
+		{
+			int index = 0;
+			Iterator<RippleValue> valuesIter = values.iterator();
+			while ( valuesIter.hasNext() )
+			{
 //                String indexPrefix = "_" + ++index + indexSeparator;
-                String indexPrefix = "rdf:_" + ++index + indexSeparator;
+				String indexPrefix = "rdf:_" + ++index + indexSeparator;
 //                String wsPrefix = "                ".substring( 0, indexPrefix.length() );
-                String wsPrefix = "";
+				String wsPrefix = "";
 
-                ps.print( indexPrefix );
+				ps.print( indexPrefix );
 
-                printTreeView( valuesIter.next(), treeViewDepth, wsPrefix, mc );
-            }
-        }
+				printTreeView( valuesIter.next(), treeViewDepth, wsPrefix, mc );
+			}
+		}
 
-        catch ( RippleException e )
-        {
-            mc.close();
-            throw e;
-        }
+		catch ( RippleException e )
+		{
+			mc.close();
+			throw e;
+		}
 
-        mc.close();
+		mc.close();
 
-        ps.print( "\n" );
-    }
+		ps.print( "\n" );
+	}
 
-    ////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-    private boolean changed = false;
-    private boolean suspended = false;
+	private boolean changed = false;
+	private boolean suspended = false;
 
-    public synchronized void suspendEventHandling()
-    {
-        suspended = true;
-    }
+	public synchronized void suspendEventHandling()
+	{
+		suspended = true;
+	}
 
-    public synchronized void resumeEventHandling()
-        throws RippleException
-    {
-        if ( suspended )
-        {
-            if ( changed )
-            {
-                refresh();
+	public synchronized void resumeEventHandling()
+		throws RippleException
+	{
+		if ( suspended )
+		{
+			if ( changed )
+			{
+				refresh();
 
-                changed = false;
-            }
+				changed = false;
+			}
 
-            suspended = false;
-        }
-    }
+			suspended = false;
+		}
+	}
 
-    public void update( Observable o, Object arg )
-    {
-        try
-        {
-            if ( o == valueSet )
-            {
-                if ( suspended )
-                    changed = true;
+	public void update( Observable o, Object arg )
+	{
+		try
+		{
+			if ( o == valueSet )
+			{
+				if ( suspended )
+					changed = true;
 
-                else
-                    refresh();
-            }
-        }
+				else
+					refresh();
+			}
+		}
 
-        catch ( RippleException e )
-        {
-            System.err.println( "\nError: " + e.toString() + "\n" );
-        }
-    }
+		catch ( RippleException e )
+		{
+			System.err.println( "\nError: " + e.toString() + "\n" );
+		}
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

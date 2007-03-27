@@ -21,4 +21,4 @@ public class ModelTest extends RippleTestCase
     }
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

@@ -27,7 +27,7 @@ public class NewExtension extends Extension
 		bridge.add( new New( new RdfValue( mc.createUri( ns + "new" ) ), mc ), mc );
 		bridge.add( new Scrap( new RdfValue( mc.createUri( ns + "scrap" ) ), mc ), mc );
 		bridge.add( new Union( new RdfValue( mc.createUri( ns + "union" ) ), mc ), mc );
-        bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
+		bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
 	}
 }
 

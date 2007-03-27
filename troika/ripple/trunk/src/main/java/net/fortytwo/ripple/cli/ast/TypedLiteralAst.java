@@ -14,42 +14,42 @@ import org.openrdf.model.Value;
 
 public class TypedLiteralAst implements Ast
 {
-    private String value;
-    private Ast type;
+	private String value;
+	private Ast type;
 
-    public TypedLiteralAst( final String value, Ast type )
-    {
-        this.value = value;
-        this.type = type;
-    }
+	public TypedLiteralAst( final String value, Ast type )
+	{
+		this.value = value;
+		this.type = type;
+	}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        ContainerSink values = new ContainerSink();
-        type.evaluate( values, itp, mc );
-        for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
-        {
-            RippleValue typeValue = iter.next();
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		ContainerSink values = new ContainerSink();
+		type.evaluate( values, itp, mc );
+		for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
+		{
+			RippleValue typeValue = iter.next();
 
-            if ( null == typeValue )
-                throw new RippleException( "badly typed literal" );
+			if ( null == typeValue )
+				throw new RippleException( "badly typed literal" );
 
-            Value v = typeValue.toRdf( mc ).getRdfValue();
+			Value v = typeValue.toRdf( mc ).getRdfValue();
 
-            if ( !( v instanceof URI ) )
-                throw new RippleException( "literal type is not a URI" );
-            else
-                sink.put( mc.createValue( value, (URI) v ) );
-        }
-    }
+			if ( !( v instanceof URI ) )
+				throw new RippleException( "literal type is not a URI" );
+			else
+				sink.put( mc.createValue( value, (URI) v ) );
+		}
+	}
 
-    public String toString()
-    {
-        return "\"" + value + "\"^^" + type;
-    }
+	public String toString()
+	{
+		return "\"" + value + "\"^^" + type;
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

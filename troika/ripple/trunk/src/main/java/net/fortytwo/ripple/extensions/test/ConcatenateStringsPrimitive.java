@@ -10,33 +10,33 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ConcatenateStringsPrimitive extends PrimitiveFunction
 {
-    public ConcatenateStringsPrimitive( RdfValue v, ModelConnection mc )
-        throws RippleException
-    {
-        super( v, mc );
-    }
+	public ConcatenateStringsPrimitive( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
 	public int arity()
 	{
 		return 2;
 	}
 
-    public void applyTo( RippleList stack,
-                                  Sink<RippleList> sink,
-                                  ModelConnection mc )
-        throws RippleException
-    {
-        String strA, strB, result;
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		String strA, strB, result;
 
-        strA = mc.stringValue( stack.getFirst() );
-        stack = stack.getRest();
-        strB = mc.stringValue( stack.getFirst() );
-        stack = stack.getRest();
+		strA = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
+		strB = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
 
-        result = strA + strB;
+		result = strA + strB;
 
-        sink.put( new RippleList( mc.createValue( result ), stack ) );
-    }
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

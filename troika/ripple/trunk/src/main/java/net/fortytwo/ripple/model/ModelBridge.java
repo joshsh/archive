@@ -16,9 +16,9 @@ public class ModelBridge
 	}
 
 	/**
-	 *  Note: not every RDF Value has a native equivalent (in other words,
-	 *  this function MAY return <code>null</code>.
-	 */
+	*  Note: not every RDF Value has a native equivalent (in other words,
+	*  this function MAY return <code>null</code>.
+	*/
 	public RippleValue get( RdfValue rdf )
 	{
 		RippleValue rpl =  rdfToNativeMap.get( rdf.getRdfValue() );

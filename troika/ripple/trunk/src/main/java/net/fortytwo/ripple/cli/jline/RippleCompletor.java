@@ -24,7 +24,7 @@ public abstract class RippleCompletor implements Completor
 
 	public int complete( String buffer, int cursor, List clist )
 	{
-        String start = ( null == buffer ) ? "" : buffer;
+		String start = ( null == buffer ) ? "" : buffer;
 
 		// A cursor more than one character beyond the end of the buffer doesn't
 		// make sense (does it?)

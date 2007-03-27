@@ -8,25 +8,25 @@ import net.fortytwo.ripple.util.Sink;
 
 public class DoubleAst implements Ast
 {
-    private double value;
+	private double value;
 
-    public DoubleAst( final double value )
-    {
-        this.value = value;
-    }
+	public DoubleAst( final double value )
+	{
+		this.value = value;
+	}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        sink.put( mc.createValue( value ) );
-    }
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		sink.put( mc.createValue( value ) );
+	}
 
-    public String toString()
-    {
-        return "" + value;
-    }
+	public String toString()
+	{
+		return "" + value;
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

@@ -17,53 +17,53 @@ import java.io.InputStreamReader;
 
 public class UrlTarget extends PrimitiveFunction
 {
-    public UrlTarget( RdfValue v, ModelConnection mc )
-        throws RippleException
-    {
-        super( v, mc );
-    }
+	public UrlTarget( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
 	public int arity()
 	{
 		return 1;
 	}
 
-    public void applyTo( RippleList stack,
-                                  Sink<RippleList> sink,
-                                  ModelConnection mc )
-        throws RippleException
-    {
-        String a, result;
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		String a, result;
 
-        a = mc.stringValue( stack.getFirst() );
-        stack = stack.getRest();
+		a = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
 
-        try
-        {
-            URL url = new URL( a );
-            URLConnection connection = url.openConnection();
-            connection.connect();
+		try
+		{
+			URL url = new URL( a );
+			URLConnection connection = url.openConnection();
+			connection.connect();
 
-            InputStream response = connection.getInputStream();
+			InputStream response = connection.getInputStream();
 
-            BufferedReader br = new BufferedReader(
-                new InputStreamReader( response ) );
-            StringBuffer sb = new StringBuffer();
-            String nextLine = "";
-            while ( ( nextLine = br.readLine() ) != null )
-                 sb.append(nextLine);
-            result = sb.toString();
+			BufferedReader br = new BufferedReader(
+				new InputStreamReader( response ) );
+			StringBuffer sb = new StringBuffer();
+			String nextLine = "";
+			while ( ( nextLine = br.readLine() ) != null )
+				sb.append(nextLine);
+			result = sb.toString();
 
-            response.close();
-        }
+			response.close();
+		}
 
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
-        sink.put( new RippleList( mc.createValue( result ), stack ) );
-    }
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

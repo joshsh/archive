@@ -15,45 +15,45 @@ import net.fortytwo.ripple.util.Sink;
 
 public class OperatorAst implements Ast
 {
-    public OperatorAst()
-    {}
+	public OperatorAst()
+	{}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        sink.put( Operator.OP );
-    }
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		sink.put( Operator.OP );
+	}
 
-    public String toString()
-    {
-        return "[op]";
-    }
+	public String toString()
+	{
+		return "[op]";
+	}
 /*
-    private Ast arg;
+	private Ast arg;
 
-    public OperatorAst( final Ast argument )
-    {
-        arg = argument;
-    }
+	public OperatorAst( final Ast argument )
+	{
+		arg = argument;
+	}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        ContainerSink values = new ContainerSink();
-        arg.evaluate( values, itp, mc );
-        for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
-            sink.put( Operator.createOperator( iter.next(), mc ) );
-    }
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		ContainerSink values = new ContainerSink();
+		arg.evaluate( values, itp, mc );
+		for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
+			sink.put( Operator.createOperator( iter.next(), mc ) );
+	}
 
-    public String toString()
-    {
-        return "/" + arg;
-    }
+	public String toString()
+	{
+		return "/" + arg;
+	}
 */
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

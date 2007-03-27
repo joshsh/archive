@@ -18,136 +18,136 @@ import java.util.Iterator;
 
 public class RipplePrintStream extends PrintStream
 {
-    private Lexicon lexicon;
+	private Lexicon lexicon;
 
-    public RipplePrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
-        throws RippleException
-    {
-        super( out );
-        this.lexicon = lexicon;
-    }
+	public RipplePrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
+		throws RippleException
+	{
+		super( out );
+		this.lexicon = lexicon;
+	}
 
-    private void printUriRef( URI uri )
-    {
-        print( "<" + uri.toString() + ">" );
-    }
+	private void printUriRef( URI uri )
+	{
+		print( "<" + uri.toString() + ">" );
+	}
 
-    private void printQName( final String nsPrefix, final String localName )
-    {
-        if ( null != nsPrefix )
-            print( nsPrefix );
+	private void printQName( final String nsPrefix, final String localName )
+	{
+		if ( null != nsPrefix )
+			print( nsPrefix );
 
-        print( ":" );
+		print( ":" );
 
-        if ( null != localName )
-            print( localName );
-    }
+		if ( null != localName )
+			print( localName );
+	}
 
-    private void printUri( URI uri )
-        throws RippleException
-    {
-        String prefix = lexicon.nsPrefixOf( uri );
+	private void printUri( URI uri )
+		throws RippleException
+	{
+		String prefix = lexicon.nsPrefixOf( uri );
 
-        if ( null == prefix )
-            printUriRef( uri );
-        else
-            printQName( prefix, uri.getLocalName() );
-    }
+		if ( null == prefix )
+			printUriRef( uri );
+		else
+			printQName( prefix, uri.getLocalName() );
+	}
 
-    private void printEscapedString( final String s )
-    {
+	private void printEscapedString( final String s )
+	{
 // TODO
 print( "\"" + s + "\"" );
-    }
+	}
 
-    public void print( RippleValue v )
-        throws RippleException
-    {
-        if ( null == v )
-            print( "()" );
+	public void print( RippleValue v )
+		throws RippleException
+	{
+		if ( null == v )
+			print( "()" );
 
-        else
-            v.printTo( this );
-    }
+		else
+			v.printTo( this );
+	}
 
-    public void print( Value v )
-        throws RippleException
-    {
-        if ( null == v )
-            print( "()" );
+	public void print( Value v )
+		throws RippleException
+	{
+		if ( null == v )
+			print( "()" );
 
-        else
-        {
-            if ( v instanceof URI )
-                printUri( (URI) v );
+		else
+		{
+			if ( v instanceof URI )
+				printUri( (URI) v );
 
-            else if ( v instanceof Literal )
-            {
-                URI dataTypeUri = ( (Literal) v ).getDatatype();
+			else if ( v instanceof Literal )
+			{
+				URI dataTypeUri = ( (Literal) v ).getDatatype();
 
-                // Note: URI's equals() returns "true if the other object is an
-                //       instance of URI  and their String-representations are
-                //       equal, false  otherwise"
-                if ( null != dataTypeUri )
-                {
-                    if ( dataTypeUri.equals( XMLSchema.BOOLEAN ) )
-                        print( v.toString() );
-                    else if ( dataTypeUri.equals( XMLSchema.DOUBLE ) )
-                        print( v.toString() );
-                    else if ( dataTypeUri.equals( XMLSchema.INTEGER ) )
-                        print( v.toString() );
-                    else if ( dataTypeUri.equals( XMLSchema.STRING ) )
-                        printEscapedString( v.toString() );
-                    else
-                    {
-                        printEscapedString( v.toString() );
-                        print( "^^" );
-                        printUri( dataTypeUri );
-                    }
-                }
+				// Note: URI's equals() returns "true if the other object is an
+				//       instance of URI  and their String-representations are
+				//       equal, false  otherwise"
+				if ( null != dataTypeUri )
+				{
+					if ( dataTypeUri.equals( XMLSchema.BOOLEAN ) )
+						print( v.toString() );
+					else if ( dataTypeUri.equals( XMLSchema.DOUBLE ) )
+						print( v.toString() );
+					else if ( dataTypeUri.equals( XMLSchema.INTEGER ) )
+						print( v.toString() );
+					else if ( dataTypeUri.equals( XMLSchema.STRING ) )
+						printEscapedString( v.toString() );
+					else
+					{
+						printEscapedString( v.toString() );
+						print( "^^" );
+						printUri( dataTypeUri );
+					}
+				}
 
-                else
-                    // For now, plain literals are printed as string-typed literals.
-                    printEscapedString( v.toString() );
+				else
+					// For now, plain literals are printed as string-typed literals.
+					printEscapedString( v.toString() );
 
-                String language = ( (Literal) v ).getLanguage();
-                if ( null != language )
-                    print( "@" + language );
-            }
+				String language = ( (Literal) v ).getLanguage();
+				if ( null != language )
+					print( "@" + language );
+			}
 
-            else if ( v instanceof BNode )
-            {
-                print( "_:" );
-                print( ( (BNode) v ).getID() );
-            }
+			else if ( v instanceof BNode )
+			{
+				print( "_:" );
+				print( ( (BNode) v ).getID() );
+			}
 
-            else
-                print( v.toString() );
-        }
-    }
+			else
+				print( v.toString() );
+		}
+	}
 
-    public void print( Statement st )
-        throws RippleException
-    {
-        print( "    " );
-        print( st.getSubject() );
+	public void print( Statement st )
+		throws RippleException
+	{
+		print( "    " );
+		print( st.getSubject() );
 
-        print( " " );
-        print( st.getPredicate() );
+		print( " " );
+		print( st.getPredicate() );
 
-        print( " " );
-        print( st.getObject() );
-    }
+		print( " " );
+		print( st.getObject() );
+	}
 
-    public void print( Iterator<Statement> stmtIter )
-        throws RippleException
-    {
-        while ( stmtIter.hasNext() )
-        {
-            print( stmtIter.next() );
-            print( "\n" );
-        }
-    }
+	public void print( Iterator<Statement> stmtIter )
+		throws RippleException
+	{
+		while ( stmtIter.hasNext() )
+		{
+			print( stmtIter.next() );
+			print( "\n" );
+		}
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

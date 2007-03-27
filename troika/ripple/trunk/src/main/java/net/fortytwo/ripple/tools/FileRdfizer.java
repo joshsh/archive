@@ -181,3 +181,5 @@ public class FileRdfizer
 		return valueFactory.createURI( namespace, "file" + fileCount++ );
 	}
 }
+
+// kate: tab-width 4

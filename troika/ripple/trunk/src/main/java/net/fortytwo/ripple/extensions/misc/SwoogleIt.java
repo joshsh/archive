@@ -26,65 +26,65 @@ import java.net.URLEncoder;
 
 public class SwoogleIt extends PrimitiveFunction
 {
-    private URI
-        swoogleQueryResponseUri;
+	private URI
+		swoogleQueryResponseUri;
 
 	private static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
 	
-    public SwoogleIt( RdfValue v, ModelConnection mc )
-        throws RippleException
-    {
-        super( v, mc );
+	public SwoogleIt( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
 
-        swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
-    }
+		swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
+	}
 
 	public int arity()
 	{
 		return 3;
 	}
 
-    public void applyTo( RippleList stack,
-                                  Sink<RippleList> sink,
-                                  ModelConnection mc )
-        throws RippleException
-    {
-        String key, searchString;
-        URI queryType;
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		String key, searchString;
+		URI queryType;
 
-        key = mc.stringValue( stack.getFirst() );
-        stack = stack.getRest();
-        queryType = mc.uriValue( stack.getFirst() );
-        stack = stack.getRest();
-        searchString = mc.stringValue( stack.getFirst() );
-        stack = stack.getRest();
+		key = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
+		queryType = mc.uriValue( stack.getFirst() );
+		stack = stack.getRest();
+		searchString = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
 
-        try
-        {
-            String urlStr = "http://logos.cs.umbc.edu:8080/swoogle31/q"
-                + "?key=" + URLEncoder.encode( key )
-                + "&queryType=" + URLEncoder.encode( queryType.getLocalName() )
-                + "&searchString=" + URLEncoder.encode( searchString );
+		try
+		{
+			String urlStr = "http://logos.cs.umbc.edu:8080/swoogle31/q"
+				+ "?key=" + URLEncoder.encode( key )
+				+ "&queryType=" + URLEncoder.encode( queryType.getLocalName() )
+				+ "&searchString=" + URLEncoder.encode( searchString );
 
-            URL url = new URL( urlStr );
+			URL url = new URL( urlStr );
 
-            URI baseUri = mc.createUri( urlStr );
-            mc.addGraph( url, baseUri );
+			URI baseUri = mc.createUri( urlStr );
+			mc.addGraph( url, baseUri );
 //System.out.println( "baseUri = " + baseUri );
 
-            RepositoryResult<Statement> stmtIter
-                = mc.getRepositoryConnection().getStatements(
-                    null, RDF.TYPE, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
-            while ( stmtIter.hasNext() )
-                sink.put( new RippleList( new RdfValue( stmtIter.next().getSubject() ), stack ) );
-            stmtIter.close();
-        }
+			RepositoryResult<Statement> stmtIter
+				= mc.getRepositoryConnection().getStatements(
+					null, RDF.TYPE, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );
+			while ( stmtIter.hasNext() )
+				sink.put( new RippleList( new RdfValue( stmtIter.next().getSubject() ), stack ) );
+			stmtIter.close();
+		}
 
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
-    }
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

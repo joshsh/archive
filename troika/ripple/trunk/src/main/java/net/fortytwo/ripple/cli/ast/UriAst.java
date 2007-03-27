@@ -10,26 +10,26 @@ import net.fortytwo.ripple.util.Sink;
 
 public class UriAst implements Ast
 {
-    private String value;
+	private String value;
 
-    public UriAst( final String value )
-    {
-        this.value = value;
-    }
+	public UriAst( final String value )
+	{
+		this.value = value;
+	}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        sink.put( mc.getModel().getBridge().get(
-            new RdfValue( mc.createUri( value ) ) ) );
-    }
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		sink.put( mc.getModel().getBridge().get(
+			new RdfValue( mc.createUri( value ) ) ) );
+	}
 
-    public String toString()
-    {
-        return "<" + value + ">";
-    }
+	public String toString()
+	{
+		return "<" + value + ">";
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

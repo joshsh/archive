@@ -7,36 +7,36 @@ import org.openrdf.model.vocabulary.RDF;
 
 public class Operator implements RippleValue
 {
-    public static Operator
-        OP = new Operator( new Op() ),
-        PRIM = new Operator( new PrimOpConstructor() ),
-        PRED = new Operator( new PredOpConstructor() ),
-        PROG = new Operator( new ProgOpConstructor() );
+	public static Operator
+		OP = new Operator( new Op() ),
+		PRIM = new Operator( new PrimOpConstructor() ),
+		PRED = new Operator( new PredOpConstructor() ),
+		PROG = new Operator( new ProgOpConstructor() );
 
-    Function func;
-    RdfValue rdfEquivalent = null;
+	Function func;
+	RdfValue rdfEquivalent = null;
 
-    public Operator( RdfValue pred )
-    {
-        func = new ForwardPredicateQuery( pred );
-    }
+	public Operator( RdfValue pred )
+	{
+		func = new ForwardPredicateQuery( pred );
+	}
 
-    public Operator( Function function )
-    {
+	public Operator( Function function )
+	{
 System.out.println( "Operator[" + this + "](" + function + ")" );
-        func = function;
-    }
+		func = function;
+	}
 
-    public Operator( RippleList list )
-    {
+	public Operator( RippleList list )
+	{
 System.out.println( "Operator[" + this + "](" + list + ")" );
-        func = new ListDequotation( list );
-    }
+		func = new ListDequotation( list );
+	}
 
-    public Function getFunction()
-    {
-        return func;
-    }
+	public Function getFunction()
+	{
+		return func;
+	}
 
 	public String toString()
 	{
@@ -44,85 +44,85 @@ System.out.println( "Operator[" + this + "](" + list + ")" );
 		return "/" + func;
 	}
 
-    public void printTo( RipplePrintStream p )
-        throws RippleException
-    {
-        p.print( "/" );
-        p.print( func );
-    }
+	public void printTo( RipplePrintStream p )
+		throws RippleException
+	{
+		p.print( "/" );
+		p.print( func );
+	}
 
-    private static RdfValue
-        rdfType = new RdfValue( RDF.TYPE );
+	private static RdfValue
+		rdfType = new RdfValue( RDF.TYPE );
 
-    public static Operator guessOperator( RippleValue v, ModelConnection mc )
-        throws RippleException
-    {
-        if ( v instanceof Function )
-            return PRIM;
+	public static Operator guessOperator( RippleValue v, ModelConnection mc )
+		throws RippleException
+	{
+		if ( v instanceof Function )
+			return PRIM;
 
-        else if ( v instanceof RippleList )
-            return PROG;
+		else if ( v instanceof RippleList )
+			return PROG;
 
-        // This is the messy part.  Attempt to guess the type of the object from
-        // the available RDF statements, and create the appropriate object.
-        if ( v instanceof RdfValue )
-        {
+		// This is the messy part.  Attempt to guess the type of the object from
+		// the available RDF statements, and create the appropriate object.
+		if ( v instanceof RdfValue )
+		{
 // TODO: do some type inference instead of a dumb, single lookup.
-            if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
-                return PROG;
-            else
-                return PRED;
-        }
+			if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
+				return PROG;
+			else
+				return PRED;
+		}
 
-        else
-            throw new RippleException( "bad RippleValue in guessOperator(): "
-                + v );
-    }
+		else
+			throw new RippleException( "bad RippleValue in guessOperator(): "
+				+ v );
+	}
 
-    private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
+	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
 
-    /**
-     *  Guesses the type of a node and creates an appropriate wrapper.
-     */
-    public static Operator createOperator( RippleValue v, ModelConnection mc )
-        throws RippleException
-    {
-        if ( v instanceof Function )
-            return new Operator( (Function) v );
+	/**
+	*  Guesses the type of a node and creates an appropriate wrapper.
+	*/
+	public static Operator createOperator( RippleValue v, ModelConnection mc )
+		throws RippleException
+	{
+		if ( v instanceof Function )
+			return new Operator( (Function) v );
 
-        else if ( v instanceof RippleList )
-            return new Operator( (RippleList) v );
+		else if ( v instanceof RippleList )
+			return new Operator( (RippleList) v );
 
-        // This is the messy part.  Attempt to guess the type of the object from
-        // the available RDF statements, and create the appropriate object.
-        if ( v instanceof RdfValue )
-        {
+		// This is the messy part.  Attempt to guess the type of the object from
+		// the available RDF statements, and create the appropriate object.
+		if ( v instanceof RdfValue )
+		{
 // TODO: do some type inference instead of a dumb, single lookup.
-            if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
-                return new Operator( new RippleList( (RdfValue) v, mc ) );
-            else
-                return new Operator( (RdfValue) v );
-        }
+			if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
+				return new Operator( new RippleList( (RdfValue) v, mc ) );
+			else
+				return new Operator( (RdfValue) v );
+		}
 
-        else
-            throw new RippleException( "bad RippleValue in createOperator(): "
-                + v );
-    }
+		else
+			throw new RippleException( "bad RippleValue in createOperator(): "
+				+ v );
+	}
 
-    public boolean isOperator()
-    {
-        return true;
-    }
+	public boolean isOperator()
+	{
+		return true;
+	}
 
 public RdfValue toRdf( ModelConnection mc )
-    throws RippleException
+	throws RippleException
 {
 // Note: only correct for OP, but I expect this method only to be used with OP anyway
 if ( null == rdfEquivalent )
-    rdfEquivalent = new RdfValue( mc.createUri( "http://troika.dnsdojo.net/2007/03/ripple#op" ) );
+	rdfEquivalent = new RdfValue( mc.createUri( "http://troika.dnsdojo.net/2007/03/ripple#op" ) );
 return rdfEquivalent;
 }
 
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

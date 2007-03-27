@@ -12,40 +12,40 @@ import org.openrdf.model.URI;
 
 public class UriToString extends PrimitiveFunction
 {
-    public UriToString( RdfValue v, ModelConnection mc )
-        throws RippleException
-    {
-        super( v, mc );
-    }
+	public UriToString( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
 	public int arity()
 	{
 		return 1;
 	}
 
-    public void applyTo( RippleList stack,
-                                  Sink<RippleList> sink,
-                                  ModelConnection mc )
-        throws RippleException
-    {
-        URI a;
-        String result;
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		URI a;
+		String result;
 
-        a = mc.uriValue( stack.getFirst() );
-        stack = stack.getRest();
+		a = mc.uriValue( stack.getFirst() );
+		stack = stack.getRest();
 
-        try
-        {
-            result = a.toString();
-        }
+		try
+		{
+			result = a.toString();
+		}
 
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
-        sink.put( new RippleList( mc.createValue( result ), stack ) );
-    }
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

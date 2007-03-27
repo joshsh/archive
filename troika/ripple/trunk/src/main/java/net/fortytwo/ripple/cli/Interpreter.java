@@ -53,695 +53,695 @@ import net.fortytwo.ripple.util.Sink;
 import org.apache.log4j.Logger;
 
 /**
- *  Console input:
- *    System.in --> reader --> readOut --> writeIn --> lexer
- *
- *  Normal output:
- *    valueSetObserver --> printStream --> System.out
- *    evaluateGraphQuery() --> printStream --> System.out
- *
- *  Error output:
- *    alert() --> errorPrintStream = System.err
- */
+*  Console input:
+*    System.in --> reader --> readOut --> writeIn --> lexer
+*
+*  Normal output:
+*    valueSetObserver --> printStream --> System.out
+*    evaluateGraphQuery() --> printStream --> System.out
+*
+*  Error output:
+*    alert() --> errorPrintStream = System.err
+*/
 public class Interpreter extends Thread implements Observer
 {
-    private final static Logger s_logger
-        = Logger.getLogger( Interpreter.class );
+	private final static Logger s_logger
+		= Logger.getLogger( Interpreter.class );
 
-    private Model model;
-    private Evaluator evaluator;
+	private Model model;
+	private Evaluator evaluator;
 
 public Model getModel()
 {
-    return model;
+	return model;
 }
 
-    private PipedInputStream  writeIn;
-    private PipedOutputStream readOut;
+	private PipedInputStream  writeIn;
+	private PipedOutputStream readOut;
 
-    private PrintWriter out;
+	private PrintWriter out;
 
-    private ConsoleReader reader;
-    private int lineNumber = 0;
+	private ConsoleReader reader;
+	private int lineNumber = 0;
 
-    private RipplePrintStream printStream;
-    private PrintStream errorPrintStream;
+	private RipplePrintStream printStream;
+	private PrintStream errorPrintStream;
 
-    private ObservableContainer valueSet;
-    private ContainerTreeView valueSetObserver;
+	private ObservableContainer valueSet;
+	private ContainerTreeView valueSetObserver;
 
-    private Lexicon lexicon;
+	private Lexicon lexicon;
 
-    ////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-    // A helper variable for the lexer and parser.
-    private String languageTag;
+	// A helper variable for the lexer and parser.
+	private String languageTag;
 
-    public String getLanguageTag()
-    {
-        return languageTag;
-    }
+	public String getLanguageTag()
+	{
+		return languageTag;
+	}
 
-    public void setLanguageTag( final String tag )
-    {
-        languageTag = tag;
-    }
+	public void setLanguageTag( final String tag )
+	{
+		languageTag = tag;
+	}
 
-    private void chooseEvaluator()
-    {
-        switch ( Ripple.getEvaluationStyle() )
-        {
-            case APPLICATIVE:
+	private void chooseEvaluator()
+	{
+		switch ( Ripple.getEvaluationStyle() )
+		{
+			case APPLICATIVE:
 // TODO: not implemented
-                break;
+				break;
 
-            case COMPOSITIONAL:
-                evaluator = new EagerStackEvaluator();
-                break;
-        }
+			case COMPOSITIONAL:
+				evaluator = new EagerStackEvaluator();
+				break;
+		}
 //        evaluator = new DebugEvaluator( new EagerStackEvaluator( model ) );
-    }
+	}
 
-    ////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-    public Interpreter( Model model ) throws RippleException
-    {
-        this.model = model;
+	public Interpreter( Model model ) throws RippleException
+	{
+		this.model = model;
 
-        chooseEvaluator();
+		chooseEvaluator();
 
-        lexicon = new Lexicon( model );
-        lexicon.addObserver( this );
+		lexicon = new Lexicon( model );
+		lexicon.addObserver( this );
 
-        String jLineDebugOutput = Ripple.getJLineDebugOutput();
+		String jLineDebugOutput = Ripple.getJLineDebugOutput();
 
-        try
-        {
-            reader = new ConsoleReader();
+		try
+		{
+			reader = new ConsoleReader();
 
-            if ( null != jLineDebugOutput )
-                reader.setDebug(
-                    new PrintWriter(
-                        new FileWriter( jLineDebugOutput, true ) ) );
-        }
+			if ( null != jLineDebugOutput )
+				reader.setDebug(
+					new PrintWriter(
+						new FileWriter( jLineDebugOutput, true ) ) );
+		}
 
-        catch ( Throwable t )
-        {
-            throw new RippleException( t );
-        }
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
-        try
-        {
-            writeIn = new PipedInputStream();
-            readOut = new PipedOutputStream( writeIn );
+		try
+		{
+			writeIn = new PipedInputStream();
+			readOut = new PipedOutputStream( writeIn );
 
-            out = new PrintWriter( System.out );
-        }
+			out = new PrintWriter( System.out );
+		}
 
-        catch ( java.io.IOException e )
-        {
-            throw new RippleException( e );
-        }
+		catch ( java.io.IOException e )
+		{
+			throw new RippleException( e );
+		}
 
-        errorPrintStream = System.err;
+		errorPrintStream = System.err;
 
-        valueSet = new ObservableContainer( model, null );
+		valueSet = new ObservableContainer( model, null );
 ModelConnection mc = new ModelConnection( model, "for ConsoleValueSet constructor" );
-        printStream = new RipplePrintStream( System.out, lexicon, mc );
-        valueSetObserver = new ContainerTreeView( valueSet, printStream );
+		printStream = new RipplePrintStream( System.out, lexicon, mc );
+		valueSetObserver = new ContainerTreeView( valueSet, printStream );
 mc.close();
-        valueSet.addObserver( valueSetObserver );
+		valueSet.addObserver( valueSetObserver );
 
-        update( lexicon, null );
-    }
+		update( lexicon, null );
+	}
 
-    ////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-    public void updateCompletors()
-    {
+	public void updateCompletors()
+	{
 System.out.println( "########## updating completors" );
-        List completors = new ArrayList();
+		List completors = new ArrayList();
 
-        try
-        {
-            completors.add( lexicon.getCompletor() );
+		try
+		{
+			completors.add( lexicon.getCompletor() );
 
-            ArrayList<String> directives = new ArrayList<String>();
-            directives.add( "@count" );
-            directives.add( "@define" );
-            directives.add( "@export" );
-            directives.add( "@help" );
-            directives.add( "@list" );
-            directives.add( "@prefix" );
-            directives.add( "@quit" );
-            directives.add( "@saveas" );
-            directives.add( "@serql" );
-            directives.add( "@undefine" );
+			ArrayList<String> directives = new ArrayList<String>();
+			directives.add( "@count" );
+			directives.add( "@define" );
+			directives.add( "@export" );
+			directives.add( "@help" );
+			directives.add( "@list" );
+			directives.add( "@prefix" );
+			directives.add( "@quit" );
+			directives.add( "@saveas" );
+			directives.add( "@serql" );
+			directives.add( "@undefine" );
 
-            completors.add(
-                new net.fortytwo.ripple.cli.jline.DirectiveCompletor(
-                    directives ) );
+			completors.add(
+				new net.fortytwo.ripple.cli.jline.DirectiveCompletor(
+					directives ) );
 
-            try
-            {
-                // This makes candidates from multiple completors available at once.
-                Completor multiCompletor = new MultiCompletor( completors );
+			try
+			{
+				// This makes candidates from multiple completors available at once.
+				Completor multiCompletor = new MultiCompletor( completors );
 
-                reader.addCompletor( multiCompletor );
-            }
+				reader.addCompletor( multiCompletor );
+			}
 
-            catch ( Throwable t )
-            {
-                throw new RippleException( t );
-            }
-        }
+			catch ( Throwable t )
+			{
+				throw new RippleException( t );
+			}
+		}
 
-        catch ( RippleException e )
-        {
-            s_logger.error( "Failed to update completors.  Continuing nonetheless." );
-        }
-    }
+		catch ( RippleException e )
+		{
+			s_logger.error( "Failed to update completors.  Continuing nonetheless." );
+		}
+	}
 
-    public boolean readLine()
-    {
-        try
-        {
-            ++lineNumber;
-            String line = reader.readLine( "" + lineNumber + " >>  " );
+	public boolean readLine()
+	{
+		try
+		{
+			++lineNumber;
+			String line = reader.readLine( "" + lineNumber + " >>  " );
 
-            if ( null == line )
-                return false;
+			if ( null == line )
+				return false;
 
-            else
-            {
-                byte[] bytes = line.getBytes();
-                readOut.write( bytes, 0, bytes.length );
+			else
+			{
+				byte[] bytes = line.getBytes();
+				readOut.write( bytes, 0, bytes.length );
 
-                // Add a deliberate "end of line" character so the lexer knows
-                // to call readLine() again when it gets there.
-                byte[] terminator = { '\n' };
-                readOut.write( terminator, 0, 1 );
+				// Add a deliberate "end of line" character so the lexer knows
+				// to call readLine() again when it gets there.
+				byte[] terminator = { '\n' };
+				readOut.write( terminator, 0, 1 );
 
-                out.flush();
-            }
+				out.flush();
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        catch( java.io.IOException e )
-        {
-            new RippleException( e );
-            return false;
-        }
-    }
+		catch( java.io.IOException e )
+		{
+			new RippleException( e );
+			return false;
+		}
+	}
 
-    public void quit()
-    {
-        s_logger.debug( "quit() called on Interpreter" );
-        throw new ParserQuitException();
-    }
+	public void quit()
+	{
+		s_logger.debug( "quit() called on Interpreter" );
+		throw new ParserQuitException();
+	}
 
-    private void runPrivate() throws Throwable
-    {
-        if ( !readLine() )
-            return;
+	private void runPrivate() throws Throwable
+	{
+		if ( !readLine() )
+			return;
 
 // FIXME: this appears to work, but I need to go back and make sure it will ALWAYS work.
-        while ( true )
-        {
+		while ( true )
+		{
 System.out.println( "--- 1 ---" );
-            // NOTE: I didn't find a "reset" method in the generated lexer or
-            // parser, so I'm assuming that we need to create a new lexer and
-            // parser instance once a parsing error puts them in a weird
-            // state (unless we want to go to the trouble of recovering from
-            // it, at any rate).
-            RippleLexer lexer = new RippleLexer( writeIn );
-            lexer.initialize( this );
-            RippleParser parser = new RippleParser( lexer );
-            parser.initialize( this );
+			// NOTE: I didn't find a "reset" method in the generated lexer or
+			// parser, so I'm assuming that we need to create a new lexer and
+			// parser instance once a parsing error puts them in a weird
+			// state (unless we want to go to the trouble of recovering from
+			// it, at any rate).
+			RippleLexer lexer = new RippleLexer( writeIn );
+			lexer.initialize( this );
+			RippleParser parser = new RippleParser( lexer );
+			parser.initialize( this );
 System.out.println( "--- 2 ---" );
 
-            try
-            {
-                parser.nt_Input();
+			try
+			{
+				parser.nt_Input();
 
-                // If the parser has exited normally, then we're done.
-                break;
-            }
+				// If the parser has exited normally, then we're done.
+				break;
+			}
 
-            catch ( antlr.RecognitionException e )
-            {
-                // Report the error, then begin parsing again.
-                alert( "RecognitionException: " + e.toString() );
-            }
+			catch ( antlr.RecognitionException e )
+			{
+				// Report the error, then begin parsing again.
+				alert( "RecognitionException: " + e.toString() );
+			}
 
-            catch ( antlr.TokenStreamRecognitionException e )
-            {
-                // Report the error, then begin parsing again.
-                alert( "TokenStreamRecognitionException: " + e.toString() );
-            }
+			catch ( antlr.TokenStreamRecognitionException e )
+			{
+				// Report the error, then begin parsing again.
+				alert( "TokenStreamRecognitionException: " + e.toString() );
+			}
 
-            catch ( ParserQuitException e )
-            {
-                // The user has instructed the parser to quit.
-                break;
-            }
+			catch ( ParserQuitException e )
+			{
+				// The user has instructed the parser to quit.
+				break;
+			}
 System.out.println( "--- 3 ---" );
-        }
-    }
+		}
+	}
 
-    public void run()
-    {
-        try
-        {
-            s_logger.debug( "running Interpreter in a new thread" );
-            runPrivate();
-        }
+	public void run()
+	{
+		try
+		{
+			s_logger.debug( "running Interpreter in a new thread" );
+			runPrivate();
+		}
 
-        catch ( Throwable t )
-        {
-            alert( "Error: " + t.toString() );
+		catch ( Throwable t )
+		{
+			alert( "Error: " + t.toString() );
 
-            new RippleException( t );
-        }
-    }
+			new RippleException( t );
+		}
+	}
 
-    ////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-    public void countStatements()
-    {
-        try
-        {
-            System.out.println( "\n" + model.countStatements() + "\n" );
-        }
+	public void countStatements()
+	{
+		try
+		{
+			System.out.println( "\n" + model.countStatements() + "\n" );
+		}
 
-        catch ( RippleException e ) {}
-    }
+		catch ( RippleException e ) {}
+	}
 
-    public void showContexts()
-    {
-        try
-        {
+	public void showContexts()
+	{
+		try
+		{
 //            valueSet.setValues( model.getContexts() );
 
 // FIXME: this is a kludge to keep the print stream from using namespace prefixes instead of full URI references
-            printStream.println( "" );
-            Iterator<RippleValue> models = model.getContexts().iterator();
-            int i = 0;
-            while ( models.hasNext() )
-            {
-                printStream.print( "[" + i++ + "] " );
-                printStream.println( models.next() );
-            }
-            printStream.println( "" );
-        }
+			printStream.println( "" );
+			Iterator<RippleValue> models = model.getContexts().iterator();
+			int i = 0;
+			while ( models.hasNext() )
+			{
+				printStream.print( "[" + i++ + "] " );
+				printStream.println( models.next() );
+			}
+			printStream.println( "" );
+		}
 
-        catch ( RippleException e ) {}
-    }
+		catch ( RippleException e ) {}
+	}
 
-    private void saveAsPrivate( String fileName )
-        throws RippleException
-    {
-        OutputStream out;
+	private void saveAsPrivate( String fileName )
+		throws RippleException
+	{
+		OutputStream out;
 
-        try
-        {
-            out = new FileOutputStream( fileName );
-        }
+		try
+		{
+			out = new FileOutputStream( fileName );
+		}
 
-        catch ( java.io.FileNotFoundException e )
-        {
-            throw new RippleException( e );
-        }
+		catch ( java.io.FileNotFoundException e )
+		{
+			throw new RippleException( e );
+		}
 
-        model.writeTo( out );
+		model.writeTo( out );
 //        model.writeTrix( out );
 
-        try
-        {
-            out.close();
-        }
+		try
+		{
+			out.close();
+		}
 
-        catch ( java.io.IOException e )
-        {
-            throw new RippleException( e );
-        }
-    }
+		catch ( java.io.IOException e )
+		{
+			throw new RippleException( e );
+		}
+	}
 
-    private void exportNsPrivate( String nsPrefix, String fileName )
-        throws RippleException
-    {
-        OutputStream out;
+	private void exportNsPrivate( String nsPrefix, String fileName )
+		throws RippleException
+	{
+		OutputStream out;
 
-        String ns = lexicon.resolveNamespacePrefix( nsPrefix );
-        if ( null == ns )
-            throw new RippleException( "namespace prefix '" + nsPrefix + "' is not defined" );
+		String ns = lexicon.resolveNamespacePrefix( nsPrefix );
+		if ( null == ns )
+			throw new RippleException( "namespace prefix '" + nsPrefix + "' is not defined" );
 
-        try
-        {
-            out = new FileOutputStream( fileName );
-        }
+		try
+		{
+			out = new FileOutputStream( fileName );
+		}
 
-        catch ( java.io.FileNotFoundException e )
-        {
-            throw new RippleException( e );
-        }
+		catch ( java.io.FileNotFoundException e )
+		{
+			throw new RippleException( e );
+		}
 
-        ModelConnection mc = new ModelConnection( model );
+		ModelConnection mc = new ModelConnection( model );
 
-        try
-        {
-            mc.exportNs( ns, out );
-        }
+		try
+		{
+			mc.exportNs( ns, out );
+		}
 
-        catch ( RippleException e )
-        {
-            mc.close();
-            throw e;
-        }
+		catch ( RippleException e )
+		{
+			mc.close();
+			throw e;
+		}
 
-        mc.close();
+		mc.close();
 
-        try
-        {
-            out.close();
-        }
+		try
+		{
+			out.close();
+		}
 
-        catch ( java.io.IOException e )
-        {
-            throw new RippleException( e );
-        }
-    }
+		catch ( java.io.IOException e )
+		{
+			throw new RippleException( e );
+		}
+	}
 
-    public void saveAs( final String fileName )
-    {
-        try
-        {
-            saveAsPrivate( fileName );
+	public void saveAs( final String fileName )
+	{
+		try
+		{
+			saveAsPrivate( fileName );
 
-            System.out.println( "\nSaved data set as " + fileName + "\n" );
-        }
+			System.out.println( "\nSaved data set as " + fileName + "\n" );
+		}
 
-        catch ( RippleException e ) {}
-    }
+		catch ( RippleException e ) {}
+	}
 
-    public void exportNs( final String nsPrefix, final String fileName )
-    {
-        try
-        {
-            exportNsPrivate( nsPrefix, fileName );
+	public void exportNs( final String nsPrefix, final String fileName )
+	{
+		try
+		{
+			exportNsPrivate( nsPrefix, fileName );
 
-            System.out.println( "\nExported namespace " + nsPrefix + " to " + fileName + "\n" );
-        }
+			System.out.println( "\nExported namespace " + nsPrefix + " to " + fileName + "\n" );
+		}
 
-        catch ( RippleException e ) {}
-    }
+		catch ( RippleException e ) {}
+	}
 
-    public void setNamespace( final String prefix, final UriAst uri )
-    {
-        ModelConnection mc = null;
+	public void setNamespace( final String prefix, final UriAst uri )
+	{
+		ModelConnection mc = null;
 
-        try
-        {
-            mc = new ModelConnection( model, "for setNamespace" );
-            ContainerSink sink = new ContainerSink();
-            uri.evaluate( sink, this, mc );
-            if ( sink.size() == 0 )
-                throw new RippleException( "URI could not be constructed from " + uri );
-            else if ( sink.size() > 1 )
-                throw new RippleException( "multiple values constructed from " + uri );
+		try
+		{
+			mc = new ModelConnection( model, "for setNamespace" );
+			ContainerSink sink = new ContainerSink();
+			uri.evaluate( sink, this, mc );
+			if ( sink.size() == 0 )
+				throw new RippleException( "URI could not be constructed from " + uri );
+			else if ( sink.size() > 1 )
+				throw new RippleException( "multiple values constructed from " + uri );
 
-            URI ns = mc.uriValue( sink.iterator().next() );
-            mc.setNamespace( prefix, ns );
-            mc.close();
-            mc = null;
+			URI ns = mc.uriValue( sink.iterator().next() );
+			mc.setNamespace( prefix, ns );
+			mc.close();
+			mc = null;
 
-            lexicon.update();
-        }
+			lexicon.update();
+		}
 
-        catch ( RippleException e )
-        {
-            if ( null != mc )
-            {
-                try
-                {
-                    mc.close();
-                }
+		catch ( RippleException e )
+		{
+			if ( null != mc )
+			{
+				try
+				{
+					mc.close();
+				}
 
-                catch ( RippleException e2 )
-                {
-                    // ...
-                }
-            }
+				catch ( RippleException e2 )
+				{
+					// ...
+				}
+			}
 
-            alert( "Error: " + e.getMessage() );
-        }
-    }
+			alert( "Error: " + e.getMessage() );
+		}
+	}
 
-    private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
-        throws RippleException
-    {
-        Dereferencer d = model.getDereferencer();
+	private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
+		throws RippleException
+	{
+		Dereferencer d = model.getDereferencer();
 
-        Iterator<RippleValue> iter = values.iterator();
-        while ( iter.hasNext() )
-        {
-            RippleValue value = iter.next();
+		Iterator<RippleValue> iter = values.iterator();
+		while ( iter.hasNext() )
+		{
+			RippleValue value = iter.next();
 if ( value instanceof RippleList )
 value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 
-            try
-            {
-                d.dereference( value.toRdf( mc ), mc );
-            }
+			try
+			{
+				d.dereference( value.toRdf( mc ), mc );
+			}
 
-            catch ( RippleException e )
-            {
-                // (soft fail)
-            }
-        }
-    }
+			catch ( RippleException e )
+			{
+				// (soft fail)
+			}
+		}
+	}
 
-    public void resolveUnqualifiedName( final String localName, Sink<RippleValue> sink )
-        throws RippleException
-    {
-        Collection<URI> options = lexicon.resolveUnqualifiedName( localName );
-        if ( 0 == options.size() )
-            errorPrintStream.println( "Warning: no values resolved for " + localName );
-        else if ( 1 < options.size() )
-            errorPrintStream.println( "Warning: multiple values resolved for " + localName );
+	public void resolveUnqualifiedName( final String localName, Sink<RippleValue> sink )
+		throws RippleException
+	{
+		Collection<URI> options = lexicon.resolveUnqualifiedName( localName );
+		if ( 0 == options.size() )
+			errorPrintStream.println( "Warning: no values resolved for " + localName );
+		else if ( 1 < options.size() )
+			errorPrintStream.println( "Warning: multiple values resolved for " + localName );
 
-        for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
-        {
-            RdfValue choice = new RdfValue( optIter.next() );
+		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
+		{
+			RdfValue choice = new RdfValue( optIter.next() );
 
-            RippleValue rv = model.getBridge().get( choice );
-            sink.put( ( null == rv )
-                ? choice
-                : rv );
-        }
-    }
+			RippleValue rv = model.getBridge().get( choice );
+			sink.put( ( null == rv )
+				? choice
+				: rv );
+		}
+	}
 
-    public void resolveQualifiedName( final String nsPrefix,
-                                      final String localName,
-                                      final Sink<RippleValue> sink )
-        throws RippleException
-    {
-        Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
+	public void resolveQualifiedName( final String nsPrefix,
+									final String localName,
+									final Sink<RippleValue> sink )
+		throws RippleException
+	{
+		Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
 
-        if ( null != v )
-        {
-            RdfValue choice = new RdfValue( v );
+		if ( null != v )
+		{
+			RdfValue choice = new RdfValue( v );
 
-            RippleValue rv = model.getBridge().get( choice );
-            sink.put( ( null == rv )
-                ? choice
-                : rv );
-        }
-    }
+			RippleValue rv = model.getBridge().get( choice );
+			sink.put( ( null == rv )
+				? choice
+				: rv );
+		}
+	}
 
-    private String getDefaultNamespace()
-        throws RippleException
-    {
-        String defaultNs = lexicon.resolveNamespacePrefix( "" );
+	private String getDefaultNamespace()
+		throws RippleException
+	{
+		String defaultNs = lexicon.resolveNamespacePrefix( "" );
 
-        if ( null == defaultNs )
-            throw new RippleException( "no default namespace is defined" );
+		if ( null == defaultNs )
+			throw new RippleException( "no default namespace is defined" );
 
-        return defaultNs;
-    }
+		return defaultNs;
+	}
 
-    private void evaluate( ListAst ast, final String name )
-        throws RippleException
-    {
-        ModelConnection mc = null;
+	private void evaluate( ListAst ast, final String name )
+		throws RippleException
+	{
+		ModelConnection mc = null;
 
-        try
-        {
-            mc = new ModelConnection( model, "for Interpreter evaluate()" );
+		try
+		{
+			mc = new ModelConnection( model, "for Interpreter evaluate()" );
 
-            ContainerSink expressions = new ContainerSink();
-            ast.evaluate( expressions, this, mc );
+			ContainerSink expressions = new ContainerSink();
+			ast.evaluate( expressions, this, mc );
 
-            // Define the term *before* reduction.
-            if ( null != name && expressions.size() > 0 )
-            {
-                if ( expressions.size() > 1 )
-                    errorPrintStream.println( "Warning: expression has multiple values.  Choosing the first value for assignment." );
+			// Define the term *before* reduction.
+			if ( null != name && expressions.size() > 0 )
+			{
+				if ( expressions.size() > 1 )
+					errorPrintStream.println( "Warning: expression has multiple values.  Choosing the first value for assignment." );
 
-                RippleValue expr = expressions.iterator().next();
+				RippleValue expr = expressions.iterator().next();
 
-                if ( !( expr instanceof RippleList ) )
-                    throw new RippleException( "term assignment for non-lists is not implemented" );
+				if ( !( expr instanceof RippleList ) )
+					throw new RippleException( "term assignment for non-lists is not implemented" );
 
-                RippleList exprList = (RippleList) expr;
+				RippleList exprList = (RippleList) expr;
 
 // TODO: check for collision with an existing URI
-                URI uri = mc.createUri( getDefaultNamespace() + name );
+				URI uri = mc.createUri( getDefaultNamespace() + name );
 
-                mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
+				mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
 
-                lexicon.update();
-            }
+				lexicon.update();
+			}
 
-            ListContainerSink evaluatedExpressions = new ListContainerSink();
-            for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
-            {
-                RippleValue expr = iter.next();
-                RippleList list = ( expr instanceof RippleList )
-                    ? (RippleList) expr
-                    : new RippleList( expr );
+			ListContainerSink evaluatedExpressions = new ListContainerSink();
+			for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
+			{
+				RippleValue expr = iter.next();
+				RippleList list = ( expr instanceof RippleList )
+					? (RippleList) expr
+					: new RippleList( expr );
 //System.out.println( "applying to: " + list );
 
-                evaluator.applyTo( list, evaluatedExpressions, mc );
-            }
+				evaluator.applyTo( list, evaluatedExpressions, mc );
+			}
 
 // TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
-            dereferenceResultSet( evaluatedExpressions, mc );
+			dereferenceResultSet( evaluatedExpressions, mc );
 
-            valueSet.setValues( evaluatedExpressions );
+			valueSet.setValues( evaluatedExpressions );
 
-            mc.close();
-        }
+			mc.close();
+		}
 
-        catch ( RippleException e )
-        {
-            mc.close();
-            throw e;
-        }
-    }
+		catch ( RippleException e )
+		{
+			mc.close();
+			throw e;
+		}
+	}
 
-    public void undefine( final String localName )
-    {
-        try
-        {
-            ModelConnection mc = new ModelConnection( model, "for Interpreter undefine()" );
+	public void undefine( final String localName )
+	{
+		try
+		{
+			ModelConnection mc = new ModelConnection( model, "for Interpreter undefine()" );
 
-            mc.removeStatementsAbout(
-                mc.createUri( getDefaultNamespace() + localName ) );
+			mc.removeStatementsAbout(
+				mc.createUri( getDefaultNamespace() + localName ) );
 
 // TODO: close on Exception
-            mc.close();
-        }
+			mc.close();
+		}
 
-        catch ( RippleException e )
-        {
-            alert( "Error: " + e.getMessage() );
-        }
-    }
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+		}
+	}
 
-    public void evaluate( ListAst ast )
-    {
-        try
-        {
-            lexicon.suspendEventHandling();
-            valueSetObserver.suspendEventHandling();
-            evaluate( ast, null );
-            lexicon.resumeEventHandling();
-            valueSetObserver.resumeEventHandling();
-        }
+	public void evaluate( ListAst ast )
+	{
+		try
+		{
+			lexicon.suspendEventHandling();
+			valueSetObserver.suspendEventHandling();
+			evaluate( ast, null );
+			lexicon.resumeEventHandling();
+			valueSetObserver.resumeEventHandling();
+		}
 
-        catch ( RippleException e )
-        {
-            alert( "Error: " + e.getMessage() );
-        }
-    }
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+		}
+	}
 
-    public void evaluateAndDefine( ListAst ast, String name )
-    {
-        try
-        {
-            lexicon.suspendEventHandling();
-            evaluate( ast, name );
-            lexicon.resumeEventHandling();
-        }
+	public void evaluateAndDefine( ListAst ast, String name )
+	{
+		try
+		{
+			lexicon.suspendEventHandling();
+			evaluate( ast, name );
+			lexicon.resumeEventHandling();
+		}
 
-        catch ( RippleException e )
-        {
-            alert( "Error: " + e.getMessage() );
-        }
-    }
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+		}
+	}
 
-    public void showNamespaces()
-    {
-        try
-        {
-            model.showNamespaces();
-        }
+	public void showNamespaces()
+	{
+		try
+		{
+			model.showNamespaces();
+		}
 
-        catch ( RippleException e )
-        {
-            alert( "Error: " + e.getMessage() );
-        }
-    }
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+		}
+	}
 
-    // E.g.
-    //      CONSTRUCT * FROM {x} p {y}
-    public void evaluateGraphQuery( final String query )
-    {
-        ModelConnection mc = null;
+	// E.g.
+	//      CONSTRUCT * FROM {x} p {y}
+	public void evaluateGraphQuery( final String query )
+	{
+		ModelConnection mc = null;
 
-        try
-        {
-            mc = new ModelConnection( model, "for evaluateGraphQuery" );
-            Iterator<Statement> stmtIter = model.graphQuery( query ).iterator();
+		try
+		{
+			mc = new ModelConnection( model, "for evaluateGraphQuery" );
+			Iterator<Statement> stmtIter = model.graphQuery( query ).iterator();
 
-            printStream.println( "" );
-            printStream.print( stmtIter );
-            printStream.println( "" );
+			printStream.println( "" );
+			printStream.print( stmtIter );
+			printStream.println( "" );
 
-            mc.close();
-        }
+			mc.close();
+		}
 
-        catch ( RippleException e )
-        {
-            try
-            {
-                mc.close();
-            }
+		catch ( RippleException e )
+		{
+			try
+			{
+				mc.close();
+			}
 
-            catch ( RippleException e2 )
-            {
-                // ...
-            }
+			catch ( RippleException e2 )
+			{
+				// ...
+			}
 
-            alert( "Error: " + e.getMessage() );
-        }
-    }
+			alert( "Error: " + e.getMessage() );
+		}
+	}
 
-    private void alert( String s )
-    {
-        errorPrintStream.println( "\n" + s + "\n" );
-    }
+	private void alert( String s )
+	{
+		errorPrintStream.println( "\n" + s + "\n" );
+	}
 
-    ////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-    public void update( Observable o, Object arg )
-    {
-        if ( o == lexicon )
-            updateCompletors();
-    }
+	public void update( Observable o, Object arg )
+	{
+		if ( o == lexicon )
+			updateCompletors();
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

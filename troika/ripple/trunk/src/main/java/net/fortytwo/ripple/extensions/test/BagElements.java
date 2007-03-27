@@ -12,30 +12,30 @@ import java.util.Iterator;
 
 public class BagElements extends PrimitiveFunction
 {
-    public BagElements( RdfValue v, ModelConnection mc )
-        throws RippleException
-    {
-        super( v, mc );
-    }
+	public BagElements( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		super( v, mc );
+	}
 
 	public int arity()
 	{
 		return 1;
 	}
 
-    public void applyTo( RippleList stack,
-                                  Sink<RippleList> sink,
-                                  ModelConnection mc )
-        throws RippleException
-    {
-        Iterator<RippleValue> values;
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		Iterator<RippleValue> values;
 
-        values = mc.bagValue( stack.getFirst() ).iterator();
-        stack = stack.getRest();
+		values = mc.bagValue( stack.getFirst() ).iterator();
+		stack = stack.getRest();
 
-        while ( values.hasNext() )
-            sink.put( new RippleList( values.next(), stack ) );
-    }
+		while ( values.hasNext() )
+			sink.put( new RippleList( values.next(), stack ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

@@ -8,25 +8,25 @@ import net.fortytwo.ripple.util.Sink;
 
 public class NameAst implements Ast
 {
-    private String localName;
+	private String localName;
 
-    public NameAst( final String localName )
-    {
-        this.localName = localName;
-    }
+	public NameAst( final String localName )
+	{
+		this.localName = localName;
+	}
 
-    public String toString()
-    {
-        return localName;
-    }
+	public String toString()
+	{
+		return localName;
+	}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        itp.resolveUnqualifiedName( localName, sink );
-    }
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		itp.resolveUnqualifiedName( localName, sink );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

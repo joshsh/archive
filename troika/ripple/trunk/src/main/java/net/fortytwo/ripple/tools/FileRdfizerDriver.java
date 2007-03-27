@@ -77,3 +77,5 @@ public class FileRdfizerDriver
 		connection.export( writer );
 	}
 }
+
+// kate: tab-width 4

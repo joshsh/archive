@@ -8,34 +8,34 @@ import net.fortytwo.ripple.util.Sink;
 
 public class StringAst implements Ast
 {
-    private String value, language;
+	private String value, language;
 
-    public StringAst( final String value )
-    {
-        this.value = value;
-        this.language = null;
-    }
+	public StringAst( final String value )
+	{
+		this.value = value;
+		this.language = null;
+	}
 
-    public StringAst( final String value, final String language )
-    {
-        this.value = value;
-        this.language = language;
-    }
+	public StringAst( final String value, final String language )
+	{
+		this.value = value;
+		this.language = language;
+	}
 
-    public void evaluate( Sink<RippleValue> sink,
-                          Interpreter itp,
-                          ModelConnection mc )
-        throws RippleException
-    {
-        sink.put( ( null == language )
-            ? mc.createValue( value )
-            : mc.createValue( value, language ) );
-    }
+	public void evaluate( Sink<RippleValue> sink,
+						Interpreter itp,
+						ModelConnection mc )
+		throws RippleException
+	{
+		sink.put( ( null == language )
+			? mc.createValue( value )
+			: mc.createValue( value, language ) );
+	}
 
-    public String toString()
-    {
-        return "\"" + value + "\"" + ( ( null == language ) ? "" : ( "@" + language ) );
-    }
+	public String toString()
+	{
+		return "\"" + value + "\"" + ( ( null == language ) ? "" : ( "@" + language ) );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

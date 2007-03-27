@@ -21,14 +21,14 @@ public abstract class PrimitiveFunction implements Function
 		p.print( rdfEquivalent );
 	}
 
-    public RdfValue toRdf( ModelConnection mc )
-        throws RippleException
-    {
+	public RdfValue toRdf( ModelConnection mc )
+		throws RippleException
+	{
 		return rdfEquivalent;
-    }
+	}
 
 	public String toString()
-    {
+	{
 		return rdfEquivalent.toString();
 	}
 

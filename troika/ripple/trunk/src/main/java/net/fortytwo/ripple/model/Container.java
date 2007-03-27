@@ -8,37 +8,37 @@ import org.openrdf.model.Value;
 
 public class Container extends LinkedList<RippleValue>//LinkedHashSet<Value>
 {
-    public Container()
-    {
-        super();
-    }
+	public Container()
+	{
+		super();
+	}
 
-    public Container( RippleValue v )
-    {
-        super();
+	public Container( RippleValue v )
+	{
+		super();
 
-        add( v );
-    }
+		add( v );
+	}
 
-    public Container( Collection<RippleValue> other )
-    {
-        super();
+	public Container( Collection<RippleValue> other )
+	{
+		super();
 
-        add( other );
-    }
+		add( other );
+	}
 
 /*
-    public boolean add( Value v )
-    {
-        return ( null == v ) ?
-            false : ( (LinkedHashSet<Value>) this ).add( v );
-    }
+	public boolean add( Value v )
+	{
+		return ( null == v ) ?
+			false : ( (LinkedHashSet<Value>) this ).add( v );
+	}
 */
 
-    public boolean add( Collection<RippleValue> other )
-    {
-        return addAll( other );
-    }
+	public boolean add( Collection<RippleValue> other )
+	{
+		return addAll( other );
+	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4

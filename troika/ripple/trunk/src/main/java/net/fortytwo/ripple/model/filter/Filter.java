@@ -11,17 +11,17 @@ import net.fortytwo.ripple.util.Sink;
 // HACK: any child class is a cheat which will not translate properly into RDF.
 public abstract class Filter implements Function
 {
-    public int arity()
-    {
-        return 1;
-    }
+	public int arity()
+	{
+		return 1;
+	}
 
 public void printTo( RipplePrintStream p )
-    throws RippleException
+	throws RippleException
 {}
 
 public RdfValue toRdf( ModelConnection mc )
-    throws RippleException
+	throws RippleException
 {
 return null;
 }
@@ -32,4 +32,4 @@ return null;
 	}
 }
 
-// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+// kate: tab-width 4
