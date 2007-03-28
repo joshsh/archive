@@ -5,17 +5,16 @@
 <language name="Ripple" version="0.1" kateversion="2.5.0" section="Sources" extensions="*.rpl" mimetype="text" author="Joshua Shinavier (parcour@gmail.com)" license="">
 	<highlighting>
 		<list name="keywords">
-			<item> add </item>
-			<item> count </item>
-			<item> define </item>
-			<item> import </item>
-			<item> namespaces </item>
-			<item> print </item>
-			<item> resolve </item>
-			<item> saveas </item>
-			<item> quit </item>
-			<item> exit </item>
+			<item> @count </item>
+			<item> @define </item>
+			<item> @export </item>
+			<item> @help </item>
+			<item> @list </item>
 			<item> @prefix </item>
+			<item> @quit </item>
+			<item> @saveas </item>
+			<item> @serql </item>
+			<item> @undefine </item>
 		</list>
 		<contexts>
 			<context attribute="Normal Text" lineEndContext="#stay" name="Default">

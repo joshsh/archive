@@ -28,8 +28,6 @@ options
 
 	// Use custom error recovery.
 	defaultErrorHandler = false;
-
-	buildAST = false;
 }
 
 {
@@ -53,27 +51,79 @@ options
 
 
 protected
-WS_CHAR_NOBREAKS
-	: ' ' | '\t'
-	;
-
-protected
 WS_CHAR
-	: ( WS_CHAR_NOBREAKS
-		|   '\r' '\n' { newline(); }
-		|   '\n'      { newline(); endOfLineEvent(); }
-	)
+	: ' ' | '\t' | '\r'
+	| '\n'      { newline(); endOfLineEvent(); }
 	;
 
 WS
 	: (WS_CHAR)+
-//        { $setType(Token.SKIP); } //ignore this token
 	;
 
 protected
-NORMAL
-	: '$' | '%' | '\'' | '-' | '=' | '!' | ('A' .. 'Z') | '&' | '_' | '`' | ('a' .. 'z') | '{' | '}' | '~'
-//    | '\\' ( '\"' | '\\' | WS )
+HEX
+	: ('0'..'9')
+	| ('A'..'F')
+	;
+
+protected
+CHARACTER_NOQUOTE_NOGT
+	: ' ' | '!' | ('#'..'=') | ('?'..'[')
+	| (']'..'\uFFFF')  // Note: '\u10FFFF in Turtle
+	| "\\u" HEX HEX HEX HEX
+	| "\\U" HEX HEX HEX HEX HEX HEX HEX HEX
+//	| "\\\\"
+	;
+
+protected
+ECHARACTER_NOQUOTE
+	: ( CHARACTER_NOQUOTE_NOGT | '>' )
+//	| "\\t" | "\\n" | "\\r"
+	;
+
+protected
+ECHARACTER
+	: ECHARACTER_NOQUOTE | '\"'
+	;
+
+protected
+SCHARACTER
+	: ECHARACTER_NOQUOTE
+//	| "\\\""
+	;
+
+protected
+LANGUAGE
+	: ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
+		{ interpreter.setLanguageTag( $getText ); }
+	;
+
+/*
+LONG_STRING
+	: "\"\"\""!
+		{ interpreter.setLanguageTag( null ); }
+		( SCHARACTER )* "\"\"\""! ( LANGUAGE! )?
+	;
+*/
+
+STRING
+	: '\"'!
+		{ interpreter.setLanguageTag( null ); }
+		( SCHARACTER )* '\"'! ( LANGUAGE! )?
+	;
+
+protected
+UCHARACTER
+	: ( CHARACTER_NOQUOTE_NOGT | '\"' )
+	| "\\>"
+	;
+
+URIREF
+	: '<'! ( UCHARACTER )* '>'!
+	;
+
+OPER
+	: '/'
 	;
 
 protected
@@ -82,112 +132,51 @@ DIGIT
 	;
 
 protected
-SPECIAL_0
-	: '#' | '@' | '^' | '(' | ')' | '*' | '+' | '/' | ';' | '?' | '|' | ':' | '.' | '[' | ']' | ','
-	;
-
-protected
-SPECIAL
-	: SPECIAL_0 | '<' | '>'
-	;
-
-protected
-ESC
-	: '\\' SPECIAL
-	;
-
-
-protected
-LANGUAGE
-	: ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
-		{ interpreter.setLanguageTag( $getText ); }
-	;
-
-STRING
-	: '\"'! {
-		interpreter.setLanguageTag( null );
-	} ( NORMAL | DIGIT | SPECIAL | ESC | WS_CHAR )* '\"'! ( LANGUAGE! )?
-	;
-
-URI
-	: '<'! ( NORMAL | DIGIT | SPECIAL_0 | WS_CHAR_NOBREAKS | "\\<" | "\\>" | "\\\\" )+ '>'!
-	;
-
-
-OPER
-	: '/'
-	;
-
-
-protected
-LETTER
+NAME_START_CHAR_NOUSC
 	: ('A' .. 'Z') | ('a' .. 'z')
+	| ('\u00C0'..'\u00D6')
+	| ('\u00D8'..'\u00F6')
+	| ('\u00F8'..'\u02FF')
+	| ('\u0370'..'\u037D')
+	| ('\u037F'..'\u1FFF')
+	| ('\u200C'..'\u200D')
+	| ('\u2070'..'\u218F')
+	| ('\u2C00'..'\u2FEF')
+	| ('\u3001'..'\uD7FF')
+	| ('\uF900'..'\uFDCF')
+	| ('\uFDF0'..'\uFFFD')
+//	| ('\u10000'..'\uEFFFF')
 	;
 
 protected
-NAME_OR_PREFIX_START_CHAR
-	: LETTER | ('\u00C0'..'\u00D6') | ('\u00D8'..'\u00F6') | ('\u00F8'..'\u02FF') | ('\u0370'..'\u037D') | ('\u037F'..'\u1FFF') | ('\u200C'..'\u200D') | ('\u2070'..'\u218F') | ('\u2C00'..'\u2FEF') | ('\u3001'..'\uD7FF') | ('\uF900'..'\uFDCF') | ('\uFDF0'..'\uFFFD') /*| ('\u10000'..'\uEFFFF')*/
+NAME_CHAR
+	: ( NAME_START_CHAR_NOUSC | '_' )
+	| '-' | DIGIT
+	| '\u00B7'
+	| ('\u0300'..'\u036F')
+	| ('\u203F'..'\u2040')
 	;
 
-protected
-NAME_OR_PREFIX_CHAR
-	: NAME_OR_PREFIX_START_CHAR | '-' | DIGIT | '\u00B7' | ('\u0300'..'\u036F') | ('\u203F'..'\u2040')
-	;
-
+// Could be a name or a prefixName.
 NAME_OR_PREFIX
-	: NAME_OR_PREFIX_START_CHAR (NAME_OR_PREFIX_CHAR)*
+	: NAME_START_CHAR_NOUSC ( NAME_CHAR )*
 	;
 
+// Can only be a name.
 NAME_NOT_PREFIX
-	: '_' (NAME_OR_PREFIX_CHAR)*
+	: '_' (NAME_CHAR)*
 	;
 
-BNODEREF_HEAD
-	: "_:"
-	;
-
-
-protected
-EXPONENT
-	: ('e' | 'E') ('-' | '+')? (DIGIT)+
-	;
-
-/*
-
-
-INTEGER
-	: ('-' | '+')? (DIGIT)+
-	;
-
-
-
-DECIMAL
-	: ('-' | '+')?
-	(
-		(DIGIT)+ '.' (DIGIT)*
-	| '.' (DIGIT)+
-	| (DIGIT)+ )
-	;
-
-DOUBLE
-	: ('-' | '+')?
-	( (DIGIT)+ ( '.' (DIGIT)* )?
-	| '.' (DIGIT)+ ) EXPONENT
-	;
-*/
-
-
+NODEID_PREFIX : "_:" ;
 
 
 NUMBER
-	: ('-')? ( DIGIT )+ ( '.' ( DIGIT )+ )?
+	: ('-' | '+')? ( DIGIT )+ //( '.' ( DIGIT )+ )?
 	;
 
-
-// Identical to Turtle comments.
-SINGLE_LINE_COMMENT
-	: ( '#' ( ~('\r' | '\n') )* )
-		{ $setType( Token.SKIP ); }
+// Ignore comments entirely.
+COMMENT
+	: ( '#' ( ~('\r' | '\n') )* ) { $setType( Token.SKIP ); }
 	;
 
 /*
@@ -197,36 +186,29 @@ MULTI_LINE_COMMENT
 	;
 */
 
-DOUBLE_HAT
-options { paraphrase = "double hat"; } : "^^" ;
+DOUBLE_HAT : "^^" ;
 
-L_PAREN
-options { paraphrase = "opening parenthesis"; } : '(' ;
+L_PAREN : '(' ;
 
-R_PAREN
-options { paraphrase = "closing parenthesis"; } : ')' ;
+R_PAREN : ')' ;
 
-EOS
-options { paraphrase = "end-of-statement"; } : '.' ;
+EOS : '.' ;
 
-COLON
-options { paraphrase = "colon"; } : ':' ;
+COLON : ':' ;
 
 protected
-DRCTV
-	: '@'
-	;
+DRCTV : '@' ;
 
-DRCTV_COUNT       : DRCTV ( "count"         | "c" ) ;
-DRCTV_DEFINE      : DRCTV ( "define"        | "d" ) ;
-DRCTV_EXPORT      : DRCTV ( "export"        | "e" ) ;
-DRCTV_HELP        : DRCTV ( "help"          | "h" ) ;
-DRCTV_LIST        : DRCTV ( "list"          | "l" ) ;
-DRCTV_PREFIX      : DRCTV ( "prefix"        | "p" ) ;
-DRCTV_QUIT        : DRCTV ( "quit"          | "q" ) ;
-DRCTV_SAVEAS      : DRCTV ( "saveas"        | "sa" ) ;
-DRCTV_SERQL       : DRCTV ( "serql"         | "sr" ) ;
-DRCTV_UNDEFINE    : DRCTV ( "undefine"      | "u" ) ;
+DRCTV_COUNT     : DRCTV ( "count"         | "c" ) ;
+DRCTV_DEFINE    : DRCTV ( "define"        | "d" ) ;
+DRCTV_EXPORT    : DRCTV ( "export"        | "e" ) ;
+DRCTV_HELP      : DRCTV ( "help"          | "h" ) ;
+DRCTV_LIST      : DRCTV ( "list"          | "l" ) ;
+DRCTV_PREFIX    : DRCTV ( "prefix"        | "p" ) ;
+DRCTV_QUIT      : DRCTV ( "quit"          | "q" ) ;
+DRCTV_SAVEAS    : DRCTV ( "saveas"        | "sa" ) ;
+DRCTV_SERQL     : DRCTV ( "serql"         | "sr" ) ;
+DRCTV_UNDEFINE  : DRCTV ( "undefine"      | "u" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -369,14 +351,14 @@ nt_URIRef returns [ UriAst r ]
 {
 	r = null;
 }
-	: uri:URI
+	: uri:URIREF
 		{
 			r = new UriAst( uri.getText() );
 		}
 	;
 
 
-nt_Prefix returns [ String prefix ]
+nt_PrefixName returns [ String prefix ]
 {
 	prefix = null;
 }
@@ -398,7 +380,7 @@ nt_QName returns [ Ast r ]
 	String nsPrefix = "", localName = "";
 	r = null;
 }
-	: ( ( nsPrefix=nt_Prefix )?
+	: ( ( nsPrefix=nt_PrefixName )?
 		COLON
 		( localName=nt_Name )? )
 		{
@@ -412,7 +394,7 @@ nt_BNodeRef returns [ Ast r ]
 	r = null;
 	String localName = null;
 }
-	: BNODEREF_HEAD localName=nt_Name
+	: NODEID_PREFIX localName=nt_Name
 		{
 			r = new BlankNodeAst( localName );
 		}
@@ -448,7 +430,7 @@ nt_Directive
 			interpreter.evaluateAndDefine( rhs, localName );
 		}
 
-	| DRCTV_EXPORT ( WS ( nsPrefix=nt_Prefix (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
+	| DRCTV_EXPORT ( WS ( nsPrefix=nt_PrefixName (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
 		{
 			interpreter.exportNs( nsPrefix, exFile.getText() );
 		}
@@ -469,7 +451,7 @@ nt_Directive
 			}
 		)
 
-	| DRCTV_PREFIX WS ( nsPrefix=nt_Prefix (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
+	| DRCTV_PREFIX WS ( nsPrefix=nt_PrefixName (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
 		{
 			interpreter.setNamespace( nsPrefix, ns );
 		}
