@@ -25,7 +25,7 @@
 				<RegExpr String="#.*$" attribute = "Comment" context="#stay"/>
 				<DetectChar attribute="String" context="String" char="&quot;"/>
 				<DetectChar attribute="Uri" context="Uri" char="&lt;"/>
-				<Detect2Chars attribute="Comment" context="Multi/inline Comment" char="(" char1=":" beginRegion="Comment"/>
+<!--				<Detect2Chars attribute="Comment" context="Multi/inline Comment" char="(" char1=":" beginRegion="Comment"/>-->
 				<DetectChar attribute="Symbol" context="#stay" char="{" beginRegion="Brace1" />
 				<DetectChar attribute="Symbol" context="#stay" char="}" endRegion="Brace1" />
 				<DetectChar attribute="Symbol" context="#stay" char="(" beginRegion="Parenthesis" />
@@ -45,9 +45,10 @@
 			<context attribute="Uri" lineEndContext="#stay" name="Uri">
 				<DetectChar attribute="Uri" context="#pop" char="&gt;"/>
 			</context>
+			<!--
 			<context attribute="Comment" lineEndContext="#stay" name="Multi/inline Comment">
 				<Detect2Chars attribute="Comment" context="#pop" char=":" char1=")" endRegion="Comment"/>
-			</context>
+			</context>-->
 		</contexts>
 		<itemDatas>
 			<itemData name="Normal Text" defStyleNum="dsNormal" />
@@ -66,7 +67,7 @@
 	<general>
 		<comments>
 			<comment name="singleLine" start="#"/>
-			<comment name="multiLine" start="(:" end=":)" />
+<!--			<comment name="multiLine" start="(:" end=":)" />-->
 		</comments>
 		<keywords casesensitive="1" />
 	</general>
