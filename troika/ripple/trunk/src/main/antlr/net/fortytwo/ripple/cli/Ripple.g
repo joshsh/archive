@@ -39,7 +39,6 @@ options
 	}
 
 	private void endOfLineEvent()
-//        throws Exception
 	{
 		if ( null == interpreter )
 			System.err.println( "RippleLexer instance has not been initialized" );
@@ -169,14 +168,15 @@ NAME_NOT_PREFIX
 
 NODEID_PREFIX : "_:" ;
 
-
 NUMBER
 	: ('-' | '+')? ( DIGIT )+ //( '.' ( DIGIT )+ )?
 	;
 
-// Ignore comments entirely.
+// Ignore comments.
 COMMENT
-	: ( '#' ( ~('\r' | '\n') )* ) { $setType( Token.SKIP ); }
+	: ( '#' ( ~('\r' | '\n' ) )* ) { $setType( Token.SKIP ); }
+//	: ( '#' (( ('\u0000'..'\u0009') | '\u000B' | '\u000C' | ('\u000E'..'\uFFFF')){System.out.println(".");} )* )
+//		{ $setType( Token.SKIP ); }
 	;
 
 /*
@@ -328,7 +328,7 @@ nt_Literal returns [ Ast r ]
 
 			catch ( NumberFormatException e )
 			{
-				System.err.println( "a NumberFormattingException was encountered (this shouldn't happen)" );
+				System.err.println( "a NumberFormatException was encountered (this shouldn't happen)" );
 				r = null;
 				interpreter.quit();
 			}
