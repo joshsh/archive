@@ -290,52 +290,6 @@ System.out.println( "loading from URL: " + url );
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink, ModelConnection mc )
-		throws RippleException
-	{
-//        Value rdfSubj = bridge.getRdfEquivalentOf( subj, mc ).getRdfValue();
-//        Value rdfPred = bridge.getRdfEquivalentOf( pred, mc ).getRdfValue();
-
-		Value rdfSubj = subj.getRdfValue();
-		Value rdfPred = pred.getRdfValue();
-
-//if ( null == rdfSubj || null == rdfPred )
-//return;
-		try
-		{
-			dereferencer.dereference( subj, mc );
-		}
-
-		catch ( RippleException e )
-		{
-			// (soft fail)
-s_logger.debug( "Failed to dereference URI: " + rdfSubj );
-		}
-
-		if ( rdfSubj instanceof Resource && rdfPred instanceof URI )
-		{
-			try
-			{
-		RepositoryConnection conn = repository.getConnection();
-
-				RepositoryResult<Statement> stmtIter
-					= conn.getStatements(
-						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
-				while ( stmtIter.hasNext() )
-					sink.put( new RdfValue( stmtIter.next().getObject() ) );
-
-		conn.close();
-			}
-
-			catch ( Throwable t )
-			{
-				throw new RippleException( t );
-			}
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
 	// Note: this may be a very expensive operation (see Sesame API).
 	public long countStatements()
 		throws RippleException

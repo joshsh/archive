@@ -30,7 +30,7 @@ public class QNameAst implements Ast
 						ModelConnection mc )
 		throws RippleException
 	{
-		itp.resolveQualifiedName( nsPrefix, localName, sink );
+		itp.resolveQName( nsPrefix, localName, sink );
 	}
 }
 

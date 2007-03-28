@@ -4,7 +4,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
 
-public interface Function extends RippleValue
+public interface Function
 {
 	/**
 	*  The fixed number of arguments which this function consumes before

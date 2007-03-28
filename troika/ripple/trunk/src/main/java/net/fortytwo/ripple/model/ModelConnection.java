@@ -237,6 +237,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -287,7 +288,7 @@ public class ModelConnection
 	{
 		SingleValueSink sink = new SingleValueSink();
 
-		model.multiply( subj, pred, sink, this );
+		multiply( subj, pred, sink );
 
 		return sink.getValue();
 	}
@@ -297,7 +298,7 @@ public class ModelConnection
 	{
 		SingleValueSink sink = new SingleValueSink();
 
-		model.multiply( subj, pred, sink, this );
+		multiply( subj, pred, sink );
 
 		int count = sink.countReceived();
 
@@ -431,6 +432,7 @@ System.out.println( "done" );
 		// Warning: the RepositoryResult may be left open.
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 
@@ -462,6 +464,7 @@ System.out.println( "done" );
 
 			catch ( Throwable t )
 			{
+				reset();
 				throw new RippleException( t );
 			}
 		}
@@ -488,6 +491,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -507,6 +511,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -526,6 +531,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -545,6 +551,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -561,6 +568,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -575,6 +583,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -589,6 +598,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -603,6 +613,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -617,6 +628,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -631,6 +643,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -645,6 +658,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -659,6 +673,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -673,6 +688,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -687,6 +703,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -701,6 +718,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -735,6 +753,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -750,6 +769,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -765,6 +785,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -780,6 +801,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -795,6 +817,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -810,6 +833,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -827,6 +851,7 @@ System.out.println( "done" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 	}
@@ -1006,7 +1031,6 @@ s_logger.info( "######## ext = " + ext );
 
 		urlConn.setRequestProperty( "Accept", sb.toString() );
 
-
 // To consider at some point: caching, authorization
 	}
 
@@ -1073,6 +1097,8 @@ showUrlConnection( urlConn );
 
 		catch ( Throwable t )
 		{
+			reset();
+
 			if ( t instanceof RDFParseException )
 			{
 				String msg = "line " + ( (RDFParseException) t ).getLineNumber()
@@ -1188,6 +1214,7 @@ s_logger.info( "####### graph imported without errors" );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 System.out.println( "########################### Count = " + count );
@@ -1225,6 +1252,7 @@ System.out.println( "found subject in namespace " + ns + ": " + subj );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 
@@ -1276,6 +1304,7 @@ System.out.println( "putting Resource: " + r );
 
 			catch ( Throwable t )
 			{
+				reset();
 				throw new RippleException( t );
 			}
 		}
@@ -1296,6 +1325,7 @@ System.out.println( "putting Resource: " + r );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
 		}
 
@@ -1311,7 +1341,70 @@ System.out.println( "putting Resource: " + r );
 
 		catch ( Throwable t )
 		{
+			reset();
 			throw new RippleException( t );
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
+		throws RippleException
+	{
+		try
+		{
+			model.getDereferencer().dereference( subj, this );
+		}
+
+		catch ( RippleException e )
+		{
+			// (soft fail)
+			s_logger.info( "Failed to dereference URI: " + subj );
+		}
+
+		Value rdfSubj = subj.getRdfValue();
+		Value rdfPred = pred.getRdfValue();
+
+		if ( rdfSubj instanceof Resource && rdfPred instanceof URI )
+		{
+			// Note: we must collect results in a buffer before putting anything
+			//       into the sink, as inefficient as that is, because otherwise
+			//       we might end up opening another RepositoryResult before
+			//       the one below closes, which currently causes Sesame to
+			//       deadlock.  Even using a separate RepositoryConnection for
+			//       each RepositoryResult doesn't seem to help.
+			Collection<Value> results = null;
+
+			// Perform the query and collect results.
+			try
+			{
+				RepositoryResult<Statement> stmtIter
+					= repoConnection.getStatements(
+						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
+				while ( stmtIter.hasNext() )
+				{
+					if ( null == results )
+						results = new LinkedList<Value>();
+					results.add( stmtIter.next().getObject() );
+				}
+				stmtIter.close();
+			}
+
+			catch ( Throwable t )
+			{
+				reset();
+				throw new RippleException( t );
+			}
+
+			// Now copy any results from the buffer into the sink.
+			if ( null != results )
+			{
+				for ( Iterator<Value> resultIter = results.iterator();
+					resultIter.hasNext(); )
+				{
+					sink.put( new RdfValue( resultIter.next() ) );
+				}
+			}
 		}
 	}
 }

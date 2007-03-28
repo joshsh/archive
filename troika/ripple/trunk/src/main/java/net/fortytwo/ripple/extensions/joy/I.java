@@ -2,7 +2,7 @@ package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-	import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -19,14 +19,8 @@ public class I extends PrimitiveFunction
 
 	public int arity()
 	{
+// Arguably 0...
 		return 1;
-	}
-
-	private RippleList pushReversed( RippleList in, RippleList out )
-	{
-		return ( null == in )
-			? out
-			: new RippleList( in.getFirst(), pushReversed( in.getRest(), out ) );
 	}
 
 	public void applyTo( RippleList stack,
@@ -38,11 +32,7 @@ public class I extends PrimitiveFunction
 
 // hack...
 		{
-			v = stack.getFirst();
-			stack = stack.getRest();
-	
-			Operator o = Operator.createOperator( v, mc );
-			sink.put( new RippleList( o, stack ) );
+			sink.put( new RippleList( Operator.OP, stack ) );
 		}
 /*
 		RippleList l;
@@ -53,6 +43,15 @@ public class I extends PrimitiveFunction
 		sink.put( pushReversed( l, stack ) );
 */
 	}
+
+/*
+	private RippleList pushReversed( RippleList in, RippleList out )
+	{
+		return ( null == in )
+			? out
+			: new RippleList( in.getFirst(), pushReversed( in.getRest(), out ) );
+	}
+*/
 }
 
 // kate: tab-width 4

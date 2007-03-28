@@ -7,8 +7,8 @@ import net.fortytwo.ripple.cli.ast.BooleanAst;
 import net.fortytwo.ripple.cli.ast.BlankNodeAst;
 import net.fortytwo.ripple.cli.ast.DoubleAst;
 import net.fortytwo.ripple.cli.ast.IntegerAst;
+import net.fortytwo.ripple.cli.ast.KeywordAst;
 import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.cli.ast.NameAst;
 import net.fortytwo.ripple.cli.ast.OperatorAst;
 import net.fortytwo.ripple.cli.ast.QNameAst;
 import net.fortytwo.ripple.cli.ast.StringAst;
@@ -371,7 +371,7 @@ nt_SimpleName returns [ Ast r ]
 	String localName;
 	r = null;
 }
-	: localName=nt_Name { r = new NameAst( localName ); }
+	: localName=nt_Name { r = new KeywordAst( localName ); }
 	;
 
 

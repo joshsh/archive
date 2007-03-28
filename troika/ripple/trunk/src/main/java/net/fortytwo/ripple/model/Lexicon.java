@@ -31,7 +31,8 @@ public class Lexicon extends Observable implements Observer
 {
 	private Model model;
 
-	private Hashtable<String, List<URI>> localNameToUrisMap = null;
+	private Hashtable<String, List<URI>> keywordsToUrisMap = null;
+	private Hashtable<URI, String> urisToKeywordsMap = null;
 	private Hashtable<String, String> prefixToNamespaceMap = null;
 	private Hashtable<String, String> namespaceToPrefixMap = null;
 	private Collection<String> qNamesCollection = null;
@@ -42,12 +43,40 @@ public class Lexicon extends Observable implements Observer
 		this.model = model;
 		model.addObserver( this );
 
-		createMaps();
+		// Create (immutable) keywords map.
+		{
+			keywordsToUrisMap = new Hashtable<String, List<URI>>();
+			urisToKeywordsMap = new Hashtable<URI, String>();
+
+			Collection<Value> keySet = model.getBridge().keySet();
+			for ( Iterator<Value> keyIter = keySet.iterator(); keyIter.hasNext(); )
+			{
+				Value v = keyIter.next();
+				if ( v instanceof URI )
+				{
+					String keyword = ( (URI) v ).getLocalName();
+
+					List<URI> siblings = keywordsToUrisMap.get( keyword );
+			
+					if ( null == siblings )
+					{
+						siblings = new ArrayList<URI>();
+						keywordsToUrisMap.put( keyword, siblings );
+
+						urisToKeywordsMap.put( (URI) v, keyword );
+					}
+
+					siblings.add( (URI) v );
+				}
+			}
+		}
+
+		updateMaps();
 	}
 
-	public List<URI> resolveUnqualifiedName( final String localName )
+	public List<URI> resolveKeyword( final String localName )
 	{
-		List<URI> result = localNameToUrisMap.get( localName );
+		List<URI> result = keywordsToUrisMap.get( localName );
 
 		// If there are no results, return an empty list instead of null.
 		return ( null == result )
@@ -59,29 +88,14 @@ public class Lexicon extends Observable implements Observer
 	*  Note: <code>nsPrefix</code> must be the prefix of a defined namespace.
 	*  <code>localName</code> is unconstrained.
 	*/
-	public URI resolveQualifiedName( final String nsPrefix,
-									final String localName )
+	public URI resolveQName( final String nsPrefix,
+							final String localName )
 	{
 		String ns = resolveNamespacePrefix( nsPrefix );
 
-		if ( null == ns )
-			return null;
-
-		else
-		{
-			return model.getRepository().getValueFactory().createURI( ns, localName );
-		}
-/*
-		Iterator<URI> uris = localNameToUrisMap.get( localName ).iterator();
-		while ( uris.hasNext() )
-		{
-			URI uri = uris.next();
-			if ( uri.getNamespace().equals( ns ) )
-				return uri;
-		}
-
-		return null;
-*/
+		return ( null == ns )
+			? null
+			: model.getRepository().getValueFactory().createURI( ns, localName );
 	}
 
 	public String resolveNamespacePrefix( final String nsPrefix )
@@ -89,8 +103,27 @@ public class Lexicon extends Observable implements Observer
 		return prefixToNamespaceMap.get( nsPrefix );
 	}
 
+	public String symbolFor( final URI uri )
+	{
+		// Does it have a keyword?
+		String symbol = urisToKeywordsMap.get( uri );
+
+		// If not, does it have a namespace prefix?
+		if ( null == symbol )
+		{
+			String nsPrefix = namespaceToPrefixMap.get( uri.getNamespace() );
+
+			// Namespace prefix may be empty but non-null.
+			if ( null != nsPrefix )
+				// Note: assumes that the local name is never null (although it
+				//       may be empty).
+				symbol = nsPrefix + ":" + uri.getLocalName();
+		}
+
+		return symbol;
+	}
+
 	public String nsPrefixOf( final URI uri )
-		throws RippleException
 	{
 		return namespaceToPrefixMap.get( uri.getNamespace() );
 	}
@@ -98,7 +131,7 @@ public class Lexicon extends Observable implements Observer
 	public Completor getCompletor()
 		throws RippleException
 	{
-		Set<String> localNames = localNameToUrisMap.keySet();
+		Set<String> localNames = keywordsToUrisMap.keySet();
 		Set<String> prefixes = prefixToNamespaceMap.keySet();
 
 		int size = localNames.size() + prefixes.size() + qNamesCollection.size();
@@ -139,31 +172,20 @@ public class Lexicon extends Observable implements Observer
 	private void add( URI uri )
 		throws RippleException
 	{
-		String localName = uri.getLocalName();
-		List<URI> siblings = localNameToUrisMap.get( localName );
-
-		if ( null == siblings )
-		{
-			siblings = new ArrayList<URI>();
-			localNameToUrisMap.put( localName, siblings );
-		}
-
-		siblings.add( uri );
-
-		// If possible add a qualified name as well.
+		// If possible, add a qualified name as well.
 		String prefix = nsPrefixOf( uri );
 		if ( null != prefix )
 		{
-			String qName = prefix + ":" + localName;
+			String qName = prefix + ":" + uri.getLocalName();
 			qNamesCollection.add( qName );
 		}
 	}
 
-	private void createMaps()
+	private void updateMaps()
 		throws RippleException
 	{
 System.out.println( "################# Rebuilding dictionaries." );
-		localNameToUrisMap = new Hashtable<String, List<URI>>();
+
 		prefixToNamespaceMap = new Hashtable<String, String>();
 		namespaceToPrefixMap = new Hashtable<String, String>();
 		qNamesCollection = new ArrayList<String>();
@@ -246,7 +268,7 @@ System.out.println( "################# Rebuilding dictionaries." );
 	public void update()
 		throws RippleException
 	{
-		createMaps();
+		updateMaps();
 
 		setChanged();
 		notifyObservers();

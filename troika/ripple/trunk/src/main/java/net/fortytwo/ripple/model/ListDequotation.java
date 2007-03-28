@@ -30,11 +30,6 @@ public class ListDequotation implements Function
 		return 0;
 	}
 
-	public boolean isOperator()
-	{
-		return false;
-	}
-
 	public void applyTo( RippleList stack,
 						Sink<RippleList> sink,
 						ModelConnection mc )
@@ -51,21 +46,6 @@ public class ListDequotation implements Function
 
 		sink.put( out );
 	}
-
-	public void printTo( RipplePrintStream p )
-		throws RippleException
-	{
-p.print( reversedList );
-	}
-
-public RdfValue toRdf( ModelConnection mc )
-	throws RippleException
-{
-System.out.println( "first = " + reversedList.getFirst() );
-System.out.println( "whole list = " + reversedList );
-return reverse( reversedList ).toRdf( mc );
-}
-
 }
 
 // kate: tab-width 4

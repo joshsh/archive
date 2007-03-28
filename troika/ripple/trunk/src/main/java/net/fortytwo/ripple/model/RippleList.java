@@ -137,20 +137,66 @@ System.out.println( "resulting list: " + toString() );
 		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.getExpressionOrder() )
 			? invert( this ) : this;
+		RippleValue stateVal = null;
 
 		p.print( padding ? "( " : "(" );
 		
 		boolean isFirst = true;
 		while ( null != cur )
 		{
-			if ( isFirst )
-				isFirst = false;
+			RippleValue val = cur.getFirst();
+
+			if ( null == stateVal )
+			{
+				if ( val.equals( Operator.OP ) )
+				{
+					if ( isFirst )
+						isFirst = false;
+					else
+						p.print( " " );
+
+					p.print( val );
+				}
+
+				else
+					stateVal = val;
+			}
+
 			else
-				p.print( " " );
-		
-			p.print( cur.getFirst() );
-		
+			{
+				if ( val.equals( Operator.OP ) )
+				{
+					if ( isFirst )
+						isFirst = false;
+					else
+						p.print( " " );
+
+					p.print( "/" );
+					p.print( stateVal );
+					stateVal = null;
+				}
+
+				else
+				{
+					if ( isFirst )
+						isFirst = false;
+					else
+						p.print( " " );
+
+					p.print( stateVal );
+					stateVal = val;
+				}
+			}
+
 			cur = cur.getRest();
+		}
+
+		if ( null != stateVal )
+		{
+			if ( !isFirst )
+				p.print( " " );
+
+			p.print( stateVal );
 		}
 		
 		p.print( padding ? " )" : ")" );
@@ -183,21 +229,7 @@ System.out.println( "resulting list: " + toString() );
 
 			while ( cur != null )
 			{
-/*
-				if ( cur.first.isOperator() )
-				{
-System.out.println( "it's an operator! -- " + cur.first );
-					mc.add( curRdf, rdfFirst, ( (Operator) cur.first ).getFunction().toRdf( mc ) );
-					RdfValue restRdf = new RdfValue( mc.createBNode() );
-					mc.add( curRdf, rdfRest, restRdf );
-					curRdf = restRdf;
-
-					// hack...
-					mc.add( curRdf, rdfFirst, ((Operator) cur.first).toRdf( mc ) );
-				}
-				else
-*/
-					mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
+				mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
 				RippleList rest = cur.rest;
 				RdfValue restRdf = ( null == cur.rest )
 					? rdfNil : new RdfValue( mc.createBNode() );

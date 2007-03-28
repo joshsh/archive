@@ -10,8 +10,6 @@ public class Closure implements Function
 	private RippleValue argument;
 	private int cachedArity;
 
-	private RdfValue rdfEquivalent = null;
-
 	public Closure( Function innerFunction, RippleValue argument )
 	{
 		this.innerFunction = innerFunction;
@@ -23,45 +21,6 @@ public class Closure implements Function
 	public int arity()
 	{
 		return cachedArity;
-	}
-
-	public boolean isOperator()
-	{
-		return false;
-	}
-
-// TODO: does not indicate application
-	public void printTo( RipplePrintStream p )
-		throws RippleException
-	{
-		switch ( Ripple.getExpressionOrder() )
-		{
-			case DIAGRAMMATIC:
-				p.print( innerFunction );
-				p.print( " " );
-				p.print( argument );
-				break;
-
-			case ANTIDIAGRAMMATIC:
-				p.print( argument );
-				p.print( " " );
-				p.print( innerFunction );
-				break;
-		}
-	}
-
-	public RdfValue toRdf( ModelConnection mc )
-		throws RippleException
-	{
-/*
-		if ( null == rdfEquivalent )
-		{
-			rdfEquivalent = mc.createBNode();
-
-			mc.add( rdfEquivalent, 
-		}
-*/
-		return rdfEquivalent;
 	}
 
 	public void applyTo( RippleList stack,

@@ -2,7 +2,7 @@ package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-	import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -19,6 +19,7 @@ public class Dip extends PrimitiveFunction
 
 	public int arity()
 	{
+// Arguably 1...
 		return 2;
 	}
 
@@ -33,11 +34,8 @@ public class Dip extends PrimitiveFunction
 		{
 			x = stack.getFirst();
 			stack = stack.getRest();
-			y = stack.getFirst();
-			stack = stack.getRest();
 
-			Operator o = Operator.createOperator( y, mc );
-			sink.put( new RippleList( o, stack ).push( x ) );
+			sink.put( new RippleList( Operator.OP, stack ).push( x ) );
 		}
 	}
 }

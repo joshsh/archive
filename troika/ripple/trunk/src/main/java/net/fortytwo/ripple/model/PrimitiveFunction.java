@@ -2,7 +2,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 
-public abstract class PrimitiveFunction implements Function
+public abstract class PrimitiveFunction implements Function, RippleValue
 {
 	private RdfValue rdfEquivalent;
 	private FunctionTypeAnnotation typeAnnotation;

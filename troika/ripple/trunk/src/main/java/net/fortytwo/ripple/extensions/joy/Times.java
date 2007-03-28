@@ -36,12 +36,12 @@ public class Times extends PrimitiveFunction
 		stack = stack.getRest();
 
 		if ( times < 0 )
-			throw new RippleException( "first argument to Times must be a positive integer" );
+			throw new RippleException(
+				"first argument to Times must be a positive integer" );
 
 		for ( int i = 0; i < times; i++ )
 		{
-			stack = new RippleList( p, stack );
-			stack = new RippleList( Operator.OP, stack );
+			stack = new RippleList( p, stack ).push( Operator.OP );
 		}
 
 		sink.put( stack );

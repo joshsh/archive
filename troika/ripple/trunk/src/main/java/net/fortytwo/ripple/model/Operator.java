@@ -8,10 +8,7 @@ import org.openrdf.model.vocabulary.RDF;
 public class Operator implements RippleValue
 {
 	public static Operator
-		OP = new Operator( new Op() ),
-		PRIM = new Operator( new PrimOpConstructor() ),
-		PRED = new Operator( new PredOpConstructor() ),
-		PROG = new Operator( new ProgOpConstructor() );
+		OP = new Operator( new Op() );
 
 	Function func;
 	RdfValue rdfEquivalent = null;
@@ -23,13 +20,13 @@ public class Operator implements RippleValue
 
 	public Operator( Function function )
 	{
-System.out.println( "Operator[" + this + "](" + function + ")" );
+//System.out.println( "Operator[" + this + "](" + function + ")" );
 		func = function;
 	}
 
 	public Operator( RippleList list )
 	{
-System.out.println( "Operator[" + this + "](" + list + ")" );
+//System.out.println( "Operator[" + this + "](" + list + ")" );
 		func = new ListDequotation( list );
 	}
 
@@ -54,37 +51,12 @@ System.out.println( "Operator[" + this + "](" + list + ")" );
 	private static RdfValue
 		rdfType = new RdfValue( RDF.TYPE );
 
-	public static Operator guessOperator( RippleValue v, ModelConnection mc )
-		throws RippleException
-	{
-		if ( v instanceof Function )
-			return PRIM;
-
-		else if ( v instanceof RippleList )
-			return PROG;
-
-		// This is the messy part.  Attempt to guess the type of the object from
-		// the available RDF statements, and create the appropriate object.
-		if ( v instanceof RdfValue )
-		{
-// TODO: do some type inference instead of a dumb, single lookup.
-			if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
-				return PROG;
-			else
-				return PRED;
-		}
-
-		else
-			throw new RippleException( "bad RippleValue in guessOperator(): "
-				+ v );
-	}
-
 	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
 
 	/**
 	*  Guesses the type of a node and creates an appropriate wrapper.
 	*/
-	public static Operator createOperator( RippleValue v, ModelConnection mc )
+	protected static Operator createOperator( RippleValue v, ModelConnection mc )
 		throws RippleException
 	{
 		if ( v instanceof Function )
@@ -119,7 +91,7 @@ public RdfValue toRdf( ModelConnection mc )
 {
 // Note: only correct for OP, but I expect this method only to be used with OP anyway
 if ( null == rdfEquivalent )
-	rdfEquivalent = new RdfValue( mc.createUri( "http://troika.dnsdojo.net/2007/03/ripple#op" ) );
+	rdfEquivalent = new RdfValue( mc.createUri( "http://fortytwo.net/2007/03/ripple#op" ) );
 return rdfEquivalent;
 }
 

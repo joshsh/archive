@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.filter.Filter;
+import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
@@ -41,15 +41,19 @@ public class Limit extends PrimitiveFunction
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class LimitInner extends Filter
+	protected class LimitInner implements Function
 	{
 		long count, limit;
-	
+
+		public int arity()
+		{
+			return 1;
+		}
+
 		public LimitInner( long lim )
 		{
 			limit = lim;
 			count = 0;
-	//System.out.println( "" + this + "()" );
 		}
 	
 		public void applyTo( RippleList stack,

@@ -1,6 +1,7 @@
 package net.fortytwo.ripple.model;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 import net.fortytwo.ripple.RippleException;
 
@@ -16,9 +17,10 @@ public class ModelBridge
 	}
 
 	/**
-	*  Note: not every RDF Value has a native equivalent (in other words,
-	*  this function MAY return <code>null</code>.
-	*/
+	 *  @return  a native data structure which is equated with the given RDF
+	 *  value.  If there is no such data structure, the value itself.  This
+	 *  method will never return <code>null</code>.
+	 */
 	public RippleValue get( RdfValue rdf )
 	{
 		RippleValue rpl =  rdfToNativeMap.get( rdf.getRdfValue() );
@@ -33,6 +35,11 @@ public class ModelBridge
 		throws RippleException
 	{
 		rdfToNativeMap.put( v.toRdf( mc ).getRdfValue(), v );
+	}
+
+	public Set<Value> keySet()
+	{
+		return rdfToNativeMap.keySet();
 	}
 }
 

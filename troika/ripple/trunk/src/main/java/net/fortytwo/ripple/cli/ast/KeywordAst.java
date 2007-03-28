@@ -6,18 +6,18 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class NameAst implements Ast
+public class KeywordAst implements Ast
 {
-	private String localName;
+	private String keyword;
 
-	public NameAst( final String localName )
+	public KeywordAst( final String keyword )
 	{
-		this.localName = localName;
+		this.keyword = keyword;
 	}
 
 	public String toString()
 	{
-		return localName;
+		return keyword;
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
@@ -25,7 +25,7 @@ public class NameAst implements Ast
 						ModelConnection mc )
 		throws RippleException
 	{
-		itp.resolveUnqualifiedName( localName, sink );
+		itp.resolveKeyword( keyword, sink );
 	}
 }
 

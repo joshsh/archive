@@ -6,10 +6,11 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 // HACK: any child class is a cheat which will not translate properly into RDF.
-public abstract class Filter implements Function
+public abstract class Filter implements Function, RippleValue
 {
 	public int arity()
 	{

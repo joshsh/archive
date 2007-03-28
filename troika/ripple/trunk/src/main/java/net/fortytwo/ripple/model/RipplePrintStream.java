@@ -32,26 +32,15 @@ public class RipplePrintStream extends PrintStream
 		print( "<" + uri.toString() + ">" );
 	}
 
-	private void printQName( final String nsPrefix, final String localName )
-	{
-		if ( null != nsPrefix )
-			print( nsPrefix );
-
-		print( ":" );
-
-		if ( null != localName )
-			print( localName );
-	}
-
 	private void printUri( URI uri )
 		throws RippleException
 	{
-		String prefix = lexicon.nsPrefixOf( uri );
+		String symbol = lexicon.symbolFor( uri );
 
-		if ( null == prefix )
+		if ( null == symbol )
 			printUriRef( uri );
 		else
-			printQName( prefix, uri.getLocalName() );
+			print( symbol );
 	}
 
 	private void printEscapedString( final String s )

@@ -15,26 +15,6 @@ public abstract class Evaluator implements Function
 		// reduced to any level before it is received as input.
 		return 0;
 	}
-
-	public boolean isOperator()
-	{
-		return false;
-	}
-
-	public void printTo( RipplePrintStream p )
-		throws RippleException
-	{
-p.print( "[Evaluator]" );
-	}
-
-	public RdfValue toRdf( ModelConnection mc )
-		throws RippleException
-	{
-if ( null == rdfEquivalent )
-	rdfEquivalent = new RdfValue( mc.createBNode() );
-
-return rdfEquivalent;
-	}
 }
 
 // kate: tab-width 4

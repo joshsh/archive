@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.filter.Filter;
+import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
@@ -39,13 +39,13 @@ public class Unique extends PrimitiveFunction
 
 	private static String memo = "memo";
 
-	protected class UniqueInner extends Filter
+	protected class UniqueInner implements Function
 	{
 		private ListMemoizer<RippleValue,String> memoizer = null;
 	
-		public UniqueInner()
+		public int arity()
 		{
-//System.out.println( "" + this + "()" );
+			return 1;
 		}
 	
 		public void applyTo( RippleList stack,
@@ -57,16 +57,10 @@ public class Unique extends PrimitiveFunction
 			{
 				memoizer = new ListMemoizer<RippleValue,String>( stack, memo );
 				sink.put( stack );
-//System.out.println( "put first: " + stack.getFirst() );
 			}
 	
 			else if ( memoizer.add( stack, memo ) )
-//{
 				sink.put( stack );
-//System.out.println( "put another: " + stack.getFirst() );
-//}
-//else
-//System.out.println( "rejected this: " + stack.getFirst() );
 		}
 	}
 }

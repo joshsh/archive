@@ -522,42 +522,30 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 		}
 	}
 
-	public void resolveUnqualifiedName( final String localName, Sink<RippleValue> sink )
+	public void resolveKeyword( final String localName, Sink<RippleValue> sink )
 		throws RippleException
 	{
-		Collection<URI> options = lexicon.resolveUnqualifiedName( localName );
+		Collection<URI> options = lexicon.resolveKeyword( localName );
 		if ( 0 == options.size() )
 			errorPrintStream.println( "Warning: no values resolved for " + localName );
 		else if ( 1 < options.size() )
 			errorPrintStream.println( "Warning: multiple values resolved for " + localName );
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
-		{
-			RdfValue choice = new RdfValue( optIter.next() );
-
-			RippleValue rv = model.getBridge().get( choice );
-			sink.put( ( null == rv )
-				? choice
-				: rv );
-		}
+			sink.put( model.getBridge().get(
+				new RdfValue( optIter.next() ) ) );
 	}
 
-	public void resolveQualifiedName( final String nsPrefix,
-									final String localName,
-									final Sink<RippleValue> sink )
+	public void resolveQName( final String nsPrefix,
+								final String localName,
+								final Sink<RippleValue> sink )
 		throws RippleException
 	{
-		Value v = lexicon.resolveQualifiedName( nsPrefix, localName );
+		Value v = lexicon.resolveQName( nsPrefix, localName );
 
 		if ( null != v )
-		{
-			RdfValue choice = new RdfValue( v );
-
-			RippleValue rv = model.getBridge().get( choice );
-			sink.put( ( null == rv )
-				? choice
-				: rv );
-		}
+			sink.put( model.getBridge().get(
+				new RdfValue( v ) ) );
 	}
 
 	private String getDefaultNamespace()
@@ -566,7 +554,7 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 		String defaultNs = lexicon.resolveNamespacePrefix( "" );
 
 		if ( null == defaultNs )
-			throw new RippleException( "no default namespace is defined" );
+			throw new RippleException( "no default namespace is defined.  Use '@prefix : <...>.'" );
 
 		return defaultNs;
 	}
