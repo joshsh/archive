@@ -1,0 +1,95 @@
+
+
+startup scripts -- args and return values
+grammar ^ Turtle
+joy primitives
+functions of operators ^ don't need to be RippleValues
+refactor source
+
+bugs
+	http://bblfish.net/people/henry/card#me
+	multi-line comments
+
+
+license
+
+
+submission format
+writeup
+readme
+website
+distribution
+
+
+
+
+Ripple vs Turtle
+	*  no 'a' keyword in Ripple
+	*  no boolean values for now
+
+
+
+================================================================================
+Contest submission
+================================================================================
+
+sudo apt-get install latex-ucs
+
+pdflatex ripple.tex
+
+# or
+latex ripple.tex
+dvipdf ripple.dvi
+
+
+================================================================================
+
+http://www.springer.com/east/home/computer/lncs?SGWID=5-164-7-72376-0&teaserId=45515&CENTER_ID=99829
+
+1.3    Copyright Forms
+The copyright form may be downloaded from the “For Authors” (Information for
+LNCS Authors) section of the LNCS Website: www.springer.com/lncs. Please
+send your signed copyright form to the Contact Volume Editor, either as a
+scanned pdf or by fax or by courier. One author may sign on behalf of all the
+other authors of a particular paper. Digital signatures are acceptable.
+
+
+Springer provides you with a complete integrated L TEX document class (llncs.cls)
+                                                 A
+
+
+
+
+2.4     Program Co de
+Program listings or program commands in the text are normally set in typewriter
+font, e.g., CMTT10 or Courier.
+
+
+References
+1. van Leeuwen, J. (ed.): Computer Science Today. Recent Trends and Developments.
+   Lecture Notes in Computer Science, Vol. 1000. Springer-Verlag, Berlin Heidelberg
+   New York (1995)
+2. Bruce, K.B., Cardelli, L., Pierce, B.C.: Comparing Ob ject Encodings. In: Abadi, M.,
+   Ito, T. (eds.): Theoretical Aspects of Computer Software. Lecture Notes in Com-
+   puter Science, Vol. 1281. Springer-Verlag, Berlin Heidelberg New York (1997) 415–
+   438
+3. Michalewicz, Z.: Genetic Algorithms + Data Structures = Evolution Programs. 3rd
+   edn. Springer-Verlag, Berlin Heidelberg New York (1996)
+4. Baldonado, M., Chang, C.-C.K., Gravano, L., Paepcke, A.: The Stanford Digital
+   Library Metadata Architecture. Int. J. Digit. Libr. 1 (1997) 108–121
+
+
+
+
+
+5   Checklist of Items to b e Sent to Volume Editors
+Here is a checklist of everything the volume editor requires from you:
+   The ﬁnal L TEX source ﬁles
+              A
+   A ﬁnal PDF ﬁle
+   A copyright form, signed by one author on behalf of all the authors of the
+   paper.
+   A readme giving the ﬁrst name(s) and the surname(s) of all the authors of
+   the paper, as well as the name and address of the corresponding author.
+
+

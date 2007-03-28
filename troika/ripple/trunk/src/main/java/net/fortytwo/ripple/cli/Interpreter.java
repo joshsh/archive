@@ -283,7 +283,7 @@ System.out.println( "--- 2 ---" );
 
 			try
 			{
-				parser.nt_Input();
+				parser.nt_Document();
 
 				// If the parser has exited normally, then we're done.
 				break;

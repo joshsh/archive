@@ -26,10 +26,10 @@ options
 {
 	k = 3;
 
-	// Do not attempt to recover from lexer errors.
+	// Use custom error recovery.
 	defaultErrorHandler = false;
 
-	//buildAST = true;
+	buildAST = false;
 }
 
 {
@@ -142,7 +142,7 @@ NAME_NOT_PREFIX
 	: '_' (NAME_OR_PREFIX_CHAR)*
 	;
 
-BNODE_HEAD
+BNODEREF_HEAD
 	: "_:"
 	;
 
@@ -183,15 +183,19 @@ NUMBER
 	: ('-')? ( DIGIT )+ ( '.' ( DIGIT )+ )?
 	;
 
-COMMENT
-	: "(:" ((~':') | (':' ~')'))* ":)"
-		{ $setType( Token.SKIP ); }
-	;
 
-COMMENT2
+// Identical to Turtle comments.
+SINGLE_LINE_COMMENT
 	: ( '#' ( ~('\r' | '\n') )* )
 		{ $setType( Token.SKIP ); }
 	;
+
+/*
+MULTI_LINE_COMMENT
+	: "(:" ((~':') | (':' ~')'))* ":)"
+		{ $setType( Token.SKIP ); }
+	;
+*/
 
 DOUBLE_HAT
 options { paraphrase = "double hat"; } : "^^" ;
@@ -209,20 +213,20 @@ COLON
 options { paraphrase = "colon"; } : ':' ;
 
 protected
-DIRECTIVE_HEAD
+DRCTV
 	: '@'
 	;
 
-DRCTV_COUNT       : DIRECTIVE_HEAD ( "count"         | "c" ) ;
-DRCTV_DEFINE      : DIRECTIVE_HEAD ( "define"        | "d" ) ;
-DRCTV_EXPORT      : DIRECTIVE_HEAD ( "export"        | "e" ) ;
-DRCTV_HELP        : DIRECTIVE_HEAD ( "help"          | "h" ) ;
-DRCTV_LIST        : DIRECTIVE_HEAD ( "list"          | "l" ) ;
-DRCTV_PREFIX      : DIRECTIVE_HEAD ( "prefix"        | "p" ) ;
-DRCTV_QUIT        : DIRECTIVE_HEAD ( "quit"          | "q" ) ;
-DRCTV_SAVEAS      : DIRECTIVE_HEAD ( "saveas"        | "sa" ) ;
-DRCTV_SERQL       : DIRECTIVE_HEAD ( "serql"         | "sr" ) ;
-DRCTV_UNDEFINE    : DIRECTIVE_HEAD ( "undefine"      | "u" ) ;
+DRCTV_COUNT       : DRCTV ( "count"         | "c" ) ;
+DRCTV_DEFINE      : DRCTV ( "define"        | "d" ) ;
+DRCTV_EXPORT      : DRCTV ( "export"        | "e" ) ;
+DRCTV_HELP        : DRCTV ( "help"          | "h" ) ;
+DRCTV_LIST        : DRCTV ( "list"          | "l" ) ;
+DRCTV_PREFIX      : DRCTV ( "prefix"        | "p" ) ;
+DRCTV_QUIT        : DRCTV ( "quit"          | "q" ) ;
+DRCTV_SAVEAS      : DRCTV ( "saveas"        | "sa" ) ;
+DRCTV_SERQL       : DRCTV ( "serql"         | "sr" ) ;
+DRCTV_UNDEFINE    : DRCTV ( "undefine"      | "u" ) ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -234,14 +238,11 @@ options
 	k = 1;
 	buildAST = false;
 
-	// Do not attempt to recover from parser errors.
+	// Use custom error recovery.
 	defaultErrorHandler = false;
 }
 
-
 {
-//    private boolean active = true;
-
 	private Interpreter interpreter = null;
 
 	public void initialize( Interpreter r )
@@ -251,7 +252,7 @@ options
 }
 
 
-nt_Input
+nt_Document
 {
 }
 	: ( (WS)? nt_Statement )*
@@ -262,31 +263,30 @@ nt_Statement
 {
 	ListAst r;
 }
-	: r=nt_Sequence (WS)? EOS
+	// A directive is executed as soon as EOS is matched in the individual
+	// rule.
+	: nt_Directive
+
+	// Query statements are always lists.
+	| r=nt_List (WS)? EOS
 		{
 			interpreter.evaluate( r );
 		}
-
-	// Directives are executed lazily, as soon as the semicolon is encountered.
-	| nt_Directive
 
 	// Empty statements are simply ignored.
 	| EOS
 	;
 
 
-nt_Sequence returns [ ListAst s ]
+nt_List returns [ ListAst s ]
 {
 	Ast i;
 	s = null;
 	boolean modified = false;
 }
-/*
-	: i=nt_Item
-*/
-	: ( OPER { modified = true; } )? i=nt_UnmodifiedItem
-	( ( WS ~(EOS) ) => ( WS s=nt_Sequence )
-	| ( L_PAREN | OPER ) => ( s=nt_Sequence )
+	: ( OPER { modified = true; } )? i=nt_Node
+	( ( WS ~(EOS) ) => ( WS s=nt_List )
+	| ( L_PAREN | OPER ) => ( s=nt_List )
 	| {}
 	)
 		{
@@ -298,66 +298,22 @@ nt_Sequence returns [ ListAst s ]
 	;
 
 
-nt_UnmodifiedItem returns [ Ast r ]
+nt_Node returns [ Ast r ]
 {
 	r = null;
 }
 	: r=nt_Resource
 	| r=nt_Literal
-	| r=nt_ParenthesizedExpression
-//    | r=nt_QuantifiedItem
-//    | r=nt_IndexExpression
+	| r=nt_ParenthesizedList
 	;
 
-/*
-nt_Item returns [ Ast r ]
-{
-	r = null;
-	Ast a = null;
-	boolean modified = false;
-}
-	: ( OPER { modified = true; } )? a=nt_UnmodifiedItem
-		{
-			r = modified
-				? new OperatorAst( a )
-				: a;
-		}
-	;
-*/
 
-nt_ParenthesizedExpression returns [ ListAst r ]
+nt_ParenthesizedList returns [ ListAst r ]
 {
 	r = null;
 }
-	: L_PAREN (WS)? ( r=nt_Sequence )? R_PAREN
+	: L_PAREN (WS)? ( r=nt_List )? R_PAREN
 	;
-
-
-/*
-nt_QuantifiedItem returns [ Ast r ]
-{
-	r = null;
-}
-	: DOT r=nt_Item
-	| AND r=nt_Item
-	| OR r=nt_Item
-//    | SLASH r=nt_Item
-	| CHOICE r=nt_Item
-	| STAR r=nt_Item
-	| PLUS r=nt_Item
-	;
-*/
-
-
-/*
-nt_IndexExpression returns [ Ast r ]
-{
-	Ast i;
-	r = null;
-}
-	: L_SQ_BRACE (WS)? r=nt_Item (WS)? ( COMMA (WS)? i=nt_Item (WS)? )? R_SQ_BRACE
-	;
-*/
 
 
 nt_Literal returns [ Ast r ]
@@ -367,7 +323,7 @@ nt_Literal returns [ Ast r ]
 }
 	: ( t:STRING
 
-		/* Note: for symmetry with Turtle, the grammar allows any resource
+		/* Note: for agreement with Turtle, the grammar allows any resource
 				reference as the data type of a literal (i.e. a URI or a blank
 				node).  However, the Sesame back end will only accept a URI. */
 		( DOUBLE_HAT dataType=nt_Resource )?
@@ -398,6 +354,17 @@ nt_Literal returns [ Ast r ]
 	;
 
 
+nt_Resource returns [ Ast r ]
+{
+	r = null;
+}
+	: r=nt_URIRef
+	| ( (NAME_OR_PREFIX)? COLON ) => r=nt_QName
+	| r=nt_SimpleName
+	| r=nt_BNodeRef
+	;
+
+
 nt_URIRef returns [ UriAst r ]
 {
 	r = null;
@@ -407,22 +374,6 @@ nt_URIRef returns [ UriAst r ]
 			r = new UriAst( uri.getText() );
 		}
 	;
-
-
-nt_Name returns [ String name ]
-{
-	name = null;
-}
-	: t1:NAME_OR_PREFIX { name = t1.getText(); }
-	| t2:NAME_NOT_PREFIX { name = t2.getText(); }
-	;
-/*
-			if ( name.equals( "true" ) )
-				r = new BooleanAst( true );
-			else if ( name.equals( "false" ) )
-				r = new BooleanAst( false );
-			else
-*/
 
 
 nt_Prefix returns [ String prefix ]
@@ -456,26 +407,24 @@ nt_QName returns [ Ast r ]
 	;
 
 
-nt_BNode returns [ Ast r ]
+nt_BNodeRef returns [ Ast r ]
 {
 	r = null;
 	String localName = null;
 }
-	: BNODE_HEAD localName=nt_Name
+	: BNODEREF_HEAD localName=nt_Name
 		{
 			r = new BlankNodeAst( localName );
 		}
 	;
 
 
-nt_Resource returns [ Ast r ]
+nt_Name returns [ String name ]
 {
-	r = null;
+	name = null;
 }
-	: r=nt_URIRef
-	| ( (NAME_OR_PREFIX)? COLON ) => r=nt_QName
-	| r=nt_SimpleName
-	| r=nt_BNode
+	: t1:NAME_OR_PREFIX { name = t1.getText(); }
+	| t2:NAME_NOT_PREFIX { name = t2.getText(); }
 	;
 
 
@@ -483,7 +432,7 @@ nt_Directive
 {
 	UriAst ns;
 
-	// Defaults to the empty (but not null) prefix.
+	// Default to the empty (but not null) prefix.
 	String nsPrefix = "";
 
 	String localName = null;
@@ -494,7 +443,7 @@ nt_Directive
 			interpreter.countStatements();
 		}
 
-	| DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_Sequence (WS)? EOS
+	| DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_List (WS)? EOS
 		{
 			interpreter.evaluateAndDefine( rhs, localName );
 		}
@@ -510,11 +459,11 @@ nt_Directive
 		}
 
 	| DRCTV_LIST WS
-		( "contexts" EOS
+		( "contexts" (WS)? EOS
 			{
 				interpreter.showContexts();
 			}
-		| "prefixes" EOS
+		| "prefixes" (WS)? EOS
 			{
 				interpreter.showNamespaces();
 			}
@@ -545,5 +494,6 @@ nt_Directive
 			interpreter.undefine( localName );
 		}
 	;
+
 
 // kate: tab-width 4

@@ -1,8 +1,8 @@
 package net.fortytwo.ripple.cli;
 
 /**
-*  A trivial exception which is used to break out of the ANTLR-generated lexer
-*  and parser, which never match end-of-input.
+*  A trivial exception for breaking out of the ANTLR-generated parser, which
+*  does not match end-of-input.
 */
 public class ParserQuitException extends RuntimeException {}
 
