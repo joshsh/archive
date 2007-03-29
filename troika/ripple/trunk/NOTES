@@ -763,7 +763,7 @@ factorial  ==  [0 =] [pop 1] [dup 1 - factorial *] ifte
 @define fibonacci:  1/sub/dup/:fibonacci/swap 1/sub/:fibonacci /add.
 
 
-Ripple gets recursive definition for free ...
+Ripple gets recursive definitions for free ...
 there is no special trick...
 
 
@@ -819,35 +819,6 @@ x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-hyponym.rdf" ;
 x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-wordsensesandwords.rdf" ;
 
 java -DentityExpansionLimit=800000 -classpath target/ripple-with-dependencies.jar ripple.JLineTest "t"
-
-
-
-
-::: example of a name collision ::::::::::::::::::::::::::::::::::::::::::::::::
-
-10 >>  Class type ;           (: type --> rdfs:type, but we meant rdf:type :)
-
-11 >>  Class rdf:type;
-
-[0] rdfs:Class
-    rdf:type
-        rdfs:Class
-    rdfs:comment
-        The class of classes.
-    rdfs:label
-        Class
-    rdfs:isDefinedBy
-        rdfs:
-    rdfs:subClassOf
-        rdfs:Resource
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
-
-
-
 
 
 

@@ -128,6 +128,8 @@ Command-query separation
 
 @prefix : <file:///tmp/new.rdf#>.
 @define listItems: (/rdf:rest/:listItems)/swap/swap rdf:first /union/i.
+pingTheSemanticWeb/rpl:parameters /:listItems.
+
 
 
 

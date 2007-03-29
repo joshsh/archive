@@ -21,7 +21,7 @@ rpl-misc:uriToString
 	rdfs:label "uriToString" ;
 	rdfs:comment "" .
 
-rpl-test:bagElements
+rpl-misc:bagElements
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType rdf:Resource ;
@@ -36,7 +36,7 @@ rpl-test:bagElements
 
 ### String manipulation primitives #############################################
 
-rpl-test:strCat
+rpl-misc:strCat
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:string ;
@@ -122,7 +122,7 @@ rpl-misc:pingTheSemanticWeb
 	rpl:parameters (
 		[
 			rdfs:label "type" ;
-			rdfs:comment "one of the values \"all\", \"foaf\", \"sioc\", \"doap\", \"rdfs\" or \"owl\"" ;
+			rdfs:comment "one of the values 'all', 'foaf', 'sioc', 'doap', 'rdfs' or 'owl'" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		[
