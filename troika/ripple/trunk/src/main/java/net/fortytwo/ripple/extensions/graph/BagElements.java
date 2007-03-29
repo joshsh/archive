@@ -1,17 +1,18 @@
-package net.fortytwo.ripple.extensions.newstuff;
+package net.fortytwo.ripple.extensions.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Pred extends PrimitiveFunction
+import java.util.Iterator;
+
+public class BagElements extends PrimitiveFunction
 {
-	public Pred( RdfValue v, ModelConnection mc )
+	public BagElements( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -23,17 +24,17 @@ public class Pred extends PrimitiveFunction
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+								Sink<RippleList> sink,
+								ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue p;
+		Iterator<RippleValue> values;
 
-		p = stack.getFirst();
+		values = mc.bagValue( stack.getFirst() ).iterator();
 		stack = stack.getRest();
 
-		sink.put( new RippleList(
-			new Operator( p.toRdf( mc ) ), stack ) );
+		while ( values.hasNext() )
+			sink.put( new RippleList( values.next(), stack ) );
 	}
 }
 

@@ -374,7 +374,10 @@ System.out.println( "done" );
 			stmtIter.close();
 
 			for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+{
+System.out.println( "removing statement" );
 				repoConnection.remove( iter.next() );
+}
 		}
 
 		catch ( Throwable t )

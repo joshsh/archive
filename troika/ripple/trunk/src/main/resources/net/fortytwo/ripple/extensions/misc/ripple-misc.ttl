@@ -1,42 +1,66 @@
-@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:       <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix rpl-misc:  <http://fortytwo.net/2007/03/rpl-misc#> .
-@prefix swoogle:   <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
-@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix misc:     <http://fortytwo.net/2007/03/ripple/misc#> .
+@prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
-### RDF primitives #############################################################
+misc:pingTheSemanticWeb
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:string ;
+	rpl:parameters (
+		[
+			rdfs:label "type" ;
+			rdfs:comment "one of the values 'all', 'foaf', 'sioc', 'doap', 'rdfs' or 'owl'" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "maxResults" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "pingTheSemanticWeb" ;
+	rdfs:comment "" .
 
-# Hackish... implementation expects a URI
-rpl-misc:uriToString
+misc:pred
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "p" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "pred" ;
+	rdfs:comment "consumes a Property and returns a 'predicate operator'" .
+
+misc:prim
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "p" ;
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "prim" ;
+	rdfs:comment "applies a Function" .
+
+misc:sha1SumOf
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
-			rdfs:label "resource" ;
+			rdfs:label "plaintext" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "uriToString" ;
+	rdfs:label "" ;
 	rdfs:comment "" .
 
-rpl-misc:bagElements
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:returnType rdf:Resource ;
-	rpl:parameters (
-		[
-			rdfs:label "bag" ;
-			rpl:parameterType rdf:Bag ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "" ;
-	rdfs:comment "..." .
-
-### String manipulation primitives #############################################
-
-rpl-misc:strCat
+misc:strCat
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:string ;
@@ -53,48 +77,7 @@ rpl-misc:strCat
 	rdfs:label "strCat" ;
 	rdfs:comment "" .
 
-rpl-misc:sha1SumOf
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
-	rpl:parameters (
-		[
-			rdfs:label "plaintext" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "" ;
-	rdfs:comment "" .
-
-rpl-misc:urlEncoding
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
-	rpl:parameters (
-		[
-			rdfs:label "plaintext" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "sha1SumOf" ;
-	rdfs:comment "" .
-
-### Networking primitives ######################################################
-
-rpl-misc:urlTarget
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
-	rpl:parameters (
-		[
-			rdfs:label "url" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "urlTarget" ;
-	rdfs:comment "" .
-
-rpl-misc:swoogleIt
+misc:swoogleIt
 	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:returnType rdfs:Class ;
@@ -115,20 +98,28 @@ rpl-misc:swoogleIt
 	rdfs:label "swoogleIt" ;
 	rdfs:comment "" .
 
-rpl-misc:pingTheSemanticWeb
+misc:urlEncoding
 	a rpl:Function ;
-	rpl:arity 2 ;
+	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
-			rdfs:label "type" ;
-			rdfs:comment "one of the values 'all', 'foaf', 'sioc', 'doap', 'rdfs' or 'owl'" ;
+			rdfs:label "plaintext" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
+		) ;
+	rdfs:label "sha1SumOf" ;
+	rdfs:comment "" .
+
+misc:urlTarget
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType xsd:string ;
+	rpl:parameters (
 		[
-			rdfs:label "maxResults" ;
-			rpl:parameterType xsd:integer ;
+			rdfs:label "url" ;
+			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "pingTheSemanticWeb" ;
+	rdfs:label "urlTarget" ;
 	rdfs:comment "" .

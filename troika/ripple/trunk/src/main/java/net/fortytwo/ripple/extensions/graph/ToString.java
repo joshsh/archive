@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.misc;
+package net.fortytwo.ripple.extensions.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,11 +8,11 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-import java.util.Iterator;
+import org.openrdf.model.URI;
 
-public class BagElements extends PrimitiveFunction
+public class ToString extends PrimitiveFunction
 {
-	public BagElements( RdfValue v, ModelConnection mc )
+	public ToString( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -28,13 +28,12 @@ public class BagElements extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		Iterator<RippleValue> values;
+		RippleValue v;
 
-		values = mc.bagValue( stack.getFirst() ).iterator();
+		v = stack.getFirst();
 		stack = stack.getRest();
 
-		while ( values.hasNext() )
-			sink.put( new RippleList( values.next(), stack ) );
+		sink.put( new RippleList( mc.createValue( v.toString() ), stack ) );
 	}
 }
 

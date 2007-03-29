@@ -194,6 +194,11 @@ if ( v instanceof URI )
 	public void forget( RdfValue rv, ModelConnection mc )
 		throws RippleException
 	{
+		// Note: this removes statements in all contexts, including
+		//       statements created with the graph primitives, and statements
+		//       about blank nodes.
+		mc.removeStatementsAbout( rv, null );
+
 		Value v = rv.getRdfValue();
 		if ( v instanceof URI )
 		{
@@ -207,7 +212,7 @@ if ( v instanceof URI )
 			if ( successMemos.contains( memo ) )
 			{
 				URI context = findContext( ( (URI) v ).getNamespace(), mc );
-				mc.removeStatementsAbout( rv, context );
+//				mc.removeStatementsAbout( rv, context );
 
 				successMemos.remove( memo );
 			}

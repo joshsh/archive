@@ -1,10 +1,10 @@
-@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix rpl-new:  <http://fortytwo.net/2007/03/rpl-new#> .
-@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:    <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix graph:  <http://fortytwo.net/2007/03/ripple/graph#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 
-rpl-new:assert
+graph:assert
 	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:parameters (
@@ -24,7 +24,20 @@ rpl-new:assert
 	rdfs:label "assert" ;
 	rdfs:comment "asserts the statement <subj> <pred> <obj>" .
 
-rpl-new:deny
+graph:bagElements
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rdf:Resource ;
+	rpl:parameters (
+		[
+			rdfs:label "bag" ;
+			rpl:parameterType rdf:Bag ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "" ;
+	rdfs:comment "..." .
+
+graph:deny
 	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:parameters (
@@ -44,7 +57,7 @@ rpl-new:deny
 	rdfs:label "deny" ;
 	rdfs:comment "revokes the statement <subj> <pred> <obj>" .
 
-rpl-new:equal
+graph:equal
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -60,7 +73,7 @@ rpl-new:equal
 	rdfs:label "equal" ;
 	rdfs:comment "true if arguments are equal, otherwise false" .
 
-rpl-new:forget
+graph:forget
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -71,32 +84,21 @@ rpl-new:forget
 	rdfs:label "forget" ;
 	rdfs:comment "revokes all statements about <subj>" .
 
-rpl-new:new
+graph:new
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rdfs:label "new" ;
 	rdfs:comment "creates a new blank node" .
 
-rpl-new:pred
+graph:toString
 	a rpl:Function ;
 	rpl:arity 1 ;
+	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
-			rdfs:label "p" ;
-			rpl:parameterType rdf:Property ;
+			rdfs:label "resource" ;
+			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "pred" ;
-	rdfs:comment "consumes a Property and returns a 'predicate operator'" .
-
-rpl-new:prim
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "p" ;
-			rpl:parameterType rpl:Function ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "prim" ;
-	rdfs:comment "applies a Function" .
+	rdfs:label "toString" ;
+	rdfs:comment "" .
