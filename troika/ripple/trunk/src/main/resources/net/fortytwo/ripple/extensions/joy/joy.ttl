@@ -1,7 +1,7 @@
 @prefix joy:   <http://fortytwo.net/2007/03/ripple/joy#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:   <http://fortytwo.net/2007/03/ripple#> .
+@prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 joy:and
@@ -18,7 +18,8 @@ joy:and
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
 			rpl:parameterType rpl:Function ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "and" ;
 	rdfs:comment "" .
 
 joy:at
@@ -34,7 +35,8 @@ joy:at
 			rdfs:label "list" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
-	) ;
+		) ;
+	rdfs:label "at" ;
 	rdfs:comment "Note: as in Joy, lists are 1-indexed" .
 
 joy:concat
@@ -51,7 +53,8 @@ joy:concat
 			rdfs:comment "tail of the new list" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "concat" ;
 	rdfs:comment "" .
 
 joy:dip
@@ -67,17 +70,20 @@ joy:dip
 			rdfs:comment "the list to be dequoted" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "dip" ;
 	rdfs:comment "" .
 
 joy:dup
 	a rpl:Function ;
 	rpl:arity 1 ;
+	rdfs:label "dup" .
 	rdfs:comment "x /dup --> x x" .
 
 joy:false
 	a rpl:Function ;
 	rpl:arity 2 ;
+	rdfs:label "false" ;
 	rdfs:comment "y x /false --> y" .
 
 joy:fold
@@ -98,7 +104,8 @@ joy:fold
 			rdfs:comment "a list through which to fold f" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "fold" ;
 	rdfs:comment "" .
 
 joy:i
@@ -110,13 +117,15 @@ joy:i
 			rdfs:comment "the list to be dequoted" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "i" ;
 	rdfs:comment "" .
 
 joy:id
 	rdfs:label "id" ;
 	a rpl:Function ;
 	rpl:arity 0 ;
+	rdfs:label "id" ;
 	rdfs:comment "the trivial 'identity' function" .
 
 joy:ifte
@@ -135,25 +144,9 @@ joy:ifte
 			rdfs:label "b" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
-	) ;
+		) ;
+	rdfs:label "ifte" ;
 	rdfs:comment "true y x /ifte --> y; false y x /ifte --> x" .
-
-joy:map
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "f" ;
-			rdfs:comment "a quoted function" ;
-			rpl:parameterType rdf:List ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "l" ;
-			rdfs:comment "a list over which to distribute f" ;
-			rpl:parameterType rdf:List ;
-			rpl:isTransparent "true" ]
-	) ;
-	rdfs:comment "" .
 
 joy:not
 	a rpl:Function ;
@@ -164,7 +157,8 @@ joy:not
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
 			rpl:parameterType rpl:Function ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "not" ;
 	rdfs:comment "" .
 
 joy:or
@@ -181,12 +175,14 @@ joy:or
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
 			rpl:parameterType rpl:Function ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "or" ;
 	rdfs:comment "" .
 
 joy:pop
 	a rpl:Function ;
 	rpl:arity 1 ;
+	rdfs:label "pop" ;
 	rdfs:comment "y x /pop --> y" .
 
 joy:size
@@ -199,7 +195,8 @@ joy:size
 			rdfs:label "list" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
-	) ;
+		) ;
+	rdfs:label "size" ;
 	rdfs:comment "finds the number of items in a List" .
 
 joy:stack
@@ -207,11 +204,13 @@ joy:stack
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:returnType rdf:List ;
+	rdfs:label "stack" ;
 	rdfs:comment "" .
 
 joy:swap
 	a rpl:Function ;
 	rpl:arity 2 ;
+	rdfs:label "swap" ;
 	rdfs:comment "x y /swap --> y x" .
 
 joy:times
@@ -226,12 +225,14 @@ joy:times
 			rdfs:label "list" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
-	) ;
+		) ;
+	rdfs:label "times" ;
 	rdfs:comment "" .
 
 joy:true
 	a rpl:Function ;
 	rpl:arity 2 ;
+	rdfs:label "true" ;
 	rdfs:comment "y x /true --> x" .
 
 joy:xor
@@ -248,5 +249,6 @@ joy:xor
 			rdfs:comment "a boolean value (joy:true or joy:false)" ;
 			rpl:parameterType rpl:Function ;
 			rpl:isTransparent "true" ]
-	) ;
+		) ;
+	rdfs:label "xor" ;
 	rdfs:comment "" .

@@ -32,7 +32,7 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 		return rdfEquivalent.toString();
 	}
 
-	public boolean isOperator()
+	public boolean isActive()
 	{
 		return false;
 	}

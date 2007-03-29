@@ -202,7 +202,7 @@ System.out.println( "resulting list: " + toString() );
 		p.print( padding ? " )" : ")" );
 	}
 
-	public boolean isOperator()
+	public boolean isActive()
 	{
 		return false;
 	}

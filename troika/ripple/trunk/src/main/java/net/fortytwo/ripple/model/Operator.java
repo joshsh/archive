@@ -81,7 +81,7 @@ public class Operator implements RippleValue
 				+ v );
 	}
 
-	public boolean isOperator()
+	public boolean isActive()
 	{
 		return true;
 	}
@@ -91,7 +91,7 @@ public RdfValue toRdf( ModelConnection mc )
 {
 // Note: only correct for OP, but I expect this method only to be used with OP anyway
 if ( null == rdfEquivalent )
-	rdfEquivalent = new RdfValue( mc.createUri( "http://fortytwo.net/2007/03/ripple#op" ) );
+	rdfEquivalent = new RdfValue( mc.createUri( "http://fortytwo.net/2007/03/ripple/schema#op" ) );
 return rdfEquivalent;
 }
 

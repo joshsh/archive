@@ -1,11 +1,10 @@
-@prefix intmath:   <http://fortytwo.net/2007/03/ripple/intmath#> .
-@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:       <http://fortytwo.net/2007/03/ripple#> .
-@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix intmath:  <http://fortytwo.net/2007/03/ripple/intmath#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
 intmath:abs
-	rdfs:label "integer-abs" ;
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:integer ;
@@ -14,10 +13,11 @@ intmath:abs
 			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "abs" ;
+	rdfs:comment "" .
 
 intmath:add
-	rdfs:label "integer-add" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
@@ -30,10 +30,11 @@ intmath:add
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "add" ;
+	rdfs:comment "" .
 
 intmath:sub
-	rdfs:label "integer-subtract" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
@@ -46,10 +47,11 @@ intmath:sub
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "sub" ;
+	rdfs:comment "" .
 
 intmath:mul
-	rdfs:label "integer-multiply" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
@@ -62,10 +64,11 @@ intmath:mul
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "mul" ;
+	rdfs:comment "" .
 
 intmath:div
-	rdfs:label "integer-divide" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
@@ -78,10 +81,11 @@ intmath:div
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "div" ;
+	rdfs:comment "" .
 
 intmath:mod
-	rdfs:label "integer-mod" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:integer ;
@@ -94,10 +98,11 @@ intmath:mod
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "mod" ;
+	rdfs:comment "" .
 
 intmath:gt
-	rdfs:label "integer-greater-than" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType rpl:Function ;
@@ -110,10 +115,11 @@ intmath:gt
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "gt" ;
+	rdfs:comment "" .
 
 intmath:lt
-	rdfs:label "integer-lessThan" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType rpl:Function ;
@@ -126,4 +132,6 @@ intmath:lt
 			rdfs:label "y" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "lt" ;
+	rdfs:comment "" .

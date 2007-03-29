@@ -1,10 +1,81 @@
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:      <http://fortytwo.net/2007/03/ripple#> .
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix rpl-new:  <http://fortytwo.net/2007/03/rpl-new#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
-################################################################################
+rpl-new:assert
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "obj" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent false ]
+		[
+			rdfs:label "pred" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "subj" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "assert" ;
+	rdfs:comment "asserts the statement <subj> <pred> <obj>" .
+
+rpl-new:deny
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "obj" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent false ]
+		[
+			rdfs:label "pred" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "subj" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "deny" ;
+	rdfs:comment "revokes the statement <subj> <pred> <obj>" .
+
+rpl-new:equal
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent false ]
+		[
+			rdfs:label "y" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "equal" ;
+	rdfs:comment "true if arguments are equal, otherwise false" .
+
+rpl-new:forget
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "subj" ;
+			rpl:isTransparent false ]
+		) ;
+	rdfs:label "forget" ;
+	rdfs:comment "revokes all statements about <subj>" .
+
+rpl-new:new
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rdfs:label "new" ;
+	rdfs:comment "creates a new blank node" .
 
 rpl-new:pred
 	a rpl:Function ;
@@ -14,8 +85,9 @@ rpl-new:pred
 			rdfs:label "p" ;
 			rpl:parameterType rdf:Property ;
 			rpl:isTransparent true ]
-	) ;
-	rdfs:comment "p /pred --> PRED[p]" .
+		) ;
+	rdfs:label "pred" ;
+	rdfs:comment "consumes a Property and returns a 'predicate operator'" .
 
 rpl-new:prim
 	a rpl:Function ;
@@ -25,41 +97,6 @@ rpl-new:prim
 			rdfs:label "p" ;
 			rpl:parameterType rpl:Function ;
 			rpl:isTransparent true ]
-	) ;
-	rdfs:comment "p /prim --> PRIM[p]" .
-
-################################################################################
-
-rpl-new:new
-	a rpl:Function ;
-	rpl:arity 0 ;
-	rdfs:comment "creates a new blank node" .
-
-rpl-new:assert
-	a rpl:Function ;
-	rpl:arity 3 ;
-	rdfs:comment "..." .
-
-rpl-new:deny
-	a rpl:Function ;
-	rpl:arity 3 ;
-	rdfs:comment "..." .
-
-rpl-new:forget
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "x" ;
-			rpl:isTransparent false ]
-	) ;
-	rdfs:comment "..." .
-
-################################################################################
-
-rpl-new:equal
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rdfs:comment "y x /equal --> rpl:true if x and y are equal, otherwise rpl:false" .
-
-################################################################################
+		) ;
+	rdfs:label "prim" ;
+	rdfs:comment "applies a Function" .

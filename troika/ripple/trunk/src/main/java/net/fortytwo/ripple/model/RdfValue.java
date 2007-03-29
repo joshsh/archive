@@ -29,7 +29,7 @@ public class RdfValue implements RippleValue
 		p.print( value );
 	}
 
-	public boolean isOperator()
+	public boolean isActive()
 	{
 		return false;
 	}

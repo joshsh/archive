@@ -36,7 +36,7 @@ public class Prim extends PrimitiveFunction
 		// Note: as far as Operator is concerned, the argument need only be a
 		//       Function, as opposed to a PrimitiveFunction in particular.
 		if ( !( p instanceof PrimitiveFunction ) )
-			throw new RippleException( "argument to rpl-new:prim is not a primitive function" );
+			throw new RippleException( "argument to prim is not a primitive function" );
 
 		sink.put( new RippleList(
 			new Operator( (Function) p ), stack ) );

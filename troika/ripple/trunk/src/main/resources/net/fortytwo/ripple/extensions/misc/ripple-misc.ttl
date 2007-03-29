@@ -1,6 +1,6 @@
 @prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:       <http://fortytwo.net/2007/03/ripple#> .
+@prefix rpl:       <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix rpl-misc:  <http://fortytwo.net/2007/03/rpl-misc#> .
 @prefix swoogle:   <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
@@ -17,7 +17,9 @@ rpl-misc:uriToString
 			rdfs:label "resource" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "uriToString" ;
+	rdfs:comment "" .
 
 ### String manipulation primitives #############################################
 
@@ -30,7 +32,9 @@ rpl-misc:sha1SumOf
 			rdfs:label "plaintext" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "" ;
+	rdfs:comment "" .
 
 rpl-misc:urlEncoding
 	a rpl:Function ;
@@ -41,7 +45,9 @@ rpl-misc:urlEncoding
 			rdfs:label "plaintext" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "sha1SumOf" ;
+	rdfs:comment "" .
 
 ### Networking primitives ######################################################
 
@@ -54,7 +60,9 @@ rpl-misc:urlTarget
 			rdfs:label "url" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "urlTarget" ;
+	rdfs:comment "" .
 
 rpl-misc:swoogleIt
 	a rpl:Function ;
@@ -73,7 +81,9 @@ rpl-misc:swoogleIt
 			rdfs:label "searchString" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "swoogleIt" ;
+	rdfs:comment "" .
 
 rpl-misc:pingTheSemanticWeb
 	a rpl:Function ;
@@ -89,5 +99,6 @@ rpl-misc:pingTheSemanticWeb
 			rdfs:label "maxResults" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
-	) .
-
+		) ;
+	rdfs:label "pingTheSemanticWeb" ;
+	rdfs:comment "" .

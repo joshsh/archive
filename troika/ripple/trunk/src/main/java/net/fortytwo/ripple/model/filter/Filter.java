@@ -27,7 +27,7 @@ public RdfValue toRdf( ModelConnection mc )
 return null;
 }
 
-	public boolean isOperator()
+	public boolean isActive()
 	{
 		return false;
 	}

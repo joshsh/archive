@@ -1,6 +1,6 @@
 @prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:       <http://fortytwo.net/2007/03/ripple#> .
+@prefix rpl:       <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix rpl-test:  <http://fortytwo.net/2007/03/rpl-test#> .
 @prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
 
@@ -15,7 +15,9 @@ rpl-test:bagElements
 			rdfs:label "bag" ;
 			rpl:parameterType rdf:Bag ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "" ;
+	rdfs:comment "..." .
 
 rpl-test:listElements
 	a rpl:Function ;
@@ -25,7 +27,9 @@ rpl-test:listElements
 		[ rdfs:label " listHead" ;
 		rpl:parameterType rdf:List ;
 		rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "" ;
+	rdfs:comment "..." .
 
 ### String manipulation primitives #############################################
 
@@ -42,4 +46,6 @@ rpl-test:concatenateStrings
 			rdfs:label "strB" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
-	) .
+		) ;
+	rdfs:label "" ;
+	rdfs:comment "..." .

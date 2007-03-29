@@ -36,19 +36,17 @@ public class Fold extends PrimitiveFunction
 		l = stack.getFirst();
 		stack = stack.getRest();
 
-		RippleList fList = ( f instanceof RippleList )
-			? (RippleList) f
-			: new RippleList( f.toRdf( mc ), mc );
 		RippleList lList = RippleList.invert( ( l instanceof RippleList )
 			? (RippleList) l
 			:  new RippleList( l.toRdf( mc ), mc ) );
 
 		RippleList result = new RippleList( v, stack );
-		Operator op = new Operator( fList );
 
 		while ( null != lList )
 		{
-			result = result.push( lList.getFirst() ).push( op );
+			result = result.push( lList.getFirst() )
+				.push( f )
+				.push( Operator.OP );
 			lList = lList.getRest();
 		}
 

@@ -63,7 +63,7 @@ public class LazyEvaluator extends Evaluator
 //System.out.println( "   first = " + stack.getFirst() );
 
 			// prim[], pred[], deq[]
-			if ( first.isOperator() )
+			if ( first.isActive() )
 			{
 				RippleList rest = stack.getRest();
 

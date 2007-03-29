@@ -230,7 +230,7 @@ rpl-new:false
 rpl-new:fold
 ========================================
 
-(2 3 4) 0 (/add) /fold.
+(2 3 4) 0 add /fold.
 
 
 ========================================
@@ -760,7 +760,7 @@ prog(rec2)
 factorial  ==  [0 =] [pop 1] [dup 1 - factorial *] ifte
 
 
-@def fibonacci:  1/sub/dup/:fibonacci/swap 1/sub/:fibonacci /add.
+@define fibonacci:  1/sub/dup/:fibonacci/swap 1/sub/:fibonacci /add.
 
 
 Ripple gets recursive definition for free ...
