@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.test;
+package net.fortytwo.ripple.extensions.misc;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;

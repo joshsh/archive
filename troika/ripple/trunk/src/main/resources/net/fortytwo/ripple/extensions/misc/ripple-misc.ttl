@@ -21,7 +21,37 @@ rpl-misc:uriToString
 	rdfs:label "uriToString" ;
 	rdfs:comment "" .
 
+rpl-test:bagElements
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rdf:Resource ;
+	rpl:parameters (
+		[
+			rdfs:label "bag" ;
+			rpl:parameterType rdf:Bag ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "" ;
+	rdfs:comment "..." .
+
 ### String manipulation primitives #############################################
+
+rpl-test:strCat
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:string ;
+	rpl:parameters (
+		[
+			rdfs:label "strA" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "strB" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "strCat" ;
+	rdfs:comment "" .
 
 rpl-misc:sha1SumOf
 	a rpl:Function ;
