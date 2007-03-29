@@ -10,9 +10,9 @@ import net.fortytwo.ripple.util.Sink;
 
 import java.util.Iterator;
 
-public class BagElements extends PrimitiveFunction
+public class Contains extends PrimitiveFunction
 {
-	public BagElements( RdfValue v, ModelConnection mc )
+	public Contains( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );

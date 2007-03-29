@@ -26,7 +26,6 @@ public class Deny extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-System.out.println( "Denied!" );
 		RippleValue subj, pred, obj;
 
 		obj = stack.getFirst();

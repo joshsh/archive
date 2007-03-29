@@ -21,18 +21,18 @@ graph:assert
 	rdfs:label "assert" ;
 	rdfs:comment "asserts the statement (subj, pred, obj)" .
 
-graph:bagElements
+graph:contains
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType rdf:Resource ;
 	rpl:parameters (
 		[
-			rdfs:label "bag" ;
-			rpl:parameterType rdf:Bag ;
+			rdfs:label "c" ;
+			rpl:parameterType rdfs:Container ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "bagElements" ;
-	rdfs:comment "" .
+	rdfs:label "contains" ;
+	rdfs:comment "finds all members of a container" .
 
 graph:deny
 	a rpl:Function ;
@@ -93,4 +93,4 @@ graph:toString
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "toString" ;
-	rdfs:comment "" .
+	rdfs:comment "finds the string representation of a node" .

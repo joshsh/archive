@@ -16,7 +16,7 @@ public class GraphExtension implements Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 
 		bridge.add( new Assert( new RdfValue( mc.createUri( ns + "assert" ) ), mc ), mc );
-		bridge.add( new BagElements( new RdfValue( mc.createUri( ns + "bagElements" ) ), mc ), mc );
+		bridge.add( new Contains( new RdfValue( mc.createUri( ns + "contains" ) ), mc ), mc );
 //		bridge.add( new Count( new RdfValue( mc.createUri( ns + "count" ) ), mc ), mc );
 		bridge.add( new Deny( new RdfValue( mc.createUri( ns + "deny" ) ), mc ), mc );
 		bridge.add( new Equal( new RdfValue( mc.createUri( ns + "equal" ) ), mc ), mc );
