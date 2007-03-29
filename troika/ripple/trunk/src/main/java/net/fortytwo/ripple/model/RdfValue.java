@@ -3,6 +3,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Value;
+import org.openrdf.model.Literal;
 
 public class RdfValue implements RippleValue
 {
@@ -38,7 +39,21 @@ public class RdfValue implements RippleValue
 	{
 //System.out.println( "(RdfValue) " + this + ".equals(" + other + ")" );
 		if ( other instanceof RdfValue )
-			return value.equals( ( (RdfValue) other ).value );
+		{
+			// Sesame's comparison for Literals appears to be either a little
+			// too imprecise or a little too strict to be useful for searching
+			// in Ripple, in that objects which should be equal are not, so we
+			// special case it.
+			if ( ( this instanceof Literal ) && ( other instanceof Literal ) )
+			{
+				return ( (Literal) this ).getLabel().equals(
+					( (Literal) other ).getLabel() );
+			}
+
+			else
+				return value.equals( ( (RdfValue) other ).value );
+		}
+
 		else
 			return false;
 	}

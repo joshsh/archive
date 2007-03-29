@@ -131,7 +131,7 @@ Command-query separation
 @define listMembers: (/rdf:rest/:listMembers)/swap/swap rdf:first /union/i.
 pingTheSemanticWeb/rpl:parameters /:listMembers.
 
-
+dip/rpl:parameters/:listMembers.
 
 
 
@@ -139,6 +139,36 @@ pingTheSemanticWeb/rpl:parameters /:listMembers.
 	42 /id 42 /id.
 	42 /id 42.
 	42 42.
+
+
+Ripple gets recursive definitions for free ...
+there is no special trick...
+
+
+@define factorial:  /dup 0 /equal (/pop 1) (/dup 1 /sub /:factorial /mul) /ifte.
+5/:factorial.
+
+
+
+
+
+
+
+
+================================================================================
+Streams and stacks: exploring a FOAF neighborhood
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -37,15 +37,13 @@ public class Operator implements RippleValue
 
 	public String toString()
 	{
-//System.out.println( "[func of this operator is: " + func + "]" );
-		return "/" + func;
+		return "OP[" + func + "]";
 	}
 
 	public void printTo( RipplePrintStream p )
 		throws RippleException
 	{
-		p.print( "/" );
-		p.print( func );
+		p.print( rdfEquivalent );
 	}
 
 	private static RdfValue

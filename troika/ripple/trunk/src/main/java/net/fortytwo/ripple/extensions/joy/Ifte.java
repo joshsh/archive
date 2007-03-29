@@ -40,9 +40,6 @@ public class Ifte extends PrimitiveFunction
 		stack = stack.getRest();
 		b = stack.getFirst();
 		stack = stack.getRest();
-System.out.println( "elsePart = " + elsePart );
-System.out.println( "ifPart = " + ifPart );
-System.out.println( "b = " + b );
 
 		if ( null == truePrim )
 		{

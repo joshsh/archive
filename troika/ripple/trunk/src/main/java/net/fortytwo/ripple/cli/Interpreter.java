@@ -535,7 +535,10 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 	{
 		Value v = lexicon.resolveQName( nsPrefix, localName );
 
-		if ( null != v )
+		if ( null == v )
+			errorPrintStream.println( "Warning: no values resolved for " + nsPrefix + ":" + localName );
+
+		else
 			sink.put( model.getBridge().get(
 				new RdfValue( v ) ) );
 	}
