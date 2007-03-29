@@ -2,6 +2,7 @@ package net.fortytwo.ripple.extensions.joy;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -61,7 +62,7 @@ System.out.println( "b = " + b );
 		else
 			throw new RippleException( "ifte expects one of the values true, false as its third argument" );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( new RippleList( result, stack ).push( Operator.OP ) );
 	}
 }
 

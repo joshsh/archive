@@ -146,10 +146,12 @@ joy:ifte
 	rpl:parameters (
 		[
 			rdfs:label "elsePart" ;
+			rdfs:comment "this program is executed if the condition is false" ;
 			rpl:parameterType rpl:Function ;
 			rpl:isTransparent true ]
 		[
 			rdfs:label "ifPart" ;
+			rdfs:comment "this program is executed if the condition is true" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		[
@@ -158,7 +160,7 @@ joy:ifte
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "ifte" ;
-	rdfs:comment "true y x /ifte --> y; false y x /ifte --> x" .
+	rdfs:comment "true y x /ifte --> /y; false y x /ifte --> /x" .
 
 joy:not
 	a rpl:Function ;

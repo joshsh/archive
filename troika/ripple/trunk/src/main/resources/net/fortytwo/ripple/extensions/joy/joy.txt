@@ -71,9 +71,11 @@ joy:id
 joy:ifte
 ========================================
 
-true 3 4 /ifte.
-false 3 4 /ifte.
-2 3 /gt "yes" "no" /ifte.
+2 3 /gt ("yes") ("no") /ifte.
+
+2 2 true add sub /ifte.
+2 2 false add sub /ifte.
+
 
 ========================================
 joy:not
