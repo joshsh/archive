@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.misc;
+package net.fortytwo.ripple.extensions.etc;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Extension;
@@ -6,9 +6,9 @@ import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 
-public class MiscExtension extends Extension
+public class EtcExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/rpl-misc#";
+	private static String ns = "http://fortytwo.net/2007/03/ripple/etc#";
 
 	public void load( ModelConnection mc )
 		throws RippleException

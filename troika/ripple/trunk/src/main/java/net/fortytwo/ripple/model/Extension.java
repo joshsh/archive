@@ -2,9 +2,9 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 
-public abstract class Extension
+public interface Extension
 {
-	public abstract void load( ModelConnection mc )
+	public void load( ModelConnection mc )
 		throws RippleException;
 }
 

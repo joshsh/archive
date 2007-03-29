@@ -6,7 +6,7 @@ import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 
-public class StreamExtension extends Extension
+public class StreamExtension implements Extension
 {
 	private static String ns = "http://fortytwo.net/2007/03/ripple/stream#";
 

@@ -1,11 +1,11 @@
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix misc:     <http://fortytwo.net/2007/03/ripple/misc#> .
+@prefix etc:      <http://fortytwo.net/2007/03/ripple/etc#> .
 @prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
-misc:pingTheSemanticWeb
+etc:pingTheSemanticWeb
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:string ;
@@ -23,7 +23,7 @@ misc:pingTheSemanticWeb
 	rdfs:label "pingTheSemanticWeb" ;
 	rdfs:comment "" .
 
-misc:pred
+etc:pred
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -35,7 +35,7 @@ misc:pred
 	rdfs:label "pred" ;
 	rdfs:comment "consumes a Property and returns a 'predicate operator'" .
 
-misc:prim
+etc:prim
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -47,7 +47,7 @@ misc:prim
 	rdfs:label "prim" ;
 	rdfs:comment "applies a Function" .
 
-misc:sha1SumOf
+etc:sha1SumOf
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
@@ -60,7 +60,7 @@ misc:sha1SumOf
 	rdfs:label "" ;
 	rdfs:comment "" .
 
-misc:strCat
+etc:strCat
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:returnType xsd:string ;
@@ -77,7 +77,7 @@ misc:strCat
 	rdfs:label "strCat" ;
 	rdfs:comment "" .
 
-misc:swoogleIt
+etc:swoogleIt
 	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:returnType rdfs:Class ;
@@ -98,7 +98,7 @@ misc:swoogleIt
 	rdfs:label "swoogleIt" ;
 	rdfs:comment "" .
 
-misc:urlEncoding
+etc:urlEncoding
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
@@ -111,7 +111,7 @@ misc:urlEncoding
 	rdfs:label "sha1SumOf" ;
 	rdfs:comment "" .
 
-misc:urlTarget
+etc:urlTarget
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:string ;
