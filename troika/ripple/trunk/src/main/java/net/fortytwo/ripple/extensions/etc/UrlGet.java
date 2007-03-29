@@ -15,9 +15,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class UrlTarget extends PrimitiveFunction
+public class UrlGet extends PrimitiveFunction
 {
-	public UrlTarget( RdfValue v, ModelConnection mc )
+	public UrlGet( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );

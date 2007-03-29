@@ -11,8 +11,7 @@ Disco knows Swoogle:
 ContainerMembershipProperty
     uriToString (rel_swt_swt_from ("demo" swoogleIt)) hasResult listElements;
 
-"Ubuntu"
-    (search_swt ("demo" swoogleIt)) hasResult member;
+"Ubuntu" swoogle:search_swt "demo" /swoogleIt/swoogle:hasResult/bagElements.
 
 (: search_swd_ontology
     Search semantic web documents which are classified as ontologies ::::::::::)

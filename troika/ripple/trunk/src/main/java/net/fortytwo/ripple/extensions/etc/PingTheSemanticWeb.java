@@ -92,7 +92,8 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		{
 			Element child = childIter.next();
 			String s = child.getAttributeValue( "url" );
-			sink.put( new RippleList( mc.createValue( s ), stack ) );
+			sink.put( new RippleList(
+				new RdfValue( mc.createUri( s ) ), stack ) );
 		}
 	}
 }

@@ -1,3 +1,4 @@
+FIX NULL LIST -- ()
 
 
 startup scripts -- args and return values
@@ -121,14 +122,14 @@ Command-query separation
 
 
 
-@define listItems:  rdf:first (/rdf:rest/:listItems) /union/i.
+@define listMembers:  rdf:first (/rdf:rest/:listMembers) /union/i.
 
 
 
 
 @prefix : <file:///tmp/new.rdf#>.
-@define listItems: (/rdf:rest/:listItems)/swap/swap rdf:first /union/i.
-pingTheSemanticWeb/rpl:parameters /:listItems.
+@define listMembers: (/rdf:rest/:listMembers)/swap/swap rdf:first /union/i.
+pingTheSemanticWeb/rpl:parameters /:listMembers.
 
 
 

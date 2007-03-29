@@ -15,7 +15,7 @@ public class IntMathExtension implements Extension
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
 
-		// Integer-specific comparison primitives
+		// Integer comparison primitives
 		bridge.add( new IntegerGreaterThan( new RdfValue( mc.createUri( ns + "gt" ) ), mc ), mc );
 		bridge.add( new IntegerLessThan( new RdfValue( mc.createUri( ns + "lt" ) ), mc ), mc );
 

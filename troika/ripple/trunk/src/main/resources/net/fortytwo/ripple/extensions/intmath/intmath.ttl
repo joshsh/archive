@@ -7,20 +7,19 @@
 intmath:abs
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "abs" ;
-	rdfs:comment "" .
+	rdfs:comment "absolute value of x" .
 
 intmath:add
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -31,13 +30,13 @@ intmath:add
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "add" ;
-	rdfs:comment "" .
+	rdfs:comment "y + x" .
 
 intmath:sub
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -48,13 +47,13 @@ intmath:sub
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "sub" ;
-	rdfs:comment "" .
+	rdfs:comment "y - x" .
 
 intmath:mul
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -65,13 +64,13 @@ intmath:mul
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "mul" ;
-	rdfs:comment "" .
+	rdfs:comment "y * x" .
 
 intmath:div
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -82,13 +81,13 @@ intmath:div
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "div" ;
-	rdfs:comment "" .
+	rdfs:comment "y / x" .
 
 intmath:mod
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -99,13 +98,13 @@ intmath:mod
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "mod" ;
-	rdfs:comment "" .
+	rdfs:comment "y % x" .
 
 intmath:gt
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType rpl:Function ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -116,13 +115,13 @@ intmath:gt
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType rpl:Function ;
 	rdfs:label "gt" ;
-	rdfs:comment "" .
+	rdfs:comment "y > x" .
 
 intmath:lt
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType rpl:Function ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -133,5 +132,6 @@ intmath:lt
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType rpl:Function ;
 	rdfs:label "lt" ;
-	rdfs:comment "" .
+	rdfs:comment "y < x" .

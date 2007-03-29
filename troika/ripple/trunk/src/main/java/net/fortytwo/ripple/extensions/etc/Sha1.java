@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Sha1SumOf extends PrimitiveFunction
+public class Sha1 extends PrimitiveFunction
 {
 	private static final String
 		s_encoding = "UTF-8",
@@ -20,7 +20,7 @@ public class Sha1SumOf extends PrimitiveFunction
 
 	private static MessageDigest messageDigest = null;
 
-	public Sha1SumOf( RdfValue v, ModelConnection mc )
+	public Sha1( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );

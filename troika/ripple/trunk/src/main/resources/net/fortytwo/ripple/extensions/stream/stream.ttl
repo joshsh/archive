@@ -7,30 +7,38 @@
 stream:limit
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType rpl:Function ;  # not strictly true...
 	rpl:parameters (
 		[
 			rdfs:label "lim" ;
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "" ;
-	rdfs:comment "x /scrap -->" .
+	rpl:returnType rpl:Function ;  # not strictly true...
+	rdfs:label "limit" ;
+	rdfs:comment "transmits at most lim stacks" .
 
 stream:scrap
 	a rpl:Function ;
 	rpl:arity 0 ;
-	rdfs:label "" ;
-	rdfs:comment "x /scrap -->" .
+	rdfs:label "scrap" ;
+	rdfs:comment "transmits no stacks" .
 
 stream:union
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rdfs:label "" ;
-	rdfs:comment "union{x}{y} --> {x,y}" .
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "union" ;
+	rdfs:comment "transmits both x pushed to the remainder of the stack, as well as y pushed to the remainder of the stack" .
 
 stream:unique
 	a rpl:Function ;
 	rpl:arity 0 ;
-	rdfs:label "" ;
-	rdfs:comment "..." .
+	rdfs:label "unique" ;
+	rdfs:comment "transmits stacks at most once, as determined by list comparison" .

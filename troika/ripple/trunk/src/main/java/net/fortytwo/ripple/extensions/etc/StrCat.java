@@ -33,7 +33,7 @@ public class StrCat extends PrimitiveFunction
 		strB = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = strA + strB;
+		result = strB + strA;
 
 		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}

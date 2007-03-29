@@ -21,7 +21,7 @@ etc:pingTheSemanticWeb
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "pingTheSemanticWeb" ;
-	rdfs:comment "" .
+	rdfs:comment "requests a list of URIs from the 'Ping the Semantic Web' service" .
 
 etc:pred
 	a rpl:Function ;
@@ -47,23 +47,22 @@ etc:prim
 	rdfs:label "prim" ;
 	rdfs:comment "applies a Function" .
 
-etc:sha1SumOf
+etc:sha1
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
 			rdfs:label "plaintext" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "" ;
-	rdfs:comment "" .
+	rpl:returnType xsd:string ;
+	rdfs:label "sha1" ;
+	rdfs:comment "finds the sha1 hash of a string" .
 
 etc:strCat
 	a rpl:Function ;
 	rpl:arity 2 ;
-	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
 			rdfs:label "strA" ;
@@ -74,13 +73,13 @@ etc:strCat
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:string ;
 	rdfs:label "strCat" ;
-	rdfs:comment "" .
+	rdfs:comment "finds the concatenation strB+strA of two strings" .
 
 etc:swoogleIt
 	a rpl:Function ;
 	rpl:arity 3 ;
-	rpl:returnType rdfs:Class ;
 	rpl:parameters (
 		[
 			rdfs:label "key" ;
@@ -96,30 +95,30 @@ etc:swoogleIt
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "swoogleIt" ;
-	rdfs:comment "" .
+	rdfs:comment "grabs search results from the Swoogle web service" .
 
 etc:urlEncoding
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
 			rdfs:label "plaintext" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "sha1SumOf" ;
-	rdfs:comment "" .
+	rpl:returnType xsd:string ;
+	rdfs:label "urlEncoding" ;
+	rdfs:comment "finds the URL encoding of a string" .
 
-etc:urlTarget
+etc:urlGet
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
 			rdfs:label "url" ;
 			rpl:parameterType xsd:string ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "urlTarget" ;
-	rdfs:comment "" .
+	rpl:returnType xsd:string ;
+	rdfs:label "urlGet" ;
+	rdfs:comment "dereferences a URL and produces the received data as a string" .

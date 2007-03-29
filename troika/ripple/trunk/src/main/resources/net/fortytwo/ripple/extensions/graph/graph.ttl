@@ -10,19 +10,16 @@ graph:assert
 	rpl:parameters (
 		[
 			rdfs:label "obj" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent false ]
 		[
 			rdfs:label "pred" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent true ]
 		[
 			rdfs:label "subj" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "assert" ;
-	rdfs:comment "asserts the statement <subj> <pred> <obj>" .
+	rdfs:comment "asserts the statement (subj, pred, obj)" .
 
 graph:bagElements
 	a rpl:Function ;
@@ -34,8 +31,8 @@ graph:bagElements
 			rpl:parameterType rdf:Bag ;
 			rpl:isTransparent true ]
 		) ;
-	rdfs:label "" ;
-	rdfs:comment "..." .
+	rdfs:label "bagElements" ;
+	rdfs:comment "" .
 
 graph:deny
 	a rpl:Function ;
@@ -43,19 +40,16 @@ graph:deny
 	rpl:parameters (
 		[
 			rdfs:label "obj" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent false ]
 		[
 			rdfs:label "pred" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent true ]
 		[
 			rdfs:label "subj" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "deny" ;
-	rdfs:comment "revokes the statement <subj> <pred> <obj>" .
+	rdfs:comment "revokes the statement (subj, pred, obj)" .
 
 graph:equal
 	a rpl:Function ;
@@ -63,15 +57,14 @@ graph:equal
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent false ]
 		[
 			rdfs:label "y" ;
-			rpl:parameterType rdf:Property ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType rpl:Function ;
 	rdfs:label "equal" ;
-	rdfs:comment "true if arguments are equal, otherwise false" .
+	rdfs:comment "true iff arguments are equal, otherwise false" .
 
 graph:forget
 	a rpl:Function ;
@@ -82,7 +75,7 @@ graph:forget
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "forget" ;
-	rdfs:comment "revokes all statements about <subj>" .
+	rdfs:comment "revokes all statements about subj" .
 
 graph:new
 	a rpl:Function ;
@@ -93,12 +86,11 @@ graph:new
 graph:toString
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType xsd:string ;
 	rpl:parameters (
 		[
-			rdfs:label "resource" ;
-			rpl:parameterType xsd:string ;
+			rdfs:label "x" ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType xsd:string ;
 	rdfs:label "toString" ;
 	rdfs:comment "" .

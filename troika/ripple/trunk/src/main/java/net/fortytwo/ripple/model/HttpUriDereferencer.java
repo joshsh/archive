@@ -148,7 +148,6 @@ s_logger.info( "##### failed to dereference URI: " + uri.toString() );
 				Resource subject = st.getSubject();
 				if ( subject instanceof URI && !( (URI) subject ).getNamespace().equals( ns ) )
 				{
-System.out.println( "Removing statement: " + st.getSubject().toString() + " " + st.getPredicate().toString() + " " + st.getObject().toString() + " from context " + st.getContext().toString() );
 					conn.remove( st );
 					count++;
 				}
