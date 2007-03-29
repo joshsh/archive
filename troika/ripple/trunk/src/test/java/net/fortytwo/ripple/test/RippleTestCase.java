@@ -5,7 +5,7 @@ import junit.framework.AssertionFailedError;
 
 import org.openrdf.repository.Repository;
 
-import net.fortytwo.ripple.CLIExample;
+import net.fortytwo.ripple.Demo;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
@@ -126,7 +126,7 @@ public abstract class RippleTestCase extends TestCase
 		if ( null == model )
 		{
 			// Warning: we never call shutDown() on this repository.
-			Repository repository = CLIExample.createTestRepository();
+			Repository repository = Demo.createTestRepository();
 
 			model = new Model( repository, "UnitTestModel" );
 		}

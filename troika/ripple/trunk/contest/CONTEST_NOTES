@@ -162,14 +162,43 @@ Streams and stacks: exploring a FOAF neighborhood
 
 
 
+@prefix : <file:///tmp/new.rdf#>.
+
+@define opt:  id/union/i.
+5 (10 /add) /:opt.
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+@define foafStep:  /foaf:knows.
+
+@define tbl: <http://www.w3.org/People/Berners-Lee/card#i>.
+/:tbl :foafStep/:opt/unique /foaf:name.
+/:tbl (:foafStep /:opt/unique) 2 /times /foaf:name.
 
 
 
+================================================================================
+Searching and filtering in Revyu.com
+================================================================================
+
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix :      <file:///tmp/stuff.rdf#>.
+
+@define restrict:  dup/swap/dip/i id scrap /ifte.
+@define booksReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:restrict.
+
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+/:tomsReviews /:booksReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
 
 
 
+ /:tbl (:foafStep /:opt/unique) 2 /times (/foaf:name "Libby Miller" /equal) /:restrict.
+ /:tbl (:foafStep /:opt/unique) 1 /times (/foaf:name "Dan Connolly" /equal) /:restrict.
 
-
+/:tbl :foafStep/:opt/unique (/foaf:name "Edd Dumbill" /equal)/:restrict.
 
 
 ================================================================================
@@ -302,3 +331,89 @@ equivalent:
 
 
 
+
+
+================================================================================
+Starting an interpreter session
+================================================================================
+
+In *nix, you can start the interpreter by executing the script ripple.sh:
+
+    $ ./ripple.sh
+
+...or on Windows, by launching Java directly:
+
+    $ java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+
+================================================================================
+
+================================================================================
+
+Ideally, Ripple is supposed attach to a persistent triple store, perform queries and transformations on the store, then detach from it.  As it is, the Sesame 2 back end 
+
+
+
+Note: depending on the data you're dealing with (for instance, when loading a large RDF dump), you may 
+java -Xmx512M -DentityExpansionLimit=150000 target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+================================================================================
+
+================================================================================
+
+
+Built-in graphs
+
+
+
+
+
+
+
+
+================================================================================
+Implementation
+================================================================================
+
+Ripple is written in Java and uses Sesame 2 (beta) as its RDF framework.  The command-line interface relies on ANTLR for lexer/parser generation and JLine for command history and tab completion.  The project is built with Maven and is distributed under an open source license (see License.txt).
+
+To build Ripple from scratch, execute "mvn install" from the root directory containing pom.xml.
+
+
+================================================================================
+Bugs
+================================================================================
+
+Oh yes, there will be bugs.  Please report them to parcour@gmail.com until I
+set up an issue tracker for Ripple.
+
+
+Last edited by Joshua Shinavier on Mar. 29, 2007
+
+
+
+
+
+
+
+
+
+
+many important pieces of the query engine and interpreter are mere days or hours old.  
+
+implementation
+	Java
+	Sesame
+	JLine
+	(Log4j)
+	Maven
+		Javadoc
+		Checkstyle
+		JUnit
+		Cobertura
+	build from source
+	usage
+		launching the interpreter
+		log files

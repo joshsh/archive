@@ -10,50 +10,6 @@ public class RippleException extends Exception
 	private final static Logger s_logger
 		= Logger.getLogger( RippleException.class );
 
-/*
-	protected static int
-		DEBUG = 1,
-		INFO = 2,
-		WARN = 3,
-		ERROR = 4;
-
-	protected RippleException( Throwable t, int logLevel )
-	{
-		try
-		{
-			boolean printTrace = false;
-
-			switch ( logLevel )
-			{
-				case DEBUG:
-
-				case INFO:
-
-				case WARN:
-
-				case ERROR:
-					printTrace = true;
-			}
-
-			if ( printTrace )
-			{
-				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				PrintStream ps = new PrintStream( os );
-				t.printStackTrace( ps );
-				s_logger.error( os.toString() );
-
-				System.err.println( t.toString() );
-			}
-		}
-
-		catch ( Throwable secondary )
-		{
-			System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
-			secondary.printStackTrace( System.err );
-		}
-	}
-*/
-
 	public RippleException( Throwable t )
 	{
 		super( t.toString() );

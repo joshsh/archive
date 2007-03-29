@@ -32,9 +32,9 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class CLIExample
+public class Demo
 {
-	private final static Logger s_logger = Logger.getLogger( CLIExample.class );
+	private final static Logger s_logger = Logger.getLogger( Demo.class );
 
 	public static Repository createTestRepository()
 		throws RippleException
