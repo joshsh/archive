@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
 
-import net.fortytwo.ripple.ThreadWrapper;
+import net.fortytwo.ripple.util.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
@@ -33,6 +33,8 @@ import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.GraphQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
@@ -1347,6 +1349,33 @@ System.out.println( "putting Resource: " + r );
 			reset();
 			throw new RippleException( t );
 		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	// e.g. CONSTRUCT * FROM {x} p {y}
+	public Collection<Statement> graphQuery( final String queryStr )
+		throws RippleException
+	{
+		Collection<Statement> statements = new ArrayList<Statement>();
+
+		try
+		{
+			GraphQueryResult result = repoConnection.prepareGraphQuery(
+				QueryLanguage.SERQL, queryStr ).evaluate();
+
+			while ( result.hasNext() )
+				statements.add( result.next() );
+
+			result.close();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+
+		return statements;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

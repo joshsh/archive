@@ -1,4 +1,4 @@
-package net.fortytwo.ripple;
+package net.fortytwo.ripple.tools;
 
 public class XPComTest {
 	static public String getGreetings() {

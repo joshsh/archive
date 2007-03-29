@@ -266,20 +266,13 @@ System.out.println( "########## updating completors" );
 		if ( !readLine() )
 			return;
 
-// FIXME: this appears to work, but I need to go back and make sure it will ALWAYS work.
+// TODO: revisit parser error recovery
 		while ( true )
 		{
-System.out.println( "--- 1 ---" );
-			// NOTE: I didn't find a "reset" method in the generated lexer or
-			// parser, so I'm assuming that we need to create a new lexer and
-			// parser instance once a parsing error puts them in a weird
-			// state (unless we want to go to the trouble of recovering from
-			// it, at any rate).
 			RippleLexer lexer = new RippleLexer( writeIn );
 			lexer.initialize( this );
 			RippleParser parser = new RippleParser( lexer );
 			parser.initialize( this );
-System.out.println( "--- 2 ---" );
 
 			try
 			{
@@ -306,7 +299,6 @@ System.out.println( "--- 2 ---" );
 				// The user has instructed the parser to quit.
 				break;
 			}
-System.out.println( "--- 3 ---" );
 		}
 	}
 
@@ -693,7 +685,7 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 		try
 		{
 			mc = new ModelConnection( model, "for evaluateGraphQuery" );
-			Iterator<Statement> stmtIter = model.graphQuery( query ).iterator();
+			Iterator<Statement> stmtIter = mc.graphQuery( query ).iterator();
 
 			printStream.println( "" );
 			printStream.print( stmtIter );

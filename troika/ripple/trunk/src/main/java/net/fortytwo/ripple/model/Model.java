@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-import net.fortytwo.ripple.UrlFactory;
+import net.fortytwo.ripple.util.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
@@ -26,9 +26,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.Repository;
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
@@ -61,16 +58,22 @@ public Dereferencer getDereferencer()
 		throws RippleException
 	{
 		String
-			rplNs           = "http://fortytwo.net/2007/03/ripple/schema#",
-			rplIntMathNs    = "http://fortytwo.net/2007/03/ripple/intmath#",
-			rplJoyNs        = "http://fortytwo.net/2007/03/ripple/joy#",
-			rplMiscNs       = "http://fortytwo.net/2007/03/ripple/misc#",
-			rplStreamNs       = "http://fortytwo.net/2007/03/ripple/stream#",
-			rplGraphNs        = "http://fortytwo.net/2007/03/ripple/graph#";
+			rplNs         = "http://fortytwo.net/2007/03/ripple/schema#",
+			rplGraphNs    = "http://fortytwo.net/2007/03/ripple/graph#",
+			rplIntMathNs  = "http://fortytwo.net/2007/03/ripple/intmath#",
+			rplJoyNs      = "http://fortytwo.net/2007/03/ripple/joy#",
+			rplMiscNs     = "http://fortytwo.net/2007/03/ripple/misc#",
+			rplStreamNs   = "http://fortytwo.net/2007/03/ripple/stream#";
 
 		Hashtable<String, String> urlMap = new Hashtable<String, String>();
+
 		urlMap.put( rplNs,
-			net.fortytwo.ripple.Ripple.class.getResource( "ripple.ttl" ) + "#" );
+			net.fortytwo.ripple.Ripple.class.getResource(
+				"ripple.ttl" ) + "#" );
+
+		urlMap.put( rplGraphNs,
+			net.fortytwo.ripple.extensions.graph.GraphExtension.class.getResource(
+				"graph.ttl" ) + "#" );
 		urlMap.put( rplIntMathNs,
 			net.fortytwo.ripple.extensions.intmath.IntMathExtension.class.getResource(
 				"intmath.ttl" ) + "#" );
@@ -79,10 +82,7 @@ public Dereferencer getDereferencer()
 				"joy.ttl" ) + "#" );
 		urlMap.put( rplMiscNs,
 			net.fortytwo.ripple.extensions.misc.MiscExtension.class.getResource(
-				"ripple-misc.ttl" ) + "#" );
-		urlMap.put( rplGraphNs,
-			net.fortytwo.ripple.extensions.graph.GraphExtension.class.getResource(
-				"graph.ttl" ) + "#" );
+				"misc.ttl" ) + "#" );
 		urlMap.put( rplStreamNs,
 			net.fortytwo.ripple.extensions.stream.StreamExtension.class.getResource(
 				"stream.ttl" ) + "#" );
@@ -109,11 +109,11 @@ public Dereferencer getDereferencer()
 
 		try
 		{
-			( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.graph.GraphExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.intmath.IntMathExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.joy.JoyExtension() ).load( mc );
+			( new net.fortytwo.ripple.extensions.misc.MiscExtension() ).load( mc );
+			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
 		}
 
 		catch ( RippleException e )
@@ -141,7 +141,8 @@ public Repository getRepository()
 	public void load( URL url )
 		throws RippleException
 	{
-System.out.println( "loading from URL: " + url );
+		s_logger.info( "loading Model from URL: " + url );
+
 		ModelConnection mc = new ModelConnection( this, "for Model load()" );
 
 		mc.addGraph( url );
@@ -200,6 +201,8 @@ System.out.println( "loading from URL: " + url );
 			last = null;
 			for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
 			{
+				s_logger.debug( "writing success memos" );
+
 				// Note: apparently it's important (in Sesame 2 beta) to add an
 				//       edge TO a blank node before adding edges FROM the blank
 				//       node, otherwise you get a disjointed graph.  I don't
@@ -224,6 +227,8 @@ System.out.println( "loading from URL: " + url );
 			last = null;
 			for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
 			{
+				s_logger.debug( "writing failure memos" );
+
 				RdfValue cur = new RdfValue( mc.createBNode() );
 				if ( null == last )
 				{
@@ -371,34 +376,6 @@ System.out.println( "loading from URL: " + url );
 		}
 
 		return contexts;
-	}
-
-	public Collection<Statement> graphQuery( final String queryStr )
-		throws RippleException
-	{
-		Collection<Statement> statements = new ArrayList<Statement>();
-
-		try
-		{
-			RepositoryConnection con = repository.getConnection();
-			GraphQueryResult result = con.prepareGraphQuery(
-				QueryLanguage.SERQL, queryStr ).evaluate();
-//                QueryLanguage.SERQL, "CONSTRUCT * FROM {x} p {y}");
-
-// TODO: can I expect the Statements to remain valid after the connection is closed?
-			while ( result.hasNext() )
-				statements.add( result.next() );
-
-			result.close();
-			con.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-
-		return statements;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
+// TODO
 public class FunctionTypeAnnotation
 {
 	class Param
@@ -39,7 +40,7 @@ public class FunctionTypeAnnotation
 		rplArityUri,
 		rplParameterUri,
 		rplParameterListUri,
-		rplParameterTransparencyUri,
+		rplIsTransparentUri,
 		rplParameterTypeUri,
 		rplParametersUri,
 		rplReturnTypeUri;
@@ -60,12 +61,12 @@ public class FunctionTypeAnnotation
 
 		boolean transparency = mc.booleanValue(
 			mc.castToLiteral(
-				mc.findUniqueProduct( head, rplParameterTransparencyUri ) ) );
+				mc.findUniqueProduct( head, rplIsTransparentUri ) ) );
 
 		return new Param( label, type, comment, transparency );
 	}
 */
-	private static String rplNs = "http://fortytwo.net/2007/03/rpl#";
+	private static String rplNs = "http://fortytwo.net/2007/03/ripple/schema#";
 
 	public FunctionTypeAnnotation( final RdfValue self, ModelConnection mc )
 		throws RippleException
@@ -74,12 +75,12 @@ public class FunctionTypeAnnotation
 		label = "";
 		comment = "";
 
-		rplParametersUri             = new RdfValue( mc.createUri( rplNs + "parameters" ) );
-		rplReturnTypeUri             = new RdfValue( mc.createUri( rplNs + "returnType" ) );
-		rplParameterUri              = new RdfValue( mc.createUri( rplNs + "Parameter" ) );
-		rplParameterListUri          = new RdfValue( mc.createUri( rplNs + "ParameterList" ) );
-		rplParameterTypeUri          = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
-		rplParameterTransparencyUri  = new RdfValue( mc.createUri( rplNs + "parameterTransparency" ) );
+		rplParametersUri     = new RdfValue( mc.createUri( rplNs + "parameters" ) );
+		rplReturnTypeUri     = new RdfValue( mc.createUri( rplNs + "returnType" ) );
+		rplParameterUri      = new RdfValue( mc.createUri( rplNs + "Parameter" ) );
+		rplParameterListUri  = new RdfValue( mc.createUri( rplNs + "ParameterList" ) );
+		rplParameterTypeUri  = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
+		rplIsTransparentUri  = new RdfValue( mc.createUri( rplNs + "isTransparent" ) );
 
 // Hack: this merely forces the model to dereference the primitive's URI so it
 //       shows up in the Lexicon.

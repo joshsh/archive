@@ -1,7 +1,7 @@
 package net.fortytwo.ripple.extensions.joy;
 
-import net.fortytwo.ripple.Extension;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.Extension;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;

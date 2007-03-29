@@ -199,13 +199,13 @@ FooComponent.prototype.initialize = function (java, trace) {
          *  Test out a static method
          */
         this._trace("Greetings: " + 
-            this._packages.getClass("net.fortytwo.ripple.XPComTest").m("getGreetings")()
+            this._packages.getClass("net.fortytwo.ripple.tools.XPComTest").m("getGreetings")()
         );
         
         /*
          *  Create a sample Java object
          */
-        this._test = this._packages.getClass("net.fortytwo.ripple.XPComTest").n(42);
+        this._test = this._packages.getClass("net.fortytwo.ripple.tools.XPComTest").n(42);
          
         this._initialized = true;
     } catch (e) {

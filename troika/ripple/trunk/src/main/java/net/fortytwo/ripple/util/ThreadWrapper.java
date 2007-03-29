@@ -1,4 +1,6 @@
-package net.fortytwo.ripple;
+package net.fortytwo.ripple.util;
+
+import net.fortytwo.ripple.RippleException;
 
 public abstract class ThreadWrapper
 {

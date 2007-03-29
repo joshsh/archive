@@ -10,96 +10,14 @@ import org.apache.log4j.PropertyConfigurator;
 
 public class Ripple
 {
-	public enum ExpressionOrder
+	public static String getName()
 	{
-		DIAGRAMMATIC        ( "diagrammatic" ),
-		ANTIDIAGRAMMATIC    ( "antidiagrammatic" );
-
-		private String name;
-		private  ExpressionOrder( String n )
-		{
-			name = n;
-		}
-
-		public static ExpressionOrder find( final String name )
-			throws RippleException
-		{
-			for ( ExpressionOrder x : ExpressionOrder.values() )
-				if ( x.name.equals( name ) )
-					return x;
-
-			String msg = "unknown ExpressionOrder: '" + name + "'";
-			throw new RippleException( msg );
-		}
+		return "Ripple";
 	}
 
-	public enum ExpressionAssociativity
+	public static String getVersion()
 	{
-		LEFT                ( "left" ),
-		RIGHT               ( "right" );
-
-		private String name;
-		private  ExpressionAssociativity( String n )
-		{
-			name = n;
-		}
-
-		public static ExpressionAssociativity find( final String name )
-			throws RippleException
-		{
-			for ( ExpressionAssociativity x : ExpressionAssociativity.values() )
-				if ( x.name.equals( name ) )
-					return x;
-
-			String msg = "unknown ExpressionAssociativity: '" + name + "'";
-			throw new RippleException( msg );
-		}
-	}
-
-	public enum EvaluationOrder
-	{
-		EAGER   ( "eager" ),
-		LAZY    ( "lazy" );
-
-		private String name;
-
-		private EvaluationOrder( String name )
-		{
-			this.name = name;
-		}
-
-		public static EvaluationOrder lookup( String name )
-			throws RippleException
-		{
-			for ( EvaluationOrder order : EvaluationOrder.values() )
-				if ( order.name.equals( name ) )
-					return order;
-
-			throw new RippleException( "unknown EvaluationOrder: " + name );
-		}
-	}
-
-	public enum EvaluationStyle
-	{
-		APPLICATIVE     ( "applicative" ),
-		COMPOSITIONAL   ( "compositional" );
-
-		private String name;
-
-		private EvaluationStyle( String name )
-		{
-			this.name = name;
-		}
-
-		public static EvaluationStyle lookup( String name )
-			throws RippleException
-	{
-			for ( EvaluationStyle style : EvaluationStyle.values() )
-				if ( style.name.equals( name ) )
-					return style;
-
-			throw new RippleException( "unknown EvaluationStyle: " + name );
-		}
+		return "0.1";
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -326,14 +244,98 @@ public class Ripple
 		}
 	}
 
-	public static String getName()
+	////////////////////////////////////////////////////////////////////////////
+
+	public enum ExpressionOrder
 	{
-		return "Ripple";
+		DIAGRAMMATIC      ( "diagrammatic" ),
+		ANTIDIAGRAMMATIC  ( "antidiagrammatic" );
+
+		private String name;
+		private  ExpressionOrder( String n )
+		{
+			name = n;
+		}
+
+		public static ExpressionOrder find( final String name )
+			throws RippleException
+		{
+			for ( ExpressionOrder x : ExpressionOrder.values() )
+				if ( x.name.equals( name ) )
+					return x;
+
+			String msg = "unknown ExpressionOrder: '" + name + "'";
+			throw new RippleException( msg );
+		}
 	}
 
-	public static String getVersion()
+	public enum ExpressionAssociativity
 	{
-		return "0.1";
+		LEFT   ( "left" ),
+		RIGHT  ( "right" );
+
+		private String name;
+		private  ExpressionAssociativity( String n )
+		{
+			name = n;
+		}
+
+		public static ExpressionAssociativity find( final String name )
+			throws RippleException
+		{
+			for ( ExpressionAssociativity x : ExpressionAssociativity.values() )
+				if ( x.name.equals( name ) )
+					return x;
+
+			String msg = "unknown ExpressionAssociativity: '" + name + "'";
+			throw new RippleException( msg );
+		}
+	}
+
+	public enum EvaluationOrder
+	{
+		EAGER  ( "eager" ),
+		LAZY   ( "lazy" );
+
+		private String name;
+
+		private EvaluationOrder( String name )
+		{
+			this.name = name;
+		}
+
+		public static EvaluationOrder lookup( String name )
+			throws RippleException
+		{
+			for ( EvaluationOrder order : EvaluationOrder.values() )
+				if ( order.name.equals( name ) )
+					return order;
+
+			throw new RippleException( "unknown EvaluationOrder: " + name );
+		}
+	}
+
+	public enum EvaluationStyle
+	{
+		APPLICATIVE    ( "applicative" ),
+		COMPOSITIONAL  ( "compositional" );
+
+		private String name;
+
+		private EvaluationStyle( String name )
+		{
+			this.name = name;
+		}
+
+		public static EvaluationStyle lookup( String name )
+			throws RippleException
+		{
+			for ( EvaluationStyle style : EvaluationStyle.values() )
+				if ( style.name.equals( name ) )
+					return style;
+
+			throw new RippleException( "unknown EvaluationStyle: " + name );
+		}
 	}
 }
 

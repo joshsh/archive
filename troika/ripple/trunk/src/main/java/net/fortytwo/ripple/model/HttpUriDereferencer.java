@@ -10,7 +10,7 @@ import java.util.LinkedHashSet;
 
 import jline.Completor;
 
-import net.fortytwo.ripple.UrlFactory;
+import net.fortytwo.ripple.util.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 
