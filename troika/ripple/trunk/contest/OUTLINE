@@ -1,3 +1,8 @@
+http://fortytwo.net/2007/03/ripple/demo#booksReviewsOnly
+demo:bookReviewsOnly.
+
+
+
 linked data
 	dereferenceable URIs
 	forward traversal
@@ -108,65 +113,525 @@ applications
 
 
 
-# qualified name
-rdfs:Class.
-
-# keyword
-swap.
-
-# Integer-typed literal
-"42"^^xsd:integer.
-
-# String-typed literal with a language tag.
-"foo"@en.
-
-# Language tag and data type are not mutually exclusive, but if both are
-# present, the language tag will be ignored.
-"42"@en^^xsd:integer.
 
 
-# Blank node named "foo".
-_:foo.
-
-
-# The RDFS namespace.
-rdfs:.
-
-# The default namespace.
-@prefix : <http://example.org/foo#>.
-:.
 
 
 ================================================================================
-Primitives
+Ripple 
 ================================================================================
 
-joy
-intmath
-graph
-misc
 
 
 
 
 
-Graph Primitives
-========================================
+
+================================================================================
+Launching the interpreter
+================================================================================
+
+In *nix, you can start the interpreter by executing the script ripple.sh:
+
+    $ ./ripple.sh
+
+...or on Windows, by launching Java directly:
+
+    $ java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+================================================================================
+Directives and queries
+================================================================================
+
+At the prompt, you may enter either a directive, for instance:
+
+    >> @export rpl:  "rpl.rdf".
+
+...or a query, for instance:
+
+    >>  rdfs:Property.
+
+A directive is a command which performs a task (the one above writes a portion
+the triple store to a file).  A query is an expression which is passed to the
+query processor for evaluation, and may reduce to any number of values.  For
+example, a query for a constant value has only one possible result:
+
+    >>  42.
+
+Other queries are multivalued in nature, for instance:
+
+    >>  <http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows.
+
+This expression represents all of the individuals foaf:known by Tim Berners-Lee,
+and has quite a number of values.  Ripple's compositional plumbing will
+distribute a further relation over each of those values, so for instance the
+expression:
+
+    >>  <http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows/foaf:name.
+
+...retrieves all of the names of all of the individuals foaf:known by TBL.  You
+will notice that 
+
+
+================================================================================
+Syntax
+================================================================================
+
+Ripple is very close to Turtle[1] in its lexical syntax, and closer to Joy[2]
+and similar languages in the 
+It also shares a library of primitive functions with Joy.
+
+
+
+Qualified names have a prefix and a local part:
+
+    >>  rdfs:Class.
+
+Either or both of the prefix and local part may be empty.  The default namespace
+can always be represented as:
+
+    >>  :.
+
+Keywords are URIs whose local names may be used without a prefix:
+
+    >>  swap.
+
+Integers (doubles are on the To Do list):
+
+    >>  -1.
+
+String literals (with optional language tag):
+
+    >>  "English"@en.
+
+Typed literals:
+
+    >>  "3.14"^^xsd:double.
+
+Blank nodes by ID:
+
+    >>  _:foo.
+
+
+
+
+
+[1] http://www.dajobe.org/2004/01/turtle/
+[2] http://www.latrobe.edu.au/philosophy/phimvt/joy.html
+
+
+================================================================================
+Directives
+================================================================================
+
+@prefix --
+
+@define --
+
+@undefine --
+
+
+
+
+================================================================================
+Postfix expressions
+================================================================================
+
+Ripple programs are expressed in postfix notation, so that operands always
+precede operations.  Computation occurs 
+
+
+
+  These primitives are so arranged that the operands have the same
+order as they would in the corresponding infix expressions, e.g. "14 - 9":
+
+    >>  14 9 /sub.
+
+These expressions are equivalent:
+
+    >>  60 60 24 /mul/mul.
+    >>  60 60 /mul 24 /mul.
+
+
+Ripple defines a few arithmetic primitives in the namespace:
+    http://fortytwo.net/2007/03/ripple/intmath#
+To get a list of them, type
+    >>  intmath:
+followed by a tab character.  Since all primitives are keywords, you can use
+them with or without the namespace prefix:
+
+    >>  2 3 /add.
+
+
+
+
+
+
+================================================================================
+Everything is a List
+================================================================================
+
+
+
+================================================================================
+Loading and saving data sets
+================================================================================
+
+Ideally, Ripple is supposed attach to a persistent triple store, perform queries and transformations on the store, then detach from it.  
+
+
+
+Note: depending on the data you're dealing with (for instance, when loading a large RDF dump), you may 
+java -Xmx512M -DentityExpansionLimit=150000 target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+
+================================================================================
+Keywords
+================================================================================
+
+Besides
+
+
+
+================================================================================
+Fun with stacks
+================================================================================
+
+Ripple implements a subset of Joy's
+
+Can you tell what this will do?
+
+
+
+365 /dup 7 /div
+
+365 7   
+
+
+
+
+
+================================================================================
+Recursion
+================================================================================
+
+
+    >>  @define factorial:  /dup 0 /equal (/pop 1) (/dup 1 /sub /:factorial /mul) /ifte.
+
+    >>  5/:factorial.
+
+
+
+
+
+
+
+Built-in graphs
+
+
+
+
+================================================================================
+Linked data
+================================================================================
+
+Ripple's command-line tool behaves a bit like a web browser in that 
+
+For simple queries, Ripple's command-line tool behaves like a 
+
+
+Path expressions in Ripple take the form of 
+
+    >>  @prefix owl:  <http://www.w3.org/2002/07/owl#>.
+    >>  <http://dbpedia.org/resource/Berlin> /owl:sameAs.
+
+
+
+    >>  @prefix geo:  <http://www.geonames.org/ontology#>.
+
+
+<http://dbpedia.org/resource/Berlin> /owl:sameAs (geo:parentFeature /:opt) 5/times /geo:name.
+
+
+
+
+
+Note: this particular selection of Joy primitives is by no means final.
+
+
+
+
+
+Why?  Because that's what I needed at the moment I wrote them
+
+
+
+================================================================================
+From a walk to a crawl
+================================================================================
+
+
+
+
+
+================================================================================
+From stacks to streams: exploring a FOAF neighborhood
+================================================================================
 
 @prefix : <file:///tmp/new.rdf#>.
+
+@define opt:  id/union/i.
+5 (10 /add) /:opt.
+
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 
-@define Arthur: /new
-    rdfs:type foaf:Person /assert
-    foaf:name "Arthur Dent" /assert.
+@define foafStep:  /foaf:knows.
 
-/:Arthur
-    foaf:name "Arthur Dent" /deny
-    foaf:name "Arthur P. Dent" /assert.
+@define tbl: <http://www.w3.org/People/Berners-Lee/card#i>.
+/:tbl :foafStep/:opt/unique /foaf:name.
+/:tbl (:foafStep /:opt/unique) 2 /times /foaf:name.
 
-@undefine Arthur.
 
-/:Arthur /forget.
+================================================================================
+Searching and filtering in Revyu.com
+================================================================================
+
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix :      <file:///tmp/stuff.rdf#>.
+
+@define restrict:  dup/swap/dip/i id scrap /ifte.
+@define booksReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:restrict.
+
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+/:tomsReviews /:booksReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
+
+
+
+ /:tbl (:foafStep /:opt/unique) 2 /times (/foaf:name "Libby Miller" /equal) /:restrict.
+ /:tbl (:foafStep /:opt/unique) 1 /times (/foaf:name "Dan Connolly" /equal) /:restrict.
+
+/:tbl :foafStep/:opt/unique (/foaf:name "Edd Dumbill" /equal)/:restrict.
+
+
+================================================================================
+Graph primitives
+================================================================================
+
+In the graph: namespace you'll find a list of primitives which might end up
+being useful for graph transformations.  The nullary primitive graph:new creates
+a new blank node, to which we can then attach statements using graph:assert
+
+    >>  @define Arthur: /new
+    >>      rdfs:type foaf:Person /assert
+    >>      foaf:name "Arthur Dent" /assert.
+
+To remove statements from the graph, use graph:deny
+
+    >>  /:Arthur
+    >>      foaf:name "Arthur Dent" /deny
+    >>      foaf:name "Arthur P. Dent" /assert.
+
+These three functions should be enough to perform all manner of operations on
+linked data structures.  However, it's not in the spirit of a functional
+language to alter state without some sort of guarantee that ............................
+
+To remove all statements about a particular subject (as with @undefine) and
+additionally erase it from the cache, use graph:forget
+
+    >>  /:Arthur /forget.
+
+This function is particularly offensive because it has a global effect on
+the graph, but is useful as a trick to "refresh" the graph with respect to a
+Resource which has either failed to resolve properly or may be out of date
+with its source.
+
+
+================================================================================
+Implementation
+================================================================================
+
+Ripple is written in Java and uses Sesame 2 (beta) as its RDF framework.  The command-line interface relies on ANTLR for lexer/parser generation and JLine for command history and tab completion.  The project is built with Maven and is distributed under an open source license (see License.txt).
+
+To build Ripple from scratch using Maven, execute "mvn install" from the
+directory containing pom.xml.
+
+
+================================================================================
+Bugs
+================================================================================
+
+Please report them to parcour@gmail.com.
+
+Some known issues include:
+* Literals are not always compared properly, so (2 2 /equal) or
+  ("foo" "foo" /equal) is sometimes false.
+* the dereferencer is dumb enough to try and resolve mailto: and other
+  non-dereferenceable URIs, and complain when it fails
+* namespace prefix collisions are handled poorly (Sesame bug fixed in trunk)
+* interpreter hangs on @quit after @saveas, or at least it did once
+
+
+Last edited by Joshua Shinavier on Mar. 29, 2007
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+Notes on Ripple Compared with Joy
+================================================================================
+
+Ripple takes a slightly different approach to quotation than Joy does.  In Ripple, programs are quoted by default, 
+
+	2 dup
+
+	2 /dup
+
+
+As in Joy, there are two possible kinds of objects on a stack: passive ones, which are simply treated as data structures, and active ones, which are executed as programs.  For instance:
+
+    42
+
+is a passive object in both Joy and Ripple, while
+
+    dup
+
+and
+
+    /dup
+
+are active objects in Joy and Ripple, respectively.  
+
+
+compositional pipeline
+
+Ripple ... is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor.  Its distinguishing features are 
+
+multivalued nature of RDF relations
+
+
+
+
+The difference in syntax reflects a different attitude towards quotations: in Joy, ~objects are active by default.  To make them passive, you must put them in a quotation, like this:
+
+    [dup]
+
+In Ripple, ~objects are passive by default, so there's less need for explicit quotation:
+
+    dup
+
+On the other hand, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
+
+    http://fortytwo.net/2007/03/ripple/schema#op
+
+When this symbol is encountered at the head of a program, it has the effect of making the preceding symbol active according to its type:
+* If the argument is an List, it is executed as a program
+* If the argument is a Function, the stack is first normalized to a depth equal to the function's arity, then the function is applied to the result
+* If the argument is a Property, it is applied as a unary function which maps subjects to objects
+* Any other type of argument effectively becomes an active nullary function with no output
+
+
+
+    2 dup op
+
+which may be abbreviated as
+
+    2 /dup
+
+
+
+
+
+
+* If it i
+
+
+	[2 5 3]  0  [+]  fold
+
+	(2 5 3) 0 add /fold.
+
+	(2 5 3) 0 add fold op.
+
+
+
+ whereas in Joy you would enclose a program in a quotation in order to pass it as an argument to a combinator
+
+
+
+is not reduced at all
+	42 /id 42.
+	42 /id 42 42.
+
+
+
+primitive functions become keywords in the front-end grammar
+	type ">>  dup." --> see that it's the same as joy:dup
+
+
+
+does not yield a list view:
+	concatenateStrings/rpl:parameters.
+
+
+
+
+4 >>  2 dup 3 /dip.
+
+rdf:_1  (2 joy:dup /net.fortytwo.ripple.model.Op@1e4457d 3)
+
+
+
+
+equivalent:
+
+  2 /dup.
+  2 /joy:dup.
+  2 /<http://fortytwo.net/2007/03/ripple/joy#dup>.
+  2 dup /i.
+
+  2 dup op.
+  2 dup rpl:op.
+  2 dup <http://fortytwo.net/2007/03/ripple#op>.
+
+
+
+
+
+
+@define trivial:  /.
+
+
+
+
+2 dup rpl:op.
+
+
+
+
+
+
+
 
 
 
