@@ -4,7 +4,32 @@
 Introduction
 ================================================================================
 
-Ripple is a programming language expressed as RDF lists.  
+Ripple is a scripting language expressed as RDF lists.  It combines a minimal, point-free syntax 
+
+
+
+
+
+
+
+Conclusion and Future Work
+
+Ripple is an exploratory undertaking, which is to say that I have only the vaguest notion of where it will go from here.
+
+  The motivation for Ripple stems from the observation that the Semantic Web, in particular the linked data web, is growing
+
+... where ... from here.
+
+safe
+...and let the best program win.
+
+I have other tools 
+
+
+
+
+
+
 
 "point-free"
 curried

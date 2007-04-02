@@ -1,3 +1,4 @@
+cd /tmp
 rm -rf /tmp/demo
 mkdir /tmp/demo
 cd /tmp/demo
@@ -10,6 +11,7 @@ rm -rf `find -name .svn`
 rm NOTES
 rm REFACTORING
 rm TODO
+mvn install
 
 
 
