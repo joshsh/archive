@@ -184,8 +184,6 @@ public class Lexicon extends Observable implements Observer
 	private void updateMaps()
 		throws RippleException
 	{
-System.out.println( "################# Rebuilding dictionaries." );
-
 		prefixToNamespaceMap = new Hashtable<String, String>();
 		namespaceToPrefixMap = new Hashtable<String, String>();
 		qNamesCollection = new ArrayList<String>();

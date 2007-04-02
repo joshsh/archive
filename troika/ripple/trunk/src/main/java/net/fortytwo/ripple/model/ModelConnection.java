@@ -328,8 +328,6 @@ public class ModelConnection
 	{
 		Resource srcResource = castToResource( src.getRdfValue() );
 		Resource destResource = castToResource( dest.getRdfValue() );
-System.out.println( "srcResource = " + srcResource );
-System.out.println( "destResource = " + destResource );
 
 		try
 		{
@@ -345,12 +343,9 @@ System.out.println( "destResource = " + destResource );
 			for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
 			{
 				Statement st = iter.next();
-System.out.println( "reading statement: (" + st.getSubject() + ", " + st.getPredicate() + ", " + st.getObject() + ")" ); System.out.flush();
-System.out.println( "adding statement: (" + destResource + ", " + st.getPredicate() + ", " + st.getObject() + ")" ); System.out.flush();
+
 				repoConnection.add( destResource, st.getPredicate(), st.getObject() );
 //                repoConnection.add( RDF.NIL, RDF.TYPE, RDF.LIST );
-System.out.println( "done." );
-System.out.flush();
 			}
 		}
 
@@ -359,7 +354,6 @@ System.out.flush();
 			reset();
 			throw new RippleException( t );
 		}
-System.out.println( "done" );
 	}
 
 	public void removeStatementsAbout( final URI subj )
@@ -376,10 +370,7 @@ System.out.println( "done" );
 			stmtIter.close();
 
 			for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
-{
-System.out.println( "removing statement" );
 				repoConnection.remove( iter.next() );
-}
 		}
 
 		catch ( Throwable t )
@@ -875,7 +866,7 @@ System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType
 System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
 */
 		String contentType = urlConn.getContentType();
-s_logger.info( "######## contentType = " + contentType );
+		s_logger.debug( "contentType = " + contentType );
 
 		String file = urlConn.getURL().getFile();
 		String ext;
@@ -888,7 +879,7 @@ s_logger.info( "######## contentType = " + contentType );
 				? file.substring( lastDot + 1 )
 				: null;
 		}
-s_logger.info( "######## ext = " + ext );
+		s_logger.debug( "extension = " + ext );
 
 		// Primary content type rules.
 		if ( null != contentType )
@@ -1048,7 +1039,7 @@ s_logger.info( "######## ext = " + ext );
 		{
 			urlConn = url.openConnection();
 			prepareUrlConnectionForRdfRequest( urlConn );
-showUrlConnection( urlConn );
+//showUrlConnection( urlConn );
 		}
 
 		catch ( java.io.IOException e )
@@ -1125,7 +1116,6 @@ showUrlConnection( urlConn );
 			( ( null == context ) ? "" : " in context " + context.toString() ) );
 
 		boolean verifyData = true;
-s_logger.info( "######## dereferencing graph at URL: " + url );
 
 		URLConnection urlConn = openUrlConnection( url );
 		InputStream response = null;
@@ -1134,7 +1124,7 @@ s_logger.info( "######## dereferencing graph at URL: " + url );
 		if ( null == format )
 			return;
 
-s_logger.info( "####### Guessed format is " + format.getName() );
+		s_logger.debug( "guessed format is " + format.getName() );
 
 		try
 		{
@@ -1158,8 +1148,7 @@ s_logger.info( "####### Guessed format is " + format.getName() );
 		}
 
 		close( response );
-
-s_logger.info( "####### graph imported without errors" );
+		s_logger.debug( "graph imported without errors" );
 
 		model.touch();
 	}
@@ -1222,7 +1211,6 @@ s_logger.info( "####### graph imported without errors" );
 			reset();
 			throw new RippleException( t );
 		}
-System.out.println( "########################### Count = " + count );
 		return count;
 	}
 
@@ -1247,7 +1235,6 @@ System.out.println( "########################### Count = " + count );
 				if ( subj instanceof URI
 					&& subj.toString().startsWith( ns ) )
 				{
-System.out.println( "found subject in namespace " + ns + ": " + subj );
 					subjects.add( (URI) subj );
 				}
 			}
@@ -1278,7 +1265,6 @@ System.out.println( "found subject in namespace " + ns + ": " + subj );
 		public void put( Resource r )
 			throws RippleException
 		{
-System.out.println( "putting Resource: " + r );
 			if ( visited.contains( r ) )
 				return;
 			else

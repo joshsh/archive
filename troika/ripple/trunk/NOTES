@@ -63,14 +63,6 @@ ambiguousTerm.
 
 
 
-@prefix : <http://example.org/foo#>.
-@define woot: 2 3 .
-:woot /prog.
-/woot.
-
-(2 3)/rdf:first.
-(2 3)/rdf:rest.
-
 
 ba
 	().

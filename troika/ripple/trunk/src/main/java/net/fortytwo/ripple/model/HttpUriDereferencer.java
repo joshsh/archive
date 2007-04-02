@@ -110,13 +110,13 @@ public class HttpUriDereferencer implements Dereferencer
 				url = urlFactory.createUrl( uri.toString() );
 
 			mc.addGraph( url, context );
-s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
+//s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
 		}
 
 		catch ( RippleException e )
 		{
 			mc.reset();
-s_logger.info( "##### failed to dereference URI: " + uri.toString() );
+			s_logger.info( "##### failed to dereference URI: " + uri.toString() );
 			failureMemos.add( memo );
 			throw e;
 		}
@@ -222,13 +222,13 @@ if ( v instanceof URI )
 
 	public void addSuccessMemo( final String memo )
 	{
-System.out.println( "adding success memo: " + memo );
+//System.out.println( "adding success memo: " + memo );
 		successMemos.add( memo );
 	}
 
 	public void addFailureMemo( final String memo )
 	{
-System.out.println( "adding failure memo: " + memo );
+//System.out.println( "adding failure memo: " + memo );
 		failureMemos.add( memo );
 	}
 

@@ -10,9 +10,7 @@ refactor source
 bugs
 	http://www.w3.org/People/djweitzner/public/foaf.rdf
 	comments
-	remove statements
 
-license
 
 
 submission format
@@ -27,8 +25,43 @@ distribution
 Ripple vs Turtle
 	*  no 'a' keyword in Ripple
 	*  no boolean values for now
+	*  no double values
 
 
+
+
+
+Note: depending on the data you're dealing with (for instance, when loading a large RDF dump), you may 
+java -Xmx512M -DentityExpansionLimit=150000 target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ripple's command-line tool behaves a bit like a web browser in that 
+
+For simple queries, Ripple's command-line tool behaves like a 
+
+
+Path expressions in Ripple take the form of 
+
+    >>  @prefix owl:  <http://www.w3.org/2002/07/owl#>.
+    >>  <http://dbpedia.org/resource/Berlin> /owl:sameAs.
+
+
+
+    >>  @prefix geo:  <http://www.geonames.org/ontology#>.
+
+
+<http://dbpedia.org/resource/Berlin> /owl:sameAs (geo:parentFeature /:choice) 5/times /geo:name.
 
 
 
@@ -107,14 +140,12 @@ Here is a checklist of everything the volume editor requires from you:
 
 
 
+ /:tbl (:foafStep /:opt/unique) 2 /times (/foaf:name "Libby Miller" /equal) /:restrict.
+ /:tbl (:foafStep /:opt/unique) 1 /times (/foaf:name "Dan Connolly" /equal) /:restrict.
+
+/:tbl :foafStep/:opt/unique (/foaf:name "Edd Dumbill" /equal)/:restrict.
 
 
-
-Ripple provides for a single RDF query operation: forward traversal from a given subject, through a given predicate, to zero or more objects.  Ripple does not allow global operations, such as queries for all subjects or all predicates in a graph, all statements about a given subject, etc.  Neither does it allow for the other common path operation, backward traversal.  While the Java implementation uses a variety of RDF operations internally, Ripple queries themselves are, by design, strictly limited to forward traversal.
-* it makes queries simpler
-* it allows Ripple to identify a Property with a single function
-* it affords interesting opportunities for context and data hiding
-* it preserves referential transparency.  It tends to be the case when working with dereferenceable URIs that all of the statements about a given subject come from a single source.  Ripple is only a "functional" language insofar as the data it works with has this property
 
 
 
@@ -131,7 +162,83 @@ all()
 
 
 
+Built-in graphs
 
+
+
+
+
+
+
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rev:   <http://purl.org/stuff/rev#>.
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix :      <http://fortytwo.net/2007/03/ripple/demo#>.
+
+@define third:  /rdf:rest/rdf:rest/rdf:first.
+@define factorial:  /dup 0 /equal (/pop 1) (/dup 1 /sub /:factorial /mul) /ifte.
+@define listMembers: (/rdf:rest/:listMembers)/swap/swap rdf:first /union/i.
+
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+@define restrict:  dup/swap/dip/i id scrap /ifte.
+@define favorableOnly:  (/rev:rating 3 /gt)/:restrict.
+@define bookReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:restrict.
+@define choice:  id/union/i.
+
+@define foafStep:  (foaf:knows owl:sameAs /union/i) /:choice/unique.
+@define tbl: <http://www.w3.org/People/Berners-Lee/card#i>.
+
+@export :  "/home/josh/www/2007/03/ripple/demo".
+
+
+
+
+
+@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
+
+
+
+
+
+
+
+
+
+
+:restrict is meant to be applied to two arguments, like so:
+
+    x f /:restrict.
+
+...where x is the value to check, and f is a unary function which yields true or
+false.  If x/f is true, then the result should be x.  If x/f is false, the
+result is nothing.  Here's what the stack looks like as it is reduced:
+
+
+    x f /:restrict.
+    x f dup/swap/dip/i id scrap /ifte.
+    x dup f /dip/i id scrap /ifte.
+    x /dup f /i id scrap /ifte.
+    x /dup/f id scrap /ifte.
+    x x /f id scrap /ifte.
+    [x/f true]
+        x true id scrap /ifte.
+        x /id.
+        x
+    [x/f false]
+        x false id scrap /ifte.
+        x /scrap.
+
+
+This may be a pain to read, but it was easy enough to write, and from now on
+we'll treat it like a black box which just does what it advertises.  For a
+thorough introduction to concatenative combinators, see the Joy tutorial [3],
+but note that scrap is not a Joy operator; it's a "stream" primitive which only
+makes sense in a multivalued context.  It has the effect of discarding the
+entire stack, and is useful for weeding out unwanted values.
+
+    @define fiveStarsOnly:  (/rev:rating 4 /gt)/:restrict.
 
 
 

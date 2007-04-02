@@ -46,16 +46,9 @@ public abstract class ThreadWrapper
 			synchronized( monitorObj )
 			{
 				if ( timeout > 0 )
-{
-System.out.println( "wait(" + timeout + ")" );
 					monitorObj.wait( timeout );
-}
 				else
-{
 					monitorObj.wait();
-System.out.println( "wait()" );
-}
-System.out.println( "done! #####################" ); System.out.flush();
 			}
 
 			if ( !finished )
@@ -64,10 +57,8 @@ System.out.println( "done! #####################" ); System.out.flush();
 
 		catch ( InterruptedException e )
 		{
-System.out.println( "catch ( InterruptedException e )" ); System.out.flush();
 			throw new RippleException( e );
 		}
-System.out.println( "finished = " + finished );
 
 		if ( !finished )
 			throw new RippleException( "operation timed out" );

@@ -179,7 +179,7 @@ mc.close();
 
 	public void updateCompletors()
 	{
-System.out.println( "########## updating completors" );
+		s_logger.debug( "updating completors" );
 		List completors = new ArrayList();
 
 		try
@@ -519,9 +519,9 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 	{
 		Collection<URI> options = lexicon.resolveKeyword( localName );
 		if ( 0 == options.size() )
-			errorPrintStream.println( "Warning: no values resolved for " + localName );
+			errorPrintStream.println( "Warning: no values resolved for keyword " + localName );
 		else if ( 1 < options.size() )
-			errorPrintStream.println( "Warning: multiple values resolved for " + localName );
+			errorPrintStream.println( "Warning: multiple values resolved for keyword " + localName );
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
 			sink.put( model.getBridge().get(
@@ -587,23 +587,28 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 				lexicon.update();
 			}
 
-			ListContainerSink evaluatedExpressions = new ListContainerSink();
-			for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
+// TODO: break this up into definition and evaluation.  I think it's clear that
+//       we don't want both at once.
+			if ( null == name )
 			{
-				RippleValue expr = iter.next();
-				RippleList list = ( expr instanceof RippleList )
-					? (RippleList) expr
-					: new RippleList( expr );
+				ListContainerSink evaluatedExpressions = new ListContainerSink();
+				for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
+				{
+					RippleValue expr = iter.next();
+					RippleList list = ( expr instanceof RippleList )
+						? (RippleList) expr
+						: new RippleList( expr );
 //System.out.println( "applying to: " + list );
-
-				evaluator.applyTo( list, evaluatedExpressions, mc );
-			}
+	
+					evaluator.applyTo( list, evaluatedExpressions, mc );
+				}
 
 // TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
-			dereferenceResultSet( evaluatedExpressions, mc );
-
-			valueSet.setValues( evaluatedExpressions );
+				dereferenceResultSet( evaluatedExpressions, mc );
+	
+				valueSet.setValues( evaluatedExpressions );
+			}
 
 			mc.close();
 		}
