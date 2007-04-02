@@ -1,3 +1,160 @@
+rm -rf /tmp/demo
+mkdir /tmp/demo
+cd /tmp/demo
+svn co http://fortytwo.net/svn/repository/troika/ripple/trunk
+
+cdpr
+svn up
+cp . /tmp/demo
+cd /tmp/demo
+rmbackup
+rm -rf `find -name .svn`
+rm NOTES
+rm -rf examples
+
+
+
+
+
+
+
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+
+cat `find src -name "*.java"`| wc
+
+
+V
+    @open;
+    @close;
+
+
+[U] assumptions
+    [.] arity of a function (read: Apply) is constant, unaffected by reduction
+
+[U] 
+    [.] primitive functions may yield multiple values at a time
+
+[U]
+    [*] statements about a resource outside of their context are not allowed
+    [*] "imperative" creation of statements about an existing resource is not allowed, as is deletion of statements
+    [*] context = namespace
+
+[*] lazy reduction -- an expression is reduced when:
+    [.] it appears at the head of an expression under reduction
+    [.] it appears as an argument to a primitive function which is to be applied
+
+[V] names ^ command-line syntax
+    foo:bar -- qualified name
+    foo:    -- qualified name in which the local name is blank
+    :bar    -- name qualified with the default namespace
+    bar     -- name which relies on namespace inference
+    :       -- degenerate case, but well defined, and legal in Turtle
+    _:bar   -- blank node identified by 'bar'
+
+::::::::::::::::::::::::::::::::::::::::
+
+mvn clean
+mvn antlr:generate
+mvn install
+mvn assembly:assembly
+
+unzip -l target/firefox/ripple.xpi
+
+
+java -classpath target/ripple-full.jar net.forytwo.ripple.tools.FileRdfizerDriver $SRC > target/fileRdfizerTest.rdf
+
+
+::::::::::::::::::::::::::::::::::::::::
+
+[ba]
+http://www.w3.org/2000/01/rdf-schema#comment
+    http://www.w3.org/2000/01/rdf-schema#subPropertyOf
+        http://www.w3.org/2000/01/rdf-schema#comment
+
+::::::::::::::::::::::::::::::::::::::::
+
+[.] http://www.w3.org/1999/02/22-rdf-syntax-ns -- the RDF Schema for the RDF vocabulary defined in the RDF namespace
+[.] http://www.w3.org/2000/01/rdf-schema -- The RDF Schema vocabulary (RDFS)
+
+[conflicts] ::::::::::::::::::::::::::::
+
+[ba] Oddly enough, neither "type" nor "List" are defined by the rdfs model.  Maybe this is an OpenRDF bug.
+     BUT... http://www.w3.org/2000/01/rdf-schema#List
+
+[.]
+    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+    [ba] http://www.w3.org/2000/01/rdf-schema#type
+
+[.]
+    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+    [ba] http://www.w3.org/2000/01/rdf-schema#List
+
+
+
+svn propset svn:keywords "Id LastChangedDate Revision Author" myfile
+
+
+
+
+========================================
+launch the interpreter
+========================================
+
+java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
+
+alias ripple='java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample'
+ripple
+
+
+========================================
+update the syntax highlighter
+========================================
+
+sudo cp ./src/main/resources/net/fortytwo/ripple/cli/kate/ripple.xml /usr/share/apps/katepart/syntax
+
+
+========================================
+create RDF/XML for the server
+========================================
+
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/ripple.ttl > tmp/ripple.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/misc/ripple-misc.ttl > tmp/ripple-misc.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/newstuff/ripple-new.ttl > tmp/ripple-new.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/test/ripple-test.ttl > tmp/ripple-test.rdf
+
+
+========================================
+create a visualization of the rpl namespace
+========================================
+
+rapper -q -i turtle -o dot ./src/main/resources/net/fortytwo/ripple/ripple.ttl > tmp/ripple.dot
+dot -Tpng -o tmp/ripple.png tmp/ripple.dot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Comparison with Joy
 * Ripple's implementation of joy's list operators (e.g. concat) currently only work on rdf:Lists, and not on strings or other aggregate objects.
 * Ripple doesn't need to implement joy:first and joy:rest for lists, as it gets the same functionality out of rdf:first and rdf:rest as predicates.
