@@ -10,7 +10,7 @@
 	<artifactId>ripple</artifactId>
 	<version>0.1</version>
 	<name>Ripple</name>
-	<description>An expeditious command-line interface for the Semantic Web surfer.</description>
+	<description>Functional Programs as Linked Data</description>
 	<url>http://fortytwo.net/</url>
 	<inceptionYear>2007</inceptionYear>
 	<licenses></licenses>
@@ -26,7 +26,7 @@
 			</roles>
 			<timezone>-8</timezone>
 			<properties>
-				<picUrl>http://fortytwo.net/pics/industrial/self.jpg</picUrl>
+<!--				<picUrl>...</picUrl>-->
 			</properties>
 		</developer>
 	</developers>
@@ -279,25 +279,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<!-- Package the Firefox extension. -->
-							<execution>
-								<phase>package</phase>
-								<configuration>
-									<tasks>
-										<ant antfile="build.xml" dir="src/main/firefox"/>
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					
+										
 					<!-- mvn -N doap:generate -->
 					<!-- http://repo1.maven.org/maven2/org/apache/maven/plugins/maven-doap-plugin/1.0-beta-1/ -->
 					<plugin>

@@ -2,16 +2,14 @@ rm -rf /tmp/demo
 mkdir /tmp/demo
 cd /tmp/demo
 svn co http://fortytwo.net/svn/repository/troika/ripple/trunk
-
-cdpr
-svn up
-cp . /tmp/demo
-cd /tmp/demo
-rmbackup
+cd trunk
+rm -rf contest
+rm -rf examples
+rm -rf issues
 rm -rf `find -name .svn`
 rm NOTES
-rm -rf examples
-
+rm REFACTORING
+rm TODO
 
 
 
