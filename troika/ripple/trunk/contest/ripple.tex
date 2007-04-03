@@ -23,8 +23,7 @@
 \usepackage{graphicx}
 
 \usepackage{url}
-\urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.beyer, christine.guenther,|
-\urldef{\mailsb}\path|frank.holzwarth, anna.kramer, erika.siebert-cole, lncs}@springer.com|
+\urldef{\mailsb}\path|josh@fortytwo.net|
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
 \noindent\keywordname\enspace\ignorespaces#1}
 
@@ -32,11 +31,12 @@
 
 \mainmatter  % start of an individual contribution
 
+
 % first the title is needed
-\title{Ripple: Programs as Linked Data}
+\title{Ripple: Functional Programs as Linked Data}
 
 % a short form should be given in case it is too long for the running head
-\titlerunning{Ripple: Programs as Linked Data}
+\titlerunning{Ripple: Functional Programs as Linked Data}
 
 % the name(s) of the author(s) follow(s) next
 %
@@ -44,17 +44,18 @@
 % their surnames. This ensures that the names appear correctly in
 % the running heads and the author index.
 %
-\author{Joshua Shinavier}
+\author{
+Joshua Shinavier
+\newline
+\url{josh@fortytwo.net}}
 %
-\authorrunning{Lecture Notes in Computer Science: Authors' Instructions}
+\authorrunning{Ripple: Functional Programs as Linked Data}
 % (feature abused for this document to repeat the title also on left hand pages)
 
 % the affiliations are given next
-\institute{Springer-Verlag, Computer Science Editorial,\\
-Tiergartenstr. 17, 69121 Heidelberg, Germany\\
-\mailsa\\
-\mailsb\\
-\url{http://www.springer.com/lncs}}
+\institute{\footnote{The writing of this paper was supported by Soph-Ware Associates}Soph-Ware Associates, Inc.,\\
+624 W. Hastings Rd, Spokane, WA 99218 USA\\
+\url{http://www.soph-ware.com}}
 
 %
 % NB: a more complex sample for affiliations and the mapping to the
@@ -63,299 +64,465 @@ Tiergartenstr. 17, 69121 Heidelberg, Germany\\
 % "llncs.dem" accompanies the document class "llncs.cls".
 %
 
-\toctitle{Lecture Notes in Computer Science}
-\tocauthor{Authors' Instructions}
+\toctitle{Ripple: Functional Programs as Linked Data}
+\tocauthor{Ripple: Functional Programs as Linked Data}
 \maketitle
 
 
 \begin{abstract}
-Ripple is a query language expressed as RDF lists.
-
-Ripple ... is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor.  Its distinguishing features are 
-\emph{abstract} environment.
-\keywords{We would like to encourage you to list your keywords within
-the abstract section}
+Ripple is a scripting language expressed in RDF lists.  Its scripts both operate upon and are made up of RDF metadata, extending the idea of HTTP dereferenceability to computation.  Ripple is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor, and distinguishes itself through a multivalued, "pipeline" approach to query composition, as well as the inherent distributability of its programs.  The Java implementation presented here includes a query engine, a provisonal assortment of primitive functions, and an interactive interpreter which parses commands and queries in a readable, Turtle-like format.  A demo application can be found at:
+    http://fortytwo.net/ripple.
+\keywords{RDF, scripting language, query language, concatenative, linked data}
 \end{abstract}
 
+\section{Overview}
 
-\section{Introduction}
+{\it Note: for the sake of brevity, the rest of this document assumes some familiarity both with RDF and with the programming language Joy.  For an introduction to Joy, see: http://www.latrobe.edu.au/philosophy/phimvt/joy/j01tut.html}
 
-You are strongly encouraged to use \LaTeXe{} for the
-preparation of your camera-ready manuscript together with the
-corresponding Springer class file \verb+llncs.cls+. Only if you use
-\LaTeXe{} can hyperlinks be generated in the online version
-of your manuscript.
+\subsection{Linked Data}
 
-The \LaTeX{} source of this instruction file for \LaTeX{} users may be used as
-a template. Kindly
-send the final and checked source and PDF files of your paper to the
-Contact Volume Editor. This is usually one of the organizers of the
-conference. You should make sure that the \LaTeX{} and the PDF files are
-identical and correct and that only one version of your paper is sent.
-It is not possible to update files at a later stage. Please note that we
-do not need the printed paper.
+"Linked data"\footnote{http://www.w3.org/DesignIssues/LinkedData.html} is the subset of the Semantic Web which associates statements about the "thing" identified by a particular URI with the corresponding web location.  An appropriate HTTP request for such a URI should produce an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is \emph{complete}, and the software may reject statements about the URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation: forward traversal.  For instance, if s and p are resources, then the set of triples s/p with s as their subject and p as their predicate can be determined by a single HTTP request, and will not change, despite any subsequent operations.  Here, the expression /p represents the application of a function which maps a subject s to the set of all objects o such that the statement (s, p, o) exists.  Syntactically, it is no different than the application of a primitive function or the dequotation of a list (see below).
 
-\subsection{Checking the PDF File}
+\subsection{RDF Equivalence}
 
-Kindly assure that the Contact Volume Editor is given the name and email
-address of the contact author for your paper. The Contact Volume Editor
-uses these details to compile a list for our production department at
-SPS in India. Once the files have been worked upon, SPS sends a copy of
-the final pdf of each paper to its contact author. The contact author is
-asked to check through the final pdf to make sure that no errors have
-crept in during the transfer or preparation of the files. This should
-not be seen as an opportunity to update or copyedit the papers, which is
-not possible due to time constraints. Only errors introduced during the
-preparation of the files will be corrected.
+Not only does Ripple \emph{operate} on linked data, but its programs are meant to \emph{be} linked data as well.  Every Ripple expression is equivalent to a collection of type rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is transparent to the user application.  Because Ripple treats rdf:Properties as functions, the application may navigate a list using either list primitives or the RDF collections
+vocabulary.  For instance:
 
-This round of checking takes place about two weeks after the files have
-been sent to the Editorial by the Contact Volume Editor, i.e. roughly
-seven weeks before the start of the conference for conference
-proceedings, or seven weeks before the volume leaves the printer's, for
-post-proceedings. If SPS does not receive a reply from a particular
-contact author, within the timeframe given, then it is presumed that the
-author has found no errors in the paper. The tight publication schedule
-of LNCS does not allow SPS to send reminders or search for alternative
-email addresses on the Internet.
-
-In some cases, it is the Contact Volume Editor that checks all the final
-pdfs. In such cases, the authors are not involved in the checking phase.
-
-\subsection{Additional Information Required by the Volume Editor}
-
-When sending your final files, please include a readme informing the
-Contact Volume Editor which of your names is/are your first name(s) and
-which is/are your family name(s). This is particularly important for
-Spanish and Chinese names. Authors are listed alphabetically according
-to their surnames in the author index.
-
-\subsection{Copyright Forms}
-
-The copyright form may be downloaded from the ``For Authors"
-(Information for LNCS Authors)
-section of the LNCS Website: \texttt{www.springer.com/lncs}.
-Please send your signed copyright
-form to the Contact Volume Editor, either as a scanned pdf or by fax or
-by courier. One author may sign on behalf of all the other authors of a particular
-paper. Digital signatures are acceptable.
-
-\section{Paper Preparation}
-
-Springer
-provides you with a complete integrated \LaTeX{} document class (\texttt{llncs.cls})
-for multi-author books such as those in the LNCS series.
-Papers not complying with the LNCS style will be reformatted. This can
-lead to an increase in the overall number of pages. We would therefore
-urge you not to squash your paper.
-
-Please always cancel any superfluous definitions that are
-not actually used in your text. If you do not, these may conflict with
-the definitions of the macro package, causing changes in the structure
-of the text and leading to numerous mistakes in the proofs.
-
-If you wonder what \LaTeX{} is and where it can be obtained, see the
-``\textit{LaTeX project site}'' (\url{http://www.latex-project.org})
-and especially the webpage ``\textit{How to get it}''
-(\url{http://www.latex-project.org/ftp.html}) respectively.
-
-When you use \LaTeX\ together with our document class file,
-\texttt{llncs.cls},
-your text is typeset automatically in Computer Modern Roman (CM) fonts.
-Please do
-\emph{not} change the preset fonts. If you have to use fonts other
-than the preset fonts, kindly submit these with your files.
-
-Please use the commands \verb+\label+ and \verb+\ref+ for
-cross-references and the commands \verb+\bibitem+ and \verb+\cite+ for
-references to the bibliography, to enable us to create hyperlinks at
-these places.
-
-For preparing your figures electronically and integrating them into
-your source file we recommend using the standard \LaTeX{} \verb+graphics+ or
-\verb+graphicx+ package. These provide the \verb+\includegraphics+ command.
-In general, please refrain from using the \verb+\special+ command.
-
-Remember to submit any further style files and
-fonts you have used together with your source files.
-
-\subsubsection{Headings.}
-
-Headings should be capitalized
-(i.e., nouns, verbs, and all other words
-except articles, prepositions, and conjunctions should be set with an
-initial capital) and should,
-with the exception of the title, be aligned to the left.
-Words joined by a hyphen are subject to a special rule. If the first
-word can stand alone, the second word should be capitalized.
-
-Here are some examples of headings: ``Criteria to Disprove
-Context-Freeness of Collage Language", ``On Correcting the Intrusion of
-Tracing Non-deterministic Programs by Software", ``A User-Friendly and
-Extendable Data Distribution System", ``Multi-flip Networks:
-Parallelizing GenSAT", ``Self-determinations of Man".
-
-\subsubsection{Lemmas, Propositions, and Theorems.}
-
-The numbers accorded to lemmas, propositions, and theorems, etc. should
-appear in consecutive order, starting with Lemma 1, and not, for
-example, with Lemma 11.
-
-\subsection{Formulas}
-
-Displayed equations or formulas are centered and set on a separate
-line (with an extra line or halfline space above and below). Displayed
-expressions should be numbered for reference. The numbers should be
-consecutive within each section or within the contribution,
-with numbers enclosed in parentheses and set on the right margin --
-which is the default if you use the \emph{equation} environment, e.g.
-\begin{equation}
-  \psi (u) = \int_{o}^{T} \left[\frac{1}{2}
-  \left(\Lambda_{o}^{-1} u,u\right) + N^{\ast} (-u)\right] dt \;  .
-\end{equation}
-
-Please punctuate a displayed equation in the same way as ordinary
-text but with a small space before the end punctuation.
-
-\subsection{Footnotes}
-
-The superscript numeral used to refer to a footnote appears in the text
-either directly after the word to be discussed or -- in relation to a
-phrase or a sentence -- following the punctuation sign (comma,
-semicolon, or period). Footnotes should appear at the bottom of
-the
-normal text area, with a line of about 2~cm set
-immediately above them.\footnote{The footnote numeral is set flush left
-and the text follows with the usual word spacing.}
-
-\subsection{Program Code}
-
-Program listings or program commands in the text are normally set in
-typewriter font, e.g., CMTT10 or Courier.
-
-\medskip
-
-\noindent
-{\it Example of a Computer Program}
 \begin{verbatim}
-program Inflation (Output)
-  {Assuming annual inflation rates of 7%, 8%, and 10%,...
-   years};
-   const
-     MaxYears = 10;
-   var
-     Year: 0..MaxYears;
-     Factor1, Factor2, Factor3: Real;
-   begin
-     Year := 0;
-     Factor1 := 1.0; Factor2 := 1.0; Factor3 := 1.0;
-     WriteLn('Year  7% 8% 10%'); WriteLn;
-     repeat
-       Year := Year + 1;
-       Factor1 := Factor1 * 1.07;
-       Factor2 := Factor2 * 1.08;
-       Factor3 := Factor3 * 1.10;
-       WriteLn(Year:5,Factor1:7:3,Factor2:7:3,Factor3:7:3)
-     until Year = MaxYears
-end.
+(1 2 3)/rdf:first.
 \end{verbatim}
-%
-\noindent
-{\small (Example from Jensen K., Wirth N. (1991) Pascal user manual and
-report. Springer, New York)}
 
-\subsection{Citations}
+yields 1, and
 
-The list of references is headed ``References" and is not assigned a
-number. The list should be set in small print
-and placed at the end of your contribution, in front of the appendix,
-if one exists.
-Please do not insert a pagebreak before the list of references if the
-page is not completely filled.
-An example is given at the
-end of this information sheet. For citations in the text please use
-square brackets and consecutive numbers: \cite{leeuw},
-\cite{bru:car:pier}, \cite{mich} \dots
+\begin{verbatim}
+(1 2 3)/rdf:rest/rdf:rest/rdf:first.
+\end{verbatim}
 
-\subsection{Page Numbering and Running Heads}
+yields 3.  If we give an expression a URI, it thereby becomes a resource which can be incorporated into further expressions.
 
-There is no need to include page numbers. If your paper title is too
-long to serve as a running head, it will be shortened. Your suggestion
-as to how to shorten it would be most welcome.
+\begin{verbatim}
+@define third:  /rdf:rest/rdf:rest/rdf:first.
+\end{verbatim}
 
-\section{LNCS Online}
+If the base URI of :third is such that it is dereferenceable -- for instance, if Ripple is attached to a triple store with a SPARQL endpoint at a web location below the base URI -- then :third is a valid program not only to the Ripple implementation executing on the server itself, but also on any client machine.  If demo: represents the base URI, then a query like the following will yield the same result regardless of where or when it is performed.
 
-The online version of the volume will be available in LNCS Online.
-Members of institutes subscribing to the Lecture Notes in Computer
-Science series have access to all the pdfs of all the online
-publications. Non-subscribers can only read as far as the abstracts. If
-they try to go beyond this point, they are automatically asked, whether
-they would like to order the pdf, and are given instructions as to how
-to do so.
+\begin{verbatim}
+(1 2 3)/demo:third.
+\end{verbatim}
 
-\section{BibTeX Entries}
+\subsection{Computational Model}
 
-The correct BibTeX entries for the Lecture Notes in Computer Science
-volumes can be found at the following Website shortly after the
-publication of the book:
-\url{http://www.informatik.uni-trier.de/~ley/db/journals/lncs.html}
+Like Joy (and many other functional languages), Ripple's fundamental data structure is the list.  When executed as a program, a list becomes a stack.  Computation occurs at the head of the stack (visually, on the right hand side of an expression), and halts either when the stack is empty or when a "passive" item (a constant) is found at the head of the stack.  Ripple's primitive functions have an individual "arity" equal to the depth to which the stack must be reduced before it is accepted as input to the function.  Whereas Joy's many operators and combinators are active until placed inside of a quotation (a list), in Ripple, nearly everthing is either a list or is treated as a list, and is therefore quoted by default.  However, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
 
-\subsubsection*{Acknowledgments.} The heading should be treated as a
-subsubsection heading and should not be assigned a number.
+\begin{verbatim}
+http://fortytwo.net/2007/03/ripple/schema#op
+\end{verbatim}
 
-\begin{thebibliography}{4}
-%
-\bibitem{leeuw}
-van Leeuwen, J. (ed.):
-Computer Science Today. Recent Trends and Developments.
-Lecture Notes in Computer Science, Vol.~1000.
-Springer-Verlag, Berlin Heidelberg New York (1995)
-%
-\bibitem{bru:car:pier}
-Bruce, K.B., Cardelli, L., Pierce, B.C.:
-Comparing Object Encodings.
-In: Abadi,~M., Ito,~T. (eds.):
-Theoretical Aspects of Computer Software.
-Lecture Notes in Computer Science, Vol.~1281.
-Springer-Verlag, Berlin Heidelberg New York (1997) 415--438
-%
-\bibitem{mich}
-Michalewicz, Z.:
-Genetic Algorithms + Data Structures = Evolution Programs.
-3rd edn. Springer-Verlag, Berlin Heidelberg New York (1996)
-%
-\bibitem{bal:cha:gra:pae}
-Baldonado, M., Chang, C.-C.K., Gravano, L., Paepcke, A.:
-The Stanford Digital Library Metadata Architecture.
-Int. J. Digit. Libr. \textbf{1} (1997) 108--121
-%
-\end{thebibliography}
-
-
-\section*{Appendix: Springer-Author Discount}
-
-LNCS authors are entitled to a 33.3\% discount off all Springer
-publications. Before placing an order, the author should send an email
-to \texttt{SDC.bookorder@springer.com}, giving full
-details of his or her
-Springer publication, to obtain a so-called token. This token is a
-number, which must be entered when placing an order via the Internet, in
-order to obtain the discount.
-
-\section{Checklist of Items to be Sent to Volume Editors}
-Here is a checklist of everything the volume editor requires from you:
-
-
+When this symbol is encountered at the head of a stack, it has the effect of making the preceding symbol active according to its type:
 \begin{itemize}
-\settowidth{\leftmargin}{{\Large$\square$}}\advance\leftmargin\labelsep
-\itemsep8pt\relax
-\renewcommand\labelitemi{{\lower1.5pt\hbox{\Large$\square$}}}
-
-\item The final \LaTeX{} source files
-\item A final PDF file
-\item A copyright form, signed by one author on behalf of all the
-authors of the paper.
-\item A readme giving the first name(s) and the surname(s) of all the
-authors of the paper, as well as the name and address of the
-corresponding author.
+\item If the argument is an list, it is executed as a program
+\item If the argument is a primitive function, the stack is first normalized to a depth equal to the function's arity, then the function is applied to the result
+\item If the argument is an rdf:Property, it is applied as a unary function which maps subjects to objects
+\item Any other type of argument effectively becomes an active nullary function with no output
 \end{itemize}
+
+This minimalism accounts for the different appearance of Ripple expressions as opposed to Joy.  Ripple hides its one operator behind a prefixed slash symbol '/', which for RDF predicates is identical to the forward traversal operator in Notation3.  The argument against using the slash in Notation3 itself seems to have been that its counterpart, the backslash, is no good as a symbol for backward traversal\footnote{http://www.w3.org/DesignIssues/N3Alternatives}.  However, this is not an issue for Ripple, as Ripple deliberately does not provide for backward traversal.  Note that the following expressions are equivalent.
+
+\begin{verbatim}
+2 /dup.
+2 dup op.
+2 joy:dup rpl:op.
+\end{verbatim}
+
+Ripple differs from Joy in another important respect: whereas Joy operates on single stacks, Ripple operates on "streams" of stacks.  Each of its functions consumes a series of stacks as input, and produces a series of stacks as output, which is how it gets away with using RDF predicates as functions.  This simple query, for instance, yields not one, but several values:
+
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows.
+\end{verbatim}
+
+If we compose it with another query, the second query needs to be capable of consuming not just a single stack, but many stacks, and of distributing its operation over all of them:
+
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows /foaf:name.
+\end{verbatim}
+
+To this end, Ripple replaces functions with "instances" of functions, which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of stream:limit (which counts its input stacks and stops transmitting them after a certain point) or of stream:unique (which remembers its input stacks, and will not transmit a duplicate).
+
+\section{The Demo Application}
+
+To begin an interpreter session, use one of the shortcut scripts (ripple or ripple.bat) or type:
+
+\begin{verbatim}
+java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+\end{verbatim}
+
+The demo application uses a RDF/XML file to save state between sessions, instead of a database.  The file demo-cache.rdf contains all of data which would otherwise be drawn in on-the-fly as the interpreter works through the examples in this document.  To use it, type:
+
+\begin{verbatim}
+./ripple demo-cache.rdf
+\end{verbatim}
+
+Try the examples without the cache to convince yourself that application will arrive at the same results either way, although with an obvious difference in speed.
+
+All of the terms defined in the examples have been written to this dereferenceable namespace:
+
+\begin{verbatim}
+@prefix :  <http://fortytwo.net/2007/03/ripple/demo#>.
+\end{verbatim}
+
+You can use this directive once and then simply use the terms from the examples without defining them.  The query engine will dereference them as needed.
+
+
+\subsection{Commands and Queries}
+
+
+At the prompt, Ripple will accept either a directive
+
+\begin{verbatim}
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+\end{verbatim}
+
+or a query
+
+\begin{verbatim}
+rdf:List.
+\end{verbatim}
+
+A directive is a command which performs a named task.  A query is an expression which is passed to the query processor for evaluation, yielding any number of values.  For example, a query for a constant value always yields a single result:
+
+\begin{verbatim}
+42.
+\end{verbatim}
+
+Other queries may be multivalued in nature.  Once again:
+
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows.
+\end{verbatim}
+
+This is an expression representing all of the individuals foaf:known by Tim
+Berners-Lee, and results in several values.  Ripple's compositional plumbing
+will distribute further operations over each of these values, so the expression
+
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows/foaf:name.
+\end{verbatim}
+
+has the effect of retrieving all of the names of all of the individuals
+foaf:known by TBL.  When there are statements available about a value, the
+interpreter displays them in a tree view.
+
+
+\subsection{Directives}
+
+Ripple currently supports the following directives.
+\newline
+
+Define :bar as the list (1 2 3)
+
+\begin{verbatim}
+@define bar: (1 2 3).
+\end{verbatim}
+
+Write (a bnode closure of) the terms in namespace foo: to a file
+
+\begin{verbatim}
+@export foo: "file.rdf".
+\end{verbatim}
+
+Define a namespace prefix foo
+
+\begin{verbatim}
+@prefix foo: <http://example.org/foo#>.
+\end{verbatim}
+
+Quit the application.
+
+\begin{verbatim}
+@quit.
+\end{verbatim}
+
+Save the entire graph to a file
+
+\begin{verbatim}
+@saveas "file.rdf".
+\end{verbatim}
+
+Remove all statements about :bar
+
+\begin{verbatim}
+@undefine bar.
+\end{verbatim}
+
+Note: Ripple's command-line interface includes a tab completor which keeps track of all directives and keywords, as well as all qualified names of URIs which make an appearance in the triple store.  It saves on typing and can be a good way to get a rough idea of what's in a namespace.  For instance, try typing any of the following...
+
+\begin{verbatim}
+etc:
+graph:
+intmath:
+joy:
+stream:
+\end{verbatim}
+
+...followed by a tab character, to get a list of primitive functions in each
+of Ripple's library namespaces.
+
+
+\subsection{Syntax}
+
+Ripple is very close to Turtle\footnote{http://www.dajobe.org/2004/01/turtle/} in its lexical syntax, and is made up of most
+of the same basic elements.
+\newline
+
+URI references
+
+\begin{verbatim}
+<http://dbpedia.org/resource/city/Berlin>.
+\end{verbatim}
+
+Qualified names have a prefix and a local part
+
+\begin{verbatim}
+rdfs:Class.
+\end{verbatim}
+
+Either or both of the prefix and local part may be empty.  If defined, the
+default namespace can always be represented as
+
+\begin{verbatim}
+:.
+\end{verbatim}
+
+Keywords in Ripple are URIs whose local names may be used without a prefix.
+Currently, the local name of every primitive function is a keyword.
+
+\begin{verbatim}
+swap.
+\end{verbatim}
+
+Integers (doubles are on the TODO list)
+
+\begin{verbatim}
+-1.
+\end{verbatim}
+
+String literals...
+
+\begin{verbatim}
+"the Universe".
+\end{verbatim}
+
+...with optional language tag
+
+\begin{verbatim}
+"English"@en.
+\end{verbatim}
+
+Typed literals
+
+\begin{verbatim}
+"3.14"^^xsd:double.
+\end{verbatim}
+
+Blank nodes by ID
+
+\begin{verbatim}
+_:foo.
+\end{verbatim}
+
+Lists
+
+\begin{verbatim}
+(1 2 3).
+\end{verbatim}
+
+At a higher level, Ripple grammar looks more like Joy\footnote{http://www.latrobe.edu.au/philosophy/phimvt/joy.html} and similar "concatenative" languages.  Specifically, Ripple programs are expressed in postfix notation, in that operands always precede operations.  For instance, the product 6 * 9 in Ripple is:
+
+\begin{verbatim}
+6 9 /mul.
+\end{verbatim}
+
+These expressions are equivalent:
+
+\begin{verbatim}
+60 60 24 /mul/mul.
+60 60 /mul 24 /mul.
+\end{verbatim}
+
+The slash prefix may only be used singly, before a URI, node ID, or list.  You can use it before a literal if you like, but the resulting query won't do anything.
+
+
+
+\subsection{Recursion}
+
+There is no special trick to named recursion in Ripple; just use the name of the to-be-defined program in the definition body, as you would any other program.  It's a URI reference which won't be dereferenced until after the definition has been pushed to the triple store.
+
+\begin{verbatim}
+@define factorial:
+    /dup 0 /equal (/pop 1) (/dup 1 /sub /:factorial /mul) /ifte.
+5/:factorial.
+\end{verbatim}
+
+An RDF use case:
+
+\begin{verbatim}
+@define listMembers:
+    (/rdf:rest/:listMembers)/swap/swap rdf:first /union/i.
+\end{verbatim}
+
+This is a program which retrieves all of the elements of a list (in other words, it makes a stream out of a list).  Note: the /swap/swap function is just a trick to keep the quotation from unraveling too soon.  It effectively says: "this quotation has an arity of 1".  Apply :listMembers to look at etc:pingTheSemanticWeb's parameters.
+
+\begin{verbatim}
+pingTheSemanticWeb/rpl:parameters /:listMembers.
+\end{verbatim}
+
+Ripple does not yet implement any of Joy's primitives for anonymous recursion.
+
+\subsection{Graph Primitives}
+
+In the graph: namespace you'll find a list of primitives which might end up being useful for graph transformations.  The nullary primitive graph:new creates a new blank node, to which we can then attach statements using graph:assert
+
+\begin{verbatim}
+@define Arthur: /new
+    rdfs:type foaf:Person /assert
+    foaf:name "Arthur Dent" /assert.
+\end{verbatim}
+
+To remove statements from the graph, use graph:deny
+
+\begin{verbatim}
+/:Arthur
+    foaf:name "Arthur Dent" /deny
+    foaf:name "Arthur P. Dent" /assert.
+\end{verbatim}
+
+These three functions should be enough to perform all manner of operations on linked data structures.  However, it's not really in the spirit of a functional language to alter state without a guarantee that the side effects will be contained in some way, so these primitives are to be considered experimental.
+
+To remove all statements about a particular subject (see @undefine) and additionally erase it from the cache, use graph:forget.
+
+\begin{verbatim}
+/:Arthur /forget.
+\end{verbatim}
+
+This is a useful trick to "refresh" the graph with respect to a resource which has either failed to resolve properly or may not be up-to-date with its source.
+
+\section{Examples}
+
+\subsection{Example \#1: Searching and Filtering in Revyu.com}
+
+Revyu.com links reviewers to reviews, reviews to things, and (some) things to
+books in the RDF Book Mashup.  First, some abbreviations:
+
+\begin{verbatim}
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rev:   <http://purl.org/stuff/rev#>.
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer
+                   /bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix :      <file:///tmp/stuff.rdf#>.
+\end{verbatim}
+
+
+To start with, we'll walk the graph from reviewer Tom to each of his reviews.
+
+\begin{verbatim}
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+\end{verbatim}
+
+We've just defined a program which, when executed, will find the objects of all
+foaf:made edges from Tom.  To do so, dequote it.
+{\it Note: if you did not load the demo cache above, this will take a while (and possibly annoy someone).  'tail -f ripple.log' is my usual reaction to crawler boredom.}
+
+\begin{verbatim}
+/:tomsReviews.
+\end{verbatim}
+
+This gives us over 100 results, which is more than we want to wade through, so let's filter out everything except for the more favorable reviews.  For this we will need a new program which discards any review with a rating of less than 4.
+
+\begin{verbatim}
+@define restrict:  dup/swap/dip/i id scrap /ifte.
+@define favorableOnly:  (/rev:rating 3 /gt)/:restrict.
+\end{verbatim}
+
+:restrict is a helper program which rejects any input it receives as its second argument which does not pass the boolean criterion that is its first argument.  The last three primitives in the expression are joy:id, which is the identity function, stream:scrap, which simply discards all of its input, and joy:ifte (if-then), which conditionally applies either of two functions.  The first half of the expression is pure stack manipulation.
+
+Apply this script to Tom's reviews, and we have
+
+\begin{verbatim}
+/:tomsReviews /:favorableOnly.
+\end{verbatim}
+
+This also gives us too many results, so let's look at books.  We happen to know that some books tie in to the RDF Book Mashup with owl:sameAs links, so we'll restrict our results to them.
+
+\begin{verbatim}
+@define bookReviewsOnly:
+    (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:restrict.
+/:tomsReviews/:favorableOnly/:bookReviewsOnly/rdfs:label.
+\end{verbatim}
+
+The two composed filters leave us with just two results.  We grab their labels
+
+\begin{verbatim}
+rdf:_1  ("Review of The Unwritten Rules of Phd Research, by tom")
+rdf:_2  ("Review of Designing with Web Standards, by Jeffrey Zeldman, by tom")
+\end{verbatim}
+
+
+\subsection{Example \#2: Exploring a FOAF Neighborhood}
+
+The last example was basically about tree traversal.  In this example, we'll traverse a more complicated and heterogenous structure: the FOAF network.
+
+First, another helper program.  The :choice function will act like the choice operator in a regular expression: if applying its first argument to its second produces a match, then that match will be added to the result along with the original value.  If it does not produce a result, nothing is added.
+
+\begin{verbatim}
+@define choice:  id/union/i.
+\end{verbatim}
+
+The following query illustrates its behavior.
+
+\begin{verbatim}
+5 (10 /add) /:choice.
+\end{verbatim}
+
+All we're going to do is to see how many FOAFers we can get to from a single point.  Let's use the foaf:knows and owl:sameAs properties as a kind of iterator to step through the graph
+
+\begin{verbatim}
+@define foafStep:  (foaf:knows owl:sameAs /union/i) /:choice/unique.
+\end{verbatim}
+
+There are a number of things going on here.  At the highest level, the stream:unique instance demands an argument stack which is reduced to one level.  That forces the dequotation of the :choice function, which connects
+the output of a joy:id and the anonymous quotation with the input of the stream:unique.  The quoted expression applies both foaf:knows and owl:sameAs to their argument, passing their output into :choice.  At the lowest level, the program
+applies both foaf:knows and owl:sameAs to the argument stack, funnelling their output into the same compositional
+pipeline as the original input.  The result is everything you put into the program, plus any additional results gained by following foaf:knows or owl:sameAs edges.  stream:unique guarantees that the program will not issue the same output twice, which is important when we're dealing with a graph with cycles.
+
+Let's apply :foafStep just once to Tim Berners-Lee's URI (note: /foaf:name should weed out anything we get from :foafStep which isn't at least implicitly a foaf:Person).
+
+\begin{verbatim}
+@define tbl: <http://www.w3.org/People/Berners-Lee/card#i>.
+/:tbl/foaf:name.
+/:tbl/:foafStep/foaf:name.
+\end{verbatim}
+
+Apply it twice.
+
+\begin{verbatim}
+/:tbl :foafStep 2 /times /foaf:name.
+\end{verbatim}
+
+\section{Implementation}
+
+Ripple is written in Java and uses Sesame 2 (beta) as its RDF framework.  The
+command-line interface relies on ANTLR for lexer/parser generation and JLine for
+command history and tab completion.  The project is built with Maven and is
+distributed under an open source license (see License.txt).
+
+To build Ripple from scratch, install Maven 2.0.x and issue the command
+
+\begin{verbatim}
+$ mvn install
+\end{verbatim}
+
+from the directory containing pom.xml.
+
 \end{document}
