@@ -1,0 +1,116 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+
+\usepackage{url}
+\urldef{\mailsb}\path|josh@fortytwo.net|
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+
+% first the title is needed
+\title{Ripple: Functional Programs as Linked Data}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{Ripple: Functional Programs as Linked Data}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{
+Joshua Shinavier
+\newline
+\url{josh@fortytwo.net}}
+%
+\authorrunning{Ripple: Functional Programs as Linked Data}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next
+\institute{Soph-Ware Associates, Inc.,\\
+624 W. Hastings Rd, Spokane, WA 99218 USA\\
+\url{http://www.soph-ware.com}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\toctitle{Ripple: Functional Programs as Linked Data}
+\tocauthor{Ripple: Functional Programs as Linked Data}
+\maketitle
+
+
+\begin{abstract}
+Ripple is a scripting language expressed in RDF lists.  Its scripts both operate upon and are made up of RDF metadata, extending the idea of HTTP dereferenceability to computation.  Ripple is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor, and distinguishes itself through a multivalued, "pipeline" approach to query composition, as well as the inherent distributability of its programs.  The Java implementation of Ripple includes a query engine, a provisonal assortment of primitive functions, and an interactive interpreter which parses commands and queries in a readable, Turtle-like format.  A demo application can be found at:
+\indent{http://fortytwo.net/ripple}.
+\keywords{RDF, scripting language, semantic web, linked data}
+\end{abstract}
+
+\section{Linked Data}
+
+"Linked data"\footnote{http://www.w3.org/DesignIssues/LinkedData.html} is the subset of the Semantic Web which associates statements about the "thing" identified by a particular URI with the corresponding web location.  An appropriate HTTP request for such a URI should produce an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is \emph{complete}, and the software may reject statements about the URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation, forward traversal.
+
+\section{RDF Equivalence}
+
+Not only does Ripple \emph{operate} on linked data, but its programs are meant to \emph{be} linked data as well.  Every Ripple expression is equivalent to a collection of type rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is transparent to the user application.  RDF properties are identified with functions which map subjects to objects.  For instance, in the following query, \texttt{dup}, \texttt{toString}, \texttt{sha1}, \texttt{swap}, and \texttt{equal} are all primitive functions, whereas \texttt{foaf:mbox} and \texttt{foaf:mbox\_sha1sum} are properties:
+
+\begin{verbatim}
+@prefix :      <http://fortytwo.net/2007/03/ripple/demo#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@define goodMboxSha1Sum:
+    /dup /foaf:mbox/toString/sha1 /swap /foaf:mbox_sha1sum /equal.
+\end{verbatim}
+
+The \texttt{@define} directive creates a new list and identifies it with a URI, in this case:
+\texttt{http://fortytwo.net/2007/03/ripple/demo\#goodMboxSha1Sum}.  The list may then be applied as a function:
+
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i>/:goodMboxSha1Sum.
+\end{verbatim}
+
+The above is a program which dereferences Tim Berners-Lee's FOAF URI, finds the sha1 sum of his email address, and checks it against the stated value, yielding \texttt{true}.  Characteristically of Ripple, it doesn't matter where or when a program is executed; provided that its URI is made to be dereferenceable (for instance, by exporting data to a public location, or eventually, by attaching the interpreter to a triple store with a SPARQL endpoint), the program itself is dereferenceable, and a Ripple query engine on a remote machine will draw it into its own execution environment as needed.
+
+\section{The Compositional Pipeline}
+
+If Joy\footnote{http://www.latrobe.edu.au/philosophy/phimvt/joy/j00ovr.html} is a stack language, then Ripple is a "stream-of-stacks" language.  Each of its functions consumes a series of stacks as input, and produces a series of stacks as output, which is how it gets away with using RDF properties as functions.  This simple query, for instance, yields not one, but several values:
+
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows/foaf:name.
+\end{verbatim}
+
+To distribute operations over an arbitrary number of values, Ripple replaces functions with "instances" which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of the \texttt{limit} primitive (which counts its input and stops transmitting them after a certain point) or of the \texttt{unique} primitive (which remembers its input, and will not transmit a duplicate stack).
+
+\section{Conclusion and Future Work}
+
+Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  Thus far, Ripple has been most useful for quickly picking out and exploiting useful patterns in linked data.  If the hypertext web is any example, the web of data will be vast, complex, and overall, loosely structured.  As it grows, we will need an equally sophisticated web of programs to keep pace with it.
+
+\end{document}
