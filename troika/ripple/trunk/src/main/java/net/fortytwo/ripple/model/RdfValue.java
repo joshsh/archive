@@ -37,17 +37,19 @@ public class RdfValue implements RippleValue
 
 	public boolean equals( Object other )
 	{
-//System.out.println( "(RdfValue) " + this + ".equals(" + other + ")" );
+System.out.println( "(RdfValue) " + this + ".equals(" + other + ")" );
 		if ( other instanceof RdfValue )
 		{
 			// Sesame's comparison for Literals appears to be either a little
 			// too imprecise or a little too strict to be useful for searching
 			// in Ripple, in that objects which should be equal are not, so we
 			// special case it.
-			if ( ( this instanceof Literal ) && ( other instanceof Literal ) )
+			if ( ( this.value instanceof Literal )
+				&& ( ( (RdfValue) other ).value instanceof Literal ) )
 			{
-				return ( (Literal) this ).getLabel().equals(
-					( (Literal) other ).getLabel() );
+System.out.println( "they're literals..." );
+				return ( (Literal) this.value ).getLabel().equals(
+					( (Literal) ( (RdfValue) other ).value ).getLabel() );
 			}
 
 			else
