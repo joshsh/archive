@@ -34,6 +34,16 @@ cp ripple-0.1.tar.gz ~/www/ripple
 ***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
 
 
+
+@define page:  ...
+/:tbl/foaf:knows 0 10 /page.
+
+@define page10:  10/page.
+/:tbl/foaf:knows 3/:page10.
+
+
+
+
 128.30.52.34 - - [02/Apr/2007:17:53:26 -0700] "GET /ripple/ HTTP/1.1" 200 1876 "-" "Jigsaw/2.2.5 W3C_CSS_Validator_JFouffa/2.0"
 128.30.52.34 - - [02/Apr/2007:17:53:27 -0700] "GET /life.css HTTP/1.1" 200 114 "-" "Jigsaw/2.2.5 W3C_CSS_Validator_JFouffa/2.0"
 

@@ -1,0 +1,13 @@
+<http://www.daml.org/cgi-bin/airport?CDG>.
+
+
+@prefix airport:  <http://www.daml.org/2001/10/html/airport-ont#>.
+
+airport:Airport.
+airport:elevation.
+airport:iataCode.
+airport:icaoCode.
+airport:latitude.
+airport:location.
+airport:longitude.
+airport:name.

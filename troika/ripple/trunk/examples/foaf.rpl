@@ -27,6 +27,15 @@
 
 ########################################
 
+@define fromtbl:  demo:tbl/swap/dip demo:foafStep /swap/times.
+@define withPred:  dup/swap/dip/i/pop/unique.
+
+2 /:fromtbl bio:event/:withPred/foaf:name.
+2 /:fromtbl owl:sameAs/:withPred/foaf:name.
+2 /:fromtbl foaf:knows/:withPred/foaf:name.
+
+########################################
+
 <http://my.opera.com/fred/xml/foaf#me>/knows/unique/knows/unique/knows/unique/name/unique.
 	33325 results, if you can believe that
 	What's even odder is that I get a slightly different result each time I execute the query (after all of the crawling has already been done).

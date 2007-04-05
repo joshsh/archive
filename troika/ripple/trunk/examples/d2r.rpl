@@ -1,0 +1,7 @@
+@prefix d2r:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/d2r-server/config.rdf#>.
+
+d2r:Server.
+d2r:baseURI.
+d2r:documentMetadata.
+d2r:port.
+d2r:publishes.
