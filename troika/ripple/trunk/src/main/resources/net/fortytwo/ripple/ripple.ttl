@@ -9,7 +9,7 @@
 rpl:
 	a owl:Ontology ;
 	dc:title "Ripple vocabulary" ;
-	vann:preferredNamespacePrefix "rpl".
+	vann:preferredNamespacePrefix "rpl";
 	dc:description "RDFS vocabulary for Ripple expressions" ;
 	rdfs:isDefinedBy rpl: .
 
