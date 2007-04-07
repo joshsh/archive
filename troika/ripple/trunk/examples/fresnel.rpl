@@ -1,61 +1,61 @@
-@prefix f:  <http://www.w3.org/2004/09/fresnel#> ;
+# Official Fresnel page: http://www.w3.org/2005/04/fresnel-info/
 
-<http://www.w3.org/2004/09/fresnel> ;
+@prefix f:  <http://www.w3.org/2004/09/fresnel#>.
 
-f:ClassList ;
-f:ConvenienceToken ;
-f:ConvienceProperty ;
-f:Format ;
-f:FormatDescription ;
-f:FormatDescriptionNoSubstitution ;
-f:FormatDescriptionSubstitution ;
-f:Group ;
-f:HidePropertyList ;
-f:LabellingFormat ;
-f:Lens ;
-f:PropertyDescription ;
-f:PropertySet ;
-f:PropertyValueStyle ;
-f:Purpose ;
-f:ShowPropertyList ;
-f:allProperties ;
-f:classFormatDomain ;
-f:classLensDomain ;
-f:contentAfter ;
-f:contentBefore ;
-f:contentFirst ;
-f:contentLast ;
-f:contentNoValue ;
-f:defaultLens ;
-f:depth ;
-f:externalLink ;
-f:group ;
-f:hideProperties ;
-f:image ;
-f:instanceFormatDomain ;
-f:instanceLensDomain ;
-f:label ;
-f:labelFormat ;
-f:labelLens ;
-f:labelStyle ;
-f:member ;
-f:none ;
-f:primaryClasses ;
-f:property ;
-f:propertyFormat ;
-f:propertyFormatDomain ;
-f:propertyStyle ;
-f:purpose ;
-f:replacedResource ;
-f:resourceFormat ;
-f:resourceStyle ;
-f:show ;
-f:showProperties ;
-f:sublens ;
-f:uri ;
-f:use ;
-f:value ;
-f:valueFormat ;
-f:valueStyle ;
-< ;
-< ;
+<http://www.w3.org/2004/09/fresnel>.
+
+f:ClassList.
+f:ConvenienceToken.
+f:ConvienceProperty.
+f:Format.
+f:FormatDescription.
+f:FormatDescriptionNoSubstitution.
+f:FormatDescriptionSubstitution.
+f:Group.
+f:HidePropertyList.
+f:LabellingFormat.
+f:Lens.
+f:PropertyDescription.
+f:PropertySet.
+f:PropertyValueStyle.
+f:Purpose.
+f:ShowPropertyList.
+f:allProperties.
+f:classFormatDomain.
+f:classLensDomain.
+f:contentAfter.
+f:contentBefore.
+f:contentFirst.
+f:contentLast.
+f:contentNoValue.
+f:defaultLens.
+f:depth.
+f:externalLink.
+f:group.
+f:hideProperties.
+f:image.
+f:instanceFormatDomain.
+f:instanceLensDomain.
+f:label.
+f:labelFormat.
+f:labelLens.
+f:labelStyle.
+f:member.
+f:none.
+f:primaryClasses.
+f:property.
+f:propertyFormat.
+f:propertyFormatDomain.
+f:propertyStyle.
+f:purpose.
+f:replacedResource.
+f:resourceFormat.
+f:resourceStyle.
+f:show.
+f:showProperties.
+f:sublens.
+f:uri.
+f:use.
+f:value.
+f:valueFormat.
+f:valueStyle.

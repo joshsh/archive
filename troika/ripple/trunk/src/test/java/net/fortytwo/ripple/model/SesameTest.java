@@ -105,16 +105,14 @@ s_logger.debug( "### stop" );
 	public void runTests()
 		throws Throwable
 	{
-/* RESTORE ME:
-See: http://www.openrdf.org/issues/browse/SES-358?watch=true
-net.fortytwo.ripple.model.SesameTest$AddFromInputStreamTest
-		testSynchronous( new AddFromInputStreamTest() );
-*/
+		// Note: bug fixed in Sesame2-beta3:
+		//    http://www.openrdf.org/issues/browse/SES-358?watch=true
+//		testSynchronous( new AddFromInputStreamTest() );
 
-/* RESTORE ME:
-http://www.openrdf.org/forum/mvnforum/viewthread?thread=1229
-		testSynchronous( new RecoverFromParseErrorTest() );
-*/
+		// Note: bug fixed in Sesame2-beta3:
+		//    http://www.openrdf.org/forum/mvnforum/viewthread?thread=1229
+//		testSynchronous( new RecoverFromParseErrorTest() );
+
 	}
 }
 

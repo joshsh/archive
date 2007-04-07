@@ -124,6 +124,8 @@ public Dereferencer getDereferencer()
 		}
 
 		mc.close();
+
+		s_logger.debug( "Finished creating Model '" + name + "'" );
 	}
 
 public Repository getRepository()

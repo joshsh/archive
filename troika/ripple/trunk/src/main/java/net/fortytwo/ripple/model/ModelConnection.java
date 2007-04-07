@@ -62,6 +62,8 @@ public class ModelConnection
 
 		try
 		{
+//org.openrdf.rio.Rio.createParser( RDFFormat.TURTLE );
+
 			repoConnection = model.getRepository().getConnection();
 			valueFactory = model.getRepository().getValueFactory();
 //System.out.println( "Opened "
@@ -1087,7 +1089,9 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			else
 			{
 				String baseUri = context.toString();
+s_logger.debug( "####################### before" );
 				repoConnection.add( is, baseUri, format, context );
+s_logger.debug( "####################### after" );
 			}
 		}
 

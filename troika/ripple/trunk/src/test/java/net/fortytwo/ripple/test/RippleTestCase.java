@@ -128,7 +128,7 @@ public abstract class RippleTestCase extends TestCase
 			// Warning: we never call shutDown() on this repository.
 			Repository repository = Demo.createTestRepository();
 
-			model = new Model( repository, "UnitTestModel" );
+			model = new Model( repository, "Unit Test Model" );
 		}
 
 		return model;
