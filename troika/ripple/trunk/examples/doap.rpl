@@ -56,7 +56,7 @@ doap:wiki ;
 (: http://brownsauce.sourceforge.net/ :)
 
 (: Tabulator :)
-"http://widgets.opera.com/xml/rdf/doap/5053" grab;
+<http://widgets.opera.com/xml/rdf/doap/5053#my>.
 
 (: Semantic Web Client Library :)
 "http://www4.wiwiss.fu-berlin.de/is-group/sparql?query=DESCRIBE+%3Chttp%3A%2F%2Fwww4.wiwiss.fu-berlin.de%2Fis-group%2Fresource%2Fprojects%2FProject5%3E" grab;

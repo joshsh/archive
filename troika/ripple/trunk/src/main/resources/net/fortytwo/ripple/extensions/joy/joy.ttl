@@ -57,6 +57,22 @@ joy:concat
 	rdfs:label "concat" ;
 	rdfs:comment "finds the concatenation of Lists li and l2" .
 
+joy:cons
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "cons" ;
+	rdfs:comment "..." .
+
 joy:dip
 	a rpl:Function ;
 	rpl:arity 2 ;

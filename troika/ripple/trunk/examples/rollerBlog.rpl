@@ -1,2 +1,3 @@
 # Start browsing here.
-<http://roller.blogdns.net:2020/all>;
+# Note: times out (with timeout set to 5s)
+<http://roller.blogdns.net:2020/all>.
