@@ -32,7 +32,7 @@ public class Size extends PrimitiveFunction
 		stack = stack.getRest();
 
 		int result = 0;
-		while ( null != l )
+		while ( RippleList.NIL != l )
 		{
 			result++;
 			l = l.getRest();

@@ -23,7 +23,7 @@ public class Cons extends PrimitiveFunction
 
 	private RippleList bury( RippleValue last, RippleList l )
 	{
-		if ( null == l )
+		if ( RippleList.NIL == l )
 			return new RippleList( last );
 		else
 			return new RippleList( l.getFirst(), bury( last, l.getRest() ) );

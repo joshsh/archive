@@ -177,6 +177,37 @@ http://www.w3.org/2000/01/rdf-schema#comment
 svn propset svn:keywords "Id LastChangedDate Revision Author" myfile
 
 
+========================================
+rdf:nil test cases
+========================================
+
+().
+2 ().
+2 /().
+/().
+
+rdf:nil.
+2 rdf:nil.
+2/rdf:nil.
+
+@prefix : <http://foo#>.
+@define nilA:  ().
+/:nilA.
+/:nilA/i.
+@define nilB:  rdf:nil.
+/:nilB.
+/:nilB/i.
+@define idA:  /().
+2/:idA.
+@define idB:  /rdf:nil.
+2/:idB.
+
+2 () /cons.
+
+()(2)/concat.
+(2)()/concat.
+
+()/size.
 
 
 ========================================

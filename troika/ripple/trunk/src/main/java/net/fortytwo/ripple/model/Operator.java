@@ -50,6 +50,7 @@ public class Operator implements RippleValue
 		rdfType = new RdfValue( RDF.TYPE );
 
 	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
+	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
 
 	/**
 	*  Guesses the type of a node and creates an appropriate wrapper.
@@ -68,8 +69,10 @@ public class Operator implements RippleValue
 		if ( v instanceof RdfValue )
 		{
 // TODO: do some type inference instead of a dumb, single lookup.
-			if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
-				return new Operator( new RippleList( (RdfValue) v, mc ) );
+			if ( v.equals( rdfNil ) )
+				return new Operator( RippleList.NIL );
+			else if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
+				return new Operator( RippleList.createList( (RdfValue) v, mc ) );
 			else
 				return new Operator( (RdfValue) v );
 		}

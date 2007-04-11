@@ -40,7 +40,7 @@ public class At extends PrimitiveFunction
 		for ( int j = 1; j < i; j++ )
 		{
 			l = l.getRest();
-			if ( null == l )
+			if ( RippleList.NIL == l )
 				throw new RippleException( "list index out of bounds: " + i );
 		}
 

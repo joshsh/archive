@@ -84,7 +84,7 @@ return null;
 		valueSink = sink;
 		
 		Sink<RippleList> listSink = getSink( this );
-		listSink.put( null );
+		listSink.put( RippleList.NIL );
 /*
 		ListNode<Ast> in = reorder();
 		RippleList out = null;
@@ -152,7 +152,10 @@ return null;
 		{
 //System.out.println( "ast = " + ast );
 			InnerSink innerSink = new InnerSink( list );
-			ast.evaluate( innerSink, interpreter, modelConnection );
+			if ( null == ast )
+				innerSink.put( RippleList.NIL );
+			else
+				ast.evaluate( innerSink, interpreter, modelConnection );
 		}
 	}
 

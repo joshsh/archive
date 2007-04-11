@@ -9,6 +9,9 @@ import org.openrdf.model.vocabulary.RDF;
 
 public class RippleList extends ListNode<RippleValue> implements RippleValue
 {
+	public static RippleList NIL
+		= new RippleList( (RippleValue) null, (RippleList) null );
+
 	private RippleValue first;
 	private RippleList rest;
 
@@ -27,7 +30,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	public RippleList( final RippleValue first )
 	{
 		this.first = first;
-		rest = null;
+		rest = NIL;
 	}
 	
 	public RippleList( final RippleValue first, final RippleList rest )
@@ -36,15 +39,21 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		this.rest = rest;
 	}
 
-	// Note: this constructor does not allow you to create a null list from
-	//       rdf:nil.
-	public RippleList( RdfValue v, ModelConnection mc )
+	public static RippleList createList( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
-//		if ( v.equals( rdfNil ) )
-//			return null;
+		if ( v.equals( rdfNil ) )
+			return NIL;
+
+		else
+			return new RippleList( v, mc );
+	}
+
+	private RippleList( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
 		RdfValue curRdf = v;
-		rest = null;
+		rest = NIL;
 
 		for (;;)  // break out when we get to rdf:nil
 		{
@@ -78,9 +87,9 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	public static RippleList invert( ListNode<RippleValue> rs )
 	{
 		ListNode<RippleValue> in = rs;
-		RippleList out = null;
+		RippleList out = NIL;
 
-		while ( null != in )
+		while ( NIL != in )
 		{
 			out = new RippleList( in.getFirst(), out );
 			in = in.getRest();
@@ -105,24 +114,30 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	{
 		if ( null == rdfEquivalent )
 		{
-			rdfEquivalent = new RdfValue( mc.createBNode() );
-			RdfValue curRdf = rdfEquivalent;
+			if ( NIL == this )
+				rdfEquivalent = rdfNil;
 
-			// Annotate the head of the list with a type, but don't bother
-			// annotating every node in the list.
-			mc.add( curRdf, rdfType, rdfList );
-
-			RippleList cur = invert( this );
-
-			while ( cur != null )
+			else
 			{
-				mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
-				RippleList rest = cur.rest;
-				RdfValue restRdf = ( null == cur.rest )
-					? rdfNil : new RdfValue( mc.createBNode() );
-				mc.add( curRdf, rdfRest, restRdf );
-				curRdf = restRdf;
-				cur = cur.rest;
+				rdfEquivalent = new RdfValue( mc.createBNode() );
+				RdfValue curRdf = rdfEquivalent;
+	
+				// Annotate the head of the list with a type, but don't bother
+				// annotating every node in the list.
+				mc.add( curRdf, rdfType, rdfList );
+	
+				RippleList cur = invert( this );
+	
+				while ( cur != NIL )
+				{
+					mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
+					RippleList rest = cur.rest;
+					RdfValue restRdf = ( NIL == cur.rest )
+						? rdfNil : new RdfValue( mc.createBNode() );
+					mc.add( curRdf, rdfRest, restRdf );
+					curRdf = restRdf;
+					cur = cur.rest;
+				}
 			}
 		}
 
@@ -131,7 +146,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 	public static RippleList concat( RippleList head, RippleList tail )
 	{
-		return ( null == head )
+		return ( NIL == head )
 			? tail
 			: new RippleList( head.first, concat( head.rest, tail ) );
 	}
@@ -147,7 +162,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		{
 			// If the argument is an RDF value, try to convert it to a native list.
 			if ( v instanceof RdfValue )
-				return new RippleList( (RdfValue) v, mc );
+				return createList( (RdfValue) v, mc );
 
 			// Otherwise, fail.
 			else
@@ -171,7 +186,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		sb.append( padding ? "( " : "(" );
 		
 		boolean isFirst = true;
-		while ( null != cur )
+		while ( NIL != cur )
 		{
 			RippleValue val = cur.getFirst();
 
@@ -246,7 +261,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		p.print( padding ? "( " : "(" );
 		
 		boolean isFirst = true;
-		while ( null != cur )
+		while ( NIL != cur )
 		{
 			RippleValue val = cur.getFirst();
 

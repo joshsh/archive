@@ -38,7 +38,7 @@ public class Fold extends PrimitiveFunction
 
 		RippleList lList = RippleList.invert( ( l instanceof RippleList )
 			? (RippleList) l
-			:  new RippleList( l.toRdf( mc ), mc ) );
+			:  RippleList.createList( l.toRdf( mc ), mc ) );
 
 		RippleList result = new RippleList( v, stack );
 

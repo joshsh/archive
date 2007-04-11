@@ -7,22 +7,9 @@ public class ListDequotation implements Function
 {
 	RippleList reversedList;
 
-	private static RippleList reverse( final RippleList list )
-	{
-		RippleList in = list;
-		RippleList out = null;
-		while ( null != in )
-		{
-			out = new RippleList( in.getFirst(), out );
-			in = in.getRest();
-		}
-
-		return out;
-	}
-
 	public ListDequotation( RippleList list )
 	{
-		reversedList = reverse( list );
+		reversedList = RippleList.invert( list );
 	}
 
 	public int arity()
@@ -38,13 +25,15 @@ public class ListDequotation implements Function
 		RippleList in = reversedList;
 		RippleList out = stack;
 
-		while ( null != in )
+		while ( RippleList.NIL != in )
 		{
 			out = new RippleList( in.getFirst(), out );
 			in = in.getRest();
 		}
 
-		sink.put( out );
+		// Never emit an empty stack.
+		if ( RippleList.NIL != out )
+			sink.put( out );
 	}
 }
 

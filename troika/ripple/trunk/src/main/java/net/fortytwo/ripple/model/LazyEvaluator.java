@@ -62,7 +62,6 @@ public class LazyEvaluator extends Evaluator
 			RippleValue first = stack.getFirst();
 //System.out.println( "   first = " + stack.getFirst() );
 
-			// prim[], pred[], deq[]
 			if ( first.isActive() )
 			{
 				RippleList rest = stack.getRest();
@@ -70,7 +69,7 @@ public class LazyEvaluator extends Evaluator
 				Function f = ((Operator) first).getFunction();
 
 				// Nullary functions don't need their argument stacks reduced.
-				// They shouldn't even care if the stack is null.
+				// They shouldn't even care if the stack is empty.
 				if ( f.arity() == 0 )
 					f.applyTo( rest, this, modelConnection );
 
@@ -88,7 +87,6 @@ public class LazyEvaluator extends Evaluator
 				}
 			}
 
-			// arg[]
 			else
 				sink.put( stack );
 		}
