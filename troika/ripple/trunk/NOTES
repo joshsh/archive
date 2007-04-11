@@ -5,6 +5,7 @@ cd /tmp/demo
 svn co http://fortytwo.net/svn/repository/troika/ripple/trunk
 cd trunk
 rm -rf contest
+rm -rf etc
 rm -rf examples
 rm -rf issues
 rm -rf `find -name .svn`

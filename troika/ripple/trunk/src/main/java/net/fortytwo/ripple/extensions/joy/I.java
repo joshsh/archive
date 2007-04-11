@@ -28,7 +28,7 @@ public class I extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue v;
+//		RippleValue v;
 
 // hack...
 		{

@@ -10,7 +10,11 @@ import org.openrdf.model.vocabulary.RDF;
 public class RippleList extends ListNode<RippleValue> implements RippleValue
 {
 	public static RippleList NIL
-		= new RippleList( (RippleValue) null, (RippleList) null );
+		= new RippleList(
+			// Note: this dummy value avoids null pointer exceptions in the list
+			//       memoizer.
+			new RdfValue( RDF.NIL ),
+			(RippleList) null );
 
 	private RippleValue first;
 	private RippleList rest;
