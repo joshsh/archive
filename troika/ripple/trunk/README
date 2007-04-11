@@ -1,12 +1,50 @@
 ================================================================================
+Overview
+================================================================================
+
+Ripple is a scripting language expressed in RDF lists.  Its scripts both operate
+upon and are made up of RDF metadata, extending the idea of HTTP
+dereferenceability to computation.  Ripple is a variation on the "concatenative"
+theme of functional, stack-oriented languages such as Joy and Factor, and
+distinguishes itself through a multivalued, "pipeline" approach to query
+composition, as well as the inherent distributability of its programs.  This
+Java implementation of Ripple includes a query engine, a provisonal assortment
+of primitive functions, and an interactive interpreter which parses commands and
+queries in a readable, Turtle-like format.
+
+For more information, including command-line syntax and demo code, see
+ripple.pdf.
+
+
+================================================================================
 Run
 ================================================================================
 
+To begin an interpreter session, use one of the shortcut scripts (ripple or
+ripple.bat) or type:
+
+    java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+
+The demo application uses a RDF/XML file to save state between sessions, instead
+of a database.  To create a new cache, use the @saveas directive while talking
+to the interpreter:
+
+    @saveas "newcache.rdf".
+
+To restore a previous session, specify the cache as an argument:
+
+    ./ripple newcache.rdf
 
 
 ================================================================================
 Build
 ================================================================================
+
+To build Ripple from scratch, install Maven 2.0.x and issue the command
+
+    mvn install
+
+from the directory containing pom.xml (requires Java 5).
 
 
 ================================================================================
@@ -23,4 +61,5 @@ Known issues include:
   literal as object instead of a blank node with the expected edges.  @export,
   which passes individual statements to a handler, has not had this problem
 * interpreter hangs on @quit after @saveas, or at least it did once
-* null lists -- () -- cause NullPointerExceptions, which they should not
+* if the cache becomes too large, the repository connection will time out while
+  writing it to disk
