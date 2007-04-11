@@ -35,7 +35,14 @@ public class RdfValue implements RippleValue
 		return false;
 	}
 
-	public boolean equals( Object other )
+public boolean equals( Object other )
+{
+boolean b = equals0( other );
+System.out.println( "[" + this + "].equals(" + other + ") --> " + b );
+return b;
+}
+
+	public boolean equals0( Object other )
 	{
 		if ( other instanceof RdfValue )
 		{

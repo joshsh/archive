@@ -13,7 +13,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		= new RippleList(
 			// Note: this dummy value avoids null pointer exceptions in the list
 			//       memoizer.
-			new RdfValue( RDF.NIL ),
+			new RdfValue( RDF.ALT ),
 			(RippleList) null );
 
 	private RippleValue first;
@@ -196,7 +196,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 			if ( null == stateVal )
 			{
-				if ( val.equals( Operator.OP ) )
+				if ( Operator.OP == val )
 				{
 					if ( isFirst )
 						isFirst = false;
@@ -212,7 +212,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 			else
 			{
-				if ( val.equals( Operator.OP ) )
+				if ( Operator.OP == val )
 				{
 					if ( isFirst )
 						isFirst = false;
@@ -271,7 +271,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 			if ( null == stateVal )
 			{
-				if ( val.equals( Operator.OP ) )
+				if ( Operator.OP == val )
 				{
 					if ( isFirst )
 						isFirst = false;
@@ -287,7 +287,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 			else
 			{
-				if ( val.equals( Operator.OP ) )
+				if ( Operator.OP == val )
 				{
 					if ( isFirst )
 						isFirst = false;
@@ -323,6 +323,14 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		}
 		
 		p.print( padding ? " )" : ")" );
+	}
+
+	public boolean equals( Object o )
+	{
+		if ( o instanceof ListNode )
+			return equals( (ListNode<RippleValue>) o );
+		else
+			return false;
 	}
 }
 
