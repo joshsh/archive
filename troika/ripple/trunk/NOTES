@@ -55,6 +55,12 @@ Disco
 
 
 
+... := /*subClassOf
+myProp /transitiveClosureOf --> /+myProp
+
+[Y] lazy evaluation --> lazy URI dereferencing
+
+
 while date ; do sleep 10 ; done
 
 

@@ -1,0 +1,95 @@
+3 >>  1 dup 1000/times pop 1000/times.
+
+rdf:_1  (1)
+
+4 >>  1 dup 10000/times pop 10000/times.
+
+Error: java.lang.StackOverflowError
+
+
+
+
+
+42 (rdf:nil/rdf:type/pop) 100 /times.
+42 (rdf:nil/rdf:type/pop) 1000 /times.
+
+
+
+Java Virtual Machine Profiler Interface (JVMPI) -- that allows access to the necessary timing information
+
+java -Xruncapjprof -cp target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+
+java -Xrunjmp -cp target/ripple-full.jar net.fortytwo.ripple.Demo
+
+
+
+
+
+
+
+
+
+
+class_name                         #instaces   max #instances  size    #GC     tenure
+net.fortytwo.ripple.model.RippleList    1614    1614         38736     1       277340
+net.fortytwo.ripple.model.RippleList    1       1613          24       1613    6
+
+
+
+
+class name      method  sec     calls   subsec  #alloced instances      #alloced bytes
+
+java.lang.AbstractStringBuilder java.lang.AbstractStringBuilder append (java.lang.String)       32.000816677    2182439 67.000097433    0       0
+java.lang.AbstractStringBuilder java.lang.AbstractStringBuilder append (java.lang.String)       0.000193167     11129   0.000374106     0       0
+
+java.lang.System        void arraycopy (java.lang.Object, int, java.lang.Object, int, int)      22.000534132    3450247 0.000000000     0       0
+java.lang.System        void arraycopy (java.lang.Object, int, java.lang.Object, int, int)      0.000198917     30902   0.000000000     0       0
+
+java.lang.AbstractStringBuilder void expandCapacity (int)       19.000624996    711724  4.000530935     711724  108546712
+java.lang.AbstractStringBuilder void expandCapacity (int)       0.000122380     7562    0.000048346     7562    1293904
+
+java.lang.StackTraceElement     java.lang.String toString ()    19.000514246    180361  122.000512021   360722  5771552
+java.lang.StackTraceElement     java.lang.String toString ()    0.000010593     102     0.000064013     204     3264
+
+java.lang.String        void <init> (char[], int, int)  18.000555370    550378  3.000519239     550378  105926712
+java.lang.String        void <init> (char[], int, int)  0.000250646     7453    0.000047289     7453    831216
+
+java.lang.StringBuilder java.lang.String toString ()    9.000583186     547514  18.000402494    547514  13140336
+java.lang.StringBuilder java.lang.String toString ()    0.000095532     5995    0.000232070     5995    143880
+
+java.lang.StringBuilder void <init> ()  7.000385711     545705  7.000195300     0       0
+java.lang.StringBuilder void <init> ()  0.000055519     4224    0.000044513     0       0
+
+java.lang.AbstractStringBuilder void <init> (int)       7.000221960     548571  0.000000000     548571  26410368
+java.lang.AbstractStringBuilder void <init> (int)       0.000065304     6499    0.000000000     6499    377504
+
+java.lang.Throwable     void printStackTrace (java.io.PrintWriter)      6.000733459     306     234.000989694   180361  2885776
+java.lang.Throwable     void printStackTrace (java.io.PrintWriter)      0.000004001     6       0.000132688     102     1632
+
+java.lang.StringBuffer  java.lang.StringBuffer append (java.lang.String)        5.000049756     367577  11.000899211    0       0
+java.lang.StringBuffer  java.lang.StringBuffer append (java.lang.String)        0.000022162     1761    0.000058513     0       0
+
+
+
+
+
+
+java.lang.String        void getChars (int, int, char[], int)   28.000580666    2185672 14.000467618    0       0
+java.lang.String        void getChars (int, int, char[], int)   28.000580666    2185672 14.000467618    0       0
+
+net.fortytwo.ripple.util.ThreadWrapper$1        void run ()     5.000787577     6       11.000657204    0       0
+net.fortytwo.ripple.util.ThreadWrapper$1        void run ()     3.000113219     6       10.000779631    0       0
+
+org.openrdf.sail.memory.model.MemStatement      702     702     22464   0       3339
+org.openrdf.sail.memory.model.MemStatement      687     687     21984   0       2554
+
+java.io.FileInputStream int read ()     44.000239941    50      0.000000000     0       0
+java.io.FileInputStream int read ()     28.000102716    49      0.000000000     0       0
+
+java.lang.Object        void wait (long)        11.000671871    12      0.000000000     1       24
+java.lang.Object        void wait (long)        10.000833341    12      0.000000000     1       24
+
+
+

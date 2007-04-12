@@ -98,6 +98,7 @@ return rdfEquivalent;
 
 	public int compareTo( RippleValue other )
 	{
+//System.out.println( "[" + this + "].compareTo(" + other + ")" );
 		if ( other instanceof Operator )
 		{
 			// For now, all Operators are considered equal, as the only Operator

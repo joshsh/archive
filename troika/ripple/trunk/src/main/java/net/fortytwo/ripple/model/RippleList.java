@@ -335,6 +335,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 	public int compareTo( RippleValue other )
 	{
+//System.out.println( "[" + this + "].compareTo(" + other + ")" );
 		if ( other instanceof RippleList )
 		{
 			RippleList curThis = this, curOther = (RippleList) other;

@@ -6,6 +6,9 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
+/**
+ *  Note: this class has a natural ordering that is inconsistent with equals.
+ */
 public class RdfValue implements RippleValue
 {
 	private Value value;
@@ -38,6 +41,7 @@ public class RdfValue implements RippleValue
 
 	public int compareTo( RippleValue other )
 	{
+//System.out.println( "[" + this + "].compareTo(" + other + ")" );
 		if ( other instanceof RdfValue )
 		{
 			if ( this.value instanceof Literal )
