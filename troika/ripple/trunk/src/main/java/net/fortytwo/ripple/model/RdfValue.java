@@ -2,8 +2,9 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 
-import org.openrdf.model.Value;
 import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 public class RdfValue implements RippleValue
 {
@@ -39,11 +40,24 @@ public class RdfValue implements RippleValue
 	{
 		if ( other instanceof RdfValue )
 		{
-			if ( ( this.value instanceof Literal )
-				&& ( ( (RdfValue) other ).value instanceof Literal ) )
+			if ( this.value instanceof Literal )
 			{
-				return ( (Literal) this.value ).getLabel().compareTo(
-					( (Literal) ( (RdfValue) other ).value ).getLabel() );
+				if ( ( (RdfValue) other ).value instanceof Literal )
+					return ( (Literal) this.value ).getLabel().compareTo(
+						( (Literal) ( (RdfValue) other ).value ).getLabel() );
+				else
+					return value.getClass().getName().compareTo(
+						( (RdfValue) other ).value.getClass().getName() );
+			}
+
+			else if ( this.value instanceof URI )
+			{
+				if ( ( (RdfValue) other ).value instanceof URI )
+					return ( (URI) this.value ).toString().compareTo(
+						( (URI) ( (RdfValue) other ).value ).toString() );
+				else
+					return value.getClass().getName().compareTo(
+						( (RdfValue) other ).value.getClass().getName() );
 			}
 
 			// hack...
@@ -64,34 +78,16 @@ public class RdfValue implements RippleValue
 			return RdfValue.class.getName().compareTo( other.getClass().getName() );
 	}
 
-public boolean equals( Object other )
-{
-boolean b = equals0( other );
-//System.out.println( "[" + this + "].equals(" + other + ") --> " + b );
-return b;
-}
-
-	public boolean equals0( Object other )
+	public boolean equals( Object other )
 	{
-		if ( other instanceof RdfValue )
-		{
-			// Sesame's comparison for Literals appears to be either a little
-			// too imprecise or a little too strict to be useful for searching
-			// in Ripple, in that objects which should be equal are not, so we
-			// special case it.
-			if ( ( this.value instanceof Literal )
-				&& ( ( (RdfValue) other ).value instanceof Literal ) )
-			{
-				return ( (Literal) this.value ).getLabel().equals(
-					( (Literal) ( (RdfValue) other ).value ).getLabel() );
-			}
+		return ( other instanceof RdfValue )
+			? value.equals( ( (RdfValue) other ).value )
+			: false;
+	}
 
-			else
-				return value.equals( ( (RdfValue) other ).value );
-		}
-
-		else
-			return false;
+	public int hashCode()
+	{
+		return value.hashCode();
 	}
 
 	public String toString()

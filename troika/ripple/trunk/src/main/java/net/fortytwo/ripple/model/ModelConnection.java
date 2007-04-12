@@ -906,7 +906,6 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		// Primary file extension rules.
 		if ( null != ext )
 		{
-// TODO: I don't know if this is actually an N3 file extension
 			if ( ext.equals( "n3" ) )
 				return RDFFormat.N3;
 
