@@ -96,6 +96,18 @@ if ( null == rdfEquivalent )
 return rdfEquivalent;
 }
 
+	public int compareTo( RippleValue other )
+	{
+		if ( other instanceof Operator )
+		{
+			// For now, all Operators are considered equal, as the only Operator
+			// which should ever be subjected to a compareTo is OP.
+			return 0;
+		}
+
+		else
+			return Operator.class.getName().compareTo( other.getClass().getName() );
+	}
 }
 
 // kate: tab-width 4

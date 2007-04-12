@@ -35,10 +35,39 @@ public class RdfValue implements RippleValue
 		return false;
 	}
 
+	public int compareTo( RippleValue other )
+	{
+		if ( other instanceof RdfValue )
+		{
+			if ( ( this.value instanceof Literal )
+				&& ( ( (RdfValue) other ).value instanceof Literal ) )
+			{
+				return ( (Literal) this.value ).getLabel().compareTo(
+					( (Literal) ( (RdfValue) other ).value ).getLabel() );
+			}
+
+			// hack...
+			else
+			{
+				int hcThis = value.hashCode();
+				int hcOther = ( (RdfValue) other ).value.hashCode();
+				if ( hcThis == hcOther )
+					return 0;
+				else if ( hcThis < hcOther )
+					return -1;
+				else
+					return 1;
+			}
+		}
+
+		else
+			return RdfValue.class.getName().compareTo( other.getClass().getName() );
+	}
+
 public boolean equals( Object other )
 {
 boolean b = equals0( other );
-System.out.println( "[" + this + "].equals(" + other + ") --> " + b );
+//System.out.println( "[" + this + "].equals(" + other + ") --> " + b );
 return b;
 }
 

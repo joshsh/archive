@@ -2,7 +2,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 
-public interface RippleValue
+public interface RippleValue extends Comparable<RippleValue>
 {
 	public RdfValue toRdf( ModelConnection mc )
 		throws RippleException;

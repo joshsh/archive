@@ -332,6 +332,35 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		else
 			return false;
 	}
+
+	public int compareTo( RippleValue other )
+	{
+		if ( other instanceof RippleList )
+		{
+			RippleList curThis = this, curOther = (RippleList) other;
+
+			while ( NIL != curThis )
+			{
+				if ( NIL == curOther )
+					return 1;
+
+				int cmp = curThis.first.compareTo( curOther.first );
+				if ( 0 != cmp )
+					return cmp;
+
+				curThis = curThis.rest;
+				curOther = curOther.rest;
+			}
+
+			if ( NIL == curOther )
+				return 0;
+			else
+				return -1;
+		}
+
+		else
+			return RippleList.class.getName().compareTo( other.getClass().getName() );
+	}
 }
 
 // kate: tab-width 4

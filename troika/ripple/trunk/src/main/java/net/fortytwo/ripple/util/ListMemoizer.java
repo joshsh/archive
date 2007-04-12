@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.util;
 
-public class ListMemoizer<T,M>
+public class ListMemoizer<T extends Comparable,M>
 {
 	private T first;
 	private M memo;
@@ -30,9 +30,9 @@ public class ListMemoizer<T,M>
 
 	public boolean add( ListNode<T> list, M memo )
 	{
-		T f = list.getFirst();
+		int cmp = first.compareTo( list.getFirst() );
 
-		if ( f.equals( first ) )
+		if ( 0 == cmp )
 		{
 			ListNode<T> r = list.getRest();
 
@@ -61,33 +61,28 @@ public class ListMemoizer<T,M>
 			}
 		}
 
-		else
+		else if ( cmp < 0 )
 		{
-			// Note: we ASSUME that if equals() returns false, then
-			//       the hash codes of the two objects will be different.
-			if ( f.hashCode() < first.hashCode() )
+			if ( null == left )
 			{
-				if ( null == left )
-				{
-					left = new ListMemoizer<T,M>( list, memo );
-					return true;
-				}
-
-				else
-					return left.add( list, memo );
+				left = new ListMemoizer<T,M>( list, memo );
+				return true;
 			}
 
 			else
-			{
-				if ( null == right )
-				{
-					right = new ListMemoizer<T,M>( list, memo );
-					return true;
-				}
+				return left.add( list, memo );
+		}
 
-				else
-					return right.add( list, memo );
+		else
+		{
+			if ( null == right )
+			{
+				right = new ListMemoizer<T,M>( list, memo );
+				return true;
 			}
+
+			else
+				return right.add( list, memo );
 		}
 	}
 }
