@@ -1,0 +1,88 @@
+(: See: http://www.w3.org/TR/owl-time/ :)
+
+@prefix time:  <http://www.w3.org/2006/time#> .
+time:Instant ;
+time:Interval ;
+time:TemporalEntity ;
+time:ProperInterval ;
+time:before ;
+time:after ;
+time:hasBeginning ;
+time:hasEnd ;
+time:inside ;
+time:intervalEquals ;
+time:intervalBefore ;
+time:intervalMeets ;
+time:intervalOverlaps ;
+time:intervalStarts ;
+time:intervalDuring ;
+time:intervalFinishes ;
+time:intervalAfter ;
+time:intervalMetBy ;
+time:intervalOverlappedBy ;
+time:intervalStartedBy ;
+time:intervalContains ;
+time:intervalFinishedBy ;
+time:DurationDescription ;
+time:years ;
+time:months ;
+time:weeks ;
+time:days ;
+time:hours ;
+time:minutes ;
+time:seconds ;
+time:Year ;
+time:hasDurationDescription ;
+time:DateTimeInterval ;
+time:TemporalUnit ;
+time:DateTimeDescription ;
+time:unitType ;
+time:year ;
+time:month ;
+time:week ;
+time:day ;
+time:dayOfWeek ;
+time:DayOfWeek ;
+time:dayOfYear ;
+time:hour ;
+time:minute ;
+time:second ;
+time:timeZone ;
+time:January ;
+time:inDateTime ;
+time:inXSDDateTime ;
+time:hasDateTimeDescription ;
+time:xsdDateTime ;
+
+
+@prefix tzont: <http://www.w3.org/2006/timezone#> .
+tzont:Region ;
+tzont:PoliticalRegion ;
+tzont:Country ;
+tzont:State ;
+tzont:County ;
+tzont:Reservation ;
+tzont:City ;
+tzont:TimeZone ;
+tzont:DaylightSavingsPolicy ;
+tzont:EnumeratedDaylightSavingsPolicy ;
+tzont:hasAncestorRegion ;
+tzont:hasParentRegion ;
+tzont:hasTimeZone ;
+tzont:exceptionalRegion ;
+tzont:timeZonePart ;
+tzont:countryOf ;
+tzont:stateOf ;
+tzont:name ;
+tzont:hasDaylightSavingsPolicy ;
+tzont:observesDaylightSavingsTime ;
+tzont:DLSstartDate ;
+tzont:DLSendDate ;
+tzont:GMToffset ;
+
+
+
+
+(: Temporal ontology use cases:
+	http://esw.w3.org/topic/HCLS/ACPPTaskForce/TimeConceptUseCase
+:)

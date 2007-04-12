@@ -1,0 +1,70 @@
+========================================
+graph:assert
+========================================
+
+/new rdfs:label "foo" /assert
+    rdfs:label "foo" /assert.
+
+
+========================================
+graph:contains
+========================================
+
+/new
+    rdf:_1 "one" /assert
+    rdf:_2 "two" /assert
+    rdf:_3 "three" /assert
+    /contains.
+
+
+========================================
+graph:deny
+========================================
+
+/new rdfs:label "foo" /assert
+    rdfs:label "foo" /deny.
+
+# Note: currently, this doesn't work.
+rdfs:Class rdfs:label "Class" /deny.
+
+
+========================================
+graph:equal
+========================================
+
+2 2 /equal.
+"one" "one" /equal.
+dup joy:dup /equal.
+
+2 3 /equal.
+
+
+========================================
+graph:forget
+========================================
+
+/new rdfs:label "foo" /assert/forget.
+
+rpl:arity.
+@count statements.
+rpl:arity/forget "don't resolve rpl:arity again" /swap/swap.
+@count statements.
+
+
+========================================
+graph:new
+========================================
+
+/new.
+
+
+========================================
+graph:toString
+========================================
+
+"foo"/toString.
+2/toString.
+/new/toString.
+rdfs:Class/toString.
+(1 2 /dup)/toString.
+

@@ -1,0 +1,61 @@
+========================================
+etc:pingTheSemanticWeb
+========================================
+
+5 "all" /pingTheSemanticWeb.
+5 "foaf" /pingTheSemanticWeb.
+5 "sioc" /pingTheSemanticWeb.
+5 "doap" /pingTheSemanticWeb.
+5 "rdfs" /pingTheSemanticWeb.
+5 "owl" /pingTheSemanticWeb.
+
+
+========================================
+etc:pred
+========================================
+
+rdfs:Class rdfs:label /pred.
+
+
+========================================
+etc:prim
+========================================
+
+2 dup/prim.
+
+
+========================================
+etc:sha1
+========================================
+
+"mailto:parcour@gmail.com"/sha1.
+
+
+========================================
+etc:strCat
+========================================
+
+"foo" "bar" /strCat.
+
+
+========================================
+etc:swoogleIt
+========================================
+
+"Ubuntu" swoogle:search_swt "demo" /swoogleIt/swoogle:hasResult/contains.
+"monkey" swoogle:search_swd_ontology "demo" /swoogleIt/swoogle:hasResult/contains.
+
+
+========================================
+etc:urlEncoding
+========================================
+
+"encode me!" /urlEncoding.
+
+
+========================================
+etc:urlGet
+========================================
+
+"http://revyu.com/tags/html" /urlGet.
+

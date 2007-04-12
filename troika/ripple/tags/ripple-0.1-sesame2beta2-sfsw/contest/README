@@ -1,0 +1,451 @@
+                        Ripple: Functional Programs as Linked Data
+
+================================================================================
+Introduction
+================================================================================
+
+Ripple is a scripting language expressed as RDF lists.  It combines a minimal, point-free syntax 
+
+
+
+
+
+
+
+Conclusion and Future Work
+
+Ripple is an exploratory undertaking, which is to say that I have only the vaguest notion of where it will go from here.
+
+  The motivation for Ripple stems from the observation that the Semantic Web, in particular the linked data web, is growing
+
+... where ... from here.
+
+safe
+...and let the best program win.
+
+I have other tools 
+
+
+
+
+
+
+
+"point-free"
+curried
+
+Ripple ... is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor.  Its distinguishing features include a multivalued, "pipeline" style of function composition, as well as the dereferenceable nature of its expressions, which lend themselves to ... a distributed code base.  
+
+
+In the interest of brevity, the rest of this document assumes some familiarity both with RDF and with the programming language Joy.
+
+
+================================================================================
+Linked data
+================================================================================
+
+A working definition of "linked data" [x] might be: that subset of the Semantic Web which places statements about the "thing" identified by a particular URI at the corresponding web location.  An appropriate HTTP request for such a URI should be met with an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is *complete*, and the software may reject statements about the subject URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation: forward traversal.  For instance, if s and p are resources, then the set of triples s/p with s as their subject and p as their predicate can be determined by a single HTTP request, and will not change, despite any subsequent operations.  Here, the expression /p represents the application of a function which maps a subject s to the set of all objects o such that the statement (s, p, o) exists.  Syntactically, it is no different than the application of a primitive function such as intmath:add or joy:fold, or the dequotation of a list (see below).
+
+[x] http://www.w3.org/DesignIssues/LinkedData.html
+
+================================================================================
+RDF equivalence
+================================================================================
+
+Not only does Ripple operate on linked data, but its programs are meant to be linked data as well.  Every Ripple expression is equivalent to a collection of type rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is transparent to the user application.  Because Ripple treats rdf:Properties as functions, the application may navigate a list using either list primitives or the RDF collections
+vocabulary.  For instance:
+
+    (1 2 3)/rdf:first.
+
+yields 1, and
+
+    (1 2 3)/rdf:rest/rdf:rest/rdf:first.
+
+yields 3.  If we give an expression a URI, it thereby becomes a resource which can be incorporated into further expressions.
+
+    @define third:  /rdf:rest/rdf:rest/rdf:first.
+
+If the base URI of :third is such that it is dereferenceable -- for instance, if Ripple is attached to a triple store with a SPARQL endpoint at a web location below the base URI -- then :third is a valid program not only to the Ripple implementation executing on the server itself, but also on any client machine.  If demo: represents the base URI, then a query like the following will yield the same result regardless of where or when it is performed.
+
+    (1 2 3)/demo:third.
+
+
+================================================================================
+Computational model
+================================================================================
+
+Like Joy (and many other functional languages), Ripple's fundamental data structure is the list.  When executed as a program, a list becomes a stack.  Computation occurs at the head of the stack (visually, on the right hand side of an expression), and halts either when the stack is empty or when a "passive" item (a constant) is found at the head of the stack.  Ripple's primitive functions have an individual "arity" equal to the depth to which the stack must be reduced before it is accepted as input to the function.  Whereas Joy's many operators and combinators are active until placed inside of a quotation (a list), in Ripple, nearly everthing is either a list or is treated as a list, and is therefore quoted by default.  However, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
+
+    http://fortytwo.net/2007/03/ripple/schema#op
+
+When this symbol is encountered at the head of a stack, it has the effect of making the preceding symbol active according to its type:
+* If the argument is an list, it is executed as a program
+* If the argument is a primitive function, the stack is first normalized to a depth equal to the function's arity, then the function is applied to the result
+* If the argument is an rdf:Property, it is applied as a unary function which maps subjects to objects
+* Any other type of argument effectively becomes an active nullary function with no output
+
+This minimalism accounts for the different appearance of Ripple expressions as opposed to Joy.  Ripple hides its one operator behind a prefixed slash symbol '/', which for RDF predicates is identical to the forward traversal operator in Notation3.  The argument against using the slash in Notation3 itself seems to have been that its counterpart, the backslash, is no good as a symbol for backward traversal [y].  However, this is not an issue for Ripple, as Ripple does not provide for backward traversal at all.  Note that the following expressions are equivalent.
+
+    2 /dup.
+    2 dup op.
+    2 joy:dup rpl:op.
+
+
+
+
+[y] http://www.w3.org/DesignIssues/N3Alternatives
+
+
+
+Ripple differs from Joy in another important respect: whereas Joy operates on single stacks, Ripple operates on "streams" of stacks.  Each of its functions consumes a series of stacks as input, and produces a series of stacks as output, which is how it gets away with using RDF predicates as functions.  This simple query, for instance, yields not one, but several values:
+
+    <http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows.
+
+If we compose it with another query, the second query needs to be capable of consuming not a single stack, but many stacks, and of distributing its operation over all of them:
+
+    <http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows /foaf:name.
+
+To this end, Ripple replaces functions with "instances" of functions, which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of stream:limit (which counts its input stacks and stops transmitting them after a certain point) or of stream:unique (which remembers its input stacks, and will not transmit a duplicate).
+
+Each of the small, provisional selection of Joy primitives which Ripple supports is single-valued, 
+
+
+
+
+The Ripple implementation contains a small, ...
+
+
+
+================================================================================
+The interpreter application
+================================================================================
+
+To begin a session, use one of the shortcut scripts (ripple or ripple.bat) or type:
+
+    java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+
+The demo application uses a RDF/XML file to save state between sessions, instead of a database.  The file demo-cache.rdf contains all of data which would otherwise be drawn in on-the-fly as the interpreter works through the examples in this document.  To use it, type:
+
+    ./ripple demo-cache.rdf
+
+Try the examples without the cache to convince yourself that application will arrive at the same results either way, although with an obvious difference in speed.
+
+All of the terms defined in the examples have been written to this dereferenceable namespace:
+
+    @prefix :  <http://fortytwo.net/2007/03/ripple/demo#>.
+
+You can use this directive once and then simply use the terms from the examples without defining them.  The query engine will dereference them as needed.
+
+
+================================================================================
+Commands and queries
+================================================================================
+
+At the prompt, Ripple will accept either a directive
+
+    @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+or a query
+
+    rdf:List.
+
+A directive is a command which performs a named task.  A query is an expression which is passed to the query processor for evaluation, yielding any number of values.  For example, a query for a constant value always yields a single result:
+
+    42.
+
+Other queries may be multivalued in nature, for instance:
+
+    <http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows.
+
+This is an expression representing all of the individuals foaf:known by Tim
+Berners-Lee, and results in several values.  Ripple's compositional plumbing
+will distribute further operations over each of these values, so the expression
+
+    <http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows/foaf:name.
+
+...has the effect of retrieving all of the names of all of the individuals
+foaf:known by TBL.  When there are statements available about a value, the
+interpreter displays them in a tree view.
+
+
+================================================================================
+Directives
+================================================================================
+
+Ripple supports the following provisional assortment of directives.
+
+Define :bar as the list (1 2 3)
+
+    @define bar: (1 2 3).
+
+Write (a bnode closure of) the terms in namespace foo: to a file
+
+    @export foo: "file.rdf".
+
+Define a namespace prefix foo
+
+    @prefix foo: <http://example.org/foo#>.
+
+Quit the application.
+
+    @quit.
+
+Save the entire graph to a file
+
+    @saveas "file.rdf".
+
+Remove all statements about :bar
+
+    @undefine bar.
+
+Note: Ripple's command-line interface includes a tab completor which keeps track of all directives and keywords, as well as all qualified names of URIs which make an appearance in the triple store.  It saves on typing and can be a good way to get a rough idea of what's in a namespace.  For instance, try typing any of the following...
+
+    etc:
+    graph:
+    intmath:
+    joy:
+    stream:
+
+...followed by a tab character, to get a list of primitive functions in each
+of Ripple's library namespaces.
+
+
+================================================================================
+Syntax
+================================================================================
+
+Ripple is very close to Turtle [1] in its lexical syntax, and is made up of most
+of the same basic elements.
+
+URI references
+
+    <http://dbpedia.org/resource/city/Berlin>.
+
+Qualified names have a prefix and a local part
+
+    rdfs:Class.
+
+Either or both of the prefix and local part may be empty.  If defined, the
+default namespace can always be represented as
+
+    :.
+
+Keywords in Ripple are URIs whose local names may be used without a prefix.
+Currently, the local name of every primitive function is a keyword.
+
+    swap.
+
+Integers (doubles are on the TODO list)
+
+    -1.
+
+String literals...
+
+    "the Universe".
+
+...with optional language tag
+
+    "English"@en.
+
+Typed literals
+
+    "3.14"^^xsd:double.
+
+Blank nodes by ID
+
+    _:foo.
+
+Lists
+
+    (1 2 3).
+
+At a higher level, Ripple grammar looks more like Joy [2] and similar "concatenative" languages.  Specifically, Ripple programs are expressed in postfix notation, in that operands always precede operations.  For instance, the product 6 * 9 in Ripple is:
+
+    6 9 /mul.
+
+These expressions are equivalent:
+
+    60 60 24 /mul/mul.
+    60 60 /mul 24 /mul.
+
+The slash prefix may only be used singly, before a URI, node ID, or list.  You can use it before a literal if you like, but the resulting query won't do anything.
+
+
+[1] http://www.dajobe.org/2004/01/turtle/
+[2] http://www.latrobe.edu.au/philosophy/phimvt/joy.html
+
+
+
+================================================================================
+Recursion
+================================================================================
+
+There is no special trick to named recursion in Ripple; just use the name of the to-be-defined program in the definition body, as you would any other program.  It's a URI reference which won't be dereferenced until after the definition has been pushed to the triple store.
+
+    @define factorial:  /dup 0 /equal (/pop 1) (/dup 1 /sub /:factorial /mul) /ifte.
+    5/:factorial.
+
+An RDF use case:
+
+    @define listMembers: (/rdf:rest/:listMembers)/swap/swap rdf:first /union/i.
+
+This is a program which retrieves all of the elements of a list (in other words, it makes a stream out of a list).  Note: the /swap/swap function is just a trick to keep the quotation from unraveling too soon.  It effectively says: "this quotation has an arity of 1".  Apply :listMembers to look at etc:pingTheSemanticWeb's parameters
+
+    pingTheSemanticWeb/rpl:parameters /:listMembers.
+
+Ripple does not yet implement any of Joy's primitives for anonymous recursion.
+
+
+================================================================================
+Example #1: Searching and filtering with Revyu.com
+================================================================================
+
+Revyu.com links reviewers to reviews, reviews to things, and (some) things to
+books in the RDF Book Mashup.  First, some abbreviations:
+
+    @prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+    @prefix owl:   <http://www.w3.org/2002/07/owl#>.
+    @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+    @prefix rev:   <http://purl.org/stuff/rev#>.
+    @prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+    @prefix :      <file:///tmp/stuff.rdf#>.
+
+
+To start with, we'll walk the graph
+from reviewer Tom to each of his reviews.  But before that, we'll want to
+define some namespaces.
+
+Now we can use more readable (and typeable) QNames like
+foaf:name instead of URI references like <http://xmlns.com/foaf/0.1/name>.  On
+to the reviews.
+
+As a starting point for our queries, we'll use all of Tom's reviews:
+
+    @define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+
+We've just defined a program which, when executed, will find the objects of all
+foaf:made edges from Tom.  To do so, dequotate it.  Note: if you did not load the demo cache above, this will take a while (and possibly annoy Revyu.com).  'tail -f ripple.log' is my usual reaction to crawler boredom.
+
+    /:tomsReviews.
+
+This gives us over 100 results, which is more than we want to wade through, so let's filter out everything except for the favorable reviews.  For this we will need a new program which discards any review with a rating of less than 4.
+
+    @define restrict:  dup/swap/dip/i id scrap /ifte.
+    @define favorableOnly:  (/rev:rating 3 /gt)/:restrict.
+
+:restrict is a helper program which rejects any input it receives as its second argument which does not pass the boolean criterion that is its first argument.  The last three primitives in the expression are joy:id, which is the identity function, stream:scrap, which simply discards all of its input, and joy:ifte (if-then), which conditionally applies either of two functions.  The first half of the expression is pure stack manipulation.
+
+Apply it to Tom's reviews, and we get
+
+    /:tomsReviews /:favorableOnly.
+
+That's still too many results.  Let's look at books.  We happen to know that some books link to the RDF Book Mashup with owl:sameAs links, so we'll restrict our results to those.
+
+    @define bookReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:restrict.
+    /:tomsReviews/:favorableOnly/:bookReviewsOnly/rdfs:label.
+
+The two composed filters leave us with just two results, and then we grab their labels:
+
+    rdf:_1  ("Review of The Unwritten Rules of Phd Research, by tom")
+    rdf:_2  ("Review of Designing with Web Standards, by Jeffrey Zeldman, by tom")
+
+
+================================================================================
+Example #2: exploring a FOAF neighborhood
+================================================================================
+
+The last example was basically about tree traversal.  In this example, we'll traverse a more complicated and heterogenous structure: the FOAF network.
+
+First, another helper program.  The :choice function will act like the choice operator in a regular expression: if it produces a match, that match will be added to the result along with the original value.
+
+    @define choice:  id/union/i.
+
+The following illustrates its behavior.
+
+    5 (10 /add) /:choice.
+
+All we're going to do is to see how many FOAFers we can get to from a single point.  Let's use the foaf:knows and owl:sameAs properties as a kind of iterator to step through the graph
+
+    @define foafStep:  (foaf:knows owl:sameAs /union/i) /:choice/unique.
+
+There are a number of things going on here.  At the highest level, the stream:unique instance demands an argument stack which is reduced to one level.  That forces the dequotation of the :choice function, which connects
+the output of a joy:id and the anonymous quotation with the input of the stream:unique.  The quoted expression applies both foaf:knows and owl:sameAs to their argument, passing their output into :choice.  At the lowest level, the program
+applies both foaf:knows and owl:sameAs to the argument stack, funnelling their output into the same compositional
+pipeline as the original input.  The result is everything you put into the program, plus any additional results gained by following foaf:knows or owl:sameAs edges.  stream:unique guarantees that the program will not issue the same output twice, which is important when we're dealing with a graph with cycles.
+
+    @define tbl: <http://www.w3.org/People/Berners-Lee/card#i>.
+    /:tbl/foaf:name.
+
+Apply :foafStep once to Tim Berners-Lee's URI (note: /foaf:name should weed out anything we get from :foafStep which isn't at least implicitly a foaf:Person).
+
+    /:tbl/:foafStep/foaf:name.
+
+Apply it twice.
+
+    /:tbl :foafStep 2 /times /foaf:name.
+
+
+================================================================================
+Graph primitives
+================================================================================
+
+In the graph: namespace you'll find a list of primitives which might end up being useful for graph transformations.  The nullary primitive graph:new creates a new blank node, to which we can then attach statements using graph:assert
+
+    @define Arthur: /new
+        rdfs:type foaf:Person /assert
+        foaf:name "Arthur Dent" /assert.
+
+To remove statements from the graph, use graph:deny
+
+    /:Arthur
+        foaf:name "Arthur Dent" /deny
+        foaf:name "Arthur P. Dent" /assert.
+
+These three functions should be enough to perform all manner of operations on linked data structures.  However, it's not really in the spirit of a functional language to alter state without a guarantee that the side effects will be contained in some way, so these primitives are to be considered experimental.
+
+To remove all statements about a particular subject (see @undefine) and additionally erase it from the cache, use graph:forget
+
+    /:Arthur /forget.
+
+This is a useful trick to "refresh" the graph with respect to a resource which has either failed to resolve properly or may not be up-to-date with its source.
+
+
+================================================================================
+Implementation
+================================================================================
+
+Ripple is written in Java and uses Sesame 2 (beta) as its RDF framework.  The
+command-line interface relies on ANTLR for lexer/parser generation and JLine for
+command history and tab completion.  The project is built with Maven and is
+distributed under an open source license (see License.txt).
+
+To build Ripple from scratch, install Maven 2.0.x and issue the command
+
+    $ mvn install
+
+from the directory containing pom.xml.
+
+
+
+
+
+================================================================================
+Bugs
+================================================================================
+
+Please report them to parcour@gmail.com.
+
+Known issues include:
+* literals are not always compared properly, so (2 2 /equal) or
+  ("foo" "foo" /equal) is sometimes false.
+* the dereferencer is dumb enough to try and resolve mailto: and other
+  non-dereferenceable URIs, and complain when it fails
+* namespace prefix collisions are handled poorly (Sesame bug fixed in trunk)
+* the RDF/XML dumps produced by @saveas occasionally contain an empty string
+  literal as object instead of a blank node with the expected edges.  @export,
+  which passes individual statements to a handler, has not had this problem
+* interpreter hangs on @quit after @saveas, or at least it did once
+* null lists -- () -- cause NullPointerExceptions, which they should not
+
+
+Last edited by Joshua Shinavier on Mar. 29, 2007

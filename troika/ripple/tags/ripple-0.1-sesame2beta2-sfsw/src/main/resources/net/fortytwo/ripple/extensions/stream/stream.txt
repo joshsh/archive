@@ -1,0 +1,32 @@
+========================================
+stream:limit
+========================================
+
+2 3 /union 4 /union 2 /limit.
+
+
+========================================
+stream:scrap
+========================================
+
+2 /scrap.
+rdf:Property /dup /rdf:type "this won't work" /equal id scrap /ifte/i.
+rdf:Property /dup /rdf:type rdfs:Class /equal id scrap /ifte/i.
+
+
+========================================
+stream:union
+========================================
+
+1 2 /union.
+1 2 /union 3 /union.
+1 2 3 /union /union.
+
+
+========================================
+stream:unique
+========================================
+
+"foo" /unique.
+2 /dup/union/unique.
+

@@ -1,0 +1,74 @@
+(: Note at: http://www.w3.org/2000/10/swap/
+    This NOT W3C endorsed material, it is related to the Semantic Web activity of the W3C. :)
+
+@prefix con:  <http://www.w3.org/2000/10/swap/pim/contact#> .
+
+<http://www.w3.org/2000/10/swap/pim/contact> ;
+
+con:Address ;
+con:ContactLocation ;
+con:Data ;
+con:Female ;
+con:LanguageCode ;
+con:Male ;
+con:Person ;
+con:SocialEntity ;
+con:address ;
+con:birthday ;
+con:child ;
+con:city ;
+con:country ;
+con:departmentName ;
+con:description ;
+con:emailAddress ;
+con:fax ;
+con:firstName ;
+con:fullName ;
+con:home ;
+con:homePage ;
+con:homePageAddress ;
+con:knownAs ;
+con:lastName ;
+con:mailbox ;
+con:mailboxURI ;
+con:middleInitial ;
+con:middleName ;
+con:mobile ;
+con:motherTongue ;
+con:nearestAirport ;
+con:office ;
+con:organization ;
+con:partner ;
+con:personalSuffix ;
+con:personalTitle ;
+con:phone ;
+con:postalCode ;
+con:publicHomePage ;
+con:sortName ;
+con:stateOrProvince ;
+con:street ;
+con:street2 ;
+con:street3 ;
+con:vacationHome ;
+con:vcard_list ;
+con:zip ;
+
+@prefix doc:   <http://www.w3.org/2000/10/swap/pim/doc#> .
+
+doc:OpenSourceLicense ;
+doc:Work ;
+doc:adminPage ;
+doc:creator ;
+doc:dependsOn ;
+doc:derivativeWork ;
+doc:derivedFrom ;
+doc:ipr ;
+doc:mayControl ;
+doc:mayRead ;
+doc:mayWrite ;
+doc:obsoletes ;
+doc:persistencePolicy ;
+doc:rules ;                    # Note: has to do with "valid information about the terms defined in the namespace document"
+doc:subLicense ;
+doc:version ;
+doc:versionOf ;

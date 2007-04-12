@@ -1,0 +1,96 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:    <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix graph:  <http://fortytwo.net/2007/03/ripple/graph#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+graph:assert
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "obj" ;
+			rpl:isTransparent false ]
+		[
+			rdfs:label "pred" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "subj" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "assert" ;
+	rdfs:comment "asserts the statement (subj, pred, obj)" .
+
+graph:contains
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rdf:Resource ;
+	rpl:parameters (
+		[
+			rdfs:label "c" ;
+			rpl:parameterType rdfs:Container ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "contains" ;
+	rdfs:comment "finds all members of a container" .
+
+graph:deny
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "obj" ;
+			rpl:isTransparent false ]
+		[
+			rdfs:label "pred" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "subj" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "deny" ;
+	rdfs:comment "revokes the statement (subj, pred, obj)" .
+
+graph:equal
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent false ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rpl:Function ;
+	rdfs:label "equal" ;
+	rdfs:comment "true iff arguments are equal, otherwise false" .
+
+graph:forget
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "subj" ;
+			rpl:isTransparent false ]
+		) ;
+	rdfs:label "forget" ;
+	rdfs:comment "revokes all statements about subj" .
+
+graph:new
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rdfs:label "new" ;
+	rdfs:comment "creates a new blank node" .
+
+graph:toString
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "toString" ;
+	rdfs:comment "finds the string representation of a node" .

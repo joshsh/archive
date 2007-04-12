@@ -1,0 +1,26 @@
+<http://www.pipian.com/rdf/places/planet/Earth#Earth>.
+<http://www.pipian.com/rdf/places/planet/Earth#Earth> /contains /bagElements /wail:name.
+
+
+<http://www.pipian.com/rdf/places/country/AZ>;
+
+<http://www.pipian.com/rdf/places/country/AZ#AZ> locatedIn contains;
+
+
+<http://www.pipian.com/rdf/places/planet/Earth#Earth> sweet:contains/ bagElements/ sweet:contains/ bagElements/ rdf:type/ unique/;
+
+
+*) Some bad requests give you an RDF error response.  Others give you something less friendly.
+
+
+*) For this request I get back some RDF, but the document is named "index.html".
+
+    http://www.pipian.com/rdf/places/continent/
+
+
+
+[Ripple]
+
+* define the default namespace with an empty prefix:
+    @prefix : <http://example.org/> .
+? what happens when the namespace is re-defined after you've already created some terms in the original default namespace?

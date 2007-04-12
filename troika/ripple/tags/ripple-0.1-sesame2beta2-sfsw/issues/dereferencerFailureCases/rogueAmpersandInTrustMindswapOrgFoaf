@@ -1,0 +1,220 @@
+2007-02-11 16:39:01,115 [main] ERROR - org.openrdf.rio.RDFParseException: org.xml.sax.SAXParseException: The reference to entity "c." must end with the ';' delimiter.
+	at org.openrdf.rio.helpers.RDFParserBase._reportFatalError(RDFParserBase.java:519)
+	at org.openrdf.rio.rdfxml.RDFXMLParser._parse(RDFXMLParser.java:262)
+	at org.openrdf.rio.rdfxml.RDFXMLParser.parse(RDFXMLParser.java:205)
+	at org.openrdf.repository.ConnectionImpl._addInputStreamOrReader(ConnectionImpl.java:280)
+	at org.openrdf.repository.ConnectionImpl.add(ConnectionImpl.java:244)
+	at wurfel.model.ModelConnection.addGraph(ModelConnection.java:693)
+	at wurfel.model.HttpUriDereferencer.dereference(HttpUriDereferencer.java:81)
+	at wurfel.model.Model.multiply(Model.java:201)
+	at wurfel.model.Apply.applyTo(Apply.java:55)
+	at wurfel.model.LazyEvaluator.reduce(LazyEvaluator.java:48)
+	at wurfel.cli.Interpreter.reduce(Interpreter.java:446)
+	at wurfel.cli.Interpreter.evaluate(Interpreter.java:466)
+	at wurfel.cli.Interpreter.evaluate(Interpreter.java:497)
+	at wurfel.cli.WurfelParser.nt_Statement(WurfelParser.java:170)
+	at wurfel.cli.WurfelParser.nt_Input(WurfelParser.java:116)
+	at wurfel.cli.Interpreter.runPrivate(Interpreter.java:263)
+	at wurfel.cli.Interpreter.run(Interpreter.java:295)
+	at wurfel.JLineTest.main(JLineTest.java:67)
+Caused by: org.xml.sax.SAXParseException: The reference to entity "c." must end with the ';' delimiter.
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1269)
+	at org.openrdf.rio.rdfxml.RDFXMLParser._parse(RDFXMLParser.java:254)
+	... 16 more
+
+2007-02-11 16:39:01,115 [main] DEBUG - Failed to dereference URI: http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=sbp#sbp
+
+
+
+
+<rdf:RDF
+        xmlns="http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=golbeck#"
+        xmlns:foaf="http://xmlns.com/foaf/0.1/"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:bio="http://purl.org/vocab/bio/0.1/"
+        xmlns:review="http://www.purl.org/stuff/rev#"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+>
+
+<foaf:Person rdf:ID="sbp">
+        <foaf:mbox_sha1sum>7a3f50ae075306624f19b93569194020c1353111</foaf:mbox_sha1sum>
+        <foaf:firstName>Sean</foaf:firstName>
+        <foaf:surname>Palmer</foaf:surname>
+        <foaf:name>Sean Palmer</foaf:name>
+        <foaf:homepage rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=sbp"/>
+        <foaf:img rdf:resource="http://inamidst.com/sbp/pool"/>
+        <foaf:depiction rdf:resource="http://inamidst.com/sbp/pool"/>
+        <foaf:nick>sbp</foaf:nick>
+        <foaf:holdsAccount>
+                <foaf:OnlineAccount>
+                        <foaf:accountName>sbp</foaf:accountName>
+                        <foaf:accountServiceHomepage rdf:resource="http://trust.mindswap.org/FilmTrust/"/>
+                </foaf:OnlineAccount>
+        </foaf:holdsAccount>
+
+        <bio:olb>Swhacker, &c.</bio:olb>
+
+
+        <foaf:knows>
+                <foaf:Person rdf:about="http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=aaronsw#aaronsw">
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=aaronsw"/>
+                        <foaf:nick>aaronsw</foaf:nick>
+                </foaf:Person>
+        </foaf:knows>
+
+
+        <foaf:knows>
+                <foaf:Person rdf:about="http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=mortenf#mortenf">
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=mortenf"/>
+                        <foaf:nick>mortenf</foaf:nick>
+                </foaf:Person>
+        </foaf:knows>
+       <foaf:made rdf:resource='#tt0032138-sbp'/>
+       <foaf:made rdf:resource='#tt0050212-sbp'/>
+       <foaf:made rdf:resource='#tt0076759-sbp'/>
+       <foaf:made rdf:resource='#tt0083866-sbp'/>
+       <foaf:made rdf:resource='#tt0057012-sbp'/>
+       <foaf:made rdf:resource='#tt0044706-sbp'/>
+       <foaf:made rdf:resource='#tt0055614-sbp'/>
+       <foaf:made rdf:resource='#tt0073195-sbp'/>
+</foaf:Person>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0032138/">
+
+        <dc:title>The Wizard of Oz (1939)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0032138-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0032138"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 2 stars on a 4 star scale. That has been rounded to a 5 on a 10 point scale.</rdfs:comment>
+                        <review:rating>5</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0050212/">
+
+        <dc:title>The Bridge on the River Kwai (1957)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0050212-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0050212"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 3 stars on a 4 star scale. That has been rounded to a 7.5 on a 10 point scale.</rdfs:comment>
+                        <review:rating>7.5</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0076759/">
+
+        <dc:title>Star Wars (1977)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0076759-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0076759"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 2 stars on a 4 star scale. That has been rounded to a 5 on a 10 point scale.</rdfs:comment>
+                        <review:rating>5</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0083866/">
+
+        <dc:title>E.T. the Extra-Terrestrial (1982)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0083866-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0083866"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 2 stars on a 4 star scale. That has been rounded to a 5 on a 10 point scale.</rdfs:comment>
+                        <review:rating>5</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0057012/">
+
+        <dc:title>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1964)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0057012-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0057012"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 3.5 stars on a 4 star scale. That has been rounded to a 8.75 on a 10 point scale.</rdfs:comment>
+                        <review:rating>8.75</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0044706/">
+
+        <dc:title>High Noon (1952)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0044706-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0044706"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 2.5 stars on a 4 star scale. That has been rounded to a 6.25 on a 10 point scale.</rdfs:comment>
+                        <review:rating>6.25</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0055614/">
+
+        <dc:title>West Side Story (1961)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0055614-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0055614"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 1 stars on a 4 star scale. That has been rounded to a 2.5 on a 10 point scale.</rdfs:comment>
+                        <review:rating>2.5</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://imdb.com/title/tt0073195/">
+
+        <dc:title>Jaws (1975)</dc:title>
+
+        <review:hasReview>
+                <review:Review rdf:ID="tt0073195-sbp">
+                        <dc:date>2004-01-01</dc:date>
+
+                        <rdfs:seeAlso rdf:resource="http://trust.mindswap.org/cgi-bin/FilmTrust/filmRDF.cgi?movie=tt0073195"/>
+                        <review:reviewer rdf:resource="#sbp"/>
+                        <rdfs:comment>This movie was rated 2.5 stars on a 4 star scale. That has been rounded to a 6.25 on a 10 point scale.</rdfs:comment>
+                        <review:rating>6.25</review:rating>
+
+                </review:Review>
+        </review:hasReview>
+</rdf:Description>
+
+</rdf:RDF>

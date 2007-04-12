@@ -1,0 +1,124 @@
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix etc:      <http://fortytwo.net/2007/03/ripple/etc#> .
+@prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+etc:pingTheSemanticWeb
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:returnType xsd:string ;
+	rpl:parameters (
+		[
+			rdfs:label "type" ;
+			rdfs:comment "one of the values 'all', 'foaf', 'sioc', 'doap', 'rdfs' or 'owl'" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "maxResults" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "pingTheSemanticWeb" ;
+	rdfs:comment "requests a list of URIs from the 'Ping the Semantic Web' service" .
+
+etc:pred
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "p" ;
+			rpl:parameterType rdf:Property ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "pred" ;
+	rdfs:comment "consumes a Property and returns a 'predicate operator'" .
+
+etc:prim
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "p" ;
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "prim" ;
+	rdfs:comment "applies a Function" .
+
+etc:sha1
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "plaintext" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "sha1" ;
+	rdfs:comment "finds the sha1 hash of a string" .
+
+etc:strCat
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "strA" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "strB" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "strCat" ;
+	rdfs:comment "finds the concatenation strB+strA of two strings" .
+
+etc:swoogleIt
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "key" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "queryType" ;
+			rpl:parameterType swoogle:SwoogleQueryType ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "searchString" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "swoogleIt" ;
+	rdfs:comment "grabs search results from the Swoogle web service" .
+
+etc:urlEncoding
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "plaintext" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "urlEncoding" ;
+	rdfs:comment "finds the URL encoding of a string" .
+
+etc:urlGet
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "url" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "urlGet" ;
+	rdfs:comment "dereferences a URL and produces the received data as a string" .

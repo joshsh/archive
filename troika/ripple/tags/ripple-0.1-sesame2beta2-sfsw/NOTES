@@ -1,0 +1,484 @@
+cd /tmp
+rm -rf /tmp/demo
+mkdir /tmp/demo
+cd /tmp/demo
+svn co http://fortytwo.net/svn/repository/troika/ripple/trunk
+cd trunk
+rm -rf contest
+rm -rf examples
+rm -rf issues
+rm -rf `find -name .svn`
+rm NOTES
+rm REFACTORING
+rm TODO
+mvn install
+
+
+
+
+
+
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+***** PT APPOINTMENT -- APRIL 9 AT 8AM *****
+
+
+cat `find src -name "*.java"`| wc
+
+
+V
+    @open;
+    @close;
+
+
+[U] assumptions
+    [.] arity of a function (read: Apply) is constant, unaffected by reduction
+
+[U] 
+    [.] primitive functions may yield multiple values at a time
+
+[U]
+    [*] statements about a resource outside of their context are not allowed
+    [*] "imperative" creation of statements about an existing resource is not allowed, as is deletion of statements
+    [*] context = namespace
+
+[*] lazy reduction -- an expression is reduced when:
+    [.] it appears at the head of an expression under reduction
+    [.] it appears as an argument to a primitive function which is to be applied
+
+[V] names ^ command-line syntax
+    foo:bar -- qualified name
+    foo:    -- qualified name in which the local name is blank
+    :bar    -- name qualified with the default namespace
+    bar     -- name which relies on namespace inference
+    :       -- degenerate case, but well defined, and legal in Turtle
+    _:bar   -- blank node identified by 'bar'
+
+::::::::::::::::::::::::::::::::::::::::
+
+mvn clean
+mvn antlr:generate
+mvn install
+mvn assembly:assembly
+
+unzip -l target/firefox/ripple.xpi
+
+
+java -classpath target/ripple-full.jar net.forytwo.ripple.tools.FileRdfizerDriver $SRC > target/fileRdfizerTest.rdf
+
+
+::::::::::::::::::::::::::::::::::::::::
+
+[ba]
+http://www.w3.org/2000/01/rdf-schema#comment
+    http://www.w3.org/2000/01/rdf-schema#subPropertyOf
+        http://www.w3.org/2000/01/rdf-schema#comment
+
+::::::::::::::::::::::::::::::::::::::::
+
+[.] http://www.w3.org/1999/02/22-rdf-syntax-ns -- the RDF Schema for the RDF vocabulary defined in the RDF namespace
+[.] http://www.w3.org/2000/01/rdf-schema -- The RDF Schema vocabulary (RDFS)
+
+[conflicts] ::::::::::::::::::::::::::::
+
+[ba] Oddly enough, neither "type" nor "List" are defined by the rdfs model.  Maybe this is an OpenRDF bug.
+     BUT... http://www.w3.org/2000/01/rdf-schema#List
+
+[.]
+    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+    [ba] http://www.w3.org/2000/01/rdf-schema#type
+
+[.]
+    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+    [ba] http://www.w3.org/2000/01/rdf-schema#List
+
+
+
+svn propset svn:keywords "Id LastChangedDate Revision Author" myfile
+
+
+
+
+========================================
+launch the interpreter
+========================================
+
+java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
+
+alias ripple='java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample'
+ripple
+
+
+========================================
+update the syntax highlighter
+========================================
+
+sudo cp ./src/main/resources/net/fortytwo/ripple/cli/kate/ripple.xml /usr/share/apps/katepart/syntax
+
+
+========================================
+create RDF/XML for the server
+========================================
+
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/ripple.ttl > tmp/ripple.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/misc/ripple-misc.ttl > tmp/ripple-misc.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/newstuff/ripple-new.ttl > tmp/ripple-new.rdf
+rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/test/ripple-test.ttl > tmp/ripple-test.rdf
+
+
+========================================
+create a visualization of the rpl namespace
+========================================
+
+rapper -q -i turtle -o dot ./src/main/resources/net/fortytwo/ripple/ripple.ttl > tmp/ripple.dot
+dot -Tpng -o tmp/ripple.png tmp/ripple.dot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Comparison with Joy
+* Ripple's implementation of joy's list operators (e.g. concat) currently only work on rdf:Lists, and not on strings or other aggregate objects.
+* Ripple doesn't need to implement joy:first and joy:rest for lists, as it gets the same functionality out of rdf:first and rdf:rest as predicates.
+* Ripple doesn't implement joy:get or joy:put as I'm not interested in I/O for now
+* Ripple MAY not need set operations, as they can be achieved with the stream primitives
+* not YET implemented: joy:map, joy:step, joy:filter, joy:linrec, joy:binrec, joy:treerec, joy:unitlist, joy:powerlist, joy:cleave, joy:succ, joy:pred, joy:small
+	joy:time, joy:rand
+	joy:cons, joy:swons, joy:uncons
+
+
+V"  Sink --> Consumer
+
+
+========================================
+@export directive
+========================================
+
+$ ripple
+@prefix : <file:///tmp/tmp.rdf#>.
+@define mylist: 2 3 .
+@export : "/tmp/tmp.rdf".
+@quit.
+$ ripple
+@prefix tmp: <file:///tmp/tmp.rdf#>.
+tmp:mylist.
+/tmp:mylist /swap.
+
+rpl:PrimitiveFunction.
+@export rpl: "rpl.rdf".
+
+
+========================================
+@saveas directive
+========================================
+
+@saveas "/tmp/store.rdf".
+
+
+
+
+2 3 thisisnotdefined.
+"foo" rdfs:thisisnotarealterm.
+
+@prefix : <http://example.org/foo#>.
+@define ambiguousTerm: "definition in foo namespace".
+@prefix : <http://example.org/bar#>.
+@define ambiguousTerm: "definition in bar namespace".
+ambiguousTerm.
+
+
+
+
+
+
+# EagerStackEvaluator is only partially eager:
+2 /dup 3 .
+	rdf:_1  (2 /rpl-new:dup 3)
+
+
+
+
+
+
+
+
+
+ba
+	().
+
+
+
+V
+    Property/dup/rdf:type Class /equal scrap I /V /cat.
+
+
+
+
+V  * as a function which consumes an integer, then another function:
+    $ ("earth" "air" "water" or 3*)
+      ("earth" "air" "water" or 3 times)
+
+
+
+
+
+
+
+
+blah/*3knows/depiction;
+    vs.
+blah/3*knows/depiction;
+
+
+[V"] commands --> ___ directives (e.g. @prefix), command-line directives (e.g. @saveas)
+
+
+[V] organize the FortyTwo.net namespace using a Permalink format similar to WordPress, Typo and Community Server, e.g.
+    <http://FortyTwo.net/ns/2007/02/02/JoshuaShinavier#me>;
+    <http://fortytwo.net/ns/2007/02/02/JoshuaShinavier#me>;
+    Note: disallow directory listing for /ns
+[C] purl.net
+
+
+This works:
+	<http://www.w3.org/People/Berners-Lee/card#i>;
+	<http://my.opera.com/sucks/xml/foaf#me>;
+This doesn't:
+	<http://www.w3.org/People/Berners-Lee/card#>;
+	<http://my.opera.com/sucks/xml/foaf#>;
+Neither do these, although these URIs are the subjects of statements once their graph has been imported:
+	<http://www.w3.org/People/Berners-Lee/card>;
+	<http://my.opera.com/sucks/xml/foaf>;
+
+Ripple sees these as different:
+    <http://www.w3.org/People/Berners-Lee/card#i>;
+    <http://www.w3.org/People/Berners-Lee/card.rdf#i>;
+
+
+
+* periods for composition may not work, as the period is a valid character in the local part of a URI
+	Beau.mother.father
+	Beau:mother:*father:?neighbor
+	:  :*  :+  :?  :{x}
+	#42
+
+
+
+    <owl:InverseFunctionalProperty rdf:about="http://www.w3.org/2000/10/swap/pim/contact#emailAddress">
+        <domain rdf:resource="http://www.w3.org/2000/10/swap/pim/contact#SocialEntity"/>
+        <range rdf:resource="http://www.w3.org/2000/10/swap/pim/contact#_EmailAddress"/>
+        <con:_example rdf:parseType="Quote">
+            <rdf:Description rdf:about="http://www.w3.org/2000/10/swap/pim/contact#_Dan">
+                <con:emailAddress>connolly@w3.org</con:emailAddress>
+            </rdf:Description>
+        </con:_example>
+    </owl:InverseFunctionalProperty>
+
+
+
+
+[?] What happens when the default context is saved if a statement in the default context references a blank node in another context?  If the blank node is discarded, then we'll have to discard the statement.  If the blank nodes is preserved, then we'll have duplicate data when the original context is restored (there's probably no way around this).
+    [?] extreme case: a term is defined to reference a blank node outside of the default context
+
+[*] URIs could be created at the Repository level (in fact it so happens that they can be created at any level, with no comparability problems) but we're creating them at the Connection level just because that seems most general.
+
+
+Exception handling
+================================================================================
+* Try/catch blocks around calls to Ripple methods generally expect only RippleExceptions, and do not catch anything else.  Try/catch blocks around calls to Java methods expect the specific exceptions thrown by those methods.  Try/catch blocks around calls to methods in other libraries catch all Throwables, indiscriminately (Ripple doesn't trust third-party code).
+
+
+
+http://troika.dnsdojo.net/ripple/target/site/apidocs/index.html
+http://troika.dnsdojo.net/simile/longwell/docs/api/
+
+http://w3future.com/weblog/gems/rss2rdf.xsl
+
+Design patterns which may or do apply to Ripple
+================================================================================
+* Model-View-Controller / Observer / Event Listener
+    ObservableValueSet ^ ConsoleValueSetObserver
+* SOA
+* Client/Server
+* Three-Tier
+* Pipeline
+    Interpreter ^ RippleLexer
+    diagrammatic syntax
+* Implicit Invocation
+    [breadth-first reduction]
+    ? relation to Active Object ?
+* Delegation
+    Context ^ Model (although this is more of a bug than a feature)
+* Functional Design -- low coupling, lack of side-effects
+    expression reduction, almost every other aspect of Ripple except for static initializers
+* Interface
+    uses of Java interfaces and abstract classes
+* Immutable Object
+* Marker Interface -- interface with no methods indicates some property of implementing classes
+    RippleValue
+* Factory Method
+    Model ^ getCompletor() (although this is a temporary feature)
+* Builder
+    ripple.cli.ast ^ evaluate()
+* Lazy initialization
+    lazy expression evaluation
+    various static initializers
+    [Literal memoization]
+* Aggregate
+* Bridge
+    [displaying Value={Literal,BNode,URI} in View={console,browser}
+* Composite
+    any use of an interface
+* Container, Iterator
+    any use of Java collections
+* Extensibility
+    [classloader loads primitives from an extension JAR]
+        [ba] duplicate classes in a set of extension JARs loaded together
+* Adapter
+    PrimitiveFunctions which wrap library functions
+* Command
+    [undo/redo]
+* Memento -- caretaker requests a "memento" from the originator before changing it (the originator), then may pass the memento back to the originator to restore it
+* Flyweight
+* Chain of Responsibility
+* State -- state of an object is represented explicitly by another, single, "state" object
+* Strategy -- appropriate algorithm is chosen at runtime
+* Visitor
+* Active Object -- function execution decoupled from invocation, mediated by a Scheduler
+    ? relation to Implicit Invocation ?
+
+
+* Interpreter
+    Boeing ^ model test ^ parentheses language
+* Facade
+    Phase2 ^ xmldom.h
+* Proxy
+    XpressRules ^ SQL schema deserialization
+* Singleton pattern
+    MessageHandler
+
+================================================================================
+
+
+http://pingthesemanticweb.com/imgs/semantic_web_ready_sioc.gif
+http://pingthesemanticweb.com/imgs/semantic_web_ready_foaf.gif
+http://pingthesemanticweb.com/imgs/semantic_web_ready_doap.png
+
+
+
+org/openrdf/util/http/HttpClientUtil.java
+
+
+unzip -l ./openrdf-util/1.2.6/openrdf-util-1.2.6.jar
+	[...]
+	     5801  08-21-06 11:15   org/openrdf/util/http/HttpClientUtil.class
+	[...]
+
+http://sesame.cvs.sourceforge.net/sesame/openrdf/src/org/openrdf/util/http/HttpClientUtil.java?view=markup
+
+
+
+
+http://sesame.cvs.sourceforge.net/sesame/
+
+
+
+@define fibonacci:  1/sub/dup/:fibonacci/swap 1/sub/:fibonacci /add.
+
+
+
+
+
+::: Ripple can handle around 35,000 WordNet statements :::::::::::::::::::::::::
+
+!import "file:///home/joshs/dev/ripple/rdf/wn/wnfull.rdfs" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-antonym.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-attribute.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-causes.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-classifiedby.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-derivationallyrelated.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-entailment.rdf" ;
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-frame.rdf" ;
+[status ] : Processed 468 statements in 0 seconds
+[status ] : Processed 3,994 statements in 0 seconds
+[status ] : Processed 306 statements in 0 seconds
+[status ] : Processed 218 statements in 0 seconds
+[status ] : Processed 8,358 statements in 0 seconds
+[status ] : Processed 20,701 statements in 1 seconds
+[status ] : Processed 409 statements in 0 seconds
+[status ] : Processed 367 statements in 0 seconds
+
+!import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-glossary.rdf" ;
+Transaction started.
+[status ] : Loading data
+[WARNING] : Unable to store data in tmp file, attempting to store it in main memory
+Transaction finished.
+java.lang.OutOfMemoryError: Java heap space
+java.lang.OutOfMemoryError: Java heap space
+
+
+::: WordNet's glossary contains more nested entity definitions than are allowed
+    by default :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+1 >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-glossary.rdf" ;
+Transaction started.
+[status ] : Loading data
+[WARNING] : Unable to store data in tmp file, attempting to store it in main memory
+[status ] : Data loaded (0 bytes)
+[status ] : Checking data for errors
+[Fatal Error] wordnet-glossary.rdf:-1:-1: The parser has encountered more than "64,000" entity expansions in this document; this is the limit imposed by the application.
+[ERROR  ] : Failed to add statements: org.openrdf.rio.ParseException: org.xml.sax.SAXParseException: The parser has encountered more than "64,000" entity expansions in this document; this is the limit imposed by the application.
+Transaction finished.
+2 >>
+
+# Override the limit like this (see http://java.sun.com/j2se/1.5.0/docs/guide/xml/jaxp/JAXP-Compatibility_150.html#JAXP_security):
+java -DentityExpansionLimit=150000 -classpath target/ripple-with-dependencies.jar ripple.JLineTest "t"
+
+
+# These ones have even more:
+x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-hyponym.rdf" ;
+x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-wordsensesandwords.rdf" ;
+
+java -DentityExpansionLimit=800000 -classpath target/ripple-with-dependencies.jar ripple.JLineTest "t"
+
+
+
+
+
+
+
+[" source:Longwell]
+	static public Value dupValue(Value v) {
+		return v;
+		/*
+		if (v instanceof Literal) {
+			return new LiteralImpl(((Literal) v).getLabel());
+		}
+		return dupURI((URI) v);
+		*/
+	}
+
+	static public URI dupURI(URI uri) {
+		return uri; //new URIImpl(uri.getURI());
+	}
+["]
+    static public String escape(String s, char toEscape, char escaping, char escaped) {
+    static public String unescape(String s, char toEscape, char escaping, char escaped) {
