@@ -1,11 +1,11 @@
-package net.fortytwo.ripple.cli.commands;
+package net.fortytwo.ripple.query.commands;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.Command;
-import net.fortytwo.ripple.cli.QueryContext;
+import net.fortytwo.ripple.query.Command;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.model.ModelConnection;
 
 public class SaveAsCmd implements Command

@@ -1,31 +1,29 @@
-package net.fortytwo.ripple.cli.ast;
+package net.fortytwo.ripple.ast;
 
-import net.fortytwo.ripple.cli.QueryContext;
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class KeywordAst implements Ast
+public class OperatorAst implements Ast
 {
-	private String keyword;
-
-	public KeywordAst( final String keyword )
-	{
-		this.keyword = keyword;
-	}
-
-	public String toString()
-	{
-		return keyword;
-	}
+	public OperatorAst()
+	{}
 
 	public void evaluate( Sink<RippleValue> sink,
 						QueryContext qc,
 						ModelConnection mc )
 		throws RippleException
 	{
-		qc.resolveKeyword( keyword, sink );
+		sink.put( Operator.OP );
+	}
+
+	public String toString()
+	{
+		return "[op]";
 	}
 }
 

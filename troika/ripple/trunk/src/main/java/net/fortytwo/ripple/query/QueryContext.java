@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.query;
 
 import java.io.PrintStream;
 

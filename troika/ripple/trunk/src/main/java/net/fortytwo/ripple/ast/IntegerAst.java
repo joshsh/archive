@@ -1,29 +1,31 @@
-package net.fortytwo.ripple.cli.ast;
+package net.fortytwo.ripple.ast;
 
-import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.QueryContext;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class OperatorAst implements Ast
+public class IntegerAst implements Ast
 {
-	public OperatorAst()
-	{}
+	private int value;
+
+	public IntegerAst( final int value )
+	{
+		this.value = value;
+	}
 
 	public void evaluate( Sink<RippleValue> sink,
 						QueryContext qc,
 						ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( Operator.OP );
+		sink.put( mc.createValue( value ) );
 	}
 
 	public String toString()
 	{
-		return "[op]";
+		return "" + value;
 	}
 }
 

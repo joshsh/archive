@@ -1,8 +1,8 @@
-package net.fortytwo.ripple.cli.commands;
+package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.Command;
-import net.fortytwo.ripple.cli.QueryContext;
+import net.fortytwo.ripple.query.Command;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.model.ModelConnection;
 
 public class ShowPrefixesCmd implements Command

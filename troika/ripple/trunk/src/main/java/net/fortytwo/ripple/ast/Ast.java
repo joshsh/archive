@@ -1,7 +1,7 @@
-package net.fortytwo.ripple.cli.ast;
+package net.fortytwo.ripple.ast;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.QueryContext;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;

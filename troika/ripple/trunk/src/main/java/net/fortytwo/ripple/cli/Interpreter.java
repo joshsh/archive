@@ -1,21 +1,15 @@
 package net.fortytwo.ripple.cli;
 
-import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.PrintStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-
-import java.net.URL;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,15 +17,11 @@ import jline.Completor;
 import jline.MultiCompletor;
 import jline.ConsoleReader;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Container;
+import net.fortytwo.ripple.ast.ListAst;
 import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -39,16 +29,13 @@ import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.LazyEvaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
-//import net.fortytwo.ripple.model.DebugEvaluator;
 import net.fortytwo.ripple.model.ObservableContainer;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.cli.ast.UriAst;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.query.Command;
+import net.fortytwo.ripple.query.QueryContext;
 
 import org.apache.log4j.Logger;
 

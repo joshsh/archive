@@ -1,18 +1,23 @@
-package net.fortytwo.ripple.cli.ast;
+package net.fortytwo.ripple.ast;
 
-import net.fortytwo.ripple.cli.QueryContext;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class BooleanAst implements Ast
+public class KeywordAst implements Ast
 {
-	private boolean value;
+	private String keyword;
 
-	public BooleanAst( final boolean value )
+	public KeywordAst( final String keyword )
 	{
-		this.value = value;
+		this.keyword = keyword;
+	}
+
+	public String toString()
+	{
+		return keyword;
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
@@ -20,12 +25,7 @@ public class BooleanAst implements Ast
 						ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( mc.createValue( value ) );
-	}
-
-	public String toString()
-	{
-		return "" + value;
+		qc.resolveKeyword( keyword, sink );
 	}
 }
 

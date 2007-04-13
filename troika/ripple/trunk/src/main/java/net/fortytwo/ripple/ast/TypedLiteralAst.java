@@ -1,8 +1,8 @@
-package net.fortytwo.ripple.cli.ast;
+package net.fortytwo.ripple.ast;
 
 import java.util.Iterator;
 
-import net.fortytwo.ripple.cli.QueryContext;
+import net.fortytwo.ripple.query.QueryContext;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;

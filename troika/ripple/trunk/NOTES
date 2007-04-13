@@ -192,6 +192,20 @@ svn propset svn:keywords "Id LastChangedDate Revision Author" myfile
 
 
 ========================================
+command tests
+========================================
+
+@prefix : <http://foo#>.
+@define foo: 42 43.
+:foo.
+@undefine foo.
+:foo.
+
+@prefix woot: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+woot:type.
+
+
+========================================
 rdf:nil test cases
 ========================================
 
@@ -222,6 +236,13 @@ rdf:nil.
 (2)()/concat.
 
 ()/size.
+
+
+========================================
+towards stress testing
+========================================
+
+42 (rdf:nil/rdf:type/pop) 100 /times.
 
 
 ========================================

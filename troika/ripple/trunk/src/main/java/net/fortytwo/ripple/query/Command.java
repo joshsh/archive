@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
