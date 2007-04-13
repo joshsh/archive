@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.cli.ast;
 
-import net.fortytwo.ripple.cli.Interpreter;
+import net.fortytwo.ripple.cli.QueryContext;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
@@ -26,11 +26,11 @@ public class QNameAst implements Ast
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
-						Interpreter itp,
+						QueryContext qc,
 						ModelConnection mc )
 		throws RippleException
 	{
-		itp.resolveQName( nsPrefix, localName, sink );
+		qc.resolveQName( nsPrefix, localName, sink );
 	}
 }
 

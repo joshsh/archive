@@ -36,6 +36,23 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	{
 		return false;
 	}
+
+	public int compareTo( RippleValue other )
+	{
+//System.out.println( "[" + this + "].compareTo(" + other + ")" );
+		if ( other instanceof PrimitiveFunction )
+		{
+			if ( other == this )
+				return 0;
+			else if ( this.hashCode() < other.hashCode() )
+				return -1;
+			else
+				return 1;
+		}
+
+		else
+			return this.getClass().getName().compareTo( other.getClass().getName() );
+	}
 }
 
 // kate: tab-width 4

@@ -20,7 +20,7 @@ public class RipplePrintStream extends PrintStream
 {
 	private Lexicon lexicon;
 
-	public RipplePrintStream( OutputStream out, Lexicon lexicon, ModelConnection mc )
+	public RipplePrintStream( OutputStream out, Lexicon lexicon )
 		throws RippleException
 	{
 		super( out );

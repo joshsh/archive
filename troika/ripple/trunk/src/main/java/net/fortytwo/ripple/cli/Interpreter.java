@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
 *  Console input:
-*    System.in --> reader --> readOut --> writeIn --> lexer
+*    System.in --> reader --> readOut --> writeIn --> RippleLexer
 *
 *  Normal output:
 *    valueSetObserver --> printStream --> System.out
@@ -71,15 +71,8 @@ public class Interpreter extends Thread implements Observer
 	private Model model;
 	private Evaluator evaluator;
 
-public Model getModel()
-{
-	return model;
-}
-
 	private PipedInputStream  writeIn;
 	private PipedOutputStream readOut;
-
-	private PrintWriter out;
 
 	private ConsoleReader reader;
 	private int lineNumber = 0;
@@ -90,7 +83,7 @@ public Model getModel()
 	private ObservableContainer valueSet;
 	private ContainerTreeView valueSetObserver;
 
-	private Lexicon lexicon;
+	private QueryContext queryContext;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -130,9 +123,6 @@ public Model getModel()
 
 		chooseEvaluator();
 
-		lexicon = new Lexicon( model );
-		lexicon.addObserver( this );
-
 		String jLineDebugOutput = Ripple.getJLineDebugOutput();
 
 		try
@@ -154,8 +144,6 @@ public Model getModel()
 		{
 			writeIn = new PipedInputStream();
 			readOut = new PipedOutputStream( writeIn );
-
-			out = new PrintWriter( System.out );
 		}
 
 		catch ( java.io.IOException e )
@@ -165,19 +153,20 @@ public Model getModel()
 
 		errorPrintStream = System.err;
 
+		queryContext = new QueryContext( model, System.out, errorPrintStream );
+		queryContext.getLexicon().addObserver( this );
+
 		valueSet = new ObservableContainer( model, null );
-ModelConnection mc = new ModelConnection( model, "for ConsoleValueSet constructor" );
-		printStream = new RipplePrintStream( System.out, lexicon, mc );
+		printStream = queryContext.getPrintStream();
 		valueSetObserver = new ContainerTreeView( valueSet, printStream );
-mc.close();
 		valueSet.addObserver( valueSetObserver );
 
-		update( lexicon, null );
+		update( queryContext.getLexicon(), null );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void updateCompletors()
+	private void updateCompletors( final Lexicon lexicon )
 	{
 		s_logger.debug( "updating completors" );
 		List completors = new ArrayList();
@@ -222,57 +211,49 @@ mc.close();
 		}
 	}
 
-	public boolean readLine()
+	public void readLine()
 	{
+System.out.println( "readLine()" );System.out.flush();
 		try
 		{
 			++lineNumber;
 			String line = reader.readLine( "" + lineNumber + " >>  " );
-
-			if ( null == line )
-				return false;
-
-			else
+	
+			if ( null != line )
 			{
 				byte[] bytes = line.getBytes();
 				readOut.write( bytes, 0, bytes.length );
-
+	
 				// Add a deliberate "end of line" character so the lexer knows
 				// to call readLine() again when it gets there.
 				byte[] terminator = { '\n' };
 				readOut.write( terminator, 0, 1 );
-
-				out.flush();
+	
+				readOut.flush();
 			}
-
-			return true;
 		}
 
-		catch( java.io.IOException e )
+		// This has never happened.
+		catch ( java.io.IOException e )
 		{
-			new RippleException( e );
-			return false;
+			alert( "IOException: " + e.toString() );
 		}
 	}
 
-	public void quit()
+	private void runPrivate()
 	{
-		s_logger.debug( "quit() called on Interpreter" );
-		throw new ParserQuitException();
-	}
-
-	private void runPrivate() throws Throwable
-	{
-		if ( !readLine() )
-			return;
-
 // TODO: revisit parser error recovery
-		while ( true )
+		// Break out when a @quit directive is encountered
+		for (;;)
 		{
+System.out.println( "--- 0 ---" );
+			readLine();
+System.out.println( "--- 1 ---" );
 			RippleLexer lexer = new RippleLexer( writeIn );
 			lexer.initialize( this );
 			RippleParser parser = new RippleParser( lexer );
 			parser.initialize( this );
+System.out.println( "--- 2 ---" );
 
 			try
 			{
@@ -288,17 +269,20 @@ mc.close();
 				alert( "RecognitionException: " + e.toString() );
 			}
 
-			catch ( antlr.TokenStreamRecognitionException e )
+			catch ( antlr.TokenStreamException e )
 			{
 				// Report the error, then begin parsing again.
-				alert( "TokenStreamRecognitionException: " + e.toString() );
+				alert( "TokenStreamException: " + e.toString() );
 			}
 
 			catch ( ParserQuitException e )
 			{
+				s_logger.debug( "quit() called on Interpreter" );
+
 				// The user has instructed the parser to quit.
 				break;
 			}
+System.out.println( "--- 3 ---" );
 		}
 	}
 
@@ -306,7 +290,7 @@ mc.close();
 	{
 		try
 		{
-			s_logger.debug( "running Interpreter in a new thread" );
+			s_logger.debug( "running Interpreter as a new thread" );
 			runPrivate();
 		}
 
@@ -320,362 +304,15 @@ mc.close();
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void countStatements()
-	{
-		try
-		{
-			System.out.println( "\n" + model.countStatements() + "\n" );
-		}
-
-		catch ( RippleException e ) {}
-	}
-
-	public void showContexts()
-	{
-		try
-		{
-//            valueSet.setValues( model.getContexts() );
-
-// FIXME: this is a kludge to keep the print stream from using namespace prefixes instead of full URI references
-			printStream.println( "" );
-			Iterator<RippleValue> models = model.getContexts().iterator();
-			int i = 0;
-			while ( models.hasNext() )
-			{
-				printStream.print( "[" + i++ + "] " );
-				printStream.println( models.next() );
-			}
-			printStream.println( "" );
-		}
-
-		catch ( RippleException e ) {}
-	}
-
-	private void saveAsPrivate( String fileName )
-		throws RippleException
-	{
-		OutputStream out;
-
-		try
-		{
-			out = new FileOutputStream( fileName );
-		}
-
-		catch ( java.io.FileNotFoundException e )
-		{
-			throw new RippleException( e );
-		}
-
-		model.writeTo( out );
-//        model.writeTrix( out );
-
-		try
-		{
-			out.close();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-	}
-
-	private void exportNsPrivate( String nsPrefix, String fileName )
-		throws RippleException
-	{
-		OutputStream out;
-
-		String ns = lexicon.resolveNamespacePrefix( nsPrefix );
-		if ( null == ns )
-			throw new RippleException( "namespace prefix '" + nsPrefix + "' is not defined" );
-
-		try
-		{
-			out = new FileOutputStream( fileName );
-		}
-
-		catch ( java.io.FileNotFoundException e )
-		{
-			throw new RippleException( e );
-		}
-
-		ModelConnection mc = new ModelConnection( model );
-
-		try
-		{
-			mc.exportNs( ns, out );
-		}
-
-		catch ( RippleException e )
-		{
-			mc.close();
-			throw e;
-		}
-
-		mc.close();
-
-		try
-		{
-			out.close();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-	}
-
-	public void saveAs( final String fileName )
-	{
-		try
-		{
-			saveAsPrivate( fileName );
-
-			System.out.println( "\nSaved data set as " + fileName + "\n" );
-		}
-
-		catch ( RippleException e ) {}
-	}
-
-	public void exportNs( final String nsPrefix, final String fileName )
-	{
-		try
-		{
-			exportNsPrivate( nsPrefix, fileName );
-
-			System.out.println( "\nExported namespace " + nsPrefix + " to " + fileName + "\n" );
-		}
-
-		catch ( RippleException e ) {}
-	}
-
-	public void setNamespace( final String prefix, final UriAst uri )
-	{
-		ModelConnection mc = null;
-
-		try
-		{
-			mc = new ModelConnection( model, "for setNamespace" );
-			ContainerSink sink = new ContainerSink();
-			uri.evaluate( sink, this, mc );
-			if ( sink.size() == 0 )
-				throw new RippleException( "URI could not be constructed from " + uri );
-			else if ( sink.size() > 1 )
-				throw new RippleException( "multiple values constructed from " + uri );
-
-			URI ns = mc.uriValue( sink.iterator().next() );
-			mc.setNamespace( prefix, ns );
-			mc.close();
-			mc = null;
-
-			lexicon.update();
-		}
-
-		catch ( RippleException e )
-		{
-			if ( null != mc )
-			{
-				try
-				{
-					mc.close();
-				}
-
-				catch ( RippleException e2 )
-				{
-					// ...
-				}
-			}
-
-			alert( "Error: " + e.getMessage() );
-		}
-	}
-
-	private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
-		throws RippleException
-	{
-		Dereferencer d = model.getDereferencer();
-
-		Iterator<RippleValue> iter = values.iterator();
-		while ( iter.hasNext() )
-		{
-			RippleValue value = iter.next();
-if ( value instanceof RippleList )
-value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
-
-			try
-			{
-				d.dereference( value.toRdf( mc ), mc );
-			}
-
-			catch ( RippleException e )
-			{
-				// (soft fail)
-			}
-		}
-	}
-
-	public void resolveKeyword( final String localName, Sink<RippleValue> sink )
-		throws RippleException
-	{
-		Collection<URI> options = lexicon.resolveKeyword( localName );
-		if ( 0 == options.size() )
-			errorPrintStream.println( "Warning: no values resolved for keyword " + localName );
-		else if ( 1 < options.size() )
-			errorPrintStream.println( "Warning: multiple values resolved for keyword " + localName );
-
-		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
-			sink.put( model.getBridge().get(
-				new RdfValue( optIter.next() ) ) );
-	}
-
-	public void resolveQName( final String nsPrefix,
-								final String localName,
-								final Sink<RippleValue> sink )
-		throws RippleException
-	{
-		Value v = lexicon.resolveQName( nsPrefix, localName );
-
-		if ( null == v )
-			errorPrintStream.println( "Warning: no values resolved for " + nsPrefix + ":" + localName );
-
-		else
-			sink.put( model.getBridge().get(
-				new RdfValue( v ) ) );
-	}
-
-	private String getDefaultNamespace()
-		throws RippleException
-	{
-		String defaultNs = lexicon.resolveNamespacePrefix( "" );
-
-		if ( null == defaultNs )
-			throw new RippleException( "no default namespace is defined.  Use '@prefix : <...>.'" );
-
-		return defaultNs;
-	}
-
-	private void evaluate( ListAst ast, final String name )
-		throws RippleException
-	{
-		ModelConnection mc = null;
-
-		try
-		{
-			mc = new ModelConnection( model, "for Interpreter evaluate()" );
-
-			ContainerSink expressions = new ContainerSink();
-			ast.evaluate( expressions, this, mc );
-
-			// Define the term *before* reduction.
-			if ( null != name && expressions.size() > 0 )
-			{
-				if ( expressions.size() > 1 )
-					errorPrintStream.println( "Warning: expression has multiple values.  Choosing the first value for assignment." );
-
-				RippleValue expr = expressions.iterator().next();
-
-				if ( !( expr instanceof RippleList ) )
-					throw new RippleException( "term assignment for non-lists is not implemented" );
-
-				RippleList exprList = (RippleList) expr;
-
-// TODO: check for collision with an existing URI
-				URI uri = mc.createUri( getDefaultNamespace() + name );
-
-				mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
-
-				lexicon.update();
-			}
-
-// TODO: break this up into definition and evaluation.  I think it's clear that
-//       we don't want both at once.
-			if ( null == name )
-			{
-				ListContainerSink evaluatedExpressions = new ListContainerSink();
-				for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
-				{
-					RippleValue expr = iter.next();
-					RippleList list = ( expr instanceof RippleList )
-						? (RippleList) expr
-						: new RippleList( expr );
-//System.out.println( "applying to: " + list );
-	
-					evaluator.applyTo( list, evaluatedExpressions, mc );
-				}
-
-// TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
-//       and should probably be moved into the tree view itself if possible.
-				dereferenceResultSet( evaluatedExpressions, mc );
-	
-				valueSet.setValues( evaluatedExpressions );
-			}
-
-			mc.close();
-		}
-
-		catch ( RippleException e )
-		{
-			mc.close();
-			throw e;
-		}
-	}
-
-	public void undefine( final String localName )
-	{
-		try
-		{
-			ModelConnection mc = new ModelConnection( model, "for Interpreter undefine()" );
-
-			mc.removeStatementsAbout(
-				mc.createUri( getDefaultNamespace() + localName ) );
-
-// TODO: close on Exception
-			mc.close();
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-		}
-	}
-
 	public void evaluate( ListAst ast )
 	{
 		try
 		{
-			lexicon.suspendEventHandling();
+			queryContext.getLexicon().suspendEventHandling();
 			valueSetObserver.suspendEventHandling();
-			evaluate( ast, null );
-			lexicon.resumeEventHandling();
+			evaluatePrivate( ast );
+			queryContext.getLexicon().resumeEventHandling();
 			valueSetObserver.resumeEventHandling();
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-		}
-	}
-
-	public void evaluateAndDefine( ListAst ast, String name )
-	{
-		try
-		{
-			lexicon.suspendEventHandling();
-			evaluate( ast, name );
-			lexicon.resumeEventHandling();
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-		}
-	}
-
-	public void showNamespaces()
-	{
-		try
-		{
-			model.showNamespaces();
 		}
 
 		catch ( RippleException e )
@@ -718,6 +355,72 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 		}
 	}
 
+	////////////////////////////////////////////////////////////////////////////
+
+	private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
+		throws RippleException
+	{
+		Dereferencer d = model.getDereferencer();
+
+		Iterator<RippleValue> iter = values.iterator();
+		while ( iter.hasNext() )
+		{
+			RippleValue value = iter.next();
+if ( value instanceof RippleList )
+value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
+
+			try
+			{
+				d.dereference( value.toRdf( mc ), mc );
+			}
+
+			catch ( RippleException e )
+			{
+				// (soft fail)
+			}
+		}
+	}
+
+	private void evaluatePrivate( ListAst ast )
+		throws RippleException
+	{
+		ModelConnection mc = null;
+
+		try
+		{
+			mc = new ModelConnection( model, "for Interpreter evaluate()" );
+
+			ContainerSink expressions = new ContainerSink();
+			ast.evaluate( expressions, queryContext, mc );
+
+			ListContainerSink evaluatedExpressions = new ListContainerSink();
+			for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
+			{
+				RippleValue expr = iter.next();
+				RippleList list = ( expr instanceof RippleList )
+					? (RippleList) expr
+					: new RippleList( expr );
+//System.out.println( "applying to: " + list );
+	
+				evaluator.applyTo( list, evaluatedExpressions, mc );
+			}
+
+// TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
+//       and should probably be moved into the tree view itself if possible.
+			dereferenceResultSet( evaluatedExpressions, mc );
+	
+			valueSet.setValues( evaluatedExpressions );
+
+			mc.close();
+		}
+
+		catch ( RippleException e )
+		{
+			mc.close();
+			throw e;
+		}
+	}
+
 	private void alert( String s )
 	{
 		errorPrintStream.println( "\n" + s + "\n" );
@@ -727,8 +430,64 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 
 	public void update( Observable o, Object arg )
 	{
-		if ( o == lexicon )
-			updateCompletors();
+		if ( o instanceof Lexicon )
+			updateCompletors( (Lexicon) o );
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	public void put( final Command cmd )
+	{
+		ModelConnection mc = null;
+		boolean connectionEstablished = false, commandCompleted = false;
+
+		try
+		{
+			mc = new ModelConnection( model, "Command" );
+			connectionEstablished = true;
+			cmd.execute( queryContext, mc );
+			commandCompleted = true;
+			mc.close();
+		}
+
+		catch ( ParserQuitException e )
+		{
+			try
+			{
+				mc.close();
+			}
+
+			catch ( RippleException e2 )
+			{
+				alert( "Error: failed to close connection" );
+			}
+
+			throw e;
+		}
+
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+
+			if ( !connectionEstablished )
+				alert( "Error: failed to establish connection" );
+
+			else if ( !commandCompleted )
+			{
+				try
+				{
+					mc.close();
+				}
+
+				catch ( RippleException e2 )
+				{
+					alert( "Error: failed to close connection" );
+				}
+			}
+
+			else
+				alert( "Error: failed to close connection" );
+		}
 	}
 }
 

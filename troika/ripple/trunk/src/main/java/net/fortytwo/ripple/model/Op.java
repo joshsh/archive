@@ -19,6 +19,15 @@ public class Op extends Filter
 		sink.put( new RippleList(
 			Operator.createOperator( v, mc ), stack ) );
 	}
+
+	public int compareTo( RippleValue other )
+	{
+		// There is only one Op.
+		if ( other == this )
+			return 0;
+		else
+			return this.getClass().getName().compareTo( other.getClass().getName() );
+	}
 }
 
 // kate: tab-width 4

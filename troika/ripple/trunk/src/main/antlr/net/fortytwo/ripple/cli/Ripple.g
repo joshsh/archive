@@ -14,6 +14,15 @@ import net.fortytwo.ripple.cli.ast.QNameAst;
 import net.fortytwo.ripple.cli.ast.StringAst;
 import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
 import net.fortytwo.ripple.cli.ast.UriAst;
+import net.fortytwo.ripple.cli.commands.CountStatementsCmd;
+import net.fortytwo.ripple.cli.commands.DefinePrefixCmd;
+import net.fortytwo.ripple.cli.commands.DefineTermCmd;
+import net.fortytwo.ripple.cli.commands.ExportNsCmd;
+import net.fortytwo.ripple.cli.commands.QuitCmd;
+import net.fortytwo.ripple.cli.commands.SaveAsCmd;
+import net.fortytwo.ripple.cli.commands.ShowContextsCmd;
+import net.fortytwo.ripple.cli.commands.ShowPrefixesCmd;
+import net.fortytwo.ripple.cli.commands.UndefineTermCmd;
 }
 
 
@@ -43,8 +52,8 @@ options
 		if ( null == interpreter )
 			System.err.println( "RippleLexer instance has not been initialized" );
 
-		else if ( !interpreter.readLine() )
-			throw new ParserQuitException();
+		else
+			interpreter.readLine();
 	}
 }
 
@@ -330,7 +339,7 @@ nt_Literal returns [ Ast r ]
 			{
 				System.err.println( "a NumberFormatException was encountered (this shouldn't happen)" );
 				r = null;
-				interpreter.quit();
+				System.exit( 1 );
 			}
 		}
 	;
@@ -422,17 +431,17 @@ nt_Directive
 }
 	: DRCTV_COUNT WS "statements" (WS)? EOS
 		{
-			interpreter.countStatements();
+			interpreter.put( new CountStatementsCmd() );
 		}
 
 	| DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_List (WS)? EOS
 		{
-			interpreter.evaluateAndDefine( rhs, localName );
+			interpreter.put( new DefineTermCmd( rhs, localName ) );
 		}
 
 	| DRCTV_EXPORT ( WS ( nsPrefix=nt_PrefixName (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
 		{
-			interpreter.exportNs( nsPrefix, exFile.getText() );
+			interpreter.put( new ExportNsCmd( nsPrefix, exFile.getText() ) );
 		}
 
 	| DRCTV_HELP (WS)? EOS
@@ -443,27 +452,27 @@ nt_Directive
 	| DRCTV_LIST WS
 		( "contexts" (WS)? EOS
 			{
-				interpreter.showContexts();
+				interpreter.put( new ShowContextsCmd() );
 			}
 		| "prefixes" (WS)? EOS
 			{
-				interpreter.showNamespaces();
+				interpreter.put( new ShowPrefixesCmd() );
 			}
 		)
 
 	| DRCTV_PREFIX WS ( nsPrefix=nt_PrefixName (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
 		{
-			interpreter.setNamespace( nsPrefix, ns );
+			interpreter.put( new DefinePrefixCmd( nsPrefix, ns ) );
 		}
 
 	| DRCTV_QUIT (WS)? EOS
 		{
-			interpreter.quit();
+			interpreter.put( new QuitCmd() );
 		}
 
 	| DRCTV_SAVEAS WS saFile:STRING (WS)? EOS
 		{
-			interpreter.saveAs( saFile.getText() );
+			interpreter.put( new SaveAsCmd( saFile.getText() ) );
 		}
 
 	| DRCTV_SERQL WS query:STRING (WS)? EOS
@@ -473,7 +482,7 @@ nt_Directive
 
 	| DRCTV_UNDEFINE WS localName=nt_Name (WS)? EOS
 		{
-			interpreter.undefine( localName );
+			interpreter.put( new UndefineTermCmd( localName ) );
 		}
 	;
 

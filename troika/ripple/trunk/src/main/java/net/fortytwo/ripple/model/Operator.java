@@ -107,7 +107,7 @@ return rdfEquivalent;
 		}
 
 		else
-			return Operator.class.getName().compareTo( other.getClass().getName() );
+			return this.getClass().getName().compareTo( other.getClass().getName() );
 	}
 }
 
