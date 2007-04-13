@@ -17,8 +17,6 @@ import jline.Completor;
 import jline.MultiCompletor;
 import jline.ConsoleReader;
 
-import org.openrdf.model.Statement;
-
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.ast.ListAst;
@@ -304,40 +302,6 @@ System.out.println( "--- 3 ---" );
 
 		catch ( RippleException e )
 		{
-			alert( "Error: " + e.getMessage() );
-		}
-	}
-
-	// E.g.
-	//      CONSTRUCT * FROM {x} p {y}
-	public void evaluateGraphQuery( final String query )
-	{
-		ModelConnection mc = null;
-
-		try
-		{
-			mc = new ModelConnection( model, "for evaluateGraphQuery" );
-			Iterator<Statement> stmtIter = mc.graphQuery( query ).iterator();
-
-			printStream.println( "" );
-			printStream.print( stmtIter );
-			printStream.println( "" );
-
-			mc.close();
-		}
-
-		catch ( RippleException e )
-		{
-			try
-			{
-				mc.close();
-			}
-
-			catch ( RippleException e2 )
-			{
-				// ...
-			}
-
 			alert( "Error: " + e.getMessage() );
 		}
 	}

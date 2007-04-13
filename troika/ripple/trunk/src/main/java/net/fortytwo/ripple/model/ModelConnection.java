@@ -1343,7 +1343,7 @@ s_logger.debug( "####################### after" );
 	////////////////////////////////////////////////////////////////////////////
 
 	// e.g. CONSTRUCT * FROM {x} p {y}
-	public Collection<Statement> graphQuery( final String queryStr )
+	public Collection<Statement> serqlQuery( final String queryStr )
 		throws RippleException
 	{
 		Collection<Statement> statements = new ArrayList<Statement>();

@@ -105,10 +105,6 @@ public class QueryContext
 			sink.put( model.getBridge().get(
 				new RdfValue( v ) ) );
 	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-
 }
 
 // kate: tab-width 4

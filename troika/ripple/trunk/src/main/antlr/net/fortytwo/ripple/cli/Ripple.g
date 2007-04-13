@@ -20,6 +20,7 @@ import net.fortytwo.ripple.query.commands.DefineTermCmd;
 import net.fortytwo.ripple.query.commands.ExportNsCmd;
 import net.fortytwo.ripple.query.commands.QuitCmd;
 import net.fortytwo.ripple.query.commands.SaveAsCmd;
+import net.fortytwo.ripple.query.commands.SerqlQueryCmd;
 import net.fortytwo.ripple.query.commands.ShowContextsCmd;
 import net.fortytwo.ripple.query.commands.ShowPrefixesCmd;
 import net.fortytwo.ripple.query.commands.UndefineTermCmd;
