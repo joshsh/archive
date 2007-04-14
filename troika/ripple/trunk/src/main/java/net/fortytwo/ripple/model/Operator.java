@@ -53,7 +53,7 @@ public class Operator implements RippleValue
 	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
 
 	/**
-	*  Guesses the type of a node and creates an appropriate wrapper.
+	*  Finds the type of a node and creates an appropriate wrapper.
 	*/
 	protected static Operator createOperator( RippleValue v, ModelConnection mc )
 		throws RippleException
@@ -102,7 +102,7 @@ return rdfEquivalent;
 		if ( other instanceof Operator )
 		{
 			// For now, all Operators are considered equal, as the only Operator
-			// which should ever be subjected to a compareTo is OP.
+			// which should ever be subjected to a compareTo is rpl:op.
 			return 0;
 		}
 

@@ -2,7 +2,7 @@ package net.fortytwo.ripple.ast;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
@@ -61,7 +61,7 @@ return null;
 */
 
 	private ModelConnection modelConnection;
-	private QueryContext queryContext;
+	private QueryEngine queryContext;
 	private Sink<RippleValue> valueSink;
 
 	private Sink<RippleList> getSink( ListNode<Ast> listAst )
@@ -74,13 +74,13 @@ return null;
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
-						QueryContext qc,
+						QueryEngine qe,
 						ModelConnection mc )
 		throws RippleException
 	{
 //        boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 		modelConnection = mc;
-		queryContext = qc;
+		queryContext = qe;
 		valueSink = sink;
 		
 		Sink<RippleList> listSink = getSink( this );

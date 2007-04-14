@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 
 public class SaveAsCmd implements Command
@@ -17,7 +17,7 @@ public class SaveAsCmd implements Command
 		this.fileName = fileName;
 	}
 
-	public void execute( QueryContext qc, ModelConnection mc )
+	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
 		OutputStream out;
@@ -32,8 +32,8 @@ public class SaveAsCmd implements Command
 			throw new RippleException( e );
 		}
 
-		qc.getModel().writeTo( out );
-//        qc.getModel().writeTrix( out );
+		qe.getModel().writeTo( out );
+//        qe.getModel().writeTrix( out );
 
 		try
 		{

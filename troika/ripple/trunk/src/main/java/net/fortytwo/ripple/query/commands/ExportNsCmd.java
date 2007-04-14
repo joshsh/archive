@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 
 public class ExportNsCmd implements Command
@@ -18,12 +18,12 @@ public class ExportNsCmd implements Command
 		this.fileName = fileName;
 	}
 
-	public void execute( QueryContext qc, ModelConnection mc )
+	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
 		OutputStream out;
 
-		String ns = qc.getLexicon().resolveNamespacePrefix( nsPrefix );
+		String ns = qe.getLexicon().resolveNamespacePrefix( nsPrefix );
 		if ( null == ns )
 			throw new RippleException( "namespace prefix '" + nsPrefix + "' is not defined" );
 

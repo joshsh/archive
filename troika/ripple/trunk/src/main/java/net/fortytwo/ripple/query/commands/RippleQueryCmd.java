@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 
 public class RippleQueryCmd implements Command
@@ -25,7 +25,7 @@ public class RippleQueryCmd implements Command
 		this.sink = sink;
 	}
 
-	public void execute( final QueryContext qc, final ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		Sink<RippleValue> evaluatorSink = new Sink<RippleValue>()
@@ -37,7 +37,7 @@ public class RippleQueryCmd implements Command
 			}
 		};
 
-		listAst.evaluate( evaluatorSink, qc, mc );
+		listAst.evaluate( evaluatorSink, qe, mc );
 	}
 }
 

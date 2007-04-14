@@ -3,7 +3,7 @@ package net.fortytwo.ripple.query.commands;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.ast.UriAst;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
 
@@ -20,11 +20,11 @@ public class DefinePrefixCmd implements Command
 		this.uri = uri;
 	}
 
-	public void execute( QueryContext qc, ModelConnection mc )
+	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
 		ContainerSink sink = new ContainerSink();
-		uri.evaluate( sink, qc, mc );
+		uri.evaluate( sink, qe, mc );
 		if ( sink.size() == 0 )
 			throw new RippleException( "URI could not be constructed from " + uri );
 		else if ( sink.size() > 1 )
@@ -34,7 +34,7 @@ public class DefinePrefixCmd implements Command
 		mc.setNamespace( prefix, ns );
 		mc = null;
 
-		qc.getLexicon().update();
+		qe.getLexicon().update();
 	}
 }
 

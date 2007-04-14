@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.ast;
 
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
@@ -21,11 +21,11 @@ public class KeywordAst implements Ast
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
-						QueryContext qc,
+						QueryEngine qe,
 						ModelConnection mc )
 		throws RippleException
 	{
-		qc.resolveKeyword( keyword, sink );
+		qe.resolveKeyword( keyword, sink );
 	}
 }
 

@@ -2,7 +2,7 @@ package net.fortytwo.ripple.ast;
 
 import java.util.Iterator;
 
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -24,12 +24,12 @@ public class TypedLiteralAst implements Ast
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
-						QueryContext qc,
+						QueryEngine qe,
 						ModelConnection mc )
 		throws RippleException
 	{
 		ContainerSink values = new ContainerSink();
-		type.evaluate( values, qc, mc );
+		type.evaluate( values, qe, mc );
 		for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
 		{
 			RippleValue typeValue = iter.next();

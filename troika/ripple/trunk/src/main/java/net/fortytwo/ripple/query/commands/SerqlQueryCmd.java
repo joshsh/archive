@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RipplePrintStream;
 
@@ -21,10 +21,10 @@ public class SerqlQueryCmd implements Command
 		this.query = query;
 	}
 
-	public void execute( QueryContext qc, ModelConnection mc )
+	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
-		RipplePrintStream ps = qc.getPrintStream();
+		RipplePrintStream ps = qe.getPrintStream();
 		Iterator<Statement> stmtIter = mc.serqlQuery( query ).iterator();
 
 		ps.println( "" );

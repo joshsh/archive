@@ -33,7 +33,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 
 import org.apache.log4j.Logger;
@@ -69,7 +69,7 @@ public class Interpreter extends Thread implements Observer
 	private ObservableContainer valueSet;
 	private ContainerTreeView valueSetObserver;
 
-	private QueryContext queryContext;
+	private QueryEngine queryContext;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -139,7 +139,7 @@ public class Interpreter extends Thread implements Observer
 
 		errorPrintStream = System.err;
 
-		queryContext = new QueryContext( model, System.out, errorPrintStream );
+		queryContext = new QueryEngine( model, System.out, errorPrintStream );
 		queryContext.getLexicon().addObserver( this );
 
 		valueSet = new ObservableContainer( model, null );

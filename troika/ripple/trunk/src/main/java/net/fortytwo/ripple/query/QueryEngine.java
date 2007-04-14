@@ -18,10 +18,10 @@ import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class QueryContext
+public class QueryEngine
 {
 	private final static Logger s_logger
-		= Logger.getLogger( QueryContext.class );
+		= Logger.getLogger( QueryEngine.class );
 
 	private Model model;
 	private Lexicon lexicon;
@@ -31,7 +31,7 @@ public class QueryContext
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public QueryContext( final Model model,
+	public QueryEngine( final Model model,
 						final PrintStream out,
 						final PrintStream err )
 		throws RippleException

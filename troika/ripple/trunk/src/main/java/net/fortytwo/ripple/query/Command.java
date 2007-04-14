@@ -5,7 +5,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 
 public interface Command
 {
-	public void execute( QueryContext qc, ModelConnection mc )
+	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException;
 }
 
