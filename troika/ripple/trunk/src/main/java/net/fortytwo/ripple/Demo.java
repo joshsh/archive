@@ -28,8 +28,11 @@ import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
 import net.fortytwo.ripple.cli.Interpreter;
+import net.fortytwo.ripple.model.Evaluator;
+import net.fortytwo.ripple.model.LazyEvaluator;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.query.QueryEngine;
 
 public class Demo
 {
@@ -129,7 +132,10 @@ System.exit( 0 );
 				model.load( store.toURL() );
 			}
 
-			Interpreter r = new Interpreter( model );
+			Evaluator evaluator = new LazyEvaluator();
+			QueryEngine qe
+				= new QueryEngine( model, evaluator, System.out, System.err );
+			Interpreter r = new Interpreter( qe );
 			r.run();
 
 			if ( null != store )

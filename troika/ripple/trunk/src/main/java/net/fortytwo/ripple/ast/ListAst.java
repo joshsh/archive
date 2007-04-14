@@ -61,7 +61,7 @@ return null;
 */
 
 	private ModelConnection modelConnection;
-	private QueryEngine queryContext;
+	private QueryEngine queryEngine;
 	private Sink<RippleValue> valueSink;
 
 	private Sink<RippleList> getSink( ListNode<Ast> listAst )
@@ -80,7 +80,7 @@ return null;
 	{
 //        boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 		modelConnection = mc;
-		queryContext = qe;
+		queryEngine = qe;
 		valueSink = sink;
 		
 		Sink<RippleList> listSink = getSink( this );
@@ -155,7 +155,7 @@ return null;
 			if ( null == ast )
 				innerSink.put( RippleList.NIL );
 			else
-				ast.evaluate( innerSink, queryContext, modelConnection );
+				ast.evaluate( innerSink, queryEngine, modelConnection );
 		}
 	}
 

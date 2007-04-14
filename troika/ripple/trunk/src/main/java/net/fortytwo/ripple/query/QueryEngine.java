@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.RdfValue;
@@ -25,6 +26,7 @@ public class QueryEngine
 
 	private Model model;
 	private Lexicon lexicon;
+	private Evaluator evaluator;
 
 	private RipplePrintStream printStream;
 	private PrintStream errorPrintStream;
@@ -32,17 +34,24 @@ public class QueryEngine
 	////////////////////////////////////////////////////////////////////////////
 
 	public QueryEngine( final Model model,
+						final Evaluator evaluator,
 						final PrintStream out,
 						final PrintStream err )
 		throws RippleException
 	{
 		this.model = model;
+		this.evaluator = evaluator;
 		lexicon = new Lexicon( model );
 		printStream = new RipplePrintStream( out, lexicon );
 		errorPrintStream = err;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+
+	public Evaluator getEvaluator()
+	{
+		return evaluator;
+	}
 
 	public Lexicon getLexicon()
 	{

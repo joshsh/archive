@@ -14,14 +14,11 @@ public class RippleQueryCmd implements Command
 {
 	private ListAst listAst;
 	private Sink<RippleList> sink;
-	private Evaluator evaluator;
 
 	public RippleQueryCmd( final ListAst listAst,
-							final Evaluator evaluator,
 							final Sink<RippleList> sink )
 	{
 		this.listAst = listAst;
-		this.evaluator = evaluator;
 		this.sink = sink;
 	}
 
@@ -33,7 +30,7 @@ public class RippleQueryCmd implements Command
 			public void put( RippleValue v )
 				throws RippleException
 			{
-				evaluator.applyTo( (RippleList) v, sink, mc );
+				qe.getEvaluator().applyTo( (RippleList) v, sink, mc );
 			}
 		};
 

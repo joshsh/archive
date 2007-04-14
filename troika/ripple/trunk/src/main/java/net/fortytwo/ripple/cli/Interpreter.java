@@ -23,10 +23,7 @@ import net.fortytwo.ripple.ast.ListAst;
 import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Evaluator;
-import net.fortytwo.ripple.model.LazyEvaluator;
 import net.fortytwo.ripple.model.Lexicon;
-import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ObservableContainer;
 import net.fortytwo.ripple.model.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
@@ -39,23 +36,20 @@ import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 import org.apache.log4j.Logger;
 
 /**
-*  Console input:
-*    System.in --> reader --> readOut --> writeIn --> RippleLexer
-*
-*  Normal output:
-*    valueSetObserver --> printStream --> System.out
-*    evaluateGraphQuery() --> printStream --> System.out
-*
-*  Error output:
-*    alert() --> errorPrintStream = System.err
-*/
+ * Console input:
+ *     System.in --> reader --> readOut --> writeIn --> RippleLexer
+ *
+ * Normal output:
+ *     valueSetObserver --> queryEngine.getPrintStream()
+ *     evaluateGraphQuery() --> queryEngine.getPrintStream()
+ *
+ * Error output:
+ *     alert() --> queryEngine.getErrorPrintStream()
+ */
 public class Interpreter extends Thread implements Observer
 {
 	private final static Logger s_logger
 		= Logger.getLogger( Interpreter.class );
-
-	private Model model;
-	private Evaluator evaluator;
 
 	private PipedInputStream  writeIn;
 	private PipedOutputStream readOut;
@@ -63,13 +57,10 @@ public class Interpreter extends Thread implements Observer
 	private ConsoleReader reader;
 	private int lineNumber = 0;
 
-	private RipplePrintStream printStream;
-	private PrintStream errorPrintStream;
-
 	private ObservableContainer valueSet;
 	private ContainerTreeView valueSetObserver;
 
-	private QueryEngine queryContext;
+	private QueryEngine queryEngine;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -86,28 +77,11 @@ public class Interpreter extends Thread implements Observer
 		languageTag = tag;
 	}
 
-	private void chooseEvaluator()
-	{
-		switch ( Ripple.getEvaluationStyle() )
-		{
-			case APPLICATIVE:
-// TODO: not implemented
-				break;
-
-			case COMPOSITIONAL:
-				evaluator = new LazyEvaluator();
-				break;
-		}
-//        evaluator = new DebugEvaluator( new LazyEvaaluator( model ) );
-	}
-
 	////////////////////////////////////////////////////////////////////////////
 
-	public Interpreter( Model model ) throws RippleException
+	public Interpreter( QueryEngine qe ) throws RippleException
 	{
-		this.model = model;
-
-		chooseEvaluator();
+		queryEngine = qe;
 
 		String jLineDebugOutput = Ripple.getJLineDebugOutput();
 
@@ -137,17 +111,14 @@ public class Interpreter extends Thread implements Observer
 			throw new RippleException( e );
 		}
 
-		errorPrintStream = System.err;
+		queryEngine.getLexicon().addObserver( this );
 
-		queryContext = new QueryEngine( model, System.out, errorPrintStream );
-		queryContext.getLexicon().addObserver( this );
-
-		valueSet = new ObservableContainer( model, null );
-		printStream = queryContext.getPrintStream();
-		valueSetObserver = new ContainerTreeView( valueSet, printStream );
+		valueSet = new ObservableContainer( queryEngine.getModel(), null );
+		valueSetObserver = new ContainerTreeView(
+			valueSet, queryEngine.getPrintStream() );
 		valueSet.addObserver( valueSetObserver );
 
-		update( queryContext.getLexicon(), null );
+		update( queryEngine.getLexicon(), null );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -293,10 +264,10 @@ System.out.println( "--- 3 ---" );
 	{
 		try
 		{
-			queryContext.getLexicon().suspendEventHandling();
+			queryEngine.getLexicon().suspendEventHandling();
 			valueSetObserver.suspendEventHandling();
 			evaluatePrivate( ast );
-			queryContext.getLexicon().resumeEventHandling();
+			queryEngine.getLexicon().resumeEventHandling();
 			valueSetObserver.resumeEventHandling();
 		}
 
@@ -311,7 +282,7 @@ System.out.println( "--- 3 ---" );
 	private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
 		throws RippleException
 	{
-		Dereferencer d = model.getDereferencer();
+		Dereferencer d = queryEngine.getModel().getDereferencer();
 
 		Iterator<RippleValue> iter = values.iterator();
 		while ( iter.hasNext() )
@@ -339,12 +310,11 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 
 		try
 		{
-			mc = new ModelConnection( model, "for Interpreter evaluate()" );
-
+			mc = new ModelConnection( queryEngine.getModel(), "for Interpreter evaluate()" );
 
 			ListContainerSink results = new ListContainerSink();
-			RippleQueryCmd cmd = new RippleQueryCmd( ast, evaluator, results );
-			cmd.execute( queryContext, mc );
+			RippleQueryCmd cmd = new RippleQueryCmd( ast, results );
+			cmd.execute( queryEngine, mc );
 
 // TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
@@ -364,7 +334,7 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 
 	private void alert( String s )
 	{
-		errorPrintStream.println( "\n" + s + "\n" );
+		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -384,9 +354,9 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 
 		try
 		{
-			mc = new ModelConnection( model, "Command" );
+			mc = new ModelConnection( queryEngine.getModel(), "Command" );
 			connectionEstablished = true;
-			cmd.execute( queryContext, mc );
+			cmd.execute( queryEngine, mc );
 			commandCompleted = true;
 			mc.close();
 		}
