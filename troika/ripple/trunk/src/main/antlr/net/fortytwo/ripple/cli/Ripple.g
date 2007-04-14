@@ -478,7 +478,7 @@ nt_Directive
 
 	| DRCTV_SERQL WS query:STRING (WS)? EOS
 		{
-			interpreter.evaluateGraphQuery( query.getText() );
+			interpreter.put( new SerqlQueryCmd( query.getText() ) );
 		}
 
 	| DRCTV_UNDEFINE WS localName=nt_Name (WS)? EOS

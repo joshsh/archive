@@ -34,6 +34,7 @@ import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryContext;
+import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 
 import org.apache.log4j.Logger;
 
@@ -198,7 +199,6 @@ public class Interpreter extends Thread implements Observer
 
 	public void readLine()
 	{
-System.out.println( "readLine()" );System.out.flush();
 		try
 		{
 			++lineNumber;
@@ -341,26 +341,16 @@ value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
 		{
 			mc = new ModelConnection( model, "for Interpreter evaluate()" );
 
-			ContainerSink expressions = new ContainerSink();
-			ast.evaluate( expressions, queryContext, mc );
 
-			ListContainerSink evaluatedExpressions = new ListContainerSink();
-			for ( Iterator<RippleValue> iter = expressions.iterator(); iter.hasNext(); )
-			{
-				RippleValue expr = iter.next();
-				RippleList list = ( expr instanceof RippleList )
-					? (RippleList) expr
-					: new RippleList( expr );
-//System.out.println( "applying to: " + list );
-	
-				evaluator.applyTo( list, evaluatedExpressions, mc );
-			}
+			ListContainerSink results = new ListContainerSink();
+			RippleQueryCmd cmd = new RippleQueryCmd( ast, evaluator, results );
+			cmd.execute( queryContext, mc );
 
 // TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
 //       and should probably be moved into the tree view itself if possible.
-			dereferenceResultSet( evaluatedExpressions, mc );
+			dereferenceResultSet( results, mc );
 	
-			valueSet.setValues( evaluatedExpressions );
+			valueSet.setValues( results );
 
 			mc.close();
 		}

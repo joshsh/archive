@@ -217,6 +217,7 @@ rdf:nil test cases
 rdf:nil.
 2 rdf:nil.
 2/rdf:nil.
+/rdf:nil.
 
 @prefix : <http://foo#>.
 @define nilA:  ().
@@ -236,6 +237,10 @@ rdf:nil.
 (2)()/concat.
 
 ()/size.
+
+() () /equal.
+(()) (()) /equal.
+(()) () /equal.
 
 
 ========================================

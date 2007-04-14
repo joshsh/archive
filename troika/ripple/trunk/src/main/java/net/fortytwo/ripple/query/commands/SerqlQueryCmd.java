@@ -18,7 +18,7 @@ public class SerqlQueryCmd implements Command
 
 	public SerqlQueryCmd( final String query )
 	{
-		this.term = term;
+		this.query = query;
 	}
 
 	public void execute( QueryContext qc, ModelConnection mc )
