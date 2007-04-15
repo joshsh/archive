@@ -10,7 +10,7 @@ import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RipplePrintStream;
+import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 

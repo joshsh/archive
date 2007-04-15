@@ -6,7 +6,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RipplePrintStream;
+import net.fortytwo.ripple.io.RipplePrintStream;
 
 import org.openrdf.model.Statement;
 

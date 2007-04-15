@@ -1,6 +1,7 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RipplePrintStream;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;

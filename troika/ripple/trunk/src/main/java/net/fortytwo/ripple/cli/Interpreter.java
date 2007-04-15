@@ -20,18 +20,20 @@ import jline.ConsoleReader;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.ast.ListAst;
+import net.fortytwo.ripple.io.ContainerTreeView;
 import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
-import net.fortytwo.ripple.model.ObservableContainer;
-import net.fortytwo.ripple.model.RipplePrintStream;
+import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.ListContainerSink;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
+import net.fortytwo.ripple.util.Buffer;
+import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
@@ -56,9 +58,6 @@ public class Interpreter extends Thread implements Observer
 
 	private ConsoleReader reader;
 	private int lineNumber = 0;
-
-	private ObservableContainer valueSet;
-	private ContainerTreeView valueSetObserver;
 
 	private QueryEngine queryEngine;
 
@@ -93,6 +92,9 @@ public class Interpreter extends Thread implements Observer
 				reader.setDebug(
 					new PrintWriter(
 						new FileWriter( jLineDebugOutput, true ) ) );
+
+			writeIn = new PipedInputStream();
+			readOut = new PipedOutputStream( writeIn );
 		}
 
 		catch ( Throwable t )
@@ -100,31 +102,206 @@ public class Interpreter extends Thread implements Observer
 			throw new RippleException( t );
 		}
 
-		try
-		{
-			writeIn = new PipedInputStream();
-			readOut = new PipedOutputStream( writeIn );
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
 		queryEngine.getLexicon().addObserver( this );
-
-		valueSet = new ObservableContainer( queryEngine.getModel(), null );
-		valueSetObserver = new ContainerTreeView(
-			valueSet, queryEngine.getPrintStream() );
-		valueSet.addObserver( valueSetObserver );
 
 		update( queryEngine.getLexicon(), null );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
+	public void update( Observable o, Object arg )
+	{
+System.out.println( "update()" );
+		if ( o instanceof Lexicon )
+			updateCompletors( (Lexicon) o );
+	}
+
+	public void run()
+	{
+		try
+		{
+			s_logger.debug( "running Interpreter as a new thread" );
+			runPrivate();
+		}
+
+		catch ( Throwable t )
+		{
+			alert( "Error: " + t.toString() );
+
+			new RippleException( t );
+		}
+	}
+
+	public void readLine()
+	{
+		try
+		{
+			++lineNumber;
+			String line = reader.readLine( "" + lineNumber + " >>  " );
+	
+			if ( null != line )
+			{
+				byte[] bytes = line.getBytes();
+				readOut.write( bytes, 0, bytes.length );
+	
+				// Add a deliberate "end of line" character so the lexer knows
+				// to call readLine() again when it gets there.
+				byte[] terminator = { '\n' };
+				readOut.write( terminator, 0, 1 );
+	
+				readOut.flush();
+			}
+		}
+
+		// This has never happened.
+		catch ( java.io.IOException e )
+		{
+			alert( "IOException: " + e.toString() );
+		}
+	}
+	public void put( final Command cmd )
+	{
+		ModelConnection mc = null;
+		boolean gotConnection = false, finished = false;
+
+		try
+		{
+			mc = new ModelConnection( queryEngine.getModel(), "Command" );
+			gotConnection = true;
+			cmd.execute( queryEngine, mc );
+			finished = true;
+			mc.close();
+		}
+
+		catch ( ParserQuitException e )
+		{
+			try
+			{
+				mc.close();
+			}
+
+			catch ( RippleException e2 )
+			{
+				alert( "Error: failed to close connection" );
+			}
+
+			throw e;
+		}
+
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+
+			if ( !gotConnection )
+				alert( "Error: failed to establish connection" );
+
+			else if ( !finished )
+			{
+				try
+				{
+					mc.close();
+				}
+
+				catch ( RippleException e2 )
+				{
+					alert( "Error: failed to close connection" );
+				}
+			}
+
+			else
+				alert( "Error: failed to close connection" );
+		}
+	}
+
+	public void evaluate( ListAst ast )
+	{
+System.out.println( "evaluate()" );
+		ModelConnection mc = null;
+		boolean gotConnection = false, finished = false;
+
+		try
+		{
+			mc = new ModelConnection( queryEngine.getModel(), "for Interpreter evaluate()" );
+			gotConnection = true;
+
+			// Results are first dereferenced, then placed into a buffer which
+			// will be flushed into the view after the lexicon is updated.
+			ContainerTreeView view = new ContainerTreeView(
+				queryEngine.getPrintStream(), mc );
+			final Buffer<RippleList> buff = new Buffer<RippleList>( view );
+			final ModelConnection mcf = mc;
+			Sink<RippleList> derefSink = new Sink<RippleList>()
+			{
+				public void put( final RippleList list) throws RippleException
+				{
+					dereference( list.getFirst(), mcf );
+					buff.put( list );
+				}
+			};
+
+			RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink );
+
+			queryEngine.getLexicon().suspendEventHandling();
+			cmd.execute( queryEngine, mc );
+			queryEngine.getLexicon().resumeEventHandling();
+
+			// Flush results to the view.
+			queryEngine.getPrintStream().println( "" );
+			buff.flush();
+			if ( view.size() > 0 )
+				queryEngine.getPrintStream().println( "" );
+
+			finished = true;
+			mc.close();
+		}
+
+		catch ( RippleException e )
+		{
+			alert( "Error: " + e.getMessage() );
+
+			if ( !gotConnection )
+				alert( "Error: failed to establish connection" );
+
+			else if ( !finished )
+			{
+				try
+				{
+					mc.close();
+				}
+
+				catch ( RippleException e2 )
+				{
+					alert( "Error: failed to close connection" );
+				}
+			}
+
+			else
+				alert( "Error: failed to close connection" );
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	private void dereference( RippleValue v, ModelConnection mc )
+		throws RippleException
+	{
+		Dereferencer d = mc.getModel().getDereferencer();
+		RdfValue r = v.toRdf( mc );
+
+		try
+		{
+			d.dereference( r, mc );
+		}
+
+		catch ( RippleException e )
+		{
+			// (soft fail)
+		}
+	}
+
 	private void updateCompletors( final Lexicon lexicon )
 	{
+System.out.println( "updateCompletors()" );
 		s_logger.debug( "updating completors" );
 		List completors = new ArrayList();
 
@@ -165,34 +342,6 @@ public class Interpreter extends Thread implements Observer
 		catch ( RippleException e )
 		{
 			s_logger.error( "Failed to update completors.  Continuing nonetheless." );
-		}
-	}
-
-	public void readLine()
-	{
-		try
-		{
-			++lineNumber;
-			String line = reader.readLine( "" + lineNumber + " >>  " );
-	
-			if ( null != line )
-			{
-				byte[] bytes = line.getBytes();
-				readOut.write( bytes, 0, bytes.length );
-	
-				// Add a deliberate "end of line" character so the lexer knows
-				// to call readLine() again when it gets there.
-				byte[] terminator = { '\n' };
-				readOut.write( terminator, 0, 1 );
-	
-				readOut.flush();
-			}
-		}
-
-		// This has never happened.
-		catch ( java.io.IOException e )
-		{
-			alert( "IOException: " + e.toString() );
 		}
 	}
 
@@ -242,163 +391,9 @@ System.out.println( "--- 3 ---" );
 		}
 	}
 
-	public void run()
-	{
-		try
-		{
-			s_logger.debug( "running Interpreter as a new thread" );
-			runPrivate();
-		}
-
-		catch ( Throwable t )
-		{
-			alert( "Error: " + t.toString() );
-
-			new RippleException( t );
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	public void evaluate( ListAst ast )
-	{
-		try
-		{
-			queryEngine.getLexicon().suspendEventHandling();
-			valueSetObserver.suspendEventHandling();
-			evaluatePrivate( ast );
-			queryEngine.getLexicon().resumeEventHandling();
-			valueSetObserver.resumeEventHandling();
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	private void dereferenceResultSet( Collection<RippleValue> values, ModelConnection mc )
-		throws RippleException
-	{
-		Dereferencer d = queryEngine.getModel().getDereferencer();
-
-		Iterator<RippleValue> iter = values.iterator();
-		while ( iter.hasNext() )
-		{
-			RippleValue value = iter.next();
-if ( value instanceof RippleList )
-value = ( (net.fortytwo.ripple.model.RippleList) value ).getFirst();
-
-			try
-			{
-				d.dereference( value.toRdf( mc ), mc );
-			}
-
-			catch ( RippleException e )
-			{
-				// (soft fail)
-			}
-		}
-	}
-
-	private void evaluatePrivate( ListAst ast )
-		throws RippleException
-	{
-		ModelConnection mc = null;
-
-		try
-		{
-			mc = new ModelConnection( queryEngine.getModel(), "for Interpreter evaluate()" );
-
-			ListContainerSink results = new ListContainerSink();
-			RippleQueryCmd cmd = new RippleQueryCmd( ast, results );
-			cmd.execute( queryEngine, mc );
-
-// TODO: this should dereference as many levels as Ripple.getTreeViewDepth(),
-//       and should probably be moved into the tree view itself if possible.
-			dereferenceResultSet( results, mc );
-	
-			valueSet.setValues( results );
-
-			mc.close();
-		}
-
-		catch ( RippleException e )
-		{
-			mc.close();
-			throw e;
-		}
-	}
-
 	private void alert( String s )
 	{
 		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	public void update( Observable o, Object arg )
-	{
-		if ( o instanceof Lexicon )
-			updateCompletors( (Lexicon) o );
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	public void put( final Command cmd )
-	{
-		ModelConnection mc = null;
-		boolean connectionEstablished = false, commandCompleted = false;
-
-		try
-		{
-			mc = new ModelConnection( queryEngine.getModel(), "Command" );
-			connectionEstablished = true;
-			cmd.execute( queryEngine, mc );
-			commandCompleted = true;
-			mc.close();
-		}
-
-		catch ( ParserQuitException e )
-		{
-			try
-			{
-				mc.close();
-			}
-
-			catch ( RippleException e2 )
-			{
-				alert( "Error: failed to close connection" );
-			}
-
-			throw e;
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-
-			if ( !connectionEstablished )
-				alert( "Error: failed to establish connection" );
-
-			else if ( !commandCompleted )
-			{
-				try
-				{
-					mc.close();
-				}
-
-				catch ( RippleException e2 )
-				{
-					alert( "Error: failed to close connection" );
-				}
-			}
-
-			else
-				alert( "Error: failed to close connection" );
-		}
 	}
 }
 

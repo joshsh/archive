@@ -4,7 +4,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RipplePrintStream;
+import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;

@@ -1,6 +1,7 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RipplePrintStream;
 
 public abstract class PrimitiveFunction implements Function, RippleValue
 {

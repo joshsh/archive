@@ -184,6 +184,7 @@ public class Lexicon extends Observable implements Observer
 	private void updateMaps()
 		throws RippleException
 	{
+System.out.println( "updateMaps()" );
 		prefixToNamespaceMap = new Hashtable<String, String>();
 		namespaceToPrefixMap = new Hashtable<String, String>();
 		qNamesCollection = new ArrayList<String>();
@@ -274,6 +275,7 @@ public class Lexicon extends Observable implements Observer
 
 	public void update( Observable o, Object arg )
 	{
+System.out.println( "updating lexicon..." );
 		try
 		{
 			if ( o == model )
