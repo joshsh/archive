@@ -124,7 +124,7 @@ STRING
 protected
 UCHARACTER
 	: ( CHARACTER_NOQUOTE_NOGT | '\"' )
-	| "\\>"
+//	| "\\>"
 	;
 
 URIREF
@@ -276,11 +276,10 @@ nt_List returns [ ListAst s ]
 	s = null;
 	boolean modified = false;
 }
-	: ( OPER { modified = true; } )? i=nt_Node
-	( ( WS ~(EOS) ) => ( WS s=nt_List )
-	| ( L_PAREN | OPER ) => ( s=nt_List )
-	| {}
-	)
+	: ( ( OPER { modified = true; } )? i=nt_Node
+		( ( WS ~(EOS | R_PAREN) ) => ( WS s=nt_List )
+		| ( ~(WS | EOS | R_PAREN) ) => ( s=nt_List )
+		| {} ) )
 		{
 			// Note: the resulting list will be in the same order as the input.
 			if ( modified )
@@ -304,7 +303,9 @@ nt_ParenthesizedList returns [ ListAst r ]
 {
 	r = null;
 }
-	: L_PAREN (WS)? ( r=nt_List )? R_PAREN
+	: L_PAREN (WS)? (
+		( r=nt_List (WS)? R_PAREN )
+		| R_PAREN )
 	;
 
 
@@ -352,7 +353,7 @@ nt_Resource returns [ Ast r ]
 }
 	: r=nt_URIRef
 	| ( (NAME_OR_PREFIX)? COLON ) => r=nt_QName
-	| r=nt_SimpleName
+	| r=nt_Keyword
 	| r=nt_BNodeRef
 	;
 
@@ -376,12 +377,12 @@ nt_PrefixName returns [ String prefix ]
 	;
 
 
-nt_SimpleName returns [ Ast r ]
+nt_Keyword returns [ Ast r ]
 {
-	String localName;
+	String keyword;
 	r = null;
 }
-	: localName=nt_Name { r = new KeywordAst( localName ); }
+	: keyword=nt_Name { r = new KeywordAst( keyword ); }
 	;
 
 
@@ -392,7 +393,10 @@ nt_QName returns [ Ast r ]
 }
 	: ( ( nsPrefix=nt_PrefixName )?
 		COLON
-		( localName=nt_Name )? )
+		( localName=nt_Name )?
+//		( localName=nt_Name
+//		| (~(NAME_OR_PREFIX | NAME_NOT_PREFIX)) => {} )
+	  )
 		{
 			r = new QNameAst( nsPrefix, localName );
 		}

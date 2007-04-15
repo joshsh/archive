@@ -244,6 +244,35 @@ rdf:nil.
 
 
 ========================================
+whitespace-related parser test cases
+========================================
+
+"whop""whop".
+"whop"42.
+"whop"<http://foo#>.
+"whop"().
+42"whop".
+#4242.
+42<http://foo#>.
+42().
+<http://foo#>"whop".
+<http://foo#>42.
+<http://foo#><http://foo#>.
+<http://foo#>().
+()"whop".
+()42.
+()<http://foo#>.
+()().
+
+(42).
+( 42 ).
+
+@prefix : <http://foo#>.
+@define local:  1 2 3.
+rdf:type:local.
+
+
+========================================
 towards stress testing
 ========================================
 
@@ -264,7 +293,7 @@ ripple
 update the syntax highlighter
 ========================================
 
-sudo cp ./src/main/resources/net/fortytwo/ripple/cli/kate/ripple.xml /usr/share/apps/katepart/syntax
+sudo cp ./src/main/resources/net/fortytwo/ripple/io/kate/ripple.xml /usr/share/apps/katepart/syntax
 
 
 ========================================
@@ -483,7 +512,7 @@ Design patterns which may or do apply to Ripple
 * Factory Method
     Model ^ getCompletor() (although this is a temporary feature)
 * Builder
-    ripple.cli.ast ^ evaluate()
+    ripple.ast ^ evaluate()
 * Lazy initialization
     lazy expression evaluation
     various static initializers
