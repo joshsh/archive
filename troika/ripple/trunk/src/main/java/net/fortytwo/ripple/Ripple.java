@@ -219,26 +219,36 @@ public class Ripple
 			expressionAssociativity = ExpressionAssociativity.find(
 				props.getProperty( "net.fortytwo.ripple.io.syntax.associativity" ) );
 
-			s_jLineDebugOutput = props.getProperty( "net.fortytwo.ripple.io.jline.debugOutput" );
+			s_jLineDebugOutput = props.getProperty(
+				"net.fortytwo.ripple.io.jline.debugOutput" );
 
-			s_evaluationOrder = getEvaluationOrderProperty( props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
-			s_evaluationStyle = getEvaluationStyleProperty( props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
+			s_evaluationOrder = getEvaluationOrderProperty(
+				props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
+			s_evaluationStyle = getEvaluationStyleProperty(
+				props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
 
-			s_useInference = getBooleanProperty( props, "net.fortytwo.ripple.model.rdf.useInference", false );
-			s_enforceImplicitProvenance = getBooleanProperty( props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
+			s_useInference = getBooleanProperty(
+				props, "net.fortytwo.ripple.model.rdf.useInference", false );
+			s_enforceImplicitProvenance = getBooleanProperty(
+				props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
 
-			s_dereferenceByNamespace = getBooleanProperty( props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
-			s_uriDereferencingTimeout = getLongProperty( props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
+			s_dereferenceByNamespace = getBooleanProperty(
+				props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
+			s_uriDereferencingTimeout = getLongProperty(
+				props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
 
-			s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.io.treeView.depth", 1 );
+			s_treeViewDepth = getIntProperty(
+				props, "net.fortytwo.ripple.io.treeView.depth", 1 );
 			if ( s_treeViewDepth < 0 )
 				s_treeViewDepth = 0;
 
-			s_treeViewMaxBreadth = getIntProperty( props, "net.fortytwo.ripple.io.treeView.maxBreadth", 32 );
+			s_treeViewMaxBreadth = getIntProperty(
+				props, "net.fortytwo.ripple.io.treeView.maxBreadth", 32 );
 			if ( s_treeViewMaxBreadth < 0 )
 				s_treeViewMaxBreadth = 0;
 
-			s_listPadding = getBooleanProperty( props, "net.fortytwo.ripple.printing.listPadding", false );
+			s_listPadding = getBooleanProperty(
+				props, "net.fortytwo.ripple.printing.listPadding", false );
 
 			initialized = true;
 		}
