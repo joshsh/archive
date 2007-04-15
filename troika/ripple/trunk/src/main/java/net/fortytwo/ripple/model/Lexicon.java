@@ -2,7 +2,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.jline.LexicalCompletor;
+import net.fortytwo.ripple.io.jline.LexicalCompletor;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;

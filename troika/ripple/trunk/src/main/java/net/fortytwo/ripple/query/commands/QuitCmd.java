@@ -2,7 +2,7 @@ package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.cli.ParserQuitException;
+import net.fortytwo.ripple.io.ParserQuitException;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 

@@ -1,6 +1,6 @@
 header
 {
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.ast.Ast;
 import net.fortytwo.ripple.ast.BooleanAst;

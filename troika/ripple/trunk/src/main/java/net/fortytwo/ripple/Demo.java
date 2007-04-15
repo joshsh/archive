@@ -27,7 +27,7 @@ import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 //import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
-import net.fortytwo.ripple.cli.Interpreter;
+import net.fortytwo.ripple.io.Interpreter;
 import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.LazyEvaluator;
 import net.fortytwo.ripple.model.Model;

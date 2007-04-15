@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.cli.jline;
+package net.fortytwo.ripple.io.jline;
 
 import java.util.Collection;
 import java.util.Iterator;

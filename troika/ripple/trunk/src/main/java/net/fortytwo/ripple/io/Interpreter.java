@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.io;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -322,7 +322,7 @@ System.out.println( "updateCompletors()" );
 			directives.add( "@undefine" );
 
 			completors.add(
-				new net.fortytwo.ripple.cli.jline.DirectiveCompletor(
+				new net.fortytwo.ripple.io.jline.DirectiveCompletor(
 					directives ) );
 
 			try

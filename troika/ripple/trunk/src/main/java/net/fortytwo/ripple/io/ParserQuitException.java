@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.io;
 
 /**
 *  A trivial exception for breaking out of the ANTLR-generated parser, which

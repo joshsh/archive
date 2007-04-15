@@ -215,11 +215,11 @@ public class Ripple
 			}
 
 			expressionOrder = ExpressionOrder.find(
-				props.getProperty( "net.fortytwo.ripple.cli.syntax.order" ) );
+				props.getProperty( "net.fortytwo.ripple.io.syntax.order" ) );
 			expressionAssociativity = ExpressionAssociativity.find(
-				props.getProperty( "net.fortytwo.ripple.cli.syntax.associativity" ) );
+				props.getProperty( "net.fortytwo.ripple.io.syntax.associativity" ) );
 
-			s_jLineDebugOutput = props.getProperty( "net.fortytwo.ripple.cli.jline.debugOutput" );
+			s_jLineDebugOutput = props.getProperty( "net.fortytwo.ripple.io.jline.debugOutput" );
 
 			s_evaluationOrder = getEvaluationOrderProperty( props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
 			s_evaluationStyle = getEvaluationStyleProperty( props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
@@ -230,11 +230,11 @@ public class Ripple
 			s_dereferenceByNamespace = getBooleanProperty( props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
 			s_uriDereferencingTimeout = getLongProperty( props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
 
-			s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.cli.treeView.depth", 1 );
+			s_treeViewDepth = getIntProperty( props, "net.fortytwo.ripple.io.treeView.depth", 1 );
 			if ( s_treeViewDepth < 0 )
 				s_treeViewDepth = 0;
 
-			s_treeViewMaxBreadth = getIntProperty( props, "net.fortytwo.ripple.cli.treeView.maxBreadth", 32 );
+			s_treeViewMaxBreadth = getIntProperty( props, "net.fortytwo.ripple.io.treeView.maxBreadth", 32 );
 			if ( s_treeViewMaxBreadth < 0 )
 				s_treeViewMaxBreadth = 0;
 
