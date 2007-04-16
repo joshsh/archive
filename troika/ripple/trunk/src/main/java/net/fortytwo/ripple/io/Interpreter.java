@@ -368,23 +368,30 @@ System.out.println( "--- 2 ---" );
 				break;
 			}
 
+			// Non-fatal.
 			catch ( antlr.RecognitionException e )
 			{
-				// Report the error, then begin parsing again.
 				alert( "RecognitionException: " + e.toString() );
 			}
 
+			// Non-fatal.
 			catch ( antlr.TokenStreamException e )
 			{
-				// Report the error, then begin parsing again.
 				alert( "TokenStreamException: " + e.toString() );
 			}
 
+			// This happens, for instance, when the parser receives a value
+			// which is too large for the target data type.  Non-fatal.
+			catch ( NumberFormatException e )
+			{
+				alert( e.toString() );
+			}
+
+			// The parser has received a quit command.
 			catch ( ParserQuitException e )
 			{
 				s_logger.debug( "quit() called on Interpreter" );
 
-				// The user has instructed the parser to quit.
 				break;
 			}
 System.out.println( "--- 3 ---" );

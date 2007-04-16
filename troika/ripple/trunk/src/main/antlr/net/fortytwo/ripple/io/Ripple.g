@@ -315,21 +315,12 @@ nt_Literal returns [ Ast r ]
 		}
 	| u:NUMBER
 		{
-			try
-			{
-				String s = u.getText();
-				if ( s.contains( "." ) )
-					r = new DoubleAst( ( new Double( s ) ).doubleValue() );
-				else
-					r = new IntegerAst( ( new Integer( s ) ).intValue() );
-			}
-
-			catch ( NumberFormatException e )
-			{
-				System.err.println( "a NumberFormatException was encountered (this shouldn't happen)" );
-				r = null;
-				System.exit( 1 );
-			}
+			// Note: number format exceptions are handled at a higher level.
+			String s = u.getText();
+			if ( s.contains( "." ) )
+				r = new DoubleAst( ( new Double( s ) ).doubleValue() );
+			else
+				r = new IntegerAst( ( new Integer( s ) ).intValue() );
 		}
 	;
 

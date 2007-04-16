@@ -1,0 +1,8 @@
+1 >>  <>.
+--- 1 ---
+--- 2 ---
+evaluate()
+
+Error: java.lang.IllegalArgumentException: Not a valid (absolute) URI:
+
+2 >>
