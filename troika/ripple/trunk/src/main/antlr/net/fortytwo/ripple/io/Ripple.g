@@ -76,35 +76,33 @@ HEX
 	;
 
 protected
-CHARACTER_NOQUOTE_NOGT
-	: ' ' | '!' | ('#'..'=') | ('?'..'[')
-	| (']'..'\uFFFF')  // Note: '\u10FFFF in Turtle
+SCHARACTER
+	: ' ' | '!' | ('#'..'[')  // excludes: '\"', '\\'
+	| (']'..'\uFFFF')  // Note: '\u10FFFF' in Turtle
 	| "\\u" HEX HEX HEX HEX
 	| "\\U" HEX HEX HEX HEX HEX HEX HEX HEX
-//	| "\\\\"
+	| '\\' ('\\' | '\"' | 't' | 'n' | 'r' )
 	;
 
 protected
-ECHARACTER_NOQUOTE
-	: ( CHARACTER_NOQUOTE_NOGT | '>' )
-//	| "\\t" | "\\n" | "\\r"
-	;
-
-protected
-ECHARACTER
-	: ECHARACTER_NOQUOTE | '\"'
-	;
-
-protected
-SCHARACTER
-	: ECHARACTER_NOQUOTE
-//	| "\\\""
+UCHARACTER
+	: (' '..'=') | ('?'..'[')  // excludes: '>', '\\'
+	| (']'..'\uFFFF')  // Note: '\u10FFFF' in Turtle
+	| "\\u" HEX HEX HEX HEX
+	| "\\U" HEX HEX HEX HEX HEX HEX HEX HEX
+	| '\\' ('\\' | '>')
 	;
 
 protected
 LANGUAGE
 	: ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
 		{ interpreter.setLanguageTag( $getText ); }
+	;
+
+STRING
+	: '\"'!
+		{ interpreter.setLanguageTag( null ); }
+		( SCHARACTER )* '\"'! ( LANGUAGE! )?
 	;
 
 /*
@@ -114,18 +112,6 @@ LONG_STRING
 		( SCHARACTER )* "\"\"\""! ( LANGUAGE! )?
 	;
 */
-
-STRING
-	: '\"'!
-		{ interpreter.setLanguageTag( null ); }
-		( SCHARACTER )* '\"'! ( LANGUAGE! )?
-	;
-
-protected
-UCHARACTER
-	: ( CHARACTER_NOQUOTE_NOGT | '\"' )
-//	| "\\>"
-	;
 
 URIREF
 	: '<'! ( UCHARACTER )* '>'!
@@ -279,7 +265,8 @@ nt_List returns [ ListAst s ]
 	: ( ( OPER { modified = true; } )? i=nt_Node
 		( ( WS ~(EOS | R_PAREN) ) => ( WS s=nt_List )
 		| ( ~(WS | EOS | R_PAREN) ) => ( s=nt_List )
-		| {} ) )
+		| {}  // end of list
+		) )
 		{
 			// Note: the resulting list will be in the same order as the input.
 			if ( modified )

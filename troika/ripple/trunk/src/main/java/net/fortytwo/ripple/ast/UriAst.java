@@ -7,14 +7,23 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.StringUtils;
 
 public class UriAst implements Ast
 {
 	private String value;
 
-	public UriAst( final String value )
+	public UriAst( final String escapedValue )
 	{
-		this.value = value;
+		try
+		{
+			this.value = StringUtils.unescapeUriString( escapedValue );
+		}
+
+		catch ( RippleException e )
+		{
+			System.exit( 1 );
+		}
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
@@ -28,8 +37,10 @@ public class UriAst implements Ast
 
 	public String toString()
 	{
-		return "<" + value + ">";
+		return "<" + StringUtils.escapeUriString( value ) + ">";
 	}
+
+
 }
 
 // kate: tab-width 4

@@ -5,6 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.StringUtils;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
@@ -31,7 +32,7 @@ public class RipplePrintStream extends PrintStream
 
 	private void printUriRef( URI uri )
 	{
-		print( "<" + uri.toString() + ">" );
+		print( "<" + StringUtils.escapeUriString( uri.toString() ) + ">" );
 	}
 
 	private void printUri( URI uri )
@@ -47,8 +48,9 @@ public class RipplePrintStream extends PrintStream
 
 	private void printEscapedString( final String s )
 	{
-// TODO
-print( "\"" + s + "\"" );
+		print( '\"' );
+		print( StringUtils.escapeString( s ) );
+		print( '\"' );
 	}
 
 	public void print( RippleValue v )

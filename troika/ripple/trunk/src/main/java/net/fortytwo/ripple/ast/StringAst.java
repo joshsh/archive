@@ -1,24 +1,43 @@
 package net.fortytwo.ripple.ast;
 
-import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.StringUtils;
 
 public class StringAst implements Ast
 {
 	private String value, language;
 
-	public StringAst( final String value )
+	public StringAst( final String escapedValue )
 	{
-		this.value = value;
-		this.language = null;
+		try
+		{
+			value = StringUtils.unescapeString( escapedValue );
+		}
+
+		catch ( RippleException e )
+		{
+			System.exit( 1 );
+		}
+
+		language = null;
 	}
 
-	public StringAst( final String value, final String language )
+	public StringAst( final String escapedValue, final String language )
 	{
-		this.value = value;
+		try
+		{
+			value = StringUtils.unescapeString( escapedValue );
+		}
+
+		catch ( RippleException e )
+		{
+			System.exit( 1 );
+		}
+
 		this.language = language;
 	}
 
@@ -34,7 +53,8 @@ public class StringAst implements Ast
 
 	public String toString()
 	{
-		return "\"" + value + "\"" + ( ( null == language ) ? "" : ( "@" + language ) );
+		return "\"" + StringUtils.escapeString( value ) + "\""
+			+ ( ( null == language ) ? "" : ( "@" + language ) );
 	}
 }
 

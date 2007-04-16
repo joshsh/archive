@@ -273,6 +273,22 @@ rdf:type:local.
 
 
 ========================================
+string and URI encoding test cases
+========================================
+
+"with\nescaped\twhitespace".
+"with\\backslash".
+"\"quoted\"".
+"\u5DE5\u592B".
+"\U12345678".
+
+<http://uri.with\\backslash/>.
+<http://uri.with\>gt/>.
+<http://\u5DE5\u592B.com>.
+<mailto:\U12345678@bogus.com>.
+
+
+========================================
 towards stress testing
 ========================================
 
