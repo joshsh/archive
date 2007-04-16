@@ -170,7 +170,7 @@ NUMBER
 
 // Ignore comments.
 COMMENT
-	: ( '#' ( ~('\r' | '\n' ) )* ) { $setType( Token.SKIP ); }
+	: ( '#' ( ~('\n') )* ) { $setType( Token.SKIP ); }
 //	: ( '#' (( ('\u0000'..'\u0009') | '\u000B' | '\u000C' | ('\u000E'..'\uFFFF')){System.out.println(".");} )* )
 //		{ $setType( Token.SKIP ); }
 	;
