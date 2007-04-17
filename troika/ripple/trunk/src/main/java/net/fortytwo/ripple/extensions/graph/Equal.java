@@ -48,8 +48,10 @@ public class Equal extends PrimitiveFunction
 				throw new RippleException( "boolean primitives not found" );
 		}
 
-//System.out.println( "(" + a + " = " + b + ") --> " + a.equals( b ) );
-		result = ( a.equals( b ) )
+		// Note: equals() is not suitable for this operation (for instance,
+		//       it may yield false for RdfValues containing identical
+		//       Literals).
+		result = ( 0 == a.compareTo( b ) )
 			? truePrim
 			: falsePrim;
 
