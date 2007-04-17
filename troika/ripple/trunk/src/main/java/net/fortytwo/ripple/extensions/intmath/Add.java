@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class IntegerAbs extends PrimitiveFunction
+public class Add extends PrimitiveFunction
 {
-	public IntegerAbs( RdfValue v, ModelConnection mc )
+	public Add( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -18,20 +18,22 @@ public class IntegerAbs extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 2;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+								Sink<RippleList> sink,
+								ModelConnection mc )
 		throws RippleException
 	{
-		int a, result;
+		int a, b, result;
 
+		b = mc.intValue( stack.getFirst() );
+		stack = stack.getRest();
 		a = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = ( a >= 0 ) ? a : -a;
+		result = a + b;
 
 		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}

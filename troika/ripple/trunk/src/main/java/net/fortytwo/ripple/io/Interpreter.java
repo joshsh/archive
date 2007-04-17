@@ -1,5 +1,6 @@
 package net.fortytwo.ripple.io;
 
+import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
@@ -111,7 +112,6 @@ public class Interpreter extends Thread implements Observer
 
 	public void update( Observable o, Object arg )
 	{
-System.out.println( "update()" );
 		if ( o instanceof Lexicon )
 			updateCompletors( (Lexicon) o );
 	}
@@ -128,6 +128,7 @@ System.out.println( "update()" );
 		{
 			alert( "Error: " + t.toString() );
 
+			// Log the error.
 			new RippleException( t );
 		}
 	}
@@ -159,7 +160,7 @@ System.out.println( "update()" );
 			alert( "IOException: " + e.toString() );
 		}
 	}
-	public void put( final Command cmd )
+	public void execute( final Command cmd )
 	{
 		ModelConnection mc = null;
 		boolean gotConnection = false, finished = false;
@@ -215,7 +216,6 @@ System.out.println( "update()" );
 
 	public void evaluate( ListAst ast )
 	{
-System.out.println( "evaluate()" );
 		ModelConnection mc = null;
 		boolean gotConnection = false, finished = false;
 
@@ -301,7 +301,6 @@ System.out.println( "evaluate()" );
 
 	private void updateCompletors( final Lexicon lexicon )
 	{
-System.out.println( "updateCompletors()" );
 		s_logger.debug( "updating completors" );
 		List completors = new ArrayList();
 
@@ -345,20 +344,38 @@ System.out.println( "updateCompletors()" );
 		}
 	}
 
+	private void clear( final InputStream is )
+	{
+		try
+		{
+			int lim = is.available();
+			for ( int i = 0; i < lim; i++ )
+				is.read();
+		}
+
+		catch ( java.io.IOException e )
+		{
+			alert( "Error: " + e );
+		}
+	}
+
 	private void runPrivate()
 	{
-// TODO: revisit parser error recovery
 		// Break out when a @quit directive is encountered
 		for (;;)
 		{
-System.out.println( "--- 0 ---" );
+			// If there's anything in the input buffer, it's because the parser
+			// ran across a syntax error.  Clear the buffer and start afresh.
+			clear( writeIn );
+
+			// Get the first line of input (the parser itself will request
+			// additional input when it's ready).
 			readLine();
-System.out.println( "--- 1 ---" );
+
 			RippleLexer lexer = new RippleLexer( writeIn );
 			lexer.initialize( this );
 			RippleParser parser = new RippleParser( lexer );
 			parser.initialize( this );
-System.out.println( "--- 2 ---" );
 
 			try
 			{
@@ -394,7 +411,6 @@ System.out.println( "--- 2 ---" );
 
 				break;
 			}
-System.out.println( "--- 3 ---" );
 		}
 	}
 

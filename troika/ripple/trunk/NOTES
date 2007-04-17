@@ -300,19 +300,29 @@ range of numeric types
 
 
 ========================================
+error handling test cases
+========================================
+
+1 0 /div.
+
+2).
+
+
+========================================
 towards stress testing
 ========================================
 
 42 (rdf:nil/rdf:type/pop) 100 /times.
+42 (rdf:nil/rdf:type/pop) 1000 /times.
 
 
 ========================================
 launch the interpreter
 ========================================
 
-java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample
+java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
 
-alias ripple='java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.CLIExample'
+alias ripple='java -Xmx512M -DentityExpansionLimit=150000 -classpath target/ripple-full.jar net.fortytwo.ripple.Demo'
 ripple
 
 

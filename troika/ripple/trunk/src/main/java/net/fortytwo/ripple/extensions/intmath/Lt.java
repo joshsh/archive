@@ -8,17 +8,19 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class IntegerGreaterThan extends PrimitiveFunction
+public class Lt extends PrimitiveFunction
 {
 	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
 
 	private RippleValue truePrim = null;
 	private RippleValue falsePrim = null;
 	
-	public IntegerGreaterThan( RdfValue v, ModelConnection mc )
+	public Lt( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
+		this.truePrim = truePrim;
+		this.falsePrim = falsePrim;
 	}
 
 	public int arity()
@@ -49,7 +51,7 @@ public class IntegerGreaterThan extends PrimitiveFunction
 				throw new RippleException( "boolean primitives not found" );
 		}
 
-		result = ( a > b )
+		result = ( a < b )
 			? truePrim
 			: falsePrim;
 

@@ -62,7 +62,7 @@ options
 protected
 WS_CHAR
 	: ' ' | '\t' | '\r'
-	| '\n'      { newline(); endOfLineEvent(); }
+	| '\n'  { newline(); endOfLineEvent(); }
 	;
 
 WS
@@ -171,8 +171,6 @@ NUMBER
 // Ignore comments.
 COMMENT
 	: ( '#' ( ~('\n') )* ) { $setType( Token.SKIP ); }
-//	: ( '#' (( ('\u0000'..'\u0009') | '\u000B' | '\u000C' | ('\u000E'..'\uFFFF')){System.out.println(".");} )* )
-//		{ $setType( Token.SKIP ); }
 	;
 
 /*
@@ -233,7 +231,14 @@ options
 nt_Document
 {
 }
-	: ( (WS)? nt_Statement )*
+	: ( (nt_Ws)? nt_Statement )*
+	;
+
+
+nt_Ws
+	// Note: consecutive WS tokens occur when the lexer matches a COMMENT
+	//       between them.
+	: (WS)+
 	;
 
 
@@ -246,7 +251,7 @@ nt_Statement
 	: nt_Directive
 
 	// Query statements are always lists.
-	| r=nt_List (WS)? EOS
+	| r=nt_List (nt_Ws)? EOS
 		{
 			interpreter.evaluate( r );
 		}
@@ -263,7 +268,7 @@ nt_List returns [ ListAst s ]
 	boolean modified = false;
 }
 	: ( ( OPER { modified = true; } )? i=nt_Node
-		( ( WS ~(EOS | R_PAREN) ) => ( WS s=nt_List )
+		( ( WS ~(EOS | R_PAREN) ) => ( nt_Ws s=nt_List )
 		| ( ~(WS | EOS | R_PAREN) ) => ( s=nt_List )
 		| {}  // end of list
 		) )
@@ -290,8 +295,8 @@ nt_ParenthesizedList returns [ ListAst r ]
 {
 	r = null;
 }
-	: L_PAREN (WS)? (
-		( r=nt_List (WS)? R_PAREN )
+	: L_PAREN (nt_Ws)? (
+		( r=nt_List (nt_Ws)? R_PAREN )
 		| R_PAREN )
 	;
 
@@ -412,60 +417,60 @@ nt_Directive
 	String localName = null;
 	ListAst rhs;
 }
-	: DRCTV_COUNT WS "statements" (WS)? EOS
+	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? EOS
 		{
-			interpreter.put( new CountStatementsCmd() );
+			interpreter.execute( new CountStatementsCmd() );
 		}
 
-	| DRCTV_DEFINE WS localName=nt_Name (WS)? COLON (WS)? rhs=nt_List (WS)? EOS
+	| DRCTV_DEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List (nt_Ws)? EOS
 		{
-			interpreter.put( new DefineTermCmd( rhs, localName ) );
+			interpreter.execute( new DefineTermCmd( rhs, localName ) );
 		}
 
-	| DRCTV_EXPORT ( WS ( nsPrefix=nt_PrefixName (WS)? )? )? COLON (WS)? exFile:STRING (WS)? EOS
+	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? EOS
 		{
-			interpreter.put( new ExportNsCmd( nsPrefix, exFile.getText() ) );
+			interpreter.execute( new ExportNsCmd( nsPrefix, exFile.getText() ) );
 		}
 
-	| DRCTV_HELP (WS)? EOS
+	| DRCTV_HELP (nt_Ws)? EOS
 		{
 			System.out.println( "\nSorry, the @help directive is just a placeholder for now.\n" );
 		}
 
-	| DRCTV_LIST WS
-		( "contexts" (WS)? EOS
+	| DRCTV_LIST nt_Ws
+		( "contexts" (nt_Ws)? EOS
 			{
-				interpreter.put( new ShowContextsCmd() );
+				interpreter.execute( new ShowContextsCmd() );
 			}
-		| "prefixes" (WS)? EOS
+		| "prefixes" (nt_Ws)? EOS
 			{
-				interpreter.put( new ShowPrefixesCmd() );
+				interpreter.execute( new ShowPrefixesCmd() );
 			}
 		)
 
-	| DRCTV_PREFIX WS ( nsPrefix=nt_PrefixName (WS)? )? COLON (WS)? ns=nt_URIRef (WS)? EOS
+	| DRCTV_PREFIX nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? COLON (nt_Ws)? ns=nt_URIRef (nt_Ws)? EOS
 		{
-			interpreter.put( new DefinePrefixCmd( nsPrefix, ns ) );
+			interpreter.execute( new DefinePrefixCmd( nsPrefix, ns ) );
 		}
 
-	| DRCTV_QUIT (WS)? EOS
+	| DRCTV_QUIT (nt_Ws)? EOS
 		{
-			interpreter.put( new QuitCmd() );
+			interpreter.execute( new QuitCmd() );
 		}
 
-	| DRCTV_SAVEAS WS saFile:STRING (WS)? EOS
+	| DRCTV_SAVEAS nt_Ws saFile:STRING (nt_Ws)? EOS
 		{
-			interpreter.put( new SaveAsCmd( saFile.getText() ) );
+			interpreter.execute( new SaveAsCmd( saFile.getText() ) );
 		}
 
-	| DRCTV_SERQL WS query:STRING (WS)? EOS
+	| DRCTV_SERQL nt_Ws query:STRING (nt_Ws)? EOS
 		{
-			interpreter.put( new SerqlQueryCmd( query.getText() ) );
+			interpreter.execute( new SerqlQueryCmd( query.getText() ) );
 		}
 
-	| DRCTV_UNDEFINE WS localName=nt_Name (WS)? EOS
+	| DRCTV_UNDEFINE nt_Ws localName=nt_Name (nt_Ws)? EOS
 		{
-			interpreter.put( new UndefineTermCmd( localName ) );
+			interpreter.execute( new UndefineTermCmd( localName ) );
 		}
 	;
 

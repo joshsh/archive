@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class IntegerDivide extends PrimitiveFunction
+public class Mod extends PrimitiveFunction
 {
-	public IntegerDivide( RdfValue v, ModelConnection mc )
+	public Mod( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -35,7 +35,7 @@ public class IntegerDivide extends PrimitiveFunction
 
 		try
 		{
-			result = a / b;
+			result = a % b;
 		}
 
 		catch ( Throwable t )

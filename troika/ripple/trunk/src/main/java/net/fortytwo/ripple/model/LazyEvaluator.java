@@ -99,12 +99,21 @@ public class LazyEvaluator extends Evaluator
 						ModelConnection mc )
 		throws RippleException
 	{
-//System.out.println( "public void applyTo" );
 		modelConnection = mc;
 		model = modelConnection.getModel();
 
 		EvaluatorSink evalSink = new EvaluatorSink( sink );
-		evalSink.put( stack );
+
+		try
+		{
+			evalSink.put( stack );
+		}
+
+		// Attempt to recover from stack overflow.
+		catch ( StackOverflowError e )
+		{
+			throw new RippleException( e );
+		}
 	}
 
 }

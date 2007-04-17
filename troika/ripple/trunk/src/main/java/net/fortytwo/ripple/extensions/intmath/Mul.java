@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class IntegerMultiply extends PrimitiveFunction
+public class Mul extends PrimitiveFunction
 {
-	public IntegerMultiply( RdfValue v, ModelConnection mc )
+	public Mul( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );

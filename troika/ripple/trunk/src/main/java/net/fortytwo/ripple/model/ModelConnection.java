@@ -109,10 +109,8 @@ public class ModelConnection
 	{
 		try
 		{
+//System.out.println( "closing connection..." );
 			repoConnection.close();
-//System.out.println( "Closed "
-//    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-//    + " (" + openConnections + " total)." );
 		}
 
 		catch ( Throwable t )
@@ -1395,24 +1393,38 @@ s_logger.debug( "####################### after" );
 			//       deadlock.  Even using a separate RepositoryConnection for
 			//       each RepositoryResult doesn't seem to help.
 			Collection<Value> results = null;
+			RepositoryResult<Statement> stmtIter = null;
 
 			// Perform the query and collect results.
 			try
 			{
-				RepositoryResult<Statement> stmtIter
-					= repoConnection.getStatements(
-						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
+				stmtIter = repoConnection.getStatements(
+					(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
 				while ( stmtIter.hasNext() )
 				{
 					if ( null == results )
 						results = new LinkedList<Value>();
 					results.add( stmtIter.next().getObject() );
 				}
+//System.out.println( "closing stmtIter (1)" );
 				stmtIter.close();
 			}
 
 			catch ( Throwable t )
 			{
+//System.out.println( "caught Throwable: " + t );
+//t.printStackTrace( System.err );
+				try
+				{
+System.out.println( "closing stmtIter (2)" );
+					stmtIter.close();
+				}
+
+				catch ( Throwable t2 )
+				{
+					System.exit( 1 );
+				}
+
 				reset();
 				throw new RippleException( t );
 			}
