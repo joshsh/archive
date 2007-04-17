@@ -198,7 +198,7 @@
 				<version>2.1</version>
 				<configuration>
 					<descriptors>
-						<descriptor>descriptor.xml</descriptor>
+						<descriptor>assembly.xml</descriptor>
 					</descriptors>
 					<finalName>ripple</finalName>
 					<outputDirectory>target</outputDirectory>

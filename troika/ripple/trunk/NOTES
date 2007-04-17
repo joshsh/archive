@@ -18,9 +18,9 @@ rm ripple.log
 #cp ~/www/ripple/demo-cache.rdf .
 cp ~/www/ripple/ripple.pdf .
 cd ..
-mv trunk/ ripple-0.1.1
-tar -cf ripple-0.1.1.tar ripple-0.1.1
-gzip ripple-0.1.1.tar
+mv trunk/ ripple-0.1.2
+tar -cf ripple-0.1.2.tar ripple-0.1.2
+gzip ripple-0.1.2.tar
 
 cp ripple-0.1.tar.gz ~/www/ripple
 
@@ -286,6 +286,20 @@ string and URI encoding test cases
 <http://uri.with\>gt/>.
 <http://\u5DE5\u592B.com>.
 <mailto:\U12345678@bogus.com>.
+
+
+========================================
+comments test cases
+========================================
+
+#
+#foo
+
+42. #foo
+
+2#foo
+3/add
+.#
 
 
 ========================================
