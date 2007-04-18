@@ -14,6 +14,7 @@ import net.fortytwo.ripple.ast.QNameAst;
 import net.fortytwo.ripple.ast.StringAst;
 import net.fortytwo.ripple.ast.TypedLiteralAst;
 import net.fortytwo.ripple.ast.UriAst;
+import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.commands.CountStatementsCmd;
 import net.fortytwo.ripple.query.commands.DefinePrefixCmd;
 import net.fortytwo.ripple.query.commands.DefineTermCmd;
@@ -41,20 +42,23 @@ options
 }
 
 {
-	private Interpreter interpreter = null;
+	private RecognizerInterface itf = null;
 
-	public void initialize( Interpreter r )
+	public void initialize( final RecognizerInterface i )
 	{
-		interpreter = r;
+		itf = i;
 	}
 
-	private void endOfLineEvent()
+	private void matchEndOfLine()
 	{
-		if ( null == interpreter )
-			System.err.println( "RippleLexer instance has not been initialized" );
+		if ( null == itf )
+		{
+			System.err.println( "lexer has not been initialized" );
+			System.exit( 1 );
+		}
 
 		else
-			interpreter.readLine();
+			itf.put( RecognizerEvent.NEWLINE );
 	}
 }
 
@@ -62,7 +66,7 @@ options
 protected
 WS_CHAR
 	: ' ' | '\t' | '\r'
-	| '\n'  { newline(); endOfLineEvent(); }
+	| '\n'  { newline(); matchEndOfLine(); }
 	;
 
 WS
@@ -96,19 +100,19 @@ UCHARACTER
 protected
 LANGUAGE
 	: ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
-		{ interpreter.setLanguageTag( $getText ); }
+		{ itf.setLanguageTag( $getText ); }
 	;
 
 STRING
 	: '\"'!
-		{ interpreter.setLanguageTag( null ); }
+		{ itf.setLanguageTag( null ); }
 		( SCHARACTER )* '\"'! ( LANGUAGE! )?
 	;
 
 /*
 LONG_STRING
 	: "\"\"\""!
-		{ interpreter.setLanguageTag( null ); }
+		{ itf.setLanguageTag( null ); }
 		( SCHARACTER )* "\"\"\""! ( LANGUAGE! )?
 	;
 */
@@ -219,11 +223,35 @@ options
 }
 
 {
-	private Interpreter interpreter = null;
+	private RecognizerInterface itf = null;
 
-	public void initialize( Interpreter r )
+	public void initialize( final RecognizerInterface i )
 	{
-		interpreter = r;
+		itf = i;
+	}
+
+	public void matchCommand( final Command cmd )
+	{
+		if ( null == itf )
+		{
+			System.err.println( "parser has not been initialized" );
+			System.exit( 1 );
+		}
+
+		else
+			itf.put( cmd );
+	}
+
+	public void matchQuery( final ListAst ast )
+	{
+		if ( null == itf )
+		{
+			System.err.println( "parser has not been initialized" );
+			System.exit( 1 );
+		}
+
+		else
+			itf.put( ast );
 	}
 }
 
@@ -251,14 +279,15 @@ nt_Statement
 	: nt_Directive
 
 	// Query statements are always lists.
-	| r=nt_List (nt_Ws)? EOS
+	| r=nt_List EOS
 		{
-			interpreter.evaluate( r );
+			matchQuery( r );
 		}
 
 	// Empty statements are simply ignored.
 	| EOS
 	;
+
 
 
 nt_List returns [ ListAst s ]
@@ -267,18 +296,31 @@ nt_List returns [ ListAst s ]
 	s = null;
 	boolean modified = false;
 }
-	: ( ( OPER { modified = true; } )? i=nt_Node
-		( ( WS ~(EOS | R_PAREN) ) => ( nt_Ws s=nt_List )
-		| ( ~(WS | EOS | R_PAREN) ) => ( s=nt_List )
-		| {}  // end of list
-		) )
-		{
-			// Note: the resulting list will be in the same order as the input.
-			if ( modified )
-				s = new ListAst( new OperatorAst(), s );
-			s = new ListAst( i, s );
-		}
+		// Optional slash operator.
+	:	( OPER { modified = true; } )?
+
+		// Head of the list.
+		i=nt_Node
+
+		(
+			(WS) => ( nt_Ws
+				( (~(EOS | R_PAREN )) => s=nt_List
+				| {}
+				) )
+
+			// Tail of the list.
+		|	(~(WS | EOS | R_PAREN)) => s=nt_List
+
+			// End of the list.
+		|	(EOS | R_PAREN) => ()
+		)
+			{
+				if ( modified )
+					s = new ListAst( new OperatorAst(), s );
+				s = new ListAst( i, s );
+			}
 	;
+
 
 
 nt_Node returns [ Ast r ]
@@ -296,7 +338,7 @@ nt_ParenthesizedList returns [ ListAst r ]
 	r = null;
 }
 	: L_PAREN (nt_Ws)? (
-		( r=nt_List (nt_Ws)? R_PAREN )
+		( r=nt_List /*(nt_Ws)?*/ R_PAREN )
 		| R_PAREN )
 	;
 
@@ -315,7 +357,7 @@ nt_Literal returns [ Ast r ]
 	)
 		{
 			r = ( null == dataType )
-				? new StringAst( t.getText(), interpreter.getLanguageTag() )
+				? new StringAst( t.getText(), itf.getLanguageTag() )
 				: new TypedLiteralAst( t.getText(), dataType );
 		}
 	| u:NUMBER
@@ -419,17 +461,17 @@ nt_Directive
 }
 	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? EOS
 		{
-			interpreter.execute( new CountStatementsCmd() );
+			matchCommand( new CountStatementsCmd() );
 		}
 
-	| DRCTV_DEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List (nt_Ws)? EOS
+	| DRCTV_DEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ EOS
 		{
-			interpreter.execute( new DefineTermCmd( rhs, localName ) );
+			matchCommand( new DefineTermCmd( rhs, localName ) );
 		}
 
 	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? EOS
 		{
-			interpreter.execute( new ExportNsCmd( nsPrefix, exFile.getText() ) );
+			matchCommand( new ExportNsCmd( nsPrefix, exFile.getText() ) );
 		}
 
 	| DRCTV_HELP (nt_Ws)? EOS
@@ -440,37 +482,37 @@ nt_Directive
 	| DRCTV_LIST nt_Ws
 		( "contexts" (nt_Ws)? EOS
 			{
-				interpreter.execute( new ShowContextsCmd() );
+				matchCommand( new ShowContextsCmd() );
 			}
 		| "prefixes" (nt_Ws)? EOS
 			{
-				interpreter.execute( new ShowPrefixesCmd() );
+				matchCommand( new ShowPrefixesCmd() );
 			}
 		)
 
 	| DRCTV_PREFIX nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? COLON (nt_Ws)? ns=nt_URIRef (nt_Ws)? EOS
 		{
-			interpreter.execute( new DefinePrefixCmd( nsPrefix, ns ) );
+			matchCommand( new DefinePrefixCmd( nsPrefix, ns ) );
 		}
 
 	| DRCTV_QUIT (nt_Ws)? EOS
 		{
-			interpreter.execute( new QuitCmd() );
+			matchCommand( new QuitCmd() );
 		}
 
 	| DRCTV_SAVEAS nt_Ws saFile:STRING (nt_Ws)? EOS
 		{
-			interpreter.execute( new SaveAsCmd( saFile.getText() ) );
+			matchCommand( new SaveAsCmd( saFile.getText() ) );
 		}
 
 	| DRCTV_SERQL nt_Ws query:STRING (nt_Ws)? EOS
 		{
-			interpreter.execute( new SerqlQueryCmd( query.getText() ) );
+			matchCommand( new SerqlQueryCmd( query.getText() ) );
 		}
 
 	| DRCTV_UNDEFINE nt_Ws localName=nt_Name (nt_Ws)? EOS
 		{
-			interpreter.execute( new UndefineTermCmd( localName ) );
+			matchCommand( new UndefineTermCmd( localName ) );
 		}
 	;
 

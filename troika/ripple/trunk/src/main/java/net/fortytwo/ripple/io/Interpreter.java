@@ -6,6 +6,7 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.PrintStream;
+import java.io.OutputStreamWriter;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -43,8 +44,7 @@ import org.apache.log4j.Logger;
  *     System.in --> reader --> readOut --> writeIn --> RippleLexer
  *
  * Normal output:
- *     valueSetObserver --> queryEngine.getPrintStream()
- *     evaluateGraphQuery() --> queryEngine.getPrintStream()
+ *     [commands and queries] --> queryEngine.getPrintStream()
  *
  * Error output:
  *     alert() --> queryEngine.getErrorPrintStream()
@@ -62,24 +62,12 @@ public class Interpreter extends Thread implements Observer
 
 	private QueryEngine queryEngine;
 
-	////////////////////////////////////////////////////////////////////////////
-
-	// A helper variable for the lexer and parser.
-	private String languageTag;
-
-	public String getLanguageTag()
-	{
-		return languageTag;
-	}
-
-	public void setLanguageTag( final String tag )
-	{
-		languageTag = tag;
-	}
+	private RecognizerInterface recognizerInterface;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public Interpreter( QueryEngine qe ) throws RippleException
+	public Interpreter( final QueryEngine qe, final InputStream is )
+		throws RippleException
 	{
 		queryEngine = qe;
 
@@ -87,7 +75,8 @@ public class Interpreter extends Thread implements Observer
 
 		try
 		{
-			reader = new ConsoleReader();
+			reader = new ConsoleReader( is,
+				new OutputStreamWriter( qe.getPrintStream() ) );
 
 			if ( null != jLineDebugOutput )
 				reader.setDebug(
@@ -106,6 +95,44 @@ public class Interpreter extends Thread implements Observer
 		queryEngine.getLexicon().addObserver( this );
 
 		update( queryEngine.getLexicon(), null );
+
+		Sink<ListAst> querySink = new Sink<ListAst>()
+		{
+			public void put( final ListAst ast )
+				throws RippleException
+			{
+				evaluate( ast );
+			}
+		};
+
+		Sink<Command> commandSink = new Sink<Command>()
+		{
+			public void put( final Command cmd )
+				throws RippleException
+			{
+				execute( cmd );
+			}
+		};
+
+		Sink<RecognizerEvent> eventSink = new Sink<RecognizerEvent>()
+		{
+			public void put( final RecognizerEvent event )
+				throws RippleException
+			{
+				switch ( event )
+				{
+					case NEWLINE:
+						readLine();
+						break;
+					default:
+						throw new RippleException( "event not yet supported: "
+							+ event );
+				}
+			}
+		};
+
+		recognizerInterface = new RecognizerInterface(
+			querySink, commandSink, eventSink, qe.getErrorPrintStream() );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -133,7 +160,7 @@ public class Interpreter extends Thread implements Observer
 		}
 	}
 
-	public void readLine()
+	private void readLine()
 	{
 		try
 		{
@@ -160,7 +187,8 @@ public class Interpreter extends Thread implements Observer
 			alert( "IOException: " + e.toString() );
 		}
 	}
-	public void execute( final Command cmd )
+
+	private void execute( final Command cmd )
 	{
 		ModelConnection mc = null;
 		boolean gotConnection = false, finished = false;
@@ -214,7 +242,7 @@ public class Interpreter extends Thread implements Observer
 		}
 	}
 
-	public void evaluate( ListAst ast )
+	private void evaluate( ListAst ast )
 	{
 		ModelConnection mc = null;
 		boolean gotConnection = false, finished = false;
@@ -373,9 +401,9 @@ public class Interpreter extends Thread implements Observer
 			readLine();
 
 			RippleLexer lexer = new RippleLexer( writeIn );
-			lexer.initialize( this );
+			lexer.initialize( recognizerInterface );
 			RippleParser parser = new RippleParser( lexer );
-			parser.initialize( this );
+			parser.initialize( recognizerInterface );
 
 			try
 			{

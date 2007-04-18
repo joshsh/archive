@@ -271,6 +271,8 @@ whitespace-related parser test cases
 @define local:  1 2 3.
 rdf:type:local.
 
+@define bar: 2  .
+
 
 ========================================
 string and URI encoding test cases
@@ -300,6 +302,9 @@ comments test cases
 2#foo
 3/add
 .#
+
+2 #asdfasdf
+.
 
 
 ========================================

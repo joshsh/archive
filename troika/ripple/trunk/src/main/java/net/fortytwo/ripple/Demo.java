@@ -135,7 +135,10 @@ System.exit( 0 );
 			Evaluator evaluator = new LazyEvaluator();
 			QueryEngine qe
 				= new QueryEngine( model, evaluator, System.out, System.err );
-			Interpreter r = new Interpreter( qe );
+
+			// Attach an interpreter to the query engine and let it read from
+			// standard input.
+			Interpreter r = new Interpreter( qe, System.in );
 			r.run();
 
 			if ( null != store )
