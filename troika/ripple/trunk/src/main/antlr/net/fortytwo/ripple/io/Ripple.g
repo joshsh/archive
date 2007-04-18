@@ -302,8 +302,7 @@ nt_List returns [ ListAst s ]
 		// Head of the list.
 		i=nt_Node
 
-		(
-			(WS) => ( nt_Ws
+		(	(WS) => ( nt_Ws
 				( (~(EOS | R_PAREN )) => s=nt_List
 				| {}
 				) )
@@ -312,7 +311,7 @@ nt_List returns [ ListAst s ]
 		|	(~(WS | EOS | R_PAREN)) => s=nt_List
 
 			// End of the list.
-		|	(EOS | R_PAREN) => ()
+		|	()
 		)
 			{
 				if ( modified )
