@@ -5,3 +5,17 @@
 20 "doap" /pingTheSemanticWeb.
 20 "rdfs" /pingTheSemanticWeb.
 20 "owl" /pingTheSemanticWeb.
+
+
+
+@prefix : <http://foo#>.
+@define pingStr: /toString/urlEncoding "http://pingthesemanticweb.com/rest/?url=" /swap/strCat.
+@define ping: /:pingStr/urlGet.
+
+rpl:/:ping.
+etc:/:ping.
+graph:/:ping.
+intmath:/:ping.
+joy:/:ping.
+stream:/:ping.
+

@@ -30,9 +30,13 @@
 			</properties>
 		</developer>
 	</developers>
+	<organization>
+		<!-- for the copyright notice on the generated web site -->
+		<name>Joshua Shinavier</name>
+	</organization>
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>http://127.0.0.1/bugzilla</url>
+		<system>GForge Tracker</system>
+		<url>http://projects.semwebcentral.org/tracker/?atid=573&amp;group_id=125&amp;func=browse</url>
 	</issueManagement>
 	
 	<!--<scm>

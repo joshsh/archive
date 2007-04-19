@@ -24,7 +24,16 @@
 
 
 
-(: SPARQL
+# My account.
+<http://revyu.com/people/iamthewalnut>.
+
+
+
+
+
+========================================
+SPARQL
+========================================
 
 PREFIX rev: <http://purl.org/stuff/rev#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -49,7 +58,6 @@ WHERE
  ?review rev:createdOn ?createdOn
 }
 
-:)
 
 
 

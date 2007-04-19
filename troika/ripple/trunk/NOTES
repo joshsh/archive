@@ -13,6 +13,7 @@ rm NOTES
 rm REFACTORING
 rm TODO
 mvn install
+mvn site
 rm -rf target/assembly
 rm ripple.log
 #cp ~/www/ripple/demo-cache.rdf .
@@ -372,7 +373,12 @@ rapper -q -i turtle -o dot ./src/main/resources/net/fortytwo/ripple/ripple.ttl >
 dot -Tpng -o tmp/ripple.png tmp/ripple.dot
 
 
+========================================
+create HTML from ripple.tex
+========================================
 
+cd contest
+tth ripple.tex
 
 
 

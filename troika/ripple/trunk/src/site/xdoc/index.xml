@@ -1,0 +1,27 @@
+<document>
+
+    <properties>
+        <title>Ripple Maven project</title>
+        <author email="josh@fortytwo.net">Joshua Shinavier</author>
+    </properties>
+
+    <body>
+
+        <section name="Ripple RDF Scripting Language">
+
+            <subsection name="JavaDoc">
+                <A HREF="apidocs/index.html">JavaDoc</A> API reference.
+            </subsection>
+
+            <subsection name="Reporting">
+                <UL>
+                    <LI><A HREF="cobertura/index.html">Cobertura</A> code coverage.</LI>
+                    <LI><A HREF="checkstyle.html">Checkstyle</A> reports.</LI>
+                </UL>
+            </subsection>
+
+        </section>
+
+    </body>
+
+</document>
