@@ -12,8 +12,9 @@ Java implementation of Ripple includes a query engine, a provisonal assortment
 of primitive functions, and an interactive interpreter which parses commands and
 queries in a readable, Turtle-like format.
 
-For more information, including command-line syntax and demo code, see
-ripple.pdf.
+For more information, including command-line syntax and demo code, see:
+
+    http://ripple.projects.semwebcentral.org/ripple.html
 
 
 ================================================================================
@@ -51,7 +52,11 @@ from the directory containing pom.xml (requires Java 5).
 Bugs
 ================================================================================
 
-Please report them to parcour@gmail.com.
+Please submit bug reports to the tracker at:
+
+    http://projects.semwebcentral.org/tracker/?atid=573&group_id=125
+
+or send mail to josh@fortytwo.net.
 
 Known issues include:
 * the dereferencer is dumb enough to try and resolve mailto: and other

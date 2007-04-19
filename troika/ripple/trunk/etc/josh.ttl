@@ -23,8 +23,8 @@
 	foaf:givenname "Joshua" ;
 	foaf:family_name "Shinavier" ;
 	foaf:nick "Josh" ;
-	foaf:mbox_sha1sum "e9bbf0a3835f323fc4bf3a20f8f41df1b31bda6a" ;
-	foaf:mbox <mailto:parcour@gmail.com> ;
+	foaf:mbox_sha1sum "1f62decdebec6594187ed1fa02355d9db33184fa" ;
+	foaf:mbox <mailto:josh@fortytwo.net> ;
 #	foaf:holdsAccount <http://www.flickr.com/photos/72748463@N00/> ;
 #	foaf:homepage <http://fortytwo.net> ;
 	con:homepage <http://fortytwo.net> ;

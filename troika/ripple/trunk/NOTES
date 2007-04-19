@@ -1,3 +1,7 @@
+========================================
+create distribution
+========================================
+
 cd /tmp
 rm -rf /tmp/demo
 mkdir /tmp/demo
@@ -23,7 +27,19 @@ mv trunk/ ripple-0.1.2
 tar -cf ripple-0.1.2.tar ripple-0.1.2
 gzip ripple-0.1.2.tar
 
-cp ripple-0.1.tar.gz ~/www/ripple
+
+========================================
+create and publish website
+========================================
+
+cdpr
+mvn site
+tth contest/ripple.tex
+cp contest/ripple.html target/site
+cd target/site
+scp -r * fortytwo@projects.semwebcentral.org:/var/www/gforge-projects/ripple
+
+
 
 
 @prefix demo:  <http://fortytwo.net/2007/03/ripple/demo#>.

@@ -8,7 +8,7 @@
 	
 	<groupId>net.fortytwo</groupId>
 	<artifactId>ripple</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<name>Ripple</name>
 	<description>Functional Programs as Linked Data</description>
 	<url>http://fortytwo.net/ripple</url>
@@ -18,7 +18,7 @@
 		<developer>
 			<id>josh</id>
 			<name>Joshua Shinavier</name>
-			<email>parcour@gmail.com</email>
+			<email>josh@fortytwo.net</email>
 			<url>http://fortytwo.net</url>
 			<roles>
 				<role>architect</role>
@@ -53,7 +53,7 @@
 		</repository>
 		<!--<repository>
 			<id>fortytwo</id>
-			<name>Josh's m2 repository</name>
+			<name>fortytwo.net Maven repository</name>
 			<url>http://fortytwo.net/maven2</url>
 		</repository>-->
 		<repository>

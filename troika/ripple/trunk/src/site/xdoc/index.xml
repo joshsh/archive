@@ -9,6 +9,8 @@
 
         <section name="Ripple RDF Scripting Language">
 
+            Read an <A HREF="ripple.html">introduction</A> to Ripple.
+
             <subsection name="JavaDoc">
                 <A HREF="apidocs/index.html">JavaDoc</A> API reference.
             </subsection>
