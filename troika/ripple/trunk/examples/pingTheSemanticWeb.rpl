@@ -9,6 +9,7 @@
 
 
 @prefix : <http://foo#>.
+@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
 @define pingStr: /toString/urlEncoding "http://pingthesemanticweb.com/rest/?url=" /swap/strCat.
 @define ping: /:pingStr/urlGet.
 
@@ -18,4 +19,6 @@ graph:/:ping.
 intmath:/:ping.
 joy:/:ping.
 stream:/:ping.
+demo:/:ping.
 
+<http://fortytwo.net/2007/03/ripple/doap#>/:ping.

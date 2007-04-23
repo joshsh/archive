@@ -41,6 +41,9 @@ doap:wiki ;
 
 
 
+# Ripple's DOAP
+<http://fortytwo.net/2007/03/ripple/doap#>.
+
 
 (: PRJ Project Vocabulary :)
 "http://dannyayers.com:88/xmlns/project/project.owl" grab;

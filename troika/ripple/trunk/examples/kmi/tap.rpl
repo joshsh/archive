@@ -1,0 +1,4 @@
+# Note: own definition.
+@prefix tap:  <http://athena.ics.forth.gr:9090/RDF/VRP/Examples/tap.rdf#>.
+
+[many terms]

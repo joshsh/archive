@@ -1,0 +1,105 @@
+@prefix :  <http://foo#>.
+@prefix ont:  <http://fortytwo.net/2007/04/kmi/ont.ttl#>.
+@prefix toy:  <http://fortytwo.net/2007/04/kmi/toy.ttl#>.
+@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
+
+ont:Ontology.
+toy:.
+
+@define hasItem:
+    /dup/ont:hasConcept/swap
+    /dup/ont:hasIndividual /swap
+    /ont:hasProperty /union/union/unique.
+
+toy:/:hasItem.
+
+# implication closure
+@define superConcepts: (/ont:implies/:superConcepts)/swap/swap id /union/i/unique.
+
+toy:Mother/:superConcepts.
+
+
+@define allConcepts: /ont:instanceOf/:superConcepts/unique.
+
+toy:samantha/:allConcepts.
+
+
+
+# a b /:dupDown  -->  a b a
+@define dupDown:  dup/swap/dip/swap.
+
+@define mostSpecificConceptOf:
+    /dup/ont:instanceOf/swap
+    /ont:instanceOf/:superConcepts
+    /:dupDown/equal/unique scrap pop /ifte.
+
+toy:samantha/:mostSpecificConceptOf.
+
+
+
+@define intersect:  /:dupDown/equal id scrap /ifte.
+
+1 2 /union 2 5 /union /:intersect.
+
+@define commonSuperConcepts:
+    :superConcepts/swap/dip
+    /:superConcepts/:intersect.
+
+toy:Father toy:Mother /:commonSuperConcepts.
+
+
+@define without:  (/equal/not)/demo:filter.
+
+/ont:instanceOf/dup/:superConcepts/:without.
+
+
+# most specific concept
+@define msc: ...
+
+# most specific common super-concept
+@define mostSpecificCommonSuperConcept: ...
+
+# most specific common super-property
+@define mscsp: ...
+
+@define extractConcepts:
+	SV/ont:hasConcept
+	M/ont:hasConcept M/ont:hasConcept /:mostSpecificCommonSuperConcept /union
+	M/ont:hasIndividual /:msc /union
+	M/ont:hasConcept /:superConcepts /union
+	M/ont:hasConcept
+		ont:predicate
+		ont:intersectArg /union
+		ont:unionArg /union
+		ont:negationArg /union /i
+	/union/unique.
+	
+@define extractProperties:
+	SV/ont:hasProperty
+	M/ont:hasProperty M/ont:hasProperty /:mscsp /union
+	.......O/ont:hasProperty  M/ont:hasIndividual.............
+	M/ont:hasConcept........
+	
+@define extractIndividuals:
+	SV/ont:hasIndividual
+	M/ont:hasAssertion (/dup/ont:subject M/ont:hasIndividual /equals)/:filter /ont:predicate /union
+	M/ont:hasConcept/ont:contains.
+	
+@define extractAssertions:
+	O/ont:hasAssertion
+		(/ont:subject M/:item /equals)/demo:filter
+		(/ont:object M/:item /equals)/demo:filter.
+
+
+
+@define extractFrom:
+	/new
+	rdf:type ont:Ontology /assert
+	ont:hasConcept M/extractConcepts /assert
+	ont:hasProperty M/extractProperties /assert
+	ont:hasIndividual M/extractIndividuals /assert
+	ont:hasAssertion M/extractAssertions /assert.
+	
+	
+
+

@@ -373,6 +373,8 @@ sudo cp ./src/main/resources/net/fortytwo/ripple/io/kate/ripple.xml /usr/share/a
 create RDF/XML for the server
 ========================================
 
+rapper -q -i turtle -o rdfxml etc/doap.ttl > ~/www/2007/03/ripple/doap.rdf
+
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/ripple.ttl > tmp/schema.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/etc/etc.ttl > tmp/etc.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/graph/graph.ttl > tmp/graph.rdf
