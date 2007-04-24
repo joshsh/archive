@@ -35,6 +35,7 @@ public class Assert extends PrimitiveFunction
 		subj = stack.getFirst();
 		stack = stack.getRest();
 
+System.out.println( "Asserting (" + subj + ", " + pred + ", " + obj + ")" );
 		mc.add( subj, pred, obj );
 
 		sink.put( new RippleList( subj, stack ) );

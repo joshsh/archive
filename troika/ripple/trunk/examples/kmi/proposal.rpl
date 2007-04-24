@@ -7,33 +7,39 @@ ont:Ontology.
 toy:.
 
 @define hasItem:
-    /dup/ont:hasConcept/swap
-    /dup/ont:hasIndividual /swap
-    /ont:hasProperty /union/union/unique.
+    ont:hasConcept
+    ont:hasIndividual/union
+    ont:hasProperty/union
+    /i/unique.
 
 toy:/:hasItem.
 
-# implication closure
-@define superConcepts: (/ont:implies/:superConcepts)/swap/swap id /union/i/unique.
+@define superConcepts:
+    (/ont:implies/:superConcepts)/swap/swap id /union/i/unique.
 
 toy:Mother/:superConcepts.
 
+@define superProperties:
+    (/rdfs:subPropertyOf)/swap/swap id /union/i/unique.
+
+toy:hasChild /:superProperties.
 
 @define allConcepts: /ont:instanceOf/:superConcepts/unique.
 
 toy:samantha/:allConcepts.
+
+# cheat!
+@define mostSpecificConceptOf:
+    /:allConcepts.
+
+toy:samantha/:mostSpecificConceptOf.
 
 
 
 # a b /:dupDown  -->  a b a
 @define dupDown:  dup/swap/dip/swap.
 
-@define mostSpecificConceptOf:
-    /dup/ont:instanceOf/swap
-    /ont:instanceOf/:superConcepts
-    /:dupDown/equal/unique scrap pop /ifte.
-
-toy:samantha/:mostSpecificConceptOf.
+2 3 /:dupDown.
 
 
 
@@ -47,59 +53,114 @@ toy:samantha/:mostSpecificConceptOf.
 
 toy:Father toy:Mother /:commonSuperConcepts.
 
+@define commonSuperProperties:
+    :superProperties/swap/dip
+    /:superProperties/:intersect.
 
-@define without:  (/equal/not)/demo:filter.
+toy:hasChild toy:hasChild /:commonSuperProperties.
 
-/ont:instanceOf/dup/:superConcepts/:without.
+# cheat!
+@define mostSpecificCommonSuperConcept:
+    /:commonSuperConcepts.
 
+toy:Father toy:Mother /:mostSpecificCommonSuperConcept.
 
-# most specific concept
-@define msc: ...
+# cheat!
+@define mostSpecificCommonSuperProperty:
+    /:commonSuperProperties.
 
-# most specific common super-concept
-@define mostSpecificCommonSuperConcept: ...
-
-# most specific common super-property
-@define mscsp: ...
-
-@define extractConcepts:
-	SV/ont:hasConcept
-	M/ont:hasConcept M/ont:hasConcept /:mostSpecificCommonSuperConcept /union
-	M/ont:hasIndividual /:msc /union
-	M/ont:hasConcept /:superConcepts /union
-	M/ont:hasConcept
-		ont:predicate
-		ont:intersectArg /union
-		ont:unionArg /union
-		ont:negationArg /union /i
-	/union/unique.
-	
-@define extractProperties:
-	SV/ont:hasProperty
-	M/ont:hasProperty M/ont:hasProperty /:mscsp /union
-	.......O/ont:hasProperty  M/ont:hasIndividual.............
-	M/ont:hasConcept........
-	
-@define extractIndividuals:
-	SV/ont:hasIndividual
-	M/ont:hasAssertion (/dup/ont:subject M/ont:hasIndividual /equals)/:filter /ont:predicate /union
-	M/ont:hasConcept/ont:contains.
-	
-@define extractAssertions:
-	O/ont:hasAssertion
-		(/ont:subject M/:item /equals)/demo:filter
-		(/ont:object M/:item /equals)/demo:filter.
+toy:hasChild toy:hasChild /:mostSpecificCommonSuperProperty.
 
 
 
-@define extractFrom:
-	/new
-	rdf:type ont:Ontology /assert
-	ont:hasConcept M/extractConcepts /assert
-	ont:hasProperty M/extractProperties /assert
-	ont:hasIndividual M/extractIndividuals /assert
-	ont:hasAssertion M/extractAssertions /assert.
-	
-	
+# apply to M
+@define extendConcepts:
+    (/ont:hasConcept /swap/pop)                                  # c1
+    (/dup/ont:hasConcept /swap/ont:hasConcept                    # c2
+        /:mostSpecificCommonSuperConcept /swap/pop
+    )/union
+    (/ont:hasIndividual/:mostSpecificConceptOf /swap/pop)/union  # c3
+    (/ont:hasConcept/:superConcepts /swap/pop)/union             # c4
+    (/ont:hasConcept                                             # c5
+        ont:predicate
+        ont:intersectArg/union
+        ont:unionArg/union
+        ont:negationArg/union
+        /i/unique/swap/pop
+    )/union
+    /dip/i/unique.
+
+(toy: toy:sv) /:extendConcepts.
+
+@define extendProperties:
+    (/ont:hasProperty /swap/pop)                                 # p1
+    (/dup/ont:hasProperty /swap/ont:hasProperty                  # p2
+        /:mostSpecificCommonSuperProperty /swap/pop
+    )/union
+    (/swap/ont:hasAssertion/swap/ont:hasIndividual               # p3
+        /:dupDown/ont:subject/equal id scrap /ifte /ont:predicate
+    )/union
+    (/ont:hasConcept/ont:predicateArg /swap/pop)/union           # p4
+    /dip/i/unique.
+
+(toy: toy:sv) /:extendProperties.
+
+
+@define extendIndividuals:
+    (/ont:hasIndividual /swap/pop)                               # i1
+    (ont:hasAssertion/swap/dip                                   # i2
+        (/dup/ont:subject)/swap/dip
+        /ont:hasIndividual/equal id scrap /ifte /ont:object
+    )/union
+    (/ont:hasConcept/ont:setArg /swap/pop)/union                 # i3
+    /dip/i/unique.
+
+(toy: toy:sv) /:extendIndividuals.
+
+
+@define extendAssertions:
+    /i/swap/ont:hasAssertion
+    (/ont:subject
+        :dupDown/swap/dip
+        :hasItem/swap/dip
+        /equal
+    )/demo:restrict
+    (/ont:predicate
+        :dupDown/swap/dip
+        :hasItem/swap/dip
+        /equal
+    )/demo:restrict
+    (/ont:object
+        :dupDown/swap/dip
+        :hasItem/swap/dip
+        /equal
+    )/demo:restrict.
+
+(toy: toy:sv) /:extendAssertions.
+
+
+@define extendOntology:
+    (/:extendConcepts ont:hasConcept /swap/assert)
+    (/:extendProperties ont:hasProperty /swap/assert)/union
+    (/:extendIndividuals ont:hasIndividual /swap/assert)/union
+    (/:extendAssertions ont:hasAssertion /swap/assert)/union
+    /new/swap :dupDown/swap/dip/i/unique
+    /swap/i/pop/swap ()/cons/cons.
+
+(toy: toy:sv) /:extendOntology/i.
+(toy: toy:sv) /:extendOntology/:extendOntology/i.
+(toy: toy:sv) /:extendOntology :extendOntology /swap/swap/i.
+(toy: toy:sv) :extendOntology 2 /times.
+
+
+
+:extendOntology (toy: toy:sv)/:extendOntology /swap/i /i.
+
+
+
+(toy: _:node128gmnj3mx727)/:extendOntology/i.
+
+
+
 
 

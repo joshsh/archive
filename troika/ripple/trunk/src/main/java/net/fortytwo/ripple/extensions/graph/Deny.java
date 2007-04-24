@@ -35,6 +35,7 @@ public class Deny extends PrimitiveFunction
 		subj = stack.getFirst();
 		stack = stack.getRest();
 
+System.out.println( "Denying (" + subj + ", " + pred + ", " + obj + ")" );
 		mc.remove( subj, pred, obj );
 
 		sink.put( new RippleList( subj, stack ) );
