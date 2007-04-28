@@ -1,0 +1,11 @@
+
+make clean
+make CLFAGS=-pg
+gcc src/main.c -pg src/.libs/libphase2.a -lxml2 -lhistory -Iinclude
+./a.out -f ~/dev/wurfel/mine.p2
+gprof > out.txt
+
+
+
+
+gprof --display-unused-functions

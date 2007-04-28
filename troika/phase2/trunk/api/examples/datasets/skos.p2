@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_set p2-version="0.7.1" p2-revision="304" time="Fri Jun 30 11:25:35 2006">
+  <object id="1" type="Namespace">
+    <table>
+      <object type="Namespace" name="purl.org">
+        <table>
+          <object type="Namespace" name="dc">
+            <table>
+              <object type="Namespace" name="dcmitype">
+                <table>
+                  <object type="Namespace" name="Image">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+              <object type="Namespace" name="elements">
+                <table>
+                  <object type="Namespace" name="!1.1">
+                    <table>
+                      <object type="Namespace" name="contributor">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="creator">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="date">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="description">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="identifier">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="subject">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="title">
+                        <table/>
+                      </object>
+                    </table>
+                  </object>
+                </table>
+              </object>
+              <object type="Namespace" name="terms">
+                <table>
+                  <object type="Namespace" name="hasPart">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="hasVersion">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="isPartOf">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="isReplacedBy">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="isVersionOf">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="issued">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="modified">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="replaces">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+        </table>
+      </object>
+      <object type="Namespace" name="www.isotopicmaps.org">
+        <table>
+          <object type="Namespace" name="sam">
+            <table>
+              <object type="Namespace" name="sam-model">
+                <table/>
+              </object>
+            </table>
+          </object>
+        </table>
+      </object>
+      <object type="Namespace" name="www.topicmaps.org">
+        <table>
+          <object type="Namespace" name="xtm">
+            <table>
+              <object type="Namespace" name="!1.0">
+                <table/>
+              </object>
+            </table>
+          </object>
+        </table>
+      </object>
+      <object type="Namespace" name="www.w3.org">
+        <table>
+          <object type="Namespace" name="!1999">
+            <table>
+              <object type="Namespace" name="02">
+                <table>
+                  <object type="Namespace" name="22-rdf-syntax-ns">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+          <object type="Namespace" name="!2000">
+            <table>
+              <object type="Namespace" name="01">
+                <table>
+                  <object type="Namespace" name="rdf-schema">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+          <object type="Namespace" name="!2001">
+            <table>
+              <object type="Namespace" name="vcard-rdf">
+                <table>
+                  <object type="Namespace" name="!3.0">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+          <object type="Namespace" name="!2002">
+            <table>
+              <object type="Namespace" name="07">
+                <table>
+                  <object type="Namespace" name="owl">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+          <object type="Namespace" name="!2003">
+            <table>
+              <object type="Namespace" name="06">
+                <table>
+                  <object type="Namespace" name="sw-vocab-status">
+                    <table>
+                      <object type="Namespace" name="ns">
+                        <table/>
+                      </object>
+                    </table>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+          <object type="Namespace" name="!2004">
+            <table>
+              <object type="Namespace" name="02">
+                <table>
+                  <object type="Namespace" name="skos">
+                    <table>
+                      <object type="Namespace" name="core">
+                        <table>
+                          <object type="Namespace" name="examples">
+                            <table>
+                              <object type="Namespace" name="CollectableProperty.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="Collection.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="Concept.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="ConceptScheme.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="OrderedCollection.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="altLabel.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="altSymbol.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="broader.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="changeNote.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="definition.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="editorialNote.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="example.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="hasTopConcept.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="hiddenLabel.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="historyNote.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="inScheme.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="isPrimarySubjectOf.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="isSubjectOf.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="member.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="narrower.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="note.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="prefLabel.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="prefSymbol.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="primarySubject.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="privateNote.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="publicNote.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="related.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="scopeNote.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="semanticRelation.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="subject.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="subjectIndicator.rdf.xml">
+                                <table/>
+                              </object>
+                              <object type="Namespace" name="symbol.rdf.xml">
+                                <table/>
+                              </object>
+                            </table>
+                          </object>
+                          <object type="Namespace" name="history">
+                            <table>
+                              <object type="Namespace" name="2006-04-18">
+                                <table/>
+                              </object>
+                            </table>
+                          </object>
+                          <object type="Namespace" name="review-2">
+                            <table/>
+                          </object>
+                        </table>
+                      </object>
+                      <object type="Namespace" name="core_de">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="core_fr">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="core_nl">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="core_pt">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="extensions">
+                        <table/>
+                      </object>
+                      <object type="Namespace" name="extensions.rdf">
+                        <table/>
+                      </object>
+                    </table>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+        </table>
+      </object>
+      <object type="Namespace" name="xmlns.com">
+        <table>
+          <object type="Namespace" name="foaf">
+            <table>
+              <object type="Namespace" name="!0.1">
+                <table>
+                  <object type="Namespace" name="Document">
+                    <table/>
+                  </object>
+                  <object type="Namespace" name="homepage">
+                    <table/>
+                  </object>
+                </table>
+              </object>
+            </table>
+          </object>
+        </table>
+      </object>
+    </table>
+  </object>
+</data_set>

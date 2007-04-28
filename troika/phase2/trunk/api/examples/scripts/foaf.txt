@@ -1,0 +1,25 @@
+_new foaf;
+_ns foaf;
+
+myersBriggs := "myersBriggs";
+name := "name";
+nick := "nick";
+page := "page";
+pastProject := "pastProject";
+phone := "phone";
+plan := "plan";
+primaryTopic := "primaryTopic";
+publications := "publications";
+schoolHomepage := "schoolHomepage";
+sha1 := "sha1";
+surname := "surname";
+theme := "theme";
+thumbnail := "thumbnail";
+tipjar := "tipjar";
+title := "title";
+topic := "topic";
+topic_interest := "topic_interest";
+weblog := "weblog";
+workInfoHomepage := "workInfoHomepage";
+workplaceHomepage := "workplaceHomepage";
+yahooChatID := "yahooChatID";

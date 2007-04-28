@@ -1,0 +1,214 @@
+
+
+_new foo;
+foo:self := foo;
+
+_new ns1;
+_ns ns1;
+_new ns2;
+_ns ns2;
+_new ns3;
+_ns ns3;
+_new ns4;
+_ns ns4;
+
+_ns data;
+
+
+
+
+    f a b
+    APPLY( a, b )
+
+f a b c
+    @(@(@(f, a), b), c)
+    @(@(@( (f _ a _ b _ c)
+    A A A (f _ a _ b _ c)
+
+
+    A A A ( f o a o b o c )
+
+    A( A( A( f, a ), b), c)
+
+    "walk_compose w1 w2 v r := w1 (w2 v) v r"
+
+
+_ = ),
+    @(@(@((f ), a ), b ), c)
+
+
+    APP( w1, APP( w2, v )), 
+
+
+
+
+
+
+
+Hash_Map *
+object__traversal_tree( Object *root, Walker w )
+{
+    Hash_Map *tree;
+    Array *queue, *aux;
+
+    ACTION helper( Object **opp )
+    {
+        Object *o = DEREF( opp );
+
+        array__enqueue( queue, o );
+    }
+
+    ACTION add_children( Object **opp )
+    {
+        helper( opp );
+        return CONTINUE;
+    }
+
+    if ( DEBUG__SAFE && ... )
+        ABORT;
+
+    tree = hash_map__new();
+    queue = array__new( 0, 0 );
+
+    array__enqueue( queue, root );
+    while ( array__size( queue ) )
+        w( array__pop( queue ), add_children );
+
+    array__delete( queue );
+
+    return tree;
+}
+
+
+
+
+void
+walk_recursive( void *root, Walker w )
+{
+    ACTION visitor( void **rr )
+    {
+        w( *rr, visitor );
+        return CONTINUE;
+    }
+
+    if ( DEBUG__SAFE && ( !root || !w ) )
+        ABORT;
+
+    visitor( &root );
+}
+
+
+
+Hash_Map *
+walk_recursive__traversal_tree( void *root, Walker w )
+{
+    Hash_Map *tree;
+
+    void walk( void *p, Visitor v )
+    {
+        ACTION visit( void **rr )
+        {
+            hash_map__add( tree, *r, p );
+            walk( *rr, visit );
+            return CONTINUE;
+        }
+
+        w( p, visit );
+    }
+
+    if ( DEBUG__SAFE && ( !root || !w ) )
+        ABORT;
+
+    tree = hash_map__new();
+
+    walk( root, 0 );
+
+    return tree;
+}
+
+
+
+
+
+void
+walk_compose( Walker walk_first, Walker walk_second, void *root, Visitor v )
+{
+    ACTION visit( void **rr )
+    {
+        walk_second( *r, v );
+    }
+
+    if ( DEBUG__SAFE && ( !root || !v || !walk_first || !walk_second ) )
+        ABORT;
+
+    walk_first( root, visit );
+}
+
+
+wc w1 w2 v r
+w1 visit root
+    visit := w2 v
+w1 (w2 v) v r
+
+B (B S) B w1 w2 I v r
+C (B (B S) B w1) I w2 v r
+C I (C (B (B S) B w1)) w2 v r
+B (C I) C (B (B S) B w1) w2 v r
+B (B (C I) C) (B (B S) B) w1 w2 v r
+
+
+
+
+
+
+
+
+
+Hash_Map *
+traversal_tree( void *root, Walker w )
+{
+    Hash_Map *tree;
+    void *parent;
+
+    ACTION as_child( void **rr )
+    {
+        hash_map__add( tree, *r, parent );
+        return CONTINUE;
+    }
+
+    ACTION as_parent( void **rr )
+    {
+        parent = *rr;
+        w( parent, as_child );
+        return CONTINUE;
+    }
+
+
+
+    ACTION visitor_proxy( void **rr )
+    {
+        hash_map__add( tree, *r, parent );
+        return v( rr );
+    }
+
+    void walker( void *p, Visitor v )
+    {
+        parent = p;
+        w( p, ........ );
+    }
+
+
+
+    if ( DEBUG__SAFE && ( !root || !w ) )
+        ABORT;
+
+    tree = hash_map__new();
+
+    as_parent( &root );
+
+    return tree;
+}
+
+
+
+

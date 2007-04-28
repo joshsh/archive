@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_set p2-version="0.8.1" p2-revision="!355" time="Thu Sep 21 11:11:14 2006">
+  <object id="1" type="Namespace">
+    <table>
+      <object type="cstring" name="myersBriggs"></object>
+      <object type="cstring" name="name"></object>
+      <object type="cstring" name="nick"></object>
+      <object type="cstring" name="page"></object>
+      <object type="cstring" name="pastProject"></object>
+      <object type="cstring" name="phone"></object>
+      <object type="cstring" name="plan"></object>
+      <object type="cstring" name="primaryTopic"></object>
+      <object type="cstring" name="publications"></object>
+      <object type="cstring" name="schoolHomepage"></object>
+      <object type="cstring" name="sha1"></object>
+      <object type="cstring" name="surname"></object>
+      <object type="cstring" name="theme"></object>
+      <object type="cstring" name="thumbnail"></object>
+      <object type="cstring" name="tipjar"></object>
+      <object type="cstring" name="title"></object>
+      <object type="cstring" name="topic"></object>
+      <object type="cstring" name="topic_interest"></object>
+      <object type="cstring" name="weblog"></object>
+      <object type="cstring" name="workInfoHomepage"></object>
+      <object type="cstring" name="workplaceHomepage"></object>
+      <object type="cstring" name="yahooChatID"></object>
+    </table>
+  </object>
+</data_set>

@@ -1,0 +1,38 @@
+gsx
+
+g(^s(hx))(tx)
+S'g(B(^s)h)t
+B(S'g)(B(^s))ht
+B(B(S'g))B(^s)ht
+B(B(B(S'g))B)^sht
+<adbc>(B(B(B(S'g))B)^)ht
+
+B<adbc>(B(B(B(S'g))B))^ht
+B(B<adbc>)B(B(B(S'g))B)^ht
+B(B(B<adbc>)B)(B(B(S'g)))B^ht
+B(B(B(B<adbc>)B))B(B(S'g))B^ht
+B(B(B(B(B<adbc>)B))B)B(S'g)B^ht
+B(B(B(B(B(B<adbc>)B))B)B)S'gB^ht
+<adbc>(B(B(B(B(B(B<adbc>)B))B)B)S')B^ght
+<adbc>(<adbc>(B(B(B(B(B(B<adbc>)B))B)B)S')B^)ht
+
+adbc(adbc(B(B(B(B(B(B adbc)B))B)B)S')B root:^) HEAD TAIL
+
+
+
+adbc(adbc(B(B(B(B(B(B adbc)B))B)B)S')B root:^) I (C root:^ next0)
+
+
+
+f:
+S (K (pair HEAD TAIL)) (adbc (B (B (B (B (B (B adbc) B)) B) B) S') B ^)
+
+g:
+S (K (pair HEAD TAIL)) (B (B (B (S' (omega (B f omega)))) B) ^)
+B (pair HEAD TAIL) (B (B (B (S' (omega (B f omega)))) B) ^)
+
+
+
+
+g S0:
+S (B (omega (B f omega)) (B (^ S0) HEAD)) TAIL

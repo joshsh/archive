@@ -1,0 +1,11 @@
+{\
+putchar('\'');\
+			buf[n] = (char) c; \
+}\
+putchar('.');\
+
+
+putc((int)'q',stdin);
+putc((int)'q',stdin);
+putc((int)'q',stdin);
+putc((int)';',stdin);
