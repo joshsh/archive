@@ -1,0 +1,41 @@
+
+
+
+
+(define (UM myapply f)
+    (define (g v)
+        (lambda args (myapply (f v) args))
+    )
+    (f g)
+)
+
+
+UM M F x
+
+
+
+
+
+Object *
+UM( myapply, f )
+{
+    Object *g( v )
+    {
+        myapply( f( v ), args )
+    }
+}
+
+
+
+Personally, I find it easiest to represent recursive functions without
+the Y combinator approach (i.e. without passing a function "to
+itself").  Instead, I use to distinct sets of de Bruijn indices:
+"parameter indices" referring to the parameter passed to the function,
+and "self indices" referring to the function itself.  This approach is
+a bit more compact, but more importantly, there tend to be different
+compile-time evaluation semantics associated with self indices and
+with parameter indices: you can't try to eagerly resolve self indices
+or else you run into infinite loops.  With the Y-combinator approach
+it's not obvious whether a given parameter may be so recursive.  This
+probably doesn't matter in simple evaluations situations, but becomes
+important in recursive dependent type systems.
