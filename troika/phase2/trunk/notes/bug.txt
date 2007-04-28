@@ -1,0 +1,32 @@
+valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes phase2 1>> debug.txt 2>> debug.txt
+
+valgrind -v --tool=memcheck --leak-check=full --show-reachable=yes phase2
+
+
+
+
+strstr __pthread_initialize_minimal call_init _dl_init
+
+==11550==    at 0x723BE4: strstr (in /lib/libc-2.3.5.so)
+==11550==    by 0x9006E7: __pthread_initialize_minimal (in /lib/libpthread-2.3.5.so)
+==11550==    by 0x900297: (within /lib/libpthread-2.3.5.so)
+==11550==    by 0x8FFE7F: (within /lib/libpthread-2.3.5.so)
+==11550==    by 0x1B8F1DCA: call_init (in /lib/ld-2.3.5.so)
+==11550==    by 0x1B8F1EEC: _dl_init (in /lib/ld-2.3.5.so)
+
+{
+   <pthread strstr>
+   Memcheck:Cond
+   fun:strstr
+   fun:__pthread_initialize_minimal
+   obj:/lib/libpthread-*.so
+   obj:/lib/libpthread-*.so
+   fun:call_init
+   fun:_dl_init
+   obj:/lib/ld-*.so
+}
+
+Under valgrind 2.4.0 as distributed by Fedora Core 4,
+there is an off-by-one bug for sysctl(CTL_KERN, KERN_VERSION,).
+The kernel sets 1+strlen(version_string) bytes, but memcheck
+thinks that the terminating '\0' is not set.
