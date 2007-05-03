@@ -24,7 +24,6 @@ joy:and
 	rdfs:comment "x y  ->  z  -- where z is true if x and y are true, otherwise false" .
 
 joy:at
-	rdfs:label "at" ;
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -232,6 +231,24 @@ joy:not
 	rpl:returnType rpl:Function ;
 	rdfs:label "not" ;
 	rdfs:comment "x  ->  y  -- where y is true if x is false, otherwise false" .
+
+joy:of
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "i" ;
+			rdfs:comment "a list index" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "of" ;
+	rdfs:comment "i l  ->  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
 
 joy:or
 	a rpl:Function ;
