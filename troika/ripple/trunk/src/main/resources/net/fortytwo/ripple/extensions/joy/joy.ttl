@@ -442,6 +442,23 @@ joy:swapd
 	rdfs:label "swapd" ;
 	rdfs:comment "x y z  ->  y x z" .
 
+joy:swons
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "swons" ;
+	rdfs:comment "l x  ->  l2  -- where the first member of l2 is x and the rest of l2 is l" .
+
 joy:time
 	a rpl:Function ;
 	rpl:arity 0 ;
