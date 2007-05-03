@@ -47,6 +47,19 @@ etc:prim
 	rdfs:label "prim" ;
 	rdfs:comment "applies a Function" .
 
+etc:rand
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "lim" ;
+			rpl:parameterType xsd:int ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "rand" ;
+	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
+
 etc:sha1
 	a rpl:Function ;
 	rpl:arity 1 ;
