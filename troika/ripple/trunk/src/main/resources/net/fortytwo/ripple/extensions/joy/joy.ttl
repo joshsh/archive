@@ -21,7 +21,7 @@ joy:and
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "and" ;
-	rdfs:comment "true iff x and y are true" .
+	rdfs:comment "x y  ->  z  -- where z is true if x and y are true, otherwise false" .
 
 joy:at
 	rdfs:label "at" ;
@@ -29,16 +29,40 @@ joy:at
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
-			rdfs:label "i" ;
-			rpl:parameterType xsd:integer ;
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "l" ;
-			rpl:parameterType rdf:List ;
+			rdfs:label "i" ;
+			rdfs:comment "a list index" ;
+			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "at" ;
-	rdfs:comment "retrieves the member of List l at index i.  Note: lists are 1-indexed" .
+	rdfs:comment "l i  ->  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
+
+joy:choice
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "b" ;
+			rdfs:comment "a boolean value (joy:true or joy:false)" ;
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "t" ;
+			rdfs:comment "the value chosen if b is true" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "f" ;
+			rdfs:comment "the value chosen if b is not true" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rpl:Function ;
+	rdfs:label "choice" ;
+	rdfs:comment "b t f  ->  x  -- where x is t if b is true, otherwise f" .
 
 joy:concat
 	a rpl:Function ;
@@ -46,32 +70,35 @@ joy:concat
 	rpl:parameters (
 		[
 			rdfs:label "l1" ;
+			rdfs:comment "a List" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		[
 			rdfs:label "l2" ;
+			rdfs:comment "a List" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "concat" ;
-	rdfs:comment "finds the concatenation of Lists li and l2" .
+	rdfs:comment "l1 l2  ->  l3  -- where l3 is the concatenation of Lists l1 and l2" .
 
 joy:cons
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
-			rdfs:label "l" ;
-			rpl:parameterType rdf:List ;
+			rdfs:label "x" ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "x" ;
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "cons" ;
-	rdfs:comment "..." .
+	rdfs:comment "x l  ->  l2  -- where the first member of l2 is x and the rest of l2 is l" .
 
 joy:dip
 	a rpl:Function ;
@@ -115,7 +142,6 @@ joy:dupd
 	rdfs:label "dupd" ;
 	rdfs:comment "x y  ->  x x y" .
 
-# Note: in joy, false is a simple value, not a function.
 joy:false
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -128,47 +154,48 @@ joy:false
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "false" ;
-	rdfs:comment "y x /false --> y" .
+	rdfs:comment "x y  ->  y   -- note: in Joy, false is a literal value, not a function" .
 
 joy:fold
 	a rpl:Function ;
 	rpl:arity 3 ;
 	rpl:parameters (
 		[
-			rdfs:label "p" ;
-			rdfs:comment "a quoted function" ;
+			rdfs:label "l" ;
+			rdfs:comment "a List through which to fold p" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		[
 			rdfs:label "v0" ;
-			rdfs:comment "tail value" ;
+			rdfs:comment "initial value" ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "l" ;
-			rdfs:comment "a list through which to fold ?p" ;
+			rdfs:label "p" ;
+			rdfs:comment "a binary function" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "fold" ;
-	rdfs:comment "starting with value v, sequentially pushes members of List l and combines with binary operator p" .
+	rdfs:comment "l v0 p  ->  v  -- starting with value v0, sequentially push members of List l and combine with binary operator p" .
 
 joy:i
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
-			rdfs:label "l" ;
+			rdfs:label "p" ;
 			rdfs:comment "the program to be executed" ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "i" ;
-	rdfs:comment "x /i --> /x" .
+	rdfs:comment "p  -> /p  -- push an active copy of p, or 'execute p'" .
 
 joy:id
 	a rpl:Function ;
 	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
 	rdfs:label "id" ;
-	rdfs:comment "/id -->" .
+	rdfs:comment "id  ->  (identity function, does nothing)" .
 
 joy:ifte
 	a rpl:Function ;
@@ -204,7 +231,7 @@ joy:not
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "not" ;
-	rdfs:comment "true iff x is false, otherwise false" .
+	rdfs:comment "x  ->  y  -- where y is true if x is false, otherwise false" .
 
 joy:or
 	a rpl:Function ;
@@ -223,7 +250,7 @@ joy:or
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "or" ;
-	rdfs:comment "true iff x or y is true, otherwise false" .
+	rdfs:comment "x y  ->  z  -- where z is true if x or y is true, otherwise false" .
 
 joy:pop
 	a rpl:Function ;
@@ -304,7 +331,7 @@ joy:rollup
 	rdfs:label "rollup" ;
 	rdfs:comment "x y z  ->  z x y" .
 
-joy:rollup
+joy:rollupd
 	a rpl:Function ;
 	rpl:arity 4 ;
 	rpl:parameters (
@@ -367,13 +394,14 @@ joy:size
 	rpl:returnType xsd:integer ;
 	rpl:parameters (
 		[
-			rdfs:label "list" ;
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
 			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "size" ;
-	rdfs:comment "counts the members of a List" .
+	rdfs:comment "l  ->  n   -- where n is the number of members of l" .
 
 joy:stack
 	a rpl:Function ;
@@ -381,7 +409,7 @@ joy:stack
 	rpl:parameters rdf:nil ;
 	rpl:returnType rpl:List ;
 	rdfs:label "stack" ;
-	rdfs:comment "pushes the stack as a List" .
+	rdfs:comment "... x y z  ->  ... x y z (... x y z)  -- pushes the stack as a List" .
 
 joy:swap
 	a rpl:Function ;
@@ -420,25 +448,23 @@ joy:time
 	rpl:parameters rdf:nil ;
 	rpl:returnType xsd:int ;
 	rdfs:label "time" ;
-	rdfs:comment "pushes the current time (in seconds since the Epoch)" .
+	rdfs:comment "-> t  -- pushes the current time, in seconds since the Unix epoch" .
 
 joy:times
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
 		[
-			rdfs:label "i" ;
-			rpl:parameterType xsd:integer ;
+			rdfs:label "p" ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "p" ;
-			rpl:parameterType rdf:List ;
+			rdfs:label "n" ;
+			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "times" ;
-	rdfs:comment "pushes i active copies of p to the head of the stack" .
+	rdfs:comment "p n  ->  ... /p /p /p  -- pushes n active copies of the program p, or 'executes p n times'" .
 
-# Note: in joy, true is a simple value, not a function.
 joy:true
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -451,7 +477,7 @@ joy:true
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "true" ;
-	rdfs:comment "y x /true --> x" .
+	rdfs:comment "x y  ->  y  -- note: in Joy, true is a literal value, not a function" .
 
 joy:xor
 	a rpl:Function ;
@@ -470,4 +496,4 @@ joy:xor
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "xor" ;
-	rdfs:comment "true iff x is true or y is true, but not both" .
+	rdfs:comment "x y  ->  z  -- where z is the logical exclusive disjunction of truth values x and y" .

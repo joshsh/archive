@@ -53,10 +53,10 @@ etc:rand
 	rpl:parameters (
 		[
 			rdfs:label "lim" ;
-			rpl:parameterType xsd:int ;
+			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
-	rpl:returnType xsd:string ;
+	rpl:returnType xsd:integer ;
 	rdfs:label "rand" ;
 	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
 
