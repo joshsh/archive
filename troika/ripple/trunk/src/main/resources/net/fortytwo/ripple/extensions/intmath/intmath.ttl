@@ -15,7 +15,7 @@ intmath:abs
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "abs" ;
-	rdfs:comment "absolute value of x" .
+	rdfs:comment "x  ->  absolute value of x" .
 
 intmath:add
 	a rpl:Function ;
@@ -32,7 +32,7 @@ intmath:add
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "add" ;
-	rdfs:comment "y + x" .
+	rdfs:comment "x y  ->  x + y" .
 
 intmath:div
 	a rpl:Function ;
@@ -49,7 +49,7 @@ intmath:div
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "div" ;
-	rdfs:comment "y / x" .
+	rdfs:comment "x y  ->  y / x" .
 
 intmath:gt
 	a rpl:Function ;
@@ -66,7 +66,7 @@ intmath:gt
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "gt" ;
-	rdfs:comment "y > x" .
+	rdfs:comment "x y  ->  b  -- where b is true if x > y, otherwise false" .
 
 intmath:lt
 	a rpl:Function ;
@@ -83,7 +83,7 @@ intmath:lt
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "lt" ;
-	rdfs:comment "y < x" .
+	rdfs:comment "x y  ->  b  -- where b is true if x < y, otherwise false" .
 
 intmath:mod
 	a rpl:Function ;
@@ -100,7 +100,7 @@ intmath:mod
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "mod" ;
-	rdfs:comment "y % x" .
+	rdfs:comment "x y  ->  x % y" .
 
 
 intmath:mul
@@ -118,7 +118,33 @@ intmath:mul
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "mul" ;
-	rdfs:comment "y * x" .
+	rdfs:comment "x y  ->  x * y" .
+
+intmath:neg
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "neg" ;
+	rdfs:comment "x  ->  -x" .
+
+intmath:sign
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "sign" ;
+	rdfs:comment "x  ->  sign of x (-1, 0, or +1)" .
 
 intmath:sub
 	a rpl:Function ;
@@ -135,4 +161,4 @@ intmath:sub
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "sub" ;
-	rdfs:comment "y - x" .
+	rdfs:comment "x y  ->  x - y" .

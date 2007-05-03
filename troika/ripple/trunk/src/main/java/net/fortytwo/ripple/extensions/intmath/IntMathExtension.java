@@ -22,10 +22,12 @@ public class IntMathExtension implements Extension
 		// Integer arithmetic primitives
 		bridge.add( new Abs( new RdfValue( mc.createUri( ns + "abs" ) ), mc ), mc );
 		bridge.add( new Add( new RdfValue( mc.createUri( ns + "add" ) ), mc ), mc );
-		bridge.add( new Sub( new RdfValue( mc.createUri( ns + "sub" ) ), mc ), mc );
-		bridge.add( new Mul( new RdfValue( mc.createUri( ns + "mul" ) ), mc ), mc );
 		bridge.add( new Div( new RdfValue( mc.createUri( ns + "div" ) ), mc ), mc );
 		bridge.add( new Mod( new RdfValue( mc.createUri( ns + "mod" ) ), mc ), mc );
+		bridge.add( new Mul( new RdfValue( mc.createUri( ns + "mul" ) ), mc ), mc );
+		bridge.add( new Neg( new RdfValue( mc.createUri( ns + "neg" ) ), mc ), mc );
+		bridge.add( new Sign( new RdfValue( mc.createUri( ns + "sign" ) ), mc ), mc );
+		bridge.add( new Sub( new RdfValue( mc.createUri( ns + "sub" ) ), mc ), mc );
 	}
 }
 
