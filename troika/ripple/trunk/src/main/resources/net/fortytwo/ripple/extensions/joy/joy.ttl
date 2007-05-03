@@ -223,7 +223,6 @@ joy:pop
 	rdfs:comment "x /pop -->" .
 
 joy:size
-	rdfs:label "size" ;
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:returnType xsd:integer ;
@@ -238,9 +237,9 @@ joy:size
 	rdfs:comment "counts the members of a List" .
 
 joy:stack
-	rdfs:label "stack" ;
 	a rpl:Function ;
 	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
 	rpl:returnType rpl:List ;
 	rdfs:label "stack" ;
 	rdfs:comment "pushes the stack as a List" .
@@ -258,6 +257,14 @@ joy:swap
 		) ;
 	rdfs:label "swap" ;
 	rdfs:comment "x y /swap --> y x" .
+
+joy:time
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
+	rpl:returnType xsd:int ;
+	rdfs:label "time" ;
+	rdfs:comment "pushes the current time (in seconds since the Epoch)" .
 
 joy:times
 	a rpl:Function ;

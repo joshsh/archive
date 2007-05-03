@@ -32,6 +32,7 @@ public class JoyExtension implements Extension
 		bridge.add( new Size( new RdfValue( mc.createUri( ns + "size" ) ), mc ), mc );
 		bridge.add( new Stack( new RdfValue( mc.createUri( ns + "stack" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
+		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
 		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
 		bridge.add( new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
 		bridge.add( new Xor( new RdfValue( mc.createUri( ns + "xor" ) ), mc ), mc );

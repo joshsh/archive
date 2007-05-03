@@ -818,6 +818,22 @@ public class ModelConnection
 		}
 	}
 
+	public RdfValue createValue( final long l )
+		throws RippleException
+	{
+		try
+		{
+			return new RdfValue(
+				valueFactory.createLiteral( "" + l, XMLSchema.LONG ) );
+		}
+
+		catch ( Throwable t )
+		{
+			reset();
+			throw new RippleException( t );
+		}
+	}
+
 	public RdfValue createValue( final double d )
 		throws RippleException
 	{
