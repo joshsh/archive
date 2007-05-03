@@ -222,6 +222,57 @@ joy:pop
 	rdfs:label "pop" ;
 	rdfs:comment "x /pop -->" .
 
+joy:rolldown
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "rolldown" ;
+	rdfs:comment "x y z  ->  y z x" .
+
+joy:rollup
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "rollup" ;
+	rdfs:comment "x y z  ->  z x y" .
+
+joy:rotate
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "rotate" ;
+	rdfs:comment "x y z  ->  z y x" .
+
 joy:size
 	a rpl:Function ;
 	rpl:arity 1 ;
