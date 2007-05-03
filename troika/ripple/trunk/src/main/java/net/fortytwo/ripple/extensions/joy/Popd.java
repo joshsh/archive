@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Swap extends PrimitiveFunction
+public class Popd extends PrimitiveFunction
 {
-	public Swap( RdfValue v, ModelConnection mc )
+	public Popd( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -33,7 +33,7 @@ public class Swap extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( y, stack ).push( x ) );
+		sink.put( new RippleList( y, stack ) );
 	}
 }
 

@@ -21,6 +21,7 @@ public class JoyExtension implements Extension
 		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
 		bridge.add( new Dip( new RdfValue( mc.createUri( ns + "dip" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
+		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
 		bridge.add( new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
 		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
@@ -29,12 +30,17 @@ public class JoyExtension implements Extension
 		bridge.add( new Not( new RdfValue( mc.createUri( ns + "not" ) ), mc ), mc );
 		bridge.add( new Or( new RdfValue( mc.createUri( ns + "or" ) ), mc ), mc );
 		bridge.add( new Pop( new RdfValue( mc.createUri( ns + "pop" ) ), mc ), mc );
+		bridge.add( new Popd( new RdfValue( mc.createUri( ns + "popd" ) ), mc ), mc );
 		bridge.add( new Rolldown( new RdfValue( mc.createUri( ns + "rolldown" ) ), mc ), mc );
+		bridge.add( new Rolldownd( new RdfValue( mc.createUri( ns + "rolldownd" ) ), mc ), mc );
 		bridge.add( new Rollup( new RdfValue( mc.createUri( ns + "rollup" ) ), mc ), mc );
+		bridge.add( new Rollupd( new RdfValue( mc.createUri( ns + "rollupd" ) ), mc ), mc );
 		bridge.add( new Rotate( new RdfValue( mc.createUri( ns + "rotate" ) ), mc ), mc );
+		bridge.add( new Rotated( new RdfValue( mc.createUri( ns + "rotated" ) ), mc ), mc );
 		bridge.add( new Size( new RdfValue( mc.createUri( ns + "size" ) ), mc ), mc );
 		bridge.add( new Stack( new RdfValue( mc.createUri( ns + "stack" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
+		bridge.add( new Swapd( new RdfValue( mc.createUri( ns + "swapd" ) ), mc ), mc );
 		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
 		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
 		bridge.add( new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );

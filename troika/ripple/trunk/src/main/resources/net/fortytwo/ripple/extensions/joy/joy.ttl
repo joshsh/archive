@@ -99,7 +99,21 @@ joy:dup
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "dup" ;
-	rdfs:comment "x /dup --> x x" .
+	rdfs:comment "x  ->  x x" .
+
+joy:dupd
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "dupd" ;
+	rdfs:comment "x y  ->  x x y" .
 
 # Note: in joy, false is a simple value, not a function.
 joy:false
@@ -220,7 +234,21 @@ joy:pop
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "pop" ;
-	rdfs:comment "x /pop -->" .
+	rdfs:comment "x  ->" .
+
+joy:popd
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "popd" ;
+	rdfs:comment "x y  ->  y" .
 
 joy:rolldown
 	a rpl:Function ;
@@ -239,6 +267,26 @@ joy:rolldown
 	rdfs:label "rolldown" ;
 	rdfs:comment "x y z  ->  y z x" .
 
+joy:rolldownd
+	a rpl:Function ;
+	rpl:arity 4 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "w" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "rolldownd" ;
+	rdfs:comment "x y z w  ->  y z x w" .
+
 joy:rollup
 	a rpl:Function ;
 	rpl:arity 3 ;
@@ -256,6 +304,26 @@ joy:rollup
 	rdfs:label "rollup" ;
 	rdfs:comment "x y z  ->  z x y" .
 
+joy:rollup
+	a rpl:Function ;
+	rpl:arity 4 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "w" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "rollupd" ;
+	rdfs:comment "x y z w  ->  z x y w" .
+
 joy:rotate
 	a rpl:Function ;
 	rpl:arity 3 ;
@@ -272,6 +340,26 @@ joy:rotate
 		) ;
 	rdfs:label "rotate" ;
 	rdfs:comment "x y z  ->  z y x" .
+
+joy:rotated
+	a rpl:Function ;
+	rpl:arity 4 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "w" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "rotated" ;
+	rdfs:comment "x y z w  ->  z y x w" .
 
 joy:size
 	a rpl:Function ;
@@ -307,7 +395,24 @@ joy:swap
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "swap" ;
-	rdfs:comment "x y /swap --> y x" .
+	rdfs:comment "x y  ->  y x" .
+
+joy:swapd
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "swapd" ;
+	rdfs:comment "x y z  ->  y x z" .
 
 joy:time
 	a rpl:Function ;
