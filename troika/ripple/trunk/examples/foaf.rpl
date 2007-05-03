@@ -27,12 +27,17 @@
 
 ########################################
 
+@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
 @define fromtbl:  demo:tbl/swap/dip demo:foafStep /swap/times.
 @define withPred:  dup/swap/dip/i/pop/unique.
 
 2 /:fromtbl bio:event/:withPred/foaf:name.
 2 /:fromtbl owl:sameAs/:withPred/foaf:name.
 2 /:fromtbl foaf:knows/:withPred/foaf:name.
+
+########################################
+
+/demo:tbl demo:foafStep 3/times foaf:img foaf:depiction /union/i/unique/toString.
 
 ########################################
 

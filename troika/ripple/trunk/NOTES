@@ -56,22 +56,6 @@ rdf:nil (rdf:type/demo:choice) 2 /times /unique.
 /:tbl/foaf:knows 3/:page10.
 
 
-84.185.168.210 - - [09/Apr/2007:13:29:31 -0700] "GET /ripple HTTP/1.1" 301 347 "-" "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.3) Gecko/20070309 Firefox/2.0.0.3"
-[...]
-207.118.96.240 - - [09/Apr/2007:08:50:53 -0700] "GET /ripple/ripple-0.1.tar.gz HTTP/1.1" 200 4518543 "http://fortytwo.net/ripple/" "Mozilla/5.0 (compatible; Konqueror/3.5; Linux) KHTML/3.5.6 (like Gecko)"
-
-
-128.30.52.34 - - [02/Apr/2007:17:53:26 -0700] "GET /ripple/ HTTP/1.1" 200 1876 "-" "Jigsaw/2.2.5 W3C_CSS_Validator_JFouffa/2.0"
-128.30.52.34 - - [02/Apr/2007:17:53:27 -0700] "GET /life.css HTTP/1.1" 200 114 "-" "Jigsaw/2.2.5 W3C_CSS_Validator_JFouffa/2.0"
-
-presumably by way of meta-Exhibit
-199.203.92.238 - - [02/Apr/2007:19:15:35 -0700] "GET /sw/ipa/ HTTP/1.0" 200 2665 "-" "Mozilla/4.0 (compatible; MSIE 6.0; Win32)"
-
-Disco
-160.45.137.85 - - [03/Apr/2007:11:19:04 -0700] "GET /2007/03/ripple/schema HTTP/1.1" 200 9439 "-" "Java/1.5.0_09"
-
-
-
 ... := /*subClassOf
 myProp /transitiveClosureOf --> /+myProp
 
@@ -399,8 +383,11 @@ cd contest
 tth ripple.tex
 
 
+========================================
+check the schema for OWL consistency
+========================================
 
-
+java -jar lib/pellet.jar -if http://fortytwo.net/2007/03/ripple/schema.rdf
 
 
 
