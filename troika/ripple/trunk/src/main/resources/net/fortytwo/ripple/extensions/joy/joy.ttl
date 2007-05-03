@@ -496,6 +496,19 @@ joy:true
 	rdfs:label "true" ;
 	rdfs:comment "x y  ->  y  -- note: in Joy, true is a literal value, not a function" .
 
+joy:unstack
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List to become the new stack" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "unstack" ;
+	rdfs:comment "(x y z ...)  ->  ... z y x  -- the list at the head of the stack becomes the new stack" .
+
 joy:xor
 	a rpl:Function ;
 	rpl:arity 2 ;
