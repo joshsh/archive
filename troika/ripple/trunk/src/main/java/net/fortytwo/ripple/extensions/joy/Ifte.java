@@ -11,11 +11,6 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Ifte extends PrimitiveFunction
 {
-	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
-
-	private RippleValue truePrim = null;
-	private RippleValue falsePrim = null;
-
 	public Ifte( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
@@ -32,34 +27,21 @@ public class Ifte extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue b, ifPart, elsePart;
+		RippleValue b, trueProg, falseProg;
 
-		elsePart = stack.getFirst();
+		falseProg = stack.getFirst();
 		stack = stack.getRest();
-		ifPart = stack.getFirst();
+		trueProg = stack.getFirst();
 		stack = stack.getRest();
 		b = stack.getFirst();
 		stack = stack.getRest();
 
-		if ( null == truePrim )
-		{
-			truePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "true" ) ) );
-			falsePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "false" ) ) );
-			if ( null == truePrim || null == falsePrim )
-				throw new RippleException( "boolean primitives not found" );
-		}
-
-		RippleValue result;
-		if ( b.equals( truePrim ) )
-			result = ifPart;
-		else if ( b.equals( falsePrim ) )
-			result = elsePart;
-		else
-			throw new RippleException( "ifte expects one of the values true, false as its third argument" );
-
-		sink.put( new RippleList( result, stack ).push( Operator.OP ) );
+		sink.put( new RippleList( b, stack )
+			.push( Operator.OP )
+			.push( trueProg )
+			.push( falseProg )
+			.push( JoyExtension.getBranchValue() )
+			.push( Operator.OP ) );
 	}
 }
 

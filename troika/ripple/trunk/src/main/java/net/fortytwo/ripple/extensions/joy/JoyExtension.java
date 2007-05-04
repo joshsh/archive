@@ -5,10 +5,14 @@ import net.fortytwo.ripple.model.Extension;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleValue;
 
 public class JoyExtension implements Extension
 {
 	private static String ns = "http://fortytwo.net/2007/03/ripple/joy#";
+
+	// Some special values.
+	private static RippleValue branchVal, trueVal, falseVal;
 
 	public void load( ModelConnection mc )
 		throws RippleException
@@ -17,14 +21,14 @@ public class JoyExtension implements Extension
 
 		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
 		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
-		bridge.add( new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
+		bridge.add( branchVal = new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
 		bridge.add( new Choice( new RdfValue( mc.createUri( ns + "choice" ) ), mc ), mc );
 		bridge.add( new Concat( new RdfValue( mc.createUri( ns + "concat" ) ), mc ), mc );
 		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
 		bridge.add( new Dip( new RdfValue( mc.createUri( ns + "dip" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
-		bridge.add( new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
+		bridge.add( falseVal = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
 		bridge.add( new Has( new RdfValue( mc.createUri( ns + "has" ) ), mc ), mc );
 		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
@@ -49,12 +53,29 @@ public class JoyExtension implements Extension
 		bridge.add( new Swons( new RdfValue( mc.createUri( ns + "swons" ) ), mc ), mc );
 		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
 		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
-		bridge.add( new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
+		bridge.add( trueVal = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
 		bridge.add( new Uncons( new RdfValue( mc.createUri( ns + "uncons" ) ), mc ), mc );
 		bridge.add( new Unstack( new RdfValue( mc.createUri( ns + "unstack" ) ), mc ), mc );
 		bridge.add( new Unswons( new RdfValue( mc.createUri( ns + "unswons" ) ), mc ), mc );
 		bridge.add( new X( new RdfValue( mc.createUri( ns + "x" ) ), mc ), mc );
 		bridge.add( new Xor( new RdfValue( mc.createUri( ns + "xor" ) ), mc ), mc );
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	public static RippleValue getBranchValue()
+	{
+		return branchVal;
+	}
+
+	public static RippleValue getTrueValue()
+	{
+		return trueVal;
+	}
+
+	public static RippleValue getFalseValue()
+	{
+		return falseVal;
 	}
 }
 

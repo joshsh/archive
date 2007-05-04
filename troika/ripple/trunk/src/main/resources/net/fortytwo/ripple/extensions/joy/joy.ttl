@@ -255,7 +255,7 @@ joy:ifte
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "ifte" ;
-	rdfs:comment "true y x /ifte --> /y; false y x /ifte --> /x" .
+	rdfs:comment "b t f ->  /p  -- where p is t if /b evaluates to true, and f if it evaluates to false" .
 
 joy:in
 	a rpl:Function ;
