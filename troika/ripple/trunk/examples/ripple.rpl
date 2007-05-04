@@ -1,16 +1,13 @@
 
+# If predicates and primitive functions are really equivalent to quoations in
+# Ripple, then the following expressions should be equivalent:
+(3) dup /cat.
+(3 /dup).
 
-(: boolean filter
-   x (booleanFunction booleanFilter) --> x   if (x booleanFunction) == true
-                                     --> ()  if (x booleanFunction) == false
 
-   V I () (f x) x
-   B (V I ()) f x x
-   W (B (V I ()) f) x
-   B (W (B (V I ()))) f x
 
-   --> booleanFilter := B (W (B (V I ())))
 
-:)
 
-booleanFilter := () (I V) B W B;
+
+2.3 /dup.  # 2.3 2.3
+2. 3 /dup.  # 2, 3 3

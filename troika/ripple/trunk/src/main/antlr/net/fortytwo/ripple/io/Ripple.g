@@ -169,7 +169,9 @@ NAME_NOT_PREFIX
 NODEID_PREFIX : "_:" ;
 
 NUMBER
-	: ('-' | '+')? ( DIGIT )+ //( '.' ( DIGIT )+ )?
+	: ('-' | '+')? ( DIGIT )+
+		(('.' DIGIT ) => ( '.' ( DIGIT )+ )
+		| ())
 	;
 
 // Ignore comments.
@@ -289,7 +291,6 @@ nt_Statement
 	;
 
 
-
 nt_List returns [ ListAst s ]
 {
 	Ast i;
@@ -319,7 +320,6 @@ nt_List returns [ ListAst s ]
 				s = new ListAst( i, s );
 			}
 	;
-
 
 
 nt_Node returns [ Ast r ]
