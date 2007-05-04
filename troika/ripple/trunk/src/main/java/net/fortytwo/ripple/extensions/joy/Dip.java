@@ -19,7 +19,6 @@ public class Dip extends PrimitiveFunction
 
 	public int arity()
 	{
-// Arguably 1...
 		return 2;
 	}
 
@@ -28,14 +27,16 @@ public class Dip extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue x, y;
+		RippleValue y, x;
 
 // hack...
 		{
+			y = stack.getFirst();
+			stack = stack.getRest();
 			x = stack.getFirst();
 			stack = stack.getRest();
 
-			sink.put( new RippleList( Operator.OP, stack ).push( x ) );
+			sink.put( new RippleList( y, stack ).push( Operator.OP ).push( x ) );
 		}
 	}
 }

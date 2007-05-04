@@ -127,16 +127,15 @@ joy:dip
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
-			rdfs:comment "remains at the top of the stack" ;
+			rdfs:comment "placed above the executed program y on the stack" ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "p" ;
+			rdfs:label "y" ;
 			rdfs:comment "the program to be executed" ;
-			rpl:parameterType rdf:List ;
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "dip" ;
-	rdfs:comment "p x /dip --> /p x" .
+	rdfs:comment "x y  ->  /y x" .
 
 joy:dup
 	a rpl:Function ;
