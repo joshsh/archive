@@ -17,6 +17,7 @@ public class JoyExtension implements Extension
 
 		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
 		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
+		bridge.add( new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
 		bridge.add( new Choice( new RdfValue( mc.createUri( ns + "choice" ) ), mc ), mc );
 		bridge.add( new Concat( new RdfValue( mc.createUri( ns + "concat" ) ), mc ), mc );
 		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
@@ -52,6 +53,7 @@ public class JoyExtension implements Extension
 		bridge.add( new Uncons( new RdfValue( mc.createUri( ns + "uncons" ) ), mc ), mc );
 		bridge.add( new Unstack( new RdfValue( mc.createUri( ns + "unstack" ) ), mc ), mc );
 		bridge.add( new Unswons( new RdfValue( mc.createUri( ns + "unswons" ) ), mc ), mc );
+		bridge.add( new X( new RdfValue( mc.createUri( ns + "x" ) ), mc ), mc );
 		bridge.add( new Xor( new RdfValue( mc.createUri( ns + "xor" ) ), mc ), mc );
 	}
 }

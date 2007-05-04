@@ -41,6 +41,28 @@ joy:at
 	rdfs:label "at" ;
 	rdfs:comment "l i  ->  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
 
+joy:branch
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "b" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "t" ;
+			rdfs:comment "this program is executed if the condition is true" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "f" ;
+			rdfs:comment "this program is executed if the condition is false" ;
+			rpl:parameterType rpl:Function ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "branch" ;
+	rdfs:comment "b t f  ->  /p  -- where p is t if b is true, f if b is false" .
+
 joy:choice
 	a rpl:Function ;
 	rpl:arity 3 ;
@@ -587,6 +609,18 @@ joy:unswons
 	rpl:returnType rdf:List ;
 	rdfs:label "unswons" ;
 	rdfs:comment "l  ->  r f  -- where f is the first member of l and r is the rest of l" .
+
+joy:x
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "p" ;
+			rdfs:comment "the program to be executed" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "x" ;
+	rdfs:comment "p  -> p /p  -- push a passive copy, then an active copy of p, or 'execute p without removing it'" .
 
 joy:xor
 	a rpl:Function ;
