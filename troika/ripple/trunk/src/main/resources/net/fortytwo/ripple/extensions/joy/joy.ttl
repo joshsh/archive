@@ -513,6 +513,20 @@ joy:true
 	rdfs:label "true" ;
 	rdfs:comment "x y  ->  y  -- note: in Joy, true is a literal value, not a function" .
 
+joy:uncons
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "uncons" ;
+	rdfs:comment "l  ->  f r  -- where f is the first member of l and r is the rest of l" .
+
 joy:unstack
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -525,6 +539,20 @@ joy:unstack
 		) ;
 	rdfs:label "unstack" ;
 	rdfs:comment "(x y z ...)  ->  ... z y x  -- the list at the head of the stack becomes the new stack" .
+
+joy:unswons
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "unswons" ;
+	rdfs:comment "l  ->  r f  -- where f is the first member of l and r is the rest of l" .
 
 joy:xor
 	a rpl:Function ;
