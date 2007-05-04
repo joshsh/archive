@@ -177,6 +177,23 @@ joy:fold
 	rdfs:label "fold" ;
 	rdfs:comment "l v0 p  ->  v  -- starting with value v0, sequentially push members of List l and combine with binary operator p" .
 
+joy:has
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "has" ;
+	rdfs:comment "l x  ->  b  -- where b is true if List l contains a member which is equal to x, otherwise false" .
+
 joy:i
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -217,6 +234,23 @@ joy:ifte
 		) ;
 	rdfs:label "ifte" ;
 	rdfs:comment "true y x /ifte --> /y; false y x /ifte --> /x" .
+
+joy:in
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "in" ;
+	rdfs:comment "x l  ->  b  -- where b is true if List l contains a member equal to x, otherwise false" .
 
 joy:not
 	a rpl:Function ;

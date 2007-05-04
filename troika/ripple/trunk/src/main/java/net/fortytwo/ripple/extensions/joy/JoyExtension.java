@@ -25,9 +25,11 @@ public class JoyExtension implements Extension
 		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
 		bridge.add( new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
+		bridge.add( new Has( new RdfValue( mc.createUri( ns + "has" ) ), mc ), mc );
 		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
 		bridge.add( new Id( new RdfValue( mc.createUri( ns + "id" ) ), mc ), mc );
 		bridge.add( new Ifte( new RdfValue( mc.createUri( ns + "ifte" ) ), mc ), mc );
+		bridge.add( new In( new RdfValue( mc.createUri( ns + "in" ) ), mc ), mc );
 		bridge.add( new Not( new RdfValue( mc.createUri( ns + "not" ) ), mc ), mc );
 		bridge.add( new Of( new RdfValue( mc.createUri( ns + "of" ) ), mc ), mc );
 		bridge.add( new Or( new RdfValue( mc.createUri( ns + "or" ) ), mc ), mc );
