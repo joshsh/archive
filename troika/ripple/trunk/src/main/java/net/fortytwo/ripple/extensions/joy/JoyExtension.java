@@ -23,7 +23,7 @@ public class JoyExtension implements Extension
 		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
 		bridge.add( branchVal = new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
 		bridge.add( new Choice( new RdfValue( mc.createUri( ns + "choice" ) ), mc ), mc );
-		bridge.add( new Concat( new RdfValue( mc.createUri( ns + "concat" ) ), mc ), mc );
+		bridge.add( new Cat( new RdfValue( mc.createUri( ns + "cat" ) ), mc ), mc );
 		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
 		bridge.add( new Dip( new RdfValue( mc.createUri( ns + "dip" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );

@@ -1,0 +1,9 @@
+1 >>  @prefix :  <http://foo#>.
+2 >>
+3 >>  @define foo:  1 2 3.
+4 >>  @define foo:  1 2 3.
+5 >>  /:foo.
+
+Error: http://www.w3.org/1999/02/22-rdf-syntax-ns#rest of http://foo#foo resolved to more than one value
+
+6 >>

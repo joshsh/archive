@@ -63,6 +63,25 @@ joy:branch
 	rdfs:label "branch" ;
 	rdfs:comment "b t f  ->  /p  -- where p is t if b is true, f if b is false" .
 
+joy:cat
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "l1" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "l2" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "cat" ;
+	rdfs:comment "l1 l2  ->  l3  -- where l3 is the concatenation of Lists l1 and l2" .
+
 joy:choice
 	a rpl:Function ;
 	rpl:arity 3 ;
@@ -84,25 +103,6 @@ joy:choice
 	rpl:returnType rpl:Function ;
 	rdfs:label "choice" ;
 	rdfs:comment "b t f  ->  x  -- where x is t if b is true, otherwise f" .
-
-joy:concat
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "l1" ;
-			rdfs:comment "a List" ;
-			rpl:parameterType rdf:List ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "l2" ;
-			rdfs:comment "a List" ;
-			rpl:parameterType rdf:List ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType rdf:List ;
-	rdfs:label "concat" ;
-	rdfs:comment "l1 l2  ->  l3  -- where l3 is the concatenation of Lists l1 and l2" .
 
 joy:cons
 	a rpl:Function ;
