@@ -298,7 +298,7 @@ nt_List returns [ ListAst s ]
 	boolean modified = false;
 }
 		// Optional slash operator.
-	:	( OPER { modified = true; } )?
+	:	( OPER (WS)? { modified = true; } )?
 
 		// Head of the list.
 		i=nt_Node

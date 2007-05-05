@@ -275,6 +275,10 @@ rdf:type:local.
 
 @define bar: 2  .
 
+# Whitespace before or after slash operator is allowed.
+2 /
+dup.
+
 
 ========================================
 string and URI encoding test cases
