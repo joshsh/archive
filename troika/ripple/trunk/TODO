@@ -11,20 +11,16 @@ Exception handling
 
 Syntax
 ================================================================================
-* Edit grammar to more closely resemble Turtle / NTriples
 * Add character literal syntax, e.g. 'c'
-* Add awareness of the xml:lang and data type of literals in input grammar
 
 Schema
 ================================================================================
 * Make rpl:ParameterList into a list of rpl:Parameters, specifically
-* Fill in the comments of rpl: terms
 * Actual values for rpl:returnType and rpl:parameterType imply that types such as xsd:integer have a type of rdfs:DataType.  Is that reasonable?
 
 Model
 ================================================================================
 * Add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
-* add support for null lists -- ()
 
 Primitives
 ================================================================================
@@ -49,10 +45,6 @@ Server
 * server for HTTP response codes
 * servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.
 
-Modules
-================================================================================
-* eliminate listElements as a primitive function -- use a derived expression
-
 Concurrency
 ================================================================================
 * explore thread pooling and concurrency
@@ -73,7 +65,6 @@ Names and namespaces
 
 Command line interface
 ================================================================================
-* make ContainerTreeView's output look like Turtle/Ripple input
 * place multiple-line expressions in the history
 * make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
 
@@ -85,7 +76,6 @@ OpenRDF
 
 Coding standards
 ================================================================================
-* decide on tabs or spaces
 * decide on convention for static members
 
 Distribution
@@ -135,7 +125,6 @@ Nice-to-have
 
 Bugs
 ================================================================================
-* repository import occasionally hangs.  Time it out so you don't have to quit the application
 * forgot to close a connection somewhere:
   [WARNING] Closing dangling connection due to garbage collection
 

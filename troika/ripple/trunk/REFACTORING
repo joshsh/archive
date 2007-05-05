@@ -1,3 +1,57 @@
+stack (or list) ==============
+
+joy:at
+joy:concat
+joy:cons
+joy:dup
+joy:dupd
+joy:has
+joy:id
+joy:in
+joy:of
+joy:pop
+joy:popd
+joy:rolldown
+joy:rolldownd
+joy:rollup
+joy:rollupd
+joy:rotate
+joy:rotated
+joy:size
+joy:stack
+joy:swap
+joy:swapd
+joy:swons
+joy:uncons
+joy:unstack
+joy:unswons
+joy:x
+
+
+joy:branch
+joy:choice
+joy:ifte
+
+
+joy:dip
+joy:fold
+joy:i
+joy:times
+
+
+list =========================
+
+bool ========================
+joy:and
+joy:false
+joy:not
+joy:or
+joy:true
+joy:xor
+
+===============
+joy:time
+
 
 
 ?  when to use the bridge?

@@ -77,9 +77,11 @@ public class LazyEvaluator extends Evaluator
 				// reduced, to one level per argument.
 				else
 				{
+					// Here's the part where we simply ignore stacks which can't
+					// be reduced to something with a passive item on top.
 					if ( RippleList.NIL == rest )
 						return;
-//                    sink.put( stack );
+//						sink.put( stack );
 
 					else
 						( new EvaluatorSink(
