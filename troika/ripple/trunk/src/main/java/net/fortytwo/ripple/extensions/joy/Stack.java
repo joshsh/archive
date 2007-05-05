@@ -27,7 +27,7 @@ public class Stack extends PrimitiveFunction
 		throws RippleException
 	{
 // TODO: this should be even simpler.
-		if ( null != stack )
+		if ( RippleList.NIL != stack )
 			sink.put( new RippleList( RippleList.invert( stack ), stack ) );
 	}
 }

@@ -42,7 +42,7 @@ public class Fold extends PrimitiveFunction
 
 		RippleList result = new RippleList( v, stack );
 
-		while ( null != lList )
+		while ( RippleList.NIL != lList )
 		{
 			result = result.push( lList.getFirst() )
 				.push( f )

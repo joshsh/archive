@@ -31,7 +31,8 @@ public class Pop extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( stack );
+		if ( RippleList.NIL != stack )
+			sink.put( stack );
 	}
 }
 
