@@ -1,7 +1,7 @@
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix etc:      <http://fortytwo.net/2007/03/ripple/etc#> .
+@prefix etc:      <http://fortytwo.net/2007/05/ripple/etc#> .
 @prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 

@@ -59,11 +59,11 @@ public Dereferencer getDereferencer()
 	{
 		String
 			rplNs         = "http://fortytwo.net/2007/03/ripple/schema#",
-			rplMiscNs     = "http://fortytwo.net/2007/03/ripple/etc",
-			rplGraphNs    = "http://fortytwo.net/2007/03/ripple/graph#",
-			rplIntMathNs  = "http://fortytwo.net/2007/03/ripple/intmath#",
+			rplMiscNs     = "http://fortytwo.net/2007/05/ripple/etc#",
+			rplGraphNs    = "http://fortytwo.net/2007/05/ripple/graph#",
+			rplIntMathNs  = "http://fortytwo.net/2007/05/ripple/intmath#",
 			rplStackNs    = "http://fortytwo.net/2007/05/ripple/stack#",
-			rplStreamNs   = "http://fortytwo.net/2007/03/ripple/stream#";
+			rplStreamNs   = "http://fortytwo.net/2007/05/ripple/stream#";
 
 		Hashtable<String, String> urlMap = new Hashtable<String, String>();
 
