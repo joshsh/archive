@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.joy;
+package net.fortytwo.ripple.extensions.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -7,14 +7,10 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Xor extends PrimitiveFunction
 {
-	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
-
-	private RippleValue truePrim = null;
-	private RippleValue falsePrim = null;
-
 	public Xor( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
@@ -38,22 +34,14 @@ public class Xor extends PrimitiveFunction
 		y = stack.getFirst();
 		stack = stack.getRest();
 
-		if ( null == truePrim )
-		{
-			truePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "true" ) ) );
-			falsePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "false" ) ) );
-			if ( null == truePrim || null == falsePrim )
-				throw new RippleException( "boolean primitives not found" );
-		}
+		RippleValue trueValue = StackExtension.getTrueValue();
 
 		// Note: everything apart from joy:true is considered false.
-		boolean xb = x.equals( truePrim );
-		boolean yb = y.equals( truePrim );
+		boolean xb = ( 0 == x.compareTo( trueValue ) );
+		boolean yb = ( 0 == y.compareTo( trueValue ) );
 		RippleValue result = ( ( xb && !yb ) || ( !xb && yb ) )
-			? truePrim
-			: falsePrim;
+			? trueValue
+			: StackExtension.getFalseValue();
 
 		sink.put( new RippleList( result, stack ) );
 	}

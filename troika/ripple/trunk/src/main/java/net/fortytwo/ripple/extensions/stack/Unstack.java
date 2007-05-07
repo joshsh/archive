@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.joy;
+package net.fortytwo.ripple.extensions.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;

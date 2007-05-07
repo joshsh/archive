@@ -62,7 +62,7 @@ public Dereferencer getDereferencer()
 			rplMiscNs     = "http://fortytwo.net/2007/03/ripple/etc",
 			rplGraphNs    = "http://fortytwo.net/2007/03/ripple/graph#",
 			rplIntMathNs  = "http://fortytwo.net/2007/03/ripple/intmath#",
-			rplJoyNs      = "http://fortytwo.net/2007/03/ripple/joy#",
+			rplStackNs    = "http://fortytwo.net/2007/05/ripple/stack#",
 			rplStreamNs   = "http://fortytwo.net/2007/03/ripple/stream#";
 
 		Hashtable<String, String> urlMap = new Hashtable<String, String>();
@@ -80,9 +80,9 @@ public Dereferencer getDereferencer()
 		urlMap.put( rplIntMathNs,
 			net.fortytwo.ripple.extensions.intmath.IntMathExtension.class.getResource(
 				"intmath.ttl" ) + "#" );
-		urlMap.put( rplJoyNs,
-			net.fortytwo.ripple.extensions.joy.JoyExtension.class.getResource(
-				"joy.ttl" ) + "#" );
+		urlMap.put( rplStackNs,
+			net.fortytwo.ripple.extensions.stack.StackExtension.class.getResource(
+				"stack.ttl" ) + "#" );
 
 		urlMap.put( rplStreamNs,
 			net.fortytwo.ripple.extensions.stream.StreamExtension.class.getResource(
@@ -113,7 +113,7 @@ public Dereferencer getDereferencer()
 			( new net.fortytwo.ripple.extensions.etc.EtcExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.graph.GraphExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.intmath.IntMathExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.joy.JoyExtension() ).load( mc );
+			( new net.fortytwo.ripple.extensions.stack.StackExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
 		}
 

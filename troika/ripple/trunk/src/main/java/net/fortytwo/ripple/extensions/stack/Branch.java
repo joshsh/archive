@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.joy;
+package net.fortytwo.ripple.extensions.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -11,11 +11,6 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Branch extends PrimitiveFunction
 {
-	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
-
-	private RippleValue truePrim = null;
-	private RippleValue falsePrim = null;
-
 	public Branch( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
@@ -41,20 +36,10 @@ public class Branch extends PrimitiveFunction
 		b = stack.getFirst();
 		stack = stack.getRest();
 
-		if ( null == truePrim )
-		{
-			truePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "true" ) ) );
-			falsePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "false" ) ) );
-			if ( null == truePrim || null == falsePrim )
-				throw new RippleException( "boolean primitives not found" );
-		}
-
 		RippleValue result;
-		if ( b.equals( truePrim ) )
+		if ( b.equals( StackExtension.getTrueValue() ) )
 			result = trueProg;
-		else if ( b.equals( falsePrim ) )
+		else if ( b.equals( StackExtension.getFalseValue() ) )
 			result = falseProg;
 		else
 			throw new RippleException( "branch expects one of the values true, false as its third argument" );

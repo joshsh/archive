@@ -7,14 +7,10 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Gt extends PrimitiveFunction
 {
-	private static String tfNs = "http://fortytwo.net/2007/03/ripple/joy#";
-
-	private RippleValue truePrim = null;
-	private RippleValue falsePrim = null;
-	
 	public Gt( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
@@ -39,19 +35,9 @@ public class Gt extends PrimitiveFunction
 		a = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		if ( null == truePrim )
-		{
-			truePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "true" ) ) );
-			falsePrim = mc.getModel().getBridge().get(
-				new RdfValue( mc.createUri( tfNs + "false" ) ) );
-			if ( null == truePrim || null == falsePrim )
-				throw new RippleException( "boolean primitives not found" );
-		}
-
 		result = ( a > b )
-			? truePrim
-			: falsePrim;
+			? StackExtension.getTrueValue()
+			: StackExtension.getFalseValue();
 
 		sink.put( new RippleList( result, stack ) );
 	}

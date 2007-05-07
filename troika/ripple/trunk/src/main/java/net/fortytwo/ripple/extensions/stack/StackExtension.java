@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.joy;
+package net.fortytwo.ripple.extensions.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Extension;
@@ -7,9 +7,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class JoyExtension implements Extension
+public class StackExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/ripple/joy#";
+	private static String ns = "http://fortytwo.net/2007/03/ripple/stack#";
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
