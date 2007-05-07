@@ -110,6 +110,14 @@ etc:swoogleIt
 	rdfs:label "swoogleIt" ;
 	rdfs:comment "grabs search results from the Swoogle web service" .
 
+etc:time
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
+	rpl:returnType xsd:int ;
+	rdfs:label "time" ;
+	rdfs:comment "-> t  -- pushes the current time, in seconds since the Unix epoch" .
+
 etc:urlEncoding
 	a rpl:Function ;
 	rpl:arity 1 ;

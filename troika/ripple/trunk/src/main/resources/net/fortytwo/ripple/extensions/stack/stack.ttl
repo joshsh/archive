@@ -531,14 +531,6 @@ stack:swons
 	rdfs:label "swons" ;
 	rdfs:comment "l x  ->  l2  -- where the first member of l2 is x and the rest of l2 is l" .
 
-stack:time
-	a rpl:Function ;
-	rpl:arity 0 ;
-	rpl:parameters rdf:nil ;
-	rpl:returnType xsd:int ;
-	rdfs:label "time" ;
-	rdfs:comment "-> t  -- pushes the current time, in seconds since the Unix epoch" .
-
 stack:times
 	a rpl:Function ;
 	rpl:arity 2 ;

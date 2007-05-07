@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.extensions.etc;
 
 import java.util.Date;
 

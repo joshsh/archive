@@ -404,22 +404,6 @@ java -jar lib/pellet.jar -if http://fortytwo.net/2007/03/ripple/schema.rdf
 
 
 
-
-
-
-
-
-
-Comparison with Joy
-* Ripple's implementation of joy's list operators (e.g. concat) currently only work on rdf:Lists, and not on strings or other aggregate objects.
-* Ripple doesn't need to implement joy:first and joy:rest for lists, as it gets the same functionality out of rdf:first and rdf:rest as predicates.
-* Ripple doesn't implement joy:get or joy:put as I'm not interested in I/O for now
-* Ripple MAY not need set operations, as they can be achieved with the stream primitives
-* not YET implemented: joy:map, joy:step, joy:filter, joy:linrec, joy:binrec, joy:treerec, joy:unitlist, joy:powerlist, joy:cleave, joy:succ, joy:pred, joy:small
-	joy:time, joy:rand
-	joy:cons, joy:swons, joy:uncons
-
-
 V"  Sink --> Consumer
 
 
