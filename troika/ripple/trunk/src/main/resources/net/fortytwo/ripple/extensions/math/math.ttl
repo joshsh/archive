@@ -1,10 +1,10 @@
-@prefix intmath:  <http://fortytwo.net/2007/03/ripple/intmath#> .
-@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix math:  <http://fortytwo.net/2007/03/ripple/math#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-intmath:abs
+math:abs
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -17,7 +17,7 @@ intmath:abs
 	rdfs:label "abs" ;
 	rdfs:comment "x  ->  absolute value of x" .
 
-intmath:add
+math:add
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -34,7 +34,7 @@ intmath:add
 	rdfs:label "add" ;
 	rdfs:comment "x y  ->  x + y" .
 
-intmath:div
+math:div
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -51,7 +51,7 @@ intmath:div
 	rdfs:label "div" ;
 	rdfs:comment "x y  ->  y / x" .
 
-intmath:gt
+math:gt
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -68,7 +68,7 @@ intmath:gt
 	rdfs:label "gt" ;
 	rdfs:comment "x y  ->  b  -- where b is true if x > y, otherwise false" .
 
-intmath:lt
+math:lt
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -85,7 +85,7 @@ intmath:lt
 	rdfs:label "lt" ;
 	rdfs:comment "x y  ->  b  -- where b is true if x < y, otherwise false" .
 
-intmath:mod
+math:mod
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -103,7 +103,7 @@ intmath:mod
 	rdfs:comment "x y  ->  x % y" .
 
 
-intmath:mul
+math:mul
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (
@@ -120,7 +120,7 @@ intmath:mul
 	rdfs:label "mul" ;
 	rdfs:comment "x y  ->  x * y" .
 
-intmath:neg
+math:neg
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -133,7 +133,7 @@ intmath:neg
 	rdfs:label "neg" ;
 	rdfs:comment "x  ->  -x" .
 
-intmath:sign
+math:sign
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -146,7 +146,7 @@ intmath:sign
 	rdfs:label "sign" ;
 	rdfs:comment "x  ->  sign of x (-1, 0, or +1)" .
 
-intmath:sub
+math:sub
 	a rpl:Function ;
 	rpl:arity 2 ;
 	rpl:parameters (

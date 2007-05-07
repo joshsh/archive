@@ -61,7 +61,7 @@ public Dereferencer getDereferencer()
 			rplNs         = "http://fortytwo.net/2007/03/ripple/schema#",
 			rplMiscNs     = "http://fortytwo.net/2007/05/ripple/etc#",
 			rplGraphNs    = "http://fortytwo.net/2007/05/ripple/graph#",
-			rplIntMathNs  = "http://fortytwo.net/2007/05/ripple/intmath#",
+			rplMathNs     = "http://fortytwo.net/2007/05/ripple/math#",
 			rplStackNs    = "http://fortytwo.net/2007/05/ripple/stack#",
 			rplStreamNs   = "http://fortytwo.net/2007/05/ripple/stream#";
 
@@ -77,9 +77,9 @@ public Dereferencer getDereferencer()
 		urlMap.put( rplGraphNs,
 			net.fortytwo.ripple.extensions.graph.GraphExtension.class.getResource(
 				"graph.ttl" ) + "#" );
-		urlMap.put( rplIntMathNs,
-			net.fortytwo.ripple.extensions.intmath.IntMathExtension.class.getResource(
-				"intmath.ttl" ) + "#" );
+		urlMap.put( rplMathNs,
+			net.fortytwo.ripple.extensions.math.MathExtension.class.getResource(
+				"math.ttl" ) + "#" );
 		urlMap.put( rplStackNs,
 			net.fortytwo.ripple.extensions.stack.StackExtension.class.getResource(
 				"stack.ttl" ) + "#" );
@@ -112,7 +112,7 @@ public Dereferencer getDereferencer()
 		{
 			( new net.fortytwo.ripple.extensions.etc.EtcExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.graph.GraphExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.intmath.IntMathExtension() ).load( mc );
+			( new net.fortytwo.ripple.extensions.math.MathExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.stack.StackExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
 		}

@@ -1,7 +1,7 @@
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:     <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix stream:  <http://fortytwo.net/2007/03/ripple/stream#> .
+@prefix stream:  <http://fortytwo.net/2007/05/ripple/stream#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
 stream:limit
@@ -13,13 +13,13 @@ stream:limit
 			rpl:parameterType xsd:integer ;
 			rpl:isTransparent true ]
 		) ;
-	rpl:returnType rpl:Function ;  # not strictly true...
 	rdfs:label "limit" ;
 	rdfs:comment "transmits at most lim stacks" .
 
 stream:scrap
 	a rpl:Function ;
 	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
 	rdfs:label "scrap" ;
 	rdfs:comment "transmits no stacks" .
 
@@ -40,5 +40,6 @@ stream:union
 stream:unique
 	a rpl:Function ;
 	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
 	rdfs:label "unique" ;
 	rdfs:comment "transmits stacks at most once, as determined by list comparison" .
