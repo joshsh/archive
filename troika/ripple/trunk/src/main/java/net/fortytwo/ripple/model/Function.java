@@ -13,7 +13,7 @@ public interface Function
 	public int arity();
 
 // NOTE: this is identical to Evaluator's evaluate() method.
-	public void applyTo( RippleList args,
+	public void applyTo( RippleList stack,
 						Sink<RippleList> sink,
 						ModelConnection mc )
 		throws RippleException;

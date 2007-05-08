@@ -112,6 +112,42 @@ If the base URI of :third is such that it is dereferenceable -- for instance, if
 
 \subsection{Computational Model}
 
+
+
+\begin{enumerate}
+\item \texttt{4 /:sq} -- the evaluator sees the list \texttt{(4 :sq op)}, which as a stack has the active item \texttt{op} at its head.  \texttt{op} effectively tells the evaluator to execute the preceding symbol as a program, which for the list \texttt{:sq} means the nullary operation of list dequotation.
+\item \texttt{4 /dup/mul} -- the stack \texttt{(4 dup op mul op)} again has \texttt{op} at its head, which prompts the evaluator to pop the primitive function \texttt{mul} from the stack and push an active item which will gather \texttt{mul}'s arguments.
+\item \texttt{4 4 /mul} -- \texttt{mul} requires two arguments, so the stack beneath it must be reduced to two levels.  In doing so, a program \texttt{(4 dup op)} consisting of the dup primitive applied to an argument of \texttt{4} is discovered and executed, and the resulting stack \texttt{(4 4)} is passed in a curried fashion to the \texttt{mul} program, which applies its own rewrite rule, consuming both integer arguments and pushing their product onto the stack.
+\item \texttt{16} -- the resulting stack \texttt{(16)} has a passive item at its head, so it finds its way into the evaluator's output channel
+\end{enumerate}
+
+
+The \texttt{dup} primitive has an arity of 1 while the mul primitive has an arity of 2.  To the evaluator, this means that when an active copy of dup or mul is encountered at the head of the stack, the remainder of the stack must be reduced to one level or two levels, respectively, before the primitive's rewrite rule can be applied.  For instance, the expression 4/:sq is reduced as follows:
+\begin{enumerate}
+\item 4/:sq -- this is shorthand for a list of three elements which is passed to the evaluator for reduction.  Visually, the head of the stack is at the right-hand side of the expression.
+\item (4 :sq op!) -- the active item op! is discovered at the head of the stack.  We've added an exclamation mark to the keyword to indicate that it's active.  It immediately consumes one argument, the list named :sq in this case, determines that it is a list, and pushes an active, nullary list dequotation function to the head of the stack.
+\item (4 :sq!) --  as a nullary function, :sq! is executed immediately, and has the effect of concatenating the the remainder of the stack with :sq.
+\item (4 dup op! mul op!) -- op! once again consumes the item immediately beneath it on the stack.  This time, it finds that the item is a primitive function, and pushes an active, binary function mul! which will eventually execute mul.
+\item (4 dup op! mul!) -- mul! has yet to receive its arguments.  The evaluator invokes itself recursively at this point, connecting the output channel of the new evaluation pipeline to !mul's input channel.  mul!'s output, in turn, is fed back into the current evaluator for a second round of reduction.  A stack will travel this circuit until it has been reduced to normal form.
+\item (4 dup op!) -- the results of this query will become the arguments to mul!.  As before, dup becomes active.
+\item (4 dup!) -- dup! requires one argument, so a new pipeline is created to calculate it
+\item (4) -- this stack is already in normal form, so it immediately passes to !dup, which applies its rewrite rule.
+\item (4 4) -- !mul receives the stack and produces a closure containing the primitive function and one argument.  This is a technique known as currying.
+\item (4 (4 mul)!) -- the (4 mul)! closure has an arity of 1, so we invoke the evaluator one more time
+\item (4) -- again we find the stack to be in normal form, so it is passed upwards to the (4 mul)! pipeline.  (4 mul!) needs no more arguments, so its rewrite rule is applied.
+\item (16) -- the final result needs no more reduction, and passes into the top-level output channel.  In the command-line application, we'll see it appear on the screen:
+\end{enumerate}
+
+\begin{verbatim}
+rdf:_1  (16)
+\end{verbatim}
+
+
+
+
+
+
+
 Like Joy (and many other functional languages), Ripple's fundamental data structure is the list.  When executed as a program, a list becomes a stack.  Computation occurs at the head of the stack (visually, on the right hand side of an expression), and halts either when the stack is empty or when a "passive" item (a constant) is found at the head of the stack.  Ripple's primitive functions have an individual "arity" equal to the depth to which the stack must be reduced before it is accepted as input to the function.  Whereas Joy's many operators and combinators are active until placed inside of a quotation (a list), in Ripple, nearly everthing is either a list or is treated as a list, and is therefore quoted by default.  However, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
 
 \begin{verbatim}

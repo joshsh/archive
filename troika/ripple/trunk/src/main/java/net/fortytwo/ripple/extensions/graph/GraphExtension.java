@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RdfValue;
 
 public class GraphExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/ripple/graph#";
+	private static String ns = "http://fortytwo.net/2007/05/ripple/graph#";
 
 	public void load( ModelConnection mc )
 		throws RippleException

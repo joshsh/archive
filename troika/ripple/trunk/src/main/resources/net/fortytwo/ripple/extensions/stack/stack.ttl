@@ -21,7 +21,20 @@ stack:and
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "and" ;
-	rdfs:comment "x y  ->  z  -- where z is true if x and y are true, otherwise false" .
+	rdfs:comment "x y  =>  z  -- where z is true if x and y are true, otherwise false" .
+
+stack:ary
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "n" ;
+			rdfs:comment "the (minimum) arity of the resulting function" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "ary" ;
+	rdfs:comment "n  =>  f -- where f is an n-ary version of the id function" .
 
 stack:at
 	a rpl:Function ;
@@ -39,7 +52,7 @@ stack:at
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "at" ;
-	rdfs:comment "l i  ->  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
+	rdfs:comment "l i  =>  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
 
 stack:branch
 	a rpl:Function ;
@@ -61,7 +74,7 @@ stack:branch
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "branch" ;
-	rdfs:comment "b t f  ->  /p  -- where p is t if b is true, f if b is false" .
+	rdfs:comment "b t f  =>  /p  -- where p is t if b is true, f if b is false" .
 
 stack:cat
 	a rpl:Function ;
@@ -80,7 +93,7 @@ stack:cat
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "cat" ;
-	rdfs:comment "l1 l2  ->  l3  -- where l3 is the concatenation of Lists l1 and l2" .
+	rdfs:comment "l1 l2  =>  l3  -- where l3 is the concatenation of Lists l1 and l2" .
 
 stack:choice
 	a rpl:Function ;
@@ -102,7 +115,7 @@ stack:choice
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "choice" ;
-	rdfs:comment "b t f  ->  x  -- where x is t if b is true, otherwise f" .
+	rdfs:comment "b t f  =>  x  -- where x is t if b is true, otherwise f" .
 
 stack:cons
 	a rpl:Function ;
@@ -119,7 +132,7 @@ stack:cons
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "cons" ;
-	rdfs:comment "x l  ->  l2  -- where the first member of l2 is x and the rest of l2 is l" .
+	rdfs:comment "x l  =>  l2  -- where the first member of l2 is x and the rest of l2 is l" .
 
 stack:dip
 	a rpl:Function ;
@@ -135,7 +148,7 @@ stack:dip
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "dip" ;
-	rdfs:comment "x y  ->  /y x" .
+	rdfs:comment "x y  =>  /y x" .
 
 stack:dup
 	a rpl:Function ;
@@ -146,7 +159,7 @@ stack:dup
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "dup" ;
-	rdfs:comment "x  ->  x x" .
+	rdfs:comment "x  =>  x x" .
 
 stack:dupd
 	a rpl:Function ;
@@ -160,7 +173,7 @@ stack:dupd
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "dupd" ;
-	rdfs:comment "x y  ->  x x y" .
+	rdfs:comment "x y  =>  x x y" .
 
 stack:false
 	a rpl:Function ;
@@ -174,7 +187,7 @@ stack:false
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "false" ;
-	rdfs:comment "x y  ->  y   -- note: in Joy, false is a literal value, not a function" .
+	rdfs:comment "x y  =>  y   -- note: in Joy, false is a literal value, not a function" .
 
 stack:fold
 	a rpl:Function ;
@@ -196,7 +209,7 @@ stack:fold
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "fold" ;
-	rdfs:comment "l v0 p  ->  v  -- starting with value v0, sequentially push members of List l and combine with binary operator p" .
+	rdfs:comment "l v0 p  =>  v  -- starting with value v0, sequentially push members of List l and combine with binary operator p" .
 
 stack:has
 	a rpl:Function ;
@@ -213,7 +226,7 @@ stack:has
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "has" ;
-	rdfs:comment "l x  ->  b  -- where b is true if List l contains a member which is equal to x, otherwise false" .
+	rdfs:comment "l x  =>  b  -- where b is true if List l contains a member which is equal to x, otherwise false" .
 
 stack:i
 	a rpl:Function ;
@@ -225,14 +238,14 @@ stack:i
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "i" ;
-	rdfs:comment "p  -> /p  -- push an active copy of p, or 'execute p'" .
+	rdfs:comment "p  => /p  -- push an active copy of p, or 'execute p'" .
 
 stack:id
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
 	rdfs:label "id" ;
-	rdfs:comment "id  ->  (identity function, does nothing)" .
+	rdfs:comment "id  =>  (identity function, does nothing)" .
 
 stack:ifte
 	a rpl:Function ;
@@ -254,7 +267,7 @@ stack:ifte
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "ifte" ;
-	rdfs:comment "b t f ->  /p  -- where p is t if /b evaluates to true, and f if it evaluates to false" .
+	rdfs:comment "b t f =>  /p  -- where p is t if /b evaluates to true, and f if it evaluates to false" .
 
 stack:in
 	a rpl:Function ;
@@ -271,7 +284,7 @@ stack:in
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "in" ;
-	rdfs:comment "x l  ->  b  -- where b is true if List l contains a member equal to x, otherwise false" .
+	rdfs:comment "x l  =>  b  -- where b is true if List l contains a member equal to x, otherwise false" .
 
 stack:not
 	a rpl:Function ;
@@ -285,7 +298,7 @@ stack:not
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "not" ;
-	rdfs:comment "x  ->  y  -- where y is true if x is false, otherwise false" .
+	rdfs:comment "x  =>  y  -- where y is true if x is false, otherwise false" .
 
 stack:of
 	a rpl:Function ;
@@ -303,7 +316,7 @@ stack:of
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "of" ;
-	rdfs:comment "i l  ->  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
+	rdfs:comment "i l  =>  l[i]  -- pushes the member of List l at index i.  Note: lists are 1-indexed" .
 
 stack:or
 	a rpl:Function ;
@@ -322,7 +335,7 @@ stack:or
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "or" ;
-	rdfs:comment "x y  ->  z  -- where z is true if x or y is true, otherwise false" .
+	rdfs:comment "x y  =>  z  -- where z is true if x or y is true, otherwise false" .
 
 stack:pop
 	a rpl:Function ;
@@ -333,7 +346,7 @@ stack:pop
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "pop" ;
-	rdfs:comment "x  ->" .
+	rdfs:comment "x  =>" .
 
 stack:popd
 	a rpl:Function ;
@@ -347,7 +360,7 @@ stack:popd
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "popd" ;
-	rdfs:comment "x y  ->  y" .
+	rdfs:comment "x y  =>  y" .
 
 stack:rolldown
 	a rpl:Function ;
@@ -364,7 +377,7 @@ stack:rolldown
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "rolldown" ;
-	rdfs:comment "x y z  ->  y z x" .
+	rdfs:comment "x y z  =>  y z x" .
 
 stack:rolldownd
 	a rpl:Function ;
@@ -384,7 +397,7 @@ stack:rolldownd
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "rolldownd" ;
-	rdfs:comment "x y z w  ->  y z x w" .
+	rdfs:comment "x y z w  =>  y z x w" .
 
 stack:rollup
 	a rpl:Function ;
@@ -401,7 +414,7 @@ stack:rollup
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "rollup" ;
-	rdfs:comment "x y z  ->  z x y" .
+	rdfs:comment "x y z  =>  z x y" .
 
 stack:rollupd
 	a rpl:Function ;
@@ -421,7 +434,7 @@ stack:rollupd
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "rollupd" ;
-	rdfs:comment "x y z w  ->  z x y w" .
+	rdfs:comment "x y z w  =>  z x y w" .
 
 stack:rotate
 	a rpl:Function ;
@@ -438,7 +451,7 @@ stack:rotate
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "rotate" ;
-	rdfs:comment "x y z  ->  z y x" .
+	rdfs:comment "x y z  =>  z y x" .
 
 stack:rotated
 	a rpl:Function ;
@@ -458,7 +471,7 @@ stack:rotated
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "rotated" ;
-	rdfs:comment "x y z w  ->  z y x w" .
+	rdfs:comment "x y z w  =>  z y x w" .
 
 stack:size
 	a rpl:Function ;
@@ -473,7 +486,7 @@ stack:size
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "size" ;
-	rdfs:comment "l  ->  n   -- where n is the number of members of l" .
+	rdfs:comment "l  =>  n   -- where n is the number of members of l" .
 
 stack:stack
 	a rpl:Function ;
@@ -481,7 +494,7 @@ stack:stack
 	rpl:parameters rdf:nil ;
 	rpl:returnType rpl:List ;
 	rdfs:label "stack" ;
-	rdfs:comment "... x y z  ->  ... x y z (... x y z)  -- pushes the stack as a List" .
+	rdfs:comment "... x y z  =>  ... x y z (... x y z)  -- pushes the stack as a List" .
 
 stack:swap
 	a rpl:Function ;
@@ -495,7 +508,7 @@ stack:swap
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "swap" ;
-	rdfs:comment "x y  ->  y x" .
+	rdfs:comment "x y  =>  y x" .
 
 stack:swapd
 	a rpl:Function ;
@@ -512,7 +525,7 @@ stack:swapd
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "swapd" ;
-	rdfs:comment "x y z  ->  y x z" .
+	rdfs:comment "x y z  =>  y x z" .
 
 stack:swons
 	a rpl:Function ;
@@ -529,7 +542,7 @@ stack:swons
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "swons" ;
-	rdfs:comment "l x  ->  l2  -- where the first member of l2 is x and the rest of l2 is l" .
+	rdfs:comment "l x  =>  l2  -- where the first member of l2 is x and the rest of l2 is l" .
 
 stack:times
 	a rpl:Function ;
@@ -544,7 +557,7 @@ stack:times
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "times" ;
-	rdfs:comment "p n  ->  ... /p /p /p  -- pushes n active copies of the program p, or 'executes p n times'" .
+	rdfs:comment "p n  =>  ... /p /p /p  -- pushes n active copies of the program p, or 'executes p n times'" .
 
 stack:true
 	a rpl:Function ;
@@ -558,7 +571,7 @@ stack:true
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "true" ;
-	rdfs:comment "x y  ->  y  -- note: in Joy, true is a literal value, not a function" .
+	rdfs:comment "x y  =>  y  -- note: in Joy, true is a literal value, not a function" .
 
 stack:uncons
 	a rpl:Function ;
@@ -572,7 +585,7 @@ stack:uncons
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "uncons" ;
-	rdfs:comment "l  ->  f r  -- where f is the first member of l and r is the rest of l" .
+	rdfs:comment "l  =>  f r  -- where f is the first member of l and r is the rest of l" .
 
 stack:unstack
 	a rpl:Function ;
@@ -585,7 +598,7 @@ stack:unstack
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "unstack" ;
-	rdfs:comment "(x y z ...)  ->  ... z y x  -- the list at the head of the stack becomes the new stack" .
+	rdfs:comment "(x y z ...)  =>  ... z y x  -- the list at the head of the stack becomes the new stack" .
 
 stack:unswons
 	a rpl:Function ;
@@ -599,7 +612,7 @@ stack:unswons
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "unswons" ;
-	rdfs:comment "l  ->  r f  -- where f is the first member of l and r is the rest of l" .
+	rdfs:comment "l  =>  r f  -- where f is the first member of l and r is the rest of l" .
 
 stack:x
 	a rpl:Function ;
@@ -611,7 +624,7 @@ stack:x
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "x" ;
-	rdfs:comment "p  -> p /p  -- push a passive copy, then an active copy of p, or 'execute p without removing it'" .
+	rdfs:comment "p  => p /p  -- push a passive copy, then an active copy of p, or 'execute p without removing it'" .
 
 stack:xor
 	a rpl:Function ;
@@ -630,4 +643,4 @@ stack:xor
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "xor" ;
-	rdfs:comment "x y  ->  z  -- where z is the logical exclusive disjunction of truth values x and y" .
+	rdfs:comment "x y  =>  z  -- where z is the logical exclusive disjunction of truth values x and y" .

@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RdfValue;
 
 public class StreamExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/ripple/stream#";
+	private static String ns = "http://fortytwo.net/2007/05/ripple/stream#";
 
 	public void load( ModelConnection mc )
 		throws RippleException

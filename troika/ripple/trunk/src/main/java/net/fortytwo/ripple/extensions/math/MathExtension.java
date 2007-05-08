@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RdfValue;
 
 public class MathExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/ripple/intmath#";
+	private static String ns = "http://fortytwo.net/2007/05/ripple/math#";
 
 	public void load( ModelConnection mc )
 		throws RippleException

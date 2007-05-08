@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RdfValue;
 
 public class EtcExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/ripple/etc#";
+	private static String ns = "http://fortytwo.net/2007/05/ripple/etc#";
 
 	public void load( ModelConnection mc )
 		throws RippleException

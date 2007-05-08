@@ -9,7 +9,7 @@ import net.fortytwo.ripple.model.RippleValue;
 
 public class StackExtension implements Extension
 {
-	private static String ns = "http://fortytwo.net/2007/03/ripple/stack#";
+	private static String ns = "http://fortytwo.net/2007/05/ripple/stack#";
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
@@ -20,6 +20,7 @@ public class StackExtension implements Extension
 		ModelBridge bridge = mc.getModel().getBridge();
 
 		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
+		bridge.add( new Ary( new RdfValue( mc.createUri( ns + "ary" ) ), mc ), mc );
 		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
 		bridge.add( branchVal = new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
 		bridge.add( new Choice( new RdfValue( mc.createUri( ns + "choice" ) ), mc ), mc );
