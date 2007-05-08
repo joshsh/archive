@@ -1,3 +1,6 @@
+'lang' primitive which gets the language of a literal
+'typeOf' primitive which gets the type of a literal
+
     swapdd  // swaps third and fourth item on the stack
     dupdd   // duplicates the third item on the stack
     popdd   // removes the third item from the stack

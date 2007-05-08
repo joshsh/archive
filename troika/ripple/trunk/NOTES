@@ -1,3 +1,7 @@
+# All primitives which need attention in connection with list/primitive equivalence:
+grep RippleList.from * -Rl|grep java$
+
+
 ========================================
 create distribution
 ========================================

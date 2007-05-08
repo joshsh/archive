@@ -54,8 +54,8 @@ public class Operator implements RippleValue
 	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
 
 	/**
-	*  Finds the type of a node and creates an appropriate wrapper.
-	*/
+	 *  Finds the type of a value and creates an appropriate "active" wrapper.
+	 */
 	protected static Operator createOperator( RippleValue v, ModelConnection mc )
 		throws RippleException
 	{

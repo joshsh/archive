@@ -295,6 +295,19 @@ public class ModelConnection
 		return sink.getValue();
 	}
 
+	public RdfValue findAtLeastOneObject( RdfValue subj, RdfValue pred )
+		throws RippleException
+	{
+		SingleValueSink sink = new SingleValueSink();
+
+		multiply( subj, pred, sink );
+
+		if ( 0 == sink.countReceived() )
+			throw new RippleException( "no values resolved for " + pred.toString() + " of " + subj.toString() );
+		else
+			return sink.getValue();
+	}
+
 	public RdfValue findAtMostOneObject( RdfValue subj, RdfValue pred )
 		throws RippleException
 	{

@@ -24,3 +24,26 @@
 * define the default namespace with an empty prefix:
     @prefix : <http://example.org/> .
 ? what happens when the namespace is re-defined after you've already created some terms in the original default namespace?
+
+
+
+
+User-Agent: Ripple/0.1
+Accept: application/rdf+xml, application/trix, application/x-turtle, text/plain, application/xml;q=0.5, text/xml;q=0.2
+Host: www.pipian.com
+Connection: keep-alive
+Content-type: application/x-www-form-urlencoded
+
+
+069.056.173.178.00080-192.168.001.103.42933: HTTP/1.1 200 OK
+Date: Tue, 20 Mar 2007 05:01:54 GMT
+Server: Apache/1.3.33 (Debian GNU/Linux) PHP/4.4.4-0.dotdeb.3 with Suhosin-Patch mod_perl/1.29
+X-Powered-By: PHP/4.4.4-0.dotdeb.3
+Keep-Alive: timeout=20, max=42
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=iso-8859-1
+
+28
+The Locationary is down for renovations.
+0

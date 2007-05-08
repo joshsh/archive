@@ -4,6 +4,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.ListNode;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
@@ -72,7 +73,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			first = mc.getModel().getBridge().get(
 				mc.findUniqueProduct( curRdf, rdfFirst ) );
 
-			curRdf = mc.findUniqueProduct( curRdf, rdfRest );
+			curRdf = mc.findAtLeastOneObject( curRdf, rdfRest );
 			if ( curRdf.equals( rdfNil ) )
 				break;
 
@@ -174,6 +175,73 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				throw new RippleException( "expecting " + RippleList.class + ", found " + v );
 		}
 	}
+
+/*
+	public static void from2(	final RippleValue v,
+								final Sink<RippleList> sink,
+								final ModelConnection mc )
+		throws RippleException
+	{
+		// If already a list...
+		if ( v instanceof RippleList )
+			sink.put( (RippleList) v );
+
+		// If the argument is an RDF value, try to convert it to a native list.
+		else if ( v instanceof RdfValue )
+			createList2( (RdfValue) v, sink, mc );
+
+		// Otherwise, fail.
+		else
+			throw new RippleException( "expecting " + RippleList.class + ", found " + v );
+	}
+
+	private static void createList2( final RdfValue v,
+									final Sink<RippleList> sink,
+									final ModelConnection mc )
+		throws RippleException
+	{
+		if ( v.equals( rdfNil ) )
+			sink.put( NIL );
+
+		else
+		{
+			RdfValue curRdf = (RdfValue) v;
+			RippleList rest = NIL;
+	
+			for (;;)  // break out when we get to rdf:nil
+			{
+				rdfEquivalent = curRdf;
+	
+				Sink<RdfValue> firstSink = new Sink<RdfValue>()
+				{
+					public void put( final RdfValue v )
+						throw RippleException
+					{
+						
+					}
+				};
+
+				// Note: it might be more efficient to use ModelBridge only
+				//       lazily, binding RDF to generic RippleValues on an
+				//       as-needed basis.  However, for now there is no better
+				//       place to do this when we're coming from an rdf:List.
+				//       Consider a list containing operators.
+				first = mc.getModel().getBridge().get(
+					mc.findUniqueProduct( curRdf, rdfFirst ) );
+	
+				curRdf = mc.findAtLeastOneObject( curRdf, rdfRest );
+				if ( curRdf.equals( rdfNil ) )
+					break;
+	
+				else
+				{
+					rest = new RippleList( first, rest );
+					rest.rdfEquivalent = rdfEquivalent;
+				}
+			}
+		}
+	}
+*/
 
 	////////////////////////////////////////////////////////////////////////////
 
