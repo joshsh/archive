@@ -563,9 +563,9 @@ Apply it twice.
 open world / closed world
 
 
-\subsection{Open or closed?}
+\subsection{Open world?  Closed world?}
 
-Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains referentially transparent with respect to its one RDF query operation: forward traversal.  In other words, query results remain independent of the order in which queries are executed (thus, the order in which new linked data is drawn into the execution environment).  However, as the language currently does not implement any non-monotonic primitives (in fact, doing so would require some redesign of the push-style evaluator), the open world question is orthogonal to Ripple's actual processing model.  That may change if counting or sorting query results becomes important.
+Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains referentially transparent with respect to its one RDF query operation: forward traversal.  In other words, query results remain independent of the order in which queries are executed, and thus the order in which new linked data is drawn into the execution environment.  However, as the current implementation does not include any non-monotonic primitives (in fact, doing so would require some redesign of Ripple's push-style evaluator), the open world question is orthogonal to Ripple's actual processing model.  That may change if counting or sorting query results becomes important.
 
 \subsection{Graph transformations, and other side effects}
 
@@ -586,7 +586,7 @@ Ripple has been designed with a \textit{closed world} of linked data in mind, th
     # apply each replacement pair in turn
     ) /fold/popd.
 
-@prefix ex: <http://example.org/ex#>.
+@prefix ex: <http://example.org/minimalFoaf#>.
 
 # Maps from a minimal FOAF vocabulary to FOAF.
 @define exFoafMapping:
