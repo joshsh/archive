@@ -125,6 +125,9 @@ System.exit( 0 );
 			Repository repository = createTestRepository();
 
 			Model model = new Model( repository, "Demo Model" );
+			ModelConnection mc = new ModelConnection( model );
+			mc.setNamespace( "", Ripple.getDefaultNamespace() );
+			mc.close();
 
 			if ( null != store )
 			{

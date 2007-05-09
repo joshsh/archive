@@ -865,13 +865,13 @@ public class ModelConnection
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void setNamespace( final String prefix, final URI ns )
+	public void setNamespace( final String prefix, final String ns )
 		throws RippleException
 	{
 		try
 		{
 			repoConnection.removeNamespace( prefix );
-			repoConnection.setNamespace( prefix, ns.toString() );
+			repoConnection.setNamespace( prefix, ns );
 		}
 
 		catch ( Throwable t )
@@ -879,6 +879,12 @@ public class ModelConnection
 			reset();
 			throw new RippleException( t );
 		}
+	}
+
+	public void setNamespace( final String prefix, final URI ns )
+		throws RippleException
+	{
+		setNamespace( prefix, ns.toString() );
 	}
 
 	////////////////////////////////////////////////////////////////////////////

@@ -40,6 +40,7 @@ public class Ripple
 
 	private static boolean s_dereferenceByNamespace;
 	private static long s_uriDereferencingTimeout;
+	private static String s_defaultNamespace;
 
 	private static boolean s_listPadding;
 
@@ -100,12 +101,28 @@ public class Ripple
 		return s_uriDereferencingTimeout;
 	}
 
+	public static String getDefaultNamespace()
+	{
+		return s_defaultNamespace;
+	}
+
 	public static boolean listPadding()
 	{
 		return s_listPadding;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+
+	private static String getStringProperty( final Properties props,
+											final String name,
+											String defaultValue )
+	{
+		String s = props.getProperty( name );
+
+		return ( null == s )
+			? defaultValue
+			: s;
+	}
 
 	private static boolean getBooleanProperty( final Properties props,
 											final String name,
@@ -236,6 +253,8 @@ public class Ripple
 				props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
 			s_uriDereferencingTimeout = getLongProperty(
 				props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
+			s_defaultNamespace = getStringProperty(
+				props, "net.fortytwo.ripple.model.uri.defaultNamespace", "" );
 
 			s_treeViewDepth = getIntProperty(
 				props, "net.fortytwo.ripple.io.treeView.depth", 1 );
