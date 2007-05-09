@@ -29,7 +29,7 @@ public class New extends PrimitiveFunction
 		// Note: stack may be null (and this should not be a problem).
 		RippleList result = new RippleList(
 			new RdfValue( mc.createBNode() ), stack );
-System.out.println( "Creating a new node" );
+//System.out.println( "Creating a new node" );
 
 		sink.put( result );
 	}
