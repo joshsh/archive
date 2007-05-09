@@ -562,35 +562,27 @@ open world / closed world
 
 Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains referentially transparent with respect to its one RDF query operation: forward traversal.  In other words, query results remain independent of the order in which queries are executed, and thus the order in which new linked data is drawn into the execution environment.  However, as the current implementation does not include any non-monotonic primitives (in fact, doing so would require some redesign of Ripple's push-style evaluator), the open world question is orthogonal to Ripple's actual processing model.  That may change if counting or sorting query results becomes important.
 
-\subsection{Graph transformation, and other side effects}
+\subsection{Graph transformations, and other side effects}
 
-One interesting application of linked programs is for defining mappings 
+One interesting application of linked programs is for defining mappings between ontologies.
 
 \begin{verbatim}
-@define subst:
-    # create a new node
-    /new
-    (   # keep the original stack
-        pop
-        (   # create an edge from the new node
-            (/dupd/swap)/dip/i/dip/swap/assert
-            # discard this branch (the side-effect is done)
-            scrap 2/ary/i)
-        # apply both branches
-        /union/i
-    # apply each replacement pair in turn
-    ) /fold/popd.
+# node map => a new node with mapped properties
+@define mappedNode:
+    /each/i               # distribute over a list of pairs
+    /new                  # create a new node
+    i/dipd/rotate/assert  # assert a mapped statement
+    1/limit.              # output the node just once
 
+# Maps to a minimal FOAF-like vocabulary.
 @prefix ex: <http://example.org/minimalFoaf#>.
-
-# Maps from a minimal FOAF vocabulary to FOAF.
-@define exFoafMapping:
+@define minFoafMap:
     (rdf:type rdf:type)     # copy any rdf:type edges
-    (ex:name foaf:name)     # create ex:name from foaf:name
-    (ex:knows foaf:knows).  # create ex:knows from foaf:knows
+    (foaf:name ex:name)     # map foaf:name to ex:name
+    (foaf:knows ex:knows).  # map foaf:knows to ex:knows
 
-# TBL's FOAF => minimal FOAF
-/:tbl :exFoafMapping/:subst.
+# => minimal FOAF for TBL
+/:tbl :minFoafMap/:mappedNode.
 \end{verbatim}
 
 

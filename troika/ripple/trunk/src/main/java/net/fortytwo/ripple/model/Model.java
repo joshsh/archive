@@ -106,7 +106,10 @@ public Dereferencer getDereferencer()
 
 		bridge = new ModelBridge();
 		ModelConnection mc = new ModelConnection( this, "for Model constructor" );
-//		bridge.add( Operator.OP, mc );
+
+		// At the moment, op needs to be a special value for the sake of the
+		// evaluator.  This has the side-effect of making it a keyword.
+		bridge.add( Operator.OP, mc );
 
 		try
 		{
