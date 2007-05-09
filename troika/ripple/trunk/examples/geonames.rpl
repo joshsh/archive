@@ -1,8 +1,3 @@
 
-
 # Spokane
 <http://sws.geonames.org/5811696>.
-
-#@prefix : <http://foo#>.
-#@define star:  (/:star/dip)/cons id /union/i/unique.
-#rdfs:Class rdf:type /:star.

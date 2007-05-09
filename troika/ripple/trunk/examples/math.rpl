@@ -1,6 +1,5 @@
 
 
-@prefix : <http://foo#>.
 @define dup2: /dupd/swap/dupd/swap.
 @define max: /:dup2/gt id swap /branch/pop.
 @define min: /:dup2/lt id swap /branch/pop.
@@ -24,8 +23,6 @@
 
 
 ### fibonacci ##########################
-
-@prefix : <http://foo#>.
 
 # Recursive Fibonacci.
 @define fib:

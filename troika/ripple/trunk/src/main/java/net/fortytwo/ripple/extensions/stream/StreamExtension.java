@@ -15,6 +15,7 @@ public class StreamExtension implements Extension
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
 
+		bridge.add( new Each( new RdfValue( mc.createUri( ns + "each" ) ), mc ), mc );
 		bridge.add( new Limit( new RdfValue( mc.createUri( ns + "limit" ) ), mc ), mc );
 		bridge.add( new Scrap( new RdfValue( mc.createUri( ns + "scrap" ) ), mc ), mc );
 		bridge.add( new Union( new RdfValue( mc.createUri( ns + "union" ) ), mc ), mc );

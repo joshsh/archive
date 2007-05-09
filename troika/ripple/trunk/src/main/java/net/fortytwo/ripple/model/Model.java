@@ -106,7 +106,7 @@ public Dereferencer getDereferencer()
 
 		bridge = new ModelBridge();
 		ModelConnection mc = new ModelConnection( this, "for Model constructor" );
-		bridge.add( Operator.OP, mc );
+//		bridge.add( Operator.OP, mc );
 
 		try
 		{

@@ -4,6 +4,18 @@
 @prefix stream:  <http://fortytwo.net/2007/05/ripple/stream#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
+stream:each
+	a rpl:Function ;
+	rpl:arity 1;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "each" ;
+	rdfs:comment "l => each item in l" .
+
 stream:limit
 	a rpl:Function ;
 	rpl:arity 1 ;

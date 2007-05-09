@@ -139,11 +139,11 @@ of the same basic elements.
 
 \textit{URIs} may be ....
 \begin{verbatim}
-<http://dbpedia.org/resource/city/Berlin>.  # a URI reference
+<http://www.w3.org/2004/09/fresnel>.  # a URI reference
 rdfs:Class.              # a qualified name
 :marvin.                 # using the working (default) namespace
 rdfs:.                   # this URI has an empty local name
-:.                       # this often resolves to an ontology
+:.                       # legal, and occasionally meaningful
 \end{verbatim}
 \textit{Keywords} in Ripple are the local names of a fixed set of special URIs.  Currently, the local name of every primitive function is a keyword.
 \begin{verbatim}
@@ -168,12 +168,7 @@ _:tmp1.                  # a bnode with a user-defined id
 :joe/foaf:knows.         # queries themselves are lists
 \end{verbatim}
 
-Currently, Ripple's syntax includes just one symbol not found in Turtle: the slash operator, a prefix which indicates the execution of a program.
-
-
-
-
-
+Currently, Ripple's syntax includes just one symbol not found in Turtle: the slash operator, a prefix which indicates the execution of a program.  Where it is written before an RDF property, it is equivalent to the forward traversal operator of Notation3\footnote{http://www.w3.org/DesignIssues/N3Alternatives}.
 
 \subsection{Commands and Queries}
 
@@ -225,7 +220,7 @@ Ripple currently supports the following directives.
 @prefix foo: <http://example.org/foo#>.
 
 # Define :bar as the list (1 2 3).
-@define bar: (1 2 3).
+@define bar: 1 2 3.
 
 # Remove all statements about :bar
 @undefine bar.
@@ -295,13 +290,13 @@ In Ripple, as in Forth, stack shuffling operations take the place of bound varia
 \begin{verbatim}
 # n => fibonacci(n)
 @define fib:
-    0 1 /rolldown     # push initial value pair and put n on top.
-    (/swap/dupd/add)  # push the step function.
-    /swap/times       # execute the step function n times.
-    /pop.             # select the low value.
+    0 1 /rolldown     # push initial value pair and put n on top
+    (/swap/dupd/add)  # push the step function
+    /swap/times       # execute the step function n times
+    /pop.             # select the low value
 
 # => 13
-5/:fib.
+7/:fib.
 \end{verbatim}
 
 
@@ -336,11 +331,11 @@ When this symbol is encountered at the head of a stack, it has the effect of mak
 \item Any other type of argument effectively becomes an active nullary function with no output
 \end{itemize}
 
-This minimalism accounts for the different appearance of Ripple expressions as opposed to Joy.  Ripple hides its one operator behind a prefixed slash symbol '/', which for RDF predicates is identical to the forward traversal operator in Notation3.  The argument against using the slash in Notation3 itself seems to have been that its counterpart, the backslash, is no good as a symbol for backward traversal\footnote{http://www.w3.org/DesignIssues/N3Alternatives}.  However, this is not an issue for Ripple, as Ripple deliberately does not provide for backward traversal.  Note that the following expressions are equivalent.
+This minimalism accounts for the different appearance of Ripple expressions as opposed to Joy.  Ripple hides its one operator behind a prefixed slash symbol '/'  ........  Note that the following expressions are equivalent.
 
 \begin{verbatim}
 2 /dup.
-2 dup op.
+2 dup rpl:op.
 2 joy:dup rpl:op.
 \end{verbatim}
 
@@ -360,9 +355,9 @@ This command has the effect of pushing a new list, \texttt{(stack:dup rpl:op mat
 The query engine sees this as the list \texttt{(4 :sq rpl:op)}, and converting it to a stack\footnote{visually, the head of the stack is on the right-hand side of an expression}, passes it into an evaluational pipeline which will reduce it to normal form as follows.
 
 \begin{enumerate}
-\item \texttt{(4 :sq op!)} -- this stack has the item \texttt{op} at its head, a special value which is always active.  \texttt{op} effectively tells the evaluator to execute the preceding symbol as a program, which for the list \texttt{:sq} means the nullary operation of list dequotation.  \texttt{:sq} is read in from the triple store and concatenated with the remainder of the stack.
-\item \texttt{(4 dup op! mul op!)} -- again has \texttt{op} at its head, which prompts the evaluator to pop the primitive function \texttt{mul} from the stack and push an active item (we'll call it \texttt{mul!}) which will collect \texttt{mul}'s arguments.  At this point, the evaluator invokes itself recursively, feeding the output channel of the new pipeline into \texttt{mul!} and feeding \texttt{mul!}'s output into the original pipeline for a second round of reduction.  A stack will travel this circuit until it is in normal form or has been exhausted.
-\item \texttt{(4 4 mul!)} -- \texttt{mul!} requires two arguments, so the stack beneath it must be reduced to two levels.  In doing so, a program \texttt{(4 dup op!)} consisting of the \texttt{dup} primitive applied to an argument of \texttt{4} is discovered and executed, and the resulting stack \texttt{(4 4)} is passed in a curried fashion to the \texttt{mul!} program.  \texttt{mul!} applies its own rewrite rule, consuming both integer arguments and pushing their product onto the stack.
+\item \texttt{(4 :sq rpl:op!)} -- this stack has the item \texttt{rpl:op} at its head, a special value which is always active.  \texttt{rpl:op} effectively tells the evaluator to execute the preceding symbol as a program, which for the list \texttt{:sq} means the nullary operation of list dequotation.  \texttt{:sq} is read in from the triple store and concatenated with the remainder of the stack.
+\item \texttt{(4 dup rpl:op! mul rpl:op!)} -- again has \texttt{rpl:op} at its head, which prompts the evaluator to pop the primitive function \texttt{mul} from the stack and push an active item (we'll call it \texttt{mul!}) which will collect \texttt{mul}'s arguments.  At this point, the evaluator invokes itself recursively, feeding the output channel of the new pipeline into \texttt{mul!} and feeding \texttt{mul!}'s output into the original pipeline for a second round of reduction.  A stack will travel this circuit until it is in normal form or has been exhausted.
+\item \texttt{(4 4 mul!)} -- \texttt{mul!} requires two arguments, so the stack beneath it must be reduced to two levels.  In doing so, a program \texttt{(4 dup rpl:op!)} consisting of the \texttt{dup} primitive applied to an argument of \texttt{4} is discovered and executed, and the resulting stack \texttt{(4 4)} is passed in a curried fashion to the \texttt{mul!} program.  \texttt{mul!} applies its own rewrite rule, consuming both integer arguments and pushing their product onto the stack.
 \item \texttt{(16)} -- this stack has a passive item at its head, so it finds its way into the top-level evaluator's output channel as a query result:
 \end{enumerate}
 
@@ -514,7 +509,7 @@ rdf:_2  ("Review of Designing with Web Standards, by Jeffrey Zeldman, by tom")
 
 The last example was basically about tree traversal.  In this example, we'll traverse a more complicated and heterogenous structure: the FOAF network.
 
-First, another helper program.  The :opt function will act like the choice operator in a regular expression: if applying its first argument to its second produces a match, then that match will be added to the result along with the original value.  If it does not produce a result, nothing is added.
+First, another helper program.  The :optional function will act like the choice operator in a regular expression: if applying its first argument to its second produces a match, then that match will be added to the result along with the original value.  If it does not produce a result, nothing is added.
 
 \begin{verbatim}
 @define opt:  id/union/i.
@@ -523,17 +518,17 @@ First, another helper program.  The :opt function will act like the choice opera
 The following query illustrates its behavior.
 
 \begin{verbatim}
-5 (10 /add) /:opt.
+5 (10 /add) /:optional.
 \end{verbatim}
 
 All we're going to do is to see how many FOAFers we can get to from a single point.  Let's use the foaf:knows and owl:sameAs properties as a kind of iterator to step through the graph
 
 \begin{verbatim}
-@define foafStep:  (foaf:knows owl:sameAs /union/i) /:opt/unique.
+@define foafStep:  (foaf:knows owl:sameAs /union/i) /:optional/unique.
 \end{verbatim}
 
-There are a number of things going on here.  At the highest level, the stream:unique instance demands an argument stack which is reduced to one level.  That forces the dequotation of the :opt function, which connects
-the output of a joy:id and the anonymous quotation with the input of the stream:unique.  The quoted expression applies both foaf:knows and owl:sameAs to their argument, passing their output into :opt.  At the lowest level, the program
+There are a number of things going on here.  At the highest level, the stream:unique instance demands an argument stack which is reduced to one level.  That forces the dequotation of the :optional function, which connects
+the output of a joy:id and the anonymous quotation with the input of the stream:unique.  The quoted expression applies both foaf:knows and owl:sameAs to their argument, passing their output into :optional.  At the lowest level, the program
 applies both foaf:knows and owl:sameAs to the argument stack, funnelling their output into the same compositional
 pipeline as the original input.  The result is everything you put into the program, plus any additional results gained by following foaf:knows or owl:sameAs edges.  stream:unique guarantees that the program will not issue the same output twice, which is important when we're dealing with a graph with cycles.
 
@@ -554,7 +549,7 @@ Apply it twice.
 
 
 
-\section{Discussion and use cases}
+\section{Discussion and future work}
 
 \subsection{Turing-complete languages and the Semantic Web stack}
 
@@ -567,17 +562,17 @@ open world / closed world
 
 Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains referentially transparent with respect to its one RDF query operation: forward traversal.  In other words, query results remain independent of the order in which queries are executed, and thus the order in which new linked data is drawn into the execution environment.  However, as the current implementation does not include any non-monotonic primitives (in fact, doing so would require some redesign of Ripple's push-style evaluator), the open world question is orthogonal to Ripple's actual processing model.  That may change if counting or sorting query results becomes important.
 
-\subsection{Graph transformations, and other side effects}
+\subsection{Graph transformation, and other side effects}
 
-
+One interesting application of linked programs is for defining mappings 
 
 \begin{verbatim}
 @define subst:
-    # create a single new node
+    # create a new node
     /new
     (   # keep the original stack
         pop
-        (   # create an edge
+        (   # create an edge from the new node
             (/dupd/swap)/dip/i/dip/swap/assert
             # discard this branch (the side-effect is done)
             scrap 2/ary/i)
