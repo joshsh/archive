@@ -150,6 +150,26 @@ stack:dip
 	rdfs:label "dip" ;
 	rdfs:comment "x y  =>  /y x" .
 
+stack:dipd
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rdfs:comment "placed above the executed program y on the stack" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rdfs:comment "the program to be executed" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rdfs:comment "the program to be executed" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "dipd" ;
+	rdfs:comment "x y z  =>  /z x y" .
+
 stack:dup
 	a rpl:Function ;
 	rpl:arity 1 ;

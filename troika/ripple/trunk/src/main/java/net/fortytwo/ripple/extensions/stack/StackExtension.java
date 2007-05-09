@@ -27,6 +27,7 @@ public class StackExtension implements Extension
 		bridge.add( new Cat( new RdfValue( mc.createUri( ns + "cat" ) ), mc ), mc );
 		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
 		bridge.add( new Dip( new RdfValue( mc.createUri( ns + "dip" ) ), mc ), mc );
+		bridge.add( new Dipd( new RdfValue( mc.createUri( ns + "dipd" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
 		bridge.add( falseVal = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
