@@ -159,8 +159,8 @@ swap.                    # same as stack:swap
 \end{verbatim}
 \textit{Blank nodes} lose their identity between sessions, but it's often useful to refer to them within a session.
 \begin{verbatim}
-_:node129n4ttifx2.       # a bnode with a (presumably) generated id
-_:tmp.                   # a bnode with a user-defined id
+_:node129n4ttifx2.       # a bnode with a generated id
+_:tmp1.                  # a bnode with a user-defined id
 \end{verbatim}
 \textit{Lists} are indicated by parentheses.
 \begin{verbatim}
@@ -295,10 +295,10 @@ In Ripple, as in Forth, stack shuffling operations take the place of bound varia
 \begin{verbatim}
 # n => fibonacci(n)
 @define fib:
-    0 1 /rolldown     # Push initial value pair and put n on top.
-    (/swap/dupd/add)  # Push the step function.
-    /swap/times       # Execute the step function n times.
-    /pop.             # Take the low value.
+    0 1 /rolldown     # push initial value pair and put n on top.
+    (/swap/dupd/add)  # push the step function.
+    /swap/times       # execute the step function n times.
+    /pop.             # select the low value.
 
 # => 13
 5/:fib.
@@ -563,6 +563,40 @@ Apply it twice.
 open world / closed world
 
 
+\subsection{Open or closed?}
+
+Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains referentially transparent with respect to its one RDF query operation: forward traversal.  In other words, query results remain independent of the order in which queries are executed (thus, the order in which new linked data is drawn into the execution environment).  However, as the language currently does not implement any non-monotonic primitives (in fact, doing so would require some redesign of the push-style evaluator), the open world question is orthogonal to Ripple's actual processing model.  That may change if counting or sorting query results becomes important.
+
+\subsection{Graph transformations, and other side effects}
+
+
+
+\begin{verbatim}
+@define subst:
+    # create a single new node
+    /new
+    (   # keep the original stack
+        pop
+        (   # create an edge
+            (/dupd/swap)/dip/i/dip/swap/assert
+            # discard this branch (the side-effect is done)
+            scrap 2/ary/i)
+        # apply both branches
+        /union/i
+    # apply each replacement pair in turn
+    ) /fold/popd.
+
+@prefix ex: <http://example.org/ex#>.
+
+# Maps from a minimal FOAF vocabulary to FOAF.
+@define exFoafMapping:
+    (rdf:type rdf:type)     # copy any rdf:type edges
+    (ex:name foaf:name)     # create ex:name from foaf:name
+    (ex:knows foaf:knows).  # create ex:knows from foaf:knows
+
+# TBL's FOAF => minimal FOAF
+/:tbl :exFoafMapping/:subst.
+\end{verbatim}
 
 
 
@@ -572,9 +606,6 @@ open world / closed world
 
 
 
-
-
-\subsection{Graph Primitives}
 
 In the graph: namespace you'll find a list of primitives which might end up being useful for graph transformations.  The nullary primitive graph:new creates a new blank node, to which we can then attach statements using graph:assert
 
