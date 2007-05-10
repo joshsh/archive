@@ -7,18 +7,24 @@
 20 "owl" /pingTheSemanticWeb.
 
 
+# uri => uri (having pinged the Semantic Web)
+@define ping:
+    /toString/urlEncoding
+    "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
+    /get.
 
-@prefix : <http://foo#>.
+
 @prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
-@define pingStr: /toString/urlEncoding "http://pingthesemanticweb.com/rest/?url=" /swap/strCat.
-@define ping: /:pingStr/urlGet.
+@define rippleDocuments:
+    rpl:
+    demo:
+    <http://fortytwo.net/2007/03/ripple/doap#>
+    etc:
+    graph:
+    math:
+    stack:
+    stream:
+    .
 
-rpl:/:ping.
-etc:/:ping.
-graph:/:ping.
-intmath:/:ping.
-joy:/:ping.
-stream:/:ping.
-demo:/:ping.
+:rippleDocuments/each/:ping.
 
-<http://fortytwo.net/2007/03/ripple/doap#>/:ping.

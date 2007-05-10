@@ -5,6 +5,19 @@
 @prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
+etc:get
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "url" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "get" ;
+	rdfs:comment "issues a GET request and produces the received data as a string" .
+
 etc:pingTheSemanticWeb
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -130,16 +143,3 @@ etc:urlEncoding
 	rpl:returnType xsd:string ;
 	rdfs:label "urlEncoding" ;
 	rdfs:comment "finds the URL encoding of a string" .
-
-etc:urlGet
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "url" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "urlGet" ;
-	rdfs:comment "dereferences a URL and produces the received data as a string" .

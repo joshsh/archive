@@ -33,10 +33,10 @@
 
 
 % first the title is needed
-\title{Ripple: Functional Programs as Linked Data}
+\title{Functional Programs as Linked Data}
 
 % a short form should be given in case it is too long for the running head
-\titlerunning{Ripple: Functional Programs as Linked Data}
+\titlerunning{Functional Programs as Linked Data}
 
 % the name(s) of the author(s) follow(s) next
 %
@@ -49,11 +49,11 @@ Joshua Shinavier
 \newline
 \url{josh@fortytwo.net}}
 %
-\authorrunning{Ripple: Functional Programs as Linked Data}
+\authorrunning{Functional Programs as Linked Data}
 % (feature abused for this document to repeat the title also on left hand pages)
 
 % the affiliations are given next
-\institute{\footnote{The writing of this paper was supported by Soph-Ware Associates}Soph-Ware Associates, Inc.,\\
+\institute{Soph-Ware Associates, Inc.,\\
 624 W. Hastings Rd, Spokane, WA 99218 USA\\
 \url{http://www.soph-ware.com}}
 
@@ -64,8 +64,8 @@ Joshua Shinavier
 % "llncs.dem" accompanies the document class "llncs.cls".
 %
 
-\toctitle{Ripple: Functional Programs as Linked Data}
-\tocauthor{Ripple: Functional Programs as Linked Data}
+\toctitle{Functional Programs as Linked Data}
+\tocauthor{Functional Programs as Linked Data}
 \maketitle
 
 
@@ -83,43 +83,22 @@ Ripple is a scripting language expressed in RDF lists.  Its scripts both operate
 
 "Linked data"\footnote{http://www.w3.org/DesignIssues/LinkedData.html} is the subset of the Semantic Web which associates statements about the "thing" identified by a particular URI with the corresponding web location.  An appropriate HTTP request for such a URI should produce an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is \emph{complete}, and the software may reject statements about the URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation: forward traversal.  For instance, if s and p are resources, then the set of triples s/p with s as their subject and p as their predicate can be determined by a single HTTP request, and will not change, despite any subsequent operations.  Here, the expression /p represents the application of a function which maps a subject s to the set of all objects o such that the statement (s, p, o) exists.  Syntactically, it is no different than the application of a primitive function or the dequotation of a list (see below).
 
-\subsection{RDF Equivalence}
 
-Not only does Ripple \emph{operate} on linked data, but its programs are meant to \emph{be} linked data as well.  Every Ripple expression is equivalent to a collection of type rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is transparent to the user application.  Because Ripple treats rdf:Properties as functions, the application may navigate a list using either list primitives or the RDF collections
-vocabulary.  For instance:
 
-\begin{verbatim}
-(1 2 3)/rdf:first.
-\end{verbatim}
 
-yields 1, and
+Ripple is intermediate between very simple 
+and relatively complex, "black box" query languages such as SPARQL.
 
-\begin{verbatim}
-(1 2 3)/rdf:rest/rdf:rest/rdf:first.
-\end{verbatim}
+simple enough to be easily expressed in RDF itself
 
-yields 3.  If we give an expression a URI, it thereby becomes a resource which can be incorporated into further expressions.
-
-\begin{verbatim}
-@define third:  /rdf:rest/rdf:rest/rdf:first.
-\end{verbatim}
-
-If the base URI of :third is such that it is dereferenceable -- for instance, if Ripple is attached to a triple store with a SPARQL endpoint at a web location below the base URI -- then :third is a valid program not only to the Ripple implementation executing on the server itself, but also on any client machine.  If demo: represents the base URI, then a query like the following will yield the same result regardless of where or when it is performed.
-
-\begin{verbatim}
-(1 2 3)/demo:third.
-\end{verbatim}
+primitive functions
 
 
 
 
 
 
-
-
-
-Unless otherwise
-
+Note: in the examples which follow, the namespace prefixes \texttt{rdf}, \texttt{rdfs}, \texttt{xsd}, \texttt{rpl}, \texttt{stack}, \texttt{stream}, \texttt{math}, \texttt{graph}, and \texttt{etc} are predefined.  Typing any of these prefixes, followed by a tab character, in the interactive interpreter will reveal a number of terms in the corresponding namespace.
 
 
 
@@ -130,14 +109,10 @@ Unless otherwise
 
 \subsection{Lexical syntax}
 
-
 Ripple's text syntax is very close to Turtle\footnote{http://www.dajobe.org/2004/01/turtle/}, and is made up of most
 of the same basic elements.
-\newline
 
-
-
-\textit{URIs} may be ....
+\textit{URIs} may be given in full or abbreviated using namespace prefixes.
 \begin{verbatim}
 <http://www.w3.org/2004/09/fresnel>.  # a URI reference
 rdfs:Class.              # a qualified name
@@ -149,7 +124,7 @@ rdfs:.                   # this URI has an empty local name
 \begin{verbatim}
 swap.                    # same as stack:swap
 \end{verbatim}
-\textit{RDF Literals}.
+\textit{RDF Literals} are represented as numbers and strings.
 \begin{verbatim}
 42.                      # an integer (xsd:integer for now)
 3.1415926535.            # a floating point value (xsd:double)
@@ -167,54 +142,15 @@ _:tmp1.                  # a bnode with a user-defined id
 ("apple" "banana").      # a nested rdf:List
 :joe/foaf:knows.         # queries themselves are lists
 \end{verbatim}
+Apart from its directives, Ripple's syntax includes just one symbol not found in Turtle: the slash operator, a prefix which indicates the execution of a program.  Where it is written before an RDF property, it is equivalent to the forward traversal operator\footnote{http://www.w3.org/DesignIssues/N3Alternatives} of Notation3.  A likely extension to the language includes additional prefixed symbols as quantifiers for regular path expressions: \texttt{/?}, \texttt{/*}, and \texttt{/+}.  For example, in:
+\begin{verbatim}
+@define smush: /*owl:sameAs.
+\end{verbatim}
 
-Currently, Ripple's syntax includes just one symbol not found in Turtle: the slash operator, a prefix which indicates the execution of a program.  Where it is written before an RDF property, it is equivalent to the forward traversal operator of Notation3\footnote{http://www.w3.org/DesignIssues/N3Alternatives}.
 
 \subsection{Commands and Queries}
-
-
-At the prompt, Ripple will accept either a directive
-
-\begin{verbatim}
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-\end{verbatim}
-
-or a query
-
-\begin{verbatim}
-rdf:List.
-\end{verbatim}
-
-A directive is a command which performs a named task.  A query is an expression which is passed to the query processor for evaluation, yielding any number of values.  For example, a query for a constant value always yields a single result:
-
-\begin{verbatim}
-42.
-\end{verbatim}
-
-Other queries may be multivalued in nature.  Once again:
-
-\begin{verbatim}
-<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows.
-\end{verbatim}
-
-This is an expression representing all of the individuals foaf:known by Tim
-Berners-Lee, and results in several values.  Ripple's compositional plumbing
-will distribute further operations over each of these values, so the expression
-
-\begin{verbatim}
-<http://www.w3.org/People/Berners-Lee/card#i> /foaf:knows/foaf:name.
-\end{verbatim}
-
-has the effect of retrieving all of the names of all of the individuals
-foaf:known by TBL.  When there are statements available about a value, the
-interpreter displays them in a tree view.
-
-
-\subsection{Directives}
-
-Ripple currently supports the following directives.
+The application distinguishes between two kinds of statements: \textit{queries}, which are expressions to be evaluated by the query processor, and commands or \textit{directives}, which perform specific tasks.  Ripple currently supports the following kinds of directives.
 \newline
-
 \begin{verbatim}
 # Define a namespace prefix foo.
 @prefix foo: <http://example.org/foo#>.
@@ -235,58 +171,23 @@ Ripple currently supports the following directives.
 @quit.
 \end{verbatim}
 
-Note: Ripple's command-line interface includes a tab completor which keeps track of all directives and keywords, as well as all qualified names of URIs which make an appearance in the triple store.  It saves on typing and can be a good way to get a rough idea of what's in a namespace.  For instance, try typing any of the following...
 
-\begin{verbatim}
-etc:
-graph:
-intmath:
-joy:
-stream:
-\end{verbatim}
-
-...followed by a tab character, to get a list of primitive functions in each
-of Ripple's library namespaces.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Concatenative notation}
+\subsection{Compositional syntax}
 
 At the highest level, Ripple queries are expressed in postfix notation, or in \textit{diagrammatic order}.  Each query is a list in which the concatenation of symbols represents the composition of functions.  When the functions are RDF properties, a query is equivalent to a path expression:
 
 \begin{verbatim}
 # => "The RDF Vocabulary (RDF)"
-(1 2 3)/rdf:type/rdfs:isDefinedBy/dc:title.
+("apple" "banana")/rdf:type/rdfs:isDefinedBy/dc:title.
 \end{verbatim}
 
-The expression \texttt{(1 2 3)} represents a nullary function which produces a list.  The property \texttt{rdf:type}  consumes the list (properly speaking, a stack containing a list) and produces an intermediate result, \texttt{rdf:List}, which is in turn consumed by \texttt{rdfs:isDefinedBy} to produce the \texttt{rdf:} schema.  Finally, \texttt{dc:title} takes us from the schema to the name of the schema.
-The same syntax applies to primitive functions.  For instance, the following query calls a built-in "Ping the Semantic Web" primitive:
+This particular expression takes us from the list \texttt{("apple" "banana")} to its type \texttt{rdf:List}, from the type to the ontology \texttt{rdf:} which defines it, and from the ontology to its title, \texttt{"The RDF Vocabulary (RDF)"}.  The same idea applies to primitive functions.  Consider the following query, which calls a built-in "Ping the Semantic Web" primitive.
 \begin{verbatim}
 # => recently pinged DOAP documents
 10 "doap" /pingTheSemanticWeb/toString.
 \end{verbatim}
-As before, we can imagine data (a \textit{stream} of lists or \textit{stacks}) flowing from the left hand side of the expression and emerging from the right hand side of the expression after undergoing a transformation of some kind.  In this case, a stream of one stack containing the two arguments to \texttt{pingTheSemanticWeb} becomes a stream of ten stacks containing URIs which \texttt{toString} then converts to string literals.
-In Ripple, as in Forth, stack shuffling operations take the place of bound variables in more complex expressions:
+Here, too, we can imagine data (a \textit{stream} of lists or \textit{stacks}) flowing from the left hand side of the expression and emerging from the right hand side of the expression after undergoing a transformation of some kind.  In this case, a stream of one stack containing the two arguments to \texttt{pingTheSemanticWeb} becomes a stream of ten stacks containing URIs which \texttt{toString} then converts to string literals.
+In Ripple, as in Forth, stack shuffling operations take the place of bound variables in complex expressions:
 \begin{verbatim}
 # n => fibonacci(n)
 @define fib:
@@ -300,22 +201,37 @@ In Ripple, as in Forth, stack shuffling operations take the place of bound varia
 \end{verbatim}
 
 
+\subsection{RDF representation}
+Every Ripple program is expressible in RDF, where it takes the form of a simple rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is implicit.  For example, you may navigate a list using either list primitives or the RDF collections vocabulary, interchangeably.
+\begin{verbatim}
+("apple" "banana")/rdf:first.  # => "apple"
+("apple" "banana")/uncons/pop. # => "apple"
+\end{verbatim}
+As RDF lists, Ripple programs are built up of four kinds of items, each of which has a special behavior when interpreted as a function:
+\begin{enumerate}
+\item RDF properties -- functions of one argument which map subjects to objects
+\item primitive functions -- built-in functions with custom behavior
+\item other lists -- functions of no arguments for which execution means dequotation, or "removing the parentheses"
+\item everything else -- functions of no arguments with no output
+\end{enumerate}
+Finally, there is one special value in the language: the rpl:op operator, which causes the program it follows to be executed.  This is the same as the slash prefix, so for example, \texttt{(2 /dup)} is just a more compact way of writing \texttt{(2 dup rpl:op)}
+When we give a program a URI, we're adding its definition to the same RDF model from which our query results are drawn:
+\begin{verbatim}
+@define hello:
+    "Hello world!".
+\end{verbatim}
+Given an appropriate base URI and web-visible triple store, the program itself becomes a part of the global graph of linked data, enabling remote users and applications to execute it or build upon it arbitrarily.
+
+
+\section{Query model}
+
+Ripple's query model combines a stack-based computational scheme with a functional "pipes and filters" pattern.  The stack paradigm makes for minimal syntax at the RDF level, while the pipeline mechanism accommodates RDF's multivalued properties by distributing operations over intermediate result sets.
+.......................
 
 
 
 
-
-
-
-
-\section{Semantics}
-
-Ripple's query model combines the principles of stack manipulation with a functional "pipes and filters" pattern.  The stack paradigm makes for minimal syntax at the RDF level, while the pipeline approach allows for RDF's multivalued properties.
-
-
-
-
-\subsection{Computational Model}
+\subsection{Computational model}
 
 Like Joy (and many other functional languages), Ripple's fundamental data structure is the list.  When executed as a program, a list becomes a stack.  Computation occurs at the head of the stack (visually, on the right hand side of an expression), and halts either when the stack is empty or when a "passive" item (a constant) is found at the head of the stack.  Ripple's primitive functions have an individual \textit{arity} equal to the depth to which the stack must be reduced before it is accepted as input to the function.  Whereas Joy's many operators and combinators are active until placed inside of a quotation (a list), in Ripple, nearly everthing is either a list or is treated as a list, and is therefore quoted by default.  However, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
 
@@ -340,15 +256,20 @@ This minimalism accounts for the different appearance of Ripple expressions as o
 \end{verbatim}
 
 
+
+
+
 Suppose we define a new term in the working namespace, called \texttt{sq}.
 
 \begin{verbatim}
+# x => x*x
 @define sq: /dup/mul.
 \end{verbatim}
 
 This command has the effect of pushing a new list, \texttt{(stack:dup rpl:op math:mul rpl:op)}, to the triple store (conceptually, to the global RDF graph).  The URI \texttt{:sq} becomes the head of the list.  Now let's evaluate a query which references \texttt{:sq}.
 
 \begin{verbatim}
+# => 16
 4/:sq.
 \end{verbatim}
 
@@ -385,36 +306,32 @@ If we compose it with another query, the second query needs to be capable of con
 
 To this end, Ripple replaces functions with "instances" of functions, which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of stream:limit (which counts its input stacks and stops transmitting them after a certain point) or of stream:unique (which remembers its input stacks, and will not transmit a duplicate).
 
-\section{The Demo Application}
-
-To begin an interpreter session, use one of the shortcut scripts (ripple or ripple.bat) or type:
-
-\begin{verbatim}
-java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
-\end{verbatim}
-
-The demo application uses a RDF/XML file to save state between sessions, instead of a database.  The file demo-cache.rdf contains all of data which would otherwise be drawn in on-the-fly as the interpreter works through the examples in this document.  To use it, type:
-
-\begin{verbatim}
-./ripple demo-cache.rdf
-\end{verbatim}
-
-Try the examples without the cache to convince yourself that application will arrive at the same results either way, although with an obvious difference in speed.
-
-All of the terms defined in the examples have been written to this dereferenceable namespace:
-
-\begin{verbatim}
-@prefix :  <http://fortytwo.net/2007/03/ripple/demo#>.
-\end{verbatim}
-
-You can use this directive once and then simply use the terms from the examples without defining them.  The query engine will dereference them as needed.
-
 
 
 \subsection{Recursion}
 
 There is no special trick to named recursion in Ripple; just use the name of the to-be-defined program in the definition body, as you would any other program.  It's a URI reference which won't be dereferenced until after the definition has been pushed to the triple store.
 
+
+\begin{verbatim}
+pingTheSemanticWeb/rpl:parameters /:listItems.
+\end{verbatim}
+
+Ripple does not yet implement any of Joy's primitives for anonymous recursion.
+
+
+\section{Examples}
+
+
+
+
+
+
+\subsection{Aggregate types}
+
+
+\subsection{Recursion}
+Owing to the global nature of URIs, recursive definition is uncomplicated in Ripple.  Functions may reference each other, and themselves, arbitrarily.
 \begin{verbatim}
 # n => n!
 @define fact:
@@ -427,228 +344,140 @@ There is no special trick to named recursion in Ripple; just use the name of the
 5/:fact.
 \end{verbatim}
 
-An RDF use case:
+\subsection{Exploring a FOAF neighborhood}
 
-\begin{verbatim}
-# l => all items in l
-@define listItems:
-    rdf:first               # grab the first item
-    (/rdf:rest/:listItems)  # grab all items in the rest of the list
-    /union 2/ary /i.
-\end{verbatim}
-
-This is a program which retrieves all of the elements of a list (in other words, it makes a stream out of a list).  Note: the /swap/swap function is just a trick to keep the quotation from unraveling too soon.  It effectively says: "this quotation has an arity of 1".  Apply :listItems to look at etc:pingTheSemanticWeb's parameters.
-
-\begin{verbatim}
-pingTheSemanticWeb/rpl:parameters /:listItems.
-\end{verbatim}
-
-Ripple does not yet implement any of Joy's primitives for anonymous recursion.
-
-
-\section{Examples}
-
-\subsection{Searching and Filtering in Revyu.com}
-
-Revyu.com links reviewers to reviews, reviews to things, and (some) things to
-books in the RDF Book Mashup.  First, some abbreviations:
-
-To start with, we'll walk the graph from reviewer Tom to each of his reviews.
+The ability to request and aggregate RDF metadata on the fly gives Ripple's query engine the properties of a web crawler.  "Intelligent" applications aside, there are many conceivable use cases for simply discovering and aggregating a large chunk of data in a configurable fashion.  The following program targets the linked data of the FOAF network, beginning with Tim Berners-Lee's profile.
 \begin{verbatim}
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
 
-@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+# foaf1 => foaf1, foaf2, foaf3, ...
+@define foafStep:   # iterator for a FOAF crawler
+    (   id          # include foaf1 itself
+        owl:sameAs  # include nodes identified with foaf1
+        foaf:knows  # include those foaf:known by foaf1
+    )/each/i        # apply all three patterns at once
+    /unique.        # eliminate duplicate results
+
+# => names of TBL and friends, and of friends of friends
+<http://www.w3.org/People/Berners-Lee/card#i>
+    :foafStep 2/times /foaf:name.
 \end{verbatim}
 
-We've just defined a program which, when executed, will find the objects of all
-foaf:made edges from Tom.  To do so, dequote it.
-{\it Note: if you did not load the demo cache above, this will take a while (and possibly annoy someone).  'tail -f ripple.log' is my usual reaction to crawler boredom.}
+\subsection{Searching and filtering in Revyu.com}
+
+Revyu.com is one of many\footnote{http://esw.w3.org/topic/TaskForces/CommunityProjects/LinkingOpenData/DataSets} innovative web services which offer an RDF view of their contents.  The service links reviewers to reviews, reviews to things, and some things to book metadata in the RDF Book Mashup\footnote{http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/}.  Below, we're interested not so much in gathering a large body of data as in sifting through it in search of a few....................................
 
 \begin{verbatim}
-/:tomsReviews.
-\end{verbatim}
+# a f => a, if a/f is true, otherwise nothing
+@define restrict:
+    /dupd/i    # apply the filter criterion, f
+        id     # keep the stack if a/f is true
+        scrap  # throw the stack away if it isn't
+    /branch.
 
-This gives us over 100 results, which is more than we want to wade through, so let's filter out everything except for the more favorable reviews.  For this we will need a new program which discards any review with a rating of less than 4.
+@prefix scom: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
 
-\begin{verbatim}
+# r => r, if r is a book review, otherwise nothing
+@define bookReviewsOnly:
+    (   /foaf:primaryTopic          # from review to topic
+        /owl:sameAs                 # from topic to possible book
+        /rdf:type scom:Book /equal  # is it really a book?
+    )/:restrict.
+
 @prefix rev:  <http://purl.org/stuff/rev#>.
 
-@define restrict:  dup/swap/dip/i id scrap /ifte.
-@define favorableOnly:  (/rev:rating 3 /gt)/:restrict.
+# => labels of all of Tom's book reviews
+<http://revyu.com/people/tom> /foaf:made
+    /:bookReviewsOnly              # books only
+    (/rev:rating 3 /gt)/:restrict  # 4 stars or better
+    /rdfs:label.                   # from review to label
 \end{verbatim}
-
-:restrict is a helper program which rejects any input it receives as its second argument which does not pass the boolean criterion that is its first argument.  The last three primitives in the expression are joy:id, which is the identity function, stream:scrap, which simply discards all of its input, and joy:ifte (if-then), which conditionally applies either of two functions.  The first half of the expression is pure stack manipulation.
-
-Apply this script to Tom's reviews, and we have
-
+The query yields two results:
 \begin{verbatim}
-/:tomsReviews /:favorableOnly.
-\end{verbatim}
-
-This also gives us too many results, so let's look at books.  We happen to know that some books tie in to the RDF Book Mashup with owl:sameAs links, so we'll restrict our results to them.
-
-\begin{verbatim}
-@prefix owl:  <http://www.w3.org/2002/07/owl#>.
-@prefix scom: <http://sites.wiwiss.fu-berlin.de/suhl/bizer
-/bookmashup/simpleCommerceVocab01.rdf#>.
-
-@define bookReviewsOnly:
-    (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:restrict.
-/:tomsReviews/:favorableOnly/:bookReviewsOnly/rdfs:label.
-\end{verbatim}
-
-The two composed filters leave us with just two results.  We grab their labels
-
-\begin{verbatim}
-rdf:_1  ("Review of The Unwritten Rules of Phd Research, by tom")
+rdf:_1  ("Review of The Unwritten Rules of Phd Research, by Gordon Rugg and Marian Petre, by tom")
 rdf:_2  ("Review of Designing with Web Standards, by Jeffrey Zeldman, by tom")
 \end{verbatim}
+It is worth pointing out that, unlike the FOAF example, this program places a heavy burden on a single web server.  In this case, it would be in the best interest of both server and client to offload the query to the web service, if possible.  Knowing when to use an API for federated queries, as opposed aggregating data, probably has more to do with the economics of distributed computing than with the rest of this paper.  However, the API itself should be particularly simple.  It might be as simple as the passing of the dereferenceable URI of a single expression, to be evaluated remotely.  Perhaps the generation of a REST service and an OWL-S service description could be automated based on a particular query pattern.
 
+\subsection{Graph transformations and other side effects}
 
-\subsection{Example \#2: Exploring a FOAF Neighborhood}
-
-The last example was basically about tree traversal.  In this example, we'll traverse a more complicated and heterogenous structure: the FOAF network.
-
-First, another helper program.  The :optional function will act like the choice operator in a regular expression: if applying its first argument to its second produces a match, then that match will be added to the result along with the original value.  If it does not produce a result, nothing is added.
+The Ripple implementation includes a handful of "experimental" primitives which may be useful for graph transformations.  As these primitives affect the state of their environment (for instance, by adding or removing statements), in the context of a functional language, they are to be used with caution.  The following is an example of a "safe" application of the \texttt{new} and \texttt{assert} primitives.  It transforms a resource description by creating a new blank node which retains and renames a few of the original node's edges.
 
 \begin{verbatim}
-@define opt:  id/union/i.
-\end{verbatim}
-
-The following query illustrates its behavior.
-
-\begin{verbatim}
-5 (10 /add) /:optional.
-\end{verbatim}
-
-All we're going to do is to see how many FOAFers we can get to from a single point.  Let's use the foaf:knows and owl:sameAs properties as a kind of iterator to step through the graph
-
-\begin{verbatim}
-@define foafStep:  (foaf:knows owl:sameAs /union/i) /:optional/unique.
-\end{verbatim}
-
-There are a number of things going on here.  At the highest level, the stream:unique instance demands an argument stack which is reduced to one level.  That forces the dequotation of the :optional function, which connects
-the output of a joy:id and the anonymous quotation with the input of the stream:unique.  The quoted expression applies both foaf:knows and owl:sameAs to their argument, passing their output into :optional.  At the lowest level, the program
-applies both foaf:knows and owl:sameAs to the argument stack, funnelling their output into the same compositional
-pipeline as the original input.  The result is everything you put into the program, plus any additional results gained by following foaf:knows or owl:sameAs edges.  stream:unique guarantees that the program will not issue the same output twice, which is important when we're dealing with a graph with cycles.
-
-Let's apply :foafStep just once to Tim Berners-Lee's URI (note: /foaf:name should weed out anything we get from :foafStep which isn't at least implicitly a foaf:Person).
-
-\begin{verbatim}
-@define tbl: <http://www.w3.org/People/Berners-Lee/card#i>.
-/:tbl/foaf:name.
-/:tbl/:foafStep/foaf:name.
-\end{verbatim}
-
-Apply it twice.
-
-\begin{verbatim}
-/:tbl :foafStep 2 /times /foaf:name.
-\end{verbatim}
-
-
-
-
-\section{Discussion and future work}
-
-\subsection{Turing-complete languages and the Semantic Web stack}
-
-
-
-open world / closed world
-
-
-\subsection{Open world?  Closed world?}
-
-Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains referentially transparent with respect to its one RDF query operation: forward traversal.  In other words, query results remain independent of the order in which queries are executed, and thus the order in which new linked data is drawn into the execution environment.  However, as the current implementation does not include any non-monotonic primitives (in fact, doing so would require some redesign of Ripple's push-style evaluator), the open world question is orthogonal to Ripple's actual processing model.  That may change if counting or sorting query results becomes important.
-
-\subsection{Graph transformations, and other side effects}
-
-One interesting application of linked programs is for defining mappings between ontologies.
-
-\begin{verbatim}
-# node map => a new node with mapped properties
-@define mappedNode:
+# node map => a new node with "mapped" edges
+@define mapped:
     /each/i               # distribute over a list of pairs
     /new                  # create a new node
     i/dipd/rotate/assert  # assert a mapped statement
-    1/limit.              # output the node just once
+    1/limit.              # produce the node just once
 
 # Maps to a minimal FOAF-like vocabulary.
 @prefix ex: <http://example.org/minimalFoaf#>.
-@define minFoafMap:
+@define myMap:
     (rdf:type rdf:type)     # copy any rdf:type edges
     (foaf:name ex:name)     # map foaf:name to ex:name
     (foaf:knows ex:knows).  # map foaf:knows to ex:knows
 
 # => minimal FOAF for TBL
-/:tbl :minFoafMap/:mappedNode.
+/:tbl :myMap/:mapped.
 \end{verbatim}
 
-
-
-
-
-
-
-
-
-
-In the graph: namespace you'll find a list of primitives which might end up being useful for graph transformations.  The nullary primitive graph:new creates a new blank node, to which we can then attach statements using graph:assert
-
+Other side effects are more subtle.  For instance, this program affects the "Ping the Semantic Web" service which we queried earlier:
 \begin{verbatim}
-@define Arthur: /new
-    rdfs:type foaf:Person /assert
-    foaf:name "Arthur Dent" /assert.
+# uri => uri (having pinged the Semantic Web)
+@define ping:
+    /toString/urlEncoding
+    "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
+    /get.
+
+# => PTSW's response to a ping of Ripple's DOAP URI/document
+<http://fortytwo.net/2007/03/ripple/doap#>/:ping.
 \end{verbatim}
+The next time we use the \texttt{pingTheSemanticWeb} primitive, we might see Ripple's DOAP in the query results.  Other potentially useful side-effects include the sending of an e-mail or the firing of a system-specific event.
 
-To remove statements from the graph, use graph:deny
+\section{Discussion and future work}
 
-\begin{verbatim}
-/:Arthur
-    foaf:name "Arthur Dent" /deny
-    foaf:name "Arthur P. Dent" /assert.
-\end{verbatim}
+Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  Thus far, Ripple has been most useful for quickly picking out and exploiting useful patterns in linked data.  If the hypertext web is any indication of where the web of data is headed, it will be vast, complex, and overall, loosely structured.  As it grows, we will need an equally sophisticated web of programs to keep pace with it.
 
-These three functions should be enough to perform all manner of operations on linked data structures.  However, it's not really in the spirit of a functional language to alter state without a guarantee that the side effects will be contained in some way, so these primitives are to be considered experimental.
-
-To remove all statements about a particular subject (see @undefine) and additionally erase it from the cache, use graph:forget.
-
-\begin{verbatim}
-/:Arthur /forget.
-\end{verbatim}
-
-This is a useful trick to "refresh" the graph with respect to a resource which has either failed to resolve properly or may not be up-to-date with its source.
+\subsection{Turing-complete languages in the Semantic Web stack}
 
 
+\subsection{Open world or closed?}
 
+Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains \textit{referentially transparent} with respect to its one RDF query operation: forward traversal.  In other words, query results shouldn't depend on the order in which queries are executed.  However, so long as the language does not allow for non-monotonic primitive functions, Ripple's actual query model is independent of the open/closed world dilemma.  That may change if counting, sorting, or memoizing query results becomes important.
 
-
-
-
-
-
-
-
-
-
-
-
-
+\subsection{Advanced features}
+Currently, Ripple's type system is just a form of documentation.  As a dynamically typed language, Ripple merely needs to assure that the arguments passed to its primitive functions at execution time are of the expected types, which it does independently of the type annotations in its library metadata.  However, a more rigorous type system would be a significant step forward, insofar as it enables the type characteristics of Ripple programs to be inferred to some degree.  It would be interesting to explore an amalgamation of type inference for ontologies with Christopher Diggins' work [xxxxxxxxxxxxxxxxx] on static typing for stack languages.
+Another intriguing possibility is compilation.  While the nature of the language is such that new, interpreted programs can be drawn into the execution environment at any time, a modular Ripple program could be compiled to optimized Java bytecode and then inserted into the environment as a primitive function.  The dynamically typed Factor\footnote{http://factorcode.org/} language includes a native compiler which might serve as a starting point.
 
 \section{Implementation}
 
-Ripple is written in Java and uses Sesame 2 (beta) as its RDF framework.  The
-command-line interface relies on ANTLR for lexer/parser generation and JLine for
-command history and tab completion.  The project is built with Maven and is
-distributed under an open source license (see License.txt).
+Ripple is implemented in Java and uses the Sesame 2 (beta) RDF framework.  The command-line interface relies on ANTLR for lexer/parser generation and on JLine for command history and tab completion.  The project is built with Maven and is distributed under an open source license.  Software releases are available at \hyperref{http://fortytwo.net/ripple}.
 
-To build Ripple from scratch, install Maven 2.0.x and issue the command
+In addition to the command-line interpreter, the distribution contains a query API suitable for integration with other Java software.  A likely use case for Ripple as a "glue language" for Semantic Web applications means that 
 
-\begin{verbatim}
-$ mvn install
-\end{verbatim}
 
-from the directory containing pom.xml.
+
+
+
+
+
+
+
+
+
+
+\section{References}
+
+http://swui.semanticweb.org/swui06/papers/Berners-Lee/Berners-Lee.pdf
+
+[xxxxxxxxxxxxxxxxx] http://www.cat-language.com/typing_stacks.pdf
+
+
+
+
 
 \end{document}
