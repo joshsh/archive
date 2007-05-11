@@ -28,9 +28,9 @@ rm ripple.log
 #cp ~/www/ripple/demo-cache.rdf .
 cp ~/www/ripple/ripple.pdf .
 cd ..
-mv trunk/ ripple-0.1.2
-tar -cf ripple-0.1.2.tar ripple-0.1.2
-gzip ripple-0.1.2.tar
+mv trunk/ ripple-0.2.0
+tar -cf ripple-0.2.0.tar ripple-0.2.0
+gzip ripple-0.2.0.tar
 
 
 ========================================
