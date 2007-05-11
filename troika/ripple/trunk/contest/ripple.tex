@@ -70,47 +70,29 @@ Joshua Shinavier
 
 
 \begin{abstract}
-Ripple is a scripting language expressed in RDF lists.  Its scripts both operate upon and are made up of RDF metadata, extending the idea of HTTP dereferenceability to computation.  Ripple is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor, and distinguishes itself through a multivalued, "pipeline" approach to query composition, as well as the inherent distributability of its programs.  The Java implementation presented here includes a query engine, a provisonal assortment of primitive functions, and an interactive interpreter which parses commands and queries in a readable, Turtle-like format.  A demo application can be found at:
-    http://fortytwo.net/ripple.
-\keywords{RDF, scripting language, query language, concatenative, linked data}
+The idea of linked programs, or \textit{procedural} RDF metadata, has been relatively unexplored.  This paper introduces a dedicated scripting language for linked data, called Ripple, whose programs both operate upon and are represented as RDF graphs.  Ripple is a variation on the \textit{concatenative} theme of functional, stack-oriented languages such as Joy and Factor, and takes a multivalued, pipeline approach to query composition.  The Java implementation includes a query API, a extensible library of primitive functions, and an interactive command-line interpreter.
 \end{abstract}
 
-\section{Overview}
+\section{Introduction}
+Most of the data which populates the Semantic Web is \textit{descriptive} in nature, while the complex procedural machinery of reasoners, crawlers, query engines, and so on is buried within applications written in high-level languages such as Java or Python, and is neither machine-accessible nor reusable in the Semantic Web sense.  This paper explores the notion of "linked" or distributed programs as linked RDF data, and presents a new functional, \textit{concatenative} interpreted language, closely related to Manfred von Thun's Joy\footnote{http://www.latrobe.edu.au/philosophy/phimvt/joy/j01tut.html}, as a proof of concept.
 
-{\it Note: for the sake of brevity, the rest of this document assumes some familiarity both with RDF and with the programming language Joy.  For an introduction to Joy, see: http://www.latrobe.edu.au/philosophy/phimvt/joy/j01tut.html}
+For a Turing-complete RDF query language, Ripple is an exercise in minimalism, both in terms of syntax and query semantics.  A Ripple \textit{program} is a nested list structure described with the RDF collections vocabulary, and is thereby a first-class citizen of the Semantic Web.  The language restricts itself to a single, implicit RDF query operation: the forward traversal of links.  The goal of this project is to demonstrate that:
+\begin{enumerate}
+\item linked programs have all of the advantages of generic linked data\footnote{http://www.w3.org/DesignIssues/LinkedData.html}
+\item a stack language is like a path language, only better
+\item for most purposes, forward traversal is all you need
+\end{enumerate}
 
-\subsection{Linked Data}
-
-"Linked data"\footnote{http://www.w3.org/DesignIssues/LinkedData.html} is the subset of the Semantic Web which associates statements about the "thing" identified by a particular URI with the corresponding web location.  An appropriate HTTP request for such a URI should produce an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is \emph{complete}, and the software may reject statements about the URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation: forward traversal.  For instance, if s and p are resources, then the set of triples s/p with s as their subject and p as their predicate can be determined by a single HTTP request, and will not change, despite any subsequent operations.  Here, the expression /p represents the application of a function which maps a subject s to the set of all objects o such that the statement (s, p, o) exists.  Syntactically, it is no different than the application of a primitive function or the dequotation of a list (see below).
-
-
-
-
-Ripple is intermediate between very simple 
-and relatively complex, "black box" query languages such as SPARQL.
-
-simple enough to be easily expressed in RDF itself
-
-primitive functions
+The Java implementation resolves HTTP URIs dynamically in response to traversal queries, similarly to the Tabulator\footnote{http://www.w3.org/2005/ajar/tab} the Semantic Web Client Library\footnote{http://sites.wiwiss.fu-berlin.de/suhl/bizer/ng4j/semwebclient/}, and related tools\footnote{http://moustaki.org/swic/}.  Linked programs are drawn into the query environment in the same way, extending the notion of dereferenceable RDF metadata to computation.
 
 
+\section{Syntax and Semantics}
 
+Ripple's query model combines an evaluational scheme based on stack manipulation with a functional "pipes and filters" pattern.  The stack paradigm makes for minimal, \textit{point-free} syntax at the RDF level, while the pipeline mechanism accommodates RDF's multivalued properties by distributing operations over an arbitrary number of intermediate results.
 
-
-
-Note: in the examples which follow, the namespace prefixes \texttt{rdf}, \texttt{rdfs}, \texttt{xsd}, \texttt{rpl}, \texttt{stack}, \texttt{stream}, \texttt{math}, \texttt{graph}, and \texttt{etc} are predefined.  Typing any of these prefixes, followed by a tab character, in the interactive interpreter will reveal a number of terms in the corresponding namespace.
-
-
-
-
-
-\section{Syntax}
-
-
-\subsection{Lexical syntax}
-
-Ripple's text syntax is very close to Turtle\footnote{http://www.dajobe.org/2004/01/turtle/}, and is made up of most
-of the same basic elements.
+\subsection{Textual Representation}
+The coming examples\footnote{Note: throughout this paper, the namespace prefixes \texttt{rdf}, \texttt{rdfs}, \texttt{xsd}, \texttt{rpl}, \texttt{stack}, \texttt{stream}, \texttt{math}, \texttt{graph}, and \texttt{etc} are assumed to be predefined.  Typing any of these prefixes, followed by a tab character, in the interactive interpreter will reveal a number of terms in the corresponding namespace.} are written in a N3-like language very close to Turtle\footnote{http://www.dajobe.org/2004/01/turtle/}.  Most of the elements of the language are familiar from Turtle:
+\newline
 
 \textit{URIs} may be given in full or abbreviated using namespace prefixes.
 \begin{verbatim}
@@ -120,10 +102,12 @@ rdfs:Class.              # a qualified name
 rdfs:.                   # this URI has an empty local name
 :.                       # legal, and occasionally meaningful
 \end{verbatim}
-\textit{Keywords} in Ripple are the local names of a fixed set of special URIs.  Currently, the local name of every primitive function is a keyword.
+
+\textit{Keywords} the local names of a fixed set of special URIs.  Currently, the local name of every primitive function is a keyword.
 \begin{verbatim}
 swap.                    # same as stack:swap
 \end{verbatim}
+
 \textit{RDF Literals} are represented as numbers and strings.
 \begin{verbatim}
 42.                      # an integer (xsd:integer for now)
@@ -132,17 +116,20 @@ swap.                    # same as stack:swap
 "English"@en.            # a plain Literal with a language tag
 "2007-05-07"^^xsd:date.  # a generic typed Literal
 \end{verbatim}
+
 \textit{Blank nodes} lose their identity between sessions, but it's often useful to refer to them within a session.
 \begin{verbatim}
 _:node129n4ttifx2.       # a bnode with a generated id
 _:tmp1.                  # a bnode with a user-defined id
 \end{verbatim}
+
 \textit{Lists} are indicated by parentheses.
 \begin{verbatim}
 ("apple" "banana").      # a nested rdf:List
 :joe/foaf:knows.         # queries themselves are lists
 \end{verbatim}
-Apart from its directives, Ripple's syntax includes just one symbol not found in Turtle: the slash operator, a prefix which indicates the execution of a program.  Where it is written before an RDF property, it is equivalent to the forward traversal operator\footnote{http://www.w3.org/DesignIssues/N3Alternatives} of Notation3.  A likely extension to the language includes additional prefixed symbols as quantifiers for regular path expressions: \texttt{/?}, \texttt{/*}, and \texttt{/+}.  For example, in:
+
+One symbol not found in Turtle is the \textit{slash operator}, a prefix which indicates the execution of a program.  Where it is written before an RDF property, it is equivalent to the forward traversal operator\footnote{http://www.w3.org/DesignIssues/N3Alternatives} of Notation3.  A likely extension to the language will add quantifiers for \textit{regular path expressions}, including \texttt{/?}, \texttt{/*}, and \texttt{/+}.  For example, in:
 \begin{verbatim}
 @define smush: /*owl:sameAs.
 \end{verbatim}
@@ -172,22 +159,103 @@ The application distinguishes between two kinds of statements: \textit{queries},
 \end{verbatim}
 
 
-\subsection{Compositional syntax}
-
-At the highest level, Ripple queries are expressed in postfix notation, or in \textit{diagrammatic order}.  Each query is a list in which the concatenation of symbols represents the composition of functions.  When the functions are RDF properties, a query is equivalent to a path expression:
-
+\subsection{Compositional Syntax}
+At the level of lists and nodes, Ripple queries are expressed in postfix notation, or in \textit{diagrammatic order}.  Each query is a list in which the concatenation of symbols represents the composition of functions.  When the functions are RDF properties, a query is equivalent to a path expression:
 \begin{verbatim}
 # => "The RDF Vocabulary (RDF)"
 ("apple" "banana")/rdf:type/rdfs:isDefinedBy/dc:title.
 \end{verbatim}
 
-This particular expression takes us from the list \texttt{("apple" "banana")} to its type \texttt{rdf:List}, from the type to the ontology \texttt{rdf:} which defines it, and from the ontology to its title, \texttt{"The RDF Vocabulary (RDF)"}.  The same idea applies to primitive functions.  Consider the following query, which calls a built-in "Ping the Semantic Web" primitive.
+This particular expression takes us from the list \texttt{("apple" "banana")} to its type, \texttt{rdf:List}, from the type to the ontology, \texttt{rdf:}, which defines it, and from the ontology to its title, \texttt{"The RDF Vocabulary (RDF)"}.  The same idea applies to primitive functions:
 \begin{verbatim}
 # => recently pinged DOAP documents
 10 "doap" /pingTheSemanticWeb/toString.
 \end{verbatim}
-Here, too, we can imagine data (a \textit{stream} of lists or \textit{stacks}) flowing from the left hand side of the expression and emerging from the right hand side of the expression after undergoing a transformation of some kind.  In this case, a stream of one stack containing the two arguments to \texttt{pingTheSemanticWeb} becomes a stream of ten stacks containing URIs which \texttt{toString} then converts to string literals.
-In Ripple, as in Forth, stack shuffling operations take the place of bound variables in complex expressions:
+
+Here, too, we can imagine data (a \textit{stream} of lists or \textit{stacks}) flowing from the left hand side of the expression and emerging from the right hand side of the expression (the \textit{head} of the stack) after undergoing a transformation of some kind.  In this case, a stream of one stack containing the two arguments to the built-in "Ping the Semantic Web" function becomes a stream of ten stacks containing URIs which \texttt{toString} then converts to string literals.
+
+
+\subsection{RDF Representation}
+Every Ripple program is expressible in RDF, where it takes the form of a simple rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is implicit.  For example, you may navigate a list using either list primitives or the RDF collections vocabulary, interchangeably.
+\begin{verbatim}
+("apple" "banana")/rdf:first.  # => "apple"
+("apple" "banana")/uncons/pop. # => "apple"
+\end{verbatim}
+
+When we assign a program a URI, we're adding its definition to the same RDF model from which our query results are drawn:
+\begin{verbatim}
+@define hello:
+    "Hello world!".
+\end{verbatim}
+
+Given an appropriate base URI and web-visible triple store, the program itself becomes a part of the global graph of linked data, enabling remote users and applications to execute it or build upon it without restriction.
+
+
+\section{Query Evaluation}
+
+Ripple's evaluation strategy hinges on a dichotomy between between \texttt{active} and \texttt{passive} stack items.  Active items exhibit a special behavior depending on their type, whereas passive items simply push a "copy of themselves" to the stack.  Evaluation proceeds, \textit{lazily}, until all active items have been eliminated from the head of the stack, at which point the stack is considered to be in \textit{normal form}.  The only symbol active by default is the \texttt{rpl:op} operator, which has the effect of making the preceding item active according to its type:
+\begin{enumerate}
+\item \textit{RDF properties} consume a subject and map it to zero or more objects
+\item \textit{primitive functions} exhibit "black box", custom behavior
+\item \textit{lists} become an extension of the stack (execution "removes the parentheses")
+\item \textit{all other items} consume nothing and produce nothing (they cause the stack to disappear)
+\end{enumerate}
+
+Note: in the text notation, \texttt{rpl:op} is abbreviated as the slash prefix attached to the item it follows.  For example, \texttt{(2 /dup)} is just a more compact way of writing \texttt{(2 dup rpl:op)}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Consider the following definition and query:
+
+\begin{verbatim}
+# x => x*x
+@define sq: /dup/mul.
+
+# => 16
+4/:sq.
+\end{verbatim}
+The major steps in the evaluation of the query are as follows:
+\begin{enumerate}
+\item \texttt{(4 :sq rpl:op!)} -- \texttt{rpl:op} is active by default
+\item \texttt{(4 dup rpl:op! mul rpl:op!)} -- dereference and dequote list \texttt{:sq}
+\item \texttt{(4 dup rpl:op! mul!)} -- \texttt{mul} primitive becomes active
+\item \texttt{(4 dup! mul!)} -- \texttt{mul} needs two arguments.  Recurse
+\item \texttt{(4 4 mul!)} -- \texttt{dup} consumes its one argument and applies is rewrite rule
+\item \texttt{(16)} -- \texttt{mul} now has two reduced arguments, and applies its rule
+\end{enumerate}
+
+
+Ripple differs from Joy in another important respect: whereas Joy operates on single stacks, Ripple operates on "streams" of stacks.  Each of its functions consumes a series of stacks as input, and produces a series of stacks as output, which is how it gets away with using RDF predicates as functions.  This simple query, for instance, yields not one, but several values:
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows.
+\end{verbatim}
+
+If we compose it with another query, the second query needs to be capable of consuming not just a single stack, but many stacks, and of distributing its operation over all of them:
+\begin{verbatim}
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows /foaf:name.
+\end{verbatim}
+
+To this end, Ripple replaces functions with "instances" of functions, which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of stream:limit (which counts its input stacks and stops transmitting them after a certain point) or of stream:unique (which remembers its input stacks, and will not transmit a duplicate).
+
+
+
+
+
+\section{Examples and Use Cases}
+
+\subsection{Arithmetic}
+In Ripple, as in Forth, stack shuffling operations take the place of bound variables in complex expressions.
 \begin{verbatim}
 # n => fibonacci(n)
 @define fib:
@@ -201,137 +269,8 @@ In Ripple, as in Forth, stack shuffling operations take the place of bound varia
 \end{verbatim}
 
 
-\subsection{RDF representation}
-Every Ripple program is expressible in RDF, where it takes the form of a simple rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is implicit.  For example, you may navigate a list using either list primitives or the RDF collections vocabulary, interchangeably.
-\begin{verbatim}
-("apple" "banana")/rdf:first.  # => "apple"
-("apple" "banana")/uncons/pop. # => "apple"
-\end{verbatim}
-As RDF lists, Ripple programs are built up of four kinds of items, each of which has a special behavior when interpreted as a function:
-\begin{enumerate}
-\item RDF properties -- functions of one argument which map subjects to objects
-\item primitive functions -- built-in functions with custom behavior
-\item other lists -- functions of no arguments for which execution means dequotation, or "removing the parentheses"
-\item everything else -- functions of no arguments with no output
-\end{enumerate}
-Finally, there is one special value in the language: the rpl:op operator, which causes the program it follows to be executed.  This is the same as the slash prefix, so for example, \texttt{(2 /dup)} is just a more compact way of writing \texttt{(2 dup rpl:op)}
-When we give a program a URI, we're adding its definition to the same RDF model from which our query results are drawn:
-\begin{verbatim}
-@define hello:
-    "Hello world!".
-\end{verbatim}
-Given an appropriate base URI and web-visible triple store, the program itself becomes a part of the global graph of linked data, enabling remote users and applications to execute it or build upon it arbitrarily.
-
-
-\section{Query model}
-
-Ripple's query model combines a stack-based computational scheme with a functional "pipes and filters" pattern.  The stack paradigm makes for minimal syntax at the RDF level, while the pipeline mechanism accommodates RDF's multivalued properties by distributing operations over intermediate result sets.
-.......................
-
-
-
-
-\subsection{Computational model}
-
-Like Joy (and many other functional languages), Ripple's fundamental data structure is the list.  When executed as a program, a list becomes a stack.  Computation occurs at the head of the stack (visually, on the right hand side of an expression), and halts either when the stack is empty or when a "passive" item (a constant) is found at the head of the stack.  Ripple's primitive functions have an individual \textit{arity} equal to the depth to which the stack must be reduced before it is accepted as input to the function.  Whereas Joy's many operators and combinators are active until placed inside of a quotation (a list), in Ripple, nearly everthing is either a list or is treated as a list, and is therefore quoted by default.  However, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
-
-\begin{verbatim}
-http://fortytwo.net/2007/03/ripple/schema#op
-\end{verbatim}
-
-When this symbol is encountered at the head of a stack, it has the effect of making the preceding symbol active according to its type:
-\begin{itemize}
-\item If the argument is an list, it is executed as a program
-\item If the argument is a primitive function, the stack is first normalized to a depth equal to the function's arity, then the function is applied to the result
-\item If the argument is an rdf:Property, it is applied as a unary function which maps subjects to objects
-\item Any other type of argument effectively becomes an active nullary function with no output
-\end{itemize}
-
-This minimalism accounts for the different appearance of Ripple expressions as opposed to Joy.  Ripple hides its one operator behind a prefixed slash symbol '/'  ........  Note that the following expressions are equivalent.
-
-\begin{verbatim}
-2 /dup.
-2 dup rpl:op.
-2 joy:dup rpl:op.
-\end{verbatim}
-
-
-
-
-
-Suppose we define a new term in the working namespace, called \texttt{sq}.
-
-\begin{verbatim}
-# x => x*x
-@define sq: /dup/mul.
-\end{verbatim}
-
-This command has the effect of pushing a new list, \texttt{(stack:dup rpl:op math:mul rpl:op)}, to the triple store (conceptually, to the global RDF graph).  The URI \texttt{:sq} becomes the head of the list.  Now let's evaluate a query which references \texttt{:sq}.
-
-\begin{verbatim}
-# => 16
-4/:sq.
-\end{verbatim}
-
-The query engine sees this as the list \texttt{(4 :sq rpl:op)}, and converting it to a stack\footnote{visually, the head of the stack is on the right-hand side of an expression}, passes it into an evaluational pipeline which will reduce it to normal form as follows.
-
-\begin{enumerate}
-\item \texttt{(4 :sq rpl:op!)} -- this stack has the item \texttt{rpl:op} at its head, a special value which is always active.  \texttt{rpl:op} effectively tells the evaluator to execute the preceding symbol as a program, which for the list \texttt{:sq} means the nullary operation of list dequotation.  \texttt{:sq} is read in from the triple store and concatenated with the remainder of the stack.
-\item \texttt{(4 dup rpl:op! mul rpl:op!)} -- again has \texttt{rpl:op} at its head, which prompts the evaluator to pop the primitive function \texttt{mul} from the stack and push an active item (we'll call it \texttt{mul!}) which will collect \texttt{mul}'s arguments.  At this point, the evaluator invokes itself recursively, feeding the output channel of the new pipeline into \texttt{mul!} and feeding \texttt{mul!}'s output into the original pipeline for a second round of reduction.  A stack will travel this circuit until it is in normal form or has been exhausted.
-\item \texttt{(4 4 mul!)} -- \texttt{mul!} requires two arguments, so the stack beneath it must be reduced to two levels.  In doing so, a program \texttt{(4 dup rpl:op!)} consisting of the \texttt{dup} primitive applied to an argument of \texttt{4} is discovered and executed, and the resulting stack \texttt{(4 4)} is passed in a curried fashion to the \texttt{mul!} program.  \texttt{mul!} applies its own rewrite rule, consuming both integer arguments and pushing their product onto the stack.
-\item \texttt{(16)} -- this stack has a passive item at its head, so it finds its way into the top-level evaluator's output channel as a query result:
-\end{enumerate}
-
-\begin{verbatim}
-rdf:_1  (16)
-\end{verbatim}
-
-
-
-
-
-
-
-Ripple differs from Joy in another important respect: whereas Joy operates on single stacks, Ripple operates on "streams" of stacks.  Each of its functions consumes a series of stacks as input, and produces a series of stacks as output, which is how it gets away with using RDF predicates as functions.  This simple query, for instance, yields not one, but several values:
-
-\begin{verbatim}
-<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows.
-\end{verbatim}
-
-If we compose it with another query, the second query needs to be capable of consuming not just a single stack, but many stacks, and of distributing its operation over all of them:
-
-\begin{verbatim}
-<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows /foaf:name.
-\end{verbatim}
-
-To this end, Ripple replaces functions with "instances" of functions, which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of stream:limit (which counts its input stacks and stops transmitting them after a certain point) or of stream:unique (which remembers its input stacks, and will not transmit a duplicate).
-
-
-
 \subsection{Recursion}
-
-There is no special trick to named recursion in Ripple; just use the name of the to-be-defined program in the definition body, as you would any other program.  It's a URI reference which won't be dereferenced until after the definition has been pushed to the triple store.
-
-
-\begin{verbatim}
-pingTheSemanticWeb/rpl:parameters /:listItems.
-\end{verbatim}
-
-Ripple does not yet implement any of Joy's primitives for anonymous recursion.
-
-
-\section{Examples}
-
-
-
-
-
-
-\subsection{Aggregate types}
-
-
-\subsection{Recursion}
-Owing to the global nature of URIs, recursive definition is uncomplicated in Ripple.  Functions may reference each other, and themselves, arbitrarily.
+Owing to the global nature of URIs, recursive definition is uncomplicated in Ripple.  Functions may reference each other, and themselves, arbitrarily.  Evaluation of @defined programs is delayed until forced by the evaluation of a query.
 \begin{verbatim}
 # n => n!
 @define fact:
@@ -344,9 +283,8 @@ Owing to the global nature of URIs, recursive definition is uncomplicated in Rip
 5/:fact.
 \end{verbatim}
 
-\subsection{Exploring a FOAF neighborhood}
-
-The ability to request and aggregate RDF metadata on the fly gives Ripple's query engine the properties of a web crawler.  "Intelligent" applications aside, there are many conceivable use cases for simply discovering and aggregating a large chunk of data in a configurable fashion.  The following program targets the linked data of the FOAF network, beginning with Tim Berners-Lee's profile.
+\subsection{Exploring a FOAF Neighborhood}
+The ability to request and aggregate RDF metadata on the fly gives Ripple's query engine the properties of a web crawler.  "Intelligent" applications aside, there are many conceivable use cases for simply discovering and aggregating a large chunk of data in a configurable fashion.  The following program targets the decentralized linked data of the FOAF network, beginning with Tim Berners-Lee's profile.
 \begin{verbatim}
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix owl:  <http://www.w3.org/2002/07/owl#>.
@@ -364,10 +302,9 @@ The ability to request and aggregate RDF metadata on the fly gives Ripple's quer
     :foafStep 2/times /foaf:name.
 \end{verbatim}
 
-\subsection{Searching and filtering in Revyu.com}
-
-Revyu.com is one of many\footnote{http://esw.w3.org/topic/TaskForces/CommunityProjects/LinkingOpenData/DataSets} innovative web services which offer an RDF view of their contents.  The service links reviewers to reviews, reviews to things, and some things to book metadata in the RDF Book Mashup\footnote{http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/}.  Below, we're interested not so much in gathering a large body of data as in sifting through it in search of a few....................................
-
+\subsection{Searching and Filtering in Revyu.com}
+Revyu.com is one of many\footnote{http://esw.w3.org/topic/TaskForces/CommunityProjects/LinkingOpenData/DataSets} innovative web services which offer linked RDF views of their data.  The web site links reviewers to reviews, reviews to things, and some things to book metadata in the RDF Book Mashup\footnote{http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/}.  Here, we're 
+more interested in narrowing the search space to a handful of "hits" than we are in the aggregated data as a whole.
 \begin{verbatim}
 # a f => a, if a/f is true, otherwise nothing
 @define restrict:
@@ -376,7 +313,8 @@ Revyu.com is one of many\footnote{http://esw.w3.org/topic/TaskForces/CommunityPr
         scrap  # throw the stack away if it isn't
     /branch.
 
-@prefix scom: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix scom: <http://sites.wiwiss.fu-berlin.de[no break]
+/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix owl:  <http://www.w3.org/2002/07/owl#>.
 
@@ -395,17 +333,19 @@ Revyu.com is one of many\footnote{http://esw.w3.org/topic/TaskForces/CommunityPr
     (/rev:rating 3 /gt)/:restrict  # 4 stars or better
     /rdfs:label.                   # from review to label
 \end{verbatim}
+
 The query yields two results:
 \begin{verbatim}
-rdf:_1  ("Review of The Unwritten Rules of Phd Research, by Gordon Rugg and Marian Petre, by tom")
-rdf:_2  ("Review of Designing with Web Standards, by Jeffrey Zeldman, by tom")
+rdf:_1  ("Review of The Unwritten Rules of Phd Research, [...]")
+rdf:_2  ("Review of Designing with Web Standards, by Jeff[...]")
 \end{verbatim}
-It is worth pointing out that, unlike the FOAF example, this program places a heavy burden on a single web server.  In this case, it would be in the best interest of both server and client to offload the query to the web service, if possible.  Knowing when to use an API for federated queries, as opposed aggregating data, probably has more to do with the economics of distributed computing than with the rest of this paper.  However, the API itself should be particularly simple.  It might be as simple as the passing of the dereferenceable URI of a single expression, to be evaluated remotely.  Perhaps the generation of a REST service and an OWL-S service description could be automated based on a particular query pattern.
 
-\subsection{Graph transformations and other side effects}
+Unlike the FOAF example, this program places a heavy burden on a single web server.  If possible, it would be in the best interest of both server and client to offload query evaluation to the web service.  Knowing when to use an API for federated queries, as opposed aggregating data, probably has more to do with the economics of distributed computing than with the rest of this paper.  However, the API itself is certain to be a simple one.  It could even be as simple as the passing of the dereferenceable URI of a single expression, to be evaluated remotely.  Perhaps a REST service and an OWL-S service description could be generated based on a given query pattern.
 
-The Ripple implementation includes a handful of "experimental" primitives which may be useful for graph transformations.  As these primitives affect the state of their environment (for instance, by adding or removing statements), in the context of a functional language, they are to be used with caution.  The following is an example of a "safe" application of the \texttt{new} and \texttt{assert} primitives.  It transforms a resource description by creating a new blank node which retains and renames a few of the original node's edges.
+\subsection{Graph Transformations and Other Side Effects}
+The Ripple implementation includes a handful of "experimental" primitives which may be useful for graph transformations and in common metadata "rewiring scenarios"\footnote{http://simile.mit.edu/wiki/Rewiring\_Scenarios}.  As these primitives affect the state of their environment (for instance, by adding or removing statements), they are to be used with caution.  The following is an example of a "safe" application of the \texttt{new} and \texttt{assert} primitives.  It transforms a resource description by creating a new blank node which retains and renames a few of the original node's edges.
 
+Note: \texttt{new} produces a new blank node.  \texttt{assert} consumes a subject, predicate object triplet, creates a statement, then restores the subject to the stack.
 \begin{verbatim}
 # node map => a new node with "mapped" edges
 @define mapped:
@@ -425,7 +365,7 @@ The Ripple implementation includes a handful of "experimental" primitives which 
 /:tbl :myMap/:mapped.
 \end{verbatim}
 
-Other side effects are more subtle.  For instance, this program affects the "Ping the Semantic Web" service which we queried earlier:
+Other side effects may be more subtle.  For instance, this program affects the "Ping the Semantic Web" service which we queried earlier:
 \begin{verbatim}
 # uri => uri (having pinged the Semantic Web)
 @define ping:
@@ -436,45 +376,35 @@ Other side effects are more subtle.  For instance, this program affects the "Pin
 # => PTSW's response to a ping of Ripple's DOAP URI/document
 <http://fortytwo.net/2007/03/ripple/doap#>/:ping.
 \end{verbatim}
-The next time we use the \texttt{pingTheSemanticWeb} primitive, we might see Ripple's DOAP in the query results.  Other potentially useful side-effects include the sending of an e-mail or the firing of a system-specific event.
 
-\section{Discussion and future work}
+Other potentially useful side-effects include the sending of an e-mail or the firing of a system-specific event.
 
-Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  Thus far, Ripple has been most useful for quickly picking out and exploiting useful patterns in linked data.  If the hypertext web is any indication of where the web of data is headed, it will be vast, complex, and overall, loosely structured.  As it grows, we will need an equally sophisticated web of programs to keep pace with it.
-
-\subsection{Turing-complete languages in the Semantic Web stack}
+\section{Discussion and Future Work}
+Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  If the hypertext web is any indication of the future of the web of data, it will be vast, complex, and overall, loosely structured.  As it grows, we will need a sophisticated \textit{web of programs} to keep pace with it.
 
 
-\subsection{Open world or closed?}
+\subsection{Related Work}
+Ripple is strictly a resource-centric language and is not intended as an alternative to SPARQL, although the languages do overlap to some extent.  The fact that Ripple is essentially a path language makes it much more effective for some purposes than the relational SPARQL, and vice versa.  The same can be said of any of the other RDF Path\footnote{http://esw.w3.org/topic/RdfPath} languages, such as Versa\footnote{http://copia.ogbuji.net/files/Versa.html} or the path portion of PSPARQL\footnote{http://psparql.inrialpes.fr/}.  Probably the closest thing to Ripple is Ora Lassila's Wilbur\footnote{http://www.lassila.org/publications/2001/swws-01-abstract.shtml} language, which integrates RDF with Common Lisp (coming soon: Python!).  Deep integration [DDDDDDDDDDDDDDD] of various high-level programming languages with RDF also comes to mind.
 
-Ripple has been designed with a \textit{closed world} of linked data in mind, the idea being that by restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language remains \textit{referentially transparent} with respect to its one RDF query operation: forward traversal.  In other words, query results shouldn't depend on the order in which queries are executed.  However, so long as the language does not allow for non-monotonic primitive functions, Ripple's actual query model is independent of the open/closed world dilemma.  That may change if counting, sorting, or memoizing query results becomes important.
 
-\subsection{Advanced features}
-Currently, Ripple's type system is just a form of documentation.  As a dynamically typed language, Ripple merely needs to assure that the arguments passed to its primitive functions at execution time are of the expected types, which it does independently of the type annotations in its library metadata.  However, a more rigorous type system would be a significant step forward, insofar as it enables the type characteristics of Ripple programs to be inferred to some degree.  It would be interesting to explore an amalgamation of type inference for ontologies with Christopher Diggins' work [xxxxxxxxxxxxxxxxx] on static typing for stack languages.
-Another intriguing possibility is compilation.  While the nature of the language is such that new, interpreted programs can be drawn into the execution environment at any time, a modular Ripple program could be compiled to optimized Java bytecode and then inserted into the environment as a primitive function.  The dynamically typed Factor\footnote{http://factorcode.org/} language includes a native compiler which might serve as a starting point.
+\subsection{Open World or Closed?}
+Ripple has been designed with a \textit{closed world} of linked data in mind.  By restricting the query engine to a closed subset of the Semantic Web \footnote{specifically, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language is guaranteed to be \textit{referentially transparent} with respect to its one RDF query operation: forward traversal.  In other words, query results are guaranteed to be independent of the order in which queries are executed.  In the presence of non-monotonic functions, this could lead to a contradiction.  In fact, Ripple's current, push-model evaluator is essentially monotonic, so it is not incompatible with RDF's open world assumption.  However, it's possible that this will change if counting, sorting, or memoizing query results becomes important.
+
+
+\subsection{Advanced Features}
+Currently, Ripple's \textit{type system} is just a form of API documentation.  As a \textit{dynamically typed} language, Ripple merely checks the types the arguments passed to its primitive functions at execution time are of the expected types, and it does this independently of the type annotations in its library metadata.  A more rigorous type system would be a significant step forward, insofar as it enables the interpreter to reason about programs on behalf of the programmer.  It might be worthwhile to explore an amalgamation of type inference for ontologies with Christopher Diggins' work [xxxxxxxxxxxxxxxxx] on static typing for stack languages.
+
+\textit{Compilation} is another interesting possibility.  While Ripple will never be a completely compiled language, a modular Ripple program could be compiled to optimized Java bytecode and then reinserted into the environment as a primitive function.  The dynamically typed Factor\footnote{http://factorcode.org/} language includes a native compiler which might serve as a starting point.
+
 
 \section{Implementation}
+Ripple is implemented in Java and uses the Sesame 2 (beta) RDF framework.  The command-line interface relies on ANTLR for lexer/parser generation and on JLine for command history and tab completion.  The project is built with Maven and is distributed under an open source license.  Software releases are available at \texttt{http://fortytwo.net/ripple}.
 
-Ripple is implemented in Java and uses the Sesame 2 (beta) RDF framework.  The command-line interface relies on ANTLR for lexer/parser generation and on JLine for command history and tab completion.  The project is built with Maven and is distributed under an open source license.  Software releases are available at \hyperref{http://fortytwo.net/ripple}.
-
-In addition to the command-line interpreter, the distribution contains a query API suitable for integration with other Java software.  A likely use case for Ripple as a "glue language" for Semantic Web applications means that 
-
-
-
-
-
-
-
-
-
+In addition to the command-line interpreter, the distribution contains a query API suitable for integration with other Java software.  A likely use case for Ripple as a "glue language" for Semantic Web applications.........
 
 
 
 \section{References}
-
-http://swui.semanticweb.org/swui06/papers/Berners-Lee/Berners-Lee.pdf
-
-[xxxxxxxxxxxxxxxxx] http://www.cat-language.com/typing_stacks.pdf
 
 
 
