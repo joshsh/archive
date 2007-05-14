@@ -1475,6 +1475,70 @@ System.out.println( "closing stmtIter (2)" );
 			}
 		}
 	}
+
+	public void divide( RdfValue obj, RdfValue pred, Sink<RdfValue> sink )
+		throws RippleException
+	{
+		try
+		{
+			model.getDereferencer().dereference( obj, this );
+		}
+
+		catch ( RippleException e )
+		{
+			// (soft fail)
+			s_logger.info( "Failed to dereference URI: " + obj );
+		}
+
+		Value rdfObj = obj.getRdfValue();
+		Value rdfPred = pred.getRdfValue();
+
+		if ( rdfPred instanceof URI )
+		{
+			Collection<Value> results = null;
+			RepositoryResult<Statement> stmtIter = null;
+
+			// Perform the query and collect results.
+			try
+			{
+				stmtIter = repoConnection.getStatements(
+					null, (URI) rdfPred, rdfObj, Ripple.useInference() );
+				while ( stmtIter.hasNext() )
+				{
+					if ( null == results )
+						results = new LinkedList<Value>();
+					results.add( stmtIter.next().getSubject() );
+				}
+				stmtIter.close();
+			}
+
+			catch ( Throwable t )
+			{
+				try
+				{
+					stmtIter.close();
+				}
+
+				catch ( Throwable t2 )
+				{
+					System.exit( 1 );
+				}
+
+				reset();
+				throw new RippleException( t );
+			}
+
+			// Now copy any results from the buffer into the sink.
+			if ( null != results )
+			{
+				for ( Iterator<Value> resultIter = results.iterator();
+					resultIter.hasNext(); )
+				{
+					sink.put( new RdfValue( resultIter.next() ) );
+				}
+			}
+		}
+	}
 }
 
 // kate: tab-width 4

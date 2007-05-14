@@ -15,6 +15,7 @@ public class EtcExtension implements Extension
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
 
+		bridge.add( new Back( new RdfValue( mc.createUri( ns + "back" ) ), mc ), mc );
 		bridge.add( new Get( new RdfValue( mc.createUri( ns + "get" ) ), mc ), mc );
 		bridge.add( new PingTheSemanticWeb( new RdfValue( mc.createUri( ns + "pingTheSemanticWeb" ) ), mc ), mc );
 		bridge.add( new Pred( new RdfValue( mc.createUri( ns + "pred" ) ), mc ), mc );

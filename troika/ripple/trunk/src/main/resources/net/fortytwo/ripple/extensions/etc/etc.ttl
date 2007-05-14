@@ -5,6 +5,20 @@
 @prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
+etc:back
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "o" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "p" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:label "back" ;
+	rdfs:comment "o p => s" .
+
 etc:get
 	a rpl:Function ;
 	rpl:arity 1 ;
