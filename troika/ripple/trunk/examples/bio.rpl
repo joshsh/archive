@@ -2,12 +2,14 @@
 
 @prefix bio:  <http://purl.org/vocab/bio/0.1/>.
 
-bio:Birth.
-bio:Death.
-bio:Event.
-bio:Marriage.
-bio:date.
-bio:event.
-bio:keywords.
-bio:olb.
-bio:place.
+@define bioTerms:
+    bio:Birth
+    bio:Death
+    bio:Event
+    bio:Marriage
+    bio:date
+    bio:event
+    bio:keywords
+    bio:olb
+    bio:place
+    .
