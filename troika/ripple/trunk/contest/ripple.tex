@@ -180,7 +180,7 @@ Here, too, we can imagine data (a \textit{stream} of lists or \textit{stacks}) f
 
 
 \subsection{RDF Representation}
-Every Ripple program is expressible in RDF, where it takes the form of a simple rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is implicit.  For example, you may navigate a list using either list primitives or the RDF collections vocabulary, interchangeably.
+Every Ripple program is expressible in RDF, where it takes the form of a simple RDF list.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is implicit.  For example, you may navigate a list using either list primitives or the RDF collections vocabulary, interchangeably.
 \begin{verbatim}
 ("apple" "banana")/rdf:first.  # => "apple"
 ("apple" "banana")/uncons/pop. # => "apple"
@@ -197,12 +197,12 @@ Given an appropriate base URI and web-visible triple store, the program itself b
 
 \section{Query Evaluation}
 
-Ripple's evaluation strategy hinges on a dichotomy between between \texttt{active} and \texttt{passive} stack items.  Active items exhibit type-specific behavior, whereas passive items simply push a "copy of themselves" to the stack.  Every item has a well-defined \textit{arity} which, roughly speaking, is the number of arguments it consumes.  To be precise, the arity is the depth to which the stack must be reduced before the item can be applied.  For instance, the \texttt{swap} function requires two arguments, so the evaluator must make sure that the stack is normalized to two levels before \texttt{swap} receives it.  Evaluation proceeds, \textit{lazily}, until all active items have been eliminated from the head of the stack, at which point the stack is said to be in \textit{normal form} (to one level).  The only symbol active by default is the \texttt{rpl:op} operator, which has the effect of making the preceding item active as follows:
+Ripple's evaluation strategy hinges on a dichotomy between between \texttt{active} and \texttt{passive} stack items.  Active items exhibit type-specific behavior, whereas passive items simply push a "copy of themselves" to the stack.  Every item has a well-defined \textit{arity} which, roughly speaking, is the number of arguments it consumes.  To be precise, the arity is the depth to which the stack must be reduced before the item can be applied.  For instance, the \texttt{swap} function requires two arguments, so the evaluator must make sure that the stack is normalized to two levels before \texttt{swap} receives it.  Evaluation proceeds, \textit{lazily}, until all active items have been eliminated from the head of the stack, at which point the stack is said to be in \textit{normal form} to one level.  The only symbol active by default is the \texttt{rpl:op} operator, which has the effect of making the preceding item active as follows:
 \begin{enumerate}
 \item \textit{RDF properties} consume a subject and map it to a stream of zero or more objects
 \item \textit{primitive functions} exhibit "black box", custom behavior
 \item \textit{lists} become an extension of the stack (execution "removes the parentheses")
-\item \textit{all other items} consume nothing and produce nothing (they just cause the stack to disappear)
+\item \textit{all other items} consume nothing and produce nothing (they cause the stack to disappear)
 \end{enumerate}
 
 Note: in the text notation, \texttt{rpl:op} is abbreviated as the slash prefix attached to the item it follows.  For example, \texttt{(2 /dup)} is just a more compact way of writing \texttt{(2 dup rpl:op)}.
@@ -222,7 +222,7 @@ The major steps in the evaluation of the query are as follows:
 \item \texttt{(4 dup rpl:op! mul rpl:op!)} -- dereference and dequote list \texttt{:sq}
 \item \texttt{(4 dup rpl:op! mul!)} -- \texttt{mul} primitive becomes active
 \item \texttt{(4 dup! mul!)} -- \texttt{mul} needs two arguments.  Recurse
-\item \texttt{(4 4 mul!)} -- \texttt{dup} consumes its one argument and applies is rewrite rule
+\item \texttt{(4 4 mul!)} -- \texttt{dup} consumes its one argument and applies its rewrite rule
 \item \texttt{(16)} -- \texttt{mul} now has two reduced arguments, and applies its rule, yielding \texttt{16}
 \end{enumerate}
 
@@ -262,7 +262,7 @@ In Ripple, as in Forth, stack shuffling operations take the place of bound varia
 \subsection{Recursion}
 Owing to the global nature of URIs, recursive definition is uncomplicated in Ripple.  Functions may reference each other, and themselves, arbitrarily.  Evaluation of @defined programs is delayed until forced by the evaluation of a query.
 \begin{verbatim}
-# n => n!
+# n => factorial(n)
 @define fact:
     /dup 0 /equal                  # if n is 0...
         (1 /popd)                  # yield 1
@@ -317,7 +317,7 @@ more interested in narrowing the search space to a handful of "hits" than we are
 
 @prefix rev:  <http://purl.org/stuff/rev#>.
 
-# => labels of all of Tom's book reviews
+# => labels of all of Tom's more favorable book reviews
 <http://revyu.com/people/tom> /foaf:made
     /:bookReviewsOnly              # books only
     (/rev:rating 3 /gt)/:restrict  # 4 stars or better
@@ -330,12 +330,12 @@ rdf:_1  ("Review of The Unwritten Rules of Phd Research, [...]")
 rdf:_2  ("Review of Designing with Web Standards, by Jeff[...]")
 \end{verbatim}
 
-Unlike the FOAF example, this program places a heavy burden on a single network server.  If possible, it would be in the best interest of both server and client to offload query evaluation to the web service.  Knowing when to use an API for federated queries, as opposed aggregating data, probably has more to do with the economics of distributed computing than with the rest of this paper.  However, the API itself is certain to be a simple one.  It could even be as simple as the passing of the dereferenceable URI of a single expression, to be resolved and evaluated remotely.  Perhaps a REST service and an OWL-S service description could be generated based on a given query pattern.
+Unlike the FOAF example, this program places a heavy burden on a single network server.  If possible, it would be in the best interest of both server and client to offload query evaluation to the web service.  Knowing when to use an API for federated queries, as opposed aggregating data, probably has more to do with the economics of distributed computing than with the rest of this paper.  However, the API itself is certain to be a simple one.  It could even be as simple as the passing of the dereferenceable URI of a single expression, to be resolved and evaluated remotely.  Perhaps a REST service and an OWL-S service description could be generated, based on a given query pattern.
 
 \subsection{Graph Transformations and Other Side Effects}
 The Ripple implementation includes a number of "experimental" primitives which may be useful for graph transformations and in common metadata "rewiring scenarios"\footnote{http://simile.mit.edu/wiki/Rewiring\_Scenarios}.  As these primitives affect the state of their environment (for instance, by adding or removing statements), they are to be used with caution.  The following is an example of a "safe" application of the \texttt{new} and \texttt{assert} primitives.  It transforms a resource description by creating a new blank node which retains and renames a few of the original node's edges.
 
-\textit{Note: to see a description of these or any other primitive functions, type in their names at the command line, followed by a period.}
+\textit{Note: to see a description of these or any other primitive functions, type in the name of the function at the command line, followed by a period.}
 \begin{verbatim}
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 
@@ -359,7 +359,7 @@ The Ripple implementation includes a number of "experimental" primitives which m
 
 Other side effects may be more subtle.  For instance, the following program affects the "Ping the Semantic Web" service which we queried earlier, possibly influencing subsequent query results.
 \begin{verbatim}
-# uri => uri (having pinged the Semantic Web)
+# uri => PTSW's ping response
 @define ping:
     /toString/urlEncoding
     "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
@@ -376,24 +376,24 @@ Other potentially useful side-effects include the sending of an e-mail or the fi
 Ripple is implemented in Java and uses the Sesame 2 (beta) RDF framework.  The command-line interface relies on ANTLR for lexer/parser generation and on JLine for command history and tab completion.  The project is built with Maven and is distributed under an open source license.  Software releases are available at \texttt{http://fortytwo.net/ripple}.
 
 \section{Related Work}
-Ripple is strictly a resource-centric language and is not intended as an alternative to SPARQL.  The fact that Ripple is rather like a path language makes it much more effective at some tasks than the "relational" SPARQL, and vice versa.  The same can be said of any of the other RDF Path\footnote{http://esw.w3.org/topic/RdfPath} languages, such as Versa\footnote{http://copia.ogbuji.net/files/Versa.html} or the path portion of PSPARQL\footnote{http://psparql.inrialpes.fr/}.  Probably the closest thing to Ripple is Ora Lassila's Wilbur\footnote{http://www.lassila.org/publications/2001/swws-01-abstract.shtml} toolkit and path language, which integrates RDF with Common Lisp (coming soon: Python!).  Deep integration [2] of languages such as Ruby [3] and Python [4] with RDF are related efforts, as well.
+Ripple is strictly a resource-centric language and is not intended as an alternative to SPARQL.  The fact that Ripple is rather like a path language makes it much more effective for some tasks than the "relational" SPARQL, and vice versa.  The same can be said of any of the other RDF Path\footnote{http://esw.w3.org/topic/RdfPath} languages, such as Versa\footnote{http://copia.ogbuji.net/files/Versa.html} or the path portion of PSPARQL\footnote{http://psparql.inrialpes.fr/}.  Possibly the closest thing to Ripple is Ora Lassila's Wilbur\footnote{http://www.lassila.org/publications/2001/swws-01-abstract.shtml} toolkit and path language, which integrates RDF with Common Lisp (coming soon: Python!).  Deep integration [2] of languages such as Ruby [3] and Python [4] with RDF are related efforts, as well.
 
 \section{Conclusion and Future Work}
 Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  If the hypertext web is any indication of the future of the web of data, it will be vast, complex, and overall, loosely structured.  As it grows, we will need a sophisticated \textit{web of programs} to keep pace with it.
 
 In addition to the command-line interpreter, the distribution contains a query API, and the embedding of the Ripple query processor in further Semantic Web applications is a very likely use case.  In the short term, I would like to integrate Ripple with a graphical RDF browser such as Longwell\footnote{http://simile.mit.edu/wiki/Longwell}, and investigate the federated query scenario mentioned above.
 
-Christopher Diggins has done some work on static typing for stack languages [5], and it would be interesting to see if or how such a type system can be expressed with an ontology.  Currently, Ripple's type system is just a form of API documentation, so a more rigorous one would definitely be a step forward.
+Christopher Diggins has done some work on static typing for stack languages [5], and it would be interesting to see whether and how such a type system could be expressed with an ontology.  Currently, Ripple's type system is just a form of API documentation, so a more rigorous one would definitely be a step forward.
 
 \textit{Compilation} is another interesting possibility.  While Ripple will always have an interpreted component, a modular Ripple program could be compiled to optimized Java bytecode and then reinserted into the environment as a primitive function.
 
 \section*{References}
 \begin{enumerate}
-\item Tim Berners-Lee et al. Tabulator: Exploring and Analyzing linked data on the Semantic Web. In Proceedings of the 3rd International Semantic Web User Interaction Workshop, 2006.
-\item Vrandecic, D., Deep Integration of Scripting Languages and Semantic Web Technologies, In Soren Auer, Chris Bizer, Libby Miller, 1st International Workshop on Scripting for the Semantic Web SFSW 2005 , volume 135 of CEUR Workshop Proceedings. CEUR-WS.org, Herakleion, Greece, May 2005. ISSN: 1613-0073
-\item Fernandez, O., Deep Integration of Ruby with Semantic Web Ontologies, see gigaton.thoughtworks.net/ofernand1/DeepIntegration.pdf
-\item Marian Babik, Ladislav Hluchy: Deep Integration of Python with Web Ontology Language. Proc. of Scripting for the Semantic Web Workshop at the ESWC, Budva, Montenegro, June 12, 2006, CEUR Workshop Proceedings, ISSN 1613-0073, online CEUR-WS.org/Vol-181/paper1.pdf
-\item Diggins, C., Typing Stack-Based Languages, available at http://www.cat-language.com/paper.html
+\item Berners-Lee, T., et al., Tabulator: Exploring and Analyzing linked data on the Semantic Web. In Proceedings of the 3rd International Semantic Web User Interaction Workshop, 2006.
+\item Vrandecic, D., Deep Integration of Scripting Languages and Semantic Web Technologies. In 1st International Workshop on Scripting for the Semantic Web, volume 135 of CEUR Workshop Proceedings. Herakleion, Greece, May 2005. ISSN: 1613-0073
+\item Fernandez, O., Deep Integration of Ruby with Semantic Web Ontologies. See http://obiefernandez.com/DeepIntegration.pdf
+\item Babik, M., Hluchy, L., Deep Integration of Python with Web Ontology Language. In 2nd International Workshop on Scripting for the Semantic Web, volume 181 of CEUR Workshop Proceedings. Budva, Montenegro, June 2006. ISSN: 1613-0073.
+\item Diggins, C., Typing Functional Stack-Based Languages.  See http://www.cat-language.com/paper.html
 \end{enumerate}
 
 \end{document}

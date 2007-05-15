@@ -68,49 +68,58 @@ Joshua Shinavier
 \tocauthor{Ripple: Functional Programs as Linked Data}
 \maketitle
 
-
 \begin{abstract}
-Ripple is a scripting language expressed in RDF lists.  Its scripts both operate upon and are made up of RDF metadata, extending the idea of HTTP dereferenceability to computation.  Ripple is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor, and distinguishes itself through a multivalued, "pipeline" approach to query composition, as well as the inherent distributability of its programs.  The Java implementation of Ripple includes a query engine, a provisonal assortment of primitive functions, and an interactive interpreter which parses commands and queries in a readable, Turtle-like format.  A demo application can be found at:
-\indent{http://fortytwo.net/ripple}.
-\keywords{RDF, scripting language, semantic web, linked data}
+Ripple is dedicated scripting language for linked data whose programs both operate upon and reside in RDF graphs.  Ripple is a variation on the \textit{concatenative} theme of functional, stack-oriented languages such as Joy and Factor, and takes a multivalued, pipeline approach to query composition.  The Java implementation includes a query API, an extensible library of primitive functions, and an interactive command-line interpreter.  A demo application can be found at:
+
+\indent \texttt{http://fortytwo.net/ripple}.
 \end{abstract}
 
-\section{Linked Data}
+\section{Introduction}
+Most of the data which populates today's Semantic Web is purely \textit{descriptive} in nature, while the complex procedural machinery for querying, crawling, transforming and reasoning about that data is buried within applications written in high-level languages such as Java or Python, and is neither machine-accessible nor reusable in the Semantic Web sense.  This project explores the notion of \textit{linked} or distributed programs as RDF graphs, and presents a functional, \textit{concatenative} interpreted language, closely related to Manfred von Thun's Joy\footnote{http://www.latrobe.edu.au/philosophy/phimvt/joy/j01tut.html}, as a proof of concept.
 
-"Linked data"\footnote{http://www.w3.org/DesignIssues/LinkedData.html} is the subset of the Semantic Web which associates statements about the "thing" identified by a particular URI with the corresponding web location.  An appropriate HTTP request for such a URI should produce an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is \emph{complete}, and the software may reject statements about the URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation, forward traversal.
+For a Turing-complete RDF query language, Ripple is an exercise in minimalism, both in terms of syntax and semantics.  A Ripple \textit{program} is a nested list structure described with the RDF collections vocabulary, and is thereby a first-class citizen of the Semantic Web.  In the Java implementation, conversion between the RDF graph representation of a program and its more efficient linked list counterpart is transparent to the user application.
 
-\section{RDF Equivalence}
-
-Not only does Ripple \emph{operate} on linked data, but its programs are meant to \emph{be} linked data as well.  Every Ripple expression is equivalent to a collection of type rdf:List.  In the Java implementation, conversion between the RDF graph representation of a list and its more efficient linked list counterpart is transparent to the user application.  RDF properties are identified with functions which map subjects to objects.  For instance, in the following query, \texttt{dup}, \texttt{toString}, \texttt{sha1}, \texttt{swap}, and \texttt{equal} are all primitive functions, whereas \texttt{foaf:mbox} and \texttt{foaf:mbox\_sha1sum} are properties:
-
+When we assign a program a URI, we're pushing its definition to the same RDF model from which our query results are drawn:
 \begin{verbatim}
-@prefix :      <http://fortytwo.net/2007/03/ripple/demo#>.
-@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
-@define goodMboxSha1Sum:
-    /dup /foaf:mbox/toString/sha1 /swap /foaf:mbox_sha1sum /equal.
+@define hello:
+    "Hello world!".
+\end{verbatim}
+Given an appropriate base URI and web-visible triple store, the program itself becomes a part of the global graph of linked data\footnote{http://www.w3.org/DesignIssues/LinkedData.html}, enabling a remote application to read it in, execute it, and build upon it without restriction.
+
+\section{Examples}
+Ripple's query model combines a computational scheme based on \textit{stack manipulation} with a functional "pipes and filters" pattern.  The stack paradigm makes for minimal, \textit{point-free} syntax at the RDF level, while the \textit{pipeline} mechanism accommodates RDF's multivalued properties by distributing operations over arbitrary numbers of intermediate results.  Programs resemble path expressions in which RDF lists, RDF properties, and "black box" primitive functions are interchangeable.  For instance, in the following program, \texttt{toString}, and \texttt{sha1} are primitive functions, whereas \texttt{foaf:mbox} is a property:
+\begin{verbatim}
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+# p => calculated mbox sha1 sum of p
+@define mboxSha1: /foaf:mbox/toString/sha1.
 \end{verbatim}
 
-The \texttt{@define} directive creates a new list and identifies it with a URI, in this case:
-\texttt{http://fortytwo.net/2007/03/ripple/demo\#goodMboxSha1Sum}.  The list may then be applied as a function:
-
+The following example contains a more sophisticated query.
 \begin{verbatim}
-<http://www.w3.org/People/Berners-Lee/card#i>/:goodMboxSha1Sum.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+# foaf1 => foaf1, foaf2, foaf3, ...
+@define foafStep:   # iterator for a FOAF crawler
+    (   id          # include foaf1 itself
+        owl:sameAs  # include nodes identified with foaf1
+        foaf:knows  # include those foaf:known by foaf1
+    )/each/i        # apply all three patterns at once
+    /unique.        # eliminate duplicate results
+
+# => names of Tim Berners-Lee and friends
+<http://www.w3.org/People/Berners-Lee/card#i>
+    :foafStep    # the iterator function
+    1/times      # (change this value to extend the crawl)
+    /foaf:name.  # grab all matching individuals' names
 \end{verbatim}
-
-The above is a program which dereferences Tim Berners-Lee's FOAF URI, finds the sha1 sum of his email address, and checks it against the stated value, yielding \texttt{true}.  Characteristically of Ripple, it doesn't matter where or when a program is executed; provided that its URI is made to be dereferenceable (for instance, by exporting data to a public location, or eventually, by attaching the interpreter to a triple store with a SPARQL endpoint), the program itself is dereferenceable, and a Ripple query engine on a remote machine will draw it into its own execution environment as needed.
-
-\section{The Compositional Pipeline}
-
-If Joy\footnote{http://www.latrobe.edu.au/philosophy/phimvt/joy/j00ovr.html} is a stack language, then Ripple is a "stream-of-stacks" language.  Each of its functions consumes a series of stacks as input, and produces a series of stacks as output, which is how it gets away with using RDF properties as functions.  This simple query, for instance, yields not one, but several values:
-
-\begin{verbatim}
-<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows/foaf:name.
-\end{verbatim}
-
-To distribute operations over an arbitrary number of values, Ripple replaces functions with "instances" which behave like elements of a pipeline: receiving input, transforming it, and passing it on.  Instances may have state; for example, instances of the \texttt{limit} primitive (which counts its input and stops transmitting them after a certain point) or of the \texttt{unique} primitive (which remembers its input, and will not transmit a duplicate stack).
 
 \section{Conclusion and Future Work}
+Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  Thus far, Ripple has been most useful for discovery, navigation and mapping of linked data.  If the hypertext web is any indication of the future of the Semantic Web, it be vast, complex, and overall, loosely structured.  As it grows, we will need an equally sophisticated \textit{web of programs} to keep pace with it.
 
-Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  Thus far, Ripple has been most useful for quickly picking out and exploiting useful patterns in linked data.  If the hypertext web is any example, the web of data will be vast, complex, and overall, loosely structured.  As it grows, we will need an equally sophisticated web of programs to keep pace with it.
+\section*{References}
+\begin{enumerate}
+\item Tim Berners-Lee et al. Tabulator: Exploring and Analyzing linked data on the Semantic Web. In Proceedings of the 3rd International Semantic Web User Interaction Workshop, 2006.
+\end{enumerate}
 
 \end{document}
