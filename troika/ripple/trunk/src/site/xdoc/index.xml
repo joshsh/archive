@@ -9,7 +9,11 @@
 
         <section name="Ripple RDF Scripting Language">
 
-            Read an <A HREF="ripple.html">introduction</A> to Ripple.
+            <subsection name="Publication">
+                <b>Abstract.</b> The idea of linked programs, or <i>procedural</i> RDF metadata, has not been deeply explored.  This paper introduces a dedicated scripting language for linked data, called Ripple, whose programs both operate upon and reside in RDF graphs.  Ripple is a variation on the <i>concatenative</i> theme of functional, stack-oriented languages such as Joy and Factor, and takes a multivalued, pipeline approach to query composition.  The Java implementation includes a query API, an extensible library of primitive functions, and an interactive command-line interpreter.<br/>
+                <br/>
+                Shinavier, J., <a href="http://projects.semwebcentral.org/docman/view.php/125/36/ripple.pdf">Functional Programs as Linked Data</a> (<a href="http://projects.semwebcentral.org/docman/view.php/125/36/ripple.pdf">PDF</a>/<a href="http://ripple.projects.semwebcentral.org/ripple.html">HTML</a>). In <a href="http://www.semanticscripting.org/SFSW2007/">3rd Workshop on Scripting for the Semantic Web</a>, Innsbruck, Austria, May 2007.
+            </subsection>
 
             <subsection name="JavaDoc">
                 <A HREF="apidocs/index.html">JavaDoc</A> API reference.

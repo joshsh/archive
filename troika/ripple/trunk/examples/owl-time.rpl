@@ -1,5 +1,9 @@
 # See: http://www.w3.org/TR/owl-time/
 
+# Temporal ontology use cases:
+#     http://esw.w3.org/topic/HCLS/ACPPTaskForce/TimeConceptUseCase
+
+
 @prefix time:  <http://www.w3.org/2006/time#> .
 
 @define timeTerms:
@@ -87,6 +91,3 @@
 
 
 
-
-# Temporal ontology use cases:
-#     http://esw.w3.org/topic/HCLS/ACPPTaskForce/TimeConceptUseCase
