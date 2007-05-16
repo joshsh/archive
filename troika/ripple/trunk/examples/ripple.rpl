@@ -1,5 +1,6 @@
 
-"Hello world!".
+@define hello:
+    "Hello world!".
 
 
 # If predicates and primitive functions are really equivalent to quoations in

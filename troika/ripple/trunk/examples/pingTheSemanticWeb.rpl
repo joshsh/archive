@@ -1,4 +1,7 @@
 
+# => recently pinged DOAP documents
+10 "doap" /pingTheSemanticWeb/toString.
+
 20 "all" /pingTheSemanticWeb.
 20 "foaf" /pingTheSemanticWeb.
 20 "sioc" /pingTheSemanticWeb.

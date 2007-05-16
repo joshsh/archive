@@ -10,21 +10,21 @@
 3 2 /:min.  # 2
 
 
+### recursive factorial ################
 
-# Recursive factorial.
+# n => factorial(n)
 @define fact:
     /dup 0 /equal                  # if n is 0...
         (1 /popd)                  # yield 1
         (/dup 1 /sub /:fact /mul)  # otherwise, yield n*fact(n-1)
     /branch.
 
+# => 120
 5/:fact.
 
 
+### recursive Fibonacci ################
 
-### fibonacci ##########################
-
-# Recursive Fibonacci.
 @define fib:
     /dup 2/lt                               # if n is less than two...
     (1 /popd)                               # yield 1
@@ -40,9 +40,17 @@
 6/:fib.  # 13
 
 
-# Iterative Fibonacci.
+### iterative Fibonacci ################
+
+# n => fibonacci(n)
 @define fib:
-    0 1 /rolldown (/swap/dupd/add)/swap /times /pop.
+    0 1 /rolldown     # push initial value pair and put n on top
+    (/swap/dupd/add)  # push the step function
+    /swap/times       # execute the step function n times
+    /pop.             # select the low value
+
+# => 13
+7/:fib.
 
 0/:fib.  # 0
 1/:fib.  # 1

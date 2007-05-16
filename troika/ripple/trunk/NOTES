@@ -179,20 +179,6 @@ http://www.w3.org/2000/01/rdf-schema#comment
 [.] http://www.w3.org/1999/02/22-rdf-syntax-ns -- the RDF Schema for the RDF vocabulary defined in the RDF namespace
 [.] http://www.w3.org/2000/01/rdf-schema -- The RDF Schema vocabulary (RDFS)
 
-[conflicts] ::::::::::::::::::::::::::::
-
-[ba] Oddly enough, neither "type" nor "List" are defined by the rdfs model.  Maybe this is an OpenRDF bug.
-     BUT... http://www.w3.org/2000/01/rdf-schema#List
-
-[.]
-    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-    [ba] http://www.w3.org/2000/01/rdf-schema#type
-
-[.]
-    [.] http://www.w3.org/1999/02/22-rdf-syntax-ns#List
-    [ba] http://www.w3.org/2000/01/rdf-schema#List
-
-
 
 svn propset svn:keywords "Id LastChangedDate Revision Author" myfile
 
@@ -502,18 +488,18 @@ blah/3*knows/depiction;
 
 
 This works:
-	<http://www.w3.org/People/Berners-Lee/card#i>;
-	<http://my.opera.com/sucks/xml/foaf#me>;
+	<http://www.w3.org/People/Berners-Lee/card#i>
+	<http://my.opera.com/sucks/xml/foaf#me>
 This doesn't:
-	<http://www.w3.org/People/Berners-Lee/card#>;
-	<http://my.opera.com/sucks/xml/foaf#>;
+	<http://www.w3.org/People/Berners-Lee/card#>
+	<http://my.opera.com/sucks/xml/foaf#>
 Neither do these, although these URIs are the subjects of statements once their graph has been imported:
-	<http://www.w3.org/People/Berners-Lee/card>;
-	<http://my.opera.com/sucks/xml/foaf>;
+	<http://www.w3.org/People/Berners-Lee/card>
+	<http://my.opera.com/sucks/xml/foaf>
 
 Ripple sees these as different:
-    <http://www.w3.org/People/Berners-Lee/card#i>;
-    <http://www.w3.org/People/Berners-Lee/card.rdf#i>;
+    <http://www.w3.org/People/Berners-Lee/card#i>
+    <http://www.w3.org/People/Berners-Lee/card.rdf#i>
 
 
 
