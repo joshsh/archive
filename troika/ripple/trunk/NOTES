@@ -18,6 +18,7 @@ cp doc/ripple.html target/site
 cp doc/ripple.pdf target/site
 rm -rf target/assembly
 rm ripple.log
+rm cobertura.ser
 rm -rf contest
 rm -rf etc
 rm -rf examples
@@ -27,8 +28,6 @@ rm NOTES
 rm REFACTORING
 rm NEWPRIMITIVES
 rm TODO
-#cp ~/www/ripple/demo-cache.rdf .
-cp ~/www/ripple/ripple.pdf .
 cd ..
 mv trunk/ ripple-0.2.1
 tar -cf ripple-0.2.1.tar ripple-0.2.1
