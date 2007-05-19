@@ -2,12 +2,14 @@ concatenative languages and the Semantic Web
 
 Hi all,
 
-I've been lurking this list for a few weeks now, and thought it was about time to speak up and introduce an application of concatenative languages which I've been investigating lately.  For those unacquainted with the idea, the "Semantic Web" is a network of machine-understandable data which is to a software agent what the hypertext Web is to a person.  It replaces the unconstrained, natural language text of HTML web pages with the software-friendly subject-predicate-object triples of RDF, enabling specialized applications to make more intelligent use of the vast amounts of information on the Web (or at least, that's the vision).  Personally, I'm very interested in the procedural aspect of the Semantic Web, or the logic and algorithms which drive the crawlers, reasoners, and innovative mashups that consume and do useful things with the data.  I think the Semantic Web has a lot to gain from the "programs as data" mindset of functional programming, so I've designed a simple Semantic Web programming language which is expressed in RDF itself, called Ripple.  I decided to make Ripple a concatenative language because of the simplicity of concatenative programs and because of their resemblance to path expressions, which are very appropriate for the labeled graph model of RDF.  There's some documentation on Ripple here:
+I'd like to introduce a new, concatenative language aimed at Semantic Web applications.  Ripple is a Turing-complete RDF query language which borrows heavily from Joy, and has the novel property of being expressible in RDF as well as operating upon it.
+
+I'd like to introduce an application of concatenative languages which I've been investigating: a concatenative RDF query language called Ripple.  For those unacquainted with the Semantic Web, the "Semantic Web" is a network of machine-understandable data which is to a software agent what the hypertext Web is to a person.  It replaces the unconstrained, natural language text of HTML web pages with the software-friendly subject-predicate-object triples of RDF, enabling specialized applications to make more intelligent use of the vast amounts of information on the Web (or at least, that's the vision).  Personally, I'm very interested in the procedural aspect of the Semantic Web, or the logic and algorithms which drive the crawlers, reasoners, and innovative mashups that consume and do useful things with the data.  I think the Semantic Web has a lot to gain from the "programs as data" mindset of functional programming, so I've designed a simple Semantic Web programming language which is expressed in RDF itself, called Ripple.  I decided to make Ripple a concatenative language because of the simplicity of concatenative programs and because of their resemblance to path expressions, which are very appropriate for the labeled graph model of RDF.  There's some documentation on Ripple here:
     http://ripple.projects.semwebcentral.org/
 And a distribution of the Java implementation here:
     http://projects.semwebcentral.org/frs/?group_id=125
 
-Basically, Ripple is very much like Joy and friends except that functions ("filters") may yield any number of values.  Also, Ripple's notation has a slightly different appearance, owing to a slash symbol which represents its only operator.  For instance, whereas in Joy you would write
+Basically, Ripple is very much like Joy and friends except that functions ("filters") may yield any number of values.  Ripple's notation has a slightly different appearance, owing to a slash symbol which represents its only operator.  For instance, whereas in Joy you would write
 
     2 dup.
 
@@ -19,13 +21,15 @@ or
 
     2/dup.
 
-In Ripple, dup is a "passive" stack item just the literal value 2.  We need an operator, op, to consume dup and push an "active" dup filter to the stack which then consumes the 2.  The single operator, as one of only a handful of special values, cuts down on the number of comparisons the Ripple query engine needs to make when a new program is drawn in from the data web; there are several kinds of objects Ripple recognizes as programs, but as the operations involved in checking for them and distinguishing between them are expensive, the interpreter doesn't do so until it's absolutely necessary.  Since 
+In Ripple, dup is a "passive" stack item just the literal value 2.  We need an operator, op, to consume dup and push an "active" dup filter to the stack, which then consumes the 2.  The single operator, as one of only a handful of special values, cuts down on the number of comparisons the Ripple query engine needs to make when a new program is drawn in from the data web; there are several kinds of objects Ripple recognizes as programs, but as the operations involved in checking for them and distinguishing between them are expensive, the interpreter doesn't do so until it's absolutely necessary.  Since 
 
     dup/rdf:type.
 
 
 
 I tried not to lose my (Semantic Web) audience in the paper by getting 
+
+I've been lurking this list for a few weeks now, and thought it was about time to speak up and i
 
 
 Below are some details of the language in a format 
@@ -116,10 +120,10 @@ Q: What control constructs does it include?
 A: Currently, it borrows the "ifte", "branch", "choice" and "times" functions from Joy.
 
 Q: Is the style predominantly iterative or recursive?
-A: Recursive.  Even the "times" function is a recursive function internally.  When something goes wrong, big stack traces are the norm.
+A: Recursive.  Even the "times" function is a recursive function, internally.
 
 Q: How verbose is the language?
-A: Comparable to Joy in that respect.  Ripple adds the slash prefix, which makes some programs a little longer, others a little shorter.  At the RDF level, Ripple is more verbose than Joy on account of repetitive use of the "op" sybol.
+A: Comparable to Joy in that respect.  Ripple adds the slash prefix, which makes some programs a little longer, others a little shorter.  At the RDF level, Ripple is more verbose than Joy on account of repetitive use of the "op" symbol.
 
 Q: How programmer-efficient is it?
 A: Comparable to Joy, and 
@@ -132,16 +136,16 @@ A: The Java implementation includes an interactive command-line interpreter, com
 	definition is easy
 
 Q: Does code = data?
-A: Yes.  The stated purpose of the language is to express RDF queries in RDF.
+A: Yes.  The stated purpose of the language is to express RDF queries in RDF itself.
 
 Q: How far is it from the hardware?
 A: Pretty far.  Ripple is meant to operate on metadata, which is pretty abstract stuff.  There are no functions which deal with input/output, environment variables, memory management, etc.
 
 Q: How does it manage its memory?
-A: It doesn't.  Java does :-)  Management of an RDF triple store is an interesting research topic, but is outside of the scope of the Ripple language and query engine.
+A: It doesn't.  Java does :-)  Management of an RDF triple store is an interesting research topic, but is outside of the scope of this project.
 
 Q: How is its performance?
-A: I have not yet compared Ripple's performance to that of SPARQL implementations or other RDF query processors.  It's certainly not a number cruncher, but it's not meant to be.
+A: I have not yet compared Ripple's performance to that of SPARQL implementations or of other RDF query processors.  It's certainly not a number cruncher, but it's not meant to be.
 
 Q: What is the execution model?
 A: Execution takes the form of lazy evaluation at the head of the stack.  

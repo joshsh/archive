@@ -80,3 +80,12 @@ etc:urlEncoding
 ========================================
 
 "encode me!" /urlEncoding.
+
+
+========================================
+xml:lang
+========================================
+
+"vierzig"@de /xml:lang.  # "de"
+"vierzig"@de /lang.  # "de"
+"vierzig" /lang.  # ""

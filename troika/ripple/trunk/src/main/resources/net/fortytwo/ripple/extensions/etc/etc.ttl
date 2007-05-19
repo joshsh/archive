@@ -5,6 +5,10 @@
 @prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
+# For the xml:lang primitive.
+# Note: actually http://www.w3.org/XML/1998/namespace
+@prefix xml:      <http://www.w3.org/XML/1998/namespace/> .
+
 etc:back
 	a rpl:Function ;
 	rpl:arity 2 ;

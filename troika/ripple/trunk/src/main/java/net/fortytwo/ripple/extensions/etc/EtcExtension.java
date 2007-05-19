@@ -26,6 +26,9 @@ public class EtcExtension implements Extension
 		bridge.add( new SwoogleIt( new RdfValue( mc.createUri( ns + "swoogleIt" ) ), mc ), mc );
 		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
 		bridge.add( new UrlEncoding( new RdfValue( mc.createUri( ns + "urlEncoding" ) ), mc ), mc );
+
+		// Note: the xml: namespace is actually said to be http://www.w3.org/XML/1998/namespace (i.e. without the slash).
+		bridge.add( new Lang( new RdfValue( mc.createUri( "http://www.w3.org/XML/1998/namespace/lang" ) ), mc ), mc );
 	}
 }
 
