@@ -85,6 +85,37 @@ public class ListMemoizer<T extends Comparable,M>
 				return right.add( list, memo );
 		}
 	}
+
+	private int compare( ListMemoizer<T, M> first,
+						ListMemoizer<T, M> second )
+	{
+		if ( null == first )
+			return ( null == second )
+				? 0 : -1;
+		else if ( null == second )
+			return 1;
+		else
+			return first.compareTo( second );
+	}
+
+	public int compareTo( ListMemoizer<T, M> other )
+	{
+		int cmp = first.compareTo( other.first );
+
+		if ( 0 != cmp )
+			return cmp;
+
+		cmp = compare( left, other.left );
+		if ( 0 != cmp )
+			return cmp;
+
+		cmp = compare( rest, other.rest );
+		if ( 0 != cmp )
+			return cmp;
+
+		cmp = compare( right, other.right );
+			return cmp;
+	}
 }
 
 // kate: tab-width 4

@@ -58,7 +58,6 @@ public class Demo
 
 		catch ( Throwable t )
 		{
-t.printStackTrace( System.err );
 			throw new RippleException( t );
 		}
 	}
@@ -120,21 +119,28 @@ System.exit( 0 );
 		{
 			File store = ( args.length > 0 ) ? new File( args[0] ) : null;
 
+			// Load Ripple configuration.
 			Ripple.initialize();
 
+			// Create a Sesame repository.
 			Repository repository = createTestRepository();
 
+			// Attach a Ripple model to the repository.
 			Model model = new Model( repository, "Demo Model" );
+
+			// Set the default namespace.
 			ModelConnection mc = new ModelConnection( model );
 			mc.setNamespace( "", Ripple.getDefaultNamespace() );
 			mc.close();
 
+			// Load from store.
 			if ( null != store )
 			{
 				s_logger.info( "loading state from " + store );
 				model.load( store.toURL() );
 			}
 
+			// Attach a query engine to the model.
 			Evaluator evaluator = new LazyEvaluator();
 			QueryEngine qe
 				= new QueryEngine( model, evaluator, System.out, System.err );
@@ -144,6 +150,7 @@ System.exit( 0 );
 			Interpreter r = new Interpreter( qe, System.in );
 			r.run();
 
+			// Save back to store.
 			if ( null != store )
 			{
 				s_logger.info( "saving state to " + store );
@@ -152,6 +159,7 @@ System.exit( 0 );
 				out.close();
 			}
 
+			// Shut down the Sesame repository.
 			repository.shutDown();
 		}
 

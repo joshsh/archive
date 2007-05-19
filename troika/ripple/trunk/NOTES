@@ -19,7 +19,7 @@ cp doc/ripple.pdf target/site
 rm -rf target/assembly
 rm ripple.log
 rm cobertura.ser
-rm -rf contest
+rm -rf doc
 rm -rf etc
 rm -rf examples
 rm -rf issues
