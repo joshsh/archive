@@ -89,3 +89,15 @@ xml:lang
 "vierzig"@de /xml:lang.  # "de"
 "vierzig"@de /lang.  # "de"
 "vierzig" /lang.  # ""
+42/lang.  # ""
+rdf:/lang.  # [nothing]
+
+
+========================================
+xsd:type
+========================================
+
+42/xsd:type.  # xsd:integer
+"foo"/type.  # xsd:string
+rdf:/type.  # [nothing]
+rdf:/dc:title/type.  # [nothing]

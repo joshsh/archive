@@ -10,10 +10,11 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
 
-public class Lang extends PrimitiveFunction
+public class Type extends PrimitiveFunction
 {
-	public Lang( RdfValue v, ModelConnection mc )
+	public Type( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -30,19 +31,16 @@ public class Lang extends PrimitiveFunction
 		throws RippleException
 	{
 		Value v;
-		String result;
 
 		v = stack.getFirst().toRdf( mc ).getRdfValue();
 		stack = stack.getRest();
 
 		if ( v instanceof Literal )
 		{
-			result = ( (Literal) v ).getLanguage();
+			URI type = ( (Literal) v ).getDatatype();
 
-			if ( null == result )
-				result = "";
-
-			sink.put( new RippleList( mc.createValue( result ), stack ) );
+			if ( null != type )
+				sink.put( new RippleList( new RdfValue( type ), stack ) );
 		}
 	}
 }

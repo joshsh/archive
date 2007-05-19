@@ -28,7 +28,10 @@ public class EtcExtension implements Extension
 		bridge.add( new UrlEncoding( new RdfValue( mc.createUri( ns + "urlEncoding" ) ), mc ), mc );
 
 		// Note: the xml: namespace is actually said to be http://www.w3.org/XML/1998/namespace (i.e. without the slash).
-		bridge.add( new Lang( new RdfValue( mc.createUri( "http://www.w3.org/XML/1998/namespace/lang" ) ), mc ), mc );
+		bridge.add( new Lang( new RdfValue( mc.createUri( "http://www.w3.org/XML/1998/namespace#lang" ) ), mc ), mc );
+
+		// Note: this URI is bogus.
+		bridge.add( new Type( new RdfValue( mc.createUri( "http://www.w3.org/2001/XMLSchema#type" ) ), mc ), mc );
 	}
 }
 
