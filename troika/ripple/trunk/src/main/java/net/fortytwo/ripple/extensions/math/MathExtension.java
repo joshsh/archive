@@ -26,6 +26,7 @@ public class MathExtension implements Extension
 		bridge.add( new Mod( new RdfValue( mc.createUri( ns + "mod" ) ), mc ), mc );
 		bridge.add( new Mul( new RdfValue( mc.createUri( ns + "mul" ) ), mc ), mc );
 		bridge.add( new Neg( new RdfValue( mc.createUri( ns + "neg" ) ), mc ), mc );
+		bridge.add( new Pow( new RdfValue( mc.createUri( ns + "pow" ) ), mc ), mc );
 		bridge.add( new Sign( new RdfValue( mc.createUri( ns + "sign" ) ), mc ), mc );
 		bridge.add( new Sub( new RdfValue( mc.createUri( ns + "sub" ) ), mc ), mc );
 	}

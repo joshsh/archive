@@ -133,6 +133,23 @@ math:neg
 	rdfs:label "neg" ;
 	rdfs:comment "x  ->  -x" .
 
+math:pow
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "p" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "pow" ;
+	rdfs:comment "x p  ->  x^p" .
+
 math:sign
 	a rpl:Function ;
 	rpl:arity 1 ;

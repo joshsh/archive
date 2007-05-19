@@ -1,73 +1,3 @@
-# foaf
-<http://xmlns.com/foaf/0.1/>.
-
-# Tim Berners-Lee
-<http://www.w3.org/People/Berners-Lee/card#i>.
-
-########################################
-
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix owl:  <http://www.w3.org/2002/07/owl#>.
-
-# foaf1 => foaf1, foaf2, foaf3, ...
-@define foafStep:   # iterator for a FOAF crawler
-    (   id          # include foaf1 itself
-        owl:sameAs  # include nodes identified with foaf1
-        foaf:knows  # include those foaf:known by foaf1
-    )/each/i        # apply all three patterns at once
-    /unique.        # eliminate duplicate results
-
-# => names of TBL and friends, and of friends of friends
-<http://www.w3.org/People/Berners-Lee/card#i>
-    :foafStep 2/times /foaf:name.
-
-@saveas "/tmp/new.rdf".
-
-# Note: after the second step or so, most if not all graphs are from my.opera.com
-# 1 times -- 38
-# 2 times -- 256 (with a previous algorithm: 248)
-# 3 times -- 1157 (previously: 2652)
-# 4 times -- out of heap space (previously: 69317)
-
-
-########################################
-
-@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
-@define fromtbl:  demo:tbl/swap/dip demo:foafStep /swap/times.
-@define withPred:  dup/swap/dip/i/pop/unique.
-
-2 /:fromtbl bio:event/:withPred/foaf:name.
-2 /:fromtbl owl:sameAs/:withPred/foaf:name.
-2 /:fromtbl foaf:knows/:withPred/foaf:name.
-
-########################################
-
-/demo:tbl demo:foafStep 3/times foaf:img foaf:depiction /union/i/unique/toString.
-
-########################################
-
-# => a whopping 33325 results
-<http://my.opera.com/fred/xml/foaf#me> (/foaf:knows/unique) 3/times /foaf:name/unique.
-
-########################################
-
-# TBL is indeed a Person.
-<http://www.w3.org/People/Berners-Lee/card#i> /dup /rdf:type foaf:Person /equal scrap I V/// /;
-
-# He knows a few other Persons.
-<http://www.w3.org/People/Berners-Lee/card#i> knows seeAlso or// / dup/ rdf:type/ foaf:Person equal// scrap I V/// /;
-
-# This gives us more results, because (apparently) many of the above are not typed as foaf:Person.
-<http://www.w3.org/People/Berners-Lee/card#i> knows/ unique/;
-
-########################################
-
-# Ego
-<http://fortytwo.net/2007/03/06/josh#me>.
-<http://fortytwo.net/2007/03/06/josh#me> /foaf:interest.
-
-########################################
-
 # Cheat to grab the actual FOAF vocabulary:
 <http://xmlns.com/foaf/0.1/index.rdf#>.
 
@@ -141,6 +71,70 @@ foaf: .
     foaf:workplaceHomepage
     foaf:yahooChatID
     .
+
+
+########################################
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+# foaf1 => foaf1, foaf2, foaf3, ...
+@define foafStep:   # iterator for a FOAF crawler
+    (   id          # include foaf1 itself
+        owl:sameAs  # include nodes identified with foaf1
+        foaf:knows  # include those foaf:known by foaf1
+    )/each/i        # apply all three patterns at once
+    /unique.        # eliminate duplicate results
+
+# => names of TBL and friends, and of friends of friends
+<http://www.w3.org/People/Berners-Lee/card#i>
+    :foafStep 2/times /foaf:name.
+
+@saveas "/tmp/new.rdf".
+
+# Note: after the second step or so, most if not all graphs are from my.opera.com
+# 1 times -- 38
+# 2 times -- 256 (with a previous algorithm: 248)
+# 3 times -- 1157 (previously: 2652)
+# 4 times -- out of heap space (previously: 69317)
+
+
+########################################
+
+@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
+@define fromtbl:  demo:tbl/swap/dip demo:foafStep /swap/times.
+@define withPred:  dup/swap/dip/i/pop/unique.
+
+2 /:fromtbl bio:event/:withPred/foaf:name.
+2 /:fromtbl owl:sameAs/:withPred/foaf:name.
+2 /:fromtbl foaf:knows/:withPred/foaf:name.
+
+########################################
+
+/demo:tbl demo:foafStep 3/times foaf:img foaf:depiction /union/i/unique/toString.
+
+########################################
+
+# => a whopping 33325 results
+<http://my.opera.com/fred/xml/foaf#me> (/foaf:knows/unique) 3/times /foaf:name/unique.
+
+########################################
+
+# TBL is indeed a Person.
+<http://www.w3.org/People/Berners-Lee/card#i> /dup /rdf:type foaf:Person /equal scrap I V/// /;
+
+# He knows a few other Persons.
+<http://www.w3.org/People/Berners-Lee/card#i> knows seeAlso or// / dup/ rdf:type/ foaf:Person equal// scrap I V/// /;
+
+# This gives us more results, because (apparently) many of the above are not typed as foaf:Person.
+<http://www.w3.org/People/Berners-Lee/card#i> knows/ unique/;
+
+########################################
+
+# Ego
+<http://fortytwo.net/2007/03/06/josh#me>.
+<http://fortytwo.net/2007/03/06/josh#me> /foaf:interest.
+
 
 ########################################
 
