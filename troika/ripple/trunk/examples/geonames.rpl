@@ -1,3 +1,9 @@
 
 # Spokane
-<http://sws.geonames.org/5811696>.
+<http://sws.geonames.org/5811696/>.
+
+
+# Alternate place names in various languages.
+<http://sws.geonames.org/5811696/>
+    /<http://www.geonames.org/ontology#alternateName>
+    /xml:lang.
