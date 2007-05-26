@@ -10,6 +10,9 @@ package net.fortytwo.ripple;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
+	import java.awt.Color;
+	import java.awt.SystemColor;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
@@ -75,8 +78,8 @@ public class Demo
 	public static void main( final String [] args )
 	{
 
-
-
+System.out.println( "system color: " + SystemColor.text );
+//SystemColor.text = Color.red;
 
 /*
 Getopt g = new Getopt( Ripple.getName(), args, "ab:c::d" );

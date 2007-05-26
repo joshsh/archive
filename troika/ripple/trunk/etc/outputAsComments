@@ -1,0 +1,41 @@
+
+
+29 >>  <http://www.w3.org/People/Berners-Lee/card#i>/foaf:nick.
+
+# rdf:_1  ("TimBL")
+# rdf:_2  ("timbl")
+# rdf:_3  ("TimBL")
+# rdf:_4  ("timbl")
+
+30 >>  <http://www.w3.org/People/Berners-Lee/card#i>/owl:sameAs.
+
+# rdf:_1  (<http://www4.wiwiss.fu-berlin.de/bookmashup/persons/Tim+Berners-Lee>)
+#    ns0pred:type
+#       foaf:Person
+#    foaf:name
+#       "Tim Berners-Lee"
+#    owl:sameAs
+#       <http://www4.wiwiss.fu-berlin.de/dblp/resource/person/100007>
+# rdf:_2  (<http://www4.wiwiss.fu-berlin.de/dblp/resource/person/100007>)
+#    ns0pred:type
+#       foaf:Person
+#    foaf:name
+#       "Tim Berners-Lee"
+#    rdfs:label
+#       "Tim Berners-Lee"
+# rdf:_3  (<http://www4.wiwiss.fu-berlin.de/bookmashup/persons/Tim+Berners-Lee>)
+#    ns0pred:type
+#       foaf:Person
+#    foaf:name
+#       "Tim Berners-Lee"
+#    owl:sameAs
+#       <http://www4.wiwiss.fu-berlin.de/dblp/resource/person/100007>
+# rdf:_4  (<http://www4.wiwiss.fu-berlin.de/dblp/resource/person/100007>)
+#    ns0pred:type
+#       foaf:Person
+#    foaf:name
+#       "Tim Berners-Lee"
+#    rdfs:label
+#       "Tim Berners-Lee"
+
+31 >>

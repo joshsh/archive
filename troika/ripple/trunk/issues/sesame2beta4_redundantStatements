@@ -1,0 +1,22 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+# foaf1 => foaf1, foaf2, foaf3, ...
+@define foafStep:   # iterator for a FOAF crawler
+    (   id          # include foaf1 itself
+        owl:sameAs  # include nodes identified with foaf1
+        foaf:knows  # include those foaf:known by foaf1
+    )/each/i        # apply all three patterns at once
+    /unique.        # eliminate duplicate results
+
+
+
+<http://www.w3.org/People/Berners-Lee/card#i>
+    :foafStep 2/times /foaf:name.
+
+
+
+
+<http://www.w3.org/People/Berners-Lee/card#i>.
+
+<http://www.w3.org/People/Berners-Lee/card#i>/owl:sameAs.

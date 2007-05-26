@@ -23,6 +23,30 @@ public class RipplePrintStream extends PrintStream
 {
 	private Lexicon lexicon;
 
+/*
+private class Palette
+{
+	private static final int
+		BLACK = 0,
+		RED = 1,
+		GREEN = 2,
+		YELLOW = 3,
+		BLUE = 4,
+		MAGENTA = 5,
+		CYAN = 6,
+		WHITE = 7;
+
+	private int bg = 7;
+	private int text = 0;
+	private int uri = 4;
+
+	public String beginUri = "\u001B[0;" + 3 + uri + ";" + 4 + bg + "m";
+	public String endUri = "\u001B[0;" + 3 + text + ";" + 4 + bg + "m";
+}
+
+Palette palette = new Palette();
+*/
+
 	public RipplePrintStream( OutputStream out, Lexicon lexicon )
 		throws RippleException
 	{
@@ -32,7 +56,9 @@ public class RipplePrintStream extends PrintStream
 
 	private void printUriRef( URI uri )
 	{
+//print( palette.beginUri );
 		print( "<" + StringUtils.escapeUriString( uri.toString() ) + ">" );
+//print( palette.endUri );
 	}
 
 	private void printUri( URI uri )

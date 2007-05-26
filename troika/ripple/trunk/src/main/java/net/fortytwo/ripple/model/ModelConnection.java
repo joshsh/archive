@@ -62,13 +62,11 @@ public class ModelConnection
 
 		try
 		{
-//org.openrdf.rio.Rio.createParser( RDFFormat.TURTLE );
-
+			s_logger.debug( "opening " + ( null == name ?
+				"anonymous connection" : ( "connection \"" + name + "\"" ) )
+				+ " (" + openConnections + " total)" );
 			repoConnection = model.getRepository().getConnection();
 			valueFactory = model.getRepository().getValueFactory();
-//System.out.println( "Opened "
-//    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-//    + " (" + openConnections + " total)." );
 		}
 
 		catch ( Throwable t )
@@ -109,7 +107,9 @@ public class ModelConnection
 	{
 		try
 		{
-//System.out.println( "closing connection..." );
+			s_logger.debug( "closing " + ( null == name ?
+				"anonymous connection" : ( "connection \"" + name + "\"" ) )
+				+ " (" + openConnections + " total)" );
 			repoConnection.close();
 		}
 
@@ -927,7 +927,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			else if ( contentType.contains( "text/rdf+n3" ) )
 				return RDFFormat.N3;
 
-// See: RDFFormat.TRIX.getMIMEType()
+			// See: RDFFormat.TRIX.getMIMEType()
 			else if ( contentType.contains( "application/trix" ) )
 				return RDFFormat.TRIX;
 
@@ -959,7 +959,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 				return RDFFormat.TURTLE;
 
 // TODO: I'm not sure just how hackish this is.
-// precedent:
+// E.g.
 //     http://www.aaronsw.com/about.xrdf
 //     http://www.w3.org/People/karl/karl-foaf.xrdf
 			else if ( ext.equals( "xrdf" ) )
@@ -972,7 +972,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			if ( contentType.contains( "application/xml" ) )
 				return RDFFormat.RDFXML;
 
-			// precedent: http://www.mindswap.org/2004/owl/mindswappers
+			// E.g. http://www.mindswap.org/2004/owl/mindswappers
 			else if ( contentType.contains( "text/xml" ) )
 				return RDFFormat.RDFXML;
 
@@ -986,8 +986,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		// Secondary file extension rules.
 		if ( null != ext )
 		{
-			// precedent:
-			//     http://hometown.aol.com/chbussler/foaf/chbussler.foaf
+			// E.g. http://hometown.aol.com/chbussler/foaf/chbussler.foaf
 			if ( ext.equals( "foaf" ) )
 				return RDFFormat.RDFXML;
 		}
@@ -1121,7 +1120,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			else
 			{
 				String baseUri = context.toString();
-s_logger.debug( "####################### before" );
+s_logger.debug( "####################### before (format =" + format + ")" );
 				repoConnection.add( is, baseUri, format, context );
 s_logger.debug( "####################### after" );
 			}

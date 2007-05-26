@@ -65,6 +65,7 @@ Names and namespaces
 
 Command line interface
 ================================================================================
+* look into terminal colors a la the Enigma console and shell
 * place multiple-line expressions in the history
 * make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
 

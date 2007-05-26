@@ -1,0 +1,144 @@
+
+
+\subsection{Recursion}
+
+There is no special trick to named recursion in Ripple; just use the name of the to-be-defined program in the definition body, as you would any other program.  It's a URI reference which won't be dereferenced until after the definition has been pushed to the triple store.
+
+
+
+
+
+\begin{verbatim}
+pingTheSemanticWeb/rpl:parameters /:listItems.
+\end{verbatim}
+
+Ripple does not yet implement any of Joy's primitives for anonymous recursion.
+
+
+
+
+
+
+
+
+\subsection{Computational model}
+
+Like Joy (and many other functional languages), Ripple's fundamental data structure is the list.  When executed as a program, a list becomes a stack.  Computation occurs at the head of the stack (visually, on the right hand side of an expression), and halts either when the stack is empty or when a "passive" item (a constant) is found at the head of the stack.  Ripple's primitive functions have an individual \textit{arity} equal to the depth to which the stack must be reduced before it is accepted as input to the function.  Whereas Joy's many operators and combinators are active until placed inside of a quotation (a list), in Ripple, nearly everthing is either a list or is treated as a list, and is therefore quoted by default.  However, for computation to be possible we need at least one active symbol, and Ripple defines exactly one:
+
+\begin{verbatim}
+http://fortytwo.net/2007/03/ripple/schema#op
+\end{verbatim}
+
+When this symbol is encountered at the head of a stack, it has the effect of making the preceding symbol active according to its type:
+\begin{itemize}
+\item If the argument is an list, it is executed as a program
+\item If the argument is a primitive function, the stack is first normalized to a depth equal to the function's arity, then the function is applied to the result
+\item If the argument is an rdf:Property, it is applied as a unary function which maps subjects to objects
+\item Any other type of argument effectively becomes an active nullary function with no output
+\end{itemize}
+
+This minimalism accounts for the different appearance of Ripple expressions as opposed to Joy.  Ripple hides its one operator behind a prefixed slash symbol '/'  ........  Note that the following expressions are equivalent.
+
+\begin{verbatim}
+2 /dup.
+2 dup rpl:op.
+2 joy:dup rpl:op.
+\end{verbatim}
+
+
+
+
+
+
+.  Consider the following query, which calls a built-in "Ping the Semantic Web" primitive.
+
+
+
+
+\subsection{Linked Data}
+
+"Linked data"\footnote{http://www.w3.org/DesignIssues/LinkedData.html} is the subset of the Semantic Web which associates statements about the "thing" identified by a particular URI with the corresponding web location.  An appropriate HTTP request for such a URI should produce an RDF document containing statements about it.  Ripple assumes, furthermore, that the set of statements in such a response is \emph{complete}, and the software may reject statements about the URI from any other source.  This restriction makes the language referentially transparent with respect to its one RDF query operation: forward traversal.  For instance, if s and p are resources, then the set of triples s/p with s as their subject and p as their predicate can be determined by a single HTTP request, and will not change, despite any subsequent operations.  Here, the expression /p represents the application of a function which maps a subject s to the set of all objects o such that the statement (s, p, o) exists.  Syntactically, it is no different than the application of a primitive function or the dequotation of a list (see below).
+
+
+
+The next time we use the \texttt{pingTheSemanticWeb} primitive, we might see Ripple's DOAP in the query results.  
+
+
+
+\keywords{RDF, scripting language, concatenative, linked data}
+
+
+
+
+
+
+
+
+
+  As a \textit{stack language}, Ripple has no
+
+
+
+
+
+It is intermediate in complexity between 
+
+
+Ripple is expressive enough to 
+
+
+
+The structure of a query is simple enough to 
+
+is a list described in terms of, and it
+
+and is intermediate in complexity between
+
+ containing generic resources, properties, and a 
+
+
+, firstly in its abstract syntax, and secondly in 
+
+nlike most RDF query languages, Ripple does not offer 
+
+forward traversal of links.
+
+
+
+Ripple is intermediate between very simple 
+and relatively complex, "black box" query languages such as SPARQL.
+
+simple enough to be easily expressed in RDF itself
+
+primitive functions
+
+
+
+Ripple is a scripting language expressed in RDF lists.  Its scripts both operate upon and are made up of RDF metadata, extending the notion of HTTP dereferenceability to computation.  Ripple is a variation on the "concatenative" theme of functional, stack-oriented languages such as Joy and Factor, and distinguishes itself through a multivalued, "pipeline" approach to query composition, as well as the inherent distributability of its programs.  The Java implementation presented here includes a query engine, a provisonal assortment of primitive functions, and an interactive interpreter which parses commands and queries in a readable, Turtle-like format.  A demo application can be found at:
+    http://fortytwo.net/ripple.
+
+
+
+
+
+primitives
+
+
+
+
+
+The major steps in the reduction of \texttt{(4/:sq)} 
+
+The query engine sees this as the list \texttt{(4 :sq rpl:op)}, and converting it to a stack\footnote{visually, the head of the stack is on the right-hand side of an expression}, passes it into an evaluational pipeline which will reduce it to normal form as follows.
+
+\begin{enumerate}
+\item \texttt{(4 :sq rpl:op!)} -- this stack has the item \texttt{rpl:op} at its head, a special value which is always active.  \texttt{rpl:op} effectively tells the evaluator to execute the preceding symbol as a program, which for the list \texttt{:sq} means the nullary operation of list dequotation.  \texttt{:sq} is read in from the triple store and concatenated with the remainder of the stack.
+\item \texttt{(4 dup rpl:op! mul rpl:op!)} -- again has \texttt{rpl:op} at its head, which prompts the evaluator to pop the primitive function \texttt{mul} from the stack and push an active item (we'll call it \texttt{mul!}) which will collect \texttt{mul}'s arguments.  At this point, the evaluator invokes itself recursively, feeding the output channel of the new pipeline into \texttt{mul!} and feeding \texttt{mul!}'s output into the original pipeline for a second round of reduction.  A stack will travel this circuit until it is in normal form or has been exhausted.
+\item \texttt{(4 4 mul!)} -- \texttt{mul!} requires two arguments, so the stack beneath it must be reduced to two levels.  In doing so, a program \texttt{(4 dup rpl:op!)} consisting of the \texttt{dup} primitive applied to an argument of \texttt{4} is discovered and executed, and the resulting stack \texttt{(4 4)} is passed in a curried fashion to the \texttt{mul!} program.  \texttt{mul!} applies its own rewrite rule, consuming both integer arguments and pushing their product onto the stack.
+\item \texttt{(16)} -- this stack has a passive item at its head, so it finds its way into the top-level evaluator's output channel as a query result:
+\end{enumerate}
+
+\begin{verbatim}
+rdf:_1  (16)
+\end{verbatim}
+

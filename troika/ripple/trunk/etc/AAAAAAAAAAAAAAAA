@@ -1,0 +1,69 @@
+
+
+\subsection{Open World or Closed?}
+Ripple has been designed with a \textit{closed world} of linked data in mind.  By restricting the query engine to a closed subset of the Semantic Web \footnote{namely, the set of statements which are served against their subject's URI, as well as statements about blank nodes}, the language is guaranteed to be \textit{referentially transparent} with respect to forward traversal.  Otherwise, query results depend on the order in which queries are evaluated, which in the presence of non-monotonic functions could lead to a contradiction.  In fact, Ripple's current, push-model evaluator is essentially monotonic, so it is not incompatible with RDF's open world assumption.  However, it's possible that this will change if counting, sorting, or memoizing query results becomes important.
+
+
+
+
+
+
+
+
+
+
+
+http://swui.semanticweb.org/swui06/papers/Berners-Lee/Berners-Lee.pdf
+
+
+
+[DDDDDDDDDD] http://www.semanticscripting.org/SFSW2005/papers/Vrandecic-Deep_Integration.pdf
+
+[xxxxxxxxxxxxxxxxx] http://www.cat-language.com/typing_stacks.pdf
+
+
+1. Vrandecic, D., Deep Integration of Scripting Languages and Semantic Web Technologies, In Soren Auer, Chris Bizer, Libby Miller, 1st International Workshop on Scripting for the Semantic Web SFSW 2005 , volume 135 of CEUR Workshop Proceedings. CEUR-WS.org, Herakleion, Greece, May 2005. ISSN: 1613-0073
+
+
+
+
+
+
+Typing Functional Stack-Based Languages
+               Christopher Diggins
+              Independent (no afﬁliation)
+                 cdiggins@gmail.com
+
+
+\item Tim Berners-Lee et al. Tabulator: Exploring and Analyzing linked data on the Semantic Web. In Proceedings of the 3rd International Semantic Web User Interaction Workshop, 2006. Available at http://swui.semanticweb.org/swui06/papers/Berners-Lee/Berners-Lee.pdf.
+
+
+
+
+1. F. Baader, D. Calvanese, D. L. McGuinness, D. Nardi, and P. F. Patel-Schneider,
+   editors. The description logic handbook: theory, implementation, and applications.
+   Cambridge University Press, New York, NY, USA, 2003.
+2. J. Cohen. A view of the origins and development of prolog. Commun. ACM,
+   31(1):26–36, 1988.
+3. M. Dean and G. Schreiber. OWL Web Ontology Language Reference, 2004. W3C
+   Recommendation 10 February 2004, available at http://www.w3.org/TR/owl-ref/.
+4. M. K. Smith, C. Welty, and D. McGuinness.             OWL Web Ontology Lan-
+   guage Guide, 2004. W3C Recommendation 10 February 2004, available at
+   http://www.w3.org/TR/owl-guide/.
+5. G. van Rossum. Computer programming for everybody. Technical report, Corpo-
+   ration for National Research Initiatives, 1999.
+
+
+
+
+
+ Available at http://swui.semanticweb.org/swui06/papers/Berners-Lee/Berners-Lee.pdf.
+\footnote{http://www.w3.org/2005/ajar/tab}
+
+
+
+.  As a \textit{dynamically typed} language, Ripple merely checks the types the arguments passed to its primitive functions at execution time are of the expected types, and it does this independently of the type annotations in its library metadata.  A more rigorous type system would be a significant step forward, insofar as it enables the interpreter to reason about programs on behalf of the programmer.  It might be worthwhile to explore an amalgamation of type inference for ontologies with Christopher Diggins' work [3] on static typing for stack languages.
+
+
+
+In other words, query results are guaranteed to be independent of the order in which queries are executed.  In the 
