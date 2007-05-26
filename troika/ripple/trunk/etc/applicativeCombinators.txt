@@ -1,0 +1,71 @@
+### Combinators ################################################################
+
+rpl-test:B
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 3 ;
+  rdfs:comment "Bxyz --> x(yz)" .
+
+rpl-test:C
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 3 ;
+  rdfs:comment "Cxyz --> xzy" .
+
+rpl-test:I
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 1 ;
+  rdfs:comment "Ix --> x" .
+
+rpl-test:K
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 2 ;
+  rdfs:comment "Kxy --> x" .
+
+rpl-test:L
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 2 ;
+  rdfs:comment "Lxy --> x(yy)" .
+
+rpl-test:O
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 2 ;
+  rdfs:comment "Oxy --> y(xy)" .
+
+rpl-test:R
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 3 ;
+  rdfs:comment "Rxyz --> yzx" .
+
+rpl-test:S
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 3 ;
+  rdfs:comment "Sxyz --> xz(yz)" .
+
+rpl-test:T
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 2 ;
+  rdfs:comment "Txy --> yx" .
+
+rpl-test:U
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 2 ;
+  rdfs:comment "Uxy --> y(xxy)" .
+
+rpl-test:V
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 3 ;
+  rdfs:comment "Vxyz --> zxy" .
+
+rpl-test:W
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 2 ;
+  rdfs:comment "Wxy --> xyy" .
+
+rpl-test:Y
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 1 ;
+  rdfs:comment "Yx --> x(Yx)" .
+
+rpl-test:w
+  rdfs:type rpl:Combinator ;
+  rpl:combinatorArity 1 ;
+  rdfs:comment "wx --> xx" .

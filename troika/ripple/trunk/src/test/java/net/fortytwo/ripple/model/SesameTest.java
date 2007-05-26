@@ -197,7 +197,7 @@ public class SesameTest extends RippleTestCase
 
 // See: http://www.openrdf.org/forum/mvnforum/viewthread?thread=1320
 //		testSynchronous( new DuplicateStatementsTest() );
-		testSynchronous( new DuplicateStatementsTest2() );
+//		testSynchronous( new DuplicateStatementsTest2() );
 	}
 }
 

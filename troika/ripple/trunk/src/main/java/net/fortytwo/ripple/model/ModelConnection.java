@@ -911,7 +911,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		{
 			int lastDot = file.lastIndexOf( '.' );
 			ext = ( lastDot > 0 && lastDot < file.length() - 1 )
-				? file.substring( lastDot + 1 )
+				? file.substring( lastDot + 1 ).toLowerCase()
 				: null;
 		}
 		s_logger.debug( "extension = " + ext );
@@ -1450,7 +1450,7 @@ s_logger.debug( "####################### after" );
 //t.printStackTrace( System.err );
 				try
 				{
-System.out.println( "closing stmtIter (2)" );
+//System.out.println( "closing stmtIter (2)" );
 					stmtIter.close();
 				}
 

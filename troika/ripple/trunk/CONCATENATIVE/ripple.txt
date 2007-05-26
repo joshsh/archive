@@ -1,42 +1,142 @@
+
+
+
+
+
 concatenative languages and the Semantic Web
 
 Hi all,
 
-I'd like to introduce a new, concatenative language aimed at Semantic Web applications.  Ripple is a Turing-complete RDF query language which borrows heavily from Joy, and has the novel property of being expressible in RDF as well as operating upon it.
+I'd like to introduce a new RDF query language, called Ripple, which applies the basic ideas of concatenative languages like Joy to the Semantic Web.  It has the novel feature of both operating upon and 
+concatenative language which applies   Ripple is a Turing-complete RDF query language expressed in RDF itself.  Briefly, the "Semantic Web" is a network of machine-understandable data which is to a software agent what the hypertext Web is to a person.  It replaces the unconstrained, natural language text of HTML web pages with the software-friendly subject-predicate-object triples of RDF, enabling specialized applications to make more intelligent use of the vast amounts of information on the Web (or at least, that's the vision).  I'm very interested in the procedural aspect of the Semantic Web, or the logic and algorithms which drive the crawlers, reasoners, and innovative mashups that consume and do useful things with the data.  I also like functional programming, so expressing Semantic Web programs as Semantic Web data seems to me like a natural thing to do.  I decided to make Ripple a concatenative language because of the simplicity of concatenative programs and because of their resemblance to path expressions, which are very appropriate for the labeled graph model of RDF.  There's some documentation on Ripple here:
 
-I'd like to introduce an application of concatenative languages which I've been investigating: a concatenative RDF query language called Ripple.  For those unacquainted with the Semantic Web, the "Semantic Web" is a network of machine-understandable data which is to a software agent what the hypertext Web is to a person.  It replaces the unconstrained, natural language text of HTML web pages with the software-friendly subject-predicate-object triples of RDF, enabling specialized applications to make more intelligent use of the vast amounts of information on the Web (or at least, that's the vision).  Personally, I'm very interested in the procedural aspect of the Semantic Web, or the logic and algorithms which drive the crawlers, reasoners, and innovative mashups that consume and do useful things with the data.  I think the Semantic Web has a lot to gain from the "programs as data" mindset of functional programming, so I've designed a simple Semantic Web programming language which is expressed in RDF itself, called Ripple.  I decided to make Ripple a concatenative language because of the simplicity of concatenative programs and because of their resemblance to path expressions, which are very appropriate for the labeled graph model of RDF.  There's some documentation on Ripple here:
     http://ripple.projects.semwebcentral.org/
-And a distribution of the Java implementation here:
+
+The Java implementation is available here:
+
     http://projects.semwebcentral.org/frs/?group_id=125
 
-Basically, Ripple is very much like Joy and friends except that functions ("filters") may yield any number of values.  Ripple's notation has a slightly different appearance, owing to a slash symbol which represents its only operator.  For instance, whereas in Joy you would write
+Ripple borrows heavily from Joy and friends.  ........
 
-    2 dup.
+1) There is only one "operator" (a dispatch function called op) in the language; everything else is treated as a constant.  For instance, whereas in Joy you would write
+
+    2 dup
 
 In Ripple, you would write
 
-    2 dup op.
+    2 dup op
 
-or
+Since op is so common, the notation allows it to be abbreviated as a prefix (the slash character).  Thus, the above could (and usually would) be written:
 
-    2/dup.
+    2 /dup
 
-In Ripple, dup is a "passive" stack item just the literal value 2.  We need an operator, op, to consume dup and push an "active" dup filter to the stack, which then consumes the 2.  The single operator, as one of only a handful of special values, cuts down on the number of comparisons the Ripple query engine needs to make when a new program is drawn in from the data web; there are several kinds of objects Ripple recognizes as programs, but as the operations involved in checking for them and distinguishing between them are expensive, the interpreter doesn't do so until it's absolutely necessary.  Since 
+In Ripple, dup is a "passive" stack item just like the literal value 2.  We need an operator, op, to consume dup and push an "active" dup filter to the stack, which then consumes the 2.  Ripple draws in programs and data from the Semantic Web on the fly, so the op symbol potentially saves on a lot of comparison operations by telling the evaluator exactly when it needs to examine a resource and treat it as a program.
+
+2) Quotations, primitive functions, and RDF properties are interchangeable.  In Ripple, combinators such as i and dip have a slightly different mode of operation than they do in Joy, in that they push op to the stack instead of dequoting programs directly.  So, for instance,
+
+    ("one" "two") /i  --  ("one" "two") i op
+
+becomes
+
+    /("one" "two")  --  ("one" "two") op
+
+Op consumes the list and dequotes it, yielding:
+
+    "one" "two"
+
+If op is applied to a primitive function, it applies the function to the stack.  So a construction like the following is legal in Ripple (think of dup as [dup] in Joy).
+
+    2 dup/i  --  2 dup i op
+
+becomes
+
+    2/dup  --  2 dup op
+
+becomes
+
+    2 2
+
+Op will also apply RDF properties as functions, which is what makes Ripple an RDF query language.  For example:
+
+    :arthur/foaf:name  --  :arthur foaf:name op
+
+becomes
+
+    "Arthur Dent"
+
+This is a program which takes us from the resource called :arthur to a value connected to :arthur by a foaf:name edge in the RDF graph we're querying.  The foaf:name resource behaves like a partial function over all of the resources in the graph.
+
+3) Functions ("filters") may yield any number of values.  For instance,
+
+    (1 2 3)/each  --  (1 2 3) each op
+
+This program yields not one, but three values, which become three different stacks:
+
+    1
+    2
+    3
+
+The three stacks continue down the evaluation "pipeline" individually.
+
+    (1 2 3)/each 100/add  --  (1 2 3) each op 100 add op
+
+becomes
+
+    101
+    102
+    103
+
+Here's a recursive factorial function in Ripple:
+
+@define fact:
+    /dup 0 /equal                  # if n is 0...
+        (1 /popd)                  # yield 1
+        (/dup 1/sub /:fact /mul)  # otherwise, yield n*fact(n-1)
+    /branch.
+
+
+Hope this was interesting
+
+
+
+
+
+
+
+
+
+I've been lurking this list for a few weeks now, and thought it was about time to speak up and i
+I'd like to introduce an application of concatenative languages which I've been investigating: a concatenative RDF query language called Ripple.  
+
+  "Ripple" is a Turing-complete RDF query language which borrows heavily from Joy.  
+, and has the novel property of being expressible in RDF as well as operating upon it.
+
+  I think the Semantic Web has a lot to gain from the "programs as data" mindset of functional programming, so I've designed a simple Semantic Web programming language which is expressed in RDF itself, called Ripple.  
+
+
+
+
+
+
+
+
+
+dup/i
+
+[dup] i
+
+
+
+
+  The single operator, as one of only a handful of special values, cuts down on the number of comparisons the Ripple query engine needs to make when a new program is drawn in from the data web; there are several kinds of objects Ripple recognizes as programs, but as the operations involved in checking for them and distinguishing between them are expensive, the interpreter doesn't do so until it's absolutely necessary.  Since 
 
     dup/rdf:type.
 
 
-
+Ripple's notation has a slightly different appearance as well, owing to a slash symbol which represents its only operator.
 I tried not to lose my (Semantic Web) audience in the paper by getting 
 
-I've been lurking this list for a few weeks now, and thought it was about time to speak up and i
 
-
-Below are some details of the language in a format 
-
-Best,
-
-Josh
 
 
 
