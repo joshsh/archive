@@ -1,0 +1,13 @@
+
+    *  The URI is not dereferencable, meaning that looking the URI up with the HTTP accept header application/rdf+xml doesn't return any RDF/XML.
+    * The server is too slow, as the Disco browser is configured to wait only 2 seconds for responses.
+    * The response is too big, as the Disco browser is configured to accept only responses up to 10000 triples.
+
+
+Near http://bblfish.net/people/henry/card#me
+
+        <knows rdf:parseType="Resource">
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            <owl:sameAs rdf:resource="http://www.w3.org/People/Berners-Lee/card#i"/>
+            <name>Tim Berners Lee</name>
+        </knows>

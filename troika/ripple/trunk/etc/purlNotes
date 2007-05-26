@@ -1,0 +1,11 @@
+Using PURL
+Submitted by Josef Petrák (not verified) (%c) on Wed, 2006-02-15 02:54.
+
+I use another sollution. I created a PURL (purl.org) pointing to my FOAF profile (http://purl.org/jspetrak/profile-foaf) and in that a resource with ID #dj. Then my URI is http://purl.org/jspetrak/profile-foaf#dj. Is it good or bad sollution. IMHO it keeps the URI really persistent.
+login to post comments
+that's fine
+Submitted by connolly (OpenID: http://www.w3.org/People/Connolly/) on Thu, 2006-02-16 00:38.
+
+I just tried it in the tabulator and it looks fine. I was a little worried about interactions between redirections and fragments, but the tabulator seems to get it right.
+
+Purls are great for persistence, indeed.
