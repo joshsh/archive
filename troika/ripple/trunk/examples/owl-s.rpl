@@ -1,0 +1,21 @@
+<http://www.daml.org/services/owl-s/1.0/Service.owl>.
+
+@define owlsTerms:
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#Service>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#ServiceGrounding>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#ServiceModel>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#ServiceProfile>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#describedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#describes>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#isDescribedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#isPresentedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#isSupportedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#presentedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#presents>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#providedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#provides>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#supportedBy>
+    <http://www.daml.org/services/owl-s/1.0/Service.owl#supports>
+    .
+
+:owlsTerms/each/rdf:type/unique.

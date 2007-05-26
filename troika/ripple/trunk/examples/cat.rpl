@@ -1,0 +1,21 @@
+
+@prefix :  <http://cat#>.
+
+@define dup:  /dup.
+@define dupd:  /dupd.
+@define dupdd:  dupd/dip.
+@define if:  /branch.
+@define keep:  /dupd/dip.
+@define pop:  /pop.
+@define popd:  /popd.
+@define popdd:  popd/dip.
+@define sweep:  /swap/:keep.
+@define swap:  /swap.
+@define swapd:  /swapd.
+@define swapdd:  swapd/dip.
+@define swip:  /swap/dip.
+
+
+true ("I like Cat") ("I don't like Cat") /:if.
+
+1 2 3 4 /:swapdd.

@@ -1,0 +1,17 @@
+
+
+# wget http://web.resource.org/rss/1.0/schema.rdf
+
+@prefix rss:  <http://purl.org/rss/1.0/>.
+
+# Not dereferenceable.
+rss:channel.
+rss:description.
+rss:image.
+rss:item.
+rss:items.
+rss:link.
+rss:name.
+rss:textinput.
+rss:title.
+rss:url.

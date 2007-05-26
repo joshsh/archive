@@ -1,0 +1,103 @@
+========================================
+etc:back
+========================================
+
+rdf: rdfs:isDefinedBy /back.
+
+
+========================================
+etc:get
+========================================
+
+"http://revyu.com/tags/html" /get.
+
+
+========================================
+etc:pingTheSemanticWeb
+========================================
+
+5 "all" /pingTheSemanticWeb.
+5 "foaf" /pingTheSemanticWeb.
+5 "sioc" /pingTheSemanticWeb.
+5 "doap" /pingTheSemanticWeb.
+5 "rdfs" /pingTheSemanticWeb.
+5 "owl" /pingTheSemanticWeb.
+
+
+========================================
+etc:pred
+========================================
+
+rdfs:Class rdfs:label /pred.
+
+
+========================================
+etc:prim
+========================================
+
+2 dup/prim.
+
+
+========================================
+etc:rand
+========================================
+
+100 /rand.
+
+
+========================================
+etc:sha1
+========================================
+
+"mailto:parcour@gmail.com"/sha1.
+
+
+========================================
+etc:strCat
+========================================
+
+"foo" "bar" /strCat.
+
+
+========================================
+etc:swoogleIt
+========================================
+
+"Ubuntu" swoogle:search_swt "demo" /swoogleIt/swoogle:hasResult/contains.
+"monkey" swoogle:search_swd_ontology "demo" /swoogleIt/swoogle:hasResult/contains.
+
+
+========================================
+etc:time
+========================================
+
+# years since the Unix epoch.
+/time 60 60 24 365 /mul/mul/mul /div.  # 37...
+
+
+========================================
+etc:urlEncoding
+========================================
+
+"encode me!" /urlEncoding.
+
+
+========================================
+xml:lang
+========================================
+
+"vierzig"@de /xml:lang.  # "de"
+"vierzig"@de /lang.  # "de"
+"vierzig" /lang.  # ""
+42/lang.  # ""
+rdf:/lang.  # [nothing]
+
+
+========================================
+xsd:type
+========================================
+
+42/xsd:type.  # xsd:integer
+"foo"/type.  # xsd:string
+rdf:/type.  # [nothing]
+rdf:/dc:title/type.  # [nothing]

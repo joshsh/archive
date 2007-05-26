@@ -1,0 +1,125 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+
+\usepackage{url}
+\urldef{\mailsb}\path|josh@fortytwo.net|
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+
+% first the title is needed
+\title{Ripple: Functional Programs as Linked Data}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{Ripple: Functional Programs as Linked Data}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{
+Joshua Shinavier
+\newline
+\url{josh@fortytwo.net}}
+%
+\authorrunning{Ripple: Functional Programs as Linked Data}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next
+\institute{Soph-Ware Associates, Inc.,\\
+624 W. Hastings Rd, Spokane, WA 99218 USA\\
+\url{http://www.soph-ware.com}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\toctitle{Ripple: Functional Programs as Linked Data}
+\tocauthor{Ripple: Functional Programs as Linked Data}
+\maketitle
+
+\begin{abstract}
+Ripple is dedicated scripting language for linked data whose programs both operate upon and reside in RDF graphs.  Ripple is a variation on the \textit{concatenative} theme of functional, stack-oriented languages such as Joy and Factor, and takes a multivalued, pipeline approach to query composition.  The Java implementation includes a query API, an extensible library of primitive functions, and an interactive command-line interpreter.  A demo application can be found at:
+
+\indent \texttt{http://fortytwo.net/ripple}.
+\end{abstract}
+
+\section{Introduction}
+Most of the data which populates today's Semantic Web is purely \textit{descriptive} in nature, while the complex procedural machinery for querying, crawling, transforming and reasoning about that data is buried within applications written in high-level languages such as Java or Python, and is neither machine-accessible nor reusable in the Semantic Web sense.  This project explores the notion of \textit{linked} or distributed programs as RDF graphs, and presents a functional, \textit{concatenative} interpreted language, closely related to Manfred von Thun's Joy\footnote{http://www.latrobe.edu.au/philosophy/phimvt/joy/j01tut.html}, as a proof of concept.
+
+For a Turing-complete RDF query language, Ripple is an exercise in minimalism, both in terms of syntax and semantics.  A Ripple \textit{program} is a nested list structure described with the RDF collections vocabulary, and is thereby a first-class citizen of the Semantic Web.  In the Java implementation, conversion between the RDF graph representation of a program and its more efficient linked list counterpart is transparent to the user application.
+
+When we assign a program a URI, we're pushing its definition to the same RDF model from which our query results are drawn:
+\begin{verbatim}
+@define hello:
+    "Hello world!".
+\end{verbatim}
+Given an appropriate base URI and web-visible triple store, the program itself becomes a part of the global graph of linked data\footnote{http://www.w3.org/DesignIssues/LinkedData.html}, enabling a remote application to read it in, execute it, and build upon it without restriction.
+
+\section{Examples}
+Ripple's query model combines a computational scheme based on \textit{stack manipulation} with a functional "pipes and filters" pattern.  The stack paradigm makes for minimal, \textit{point-free} syntax at the RDF level, while the \textit{pipeline} mechanism accommodates RDF's multivalued properties by distributing operations over arbitrary numbers of intermediate results.  Programs resemble path expressions in which RDF lists, RDF properties, and "black box" primitive functions are interchangeable.  For instance, in the following program, \texttt{toString}, and \texttt{sha1} are primitive functions, whereas \texttt{foaf:mbox} is a property:
+\begin{verbatim}
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+# p => calculated mbox sha1 sum of p
+@define mboxSha1: /foaf:mbox/toString/sha1.
+\end{verbatim}
+
+The following example contains a more sophisticated query.
+\begin{verbatim}
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+# foaf1 => foaf1, foaf2, foaf3, ...
+@define foafStep:   # iterator for a FOAF crawler
+    (   id          # include foaf1 itself
+        owl:sameAs  # include nodes identified with foaf1
+        foaf:knows  # include those foaf:known by foaf1
+    )/each/i        # apply all three patterns at once
+    /unique.        # eliminate duplicate results
+
+# => names of Tim Berners-Lee and friends
+<http://www.w3.org/People/Berners-Lee/card#i>
+    :foafStep    # the iterator function
+    1/times      # (change this value to extend the crawl)
+    /foaf:name.  # grab all matching individuals' names
+\end{verbatim}
+
+\section{Conclusion and Future Work}
+Ripple is an exploratory project, which is to say that further development will be driven by discoveries made along the way.  Thus far, Ripple has been most useful for discovery, navigation and mapping of linked data.  If the hypertext web is any indication of the future of the Semantic Web, it be vast, complex, and overall, loosely structured.  As it grows, we will need an equally sophisticated \textit{web of programs} to keep pace with it.
+
+\section*{References}
+\begin{enumerate}
+\item Tim Berners-Lee et al. Tabulator: Exploring and Analyzing linked data on the Semantic Web. In Proceedings of the 3rd International Semantic Web User Interaction Workshop, 2006.
+\end{enumerate}
+
+\end{document}

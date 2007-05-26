@@ -1,0 +1,4 @@
+# V  a (derived) rdfize function which creates an rdfize.com URI, based on an e-mail address or mailto: checksum
+
+# rdfize URI for mailto:parcour@gmail.com
+<http://rdfize.com/people/e9bbf0a3835f323fc4bf3a20f8f41df1b31bda6a/>.

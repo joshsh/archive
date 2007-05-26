@@ -1,0 +1,5 @@
+1 >>  /pop.
+--- 1 ---
+--- 2 ---
+
+Error: java.lang.NullPointerException

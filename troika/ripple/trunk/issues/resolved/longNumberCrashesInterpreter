@@ -1,0 +1,8 @@
+1 >>
+2 >>
+3 >>  34.
+
+rdf:_1  (34)
+
+4 >>  5000000000.
+a NumberFormatException was encountered (this shouldn't happen)

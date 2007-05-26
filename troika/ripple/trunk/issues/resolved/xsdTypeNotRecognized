@@ -1,0 +1,23 @@
+1 >>  <http://troika.dnsdojo.net/rdf/context_2007-02-01.rdf#now>;
+
+[0] <http://troika.dnsdojo.net/rdf/context_2007-02-01.rdf#now>
+    currency:currentRate_HKD
+        "10.1609"^^<xsd:double>
+    currency:currentRate_THB
+        "45.765"^^<xsd:double>
+    currency:currentRate_LVL
+        "0.6964"^^<xsd:double>
+[...]
+
+
+
+
+This was because the datatype URI came through as <xsd:double> instead of xsd:double here:
+	<?xml version="1.0"?>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:currency="http://troika.dnsdojo.net/rdf/currency.ttl#" xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns:euroxref="http://www.ecb.int/vocabulary/2002-08-01/eurofxref" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+		<currency:Context rdf:ID="now" currency:date="2007-02-01">
+			<currency:currentRate_USD rdf:datatype="xsd:double">1.3020</currency:currentRate_USD>
+			<currency:currentRate_JPY rdf:datatype="xsd:double">156.85</currency:currentRate_JPY>
+			[...]
+		</currency:Context>
+	</rdf:RDF>

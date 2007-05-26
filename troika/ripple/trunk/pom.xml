@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is a Maven 2 Project Object Model -->
+<project  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>jar</packaging>
+	
+	<groupId>net.fortytwo</groupId>
+	<artifactId>ripple</artifactId>
+	<version>0.2</version>
+	<name>Ripple</name>
+	<description>Functional Programs as Linked Data</description>
+	<url>http://fortytwo.net/ripple</url>
+	<inceptionYear>2007</inceptionYear>
+	<licenses></licenses>
+	<developers>
+		<developer>
+			<id>josh</id>
+			<name>Joshua Shinavier</name>
+			<email>josh@fortytwo.net</email>
+			<url>http://fortytwo.net</url>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-8</timezone>
+			<properties>
+				<!--<picUrl>...</picUrl>-->
+			</properties>
+		</developer>
+	</developers>
+	<organization>
+		<!-- for the copyright notice on the generated web site -->
+		<name>Joshua Shinavier</name>
+	</organization>
+	<issueManagement>
+		<system>GForge Tracker</system>
+		<url>http://projects.semwebcentral.org/tracker/?atid=573&amp;group_id=125&amp;func=browse</url>
+	</issueManagement>
+	
+	<!--<scm>
+		<connection>scm:svn:http://...</connection>
+		<developerConnection>scm:svn:http://...</developerConnection>
+		<url>http://...</url>
+	</scm>-->
+	
+	<repositories>
+		<repository>
+			<id>jline</id>
+			<name>JLine Project Repository</name>
+			<url>http://jline.sourceforge.net/m2repo</url>
+		</repository>
+		<!--<repository>
+			<id>fortytwo</id>
+			<name>fortytwo.net Maven repository</name>
+			<url>http://fortytwo.net/maven2</url>
+		</repository>-->
+		<repository>
+			<id>aduna-repo</id>
+			<name>Aduna repository</name>
+			<url>http://repository.aduna-software.org/maven2/</url>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>antlr</groupId>
+			<artifactId>antlr</artifactId>
+			<version>2.7.2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>jline</groupId>
+			<artifactId>jline</artifactId>
+			<version>0.9.9</version>
+		</dependency>
+		<dependency>
+			<groupId>urbanophile</groupId>
+			<artifactId>java-getopt</artifactId>
+			<version>1.0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<type>jar</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-model</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-repository-api</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-repository-http</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-repository-sail</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-rio-n3</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-rio-rdfxml</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-rio-turtle</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-sail-inferencer</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-sail-memory</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-rio-trix</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>
+		<!--<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>openrdf-util</artifactId>
+			<version>2.0-beta2</version>
+			<type>jar</type>
+		</dependency>-->
+	</dependencies>
+	
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<directory>target</directory>
+		<outputDirectory>target/classes</outputDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
+		<finalName>${artifactId}-${version}</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+		
+		<plugins>
+			<!-- Tells the compiler plugin to use Java 5.0 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+					<finalName>ripple</finalName>
+					<outputDirectory>target</outputDirectory>
+					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+				<!-- Create a single JAR with all dependencies. -->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antlr-plugin</artifactId>
+				<configuration>
+					<grammars>net/fortytwo/ripple/io/Ripple.g</grammars>
+					<outputDirectory>${basedir}/target/generated-sources/main/java</outputDirectory>
+				</configuration>
+				<!-- Compile the ANTLR grammar. -->
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- mvn -N doap:generate -->
+			<!-- http://repo1.maven.org/maven2/org/apache/maven/plugins/maven-doap-plugin/1.0-beta-1/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-doap-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<configuration>
+					<language>Java</language>
+					<doapFile>${basedir}/target/doap_${project.artifactId}.rdf</doapFile>
+					<!-- TODO: See: http://projects.apache.org/categories.html -->
+					<category>xml</category>
+					<project>${project}</project>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>site</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+	
+	<reporting>
+		<plugins>
+			
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<!--<aggregate>true</aggregate>-->
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<configLocation>${basedir}/src/site/checkstyle.xml</configLocation>
+					<!--<aggregate>true</aggregate>-->
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<!-- Note: version 2.1 appears to be buggy -->
+				<version>2.0</version>
+			</plugin>
+			
+		</plugins>
+	</reporting>
+	
+</project>

@@ -1,0 +1,6 @@
+# See: http://www.w3.org/TR/wordnet-rdf/
+
+<http://www.w3.org/2006/03/wn/wn20/instances/word-read_write_memory>.
+
+<http://www.w3.org/2006/03/wn/wn20/instances/wordsense-bank-noun-1>.
+<http://www.w3.org/2006/03/wn/wn20/instances/wordsense-bank-noun-1>/wn20schema:derivationallyRelated.

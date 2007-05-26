@@ -1,0 +1,57 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:     <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix stream:  <http://fortytwo.net/2007/05/ripple/stream#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+stream:each
+	a rpl:Function ;
+	rpl:arity 1;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "each" ;
+	rdfs:comment "l => each item in l" .
+
+stream:limit
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "lim" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "limit" ;
+	rdfs:comment "transmits at most lim stacks" .
+
+stream:scrap
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
+	rdfs:label "scrap" ;
+	rdfs:comment "transmits no stacks" .
+
+stream:union
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "union" ;
+	rdfs:comment "transmits both x pushed to the remainder of the stack, as well as y pushed to the remainder of the stack" .
+
+stream:unique
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
+	rdfs:label "unique" ;
+	rdfs:comment "transmits stacks at most once, as determined by list comparison" .

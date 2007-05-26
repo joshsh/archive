@@ -1,0 +1,33 @@
+
+# => recently pinged DOAP documents
+10 "doap" /pingTheSemanticWeb/toString.
+
+20 "all" /pingTheSemanticWeb.
+20 "foaf" /pingTheSemanticWeb.
+20 "sioc" /pingTheSemanticWeb.
+20 "doap" /pingTheSemanticWeb.
+20 "rdfs" /pingTheSemanticWeb.
+20 "owl" /pingTheSemanticWeb.
+
+
+# uri => uri (having pinged the Semantic Web)
+@define ping:
+    /toString/urlEncoding
+    "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
+    /get.
+
+
+@prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
+@define rippleDocuments:
+    rpl:
+    demo:
+    <http://fortytwo.net/2007/03/ripple/doap#>
+    etc:
+    graph:
+    math:
+    stack:
+    stream:
+    .
+
+:rippleDocuments/each/:ping.
+

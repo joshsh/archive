@@ -1,0 +1,130 @@
+Build
+================================================================================
+* Install Trac
+* Prevent the build from succeeding when ANTLR parser generation fails
+* Build and test on Windows
+
+Exception handling
+================================================================================
+* Decide on an extensible approach for exception handling and error logging
+* crash-test the evaluator and the interpreter with bad and weird expressions
+
+Syntax
+================================================================================
+* Add character literal syntax, e.g. 'c'
+
+Schema
+================================================================================
+* Make rpl:ParameterList into a list of rpl:Parameters, specifically
+* Actual values for rpl:returnType and rpl:parameterType imply that types such as xsd:integer have a type of rdfs:DataType.  Is that reasonable?
+
+Model
+================================================================================
+* Add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
+
+Primitives
+================================================================================
+* Add a sample Primitive or two which deal with the rdf:XMLLiteral type, if OpenRDF makes this possible
+* Decide what to do with the SwoogleIt primitive
+
+Crawling
+================================================================================
+* Look into adding a FOAF scutterer which can handle:
+  * foaf:knows links
+  * owl:sameAs indirection
+  * rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
+* Ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
+    http://purl.org/stuff/rev#Review
+* Dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
+
+Server
+================================================================================
+* REST query format and service endpoint.  Returns a graph in RDF/XML... which may be simply a list of indirection nodes to results.
+* dbpedia server (not necessarily using Ripple)
+* RFC server
+* server for HTTP response codes
+* servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.
+
+Concurrency
+================================================================================
+* explore thread pooling and concurrency
+* make all initializers thread-safe.  Make good use of the 'volatile' keyword
+
+Event handling
+================================================================================
+* investigate java.util.EventObject, java.util.EventListener
+* add interrupt handling / ability to terminate a query without quitting the application
+
+Names and namespaces
+================================================================================
+* use a default empty prefix, like N3 does
+* address name collisions, scalability issues in general
+* handle name collisions in a more flexible and configurable way
+* make "prefix discovery" a configurable feature
+* investigate relative URIs for Ripple vocabularies, so I don't have to change them every time I change the location of the vocabulary
+
+Command line interface
+================================================================================
+* place multiple-line expressions in the history
+* make Lexicon updatable, without having to rebuild the dictionaries from scratch whenever the model changes
+
+OpenRDF
+================================================================================
+* Look into connection pooling.
+* investigate warning (encountered while crawling foaf:knows graph starting at TBL):
+	2007-01-29 16:57:00:417 [WARNING] Rolling back transaction due to connection close
+
+Coding standards
+================================================================================
+* decide on convention for static members
+
+Distribution
+================================================================================
+* clean out the 'work' resources directory
+* tweak ripple.sh and ripple.bat so that they yield the same return value as the program
+
+Testing
+================================================================================
+* syntax testing (both success and failure cases).  See:
+  http://www.dajobe.org/2004/01/turtle/tests/
+  http://www.w3.org/2000/10/rdf-tests/rdfcore/ntriples/test.nt
+* test of HTTP URI dereferencing
+* test of the context filter
+
+Standards
+================================================================================
+* bring RipplePrintStream into agreement with some identified set of RDF encoding practices
+
+Use cases
+================================================================================
+* data hiding use case
+* implicit context use case
+* distributed programming use case
+* DL or other reasoning use case
+* later: concurrent programming use case
+
+Demo / public web service
+================================================================================
+* create one
+
+Nice-to-have
+================================================================================
+* RSS reader
+* Atom reader
+  http://www.intertwingly.net/stories/2003/08/17/atom2rdf.xsl
+  Danny Ayers: http://semtext.org/atom/xslt/atom2atomrdf.xslt
+  Henry Story: http://djpowell.net/atomrdf/0.1/files/atom2rdf-06.xsl
+               http://djpowell.net/schemas/atomrdf/0.1-EXPERIMENTAL/
+* Wikipedia3 stuff
+  http://labs.systemone.at/wikipedia3
+* XBRL RDFizer
+* XML Schema RDFizer
+* XLink ^ RDF ?
+* RDF-to-natural-language utilities -- express RDF as plain English, to some extent
+* RDFizer for output of a natural language processing / information extraction tool such as Wraetlic
+
+Bugs
+================================================================================
+* forgot to close a connection somewhere:
+  [WARNING] Closing dangling connection due to garbage collection
+

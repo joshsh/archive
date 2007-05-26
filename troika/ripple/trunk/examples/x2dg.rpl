@@ -1,0 +1,91 @@
+<http://192.168.1.20:2020/all>.
+
+@define members:  /rdfs:seeAlso/dup/rdf:type/pop.
+@define allPolicySets:  <http://192.168.1.20:2020/all/PolicySets>/:members.
+@define allUserGroups:  <http://192.168.1.20:2020/all/UserGroups>/:members.
+
+
+/:allPolicySets/vocab:PolicySets_Name.
+/:allUserGroups/vocab:UserGroups_Name.
+
+
+
+
+
+
+
+
+
+
+      <http://192.168.1.20:2020/all/Transforms_TransformSets_Join>
+      <http://192.168.1.20:2020/all/Vocabularies>
+      <http://192.168.1.20:2020/all/Languages>
+      <http://192.168.1.20:2020/all/Policies_PolicySets_Join>
+      <http://192.168.1.20:2020/all/TransformSetPermissions>
+      <http://192.168.1.20:2020/all/LogEvents>
+      <http://192.168.1.20:2020/all/Transforms>
+      <http://192.168.1.20:2020/all/Users_UserGroups_Join>
+      <http://192.168.1.20:2020/all/ActionPermissions>
+      <http://192.168.1.20:2020/all/UserGroups>
+      <http://192.168.1.20:2020/all/PolicySets>
+      <http://192.168.1.20:2020/all/ResourceStatusEnum>
+      <http://192.168.1.20:2020/all/PolicySetPermissions>
+      <http://192.168.1.20:2020/all/TransformSets>
+      <http://192.168.1.20:2020/all/OutcomeEnum>
+      <http://192.168.1.20:2020/all/Actions>
+      <http://192.168.1.20:2020/all/OperatingSystems>
+      <http://192.168.1.20:2020/all/UserGroupPermissions>
+      <http://192.168.1.20:2020/all/Policies>
+      <http://192.168.1.20:2020/all/Users>
+      <http://192.168.1.20:2020/all/SecurityLevelEnum>
+      <http://192.168.1.20:2020/all/ResourceTypeEnum>
+
+
+
+
+
+
+
+
+
+
+
+
+
+@prefix demo:  <http://fortytwo.net/2007/03/ripple/demo#>.
+
+<http://192.168.1.20:2020/all/PolicySets>/rdfs:seeAlso.
+
+
+
+@define withType:  (rdf:type/swap/dip/equal) /demo:restrict.
+
+
+
+
+<http://192.168.1.20:2020/all/PolicySets>/rdfs:seeAlso vocab:PolicySets/:withType.
+
+<http://192.168.1.20:2020/all/PolicySets>/rdfs:seeAlso vocab:PolicySets rdf:type/swap/dip/equal.
+
+
+
+
+
+
+
+V  tab completion for unqualified local names in @undefine:
+       @undefine withType.
+   OR extend @undefine to arbitrary qnames:
+       @undefine :withType.
+   -->
+       @define :withType:  ...
+
+
+
+
+
+@define withEdge:  (/swap/dip/equal)/cons /demo:restrict.
+
+
+
+

@@ -1,0 +1,50 @@
+
+# The GForge ontology ##################
+
+# Note: own definition.
+@prefix gforge: <http://swc.projects.semwebcentral.org/owl/gforge-ont#>.
+
+@define gForgeTerms:
+    gforge:Category
+    gforge:Project
+    gforge:User
+    gforge:admin
+    gforge:audience
+    gforge:developmentstatus
+    gforge:homepage
+    gforge:id
+    gforge:inputlanguage
+    gforge:interface
+    gforge:language
+    gforge:license
+    gforge:member
+    gforge:name
+    gforge:natlanguage
+    gforge:outputlanguage
+    gforge:registerTime
+    gforge:semwebtoolcategories
+    gforge:shortDescription
+    gforge:shortName
+    gforge:subCategoryOf
+    .
+
+
+########################################
+
+<http://projects.semwebcentral.org>.
+
+
+ns1:      http://swc.projects.semwebcentral.org/owl/gforge-ont#
+
+<http://projects.semwebcentral.org/projects/ripple>
+<http://projects.semwebcentral.org/categories/api>
+<http://projects.semwebcentral.org/categories/semwebtoolcategories>
+
+<http://projects.semwebcentral.org/categories/java>
+<http://projects.semwebcentral.org/categories/language>
+
+<http://projects.semwebcentral.org/categories/mit>
+
+
+
+

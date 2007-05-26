@@ -1,0 +1,130 @@
+# Currency ontology ############################################################
+
+@prefix nso: <http://www.daml.org/2001/09/countries/iso-3166-ont#>.
+
+@define currencyOntology:
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#Currency>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#code>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#country>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#name>
+    .
+
+:currencyOntology/each/rdf:type/unique.
+
+@define currencies:
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AFA>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ANG>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ARS>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AUD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AWG>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#AZM>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BAM>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BBD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BIF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BMD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BND>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BRL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BSD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BWP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BYR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#BZD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CDF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CHF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CNY>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CRC>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CUP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#CYP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#DKK>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#DZD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#EGP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ERN>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ETB>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#EUR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#FJD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#FKP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GBP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GEL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GHC>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GNF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GTQ>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#GYD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#HKD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#IDR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ILS>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#INR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#IRR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ISK>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#JMD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#JOD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#JPY>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#KGS>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#KRW>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#KYD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#LRD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#LSL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#LVL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MDL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MKD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MNT>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MRO>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MXN>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MYR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#MZM>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#NAD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#NOK>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#NZD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#OMR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PAB>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PEN>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PGK>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#PLN>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#QAR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ROL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#RUR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#RWF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SAR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SBD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SCR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SDD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SEK>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SKK>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#STD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SVC>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#SYP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TMM>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TND>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TOP>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TRL>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TVD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#TZS>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#UAH>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#USD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#VEB>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#VUV>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#WST>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XAF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XAG>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XAU>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XCD>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#XPF>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#YUM>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ZAR>
+    <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#ZWD>
+    .
+
+:currencies/each/dup
+    /dup /<http://www.daml.ecs.soton.ac.uk/ont/currency.owl#name>
+    /swap/<http://www.daml.ecs.soton.ac.uk/ont/currency.owl#country>/nso:name.
+
+# Currency converter web service ###############################################
+
+# (sic)
+<http://www.daml.ecs.soton.ac.uk/services/daml-s0.7/cc/currencyconverter-service.daml#CurrenctConverterWebService>.
+
+# My own currency stuff ########################################################
+
+# This should work, but, unsuprisingly, doesn't.  Dunno whether it's the Evaluator or my logic which is at fault.
+<http://fortytwo.net/2007/02/06/context_2007-02-01.rdf#now> (currency:GPB (currency:USD (currency:rateProperty (concatenateStrings (B (S B B)) B B B (T B) W)))).
+
+
+

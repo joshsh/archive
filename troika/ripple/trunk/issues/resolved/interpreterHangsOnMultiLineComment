@@ -1,0 +1,5 @@
+1 >>  (: single line is ok :)
+--- 1 ---
+--- 2 ---
+2 >>  (: multiple line causes interpreter to hang...
+[joshs@localhost trunk]$

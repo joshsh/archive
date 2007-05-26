@@ -1,0 +1,71 @@
+<http://revyu.com/>.
+
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738>.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /reviewer.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /reviewer/made.
+@quit;
+
+# Revyu + book mashup
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869> /primaryTopic /sameAs.
+	# --> <http://www4.wiwiss.fu-berlin.de/bookmashup/books/0735712018>
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869>/primaryTopic/sameAs/hasOffer/scom:hasPrice/unique.
+
+
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix :  <file:///tmp/stuff.rdf#>.
+
+@define filter:  dup/swap/dip/joy:i id scrap /ifte/joy:i.
+@define booksReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:filter.
+
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+/:tomsReviews /:booksReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
+
+
+
+# My account.
+<http://revyu.com/people/iamthewalnut>.
+
+
+
+
+
+========================================
+SPARQL
+========================================
+
+PREFIX rev: <http://purl.org/stuff/rev#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?thing ?name ?review ?createdOn
+WHERE
+{
+ ?thing rdfs:label ?name .
+ ?thing rev:hasReview ?review .
+ ?review rev:reviewer <people/tom> .
+ ?review rev:createdOn ?createdOn
+}
+
+
+PREFIX rev: <http://purl.org/stuff/rev#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+CONSTRUCT {  ?review rev:reviewer <people/tom> }
+WHERE
+{
+ ?thing rdfs:label ?name .
+ ?thing rev:hasReview ?review .
+ ?review rev:reviewer <people/tom> .
+ ?review rev:createdOn ?createdOn
+}
+
+
+
+
+
+ba  has no type:
+	tag:associatedTag
+	<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> primaryTopic  tag;
+
+
+

@@ -1,0 +1,71 @@
+================================================================================
+Overview
+================================================================================
+
+Ripple is dedicated scripting language for linked data.  Its programs both
+operate upon and reside in RDF graphs.  Ripple is a variation on the
+"concatenative" theme of functional, stack-oriented languages such as Joy and
+Factor, and takes a multivalued, pipeline approach to query composition.  This
+Java implementation includes a query API, an extensible library of primitive
+functions, and an interactive command-line interpreter.
+
+For more information, including documentation and code samples, see:
+
+    http://ripple.projects.semwebcentral.org/
+
+
+================================================================================
+Run
+================================================================================
+
+To begin an interpreter session, use one of the shortcut scripts (ripple or
+ripple.bat) or type:
+
+    java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+
+The demo application uses a RDF/XML file to save state between sessions, instead
+of a database.  To create a new cache, use the @saveas directive while talking
+to the interpreter:
+
+    @saveas "newcache.rdf".
+
+To restore a previous session, specify the cache as an argument:
+
+    ./ripple newcache.rdf
+
+When you quit the application, its state will written back to the cache.
+
+    @quit.
+
+
+================================================================================
+Build
+================================================================================
+
+To build Ripple from scratch, install Maven 2.0.x and issue the command
+
+    mvn install
+
+from the directory containing pom.xml (requires Java 5).
+
+
+================================================================================
+Bugs
+================================================================================
+
+Please submit bug reports to the tracker at:
+
+    http://projects.semwebcentral.org/tracker/?atid=573&group_id=125
+
+or send mail to josh@fortytwo.net.
+
+Known issues include:
+* the dereferencer is dumb enough to try and resolve mailto: and other
+  non-dereferenceable URIs, and complain when it fails
+* namespace prefix collisions are handled poorly (Sesame bug fixed in trunk)
+* the RDF/XML dumps produced by @saveas occasionally contain an empty string
+  literal as object instead of a blank node with the expected edges.  @export,
+  which passes individual statements to a handler, has not had this problem
+* interpreter hangs on @quit after @saveas, or at least it did once
+* if the cache becomes too large, the repository connection will time out while
+  writing it to disk

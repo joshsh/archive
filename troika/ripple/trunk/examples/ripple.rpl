@@ -1,0 +1,15 @@
+
+@define hello:
+    "Hello world!".
+
+
+# If predicates and primitive functions are really equivalent to quoations in
+# Ripple, then the following expressions should be equivalent:
+(3) dup /cat.
+(3 /dup).
+
+
+
+# Isn't this a little inconsistent?
+2 /swap.  # nothing.
+2 /swap 3  # 2 /swap 3

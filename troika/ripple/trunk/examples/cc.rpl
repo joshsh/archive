@@ -1,0 +1,27 @@
+# wget http://web.resource.org/cc/schema.rdf
+
+@prefix cc:  <http://web.resource.org/cc/>.
+
+# ! these are apparently not dereferenceable.
+@define ccTerms:
+    cc:Agent
+    cc:Attribution
+    cc:CommercialUse
+    cc:DerivativeWorks
+    cc:Distribution
+    cc:License
+    cc:Notice
+    cc:Permission
+    cc:Prohibition
+    cc:PublicDomain
+    cc:Reproduction
+    cc:Requirement
+    cc:ShareAlike
+    cc:SourceCode
+    cc:Work
+    cc:derivativeWork
+    cc:license
+    cc:permits
+    cc:prohibits
+    cc:requires
+    .

@@ -1,0 +1,119 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:    <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix graph:  <http://fortytwo.net/2007/05/ripple/graph#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+graph:assert
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rdfs:comment "the subject of the assertion" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "p" ;
+			rdfs:comment "the predicate of the assertion" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "o" ;
+			rdfs:comment "the object of the assertion" ;
+			rpl:isTransparent false ]
+		) ;
+	rdfs:label "assert" ;
+	rdfs:comment "s p o  ->  s  -- has the side-effect of asserting the statement (s, p, o)" .
+
+graph:compare
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "compare" ;
+	rdfs:comment "x y  ->  i  -- where i is -1 if x < y, 0 if x = y, and 1 if x > y" .
+
+graph:contains
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rdf:Resource ;
+	rpl:parameters (
+		[
+			rdfs:label "c" ;
+			rdfs:comment "an RDF Container; for instance, a Bag" ;
+			rpl:parameterType rdfs:Container ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "contains" ;
+	rdfs:comment "c  ->  x  -- for each member x of Container c" .
+
+graph:deny
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rdfs:comment "the subject of the assertion" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "p" ;
+			rdfs:comment "the predicate of the assertion" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "o" ;
+			rdfs:comment "the object of the assertion" ;
+			rpl:isTransparent false ]
+		) ;
+	rdfs:label "deny" ;
+	rdfs:comment "s p o  ->  s  -- has the side-effect of revoking the statement (s, p, o)" .
+
+graph:equal
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rpl:Function ;
+	rdfs:label "equal" ;
+	rdfs:comment "x y  ->  b  -- where b is true if x and y are equal, otherwise false" .
+
+graph:forget
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent false ]
+		) ;
+	rdfs:label "forget" ;
+	rdfs:comment "x  ->  x  -- has the side-effect of revoking all statements about x" .
+
+graph:new
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
+	rdfs:label "new" ;
+	rdfs:comment "->  n  -- where n is a new blank node" .
+
+graph:toString
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "toString" ;
+	rdfs:comment "x  ->  string representation of x" .

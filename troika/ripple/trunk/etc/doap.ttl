@@ -1,0 +1,19 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+<http://fortytwo.net/2007/03/ripple/doap#>
+	a doap:Project;
+	doap:created 2007;
+	doap:name "Ripple";
+	doap:homepage <http://fortytwo.net/ripple>;
+	doap:shortdesc "Functional Programs as Linked Data";
+	doap:description "Ripple is a scripting language expressed in RDF lists.  Its scripts both operate upon and are made up of RDF metadata, extending the idea of HTTP dereferenceability to computation.  Ripple is a variation on the 'concatenative' theme of functional, stack-oriented languages such as Joy and Factor, and distinguishes itself through a multivalued, 'pipeline' approach to query composition, as well as the inherent distributability of its programs.  The Java implementation of Ripple includes a query engine, a provisonal assortment of primitive functions, and an interactive interpreter which parses commands and queries in a readable, Turtle-like format.";
+	doap:license <http://usefulinc.com/doap/licenses/mit>;
+	doap:bug-database <http://projects.semwebcentral.org/tracker/?atid=573&group_id=125&func=browse>;
+	doap:download-page <http://projects.semwebcentral.org/projects/ripple>;
+	doap:programming-language "Java";
+#	doap:category <http://projects.apache.org/category/xml>;
+	doap:maintainer [
+		a foaf:Person;
+		foaf:name "Joshua Shinavier";
+		foaf:mbox <mailto:josh@fortytwo.net> ].

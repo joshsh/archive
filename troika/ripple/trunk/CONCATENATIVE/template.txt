@@ -1,0 +1,455 @@
+    * Yahoo!
+    * My Yahoo!
+    * Mail
+    *      Make Y! your home page
+      Yahoo!
+         1. Drag the "Y!" and drop it onto the "House" icon.
+         2. Select "Yes" from the pop up window.
+         3. Nothing, you're done.
+
+      If this didn't work for you or you want more detailed instructions click here.
+
+      Close this window
+
+Yahoo! SearchSearch:
+Yahoo! Tech
+Sign InNew User? Sign Up
+
+    * Tech -
+    * Groups -
+    * Help
+
+concatenative · Discuss the concatenative variety of computer languages: Joy, Forth, Postscript
+
+    * Home
+    * Messages
+
+    * Members Only
+    * Post
+    * Files
+    * Photos
+    * Links
+    * Database
+    * Polls
+    * Members
+    * Calendar
+    * Promote
+
+? Already a member? Sign in to Yahoo!
+Yahoo! Groups Tips
+Did you know...
+Want your group to be featured on the Yahoo! Groups website? Add a group photo to Flickr.
+Yahoo! 360°
+Share your life through photos, blogs, more.
+	
+Messages
+	  	Messages Help
+Message #
+Search:
+Advanced
+david madore's yin/yang mind-boggler 	  Message List  
+Reply | Forward 		Message #1933 of 3380 < Prev | Next >
+Re: [stack] Five (?) concatenative languages
+
+
+
+> I'd be glad to write about Forth. When you ask for a comparison,
+> though, do you mean something more like a precis, or a summary? I
+> couldn't compare Forth to any of the others except Joy or maybe cK; I
+> don't know enough about them to do them justice. But I'd be glad to
+> talk about Forth :-).
+>
+> -Billy
+
+
+
+Your remarks give me what seems to be a good idea: A list of attributes that
+concatenative languages (and sometimes other languages) can have that would
+enable them to be both compared to each other and also classified.
+
+
+
+1. Concatenation is at least one common trait. But, then, all programming
+languages are concatenative in a very broad sense (they concatenate
+statements, etc.), so we would want to restrict the term to languages that
+basically map the sequence of functions in the language to sequences of
+steps in execution, without introducing complexities like
+parameter-substitution and complex statements. Joy is more strictly
+concatenative than Forth, for example (no control constructs to get in the
+way).
+
+
+
+2. Another of the features about Joy that distinguish it from conventional
+functional languages is the lack of application (or, rather, the completely
+automatic nature of application, in that every function is automatically
+"applied" to the stack). I assume that all of the language in the list are
+like this, so this might not be a good basis for comparison, except with
+languages of completely different types.
+
+
+
+3. The use of a stack is itself a feature of languages, at least in terms of
+how they are typically implemented, and even two languages that use a stack
+can be differentiated somewhat on how they use it. Forth has a return stack,
+for example, and Joy does not, so those knowledgeable about the other
+languages (XY, etc.) might want to discuss the specifics of how the stack is
+used, whether they require a return stack, etc.
+
+
+
+4. Variables: We can compare languages on both whether they have variables
+or not, and, if they do, how they are used. Forth has variables, but it uses
+them sparingly, and Joy doesn't even have them.
+
+
+
+5. Whether a language has a fairly simple, straightforward structure is
+another area of comparison and classification. Joy is even simpler in
+structure than Forth, for example.
+
+
+
+6. Usefulness for general programming might be another classificatory
+dimension, in that, while some languages are theoretically universal, in
+practice, they are not very useful. Of course, we might want to qualify this
+by saying that a language is useful for such things as studying computation
+theory, even if it is not useful for writing games, business applications,
+word processors, or various other things.
+
+
+
+7. Control constructs. No really useful language gets away with being
+completely free of them, if only in the form of conditional branching. But
+most modern languages have explicit loops and some variant of if-then-else.
+Even Forth has them. Joy does not have them in the usual sense, of course,
+but it still has (much nicer) equivalents (ifte, etc). Thus, in describing a
+language, we might want to describe how it handles the need to be able to
+repeatedly, conditionally, or otherwise control the execution of code.
+
+
+
+8. Verbosity might be another dimension. Cobol and (I think) PL/1 are
+probably at least among the most verbose languages. APL and Forth and Joy
+all tend to require less long-windedness to "say" something in them than is
+required in other languages at the same general level of programming.
+
+
+
+9. What might be called programmer-efficient programming might be another
+"dimension." One of the things I like about Joy, Forth, Factor, etc., is the
+ease with which fragments of code can be given names and thereby made into
+single words/atoms. Many languages typically don't allow fairly short
+stretches of code to be turned into named entities. The only way you can get
+significant compression is by finding longer stretches of code that you use
+often enough to make it worthwhile to turn them into functions or
+subroutines. You won't find swons very tersely defined in Basic. In Basic,
+even if you have both swap and cons already written, there is still a lot of
+overhead in using them to write swons:
+
+
+
+Sub swons()
+
+swap()
+
+cons()
+
+End Sub
+
+
+
+Compare this with:
+
+
+
+swons == swap cons ;
+
+
+
+This latter is programmer-efficient coding. Don't get me started on Cobol or
+Pl/1 (yes, I'm afraid I've been around long enough to have worked with PL/1
+code, converting PL/1 to Fortran in the 1970's).
+
+
+
+10. Does code = data? Can we manipulate code easily with other code? It has
+been a primary design constraint of mine in making my own variant of Joy
+that this facility be retained even though it is to be a "compiled" language
+(in the form of what might be called "object-threaded code"(so far, this is
+actually working, though I'm still in mid-implementation).
+
+
+
+11. How far from the hardware is the language? One of the things that I
+don't much like about Forth is that actual data goes on the stack, so you
+can't put a long string on the stack without eating up stack space. In Joy,
+it doesn't matter how big a thing is. It takes exactly one unit of stack
+space regardless of its actual size, and we don't even have to know how wide
+a unit of stack space is. This is not so much a criticism of Forth as it is
+a recognition of their different origins and typical uses. For some
+purposes, this relative closeness to the hardware is a significant
+advantage, but for the kinds of programming that I'm mostly interested in, I
+don't want to be concerned with actual stack-width, actual memory, etc.
+
+
+
+12. Performance. This is so strongly dependent on how a language is
+implemented that it's mostly only meaningful if we are actually considering
+implementing something in the language where performance might be an issue.
+However, some languages seem more inclined to inefficiency than others,
+almost inherently. This is probably partly due to the difficulty that a
+compiler (okay, a compiler-writer) has in determining how to determine the
+"lowest common denominator" of code that will work for anything that it
+might have to handle.
+
+
+
+13. Closeness of fit between code and problem. Lower-level languages tend to
+allow the programmers to quite precisely fit the program to the problem.
+Higher-level languages tend to be more likely to require either doing more
+than one really wants to in order to get done what one wants, or to have
+extraneous processing that's not really part of doing what one really wants
+the program to do. This is related to, but not identical to, the issue of
+verbosity. Some languages tend to have sledgehammers and bulldozers, but no
+pliers or tweezers (metaphorically speaking). Cobol has a selection of
+clunky tools that are okay for their general uses (like batch processing in
+business), but not so good for doing such things as writing a game like Duke
+Nukem (I'd use a more recent game as an example, but I'm not a gamer so I
+don't keep up). You might be able to write such a game in such a language,
+but you'd end up using up a lot of CPU doing things that you don't really
+want to do merely because Cobol doesn't offer any more
+sharply-discriminating way to do it (consider trying to process lots
+bit-masks in Cobol). One way I think of this aspect of a programming
+language is: How closely does the outline of the program follow the outline
+of the problem? For a metaphor from geometry: An octagon more closely fits
+around a circle than a triangle does. The circumference is more nearly equal
+to that of the circle, and the area between the circle and the octagon is
+smaller than the area between a circle and an enclosing triangle, so there
+is, in a sense, less "waste" if one can use an octagon to approximate the
+circle rather than a triangle.
+
+
+
+What else? I'm sure I've left some things out, if only because I'm getting
+sleepy, so this is my official request to others to expand/modify the list
+of attributes/dimensions that we might want to use in comparing the
+languages MVT listed.
+
+
+
+I don't know anything about the other languages other than Forth and a
+little about XY and Factor (I skimmed over (some of) the documentation
+quickly to get the general idea, but need to go back to it), so it's quite
+likely that people can come up with additional language-aspects (or
+reformulations of ones listed) for the list.
+
+
+
+When we get through, we might be able to make a fairly reasonable
+comparison-table (or at least have a list of things to talk about in the
+500-word descriptions).
+
+
+
+Comments, additions, suggested modifications?
+
+
+
+--Chris Cogan
+
+
+
+
+	
+Sun Aug 8, 2004 4:01 am
+
+Show Message Option
+View Source
+Use Fixed Width Font
+Unwrap Lines
+"Chris Cogan" <ccogan@...>
+cpcogan
+Offline Offline
+Send Email Send Email
+
+Forward 		Message #1933 of 3380 < Prev | Next >
+Expand Messages 	Author 	Sort by Date
+david madore's yin/yang mind-boggler
+http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&threadm=u04sjxypbh.fsf%40hana.kurims.kyoto-u.ac.jp&rnum=1&prev=/groups%3Fq%3Dyin-yang%2Bcps%26hl%3Den%26lr%3... 	stevan apter
+sa@...
+Send Email 	Jul 25, 2004
+7:10 pm
+XY
+basic documentation for XY is done (http://www.nsl.com/papers/xy.htm), and most of the bugs have been knocked out of the code (accessible from the paper.) i've...
+	sa@...
+Send Email 	Jul 28, 2004
+6:06 pm
+Re: XY
+i hate my mail program. hate hate hate. find the un-pretzeled version on my website....
+	sa@...
+Send Email 	Jul 28, 2004
+6:38 pm
+Five (?) concatenative languages
+It would be useful for readers if there was some kind of compact comparison of the various concatenative languages that we have been discussing here. I am...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 3, 2004
+6:15 am
+Re: Five (?) concatenative languages
+I'd be glad to write about Forth. When you ask for a comparison, though, do you mean something more like a precis, or a summary? I couldn't compare Forth to...
+	William Tanksley, Jr
+wtanksle
+Offline Send Email 	Aug 4, 2004
+1:43 am
+Re: Five (?) concatenative languages
+i'm not sure when i'll be able to get to this - perhaps in a few weeks. meanwhile, i've encountered some serious difficulties with the xy design, which i'm not...
+	sa
+sa@...
+Send Email 	Aug 4, 2004
+7:51 am
+Re: Five (?) concatenative languages
+... This makes sense. ... This doesn't make sense to me. Oh, yes, I suspect you can make it work this way, but allowing things to execute inside your stack...
+	William Tanksley, Jr
+wtanksle
+Offline Send Email 	Aug 4, 2004
+3:15 pm
+Re: Five (?) concatenative languages
+suppose the queue consists of [+ 2 3] { [[a A]] a A } so [+ 2 3] is pushed on the stack, then { is evaluated, which looks ahead to the closing } and takes the...
+	sa@...
+Send Email 	Aug 4, 2004
+3:37 pm
+Re: Five (?) concatenative languages
+... Your remarks give me what seems to be a good idea: A list of attributes that concatenative languages (and sometimes other languages) can have that would ...
+	Chris Cogan
+cpcogan
+Offline Send Email 	Aug 8, 2004
+4:01 am
+Re: Five (?) concatenative languages
+On Sat, 7 Aug 2004, Chris Cogan wrote: [..] ... [.. A very long and careful contribution to the discussion ..] Thank you very much for this, much appreciated....
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 11, 2004
+6:57 am
+Re: Five (?) concatenative languages
+... I think the stack is the key concept, not the "concatenative" nature. The latter is just implied by the former. I'm not aware of any language with implicit...
+	Slava Pestov
+slava@...
+Send Email 	Aug 15, 2004
+7:41 pm
+Re: Five (?) concatenative languages
+... The stack is not essential, except that: 1. it is an obvious and convenient may of implementing postfix 2. it is psychologically useful for explaining...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 17, 2004
+6:48 am
+Re: Five (?) concatenative languages
+Hello I believe I haven't posted here yet, but I want to ask something regarding this thread: ... Here's my question - can J be considered a partially...
+	Sergei Zubkov
+ruscubbi
+Offline Send Email 	Aug 18, 2004
+7:35 am
+Re: Five (?) concatenative languages
+... No; this means that J is a dataflow-using language. The ability to write "tacit" functions in J does give you some of the advantages that concatenative...
+	William Tanksley, Jr
+wtanksle
+Offline Send Email 	Aug 21, 2004
+5:21 pm
+Re: Five (?) concatenative languages
+Would Sergei or Billy be interested to write a short exposition of this for the "5 concat L's" (maybe 5.5 or 6)? Back in the early days of the concatenative...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 24, 2004
+6:05 am
+Re: Five (?) concatenative languages
+... Yes, I would. Of course it would be subject to correction by the rest of the gang. All of the languages and dialects seem to have interesting features or...
+	ccogan@...
+cpcogan
+Offline Send Email 	Aug 11, 2004
+2:57 pm
+Re: Five (?) concatenative languages
+... No, no! The title should be _The Programming of Joy_! -- John Cowan jcowan@... www.reutershealth.com www.ccil.org/~cowan No man is an...
+	John Cowan
+johnwcowan
+Online Now Send Email 	Aug 11, 2004
+4:15 pm
+Re: Five (?) concatenative languages
+On Wed, 11 Aug 2004 ccogan@... wrote: [..] ... That is certainly something we should discuss in detail. You may or may not know that my original version...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 17, 2004
+6:32 am
+Re: Five (?) concatenative languages
+Hi, I think this is a great idea! Do you want each section to be 'free standing', or discuss differences with other concatenative languages?...
+	Slava Pestov
+slava@...
+Send Email 	Aug 4, 2004
+1:56 am
+Re: Five (?) concatenative languages
+Thanks to everybody for the quick responses. To answer several questions, here is some clarification. It would require some detailed knowledge of all the...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 6, 2004
+6:11 am
+5(?) concatenative L's: introduction
+Here is my first draft for the general introduction, warts and all. But I think the contents will stand. I send it out straight away so that the authors of the...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 11, 2004
+5:59 am
+Re: 5(?) concatenative L's: Joy
+Since there are different ways of doing the conditional in concatenative languages, it might be good if we all had them for comparison. This is more or less...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 11, 2004
+6:36 am
+Re: 5 concat L's: Joy
+Here is my draft for the Joy section. I humbly submit it to your savage criticism. - Manfred THE CONCATENATIVE LANGUAGE JOY The datatypes of Joy are integers,...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 17, 2004
+6:17 am
+Re: 5 concat L's: Joy
+... and ... [10 <] [1 +] [-1 +] ifte in XY, ifte is defined: { [d c t e] d [e t] d c i true? at i } or non-patternishly as: pair [[dup] dip i false?] dip swap...
+	sa@...
+Send Email 	Aug 18, 2004
+12:35 pm
+Re: 5 concat L's: Joy
+... In Joy, a program that increments the number on top of the stack if the five numbers on top of the stack add up to less than 100 and otherwise decrements...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 24, 2004
+6:26 am
+Re: 5 concat L's: Joy
+phimvt@... wrote on 08/24/2004 08:23:34 AM: [:] ... of course you are right. here is a version which conforms to the joy spec: { [c t e] [e...
+	sa@...
+Send Email 	Aug 24, 2004
+7:20 am
+Re: 5 concat L's: Joy
+XY implementations of map (still looking for a simpler implementation), filter, fold: ; map { [a p] `a [a @: [a p i] [[] a p map.] else] [a] if } ; ; map....
+	sa@...
+Send Email 	Aug 18, 2004
+4:23 pm
+Re: 5(?) concatenative L's: Forth
+Billy, you will have seen the previous posting about conditionals in Joy. The corresponding one for Forth would be something like this (pardon my Forth, you...
+	phimvt@...
+phimvt
+Offline Send Email 	Aug 11, 2004
+6:47 am
+< Prev Topic  |  Next Topic >
+Message #
+Search:
+Advanced
+SPONSOR RESULTS
+
+Computer Telephony CTI for Major Pbxs
+www.pwin.com - Picturewindow Software has been providing CTI (Computer Telephony) PC consoles, soft phones, ACD management and other applications for Nortel, Avaya, and other major Pbxs for over 10 years.
+
+Portable Computer
+www.theportablepc.com - Sterling Computer Sales offers portable lunchbox computers that are rugged and upgradeable.
+
+Kwikool Portable Computer Room A/C
+www.kwikool.com - Commercial one to ten-ton strategic air centers, full-featured portable air conditioners with microprocessor controls, available in air-cooled, split and water-cooled. Great for servers.
+Copyright © 2007 Yahoo! Inc. All rights reserved.
+Privacy Policy - Copyright/IP Policy - Terms of Service - Guidelines - Help
+ 

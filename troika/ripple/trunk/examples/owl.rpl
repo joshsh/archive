@@ -1,0 +1,46 @@
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+@define owlTerms:
+    owl:AllDifferent
+    owl:AnnotationProperty
+    owl:Class
+    owl:DataRange
+    owl:DatatypeProperty
+    owl:DeprecatedClass
+    owl:DeprecatedProperty
+    owl:FunctionalProperty
+    owl:InverseFunctionalProperty
+    owl:Nothing
+    owl:ObjectProperty
+    owl:Ontology
+    owl:OntologyProperty
+    owl:Restriction
+    owl:SymmetricProperty
+    owl:Thing
+    owl:TransitiveProperty
+    owl:allValuesFrom
+    owl:backwardCompatibleWith
+    owl:cardinality
+    owl:complementOf
+    owl:differentFrom
+    owl:disjointWith
+    owl:distinctMembers
+    owl:equivalentClass
+    owl:equivalentProperty
+    owl:hasValue
+    owl:imports
+    owl:incompatibleWith
+    owl:intersectionOf
+    owl:inverseOf
+    owl:maxCardinality
+    owl:minCardinality
+    owl:onProperty
+    owl:oneOf
+    owl:priorVersion
+    owl:sameAs
+    owl:someValuesFrom
+    owl:unionOf
+    owl:versionInfo
+    .
+
+:owlTerms/each/rdf:type/unique.
