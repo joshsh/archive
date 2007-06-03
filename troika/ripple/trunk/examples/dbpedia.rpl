@@ -1,6 +1,7 @@
 
-<http://dbpedia.org/resource/city/Berlin>;
+<http://dbpedia.org/resource/city/Berlin>.
 
+<http://dbpedia.org/resource/Agatha_Christie>.
 
 
 (:  dbpedia uses Jetty:

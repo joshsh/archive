@@ -933,7 +933,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 			// See: http://www.dajobe.org/2004/01/turtle/
 			else if ( contentType.contains( "application/x-turtle" ) )
-				return RDFFormat.N3;
+				return RDFFormat.TURTLE;
 		}
 
 		// Primary file extension rules.
@@ -1121,9 +1121,9 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			else
 			{
 				String baseUri = context.toString();
-s_logger.debug( "####################### before" );
+//s_logger.debug( "####################### before" );
 				repoConnection.add( is, baseUri, format, context );
-s_logger.debug( "####################### after" );
+//s_logger.debug( "####################### after" );
 			}
 		}
 

@@ -104,6 +104,11 @@ public Dereferencer getDereferencer()
 
 		dereferencer = new HttpUriDereferencer( createUrlFactory() );
 
+		// Don't bother trying to dereference terms in these common namespaces.
+		dereferencer.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );
+		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
+		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
+
 		bridge = new ModelBridge();
 		ModelConnection mc = new ModelConnection( this, "for Model constructor" );
 

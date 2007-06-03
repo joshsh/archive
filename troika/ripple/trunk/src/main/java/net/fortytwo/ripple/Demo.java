@@ -11,8 +11,10 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 import java.net.URL;
 
@@ -72,12 +74,78 @@ public class Demo
 		System.out.println( "usage:  ripple [-f FORMAT] [STORE]" );
 	}
 
+	public static void demo( final String [] args,
+							final InputStream in,
+							final PrintStream out,
+							final PrintStream err )
+	{
+		try
+		{
+			File store = ( args.length > 0 ) ? new File( args[0] ) : null;
+
+			// Load Ripple configuration.
+			Ripple.initialize();
+
+			// Create a Sesame repository.
+			Repository repository = createTestRepository();
+
+			// Attach a Ripple model to the repository.
+			Model model = new Model( repository, "Demo Model" );
+
+			// Set the default namespace.
+			ModelConnection mc = new ModelConnection( model );
+			mc.setNamespace( "", Ripple.getDefaultNamespace() );
+			mc.close();
+
+			// Load from store.
+			if ( null != store )
+			{
+				s_logger.info( "loading state from " + store );
+				model.load( store.toURL() );
+			}
+
+			// Attach a query engine to the model.
+			Evaluator evaluator = new LazyEvaluator();
+			QueryEngine qe
+				= new QueryEngine( model, evaluator, out, err );
+
+			// Attach an interpreter to the query engine and let it read from
+			// standard input.
+			Interpreter r = new Interpreter( qe, in );
+			r.run();
+
+			// Save back to store.
+			if ( null != store )
+			{
+				s_logger.info( "saving state to " + store );
+				OutputStream storeOut = new FileOutputStream( store );
+				model.writeTo( storeOut );
+				storeOut.close();
+			}
+
+			// Shut down the Sesame repository.
+			repository.shutDown();
+		}
+
+		catch ( Throwable t )
+		{
+			System.out.println( t.toString() );
+		}
+
+		List<String> openConnections = ModelConnection.listOpenConnections();
+		if ( openConnections.size() > 0 )
+		{
+			Iterator<String> i = openConnections.iterator();
+			String s = "" + openConnections.size() + " dangling connections: \"" + i.next() + "\"";
+			while ( i.hasNext() )
+				s += ", \"" + i.next() + "\"";
+
+			s_logger.warn( s );
+		}
+	}
+
 	public static void main( final String [] args )
 	{
-
-
-
-
 /*
 Getopt g = new Getopt( Ripple.getName(), args, "ab:c::d" );
 //
@@ -110,74 +178,7 @@ while ((c = g.getopt()) != -1)
 System.exit( 0 );
 */
 
-
-
-
-
-
-		try
-		{
-			File store = ( args.length > 0 ) ? new File( args[0] ) : null;
-
-			// Load Ripple configuration.
-			Ripple.initialize();
-
-			// Create a Sesame repository.
-			Repository repository = createTestRepository();
-
-			// Attach a Ripple model to the repository.
-			Model model = new Model( repository, "Demo Model" );
-
-			// Set the default namespace.
-			ModelConnection mc = new ModelConnection( model );
-			mc.setNamespace( "", Ripple.getDefaultNamespace() );
-			mc.close();
-
-			// Load from store.
-			if ( null != store )
-			{
-				s_logger.info( "loading state from " + store );
-				model.load( store.toURL() );
-			}
-
-			// Attach a query engine to the model.
-			Evaluator evaluator = new LazyEvaluator();
-			QueryEngine qe
-				= new QueryEngine( model, evaluator, System.out, System.err );
-
-			// Attach an interpreter to the query engine and let it read from
-			// standard input.
-			Interpreter r = new Interpreter( qe, System.in );
-			r.run();
-
-			// Save back to store.
-			if ( null != store )
-			{
-				s_logger.info( "saving state to " + store );
-				OutputStream out = new FileOutputStream( store );
-				model.writeTo( out );
-				out.close();
-			}
-
-			// Shut down the Sesame repository.
-			repository.shutDown();
-		}
-
-		catch ( Throwable t )
-		{
-			System.out.println( t.toString() );
-		}
-
-		List<String> openConnections = ModelConnection.listOpenConnections();
-		if ( openConnections.size() > 0 )
-		{
-			Iterator<String> i = openConnections.iterator();
-			String s = "" + openConnections.size() + " dangling connections: \"" + i.next() + "\"";
-			while ( i.hasNext() )
-				s += ", \"" + i.next() + "\"";
-
-			s_logger.warn( s );
-		}
+		demo( args, System.in, System.out, System.err );
 	}
 }
 
