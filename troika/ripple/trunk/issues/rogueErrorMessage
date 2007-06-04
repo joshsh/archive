@@ -1,0 +1,6 @@
+1 >>  <http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=sbp#sbp>.
+[Fatal Error] foaf.cgi?user=sbp#:30:24: The reference to entity "c." must end with the ';' delimiter.
+
+rdf:_1  (<http://trust.mindswap.org/cgi-bin/FilmTrust/foaf.cgi?user=sbp#sbp>)
+
+2 >>  

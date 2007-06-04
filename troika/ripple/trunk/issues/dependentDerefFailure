@@ -1,0 +1,20 @@
+This URI fails, although it succeeds individually:
+    http://my.opera.com/chaals/xml/foaf#me
+
+
+
+1 >>  @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+2 >>  @prefix owl:  <http://www.w3.org/2002/07/owl#>.
+3 >>  
+4 >>  # foaf1 => foaf1, foaf2, foaf3, ...
+5 >>  @define foafStep:   # iterator for a FOAF crawler
+6 >>      (   id          # include foaf1 itself
+7 >>          owl:sameAs  # include nodes identified with foaf1
+8 >>          foaf:knows  # include those foaf:known by foaf1
+9 >>      )/each/i        # apply all three patterns at once
+10 >>      /unique.        # eliminate duplicate results
+11 >>  
+12 >>  # => names of TBL and friends, and of friends of friends
+13 >>  <http://www.w3.org/People/Berners-Lee/card#i>
+14 >>      :foafStep 2/times /foaf:name.
+

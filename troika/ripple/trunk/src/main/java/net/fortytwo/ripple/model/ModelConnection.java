@@ -60,15 +60,15 @@ public class ModelConnection
 	{
 		this.model = model;
 
+		openRepositoryConnection();
+
 		try
 		{
 //org.openrdf.rio.Rio.createParser( RDFFormat.TURTLE );
-
-			repoConnection = model.getRepository().getConnection();
 			valueFactory = model.getRepository().getValueFactory();
-//System.out.println( "Opened "
-//    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-//    + " (" + openConnections + " total)." );
+s_logger.info( "Opened "
+    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+    + " (" + openConnections.size() + " total)." );
 		}
 
 		catch ( Throwable t )
@@ -107,16 +107,11 @@ public class ModelConnection
 	public void close()
 		throws RippleException
 	{
-		try
-		{
-//System.out.println( "closing connection..." );
-			repoConnection.close();
-		}
+s_logger.info( "Closing "
+    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+    + " (" + openConnections.size() + " total)." );
 
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
+		closeRepositoryConnection( false );
 
 		remove( this );
 	}
@@ -125,19 +120,60 @@ public class ModelConnection
 	*  Returns the ModelConnection to a normal state after an Exception has
 	*  been thrown.
 	*/
-	public void reset()
+	public void reset( final boolean rollback )
+		throws RippleException
+	{
+s_logger.info( "Resetting "
+    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+    + " (" + openConnections.size() + " total)." );
+		closeRepositoryConnection( rollback );
+		openRepositoryConnection();
+	}
+
+	private static int openRepoConns = 0;
+
+	// Establish a new Sesame connection.
+	private void openRepositoryConnection()
 		throws RippleException
 	{
 		try
 		{
-			repoConnection.close();
 			repoConnection = model.getRepository().getConnection();
+openRepoConns++;
+s_logger.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
 		}
 
 		catch ( Throwable t )
 		{
 			throw new RippleException( t );
 		}
+	}
+
+	// Close the current Sesame connection.
+	private void closeRepositoryConnection( final boolean rollback )
+		throws RippleException
+	{
+		try
+		{
+			if ( repoConnection.isOpen() )
+			{
+				if ( rollback )
+					repoConnection.rollback();
+
+openRepoConns--;
+s_logger.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
+				repoConnection.close();
+
+				return;
+			}
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+
+		throw new RippleException( "attempting to close already-closed connection" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -239,7 +275,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -346,25 +382,29 @@ public class ModelConnection
 		{
 			// Note: 
 			Collection<Statement> stmts = new LinkedList<Statement>();
-			RepositoryResult<Statement> stmtIter
-				= repoConnection.getStatements(
-					srcResource, null, null, Ripple.useInference() );
-			while ( stmtIter.hasNext() )
-				stmts.add( stmtIter.next() );
-			stmtIter.close();
 
-			for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+			synchronized( repoConnection )
 			{
-				Statement st = iter.next();
+				RepositoryResult<Statement> stmtIter
+					= repoConnection.getStatements(
+						srcResource, null, null, Ripple.useInference() );
+				while ( stmtIter.hasNext() )
+					stmts.add( stmtIter.next() );
+				stmtIter.close();
 
-				repoConnection.add( destResource, st.getPredicate(), st.getObject() );
+				for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+				{
+					Statement st = iter.next();
+	
+					repoConnection.add( destResource, st.getPredicate(), st.getObject() );
 //                repoConnection.add( RDF.NIL, RDF.TYPE, RDF.LIST );
+				}
 			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -375,20 +415,24 @@ public class ModelConnection
 		try
 		{
 			Collection<Statement> stmts = new LinkedList<Statement>();
-			RepositoryResult<Statement> stmtIter
-				= repoConnection.getStatements(
-					subj, null, null, Ripple.useInference() );
-			while ( stmtIter.hasNext() )
-				stmts.add( stmtIter.next() );
-			stmtIter.close();
 
-			for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
-				repoConnection.remove( iter.next() );
+			synchronized( repoConnection )
+			{
+				RepositoryResult<Statement> stmtIter
+					= repoConnection.getStatements(
+						subj, null, null, Ripple.useInference() );
+				while ( stmtIter.hasNext() )
+					stmts.add( stmtIter.next() );
+				stmtIter.close();
+	
+				for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+					repoConnection.remove( iter.next() );
+			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -424,24 +468,27 @@ public class ModelConnection
 		{
 			boolean useInference = false;
 
-			RepositoryResult<Statement> stmtIter
-				= repoConnection.getStatements(
-					castToResource( head.toRdf( this ).getRdfValue() ), null, null, useInference );
-
-			while ( stmtIter.hasNext() )
+			synchronized( repoConnection )
 			{
-				Statement st = stmtIter.next();
-				if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
-					results.add( bridge.get( new RdfValue( st.getObject() ) ) );
+				RepositoryResult<Statement> stmtIter
+					= repoConnection.getStatements(
+						castToResource( head.toRdf( this ).getRdfValue() ), null, null, useInference );
+	
+				while ( stmtIter.hasNext() )
+				{
+					Statement st = stmtIter.next();
+					if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
+						results.add( bridge.get( new RdfValue( st.getObject() ) ) );
+				}
+	
+				stmtIter.close();
 			}
-
-			stmtIter.close();
 		}
 
 		// Warning: the RepositoryResult may be left open.
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 
@@ -462,18 +509,21 @@ public class ModelConnection
 
 			try
 			{
-				RepositoryResult<Statement> stmtIter
-					= repoConnection.getStatements(
+				synchronized( repoConnection )
+				{
+					RepositoryResult<Statement> stmtIter
+						= repoConnection.getStatements(
 //                    subject, null, null, model, includeInferred );
-						subjRdf, null, null, Ripple.useInference() );
-				while ( stmtIter.hasNext() )
-					predicates.add( stmtIter.next().getPredicate() );
-				stmtIter.close();
+							subjRdf, null, null, Ripple.useInference() );
+					while ( stmtIter.hasNext() )
+						predicates.add( stmtIter.next().getPredicate() );
+					stmtIter.close();
+				}
 			}
 
 			catch ( Throwable t )
 			{
-				reset();
+				reset( true );
 				throw new RippleException( t );
 			}
 		}
@@ -495,12 +545,15 @@ public class ModelConnection
 		try
 		{
 //            repoConnection.add( subjResource, predUri, obj, singleContext );
-			repoConnection.add( subjResource, predUri, objValue );
+			synchronized( repoConnection )
+			{
+				repoConnection.add( subjResource, predUri, objValue );
+			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -515,12 +568,15 @@ public class ModelConnection
 		try
 		{
 //            repoConnection.add( subjResource, predUri, obj, singleContext );
-			repoConnection.add( subjResource, predUri, objValue, context );
+			synchronized( repoConnection )
+			{
+				repoConnection.add( subjResource, predUri, objValue, context );
+			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -535,12 +591,15 @@ public class ModelConnection
 		try
 		{
 // Does this remove the statement from ALL contexts?
-			repoConnection.remove( subjResource, predUri, objValue );
+			synchronized( repoConnection )
+			{
+				repoConnection.remove( subjResource, predUri, objValue );
+			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -552,15 +611,18 @@ public class ModelConnection
 
 		try
 		{
-			if ( null == context )
-				repoConnection.remove( subjResource, null, null );
-			else
-				repoConnection.remove( subjResource, null, null, context );
+			synchronized( repoConnection )
+			{
+				if ( null == context )
+					repoConnection.remove( subjResource, null, null );
+				else
+					repoConnection.remove( subjResource, null, null, context );
+			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -577,7 +639,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -592,7 +654,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -607,7 +669,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -622,7 +684,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -637,7 +699,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -652,7 +714,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -667,7 +729,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -682,7 +744,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -697,7 +759,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -712,7 +774,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -727,7 +789,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -762,7 +824,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -778,7 +840,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -794,7 +856,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -810,7 +872,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -826,7 +888,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -842,7 +904,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -858,7 +920,7 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -870,13 +932,16 @@ public class ModelConnection
 	{
 		try
 		{
-			repoConnection.removeNamespace( prefix );
-			repoConnection.setNamespace( prefix, ns );
+			synchronized( repoConnection )
+			{
+				repoConnection.removeNamespace( prefix );
+				repoConnection.setNamespace( prefix, ns );
+			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -1116,20 +1181,36 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 	{
 		try
 		{
-			if ( null == context )
-				repoConnection.add( is, null, format );
-			else
+if ( !repoConnection.isOpen() )
+{
+s_logger.info( "connection was found to be closed: " + repoConnection );
+reset( false );
+}
+
+			synchronized( repoConnection )
 			{
-				String baseUri = context.toString();
+				if ( null == context )
+					repoConnection.add( is, null, format );
+				else
+				{
+					String baseUri = context.toString();
 //s_logger.debug( "####################### before" );
-				repoConnection.add( is, baseUri, format, context );
+					synchronized( repoConnection )
+					{
+						repoConnection.add( is, baseUri, format, context );
+					}
 //s_logger.debug( "####################### after" );
+				}
+	
+				// Commit immediately, so that data is not lost if subsequent
+				// operations fail.
+				repoConnection.commit();
 			}
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 
 			if ( t instanceof RDFParseException )
 			{
@@ -1141,7 +1222,10 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			}
 
 			else
+{
+System.out.println( "you caught it here! -- " + t );
 				throw new RippleException( t );
+}
 		}
 	}
 
@@ -1230,21 +1314,24 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 		try
 		{
-			RepositoryResult<Statement> stmtIter
-				= repoConnection.getStatements(
-					null, null, null, Ripple.useInference(), context );
-			while ( stmtIter.hasNext() )
+			synchronized( repoConnection )
 			{
-				stmtIter.next();
-				count++;
+				RepositoryResult<Statement> stmtIter
+					= repoConnection.getStatements(
+						null, null, null, Ripple.useInference(), context );
+				while ( stmtIter.hasNext() )
+				{
+					stmtIter.next();
+					count++;
+				}
+	
+				stmtIter.close();
 			}
-
-			stmtIter.close();
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 		return count;
@@ -1261,26 +1348,29 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 		try
 		{
-			RepositoryResult<Statement> stmtIter
-				= repoConnection.getStatements(
-					null, null, null, false );
-
-			while ( stmtIter.hasNext() )
+			synchronized( repoConnection )
 			{
-				Resource subj = stmtIter.next().getSubject();
-				if ( subj instanceof URI
-					&& subj.toString().startsWith( ns ) )
+				RepositoryResult<Statement> stmtIter
+					= repoConnection.getStatements(
+						null, null, null, false );
+	
+				while ( stmtIter.hasNext() )
 				{
-					subjects.add( (URI) subj );
+					Resource subj = stmtIter.next().getSubject();
+					if ( subj instanceof URI
+						&& subj.toString().startsWith( ns ) )
+					{
+						subjects.add( (URI) subj );
+					}
 				}
+	
+				stmtIter.close();
 			}
-
-			stmtIter.close();
 		}
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 
@@ -1308,30 +1398,33 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 			try
 			{
-				RepositoryResult<Statement> stmtIter
-					= repoConnection.getStatements(
-						r, null, null, false );
-
-				while ( stmtIter.hasNext() )
+				synchronized( repoConnection )
 				{
-					Statement st = stmtIter.next();
-
-					// Add all statement about this Resource to the result graph.
-					handler.handleStatement( st );
-
-					// Traverse to any neighboring blank nodes (but not to URIs).
-					Value obj = st.getObject();
-					if ( obj instanceof Resource
-						&& !( obj instanceof URI ) )
-						put( (Resource) obj );
+					RepositoryResult<Statement> stmtIter
+						= repoConnection.getStatements(
+							r, null, null, false );
+	
+					while ( stmtIter.hasNext() )
+					{
+						Statement st = stmtIter.next();
+	
+						// Add all statement about this Resource to the result graph.
+						handler.handleStatement( st );
+	
+						// Traverse to any neighboring blank nodes (but not to URIs).
+						Value obj = st.getObject();
+						if ( obj instanceof Resource
+							&& !( obj instanceof URI ) )
+							put( (Resource) obj );
+					}
+	
+					stmtIter.close();
 				}
-
-				stmtIter.close();
 			}
 
 			catch ( Throwable t )
 			{
-				reset();
+				reset( true );
 				throw new RippleException( t );
 			}
 		}
@@ -1352,7 +1445,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 
@@ -1368,7 +1461,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 		catch ( Throwable t )
 		{
-			reset();
+			reset( true );
 			throw new RippleException( t );
 		}
 	}
@@ -1383,13 +1476,16 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 
 		try
 		{
-			GraphQueryResult result = repoConnection.prepareGraphQuery(
-				QueryLanguage.SERQL, queryStr ).evaluate();
-
-			while ( result.hasNext() )
-				statements.add( result.next() );
-
-			result.close();
+			synchronized( repoConnection )
+			{
+				GraphQueryResult result = repoConnection.prepareGraphQuery(
+					QueryLanguage.SERQL, queryStr ).evaluate();
+	
+				while ( result.hasNext() )
+					statements.add( result.next() );
+	
+				result.close();
+			}
 		}
 
 		catch ( Throwable t )
@@ -1433,8 +1529,12 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			// Perform the query and collect results.
 			try
 			{
-				stmtIter = repoConnection.getStatements(
-					(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
+				synchronized( repoConnection )
+				{
+					stmtIter = repoConnection.getStatements(
+						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
+				}
+
 				while ( stmtIter.hasNext() )
 				{
 					if ( null == results )
@@ -1460,7 +1560,7 @@ System.out.println( "closing stmtIter (2)" );
 					System.exit( 1 );
 				}
 
-				reset();
+				reset( true );
 				throw new RippleException( t );
 			}
 
@@ -1501,15 +1601,18 @@ System.out.println( "closing stmtIter (2)" );
 			// Perform the query and collect results.
 			try
 			{
-				stmtIter = repoConnection.getStatements(
-					null, (URI) rdfPred, rdfObj, Ripple.useInference() );
-				while ( stmtIter.hasNext() )
+				synchronized( repoConnection )
 				{
-					if ( null == results )
-						results = new LinkedList<Value>();
-					results.add( stmtIter.next().getSubject() );
+					stmtIter = repoConnection.getStatements(
+						null, (URI) rdfPred, rdfObj, Ripple.useInference() );
+					while ( stmtIter.hasNext() )
+					{
+						if ( null == results )
+							results = new LinkedList<Value>();
+						results.add( stmtIter.next().getSubject() );
+					}
+					stmtIter.close();
 				}
-				stmtIter.close();
 			}
 
 			catch ( Throwable t )
@@ -1524,7 +1627,7 @@ System.out.println( "closing stmtIter (2)" );
 					System.exit( 1 );
 				}
 
-				reset();
+				reset( true );
 				throw new RippleException( t );
 			}
 

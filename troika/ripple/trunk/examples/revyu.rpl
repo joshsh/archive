@@ -30,6 +30,13 @@
 
 
 
+# => rating reviewer [for each review of Casino Royale]
+<http://revyu.com/things/casino-royale-1164058953>
+    /rev:hasReview /dup
+    /rev:rating
+    /swap /rev:reviewer/toString.
+
+
 
 
 ========================================
