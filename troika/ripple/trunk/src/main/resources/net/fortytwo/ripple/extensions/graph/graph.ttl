@@ -106,6 +106,30 @@ graph:new
 	rdfs:label "new" ;
 	rdfs:comment "->  n  -- where n is a new blank node" .
 
+graph:toDouble
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "toDouble" ;
+	rdfs:comment "x  ->  x as double literal" .
+
+graph:toInteger
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "toInteger" ;
+	rdfs:comment "x  ->  x as integer literal" .
+
 graph:toString
 	a rpl:Function ;
 	rpl:arity 1 ;

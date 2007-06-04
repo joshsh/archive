@@ -23,6 +23,8 @@ public class GraphExtension implements Extension
 		bridge.add( new Equal( new RdfValue( mc.createUri( ns + "equal" ) ), mc ), mc );
 		bridge.add( new Forget( new RdfValue( mc.createUri( ns + "forget" ) ), mc ), mc );
 		bridge.add( new New( new RdfValue( mc.createUri( ns + "new" ) ), mc ), mc );
+		bridge.add( new ToDouble( new RdfValue( mc.createUri( ns + "toDouble" ) ), mc ), mc );
+		bridge.add( new ToInteger( new RdfValue( mc.createUri( ns + "toInteger" ) ), mc ), mc );
 		bridge.add( new ToString( new RdfValue( mc.createUri( ns + "toString" ) ), mc ), mc );
 	}
 }
