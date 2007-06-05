@@ -15,7 +15,7 @@ math:abs
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "abs" ;
-	rdfs:comment "x  ->  absolute value of x" .
+	rdfs:comment "x  =>  absolute value of x" .
 
 math:add
 	a rpl:Function ;
@@ -32,7 +32,7 @@ math:add
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "add" ;
-	rdfs:comment "x y  ->  x + y" .
+	rdfs:comment "x y  =>  x + y" .
 
 math:div
 	a rpl:Function ;
@@ -49,7 +49,7 @@ math:div
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "div" ;
-	rdfs:comment "x y  ->  y / x" .
+	rdfs:comment "x y  =>  y / x" .
 
 math:gt
 	a rpl:Function ;
@@ -66,7 +66,7 @@ math:gt
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "gt" ;
-	rdfs:comment "x y  ->  b  -- where b is true if x > y, otherwise false" .
+	rdfs:comment "x y  =>  b  -- where b is true if x > y, otherwise false" .
 
 math:lt
 	a rpl:Function ;
@@ -83,7 +83,7 @@ math:lt
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "lt" ;
-	rdfs:comment "x y  ->  b  -- where b is true if x < y, otherwise false" .
+	rdfs:comment "x y  =>  b  -- where b is true if x < y, otherwise false" .
 
 math:mod
 	a rpl:Function ;
@@ -100,7 +100,7 @@ math:mod
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "mod" ;
-	rdfs:comment "x y  ->  x % y" .
+	rdfs:comment "x y  =>  x % y" .
 
 
 math:mul
@@ -118,7 +118,7 @@ math:mul
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "mul" ;
-	rdfs:comment "x y  ->  x * y" .
+	rdfs:comment "x y  =>  x * y" .
 
 math:neg
 	a rpl:Function ;
@@ -131,7 +131,7 @@ math:neg
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "neg" ;
-	rdfs:comment "x  ->  -x" .
+	rdfs:comment "x  =>  -x" .
 
 math:pow
 	a rpl:Function ;
@@ -148,7 +148,7 @@ math:pow
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "pow" ;
-	rdfs:comment "x p  ->  x^p" .
+	rdfs:comment "x p  =>  x^p" .
 
 math:sign
 	a rpl:Function ;
@@ -161,7 +161,7 @@ math:sign
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "sign" ;
-	rdfs:comment "x  ->  sign of x (-1, 0, or +1)" .
+	rdfs:comment "x  =>  sign of x (-1, 0, or +1)" .
 
 math:sub
 	a rpl:Function ;
@@ -178,4 +178,4 @@ math:sub
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "sub" ;
-	rdfs:comment "x y  ->  x - y" .
+	rdfs:comment "x y  =>  x - y" .

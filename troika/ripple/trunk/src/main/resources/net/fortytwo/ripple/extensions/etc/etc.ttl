@@ -5,10 +5,6 @@
 @prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
-# For the xml:lang primitive.
-# Note: actually http://www.w3.org/XML/1998/namespace
-@prefix xml:      <http://www.w3.org/XML/1998/namespace#> .
-
 etc:back
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -147,7 +143,7 @@ etc:time
 	rpl:parameters rdf:nil ;
 	rpl:returnType xsd:int ;
 	rdfs:label "time" ;
-	rdfs:comment "-> t  -- pushes the current time, in seconds since the Unix epoch" .
+	rdfs:comment "=> t  -- pushes the current time, in seconds since the Unix epoch" .
 
 etc:urlEncoding
 	a rpl:Function ;
@@ -161,3 +157,25 @@ etc:urlEncoding
 	rpl:returnType xsd:string ;
 	rdfs:label "urlEncoding" ;
 	rdfs:comment "finds the URL encoding of a string" .
+
+xsd:type
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:isTransparent true ]
+		);
+	rdfs:label "type" ;
+	rdfs:comment "l  =>  data type of literal l" .
+
+<http://www.w3.org/XML/1998/namespace#lang>
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:isTransparent true ]
+		);
+	rdfs:label "lang" ;
+	rdfs:comment "l  =>  language tag of literal l" .

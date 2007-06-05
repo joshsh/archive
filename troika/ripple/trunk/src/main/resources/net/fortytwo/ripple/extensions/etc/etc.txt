@@ -83,7 +83,7 @@ etc:urlEncoding
 
 
 ========================================
-xml:lang
+<http://www.w3.org/XML/1998/namespace#lang>
 ========================================
 
 "vierzig"@de /xml:lang.  # "de"
