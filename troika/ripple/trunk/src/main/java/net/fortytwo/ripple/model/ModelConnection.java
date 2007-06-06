@@ -64,11 +64,10 @@ public class ModelConnection
 
 		try
 		{
-//org.openrdf.rio.Rio.createParser( RDFFormat.TURTLE );
 			valueFactory = model.getRepository().getValueFactory();
-s_logger.info( "Opened "
-    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-    + " (" + openConnections.size() + " total)." );
+// s_logger.info( "Opened "
+//     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+//     + " (" + openConnections.size() + " total)." );
 		}
 
 		catch ( Throwable t )
@@ -107,9 +106,9 @@ s_logger.info( "Opened "
 	public void close()
 		throws RippleException
 	{
-s_logger.info( "Closing "
-    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-    + " (" + openConnections.size() + " total)." );
+// s_logger.info( "Closing "
+//     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+//     + " (" + openConnections.size() + " total)." );
 
 		closeRepositoryConnection( false );
 
@@ -123,9 +122,9 @@ s_logger.info( "Closing "
 	public void reset( final boolean rollback )
 		throws RippleException
 	{
-s_logger.info( "Resetting "
-    + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-    + " (" + openConnections.size() + " total)." );
+// s_logger.info( "Resetting "
+//     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+//     + " (" + openConnections.size() + " total)." );
 		closeRepositoryConnection( rollback );
 		openRepositoryConnection();
 	}
@@ -139,8 +138,8 @@ s_logger.info( "Resetting "
 		try
 		{
 			repoConnection = model.getRepository().getConnection();
-openRepoConns++;
-s_logger.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
+// openRepoConns++;
+// s_logger.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
 		}
 
 		catch ( Throwable t )
@@ -160,8 +159,8 @@ s_logger.info( "opened repo connection (making " + openRepoConns + " total): " +
 				if ( rollback )
 					repoConnection.rollback();
 
-openRepoConns--;
-s_logger.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
+// openRepoConns--;
+// s_logger.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
 				repoConnection.close();
 
 				return;
@@ -261,7 +260,6 @@ s_logger.info( "closing repo connection (making " + openRepoConns + " total): " 
 	public int intValue( RippleValue rv )
 		throws RippleException
 	{
-//System.out.println( "intValue(" + rv );
 		Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
 //        URI type = l.getDatatype();
@@ -1015,7 +1013,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			|| ext.equals( "owl" ) )
 				return RDFFormat.RDFXML;
 
-// TODO: I don't know if this is actually a TriX file extension
+// TODO: is this actually a TriX file extension?
 			else if ( ext.equals( "trix" ) )
 				return RDFFormat.TRIX;
 
@@ -1023,8 +1021,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			|| ext.equals( "turtle" ) )
 				return RDFFormat.TURTLE;
 
-// TODO: I'm not sure just how hackish this is.
-// precedent:
+// example:
 //     http://www.aaronsw.com/about.xrdf
 //     http://www.w3.org/People/karl/karl-foaf.xrdf
 			else if ( ext.equals( "xrdf" ) )
@@ -1181,11 +1178,11 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 	{
 		try
 		{
-if ( !repoConnection.isOpen() )
-{
-s_logger.info( "connection was found to be closed: " + repoConnection );
-reset( false );
-}
+// if ( !repoConnection.isOpen() )
+// {
+// s_logger.info( "connection was found to be closed: " + repoConnection );
+// reset( false );
+// }
 
 			synchronized( repoConnection )
 			{
@@ -1194,12 +1191,10 @@ reset( false );
 				else
 				{
 					String baseUri = context.toString();
-//s_logger.debug( "####################### before" );
 					synchronized( repoConnection )
 					{
 						repoConnection.add( is, baseUri, format, context );
 					}
-//s_logger.debug( "####################### after" );
 				}
 	
 				// Commit immediately, so that data is not lost if subsequent
@@ -1222,10 +1217,7 @@ reset( false );
 			}
 
 			else
-{
-System.out.println( "you caught it here! -- " + t );
 				throw new RippleException( t );
-}
 		}
 	}
 
@@ -1541,17 +1533,13 @@ System.out.println( "you caught it here! -- " + t );
 						results = new LinkedList<Value>();
 					results.add( stmtIter.next().getObject() );
 				}
-//System.out.println( "closing stmtIter (1)" );
 				stmtIter.close();
 			}
 
 			catch ( Throwable t )
 			{
-//System.out.println( "caught Throwable: " + t );
-//t.printStackTrace( System.err );
 				try
 				{
-System.out.println( "closing stmtIter (2)" );
 					stmtIter.close();
 				}
 

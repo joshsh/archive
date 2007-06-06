@@ -8,7 +8,7 @@
 	
 	<groupId>net.fortytwo</groupId>
 	<artifactId>ripple</artifactId>
-	<version>0.2</version>
+	<version>0.3</version>
 	<name>Ripple</name>
 	<description>Functional Programs as Linked Data</description>
 	<url>http://fortytwo.net/ripple</url>
