@@ -2,7 +2,7 @@
 Overview
 ================================================================================
 
-Ripple is dedicated scripting language for linked data.  Its programs both
+Ripple is dedicated scripting language for the Semantic Web.  Its programs both
 operate upon and reside in RDF graphs.  Ripple is a variation on the
 "concatenative" theme of functional, stack-oriented languages such as Joy and
 Factor, and takes a multivalued, pipeline approach to query composition.  This
@@ -11,7 +11,7 @@ functions, and an interactive command-line interpreter.
 
 For more information, including documentation and code samples, see:
 
-    http://ripple.projects.semwebcentral.org/
+    http://fortytwo.net/ripple
 
 
 ================================================================================
@@ -58,14 +58,3 @@ Please submit bug reports to the tracker at:
     http://projects.semwebcentral.org/tracker/?atid=573&group_id=125
 
 or send mail to josh@fortytwo.net.
-
-Known issues include:
-* the dereferencer is dumb enough to try and resolve mailto: and other
-  non-dereferenceable URIs, and complain when it fails
-* namespace prefix collisions are handled poorly (Sesame bug fixed in trunk)
-* the RDF/XML dumps produced by @saveas occasionally contain an empty string
-  literal as object instead of a blank node with the expected edges.  @export,
-  which passes individual statements to a handler, has not had this problem
-* interpreter hangs on @quit after @saveas, or at least it did once
-* if the cache becomes too large, the repository connection will time out while
-  writing it to disk

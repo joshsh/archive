@@ -54,14 +54,17 @@ public class ContainerTreeView implements Sink<RippleList>
 		RdfValueCollector predicates = new RdfValueCollector( mc.getModel().getBridge() );
 		mc.findPredicates( first, predicates );
 
-		int predCount = 0, lim = Ripple.getTreeViewMaxBreadth();
+		int predCount = 0,
+			predlim = Ripple.getTreeViewMaxPredicates(),
+			objlim = Ripple.getTreeViewMaxObjects();
+
 		for ( Iterator<RdfValue> predIter = predicates.iterator();
 			predIter.hasNext(); )
 		{
 			RdfValue predicate = predIter.next();
 			ps.print( indent );
 
-			if ( ++predCount > lim )
+			if ( ++predCount > predlim )
 			{
 				ps.print( "[...]\n" );
 				break;
@@ -80,7 +83,7 @@ public class ContainerTreeView implements Sink<RippleList>
 				ps.print( indent );
 				ps.print( indent );
 
-				if ( ++objCount > lim )
+				if ( ++objCount > objlim )
 				{
 					ps.print( "[...]\n" );
 					break;
