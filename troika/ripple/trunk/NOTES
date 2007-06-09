@@ -24,14 +24,16 @@ rm -rf etc
 rm -rf examples
 rm -rf issues
 rm -rf `find -name .svn`
+rm -rf CONCATENATIVE
 rm NOTES
 rm REFACTORING
 rm NEWPRIMITIVES
 rm TODO
 cd ..
-mv trunk/ ripple-0.2.1
-tar -cf ripple-0.2.1.tar ripple-0.2.1
-gzip ripple-0.2.1.tar
+mv trunk/ ripple-0.3.0
+tar -cf ripple-0.3.0.tar ripple-0.3.0
+gzip ripple-0.3.0.tar
+zip -r ripple-0.3.0.zip ripple-0.3.0
 
 
 ========================================
@@ -44,6 +46,9 @@ tth contest/ripple.tex
 cp contest/ripple.html target/site
 cd target/site
 scp -r * fortytwo@projects.semwebcentral.org:/var/www/gforge-projects/ripple
+
+cd target/site
+scp -r * josh@fortytwo.net:/home/josh/www/ripple_tmp
 
 
 
@@ -370,6 +375,13 @@ rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extension
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/joy/joy.ttl > tmp/joy.rdf
 rapper -q -i turtle -o rdfxml ./src/main/resources/net/fortytwo/ripple/extensions/stream/stream.ttl > tmp/stream.rdf
 
+# Or in Ripple:
+@export etc: "tmp/etc.rdf".
+@export graph: "tmp/graph.rdf".
+@export math: "tmp/math.rdf".
+@export stack: "tmp/stack.rdf".
+@export stream: "tmp/stream.rdf".
+
 
 ========================================
 create a visualization of the rpl namespace
@@ -689,6 +701,25 @@ x >>  !import "file:///home/joshs/dev/ripple/rdf/wn/wordnet-wordsensesandwords.r
 
 java -DentityExpansionLimit=800000 -classpath target/ripple-with-dependencies.jar ripple.JLineTest "t"
 
+
+
+
+
+
+
+
+
+
+Known issues include:
+* the dereferencer is dumb enough to try and resolve mailto: and other
+  non-dereferenceable URIs, and complain when it fails
+* namespace prefix collisions are handled poorly (Sesame bug fixed in trunk)
+* the RDF/XML dumps produced by @saveas occasionally contain an empty string
+  literal as object instead of a blank node with the expected edges.  @export,
+  which passes individual statements to a handler, has not had this problem
+* interpreter hangs on @quit after @saveas, or at least it did once
+* if the cache becomes too large, the repository connection will time out while
+  writing it to disk
 
 
 

@@ -23,9 +23,9 @@ ripple.bat) or type:
 
     java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
 
-The demo application uses a RDF/XML file to save state between sessions, instead
-of a database.  To create a new cache, use the @saveas directive while talking
-to the interpreter:
+The demo application uses an RDF/XML cache file to save state between sessions,
+instead of a database.  To create a new cache, use the @saveas directive while
+talking to the interpreter:
 
     @saveas "newcache.rdf".
 
@@ -33,7 +33,7 @@ To restore a previous session, specify the cache as an argument:
 
     ./ripple newcache.rdf
 
-When you quit the application, its state will written back to the cache.
+When you quit the application, its state will be written back to the cache.
 
     @quit.
 
