@@ -1,10 +1,15 @@
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
+
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.XMLSchema;
 
 public class NumericLiteral implements RippleValue
 {
@@ -61,20 +66,20 @@ public class NumericLiteral implements RippleValue
 
 	public NumericLiteral( int i )
 	{
-		type = INTEGER;
+		type = NumericLiteralType.INTEGER;
 		number = new Integer( i );
 	}
 
 	public NumericLiteral( double d )
 	{
-		type = DOUBLE;
+		type = NumericLiteralType.DOUBLE;
 		number = new Double( d );
 	}
 
 	public static NumericLiteral add( final NumericLiteral a,
 										final NumericLiteral b )
 	{
-		if ( INTEGER == a.type && INTEGER == b.type )
+		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
 			return new NumericLiteral( a.number.intValue() + b.number.intValue() );
 		else
 			return new NumericLiteral( a.number.doubleValue() + b.number.doubleValue() );
@@ -83,7 +88,7 @@ public class NumericLiteral implements RippleValue
 	public static NumericLiteral sub( final NumericLiteral a,
 										final NumericLiteral b )
 	{
-		if ( INTEGER == a.number.type && INTEGER == b.number.type )
+		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
 			return new NumericLiteral( a.number.intValue() - b.number.intValue() );
 		else
 			return new NumericLiteral( a.number.doubleValue() - b.number.doubleValue() );
@@ -92,7 +97,7 @@ public class NumericLiteral implements RippleValue
 	public static NumericLiteral mul( final NumericLiteral a,
 										final NumericLiteral b )
 	{
-		if ( INTEGER == a.number.type && INTEGER == b.number.type )
+		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
 			return new NumericLiteral( a.number.intValue() * b.number.intValue() );
 		else
 			return new NumericLiteral( a.number.doubleValue() * b.number.doubleValue() );
@@ -102,7 +107,7 @@ public class NumericLiteral implements RippleValue
 	public static NumericLiteral div( final NumericLiteral a,
 										final NumericLiteral b )
 	{
-		if ( INTEGER == a.number.type && INTEGER == b.number.type )
+		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
 			return new NumericLiteral( a.number.intValue() / b.number.intValue() );
 		else
 			return new NumericLiteral( a.number.doubleValue() / b.number.doubleValue() );
@@ -168,11 +173,15 @@ public class NumericLiteral implements RippleValue
 	public int compareTo( final RippleValue other )
 	{
 		if ( other instanceof NumericLiteral )
-			return number.compareTo( ( (NumericLiteral) other ).number );
+		{
+			double n = number.doubleValue(),
+				nOther =  ((NumericLiteral) other ).number.doubleValue();
+			return ( n > nOther ) ? 1 : ( n < nOther ) ? -1 : 0;
+		}
 
 		else if ( other instanceof RdfValue )
 		{
-			return 
+return 0;
 
 		}
 
