@@ -99,3 +99,10 @@ graph:toString
 rdfs:Class/toString.
 (1 2 /dup)/toString.
 
+
+========================================
+graph:toUri
+========================================
+
+"http://www.w3.org/2000/01/rdf-schema#Class"/toUri.  # rdfs:Class
+

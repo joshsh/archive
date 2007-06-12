@@ -141,3 +141,15 @@ graph:toString
 	rpl:returnType xsd:string ;
 	rdfs:label "toString" ;
 	rdfs:comment "x  ->  string representation of x" .
+
+graph:toUri
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rdf:type xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "toUri" ;
+	rdfs:comment "s  ->  uri -- where uri is the URI whose string representation is s" .
