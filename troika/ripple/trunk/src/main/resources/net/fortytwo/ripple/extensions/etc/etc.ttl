@@ -32,6 +32,19 @@ etc:get
 	rdfs:label "get" ;
 	rdfs:comment "issues a GET request and produces the received data as a string" .
 
+etc:length
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "length" ;
+	rdfs:comment "s  =>  l -- where l is the length of string s" .
+
 etc:pingTheSemanticWeb
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -100,6 +113,23 @@ etc:sha1
 	rdfs:label "sha1" ;
 	rdfs:comment "finds the sha1 hash of a string" .
 
+etc:split
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "regex" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "split" ;
+	rdfs:comment "s regex  =>  (s1, s2, s3, ...) -- where s has been divided into substrings by occurrences of regular expression regex" .
+
 etc:strCat
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -116,6 +146,27 @@ etc:strCat
 	rpl:returnType xsd:string ;
 	rdfs:label "strCat" ;
 	rdfs:comment "finds the concatenation strB+strA of two strings" .
+
+etc:substring
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "beginIndex" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "endIndex" ;
+			rpl:parameterType xsd:integer ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "substring" ;
+	rdfs:comment "s beginIndex endIndex  =>  s2 -- where s2 is the substring of s which begins at the specified beginIndex and extends to the character at index endIndex - 1" .
 
 etc:swoogleIt
 	a rpl:Function ;
