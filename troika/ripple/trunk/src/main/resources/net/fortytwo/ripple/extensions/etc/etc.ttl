@@ -143,7 +143,46 @@ etc:time
 	rpl:parameters rdf:nil ;
 	rpl:returnType xsd:int ;
 	rdfs:label "time" ;
-	rdfs:comment "=> t  -- pushes the current time, in seconds since the Unix epoch" .
+	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" .
+
+etc:toLowerCase
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "toLowerCase" ;
+	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to lower case" .
+
+etc:toUpperCase
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "toUpperCase" ;
+	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to upper case" .
+
+etc:trim
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "trim" ;
+	rdfs:comment "s  =>  s2 -- where s2 is equal to s with leading and trailing white space omitted" .
 
 etc:urlEncoding
 	a rpl:Function ;

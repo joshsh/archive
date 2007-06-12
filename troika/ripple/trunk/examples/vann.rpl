@@ -3,8 +3,11 @@
 @prefix vann:  <http://purl.org/vocab/vann/>.
 
 vann:.
-vann:changes.
-vann:example.
-vann:preferredNamespacePrefix.
-vann:preferredNamespaceUri.
-vann:usageNote.
+
+@define vannTerms:
+    vann:changes
+    vann:example
+    vann:preferredNamespacePrefix
+    vann:preferredNamespaceUri
+    vann:usageNote
+    .

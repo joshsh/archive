@@ -22,12 +22,19 @@ public class EtcExtension implements Extension
 		bridge.add( new Prim( new RdfValue( mc.createUri( ns + "prim" ) ), mc ), mc );
 		bridge.add( new Rand( new RdfValue( mc.createUri( ns + "rand" ) ), mc ), mc );
 		bridge.add( new Sha1( new RdfValue( mc.createUri( ns + "sha1" ) ), mc ), mc );
-		bridge.add( new StrCat( new RdfValue( mc.createUri( ns + "strCat" ) ), mc ), mc );
 		bridge.add( new SwoogleIt( new RdfValue( mc.createUri( ns + "swoogleIt" ) ), mc ), mc );
 		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
 		bridge.add( new UrlEncoding( new RdfValue( mc.createUri( ns + "urlEncoding" ) ), mc ), mc );
 
-		// Note: the xml: namespace is actually said to be http://www.w3.org/XML/1998/namespace (i.e. without the slash).
+		// Basic string functions.
+		bridge.add( new StrCat( new RdfValue( mc.createUri( ns + "strCat" ) ), mc ), mc );
+		bridge.add( new ToLowerCase( new RdfValue( mc.createUri( ns + "toLowerCase" ) ), mc ), mc );
+		bridge.add( new ToUpperCase( new RdfValue( mc.createUri( ns + "toUpperCase" ) ), mc ), mc );
+		bridge.add( new Trim( new RdfValue( mc.createUri( ns + "trim" ) ), mc ), mc );
+
+		// Note: the xml: namespace is actually said to be
+		//       http://www.w3.org/XML/1998/namespace
+		//       (i.e. without the hash character).
 		bridge.add( new Lang( new RdfValue( mc.createUri( "http://www.w3.org/XML/1998/namespace#lang" ) ), mc ), mc );
 
 		// Note: this URI is bogus.
