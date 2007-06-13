@@ -27,8 +27,12 @@ public class EtcExtension implements Extension
 		bridge.add( new UrlEncoding( new RdfValue( mc.createUri( ns + "urlEncoding" ) ), mc ), mc );
 
 		// Basic string functions.
+		bridge.add( new EndsWith( new RdfValue( mc.createUri( ns + "endsWith" ) ), mc ), mc );
 		bridge.add( new Length( new RdfValue( mc.createUri( ns + "length" ) ), mc ), mc );
+		bridge.add( new Matches( new RdfValue( mc.createUri( ns + "matches" ) ), mc ), mc );
+		bridge.add( new ReplaceAll( new RdfValue( mc.createUri( ns + "replaceAll" ) ), mc ), mc );
 		bridge.add( new Split( new RdfValue( mc.createUri( ns + "split" ) ), mc ), mc );
+		bridge.add( new StartsWith( new RdfValue( mc.createUri( ns + "startsWith" ) ), mc ), mc );
 		bridge.add( new StrCat( new RdfValue( mc.createUri( ns + "strCat" ) ), mc ), mc );
 		bridge.add( new Substring( new RdfValue( mc.createUri( ns + "substring" ) ), mc ), mc );
 		bridge.add( new ToLowerCase( new RdfValue( mc.createUri( ns + "toLowerCase" ) ), mc ), mc );

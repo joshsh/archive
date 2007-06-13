@@ -19,6 +19,22 @@ etc:back
 	rpl:label "back" ;
 	rdfs:comment "o p => s" .
 
+etc:endsWith
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "suffix" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "endsWith" ;
+	rdfs:comment "s suffix  =>  b -- where b is true if the given string ends with the given suffix, otherwise false" .
+
 etc:get
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -44,6 +60,23 @@ etc:length
 	rpl:returnType xsd:integer ;
 	rdfs:label "length" ;
 	rdfs:comment "s  =>  l -- where l is the length of string s" .
+
+etc:matches
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "regex" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "matches" ;
+	rdfs:comment "s regex  =>  b -- where b is true if the given string matches the given regular expression, otherwise false" .
+
 
 etc:pingTheSemanticWeb
 	a rpl:Function ;
@@ -100,6 +133,27 @@ etc:rand
 	rdfs:label "rand" ;
 	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
 
+etc:replaceAll
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "regex" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "replacement" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "replaceAll" ;
+	rdfs:comment "s regex replacement  =>  s2 -- in which each occurrence of the given regular expression in s has been substituted with the given replacement" .
+
 etc:sha1
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -129,6 +183,22 @@ etc:split
 	rpl:returnType xsd:string ;
 	rdfs:label "split" ;
 	rdfs:comment "s regex  =>  (s1, s2, s3, ...) -- where s has been divided into substrings by occurrences of regular expression regex" .
+
+etc:startsWith
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "prefix" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "startsWith" ;
+	rdfs:comment "s prefix  =>  b -- where b is true if the given string begins with the given prefix, otherwise false" .
 
 etc:strCat
 	a rpl:Function ;
