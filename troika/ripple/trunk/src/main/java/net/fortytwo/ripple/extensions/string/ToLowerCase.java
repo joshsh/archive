@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.string;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class ReplaceAll extends PrimitiveFunction
+public class ToLowerCase extends PrimitiveFunction
 {
-	public ReplaceAll( RdfValue v, ModelConnection mc )
+	public ToLowerCase( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -18,7 +18,7 @@ public class ReplaceAll extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 3;
+		return 1;
 	}
 
 	public void applyTo( RippleList stack,
@@ -26,26 +26,13 @@ public class ReplaceAll extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		String regex, replacement, s, result;
+		String s, result;
 
-		replacement = mc.stringValue( stack.getFirst() );
-		stack = stack.getRest();
-		regex = mc.stringValue( stack.getFirst() );
-		stack = stack.getRest();
 		s = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
+		result = s.toLowerCase();
 
-		try
-		{
-			result = s.replaceAll( regex, replacement );
-			sink.put( new RippleList( mc.createValue( result ), stack ) );
-		}
-
-		catch ( java.util.regex.PatternSyntaxException e )
-		{
-			// Hard fail (for now).
-			throw new RippleException( e );
-		}
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}
 }
 

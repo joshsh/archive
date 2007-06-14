@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.string;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Length extends PrimitiveFunction
+public class Trim extends PrimitiveFunction
 {
-	public Length( RdfValue v, ModelConnection mc )
+	public Trim( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -26,13 +26,14 @@ public class Length extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		String s;
+		String s, result;
 
 		s = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		sink.put( new RippleList(
-			mc.createValue( s.length() ), stack ) );
+		result = s.trim();
+
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}
 }
 

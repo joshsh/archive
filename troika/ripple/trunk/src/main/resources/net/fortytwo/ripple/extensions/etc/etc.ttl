@@ -19,22 +19,6 @@ etc:back
 	rpl:label "back" ;
 	rdfs:comment "o p => s" .
 
-etc:endsWith
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "suffix" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "endsWith" ;
-	rdfs:comment "s suffix  =>  b -- where b is true if the given string ends with the given suffix, otherwise false" .
-
 etc:get
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -47,36 +31,6 @@ etc:get
 	rpl:returnType xsd:string ;
 	rdfs:label "get" ;
 	rdfs:comment "issues a GET request and produces the received data as a string" .
-
-etc:length
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:integer ;
-	rdfs:label "length" ;
-	rdfs:comment "s  =>  l -- where l is the length of string s" .
-
-etc:matches
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "regex" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "matches" ;
-	rdfs:comment "s regex  =>  b -- where b is true if the given string matches the given regular expression, otherwise false" .
-
 
 etc:pingTheSemanticWeb
 	a rpl:Function ;
@@ -133,111 +87,6 @@ etc:rand
 	rdfs:label "rand" ;
 	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
 
-etc:replaceAll
-	a rpl:Function ;
-	rpl:arity 3 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "regex" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "replacement" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "replaceAll" ;
-	rdfs:comment "s regex replacement  =>  s2 -- in which each occurrence of the given regular expression in s has been substituted with the given replacement" .
-
-etc:sha1
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "plaintext" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "sha1" ;
-	rdfs:comment "finds the sha1 hash of a string" .
-
-etc:split
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "regex" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "split" ;
-	rdfs:comment "s regex  =>  (s1, s2, s3, ...) -- where s has been divided into substrings by occurrences of regular expression regex" .
-
-etc:startsWith
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "prefix" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "startsWith" ;
-	rdfs:comment "s prefix  =>  b -- where b is true if the given string begins with the given prefix, otherwise false" .
-
-etc:strCat
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "strA" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "strB" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "strCat" ;
-	rdfs:comment "finds the concatenation strB+strA of two strings" .
-
-etc:substring
-	a rpl:Function ;
-	rpl:arity 3 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "beginIndex" ;
-			rpl:parameterType xsd:integer ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "endIndex" ;
-			rpl:parameterType xsd:integer ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "substring" ;
-	rdfs:comment "s beginIndex endIndex  =>  s2 -- where s2 is the substring of s which begins at the specified beginIndex and extends to the character at index endIndex - 1" .
-
 etc:swoogleIt
 	a rpl:Function ;
 	rpl:arity 3 ;
@@ -265,58 +114,6 @@ etc:time
 	rpl:returnType xsd:int ;
 	rdfs:label "time" ;
 	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" .
-
-etc:toLowerCase
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "toLowerCase" ;
-	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to lower case" .
-
-etc:toUpperCase
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "toUpperCase" ;
-	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to upper case" .
-
-etc:trim
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "s" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "trim" ;
-	rdfs:comment "s  =>  s2 -- where s2 is equal to s with leading and trailing white space omitted" .
-
-etc:urlEncoding
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "plaintext" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "urlEncoding" ;
-	rdfs:comment "finds the URL encoding of a string" .
 
 xsd:type
 	a rpl:Function ;

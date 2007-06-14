@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.string;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Trim extends PrimitiveFunction
+public class Substring extends PrimitiveFunction
 {
-	public Trim( RdfValue v, ModelConnection mc )
+	public Substring( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -18,7 +18,7 @@ public class Trim extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 3;
 	}
 
 	public void applyTo( RippleList stack,
@@ -26,14 +26,27 @@ public class Trim extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
+		int begin, end;
 		String s, result;
 
+		end = mc.intValue( stack.getFirst() );
+		stack = stack.getRest();
+		begin = mc.intValue( stack.getFirst() );
+		stack = stack.getRest();
 		s = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = s.trim();
+		try
+		{
+			result = s.substring( begin, end );
+			sink.put( new RippleList( mc.createValue( result ), stack ) );
+		}
 
-		sink.put( new RippleList( mc.createValue( result ), stack ) );
+		catch ( IndexOutOfBoundsException e )
+		{
+			// Silent fail.
+			return;
+		}
 	}
 }
 

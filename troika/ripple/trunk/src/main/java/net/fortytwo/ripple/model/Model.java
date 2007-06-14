@@ -63,7 +63,8 @@ public Dereferencer getDereferencer()
 			rplGraphNs    = "http://fortytwo.net/2007/05/ripple/graph#",
 			rplMathNs     = "http://fortytwo.net/2007/05/ripple/math#",
 			rplStackNs    = "http://fortytwo.net/2007/05/ripple/stack#",
-			rplStreamNs   = "http://fortytwo.net/2007/05/ripple/stream#";
+			rplStreamNs   = "http://fortytwo.net/2007/05/ripple/stream#",
+			rplStringNs   = "http://fortytwo.net/2007/05/ripple/string#";
 
 		Hashtable<String, String> urlMap = new Hashtable<String, String>();
 
@@ -83,10 +84,12 @@ public Dereferencer getDereferencer()
 		urlMap.put( rplStackNs,
 			net.fortytwo.ripple.extensions.stack.StackExtension.class.getResource(
 				"stack.ttl" ) + "#" );
-
 		urlMap.put( rplStreamNs,
 			net.fortytwo.ripple.extensions.stream.StreamExtension.class.getResource(
 				"stream.ttl" ) + "#" );
+		urlMap.put( rplStringNs,
+			net.fortytwo.ripple.extensions.string.StringExtension.class.getResource(
+				"string.ttl" ) + "#" );
 
 		return new UrlFactory( urlMap );
 	}
@@ -123,6 +126,7 @@ public Dereferencer getDereferencer()
 			( new net.fortytwo.ripple.extensions.math.MathExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.stack.StackExtension() ).load( mc );
 			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
+			( new net.fortytwo.ripple.extensions.string.StringExtension() ).load( mc );
 		}
 
 		catch ( RippleException e )

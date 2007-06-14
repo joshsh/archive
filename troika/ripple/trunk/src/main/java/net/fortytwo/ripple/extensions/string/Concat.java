@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.string;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class StrCat extends PrimitiveFunction
+public class Concat extends PrimitiveFunction
 {
-	public StrCat( RdfValue v, ModelConnection mc )
+	public Concat( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );

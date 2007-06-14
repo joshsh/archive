@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.string;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -7,10 +7,11 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.extensions.stack.StackExtension;
 
-public class Split extends PrimitiveFunction
+public class EndsWith extends PrimitiveFunction
 {
-	public Split( RdfValue v, ModelConnection mc )
+	public EndsWith( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -26,28 +27,18 @@ public class Split extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		String s, regex;
+		String affix, s;
+		RippleValue result;
 
-		regex = mc.stringValue( stack.getFirst() );
+		affix = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 		s = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		try
-		{
-			String [] array = s.split( regex );
-			RippleList result = RippleList.NIL;
-			for ( int i = 0; i < array.length; i++ )
-				result = new RippleList( mc.createValue( array[i] ), result );
-
-			sink.put( new RippleList( result, stack ) );
-		}
-
-		catch ( java.util.regex.PatternSyntaxException e )
-		{
-			// Hard fail (for now).
-			throw new RippleException( e );
-		}
+		result = ( s.endsWith( affix ) )
+			? StackExtension.getTrueValue()
+			: StackExtension.getFalseValue();
+		sink.put( new RippleList( result, stack ) );
 	}
 }
 
