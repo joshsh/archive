@@ -11,7 +11,7 @@
 	<version>0.3</version>
 	<name>Ripple</name>
 	<description>Functional Programs as Linked Data</description>
-	<url>http://fortytwo.net/ripple</url>
+	<url>http://ripple.fortytwo.net/</url>
 	<inceptionYear>2007</inceptionYear>
 	<licenses></licenses>
 	<developers>
@@ -187,7 +187,6 @@
 		</testResources>
 		
 		<plugins>
-			<!-- Tells the compiler plugin to use Java 5.0 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
