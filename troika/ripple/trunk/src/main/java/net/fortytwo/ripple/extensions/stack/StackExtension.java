@@ -6,6 +6,7 @@ import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.UrlFactory;
 
 public class StackExtension implements Extension
 {
@@ -14,10 +15,12 @@ public class StackExtension implements Extension
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
 
-	public void load( ModelConnection mc )
+	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
+		uf.addMapping(
+			ns, getClass().getResource( "stack.ttl" ) + "#" );
 
 		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
 		bridge.add( new Ary( new RdfValue( mc.createUri( ns + "ary" ) ), mc ), mc );

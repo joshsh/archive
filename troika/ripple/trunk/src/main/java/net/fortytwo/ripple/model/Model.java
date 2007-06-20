@@ -15,10 +15,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-import net.fortytwo.ripple.util.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.ExtensionLoader;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
 
@@ -54,46 +55,6 @@ public Dereferencer getDereferencer()
 		return bridge;
 	}
 
-	private UrlFactory createUrlFactory()
-		throws RippleException
-	{
-		String
-			rplNs         = "http://fortytwo.net/2007/03/ripple/schema#",
-			rplMiscNs     = "http://fortytwo.net/2007/05/ripple/etc#",
-			rplGraphNs    = "http://fortytwo.net/2007/05/ripple/graph#",
-			rplMathNs     = "http://fortytwo.net/2007/05/ripple/math#",
-			rplStackNs    = "http://fortytwo.net/2007/05/ripple/stack#",
-			rplStreamNs   = "http://fortytwo.net/2007/05/ripple/stream#",
-			rplStringNs   = "http://fortytwo.net/2007/05/ripple/string#";
-
-		Hashtable<String, String> urlMap = new Hashtable<String, String>();
-
-		urlMap.put( rplNs,
-			net.fortytwo.ripple.Ripple.class.getResource(
-				"ripple.ttl" ) + "#" );
-
-		urlMap.put( rplMiscNs,
-			net.fortytwo.ripple.extensions.etc.EtcExtension.class.getResource(
-				"etc.ttl" ) + "#" );
-		urlMap.put( rplGraphNs,
-			net.fortytwo.ripple.extensions.graph.GraphExtension.class.getResource(
-				"graph.ttl" ) + "#" );
-		urlMap.put( rplMathNs,
-			net.fortytwo.ripple.extensions.math.MathExtension.class.getResource(
-				"math.ttl" ) + "#" );
-		urlMap.put( rplStackNs,
-			net.fortytwo.ripple.extensions.stack.StackExtension.class.getResource(
-				"stack.ttl" ) + "#" );
-		urlMap.put( rplStreamNs,
-			net.fortytwo.ripple.extensions.stream.StreamExtension.class.getResource(
-				"stream.ttl" ) + "#" );
-		urlMap.put( rplStringNs,
-			net.fortytwo.ripple.extensions.string.StringExtension.class.getResource(
-				"string.ttl" ) + "#" );
-
-		return new UrlFactory( urlMap );
-	}
-
 	/**
 	*  @param Repository  an initialized Repository
 	*/
@@ -105,28 +66,36 @@ public Dereferencer getDereferencer()
 		this.repository = repository;
 		this.name = name;
 
-		dereferencer = new HttpUriDereferencer( createUrlFactory() );
+		bridge = new ModelBridge();
+
+		UrlFactory urlFactory = new UrlFactory();
+
+		dereferencer = new HttpUriDereferencer( urlFactory );
 
 		// Don't bother trying to dereference terms in these common namespaces.
 		dereferencer.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
 
-		bridge = new ModelBridge();
-		ModelConnection mc = new ModelConnection( this, "for Model constructor" );
+		loadSymbols( urlFactory );
+
+		s_logger.debug( "Finished creating Model '" + name + "'" );
+	}
+
+	private void loadSymbols( final UrlFactory uf )
+		throws RippleException
+	{
+		ModelConnection mc = new ModelConnection( this, "for Model.loadSymbols" );
 
 		// At the moment, op needs to be a special value for the sake of the
 		// evaluator.  This has the side-effect of making it a keyword.
 		bridge.add( Operator.OP, mc );
 
+		ExtensionLoader loader = new ExtensionLoader();
+
 		try
 		{
-			( new net.fortytwo.ripple.extensions.etc.EtcExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.graph.GraphExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.math.MathExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.stack.StackExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.stream.StreamExtension() ).load( mc );
-			( new net.fortytwo.ripple.extensions.string.StringExtension() ).load( mc );
+			loader.load( uf, mc );
 		}
 
 		catch ( RippleException e )
@@ -136,8 +105,6 @@ public Dereferencer getDereferencer()
 		}
 
 		mc.close();
-
-		s_logger.debug( "Finished creating Model '" + name + "'" );
 	}
 
 public Repository getRepository()

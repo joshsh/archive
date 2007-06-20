@@ -5,15 +5,18 @@ import net.fortytwo.ripple.model.Extension;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.util.UrlFactory;
 
 public class GraphExtension implements Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/graph#";
 
-	public void load( ModelConnection mc )
+	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
+		uf.addMapping(
+			ns, getClass().getResource( "graph.ttl" ) + "#" );
 
 		bridge.add( new Assert( new RdfValue( mc.createUri( ns + "assert" ) ), mc ), mc );
 		bridge.add( new Contains( new RdfValue( mc.createUri( ns + "contains" ) ), mc ), mc );

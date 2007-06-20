@@ -1,0 +1,9 @@
+# This is a complete list of Ripple extensions defining primitive functions
+# which are to be available to the query environment.
+
+net.fortytwo.ripple.extensions.etc.EtcExtension
+net.fortytwo.ripple.extensions.graph.GraphExtension
+net.fortytwo.ripple.extensions.math.MathExtension
+net.fortytwo.ripple.extensions.stack.StackExtension
+net.fortytwo.ripple.extensions.stream.StreamExtension
+net.fortytwo.ripple.extensions.string.StringExtension

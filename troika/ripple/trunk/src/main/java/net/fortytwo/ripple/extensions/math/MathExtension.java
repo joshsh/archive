@@ -5,15 +5,18 @@ import net.fortytwo.ripple.model.Extension;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.util.UrlFactory;
 
 public class MathExtension implements Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/math#";
 
-	public void load( ModelConnection mc )
+	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException
 	{
 		ModelBridge bridge = mc.getModel().getBridge();
+		uf.addMapping(
+			ns, getClass().getResource( "math.ttl" ) + "#" );
 
 		// Integer comparison primitives
 		bridge.add( new Gt( new RdfValue( mc.createUri( ns + "gt" ) ), mc ), mc );
