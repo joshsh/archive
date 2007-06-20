@@ -1,8 +1,13 @@
 # Note: this list overrides the one in Ripple Core.
 
-#net.fortytwo.ripple.extensions.etc.EtcExtension
-#net.fortytwo.ripple.extensions.graph.GraphExtension
+# Ripple core extensions.
+net.fortytwo.ripple.extensions.etc.EtcExtension
+net.fortytwo.ripple.extensions.graph.GraphExtension
 net.fortytwo.ripple.extensions.math.MathExtension
-#net.fortytwo.ripple.extensions.stack.StackExtension
-#net.fortytwo.ripple.extensions.stream.StreamExtension
-#net.fortytwo.ripple.extensions.string.StringExtension
+net.fortytwo.ripple.extensions.stack.StackExtension
+net.fortytwo.ripple.extensions.stream.StreamExtension
+net.fortytwo.ripple.extensions.string.StringExtension
+
+# Additional extension.
+net.fortytwo.ripple.extensions.media.MediaExtension
+
