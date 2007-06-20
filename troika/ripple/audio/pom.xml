@@ -39,11 +39,11 @@
 	</issueManagement>
 	
 	<repositories>
-		<!--<repository>
+		<repository>
 			<id>fortytwo</id>
 			<name>fortytwo.net Maven repository</name>
 			<url>http://fortytwo.net/maven2</url>
-		</repository>-->
+		</repository>
 		<repository>
 			<id>scriptlandia-repo</id>
 			<name>Scriptlandia Maven2 repository</name>
@@ -52,6 +52,12 @@
 	</repositories>
 	
 	<dependencies>
+		<dependency>
+			<groupId>net.fortytwo</groupId>
+			<artifactId>ripple</artifactId>
+			<version>0.3</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
