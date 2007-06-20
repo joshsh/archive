@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Extension;
 import net.fortytwo.ripple.model.ModelConnection;
 
 public class ExtensionLoader extends ClassLoader

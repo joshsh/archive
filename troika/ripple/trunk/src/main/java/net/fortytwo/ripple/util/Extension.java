@@ -1,7 +1,7 @@
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.util;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.model.ModelConnection;
 
 public interface Extension
 {

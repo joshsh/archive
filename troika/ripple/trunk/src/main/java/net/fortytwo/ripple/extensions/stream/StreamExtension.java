@@ -1,10 +1,10 @@
 package net.fortytwo.ripple.extensions.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Extension;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
 public class StreamExtension implements Extension
