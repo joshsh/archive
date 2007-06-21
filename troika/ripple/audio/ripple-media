@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -classpath target/ripple-audio-full.jar net.fortytwo.ripple.Demo $1
+exit $?
