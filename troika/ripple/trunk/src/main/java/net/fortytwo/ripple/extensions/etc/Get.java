@@ -9,12 +9,12 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.HttpUtils;
 
-import java.net.URL;
-import java.net.URLConnection;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import java.net.URL;
+import java.net.URLConnection;
 
 public class Get extends PrimitiveFunction
 {
@@ -45,7 +45,6 @@ public class Get extends PrimitiveFunction
 			URLConnection connection = url.openConnection();
 			HttpUtils.prepareUrlConnectionForTextRequest( connection );
 			connection.connect();
-
 			InputStream response = connection.getInputStream();
 
 			BufferedReader br = new BufferedReader(

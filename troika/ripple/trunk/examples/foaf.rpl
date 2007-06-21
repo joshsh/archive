@@ -145,6 +145,16 @@ foaf: .
 
 ########################################
 
+@define tim: <http://www.w3.org/People/Berners-Lee/card#i>.
+/:tim.
+/:tim/foaf:knows/foaf:knows
+    foaf:img foaf:depiction /union/i
+    /unique/show.
+
+/:tim/foaf:knows
+    /foaf:name
+    /unique/speak.
+
 (:
     foaf:img --> Image
     foaf:depiction --> Image
