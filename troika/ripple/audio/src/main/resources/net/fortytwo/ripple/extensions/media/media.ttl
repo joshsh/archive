@@ -4,6 +4,17 @@
 @prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
+media:show
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "imgUri" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "show" ;
+	rdfs:comment "imgUri  =>   -- has the side-effect of displaying the image at URI imgUri" .
+
 media:speak
 	a rpl:Function ;
 	rpl:arity 1 ;

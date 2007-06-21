@@ -18,6 +18,7 @@ public class MediaExtension implements Extension
 		uf.addMapping(
 			ns, getClass().getResource( "media.ttl" ) + "#" );
 
+		bridge.add( new Show( new RdfValue( mc.createUri( ns + "show" ) ), mc ), mc );
 		bridge.add( new Speak( new RdfValue( mc.createUri( ns + "speak" ) ), mc ), mc );
 	}
 }
