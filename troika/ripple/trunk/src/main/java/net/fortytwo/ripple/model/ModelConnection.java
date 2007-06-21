@@ -21,6 +21,7 @@ import net.fortytwo.ripple.util.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.HttpUtils;
 
 import org.apache.log4j.Logger;
 
@@ -1099,33 +1100,6 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		System.out.println( sb.toString() );
 	}
 
-	private static void prepareUrlConnectionForRdfRequest( URLConnection urlConn )
-	{
-		urlConn.setRequestProperty( "User-Agent",
-			Ripple.getName() + "/" + Ripple.getVersion() );
-
-		/* Comment by arjohn in http://www.openrdf.org/forum/mvnforum/viewthread?thread=805#3234
-			Note that Sesame/Rio doesn't have a real N3 parser, but it does have a Turtle parser, which supports a much larger subset of N3. At first sight, I would say that the Turtle parser should be able to parse the data fragment that you posted. */
-		boolean n3DeserializationSupported = false;
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append( "application/rdf+xml" );
-
-		if ( n3DeserializationSupported )
-			sb.append( ", text/rdf+n3" );
-
-		sb.append( ", application/trix" );
-		sb.append( ", application/x-turtle" );
-		sb.append( ", text/plain" );
-		sb.append( ", application/xml;q=0.5" );
-		sb.append( ", text/xml;q=0.2" );
-
-		urlConn.setRequestProperty( "Accept", sb.toString() );
-
-// To consider at some point: caching, authorization
-	}
-
 	private URLConnection openUrlConnection( URL url )
 		throws RippleException
 	{
@@ -1134,7 +1108,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		try
 		{
 			urlConn = url.openConnection();
-			prepareUrlConnectionForRdfRequest( urlConn );
+			HttpUtils.prepareUrlConnectionForRdfRequest( urlConn );
 //showUrlConnection( urlConn );
 		}
 

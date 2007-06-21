@@ -116,7 +116,7 @@ public class HttpUriDereferencer implements Dereferencer
 		catch ( RippleException e )
 		{
 //			mc.reset( true );
-			s_logger.info( "##### failed to dereference URI: " + uri.toString() );
+			s_logger.info( "Failed to dereference URI: " + uri.toString() );
 			failureMemos.add( memo );
 			throw e;
 		}

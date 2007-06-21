@@ -11,7 +11,7 @@ functions, and an interactive command-line interpreter.
 
 For more information, including documentation and code samples, see:
 
-    http://fortytwo.net/ripple
+    http://ripple.fortytwo.net/
 
 
 ================================================================================
@@ -21,7 +21,7 @@ Run
 To begin an interpreter session, use one of the shortcut scripts (ripple or
 ripple.bat) or type:
 
-    java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+    $ java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
 
 The demo application uses an RDF/XML cache file to save state between sessions,
 instead of a database.  To create a new cache, use the @saveas directive while
@@ -29,9 +29,10 @@ talking to the interpreter:
 
     @saveas "newcache.rdf".
 
-To restore a previous session, specify the cache as an argument:
+To restore a previous session, specify the cache as an argument at the command
+line:
 
-    ./ripple newcache.rdf
+    $ ./ripple newcache.rdf
 
 When you quit the application, its state will be written back to the cache.
 
@@ -44,7 +45,7 @@ Build
 
 To build Ripple from scratch, install Maven 2.0.x and issue the command
 
-    mvn install
+    $ mvn install
 
 from the directory containing pom.xml (requires Java 5).
 

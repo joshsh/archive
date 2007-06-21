@@ -7,6 +7,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.HttpUtils;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -42,6 +43,7 @@ public class Get extends PrimitiveFunction
 		{
 			URL url = new URL( a );
 			URLConnection connection = url.openConnection();
+			HttpUtils.prepareUrlConnectionForTextRequest( connection );
 			connection.connect();
 
 			InputStream response = connection.getInputStream();
