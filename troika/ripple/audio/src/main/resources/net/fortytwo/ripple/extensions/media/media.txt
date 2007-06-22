@@ -3,3 +3,10 @@ media:speak
 ========================================
 
 "Hello World!" /speak.
+
+
+========================================
+media:show
+========================================
+
+<http://www.gnu.org/graphics/gnu-head-banner.png> /show.

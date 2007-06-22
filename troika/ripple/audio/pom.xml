@@ -44,11 +44,11 @@
 			<name>fortytwo.net Maven repository</name>
 			<url>http://fortytwo.net/maven2</url>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>scriptlandia-repo</id>
 			<name>Scriptlandia Maven2 repository</name>
 			<url>http://scriptlandia-repository.googlecode.com/svn/trunk/tools</url>
-		</repository>
+		</repository>-->
 	</repositories>
 	
 	<dependencies>
@@ -65,11 +65,11 @@
 			<type>jar</type>
 		</dependency>
 		
-		<dependency>
+		<!--<dependency>
 			<groupId>javax.speech</groupId>
 			<artifactId>jsapi</artifactId>
 			<version>1.0</version>
-		</dependency>
+		</dependency>-->
 		
 		<dependency>
 			<groupId>com.sun.speech</groupId>

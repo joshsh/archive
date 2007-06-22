@@ -4,6 +4,17 @@
 @prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
+media:playMidi
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "midiUri" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "playMidi" ;
+	rdfs:comment "midiUri  =>   -- has the side-effect of playing the MIDI file" .
+
 media:show
 	a rpl:Function ;
 	rpl:arity 1 ;
