@@ -29,10 +29,7 @@ Primitives
 
 Crawling
 ================================================================================
-* Look into adding a FOAF scutterer which can handle:
-  * foaf:knows links
-  * owl:sameAs indirection
-  * rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
+* Look into adding a FOAF scutterer which can handle rdfs:seeAlso / something like the mbox breadcrumbs protocol described in the Tabulator intro
 * Ponder the implications of purl URIs like this one (note: Disco can't handle this, either):
     http://purl.org/stuff/rev#Review
 * Dereference this: http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag
@@ -40,7 +37,6 @@ Crawling
 Server
 ================================================================================
 * REST query format and service endpoint.  Returns a graph in RDF/XML... which may be simply a list of indirection nodes to results.
-* dbpedia server (not necessarily using Ripple)
 * RFC server
 * server for HTTP response codes
 * servers for "recreational" data sets like chat channels, RPGs, virtual environments like ActiveWorlds, etc.

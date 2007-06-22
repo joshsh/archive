@@ -1,0 +1,181 @@
+# http://atomowl.org/
+
+### AtomRDF ############################
+
+# (own prefix )
+@prefix atomrdf: <http://atomowl.org/ontologies/atomrdf#>.
+
+atomrdf:.
+
+@define atomRdfTerms:
+    atomrdf:Category
+    atomrdf:Entry
+    atomrdf:EntryInstance
+    atomrdf:Extension
+    atomrdf:Feed
+    atomrdf:FeedInstance
+    atomrdf:Generator
+    atomrdf:Link
+    atomrdf:Person
+    atomrdf:Text
+    atomrdf:author
+    atomrdf:category
+    atomrdf:categoryLabel
+    atomrdf:categoryScheme
+    atomrdf:categoryTerm
+    atomrdf:containingFeed
+    atomrdf:content
+    atomrdf:contentBase
+    atomrdf:contentLang
+    atomrdf:contentSource
+    atomrdf:contentType
+    atomrdf:contributor
+    atomrdf:entryInstance
+    atomrdf:extension
+    atomrdf:extensionText
+    atomrdf:extensionXML
+    atomrdf:feedInstance
+    atomrdf:generator
+    atomrdf:generatorName
+    atomrdf:generatorUri
+    atomrdf:generatorVersion
+    atomrdf:icon
+    atomrdf:link
+    atomrdf:linkHref
+    atomrdf:linkHrefLang
+    atomrdf:linkLength
+    atomrdf:linkRel
+    atomrdf:linkTitle
+    atomrdf:linkType
+    atomrdf:logo
+    atomrdf:mimeType
+    atomrdf:personEmail
+    atomrdf:personName
+    atomrdf:personUri
+    atomrdf:propertyNS
+    atomrdf:propertyName
+    atomrdf:published
+    atomrdf:rights
+    atomrdf:sourceFeed
+    atomrdf:subtitle
+    atomrdf:summary
+    atomrdf:title
+    atomrdf:updated
+    .
+
+### AtomOWL ############################
+
+# (own prefix)
+@prefix atomowl: <http://atomowl.org/ontologies/atomowl#>.
+
+atomowl:.
+
+@define atomowlTerms:
+    atomowl:Category
+    atomowl:Content
+    atomowl:Entry
+    atomowl:EntryId
+    atomowl:Feed
+    atomowl:FeedId
+    atomowl:FeedOrEntry
+    atomowl:Generator
+    atomowl:Id
+    atomowl:Link
+    atomowl:Person
+    atomowl:PlainTextContent
+    atomowl:RelationType
+    atomowl:TextContent
+    atomowl:Version
+    atomowl:author
+    atomowl:category
+    atomowl:content
+    atomowl:contributor
+    atomowl:dannyNote
+    atomowl:email
+    atomowl:entry
+    atomowl:feedId
+    atomowl:generator
+    atomowl:generatorVersion
+    atomowl:href
+    atomowl:icon
+    atomowl:id
+    atomowl:label
+    atomowl:lang
+    atomowl:length
+    atomowl:link
+    atomowl:linkTitle
+    atomowl:logo
+    atomowl:name
+    atomowl:published
+    atomowl:rel
+    atomowl:retosNote
+    atomowl:rights
+    atomowl:scheme
+    atomowl:source
+    atomowl:src
+    atomowl:subject
+    atomowl:subtitle
+    atomowl:summary
+    atomowl:term
+    atomowl:title
+    atomowl:type
+    atomowl:update
+    atomowl:updated
+    atomowl:uri
+    atomowl:value
+    atomowl:version
+    .
+
+
+### An earlier draft of AtomOWL (?) ###############
+
+<http://bblfish.net/work/atom-owl/2004-08-12/Atom.owl>.
+
+# (own prefix, and apparently a temporary namespace)
+@prefix atom: <http://bblfish.net/work/atom-owl/2004-08-12/Atom.owl#>.
+
+@define atomTerms:
+    atom:Atom
+    atom:Blog
+    atom:Content
+    atom:Entry
+    atom:EntryID
+    atom:EntryVersion
+    atom:Feed
+    atom:Link
+    atom:about
+    atom:alternate
+    atom:author
+    atom:blog
+    atom:content
+    atom:contributor
+    atom:copyright
+    atom:created
+    atom:data
+    atom:dynamic
+    atom:edit-service
+    atom:entry
+    atom:entry-location
+    atom:entry-version
+    atom:feed
+    atom:generator
+    atom:header
+    atom:href
+    atom:id
+    atom:in-reply-to
+    atom:info
+    atom:issued
+    atom:lang
+    atom:mime-type
+    atom:mode
+    atom:modified
+    atom:next
+    atom:post-service
+    atom:previous
+    atom:state
+    atom:summary
+    atom:text
+    atom:title
+    atom:topic
+    atom:version
+    .
