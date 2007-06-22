@@ -113,15 +113,28 @@ public class Sindice extends PrimitiveFunction
 		}
 
 		Element root = doc.getRootElement();
-		Iterator<Element> childIter = root.getChildren().iterator();
-		while ( childIter.hasNext() )
+
+		// Nonempty result set.
+		if ( root.getName().equals( "sindice-sources" ) )
 		{
-			Element sourceEl = childIter.next();
-			Element urlEl = sourceEl.getChild( "url" );
-			String s = urlEl.getText().trim();
-			sink.put( new RippleList(
-				new RdfValue( mc.createUri( s ) ), stack ) );
+			Iterator<Element> childIter = root.getChildren().iterator();
+			while ( childIter.hasNext() )
+			{
+				Element sourceEl = childIter.next();
+				Element urlEl = sourceEl.getChild( "url" );
+				String s = urlEl.getText().trim();
+				sink.put( new RippleList(
+					new RdfValue( mc.createUri( s ) ), stack ) );
+			}
 		}
+
+		else if ( root.getName().equals( "nil-classes" ) )
+		{
+			// Do nothing.
+		}
+
+		else
+			throw new RippleException( "Unexpected Sindice response: " + root.getName() );
 	}
 }
 

@@ -53,6 +53,9 @@ etc:sindice
 <http://www.w3.org/People/Berners-Lee/card#i>
     /sindice/toString.  # a bunch of FOAF documents
 
+<http://zitgist.com/music/artist/5f9f2dfb-76f0-4872-ad7d-f9d84a908cb5>
+    /sindice/toString.  # nothing
+
 
 ========================================
 etc:swoogleIt

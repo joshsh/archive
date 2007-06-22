@@ -7,6 +7,10 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
+	<!-- Empty result set looks like this. -->
+	<xsd:element name="nil-classes" type="xsd:string"/>
+
+	<!-- Nonempty result set looks like this. -->
 	<xsd:element name="sindice-sources">
 		<xsd:complexType>
 			<xsd:sequence>
