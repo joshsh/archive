@@ -87,6 +87,17 @@ etc:rand
 	rdfs:label "rand" ;
 	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
 
+etc:sindice
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "uri" ;
+			rpl:isTransparent true ]
+		);
+	rdfs:label "sindice" ;
+	rdfs:comment "uri  =>  doc  -- where doc represents zero or more RDF documents referencing the given URI" .
+
 etc:swoogleIt
 	a rpl:Function ;
 	rpl:arity 3 ;

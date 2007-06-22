@@ -24,6 +24,7 @@ public class EtcExtension implements Extension
 		bridge.add( new Pred( new RdfValue( mc.createUri( ns + "pred" ) ), mc ), mc );
 		bridge.add( new Prim( new RdfValue( mc.createUri( ns + "prim" ) ), mc ), mc );
 		bridge.add( new Rand( new RdfValue( mc.createUri( ns + "rand" ) ), mc ), mc );
+		bridge.add( new Sindice( new RdfValue( mc.createUri( ns + "sindice" ) ), mc ), mc );
 		bridge.add( new SwoogleIt( new RdfValue( mc.createUri( ns + "swoogleIt" ) ), mc ), mc );
 		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
 

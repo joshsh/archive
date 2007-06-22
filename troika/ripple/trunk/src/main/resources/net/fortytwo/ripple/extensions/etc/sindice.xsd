@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This is a provisional schema for Sindice XML results.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:element name="sindice-sources">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="source" type="Source" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="Source">
+		<xsd:sequence>
+			<xsd:element name="url" type="xsd:string"/>
+			<xsd:element name="description" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

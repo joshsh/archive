@@ -9,6 +9,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.StringUtils;
 
 import java.io.InputStream;
 
@@ -24,11 +25,13 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-public class PingTheSemanticWeb extends PrimitiveFunction
+import org.openrdf.model.URI;
+
+public class Sindice extends PrimitiveFunction
 {
 	private static SAXBuilder s_saxBuilder = null;
 
-	public PingTheSemanticWeb( RdfValue v, ModelConnection mc )
+	public Sindice( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		super( v, mc );
@@ -36,7 +39,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return 1;
 	}
 
 	public void applyTo( RippleList stack,
@@ -44,12 +47,9 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		String type;
-		int maxResults;
+		URI uri;
 
-		type = mc.stringValue( stack.getFirst() );
-		stack = stack.getRest();
-		maxResults = mc.intValue( stack.getFirst() );
+		uri = mc.uriValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		if ( null == s_saxBuilder )
@@ -57,19 +57,20 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 			s_saxBuilder = new SAXBuilder( true );
 			s_saxBuilder.setReuseParser( true );
 
-			String schemaLocation = PingTheSemanticWeb.class.getResource( "pingTheSemanticWeb.xsd" ).toString();
+			String schemaLocation = PingTheSemanticWeb.class.getResource( "sindice.xsd" ).toString();
 			s_saxBuilder.setFeature(
 				"http://apache.org/xml/features/validation/schema", true );
 			s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
 				+ "external-noNamespaceSchemaLocation", schemaLocation );
 		}
 
-		URLConnection connection;
+		URLConnection urlConn;
 
 		try
 		{
-			URL url = new URL( "http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );
-			connection = url.openConnection();
+			URL url = new URL( "http://www.sindice.com/lookup?uri="
+				+ StringUtils.urlEncode( uri.toString() ) );
+			urlConn = url.openConnection();
 		}
 
 		catch ( java.net.MalformedURLException e )
@@ -83,14 +84,15 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		}
 
 		String []mimeTypes = { "text/xml" };
-		HttpUtils.prepareUrlConnectionForRequest( connection, mimeTypes );
+		HttpUtils.prepareUrlConnectionForRequest( urlConn, mimeTypes );
 
 		Document doc;
 
 		try
 		{
-			connection.connect();
-			InputStream response = connection.getInputStream();
+			urlConn.connect();
+
+			InputStream response = urlConn.getInputStream();
 
 			synchronized( s_saxBuilder )
 			{
@@ -114,8 +116,9 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		Iterator<Element> childIter = root.getChildren().iterator();
 		while ( childIter.hasNext() )
 		{
-			Element child = childIter.next();
-			String s = child.getAttributeValue( "url" );
+			Element sourceEl = childIter.next();
+			Element urlEl = sourceEl.getChild( "url" );
+			String s = urlEl.getText().trim();
 			sink.put( new RippleList(
 				new RdfValue( mc.createUri( s ) ), stack ) );
 		}
