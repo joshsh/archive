@@ -103,6 +103,9 @@ public class Show extends PrimitiveFunction
 			{
 				throw new RippleException( e );
 			}
+
+			if ( null == img )
+				throw new RippleException( "no displayable image found at URI " + uri );
 		}
 		
 		//override paint method of panel
