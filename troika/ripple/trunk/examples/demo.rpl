@@ -1,0 +1,18 @@
+
+@prefix demo: <http://fortytwo.net/2007/05/ripple/demo#>.
+
+
+
+@define demoTerms:
+    demo:bar
+    demo:bookReviewsOnly
+    demo:fact
+    demo:fib
+    demo:foafStep
+    demo:hello
+    demo:mapped
+    demo:myMap
+    demo:ping
+    demo:restrict
+    demo:sq
+    .

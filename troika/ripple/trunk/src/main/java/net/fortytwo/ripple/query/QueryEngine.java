@@ -9,13 +9,19 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Evaluator;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfSourceAdapter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.NullSink;
+import net.fortytwo.ripple.util.ReadOnlyFilter;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
+import org.openrdf.model.Namespace;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
@@ -47,6 +53,40 @@ public class QueryEngine
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+
+	public ModelConnection getConnection()
+	{
+		final ModelConnection mc = new ModelConnection( model );
+
+		Sink<Statement> addStatementSink = new Sink<Statement>()
+		{
+			public void put( Statement st )
+			{
+				mc.add( st );
+			}
+		};
+
+		ReadOnlyFilter<Statement> lexiconStatementUpdater
+			= new ReadOnlyFilter<Statement>( addStatementSink )
+				{
+					public void handle( Statement st )
+					{}
+				};
+
+		ReadOnlyFilter<Namespace> lexiconNamespaceUpdater
+			= new ReadOnlyFilter<Namespace>( new NullSink<Namespace>() )
+				{
+					public void handle( Namespace ns )
+					{}
+				};
+
+		RdfSourceAdapter adapter = new RdfSourceAdapter(
+			lexiconStatementUpdater,
+			lexiconNamespaceUpdater,
+			new NullSink<String>() );
+
+		mc.setAdapter( adapter );
+	}
 
 	public Evaluator getEvaluator()
 	{

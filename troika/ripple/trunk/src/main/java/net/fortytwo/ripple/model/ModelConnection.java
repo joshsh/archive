@@ -54,6 +54,8 @@ public class ModelConnection
 	private ModelBridge bridge;
 	private String name = null;
 
+private RdfSourceAdapter adapter = null;
+
 	////////////////////////////////////////////////////////////////////////////
 
 	private void constructPrivate( Model model )
@@ -533,6 +535,22 @@ public class ModelConnection
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+
+	// NOTE: not thread-safe on its own
+	public void add( Statement st )
+		throws RippleException
+	{
+		try
+		{
+			repoConnection.add( st );
+		}
+
+		catch ( Throwable t )
+		{
+			reset( true );
+			throw new RippleException( t );
+		}
+	}
 
 	public void add( RippleValue subj, RippleValue pred, RippleValue obj )
 		throws RippleException
