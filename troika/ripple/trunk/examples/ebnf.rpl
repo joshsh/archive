@@ -1,0 +1,15 @@
+# See: bnf2turtle -- http://dig.csail.mit.edu/breadcrumbs/node/85
+
+@prefix ebnf: <http://www.w3.org/2000/10/swap/grammar/ebnf#>.
+
+@define ebnfTerms:
+    ebnf:alt
+    ebnf:empty
+    ebnf:eof
+    ebnf:nonTerminal
+    ebnf:opt
+    ebnf:plus
+    ebnf:seq
+    ebnf:star
+    ebnf:terminal
+    .

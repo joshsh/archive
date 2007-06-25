@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Lexicon extends Observable implements Observer
+public class Lexicon extends Observable
 {
 	private Model model;
 
@@ -41,7 +41,6 @@ public class Lexicon extends Observable implements Observer
 		throws RippleException
 	{
 		this.model = model;
-		model.addObserver( this );
 
 		// Create (immutable) keywords map.
 		{
@@ -161,7 +160,21 @@ public class Lexicon extends Observable implements Observer
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private void add( final Namespace ns )
+	public void add( final Statement st )
+		throws RippleException
+	{
+		Resource subj = st.getSubject();
+		URI pred = st.getPredicate();
+		Value obj = st.getObject();
+
+		if ( subj instanceof URI )
+			add( (URI) subj );
+		add( pred );
+		if ( obj instanceof URI )
+			add( (URI) obj );
+	}
+
+	public void add( final Namespace ns )
 	{
 //System.out.println( "(" + ns.getPrefix() + "=" + ns.getName() + ")" );
 		prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
@@ -188,9 +201,7 @@ public class Lexicon extends Observable implements Observer
 		namespaceToPrefixMap = new Hashtable<String, String>();
 		qNamesCollection = new ArrayList<String>();
 
-		Set<URI> allURIs = new HashSet<URI>();
-
-		ModelConnection mc = new ModelConnection( model, "for Lexicon update()" );
+		ModelConnection mc = model.getConnection( "for Lexicon update()" );
 
 		try
 		{
@@ -199,19 +210,7 @@ public class Lexicon extends Observable implements Observer
 //                    null, null, null, model, includeInferred );
 					null, null, null, Ripple.useInference() );
 			while ( stmtIter.hasNext() )
-			{
-				Statement st = stmtIter.next();
-
-				Resource subj = st.getSubject();
-				URI pred = st.getPredicate();
-				Value obj = st.getObject();
-
-				if ( subj instanceof URI )
-					allURIs.add( (URI) subj );
-				allURIs.add( pred );
-				if ( obj instanceof URI )
-					allURIs.add( (URI) obj );
-			}
+				add( stmtIter.next() );
 			stmtIter.close();
 
 			// Namespace prefixes are managed by OpenRDF, and are simply
@@ -230,37 +229,9 @@ public class Lexicon extends Observable implements Observer
 		}
 
 		mc.close();
-
-		Iterator<URI> uriIter = allURIs.iterator();
-		while ( uriIter.hasNext() )
-			add( uriIter.next() );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
-
-	private boolean changed = false;
-	private boolean suspended = false;
-
-	public synchronized void suspendEventHandling()
-	{
-		suspended = true;
-	}
-
-	public synchronized void resumeEventHandling()
-		throws RippleException
-	{
-		if ( suspended )
-		{
-			if ( changed )
-			{
-				update();
-
-				changed = false;
-			}
-
-			suspended = false;
-		}
-	}
 
 	// Public access allows the Interpreter to force a refresh.
 	public void update()
@@ -270,26 +241,6 @@ public class Lexicon extends Observable implements Observer
 
 		setChanged();
 		notifyObservers();
-	}
-
-	public void update( Observable o, Object arg )
-	{
-		try
-		{
-			if ( o == model )
-			{
-				if ( suspended )
-					changed = true;
-
-				else
-					update();
-			}
-		}
-
-		catch ( RippleException e )
-		{
-			System.err.println( "\nError: " + e.toString() + "\n" );
-		}
 	}
 }
 

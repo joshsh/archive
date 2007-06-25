@@ -55,12 +55,22 @@ public class QueryEngine
 	////////////////////////////////////////////////////////////////////////////
 
 	public ModelConnection getConnection()
+		throws RippleException
 	{
-		final ModelConnection mc = new ModelConnection( model );
+		return getConnection( null );
+	}
+
+	public ModelConnection getConnection( final String name )
+		throws RippleException
+	{
+		final ModelConnection mc = ( null == name )
+			? new ModelConnection( model )
+			: new ModelConnection( model, name );
 
 		Sink<Statement> addStatementSink = new Sink<Statement>()
 		{
 			public void put( Statement st )
+				throws RippleException
 			{
 				mc.add( st );
 			}
@@ -70,14 +80,19 @@ public class QueryEngine
 			= new ReadOnlyFilter<Statement>( addStatementSink )
 				{
 					public void handle( Statement st )
-					{}
+						throws RippleException
+					{
+						lexicon.add( st );
+					}
 				};
 
 		ReadOnlyFilter<Namespace> lexiconNamespaceUpdater
 			= new ReadOnlyFilter<Namespace>( new NullSink<Namespace>() )
 				{
 					public void handle( Namespace ns )
-					{}
+					{
+						lexicon.add( ns );
+					}
 				};
 
 		RdfSourceAdapter adapter = new RdfSourceAdapter(
@@ -85,7 +100,9 @@ public class QueryEngine
 			lexiconNamespaceUpdater,
 			new NullSink<String>() );
 
-		mc.setAdapter( adapter );
+		mc.setSourceAdapter( adapter );
+
+		return mc;
 	}
 
 	public Evaluator getEvaluator()

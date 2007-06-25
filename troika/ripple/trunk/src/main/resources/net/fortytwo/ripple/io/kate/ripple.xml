@@ -2,7 +2,7 @@
 
 <!DOCTYPE language SYSTEM "language.dtd">
 
-<language name="Ripple" version="0.1" kateversion="2.5.0" section="Sources" extensions="*.rpl" mimetype="text" author="Joshua Shinavier (parcour@gmail.com)" license="">
+<language name="Ripple" version="0.3" kateversion="2.5.0" section="Scripts" extensions="*.rpl" mimetype="text" author="Joshua Shinavier (josh@fortytwo.net)" license="">
 	<highlighting>
 		<list name="keywords">
 			<item> @count </item>

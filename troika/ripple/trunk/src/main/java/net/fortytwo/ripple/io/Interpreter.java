@@ -195,7 +195,7 @@ public class Interpreter extends Thread implements Observer
 
 		try
 		{
-			mc = new ModelConnection( queryEngine.getModel(), "Command" );
+			mc = queryEngine.getConnection( "Command" );
 			gotConnection = true;
 			cmd.execute( queryEngine, mc );
 			finished = true;
@@ -249,7 +249,7 @@ public class Interpreter extends Thread implements Observer
 
 		try
 		{
-			mc = new ModelConnection( queryEngine.getModel(), "for Interpreter evaluate()" );
+			mc = queryEngine.getConnection( "for Interpreter evaluate()" );
 			gotConnection = true;
 
 			// Results are first dereferenced, then placed into a buffer which

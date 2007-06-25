@@ -18,6 +18,7 @@ import java.util.Set;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.ExtensionLoader;
+import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UrlFactory;
 
@@ -85,7 +86,7 @@ public Dereferencer getDereferencer()
 	private void loadSymbols( final UrlFactory uf )
 		throws RippleException
 	{
-		ModelConnection mc = new ModelConnection( this, "for Model.loadSymbols" );
+		ModelConnection mc = getConnection( "for Model.loadSymbols" );
 
 		// At the moment, op needs to be a special value for the sake of the
 		// evaluator.  This has the side-effect of making it a keyword.
@@ -107,6 +108,41 @@ public Dereferencer getDereferencer()
 		mc.close();
 	}
 
+	public ModelConnection getConnection( final String name )
+		throws RippleException
+	{
+		final ModelConnection mc = ( null == name )
+			? new ModelConnection( this )
+			: new ModelConnection( this, name );
+
+		Sink<Statement> addStatementSink = new Sink<Statement>()
+		{
+			public void put( Statement st )
+				throws RippleException
+			{
+				mc.add( st );
+			}
+		};
+
+		Sink<Namespace> defineNamespaceSink = new Sink<Namespace>()
+		{
+			public void put( Namespace ns )
+				throws RippleException
+			{
+				mc.setNamespace( ns.getPrefix(), ns.getName() );
+			}
+		};
+
+		RdfSourceAdapter adapter = new RdfSourceAdapter(
+			addStatementSink,
+			defineNamespaceSink,
+			new NullSink<String>() );
+
+		mc.setSourceAdapter( adapter );
+
+		return mc;
+	}
+
 public Repository getRepository()
 {
 	return repository;
@@ -125,7 +161,7 @@ public Repository getRepository()
 	{
 		s_logger.info( "loading Model from URL: " + url );
 
-		ModelConnection mc = new ModelConnection( this, "for Model load()" );
+		ModelConnection mc = getConnection( "for Model load()" );
 
 		mc.addGraph( url );
 
@@ -165,7 +201,7 @@ public Repository getRepository()
 	{
 		// Save dereferencer state.
 		{
-			ModelConnection mc = new ModelConnection( this );
+			ModelConnection mc = getConnection( null );
 
 			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
 			RdfValue succ = new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) );

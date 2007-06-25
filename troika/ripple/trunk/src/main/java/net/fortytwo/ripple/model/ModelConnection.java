@@ -37,9 +37,10 @@ import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.GraphQueryResult;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.openrdf.repository.RepositoryResult;
 
@@ -55,6 +56,11 @@ public class ModelConnection
 	private String name = null;
 
 private RdfSourceAdapter adapter = null;
+
+public void setSourceAdapter( RdfSourceAdapter adapter )
+{
+	this.adapter = adapter;
+}
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -1148,7 +1154,6 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		return urlConn;
 	}
 
-
 	public void addGraph( final URL url, final URI context )
 		throws RippleException
 	{
@@ -1164,10 +1169,12 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		}.start( Ripple.uriDereferencingTimeout() );
 	}
 
-
 	public void addGraph( final InputStream is, final URI context, RDFFormat format )
 		throws RippleException
 	{
+		if ( null == adapter )
+			throw new RippleException( "no source adapter has been defined" );
+
 		try
 		{
 // if ( !repoConnection.isOpen() )
@@ -1175,19 +1182,11 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 // s_logger.info( "connection was found to be closed: " + repoConnection );
 // reset( false );
 // }
-
+			RDFParser parser = Rio.createParser( format, valueFactory );
+			parser.setRDFHandler( adapter );
 			synchronized( repoConnection )
 			{
-				if ( null == context )
-					repoConnection.add( is, null, format );
-				else
-				{
-					String baseUri = context.toString();
-					synchronized( repoConnection )
-					{
-						repoConnection.add( is, baseUri, format, context );
-					}
-				}
+				parser.parse( is, context.toString() );
 	
 				// Commit immediately, so that data is not lost if subsequent
 				// operations fail.
@@ -1199,10 +1198,10 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		{
 			reset( true );
 
-			if ( t instanceof RDFParseException )
+			if ( t instanceof org.openrdf.rio.RDFParseException )
 			{
-				String msg = "line " + ( (RDFParseException) t ).getLineNumber()
-					+ ", column " + ( (RDFParseException) t ).getColumnNumber()
+				String msg = "line " + ( (org.openrdf.rio.RDFParseException) t ).getLineNumber()
+					+ ", column " + ( (org.openrdf.rio.RDFParseException) t ).getColumnNumber()
 					+ ": " + t.getMessage();
 
 				throw new RippleException( msg );

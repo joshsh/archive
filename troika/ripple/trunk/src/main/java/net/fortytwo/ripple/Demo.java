@@ -92,11 +92,6 @@ public class Demo
 			// Attach a Ripple model to the repository.
 			Model model = new Model( repository, "Demo Model" );
 
-			// Set the default namespace.
-			ModelConnection mc = new ModelConnection( model );
-			mc.setNamespace( "", Ripple.getDefaultNamespace() );
-			mc.close();
-
 			// Load from store.
 			if ( null != store )
 			{
@@ -108,6 +103,11 @@ public class Demo
 			Evaluator evaluator = new LazyEvaluator();
 			QueryEngine qe
 				= new QueryEngine( model, evaluator, out, err );
+
+			// Set the default namespace.
+			ModelConnection mc = qe.getConnection();
+			mc.setNamespace( "", Ripple.getDefaultNamespace() );
+			mc.close();
 
 			// Attach an interpreter to the query engine and let it read from
 			// standard input.

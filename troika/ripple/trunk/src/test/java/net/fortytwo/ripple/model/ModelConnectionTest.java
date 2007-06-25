@@ -17,7 +17,7 @@ public class ModelConnectionTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			ModelConnection mc = new ModelConnection( getTestModel() );
+			ModelConnection mc = getTestModel().getConnection( "for CreateUriTest" );
 
 			URI uri;
 			String localName, namespace;
@@ -71,7 +71,7 @@ public class ModelConnectionTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			ModelConnection mc = new ModelConnection( getTestModel() );
+			ModelConnection mc = getTestModel().getConnection( "for CountStatementsTest" );
 
 			URI context = mc.createUri( "urn:org.example.test.countStatementsTest#" );
 
@@ -100,7 +100,7 @@ public class ModelConnectionTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			ModelConnection mc = new ModelConnection( getTestModel() );
+			ModelConnection mc = getTestModel().getConnection( "for AddStatementsTest" );
 
 			URI ctxA = mc.createUri( "urn:org.example.test.addStatementsTest.ctxA#" );
 			URI uri1 = mc.createUri( "urn:org.example.test.addStatementsTest.ctxA#uri1" );
@@ -118,7 +118,7 @@ public class ModelConnectionTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			ModelConnection mc = new ModelConnection( getTestModel() );
+			ModelConnection mc = getTestModel().getConnection( "for AddGraphTest" );
 
 			{
 				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.turtleStrA#" );
