@@ -118,6 +118,15 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
+	static long s_courtesyDelay;
+
+	public static long getCourtesyDelay()
+	{
+		return s_courtesyDelay;
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
 	private static String getStringProperty( final Properties props,
 											final String name,
 											String defaultValue )
@@ -275,9 +284,11 @@ public class Ripple
 			if ( s_treeViewMaxObjects < 0 )
 				s_treeViewMaxObjects = 0;
 
-
 			s_listPadding = getBooleanProperty(
 				props, "net.fortytwo.ripple.printing.listPadding", false );
+
+			s_courtesyDelay = getLongProperty(
+				props, "net.fortytwo.ripple.client.courtesyDelay", 500 );
 
 			initialized = true;
 		}

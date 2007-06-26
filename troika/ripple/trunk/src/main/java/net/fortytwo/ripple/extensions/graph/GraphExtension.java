@@ -26,10 +26,17 @@ public class GraphExtension implements Extension
 		bridge.add( new Equal( new RdfValue( mc.createUri( ns + "equal" ) ), mc ), mc );
 		bridge.add( new Forget( new RdfValue( mc.createUri( ns + "forget" ) ), mc ), mc );
 		bridge.add( new New( new RdfValue( mc.createUri( ns + "new" ) ), mc ), mc );
+
+		// Type conversion / literal reification.
 		bridge.add( new ToDouble( new RdfValue( mc.createUri( ns + "toDouble" ) ), mc ), mc );
 		bridge.add( new ToInteger( new RdfValue( mc.createUri( ns + "toInteger" ) ), mc ), mc );
 		bridge.add( new ToString( new RdfValue( mc.createUri( ns + "toString" ) ), mc ), mc );
 		bridge.add( new ToUri( new RdfValue( mc.createUri( ns + "toUri" ) ), mc ), mc );
+
+		// Document-centric primitives.
+		bridge.add( new Comments( new RdfValue( mc.createUri( ns + "comments" ) ), mc ), mc );
+		bridge.add( new Namespaces( new RdfValue( mc.createUri( ns + "namespaces" ) ), mc ), mc );
+		bridge.add( new Triples( new RdfValue( mc.createUri( ns + "triples" ) ), mc ), mc );
 	}
 }
 

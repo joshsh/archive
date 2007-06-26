@@ -12,8 +12,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import jline.Completor;
 import jline.MultiCompletor;
@@ -49,7 +47,7 @@ import org.apache.log4j.Logger;
  * Error output:
  *     alert() --> queryEngine.getErrorPrintStream()
  */
-public class Interpreter extends Thread implements Observer
+public class Interpreter extends Thread
 {
 	private final static Logger s_logger
 		= Logger.getLogger( Interpreter.class );
@@ -92,9 +90,7 @@ public class Interpreter extends Thread implements Observer
 			throw new RippleException( t );
 		}
 
-		queryEngine.getLexicon().addObserver( this );
-
-		update( queryEngine.getLexicon(), null );
+		updateCompletors();
 
 		Sink<ListAst> querySink = new Sink<ListAst>()
 		{
@@ -136,12 +132,6 @@ public class Interpreter extends Thread implements Observer
 	}
 
 	////////////////////////////////////////////////////////////////////////////
-
-	public void update( Observable o, Object arg )
-	{
-		if ( o instanceof Lexicon )
-			updateCompletors( (Lexicon) o );
-	}
 
 	public void run()
 	{
@@ -200,6 +190,8 @@ public class Interpreter extends Thread implements Observer
 			cmd.execute( queryEngine, mc );
 			finished = true;
 			mc.close();
+
+			updateCompletors();
 		}
 
 		catch ( ParserQuitException e )
@@ -269,9 +261,7 @@ public class Interpreter extends Thread implements Observer
 
 			RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink );
 
-			queryEngine.getLexicon().suspendEventHandling();
 			cmd.execute( queryEngine, mc );
-			queryEngine.getLexicon().resumeEventHandling();
 
 			// Flush results to the view.
 			queryEngine.getPrintStream().println( "" );
@@ -281,6 +271,8 @@ public class Interpreter extends Thread implements Observer
 
 			finished = true;
 			mc.close();
+
+			updateCompletors();
 		}
 
 		catch ( RippleException e )
@@ -327,14 +319,14 @@ public class Interpreter extends Thread implements Observer
 		}
 	}
 
-	private void updateCompletors( final Lexicon lexicon )
+	private void updateCompletors()
 	{
 		s_logger.debug( "updating completors" );
 		List completors = new ArrayList();
 
 		try
 		{
-			completors.add( lexicon.getCompletor() );
+			completors.add( queryEngine.getLexicon().getCompletor() );
 
 			ArrayList<String> directives = new ArrayList<String>();
 			directives.add( "@count" );

@@ -24,10 +24,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 
-public class Lexicon extends Observable
+public class Lexicon
 {
 	private Model model;
 
@@ -182,7 +180,7 @@ public class Lexicon extends Observable
 	}
 
 	// Note: assumes that the same URI will not be added twice.
-	private void add( URI uri )
+	public void add( URI uri )
 		throws RippleException
 	{
 		// If possible, add a qualified name as well.
@@ -229,18 +227,6 @@ public class Lexicon extends Observable
 		}
 
 		mc.close();
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	// Public access allows the Interpreter to force a refresh.
-	public void update()
-		throws RippleException
-	{
-		updateMaps();
-
-		setChanged();
-		notifyObservers();
 	}
 }
 

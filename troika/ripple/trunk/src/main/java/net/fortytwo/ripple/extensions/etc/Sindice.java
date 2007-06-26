@@ -14,7 +14,6 @@ import net.fortytwo.ripple.util.StringUtils;
 import java.io.InputStream;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.net.URLConnection;
 
 import java.util.Collection;
@@ -85,13 +84,12 @@ public class Sindice extends PrimitiveFunction
 
 		String []mimeTypes = { "text/xml" };
 		HttpUtils.prepareUrlConnectionForRequest( urlConn, mimeTypes );
+		HttpUtils.connect( urlConn );
 
 		Document doc;
 
 		try
 		{
-			urlConn.connect();
-
 			InputStream response = urlConn.getInputStream();
 
 			synchronized( s_saxBuilder )

@@ -39,28 +39,45 @@ public class Get extends PrimitiveFunction
 		a = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
+		URLConnection urlConn;
+
 		try
 		{
 			URL url = new URL( a );
-			URLConnection connection = url.openConnection();
-			HttpUtils.prepareUrlConnectionForTextRequest( connection );
-			connection.connect();
-			InputStream response = connection.getInputStream();
+			urlConn = url.openConnection();
+		}
+
+		catch ( java.net.MalformedURLException e )
+		{
+			throw new RippleException( e );
+		}
+
+		catch ( java.io.IOException e )
+		{
+			throw new RippleException( e );
+		}
+
+		HttpUtils.prepareUrlConnectionForTextRequest( urlConn );
+		HttpUtils.connect( urlConn );
+
+		try
+		{
+			InputStream response = urlConn.getInputStream();
 
 			BufferedReader br = new BufferedReader(
 				new InputStreamReader( response ) );
 			StringBuffer sb = new StringBuffer();
 			String nextLine = "";
 			while ( ( nextLine = br.readLine() ) != null )
-				sb.append(nextLine);
+				sb.append( nextLine );
 			result = sb.toString();
 
 			response.close();
 		}
 
-		catch ( Throwable t )
+		catch ( java.io.IOException e )
 		{
-			throw new RippleException( t );
+			throw new RippleException( e );
 		}
 
 		sink.put( new RippleList( mc.createValue( result ), stack ) );

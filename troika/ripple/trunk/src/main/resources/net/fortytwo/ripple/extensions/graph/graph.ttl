@@ -24,6 +24,8 @@ graph:assert
 	rdfs:label "assert" ;
 	rdfs:comment "s p o  ->  s  -- has the side-effect of asserting the statement (s, p, o)" .
 
+#graph:comments ...
+
 graph:compare
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -99,6 +101,19 @@ graph:forget
 	rdfs:label "forget" ;
 	rdfs:comment "x  ->  x  -- has the side-effect of revoking all statements about x" .
 
+graph:namespaces
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rdf:List ;
+	rpl:parameters (
+		[
+			rdfs:label "doc" ;
+			rdfs:comment "a Semantic Web document" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "namespaces" ;
+	rdfs:comment "doc  ->  (prefix name)  -- for each namespace defined in document doc" .
+
 graph:new
 	a rpl:Function ;
 	rpl:arity 0 ;
@@ -153,3 +168,16 @@ graph:toUri
 		) ;
 	rdfs:label "toUri" ;
 	rdfs:comment "s  ->  uri -- where uri is the URI whose string representation is s" .
+
+graph:triples
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType rdf:List ;
+	rpl:parameters (
+		[
+			rdfs:label "doc" ;
+			rdfs:comment "a Semantic Web document" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "triples" ;
+	rdfs:comment "doc  ->  (s p o)  -- for each triple (s p o) in document doc" .

@@ -8,6 +8,7 @@ import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.NamespaceImpl;
 
 public class DefinePrefixCmd implements Command
 {
@@ -34,7 +35,7 @@ public class DefinePrefixCmd implements Command
 		mc.setNamespace( prefix, ns );
 		mc = null;
 
-		qe.getLexicon().update();
+		qe.getLexicon().add( new NamespaceImpl( prefix, ns.toString() ) );
 	}
 }
 

@@ -3,3 +3,7 @@
 
 # => lots of Geonames results.
 <http://www.geonames.org/countries/#DE>/:sin.
+
+
+# NOTE: some Sindice results contain URIs of objects (e.g. GIF images) which are not RDF documents:
+foaf:mbox/sindice/toString.

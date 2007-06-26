@@ -84,12 +84,12 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 
 		String []mimeTypes = { "text/xml" };
 		HttpUtils.prepareUrlConnectionForRequest( connection, mimeTypes );
+		HttpUtils.connect( connection );
 
 		Document doc;
 
 		try
 		{
-			connection.connect();
 			InputStream response = connection.getInputStream();
 
 			synchronized( s_saxBuilder )

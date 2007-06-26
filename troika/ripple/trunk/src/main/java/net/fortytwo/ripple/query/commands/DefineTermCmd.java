@@ -51,7 +51,7 @@ public class DefineTermCmd implements Command
 
 			mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
 
-			qe.getLexicon().update();
+			qe.getLexicon().add( uri );
 		}
 	}
 }

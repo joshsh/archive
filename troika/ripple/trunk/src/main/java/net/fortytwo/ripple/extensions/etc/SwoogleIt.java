@@ -59,19 +59,30 @@ public class SwoogleIt extends PrimitiveFunction
 		searchString = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
+		String urlStr;
+		URL url;
+
 		try
 		{
-			String urlStr = "http://logos.cs.umbc.edu:8080/swoogle31/q"
+			urlStr = "http://logos.cs.umbc.edu:8080/swoogle31/q"
 				+ "?key=" + URLEncoder.encode( key )
 				+ "&queryType=" + URLEncoder.encode( queryType.getLocalName() )
 				+ "&searchString=" + URLEncoder.encode( searchString );
 
-			URL url = new URL( urlStr );
+			url = new URL( urlStr );
+		}
 
-			URI baseUri = mc.createUri( urlStr );
-			mc.addGraph( url, baseUri );
+		catch ( java.net.MalformedURLException e )
+		{
+			throw new RippleException( e );
+		}
+
+		URI baseUri = mc.createUri( urlStr );
+		mc.addGraph( url, baseUri );
 //System.out.println( "baseUri = " + baseUri );
 
+		try
+		{
 			RepositoryResult<Statement> stmtIter
 				= mc.getRepositoryConnection().getStatements(
 					null, RDF.TYPE, swoogleQueryResponseUri, /*baseUri,*/ Ripple.useInference() );

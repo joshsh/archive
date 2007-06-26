@@ -108,6 +108,7 @@ public class Demo
 			ModelConnection mc = qe.getConnection();
 			mc.setNamespace( "", Ripple.getDefaultNamespace() );
 			mc.close();
+qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDefaultNamespace() ) );
 
 			// Attach an interpreter to the query engine and let it read from
 			// standard input.
