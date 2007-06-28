@@ -4,8 +4,9 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.ast.UriAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
@@ -24,7 +25,7 @@ public class DefinePrefixCmd implements Command
 	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
-		ContainerSink sink = new ContainerSink();
+		Collector<RippleValue> sink = new Collector<RippleValue>();
 		uri.evaluate( sink, qe, mc );
 		if ( sink.size() == 0 )
 			throw new RippleException( "URI could not be constructed from " + uri );

@@ -23,7 +23,6 @@ import net.fortytwo.ripple.ast.ListAst;
 import net.fortytwo.ripple.io.ContainerTreeView;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.RdfValue;
@@ -92,6 +91,7 @@ public class Interpreter extends Thread
 
 		updateCompletors();
 
+		// What do we do with queries?
 		Sink<ListAst> querySink = new Sink<ListAst>()
 		{
 			public void put( final ListAst ast )
@@ -101,6 +101,7 @@ public class Interpreter extends Thread
 			}
 		};
 
+		// What do we do with commands?
 		Sink<Command> commandSink = new Sink<Command>()
 		{
 			public void put( final Command cmd )
@@ -110,6 +111,7 @@ public class Interpreter extends Thread
 			}
 		};
 
+		// What do we do with parser events?
 		Sink<RecognizerEvent> eventSink = new Sink<RecognizerEvent>()
 		{
 			public void put( final RecognizerEvent event )

@@ -6,28 +6,23 @@ import java.util.LinkedList;
 
 import net.fortytwo.ripple.RippleException;
 
-public class Buffer<T> implements Sink<T>
+public class Buffer<T> extends Collector<T>
 {
 	private Sink<T> sink;
-	Collection<T> collection;
 
 	public Buffer( Sink<T> sink )
 	{
-		this.sink = sink;
-		collection = new LinkedList<T>();
-	}
+		super();
 
-	public void put( T t ) throws RippleException
-	{
-		collection.add( t );
+		this.sink = sink;
 	}
 
 	public void flush() throws RippleException
 	{
-		for ( Iterator<T> i = collection.iterator(); i.hasNext(); )
+		for ( Iterator<T> i = iterator(); i.hasNext(); )
 			sink.put( i.next() );
 
-		collection.clear();
+		clear();
 	}
 }
 

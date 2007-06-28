@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
@@ -28,7 +28,7 @@ public class TypedLiteralAst implements Ast
 						ModelConnection mc )
 		throws RippleException
 	{
-		ContainerSink values = new ContainerSink();
+		Collector<RippleValue> values = new Collector<RippleValue>();
 		type.evaluate( values, qe, mc );
 		for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
 		{

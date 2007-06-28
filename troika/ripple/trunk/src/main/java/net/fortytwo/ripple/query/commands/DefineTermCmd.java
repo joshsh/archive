@@ -4,11 +4,11 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.ast.ListAst;
-import net.fortytwo.ripple.model.ContainerSink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
 
@@ -26,7 +26,7 @@ public class DefineTermCmd implements Command
 	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
-		ContainerSink expressions = new ContainerSink();
+		Collector<RippleValue> expressions = new Collector<RippleValue>();
 		ast.evaluate( expressions, qe, mc );
 
 		if ( expressions.size() == 0 )

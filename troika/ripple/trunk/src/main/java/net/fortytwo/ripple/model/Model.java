@@ -376,7 +376,7 @@ public Repository getRepository()
 	public Collection<RippleValue> getContexts()
 		throws RippleException
 	{
-		Container contexts = new Container();
+		Collection<RippleValue> contexts = new LinkedList<RippleValue>();
 
 		try
 		{

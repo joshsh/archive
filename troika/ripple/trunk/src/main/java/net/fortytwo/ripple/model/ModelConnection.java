@@ -470,7 +470,7 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 	public Collection<RippleValue> bagValue( final RippleValue head )
 		throws RippleException
 	{
-		Collection<RippleValue> results = new Container();
+		Collection<RippleValue> results = new LinkedList<RippleValue>();
 
 		try
 		{
