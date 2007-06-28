@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.net.URLConnection;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.RdfSourceAdapter;
+import net.fortytwo.ripple.io.RdfSourceAdapter;
 
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;

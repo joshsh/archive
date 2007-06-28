@@ -5,9 +5,9 @@ import java.net.URLConnection;
 import java.io.InputStream;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfSourceAdapter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;

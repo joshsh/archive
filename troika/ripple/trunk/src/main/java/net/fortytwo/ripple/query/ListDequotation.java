@@ -1,6 +1,9 @@
 package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 public class ListDequotation implements Function

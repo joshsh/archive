@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.query;
+package net.fortytwo.ripple.io;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +13,8 @@ import jline.Completor;
 import net.fortytwo.ripple.util.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfValue;
 
 import org.apache.log4j.Logger;
 

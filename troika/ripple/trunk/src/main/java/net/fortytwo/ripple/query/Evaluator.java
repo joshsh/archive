@@ -1,6 +1,8 @@
 package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.RdfValue;
 
 /**
 *  A function which reduces arbitrary expressions to a particular normal form.

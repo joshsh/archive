@@ -1,8 +1,10 @@
-package net.fortytwo.ripple.query;
+package net.fortytwo.ripple.io;
 
 import java.util.Collection;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfValue;
 
 import org.openrdf.model.URI;
 

@@ -17,6 +17,9 @@ import java.util.Set;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.Dereferencer;
+import net.fortytwo.ripple.io.HttpUriDereferencer;
+import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.util.ExtensionLoader;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;

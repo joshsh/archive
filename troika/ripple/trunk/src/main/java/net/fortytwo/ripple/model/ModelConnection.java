@@ -20,6 +20,7 @@ import java.util.Random;
 import net.fortytwo.ripple.util.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.HttpUtils;
 
