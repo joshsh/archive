@@ -35,7 +35,7 @@ rpl:ParameterList
 rpl:arity
 	a rdfs:Property ;
 	rdfs:domain rpl:Function ;
-	rpl:range xsd:integer ;
+	rdfs:range xsd:integer ;
 	rdfs:label "arity" ;
 	rdfs:comment "the number of Parameters consumed by a Function" ;
 	rdfs:isDefinedBy rpl: .
