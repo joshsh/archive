@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.query;
 
 import java.util.Iterator;
 
