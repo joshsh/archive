@@ -240,9 +240,12 @@ public class Interpreter extends Thread
 	{
 		ModelConnection mc = null;
 		boolean gotConnection = false, finished = false;
+		boolean doBuffer = Ripple.getBufferTreeView();
 
 		try
 		{
+			queryEngine.getPrintStream().println( "" );
+
 			mc = queryEngine.getConnection( "for Interpreter evaluate()" );
 			gotConnection = true;
 
@@ -250,14 +253,17 @@ public class Interpreter extends Thread
 			// will be flushed into the view after the lexicon is updated.
 			ContainerTreeView view = new ContainerTreeView(
 				queryEngine.getPrintStream(), mc );
-			final Buffer<RippleList> buff = new Buffer<RippleList>( view );
+			final Sink<RippleList> results = doBuffer
+				? new Buffer<RippleList>( view )
+				: view;
+
 			final ModelConnection mcf = mc;
 			Sink<RippleList> derefSink = new Sink<RippleList>()
 			{
 				public void put( final RippleList list) throws RippleException
 				{
 					dereference( list.getFirst(), mcf );
-					buff.put( list );
+					results.put( list );
 				}
 			};
 
@@ -266,8 +272,9 @@ public class Interpreter extends Thread
 			cmd.execute( queryEngine, mc );
 
 			// Flush results to the view.
-			queryEngine.getPrintStream().println( "" );
-			buff.flush();
+			if ( doBuffer )
+				( (Buffer<RippleList>) results ).flush();
+
 			if ( view.size() > 0 )
 				queryEngine.getPrintStream().println( "" );
 

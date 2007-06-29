@@ -67,7 +67,7 @@ public class Sindice extends PrimitiveFunction
 
 		try
 		{
-			URL url = new URL( "http://www.sindice.com/lookup?uri="
+			URL url = new URL( "http://www.sindice.com/lookup/lookup_uri?uri="
 				+ StringUtils.urlEncode( uri.toString() ) );
 			urlConn = url.openConnection();
 		}
@@ -82,7 +82,7 @@ public class Sindice extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
-		String []mimeTypes = { "text/xml" };
+		String []mimeTypes = { "application/xml", "text/xml" };
 		HttpUtils.prepareUrlConnectionForRequest( urlConn, mimeTypes );
 		HttpUtils.connect( urlConn );
 

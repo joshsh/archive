@@ -36,8 +36,6 @@ public class Ripple
 		s_useInference,
 		s_enforceImplicitProvenance;
 
-	private static int s_treeViewDepth, s_treeViewMaxPredicates, s_treeViewMaxObjects;
-
 	private static boolean s_dereferenceByNamespace;
 	private static long s_uriDereferencingTimeout;
 	private static String s_defaultNamespace;
@@ -81,21 +79,6 @@ public class Ripple
 		return s_enforceImplicitProvenance;
 	}
 
-	public static int getTreeViewDepth()
-	{
-		return s_treeViewDepth;
-	}
-
-	public static int getTreeViewMaxPredicates()
-	{
-		return s_treeViewMaxPredicates;
-	}
-
-	public static int getTreeViewMaxObjects()
-	{
-		return s_treeViewMaxObjects;
-	}
-
 	public static boolean dereferenceByNamespace()
 	{
 		return s_dereferenceByNamespace;
@@ -114,6 +97,26 @@ public class Ripple
 	public static boolean listPadding()
 	{
 		return s_listPadding;
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	static boolean s_bufferTreeView;
+	static int s_treeViewMaxPredicates, s_treeViewMaxObjects;
+
+	public static boolean getBufferTreeView()
+	{
+		return s_bufferTreeView;
+	}
+
+	public static int getTreeViewMaxPredicates()
+	{
+		return s_treeViewMaxPredicates;
+	}
+
+	public static int getTreeViewMaxObjects()
+	{
+		return s_treeViewMaxObjects;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -270,11 +273,8 @@ public class Ripple
 			s_defaultNamespace = getStringProperty(
 				props, "net.fortytwo.ripple.model.uri.defaultNamespace", "" );
 
-			s_treeViewDepth = getIntProperty(
-				props, "net.fortytwo.ripple.io.treeView.depth", 1 );
-			if ( s_treeViewDepth < 0 )
-				s_treeViewDepth = 0;
-
+			s_bufferTreeView = getBooleanProperty(
+				props, "net.fortytwo.ripple.io.treeView.bufferOutput", false );
 			s_treeViewMaxPredicates = getIntProperty(
 				props, "net.fortytwo.ripple.io.treeView.maxPredicates", 32 );
 			if ( s_treeViewMaxPredicates < 0 )

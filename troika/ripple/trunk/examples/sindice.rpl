@@ -7,3 +7,11 @@
 
 # NOTE: some Sindice results contain URIs of objects (e.g. GIF images) which are not RDF documents:
 foaf:mbox/sindice/toString.
+
+
+
+
+wget --header="Accept: application/xml, text/xml" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal
+
+wget --header="Accept: text/javascript, text/x-javascript, application/javascript, application/x-javascript, application/json" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal
+
