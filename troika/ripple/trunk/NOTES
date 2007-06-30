@@ -117,18 +117,6 @@ demo:third.
 
 
 
-
-\section{Conclusion and Future Work}
-
-Ripple is an exploratory undertaking, which is to say that I have only the vaguest notion of where it will go from here.
-
-  The motivation for Ripple stems from the observation that the Semantic Web, in particular the linked data web, is growing
-
-... where ... from here.
-
-
-
-
 cat `find src -name "*.java"`| wc
 
 

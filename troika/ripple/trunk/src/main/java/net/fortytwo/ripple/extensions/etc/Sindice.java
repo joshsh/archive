@@ -67,9 +67,8 @@ public class Sindice extends PrimitiveFunction
 
 		String urlStr;
 		if ( v instanceof Literal )
-			urlStr = "http://sindice.com/beta/lookup_literal?keyword="
-				+ StringUtils.urlEncode( v.toString() )
-				+ "&lookup=Lookup";
+			urlStr = "http://sindice.com/beta/lookup/keyword?keyword="
+				+ StringUtils.urlEncode( v.toString() );
 		else if ( v instanceof URI )
 			urlStr = "http://sindice.com/lookup?uri="
 //			urlStr = "http://sindice.com/beta/lookup_uri?uri="
@@ -166,7 +165,7 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 		}
 
 		// Nonempty result set (using the beta format)
-		if ( root.getName().equals( "records" ) )
+		else if ( root.getName().equals( "records" ) )
 		{
 			Iterator<Element> childIter = root.getChildren().iterator();
 			while ( childIter.hasNext() )
