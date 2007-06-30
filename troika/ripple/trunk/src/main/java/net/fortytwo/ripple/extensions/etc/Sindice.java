@@ -24,7 +24,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 public class Sindice extends PrimitiveFunction
 {
@@ -46,11 +48,6 @@ public class Sindice extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		URI uri;
-
-		uri = mc.uriValue( stack.getFirst() );
-		stack = stack.getRest();
-
 		if ( null == s_saxBuilder )
 		{
 			s_saxBuilder = new SAXBuilder( true );
@@ -63,12 +60,40 @@ public class Sindice extends PrimitiveFunction
 				+ "external-noNamespaceSchemaLocation", schemaLocation );
 		}
 
+		Value v;
+
+		v = stack.getFirst().toRdf( mc ).getRdfValue();
+		stack = stack.getRest();
+
+		String urlStr;
+		if ( v instanceof Literal )
+			urlStr = "http://sindice.com/beta/lookup_literal?keyword="
+				+ StringUtils.urlEncode( v.toString() )
+				+ "&lookup=Lookup";
+		else if ( v instanceof URI )
+			urlStr = "http://sindice.com/lookup?uri="
+//			urlStr = "http://sindice.com/beta/lookup_uri?uri="
+				+ StringUtils.urlEncode( v.toString() )
+				+ "&lookup=Lookup";
+		else
+			throw new RippleException( "argument is neither a Literal nor a URI: " + v );
+
 		URLConnection urlConn;
 
+/*
+literals:
+    http://sindice.com/beta/lookup_literal?keyword=timbl&lookup=Lookup
+inverse functional properties:
+    http://sindice.com/beta/lookup_ifp?property=http%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2Fmbox&object=mailto%3Atimbl%40w3.org&lookup=Lookup
+resources:
+http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerners-Lee%2Fcard%23i&lookup=Lookup
+*/
 		try
 		{
-			URL url = new URL( "http://www.sindice.com/lookup/lookup_uri?uri="
-				+ StringUtils.urlEncode( uri.toString() ) );
+			URL url = new URL( urlStr );
+//			URL url = new URL( "http://www.sindice.com/lookup?uri="
+//			URL url = new URL( "http://www.sindice.com/lookup/lookup_uri?uri="
+//				+ StringUtils.urlEncode( uri.toString() ) );
 			urlConn = url.openConnection();
 		}
 
@@ -121,8 +146,50 @@ public class Sindice extends PrimitiveFunction
 				Element sourceEl = childIter.next();
 				Element urlEl = sourceEl.getChild( "url" );
 				String s = urlEl.getText().trim();
+
+				URI resultUri;
+
+				// Tolerate bad document URIs, but don't make results out of them.
+				try
+				{
+					resultUri = mc.createUri( s );
+				}
+
+				catch ( RippleException e )
+				{
+					continue;
+				}
+
 				sink.put( new RippleList(
-					new RdfValue( mc.createUri( s ) ), stack ) );
+					new RdfValue( resultUri ), stack ) );
+			}
+		}
+
+		// Nonempty result set (using the beta format)
+		if ( root.getName().equals( "records" ) )
+		{
+			Iterator<Element> childIter = root.getChildren().iterator();
+			while ( childIter.hasNext() )
+			{
+				Element sourceEl = childIter.next();
+				Element urlEl = sourceEl.getChild( "id" );
+				String s = urlEl.getText().trim();
+
+				URI resultUri;
+
+				// Tolerate bad document URIs, but don't make results out of them.
+				try
+				{
+					resultUri = mc.createUri( s );
+				}
+
+				catch ( RippleException e )
+				{
+					continue;
+				}
+
+				sink.put( new RippleList(
+					new RdfValue( resultUri ), stack ) );
 			}
 		}
 

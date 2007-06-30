@@ -9,9 +9,14 @@
 foaf:mbox/sindice/toString.
 
 
-
-
 wget --header="Accept: application/xml, text/xml" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal
 
 wget --header="Accept: text/javascript, text/x-javascript, application/javascript, application/x-javascript, application/json" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal
 
+
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows/foaf:name/unique/sindice/toString.
+
+
+
+# This caused failure:
+#     http://sindice.com/beta/lookup_literal?keyword=H%e5kon%20Wium%20Lie&lookup=Lookup
