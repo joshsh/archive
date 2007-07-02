@@ -21,6 +21,7 @@ Schema
 Model
 ================================================================================
 * allow for multivalued collections, e.g. a List node with two rdfs:first or rdfs:rest edges
+* finish NumericLiteral functionality
 
 Primitives
 ================================================================================

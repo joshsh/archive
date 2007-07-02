@@ -33,17 +33,9 @@ public class Mod extends PrimitiveFunction
 		a = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		try
-		{
-			result = a % b;
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-
-		sink.put( new RippleList( mc.createValue( result ), stack ) );
+		// Note: mod by zero simply does not yield a result.
+		if ( 0 != b )
+			sink.put( new RippleList( mc.createValue( a % b ), stack ) );
 	}
 }
 
