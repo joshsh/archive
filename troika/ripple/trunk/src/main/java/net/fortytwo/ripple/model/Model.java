@@ -114,6 +114,8 @@ public Dereferencer getDereferencer()
 	public ModelConnection getConnection( final String name )
 		throws RippleException
 	{
+		final boolean override = Ripple.preferNewestNamespaceDefinitions();
+
 		final ModelConnection mc = ( null == name )
 			? new ModelConnection( this )
 			: new ModelConnection( this, name );
@@ -132,7 +134,7 @@ public Dereferencer getDereferencer()
 			public void put( Namespace ns )
 				throws RippleException
 			{
-				mc.setNamespace( ns.getPrefix(), ns.getName() );
+				mc.setNamespace( ns.getPrefix(), ns.getName(), override );
 			}
 		};
 

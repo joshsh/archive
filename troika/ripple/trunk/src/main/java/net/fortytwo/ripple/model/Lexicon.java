@@ -172,11 +172,14 @@ public class Lexicon
 			add( (URI) obj );
 	}
 
-	public void add( final Namespace ns )
+	public void add( final Namespace ns, final boolean override )
 	{
 //System.out.println( "(" + ns.getPrefix() + "=" + ns.getName() + ")" );
-		prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
-		namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
+		if ( override || null == prefixToNamespaceMap.get( ns.getPrefix() ) )
+		{
+			prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
+			namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
+		}
 	}
 
 	// Note: assumes that the same URI will not be added twice.
@@ -192,17 +195,25 @@ public class Lexicon
 		}
 	}
 
-	private void updateMaps()
+	void updateMaps()
 		throws RippleException
 	{
 		prefixToNamespaceMap = new Hashtable<String, String>();
 		namespaceToPrefixMap = new Hashtable<String, String>();
 		qNamesCollection = new ArrayList<String>();
 
-		ModelConnection mc = model.getConnection( "for Lexicon update()" );
+		ModelConnection mc = model.getConnection( "for Lexicon updateMaps()" );
 
 		try
 		{
+			// We import the repository's namespaces before its statements, so
+			// that the namespaces are recognized in the statements' URIs.
+			RepositoryResult<Namespace> nsIter
+				= mc.getRepositoryConnection().getNamespaces();
+			while ( nsIter.hasNext() )
+				add( nsIter.next(), true );
+			nsIter.close();
+
 			RepositoryResult<Statement> stmtIter
 				= mc.getRepositoryConnection().getStatements(
 //                    null, null, null, model, includeInferred );
@@ -210,14 +221,6 @@ public class Lexicon
 			while ( stmtIter.hasNext() )
 				add( stmtIter.next() );
 			stmtIter.close();
-
-			// Namespace prefixes are managed by OpenRDF, and are simply
-			// imported into the Lexicon.
-			RepositoryResult<Namespace> nsIter
-				= mc.getRepositoryConnection().getNamespaces();
-			while ( nsIter.hasNext() )
-				add( nsIter.next() );
-			nsIter.close();
 		}
 
 		catch ( Throwable t )

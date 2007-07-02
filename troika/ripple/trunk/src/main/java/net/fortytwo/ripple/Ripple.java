@@ -84,6 +84,13 @@ public class Ripple
 		return s_dereferenceByNamespace;
 	}
 
+	static boolean s_preferNewestNamespaceDefinitions;
+
+	public static boolean preferNewestNamespaceDefinitions()
+	{
+		return s_preferNewestNamespaceDefinitions;
+	}
+
 	public static long uriDereferencingTimeout()
 	{
 		return s_uriDereferencingTimeout;
@@ -231,67 +238,70 @@ public class Ripple
 	public static void initialize()
 		throws RippleException
 	{
-		if ( !initialized )
+		if ( initialized )
+			return;
+
+		PropertyConfigurator.configure(
+			Ripple.class.getResource( "log4j.properties" ) );
+
+		Properties props = new Properties();
+
+		try
 		{
-			PropertyConfigurator.configure(
-				Ripple.class.getResource( "log4j.properties" ) );
-
-			Properties props = new Properties();
-
-			try
-			{
-				props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
-			}
-
-			catch ( IOException e )
-			{
-				throw new RippleException( "unable to load ripple.properties" );
-			}
-
-			expressionOrder = ExpressionOrder.find(
-				props.getProperty( "net.fortytwo.ripple.io.syntax.order" ) );
-			expressionAssociativity = ExpressionAssociativity.find(
-				props.getProperty( "net.fortytwo.ripple.io.syntax.associativity" ) );
-
-			s_jLineDebugOutput = props.getProperty(
-				"net.fortytwo.ripple.io.jline.debugOutput" );
-
-			s_evaluationOrder = getEvaluationOrderProperty(
-				props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
-			s_evaluationStyle = getEvaluationStyleProperty(
-				props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
-
-			s_useInference = getBooleanProperty(
-				props, "net.fortytwo.ripple.model.rdf.useInference", false );
-			s_enforceImplicitProvenance = getBooleanProperty(
-				props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
-
-			s_dereferenceByNamespace = getBooleanProperty(
-				props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
-			s_uriDereferencingTimeout = getLongProperty(
-				props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
-			s_defaultNamespace = getStringProperty(
-				props, "net.fortytwo.ripple.model.uri.defaultNamespace", "" );
-
-			s_bufferTreeView = getBooleanProperty(
-				props, "net.fortytwo.ripple.io.treeView.bufferOutput", false );
-			s_treeViewMaxPredicates = getIntProperty(
-				props, "net.fortytwo.ripple.io.treeView.maxPredicates", 32 );
-			if ( s_treeViewMaxPredicates < 0 )
-				s_treeViewMaxPredicates = 0;
-			s_treeViewMaxObjects = getIntProperty(
-				props, "net.fortytwo.ripple.io.treeView.maxObjects", 32 );
-			if ( s_treeViewMaxObjects < 0 )
-				s_treeViewMaxObjects = 0;
-
-			s_listPadding = getBooleanProperty(
-				props, "net.fortytwo.ripple.printing.listPadding", false );
-
-			s_courtesyDelay = getLongProperty(
-				props, "net.fortytwo.ripple.client.courtesyDelay", 500 );
-
-			initialized = true;
+			props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
 		}
+
+		catch ( IOException e )
+		{
+			throw new RippleException( "unable to load ripple.properties" );
+		}
+
+		expressionOrder = ExpressionOrder.find(
+			props.getProperty( "net.fortytwo.ripple.io.syntax.order" ) );
+		expressionAssociativity = ExpressionAssociativity.find(
+			props.getProperty( "net.fortytwo.ripple.io.syntax.associativity" ) );
+
+		s_jLineDebugOutput = props.getProperty(
+			"net.fortytwo.ripple.io.jline.debugOutput" );
+
+		s_evaluationOrder = getEvaluationOrderProperty(
+			props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
+		s_evaluationStyle = getEvaluationStyleProperty(
+			props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
+
+		s_useInference = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.rdf.useInference", false );
+		s_enforceImplicitProvenance = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
+
+		s_preferNewestNamespaceDefinitions = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.namespace.preferNewest", false );
+
+		s_dereferenceByNamespace = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
+		s_uriDereferencingTimeout = getLongProperty(
+			props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
+		s_defaultNamespace = getStringProperty(
+			props, "net.fortytwo.ripple.model.uri.defaultNamespace", "" );
+
+		s_bufferTreeView = getBooleanProperty(
+			props, "net.fortytwo.ripple.io.treeView.bufferOutput", false );
+		s_treeViewMaxPredicates = getIntProperty(
+			props, "net.fortytwo.ripple.io.treeView.maxPredicates", 32 );
+		if ( s_treeViewMaxPredicates < 0 )
+			s_treeViewMaxPredicates = 0;
+		s_treeViewMaxObjects = getIntProperty(
+			props, "net.fortytwo.ripple.io.treeView.maxObjects", 32 );
+		if ( s_treeViewMaxObjects < 0 )
+			s_treeViewMaxObjects = 0;
+
+		s_listPadding = getBooleanProperty(
+			props, "net.fortytwo.ripple.printing.listPadding", false );
+
+		s_courtesyDelay = getLongProperty(
+			props, "net.fortytwo.ripple.client.courtesyDelay", 500 );
+
+		initialized = true;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

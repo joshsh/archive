@@ -951,7 +951,7 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void setNamespace( final String prefix, final String ns )
+	public void setNamespace( final String prefix, final String ns, final boolean override )
 		throws RippleException
 	{
 s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
@@ -959,8 +959,11 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		{
 			synchronized( repoConnection )
 			{
-				repoConnection.removeNamespace( prefix );
-				repoConnection.setNamespace( prefix, ns );
+				if ( override || null == repoConnection.getNamespace( prefix ) )
+				{
+					repoConnection.removeNamespace( prefix );
+					repoConnection.setNamespace( prefix, ns );
+				}
 			}
 		}
 
@@ -971,10 +974,10 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		}
 	}
 
-	public void setNamespace( final String prefix, final URI ns )
+	public void setNamespace( final String prefix, final URI ns, final boolean override )
 		throws RippleException
 	{
-		setNamespace( prefix, ns.toString() );
+		setNamespace( prefix, ns.toString(), override );
 	}
 
 	////////////////////////////////////////////////////////////////////////////

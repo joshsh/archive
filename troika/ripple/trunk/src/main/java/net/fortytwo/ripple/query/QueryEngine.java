@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
@@ -62,6 +63,8 @@ public class QueryEngine
 	public ModelConnection getConnection( final String name )
 		throws RippleException
 	{
+		final boolean override = Ripple.preferNewestNamespaceDefinitions();
+
 		final ModelConnection mc = ( null == name )
 			? new ModelConnection( model )
 			: new ModelConnection( model, name );
@@ -72,6 +75,15 @@ public class QueryEngine
 				throws RippleException
 			{
 				mc.add( st );
+			}
+		};
+
+		Sink<Namespace> defineNamespaceSink = new Sink<Namespace>()
+		{
+			public void put( final Namespace ns )
+				throws RippleException
+			{
+				mc.setNamespace( ns.getPrefix(), ns.getName(), override );
 			}
 		};
 
@@ -86,11 +98,11 @@ public class QueryEngine
 				};
 
 		ReadOnlyFilter<Namespace> lexiconNamespaceUpdater
-			= new ReadOnlyFilter<Namespace>( new NullSink<Namespace>() )
+			= new ReadOnlyFilter<Namespace>( defineNamespaceSink )
 				{
 					public void handle( Namespace ns )
 					{
-						lexicon.add( ns );
+						lexicon.add( ns, override );
 					}
 				};
 

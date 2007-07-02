@@ -20,7 +20,7 @@ Schema
 
 Model
 ================================================================================
-* Add a getConnection method to Model, and use that publicly instead of the ModelConnection constructor
+* allow for multivalued collections, e.g. a List node with two rdfs:first or rdfs:rest edges
 
 Primitives
 ================================================================================

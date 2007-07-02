@@ -33,10 +33,10 @@ public class DefinePrefixCmd implements Command
 			throw new RippleException( "multiple values constructed from " + uri );
 
 		URI ns = mc.uriValue( sink.iterator().next() );
-		mc.setNamespace( prefix, ns );
+		mc.setNamespace( prefix, ns, true );
 		mc = null;
 
-		qe.getLexicon().add( new NamespaceImpl( prefix, ns.toString() ) );
+		qe.getLexicon().add( new NamespaceImpl( prefix, ns.toString() ), true );
 	}
 }
 

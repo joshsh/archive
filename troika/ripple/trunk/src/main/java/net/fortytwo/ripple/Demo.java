@@ -78,59 +78,92 @@ public class Demo
 							final InputStream in,
 							final PrintStream out,
 							final PrintStream err )
+		throws RippleException
 	{
-		try
+		File store = ( args.length > 0 ) ? new File( args[0] ) : null;
+
+		// Load Ripple configuration.
+		Ripple.initialize();
+
+		// Create a Sesame repository.
+		Repository repository = createTestRepository();
+
+		// Attach a Ripple model to the repository.
+		Model model = new Model( repository, "Demo Model" );
+
+		// Load from store.
+		if ( null != store )
 		{
-			File store = ( args.length > 0 ) ? new File( args[0] ) : null;
+			s_logger.info( "loading state from " + store );
+			URL storeUrl;
 
-			// Load Ripple configuration.
-			Ripple.initialize();
-
-			// Create a Sesame repository.
-			Repository repository = createTestRepository();
-
-			// Attach a Ripple model to the repository.
-			Model model = new Model( repository, "Demo Model" );
-
-			// Load from store.
-			if ( null != store )
+			try
 			{
-				s_logger.info( "loading state from " + store );
-				model.load( store.toURL() );
+				storeUrl = store.toURL();
 			}
 
-			// Attach a query engine to the model.
-			Evaluator evaluator = new LazyEvaluator();
-			QueryEngine qe
-				= new QueryEngine( model, evaluator, out, err );
-
-			// Set the default namespace.
-			ModelConnection mc = qe.getConnection();
-			mc.setNamespace( "", Ripple.getDefaultNamespace() );
-			mc.close();
-qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDefaultNamespace() ) );
-
-			// Attach an interpreter to the query engine and let it read from
-			// standard input.
-			Interpreter r = new Interpreter( qe, in );
-			r.run();
-
-			// Save back to store.
-			if ( null != store )
+			catch( java.net.MalformedURLException e )
 			{
-				s_logger.info( "saving state to " + store );
-				OutputStream storeOut = new FileOutputStream( store );
-				model.writeTo( storeOut );
+				throw new RippleException( e );
+			}
+
+			model.load( storeUrl );
+		}
+
+		// Attach a query engine to the model.
+		Evaluator evaluator = new LazyEvaluator();
+		QueryEngine qe
+			= new QueryEngine( model, evaluator, out, err );
+
+		// Set the default namespace.
+		ModelConnection mc = qe.getConnection();
+		mc.setNamespace( "", Ripple.getDefaultNamespace(), false );
+		mc.close();
+qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDefaultNamespace() ), false );
+
+		// Attach an interpreter to the query engine and let it read from
+		// standard input.
+		Interpreter r = new Interpreter( qe, in );
+		r.run();
+
+		// Save back to store.
+		if ( null != store )
+		{
+			s_logger.info( "saving state to " + store );
+			OutputStream storeOut;
+
+			try
+			{
+				storeOut = new FileOutputStream( store );
+			}
+
+			catch ( java.io.IOException e )
+			{
+				throw new RippleException( e );
+			}
+
+			model.writeTo( storeOut );
+
+			try
+			{
 				storeOut.close();
 			}
 
-			// Shut down the Sesame repository.
+			catch ( java.io.IOException e )
+			{
+				throw new RippleException( e );
+			}
+		}
+
+		// Shut down the Sesame repository.
+		try
+		{
 			repository.shutDown();
 		}
 
-		catch ( Throwable t )
+		catch( Throwable t )
 		{
-			System.out.println( t.toString() );
+			throw new RippleException( t );
 		}
 
 		List<String> openConnections = ModelConnection.listOpenConnections();
@@ -179,7 +212,15 @@ while ((c = g.getopt()) != -1)
 System.exit( 0 );
 */
 
-		demo( args, System.in, System.out, System.err );
+		try
+		{
+			demo( args, System.in, System.out, System.err );
+		}
+
+		catch ( RippleException e )
+		{
+			System.out.println( e.toString() );
+		}
 	}
 }
 
