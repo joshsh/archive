@@ -323,6 +323,34 @@ stack:in
 	rdfs:label "in" ;
 	rdfs:comment "x l  =>  b  -- where b is true if List l contains a member equal to x, otherwise false" .
 
+stack:max
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "max" ;
+	rdfs:comment "l  =>  x   -- where x is the greatest member of l" .
+
+stack:min
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rdfs:comment "a List" ;
+			rpl:parameterType rdf:List ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "min" ;
+	rdfs:comment "l  =>  x   -- where x is the least member of l" .
+
 stack:not
 	a rpl:Function ;
 	rpl:arity 1 ;

@@ -27,22 +27,16 @@ public class StackExtension implements Extension
 		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
 		bridge.add( branchVal = new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
 		bridge.add( new Choice( new RdfValue( mc.createUri( ns + "choice" ) ), mc ), mc );
-		bridge.add( new Cat( new RdfValue( mc.createUri( ns + "cat" ) ), mc ), mc );
-		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
 		bridge.add( new Dip( new RdfValue( mc.createUri( ns + "dip" ) ), mc ), mc );
 		bridge.add( new Dipd( new RdfValue( mc.createUri( ns + "dipd" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
 		bridge.add( new Dupdd( new RdfValue( mc.createUri( ns + "dupdd" ) ), mc ), mc );
 		bridge.add( falseVal = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
-		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
-		bridge.add( new Has( new RdfValue( mc.createUri( ns + "has" ) ), mc ), mc );
 		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
 		bridge.add( new Id( new RdfValue( mc.createUri( ns + "id" ) ), mc ), mc );
 		bridge.add( new Ifte( new RdfValue( mc.createUri( ns + "ifte" ) ), mc ), mc );
-		bridge.add( new In( new RdfValue( mc.createUri( ns + "in" ) ), mc ), mc );
 		bridge.add( new Not( new RdfValue( mc.createUri( ns + "not" ) ), mc ), mc );
-		bridge.add( new Of( new RdfValue( mc.createUri( ns + "of" ) ), mc ), mc );
 		bridge.add( new Or( new RdfValue( mc.createUri( ns + "or" ) ), mc ), mc );
 		bridge.add( new Pop( new RdfValue( mc.createUri( ns + "pop" ) ), mc ), mc );
 		bridge.add( new Popd( new RdfValue( mc.createUri( ns + "popd" ) ), mc ), mc );
@@ -53,19 +47,29 @@ public class StackExtension implements Extension
 		bridge.add( new Rollupd( new RdfValue( mc.createUri( ns + "rollupd" ) ), mc ), mc );
 		bridge.add( new Rotate( new RdfValue( mc.createUri( ns + "rotate" ) ), mc ), mc );
 		bridge.add( new Rotated( new RdfValue( mc.createUri( ns + "rotated" ) ), mc ), mc );
-		bridge.add( new Size( new RdfValue( mc.createUri( ns + "size" ) ), mc ), mc );
 		bridge.add( new Stack( new RdfValue( mc.createUri( ns + "stack" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
 		bridge.add( new Swapd( new RdfValue( mc.createUri( ns + "swapd" ) ), mc ), mc );
 		bridge.add( new Swapdd( new RdfValue( mc.createUri( ns + "swapdd" ) ), mc ), mc );
-		bridge.add( new Swons( new RdfValue( mc.createUri( ns + "swons" ) ), mc ), mc );
 		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
 		bridge.add( trueVal = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
-		bridge.add( new Uncons( new RdfValue( mc.createUri( ns + "uncons" ) ), mc ), mc );
 		bridge.add( new Unstack( new RdfValue( mc.createUri( ns + "unstack" ) ), mc ), mc );
-		bridge.add( new Unswons( new RdfValue( mc.createUri( ns + "unswons" ) ), mc ), mc );
 		bridge.add( new X( new RdfValue( mc.createUri( ns + "x" ) ), mc ), mc );
 		bridge.add( new Xor( new RdfValue( mc.createUri( ns + "xor" ) ), mc ), mc );
+
+		// List primitives.
+		bridge.add( new Cat( new RdfValue( mc.createUri( ns + "cat" ) ), mc ), mc );
+		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
+		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
+		bridge.add( new Has( new RdfValue( mc.createUri( ns + "has" ) ), mc ), mc );
+		bridge.add( new In( new RdfValue( mc.createUri( ns + "in" ) ), mc ), mc );
+		bridge.add( new Max( new RdfValue( mc.createUri( ns + "max" ) ), mc ), mc );
+		bridge.add( new Min( new RdfValue( mc.createUri( ns + "min" ) ), mc ), mc );
+		bridge.add( new Of( new RdfValue( mc.createUri( ns + "of" ) ), mc ), mc );
+		bridge.add( new Size( new RdfValue( mc.createUri( ns + "size" ) ), mc ), mc );
+		bridge.add( new Swons( new RdfValue( mc.createUri( ns + "swons" ) ), mc ), mc );
+		bridge.add( new Uncons( new RdfValue( mc.createUri( ns + "uncons" ) ), mc ), mc );
+		bridge.add( new Unswons( new RdfValue( mc.createUri( ns + "unswons" ) ), mc ), mc );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
