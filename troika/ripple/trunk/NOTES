@@ -377,6 +377,7 @@ create a visualization of the rpl namespace
 
 rapper -q -i turtle -o dot ./src/main/resources/net/fortytwo/ripple/ripple.ttl > tmp/ripple.dot
 dot -Tpng -o tmp/ripple.png tmp/ripple.dot
+kuickshow tmp/ripple.png
 
 
 ========================================

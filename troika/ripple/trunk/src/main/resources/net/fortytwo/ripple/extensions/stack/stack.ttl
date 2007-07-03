@@ -195,6 +195,23 @@ stack:dupd
 	rdfs:label "dupd" ;
 	rdfs:comment "x y  =>  x x y" .
 
+stack:dupdd
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "dupdd" ;
+	rdfs:comment "x y z  =>  x x y z" .
+
 stack:false
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -370,7 +387,7 @@ stack:pop
 
 stack:popd
 	a rpl:Function ;
-	rpl:arity 1 ;
+	rpl:arity 2 ;
 	rpl:parameters (
 		[
 			rdfs:label "x" ;
@@ -381,6 +398,23 @@ stack:popd
 		) ;
 	rdfs:label "popd" ;
 	rdfs:comment "x y  =>  y" .
+
+stack:popdd
+	a rpl:Function ;
+	rpl:arity 3 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "popdd" ;
+	rdfs:comment "x y z  =>  y z" .
 
 stack:rolldown
 	a rpl:Function ;
@@ -546,6 +580,26 @@ stack:swapd
 		) ;
 	rdfs:label "swapd" ;
 	rdfs:comment "x y z  =>  y x z" .
+
+stack:swapdd
+	a rpl:Function ;
+	rpl:arity 4 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "y" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "z" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "a" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "swapdd" ;
+	rdfs:comment "x y z a  =>  y x z a" .
 
 stack:swons
 	a rpl:Function ;

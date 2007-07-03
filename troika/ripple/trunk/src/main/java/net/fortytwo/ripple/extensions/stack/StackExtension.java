@@ -33,6 +33,7 @@ public class StackExtension implements Extension
 		bridge.add( new Dipd( new RdfValue( mc.createUri( ns + "dipd" ) ), mc ), mc );
 		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
 		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
+		bridge.add( new Dupdd( new RdfValue( mc.createUri( ns + "dupdd" ) ), mc ), mc );
 		bridge.add( falseVal = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
 		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
 		bridge.add( new Has( new RdfValue( mc.createUri( ns + "has" ) ), mc ), mc );
@@ -45,6 +46,7 @@ public class StackExtension implements Extension
 		bridge.add( new Or( new RdfValue( mc.createUri( ns + "or" ) ), mc ), mc );
 		bridge.add( new Pop( new RdfValue( mc.createUri( ns + "pop" ) ), mc ), mc );
 		bridge.add( new Popd( new RdfValue( mc.createUri( ns + "popd" ) ), mc ), mc );
+		bridge.add( new Popdd( new RdfValue( mc.createUri( ns + "popdd" ) ), mc ), mc );
 		bridge.add( new Rolldown( new RdfValue( mc.createUri( ns + "rolldown" ) ), mc ), mc );
 		bridge.add( new Rolldownd( new RdfValue( mc.createUri( ns + "rolldownd" ) ), mc ), mc );
 		bridge.add( new Rollup( new RdfValue( mc.createUri( ns + "rollup" ) ), mc ), mc );
@@ -55,6 +57,7 @@ public class StackExtension implements Extension
 		bridge.add( new Stack( new RdfValue( mc.createUri( ns + "stack" ) ), mc ), mc );
 		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
 		bridge.add( new Swapd( new RdfValue( mc.createUri( ns + "swapd" ) ), mc ), mc );
+		bridge.add( new Swapdd( new RdfValue( mc.createUri( ns + "swapdd" ) ), mc ), mc );
 		bridge.add( new Swons( new RdfValue( mc.createUri( ns + "swons" ) ), mc ), mc );
 		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
 		bridge.add( trueVal = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
