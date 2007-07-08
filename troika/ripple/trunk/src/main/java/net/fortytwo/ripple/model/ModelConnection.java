@@ -1366,6 +1366,7 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 				{
 					stmtIter = repoConnection.getStatements(
 						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
+stmtIter.enableDuplicateFilter();
 				}
 
 				while ( stmtIter.hasNext() )
@@ -1434,6 +1435,7 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 				{
 					stmtIter = repoConnection.getStatements(
 						null, (URI) rdfPred, rdfObj, Ripple.useInference() );
+stmtIter.enableDuplicateFilter();
 					while ( stmtIter.hasNext() )
 					{
 						if ( null == results )

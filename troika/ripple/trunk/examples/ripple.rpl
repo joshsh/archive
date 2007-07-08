@@ -13,3 +13,12 @@
 # Isn't this a little inconsistent?
 2 /swap.  # nothing.
 2 /swap 3  # 2 /swap 3
+
+
+
+
+# Use 'triples' together with 'assert' to manually import RDF documents.
+# Note: namespace prefix definitions are not imported.
+<http://example.org/ns#a>.
+<http://fortytwo.net/2007/07/notDereferenceable.ttl> /triples/i/assert.
+<http://example.org/ns#a>.
