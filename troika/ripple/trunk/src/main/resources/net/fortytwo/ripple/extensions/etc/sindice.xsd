@@ -36,7 +36,7 @@
 
 	<xsd:complexType name="Record">
 		<xsd:sequence>
-			<xsd:element name="score" type="Score"/>
+			<!--<xsd:element name="score" type="Score"/>-->
 			<xsd:element name="timestamp" type="xsd:date"/>
 			<xsd:element name="id" type="xsd:string"/>
 		</xsd:sequence>

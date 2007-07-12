@@ -17,7 +17,7 @@ public class Ripple
 
 	public static String getVersion()
 	{
-		return "0.3";
+		return "0.4-dev";
 	}
 
 	////////////////////////////////////////////////////////////////////////////

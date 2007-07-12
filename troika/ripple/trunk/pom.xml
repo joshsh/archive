@@ -8,7 +8,7 @@
 	
 	<groupId>net.fortytwo</groupId>
 	<artifactId>ripple</artifactId>
-	<version>0.3</version>
+	<version>0.4-dev</version>
 	<name>Ripple</name>
 	<description>Functional Programs as Linked Data</description>
 	<url>http://ripple.fortytwo.net/</url>
@@ -66,12 +66,6 @@
 	<dependencies>
 		
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		
-		<dependency>
 			<groupId>antlr</groupId>
 			<artifactId>antlr</artifactId>
 			<version>2.7.2</version>
@@ -98,6 +92,13 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 			<type>jar</type>
+		</dependency>
+		
+		<!-- Needed by OpenRDF dependencies. -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 		
 		<dependency>

@@ -67,7 +67,8 @@ public class Sindice extends PrimitiveFunction
 
 		String urlStr;
 		if ( v instanceof Literal )
-			urlStr = "http://sindice.com/beta/lookup/keyword?keyword="
+			urlStr = "http://sindice.com/beta/keyword/"
+//			urlStr = "http://sindice.com/beta/lookup/keyword?keyword="
 				+ StringUtils.urlEncode( v.toString() );
 		else if ( v instanceof URI )
 			urlStr = "http://sindice.com/lookup?uri="

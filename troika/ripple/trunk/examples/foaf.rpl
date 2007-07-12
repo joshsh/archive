@@ -123,6 +123,12 @@ foaf: .
 
 ########################################
 
+# These have been pointed out as good FOAF files.
+<http://www.w3.org/People/Berners-Lee/card>.
+<http://www.ivan-herman.net/foaf.rdf>.
+
+########################################
+
 /demo:tbl demo:foafStep 3/times foaf:img foaf:depiction /union/i/unique/toString.
 
 ########################################
