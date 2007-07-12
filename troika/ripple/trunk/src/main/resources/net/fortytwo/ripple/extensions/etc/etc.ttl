@@ -2,7 +2,6 @@
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix etc:      <http://fortytwo.net/2007/05/ripple/etc#> .
-@prefix swoogle:  <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
 etc:back
@@ -31,24 +30,6 @@ etc:get
 	rpl:returnType xsd:string ;
 	rdfs:label "get" ;
 	rdfs:comment "issues a GET request and produces the received data as a string" .
-
-etc:pingTheSemanticWeb
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:returnType xsd:string ;
-	rpl:parameters (
-		[
-			rdfs:label "type" ;
-			rdfs:comment "one of the values 'all', 'foaf', 'sioc', 'doap', 'rdfs' or 'owl'" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "maxResults" ;
-			rpl:parameterType xsd:integer ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "pingTheSemanticWeb" ;
-	rdfs:comment "requests a list of URIs from the 'Ping the Semantic Web' service" .
 
 etc:pred
 	a rpl:Function ;
@@ -86,37 +67,6 @@ etc:rand
 	rpl:returnType xsd:integer ;
 	rdfs:label "rand" ;
 	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
-
-etc:sindice
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "uri" ;
-			rpl:isTransparent true ]
-		);
-	rdfs:label "sindice" ;
-	rdfs:comment "uri  =>  doc  -- where doc represents zero or more RDF documents referencing the given URI" .
-
-etc:swoogleIt
-	a rpl:Function ;
-	rpl:arity 3 ;
-	rpl:parameters (
-		[
-			rdfs:label "key" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "queryType" ;
-			rpl:parameterType swoogle:SwoogleQueryType ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "searchString" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "swoogleIt" ;
-	rdfs:comment "grabs search results from the Swoogle web service" .
 
 etc:time
 	a rpl:Function ;

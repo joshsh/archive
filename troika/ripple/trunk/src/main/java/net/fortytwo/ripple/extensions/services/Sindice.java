@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.services;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
