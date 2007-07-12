@@ -17,7 +17,8 @@
 
 
 
-# Use 'triples' together with 'assert' to manually import RDF documents.
+# Use 'triples' together with 'assert' to manually import RDF documents
+# (including statements involving blank nodes and literals).
 # Note: namespace prefix definitions are not imported.
 <http://example.org/ns#a>.
 <http://fortytwo.net/2007/07/notDereferenceable.ttl> /triples/i/assert.

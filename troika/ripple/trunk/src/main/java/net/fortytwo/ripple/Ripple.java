@@ -106,6 +106,13 @@ public class Ripple
 		return s_listPadding;
 	}
 
+	static String s_exportFormat;
+
+	public static String exportFormat()
+	{
+		return s_exportFormat;
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 
 	static boolean s_bufferTreeView;
@@ -273,6 +280,8 @@ public class Ripple
 			props, "net.fortytwo.ripple.model.rdf.useInference", false );
 		s_enforceImplicitProvenance = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
+		s_exportFormat = getStringProperty(
+			props, "net.fortytwo.ripple.model.rdf.export.format", "rdfxml" );
 
 		s_preferNewestNamespaceDefinitions = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.namespace.preferNewest", false );

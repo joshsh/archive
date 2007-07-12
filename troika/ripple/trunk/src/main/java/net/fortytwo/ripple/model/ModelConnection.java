@@ -1263,16 +1263,42 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		}
 	}
 
+	static RDFHandler hack_getSerializer( final OutputStream out )
+		throws RippleException
+	{
+		String s = Ripple.exportFormat().toLowerCase();
+
+		try
+		{
+			if ( s.equals( "rdfxml" ) )
+				return new org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter( out );
+
+// Weird... when I used this, my graph was output in N-Triples.
+			else if ( s.equals( "turtle" ) )
+				return new org.openrdf.rio.turtle.TurtleWriter( out );
+
+// ...this came out as N-Triples as well.
+			else if ( s.equals( "n3" ) )
+				return new org.openrdf.rio.n3.N3Writer( out );
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+
+		throw new RippleException( "unknown format: " + s );
+	}
+
 	public void exportNs( final String nsPrefix, OutputStream out )
 		throws RippleException
 	{
 		Set<URI> subjects = findSubjectsInNamespace( nsPrefix );
 
-		RDFHandler handler;
+		RDFHandler handler = hack_getSerializer( out );
 
 		try
 		{
-			handler = new RDFXMLPrettyWriter( out );
 			handler.startRDF();
 		}
 
