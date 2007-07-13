@@ -3,7 +3,8 @@ package net.fortytwo.ripple.io;
 public enum RecognizerEvent
 {
 	NEWLINE,
-	EOI
+	EOI,
+	ESCAPE
 }
 
 // kate: tab-width 4

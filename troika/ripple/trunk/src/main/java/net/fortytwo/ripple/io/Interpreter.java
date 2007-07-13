@@ -48,18 +48,18 @@ import org.apache.log4j.Logger;
  */
 public class Interpreter extends Thread
 {
-	private final static Logger s_logger
+	final static Logger s_logger
 		= Logger.getLogger( Interpreter.class );
 
-	private PipedInputStream  writeIn;
-	private PipedOutputStream readOut;
+	PipedInputStream  writeIn;
+	PipedOutputStream readOut;
 
-	private ConsoleReader reader;
-	private int lineNumber = 0;
+	ConsoleReader reader;
+	int lineNumber = 0;
 
-	private QueryEngine queryEngine;
+	QueryEngine queryEngine;
 
-	private RecognizerInterface recognizerInterface;
+	RecognizerInterface recognizerInterface;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +75,7 @@ public class Interpreter extends Thread
 			reader = new ConsoleReader( is,
 				new OutputStreamWriter( qe.getPrintStream() ) );
 
+			// Set up JLine logging if asked for.
 			if ( null != jLineDebugOutput )
 				reader.setDebug(
 					new PrintWriter(
@@ -121,6 +122,9 @@ public class Interpreter extends Thread
 				{
 					case NEWLINE:
 						readLine();
+						break;
+					case ESCAPE:
+System.out.println( "Escape!" );
 						break;
 					default:
 						throw new RippleException( "event not yet supported: "
@@ -440,6 +444,13 @@ public class Interpreter extends Thread
 
 				break;
 			}
+
+/*
+			catch ( InterruptedException e )
+			{
+System.out.println( "interrupted!" );
+			}
+*/
 		}
 	}
 

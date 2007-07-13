@@ -42,14 +42,14 @@ options
 }
 
 {
-	private RecognizerInterface itf = null;
+	RecognizerInterface itf = null;
 
 	public void initialize( final RecognizerInterface i )
 	{
 		itf = i;
 	}
 
-	private void matchEndOfLine()
+	void matchEndOfLine()
 	{
 		if ( null == itf )
 		{
@@ -59,6 +59,11 @@ options
 
 		else
 			itf.put( RecognizerEvent.NEWLINE );
+	}
+
+	void matchEscapeCharacter()
+	{
+		itf.put( RecognizerEvent.ESCAPE );
 	}
 }
 
@@ -72,6 +77,14 @@ WS_CHAR
 WS
 	: (WS_CHAR)+
 	;
+
+/*
+ESC
+	: //(('\0'..'\8') | ('\11'..'\12') | ('\14'..'\27'))
+	  (('\u0000'..'\u0008') | ('\u000b'..'\u000c') | ('\u000e'..'\u001b'))
+		{ matchEscapeCharacter(); $setType(Token.SKIP); }
+	;
+*/
 
 protected
 HEX
