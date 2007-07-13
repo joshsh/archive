@@ -7,10 +7,10 @@
 	<packaging>jar</packaging>
 	
 	<groupId>net.fortytwo</groupId>
-	<artifactId>ripple-audio</artifactId>
-	<version>0.3</version>
+	<artifactId>ripple-media</artifactId>
+	<version>0.4-dev</version>
 	<name>Ripple Audio Extension</name>
-	<description>audio and speech extension for the Ripple scripting language</description>
+	<description>Media and speech extension for the Ripple Semantic Web scripting language</description>
 	<url>http://ripple.fortytwo.net/</url>
 	<inceptionYear>2007</inceptionYear>
 	<licenses></licenses>
@@ -55,16 +55,9 @@
 		<dependency>
 			<groupId>net.fortytwo</groupId>
 			<artifactId>ripple</artifactId>
-			<version>0.3</version>
+			<version>0.4-dev</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
-			<type>jar</type>
-		</dependency>
-		
+
 		<!--<dependency>
 			<groupId>javax.speech</groupId>
 			<artifactId>jsapi</artifactId>
