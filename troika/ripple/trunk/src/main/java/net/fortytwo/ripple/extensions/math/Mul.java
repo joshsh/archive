@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Mul extends PrimitiveFunction
 {
-	public Mul( RdfValue v, ModelConnection mc )
+	public Mul()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

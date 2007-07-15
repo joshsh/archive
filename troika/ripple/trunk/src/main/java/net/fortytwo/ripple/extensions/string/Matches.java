@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Matches extends PrimitiveFunction
 {
-	public Matches( RdfValue v, ModelConnection mc )
+	public Matches()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

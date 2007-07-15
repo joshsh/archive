@@ -11,10 +11,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Fold extends PrimitiveFunction
 {
-	public Fold( RdfValue v, ModelConnection mc )
+	public Fold()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class StreamExtension implements Extension
+public class StreamExtension extends Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/stream#";
 
@@ -18,11 +18,11 @@ public class StreamExtension implements Extension
 		uf.addMapping(
 			ns, getClass().getResource( "stream.ttl" ) + "#" );
 
-		bridge.add( new Each( new RdfValue( mc.createUri( ns + "each" ) ), mc ), mc );
-		bridge.add( new Limit( new RdfValue( mc.createUri( ns + "limit" ) ), mc ), mc );
-		bridge.add( new Scrap( new RdfValue( mc.createUri( ns + "scrap" ) ), mc ), mc );
-		bridge.add( new Union( new RdfValue( mc.createUri( ns + "union" ) ), mc ), mc );
-		bridge.add( new Unique( new RdfValue( mc.createUri( ns + "unique" ) ), mc ), mc );
+		registerPrimitive( Each.class, ns + "each", mc );
+		registerPrimitive( Limit.class, ns + "limit", mc );
+		registerPrimitive( Scrap.class, ns + "scrap", mc );
+		registerPrimitive( Union.class, ns + "union", mc );
+		registerPrimitive( Unique.class, ns + "unique", mc );
 	}
 }
 

@@ -12,10 +12,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Limit extends PrimitiveFunction
 {
-	public Limit( RdfValue v, ModelConnection mc )
+	public Limit()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

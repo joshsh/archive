@@ -5,10 +5,19 @@ import net.fortytwo.ripple.io.RipplePrintStream;
 
 public abstract class PrimitiveFunction implements Function, RippleValue
 {
-	private RdfValue rdfEquivalent;
-	private FunctionTypeAnnotation typeAnnotation;
+	private RdfValue rdfEquivalent = null;
+	private FunctionTypeAnnotation typeAnnotation = null;
+
+	public PrimitiveFunction()
+	{}
 
 	public PrimitiveFunction( RdfValue v, ModelConnection mc )
+		throws RippleException
+	{
+		setRdfEquivalent( v, mc );
+	}
+
+	public void setRdfEquivalent( RdfValue v, ModelConnection mc )
 		throws RippleException
 	{
 		rdfEquivalent = v;

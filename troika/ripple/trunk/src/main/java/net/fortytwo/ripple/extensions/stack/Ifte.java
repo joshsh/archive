@@ -11,10 +11,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Ifte extends PrimitiveFunction
 {
-	public Ifte( RdfValue v, ModelConnection mc )
+	public Ifte()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

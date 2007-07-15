@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ReplaceAll extends PrimitiveFunction
 {
-	public ReplaceAll( RdfValue v, ModelConnection mc )
+	public ReplaceAll()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Popdd extends PrimitiveFunction
 {
-	public Popdd( RdfValue v, ModelConnection mc )
+	public Popdd()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

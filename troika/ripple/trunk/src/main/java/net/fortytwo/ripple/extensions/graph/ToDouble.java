@@ -17,10 +17,10 @@ public class ToDouble extends PrimitiveFunction
 	private final static Logger s_logger
 		= Logger.getLogger( ToDouble.class );
 
-	public ToDouble( RdfValue v, ModelConnection mc )
+	public ToDouble()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

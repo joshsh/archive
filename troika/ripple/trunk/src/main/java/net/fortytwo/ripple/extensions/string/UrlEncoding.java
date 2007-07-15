@@ -13,10 +13,10 @@ import net.fortytwo.ripple.util.StringUtils;
 
 public class UrlEncoding extends PrimitiveFunction
 {
-	public UrlEncoding( RdfValue v, ModelConnection mc )
+	public UrlEncoding()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

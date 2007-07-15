@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Sign extends PrimitiveFunction
 {
-	public Sign( RdfValue v, ModelConnection mc )
+	public Sign()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

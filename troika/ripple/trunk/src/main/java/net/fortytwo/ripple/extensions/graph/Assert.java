@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Assert extends PrimitiveFunction
 {
-	public Assert( RdfValue v, ModelConnection mc )
+	public Assert()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

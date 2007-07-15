@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Xor extends PrimitiveFunction
 {
-	public Xor( RdfValue v, ModelConnection mc )
+	public Xor()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

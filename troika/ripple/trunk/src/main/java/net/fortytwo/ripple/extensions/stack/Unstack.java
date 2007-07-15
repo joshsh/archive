@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Unstack extends PrimitiveFunction
 {
-	public Unstack( RdfValue v, ModelConnection mc )
+	public Unstack()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

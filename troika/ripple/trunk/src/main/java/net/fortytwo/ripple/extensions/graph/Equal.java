@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Equal extends PrimitiveFunction
 {
-	public Equal( RdfValue v, ModelConnection mc )
+	public Equal()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

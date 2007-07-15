@@ -13,10 +13,10 @@ import org.openrdf.model.Literal;
 
 public class Lang extends PrimitiveFunction
 {
-	public Lang( RdfValue v, ModelConnection mc )
+	public Lang()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

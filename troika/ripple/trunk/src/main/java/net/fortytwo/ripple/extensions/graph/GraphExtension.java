@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class GraphExtension implements Extension
+public class GraphExtension extends Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/graph#";
 
@@ -18,25 +18,25 @@ public class GraphExtension implements Extension
 		uf.addMapping(
 			ns, getClass().getResource( "graph.ttl" ) + "#" );
 
-		bridge.add( new Assert( new RdfValue( mc.createUri( ns + "assert" ) ), mc ), mc );
-		bridge.add( new Contains( new RdfValue( mc.createUri( ns + "contains" ) ), mc ), mc );
-//		bridge.add( new Count( new RdfValue( mc.createUri( ns + "count" ) ), mc ), mc );
-		bridge.add( new Compare( new RdfValue( mc.createUri( ns + "compare" ) ), mc ), mc );
-		bridge.add( new Deny( new RdfValue( mc.createUri( ns + "deny" ) ), mc ), mc );
-		bridge.add( new Equal( new RdfValue( mc.createUri( ns + "equal" ) ), mc ), mc );
-		bridge.add( new Forget( new RdfValue( mc.createUri( ns + "forget" ) ), mc ), mc );
-		bridge.add( new New( new RdfValue( mc.createUri( ns + "new" ) ), mc ), mc );
+		registerPrimitive( Assert.class, ns + "assert", mc );
+		registerPrimitive( Contains.class, ns + "contains", mc );
+//		registerPrimitive( Count.class, ns + "count", mc );
+		registerPrimitive( Compare.class, ns + "compare", mc );
+		registerPrimitive( Deny.class, ns + "deny", mc );
+		registerPrimitive( Equal.class, ns + "equal", mc );
+		registerPrimitive( Forget.class, ns + "forget", mc );
+		registerPrimitive( New.class, ns + "new", mc );
 
 		// Type conversion / literal reification.
-		bridge.add( new ToDouble( new RdfValue( mc.createUri( ns + "toDouble" ) ), mc ), mc );
-		bridge.add( new ToInteger( new RdfValue( mc.createUri( ns + "toInteger" ) ), mc ), mc );
-		bridge.add( new ToString( new RdfValue( mc.createUri( ns + "toString" ) ), mc ), mc );
-		bridge.add( new ToUri( new RdfValue( mc.createUri( ns + "toUri" ) ), mc ), mc );
+		registerPrimitive( ToDouble.class, ns + "toDouble", mc );
+		registerPrimitive( ToInteger.class, ns + "toInteger", mc );
+		registerPrimitive( ToString.class, ns + "toString", mc );
+		registerPrimitive( ToUri.class, ns + "toUri", mc );
 
 		// Document-centric primitives.
-		bridge.add( new Comments( new RdfValue( mc.createUri( ns + "comments" ) ), mc ), mc );
-		bridge.add( new Namespaces( new RdfValue( mc.createUri( ns + "namespaces" ) ), mc ), mc );
-		bridge.add( new Triples( new RdfValue( mc.createUri( ns + "triples" ) ), mc ), mc );
+		registerPrimitive( Comments.class, ns + "comments", mc );
+		registerPrimitive( Namespaces.class, ns + "namespaces", mc );
+		registerPrimitive( Triples.class, ns + "triples", mc );
 	}
 }
 

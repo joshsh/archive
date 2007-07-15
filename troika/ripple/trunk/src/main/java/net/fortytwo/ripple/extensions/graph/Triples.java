@@ -22,10 +22,10 @@ import org.openrdf.model.URI;
 
 public class Triples extends PrimitiveFunction
 {
-	public Triples( RdfValue v, ModelConnection mc )
+	public Triples()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

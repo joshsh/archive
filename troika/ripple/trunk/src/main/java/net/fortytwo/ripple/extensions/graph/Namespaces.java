@@ -22,10 +22,10 @@ import org.openrdf.model.URI;
 
 public class Namespaces extends PrimitiveFunction
 {
-	public Namespaces( RdfValue v, ModelConnection mc )
+	public Namespaces()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

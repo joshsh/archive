@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Rotate extends PrimitiveFunction
 {
-	public Rotate( RdfValue v, ModelConnection mc )
+	public Rotate()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

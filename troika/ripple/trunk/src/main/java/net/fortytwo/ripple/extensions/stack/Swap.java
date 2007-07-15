@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Swap extends PrimitiveFunction
 {
-	public Swap( RdfValue v, ModelConnection mc )
+	public Swap()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

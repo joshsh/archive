@@ -7,9 +7,9 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class ServicesExtension implements Extension
+public class ServicesExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/05/ripple/services#";
+	static String ns = "http://fortytwo.net/2007/05/ripple/services#";
 
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException
@@ -18,9 +18,10 @@ public class ServicesExtension implements Extension
 		uf.addMapping(
 			ns, getClass().getResource( "services.ttl" ) + "#" );
 
-		bridge.add( new PingTheSemanticWeb( new RdfValue( mc.createUri( ns + "pingTheSemanticWeb" ) ), mc ), mc );
-		bridge.add( new Sindice( new RdfValue( mc.createUri( ns + "sindice" ) ), mc ), mc );
-		bridge.add( new SwoogleIt( new RdfValue( mc.createUri( ns + "swoogleIt" ) ), mc ), mc );
+		registerPrimitive( PingTheSemanticWeb.class, ns + "pingTheSemanticWeb", mc );
+		registerPrimitive( Sindice.class, ns + "sindice", mc );
+		registerPrimitive( SwoogleIt.class, ns + "swoogleIt", mc );
+		registerPrimitive( Uriqr.class, ns + "uriqr", mc );
 	}
 }
 

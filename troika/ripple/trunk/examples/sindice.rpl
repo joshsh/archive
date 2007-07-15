@@ -5,8 +5,18 @@
 <http://www.geonames.org/countries/#DE>/:sin.
 
 
-# NOTE: some Sindice results contain URIs of objects (e.g. GIF images) which are not RDF documents:
+# NOTE: some Sindice results contain URIs of objects (e.g. GIF images) which are
+#       not RDF documents.  This is mentioned in the paper on Sindice.
 foaf:mbox/sindice/toString.
+
+
+# Look for documents which use reification (from a LOD comment by Giovanni):
+rdf:Statement/sindice/toString.
+
+
+
+# Literal lookup:
+"encyclopedia of life"/sindice/toString.
 
 
 wget --header="Accept: application/xml, text/xml" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal

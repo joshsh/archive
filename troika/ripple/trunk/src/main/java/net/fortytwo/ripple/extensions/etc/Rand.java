@@ -14,10 +14,10 @@ public class Rand extends PrimitiveFunction
 {
 	private Random random = new Random();
 
-	public Rand( RdfValue v, ModelConnection mc )
+	public Rand()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

@@ -12,10 +12,10 @@ import org.openrdf.model.URI;
 
 public class ToUri extends PrimitiveFunction
 {
-	public ToUri( RdfValue v, ModelConnection mc )
+	public ToUri()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

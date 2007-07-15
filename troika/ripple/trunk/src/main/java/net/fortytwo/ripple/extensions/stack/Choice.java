@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Choice extends PrimitiveFunction
 {
-	public Choice( RdfValue v, ModelConnection mc )
+	public Choice()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

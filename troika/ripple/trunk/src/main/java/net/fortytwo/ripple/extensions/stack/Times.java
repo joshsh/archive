@@ -11,10 +11,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Times extends PrimitiveFunction
 {
-	public Times( RdfValue v, ModelConnection mc )
+	public Times()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

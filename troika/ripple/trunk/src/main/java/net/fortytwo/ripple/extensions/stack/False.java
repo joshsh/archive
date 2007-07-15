@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class False extends PrimitiveFunction
 {
-	public False( RdfValue v, ModelConnection mc )
+	public False()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

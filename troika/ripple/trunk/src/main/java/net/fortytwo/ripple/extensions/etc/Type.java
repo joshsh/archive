@@ -14,10 +14,10 @@ import org.openrdf.model.URI;
 
 public class Type extends PrimitiveFunction
 {
-	public Type( RdfValue v, ModelConnection mc )
+	public Type()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

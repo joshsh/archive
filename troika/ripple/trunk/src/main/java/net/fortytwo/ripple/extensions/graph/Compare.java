@@ -13,10 +13,10 @@ public class Compare extends PrimitiveFunction
 	private RippleValue truePrim = null;
 	private RippleValue falsePrim = null;
 
-	public Compare( RdfValue v, ModelConnection mc )
+	public Compare()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

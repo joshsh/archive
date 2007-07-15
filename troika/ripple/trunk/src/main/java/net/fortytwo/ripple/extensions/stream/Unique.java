@@ -13,10 +13,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Unique extends PrimitiveFunction
 {
-	public Unique( RdfValue v, ModelConnection mc )
+	public Unique()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

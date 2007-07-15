@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class StartsWith extends PrimitiveFunction
 {
-	public StartsWith( RdfValue v, ModelConnection mc )
+	public StartsWith()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

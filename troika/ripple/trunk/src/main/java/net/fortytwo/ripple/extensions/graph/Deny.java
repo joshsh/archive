@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Deny extends PrimitiveFunction
 {
-	public Deny( RdfValue v, ModelConnection mc )
+	public Deny()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

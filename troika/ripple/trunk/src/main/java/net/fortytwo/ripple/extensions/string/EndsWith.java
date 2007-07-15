@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class EndsWith extends PrimitiveFunction
 {
-	public EndsWith( RdfValue v, ModelConnection mc )
+	public EndsWith()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

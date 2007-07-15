@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ToLowerCase extends PrimitiveFunction
 {
-	public ToLowerCase( RdfValue v, ModelConnection mc )
+	public ToLowerCase()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

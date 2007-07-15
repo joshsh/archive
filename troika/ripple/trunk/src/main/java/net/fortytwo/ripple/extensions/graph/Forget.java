@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Forget extends PrimitiveFunction
 {
-	public Forget( RdfValue v, ModelConnection mc )
+	public Forget()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

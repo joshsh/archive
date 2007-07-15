@@ -20,10 +20,10 @@ public class Sha1 extends PrimitiveFunction
 
 	private static MessageDigest messageDigest = null;
 
-	public Sha1( RdfValue v, ModelConnection mc )
+	public Sha1()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

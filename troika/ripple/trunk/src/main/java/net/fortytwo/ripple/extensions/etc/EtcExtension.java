@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class EtcExtension implements Extension
+public class EtcExtension extends Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/etc#";
 
@@ -18,20 +18,20 @@ public class EtcExtension implements Extension
 		uf.addMapping(
 			ns, getClass().getResource( "etc.ttl" ) + "#" );
 
-		bridge.add( new Back( new RdfValue( mc.createUri( ns + "back" ) ), mc ), mc );
-		bridge.add( new Get( new RdfValue( mc.createUri( ns + "get" ) ), mc ), mc );
-		bridge.add( new Pred( new RdfValue( mc.createUri( ns + "pred" ) ), mc ), mc );
-		bridge.add( new Prim( new RdfValue( mc.createUri( ns + "prim" ) ), mc ), mc );
-		bridge.add( new Rand( new RdfValue( mc.createUri( ns + "rand" ) ), mc ), mc );
-		bridge.add( new Time( new RdfValue( mc.createUri( ns + "time" ) ), mc ), mc );
+		registerPrimitive( Back.class, ns + "back", mc );
+		registerPrimitive( Get.class, ns + "get", mc );
+		registerPrimitive( Pred.class, ns + "pred", mc );
+		registerPrimitive( Prim.class, ns + "prim", mc );
+		registerPrimitive( Rand.class, ns + "rand", mc );
+		registerPrimitive( Time.class, ns + "time", mc );
 
 		// Note: the xml: namespace is actually said to be
 		//       http://www.w3.org/XML/1998/namespace
 		//       (i.e. without the hash character).
-		bridge.add( new Lang( new RdfValue( mc.createUri( "http://www.w3.org/XML/1998/namespace#lang" ) ), mc ), mc );
+		registerPrimitive( Lang.class, "http://www.w3.org/XML/1998/namespace#lang", mc );
 
 		// Note: this URI is bogus.
-		bridge.add( new Type( new RdfValue( mc.createUri( "http://www.w3.org/2001/XMLSchema#type" ) ), mc ), mc );
+		registerPrimitive( Type.class, "http://www.w3.org/2001/XMLSchema#type", mc );
 	}
 }
 

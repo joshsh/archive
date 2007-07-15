@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Has extends PrimitiveFunction
 {
-	public Has( RdfValue v, ModelConnection mc )
+	public Has()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Substring extends PrimitiveFunction
 {
-	public Substring( RdfValue v, ModelConnection mc )
+	public Substring()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

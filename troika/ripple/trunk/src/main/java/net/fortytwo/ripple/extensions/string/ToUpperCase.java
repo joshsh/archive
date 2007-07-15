@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ToUpperCase extends PrimitiveFunction
 {
-	public ToUpperCase( RdfValue v, ModelConnection mc )
+	public ToUpperCase()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

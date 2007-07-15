@@ -18,10 +18,10 @@ import java.net.URLConnection;
 
 public class Get extends PrimitiveFunction
 {
-	public Get( RdfValue v, ModelConnection mc )
+	public Get()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

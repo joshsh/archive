@@ -12,10 +12,10 @@ import java.util.Iterator;
 
 public class Contains extends PrimitiveFunction
 {
-	public Contains( RdfValue v, ModelConnection mc )
+	public Contains()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

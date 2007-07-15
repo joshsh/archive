@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Union extends PrimitiveFunction
 {
-	public Union( RdfValue v, ModelConnection mc )
+	public Union()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

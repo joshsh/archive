@@ -9,26 +9,29 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.StringUtils;
 
 import java.io.InputStream;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.net.URLConnection;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
 
-public class PingTheSemanticWeb extends PrimitiveFunction
+import org.openrdf.model.URI;
+
+public class Uriqr extends PrimitiveFunction
 {
-	private static SAXBuilder s_saxBuilder = null;
+	static SAXBuilder s_saxBuilder = null;
+	static XPath resultPath = null;
 
-	public PingTheSemanticWeb()
+	public Uriqr()
 		throws RippleException
 	{
 		super();
@@ -36,7 +39,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return 1;
 	}
 
 	public void applyTo( RippleList stack,
@@ -44,32 +47,44 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		String type;
-		int maxResults;
-
-		type = mc.stringValue( stack.getFirst() );
-		stack = stack.getRest();
-		maxResults = mc.intValue( stack.getFirst() );
-		stack = stack.getRest();
-
 		if ( null == s_saxBuilder )
 		{
 			s_saxBuilder = new SAXBuilder( true );
 			s_saxBuilder.setReuseParser( true );
 
-			String schemaLocation = PingTheSemanticWeb.class.getResource( "pingTheSemanticWeb.xsd" ).toString();
+/*
+			String schemaLocation = Uriqr.class.getResource( "uriqr.xsd" ).toString();
 			s_saxBuilder.setFeature(
 				"http://apache.org/xml/features/validation/schema", true );
 			s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
 				+ "external-noNamespaceSchemaLocation", schemaLocation );
+*/
+
+			try
+			{
+				resultPath = XPath.newInstance( "html/body/div[@id='content']/p/strong" );
+			}
+
+			catch ( org.jdom.JDOMException e )
+			{
+				throw new RippleException( e );
+			}
 		}
 
-		URLConnection connection;
+		String s;
+
+		s = mc.stringValue( stack.getFirst() );
+		stack = stack.getRest();
+
+		String urlStr = "http://dev.uriqr.com/search.php?query="
+			+ StringUtils.urlEncode( s );
+
+		URLConnection urlConn;
 
 		try
 		{
-			URL url = new URL( "http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );
-			connection = url.openConnection();
+			URL url = new URL( urlStr );
+			urlConn = url.openConnection();
 		}
 
 		catch ( java.net.MalformedURLException e )
@@ -82,15 +97,15 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
-		String []mimeTypes = { "text/xml" };
-		HttpUtils.prepareUrlConnectionForRequest( connection, mimeTypes );
-		HttpUtils.connect( connection );
+		String []mimeTypes = { "application/xhtml+xml", "application/xml", "text/xml" };
+		HttpUtils.prepareUrlConnectionForRequest( urlConn, mimeTypes );
+		HttpUtils.connect( urlConn );
 
 		Document doc;
 
 		try
 		{
-			InputStream response = connection.getInputStream();
+			InputStream response = urlConn.getInputStream();
 
 			synchronized( s_saxBuilder )
 			{
@@ -110,14 +125,31 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
-		Element root = doc.getRootElement();
-		Iterator<Element> childIter = root.getChildren().iterator();
-		while ( childIter.hasNext() )
+		List<Object> results;
+
+		try
 		{
-			Element child = childIter.next();
-			String s = child.getAttributeValue( "url" );
-			sink.put( new RippleList(
-				new RdfValue( mc.createUri( s ) ), stack ) );
+			results = resultPath.selectNodes( doc );
+		}
+
+		catch ( org.jdom.JDOMException e )
+		{
+			throw new RippleException( e );
+		}
+
+		for ( Iterator<Object> iter = results.iterator(); iter.hasNext(); )
+		{
+			Object r = iter.next();
+			if ( r instanceof Element )
+			{
+				String text = ( ( Element ) r ).getText();
+				URI resultUri = mc.createUri( text );
+
+				sink.put( new RippleList(
+					new RdfValue( resultUri ), stack ) );
+			}
+
+			throw new RippleException( "unexpected result format" );
 		}
 	}
 }

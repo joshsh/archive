@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Rolldown extends PrimitiveFunction
 {
-	public Rolldown( RdfValue v, ModelConnection mc )
+	public Rolldown()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

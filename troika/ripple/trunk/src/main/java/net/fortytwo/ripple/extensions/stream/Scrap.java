@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Scrap extends PrimitiveFunction
 {
-	public Scrap( RdfValue v, ModelConnection mc )
+	public Scrap()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

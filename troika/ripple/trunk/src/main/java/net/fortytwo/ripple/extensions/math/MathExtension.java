@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class MathExtension implements Extension
+public class MathExtension extends Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/math#";
 
@@ -19,19 +19,19 @@ public class MathExtension implements Extension
 			ns, getClass().getResource( "math.ttl" ) + "#" );
 
 		// Integer comparison primitives
-		bridge.add( new Gt( new RdfValue( mc.createUri( ns + "gt" ) ), mc ), mc );
-		bridge.add( new Lt( new RdfValue( mc.createUri( ns + "lt" ) ), mc ), mc );
+		registerPrimitive( Gt.class, ns + "gt", mc );
+		registerPrimitive( Lt.class, ns + "lt", mc );
 
 		// Integer arithmetic primitives
-		bridge.add( new Abs( new RdfValue( mc.createUri( ns + "abs" ) ), mc ), mc );
-		bridge.add( new Add( new RdfValue( mc.createUri( ns + "add" ) ), mc ), mc );
-		bridge.add( new Div( new RdfValue( mc.createUri( ns + "div" ) ), mc ), mc );
-		bridge.add( new Mod( new RdfValue( mc.createUri( ns + "mod" ) ), mc ), mc );
-		bridge.add( new Mul( new RdfValue( mc.createUri( ns + "mul" ) ), mc ), mc );
-		bridge.add( new Neg( new RdfValue( mc.createUri( ns + "neg" ) ), mc ), mc );
-		bridge.add( new Pow( new RdfValue( mc.createUri( ns + "pow" ) ), mc ), mc );
-		bridge.add( new Sign( new RdfValue( mc.createUri( ns + "sign" ) ), mc ), mc );
-		bridge.add( new Sub( new RdfValue( mc.createUri( ns + "sub" ) ), mc ), mc );
+		registerPrimitive( Abs.class, ns + "abs", mc );
+		registerPrimitive( Add.class, ns + "add", mc );
+		registerPrimitive( Div.class, ns + "div", mc );
+		registerPrimitive( Mod.class, ns + "mod", mc );
+		registerPrimitive( Mul.class, ns + "mul", mc );
+		registerPrimitive( Neg.class, ns + "neg", mc );
+		registerPrimitive( Pow.class, ns + "pow", mc );
+		registerPrimitive( Sign.class, ns + "sign", mc );
+		registerPrimitive( Sub.class, ns + "sub", mc );
 	}
 }
 

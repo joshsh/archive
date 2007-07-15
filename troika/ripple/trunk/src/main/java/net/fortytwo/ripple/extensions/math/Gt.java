@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Gt extends PrimitiveFunction
 {
-	public Gt( RdfValue v, ModelConnection mc )
+	public Gt()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

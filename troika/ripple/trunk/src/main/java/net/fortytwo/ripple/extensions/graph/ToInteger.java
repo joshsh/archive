@@ -17,10 +17,10 @@ public class ToInteger extends PrimitiveFunction
 	private final static Logger s_logger
 		= Logger.getLogger( ToInteger.class );
 
-	public ToInteger( RdfValue v, ModelConnection mc )
+	public ToInteger()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

@@ -26,17 +26,13 @@ import java.net.URLEncoder;
 
 public class SwoogleIt extends PrimitiveFunction
 {
-	private URI
-		swoogleQueryResponseUri;
-
-	private static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
+	URI swoogleQueryResponseUri = null;
+	static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
 	
-	public SwoogleIt( RdfValue v, ModelConnection mc )
+	public SwoogleIt()
 		throws RippleException
 	{
-		super( v, mc );
-
-		swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
+		super();
 	}
 
 	public int arity()
@@ -49,6 +45,9 @@ public class SwoogleIt extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
+		if ( null == swoogleQueryResponseUri )
+			swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
+
 		String key, searchString;
 		URI queryType;
 

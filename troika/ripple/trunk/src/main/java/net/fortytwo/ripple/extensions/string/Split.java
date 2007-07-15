@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Split extends PrimitiveFunction
 {
-	public Split( RdfValue v, ModelConnection mc )
+	public Split()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

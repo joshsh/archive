@@ -22,10 +22,10 @@ import org.openrdf.model.URI;
 
 public class Comments extends PrimitiveFunction
 {
-	public Comments( RdfValue v, ModelConnection mc )
+	public Comments()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

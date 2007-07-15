@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Dupdd extends PrimitiveFunction
 {
-	public Dupdd( RdfValue v, ModelConnection mc )
+	public Dupdd()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

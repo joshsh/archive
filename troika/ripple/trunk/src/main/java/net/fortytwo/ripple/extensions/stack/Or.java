@@ -11,10 +11,10 @@ import net.fortytwo.ripple.extensions.stack.StackExtension;
 
 public class Or extends PrimitiveFunction
 {
-	public Or( RdfValue v, ModelConnection mc )
+	public Or()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

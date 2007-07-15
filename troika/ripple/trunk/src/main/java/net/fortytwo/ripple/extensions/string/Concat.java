@@ -10,10 +10,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Concat extends PrimitiveFunction
 {
-	public Concat( RdfValue v, ModelConnection mc )
+	public Concat()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

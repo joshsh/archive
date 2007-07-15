@@ -32,10 +32,10 @@ public class Sindice extends PrimitiveFunction
 {
 	private static SAXBuilder s_saxBuilder = null;
 
-	public Sindice( RdfValue v, ModelConnection mc )
+	public Sindice()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()
@@ -53,7 +53,7 @@ public class Sindice extends PrimitiveFunction
 			s_saxBuilder = new SAXBuilder( true );
 			s_saxBuilder.setReuseParser( true );
 
-			String schemaLocation = PingTheSemanticWeb.class.getResource( "sindice.xsd" ).toString();
+			String schemaLocation = Sindice.class.getResource( "sindice.xsd" ).toString();
 			s_saxBuilder.setFeature(
 				"http://apache.org/xml/features/validation/schema", true );
 			s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"

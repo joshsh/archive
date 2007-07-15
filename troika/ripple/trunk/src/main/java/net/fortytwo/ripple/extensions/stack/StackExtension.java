@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class StackExtension implements Extension
+public class StackExtension extends Extension
 {
 	private static String ns = "http://fortytwo.net/2007/05/ripple/stack#";
 
@@ -22,54 +22,54 @@ public class StackExtension implements Extension
 		uf.addMapping(
 			ns, getClass().getResource( "stack.ttl" ) + "#" );
 
-		bridge.add( new And( new RdfValue( mc.createUri( ns + "and" ) ), mc ), mc );
-		bridge.add( new Ary( new RdfValue( mc.createUri( ns + "ary" ) ), mc ), mc );
-		bridge.add( new At( new RdfValue( mc.createUri( ns + "at" ) ), mc ), mc );
-		bridge.add( branchVal = new Branch( new RdfValue( mc.createUri( ns + "branch" ) ), mc ), mc );
-		bridge.add( new Choice( new RdfValue( mc.createUri( ns + "choice" ) ), mc ), mc );
-		bridge.add( new Dip( new RdfValue( mc.createUri( ns + "dip" ) ), mc ), mc );
-		bridge.add( new Dipd( new RdfValue( mc.createUri( ns + "dipd" ) ), mc ), mc );
-		bridge.add( new Dup( new RdfValue( mc.createUri( ns + "dup" ) ), mc ), mc );
-		bridge.add( new Dupd( new RdfValue( mc.createUri( ns + "dupd" ) ), mc ), mc );
-		bridge.add( new Dupdd( new RdfValue( mc.createUri( ns + "dupdd" ) ), mc ), mc );
-		bridge.add( falseVal = new False( new RdfValue( mc.createUri( ns + "false" ) ), mc ), mc );
-		bridge.add( new I( new RdfValue( mc.createUri( ns + "i" ) ), mc ), mc );
-		bridge.add( new Id( new RdfValue( mc.createUri( ns + "id" ) ), mc ), mc );
-		bridge.add( new Ifte( new RdfValue( mc.createUri( ns + "ifte" ) ), mc ), mc );
-		bridge.add( new Not( new RdfValue( mc.createUri( ns + "not" ) ), mc ), mc );
-		bridge.add( new Or( new RdfValue( mc.createUri( ns + "or" ) ), mc ), mc );
-		bridge.add( new Pop( new RdfValue( mc.createUri( ns + "pop" ) ), mc ), mc );
-		bridge.add( new Popd( new RdfValue( mc.createUri( ns + "popd" ) ), mc ), mc );
-		bridge.add( new Popdd( new RdfValue( mc.createUri( ns + "popdd" ) ), mc ), mc );
-		bridge.add( new Rolldown( new RdfValue( mc.createUri( ns + "rolldown" ) ), mc ), mc );
-		bridge.add( new Rolldownd( new RdfValue( mc.createUri( ns + "rolldownd" ) ), mc ), mc );
-		bridge.add( new Rollup( new RdfValue( mc.createUri( ns + "rollup" ) ), mc ), mc );
-		bridge.add( new Rollupd( new RdfValue( mc.createUri( ns + "rollupd" ) ), mc ), mc );
-		bridge.add( new Rotate( new RdfValue( mc.createUri( ns + "rotate" ) ), mc ), mc );
-		bridge.add( new Rotated( new RdfValue( mc.createUri( ns + "rotated" ) ), mc ), mc );
-		bridge.add( new Stack( new RdfValue( mc.createUri( ns + "stack" ) ), mc ), mc );
-		bridge.add( new Swap( new RdfValue( mc.createUri( ns + "swap" ) ), mc ), mc );
-		bridge.add( new Swapd( new RdfValue( mc.createUri( ns + "swapd" ) ), mc ), mc );
-		bridge.add( new Swapdd( new RdfValue( mc.createUri( ns + "swapdd" ) ), mc ), mc );
-		bridge.add( new Times( new RdfValue( mc.createUri( ns + "times" ) ), mc ), mc );
-		bridge.add( trueVal = new True( new RdfValue( mc.createUri( ns + "true" ) ), mc ), mc );
-		bridge.add( new Unstack( new RdfValue( mc.createUri( ns + "unstack" ) ), mc ), mc );
-		bridge.add( new X( new RdfValue( mc.createUri( ns + "x" ) ), mc ), mc );
-		bridge.add( new Xor( new RdfValue( mc.createUri( ns + "xor" ) ), mc ), mc );
+		registerPrimitive( And.class, ns + "and", mc );
+		registerPrimitive( Ary.class, ns + "ary", mc );
+		registerPrimitive( At.class, ns + "at", mc );
+		branchVal = registerPrimitive( Branch.class, ns + "branch", mc );
+		registerPrimitive( Choice.class, ns + "choice", mc );
+		registerPrimitive( Dip.class, ns + "dip", mc );
+		registerPrimitive( Dipd.class, ns + "dipd", mc );
+		registerPrimitive( Dup.class, ns + "dup", mc );
+		registerPrimitive( Dupd.class, ns + "dupd", mc );
+		registerPrimitive( Dupdd.class, ns + "dupdd", mc );
+		falseVal = registerPrimitive( False.class, ns + "false", mc );
+		registerPrimitive( I.class, ns + "i", mc );
+		registerPrimitive( Id.class, ns + "id", mc );
+		registerPrimitive( Ifte.class, ns + "ifte", mc );
+		registerPrimitive( Not.class, ns + "not", mc );
+		registerPrimitive( Or.class, ns + "or", mc );
+		registerPrimitive( Pop.class, ns + "pop", mc );
+		registerPrimitive( Popd.class, ns + "popd", mc );
+		registerPrimitive( Popdd.class, ns + "popdd", mc );
+		registerPrimitive( Rolldown.class, ns + "rolldown", mc );
+		registerPrimitive( Rolldownd.class, ns + "rolldownd", mc );
+		registerPrimitive( Rollup.class, ns + "rollup", mc );
+		registerPrimitive( Rollupd.class, ns + "rollupd", mc );
+		registerPrimitive( Rotate.class, ns + "rotate", mc );
+		registerPrimitive( Rotated.class, ns + "rotated", mc );
+		registerPrimitive( Stack.class, ns + "stack", mc );
+		registerPrimitive( Swap.class, ns + "swap", mc );
+		registerPrimitive( Swapd.class, ns + "swapd", mc );
+		registerPrimitive( Swapdd.class, ns + "swapdd", mc );
+		registerPrimitive( Times.class, ns + "times", mc );
+		trueVal = registerPrimitive( True.class, ns + "true", mc );
+		registerPrimitive( Unstack.class, ns + "unstack", mc );
+		registerPrimitive( X.class, ns + "x", mc );
+		registerPrimitive( Xor.class, ns + "xor", mc );
 
 		// List primitives.
-		bridge.add( new Cat( new RdfValue( mc.createUri( ns + "cat" ) ), mc ), mc );
-		bridge.add( new Cons( new RdfValue( mc.createUri( ns + "cons" ) ), mc ), mc );
-		bridge.add( new Fold( new RdfValue( mc.createUri( ns + "fold" ) ), mc ), mc );
-		bridge.add( new Has( new RdfValue( mc.createUri( ns + "has" ) ), mc ), mc );
-		bridge.add( new In( new RdfValue( mc.createUri( ns + "in" ) ), mc ), mc );
-		bridge.add( new Max( new RdfValue( mc.createUri( ns + "max" ) ), mc ), mc );
-		bridge.add( new Min( new RdfValue( mc.createUri( ns + "min" ) ), mc ), mc );
-		bridge.add( new Of( new RdfValue( mc.createUri( ns + "of" ) ), mc ), mc );
-		bridge.add( new Size( new RdfValue( mc.createUri( ns + "size" ) ), mc ), mc );
-		bridge.add( new Swons( new RdfValue( mc.createUri( ns + "swons" ) ), mc ), mc );
-		bridge.add( new Uncons( new RdfValue( mc.createUri( ns + "uncons" ) ), mc ), mc );
-		bridge.add( new Unswons( new RdfValue( mc.createUri( ns + "unswons" ) ), mc ), mc );
+		registerPrimitive( Cat.class, ns + "cat", mc );
+		registerPrimitive( Cons.class, ns + "cons", mc );
+		registerPrimitive( Fold.class, ns + "fold", mc );
+		registerPrimitive( Has.class, ns + "has", mc );
+		registerPrimitive( In.class, ns + "in", mc );
+		registerPrimitive( Max.class, ns + "max", mc );
+		registerPrimitive( Min.class, ns + "min", mc );
+		registerPrimitive( Of.class, ns + "of", mc );
+		registerPrimitive( Size.class, ns + "size", mc );
+		registerPrimitive( Swons.class, ns + "swons", mc );
+		registerPrimitive( Uncons.class, ns + "uncons", mc );
+		registerPrimitive( Unswons.class, ns + "unswons", mc );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
