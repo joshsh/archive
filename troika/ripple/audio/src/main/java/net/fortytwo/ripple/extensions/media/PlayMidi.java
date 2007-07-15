@@ -20,10 +20,10 @@ import org.openrdf.model.URI;
 
 public class PlayMidi extends PrimitiveFunction
 {
-	public PlayMidi( RdfValue v, ModelConnection mc )
+	public PlayMidi()
 		throws RippleException
 	{
-		super( v, mc );
+		super();
 	}
 
 	public int arity()

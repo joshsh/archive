@@ -14,13 +14,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Speak extends PrimitiveFunction
 {
-	public Speak( RdfValue v, ModelConnection mc )
+	public Speak()
 		throws RippleException
 	{
-		super( v, mc );
-
-		if ( !initialized )
-			init();
+		super();
 	}
 
 	public int arity()
@@ -33,6 +30,9 @@ public class Speak extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
+		if ( !initialized )
+			init();
+
 		String s;
 
 		s = mc.stringValue( stack.getFirst() );
