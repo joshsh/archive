@@ -30,10 +30,10 @@ rm REFACTORING
 rm NEWPRIMITIVES
 rm TODO
 cd ..
-mv trunk/ ripple-0.3.0
-tar -cf ripple-0.3.0.tar ripple-0.3.0
-gzip ripple-0.3.0.tar
-zip -r ripple-0.3.0.zip ripple-0.3.0
+mv trunk/ ripple-0.4.0
+tar -cf ripple-0.4.0.tar ripple-0.4.0
+gzip ripple-0.4.0.tar
+zip -r ripple-0.4.0.zip ripple-0.4.0
 
 
 ========================================
@@ -116,7 +116,7 @@ demo:third.
 
 
 
-
+# Count lines of source code.
 cat `find src -name "*.java"`| wc
 
 

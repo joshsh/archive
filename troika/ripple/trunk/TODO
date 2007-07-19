@@ -4,6 +4,11 @@ Build
 * Prevent the build from succeeding when ANTLR parser generation fails
 * Build and test on Windows
 
+Launcher scripts
+================================================================================
+* test UNIX script in Cygwin
+* improve Windows script
+
 Exception handling
 ================================================================================
 * Decide on an extensible approach for exception handling and error logging

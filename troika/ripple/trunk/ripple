@@ -1,4 +1,31 @@
 #!/bin/bash
 
-java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo $1
+# Find Java.
+if [ "$JAVA_HOME" = "" ] ; then
+	JAVA="java"
+else
+	JAVA="$JAVA_HOME/bin/java"
+fi
+
+# Set Java options.
+if [ "$JAVA_OPTIONS" = "" ] ; then
+	JAVA_OPTIONS="-Xms32M -Xmx512M -Djava.awt.headless=true"
+fi
+
+# Ensure that the Ripple JAR is first in the classpath.
+for file in target/ripple-*.jar
+do
+	CP=${file}
+done
+
+# Add dependencies to the classpath.
+for file in target/*jar
+do
+	CP=$CP:${file}
+done
+
+# Launch Ripple.
+$JAVA $JAVA_OPTIONS -classpath $CP net.fortytwo.ripple.Demo $*
+
+# Return the appropriate exit code.
 exit $?
