@@ -1,6 +1,5 @@
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.test.RippleTestCase;
 
 public class ModelTest extends RippleTestCase

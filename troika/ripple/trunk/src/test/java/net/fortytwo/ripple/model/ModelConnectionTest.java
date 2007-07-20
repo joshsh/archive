@@ -5,10 +5,10 @@ import java.io.InputStream;
 
 import java.net.URL;
 
+import net.fortytwo.ripple.test.RippleTestCase;
+
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
-
-import net.fortytwo.ripple.test.RippleTestCase;
 
 public class ModelConnectionTest extends RippleTestCase
 {

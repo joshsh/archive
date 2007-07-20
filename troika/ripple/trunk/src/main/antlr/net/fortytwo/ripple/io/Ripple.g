@@ -134,10 +134,6 @@ URIREF
 	: '<'! ( UCHARACTER )* '>'!
 	;
 
-OPER
-	: '/'
-	;
-
 protected
 DIGIT
 	: ('0' .. '9')
@@ -205,9 +201,13 @@ L_PAREN : '(' ;
 
 R_PAREN : ')' ;
 
+SEMI : ';' ;
 EOS : '.' ;
 
 COLON : ':' ;
+
+OP_PRE : '/' ;
+OP_POST : '!' ;
 
 protected
 DRCTV : '@' ;
@@ -273,6 +273,9 @@ options
 
 nt_Document
 {
+	// Request a first line of input from the interface (the lexer will request
+	// additional input as it matches newlines).
+	itf.put( RecognizerEvent.NEWLINE );
 }
 	: ( (nt_Ws)? nt_Statement )*
 	;
@@ -294,13 +297,13 @@ nt_Statement
 	: nt_Directive
 
 	// Query statements are always lists.
-	| r=nt_List EOS
+	| r=nt_List ( EOS | SEMI )
 		{
 			matchQuery( r );
 		}
 
 	// Empty statements are simply ignored.
-	| EOS
+	| EOS | SEMI
 	;
 
 
@@ -311,18 +314,18 @@ nt_List returns [ ListAst s ]
 	boolean modified = false;
 }
 		// Optional slash operator.
-	:	( OPER (WS)? { modified = true; } )?
+	:	( OP_PRE (WS)? { modified = true; } )?
 
 		// Head of the list.
 		i=nt_Node
 
 		(	(WS) => ( nt_Ws
-				( (~(EOS | R_PAREN )) => s=nt_List
+				( (~(EOS | SEMI | R_PAREN )) => s=nt_List
 				| {}
 				) )
 
 			// Tail of the list.
-		|	(~(WS | EOS | R_PAREN)) => s=nt_List
+		|	(~(WS | EOS | SEMI | R_PAREN)) => s=nt_List
 
 			// End of the list.
 		|	()
@@ -342,6 +345,7 @@ nt_Node returns [ Ast r ]
 	: r=nt_Resource
 	| r=nt_Literal
 	| r=nt_ParenthesizedList
+	| OP_POST { r = new OperatorAst(); }
 	;
 
 

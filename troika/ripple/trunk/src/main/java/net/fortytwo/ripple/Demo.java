@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Iterator;
 
-import net.fortytwo.ripple.io.Interpreter;
+import net.fortytwo.ripple.io.CommandLineInterface;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.query.Evaluator;
@@ -123,7 +123,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 
 		// Attach an interpreter to the query engine and let it read from
 		// standard input.
-		Interpreter r = new Interpreter( qe, in );
+		CommandLineInterface r = new CommandLineInterface( qe, in );
 		r.run();
 
 		// Save back to store.

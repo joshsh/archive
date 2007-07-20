@@ -12,11 +12,6 @@ public interface Ast
 								QueryEngine qe,
 								ModelConnection mc )
 		throws RippleException;
-
-/*
-	public RippleValue evaluate( Interpreter itp, ModelConnection mc )
-		throws RippleException;
-*/
 }
 
 // kate: tab-width 4
