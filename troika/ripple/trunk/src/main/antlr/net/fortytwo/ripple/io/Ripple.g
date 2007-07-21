@@ -273,9 +273,11 @@ options
 
 nt_Document
 {
+System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
 	itf.put( RecognizerEvent.NEWLINE );
+System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
 }
 	: ( (nt_Ws)? nt_Statement )*
 	;

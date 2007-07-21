@@ -1,9 +1,9 @@
 package net.fortytwo.ripple.io;
 
 import java.io.InputStream;
-import java.io.PrintStream;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
@@ -15,25 +15,30 @@ public class Interpreter
 	RecognizerInterface recognizerInterface;
 
 	InputStream input;
-	PrintStream errorOutput;
 
-	public Interpreter( RecognizerInterface itf,
+	Sink<Exception> exceptionSink;
+
+	public Interpreter( final RecognizerInterface itf,
 						final InputStream in,
-						final PrintStream err )
+						final Sink<Exception> exceptions )
 	{
 		recognizerInterface = itf;
 		input = in;
-		errorOutput = err;
+		exceptionSink = exceptions;
 	}
 
 	public void parse()
+		throws RippleException
 	{
+System.out.println( "parse!!!!!!!!!!!!" );
 		// Break out when a @quit directive is encountered
 		for (;;)
 		{
 			// If there's anything in the input buffer, it's because the parser
-			// ran across a syntax error.  Clear the buffer and start afresh.
+			// ran across a syntax error.  Clear the buffer, create a new lexer
+			// and parser instance, and start afresh.
 			clear( input );
+System.out.println( "construct!!!!!!!!!!!!" );
 
 			RippleLexer lexer = new RippleLexer( input );
 			lexer.initialize( recognizerInterface );
@@ -42,29 +47,11 @@ public class Interpreter
 
 			try
 			{
+System.out.println( "antlr!!!!!!!!!!!!" );
 				parser.nt_Document();
 
 				// If the parser has exited normally, then we're done.
 				break;
-			}
-
-			// Non-fatal.
-			catch ( antlr.RecognitionException e )
-			{
-				alert( "RecognitionException: " + e.toString() );
-			}
-
-			// Non-fatal.
-			catch ( antlr.TokenStreamException e )
-			{
-				alert( "TokenStreamException: " + e.toString() );
-			}
-
-			// This happens, for instance, when the parser receives a value
-			// which is too large for the target data type.  Non-fatal.
-			catch ( NumberFormatException e )
-			{
-				alert( e.toString() );
 			}
 
 			// The parser has received a quit command.
@@ -73,6 +60,11 @@ public class Interpreter
 				s_logger.debug( "quit() called on Interpreter" );
 
 				break;
+			}
+
+			catch ( Exception e )
+			{
+				exceptionSink.put( e );
 			}
 
 /*
@@ -84,12 +76,8 @@ System.out.println( "interrupted!" );
 		}
 	}
 
-	void alert( final String s )
-	{
-		errorOutput.println( "\n" + s + "\n" );
-	}
-
 	void clear( final InputStream is )
+		throws RippleException
 	{
 		try
 		{
@@ -100,7 +88,7 @@ System.out.println( "interrupted!" );
 
 		catch ( java.io.IOException e )
 		{
-			alert( "Error: " + e );
+			throw new RippleException( e );
 		}
 	}
 }

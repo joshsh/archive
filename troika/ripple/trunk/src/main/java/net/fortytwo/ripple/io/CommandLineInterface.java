@@ -136,7 +136,31 @@ System.out.println( "Escape!" );
 		RecognizerInterface itf = new RecognizerInterface(
 			querySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
-		interpreter = new Interpreter( itf, writeIn, queryEngine.getErrorPrintStream() );
+		Sink<Exception> parserExceptionSink = new Sink<Exception>()
+		{
+			public void put( final Exception e )
+				throws RippleException
+			{
+				// This happens, for instance, when the parser receives a value
+				// which is too large for the target data type.  Non-fatal.
+				if ( e instanceof NumberFormatException )
+					alert( e.toString() );
+
+				// Non-fatal.
+				else if ( e instanceof antlr.RecognitionException )
+					alert( "RecognitionException: " + e.toString() );
+
+				// Non-fatal.
+				else if ( e instanceof antlr.TokenStreamException )
+					alert( "TokenStreamException: " + e.toString() );
+
+				else
+					throw new RippleException(
+						"non-recoverable exception thrown: " + e.toString() );
+			}
+		};
+
+		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
 	}
 
 	public void run()
