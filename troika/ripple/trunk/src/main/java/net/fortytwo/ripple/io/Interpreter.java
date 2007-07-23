@@ -51,6 +51,7 @@ System.out.println( "antlr!!!!!!!!!!!!" );
 				parser.nt_Document();
 
 				// If the parser has exited normally, then we're done.
+System.out.println( "exited normally" );
 				break;
 			}
 
@@ -66,6 +67,13 @@ System.out.println( "antlr!!!!!!!!!!!!" );
 			{
 				exceptionSink.put( e );
 			}
+
+/*
+catch ( Throwable t )
+{
+System.out.println( "caught some odd Throwable: " + t );
+}
+*/
 
 /*
 			catch ( InterruptedException e )

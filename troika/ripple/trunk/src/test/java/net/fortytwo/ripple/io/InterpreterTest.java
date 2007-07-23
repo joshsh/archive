@@ -105,12 +105,16 @@ System.out.println( "(" + expectSuccess + ") exceptions.size() = " + exceptions.
 							line = line.trim();
 
 						} while ( line.startsWith( "#" ) || line.equals( "" ) );
+System.out.println( "(" + expectSuccess + ") testing line " + getLineNumber() + ": " + line );
 
 						// If we're here, there is another line of input to match.
 						try
 						{
+System.out.println( "pushing line to readOut: " + line );
 							readOut.write( line.getBytes() );
 							readOut.write( '\n' );
+//readOut.flush();
+//							readOut.write( ' ' );
 						}
 
 						catch ( java.io.IOException e )
@@ -119,7 +123,6 @@ System.out.println( "(" + expectSuccess + ") exceptions.size() = " + exceptions.
 						}
 
 						setLineNumber( getLineNumber() + 1 );
-System.out.println( "(" + expectSuccess + ") testing line " + getLineNumber() + ": " + line );
 
 						break;
 					case ESCAPE:

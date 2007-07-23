@@ -14,7 +14,6 @@ public class ServicesExtension extends Extension
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException
 	{
-		ModelBridge bridge = mc.getModel().getBridge();
 		uf.addMapping(
 			ns, getClass().getResource( "services.ttl" ) + "#" );
 
