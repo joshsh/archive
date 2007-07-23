@@ -1,5 +1,0 @@
-1 >>  "foo
-
-TokenStreamRecognitionException: line 1:5: expecting '"', found '\n'
-
-

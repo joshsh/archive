@@ -1,9 +1,0 @@
-1 >>
---- 1 ---
---- 2 ---
-2 >>  @prefix : <http://example.org/foo#>;
-3 >>  :bar;
-':bar' is undefined in this context
-
-Error: null
-

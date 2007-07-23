@@ -1,8 +1,0 @@
-Tried to dereference:
-    <http://roller.blogdns.net:2020/all/link_entry_alt_html>
-
-HttpUriDereferencer died because it tried to grab this graph:
-    http://roller.blogdns.net:2020/all/
-instead of this graph
-    http://roller.blogdns.net:2020/all
-
