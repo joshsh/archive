@@ -27,49 +27,22 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
+import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
 
 import org.openrdf.repository.Repository;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
-//import org.openrdf.sail.inferencer.MemoryStoreRDFSInferencer;
-import org.openrdf.sail.memory.MemoryStore;
 
 public class Demo
 {
-	private final static Logger s_logger = Logger.getLogger( Demo.class );
+	final static Logger s_logger = Logger.getLogger( Demo.class );
 
-	public static Repository createTestRepository()
-		throws RippleException
-	{
-		try
-		{
-			Repository repository = Ripple.useInference()
-				? new SailRepository(
-					new MemoryStoreRDFSInferencer(
-						new MemoryStore() ) )
-				: new SailRepository(
-					new MemoryStore() );
-//                    new MemoryStore( new java.io.File( "net.fortytwo.ripple.tmp" ) ) ) );
-
-			repository.initialize();
-
-			return repository;
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-	}
-
-	private static LongOpt [] longOptions = {
+	static LongOpt [] longOptions = {
 		new LongOpt( "format", LongOpt.REQUIRED_ARGUMENT, null, 'f' ),
 		new LongOpt( "quiet", LongOpt.NO_ARGUMENT, null, 'q' ),
 		new LongOpt( "version", LongOpt.NO_ARGUMENT, null, 'v' ) };
 
-	private static void printUsage()
+	static void printUsage()
 	{
 		System.out.println( "usage:  ripple [-f FORMAT] [STORE]" );
 	}
@@ -86,7 +59,7 @@ public class Demo
 		Ripple.initialize();
 
 		// Create a Sesame repository.
-		Repository repository = createTestRepository();
+		Repository repository = RdfUtils.createMemoryStoreRepository();
 
 		// Attach a Ripple model to the repository.
 		Model model = new Model( repository, "Demo Model" );

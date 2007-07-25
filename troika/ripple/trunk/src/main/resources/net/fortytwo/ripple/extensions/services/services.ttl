@@ -21,7 +21,8 @@ services:pingTheSemanticWeb
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "pingTheSemanticWeb" ;
-	rdfs:comment "requests a list of URIs from the 'Ping the Semantic Web' service" .
+	rdfs:comment "requests a list of URIs from the 'Ping the Semantic Web' service" ;
+	.
 
 services:sindice
 	a rpl:Function ;
@@ -32,7 +33,8 @@ services:sindice
 			rpl:isTransparent true ]
 		);
 	rdfs:label "sindice" ;
-	rdfs:comment "uri  =>  doc  -- where doc represents zero or more RDF documents referencing the given URI" .
+	rdfs:comment "uri  =>  doc  -- where doc represents zero or more RDF documents referencing the given URI" ;
+	.
 
 services:swoogleIt
 	a rpl:Function ;
@@ -52,4 +54,5 @@ services:swoogleIt
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "swoogleIt" ;
-	rdfs:comment "grabs search results from the Swoogle web service" .
+	rdfs:comment "grabs search results from the Swoogle web service" ;
+	.

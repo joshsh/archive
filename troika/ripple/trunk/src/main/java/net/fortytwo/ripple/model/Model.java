@@ -48,7 +48,7 @@ public Dereferencer getDereferencer()
 	return dereferencer;
 }
 
-	private final static Logger s_logger = Logger.getLogger( Model.class );
+	final static Logger s_logger = Logger.getLogger( Model.class );
 
 	String name;
 	Repository repository;

@@ -16,7 +16,8 @@ etc:back
 			rpl:isTransparent true ]
 		) ;
 	rpl:label "back" ;
-	rdfs:comment "o p => s" .
+	rdfs:comment "o p => s" ;
+	.
 
 etc:get
 	a rpl:Function ;
@@ -29,7 +30,8 @@ etc:get
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "get" ;
-	rdfs:comment "issues a GET request and produces the received data as a string" .
+	rdfs:comment "issues a GET request and produces the received data as a string" ;
+	.
 
 etc:pred
 	a rpl:Function ;
@@ -41,7 +43,8 @@ etc:pred
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "pred" ;
-	rdfs:comment "consumes a Property and returns a 'predicate operator'" .
+	rdfs:comment "consumes a Property and returns a 'predicate operator'" ;
+	.
 
 etc:prim
 	a rpl:Function ;
@@ -53,7 +56,8 @@ etc:prim
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "prim" ;
-	rdfs:comment "applies a Function" .
+	rdfs:comment "applies a Function" ;
+	.
 
 etc:rand
 	a rpl:Function ;
@@ -66,7 +70,8 @@ etc:rand
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "rand" ;
-	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" .
+	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" ;
+	.
 
 etc:time
 	a rpl:Function ;
@@ -74,7 +79,8 @@ etc:time
 	rpl:parameters rdf:nil ;
 	rpl:returnType xsd:int ;
 	rdfs:label "time" ;
-	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" .
+	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" ;
+	.
 
 xsd:type
 	a rpl:Function ;
@@ -85,7 +91,8 @@ xsd:type
 			rpl:isTransparent true ]
 		);
 	rdfs:label "type" ;
-	rdfs:comment "l  =>  data type of literal l" .
+	rdfs:comment "l  =>  data type of literal l" ;
+	.
 
 <http://www.w3.org/XML/1998/namespace#lang>
 	a rpl:Function ;
@@ -96,4 +103,5 @@ xsd:type
 			rpl:isTransparent true ]
 		);
 	rdfs:label "lang" ;
-	rdfs:comment "l  =>  language tag of literal l" .
+	rdfs:comment "l  =>  language tag of literal l" ;
+	.

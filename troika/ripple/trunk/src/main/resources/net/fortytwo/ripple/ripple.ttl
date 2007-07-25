@@ -11,26 +11,30 @@ rpl:
 	dc:title "Ripple vocabulary" ;
 	vann:preferredNamespacePrefix "rpl";
 	dc:description "RDFS vocabulary for Ripple expressions" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:Function
 	a rdfs:Class ;
 	rdfs:label "Function" ;
 	rdfs:comment "an abstraction which consumes a series of rdf:Lists as input and produces a series of rdf:Lists as output" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:Parameter
 	a rdfs:Class ;
 	rdfs:label "Parameter" ;
 	rdfs:comment "a formal argument to a Function" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:ParameterList
 	a rdfs:Class ;
 	rdfs:subClassOf rdf:List ;
 	rdfs:label "ParameterList" ;
 	rdfs:comment "a list of Parameters" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:arity
 	a rdfs:Property ;
@@ -38,13 +42,15 @@ rpl:arity
 	rdfs:range xsd:integer ;
 	rdfs:label "arity" ;
 	rdfs:comment "the number of Parameters consumed by a Function" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:op
 	a rdf:Resource ;
 	rdfs:label "op" ;
 	rdfs:comment "a single operator which pops a program off of the stack and executes it" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:parameters
 	a rdf:Property ;
@@ -52,7 +58,8 @@ rpl:parameters
 	rdfs:range rpl:ParameterList ;
 	rdfs:label "parameters" ;
 	rdfs:comment "a list of the Function's Parameters" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:isTransparent
 	a rdf:Property ;
@@ -60,7 +67,8 @@ rpl:isTransparent
 	rdfs:range xsd:boolean ;
 	rdfs:label "isTransparent" ;
 	rdfs:comment "property of a Function with no side-effects w.r.t. this Parameter" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:parameterType
 	a rdf:Property ;
@@ -68,7 +76,8 @@ rpl:parameterType
 	rdfs:range rdfs:DataType ;
 	rdfs:comment "the data type of a Parameter" ;
 	rdfs:label "parameterType" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.
 
 rpl:returnType
 	a rdf:Property ;
@@ -76,4 +85,5 @@ rpl:returnType
 	rdfs:range rdfs:DataType ;
 	rdfs:label "returnType" ;
 	rdfs:comment "the data type of the values produced by a Function" ;
-	rdfs:isDefinedBy rpl: .
+	rdfs:isDefinedBy rpl: ;
+	.

@@ -5,17 +5,17 @@ import junit.framework.AssertionFailedError;
 
 import org.openrdf.repository.Repository;
 
-import net.fortytwo.ripple.Demo;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.util.RdfUtils;
 
 public abstract class RippleTestCase extends TestCase
 {
 	protected static final boolean DEBUG = true;
 
 	private int totalRunningTests;
-	private Throwable error = null;
+	private Exception error = null;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +34,7 @@ public abstract class RippleTestCase extends TestCase
 				test();
 			}
 
-			catch ( Throwable t )
+			catch ( Exception t )
 			{
 				error = t;
 			}
@@ -81,7 +81,7 @@ public abstract class RippleTestCase extends TestCase
 	}
 
 	protected synchronized void finish()
-		throws Throwable
+		throws Exception
 	{
 		try
 		{
@@ -104,10 +104,10 @@ public abstract class RippleTestCase extends TestCase
 	}
 
 	public abstract void runTests()
-		throws Throwable;
+		throws Exception;
 
 	public void testAll()
-		throws Throwable
+		throws Exception
 	{
 		start();
 
@@ -126,7 +126,7 @@ public abstract class RippleTestCase extends TestCase
 		if ( null == model )
 		{
 			// Warning: we never call shutDown() on this repository.
-			Repository repository = Demo.createTestRepository();
+			Repository repository = RdfUtils.createMemoryStoreRepository();
 
 			model = new Model( repository, "Unit Test Model" );
 		}

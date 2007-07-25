@@ -14,7 +14,7 @@ public class ModelTest extends RippleTestCase
 	}
 
 	public void runTests()
-		throws Throwable
+		throws Exception
 	{
 		testAsynchronous( new ModelConstructorTest() );
 	}

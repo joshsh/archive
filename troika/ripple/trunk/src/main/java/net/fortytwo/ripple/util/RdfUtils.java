@@ -4,15 +4,44 @@ import java.io.InputStream;
 
 import java.net.URLConnection;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
+import org.openrdf.sail.memory.MemoryStore;
 
 public class RdfUtils
 {
+	public static Repository createMemoryStoreRepository()
+		throws RippleException
+	{
+		try
+		{
+			Repository repository = Ripple.useInference()
+				? new SailRepository(
+					new MemoryStoreRDFSInferencer(
+						new MemoryStore() ) )
+				: new SailRepository(
+					new MemoryStore() );
+//                    new MemoryStore( new java.io.File( "net.fortytwo.ripple.tmp" ) ) ) );
+
+			repository.initialize();
+
+			return repository;
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+	}
+
 	public static void read( final URLConnection urlConn,
 					final RdfSourceAdapter adapter,
 					final String baseUri )

@@ -18,7 +18,8 @@ string:endsWith
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "endsWith" ;
-	rdfs:comment "s suffix  =>  b -- where b is true if the given string ends with the given suffix, otherwise false" .
+	rdfs:comment "s suffix  =>  b -- where b is true if the given string ends with the given suffix, otherwise false" ;
+	.
 
 string:length
 	a rpl:Function ;
@@ -31,7 +32,8 @@ string:length
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "length" ;
-	rdfs:comment "s  =>  l -- where l is the length of string s" .
+	rdfs:comment "s  =>  l -- where l is the length of string s" ;
+	.
 
 string:matches
 	a rpl:Function ;
@@ -47,7 +49,8 @@ string:matches
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "matches" ;
-	rdfs:comment "s regex  =>  b -- where b is true if the given string matches the given regular expression, otherwise false" .
+	rdfs:comment "s regex  =>  b -- where b is true if the given string matches the given regular expression, otherwise false" ;
+	.
 
 string:replaceAll
 	a rpl:Function ;
@@ -68,7 +71,8 @@ string:replaceAll
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "replaceAll" ;
-	rdfs:comment "s regex replacement  =>  s2 -- in which each occurrence of the given regular expression in s has been substituted with the given replacement" .
+	rdfs:comment "s regex replacement  =>  s2 -- in which each occurrence of the given regular expression in s has been substituted with the given replacement" ;
+	.
 
 string:sha1
 	a rpl:Function ;
@@ -81,7 +85,8 @@ string:sha1
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "sha1" ;
-	rdfs:comment "finds the sha1 hash of a string" .
+	rdfs:comment "finds the sha1 hash of a string" ;
+	.
 
 string:split
 	a rpl:Function ;
@@ -98,7 +103,8 @@ string:split
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "split" ;
-	rdfs:comment "s regex  =>  (s1, s2, s3, ...) -- where s has been divided into substrings by occurrences of regular expression regex" .
+	rdfs:comment "s regex  =>  (s1, s2, s3, ...) -- where s has been divided into substrings by occurrences of regular expression regex" ;
+	.
 
 string:startsWith
 	a rpl:Function ;
@@ -114,7 +120,8 @@ string:startsWith
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "startsWith" ;
-	rdfs:comment "s prefix  =>  b -- where b is true if the given string begins with the given prefix, otherwise false" .
+	rdfs:comment "s prefix  =>  b -- where b is true if the given string begins with the given prefix, otherwise false" ;
+	.
 
 string:concat
 	a rpl:Function ;
@@ -131,7 +138,8 @@ string:concat
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "concat" ;
-	rdfs:comment "s1 s2  =>  s3  -- where s3 is the concatenation of s1 and s2" .
+	rdfs:comment "s1 s2  =>  s3  -- where s3 is the concatenation of s1 and s2" ;
+	.
 
 string:substring
 	a rpl:Function ;
@@ -152,7 +160,8 @@ string:substring
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "substring" ;
-	rdfs:comment "s beginIndex endIndex  =>  s2 -- where s2 is the substring of s which begins at the specified beginIndex and extends to the character at index endIndex - 1" .
+	rdfs:comment "s beginIndex endIndex  =>  s2 -- where s2 is the substring of s which begins at the specified beginIndex and extends to the character at index endIndex - 1" ;
+	.
 
 string:toLowerCase
 	a rpl:Function ;
@@ -165,7 +174,8 @@ string:toLowerCase
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "toLowerCase" ;
-	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to lower case" .
+	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to lower case" ;
+	.
 
 string:toUpperCase
 	a rpl:Function ;
@@ -178,7 +188,8 @@ string:toUpperCase
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "toUpperCase" ;
-	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to upper case" .
+	rdfs:comment "s  =>  s2 -- where s2 is equal to s with all characters converted to upper case" ;
+	.
 
 string:trim
 	a rpl:Function ;
@@ -191,7 +202,8 @@ string:trim
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "trim" ;
-	rdfs:comment "s  =>  s2 -- where s2 is equal to s with leading and trailing white space omitted" .
+	rdfs:comment "s  =>  s2 -- where s2 is equal to s with leading and trailing white space omitted" ;
+	.
 
 string:urlEncoding
 	a rpl:Function ;
@@ -204,4 +216,5 @@ string:urlEncoding
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "urlEncoding" ;
-	rdfs:comment "finds the URL encoding of a string" .
+	rdfs:comment "finds the URL encoding of a string" ;
+	.

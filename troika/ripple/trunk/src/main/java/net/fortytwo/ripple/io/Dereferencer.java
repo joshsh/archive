@@ -19,8 +19,8 @@ public void dereference( URI uri, ModelConnection mc )
 	public void forget( RdfValue rv, ModelConnection mc )
 		throws RippleException;
 
-	public void addSuccessMemo( final String memo );
-	public void addFailureMemo( final String memo );
+	public void addSuccessMemo( String memo );
+	public void addFailureMemo( String memo );
 
 	public Collection<String> getSuccessMemos();
 	public Collection<String> getFailureMemos();

@@ -22,7 +22,8 @@ graph:assert
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "assert" ;
-	rdfs:comment "s p o  ->  s  -- has the side-effect of asserting the statement (s, p, o)" .
+	rdfs:comment "s p o  ->  s  -- has the side-effect of asserting the statement (s, p, o)" ;
+	.
 
 #graph:comments ...
 
@@ -39,7 +40,8 @@ graph:compare
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "compare" ;
-	rdfs:comment "x y  ->  i  -- where i is -1 if x < y, 0 if x = y, and 1 if x > y" .
+	rdfs:comment "x y  ->  i  -- where i is -1 if x < y, 0 if x = y, and 1 if x > y" ;
+	.
 
 graph:contains
 	a rpl:Function ;
@@ -53,7 +55,8 @@ graph:contains
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "contains" ;
-	rdfs:comment "c  ->  x  -- for each member x of Container c" .
+	rdfs:comment "c  ->  x  -- for each member x of Container c" ;
+	.
 
 graph:deny
 	a rpl:Function ;
@@ -73,7 +76,8 @@ graph:deny
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "deny" ;
-	rdfs:comment "s p o  ->  s  -- has the side-effect of revoking the statement (s, p, o)" .
+	rdfs:comment "s p o  ->  s  -- has the side-effect of revoking the statement (s, p, o)" ;
+	.
 
 graph:equal
 	a rpl:Function ;
@@ -88,7 +92,8 @@ graph:equal
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "equal" ;
-	rdfs:comment "x y  ->  b  -- where b is true if x and y are equal, otherwise false" .
+	rdfs:comment "x y  ->  b  -- where b is true if x and y are equal, otherwise false" ;
+	.
 
 graph:forget
 	a rpl:Function ;
@@ -99,7 +104,8 @@ graph:forget
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "forget" ;
-	rdfs:comment "x  ->  x  -- has the side-effect of revoking all statements about x" .
+	rdfs:comment "x  ->  x  -- has the side-effect of revoking all statements about x" ;
+	.
 
 graph:namespaces
 	a rpl:Function ;
@@ -112,14 +118,16 @@ graph:namespaces
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "namespaces" ;
-	rdfs:comment "doc  ->  (prefix name)  -- for each namespace defined in document doc" .
+	rdfs:comment "doc  ->  (prefix name)  -- for each namespace defined in document doc" ;
+	.
 
 graph:new
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
 	rdfs:label "new" ;
-	rdfs:comment "->  n  -- where n is a new blank node" .
+	rdfs:comment "->  n  -- where n is a new blank node" ;
+	.
 
 graph:toDouble
 	a rpl:Function ;
@@ -131,7 +139,8 @@ graph:toDouble
 		) ;
 	rpl:returnType xsd:double ;
 	rdfs:label "toDouble" ;
-	rdfs:comment "x  ->  x as double literal" .
+	rdfs:comment "x  ->  x as double literal" ;
+	.
 
 graph:toInteger
 	a rpl:Function ;
@@ -143,7 +152,8 @@ graph:toInteger
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "toInteger" ;
-	rdfs:comment "x  ->  x as integer literal" .
+	rdfs:comment "x  ->  x as integer literal" ;
+	.
 
 graph:toString
 	a rpl:Function ;
@@ -155,7 +165,8 @@ graph:toString
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "toString" ;
-	rdfs:comment "x  ->  string representation of x" .
+	rdfs:comment "x  ->  string representation of x" ;
+	.
 
 graph:toUri
 	a rpl:Function ;
@@ -167,7 +178,8 @@ graph:toUri
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "toUri" ;
-	rdfs:comment "s  ->  uri -- where uri is the URI whose string representation is s" .
+	rdfs:comment "s  ->  uri -- where uri is the URI whose string representation is s" ;
+	.
 
 graph:triples
 	a rpl:Function ;
@@ -180,4 +192,5 @@ graph:triples
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "triples" ;
-	rdfs:comment "doc  ->  (s p o)  -- for each triple (s p o) in document doc" .
+	rdfs:comment "doc  ->  (s p o)  -- for each triple (s p o) in document doc" ;
+	.

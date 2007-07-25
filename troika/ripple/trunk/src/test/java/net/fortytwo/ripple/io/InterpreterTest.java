@@ -178,7 +178,7 @@ System.out.println( "########## got an exception: " + e );
 	}
 
 	public void runTests()
-		throws Throwable
+		throws Exception
 	{
 		testSynchronous( new SuccessCasesTest() );
 		testSynchronous( new FailureCasesTest() );

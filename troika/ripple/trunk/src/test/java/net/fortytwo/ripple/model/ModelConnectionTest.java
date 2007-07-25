@@ -175,7 +175,7 @@ public class ModelConnectionTest extends RippleTestCase
 	}
 
 	public void runTests()
-		throws Throwable
+		throws Exception
 	{
 // Note: Sesame repositories have not responded well to asynchronous testing, so ModelConnection will have to add its own synchronization code (synchronize on the Repository).
 		testSynchronous( new CreateUriTest() );

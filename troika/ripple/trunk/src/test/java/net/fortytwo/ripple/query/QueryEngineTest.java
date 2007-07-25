@@ -9,7 +9,7 @@ public class QueryEngineTest extends RippleTestCase
 	QueryEngine queryEngine;
 
 	public void runTests()
-		throws Throwable
+		throws Exception
 	{
 /*
 		InputStream is = ...

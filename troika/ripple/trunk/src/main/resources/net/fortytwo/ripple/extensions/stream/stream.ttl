@@ -14,7 +14,8 @@ stream:each
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "each" ;
-	rdfs:comment "l => each item in l" .
+	rdfs:comment "l => each item in l" ;
+	.
 
 stream:limit
 	a rpl:Function ;
@@ -26,14 +27,16 @@ stream:limit
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "limit" ;
-	rdfs:comment "transmits at most lim stacks" .
+	rdfs:comment "transmits at most lim stacks" ;
+	.
 
 stream:scrap
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
 	rdfs:label "scrap" ;
-	rdfs:comment "transmits no stacks" .
+	rdfs:comment "transmits no stacks" ;
+	.
 
 stream:union
 	a rpl:Function ;
@@ -47,11 +50,13 @@ stream:union
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "union" ;
-	rdfs:comment "transmits both x pushed to the remainder of the stack, as well as y pushed to the remainder of the stack" .
+	rdfs:comment "transmits both x pushed to the remainder of the stack, as well as y pushed to the remainder of the stack" ;
+	.
 
 stream:unique
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
 	rdfs:label "unique" ;
-	rdfs:comment "transmits stacks at most once, as determined by list comparison" .
+	rdfs:comment "transmits stacks at most once, as determined by list comparison" ;
+	.

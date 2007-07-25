@@ -1,3 +1,22 @@
+
+@prefix vocab: <http://demo.soph-ware.com/2007/07/coi/vocab#>.
+
+@define vocabTerms:
+    vocab:Attribute
+    vocab:AttributeCategory
+    vocab:Vocabulary
+    vocab:action
+    vocab:category
+    vocab:containsAttribute
+    vocab:hasValidValue
+    vocab:resource
+    vocab:subject
+    .
+
+
+
+
+
 <http://192.168.1.20:2020/all>.
 
 @define members:  /rdfs:seeAlso/dup/rdf:type/pop.

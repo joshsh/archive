@@ -103,7 +103,7 @@ s_logger.debug( "### stop" );
 	}
 
 	public void runTests()
-		throws Throwable
+		throws Exception
 	{
 		// Note: bug fixed in Sesame2-beta3:
 		//    http://www.openrdf.org/issues/browse/SES-358?watch=true

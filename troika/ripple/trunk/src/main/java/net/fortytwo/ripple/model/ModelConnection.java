@@ -38,12 +38,12 @@ import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.GraphQueryResult;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryResult;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
-import org.openrdf.repository.RepositoryResult;
 
 public class ModelConnection
 {
@@ -57,6 +57,11 @@ public class ModelConnection
 	private String name = null;
 
 private RdfSourceAdapter adapter = null;
+
+public RdfSourceAdapter getSourceAdapter()
+{
+	return adapter;
+}
 
 public void setSourceAdapter( RdfSourceAdapter adapter )
 {
