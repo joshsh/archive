@@ -37,27 +37,12 @@ public class Demo
 {
 	final static Logger s_logger = Logger.getLogger( Demo.class );
 
-	static LongOpt [] longOptions = {
-		new LongOpt( "format", LongOpt.REQUIRED_ARGUMENT, null, 'f' ),
-		new LongOpt( "quiet", LongOpt.NO_ARGUMENT, null, 'q' ),
-		new LongOpt( "version", LongOpt.NO_ARGUMENT, null, 'v' ) };
-
-	static void printUsage()
-	{
-		System.out.println( "usage:  ripple [-f FORMAT] [STORE]" );
-	}
-
-	public static void demo( final String [] args,
+	public static void demo( final File store,
 							final InputStream in,
 							final PrintStream out,
 							final PrintStream err )
 		throws RippleException
 	{
-		File store = ( args.length > 0 ) ? new File( args[0] ) : null;
-
-		// Load Ripple configuration.
-		Ripple.initialize();
-
 		// Create a Sesame repository.
 		Repository repository = RdfUtils.createMemoryStoreRepository();
 
@@ -151,48 +136,125 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 		}
 	}
 
+	static void printUsage()
+	{
+		System.out.println( "Usage:  ripple [options] [store]" );
+		System.out.println( "Options:\n"
+			+ "  -f <format>  Use <format> for the RDF store\n"
+			+ "  -h           Print this help and exit\n"
+			+ "  -q           Suppress normal output\n"
+			+ "  -v           Print version information and exit" );
+		System.out.println( "For more information, please see:\n"
+			+ "  <URL:http://ripple.fortytwo.net/>." );
+	}
+
+	static void printVersion()
+	{
+		System.out.println( Ripple.getName() + " " + Ripple.getVersion() );
+
+		// Would be nice: list of extensions
+	}
+
 	public static void main( final String [] args )
 	{
-/*
-Getopt g = new Getopt( Ripple.getName(), args, "ab:c::d" );
-//
-int c;
-String arg;
-while ((c = g.getopt()) != -1)
-{
-	switch(c)
-	{
-		case 'a':
-		case 'd':
-			System.out.print("You picked " + (char)c + "\n");
-			break;
-			//
-		case 'b':
-		case 'c':
-			arg = g.getOptarg();
-			System.out.print("You picked " + (char)c + 
-							" with an argument of " +
-							((arg != null) ? arg : "null") + "\n");
-			break;
-			//
-		case '?':
-			break; // getopt() already printed an error
-			//
-		default:
-			System.out.print("getopt() returned " + c + "\n");
-	}
-}
-System.exit( 0 );
-*/
-
 		try
 		{
-			demo( args, System.in, System.out, System.err );
+			// Load Ripple configuration.
+			Ripple.initialize();
 		}
 
 		catch ( RippleException e )
 		{
 			System.out.println( e.toString() );
+			System.exit( 1 );
+		}
+
+		// Default values.
+		boolean quiet = false, showVersion = false, showHelp = false;
+		String format = "rdfxml";
+		File store = null;
+
+		// Long options are available but are not advertised.
+		LongOpt [] longOptions = {
+			new LongOpt( "format", LongOpt.REQUIRED_ARGUMENT, null, 'f' ),
+			new LongOpt( "help", LongOpt.NO_ARGUMENT, null, 'h' ),
+			new LongOpt( "quiet", LongOpt.NO_ARGUMENT, null, 'q' ),
+			new LongOpt( "version", LongOpt.NO_ARGUMENT, null, 'v' ) };
+
+		Getopt g = new Getopt( Ripple.getName(), args, "f:hqv", longOptions );
+		int c;
+		while ( ( c = g.getopt() ) != -1 )
+		{
+			switch( c )
+			{
+				case 'q':
+				case 2:
+					quiet = true;
+					break;
+				case 'h':
+				case 1:
+					showHelp = true;
+					break;
+				case 'v':
+				case 3:
+					showVersion = true;
+					break;
+				case 'f':
+				case 0:
+// FIXME: format is ignored
+					format = g.getOptarg();
+					break;
+				case '?':
+					 // Note: getopt() already printed an error
+					printUsage();
+					System.exit( 1 );
+					break;
+				default:
+					System.out.print("getopt() returned " + c + "\n");
+			}
+		}
+
+		int i = g.getOptind();
+		if ( i < args.length )
+		{
+			// Too many non-option arguments.
+			if ( args.length - i > 1 )
+			{
+				printUsage();
+				System.exit( 1 );
+			}
+
+			store = new File( args[i] );
+		}
+
+		if ( showHelp )
+		{
+			printUsage();
+			System.exit( 0 );
+		}
+
+		if ( showVersion )
+		{
+			printVersion();
+			System.exit( 0 );
+		}
+
+		Ripple.setQuiet( quiet );
+
+// System.out.println( "quiet = " + quiet );
+// System.out.println( "showVersion = " + showVersion );
+// System.out.println( "format = " + format );
+// System.out.println( "store = " + store );
+
+		try
+		{
+			demo( store, System.in, System.out, System.err );
+		}
+
+		catch ( RippleException e )
+		{
+			System.out.println( e.toString() );
+			System.exit( 1 );
 		}
 	}
 }

@@ -14,8 +14,19 @@
     .
 
 
+### vocabulary data source #############
+
+@prefix vocab: <http://demo.soph-ware.com/2007/07/coi/vocab#>.
+
+<http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#usaf>.
+<http://192.168.1.20:8080/vocab-1.0/resource?id=2&version=1#med>.
+
+<http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#usaf>
+    /vocab:containsAttribute
+    /rdfs:label.
 
 
+### general data source ################
 
 <http://192.168.1.20:2020/all>.
 
@@ -29,82 +40,97 @@
 
 
 
+# Gateway resources.
+<http://192.168.1.20:2020/all/Transforms_TransformSets_Join>
+<http://192.168.1.20:2020/all/Languages>
+<http://192.168.1.20:2020/all/Policies_PolicySets_Join>
+<http://192.168.1.20:2020/all/TransformSetPermissions>
+<http://192.168.1.20:2020/all/Users_UserGroups_Join>
+<http://192.168.1.20:2020/all/ActionPermissions>
+<http://192.168.1.20:2020/all/UserGroups>
+<http://192.168.1.20:2020/all/PolicySets>
+<http://192.168.1.20:2020/all/ResourceStatusEnum>
+<http://192.168.1.20:2020/all/PolicySetPermissions>
+<http://192.168.1.20:2020/all/TransformSets>
+<http://192.168.1.20:2020/all/OutcomeEnum>
+<http://192.168.1.20:2020/all/Actions>
+<http://192.168.1.20:2020/all/OperatingSystems>
+<http://192.168.1.20:2020/all/UserGroupPermissions>
+<http://192.168.1.20:2020/all/SecurityLevelEnum>
+<http://192.168.1.20:2020/all/ResourceTypeEnum>
+
+# Example instances.
+<http://192.168.1.20:2020/resource/Transforms_TransformSets_Join/1/77/1>
+<http://192.168.1.20:2020/resource/Languages/2>
+<http://192.168.1.20:2020/resource/Policies_PolicySets_Join/1/160/1>
+<http://192.168.1.20:2020/resource/TransformSetPermissions/3/1>
+<http://192.168.1.20:2020/resource/Users_UserGroups_Join/1/4>
+<http://192.168.1.20:2020/resource/ActionPermissions/62/4>
+<http://192.168.1.20:2020/resource/UserGroups/4>
+<http://192.168.1.20:2020/resource/PolicySets/140>
+<http://192.168.1.20:2020/resource/ResourceStatusEnum/2>
+<http://192.168.1.20:2020/resource/PolicySetPermissions/3/2>
+<http://192.168.1.20:2020/resource/TransformSets/1>
+<http://192.168.1.20:2020/resource/OutcomeEnum/1>
+<http://192.168.1.20:2020/resource/Actions/20>
+<http://192.168.1.20:2020/resource/OperatingSystems/2>
+# (no UserGroupPermissions instances available)
+<http://192.168.1.20:2020/resource/SecurityLevelEnum/1>
+<http://192.168.1.20:2020/resource/ResourceTypeEnum/2>
+
+<http://192.168.1.20:2020/resource/Users/1>
+<http://192.168.1.20:2020/resource/Vocabularies/1/1>
+<http://192.168.1.20:2020/resource/LogEvents/1>
+<http://192.168.1.20:2020/resource/Transforms/1/1>.
 
 
 
-
-
-
-
-      <http://192.168.1.20:2020/all/Transforms_TransformSets_Join>
+# Not working:
       <http://192.168.1.20:2020/all/Vocabularies>
-      <http://192.168.1.20:2020/all/Languages>
-      <http://192.168.1.20:2020/all/Policies_PolicySets_Join>
-      <http://192.168.1.20:2020/all/TransformSetPermissions>
       <http://192.168.1.20:2020/all/LogEvents>
       <http://192.168.1.20:2020/all/Transforms>
-      <http://192.168.1.20:2020/all/Users_UserGroups_Join>
-      <http://192.168.1.20:2020/all/ActionPermissions>
-      <http://192.168.1.20:2020/all/UserGroups>
-      <http://192.168.1.20:2020/all/PolicySets>
-      <http://192.168.1.20:2020/all/ResourceStatusEnum>
-      <http://192.168.1.20:2020/all/PolicySetPermissions>
-      <http://192.168.1.20:2020/all/TransformSets>
-      <http://192.168.1.20:2020/all/OutcomeEnum>
-      <http://192.168.1.20:2020/all/Actions>
-      <http://192.168.1.20:2020/all/OperatingSystems>
-      <http://192.168.1.20:2020/all/UserGroupPermissions>
       <http://192.168.1.20:2020/all/Policies>
       <http://192.168.1.20:2020/all/Users>
-      <http://192.168.1.20:2020/all/SecurityLevelEnum>
-      <http://192.168.1.20:2020/all/ResourceTypeEnum>
+
+      <http://192.168.1.20:2020/resource/Policies/160/1>
+      <http://192.168.1.20:2020/resource/Policies/1/1>
 
 
 
 
 
 
+# Gateway resource for policy sets.
+<http://192.168.1.20:2020/resource/PolicySets>.
+
+# An individual policy set.
+<http://192.168.1.20:2020/resource/PolicySets/140>.
+
+
+# Gateway resource for vocabularies.
+# ba: doesn't list them
+<http://192.168.1.20:2020/all/Vocabularies>.
+# A specific vocabulary.
+<http://192.168.1.20:2020/resource/Vocabularies/1/1>.
 
 
 
-
-
-
-
-@prefix demo:  <http://fortytwo.net/2007/03/ripple/demo#>.
 
 <http://192.168.1.20:2020/all/PolicySets>/rdfs:seeAlso.
 
 
-
+@prefix demo:  <http://fortytwo.net/2007/03/ripple/demo#>.
 @define withType:  (rdf:type/swap/dip/equal) /demo:restrict.
 
+<http://192.168.1.20:2020/all/PolicySets>
+    /rdfs:seeAlso
+    vocab:PolicySets/:withType.
 
-
-
-<http://192.168.1.20:2020/all/PolicySets>/rdfs:seeAlso vocab:PolicySets/:withType.
-
-<http://192.168.1.20:2020/all/PolicySets>/rdfs:seeAlso vocab:PolicySets rdf:type/swap/dip/equal.
-
-
-
-
-
-
-
-V  tab completion for unqualified local names in @undefine:
-       @undefine withType.
-   OR extend @undefine to arbitrary qnames:
-       @undefine :withType.
-   -->
-       @define :withType:  ...
-
-
+<http://192.168.1.20:2020/all/PolicySets>
+    /rdfs:seeAlso
+    vocab:PolicySets rdf:type/swap/dip/equal.
 
 
 
 @define withEdge:  (/swap/dip/equal)/cons /demo:restrict.
-
-
-
 

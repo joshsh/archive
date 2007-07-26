@@ -58,7 +58,7 @@ public class ExtensionLoader extends ClassLoader
 		}
 	}
 
-	private Collection<String> getNames()
+	Collection<String> getNames()
 		throws RippleException
 	{
 		HashSet<String> names = new HashSet<String>();

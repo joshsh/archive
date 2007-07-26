@@ -22,25 +22,40 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private static boolean initialized = false;
+	static boolean initialized = false;
 
-	private static ExpressionOrder expressionOrder;
-	private static ExpressionAssociativity expressionAssociativity;
+	static ExpressionOrder expressionOrder;
+	static ExpressionAssociativity expressionAssociativity;
 
-	private static EvaluationOrder s_evaluationOrder;
-	private static EvaluationStyle s_evaluationStyle;
+	static EvaluationOrder s_evaluationOrder;
+	static EvaluationStyle s_evaluationStyle;
 
-	private static String s_jLineDebugOutput;
+	static String s_jLineDebugOutput;
 
-	private static boolean
+	static boolean
 		s_useInference,
 		s_enforceImplicitProvenance;
 
-	private static boolean s_dereferenceByNamespace;
-	private static long s_uriDereferencingTimeout;
-	private static String s_defaultNamespace;
+	static boolean s_dereferenceByNamespace;
+	static long s_uriDereferencingTimeout;
+	static String s_defaultNamespace;
 
-	private static boolean s_listPadding;
+	static boolean s_listPadding;
+
+	////////////////////////////////////////////////////////////////////////////
+
+// FIXME: quiet is never used
+	static boolean quiet = false;
+
+	public static boolean getQuiet()
+	{
+		return quiet;
+	}
+
+	public static void setQuiet( final boolean q )
+	{
+		quiet = q;
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -144,7 +159,7 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private static String getStringProperty( final Properties props,
+	static String getStringProperty( final Properties props,
 											final String name,
 											String defaultValue )
 	{
@@ -155,7 +170,7 @@ public class Ripple
 			: s;
 	}
 
-	private static boolean getBooleanProperty( final Properties props,
+	static boolean getBooleanProperty( final Properties props,
 											final String name,
 											boolean defaultValue )
 	{
@@ -166,7 +181,7 @@ public class Ripple
 			: s.equals( "true" );
 	}
 
-	private static int getIntProperty( final Properties props,
+	static int getIntProperty( final Properties props,
 									final String name,
 									final int defaultValue )
 		throws RippleException
@@ -190,7 +205,7 @@ public class Ripple
 		}
 	}
 
-	private static long getLongProperty( final Properties props,
+	static long getLongProperty( final Properties props,
 									final String name,
 									final long defaultValue )
 		throws RippleException
@@ -214,7 +229,7 @@ public class Ripple
 		}
 	}
 
-	private static EvaluationOrder getEvaluationOrderProperty(
+	static EvaluationOrder getEvaluationOrderProperty(
 		final Properties props,
 		final String name,
 		final EvaluationOrder defaultValue ) throws RippleException
@@ -228,7 +243,7 @@ public class Ripple
 			return EvaluationOrder.lookup( s );
 	}
 
-	private static EvaluationStyle getEvaluationStyleProperty(
+	static EvaluationStyle getEvaluationStyleProperty(
 		final Properties props,
 		final String name,
 		final EvaluationStyle defaultValue ) throws RippleException
