@@ -38,6 +38,7 @@ public class Demo
 	final static Logger s_logger = Logger.getLogger( Demo.class );
 
 	public static void demo( final File store,
+							final String storeFormat,  // not used
 							final InputStream in,
 							final PrintStream out,
 							final PrintStream err )
@@ -248,7 +249,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 
 		try
 		{
-			demo( store, System.in, System.out, System.err );
+			demo( store, format, System.in, System.out, System.err );
 		}
 
 		catch ( RippleException e )

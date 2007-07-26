@@ -1,7 +1,8 @@
+@prefix graph:  <http://fortytwo.net/2007/07/ripple/graph#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#>.
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:    <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix graph:  <http://fortytwo.net/2007/05/ripple/graph#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 
 graph:assert
@@ -23,6 +24,7 @@ graph:assert
 		) ;
 	rdfs:label "assert" ;
 	rdfs:comment "s p o  ->  s  -- has the side-effect of asserting the statement (s, p, o)" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#assert> ;
 	.
 
 #graph:comments ...
@@ -41,6 +43,7 @@ graph:compare
 	rpl:returnType xsd:integer ;
 	rdfs:label "compare" ;
 	rdfs:comment "x y  ->  i  -- where i is -1 if x < y, 0 if x = y, and 1 if x > y" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#compare> ;
 	.
 
 graph:contains
@@ -56,6 +59,7 @@ graph:contains
 		) ;
 	rdfs:label "contains" ;
 	rdfs:comment "c  ->  x  -- for each member x of Container c" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#contains> ;
 	.
 
 graph:deny
@@ -77,6 +81,7 @@ graph:deny
 		) ;
 	rdfs:label "deny" ;
 	rdfs:comment "s p o  ->  s  -- has the side-effect of revoking the statement (s, p, o)" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#deny> ;
 	.
 
 graph:equal
@@ -93,6 +98,7 @@ graph:equal
 	rpl:returnType rpl:Function ;
 	rdfs:label "equal" ;
 	rdfs:comment "x y  ->  b  -- where b is true if x and y are equal, otherwise false" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#equal> ;
 	.
 
 graph:forget
@@ -105,6 +111,7 @@ graph:forget
 		) ;
 	rdfs:label "forget" ;
 	rdfs:comment "x  ->  x  -- has the side-effect of revoking all statements about x" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#forget> ;
 	.
 
 graph:namespaces
@@ -127,6 +134,7 @@ graph:new
 	rpl:parameters rdf:nil ;
 	rdfs:label "new" ;
 	rdfs:comment "->  n  -- where n is a new blank node" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#new> ;
 	.
 
 graph:toDouble
@@ -140,6 +148,7 @@ graph:toDouble
 	rpl:returnType xsd:double ;
 	rdfs:label "toDouble" ;
 	rdfs:comment "x  ->  x as double literal" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#toDouble> ;
 	.
 
 graph:toInteger
@@ -153,6 +162,7 @@ graph:toInteger
 	rpl:returnType xsd:integer ;
 	rdfs:label "toInteger" ;
 	rdfs:comment "x  ->  x as integer literal" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#toInteger> ;
 	.
 
 graph:toString
@@ -166,6 +176,7 @@ graph:toString
 	rpl:returnType xsd:string ;
 	rdfs:label "toString" ;
 	rdfs:comment "x  ->  string representation of x" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#toString> ;
 	.
 
 graph:toUri

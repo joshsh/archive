@@ -1,9 +1,8 @@
 ========================================
-string:startsWith
+string:concat
 ========================================
 
-"foo" "fo" /startsWith.  # true
-"fo" "foo" /startsWith.  # false
+"foo" "bar" /concat.
 
 
 ========================================
@@ -31,6 +30,13 @@ string:matches
 
 
 ========================================
+string:percentEncode
+========================================
+
+"encode me!" /percentEncode.  # "encode%20me%21"
+
+
+========================================
 string:replaceAll
 ========================================
 
@@ -52,10 +58,11 @@ string:split
 
 
 ========================================
-string:concat
+string:startsWith
 ========================================
 
-"foo" "bar" /concat.
+"foo" "fo" /startsWith.  # true
+"fo" "foo" /startsWith.  # false
 
 
 ========================================
@@ -87,8 +94,8 @@ string:trim
 
 
 ========================================
-string:urlEncoding
+string:urlEncode
 ========================================
 
-"encode me!" /urlEncoding.
+"encode me!" /urlEncode.  # "encode+me%21"
 

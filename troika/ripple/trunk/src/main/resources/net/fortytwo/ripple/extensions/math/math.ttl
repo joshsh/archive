@@ -1,4 +1,5 @@
-@prefix math:  <http://fortytwo.net/2007/05/ripple/math#> .
+@prefix math:  <http://fortytwo.net/2007/07/ripple/math#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
@@ -16,6 +17,7 @@ math:abs
 	rpl:returnType xsd:integer ;
 	rdfs:label "abs" ;
 	rdfs:comment "x  =>  absolute value of x" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#abs> ;
 	.
 
 math:add
@@ -34,6 +36,7 @@ math:add
 	rpl:returnType xsd:integer ;
 	rdfs:label "add" ;
 	rdfs:comment "x y  =>  x + y" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#add> ;
 	.
 
 math:div
@@ -52,6 +55,7 @@ math:div
 	rpl:returnType xsd:integer ;
 	rdfs:label "div" ;
 	rdfs:comment "x y  =>  y / x" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#div> ;
 	.
 
 math:gt
@@ -70,6 +74,7 @@ math:gt
 	rpl:returnType rpl:Function ;
 	rdfs:label "gt" ;
 	rdfs:comment "x y  =>  b  -- where b is true if x > y, otherwise false" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#gt> ;
 	.
 
 math:lt
@@ -88,6 +93,7 @@ math:lt
 	rpl:returnType rpl:Function ;
 	rdfs:label "lt" ;
 	rdfs:comment "x y  =>  b  -- where b is true if x < y, otherwise false" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#lt> ;
 	.
 
 math:mod
@@ -106,6 +112,7 @@ math:mod
 	rpl:returnType xsd:integer ;
 	rdfs:label "mod" ;
 	rdfs:comment "x y  =>  x % y" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#mod> ;
 	.
 
 
@@ -125,6 +132,7 @@ math:mul
 	rpl:returnType xsd:integer ;
 	rdfs:label "mul" ;
 	rdfs:comment "x y  =>  x * y" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#mul> ;
 	.
 
 math:neg
@@ -139,6 +147,7 @@ math:neg
 	rpl:returnType xsd:integer ;
 	rdfs:label "neg" ;
 	rdfs:comment "x  =>  -x" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#neg> ;
 	.
 
 math:pow
@@ -157,6 +166,7 @@ math:pow
 	rpl:returnType xsd:integer ;
 	rdfs:label "pow" ;
 	rdfs:comment "x p  =>  x^p" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#pow> ;
 	.
 
 math:sign
@@ -171,6 +181,7 @@ math:sign
 	rpl:returnType xsd:integer ;
 	rdfs:label "sign" ;
 	rdfs:comment "x  =>  sign of x (-1, 0, or +1)" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#sign> ;
 	.
 
 math:sub
@@ -189,4 +200,5 @@ math:sub
 	rpl:returnType xsd:integer ;
 	rdfs:label "sub" ;
 	rdfs:comment "x y  =>  x - y" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#sub> ;
 	.

@@ -1,7 +1,8 @@
+@prefix owl:     <http://www.w3.org/2002/07/owl#>.
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rpl:     <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix stream:  <http://fortytwo.net/2007/05/ripple/stream#> .
+@prefix stream:  <http://fortytwo.net/2007/07/ripple/stream#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
 stream:each
@@ -15,6 +16,7 @@ stream:each
 		) ;
 	rdfs:label "each" ;
 	rdfs:comment "l => each item in l" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/stream#each> ;
 	.
 
 stream:limit
@@ -28,6 +30,7 @@ stream:limit
 		) ;
 	rdfs:label "limit" ;
 	rdfs:comment "transmits at most lim stacks" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/stream#limit> ;
 	.
 
 stream:scrap
@@ -36,6 +39,7 @@ stream:scrap
 	rpl:parameters rdf:nil ;
 	rdfs:label "scrap" ;
 	rdfs:comment "transmits no stacks" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/stream#scrap> ;
 	.
 
 stream:union
@@ -51,6 +55,7 @@ stream:union
 		) ;
 	rdfs:label "union" ;
 	rdfs:comment "transmits both x pushed to the remainder of the stack, as well as y pushed to the remainder of the stack" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/stream#union> ;
 	.
 
 stream:unique
@@ -59,4 +64,5 @@ stream:unique
 	rpl:parameters rdf:nil ;
 	rdfs:label "unique" ;
 	rdfs:comment "transmits stacks at most once, as determined by list comparison" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/stream#unique> ;
 	.

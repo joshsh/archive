@@ -9,11 +9,9 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
-//import java.net.URLEncoder;
-
-public class UrlEncoding extends PrimitiveFunction
+public class PercentEncode extends PrimitiveFunction
 {
-	public UrlEncoding()
+	public PercentEncode()
 		throws RippleException
 	{
 		super();
@@ -34,19 +32,7 @@ public class UrlEncoding extends PrimitiveFunction
 		a = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = StringUtils.urlEncode( a );
-/*
-		try
-		{
-			result = URLEncoder.encode( a, "UTF-8" );
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-*/
-
+		result = StringUtils.percentEncode( a );
 		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}
 }

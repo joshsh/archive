@@ -1,8 +1,28 @@
-@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix string:   <http://fortytwo.net/2007/05/ripple/string#> .
-@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:     <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix string:  <http://fortytwo.net/2007/07/ripple/string#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+string:concat
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "s1" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "s2" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "concat" ;
+	rdfs:comment "s1 s2  =>  s3  -- where s3 is the concatenation of s1 and s2" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#strCat> ;
+	.
 
 string:endsWith
 	a rpl:Function ;
@@ -52,6 +72,21 @@ string:matches
 	rdfs:comment "s regex  =>  b -- where b is true if the given string matches the given regular expression, otherwise false" ;
 	.
 
+string:percentEncode
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "plaintext" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "percentEncode" ;
+	rdfs:comment "finds the percent encoding (per RFC 3986) of a string" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#urlEncoding> ;
+	.
+
 string:replaceAll
 	a rpl:Function ;
 	rpl:arity 3 ;
@@ -86,6 +121,7 @@ string:sha1
 	rpl:returnType xsd:string ;
 	rdfs:label "sha1" ;
 	rdfs:comment "finds the sha1 hash of a string" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#sha1> ;
 	.
 
 string:split
@@ -121,24 +157,6 @@ string:startsWith
 		) ;
 	rdfs:label "startsWith" ;
 	rdfs:comment "s prefix  =>  b -- where b is true if the given string begins with the given prefix, otherwise false" ;
-	.
-
-string:concat
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "s1" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "s2" ;
-			rpl:parameterType xsd:string ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:string ;
-	rdfs:label "concat" ;
-	rdfs:comment "s1 s2  =>  s3  -- where s3 is the concatenation of s1 and s2" ;
 	.
 
 string:substring
@@ -205,7 +223,7 @@ string:trim
 	rdfs:comment "s  =>  s2 -- where s2 is equal to s with leading and trailing white space omitted" ;
 	.
 
-string:urlEncoding
+string:urlEncode
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -215,6 +233,6 @@ string:urlEncoding
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType xsd:string ;
-	rdfs:label "urlEncoding" ;
-	rdfs:comment "finds the URL encoding of a string" ;
+	rdfs:label "urlEncode" ;
+	rdfs:comment "finds the URL encoding (per application/x-www-form-urlencoded) of a string" ;
 	.

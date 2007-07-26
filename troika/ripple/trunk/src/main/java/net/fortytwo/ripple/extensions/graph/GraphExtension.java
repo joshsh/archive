@@ -9,7 +9,7 @@ import net.fortytwo.ripple.util.UrlFactory;
 
 public class GraphExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/05/ripple/graph#";
+	private static String ns = "http://fortytwo.net/2007/07/ripple/graph#";
 
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException

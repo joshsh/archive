@@ -1,8 +1,9 @@
-@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:      <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix etc:      <http://fortytwo.net/2007/05/ripple/etc#> .
-@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix etc:   <http://fortytwo.net/2007/07/ripple/etc#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 etc:back
 	a rpl:Function ;
@@ -17,6 +18,7 @@ etc:back
 		) ;
 	rpl:label "back" ;
 	rdfs:comment "o p => s" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#back> ;
 	.
 
 etc:get
@@ -31,6 +33,7 @@ etc:get
 	rpl:returnType xsd:string ;
 	rdfs:label "get" ;
 	rdfs:comment "issues a GET request and produces the received data as a string" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#get> ;
 	.
 
 etc:pred
@@ -44,6 +47,7 @@ etc:pred
 		) ;
 	rdfs:label "pred" ;
 	rdfs:comment "consumes a Property and returns a 'predicate operator'" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#pred> ;
 	.
 
 etc:prim
@@ -57,6 +61,7 @@ etc:prim
 		) ;
 	rdfs:label "prim" ;
 	rdfs:comment "applies a Function" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#prim> ;
 	.
 
 etc:rand
@@ -71,6 +76,7 @@ etc:rand
 	rpl:returnType xsd:integer ;
 	rdfs:label "rand" ;
 	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#rand> ;
 	.
 
 etc:time
@@ -80,6 +86,7 @@ etc:time
 	rpl:returnType xsd:int ;
 	rdfs:label "time" ;
 	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#time> ;
 	.
 
 xsd:type

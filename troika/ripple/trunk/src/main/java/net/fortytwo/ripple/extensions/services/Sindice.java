@@ -69,11 +69,11 @@ public class Sindice extends PrimitiveFunction
 		if ( v instanceof Literal )
 			urlStr = "http://sindice.com/beta/keyword/"
 //			urlStr = "http://sindice.com/beta/lookup/keyword?keyword="
-				+ StringUtils.urlEncode( v.toString() );
+				+ StringUtils.percentEncode( v.toString() );
 		else if ( v instanceof URI )
 			urlStr = "http://sindice.com/lookup?uri="
 //			urlStr = "http://sindice.com/beta/lookup_uri?uri="
-				+ StringUtils.urlEncode( v.toString() )
+				+ StringUtils.percentEncode( v.toString() )
 				+ "&lookup=Lookup";
 		else
 			throw new RippleException( "argument is neither a Literal nor a URI: " + v );
@@ -93,7 +93,7 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 			URL url = new URL( urlStr );
 //			URL url = new URL( "http://www.sindice.com/lookup?uri="
 //			URL url = new URL( "http://www.sindice.com/lookup/lookup_uri?uri="
-//				+ StringUtils.urlEncode( uri.toString() ) );
+//				+ StringUtils.percentEncode( uri.toString() ) );
 			urlConn = url.openConnection();
 		}
 

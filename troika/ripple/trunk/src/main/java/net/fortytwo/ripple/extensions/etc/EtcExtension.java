@@ -9,7 +9,7 @@ import net.fortytwo.ripple.util.UrlFactory;
 
 public class EtcExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/05/ripple/etc#";
+	private static String ns = "http://fortytwo.net/2007/07/ripple/etc#";
 
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException

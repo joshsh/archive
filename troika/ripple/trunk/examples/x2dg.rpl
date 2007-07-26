@@ -16,14 +16,24 @@
 
 ### vocabulary data source #############
 
+# Individual vocabularies.
+<http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#vocab>
+<http://192.168.1.20:8080/vocab-1.0/resource?id=2&version=1#vocab>
+
+# Names of all attributes of a vocabulary.
 @prefix vocab: <http://demo.soph-ware.com/2007/07/coi/vocab#>.
-
-<http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#usaf>.
-<http://192.168.1.20:8080/vocab-1.0/resource?id=2&version=1#med>.
-
 <http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#usaf>
     /vocab:containsAttribute
     /rdfs:label.
+
+# Individual attributes.
+<http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#attr_DisseminationControl>
+<http://192.168.1.20:8080/vocab-1.0/resource?id=2&version=1#attr_BloodType>
+
+# Reciprocal owl:sameAs links with the XpressRules D2R server.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+<http://192.168.1.20:8080/vocab-1.0/resource?id=1&version=1#vocab>
+    dup! <http://www.w3.org/2002/07/owl#sameAs> 2 times! equal!.  # => true
 
 
 ### general data source ################

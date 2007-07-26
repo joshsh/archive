@@ -9,7 +9,7 @@ import net.fortytwo.ripple.util.UrlFactory;
 
 public class MathExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/05/ripple/math#";
+	private static String ns = "http://fortytwo.net/2007/07/ripple/math#";
 
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException

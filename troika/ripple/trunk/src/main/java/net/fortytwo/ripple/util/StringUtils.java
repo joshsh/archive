@@ -1,5 +1,7 @@
 package net.fortytwo.ripple.util;
 
+import java.net.URLEncoder;
+
 import net.fortytwo.ripple.RippleException;
 
 public class StringUtils
@@ -163,32 +165,54 @@ public class StringUtils
 	final static String safeURLCharacters
 		= "@*-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
-	public static String urlEncode( final String url )
+	/**
+	 *  @param s  a string to encode
+	 *  @return  percent-encoded (per RFC 3986) version of the string
+	 */
+	public static String percentEncode( final String s )
 	{
-		StringBuffer enc = new StringBuffer( url.length() );
-		for ( int i = 0; i < url.length(); ++i )
+		StringBuffer enc = new StringBuffer( s.length() );
+		for ( int i = 0; i < s.length(); ++i )
 		{
-			char c = url.charAt(i);
+			char c = s.charAt( i );
 
-			if (safeURLCharacters.indexOf(c) >= 0)
+			if (safeURLCharacters.indexOf( c ) >= 0)
 			{
-				enc.append(c);
+				enc.append( c );
 			}
 
 			else
 			{
 				// Just keep lsb like:
 				// http://java.sun.com/j2se/1.3/docs/api/java/net/URLEncoder.html
-				c = (char) (c & '\u00ff');
+				c = (char) ( c & '\u00ff' );
 				if (c < 16)
-					enc.append("%0");
+					enc.append( "%0" );
 				else
-					enc.append("%");
+					enc.append( "%" );
 
 				enc.append( Integer.toHexString( c ) );
 			}
 		}
 		return enc.toString();
+	}
+
+	/**
+	 *  @param s  a string to encode
+	 *  @return  application/x-www-form-urlencoded version of the string
+	 */
+ 	public static String urlEncode( final String s )
+		throws RippleException
+	{
+		try
+		{
+			return URLEncoder.encode( s, "UTF-8" );
+		}
+
+		catch ( java.io.UnsupportedEncodingException e )
+		{
+			throw new RippleException( e );
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
