@@ -107,12 +107,11 @@ s_logger.debug( "### stop" );
 	{
 		// Note: bug fixed in Sesame2-beta3:
 		//    http://www.openrdf.org/issues/browse/SES-358?watch=true
-//		testSynchronous( new AddFromInputStreamTest() );
+		testSynchronous( new AddFromInputStreamTest() );
 
 		// Note: bug fixed in Sesame2-beta3:
 		//    http://www.openrdf.org/forum/mvnforum/viewthread?thread=1229
-//		testSynchronous( new RecoverFromParseErrorTest() );
-
+		testSynchronous( new RecoverFromParseErrorTest() );
 	}
 }
 

@@ -31,19 +31,9 @@ public class FunctionTypeAnnotation
 		}
 	}
 
-	private List<Param> params;
-	private RdfValue returnType;
-	private String label;
-	private String comment;
-
-	private RdfValue
-		rplArityUri,
-		rplParameterUri,
-		rplParameterListUri,
-		rplIsTransparentUri,
-		rplParameterTypeUri,
-		rplParametersUri,
-		rplReturnTypeUri;
+	List<Param> params;
+	RdfValue returnType;
+	String label, comment;
 
 /*
 
@@ -66,7 +56,17 @@ public class FunctionTypeAnnotation
 		return new Param( label, type, comment, transparency );
 	}
 */
-	private static String rplNs = "http://fortytwo.net/2007/03/ripple/schema#";
+	static String rplNs = "http://fortytwo.net/2007/03/ripple/schema#";
+	static RdfValue
+		rplArityUri,
+		rplParameterUri,
+		rplParameterListUri,
+		rplIsTransparentUri,
+		rplParameterTypeUri,
+		rplParametersUri,
+		rplReturnTypeUri;
+
+	static boolean initialized = false;
 
 	public FunctionTypeAnnotation( final RdfValue self, ModelConnection mc )
 		throws RippleException
@@ -75,12 +75,16 @@ public class FunctionTypeAnnotation
 		label = "";
 		comment = "";
 
-		rplParametersUri     = new RdfValue( mc.createUri( rplNs + "parameters" ) );
-		rplReturnTypeUri     = new RdfValue( mc.createUri( rplNs + "returnType" ) );
-		rplParameterUri      = new RdfValue( mc.createUri( rplNs + "Parameter" ) );
-		rplParameterListUri  = new RdfValue( mc.createUri( rplNs + "ParameterList" ) );
-		rplParameterTypeUri  = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
-		rplIsTransparentUri  = new RdfValue( mc.createUri( rplNs + "isTransparent" ) );
+		if ( !initialized )
+		{
+			rplParametersUri     = new RdfValue( mc.createUri( rplNs + "parameters" ) );
+			rplReturnTypeUri     = new RdfValue( mc.createUri( rplNs + "returnType" ) );
+			rplParameterUri      = new RdfValue( mc.createUri( rplNs + "Parameter" ) );
+			rplParameterListUri  = new RdfValue( mc.createUri( rplNs + "ParameterList" ) );
+			rplParameterTypeUri  = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
+			rplIsTransparentUri  = new RdfValue( mc.createUri( rplNs + "isTransparent" ) );
+			initialized = true;
+		}
 
 // Hack: this merely forces the model to dereference the primitive's URI so it
 //       shows up in the Lexicon.
