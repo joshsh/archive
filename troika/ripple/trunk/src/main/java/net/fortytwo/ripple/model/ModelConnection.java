@@ -43,8 +43,6 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 
 public class ModelConnection
 {
@@ -193,10 +191,10 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private static Set<ModelConnection> openConnections
+	static Set<ModelConnection> openConnections
 		= new LinkedHashSet<ModelConnection>();
 
-	private static void add( ModelConnection mc )
+	static void add( ModelConnection mc )
 	{
 		synchronized( openConnections )
 		{
@@ -204,7 +202,7 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 		}
 	}
 
-	private static void remove( ModelConnection mc )
+	static void remove( ModelConnection mc )
 	{
 		synchronized( openConnections )
 		{
@@ -228,7 +226,7 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private Resource castToResource( Value v )
+	Resource castToResource( Value v )
 		throws RippleException
 	{
 		if ( v instanceof Resource )
@@ -237,7 +235,7 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 			throw new RippleException( "value " + v.toString() + " is not a Resource" );
 	}
 
-	private URI castToUri( Value v )
+	URI castToUri( Value v )
 		throws RippleException
 	{
 		if ( v instanceof URI )
@@ -247,7 +245,7 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 			throw new RippleException( "value " + v.toString() + " is not a URI" );
 	}
 
-	private Literal castToLiteral( Value v )
+	Literal castToLiteral( Value v )
 		throws RippleException
 	{
 		if ( v instanceof Literal )

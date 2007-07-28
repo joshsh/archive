@@ -87,7 +87,7 @@
 
 # uri => PTSW's ping response
 @define ping:
-    /toString/urlEncoding
+    /toString/percentEncode
     "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
     /get.
 
