@@ -1,8 +1,10 @@
 package net.fortytwo.ripple.extensions.media;
 
-	import javax.swing.*;
-	import java.awt.*;
-	import javax.imageio.*;
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import java.io.InputStream;
 
@@ -73,18 +75,12 @@ public class Show extends PrimitiveFunction
 	//panel used to draw image on
 	private class ImagePanel extends JPanel
 	{
-		//path of image
-		private String path;
-		
 		//image object
 		public Image img;
 		
 		public ImagePanel( final URI uri )
 			throws RippleException
 		{
-			//save path
-			this.path = path;	
-			
 			try
 			{
 				URL url = new URL( uri.toString() );
