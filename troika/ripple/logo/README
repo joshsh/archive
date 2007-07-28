@@ -1,0 +1,3 @@
+javac RippleEffect.java
+
+java RippleEffect

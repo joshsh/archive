@@ -11,6 +11,8 @@ import java.awt.image.MemoryImageSource;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.util.Random;
+
 public class RippleEffect
 {
 	Color [][] matrix;
@@ -25,10 +27,78 @@ public class RippleEffect
 	Color backgroundColor;
 
 	Image image;
+	Random random;
+	long randomSeed;
+
+static double sloshMax = 0;
+static double distMin = 100000;
+static double distMax = 0;
+	private class Slosh
+	{
+		public Point2D location;
+		public double magnitude;
+		public Slosh()
+		{
+			double minMagnitude = 0.5;
+
+			double x = random.nextDouble();
+			double y = random.nextDouble();
+			location = new Point2D.Double( x, y );
+
+			magnitude = minMagnitude * ( random.nextDouble() * ( 1 - minMagnitude ) );
+			if ( random.nextBoolean() )
+				magnitude = -magnitude;
+
+System.out.println( "new slosh: " + magnitude + " at " + location );
+		}
+
+		public double waveFunc( Point2D p )
+		{
+			double distance = p.distance( location );
+			double d = Math.cos( ( Math.PI / 2.0 ) - ( sloshConstA / ( ( sloshPointiness * distance ) + sloshConstB ) ) );
+//			double d = ( 0 == distance ) ? 1 : Math.exp( distance );
+
+// if ( d > sloshMax ){
+// sloshMax = d;
+// System.out.println( "d = " + d );}
+
+// if ( distance < distMin ){
+// distMin = distance;
+// System.out.println( "distMin = " + distance );
+// System.out.println( "  d = " + d ); }
+// 
+// if ( distance > distMax ){
+// distMax = distance;
+// System.out.println( "        distMax = " + distance );
+// System.out.println( "          d = " + d ); }
+
+			double result = d * magnitude;
+			return d * magnitude;
+		}
+	}
+
+	double sloshWeight;
+	Slosh[] sloshes;
+	int nSloshes;
+	double[][] sloshField;
+	double sloshConstA, sloshConstB, sloshPointiness;
 
 	double dampen( double distance )
 	{
 		return Math.cos( ( distance / radiusRest ) * Math.PI / 2.0 );
+	}
+
+	double dampen( Point2D p )
+	{
+		double min = 100;
+		for ( int i = 0; i < 3; i++ )
+		{
+			double d = p.distance( centers[i] );
+			if ( d < min )
+				min = d;
+		}
+
+		return dampen( min );
 	}
 
 	double waveFunc( double distance )
@@ -44,6 +114,18 @@ public class RippleEffect
 //				( 1.0 + Math.cos(
 //					frequencyFactor * Math.tan( distance * tanFactor ) ) ) / 2.0;
 //				* ( 1.0 + Math.cos( frequencyFactor / ( radiusRest - distance ) ) ) / 2.0;
+	}
+
+	// Just a debug method.
+	void drawSloshCenters()
+	{
+		for ( int i = 0; i < nSloshes; i++ )
+		{
+			Point2D p = sloshes[i].location;
+			int x = (int) ( width * p.getX() );
+			int y = (int) ( width * p.getY() );
+			matrix[y][x] = Color.BLACK;
+		}
 	}
 
 	double intensify( double val, int n )
@@ -125,12 +207,19 @@ if ( dist0 >= radiusRest && dist1 >= radiusRest && dist2 >= radiusRest )
 				double val1 = waveFunc( dist1 );
 				double val2 = waveFunc( dist2 );
 
-				double intensity = ( val0 + val1 + val2 ) / 3.0;
+double slosh = sloshField[i][j];
+
+//				double intensity = ( val0 + val1 + val2 ) / 3.0;
+//double intensity = slosh / sloshWeight;
+double intensity = ( val0 + val1 + val2 + ( slosh * sloshWeight ) ) / ( 3.0 + sloshWeight );
+
+				intensity = intensity * dampen( p );
+
 				if ( intensity < 0 )
 					intensity = 0;
 
 /*
-intensity = intensify( intensity );
+//intensity = intensify( intensity, 4 );
 int v = (int) ( 255 * intensity );
 Color result = new Color( v, v, v );
 //*/
@@ -175,7 +264,7 @@ Color result = new Color( v, v, v );
 //				double dgreen = intensify( intensity * g / sumRgb )
 //				double dblue = intensify( intensity * b / sumRgb )
 
-//*
+
 double sat = dred;
 if ( dgreen > sat )
 	sat = dgreen;
@@ -185,7 +274,7 @@ if ( dblue > sat )
 dred = dred * sat + ( rBack * ( 1 - sat ) );
 dgreen = dgreen * sat + ( gBack * ( 1 - sat ) );
 dblue = dblue * sat + ( bBack * ( 1 - sat ) );
-//*/
+
 
 				int red = (int) ( dred * 255 );
 				int green = (int) ( dgreen * 255 );
@@ -203,6 +292,46 @@ dblue = dblue * sat + ( bBack * ( 1 - sat ) );
 				matrix[i][j] = result;
 			}
 		}
+	}
+
+	void createSloshes()
+	{
+		sloshConstB = 2 * sloshConstA / Math.PI;
+
+		sloshes = new Slosh[nSloshes];
+		for ( int i = 0; i < nSloshes; i++ )
+			sloshes[i] = new Slosh();
+
+		sloshField = new double[height][width];
+		double max = 0;
+		for ( int i = 0; i < height; i++ )
+		{
+			for ( int j = 0; j < width; j++ )
+			{
+				Point2D p = new Point2D.Double( j / ( (double) width ), i / ( (double) height ) );
+				double sum = 0;
+				for ( int k = 0; k < nSloshes; k++ )
+					sum += sloshes[k].waveFunc( p );
+				sloshField[i][j] = sum;
+				if ( sum > 0 )
+				{
+					if ( sum > max )
+						max = sum;
+				}
+
+				else if ( sum < 0 )
+				{
+					if ( -sum > max )
+						max = -sum;
+				}
+			}
+		}
+System.out.println( "max = " + max );
+
+		// Put the extremum at exactly 1 or -1.
+		for ( int i = 0; i < height; i++ )
+			for ( int j = 0; j < width; j++ )
+				sloshField[i][j] = sloshField[i][j] / max;
 	}
 
 	void createImage()
@@ -236,8 +365,14 @@ dblue = dblue * sat + ( bBack * ( 1 - sat ) );
 		radius = 0.15;
 		rotateBy = 1/2.0 + 1/20.0;
 		frequencyFactor = 9.0;
-		width = 1000;
-		height = 1000;
+		width = 400;
+		height = 400;
+
+		nSloshes = 40;
+		sloshWeight = 1.0;
+		sloshConstA = 1.0;
+		sloshPointiness = 20.0;
+		randomSeed = 42;
 
 		colors = new Color[3];
 		colors[0] = Color.RED;
@@ -246,8 +381,13 @@ dblue = dblue * sat + ( bBack * ( 1 - sat ) );
 
 		backgroundColor = Color.WHITE;
 
+//		random = new Random( randomSeed );
+random = new Random();
+
 		createPoints();
+		createSloshes();
 		createField();
+drawSloshCenters();
 		createImage();
 	}
 
