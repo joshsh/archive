@@ -28,6 +28,23 @@
 
 
 
+########################################
+# Revyu's dereferenceable RDF news feed
+########################################
+
+# Note: own prefix
+@prefix rss: <http://purl.org/rss/1.0/>.
+
+# The channel resource.
+<http://revyu.com/latest/rss>.
+
+# All of the latest reviews.
+<http://revyu.com/latest/rss> rss:items! contains!.
+
+
+
+
+
 # My account.
 <http://revyu.com/people/iamthewalnut>.
 

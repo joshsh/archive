@@ -70,7 +70,7 @@ public class Lexicon
 
 					// The presence of aliases will cause the same URI / keyword
 					// pair to appear more than once.
-					else if ( !siblings.contains( (URI) v ) )
+					if ( !siblings.contains( (URI) v ) )
 						siblings.add( (URI) v );
 				}
 			}
