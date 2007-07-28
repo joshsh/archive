@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Iterator;
 
+import net.fortytwo.ripple.io.CacheManager;
 import net.fortytwo.ripple.io.CommandLineInterface;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -32,13 +33,13 @@ import net.fortytwo.ripple.util.RdfUtils;
 import org.apache.log4j.Logger;
 
 import org.openrdf.repository.Repository;
+import org.openrdf.rio.RDFFormat;
 
 public class Demo
 {
 	final static Logger s_logger = Logger.getLogger( Demo.class );
 
 	public static void demo( final File store,
-							final String storeFormat,  // not used
 							final InputStream in,
 							final PrintStream out,
 							final PrintStream err )
@@ -49,6 +50,14 @@ public class Demo
 
 		// Attach a Ripple model to the repository.
 		Model model = new Model( repository, "Demo Model" );
+
+		// Attach a query engine to the model.
+		Evaluator evaluator = new LazyEvaluator();
+		QueryEngine qe
+			= new QueryEngine( model, evaluator, out, err );
+
+		// Establish a connection.
+		ModelConnection mc = qe.getConnection();
 
 		// Load from store.
 		if ( null != store )
@@ -66,16 +75,10 @@ public class Demo
 				throw new RippleException( e );
 			}
 
-			model.load( storeUrl );
+			CacheManager.loadCache( storeUrl, Ripple.cacheFormat(), mc );
 		}
 
-		// Attach a query engine to the model.
-		Evaluator evaluator = new LazyEvaluator();
-		QueryEngine qe
-			= new QueryEngine( model, evaluator, out, err );
-
 		// Set the default namespace.
-		ModelConnection mc = qe.getConnection();
 		mc.setNamespace( "", Ripple.getDefaultNamespace(), false );
 		mc.close();
 qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDefaultNamespace() ), false );
@@ -101,7 +104,8 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 				throw new RippleException( e );
 			}
 
-			model.writeTo( storeOut );
+			// Write the cache out in the same format as it was read in.
+			CacheManager.writeCacheTo( model, storeOut, Ripple.cacheFormat() );
 
 			try
 			{
@@ -172,7 +176,6 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 
 		// Default values.
 		boolean quiet = false, showVersion = false, showHelp = false;
-		String format = "rdfxml";
 		File store = null;
 
 		// Long options are available but are not advertised.
@@ -202,8 +205,14 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 					break;
 				case 'f':
 				case 0:
-// FIXME: format is ignored
-					format = g.getOptarg();
+					// Override the default cache format.
+					RDFFormat format = RdfUtils.findFormat( g.getOptarg() );
+					if ( null == format )
+					{
+						System.err.println( "Unknown format: " + g.getOptarg() );
+						System.exit( 1 );
+					}
+					Ripple.setCacheFormat( format );
 					break;
 				case '?':
 					 // Note: getopt() already printed an error
@@ -211,7 +220,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 					System.exit( 1 );
 					break;
 				default:
-					System.out.print("getopt() returned " + c + "\n");
+					System.err.print("getopt() returned " + c + "\n");
 			}
 		}
 
@@ -249,7 +258,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 
 		try
 		{
-			demo( store, format, System.in, System.out, System.err );
+			demo( store, System.in, System.out, System.err );
 		}
 
 		catch ( RippleException e )

@@ -38,9 +38,7 @@ public class Triples extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		URI uri;
-
-		uri = mc.uriValue( stack.getFirst() );
+		URI uri = mc.uriValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		RdfSourceAdapter adapter = createAdapter( stack, sink );
@@ -61,7 +59,7 @@ public class Triples extends PrimitiveFunction
 			public void put( Statement st )
 				throws RippleException
 			{
-// Note: don't bother with the model bridge for now.
+// Note: don't bother with the ModelBridge for now.
 				RippleValue subj = new RdfValue( st.getSubject() );
 				RippleValue pred = new RdfValue( st.getPredicate() );
 				RippleValue obj = new RdfValue( st.getObject() );

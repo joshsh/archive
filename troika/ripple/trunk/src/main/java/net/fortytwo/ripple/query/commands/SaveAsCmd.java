@@ -3,10 +3,12 @@ package net.fortytwo.ripple.query.commands;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.io.CacheManager;
 
 public class SaveAsCmd implements Command
 {
@@ -32,8 +34,7 @@ public class SaveAsCmd implements Command
 			throw new RippleException( e );
 		}
 
-		qe.getModel().writeTo( out );
-//        qe.getModel().writeTrix( out );
+		CacheManager.writeCacheTo( qe.getModel(), out, Ripple.cacheFormat() );
 
 		try
 		{

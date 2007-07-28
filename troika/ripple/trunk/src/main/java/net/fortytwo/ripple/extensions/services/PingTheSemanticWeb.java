@@ -26,7 +26,18 @@ import org.jdom.input.SAXBuilder;
 
 public class PingTheSemanticWeb extends PrimitiveFunction
 {
-	private static SAXBuilder s_saxBuilder = null;
+	static SAXBuilder s_saxBuilder = null;
+	static void initialize()
+	{
+		s_saxBuilder = new SAXBuilder( true );
+		s_saxBuilder.setReuseParser( true );
+
+		String schemaLocation = PingTheSemanticWeb.class.getResource( "pingTheSemanticWeb.xsd" ).toString();
+		s_saxBuilder.setFeature(
+			"http://apache.org/xml/features/validation/schema", true );
+		s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
+			+ "external-noNamespaceSchemaLocation", schemaLocation );
+	}
 
 	public PingTheSemanticWeb()
 		throws RippleException
@@ -44,6 +55,9 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
+		if ( null == s_saxBuilder )
+			initialize();
+
 		String type;
 		int maxResults;
 
@@ -52,45 +66,18 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		maxResults = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		if ( null == s_saxBuilder )
-		{
-			s_saxBuilder = new SAXBuilder( true );
-			s_saxBuilder.setReuseParser( true );
+		URLConnection urlConn = HttpUtils.openConnection(
+			"http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );
 
-			String schemaLocation = PingTheSemanticWeb.class.getResource( "pingTheSemanticWeb.xsd" ).toString();
-			s_saxBuilder.setFeature(
-				"http://apache.org/xml/features/validation/schema", true );
-			s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
-				+ "external-noNamespaceSchemaLocation", schemaLocation );
-		}
-
-		URLConnection connection;
-
-		try
-		{
-			URL url = new URL( "http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );
-			connection = url.openConnection();
-		}
-
-		catch ( java.net.MalformedURLException e )
-		{
-			throw new RippleException( e );
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		String []mimeTypes = { "text/xml" };
-		HttpUtils.prepareUrlConnectionForRequest( connection, mimeTypes );
-		HttpUtils.connect( connection );
+		String[] mimeTypes = { "text/xml" };
+		HttpUtils.prepareUrlConnectionForRequest( urlConn, mimeTypes );
+		HttpUtils.connect( urlConn );
 
 		Document doc;
 
 		try
 		{
-			InputStream response = connection.getInputStream();
+			InputStream response = urlConn.getInputStream();
 
 			synchronized( s_saxBuilder )
 			{

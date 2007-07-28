@@ -27,28 +27,33 @@ import java.util.Iterator;
 
 public class Lexicon
 {
-	private Model model;
+	Model model;
 
-	private Hashtable<String, List<URI>> keywordsToUrisMap = null;
-	private Hashtable<URI, String> urisToKeywordsMap = null;
-	private Hashtable<String, String> prefixToNamespaceMap = null;
-	private Hashtable<String, String> namespaceToPrefixMap = null;
-	private Collection<String> qNamesCollection = null;
+	Hashtable<String, List<URI>> keywordsToUrisMap = null;
+	Hashtable<URI, String> urisToKeywordsMap = null;
+	Hashtable<String, String> prefixToNamespaceMap = null;
+	Hashtable<String, String> namespaceToPrefixMap = null;
+	Collection<String> qNamesCollection = null;
 
 	public Lexicon( Model model )
 		throws RippleException
 	{
 		this.model = model;
+		ModelConnection mc = model.getConnection( "for Lexicon constructor" );
 
 		// Create (immutable) keywords map.
 		{
 			keywordsToUrisMap = new Hashtable<String, List<URI>>();
 			urisToKeywordsMap = new Hashtable<URI, String>();
 
-			Collection<Value> keySet = model.getBridge().keySet();
-			for ( Iterator<Value> keyIter = keySet.iterator(); keyIter.hasNext(); )
+			ModelBridge bridge = model.getBridge();
+			Iterator<Value> keys = bridge.keySet().iterator();
+			while ( keys.hasNext() )
 			{
-				Value v = keyIter.next();
+				// An extra trip through the bridge replaces aliases with
+				// "definitive" values.
+				Value v = bridge.get( keys.next() ).toRdf( mc ).getRdfValue();
+
 				if ( v instanceof URI )
 				{
 					String keyword = ( (URI) v ).getLocalName();
@@ -63,11 +68,15 @@ public class Lexicon
 						urisToKeywordsMap.put( (URI) v, keyword );
 					}
 
-					siblings.add( (URI) v );
+					// The presence of aliases will cause the same URI / keyword
+					// pair to appear more than once.
+					else if ( !siblings.contains( (URI) v ) )
+						siblings.add( (URI) v );
 				}
 			}
 		}
 
+		mc.close();
 		updateMaps();
 	}
 

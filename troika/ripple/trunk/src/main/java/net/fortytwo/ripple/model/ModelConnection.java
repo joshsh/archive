@@ -23,6 +23,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
 
@@ -987,29 +988,7 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private URLConnection openUrlConnection( final URL url )
-		throws RippleException
-	{
-		URLConnection urlConn;
-
-		try
-		{
-			urlConn = url.openConnection();
-//HttpUtils.showUrlConnection( urlConn );
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		HttpUtils.prepareUrlConnectionForRdfRequest( urlConn );
-		HttpUtils.connect( urlConn );
-
-		return urlConn;
-	}
-
-	public void addGraph( final URL url, final URI context )
+	public void addGraph( final URL url, final String baseUri )
 		throws RippleException
 	{
 		// Wrap the entire operation in the timeout wrapper, as there are various
@@ -1019,130 +998,28 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		new ThreadWrapper() {
 			protected void run() throws RippleException
 			{
-				addGraphPrivate( url, context );
+				s_logger.info( "Importing model " + url.toString() +
+					( ( null == baseUri ) ? "" : " at base URI " + baseUri.toString() ) );
+				RdfUtils.read( url, adapter, baseUri );
+				s_logger.debug( "graph imported without errors" );
 			}
 		}.start( Ripple.uriDereferencingTimeout() );
 	}
 
-	public void addGraph( final InputStream is, final URI context, RDFFormat format )
+	public void addGraph( final InputStream is, final String baseUri, RDFFormat format )
 		throws RippleException
 	{
 		if ( null == adapter )
 			throw new RippleException( "no source adapter has been defined" );
 
-		try
-		{
-// if ( !repoConnection.isOpen() )
-// {
-// s_logger.info( "connection was found to be closed: " + repoConnection );
-// reset( false );
-// }
-			RDFParser parser = Rio.createParser( format, valueFactory );
-			parser.setRDFHandler( adapter );
-			synchronized( repoConnection )
-			{
-				parser.parse( is, context.toString() );
-	
-				// Commit immediately, so that data is not lost if subsequent
-				// operations fail.
-				repoConnection.commit();
-			}
-		}
-
-		catch ( Throwable t )
-		{
-			reset( true );
-
-			if ( t instanceof org.openrdf.rio.RDFParseException )
-			{
-				String msg = "line " + ( (org.openrdf.rio.RDFParseException) t ).getLineNumber()
-					+ ", column " + ( (org.openrdf.rio.RDFParseException) t ).getColumnNumber()
-					+ ": " + t.getMessage();
-
-				throw new RippleException( msg );
-			}
-
-			else
-				throw new RippleException( t );
-		}
-	}
-
-	private void addGraphPrivate( final URL url, final URI context )
-		throws RippleException
-	{
-		s_logger.info( "Importing model " + url.toString() +
-			( ( null == context ) ? "" : " in context " + context.toString() ) );
-
-		boolean verifyData = true;
-
-		URLConnection urlConn = openUrlConnection( url );
-		InputStream response = null;
-
-		final RDFFormat format = HttpUtils.guessRdfFormat( urlConn );
-		if ( null == format )
-			return;
-
-		s_logger.debug( "guessed format is " + format.getName() );
-
-		try
-		{
-			response = urlConn.getInputStream();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		try
-		{
-			addGraph( response, context, format );
-		}
-
-		catch ( RippleException e )
-		{
-			close( response );
-			throw e;
-		}
-
-		close( response );
-		s_logger.debug( "graph imported without errors" );
-
-		model.touch();
+		RdfUtils.read( is, adapter, baseUri, format );
 	}
 
 	public void addGraph( final URL url )
 		throws RippleException
 	{
-		String uriStr;
-
-		try
-		{
 // FIXME: the URL should be treated as a black box.
-			uriStr = url.toURI().toString();
-		}
-
-		catch ( java.net.URISyntaxException e )
-		{
-			throw new RippleException( e );
-		}
-
-		URI baseURI = createUri( uriStr );
-		addGraph( url, baseURI );
-	}
-
-	private static void close( InputStream is )
-		throws RippleException
-	{
-		try
-		{
-			is.close();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
+		addGraph( url, url.toString() );
 	}
 
 	public long countStatements( Resource context )
@@ -1268,39 +1145,12 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		}
 	}
 
-	static RDFHandler hack_getSerializer( final OutputStream out )
-		throws RippleException
-	{
-		String s = Ripple.exportFormat().toLowerCase();
-
-		try
-		{
-			if ( s.equals( "rdfxml" ) )
-				return new org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter( out );
-
-// Weird... when I used this, my graph was output in N-Triples.
-			else if ( s.equals( "turtle" ) )
-				return new org.openrdf.rio.turtle.TurtleWriter( out );
-
-// ...this came out as N-Triples as well.
-			else if ( s.equals( "n3" ) )
-				return new org.openrdf.rio.n3.N3Writer( out );
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-
-		throw new RippleException( "unknown format: " + s );
-	}
-
 	public void exportNs( final String nsPrefix, OutputStream out )
 		throws RippleException
 	{
 		Set<URI> subjects = findSubjectsInNamespace( nsPrefix );
 
-		RDFHandler handler = hack_getSerializer( out );
+		RDFHandler handler = Rio.createWriter( Ripple.exportFormat(), out );
 
 		try
 		{

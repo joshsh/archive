@@ -30,7 +30,18 @@ import org.openrdf.model.Value;
 
 public class Sindice extends PrimitiveFunction
 {
-	private static SAXBuilder s_saxBuilder = null;
+	static SAXBuilder s_saxBuilder = null;
+	static void initialize()
+	{
+		s_saxBuilder = new SAXBuilder( true );
+		s_saxBuilder.setReuseParser( true );
+
+		String schemaLocation = Sindice.class.getResource( "sindice.xsd" ).toString();
+		s_saxBuilder.setFeature(
+			"http://apache.org/xml/features/validation/schema", true );
+		s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
+			+ "external-noNamespaceSchemaLocation", schemaLocation );
+	}
 
 	public Sindice()
 		throws RippleException
@@ -49,16 +60,7 @@ public class Sindice extends PrimitiveFunction
 		throws RippleException
 	{
 		if ( null == s_saxBuilder )
-		{
-			s_saxBuilder = new SAXBuilder( true );
-			s_saxBuilder.setReuseParser( true );
-
-			String schemaLocation = Sindice.class.getResource( "sindice.xsd" ).toString();
-			s_saxBuilder.setFeature(
-				"http://apache.org/xml/features/validation/schema", true );
-			s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
-				+ "external-noNamespaceSchemaLocation", schemaLocation );
-		}
+			initialize();
 
 		Value v;
 

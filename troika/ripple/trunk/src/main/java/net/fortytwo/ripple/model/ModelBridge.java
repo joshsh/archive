@@ -31,6 +31,16 @@ public class ModelBridge
 		return rpl;
 	}
 
+	public RippleValue get( Value v )
+	{
+		RippleValue rpl =  rdfToNativeMap.get( v );
+
+		if ( null == rpl )
+			return new RdfValue( v );
+		else
+			return rpl;
+	}
+
 	public void add( final RdfValue key, final RippleValue value )
 		throws RippleException
 	{

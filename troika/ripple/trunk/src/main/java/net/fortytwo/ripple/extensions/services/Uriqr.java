@@ -30,25 +30,9 @@ public class Uriqr extends PrimitiveFunction
 {
 	static SAXBuilder s_saxBuilder = null;
 	static XPath resultPath = null;
-
-	public Uriqr()
+	static void initialize()
 		throws RippleException
 	{
-		super();
-	}
-
-	public int arity()
-	{
-		return 1;
-	}
-
-	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
-		throws RippleException
-	{
-		if ( null == s_saxBuilder )
-		{
 			s_saxBuilder = new SAXBuilder( true );
 			s_saxBuilder.setReuseParser( true );
 
@@ -69,7 +53,26 @@ public class Uriqr extends PrimitiveFunction
 			{
 				throw new RippleException( e );
 			}
-		}
+	}
+
+	public Uriqr()
+		throws RippleException
+	{
+		super();
+	}
+
+	public int arity()
+	{
+		return 1;
+	}
+
+	public void applyTo( RippleList stack,
+								Sink<RippleList> sink,
+								ModelConnection mc )
+		throws RippleException
+	{
+		if ( null == s_saxBuilder )
+			initialize();
 
 		String s;
 

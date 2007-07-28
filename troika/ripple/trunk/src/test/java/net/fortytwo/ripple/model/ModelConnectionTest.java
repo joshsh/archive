@@ -127,7 +127,7 @@ public class ModelConnectionTest extends RippleTestCase
 					+ "foo:a foo:b foo:c." ;
 				InputStream is = new ByteArrayInputStream( s.getBytes() );
 
-				mc.addGraph( is, ctxA, RDFFormat.TURTLE );
+				mc.addGraph( is, ctxA.toString(), RDFFormat.TURTLE );
 
 				//assertEquals( mc.countStatements( null ), 1 );
 				assertEquals( mc.countStatements( ctxA ), 1 );
@@ -140,14 +140,14 @@ public class ModelConnectionTest extends RippleTestCase
 				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.turtleA#" );
 				URI ctxB = mc.createUri( "urn:org.example.test.addGraphTest.turtleB#" );
 
-				mc.addGraph( test1Url, ctxA );
+				mc.addGraph( test1Url, ctxA.toString() );
 				assertEquals( mc.countStatements( ctxA ), 2 );
-				mc.addGraph( test2Url, ctxA );
+				mc.addGraph( test2Url, ctxA.toString() );
 				assertEquals( mc.countStatements( ctxA ), 4 );
 
-				mc.addGraph( test1Url, ctxB );
+				mc.addGraph( test1Url, ctxB.toString() );
 				assertEquals( mc.countStatements( ctxB ), 2 );
-				mc.addGraph( test2Url, ctxB );
+				mc.addGraph( test2Url, ctxB.toString() );
 				assertEquals( mc.countStatements( ctxB ), 4 );
 			}
 
@@ -158,14 +158,14 @@ public class ModelConnectionTest extends RippleTestCase
 				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.rdfxmlA#" );
 				URI ctxB = mc.createUri( "urn:org.example.test.addGraphTest.rdfxmlB#" );
 
-				mc.addGraph( test1Url, ctxA );
+				mc.addGraph( test1Url, ctxA.toString() );
 				assertEquals( mc.countStatements( ctxA ), 2 );
-				mc.addGraph( test2Url, ctxA );
+				mc.addGraph( test2Url, ctxA.toString() );
 				assertEquals( mc.countStatements( ctxA ), 4 );
 
-				mc.addGraph( test1Url, ctxB );
+				mc.addGraph( test1Url, ctxB.toString() );
 				assertEquals( mc.countStatements( ctxB ), 2 );
-				mc.addGraph( test2Url, ctxB );
+				mc.addGraph( test2Url, ctxB.toString() );
 				assertEquals( mc.countStatements( ctxB ), 4 );
 			}
 //*/

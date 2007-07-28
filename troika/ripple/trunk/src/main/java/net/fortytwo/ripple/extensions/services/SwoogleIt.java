@@ -76,9 +76,8 @@ public class SwoogleIt extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
-		URI baseUri = mc.createUri( urlStr );
-		mc.addGraph( url, baseUri );
-//System.out.println( "baseUri = " + baseUri );
+		mc.addGraph( url, urlStr );
+//System.out.println( "baseUri = " + urlStr );
 
 		try
 		{

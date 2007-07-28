@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
 import net.fortytwo.ripple.Ripple;
@@ -40,20 +39,25 @@ import org.openrdf.model.Namespace;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.model.vocabulary.RDF;
 
-public class Model extends Observable
+public class Model
 {
-	private Dereferencer dereferencer;
+	final static Logger s_logger = Logger.getLogger( Model.class );
+
+	String name;
+
+	Repository repository;
+public Repository getRepository()
+{
+	return repository;
+}
+
+	Dereferencer dereferencer;
 public Dereferencer getDereferencer()
 {
 	return dereferencer;
 }
 
-	final static Logger s_logger = Logger.getLogger( Model.class );
-
-	String name;
-	Repository repository;
-
-	private ModelBridge bridge;
+	ModelBridge bridge;
 	public ModelBridge getBridge()
 	{
 		return bridge;
@@ -148,169 +152,6 @@ public Dereferencer getDereferencer()
 		return mc;
 	}
 
-public Repository getRepository()
-{
-	return repository;
-}
-
-
-	private static String
-		// A special "URI" for metadata about Ripple's triple store.  It is not
-		// dereferenceable, and its value is specific to the particular store.
-		rplStoreRootUri = "urn:net.fortytwo.ripple.store.meta",
-		rplStoreSuccessMemosUri = "http://fortytwo.net/2007/03/ripple/store#successMemos",
-		rplStoreFailureMemosUri = "http://fortytwo.net/2007/03/ripple/store#failureMemos";
-
-	public void load( URL url )
-		throws RippleException
-	{
-		s_logger.info( "loading Model from URL: " + url );
-
-		ModelConnection mc = getConnection( "for Model load()" );
-
-		mc.addGraph( url );
-
-		// Restore dereferencer state by reading success and failure memos
-		// from the last session (if present).
-		{
-			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
-			RdfValue succ = mc.findAtMostOneObject( meta,
-				new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) ) );
-			RdfValue fail = mc.findAtMostOneObject( meta,
-				new RdfValue( mc.createUri( rplStoreFailureMemosUri ) ) );
-
-			if ( null != succ )
-			{
-				s_logger.debug( "reading success memos" );
-				List<RippleValue> successMemos = mc.listValue( succ );
-
-				for ( Iterator<RippleValue> iter = successMemos.iterator(); iter.hasNext(); )
-					dereferencer.addSuccessMemo( mc.stringValue( iter.next() ) );
-			}
-
-			if ( null != fail )
-			{
-				s_logger.debug( "reading failure memos" );
-				List<RippleValue> failureMemos = mc.listValue( fail );
-
-				for ( Iterator<RippleValue> iter = failureMemos.iterator(); iter.hasNext(); )
-					dereferencer.addFailureMemo( mc.stringValue( iter.next() ) );
-			}
-		}
-
-		mc.close();
-	}
-
-	public void writeTo( OutputStream out )
-		throws RippleException
-	{
-		// Save dereferencer state.
-		{
-			ModelConnection mc = getConnection( null );
-
-			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
-			RdfValue succ = new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) );
-			RdfValue fail = new RdfValue( mc.createUri( rplStoreFailureMemosUri ) );
-
-			mc.removeStatementsAbout( meta, null );
-
-			RdfValue rdfFirst = new RdfValue( RDF.FIRST );
-			RdfValue rdfRest = new RdfValue( RDF.REST );
-			RdfValue rdfNil = new RdfValue( RDF.NIL );
-			RdfValue rdfType = new RdfValue( RDF.TYPE );
-			RdfValue rdfList = new RdfValue( RDF.LIST );
-			RdfValue last;
-
-			last = null;
-			for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
-			{
-				s_logger.debug( "writing success memos" );
-
-				// Note: apparently it's important (in Sesame 2 beta) to add an
-				//       edge TO a blank node before adding edges FROM the blank
-				//       node, otherwise you get a disjointed graph.  I don't
-				//       know whether this is a bug or a feature.
-				RdfValue cur = new RdfValue( mc.createBNode() );
-				if ( null == last )
-				{
-					mc.add( meta, succ, cur );
-					mc.add( cur, rdfType, rdfList );
-				}
-				else
-					mc.add( last, rdfRest, cur );
-
-				RdfValue first = mc.createValue( iter.next() );
-				mc.add( cur, rdfFirst, first );
-
-				last = cur;
-			}
-			if ( null != last )
-				mc.add( last, rdfRest, rdfNil );
-
-			last = null;
-			for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
-			{
-				s_logger.debug( "writing failure memos" );
-
-				RdfValue cur = new RdfValue( mc.createBNode() );
-				if ( null == last )
-				{
-					mc.add( meta, fail, cur );
-					mc.add( cur, rdfType, rdfList );
-				}
-				else
-					mc.add( last, rdfRest, cur );
-
-				RdfValue first = mc.createValue( iter.next() );
-				mc.add( cur, rdfFirst, first );
-
-				last = cur;
-			}
-			if ( null != last )
-				mc.add( last, rdfRest, rdfNil );
-
-			mc.close();
-		}
-
-		// Note: a comment by Jeen suggests that a new writer should be created
-		//       for each use:
-		//       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
-		RDFWriter writer = new RDFXMLPrettyWriter( out );
-
-		try
-		{
-			RepositoryConnection con = repository.getConnection();
-			con.export( writer );
-			con.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-	}
-
-	public void writeTrix( OutputStream out )
-		throws RippleException
-	{
-		// Note: a comment by Jeen suggests that a new writer should be created
-		//       for each use:
-		//       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
-		RDFWriter writer = new TriXWriter( out );
-
-		try
-		{
-			RepositoryConnection con = repository.getConnection();
-			con.export( writer );
-			con.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-	}
-
 	////////////////////////////////////////////////////////////////////////////
 
 	// Note: this may be a very expensive operation (see Sesame API).
@@ -399,14 +240,6 @@ public Repository getRepository()
 		}
 
 		return contexts;
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	public void touch()
-	{
-		setChanged();
-		notifyObservers();
 	}
 }
 

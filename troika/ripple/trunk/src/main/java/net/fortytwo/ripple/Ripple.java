@@ -1,12 +1,16 @@
 package net.fortytwo.ripple;
 
+import java.io.IOException;
+
 import java.net.URL;
 
 import java.util.Properties;
 
-import java.io.IOException;
+import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.PropertyConfigurator;
+
+import org.openrdf.rio.RDFFormat;
 
 public class Ripple
 {
@@ -121,11 +125,22 @@ public class Ripple
 		return s_listPadding;
 	}
 
-	static String s_exportFormat;
+	////////////////////////////////////////////////////////////////////////////
 
-	public static String exportFormat()
+	static RDFFormat s_exportFormat, s_cacheFormat;
+
+	public static RDFFormat exportFormat()
 	{
 		return s_exportFormat;
+	}
+
+	public static RDFFormat cacheFormat()
+	{
+		return s_cacheFormat;
+	}
+	public static void setCacheFormat( final RDFFormat format )
+	{
+		s_cacheFormat = format;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -257,6 +272,33 @@ public class Ripple
 			return EvaluationStyle.lookup( s );
 	}
 
+	static RDFFormat getRdfFormatProperty(
+		final Properties props,
+		final String name,
+		final RDFFormat defaultValue ) throws RippleException
+	{
+// System.out.println( "########## " + RDFFormat.N3 );
+// System.out.println( "########## " + RDFFormat.NTRIPLES );
+// System.out.println( "########## " + RDFFormat.RDFXML );
+// System.out.println( "########## " + RDFFormat.TRIG );
+// System.out.println( "########## " + RDFFormat.TRIX );
+// System.out.println( "########## " + RDFFormat.TURTLE );
+		String s = props.getProperty( name );
+
+		if ( null == s )
+			return defaultValue;
+
+		else
+		{
+			RDFFormat format = RdfUtils.findFormat( s );
+
+			if ( null == format )
+				throw new RippleException( "unknown RDF format: " + s );
+
+			return format;
+		}
+	}
+
 	public static void initialize()
 		throws RippleException
 	{
@@ -278,11 +320,6 @@ public class Ripple
 			throw new RippleException( "unable to load ripple.properties" );
 		}
 
-		expressionOrder = ExpressionOrder.find(
-			props.getProperty( "net.fortytwo.ripple.io.syntax.order" ) );
-		expressionAssociativity = ExpressionAssociativity.find(
-			props.getProperty( "net.fortytwo.ripple.io.syntax.associativity" ) );
-
 		s_jLineDebugOutput = props.getProperty(
 			"net.fortytwo.ripple.io.jline.debugOutput" );
 
@@ -295,8 +332,6 @@ public class Ripple
 			props, "net.fortytwo.ripple.model.rdf.useInference", false );
 		s_enforceImplicitProvenance = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
-		s_exportFormat = getStringProperty(
-			props, "net.fortytwo.ripple.model.rdf.export.format", "rdfxml" );
 
 		s_preferNewestNamespaceDefinitions = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.namespace.preferNewest", false );
@@ -307,6 +342,16 @@ public class Ripple
 			props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
 		s_defaultNamespace = getStringProperty(
 			props, "net.fortytwo.ripple.model.uri.defaultNamespace", "" );
+
+		expressionOrder = ExpressionOrder.find(
+			props.getProperty( "net.fortytwo.ripple.query.syntax.order" ) );
+		expressionAssociativity = ExpressionAssociativity.find(
+			props.getProperty( "net.fortytwo.ripple.query.syntax.associativity" ) );
+
+		s_cacheFormat = getRdfFormatProperty(
+			props, "net.fortytwo.ripple.io.cache.format", RDFFormat.RDFXML );
+		s_exportFormat = getRdfFormatProperty(
+			props, "net.fortytwo.ripple.io.export.format", RDFFormat.RDFXML );
 
 		s_bufferTreeView = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.treeView.bufferOutput", false );

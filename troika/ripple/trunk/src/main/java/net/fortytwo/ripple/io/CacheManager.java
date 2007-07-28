@@ -3,6 +3,9 @@ package net.fortytwo.ripple.io;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.net.URL;
+import java.net.URLConnection;
+
 	import java.util.Iterator;
 	import java.util.List;
 
@@ -11,16 +14,14 @@ import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
 
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
-import org.openrdf.rio.trix.TriXWriter;
 
 public class CacheManager
 {
@@ -33,48 +34,23 @@ public class CacheManager
 		rplStoreSuccessMemosUri = "http://fortytwo.net/2007/03/ripple/store#successMemos",
 		rplStoreFailureMemosUri = "http://fortytwo.net/2007/03/ripple/store#failureMemos";
 
-	// Note: not thread-safe.
-	public static void load( final Model model, final InputStream is, final RDFFormat format )
+	public static RDFFormat loadCache( final URL url,
+								RDFFormat format,
+								final ModelConnection mc )
 		throws RippleException
 	{
-		ModelConnection mc = model.getConnection( "for CacheManager's load()" );
+		format = ( null == format )
+			? RdfUtils.read( url, mc.getSourceAdapter(), url.toString() )
+			: RdfUtils.read( url, mc.getSourceAdapter(), url.toString(), format );
 
-		mc.addGraph( is, null, format );
+		updateDereferencer( mc );
 
-		Dereferencer dereferencer = model.getDereferencer();
-
-		// Restore dereferencer state by reading success and failure memos
-		// from the last session (if present).
-		{
-			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
-			RdfValue succ = mc.findAtMostOneObject( meta,
-				new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) ) );
-			RdfValue fail = mc.findAtMostOneObject( meta,
-				new RdfValue( mc.createUri( rplStoreFailureMemosUri ) ) );
-
-			if ( null != succ )
-			{
-				s_logger.debug( "reading success memos" );
-				List<RippleValue> successMemos = mc.listValue( succ );
-
-				for ( Iterator<RippleValue> iter = successMemos.iterator(); iter.hasNext(); )
-					dereferencer.addSuccessMemo( mc.stringValue( iter.next() ) );
-			}
-
-			if ( null != fail )
-			{
-				s_logger.debug( "reading failure memos" );
-				List<RippleValue> failureMemos = mc.listValue( fail );
-
-				for ( Iterator<RippleValue> iter = failureMemos.iterator(); iter.hasNext(); )
-					dereferencer.addFailureMemo( mc.stringValue( iter.next() ) );
-			}
-		}
-
-		mc.close();
+		return format;
 	}
 
-	public void writeTo( final Model model, final OutputStream out )
+	public static void writeCacheTo( final Model model,
+									final OutputStream out,
+									RDFFormat format )
 		throws RippleException
 	{
 		// Save dereferencer state.
@@ -147,44 +123,46 @@ public class CacheManager
 			mc.close();
 		}
 
-		// Note: a comment by Jeen suggests that a new writer should be created
-		//       for each use:
-		//       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
-		RDFWriter writer = new RDFXMLPrettyWriter( out );
-
-		try
-		{
-			RepositoryConnection con = model.getRepository().getConnection();
-			con.export( writer );
-			con.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
+		RdfUtils.write( model.getRepository(), out, format );
 	}
 
-	public void writeTrix( final Model model, final OutputStream out )
+	////////////////////////////////////////////////////////////////////////////
+
+	static void updateDereferencer( final ModelConnection mc )
 		throws RippleException
 	{
-		// Note: a comment by Jeen suggests that a new writer should be created
-		//       for each use:
-		//       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
-		RDFWriter writer = new TriXWriter( out );
+		Model model = mc.getModel();
+		Dereferencer dereferencer = model.getDereferencer();
 
-		try
+		// Restore dereferencer state by reading success and failure memos
+		// from the last session (if present).
 		{
-			RepositoryConnection con = model.getRepository().getConnection();
-			con.export( writer );
-			con.close();
-		}
+			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
+			RdfValue succ = mc.findAtMostOneObject( meta,
+				new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) ) );
+			RdfValue fail = mc.findAtMostOneObject( meta,
+				new RdfValue( mc.createUri( rplStoreFailureMemosUri ) ) );
 
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
+			if ( null != succ )
+			{
+				s_logger.debug( "reading success memos" );
+				List<RippleValue> successMemos = mc.listValue( succ );
+
+				for ( Iterator<RippleValue> iter = successMemos.iterator(); iter.hasNext(); )
+					dereferencer.addSuccessMemo( mc.stringValue( iter.next() ) );
+			}
+
+			if ( null != fail )
+			{
+				s_logger.debug( "reading failure memos" );
+				List<RippleValue> failureMemos = mc.listValue( fail );
+
+				for ( Iterator<RippleValue> iter = failureMemos.iterator(); iter.hasNext(); )
+					dereferencer.addFailureMemo( mc.stringValue( iter.next() ) );
+			}
 		}
 	}
+
 }
 
 // kate: tab-width 4

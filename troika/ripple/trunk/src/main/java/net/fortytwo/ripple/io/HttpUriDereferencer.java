@@ -111,7 +111,7 @@ public class HttpUriDereferencer implements Dereferencer
 			else
 				url = urlFactory.createUrl( uri.toString() );
 
-			mc.addGraph( url, context );
+			mc.addGraph( url, context.toString() );
 //s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
 		}
 
