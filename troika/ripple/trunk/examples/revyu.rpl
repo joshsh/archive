@@ -20,7 +20,7 @@
 @prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
 @prefix :  <file:///tmp/stuff.rdf#>.
 
-@define filter:  dup/swap/dip/joy:i id scrap /ifte/joy:i.
+@define filter:  dup/swap/dip/i id scrap /ifte/i.
 @define booksReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:filter.
 
 @define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.

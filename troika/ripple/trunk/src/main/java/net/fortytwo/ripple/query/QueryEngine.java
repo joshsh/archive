@@ -27,15 +27,15 @@ import org.openrdf.model.Value;
 
 public class QueryEngine
 {
-	private final static Logger s_logger
+	final static Logger s_logger
 		= Logger.getLogger( QueryEngine.class );
 
-	private Model model;
-	private Lexicon lexicon;
-	private Evaluator evaluator;
+	Model model;
+	Lexicon lexicon;
+	Evaluator evaluator;
 
-	private RipplePrintStream printStream;
-	private PrintStream errorPrintStream;
+	RipplePrintStream printStream;
+	PrintStream errorPrintStream;
 
 	////////////////////////////////////////////////////////////////////////////
 

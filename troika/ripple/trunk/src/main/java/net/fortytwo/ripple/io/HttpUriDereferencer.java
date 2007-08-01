@@ -28,12 +28,12 @@ import org.openrdf.repository.RepositoryResult;
 
 public class HttpUriDereferencer implements Dereferencer
 {
-	private final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
+	final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
 
-	private Set<String> successMemos;
-	private Set<String> failureMemos;
+	Set<String> successMemos;
+	Set<String> failureMemos;
 
-	private UrlFactory urlFactory;
+	UrlFactory urlFactory;
 
 	public HttpUriDereferencer( UrlFactory urlFactory )
 	{
@@ -43,11 +43,11 @@ public class HttpUriDereferencer implements Dereferencer
 		failureMemos = new LinkedHashSet<String>();
 	}
 
-	private String findMemo( final URI uri )
+	String findMemo( final URI uri )
 	{
 		String ns = uri.getNamespace();
 
-		// For hash namespaces, the namespace is memoized.
+		// For hash namespaces, the "racine" of the URI is memoized.
 		if ( '#' == ns.charAt( ns.length() - 1 ) )
 			return ns;
 
@@ -67,7 +67,7 @@ public class HttpUriDereferencer implements Dereferencer
 		}
 	}
 
-	private URI findContext( final String ns, ModelConnection mc )
+	URI findContext( final String ns, ModelConnection mc )
 		throws RippleException
 	{
 		return mc.createUri( ns );
@@ -130,7 +130,7 @@ public class HttpUriDereferencer implements Dereferencer
 			filter( ns, context, mc );
 	}
 
-	private void filter( final String ns, final URI context, ModelConnection mc )
+	void filter( final String ns, final URI context, ModelConnection mc )
 		throws RippleException
 	{
 		RepositoryConnection conn = mc.getRepositoryConnection();
