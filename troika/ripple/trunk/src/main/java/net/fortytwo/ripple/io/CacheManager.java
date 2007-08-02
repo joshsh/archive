@@ -27,18 +27,35 @@ public class CacheManager
 {
 	final static Logger s_logger = Logger.getLogger( CacheManager.class );
 
-	final static String
-		// A special "URI" for metadata about Ripple's triple store.  It is not
+	static RdfValue
+		// An indexical resource for metadata about Ripple's triple store.  It is not
 		// dereferenceable, and its value is specific to the particular store.
-		rplStoreRootUri = "urn:net.fortytwo.ripple.store.meta",
-		rplStoreSuccessMemosUri = "http://fortytwo.net/2007/03/ripple/store#successMemos",
-		rplStoreFailureMemosUri = "http://fortytwo.net/2007/03/ripple/store#failureMemos";
+		rplStoreRoot,
+		rplStoreSuccessMemo,
+		rplStoreFailureMemo;
+
+	static boolean initialized = false;
+	static void initialize( final ModelConnection mc )
+		throws RippleException
+	{
+		rplStoreRoot = new RdfValue( mc.createUri(
+			"urn:net.fortytwo.ripple.store.meta" ) );
+		rplStoreSuccessMemo = new RdfValue( mc.createUri(
+			"http://fortytwo.net/2007/03/ripple/store#successMemo" ) );
+		rplStoreFailureMemo = new RdfValue( mc.createUri(
+			"http://fortytwo.net/2007/03/ripple/store#failureMemo" ) );
+
+		initialized = true;
+	}
 
 	public static RDFFormat loadCache( final URL url,
 								RDFFormat format,
 								final ModelConnection mc )
 		throws RippleException
 	{
+		if ( !initialized )
+			initialize( mc );
+
 		format = ( null == format )
 			? RdfUtils.read( url, mc.getSourceAdapter(), url.toString() )
 			: RdfUtils.read( url, mc.getSourceAdapter(), url.toString(), format );
@@ -58,67 +75,18 @@ public class CacheManager
 			Dereferencer dereferencer = model.getDereferencer();
 
 			ModelConnection mc = model.getConnection( null );
+			if ( !initialized )
+				initialize( mc );
 
-			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
-			RdfValue succ = new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) );
-			RdfValue fail = new RdfValue( mc.createUri( rplStoreFailureMemosUri ) );
+			mc.removeStatementsAbout( rplStoreRoot, null );
 
-			mc.removeStatementsAbout( meta, null );
-
-			RdfValue rdfFirst = new RdfValue( RDF.FIRST );
-			RdfValue rdfRest = new RdfValue( RDF.REST );
-			RdfValue rdfNil = new RdfValue( RDF.NIL );
-			RdfValue rdfType = new RdfValue( RDF.TYPE );
-			RdfValue rdfList = new RdfValue( RDF.LIST );
-			RdfValue last;
-
-			last = null;
+			s_logger.debug( "writing success memos" );
 			for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
-			{
-				s_logger.debug( "writing success memos" );
+				mc.add( rplStoreRoot, rplStoreSuccessMemo, mc.createValue( iter.next() ) );
 
-				// Note: apparently it's important (in Sesame 2 beta) to add an
-				//       edge TO a blank node before adding edges FROM the blank
-				//       node, otherwise you get a disjointed graph.  I don't
-				//       know whether this is a bug or a feature.
-				RdfValue cur = new RdfValue( mc.createBNode() );
-				if ( null == last )
-				{
-					mc.add( meta, succ, cur );
-					mc.add( cur, rdfType, rdfList );
-				}
-				else
-					mc.add( last, rdfRest, cur );
-
-				RdfValue first = mc.createValue( iter.next() );
-				mc.add( cur, rdfFirst, first );
-
-				last = cur;
-			}
-			if ( null != last )
-				mc.add( last, rdfRest, rdfNil );
-
-			last = null;
+			s_logger.debug( "writing failure memos" );
 			for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
-			{
-				s_logger.debug( "writing failure memos" );
-
-				RdfValue cur = new RdfValue( mc.createBNode() );
-				if ( null == last )
-				{
-					mc.add( meta, fail, cur );
-					mc.add( cur, rdfType, rdfList );
-				}
-				else
-					mc.add( last, rdfRest, cur );
-
-				RdfValue first = mc.createValue( iter.next() );
-				mc.add( cur, rdfFirst, first );
-
-				last = cur;
-			}
-			if ( null != last )
-				mc.add( last, rdfRest, rdfNil );
+				mc.add( rplStoreRoot, rplStoreFailureMemo, mc.createValue( iter.next() ) );
 
 			mc.close();
 		}
@@ -128,39 +96,23 @@ public class CacheManager
 
 	////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 *  Restores dereferencer state by reading success and failure memos
+	 *  from the last session (if present).
+	 */
 	static void updateDereferencer( final ModelConnection mc )
 		throws RippleException
 	{
 		Model model = mc.getModel();
 		Dereferencer dereferencer = model.getDereferencer();
 
-		// Restore dereferencer state by reading success and failure memos
-		// from the last session (if present).
-		{
-			RdfValue meta = new RdfValue( mc.createUri( rplStoreRootUri ) );
-			RdfValue succ = mc.findAtMostOneObject( meta,
-				new RdfValue( mc.createUri( rplStoreSuccessMemosUri ) ) );
-			RdfValue fail = mc.findAtMostOneObject( meta,
-				new RdfValue( mc.createUri( rplStoreFailureMemosUri ) ) );
+		Iterator<RdfValue> succIter = mc.findObjects( rplStoreRoot, rplStoreSuccessMemo ).iterator();
+		while ( succIter.hasNext() )
+			dereferencer.addSuccessMemo( mc.stringValue( succIter.next() ) );
 
-			if ( null != succ )
-			{
-				s_logger.debug( "reading success memos" );
-				List<RippleValue> successMemos = mc.listValue( succ );
-
-				for ( Iterator<RippleValue> iter = successMemos.iterator(); iter.hasNext(); )
-					dereferencer.addSuccessMemo( mc.stringValue( iter.next() ) );
-			}
-
-			if ( null != fail )
-			{
-				s_logger.debug( "reading failure memos" );
-				List<RippleValue> failureMemos = mc.listValue( fail );
-
-				for ( Iterator<RippleValue> iter = failureMemos.iterator(); iter.hasNext(); )
-					dereferencer.addFailureMemo( mc.stringValue( iter.next() ) );
-			}
-		}
+		Iterator<RdfValue> failIter = mc.findObjects( rplStoreRoot, rplStoreSuccessMemo ).iterator();
+		while ( failIter.hasNext() )
+			dereferencer.addSuccessMemo( mc.stringValue( failIter.next() ) );
 	}
 
 }

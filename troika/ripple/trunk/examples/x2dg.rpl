@@ -51,6 +51,7 @@
 
 
 # Gateway resources.
+<http://192.168.1.20:2020/all/Actions>
 <http://192.168.1.20:2020/all/Transforms_TransformSets_Join>
 <http://192.168.1.20:2020/all/Languages>
 <http://192.168.1.20:2020/all/Policies_PolicySets_Join>
@@ -63,7 +64,6 @@
 <http://192.168.1.20:2020/all/PolicySetPermissions>
 <http://192.168.1.20:2020/all/TransformSets>
 <http://192.168.1.20:2020/all/OutcomeEnum>
-<http://192.168.1.20:2020/all/Actions>
 <http://192.168.1.20:2020/all/OperatingSystems>
 <http://192.168.1.20:2020/all/UserGroupPermissions>
 <http://192.168.1.20:2020/all/SecurityLevelEnum>
@@ -91,12 +91,16 @@
 <http://192.168.1.20:2020/resource/Users/1>
 <http://192.168.1.20:2020/resource/Vocabularies/1/1>
 <http://192.168.1.20:2020/resource/LogEvents/1>
-<http://192.168.1.20:2020/resource/Transforms/1/1>.
+<http://192.168.1.20:2020/resource/Transforms/1/1>
 
 
 
 # Not working:
       <http://192.168.1.20:2020/all/Vocabularies>
+	2007-08-02 10:30:50,480 [Thread-9] ERROR RippleException - org.openrdf.rio.RDFParseException: '2007-02-07 16:46:21.0' is not a valid value for datatype http://www.w3.org/2001/XMLSchema#dateTime [line 20, column 59]
+	[...]
+'-'? yyyy '-' mm '-' dd 'T' hh ':' mm ':' ss ('.' s+)? (zzzzzz)?
+
       <http://192.168.1.20:2020/all/LogEvents>
       <http://192.168.1.20:2020/all/Transforms>
       <http://192.168.1.20:2020/all/Policies>

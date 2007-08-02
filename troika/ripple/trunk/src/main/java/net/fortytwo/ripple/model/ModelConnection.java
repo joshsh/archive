@@ -21,6 +21,7 @@ import net.fortytwo.ripple.util.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
+import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.RdfUtils;
@@ -331,6 +332,16 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 		{
 			return valuesReceived;
 		}
+	}
+
+	public Collection<RdfValue> findObjects( RdfValue subj, RdfValue pred )
+		throws RippleException
+	{
+		Collector<RdfValue> sink = new Collector<RdfValue>();
+
+		multiply( subj, pred, sink );
+
+		return sink;
 	}
 
 	public RdfValue findSingleObject( RdfValue subj, RdfValue pred )
