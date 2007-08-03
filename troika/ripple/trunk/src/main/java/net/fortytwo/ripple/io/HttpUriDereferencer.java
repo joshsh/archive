@@ -221,11 +221,13 @@ if ( v instanceof URI )
 
 	public void addSuccessMemo( final String memo )
 	{
+System.out.println( "adding success memo: " + memo );
 		successMemos.add( memo );
 	}
 
 	public void addFailureMemo( final String memo )
 	{
+System.out.println( "adding failure memo: " + memo );
 		failureMemos.add( memo );
 	}
 

@@ -85,6 +85,9 @@ public Dereferencer getDereferencer()
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
 
+		// Don't try to dereference the cache resource.
+		dereferencer.addSuccessMemo( "urn:net.fortytwo.ripple.store.meta" );
+
 		loadSymbols( urlFactory );
 
 		s_logger.debug( "Finished creating Model '" + name + "'" );

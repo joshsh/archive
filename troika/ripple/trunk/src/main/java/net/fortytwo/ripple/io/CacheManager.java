@@ -9,6 +9,7 @@ import java.util.Iterator;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.RdfUtils;
 
@@ -50,7 +51,8 @@ public class CacheManager
 		if ( !initialized )
 			initialize( mc );
 
-		RdfSourceAdapter adapter = new RdfSourceAdapter( mc.getRdfSink() );
+		RdfImporter importer = new RdfImporter( mc, mc.getRdfSink() );
+		RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
 
 		format = ( null == format )
 			? RdfUtils.read( url, adapter, url.toString() )
@@ -103,15 +105,17 @@ public class CacheManager
 	static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
+System.out.println( "restoreCacheMetaData" );
 		Dereferencer dereferencer = mc.getModel().getDereferencer();
 
 		Iterator<RdfValue> succIter = mc.findObjects( rplCacheRoot, rplCacheSuccessMemo ).iterator();
 		while ( succIter.hasNext() )
 			dereferencer.addSuccessMemo( mc.stringValue( succIter.next() ) );
 
-		Iterator<RdfValue> failIter = mc.findObjects( rplCacheRoot, rplCacheSuccessMemo ).iterator();
+		Iterator<RdfValue> failIter = mc.findObjects( rplCacheRoot, rplCacheFailureMemo ).iterator();
 		while ( failIter.hasNext() )
-			dereferencer.addSuccessMemo( mc.stringValue( failIter.next() ) );
+			dereferencer.addFailureMemo( mc.stringValue( failIter.next() ) );
+System.out.println( "done!" );
 	}
 }
 
