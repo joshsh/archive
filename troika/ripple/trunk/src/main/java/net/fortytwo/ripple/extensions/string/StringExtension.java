@@ -11,7 +11,7 @@ public class StringExtension extends Extension
 {
 	private static String ns = "http://fortytwo.net/2007/07/ripple/string#";
 
-	public void load( UrlFactory uf, ModelConnection mc )
+	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.addMapping(
@@ -19,6 +19,8 @@ public class StringExtension extends Extension
 
 		registerPrimitive( Concat.class, ns + "concat", mc );
 		registerPrimitive( EndsWith.class, ns + "endsWith", mc );
+		registerPrimitive( IndexOf.class, ns + "indexOf", mc );
+		registerPrimitive( LastIndexOf.class, ns + "lastIndexOf", mc );
 		registerPrimitive( Length.class, ns + "length", mc );
 		registerPrimitive( Matches.class, ns + "matches", mc );
 		registerPrimitive( PercentEncode.class, ns + "percentEncode", mc );

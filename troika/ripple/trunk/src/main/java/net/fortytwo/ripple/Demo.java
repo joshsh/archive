@@ -117,6 +117,9 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 			}
 		}
 
+		// Must close the connection before the repository can be shut down.
+		mc.close();
+
 		// Shut down the Sesame repository.
 		try
 		{
@@ -127,8 +130,6 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 		{
 			throw new RippleException( t );
 		}
-
-		mc.close();
 
 		List<String> openConnections = ModelConnection.listOpenConnections();
 		if ( openConnections.size() > 0 )

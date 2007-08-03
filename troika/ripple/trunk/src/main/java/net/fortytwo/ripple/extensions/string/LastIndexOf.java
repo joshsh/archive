@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Substring extends PrimitiveFunction
+public class LastIndexOf extends PrimitiveFunction
 {
-	public Substring()
+	public LastIndexOf()
 		throws RippleException
 	{
 		super();
@@ -18,7 +18,7 @@ public class Substring extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 3;
+		return 2;
 	}
 
 	public void applyTo( RippleList stack,
@@ -26,27 +26,16 @@ public class Substring extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		int begin, end;
-		String s, result;
+		String str, substr;
+		int result;
 
-		end = mc.intValue( stack.getFirst() );
+		substr = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
-		begin = mc.intValue( stack.getFirst() );
-		stack = stack.getRest();
-		s = mc.stringValue( stack.getFirst() );
+		str = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		try
-		{
-			result = s.substring( begin, end );
-			sink.put( new RippleList( mc.createValue( result ), stack ) );
-		}
-
-		catch ( IndexOutOfBoundsException e )
-		{
-			// Silent fail.
-			return;
-		}
+		result = str.lastIndexOf( substr );
+		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}
 }
 

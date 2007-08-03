@@ -14,6 +14,22 @@ string:endsWith
 
 
 ========================================
+string:indexOf
+========================================
+
+"swell" "we" /indexOf.  # 1
+"fish" "sandwich" /indexOf.  # -1
+
+
+========================================
+string:lastIndexOf
+========================================
+
+"mississippi" "is" /lastIndexOf.  # 4
+"fish" "sandwich" /lastIndexOf.  # -1
+
+
+========================================
 string:length
 ========================================
 

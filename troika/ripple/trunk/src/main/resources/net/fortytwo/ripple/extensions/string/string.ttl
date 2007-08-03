@@ -41,6 +41,42 @@ string:endsWith
 	rdfs:comment "s suffix  =>  b -- where b is true if the given string ends with the given suffix, otherwise false" ;
 	.
 
+string:indexOf
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "str" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "substr" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "indexOf" ;
+	rdfs:comment "str substr  =>  i -- where i is the index of the first occurrence of substr in str, or -1 if it does not occur" ;
+	.
+
+string:lastIndexOf
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "str" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "substr" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "lastIndexOf" ;
+	rdfs:comment "str substr  =>  i -- where i is the index of the last occurrence of substr in str, or -1 if it does not occur" ;
+	.
+
 string:length
 	a rpl:Function ;
 	rpl:arity 1 ;
