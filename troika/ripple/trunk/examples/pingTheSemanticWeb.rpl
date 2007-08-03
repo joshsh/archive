@@ -12,8 +12,8 @@
 
 # uri => uri (having pinged the Semantic Web)
 @define ping:
-    /toString/urlEncoding
-    "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
+    /toString/percentEncode
+    "http://pingthesemanticweb.com/rest/?url=" /swap/concat
     /get.
 
 

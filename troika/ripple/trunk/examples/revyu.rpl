@@ -48,14 +48,18 @@
 
 
 
-
-
+@define min:
+    dupd! dup! swapd! gt! popd pop branch!.
+@define max:
+    dupd! dup! swapd! gt! pop popd branch!.
 
 # uri => local name of uri
 @define localName:
     toString!
     dup! dup! length! swap!
-    "/" lastIndexOf! 1 add! swap! substring!.
+    dup! "#" lastIndexOf!
+    swap! "/" lastIndexOf!
+    :max! 1 add! swap! substring!.
 
 # reviewer's name (e.g. "Paddy") => reviewer resource (e.g. <http://revyu.com/people/Paddy>)
 @define reviewerByName:
@@ -68,7 +72,7 @@
 <http://revyu.com/latest/rss/people/Paddy> :localName! :reviewerByName!.
 
 # From reviewer to feed.
-<http://revyu.com/people/Paddy> :localname! :revyuFeedByName!.
+<http://revyu.com/people/Paddy> :localName! :revyuFeedByName!.
 
 
 
