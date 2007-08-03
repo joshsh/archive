@@ -33,7 +33,6 @@ public class RdfUtils
 						new MemoryStore() ) )
 				: new SailRepository(
 					new MemoryStore() );
-//                    new MemoryStore( new java.io.File( "net.fortytwo.ripple.tmp" ) ) ) );
 
 			repository.initialize();
 

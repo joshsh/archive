@@ -47,30 +47,28 @@ import org.openrdf.rio.RDFHandler;
 
 public class ModelConnection
 {
-	private final static Logger s_logger
+	final static Logger s_logger
 		= Logger.getLogger( ModelConnection.class );
 
-	private Model model;
-	private RepositoryConnection repoConnection;
-	private ValueFactory valueFactory;
-	private ModelBridge bridge;
-	private String name = null;
+	Model model;
+	RepositoryConnection repoConnection;
+	ValueFactory valueFactory;
+	ModelBridge bridge;
+	String name = null;
 
-private RdfSourceAdapter adapter = null;
-
-public RdfSourceAdapter getSourceAdapter()
+RdfSink rdfSink = new RdfNullSink();
+public RdfSink getRdfSink()
 {
-	return adapter;
+	return rdfSink;
 }
-
-public void setSourceAdapter( RdfSourceAdapter adapter )
+public void setRdfSink( final RdfSink sink )
 {
-	this.adapter = adapter;
+	rdfSink = sink;
 }
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private void constructPrivate( Model model )
+	public ModelConnection( Model model )
 		throws RippleException
 	{
 		this.model = model;
@@ -80,9 +78,6 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 		try
 		{
 			valueFactory = model.getRepository().getValueFactory();
-// s_logger.info( "Opened "
-//     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-//     + " (" + openConnections.size() + " total)." );
 		}
 
 		catch ( Throwable t )
@@ -95,17 +90,11 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 		add( this );
 	}
 
-	public ModelConnection( Model model )
-		throws RippleException
-	{
-		constructPrivate( model );
-	}
-
 	public ModelConnection( Model model, final String name )
 		throws RippleException
 	{
+		this( model );
 		this.name = name;
-		constructPrivate( model );
 	}
 
 	public Model getModel()
@@ -460,9 +449,10 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 		}
 	}
 
-	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
-	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
-	private static RdfValue rdfRest = new RdfValue( RDF.REST );
+	static RdfValue
+		rdfFirst = new RdfValue( RDF.FIRST ),
+		rdfNil = new RdfValue( RDF.NIL ),
+		rdfRest = new RdfValue( RDF.REST );
 
 	public List<RippleValue> listValue( final RippleValue listHead )
 		throws RippleException
@@ -559,12 +549,12 @@ public void setSourceAdapter( RdfSourceAdapter adapter )
 	////////////////////////////////////////////////////////////////////////////
 
 	// NOTE: not thread-safe on its own
-	public void add( Statement st )
+	public void add( Statement st, Resource... contexts )
 		throws RippleException
 	{
 		try
 		{
-			repoConnection.add( st );
+			repoConnection.add( st, contexts );
 		}
 
 		catch ( Throwable t )
@@ -997,9 +987,14 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void addGraph( final URL url, final String baseUri )
+	public void addGraph( final URL url,
+						final String baseUri,
+						final Resource... contexts )
 		throws RippleException
 	{
+RdfImporter importer = new RdfImporter( this, rdfSink, contexts );
+final RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
+
 		// Wrap the entire operation in the timeout wrapper, as there are various
 		// pieces which are capable of hanging:
 		//     urlConn.connect()
@@ -1015,20 +1010,16 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		}.start( Ripple.uriDereferencingTimeout() );
 	}
 
-	public void addGraph( final InputStream is, final String baseUri, RDFFormat format )
+	public void addGraph( final InputStream is,
+						final String baseUri,
+						RDFFormat format,
+						final Resource... contexts )
 		throws RippleException
 	{
-		if ( null == adapter )
-			throw new RippleException( "no source adapter has been defined" );
+RdfImporter importer = new RdfImporter( this, rdfSink, contexts );
+final RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
 
 		RdfUtils.read( is, adapter, baseUri, format );
-	}
-
-	public void addGraph( final URL url )
-		throws RippleException
-	{
-// FIXME: the URL should be treated as a black box.
-		addGraph( url, url.toString() );
 	}
 
 	public long countStatements( Resource context )
@@ -1221,19 +1212,24 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
-		throws RippleException
+	void dereference( final RdfValue v )
 	{
 		try
 		{
-			model.getDereferencer().dereference( subj, this );
+			model.getDereferencer().dereference( v, this );
 		}
 
 		catch ( RippleException e )
 		{
 			// (soft fail)
-			s_logger.info( "Failed to dereference URI: " + subj );
+			s_logger.info( "Failed to dereference resource: " + v );
 		}
+	}
+
+	public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
+		throws RippleException
+	{
+		dereference( subj );
 
 		Value rdfSubj = subj.getRdfValue();
 		Value rdfPred = pred.getRdfValue();
@@ -1299,16 +1295,7 @@ stmtIter.enableDuplicateFilter();
 	public void divide( RdfValue obj, RdfValue pred, Sink<RdfValue> sink )
 		throws RippleException
 	{
-		try
-		{
-			model.getDereferencer().dereference( obj, this );
-		}
-
-		catch ( RippleException e )
-		{
-			// (soft fail)
-			s_logger.info( "Failed to dereference URI: " + obj );
-		}
+		dereference( obj );
 
 		Value rdfObj = obj.getRdfValue();
 		Value rdfPred = pred.getRdfValue();

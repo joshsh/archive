@@ -1,6 +1,8 @@
 package net.fortytwo.ripple.model;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import java.util.Iterator;
 
@@ -195,11 +197,65 @@ System.out.println( "unhandled test case!" );
 		}
 	}
 
+	private class UriNamespaceTest extends TestRunnable
+	{
+		void nsTest( final String uri,
+					final String ns,
+					final String localName,
+					final ModelConnection mc )
+			throws Exception
+		{
+			URI uriCreated = mc.createUri( uri );
+			String nsCreated = uriCreated.getNamespace();
+			String localNameCreated = uriCreated.getLocalName();
+
+			assertEquals( uriCreated.toString(), uri );
+			assertEquals( nsCreated, ns );
+			assertEquals( localNameCreated, localName );
+		}
+
+		public void test()
+			throws Exception
+		{
+			ModelConnection mc = getTestModel().getConnection( "for UriNamespaceTest" );
+
+			InputStream is = UriTest.class.getResourceAsStream( "UriNamespaceTest.txt" );
+
+			BufferedReader reader = new BufferedReader(
+				new InputStreamReader( is ) );
+			int lineno = 0;
+
+			// Break out when end of stream is reached.
+			while ( true )
+			{
+				String line = reader.readLine();
+				lineno++;
+
+				if ( null == line )
+					break;
+	
+				line = line.trim();
+	
+				if ( !line.startsWith( "#" ) && !line.equals( "" ) )
+				{
+					String[] args = line.split( "\t" );
+					if ( args.length != 3 )
+						throw new RippleException( "wrong number of aguments on line " + lineno );
+					nsTest( args[0], args[1], args[2], mc );
+				}
+			}
+	
+			is.close();
+			mc.close();
+		}
+	}
+
 	public void runTests()
 		throws Exception
 	{
 		initialize();
 
+		testSynchronous( new UriNamespaceTest() );
 		testSynchronous( new GrahamKlyneCasesTest() );
 	}
 }

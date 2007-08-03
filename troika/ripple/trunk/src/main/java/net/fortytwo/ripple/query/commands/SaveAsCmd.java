@@ -34,7 +34,7 @@ public class SaveAsCmd implements Command
 			throw new RippleException( e );
 		}
 
-		CacheManager.writeCacheTo( qe.getModel(), out, Ripple.cacheFormat() );
+		CacheManager.writeCacheTo( out, Ripple.cacheFormat(), mc );
 
 		try
 		{

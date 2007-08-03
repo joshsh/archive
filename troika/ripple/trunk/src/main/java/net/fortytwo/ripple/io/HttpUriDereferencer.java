@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 
 import jline.Completor;
 
@@ -26,6 +26,8 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 
+// Note: throughout this implementation, both the caching context of a URI and
+//       its associated web location are the same as its success or failure 'memo'.
 public class HttpUriDereferencer implements Dereferencer
 {
 	final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
@@ -39,95 +41,90 @@ public class HttpUriDereferencer implements Dereferencer
 	{
 		this.urlFactory = urlFactory;
 
-		successMemos = new LinkedHashSet<String>();
-		failureMemos = new LinkedHashSet<String>();
+		successMemos = new HashSet<String>();
+		failureMemos = new HashSet<String>();
 	}
 
-	String findMemo( final URI uri )
+	/**
+	 *  @return  a String representation of the URL to be resolved
+	 */
+	static String findMemo( final URI uri )
 	{
 		String ns = uri.getNamespace();
+		String memo;
 
-		// For hash namespaces, the "racine" of the URI is memoized.
+		// For hash namespaces, the "racine" of the URI, followed by the hash
+		// character (because it's a little quicker to leave it intact), is memoized.
 		if ( '#' == ns.charAt( ns.length() - 1 ) )
-			return ns;
+			memo = ns;
 
-		// For slash namespaces, we're forced to memoize the specific URI,
-		// as we don't know whether to expect to get statements only about
-		// the target URI or about other URIs in the namespace as well.
+		// For slash namespaces, we're forced to choose between requesting
+		// the information resource at the full URI, or removing a local
+		// name and treating the remainder as the URI of the information
+		// resource.  Both kinds of documents are found on the Semantic Web.
 		else
 		{
-			String uriStr = uri.toString();
+			// Pro: saves time if multiple URIs resolve to the same information
+			//      resource
+			// Con: very many hash namespaces are not set up this way, and we
+			//      may lose significant information
+			if ( Ripple.dereferenceByNamespace() )
+				memo = ns;
 
-			// For memoization purposes, a URI with a trailing slash is no
-			// different than the same URI without the slash.
-			if ( '/' == uriStr.charAt( uriStr.length() - 1 ) )
-				return uriStr.substring( 0, uriStr.length() - 1 );
+			// Pro: no information loss
+			// Con: frequent repeated requests for the same document, resulting
+			//      in wasted bandwidth and redundant statements
 			else
-				return uriStr;
+				memo = uri.toString();
 		}
+
+		// Note: currently, many distinct memos may be equivalent as URLs, e.g.
+		//           http://example.com/#
+		//           http://example.com
+		//           http://example.com/
+		//           http://example.com///
+		//           etc.
+		return memo;
 	}
 
-	URI findContext( final String ns, ModelConnection mc )
+	public void dereference( final URI uri, final ModelConnection mc )
 		throws RippleException
 	{
-		return mc.createUri( ns );
-	}
-
-	public void dereference( final URI uri, ModelConnection mc )
-		throws RippleException
-	{
-		String ns = uri.getNamespace();
 		String memo = findMemo( uri );
 
-		if ( successMemos.contains( memo )
-		|| failureMemos.contains( memo ) )
-{
-//if ( successMemos.contains( memo ) )
-//s_logger.info( "URI memo already succeeded: " + memo );
-//if ( failureMemos.contains( memo ) )
-//s_logger.info( "URI memo already failed: " + memo );
+		if ( successMemos.contains( memo ) || failureMemos.contains( memo ) )
 			return;
-}
 
-		// Identify the context of the to-be-imported graph with its namespace.
-		URI context = findContext( ns, mc );
+		// Note: this URL should be treated as a "black box" once created; it
+		// need not bear any relation to the URI it was created from.
+		URL url = urlFactory.createUrl( memo );
+
+		// The web location 'memo' is used as the caching context.
+		URI context = mc.createUri( memo );
 
 		try
 		{
-			// Note: this URL should be treated as a "black box" once created; it
-			// need not bear any relation to the URI it was created from.
-			URL url;
-
-			// Request the resource by its namespace, rather than by its full
-			// URI.
-			// Note: for hash namespaces, this doesn't make any difference.
-			if ( Ripple.dereferenceByNamespace() )
-				url = urlFactory.createUrl( ns );
-
-			// Request the resource at the full URI.  If the purpose of a slash
-			// namespace is to serve up statements about a specific URI, then
-			// this is the way to go.  However, we'll lose some documents which
-			// perhaps should be using a hash namespace instead.
-			else
-				url = urlFactory.createUrl( uri.toString() );
-
-			mc.addGraph( url, context.toString() );
-//s_logger.info( "#### Added " + mc.countStatements( context ) + " statements to context " + context.toString() );
+			// Attempt to import the information resource.  The web location
+			// 'memo' is used as the base URI for any relative references.
+			mc.addGraph( url, memo, context );
 		}
 
+		// For now, any exception thrown during the importing process
+		// results in the URI being blacklisted as not dereferenceable.
 		catch ( RippleException e )
 		{
-//			mc.reset( true );
 			s_logger.info( "Failed to dereference URI: " + uri.toString() );
 			failureMemos.add( memo );
 			throw e;
 		}
 
+		// At this point, the URI is considered to have been successfully
+		// dereferenced.
 		successMemos.add( memo );
 
 // TODO: this should probably be in a parent Dereferencer.
 		if ( Ripple.enforceImplicitProvenance() )
-			filter( ns, context, mc );
+			filter( uri.getNamespace(), context, mc );
 	}
 
 	void filter( final String ns, final URI context, ModelConnection mc )
@@ -212,7 +209,7 @@ if ( v instanceof URI )
 			// the value in the appropriate context.
 			if ( successMemos.contains( memo ) )
 			{
-				URI context = findContext( ( (URI) v ).getNamespace(), mc );
+				URI context = mc.createUri( memo );
 //				mc.removeStatementsAbout( rv, context );
 
 				successMemos.remove( memo );
@@ -224,13 +221,11 @@ if ( v instanceof URI )
 
 	public void addSuccessMemo( final String memo )
 	{
-//System.out.println( "adding success memo: " + memo );
 		successMemos.add( memo );
 	}
 
 	public void addFailureMemo( final String memo )
 	{
-//System.out.println( "adding failure memo: " + memo );
 		failureMemos.add( memo );
 	}
 

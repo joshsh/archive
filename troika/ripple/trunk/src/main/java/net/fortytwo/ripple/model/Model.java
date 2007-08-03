@@ -124,31 +124,6 @@ public Dereferencer getDereferencer()
 			? new ModelConnection( this )
 			: new ModelConnection( this, name );
 
-		Sink<Statement> addStatementSink = new Sink<Statement>()
-		{
-			public void put( Statement st )
-				throws RippleException
-			{
-				mc.add( st );
-			}
-		};
-
-		Sink<Namespace> defineNamespaceSink = new Sink<Namespace>()
-		{
-			public void put( Namespace ns )
-				throws RippleException
-			{
-				mc.setNamespace( ns.getPrefix(), ns.getName(), override );
-			}
-		};
-
-		RdfSourceAdapter adapter = new RdfSourceAdapter(
-			addStatementSink,
-			defineNamespaceSink,
-			new NullSink<String>() );
-
-		mc.setSourceAdapter( adapter );
-
 		return mc;
 	}
 

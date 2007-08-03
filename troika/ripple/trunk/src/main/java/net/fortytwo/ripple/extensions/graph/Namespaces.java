@@ -8,6 +8,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
@@ -34,8 +35,8 @@ public class Namespaces extends PrimitiveFunction
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		URI uri;
@@ -56,28 +57,24 @@ public class Namespaces extends PrimitiveFunction
 										final Sink<RippleList> resultSink,
 										final ModelConnection mc )
 	{
-		// Discard statements.
-		Sink<Statement> statementSink = new NullSink<Statement>();
-
-		// Push namespaces to the stack as pairs.
-		Sink<Namespace> namespaceSink = new Sink<Namespace>()
+		RdfSink rdfSink = new RdfSink()
 		{
-			public void put( Namespace ns )
-				throws RippleException
+			// Discard statements.
+			public void put( final Statement st ) throws RippleException {}
+
+			// Push namespaces to the stack as pairs.
+			public void put( final Namespace ns ) throws RippleException
 			{
 				RippleList result = new RippleList(
 					mc.createValue( ns.getPrefix() ) ).push( mc.createValue( ns.getName() ) );
 				resultSink.put( new RippleList( result, stack ) );
 			}
+
+			// Discard comments.
+			public void put( final String comment ) throws RippleException {}
 		};
 
-		// Discard comments.
-		Sink<String> commentSink = new NullSink<String>();
-
-		RdfSourceAdapter adapter = new RdfSourceAdapter(
-			statementSink,
-			namespaceSink,
-			commentSink );
+		RdfSourceAdapter adapter = new RdfSourceAdapter( rdfSink );
 
 		return adapter;
 	}

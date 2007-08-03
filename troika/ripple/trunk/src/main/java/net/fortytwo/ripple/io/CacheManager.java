@@ -1,19 +1,15 @@
 package net.fortytwo.ripple.io;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.net.URL;
-import java.net.URLConnection;
 
-	import java.util.Iterator;
-	import java.util.List;
+import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
@@ -28,22 +24,20 @@ public class CacheManager
 	final static Logger s_logger = Logger.getLogger( CacheManager.class );
 
 	static RdfValue
-		// An indexical resource for metadata about Ripple's triple store.  It is not
-		// dereferenceable, and its value is specific to the particular store.
-		rplStoreRoot,
-		rplStoreSuccessMemo,
-		rplStoreFailureMemo;
+		rplCacheRoot,
+		rplCacheSuccessMemo,
+		rplCacheFailureMemo;
 
 	static boolean initialized = false;
 	static void initialize( final ModelConnection mc )
 		throws RippleException
 	{
-		rplStoreRoot = new RdfValue( mc.createUri(
+		rplCacheRoot = new RdfValue( mc.createUri(
 			"urn:net.fortytwo.ripple.store.meta" ) );
-		rplStoreSuccessMemo = new RdfValue( mc.createUri(
-			"http://fortytwo.net/2007/03/ripple/store#successMemo" ) );
-		rplStoreFailureMemo = new RdfValue( mc.createUri(
-			"http://fortytwo.net/2007/03/ripple/store#failureMemo" ) );
+		rplCacheSuccessMemo = new RdfValue( mc.createUri(
+			"http://fortytwo.net/2007/07/ripple/cache#successMemo" ) );
+		rplCacheFailureMemo = new RdfValue( mc.createUri(
+			"http://fortytwo.net/2007/07/ripple/cache#failureMemo" ) );
 
 		initialized = true;
 	}
@@ -56,65 +50,69 @@ public class CacheManager
 		if ( !initialized )
 			initialize( mc );
 
-		format = ( null == format )
-			? RdfUtils.read( url, mc.getSourceAdapter(), url.toString() )
-			: RdfUtils.read( url, mc.getSourceAdapter(), url.toString(), format );
+		RdfSourceAdapter adapter = new RdfSourceAdapter( mc.getRdfSink() );
 
-		updateDereferencer( mc );
+		format = ( null == format )
+			? RdfUtils.read( url, adapter, url.toString() )
+			: RdfUtils.read( url, adapter, url.toString(), format );
+
+		restoreCacheMetaData( mc );
 
 		return format;
 	}
 
-	public static void writeCacheTo( final Model model,
-									final OutputStream out,
-									RDFFormat format )
+	public static void writeCacheTo( final OutputStream out,
+									final RDFFormat format,
+									final ModelConnection mc )
 		throws RippleException
 	{
-		// Save dereferencer state.
-		{
-			Dereferencer dereferencer = model.getDereferencer();
+		if ( !initialized )
+			initialize( mc );
 
-			ModelConnection mc = model.getConnection( null );
-			if ( !initialized )
-				initialize( mc );
+		persistCacheMetadata( mc );
 
-			mc.removeStatementsAbout( rplStoreRoot, null );
-
-			s_logger.debug( "writing success memos" );
-			for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
-				mc.add( rplStoreRoot, rplStoreSuccessMemo, mc.createValue( iter.next() ) );
-
-			s_logger.debug( "writing failure memos" );
-			for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
-				mc.add( rplStoreRoot, rplStoreFailureMemo, mc.createValue( iter.next() ) );
-
-			mc.close();
-		}
-
-		RdfUtils.write( model.getRepository(), out, format );
+		RdfUtils.write( mc.getModel().getRepository(), out, format );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
 	/**
+	 *  Writes cache metadata to the triple store.
+	 *  Note: for now, this metadata resides in the null context.
+	 */
+	static void persistCacheMetadata( final ModelConnection mc )
+		throws RippleException
+	{
+		Dereferencer dereferencer = mc.getModel().getDereferencer();
+
+		mc.removeStatementsAbout( rplCacheRoot, null );
+
+		s_logger.debug( "writing success memos" );
+		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
+			mc.add( rplCacheRoot, rplCacheSuccessMemo, mc.createValue( iter.next() ) );
+
+		s_logger.debug( "writing failure memos" );
+		for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
+			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.createValue( iter.next() ) );
+	}
+
+	/**
 	 *  Restores dereferencer state by reading success and failure memos
 	 *  from the last session (if present).
 	 */
-	static void updateDereferencer( final ModelConnection mc )
+	static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
-		Model model = mc.getModel();
-		Dereferencer dereferencer = model.getDereferencer();
+		Dereferencer dereferencer = mc.getModel().getDereferencer();
 
-		Iterator<RdfValue> succIter = mc.findObjects( rplStoreRoot, rplStoreSuccessMemo ).iterator();
+		Iterator<RdfValue> succIter = mc.findObjects( rplCacheRoot, rplCacheSuccessMemo ).iterator();
 		while ( succIter.hasNext() )
 			dereferencer.addSuccessMemo( mc.stringValue( succIter.next() ) );
 
-		Iterator<RdfValue> failIter = mc.findObjects( rplStoreRoot, rplStoreSuccessMemo ).iterator();
+		Iterator<RdfValue> failIter = mc.findObjects( rplCacheRoot, rplCacheSuccessMemo ).iterator();
 		while ( failIter.hasNext() )
 			dereferencer.addSuccessMemo( mc.stringValue( failIter.next() ) );
 	}
-
 }
 
 // kate: tab-width 4

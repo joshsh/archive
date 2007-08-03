@@ -80,7 +80,6 @@ public class Demo
 
 		// Set the default namespace.
 		mc.setNamespace( "", Ripple.getDefaultNamespace(), false );
-		mc.close();
 qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDefaultNamespace() ), false );
 
 		// Attach an interpreter to the query engine and let it read from
@@ -105,7 +104,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 			}
 
 			// Write the cache out in the same format as it was read in.
-			CacheManager.writeCacheTo( model, storeOut, Ripple.cacheFormat() );
+			CacheManager.writeCacheTo( storeOut, Ripple.cacheFormat(), mc );
 
 			try
 			{
@@ -128,6 +127,8 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDef
 		{
 			throw new RippleException( t );
 		}
+
+		mc.close();
 
 		List<String> openConnections = ModelConnection.listOpenConnections();
 		if ( openConnections.size() > 0 )

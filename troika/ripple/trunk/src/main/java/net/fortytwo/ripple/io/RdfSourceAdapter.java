@@ -1,30 +1,20 @@
 package net.fortytwo.ripple.io;
 
-import java.io.InputStream;
-
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.model.RdfSink;
 
-import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 
 public class RdfSourceAdapter implements RDFHandler
 {
-	Sink<Statement> statementSink;
-	Sink<Namespace> namespaceSink;
-	Sink<String> commentSink;
+	RdfSink sink;
 
-	public RdfSourceAdapter( Sink<Statement> statementSink,
-							Sink<Namespace> namespaceSink,
-							Sink<String> commentSink )
+	public RdfSourceAdapter( RdfSink sink )
 	{
-		this.statementSink = statementSink;
-		this.namespaceSink = namespaceSink;
-		this.commentSink = commentSink;
+		this.sink = sink;
 	}
 
 	/**
@@ -34,7 +24,7 @@ public class RdfSourceAdapter implements RDFHandler
 	{
 		try
 		{
-			commentSink.put( comment );
+			sink.put( comment );
 		}
 
 		catch ( RippleException e )
@@ -50,7 +40,7 @@ public class RdfSourceAdapter implements RDFHandler
 	{
 		try
 		{
-			namespaceSink.put( new NamespaceImpl( prefix, uri ) );
+			sink.put( new NamespaceImpl( prefix, uri ) );
 		}
 
 		catch ( RippleException e )
@@ -66,7 +56,7 @@ public class RdfSourceAdapter implements RDFHandler
 	{
 		try
 		{
-			statementSink.put( st );
+			sink.put( st );
 		}
 
 		catch ( RippleException e )

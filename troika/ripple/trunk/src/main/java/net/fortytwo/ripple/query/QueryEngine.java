@@ -8,8 +8,10 @@ import java.util.Iterator;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Lexicon;
+import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfNullSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
@@ -63,55 +65,11 @@ public class QueryEngine
 	public ModelConnection getConnection( final String name )
 		throws RippleException
 	{
-		final boolean override = Ripple.preferNewestNamespaceDefinitions();
-
 		final ModelConnection mc = ( null == name )
 			? new ModelConnection( model )
 			: new ModelConnection( model, name );
 
-		Sink<Statement> addStatementSink = new Sink<Statement>()
-		{
-			public void put( Statement st )
-				throws RippleException
-			{
-				mc.add( st );
-			}
-		};
-
-		Sink<Namespace> defineNamespaceSink = new Sink<Namespace>()
-		{
-			public void put( final Namespace ns )
-				throws RippleException
-			{
-				mc.setNamespace( ns.getPrefix(), ns.getName(), override );
-			}
-		};
-
-		ReadOnlyFilter<Statement> lexiconStatementUpdater
-			= new ReadOnlyFilter<Statement>( addStatementSink )
-				{
-					public void handle( Statement st )
-						throws RippleException
-					{
-						lexicon.add( st );
-					}
-				};
-
-		ReadOnlyFilter<Namespace> lexiconNamespaceUpdater
-			= new ReadOnlyFilter<Namespace>( defineNamespaceSink )
-				{
-					public void handle( Namespace ns )
-					{
-						lexicon.add( ns, override );
-					}
-				};
-
-		RdfSourceAdapter adapter = new RdfSourceAdapter(
-			lexiconStatementUpdater,
-			lexiconNamespaceUpdater,
-			new NullSink<String>() );
-
-		mc.setSourceAdapter( adapter );
+		mc.setRdfSink( new LexiconUpdater( lexicon, new RdfNullSink() ) );
 
 		return mc;
 	}
