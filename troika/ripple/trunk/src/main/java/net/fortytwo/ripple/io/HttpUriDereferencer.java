@@ -10,11 +10,14 @@ import java.util.HashSet;
 
 import jline.Completor;
 
-import net.fortytwo.ripple.util.UrlFactory;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.util.ThreadWrapper;
+import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
 
@@ -90,23 +93,36 @@ public class HttpUriDereferencer implements Dereferencer
 	public void dereference( final URI uri, final ModelConnection mc )
 		throws RippleException
 	{
-		String memo = findMemo( uri );
+		final String memo = findMemo( uri );
 
 		if ( successMemos.contains( memo ) || failureMemos.contains( memo ) )
 			return;
 
 		// Note: this URL should be treated as a "black box" once created; it
 		// need not bear any relation to the URI it was created from.
-		URL url = urlFactory.createUrl( memo );
+		final URL url = urlFactory.createUrl( memo );
 
-		// The web location 'memo' is used as the caching context.
-		URI context = mc.createUri( memo );
+		RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
+		final RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
 
+		// Attempt to import the information resource.  The web location
+		// 'memo' is used as the base URI for any relative references.
 		try
 		{
-			// Attempt to import the information resource.  The web location
-			// 'memo' is used as the base URI for any relative references.
-			mc.addGraph( url, memo, context );
+			s_logger.info( "Dereferencing URI " + uri + " at location " + url );
+
+			// Enclose the entire operation in the timeout wrapper, as there are various
+			// pieces which are capable of hanging:
+			//     urlConn.connect()
+			//     urlConn.getContentType()
+			new ThreadWrapper() {
+				protected void run() throws RippleException
+				{
+					RdfUtils.read( url, adapter, memo );
+				}
+			}.start( Ripple.uriDereferencingTimeout() );
+
+			s_logger.debug( "URI dereferenced without errors" );
 		}
 
 		// For now, any exception thrown during the importing process
@@ -124,7 +140,7 @@ public class HttpUriDereferencer implements Dereferencer
 
 // TODO: this should probably be in a parent Dereferencer.
 		if ( Ripple.enforceImplicitProvenance() )
-			filter( uri.getNamespace(), context, mc );
+			filter( uri.getNamespace(), mc.createUri( memo ), mc );
 	}
 
 	void filter( final String ns, final URI context, ModelConnection mc )

@@ -15,11 +15,10 @@ public class RdfImporter implements RdfSink
 	boolean override;
 
 	public RdfImporter( final ModelConnection mc,
-						final RdfSink sink,
 						final Resource... contexts )
 	{
 		this.mc = mc;
-		this.sink = sink;
+		sink = mc.getRdfSink();
 		this.contexts = contexts;
 
 		override = Ripple.preferNewestNamespaceDefinitions();

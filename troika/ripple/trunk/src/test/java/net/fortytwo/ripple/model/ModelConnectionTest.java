@@ -106,71 +106,10 @@ public class ModelConnectionTest extends RippleTestCase
 			URI uri1 = mc.createUri( "urn:org.example.test.addStatementsTest.ctxA#uri1" );
 			assertEquals( mc.countStatements( ctxA ), 0 );
 			mc.add(
-		new RdfValue( uri1 ),
-		new RdfValue( uri1 ),
-		new RdfValue( uri1 ) );
+				new RdfValue( uri1 ),
+				new RdfValue( uri1 ),
+				new RdfValue( uri1 ) );
 			assertEquals( mc.countStatements( ctxA ), 1 );
-		}
-	}
-
-	private class AddGraphTest extends TestRunnable
-	{
-		public void test()
-			throws Exception
-		{
-			ModelConnection mc = getTestModel().getConnection( "for AddGraphTest" );
-
-			{
-				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.turtleStrA#" );
-
-				String s = "@prefix foo:  <http://example.org/foo#>.\n"
-					+ "foo:a foo:b foo:c." ;
-				InputStream is = new ByteArrayInputStream( s.getBytes() );
-
-				mc.addGraph( is, ctxA.toString(), RDFFormat.TURTLE );
-
-				//assertEquals( mc.countStatements( null ), 1 );
-				assertEquals( mc.countStatements( ctxA ), 1 );
-			}
-
-			{
-				URL test1Url = ModelConnectionTest.class.getResource( "test1.ttl" );
-				URL test2Url = ModelConnectionTest.class.getResource( "test2.ttl" );
-
-				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.turtleA#" );
-				URI ctxB = mc.createUri( "urn:org.example.test.addGraphTest.turtleB#" );
-
-				mc.addGraph( test1Url, ctxA.toString() );
-				assertEquals( mc.countStatements( ctxA ), 2 );
-				mc.addGraph( test2Url, ctxA.toString() );
-				assertEquals( mc.countStatements( ctxA ), 4 );
-
-				mc.addGraph( test1Url, ctxB.toString() );
-				assertEquals( mc.countStatements( ctxB ), 2 );
-				mc.addGraph( test2Url, ctxB.toString() );
-				assertEquals( mc.countStatements( ctxB ), 4 );
-			}
-
-			{
-				URL test1Url = ModelConnectionTest.class.getResource( "test1.rdf" );
-				URL test2Url = ModelConnectionTest.class.getResource( "test2.rdf" );
-
-				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.rdfxmlA#" );
-				URI ctxB = mc.createUri( "urn:org.example.test.addGraphTest.rdfxmlB#" );
-
-				mc.addGraph( test1Url, ctxA.toString() );
-				assertEquals( mc.countStatements( ctxA ), 2 );
-				mc.addGraph( test2Url, ctxA.toString() );
-				assertEquals( mc.countStatements( ctxA ), 4 );
-
-				mc.addGraph( test1Url, ctxB.toString() );
-				assertEquals( mc.countStatements( ctxB ), 2 );
-				mc.addGraph( test2Url, ctxB.toString() );
-				assertEquals( mc.countStatements( ctxB ), 4 );
-			}
-//*/
-
-			mc.close();
 		}
 	}
 
@@ -180,12 +119,6 @@ public class ModelConnectionTest extends RippleTestCase
 // Note: Sesame repositories have not responded well to asynchronous testing, so ModelConnection will have to add its own synchronization code (synchronize on the Repository).
 		testSynchronous( new CreateUriTest() );
 		testSynchronous( new CountStatementsTest() );
-
-/* RESTORE ME:
-See: http://www.openrdf.org/issues/browse/SES-358?watch=true
-net.fortytwo.ripple.model.SesameTest$AddFromInputStreamTest
-		testSynchronous( new AddGraphTest() );
-*/
 	}
 }
 

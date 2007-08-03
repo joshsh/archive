@@ -23,7 +23,6 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
@@ -656,6 +655,36 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
+	public long countStatements( Resource context )
+			throws RippleException
+	{
+			int count = 0;
+
+			try
+			{
+				synchronized( repoConnection )
+				{
+					RepositoryResult<Statement> stmtIter
+							= repoConnection.getStatements(
+									null, null, null, Ripple.useInference(), context );
+					while ( stmtIter.hasNext() )
+					{
+							stmtIter.next();
+							count++;
+					}
+
+					stmtIter.close();
+				}
+			}
+
+			catch ( Throwable t )
+			{
+					reset( true );
+					throw new RippleException( t );
+			}
+			return count;
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 
 	public URI createUri( final String s )
@@ -983,73 +1012,6 @@ s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		throws RippleException
 	{
 		setNamespace( prefix, ns.toString(), override );
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	public void addGraph( final URL url,
-						final String baseUri,
-						final Resource... contexts )
-		throws RippleException
-	{
-RdfImporter importer = new RdfImporter( this, rdfSink, contexts );
-final RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
-
-		// Wrap the entire operation in the timeout wrapper, as there are various
-		// pieces which are capable of hanging:
-		//     urlConn.connect()
-		//     urlConn.getContentType()
-		new ThreadWrapper() {
-			protected void run() throws RippleException
-			{
-				s_logger.info( "Importing model " + url.toString() +
-					( ( null == baseUri ) ? "" : " at base URI " + baseUri.toString() ) );
-				RdfUtils.read( url, adapter, baseUri );
-				s_logger.debug( "graph imported without errors" );
-			}
-		}.start( Ripple.uriDereferencingTimeout() );
-	}
-
-	public void addGraph( final InputStream is,
-						final String baseUri,
-						RDFFormat format,
-						final Resource... contexts )
-		throws RippleException
-	{
-RdfImporter importer = new RdfImporter( this, rdfSink, contexts );
-final RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
-
-		RdfUtils.read( is, adapter, baseUri, format );
-	}
-
-	public long countStatements( Resource context )
-		throws RippleException
-	{
-		int count = 0;
-
-		try
-		{
-			synchronized( repoConnection )
-			{
-				RepositoryResult<Statement> stmtIter
-					= repoConnection.getStatements(
-						null, null, null, Ripple.useInference(), context );
-				while ( stmtIter.hasNext() )
-				{
-					stmtIter.next();
-					count++;
-				}
-	
-				stmtIter.close();
-			}
-		}
-
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-		return count;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.util.RdfUtils;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
@@ -179,7 +179,10 @@ System.out.println( "unhandled test case!" );
 
 			// See: http://lists.w3.org/Archives/Public/uri/2006Feb/0003.html
 			InputStream is = UriTest.class.getResourceAsStream( "UriTest.n3" );
-			mc.addGraph( is, "", RDFFormat.N3 );
+
+			RdfImporter importer = new RdfImporter( mc );
+			RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
+			RdfUtils.read( is, adapter, "", RDFFormat.N3 );
 
 			Collector<RdfValue> cases = new Collector<RdfValue>();
 			mc.divide( URITEST, TYPE, cases );
