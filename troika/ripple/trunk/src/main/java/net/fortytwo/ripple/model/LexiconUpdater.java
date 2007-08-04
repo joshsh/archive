@@ -4,7 +4,10 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Namespace;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 public class LexiconUpdater implements RdfSink
 {
@@ -22,7 +25,16 @@ public class LexiconUpdater implements RdfSink
 
 	public void put( final Statement st ) throws RippleException
 	{
-		lexicon.add( st );
+		Resource subj = st.getSubject();
+		URI pred = st.getPredicate();
+		Value obj = st.getObject();
+
+		if ( subj instanceof URI )
+			lexicon.add( (URI) subj );
+		lexicon.add( pred );
+		if ( obj instanceof URI )
+			lexicon.add( (URI) obj );
+
 		sink.put( st );
 	}
 

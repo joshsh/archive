@@ -84,7 +84,7 @@ System.out.println( "interrupted!" );
 		}
 	}
 
-	void clear( final InputStream is )
+	static void clear( final InputStream is )
 		throws RippleException
 	{
 		try

@@ -4,14 +4,14 @@ import java.util.Collection;
 
 public class DirectiveCompletor extends RippleCompletor
 {
-	private char [] delimiters = { ' ', '\t', '\n', '\r' };
+	char [] delimiters = { ' ', '\t', '\n', '\r' };
 
-	public DirectiveCompletor( Collection<String> alternatives )
+	public DirectiveCompletor( final Collection<String> alternatives )
 	{
 		super( alternatives );
 	}
 
-	private boolean isWhitespace( char c )
+	boolean isDelimiter( final char c )
 	{
 		for ( int i = 0; i < delimiters.length; i++ )
 			if ( delimiters[i] == c )
@@ -29,7 +29,7 @@ public class DirectiveCompletor extends RippleCompletor
 		{
 			char c = s.charAt( i );
 
-			if ( isWhitespace( c ) )
+			if ( isDelimiter( c ) )
 			{
 				if ( ok )
 					index = i + 1;

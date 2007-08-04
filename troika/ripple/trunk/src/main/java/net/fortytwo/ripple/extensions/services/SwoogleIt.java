@@ -32,8 +32,8 @@ import java.net.URL;
 
 public class SwoogleIt extends PrimitiveFunction
 {
-	URI swoogleQueryResponseUri = null;
 	static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
+	URI swoogleQueryResponseUri = null;
 	
 	public SwoogleIt()
 		throws RippleException

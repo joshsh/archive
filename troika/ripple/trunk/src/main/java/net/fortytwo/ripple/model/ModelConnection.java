@@ -132,10 +132,10 @@ public void setRdfSink( final RdfSink sink )
 		openRepositoryConnection();
 	}
 
-	private static int openRepoConns = 0;
+	static int openRepoConns = 0;
 
 	// Establish a new Sesame connection.
-	private void openRepositoryConnection()
+	void openRepositoryConnection()
 		throws RippleException
 	{
 		try
@@ -152,7 +152,7 @@ public void setRdfSink( final RdfSink sink )
 	}
 
 	// Close the current Sesame connection.
-	private void closeRepositoryConnection( final boolean rollback )
+	void closeRepositoryConnection( final boolean rollback )
 		throws RippleException
 	{
 		try
@@ -175,7 +175,8 @@ public void setRdfSink( final RdfSink sink )
 			throw new RippleException( t );
 		}
 
-		throw new RippleException( "attempting to close already-closed connection" );
+		// Don't throw an exception: we could easily end up in a loop.
+		s_logger.error( "tried to close an already-closed connection" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -988,7 +989,7 @@ public void setRdfSink( final RdfSink sink )
 	public void setNamespace( final String prefix, final String ns, final boolean override )
 		throws RippleException
 	{
-s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
+//s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		try
 		{
 			synchronized( repoConnection )

@@ -10,9 +10,9 @@ import jline.Completor;
 
 public abstract class RippleCompletor implements Completor
 {
-	private SortedSet<String> alts;
+	SortedSet<String> alts;
 
-	public RippleCompletor( Collection<String> alternatives )
+	public RippleCompletor( final Collection<String> alternatives )
 	{
 		alts = new TreeSet<String>();
 
@@ -20,9 +20,11 @@ public abstract class RippleCompletor implements Completor
 			alts.add( i.next() );
 	}
 
-	protected abstract int findStartIndex( final String s );
+	protected abstract int findStartIndex( String s );
 
-	public int complete( String buffer, int cursor, List clist )
+	public int complete( final String buffer,
+						final int cursor,
+						final List clist )
 	{
 		String start = ( null == buffer ) ? "" : buffer;
 

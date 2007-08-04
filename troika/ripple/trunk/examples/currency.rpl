@@ -2,7 +2,7 @@
 
 @prefix nso: <http://www.daml.org/2001/09/countries/iso-3166-ont#>.
 
-@define currencyOntology:
+@define currencyTerms:
     <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#Currency>
     <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#code>
     <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#country>

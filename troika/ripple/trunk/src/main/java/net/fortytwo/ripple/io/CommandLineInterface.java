@@ -90,6 +90,7 @@ public class CommandLineInterface extends Thread
 			throw new RippleException( t );
 		}
 
+		// Initialize completors.
 		updateCompletors();
 
 		// What do we do with queries?
@@ -223,6 +224,7 @@ System.out.println( "Escape!" );
 			finished = true;
 			mc.close();
 
+			// Model may have changed, so update completors.
 			updateCompletors();
 		}
 
@@ -311,6 +313,7 @@ System.out.println( "Escape!" );
 			finished = true;
 			mc.close();
 
+			// Model may have changed, so update completors.
 			updateCompletors();
 		}
 

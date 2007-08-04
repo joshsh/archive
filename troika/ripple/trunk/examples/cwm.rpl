@@ -2,7 +2,7 @@
 
 # Cwm Reason Ontology ##########################################################
 
-@define reasonTerms:
+@define cwmReasonTerms:
     <http://www.w3.org/2000/10/swap/reason#Binding>
     <http://www.w3.org/2000/10/swap/reason#CommandLine>
     <http://www.w3.org/2000/10/swap/reason#Conjunction>
@@ -21,13 +21,13 @@
     <http://www.w3.org/2000/10/swap/reason#source>
     <http://www.w3.org/2000/10/swap/reason#variable>
     .
-:reasonTerms/each/rdf:type/unique.
+:cwmReasonTerms/each/rdf:type/unique.
 
 
 # Cwm built-in functions #######################################################
 
 @prefix crypto: <http://www.w3.org/2000/10/swap/crypto#>.
-@define cryptoTerms:
+@define cwmCryptoTerms:
     crypto:CanEncrypt
     crypto:CanSign
     crypto:HasPrivate
@@ -40,20 +40,20 @@
     crypto:verify
     crypto:verifyBoolean
     .
-:cryptoTerms/each/rdf:type/unique.
+:cwmCryptoTerms/each/rdf:type/unique.
 
 
 @prefix list: <http://www.w3.org/2000/10/swap/list#>.
 # ! in N3 format
-@define listTerms:
+@define cwmListTerms:
     list:in
     list:last
     .
-:listTerms/each/rdf:type/unique.
+:cwmListTerms/each/rdf:type/unique.
 
 
 @prefix log: <http://www.w3.org/2000/10/swap/log#>.
-@define logTerms:
+@define cwmLogTerms:
     log:Chaff
     log:N3Document
     log:Truth
@@ -77,11 +77,11 @@
     log:semanticsOrError
     log:uri
     .
-:logTerms/each/rdf:type/unique.
+:cwmLogTerms/each/rdf:type/unique.
 
 
 @prefix math: <http://www.w3.org/2000/10/swap/math#>.
-@define mathTerms:
+@define cwmMathTerms:
     math:Function
     math:List
     math:LogicalOperator
@@ -113,21 +113,21 @@
     math:tan
     math:tanh
     .
-:mathTerms/each/rdf:type/unique.
+:cwmMathTerms/each/rdf:type/unique.
 
 
 @prefix os: <http://www.w3.org/2000/10/swap/os#>.
-@define osTerms:
+@define cwmOsTerms:
     os:argv
     os:baseAbsolute
     os:baseRelative
     os:environ
     .
-:osTerms/each/rdf:type/unique.
+:cwmOsTerms/each/rdf:type/unique.
 
 
 @prefix string: <http://www.w3.org/2000/10/swap/string#>.
-@define stringTerms:
+@define cwmStringTerms:
     string:concat
     string:concatenation
     string:contains
@@ -144,11 +144,11 @@
     string:scrape
     string:startsWith
     .
-:stringTerms/each/rdf:type/unique.
+:cwmStringTerms/each/rdf:type/unique.
 
 
 @prefix time: <http://www.w3.org/2000/10/swap/time#>.
-@define timeTerms:
+@define cwmTimeTerms:
     time:day
     time:dayOfWeek
     time:gmTime
@@ -161,7 +161,7 @@
     time:timeZone
     time:year
     .
-:timeTerms/each/rdf:type/unique.
+:cwmTimeTerms/each/rdf:type/unique.
 
 
 ################################################################################

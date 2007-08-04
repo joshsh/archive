@@ -12,6 +12,9 @@ import org.apache.log4j.PropertyConfigurator;
 
 import org.openrdf.rio.RDFFormat;
 
+/**
+ *  Read-only configuration metadata.
+ */
 public class Ripple
 {
 	public static String getName()

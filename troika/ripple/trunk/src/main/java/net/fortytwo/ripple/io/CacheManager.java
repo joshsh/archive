@@ -51,7 +51,7 @@ public class CacheManager
 		if ( !initialized )
 			initialize( mc );
 
-		RdfImporter importer = new RdfImporter( mc, mc.getRdfSink() );
+		RdfImporter importer = new RdfImporter( mc );
 		RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
 
 		format = ( null == format )

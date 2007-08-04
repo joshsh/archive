@@ -132,6 +132,24 @@ public Dereferencer getDereferencer()
 
 	////////////////////////////////////////////////////////////////////////////
 
+	public void readAll( final RdfSink sink )
+		throws RippleException
+	{
+		RdfSourceAdapter handler = new RdfSourceAdapter( sink );
+
+		try
+		{
+			RepositoryConnection rc = repository.getConnection();
+			rc.export( handler );
+			rc.close();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+	}
+
 	// Note: this may be a very expensive operation (see Sesame API).
 	public long countStatements()
 		throws RippleException
@@ -140,9 +158,9 @@ public Dereferencer getDereferencer()
 
 		try
 		{
-			RepositoryConnection con = repository.getConnection();
-			size = con.size();
-			con.close();
+			RepositoryConnection rc = repository.getConnection();
+			size = rc.size();
+			rc.close();
 		}
 
 		catch ( Throwable t )

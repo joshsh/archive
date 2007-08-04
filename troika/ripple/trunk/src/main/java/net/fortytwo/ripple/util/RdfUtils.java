@@ -67,20 +67,37 @@ public class RdfUtils
 		return format;
 	}
 
-	/**
-	 *  @param urlConn  an already-connected URLConnection
-	 */
-	public static RDFFormat read( final URLConnection urlConn,
-								final RdfSourceAdapter adapter,
-								final String baseUri,
-								final RDFFormat format )
+	static RDFFormat readPrivate( final URLConnection uc,
+									final RdfSourceAdapter adapter,
+									final String baseUri,
+									final RDFFormat format )
 		throws RippleException
 	{
+		final Pointer<RDFFormat> formatPtr = new Pointer<RDFFormat>();
+		formatPtr.ref = format;
+
+		new ThreadWrapper()
+		{
+			protected void run() throws RippleException
+			{
+				// This operation may hang indefinitely (hence the timeout block).
+				HttpUtils.connect( uc );
+	
+				if ( null == formatPtr.ref )
+					// This one may hang as well.
+					formatPtr.ref = HttpUtils.guessRdfFormat( uc );
+			}
+		}.start( Ripple.uriDereferencingTimeout() );
+
+		if ( null == formatPtr.ref )
+			// Soft fail (possibly too soft?)
+			return null;
+
 		InputStream response;
 
 		try
 		{
-			response = urlConn.getInputStream();
+			response = uc.getInputStream();
 		}
 
 		catch ( java.io.IOException e )
@@ -88,7 +105,7 @@ public class RdfUtils
 			throw new RippleException( e );
 		}
 
-		read( response, adapter, baseUri, format );
+		read( response, adapter, baseUri, formatPtr.ref );
 
 		try
 		{
@@ -104,43 +121,26 @@ public class RdfUtils
 	}
 
 	/**
-	 *  @param urlConn  an already-connected URLConnection
+	 *  @param uc  an already-connected URLConnection
 	 */
-	public static RDFFormat read( final URLConnection urlConn,
+	public static RDFFormat read( final URLConnection uc,
+								final RdfSourceAdapter adapter,
+								final String baseUri,
+								final RDFFormat format )
+		throws RippleException
+	{
+		return readPrivate( uc, adapter, baseUri, format );
+	}
+
+	/**
+	 *  @param uc  an already-connected URLConnection
+	 */
+	public static RDFFormat read( final URLConnection uc,
 								final RdfSourceAdapter adapter,
 								final String baseUri )
 		throws RippleException
 	{
-		InputStream response;
-
-		try
-		{
-			response = urlConn.getInputStream();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		RDFFormat format = HttpUtils.guessRdfFormat( urlConn );
-		if ( null == format )
-			// Soft fail (possibly too soft?)
-			return null;
-
-		read( response, adapter, baseUri, format );
-
-		try
-		{
-			response.close();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		return format;
+		return readPrivate( uc, adapter, baseUri, null );
 	}
 
 	public static RDFFormat read( final URL url,
@@ -149,11 +149,10 @@ public class RdfUtils
 								RDFFormat format )
 		throws RippleException
 	{
-		URLConnection urlConn = HttpUtils.openConnection( url );
-		HttpUtils.prepareUrlConnectionForRdfRequest( urlConn );
-		HttpUtils.connect( urlConn );
+		URLConnection uc = HttpUtils.openConnection( url );
+		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
 
-		return read( urlConn, adapter, baseUri, format );
+		return readPrivate( uc, adapter, baseUri, format );
 	}
 
 	public static RDFFormat read( final URL url,
@@ -161,11 +160,7 @@ public class RdfUtils
 								final String baseUri )
 		throws RippleException
 	{
-		URLConnection urlConn = HttpUtils.openConnection( url );
-		HttpUtils.prepareUrlConnectionForRdfRequest( urlConn );
-		HttpUtils.connect( urlConn );
-
-		return read( urlConn, adapter, baseUri );
+		return read( url, adapter, baseUri, null );
 	}
 
 	// Note: not thread-safe with respect to the repository.
@@ -200,7 +195,7 @@ public class RdfUtils
 		String s = name.toLowerCase();
 
 		// Try not to be picky.
-		if ( s.equals( "n3" ) )
+		if ( s.equals( "n3" ) || s.equals( "notation3" ) )
 			format = RDFFormat.N3;
 		else if ( s.equals( "ntriples" ) || s.equals( "n-triples" ) )
 			format = RDFFormat.NTRIPLES;

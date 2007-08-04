@@ -4,14 +4,14 @@ import java.util.Collection;
 
 public class LexicalCompletor extends RippleCompletor
 {
-	private char [] delimiters = { ' ', '\t', '\n', '\r', '.', '/', '(', ')' };
+	char [] delimiters = { ' ', '\t', '\n', '\r', '.', '/', '(', ')', ';', '!' };
 
-	public LexicalCompletor( Collection<String> alternatives )
+	public LexicalCompletor( final Collection<String> alternatives )
 	{
 		super( alternatives );
 	}
 
-	private boolean isDelimiter( char c )
+	boolean isDelimiter( final char c )
 	{
 		for ( int i = 0; i < delimiters.length; i++ )
 			if ( delimiters[i] == c )

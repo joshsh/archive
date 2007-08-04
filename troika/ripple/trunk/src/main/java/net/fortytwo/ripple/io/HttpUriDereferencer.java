@@ -111,16 +111,7 @@ public class HttpUriDereferencer implements Dereferencer
 		{
 			s_logger.info( "Dereferencing URI " + uri + " at location " + url );
 
-			// Enclose the entire operation in the timeout wrapper, as there are various
-			// pieces which are capable of hanging:
-			//     urlConn.connect()
-			//     urlConn.getContentType()
-			new ThreadWrapper() {
-				protected void run() throws RippleException
-				{
-					RdfUtils.read( url, adapter, memo );
-				}
-			}.start( Ripple.uriDereferencingTimeout() );
+			RdfUtils.read( url, adapter, memo );
 
 			s_logger.debug( "URI dereferenced without errors" );
 		}
@@ -130,6 +121,9 @@ public class HttpUriDereferencer implements Dereferencer
 		catch ( RippleException e )
 		{
 			s_logger.info( "Failed to dereference URI: " + uri.toString() );
+// s_logger.info( "### a" );
+// mc.reset( false );
+// s_logger.info( "### b" );
 			failureMemos.add( memo );
 			throw e;
 		}

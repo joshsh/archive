@@ -70,7 +70,7 @@ atomrdf:.
 
 atomowl:.
 
-@define atomowlTerms:
+@define atomOwlTerms:
     atomowl:Category
     atomowl:Content
     atomowl:Entry

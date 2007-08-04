@@ -1,5 +1,7 @@
 package net.fortytwo.ripple.util;
 
+import java.io.InputStream;
+
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -291,6 +293,20 @@ s_logger.info( "    waiting " + w + " milliseconds" );
 		}
 
 		return openConnection( url );
+	}
+
+	public InputStream getInputStream( final URLConnection uc )
+		throws RippleException
+	{
+		try
+		{
+			return uc.getInputStream();
+		}
+
+		catch ( java.io.IOException e )
+		{
+			throw new RippleException( e );
+		}
 	}
 
 	public static void showUrlConnection( final URLConnection urlConn )

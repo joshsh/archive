@@ -46,11 +46,9 @@ public class Comments extends PrimitiveFunction
 
 		RdfSourceAdapter adapter = createAdapter( stack, sink, mc );
 
-		URLConnection urlConn = HttpUtils.openConnection( uri.toString() );
-		HttpUtils.prepareUrlConnectionForRdfRequest( urlConn );
-		HttpUtils.connect( urlConn );
-
-		RdfUtils.read( urlConn, adapter, uri.toString() );
+		URLConnection uc = HttpUtils.openConnection( uri.toString() );
+		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
+		RdfUtils.read( uc, adapter, uri.toString() );
 	}
 
 	static RdfSourceAdapter createAdapter( final RippleList stack,

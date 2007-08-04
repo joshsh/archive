@@ -20,13 +20,15 @@
 @prefix demo: <http://fortytwo.net/2007/03/ripple/demo#>.
 @define rippleDocuments:
     rpl:
-    demo:
-    <http://fortytwo.net/2007/03/ripple/doap#>
+#    demo:
+#    <http://fortytwo.net/2007/03/ripple/doap#>
     etc:
     graph:
     math:
+    services:
     stack:
     stream:
+    string:
     .
 
 :rippleDocuments/each/:ping.

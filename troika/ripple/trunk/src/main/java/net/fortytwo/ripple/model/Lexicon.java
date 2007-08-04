@@ -77,7 +77,10 @@ public class Lexicon
 		}
 
 		mc.close();
-		updateMaps();
+
+		prefixToNamespaceMap = new Hashtable<String, String>();
+		namespaceToPrefixMap = new Hashtable<String, String>();
+		qNamesCollection = new ArrayList<String>();
 	}
 
 	public List<URI> resolveKeyword( final String localName )
@@ -137,15 +140,15 @@ public class Lexicon
 	public Completor getCompletor()
 		throws RippleException
 	{
-		Set<String> localNames = keywordsToUrisMap.keySet();
+		Set<String> keywords = keywordsToUrisMap.keySet();
 		Set<String> prefixes = prefixToNamespaceMap.keySet();
 
-		int size = localNames.size() + prefixes.size() + qNamesCollection.size();
+		int size = keywords.size() + prefixes.size() + qNamesCollection.size();
 		if ( 0 < size )
 		{
 			Collection<String> alts = new ArrayList<String>();
 
-			Iterator<String> localNameIter = localNames.iterator();
+			Iterator<String> localNameIter = keywords.iterator();
 			while ( localNameIter.hasNext() )
 				alts.add( localNameIter.next() );
 
@@ -158,7 +161,6 @@ public class Lexicon
 				alts.add( qNameIter.next() );
 
 			return new LexicalCompletor( alts );
-//            return new SimpleCompletor( alts );
 		}
 
 		else
@@ -166,20 +168,6 @@ public class Lexicon
 	}
 
 	////////////////////////////////////////////////////////////////////////////
-
-	public void add( final Statement st )
-		throws RippleException
-	{
-		Resource subj = st.getSubject();
-		URI pred = st.getPredicate();
-		Value obj = st.getObject();
-
-		if ( subj instanceof URI )
-			add( (URI) subj );
-		add( pred );
-		if ( obj instanceof URI )
-			add( (URI) obj );
-	}
 
 	public void add( final Namespace ns, final boolean override )
 	{
@@ -195,6 +183,7 @@ public class Lexicon
 	public void add( URI uri )
 		throws RippleException
 	{
+//System.out.println( "adding URI: " + uri );
 		// If possible, add a qualified name as well.
 		String prefix = nsPrefixOf( uri );
 		if ( null != prefix )
@@ -202,43 +191,6 @@ public class Lexicon
 			String qName = prefix + ":" + uri.getLocalName();
 			qNamesCollection.add( qName );
 		}
-	}
-
-	void updateMaps()
-		throws RippleException
-	{
-		prefixToNamespaceMap = new Hashtable<String, String>();
-		namespaceToPrefixMap = new Hashtable<String, String>();
-		qNamesCollection = new ArrayList<String>();
-
-		ModelConnection mc = model.getConnection( "for Lexicon updateMaps()" );
-
-		try
-		{
-			// We import the repository's namespaces before its statements, so
-			// that the namespaces are recognized in the statements' URIs.
-			RepositoryResult<Namespace> nsIter
-				= mc.getRepositoryConnection().getNamespaces();
-			while ( nsIter.hasNext() )
-				add( nsIter.next(), true );
-			nsIter.close();
-
-			RepositoryResult<Statement> stmtIter
-				= mc.getRepositoryConnection().getStatements(
-//                    null, null, null, model, includeInferred );
-					null, null, null, Ripple.useInference() );
-			while ( stmtIter.hasNext() )
-				add( stmtIter.next() );
-			stmtIter.close();
-		}
-
-		catch ( Throwable t )
-		{
-			mc.close();
-			throw new RippleException( t );
-		}
-
-		mc.close();
 	}
 }
 

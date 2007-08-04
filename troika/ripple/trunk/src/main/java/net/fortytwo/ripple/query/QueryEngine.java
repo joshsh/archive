@@ -52,6 +52,8 @@ public class QueryEngine
 		lexicon = new Lexicon( model );
 		printStream = new RipplePrintStream( out, lexicon );
 		errorPrintStream = err;
+
+		initializeLexicon();
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -139,6 +141,15 @@ public class QueryEngine
 		else
 			sink.put( model.getBridge().get(
 				new RdfValue( v ) ) );
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	void initializeLexicon() throws RippleException
+	{
+		LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
+
+		model.readAll( updater );
 	}
 }
 
