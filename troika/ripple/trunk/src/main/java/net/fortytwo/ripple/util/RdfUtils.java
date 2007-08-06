@@ -76,6 +76,9 @@ public class RdfUtils
 		final Pointer<RDFFormat> formatPtr = new Pointer<RDFFormat>();
 		formatPtr.ref = format;
 
+		// Note: this timeout block will abort the download if it takes too
+		//       long to connect.  However, the document may take arbitrarily
+		//       long to parse (so there's no limit on the size of a document).
 		new ThreadWrapper()
 		{
 			protected void run() throws RippleException

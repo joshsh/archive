@@ -18,7 +18,7 @@ public class ExportNsCmd implements Command
 		this.fileName = fileName;
 	}
 
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		OutputStream out;

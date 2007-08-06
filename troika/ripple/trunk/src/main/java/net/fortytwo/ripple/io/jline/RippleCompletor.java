@@ -41,9 +41,9 @@ public abstract class RippleCompletor implements Completor
 			if ( findStartIndex( tail ) <= 0 )
 				return -1;
 			else
-			start = ( cursor > 0 )
-				? start.substring( 0, cursor )
-				: "";
+				start = ( cursor > 0 )
+					? start.substring( 0, cursor )
+					: "";
 		}
 
 		int startIndex = findStartIndex( start );

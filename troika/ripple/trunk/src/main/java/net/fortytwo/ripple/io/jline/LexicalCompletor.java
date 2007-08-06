@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public class LexicalCompletor extends RippleCompletor
 {
-	char [] delimiters = { ' ', '\t', '\n', '\r', '.', '/', '(', ')', ';', '!' };
+	char [] delimiters = { ' ', '\t', '\n', '\r', '(', ')', '.', ';', '/', '!' };
 
 	public LexicalCompletor( final Collection<String> alternatives )
 	{

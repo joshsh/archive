@@ -152,13 +152,13 @@ public class Lexicon
 			while ( localNameIter.hasNext() )
 				alts.add( localNameIter.next() );
 
-			Iterator<String> prefixIter = prefixes.iterator();
-			while ( prefixIter.hasNext() )
-				alts.add( prefixIter.next() + ":" );
-
 			Iterator<String> qNameIter = qNamesCollection.iterator();
 			while( qNameIter.hasNext() )
 				alts.add( qNameIter.next() );
+
+			Iterator<String> prefixIter = prefixes.iterator();
+			while ( prefixIter.hasNext() )
+				alts.add( prefixIter.next() + ":" );
 
 			return new LexicalCompletor( alts );
 		}
@@ -189,6 +189,7 @@ public class Lexicon
 		if ( null != prefix )
 		{
 			String qName = prefix + ":" + uri.getLocalName();
+//System.out.println( "adding qname: " + qName );
 			qNamesCollection.add( qName );
 		}
 	}

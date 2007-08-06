@@ -67,8 +67,8 @@ public class Uriqr extends PrimitiveFunction
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		if ( null == s_saxBuilder )
