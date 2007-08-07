@@ -1,37 +1,38 @@
-@prefix vcard:  <http://www.w3.org/2001/vcard-rdf/3.0#> ;
+@prefix vcard:  <http://www.w3.org/2001/vcard-rdf/3.0#>.
 
-vcard:ADRPROPERTIES ;
-vcard:ADRTYPES ;
-vcard:EMAILTYPES ;
-vcard:NPROPERTIES ;
-vcard:ORGPROPERTIES ;
-vcard:TELTYPES ;
-vcard:TZTYPES ;
-vcard:bbs ;
-vcard:car ;
-vcard:cell ;
-vcard:dom ;
-vcard:fax ;
-vcard:home ;
-vcard:home ;
-vcard:internet ;
-vcard:intl ;
-vcard:isdn ;
-vcard:modem ;
-vcard:msg ;
-vcard:pager ;
-vcard:parcel ;
-vcard:pcs ;
-vcard:postal ;
-vcard:pref ;
-vcard:pref ;
-vcard:text ;
-vcard:video ;
-vcard:work ;
-vcard:work ;
-vcard:x400 ;
-
-
+# Note: not dereferenceable.
+@define vcardTerms:
+    vcard:ADRPROPERTIES
+    vcard:ADRTYPES
+    vcard:EMAILTYPES
+    vcard:NPROPERTIES
+    vcard:ORGPROPERTIES
+    vcard:TELTYPES
+    vcard:TZTYPES
+    vcard:bbs
+    vcard:car
+    vcard:cell
+    vcard:dom
+    vcard:fax
+    vcard:home
+    vcard:home
+    vcard:internet
+    vcard:intl
+    vcard:isdn
+    vcard:modem
+    vcard:msg
+    vcard:pager
+    vcard:parcel
+    vcard:pcs
+    vcard:postal
+    vcard:pref
+    vcard:pref
+    vcard:text
+    vcard:video
+    vcard:work
+    vcard:work
+    vcard:x400
+    .
 
 (:
 http://www.w3.org/2001/vcard-rdf/3.0

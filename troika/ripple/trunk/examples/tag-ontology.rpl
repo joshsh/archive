@@ -1,17 +1,18 @@
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/>.
 
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/> ;
-
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/RestrictedTagging> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/equivalentTag> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/isTagOf> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/name> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/relatedTag> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/tag> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/tagName> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedBy> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedOn> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedResource> ;
-<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedWithTag> ;
+@define tagTerms:
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/RestrictedTagging>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/equivalentTag>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/isTagOf>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/name>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/relatedTag>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/tag>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/tagName>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedBy>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedOn>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedResource>
+    <http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedWithTag>
+    .

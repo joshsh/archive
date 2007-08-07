@@ -17,7 +17,7 @@
     dc:coverage
     dc:rights
     .
-	
+
 @prefix dcterms:  <http://purl.org/dc/terms/> .
 
 @define dctermsTerms:
@@ -89,4 +89,4 @@
     dcterms:W3CDTF
     dcterms:RFC3066
     dcterms:NLM
-	.
+    .

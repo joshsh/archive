@@ -1,5 +1,5 @@
 
-@define allOperatingSystems:
+@define operatingSystems:
     <http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl#BSD>
     <http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl#CAB>
     <http://ssel.vub.ac.be/codamos/2005/01/operatingsystems.owl#DMG>

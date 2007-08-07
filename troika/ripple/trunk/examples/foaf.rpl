@@ -150,6 +150,7 @@ foaf: .
 ########################################
 
 # Ego
+<http://fortytwo.net/foaf#josh>.
 <http://fortytwo.net/2007/03/06/josh#me>.
 <http://fortytwo.net/2007/03/06/josh#me> /foaf:interest.
 

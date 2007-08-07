@@ -1,0 +1,6 @@
+# a f => a, if a/f is true, otherwise nothing
+@define restrict:
+    /dupd/i    # apply the filter criterion, f
+        id     # keep the stack if a/f is true
+        scrap  # throw the stack away if it isn't
+    /branch.

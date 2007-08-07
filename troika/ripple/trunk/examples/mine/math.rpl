@@ -1,8 +1,9 @@
 
 
-@define dup2: /dupd/swap/dupd/swap.
-@define max: /:dup2/gt id swap /branch/pop.
-@define min: /:dup2/lt id swap /branch/pop.
+@define min:
+    dupd! dup! swapd! gt! popd pop branch!.
+@define max:
+    dupd! dup! swapd! gt! pop popd branch!.
 
 2 3 /:max.  # 3
 3 2 /:max.  # 3

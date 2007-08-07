@@ -1,3 +1,10 @@
+# Note: own prefix.
+@prefix geo: <http://www.geonames.org/ontology#>.
+
+@define geoTerms:
+    geo:alternateName
+    geo:name
+    .
 
 # Spokane
 <http://sws.geonames.org/5811696/>.

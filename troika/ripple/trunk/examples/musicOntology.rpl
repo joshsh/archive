@@ -1,7 +1,11 @@
 # http://musicontology.com/
 #
+# Specification:
+#     http://musicontology.com/
 # Music Ontology wiki:
 #     http://wiki.musicontology.com/index.php/Music_Features_Ontology
+#
+# Note: use by dbtune, e.g. http://dbtune.org/magnatune/data/magnatune/track/445
 
 @prefix mo: <http://purl.org/ontology/mo/>.
 

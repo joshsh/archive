@@ -1,0 +1,7 @@
+# uri => local name of uri
+@define localName:
+    toString!
+    dup! dup! length! swap!
+    dup! "#" lastIndexOf!
+    swap! "/" lastIndexOf!
+    :max! 1 add! swap! substring!.

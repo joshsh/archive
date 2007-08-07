@@ -2,3 +2,9 @@
 
 # rdfize URI for mailto:parcour@gmail.com
 <http://rdfize.com/people/e9bbf0a3835f323fc4bf3a20f8f41df1b31bda6a/>.
+
+@define rdfize:
+    /toString/sha1
+    "/" /concat
+    "http://rdfize.com/people/" /swap/concat
+    /toUri.

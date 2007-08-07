@@ -1,10 +1,11 @@
 # PRJ Project Vocabulary
 # wget http://dannyayers.com:88/xmlns/project/project.owl
 
-@define prj: <http://purl.org/stuff/project/>.
+@prefix prj: <http://purl.org/stuff/project/>.
 
 <http://purl.org/stuff/project>.
 
+# Note: not dereferenceable.
 @define prjTerms:
     prj:Agent
     prj:Goal

@@ -18,13 +18,16 @@
 @prefix owl:   <http://www.w3.org/2002/07/owl#>.
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
-@prefix :  <file:///tmp/stuff.rdf#>.
 
-@define filter:  dup/swap/dip/i id scrap /ifte/i.
-@define booksReviewsOnly:  (/foaf:primaryTopic/owl:sameAs/rdf:type scom:Book /equal) /:filter.
+# r => r, if r is a book review, otherwise nothing
+@define bookReviewsOnly:
+    (   /foaf:primaryTopic          # from review to topic
+        /owl:sameAs                 # from topic to possible book
+        /rdf:type scom:Book /equal  # is it really a book?
+    )/:restrict.
 
 @define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
-/:tomsReviews /:booksReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
+/:tomsReviews /:bookReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
 
 
 
@@ -48,18 +51,8 @@
 
 
 
-@define min:
-    dupd! dup! swapd! gt! popd pop branch!.
-@define max:
-    dupd! dup! swapd! gt! pop popd branch!.
 
-# uri => local name of uri
-@define localName:
-    toString!
-    dup! dup! length! swap!
-    dup! "#" lastIndexOf!
-    swap! "/" lastIndexOf!
-    :max! 1 add! swap! substring!.
+
 
 # reviewer's name (e.g. "Paddy") => reviewer resource (e.g. <http://revyu.com/people/Paddy>)
 @define reviewerByName:
