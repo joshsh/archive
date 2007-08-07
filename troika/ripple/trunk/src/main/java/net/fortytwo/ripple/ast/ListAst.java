@@ -16,8 +16,8 @@ import java.util.ArrayList;
 // TODO: this class has more plumbing than it needs
 public class ListAst extends ListNode<Ast> implements Ast
 {
-	private Ast first;
-	private ListNode<Ast> rest;
+	Ast first;
+	ListNode<Ast> rest;
 
 	public Ast getFirst()
 	{
@@ -29,11 +29,24 @@ public class ListAst extends ListNode<Ast> implements Ast
 		return rest;
 	}
 
+	/**
+	 *  Constructs a nil list AST.
+	 */
+	public ListAst()
+	{
+		first = null;
+	}
+
 	public ListAst( Ast first, ListNode<Ast> rest )
 	{
 //System.out.println( "first = " + first + ", rest = " + rest );
 		this.first = first;
 		this.rest = rest;
+	}
+
+	boolean isNil()
+	{
+		return ( null == first );
 	}
 
 /*
@@ -60,11 +73,11 @@ return null;
 	}
 */
 
-	private ModelConnection modelConnection;
-	private QueryEngine queryEngine;
-	private Sink<RippleValue> valueSink;
+	ModelConnection modelConnection;
+	QueryEngine queryEngine;
+	Sink<RippleValue> valueSink;
 
-	private Sink<RippleList> getSink( ListNode<Ast> listAst )
+	Sink<RippleList> getSink( ListNode<Ast> listAst )
 	{
 		if ( null == listAst )
 			return new ListToValueSink( valueSink );
@@ -78,6 +91,10 @@ return null;
 						ModelConnection mc )
 		throws RippleException
 	{
+		if ( isNil() )
+//			return;
+			sink.put( RippleList.NIL );
+
 //        boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 		modelConnection = mc;
 		queryEngine = qe;
@@ -103,17 +120,21 @@ return null;
 	{
 		StringBuilder s = new StringBuilder();
 		s.append( "(" );
-		ListNode<Ast> cur = this;
-		boolean first = true;
-		while ( null != cur )
-		{
-			if ( first )
-				first = false;
-			else
-				s.append( " " );
 
-			s.append( cur.getFirst().toString() );
-			cur = cur.getRest();
+		if ( !isNil() )
+		{
+			ListNode<Ast> cur = this;
+			boolean first = true;
+			while ( null != cur )
+			{
+				if ( first )
+					first = false;
+				else
+					s.append( " " );
+	
+				s.append( cur.getFirst().toString() );
+				cur = cur.getRest();
+			}
 		}
 
 		s.append( ")" );

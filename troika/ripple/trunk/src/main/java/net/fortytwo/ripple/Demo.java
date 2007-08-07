@@ -35,6 +35,9 @@ import org.apache.log4j.Logger;
 import org.openrdf.repository.Repository;
 import org.openrdf.rio.RDFFormat;
 
+/**
+ *  Demo application.
+ */
 public class Demo
 {
 	final static Logger s_logger = Logger.getLogger( Demo.class );

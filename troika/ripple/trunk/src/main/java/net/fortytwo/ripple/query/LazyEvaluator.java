@@ -103,11 +103,14 @@ public class LazyEvaluator extends Evaluator
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+	public void applyTo( final RippleList stack,
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
+if ( stack == RippleList.NIL )
+	return;
+
 		modelConnection = mc;
 		model = modelConnection.getModel();
 

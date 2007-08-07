@@ -32,7 +32,9 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 import net.fortytwo.ripple.util.Buffer;
+import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.Tee;
 
 import org.apache.log4j.Logger;
 
@@ -99,7 +101,17 @@ public class CommandLineInterface extends Thread
 			public void put( final ListAst ast )
 				throws RippleException
 			{
-				evaluate( ast );
+				evaluate( ast, false );
+			}
+		};
+
+		// What do we do with query queryPrefixs?
+		Sink<ListAst> continuingQuerySink = new Sink<ListAst>()
+		{
+			public void put( final ListAst ast )
+				throws RippleException
+			{
+				evaluate( ast, true );
 			}
 		};
 
@@ -135,7 +147,7 @@ System.out.println( "Escape!" );
 		};
 
 		RecognizerInterface itf = new RecognizerInterface(
-			querySink, commandSink, eventSink, qe.getErrorPrintStream() );
+			querySink, continuingQuerySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
 		Sink<Exception> parserExceptionSink = new Sink<Exception>()
 		{
@@ -162,6 +174,8 @@ System.out.println( "Escape!" );
 		};
 
 		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
+
+		resetContinuation();
 	}
 
 	public void run()
@@ -268,8 +282,18 @@ System.out.println( "Escape!" );
 		}
 	}
 
-	void evaluate( ListAst ast )
+	Collector<RippleList> queryPrefix = new Collector<RippleList>();
+
+	void resetContinuation()
+		throws RippleException
 	{
+		queryPrefix.clear();
+		queryPrefix.put( RippleList.NIL );
+	}
+
+	void evaluate( final ListAst ast, final boolean continuing )
+	{
+System.out.println( "continuing = " + continuing );
 		ModelConnection mc = null;
 		boolean gotConnection = false, finished = false;
 		boolean doBuffer = Ripple.getBufferTreeView();
@@ -285,9 +309,13 @@ System.out.println( "Escape!" );
 			// will be flushed into the view after the lexicon is updated.
 			ContainerTreeView view = new ContainerTreeView(
 				queryEngine.getPrintStream(), mc );
-			final Sink<RippleList> results = doBuffer
+			Sink<RippleList> med = doBuffer
 				? new Buffer<RippleList>( view )
 				: view;
+			Collector<RippleList> newQueryPrefix = new Collector<RippleList>();
+			final Sink<RippleList> results = continuing
+				? new Tee<RippleList>( med, newQueryPrefix )
+				: med;
 
 			final ModelConnection mcf = mc;
 			Sink<RippleList> derefSink = new Sink<RippleList>()
@@ -299,7 +327,7 @@ System.out.println( "Escape!" );
 				}
 			};
 
-			RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink );
+			RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink, queryPrefix );
 
 			cmd.execute( queryEngine, mc );
 
@@ -312,6 +340,11 @@ System.out.println( "Escape!" );
 
 			finished = true;
 			mc.close();
+
+			if ( continuing )
+				queryPrefix = newQueryPrefix;
+			else
+				resetContinuation();
 
 			// Model may have changed, so update completors.
 			updateCompletors();

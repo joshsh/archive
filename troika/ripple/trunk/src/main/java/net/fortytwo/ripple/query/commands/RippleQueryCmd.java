@@ -1,5 +1,8 @@
 package net.fortytwo.ripple.query.commands;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -12,14 +15,17 @@ import net.fortytwo.ripple.util.Sink;
 
 public class RippleQueryCmd implements Command
 {
-	private ListAst listAst;
-	private Sink<RippleList> sink;
+	ListAst listAst;
+	Sink<RippleList> sink;
+	Collection<RippleList> composedWith;
 
 	public RippleQueryCmd( final ListAst listAst,
-							final Sink<RippleList> sink )
+							final Sink<RippleList> sink,
+							final Collection<RippleList> composedWith )
 	{
 		this.listAst = listAst;
 		this.sink = sink;
+		this.composedWith = composedWith;
 	}
 
 	public void execute( final QueryEngine qe, final ModelConnection mc )
@@ -31,7 +37,11 @@ public class RippleQueryCmd implements Command
 			public void put( RippleValue v )
 				throws RippleException
 			{
-				qe.getEvaluator().applyTo( (RippleList) v, sink, mc );
+				RippleList l = (RippleList) v;
+				Iterator<RippleList> iter = composedWith.iterator();
+				while ( iter.hasNext() )
+					qe.getEvaluator().applyTo(
+						RippleList.concat( l, iter.next() ), sink, mc );
 			}
 		};
 

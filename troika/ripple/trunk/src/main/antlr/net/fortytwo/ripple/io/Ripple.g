@@ -58,12 +58,12 @@ options
 		}
 
 		else
-			itf.put( RecognizerEvent.NEWLINE );
+			itf.putEvent( RecognizerEvent.NEWLINE );
 	}
 
 	void matchEscapeCharacter()
 	{
-		itf.put( RecognizerEvent.ESCAPE );
+		itf.putEvent( RecognizerEvent.ESCAPE );
 	}
 }
 
@@ -254,7 +254,7 @@ options
 		}
 
 		else
-			itf.put( cmd );
+			itf.putCommand( cmd );
 	}
 
 	public void matchQuery( final ListAst ast )
@@ -266,7 +266,19 @@ options
 		}
 
 		else
-			itf.put( ast );
+			itf.putQuery( ast );
+	}
+
+	public void matchContinuingQuery( final ListAst ast )
+	{
+		if ( null == itf )
+		{
+			System.err.println( "parser has not been initialized" );
+			System.exit( 1 );
+		}
+
+		else
+			itf.putContinuingQuery( ast );
 	}
 }
 
@@ -276,7 +288,7 @@ nt_Document
 System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
-	itf.put( RecognizerEvent.NEWLINE );
+	itf.putEvent( RecognizerEvent.NEWLINE );
 System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
 }
 	: ( (nt_Ws)? nt_Statement )*
@@ -299,13 +311,13 @@ nt_Statement
 	: nt_Directive
 
 	// Query statements are always lists.
-	| r=nt_List ( EOS | SEMI )
-		{
-			matchQuery( r );
-		}
+	| r=nt_List (
+		EOS { matchQuery( r ); }
+ 		| SEMI { matchContinuingQuery( r ); } )
 
-	// Empty statements are simply ignored.
-	| EOS | SEMI
+	// Empty statements are effectively ignored.
+	| EOS { matchQuery( new ListAst() ); }
+	| SEMI { matchContinuingQuery( new ListAst() ); }
 	;
 
 

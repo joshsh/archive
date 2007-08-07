@@ -16,8 +16,6 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.util.NullSink;
-import net.fortytwo.ripple.util.ReadOnlyFilter;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;

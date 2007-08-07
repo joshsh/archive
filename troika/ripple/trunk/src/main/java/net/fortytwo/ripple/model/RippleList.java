@@ -15,7 +15,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		= new RippleList(
 			// Note: this dummy value avoids null pointer exceptions in the list
 			//       memoizer.
-			new RdfValue( RDF.ALT ),
+			new NumericLiteral( 42 ),
 			(RippleList) null );
 
 	private RippleValue first;
@@ -33,6 +33,38 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		return rest;
 	}
 	
+	public RippleValue get( final int i )
+		throws RippleException
+	{
+		if ( i < 0 )
+			throw new RippleException( "list index out of bounds: " + i );
+
+		RippleList cur = this;
+		for ( int j = 0; j < i; j++ )
+		{
+			if ( NIL == cur )
+				throw new RippleException( "list index out of bounds: " + i );
+
+			cur = cur.getRest();
+		}
+
+		return cur.getFirst();
+	}
+
+	public int length()
+	{
+		int l = 0;
+
+		RippleList cur = this;
+		while ( NIL != cur )
+		{
+			l++;
+			cur = cur.getRest();
+		}
+
+		return l;
+	}
+
 	public RippleList( final RippleValue first )
 	{
 		this.first = first;

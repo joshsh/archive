@@ -9,23 +9,25 @@ import net.fortytwo.ripple.util.Sink;
 
 public class RecognizerInterface
 {
-	private Sink<ListAst> querySink;
+	private Sink<ListAst> querySink, continuingQuerySink;
 	private Sink<Command> commandSink;
 	private Sink<RecognizerEvent> eventSink;
 	private PrintStream errorStream;
 
 	public RecognizerInterface( final Sink<ListAst> querySink,
+							final Sink<ListAst> continuingQuerySink,
 							final Sink<Command> commandSink,
 							final Sink<RecognizerEvent> eventSink,
 							final PrintStream errorStream )
 	{
 		this.querySink = querySink;
+		this.continuingQuerySink = continuingQuerySink;
 		this.commandSink = commandSink;
 		this.eventSink = eventSink;
 		this.errorStream = errorStream;
 	}
 
-	public void put( final ListAst ast )
+	public void putQuery( final ListAst ast )
 	{
 		try
 		{
@@ -38,7 +40,20 @@ public class RecognizerInterface
 		}
 	}
 
-	public void put( final Command cmd )
+	public void putContinuingQuery( final ListAst ast )
+	{
+		try
+		{
+			continuingQuerySink.put( ast );
+		}
+
+		catch ( RippleException e )
+		{
+			errorStream.println( "\nError: " + e + "\n" );
+		}
+	}
+
+	public void putCommand( final Command cmd )
 	{
 		try
 		{
@@ -51,7 +66,7 @@ public class RecognizerInterface
 		}
 	}
 
-	public void put( final RecognizerEvent event )
+	public void putEvent( final RecognizerEvent event )
 	{
 		try
 		{

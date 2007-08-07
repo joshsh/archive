@@ -135,7 +135,7 @@ System.out.println( "pushing line to readOut: " + line );
 		};
 
 		final RecognizerInterface itf = new RecognizerInterface(
-			querySink, commandSink, eventSink, System.err );
+			querySink, querySink, commandSink, eventSink, System.err );
 
 		Sink<Exception> exceptionSink = new Sink<Exception>()
 		{
@@ -143,7 +143,7 @@ System.out.println( "pushing line to readOut: " + line );
 				throws RippleException
 			{
 System.out.println( "########## got an exception: " + e );
-				itf.put( RecognizerEvent.NEWLINE );
+				itf.putEvent( RecognizerEvent.NEWLINE );
 
 				exceptions.put( e );
 			}

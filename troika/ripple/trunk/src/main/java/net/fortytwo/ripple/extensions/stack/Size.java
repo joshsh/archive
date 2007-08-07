@@ -31,12 +31,7 @@ public class Size extends PrimitiveFunction
 		l = RippleList.from( stack.getFirst(), mc );
 		stack = stack.getRest();
 
-		int result = 0;
-		while ( RippleList.NIL != l )
-		{
-			result++;
-			l = l.getRest();
-		}
+		int result = l.length();
 
 		sink.put( new RippleList( mc.createValue( result ), stack ) );
 	}
