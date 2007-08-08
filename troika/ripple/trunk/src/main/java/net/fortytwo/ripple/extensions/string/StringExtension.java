@@ -17,7 +17,6 @@ public class StringExtension extends Extension
 		uf.addMapping(
 			ns, getClass().getResource( "string.ttl" ) + "#" );
 
-		registerPrimitive( Concat.class, ns + "concat", mc );
 		registerPrimitive( EndsWith.class, ns + "endsWith", mc );
 		registerPrimitive( IndexOf.class, ns + "indexOf", mc );
 		registerPrimitive( LastIndexOf.class, ns + "lastIndexOf", mc );
@@ -28,6 +27,7 @@ public class StringExtension extends Extension
 		registerPrimitive( Sha1.class, ns + "sha1", mc );
 		registerPrimitive( Split.class, ns + "split", mc );
 		registerPrimitive( StartsWith.class, ns + "startsWith", mc );
+		registerPrimitive( StrCat.class, ns + "strCat", mc );
 		registerPrimitive( Substring.class, ns + "substring", mc );
 		registerPrimitive( ToLowerCase.class, ns + "toLowerCase", mc );
 		registerPrimitive( ToUpperCase.class, ns + "toUpperCase", mc );

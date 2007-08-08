@@ -56,10 +56,10 @@
 
 # reviewer's name (e.g. "Paddy") => reviewer resource (e.g. <http://revyu.com/people/Paddy>)
 @define reviewerByName:
-    "http://revyu.com/people/" swap! concat! toUri!.
+    "http://revyu.com/people/" swap! strCat! toUri!.
 
 @define revyuFeedByName:
-    "http://revyu.com/latest/rss/people/" swap! concat! toUri!.
+    "http://revyu.com/latest/rss/people/" swap! strCat! toUri!.
 
 # From feed to reviewer.
 <http://revyu.com/latest/rss/people/Paddy> :localName! :reviewerByName!.

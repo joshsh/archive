@@ -8,9 +8,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Concat extends PrimitiveFunction
+public class StrCat extends PrimitiveFunction
 {
-	public Concat()
+	public StrCat()
 		throws RippleException
 	{
 		super();

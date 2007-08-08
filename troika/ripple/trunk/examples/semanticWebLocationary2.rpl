@@ -1,5 +1,5 @@
 
-@define wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
 @define altitudeDifference: wgs84_pos:alt/dip /wgs84_pos:alt /sub.
 
 @define seattle: <http://www.pipian.com/rdf/places/5809844#5809844>.

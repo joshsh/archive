@@ -1,3 +1,4 @@
+@prefix eurostat: <http://www4.wiwiss.fu-berlin.de/eurostat/resource/eurostat/>.
 
 # Not dereferenceable:
 <http://www4.wiwiss.fu-berlin.de/eurostat/page/countries/United_Kingdom>

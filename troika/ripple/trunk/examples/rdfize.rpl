@@ -5,6 +5,8 @@
 
 @define rdfize:
     /toString/sha1
-    "/" /concat
-    "http://rdfize.com/people/" /swap/concat
+    "/" /strCat
+    "http://rdfize.com/people/" /swap/strCat
     /toUri.
+
+<mailto:josh@fortytwo.net> :rdfize!.
