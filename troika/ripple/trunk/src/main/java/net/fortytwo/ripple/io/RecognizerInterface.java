@@ -9,16 +9,16 @@ import net.fortytwo.ripple.util.Sink;
 
 public class RecognizerInterface
 {
-	private Sink<ListAst> querySink, continuingQuerySink;
-	private Sink<Command> commandSink;
-	private Sink<RecognizerEvent> eventSink;
-	private PrintStream errorStream;
+	Sink<ListAst> querySink, continuingQuerySink;
+	Sink<Command> commandSink;
+	Sink<RecognizerEvent> eventSink;
+	PrintStream errorStream;
 
 	public RecognizerInterface( final Sink<ListAst> querySink,
-							final Sink<ListAst> continuingQuerySink,
-							final Sink<Command> commandSink,
-							final Sink<RecognizerEvent> eventSink,
-							final PrintStream errorStream )
+								final Sink<ListAst> continuingQuerySink,
+								final Sink<Command> commandSink,
+								final Sink<RecognizerEvent> eventSink,
+								final PrintStream errorStream )
 	{
 		this.querySink = querySink;
 		this.continuingQuerySink = continuingQuerySink;
@@ -80,7 +80,7 @@ public class RecognizerInterface
 	}
 
 	// A helper variable for the lexer and parser.
-	private String languageTag;
+	String languageTag;
 
 	public String getLanguageTag()
 	{

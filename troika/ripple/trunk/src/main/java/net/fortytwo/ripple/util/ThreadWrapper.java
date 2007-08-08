@@ -6,8 +6,8 @@ public abstract class ThreadWrapper
 {
 	protected abstract void run() throws RippleException;
 
-	private boolean finished;
-	private RippleException error;
+	boolean finished;
+	RippleException error;
 
 	public void start( final long timeout )
 		throws RippleException

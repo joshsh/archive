@@ -143,6 +143,46 @@ public class QueryEngine
 
 	////////////////////////////////////////////////////////////////////////////
 
+	public void executeCommand( final Command cmd )
+	{
+		ModelConnection mc;
+
+		try
+		{
+			mc = getConnection();
+		}
+
+		catch ( RippleException e )
+		{
+System.err.println( "Note: exception disregarded" );
+			return;
+		}
+
+		try
+		{
+			mc = getConnection();
+			cmd.execute( this, mc );
+		}
+
+		catch ( RippleException e )
+		{
+System.err.println( "Note: exception disregarded" );
+		}
+
+		try
+		{
+			mc.close();
+		}
+
+		catch ( RippleException e )
+		{
+			System.err.println( "failed to close connection" );
+			System.exit( 1 );
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
 	void initializeLexicon() throws RippleException
 	{
 		LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );

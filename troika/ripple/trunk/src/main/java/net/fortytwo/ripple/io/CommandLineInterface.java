@@ -29,6 +29,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
+import net.fortytwo.ripple.query.CommandQueue;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 import net.fortytwo.ripple.util.Buffer;
@@ -48,7 +49,7 @@ import org.apache.log4j.Logger;
  * Error output:
  *     alert() --> queryEngine.getErrorPrintStream()
  */
-public class CommandLineInterface extends Thread
+public class CommandLineInterface
 {
 	final static Logger s_logger
 		= Logger.getLogger( CommandLineInterface.class );
@@ -62,6 +63,7 @@ public class CommandLineInterface extends Thread
 	int lineNumber = 0;
 
 	QueryEngine queryEngine;
+	CommandQueue cmdQueue;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -69,63 +71,47 @@ public class CommandLineInterface extends Thread
 		throws RippleException
 	{
 		queryEngine = qe;
-
-		String jLineDebugOutput = Ripple.getJLineDebugOutput();
-
-		try
-		{
-			reader = new ConsoleReader( is,
-				new OutputStreamWriter( qe.getPrintStream() ) );
-
-			// Set up JLine logging if asked for.
-			if ( null != jLineDebugOutput )
-				reader.setDebug(
-					new PrintWriter(
-						new FileWriter( jLineDebugOutput, true ) ) );
-
-			writeIn = new PipedInputStream();
-			readOut = new PipedOutputStream( writeIn );
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
+		cmdQueue = new CommandQueue( queryEngine );
 
 		// Initialize completors.
 		updateCompletors();
 
-		// What do we do with queries?
+		// Handling of queries
 		Sink<ListAst> querySink = new Sink<ListAst>()
 		{
 			public void put( final ListAst ast )
 				throws RippleException
 			{
-				evaluate( ast, false );
+				Command cmd = createQueryCommand( ast, false );
+				cmdQueue.add( cmd );
+				cmdQueue.add( new UpdateCompletorsCmd() );
 			}
 		};
 
-		// What do we do with query queryPrefixs?
+		// Handling of "continuing" queries
 		Sink<ListAst> continuingQuerySink = new Sink<ListAst>()
 		{
 			public void put( final ListAst ast )
 				throws RippleException
 			{
-				evaluate( ast, true );
+				Command cmd = createQueryCommand( ast, true );
+				cmdQueue.add( cmd );
+				cmdQueue.add( new UpdateCompletorsCmd() );
 			}
 		};
 
-		// What do we do with commands?
+		// Handling of commands
 		Sink<Command> commandSink = new Sink<Command>()
 		{
 			public void put( final Command cmd )
 				throws RippleException
 			{
-				execute( cmd );
+				cmdQueue.add( cmd );
+				cmdQueue.add( new UpdateCompletorsCmd() );
 			}
 		};
 
-		// What do we do with parser events?
+		// Handling of parser events
 		Sink<RecognizerEvent> eventSink = new Sink<RecognizerEvent>()
 		{
 			public void put( final RecognizerEvent event )
@@ -138,10 +124,11 @@ public class CommandLineInterface extends Thread
 						break;
 					case ESCAPE:
 System.out.println( "Escape!" );
+						cmdQueue.cancelCurrent();
 						break;
 					default:
-						throw new RippleException( "event not yet supported: "
-							+ event );
+						throw new RippleException(
+							"event not yet supported: " + event );
 				}
 			}
 		};
@@ -168,10 +155,37 @@ System.out.println( "Escape!" );
 					alert( "TokenStreamException: " + e.toString() );
 
 				else
+{
+e.printStackTrace( System.err );
 					throw new RippleException(
 						"non-recoverable exception thrown: " + e.toString() );
+}
 			}
 		};
+
+		InputStreamEventFilter filter = new InputStreamEventFilter( is, itf );
+
+		String jLineDebugOutput = Ripple.getJLineDebugOutput();
+
+		try
+		{
+			reader = new ConsoleReader( filter,
+				new OutputStreamWriter( qe.getPrintStream() ) );
+
+			// Set up JLine logging if asked for.
+			if ( null != jLineDebugOutput )
+				reader.setDebug(
+					new PrintWriter(
+						new FileWriter( jLineDebugOutput, true ) ) );
+
+			writeIn = new PipedInputStream();
+			readOut = new PipedOutputStream( writeIn );
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
 		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
 
@@ -179,20 +193,9 @@ System.out.println( "Escape!" );
 	}
 
 	public void run()
+		throws RippleException
 	{
-		try
-		{
-			s_logger.debug( "running CommandLineInterface as a new thread" );
-			interpreter.parse();
-		}
-
-		catch ( Throwable t )
-		{
-			alert( "Error: " + t.toString() );
-
-			// Log the error.
-			new RippleException( t );
-		}
+		interpreter.parse();
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -225,63 +228,6 @@ System.out.println( "Escape!" );
 		}
 	}
 
-	void execute( final Command cmd )
-	{
-		ModelConnection mc = null;
-		boolean gotConnection = false, finished = false;
-
-		try
-		{
-			mc = queryEngine.getConnection( "Command" );
-			gotConnection = true;
-			cmd.execute( queryEngine, mc );
-			finished = true;
-			mc.close();
-
-			// Model may have changed, so update completors.
-			updateCompletors();
-		}
-
-		catch ( ParserQuitException e )
-		{
-			try
-			{
-				mc.close();
-			}
-
-			catch ( RippleException e2 )
-			{
-				alert( "Error: failed to close connection" );
-			}
-
-			throw e;
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-
-			if ( !gotConnection )
-				alert( "Error: failed to establish connection" );
-
-			else if ( !finished )
-			{
-				try
-				{
-					mc.close();
-				}
-
-				catch ( RippleException e2 )
-				{
-					alert( "Error: failed to close connection" );
-				}
-			}
-
-			else
-				alert( "Error: failed to close connection" );
-		}
-	}
-
 	Collector<RippleList> queryPrefix = new Collector<RippleList>();
 
 	void resetContinuation()
@@ -291,88 +237,57 @@ System.out.println( "Escape!" );
 		queryPrefix.put( RippleList.NIL );
 	}
 
-	void evaluate( final ListAst ast, final boolean continuing )
+	Command createQueryCommand( final ListAst ast, final boolean continuing )
 	{
 System.out.println( "continuing = " + continuing );
-		ModelConnection mc = null;
-		boolean gotConnection = false, finished = false;
-		boolean doBuffer = Ripple.getBufferTreeView();
-
-		try
+		return new Command()
 		{
-			queryEngine.getPrintStream().println( "" );
-
-			mc = queryEngine.getConnection( "for CommandLineInterface evaluate()" );
-			gotConnection = true;
-
-			// Results are first dereferenced, then placed into a buffer which
-			// will be flushed into the view after the lexicon is updated.
-			ContainerTreeView view = new ContainerTreeView(
-				queryEngine.getPrintStream(), mc );
-			Sink<RippleList> med = doBuffer
-				? new Buffer<RippleList>( view )
-				: view;
-			Collector<RippleList> newQueryPrefix = new Collector<RippleList>();
-			final Sink<RippleList> results = continuing
-				? new Tee<RippleList>( med, newQueryPrefix )
-				: med;
-
-			final ModelConnection mcf = mc;
-			Sink<RippleList> derefSink = new Sink<RippleList>()
+			public void execute( QueryEngine qe, ModelConnection mc )
+				throws RippleException
 			{
-				public void put( final RippleList list) throws RippleException
-				{
-					dereference( list.getFirst(), mcf );
-					results.put( list );
-				}
-			};
-
-			RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink, queryPrefix );
-
-			cmd.execute( queryEngine, mc );
-
-			// Flush results to the view.
-			if ( doBuffer )
-				( (Buffer<RippleList>) results ).flush();
-
-			if ( view.size() > 0 )
+				boolean doBuffer = Ripple.getBufferTreeView();
+	
 				queryEngine.getPrintStream().println( "" );
-
-			finished = true;
-			mc.close();
-
-			if ( continuing )
-				queryPrefix = newQueryPrefix;
-			else
-				resetContinuation();
-
-			// Model may have changed, so update completors.
-			updateCompletors();
-		}
-
-		catch ( RippleException e )
-		{
-			alert( "Error: " + e.getMessage() );
-
-			if ( !gotConnection )
-				alert( "Error: failed to establish connection" );
-
-			else if ( !finished )
-			{
-				try
+	
+				// Results are first dereferenced, then placed into a buffer which
+				// will be flushed into the view after the lexicon is updated.
+				ContainerTreeView view = new ContainerTreeView(
+					queryEngine.getPrintStream(), mc );
+				Sink<RippleList> med = doBuffer
+					? new Buffer<RippleList>( view )
+					: view;
+				Collector<RippleList> newQueryPrefix = new Collector<RippleList>();
+				final Sink<RippleList> results = continuing
+					? new Tee<RippleList>( med, newQueryPrefix )
+					: med;
+	
+				final ModelConnection mcf = mc;
+				Sink<RippleList> derefSink = new Sink<RippleList>()
 				{
-					mc.close();
-				}
-
-				catch ( RippleException e2 )
-				{
-					alert( "Error: failed to close connection" );
-				}
+					public void put( final RippleList list) throws RippleException
+					{
+						dereference( list.getFirst(), mcf );
+						results.put( list );
+					}
+				};
+	
+				RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink, queryPrefix );
+	
+				cmd.execute( queryEngine, mc );
+	
+				// Flush results to the view.
+				if ( doBuffer )
+					( (Buffer<RippleList>) results ).flush();
+	
+				if ( view.size() > 0 )
+					queryEngine.getPrintStream().println( "" );
+	
+				if ( continuing )
+					queryPrefix = newQueryPrefix;
+				else
+					resetContinuation();
 			}
-
-			else
-				alert( "Error: failed to close connection" );
-		}
+		};
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -442,6 +357,65 @@ System.out.println( "continuing = " + continuing );
 	void alert( String s )
 	{
 		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
+	}
+
+	private class UpdateCompletorsCmd implements Command
+	{
+		public void execute( QueryEngine qe, ModelConnection mc )
+			throws RippleException
+		{
+			updateCompletors();
+		}
+	}
+
+	private class InputStreamEventFilter extends InputStream
+	{
+		InputStream source;
+		RecognizerInterface itf;
+
+		int buffered;
+
+		public InputStreamEventFilter( final InputStream is,
+										final RecognizerInterface itf )
+		{
+			source = is;
+			this.itf = itf;
+
+			buffered = -1;
+		}
+
+		public int read()
+			throws java.io.IOException
+		{
+			if ( -1 != buffered )
+			{
+				int tmp = buffered;
+				buffered = -1;
+				return tmp;
+			}
+
+			// Break out when an ordinary character or sequence is found
+			while( true )
+			{
+				int c = source.read();
+	
+				if ( 27 == c )
+				{
+					c = source.read();
+	
+					if ( 27 == c )
+						itf.putEvent( RecognizerEvent.ESCAPE );
+					else
+					{
+						buffered = c;
+						return 27;
+					}
+				}
+	
+				else
+					return c;
+			}
+		}
 	}
 }
 

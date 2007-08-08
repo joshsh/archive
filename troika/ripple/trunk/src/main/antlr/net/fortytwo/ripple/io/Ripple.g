@@ -61,10 +61,13 @@ options
 			itf.putEvent( RecognizerEvent.NEWLINE );
 	}
 
+/*
 	void matchEscapeCharacter()
 	{
+System.out.println( "matchEscapeCharacter" );
 		itf.putEvent( RecognizerEvent.ESCAPE );
 	}
+*/
 }
 
 

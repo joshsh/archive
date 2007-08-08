@@ -1,7 +1,7 @@
 <http://foafing-the-music.iua.upf.edu/music-ontology>.
 <http://foafing-the-music.iua.upf.edu/music-ontology#>.
 
-@define foafingMusicTerms:
+@define foafingTheMusicTerms:
     <http://foafing-the-music.iua.upf.edu/music-ontology#Artist>
     <http://foafing-the-music.iua.upf.edu/music-ontology#Track>
     <http://foafing-the-music.iua.upf.edu/music-ontology#city>

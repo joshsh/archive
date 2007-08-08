@@ -36,7 +36,7 @@ public class RippleException extends Exception
 	{
 		super( msg );
 
-// printStackTrace( System.err );
+printStackTrace( System.err );
 // System.err.println( "" );
 		try
 		{
