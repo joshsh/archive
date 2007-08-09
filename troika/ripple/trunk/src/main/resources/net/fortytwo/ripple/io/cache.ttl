@@ -1,3 +1,5 @@
+# rapper -q -i turtle -o rdfxml cache.ttl > cache.rdf
+
 @prefix cache: <http://fortytwo.net/2007/08/ripple/cache#>.
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .

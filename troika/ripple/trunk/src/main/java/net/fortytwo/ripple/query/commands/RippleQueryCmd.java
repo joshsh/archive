@@ -12,16 +12,17 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.Source;
 
 public class RippleQueryCmd implements Command
 {
 	ListAst listAst;
 	Sink<RippleList> sink;
-	Collection<RippleList> composedWith;
+	Source<RippleList> composedWith;
 
 	public RippleQueryCmd( final ListAst listAst,
 							final Sink<RippleList> sink,
-							final Collection<RippleList> composedWith )
+							final Source<RippleList> composedWith )
 	{
 		this.listAst = listAst;
 		this.sink = sink;
@@ -37,11 +38,20 @@ public class RippleQueryCmd implements Command
 			public void put( RippleValue v )
 				throws RippleException
 			{
-				RippleList l = (RippleList) v;
-				Iterator<RippleList> iter = composedWith.iterator();
-				while ( iter.hasNext() )
-					qe.getEvaluator().applyTo(
-						RippleList.concat( l, iter.next() ), sink, mc );
+				final RippleList l = (RippleList) v;
+				final Evaluator evaluator = qe.getEvaluator();
+
+				Sink<RippleList> composedWithSink = new Sink<RippleList>()
+				{
+					public void put( final RippleList base )
+						throws RippleException
+					{
+						evaluator.applyTo(
+							RippleList.concat( l, base ), sink, mc );
+					}
+				};
+
+				composedWith.writeTo( composedWithSink );
 			}
 		};
 

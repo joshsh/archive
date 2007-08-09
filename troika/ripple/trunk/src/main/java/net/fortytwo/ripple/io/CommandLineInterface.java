@@ -34,6 +34,7 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Tee;
 
@@ -65,6 +66,10 @@ public class CommandLineInterface
 	QueryEngine queryEngine;
 	CommandQueue cmdQueue;
 
+	CollectorHistory<RippleList> queryResultHistory
+		= new CollectorHistory<RippleList>( 2 );
+boolean lastQueryContinued = false;
+
 	////////////////////////////////////////////////////////////////////////////
 
 	public CommandLineInterface( final QueryEngine qe, final InputStream is )
@@ -72,9 +77,6 @@ public class CommandLineInterface
 	{
 		queryEngine = qe;
 		cmdQueue = new CommandQueue( queryEngine );
-
-		// Initialize completors.
-		updateCompletors();
 
 		// Handling of queries
 		Sink<ListAst> querySink = new Sink<ListAst>()
@@ -163,10 +165,12 @@ e.printStackTrace( System.err );
 			}
 		};
 
+		// Pass input through a filter to watch for special byte sequences.
 		InputStreamEventFilter filter = new InputStreamEventFilter( is, itf );
 
 		String jLineDebugOutput = Ripple.getJLineDebugOutput();
 
+		// Create reader.
 		try
 		{
 			reader = new ConsoleReader( filter,
@@ -187,9 +191,11 @@ e.printStackTrace( System.err );
 			throw new RippleException( t );
 		}
 
-		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
+		// Initialize completors.
+		updateCompletors();
 
-		resetContinuation();
+		// Create interpreter.
+		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
 	}
 
 	public void run()
@@ -228,18 +234,8 @@ e.printStackTrace( System.err );
 		}
 	}
 
-	Collector<RippleList> queryPrefix = new Collector<RippleList>();
-
-	void resetContinuation()
-		throws RippleException
-	{
-		queryPrefix.clear();
-		queryPrefix.put( RippleList.NIL );
-	}
-
 	Command createQueryCommand( final ListAst ast, final boolean continuing )
 	{
-System.out.println( "continuing = " + continuing );
 		return new Command()
 		{
 			public void execute( QueryEngine qe, ModelConnection mc )
@@ -256,10 +252,9 @@ System.out.println( "continuing = " + continuing );
 				Sink<RippleList> med = doBuffer
 					? new Buffer<RippleList>( view )
 					: view;
-				Collector<RippleList> newQueryPrefix = new Collector<RippleList>();
-				final Sink<RippleList> results = continuing
-					? new Tee<RippleList>( med, newQueryPrefix )
-					: med;
+
+				final Sink<RippleList> results
+					= new Tee<RippleList>( med, queryResultHistory );
 	
 				final ModelConnection mcf = mc;
 				Sink<RippleList> derefSink = new Sink<RippleList>()
@@ -270,9 +265,15 @@ System.out.println( "continuing = " + continuing );
 						results.put( list );
 					}
 				};
-	
-				RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink, queryPrefix );
-	
+
+Collector<RippleList> nilSource = new Collector<RippleList>();
+nilSource.put( RippleList.NIL );
+				RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink,
+					( lastQueryContinued
+						? queryResultHistory.getSource( 1 )
+						: nilSource ) );
+lastQueryContinued = continuing;
+
 				cmd.execute( queryEngine, mc );
 	
 				// Flush results to the view.
@@ -282,10 +283,7 @@ System.out.println( "continuing = " + continuing );
 				if ( view.size() > 0 )
 					queryEngine.getPrintStream().println( "" );
 	
-				if ( continuing )
-					queryPrefix = newQueryPrefix;
-				else
-					resetContinuation();
+				queryResultHistory.advance();
 			}
 		};
 	}

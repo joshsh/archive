@@ -58,7 +58,7 @@ public class LazyEvaluator extends Evaluator
 
 		public EvaluatorSink( Sink<RippleList> sink )
 		{
-		this.sink = sink;
+			this.sink = sink;
 //System.out.println( this + "( " + sink + ")" );
 		}
 
@@ -127,7 +127,6 @@ if ( stack == RippleList.NIL )
 			throw new RippleException( e );
 		}
 	}
-
 }
 
 // kate: tab-width 4
