@@ -10,7 +10,7 @@ import net.fortytwo.ripple.util.UrlFactory;
 
 public class StackExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/07/ripple/stack#";
+	private static String ns = "http://fortytwo.net/2007/08/ripple/stack#";
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;

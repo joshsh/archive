@@ -36,9 +36,9 @@ public class CacheManager
 		rplCacheRoot = new RdfValue( mc.createUri(
 			"urn:net.fortytwo.ripple.store.meta" ) );
 		rplCacheSuccessMemo = new RdfValue( mc.createUri(
-			"http://fortytwo.net/2007/07/ripple/cache#successMemo" ) );
+			"http://fortytwo.net/2007/08/ripple/cache#successMemo" ) );
 		rplCacheFailureMemo = new RdfValue( mc.createUri(
-			"http://fortytwo.net/2007/07/ripple/cache#failureMemo" ) );
+			"http://fortytwo.net/2007/08/ripple/cache#failureMemo" ) );
 
 		initialized = true;
 	}

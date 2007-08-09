@@ -9,7 +9,7 @@ import net.fortytwo.ripple.util.UrlFactory;
 
 public class ServicesExtension extends Extension
 {
-	static String ns = "http://fortytwo.net/2007/07/ripple/services#";
+	static String ns = "http://fortytwo.net/2007/08/ripple/services#";
 
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException

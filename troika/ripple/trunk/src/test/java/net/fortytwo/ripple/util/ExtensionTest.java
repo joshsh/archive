@@ -20,7 +20,7 @@ public class ExtensionTest extends RippleTestCase
 			RdfValue dup05 = new RdfValue(
 				mc.createUri( "http://fortytwo.net/2007/05/ripple/stack#dup" ) );
 			RdfValue dup07 = new RdfValue(
-				mc.createUri( "http://fortytwo.net/2007/07/ripple/stack#dup" ) );
+				mc.createUri( "http://fortytwo.net/2007/08/ripple/stack#dup" ) );
 
 			ModelBridge bridge = mc.getModel().getBridge();
 
