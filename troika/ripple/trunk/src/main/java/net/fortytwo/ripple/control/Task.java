@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.control;
 
 import net.fortytwo.ripple.RippleException;
 

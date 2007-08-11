@@ -9,7 +9,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.util.RdfUtils;
-import net.fortytwo.ripple.util.ThreadPool;
+import net.fortytwo.ripple.control.ThreadPool;
 
 public abstract class RippleTestCase extends TestCase
 {

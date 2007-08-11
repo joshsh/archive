@@ -17,15 +17,15 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
 
-import net.fortytwo.ripple.util.ThreadWrapper;
+import net.fortytwo.ripple.control.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.RdfUtils;
-import net.fortytwo.ripple.util.Task;
-import net.fortytwo.ripple.util.TaskSet;
+import net.fortytwo.ripple.control.Task;
+import net.fortytwo.ripple.control.TaskSet;
 
 import org.apache.log4j.Logger;
 

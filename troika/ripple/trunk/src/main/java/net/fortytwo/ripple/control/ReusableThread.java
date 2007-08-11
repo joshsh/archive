@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.control;
 
 public class ReusableThread extends Thread
 {

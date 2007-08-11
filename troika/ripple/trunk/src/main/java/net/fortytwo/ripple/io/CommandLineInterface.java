@@ -37,7 +37,7 @@ import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Tee;
-import net.fortytwo.ripple.util.ThreadPool;
+import net.fortytwo.ripple.control.ThreadPool;
 
 import org.apache.log4j.Logger;
 

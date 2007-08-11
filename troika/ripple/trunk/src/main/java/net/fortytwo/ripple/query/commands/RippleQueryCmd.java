@@ -13,7 +13,7 @@ import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
-import net.fortytwo.ripple.util.ThreadPool;
+import net.fortytwo.ripple.control.ThreadPool;
 
 public class RippleQueryCmd extends Command
 {

@@ -1,7 +1,8 @@
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.control;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Scheduler;
+import net.fortytwo.ripple.util.Sink;
 
 public class TaskSet
 {

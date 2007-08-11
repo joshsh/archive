@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.Task;
-import net.fortytwo.ripple.util.ThreadPool;
+import net.fortytwo.ripple.control.Task;
+import net.fortytwo.ripple.control.ThreadPool;
 
 public class Scheduler
 {

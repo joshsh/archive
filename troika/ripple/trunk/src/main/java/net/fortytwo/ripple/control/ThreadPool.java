@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.control;
 
 import org.apache.log4j.Logger;
 
