@@ -12,9 +12,9 @@ import org.openrdf.model.Statement;
 
 // E.g.
 //      CONSTRUCT * FROM {x} p {y}
-public class SerqlQueryCmd implements Command
+public class SerqlQueryCmd extends Command
 {
-	private String query;
+	String query;
 
 	public SerqlQueryCmd( final String query )
 	{
@@ -30,7 +30,11 @@ public class SerqlQueryCmd implements Command
 		ps.println( "" );
 		ps.print( stmtIter );
 		ps.println( "" );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

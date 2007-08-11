@@ -11,10 +11,10 @@ import net.fortytwo.ripple.util.Collector;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 
-public class DefinePrefixCmd implements Command
+public class DefinePrefixCmd extends Command
 {
-	private String prefix;
-	private UriAst uri;
+	String prefix;
+	UriAst uri;
 
 	public DefinePrefixCmd( final String prefix, final UriAst uri )
 	{
@@ -37,7 +37,11 @@ public class DefinePrefixCmd implements Command
 		mc = null;
 
 		qe.getLexicon().add( new NamespaceImpl( prefix, ns.toString() ), true );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

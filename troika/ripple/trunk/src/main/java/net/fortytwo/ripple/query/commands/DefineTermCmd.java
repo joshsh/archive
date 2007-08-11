@@ -12,10 +12,10 @@ import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
 
-public class DefineTermCmd implements Command
+public class DefineTermCmd extends Command
 {
-	private ListAst ast;
-	private String term;
+	ListAst ast;
+	String term;
 
 	public DefineTermCmd( ListAst ast, final String term )
 	{
@@ -53,7 +53,11 @@ public class DefineTermCmd implements Command
 
 			qe.getLexicon().add( uri );
 		}
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

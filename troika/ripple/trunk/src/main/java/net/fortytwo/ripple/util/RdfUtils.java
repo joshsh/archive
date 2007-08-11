@@ -76,21 +76,21 @@ public class RdfUtils
 		final Pointer<RDFFormat> formatPtr = new Pointer<RDFFormat>();
 		formatPtr.ref = format;
 
-		// Note: this timeout block will abort the download if it takes too
-		//       long to connect.  However, the document may take arbitrarily
-		//       long to parse (so there's no limit on the size of a document).
-		new ThreadWrapper()
-		{
-			protected void run() throws RippleException
-			{
-				// This operation may hang indefinitely (hence the timeout block).
-				HttpUtils.connect( uc );
-	
+		// Don't wait indefinitely for a connection.
+		// Note: this timeout applies only to the establishment of a connection.
+		//       A document may take arbitrarily long to retrieve and parse.
+		uc.setConnectTimeout( (int) Ripple.uriDereferencingTimeout() );
+		HttpUtils.connect( uc );
+
+// 		new ThreadWrapper( "for RDFFormat readPrivate" )
+// 		{
+// 			protected void run() throws RippleException
+// 			{
 				if ( null == formatPtr.ref )
-					// This one may hang as well.
+					// This operation may hang as well.
 					formatPtr.ref = HttpUtils.guessRdfFormat( uc );
-			}
-		}.start( Ripple.uriDereferencingTimeout() );
+// 			}
+// 		}.start(  );
 
 		if ( null == formatPtr.ref )
 			// Soft fail (possibly too soft?)

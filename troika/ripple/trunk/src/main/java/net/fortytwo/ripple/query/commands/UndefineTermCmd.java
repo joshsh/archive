@@ -5,9 +5,9 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class UndefineTermCmd implements Command
+public class UndefineTermCmd extends Command
 {
-	private String term;
+	String term;
 
 	public UndefineTermCmd( final String term )
 	{
@@ -19,7 +19,11 @@ public class UndefineTermCmd implements Command
 	{
 		mc.removeStatementsAbout(
 			mc.createUri( qe.getDefaultNamespace() + term ) );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

@@ -57,7 +57,8 @@ public class ForwardPredicateQuery implements Function
 
 		Sink<RdfValue> querySink = new ForwardPredicateQueryResultSink( rest, sink );
 
-		mc.multiply( first.toRdf( mc ), pred, querySink );
+//		mc.multiply( first.toRdf( mc ), pred, querySink );
+		mc.multiplyAsynch( first.toRdf( mc ), pred, querySink );
 	}
 }
 

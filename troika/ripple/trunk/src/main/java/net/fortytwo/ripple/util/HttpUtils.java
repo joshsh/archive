@@ -261,6 +261,11 @@ s_logger.info( "    waiting " + w + " milliseconds" );
 		{
 			throw new RippleException( e );
 		}
+
+// 		catch( java.net.SocketTimeoutException e )
+// 		{
+// 			throw new RippleException( e );
+// 		}
 	}
 
 	public static URLConnection openConnection( final URL url )

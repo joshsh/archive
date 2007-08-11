@@ -8,9 +8,9 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class ExportNsCmd implements Command
+public class ExportNsCmd extends Command
 {
-	private String nsPrefix, fileName;
+	String nsPrefix, fileName;
 
 	public ExportNsCmd( final String nsPrefix, final String fileName )
 	{
@@ -50,7 +50,11 @@ public class ExportNsCmd implements Command
 		}
 
 		System.out.println( "\nExported namespace " + nsPrefix + " to " + fileName + "\n" );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

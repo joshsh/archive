@@ -6,15 +6,18 @@ import net.fortytwo.ripple.io.ParserQuitException;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class QuitCmd implements Command
+public class QuitCmd extends Command
 {
-	public QuitCmd() {}
-
 	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
+// FIXME...
+		finished();
+
 		throw new ParserQuitException();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

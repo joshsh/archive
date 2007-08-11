@@ -6,19 +6,30 @@ public abstract class ThreadWrapper
 {
 	protected abstract void run() throws RippleException;
 
+	String name;
+	public ThreadWrapper( final String name )
+	{
+		this.name = name;
+	}
+
 	boolean finished;
 	RippleException error;
+
+	public void setFinished( boolean f ) { finished = f; }
+	public void setError( RippleException e ) { error = e; }
+	public boolean getFinished() { return finished; }
+	public RippleException getError() { return error; }
 
 	public void start( final long timeout )
 		throws RippleException
 	{
-		finished = false;
-		error = null;
+		setFinished( false );
+		setError( null );
 
 		final Object monitorObj = "";
 		final ThreadWrapper tw = this;
 
-		Thread t = new Thread( new Runnable() {
+		Runnable target = new Runnable() {
 			public void run()
 			{
 				try
@@ -28,17 +39,18 @@ public abstract class ThreadWrapper
 
 				catch ( RippleException e )
 				{
-					error = e;
+					setError( e );
 				}
 
-				finished = true;
+				setFinished( true );
 				synchronized( monitorObj )
 				{
 					monitorObj.notify();
 				}
 			}
-		} );
+		};
 
+		Thread t = ThreadPool.getThread( target, name );
 		t.start();
 
 		try
@@ -51,7 +63,7 @@ public abstract class ThreadWrapper
 					monitorObj.wait();
 			}
 
-			if ( !finished )
+			if ( !getFinished() )
 				t.interrupt();
 		}
 
@@ -60,11 +72,11 @@ public abstract class ThreadWrapper
 			throw new RippleException( e );
 		}
 
-		if ( !finished )
+		if ( !getFinished() )
 			throw new RippleException( "operation timed out" );
 
-		else if ( null != error )
-			throw error;
+		else if ( null != getError() )
+			throw getError();
 	}
 
 	public void start()

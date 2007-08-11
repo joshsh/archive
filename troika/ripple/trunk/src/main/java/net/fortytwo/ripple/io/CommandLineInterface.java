@@ -29,7 +29,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.CommandQueue;
+import net.fortytwo.ripple.query.Scheduler;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 import net.fortytwo.ripple.util.Buffer;
@@ -37,6 +37,7 @@ import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Tee;
+import net.fortytwo.ripple.util.ThreadPool;
 
 import org.apache.log4j.Logger;
 
@@ -64,7 +65,7 @@ public class CommandLineInterface
 	int lineNumber = 0;
 
 	QueryEngine queryEngine;
-	CommandQueue cmdQueue;
+	Scheduler scheduler;
 
 	CollectorHistory<RippleList> queryResultHistory
 		= new CollectorHistory<RippleList>( 2 );
@@ -76,7 +77,7 @@ boolean lastQueryContinued = false;
 		throws RippleException
 	{
 		queryEngine = qe;
-		cmdQueue = new CommandQueue( queryEngine );
+		scheduler = new Scheduler( queryEngine );
 
 		// Handling of queries
 		Sink<ListAst> querySink = new Sink<ListAst>()
@@ -85,8 +86,8 @@ boolean lastQueryContinued = false;
 				throws RippleException
 			{
 				Command cmd = createQueryCommand( ast, false );
-				cmdQueue.add( cmd );
-				cmdQueue.add( new UpdateCompletorsCmd() );
+				scheduler.add( cmd );
+				scheduler.add( new UpdateCompletorsCmd() );
 			}
 		};
 
@@ -97,8 +98,8 @@ boolean lastQueryContinued = false;
 				throws RippleException
 			{
 				Command cmd = createQueryCommand( ast, true );
-				cmdQueue.add( cmd );
-				cmdQueue.add( new UpdateCompletorsCmd() );
+				scheduler.add( cmd );
+				scheduler.add( new UpdateCompletorsCmd() );
 			}
 		};
 
@@ -108,8 +109,8 @@ boolean lastQueryContinued = false;
 			public void put( final Command cmd )
 				throws RippleException
 			{
-				cmdQueue.add( cmd );
-				cmdQueue.add( new UpdateCompletorsCmd() );
+				scheduler.add( cmd );
+				scheduler.add( new UpdateCompletorsCmd() );
 			}
 		};
 
@@ -126,7 +127,7 @@ boolean lastQueryContinued = false;
 						break;
 					case ESCAPE:
 System.out.println( "Escape!" );
-						cmdQueue.cancelCurrent();
+						scheduler.cancelCurrent();
 						break;
 					default:
 						throw new RippleException(
@@ -238,6 +239,8 @@ e.printStackTrace( System.err );
 	{
 		return new Command()
 		{
+			Command cmd = null;
+
 			public void execute( QueryEngine qe, ModelConnection mc )
 				throws RippleException
 			{
@@ -268,14 +271,27 @@ e.printStackTrace( System.err );
 
 Collector<RippleList> nilSource = new Collector<RippleList>();
 nilSource.put( RippleList.NIL );
-				RippleQueryCmd cmd = new RippleQueryCmd( ast, derefSink,
+				cmd = new RippleQueryCmd( ast, derefSink,
 					( lastQueryContinued
 						? queryResultHistory.getSource( 1 )
 						: nilSource ) );
 lastQueryContinued = continuing;
 
+				// Execute the inner command and wait until it is finished.
 				cmd.execute( queryEngine, mc );
-	
+				synchronized( cmd )
+				{
+					try
+					{
+						cmd.wait();
+					}
+
+					catch ( java.lang.InterruptedException e )
+					{
+						throw new RippleException( "interrupted while waiting for inner command to complete" );
+					}
+				}
+
 				// Flush results to the view.
 				if ( doBuffer )
 					( (Buffer<RippleList>) results ).flush();
@@ -284,6 +300,14 @@ lastQueryContinued = continuing;
 					queryEngine.getPrintStream().println( "" );
 	
 				queryResultHistory.advance();
+
+				finished();
+			}
+
+			protected void abort()
+			{
+				if ( null != cmd )
+					cmd.cancel();
 			}
 		};
 	}
@@ -357,13 +381,17 @@ lastQueryContinued = continuing;
 		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
 	}
 
-	private class UpdateCompletorsCmd implements Command
+	private class UpdateCompletorsCmd extends Command
 	{
 		public void execute( QueryEngine qe, ModelConnection mc )
 			throws RippleException
 		{
 			updateCompletors();
+
+			finished();
 		}
+
+		protected void abort() {}
 	}
 
 	private class InputStreamEventFilter extends InputStream

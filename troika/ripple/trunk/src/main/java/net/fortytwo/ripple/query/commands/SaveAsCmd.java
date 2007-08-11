@@ -10,9 +10,9 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.CacheManager;
 
-public class SaveAsCmd implements Command
+public class SaveAsCmd extends Command
 {
-	private String fileName;
+	String fileName;
 
 	public SaveAsCmd( final String fileName )
 	{
@@ -47,7 +47,11 @@ public class SaveAsCmd implements Command
 		}
 
 		System.out.println( "\nSaved data set as " + fileName + "\n" );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

@@ -5,15 +5,17 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class CountStatementsCmd implements Command
+public class CountStatementsCmd extends Command
 {
-	public CountStatementsCmd() {}
-
 	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
 		System.out.println( "\n" + qe.getModel().countStatements() + "\n" );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4

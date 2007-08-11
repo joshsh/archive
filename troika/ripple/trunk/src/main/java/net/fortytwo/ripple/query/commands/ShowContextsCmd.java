@@ -9,10 +9,8 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.RippleValue;
 
-public class ShowContextsCmd implements Command
+public class ShowContextsCmd extends Command
 {
-	public ShowContextsCmd() {}
-
 	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
@@ -29,7 +27,11 @@ public class ShowContextsCmd implements Command
 		}
 
 		ps.println( "" );
+
+		finished();
 	}
+
+	protected void abort() {}
 }
 
 // kate: tab-width 4
