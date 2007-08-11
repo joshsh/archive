@@ -204,6 +204,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 s_logger.info( "connecting to: " + urlConn.getURL() );
 		String host = urlConn.getURL().getHost();
 s_logger.info( "    host = " + host );
+
 		// Some connections (e.g. file system operations) have no host.  Don't
 		// bother regulating them.
 		if ( null != host && host.length() > 0 )
@@ -212,43 +213,45 @@ s_logger.info( "    host = " + host );
 			long delay = Ripple.getCourtesyDelay();
 s_logger.info( "    delay = " + delay );
 	
-			Date lastRequest = lastRequestByHost.get( host );
-	
-			// We've already made a request of this host.
-			if ( null != lastRequest )
+			Date lastRequest;
+			long w = 0;
+
+			synchronized( lastRequestByHost )
 			{
-				// If it hasn't been long enough since the last request from the same
-				// host, wait a bit before issuing a new request.
-				long millisSinceLastRequest = now.getTime() - lastRequest.getTime();
-				if ( millisSinceLastRequest < delay )
+				lastRequest = lastRequestByHost.get( host );
+
+				// We've already made a request of this host.
+				if ( null != lastRequest )
 				{
-					// Avoid any other requests of the same host getting through
-					// while this one is waiting.
-					lastRequestByHost.put( host, now );
-	
-					long w = lastRequest.getTime() + delay - now.getTime();
+					// If it hasn't been long enough since the last request from the same
+					// host, wait a bit before issuing a new request.
+					if ( now.getTime() - lastRequest.getTime() < delay )
+						w = lastRequest.getTime() + delay - now.getTime();
+				}
 s_logger.info( "    waiting " + w + " milliseconds" );
 
-					try
-					{
-						synchronized( now )
-						{
-							now.wait( w );
-						}
-					}
-	
-					catch ( InterruptedException e )
-					{
-						throw new RippleException( e );
-					}
-	
-					// Update current time.
-					now = new Date();
-				}
+				// Record the projected start time of the request beforehand, to
+				// avoid any other requests being scheduled without knowledge of
+				// this one.
+				lastRequestByHost.put( host, new Date( w + now.getTime() ) );
 			}
 	
-			// Record this event.
-			lastRequestByHost.put( host, now );
+			// Wait if necessary.
+			if ( w > 0 )
+			{
+				try
+				{
+					synchronized( now )
+					{
+						now.wait( w );
+					}
+				}
+
+				catch ( InterruptedException e )
+				{
+					throw new RippleException( e );
+				}
+			}
 		}
 
 		try

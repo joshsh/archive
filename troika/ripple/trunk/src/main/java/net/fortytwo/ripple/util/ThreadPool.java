@@ -9,7 +9,7 @@ public class ThreadPool
 
 	public static Thread getThread( final Runnable target, final String name )
 	{
-		Thread t = new Thread( target, name );
+		Thread t = new ReusableThread( target, name );
 s_logger.info( "creating new thread '" + name + "' -- " + t );
 		return t;
 	}

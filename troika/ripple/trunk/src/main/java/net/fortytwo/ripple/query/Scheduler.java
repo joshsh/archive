@@ -162,6 +162,7 @@ System.out.println( "cancelCurrent() -- cmd = " + cmd );
 					task.execute();
 
 					// Now that execute() is done, the task is done.
+System.out.println( "task is done." );
 					completedTaskSink.put( task );
 				}
 

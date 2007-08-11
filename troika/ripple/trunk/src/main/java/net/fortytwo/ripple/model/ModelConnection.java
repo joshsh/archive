@@ -21,12 +21,11 @@ import net.fortytwo.ripple.util.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
-import net.fortytwo.ripple.query.Scheduler;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Task;
-import net.fortytwo.ripple.util.ThreadPool;
+import net.fortytwo.ripple.util.TaskSet;
 
 import org.apache.log4j.Logger;
 
@@ -117,7 +116,7 @@ public void setRdfSink( final RdfSink sink )
 //     + " (" + openConnections.size() + " total)." );
 
 		// Complete any still-executing tasks.
-		completeTasks();
+		taskSet.waitUntilEmpty();
 
 		closeRepositoryConnection( false );
 
@@ -1216,58 +1215,13 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	private class Sema
-	{
-		int count;
-		public Sema() { count = 0; }
-		public synchronized void increment() { count++; }
-		public synchronized void decrement() { if ( count > 0 ) count--; else notifyEmpty(); }
-		public boolean isEmpty() { return ( 0 == count ); }
-		synchronized void notifyEmpty() { notify(); }
-	}
-
-	Sink<Task> completedTaskSink = new Sink<Task>()
-	{
-		public void put( final Task task ) throws RippleException
-		{
-			activeTasks.decrement();
-		}
-	};
-
-	void executeTask( final MultiplyTask task )
-	{
-		activeTasks.increment();
-		Scheduler.schedule( task, completedTaskSink );
-	}
-
-	void completeTasks()
-		throws RippleException
-	{
-System.out.println( "completeTasks" );
-		if ( !activeTasks.isEmpty() )
-		{
-			try
-			{
-				synchronized( activeTasks )
-				{
-					activeTasks.wait();
-				}
-			}
-
-			catch ( java.lang.InterruptedException e )
-			{
-				throw new RippleException( "model connection interrupted while waiting to complete tasks" );
-			}
-		}
-	}
-
-	Sema activeTasks = new Sema();
+	TaskSet taskSet = new TaskSet();
 
 	public void multiplyAsynch( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
 		throws RippleException
 	{
 		MultiplyTask task = new MultiplyTask( subj, pred, sink );
-		executeTask( task );
+		taskSet.add( task );
 	}
 
 	public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
@@ -1334,6 +1288,7 @@ stmtIter.enableDuplicateFilter();
 				}
 			}
 		}
+//System.out.println( "done multiplying" );
 	}
 
 	public void divide( RdfValue obj, RdfValue pred, Sink<RdfValue> sink )
