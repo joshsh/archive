@@ -9,9 +9,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Sign extends PrimitiveFunction
+public class Exp extends PrimitiveFunction
 {
-	public Sign()
+	public Exp()
 		throws RippleException
 	{
 		super();
@@ -32,10 +32,9 @@ public class Sign extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( a.sign() );
+		result = new NumericLiteral( Math.exp( a.doubleValue() ) );
 
-		sink.put(
-			new RippleList( result, stack ) );
+		sink.put( new RippleList( result, stack ) );
 	}
 }
 

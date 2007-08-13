@@ -1,20 +1,19 @@
-package net.fortytwo.ripple.extensions.etc;
-
-import java.util.Random;
+package net.fortytwo.ripple.extensions.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.NumericLiteral;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Rand extends PrimitiveFunction
+public class Random extends PrimitiveFunction
 {
-	private Random random = new Random();
+	java.util.Random random;
 
-	public Rand()
+	public Random()
 		throws RippleException
 	{
 		super();
@@ -22,7 +21,7 @@ public class Rand extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return 0;
 	}
 
 	public void applyTo( RippleList stack,
@@ -30,10 +29,9 @@ public class Rand extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		int lim = mc.intValue( stack.getFirst() );
-		stack = stack.getRest();
+		NumericLiteral result;
 
-		RippleValue result = mc.createValue( random.nextInt( lim ) );
+		result = new NumericLiteral( Math.random() );
 
 		sink.put( new RippleList( result, stack ) );
 	}

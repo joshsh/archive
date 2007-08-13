@@ -20,6 +20,20 @@ math:abs
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#abs> ;
 	.
 
+math:acos
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "acos" ;
+	rdfs:comment "x  =>  acos(x)" ;
+	.
+
 math:add
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -39,6 +53,76 @@ math:add
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#add> ;
 	.
 
+math:asin
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "asin" ;
+	rdfs:comment "x  =>  asin(x)" ;
+	.
+
+math:atan
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "atan" ;
+	rdfs:comment "x  =>  atan(x)" ;
+	.
+
+math:cbrt
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "cbrt" ;
+	rdfs:comment "x  =>  real cube root of x" ;
+	.
+
+math:cos
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "cos" ;
+	rdfs:comment "x  =>  cos(x)" ;
+	.
+
+math:cosh
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "cosh" ;
+	rdfs:comment "x  =>  cosh(x)" ;
+	.
+
 math:div
 	a rpl:Function ;
 	rpl:arity 2 ;
@@ -56,6 +140,20 @@ math:div
 	rdfs:label "div" ;
 	rdfs:comment "x y  =>  y / x" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#div> ;
+	.
+
+math:exp
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "exp" ;
+	rdfs:comment "x  =>  exp(x)" ;
 	.
 
 math:gt
@@ -94,6 +192,34 @@ math:lt
 	rdfs:label "lt" ;
 	rdfs:comment "x y  =>  b  -- where b is true if x < y, otherwise false" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#lt> ;
+	.
+
+math:log
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "log" ;
+	rdfs:comment "x  =>  natural logarithm of x" ;
+	.
+
+math:log10
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "log10" ;
+	rdfs:comment "x  =>  base-10 logarithm of x" ;
 	.
 
 math:mod
@@ -169,7 +295,16 @@ math:pow
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#pow> ;
 	.
 
-math:sign
+etc:random
+	a rpl:Function ;
+	rpl:arity 0 ;
+	rpl:parameters rdf:nil ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "random" ;
+	rdfs:comment "=> x, where x is a pseudorandom number in the interval [0.0, 1.0)" ;
+	.
+
+math:signum
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
@@ -179,9 +314,51 @@ math:sign
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType xsd:integer ;
-	rdfs:label "sign" ;
+	rdfs:label "signum" ;
 	rdfs:comment "x  =>  sign of x (-1, 0, or +1)" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#sign> ;
+	.
+
+math:sin
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "sin" ;
+	rdfs:comment "x  =>  sin(x)" ;
+	.
+
+math:sinh
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "sinh" ;
+	rdfs:comment "x  =>  sinh(x)" ;
+	.
+
+math:sqrt
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "sqrt" ;
+	rdfs:comment "x  =>  real square root(s) of x" ;
 	.
 
 math:sub
@@ -201,4 +378,32 @@ math:sub
 	rdfs:label "sub" ;
 	rdfs:comment "x y  =>  x - y" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#sub> ;
+	.
+
+math:tan
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "tan" ;
+	rdfs:comment "x  =>  tan(x)" ;
+	.
+
+math:tanh
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:double ;
+	rdfs:label "tanh" ;
+	rdfs:comment "x  =>  tanh(x)" ;
 	.

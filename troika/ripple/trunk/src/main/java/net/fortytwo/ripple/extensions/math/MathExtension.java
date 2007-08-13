@@ -17,20 +17,41 @@ public class MathExtension extends Extension
 		uf.addMapping(
 			ns, getClass().getResource( "math.ttl" ) + "#" );
 
-		// Integer comparison primitives
+		// Comparison
 		registerPrimitive( Gt.class, ns + "gt", mc );
 		registerPrimitive( Lt.class, ns + "lt", mc );
 
-		// Integer arithmetic primitives
+		// Arithmetic
 		registerPrimitive( Abs.class, ns + "abs", mc );
 		registerPrimitive( Add.class, ns + "add", mc );
 		registerPrimitive( Div.class, ns + "div", mc );
 		registerPrimitive( Mod.class, ns + "mod", mc );
 		registerPrimitive( Mul.class, ns + "mul", mc );
 		registerPrimitive( Neg.class, ns + "neg", mc );
-		registerPrimitive( Pow.class, ns + "pow", mc );
-		registerPrimitive( Sign.class, ns + "sign", mc );
+		registerPrimitive( Signum.class, ns + "signum", mc );
 		registerPrimitive( Sub.class, ns + "sub", mc );
+
+		// Exponents
+		registerPrimitive( Cbrt.class, ns + "cbrt", mc );
+		registerPrimitive( Exp.class, ns + "exp", mc );
+		registerPrimitive( Log.class, ns + "log", mc );
+		registerPrimitive( Log10.class, ns + "log10", mc );
+		registerPrimitive( Pow.class, ns + "pow", mc );
+		registerPrimitive( Sqrt.class, ns + "sqrt", mc );
+
+		// Trigonometry
+		registerPrimitive( Acos.class, ns + "acos", mc );
+		registerPrimitive( Asin.class, ns + "asin", mc );
+		registerPrimitive( Atan.class, ns + "atan", mc );
+		registerPrimitive( Cos.class, ns + "cos", mc );
+		registerPrimitive( Cosh.class, ns + "cosh", mc );
+		registerPrimitive( Sin.class, ns + "sin", mc );
+		registerPrimitive( Sinh.class, ns + "sinh", mc );
+		registerPrimitive( Tan.class, ns + "tan", mc );
+		registerPrimitive( Tanh.class, ns + "tanh", mc );
+
+		// Misc
+		registerPrimitive( Random.class, ns + "random", mc );
 	}
 }
 

@@ -64,21 +64,6 @@ etc:prim
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#prim> ;
 	.
 
-etc:rand
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "lim" ;
-			rpl:parameterType xsd:integer ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:returnType xsd:integer ;
-	rdfs:label "rand" ;
-	rdfs:comment "pushes a pseudorandom int value between 0 (inclusive) and lim (exclusive)" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#rand> ;
-	.
-
 etc:time
 	a rpl:Function ;
 	rpl:arity 0 ;

@@ -21,7 +21,6 @@ public class EtcExtension extends Extension
 		registerPrimitive( Get.class, ns + "get", mc );
 		registerPrimitive( Pred.class, ns + "pred", mc );
 		registerPrimitive( Prim.class, ns + "prim", mc );
-		registerPrimitive( Rand.class, ns + "rand", mc );
 		registerPrimitive( Time.class, ns + "time", mc );
 
 		// Note: the xml: namespace is actually said to be
