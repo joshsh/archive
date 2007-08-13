@@ -25,7 +25,7 @@ public class Scheduler
 
 	public void add( final Command cmd )
 	{
-System.out.println( "add( " + cmd + " )" );
+//System.out.println( "add( " + cmd + " )" );
 		synchronized( queue )
 		{
 			queue.addLast( cmd );
@@ -65,7 +65,7 @@ System.out.println( "add( " + cmd + " )" );
 			// Never terminate unless interrupted
 			while( true )
 			{
-System.out.println( "--- 1" );
+//System.out.println( "--- 1" );
 				int size;
 
 				synchronized( queue )
@@ -80,9 +80,9 @@ System.out.println( "--- 1" );
 					{
 						try
 						{
-System.out.println( "waiting for new commands" );
+//System.out.println( "waiting for new commands" );
 							wait();
-System.out.println( "done waiting" );
+//System.out.println( "done waiting" );
 						}
 
 						catch( InterruptedException e )
@@ -92,18 +92,18 @@ System.out.println( "done waiting" );
 						}
 					}
 				}
-System.out.println( "--- 2" );
+//System.out.println( "--- 2" );
 
 				synchronized( queue )
 				{
-System.out.println( "cmd = queue.removeFirst();" );
+//System.out.println( "cmd = queue.removeFirst();" );
 					cmd = queue.removeFirst();
 				}
-System.out.println( "--- 3" );
+//System.out.println( "--- 3" );
 
 				// Begin executing the command.
 				queryEngine.executeCommand( cmd );
-System.out.println( "--- 4" );
+//System.out.println( "--- 4" );
 
 				//  Wait until the command has finished executing.
 				try
@@ -120,19 +120,19 @@ System.out.println( "--- 4" );
 					System.err.println( "scheduler interrupted while waiting for command to finish executing" );
 					return;
 				}
-System.out.println( "--- 5" );
+//System.out.println( "--- 5" );
 
 				synchronized( this )
 				{
 					cmd = null;
 				}
-System.out.println( "--- 6" );
+//System.out.println( "--- 6" );
 			}
 		}
 
 		synchronized public void cancelCurrent()
 		{
-System.out.println( "cancelCurrent() -- cmd = " + cmd );
+//System.out.println( "cancelCurrent() -- cmd = " + cmd );
 			if ( null != cmd )
 				cmd.cancel();
 		}
@@ -162,7 +162,7 @@ System.out.println( "cancelCurrent() -- cmd = " + cmd );
 					task.execute();
 
 					// Now that execute() is done, the task is done.
-System.out.println( "task is done." );
+//System.out.println( "task is done." );
 					completedTaskSink.put( task );
 				}
 

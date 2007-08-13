@@ -27,15 +27,14 @@ public class Lt extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		int a, b;
-		RippleValue result;
+		RippleValue a, b, result;
 
-		b = mc.intValue( stack.getFirst() );
+		b = stack.getFirst();
 		stack = stack.getRest();
-		a = mc.intValue( stack.getFirst() );
+		a = stack.getFirst();
 		stack = stack.getRest();
 
-		result = ( a < b )
+		result = ( a.compareTo( b ) < 0 )
 			? StackExtension.getTrueValue()
 			: StackExtension.getFalseValue();
 

@@ -2,6 +2,7 @@ package net.fortytwo.ripple.extensions.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.NumericLiteral;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -26,14 +27,15 @@ public class Sign extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		int a, result;
+		NumericLiteral a, result;
 
-		a = mc.intValue( stack.getFirst() );
+		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		sink.put( new RippleList(
-			mc.createValue( a == 0 ? 0 : a > 0 ? 1 : -1 ),
-			stack ) );
+		result = new NumericLiteral( a.sign() );
+
+		sink.put(
+			new RippleList( result, stack ) );
 	}
 }
 

@@ -2,6 +2,7 @@ package net.fortytwo.ripple.extensions.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.NumericLiteral;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -26,27 +27,16 @@ public class Pow extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		int p, x, result;
+		NumericLiteral p, x, result;
 
-		p = mc.intValue( stack.getFirst() );
+		p = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
-		x = mc.intValue( stack.getFirst() );
+		x = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		int r;
+		result = NumericLiteral.pow( x, p );
 
-		if ( p < 0 )
-			r = 0;
-
-		else
-		{
-			r = 1;
-
-			for ( int i = 0; i < p; i++ )
-				r *= x;
-		}
-		
-		sink.put( new RippleList( mc.createValue( r ), stack ) );
+		sink.put( new RippleList( result, stack ) );
 	}
 }
 

@@ -49,6 +49,11 @@ printStackTrace( System.err );
 			secondary.printStackTrace( System.err );
 		}
 	}
+
+	public void log()
+	{
+// ...
+	}
 }
 
 // kate: tab-width 4

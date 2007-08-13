@@ -2,6 +2,7 @@ package net.fortytwo.ripple.extensions.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.NumericLiteral;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -26,16 +27,20 @@ public class Div extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		int a, b, result;
+		NumericLiteral a, b, result;
 
-		b = mc.intValue( stack.getFirst() );
+		b = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
-		a = mc.intValue( stack.getFirst() );
+		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		// Note: division by zero simply does not yield a result.
-		if ( 0 != b )
-			sink.put( new RippleList( mc.createValue( a / b ), stack ) );
+		if ( !b.isZero() )
+		{
+			result = NumericLiteral.div( a, b );
+
+			sink.put( new RippleList( result, stack ) );
+		}
 	}
 }
 

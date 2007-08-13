@@ -266,9 +266,23 @@ public void setRdfSink( final RdfSink sink )
 		return label.equals( "true" );
 	}
 
+	public NumericLiteral numericValue( RippleValue rv )
+		throws RippleException
+	{
+		if ( rv instanceof NumericLiteral )
+			return (NumericLiteral) rv;
+
+		else
+			return new NumericLiteral( rv.toRdf( this ) );
+	}
+
 	public int intValue( RippleValue rv )
 		throws RippleException
 	{
+		if ( rv instanceof NumericLiteral )
+			// Note: possible loss of precision
+			return ( (NumericLiteral) rv ).intValue();
+
 		Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
 //        URI type = l.getDatatype();

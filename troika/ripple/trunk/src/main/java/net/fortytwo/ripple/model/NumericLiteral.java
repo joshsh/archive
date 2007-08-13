@@ -11,9 +11,11 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.XMLSchema;
 
+/**
+ */
 public class NumericLiteral implements RippleValue
 {
-	enum NumericLiteralType { INTEGER, DOUBLE };
+	public enum NumericLiteralType { INTEGER, DOUBLE };
 
 	NumericLiteralType type;
 	Number number;
@@ -39,6 +41,7 @@ public class NumericLiteral implements RippleValue
 		{
 			try
 			{
+				type = NumericLiteralType.INTEGER;
 				number = new Integer( ( (Literal) v ).intValue() );
 			}
 
@@ -52,6 +55,7 @@ public class NumericLiteral implements RippleValue
 		{
 			try
 			{
+				type = NumericLiteralType.DOUBLE;
 				number = new Double( ( (Literal) v ).doubleValue() );
 			}
 
@@ -64,16 +68,61 @@ public class NumericLiteral implements RippleValue
 			throw new RippleException( "not a recognized numeric data type: " + dataType );
 	}
 
-	public NumericLiteral( int i )
+	public NumericLiteral( final int i )
 	{
 		type = NumericLiteralType.INTEGER;
 		number = new Integer( i );
 	}
 
-	public NumericLiteral( double d )
+	public NumericLiteral( final double d )
 	{
 		type = NumericLiteralType.DOUBLE;
 		number = new Double( d );
+	}
+
+	public NumericLiteralType getType()
+	{
+		return type;
+	}
+
+	public int intValue()
+	{
+		return number.intValue();
+	}
+
+	public double doubleValue()
+	{
+		return number.doubleValue();
+	}
+
+	public boolean isZero()
+	{
+		return ( 0.0 == number.doubleValue() );
+	}
+
+	public int sign()
+	{
+		double x = number.doubleValue();
+		return ( x == 0.0 ? 0 : x > 0 ? 1 : -1 );
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	public static NumericLiteral abs( final NumericLiteral a )
+	{
+		if ( NumericLiteralType.INTEGER == a.type )
+			return new NumericLiteral( Math.abs( a.intValue() ) );
+		else
+			return new NumericLiteral( Math.abs( a.doubleValue() ) );
+	}
+
+	public static NumericLiteral neg( final NumericLiteral a )
+	{
+		if ( NumericLiteralType.INTEGER == a.type )
+			return new NumericLiteral( -a.intValue() );
+		else
+			// Note: avoids negative zero.
+			return new NumericLiteral( 0.0 - a.doubleValue() );
 	}
 
 	public static NumericLiteral add( final NumericLiteral a,
@@ -113,29 +162,24 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( a.number.doubleValue() / b.number.doubleValue() );
 	}
 
-/*
 	// Note: does not check for divide-by-zero.
 	public static NumericLiteral mod( final NumericLiteral a,
 										final NumericLiteral b )
 	{
-
+		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
+			return new NumericLiteral( a.intValue() % b.intValue() );
+		else
+			return new NumericLiteral( a.doubleValue() % b.doubleValue() );
 	}
 
 	public static NumericLiteral pow( final NumericLiteral a,
-										final NumericLiteral b )
+										final NumericLiteral pow )
 	{
-
-	}
-*/
-
-	public int intValue()
-	{
-		return number.intValue();
-	}
-
-	public double doubleValue()
-	{
-		return number.doubleValue();
+		double r = Math.pow( a.doubleValue(), pow.doubleValue() );
+		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == pow.type )
+			return new NumericLiteral( (int) r );
+		else
+			return new NumericLiteral( r );
 	}
 
 	// RippleValue methods /////////////////////////////////////////////////////
@@ -167,7 +211,15 @@ public class NumericLiteral implements RippleValue
 	public void printTo( RipplePrintStream p )
 		throws RippleException
 	{
-		p.print( number );
+		switch ( type )
+		{
+			case INTEGER:
+				p.print( number.intValue() );
+				break;
+			case DOUBLE:
+				p.print( number.doubleValue() );
+				break;
+		}
 	}
 
 	public int compareTo( final RippleValue other )
@@ -176,13 +228,24 @@ public class NumericLiteral implements RippleValue
 		{
 			double n = number.doubleValue(),
 				nOther =  ((NumericLiteral) other ).number.doubleValue();
+// Note: doesn't take special floating-point number entities into account:
+//       floating-point infinities, negative infinities, negative zero, and NaN
 			return ( n > nOther ) ? 1 : ( n < nOther ) ? -1 : 0;
 		}
 
 		else if ( other instanceof RdfValue )
 		{
-return 0;
+			try
+			{
+				// Note: wasty
+				return compareTo( new NumericLiteral( (RdfValue) other ) );
+			}
 
+			catch( RippleException e )
+			{
+				e.log( );
+				return 0;
+			}
 		}
 
 		else
