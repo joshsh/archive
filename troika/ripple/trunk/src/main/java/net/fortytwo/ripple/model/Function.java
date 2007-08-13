@@ -3,7 +3,6 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
-
 public interface Function
 {
 	/**

@@ -49,11 +49,11 @@ public class Operator implements RippleValue
 		p.print( rdfEquivalent );
 	}
 
-	private static RdfValue
+	static RdfValue
 		rdfType = new RdfValue( RDF.TYPE );
 
-	private static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
-	private static RdfValue rdfNil = new RdfValue( RDF.NIL );
+	static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
+	static RdfValue rdfNil = new RdfValue( RDF.NIL );
 
 	/**
 	 *  Finds the type of a value and creates an appropriate "active" wrapper.
@@ -61,9 +61,11 @@ public class Operator implements RippleValue
 	protected static Operator createOperator( RippleValue v, ModelConnection mc )
 		throws RippleException
 	{
+		// A function becomes active.
 		if ( v instanceof Function )
 			return new Operator( (Function) v );
 
+		// A list is dequoted.
 		else if ( v instanceof RippleList )
 			return new Operator( (RippleList) v );
 
@@ -71,23 +73,30 @@ public class Operator implements RippleValue
 		// the available RDF statements, and create the appropriate object.
 		if ( v instanceof RdfValue )
 		{
-// TODO: do some type inference instead of a dumb, single lookup.
-			if ( v.equals( rdfNil ) )
-				return new Operator( RippleList.NIL );
-			else if ( null != mc.findSingleObject( (RdfValue) v, rdfFirst ) )
+			if ( isRdfList( (RdfValue) v, mc ) )
 				return new Operator( RippleList.createList( (RdfValue) v, mc ) );
+
+			// An RDF value not otherwise recognizable becomes a predicate filter.
 			else
 				return new Operator( (RdfValue) v );
 		}
 
+		// Anything else becomes an active nullary filter with no output.
 		else
-			throw new RippleException( "bad RippleValue in createOperator(): "
-				+ v );
+			return new Operator( new NullFilter() );
 	}
 
 	public boolean isActive()
 	{
 		return true;
+	}
+
+// TODO: replace this with something a little more clever
+	static boolean isRdfList( final RdfValue v, final ModelConnection mc )
+		throws RippleException
+	{
+		return ( v.equals( rdfNil )
+			|| null != mc.findSingleObject( (RdfValue) v, rdfFirst ) );
 	}
 
 public RdfValue toRdf( ModelConnection mc )
@@ -101,7 +110,6 @@ return rdfEquivalent;
 
 	public int compareTo( RippleValue other )
 	{
-//System.out.println( "[" + this + "].compareTo(" + other + ")" );
 		if ( other instanceof Operator )
 		{
 			// For now, all Operators are considered equal, as the only Operator

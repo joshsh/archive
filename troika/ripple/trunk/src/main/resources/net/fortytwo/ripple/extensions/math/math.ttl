@@ -295,7 +295,7 @@ math:pow
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/math#pow> ;
 	.
 
-etc:random
+math:random
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
