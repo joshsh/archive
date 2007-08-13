@@ -30,43 +30,73 @@ public class Speak extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
-		if ( !initialized )
-			init();
-
 		String s;
 
 		s = mc.stringValue( stack.getFirst() );
-		stack = stack.getRest();
+//		stack = stack.getRest();
+
+		speak( s );
+
+		// Pass the stack along, unaltered.
+		sink.put( stack );
+	}
+
+	Voice singleVoice = null;
+
+	// Note: we won't try to speak more than one expression at a time.
+	synchronized void speak( final String s )
+		throws RippleException
+	{
+		if ( null == singleVoice )
+			createVoice();
 
 		singleVoice.speak( s );
 	}
 
-	static Voice singleVoice;
-
-	static boolean initialized = false;
-
-	static void init()
+	void createVoice()
 		throws RippleException
 	{
 		String voiceName = "kevin";
 
-		VoiceManager voiceManager = VoiceManager.getInstance();
-		singleVoice = voiceManager.getVoice( voiceName );
+		try
+		{
+			VoiceManager voiceManager = VoiceManager.getInstance();
+			singleVoice = voiceManager.getVoice( voiceName );
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
 		if ( null == singleVoice )
 			throw new RippleException(
 				"Cannot find a voice named " + voiceName );
-		
-		singleVoice.allocate();
 
-		initialized = true;
+		try
+		{
+			singleVoice.allocate();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 	}
 
 	// Note: never called.
-	static void shutdown()
+	synchronized void end() throws RippleException
 	{
-		if ( initialized )
-			singleVoice.deallocate();
+		try
+		{
+			if ( null != singleVoice )
+				singleVoice.deallocate();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 	}
 }
 
