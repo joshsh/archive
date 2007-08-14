@@ -73,7 +73,7 @@ System.out.println( "new slosh: " + magnitude + " at " + location );
 // System.out.println( "          d = " + d ); }
 
 			double result = d * magnitude;
-			return d * magnitude;
+			return result;
 		}
 	}
 
@@ -197,29 +197,32 @@ System.out.println( "new slosh: " + magnitude + " at " + location );
 				double dist1 = p.distance( centers[1] );
 				double dist2 = p.distance( centers[2] );
 
-if ( dist0 >= radiusRest && dist1 >= radiusRest && dist2 >= radiusRest )
-{
-	matrix[i][j] = backgroundColor;
-	continue;
-}
+				// Don't draw anything beyond the trefoil border.
+				if ( dist0 >= radiusRest && dist1 >= radiusRest && dist2 >= radiusRest )
+				{
+					matrix[i][j] = backgroundColor;
+					continue;
+				}
 
 				double val0 = waveFunc( dist0 );
 				double val1 = waveFunc( dist1 );
 				double val2 = waveFunc( dist2 );
 
-double slosh = sloshField[i][j];
+				double slosh = sloshField[i][j];
 
+				double intensity = ( val0 + val1 + val2 + ( slosh * sloshWeight ) ) / ( 3.0 + sloshWeight );
 //				double intensity = ( val0 + val1 + val2 ) / 3.0;
-//double intensity = slosh / sloshWeight;
-double intensity = ( val0 + val1 + val2 + ( slosh * sloshWeight ) ) / ( 3.0 + sloshWeight );
+//				double intensity = 1;
+//				double intensity = slosh / sloshWeight;
 
+				// Fade out at edges of trefoil.
 				intensity = intensity * dampen( p );
 
 				if ( intensity < 0 )
 					intensity = 0;
 
+intensity = intensify( intensity, 4 );
 /*
-//intensity = intensify( intensity, 4 );
 int v = (int) ( 255 * intensity );
 Color result = new Color( v, v, v );
 //*/
@@ -240,6 +243,31 @@ Color result = new Color( v, v, v );
 				double m1_b = dist1 > radiusRest ? 0 : 1.0 - ( dist1 / radiusRest );
 				double m2_b = dist2 > radiusRest ? 0 : 1.0 - ( dist2 / radiusRest );
 
+double r = m0_b;
+double g = m1_b;
+double b = m2_b;
+
+/*
+r = Math.sqrt(r);//r*r;
+g = Math.sqrt(g);//g*g;
+b = Math.sqrt(b);//b*b;
+*/
+
+/*
+double brightness = ( r + g + b ) / 3;
+double sq = Math.sqrt(brightness);
+r /= sq;
+g /= sq;
+b /= sq;
+if ( r > 1 ) r = 1;
+if ( g > 1 ) g = 1;
+if ( b > 1 ) b = 1;
+*/
+
+
+
+//*/
+/*
 		double favor = 500.0;
 
 				double m0 = m0_a + favor*m0_b;
@@ -254,17 +282,34 @@ Color result = new Color( v, v, v );
 				double r = ( r0*w0 + r1*w1 + r2*w2 ) / 3.0;
 				double g = ( g0*w0 + g1*w1 + g2*w2 ) / 3.0;
 				double b = ( b0*w0 + b1*w1 + b2*w2 ) / 3.0;
+*/
+
+/*
+double cmax = r;
+if ( g > cmax )
+	cmax = g;
+if ( b > cmax )
+	cmax = b;
+r /= cmax;
+g /= cmax;
+b /= cmax;
+*/
+/*double dred = r;
+double dgreen = g;
+double dblue = b;
+
 
 				int n = 7;
 				double dred = intensify( intensity * r, n );
 				double dgreen = intensify( intensity * g, n );
 				double dblue = intensify( intensity * b, n );
+*/
 //				double sumRgb = r + g + b;
 //				double dred = intensify( intensity * r / sumRgb )
 //				double dgreen = intensify( intensity * g / sumRgb )
 //				double dblue = intensify( intensity * b / sumRgb )
 
-
+/*
 double sat = dred;
 if ( dgreen > sat )
 	sat = dgreen;
@@ -274,8 +319,11 @@ if ( dblue > sat )
 dred = dred * sat + ( rBack * ( 1 - sat ) );
 dgreen = dgreen * sat + ( gBack * ( 1 - sat ) );
 dblue = dblue * sat + ( bBack * ( 1 - sat ) );
+*/
 
-
+/*
+int opaque = (int) ( intensity * 255 );
+//System.out.println( "opaque = " + opaque );
 				int red = (int) ( dred * 255 );
 				int green = (int) ( dgreen * 255 );
 				int blue = (int) ( dblue * 255 );
@@ -287,7 +335,16 @@ dblue = dblue * sat + ( bBack * ( 1 - sat ) );
 				if ( blue > 255 )
 					blue = 255;
 
-				Color result = new Color( red, green, blue );
+				Color result = new Color( red, green, blue, opaque );
+*/
+Color med = new Color( (float) r, (float) g, (float) b );
+//int nBrighten = 5;
+int nBrighten = 3;
+for ( int k = 0; k < nBrighten; k++ )
+	med = med.brighter();
+
+				Color result = new Color( med.getRed(), med.getGreen(), med.getBlue(), (int) (255*intensity) );
+//				Color result = new Color( (float) r, (float) g, (float) b, (float) intensity ).brighter();
 //*/
 				matrix[i][j] = result;
 			}
@@ -339,13 +396,12 @@ System.out.println( "max = " + max );
 	{
 		int []bytes = new int[width * height];
 		int k = 0;
-		int alpha = 255;
 		for ( int i = 0; i < height; i++ )
 		{
 			for ( int j = 0; j < width; j++ )
 			{
 				Color c = matrix[i][j];
-				bytes[k++] = (alpha << 24)
+				bytes[k++] = (c.getAlpha() << 24)
 					|  (c.getRed() << 16)
 					|  (c.getGreen() << 8 )
 					| c.getBlue();
@@ -369,10 +425,11 @@ System.out.println( "max = " + max );
 		height = 400;
 
 		nSloshes = 40;
-		sloshWeight = 1.0;
+		sloshWeight = 2.0;
 		sloshConstA = 1.0;
 		sloshPointiness = 20.0;
-		randomSeed = 42;
+		randomSeed = 2750;
+//		randomSeed = ( new Random() ).nextInt( 10000 );
 
 		colors = new Color[3];
 		colors[0] = Color.RED;
@@ -381,14 +438,15 @@ System.out.println( "max = " + max );
 
 		backgroundColor = Color.WHITE;
 
-//		random = new Random( randomSeed );
-random = new Random();
+		random = new Random( randomSeed );
 
 		createPoints();
 		createSloshes();
 		createField();
 drawSloshCenters();
 		createImage();
+
+		System.out.println( "randomSeed = " + randomSeed );
 	}
 
 	public void show()
@@ -396,6 +454,7 @@ drawSloshCenters();
 	{
 		ImagePanel panel = new ImagePanel( image );
 		JFrame f = new JFrame();
+f.setBackground( backgroundColor );
 		f.getContentPane().add( panel );
 		
 		int width = panel.img.getWidth( null );
@@ -414,11 +473,13 @@ drawSloshCenters();
 		public ImagePanel( final Image img )
 		{
 			this.img = img;
+//setBackground( Color.WHITE );
 		}
 		
 		//override paint method of panel
 		public void paint( Graphics g )
 		{
+//setBackground( Color.WHITE );
 			g.drawImage( img, 0, 0, this );
 		}
 	}
