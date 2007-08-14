@@ -1,24 +1,23 @@
-package net.fortytwo.ripple.ast;
+package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class BlankNodeAst implements Ast
+public class KeywordAst implements Ast
 {
-	private String id;
+	private String keyword;
 
-	public BlankNodeAst( final String id )
+	public KeywordAst( final String keyword )
 	{
-		this.id = id;
+		this.keyword = keyword;
 	}
 
 	public String toString()
 	{
-		return "_:" + id;
+		return keyword;
 	}
 
 	public void evaluate( Sink<RippleValue> sink,
@@ -26,12 +25,7 @@ public class BlankNodeAst implements Ast
 						ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue v = new RdfValue( mc.createBNode( id ) );
-
-		if ( null == v )
-			throw new RippleException( "blank node '" + this + "' does not exist" );
-		else
-			sink.put( v );
+		qe.resolveKeyword( keyword, sink );
 	}
 }
 

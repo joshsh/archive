@@ -21,8 +21,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Iterator;
 
+import net.fortytwo.ripple.cli.CommandLineInterface;
 import net.fortytwo.ripple.io.CacheManager;
-import net.fortytwo.ripple.io.CommandLineInterface;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.query.Evaluator;
@@ -82,8 +82,9 @@ public class Demo
 		}
 
 		// Set the default namespace.
-		mc.setNamespace( "", Ripple.getDefaultNamespace(), false );
-qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.getDefaultNamespace() ), false );
+// TODO: should be done in the QueryEngine
+mc.setNamespace( "", Ripple.defaultNamespace(), false );
+qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaultNamespace() ), false );
 
 		// Attach an interpreter to the query engine and let it read from
 		// standard input.

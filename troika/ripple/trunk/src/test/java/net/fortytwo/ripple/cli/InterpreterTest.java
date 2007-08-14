@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.cli;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;

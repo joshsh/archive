@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.cli;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -55,8 +55,8 @@ public class ContainerTreeView implements Sink<RippleList>
 		mc.findPredicates( first, predicates );
 
 		int predCount = 0,
-			predlim = Ripple.getTreeViewMaxPredicates(),
-			objlim = Ripple.getTreeViewMaxObjects();
+			predlim = Ripple.containerViewMaxPredicates(),
+			objlim = Ripple.containerViewMaxObjects();
 
 		for ( Iterator<RdfValue> predIter = predicates.iterator();
 			predIter.hasNext(); )

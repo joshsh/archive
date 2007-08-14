@@ -848,6 +848,7 @@
 
 @prefix units:  <http://sweetjplnasagov/ontology/unitsowl#>.
 
+# Note: on 8/14/07, Sindice didn't turn up any use of these terms.
 @define sweetUnitsTerms:
     units:BaseUnit
     units:BaseUnitOrUnitDerivedtWithoutChangingOfDimension

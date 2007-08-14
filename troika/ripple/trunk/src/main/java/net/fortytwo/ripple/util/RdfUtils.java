@@ -79,7 +79,7 @@ public class RdfUtils
 		// Don't wait indefinitely for a connection.
 		// Note: this timeout applies only to the establishment of a connection.
 		//       A document may take arbitrarily long to retrieve and parse.
-		uc.setConnectTimeout( (int) Ripple.uriDereferencingTimeout() );
+		uc.setConnectTimeout( (int) Ripple.urlConnectTimeout() );
 		HttpUtils.connect( uc );
 
 // 		new ThreadWrapper( "for RDFFormat readPrivate" )

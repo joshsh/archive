@@ -71,7 +71,7 @@ public class HttpUriDereferencer implements Dereferencer
 			//      resource
 			// Con: very many hash namespaces are not set up this way, and we
 			//      may lose significant information
-			if ( Ripple.dereferenceByNamespace() )
+			if ( Ripple.dereferenceUrisByNamespace() )
 				memo = ns;
 
 			// Pro: no information loss
@@ -133,7 +133,7 @@ public class HttpUriDereferencer implements Dereferencer
 		successMemos.add( memo );
 
 // TODO: this should probably be in a parent Dereferencer.
-		if ( Ripple.enforceImplicitProvenance() )
+		if ( Ripple.rejectNonAssociatedStatements() )
 			filter( uri.getNamespace(), mc.createUri( memo ), mc );
 	}
 

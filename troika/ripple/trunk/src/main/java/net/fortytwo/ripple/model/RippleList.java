@@ -284,7 +284,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		boolean padding = Ripple.listPadding();
 
 		ListNode<RippleValue> cur =
-			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.getExpressionOrder() )
+			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
 			? invert( this ) : this;
 		RippleValue stateVal = null;
 
@@ -359,7 +359,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		boolean padding = Ripple.listPadding();
 
 		ListNode<RippleValue> cur =
-			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.getExpressionOrder() )
+			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
 			? invert( this ) : this;
 		RippleValue stateVal = null;
 

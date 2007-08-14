@@ -210,7 +210,7 @@ s_logger.info( "    host = " + host );
 		if ( null != host && host.length() > 0 )
 		{
 			Date now = new Date();
-			long delay = Ripple.getCourtesyDelay();
+			long delay = Ripple.urlConnectCourtesyInterval();
 s_logger.info( "    delay = " + delay );
 	
 			Date lastRequest;

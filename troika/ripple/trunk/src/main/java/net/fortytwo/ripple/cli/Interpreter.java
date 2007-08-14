@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.cli;
 
 import java.io.InputStream;
 

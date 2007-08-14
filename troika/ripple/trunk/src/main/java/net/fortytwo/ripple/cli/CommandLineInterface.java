@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.cli;
 
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -19,8 +19,9 @@ import jline.ConsoleReader;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.ast.ListAst;
-import net.fortytwo.ripple.io.ContainerTreeView;
+import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
+import net.fortytwo.ripple.control.ThreadPool;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -37,7 +38,6 @@ import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Tee;
-import net.fortytwo.ripple.control.ThreadPool;
 
 import org.apache.log4j.Logger;
 
@@ -169,7 +169,7 @@ e.printStackTrace( System.err );
 		// Pass input through a filter to watch for special byte sequences.
 		InputStreamEventFilter filter = new InputStreamEventFilter( is, itf );
 
-		String jLineDebugOutput = Ripple.getJLineDebugOutput();
+		String jlineDebugOutput = Ripple.jlineDebugOutput();
 
 		// Create reader.
 		try
@@ -178,10 +178,10 @@ e.printStackTrace( System.err );
 				new OutputStreamWriter( qe.getPrintStream() ) );
 
 			// Set up JLine logging if asked for.
-			if ( null != jLineDebugOutput )
+			if ( null != jlineDebugOutput )
 				reader.setDebug(
 					new PrintWriter(
-						new FileWriter( jLineDebugOutput, true ) ) );
+						new FileWriter( jlineDebugOutput, true ) ) );
 
 			writeIn = new PipedInputStream();
 			readOut = new PipedOutputStream( writeIn );
@@ -244,7 +244,7 @@ e.printStackTrace( System.err );
 			public void execute( QueryEngine qe, ModelConnection mc )
 				throws RippleException
 			{
-				boolean doBuffer = Ripple.getBufferTreeView();
+				boolean doBuffer = Ripple.containerViewBufferOutput();
 	
 				queryEngine.getPrintStream().println( "" );
 	
@@ -353,8 +353,7 @@ lastQueryContinued = continuing;
 			directives.add( "@undefine" );
 
 			completors.add(
-				new net.fortytwo.ripple.io.jline.DirectiveCompletor(
-					directives ) );
+				new DirectiveCompletor( directives ) );
 
 			try
 			{

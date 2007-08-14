@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.query;
 
-import net.fortytwo.ripple.io.Interpreter;
+import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.test.RippleTestCase;
 

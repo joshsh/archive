@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.ast;
+package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
@@ -6,11 +6,11 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class BooleanAst implements Ast
+public class IntegerAst implements Ast
 {
-	private boolean value;
+	private int value;
 
-	public BooleanAst( final boolean value )
+	public IntegerAst( final int value )
 	{
 		this.value = value;
 	}

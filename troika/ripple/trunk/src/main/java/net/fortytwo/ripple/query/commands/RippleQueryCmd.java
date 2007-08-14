@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;

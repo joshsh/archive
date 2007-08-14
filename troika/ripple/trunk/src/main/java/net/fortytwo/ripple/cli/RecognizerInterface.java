@@ -1,9 +1,9 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.cli;
 
 import java.io.PrintStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.util.Sink;
 

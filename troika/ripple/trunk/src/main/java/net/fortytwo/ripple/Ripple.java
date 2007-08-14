@@ -17,6 +17,84 @@ import org.openrdf.rio.RDFFormat;
  */
 public class Ripple
 {
+	static boolean initialized = false;
+
+	public static void initialize()
+		throws RippleException
+	{
+		if ( initialized )
+			return;
+
+		PropertyConfigurator.configure(
+			Ripple.class.getResource( "log4j.properties" ) );
+
+		Properties props = new Properties();
+
+		try
+		{
+			props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
+		}
+
+		catch ( IOException e )
+		{
+			throw new RippleException( "unable to load ripple.properties" );
+		}
+
+		// Command-line interface
+		s_containerViewBufferOutput = getBooleanProperty(
+			props, "net.fortytwo.ripple.cli.containerViewBufferOutput", false );
+		s_containerViewMaxPredicates = getIntProperty(
+			props, "net.fortytwo.ripple.cli.containerViewMaxPredicates", 32 );
+		if ( s_containerViewMaxPredicates < 0 )
+			s_containerViewMaxPredicates = 0;
+		s_containerViewMaxObjects = getIntProperty(
+			props, "net.fortytwo.ripple.cli.containerViewMaxObjects", 32 );
+		if ( s_containerViewMaxObjects < 0 )
+			s_containerViewMaxObjects = 0;
+		s_jLineDebugOutput = props.getProperty(
+			"net.fortytwo.ripple.cli.jline.debugOutput" );
+
+		// Program control
+
+		// Input/Output
+		s_cacheFormat = getRdfFormatProperty(
+			props, "net.fortytwo.ripple.io.cacheFormat", RDFFormat.RDFXML );
+		s_exportFormat = getRdfFormatProperty(
+			props, "net.fortytwo.ripple.io.exportFormat", RDFFormat.RDFXML );
+		s_rejectNonAssociatedStatements = getBooleanProperty(
+			props, "net.fortytwo.ripple.io.rejectNonAssociatedStatements", true );
+		s_preferNewestNamespaceDefinitions = getBooleanProperty(
+			props, "net.fortytwo.ripple.io.preferNewestNamespaceDefinitions", false );
+		s_dereferenceUrisByNamespace = getBooleanProperty(
+			props, "net.fortytwo.ripple.io.dereferenceUrisByNamespace", false );
+		s_urlConnectTimeout = getLongProperty(
+			props, "net.fortytwo.ripple.io.urlConnectTimeout", 2000 );
+		s_urlConnectCourtesyInterval = getLongProperty(
+			props, "net.fortytwo.ripple.io.urlConnectCourtesyInterval", 500 );
+
+		// Model
+		s_useInference = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.useInference", false );
+		s_listPadding = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.listPadding", false );
+
+		// Queries
+		s_defaultNamespace = getStringProperty(
+			props, "net.fortytwo.ripple.query.defaultNamespace", "" );
+		s_evaluationOrder = getEvaluationOrderProperty(
+			props, "net.fortytwo.ripple.query.evaluationOrder", EvaluationOrder.LAZY );
+		s_evaluationStyle = getEvaluationStyleProperty(
+			props, "net.fortytwo.ripple.query.evaluationStyle", EvaluationStyle.COMPOSITIONAL );
+		s_expressionAssociativity = ExpressionAssociativity.find(
+			props.getProperty( "net.fortytwo.ripple.query.expressionAssociativity" ) );
+		s_expressionOrder = ExpressionOrder.find(
+			props.getProperty( "net.fortytwo.ripple.query.expressionOrder" ) );
+
+		initialized = true;
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
 	public static String getName()
 	{
 		return "Ripple";
@@ -26,30 +104,6 @@ public class Ripple
 	{
 		return "0.4-dev";
 	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	static boolean initialized = false;
-
-	static ExpressionOrder expressionOrder;
-	static ExpressionAssociativity expressionAssociativity;
-
-	static EvaluationOrder s_evaluationOrder;
-	static EvaluationStyle s_evaluationStyle;
-
-	static String s_jLineDebugOutput;
-
-	static boolean
-		s_useInference,
-		s_enforceImplicitProvenance;
-
-	static boolean s_dereferenceByNamespace;
-	static long s_uriDereferencingTimeout;
-	static String s_defaultNamespace;
-
-	static boolean s_listPadding;
-
-	////////////////////////////////////////////////////////////////////////////
 
 // FIXME: quiet is never used
 	static boolean quiet = false;
@@ -66,77 +120,85 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public static ExpressionOrder getExpressionOrder()
+	static ExpressionOrder s_expressionOrder;
+	public static ExpressionOrder expressionOrder()
 	{
-		return expressionOrder;
+		return s_expressionOrder;
 	}
 
-	public static ExpressionAssociativity getExpressionAssociativity()
+	static ExpressionAssociativity s_expressionAssociativity;
+	public static ExpressionAssociativity expressionAssociativity()
 	{
-		return expressionAssociativity;
+		return s_expressionAssociativity;
 	}
 
-	public static EvaluationOrder getEvaluationOrder()
+	static EvaluationOrder s_evaluationOrder;
+	public static EvaluationOrder evaluationOrder()
 	{
 		return s_evaluationOrder;
 	}
 
-	public static EvaluationStyle getEvaluationStyle()
+	static EvaluationStyle s_evaluationStyle;
+	public static EvaluationStyle evaluationStyle()
 	{
 		return s_evaluationStyle;
 	}
 
-	public static String getJLineDebugOutput()
+	static String s_jLineDebugOutput;
+	public static String jlineDebugOutput()
 	{
 		return s_jLineDebugOutput;
 	}
 
+	static boolean s_useInference;
 	public static boolean useInference()
 	{
 		return s_useInference;
 	}
 
-	public static boolean enforceImplicitProvenance()
+	static boolean s_rejectNonAssociatedStatements;
+	public static boolean rejectNonAssociatedStatements()
 	{
-		return s_enforceImplicitProvenance;
+		return s_rejectNonAssociatedStatements;
 	}
 
-	public static boolean dereferenceByNamespace()
+	static boolean s_dereferenceUrisByNamespace;
+	public static boolean dereferenceUrisByNamespace()
 	{
-		return s_dereferenceByNamespace;
+		return s_dereferenceUrisByNamespace;
 	}
 
 	static boolean s_preferNewestNamespaceDefinitions;
-
 	public static boolean preferNewestNamespaceDefinitions()
 	{
 		return s_preferNewestNamespaceDefinitions;
 	}
 
-	public static long uriDereferencingTimeout()
+	static long s_urlConnectTimeout;
+	public static long urlConnectTimeout()
 	{
-		return s_uriDereferencingTimeout;
+		return s_urlConnectTimeout;
 	}
 
-	public static String getDefaultNamespace()
+	static String s_defaultNamespace;
+	public static String defaultNamespace()
 	{
 		return s_defaultNamespace;
 	}
 
+	static boolean s_listPadding;
 	public static boolean listPadding()
 	{
 		return s_listPadding;
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-
-	static RDFFormat s_exportFormat, s_cacheFormat;
-
+	static RDFFormat s_exportFormat;
 	public static RDFFormat exportFormat()
 	{
 		return s_exportFormat;
 	}
 
+	static RDFFormat s_cacheFormat;
 	public static RDFFormat cacheFormat()
 	{
 		return s_cacheFormat;
@@ -146,33 +208,28 @@ public class Ripple
 		s_cacheFormat = format;
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-
-	static boolean s_bufferTreeView;
-	static int s_treeViewMaxPredicates, s_treeViewMaxObjects;
-
-	public static boolean getBufferTreeView()
+	static boolean s_containerViewBufferOutput;
+	public static boolean containerViewBufferOutput()
 	{
-		return s_bufferTreeView;
+		return s_containerViewBufferOutput;
 	}
 
-	public static int getTreeViewMaxPredicates()
+	static int s_containerViewMaxPredicates;
+	public static int containerViewMaxPredicates()
 	{
-		return s_treeViewMaxPredicates;
+		return s_containerViewMaxPredicates;
 	}
 
-	public static int getTreeViewMaxObjects()
+	static int s_containerViewMaxObjects;
+	public static int containerViewMaxObjects()
 	{
-		return s_treeViewMaxObjects;
+		return s_containerViewMaxObjects;
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-
-	static long s_courtesyDelay;
-
-	public static long getCourtesyDelay()
+	static long s_urlConnectCourtesyInterval;
+	public static long urlConnectCourtesyInterval()
 	{
-		return s_courtesyDelay;
+		return s_urlConnectCourtesyInterval;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -300,80 +357,6 @@ public class Ripple
 
 			return format;
 		}
-	}
-
-	public static void initialize()
-		throws RippleException
-	{
-		if ( initialized )
-			return;
-
-		PropertyConfigurator.configure(
-			Ripple.class.getResource( "log4j.properties" ) );
-
-		Properties props = new Properties();
-
-		try
-		{
-			props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
-		}
-
-		catch ( IOException e )
-		{
-			throw new RippleException( "unable to load ripple.properties" );
-		}
-
-		s_jLineDebugOutput = props.getProperty(
-			"net.fortytwo.ripple.io.jline.debugOutput" );
-
-		s_evaluationOrder = getEvaluationOrderProperty(
-			props, "net.fortytwo.ripple.model.evaluation.order", EvaluationOrder.LAZY );
-		s_evaluationStyle = getEvaluationStyleProperty(
-			props, "net.fortytwo.ripple.model.evaluation.style", EvaluationStyle.COMPOSITIONAL );
-
-		s_useInference = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.rdf.useInference", false );
-		s_enforceImplicitProvenance = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.rdf.enforceImplicitProvenance", true );
-
-		s_preferNewestNamespaceDefinitions = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.namespace.preferNewest", false );
-
-		s_dereferenceByNamespace = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.uri.dereferenceByNamespace", false );
-		s_uriDereferencingTimeout = getLongProperty(
-			props, "net.fortytwo.ripple.model.uri.dereferencing.timeout", 2000 );
-		s_defaultNamespace = getStringProperty(
-			props, "net.fortytwo.ripple.model.uri.defaultNamespace", "" );
-
-		expressionOrder = ExpressionOrder.find(
-			props.getProperty( "net.fortytwo.ripple.query.syntax.order" ) );
-		expressionAssociativity = ExpressionAssociativity.find(
-			props.getProperty( "net.fortytwo.ripple.query.syntax.associativity" ) );
-
-		s_cacheFormat = getRdfFormatProperty(
-			props, "net.fortytwo.ripple.io.cache.format", RDFFormat.RDFXML );
-		s_exportFormat = getRdfFormatProperty(
-			props, "net.fortytwo.ripple.io.export.format", RDFFormat.RDFXML );
-
-		s_bufferTreeView = getBooleanProperty(
-			props, "net.fortytwo.ripple.io.treeView.bufferOutput", false );
-		s_treeViewMaxPredicates = getIntProperty(
-			props, "net.fortytwo.ripple.io.treeView.maxPredicates", 32 );
-		if ( s_treeViewMaxPredicates < 0 )
-			s_treeViewMaxPredicates = 0;
-		s_treeViewMaxObjects = getIntProperty(
-			props, "net.fortytwo.ripple.io.treeView.maxObjects", 32 );
-		if ( s_treeViewMaxObjects < 0 )
-			s_treeViewMaxObjects = 0;
-
-		s_listPadding = getBooleanProperty(
-			props, "net.fortytwo.ripple.printing.listPadding", false );
-
-		s_courtesyDelay = getLongProperty(
-			props, "net.fortytwo.ripple.client.courtesyDelay", 500 );
-
-		initialized = true;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

@@ -1,19 +1,19 @@
 header
 {
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.cli;
 
-import net.fortytwo.ripple.ast.Ast;
-import net.fortytwo.ripple.ast.BooleanAst;
-import net.fortytwo.ripple.ast.BlankNodeAst;
-import net.fortytwo.ripple.ast.DoubleAst;
-import net.fortytwo.ripple.ast.IntegerAst;
-import net.fortytwo.ripple.ast.KeywordAst;
-import net.fortytwo.ripple.ast.ListAst;
-import net.fortytwo.ripple.ast.OperatorAst;
-import net.fortytwo.ripple.ast.QNameAst;
-import net.fortytwo.ripple.ast.StringAst;
-import net.fortytwo.ripple.ast.TypedLiteralAst;
-import net.fortytwo.ripple.ast.UriAst;
+import net.fortytwo.ripple.cli.ast.Ast;
+import net.fortytwo.ripple.cli.ast.BooleanAst;
+import net.fortytwo.ripple.cli.ast.BlankNodeAst;
+import net.fortytwo.ripple.cli.ast.DoubleAst;
+import net.fortytwo.ripple.cli.ast.IntegerAst;
+import net.fortytwo.ripple.cli.ast.KeywordAst;
+import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.OperatorAst;
+import net.fortytwo.ripple.cli.ast.QNameAst;
+import net.fortytwo.ripple.cli.ast.StringAst;
+import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
+import net.fortytwo.ripple.cli.ast.UriAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.commands.CountStatementsCmd;
 import net.fortytwo.ripple.query.commands.DefinePrefixCmd;

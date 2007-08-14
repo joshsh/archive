@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.ast;
+package net.fortytwo.ripple.cli.ast;
 
 import java.util.Iterator;
 

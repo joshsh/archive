@@ -248,7 +248,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antlr-plugin</artifactId>
 				<configuration>
-					<grammars>net/fortytwo/ripple/io/Ripple.g</grammars>
+					<grammars>net/fortytwo/ripple/cli/Ripple.g</grammars>
 					<outputDirectory>${basedir}/target/generated-sources/main/java</outputDirectory>
 				</configuration>
 				<!-- Compile the ANTLR grammar. -->
