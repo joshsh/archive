@@ -88,6 +88,7 @@ boolean lastQueryContinued = false;
 				Command cmd = createQueryCommand( ast, false );
 				scheduler.add( cmd );
 				scheduler.add( new UpdateCompletorsCmd() );
+				waitUntilCommandsCompleted();
 			}
 		};
 
@@ -100,6 +101,7 @@ boolean lastQueryContinued = false;
 				Command cmd = createQueryCommand( ast, true );
 				scheduler.add( cmd );
 				scheduler.add( new UpdateCompletorsCmd() );
+				waitUntilCommandsCompleted();
 			}
 		};
 
@@ -111,6 +113,7 @@ boolean lastQueryContinued = false;
 			{
 				scheduler.add( cmd );
 				scheduler.add( new UpdateCompletorsCmd() );
+				waitUntilCommandsCompleted();
 			}
 		};
 
@@ -380,9 +383,27 @@ lastQueryContinued = continuing;
 		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
 	}
 
+	void waitUntilCommandsCompleted()
+		throws RippleException
+	{
+		synchronized( scheduler )
+		{
+			try
+			{
+				while ( scheduler.count() > 0 )
+					scheduler.wait();
+			}
+
+			catch ( InterruptedException e )
+			{
+				throw new RippleException( "interrupted while waiting for command queue to empty" );
+			}
+		}
+	}
+
 	private class UpdateCompletorsCmd extends Command
 	{
-		public void execute( QueryEngine qe, ModelConnection mc )
+		public void execute( final QueryEngine qe, final ModelConnection mc )
 			throws RippleException
 		{
 			updateCompletors();

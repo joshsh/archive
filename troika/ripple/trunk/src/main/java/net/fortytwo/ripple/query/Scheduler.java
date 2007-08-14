@@ -12,9 +12,12 @@ public class Scheduler
 	QueryEngine queryEngine;
 	ExecutorRunnable schedulerRunnable;
 	LinkedList<Command> queue;
+	Object monitorObj;
 
 	public Scheduler( final QueryEngine qe )
 	{
+		monitorObj = this;
+
 		queryEngine = qe;
 		queue = new LinkedList<Command>();
 
@@ -35,6 +38,11 @@ public class Scheduler
 		{
 			schedulerRunnable.notify();
 		}
+	}
+
+	public synchronized int count()
+	{
+		return queue.size();
 	}
 
 	/**
@@ -76,6 +84,13 @@ public class Scheduler
 				// Wait while there are no items in the queue.
 				if ( 0 == size )
 				{
+					synchronized( monitorObj )
+					{
+						// Notify any interested threads that this scheduler is
+						// waiting on new commands.
+						monitorObj.notify();
+					}
+
 					synchronized( this )
 					{
 						try
