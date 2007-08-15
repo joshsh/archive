@@ -1,3 +1,12 @@
+/*
+ * $URL$
+ * $Revision$
+ * $Author$
+ *
+ * Copyright (C) 2007 Joshua Shinavier
+ */
+
+
 package net.fortytwo.ripple.control;
 
 import org.apache.log4j.Logger;

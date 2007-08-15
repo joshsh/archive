@@ -1,3 +1,12 @@
+/*
+ * $URL$
+ * $Revision$
+ * $Author$
+ *
+ * Copyright (C) 2007 Joshua Shinavier
+ */
+
+
 package net.fortytwo.ripple.model;
 
 import java.io.InputStream;
