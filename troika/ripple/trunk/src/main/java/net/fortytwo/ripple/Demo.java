@@ -1,7 +1,6 @@
 /*
- * $Id$
+ * $URL$
  * $Revision$
- * $LastChangedDate$
  * $Author$
  *
  * Copyright (C) 2007 Joshua Shinavier
