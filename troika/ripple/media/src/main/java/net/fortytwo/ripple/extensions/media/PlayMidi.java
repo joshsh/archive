@@ -53,7 +53,7 @@ public class PlayMidi extends PrimitiveFunction
 		}
 	}
 
-	private void play( final URI uri )
+	void play( final URI uri )
 		throws RippleException
 	{
 		URLConnection conn;
@@ -90,6 +90,23 @@ public class PlayMidi extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
+		play( is );
+
+		try
+		{
+			is.close();
+		}
+
+		catch( java.io.IOException e )
+		{
+			throw new RippleException( e );
+		}
+	}
+
+	// Note: we won't try to play more than one MIDI at a time.
+	synchronized void play( final InputStream is )
+		throws RippleException
+	{
 		// Play once
 		try
 		{
