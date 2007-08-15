@@ -21,7 +21,7 @@ import org.openrdf.rio.RDFFormat;
 
 public class HttpUtils
 {
-	final static Logger s_logger
+	final static Logger logger
 		= Logger.getLogger( HttpUtils.class );
 
 	public static void prepareUrlConnectionForTextRequest( final URLConnection urlConn )
@@ -88,7 +88,7 @@ System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType
 System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
 */
 		String contentType = urlConn.getContentType();
-		s_logger.debug( "contentType = " + contentType );
+		logger.debug( "contentType = " + contentType );
 
 		String file = urlConn.getURL().getFile();
 		String ext;
@@ -101,7 +101,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 				? file.substring( lastDot + 1 )
 				: null;
 		}
-		s_logger.debug( "extension = " + ext );
+		logger.debug( "extension = " + ext );
 
 		// Primary content type rules.
 		if ( null != contentType )
@@ -201,9 +201,9 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 	public static void connect( final URLConnection urlConn )
 		throws RippleException
 	{
-s_logger.info( "connecting to: " + urlConn.getURL() );
+logger.info( "connecting to: " + urlConn.getURL() );
 		String host = urlConn.getURL().getHost();
-s_logger.info( "    host = " + host );
+logger.info( "    host = " + host );
 
 		// Some connections (e.g. file system operations) have no host.  Don't
 		// bother regulating them.
@@ -211,7 +211,7 @@ s_logger.info( "    host = " + host );
 		{
 			Date now = new Date();
 			long delay = Ripple.urlConnectCourtesyInterval();
-s_logger.info( "    delay = " + delay );
+logger.info( "    delay = " + delay );
 	
 			Date lastRequest;
 			long w = 0;
@@ -228,7 +228,7 @@ s_logger.info( "    delay = " + delay );
 					if ( now.getTime() - lastRequest.getTime() < delay )
 						w = lastRequest.getTime() + delay - now.getTime();
 				}
-s_logger.info( "    waiting " + w + " milliseconds" );
+logger.info( "    waiting " + w + " milliseconds" );
 
 				// Record the projected start time of the request beforehand, to
 				// avoid any other requests being scheduled without knowledge of

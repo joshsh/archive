@@ -41,7 +41,7 @@ import org.openrdf.model.vocabulary.RDF;
 
 public class Model
 {
-	final static Logger s_logger = Logger.getLogger( Model.class );
+	final static Logger logger = Logger.getLogger( Model.class );
 
 	String name;
 
@@ -69,7 +69,7 @@ public Dereferencer getDereferencer()
 	public Model( final Repository repository, final String name )
 		throws RippleException
 	{
-		s_logger.debug( "Creating new Model '" + name + "'" );
+		logger.debug( "Creating new Model '" + name + "'" );
 
 		this.repository = repository;
 		this.name = name;
@@ -90,7 +90,7 @@ public Dereferencer getDereferencer()
 
 		loadSymbols( urlFactory );
 
-		s_logger.debug( "Finished creating Model '" + name + "'" );
+		logger.debug( "Finished creating Model '" + name + "'" );
 	}
 
 	private void loadSymbols( final UrlFactory uf )

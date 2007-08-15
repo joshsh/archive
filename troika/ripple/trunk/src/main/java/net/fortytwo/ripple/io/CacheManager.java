@@ -22,7 +22,7 @@ import org.openrdf.rio.RDFFormat;
 
 public class CacheManager
 {
-	final static Logger s_logger = Logger.getLogger( CacheManager.class );
+	final static Logger logger = Logger.getLogger( CacheManager.class );
 
 	static RdfValue
 		rplCacheRoot,
@@ -89,11 +89,11 @@ public class CacheManager
 
 		mc.removeStatementsAbout( rplCacheRoot, null );
 
-		s_logger.debug( "writing success memos" );
+		logger.debug( "writing success memos" );
 		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
 			mc.add( rplCacheRoot, rplCacheSuccessMemo, mc.createValue( iter.next() ) );
 
-		s_logger.debug( "writing failure memos" );
+		logger.debug( "writing failure memos" );
 		for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
 			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.createValue( iter.next() ) );
 	}

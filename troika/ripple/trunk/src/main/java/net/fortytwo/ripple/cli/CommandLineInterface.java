@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
  */
 public class CommandLineInterface
 {
-	final static Logger s_logger
+	final static Logger logger
 		= Logger.getLogger( CommandLineInterface.class );
 
 	PipedInputStream  writeIn;
@@ -336,7 +336,7 @@ lastQueryContinued = continuing;
 
 	void updateCompletors()
 	{
-		s_logger.debug( "updating completors" );
+		logger.debug( "updating completors" );
 		List completors = new ArrayList();
 
 		try
@@ -374,7 +374,7 @@ lastQueryContinued = continuing;
 
 		catch ( RippleException e )
 		{
-			s_logger.error( "Failed to update completors.  Continuing nonetheless." );
+			logger.error( "Failed to update completors.  Continuing nonetheless." );
 		}
 	}
 

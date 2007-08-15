@@ -1,9 +1,12 @@
-/**
-*  $Id$
-*  $LastChangedDate$
-*  $Revision$
-*  $Author$
-*/
+/*
+ * $Id$
+ * $Revision$
+ * $LastChangedDate$
+ * $Author$
+ *
+ * Copyright (C) 2007 Joshua Shinavier
+ */
+
 
 package net.fortytwo.ripple;
 
@@ -36,11 +39,11 @@ import org.openrdf.repository.Repository;
 import org.openrdf.rio.RDFFormat;
 
 /**
- *  Demo application.
+ * Demo application.
  */
 public class Demo
 {
-	final static Logger s_logger = Logger.getLogger( Demo.class );
+	final static Logger logger = Logger.getLogger( Demo.class );
 
 	public static void demo( final File store,
 							final InputStream in,
@@ -65,7 +68,7 @@ public class Demo
 		// Load from store.
 		if ( null != store )
 		{
-			s_logger.info( "loading state from " + store );
+			logger.info( "loading state from " + store );
 			URL storeUrl;
 
 			try
@@ -94,7 +97,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		// Save back to store.
 		if ( null != store )
 		{
-			s_logger.info( "saving state to " + store );
+			logger.info( "saving state to " + store );
 			OutputStream storeOut;
 
 			try
@@ -140,10 +143,13 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		{
 			Iterator<String> i = openConnections.iterator();
 			String s = "" + openConnections.size() + " dangling connections: \"" + i.next() + "\"";
-			while ( i.hasNext() )
-				s += ", \"" + i.next() + "\"";
 
-			s_logger.warn( s );
+			while ( i.hasNext() )
+			{
+				s += ", \"" + i.next() + "\"";
+			}
+
+			logger.warn( s );
 		}
 	}
 

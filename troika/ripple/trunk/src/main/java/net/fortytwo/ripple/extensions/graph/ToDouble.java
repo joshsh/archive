@@ -14,7 +14,7 @@ import org.openrdf.model.URI;
 
 public class ToDouble extends PrimitiveFunction
 {
-	private final static Logger s_logger
+	private final static Logger logger
 		= Logger.getLogger( ToDouble.class );
 
 	public ToDouble()
@@ -47,7 +47,7 @@ public class ToDouble extends PrimitiveFunction
 
 		catch ( NumberFormatException e )
 		{
-			s_logger.debug( "bad integer value: " + s );
+			logger.debug( "bad integer value: " + s );
 			return;
 		}
 

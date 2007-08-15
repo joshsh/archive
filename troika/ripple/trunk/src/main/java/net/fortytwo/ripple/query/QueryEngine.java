@@ -27,7 +27,7 @@ import org.openrdf.model.Value;
 
 public class QueryEngine
 {
-	final static Logger s_logger
+	final static Logger logger
 		= Logger.getLogger( QueryEngine.class );
 
 	Model model;

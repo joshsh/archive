@@ -15,8 +15,8 @@ import java.security.NoSuchAlgorithmException;
 public class Sha1 extends PrimitiveFunction
 {
 	private static final String
-		s_encoding = "UTF-8",
-		s_algorithm = "SHA";
+		encoding = "UTF-8",
+		algorithm = "SHA";
 
 	private static MessageDigest messageDigest = null;
 
@@ -38,7 +38,7 @@ public class Sha1 extends PrimitiveFunction
 		try
 		{
 			if ( null == messageDigest )
-				messageDigest = MessageDigest.getInstance( s_algorithm );
+				messageDigest = MessageDigest.getInstance( algorithm );
 		}
 
 		catch( NoSuchAlgorithmException e )
@@ -48,7 +48,7 @@ public class Sha1 extends PrimitiveFunction
 
 		try
 		{
-			messageDigest.update( plaintext.getBytes( s_encoding ) );
+			messageDigest.update( plaintext.getBytes( encoding ) );
 		}
 
 		catch( UnsupportedEncodingException e )

@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 public class Interpreter
 {
-	final static Logger s_logger
+	final static Logger logger
 		= Logger.getLogger( Interpreter.class );
 
 	RecognizerInterface recognizerInterface;
@@ -58,7 +58,7 @@ System.out.println( "exited normally" );
 			// The parser has received a quit command.
 			catch ( ParserQuitException e )
 			{
-				s_logger.debug( "quit() called on Interpreter" );
+				logger.debug( "quit() called on Interpreter" );
 
 				break;
 			}

@@ -33,7 +33,7 @@ import org.openrdf.repository.RepositoryResult;
 //       its associated web location are the same as its success or failure 'memo'.
 public class HttpUriDereferencer implements Dereferencer
 {
-	final static Logger s_logger = Logger.getLogger( HttpUriDereferencer.class );
+	final static Logger logger = Logger.getLogger( HttpUriDereferencer.class );
 
 	Set<String> successMemos;
 	Set<String> failureMemos;
@@ -90,6 +90,7 @@ public class HttpUriDereferencer implements Dereferencer
 		return memo;
 	}
 
+// TODO: two threads may dereference the same URI twice if the two calls of this method occur close enough together in time.
 	public void dereference( final URI uri, final ModelConnection mc )
 		throws RippleException
 	{
@@ -109,21 +110,21 @@ public class HttpUriDereferencer implements Dereferencer
 		// 'memo' is used as the base URI for any relative references.
 		try
 		{
-			s_logger.info( "Dereferencing URI " + uri + " at location " + url );
+			logger.info( "Dereferencing URI " + uri + " at location " + url );
 
 			RdfUtils.read( url, adapter, memo );
 
-			s_logger.debug( "URI dereferenced without errors" );
+			logger.debug( "URI dereferenced without errors" );
 		}
 
 		// For now, any exception thrown during the importing process
 		// results in the URI being blacklisted as not dereferenceable.
 		catch ( RippleException e )
 		{
-			s_logger.info( "Failed to dereference URI: " + uri.toString() );
-// s_logger.info( "### a" );
+			logger.info( "Failed to dereference URI: " + uri.toString() );
+// logger.info( "### a" );
 // mc.reset( false );
-// s_logger.info( "### b" );
+// logger.info( "### b" );
 			failureMemos.add( memo );
 			throw e;
 		}
@@ -183,7 +184,7 @@ public class HttpUriDereferencer implements Dereferencer
 			throw new RippleException( t );
 		}
 
-		s_logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
+		logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
 	}
 
 	public void dereference( RdfValue rv, ModelConnection mc )

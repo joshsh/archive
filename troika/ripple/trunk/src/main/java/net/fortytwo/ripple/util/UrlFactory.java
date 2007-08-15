@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class UrlFactory
 {
-	private final static Logger s_logger
+	private final static Logger logger
 		= Logger.getLogger( UrlFactory.class );
 
 	private Map<String, String> map;
@@ -59,7 +59,7 @@ public class UrlFactory
 		for ( int i = 0; i < sourceUrls.length; i++ )
 		{
 			targetUrls[i] = map.get( sourceUrls[i] );
-			s_logger.debug( "map " + sourceUrls[i] + " to " + targetUrls[i] );
+			logger.debug( "map " + sourceUrls[i] + " to " + targetUrls[i] );
 		}
 
 		upToDate = true;

@@ -19,6 +19,27 @@ public class Ripple
 {
 	static boolean initialized = false;
 
+	static ExpressionOrder expressionOrder;
+	static ExpressionAssociativity expressionAssociativity;
+	static EvaluationOrder evaluationOrder;
+	static EvaluationStyle evaluationStyle;
+	static String jLineDebugOutput;
+	static boolean useInference;
+	static boolean rejectNonAssociatedStatements;
+	static boolean dereferenceUrisByNamespace;
+	static boolean preferNewestNamespaceDefinitions;
+	static long urlConnectTimeout;
+	static String defaultNamespace;
+	static boolean listPadding;
+	static RDFFormat exportFormat;
+	static RDFFormat cacheFormat;
+	static boolean containerViewBufferOutput;
+	static int containerViewMaxPredicates;
+	static int containerViewMaxObjects;
+	static long urlConnectCourtesyInterval;
+
+	////////////////////////////////////////////////////////////////////////////
+
 	public static void initialize()
 		throws RippleException
 	{
@@ -41,54 +62,58 @@ public class Ripple
 		}
 
 		// Command-line interface
-		s_containerViewBufferOutput = getBooleanProperty(
+		containerViewBufferOutput = getBooleanProperty(
 			props, "net.fortytwo.ripple.cli.containerViewBufferOutput", false );
-		s_containerViewMaxPredicates = getIntProperty(
+		containerViewMaxPredicates = getIntProperty(
 			props, "net.fortytwo.ripple.cli.containerViewMaxPredicates", 32 );
-		if ( s_containerViewMaxPredicates < 0 )
-			s_containerViewMaxPredicates = 0;
-		s_containerViewMaxObjects = getIntProperty(
+		if ( containerViewMaxPredicates < 0 )
+		{
+			containerViewMaxPredicates = 0;
+		}
+		containerViewMaxObjects = getIntProperty(
 			props, "net.fortytwo.ripple.cli.containerViewMaxObjects", 32 );
-		if ( s_containerViewMaxObjects < 0 )
-			s_containerViewMaxObjects = 0;
-		s_jLineDebugOutput = props.getProperty(
+		if ( containerViewMaxObjects < 0 )
+		{
+			containerViewMaxObjects = 0;
+		}
+		jLineDebugOutput = props.getProperty(
 			"net.fortytwo.ripple.cli.jline.debugOutput" );
 
 		// Program control
 
 		// Input/Output
-		s_cacheFormat = getRdfFormatProperty(
+		cacheFormat = getRdfFormatProperty(
 			props, "net.fortytwo.ripple.io.cacheFormat", RDFFormat.RDFXML );
-		s_exportFormat = getRdfFormatProperty(
+		exportFormat = getRdfFormatProperty(
 			props, "net.fortytwo.ripple.io.exportFormat", RDFFormat.RDFXML );
-		s_rejectNonAssociatedStatements = getBooleanProperty(
+		rejectNonAssociatedStatements = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.rejectNonAssociatedStatements", true );
-		s_preferNewestNamespaceDefinitions = getBooleanProperty(
+		preferNewestNamespaceDefinitions = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.preferNewestNamespaceDefinitions", false );
-		s_dereferenceUrisByNamespace = getBooleanProperty(
+		dereferenceUrisByNamespace = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.dereferenceUrisByNamespace", false );
-		s_urlConnectTimeout = getLongProperty(
+		urlConnectTimeout = getLongProperty(
 			props, "net.fortytwo.ripple.io.urlConnectTimeout", 2000 );
-		s_urlConnectCourtesyInterval = getLongProperty(
+		urlConnectCourtesyInterval = getLongProperty(
 			props, "net.fortytwo.ripple.io.urlConnectCourtesyInterval", 500 );
 
 		// Model
-		s_useInference = getBooleanProperty(
+		useInference = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.useInference", false );
-		s_listPadding = getBooleanProperty(
+		listPadding = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.listPadding", false );
 
 		// Queries
-		s_defaultNamespace = getStringProperty(
+		defaultNamespace = getStringProperty(
 			props, "net.fortytwo.ripple.query.defaultNamespace", "" );
-		s_evaluationOrder = getEvaluationOrderProperty(
-			props, "net.fortytwo.ripple.query.evaluationOrder", EvaluationOrder.LAZY );
-		s_evaluationStyle = getEvaluationStyleProperty(
-			props, "net.fortytwo.ripple.query.evaluationStyle", EvaluationStyle.COMPOSITIONAL );
-		s_expressionAssociativity = ExpressionAssociativity.find(
-			props.getProperty( "net.fortytwo.ripple.query.expressionAssociativity" ) );
-		s_expressionOrder = ExpressionOrder.find(
-			props.getProperty( "net.fortytwo.ripple.query.expressionOrder" ) );
+		evaluationOrder = EvaluationOrder.find( getStringProperty(
+			props, "net.fortytwo.ripple.query.evaluationOrder", "lazy" ) );
+		evaluationStyle = EvaluationStyle.find( getStringProperty(
+			props, "net.fortytwo.ripple.query.evaluationStyle", "compositional" ) );
+		expressionAssociativity = ExpressionAssociativity.find( getStringProperty(
+			props, "net.fortytwo.ripple.query.expressionAssociativity", "left" ) );
+		expressionOrder = ExpressionOrder.find( getStringProperty(
+			props, "net.fortytwo.ripple.query.expressionOrder", "diagrammatic" ) );
 
 		initialized = true;
 	}
@@ -120,116 +145,98 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	static ExpressionOrder s_expressionOrder;
 	public static ExpressionOrder expressionOrder()
 	{
-		return s_expressionOrder;
+		return expressionOrder;
 	}
 
-	static ExpressionAssociativity s_expressionAssociativity;
 	public static ExpressionAssociativity expressionAssociativity()
 	{
-		return s_expressionAssociativity;
+		return expressionAssociativity;
 	}
 
-	static EvaluationOrder s_evaluationOrder;
 	public static EvaluationOrder evaluationOrder()
 	{
-		return s_evaluationOrder;
+		return evaluationOrder;
 	}
 
-	static EvaluationStyle s_evaluationStyle;
 	public static EvaluationStyle evaluationStyle()
 	{
-		return s_evaluationStyle;
+		return evaluationStyle;
 	}
 
-	static String s_jLineDebugOutput;
 	public static String jlineDebugOutput()
 	{
-		return s_jLineDebugOutput;
+		return jLineDebugOutput;
 	}
 
-	static boolean s_useInference;
 	public static boolean useInference()
 	{
-		return s_useInference;
+		return useInference;
 	}
 
-	static boolean s_rejectNonAssociatedStatements;
 	public static boolean rejectNonAssociatedStatements()
 	{
-		return s_rejectNonAssociatedStatements;
+		return rejectNonAssociatedStatements;
 	}
 
-	static boolean s_dereferenceUrisByNamespace;
 	public static boolean dereferenceUrisByNamespace()
 	{
-		return s_dereferenceUrisByNamespace;
+		return dereferenceUrisByNamespace;
 	}
 
-	static boolean s_preferNewestNamespaceDefinitions;
 	public static boolean preferNewestNamespaceDefinitions()
 	{
-		return s_preferNewestNamespaceDefinitions;
+		return preferNewestNamespaceDefinitions;
 	}
 
-	static long s_urlConnectTimeout;
 	public static long urlConnectTimeout()
 	{
-		return s_urlConnectTimeout;
+		return urlConnectTimeout;
 	}
 
-	static String s_defaultNamespace;
 	public static String defaultNamespace()
 	{
-		return s_defaultNamespace;
+		return defaultNamespace;
 	}
 
-	static boolean s_listPadding;
 	public static boolean listPadding()
 	{
-		return s_listPadding;
+		return listPadding;
 	}
 
-	static RDFFormat s_exportFormat;
 	public static RDFFormat exportFormat()
 	{
-		return s_exportFormat;
+		return exportFormat;
 	}
 
-	static RDFFormat s_cacheFormat;
 	public static RDFFormat cacheFormat()
 	{
-		return s_cacheFormat;
+		return cacheFormat;
 	}
 	public static void setCacheFormat( final RDFFormat format )
 	{
-		s_cacheFormat = format;
+		cacheFormat = format;
 	}
 
-	static boolean s_containerViewBufferOutput;
 	public static boolean containerViewBufferOutput()
 	{
-		return s_containerViewBufferOutput;
+		return containerViewBufferOutput;
 	}
 
-	static int s_containerViewMaxPredicates;
 	public static int containerViewMaxPredicates()
 	{
-		return s_containerViewMaxPredicates;
+		return containerViewMaxPredicates;
 	}
 
-	static int s_containerViewMaxObjects;
 	public static int containerViewMaxObjects()
 	{
-		return s_containerViewMaxObjects;
+		return containerViewMaxObjects;
 	}
 
-	static long s_urlConnectCourtesyInterval;
 	public static long urlConnectCourtesyInterval()
 	{
-		return s_urlConnectCourtesyInterval;
+		return urlConnectCourtesyInterval;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -264,7 +271,9 @@ public class Ripple
 		String s = props.getProperty( name );
 
 		if ( null == s )
+		{
 			return defaultValue;
+		}
 
 		else
 		{
@@ -288,7 +297,9 @@ public class Ripple
 		String s = props.getProperty( name );
 
 		if ( null == s )
+		{
 			return defaultValue;
+		}
 
 		else
 		{
@@ -302,34 +313,6 @@ public class Ripple
 				throw new RippleException( e );
 			}
 		}
-	}
-
-	static EvaluationOrder getEvaluationOrderProperty(
-		final Properties props,
-		final String name,
-		final EvaluationOrder defaultValue ) throws RippleException
-	{
-		String s = props.getProperty( name );
-
-		if ( null == s )
-			return defaultValue;
-
-		else
-			return EvaluationOrder.lookup( s );
-	}
-
-	static EvaluationStyle getEvaluationStyleProperty(
-		final Properties props,
-		final String name,
-		final EvaluationStyle defaultValue ) throws RippleException
-	{
-		String s = props.getProperty( name );
-
-		if ( null == s )
-			return defaultValue;
-
-		else
-			return EvaluationStyle.lookup( s );
 	}
 
 	static RDFFormat getRdfFormatProperty(
@@ -346,14 +329,18 @@ public class Ripple
 		String s = props.getProperty( name );
 
 		if ( null == s )
+		{
 			return defaultValue;
+		}
 
 		else
 		{
 			RDFFormat format = RdfUtils.findFormat( s );
 
 			if ( null == format )
+			{
 				throw new RippleException( "unknown RDF format: " + s );
+			}
 
 			return format;
 		}
@@ -366,8 +353,8 @@ public class Ripple
 		DIAGRAMMATIC      ( "diagrammatic" ),
 		ANTIDIAGRAMMATIC  ( "antidiagrammatic" );
 
-		private String name;
-		private  ExpressionOrder( String n )
+		String name;
+		ExpressionOrder( String n )
 		{
 			name = n;
 		}
@@ -376,8 +363,12 @@ public class Ripple
 			throws RippleException
 		{
 			for ( ExpressionOrder x : ExpressionOrder.values() )
+			{
 				if ( x.name.equals( name ) )
+				{
 					return x;
+				}
+			}
 
 			String msg = "unknown ExpressionOrder: '" + name + "'";
 			throw new RippleException( msg );
@@ -389,8 +380,8 @@ public class Ripple
 		LEFT   ( "left" ),
 		RIGHT  ( "right" );
 
-		private String name;
-		private  ExpressionAssociativity( String n )
+		String name;
+		ExpressionAssociativity( String n )
 		{
 			name = n;
 		}
@@ -399,8 +390,12 @@ public class Ripple
 			throws RippleException
 		{
 			for ( ExpressionAssociativity x : ExpressionAssociativity.values() )
+			{
 				if ( x.name.equals( name ) )
+				{
 					return x;
+				}
+			}
 
 			String msg = "unknown ExpressionAssociativity: '" + name + "'";
 			throw new RippleException( msg );
@@ -412,19 +407,23 @@ public class Ripple
 		EAGER  ( "eager" ),
 		LAZY   ( "lazy" );
 
-		private String name;
+		String name;
 
-		private EvaluationOrder( String name )
+		EvaluationOrder( String name )
 		{
 			this.name = name;
 		}
 
-		public static EvaluationOrder lookup( String name )
+		public static EvaluationOrder find( String name )
 			throws RippleException
 		{
 			for ( EvaluationOrder order : EvaluationOrder.values() )
+			{
 				if ( order.name.equals( name ) )
+				{
 					return order;
+				}
+			}
 
 			throw new RippleException( "unknown EvaluationOrder: " + name );
 		}
@@ -435,19 +434,23 @@ public class Ripple
 		APPLICATIVE    ( "applicative" ),
 		COMPOSITIONAL  ( "compositional" );
 
-		private String name;
+		String name;
 
-		private EvaluationStyle( String name )
+		EvaluationStyle( String name )
 		{
 			this.name = name;
 		}
 
-		public static EvaluationStyle lookup( String name )
+		public static EvaluationStyle find( String name )
 			throws RippleException
 		{
 			for ( EvaluationStyle style : EvaluationStyle.values() )
+			{
 				if ( style.name.equals( name ) )
+				{
 					return style;
+				}
+			}
 
 			throw new RippleException( "unknown EvaluationStyle: " + name );
 		}

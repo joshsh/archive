@@ -48,7 +48,7 @@ import org.openrdf.rio.RDFHandler;
 
 public class ModelConnection
 {
-	final static Logger s_logger
+	final static Logger logger
 		= Logger.getLogger( ModelConnection.class );
 
 	Model model;
@@ -111,7 +111,7 @@ public void setRdfSink( final RdfSink sink )
 	public void close()
 		throws RippleException
 	{
-// s_logger.info( "Closing "
+// logger.info( "Closing "
 //     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //     + " (" + openConnections.size() + " total)." );
 
@@ -130,7 +130,7 @@ public void setRdfSink( final RdfSink sink )
 	public void reset( final boolean rollback )
 		throws RippleException
 	{
-// s_logger.info( "Resetting "
+// logger.info( "Resetting "
 //     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //     + " (" + openConnections.size() + " total)." );
 		closeRepositoryConnection( rollback );
@@ -147,7 +147,7 @@ public void setRdfSink( final RdfSink sink )
 		{
 			repoConnection = model.getRepository().getConnection();
 // openRepoConns++;
-// s_logger.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
+// logger.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
 		}
 
 		catch ( Throwable t )
@@ -168,7 +168,7 @@ public void setRdfSink( final RdfSink sink )
 					repoConnection.rollback();
 
 // openRepoConns--;
-// s_logger.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
+// logger.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
 				repoConnection.close();
 
 				return;
@@ -181,7 +181,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 
 		// Don't throw an exception: we could easily end up in a loop.
-		s_logger.error( "tried to close an already-closed connection" );
+		logger.error( "tried to close an already-closed connection" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -872,12 +872,12 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	private static Random s_rn = new Random();
+	private static Random rn = new Random();
 
 	private static int randomInt( int lo, int hi )
 	{
 		int n = hi - lo + 1;
-		int i = s_rn.nextInt() % n;
+		int i = rn.nextInt() % n;
 		if (i < 0)
 			i = -i;
 		return lo + i;
@@ -1008,7 +1008,7 @@ public void setRdfSink( final RdfSink sink )
 	public void setNamespace( final String prefix, final String ns, final boolean override )
 		throws RippleException
 	{
-//s_logger.info( "### setting namespace: '" + prefix + "' to " + ns );
+//logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		try
 		{
 			synchronized( repoConnection )
@@ -1204,7 +1204,7 @@ public void setRdfSink( final RdfSink sink )
 		catch ( RippleException e )
 		{
 			// (soft fail)
-			s_logger.info( "Failed to dereference resource: " + v );
+			logger.info( "Failed to dereference resource: " + v );
 		}
 	}
 

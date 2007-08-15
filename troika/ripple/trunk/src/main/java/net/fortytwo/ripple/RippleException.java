@@ -7,8 +7,7 @@ import org.apache.log4j.Logger;
 
 public class RippleException extends Exception
 {
-	private final static Logger s_logger
-		= Logger.getLogger( RippleException.class );
+	final static Logger logger = Logger.getLogger( RippleException.class );
 
 	public RippleException( Throwable t )
 	{
@@ -19,7 +18,7 @@ public class RippleException extends Exception
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			PrintStream ps = new PrintStream( os );
 			t.printStackTrace( ps );
-			s_logger.error( os.toString() );
+			logger.error( os.toString() );
 
 			ps.close();
 			os.close();
@@ -40,7 +39,7 @@ printStackTrace( System.err );
 // System.err.println( "" );
 		try
 		{
-			s_logger.error( msg );
+			logger.error( msg );
 		}
 
 		catch ( Throwable secondary )

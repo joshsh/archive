@@ -18,7 +18,7 @@ import org.openrdf.sail.memory.MemoryStore;
 
 public class SesameTest extends RippleTestCase
 {
-	private final static Logger s_logger = Logger.getLogger( SesameTest.class );
+	private final static Logger logger = Logger.getLogger( SesameTest.class );
 
 	static int countStatements( RepositoryConnection rc, URI context )
 		throws Exception
@@ -57,17 +57,17 @@ public class SesameTest extends RippleTestCase
 
 			InputStream is;
 
-s_logger.debug( "### start" );
+logger.debug( "### start" );
 			try {
 				is = new ByteArrayInputStream( bad.getBytes() );
 				rc.add( is, "", RDFFormat.TURTLE );
 			} catch ( Exception e ) {}
-s_logger.debug( "### mid" );
+logger.debug( "### mid" );
 			try {
 				is = new ByteArrayInputStream( good.getBytes() );
 				rc.add( is, "", RDFFormat.TURTLE );
 			} catch ( Exception e ) {}
-s_logger.debug( "### stop" );
+logger.debug( "### stop" );
 
 			assertEquals( 1, countStatements( rc, null ) );
 

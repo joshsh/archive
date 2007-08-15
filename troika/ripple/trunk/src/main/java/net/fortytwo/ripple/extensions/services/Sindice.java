@@ -30,16 +30,16 @@ import org.openrdf.model.Value;
 
 public class Sindice extends PrimitiveFunction
 {
-	static SAXBuilder s_saxBuilder = null;
+	static SAXBuilder saxBuilder = null;
 	static void initialize()
 	{
-		s_saxBuilder = new SAXBuilder( true );
-		s_saxBuilder.setReuseParser( true );
+		saxBuilder = new SAXBuilder( true );
+		saxBuilder.setReuseParser( true );
 
 		String schemaLocation = Sindice.class.getResource( "sindice.xsd" ).toString();
-		s_saxBuilder.setFeature(
+		saxBuilder.setFeature(
 			"http://apache.org/xml/features/validation/schema", true );
-		s_saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
+		saxBuilder.setProperty( "http://apache.org/xml/properties/schema/"
 			+ "external-noNamespaceSchemaLocation", schemaLocation );
 	}
 
@@ -59,7 +59,7 @@ public class Sindice extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		if ( null == s_saxBuilder )
+		if ( null == saxBuilder )
 			initialize();
 
 		Value v;
@@ -119,9 +119,9 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 		{
 			InputStream response = urlConn.getInputStream();
 
-			synchronized( s_saxBuilder )
+			synchronized( saxBuilder )
 			{
-				doc = s_saxBuilder.build( response );
+				doc = saxBuilder.build( response );
 			}
 
 			response.close();
