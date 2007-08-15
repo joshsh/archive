@@ -168,6 +168,7 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 
 				catch ( RippleException e )
 				{
+					e.logError();
 					continue;
 				}
 
@@ -196,6 +197,7 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 
 				catch ( RippleException e )
 				{
+					e.logError();
 					continue;
 				}
 

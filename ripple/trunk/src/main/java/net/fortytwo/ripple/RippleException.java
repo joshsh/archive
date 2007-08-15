@@ -18,49 +18,55 @@ public class RippleException extends Exception
 {
 	final static Logger logger = Logger.getLogger( RippleException.class );
 
-	public RippleException( Throwable t )
+	public RippleException( final Throwable cause )
 	{
-		super( t.toString() );
-
-		try
-		{
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream( os );
-			t.printStackTrace( ps );
-			logger.error( os.toString() );
-
-			ps.close();
-			os.close();
-		}
-
-		catch ( Throwable secondary )
-		{
-			System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
-			secondary.printStackTrace( System.err );
-		}
+		super( cause );
 	}
 
 	public RippleException( final String msg )
 	{
 		super( msg );
-
-printStackTrace( System.err );
-// System.err.println( "" );
-		try
-		{
-			logger.error( msg );
-		}
-
-		catch ( Throwable secondary )
-		{
-			System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
-			secondary.printStackTrace( System.err );
-		}
 	}
 
-	public void log()
+	public void logError()
 	{
-// ...
+		String description;
+
+		if ( null == getCause() )
+		{
+			description = getMessage();
+		}
+
+		else
+		{
+			try
+			{
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				PrintStream ps = new PrintStream( os );
+				getCause().printStackTrace( ps );
+				description = os.toString();
+				ps.close();
+				os.close();
+			}
+	
+			catch ( java.io.IOException e )
+			{
+				System.err.println( "Failed to create error message. A stack trace of the secondary error follows." );
+				e.printStackTrace( System.err );
+				return;
+			}
+		}
+
+		try
+		{
+			logger.error( description );
+		}
+
+		catch ( Throwable t )
+		{
+			System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
+			t.printStackTrace( System.err );
+		}
 	}
 }
 

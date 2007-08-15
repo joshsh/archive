@@ -1212,7 +1212,7 @@ public void setRdfSink( final RdfSink sink )
 
 		catch ( RippleException e )
 		{
-			// (soft fail)
+			// (soft fail... don't even log the error)
 			logger.info( "Failed to dereference resource: " + v );
 		}
 	}

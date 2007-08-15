@@ -38,7 +38,8 @@ public class RdfSourceAdapter implements RDFHandler
 
 		catch ( RippleException e )
 		{
-			// Do nothing.
+			// Log the error, but continue.
+			e.logError();
 		}
 	}
 
@@ -54,7 +55,8 @@ public class RdfSourceAdapter implements RDFHandler
 
 		catch ( RippleException e )
 		{
-			// Do nothing.
+			// Log the error, but continue.
+			e.logError();
 		}
 	}
 
@@ -70,7 +72,8 @@ public class RdfSourceAdapter implements RDFHandler
 
 		catch ( RippleException e )
 		{
-			// Do nothing.
+			// Log the error, but continue.
+			e.logError();
 		}
 	}
 

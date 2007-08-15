@@ -250,9 +250,10 @@ public class NumericLiteral implements RippleValue
 				return compareTo( new NumericLiteral( (RdfValue) other ) );
 			}
 
-			catch( RippleException e )
+			catch ( RippleException e )
 			{
-				e.log( );
+				// Log the error, but otherwise ignore it and call the objects equal.
+				e.logError();
 				return 0;
 			}
 		}

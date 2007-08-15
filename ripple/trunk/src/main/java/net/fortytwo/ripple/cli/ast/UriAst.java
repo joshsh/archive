@@ -31,6 +31,7 @@ public class UriAst implements Ast
 
 		catch ( RippleException e )
 		{
+			e.logError();
 			System.exit( 1 );
 		}
 	}

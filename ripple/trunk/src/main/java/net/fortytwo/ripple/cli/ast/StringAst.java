@@ -29,6 +29,7 @@ public class StringAst implements Ast
 
 		catch ( RippleException e )
 		{
+			e.logError();
 			System.exit( 1 );
 		}
 
@@ -44,6 +45,7 @@ public class StringAst implements Ast
 
 		catch ( RippleException e )
 		{
+			e.logError();
 			System.exit( 1 );
 		}
 

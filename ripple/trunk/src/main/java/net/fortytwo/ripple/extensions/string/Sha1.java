@@ -50,7 +50,7 @@ public class Sha1 extends PrimitiveFunction
 				messageDigest = MessageDigest.getInstance( algorithm );
 		}
 
-		catch( NoSuchAlgorithmException e )
+		catch ( NoSuchAlgorithmException e )
 		{
 			throw new RippleException( e );
 		}
@@ -60,7 +60,7 @@ public class Sha1 extends PrimitiveFunction
 			messageDigest.update( plaintext.getBytes( encoding ) );
 		}
 
-		catch( UnsupportedEncodingException e )
+		catch ( UnsupportedEncodingException e )
 		{
 			throw new RippleException( e );
 		}

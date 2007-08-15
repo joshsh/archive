@@ -163,7 +163,9 @@ public class QueryEngine
 
 		catch ( RippleException e )
 		{
-System.err.println( "Note: exception disregarded" );
+			// Note the error, don't execute the command.
+			errorPrintStream.println( "Error: " + e );
+			e.logError();
 			return;
 		}
 
@@ -175,7 +177,9 @@ System.err.println( "Note: exception disregarded" );
 
 		catch ( RippleException e )
 		{
-System.err.println( "Note: exception disregarded" );
+			// Note the error but continue normally.
+			errorPrintStream.println( "Error: " + e );
+			e.logError();
 		}
 
 		try
@@ -185,7 +189,8 @@ System.err.println( "Note: exception disregarded" );
 
 		catch ( RippleException e )
 		{
-			System.err.println( "failed to close connection" );
+			errorPrintStream.println( "Failed to close connection: " + e );
+			e.logError();
 			System.exit( 1 );
 		}
 	}

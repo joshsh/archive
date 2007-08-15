@@ -75,7 +75,7 @@ public class Demo
 				storeUrl = store.toURL();
 			}
 
-			catch( java.net.MalformedURLException e )
+			catch ( java.net.MalformedURLException e )
 			{
 				throw new RippleException( e );
 			}
@@ -132,7 +132,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 			repository.shutDown();
 		}
 
-		catch( Throwable t )
+		catch ( Throwable t )
 		{
 			throw new RippleException( t );
 		}
@@ -181,7 +181,8 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 
 		catch ( RippleException e )
 		{
-			System.out.println( e.toString() );
+			System.err.println( "Initialization error: " + e );
+			e.logError();
 			System.exit( 1 );
 		}
 
@@ -274,7 +275,8 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 
 		catch ( RippleException e )
 		{
-			System.out.println( e.toString() );
+			System.out.println( "Fatal error: " + e );
+			e.logError();
 			System.exit( 1 );
 		}
 	}

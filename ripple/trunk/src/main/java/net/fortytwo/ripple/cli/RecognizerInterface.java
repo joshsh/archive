@@ -46,6 +46,7 @@ public class RecognizerInterface
 		catch ( RippleException e )
 		{
 			errorStream.println( "\nError: " + e + "\n" );
+			e.logError();
 		}
 	}
 
@@ -59,6 +60,7 @@ public class RecognizerInterface
 		catch ( RippleException e )
 		{
 			errorStream.println( "\nError: " + e + "\n" );
+			e.logError();
 		}
 	}
 
@@ -72,6 +74,7 @@ public class RecognizerInterface
 		catch ( RippleException e )
 		{
 			errorStream.println( "\nError: " + e + "\n" );
+			e.logError();
 		}
 	}
 
@@ -85,6 +88,7 @@ public class RecognizerInterface
 		catch ( RippleException e )
 		{
 			errorStream.println( "\nError: " + e + "\n" );
+			e.logError();
 		}
 	}
 

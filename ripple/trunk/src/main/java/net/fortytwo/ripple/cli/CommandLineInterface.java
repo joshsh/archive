@@ -339,7 +339,7 @@ lastQueryContinued = continuing;
 
 		catch ( RippleException e )
 		{
-			// (soft fail)
+			// (soft fail... don't even log the error)
 		}
 	}
 
@@ -383,6 +383,7 @@ lastQueryContinued = continuing;
 
 		catch ( RippleException e )
 		{
+			e.logError();
 			logger.error( "Failed to update completors.  Continuing nonetheless." );
 		}
 	}

@@ -109,7 +109,7 @@ public class Scheduler
 //System.out.println( "done waiting" );
 						}
 
-						catch( InterruptedException e )
+						catch ( InterruptedException e )
 						{
 							System.err.println( "scheduler interrupted while waiting for new commands" );
 							return;
@@ -139,7 +139,7 @@ public class Scheduler
 					}
 				}
 
-				catch( InterruptedException e )
+				catch ( InterruptedException e )
 				{
 					System.err.println( "scheduler interrupted while waiting for command to finish executing" );
 					return;
@@ -192,6 +192,7 @@ public class Scheduler
 
 				catch ( RippleException e )
 				{
+					e.logError();
 System.err.println( "RippleException ignored: " + e );
 				}
 			}
