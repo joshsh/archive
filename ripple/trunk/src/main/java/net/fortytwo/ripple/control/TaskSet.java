@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.control;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.query.Scheduler;
+//import net.fortytwo.ripple.query.Scheduler;
 import net.fortytwo.ripple.util.Sink;
 
 public class TaskSet
@@ -25,7 +25,7 @@ public class TaskSet
 System.out.println( "[+] count is now: " + count );
 		}
 
-		Scheduler.schedule( task, completedTaskSink );
+		Scheduler.add( task, completedTaskSink );
 	}
 
 	/**

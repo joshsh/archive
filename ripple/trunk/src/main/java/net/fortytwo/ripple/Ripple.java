@@ -28,25 +28,26 @@ public class Ripple
 {
 	static boolean initialized = false;
 
-	static ExpressionOrder expressionOrder;
-	static ExpressionAssociativity expressionAssociativity;
-	static EvaluationOrder evaluationOrder;
-	static EvaluationStyle evaluationStyle;
-	static String jLineDebugOutput;
-	static boolean useInference;
-	static boolean rejectNonAssociatedStatements;
-	static boolean dereferenceUrisByNamespace;
-	static boolean preferNewestNamespaceDefinitions;
 	static boolean allowDuplicateNamespaces;
-	static long urlConnectTimeout;
-	static String defaultNamespace;
-	static boolean listPadding;
-	static RDFFormat exportFormat;
 	static RDFFormat cacheFormat;
 	static boolean containerViewBufferOutput;
-	static int containerViewMaxPredicates;
 	static int containerViewMaxObjects;
+	static int containerViewMaxPredicates;
+	static String defaultNamespace;
+	static boolean dereferenceUrisByNamespace;
+	static EvaluationOrder evaluationOrder;
+	static EvaluationStyle evaluationStyle;
+	static RDFFormat exportFormat;
+	static ExpressionAssociativity expressionAssociativity;
+	static ExpressionOrder expressionOrder;
+	static String jLineDebugOutput;
+	static boolean listPadding;
+	static int maxWorkerThreads;
+	static boolean preferNewestNamespaceDefinitions;
+	static boolean rejectNonAssociatedStatements;
 	static long urlConnectCourtesyInterval;
+	static long urlConnectTimeout;
+	static boolean useInference;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -54,7 +55,9 @@ public class Ripple
 		throws RippleException
 	{
 		if ( initialized )
+		{
 			return;
+		}
 
 		PropertyConfigurator.configure(
 			Ripple.class.getResource( "log4j.properties" ) );
@@ -86,10 +89,12 @@ public class Ripple
 		{
 			containerViewMaxObjects = 0;
 		}
-		jLineDebugOutput = props.getProperty(
-			"net.fortytwo.ripple.cli.jline.debugOutput" );
+		jLineDebugOutput = getStringProperty(
+			props, "net.fortytwo.ripple.cli.jline.debugOutput", null );
 
 		// Program control
+		maxWorkerThreads = getIntProperty(
+			props, "net.fortytwo.ripple.control.maxWorkerThreads", 50 );
 
 		// Input/Output
 		cacheFormat = getRdfFormatProperty(
@@ -157,14 +162,54 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public static ExpressionOrder expressionOrder()
+	public static boolean allowDuplicateNamespaces()
 	{
-		return expressionOrder;
+		return allowDuplicateNamespaces;
+	}
+
+	public static RDFFormat cacheFormat()
+	{
+		return cacheFormat;
+	}
+
+	public static boolean containerViewBufferOutput()
+	{
+		return containerViewBufferOutput;
+	}
+
+	public static int containerViewMaxObjects()
+	{
+		return containerViewMaxObjects;
+	}
+
+	public static int containerViewMaxPredicates()
+	{
+		return containerViewMaxPredicates;
+	}
+
+	public static String defaultNamespace()
+	{
+		return defaultNamespace;
+	}
+
+	public static boolean dereferenceUrisByNamespace()
+	{
+		return dereferenceUrisByNamespace;
+	}
+
+	public static RDFFormat exportFormat()
+	{
+		return exportFormat;
 	}
 
 	public static ExpressionAssociativity expressionAssociativity()
 	{
 		return expressionAssociativity;
+	}
+
+	public static ExpressionOrder expressionOrder()
+	{
+		return expressionOrder;
 	}
 
 	public static EvaluationOrder evaluationOrder()
@@ -182,19 +227,14 @@ public class Ripple
 		return jLineDebugOutput;
 	}
 
-	public static boolean useInference()
+	public static boolean listPadding()
 	{
-		return useInference;
+		return listPadding;
 	}
 
-	public static boolean rejectNonAssociatedStatements()
+	public static int maxWorkerThreads()
 	{
-		return rejectNonAssociatedStatements;
-	}
-
-	public static boolean dereferenceUrisByNamespace()
-	{
-		return dereferenceUrisByNamespace;
+		return maxWorkerThreads;
 	}
 
 	public static boolean preferNewestNamespaceDefinitions()
@@ -202,9 +242,19 @@ public class Ripple
 		return preferNewestNamespaceDefinitions;
 	}
 
-	public static boolean allowDuplicateNamespaces()
+	public static boolean rejectNonAssociatedStatements()
 	{
-		return allowDuplicateNamespaces;
+		return rejectNonAssociatedStatements;
+	}
+
+	public static void setCacheFormat( final RDFFormat format )
+	{
+		cacheFormat = format;
+	}
+
+	public static long urlConnectCourtesyInterval()
+	{
+		return urlConnectCourtesyInterval;
 	}
 
 	public static long urlConnectTimeout()
@@ -212,48 +262,9 @@ public class Ripple
 		return urlConnectTimeout;
 	}
 
-	public static String defaultNamespace()
+	public static boolean useInference()
 	{
-		return defaultNamespace;
-	}
-
-	public static boolean listPadding()
-	{
-		return listPadding;
-	}
-
-	public static RDFFormat exportFormat()
-	{
-		return exportFormat;
-	}
-
-	public static RDFFormat cacheFormat()
-	{
-		return cacheFormat;
-	}
-	public static void setCacheFormat( final RDFFormat format )
-	{
-		cacheFormat = format;
-	}
-
-	public static boolean containerViewBufferOutput()
-	{
-		return containerViewBufferOutput;
-	}
-
-	public static int containerViewMaxPredicates()
-	{
-		return containerViewMaxPredicates;
-	}
-
-	public static int containerViewMaxObjects()
-	{
-		return containerViewMaxObjects;
-	}
-
-	public static long urlConnectCourtesyInterval()
-	{
-		return urlConnectCourtesyInterval;
+		return useInference;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
