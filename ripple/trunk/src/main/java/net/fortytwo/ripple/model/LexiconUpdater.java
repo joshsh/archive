@@ -23,6 +23,7 @@ public class LexiconUpdater implements RdfSink
 	Lexicon lexicon;
 	RdfSink sink;
 	boolean override;
+	boolean allowDuplicateNamespaces;
 
 	public LexiconUpdater( final Lexicon lexicon, final RdfSink sink )
 	{
@@ -30,6 +31,7 @@ public class LexiconUpdater implements RdfSink
 		this.sink = sink;
 
 		override = Ripple.preferNewestNamespaceDefinitions();
+		allowDuplicateNamespaces = Ripple.allowDuplicateNamespaces();
 	}
 
 	public void put( final Statement st ) throws RippleException
@@ -49,8 +51,14 @@ public class LexiconUpdater implements RdfSink
 
 	public void put( final Namespace ns ) throws RippleException
 	{
-		lexicon.add( ns, override );
-		sink.put( ns );
+		if ( override || null == lexicon.resolveNamespacePrefix( ns.getPrefix() ) )
+		{
+			if ( allowDuplicateNamespaces || null == lexicon.nsPrefixOf( ns.getName() ) )
+			{
+				lexicon.add( ns );
+				sink.put( ns );
+			}
+		}
 	}
 
 	public void put( final String comment ) throws RippleException

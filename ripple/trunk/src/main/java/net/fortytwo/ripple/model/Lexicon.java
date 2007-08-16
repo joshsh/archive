@@ -141,9 +141,9 @@ public class Lexicon
 		return symbol;
 	}
 
-	public String nsPrefixOf( final URI uri )
+	public String nsPrefixOf( final String uri )
 	{
-		return namespaceToPrefixMap.get( uri.getNamespace() );
+		return namespaceToPrefixMap.get( uri );
 	}
 
 	public Completor getCompletor()
@@ -178,14 +178,11 @@ public class Lexicon
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void add( final Namespace ns, final boolean override )
+	public void add( final Namespace ns )
 	{
 //System.out.println( "(" + ns.getPrefix() + "=" + ns.getName() + ")" );
-		if ( override || null == prefixToNamespaceMap.get( ns.getPrefix() ) )
-		{
-			prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
-			namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
-		}
+		prefixToNamespaceMap.put( ns.getPrefix(), ns.getName() );
+		namespaceToPrefixMap.put( ns.getName(), ns.getPrefix() );
 	}
 
 	// Note: assumes that the same URI will not be added twice.
@@ -194,7 +191,7 @@ public class Lexicon
 	{
 //System.out.println( "adding URI: " + uri );
 		// If possible, add a qualified name as well.
-		String prefix = nsPrefixOf( uri );
+		String prefix = namespaceToPrefixMap.get( uri.getNamespace() );
 		if ( null != prefix )
 		{
 			String qName = prefix + ":" + uri.getLocalName();

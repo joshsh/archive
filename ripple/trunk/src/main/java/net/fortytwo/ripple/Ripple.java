@@ -37,6 +37,7 @@ public class Ripple
 	static boolean rejectNonAssociatedStatements;
 	static boolean dereferenceUrisByNamespace;
 	static boolean preferNewestNamespaceDefinitions;
+	static boolean allowDuplicateNamespaces;
 	static long urlConnectTimeout;
 	static String defaultNamespace;
 	static boolean listPadding;
@@ -99,6 +100,8 @@ public class Ripple
 			props, "net.fortytwo.ripple.io.rejectNonAssociatedStatements", true );
 		preferNewestNamespaceDefinitions = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.preferNewestNamespaceDefinitions", false );
+		allowDuplicateNamespaces = getBooleanProperty(
+			props, "net.fortytwo.ripple.io.allowDuplicateNamespaces", false );
 		dereferenceUrisByNamespace = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.dereferenceUrisByNamespace", false );
 		urlConnectTimeout = getLongProperty(
@@ -197,6 +200,11 @@ public class Ripple
 	public static boolean preferNewestNamespaceDefinitions()
 	{
 		return preferNewestNamespaceDefinitions;
+	}
+
+	public static boolean allowDuplicateNamespaces()
+	{
+		return allowDuplicateNamespaces;
 	}
 
 	public static long urlConnectTimeout()
