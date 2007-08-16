@@ -30,8 +30,7 @@ import org.openrdf.rio.RDFFormat;
 
 public class HttpUtils
 {
-	final static Logger logger
-		= Logger.getLogger( HttpUtils.class );
+	final static Logger logger = Logger.getLogger( HttpUtils.class );
 
 	public static void prepareUrlConnectionForTextRequest( final URLConnection urlConn )
 	{
@@ -85,120 +84,6 @@ public class HttpUtils
 // To consider at some point: caching, authorization
 	}
 
-	// Note: examines the content type first, then the URL extension.  If all
-	//       else fails, default to RDF/XML and hope for the best.
-	public static RDFFormat guessRdfFormat( final URLConnection urlConn )
-	{
-/*
-System.out.println( RDFFormat.N3.getName() + ": " + RDFFormat.N3.getMIMEType() );
-System.out.println( RDFFormat.NTRIPLES.getName() + ": " + RDFFormat.NTRIPLES.getMIMEType() );
-System.out.println( RDFFormat.RDFXML.getName() + ": " + RDFFormat.RDFXML.getMIMEType() );
-System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType() );
-System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
-*/
-		String contentType = urlConn.getContentType();
-		logger.debug( "contentType = " + contentType );
-
-		String file = urlConn.getURL().getFile();
-		String ext;
-		if ( null == file )
-			ext = null;
-		else
-		{
-			int lastDot = file.lastIndexOf( '.' );
-			ext = ( lastDot > 0 && lastDot < file.length() - 1 )
-				? file.substring( lastDot + 1 )
-				: null;
-		}
-		logger.debug( "extension = " + ext );
-
-		// Primary content type rules.
-		if ( null != contentType )
-		{
-			// See: http://www.w3.org/TR/rdf-syntax-grammar/
-			if ( contentType.contains( "application/rdf+xml" ) )
-				return RDFFormat.RDFXML;
-
-			// See: http://www.w3.org/DesignIssues/Notation3.html
-			else if ( contentType.contains( "text/rdf+n3" ) )
-				return RDFFormat.N3;
-
-// See: RDFFormat.TRIX.getMIMEType()
-			else if ( contentType.contains( "application/trix" ) )
-				return RDFFormat.TRIX;
-
-			// See: http://www.dajobe.org/2004/01/turtle/
-			else if ( contentType.contains( "application/x-turtle" ) )
-				return RDFFormat.TURTLE;
-		}
-
-		// Primary file extension rules.
-		if ( null != ext )
-		{
-			if ( ext.equals( "n3" ) )
-				return RDFFormat.N3;
-
-			else if ( ext.equals( "nt" ) )
-				return RDFFormat.NTRIPLES;
-
-			else if ( ext.equals( "rdf" )
-			|| ext.equals( "rdfs" )
-			|| ext.equals( "owl" ) )
-				return RDFFormat.RDFXML;
-
-// TODO: is this actually a TriX file extension?
-			else if ( ext.equals( "trix" ) )
-				return RDFFormat.TRIX;
-
-			else if ( ext.equals( "ttl" )
-			|| ext.equals( "turtle" ) )
-				return RDFFormat.TURTLE;
-
-// example:
-//     http://www.aaronsw.com/about.xrdf
-//     http://www.w3.org/People/karl/karl-foaf.xrdf
-			else if ( ext.equals( "xrdf" ) )
-				return RDFFormat.RDFXML;
-		}
-
-		// Secondary content type rules.
-		if ( null != contentType )
-		{
-			if ( contentType.contains( "application/xml" ) )
-				return RDFFormat.RDFXML;
-
-			// precedent: http://www.mindswap.org/2004/owl/mindswappers
-			else if ( contentType.contains( "text/xml" ) )
-				return RDFFormat.RDFXML;
-
-			// See: http://www.w3.org/TR/rdf-testcases/#ntriples)
-			// This is only a secondary rule because the text/plain MIME type
-			// is so broad, and the N-Triples format so uncommon.
-//            else if ( contentType.contains( "text/plain" ) )
-//                return RDFFormat.NTRIPLES;
-		}
-
-		// Secondary file extension rules.
-		if ( null != ext )
-		{
-			// precedent:
-			//     http://hometown.aol.com/chbussler/foaf/chbussler.foaf
-			if ( ext.equals( "foaf" ) )
-				return RDFFormat.RDFXML;
-		}
-
-		// Blacklisting rules.  There are some common content types which are
-		// not worth trying.
-		if ( null != contentType )
-		{
-			if ( contentType.contains( "text/html" ) )
-				return null;
-		}
-
-		// Last-ditch rule.
-		return RDFFormat.RDFXML;
-	}
-
 	static Map<String, Date> lastRequestByHost = new HashMap<String, Date>();
 
 	/**
@@ -237,7 +122,6 @@ logger.info( "    delay = " + delay );
 					if ( now.getTime() - lastRequest.getTime() < delay )
 						w = lastRequest.getTime() + delay - now.getTime();
 				}
-logger.info( "    waiting " + w + " milliseconds" );
 
 				// Record the projected start time of the request beforehand, to
 				// avoid any other requests being scheduled without knowledge of
@@ -250,10 +134,8 @@ logger.info( "    waiting " + w + " milliseconds" );
 			{
 				try
 				{
-					synchronized( now )
-					{
-						now.wait( w );
-					}
+logger.info( "    waiting " + w + " milliseconds" );
+					Thread.sleep( w );
 				}
 
 				catch ( InterruptedException e )

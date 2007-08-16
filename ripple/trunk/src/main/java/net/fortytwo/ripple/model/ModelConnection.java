@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
 
-import net.fortytwo.ripple.control.ThreadWrapper;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;

@@ -73,7 +73,8 @@ public class RippleQueryCmd extends Command
 			{
 				try
 				{
-						listAst.evaluate( evaluatorSink, qe, mc );
+//						listAst.evaluate( evaluatorSink, qe, mc );
+doit();
 				}
 
 				catch ( RippleException e )
@@ -92,6 +93,12 @@ System.out.println( "ignoring InterruptedException" );
 
 				finished();
 			}
+
+private void doit()
+	throws java.lang.InterruptedException, RippleException
+{
+						listAst.evaluate( evaluatorSink, qe, mc );
+}
 		};
 
 		evaluatorThread = ThreadPool.getThread( target, "for RippleQueryCmd execute" );

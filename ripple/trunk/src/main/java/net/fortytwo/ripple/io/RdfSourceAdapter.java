@@ -21,7 +21,7 @@ public class RdfSourceAdapter implements RDFHandler
 {
 	RdfSink sink;
 
-	public RdfSourceAdapter( RdfSink sink )
+	public RdfSourceAdapter( final RdfSink sink )
 	{
 		this.sink = sink;
 	}
@@ -46,7 +46,7 @@ public class RdfSourceAdapter implements RDFHandler
 	/**
 	 *  Handles a namespace declaration/definition.
 	 */
-	public void handleNamespace( String prefix, String uri )
+	public void handleNamespace( final String prefix, final String uri )
 	{
 		try
 		{
@@ -63,7 +63,7 @@ public class RdfSourceAdapter implements RDFHandler
 	/**
 	 *  Handles a statement.
 	 */
-	public void handleStatement( Statement st )
+	public void handleStatement( final Statement st )
 	{
 		try
 		{

@@ -39,6 +39,7 @@ public class CacheManager
 		rplCacheFailureMemo;
 
 	static boolean initialized = false;
+
 	static void initialize( final ModelConnection mc )
 		throws RippleException
 	{
@@ -58,7 +59,9 @@ public class CacheManager
 		throws RippleException
 	{
 		if ( !initialized )
+		{
 			initialize( mc );
+		}
 
 		RdfImporter importer = new RdfImporter( mc );
 		RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
@@ -78,7 +81,9 @@ public class CacheManager
 		throws RippleException
 	{
 		if ( !initialized )
+		{
 			initialize( mc );
+		}
 
 		persistCacheMetadata( mc );
 
@@ -100,11 +105,15 @@ public class CacheManager
 
 		logger.debug( "writing success memos" );
 		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
+		{
 			mc.add( rplCacheRoot, rplCacheSuccessMemo, mc.createValue( iter.next() ) );
+		}
 
 		logger.debug( "writing failure memos" );
 		for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
+		{
 			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.createValue( iter.next() ) );
+		}
 	}
 
 	/**
@@ -114,17 +123,19 @@ public class CacheManager
 	static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
-System.out.println( "restoreCacheMetaData" );
 		Dereferencer dereferencer = mc.getModel().getDereferencer();
 
 		Iterator<RdfValue> succIter = mc.findObjects( rplCacheRoot, rplCacheSuccessMemo ).iterator();
 		while ( succIter.hasNext() )
+		{
 			dereferencer.addSuccessMemo( mc.stringValue( succIter.next() ) );
+		}
 
 		Iterator<RdfValue> failIter = mc.findObjects( rplCacheRoot, rplCacheFailureMemo ).iterator();
 		while ( failIter.hasNext() )
+		{
 			dereferencer.addFailureMemo( mc.stringValue( failIter.next() ) );
-System.out.println( "done!" );
+		}
 	}
 }
 

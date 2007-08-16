@@ -11,14 +11,6 @@
 	<xsd:element name="nil-classes" type="xsd:string"/>
 
 	<!-- Nonempty result set looks like this. -->
-	<xsd:element name="sindice-sources">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="source" type="Source" maxOccurs="unbounded"/>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
-
 	<xsd:element name="records">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -36,7 +28,7 @@
 
 	<xsd:complexType name="Record">
 		<xsd:sequence>
-			<!--<xsd:element name="score" type="Score"/>-->
+			<xsd:element name="score" type="Score"/>
 			<xsd:element name="timestamp" type="xsd:date"/>
 			<xsd:element name="id" type="xsd:string"/>
 		</xsd:sequence>

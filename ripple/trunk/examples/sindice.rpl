@@ -30,3 +30,16 @@ wget --header="Accept: text/javascript, text/x-javascript, application/javascrip
 
 # This caused failure:
 #     http://sindice.com/beta/lookup_literal?keyword=H%e5kon%20Wium%20Lie&lookup=Lookup
+
+
+# On Aug 15, these worked:
+wget --header="Accept: application/xml" http://sindice.com/keyword/three
+wget --header="Accept: application/xml" "http://sindice.com/uri/http://www.w3.org/1999/02/22-rdf-syntax-ns%23type"
+wget http://sindice.com/keyword/two
+wget http://sindice.com/uri/http%3a//rdfs.org/sioc/ns%23User
+
+# ...these didn't:
+wget --header="Accept: application/xml" http://sindice.com/keyword/two
+wget --header="Accept: application/xml" http://sindice.com/uri/http%3a//rdfs.org/sioc/ns%23User
+
+

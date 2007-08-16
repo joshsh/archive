@@ -25,7 +25,6 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.RdfUtils;
-import net.fortytwo.ripple.control.ThreadWrapper;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;

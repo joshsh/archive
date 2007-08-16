@@ -30,7 +30,6 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
-import net.fortytwo.ripple.control.ThreadPool;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
