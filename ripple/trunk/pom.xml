@@ -225,8 +225,7 @@
 				<version>2.1</version>
 				<configuration>
 					<descriptors>
-						<descriptor>standalone.xml</descriptor>
-						<!--<descriptor>distro.xml</descriptor>-->
+						<descriptor>src/assembly/standalone.xml</descriptor>
 					</descriptors>
 					<finalName>ripple-${project.version}</finalName>
 					<outputDirectory>target</outputDirectory>
@@ -275,7 +274,7 @@
 				<version>1.0-beta-1</version>
 				<configuration>
 					<language>Java</language>
-					<doapFile>${basedir}/target/doap_${project.artifactId}.rdf</doapFile>
+					<doapFile>${basedir}/target/${project.artifactId}-${project.version}-doap.rdf</doapFile>
 					<!-- TODO: See: http://projects.apache.org/categories.html -->
 					<category>xml</category>
 					<project>${project}</project>

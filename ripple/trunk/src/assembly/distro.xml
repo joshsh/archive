@@ -1,17 +1,14 @@
 <assembly>
-	<id>src</id>
 	<formats>
 		<format>zip</format>
-		<format>tar.gz</format>
+		<!--<format>tar.gz</format>-->
 	</formats>
 	<fileSets>
 		<fileSet>
 			<includes>
-				<include>distro.xml</include>
 				<include>LICENSE.txt</include>
 				<include>pom.xml</include>
 				<include>README.txt</include>
-				<include>standalone.xml</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -26,11 +23,17 @@
 		</fileSet>
 		<fileSet>
 			<directory>target</directory>
-			<excludes>
+			<includes>
+				<include>ripple-*-standalone.jar</include>
+				<include>ripple-*-doap.rdf</include>
+				<include>surefire-reports</include>
+			</includes>
+			<!--<excludes>
 				<exclude>assembly</exclude>
+				<exclude>assembly/**</exclude>
 				<exclude>ripple-*-src.zip</exclude>
 				<exclude>ripple-*-src.tar.gz</exclude>
-			</excludes>
+			</excludes>-->
 		</fileSet>
 	</fileSets>
 </assembly>
