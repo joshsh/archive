@@ -1,0 +1,36 @@
+<assembly>
+	<id>src</id>
+	<formats>
+		<format>zip</format>
+		<format>tar.gz</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<includes>
+				<include>distro.xml</include>
+				<include>LICENSE.txt</include>
+				<include>pom.xml</include>
+				<include>README.txt</include>
+				<include>standalone.xml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<fileMode>0775</fileMode>
+			<includes>
+				<include>ripple</include>
+				<include>ripple.bat</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src</directory>
+		</fileSet>
+		<fileSet>
+			<directory>target</directory>
+			<excludes>
+				<exclude>assembly</exclude>
+				<exclude>ripple-*-src.zip</exclude>
+				<exclude>ripple-*-src.tar.gz</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>

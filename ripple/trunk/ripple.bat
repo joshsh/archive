@@ -1,2 +1,2 @@
-rem  note: not tested (and I know nothing of batch scripting)
-java -classpath target\ripple-full.jar net.fortytwo.ripple.Demo %1
+rem  note: not tested
+java -jar target\ripple-*-standalone.jar %1

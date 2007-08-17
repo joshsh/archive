@@ -128,14 +128,14 @@ System.out.println( "### total number of worker runnables: " + allRunnables.size
 System.err.println( "Error executing task: " + e );
 						e.logError();
 					}
-
-					catch ( InterruptedException e )
+					
+					catch ( Throwable t )
 					{
-						
-// 					catch ( Throwable t )
-// 					{
-// 						...
-// 					}
+						if ( t instanceof InterruptedException )
+							logger.warn( "task interrupted: " + taskItem.task );
+// 						else
+// 							...
+					}
 				}
 
 				// If there are no tasks in the queue, add this Runnable to a

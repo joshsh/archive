@@ -19,24 +19,23 @@ Run
 ================================================================================
 
 To begin an interpreter session, use one of the shortcut scripts (ripple or
-ripple.bat) or type:
+ripple.bat) or invoke Ripple's Java archive directly:
 
-    $ java -classpath target/ripple-full.jar net.fortytwo.ripple.Demo
+    $ java -jar target/ripple-*-standalone.jar
 
-The demo application uses an RDF/XML cache file to save state between sessions,
-instead of a database.  To create a new cache, use the @saveas directive while
-talking to the interpreter:
+By default, Ripple uses a TriG cache file to save state between sessions.  To
+create a new cache, use the @saveas directive while talking to the interpreter:
 
-    @saveas "newcache.rdf".
+    >>  @saveas "cache.trig".
 
 To restore a previous session, specify the cache as an argument at the command
 line:
 
-    $ ./ripple newcache.rdf
+    $ ./ripple cache.trig
 
-When you quit the application, its state will be written back to the cache.
+When you quit the application, the triple store is written back to the cache.
 
-    @quit.
+    >>  @quit.
 
 
 ================================================================================
@@ -47,7 +46,12 @@ To build Ripple from scratch, install Maven 2.0.x and issue the command
 
     $ mvn install
 
-from the directory containing pom.xml (requires Java 5).
+from the directory containing pom.xml (note: requires Java 5).  To build
+Ripple with a custom configuration, modify the properties file at...
+
+    ./src/main/resources/net/fortytwo/ripple/ripple.properties
+
+...and recompile.
 
 
 ================================================================================
