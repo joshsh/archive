@@ -2,11 +2,15 @@
 Overview
 ================================================================================
 
-Ripple is dedicated scripting language for the Semantic Web.  Its programs both
-operate upon and reside in RDF graphs.  Ripple is a variation on the
-"concatenative" theme of functional, stack-oriented languages such as Joy and
-Factor, and takes a multivalued, pipeline approach to query composition.  This
-Java implementation includes a query API, an extensible library of primitive
+Ripple is dedicated scripting language for the Semantic Web.  Ripple scripts
+not only query the Semantic Web, but actually reside within it as RDF data
+structures, forming a global network of interlinked programs.  As a programming
+language, Ripple is best classified as a relational stack language, closely
+related to functional stack languages such as Joy, Factor and Cat.  As a
+Semantic Web interface, Ripple is a fast, text-based linked data explorer with
+the unlimited flexibility of user-defined browsing patterns.
+
+This Java implementation includes a query API, an extensible library of primitive
 functions, and an interactive command-line interpreter.
 
 For more information, including documentation and code samples, see:
@@ -19,7 +23,11 @@ Run
 ================================================================================
 
 To begin an interpreter session, use one of the shortcut scripts (ripple or
-ripple.bat) or invoke Ripple's Java archive directly:
+ripple.bat):
+
+    $ ./ripple
+
+or invoke the executable JAR directly:
 
     $ java -jar target/ripple-*-standalone.jar
 
@@ -42,16 +50,16 @@ When you quit the application, the triple store is written back to the cache.
 Build
 ================================================================================
 
-To build Ripple from scratch, install Maven 2.0.x and issue the command
+To build Ripple from scratch, issue the command:
 
     $ mvn install
 
-from the directory containing pom.xml (note: requires Java 5).  To build
-Ripple with a custom configuration, modify the properties file at...
+from the directory containing pom.xml (note: requires Maven 2 and Java 5).  To
+customize Ripple's configuration modify this file:
 
     ./src/main/resources/net/fortytwo/ripple/ripple.properties
 
-...and recompile.
+...then recompile.
 
 
 ================================================================================
