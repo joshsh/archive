@@ -43,31 +43,33 @@ public class Show extends PrimitiveFunction
 		URI uri;
 
 		uri = mc.uriValue( stack.getFirst() );
-		stack = stack.getRest();
+//		stack = stack.getRest();
 
 		ImagePanel panel;
 
 		try
 		{
 			panel = new ImagePanel( uri );
+
+			JFrame f = new JFrame();
+	
+			f.getContentPane().add( panel );
+			
+			int width = panel.img.getWidth( null );
+			int height = panel.img.getHeight( null );
+	
+			//show frame
+			f.setBounds( 0, 0, width, height );
+			f.setVisible( true );
 		}
 
 		catch ( RippleException e )
 		{
-			// Discard the exception (it has already been logged).
-			return;
+			e.logError();
 		}
 
-		JFrame f = new JFrame();
-
-		f.getContentPane().add( panel );
-		
-		int width = panel.img.getWidth( null );
-		int height = panel.img.getHeight( null );
-
-		//show frame
-		f.setBounds( 0, 0, width, height );
-		f.setVisible( true );
+		// Pass the stack along, unaltered.
+		sink.put( stack );
 	}
 
 	static String[] mimeTypes = ImageIO.getReaderMIMETypes();

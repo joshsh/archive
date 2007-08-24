@@ -9,7 +9,7 @@ import net.fortytwo.ripple.util.UrlFactory;
 
 public class MediaExtension extends Extension
 {
-	static String ns = "http://fortytwo.net/2007/05/ripple/media#";
+	static String ns = "http://fortytwo.net/2007/08/ripple/media#";
 
 	public void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException
@@ -17,7 +17,7 @@ public class MediaExtension extends Extension
 		uf.addMapping(
 			ns, getClass().getResource( "media.ttl" ) + "#" );
 
-		registerPrimitive( PlayMidi.class, ns + "playMidi", mc );
+		registerPrimitive( Play.class, ns + "play", mc );
 		registerPrimitive( Show.class, ns + "show", mc );
 		registerPrimitive( Speak.class, ns + "speak", mc );
 	}

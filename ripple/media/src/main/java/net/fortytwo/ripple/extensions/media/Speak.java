@@ -35,7 +35,16 @@ public class Speak extends PrimitiveFunction
 		s = mc.stringValue( stack.getFirst() );
 //		stack = stack.getRest();
 
-		speak( s );
+		try
+		{
+			speak( s );
+		}
+
+		catch ( RippleException e )
+		{
+System.out.println( "error: " + e );
+			e.logError();
+		}
 
 		// Pass the stack along, unaltered.
 		sink.put( stack );

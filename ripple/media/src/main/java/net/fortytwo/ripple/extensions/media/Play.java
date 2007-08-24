@@ -18,9 +18,9 @@ import net.fortytwo.ripple.util.HttpUtils;
 
 import org.openrdf.model.URI;
 
-public class PlayMidi extends PrimitiveFunction
+public class Play extends PrimitiveFunction
 {
-	public PlayMidi()
+	public Play()
 		throws RippleException
 	{
 		super();
@@ -36,10 +36,11 @@ public class PlayMidi extends PrimitiveFunction
 						ModelConnection mc )
 		throws RippleException
 	{
+System.out.println( "bar" );
 		URI uri;
 
 		uri = mc.uriValue( stack.getFirst() );
-		stack = stack.getRest();
+//		stack = stack.getRest();
 
 		try
 		{
@@ -48,9 +49,12 @@ public class PlayMidi extends PrimitiveFunction
 
 		catch ( RippleException e )
 		{
-			// Soft fail.
-			return;
+System.out.println( "error: " + e );
+			e.logError();
 		}
+System.out.println( "foo" );
+		// Pass the stack along, unaltered.
+		sink.put( stack );
 	}
 
 	void play( final URI uri )
