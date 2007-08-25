@@ -49,8 +49,6 @@ public class DefinePrefixCmd extends Command
 		// existing prefix with the same name, or duplicate another namespace
 		// with the same URI.
 		qe.getLexicon().add( new NamespaceImpl( prefix, ns.toString() ) );
-
-		finished();
 	}
 
 	protected void abort() {}

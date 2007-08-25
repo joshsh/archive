@@ -20,8 +20,6 @@ public class ShowPrefixesCmd extends Command
 		throws RippleException
 	{
 		qe.getModel().showNamespaces();
-
-		finished();
 	}
 
 	protected void abort() {}

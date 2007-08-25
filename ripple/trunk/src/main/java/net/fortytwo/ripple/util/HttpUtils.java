@@ -110,7 +110,7 @@ logger.info( "    delay = " + delay );
 			Date lastRequest;
 			long w = 0;
 
-			synchronized( lastRequestByHost )
+			synchronized ( lastRequestByHost )
 			{
 				lastRequest = lastRequestByHost.get( host );
 

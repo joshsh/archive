@@ -26,6 +26,8 @@ public abstract class Evaluator implements Function
 		// reduced to any level before it is received as input.
 		return 0;
 	}
+
+	public abstract void stop();
 }
 
 // kate: tab-width 4

@@ -18,7 +18,6 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.util.RdfUtils;
-import net.fortytwo.ripple.control.ThreadPool;
 
 public abstract class RippleTestCase extends TestCase
 {
@@ -79,7 +78,7 @@ public abstract class RippleTestCase extends TestCase
 	{
 		startTest();
 
-		Thread t = ThreadPool.getThread( r, "for RippleTestCase testAsynchronous" );
+		Thread t = new Thread( r, "for RippleTestCase testAsynchronous" );
 		t.start();
 	}
 

@@ -88,7 +88,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		{
 			InputStream response = urlConn.getInputStream();
 
-			synchronized( saxBuilder )
+			synchronized ( saxBuilder )
 			{
 				doc = saxBuilder.build( response );
 			}

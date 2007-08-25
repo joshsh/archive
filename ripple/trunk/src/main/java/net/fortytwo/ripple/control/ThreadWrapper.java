@@ -52,19 +52,19 @@ public abstract class ThreadWrapper
 				}
 
 				setFinished( true );
-				synchronized( monitorObj )
+				synchronized ( monitorObj )
 				{
 					monitorObj.notify();
 				}
 			}
 		};
 
-		Thread t = ThreadPool.getThread( target, name );
+		Thread t = new Thread( target, name );
 		t.start();
 
 		try
 		{
-			synchronized( monitorObj )
+			synchronized ( monitorObj )
 			{
 				if ( timeout > 0 )
 					monitorObj.wait( timeout );

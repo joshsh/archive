@@ -39,8 +39,6 @@ public class SerqlQueryCmd extends Command
 		ps.println( "" );
 		ps.print( stmtIter );
 		ps.println( "" );
-
-		finished();
 	}
 
 	protected void abort() {}

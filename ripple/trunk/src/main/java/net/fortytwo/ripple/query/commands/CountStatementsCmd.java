@@ -20,8 +20,6 @@ public class CountStatementsCmd extends Command
 		throws RippleException
 	{
 		System.out.println( "\n" + qe.getModel().countStatements() + "\n" );
-
-		finished();
 	}
 
 	protected void abort() {}

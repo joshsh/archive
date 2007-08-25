@@ -262,7 +262,6 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		}
 
 		Ripple.setQuiet( quiet );
-
 // System.out.println( "quiet = " + quiet );
 // System.out.println( "showVersion = " + showVersion );
 // System.out.println( "format = " + format );
@@ -275,7 +274,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 
 		catch ( RippleException e )
 		{
-			System.out.println( "Fatal error: " + e );
+			System.out.println( "Error: " + e );
 			e.logError();
 			System.exit( 1 );
 		}

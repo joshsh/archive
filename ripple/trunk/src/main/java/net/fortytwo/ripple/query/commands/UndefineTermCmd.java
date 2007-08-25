@@ -27,9 +27,7 @@ public class UndefineTermCmd extends Command
 		throws RippleException
 	{
 		mc.removeStatementsAbout(
-			mc.createUri( qe.getDefaultNamespace() + term ) );
-
-		finished();
+		mc.createUri( qe.getDefaultNamespace() + term ) );
 	}
 
 	protected void abort() {}

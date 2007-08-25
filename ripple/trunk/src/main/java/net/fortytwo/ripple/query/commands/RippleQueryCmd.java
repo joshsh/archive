@@ -22,13 +22,13 @@ import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
-import net.fortytwo.ripple.control.ThreadPool;
 
 public class RippleQueryCmd extends Command
 {
 	ListAst listAst;
 	Sink<RippleList> sink;
 	Source<RippleList> composedWith;
+	Evaluator evaluator;
 
 	public RippleQueryCmd( final ListAst listAst,
 							final Sink<RippleList> sink,
@@ -39,11 +39,11 @@ public class RippleQueryCmd extends Command
 		this.composedWith = composedWith;
 	}
 
-	Thread evaluatorThread = null;
-
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
+		evaluator = qe.getEvaluator();
+
 		final Sink<RippleValue> evaluatorSink = new Sink<RippleValue>()
 		{
 			// Note: v will always be a list.
@@ -51,7 +51,6 @@ public class RippleQueryCmd extends Command
 				throws RippleException
 			{
 				final RippleList l = (RippleList) v;
-				final Evaluator evaluator = qe.getEvaluator();
 
 				Sink<RippleList> composedWithSink = new Sink<RippleList>()
 				{
@@ -67,49 +66,13 @@ public class RippleQueryCmd extends Command
 			}
 		};
 
-		Runnable target = new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-//						listAst.evaluate( evaluatorSink, qe, mc );
-doit();
-				}
-
-				catch ( RippleException e )
-				{
-					e.logError();
-System.out.println( "RippleException ignored: " + e );
-				}
-
-catch ( java.lang.InterruptedException e )
-{
-System.out.println( "ignoring InterruptedException" );
-}
-
-				// All done.
-				evaluatorThread = null;
-
-				finished();
-			}
-
-private void doit()
-	throws java.lang.InterruptedException, RippleException
-{
-						listAst.evaluate( evaluatorSink, qe, mc );
-}
-		};
-
-		evaluatorThread = ThreadPool.getThread( target, "for RippleQueryCmd execute" );
-		evaluatorThread.start();
+		listAst.evaluate( evaluatorSink, qe, mc );
 	}
 
 	protected void abort()
 	{
 System.out.println( "aborting Ripple query command" );
-		if ( null != evaluatorThread )
-			evaluatorThread.interrupt();
+		evaluator.stop();
 	}
 }
 

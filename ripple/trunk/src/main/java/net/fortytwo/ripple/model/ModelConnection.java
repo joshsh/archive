@@ -30,6 +30,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.control.Task;
@@ -199,7 +200,7 @@ public void setRdfSink( final RdfSink sink )
 
 	static void add( ModelConnection mc )
 	{
-		synchronized( openConnections )
+		synchronized ( openConnections )
 		{
 			openConnections.add( mc );
 		}
@@ -207,7 +208,7 @@ public void setRdfSink( final RdfSink sink )
 
 	static void remove( ModelConnection mc )
 	{
-		synchronized( openConnections )
+		synchronized ( openConnections )
 		{
 			openConnections.remove( mc );
 		}
@@ -215,7 +216,7 @@ public void setRdfSink( final RdfSink sink )
 
 	public static List<String> listOpenConnections()
 	{
-		synchronized( openConnections )
+		synchronized ( openConnections )
 		{
 			List<String> names = new ArrayList<String>( openConnections.size() );
 
@@ -422,7 +423,7 @@ public void setRdfSink( final RdfSink sink )
 			// Note: 
 			Collection<Statement> stmts = new LinkedList<Statement>();
 
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				RepositoryResult<Statement> stmtIter
 					= repoConnection.getStatements(
@@ -455,7 +456,7 @@ public void setRdfSink( final RdfSink sink )
 		{
 			Collection<Statement> stmts = new LinkedList<Statement>();
 
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				RepositoryResult<Statement> stmtIter
 					= repoConnection.getStatements(
@@ -508,7 +509,7 @@ public void setRdfSink( final RdfSink sink )
 		{
 			boolean useInference = false;
 
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				RepositoryResult<Statement> stmtIter
 					= repoConnection.getStatements(
@@ -549,7 +550,7 @@ public void setRdfSink( final RdfSink sink )
 
 			try
 			{
-				synchronized( repoConnection )
+				synchronized ( repoConnection )
 				{
 					RepositoryResult<Statement> stmtIter
 						= repoConnection.getStatements(
@@ -601,7 +602,7 @@ public void setRdfSink( final RdfSink sink )
 		try
 		{
 //            repoConnection.add( subjResource, predUri, obj, singleContext );
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				repoConnection.add( subjResource, predUri, objValue );
 			}
@@ -624,7 +625,7 @@ public void setRdfSink( final RdfSink sink )
 		try
 		{
 //            repoConnection.add( subjResource, predUri, obj, singleContext );
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				repoConnection.add( subjResource, predUri, objValue, context );
 			}
@@ -647,7 +648,7 @@ public void setRdfSink( final RdfSink sink )
 		try
 		{
 // Does this remove the statement from ALL contexts?
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				repoConnection.remove( subjResource, predUri, objValue );
 			}
@@ -667,7 +668,7 @@ public void setRdfSink( final RdfSink sink )
 
 		try
 		{
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				if ( null == context )
 					repoConnection.remove( subjResource, null, null );
@@ -690,7 +691,7 @@ public void setRdfSink( final RdfSink sink )
 
 			try
 			{
-				synchronized( repoConnection )
+				synchronized ( repoConnection )
 				{
 					RepositoryResult<Statement> stmtIter
 							= repoConnection.getStatements(
@@ -1019,7 +1020,7 @@ public void setRdfSink( final RdfSink sink )
 //logger.info( "### setting namespace: '" + prefix + "' to " + ns );
 		try
 		{
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				if ( override || null == repoConnection.getNamespace( prefix ) )
 				{
@@ -1053,7 +1054,7 @@ public void setRdfSink( final RdfSink sink )
 
 		try
 		{
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				RepositoryResult<Statement> stmtIter
 					= repoConnection.getStatements(
@@ -1103,7 +1104,7 @@ public void setRdfSink( final RdfSink sink )
 
 			try
 			{
-				synchronized( repoConnection )
+				synchronized ( repoConnection )
 				{
 					RepositoryResult<Statement> stmtIter
 						= repoConnection.getStatements(
@@ -1180,7 +1181,7 @@ public void setRdfSink( final RdfSink sink )
 
 		try
 		{
-			synchronized( repoConnection )
+			synchronized ( repoConnection )
 			{
 				GraphQueryResult result = repoConnection.prepareGraphQuery(
 					QueryLanguage.SERQL, queryStr ).evaluate();
@@ -1216,7 +1217,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	private class MultiplyTask implements Task
+	private class MultiplyTask extends Task
 	{
 		RdfValue subj, pred;
 		Sink<RdfValue> sink;
@@ -1230,10 +1231,17 @@ public void setRdfSink( final RdfSink sink )
 			this.sink = sink;
 		}
 
-		public void execute()
-			throws RippleException
+		public void executeProtected() throws RippleException
 		{
 			multiply( subj, pred, sink );
+		}
+
+		protected void stopProtected()
+		{
+			synchronized ( sink )
+			{
+				sink = new NullSink<RdfValue>();
+			}
 		}
 	}
 
@@ -1268,7 +1276,7 @@ public void setRdfSink( final RdfSink sink )
 			// Perform the query and collect results.
 			try
 			{
-				synchronized( repoConnection )
+				synchronized ( repoConnection )
 				{
 					stmtIter = repoConnection.getStatements(
 						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
@@ -1329,7 +1337,7 @@ stmtIter.enableDuplicateFilter();
 			// Perform the query and collect results.
 			try
 			{
-				synchronized( repoConnection )
+				synchronized ( repoConnection )
 				{
 					stmtIter = repoConnection.getStatements(
 						null, (URI) rdfPred, rdfObj, Ripple.useInference() );

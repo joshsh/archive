@@ -56,8 +56,6 @@ public class SaveAsCmd extends Command
 		}
 
 		System.out.println( "\nSaved data set as " + fileName + "\n" );
-
-		finished();
 	}
 
 	protected void abort() {}

@@ -36,8 +36,6 @@ public class ShowContextsCmd extends Command
 		}
 
 		ps.println( "" );
-
-		finished();
 	}
 
 	protected void abort() {}

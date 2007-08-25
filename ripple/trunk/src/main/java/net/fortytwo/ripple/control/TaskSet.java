@@ -10,58 +10,64 @@
 package net.fortytwo.ripple.control;
 
 import net.fortytwo.ripple.RippleException;
-//import net.fortytwo.ripple.query.Scheduler;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A set of tasks which are evaluated concurrently.  Tasks are scheduled for
+ * execution as soon as they are added to the set.
+ */
 public class TaskSet
 {
 	int count = 0;
 
 	public void add( final Task task )
 	{
-		synchronized( completedTaskSink )
+//System.out.println( "add( " + task + ")" );
+		synchronized ( completedTaskSink )
 		{
 			count++;
-System.out.println( "[+] count is now: " + count );
+//System.out.println( "    [+] count is now: " + count );
 		}
 
 		Scheduler.add( task, completedTaskSink );
 	}
 
 	/**
-	 *  Note: by the time this method is called, all tasks should already
-	 *        have been added to the set, while there may be any number of
-	 *        tasks which have not finished executing.
+	 * Note: all tasks are to have been added to the set before this method is
+	 * called, while there may be any number of tasks which have not finished
+	 * executing.
 	 */
 	public void waitUntilEmpty() throws RippleException
 	{
-System.out.println( "waitUntilEmpty" );
-// TODO: slight chance of a race condition here
-		while ( count > 0 )
+//System.out.println( "[" + this + "].waitUntilEmpty()" );
+		synchronized ( completedTaskSink )
 		{
-			try
+			if ( count > 0 )
 			{
-				synchronized( completedTaskSink )
+				try
 				{
 					completedTaskSink.wait();
 				}
-			}
-
-			catch ( java.lang.InterruptedException e )
-			{
-				throw new RippleException( "interrupted while waiting to complete tasks" );
+	
+				catch ( java.lang.InterruptedException e )
+				{
+					throw new RippleException( "interrupted while waiting to complete tasks" );
+				}
 			}
 		}
+//System.out.println( "    done." );
 	}
 
 	Sink<Task> completedTaskSink = new Sink<Task>()
 	{
 		public synchronized void put( final Task task ) throws RippleException
 		{
+//System.out.println( "put( " + task + ")" );
 			count--;
-System.out.println( "[-] count is now: " + count );
+//System.out.println( "    [-] count is now: " + count );
 
-			notify();
+			if ( 0 == count )
+				notify();
 		}
 	};
 }

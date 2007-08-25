@@ -20,9 +20,6 @@ public class QuitCmd extends Command
 	public void execute( QueryEngine qe, ModelConnection mc )
 		throws RippleException
 	{
-// FIXME...
-		finished();
-
 		throw new ParserQuitException();
 	}
 

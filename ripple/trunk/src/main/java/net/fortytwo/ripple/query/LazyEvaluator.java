@@ -19,10 +19,12 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+// Note: not thread-safe, on account of stop()
 public class LazyEvaluator extends Evaluator
 {
-	private Model model;
-	private ModelConnection modelConnection;
+	Model model;
+	ModelConnection modelConnection;
+	boolean stopped = true;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -42,6 +44,9 @@ public class LazyEvaluator extends Evaluator
 		public void put( RippleList stack )
 			throws RippleException
 		{
+			if ( stopped )
+				return;
+
 //System.out.println( this + ".put( " + stack + " )" );
 //System.out.println( "   first = " + stack.getFirst() );
 			if ( function.arity() == 1 )
@@ -74,6 +79,9 @@ public class LazyEvaluator extends Evaluator
 		public void put( RippleList stack )
 			throws RippleException
 		{
+			if ( stopped )
+				return;
+
 //System.out.println( this + ".put( " + stack + " )" );
 			RippleValue first = stack.getFirst();
 //System.out.println( "   first = " + stack.getFirst() );
@@ -124,6 +132,7 @@ if ( stack == RippleList.NIL )
 		model = modelConnection.getModel();
 
 		EvaluatorSink evalSink = new EvaluatorSink( sink );
+		stopped = false;
 
 		try
 		{
@@ -134,6 +143,14 @@ if ( stack == RippleList.NIL )
 		catch ( StackOverflowError e )
 		{
 			throw new RippleException( e );
+		}
+	}
+
+	public void stop()
+	{
+		synchronized ( this )
+		{
+			stopped = true;
 		}
 	}
 }

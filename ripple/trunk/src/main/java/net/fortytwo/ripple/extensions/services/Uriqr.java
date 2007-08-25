@@ -119,7 +119,7 @@ public class Uriqr extends PrimitiveFunction
 		{
 			InputStream response = urlConn.getInputStream();
 
-			synchronized( saxBuilder )
+			synchronized ( saxBuilder )
 			{
 				doc = saxBuilder.build( response );
 			}

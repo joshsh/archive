@@ -9,13 +9,115 @@
 
 package net.fortytwo.ripple.control;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import net.fortytwo.ripple.RippleException;
 
-public interface Task
-{
-	public void execute() throws RippleException;
+import org.apache.log4j.Logger;
 
-//	public void stop();
+public abstract class Task
+{
+	final static Logger logger = Logger.getLogger( Task.class );
+
+	LinkedList<Task> children = null;
+	boolean finished = true;
+
+	protected abstract void executeProtected() throws RippleException;
+	protected abstract void stopProtected();
+
+	/**
+	 * Note: while executing a task a second time is permitted, the task loses
+	 * ownership of any children acquired through a previous execution.
+	 */
+	public void execute() throws RippleException
+	{
+		if ( null != children )
+		{
+			children.clear();
+		}
+
+		executeProtected();
+
+		synchronized ( this )
+		{
+			finished = true;
+
+			notify();
+		}
+	}
+
+	/**
+	 * Note: it is possible to stop a task which has already finished executing
+	 * (the effect is to stop any children which may still be executing).
+	 */
+	public synchronized void stop()
+	{
+//System.out.println( "[" + this + "].stop()" );
+		stopProtected();
+
+		if ( null != children )
+		{
+			Iterator<Task> iter = children.iterator();
+			while( iter.hasNext() )
+			{
+				Task child = iter.next();
+//System.out.println( "    stopping child: " + child );
+				child.stop();
+			}
+		}
+	}
+
+	/**
+	 * Note: should not be called outside of Scheduler.
+	 */
+	public void begin()
+	{
+		finished = false;
+	}
+
+	/**
+	 * Note: should not be called outside of Scheduler.
+	 */
+	public synchronized void addChild( final Task child )
+	{
+//System.out.println( "[" + this + "].addChild(" + child + ")" );
+		if ( finished )
+		{
+			logger.error( "attempted to add a child to a finished task" );
+		}
+
+		else
+		{
+			if ( null == children )
+			{
+				children = new LinkedList<Task>();
+			}
+			
+			children.add( child );
+		}
+	}
+
+	public void waitUntilFinished() throws RippleException
+	{
+//System.out.println( "[" + this + "].waitUntilFinished()" );
+		synchronized ( this )
+		{
+			if ( !finished )
+			{
+				try
+				{
+					wait();
+				}
+	
+				catch ( InterruptedException e )
+				{
+					throw new RippleException( "interrupted while waiting for task to finish" );
+				}
+			}
+		}
+//System.out.println( "    done." );
+	}
 }
 
 // kate: tab-width 4

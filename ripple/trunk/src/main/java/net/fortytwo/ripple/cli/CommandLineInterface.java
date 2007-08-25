@@ -30,6 +30,10 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
+import net.fortytwo.ripple.control.Scheduler;
+import net.fortytwo.ripple.control.Task;
+import net.fortytwo.ripple.control.TaskQueue;
+import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -38,7 +42,6 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.Scheduler;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
 import net.fortytwo.ripple.util.Buffer;
@@ -64,28 +67,61 @@ public class CommandLineInterface
 	final static Logger logger
 		= Logger.getLogger( CommandLineInterface.class );
 
+	final static byte[] EOL = { '\n' };
+
 	PipedInputStream  writeIn;
 	PipedOutputStream readOut;
+	ThreadedInputStream consoleReaderInput;
 
 	Interpreter interpreter;
 
 	ConsoleReader reader;
-	int lineNumber = 0;
+	int lineNumber;
 
 	QueryEngine queryEngine;
-	Scheduler scheduler;
 
 	CollectorHistory<RippleList> queryResultHistory
 		= new CollectorHistory<RippleList>( 2 );
 boolean lastQueryContinued = false;
 
+	TaskQueue taskQueue = new TaskQueue();
+
 	////////////////////////////////////////////////////////////////////////////
+
+void addCommand( final Command cmd )
+{
+	cmd.setQueryEngine( queryEngine );
+	taskQueue.add( cmd );
+}
+void executeCommands() throws RippleException
+{
+	Scheduler.add( taskQueue );
+
+//System.out.println( "consoleReaderInput.setEager( true );" );
+	consoleReaderInput.setEager( true );
+
+	try
+	{
+		taskQueue.waitUntilFinished();
+	}
+
+	catch ( RippleException e )
+	{
+		consoleReaderInput.setEager( false );
+		throw e;
+	}
+//System.out.println( "consoleReaderInput.setEager( false );" );
+	consoleReaderInput.setEager( false );
+}
+void abortCommands()
+{
+	taskQueue.stop();
+}
 
 	public CommandLineInterface( final QueryEngine qe, final InputStream is )
 		throws RippleException
 	{
 		queryEngine = qe;
-		scheduler = new Scheduler( queryEngine );
 
 		// Handling of queries
 		Sink<ListAst> querySink = new Sink<ListAst>()
@@ -93,10 +129,9 @@ boolean lastQueryContinued = false;
 			public void put( final ListAst ast )
 				throws RippleException
 			{
-				Command cmd = createQueryCommand( ast, false );
-				scheduler.add( cmd );
-				scheduler.add( new UpdateCompletorsCmd() );
-				waitUntilCommandsCompleted();
+				addCommand( createQueryCommand( ast, false ) );
+				addCommand( new UpdateCompletorsCmd() );
+				executeCommands();
 			}
 		};
 
@@ -106,10 +141,9 @@ boolean lastQueryContinued = false;
 			public void put( final ListAst ast )
 				throws RippleException
 			{
-				Command cmd = createQueryCommand( ast, true );
-				scheduler.add( cmd );
-				scheduler.add( new UpdateCompletorsCmd() );
-				waitUntilCommandsCompleted();
+				addCommand( createQueryCommand( ast, true ) );
+				addCommand( new UpdateCompletorsCmd() );
+				executeCommands();
 			}
 		};
 
@@ -119,9 +153,9 @@ boolean lastQueryContinued = false;
 			public void put( final Command cmd )
 				throws RippleException
 			{
-				scheduler.add( cmd );
-				scheduler.add( new UpdateCompletorsCmd() );
-				waitUntilCommandsCompleted();
+				addCommand( cmd );
+				addCommand( new UpdateCompletorsCmd() );
+				executeCommands();
 			}
 		};
 
@@ -138,7 +172,7 @@ boolean lastQueryContinued = false;
 						break;
 					case ESCAPE:
 System.out.println( "Escape!" );
-						scheduler.cancelCurrent();
+						abortCommands();
 						break;
 					default:
 						throw new RippleException(
@@ -152,25 +186,30 @@ System.out.println( "Escape!" );
 
 		Sink<Exception> parserExceptionSink = new Sink<Exception>()
 		{
-			public void put( final Exception e )
-				throws RippleException
+			public void put( final Exception e ) throws RippleException
 			{
 				// This happens, for instance, when the parser receives a value
 				// which is too large for the target data type.  Non-fatal.
 				if ( e instanceof NumberFormatException )
+				{
 					alert( e.toString() );
+				}
 
 				// Non-fatal.
 				else if ( e instanceof antlr.RecognitionException )
+				{
 					alert( "RecognitionException: " + e.toString() );
+				}
 
 				// Non-fatal.
 				else if ( e instanceof antlr.TokenStreamException )
+				{
 					alert( "TokenStreamException: " + e.toString() );
+				}
 
 				else
 {
-e.printStackTrace( System.err );
+					alert( "Error: " + e.toString() );
 					throw new RippleException(
 						"non-recoverable exception thrown: " + e.toString() );
 }
@@ -178,29 +217,42 @@ e.printStackTrace( System.err );
 		};
 
 		// Pass input through a filter to watch for special byte sequences.
-		InputStreamEventFilter filter = new InputStreamEventFilter( is, itf );
+		InputStream filter = new InputStreamEventFilter( is, itf );
+consoleReaderInput = new ThreadedInputStream( filter );
+//InputStream consoleReaderInput = filter;
+//		InputStream consoleReaderInput = new ThreadedEagerInputStream( filter );
 
 		String jlineDebugOutput = Ripple.jlineDebugOutput();
 
 		// Create reader.
 		try
 		{
-			reader = new ConsoleReader( filter,
+			reader = new ConsoleReader( consoleReaderInput,
 				new OutputStreamWriter( qe.getPrintStream() ) );
 
 			// Set up JLine logging if asked for.
 			if ( null != jlineDebugOutput )
+			{
 				reader.setDebug(
 					new PrintWriter(
 						new FileWriter( jlineDebugOutput, true ) ) );
-
-			writeIn = new PipedInputStream();
-			readOut = new PipedOutputStream( writeIn );
+			}
 		}
 
 		catch ( Throwable t )
 		{
 			throw new RippleException( t );
+		}
+
+		try
+		{
+			writeIn = new PipedInputStream();
+			readOut = new PipedOutputStream( writeIn );
+		}
+
+		catch ( java.io.IOException e )
+		{
+			throw new RippleException( e );
 		}
 
 		// Initialize completors.
@@ -210,9 +262,9 @@ e.printStackTrace( System.err );
 		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
 	}
 
-	public void run()
-		throws RippleException
+	public void run() throws RippleException
 	{
+		lineNumber = 0;
 		interpreter.parse();
 	}
 
@@ -220,26 +272,27 @@ e.printStackTrace( System.err );
 
 	void readLine()
 	{
+//System.out.println( "readLine()" );
 		try
 		{
 			++lineNumber;
-			String line = reader.readLine( "" + lineNumber + " >>  " );
+			String prefix = "" + lineNumber + " >>  ";
+			String line = reader.readLine( prefix );
 	
 			if ( null != line )
 			{
+				// Feed the line to the lexer.
 				byte[] bytes = line.getBytes();
 				readOut.write( bytes, 0, bytes.length );
 	
-				// Add a deliberate "end of line" character so the lexer knows
-				// to call readLine() again when it gets there.
-				byte[] terminator = { '\n' };
-				readOut.write( terminator, 0, 1 );
+				// Add a newline character so the lexer will call readLine()
+				// again when it gets there.
+				readOut.write( EOL, 0, 1 );
 	
 				readOut.flush();
 			}
 		}
 
-		// This has never happened.
 		catch ( java.io.IOException e )
 		{
 			alert( "IOException: " + e.toString() );
@@ -255,6 +308,8 @@ e.printStackTrace( System.err );
 			public void execute( QueryEngine qe, ModelConnection mc )
 				throws RippleException
 			{
+//System.out.println( "[" + this + "]execute(...)" );
+//System.out.println( "   1" );
 				boolean doBuffer = Ripple.containerViewBufferOutput();
 	
 				queryEngine.getPrintStream().println( "" );
@@ -289,19 +344,10 @@ nilSource.put( RippleList.NIL );
 lastQueryContinued = continuing;
 
 				// Execute the inner command and wait until it is finished.
-				cmd.execute( queryEngine, mc );
-				synchronized( cmd )
-				{
-					try
-					{
-						cmd.wait();
-					}
-
-					catch ( java.lang.InterruptedException e )
-					{
-						throw new RippleException( "interrupted while waiting for inner command to complete" );
-					}
-				}
+				cmd.setQueryEngine( queryEngine );
+				TaskSet ts = new TaskSet();
+				ts.add( cmd );
+				ts.waitUntilEmpty();
 
 				// Flush results to the view.
 				if ( doBuffer )
@@ -311,15 +357,9 @@ lastQueryContinued = continuing;
 					queryEngine.getPrintStream().println( "" );
 	
 				queryResultHistory.advance();
-
-				finished();
 			}
 
-			protected void abort()
-			{
-				if ( null != cmd )
-					cmd.cancel();
-			}
+			protected void abort() {}
 		};
 	}
 
@@ -340,6 +380,11 @@ lastQueryContinued = continuing;
 		{
 			// (soft fail... don't even log the error)
 		}
+	}
+
+	void alert( String s )
+	{
+		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
 	}
 
 	void updateCompletors()
@@ -383,30 +428,7 @@ lastQueryContinued = continuing;
 		catch ( RippleException e )
 		{
 			e.logError();
-			logger.error( "Failed to update completors.  Continuing nonetheless." );
-		}
-	}
-
-	void alert( String s )
-	{
-		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
-	}
-
-	void waitUntilCommandsCompleted()
-		throws RippleException
-	{
-		synchronized( scheduler )
-		{
-			try
-			{
-				while ( scheduler.count() > 0 )
-					scheduler.wait();
-			}
-
-			catch ( InterruptedException e )
-			{
-				throw new RippleException( "interrupted while waiting for command queue to empty" );
-			}
+			logger.error( "failed to update completors" );
 		}
 	}
 
@@ -416,61 +438,9 @@ lastQueryContinued = continuing;
 			throws RippleException
 		{
 			updateCompletors();
-
-			finished();
 		}
 
 		protected void abort() {}
-	}
-
-	private class InputStreamEventFilter extends InputStream
-	{
-		InputStream source;
-		RecognizerInterface itf;
-
-		int buffered;
-
-		public InputStreamEventFilter( final InputStream is,
-										final RecognizerInterface itf )
-		{
-			source = is;
-			this.itf = itf;
-
-			buffered = -1;
-		}
-
-		public int read()
-			throws java.io.IOException
-		{
-			if ( -1 != buffered )
-			{
-				int tmp = buffered;
-				buffered = -1;
-				return tmp;
-			}
-
-			// Break out when an ordinary character or sequence is found
-			while( true )
-			{
-				int c = source.read();
-	
-				if ( 27 == c )
-				{
-					c = source.read();
-	
-					if ( 27 == c )
-						itf.putEvent( RecognizerEvent.ESCAPE );
-					else
-					{
-						buffered = c;
-						return 27;
-					}
-				}
-	
-				else
-					return c;
-			}
-		}
 	}
 }
 

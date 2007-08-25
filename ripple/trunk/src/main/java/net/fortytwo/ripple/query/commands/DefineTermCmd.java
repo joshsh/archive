@@ -62,8 +62,6 @@ public class DefineTermCmd extends Command
 
 			qe.getLexicon().add( uri );
 		}
-
-		finished();
 	}
 
 	protected void abort() {}
