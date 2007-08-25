@@ -158,7 +158,7 @@ public class QueryEngine
 
 		try
 		{
-			mc = getConnection();
+			mc = getConnection( "for executeCommand" );
 		}
 
 		catch ( RippleException e )
@@ -171,7 +171,6 @@ public class QueryEngine
 
 		try
 		{
-			mc = getConnection();
 			cmd.execute( this, mc );
 		}
 

@@ -9,6 +9,7 @@
 
 package net.fortytwo.ripple.control;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.fortytwo.ripple.Ripple;
@@ -106,6 +107,22 @@ public class Scheduler
 //System.out.println( "    ### total number of worker runnables: " + allRunnables.size() );
 	}
 
+// has not been tested
+	public void stopAll()
+	{
+		synchronized ( allRunnables )
+		{
+			Iterator<WorkerRunnable> iter = allRunnables.iterator();
+			while ( iter.hasNext() )
+			{
+				WorkerRunnable r = iter.next();
+				Task task = r.getCurrentTask();
+				if ( null != task )
+					task.stop();
+			}
+		}
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 
 	private class TaskItem
@@ -169,16 +186,20 @@ public class Scheduler
 						taskItem.sink.put( taskItem.task );
 					}
 		
+					// This is the end of the line for ordinary exceptions.
 					catch ( RippleException e )
 					{
-//System.err.println( "Error executing task: " + e );
+System.err.println( "Error: " + e );
 						e.logError();
 					}
 					
 					catch ( Throwable t )
 					{
 						if ( t instanceof InterruptedException )
+						{
 							logger.warn( "task interrupted: " + currentTask );
+						}
+
 // 						else
 // 							...
 					}

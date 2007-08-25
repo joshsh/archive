@@ -88,36 +88,6 @@ boolean lastQueryContinued = false;
 
 	////////////////////////////////////////////////////////////////////////////
 
-void addCommand( final Command cmd )
-{
-	cmd.setQueryEngine( queryEngine );
-	taskQueue.add( cmd );
-}
-void executeCommands() throws RippleException
-{
-	Scheduler.add( taskQueue );
-
-//System.out.println( "consoleReaderInput.setEager( true );" );
-	consoleReaderInput.setEager( true );
-
-	try
-	{
-		taskQueue.waitUntilFinished();
-	}
-
-	catch ( RippleException e )
-	{
-		consoleReaderInput.setEager( false );
-		throw e;
-	}
-//System.out.println( "consoleReaderInput.setEager( false );" );
-	consoleReaderInput.setEager( false );
-}
-void abortCommands()
-{
-	taskQueue.stop();
-}
-
 	public CommandLineInterface( final QueryEngine qe, final InputStream is )
 		throws RippleException
 	{
@@ -171,9 +141,14 @@ void abortCommands()
 						readLine();
 						break;
 					case ESCAPE:
-System.out.println( "Escape!" );
+						logger.debug( "received escape event" );
 						abortCommands();
 						break;
+					case QUIT:
+						logger.debug( "received quit event" );
+						abortCommands();
+						// Note: exception handling used for control
+						throw new ParserQuitException();
 					default:
 						throw new RippleException(
 							"event not yet supported: " + event );
@@ -216,11 +191,10 @@ System.out.println( "Escape!" );
 			}
 		};
 
-		// Pass input through a filter to watch for special byte sequences.
+		// Pass input through a filter to watch for special byte sequences, and
+		// another draw input through it even when the interface is busy.
 		InputStream filter = new InputStreamEventFilter( is, itf );
-consoleReaderInput = new ThreadedInputStream( filter );
-//InputStream consoleReaderInput = filter;
-//		InputStream consoleReaderInput = new ThreadedEagerInputStream( filter );
+		consoleReaderInput = new ThreadedInputStream( filter );
 
 		String jlineDebugOutput = Ripple.jlineDebugOutput();
 
@@ -266,13 +240,13 @@ consoleReaderInput = new ThreadedInputStream( filter );
 	{
 		lineNumber = 0;
 		interpreter.parse();
+System.out.println( "done parsing" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
 	void readLine()
 	{
-//System.out.println( "readLine()" );
 		try
 		{
 			++lineNumber;
@@ -299,6 +273,99 @@ consoleReaderInput = new ThreadedInputStream( filter );
 		}
 	}
 
+	void alert( String s )
+	{
+		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
+	}
+
+	void updateCompletors()
+	{
+		logger.debug( "updating completors" );
+		List completors = new ArrayList();
+
+		try
+		{
+			completors.add( queryEngine.getLexicon().getCompletor() );
+
+			ArrayList<String> directives = new ArrayList<String>();
+			directives.add( "@count" );
+			directives.add( "@define" );
+			directives.add( "@export" );
+			directives.add( "@help" );
+			directives.add( "@list" );
+			directives.add( "@prefix" );
+			directives.add( "@quit" );
+			directives.add( "@saveas" );
+			directives.add( "@serql" );
+			directives.add( "@undefine" );
+
+			completors.add(
+				new DirectiveCompletor( directives ) );
+
+			try
+			{
+				// This makes candidates from multiple completors available at once.
+				Completor multiCompletor = new MultiCompletor( completors );
+
+				reader.addCompletor( multiCompletor );
+			}
+
+			catch ( Throwable t )
+			{
+				throw new RippleException( t );
+			}
+		}
+
+		catch ( RippleException e )
+		{
+			e.logError();
+			logger.error( "failed to update completors" );
+		}
+	}
+
+	private class UpdateCompletorsCmd extends Command
+	{
+		public void execute( final QueryEngine qe, final ModelConnection mc )
+			throws RippleException
+		{
+			updateCompletors();
+		}
+
+		protected void abort() {}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	void addCommand( final Command cmd )
+	{
+		cmd.setQueryEngine( queryEngine );
+		taskQueue.add( cmd );
+	}
+
+	void executeCommands() throws RippleException
+	{
+		Scheduler.add( taskQueue );
+	
+		consoleReaderInput.setEager( true );
+	
+		try
+		{
+			taskQueue.waitUntilFinished();
+		}
+	
+		catch ( RippleException e )
+		{
+			consoleReaderInput.setEager( false );
+			throw e;
+		}
+		consoleReaderInput.setEager( false );
+	}
+
+	void abortCommands()
+	{
+		taskQueue.stop();
+	}
+
 	Command createQueryCommand( final ListAst ast, final boolean continuing )
 	{
 		return new Command()
@@ -308,8 +375,6 @@ consoleReaderInput = new ThreadedInputStream( filter );
 			public void execute( QueryEngine qe, ModelConnection mc )
 				throws RippleException
 			{
-//System.out.println( "[" + this + "]execute(...)" );
-//System.out.println( "   1" );
 				boolean doBuffer = Ripple.containerViewBufferOutput();
 	
 				queryEngine.getPrintStream().println( "" );
@@ -380,67 +445,6 @@ lastQueryContinued = continuing;
 		{
 			// (soft fail... don't even log the error)
 		}
-	}
-
-	void alert( String s )
-	{
-		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
-	}
-
-	void updateCompletors()
-	{
-		logger.debug( "updating completors" );
-		List completors = new ArrayList();
-
-		try
-		{
-			completors.add( queryEngine.getLexicon().getCompletor() );
-
-			ArrayList<String> directives = new ArrayList<String>();
-			directives.add( "@count" );
-			directives.add( "@define" );
-			directives.add( "@export" );
-			directives.add( "@help" );
-			directives.add( "@list" );
-			directives.add( "@prefix" );
-			directives.add( "@quit" );
-			directives.add( "@saveas" );
-			directives.add( "@serql" );
-			directives.add( "@undefine" );
-
-			completors.add(
-				new DirectiveCompletor( directives ) );
-
-			try
-			{
-				// This makes candidates from multiple completors available at once.
-				Completor multiCompletor = new MultiCompletor( completors );
-
-				reader.addCompletor( multiCompletor );
-			}
-
-			catch ( Throwable t )
-			{
-				throw new RippleException( t );
-			}
-		}
-
-		catch ( RippleException e )
-		{
-			e.logError();
-			logger.error( "failed to update completors" );
-		}
-	}
-
-	private class UpdateCompletorsCmd extends Command
-	{
-		public void execute( final QueryEngine qe, final ModelConnection mc )
-			throws RippleException
-		{
-			updateCompletors();
-		}
-
-		protected void abort() {}
 	}
 }
 

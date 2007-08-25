@@ -2,13 +2,13 @@
 Overview
 ================================================================================
 
-Ripple is dedicated scripting language for the Semantic Web.  Ripple scripts
+Ripple is dedicated scripting language for the Semantic Web.  Ripple programs
 not only query the Semantic Web, but actually reside within it as RDF data
-structures, forming a global network of interlinked programs.  As a programming
-language, Ripple is best classified as a relational stack language, closely
-related to functional stack languages such as Joy, Factor and Cat.  As a
-Semantic Web interface, Ripple is a fast, text-based linked data explorer with
-the unlimited flexibility of user-defined browsing patterns.
+structures, forming a global network of interlinked programs.  Ripple is a
+relational stack language, closely related to functional stack languages such as
+Joy, Factor and Cat.  As a Semantic Web interface, Ripple is a fast, text-based
+linked data crawler and browser with all of the flexibility of a Turing-complete
+programming language.
 
 This Java implementation includes a query API, an extensible library of primitive
 functions, and an interactive command-line interpreter.
@@ -55,7 +55,7 @@ To build Ripple from scratch, issue the command:
     $ mvn install
 
 from the directory containing pom.xml (note: requires Maven 2 and Java 5).  To
-customize Ripple's configuration modify this file:
+customize Ripple, modify this file:
 
     ./src/main/resources/net/fortytwo/ripple/ripple.properties
 

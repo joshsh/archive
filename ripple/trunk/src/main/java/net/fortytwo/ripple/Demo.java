@@ -62,7 +62,7 @@ public class Demo
 			= new QueryEngine( model, evaluator, out, err );
 
 		// Establish a connection.
-		ModelConnection mc = qe.getConnection();
+		ModelConnection mc = qe.getConnection( "Demo connection" );
 
 		// Load from store.
 		if ( null != store )
@@ -126,17 +126,6 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		// Must close the connection before the repository can be shut down.
 		mc.close();
 
-		// Shut down the Sesame repository.
-		try
-		{
-			repository.shutDown();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-
 		List<String> openConnections = ModelConnection.listOpenConnections();
 		if ( openConnections.size() > 0 )
 		{
@@ -149,6 +138,20 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 			}
 
 			logger.warn( s );
+
+			System.exit( 1 );
+//			ModelConnection.closeOpenConnections();
+		}
+
+		// Shut down the Sesame repository.
+		try
+		{
+			repository.shutDown();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
 		}
 	}
 
@@ -278,6 +281,9 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 			e.logError();
 			System.exit( 1 );
 		}
+
+		// Exit despite any remaining active threads.
+		System.exit( 0 );
 	}
 }
 

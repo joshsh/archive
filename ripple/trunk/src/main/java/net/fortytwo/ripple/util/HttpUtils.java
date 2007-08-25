@@ -95,9 +95,9 @@ public class HttpUtils
 	public static void connect( final URLConnection urlConn )
 		throws RippleException
 	{
-logger.info( "connecting to: " + urlConn.getURL() );
+//logger.info( "connecting to: " + urlConn.getURL() );
 		String host = urlConn.getURL().getHost();
-logger.info( "    host = " + host );
+//logger.info( "    host = " + host );
 
 		// Some connections (e.g. file system operations) have no host.  Don't
 		// bother regulating them.
@@ -105,7 +105,7 @@ logger.info( "    host = " + host );
 		{
 			Date now = new Date();
 			long delay = Ripple.urlConnectCourtesyInterval();
-logger.info( "    delay = " + delay );
+//logger.info( "    delay = " + delay );
 	
 			Date lastRequest;
 			long w = 0;
@@ -134,7 +134,7 @@ logger.info( "    delay = " + delay );
 			{
 				try
 				{
-logger.info( "    waiting " + w + " milliseconds" );
+//logger.info( "    waiting " + w + " milliseconds" );
 					Thread.sleep( w );
 				}
 

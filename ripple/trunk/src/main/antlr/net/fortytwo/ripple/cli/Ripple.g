@@ -51,14 +51,7 @@ options
 
 	void matchEndOfLine()
 	{
-		if ( null == itf )
-		{
-			System.err.println( "lexer has not been initialized" );
-			System.exit( 1 );
-		}
-
-		else
-			itf.putEvent( RecognizerEvent.NEWLINE );
+		itf.putEvent( RecognizerEvent.NEWLINE );
 	}
 
 /*
@@ -250,49 +243,33 @@ options
 
 	public void matchCommand( final Command cmd )
 	{
-		if ( null == itf )
-		{
-			System.err.println( "parser has not been initialized" );
-			System.exit( 1 );
-		}
-
-		else
-			itf.putCommand( cmd );
+		itf.putCommand( cmd );
 	}
 
 	public void matchQuery( final ListAst ast )
 	{
-		if ( null == itf )
-		{
-			System.err.println( "parser has not been initialized" );
-			System.exit( 1 );
-		}
-
-		else
-			itf.putQuery( ast );
+		itf.putQuery( ast );
 	}
 
 	public void matchContinuingQuery( final ListAst ast )
 	{
-		if ( null == itf )
-		{
-			System.err.println( "parser has not been initialized" );
-			System.exit( 1 );
-		}
+		itf.putContinuingQuery( ast );
+	}
 
-		else
-			itf.putContinuingQuery( ast );
+	public void matchQuit()
+	{
+		itf.putEvent( RecognizerEvent.QUIT );
 	}
 }
 
 
 nt_Document
 {
-System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
+//System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
 	itf.putEvent( RecognizerEvent.NEWLINE );
-System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
+//System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
 }
 	: ( (nt_Ws)? nt_Statement )*
 	;
@@ -530,7 +507,8 @@ nt_Directive
 
 	| DRCTV_QUIT (nt_Ws)? EOS
 		{
-			matchCommand( new QuitCmd() );
+			matchQuit();
+//			matchCommand( new QuitCmd() );
 		}
 
 	| DRCTV_SAVEAS nt_Ws saFile:STRING (nt_Ws)? EOS

@@ -121,8 +121,8 @@ public void setRdfSink( final RdfSink sink )
 		throws RippleException
 	{
 // logger.info( "Closing "
-//     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
-//     + " (" + openConnections.size() + " total)." );
+// 	+ ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
+// 	+ " (" + openConnections.size() + " total)." );
 
 		// Complete any still-executing tasks.
 		taskSet.waitUntilEmpty();
@@ -198,7 +198,7 @@ public void setRdfSink( final RdfSink sink )
 	static Set<ModelConnection> openConnections
 		= new LinkedHashSet<ModelConnection>();
 
-	static void add( ModelConnection mc )
+	static void add( final ModelConnection mc )
 	{
 		synchronized ( openConnections )
 		{
@@ -206,7 +206,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	static void remove( ModelConnection mc )
+	static void remove( final ModelConnection mc )
 	{
 		synchronized ( openConnections )
 		{
@@ -222,9 +222,24 @@ public void setRdfSink( final RdfSink sink )
 
 			Iterator<ModelConnection> i = openConnections.iterator();
 			while ( i.hasNext() )
+			{
 				names.add( i.next().name );
+			}
 
 			return names;
+		}
+	}
+
+	public static void closeOpenConnections() throws RippleException
+	{
+		synchronized ( openConnections )
+		{
+			Iterator<ModelConnection> i = openConnections.iterator();
+			while ( i.hasNext() )
+			{
+				ModelConnection mc = i.next();
+//				mc.close();
+			}
 		}
 	}
 

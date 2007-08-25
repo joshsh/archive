@@ -11,9 +11,10 @@ package net.fortytwo.ripple.cli;
 
 public enum RecognizerEvent
 {
-	NEWLINE,
 	EOI,
-	ESCAPE
+	ESCAPE,
+	NEWLINE,
+	QUIT
 }
 
 // kate: tab-width 4
