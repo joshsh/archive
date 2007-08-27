@@ -144,7 +144,7 @@ public class Ripple
 
 	public static String getVersion()
 	{
-		return "0.4-dev";
+		return "0.4";
 	}
 
 // FIXME: quiet is never used

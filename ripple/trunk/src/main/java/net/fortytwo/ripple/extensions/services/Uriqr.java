@@ -26,6 +26,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.jdom.Document;
@@ -39,11 +40,10 @@ public class Uriqr extends PrimitiveFunction
 {
 	static SAXBuilder saxBuilder = null;
 	static XPath resultPath = null;
-	static void initialize()
-		throws RippleException
+	static void initialize() throws RippleException
 	{
-			saxBuilder = new SAXBuilder( true );
-			saxBuilder.setReuseParser( true );
+		saxBuilder = new SAXBuilder( true );
+		saxBuilder.setReuseParser( true );
 
 /*
 			String schemaLocation = Uriqr.class.getResource( "uriqr.xsd" ).toString();
@@ -53,15 +53,18 @@ public class Uriqr extends PrimitiveFunction
 				+ "external-noNamespaceSchemaLocation", schemaLocation );
 */
 
-			try
-			{
-				resultPath = XPath.newInstance( "html/body/div[@id='content']/p/strong" );
-			}
+/* hefty Jaxen dependency removed
+		try
+		{
+//XPath.setXPathClass( org.jdom.xpath.JaxenXPath.class );
+			resultPath = XPath.newInstance( "html/body/div[@id='content']/p/strong" );
+		}
 
-			catch ( org.jdom.JDOMException e )
-			{
-				throw new RippleException( e );
-			}
+		catch ( org.jdom.JDOMException e )
+		{
+			throw new RippleException( e );
+		}
+*/
 	}
 
 	public Uriqr()
@@ -81,7 +84,9 @@ public class Uriqr extends PrimitiveFunction
 		throws RippleException
 	{
 		if ( null == saxBuilder )
+		{
 			initialize();
+		}
 
 		String s;
 
@@ -91,12 +96,12 @@ public class Uriqr extends PrimitiveFunction
 		String urlStr = "http://dev.uriqr.com/search.php?query="
 			+ StringUtils.urlEncode( s );
 
-		URLConnection urlConn;
+		URLConnection uc;
 
 		try
 		{
 			URL url = new URL( urlStr );
-			urlConn = url.openConnection();
+			uc = url.openConnection();
 		}
 
 		catch ( java.net.MalformedURLException e )
@@ -110,14 +115,15 @@ public class Uriqr extends PrimitiveFunction
 		}
 
 		String []mimeTypes = { "application/xhtml+xml", "application/xml", "text/xml" };
-		HttpUtils.prepareUrlConnectionForRequest( urlConn, mimeTypes );
-		HttpUtils.connect( urlConn );
+		HttpUtils.prepareUrlConnectionForRequest( uc, mimeTypes );
+		uc.setConnectTimeout( (int) Ripple.urlConnectTimeout() );
+		HttpUtils.connect( uc );
 
 		Document doc;
 
 		try
 		{
-			InputStream response = urlConn.getInputStream();
+			InputStream response = uc.getInputStream();
 
 			synchronized ( saxBuilder )
 			{
@@ -137,19 +143,9 @@ public class Uriqr extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
-		List<Object> results;
+		List results = selectNodes( doc );
 
-		try
-		{
-			results = resultPath.selectNodes( doc );
-		}
-
-		catch ( org.jdom.JDOMException e )
-		{
-			throw new RippleException( e );
-		}
-
-		for ( Iterator<Object> iter = results.iterator(); iter.hasNext(); )
+		for ( Iterator iter = results.iterator(); iter.hasNext(); )
 		{
 			Object r = iter.next();
 			if ( r instanceof Element )
@@ -163,6 +159,43 @@ public class Uriqr extends PrimitiveFunction
 
 			throw new RippleException( "unexpected result format" );
 		}
+	}
+
+	List selectNodes( final Document doc ) throws RippleException
+	{
+/*
+		try
+		{
+			return resultPath.selectNodes( doc );
+		}
+
+		catch ( org.jdom.JDOMException e )
+		{
+			throw new RippleException( e );
+		}
+*/
+		List results = new LinkedList();
+		Element html = doc.getRootElement();
+		Iterator<Element> divIter = html.getChildren( "div" ).iterator();
+		while ( divIter.hasNext() )
+		{
+			Element div = divIter.next();
+			String id = div.getAttributeValue( "id" );
+			if ( id != null && id.equals( "content" ) )
+			{
+				Iterator<Element> pIter = div.getChildren( "p" ).iterator();
+				while ( pIter.hasNext() )
+				{
+					Element p = pIter.next();
+					Iterator<Element> strongIter = p.getChildren( "strong" ).iterator();
+					while ( strongIter.hasNext() )
+					{
+						results.add( strongIter.next() );
+					}
+				}
+			}
+		}
+		return results;
 	}
 }
 
