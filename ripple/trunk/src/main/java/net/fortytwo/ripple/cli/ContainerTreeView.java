@@ -100,6 +100,10 @@ public class ContainerTreeView implements Sink<RippleList>
 
 				RdfValue object = objIter.next();
 				ps.print( bridge.get( object ) );
+				ps.print( ( objIter.hasNext() )
+					? ","
+					: ( predIter.hasNext() )
+						? ";" : "." );
 				ps.print( "\n" );
 			}
 		}
