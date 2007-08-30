@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.RippleException;
 

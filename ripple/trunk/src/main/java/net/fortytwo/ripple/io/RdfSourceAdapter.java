@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.RdfSink;
+import net.fortytwo.ripple.io.RdfSink;
 
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.NamespaceImpl;

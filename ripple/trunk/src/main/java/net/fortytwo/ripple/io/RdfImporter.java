@@ -7,10 +7,11 @@
  */
 
 
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.ModelConnection;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;

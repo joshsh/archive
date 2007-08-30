@@ -11,6 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfSink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;

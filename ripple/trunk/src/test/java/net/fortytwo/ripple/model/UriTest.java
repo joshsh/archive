@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.io.RdfSourceAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;

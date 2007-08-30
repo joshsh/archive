@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSourceAdapter;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.RdfUtils;
 
@@ -67,8 +67,8 @@ public class RdfImporterTest extends RippleTestCase
 			}
 
 			{
-				URL test1Url = ModelConnectionTest.class.getResource( "test1.ttl" );
-				URL test2Url = ModelConnectionTest.class.getResource( "test2.ttl" );
+				URL test1Url = RdfImporterTest.class.getResource( "rdfImporterTest1.ttl" );
+				URL test2Url = RdfImporterTest.class.getResource( "rdfImporterTest2.ttl" );
 
 				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.turtleA#" );
 				URI ctxB = mc.createUri( "urn:org.example.test.addGraphTest.turtleB#" );
@@ -85,8 +85,8 @@ public class RdfImporterTest extends RippleTestCase
 			}
 
 			{
-				URL test1Url = ModelConnectionTest.class.getResource( "test1.rdf" );
-				URL test2Url = ModelConnectionTest.class.getResource( "test2.rdf" );
+				URL test1Url = RdfImporterTest.class.getResource( "rdfImporterTest1.rdf" );
+				URL test2Url = RdfImporterTest.class.getResource( "rdfImporterTest2.rdf" );
 
 				URI ctxA = mc.createUri( "urn:org.example.test.addGraphTest.rdfxmlA#" );
 				URI ctxB = mc.createUri( "urn:org.example.test.addGraphTest.rdfxmlB#" );

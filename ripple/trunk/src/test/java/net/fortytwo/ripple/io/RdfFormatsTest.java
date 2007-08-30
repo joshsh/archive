@@ -11,7 +11,7 @@ package net.fortytwo.ripple.io;
 
 import java.net.URL;
 
-import net.fortytwo.ripple.model.RdfCollector;
+import net.fortytwo.ripple.io.RdfCollector;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.RdfUtils;
 
