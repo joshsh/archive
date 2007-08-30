@@ -7,11 +7,10 @@
  */
 
 
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -26,7 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class ContainerTreeView implements Sink<RippleList>
+public class TurtleView implements Sink<RippleList>
 {
 	RipplePrintStream ps;
 	ModelConnection mc;
@@ -37,7 +36,7 @@ public class ContainerTreeView implements Sink<RippleList>
 
 	static final String indexSeparator = "  ";
 
-	public ContainerTreeView( RipplePrintStream printStream, ModelConnection mc )
+	public TurtleView( RipplePrintStream printStream, ModelConnection mc )
 		throws RippleException
 	{
 		ps = printStream;

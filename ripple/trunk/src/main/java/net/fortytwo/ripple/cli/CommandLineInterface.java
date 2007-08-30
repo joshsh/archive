@@ -36,6 +36,7 @@ import net.fortytwo.ripple.control.TaskQueue;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
+import net.fortytwo.ripple.io.TurtleView;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.RdfValue;
@@ -381,7 +382,7 @@ System.out.println( "done parsing" );
 	
 				// Results are first dereferenced, then placed into a buffer which
 				// will be flushed into the view after the lexicon is updated.
-				ContainerTreeView view = new ContainerTreeView(
+				TurtleView view = new TurtleView(
 					queryEngine.getPrintStream(), mc );
 				Sink<RippleList> med = doBuffer
 					? new Buffer<RippleList>( view )

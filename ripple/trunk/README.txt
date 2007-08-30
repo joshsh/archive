@@ -3,7 +3,7 @@ Overview
 ================================================================================
 
 Ripple is dedicated scripting language for the Semantic Web.  Ripple programs
-not only query the Semantic Web, but actually reside within it as RDF data
+not only query the Semantic Web, but also reside within it as RDF data
 structures, forming a global network of interlinked programs.  Ripple is a
 relational stack language, closely related to functional stack languages such as
 Joy, Factor and Cat.  As a Semantic Web interface, Ripple is a fast, text-based
