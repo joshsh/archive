@@ -44,7 +44,7 @@ public class Lexicon
 	Hashtable<String, String> namespaceToPrefixMap = null;
 	Collection<String> qNamesCollection = null;
 
-	public Lexicon( Model model )
+	public Lexicon( final Model model )
 		throws RippleException
 	{
 		this.model = model;

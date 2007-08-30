@@ -9,12 +9,9 @@
 
 package net.fortytwo.ripple.util;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
@@ -67,43 +64,23 @@ public class ExtensionLoader extends ClassLoader
 		}
 	}
 
-	Collection<String> getNames()
-		throws RippleException
+	Collection<String> getNames() throws RippleException
 	{
-		HashSet<String> names = new HashSet<String>();
-
 		try
 		{
 			InputStream is
 				= net.fortytwo.ripple.Ripple.class.getResourceAsStream(
 					"extensions.txt" );
-
-			BufferedReader reader = new BufferedReader(
-				new InputStreamReader( is ) );
-	
-			// Break out when end of stream is reached.
-			while ( true )
-			{
-				String line = reader.readLine();
-	
-				if ( null == line )
-					break;
-	
-				line = line.trim();
-	
-				if ( !line.startsWith( "#" ) && !line.equals( "" ) )
-					names.add( line );
-			}
-	
+			Collection<String> names = FileUtils.getLines( is );
 			is.close();
+
+			return names;
 		}
 
 		catch ( java.io.IOException e )
 		{
 			throw new RippleException( e );
 		}
-
-		return names;
 	}
 }
 
