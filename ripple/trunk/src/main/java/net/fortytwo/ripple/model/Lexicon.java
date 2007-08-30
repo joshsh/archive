@@ -13,14 +13,15 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.jline.LexicalCompletor;
 
+import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.URI;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.model.Namespace;
 
 import jline.Completor;
 import jline.SimpleCompletor;
@@ -36,7 +37,7 @@ import java.util.Iterator;
 
 public class Lexicon
 {
-	Model model;
+	ValueFactory valueFactory;
 
 	Hashtable<String, List<URI>> keywordsToUrisMap = null;
 	Hashtable<URI, String> urisToKeywordsMap = null;
@@ -47,7 +48,7 @@ public class Lexicon
 	public Lexicon( final Model model )
 		throws RippleException
 	{
-		this.model = model;
+		valueFactory = model.getRepository().getValueFactory();
 		ModelConnection mc = model.getConnection( "for Lexicon constructor" );
 
 		// Create (immutable) keywords map.
@@ -113,7 +114,7 @@ public class Lexicon
 
 		return ( null == ns )
 			? null
-			: model.getRepository().getValueFactory().createURI( ns, localName );
+			: valueFactory.createURI( ns, localName );
 	}
 
 	public String resolveNamespacePrefix( final String nsPrefix )

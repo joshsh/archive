@@ -9,6 +9,8 @@
 
 package net.fortytwo.ripple.model;
 
+import java.util.regex.Pattern;
+
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfSink;
@@ -21,6 +23,9 @@ import org.openrdf.model.Value;
 
 public class LexiconUpdater implements RdfSink
 {
+// TODO: Unicode characters supported by the lexer / Turtle grammar
+	Pattern prefixPattern = Pattern.compile( "[A-Za-z][-0-9A-Z_a-z]*" );
+
 	Lexicon lexicon;
 	RdfSink sink;
 	boolean override;
@@ -52,6 +57,9 @@ public class LexiconUpdater implements RdfSink
 
 	public void put( final Namespace ns ) throws RippleException
 	{
+		if ( !allowedNsPrefix( ns.getPrefix() ) )
+			return;
+
 		if ( override || null == lexicon.resolveNamespacePrefix( ns.getPrefix() ) )
 		{
 			if ( allowDuplicateNamespaces || null == lexicon.nsPrefixOf( ns.getName() ) )
@@ -65,6 +73,11 @@ public class LexiconUpdater implements RdfSink
 	public void put( final String comment ) throws RippleException
 	{
 		sink.put( comment );
+	}
+
+	boolean allowedNsPrefix( final String nsPrefix )
+	{
+		return prefixPattern.matcher( nsPrefix ).matches();
 	}
 }
 

@@ -3,9 +3,14 @@ package net.fortytwo.ripple.model;
 import java.io.InputStream;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.fortytwo.ripple.test.RippleTestCase;
+import net.fortytwo.ripple.io.RdfNullSink;
 import net.fortytwo.ripple.util.FileUtils;
+
+import org.openrdf.model.Namespace;
+import org.openrdf.model.impl.NamespaceImpl;
 
 public class LexiconUpdaterTest extends RippleTestCase
 {
@@ -14,13 +19,53 @@ public class LexiconUpdaterTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			Lexicon lexicon = new Lexicon( getTestModel() );
+			String nsBase = "http://example.org/ns";
+			int i = 0;
 
-			Iterator<String> badPrefixIter = getLines( "badNsPrefixes.txt" ).iterator();
-			assertTrue( badPrefixIter.hasNext() );
-			while ( badPrefixIter.hasNext() )
+			Lexicon lexicon = new Lexicon( getTestModel() );
+			LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
+
+			Iterator<String> prefixIter = getLines( "badNsPrefixes.txt" ).iterator();
+			assertTrue( prefixIter.hasNext() );
+			while ( prefixIter.hasNext() )
 			{
-				String prefix = badPrefixIter.next();
+				String prefix = prefixIter.next();
+				assertNull( lexicon.resolveNamespacePrefix( prefix ) );
+
+				i++;
+				String nsUri = nsBase + i + "#";
+				Namespace ns = new NamespaceImpl( prefix, nsUri );
+				updater.put( ns );
+
+				assertNull( lexicon.resolveNamespacePrefix( prefix ) );
+			}
+		}
+	}
+
+	private class AcceptGoodNamespaces extends TestRunnable
+	{
+		public void test()
+			throws Exception
+		{
+			String nsBase = "http://example.org/ns";
+			int i = 0;
+
+			Lexicon lexicon = new Lexicon( getTestModel() );
+			LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
+
+			Iterator<String> prefixIter = getLines( "goodNsPrefixes.txt" ).iterator();
+			assertTrue( prefixIter.hasNext() );
+			while ( prefixIter.hasNext() )
+			{
+				String prefix = prefixIter.next();
+				assertNull( lexicon.resolveNamespacePrefix( prefix ) );
+
+				i++;
+				String nsUri = nsBase + i + "#";
+				Namespace ns = new NamespaceImpl( prefix, nsUri );
+				updater.put( ns );
+
+				assertEquals( lexicon.resolveNamespacePrefix( prefix ), nsUri );
 			}
 		}
 	}
@@ -37,6 +82,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 		throws Exception
 	{
 		testAsynchronous( new RejectBadNamespaces() );
+		testAsynchronous( new AcceptGoodNamespaces() );
 	}
 }
 
