@@ -65,6 +65,10 @@ public class ModelConnection
 	Model model;
 	RepositoryConnection repoConnection;
 	ValueFactory valueFactory;
+public ValueFactory getValueFactory()
+{
+	return valueFactory;
+}
 	ModelBridge bridge;
 	String name = null;
 

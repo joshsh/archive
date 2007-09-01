@@ -21,6 +21,11 @@ import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
 
+	import net.fortytwo.ripple.io.RdfDiff;
+	import net.fortytwo.ripple.io.SparqlUpdater;
+	import net.fortytwo.ripple.util.Sink;
+	import org.openrdf.model.Statement;
+
 public class DefineTermCmd extends Command
 {
 	ListAst ast;
@@ -61,10 +66,38 @@ public class DefineTermCmd extends Command
 			mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
 
 			qe.getLexicon().add( uri );
+
+pushListToSemWeb( exprList, mc );
 		}
 	}
 
 	protected void abort() {}
+
+
+
+
+
+void pushListToSemWeb( final RippleList list, final ModelConnection mc ) throws RippleException
+{
+	final RdfDiff diff = new RdfDiff();
+
+	Sink<Statement> diffAdderSink = new Sink<Statement>()
+	{
+		public void put( final Statement st ) throws RippleException
+		{
+			diff.add( st );
+		}
+	};
+
+	list.writeStatementsTo( diffAdderSink, mc );
+
+	SparqlUpdater.postUpdate( diff, null );
+}
+
+
+
+
+
 }
 
 // kate: tab-width 4
