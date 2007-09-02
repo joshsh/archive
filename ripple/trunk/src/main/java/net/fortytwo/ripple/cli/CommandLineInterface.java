@@ -49,6 +49,7 @@ import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.SynchronizedSink;
 import net.fortytwo.ripple.util.Tee;
 
 import org.apache.log4j.Logger;
@@ -241,7 +242,7 @@ boolean lastQueryContinued = false;
 	{
 		lineNumber = 0;
 		interpreter.parse();
-System.out.println( "done parsing" );
+//System.out.println( "done parsing" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -384,9 +385,10 @@ System.out.println( "done parsing" );
 				// will be flushed into the view after the lexicon is updated.
 				TurtleView view = new TurtleView(
 					queryEngine.getPrintStream(), mc );
-				Sink<RippleList> med = doBuffer
-					? new Buffer<RippleList>( view )
-					: view;
+				Sink<RippleList> med = new SynchronizedSink(
+					( doBuffer
+						? new Buffer<RippleList>( view )
+						: view ) );
 
 				final Sink<RippleList> results
 					= new Tee<RippleList>( med, queryResultHistory );

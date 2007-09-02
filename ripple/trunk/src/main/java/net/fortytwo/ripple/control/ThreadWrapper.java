@@ -13,24 +13,24 @@ import net.fortytwo.ripple.RippleException;
 
 public abstract class ThreadWrapper
 {
+	String name;
+
+	boolean finished;
+	RippleException error;
+
 	protected abstract void run() throws RippleException;
 
-	String name;
 	public ThreadWrapper( final String name )
 	{
 		this.name = name;
 	}
 
-	boolean finished;
-	RippleException error;
+	void setFinished( boolean f ) { finished = f; }
+	void setError( RippleException e ) { error = e; }
+	boolean getFinished() { return finished; }
+	RippleException getError() { return error; }
 
-	public void setFinished( boolean f ) { finished = f; }
-	public void setError( RippleException e ) { error = e; }
-	public boolean getFinished() { return finished; }
-	public RippleException getError() { return error; }
-
-	public void start( final long timeout )
-		throws RippleException
+	public void start( final long timeout ) throws RippleException
 	{
 		setFinished( false );
 		setError( null );
@@ -88,8 +88,7 @@ public abstract class ThreadWrapper
 			throw getError();
 	}
 
-	public void start()
-		throws RippleException
+	public void start() throws RippleException
 	{
 		start( -1 );
 	}

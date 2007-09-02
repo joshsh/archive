@@ -30,58 +30,41 @@ import java.util.Iterator;
 
 public class RipplePrintStream extends PrintStream
 {
-	private Lexicon lexicon;
+	Lexicon lexicon;
 
-	public RipplePrintStream( OutputStream out, Lexicon lexicon )
+	public RipplePrintStream( final OutputStream out, final Lexicon lexicon )
 		throws RippleException
 	{
 		super( out );
 		this.lexicon = lexicon;
 	}
 
-	private void printUriRef( URI uri )
-	{
-		print( "<" + StringUtils.escapeUriString( uri.toString() ) + ">" );
-	}
-
-	private void printUri( URI uri )
-		throws RippleException
-	{
-		String symbol = lexicon.symbolFor( uri );
-
-		if ( null == symbol )
-			printUriRef( uri );
-		else
-			print( symbol );
-	}
-
-	private void printEscapedString( final String s )
-	{
-		print( '\"' );
-		print( StringUtils.escapeString( s ) );
-		print( '\"' );
-	}
-
-	public void print( RippleValue v )
-		throws RippleException
+	public void print( final RippleValue v ) throws RippleException
 	{
 		if ( null == v )
+		{
 			print( "()" );
+		}
 
 		else
+		{
 			v.printTo( this );
+		}
 	}
 
-	public void print( Value v )
-		throws RippleException
+	public void print( final Value v ) throws RippleException
 	{
 		if ( null == v )
+		{
 			print( "()" );
+		}
 
 		else
 		{
 			if ( v instanceof URI )
+			{
 				printUri( (URI) v );
+			}
 
 			else if ( v instanceof Literal )
 			{
@@ -93,13 +76,25 @@ public class RipplePrintStream extends PrintStream
 				if ( null != dataTypeUri )
 				{
 					if ( dataTypeUri.equals( XMLSchema.BOOLEAN ) )
+					{
 						print( v.toString() );
+					}
+
 					else if ( dataTypeUri.equals( XMLSchema.DOUBLE ) )
+					{
 						print( v.toString() );
+					}
+
 					else if ( dataTypeUri.equals( XMLSchema.INTEGER ) )
+					{
 						print( v.toString() );
+					}
+
 					else if ( dataTypeUri.equals( XMLSchema.STRING ) )
+					{
 						printEscapedString( v.toString() );
+					}
+
 					else
 					{
 						printEscapedString( v.toString() );
@@ -109,12 +104,16 @@ public class RipplePrintStream extends PrintStream
 				}
 
 				else
+				{
 					// For now, plain literals are printed as string-typed literals.
 					printEscapedString( v.toString() );
+				}
 
 				String language = ( (Literal) v ).getLanguage();
 				if ( null != language )
+				{
 					print( "@" + language );
+				}
 			}
 
 			else if ( v instanceof BNode )
@@ -124,12 +123,13 @@ public class RipplePrintStream extends PrintStream
 			}
 
 			else
+			{
 				print( v.toString() );
+			}
 		}
 	}
 
-	public void print( Statement st )
-		throws RippleException
+	public void print( final Statement st ) throws RippleException
 	{
 		print( "    " );
 		print( st.getSubject() );
@@ -141,14 +141,42 @@ public class RipplePrintStream extends PrintStream
 		print( st.getObject() );
 	}
 
-	public void print( Iterator<Statement> stmtIter )
-		throws RippleException
+	public void print( final Iterator<Statement> stmtIter ) throws RippleException
 	{
 		while ( stmtIter.hasNext() )
 		{
 			print( stmtIter.next() );
 			print( "\n" );
 		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	void printUriRef( final URI uri )
+	{
+		print( "<" + StringUtils.escapeUriString( uri.toString() ) + ">" );
+	}
+
+	void printUri( final URI uri ) throws RippleException
+	{
+		String symbol = lexicon.symbolFor( uri );
+
+		if ( null == symbol )
+		{
+			printUriRef( uri );
+		}
+
+		else
+		{
+			print( symbol );
+		}
+	}
+
+	void printEscapedString( final String s )
+	{
+		print( '\"' );
+		print( StringUtils.escapeString( s ) );
+		print( '\"' );
 	}
 }
 
