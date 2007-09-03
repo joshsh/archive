@@ -39,7 +39,7 @@ public class Interpreter
 	public void parse()
 		throws RippleException
 	{
-//System.out.println( "parse!!!!!!!!!!!!" );
+//System.out.println( "-- parse" );
 		// Break out when a @quit directive is encountered
 		for (;;)
 		{
@@ -47,7 +47,7 @@ public class Interpreter
 			// ran across a syntax error.  Clear the buffer, create a new lexer
 			// and parser instance, and start afresh.
 			clear( input );
-//System.out.println( "construct!!!!!!!!!!!!" );
+//System.out.println( "-- construct" );
 
 			RippleLexer lexer = new RippleLexer( input );
 			lexer.initialize( recognizerInterface );
@@ -56,18 +56,18 @@ public class Interpreter
 
 			try
 			{
-//System.out.println( "antlr!!!!!!!!!!!!" );
+//System.out.println( "-- antlr" );
 				parser.nt_Document();
 
 				// If the parser has exited normally, then we're done.
-//System.out.println( "exited normally" );
+//System.out.println( "-- normal exit" );
 				break;
 			}
 
 			// The parser has received a quit command.
 			catch ( ParserQuitException e )
 			{
-System.out.println( "quit!" );
+//System.out.println( "-- quit" );
 				logger.debug( "quit() called on Interpreter" );
 
 				break;
@@ -88,7 +88,7 @@ System.out.println( "caught some odd Throwable: " + t );
 /*
 			catch ( InterruptedException e )
 			{
-System.out.println( "interrupted!" );
+System.out.println( "-- interrupted" );
 			}
 */
 		}

@@ -30,9 +30,9 @@ public class Ripple
 
 	static boolean allowDuplicateNamespaces;
 	static RDFFormat cacheFormat;
-	static boolean containerViewBufferOutput;
-	static int containerViewMaxObjects;
-	static int containerViewMaxPredicates;
+	static boolean resultViewBufferOutput;
+	static int resultViewMaxObjects;
+	static int resultViewMaxPredicates;
 	static String defaultNamespace;
 	static boolean dereferenceUrisByNamespace;
 	static EvaluationOrder evaluationOrder;
@@ -75,19 +75,19 @@ public class Ripple
 		}
 
 		// Command-line interface
-		containerViewBufferOutput = getBooleanProperty(
-			props, "net.fortytwo.ripple.cli.containerViewBufferOutput", false );
-		containerViewMaxPredicates = getIntProperty(
-			props, "net.fortytwo.ripple.cli.containerViewMaxPredicates", 32 );
-		if ( containerViewMaxPredicates < 0 )
+		resultViewBufferOutput = getBooleanProperty(
+			props, "net.fortytwo.ripple.cli.resultViewBufferOutput", false );
+		resultViewMaxPredicates = getIntProperty(
+			props, "net.fortytwo.ripple.cli.resultViewMaxPredicates", 32 );
+		if ( resultViewMaxPredicates < 0 )
 		{
-			containerViewMaxPredicates = 0;
+			resultViewMaxPredicates = 0;
 		}
-		containerViewMaxObjects = getIntProperty(
-			props, "net.fortytwo.ripple.cli.containerViewMaxObjects", 32 );
-		if ( containerViewMaxObjects < 0 )
+		resultViewMaxObjects = getIntProperty(
+			props, "net.fortytwo.ripple.cli.resultViewMaxObjects", 32 );
+		if ( resultViewMaxObjects < 0 )
 		{
-			containerViewMaxObjects = 0;
+			resultViewMaxObjects = 0;
 		}
 		jLineDebugOutput = getStringProperty(
 			props, "net.fortytwo.ripple.cli.jline.debugOutput", null );
@@ -172,19 +172,19 @@ public class Ripple
 		return cacheFormat;
 	}
 
-	public static boolean containerViewBufferOutput()
+	public static boolean resultViewBufferOutput()
 	{
-		return containerViewBufferOutput;
+		return resultViewBufferOutput;
 	}
 
-	public static int containerViewMaxObjects()
+	public static int resultViewMaxObjects()
 	{
-		return containerViewMaxObjects;
+		return resultViewMaxObjects;
 	}
 
-	public static int containerViewMaxPredicates()
+	public static int resultViewMaxPredicates()
 	{
-		return containerViewMaxPredicates;
+		return resultViewMaxPredicates;
 	}
 
 	public static String defaultNamespace()

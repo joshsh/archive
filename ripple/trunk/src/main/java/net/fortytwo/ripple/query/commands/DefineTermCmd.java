@@ -67,7 +67,7 @@ public class DefineTermCmd extends Command
 
 			qe.getLexicon().add( uri );
 
-pushListToSemWeb( exprList, mc );
+//pushListToSemWeb( exprList, mc );
 		}
 	}
 

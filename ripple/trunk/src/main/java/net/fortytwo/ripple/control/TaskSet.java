@@ -13,7 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
 /**
- * A set of tasks which are evaluated concurrently.  Tasks are scheduled for
+ * A set of tasks which are executed concurrently.  Tasks are scheduled for
  * execution as soon as they are added to the set.
  */
 public class TaskSet

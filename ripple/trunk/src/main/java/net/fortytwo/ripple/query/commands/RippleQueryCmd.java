@@ -71,7 +71,7 @@ public class RippleQueryCmd extends Command
 
 	protected void abort()
 	{
-System.out.println( "aborting Ripple query command" );
+//System.out.println( "aborting Ripple query command" );
 		evaluator.stop();
 	}
 }

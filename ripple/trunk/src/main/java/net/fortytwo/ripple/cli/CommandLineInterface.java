@@ -377,7 +377,7 @@ boolean lastQueryContinued = false;
 			public void execute( QueryEngine qe, ModelConnection mc )
 				throws RippleException
 			{
-				boolean doBuffer = Ripple.containerViewBufferOutput();
+				boolean doBuffer = Ripple.resultViewBufferOutput();
 	
 				queryEngine.getPrintStream().println( "" );
 	

@@ -63,8 +63,8 @@ public class TurtleView implements Sink<RippleList>
 		mc.findPredicates( first, predicates );
 
 		int predCount = 0,
-			predlim = Ripple.containerViewMaxPredicates(),
-			objlim = Ripple.containerViewMaxObjects();
+			predlim = Ripple.resultViewMaxPredicates(),
+			objlim = Ripple.resultViewMaxObjects();
 
 		for ( Iterator<RdfValue> predIter = predicates.iterator();
 			predIter.hasNext(); )
