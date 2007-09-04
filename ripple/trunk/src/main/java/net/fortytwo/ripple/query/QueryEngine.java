@@ -23,7 +23,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.RdfNullSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.io.SesameCoupling;
+import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Sink;
 

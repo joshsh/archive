@@ -106,7 +106,9 @@ nilSource.put( RippleList.NIL );
 
 	protected void abort()
 	{
+		// Late arrivals should not show up in the view.
 		results.flip();
+
 		taskSet.stopWaiting();
 	}
 

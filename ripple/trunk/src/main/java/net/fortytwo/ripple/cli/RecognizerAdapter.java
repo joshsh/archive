@@ -16,14 +16,14 @@ import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.util.Sink;
 
-public class RecognizerCoupling
+public class RecognizerAdapter
 {
 	Sink<ListAst> querySink, continuingQuerySink;
 	Sink<Command> commandSink;
 	Sink<RecognizerEvent> eventSink;
 	PrintStream errorStream;
 
-	public RecognizerCoupling( final Sink<ListAst> querySink,
+	public RecognizerAdapter( final Sink<ListAst> querySink,
 								final Sink<ListAst> continuingQuerySink,
 								final Sink<Command> commandSink,
 								final Sink<RecognizerEvent> eventSink,

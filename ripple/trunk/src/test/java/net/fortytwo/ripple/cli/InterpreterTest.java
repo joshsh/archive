@@ -143,7 +143,7 @@ System.out.println( "pushing line to readOut: " + line );
 			}
 		};
 
-		final RecognizerCoupling rc = new RecognizerCoupling(
+		final RecognizerAdapter rc = new RecognizerAdapter(
 			querySink, querySink, commandSink, eventSink, System.err );
 
 		Sink<Exception> exceptionSink = new Sink<Exception>()

@@ -14,15 +14,15 @@ import java.io.InputStream;
 public class InputStreamEventFilter extends InputStream
 {
 	InputStream source;
-	RecognizerCoupling recognizerCoupling;
+	RecognizerAdapter recognizerAdapter;
 
 	int buffered;
 
 	public InputStreamEventFilter( final InputStream is,
-									final RecognizerCoupling rc )
+									final RecognizerAdapter rc )
 	{
 		source = is;
-		recognizerCoupling = rc;
+		recognizerAdapter = rc;
 
 		buffered = -1;
 	}
@@ -46,7 +46,7 @@ public class InputStreamEventFilter extends InputStream
 				c = source.read();
 
 				if ( 27 == c )
-					recognizerCoupling.putEvent( RecognizerEvent.ESCAPE );
+					recognizerAdapter.putEvent( RecognizerEvent.ESCAPE );
 				else
 				{
 					buffered = c;

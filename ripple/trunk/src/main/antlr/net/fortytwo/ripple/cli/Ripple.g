@@ -42,23 +42,23 @@ options
 }
 
 {
-	RecognizerCoupling coupling = null;
+	RecognizerAdapter adapter = null;
 
-	public void initialize( final RecognizerCoupling i )
+	public void initialize( final RecognizerAdapter i )
 	{
-		coupling = i;
+		adapter = i;
 	}
 
 	void matchEndOfLine()
 	{
-		coupling.putEvent( RecognizerEvent.NEWLINE );
+		adapter.putEvent( RecognizerEvent.NEWLINE );
 	}
 
 /*
 	void matchEscapeCharacter()
 	{
 System.out.println( "matchEscapeCharacter" );
-		coupling.putEvent( RecognizerEvent.ESCAPE );
+		adapter.putEvent( RecognizerEvent.ESCAPE );
 	}
 */
 }
@@ -109,19 +109,19 @@ UCHARACTER
 protected
 LANGUAGE
 	: ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
-		{ coupling.setLanguageTag( $getText ); }
+		{ adapter.setLanguageTag( $getText ); }
 	;
 
 STRING
 	: '\"'!
-		{ coupling.setLanguageTag( null ); }
+		{ adapter.setLanguageTag( null ); }
 		( SCHARACTER )* '\"'! ( LANGUAGE! )?
 	;
 
 /*
 LONG_STRING
 	: "\"\"\""!
-		{ coupling.setLanguageTag( null ); }
+		{ adapter.setLanguageTag( null ); }
 		( SCHARACTER )* "\"\"\""! ( LANGUAGE! )?
 	;
 */
@@ -234,31 +234,31 @@ options
 }
 
 {
-	private RecognizerCoupling coupling = null;
+	private RecognizerAdapter adapter = null;
 
-	public void initialize( final RecognizerCoupling i )
+	public void initialize( final RecognizerAdapter i )
 	{
-		coupling = i;
+		adapter = i;
 	}
 
 	public void matchCommand( final Command cmd )
 	{
-		coupling.putCommand( cmd );
+		adapter.putCommand( cmd );
 	}
 
 	public void matchQuery( final ListAst ast )
 	{
-		coupling.putQuery( ast );
+		adapter.putQuery( ast );
 	}
 
 	public void matchContinuingQuery( final ListAst ast )
 	{
-		coupling.putContinuingQuery( ast );
+		adapter.putContinuingQuery( ast );
 	}
 
 	public void matchQuit()
 	{
-		coupling.putEvent( RecognizerEvent.QUIT );
+		adapter.putEvent( RecognizerEvent.QUIT );
 	}
 }
 
@@ -268,7 +268,7 @@ nt_Document
 //System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
-	coupling.putEvent( RecognizerEvent.NEWLINE );
+	adapter.putEvent( RecognizerEvent.NEWLINE );
 //System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
 }
 	: ( (nt_Ws)? nt_Statement )*
@@ -367,7 +367,7 @@ nt_Literal returns [ Ast r ]
 	)
 		{
 			r = ( null == dataType )
-				? new StringAst( t.getText(), coupling.getLanguageTag() )
+				? new StringAst( t.getText(), adapter.getLanguageTag() )
 				: new TypedLiteralAst( t.getText(), dataType );
 		}
 	| u:NUMBER

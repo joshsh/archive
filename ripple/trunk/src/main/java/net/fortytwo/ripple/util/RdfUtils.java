@@ -17,7 +17,7 @@ import java.net.URLConnection;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.SesameCoupling;
+import net.fortytwo.ripple.io.SesameAdapter;
 
 import org.apache.log4j.Logger;
 
@@ -59,7 +59,7 @@ public class RdfUtils
 	}
 
 	public static RDFFormat read( final InputStream is,
-								final SesameCoupling sc,
+								final SesameAdapter sc,
 								final String baseUri,
 								final RDFFormat format )
 		throws RippleException
@@ -81,7 +81,7 @@ public class RdfUtils
 	}
 
 	static RDFFormat readPrivate( final URLConnection uc,
-									final SesameCoupling sc,
+									final SesameAdapter sc,
 									final String baseUri,
 									final RDFFormat format )
 		throws RippleException
@@ -140,7 +140,7 @@ public class RdfUtils
 	 *  @param uc  an already-connected URLConnection
 	 */
 	public static RDFFormat read( final URLConnection uc,
-								final SesameCoupling sc,
+								final SesameAdapter sc,
 								final String baseUri,
 								final RDFFormat format )
 		throws RippleException
@@ -152,7 +152,7 @@ public class RdfUtils
 	 *  @param uc  an already-connected URLConnection
 	 */
 	public static RDFFormat read( final URLConnection uc,
-								final SesameCoupling sc,
+								final SesameAdapter sc,
 								final String baseUri )
 		throws RippleException
 	{
@@ -160,7 +160,7 @@ public class RdfUtils
 	}
 
 	public static RDFFormat read( final URL url,
-								final SesameCoupling sc,
+								final SesameAdapter sc,
 								final String baseUri,
 								RDFFormat format )
 		throws RippleException
@@ -172,7 +172,7 @@ public class RdfUtils
 	}
 
 	public static RDFFormat read( final URL url,
-								final SesameCoupling sc,
+								final SesameAdapter sc,
 								final String baseUri )
 		throws RippleException
 	{

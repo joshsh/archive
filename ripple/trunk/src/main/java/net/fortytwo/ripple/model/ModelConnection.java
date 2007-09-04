@@ -30,7 +30,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfNullSink;
 import net.fortytwo.ripple.io.RdfSink;
-import net.fortytwo.ripple.io.SesameCoupling;
+import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;

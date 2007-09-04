@@ -21,17 +21,17 @@ public class Interpreter
 	final static Logger logger
 		= Logger.getLogger( Interpreter.class );
 
-	RecognizerCoupling recognizerCoupling;
+	RecognizerAdapter recognizerAdapter;
 
 	InputStream input;
 
 	Sink<Exception> exceptionSink;
 
-	public Interpreter( final RecognizerCoupling rc,
+	public Interpreter( final RecognizerAdapter rc,
 						final InputStream in,
 						final Sink<Exception> exceptions )
 	{
-		recognizerCoupling = rc;
+		recognizerAdapter = rc;
 		input = in;
 		exceptionSink = exceptions;
 	}
@@ -49,9 +49,9 @@ public class Interpreter
 //System.out.println( "-- construct" );
 
 			RippleLexer lexer = new RippleLexer( input );
-			lexer.initialize( recognizerCoupling );
+			lexer.initialize( recognizerAdapter );
 			RippleParser parser = new RippleParser( lexer );
-			parser.initialize( recognizerCoupling );
+			parser.initialize( recognizerAdapter );
 
 			try
 			{

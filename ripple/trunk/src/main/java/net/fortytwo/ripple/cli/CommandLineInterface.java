@@ -157,7 +157,7 @@ boolean lastQueryContinued = false;
 			}
 		};
 
-		RecognizerCoupling rc = new RecognizerCoupling(
+		RecognizerAdapter rc = new RecognizerAdapter(
 			querySink, continuingQuerySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
 		Sink<Exception> parserExceptionSink = new Sink<Exception>()
