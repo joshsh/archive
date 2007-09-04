@@ -58,6 +58,14 @@ public class TaskSet
 //System.out.println( "    done." );
 	}
 
+	public void stopWaiting()
+	{
+		synchronized ( completedTaskSink )
+		{
+			completedTaskSink.notify();
+		}
+	}
+
 	Sink<Task> completedTaskSink = new Sink<Task>()
 	{
 		public synchronized void put( final Task task ) throws RippleException
@@ -67,7 +75,9 @@ public class TaskSet
 //System.out.println( "    [-] count is now: " + count );
 
 			if ( 0 == count )
+			{
 				notify();
+			}
 		}
 	};
 }

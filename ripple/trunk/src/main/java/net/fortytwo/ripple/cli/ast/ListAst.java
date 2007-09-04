@@ -46,7 +46,7 @@ public class ListAst extends ListNode<Ast> implements Ast
 		first = null;
 	}
 
-	public ListAst( Ast first, ListNode<Ast> rest )
+	public ListAst( final Ast first, final ListNode<Ast> rest )
 	{
 //System.out.println( "first = " + first + ", rest = " + rest );
 		this.first = first;
@@ -86,23 +86,30 @@ return null;
 	QueryEngine queryEngine;
 	Sink<RippleValue> valueSink;
 
-	Sink<RippleList> getSink( ListNode<Ast> listAst )
+	Sink<RippleList> getSink( final ListNode<Ast> listAst )
 	{
 		if ( null == listAst )
+		{
 			return new ListToValueSink( valueSink );
+		}
+
 		else
+		{
 			return new ListBuilderSink( listAst.getFirst(),
 				getSink( listAst.getRest() ) );
+		}
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		if ( isNil() )
+		{
 //			return;
 			sink.put( RippleList.NIL );
+		}
 
 //        boolean comp = ( Ripple.getEvaluationStyle() == Ripple.EvaluationStyle.COMPOSITIONAL );
 		modelConnection = mc;
@@ -137,9 +144,14 @@ return null;
 			while ( null != cur )
 			{
 				if ( first )
+				{
 					first = false;
+				}
+
 				else
+				{
 					s.append( " " );
+				}
 	
 				s.append( cur.getFirst().toString() );
 				cur = cur.getRest();
@@ -159,33 +171,38 @@ return null;
 		{
 			private RippleList tail;
 	
-			public InnerSink( RippleList list )
+			public InnerSink( final RippleList list )
 			{
 				tail = list;
 			}
 	
-			public void put( RippleValue v )
+			public void put( final RippleValue v )
 				throws RippleException
 			{
 				sink.put( new RippleList( v, tail ) );
 			}
 		}
 
-		ListBuilderSink( Ast ast, Sink<RippleList> sink )
+		ListBuilderSink( final Ast ast, final Sink<RippleList> sink )
 		{
 			this.sink = sink;
 			this.ast = ast;
 		}
 
-		public void put( RippleList list )
-			throws RippleException
+		public void put( final RippleList list ) throws RippleException
 		{
 //System.out.println( "ast = " + ast );
 			InnerSink innerSink = new InnerSink( list );
+
 			if ( null == ast )
+			{
 				innerSink.put( RippleList.NIL );
+			}
+
 			else
+			{
 				ast.evaluate( innerSink, queryEngine, modelConnection );
+			}
 		}
 	}
 
@@ -193,13 +210,12 @@ return null;
 	{
 		private Sink<RippleValue> sink;
 
-		public ListToValueSink( Sink<RippleValue> sink )
+		public ListToValueSink( final Sink<RippleValue> sink )
 		{
 			this.sink = sink;
 		}
 
-		public void put( RippleList list )
-			throws RippleException
+		public void put( final RippleList list ) throws RippleException
 		{
 			sink.put( list );
 		}

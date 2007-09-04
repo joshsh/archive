@@ -13,8 +13,7 @@ import net.fortytwo.ripple.RippleException;
 
 public class NullSink<T> implements Sink<T>
 {
-	public void put( T t )
-		throws RippleException
+	public void put( final T t ) throws RippleException
 	{}
 }
 

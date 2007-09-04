@@ -152,22 +152,10 @@ public class QueryEngine
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void executeCommand( final Command cmd )
+	public void executeCommand( final Command cmd ) throws RippleException
 	{
-		ModelConnection mc;
-
-		try
-		{
-			mc = getConnection( "for executeCommand" );
-		}
-
-		catch ( RippleException e )
-		{
-			// Note the error, don't execute the command.
-			errorPrintStream.println( "Error: " + e );
-			e.logError();
-			return;
-		}
+		ModelConnection mc = getConnection( "for executeCommand" );
+		RippleException ex = null;
 
 		try
 		{
@@ -176,21 +164,14 @@ public class QueryEngine
 
 		catch ( RippleException e )
 		{
-			// Note the error but continue normally.
-			errorPrintStream.println( "Error: " + e );
-			e.logError();
+			ex = e;
 		}
 
-		try
-		{
-			mc.close();
-		}
+		mc.close();
 
-		catch ( RippleException e )
+		if ( null != ex )
 		{
-			errorPrintStream.println( "Failed to close connection: " + e );
-			e.logError();
-			System.exit( 1 );
+			throw ex;
 		}
 	}
 

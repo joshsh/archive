@@ -45,8 +45,7 @@ public class Lexicon
 	Hashtable<String, String> namespaceToPrefixMap = null;
 	Collection<String> qNamesCollection = null;
 
-	public Lexicon( final Model model )
-		throws RippleException
+	public Lexicon( final Model model ) throws RippleException
 	{
 		valueFactory = model.getRepository().getValueFactory();
 		ModelConnection mc = model.getConnection( "for Lexicon constructor" );
@@ -134,9 +133,11 @@ public class Lexicon
 
 			// Namespace prefix may be empty but non-null.
 			if ( null != nsPrefix )
+			{
 				// Note: assumes that the local name is never null (although it
 				//       may be empty).
 				symbol = nsPrefix + ":" + uri.getLocalName();
+			}
 		}
 
 		return symbol;
@@ -147,8 +148,7 @@ public class Lexicon
 		return namespaceToPrefixMap.get( uri );
 	}
 
-	public Completor getCompletor()
-		throws RippleException
+	public Completor getCompletor() throws RippleException
 	{
 		Set<String> keywords = keywordsToUrisMap.keySet();
 		Set<String> prefixes = prefixToNamespaceMap.keySet();
@@ -160,21 +160,29 @@ public class Lexicon
 
 			Iterator<String> localNameIter = keywords.iterator();
 			while ( localNameIter.hasNext() )
+			{
 				alts.add( localNameIter.next() );
+			}
 
 			Iterator<String> qNameIter = qNamesCollection.iterator();
 			while( qNameIter.hasNext() )
+			{
 				alts.add( qNameIter.next() );
+			}
 
 			Iterator<String> prefixIter = prefixes.iterator();
 			while ( prefixIter.hasNext() )
+			{
 				alts.add( prefixIter.next() + ":" );
+			}
 
 			return new LexicalCompletor( alts );
 		}
 
 		else
+		{
 			return new NullCompletor();
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -187,8 +195,7 @@ public class Lexicon
 	}
 
 	// Note: assumes that the same URI will not be added twice.
-	public void add( URI uri )
-		throws RippleException
+	public void add( URI uri ) throws RippleException
 	{
 //System.out.println( "adding URI: " + uri );
 		// If possible, add a qualified name as well.

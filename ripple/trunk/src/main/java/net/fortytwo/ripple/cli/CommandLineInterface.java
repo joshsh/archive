@@ -98,10 +98,10 @@ boolean lastQueryContinued = false;
 		// Handling of queries
 		Sink<ListAst> querySink = new Sink<ListAst>()
 		{
-			public void put( final ListAst ast )
-				throws RippleException
+			public void put( final ListAst ast ) throws RippleException
 			{
-				addCommand( createQueryCommand( ast, false ) );
+				addCommand( new VisibleQueryCommand( ast, queryResultHistory, lastQueryContinued ) );
+				lastQueryContinued = false;
 				addCommand( new UpdateCompletorsCmd() );
 				executeCommands();
 			}
@@ -110,10 +110,10 @@ boolean lastQueryContinued = false;
 		// Handling of "continuing" queries
 		Sink<ListAst> continuingQuerySink = new Sink<ListAst>()
 		{
-			public void put( final ListAst ast )
-				throws RippleException
+			public void put( final ListAst ast ) throws RippleException
 			{
-				addCommand( createQueryCommand( ast, true ) );
+				addCommand( new VisibleQueryCommand( ast, queryResultHistory, lastQueryContinued ) );
+				lastQueryContinued = true;
 				addCommand( new UpdateCompletorsCmd() );
 				executeCommands();
 			}
@@ -122,8 +122,7 @@ boolean lastQueryContinued = false;
 		// Handling of commands
 		Sink<Command> commandSink = new Sink<Command>()
 		{
-			public void put( final Command cmd )
-				throws RippleException
+			public void put( final Command cmd ) throws RippleException
 			{
 				addCommand( cmd );
 				addCommand( new UpdateCompletorsCmd() );
@@ -287,7 +286,12 @@ boolean lastQueryContinued = false;
 
 		try
 		{
-			completors.add( queryEngine.getLexicon().getCompletor() );
+			Lexicon lex = queryEngine.getLexicon();
+
+			synchronized ( lex )
+			{
+				completors.add( lex.getCompletor() );
+			}
 
 			ArrayList<String> directives = new ArrayList<String>();
 			directives.add( "@count" );
@@ -370,88 +374,6 @@ boolean lastQueryContinued = false;
 	{
 //System.out.println( "abortCommands()" );
 		taskQueue.stop();
-	}
-
-	Command createQueryCommand( final ListAst ast, final boolean continuing )
-	{
-		return new Command()
-		{
-			Command cmd = null;
-
-			public void execute( QueryEngine qe, ModelConnection mc )
-				throws RippleException
-			{
-				boolean doBuffer = Ripple.resultViewBufferOutput();
-	
-				queryEngine.getPrintStream().println( "" );
-	
-				// Results are first dereferenced, then placed into a buffer which
-				// will be flushed into the view after the lexicon is updated.
-				TurtleView view = new TurtleView(
-					queryEngine.getPrintStream(), mc );
-				Sink<RippleList> med = new SynchronizedSink(
-					( doBuffer
-						? new Buffer<RippleList>( view )
-						: view ) );
-
-				final Sink<RippleList> results
-					= new Tee<RippleList>( med, queryResultHistory );
-	
-				final ModelConnection mcf = mc;
-				Sink<RippleList> derefSink = new Sink<RippleList>()
-				{
-					public void put( final RippleList list) throws RippleException
-					{
-						dereference( list.getFirst(), mcf );
-						results.put( list );
-					}
-				};
-
-Collector<RippleList> nilSource = new Collector<RippleList>();
-nilSource.put( RippleList.NIL );
-				cmd = new RippleQueryCmd( ast, derefSink,
-					( lastQueryContinued
-						? queryResultHistory.getSource( 1 )
-						: nilSource ) );
-lastQueryContinued = continuing;
-
-				// Execute the inner command and wait until it is finished.
-				cmd.setQueryEngine( queryEngine );
-				TaskSet ts = new TaskSet();
-				ts.add( cmd );
-				ts.waitUntilEmpty();
-
-				// Flush results to the view.
-				if ( doBuffer )
-					( (Buffer<RippleList>) results ).flush();
-	
-				if ( view.size() > 0 )
-					queryEngine.getPrintStream().println( "" );
-	
-				queryResultHistory.advance();
-			}
-
-			protected void abort() {}
-		};
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	void dereference( RippleValue v, ModelConnection mc )
-		throws RippleException
-	{
-		Dereferencer d = mc.getModel().getDereferencer();
-		RdfValue r = v.toRdf( mc );
-
-		try
-		{
-			d.dereference( r, mc );
-		}
-
-		catch ( RippleException e )
-		{
-			// (soft fail... don't even log the error)
-		}
 	}
 }
 

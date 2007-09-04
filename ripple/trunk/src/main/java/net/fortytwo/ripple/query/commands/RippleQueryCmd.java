@@ -47,8 +47,7 @@ public class RippleQueryCmd extends Command
 		final Sink<RippleValue> evaluatorSink = new Sink<RippleValue>()
 		{
 			// Note: v will always be a list.
-			public void put( RippleValue v )
-				throws RippleException
+			public void put( final RippleValue v ) throws RippleException
 			{
 				final RippleList l = (RippleList) v;
 

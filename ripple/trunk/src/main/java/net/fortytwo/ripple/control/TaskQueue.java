@@ -23,17 +23,17 @@ public class TaskQueue extends Task
 
 	public void add( final Task task )
 	{
-System.out.println( "[" + this + "]add( " + task + ")" );
+//System.out.println( "[" + this + "]add( " + task + ")" );
 		queue.add( task );
-System.out.println( "    [+] queue.size() is now: " + queue.size() );
+//System.out.println( "    [+] queue.size() is now: " + queue.size() );
 	}
 
 	Sink<Task> completedTaskSink = new Sink<Task>()
 	{
 		public void put( final Task task ) throws RippleException
 		{
-System.out.println( "[" + this + "]put( " + task + ")" );
-System.out.println( "    [-] queue.size() is now: " + queue.size() );
+//System.out.println( "[" + this + "]put( " + task + ")" );
+//System.out.println( "    [-] queue.size() is now: " + queue.size() );
 			synchronized ( completedTaskSink )
 			{
 				completedTaskSink.notify();
@@ -47,19 +47,19 @@ System.out.println( "    [-] queue.size() is now: " + queue.size() );
 	 */
 	protected void executeProtected() throws RippleException
 	{
-System.out.println( "[" + this + "].executeProtected()" );
+//System.out.println( "[" + this + "].executeProtected()" );
 		while ( queue.size() > 0 )
 		{
 			Task task = queue.removeFirst();
 			Scheduler.add( task );
 			task.waitUntilFinished();
 		}
-System.out.println( "    done." );
+//System.out.println( "    done." );
 	}
 
 	protected void stopProtected()
 	{
-System.out.println( "stopping all tasks currently executing: " + this );
+//System.out.println( "stopping all tasks currently executing: " + this );
 	}
 }
 

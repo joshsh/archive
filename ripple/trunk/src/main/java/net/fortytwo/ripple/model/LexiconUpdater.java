@@ -21,6 +21,9 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
+/**
+ * Note: several LexiconUpdaters may safely be attached to a single Lexicon.
+ */
 public class LexiconUpdater implements RdfSink
 {
 // TODO: Unicode characters supported by the lexer / Turtle grammar
@@ -46,11 +49,20 @@ public class LexiconUpdater implements RdfSink
 		URI pred = st.getPredicate();
 		Value obj = st.getObject();
 
-		if ( subj instanceof URI )
-			lexicon.add( (URI) subj );
-		lexicon.add( pred );
-		if ( obj instanceof URI )
-			lexicon.add( (URI) obj );
+		synchronized( lexicon )
+		{
+			if ( subj instanceof URI )
+			{
+				lexicon.add( (URI) subj );
+			}
+	
+			lexicon.add( pred );
+	
+			if ( obj instanceof URI )
+			{
+				lexicon.add( (URI) obj );
+			}
+		}
 
 		sink.put( st );
 	}
@@ -58,15 +70,29 @@ public class LexiconUpdater implements RdfSink
 	public void put( final Namespace ns ) throws RippleException
 	{
 		if ( !allowedNsPrefix( ns.getPrefix() ) )
-			return;
-
-		if ( override || null == lexicon.resolveNamespacePrefix( ns.getPrefix() ) )
 		{
-			if ( allowDuplicateNamespaces || null == lexicon.nsPrefixOf( ns.getName() ) )
+			return;
+		}
+
+		boolean doPut = false;
+
+		synchronized ( lexicon )
+		{
+			if ( override || null == lexicon.resolveNamespacePrefix( ns.getPrefix() ) )
 			{
-				lexicon.add( ns );
-				sink.put( ns );
+				if ( allowDuplicateNamespaces || null == lexicon.nsPrefixOf( ns.getName() ) )
+				{
+	
+					lexicon.add( ns );
+	
+					doPut = true;
+				}
 			}
+		}
+
+		if ( doPut )
+		{
+			sink.put( ns );
 		}
 	}
 

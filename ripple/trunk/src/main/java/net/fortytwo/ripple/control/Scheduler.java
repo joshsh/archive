@@ -60,6 +60,8 @@ public class Scheduler
 
 	void addPrivate( final Task task, final Sink<Task> completedTaskSink )
 	{
+		// Initialize the task immediately.  It may not begin executing for
+		// some time.
 		task.begin();
 
 //System.out.println( "[" + this + "]addPrivate( " + task + ", ... )" );
@@ -85,17 +87,19 @@ public class Scheduler
 			{
 //System.out.println( "    ( 1 == taskQueue.size() && waitingRunnables.size() > 0 )" );
 				WorkerRunnable r = waitingRunnables.removeFirst();
+
+				// Remove a task from the queue immediately.
+				r.retrieveTask();
+
+				// Alert the waiting runnable that it now has a task.
 				synchronized ( r )
 				{
-					// Remove a task from the queue immediately.
-					r.retrieveTask();
-
 					r.notify();
 				}
 			}
 
 			// If there are more tasks than threads, and we have not reached the
-			// maximum number of threads, then create a new one.
+			// maximum number of threads, then start a new one.
 			else if ( allRunnables.size() < maxThreads )
 			{
 //System.out.println( "    taskQueue.size() > allRunnables.size() && allRunnables.size() < maxThreads" );
@@ -105,7 +109,7 @@ public class Scheduler
 				t.start();
 			}
 //else
-//System.out.println( "Could not start a new thread!" );
+//System.out.println( "Could not start a new thread" );
 		}
 //System.out.println( "    ### total number of worker runnables: " + allRunnables.size() );
 //System.out.println( "    waitingRunnables.size(): " + waitingRunnables.size() );
@@ -171,6 +175,7 @@ public class Scheduler
 			{
 				if ( null == currentTaskItem )
 				{
+					// Try to remove a task from the queue.
 					synchronized ( taskQueue )
 					{
 //System.out.println( "    testing queue" );
@@ -189,25 +194,24 @@ public class Scheduler
 					{
 //System.out.println( "    executing task: " + currentTaskItem.task );
 						currentTaskItem.task.execute();
-						currentTaskItem.sink.put( currentTaskItem.task );
 					}
 		
-					// This is the end of the line for ordinary exceptions.
-					catch ( RippleException e )
-					{
-//System.err.println( "Error: " + e );
-						e.logError();
-					}
-					
+					// This is the end of the line for exceptions.
 					catch ( Throwable t )
 					{
-						if ( t instanceof InterruptedException )
-						{
-							logger.warn( "task interrupted: " + currentTaskItem.task );
-						}
+						logThrowable( t );
+					}
 
-// 						else
-// 							...
+					// Even tasks which failed with a throwable are put into
+					// the appropriate completed task sink.
+					try
+					{
+						currentTaskItem.sink.put( currentTaskItem.task );
+					}
+
+					catch ( Throwable t )
+					{
+						logThrowable( t );
 					}
 
 					currentTaskItem = null;
@@ -218,7 +222,7 @@ public class Scheduler
 				else
 				{
 //System.out.println( "    adding self to waiting queue" );
-					synchronized ( waitingRunnables )
+					synchronized ( taskQueue )
 					{
 						waitingRunnables.addLast( this );
 					}
@@ -236,6 +240,37 @@ public class Scheduler
 						}
 					}
 				}
+			}
+		}
+
+		void logThrowable( final Throwable t )
+		{
+			RippleException e;
+
+			if ( t instanceof RippleException )
+			{
+				e = (RippleException) t;
+			}
+
+			else
+			{
+				if ( t instanceof InterruptedException )
+				{
+					logger.warn( "task interrupted: " + currentTaskItem.task );
+					return;
+				}
+
+				e = new RippleException( t );
+			}
+
+			try
+			{
+				e.logError();
+			}
+
+			catch ( Throwable secondary )
+			{
+				System.out.println( "failed to log error: " + t );
 			}
 		}
 
