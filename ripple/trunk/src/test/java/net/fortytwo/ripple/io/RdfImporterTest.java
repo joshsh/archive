@@ -33,8 +33,8 @@ public class RdfImporterTest extends RippleTestCase
 			throws RippleException
 		{
 			RdfImporter importer = new RdfImporter( mc, context );
-			RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
-			RdfUtils.read( is, adapter, context.toString(), format );
+			SesameCoupling sc = new SesameCoupling( importer );
+			RdfUtils.read( is, sc, context.toString(), format );
 		}
 
 		void addGraph( final URL url,
@@ -44,8 +44,8 @@ public class RdfImporterTest extends RippleTestCase
 			throws RippleException
 		{
 			RdfImporter importer = new RdfImporter( mc, context );
-			RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
-			RdfUtils.read( url, adapter, context.toString(), format );
+			SesameCoupling sc = new SesameCoupling( importer );
+			RdfUtils.read( url, sc, context.toString(), format );
 		}
 
 		public void test()

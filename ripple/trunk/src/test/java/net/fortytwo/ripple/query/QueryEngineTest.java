@@ -26,8 +26,8 @@ public class QueryEngineTest extends RippleTestCase
 		Model model =  getTestModel();
 		Evaluator evaluator = new LazyEvaluator();
 		queryEngine = new QueryEngine( model, evaluator, System.out, System.err );
-		RecognizerInterface itf = ...
-		Interpreter interpreter = new Interpreter( itf, queryEngine, is );
+		RecognizerCoupling rc = ...
+		Interpreter interpreter = new Interpreter( rc, queryEngine, is );
 
 		testAsynchronous( new ModelConstructorTest() );
 */

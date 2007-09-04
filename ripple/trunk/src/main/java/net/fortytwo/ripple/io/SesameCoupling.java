@@ -17,11 +17,11 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 
-public class RdfSourceAdapter implements RDFHandler
+public class SesameCoupling implements RDFHandler
 {
 	RdfSink sink;
 
-	public RdfSourceAdapter( final RdfSink sink )
+	public SesameCoupling( final RdfSink sink )
 	{
 		this.sink = sink;
 	}

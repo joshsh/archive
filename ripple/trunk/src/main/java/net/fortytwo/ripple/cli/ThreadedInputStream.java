@@ -78,9 +78,9 @@ public class ThreadedInputStream extends InputStream
 			{
 				readOut.write( source.read() );
 			}
-		}
 
-		return writeIn.read();
+			return writeIn.read();
+		}
 	}
 
 	void createTask()
@@ -117,10 +117,12 @@ public class ThreadedInputStream extends InputStream
 		};
 	}
 
-	public int available()
+	public int available() throws java.io.IOException
 	{
-// TODO
-return 0;
+		synchronized ( source )
+		{
+			return writeIn.available();
+		}
 	}
 }
 

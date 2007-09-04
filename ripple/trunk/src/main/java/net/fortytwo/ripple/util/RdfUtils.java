@@ -17,7 +17,7 @@ import java.net.URLConnection;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSourceAdapter;
+import net.fortytwo.ripple.io.SesameCoupling;
 
 import org.apache.log4j.Logger;
 
@@ -59,7 +59,7 @@ public class RdfUtils
 	}
 
 	public static RDFFormat read( final InputStream is,
-								final RdfSourceAdapter adapter,
+								final SesameCoupling sc,
 								final String baseUri,
 								final RDFFormat format )
 		throws RippleException
@@ -67,7 +67,7 @@ public class RdfUtils
 		try
 		{
 			RDFParser parser = Rio.createParser( format /*, valueFactory */ );
-			parser.setRDFHandler( adapter );
+			parser.setRDFHandler( sc );
 			parser.parse( is, baseUri );
 		}
 
@@ -81,7 +81,7 @@ public class RdfUtils
 	}
 
 	static RDFFormat readPrivate( final URLConnection uc,
-									final RdfSourceAdapter adapter,
+									final SesameCoupling sc,
 									final String baseUri,
 									final RDFFormat format )
 		throws RippleException
@@ -121,7 +121,7 @@ public class RdfUtils
 			throw new RippleException( e );
 		}
 
-		read( response, adapter, baseUri, formatPtr.ref );
+		read( response, sc, baseUri, formatPtr.ref );
 
 		try
 		{
@@ -140,27 +140,27 @@ public class RdfUtils
 	 *  @param uc  an already-connected URLConnection
 	 */
 	public static RDFFormat read( final URLConnection uc,
-								final RdfSourceAdapter adapter,
+								final SesameCoupling sc,
 								final String baseUri,
 								final RDFFormat format )
 		throws RippleException
 	{
-		return readPrivate( uc, adapter, baseUri, format );
+		return readPrivate( uc, sc, baseUri, format );
 	}
 
 	/**
 	 *  @param uc  an already-connected URLConnection
 	 */
 	public static RDFFormat read( final URLConnection uc,
-								final RdfSourceAdapter adapter,
+								final SesameCoupling sc,
 								final String baseUri )
 		throws RippleException
 	{
-		return readPrivate( uc, adapter, baseUri, null );
+		return readPrivate( uc, sc, baseUri, null );
 	}
 
 	public static RDFFormat read( final URL url,
-								final RdfSourceAdapter adapter,
+								final SesameCoupling sc,
 								final String baseUri,
 								RDFFormat format )
 		throws RippleException
@@ -168,15 +168,15 @@ public class RdfUtils
 		URLConnection uc = HttpUtils.openConnection( url );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
 
-		return readPrivate( uc, adapter, baseUri, format );
+		return readPrivate( uc, sc, baseUri, format );
 	}
 
 	public static RDFFormat read( final URL url,
-								final RdfSourceAdapter adapter,
+								final SesameCoupling sc,
 								final String baseUri )
 		throws RippleException
 	{
-		return read( url, adapter, baseUri, null );
+		return read( url, sc, baseUri, null );
 	}
 
 	// Note: not thread-safe with respect to the repository.

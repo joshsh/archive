@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSourceAdapter;
+import net.fortytwo.ripple.io.SesameCoupling;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
@@ -64,11 +64,11 @@ public class CacheManager
 		}
 
 		RdfImporter importer = new RdfImporter( mc );
-		RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
+		SesameCoupling sc = new SesameCoupling( importer );
 
 		format = ( null == format )
-			? RdfUtils.read( url, adapter, url.toString() )
-			: RdfUtils.read( url, adapter, url.toString(), format );
+			? RdfUtils.read( url, sc, url.toString() )
+			: RdfUtils.read( url, sc, url.toString(), format );
 
 		restoreCacheMetaData( mc );
 

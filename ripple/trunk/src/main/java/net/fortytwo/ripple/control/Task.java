@@ -111,7 +111,7 @@ public abstract class Task
 
 	public void waitUntilFinished() throws RippleException
 	{
-//System.out.println( "[" + this + "].waitUntilFinished()" );
+System.out.println( "[" + this + "].waitUntilFinished()" );
 		synchronized ( this )
 		{
 			if ( !finished )
@@ -127,7 +127,7 @@ public abstract class Task
 				}
 			}
 		}
-//System.out.println( "    done." );
+System.out.println( "    done -- " + this );
 	}
 }
 

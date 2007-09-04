@@ -14,7 +14,7 @@ import java.net.URLConnection;
 import java.io.InputStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSourceAdapter;
+import net.fortytwo.ripple.io.SesameCoupling;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.io.RdfSink;
@@ -51,14 +51,14 @@ public class Triples extends PrimitiveFunction
 		URI uri = mc.uriValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		RdfSourceAdapter adapter = createAdapter( stack, sink );
+		SesameCoupling sc = createAdapter( stack, sink );
 
 		URLConnection uc = HttpUtils.openConnection( uri.toString() );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
-		RdfUtils.read( uc, adapter, uri.toString() );
+		RdfUtils.read( uc, sc, uri.toString() );
 	}
 
-	static RdfSourceAdapter createAdapter( final RippleList stack,
+	static SesameCoupling createAdapter( final RippleList stack,
 										final Sink<RippleList> resultSink )
 	{
 		RdfSink rdfSink = new RdfSink()
@@ -83,9 +83,9 @@ public class Triples extends PrimitiveFunction
 			public void put( final String comment ) throws RippleException {}
 		};
 
-		RdfSourceAdapter adapter = new RdfSourceAdapter( rdfSink );
+		SesameCoupling sc = new SesameCoupling( rdfSink );
 
-		return adapter;
+		return sc;
 	}
 }
 

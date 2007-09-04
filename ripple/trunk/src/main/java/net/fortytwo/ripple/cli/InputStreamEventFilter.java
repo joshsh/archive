@@ -5,15 +5,15 @@ import java.io.InputStream;
 public class InputStreamEventFilter extends InputStream
 {
 	InputStream source;
-	RecognizerInterface itf;
+	RecognizerCoupling recognizerCoupling;
 
 	int buffered;
 
 	public InputStreamEventFilter( final InputStream is,
-									final RecognizerInterface itf )
+									final RecognizerCoupling rc )
 	{
 		source = is;
-		this.itf = itf;
+		recognizerCoupling = rc;
 
 		buffered = -1;
 	}
@@ -37,7 +37,7 @@ public class InputStreamEventFilter extends InputStream
 				c = source.read();
 
 				if ( 27 == c )
-					itf.putEvent( RecognizerEvent.ESCAPE );
+					recognizerCoupling.putEvent( RecognizerEvent.ESCAPE );
 				else
 				{
 					buffered = c;

@@ -12,7 +12,7 @@ package net.fortytwo.ripple.extensions.services;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSourceAdapter;
+import net.fortytwo.ripple.io.SesameCoupling;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.io.RdfImporter;
@@ -124,10 +124,10 @@ URI context = mc.createUri( url.toString() );
 			}
 		};
 
-		final RdfSourceAdapter adapter = new RdfSourceAdapter( responseWatcher );
+		final SesameCoupling sc = new SesameCoupling( responseWatcher );
 
 // TODO: enclose in a timeout wrapper
-		RdfUtils.read( url, adapter, url.toString() );
+		RdfUtils.read( url, sc, url.toString() );
 
 		buffer.flush();
 	}

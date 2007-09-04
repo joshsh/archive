@@ -42,23 +42,23 @@ options
 }
 
 {
-	RecognizerInterface itf = null;
+	RecognizerCoupling coupling = null;
 
-	public void initialize( final RecognizerInterface i )
+	public void initialize( final RecognizerCoupling i )
 	{
-		itf = i;
+		coupling = i;
 	}
 
 	void matchEndOfLine()
 	{
-		itf.putEvent( RecognizerEvent.NEWLINE );
+		coupling.putEvent( RecognizerEvent.NEWLINE );
 	}
 
 /*
 	void matchEscapeCharacter()
 	{
 System.out.println( "matchEscapeCharacter" );
-		itf.putEvent( RecognizerEvent.ESCAPE );
+		coupling.putEvent( RecognizerEvent.ESCAPE );
 	}
 */
 }
@@ -109,19 +109,19 @@ UCHARACTER
 protected
 LANGUAGE
 	: ( '@'! ('a'..'z')+ ('-' (('a'..'z') | ('0'..'9'))+)* )
-		{ itf.setLanguageTag( $getText ); }
+		{ coupling.setLanguageTag( $getText ); }
 	;
 
 STRING
 	: '\"'!
-		{ itf.setLanguageTag( null ); }
+		{ coupling.setLanguageTag( null ); }
 		( SCHARACTER )* '\"'! ( LANGUAGE! )?
 	;
 
 /*
 LONG_STRING
 	: "\"\"\""!
-		{ itf.setLanguageTag( null ); }
+		{ coupling.setLanguageTag( null ); }
 		( SCHARACTER )* "\"\"\""! ( LANGUAGE! )?
 	;
 */
@@ -234,31 +234,31 @@ options
 }
 
 {
-	private RecognizerInterface itf = null;
+	private RecognizerCoupling coupling = null;
 
-	public void initialize( final RecognizerInterface i )
+	public void initialize( final RecognizerCoupling i )
 	{
-		itf = i;
+		coupling = i;
 	}
 
 	public void matchCommand( final Command cmd )
 	{
-		itf.putCommand( cmd );
+		coupling.putCommand( cmd );
 	}
 
 	public void matchQuery( final ListAst ast )
 	{
-		itf.putQuery( ast );
+		coupling.putQuery( ast );
 	}
 
 	public void matchContinuingQuery( final ListAst ast )
 	{
-		itf.putContinuingQuery( ast );
+		coupling.putContinuingQuery( ast );
 	}
 
 	public void matchQuit()
 	{
-		itf.putEvent( RecognizerEvent.QUIT );
+		coupling.putEvent( RecognizerEvent.QUIT );
 	}
 }
 
@@ -268,7 +268,7 @@ nt_Document
 //System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
-	itf.putEvent( RecognizerEvent.NEWLINE );
+	coupling.putEvent( RecognizerEvent.NEWLINE );
 //System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
 }
 	: ( (nt_Ws)? nt_Statement )*
@@ -367,7 +367,7 @@ nt_Literal returns [ Ast r ]
 	)
 		{
 			r = ( null == dataType )
-				? new StringAst( t.getText(), itf.getLanguageTag() )
+				? new StringAst( t.getText(), coupling.getLanguageTag() )
 				: new TypedLiteralAst( t.getText(), dataType );
 		}
 	| u:NUMBER

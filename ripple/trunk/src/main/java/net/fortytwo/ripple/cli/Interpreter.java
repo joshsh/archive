@@ -21,23 +21,22 @@ public class Interpreter
 	final static Logger logger
 		= Logger.getLogger( Interpreter.class );
 
-	RecognizerInterface recognizerInterface;
+	RecognizerCoupling recognizerCoupling;
 
 	InputStream input;
 
 	Sink<Exception> exceptionSink;
 
-	public Interpreter( final RecognizerInterface itf,
+	public Interpreter( final RecognizerCoupling rc,
 						final InputStream in,
 						final Sink<Exception> exceptions )
 	{
-		recognizerInterface = itf;
+		recognizerCoupling = rc;
 		input = in;
 		exceptionSink = exceptions;
 	}
 
-	public void parse()
-		throws RippleException
+	public void parse() throws RippleException
 	{
 //System.out.println( "-- parse" );
 		// Break out when a @quit directive is encountered
@@ -50,9 +49,9 @@ public class Interpreter
 //System.out.println( "-- construct" );
 
 			RippleLexer lexer = new RippleLexer( input );
-			lexer.initialize( recognizerInterface );
+			lexer.initialize( recognizerCoupling );
 			RippleParser parser = new RippleParser( lexer );
-			parser.initialize( recognizerInterface );
+			parser.initialize( recognizerCoupling );
 
 			try
 			{
@@ -94,14 +93,15 @@ System.out.println( "-- interrupted" );
 		}
 	}
 
-	static void clear( final InputStream is )
-		throws RippleException
+	static void clear( final InputStream is ) throws RippleException
 	{
 		try
 		{
 			int lim = is.available();
 			for ( int i = 0; i < lim; i++ )
+			{
 				is.read();
+			}
 		}
 
 		catch ( java.io.IOException e )

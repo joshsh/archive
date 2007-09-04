@@ -158,7 +158,7 @@ boolean lastQueryContinued = false;
 			}
 		};
 
-		RecognizerInterface itf = new RecognizerInterface(
+		RecognizerCoupling rc = new RecognizerCoupling(
 			querySink, continuingQuerySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
 		Sink<Exception> parserExceptionSink = new Sink<Exception>()
@@ -195,7 +195,7 @@ boolean lastQueryContinued = false;
 
 		// Pass input through a filter to watch for special byte sequences, and
 		// another draw input through it even when the interface is busy.
-		InputStream filter = new InputStreamEventFilter( is, itf );
+		InputStream filter = new InputStreamEventFilter( is, rc );
 		consoleReaderInput = new ThreadedInputStream( filter );
 
 		String jlineDebugOutput = Ripple.jlineDebugOutput();
@@ -235,7 +235,7 @@ boolean lastQueryContinued = false;
 		updateCompletors();
 
 		// Create interpreter.
-		interpreter = new Interpreter( itf, writeIn, parserExceptionSink );
+		interpreter = new Interpreter( rc, writeIn, parserExceptionSink );
 	}
 
 	public void run() throws RippleException

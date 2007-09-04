@@ -112,7 +112,7 @@ public class HttpUriDereferencer implements Dereferencer
 		final URL url = urlFactory.createUrl( memo );
 
 		RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
-		final RdfSourceAdapter adapter = new RdfSourceAdapter( importer );
+		final SesameCoupling sc = new SesameCoupling( importer );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.
@@ -120,7 +120,7 @@ public class HttpUriDereferencer implements Dereferencer
 		{
 			logger.info( "Dereferencing URI " + uri + " at location " + url );
 
-			RdfUtils.read( url, adapter, memo );
+			RdfUtils.read( url, sc, memo );
 
 			logger.debug( "URI dereferenced without errors" );
 		}
