@@ -62,7 +62,7 @@ public class Scheduler
 	{
 		task.begin();
 
-//System.out.println( "[" + this + "]add( " + task + ", ... )" );
+//System.out.println( "[" + this + "]addPrivate( " + task + ", ... )" );
 		// Add the new task as a child of the currently executing task.
 		Thread currentThread = Thread.currentThread();
 		if ( currentThread instanceof WorkerThread )
@@ -87,6 +87,9 @@ public class Scheduler
 				WorkerRunnable r = waitingRunnables.removeFirst();
 				synchronized ( r )
 				{
+					// Remove a task from the queue immediately.
+					r.retrieveTask();
+
 					r.notify();
 				}
 			}
@@ -105,6 +108,8 @@ public class Scheduler
 //System.out.println( "Could not start a new thread!" );
 		}
 //System.out.println( "    ### total number of worker runnables: " + allRunnables.size() );
+//System.out.println( "    waitingRunnables.size(): " + waitingRunnables.size() );
+//System.out.println( "    taskQueue.size(): " + taskQueue.size() );
 	}
 
 // has not been tested
@@ -156,7 +161,7 @@ public class Scheduler
 
 	private class WorkerRunnable implements Runnable
 	{
-		Task currentTask = null;
+		TaskItem currentTaskItem = null;
 
 		public void run()
 		{
@@ -164,32 +169,33 @@ public class Scheduler
 			// Continue waiting for and executing tasks indefinitely.
 			while ( true )
 			{
-				TaskItem taskItem = null;
-
-				synchronized ( taskQueue )
+				if ( null == currentTaskItem )
 				{
+					synchronized ( taskQueue )
+					{
 //System.out.println( "    testing queue" );
-					if ( taskQueue.size() > 0 )
-						taskItem = taskQueue.removeFirst();
+						if ( taskQueue.size() > 0 )
+						{
+							currentTaskItem = taskQueue.removeFirst();
+						}
+					}
 				}
 
 				// If a task was found in the queue, execute it.
-				if ( null != taskItem )
+				if ( null != currentTaskItem )
 				{
 //System.out.println( "    found a task to execute" );
 					try
 					{
-						currentTask = taskItem.task;
-
-//System.out.println( "    executing task: " + currentTask );
-						currentTask.execute();
-						taskItem.sink.put( taskItem.task );
+//System.out.println( "    executing task: " + currentTaskItem.task );
+						currentTaskItem.task.execute();
+						currentTaskItem.sink.put( currentTaskItem.task );
 					}
 		
 					// This is the end of the line for ordinary exceptions.
 					catch ( RippleException e )
 					{
-System.err.println( "Error: " + e );
+//System.err.println( "Error: " + e );
 						e.logError();
 					}
 					
@@ -197,12 +203,14 @@ System.err.println( "Error: " + e );
 					{
 						if ( t instanceof InterruptedException )
 						{
-							logger.warn( "task interrupted: " + currentTask );
+							logger.warn( "task interrupted: " + currentTaskItem.task );
 						}
 
 // 						else
 // 							...
 					}
+
+					currentTaskItem = null;
 				}
 
 				// If there are no tasks in the queue, add this Runnable to a
@@ -231,9 +239,14 @@ System.err.println( "Error: " + e );
 			}
 		}
 
+		public void retrieveTask()
+		{
+			currentTaskItem = taskQueue.removeFirst();
+		}
+
 		public Task getCurrentTask()
 		{
-			return currentTask;
+			return currentTaskItem.task;
 		}
 	}
 }

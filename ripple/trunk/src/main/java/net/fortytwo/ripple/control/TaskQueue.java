@@ -59,7 +59,7 @@ public class TaskQueue extends Task
 
 	protected void stopProtected()
 	{
-//System.out.println( "stopping all tasks in queue: " + this );
+//System.out.println( "stopping all tasks currently executing: " + this );
 	}
 }
 

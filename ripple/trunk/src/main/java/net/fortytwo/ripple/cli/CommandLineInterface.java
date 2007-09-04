@@ -340,12 +340,14 @@ boolean lastQueryContinued = false;
 
 	void addCommand( final Command cmd )
 	{
+//System.out.println( "addCommand(" + cmd + ")" );
 		cmd.setQueryEngine( queryEngine );
 		taskQueue.add( cmd );
 	}
 
 	void executeCommands() throws RippleException
 	{
+//System.out.println( "executeCommands()" );
 		Scheduler.add( taskQueue );
 	
 		consoleReaderInput.setEager( true );
@@ -360,11 +362,13 @@ boolean lastQueryContinued = false;
 			consoleReaderInput.setEager( false );
 			throw e;
 		}
+
 		consoleReaderInput.setEager( false );
 	}
 
 	void abortCommands()
 	{
+//System.out.println( "abortCommands()" );
 		taskQueue.stop();
 	}
 

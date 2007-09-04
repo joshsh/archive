@@ -21,23 +21,21 @@ public abstract class Task
 	final static Logger logger = Logger.getLogger( Task.class );
 
 	LinkedList<Task> children = null;
-	boolean finished = true;
+	boolean finished = true, stopped = false;
 
 	protected abstract void executeProtected() throws RippleException;
 	protected abstract void stopProtected();
 
-	/**
-	 * Note: while executing a task a second time is permitted, the task loses
-	 * ownership of any children acquired through a previous execution.
-	 */
 	public void execute() throws RippleException
 	{
-		if ( null != children )
+//System.out.println( "[" + this + "].execute()" );
+		// A task may be stopped before it executes.
+		if ( !stopped )
 		{
-			children.clear();
+			executeProtected();
 		}
-
-		executeProtected();
+//else
+//System.out.println( "    already stopped!" );
 
 		synchronized ( this )
 		{
@@ -54,16 +52,21 @@ public abstract class Task
 	public synchronized void stop()
 	{
 //System.out.println( "[" + this + "].stop()" );
-		stopProtected();
-
-		if ( null != children )
+		if ( !stopped )
 		{
-			Iterator<Task> iter = children.iterator();
-			while( iter.hasNext() )
+			stopped = true;
+	
+			stopProtected();
+	
+			if ( null != children )
 			{
-				Task child = iter.next();
+				Iterator<Task> iter = children.iterator();
+				while( iter.hasNext() )
+				{
+					Task child = iter.next();
 //System.out.println( "    stopping child: " + child );
-				child.stop();
+					child.stop();
+				}
 			}
 		}
 	}
@@ -74,6 +77,14 @@ public abstract class Task
 	public void begin()
 	{
 		finished = false;
+		stopped = false;
+
+		// Note: while executing a task a second time is permitted, the task loses
+		// ownership of any children acquired through a previous execution.
+		if ( null != children )
+		{
+			children.clear();
+		}
 	}
 
 	/**
