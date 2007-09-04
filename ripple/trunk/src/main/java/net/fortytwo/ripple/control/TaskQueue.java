@@ -1,7 +1,7 @@
 /*
- * $URL: http://svn.fortytwo.net/projects/ripple/trunk/src/main/java/net/fortytwo/ripple/control/TaskSet.java $
- * $Revision: 827 $
- * $Author: josh $
+ * $URL$
+ * $Revision$
+ * $Author$
  *
  * Copyright (C) 2007 Joshua Shinavier
  */
