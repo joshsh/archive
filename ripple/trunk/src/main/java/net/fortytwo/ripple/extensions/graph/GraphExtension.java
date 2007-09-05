@@ -41,6 +41,10 @@ public class GraphExtension extends Extension
 		registerPrimitive( ToString.class, ns + "toString", mc );
 		registerPrimitive( ToUri.class, ns + "toUri", mc );
 
+		// Resource-centric primitives.
+		registerPrimitive( Back.class, ns + "back", mc );
+		registerPrimitive( Links.class, ns + "links", mc );
+
 		// Document-centric primitives.
 		registerPrimitive( Comments.class, ns + "comments", mc );
 		registerPrimitive( Namespaces.class, ns + "namespaces", mc );

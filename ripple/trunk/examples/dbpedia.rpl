@@ -1,6 +1,44 @@
-
-<http://dbpedia.org/resource/city/Berlin>.
-
+# Some DBPedia resources.
 <http://dbpedia.org/resource/Agatha_Christie>.
-
 <http://dbpedia.org/resource/Innsbruck>.
+
+
+### Geonames and Eurostat linkage ######
+
+@define berlin: <http://dbpedia.org/resource/Berlin>.
+/:berlin.
+
+# All outbound links to HTTP URIs from this resource.
+/:berlin/links/popd/popd/toString/unique ("http" /startsWith) /:restrict.
+
+# Reciprocal links with Geonames and Eurostat.
+/:berlin /owl:sameAs.
+/:berlin /owl:sameAs /owl:sameAs /unique.
+
+
+### Musicbrainz linkage ################
+
+@define beatles: <http://dbpedia.org/resource/The_Beatles>.
+/:beatles.
+
+# Link into Zitgist/Musicbrainz (?).  When tried, object URI could not be dereferenced.
+/:beatles /owl:sameAs.
+
+
+
+
+
+WordNet
+World Factbook
+Book Mashup
+DBLP Bibliography
+Project Gutenberg
+
+
+
+We interlinked DBpedia with further open datasets and ontologies. The
+dataset now contains 440 000 external RDF links into the Geonames,
+Musicbrainz, WordNet, World Factbook, EuroStat, Book Mashup, DBLP
+Bibliography and Project Gutenberg datasets. Altogether, the network
+of interlinked datasources around DBpedia currently amounts to around
+2 billion RDF triples which are accessible as Linked Data on the Web.

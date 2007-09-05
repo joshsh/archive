@@ -7,6 +7,13 @@ graph:assert
 
 
 ========================================
+graph:back
+========================================
+
+rdf: rdfs:isDefinedBy /back.  # lots of terms in the rdf: namespace
+
+
+========================================
 graph:compare
 ========================================
 
@@ -62,6 +69,13 @@ rpl:arity.
 @count statements.
 rpl:arity/forget "don't resolve rpl:arity again" /swap/swap.
 @count statements.
+
+
+========================================
+graph:links
+========================================
+
+rdf:type /links.  # lots of statements about rdf:type
 
 
 ========================================

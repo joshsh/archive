@@ -31,6 +31,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfNullSink;
 import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.io.SesameAdapter;
+import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
@@ -1398,6 +1399,73 @@ stmtIter.enableDuplicateFilter();
 					sink.put( new RdfValue( resultIter.next() ) );
 				}
 			}
+		}
+	}
+
+	public void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink )
+		throws RippleException
+	{
+		if ( null != subj )
+		{
+			dereference( subj );
+		}
+
+		if ( null != obj )
+		{
+			dereference( obj );
+		}
+
+		Value rdfSubj = ( null == subj ) ? null : subj.getRdfValue();
+		Value rdfPred = ( null == pred ) ? null : pred.getRdfValue();
+		Value rdfObj = ( null == obj ) ? null : obj.getRdfValue();
+
+		if ( ( null == rdfSubj || rdfSubj instanceof Resource )
+				&& ( null == rdfPred || rdfPred instanceof URI ) )
+		{
+			// Note: we must collect results in a buffer before putting anything
+			//       into the sink, as inefficient as that is, because otherwise
+			//       we might end up opening another RepositoryResult before
+			//       the one below closes, which currently causes Sesame to
+			//       deadlock.  Even using a separate RepositoryConnection for
+			//       each RepositoryResult doesn't seem to help.
+			Buffer<Statement> buffer = new Buffer<Statement>( sink );
+			RepositoryResult<Statement> stmtIter = null;
+
+			// Perform the query and collect results.
+			try
+			{
+				synchronized ( repoConnection )
+				{
+					stmtIter = repoConnection.getStatements(
+						(Resource) rdfSubj, (URI) rdfPred, rdfObj, Ripple.useInference() );
+stmtIter.enableDuplicateFilter();
+				}
+
+				while ( stmtIter.hasNext() )
+				{
+					buffer.put( stmtIter.next() );
+				}
+
+				stmtIter.close();
+			}
+
+			catch ( Throwable t )
+			{
+				try
+				{
+					stmtIter.close();
+				}
+
+				catch ( Throwable t2 )
+				{
+					System.exit( 1 );
+				}
+
+				reset( true );
+				throw new RippleException( t );
+			}
+
+			buffer.flush();
 		}
 	}
 }

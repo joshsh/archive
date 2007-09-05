@@ -100,14 +100,18 @@ public class RdfUtils
 // 			protected void run() throws RippleException
 // 			{
 				if ( null == formatPtr.ref )
+				{
 					// This operation may hang as well.
 					formatPtr.ref = guessRdfFormat( uc );
+				}
 // 			}
 // 		}.start(  );
 
 		if ( null == formatPtr.ref )
+		{
 			// Soft fail (possibly too soft?)
 			return null;
+		}
 
 		InputStream response;
 
@@ -212,22 +216,41 @@ public class RdfUtils
 
 		// Try not to be picky.
 		if ( s.equals( "n3" ) || s.equals( "notation3" ) )
+		{
 			format = RDFFormat.N3;
+		}
+
 		else if ( s.equals( "ntriples" ) || s.equals( "n-triples" ) )
+		{
 			format = RDFFormat.NTRIPLES;
+		}
+
 		else if ( s.equals( "rdfxml" ) || s.equals( "rdf/xml" ) )
+		{
 			format = RDFFormat.RDFXML;
+		}
+
 		else if ( s.equals( "trig" ) )
+		{
 			format = RDFFormat.TRIG;
+		}
+
 		else if ( s.equals( "trix" ) )
+		{
 			format = RDFFormat.TRIX;
+		}
+
 		else if ( s.equals( "turtle" ) )
+		{
 			format = RDFFormat.TURTLE;
+		}
 
 		// Alright, be picky.
 		else
+		{
 			// Note: this may be null.
 			format = RDFFormat.valueOf( s );
+		}
 
 		return format;
 	}
@@ -249,7 +272,10 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		String file = urlConn.getURL().getFile();
 		String ext;
 		if ( null == file )
+		{
 			ext = null;
+		}
+
 		else
 		{
 			int lastDot = file.lastIndexOf( '.' );

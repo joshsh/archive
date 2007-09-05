@@ -10,21 +10,37 @@ graph:assert
 	rpl:arity 3 ;
 	rpl:parameters (
 		[
-			rdfs:label "s" ;
+			rdfs:label "subj" ;
 			rdfs:comment "the subject of the assertion" ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "p" ;
+			rdfs:label "pred" ;
 			rdfs:comment "the predicate of the assertion" ;
 			rpl:isTransparent true ]
 		[
-			rdfs:label "o" ;
+			rdfs:label "obj" ;
 			rdfs:comment "the object of the assertion" ;
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "assert" ;
-	rdfs:comment "s p o  ->  s  -- has the side-effect of asserting the statement (s, p, o)" ;
+	rdfs:comment "subj pred obj  =>  subj  -- has the side-effect of asserting the statement (subj, pred, obj)" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#assert> ;
+	.
+
+graph:back
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "obj" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "pred" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:label "back" ;
+	rdfs:comment "obj pred => subj" ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#back> ;
 	.
 
 #graph:comments ...
@@ -42,7 +58,7 @@ graph:compare
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "compare" ;
-	rdfs:comment "x y  ->  i  -- where i is -1 if x < y, 0 if x = y, and 1 if x > y" ;
+	rdfs:comment "x y  =>  i  -- where i is -1 if x < y, 0 if x = y, and 1 if x > y" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#compare> ;
 	.
 
@@ -58,7 +74,7 @@ graph:contains
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "contains" ;
-	rdfs:comment "c  ->  x  -- for each member x of Container c" ;
+	rdfs:comment "c  =>  x  -- for each member x of Container c" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#contains> ;
 	.
 
@@ -80,7 +96,7 @@ graph:deny
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "deny" ;
-	rdfs:comment "s p o  ->  s  -- has the side-effect of revoking the statement (s, p, o)" ;
+	rdfs:comment "s p o  =>  s  -- has the side-effect of revoking the statement (s, p, o)" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#deny> ;
 	.
 
@@ -97,7 +113,7 @@ graph:equal
 		) ;
 	rpl:returnType rpl:Function ;
 	rdfs:label "equal" ;
-	rdfs:comment "x y  ->  b  -- where b is true if x and y are equal, otherwise false" ;
+	rdfs:comment "x y  =>  b  -- where b is true if x and y are equal, otherwise false" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#equal> ;
 	.
 
@@ -110,8 +126,20 @@ graph:forget
 			rpl:isTransparent false ]
 		) ;
 	rdfs:label "forget" ;
-	rdfs:comment "x  ->  x  -- has the side-effect of revoking all statements about x" ;
+	rdfs:comment "x  =>  x  -- has the side-effect of revoking all statements about x" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#forget> ;
+	.
+
+graph:links
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "subj" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:label "links" ;
+	rdfs:comment "subj  =>  subj pred obj" ;
 	.
 
 graph:namespaces
@@ -125,7 +153,7 @@ graph:namespaces
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "namespaces" ;
-	rdfs:comment "doc  ->  (prefix name)  -- for each namespace defined in document doc" ;
+	rdfs:comment "doc  =>  (prefix name)  -- for each namespace defined in document doc" ;
 	.
 
 graph:new
@@ -133,7 +161,7 @@ graph:new
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
 	rdfs:label "new" ;
-	rdfs:comment "->  n  -- where n is a new blank node" ;
+	rdfs:comment "=>  n  -- where n is a new blank node" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#new> ;
 	.
 
@@ -147,7 +175,7 @@ graph:toDouble
 		) ;
 	rpl:returnType xsd:double ;
 	rdfs:label "toDouble" ;
-	rdfs:comment "x  ->  x as double literal" ;
+	rdfs:comment "x  =>  x as double literal" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#toDouble> ;
 	.
 
@@ -161,7 +189,7 @@ graph:toInteger
 		) ;
 	rpl:returnType xsd:integer ;
 	rdfs:label "toInteger" ;
-	rdfs:comment "x  ->  x as integer literal" ;
+	rdfs:comment "x  =>  x as integer literal" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#toInteger> ;
 	.
 
@@ -175,7 +203,7 @@ graph:toString
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "toString" ;
-	rdfs:comment "x  ->  string representation of x" ;
+	rdfs:comment "x  =>  string representation of x" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#toString> ;
 	.
 
@@ -189,7 +217,7 @@ graph:toUri
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "toUri" ;
-	rdfs:comment "s  ->  uri -- where uri is the URI whose string representation is s" ;
+	rdfs:comment "s  =>  uri -- where uri is the URI whose string representation is s" ;
 	.
 
 graph:triples
@@ -203,5 +231,5 @@ graph:triples
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "triples" ;
-	rdfs:comment "doc  ->  (s p o)  -- for each triple (s p o) in document doc" ;
+	rdfs:comment "doc  =>  (s p o)  -- for each triple (s p o) in document doc" ;
 	.

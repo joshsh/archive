@@ -1,15 +1,8 @@
 ========================================
-etc:back
-========================================
-
-rdf: rdfs:isDefinedBy /back.  # lots of terms in the rdf: namespace
-
-
-========================================
 etc:get
 ========================================
 
-"http://revyu.com/tags/html" /get.
+<http://revyu.com/tags/html> /get.
 
 
 ========================================

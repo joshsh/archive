@@ -43,16 +43,16 @@ public class Get extends PrimitiveFunction
 								ModelConnection mc )
 		throws RippleException
 	{
-		String a, result;
+		String result;
 
-		a = mc.stringValue( stack.getFirst() );
+		String uriStr = mc.uriValue( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
 		URLConnection urlConn;
 
 		try
 		{
-			URL url = new URL( a );
+			URL url = new URL( uriStr );
 			urlConn = url.openConnection();
 		}
 
@@ -77,8 +77,21 @@ public class Get extends PrimitiveFunction
 				new InputStreamReader( response ) );
 			StringBuffer sb = new StringBuffer();
 			String nextLine = "";
+			boolean first = true;
 			while ( ( nextLine = br.readLine() ) != null )
+			{
+				if ( first )
+				{
+					first = false;
+				}
+
+				else
+				{
+					sb.append( '\n' );
+				}
+
 				sb.append( nextLine );
+			}
 			result = sb.toString();
 
 			response.close();

@@ -5,35 +5,17 @@
 @prefix rpl:   <http://fortytwo.net/2007/03/ripple/schema#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-etc:back
-	a rpl:Function ;
-	rpl:arity 2 ;
-	rpl:parameters (
-		[
-			rdfs:label "o" ;
-			rpl:isTransparent true ]
-		[
-			rdfs:label "p" ;
-			rpl:isTransparent true ]
-		) ;
-	rpl:label "back" ;
-	rdfs:comment "o p => s" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#back> ;
-	.
-
 etc:get
 	a rpl:Function ;
 	rpl:arity 1 ;
 	rpl:parameters (
 		[
-			rdfs:label "url" ;
-			rpl:parameterType xsd:string ;
+			rdfs:label "uri" ;
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType xsd:string ;
 	rdfs:label "get" ;
 	rdfs:comment "issues a GET request and produces the received data as a string" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#get> ;
 	.
 
 etc:pred

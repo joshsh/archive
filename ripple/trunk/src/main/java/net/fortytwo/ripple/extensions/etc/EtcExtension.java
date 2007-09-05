@@ -26,7 +26,6 @@ public class EtcExtension extends Extension
 		uf.addMapping(
 			ns, getClass().getResource( "etc.ttl" ) + "#" );
 
-		registerPrimitive( Back.class, ns + "back", mc );
 		registerPrimitive( Get.class, ns + "get", mc );
 		registerPrimitive( Pred.class, ns + "pred", mc );
 		registerPrimitive( Prim.class, ns + "prim", mc );
