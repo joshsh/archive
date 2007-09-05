@@ -138,6 +138,7 @@ graph:links
 			rdfs:label "subj" ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType rdf:List ;
 	rpl:label "links" ;
 	rdfs:comment "subj  =>  subj pred obj" ;
 	.
@@ -152,6 +153,7 @@ graph:namespaces
 			rdfs:comment "a Semantic Web document" ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType rdf:List ;
 	rdfs:label "namespaces" ;
 	rdfs:comment "doc  =>  (prefix name)  -- for each namespace defined in document doc" ;
 	.
@@ -230,6 +232,7 @@ graph:triples
 			rdfs:comment "a Semantic Web document" ;
 			rpl:isTransparent true ]
 		) ;
+	rpl:returnType rdf:List ;
 	rdfs:label "triples" ;
 	rdfs:comment "doc  =>  (s p o)  -- for each triple (s p o) in document doc" ;
 	.

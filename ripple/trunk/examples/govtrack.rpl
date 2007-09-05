@@ -1,12 +1,28 @@
-### People
+# Would be nice:
+#     * dereferenceable schema terms
+#     * birthdays as xsd:date instead of plain literals
+#     * standard prefixes for foaf, vcard namespaces
+#     * gender URIs instead of strings (e.g. con:Male, con:Female)
+
+### People #############################
+
 # Senator John McCain
-<http://www.rdfabout.com/rdf/usgov/congress/people/M000303>.
+@define mccain: <http://www.rdfabout.com/rdf/usgov/congress/people/M000303>.
+/:mccain.
+
+# name
+@prefix vcard:  <http://www.w3.org/2001/vcard-rdf/3.0#>.
+/:mccain /vcard:N.
+
+# Office held (there are even more links from here).
+/:mccain /politico:hasRole.
 
 
 ### Bills ##############################
 
 # A bill in Congress
 @define mybill: <http://www.rdfabout.com/rdf/usgov/congress/109/bills/h867>.
+/:mybill.
 
 # Note: this has the type <tag:govshare.info,2005:rdf/usbill/HouseBill>
 
@@ -16,5 +32,8 @@
 # Subject of the bill
 /:mybill /dc:subject.
 
+/:mybill /usbill:inCommittee.
 
-
+# Sponsors
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+/:mybill /usbill:cosponsor /foaf:name.

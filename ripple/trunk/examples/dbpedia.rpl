@@ -1,7 +1,7 @@
 # Some DBPedia resources.
 <http://dbpedia.org/resource/Agatha_Christie>.
 <http://dbpedia.org/resource/Innsbruck>.
-
+<http://dbpedia.org/resource/Tetris>.
 
 ### Geonames and Eurostat linkage ######
 
@@ -25,20 +25,36 @@
 /:beatles /owl:sameAs.
 
 
+### revyu.com linkage ##################
+
+# Reciprocal owl:sameAs links with revyu.com
+<http://dbpedia.org/resource/Licence_to_Kill>/owl:sameAs.
+
+
+### Project Gutenberg linkage ##########
 
 
 
-WordNet
+
+
+
+
+!  Eurostat arrow should be bidirectional
+
+
+Haven't found these links yet:
+
+W3C WordNet
 World Factbook
 Book Mashup
 DBLP Bibliography
 Project Gutenberg
 
+US Census Data
 
 
-We interlinked DBpedia with further open datasets and ontologies. The
-dataset now contains 440 000 external RDF links into the Geonames,
-Musicbrainz, WordNet, World Factbook, EuroStat, Book Mashup, DBLP
-Bibliography and Project Gutenberg datasets. Altogether, the network
-of interlinked datasources around DBpedia currently amounts to around
-2 billion RDF triples which are accessible as Linked Data on the Web.
+
+
+### dead links (as of 9/5/07)
+# <http://dbpedia.org/resource/The_Beatles> owl:sameAs <http://zitgist.com/music/band/b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d>.
+# <http://dbpedia.org/resource/Synergy> rdf:type <http://dbpedia.org/class/yago/Buzzword106608277>

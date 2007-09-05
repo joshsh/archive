@@ -1,3 +1,6 @@
+# Would be nice:
+#     * dereferenceable openguides.org URIs
+
 # http://revyu.com/
 # http://www.hoonoh.com/
 
@@ -29,6 +32,32 @@
 @define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
 /:tomsReviews /:bookReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
 
+########################################
+# Links into openguides.org
+########################################
+
+# Note: these don't appear to be dereferenceable resources
+/:tomsReviews/foaf:primaryTopic
+    /dup /owl:sameAs
+    (/toString "http://miltonkeynes.openguides.org" /startsWith) /:restrict.
+# e.g.
+<http://miltonkeynes.openguides.org/?id=The_New_Queen_Victoria%2C_Wolverton;format=rdf#obj>.
+# Note: statements in this document are about a different URI, but this isn't dereferenceable, either:
+<http://miltonkeynes.openguides.org/?The_New_Queen_Victoria%2C_Wolverton>.
+
+
+########################################
+# Links into dbpedia.org
+########################################
+
+# Reciprocal owl:sameAs links with dbpedia
+/:tomsReviews/foaf:primaryTopic
+    /dup /owl:sameAs
+    (/toString "http://dbpedia.org" /startsWith) /:restrict.
+# e.g.
+<http://revyu.com/things/licence-to-kill-james-bond-film-movie-action>.
+# ...links to...
+<http://dbpedia.org/resource/Licence_to_Kill>.
 
 
 ########################################
@@ -46,7 +75,8 @@
 
 # Paddy's channel.
 <http://revyu.com/latest/rss/people/Paddy>
-
+# Paddy's new items.
+<http://revyu.com/latest/rss/people/Paddy> /rss:items /contains.
 
 
 
