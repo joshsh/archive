@@ -1,7 +1,7 @@
 # Description of a text.
 <http://www4.wiwiss.fu-berlin.de/gutendata/resource/etext19994>.
 
-# Get this text
+# Retrieve this text in plaint text format.
 <http://www4.wiwiss.fu-berlin.de/gutendata/resource/etext19994>
     /dcterms:version
     (/toString "txt"/endsWith) /:restrict

@@ -9,7 +9,7 @@ fi
 
 # Set Java options.
 if [ "$JAVA_OPTIONS" = "" ] ; then
-	JAVA_OPTIONS="-Xms32M -Xmx512M -Djava.awt.headless=true"
+	JAVA_OPTIONS="-Xms32M -Xmx512M"
 fi
 
 JAR=target/ripple-*-standalone.jar

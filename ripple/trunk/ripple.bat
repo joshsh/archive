@@ -7,4 +7,3 @@ set JAVA_OPTIONS=-Xms32M -Xmx512M
 java %JAVA_OPTIONS% %JAVA_ARGS% -jar target\ripple-*-standalone.jar %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :: TODO: return Ripple's exit code
-

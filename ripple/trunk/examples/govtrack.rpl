@@ -1,0 +1,20 @@
+### People
+# Senator John McCain
+<http://www.rdfabout.com/rdf/usgov/congress/people/M000303>.
+
+
+### Bills ##############################
+
+# A bill in Congress
+@define mybill: <http://www.rdfabout.com/rdf/usgov/congress/109/bills/h867>.
+
+# Note: this has the type <tag:govshare.info,2005:rdf/usbill/HouseBill>
+
+# Title of the bill
+/:mybill /usbill:hasTitle.
+
+# Subject of the bill
+/:mybill /dc:subject.
+
+
+
