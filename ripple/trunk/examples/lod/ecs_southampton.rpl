@@ -1,0 +1,10 @@
+@prefix ecs: <http://rdf.ecs.soton.ac.uk/ontology/ecs#>.
+
+...
+
+# A room in a building at ECS Southampton
+<http://id.ecs.soton.ac.uk/location/UoS/59/4219>.
+
+
+
+...

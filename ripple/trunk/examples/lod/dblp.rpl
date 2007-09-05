@@ -1,0 +1,15 @@
+
+########################################
+# DBLP Berlin
+########################################
+
+# Gateway resource
+<http://www4.wiwiss.fu-berlin.de/dblp/all>.
+
+
+########################################
+# DBLP Hannover
+########################################
+
+# Gateway resource
+<http://dblp.l3s.de/d2r/all>.
