@@ -11,7 +11,6 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.query.ForwardPredicateQuery;
 import net.fortytwo.ripple.query.ListDequotation;
 import net.fortytwo.ripple.util.Sink;
 
@@ -27,7 +26,7 @@ public class Operator implements RippleValue
 
 	public Operator( RdfValue pred )
 	{
-		func = new ForwardPredicateQuery( pred );
+		func = new RdfPredicateFunction( pred );
 	}
 
 	public Operator( Function function )

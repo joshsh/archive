@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.query;
+package net.fortytwo.ripple.model;
 
 import java.util.Iterator;
 
@@ -20,31 +20,29 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class ForwardPredicateQuery implements Function
+public class RdfPredicateFunction implements Function
 {
-	private RdfValue pred;
-	private ModelBridge bridge;
+	RdfValue pred;
+	ModelBridge bridge;
 
-	private class ForwardPredicateQueryResultSink implements Sink<RdfValue>
+	private class ValueSink implements Sink<RdfValue>
 	{
-		private Sink<RippleList> sink;
-		private RippleList stack;
+		Sink<RippleList> sink;
+		RippleList stack;
 
-		public ForwardPredicateQueryResultSink( RippleList stack, Sink<RippleList> sink )
+		public ValueSink( final RippleList stack, final Sink<RippleList> sink )
 		{
 			this.stack = stack;
 			this.sink = sink;
 		}
 
-		public void put( RdfValue v )
-			throws RippleException
+		public void put( final RdfValue v ) throws RippleException
 		{
-			sink.put(
-				new RippleList( bridge.get( v ), stack ) );
+			sink.put( new RippleList( bridge.get( v ), stack ) );
 		}
 	}
 
-	public ForwardPredicateQuery( RdfValue predicate )
+	public RdfPredicateFunction( RdfValue predicate )
 	{
 		pred = predicate;
 	}
@@ -55,16 +53,16 @@ public class ForwardPredicateQuery implements Function
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		bridge = mc.getModel().getBridge();
 
 		RippleValue first = stack.getFirst();
-		RippleList rest = stack.getRest();
+		stack = stack.getRest();
 
-		Sink<RdfValue> querySink = new ForwardPredicateQueryResultSink( rest, sink );
+		Sink<RdfValue> querySink = new ValueSink( stack, sink );
 
 //		mc.multiply( first.toRdf( mc ), pred, querySink );
 		mc.multiplyAsynch( first.toRdf( mc ), pred, querySink );

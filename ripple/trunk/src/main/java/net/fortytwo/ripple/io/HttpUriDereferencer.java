@@ -25,6 +25,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.util.StringUtils;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
@@ -121,27 +122,26 @@ public class HttpUriDereferencer implements Dereferencer
 		final URL url = urlFactory.createUrl( memo );
 
 		RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
-		final SesameAdapter sc = new SesameAdapter( importer );
+		final SesameAdapter sa = new SesameAdapter( importer );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.
 		try
 		{
-			logger.info( "Dereferencing URI " + uri + " at location " + url );
+			logger.info( "Dereferencing URI <"
+				+ StringUtils.escapeUriString( uri.toString() )
+				+ "> at location " + url );
 
-			RdfUtils.read( url, sc, memo );
-
-			logger.debug( "URI dereferenced without errors" );
+			RdfUtils.read( url, sa, memo );
 		}
 
 		// For now, any exception thrown during the importing process
 		// results in the URI being blacklisted as not dereferenceable.
 		catch ( RippleException e )
 		{
-			logger.info( "Failed to dereference URI: " + uri.toString() );
-// logger.info( "### a" );
-// mc.reset( false );
-// logger.info( "### b" );
+			logger.info( "Failed to dereference URI: <"
+				+ StringUtils.escapeUriString( uri.toString() ) + ">" );
+
 			failureMemos.add( memo );
 			throw e;
 		}
@@ -207,7 +207,8 @@ public class HttpUriDereferencer implements Dereferencer
 		logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
 	}
 
-	public void dereference( RdfValue rv, ModelConnection mc ) throws RippleException
+	public void dereference( final RdfValue rv, final ModelConnection mc )
+		throws RippleException
 	{
 Value v = rv.getRdfValue();
 if ( v instanceof URI )
@@ -221,7 +222,8 @@ if ( v instanceof URI )
 	//          subsequently dereferenced.  For instance, you may get
 	//          "redundant" statements with the same subject and predicate, and
 	//          distinct but equivalent blank nodes as object.
-	public void forget( RdfValue rv, ModelConnection mc ) throws RippleException
+	public void forget( final RdfValue rv, final ModelConnection mc )
+		throws RippleException
 	{
 		// Note: this removes statements in all contexts, including
 		//       statements created with the graph primitives, and statements
