@@ -13,7 +13,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.control.TaskSet;
-import net.fortytwo.ripple.io.TurtleView;
+import net.fortytwo.ripple.cli.TurtleView;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -51,7 +51,7 @@ public class VisibleQueryCommand extends Command
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
-		boolean doBuffer = Ripple.resultViewBufferOutput();
+		boolean doBuffer = Ripple.bufferQueryResults();
 
 		qe.getPrintStream().println( "" );
 
@@ -59,6 +59,7 @@ public class VisibleQueryCommand extends Command
 		// will be flushed into the view after the lexicon is updated.
 		TurtleView view = new TurtleView(
 			qe.getPrintStream(), mc );
+
 		Sink<RippleList> med = new SynchronizedSink(
 			( doBuffer
 				? new Buffer<RippleList>( view )

@@ -135,15 +135,19 @@ public class HttpUriDereferencer implements Dereferencer
 			RdfUtils.read( url, sa, memo );
 		}
 
-		// For now, any exception thrown during the importing process
-		// results in the URI being blacklisted as not dereferenceable.
+		// Exceptions encountered here are logged (withoug a stack trace) but
+		// tolerated.  They usually result from missing or badly-formatted
+		// Semantic Web documents.
 		catch ( RippleException e )
 		{
-			logger.info( "Failed to dereference URI: <"
-				+ StringUtils.escapeUriString( uri.toString() ) + ">" );
+			logger.info( "Failed to dereference URI <"
+				+ StringUtils.escapeUriString( uri.toString() ) + ">: " + e );
 
+			// For now, any exception thrown during the importing process
+			// results in the URI being blacklisted as not dereferenceable.
 			failureMemos.add( memo );
-			throw e;
+
+			return;
 		}
 
 		// At this point, the URI is considered to have been successfully

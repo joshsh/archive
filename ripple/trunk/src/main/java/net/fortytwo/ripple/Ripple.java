@@ -30,9 +30,10 @@ public class Ripple
 
 	static boolean allowDuplicateNamespaces;
 	static RDFFormat cacheFormat;
-	static boolean resultViewBufferOutput;
+	static boolean bufferQueryResults;
 	static int resultViewMaxObjects;
 	static int resultViewMaxPredicates;
+	static boolean resultViewPrintEntireStack;
 	static String defaultNamespace;
 	static boolean dereferenceUrisByNamespace;
 	static EvaluationOrder evaluationOrder;
@@ -75,8 +76,8 @@ public class Ripple
 		}
 
 		// Command-line interface
-		resultViewBufferOutput = getBooleanProperty(
-			props, "net.fortytwo.ripple.cli.resultViewBufferOutput", false );
+		bufferQueryResults = getBooleanProperty(
+			props, "net.fortytwo.ripple.cli.bufferQueryResults", false );
 		resultViewMaxPredicates = getIntProperty(
 			props, "net.fortytwo.ripple.cli.resultViewMaxPredicates", 32 );
 		if ( resultViewMaxPredicates < 0 )
@@ -89,6 +90,8 @@ public class Ripple
 		{
 			resultViewMaxObjects = 0;
 		}
+		resultViewPrintEntireStack = getBooleanProperty(
+			props, "net.fortytwo.ripple.cli.resultViewPrintEntireStack", true );
 		jLineDebugOutput = getStringProperty(
 			props, "net.fortytwo.ripple.cli.jline.debugOutput", null );
 
@@ -172,9 +175,9 @@ public class Ripple
 		return cacheFormat;
 	}
 
-	public static boolean resultViewBufferOutput()
+	public static boolean bufferQueryResults()
 	{
-		return resultViewBufferOutput;
+		return bufferQueryResults;
 	}
 
 	public static int resultViewMaxObjects()
@@ -185,6 +188,11 @@ public class Ripple
 	public static int resultViewMaxPredicates()
 	{
 		return resultViewMaxPredicates;
+	}
+
+	public static boolean resultViewPrintEntireStack()
+	{
+		return resultViewPrintEntireStack;
 	}
 
 	public static String defaultNamespace()

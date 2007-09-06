@@ -36,7 +36,7 @@ import net.fortytwo.ripple.control.TaskQueue;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.io.TurtleView;
+import net.fortytwo.ripple.cli.TurtleView;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.RdfValue;
