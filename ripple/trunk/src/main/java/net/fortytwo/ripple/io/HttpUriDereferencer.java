@@ -67,7 +67,9 @@ public class HttpUriDereferencer implements Dereferencer
 		// For hash namespaces, the "racine" of the URI, followed by the hash
 		// character (because it's a little quicker to leave it intact), is memoized.
 		if ( '#' == ns.charAt( ns.length() - 1 ) )
+		{
 			memo = ns;
+		}
 
 		// For slash namespaces, we're forced to choose between requesting
 		// the information resource at the full URI, or removing a local
@@ -104,8 +106,15 @@ public class HttpUriDereferencer implements Dereferencer
 	{
 		final String memo = findMemo( uri );
 
-		if ( successMemos.contains( memo ) || failureMemos.contains( memo ) )
+		// Don't dereference a URI that is not an HTTP URI (including file: URIs,
+		// which pose a security concern).
+		// Don't dereference a URI which we've already dereferenced.
+		if ( !memo.startsWith( "http://" )
+				|| successMemos.contains( memo )
+				|| failureMemos.contains( memo ) )
+		{
 			return;
+		}
 
 		// Note: this URL should be treated as a "black box" once created; it
 		// need not bear any relation to the URI it was created from.
@@ -143,7 +152,9 @@ public class HttpUriDereferencer implements Dereferencer
 
 // TODO: this should probably be in a parent Dereferencer.
 		if ( Ripple.rejectNonAssociatedStatements() )
+		{
 			filter( uri.getNamespace(), mc.createUri( memo ), mc );
+		}
 	}
 
 	void filter( final String ns, final URI context, ModelConnection mc )
@@ -164,6 +175,7 @@ public class HttpUriDereferencer implements Dereferencer
 			{
 				Statement st = stmtIter.next();
 				Resource subject = st.getSubject();
+
 				if ( subject instanceof URI && !( (URI) subject ).getNamespace().equals( ns ) )
 				{
 					conn.remove( st );
@@ -195,12 +207,13 @@ public class HttpUriDereferencer implements Dereferencer
 		logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
 	}
 
-	public void dereference( RdfValue rv, ModelConnection mc )
-		throws RippleException
+	public void dereference( RdfValue rv, ModelConnection mc ) throws RippleException
 	{
 Value v = rv.getRdfValue();
 if ( v instanceof URI )
+{
 	dereference( (URI) v, mc );
+}
 	}
 
 	// Caution: since several URIs may share a memo (e.g. in a hash namespace),
@@ -208,8 +221,7 @@ if ( v instanceof URI )
 	//          subsequently dereferenced.  For instance, you may get
 	//          "redundant" statements with the same subject and predicate, and
 	//          distinct but equivalent blank nodes as object.
-	public void forget( RdfValue rv, ModelConnection mc )
-		throws RippleException
+	public void forget( RdfValue rv, ModelConnection mc ) throws RippleException
 	{
 		// Note: this removes statements in all contexts, including
 		//       statements created with the graph primitives, and statements
@@ -217,12 +229,15 @@ if ( v instanceof URI )
 		mc.removeStatementsAbout( rv, null );
 
 		Value v = rv.getRdfValue();
+
 		if ( v instanceof URI )
 		{
 			String memo = findMemo( (URI) v );
 
 			if ( failureMemos.contains( memo ) )
+			{
 				failureMemos.remove( memo );
+			}
 
 			// If resolution previously succeeded, remove all statements about
 			// the value in the appropriate context.
