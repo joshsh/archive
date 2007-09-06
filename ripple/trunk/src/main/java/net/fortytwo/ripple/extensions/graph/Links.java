@@ -57,7 +57,7 @@ public class Links extends PrimitiveFunction
 				RippleList triple = new RippleList( subj ).push( pred ).push( obj );
 
 				sink.put(
-					new RippleList( triple, rest );
+					new RippleList( triple, rest ) );
 			}
 		};
 
