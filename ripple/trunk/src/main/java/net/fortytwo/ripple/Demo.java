@@ -50,6 +50,7 @@ public class Demo
 							final PrintStream err )
 		throws RippleException
 	{
+//net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
 		Repository repository = RdfUtils.createMemoryStoreRepository();
 

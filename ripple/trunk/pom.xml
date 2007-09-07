@@ -100,6 +100,12 @@
 			<type>jar</type>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.deri.sw</groupId>
+			<artifactId>semanticsitemap</artifactId>
+			<version>0</version>
+		</dependency>
+		
 		<!-- Needed by OpenRDF dependencies. -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

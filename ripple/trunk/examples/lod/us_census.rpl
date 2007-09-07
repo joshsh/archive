@@ -1,6 +1,7 @@
 # See http://www.rdfabout.com/demo/census/
 
 # A country
+# Note: this took forever to dereference in Ripple.  To be investigated.
 @define us: <http://www.rdfabout.com/rdf/usgov/geo/us>.
 /:us.
 
