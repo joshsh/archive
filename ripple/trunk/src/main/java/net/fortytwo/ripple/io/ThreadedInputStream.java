@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.cli;
+package net.fortytwo.ripple.io;
 
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -28,13 +28,16 @@ public class ThreadedInputStream extends InputStream
 	InputStream source;
 	PipedInputStream writeIn;
 	PipedOutputStream readOut;
-	boolean eager = false;
-	Task readerTask = null;
+	boolean eager;
+	Task readerTask;
 
 	public ThreadedInputStream( final InputStream is )
 		throws RippleException
 	{
 		source = is;
+
+		eager = false;
+		readerTask = null;
 
 		try
 		{
@@ -50,7 +53,7 @@ public class ThreadedInputStream extends InputStream
 
 	public void setEager( final boolean eager )
 	{
-//System.out.println( "setEager()" );
+//System.out.println( "setEager( " + eager + " )" );
 		if ( eager )
 		{
 			if ( !this.eager )
@@ -79,16 +82,45 @@ public class ThreadedInputStream extends InputStream
 //System.out.println( "    done." );
 	}
 
+	public int available() throws java.io.IOException
+	{
+		synchronized ( writeIn )
+		{
+			return writeIn.available();
+		}
+	}
+
 	public int read() throws java.io.IOException
 	{
-		synchronized ( source )
+//System.out.println( "read()" );
+		if ( 0 == available() )
 		{
-			if ( 0 == writeIn.available() )
-			{
-				readOut.write( source.read() );
-			}
+			requestByte( true );
+		}
 
+		synchronized ( writeIn )
+		{
 			return writeIn.read();
+		}
+	}
+
+	synchronized void requestByte( final boolean forRead )
+		throws java.io.IOException
+	{
+//System.out.println( "requestByte( " + forRead + " )" );
+//System.out.println( "    writeIn.available() = " + writeIn.available() );
+		if ( ( !forRead || !( writeIn.available() > 0 ) )
+				&& ( forRead || eager ) )
+		{
+//System.out.println( "    reading..." );
+			// This will sometimes block.
+			int c = source.read();
+//System.out.println( "    done reading" );
+
+			synchronized ( writeIn )
+			{
+				readOut.write( c );
+			}
 		}
 	}
 
@@ -106,10 +138,7 @@ public class ThreadedInputStream extends InputStream
 				{
 					try
 					{
-						synchronized ( source )
-						{
-							readOut.write( source.read() );
-						}
+						requestByte( false );
 					}
 
 					catch ( java.io.IOException e )
@@ -124,14 +153,6 @@ public class ThreadedInputStream extends InputStream
 				active = false;
 			}
 		};
-	}
-
-	public int available() throws java.io.IOException
-	{
-		synchronized ( source )
-		{
-			return writeIn.available();
-		}
 	}
 }
 

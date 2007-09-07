@@ -36,6 +36,7 @@ import net.fortytwo.ripple.control.TaskQueue;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.RipplePrintStream;
+import net.fortytwo.ripple.io.ThreadedInputStream;
 import net.fortytwo.ripple.cli.TurtleView;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
@@ -55,14 +56,8 @@ import net.fortytwo.ripple.util.Tee;
 import org.apache.log4j.Logger;
 
 /**
- * Console input:
- *     System.in --> reader --> readOut --> writeIn --> RippleLexer
- *
- * Normal output:
- *     [commands and queries] --> queryEngine.getPrintStream()
- *
- * Error output:
- *     alert() --> queryEngine.getErrorPrintStream()
+ * A command-line interpreter/browser which coordinates user interaction with a
+ * Ripple query engine.
  */
 public class CommandLineInterface
 {
@@ -90,6 +85,16 @@ boolean lastQueryContinued = false;
 
 	////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * Console input:
+	 *     is --> filter --> consoleReaderInput --> reader --> readOut --> writeIn --> interpreter
+	 *
+	 * Normal output:
+	 *     [commands and queries] --> queryEngine.getPrintStream()
+	 *
+	 * Error output:
+	 *     alert() --> queryEngine.getErrorPrintStream()
+	 */
 	public CommandLineInterface( final QueryEngine qe, final InputStream is )
 		throws RippleException
 	{
@@ -252,7 +257,10 @@ boolean lastQueryContinued = false;
 		{
 			++lineNumber;
 			String prefix = "" + lineNumber + " >>  ";
+//System.out.println( "reading a line" );
+//System.out.println( "    consoleReaderInput.available() = " + consoleReaderInput.available() );
 			String line = reader.readLine( prefix );
+//System.out.println( "done reading the line: " + line );
 	
 			if ( null != line )
 			{
@@ -262,7 +270,7 @@ boolean lastQueryContinued = false;
 	
 				// Add a newline character so the lexer will call readLine()
 				// again when it gets there.
-				readOut.write( EOL, 0, 1 );
+				readOut.write( EOL );
 	
 				readOut.flush();
 			}

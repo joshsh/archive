@@ -58,6 +58,12 @@ public class InputStreamEventFilter extends InputStream
 				return c;
 		}
 	}
+
+	public int available() throws java.io.IOException
+	{
+		// Note: ESC characters may throw this number off in either direction.
+		return source.available();
+	}
 }
 
 // kate: tab-width 4
