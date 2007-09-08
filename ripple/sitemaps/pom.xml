@@ -13,7 +13,9 @@
 	<description>Semantic Web Crawling: a Sitemap Extension (Java implementation)</description>
 	<url>http://sw.deri.org/2007/07/sitemapextension/</url>
 	<inceptionYear>2007</inceptionYear>
-	
+	<organization>
+		<name>Leandro Lopez and Andreas Harth</name>
+	</organization>
 	<dependencies>
 		<dependency>
 			<groupId>xml-apis</groupId>
