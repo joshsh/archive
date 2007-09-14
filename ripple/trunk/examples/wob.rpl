@@ -1,5 +1,6 @@
 @prefix wob: <http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl#>.
 
+# Note: served as text/plain.
 @define wobTerms:
     wob:AgentAssertion
     wob:BeliefAssertion

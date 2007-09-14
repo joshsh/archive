@@ -1,9 +1,10 @@
 # http://wiki.loa-cnr.it/index.php/LoaWiki:Ontologies
 # http://sunsite.informatik.rwth-aachen.de/Publications/CEUR-WS//Vol-201/43.pdf
 
-# Note: this prefix doesn't actually appear in the ontology.
-@prefix dolce:  <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#>.
+# Note: own prefix.
+@prefix dolce: <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#>.
 
+# Note: served as text/plain.
 @define dolceTerms:
     dolce:abstract
     dolce:abstract-location

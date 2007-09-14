@@ -3,6 +3,7 @@
 # Note: own definition.
 @prefix gforge: <http://swc.projects.semwebcentral.org/owl/gforge-ont#>.
 
+# Note: last time I checked, I got a 406 error dereferencing these.
 @define gForgeTerms:
     gforge:Category
     gforge:Project

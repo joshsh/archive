@@ -1,4 +1,4 @@
-@prefix ipa-symbols:   <http://fortytwo.net/2007/02/04/ipa-symbols.ttl#>.
+@prefix ipa-symbols:   <http://fortytwo.net/2007/07/24/ipa-symbols#>.
 
 @define ipaSymbols:
     ipa-symbols:a

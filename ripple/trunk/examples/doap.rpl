@@ -1,4 +1,4 @@
-@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
 
 doap:.
 

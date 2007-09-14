@@ -4,7 +4,7 @@
 #     http://esw.w3.org/topic/HCLS/ACPPTaskForce/TimeConceptUseCase
 
 
-@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix time: <http://www.w3.org/2006/time#>.
 
 @define timeTerms:
     time:Instant
@@ -61,7 +61,7 @@
     time:xsdDateTime
     .
 
-@prefix tzont: <http://www.w3.org/2006/timezone#> .
+@prefix tzont: <http://www.w3.org/2006/timezone#>.
 
 @define tzontTerms:
     tzont:Region

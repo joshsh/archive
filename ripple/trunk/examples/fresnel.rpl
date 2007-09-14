@@ -1,6 +1,6 @@
 # Official Fresnel page: http://www.w3.org/2005/04/fresnel-info/
 
-@prefix f:  <http://www.w3.org/2004/09/fresnel#>.
+@prefix f: <http://www.w3.org/2004/09/fresnel#>.
 
 <http://www.w3.org/2004/09/fresnel>.
 

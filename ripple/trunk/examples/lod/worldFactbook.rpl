@@ -2,7 +2,10 @@ http://www4.wiwiss.fu-berlin.de/factbook/resource/Nepal
 
 
 @prefix db: <http://www4.wiwiss.fu-berlin.de/factbook/resource/>.
+
+# Note: terms in factbook namespace dereference to RDF/XML with a content type of text/html
 @prefix factbook: <http://www4.wiwiss.fu-berlin.de/factbook/ns#>.
+
 
 @define nepal:
     <http://www4.wiwiss.fu-berlin.de/factbook/resource/Nepal>.

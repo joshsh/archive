@@ -1,5 +1,6 @@
-@prefix earthrealm:  <http://sweetjplnasagov/ontology/earthrealmowl#>.
+@prefix earthrealm: <http://sweet.jpl.nasa.gov/ontology/earthrealm.owl#>.
 
+# Note: served as text/plain
 @define sweetEarthrealmTerms:
     earthrealm:AbyssalHill
     earthrealm:AbyssalPlain
@@ -233,8 +234,9 @@
     earthrealm:primarySubstance
     .
 
-@prefix numerics:  <http://sweetjplnasagov/ontology/numericsowl#>.
+@prefix numerics: <http://sweet.jpl.nasa.gov/ontology/numerics.owl#>.
 
+# Note: served as text/plain
 @define sweetNumericsTerms:
     numerics:Anomaly
     numerics:Array
@@ -405,8 +407,9 @@
     numerics:upperBound
     .
 
-@prefix property:  <http://sweetjplnasagov/ontology/propertyowl#>.
+@prefix property: <http://sweet.jpl.nasa.gov/ontology/property.owl#>.
 
+# Note: served as text/plain
 @define sweetPropertyTerms:
     property:AbsoluteVorticity
     property:Absorptance
@@ -674,8 +677,9 @@
     property:pH
     .
 
-@prefix space:  <http://sweetjplnasagov/ontology/spaceowl#>.
+@prefix space: <http://sweet.jpl.nasa.gov/ontology/space.owl#>.
 
+# Note: served as text/plain
 @define sweetSpaceTerms:
     space:AdministrativeBoundary
     space:AdministrativeDivision
@@ -846,9 +850,10 @@
     space:westOf
     .
 
-@prefix units:  <http://sweetjplnasagov/ontology/unitsowl#>.
+@prefix units: <http://sweet.jpl.nasa.gov/ontology/units.owl#>.
 
 # Note: on 8/14/07, Sindice didn't turn up any use of these terms.
+# Note: served as text/plain
 @define sweetUnitsTerms:
     units:BaseUnit
     units:BaseUnitOrUnitDerivedtWithoutChangingOfDimension

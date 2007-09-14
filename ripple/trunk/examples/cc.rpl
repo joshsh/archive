@@ -1,6 +1,6 @@
 # wget http://web.resource.org/cc/schema.rdf
 
-@prefix cc:  <http://web.resource.org/cc/>.
+@prefix cc: <http://web.resource.org/cc/>.
 
 # ! these are apparently not dereferenceable.
 @define ccTerms:

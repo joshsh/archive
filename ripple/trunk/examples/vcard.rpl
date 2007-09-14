@@ -1,4 +1,4 @@
-@prefix vcard:  <http://www.w3.org/2001/vcard-rdf/3.0#>.
+@prefix vcard: <http://www.w3.org/2001/vcard-rdf/3.0#>.
 
 # Note: not dereferenceable.
 @define vcardTerms:

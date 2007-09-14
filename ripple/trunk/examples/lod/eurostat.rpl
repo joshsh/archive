@@ -1,3 +1,4 @@
+# Note: terms are apparently not dereferenceable (404 error)
 @prefix eurostat: <http://www4.wiwiss.fu-berlin.de/eurostat/resource/eurostat/>.
 
 # Not dereferenceable:

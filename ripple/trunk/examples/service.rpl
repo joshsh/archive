@@ -1,4 +1,4 @@
-@prefix service:  <http://www.daml.org/services/daml-s/0.7/Service.daml#> .
+@prefix service: <http://www.daml.org/services/daml-s/0.7/Service.daml#>.
 
 @define serviceTerms:
     service:Service

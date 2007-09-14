@@ -1,6 +1,6 @@
 # wget http://vocab.org/vann/vann-vocab-20050401.rdf
 
-@prefix vann:  <http://purl.org/vocab/vann/>.
+@prefix vann: <http://purl.org/vocab/vann/>.
 
 vann:.
 
