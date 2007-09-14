@@ -95,15 +95,15 @@ public Dereferencer getDereferencer()
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
 
-		// Don't try to dereference the cache resource.
-		dereferencer.addSuccessMemo( "urn:net.fortytwo.ripple.store.meta" );
+		// Don't try to dereference the cache index.
+		dereferencer.addSuccessMemo( Ripple.getCacheUri() );
 
 		loadSymbols( urlFactory );
 
 		logger.debug( "Finished creating Model '" + name + "'" );
 	}
 
-	private void loadSymbols( final UrlFactory uf )
+	void loadSymbols( final UrlFactory uf )
 		throws RippleException
 	{
 		ModelConnection mc = getConnection( "for Model.loadSymbols" );
@@ -190,14 +190,20 @@ public Dereferencer getDereferencer()
 
 			RepositoryResult<Namespace> nsIter
 				= conn.getNamespaces();
+
 			int maxlen = 0;
+
 			while ( nsIter.hasNext() )
 			{
 				Namespace ns = nsIter.next();
 				int len = ns.getPrefix().length();
+
 				if ( len > maxlen )
+				{
 					maxlen = len;
+				}
 			}
+
 			nsIter.close();
 
 			nsIter = conn.getNamespaces();
@@ -207,8 +213,12 @@ public Dereferencer getDereferencer()
 				String prefix = ns.getPrefix();
 				int len = prefix.length();
 				System.out.print( prefix + ":" );
+
 				for ( int i = 0; i < maxlen - len + 2; i++ )
+				{
 					System.out.print( " " );
+				}
+
 				System.out.println( ns.getName() );
 			}
 			nsIter.close();
@@ -233,10 +243,13 @@ public Dereferencer getDereferencer()
 
 			RepositoryResult<Resource> contextIter
 				= conn.getContextIDs();
-			while ( contextIter.hasNext() )
-				contexts.add( new RdfValue( contextIter.next() ) );
-			contextIter.close();
 
+			while ( contextIter.hasNext() )
+			{
+				contexts.add( new RdfValue( contextIter.next() ) );
+			}
+
+			contextIter.close();
 			conn.close();
 		}
 

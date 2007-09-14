@@ -17,6 +17,9 @@ import net.fortytwo.ripple.model.RdfValue;
 
 import org.openrdf.model.vocabulary.OWL;
 
+/**
+ * RDF data and Java implementation of a library of primitive functions.
+ */
 public abstract class Extension
 {
 	public abstract void load( UrlFactory uf, ModelConnection mc )

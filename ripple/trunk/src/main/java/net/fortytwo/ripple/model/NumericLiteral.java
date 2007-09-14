@@ -21,6 +21,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.XMLSchema;
 
 /**
+ * A numeric (xsd:integer or xsd:double) literal value.
  */
 public class NumericLiteral implements RippleValue
 {

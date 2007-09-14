@@ -35,15 +35,19 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+/**
+ * Defines a mapping between keywords and URIs, and between namespace prefixes
+ * and URIs.
+ */
 public class Lexicon
 {
 	ValueFactory valueFactory;
 
-	Hashtable<String, List<URI>> keywordsToUrisMap = null;
-	Hashtable<URI, String> urisToKeywordsMap = null;
+	Hashtable<String, List<URI>> keywordToUriMap = null;
+	Hashtable<URI, String> uriToKeywordMap = null;
 	Hashtable<String, String> prefixToNamespaceMap = null;
 	Hashtable<String, String> namespaceToPrefixMap = null;
-	Collection<String> qNamesCollection = null;
+	Collection<String> allQNames = null;
 
 	public Lexicon( final Model model ) throws RippleException
 	{
@@ -52,8 +56,8 @@ public class Lexicon
 
 		// Create (immutable) keywords map.
 		{
-			keywordsToUrisMap = new Hashtable<String, List<URI>>();
-			urisToKeywordsMap = new Hashtable<URI, String>();
+			keywordToUriMap = new Hashtable<String, List<URI>>();
+			uriToKeywordMap = new Hashtable<URI, String>();
 
 			ModelBridge bridge = model.getBridge();
 			Iterator<Value> keys = bridge.keySet().iterator();
@@ -67,20 +71,22 @@ public class Lexicon
 				{
 					String keyword = ( (URI) v ).getLocalName();
 
-					List<URI> siblings = keywordsToUrisMap.get( keyword );
+					List<URI> siblings = keywordToUriMap.get( keyword );
 			
 					if ( null == siblings )
 					{
 						siblings = new ArrayList<URI>();
-						keywordsToUrisMap.put( keyword, siblings );
+						keywordToUriMap.put( keyword, siblings );
 
-						urisToKeywordsMap.put( (URI) v, keyword );
+						uriToKeywordMap.put( (URI) v, keyword );
 					}
 
 					// The presence of aliases will cause the same URI / keyword
 					// pair to appear more than once.
 					if ( !siblings.contains( (URI) v ) )
+					{
 						siblings.add( (URI) v );
+					}
 				}
 			}
 		}
@@ -89,12 +95,12 @@ public class Lexicon
 
 		prefixToNamespaceMap = new Hashtable<String, String>();
 		namespaceToPrefixMap = new Hashtable<String, String>();
-		qNamesCollection = new ArrayList<String>();
+		allQNames = new ArrayList<String>();
 	}
 
-	public List<URI> resolveKeyword( final String localName )
+	public List<URI> uriForKeyword( final String localName )
 	{
-		List<URI> result = keywordsToUrisMap.get( localName );
+		List<URI> result = keywordToUriMap.get( localName );
 
 		// If there are no results, return an empty list instead of null.
 		return ( null == result )
@@ -106,7 +112,7 @@ public class Lexicon
 	*  Note: <code>nsPrefix</code> must be the prefix of a defined namespace.
 	*  <code>localName</code> is unconstrained.
 	*/
-	public URI resolveQName( final String nsPrefix,
+	public URI uriForQName( final String nsPrefix,
 							final String localName )
 	{
 		String ns = resolveNamespacePrefix( nsPrefix );
@@ -121,10 +127,10 @@ public class Lexicon
 		return prefixToNamespaceMap.get( nsPrefix );
 	}
 
-	public String symbolFor( final URI uri )
+	public String symbolForUri( final URI uri )
 	{
 		// Does it have a keyword?
-		String symbol = urisToKeywordsMap.get( uri );
+		String symbol = uriToKeywordMap.get( uri );
 
 		// If not, does it have a namespace prefix?
 		if ( null == symbol )
@@ -150,10 +156,10 @@ public class Lexicon
 
 	public Completor getCompletor() throws RippleException
 	{
-		Set<String> keywords = keywordsToUrisMap.keySet();
+		Set<String> keywords = keywordToUriMap.keySet();
 		Set<String> prefixes = prefixToNamespaceMap.keySet();
 
-		int size = keywords.size() + prefixes.size() + qNamesCollection.size();
+		int size = keywords.size() + prefixes.size() + allQNames.size();
 		if ( 0 < size )
 		{
 			Collection<String> alts = new ArrayList<String>();
@@ -164,7 +170,7 @@ public class Lexicon
 				alts.add( localNameIter.next() );
 			}
 
-			Iterator<String> qNameIter = qNamesCollection.iterator();
+			Iterator<String> qNameIter = allQNames.iterator();
 			while( qNameIter.hasNext() )
 			{
 				alts.add( qNameIter.next() );
@@ -195,7 +201,7 @@ public class Lexicon
 	}
 
 	// Note: assumes that the same URI will not be added twice.
-	public void add( URI uri ) throws RippleException
+	public void add( final URI uri ) throws RippleException
 	{
 //System.out.println( "adding URI: " + uri );
 		// If possible, add a qualified name as well.
@@ -204,7 +210,7 @@ public class Lexicon
 		{
 			String qName = prefix + ":" + uri.getLocalName();
 //System.out.println( "adding qname: " + qName );
-			qNamesCollection.add( qName );
+			allQNames.add( qName );
 		}
 	}
 }

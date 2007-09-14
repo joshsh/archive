@@ -159,7 +159,7 @@ public class RipplePrintStream extends PrintStream
 
 	void printUri( final URI uri ) throws RippleException
 	{
-		String symbol = lexicon.symbolFor( uri );
+		String symbol = lexicon.symbolForUri( uri );
 
 		if ( null == symbol )
 		{

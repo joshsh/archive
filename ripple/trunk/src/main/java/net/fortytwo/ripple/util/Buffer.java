@@ -9,15 +9,11 @@
 
 package net.fortytwo.ripple.util;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import net.fortytwo.ripple.RippleException;
 
 public class Buffer<T> extends Collector<T>
 {
-	private Sink<T> sink;
+	Sink<T> sink;
 
 	public Buffer( Sink<T> sink )
 	{
@@ -28,8 +24,7 @@ public class Buffer<T> extends Collector<T>
 
 	public void flush() throws RippleException
 	{
-		for ( Iterator<T> i = iterator(); i.hasNext(); )
-			sink.put( i.next() );
+		writeTo( sink );
 
 		clear();
 	}

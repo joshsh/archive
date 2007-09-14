@@ -15,12 +15,14 @@ import java.net.URL;
 
 import java.util.Iterator;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +46,7 @@ public class CacheManager
 		throws RippleException
 	{
 		rplCacheRoot = new RdfValue( mc.createUri(
-			"urn:net.fortytwo.ripple.store.meta" ) );
+			Ripple.getCacheUri() ) );
 		rplCacheSuccessMemo = new RdfValue( mc.createUri(
 			"http://fortytwo.net/2007/08/ripple/cache#successMemo" ) );
 		rplCacheFailureMemo = new RdfValue( mc.createUri(
@@ -93,8 +95,8 @@ public class CacheManager
 	////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 *  Writes cache metadata to the triple store.
-	 *  Note: for now, this metadata resides in the null context.
+	 * Writes cache metadata to the triple store.
+	 * Note: for now, this metadata resides in the null context.
 	 */
 	static void persistCacheMetadata( final ModelConnection mc )
 		throws RippleException
@@ -117,25 +119,32 @@ public class CacheManager
 	}
 
 	/**
-	 *  Restores dereferencer state by reading success and failure memos
-	 *  from the last session (if present).
+	 * Restores dereferencer state by reading success and failure memos from
+	 * the last session (if present).
 	 */
 	static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
-		Dereferencer dereferencer = mc.getModel().getDereferencer();
+		final Dereferencer dereferencer = mc.getModel().getDereferencer();
 
-		Iterator<RdfValue> succIter = mc.findObjects( rplCacheRoot, rplCacheSuccessMemo ).iterator();
-		while ( succIter.hasNext() )
+		Sink<RdfValue> successMemoSink = new Sink<RdfValue>()
 		{
-			dereferencer.addSuccessMemo( mc.stringValue( succIter.next() ) );
-		}
+			public void put( final RdfValue v ) throws RippleException
+			{
+				dereferencer.addSuccessMemo( mc.stringValue( v ) );
+			}
+		};
 
-		Iterator<RdfValue> failIter = mc.findObjects( rplCacheRoot, rplCacheFailureMemo ).iterator();
-		while ( failIter.hasNext() )
+		Sink<RdfValue> failureMemoSink = new Sink<RdfValue>()
 		{
-			dereferencer.addFailureMemo( mc.stringValue( failIter.next() ) );
-		}
+			public void put( final RdfValue v ) throws RippleException
+			{
+				dereferencer.addFailureMemo( mc.stringValue( v ) );
+			}
+		};
+
+		mc.multiply( rplCacheRoot, rplCacheSuccessMemo, successMemoSink );
+		mc.multiply( rplCacheRoot, rplCacheFailureMemo, failureMemoSink );
 	}
 }
 

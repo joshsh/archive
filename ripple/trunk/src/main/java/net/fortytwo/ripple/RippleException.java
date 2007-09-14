@@ -14,6 +14,9 @@ import java.io.PrintStream;
 
 import org.apache.log4j.Logger;
 
+/**
+ * A custom Exception.
+ */
 public class RippleException extends Exception
 {
 	final static Logger logger = Logger.getLogger( RippleException.class );

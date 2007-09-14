@@ -121,10 +121,10 @@ public class QueryEngine
 		return defaultNs;
 	}
 
-	public void resolveKeyword( final String localName, Sink<RippleValue> sink )
+	public void uriForKeyword( final String localName, Sink<RippleValue> sink )
 		throws RippleException
 	{
-		Collection<URI> options = lexicon.resolveKeyword( localName );
+		Collection<URI> options = lexicon.uriForKeyword( localName );
 		if ( 0 == options.size() )
 			errorPrintStream.println( "Warning: no values resolved for keyword " + localName );
 		else if ( 1 < options.size() )
@@ -135,12 +135,12 @@ public class QueryEngine
 				new RdfValue( optIter.next() ) ) );
 	}
 
-	public void resolveQName( final String nsPrefix,
+	public void uriForQName( final String nsPrefix,
 								final String localName,
 								final Sink<RippleValue> sink )
 		throws RippleException
 	{
-		Value v = lexicon.resolveQName( nsPrefix, localName );
+		Value v = lexicon.uriForQName( nsPrefix, localName );
 
 		if ( null == v )
 			errorPrintStream.println( "Warning: no values resolved for " + nsPrefix + ":" + localName );

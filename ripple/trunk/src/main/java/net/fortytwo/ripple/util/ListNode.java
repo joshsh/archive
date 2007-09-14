@@ -9,6 +9,9 @@
 
 package net.fortytwo.ripple.util;
 
+/**
+ * Head of a linked list.
+ */
 public abstract class ListNode<T>
 {
 	public abstract T getFirst();

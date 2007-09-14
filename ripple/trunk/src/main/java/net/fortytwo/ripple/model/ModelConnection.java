@@ -107,7 +107,7 @@ public void setRdfSink( final RdfSink sink )
 		add( this );
 	}
 
-	public ModelConnection( Model model, final String name )
+	public ModelConnection( final Model model, final String name )
 		throws RippleException
 	{
 		this( model );
@@ -124,8 +124,7 @@ public void setRdfSink( final RdfSink sink )
 		return repoConnection;
 	}
 
-	public void close()
-		throws RippleException
+	public void close() throws RippleException
 	{
 // logger.info( "Closing "
 // 	+ ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
@@ -143,8 +142,7 @@ public void setRdfSink( final RdfSink sink )
 	*  Returns the ModelConnection to a normal state after an Exception has
 	*  been thrown.
 	*/
-	public void reset( final boolean rollback )
-		throws RippleException
+	public void reset( final boolean rollback ) throws RippleException
 	{
 // logger.info( "Resetting "
 //     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
@@ -252,39 +250,48 @@ public void setRdfSink( final RdfSink sink )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	Resource castToResource( Value v )
-		throws RippleException
+	Resource castToResource( final Value v ) throws RippleException
 	{
 		if ( v instanceof Resource )
+		{
 			return (Resource) v;
+		}
+
 		else
+		{
 			throw new RippleException( "value " + v.toString() + " is not a Resource" );
+		}
 	}
 
-	URI castToUri( Value v )
-		throws RippleException
+	URI castToUri( final Value v ) throws RippleException
 	{
 		if ( v instanceof URI )
+		{
 			return (URI) v;
+		}
 
 		else
+		{
 			throw new RippleException( "value " + v.toString() + " is not a URI" );
+		}
 	}
 
-	Literal castToLiteral( Value v )
-		throws RippleException
+	Literal castToLiteral( final Value v ) throws RippleException
 	{
 		if ( v instanceof Literal )
+		{
 			return (Literal) v;
+		}
 
 		else
+		{
 			throw new RippleException( "value " + v.toString() + " is not a Literal" );
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public boolean booleanValue( RippleValue rv )
-		throws RippleException
+	public boolean booleanValue( final RippleValue rv ) throws RippleException
 	{
 		Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
@@ -297,7 +304,7 @@ public void setRdfSink( final RdfSink sink )
 		return label.equals( "true" );
 	}
 
-	public NumericLiteral numericValue( RippleValue rv )
+	public NumericLiteral numericValue( final RippleValue rv )
 		throws RippleException
 	{
 		if ( rv instanceof NumericLiteral )
@@ -307,12 +314,13 @@ public void setRdfSink( final RdfSink sink )
 			return new NumericLiteral( rv.toRdf( this ) );
 	}
 
-	public int intValue( RippleValue rv )
-		throws RippleException
+	public int intValue( final RippleValue rv ) throws RippleException
 	{
 		if ( rv instanceof NumericLiteral )
+		{
 			// Note: possible loss of precision
 			return ( (NumericLiteral) rv ).intValue();
+		}
 
 		Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 
@@ -332,8 +340,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public String stringValue( RippleValue v )
-		throws RippleException
+	public String stringValue( final RippleValue v ) throws RippleException
 	{
 		Literal l = castToLiteral( v.toRdf( this ).getRdfValue() );
 
@@ -355,8 +362,7 @@ public void setRdfSink( final RdfSink sink )
 		RdfValue value = null;
 		int valuesReceived = 0;
 
-		public void put( RdfValue v )
-			throws RippleException
+		public void put( RdfValue v ) throws RippleException
 		{
 			value = v;
 			valuesReceived++;
@@ -373,17 +379,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public Collection<RdfValue> findObjects( RdfValue subj, RdfValue pred )
-		throws RippleException
-	{
-		Collector<RdfValue> sink = new Collector<RdfValue>();
-
-		multiply( subj, pred, sink );
-
-		return sink;
-	}
-
-	public RdfValue findSingleObject( RdfValue subj, RdfValue pred )
+	public RdfValue findSingleObject( final RdfValue subj, final RdfValue pred )
 		throws RippleException
 	{
 		SingleValueSink sink = new SingleValueSink();
@@ -393,7 +389,7 @@ public void setRdfSink( final RdfSink sink )
 		return sink.getValue();
 	}
 
-	public RdfValue findAtLeastOneObject( RdfValue subj, RdfValue pred )
+	public RdfValue findAtLeastOneObject( final RdfValue subj, final RdfValue pred )
 		throws RippleException
 	{
 		SingleValueSink sink = new SingleValueSink();
@@ -401,12 +397,17 @@ public void setRdfSink( final RdfSink sink )
 		multiply( subj, pred, sink );
 
 		if ( 0 == sink.countReceived() )
+		{
 			throw new RippleException( "no values resolved for " + pred.toString() + " of " + subj.toString() );
+		}
+
 		else
+		{
 			return sink.getValue();
+		}
 	}
 
-	public RdfValue findAtMostOneObject( RdfValue subj, RdfValue pred )
+	public RdfValue findAtMostOneObject( final RdfValue subj, final RdfValue pred )
 		throws RippleException
 	{
 		SingleValueSink sink = new SingleValueSink();
@@ -416,25 +417,35 @@ public void setRdfSink( final RdfSink sink )
 		int count = sink.countReceived();
 
 		if ( 1 < count )
+		{
 			throw new RippleException( pred.toString() + " of " + subj.toString() + " resolved to more than one value" );
+		}
+
 		else
+		{
 			return sink.getValue();
+		}
 	}
 
-	public RdfValue findUniqueProduct( RdfValue subj, RdfValue pred )
+	public RdfValue findUniqueProduct( final RdfValue subj, final RdfValue pred )
 		throws RippleException
 	{
 		RdfValue v = findAtMostOneObject( subj, pred );
 
 		if ( null == v )
+		{
 			throw new RippleException( "no values resolved for " + pred.toString() + " of " + subj.toString() );
+		}
+
 		else
+		{
 			return v;
+		}
 	}
 
 	// Note: context is ignored.
 	// Another note: the source value is not (yet) dereferenced
-	public void copyStatements( RdfValue src, RdfValue dest )
+	public void copyStatements( final RdfValue src, final RdfValue dest )
 		throws RippleException
 	{
 		Resource srcResource = castToResource( src.getRdfValue() );
@@ -450,8 +461,12 @@ public void setRdfSink( final RdfSink sink )
 				RepositoryResult<Statement> stmtIter
 					= repoConnection.getStatements(
 						srcResource, null, null, Ripple.useInference() );
+
 				while ( stmtIter.hasNext() )
+				{
 					stmts.add( stmtIter.next() );
+				}
+
 				stmtIter.close();
 
 				for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
@@ -483,12 +498,18 @@ public void setRdfSink( final RdfSink sink )
 				RepositoryResult<Statement> stmtIter
 					= repoConnection.getStatements(
 						subj, null, null, Ripple.useInference() );
+
 				while ( stmtIter.hasNext() )
+				{
 					stmts.add( stmtIter.next() );
+				}
+
 				stmtIter.close();
 	
 				for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+				{
 					repoConnection.remove( iter.next() );
+				}
 			}
 		}
 
@@ -541,7 +562,9 @@ public void setRdfSink( final RdfSink sink )
 				{
 					Statement st = stmtIter.next();
 					if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
+					{
 						results.add( bridge.get( new RdfValue( st.getObject() ) ) );
+					}
 				}
 	
 				stmtIter.close();
@@ -560,7 +583,8 @@ public void setRdfSink( final RdfSink sink )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void findPredicates( RippleValue subject, Sink<RdfValue> sink )
+	public void findPredicates( final RippleValue subject,
+								final Sink<RdfValue> sink )
 		throws RippleException
 	{
 		Set<Value> predicates = new HashSet<Value>();
@@ -578,8 +602,12 @@ public void setRdfSink( final RdfSink sink )
 						= repoConnection.getStatements(
 //                    subject, null, null, model, includeInferred );
 							subjRdf, null, null, Ripple.useInference() );
+
 					while ( stmtIter.hasNext() )
+					{
 						predicates.add( stmtIter.next().getPredicate() );
+					}
+
 					stmtIter.close();
 				}
 			}
@@ -593,13 +621,15 @@ public void setRdfSink( final RdfSink sink )
 
 		Iterator<Value> iter = predicates.iterator();
 		while ( iter.hasNext() )
+		{
 			sink.put( new RdfValue( iter.next() ) );
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
 	// NOTE: not thread-safe on its own
-	public void add( Statement st, Resource... contexts )
+	public void add( final Statement st, final Resource... contexts )
 		throws RippleException
 	{
 		try
@@ -614,7 +644,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public void add( RippleValue subj, RippleValue pred, RippleValue obj )
+	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj )
 		throws RippleException
 	{
 		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
@@ -637,7 +667,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public void add( RippleValue subj, RippleValue pred, RippleValue obj, Resource context )
+	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj, final Resource context )
 		throws RippleException
 	{
 		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
@@ -660,7 +690,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public void remove( RippleValue subj, RippleValue pred, RippleValue obj )
+	public void remove( final RippleValue subj, final RippleValue pred, final RippleValue obj )
 		throws RippleException
 	{
 		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
@@ -683,7 +713,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public void removeStatementsAbout( RdfValue subj, URI context )
+	public void removeStatementsAbout( final RdfValue subj, final URI context )
 		throws RippleException
 	{
 		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
@@ -693,9 +723,14 @@ public void setRdfSink( final RdfSink sink )
 			synchronized ( repoConnection )
 			{
 				if ( null == context )
+				{
 					repoConnection.remove( subjResource, null, null );
+				}
+
 				else
+				{
 					repoConnection.remove( subjResource, null, null, context );
+				}
 			}
 		}
 
@@ -706,40 +741,41 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public long countStatements( Resource context )
+	public long countStatements( final Resource context )
 			throws RippleException
 	{
-			int count = 0;
+		int count = 0;
 
-			try
+		try
+		{
+			synchronized ( repoConnection )
 			{
-				synchronized ( repoConnection )
+				RepositoryResult<Statement> stmtIter
+						= repoConnection.getStatements(
+								null, null, null, Ripple.useInference(), context );
+
+				while ( stmtIter.hasNext() )
 				{
-					RepositoryResult<Statement> stmtIter
-							= repoConnection.getStatements(
-									null, null, null, Ripple.useInference(), context );
-					while ( stmtIter.hasNext() )
-					{
-							stmtIter.next();
-							count++;
-					}
-
-					stmtIter.close();
+						stmtIter.next();
+						count++;
 				}
-			}
 
-			catch ( Throwable t )
-			{
-					reset( true );
-					throw new RippleException( t );
+				stmtIter.close();
 			}
-			return count;
+		}
+
+		catch ( Throwable t )
+		{
+				reset( true );
+				throw new RippleException( t );
+		}
+
+		return count;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public URI createUri( final String s )
-		throws RippleException
+	public URI createUri( final String s ) throws RippleException
 	{
 		try
 		{
@@ -873,8 +909,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public BNode createBNode()
-		throws RippleException
+	public BNode createBNode() throws RippleException
 	{
 		try
 		{
@@ -888,8 +923,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public BNode createBNode( final String id )
-		throws RippleException
+	public BNode createBNode( final String id ) throws RippleException
 	{
 		try
 		{
@@ -914,16 +948,16 @@ public void setRdfSink( final RdfSink sink )
 		return lo + i;
 	}
 
-	public URI createRandomUri()
-		throws RippleException
+/*
+	URI createRandomUri() throws RippleException
 	{
 		return createUri( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
 	}
+*/
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public RdfValue createValue( final String s )
-		throws RippleException
+	public RdfValue createValue( final String s ) throws RippleException
 	{
 		try
 		{
@@ -1069,7 +1103,7 @@ public void setRdfSink( final RdfSink sink )
 
 	// Hackishly find all terms in the given namespace which are the subject
 	// of statements.
-	private Set<URI> findSubjectsInNamespace( final String ns )
+	Set<URI> findSubjectsInNamespace( final String ns )
 		throws RippleException
 	{
 		Set<URI> subjects = new HashSet<URI>();
@@ -1107,8 +1141,8 @@ public void setRdfSink( final RdfSink sink )
 
 	private class SpecialSubgraphHandler implements Sink<Resource>
 	{
-		private Set<Resource> visited;
-		private RDFHandler handler;
+		Set<Resource> visited;
+		RDFHandler handler;
 
 		public SpecialSubgraphHandler( final RDFHandler handler )
 		{
@@ -1116,13 +1150,18 @@ public void setRdfSink( final RdfSink sink )
 			visited = new HashSet<Resource>();
 		}
 
-		public void put( Resource r )
+		public void put( final Resource r )
 			throws RippleException
 		{
 			if ( visited.contains( r ) )
+			{
 				return;
+			}
+
 			else
+			{
 				visited.add( r );
+			}
 
 			try
 			{
@@ -1142,8 +1181,10 @@ public void setRdfSink( final RdfSink sink )
 						// Traverse to any neighboring blank nodes (but not to URIs).
 						Value obj = st.getObject();
 						if ( obj instanceof Resource
-							&& !( obj instanceof URI ) )
+								&& !( obj instanceof URI ) )
+						{
 							put( (Resource) obj );
+						}
 					}
 	
 					stmtIter.close();
@@ -1158,7 +1199,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public void exportNs( final String nsPrefix, OutputStream out )
+	public void exportNs( final String nsPrefix, final OutputStream out )
 		throws RippleException
 	{
 		Set<URI> subjects = findSubjectsInNamespace( nsPrefix );
@@ -1268,140 +1309,17 @@ public void setRdfSink( final RdfSink sink )
 
 	TaskSet taskSet = new TaskSet();
 
-	public void multiplyAsynch( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
+	public void multiplyAsynch( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
 		throws RippleException
 	{
 		MultiplyTask task = new MultiplyTask( subj, pred, sink );
 		taskSet.add( task );
 	}
 
-	public void multiply( RdfValue subj, RdfValue pred, Sink<RdfValue> sink )
-		throws RippleException
-	{
-		dereference( subj );
-
-		Value rdfSubj = subj.getRdfValue();
-		Value rdfPred = pred.getRdfValue();
-
-		if ( rdfSubj instanceof Resource && rdfPred instanceof URI )
-		{
-			// Note: we must collect results in a buffer before putting anything
-			//       into the sink, as inefficient as that is, because otherwise
-			//       we might end up opening another RepositoryResult before
-			//       the one below closes, which currently causes Sesame to
-			//       deadlock.  Even using a separate RepositoryConnection for
-			//       each RepositoryResult doesn't seem to help.
-			Collection<Value> results = null;
-			RepositoryResult<Statement> stmtIter = null;
-
-			// Perform the query and collect results.
-			try
-			{
-				synchronized ( repoConnection )
-				{
-					stmtIter = repoConnection.getStatements(
-						(Resource) rdfSubj, (URI) rdfPred, null, Ripple.useInference() );
-stmtIter.enableDuplicateFilter();
-				}
-
-				while ( stmtIter.hasNext() )
-				{
-					if ( null == results )
-						results = new LinkedList<Value>();
-					results.add( stmtIter.next().getObject() );
-				}
-				stmtIter.close();
-			}
-
-			catch ( Throwable t )
-			{
-				try
-				{
-					stmtIter.close();
-				}
-
-				catch ( Throwable t2 )
-				{
-					System.exit( 1 );
-				}
-
-				reset( true );
-				throw new RippleException( t );
-			}
-
-			// Now copy any results from the buffer into the sink.
-			if ( null != results )
-			{
-				for ( Iterator<Value> resultIter = results.iterator();
-					resultIter.hasNext(); )
-				{
-					sink.put( new RdfValue( resultIter.next() ) );
-				}
-			}
-		}
-//System.out.println( "done multiplying" );
-	}
-
-	public void divide( RdfValue obj, RdfValue pred, Sink<RdfValue> sink )
-		throws RippleException
-	{
-		dereference( obj );
-
-		Value rdfObj = obj.getRdfValue();
-		Value rdfPred = pred.getRdfValue();
-
-		if ( rdfPred instanceof URI )
-		{
-			Collection<Value> results = null;
-			RepositoryResult<Statement> stmtIter = null;
-
-			// Perform the query and collect results.
-			try
-			{
-				synchronized ( repoConnection )
-				{
-					stmtIter = repoConnection.getStatements(
-						null, (URI) rdfPred, rdfObj, Ripple.useInference() );
-stmtIter.enableDuplicateFilter();
-					while ( stmtIter.hasNext() )
-					{
-						if ( null == results )
-							results = new LinkedList<Value>();
-						results.add( stmtIter.next().getSubject() );
-					}
-					stmtIter.close();
-				}
-			}
-
-			catch ( Throwable t )
-			{
-				try
-				{
-					stmtIter.close();
-				}
-
-				catch ( Throwable t2 )
-				{
-					System.exit( 1 );
-				}
-
-				reset( true );
-				throw new RippleException( t );
-			}
-
-			// Now copy any results from the buffer into the sink.
-			if ( null != results )
-			{
-				for ( Iterator<Value> resultIter = results.iterator();
-					resultIter.hasNext(); )
-				{
-					sink.put( new RdfValue( resultIter.next() ) );
-				}
-			}
-		}
-	}
-
-	public void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink )
+	public void getStatements( final RdfValue subj,
+								final RdfValue pred,
+								final RdfValue obj,
+								final Sink<Statement> sink )
 		throws RippleException
 	{
 		if ( null != subj )
@@ -1466,6 +1384,34 @@ stmtIter.enableDuplicateFilter();
 
 			buffer.flush();
 		}
+	}
+
+	public void multiply( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
+		throws RippleException
+	{
+		Sink<Statement> stSink = new Sink<Statement>()
+		{
+			public void put( final Statement st ) throws RippleException
+			{
+				sink.put( new RdfValue( st.getObject() ) );
+			}
+		};
+
+		getStatements( subj, pred, null, stSink );
+	}
+
+	public void divide( final RdfValue obj, final RdfValue pred, final Sink<RdfValue> sink )
+		throws RippleException
+	{
+		Sink<Statement> stSink = new Sink<Statement>()
+		{
+			public void put( final Statement st ) throws RippleException
+			{
+				sink.put( new RdfValue( st.getSubject() ) );
+			}
+		};
+
+		getStatements( null, pred, obj, stSink );
 	}
 }
 

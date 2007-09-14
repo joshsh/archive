@@ -39,7 +39,7 @@ public class QNameAst implements Ast
 						ModelConnection mc )
 		throws RippleException
 	{
-		qe.resolveQName( nsPrefix, localName, sink );
+		qe.uriForQName( nsPrefix, localName, sink );
 	}
 }
 

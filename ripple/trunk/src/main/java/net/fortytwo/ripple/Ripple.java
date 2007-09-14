@@ -150,6 +150,11 @@ public class Ripple
 		return "0.4";
 	}
 
+	public static String getCacheUri()
+	{
+		return "http://fortytwo.net/2007/08/ripple/cache#index";
+	}
+
 // FIXME: quiet is never used
 	static boolean quiet = false;
 
