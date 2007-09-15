@@ -193,3 +193,13 @@ mo:.
     mo:want_item
     mo:wikipedia
     .
+
+
+# Sindice found these documents which use Music Ontology terms:
+<http://dbtune.org:2020/sparql/?query=describe%20%3Chttp://dbtune.org/magnatune/artist/anamar%3E>
+<http://dbtune.org:2020/sparql/?query=describe%20%3Chttp://dbtune.org/magnatune/artist/antiguru%3E>
+<http://dbtune.org:2020/sparql/?query=describe%20%3Chttp://dbtune.org/magnatune/artist/american_baroque%3E>
+<http://dbtune.org:2020/sparql/?query=describe%20%3Chttp://dbtune.org/magnatune/album/abs-favoritecantatas%3E>
+<http://dbtune.org:2020/sparql/?query=describe%20%3Chttp://dbtune.org/magnatune/album/lorence-winter%3E>
+<http://dbtune.org:2105/sparql/?query=describe%20%3Chttp://dbtune.org/jamendo/artist/1003%3E>
+<http://dbtune.org:2105/sparql/?query=describe%20%3Chttp://dbtune.org/jamendo/artist/1004%3E>

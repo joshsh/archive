@@ -89,6 +89,6 @@
 @define ping:
     /toString/percentEncode
     "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
-    /get.
+    /toUri /get.
 
 @export : "demo.rdf".

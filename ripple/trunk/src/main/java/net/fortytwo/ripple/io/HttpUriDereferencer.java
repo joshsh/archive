@@ -44,8 +44,12 @@ public class HttpUriDereferencer implements Dereferencer
 {
 	final static Logger logger = Logger.getLogger( HttpUriDereferencer.class );
 
+	static final String[] badExt = {"123", "3dm", "3dmf", "3gp", "8bi", "aac", "ai", "aif", "app", "asf", "asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi", "com", "cpl", "cpp", "css", "csv", "dat", "db", "dll", "dmg", "dmp", "doc", "drv", "drw", "dxf", "eps", "exe", "fnt", "fon", "gif", "gz", "h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", "jpeg", "jpg", "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim", "mng", "mov", "mp3", "mp4", "mpa", "mpg", "msg", "msi", "otf", "pct", "pdf", "php", "pif", "pkg", "pl", "plugin", "png", "pps", "ppt", "ps", "psd", "psp", "qt", "qxd", "qxp", "ra", "ram", "rar", "reg", "rm", "rtf", "sea", "sit", "sitx", "sql", "svg", "swf", "sys", "tar", "tif", "ttf", "uue", "vb", "vcd", "wav", "wks", "wma", "wmv", "wpd", "wps", "ws", "xhtml", "xll", "xls", "yps", "zip"};
+
 	Set<String> successMemos;
 	Set<String> failureMemos;
+
+	Set<String> badExtensions;
 
 	UrlFactory urlFactory;
 
@@ -55,6 +59,13 @@ public class HttpUriDereferencer implements Dereferencer
 
 		successMemos = new HashSet<String>();
 		failureMemos = new HashSet<String>();
+
+		badExtensions = new HashSet<String>();
+
+		for ( int i = 0; i < badExt.length; i++ )
+		{
+			badExtensions.add( badExt[i] );
+		}
 	}
 
 	/**
@@ -83,13 +94,17 @@ public class HttpUriDereferencer implements Dereferencer
 			// Con: very many hash namespaces are not set up this way, and we
 			//      may lose significant information
 			if ( Ripple.dereferenceUrisByNamespace() )
+			{
 				memo = ns;
+			}
 
 			// Pro: no information loss
 			// Con: frequent repeated requests for the same document, resulting
 			//      in wasted bandwidth and redundant statements
 			else
+			{
 				memo = uri.toString();
+			}
 		}
 
 		// Note: currently, many distinct memos may be equivalent as URLs, e.g.
@@ -113,6 +128,14 @@ public class HttpUriDereferencer implements Dereferencer
 		if ( !memo.startsWith( "http://" )
 				|| successMemos.contains( memo )
 				|| failureMemos.contains( memo ) )
+		{
+			return;
+		}
+
+		// Don't dereference a URI which appears to point to a file which is not
+		// an RDF document.
+		int l = memo.lastIndexOf( '.' );
+		if ( l > -1 && badExtensions.contains( memo.substring( l + 1 ) ) )
 		{
 			return;
 		}
