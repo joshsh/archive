@@ -27,10 +27,10 @@ public class NumericLiteral implements RippleValue
 {
 	public enum NumericLiteralType { INTEGER, DOUBLE };
 
-	NumericLiteralType type;
-	Number number;
+	private NumericLiteralType type;
+	private Number number;
 
-	RdfValue rdfEquivalent = null;
+	private RdfValue rdfEquivalent = null;
 
 	public NumericLiteral( final RdfValue rdf )
 		throws RippleException
@@ -39,12 +39,16 @@ public class NumericLiteral implements RippleValue
 		Value v = rdf.getRdfValue();
 
 		if ( !( v instanceof Literal ) )
+		{
 			throw new RippleException( "value " + v.toString() + " is not a Literal" );
+		}
 
 		URI dataType = ( (Literal) v ).getDatatype();
 
 		if ( null == dataType )
+		{
 			throw new RippleException( "literal is untyped" );
+		}
 
 		else if ( dataType.equals( XMLSchema.INTEGER )
 			|| dataType.equals( XMLSchema.INT ) )
@@ -75,7 +79,9 @@ public class NumericLiteral implements RippleValue
 			}
 		}
 		else
+		{
 			throw new RippleException( "not a recognized numeric data type: " + dataType );
+		}
 	}
 
 	public NumericLiteral( final int i )
@@ -121,45 +127,70 @@ public class NumericLiteral implements RippleValue
 	public static NumericLiteral abs( final NumericLiteral a )
 	{
 		if ( NumericLiteralType.INTEGER == a.type )
+		{
 			return new NumericLiteral( Math.abs( a.intValue() ) );
+		}
+
 		else
+		{
 			return new NumericLiteral( Math.abs( a.doubleValue() ) );
+		}
 	}
 
 	public static NumericLiteral neg( final NumericLiteral a )
 	{
 		if ( NumericLiteralType.INTEGER == a.type )
+		{
 			return new NumericLiteral( -a.intValue() );
+		}
+
 		else
+		{
 			// Note: avoids negative zero.
 			return new NumericLiteral( 0.0 - a.doubleValue() );
+		}
 	}
 
 	public static NumericLiteral add( final NumericLiteral a,
 										final NumericLiteral b )
 	{
 		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
+		{
 			return new NumericLiteral( a.number.intValue() + b.number.intValue() );
+		}
+
 		else
+		{
 			return new NumericLiteral( a.number.doubleValue() + b.number.doubleValue() );
+		}
 	}
 
 	public static NumericLiteral sub( final NumericLiteral a,
 										final NumericLiteral b )
 	{
 		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
+		{
 			return new NumericLiteral( a.number.intValue() - b.number.intValue() );
+		}
+
 		else
+		{
 			return new NumericLiteral( a.number.doubleValue() - b.number.doubleValue() );
+		}
 	}
 
 	public static NumericLiteral mul( final NumericLiteral a,
 										final NumericLiteral b )
 	{
 		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
+		{
 			return new NumericLiteral( a.number.intValue() * b.number.intValue() );
+		}
+
 		else
+		{
 			return new NumericLiteral( a.number.doubleValue() * b.number.doubleValue() );
+		}
 	}
 
 	// Note: does not check for divide-by-zero.
@@ -167,9 +198,14 @@ public class NumericLiteral implements RippleValue
 										final NumericLiteral b )
 	{
 		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
+		{
 			return new NumericLiteral( a.number.intValue() / b.number.intValue() );
+		}
+
 		else
+		{
 			return new NumericLiteral( a.number.doubleValue() / b.number.doubleValue() );
+		}
 	}
 
 	// Note: does not check for divide-by-zero.
@@ -177,24 +213,35 @@ public class NumericLiteral implements RippleValue
 										final NumericLiteral b )
 	{
 		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
+		{
 			return new NumericLiteral( a.intValue() % b.intValue() );
+		}
+
 		else
+		{
 			return new NumericLiteral( a.doubleValue() % b.doubleValue() );
+		}
 	}
 
 	public static NumericLiteral pow( final NumericLiteral a,
 										final NumericLiteral pow )
 	{
 		double r = Math.pow( a.doubleValue(), pow.doubleValue() );
+
 		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == pow.type )
+		{
 			return new NumericLiteral( (int) r );
+		}
+
 		else
+		{
 			return new NumericLiteral( r );
+		}
 	}
 
 	// RippleValue methods /////////////////////////////////////////////////////
 
-	public RdfValue toRdf( ModelConnection mc )
+	public RdfValue toRdf( final ModelConnection mc )
 		throws RippleException
 	{
 		if ( null == rdfEquivalent )
@@ -260,7 +307,9 @@ public class NumericLiteral implements RippleValue
 		}
 
 		else
+		{
 			return RippleList.class.getName().compareTo( other.getClass().getName() );
+		}
 	}
 }
 

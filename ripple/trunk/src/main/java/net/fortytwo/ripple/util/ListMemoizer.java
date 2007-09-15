@@ -17,7 +17,7 @@ public class ListMemoizer<T extends Comparable,M>
 	private ListMemoizer<T,M> left, right;
 	private ListMemoizer<T,M> rest;
 
-	public ListMemoizer( ListNode<T> list, M memo )
+	public ListMemoizer( final ListNode<T> list, final M memo )
 	{
 		first = list.getFirst();
 		left = null;
@@ -37,7 +37,7 @@ public class ListMemoizer<T extends Comparable,M>
 		}
 	}
 
-	public boolean add( ListNode<T> list, M memo )
+	public boolean add( final ListNode<T> list, final M memo )
 	{
 		int cmp = first.compareTo( list.getFirst() );
 
@@ -54,7 +54,9 @@ public class ListMemoizer<T extends Comparable,M>
 				}
 
 				else
+				{
 					return false;
+				}
 			}
 
 			else
@@ -66,7 +68,9 @@ public class ListMemoizer<T extends Comparable,M>
 				}
 
 				else
+				{
 					return rest.add( r, memo );
+				}
 			}
 		}
 
@@ -79,7 +83,9 @@ public class ListMemoizer<T extends Comparable,M>
 			}
 
 			else
+			{
 				return left.add( list, memo );
+			}
 		}
 
 		else
@@ -91,39 +97,55 @@ public class ListMemoizer<T extends Comparable,M>
 			}
 
 			else
+			{
 				return right.add( list, memo );
+			}
 		}
 	}
 
-	private int compare( ListMemoizer<T, M> first,
-						ListMemoizer<T, M> second )
+	private int compare( final ListMemoizer<T, M> first,
+						final ListMemoizer<T, M> second )
 	{
 		if ( null == first )
+		{
 			return ( null == second )
 				? 0 : -1;
+		}
+
 		else if ( null == second )
+		{
 			return 1;
+		}
+
 		else
+		{
 			return first.compareTo( second );
+		}
 	}
 
-	public int compareTo( ListMemoizer<T, M> other )
+	public int compareTo( final ListMemoizer<T, M> other )
 	{
 		int cmp = first.compareTo( other.first );
 
 		if ( 0 != cmp )
+		{
 			return cmp;
+		}
 
 		cmp = compare( left, other.left );
 		if ( 0 != cmp )
+		{
 			return cmp;
+		}
 
 		cmp = compare( rest, other.rest );
 		if ( 0 != cmp )
+		{
 			return cmp;
+		}
 
 		cmp = compare( right, other.right );
-			return cmp;
+		return cmp;
 	}
 }
 

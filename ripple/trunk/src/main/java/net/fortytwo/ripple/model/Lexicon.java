@@ -41,13 +41,13 @@ import java.util.Iterator;
  */
 public class Lexicon
 {
-	ValueFactory valueFactory;
+	private ValueFactory valueFactory;
 
-	Hashtable<String, List<URI>> keywordToUriMap = null;
-	Hashtable<URI, String> uriToKeywordMap = null;
-	Hashtable<String, String> prefixToNamespaceMap = null;
-	Hashtable<String, String> namespaceToPrefixMap = null;
-	Collection<String> allQNames = null;
+	private Hashtable<String, List<URI>> keywordToUriMap = null;
+	private Hashtable<URI, String> uriToKeywordMap = null;
+	private Hashtable<String, String> prefixToNamespaceMap = null;
+	private Hashtable<String, String> namespaceToPrefixMap = null;
+	private Collection<String> allQNames = null;
 
 	public Lexicon( final Model model ) throws RippleException
 	{

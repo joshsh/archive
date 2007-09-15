@@ -26,29 +26,32 @@ import org.openrdf.rio.RDFFormat;
  */
 public class Ripple
 {
-	static boolean initialized = false;
+	private static boolean initialized = false;
 
-	static boolean allowDuplicateNamespaces;
-	static RDFFormat cacheFormat;
-	static boolean bufferQueryResults;
-	static int resultViewMaxObjects;
-	static int resultViewMaxPredicates;
-	static boolean resultViewPrintEntireStack;
-	static String defaultNamespace;
-	static boolean dereferenceUrisByNamespace;
-	static EvaluationOrder evaluationOrder;
-	static EvaluationStyle evaluationStyle;
-	static RDFFormat exportFormat;
-	static ExpressionAssociativity expressionAssociativity;
-	static ExpressionOrder expressionOrder;
-	static String jLineDebugOutput;
-	static boolean listPadding;
-	static int maxWorkerThreads;
-	static boolean preferNewestNamespaceDefinitions;
-	static boolean rejectNonAssociatedStatements;
-	static long urlConnectCourtesyInterval;
-	static long urlConnectTimeout;
-	static boolean useInference;
+	private static boolean allowDuplicateNamespaces;
+	private static RDFFormat cacheFormat;
+	private static boolean bufferQueryResults;
+	private static int resultViewMaxObjects;
+	private static int resultViewMaxPredicates;
+	private static boolean resultViewPrintEntireStack;
+	private static String defaultNamespace;
+	private static boolean dereferenceUrisByNamespace;
+	private static EvaluationOrder evaluationOrder;
+	private static EvaluationStyle evaluationStyle;
+	private static RDFFormat exportFormat;
+	private static ExpressionAssociativity expressionAssociativity;
+	private static ExpressionOrder expressionOrder;
+	private static String jLineDebugOutput;
+	private static boolean listPadding;
+	private static int maxWorkerThreads;
+	private static boolean preferNewestNamespaceDefinitions;
+	private static boolean rejectNonAssociatedStatements;
+	private static long urlConnectCourtesyInterval;
+	private static long urlConnectTimeout;
+	private static boolean useInference;
+
+// FIXME: quiet is never used
+	private static boolean quiet = false;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -154,9 +157,6 @@ public class Ripple
 	{
 		return "http://fortytwo.net/2007/08/ripple/cache#index";
 	}
-
-// FIXME: quiet is never used
-	static boolean quiet = false;
 
 	public static boolean getQuiet()
 	{
@@ -282,7 +282,7 @@ public class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	static String getStringProperty( final Properties props,
+	private static String getStringProperty( final Properties props,
 											final String name,
 											String defaultValue )
 	{
@@ -293,7 +293,7 @@ public class Ripple
 			: s;
 	}
 
-	static boolean getBooleanProperty( final Properties props,
+	private static boolean getBooleanProperty( final Properties props,
 											final String name,
 											boolean defaultValue )
 	{
@@ -304,7 +304,7 @@ public class Ripple
 			: s.equals( "true" );
 	}
 
-	static int getIntProperty( final Properties props,
+	private static int getIntProperty( final Properties props,
 									final String name,
 									final int defaultValue )
 		throws RippleException
@@ -330,7 +330,7 @@ public class Ripple
 		}
 	}
 
-	static long getLongProperty( final Properties props,
+	private static long getLongProperty( final Properties props,
 									final String name,
 									final long defaultValue )
 		throws RippleException
@@ -356,7 +356,7 @@ public class Ripple
 		}
 	}
 
-	static RDFFormat getRdfFormatProperty(
+	private static RDFFormat getRdfFormatProperty(
 		final Properties props,
 		final String name,
 		final RDFFormat defaultValue ) throws RippleException
@@ -394,8 +394,9 @@ public class Ripple
 		DIAGRAMMATIC      ( "diagrammatic" ),
 		ANTIDIAGRAMMATIC  ( "antidiagrammatic" );
 
-		String name;
-		ExpressionOrder( String n )
+		private String name;
+
+		private ExpressionOrder( final String n )
 		{
 			name = n;
 		}
@@ -421,8 +422,9 @@ public class Ripple
 		LEFT   ( "left" ),
 		RIGHT  ( "right" );
 
-		String name;
-		ExpressionAssociativity( String n )
+		private String name;
+
+		private ExpressionAssociativity( final String n )
 		{
 			name = n;
 		}
@@ -448,14 +450,14 @@ public class Ripple
 		EAGER  ( "eager" ),
 		LAZY   ( "lazy" );
 
-		String name;
+		private String name;
 
-		EvaluationOrder( String name )
+		private EvaluationOrder( final String name )
 		{
 			this.name = name;
 		}
 
-		public static EvaluationOrder find( String name )
+		public static EvaluationOrder find( final String name )
 			throws RippleException
 		{
 			for ( EvaluationOrder order : EvaluationOrder.values() )
@@ -475,14 +477,14 @@ public class Ripple
 		APPLICATIVE    ( "applicative" ),
 		COMPOSITIONAL  ( "compositional" );
 
-		String name;
+		private String name;
 
-		EvaluationStyle( String name )
+		private EvaluationStyle( final String name )
 		{
 			this.name = name;
 		}
 
-		public static EvaluationStyle find( String name )
+		public static EvaluationStyle find( final String name )
 			throws RippleException
 		{
 			for ( EvaluationStyle style : EvaluationStyle.values() )

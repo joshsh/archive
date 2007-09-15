@@ -19,14 +19,16 @@ import jline.Completor;
 
 public abstract class RippleCompletor implements Completor
 {
-	SortedSet<String> alts;
+	private SortedSet<String> alts;
 
 	public RippleCompletor( final Collection<String> alternatives )
 	{
 		alts = new TreeSet<String>();
 
 		for ( Iterator<String> i = alternatives.iterator(); i.hasNext(); )
+		{
 			alts.add( i.next() );
+		}
 	}
 
 	protected abstract int findStartIndex( String s );
@@ -40,7 +42,9 @@ public abstract class RippleCompletor implements Completor
 		// A cursor more than one character beyond the end of the buffer doesn't
 		// make sense (does it?)
 		if ( cursor > start.length() )
+		{
 			return -1;
+		}
 
 		// Allow replacement before the end of input only if the cursor is on a
 		// (single-character) delimiter.
@@ -48,17 +52,24 @@ public abstract class RippleCompletor implements Completor
 		{
 			String tail = start.substring( cursor, cursor + 1 );
 			if ( findStartIndex( tail ) <= 0 )
+			{
 				return -1;
+			}
+
 			else
+			{
 				start = ( cursor > 0 )
 					? start.substring( 0, cursor )
 					: "";
+			}
 		}
 
 		int startIndex = findStartIndex( start );
 
 		if ( startIndex < 0 )
+		{
 			return -1;
+		}
 
 		String pre = ( start.length() == startIndex )
 			? "" : start.substring( startIndex );
@@ -71,7 +82,9 @@ public abstract class RippleCompletor implements Completor
 			String can = i.next();
 	
 			if ( !( can.startsWith( pre ) ) )
+			{
 				break;
+			}
 
 			else
 			{

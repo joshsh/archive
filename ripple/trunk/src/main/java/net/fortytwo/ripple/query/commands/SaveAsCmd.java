@@ -21,7 +21,7 @@ import net.fortytwo.ripple.io.CacheManager;
 
 public class SaveAsCmd extends Command
 {
-	String fileName;
+	private String fileName;
 
 	public SaveAsCmd( final String fileName )
 	{

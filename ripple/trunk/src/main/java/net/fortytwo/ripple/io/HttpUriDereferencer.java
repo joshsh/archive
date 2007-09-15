@@ -42,18 +42,18 @@ import org.openrdf.repository.RepositoryResult;
 //       its associated web location are the same as its success or failure 'memo'.
 public class HttpUriDereferencer implements Dereferencer
 {
-	final static Logger logger = Logger.getLogger( HttpUriDereferencer.class );
+	private static final Logger LOGGER = Logger.getLogger( HttpUriDereferencer.class );
 
-	static final String[] badExt = {"123", "3dm", "3dmf", "3gp", "8bi", "aac", "ai", "aif", "app", "asf", "asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi", "com", "cpl", "cpp", "css", "csv", "dat", "db", "dll", "dmg", "dmp", "doc", "drv", "drw", "dxf", "eps", "exe", "fnt", "fon", "gif", "gz", "h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", "jpeg", "jpg", "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim", "mng", "mov", "mp3", "mp4", "mpa", "mpg", "msg", "msi", "otf", "pct", "pdf", "php", "pif", "pkg", "pl", "plugin", "png", "pps", "ppt", "ps", "psd", "psp", "qt", "qxd", "qxp", "ra", "ram", "rar", "reg", "rm", "rtf", "sea", "sit", "sitx", "sql", "svg", "swf", "sys", "tar", "tif", "ttf", "uue", "vb", "vcd", "wav", "wks", "wma", "wmv", "wpd", "wps", "ws", "xhtml", "xll", "xls", "yps", "zip"};
+	private static final String[] BADEXT = {"123", "3dm", "3dmf", "3gp", "8bi", "aac", "ai", "aif", "app", "asf", "asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi", "com", "cpl", "cpp", "css", "csv", "dat", "db", "dll", "dmg", "dmp", "doc", "drv", "drw", "dxf", "eps", "exe", "fnt", "fon", "gif", "gz", "h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", "jpeg", "jpg", "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim", "mng", "mov", "mp3", "mp4", "mpa", "mpg", "msg", "msi", "otf", "pct", "pdf", "php", "pif", "pkg", "pl", "plugin", "png", "pps", "ppt", "ps", "psd", "psp", "qt", "qxd", "qxp", "ra", "ram", "rar", "reg", "rm", "rtf", "sea", "sit", "sitx", "sql", "svg", "swf", "sys", "tar", "tif", "ttf", "uue", "vb", "vcd", "wav", "wks", "wma", "wmv", "wpd", "wps", "ws", "xhtml", "xll", "xls", "yps", "zip"};
 
-	Set<String> successMemos;
-	Set<String> failureMemos;
+	private Set<String> successMemos;
+	private Set<String> failureMemos;
 
-	Set<String> badExtensions;
+	private Set<String> badExtensions;
 
-	UrlFactory urlFactory;
+	private UrlFactory urlFactory;
 
-	public HttpUriDereferencer( UrlFactory urlFactory )
+	public HttpUriDereferencer( final UrlFactory urlFactory )
 	{
 		this.urlFactory = urlFactory;
 
@@ -62,9 +62,9 @@ public class HttpUriDereferencer implements Dereferencer
 
 		badExtensions = new HashSet<String>();
 
-		for ( int i = 0; i < badExt.length; i++ )
+		for ( int i = 0; i < BADEXT.length; i++ )
 		{
-			badExtensions.add( badExt[i] );
+			badExtensions.add( BADEXT[i] );
 		}
 	}
 
@@ -151,7 +151,7 @@ public class HttpUriDereferencer implements Dereferencer
 		// 'memo' is used as the base URI for any relative references.
 		try
 		{
-			logger.info( "Dereferencing URI <"
+			LOGGER.info( "Dereferencing URI <"
 				+ StringUtils.escapeUriString( uri.toString() )
 				+ "> at location " + url );
 
@@ -163,7 +163,7 @@ public class HttpUriDereferencer implements Dereferencer
 		// Semantic Web documents.
 		catch ( RippleException e )
 		{
-			logger.info( "Failed to dereference URI <"
+			LOGGER.info( "Failed to dereference URI <"
 				+ StringUtils.escapeUriString( uri.toString() ) + ">: " + e );
 
 			// For now, any exception thrown during the importing process
@@ -184,7 +184,7 @@ public class HttpUriDereferencer implements Dereferencer
 		}
 	}
 
-	void filter( final String ns, final URI context, ModelConnection mc )
+	void filter( final String ns, final URI context, final ModelConnection mc )
 		throws RippleException
 	{
 		RepositoryConnection conn = mc.getRepositoryConnection();
@@ -231,7 +231,7 @@ public class HttpUriDereferencer implements Dereferencer
 			throw new RippleException( t );
 		}
 
-		logger.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
+		LOGGER.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
 	}
 
 	public void dereference( final RdfValue rv, final ModelConnection mc )

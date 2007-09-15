@@ -16,14 +16,14 @@ import net.fortytwo.ripple.model.ModelConnection;
 
 public class UndefineTermCmd extends Command
 {
-	String term;
+	private String term;
 
 	public UndefineTermCmd( final String term )
 	{
 		this.term = term;
 	}
 
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		mc.removeStatementsAbout(

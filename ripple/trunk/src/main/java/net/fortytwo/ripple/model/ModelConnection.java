@@ -9,11 +9,7 @@
 
 package net.fortytwo.ripple.model;
 
-import java.io.InputStream;
 import java.io.OutputStream;
-
-import java.net.URL;
-import java.net.URLConnection;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,7 +17,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.Map;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
@@ -30,12 +25,9 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfNullSink;
 import net.fortytwo.ripple.io.RdfSink;
-import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.util.Buffer;
-import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.control.Task;
 import net.fortytwo.ripple.control.TaskSet;
 
@@ -55,25 +47,38 @@ import org.openrdf.query.GraphQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.rio.Rio;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 
 public class ModelConnection
 {
-	final static Logger logger
+	private static final Logger LOGGER
 		= Logger.getLogger( ModelConnection.class );
 
-	Model model;
-	RepositoryConnection repoConnection;
-	ValueFactory valueFactory;
+	private static int openRepoConns = 0;
+
+	private static Set<ModelConnection> openConnections
+		= new LinkedHashSet<ModelConnection>();
+
+	private static final RdfValue
+		RDF_FIRST = new RdfValue( RDF.FIRST ),
+		RDF_NIL = new RdfValue( RDF.NIL ),
+		RDF_REST = new RdfValue( RDF.REST );
+
+	private static Random rn = new Random();
+
+	private TaskSet taskSet = new TaskSet();
+
+	private Model model;
+	private RepositoryConnection repoConnection;
+	private ValueFactory valueFactory;
 public ValueFactory getValueFactory()
 {
 	return valueFactory;
 }
-	ModelBridge bridge;
-	String name = null;
+	private ModelBridge bridge;
+	private String name = null;
 
-RdfSink rdfSink = new RdfNullSink();
+private RdfSink rdfSink = new RdfNullSink();
 public RdfSink getRdfSink()
 {
 	return rdfSink;
@@ -85,7 +90,7 @@ public void setRdfSink( final RdfSink sink )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public ModelConnection( Model model )
+	public ModelConnection( final Model model )
 		throws RippleException
 	{
 		this.model = model;
@@ -126,7 +131,7 @@ public void setRdfSink( final RdfSink sink )
 
 	public void close() throws RippleException
 	{
-// logger.info( "Closing "
+// LOGGER.info( "Closing "
 // 	+ ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 // 	+ " (" + openConnections.size() + " total)." );
 
@@ -144,24 +149,22 @@ public void setRdfSink( final RdfSink sink )
 	*/
 	public void reset( final boolean rollback ) throws RippleException
 	{
-// logger.info( "Resetting "
+// LOGGER.info( "Resetting "
 //     + ( ( null == name ) ? "anonymous connection" : "connection \"" + name + "\"" )
 //     + " (" + openConnections.size() + " total)." );
 		closeRepositoryConnection( rollback );
 		openRepositoryConnection();
 	}
 
-	static int openRepoConns = 0;
-
 	// Establish a new Sesame connection.
-	void openRepositoryConnection()
+	private void openRepositoryConnection()
 		throws RippleException
 	{
 		try
 		{
 			repoConnection = model.getRepository().getConnection();
 // openRepoConns++;
-// logger.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
+// LOGGER.info( "opened repo connection (making " + openRepoConns + " total): " + repoConnection );
 		}
 
 		catch ( Throwable t )
@@ -171,7 +174,7 @@ public void setRdfSink( final RdfSink sink )
 	}
 
 	// Close the current Sesame connection.
-	void closeRepositoryConnection( final boolean rollback )
+	private void closeRepositoryConnection( final boolean rollback )
 		throws RippleException
 	{
 		try
@@ -179,10 +182,12 @@ public void setRdfSink( final RdfSink sink )
 			if ( repoConnection.isOpen() )
 			{
 				if ( rollback )
+				{
 					repoConnection.rollback();
+				}
 
 // openRepoConns--;
-// logger.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
+// LOGGER.info( "closing repo connection (making " + openRepoConns + " total): " + repoConnection );
 				repoConnection.close();
 
 				return;
@@ -195,15 +200,12 @@ public void setRdfSink( final RdfSink sink )
 		}
 
 		// Don't throw an exception: we could easily end up in a loop.
-		logger.error( "tried to close an already-closed connection" );
+		LOGGER.error( "tried to close an already-closed connection" );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	static Set<ModelConnection> openConnections
-		= new LinkedHashSet<ModelConnection>();
-
-	static void add( final ModelConnection mc )
+	private static void add( final ModelConnection mc )
 	{
 		synchronized ( openConnections )
 		{
@@ -211,7 +213,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	static void remove( final ModelConnection mc )
+	private static void remove( final ModelConnection mc )
 	{
 		synchronized ( openConnections )
 		{
@@ -263,7 +265,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	URI castToUri( final Value v ) throws RippleException
+	private URI castToUri( final Value v ) throws RippleException
 	{
 		if ( v instanceof URI )
 		{
@@ -276,7 +278,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	Literal castToLiteral( final Value v ) throws RippleException
+	private Literal castToLiteral( final Value v ) throws RippleException
 	{
 		if ( v instanceof Literal )
 		{
@@ -308,10 +310,14 @@ public void setRdfSink( final RdfSink sink )
 		throws RippleException
 	{
 		if ( rv instanceof NumericLiteral )
+		{
 			return (NumericLiteral) rv;
+		}
 
 		else
+		{
 			return new NumericLiteral( rv.toRdf( this ) );
+		}
 	}
 
 	public int intValue( final RippleValue rv ) throws RippleException
@@ -347,7 +353,7 @@ public void setRdfSink( final RdfSink sink )
 		return l.getLabel();
 	}
 
-	public URI uriValue( RippleValue v )
+	public URI uriValue( final RippleValue v )
 		throws RippleException
 	{
 		return castToUri( v.toRdf( this ).getRdfValue() );
@@ -359,10 +365,10 @@ public void setRdfSink( final RdfSink sink )
 	*/
 	private class SingleValueSink implements Sink<RdfValue>
 	{
-		RdfValue value = null;
-		int valuesReceived = 0;
+		private RdfValue value = null;
+		private int valuesReceived = 0;
 
-		public void put( RdfValue v ) throws RippleException
+		public void put( final RdfValue v ) throws RippleException
 		{
 			value = v;
 			valuesReceived++;
@@ -520,11 +526,6 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	static RdfValue
-		rdfFirst = new RdfValue( RDF.FIRST ),
-		rdfNil = new RdfValue( RDF.NIL ),
-		rdfRest = new RdfValue( RDF.REST );
-
 	public List<RippleValue> listValue( final RippleValue listHead )
 		throws RippleException
 	{
@@ -532,11 +533,11 @@ public void setRdfSink( final RdfSink sink )
 
 		RdfValue cur = listHead.toRdf( this );
 
-		while ( !cur.equals( rdfNil ) )
+		while ( !cur.equals( RDF_NIL ) )
 		{
-			RdfValue v = findUniqueProduct( cur, rdfFirst );
+			RdfValue v = findUniqueProduct( cur, RDF_FIRST );
 			list.add( bridge.get( v ) );
-			cur = findUniqueProduct( cur, rdfRest );
+			cur = findUniqueProduct( cur, RDF_REST );
 		}
 
 		return list;
@@ -751,13 +752,13 @@ public void setRdfSink( final RdfSink sink )
 			synchronized ( repoConnection )
 			{
 				RepositoryResult<Statement> stmtIter
-						= repoConnection.getStatements(
-								null, null, null, Ripple.useInference(), context );
+					= repoConnection.getStatements(
+						null, null, null, Ripple.useInference(), context );
 
 				while ( stmtIter.hasNext() )
 				{
-						stmtIter.next();
-						count++;
+					stmtIter.next();
+					count++;
 				}
 
 				stmtIter.close();
@@ -937,14 +938,16 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	private static Random rn = new Random();
-
-	private static int randomInt( int lo, int hi )
+	private static int randomInt( final int lo, final int hi )
 	{
 		int n = hi - lo + 1;
 		int i = rn.nextInt() % n;
+
 		if (i < 0)
+		{
 			i = -i;
+		}
+
 		return lo + i;
 	}
 
@@ -1073,7 +1076,7 @@ public void setRdfSink( final RdfSink sink )
 	public void setNamespace( final String prefix, final String ns, final boolean override )
 		throws RippleException
 	{
-//logger.info( "### setting namespace: '" + prefix + "' to " + ns );
+//LOGGER.info( "### setting namespace: '" + prefix + "' to " + ns );
 		try
 		{
 			synchronized ( repoConnection )
@@ -1103,7 +1106,7 @@ public void setRdfSink( final RdfSink sink )
 
 	// Hackishly find all terms in the given namespace which are the subject
 	// of statements.
-	Set<URI> findSubjectsInNamespace( final String ns )
+	private Set<URI> findSubjectsInNamespace( final String ns )
 		throws RippleException
 	{
 		Set<URI> subjects = new HashSet<URI>();
@@ -1119,6 +1122,7 @@ public void setRdfSink( final RdfSink sink )
 				while ( stmtIter.hasNext() )
 				{
 					Resource subj = stmtIter.next().getSubject();
+
 					if ( subj instanceof URI
 						&& subj.toString().startsWith( ns ) )
 					{
@@ -1141,8 +1145,8 @@ public void setRdfSink( final RdfSink sink )
 
 	private class SpecialSubgraphHandler implements Sink<Resource>
 	{
-		Set<Resource> visited;
-		RDFHandler handler;
+		private Set<Resource> visited;
+		private RDFHandler handler;
 
 		public SpecialSubgraphHandler( final RDFHandler handler )
 		{
@@ -1220,7 +1224,9 @@ public void setRdfSink( final RdfSink sink )
 		SpecialSubgraphHandler ssh = new SpecialSubgraphHandler( handler );
 
 		for ( Iterator<URI> subjIter = subjects.iterator(); subjIter.hasNext(); )
+		{
 			ssh.put( subjIter.next() );
+		}
 
 		try
 		{
@@ -1248,10 +1254,12 @@ public void setRdfSink( final RdfSink sink )
 			{
 				GraphQueryResult result = repoConnection.prepareGraphQuery(
 					QueryLanguage.SERQL, queryStr ).evaluate();
-	
+
 				while ( result.hasNext() )
+				{
 					statements.add( result.next() );
-	
+				}
+
 				result.close();
 			}
 		}
@@ -1266,7 +1274,7 @@ public void setRdfSink( final RdfSink sink )
 
 	////////////////////////////////////////////////////////////////////////////
 
-	void dereference( final RdfValue v )
+	private void dereference( final RdfValue v )
 	{
 		try
 		{
@@ -1276,13 +1284,14 @@ public void setRdfSink( final RdfSink sink )
 		catch ( RippleException e )
 		{
 			// (soft fail... don't even log the error)
+			;
 		}
 	}
 
 	private class MultiplyTask extends Task
 	{
-		RdfValue subj, pred;
-		Sink<RdfValue> sink;
+		private RdfValue subj, pred;
+		private Sink<RdfValue> sink;
 
 		public MultiplyTask( final RdfValue subj,
 							final RdfValue pred,
@@ -1306,8 +1315,6 @@ public void setRdfSink( final RdfSink sink )
 			}
 		}
 	}
-
-	TaskSet taskSet = new TaskSet();
 
 	public void multiplyAsynch( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
 		throws RippleException

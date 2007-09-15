@@ -17,9 +17,9 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ListDequotation implements Function
 {
-	RippleList reversedList;
+	private RippleList reversedList;
 
-	public ListDequotation( RippleList list )
+	public ListDequotation( final RippleList list )
 	{
 		reversedList = RippleList.invert( list );
 	}
@@ -30,8 +30,8 @@ public class ListDequotation implements Function
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		RippleList in = reversedList;
@@ -45,7 +45,9 @@ public class ListDequotation implements Function
 
 		// Never emit an empty stack.
 		if ( RippleList.NIL != out )
+		{
 			sink.put( out );
+		}
 	}
 }
 

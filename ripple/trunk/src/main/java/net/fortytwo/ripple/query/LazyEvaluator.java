@@ -22,18 +22,18 @@ import net.fortytwo.ripple.util.Sink;
 // Note: not thread-safe, on account of stop()
 public class LazyEvaluator extends Evaluator
 {
-	Model model;
-	ModelConnection modelConnection;
-	boolean stopped = true;
+	private Model model;
+	private ModelConnection modelConnection;
+	private boolean stopped = true;
 
 	////////////////////////////////////////////////////////////////////////////
 
 	protected class FunctionSink implements Sink<RippleList>
 	{
 		private Function function;
-		Sink<RippleList> sink;
+		private Sink<RippleList> sink;
 
-		public FunctionSink( Function function, Sink<RippleList> sink )
+		public FunctionSink( final Function function, final Sink<RippleList> sink )
 		{
 			this.function = function;
 			this.sink = sink;
@@ -41,16 +41,20 @@ public class LazyEvaluator extends Evaluator
 //System.out.println( "function.arity() = " + function.arity() );
 		}
 
-		public void put( RippleList stack )
+		public void put( final RippleList stack )
 			throws RippleException
 		{
 			if ( stopped )
+			{
 				return;
+			}
 
 //System.out.println( this + ".put( " + stack + " )" );
 //System.out.println( "   first = " + stack.getFirst() );
 			if ( function.arity() == 1 )
+			{
 				function.applyTo( stack, sink, modelConnection );
+			}
 
 			else
 			{
@@ -68,19 +72,21 @@ public class LazyEvaluator extends Evaluator
 
 	protected class EvaluatorSink implements Sink<RippleList>
 	{
-		Sink<RippleList> sink;
+		private Sink<RippleList> sink;
 
-		public EvaluatorSink( Sink<RippleList> sink )
+		public EvaluatorSink( final Sink<RippleList> sink )
 		{
 			this.sink = sink;
 //System.out.println( this + "( " + sink + ")" );
 		}
 
-		public void put( RippleList stack )
+		public void put( final RippleList stack )
 			throws RippleException
 		{
 			if ( stopped )
+			{
 				return;
+			}
 
 //System.out.println( this + ".put( " + stack + " )" );
 			RippleValue first = stack.getFirst();
@@ -90,12 +96,14 @@ public class LazyEvaluator extends Evaluator
 			{
 				RippleList rest = stack.getRest();
 
-				Function f = ((Operator) first).getFunction();
+				Function f = ( (Operator) first ).getFunction();
 
 				// Nullary functions don't need their argument stacks reduced.
 				// They shouldn't even care if the stack is empty.
 				if ( f.arity() == 0 )
+				{
 					f.applyTo( rest, this, modelConnection );
+				}
 
 				// Functions with positive arity do require the stack to be
 				// reduced, to one level per argument.
@@ -104,17 +112,23 @@ public class LazyEvaluator extends Evaluator
 					// Here's the part where we simply ignore stacks which can't
 					// be reduced to something with a passive item on top.
 					if ( RippleList.NIL == rest )
+					{
 						return;
 //						sink.put( stack );
+					}
 
 					else
+					{
 						( new EvaluatorSink(
 							new FunctionSink( f, this ) ) ).put( rest );
+					}
 				}
 			}
 
 			else
+			{
 				sink.put( stack );
+			}
 		}
 	}
 
@@ -126,7 +140,9 @@ public class LazyEvaluator extends Evaluator
 		throws RippleException
 	{
 if ( stack == RippleList.NIL )
+{
 	return;
+}
 
 		modelConnection = mc;
 		model = modelConnection.getModel();

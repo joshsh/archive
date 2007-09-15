@@ -18,10 +18,13 @@ import net.fortytwo.ripple.util.Sink;
 
 public class RecognizerAdapter
 {
-	Sink<ListAst> querySink, continuingQuerySink;
-	Sink<Command> commandSink;
-	Sink<RecognizerEvent> eventSink;
-	PrintStream errorStream;
+	private Sink<ListAst> querySink, continuingQuerySink;
+	private Sink<Command> commandSink;
+	private Sink<RecognizerEvent> eventSink;
+	private PrintStream errorStream;
+
+	// A helper variable for the lexer and parser.
+	private String languageTag;
 
 	public RecognizerAdapter( final Sink<ListAst> querySink,
 								final Sink<ListAst> continuingQuerySink,
@@ -91,9 +94,6 @@ public class RecognizerAdapter
 			e.logError();
 		}
 	}
-
-	// A helper variable for the lexer and parser.
-	String languageTag;
 
 	public String getLanguageTag()
 	{

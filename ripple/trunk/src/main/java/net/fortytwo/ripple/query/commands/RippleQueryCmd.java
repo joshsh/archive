@@ -25,10 +25,10 @@ import net.fortytwo.ripple.util.Source;
 
 public class RippleQueryCmd extends Command
 {
-	ListAst listAst;
-	Sink<RippleList> sink;
-	Source<RippleList> composedWith;
-	Evaluator evaluator;
+	private ListAst listAst;
+	private Sink<RippleList> sink;
+	private Source<RippleList> composedWith;
+	private Evaluator evaluator;
 
 	public RippleQueryCmd( final ListAst listAst,
 							final Sink<RippleList> sink,

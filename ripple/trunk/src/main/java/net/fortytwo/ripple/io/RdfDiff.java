@@ -18,7 +18,7 @@ import org.openrdf.model.Statement;
 
 public class RdfDiff
 {
-	LinkedList<Statement> added, subtracted;
+	private LinkedList<Statement> added, subtracted;
 
 	public RdfDiff()
 	{

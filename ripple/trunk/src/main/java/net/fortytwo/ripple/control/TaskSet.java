@@ -18,7 +18,22 @@ import net.fortytwo.ripple.util.Sink;
  */
 public class TaskSet
 {
-	int count = 0;
+	private int count = 0;
+
+	private Sink<Task> completedTaskSink = new Sink<Task>()
+	{
+		public synchronized void put( final Task task ) throws RippleException
+		{
+//System.out.println( "put( " + task + ")" );
+			count--;
+//System.out.println( "    [-] count is now: " + count );
+
+			if ( 0 == count )
+			{
+				notify();
+			}
+		}
+	};
 
 	public void add( final Task task )
 	{
@@ -65,21 +80,6 @@ public class TaskSet
 			completedTaskSink.notify();
 		}
 	}
-
-	Sink<Task> completedTaskSink = new Sink<Task>()
-	{
-		public synchronized void put( final Task task ) throws RippleException
-		{
-//System.out.println( "put( " + task + ")" );
-			count--;
-//System.out.println( "    [-] count is now: " + count );
-
-			if ( 0 == count )
-			{
-				notify();
-			}
-		}
-	};
 }
 
 // kate: tab-width 4

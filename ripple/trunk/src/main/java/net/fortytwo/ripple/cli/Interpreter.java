@@ -18,14 +18,14 @@ import org.apache.log4j.Logger;
 
 public class Interpreter
 {
-	final static Logger logger
+	private static final Logger LOGGER
 		= Logger.getLogger( Interpreter.class );
 
-	RecognizerAdapter recognizerAdapter;
+	private RecognizerAdapter recognizerAdapter;
 
-	InputStream input;
+	private InputStream input;
 
-	Sink<Exception> exceptionSink;
+	private Sink<Exception> exceptionSink;
 
 	public Interpreter( final RecognizerAdapter rc,
 						final InputStream in,
@@ -67,7 +67,7 @@ public class Interpreter
 			catch ( ParserQuitException e )
 			{
 //System.out.println( "-- quit" );
-				logger.debug( "quit() called on Interpreter" );
+				LOGGER.debug( "quit() called on Interpreter" );
 
 				break;
 			}
@@ -93,7 +93,7 @@ System.out.println( "-- interrupted" );
 		}
 	}
 
-	static void clear( final InputStream is ) throws RippleException
+	private static void clear( final InputStream is ) throws RippleException
 	{
 		try
 		{

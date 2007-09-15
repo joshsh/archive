@@ -18,10 +18,10 @@ import org.apache.log4j.Logger;
 
 public abstract class Task
 {
-	final static Logger logger = Logger.getLogger( Task.class );
+	private static final Logger LOGGER = Logger.getLogger( Task.class );
 
-	LinkedList<Task> children = null;
-	boolean finished = true, stopped = false;
+	private LinkedList<Task> children = null;
+	private boolean finished = true, stopped = false;
 
 	protected abstract void executeProtected() throws RippleException;
 	protected abstract void stopProtected();
@@ -95,7 +95,7 @@ public abstract class Task
 //System.out.println( "[" + this + "].addChild(" + child + ")" );
 		if ( finished )
 		{
-			logger.error( "attempted to add a child to a finished task" );
+			LOGGER.error( "attempted to add a child to a finished task" );
 		}
 
 		else

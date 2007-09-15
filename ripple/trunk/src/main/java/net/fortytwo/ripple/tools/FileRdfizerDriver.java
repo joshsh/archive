@@ -27,7 +27,9 @@ public class FileRdfizerDriver
 		System.out.println( "FileRdfizerDriver <fileName> [namespace]" );
 	}
 
-	private static void rdfize( File file, String namespace, OutputStream out )
+	private static void rdfize( final File file,
+								final String namespace,
+								final OutputStream out )
 		throws
 			org.openrdf.sail.SailInitializationException,
 			org.openrdf.sail.SailException,
@@ -52,7 +54,7 @@ public class FileRdfizerDriver
 		repository.shutDown();
 	}
 
-	public static void main( String [] args )
+	public static void main( final String [] args )
 	{
 		if ( args.length != 1 )
 		{
@@ -77,7 +79,8 @@ public class FileRdfizerDriver
 		}
 	}
 
-	private static void extractRDF( RepositoryConnection connection, OutputStream out )
+	private static void extractRDF( final RepositoryConnection connection,
+									final OutputStream out )
 		throws org.openrdf.rio.RDFHandlerException,
 		org.openrdf.repository.RepositoryException
 	{

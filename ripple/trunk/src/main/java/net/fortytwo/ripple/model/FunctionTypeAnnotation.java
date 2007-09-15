@@ -40,9 +40,9 @@ public class FunctionTypeAnnotation
 		}
 	}
 
-	List<Param> params;
-	RdfValue returnType;
-	String label, comment;
+	private List<Param> params;
+	private RdfValue returnType;
+	private String label, comment;
 
 /*
 
@@ -65,8 +65,8 @@ public class FunctionTypeAnnotation
 		return new Param( label, type, comment, transparency );
 	}
 */
-	static String rplNs = "http://fortytwo.net/2007/03/ripple/schema#";
-	static RdfValue
+	private static final String rplNs = "http://fortytwo.net/2007/03/ripple/schema#";
+	private static RdfValue
 		rplArityUri,
 		rplParameterUri,
 		rplParameterListUri,
@@ -75,9 +75,9 @@ public class FunctionTypeAnnotation
 		rplParametersUri,
 		rplReturnTypeUri;
 
-	static boolean initialized = false;
+	private static boolean initialized = false;
 
-	public FunctionTypeAnnotation( final RdfValue self, ModelConnection mc )
+	public FunctionTypeAnnotation( final RdfValue self, final ModelConnection mc )
 		throws RippleException
 	{
 // TODO: actually use these, or get rid of them

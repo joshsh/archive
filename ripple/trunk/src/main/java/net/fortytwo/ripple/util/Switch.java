@@ -13,8 +13,8 @@ import net.fortytwo.ripple.RippleException;
 
 public class Switch<T> implements Sink<T>
 {
-	Sink<T> left, right;
-	boolean state;
+	private Sink<T> left, right;
+	private boolean state;
 
 	public Switch( final Sink<T> left, final Sink<T> right )
 	{

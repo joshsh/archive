@@ -28,8 +28,8 @@ import org.openrdf.model.URI;
 
 public class DefineTermCmd extends Command
 {
-	ListAst ast;
-	String term;
+	private ListAst ast;
+	private String term;
 
 	public DefineTermCmd( ListAst ast, final String term )
 	{
@@ -37,26 +37,32 @@ public class DefineTermCmd extends Command
 		this.term = term;
 	}
 
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		Collector<RippleValue> expressions = new Collector<RippleValue>();
 		ast.evaluate( expressions, qe, mc );
 
 		if ( expressions.size() == 0 )
+		{
 			qe.getErrorPrintStream().println(
 				"Error: the given expression did not resolve to a value." );
+		}
 
 		else if ( expressions.size() > 1 )
+		{
 			qe.getErrorPrintStream().println(
 				"Error: the given expression resolved to multiple values." );
+		}
 
 		else
 		{
 			RippleValue expr = expressions.iterator().next();
 
 			if ( !( expr instanceof RippleList ) )
+			{
 				throw new RippleException( "term assignment for non-lists is not implemented" );
+			}
 
 			RippleList exprList = (RippleList) expr;
 
@@ -77,7 +83,7 @@ public class DefineTermCmd extends Command
 
 
 
-void pushListToSemWeb( final RippleList list, final ModelConnection mc ) throws RippleException
+private void pushListToSemWeb( final RippleList list, final ModelConnection mc ) throws RippleException
 {
 	final RdfDiff diff = new RdfDiff();
 

@@ -25,8 +25,12 @@ import java.util.ArrayList;
 // TODO: this class has more plumbing than it needs
 public class ListAst extends ListNode<Ast> implements Ast
 {
-	Ast first;
-	ListNode<Ast> rest;
+	private Ast first;
+	private ListNode<Ast> rest;
+
+	private ModelConnection modelConnection;
+	private QueryEngine queryEngine;
+	private Sink<RippleValue> valueSink;
 
 	public Ast getFirst()
 	{
@@ -53,7 +57,7 @@ public class ListAst extends ListNode<Ast> implements Ast
 		this.rest = rest;
 	}
 
-	boolean isNil()
+	private boolean isNil()
 	{
 		return ( null == first );
 	}
@@ -82,11 +86,7 @@ return null;
 	}
 */
 
-	ModelConnection modelConnection;
-	QueryEngine queryEngine;
-	Sink<RippleValue> valueSink;
-
-	Sink<RippleList> getSink( final ListNode<Ast> listAst )
+	private Sink<RippleList> getSink( final ListNode<Ast> listAst )
 	{
 		if ( null == listAst )
 		{

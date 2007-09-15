@@ -28,14 +28,14 @@ import java.util.Set;
 
 public class TurtleView implements Sink<RippleList>
 {
-	// A three-space-indented tree seems to be the most readable.
-	static final String indent = "   ";
+	// A three-space-INDENTed tree seems to be the most readable.
+	private static final String INDENT = "   ";
 
-	static final String indexSeparator = "  ";
+	private static final String INDEX_SEPARATOR = "  ";
 
-	RipplePrintStream ps;
-	ModelConnection mc;
-	int index = 0;
+	private RipplePrintStream ps;
+	private ModelConnection mc;
+	private int index = 0;
 
 	public TurtleView( final RipplePrintStream printStream,
 						final ModelConnection mc )
@@ -55,7 +55,7 @@ public class TurtleView implements Sink<RippleList>
 	{
 		RippleValue first = list.getFirst();
 
-		ps.print( "rdf:_" + ++index + indexSeparator );
+		ps.print( "rdf:_" + ++index + INDEX_SEPARATOR );
 		ps.print( Ripple.resultViewPrintEntireStack() ? list : first );
 		ps.print( "\n" );
 
@@ -71,7 +71,7 @@ public class TurtleView implements Sink<RippleList>
 		for ( Iterator<RdfValue> predIter = predicates.iterator();
 			predIter.hasNext(); )
 		{
-			ps.print( indent );
+			ps.print( INDENT );
 
 			if ( ++predCount > predlim )
 			{
@@ -90,8 +90,8 @@ public class TurtleView implements Sink<RippleList>
 			for ( Iterator<RdfValue> objIter = objects.iterator();
 				objIter.hasNext(); )
 			{
-				ps.print( indent );
-				ps.print( indent );
+				ps.print( INDENT );
+				ps.print( INDENT );
 
 				if ( ++objCount > objlim )
 				{

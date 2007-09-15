@@ -19,7 +19,7 @@ public class Closure implements Function
 	private RippleValue argument;
 	private int cachedArity;
 
-	public Closure( Function innerFunction, RippleValue argument )
+	public Closure( final Function innerFunction, final RippleValue argument )
 	{
 		this.innerFunction = innerFunction;
 		this.argument = argument;
@@ -33,8 +33,8 @@ public class Closure implements Function
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		innerFunction.applyTo( new RippleList( argument, stack ), sink,  mc );

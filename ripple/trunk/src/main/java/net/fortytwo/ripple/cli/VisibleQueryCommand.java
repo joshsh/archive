@@ -32,12 +32,12 @@ import net.fortytwo.ripple.util.Tee;
 
 public class VisibleQueryCommand extends Command
 {
-	ListAst ast;
-	CollectorHistory<RippleList> resultHistory;
-	boolean continued;
-	TaskSet taskSet;
+	private ListAst ast;
+	private CollectorHistory<RippleList> resultHistory;
+	private boolean continued;
+	private TaskSet taskSet;
 
-	Switch<RippleList> results;
+	private Switch<RippleList> results;
 
 	public VisibleQueryCommand( final ListAst query,
 							final CollectorHistory<RippleList> history,
@@ -113,7 +113,7 @@ nilSource.put( RippleList.NIL );
 		taskSet.stopWaiting();
 	}
 
-	static void dereference( final RippleValue v, final ModelConnection mc )
+	private static void dereference( final RippleValue v, final ModelConnection mc )
 		throws RippleException
 	{
 		RdfValue r = v.toRdf( mc );

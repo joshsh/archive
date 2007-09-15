@@ -19,10 +19,10 @@ import org.openrdf.model.Statement;
 
 public class RdfImporter implements RdfSink
 {
-	RdfSink sink;
-	Resource[] contexts;
-	ModelConnection mc;
-	boolean override;
+	private RdfSink sink;
+	private Resource[] contexts;
+	private ModelConnection mc;
+	private boolean override;
 
 	public RdfImporter( final ModelConnection mc,
 						final Resource... contexts )

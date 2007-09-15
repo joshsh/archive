@@ -48,13 +48,15 @@ System.out.println( "reponse code = " + responseCode );
 
 	}
 
-	static String createPostData( final RdfDiff diff ) throws RippleException
+	private static String createPostData( final RdfDiff diff ) throws RippleException
 	{
 		Iterator<Statement> addIter = diff.getAddedIterator();
 		Iterator<Statement> subIter = diff.getSubtractedIterator();
 
 		if ( !addIter.hasNext() && !subIter.hasNext() )
+		{
 			return "";
+		}
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream( bos );
@@ -101,20 +103,20 @@ System.out.println( "reponse code = " + responseCode );
 		{
 			ps.println( "DELETE {" );
 
-				Statement st = addIter.next();
+			Statement st = addIter.next();
 
 // TODO: ignore statements with blank nodes as subject or object... UNLESS they're found to serve some purpose
-				try
-				{
-					writer.startRDF();
-					writer.handleStatement( st );
-					writer.endRDF();
-				}
+			try
+			{
+				writer.startRDF();
+				writer.handleStatement( st );
+				writer.endRDF();
+			}
 
-				catch ( Throwable t )
-				{
-					throw new RippleException( t );
-				}
+			catch ( Throwable t )
+			{
+				throw new RippleException( t );
+			}
 
 			ps.println( "}" );
 		}

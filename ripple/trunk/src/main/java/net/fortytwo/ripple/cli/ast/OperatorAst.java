@@ -22,9 +22,9 @@ public class OperatorAst implements Ast
 	public OperatorAst()
 	{}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		sink.put( Operator.OP );

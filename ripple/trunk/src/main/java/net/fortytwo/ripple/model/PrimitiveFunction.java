@@ -20,13 +20,13 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	public PrimitiveFunction()
 	{}
 
-	public PrimitiveFunction( RdfValue v, ModelConnection mc )
+	public PrimitiveFunction( final RdfValue v, final ModelConnection mc )
 		throws RippleException
 	{
 		setRdfEquivalent( v, mc );
 	}
 
-	public void setRdfEquivalent( RdfValue v, ModelConnection mc )
+	public void setRdfEquivalent( final RdfValue v, final ModelConnection mc )
 		throws RippleException
 	{
 		rdfEquivalent = v;
@@ -34,13 +34,13 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 		typeAnnotation = new FunctionTypeAnnotation( v, mc );
 	}
 
-	public void printTo( RipplePrintStream p )
+	public void printTo( final RipplePrintStream p )
 		throws RippleException
 	{
 		p.print( rdfEquivalent );
 	}
 
-	public RdfValue toRdf( ModelConnection mc )
+	public RdfValue toRdf( final ModelConnection mc )
 		throws RippleException
 	{
 		return rdfEquivalent;
@@ -56,21 +56,31 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 		return false;
 	}
 
-	public int compareTo( RippleValue other )
+	public int compareTo( final RippleValue other )
 	{
 //System.out.println( "[" + this + "].compareTo(" + other + ")" );
 		if ( other instanceof PrimitiveFunction )
 		{
 			if ( other == this )
+			{
 				return 0;
+			}
+
 			else if ( this.hashCode() < other.hashCode() )
+			{
 				return -1;
+			}
+
 			else
+			{
 				return 1;
+			}
 		}
 
 		else
+		{
 			return this.getClass().getName().compareTo( other.getClass().getName() );
+		}
 	}
 }
 

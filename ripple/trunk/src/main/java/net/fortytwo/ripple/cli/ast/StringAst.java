@@ -52,9 +52,9 @@ public class StringAst implements Ast
 		this.language = language;
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		sink.put( ( null == language )

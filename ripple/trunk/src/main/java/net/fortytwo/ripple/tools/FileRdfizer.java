@@ -63,7 +63,7 @@ public class FileRdfizer
 
 	private int fileCount = 0;
 
-	public FileRdfizer( ValueFactory valueFactory )
+	public FileRdfizer( final ValueFactory valueFactory )
 	{
 		this.valueFactory = valueFactory;
 		
@@ -91,7 +91,10 @@ public class FileRdfizer
 		stringUri       = valueFactory.createURI( xsdNs + "string" );
 	}
 
-	public void addTree( File file, URI context, String namespace, RepositoryConnection connection )
+	public void addTree( final File file,
+						final URI context,
+						final String namespace,
+						final RepositoryConnection connection )
 		throws org.openrdf.sail.SailException,
 		org.openrdf.repository.RepositoryException
 	{
@@ -101,7 +104,10 @@ public class FileRdfizer
 		add( file, context, namespace, connection );
 	}
 
-	private URI add( File file, URI context, String namespace, RepositoryConnection connection )
+	private URI add( final File file,
+					final URI context,
+					final String namespace,
+					final RepositoryConnection connection )
 		throws org.openrdf.sail.SailException,
 		org.openrdf.repository.RepositoryException
 	{
@@ -184,7 +190,7 @@ public class FileRdfizer
 		return self;
 	}
 
-	private URI createFileUri( File file, String namespace )
+	private URI createFileUri( final File file, final String namespace )
 	{
 //		return valueFactory.createURI( file.toURI().toString() );
 		return valueFactory.createURI( namespace, "file" + fileCount++ );

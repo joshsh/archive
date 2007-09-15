@@ -24,9 +24,9 @@ public class BooleanAst implements Ast
 		this.value = value;
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		sink.put( mc.createValue( value ) );

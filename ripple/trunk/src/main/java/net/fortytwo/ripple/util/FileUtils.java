@@ -36,12 +36,16 @@ public class FileUtils
 				String line = reader.readLine();
 	
 				if ( null == line )
+				{
 					break;
-	
+				}
+
 				line = line.trim();
 	
 				if ( !line.startsWith( "#" ) && !line.equals( "" ) )
+				{
 					lines.add( line );
+				}
 			}
 		}
 

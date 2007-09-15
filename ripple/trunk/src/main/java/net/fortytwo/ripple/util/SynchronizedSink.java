@@ -13,7 +13,7 @@ import net.fortytwo.ripple.RippleException;
 
 public class SynchronizedSink<T> implements Sink<T>
 {
-	Sink<T> sink;
+	private Sink<T> sink;
 
 	public SynchronizedSink( final Sink<T> other )
 	{

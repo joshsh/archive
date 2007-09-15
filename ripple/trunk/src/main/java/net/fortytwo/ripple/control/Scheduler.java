@@ -21,14 +21,14 @@ import org.apache.log4j.Logger;
 
 public class Scheduler
 {
-	final static Logger logger = Logger.getLogger( Scheduler.class );
+	private static final Logger LOGGER = Logger.getLogger( Scheduler.class );
 
-	static Scheduler singleInstance = null;
+	private static Scheduler singleInstance = null;
 
-	LinkedList<TaskItem> taskQueue;
-	LinkedList<WorkerRunnable> allRunnables;
-	LinkedList<WorkerRunnable> waitingRunnables;
-	int maxThreads;
+	private LinkedList<TaskItem> taskQueue;
+	private LinkedList<WorkerRunnable> allRunnables;
+	private LinkedList<WorkerRunnable> waitingRunnables;
+	private int maxThreads;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +49,7 @@ public class Scheduler
 
 	////////////////////////////////////////////////////////////////////////////
 
-	Scheduler()
+	private Scheduler()
 	{
 		taskQueue = new LinkedList<TaskItem>();
 		allRunnables = new LinkedList<WorkerRunnable>();
@@ -58,7 +58,7 @@ public class Scheduler
 		maxThreads = Ripple.maxWorkerThreads();
 	}
 
-	void addPrivate( final Task task, final Sink<Task> completedTaskSink )
+	private void addPrivate( final Task task, final Sink<Task> completedTaskSink )
 	{
 		// Initialize the task immediately.  It may not begin executing for
 		// some time.
@@ -127,7 +127,9 @@ public class Scheduler
 				WorkerRunnable r = iter.next();
 				Task task = r.getCurrentTask();
 				if ( null != task )
+				{
 					task.stop();
+				}
 			}
 		}
 	}
@@ -136,19 +138,19 @@ public class Scheduler
 
 	private class TaskItem
 	{
+		public Task task;
+		public Sink<Task> sink;
+
 		public TaskItem( final Task task, final Sink<Task> sink )
 		{
 			this.task = task;
 			this.sink = sink;
 		}
-
-		public Task task;
-		public Sink<Task> sink;
 	}
 
 	private class WorkerThread extends Thread
 	{
-		WorkerRunnable runnable;
+		private WorkerRunnable runnable;
 
 		public WorkerThread( final WorkerRunnable r )
 		{
@@ -165,7 +167,7 @@ public class Scheduler
 
 	private class WorkerRunnable implements Runnable
 	{
-		TaskItem currentTaskItem = null;
+		private TaskItem currentTaskItem = null;
 
 		public void run()
 		{
@@ -236,14 +238,14 @@ public class Scheduler
 
 						catch ( InterruptedException e )
 						{
-							logger.warn( "worker runnable interrupted while waiting for new tasks" );
+							LOGGER.warn( "worker runnable interrupted while waiting for new tasks" );
 						}
 					}
 				}
 			}
 		}
 
-		void logThrowable( final Throwable t )
+		private void logThrowable( final Throwable t )
 		{
 			RippleException e;
 
@@ -256,7 +258,7 @@ public class Scheduler
 			{
 				if ( t instanceof InterruptedException )
 				{
-					logger.warn( "task interrupted: " + currentTaskItem.task );
+					LOGGER.warn( "task interrupted: " + currentTaskItem.task );
 					return;
 				}
 

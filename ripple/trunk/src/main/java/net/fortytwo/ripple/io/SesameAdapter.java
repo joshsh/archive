@@ -19,7 +19,7 @@ import org.openrdf.rio.RDFHandler;
 
 public class SesameAdapter implements RDFHandler
 {
-	RdfSink sink;
+	private RdfSink sink;
 
 	public SesameAdapter( final RdfSink sink )
 	{

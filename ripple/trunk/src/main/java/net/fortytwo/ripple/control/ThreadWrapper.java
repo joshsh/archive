@@ -13,10 +13,10 @@ import net.fortytwo.ripple.RippleException;
 
 public abstract class ThreadWrapper
 {
-	String name;
+	private String name;
 
-	boolean finished;
-	RippleException error;
+	private boolean finished;
+	private RippleException error;
 
 	protected abstract void run() throws RippleException;
 
@@ -25,10 +25,10 @@ public abstract class ThreadWrapper
 		this.name = name;
 	}
 
-	void setFinished( boolean f ) { finished = f; }
-	void setError( RippleException e ) { error = e; }
-	boolean getFinished() { return finished; }
-	RippleException getError() { return error; }
+	private void setFinished( final boolean f ) { finished = f; }
+	private void setError( final RippleException e ) { error = e; }
+	private boolean getFinished() { return finished; }
+	private RippleException getError() { return error; }
 
 	public void start( final long timeout ) throws RippleException
 	{
@@ -67,13 +67,19 @@ public abstract class ThreadWrapper
 			synchronized ( monitorObj )
 			{
 				if ( timeout > 0 )
+				{
 					monitorObj.wait( timeout );
+				}
 				else
+				{
 					monitorObj.wait();
+				}
 			}
 
 			if ( !getFinished() )
+			{
 				t.interrupt();
+			}
 		}
 
 		catch ( InterruptedException e )
@@ -82,10 +88,14 @@ public abstract class ThreadWrapper
 		}
 
 		if ( !getFinished() )
+		{
 			throw new RippleException( "operation timed out" );
+		}
 
 		else if ( null != getError() )
+		{
 			throw getError();
+		}
 	}
 
 	public void start() throws RippleException

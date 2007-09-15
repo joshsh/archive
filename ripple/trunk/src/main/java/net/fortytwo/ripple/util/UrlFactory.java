@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class UrlFactory
 {
-	private final static Logger logger
+	private static final Logger LOGGER
 		= Logger.getLogger( UrlFactory.class );
 
 	private Map<String, String> map;
@@ -61,14 +61,16 @@ public class UrlFactory
 		Iterator<String> keySetIter = keySet.iterator();
 		int j = 0;
 		while ( keySetIter.hasNext() )
+		{
 			sourceUrls[j++] = keySetIter.next();
+		}
 		Arrays.sort( sourceUrls );
 
 		targetUrls = new String[ sourceUrls.length ];
 		for ( int i = 0; i < sourceUrls.length; i++ )
 		{
 			targetUrls[i] = map.get( sourceUrls[i] );
-			logger.debug( "map " + sourceUrls[i] + " to " + targetUrls[i] );
+			LOGGER.debug( "map " + sourceUrls[i] + " to " + targetUrls[i] );
 		}
 
 		upToDate = true;
@@ -85,7 +87,9 @@ public class UrlFactory
 		throws RippleException
 	{
 		if ( !upToDate )
+		{
 			update();
+		}
 
 		int fromIndex = 0, toIndex = sourceUrls.length - 1;
 		int mid = 0, cmp = 0;
@@ -103,20 +107,28 @@ public class UrlFactory
 			}
 
 			else if ( cmp < 0 )
+			{
 				toIndex = mid - 1;
+			}
 
 			// Exact match.  Return the corresponding target URL.
 			else
+			{
 				return createUrlPrivate( targetUrls[mid] );
+			}
 		}
 
 		if ( -1 < i && urlStr.startsWith( sourceUrls[i] ) )
+		{
 			return createUrlPrivate(
 				targetUrls[i] + urlStr.substring( sourceUrls[i].length() ) );
+		}
 
 		// No rewrite necessary.
 		else
+		{
 			return createUrlPrivate( urlStr );
+		}
 	}
 }
 

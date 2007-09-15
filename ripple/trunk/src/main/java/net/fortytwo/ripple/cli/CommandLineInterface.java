@@ -14,11 +14,8 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
-import java.io.PrintStream;
 import java.io.OutputStreamWriter;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -31,27 +28,15 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
 import net.fortytwo.ripple.control.Scheduler;
-import net.fortytwo.ripple.control.Task;
 import net.fortytwo.ripple.control.TaskQueue;
-import net.fortytwo.ripple.control.TaskSet;
-import net.fortytwo.ripple.io.Dereferencer;
-import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.io.ThreadedInputStream;
-import net.fortytwo.ripple.cli.TurtleView;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
-import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.query.commands.RippleQueryCmd;
-import net.fortytwo.ripple.util.Buffer;
-import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.SynchronizedSink;
-import net.fortytwo.ripple.util.Tee;
 
 import org.apache.log4j.Logger;
 
@@ -61,27 +46,27 @@ import org.apache.log4j.Logger;
  */
 public class CommandLineInterface
 {
-	final static Logger logger
+	private static final Logger LOGGER
 		= Logger.getLogger( CommandLineInterface.class );
 
-	final static byte[] EOL = { '\n' };
+	private static final byte[] EOL = { '\n' };
 
-	PipedInputStream  writeIn;
-	PipedOutputStream readOut;
-	ThreadedInputStream consoleReaderInput;
+	private PipedInputStream  writeIn;
+	private PipedOutputStream readOut;
+	private ThreadedInputStream consoleReaderInput;
 
-	Interpreter interpreter;
+	private Interpreter interpreter;
 
-	ConsoleReader reader;
-	int lineNumber;
+	private ConsoleReader reader;
+	private int lineNumber;
 
-	QueryEngine queryEngine;
+	private QueryEngine queryEngine;
 
-	CollectorHistory<RippleList> queryResultHistory
+	private CollectorHistory<RippleList> queryResultHistory
 		= new CollectorHistory<RippleList>( 2 );
-boolean lastQueryContinued = false;
+private boolean lastQueryContinued = false;
 
-	TaskQueue taskQueue = new TaskQueue();
+	private TaskQueue taskQueue = new TaskQueue();
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -147,11 +132,11 @@ boolean lastQueryContinued = false;
 						readLine();
 						break;
 					case ESCAPE:
-						logger.debug( "received escape event" );
+						LOGGER.debug( "received escape event" );
 						abortCommands();
 						break;
 					case QUIT:
-						logger.debug( "received quit event" );
+						LOGGER.debug( "received quit event" );
 						abortCommands();
 						// Note: exception handling used for control
 						throw new ParserQuitException();
@@ -189,11 +174,11 @@ boolean lastQueryContinued = false;
 				}
 
 				else
-{
+				{
 					alert( "Error: " + e.toString() );
 					throw new RippleException(
 						"non-recoverable exception thrown: " + e.toString() );
-}
+				}
 			}
 		};
 
@@ -251,7 +236,7 @@ boolean lastQueryContinued = false;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	void readLine()
+	private void readLine()
 	{
 		try
 		{
@@ -282,14 +267,14 @@ boolean lastQueryContinued = false;
 		}
 	}
 
-	void alert( String s )
+	private void alert( final String s )
 	{
 		queryEngine.getErrorPrintStream().println( "\n" + s + "\n" );
 	}
 
-	void updateCompletors()
+	private void updateCompletors()
 	{
-		logger.debug( "updating completors" );
+		LOGGER.debug( "updating completors" );
 		List completors = new ArrayList();
 
 		try
@@ -333,7 +318,7 @@ boolean lastQueryContinued = false;
 		catch ( RippleException e )
 		{
 			e.logError();
-			logger.error( "failed to update completors" );
+			LOGGER.error( "failed to update completors" );
 		}
 	}
 
@@ -350,14 +335,14 @@ boolean lastQueryContinued = false;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	void addCommand( final Command cmd )
+	private void addCommand( final Command cmd )
 	{
 //System.out.println( "addCommand(" + cmd + ")" );
 		cmd.setQueryEngine( queryEngine );
 		taskQueue.add( cmd );
 	}
 
-	void executeCommands() throws RippleException
+	private void executeCommands() throws RippleException
 	{
 //System.out.println( "executeCommands()" );
 		Scheduler.add( taskQueue );
@@ -378,7 +363,7 @@ boolean lastQueryContinued = false;
 		consoleReaderInput.setEager( false );
 	}
 
-	void abortCommands()
+	private void abortCommands()
 	{
 //System.out.println( "abortCommands()" );
 		taskQueue.stop();

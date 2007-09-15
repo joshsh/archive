@@ -36,15 +36,15 @@ import org.openrdf.model.Value;
 
 public class QueryEngine
 {
-	final static Logger logger
+	private static final Logger LOGGER
 		= Logger.getLogger( QueryEngine.class );
 
-	Model model;
-	Lexicon lexicon;
-	Evaluator evaluator;
+	private Model model;
+	private Lexicon lexicon;
+	private Evaluator evaluator;
 
-	RipplePrintStream printStream;
-	PrintStream errorPrintStream;
+	private RipplePrintStream printStream;
+	private PrintStream errorPrintStream;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -116,23 +116,33 @@ public class QueryEngine
 		String defaultNs = lexicon.resolveNamespacePrefix( "" );
 
 		if ( null == defaultNs )
+		{
 			throw new RippleException( "no default namespace is defined.  Use '@prefix : <...>.'" );
+		}
 
 		return defaultNs;
 	}
 
-	public void uriForKeyword( final String localName, Sink<RippleValue> sink )
+	public void uriForKeyword( final String localName, final Sink<RippleValue> sink )
 		throws RippleException
 	{
 		Collection<URI> options = lexicon.uriForKeyword( localName );
+
 		if ( 0 == options.size() )
+		{
 			errorPrintStream.println( "Warning: no values resolved for keyword " + localName );
+		}
+
 		else if ( 1 < options.size() )
+		{
 			errorPrintStream.println( "Warning: multiple values resolved for keyword " + localName );
+		}
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
+		{
 			sink.put( model.getBridge().get(
 				new RdfValue( optIter.next() ) ) );
+		}
 	}
 
 	public void uriForQName( final String nsPrefix,
@@ -143,11 +153,15 @@ public class QueryEngine
 		Value v = lexicon.uriForQName( nsPrefix, localName );
 
 		if ( null == v )
+		{
 			errorPrintStream.println( "Warning: no values resolved for " + nsPrefix + ":" + localName );
+		}
 
 		else
+		{
 			sink.put( model.getBridge().get(
 				new RdfValue( v ) ) );
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -177,7 +191,7 @@ public class QueryEngine
 
 	////////////////////////////////////////////////////////////////////////////
 
-	void initializeLexicon() throws RippleException
+	private void initializeLexicon() throws RippleException
 	{
 		LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
 

@@ -30,7 +30,9 @@ import org.openrdf.rio.RDFFormat;
 
 public class HttpUtils
 {
-	final static Logger logger = Logger.getLogger( HttpUtils.class );
+	private static final Logger LOGGER = Logger.getLogger( HttpUtils.class );
+
+	private static Map<String, Date> lastRequestByHost = new HashMap<String, Date>();
 
 	public static void prepareUrlConnectionForTextRequest( final URLConnection urlConn )
 	{
@@ -56,7 +58,10 @@ public class HttpUtils
 		for ( int i = 0; i < mimeTypes.length; i++ )
 		{
 			if ( i > 0 )
+			{
 				sb.append( ", " );
+			}
+
 			sb.append( mimeTypes[i] );
 		}
 		urlConn.setRequestProperty( "Accept", sb.toString() );
@@ -73,7 +78,9 @@ public class HttpUtils
 		StringBuilder sb = new StringBuilder();
 		sb.append( "application/rdf+xml" );
 		if ( n3DeserializationSupported )
+		{
 			sb.append( ", text/rdf+n3" );
+		}
 		sb.append( ", application/trix" );
 		sb.append( ", application/x-turtle" );
 		sb.append( ", text/plain" );
@@ -84,8 +91,6 @@ public class HttpUtils
 // To consider at some point: caching, authorization
 	}
 
-	static Map<String, Date> lastRequestByHost = new HashMap<String, Date>();
-
 	/**
 	 *  A wrapper for URLConnection.connect() which enforces crawler etiquette.
 	 *  That is, it avoids the Ripple client making a nuisance of itself by
@@ -95,9 +100,9 @@ public class HttpUtils
 	public static void connect( final URLConnection urlConn )
 		throws RippleException
 	{
-//logger.info( "connecting to: " + urlConn.getURL() );
+//LOGGER.info( "connecting to: " + urlConn.getURL() );
 		String host = urlConn.getURL().getHost();
-//logger.info( "    host = " + host );
+//LOGGER.info( "    host = " + host );
 
 		// Some connections (e.g. file system operations) have no host.  Don't
 		// bother regulating them.
@@ -105,7 +110,7 @@ public class HttpUtils
 		{
 			Date now = new Date();
 			long delay = Ripple.urlConnectCourtesyInterval();
-//logger.info( "    delay = " + delay );
+//LOGGER.info( "    delay = " + delay );
 	
 			Date lastRequest;
 			long w = 0;
@@ -120,7 +125,9 @@ public class HttpUtils
 					// If it hasn't been long enough since the last request from the same
 					// host, wait a bit before issuing a new request.
 					if ( now.getTime() - lastRequest.getTime() < delay )
+					{
 						w = lastRequest.getTime() + delay - now.getTime();
+					}
 				}
 
 				// Record the projected start time of the request beforehand, to
@@ -134,7 +141,7 @@ public class HttpUtils
 			{
 				try
 				{
-//logger.info( "    waiting " + w + " milliseconds" );
+//LOGGER.info( "    waiting " + w + " milliseconds" );
 					Thread.sleep( w );
 				}
 
@@ -229,9 +236,13 @@ public class HttpUtils
 			{
 				String value = valueIter.next();
 				if ( first )
+				{
 					first = false;
+				}
 				else
+				{
 					sb.append( ", " );
+				}
 				sb.append( value );
 			}
 
@@ -243,7 +254,7 @@ public class HttpUtils
 
 	////////////////////////////////////////////////////////////////////////////
 
-	static void setAgent( final URLConnection urlConn )
+	private static void setAgent( final URLConnection urlConn )
 	{
 		urlConn.setRequestProperty( "User-Agent",
 			Ripple.getName() + "/" + Ripple.getVersion() );

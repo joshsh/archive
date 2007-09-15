@@ -19,9 +19,9 @@ import org.openrdf.model.Statement;
 
 public class RdfCollector implements RdfSink
 {
-	LinkedList<Statement> statements;
-	LinkedList<Namespace> namespaces;
-	LinkedList<String> comments;
+	private LinkedList<Statement> statements;
+	private LinkedList<Namespace> namespaces;
+	private LinkedList<String> comments;
 
 	public RdfCollector()
 	{

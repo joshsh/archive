@@ -13,18 +13,22 @@ import java.util.Collection;
 
 public class LexicalCompletor extends RippleCompletor
 {
-	char [] delimiters = { ' ', '\t', '\n', '\r', '(', ')', '.', ';', '/', '!' };
+	private static final char [] DELIMITERS = { ' ', '\t', '\n', '\r', '(', ')', '.', ';', '/', '!' };
 
 	public LexicalCompletor( final Collection<String> alternatives )
 	{
 		super( alternatives );
 	}
 
-	boolean isDelimiter( final char c )
+	private boolean isDelimiter( final char c )
 	{
-		for ( int i = 0; i < delimiters.length; i++ )
-			if ( delimiters[i] == c )
+		for ( int i = 0; i < DELIMITERS.length; i++ )
+		{
+			if ( DELIMITERS[i] == c )
+			{
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -36,7 +40,9 @@ public class LexicalCompletor extends RippleCompletor
 		for ( int i = 0; i < s.length(); i++ )
 		{
 			if ( isDelimiter( s.charAt( i ) ) )
+			{
 				index = i + 1;
+			}
 		}
 
 		return index;

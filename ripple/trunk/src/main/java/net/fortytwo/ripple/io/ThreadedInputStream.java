@@ -25,11 +25,11 @@ import net.fortytwo.ripple.control.Task;
  */
 public class ThreadedInputStream extends InputStream
 {
-	InputStream source;
-	PipedInputStream writeIn;
-	PipedOutputStream readOut;
-	boolean eager;
-	Task readerTask;
+	private InputStream source;
+	private PipedInputStream writeIn;
+	private PipedOutputStream readOut;
+	private boolean eager;
+	private Task readerTask;
 
 	public ThreadedInputStream( final InputStream is )
 		throws RippleException
@@ -124,7 +124,7 @@ public class ThreadedInputStream extends InputStream
 		}
 	}
 
-	void createTask()
+	private void createTask()
 	{
 		readerTask = new Task()
 		{

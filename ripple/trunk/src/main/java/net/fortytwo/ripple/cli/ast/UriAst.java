@@ -36,9 +36,9 @@ public class UriAst implements Ast
 		}
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		sink.put( mc.getModel().getBridge().get(
@@ -49,8 +49,6 @@ public class UriAst implements Ast
 	{
 		return "<" + StringUtils.escapeUriString( value ) + ">";
 	}
-
-
 }
 
 // kate: tab-width 4

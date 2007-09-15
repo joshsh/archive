@@ -29,9 +29,9 @@ public class KeywordAst implements Ast
 		return keyword;
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		qe.uriForKeyword( keyword, sink );

@@ -31,7 +31,7 @@ http://www.rdfabout.com/sitemap.xml
 		}
 	}
 
-	static void testPrivate() throws Exception
+	private static void testPrivate() throws Exception
 	{
 		RobotsTXTParser parser = new RobotsTXTParser( "purl.uniprot.org" );
 			boolean isSafe = parser.isRobotSafe( "Ripple-0.4", "sitemap.xml" );

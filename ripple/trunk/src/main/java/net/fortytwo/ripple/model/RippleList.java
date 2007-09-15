@@ -23,23 +23,23 @@ import org.openrdf.model.vocabulary.RDF;
 
 public class RippleList extends ListNode<RippleValue> implements RippleValue
 {
-	public static RippleList NIL
+	public static final RippleList NIL
 		= new RippleList(
 			// Note: this dummy value avoids null pointer exceptions in the list
 			//       memoizer.
 			new NumericLiteral( 42 ),
 			(RippleList) null );
 
-	static RdfValue rdfType = new RdfValue( RDF.TYPE );
-	static RdfValue rdfList = new RdfValue( RDF.LIST );
-	static RdfValue rdfFirst = new RdfValue( RDF.FIRST );
-	static RdfValue rdfRest = new RdfValue( RDF.REST );
-	static RdfValue rdfNil = new RdfValue( RDF.NIL );
+	private static final RdfValue RDF_TYPE = new RdfValue( RDF.TYPE );
+	private static final RdfValue RDF_LIST = new RdfValue( RDF.LIST );
+	private static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
+	private static final RdfValue RDF_REST = new RdfValue( RDF.REST );
+	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
-	RippleValue first;
-	RippleList rest;
+	private RippleValue first;
+	private RippleList rest;
 
-	RdfValue rdfEquivalent = null;
+	private RdfValue rdfEquivalent = null;
 
 	public RippleValue getFirst()
 	{
@@ -55,13 +55,17 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		throws RippleException
 	{
 		if ( i < 0 )
+		{
 			throw new RippleException( "list index out of bounds: " + i );
+		}
 
 		RippleList cur = this;
 		for ( int j = 0; j < i; j++ )
 		{
 			if ( NIL == cur )
+			{
 				throw new RippleException( "list index out of bounds: " + i );
+			}
 
 			cur = cur.getRest();
 		}
@@ -98,14 +102,18 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	public static RippleList createList( final RdfValue v, final ModelConnection mc )
 		throws RippleException
 	{
-		if ( v.equals( rdfNil ) )
+		if ( v.equals( RDF_NIL ) )
+		{
 			return NIL;
+		}
 
 		else
+		{
 			return new RippleList( v, mc );
+		}
 	}
 
-	RippleList( final RdfValue v, final ModelConnection mc )
+	private RippleList( final RdfValue v, final ModelConnection mc )
 		throws RippleException
 	{
 		RdfValue curRdf = v;
@@ -121,11 +129,13 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			//       place to do this when we're coming from an rdf:List.
 			//       Consider a list containing operators.
 			first = mc.getModel().getBridge().get(
-				mc.findUniqueProduct( curRdf, rdfFirst ) );
+				mc.findUniqueProduct( curRdf, RDF_FIRST ) );
 
-			curRdf = mc.findAtLeastOneObject( curRdf, rdfRest );
-			if ( curRdf.equals( rdfNil ) )
+			curRdf = mc.findAtLeastOneObject( curRdf, RDF_REST );
+			if ( curRdf.equals( RDF_NIL ) )
+			{
 				break;
+			}
 
 			else
 			{
@@ -165,7 +175,9 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		if ( null == rdfEquivalent )
 		{
 			if ( NIL == this )
-				rdfEquivalent = rdfNil;
+			{
+				rdfEquivalent = RDF_NIL;
+			}
 
 			else
 			{
@@ -174,17 +186,17 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	
 				// Annotate the head of the list with a type, but don't bother
 				// annotating every node in the list.
-				mc.add( curRdf, rdfType, rdfList );
+				mc.add( curRdf, RDF_TYPE, RDF_LIST );
 	
 				RippleList cur = invert( this );
 	
 				while ( cur != NIL )
 				{
-					mc.add( curRdf, rdfFirst, cur.first.toRdf( mc ) );
+					mc.add( curRdf, RDF_FIRST, cur.first.toRdf( mc ) );
 					RippleList rest = cur.rest;
 					RdfValue restRdf = ( NIL == cur.rest )
-						? rdfNil : new RdfValue( mc.createBNode() );
-					mc.add( curRdf, rdfRest, restRdf );
+						? RDF_NIL : new RdfValue( mc.createBNode() );
+					mc.add( curRdf, RDF_REST, restRdf );
 					curRdf = restRdf;
 					cur = cur.rest;
 				}
@@ -250,7 +262,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 									final ModelConnection mc )
 		throws RippleException
 	{
-		if ( v.equals( rdfNil ) )
+		if ( v.equals( RDF_NIL ) )
 			sink.put( NIL );
 
 		else
@@ -277,10 +289,10 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				//       place to do this when we're coming from an rdf:List.
 				//       Consider a list containing operators.
 				first = mc.getModel().getBridge().get(
-					mc.findUniqueProduct( curRdf, rdfFirst ) );
+					mc.findUniqueProduct( curRdf, RDF_FIRST ) );
 	
-				curRdf = mc.findAtLeastOneObject( curRdf, rdfRest );
-				if ( curRdf.equals( rdfNil ) )
+				curRdf = mc.findAtLeastOneObject( curRdf, RDF_REST );
+				if ( curRdf.equals( RDF_NIL ) )
 					break;
 	
 				else
@@ -318,15 +330,22 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				if ( Operator.OP == val )
 				{
 					if ( isFirst )
+					{
 						isFirst = false;
+					}
+
 					else
+					{
 						sb.append( " " );
+					}
 
 					sb.append( val );
 				}
 
 				else
+				{
 					stateVal = val;
+				}
 			}
 
 			else
@@ -334,9 +353,14 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				if ( Operator.OP == val )
 				{
 					if ( isFirst )
+					{
 						isFirst = false;
+					}
+
 					else
+					{
 						sb.append( " " );
+					}
 
 					sb.append( "/" );
 					sb.append( stateVal );
@@ -346,9 +370,14 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				else
 				{
 					if ( isFirst )
+					{
 						isFirst = false;
+					}
+
 					else
+					{
 						sb.append( " " );
+					}
 
 					sb.append( stateVal );
 					stateVal = val;
@@ -361,7 +390,9 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		if ( null != stateVal )
 		{
 			if ( !isFirst )
+			{
 				sb.append( " " );
+			}
 
 			sb.append( stateVal );
 		}
@@ -393,15 +424,22 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				if ( Operator.OP == val )
 				{
 					if ( isFirst )
+					{
 						isFirst = false;
+					}
+
 					else
+					{
 						p.print( " " );
+					}
 
 					p.print( val );
 				}
 
 				else
+				{
 					stateVal = val;
+				}
 			}
 
 			else
@@ -409,9 +447,14 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				if ( Operator.OP == val )
 				{
 					if ( isFirst )
+					{
 						isFirst = false;
+					}
+
 					else
+					{
 						p.print( " " );
+					}
 
 					p.print( "/" );
 					p.print( stateVal );
@@ -421,9 +464,14 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				else
 				{
 					if ( isFirst )
+					{
 						isFirst = false;
+					}
+
 					else
+					{
 						p.print( " " );
+					}
 
 					p.print( stateVal );
 					stateVal = val;
@@ -436,7 +484,9 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		if ( null != stateVal )
 		{
 			if ( !isFirst )
+			{
 				p.print( " " );
+			}
 
 			p.print( stateVal );
 		}
@@ -447,9 +497,14 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	public boolean equals( final Object o )
 	{
 		if ( o instanceof ListNode )
+		{
 			return equals( (ListNode<RippleValue>) o );
+		}
+
 		else
+		{
 			return false;
+		}
 	}
 
 	public int compareTo( final RippleValue other )
@@ -462,24 +517,35 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			while ( NIL != curThis )
 			{
 				if ( NIL == curOther )
+				{
 					return 1;
+				}
 
 				int cmp = curThis.first.compareTo( curOther.first );
 				if ( 0 != cmp )
+				{
 					return cmp;
+				}
 
 				curThis = curThis.rest;
 				curOther = curOther.rest;
 			}
 
 			if ( NIL == curOther )
+			{
 				return 0;
+			}
+
 			else
+			{
 				return -1;
+			}
 		}
 
 		else
+		{
 			return RippleList.class.getName().compareTo( other.getClass().getName() );
+		}
 	}
 
 	public void writeStatementsTo( final Sink<Statement> sink,
@@ -494,11 +560,15 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 											final ModelConnection mc )
 		throws RippleException
 	{
-		if ( 0 == head.compareTo( rdfNil ) )
+		if ( 0 == head.compareTo( RDF_NIL ) )
+		{
 			return;
+		}
 
 		if ( !( head.getRdfValue() instanceof Resource ) )
+		{
 			return;
+		}
 
 		final Resource headVal = (Resource) head.getRdfValue();
 
@@ -523,8 +593,8 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			}
 		};
 
-		mc.multiply( head, rdfFirst, firstSink );
-		mc.multiply( head, rdfRest, restSink );
+		mc.multiply( head, RDF_FIRST, firstSink );
+		mc.multiply( head, RDF_REST, restSink );
 	}
 }
 

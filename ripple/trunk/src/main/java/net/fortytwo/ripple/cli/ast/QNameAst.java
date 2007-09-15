@@ -34,9 +34,9 @@ public class QNameAst implements Ast
 			+ ( ( null == localName ) ? "" : localName );
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		qe.uriForQName( nsPrefix, localName, sink );

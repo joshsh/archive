@@ -19,16 +19,9 @@ import net.fortytwo.ripple.util.Sink;
  */
 public class TaskQueue extends Task
 {
-	LinkedList<Task> queue = new LinkedList<Task>();
+	private LinkedList<Task> queue = new LinkedList<Task>();
 
-	public void add( final Task task )
-	{
-//System.out.println( "[" + this + "]add( " + task + ")" );
-		queue.add( task );
-//System.out.println( "    [+] queue.size() is now: " + queue.size() );
-	}
-
-	Sink<Task> completedTaskSink = new Sink<Task>()
+	private Sink<Task> completedTaskSink = new Sink<Task>()
 	{
 		public void put( final Task task ) throws RippleException
 		{
@@ -40,6 +33,13 @@ public class TaskQueue extends Task
 			}
 		}
 	};
+
+	public void add( final Task task )
+	{
+//System.out.println( "[" + this + "]add( " + task + ")" );
+		queue.add( task );
+//System.out.println( "    [+] queue.size() is now: " + queue.size() );
+	}
 
 	/**
 	 * Note: all tasks are to have been added to the queue before this method is

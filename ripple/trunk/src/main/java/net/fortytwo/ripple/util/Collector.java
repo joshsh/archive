@@ -16,7 +16,7 @@ import net.fortytwo.ripple.RippleException;
 
 public class Collector<T> implements Sink<T>, Source<T>
 {
-	LinkedList<T> items = new LinkedList<T>();
+	private LinkedList<T> items = new LinkedList<T>();
 
 	public Collector()
 	{

@@ -17,7 +17,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 
 public class QuitCmd extends Command
 {
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		throw new ParserQuitException();

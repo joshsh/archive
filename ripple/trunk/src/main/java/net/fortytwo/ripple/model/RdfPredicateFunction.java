@@ -22,13 +22,13 @@ import net.fortytwo.ripple.util.Sink;
 
 public class RdfPredicateFunction implements Function
 {
-	RdfValue pred;
-	ModelBridge bridge;
+	private RdfValue pred;
+	private ModelBridge bridge;
 
 	private class ValueSink implements Sink<RdfValue>
 	{
-		Sink<RippleList> sink;
-		RippleList stack;
+		private Sink<RippleList> sink;
+		private RippleList stack;
 
 		public ValueSink( final RippleList stack, final Sink<RippleList> sink )
 		{

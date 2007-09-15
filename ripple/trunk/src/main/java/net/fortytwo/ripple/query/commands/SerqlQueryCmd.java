@@ -23,14 +23,14 @@ import org.openrdf.model.Statement;
 //      CONSTRUCT * FROM {x} p {y}
 public class SerqlQueryCmd extends Command
 {
-	String query;
+	private String query;
 
 	public SerqlQueryCmd( final String query )
 	{
 		this.query = query;
 	}
 
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		RipplePrintStream ps = qe.getPrintStream();

@@ -16,7 +16,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 
 public class CountStatementsCmd extends Command
 {
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		System.out.println( "\n" + qe.getModel().countStatements() + "\n" );

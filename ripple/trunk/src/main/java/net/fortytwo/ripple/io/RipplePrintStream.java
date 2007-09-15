@@ -30,7 +30,7 @@ import java.util.Iterator;
 
 public class RipplePrintStream extends PrintStream
 {
-	Lexicon lexicon;
+	private Lexicon lexicon;
 
 	public RipplePrintStream( final OutputStream out, final Lexicon lexicon )
 		throws RippleException
@@ -152,12 +152,12 @@ public class RipplePrintStream extends PrintStream
 
 	////////////////////////////////////////////////////////////////////////////
 
-	void printUriRef( final URI uri )
+	private void printUriRef( final URI uri )
 	{
 		print( "<" + StringUtils.escapeUriString( uri.toString() ) + ">" );
 	}
 
-	void printUri( final URI uri ) throws RippleException
+	private void printUri( final URI uri ) throws RippleException
 	{
 		String symbol = lexicon.symbolForUri( uri );
 
@@ -172,7 +172,7 @@ public class RipplePrintStream extends PrintStream
 		}
 	}
 
-	void printEscapedString( final String s )
+	private void printEscapedString( final String s )
 	{
 		print( '\"' );
 		print( StringUtils.escapeString( s ) );

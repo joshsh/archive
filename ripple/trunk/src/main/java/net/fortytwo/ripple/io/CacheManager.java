@@ -33,16 +33,16 @@ import org.openrdf.rio.RDFFormat;
 
 public class CacheManager
 {
-	final static Logger logger = Logger.getLogger( CacheManager.class );
+	private static final Logger LOGGER = Logger.getLogger( CacheManager.class );
 
-	static RdfValue
+	private static RdfValue
 		rplCacheRoot,
 		rplCacheSuccessMemo,
 		rplCacheFailureMemo;
 
-	static boolean initialized = false;
+	private static boolean initialized = false;
 
-	static void initialize( final ModelConnection mc )
+	private static void initialize( final ModelConnection mc )
 		throws RippleException
 	{
 		rplCacheRoot = new RdfValue( mc.createUri(
@@ -98,20 +98,20 @@ public class CacheManager
 	 * Writes cache metadata to the triple store.
 	 * Note: for now, this metadata resides in the null context.
 	 */
-	static void persistCacheMetadata( final ModelConnection mc )
+	private static void persistCacheMetadata( final ModelConnection mc )
 		throws RippleException
 	{
 		Dereferencer dereferencer = mc.getModel().getDereferencer();
 
 		mc.removeStatementsAbout( rplCacheRoot, null );
 
-		logger.debug( "writing success memos" );
+		LOGGER.debug( "writing success memos" );
 		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
 		{
 			mc.add( rplCacheRoot, rplCacheSuccessMemo, mc.createValue( iter.next() ) );
 		}
 
-		logger.debug( "writing failure memos" );
+		LOGGER.debug( "writing failure memos" );
 		for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
 		{
 			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.createValue( iter.next() ) );
@@ -122,7 +122,7 @@ public class CacheManager
 	 * Restores dereferencer state by reading success and failure memos from
 	 * the last session (if present).
 	 */
-	static void restoreCacheMetaData( final ModelConnection mc )
+	private static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
 		final Dereferencer dereferencer = mc.getModel().getDereferencer();

@@ -19,7 +19,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 
 public class ExportNsCmd extends Command
 {
-	String nsPrefix, fileName;
+	private String nsPrefix, fileName;
 
 	public ExportNsCmd( final String nsPrefix, final String fileName )
 	{
@@ -34,7 +34,9 @@ public class ExportNsCmd extends Command
 
 		String ns = qe.getLexicon().resolveNamespacePrefix( nsPrefix );
 		if ( null == ns )
+		{
 			throw new RippleException( "namespace prefix '" + nsPrefix + "' is not defined" );
+		}
 
 		try
 		{

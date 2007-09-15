@@ -22,8 +22,8 @@ import org.openrdf.model.impl.NamespaceImpl;
 
 public class DefinePrefixCmd extends Command
 {
-	String prefix;
-	UriAst uri;
+	private String prefix;
+	private UriAst uri;
 
 	public DefinePrefixCmd( final String prefix, final UriAst uri )
 	{
@@ -31,19 +31,24 @@ public class DefinePrefixCmd extends Command
 		this.uri = uri;
 	}
 
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		Collector<RippleValue> sink = new Collector<RippleValue>();
 		uri.evaluate( sink, qe, mc );
+
 		if ( sink.size() == 0 )
+		{
 			throw new RippleException( "URI could not be constructed from " + uri );
+		}
+
 		else if ( sink.size() > 1 )
+		{
 			throw new RippleException( "multiple values constructed from " + uri );
+		}
 
 		URI ns = mc.uriValue( sink.iterator().next() );
 		mc.setNamespace( prefix, ns, true );
-		mc = null;
 
 		// Note: when a namespace is manually defined, it may both override an
 		// existing prefix with the same name, or duplicate another namespace

@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  */
 public class RippleException extends Exception
 {
-	final static Logger logger = Logger.getLogger( RippleException.class );
+	private static final Logger LOGGER = Logger.getLogger( RippleException.class );
 
 	public RippleException( final Throwable cause )
 	{
@@ -62,7 +62,7 @@ public class RippleException extends Exception
 
 		try
 		{
-			logger.error( description );
+			LOGGER.error( description );
 		}
 
 		catch ( Throwable t )

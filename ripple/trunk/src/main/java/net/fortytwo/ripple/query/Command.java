@@ -15,7 +15,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 
 public abstract class Command extends Task
 {
-	QueryEngine queryEngine = null;
+	private QueryEngine queryEngine = null;
 
 	protected abstract void abort();
 

@@ -23,7 +23,7 @@ import org.openrdf.model.URI;
 
 public class ToInteger extends PrimitiveFunction
 {
-	private final static Logger logger
+	private static final Logger LOGGER
 		= Logger.getLogger( ToInteger.class );
 
 	public ToInteger()
@@ -56,7 +56,7 @@ public class ToInteger extends PrimitiveFunction
 
 		catch ( NumberFormatException e )
 		{
-			logger.debug( "bad integer value: " + s );
+			LOGGER.debug( "bad integer value: " + s );
 			return;
 		}
 

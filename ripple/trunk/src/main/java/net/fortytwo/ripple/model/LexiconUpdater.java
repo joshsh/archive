@@ -27,12 +27,12 @@ import org.openrdf.model.Value;
 public class LexiconUpdater implements RdfSink
 {
 // TODO: Unicode characters supported by the lexer / Turtle grammar
-	Pattern prefixPattern = Pattern.compile( "[A-Za-z][-0-9A-Z_a-z]*" );
+	private Pattern prefixPattern = Pattern.compile( "[A-Za-z][-0-9A-Z_a-z]*" );
 
-	Lexicon lexicon;
-	RdfSink sink;
-	boolean override;
-	boolean allowDuplicateNamespaces;
+	private Lexicon lexicon;
+	private RdfSink sink;
+	private boolean override;
+	private boolean allowDuplicateNamespaces;
 
 	public LexiconUpdater( final Lexicon lexicon, final RdfSink sink )
 	{

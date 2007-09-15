@@ -64,7 +64,7 @@ public class ExtensionLoader extends ClassLoader
 		}
 	}
 
-	Collection<String> getNames() throws RippleException
+	private Collection<String> getNames() throws RippleException
 	{
 		try
 		{

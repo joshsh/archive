@@ -13,7 +13,7 @@ import net.fortytwo.ripple.RippleException;
 
 public class Tee<T> implements Sink<T>
 {
-	Sink<T> sinkA, sinkB;
+	private Sink<T> sinkA, sinkB;
 
 	public Tee( final Sink<T> sinkA, final Sink<T> sinkB )
 	{

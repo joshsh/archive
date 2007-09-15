@@ -42,7 +42,7 @@ import org.openrdf.rio.RDFFormat;
  */
 public class Demo
 {
-	final static Logger logger = Logger.getLogger( Demo.class );
+	private static final Logger LOGGER = Logger.getLogger( Demo.class );
 
 	public static void demo( final File store,
 							final InputStream in,
@@ -68,7 +68,7 @@ public class Demo
 		// Load from store.
 		if ( null != store )
 		{
-			logger.info( "loading state from " + store );
+			LOGGER.info( "loading state from " + store );
 			URL storeUrl;
 
 			try
@@ -97,7 +97,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		// Save back to store.
 		if ( null != store )
 		{
-			logger.info( "saving state to " + store );
+			LOGGER.info( "saving state to " + store );
 			OutputStream storeOut;
 
 			try
@@ -138,7 +138,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 				s += ", \"" + i.next() + "\"";
 			}
 
-			logger.warn( s );
+			LOGGER.warn( s );
 
 			System.exit( 1 );
 //			ModelConnection.closeOpenConnections();
@@ -156,7 +156,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		}
 	}
 
-	static void printUsage()
+	private static void printUsage()
 	{
 		System.out.println( "Usage:  ripple [options] [store]" );
 		System.out.println( "Options:\n"
@@ -168,7 +168,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 			+ "  <URL:http://ripple.fortytwo.net/>." );
 	}
 
-	static void printVersion()
+	private static void printVersion()
 	{
 		System.out.println( Ripple.getName() + " " + Ripple.getVersion() );
 

@@ -18,8 +18,6 @@ import net.fortytwo.ripple.model.RdfValue;
 */
 public abstract class Evaluator implements Function
 {
-	private RdfValue rdfEquivalent = null;
-
 	public int arity()
 	{
 		// An Evaluator performs reduction; it does not need the stack to be

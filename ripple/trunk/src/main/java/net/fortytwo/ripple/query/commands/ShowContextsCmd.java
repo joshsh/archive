@@ -20,7 +20,7 @@ import net.fortytwo.ripple.model.RippleValue;
 
 public class ShowContextsCmd extends Command
 {
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		RipplePrintStream ps = qe.getPrintStream();

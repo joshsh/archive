@@ -13,18 +13,22 @@ import java.util.Collection;
 
 public class DirectiveCompletor extends RippleCompletor
 {
-	char [] delimiters = { ' ', '\t', '\n', '\r' };
+	private static final char [] DELIMITERS = { ' ', '\t', '\n', '\r' };
 
 	public DirectiveCompletor( final Collection<String> alternatives )
 	{
 		super( alternatives );
 	}
 
-	boolean isDelimiter( final char c )
+	private boolean isDelimiter( final char c )
 	{
-		for ( int i = 0; i < delimiters.length; i++ )
-			if ( delimiters[i] == c )
+		for ( int i = 0; i < DELIMITERS.length; i++ )
+		{
+			if ( DELIMITERS[i] == c )
+			{
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -41,7 +45,9 @@ public class DirectiveCompletor extends RippleCompletor
 			if ( isDelimiter( c ) )
 			{
 				if ( ok )
+				{
 					index = i + 1;
+				}
 			}
 
 			else if ( '.' == c )
@@ -51,7 +57,9 @@ public class DirectiveCompletor extends RippleCompletor
 			}
 
 			else
+			{
 				ok = false;
+			}
 		}
 
 		return index;

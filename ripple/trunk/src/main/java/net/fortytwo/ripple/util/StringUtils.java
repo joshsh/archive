@@ -15,6 +15,10 @@ import net.fortytwo.ripple.RippleException;
 
 public class StringUtils
 {
+	// See: http://www.koders.com/java/fid97184BECA1A7DCCD2EDA6D243477157EB453294C.aspx
+	private static final String safeURLCharacters
+		= "@*-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+
 	// Note: extended characters are not escaped for printing.
 	public static String escapeString( final String s )
 	{
@@ -169,11 +173,6 @@ public class StringUtils
 		return sb.toString();
 	}
 
-	// See:
-	//    http://www.koders.com/java/fid97184BECA1A7DCCD2EDA6D243477157EB453294C.aspx
-	final static String safeURLCharacters
-		= "@*-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-
 	/**
 	 *  @param s  a string to encode
 	 *  @return  percent-encoded (per RFC 3986) version of the string
@@ -196,9 +195,13 @@ public class StringUtils
 				// http://java.sun.com/j2se/1.3/docs/api/java/net/URLEncoder.html
 				c = (char) ( c & '\u00ff' );
 				if (c < 16)
+				{
 					enc.append( "%0" );
+				}
 				else
+				{
 					enc.append( "%" );
+				}
 
 				enc.append( Integer.toHexString( c ) );
 			}

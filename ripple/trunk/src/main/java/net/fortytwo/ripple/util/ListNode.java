@@ -17,7 +17,7 @@ public abstract class ListNode<T>
 	public abstract T getFirst();
 	public abstract ListNode<T> getRest();
 	
-	public boolean equals( ListNode<T> other )
+	public boolean equals( final ListNode<T> other )
 	{
 		ListNode thisCur = this;
 		ListNode otherCur = other;
@@ -25,17 +25,23 @@ public abstract class ListNode<T>
 		while ( null != thisCur )
 		{
 			if ( null == otherCur )
+			{
 				return false;
+			}
 
 			if ( !thisCur.getFirst().equals( otherCur.getFirst() ) )
+			{
 				return false;
+			}
 	
 			thisCur = thisCur.getRest();
 			otherCur = otherCur.getRest();
 		}
 	
 		if ( null != otherCur )
+		{
 			return false;
+		}
 	
 		return true;
 	}

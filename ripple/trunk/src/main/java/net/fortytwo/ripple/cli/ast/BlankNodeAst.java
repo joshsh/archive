@@ -30,17 +30,22 @@ public class BlankNodeAst implements Ast
 		return "_:" + id;
 	}
 
-	public void evaluate( Sink<RippleValue> sink,
-						QueryEngine qe,
-						ModelConnection mc )
+	public void evaluate( final Sink<RippleValue> sink,
+						final QueryEngine qe,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		RippleValue v = new RdfValue( mc.createBNode( id ) );
 
 		if ( null == v )
+		{
 			throw new RippleException( "blank node '" + this + "' does not exist" );
+		}
+
 		else
+		{
 			sink.put( v );
+		}
 	}
 }
 

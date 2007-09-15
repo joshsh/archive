@@ -33,7 +33,7 @@ import org.openrdf.sail.memory.MemoryStore;
 
 public class RdfUtils
 {
-	final static Logger logger = Logger.getLogger( RdfUtils.class );
+	private static final Logger LOGGER = Logger.getLogger( RdfUtils.class );
 
 	public static Repository createMemoryStoreRepository()
 		throws RippleException
@@ -80,7 +80,7 @@ public class RdfUtils
 		return format;
 	}
 
-	static RDFFormat readPrivate( final URLConnection uc,
+	private static RDFFormat readPrivate( final URLConnection uc,
 									final SesameAdapter sa,
 									final String baseUri,
 									final RDFFormat format )
@@ -261,7 +261,7 @@ System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType
 System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
 */
 		String contentType = urlConn.getContentType();
-		logger.debug( "contentType = " + contentType );
+		LOGGER.debug( "contentType = " + contentType );
 
 		String file = urlConn.getURL().getFile();
 		String ext;
@@ -277,7 +277,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 				? file.substring( lastDot + 1 )
 				: null;
 		}
-		logger.debug( "extension = " + ext );
+		LOGGER.debug( "extension = " + ext );
 
 		// Primary content type rules.
 		if ( null != contentType )

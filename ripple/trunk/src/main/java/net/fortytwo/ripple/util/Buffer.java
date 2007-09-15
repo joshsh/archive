@@ -13,9 +13,9 @@ import net.fortytwo.ripple.RippleException;
 
 public class Buffer<T> extends Collector<T>
 {
-	Sink<T> sink;
+	private Sink<T> sink;
 
-	public Buffer( Sink<T> sink )
+	public Buffer( final Sink<T> sink )
 	{
 		super();
 

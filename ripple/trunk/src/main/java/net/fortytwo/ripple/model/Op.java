@@ -16,8 +16,8 @@ import net.fortytwo.ripple.util.Sink;
 public class Op implements Function, RippleValue
 {
 	public void applyTo( RippleList stack,
-				Sink<RippleList> sink,
-				ModelConnection mc )
+				final Sink<RippleList> sink,
+				final ModelConnection mc )
 		throws RippleException
 	{
 		RippleValue v;
@@ -29,13 +29,18 @@ public class Op implements Function, RippleValue
 			Operator.createOperator( v, mc ), stack ) );
 	}
 
-	public int compareTo( RippleValue other )
+	public int compareTo( final RippleValue other )
 	{
 		// There is only one Op.
 		if ( other == this )
+		{
 			return 0;
+		}
+
 		else
+		{
 			return this.getClass().getName().compareTo( other.getClass().getName() );
+		}
 	}
 
 	public int arity()
@@ -43,14 +48,14 @@ public class Op implements Function, RippleValue
 		return 1;
 	}
 
-	public void printTo( RipplePrintStream p )
+	public void printTo( final RipplePrintStream p )
 		throws RippleException
 	{
 		System.err.println( "You should not need to print op directly." );
 		System.exit( 1 );
 	}
 
-	public RdfValue toRdf( ModelConnection mc )
+	public RdfValue toRdf( final ModelConnection mc )
 		throws RippleException
 	{
 		System.err.println( "You should not need to convert op explicitly." );

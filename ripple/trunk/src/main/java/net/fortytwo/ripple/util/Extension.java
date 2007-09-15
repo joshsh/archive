@@ -22,11 +22,10 @@ import org.openrdf.model.vocabulary.OWL;
  */
 public abstract class Extension
 {
+	private static final RdfValue OWL_SAMEAS = new RdfValue( OWL.SAMEAS );
+
 	public abstract void load( UrlFactory uf, ModelConnection mc )
 		throws RippleException;
-
-	static boolean initialized = false;
-	static RdfValue owlSameAs;
 
 	protected PrimitiveFunction registerPrimitive( final Class c,
 										final String name,
@@ -34,12 +33,6 @@ public abstract class Extension
 		throws RippleException
 	{
 		PrimitiveFunction prim;
-
-		if ( !initialized )
-		{
-			owlSameAs = new RdfValue( OWL.SAMEAS );
-			initialized = true;
-		}
 
 		try
 		{
@@ -73,7 +66,7 @@ public abstract class Extension
 		bridge.add( prim, mc );
 
 		// Add all stated aliases (but no aliases of aliases) to the map.
-		mc.multiply( prim.toRdf( mc ), owlSameAs, aliasSink );
+		mc.multiply( prim.toRdf( mc ), OWL_SAMEAS, aliasSink );
 
 		return prim;
 	}
