@@ -18,34 +18,6 @@ etc:get
 	rdfs:comment "issues a GET request and produces the received data as a string" ;
 	.
 
-etc:pred
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "p" ;
-			rpl:parameterType rdf:Property ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "pred" ;
-	rdfs:comment "consumes a Property and returns a 'predicate operator'" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#pred> ;
-	.
-
-etc:prim
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "p" ;
-			rpl:parameterType rpl:Function ;
-			rpl:isTransparent true ]
-		) ;
-	rdfs:label "prim" ;
-	rdfs:comment "applies a Function" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#prim> ;
-	.
-
 etc:time
 	a rpl:Function ;
 	rpl:arity 0 ;
@@ -54,28 +26,4 @@ etc:time
 	rdfs:label "time" ;
 	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#time> ;
-	.
-
-xsd:type
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "l" ;
-			rpl:isTransparent true ]
-		);
-	rdfs:label "type" ;
-	rdfs:comment "l  =>  data type of literal l" ;
-	.
-
-<http://www.w3.org/XML/1998/namespace#lang>
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "l" ;
-			rpl:isTransparent true ]
-		);
-	rdfs:label "lang" ;
-	rdfs:comment "l  =>  language tag of literal l" ;
 	.

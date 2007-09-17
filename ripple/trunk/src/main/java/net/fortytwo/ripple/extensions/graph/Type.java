@@ -7,21 +7,24 @@
  */
 
 
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.extensions.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public class Pred extends PrimitiveFunction
+import org.openrdf.model.Value;
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+
+public class Type extends PrimitiveFunction
 {
 	private static final int ARITY = 1;
 
-	public Pred()
+	public Type()
 		throws RippleException
 	{
 		super();
@@ -37,13 +40,20 @@ public class Pred extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue p;
+		Value v;
 
-		p = stack.getFirst();
+		v = stack.getFirst().toRdf( mc ).getRdfValue();
 		stack = stack.getRest();
 
-		sink.put( new RippleList(
-			new Operator( p.toRdf( mc ) ), stack ) );
+		if ( v instanceof Literal )
+		{
+			URI type = ( (Literal) v ).getDatatype();
+
+			if ( null != type )
+			{
+				sink.put( new RippleList( new RdfValue( type ), stack ) );
+			}
+		}
 	}
 }
 

@@ -6,43 +6,8 @@ etc:get
 
 
 ========================================
-etc:pred
-========================================
-
-rdfs:Class rdfs:label /pred.
-
-
-========================================
-etc:prim
-========================================
-
-2 dup/prim.
-
-
-========================================
 etc:time
 ========================================
 
 # years since the Unix epoch.
 /time 60 60 24 365 /mul/mul/mul /div.  # 37...
-
-
-========================================
-<http://www.w3.org/XML/1998/namespace#lang>
-========================================
-
-"vierzig"@de /xml:lang.  # "de"
-"vierzig"@de /lang.  # "de"
-"vierzig" /lang.  # ""
-42/lang.  # ""
-rdf:/lang.  # [nothing]
-
-
-========================================
-xsd:type
-========================================
-
-42/xsd:type.  # xsd:integer
-"foo"/type.  # xsd:string
-rdf:/type.  # [nothing]
-rdf:/dc:title/type.  # [nothing]

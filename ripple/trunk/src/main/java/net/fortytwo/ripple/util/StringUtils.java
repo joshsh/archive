@@ -11,6 +11,8 @@ package net.fortytwo.ripple.util;
 
 import java.net.URLEncoder;
 
+import java.security.MessageDigest;
+
 import net.fortytwo.ripple.RippleException;
 
 public final class StringUtils
@@ -23,6 +25,8 @@ public final class StringUtils
 		FOUR = 4,
 		EIGHT = 8,
 		SIXTEEN = 16;
+
+	private static MessageDigest sha1Digest = null;
 
 	private StringUtils()
 	{
@@ -238,6 +242,56 @@ public final class StringUtils
 		{
 			throw new RippleException( e );
 		}
+	}
+
+	// See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
+	public static String sha1SumOf( final String plaintext )
+		throws RippleException
+	{
+		try
+		{
+			if ( null == sha1Digest )
+			{
+				sha1Digest = MessageDigest.getInstance( "SHA" );
+			}
+		}
+
+		catch ( java.security.NoSuchAlgorithmException e )
+		{
+			throw new RippleException( e );
+		}
+
+		try
+		{
+			synchronized ( sha1Digest )
+			{
+				sha1Digest.update( plaintext.getBytes( "UTF-8" ) );
+			}
+		}
+
+		catch ( java.io.UnsupportedEncodingException e )
+		{
+			throw new RippleException( e );
+		}
+
+		byte[] digest = sha1Digest.digest();
+
+		String coded = "";
+
+		for  ( byte b : digest )
+		{
+			String hex = Integer.toHexString( b );
+
+			if ( hex.length() == 1 )
+			{
+				hex = "0" + hex;
+			}
+
+			hex = hex.substring( hex.length() - 2 );
+			coded += hex;
+		}
+
+		return coded;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

@@ -1,9 +1,10 @@
-@prefix graph:  <http://fortytwo.net/2007/08/ripple/graph#> .
+@prefix graph:  <http://fortytwo.net/2007/08/ripple/graph#>.
 @prefix owl:    <http://www.w3.org/2002/07/owl#>.
-@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rpl:    <http://fortytwo.net/2007/03/ripple/schema#> .
-@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rpl:    <http://fortytwo.net/2007/03/ripple/schema#>.
+@prefix xml:    <http://www.w3.org/XML/1998/namespace#>.
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#>.
 
 graph:assert
 	a rpl:Function ;
@@ -43,7 +44,19 @@ graph:back
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#back> ;
 	.
 
-#graph:comments ...
+graph:comments
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "doc" ;
+			rdfs:comment "a Semantic Web document" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "comments" ;
+	rdfs:comment "doc  =>  comment  -- for each comment in doc" ;
+	.
 
 graph:compare
 	a rpl:Function ;
@@ -146,7 +159,6 @@ graph:links
 graph:namespaces
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType rdf:List ;
 	rpl:parameters (
 		[
 			rdfs:label "doc" ;
@@ -225,7 +237,6 @@ graph:toUri
 graph:triples
 	a rpl:Function ;
 	rpl:arity 1 ;
-	rpl:returnType rdf:List ;
 	rpl:parameters (
 		[
 			rdfs:label "doc" ;
@@ -235,4 +246,28 @@ graph:triples
 	rpl:returnType rdf:List ;
 	rdfs:label "triples" ;
 	rdfs:comment "doc  =>  (s p o)  -- for each triple (s p o) in document doc" ;
+	.
+
+xml:lang
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:isTransparent true ]
+		);
+	rdfs:label "lang" ;
+	rdfs:comment "l  =>  language tag of literal l" ;
+	.
+
+xsd:type
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "l" ;
+			rpl:isTransparent true ]
+		);
+	rdfs:label "type" ;
+	rdfs:comment "l  =>  data type of literal l" ;
 	.

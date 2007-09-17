@@ -14,6 +14,14 @@ rdf: rdfs:isDefinedBy /back.  # lots of terms in the rdf: namespace
 
 
 ========================================
+graph:comments
+========================================
+
+# I have yet to get this primitive to do anything.  Apparently the Sesame
+# parsers simply discard comments.
+
+
+========================================
 graph:compare
 ========================================
 
@@ -79,6 +87,13 @@ rdf:type /links.  # lots of statements about rdf:type
 
 
 ========================================
+graph:namespaces
+========================================
+
+<http://www.w3.org/People/Berners-Lee/card#i>/namespaces/i.
+
+
+========================================
 graph:new
 ========================================
 
@@ -121,25 +136,6 @@ graph:toUri
 "http://www.w3.org/2000/01/rdf-schema#Class"/toUri.  # rdfs:Class
 
 
-
-
-
-
-========================================
-graph:comments
-========================================
-
-# I have yet to get this primitive to do anything.  Apparently the Sesame
-# parsers simply discard comments.
-
-
-========================================
-graph:namespaces
-========================================
-
-<http://www.w3.org/People/Berners-Lee/card#i>/namespaces/i.
-
-
 ========================================
 graph:triples
 ========================================
@@ -159,3 +155,24 @@ graph:triples
 <http://www.w3.org/People/Berners-Lee/card#i>/:predicates/toString.
 <http://www.w3.org/People/Berners-Lee/card#i>/:objects/toString.
 <http://www.w3.org/People/Berners-Lee/card#i>/:nodes/toString.
+
+
+========================================
+xml:lang
+========================================
+
+"vierzig"@de /xml:lang.  # "de"
+"vierzig"@de /lang.  # "de"
+"vierzig" /lang.  # ""
+42/lang.  # ""
+rdf:/lang.  # [nothing]
+
+
+========================================
+xsd:type
+========================================
+
+42/xsd:type.  # xsd:integer
+"foo"/type.  # xsd:string
+rdf:/type.  # [nothing]
+rdf:/dc:title/type.  # [nothing]

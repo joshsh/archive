@@ -47,6 +47,14 @@ public class GraphExtension extends Extension
 		registerPrimitive( Comments.class, NS + "comments", mc );
 		registerPrimitive( Namespaces.class, NS + "namespaces", mc );
 		registerPrimitive( Triples.class, NS + "triples", mc );
+
+		// Note: the xml: namespace is actually said to be
+		//       http://www.w3.org/XML/1998/namespace
+		//       (i.e. without the hash character).
+		registerPrimitive( Lang.class, "http://www.w3.org/XML/1998/namespace#lang", mc );
+
+		// Note: this URI is bogus.
+		registerPrimitive( Type.class, "http://www.w3.org/2001/XMLSchema#type", mc );
 	}
 }
 
