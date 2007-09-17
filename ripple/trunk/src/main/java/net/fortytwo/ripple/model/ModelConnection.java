@@ -1284,7 +1284,7 @@ public void setRdfSink( final RdfSink sink )
 		catch ( RippleException e )
 		{
 			// (soft fail... don't even log the error)
-			;
+			return;
 		}
 	}
 

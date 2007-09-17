@@ -10,57 +10,55 @@
 package net.fortytwo.ripple.extensions.math;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
 public class MathExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/08/ripple/math#";
+	private static final String NS = "http://fortytwo.net/2007/08/ripple/math#";
 
-	public void load( UrlFactory uf, ModelConnection mc )
+	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.addMapping(
-			ns, getClass().getResource( "math.ttl" ) + "#" );
+			NS, getClass().getResource( "math.ttl" ) + "#" );
 
 		// Comparison
-		registerPrimitive( Gt.class, ns + "gt", mc );
-		registerPrimitive( Lt.class, ns + "lt", mc );
+		registerPrimitive( Gt.class, NS + "gt", mc );
+		registerPrimitive( Lt.class, NS + "lt", mc );
 
 		// Arithmetic
-		registerPrimitive( Abs.class, ns + "abs", mc );
-		registerPrimitive( Add.class, ns + "add", mc );
-		registerPrimitive( Div.class, ns + "div", mc );
-		registerPrimitive( Mod.class, ns + "mod", mc );
-		registerPrimitive( Mul.class, ns + "mul", mc );
-		registerPrimitive( Neg.class, ns + "neg", mc );
-		registerPrimitive( Signum.class, ns + "signum", mc );
-		registerPrimitive( Sub.class, ns + "sub", mc );
+		registerPrimitive( Abs.class, NS + "abs", mc );
+		registerPrimitive( Add.class, NS + "add", mc );
+		registerPrimitive( Div.class, NS + "div", mc );
+		registerPrimitive( Mod.class, NS + "mod", mc );
+		registerPrimitive( Mul.class, NS + "mul", mc );
+		registerPrimitive( Neg.class, NS + "neg", mc );
+		registerPrimitive( Signum.class, NS + "signum", mc );
+		registerPrimitive( Sub.class, NS + "sub", mc );
 
 		// Exponents
-		registerPrimitive( Cbrt.class, ns + "cbrt", mc );
-		registerPrimitive( Exp.class, ns + "exp", mc );
-		registerPrimitive( Log.class, ns + "log", mc );
-		registerPrimitive( Log10.class, ns + "log10", mc );
-		registerPrimitive( Pow.class, ns + "pow", mc );
-		registerPrimitive( Sqrt.class, ns + "sqrt", mc );
+		registerPrimitive( Cbrt.class, NS + "cbrt", mc );
+		registerPrimitive( Exp.class, NS + "exp", mc );
+		registerPrimitive( Log.class, NS + "log", mc );
+		registerPrimitive( Log10.class, NS + "log10", mc );
+		registerPrimitive( Pow.class, NS + "pow", mc );
+		registerPrimitive( Sqrt.class, NS + "sqrt", mc );
 
 		// Trigonometry
-		registerPrimitive( Acos.class, ns + "acos", mc );
-		registerPrimitive( Asin.class, ns + "asin", mc );
-		registerPrimitive( Atan.class, ns + "atan", mc );
-		registerPrimitive( Cos.class, ns + "cos", mc );
-		registerPrimitive( Cosh.class, ns + "cosh", mc );
-		registerPrimitive( Sin.class, ns + "sin", mc );
-		registerPrimitive( Sinh.class, ns + "sinh", mc );
-		registerPrimitive( Tan.class, ns + "tan", mc );
-		registerPrimitive( Tanh.class, ns + "tanh", mc );
+		registerPrimitive( Acos.class, NS + "acos", mc );
+		registerPrimitive( Asin.class, NS + "asin", mc );
+		registerPrimitive( Atan.class, NS + "atan", mc );
+		registerPrimitive( Cos.class, NS + "cos", mc );
+		registerPrimitive( Cosh.class, NS + "cosh", mc );
+		registerPrimitive( Sin.class, NS + "sin", mc );
+		registerPrimitive( Sinh.class, NS + "sinh", mc );
+		registerPrimitive( Tan.class, NS + "tan", mc );
+		registerPrimitive( Tanh.class, NS + "tanh", mc );
 
 		// Misc
-		registerPrimitive( Random.class, ns + "random", mc );
+		registerPrimitive( Random.class, NS + "random", mc );
 	}
 }
 

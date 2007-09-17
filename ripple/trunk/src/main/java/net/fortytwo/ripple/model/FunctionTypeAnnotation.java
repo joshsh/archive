@@ -65,7 +65,7 @@ public class FunctionTypeAnnotation
 		return new Param( label, type, comment, transparency );
 	}
 */
-	private static final String rplNs = "http://fortytwo.net/2007/03/ripple/schema#";
+	private static final String RPL = "http://fortytwo.net/2007/03/ripple/schema#";
 	private static RdfValue
 		rplArityUri,
 		rplParameterUri,
@@ -86,12 +86,12 @@ public class FunctionTypeAnnotation
 
 		if ( !initialized )
 		{
-			rplParametersUri     = new RdfValue( mc.createUri( rplNs + "parameters" ) );
-			rplReturnTypeUri     = new RdfValue( mc.createUri( rplNs + "returnType" ) );
-			rplParameterUri      = new RdfValue( mc.createUri( rplNs + "Parameter" ) );
-			rplParameterListUri  = new RdfValue( mc.createUri( rplNs + "ParameterList" ) );
-			rplParameterTypeUri  = new RdfValue( mc.createUri( rplNs + "parameterType" ) );
-			rplIsTransparentUri  = new RdfValue( mc.createUri( rplNs + "isTransparent" ) );
+			rplParametersUri     = new RdfValue( mc.createUri( RPL + "parameters" ) );
+			rplReturnTypeUri     = new RdfValue( mc.createUri( RPL + "returnType" ) );
+			rplParameterUri      = new RdfValue( mc.createUri( RPL + "Parameter" ) );
+			rplParameterListUri  = new RdfValue( mc.createUri( RPL + "ParameterList" ) );
+			rplParameterTypeUri  = new RdfValue( mc.createUri( RPL + "parameterType" ) );
+			rplIsTransparentUri  = new RdfValue( mc.createUri( RPL + "isTransparent" ) );
 			initialized = true;
 		}
 

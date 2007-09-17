@@ -11,8 +11,6 @@ package net.fortytwo.ripple.extensions.graph;
 
 import java.net.URLConnection;
 
-import java.io.InputStream;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -22,7 +20,6 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 
@@ -32,6 +29,8 @@ import org.openrdf.model.URI;
 
 public class Triples extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public Triples()
 		throws RippleException
 	{
@@ -40,7 +39,7 @@ public class Triples extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
@@ -77,10 +76,14 @@ public class Triples extends PrimitiveFunction
 			}
 
 			// Discard namespaces.
-			public void put( final Namespace ns ) throws RippleException {}
+			public void put( final Namespace ns ) throws RippleException
+			{
+			}
 
 			// Discard comments.
-			public void put( final String comment ) throws RippleException {}
+			public void put( final String comment ) throws RippleException
+			{
+			}
 		};
 
 		SesameAdapter sc = new SesameAdapter( rdfSink );

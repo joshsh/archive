@@ -9,22 +9,15 @@
 
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.jline.LexicalCompletor;
 
 import org.openrdf.model.Namespace;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.URI;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
 
 import jline.Completor;
-import jline.SimpleCompletor;
 import jline.NullCompletor;
 
 import java.util.ArrayList;
@@ -52,50 +45,53 @@ public class Lexicon
 	public Lexicon( final Model model ) throws RippleException
 	{
 		valueFactory = model.getRepository().getValueFactory();
+
+		createKeywordMap( model );
+
+		prefixToNamespaceMap = new Hashtable<String, String>();
+		namespaceToPrefixMap = new Hashtable<String, String>();
+		allQNames = new ArrayList<String>();
+	}
+
+	private void createKeywordMap( final Model model ) throws RippleException
+	{
 		ModelConnection mc = model.getConnection( "for Lexicon constructor" );
 
-		// Create (immutable) keywords map.
+		keywordToUriMap = new Hashtable<String, List<URI>>();
+		uriToKeywordMap = new Hashtable<URI, String>();
+
+		ModelBridge bridge = model.getBridge();
+		Iterator<Value> keys = bridge.keySet().iterator();
+		while ( keys.hasNext() )
 		{
-			keywordToUriMap = new Hashtable<String, List<URI>>();
-			uriToKeywordMap = new Hashtable<URI, String>();
+			// An extra trip through the bridge replaces aliases with
+			// "definitive" values.
+			Value v = bridge.get( keys.next() ).toRdf( mc ).getRdfValue();
 
-			ModelBridge bridge = model.getBridge();
-			Iterator<Value> keys = bridge.keySet().iterator();
-			while ( keys.hasNext() )
+			if ( v instanceof URI )
 			{
-				// An extra trip through the bridge replaces aliases with
-				// "definitive" values.
-				Value v = bridge.get( keys.next() ).toRdf( mc ).getRdfValue();
+				String keyword = ( (URI) v ).getLocalName();
 
-				if ( v instanceof URI )
+				List<URI> siblings = keywordToUriMap.get( keyword );
+		
+				if ( null == siblings )
 				{
-					String keyword = ( (URI) v ).getLocalName();
+					siblings = new ArrayList<URI>();
+					keywordToUriMap.put( keyword, siblings );
 
-					List<URI> siblings = keywordToUriMap.get( keyword );
-			
-					if ( null == siblings )
-					{
-						siblings = new ArrayList<URI>();
-						keywordToUriMap.put( keyword, siblings );
+					uriToKeywordMap.put( (URI) v, keyword );
+				}
 
-						uriToKeywordMap.put( (URI) v, keyword );
-					}
-
-					// The presence of aliases will cause the same URI / keyword
-					// pair to appear more than once.
-					if ( !siblings.contains( (URI) v ) )
-					{
-						siblings.add( (URI) v );
-					}
+				// The presence of aliases will cause the same URI / keyword
+				// pair to appear more than once.
+				if ( !siblings.contains( (URI) v ) )
+				{
+					siblings.add( (URI) v );
 				}
 			}
 		}
 
 		mc.close();
-
-		prefixToNamespaceMap = new Hashtable<String, String>();
-		namespaceToPrefixMap = new Hashtable<String, String>();
-		allQNames = new ArrayList<String>();
 	}
 
 	public List<URI> uriForKeyword( final String localName )
@@ -171,7 +167,7 @@ public class Lexicon
 			}
 
 			Iterator<String> qNameIter = allQNames.iterator();
-			while( qNameIter.hasNext() )
+			while ( qNameIter.hasNext() )
 			{
 				alts.add( qNameIter.next() );
 			}

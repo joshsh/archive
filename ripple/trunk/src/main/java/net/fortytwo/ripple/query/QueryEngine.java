@@ -14,7 +14,6 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.LexiconUpdater;
@@ -23,14 +22,11 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.io.RdfNullSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 

@@ -15,8 +15,6 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.Value;
-
 public class QNameAst implements Ast
 {
 	private String nsPrefix, localName;

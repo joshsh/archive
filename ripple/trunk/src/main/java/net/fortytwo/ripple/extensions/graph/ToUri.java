@@ -14,13 +14,14 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 
 public class ToUri extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public ToUri()
 		throws RippleException
 	{
@@ -29,12 +30,12 @@ public class ToUri extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		String s;

@@ -13,14 +13,14 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericLiteral;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Random extends PrimitiveFunction
 {
-	java.util.Random random;
+	private static final int ARITY = 0;
+
+	private java.util.Random random;
 
 	public Random()
 		throws RippleException
@@ -30,12 +30,12 @@ public class Random extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 0;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		NumericLiteral result;

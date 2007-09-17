@@ -9,19 +9,8 @@
 
 package net.fortytwo.ripple.model;
 
-import java.io.OutputStream;
-
-import java.net.URL;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -30,24 +19,15 @@ import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.util.ExtensionLoader;
-import net.fortytwo.ripple.util.NullSink;
-import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
 
 import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.Repository;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
-import org.openrdf.rio.trix.TriXWriter;
-import org.openrdf.rio.RDFWriter;
 import org.openrdf.model.Namespace;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.model.vocabulary.RDF;
 
 public class Model
 {

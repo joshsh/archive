@@ -11,25 +11,26 @@ package net.fortytwo.ripple.tools;
 
 public class XPComTest
 {
-	private int m_count;
+	private int count;
 
 	public static String getGreetings()
 	{
 		return "Hello World!";
 	}
 
-	public XPComTest(int start) {
-		m_count = start;
+	public XPComTest( final int start )
+	{
+		count = start;
 	}
 
 	public void count()
 	{
-		m_count++;
+		count++;
 	}
 
 	public int getCount()
 	{
-		return m_count;
+		return count;
 	}
 }
 

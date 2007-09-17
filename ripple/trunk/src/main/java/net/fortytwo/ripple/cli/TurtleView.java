@@ -12,7 +12,6 @@ package net.fortytwo.ripple.cli;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
@@ -21,10 +20,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
 
 public class TurtleView implements Sink<RippleList>
 {

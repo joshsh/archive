@@ -38,7 +38,9 @@ public class ShowContextsCmd extends Command
 		ps.println( "" );
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

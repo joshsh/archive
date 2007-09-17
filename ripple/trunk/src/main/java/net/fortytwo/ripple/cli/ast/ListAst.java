@@ -9,7 +9,6 @@
 
 package net.fortytwo.ripple.cli.ast;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -17,10 +16,6 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.ListNode;
 import net.fortytwo.ripple.util.Sink;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 
 // TODO: this class has more plumbing than it needs
 public class ListAst extends ListNode<Ast> implements Ast

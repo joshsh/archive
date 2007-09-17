@@ -14,13 +14,13 @@ import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Limit extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public Limit()
 		throws RippleException
 	{
@@ -29,12 +29,12 @@ public class Limit extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		int lim;
@@ -52,22 +52,22 @@ public class Limit extends PrimitiveFunction
 
 	protected class LimitInner implements Function
 	{
-		long count, limit;
+		private long count, limit;
 
 		public int arity()
 		{
 			return 1;
 		}
 
-		public LimitInner( long lim )
+		public LimitInner( final long lim )
 		{
 			limit = lim;
 			count = 0;
 		}
 	
 		public void applyTo( RippleList stack,
-							Sink<RippleList> sink,
-							ModelConnection mc )
+							final Sink<RippleList> sink,
+							final ModelConnection mc )
 			throws RippleException
 		{
 			if ( count < limit )

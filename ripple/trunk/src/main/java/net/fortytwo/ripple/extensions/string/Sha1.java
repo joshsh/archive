@@ -12,9 +12,7 @@ package net.fortytwo.ripple.extensions.string;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 import java.io.UnsupportedEncodingException;
@@ -23,9 +21,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class Sha1 extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	private static final String
-		encoding = "UTF-8",
-		algorithm = "SHA";
+		ENCODING = "UTF-8",
+		ALGORITHM = "SHA";
 
 	private static MessageDigest messageDigest = null;
 
@@ -37,7 +37,7 @@ public class Sha1 extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	// See: http://intertwingly.net/stories/2003/08/05/sha1demo.java
@@ -47,7 +47,9 @@ public class Sha1 extends PrimitiveFunction
 		try
 		{
 			if ( null == messageDigest )
-				messageDigest = MessageDigest.getInstance( algorithm );
+			{
+				messageDigest = MessageDigest.getInstance( ALGORITHM );
+			}
 		}
 
 		catch ( NoSuchAlgorithmException e )
@@ -57,7 +59,7 @@ public class Sha1 extends PrimitiveFunction
 
 		try
 		{
-			messageDigest.update( plaintext.getBytes( encoding ) );
+			messageDigest.update( plaintext.getBytes( ENCODING ) );
 		}
 
 		catch ( UnsupportedEncodingException e )
@@ -67,7 +69,7 @@ public class Sha1 extends PrimitiveFunction
 
 		try
 		{
-			byte digest[] = messageDigest.digest();
+			byte[] digest = messageDigest.digest();
 
 			String coded = "";
 
@@ -75,7 +77,9 @@ public class Sha1 extends PrimitiveFunction
 			{
 				String hex = Integer.toHexString( b );
 				if ( hex.length() == 1 )
+				{
 					hex = "0" + hex;
+				}
 				hex = hex.substring( hex.length() - 2 );
 				coded += hex;
 			}
@@ -90,8 +94,8 @@ public class Sha1 extends PrimitiveFunction
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		String a, result;

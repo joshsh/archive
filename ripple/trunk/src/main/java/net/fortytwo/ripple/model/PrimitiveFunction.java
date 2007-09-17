@@ -18,7 +18,8 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	private FunctionTypeAnnotation typeAnnotation = null;
 
 	public PrimitiveFunction()
-	{}
+	{
+	}
 
 	public PrimitiveFunction( final RdfValue v, final ModelConnection mc )
 		throws RippleException

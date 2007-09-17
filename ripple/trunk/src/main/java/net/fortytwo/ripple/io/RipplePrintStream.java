@@ -9,10 +9,8 @@
 
 package net.fortytwo.ripple.io;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Lexicon;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.StringUtils;
 

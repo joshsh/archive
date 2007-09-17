@@ -11,7 +11,7 @@ package net.fortytwo.ripple.util;
 
 public class Pointer<T>
 {
-	public T ref;
+	private T ref;
 
 	public Pointer()
 	{
@@ -19,6 +19,16 @@ public class Pointer<T>
 	}
 
 	public Pointer( final T ref )
+	{
+		this.ref = ref;
+	}
+
+	public T getRef()
+	{
+		return ref;
+	}
+
+	public void setRef( final T ref )
 	{
 		this.ref = ref;
 	}

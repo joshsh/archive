@@ -23,8 +23,12 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 
-public class SparqlUpdater
+public final class SparqlUpdater
 {
+	private SparqlUpdater()
+	{
+	}
+
 	public static void postUpdate( final RdfDiff diff, final URL url )
 		throws RippleException
 	{

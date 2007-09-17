@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.extensions.services;
 
-
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -19,30 +17,26 @@ import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
-import org.openrdf.model.Value;
 import org.openrdf.model.URI;
-import org.openrdf.model.Literal;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-import org.openrdf.repository.RepositoryResult;
 import org.openrdf.model.vocabulary.RDF;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import java.net.URL;
 
 public class SwoogleIt extends PrimitiveFunction
 {
-	static String swoogleNs = "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
-	URI swoogleQueryResponseUri = null;
+	private static final int ARITY = 3;
+
+	private static final String SWOOGLE_NS
+		= "http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#";
+
+	private URI swoogleQueryResponseUri = null;
 	
 	public SwoogleIt()
 		throws RippleException
@@ -52,7 +46,7 @@ public class SwoogleIt extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 3;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
@@ -61,7 +55,9 @@ public class SwoogleIt extends PrimitiveFunction
 		throws RippleException
 	{
 		if ( null == swoogleQueryResponseUri )
-			swoogleQueryResponseUri = mc.createUri( swoogleNs + "QueryResponse" );
+		{
+			swoogleQueryResponseUri = mc.createUri( SWOOGLE_NS + "QueryResponse" );
+		}
 
 		String key, searchString;
 		URI queryType;
@@ -106,9 +102,11 @@ URI context = mc.createUri( url.toString() );
 				importer.put( st );
 
 				if ( st.getPredicate().equals( RDF.TYPE )
-					&& st.getObject().equals( swoogleQueryResponseUri ) )
+						&& st.getObject().equals( swoogleQueryResponseUri ) )
+				{
 					buffer.put( new RippleList(
 						new RdfValue( st.getSubject() ), stackFinal ) );
+				}
 			}
 
 			public void put( final Namespace ns )

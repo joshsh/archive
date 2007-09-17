@@ -26,8 +26,6 @@ import net.fortytwo.ripple.RippleException;
 
 import org.apache.log4j.Logger;
 
-import org.openrdf.rio.RDFFormat;
-
 public class HttpUtils
 {
 	private static final Logger LOGGER = Logger.getLogger( HttpUtils.class );
@@ -217,7 +215,7 @@ public class HttpUtils
 
 	public static void showUrlConnection( final URLConnection urlConn )
 	{
-		Map<String,List<String>> requestProperties
+		Map<String, List<String>> requestProperties
 			= urlConn.getRequestProperties();
 		Set<String> keys = requestProperties.keySet();
 

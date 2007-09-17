@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
-public class Scheduler
+public final class Scheduler
 {
 	private static final Logger LOGGER = Logger.getLogger( Scheduler.class );
 

@@ -22,11 +22,12 @@ public class NullFilter implements Function
 		return 0;
 	}
 
-	public void applyTo( final RippleList stack,
+	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
 						final ModelConnection mc )
 		throws RippleException
-	{}
+	{
+	}
 }
 
 // kate: tab-width 4

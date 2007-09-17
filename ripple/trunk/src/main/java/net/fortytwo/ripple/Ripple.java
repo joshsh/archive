@@ -11,8 +11,6 @@ package net.fortytwo.ripple;
 
 import java.io.IOException;
 
-import java.net.URL;
-
 import java.util.Properties;
 
 import net.fortytwo.ripple.util.RdfUtils;
@@ -24,7 +22,7 @@ import org.openrdf.rio.RDFFormat;
 /**
  *  Read-only configuration metadata.
  */
-public class Ripple
+public final class Ripple
 {
 	private static boolean initialized = false;
 
@@ -54,6 +52,10 @@ public class Ripple
 	private static boolean quiet = false;
 
 	////////////////////////////////////////////////////////////////////////////
+
+	private Ripple()
+	{
+	}
 
 	public static void initialize()
 		throws RippleException
@@ -284,7 +286,7 @@ public class Ripple
 
 	private static String getStringProperty( final Properties props,
 											final String name,
-											String defaultValue )
+											final String defaultValue )
 	{
 		String s = props.getProperty( name );
 
@@ -295,7 +297,7 @@ public class Ripple
 
 	private static boolean getBooleanProperty( final Properties props,
 											final String name,
-											boolean defaultValue )
+											final boolean defaultValue )
 	{
 		String s = props.getProperty( name );
 

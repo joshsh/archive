@@ -61,7 +61,7 @@ public abstract class Task
 			if ( null != children )
 			{
 				Iterator<Task> iter = children.iterator();
-				while( iter.hasNext() )
+				while ( iter.hasNext() )
 				{
 					Task child = iter.next();
 //System.out.println( "    stopping child: " + child );

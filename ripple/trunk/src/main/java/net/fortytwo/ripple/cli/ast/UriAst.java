@@ -9,7 +9,6 @@
 
 package net.fortytwo.ripple.cli.ast;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;

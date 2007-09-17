@@ -28,7 +28,7 @@ public class SaveAsCmd extends Command
 		this.fileName = fileName;
 	}
 
-	public void execute( QueryEngine qe, ModelConnection mc )
+	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		OutputStream out;
@@ -58,7 +58,9 @@ public class SaveAsCmd extends Command
 		System.out.println( "\nSaved data set as " + fileName + "\n" );
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

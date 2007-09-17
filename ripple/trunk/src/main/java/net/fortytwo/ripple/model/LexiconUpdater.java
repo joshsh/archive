@@ -49,7 +49,7 @@ public class LexiconUpdater implements RdfSink
 		URI pred = st.getPredicate();
 		Value obj = st.getObject();
 
-		synchronized( lexicon )
+		synchronized ( lexicon )
 		{
 			if ( subj instanceof URI )
 			{

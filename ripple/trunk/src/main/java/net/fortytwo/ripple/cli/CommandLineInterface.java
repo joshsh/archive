@@ -41,8 +41,7 @@ import net.fortytwo.ripple.util.Sink;
 import org.apache.log4j.Logger;
 
 /**
- * A command-line interpreter/browser which coordinates user interaction with a
- * Ripple query engine.
+ * A command-line interpreter/browser which coordinates user interaction with a Ripple query engine.
  */
 public class CommandLineInterface
 {
@@ -330,7 +329,9 @@ private boolean lastQueryContinued = false;
 			updateCompletors();
 		}
 
-		protected void abort() {}
+		protected void abort()
+		{
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////

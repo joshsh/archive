@@ -12,13 +12,13 @@ package net.fortytwo.ripple.extensions.string;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class IndexOf extends PrimitiveFunction
 {
+	private static final int ARITY = 2;
+
 	public IndexOf()
 		throws RippleException
 	{
@@ -27,7 +27,7 @@ public class IndexOf extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,

@@ -13,13 +13,14 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Ifte extends PrimitiveFunction
 {
+	private static final int ARITY = 3;
+
 	public Ifte()
 		throws RippleException
 	{
@@ -28,12 +29,12 @@ public class Ifte extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 3;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		RippleValue b, trueProg, falseProg;

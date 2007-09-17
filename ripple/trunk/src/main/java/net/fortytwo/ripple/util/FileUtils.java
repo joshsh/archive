@@ -18,7 +18,7 @@ import java.util.LinkedList;
 
 import net.fortytwo.ripple.RippleException;
 
-public class FileUtils
+public final class FileUtils
 {
 	public static Collection<String> getLines( final InputStream is )
 		throws RippleException
@@ -55,6 +55,10 @@ public class FileUtils
 		}
 
 		return lines;
+	}
+
+	private FileUtils()
+	{
 	}
 }
 

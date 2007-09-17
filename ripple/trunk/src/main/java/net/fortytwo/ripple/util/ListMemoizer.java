@@ -9,13 +9,13 @@
 
 package net.fortytwo.ripple.util;
 
-public class ListMemoizer<T extends Comparable,M>
+public class ListMemoizer<T extends Comparable, M>
 {
 	private T first;
 	private M memo;
 
-	private ListMemoizer<T,M> left, right;
-	private ListMemoizer<T,M> rest;
+	private ListMemoizer<T, M> left, right;
+	private ListMemoizer<T, M> rest;
 
 	public ListMemoizer( final ListNode<T> list, final M memo )
 	{
@@ -63,7 +63,7 @@ public class ListMemoizer<T extends Comparable,M>
 			{
 				if ( null == rest )
 				{
-					rest = new ListMemoizer<T,M>( r, memo );
+					rest = new ListMemoizer<T, M>( r, memo );
 					return true;
 				}
 
@@ -78,7 +78,7 @@ public class ListMemoizer<T extends Comparable,M>
 		{
 			if ( null == left )
 			{
-				left = new ListMemoizer<T,M>( list, memo );
+				left = new ListMemoizer<T, M>( list, memo );
 				return true;
 			}
 
@@ -92,7 +92,7 @@ public class ListMemoizer<T extends Comparable,M>
 		{
 			if ( null == right )
 			{
-				right = new ListMemoizer<T,M>( list, memo );
+				right = new ListMemoizer<T, M>( list, memo );
 				return true;
 			}
 

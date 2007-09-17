@@ -12,7 +12,6 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.query.ListDequotation;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.vocabulary.RDF;
 

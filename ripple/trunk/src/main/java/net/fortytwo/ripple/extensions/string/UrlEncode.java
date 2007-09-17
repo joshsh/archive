@@ -12,14 +12,14 @@ package net.fortytwo.ripple.extensions.string;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
 public class UrlEncode extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public UrlEncode()
 		throws RippleException
 	{
@@ -28,12 +28,12 @@ public class UrlEncode extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		String a, result;

@@ -14,7 +14,6 @@ import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.ListMemoizer;
@@ -22,6 +21,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Unique extends PrimitiveFunction
 {
+	private static final int ARITY = 0;
+
+	private static final String MEMO = "memo";
+
 	public Unique()
 		throws RippleException
 	{
@@ -30,12 +33,12 @@ public class Unique extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 0;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		sink.put(
@@ -46,11 +49,9 @@ public class Unique extends PrimitiveFunction
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private static String memo = "memo";
-
 	protected class UniqueInner implements Function
 	{
-		private ListMemoizer<RippleValue,String> memoizer = null;
+		private ListMemoizer<RippleValue, String> memoizer = null;
 	
 		public int arity()
 		{
@@ -58,18 +59,20 @@ public class Unique extends PrimitiveFunction
 		}
 	
 		public void applyTo( RippleList stack,
-							Sink<RippleList> sink,
-							ModelConnection mc )
+							final Sink<RippleList> sink,
+							final ModelConnection mc )
 			throws RippleException
 		{
 			if ( null == memoizer )
 			{
-				memoizer = new ListMemoizer<RippleValue,String>( stack, memo );
+				memoizer = new ListMemoizer<RippleValue, String>( stack, MEMO );
 				sink.put( stack );
 			}
 	
-			else if ( memoizer.add( stack, memo ) )
+			else if ( memoizer.add( stack, MEMO ) )
+			{
 				sink.put( stack );
+			}
 		}
 	}
 }

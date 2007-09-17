@@ -9,9 +9,6 @@
 
 package net.fortytwo.ripple.query.commands;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;

@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.RepositoryConnection;
@@ -56,10 +55,10 @@ public class FileRdfizer
 		= new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
 	private static final String
-		fileNs = "http://fortytwo.net/2007/02/06/file#",
-		rdfNs = "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-		rdfsNs = "http://www.w3.org/2000/01/rdf-schema#",
-		xsdNs = "http://www.w3.org/2001/XMLSchema#";
+		FILE = "http://fortytwo.net/2007/02/06/file#",
+		RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		RDFS = "http://www.w3.org/2000/01/rdf-schema#",
+		XSD = "http://www.w3.org/2001/XMLSchema#";
 
 	private int fileCount = 0;
 
@@ -67,28 +66,28 @@ public class FileRdfizer
 	{
 		this.valueFactory = valueFactory;
 		
-		fileUri         = valueFactory.createURI( fileNs + "File" );
-		directoryUri    = valueFactory.createURI( fileNs + "Directory" );
-		nameUri         = valueFactory.createURI( fileNs + "name" );
-		urlUri          = valueFactory.createURI( fileNs + "url" );
-		parentOfUri     = valueFactory.createURI( fileNs + "parentOf" );
-		childOfUri      = valueFactory.createURI( fileNs + "childOf" );
-		sizeUri         = valueFactory.createURI( fileNs + "size" );
-		isHiddenUri     = valueFactory.createURI( fileNs + "isHidden" );
-		lastModifiedUri = valueFactory.createURI( fileNs + "lastModified" );
+		fileUri         = valueFactory.createURI( FILE + "File" );
+		directoryUri    = valueFactory.createURI( FILE + "Directory" );
+		nameUri         = valueFactory.createURI( FILE + "name" );
+		urlUri          = valueFactory.createURI( FILE + "url" );
+		parentOfUri     = valueFactory.createURI( FILE + "parentOf" );
+		childOfUri      = valueFactory.createURI( FILE + "childOf" );
+		sizeUri         = valueFactory.createURI( FILE + "size" );
+		isHiddenUri     = valueFactory.createURI( FILE + "isHidden" );
+		lastModifiedUri = valueFactory.createURI( FILE + "lastModified" );
 
-		propertyUri     = valueFactory.createURI( rdfNs + "Property" );
-		typeUri         = valueFactory.createURI( rdfNs + "type" );
+		propertyUri     = valueFactory.createURI( RDF + "Property" );
+		typeUri         = valueFactory.createURI( RDF + "type" );
 
-		classUri        = valueFactory.createURI( rdfsNs + "Class" );
-		domainUri       = valueFactory.createURI( rdfsNs + "domain" );
-		rangeUri        = valueFactory.createURI( rdfsNs + "range" );
-		subClassOfUri   = valueFactory.createURI( rdfsNs + "subClassOf" );
+		classUri        = valueFactory.createURI( RDFS + "Class" );
+		domainUri       = valueFactory.createURI( RDFS + "domain" );
+		rangeUri        = valueFactory.createURI( RDFS + "range" );
+		subClassOfUri   = valueFactory.createURI( RDFS + "subClassOf" );
 
-		booleanUri      = valueFactory.createURI( xsdNs + "boolean" );
-		dateTimeUri     = valueFactory.createURI( xsdNs + "dateTime" );
-		longUri         = valueFactory.createURI( xsdNs + "long" );
-		stringUri       = valueFactory.createURI( xsdNs + "string" );
+		booleanUri      = valueFactory.createURI( XSD + "boolean" );
+		dateTimeUri     = valueFactory.createURI( XSD + "dateTime" );
+		longUri         = valueFactory.createURI( XSD + "long" );
+		stringUri       = valueFactory.createURI( XSD + "string" );
 	}
 
 	public void addTree( final File file,
@@ -98,8 +97,8 @@ public class FileRdfizer
 		throws org.openrdf.sail.SailException,
 		org.openrdf.repository.RepositoryException
 	{
-		connection.setNamespace( "file", fileNs );
-		connection.setNamespace( "xsd", xsdNs );
+		connection.setNamespace( "file", FILE );
+		connection.setNamespace( "xsd", XSD );
 
 		add( file, context, namespace, connection );
 	}
@@ -108,8 +107,9 @@ public class FileRdfizer
 					final URI context,
 					final String namespace,
 					final RepositoryConnection connection )
-		throws org.openrdf.sail.SailException,
-		org.openrdf.repository.RepositoryException
+		throws
+			org.openrdf.sail.SailException,
+			org.openrdf.repository.RepositoryException
 	{
 		URI self = createFileUri( file, namespace );
 
@@ -139,7 +139,10 @@ public class FileRdfizer
 				context ) );
 		}
 
-		catch ( java.net.MalformedURLException e ) {}
+		catch ( java.net.MalformedURLException e )
+		{
+			return null;
+		}
 
 		// size
 		long size = file.length();

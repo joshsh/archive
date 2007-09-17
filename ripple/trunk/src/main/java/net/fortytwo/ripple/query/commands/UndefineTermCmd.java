@@ -30,7 +30,9 @@ public class UndefineTermCmd extends Command
 		mc.createUri( qe.getDefaultNamespace() + term ) );
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

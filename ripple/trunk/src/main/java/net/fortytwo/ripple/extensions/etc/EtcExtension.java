@@ -10,26 +10,24 @@
 package net.fortytwo.ripple.extensions.etc;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
 public class EtcExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/08/ripple/etc#";
+	private static final String NS = "http://fortytwo.net/2007/08/ripple/etc#";
 
-	public void load( UrlFactory uf, ModelConnection mc )
+	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.addMapping(
-			ns, getClass().getResource( "etc.ttl" ) + "#" );
+			NS, getClass().getResource( "etc.ttl" ) + "#" );
 
-		registerPrimitive( Get.class, ns + "get", mc );
-		registerPrimitive( Pred.class, ns + "pred", mc );
-		registerPrimitive( Prim.class, ns + "prim", mc );
-		registerPrimitive( Time.class, ns + "time", mc );
+		registerPrimitive( Get.class, NS + "get", mc );
+		registerPrimitive( Pred.class, NS + "pred", mc );
+		registerPrimitive( Prim.class, NS + "prim", mc );
+		registerPrimitive( Time.class, NS + "time", mc );
 
 		// Note: the xml: namespace is actually said to be
 		//       http://www.w3.org/XML/1998/namespace

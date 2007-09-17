@@ -17,8 +17,6 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
 public class RippleList extends ListNode<RippleValue> implements RippleValue

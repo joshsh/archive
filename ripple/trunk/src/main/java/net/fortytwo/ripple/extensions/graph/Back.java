@@ -11,7 +11,6 @@ package net.fortytwo.ripple.extensions.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -20,6 +19,8 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Back extends PrimitiveFunction
 {
+	private static final int ARITY = 2;
+
 	public Back()
 		throws RippleException
 	{
@@ -28,7 +29,7 @@ public class Back extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,

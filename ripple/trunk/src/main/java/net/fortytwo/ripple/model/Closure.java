@@ -8,9 +8,8 @@
 
 
 package net.fortytwo.ripple.model;
-import net.fortytwo.ripple.util.Sink;
 
-import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.RippleException;
 
 public class Closure implements Function

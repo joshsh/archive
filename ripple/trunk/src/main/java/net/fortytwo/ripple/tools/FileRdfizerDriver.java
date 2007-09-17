@@ -20,8 +20,12 @@ import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.sail.memory.MemoryStore;
 
-public class FileRdfizerDriver
+public final class FileRdfizerDriver
 {
+	private FileRdfizerDriver()
+	{
+	}
+
 	private static void printUsage()
 	{
 		System.out.println( "FileRdfizerDriver <fileName> [namespace]" );
@@ -31,7 +35,6 @@ public class FileRdfizerDriver
 								final String namespace,
 								final OutputStream out )
 		throws
-			org.openrdf.sail.SailInitializationException,
 			org.openrdf.sail.SailException,
 			org.openrdf.rio.RDFHandlerException,
 			org.openrdf.repository.RepositoryException

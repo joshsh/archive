@@ -9,13 +9,11 @@
 
 package net.fortytwo.ripple.extensions.services;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
@@ -25,9 +23,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -39,8 +35,10 @@ import org.openrdf.model.Value;
 
 public class Sindice extends PrimitiveFunction
 {
-	static SAXBuilder saxBuilder = null;
-	static void initialize()
+	private static final int ARITY = 1;
+
+	private static SAXBuilder saxBuilder = null;
+	private static void initialize()
 	{
 		saxBuilder = new SAXBuilder( true );
 		saxBuilder.setReuseParser( true );
@@ -60,16 +58,18 @@ public class Sindice extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		if ( null == saxBuilder )
+		{
 			initialize();
+		}
 
 		Value v;
 
@@ -78,19 +78,27 @@ public class Sindice extends PrimitiveFunction
 
 		String urlStr;
 		if ( v instanceof Literal )
+		{
 			urlStr = "http://sindice.com/keyword/"
 //			urlStr = "http://sindice.com/beta/keyword/"
 //			urlStr = "http://sindice.com/beta/lookup/keyword?keyword="
 				+ StringUtils.percentEncode( v.toString() );
+		}
+
 		else if ( v instanceof URI )
+		{
 			urlStr = "http://sindice.com/uri/"
 //			urlStr = "http://sindice.com/lookup?uri="
 //			urlStr = "http://sindice.com/beta/lookup_uri?uri="
 				+ StringUtils.percentEncode( v.toString() )
 			;
 //				+ "&lookup=Lookup";
+		}
+
 		else
+		{
 			throw new RippleException( "argument is neither a literal value nor a URI: " + v );
+		}
 
 		URLConnection urlConn;
 
@@ -212,10 +220,13 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 		else if ( root.getName().equals( "nil-classes" ) )
 		{
 			// Do nothing.
+			return;
 		}
 
 		else
+		{
 			throw new RippleException( "Unexpected Sindice response: " + root.getName() );
+		}
 	}
 }
 

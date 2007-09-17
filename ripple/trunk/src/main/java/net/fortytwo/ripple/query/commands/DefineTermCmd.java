@@ -31,7 +31,7 @@ public class DefineTermCmd extends Command
 	private ListAst ast;
 	private String term;
 
-	public DefineTermCmd( ListAst ast, final String term )
+	public DefineTermCmd( final ListAst ast, final String term )
 	{
 		this.ast = ast;
 		this.term = term;
@@ -77,7 +77,9 @@ public class DefineTermCmd extends Command
 		}
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 
 
 

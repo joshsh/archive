@@ -12,9 +12,7 @@ package net.fortytwo.ripple.extensions.etc;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.HttpUtils;
 
@@ -27,6 +25,8 @@ import java.net.URLConnection;
 
 public class Get extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public Get()
 		throws RippleException
 	{
@@ -35,12 +35,12 @@ public class Get extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		String result;

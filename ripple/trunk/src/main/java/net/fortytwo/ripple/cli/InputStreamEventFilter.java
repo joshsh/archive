@@ -13,6 +13,8 @@ import java.io.InputStream;
 
 public class InputStreamEventFilter extends InputStream
 {
+	private static final int ESC = 27;
+
 	private InputStream source;
 	private RecognizerAdapter recognizerAdapter;
 
@@ -37,15 +39,15 @@ public class InputStreamEventFilter extends InputStream
 		}
 
 		// Break out when an ordinary character or sequence is found
-		while( true )
+		while ( true )
 		{
 			int c = source.read();
 
-			if ( 27 == c )
+			if ( ESC == c )
 			{
 				c = source.read();
 
-				if ( 27 == c )
+				if ( ESC == c )
 				{
 					recognizerAdapter.putEvent( RecognizerEvent.ESCAPE );
 				}
@@ -53,7 +55,7 @@ public class InputStreamEventFilter extends InputStream
 				else
 				{
 					buffered = c;
-					return 27;
+					return ESC;
 				}
 			}
 

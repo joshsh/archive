@@ -11,12 +11,15 @@ import org.deri.sw.semanticsitemap.Dataset;
 import org.deri.sw.semanticsitemap.RobotsTXTParser;
 import org.deri.sw.semanticsitemap.SemanticSitemapParser;
 
-public class SitemapsUtils
+public final class SitemapsUtils
 {
 /*
 http://purl.uniprot.org/sitemap.xml
 http://www.rdfabout.com/sitemap.xml
 */
+	private SitemapsUtils()
+	{
+	}
 
 	public static void test() throws RippleException
 	{

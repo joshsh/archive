@@ -13,11 +13,20 @@ import java.net.URLEncoder;
 
 import net.fortytwo.ripple.RippleException;
 
-public class StringUtils
+public final class StringUtils
 {
 	// See: http://www.koders.com/java/fid97184BECA1A7DCCD2EDA6D243477157EB453294C.aspx
-	private static final String safeURLCharacters
+	private static final String SAFE_URL_CHARACTERS
 		= "@*-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+
+	private static final int
+		FOUR = 4,
+		EIGHT = 8,
+		SIXTEEN = 16;
+
+	private StringUtils()
+	{
+	}
 
 	// Note: extended characters are not escaped for printing.
 	public static String escapeString( final String s )
@@ -107,14 +116,14 @@ public class StringUtils
 						sb.append( '\r' );
 						break;
 					case 'u':
-						seq = s.substring( i + 1, i + 5 );
+						seq = s.substring( i + 1, i + FOUR + 1 );
 						sb.append( toUnicodeChar( seq ) );
-						i += 4;
+						i += FOUR;
 						break;
 					case 'U':
-						seq = s.substring( i + 1, i + 9 );
+						seq = s.substring( i + 1, i + EIGHT + 1 );
 						sb.append( toUnicodeChar( seq ) );
-						i += 8;
+						i += EIGHT;
 						break;
 					default:
 						throw new RippleException( "bad escape sequence: \\" + s.charAt( i + 1 ) );
@@ -122,7 +131,9 @@ public class StringUtils
 			}
 
 			else
+			{
 				sb.append( c );
+			}
 		}
 
 		return sb.toString();
@@ -152,14 +163,14 @@ public class StringUtils
 						sb.append( '>' );
 						break;
 					case 'u':
-						seq = s.substring( i + 1, i + 5 );
+						seq = s.substring( i + 1, i + FOUR + 1 );
 						sb.append( toUnicodeChar( seq ) );
-						i += 4;
+						i += FOUR;
 						break;
 					case 'U':
-						seq = s.substring( i + 1, i + 9 );
+						seq = s.substring( i + 1, i + EIGHT + 1 );
 						sb.append( toUnicodeChar( seq ) );
-						i += 8;
+						i += EIGHT;
 						break;
 					default:
 						throw new RippleException( "bad escape sequence: \\" + s.charAt( i + 1 ) );
@@ -167,7 +178,9 @@ public class StringUtils
 			}
 
 			else
+			{
 				sb.append( c );
+			}
 		}
 
 		return sb.toString();
@@ -184,7 +197,7 @@ public class StringUtils
 		{
 			char c = s.charAt( i );
 
-			if (safeURLCharacters.indexOf( c ) >= 0)
+			if (SAFE_URL_CHARACTERS.indexOf( c ) >= 0)
 			{
 				enc.append( c );
 			}
@@ -194,7 +207,7 @@ public class StringUtils
 				// Just keep lsb like:
 				// http://java.sun.com/j2se/1.3/docs/api/java/net/URLEncoder.html
 				c = (char) ( c & '\u00ff' );
-				if (c < 16)
+				if ( c < SIXTEEN )
 				{
 					enc.append( "%0" );
 				}
@@ -234,7 +247,7 @@ public class StringUtils
 	{
 		try
 		{
-			return (char) Integer.parseInt( unicode.toString(), 16 );
+			return (char) Integer.parseInt( unicode.toString(), SIXTEEN );
 		}
 
 		catch ( NumberFormatException e )

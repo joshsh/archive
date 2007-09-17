@@ -16,9 +16,9 @@ import org.openrdf.model.Statement;
 
 public interface RdfSink
 {
-	public void put( Statement st ) throws RippleException;
-	public void put( Namespace ns ) throws RippleException;
-	public void put( String comment ) throws RippleException;
+	void put( Statement st ) throws RippleException;
+	void put( Namespace ns ) throws RippleException;
+	void put( String comment ) throws RippleException;
 }
 
 // kate: tab-width 4

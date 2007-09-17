@@ -35,8 +35,10 @@ import org.jdom.input.SAXBuilder;
 
 public class PingTheSemanticWeb extends PrimitiveFunction
 {
-	static SAXBuilder saxBuilder = null;
-	static void initialize()
+	private static final int ARITY = 2;
+
+	private static SAXBuilder saxBuilder = null;
+	private static void initialize()
 	{
 		saxBuilder = new SAXBuilder( true );
 		saxBuilder.setReuseParser( true );
@@ -56,12 +58,12 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		if ( null == saxBuilder )

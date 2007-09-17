@@ -10,11 +10,9 @@
 package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSink;
 
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.NamespaceImpl;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 
 public class SesameAdapter implements RDFHandler
@@ -81,13 +79,15 @@ public class SesameAdapter implements RDFHandler
 	 *  Signals the start of the RDF data.
 	 */
 	public void startRDF()
-	{}
+	{
+	}
 
 	/**
 	 *  Signals the end of the RDF data.
 	 */
 	public void endRDF()
-	{}
+	{
+	}
 }
 
 // kate: tab-width 4

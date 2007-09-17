@@ -10,38 +10,36 @@
 package net.fortytwo.ripple.extensions.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
 public class StringExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/08/ripple/string#";
+	private static final String NS = "http://fortytwo.net/2007/08/ripple/string#";
 
 	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.addMapping(
-			ns, getClass().getResource( "string.ttl" ) + "#" );
+			NS, getClass().getResource( "string.ttl" ) + "#" );
 
-		registerPrimitive( EndsWith.class, ns + "endsWith", mc );
-		registerPrimitive( IndexOf.class, ns + "indexOf", mc );
-		registerPrimitive( LastIndexOf.class, ns + "lastIndexOf", mc );
-		registerPrimitive( Length.class, ns + "length", mc );
-		registerPrimitive( Matches.class, ns + "matches", mc );
-		registerPrimitive( PercentEncode.class, ns + "percentEncode", mc );
-		registerPrimitive( ReplaceAll.class, ns + "replaceAll", mc );
-		registerPrimitive( Sha1.class, ns + "sha1", mc );
-		registerPrimitive( Split.class, ns + "split", mc );
-		registerPrimitive( StartsWith.class, ns + "startsWith", mc );
-		registerPrimitive( StrCat.class, ns + "strCat", mc );
-		registerPrimitive( Substring.class, ns + "substring", mc );
-		registerPrimitive( ToLowerCase.class, ns + "toLowerCase", mc );
-		registerPrimitive( ToUpperCase.class, ns + "toUpperCase", mc );
-		registerPrimitive( Trim.class, ns + "trim", mc );
-		registerPrimitive( UrlEncode.class, ns + "urlEncode", mc );
+		registerPrimitive( EndsWith.class, NS + "endsWith", mc );
+		registerPrimitive( IndexOf.class, NS + "indexOf", mc );
+		registerPrimitive( LastIndexOf.class, NS + "lastIndexOf", mc );
+		registerPrimitive( Length.class, NS + "length", mc );
+		registerPrimitive( Matches.class, NS + "matches", mc );
+		registerPrimitive( PercentEncode.class, NS + "percentEncode", mc );
+		registerPrimitive( ReplaceAll.class, NS + "replaceAll", mc );
+		registerPrimitive( Sha1.class, NS + "sha1", mc );
+		registerPrimitive( Split.class, NS + "split", mc );
+		registerPrimitive( StartsWith.class, NS + "startsWith", mc );
+		registerPrimitive( StrCat.class, NS + "strCat", mc );
+		registerPrimitive( Substring.class, NS + "substring", mc );
+		registerPrimitive( ToLowerCase.class, NS + "toLowerCase", mc );
+		registerPrimitive( ToUpperCase.class, NS + "toUpperCase", mc );
+		registerPrimitive( Trim.class, NS + "trim", mc );
+		registerPrimitive( UrlEncode.class, NS + "urlEncode", mc );
 	}
 }
 

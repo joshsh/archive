@@ -63,7 +63,9 @@ public class ExportNsCmd extends Command
 		System.out.println( "\nExported namespace " + nsPrefix + " to " + fileName + "\n" );
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

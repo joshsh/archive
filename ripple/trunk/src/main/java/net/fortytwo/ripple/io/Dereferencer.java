@@ -19,20 +19,20 @@ import org.openrdf.model.URI;
 
 public interface Dereferencer
 {
-	public void dereference( URI uri, ModelConnection mc )
+	void dereference( URI uri, ModelConnection mc )
 		throws RippleException;
 
-	public void dereference( RdfValue rv, ModelConnection mc )
+	void dereference( RdfValue rv, ModelConnection mc )
 		throws RippleException;
 
-	public void forget( RdfValue rv, ModelConnection mc )
+	void forget( RdfValue rv, ModelConnection mc )
 		throws RippleException;
 
-	public void addSuccessMemo( String memo );
-	public void addFailureMemo( String memo );
+	void addSuccessMemo( String memo );
+	void addFailureMemo( String memo );
 
-	public Collection<String> getSuccessMemos();
-	public Collection<String> getFailureMemos();
+	Collection<String> getSuccessMemos();
+	Collection<String> getFailureMemos();
 }
 
 // kate: tab-width 4

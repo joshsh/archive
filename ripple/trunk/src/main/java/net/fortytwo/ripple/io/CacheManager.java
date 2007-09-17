@@ -17,21 +17,16 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
 
-public class CacheManager
+public final class CacheManager
 {
 	private static final Logger LOGGER = Logger.getLogger( CacheManager.class );
 
@@ -41,6 +36,10 @@ public class CacheManager
 		rplCacheFailureMemo;
 
 	private static boolean initialized = false;
+
+	private CacheManager()
+	{
+	}
 
 	private static void initialize( final ModelConnection mc )
 		throws RippleException

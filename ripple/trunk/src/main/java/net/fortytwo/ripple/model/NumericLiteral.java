@@ -11,9 +11,6 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleValue;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -25,6 +22,9 @@ import org.openrdf.model.vocabulary.XMLSchema;
  */
 public class NumericLiteral implements RippleValue
 {
+	/**
+	 * Distinguishes between numeric literals of type xsd:integer and xsd:double.
+	 */
 	public enum NumericLiteralType { INTEGER, DOUBLE };
 
 	private NumericLiteralType type;
@@ -265,7 +265,7 @@ public class NumericLiteral implements RippleValue
 		return false;
 	}
 
-	public void printTo( RipplePrintStream p )
+	public void printTo( final RipplePrintStream p )
 		throws RippleException
 	{
 		switch ( type )

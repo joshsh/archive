@@ -31,9 +31,13 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
-public class RdfUtils
+public final class RdfUtils
 {
 	private static final Logger LOGGER = Logger.getLogger( RdfUtils.class );
+
+	private RdfUtils()
+	{
+	}
 
 	public static Repository createMemoryStoreRepository()
 		throws RippleException
@@ -87,7 +91,7 @@ public class RdfUtils
 		throws RippleException
 	{
 		final Pointer<RDFFormat> formatPtr = new Pointer<RDFFormat>();
-		formatPtr.ref = format;
+		formatPtr.setRef( format );
 
 		// Don't wait indefinitely for a connection.
 		// Note: this timeout applies only to the establishment of a connection.
@@ -99,15 +103,15 @@ public class RdfUtils
 // 		{
 // 			protected void run() throws RippleException
 // 			{
-				if ( null == formatPtr.ref )
+				if ( null == formatPtr.getRef() )
 				{
 					// This operation may hang as well.
-					formatPtr.ref = guessRdfFormat( uc );
+					formatPtr.setRef( guessRdfFormat( uc ) );
 				}
 // 			}
 // 		}.start(  );
 
-		if ( null == formatPtr.ref )
+		if ( null == formatPtr.getRef() )
 		{
 			// Soft fail (possibly too soft?)
 			return null;
@@ -125,7 +129,7 @@ public class RdfUtils
 			throw new RippleException( e );
 		}
 
-		read( response, sa, baseUri, formatPtr.ref );
+		read( response, sa, baseUri, formatPtr.getRef() );
 
 		try
 		{
@@ -137,7 +141,7 @@ public class RdfUtils
 			throw new RippleException( e );
 		}
 
-		return formatPtr.ref;
+		return formatPtr.getRef();
 	}
 
 	public static RDFFormat read( final URLConnection uc,

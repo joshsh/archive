@@ -40,9 +40,13 @@ import org.openrdf.rio.RDFFormat;
 /**
  * Demo application.
  */
-public class Demo
+public final class Demo
 {
 	private static final Logger LOGGER = Logger.getLogger( Demo.class );
+
+	private Demo()
+	{
+	}
 
 	public static void demo( final File store,
 							final InputStream in,

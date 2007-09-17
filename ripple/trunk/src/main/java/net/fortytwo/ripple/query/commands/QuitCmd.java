@@ -23,7 +23,9 @@ public class QuitCmd extends Command
 		throw new ParserQuitException();
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

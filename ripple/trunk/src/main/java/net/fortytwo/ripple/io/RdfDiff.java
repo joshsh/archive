@@ -12,8 +12,6 @@ package net.fortytwo.ripple.io;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import net.fortytwo.ripple.RippleException;
-
 import org.openrdf.model.Statement;
 
 public class RdfDiff

@@ -21,7 +21,7 @@ public class Tee<T> implements Sink<T>
 		this.sinkB = sinkB;
 	}
 
-	public void put( T t )
+	public void put( final  T t )
 		throws RippleException
 	{
 		sinkA.put( t );

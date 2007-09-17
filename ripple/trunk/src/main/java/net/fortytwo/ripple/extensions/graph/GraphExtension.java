@@ -10,45 +10,43 @@
 package net.fortytwo.ripple.extensions.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
 public class GraphExtension extends Extension
 {
-	private static String ns = "http://fortytwo.net/2007/08/ripple/graph#";
+	private static final String NS = "http://fortytwo.net/2007/08/ripple/graph#";
 
-	public void load( UrlFactory uf, ModelConnection mc )
+	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.addMapping(
-			ns, getClass().getResource( "graph.ttl" ) + "#" );
+			NS, getClass().getResource( "graph.ttl" ) + "#" );
 
-		registerPrimitive( Assert.class, ns + "assert", mc );
-		registerPrimitive( Contains.class, ns + "contains", mc );
-//		registerPrimitive( Count.class, ns + "count", mc );
-		registerPrimitive( Compare.class, ns + "compare", mc );
-		registerPrimitive( Deny.class, ns + "deny", mc );
-		registerPrimitive( Equal.class, ns + "equal", mc );
-		registerPrimitive( Forget.class, ns + "forget", mc );
-		registerPrimitive( New.class, ns + "new", mc );
+		registerPrimitive( Assert.class, NS + "assert", mc );
+		registerPrimitive( Contains.class, NS + "contains", mc );
+//		registerPrimitive( Count.class, NS + "count", mc );
+		registerPrimitive( Compare.class, NS + "compare", mc );
+		registerPrimitive( Deny.class, NS + "deny", mc );
+		registerPrimitive( Equal.class, NS + "equal", mc );
+		registerPrimitive( Forget.class, NS + "forget", mc );
+		registerPrimitive( New.class, NS + "new", mc );
 
 		// Type conversion / literal reification.
-		registerPrimitive( ToDouble.class, ns + "toDouble", mc );
-		registerPrimitive( ToInteger.class, ns + "toInteger", mc );
-		registerPrimitive( ToString.class, ns + "toString", mc );
-		registerPrimitive( ToUri.class, ns + "toUri", mc );
+		registerPrimitive( ToDouble.class, NS + "toDouble", mc );
+		registerPrimitive( ToInteger.class, NS + "toInteger", mc );
+		registerPrimitive( ToString.class, NS + "toString", mc );
+		registerPrimitive( ToUri.class, NS + "toUri", mc );
 
 		// Resource-centric primitives.
-		registerPrimitive( Back.class, ns + "back", mc );
-		registerPrimitive( Links.class, ns + "links", mc );
+		registerPrimitive( Back.class, NS + "back", mc );
+		registerPrimitive( Links.class, NS + "links", mc );
 
 		// Document-centric primitives.
-		registerPrimitive( Comments.class, ns + "comments", mc );
-		registerPrimitive( Namespaces.class, ns + "namespaces", mc );
-		registerPrimitive( Triples.class, ns + "triples", mc );
+		registerPrimitive( Comments.class, NS + "comments", mc );
+		registerPrimitive( Namespaces.class, NS + "namespaces", mc );
+		registerPrimitive( Triples.class, NS + "triples", mc );
 	}
 }
 

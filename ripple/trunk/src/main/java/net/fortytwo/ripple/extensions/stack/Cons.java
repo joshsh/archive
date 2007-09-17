@@ -12,13 +12,14 @@ package net.fortytwo.ripple.extensions.stack;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Cons extends PrimitiveFunction
 {
+	private static final int ARITY = 2;
+
 	public Cons()
 		throws RippleException
 	{
@@ -27,20 +28,25 @@ public class Cons extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return ARITY;
 	}
 
-	private RippleList bury( RippleValue last, RippleList l )
+	private RippleList bury( final RippleValue last, final RippleList l )
 	{
 		if ( RippleList.NIL == l )
+		{
 			return new RippleList( last );
+		}
+
 		else
+		{
 			return new RippleList( l.getFirst(), bury( last, l.getRest() ) );
+		}
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		RippleValue x;

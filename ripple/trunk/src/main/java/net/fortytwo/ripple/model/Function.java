@@ -18,11 +18,11 @@ public interface Function
 	*  The fixed number of arguments which this function consumes before
 	*  yielding a result.
 	*/
-	public int arity();
+	int arity();
 
-	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+	void applyTo( RippleList stack,
+					Sink<RippleList> sink,
+					ModelConnection mc )
 		throws RippleException;
 }
 

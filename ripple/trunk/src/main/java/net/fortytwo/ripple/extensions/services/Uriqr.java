@@ -15,7 +15,6 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
@@ -38,9 +37,12 @@ import org.openrdf.model.URI;
 
 public class Uriqr extends PrimitiveFunction
 {
-	static SAXBuilder saxBuilder = null;
-	static XPath resultPath = null;
-	static void initialize() throws RippleException
+	private static final int ARITY = 1;
+
+	private static SAXBuilder saxBuilder = null;
+	private static XPath resultPath = null;
+
+	private static void initialize() throws RippleException
 	{
 		saxBuilder = new SAXBuilder( true );
 		saxBuilder.setReuseParser( true );
@@ -75,7 +77,7 @@ public class Uriqr extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
@@ -150,7 +152,7 @@ public class Uriqr extends PrimitiveFunction
 			Object r = iter.next();
 			if ( r instanceof Element )
 			{
-				String text = ( ( Element ) r ).getText();
+				String text = ( (Element) r ).getText();
 				URI resultUri = mc.createUri( text );
 
 				sink.put( new RippleList(

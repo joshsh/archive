@@ -13,7 +13,6 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.control.TaskSet;
-import net.fortytwo.ripple.cli.TurtleView;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -126,6 +125,7 @@ nilSource.put( RippleList.NIL );
 		catch ( RippleException e )
 		{
 			// (soft fail... don't even log the error)
+			return;
 		}
 	}
 }

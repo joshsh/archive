@@ -22,7 +22,9 @@ public class ShowPrefixesCmd extends Command
 		qe.getModel().showNamespaces();
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

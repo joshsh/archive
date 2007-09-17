@@ -11,18 +11,13 @@ package net.fortytwo.ripple.extensions.graph;
 
 import java.net.URLConnection;
 
-import java.io.InputStream;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.SesameAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.io.RdfSink;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 
@@ -32,6 +27,8 @@ import org.openrdf.model.URI;
 
 public class Comments extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public Comments()
 		throws RippleException
 	{
@@ -40,7 +37,7 @@ public class Comments extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
@@ -67,10 +64,14 @@ public class Comments extends PrimitiveFunction
 		RdfSink rdfSink = new RdfSink()
 		{
 			// Discard statements.
-			public void put( final Statement st ) throws RippleException {}
+			public void put( final Statement st ) throws RippleException
+			{
+			}
 
 			// Discard namespaces.
-			public void put( final Namespace ns ) throws RippleException {}
+			public void put( final Namespace ns ) throws RippleException
+			{
+			}
 
 			// Push comments to the stack.
 			public void put( final String comment ) throws RippleException

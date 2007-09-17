@@ -22,7 +22,9 @@ public class CountStatementsCmd extends Command
 		System.out.println( "\n" + qe.getModel().countStatements() + "\n" );
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

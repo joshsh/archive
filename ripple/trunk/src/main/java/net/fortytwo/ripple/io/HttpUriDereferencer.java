@@ -9,20 +9,15 @@
 
 package net.fortytwo.ripple.io;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
-
-import jline.Completor;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.StringUtils;
@@ -34,7 +29,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 

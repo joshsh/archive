@@ -9,15 +9,7 @@
 
 package net.fortytwo.ripple.model;
 
-import java.util.Iterator;
-
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ModelBridge;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class RdfPredicateFunction implements Function
@@ -42,7 +34,7 @@ public class RdfPredicateFunction implements Function
 		}
 	}
 
-	public RdfPredicateFunction( RdfValue predicate )
+	public RdfPredicateFunction( final RdfValue predicate )
 	{
 		pred = predicate;
 	}

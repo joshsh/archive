@@ -12,13 +12,13 @@ package net.fortytwo.ripple.extensions.string;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Split extends PrimitiveFunction
 {
+	private static final int ARITY = 2;
+
 	public Split()
 		throws RippleException
 	{
@@ -27,12 +27,12 @@ public class Split extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 2;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-								Sink<RippleList> sink,
-								ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		String s, regex;
@@ -47,7 +47,9 @@ public class Split extends PrimitiveFunction
 			String [] array = s.split( regex );
 			RippleList result = RippleList.NIL;
 			for ( int i = 0; i < array.length; i++ )
+			{
 				result = new RippleList( mc.createValue( array[i] ), result );
+			}
 
 			sink.put( new RippleList( result, stack ) );
 		}

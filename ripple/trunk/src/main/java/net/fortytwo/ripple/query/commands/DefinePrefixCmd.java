@@ -56,7 +56,9 @@ public class DefinePrefixCmd extends Command
 		qe.getLexicon().add( new NamespaceImpl( prefix, ns.toString() ) );
 	}
 
-	protected void abort() {}
+	protected void abort()
+	{
+	}
 }
 
 // kate: tab-width 4

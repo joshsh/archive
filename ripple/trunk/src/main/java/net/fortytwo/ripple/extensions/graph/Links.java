@@ -12,9 +12,7 @@ package net.fortytwo.ripple.extensions.graph;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
@@ -23,6 +21,8 @@ import org.openrdf.model.Statement;
 
 public class Links extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public Links()
 		throws RippleException
 	{
@@ -31,7 +31,7 @@ public class Links extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,

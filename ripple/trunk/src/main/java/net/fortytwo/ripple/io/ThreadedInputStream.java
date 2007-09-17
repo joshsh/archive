@@ -128,7 +128,7 @@ public class ThreadedInputStream extends InputStream
 	{
 		readerTask = new Task()
 		{
-			boolean active = false;
+			private boolean active = false;
 
 			protected void executeProtected() throws RippleException
 			{
