@@ -29,6 +29,8 @@ import org.openrdf.model.URI;
 
 public class Play extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
 	public Play()
 		throws RippleException
 	{
@@ -37,15 +39,14 @@ public class Play extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
-System.out.println( "bar" );
 		URI uri;
 
 		uri = mc.uriValue( stack.getFirst() );
@@ -61,7 +62,7 @@ System.out.println( "bar" );
 System.out.println( "error: " + e );
 			e.logError();
 		}
-System.out.println( "foo" );
+
 		// Pass the stack along, unaltered.
 		sink.put( stack );
 	}

@@ -23,6 +23,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Speak extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
+	private Voice singleVoice = null;
+
 	public Speak()
 		throws RippleException
 	{
@@ -31,12 +35,12 @@ public class Speak extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		String s;
@@ -59,19 +63,19 @@ System.out.println( "error: " + e );
 		sink.put( stack );
 	}
 
-	Voice singleVoice = null;
-
 	// Note: we won't try to speak more than one expression at a time.
 	synchronized void speak( final String s )
 		throws RippleException
 	{
 		if ( null == singleVoice )
+		{
 			createVoice();
+		}
 
 		singleVoice.speak( s );
 	}
 
-	void createVoice()
+	private void createVoice()
 		throws RippleException
 	{
 		String voiceName = "kevin";
@@ -88,8 +92,10 @@ System.out.println( "error: " + e );
 		}
 
 		if ( null == singleVoice )
+		{
 			throw new RippleException(
 				"Cannot find a voice named " + voiceName );
+		}
 
 		try
 		{
@@ -103,12 +109,14 @@ System.out.println( "error: " + e );
 	}
 
 	// Note: never called.
-	synchronized void end() throws RippleException
+	private synchronized void end() throws RippleException
 	{
 		try
 		{
 			if ( null != singleVoice )
+			{
 				singleVoice.deallocate();
+			}
 		}
 
 		catch ( Throwable t )

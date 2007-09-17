@@ -33,6 +33,10 @@ import org.openrdf.model.URI;
 
 public class Show extends PrimitiveFunction
 {
+	private static final int ARITY = 1;
+
+	private static String[] mimeTypes = ImageIO.getReaderMIMETypes();
+
 	public Show()
 		throws RippleException
 	{
@@ -41,12 +45,12 @@ public class Show extends PrimitiveFunction
 
 	public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public void applyTo( RippleList stack,
-						Sink<RippleList> sink,
-						ModelConnection mc )
+						final Sink<RippleList> sink,
+						final ModelConnection mc )
 		throws RippleException
 	{
 		URI uri;
@@ -81,8 +85,6 @@ public class Show extends PrimitiveFunction
 		sink.put( stack );
 	}
 
-	static String[] mimeTypes = ImageIO.getReaderMIMETypes();
-
 	//panel used to draw image on
 	private class ImagePanel extends JPanel
 	{
@@ -116,11 +118,13 @@ public class Show extends PrimitiveFunction
 		}
 		
 		//override paint method of panel
-		public void paint( Graphics g )
+		public void paint( final Graphics g )
 		{
 			//draw the image
 			if( img != null )
+			{
 				g.drawImage( img, 0, 0, this );
+			}
 		}
 	}
 }
