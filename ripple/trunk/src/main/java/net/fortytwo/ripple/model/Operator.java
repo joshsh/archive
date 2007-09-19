@@ -13,15 +13,10 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.query.ListDequotation;
 
-import org.openrdf.model.vocabulary.RDF;
-
 public class Operator implements RippleValue
 {
 	public static final Operator
 		OP = new Operator( new Op() );
-
-	static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
-	static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
 	private Function func;
 	private RdfValue rdfEquivalent = null;
@@ -59,58 +54,9 @@ public class Operator implements RippleValue
 		p.print( rdfEquivalent );
 	}
 
-	/**
-	 *  Finds the type of a value and creates an appropriate "active" wrapper.
-	 */
-	protected static Operator createOperator( final RippleValue v, final ModelConnection mc )
-		throws RippleException
-	{
-		// A function becomes active.
-		if ( v instanceof Function )
-		{
-			return new Operator( (Function) v );
-		}
-
-		// A list is dequoted.
-		else if ( v instanceof RippleList )
-		{
-			return new Operator( (RippleList) v );
-		}
-
-		// This is the messy part.  Attempt to guess the type of the object from
-		// the available RDF statements, and create the appropriate object.
-		if ( v instanceof RdfValue )
-		{
-			if ( isRdfList( (RdfValue) v, mc ) )
-			{
-				return new Operator( RippleList.createList( (RdfValue) v, mc ) );
-			}
-
-			// An RDF value not otherwise recognizable becomes a predicate filter.
-			else
-			{
-				return new Operator( (RdfValue) v );
-			}
-		}
-
-		// Anything else becomes an active nullary filter with no output.
-		else
-		{
-			return new Operator( new NullFilter() );
-		}
-	}
-
 	public boolean isActive()
 	{
 		return true;
-	}
-
-// TODO: replace this with something a little more clever
-	private static boolean isRdfList( final RdfValue v, final ModelConnection mc )
-		throws RippleException
-	{
-		return ( v.equals( RDF_NIL )
-			|| null != mc.findSingleObject( (RdfValue) v, RDF_FIRST ) );
 	}
 
 public RdfValue toRdf( final ModelConnection mc )

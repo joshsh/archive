@@ -52,15 +52,22 @@ public class In extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue x;
-		RippleList l;
+		RippleValue l;
 
-		l = RippleList.from( stack.getFirst(), mc );
+		l = stack.getFirst();
 		stack = stack.getRest();
-		x = stack.getFirst();
-		stack = stack.getRest();
+		final RippleValue x = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		sink.put( new RippleList( has( l, x ) ? StackExtension.getTrueValue() : StackExtension.getFalseValue(), stack ) );
+		Sink<RippleList> listSink = new Sink<RippleList>()
+		{
+			public void put( final RippleList list ) throws RippleException
+			{
+				sink.put( new RippleList( has( list, x ) ? StackExtension.getTrueValue() : StackExtension.getFalseValue(), rest ) );
+			}
+		};
+
+		RippleList.from( l, listSink, mc );
 	}
 }
 

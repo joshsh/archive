@@ -126,12 +126,12 @@ public class QueryEngine
 
 		if ( 0 == options.size() )
 		{
-			errorPrintStream.println( "Warning: no values resolved for keyword " + localName );
+			errorPrintStream.println( "Warning: no values resolved for keyword " + localName + "\n" );
 		}
 
 		else if ( 1 < options.size() )
 		{
-			errorPrintStream.println( "Warning: multiple values resolved for keyword " + localName );
+			errorPrintStream.println( "Warning: multiple values resolved for keyword " + localName + "\n" );
 		}
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )

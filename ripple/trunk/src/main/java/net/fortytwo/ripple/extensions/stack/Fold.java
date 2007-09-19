@@ -37,30 +37,35 @@ public class Fold extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue f, v, l;
+		RippleValue l;
 
-		f = stack.getFirst();
+		final RippleValue f = stack.getFirst();
 		stack = stack.getRest();
-		v = stack.getFirst();
+		final RippleValue v = stack.getFirst();
 		stack = stack.getRest();
 		l = stack.getFirst();
-		stack = stack.getRest();
+		final RippleList rest = stack.getRest();
 
-		RippleList lList = RippleList.invert( ( l instanceof RippleList )
-			? (RippleList) l
-			:  RippleList.createList( l.toRdf( mc ), mc ) );
-
-		RippleList result = new RippleList( v, stack );
-
-		while ( RippleList.NIL != lList )
+		Sink<RippleList> listSink = new Sink<RippleList>()
 		{
-			result = result.push( lList.getFirst() )
-				.push( f )
-				.push( Operator.OP );
-			lList = lList.getRest();
-		}
+			public void put( final RippleList list ) throws RippleException
+			{
+				RippleList lList = RippleList.invert( list );
+				RippleList result = new RippleList( v, rest );
+		
+				while ( RippleList.NIL != lList )
+				{
+					result = result.push( lList.getFirst() )
+						.push( f )
+						.push( Operator.OP );
+					lList = lList.getRest();
+				}
+		
+				sink.put( result );
+			}
+		};
 
-		sink.put( result );
+		RippleList.from( l, listSink, mc );
 	}
 }
 

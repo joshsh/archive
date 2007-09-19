@@ -13,6 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Size extends PrimitiveFunction
@@ -35,14 +36,21 @@ public class Size extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleList l;
+		RippleValue l;
 
-		l = RippleList.from( stack.getFirst(), mc );
-		stack = stack.getRest();
+		l = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		int result = l.length();
+		Sink<RippleList> listSink = new Sink<RippleList>()
+		{
+			public void put( final RippleList list ) throws RippleException
+			{
+				int result = list.length();
+				sink.put( new RippleList( mc.createValue( result ), rest ) );
+			}
+		};
 
-		sink.put( new RippleList( mc.createValue( result ), stack ) );
+		RippleList.from( l, listSink, mc );
 	}
 }
 

@@ -13,6 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class At extends PrimitiveFunction
@@ -35,29 +36,36 @@ public class At extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		int i;
-		RippleList l;
+		RippleValue l;
 
-		i = mc.intValue( stack.getFirst() );
+		final int i = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
-		l = RippleList.invert( RippleList.from( stack.getFirst(), mc ) );
-		stack = stack.getRest();
+		l = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		if ( i < 1 )
+		Sink<RippleList> listSink = new Sink<RippleList>()
 		{
-			throw new RippleException( "list index out of bounds (keep in mind that 'at' begins counting at 1): " + i );
-		}
-
-		for ( int j = 1; j < i; j++ )
-		{
-			l = l.getRest();
-			if ( RippleList.NIL == l )
+			public void put( RippleList list ) throws RippleException
 			{
-				throw new RippleException( "list index out of bounds: " + i );
+				if ( i < 1 )
+				{
+					throw new RippleException( "list index out of bounds (keep in mind that 'at' begins counting at 1): " + i );
+				}
+		
+				for ( int j = 1; j < i; j++ )
+				{
+					list = list.getRest();
+					if ( RippleList.NIL == list )
+					{
+						throw new RippleException( "list index out of bounds: " + i );
+					}
+				}
+		
+				sink.put( new RippleList( list.getFirst(), rest ) );
 			}
-		}
+		};
 
-		sink.put( new RippleList( l.getFirst(), stack ) );
+		RippleList.from( l, listSink, mc );
 	}
 }
 

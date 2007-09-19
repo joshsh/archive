@@ -11,8 +11,11 @@ package net.fortytwo.ripple.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.OutputStream;
+import java.io.InputStream;
 
 import java.net.URL;
+import java.net.HttpURLConnection;
 
 import java.util.Iterator;
 
@@ -36,19 +39,32 @@ public final class SparqlUpdater
 
 System.out.println( "would have posted this data: " + postData );
 
-
-/*
-		HttpUrlConnection huc = url.openConnection();
+try
+{
+		HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 		huc.setRequestMethod( "POST" );
 		huc.setDoOutput( true );
 		OutputStream os = huc.getOutputStream();
 		
-		....
-		
+// 		SesameOutputAdapter soa = new SesameOutputAdapter(
+// 			new RDFXMLWriter( os ) );
+// 		soa.startRDF();
+// 		...
+// 		soa.endRDF();
+
+		PrintStream ps = new PrintStream( os );
+		ps.print( postData );
+		ps.close();
 		os.close();
+
 		int responseCode = huc.getResponseCode();
-System.out.println( "reponse code = " + responseCode );
-*/
+System.out.println( "response code = " + responseCode );
+}
+
+catch ( Throwable t )
+{
+	throw new RippleException( t );
+}
 
 	}
 

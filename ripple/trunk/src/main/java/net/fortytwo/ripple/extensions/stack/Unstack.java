@@ -13,6 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 public class Unstack extends PrimitiveFunction
@@ -35,12 +36,20 @@ public class Unstack extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleList l;
+		RippleValue l;
 
-		l = RippleList.from( stack.getFirst(), mc );
-		stack = stack.getRest();
+		l = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		sink.put( RippleList.invert( l ) );
+		Sink<RippleList> listSink = new Sink<RippleList>()
+		{
+			public void put( final RippleList list ) throws RippleException
+			{
+				sink.put( RippleList.invert( list ) );
+			}
+		};
+
+		RippleList.from( l, listSink, mc );
 	}
 }
 

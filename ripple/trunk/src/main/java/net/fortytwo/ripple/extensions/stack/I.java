@@ -37,28 +37,9 @@ public class I extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-//		RippleValue v;
-
 // hack...
 		sink.put( new RippleList( Operator.OP, stack ) );
-/*
-		RippleList l;
-
-		l = RippleList.from( stack.getFirst(), mc );
-		stack = stack.getRest();
-
-		sink.put( pushReversed( l, stack ) );
-*/
 	}
-
-/*
-	private RippleList pushReversed( RippleList in, RippleList out )
-	{
-		return ( null == in )
-			? out
-			: new RippleList( in.getFirst(), pushReversed( in.getRest(), out ) );
-	}
-*/
 }
 
 // kate: tab-width 4

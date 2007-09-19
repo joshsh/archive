@@ -36,27 +36,35 @@ public class Min extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleList l;
+		RippleValue l;
 
-		l = RippleList.from( stack.getFirst(), mc );
-		stack = stack.getRest();
+		l = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		RippleValue result = null;
-		while ( RippleList.NIL != l )
+		Sink<RippleList> listSink = new Sink<RippleList>()
 		{
-			RippleValue v = l.getFirst();
-			if ( null == result || v.compareTo( result ) < 0 )
+			public void put( RippleList list ) throws RippleException
 			{
-				result = v;
+				RippleValue result = null;
+				while ( RippleList.NIL != list )
+				{
+					RippleValue v = list.getFirst();
+					if ( null == result || v.compareTo( result ) < 0 )
+					{
+						result = v;
+					}
+		
+					list = list.getRest();
+				}
+		
+				if ( null != result )
+				{
+					sink.put( new RippleList( result, rest ) );
+				}
 			}
+		};
 
-			l = l.getRest();
-		}
-
-		if ( null != result )
-		{
-			sink.put( new RippleList( result, stack ) );
-		}
+		RippleList.from( l, listSink, mc );
 	}
 }
 

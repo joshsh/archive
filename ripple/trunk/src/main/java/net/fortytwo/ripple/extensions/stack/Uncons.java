@@ -36,16 +36,24 @@ public class Uncons extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleList l;
+		RippleValue l;
 
-		l = RippleList.from( stack.getFirst(), mc );
-		stack = stack.getRest();
+		l = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		RippleList inv = RippleList.invert( l );
-		RippleValue f = inv.getFirst();
-		RippleList r = RippleList.invert( inv.getRest() );
+		Sink<RippleList> listSink = new Sink<RippleList>()
+		{
+			public void put( final RippleList list ) throws RippleException
+			{
+				RippleList inv = RippleList.invert( list );
+				RippleValue f = inv.getFirst();
+				RippleList r = RippleList.invert( inv.getRest() );
+		
+				sink.put( new RippleList( f, rest ).push( r ) );
+			}
+		};
 
-		sink.put( new RippleList( f, stack ).push( r ) );
+		RippleList.from( l, listSink, mc );
 	}
 }
 

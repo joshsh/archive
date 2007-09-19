@@ -9,6 +9,8 @@
 
 package net.fortytwo.ripple.query.commands;
 
+import java.net.URL;
+
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -73,7 +75,7 @@ public class DefineTermCmd extends Command
 
 			qe.getLexicon().add( uri );
 
-//pushListToSemWeb( exprList, mc );
+pushListToSemWeb( uri, mc );
 		}
 	}
 
@@ -85,21 +87,46 @@ public class DefineTermCmd extends Command
 
 
 
-private void pushListToSemWeb( final RippleList list, final ModelConnection mc ) throws RippleException
+private void pushListToSemWeb( final URI uri,
+								final ModelConnection mc )
+	throws RippleException
 {
 	final RdfDiff diff = new RdfDiff();
 
-	Sink<Statement> diffAdderSink = new Sink<Statement>()
+	final Sink<Statement> diffAdderSink = new Sink<Statement>()
 	{
 		public void put( final Statement st ) throws RippleException
 		{
+System.out.println( "adding statement: " + st );
 			diff.add( st );
 		}
 	};
 
-	list.writeStatementsTo( diffAdderSink, mc );
+// FIXME: reading the list from the RDF model is backwards
+	Sink<RippleList> listSink = new Sink<RippleList>()
+	{
+		public void put( final RippleList list ) throws RippleException
+		{
+System.out.println( "list = " + list );
+			list.writeStatementsTo( diffAdderSink, mc );
+		}
+	};
 
-	SparqlUpdater.postUpdate( diff, null );
+	RippleList.from( new RdfValue( uri ), listSink, mc );
+
+	URL url;
+
+	try
+	{
+		url = new URL( uri.toString() );
+	}
+
+	catch ( java.net.MalformedURLException e )
+	{
+		throw new RippleException( e );
+	}
+
+	SparqlUpdater.postUpdate( diff, url );
 }
 
 

@@ -13,6 +13,8 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 
 public class Cat extends PrimitiveFunction
@@ -35,16 +37,34 @@ public class Cat extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleList l1, l2;
+		RippleValue l1, l2;
 
-		l1 = RippleList.from( stack.getFirst(), mc );
+		l1 = stack.getFirst();
 		stack = stack.getRest();
-		l2 = RippleList.from( stack.getFirst(), mc );
-		stack = stack.getRest();
+		l2 = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		RippleList result = RippleList.concat( l1, l2 );
+		final Collector<RippleList> firstLists = new Collector<RippleList>();
 
-		sink.put( new RippleList( result, stack ) );
+		Sink<RippleList> listSink = new Sink<RippleList>()
+		{
+			public void put( final RippleList list2 ) throws RippleException
+			{
+				Sink<RippleList> catSink = new Sink<RippleList>()
+				{
+					public void put( final RippleList list1 ) throws RippleException
+					{
+						RippleList result = RippleList.concat( list1, list2 );
+						sink.put( new RippleList( result, rest ) );
+					}
+				};
+
+				firstLists.writeTo( catSink );
+			}
+		};
+
+		RippleList.from( l1, firstLists, mc );
+		RippleList.from( l2, listSink, mc );
 	}
 }
 

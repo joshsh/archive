@@ -12,6 +12,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
+import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.ListNode;
 import net.fortytwo.ripple.util.Sink;
 
@@ -95,20 +96,6 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	{
 		this.first = first;
 		this.rest = rest;
-	}
-
-	public static RippleList createList( final RdfValue v, final ModelConnection mc )
-		throws RippleException
-	{
-		if ( v.equals( RDF_NIL ) )
-		{
-			return NIL;
-		}
-
-		else
-		{
-			return new RippleList( v, mc );
-		}
 	}
 
 	private RippleList( final RdfValue v, final ModelConnection mc )
@@ -211,97 +198,89 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			: new RippleList( head.first, concat( head.rest, tail ) );
 	}
 
-	public static RippleList from( final RippleValue v, final ModelConnection mc )
-		throws RippleException
-	{
-		if ( v instanceof RippleList )
-		{
-			return (RippleList) v;
-		}
-
-		// If not (already) a list...
-		else
-		{
-			// If the argument is an RDF value, try to convert it to a native list.
-			if ( v instanceof RdfValue )
-			{
-				return createList( (RdfValue) v, mc );
-			}
-
-			// Otherwise, fail.
-			else
-			{
-				throw new RippleException( "expecting " + RippleList.class + ", found " + v );
-			}
-		}
-	}
-
-/*
-	public static void from2(	final RippleValue v,
-								final Sink<RippleList> sink,
-								final ModelConnection mc )
+	public static void from( final RippleValue v,
+							final Sink<RippleList> sink,
+							final ModelConnection mc )
 		throws RippleException
 	{
 		// If already a list...
 		if ( v instanceof RippleList )
+		{
 			sink.put( (RippleList) v );
+		}
 
 		// If the argument is an RDF value, try to convert it to a native list.
 		else if ( v instanceof RdfValue )
-			createList2( (RdfValue) v, sink, mc );
+		{
+			createList( (RdfValue) v, sink, mc );
+		}
 
 		// Otherwise, fail.
 		else
+		{
 			throw new RippleException( "expecting " + RippleList.class + ", found " + v );
+		}
 	}
 
-	private static void createList2( final RdfValue v,
+// TODO: handle circular lists and other convergent structures 
+	private static void createList( final RdfValue head,
 									final Sink<RippleList> sink,
 									final ModelConnection mc )
 		throws RippleException
 	{
-		if ( v.equals( RDF_NIL ) )
+		if ( head.equals( RDF_NIL ) )
+		{
 			sink.put( NIL );
+		}
 
 		else
 		{
-			RdfValue curRdf = (RdfValue) v;
-			RippleList rest = NIL;
-	
-			for (;;)  // break out when we get to rdf:nil
-			{
-				rdfEquivalent = curRdf;
-	
-				Sink<RdfValue> firstSink = new Sink<RdfValue>()
-				{
-					public void put( final RdfValue v )
-						throw RippleException
-					{
-						
-					}
-				};
+			final Collector<RippleValue> firstValues = new Collector<RippleValue>();
 
-				// Note: it might be more efficient to use ModelBridge only
-				//       lazily, binding RDF to generic RippleValues on an
-				//       as-needed basis.  However, for now there is no better
-				//       place to do this when we're coming from an rdf:List.
-				//       Consider a list containing operators.
-				first = mc.getModel().getBridge().get(
-					mc.findUniqueProduct( curRdf, RDF_FIRST ) );
-	
-				curRdf = mc.findAtLeastOneObject( curRdf, RDF_REST );
-				if ( curRdf.equals( RDF_NIL ) )
-					break;
-	
-				else
+			final Sink<RippleList> restSink = new Sink<RippleList>()
+			{
+				public void put( final RippleList rest ) throws RippleException
 				{
-					rest = new RippleList( first, rest );
-					rest.rdfEquivalent = rdfEquivalent;
+					Sink<RippleValue> firstSink = new Sink<RippleValue>()
+					{
+						public void put( final RippleValue first ) throws RippleException
+						{
+							RippleList list = new RippleList( first, rest );
+							list.rdfEquivalent = head;
+							sink.put( list );
+						}
+					};
+			
+					firstValues.writeTo( firstSink );
 				}
-			}
+			};
+			
+			Sink<RdfValue> rdfRestSink = new Sink<RdfValue>()
+			{
+				public void put( final RdfValue rest ) throws RippleException
+				{
+					// Recurse.
+					createList( rest, restSink, mc );
+				}
+			};
+			
+			Sink<RdfValue> rdfFirstSink = new Sink<RdfValue>()
+			{
+				public void put( final RdfValue first ) throws RippleException
+				{
+					// Note: it might be more efficient to use ModelBridge only
+					//       lazily, binding RDF to generic RippleValues on an
+					//       as-needed basis.  However, for now there is no better
+					//       place to do this when we're coming from an rdf:List.
+					//       Consider a list containing operators.
+					firstValues.put( mc.getModel().getBridge().get( first ) );
+				}
+			};
+
+			mc.multiply( head, RDF_FIRST, rdfFirstSink );
+			mc.multiply( head, RDF_REST, rdfRestSink );
 		}
 	}
-*/
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -545,6 +524,23 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			return RippleList.class.getName().compareTo( other.getClass().getName() );
 		}
 	}
+
+/*
+	public void writeStatementsTo( final Sink<Statement> sink,
+									final ModelConnection mc )
+		throws RippleException
+	{
+		RippleList cur = this;
+		while ( NIL != cur )
+		{
+			RippleValue f = cur.getFirst();
+			RippleList r = cur.getRest();
+
+			
+			Statement stf = mc.createStatement( cur.toRdf( mc ), 
+		}
+	}
+*/
 
 	public void writeStatementsTo( final Sink<Statement> sink,
 									final ModelConnection mc )
