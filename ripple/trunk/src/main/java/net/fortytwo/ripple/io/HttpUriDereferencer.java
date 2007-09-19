@@ -139,7 +139,7 @@ public class HttpUriDereferencer implements Dereferencer
 		final URL url = urlFactory.createUrl( memo );
 
 		RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
-		final SesameAdapter sa = new SesameAdapter( importer );
+		final SesameInputAdapter sa = new SesameInputAdapter( importer );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.

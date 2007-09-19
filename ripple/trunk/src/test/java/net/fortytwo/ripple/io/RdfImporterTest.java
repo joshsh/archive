@@ -33,7 +33,7 @@ public class RdfImporterTest extends RippleTestCase
 			throws RippleException
 		{
 			RdfImporter importer = new RdfImporter( mc, context );
-			SesameAdapter sc = new SesameAdapter( importer );
+			SesameInputAdapter sc = new SesameInputAdapter( importer );
 			RdfUtils.read( is, sc, context.toString(), format );
 		}
 
@@ -44,7 +44,7 @@ public class RdfImporterTest extends RippleTestCase
 			throws RippleException
 		{
 			RdfImporter importer = new RdfImporter( mc, context );
-			SesameAdapter sc = new SesameAdapter( importer );
+			SesameInputAdapter sc = new SesameInputAdapter( importer );
 			RdfUtils.read( url, sc, context.toString(), format );
 		}
 

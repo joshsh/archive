@@ -13,6 +13,7 @@ import java.io.InputStream;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.HttpURLConnection;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -69,6 +70,34 @@ public class HttpUtils
 	{
 		setAgent( urlConn );
 
+		setRdfAcceptHeader( urlConn );
+
+// To consider at some point: caching, authorization
+	}
+
+	public static void prepareUrlConnectionForSparqlUpdate( final HttpURLConnection urlConn )
+		throws RippleException
+	{
+		setAgent( urlConn );
+
+		urlConn.setDoOutput( true );
+
+		try
+		{
+			urlConn.setRequestMethod( "POST" );
+		}
+
+		catch ( java.net.ProtocolException e )
+		{
+			throw new RippleException( e );
+		}
+
+		urlConn.setRequestProperty( "Content-type", "application/sparql-query" );
+		setRdfAcceptHeader( urlConn );
+	}
+
+	private static void setRdfAcceptHeader( final URLConnection urlConn )
+	{
 		/* Comment by arjohn in http://www.openrdf.org/forum/mvnforum/viewthread?thread=805#3234
 			Note that Sesame/Rio doesn't have a real N3 parser, but it does have a Turtle parser, which supports a much larger subset of N3. At first sight, I would say that the Turtle parser should be able to parse the data fragment that you posted. */
 		boolean n3DeserializationSupported = false;
@@ -85,8 +114,6 @@ public class HttpUtils
 		sb.append( ", application/xml;q=0.5" );
 		sb.append( ", text/xml;q=0.2" );
 		urlConn.setRequestProperty( "Accept", sb.toString() );
-
-// To consider at some point: caching, authorization
 	}
 
 	/**

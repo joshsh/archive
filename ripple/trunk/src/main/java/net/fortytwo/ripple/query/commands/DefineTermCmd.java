@@ -97,7 +97,7 @@ private void pushListToSemWeb( final URI uri,
 	{
 		public void put( final Statement st ) throws RippleException
 		{
-System.out.println( "adding statement: " + st );
+//System.out.println( "adding statement: " + st );
 			diff.add( st );
 		}
 	};
@@ -107,7 +107,7 @@ System.out.println( "adding statement: " + st );
 	{
 		public void put( final RippleList list ) throws RippleException
 		{
-System.out.println( "list = " + list );
+//System.out.println( "list = " + list );
 			list.writeStatementsTo( diffAdderSink, mc );
 		}
 	};
@@ -118,7 +118,15 @@ System.out.println( "list = " + list );
 
 	try
 	{
-		url = new URL( uri.toString() );
+		String s = uri.toString();
+		int hashIndex = s.lastIndexOf( '#' );
+		if ( hashIndex >= 0 )
+		{
+			s = s.substring( 0, hashIndex );
+		}
+
+		url = new URL( s );
+System.out.println( "url =" + url );
 	}
 
 	catch ( java.net.MalformedURLException e )

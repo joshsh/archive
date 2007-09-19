@@ -17,7 +17,7 @@ import net.fortytwo.ripple.RippleException;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
-public class RdfCollector implements RdfSink
+public class RdfCollector extends RdfSink
 {
 	private LinkedList<Statement> statements;
 	private LinkedList<Namespace> namespaces;

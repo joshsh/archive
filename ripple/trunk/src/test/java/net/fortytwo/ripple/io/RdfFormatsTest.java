@@ -20,7 +20,7 @@ import org.openrdf.rio.RDFFormat;
 public class RdfFormatsTest extends RippleTestCase
 {
 	RdfCollector collector;
-	SesameAdapter sesameAdapter;
+	SesameInputAdapter sesameAdapter;
 
 	private class ParseN3Test extends TestRunnable
 	{
@@ -128,7 +128,7 @@ public class RdfFormatsTest extends RippleTestCase
 		throws Exception
 	{
 		collector = new RdfCollector();
-		sesameAdapter = new SesameAdapter( collector );
+		sesameAdapter = new SesameInputAdapter( collector );
 
 		testSynchronous( new ParseN3Test() );
 		testSynchronous( new ParseNtriplesTest() );

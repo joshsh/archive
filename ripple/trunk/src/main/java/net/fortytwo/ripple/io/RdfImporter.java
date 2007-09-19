@@ -17,7 +17,7 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 
-public class RdfImporter implements RdfSink
+public class RdfImporter extends RdfSink
 {
 	private RdfSink sink;
 	private Resource[] contexts;

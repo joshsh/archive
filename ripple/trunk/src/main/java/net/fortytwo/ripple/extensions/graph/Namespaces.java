@@ -12,7 +12,7 @@ package net.fortytwo.ripple.extensions.graph;
 import java.net.URLConnection;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.SesameAdapter;
+import net.fortytwo.ripple.io.SesameInputAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.io.RdfSink;
@@ -50,14 +50,14 @@ public class Namespaces extends PrimitiveFunction
 		uri = mc.uriValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		SesameAdapter sc = createAdapter( stack, sink, mc );
+		SesameInputAdapter sc = createAdapter( stack, sink, mc );
 
 		URLConnection uc = HttpUtils.openConnection( uri.toString() );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
 		RdfUtils.read( uc, sc, uri.toString() );
 	}
 
-	private static SesameAdapter createAdapter( final RippleList stack,
+	private static SesameInputAdapter createAdapter( final RippleList stack,
 												final Sink<RippleList> resultSink,
 												final ModelConnection mc )
 	{
@@ -82,7 +82,7 @@ public class Namespaces extends PrimitiveFunction
 			}
 		};
 
-		SesameAdapter sc = new SesameAdapter( rdfSink );
+		SesameInputAdapter sc = new SesameInputAdapter( rdfSink );
 
 		return sc;
 	}

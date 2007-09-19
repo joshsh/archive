@@ -65,7 +65,7 @@ public final class CacheManager
 		}
 
 		RdfImporter importer = new RdfImporter( mc );
-		SesameAdapter sc = new SesameAdapter( importer );
+		SesameInputAdapter sc = new SesameInputAdapter( importer );
 
 		format = ( null == format )
 			? RdfUtils.read( url, sc, url.toString() )

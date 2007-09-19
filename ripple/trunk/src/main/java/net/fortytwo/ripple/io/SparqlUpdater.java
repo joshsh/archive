@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.HttpUtils;
 
 import org.openrdf.model.Statement;
 import org.openrdf.rio.Rio;
@@ -37,13 +38,12 @@ public final class SparqlUpdater
 	{
 		String postData = createPostData( diff );
 
-System.out.println( "would have posted this data: " + postData );
+System.out.println( "about to post this data: " + postData );
 
 try
 {
 		HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-		huc.setRequestMethod( "POST" );
-		huc.setDoOutput( true );
+		HttpUtils.prepareUrlConnectionForSparqlUpdate( huc );
 		OutputStream os = huc.getOutputStream();
 		
 // 		SesameOutputAdapter soa = new SesameOutputAdapter(
@@ -70,14 +70,6 @@ catch ( Throwable t )
 
 	private static String createPostData( final RdfDiff diff ) throws RippleException
 	{
-		Iterator<Statement> addIter = diff.getAddedIterator();
-		Iterator<Statement> subIter = diff.getSubtractedIterator();
-
-		if ( !addIter.hasNext() && !subIter.hasNext() )
-		{
-			return "";
-		}
-
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream( bos );
 
@@ -93,51 +85,30 @@ catch ( Throwable t )
 			throw new RippleException( t );
 		}
 
-		if ( addIter.hasNext() )
+		SesameOutputAdapter adapter = new SesameOutputAdapter( writer );
+
+		if ( diff.countAdded() > 0 )
 		{
 			ps.println( "INSERT {" );
+			adapter.startRDF();
 
-			while ( addIter.hasNext() )
-			{
-				Statement st = addIter.next();
+			adapter.putStatements( diff.getAdded() );
 
-				try
-				{
-					writer.startRDF();
-					writer.handleStatement( st );
-					writer.endRDF();
-				}
-
-				catch ( Throwable t )
-				{
-					throw new RippleException( t );
-				}
-			}
-
+			adapter.endRDF();
 			ps.println( "}" );
 		}
 
 		// Note: since some statements are rejected, we will sometimes end up
 		// with an empty DELETE graph.
-		if ( subIter.hasNext() )
+		if ( diff.countSubtracted() > 0 )
 		{
 			ps.println( "DELETE {" );
-
-			Statement st = addIter.next();
+			adapter.startRDF();
 
 // TODO: ignore statements with blank nodes as subject or object... UNLESS they're found to serve some purpose
-			try
-			{
-				writer.startRDF();
-				writer.handleStatement( st );
-				writer.endRDF();
-			}
+			adapter.putStatements( diff.getSubtracted() );
 
-			catch ( Throwable t )
-			{
-				throw new RippleException( t );
-			}
-
+			adapter.endRDF();
 			ps.println( "}" );
 		}
 

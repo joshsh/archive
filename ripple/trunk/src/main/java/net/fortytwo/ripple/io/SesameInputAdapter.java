@@ -15,11 +15,14 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.rio.RDFHandler;
 
-public class SesameAdapter implements RDFHandler
+/**
+ * An RDFHandler which passes its input into an RdfSink.
+ */
+public class SesameInputAdapter implements RDFHandler
 {
 	private RdfSink sink;
 
-	public SesameAdapter( final RdfSink sink )
+	public SesameInputAdapter( final RdfSink sink )
 	{
 		this.sink = sink;
 	}

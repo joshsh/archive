@@ -17,7 +17,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.io.RdfSink;
-import net.fortytwo.ripple.io.SesameAdapter;
+import net.fortytwo.ripple.io.SesameInputAdapter;
 import net.fortytwo.ripple.util.ExtensionLoader;
 import net.fortytwo.ripple.util.UrlFactory;
 
@@ -125,7 +125,7 @@ public Dereferencer getDereferencer()
 	public void readAll( final RdfSink sink )
 		throws RippleException
 	{
-		SesameAdapter handler = new SesameAdapter( sink );
+		SesameInputAdapter handler = new SesameInputAdapter( sink );
 
 		try
 		{

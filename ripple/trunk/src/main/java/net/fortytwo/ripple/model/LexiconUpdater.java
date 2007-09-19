@@ -24,7 +24,7 @@ import org.openrdf.model.Value;
 /**
  * Note: several LexiconUpdaters may safely be attached to a single Lexicon.
  */
-public class LexiconUpdater implements RdfSink
+public class LexiconUpdater extends RdfSink
 {
 // TODO: Unicode characters supported by the lexer / Turtle grammar
 	private Pattern prefixPattern = Pattern.compile( "[A-Za-z][-0-9A-Z_a-z]*" );

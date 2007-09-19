@@ -14,7 +14,7 @@ import net.fortytwo.ripple.RippleException;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
-public class RdfNullSink implements RdfSink
+public class RdfNullSink extends RdfSink
 {
 	public void put( final Statement st ) throws RippleException
 	{

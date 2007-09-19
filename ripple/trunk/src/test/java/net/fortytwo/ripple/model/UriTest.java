@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfImporter;
-import net.fortytwo.ripple.io.SesameAdapter;
+import net.fortytwo.ripple.io.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.RdfUtils;
@@ -191,7 +191,7 @@ System.out.println( "unhandled test case!" );
 			InputStream is = UriTest.class.getResourceAsStream( "UriTest.n3" );
 
 			RdfImporter importer = new RdfImporter( mc );
-			SesameAdapter sc = new SesameAdapter( importer );
+			SesameInputAdapter sc = new SesameInputAdapter( importer );
 			RdfUtils.read( is, sc, "", RDFFormat.N3 );
 
 			Collector<RdfValue> cases = new Collector<RdfValue>();
