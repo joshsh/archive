@@ -175,8 +175,7 @@ private boolean lastQueryContinued = false;
 				else
 				{
 					alert( "Error: " + e.toString() );
-					throw new RippleException(
-						"non-recoverable exception thrown: " + e.toString() );
+					( new RippleException( e ) ).logError();
 				}
 			}
 		};

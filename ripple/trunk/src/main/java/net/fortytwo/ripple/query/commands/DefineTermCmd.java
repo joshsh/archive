@@ -48,13 +48,13 @@ public class DefineTermCmd extends Command
 		if ( expressions.size() == 0 )
 		{
 			qe.getErrorPrintStream().println(
-				"Error: the given expression did not resolve to a value." );
+				"Warning: the given expression did not resolve to a value." );
 		}
 
 		else if ( expressions.size() > 1 )
 		{
 			qe.getErrorPrintStream().println(
-				"Error: the given expression resolved to multiple values." );
+				"Warning: the given expression resolved to multiple values." );
 		}
 
 		else
@@ -67,6 +67,7 @@ public class DefineTermCmd extends Command
 			}
 
 			RippleList exprList = (RippleList) expr;
+//System.out.println( "exprList = " + exprList );
 
 // TODO: check for collision with an existing URI
 			URI uri = mc.createUri( qe.getDefaultNamespace() + term );

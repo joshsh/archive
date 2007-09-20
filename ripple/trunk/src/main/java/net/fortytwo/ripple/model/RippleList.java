@@ -173,7 +173,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				// annotating every node in the list.
 				mc.add( curRdf, RDF_TYPE, RDF_LIST );
 	
-				RippleList cur = invert( this );
+				RippleList cur = this;
 	
 				while ( cur != NIL )
 				{
@@ -292,7 +292,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
-			? invert( this ) : this;
+			? this: invert( this );
 		RippleValue stateVal = null;
 
 		sb.append( padding ? "( " : "(" );
@@ -386,7 +386,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 
 		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
-			? invert( this ) : this;
+			? this : invert( this );
 		RippleValue stateVal = null;
 
 		p.print( padding ? "( " : "(" );
@@ -586,6 +586,11 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 				writeStatementsTo( v, sink, mc );
 			}
 		};
+
+		// Annotate the head of the list with a type, but don't bother
+		// annotating every node in the list.
+		sink.put( mc.getValueFactory().createStatement(
+			headVal, RDF.TYPE, RDF.LIST ) );
 
 		mc.multiply( head, RDF_FIRST, firstSink );
 		mc.multiply( head, RDF_REST, restSink );

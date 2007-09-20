@@ -17,11 +17,11 @@ import net.fortytwo.ripple.util.Sink;
 
 public class ListDequotation implements Function
 {
-	private RippleList reversedList;
+	private RippleList list;
 
 	public ListDequotation( final RippleList list )
 	{
-		reversedList = RippleList.invert( list );
+		this.list = list;
 	}
 
 	public int arity()
@@ -34,7 +34,7 @@ public class ListDequotation implements Function
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleList in = reversedList;
+		RippleList in = list;
 		RippleList out = stack;
 
 		while ( RippleList.NIL != in )

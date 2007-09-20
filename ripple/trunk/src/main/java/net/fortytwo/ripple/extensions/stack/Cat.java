@@ -54,7 +54,7 @@ public class Cat extends PrimitiveFunction
 				{
 					public void put( final RippleList list1 ) throws RippleException
 					{
-						RippleList result = RippleList.concat( list1, list2 );
+						RippleList result = RippleList.concat( list2, list1 );
 						sink.put( new RippleList( result, rest ) );
 					}
 				};

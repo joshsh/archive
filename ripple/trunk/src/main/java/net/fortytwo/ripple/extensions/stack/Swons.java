@@ -31,19 +31,6 @@ public class Swons extends PrimitiveFunction
 		return ARITY;
 	}
 
-	private RippleList bury( final RippleValue last, final RippleList l )
-	{
-		if ( RippleList.NIL == l )
-		{
-			return new RippleList( last );
-		}
-
-		else
-		{
-			return new RippleList( l.getFirst(), bury( last, l.getRest() ) );
-		}
-	}
-
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
 						final ModelConnection mc )
@@ -60,7 +47,8 @@ public class Swons extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( new RippleList( bury( x, list ), rest ) );
+				sink.put( new RippleList(
+					new RippleList( x, list ), rest ) );
 			}
 		};
 

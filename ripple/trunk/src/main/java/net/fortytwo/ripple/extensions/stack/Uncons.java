@@ -45,11 +45,7 @@ public class Uncons extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				RippleList inv = RippleList.invert( list );
-				RippleValue f = inv.getFirst();
-				RippleList r = RippleList.invert( inv.getRest() );
-		
-				sink.put( new RippleList( f, rest ).push( r ) );
+				sink.put( new RippleList( list.getFirst(), rest ).push( list.getRest() ) );
 			}
 		};
 

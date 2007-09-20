@@ -265,11 +265,9 @@ options
 
 nt_Document
 {
-//System.out.println( "nt_Document!!!!!!!!!!!!!!!!" );
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
 	adapter.putEvent( RecognizerEvent.NEWLINE );
-//System.out.println( "already put newline!!!!!!!!!!!!!!!!!" );
 }
 	: ( (nt_Ws)? nt_Statement )*
 	;
@@ -301,33 +299,42 @@ nt_Statement
 	;
 
 
-nt_List returns [ ListAst s ]
+nt_List returns [ ListAst list ]
 {
-	Ast i;
-	s = null;
+	Ast first;
+	ListAst rest = null;
+	list = null;
 	boolean modified = false;
 }
 		// Optional slash operator.
 	:	( OP_PRE (WS)? { modified = true; } )?
 
 		// Head of the list.
-		i=nt_Node
+		first = nt_Node
 
 		(	(WS) => ( nt_Ws
-				( (~(EOS | SEMI | R_PAREN )) => s=nt_List
+				( (~(EOS | SEMI | R_PAREN )) => rest = nt_List
 				| {}
 				) )
 
 			// Tail of the list.
-		|	(~(WS | EOS | SEMI | R_PAREN)) => s=nt_List
+		|	(~(WS | EOS | SEMI | R_PAREN)) => rest = nt_List
 
 			// End of the list.
 		|	()
 		)
 			{
+				if ( null == rest )
+				{
+					rest = new ListAst();
+				}
+
 				if ( modified )
-					s = new ListAst( new OperatorAst(), s );
-				s = new ListAst( i, s );
+				{
+					rest = new ListAst( new OperatorAst(), rest );
+				}
+
+				list = new ListAst( first, rest );
 			}
 	;
 
@@ -348,8 +355,8 @@ nt_ParenthesizedList returns [ ListAst r ]
 	r = null;
 }
 	: L_PAREN (nt_Ws)? (
-		( r=nt_List /*(nt_Ws)?*/ R_PAREN )
-		| R_PAREN )
+		( r = nt_List /*(nt_Ws)?*/ R_PAREN )
+		| R_PAREN { r = new ListAst(); } )
 	;
 
 
@@ -374,10 +381,16 @@ nt_Literal returns [ Ast r ]
 		{
 			// Note: number format exceptions are handled at a higher level.
 			String s = u.getText();
+
 			if ( s.contains( "." ) )
+			{
 				r = new DoubleAst( ( new Double( s ) ).doubleValue() );
+			}
+
 			else
+			{
 				r = new IntegerAst( ( new Integer( s ) ).intValue() );
+			}
 		}
 	;
 

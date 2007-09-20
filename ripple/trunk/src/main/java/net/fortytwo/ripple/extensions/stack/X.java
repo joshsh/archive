@@ -31,6 +31,7 @@ public class X extends PrimitiveFunction
 	{
 		return ARITY;
 	}
+
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
 						final ModelConnection mc )

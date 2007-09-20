@@ -45,7 +45,7 @@ public class Unstack extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( RippleList.invert( list ) );
+				sink.put( list );
 			}
 		};
 

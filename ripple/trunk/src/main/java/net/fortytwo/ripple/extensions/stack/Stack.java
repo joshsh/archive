@@ -38,7 +38,7 @@ public class Stack extends PrimitiveFunction
 // TODO: this should be even simpler.
 		if ( RippleList.NIL != stack )
 		{
-			sink.put( new RippleList( RippleList.invert( stack ), stack ) );
+			sink.put( new RippleList( stack, stack ) );
 		}
 	}
 }
