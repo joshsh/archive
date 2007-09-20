@@ -12,11 +12,17 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.query.ListDequotation;
+import net.fortytwo.ripple.util.Sink;
+
+import org.openrdf.model.vocabulary.RDF;
 
 public class Operator implements RippleValue
 {
 	public static final Operator
 		OP = new Operator( new Op() );
+
+	private static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
+	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
 	private Function func;
 	private RdfValue rdfEquivalent = null;
@@ -83,6 +89,71 @@ return rdfEquivalent;
 		{
 			return this.getClass().getName().compareTo( other.getClass().getName() );
 		}
+	}
+
+	/**
+	 *  Finds the type of a value and creates an appropriate "active" wrapper.
+	 */
+	public static void createOperator( final RippleValue v,
+										final Sink<Operator> opSink,
+										final ModelConnection mc )
+		throws RippleException
+	{
+		// A function becomes active.
+		if ( v instanceof Function )
+		{
+			opSink.put( new Operator( (Function) v ) );
+			return;
+		}
+
+		// A list is dequoted.
+		else if ( v instanceof RippleList )
+		{
+			opSink.put( new Operator( (RippleList) v ) );
+			return;
+		}
+
+		// This is the messy part.  Attempt to guess the type of the object from
+		// the available RDF statements, and create the appropriate object.
+		if ( v instanceof RdfValue )
+		{
+			if ( isRdfList( (RdfValue) v, mc ) )
+			{
+				Sink<RippleList> listSink = new Sink<RippleList>()
+				{
+					public void put( final RippleList list )
+						throws RippleException
+					{
+						opSink.put( new Operator( list ) );
+					}
+				};
+
+				RippleList.from( v, listSink, mc );
+				return;
+			}
+
+			// An RDF value not otherwise recognizable becomes a predicate filter.
+			else
+			{
+				opSink.put( new Operator( (RdfValue) v ) );
+				return;
+			}
+		}
+
+		// Anything else becomes an active nullary filter with no output.
+		else
+		{
+			opSink.put( new Operator( new NullFilter() ) );
+			return;
+		}
+	}
+
+// TODO: replace this with something a little more clever
+	private static boolean isRdfList( final RdfValue v, final ModelConnection mc )
+		throws RippleException
+	{
+		return ( v.equals( RDF_NIL )
+			|| null != mc.findSingleObject( (RdfValue) v, RDF_FIRST ) );
 	}
 }
 

@@ -209,6 +209,23 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 			sink.put( (RippleList) v );
 		}
 
+/* TODO
+		// Towards a more general notion of lists...
+		else
+		{
+			Sink<Operator> opSink = new Sink<Operator>()
+			{
+				public void put( final Operator op )
+					throws RippleException
+				{
+					sink.put( new RippleList( op ) );
+				}
+			};
+
+			Operator.createOperator( v, opSink, mc );
+		}
+*/
+
 		// If the argument is an RDF value, try to convert it to a native list.
 		else if ( v instanceof RdfValue )
 		{

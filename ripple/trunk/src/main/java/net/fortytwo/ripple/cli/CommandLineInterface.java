@@ -206,6 +206,8 @@ private boolean lastQueryContinued = false;
 		{
 			throw new RippleException( t );
 		}
+jline.Terminal term = reader.getTerminal();
+System.out.println( "reader.getTerminal() = " + term );
 
 		try
 		{
