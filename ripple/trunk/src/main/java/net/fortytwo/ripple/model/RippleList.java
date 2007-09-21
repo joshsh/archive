@@ -11,6 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.ListNode;
@@ -18,22 +19,19 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 
 public class RippleList extends ListNode<RippleValue> implements RippleValue
 {
-	public static final RippleList NIL
-		= new RippleList(
-			// Note: this dummy value avoids null pointer exceptions in the list
-			//       memoizer.
-			new NumericLiteral( 42 ),
-			(RippleList) null );
-
 	private static final RdfValue RDF_TYPE = new RdfValue( RDF.TYPE );
 	private static final RdfValue RDF_LIST = new RdfValue( RDF.LIST );
 	private static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
 	private static final RdfValue RDF_REST = new RdfValue( RDF.REST );
 	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
+
+// FIXME: depends on RDF_NIL being defined before the constructor is called.
+	public static final RippleList NIL = new RippleList();
 
 	private RippleValue first;
 	private RippleList rest;
@@ -98,6 +96,17 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		this.rest = rest;
 	}
 
+	private RippleList()
+	{
+		// Note: this dummy value avoids null pointer exceptions in the list
+		//       memoizer.
+		first = new NumericLiteral( 42 );
+		
+		rest = null;
+
+		rdfEquivalent = RDF_NIL;
+	}
+
 	private RippleList( final RdfValue v, final ModelConnection mc )
 		throws RippleException
 	{
@@ -159,36 +168,70 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	{
 		if ( null == rdfEquivalent )
 		{
-			if ( NIL == this )
+System.out.println( "mc.getRdfSink() = " + mc.getRdfSink() );
+			putRdfStatements( mc.getRdfSink(), mc );
+		}
+
+		return rdfEquivalent;
+	}
+
+	public void putRdfStatements( final RdfSink sink, final ModelConnection mc )
+		throws RippleException
+	{
+		RippleList cur = this;
+		Resource prevRdf = null;
+
+		do
+		{
+System.out.println( "cur = " + cur );
+			Resource curRdf;
+
+			// Associate list nodes with RDF values.
+			if ( null == cur.rdfEquivalent )
 			{
-				rdfEquivalent = RDF_NIL;
+				curRdf = mc.createBNode();
+				cur.rdfEquivalent = new RdfValue( curRdf );
+			}
+
+			// Currently, only RippleList.NIL will already have an RDF equivalent.
+			else
+			{
+				curRdf = (Resource) cur.rdfEquivalent.getRdfValue();
+			}
+System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
+
+			// Annotate the head of the list with a type, but don't bother
+			// annotating every node in the list.
+			if ( null == prevRdf )
+			{
+				if ( RDF.NIL != prevRdf )
+				{
+System.out.println( "    putting type statement" );
+//					sink.put(
+					mc.add(
+						mc.createStatement( curRdf, RDF.TYPE, RDF.LIST ) );
+				}
 			}
 
 			else
 			{
-				rdfEquivalent = new RdfValue( mc.createBNode() );
-				RdfValue curRdf = rdfEquivalent;
-	
-				// Annotate the head of the list with a type, but don't bother
-				// annotating every node in the list.
-				mc.add( curRdf, RDF_TYPE, RDF_LIST );
-	
-				RippleList cur = this;
-	
-				while ( cur != NIL )
-				{
-					mc.add( curRdf, RDF_FIRST, cur.first.toRdf( mc ) );
-					RippleList rest = cur.rest;
-					RdfValue restRdf = ( NIL == cur.rest )
-						? RDF_NIL : new RdfValue( mc.createBNode() );
-					mc.add( curRdf, RDF_REST, restRdf );
-					curRdf = restRdf;
-					cur = cur.rest;
-				}
+System.out.println( "    putting rest statement" );
+//				sink.put(
+				mc.add(
+					mc.createStatement( prevRdf, RDF.REST, curRdf ) );
 			}
-		}
 
-		return rdfEquivalent;
+			if ( RDF.NIL != curRdf )
+			{
+System.out.println( "    putting first statement" );
+//				sink.put(
+				mc.add(
+					mc.createStatement( curRdf, RDF.FIRST, cur.first.toRdf( mc ).getRdfValue() ) );
+			}
+
+			prevRdf = curRdf;
+			cur = cur.getRest();
+		} while ( RDF.NIL != prevRdf );
 	}
 
 	public static RippleList concat( final RippleList head, final RippleList tail )

@@ -67,6 +67,21 @@ public abstract class RdfSink
 
 		source.writeTo( sink );
 	}
+
+/*
+	public Sink<Statement> getStatementSink()
+	{
+		RdfSink sink = this;
+
+		return new Sink<Statement>()
+		{
+			public void put( final Statement st ) throws RippleException
+			{
+				sink.put( st );
+			}
+		};
+	}
+*/
 }
 
 // kate: tab-width 4

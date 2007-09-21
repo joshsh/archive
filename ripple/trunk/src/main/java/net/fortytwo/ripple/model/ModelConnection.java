@@ -645,7 +645,7 @@ public void setRdfSink( final RdfSink sink )
 		}
 	}
 
-	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj )
+	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj, final Resource... contexts )
 		throws RippleException
 	{
 		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
@@ -657,30 +657,7 @@ public void setRdfSink( final RdfSink sink )
 //            repoConnection.add( subjResource, predUri, obj, singleContext );
 			synchronized ( repoConnection )
 			{
-				repoConnection.add( subjResource, predUri, objValue );
-			}
-		}
-
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-
-	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj, final Resource context )
-		throws RippleException
-	{
-		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
-		URI predUri = castToUri( pred.toRdf( this ).getRdfValue() );
-		Value objValue = obj.toRdf( this ).getRdfValue();
-
-		try
-		{
-//            repoConnection.add( subjResource, predUri, obj, singleContext );
-			synchronized ( repoConnection )
-			{
-				repoConnection.add( subjResource, predUri, objValue, context );
+				repoConnection.add( subjResource, predUri, objValue, contexts );
 			}
 		}
 
@@ -959,6 +936,20 @@ public void setRdfSink( final RdfSink sink )
 */
 
 	////////////////////////////////////////////////////////////////////////////
+
+	public Statement createStatement( final Resource subj, final URI pred, final Value obj )
+		throws RippleException
+	{
+		try
+		{
+			return valueFactory.createStatement( subj, pred, obj );
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+	}
 
 	public RdfValue createValue( final String s ) throws RippleException
 	{
