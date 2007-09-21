@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.control.TaskSet;
+import net.fortytwo.ripple.io.Dereferencer;
 
 import org.apache.log4j.Logger;
 
@@ -38,13 +39,16 @@ public class LinkedDataSailConnection implements SailConnection
 	private boolean open = false;
 	private Sail localStore;
 	private SailConnection localStoreConnection;
+	private Dereferencer dereferencer;
 
 	private TaskSet taskSet = new TaskSet();
 
-	public LinkedDataSailConnection( final Sail localStore )
+	public LinkedDataSailConnection( final Sail localStore,
+									 final Dereferencer dereferencer )
 		throws SailException
 	{
 		this.localStore = localStore;
+		this.dereferencer = dereferencer;
 		openLocalStoreConnection();
 		open = true;
 
@@ -54,12 +58,12 @@ public class LinkedDataSailConnection implements SailConnection
 		}
 	}
 
-	public LinkedDataSailConnection( final Sail localStore, final String name )
-		throws SailException
-	{
-		this( localStore );
-		this.name = name;
-	}
+// 	public LinkedDataSailConnection( final Sail localStore, final String name )
+// 		throws SailException
+// 	{
+// 		this( localStore );
+// 		this.name = name;
+// 	}
 
 	public void addConnectionListener( final SailConnectionListener listener )
 	{
@@ -259,6 +263,24 @@ public class LinkedDataSailConnection implements SailConnection
 		closeLocalStoreConnection( rollback );
 		openLocalStoreConnection();
 	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+/*
+	private void dereference( final URI uri )
+	{
+		try
+		{
+			dereferencer.dereference( uri, this );
+		}
+
+		catch ( RippleException e )
+		{
+			// (soft fail... don't even log the error)
+			return;
+		}
+	}
+*/
 }
 
 // kate: tab-width 4
