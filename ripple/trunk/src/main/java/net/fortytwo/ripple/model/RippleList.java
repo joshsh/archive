@@ -169,13 +169,13 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		if ( null == rdfEquivalent )
 		{
 System.out.println( "mc.getRdfSink() = " + mc.getRdfSink() );
-			putRdfStatements( mc.getRdfSink(), mc );
+			putRdfStatements( mc.getRdfSink().statementSink(), mc );
 		}
 
 		return rdfEquivalent;
 	}
 
-	public void putRdfStatements( final RdfSink sink, final ModelConnection mc )
+	public void putRdfStatements( final Sink<Statement> sink, final ModelConnection mc )
 		throws RippleException
 	{
 		RippleList cur = this;

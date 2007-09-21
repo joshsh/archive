@@ -6,6 +6,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
+import net.fortytwo.ripple.io.RdfDiffSink;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
@@ -93,6 +94,12 @@ return null;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+
+	public SailConnection getConnection( final RdfDiffSink updateSink )
+		throws SailException
+	{
+		return new LinkedDataSailConnection( localStore, dereferencer, updateSink );
+	}
 
 // 	public Dereferencer getDereferencer()
 // 	{

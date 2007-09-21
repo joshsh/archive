@@ -12,6 +12,7 @@ package net.fortytwo.ripple.io;
 import java.util.Collection;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 
@@ -19,11 +20,12 @@ import org.openrdf.model.URI;
 
 public interface Dereferencer
 {
-	void dereference( URI uri, ModelConnection mc )
-		throws RippleException;
+	void dereference( URI uri, RdfSink adderSink ) throws RippleException;
 
-	void dereference( RdfValue rv, ModelConnection mc )
-		throws RippleException;
+void dereference( URI uri, ModelConnection mc )
+	throws RippleException;
+void dereference( RdfValue rv, ModelConnection mc )
+	throws RippleException;
 
 	void forget( RdfValue rv, ModelConnection mc )
 		throws RippleException;

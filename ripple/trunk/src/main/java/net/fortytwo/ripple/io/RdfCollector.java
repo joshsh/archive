@@ -13,57 +13,61 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.Source;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
-public class RdfCollector extends RdfSink
+public class RdfCollector implements RdfSink, RdfSource
 {
-	private LinkedList<Statement> statements;
-	private LinkedList<Namespace> namespaces;
-	private LinkedList<String> comments;
+	private Collector<Statement> statements;
+	private Collector<Namespace> namespaces;
+	private Collector<String> comments;
 
 	public RdfCollector()
 	{
-		statements = new LinkedList<Statement>();
-		namespaces = new LinkedList<Namespace>();
-		comments = new LinkedList<String>();
+		statements = new Collector<Statement>();
+		namespaces = new Collector<Namespace>();
+		comments = new Collector<String>();
 	}
 
-	public void put( final Statement st ) throws RippleException
+	public Sink<Statement> statementSink()
 	{
-		statements.add( st );
+		return statements;
 	}
 
-	public void put( final Namespace ns ) throws RippleException
+	public Sink<Namespace> namespaceSink()
 	{
-		namespaces.add( ns );
+		return namespaces;
 	}
 
-	public void put( final String comment ) throws RippleException
+	public Sink<String> commentSink()
 	{
-		comments.add( comment );
+		return comments;
+	}
+
+	public Source<Statement> statementSource()
+	{
+		return statements;
+	}
+
+	public Source<Namespace> namespaceSource()
+	{
+		return namespaces;
+	}
+
+	public Source<String> commentSource()
+	{
+		return comments;
 	}
 
 	public void writeTo( final RdfSink sink ) throws RippleException
 	{
-		Iterator<Statement> stmtIter = statements.iterator();
-		while ( stmtIter.hasNext() )
-		{
-			sink.put( stmtIter.next() );
-		}
-
-		Iterator<Namespace> nsIter = namespaces.iterator();
-		while ( nsIter.hasNext() )
-		{
-			sink.put( nsIter.next() );
-		}
-
-		Iterator<String> commentIter = comments.iterator();
-		while ( commentIter.hasNext() )
-		{
-			sink.put( commentIter.next() );
-		}
+		statements.writeTo( sink.statementSink() );
+		namespaces.writeTo( sink.namespaceSink() );
+		comments.writeTo( sink.commentSink() );
 	}
 
 	public void clear()

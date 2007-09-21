@@ -12,43 +12,65 @@ package net.fortytwo.ripple.io;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 
-public class RdfImporter extends RdfSink
+public class RdfImporter implements RdfSink
 {
-	private RdfSink sink;
-	private Resource[] contexts;
-	private ModelConnection mc;
-	private boolean override;
+	private Sink<Statement> stSink;
+	private Sink<Namespace> nsSink;
+	private Sink<String> cmtSink;
 
 	public RdfImporter( final ModelConnection mc,
 						final Resource... contexts )
 	{
-		this.mc = mc;
-		sink = mc.getRdfSink();
-		this.contexts = contexts;
+		final RdfSink sink = mc.getRdfSink();
 
-		override = Ripple.preferNewestNamespaceDefinitions();
+		final boolean override = Ripple.preferNewestNamespaceDefinitions();
+
+		stSink = new Sink<Statement>()
+		{
+			public void put( final Statement st ) throws RippleException
+			{
+				mc.add( st, contexts );
+				sink.statementSink().put( st );
+			}
+		};
+
+		nsSink = new Sink<Namespace>()
+		{
+			public void put( final Namespace ns ) throws RippleException
+			{
+				mc.setNamespace( ns.getPrefix(), ns.getName(), override );
+				sink.namespaceSink().put( ns );
+			}
+		};
+
+		cmtSink = new Sink<String>()
+		{
+			public void put( final String comment ) throws RippleException
+			{
+				sink.commentSink().put( comment );
+			}
+		};
 	}
 
-	public void put( final Statement st ) throws RippleException
+	public Sink<Statement> statementSink()
 	{
-		mc.add( st, contexts );
-		sink.put( st );
+		return stSink;
 	}
 
-	public void put( final Namespace ns ) throws RippleException
+	public Sink<Namespace> namespaceSink()
 	{
-		mc.setNamespace( ns.getPrefix(), ns.getName(), override );
-		sink.put( ns );
+		return nsSink;
 	}
 
-	public void put( final String comment) throws RippleException
+	public Sink<String> commentSink()
 	{
-		sink.put( comment );
+		return cmtSink;
 	}
 }
 

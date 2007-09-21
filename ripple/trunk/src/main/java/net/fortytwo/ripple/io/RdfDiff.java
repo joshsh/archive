@@ -9,53 +9,44 @@
 
 package net.fortytwo.ripple.io;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Source;
 
 import org.openrdf.model.Statement;
 
-public class RdfDiff
+public class RdfDiff implements RdfDiffSink, RdfDiffSource
 {
-	private Collector<Statement> added, subtracted;
+	private RdfCollector added, subtracted;
 
 	public RdfDiff()
 	{
-		added = new Collector<Statement>();
-		subtracted = new Collector<Statement>();
+		added = new RdfCollector();
+		subtracted = new RdfCollector();
 	}
 
-	public void add( final Statement st ) throws RippleException
-	{
-		added.put( st );
-	}
-
-	public void subtract( final Statement st ) throws RippleException
-	{
-		subtracted.put( st );
-	}
-
-	public int countAdded()
-	{
-		return added.size();
-	}
-
-	public int countSubtracted()
-	{
-		return subtracted.size();
-	}
-
-	public Source<Statement> getAdded()
+	public RdfSink adderSink()
 	{
 		return added;
 	}
 
-	public Source<Statement> getSubtracted()
+	public RdfSink subtractorSink()
 	{
 		return subtracted;
+	}
+
+	public RdfSource adderSource()
+	{
+		return added;
+	}
+
+	public RdfSource subtractorSource()
+	{
+		return subtracted;
+	}
+
+	public void writeTo( final RdfDiffSink sink ) throws RippleException
+	{
+		added.writeTo( sink.adderSink() );
+		subtracted.writeTo( sink.subtractorSink() );
 	}
 }
 

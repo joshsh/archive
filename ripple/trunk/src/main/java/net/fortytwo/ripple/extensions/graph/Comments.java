@@ -19,6 +19,7 @@ import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
@@ -64,20 +65,35 @@ public class Comments extends PrimitiveFunction
 		RdfSink rdfSink = new RdfSink()
 		{
 			// Discard statements.
-			public void put( final Statement st ) throws RippleException
-			{
-			}
+			private Sink<Statement> stSink = new NullSink<Statement>();
 
 			// Discard namespaces.
-			public void put( final Namespace ns ) throws RippleException
-			{
-			}
+			private Sink<Namespace> nsSink = new NullSink<Namespace>();
 
-			// Push comments to the stack.
-			public void put( final String comment ) throws RippleException
+			// Push comments.
+			private Sink<String> cmtSink = new Sink<String>()
 			{
-				resultSink.put(
-					new RippleList( mc.createValue( comment ), stack ) );
+				public void put( final String comment )
+					throws RippleException
+				{
+					resultSink.put(
+						new RippleList( mc.createValue( comment ), stack ) );
+				}
+			};
+
+			public Sink<Statement> statementSink()
+			{
+				return stSink;
+			}
+		
+			public Sink<Namespace> namespaceSink()
+			{
+				return nsSink;
+			}
+		
+			public Sink<String> commentSink()
+			{
+				return cmtSink;
 			}
 		};
 

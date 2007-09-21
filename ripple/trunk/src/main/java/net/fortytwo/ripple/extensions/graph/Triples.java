@@ -21,6 +21,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
@@ -62,27 +63,41 @@ public class Triples extends PrimitiveFunction
 	{
 		RdfSink rdfSink = new RdfSink()
 		{
-			// Push statements to the stack as triples.
-			public void put( final Statement st ) throws RippleException
+			// Discard statements.
+			private Sink<Statement> stSink = new Sink<Statement>()
 			{
+				public void put( final Statement st ) throws RippleException
+				{
 // Note: don't bother with the ModelBridge for now.
-				RippleValue subj = new RdfValue( st.getSubject() );
-				RippleValue pred = new RdfValue( st.getPredicate() );
-				RippleValue obj = new RdfValue( st.getObject() );
-
-				RippleList triple = new RippleList( subj ).push( pred ).push( obj );
-				resultSink.put(
-					new RippleList( triple, stack ) );
-			}
+					RippleValue subj = new RdfValue( st.getSubject() );
+					RippleValue pred = new RdfValue( st.getPredicate() );
+					RippleValue obj = new RdfValue( st.getObject() );
+	
+					RippleList triple = new RippleList( subj ).push( pred ).push( obj );
+					resultSink.put(
+						new RippleList( triple, stack ) );
+				}
+			};
 
 			// Discard namespaces.
-			public void put( final Namespace ns ) throws RippleException
-			{
-			}
+			private Sink<Namespace> nsSink = new NullSink<Namespace>();
 
 			// Discard comments.
-			public void put( final String comment ) throws RippleException
+			private Sink<String> cmtSink = new NullSink<String>();
+
+			public Sink<Statement> statementSink()
 			{
+				return stSink;
+			}
+		
+			public Sink<Namespace> namespaceSink()
+			{
+				return nsSink;
+			}
+		
+			public Sink<String> commentSink()
+			{
+				return cmtSink;
 			}
 		};
 

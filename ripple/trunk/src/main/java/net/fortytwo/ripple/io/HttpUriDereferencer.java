@@ -111,7 +111,7 @@ public class HttpUriDereferencer implements Dereferencer
 	}
 
 // TODO: two threads may dereference the same URI twice if the two calls of this method occur close enough together in time.
-	public void dereference( final URI uri, final ModelConnection mc )
+	public void dereference( final URI uri, final RdfSink adderSink )
 		throws RippleException
 	{
 		final String memo = findMemo( uri );
@@ -138,8 +138,7 @@ public class HttpUriDereferencer implements Dereferencer
 		// need not bear any relation to the URI it was created from.
 		final URL url = urlFactory.createUrl( memo );
 
-		RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
-		final SesameInputAdapter sa = new SesameInputAdapter( importer );
+		final SesameInputAdapter sa = new SesameInputAdapter( adderSink );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.
@@ -172,11 +171,78 @@ public class HttpUriDereferencer implements Dereferencer
 		successMemos.add( memo );
 
 // TODO: this should probably be in a parent Dereferencer.
-		if ( Ripple.rejectNonAssociatedStatements() )
-		{
-			filter( uri.getNamespace(), mc.createUri( memo ), mc );
-		}
+// 		if ( Ripple.rejectNonAssociatedStatements() )
+// 		{
+// 			filter( uri.getNamespace(), mc.createUri( memo ), mc );
+// 		}
 	}
+
+public void dereference( final URI uri, final ModelConnection mc )
+	throws RippleException
+{
+	final String memo = findMemo( uri );
+
+	// Don't dereference a URI that is not an HTTP URI (including file: URIs,
+	// which pose a security concern).
+	// Don't dereference a URI which we've already dereferenced.
+	if ( !memo.startsWith( "http://" )
+			|| successMemos.contains( memo )
+			|| failureMemos.contains( memo ) )
+	{
+		return;
+	}
+
+	// Don't dereference a URI which appears to point to a file which is not
+	// an RDF document.
+	int l = memo.lastIndexOf( '.' );
+	if ( l > -1 && badExtensions.contains( memo.substring( l + 1 ) ) )
+	{
+		return;
+	}
+
+	// Note: this URL should be treated as a "black box" once created; it
+	// need not bear any relation to the URI it was created from.
+	final URL url = urlFactory.createUrl( memo );
+
+	RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
+	final SesameInputAdapter sa = new SesameInputAdapter( importer );
+
+	// Attempt to import the information resource.  The web location
+	// 'memo' is used as the base URI for any relative references.
+	try
+	{
+		LOGGER.info( "Dereferencing URI <"
+			+ StringUtils.escapeUriString( uri.toString() )
+			+ "> at location " + url );
+
+		RdfUtils.read( url, sa, memo );
+	}
+
+	// Exceptions encountered here are logged (withoug a stack trace) but
+	// tolerated.  They usually result from missing or badly-formatted
+	// Semantic Web documents.
+	catch ( RippleException e )
+	{
+		LOGGER.info( "Failed to dereference URI <"
+			+ StringUtils.escapeUriString( uri.toString() ) + ">: " + e );
+
+		// For now, any exception thrown during the importing process
+		// results in the URI being blacklisted as not dereferenceable.
+		failureMemos.add( memo );
+
+		return;
+	}
+
+	// At this point, the URI is considered to have been successfully
+	// dereferenced.
+	successMemos.add( memo );
+
+// TODO: this should probably be in a parent Dereferencer.
+	if ( Ripple.rejectNonAssociatedStatements() )
+	{
+		filter( uri.getNamespace(), mc.createUri( memo ), mc );
+	}
+}
 
 	void filter( final String ns, final URI context, final ModelConnection mc )
 		throws RippleException

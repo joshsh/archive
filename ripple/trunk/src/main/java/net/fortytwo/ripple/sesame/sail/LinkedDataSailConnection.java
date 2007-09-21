@@ -11,6 +11,8 @@ import java.util.Set;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
+import net.fortytwo.ripple.io.RdfDiffSink;
+import net.fortytwo.ripple.io.RdfDiffTee;
 
 import org.apache.log4j.Logger;
 
@@ -43,13 +45,31 @@ public class LinkedDataSailConnection implements SailConnection
 
 	private TaskSet taskSet = new TaskSet();
 
+	private RdfDiffSink inputSink;
+
 	public LinkedDataSailConnection( final Sail localStore,
 									 final Dereferencer dereferencer )
 		throws SailException
 	{
+		this( localStore, dereferencer, null );
+	}
+
+	public LinkedDataSailConnection( final Sail localStore,
+									 final Dereferencer dereferencer,
+									 final RdfDiffSink updateSink )
+		throws SailException
+	{
 		this.localStore = localStore;
 		this.dereferencer = dereferencer;
+
 		openLocalStoreConnection();
+
+		SailConnectionOutputAdapter adapter
+			= new SailConnectionOutputAdapter( this );
+		inputSink = ( null == updateSink )
+			? adapter
+			: new RdfDiffTee( adapter, updateSink );
+
 		open = true;
 
 		synchronized ( openConnections )
@@ -77,6 +97,20 @@ public class LinkedDataSailConnection implements SailConnection
 		throws SailException
 	{
 // TODO
+
+
+// 		if ( null != updateSink )
+// 		{
+// 			try
+// 			{
+// 				updateSink.adderSink().statementSink().put( ...
+// 			}
+// 
+// 			catch ( RippleException e )
+// 			{
+// 				throw new SailException( e );
+// 			}
+// 		}
 	}
 
 	public void clear( final Resource... contexts )
@@ -266,12 +300,11 @@ public class LinkedDataSailConnection implements SailConnection
 
 	////////////////////////////////////////////////////////////////////////////
 
-/*
 	private void dereference( final URI uri )
 	{
 		try
 		{
-			dereferencer.dereference( uri, this );
+			dereferencer.dereference( uri, inputSink.adderSink() );
 		}
 
 		catch ( RippleException e )
@@ -280,7 +313,6 @@ public class LinkedDataSailConnection implements SailConnection
 			return;
 		}
 	}
-*/
 }
 
 // kate: tab-width 4

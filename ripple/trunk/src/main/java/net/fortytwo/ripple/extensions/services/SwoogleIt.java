@@ -96,29 +96,53 @@ URI context = mc.createUri( url.toString() );
 
 		RdfSink responseWatcher = new RdfSink()
 		{
-			public void put( final Statement st )
-				throws RippleException
+			private Sink<Statement> stSink = new Sink<Statement>()
 			{
-				importer.put( st );
-
-				if ( st.getPredicate().equals( RDF.TYPE )
-						&& st.getObject().equals( swoogleQueryResponseUri ) )
+				public void put( final Statement st )
+					throws RippleException
 				{
-					buffer.put( new RippleList(
-						new RdfValue( st.getSubject() ), stackFinal ) );
+					importer.statementSink().put( st );
+	
+					if ( st.getPredicate().equals( RDF.TYPE )
+							&& st.getObject().equals( swoogleQueryResponseUri ) )
+					{
+						buffer.put( new RippleList(
+							new RdfValue( st.getSubject() ), stackFinal ) );
+					}
 				}
-			}
+			};
 
-			public void put( final Namespace ns )
-				throws RippleException
+			private Sink<Namespace> nsSink = new Sink<Namespace>()
 			{
-				importer.put( ns );
-			}
+				public void put( final Namespace ns )
+					throws RippleException
+				{
+					importer.namespaceSink().put( ns );
+				}
+			};
 
-			public void put( final String comment )
-				throws RippleException
+			private Sink<String> cmtSink = new Sink<String>()
 			{
-				importer.put( comment );
+				public void put( final String comment )
+					throws RippleException
+				{
+					importer.commentSink().put( comment );
+				}
+			};
+
+			public Sink<Statement> statementSink()
+			{
+				return stSink;
+			}
+		
+			public Sink<Namespace> namespaceSink()
+			{
+				return nsSink;
+			}
+		
+			public Sink<String> commentSink()
+			{
+				return cmtSink;
 			}
 		};
 

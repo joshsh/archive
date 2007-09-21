@@ -10,8 +10,10 @@
 package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Statement;
+import org.openrdf.model.Namespace;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.rio.RDFHandler;
 
@@ -20,11 +22,15 @@ import org.openrdf.rio.RDFHandler;
  */
 public class SesameInputAdapter implements RDFHandler
 {
-	private RdfSink sink;
+	private Sink<Statement> stSink;
+	private Sink<Namespace> nsSink;
+	private Sink<String> cmtSink;
 
 	public SesameInputAdapter( final RdfSink sink )
 	{
-		this.sink = sink;
+		stSink = sink.statementSink();
+		nsSink = sink.namespaceSink();
+		cmtSink = sink.commentSink();
 	}
 
 	/**
@@ -34,7 +40,7 @@ public class SesameInputAdapter implements RDFHandler
 	{
 		try
 		{
-			sink.put( comment );
+			cmtSink.put( comment );
 		}
 
 		catch ( RippleException e )
@@ -51,7 +57,7 @@ public class SesameInputAdapter implements RDFHandler
 	{
 		try
 		{
-			sink.put( new NamespaceImpl( prefix, uri ) );
+			nsSink.put( new NamespaceImpl( prefix, uri ) );
 		}
 
 		catch ( RippleException e )
@@ -68,7 +74,7 @@ public class SesameInputAdapter implements RDFHandler
 	{
 		try
 		{
-			sink.put( st );
+			stSink.put( st );
 		}
 
 		catch ( RippleException e )

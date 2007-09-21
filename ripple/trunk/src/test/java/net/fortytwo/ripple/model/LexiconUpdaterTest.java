@@ -44,7 +44,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 				i++;
 				String nsUri = nsBase + i + "#";
 				Namespace ns = new NamespaceImpl( prefix, nsUri );
-				updater.put( ns );
+				updater.namespaceSink().put( ns );
 
 				assertNull( lexicon.resolveNamespacePrefix( prefix ) );
 			}
@@ -72,7 +72,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 				i++;
 				String nsUri = nsBase + i + "#";
 				Namespace ns = new NamespaceImpl( prefix, nsUri );
-				updater.put( ns );
+				updater.namespaceSink().put( ns );
 
 				assertEquals( lexicon.resolveNamespacePrefix( prefix ), nsUri );
 			}

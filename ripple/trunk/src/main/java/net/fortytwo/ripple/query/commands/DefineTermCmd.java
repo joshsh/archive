@@ -94,14 +94,7 @@ private void pushListToSemWeb( final URI uri,
 {
 	final RdfDiff diff = new RdfDiff();
 
-	final Sink<Statement> diffAdderSink = new Sink<Statement>()
-	{
-		public void put( final Statement st ) throws RippleException
-		{
-//System.out.println( "adding statement: " + st );
-			diff.add( st );
-		}
-	};
+	final Sink<Statement> diffAdderSink = diff.adderSink().statementSink();
 
 // FIXME: reading the list from the RDF model is backwards
 	Sink<RippleList> listSink = new Sink<RippleList>()

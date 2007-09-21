@@ -87,30 +87,30 @@ catch ( Throwable t )
 
 		SesameOutputAdapter adapter = new SesameOutputAdapter( writer );
 
-		if ( diff.countAdded() > 0 )
-		{
+// 		if ( diff.countAdded() > 0 )
+// 		{
 			ps.println( "INSERT {" );
 			adapter.startRDF();
 
-			adapter.putStatements( diff.getAdded() );
+			diff.adderSource().statementSource().writeTo( adapter.statementSink() );
 
 			adapter.endRDF();
 			ps.println( "}" );
-		}
+// 		}
 
 		// Note: since some statements are rejected, we will sometimes end up
 		// with an empty DELETE graph.
-		if ( diff.countSubtracted() > 0 )
-		{
+// 		if ( diff.countSubtracted() > 0 )
+// 		{
 			ps.println( "DELETE {" );
 			adapter.startRDF();
 
 // TODO: ignore statements with blank nodes as subject or object... UNLESS they're found to serve some purpose
-			adapter.putStatements( diff.getSubtracted() );
+			diff.subtractorSource().statementSource().writeTo( adapter.statementSink() );
 
 			adapter.endRDF();
 			ps.println( "}" );
-		}
+// 		}
 
 		return bos.toString();
 	}
