@@ -16,8 +16,8 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
-import net.fortytwo.ripple.io.RdfSink;
-import net.fortytwo.ripple.io.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.util.ExtensionLoader;
 import net.fortytwo.ripple.util.UrlFactory;
 

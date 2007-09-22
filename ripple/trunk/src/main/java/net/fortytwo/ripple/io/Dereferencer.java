@@ -12,9 +12,9 @@ package net.fortytwo.ripple.io;
 import java.util.Collection;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.rdf.RdfSink;
 
 import org.openrdf.model.URI;
 

@@ -20,6 +20,8 @@ import java.net.HttpURLConnection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.rdf.diff.RdfDiff;
 import net.fortytwo.ripple.util.HttpUtils;
 
 import org.openrdf.model.Statement;

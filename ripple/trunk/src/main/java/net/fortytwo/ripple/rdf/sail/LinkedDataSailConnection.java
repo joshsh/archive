@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.model.sail;
+package net.fortytwo.ripple.rdf.sail;
 
 import info.aduna.iteration.CloseableIteration;
 
@@ -11,8 +11,8 @@ import java.util.Set;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
-import net.fortytwo.ripple.io.RdfDiffSink;
-import net.fortytwo.ripple.io.RdfDiffTee;
+import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
+import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 
 import org.apache.log4j.Logger;
 

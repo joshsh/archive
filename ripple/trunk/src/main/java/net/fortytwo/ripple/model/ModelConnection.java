@@ -23,8 +23,8 @@ import java.util.Random;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfNullSink;
-import net.fortytwo.ripple.io.RdfSink;
+import net.fortytwo.ripple.rdf.RdfNullSink;
+import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;

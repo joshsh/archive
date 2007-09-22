@@ -1,4 +1,6 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.rdf.diff;
+
+import net.fortytwo.ripple.rdf.RdfSink;
 
 public interface RdfDiffSink
 {

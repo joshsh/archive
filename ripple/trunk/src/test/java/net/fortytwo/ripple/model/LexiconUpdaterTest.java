@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.io.RdfNullSink;
+import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.util.FileUtils;
 
 import org.openrdf.model.Namespace;

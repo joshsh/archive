@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfImporter;
-import net.fortytwo.ripple.io.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.RdfUtils;

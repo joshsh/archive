@@ -12,10 +12,10 @@ package net.fortytwo.ripple.extensions.graph;
 import java.net.URLConnection;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.io.RdfSink;
+import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.RdfUtils;

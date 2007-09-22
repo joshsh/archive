@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfSink;
+import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;

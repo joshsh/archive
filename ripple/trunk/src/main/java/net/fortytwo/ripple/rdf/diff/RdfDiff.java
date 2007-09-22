@@ -7,9 +7,12 @@
  */
 
 
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.rdf.diff;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.RdfCollector;
+import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RdfSource;
 
 import org.openrdf.model.Statement;
 

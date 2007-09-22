@@ -19,7 +19,7 @@ import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.io.RdfNullSink;
+import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.io.RipplePrintStream;

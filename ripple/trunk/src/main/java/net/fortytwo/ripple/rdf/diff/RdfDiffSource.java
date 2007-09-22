@@ -1,6 +1,8 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.rdf.diff;
 
 import net.fortytwo.ripple.RippleException;
+
+import net.fortytwo.ripple.rdf.RdfSource;
 
 public interface RdfDiffSource
 {

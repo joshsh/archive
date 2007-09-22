@@ -19,6 +19,8 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.StringUtils;
 import net.fortytwo.ripple.util.UrlFactory;

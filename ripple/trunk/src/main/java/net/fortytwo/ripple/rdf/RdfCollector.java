@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.rdf;
 
 import java.util.Iterator;
 import java.util.LinkedList;

@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.rdf;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;

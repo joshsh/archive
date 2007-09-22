@@ -1,8 +1,8 @@
-package net.fortytwo.ripple.model.sail;
+package net.fortytwo.ripple.rdf.sail;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.RdfDiffSink;
-import net.fortytwo.ripple.io.RdfSink;
+import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
+import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 

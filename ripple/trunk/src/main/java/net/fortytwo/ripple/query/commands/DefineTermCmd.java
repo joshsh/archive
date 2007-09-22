@@ -23,7 +23,7 @@ import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
 
-	import net.fortytwo.ripple.io.RdfDiff;
+	import net.fortytwo.ripple.rdf.diff.RdfDiff;
 	import net.fortytwo.ripple.io.SparqlUpdater;
 	import net.fortytwo.ripple.util.Sink;
 	import org.openrdf.model.Statement;

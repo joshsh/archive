@@ -1,4 +1,4 @@
-package net.fortytwo.ripple.model.sail;
+package net.fortytwo.ripple.rdf.sail;
 
 import java.io.File;
 
@@ -6,7 +6,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
-import net.fortytwo.ripple.io.RdfDiffSink;
+import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;

@@ -17,7 +17,7 @@ import java.net.URLConnection;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 
 import org.apache.log4j.Logger;
 
