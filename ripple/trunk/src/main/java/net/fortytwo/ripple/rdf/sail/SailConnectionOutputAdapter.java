@@ -12,12 +12,14 @@ import org.openrdf.model.Statement;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
+// Note: for maximum clarity, this class should probably be called
+//       "LinkedDataSailConnectionOutputAdapter"
 public class SailConnectionOutputAdapter implements RdfDiffSink
 {
-	private SailConnection sailConnection;
+	private LinkedDataSailConnection sailConnection;
 	private RdfSink addSink, subtractSink;
 
-	public SailConnectionOutputAdapter( final SailConnection sc )
+	public SailConnectionOutputAdapter( final LinkedDataSailConnection sc )
 	{
 		sailConnection = sc;
 
@@ -27,32 +29,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			{
 				public void put( final Statement st ) throws RippleException
 				{
-					Resource context = st.getContext();
-
-					try
-					{
-						if ( null == context )
-						{
-							sailConnection.addStatement(
-								st.getSubject(),
-								st.getPredicate(),
-								st.getObject() );
-						}
-
-						else
-						{
-							sailConnection.addStatement(
-								st.getSubject(),
-								st.getPredicate(),
-								st.getObject(),
-								context );
-						}
-					}
-	
-					catch ( SailException e )
-					{
-						throw new RippleException( e );
-					}
+					sailConnection.addStatement( st );
 				}
 			};
 
@@ -60,15 +37,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
-					try
-					{
-						sailConnection.setNamespace( ns.getPrefix(), ns.getName() );
-					}
-	
-					catch ( SailException e )
-					{
-						throw new RippleException( e );
-					}
+					sailConnection.addNamespace( ns );
 				}
 			};
 
@@ -96,32 +65,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			{
 				public void put( final Statement st ) throws RippleException
 				{
-					Resource context = st.getContext();
-
-					try
-					{
-						if ( null == context )
-						{
-							sailConnection.removeStatements(
-								st.getSubject(),
-								st.getPredicate(),
-								st.getObject() );
-						}
-
-						else
-						{
-							sailConnection.removeStatements(
-								st.getSubject(),
-								st.getPredicate(),
-								st.getObject(),
-								context );
-						}
-					}
-	
-					catch ( SailException e )
-					{
-						throw new RippleException( e );
-					}
+					sailConnection.removeStatement( st );
 				}
 			};
 
@@ -129,17 +73,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
-					try
-					{
-						// Note: removes the namespace with the given prefix,
-						// regardless of the associated URI.
-						sailConnection.removeNamespace( ns.getPrefix() );
-					}
-	
-					catch ( SailException e )
-					{
-						throw new RippleException( e );
-					}
+					sailConnection.removeNamespace( ns );
 				}
 			};
 

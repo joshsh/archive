@@ -61,7 +61,8 @@ return null;
 
 	public ValueFactory getValueFactory()
 	{
-return null;
+		// Inherit the local store's ValueFactory
+		return localStore.getValueFactory();
 	}
 
 	public void initialize()
@@ -95,10 +96,10 @@ return null;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public SailConnection getConnection( final RdfDiffSink updateSink )
+	public SailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		return new LinkedDataSailConnection( localStore, dereferencer, updateSink );
+		return new LinkedDataSailConnection( localStore, dereferencer, listenerSink );
 	}
 
 // 	public Dereferencer getDereferencer()
