@@ -9,9 +9,6 @@
 
 package net.fortytwo.ripple.rdf;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;

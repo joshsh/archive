@@ -108,7 +108,7 @@ public class QueryEngine
 
 		if ( null == defaultNs )
 		{
-			throw new RippleException( "no default namespace is defined.  Use '@prefix : <...>.'" );
+			throw new RippleException( "no default namespace is defined.  Use '@prefix : <...>.'\n" );
 		}
 
 		return defaultNs;
@@ -121,12 +121,12 @@ public class QueryEngine
 
 		if ( 0 == options.size() )
 		{
-			errorPrintStream.println( "Warning: no values resolved for keyword " + localName + "\n" );
+			errorPrintStream.println( "Warning: keyword " + localName + " is undefined\n" );
 		}
 
 		else if ( 1 < options.size() )
 		{
-			errorPrintStream.println( "Warning: multiple values resolved for keyword " + localName + "\n" );
+			errorPrintStream.println( "Warning: keyword " + localName + " is ambiguous\n" );
 		}
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
@@ -145,7 +145,7 @@ public class QueryEngine
 
 		if ( null == v )
 		{
-			errorPrintStream.println( "Warning: no values resolved for " + nsPrefix + ":" + localName );
+			errorPrintStream.println( "Warning: " + nsPrefix + ":" + localName + " is undefined\n" );
 		}
 
 		else
@@ -188,7 +188,7 @@ public class QueryEngine
 
 		ModelConnection mc = getConnection();
 		mc.getStatements( null, null, null, updater.adderSink().statementSink() );
-// TODO: namespaces
+		mc.getNamespaces( updater.adderSink().namespaceSink() );
 		mc.close();
 	}
 }

@@ -152,7 +152,7 @@ public final class Ripple
 
 	public static String getVersion()
 	{
-		return "0.4";
+		return "0.5-dev";
 	}
 
 	public static String getCacheUri()

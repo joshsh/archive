@@ -29,6 +29,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			{
 				public void put( final Statement st ) throws RippleException
 				{
+//System.out.println( "adding statement: " + st );
 					sailConnection.addStatement( st );
 				}
 			};
@@ -37,6 +38,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
+//System.out.println( "adding namespace: " + ns );
 					sailConnection.addNamespace( ns );
 				}
 			};

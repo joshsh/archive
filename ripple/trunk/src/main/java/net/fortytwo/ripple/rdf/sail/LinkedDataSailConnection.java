@@ -8,6 +8,7 @@ import java.util.HashSet;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
+import net.fortytwo.ripple.rdf.diff.RdfDiffBuffer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 import net.fortytwo.ripple.util.Sink;
@@ -44,46 +45,12 @@ public class LinkedDataSailConnection implements SailConnection
 
 	private Dereferencer dereferencer;
 
-	private RdfDiffSink inputSink, sparqlUpdateSink;
+	private RdfDiffSink sparqlUpdateSink;
 
-	// Package-level use only.
-	LinkedDataSailConnection( final Sail localStore,
-									final Dereferencer dereferencer,
-									final RdfDiffSink listenerSink )
-		throws SailException
-	{
-		this.localStore = localStore;
-		this.dereferencer = dereferencer;
+	// Buffering input to the wrapped SailConnection avoids deadlocks.
+	private RdfDiffBuffer inputBuffer;
 
-		// Inherit the local store's ValueFactory
-		valueFactory = localStore.getValueFactory();
-
-		openLocalStoreConnection();
-
-		SailConnectionOutputAdapter adapter
-			= new SailConnectionOutputAdapter( this );
-		inputSink = ( null == listenerSink )
-			? adapter
-			: new RdfDiffTee( adapter, listenerSink );
-sparqlUpdateSink = inputSink;
-
-		open = true;
-	}
-
-	// Package-level use only.
-	LinkedDataSailConnection( final Sail localStore,
-									final Dereferencer dereferencer )
-		throws SailException
-	{
-		this( localStore, dereferencer, null );
-	}
-
-// 	public LinkedDataSailConnection( final Sail localStore, final String name )
-// 		throws SailException
-// 	{
-// 		this( localStore );
-// 		this.name = name;
-// 	}
+	////////////////////////////////////////////////////////////////////////////
 
 	public void addConnectionListener( final SailConnectionListener listener )
 	{
@@ -147,7 +114,9 @@ sparqlUpdateSink = inputSink;
 	public void commit()
 		throws SailException
 	{
-// TODO -- flushes data through the SPARUL pipeline
+// TODO -- flush data through the SPARUL pipeline
+
+		commitInput();
 	}
 
 	public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
@@ -190,14 +159,18 @@ sparqlUpdateSink = inputSink;
 		if ( null != subj && subj instanceof URI )
 		{
 			dereference( (URI) subj );
+			commitInput();
 		}
 
 		if ( null != obj && obj instanceof URI )
 		{
 			dereference( (URI) obj );
+			commitInput();
 		}
 
 		// Now that the new RDF data is in the local store, query it.
+//System.out.println( "getStatements(" + subj + ", " + pred + ", " + obj + ", " + includeInferred + ", " + contexts + ")" );
+//System.out.println( "    # contexts = " + contexts.length );
 		return localStoreConnection.getStatements(
 			subj, pred, obj, includeInferred, contexts );
 	}
@@ -299,12 +272,43 @@ sparqlUpdateSink = inputSink;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	// Package-level use only.
+	LinkedDataSailConnection( final Sail localStore,
+									final Dereferencer dereferencer,
+									final RdfDiffSink listenerSink )
+		throws SailException
+	{
+		this.localStore = localStore;
+		this.dereferencer = dereferencer;
+
+		// Inherit the local store's ValueFactory
+		valueFactory = localStore.getValueFactory();
+
+		openLocalStoreConnection();
+
+		SailConnectionOutputAdapter adapter
+			= new SailConnectionOutputAdapter( this );
+		inputBuffer = new RdfDiffBuffer(
+			( null == listenerSink )
+				? adapter
+				: new RdfDiffTee( adapter, listenerSink ) );
+sparqlUpdateSink = inputBuffer;
+
+		open = true;
+	}
+
+	LinkedDataSailConnection( final Sail localStore,
+								final Dereferencer dereferencer )
+		throws SailException
+	{
+		this( localStore, dereferencer, null );
+	}
+
 	void addNamespace( final Namespace ns )
 		throws RippleException
 	{
 		try
 		{
+//localStoreConnection.commit();
 			localStoreConnection.setNamespace( ns.getPrefix(), ns.getName() );
 		}
 
@@ -314,7 +318,6 @@ sparqlUpdateSink = inputSink;
 		}
 	}
 
-	// Package-level use only.
 	void addStatement( final Statement st )
 		throws RippleException
 	{
@@ -338,24 +341,23 @@ sparqlUpdateSink = inputSink;
 					st.getObject(),
 					context );
 			}
-		}
 
-		catch ( SailException e )
-		{
-			throw new RippleException( e );
-		}
-
-		if ( null != listeners )
-		{
-			Iterator<SailConnectionListener> iter = listeners.iterator();
-			while ( iter.hasNext() )
+			if ( null != listeners )
 			{
-				iter.next().statementAdded( st );
+				Iterator<SailConnectionListener> iter = listeners.iterator();
+				while ( iter.hasNext() )
+				{
+					iter.next().statementAdded( st );
+				}
 			}
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
 		}
 	}
 
-	// Package-level use only.
 	void removeNamespace( final Namespace ns )
 		throws RippleException
 	{
@@ -372,7 +374,6 @@ sparqlUpdateSink = inputSink;
 		}
 	}
 
-	// Package-level use only.
 	void removeStatement( final Statement st )
 		throws RippleException
 	{
@@ -441,6 +442,21 @@ sparqlUpdateSink = inputSink;
 		}
 	}
 
+	private void commitInput() throws SailException
+	{
+		try
+		{
+			inputBuffer.flush();
+		}
+
+		catch ( RippleException e )
+		{
+			throw new SailException( e );
+		}
+
+		localStoreConnection.commit();
+	}
+
 	/**
 	 * Attempts to return the connection to a normal state after an Exception
 	 * has been thrown.
@@ -455,7 +471,7 @@ sparqlUpdateSink = inputSink;
 	{
 		try
 		{
-			dereferencer.dereference( uri, inputSink.adderSink() );
+			dereferencer.dereference( uri, inputBuffer.adderSink() );
 		}
 
 		catch ( RippleException e )
