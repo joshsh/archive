@@ -14,37 +14,29 @@ import java.util.LinkedList;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.Dereferencer;
-import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
+import net.fortytwo.ripple.rdf.sail.LinkedDataSailConnection;
 import net.fortytwo.ripple.util.ExtensionLoader;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
 
 import org.openrdf.model.Resource;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.Repository;
 import org.openrdf.model.Namespace;
-import org.openrdf.repository.RepositoryResult;
+import org.openrdf.sail.Sail;
+
 
 public class Model
 {
 	private static final Logger LOGGER = Logger.getLogger( Model.class );
 
 	private String name;
-
-	private Repository repository;
-public Repository getRepository()
+	private LinkedDataSail sail;
+public LinkedDataSail getSail()
 {
-	return repository;
-}
-
-	private Dereferencer dereferencer;
-public Dereferencer getDereferencer()
-{
-	return dereferencer;
+	return sail;
 }
 
 	private ModelBridge bridge;
@@ -53,34 +45,17 @@ public Dereferencer getDereferencer()
 		return bridge;
 	}
 
-	/**
-	*  @param Repository  an initialized Repository
-	*/
-	public Model( final Repository repository, final String name )
+	public Model( final Sail localStore, final String name )
 		throws RippleException
 	{
 		LOGGER.debug( "Creating new Model '" + name + "'" );
-
-		this.repository = repository;
+	
 		this.name = name;
-
 		bridge = new ModelBridge();
-
 		UrlFactory urlFactory = new UrlFactory();
-
-		dereferencer = new HttpUriDereferencer( urlFactory );
-
-		// Don't bother trying to dereference terms in these common namespaces.
-		dereferencer.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );
-		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
-		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
-
-		// Don't try to dereference the cache index.
-		dereferencer.addSuccessMemo( Ripple.getCacheUri() );
+		sail = new LinkedDataSail( localStore, urlFactory );
 
 		loadSymbols( urlFactory );
-
-		LOGGER.debug( "Finished creating Model '" + name + "'" );
 	}
 
 	void loadSymbols( final UrlFactory uf )
@@ -111,39 +86,17 @@ public Dereferencer getDereferencer()
 	public ModelConnection getConnection( final String name )
 		throws RippleException
 	{
-		final boolean override = Ripple.preferNewestNamespaceDefinitions();
-
-		final ModelConnection mc = ( null == name )
-			? new ModelConnection( this )
-			: new ModelConnection( this, name );
-
-		return mc;
+		return new ModelConnection( this, name, null );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
-
-	public void readAll( final RdfSink sink )
-		throws RippleException
-	{
-		SesameInputAdapter handler = new SesameInputAdapter( sink );
-
-		try
-		{
-			RepositoryConnection rc = repository.getConnection();
-			rc.export( handler );
-			rc.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-	}
 
 	// Note: this may be a very expensive operation (see Sesame API).
 	public long countStatements()
 		throws RippleException
 	{
+return 0;
+/* TODO
 		long size;
 
 		try
@@ -159,11 +112,13 @@ public Dereferencer getDereferencer()
 		}
 
 		return size;
+*/
 	}
 
 	public void showNamespaces()
 		throws RippleException
 	{
+/* TODO
 		try
 		{
 			RepositoryConnection conn = repository.getConnection();
@@ -210,6 +165,7 @@ public Dereferencer getDereferencer()
 		{
 			throw new RippleException( t );
 		}
+*/
 	}
 
 	public Collection<RippleValue> getContexts()
@@ -217,6 +173,7 @@ public Dereferencer getDereferencer()
 	{
 		Collection<RippleValue> contexts = new LinkedList<RippleValue>();
 
+/* TODO
 		try
 		{
 			RepositoryConnection conn = repository.getConnection();
@@ -237,7 +194,7 @@ public Dereferencer getDereferencer()
 		{
 			throw new RippleException( t );
 		}
-
+*/
 		return contexts;
 	}
 }

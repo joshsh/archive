@@ -8,12 +8,12 @@
 	
 	<groupId>net.fortytwo</groupId>
 	<artifactId>ripple</artifactId>
-	<version>0.4</version>
+	<version>0.5</version>
 	<name>Ripple</name>
 	<description>Functional Programs as Linked Data</description>
 	<url>http://ripple.fortytwo.net/</url>
 	<inceptionYear>2007</inceptionYear>
-	<licenses></licenses>
+	<!--<licenses><license>MIT/X Consortium License</license></licenses>-->
 	<developers>
 		<developer>
 			<id>josh</id>

@@ -32,7 +32,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 			int i = 0;
 
 			Lexicon lexicon = new Lexicon( getTestModel() );
-			LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
+			LexiconUpdater updater = new LexiconUpdater( lexicon );
 
 			Iterator<String> prefixIter = getLines( "badNsPrefixes.txt" ).iterator();
 			assertTrue( prefixIter.hasNext() );
@@ -44,7 +44,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 				i++;
 				String nsUri = nsBase + i + "#";
 				Namespace ns = new NamespaceImpl( prefix, nsUri );
-				updater.namespaceSink().put( ns );
+				updater.adderSink().namespaceSink().put( ns );
 
 				assertNull( lexicon.resolveNamespacePrefix( prefix ) );
 			}
@@ -60,7 +60,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 			int i = 0;
 
 			Lexicon lexicon = new Lexicon( getTestModel() );
-			LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
+			LexiconUpdater updater = new LexiconUpdater( lexicon );
 
 			Iterator<String> prefixIter = getLines( "goodNsPrefixes.txt" ).iterator();
 			assertTrue( prefixIter.hasNext() );
@@ -72,7 +72,7 @@ public class LexiconUpdaterTest extends RippleTestCase
 				i++;
 				String nsUri = nsBase + i + "#";
 				Namespace ns = new NamespaceImpl( prefix, nsUri );
-				updater.namespaceSink().put( ns );
+				updater.adderSink().namespaceSink().put( ns );
 
 				assertEquals( lexicon.resolveNamespacePrefix( prefix ), nsUri );
 			}

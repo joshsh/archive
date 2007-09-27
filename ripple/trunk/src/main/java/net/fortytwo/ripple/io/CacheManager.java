@@ -20,6 +20,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 
@@ -89,7 +90,10 @@ public final class CacheManager
 
 		persistCacheMetadata( mc );
 
-		RdfUtils.write( mc.getModel().getRepository(), out, format );
+		SesameOutputAdapter soa = RdfUtils.createOutputAdapter( out, format );
+		soa.startRDF();
+		mc.getSource().writeTo( soa );
+		soa.endRDF();
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -101,7 +105,7 @@ public final class CacheManager
 	private static void persistCacheMetadata( final ModelConnection mc )
 		throws RippleException
 	{
-		Dereferencer dereferencer = mc.getModel().getDereferencer();
+		Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
 
 		mc.removeStatementsAbout( rplCacheRoot, null );
 
@@ -125,7 +129,7 @@ public final class CacheManager
 	private static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
-		final Dereferencer dereferencer = mc.getModel().getDereferencer();
+		final Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
 
 		Sink<RdfValue> successMemoSink = new Sink<RdfValue>()
 		{

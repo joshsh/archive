@@ -203,3 +203,7 @@ mo:.
 <http://dbtune.org:2020/sparql/?query=describe%20%3Chttp://dbtune.org/magnatune/album/lorence-winter%3E>
 <http://dbtune.org:2105/sparql/?query=describe%20%3Chttp://dbtune.org/jamendo/artist/1003%3E>
 <http://dbtune.org:2105/sparql/?query=describe%20%3Chttp://dbtune.org/jamendo/artist/1004%3E>
+
+
+# Mopy (a tool designed for use with the Music Ontology):
+#     http://motools.sourceforge.net/mopyreadme.html

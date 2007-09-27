@@ -18,16 +18,15 @@ import java.net.URLConnection;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 
 import org.apache.log4j.Logger;
 
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
+import org.openrdf.sail.Sail;
 import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 
@@ -39,21 +38,19 @@ public final class RdfUtils
 	{
 	}
 
-	public static Repository createMemoryStoreRepository()
+	public static Sail createMemoryStoreSail()
 		throws RippleException
 	{
 		try
 		{
-			Repository repository = Ripple.useInference()
-				? new SailRepository(
-					new MemoryStoreRDFSInferencer(
-						new MemoryStore() ) )
-				: new SailRepository(
-					new MemoryStore() );
+			Sail sail = Ripple.useInference()
+				? new MemoryStoreRDFSInferencer(
+					new MemoryStore() )
+				: new MemoryStore();
 
-			repository.initialize();
+			sail.initialize();
 
-			return repository;
+			return sail;
 		}
 
 		catch ( Throwable t )
@@ -181,29 +178,27 @@ public final class RdfUtils
 		return read( url, sa, baseUri, null );
 	}
 
-	// Note: not thread-safe with respect to the repository.
-	public static void write( final Repository repo,
-								final OutputStream out,
-								final RDFFormat format )
+	public static SesameOutputAdapter createOutputAdapter(
+			final OutputStream out,
+			final RDFFormat format )
 		throws RippleException
 	{
+		RDFWriter writer;
+
 		try
 		{
-			RepositoryConnection rc = repo.getConnection();
-
 			// Note: a comment by Jeen suggests that a new writer should be created
 			//       for each use:
 			//       http://www.openrdf.org/forum/mvnforum/viewthread?thread=785#3159
-			RDFWriter writer = Rio.createWriter( format, out );
-			rc.export( writer );
-
-			rc.close();
+			writer = Rio.createWriter( format, out );
 		}
 
 		catch ( Throwable t )
 		{
 			throw new RippleException( t );
 		}
+
+		return new SesameOutputAdapter( writer );
 	}
 
 	public static RDFFormat findFormat( final String name )

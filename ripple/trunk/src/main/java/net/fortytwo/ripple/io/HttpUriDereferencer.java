@@ -31,8 +31,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
 
 // Note: throughout this implementation, both the caching context of a URI and
 //       its associated web location are the same as its success or failure 'memo'.
@@ -249,6 +247,7 @@ public void dereference( final URI uri, final ModelConnection mc )
 	void filter( final String ns, final URI context, final ModelConnection mc )
 		throws RippleException
 	{
+/* TODO
 		RepositoryConnection conn = mc.getRepositoryConnection();
 
 		RepositoryResult<Statement> stmtIter = null;
@@ -258,7 +257,7 @@ public void dereference( final URI uri, final ModelConnection mc )
 		try
 		{
 			stmtIter = conn.getStatements(
-				null, null, null, /*context,*/ Ripple.useInference() );
+				null, null, null, Ripple.useInference() );
 
 			while ( stmtIter.hasNext() )
 			{
@@ -294,6 +293,7 @@ public void dereference( final URI uri, final ModelConnection mc )
 		}
 
 		LOGGER.info( "Removed " + count + " disallowed statement(s) from context " + ns + "." );
+*/
 	}
 
 	public void dereference( final RdfValue rv, final ModelConnection mc )

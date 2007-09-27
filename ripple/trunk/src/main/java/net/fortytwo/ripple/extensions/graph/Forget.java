@@ -40,7 +40,7 @@ public class Forget extends PrimitiveFunction
 
 		v = stack.getFirst();
 
-		mc.getModel().getDereferencer().forget( v.toRdf( mc ), mc );
+		mc.getModel().getSail().getDereferencer().forget( v.toRdf( mc ), mc );
 
 		// Note: the stack itself has not been altered.
 		sink.put( stack );

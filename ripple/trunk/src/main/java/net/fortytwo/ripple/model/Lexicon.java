@@ -44,7 +44,7 @@ public class Lexicon
 
 	public Lexicon( final Model model ) throws RippleException
 	{
-		valueFactory = model.getRepository().getValueFactory();
+valueFactory = model.getSail().getValueFactory();
 
 		createKeywordMap( model );
 

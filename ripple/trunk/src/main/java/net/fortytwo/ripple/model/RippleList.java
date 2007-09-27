@@ -168,8 +168,8 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	{
 		if ( null == rdfEquivalent )
 		{
-System.out.println( "mc.getRdfSink() = " + mc.getRdfSink() );
-			putRdfStatements( mc.getRdfSink().statementSink(), mc );
+net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImporter( mc );
+			putRdfStatements( importer.statementSink(), mc );
 		}
 
 		return rdfEquivalent;
@@ -630,7 +630,7 @@ System.out.println( "    putting first statement" );
 		{
 			public void put( final RdfValue v ) throws RippleException
 			{
-				sink.put( mc.getValueFactory().createStatement(
+				sink.put( mc.createStatement(
 					headVal, RDF.FIRST, v.getRdfValue() ) );
 			}
 		};
@@ -639,7 +639,7 @@ System.out.println( "    putting first statement" );
 		{
 			public void put( final RdfValue v ) throws RippleException
 			{
-				sink.put( mc.getValueFactory().createStatement(
+				sink.put( mc.createStatement(
 					headVal, RDF.REST, v.getRdfValue() ) );
 
 				// Recurse.
@@ -649,7 +649,7 @@ System.out.println( "    putting first statement" );
 
 		// Annotate the head of the list with a type, but don't bother
 		// annotating every node in the list.
-		sink.put( mc.getValueFactory().createStatement(
+		sink.put( mc.createStatement(
 			headVal, RDF.TYPE, RDF.LIST ) );
 
 		mc.multiply( head, RDF_FIRST, firstSink );

@@ -28,8 +28,6 @@ public class RdfImporter implements RdfSink
 	public RdfImporter( final ModelConnection mc,
 						final Resource... contexts )
 	{
-		final RdfSink sink = mc.getRdfSink();
-
 		final boolean override = Ripple.preferNewestNamespaceDefinitions();
 
 		stSink = new Sink<Statement>()
@@ -37,7 +35,6 @@ public class RdfImporter implements RdfSink
 			public void put( final Statement st ) throws RippleException
 			{
 				mc.add( st, contexts );
-				sink.statementSink().put( st );
 			}
 		};
 
@@ -46,7 +43,6 @@ public class RdfImporter implements RdfSink
 			public void put( final Namespace ns ) throws RippleException
 			{
 				mc.setNamespace( ns.getPrefix(), ns.getName(), override );
-				sink.namespaceSink().put( ns );
 			}
 		};
 
@@ -54,7 +50,6 @@ public class RdfImporter implements RdfSink
 		{
 			public void put( final String comment ) throws RippleException
 			{
-				sink.commentSink().put( comment );
 			}
 		};
 	}

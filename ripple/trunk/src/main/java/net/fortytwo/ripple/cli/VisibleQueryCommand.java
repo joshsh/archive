@@ -29,6 +29,8 @@ import net.fortytwo.ripple.util.Switch;
 import net.fortytwo.ripple.util.SynchronizedSink;
 import net.fortytwo.ripple.util.Tee;
 
+import org.openrdf.model.Statement;
+
 public class VisibleQueryCommand extends Command
 {
 	private ListAst ast;
@@ -119,7 +121,8 @@ nilSource.put( RippleList.NIL );
 
 		try
 		{
-			mc.getModel().getDereferencer().dereference( r, mc );
+mc.getStatements( r, null, null, new NullSink<Statement>() );
+//			mc.getModel().getDereferencer().dereference( r, mc );
 		}
 
 		catch ( RippleException e )

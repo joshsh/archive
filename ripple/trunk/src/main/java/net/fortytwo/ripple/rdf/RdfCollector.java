@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Source;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
-public class RdfCollector implements RdfSink, RdfSource
+public class RdfCollector extends RdfSource implements RdfSink
 {
 	private Collector<Statement> statements;
 	private Collector<Namespace> namespaces;

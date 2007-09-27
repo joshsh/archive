@@ -2,15 +2,11 @@ package net.fortytwo.ripple.rdf.sail;
 
 import info.aduna.iteration.CloseableIteration;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
@@ -38,9 +34,6 @@ public class LinkedDataSailConnection implements SailConnection
 	private static final Logger LOGGER
 		= Logger.getLogger( LinkedDataSailConnection.class );
 
-	private static Set<LinkedDataSailConnection> openConnections
-		= new LinkedHashSet<LinkedDataSailConnection>();
-
 	private String name = null;
 	private boolean open = false;
 
@@ -50,8 +43,6 @@ public class LinkedDataSailConnection implements SailConnection
 	private Set<SailConnectionListener> listeners = null;
 
 	private Dereferencer dereferencer;
-
-	private TaskSet taskSet = new TaskSet();
 
 	private RdfDiffSink inputSink, sparqlUpdateSink;
 
@@ -77,11 +68,6 @@ public class LinkedDataSailConnection implements SailConnection
 sparqlUpdateSink = inputSink;
 
 		open = true;
-
-		synchronized ( openConnections )
-		{
-			openConnections.add( this );
-		}
 	}
 
 	// Package-level use only.
@@ -153,25 +139,9 @@ sparqlUpdateSink = inputSink;
 	{
 		commit();
 
-		// Complete any still-executing tasks.
-		try
-		{
-			taskSet.waitUntilEmpty();
-		}
-
-		catch ( RippleException e )
-		{
-			throw new SailException( e );
-		}
-
 		closeLocalStoreConnection( false );
 
 		open = false;
-
-		synchronized ( openConnections )
-		{
-			openConnections.remove( this );
-		}
 	}
 
 	public void commit()
@@ -180,7 +150,7 @@ sparqlUpdateSink = inputSink;
 // TODO -- flushes data through the SPARUL pipeline
 	}
 
-	public CloseableIteration<? extends BindingSet,QueryEvaluationException> evaluate(
+	public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
 			final TupleExpr tupleExpr,
 			final BindingSet bindings,
 			final boolean includeInferred )
@@ -189,7 +159,7 @@ sparqlUpdateSink = inputSink;
 		throw new SailException( "this method is not implemented" );
 	}
 
-	public CloseableIteration<? extends Resource,SailException> getContextIDs()
+	public CloseableIteration<? extends Resource, SailException> getContextIDs()
 		throws SailException
 	{
 		throw new SailException( "this method is not implemented" );
@@ -202,14 +172,14 @@ sparqlUpdateSink = inputSink;
 		return localStoreConnection.getNamespace( prefix );
 	}
 
-	public CloseableIteration<? extends Namespace,SailException> getNamespaces()
+	public CloseableIteration<? extends Namespace, SailException> getNamespaces()
 		throws SailException
 	{
 		// Note: only committed namespaces will match.
 		return localStoreConnection.getNamespaces();
 	}
 
-	public CloseableIteration<? extends Statement,SailException> getStatements(
+	public CloseableIteration<? extends Statement, SailException> getStatements(
 			final Resource subj,
 			final URI pred,
 			final Value obj,
@@ -329,63 +299,6 @@ sparqlUpdateSink = inputSink;
 
 	////////////////////////////////////////////////////////////////////////////
 
-// FIXME: this should probably be removed, along with openConnections and name
-	public static List<String> listOpenConnections()
-	{
-		synchronized ( openConnections )
-		{
-			List<String> names = new ArrayList<String>( openConnections.size() );
-
-			Iterator<LinkedDataSailConnection> i = openConnections.iterator();
-			while ( i.hasNext() )
-			{
-				names.add( i.next().name );
-			}
-
-			return names;
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	private void openLocalStoreConnection()
-		throws SailException
-	{
-		localStoreConnection = localStore.getConnection();
-	}
-
-	private void closeLocalStoreConnection( final boolean rollback )
-		throws SailException
-	{
-		if ( localStoreConnection.isOpen() )
-		{
-			if ( rollback )
-			{
-				localStoreConnection.rollback();
-			}
-
-			localStoreConnection.close();
-		}
-
-		else
-		{
-			// Don't throw an exception: we could easily end up in a loop.
-			LOGGER.error( "tried to close an already-closed connection" );
-		}
-	}
-
-	/**
-	 * Attempts to return the connection to a normal state after an Exception
-	 * has been thrown.
-	 */
-	private void reset( final boolean rollback ) throws SailException
-	{
-		closeLocalStoreConnection( rollback );
-		openLocalStoreConnection();
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
 	// Package-level use only.
 	void addNamespace( final Namespace ns )
 		throws RippleException
@@ -501,6 +414,42 @@ sparqlUpdateSink = inputSink;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+
+	private void openLocalStoreConnection()
+		throws SailException
+	{
+		localStoreConnection = localStore.getConnection();
+	}
+
+	private void closeLocalStoreConnection( final boolean rollback )
+		throws SailException
+	{
+		if ( localStoreConnection.isOpen() )
+		{
+			if ( rollback )
+			{
+				localStoreConnection.rollback();
+			}
+
+			localStoreConnection.close();
+		}
+
+		else
+		{
+			// Don't throw an exception: we could easily end up in a loop.
+			LOGGER.error( "tried to close an already-closed connection" );
+		}
+	}
+
+	/**
+	 * Attempts to return the connection to a normal state after an Exception
+	 * has been thrown.
+	 */
+	private void reset( final boolean rollback ) throws SailException
+	{
+		closeLocalStoreConnection( rollback );
+		openLocalStoreConnection();
+	}
 
 	private void dereference( final URI uri )
 	{

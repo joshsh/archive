@@ -70,13 +70,8 @@ public class QueryEngine
 	public ModelConnection getConnection( final String name )
 		throws RippleException
 	{
-		final ModelConnection mc = ( null == name )
-			? new ModelConnection( model )
-			: new ModelConnection( model, name );
-
-		mc.setRdfSink( new LexiconUpdater( lexicon, new RdfNullSink() ) );
-
-		return mc;
+		return new ModelConnection(
+			model, name, new LexiconUpdater( lexicon ) );
 	}
 
 	public Evaluator getEvaluator()
@@ -189,9 +184,12 @@ public class QueryEngine
 
 	private void initializeLexicon() throws RippleException
 	{
-		LexiconUpdater updater = new LexiconUpdater( lexicon, new RdfNullSink() );
+		LexiconUpdater updater = new LexiconUpdater( lexicon );
 
-		model.readAll( updater );
+		ModelConnection mc = getConnection();
+		mc.getStatements( null, null, null, updater.adderSink().statementSink() );
+// TODO: namespaces
+		mc.close();
 	}
 }
 

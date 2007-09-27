@@ -27,12 +27,11 @@ public class LinkedDataSail implements Sail
 	/**
 	 * @param localStore  (should be initialized before this object is used)
 	 */
-	public LinkedDataSail( final Sail localStore )
+	public LinkedDataSail( final Sail localStore, final UrlFactory urlFactory )
 		throws RippleException
 	{
 		this.localStore = localStore;
 
-		UrlFactory urlFactory = new UrlFactory();
 		dereferencer = new HttpUriDereferencer( urlFactory );
 
 		// Don't bother trying to dereference terms in these common namespaces.
@@ -96,16 +95,17 @@ return null;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public SailConnection getConnection( final RdfDiffSink listenerSink )
+	// Extended API
+	public LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
 		return new LinkedDataSailConnection( localStore, dereferencer, listenerSink );
 	}
 
-// 	public Dereferencer getDereferencer()
-// 	{
-// 		return dereferencer;
-// 	}
+public Dereferencer getDereferencer()
+{
+	return dereferencer;
+}
 }
 
 // kate: tab-width 4

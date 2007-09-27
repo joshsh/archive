@@ -12,7 +12,7 @@ package net.fortytwo.ripple.test;
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
-import org.openrdf.repository.Repository;
+import org.openrdf.sail.Sail;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -136,9 +136,9 @@ public abstract class RippleTestCase extends TestCase
 		if ( null == model )
 		{
 			// Warning: we never call shutDown() on this repository.
-			Repository repository = RdfUtils.createMemoryStoreRepository();
+			Sail sail = RdfUtils.createMemoryStoreSail();
 
-			model = new Model( repository, "Unit Test Model" );
+			model = new Model( sail, "Unit Test Model" );
 		}
 
 		return model;

@@ -34,8 +34,10 @@ import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
 
-import org.openrdf.repository.Repository;
+	import org.openrdf.repository.Repository;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.sail.Sail;
+
 
 /**
  * Demo application.
@@ -56,10 +58,12 @@ public final class Demo
 	{
 //net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
-		Repository repository = RdfUtils.createMemoryStoreRepository();
+		Sail sail = RdfUtils.createMemoryStoreSail();
+//		Repository repository = RdfUtils.createMemoryStoreRepository();
 
 		// Attach a Ripple model to the repository.
-		Model model = new Model( repository, "Demo Model" );
+		Model model = new Model( sail, "Demo Model" );
+//		Model model = new Model( repository, "Demo Model" );
 
 		// Attach a query engine to the model.
 		Evaluator evaluator = new LazyEvaluator();
@@ -148,10 +152,10 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 //			ModelConnection.closeOpenConnections();
 		}
 
-		// Shut down the Sesame repository.
 		try
 		{
-			repository.shutDown();
+			sail.shutDown();
+//			repository.shutDown();
 		}
 
 		catch ( Throwable t )
