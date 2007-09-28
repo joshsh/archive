@@ -48,11 +48,11 @@ public class LinkedDataSailConnection implements SailConnection
 	private RdfDiffSink apiInputSink;
 
 	// Buffering input to the wrapped SailConnection avoids deadlocks.
-	private RdfDiffBuffer inputBuffer;
+	private RdfDiffBuffer inputSink;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void addConnectionListener( final SailConnectionListener listener )
+	public synchronized void addConnectionListener( final SailConnectionListener listener )
 	{
 		if ( null == listeners )
 		{
@@ -62,7 +62,7 @@ public class LinkedDataSailConnection implements SailConnection
 		listeners.add( listener );
 	}
 
-	public void addStatement( final Resource subj,
+	public synchronized void addStatement( final Resource subj,
 								final URI pred,
 								final Value obj,
 								final Resource... contexts )
@@ -134,20 +134,21 @@ public class LinkedDataSailConnection implements SailConnection
 		throw new SailException( "this method is not implemented" );
 	}
 
-	public String getNamespace( final String prefix )
+	public synchronized String getNamespace( final String prefix )
 		throws SailException
 	{
 		// Note: only committed namespaces will match.
 		return localStoreConnection.getNamespace( prefix );
 	}
 
-	public CloseableIteration<? extends Namespace, SailException> getNamespaces()
+	public synchronized CloseableIteration<? extends Namespace, SailException> getNamespaces()
 		throws SailException
 	{
 		// Note: only committed namespaces will match.
 		return localStoreConnection.getNamespaces();
 	}
 
+// Note: not sychronized, on account of URI dereferencing
 	public CloseableIteration<? extends Statement, SailException> getStatements(
 			final Resource subj,
 			final URI pred,
@@ -171,8 +172,11 @@ public class LinkedDataSailConnection implements SailConnection
 		// Now that the new RDF data is in the local store, query it.
 //System.out.println( "getStatements(" + subj + ", " + pred + ", " + obj + ", " + includeInferred + ", " + contexts + ")" );
 //System.out.println( "    # contexts = " + contexts.length );
-		return localStoreConnection.getStatements(
-			subj, pred, obj, includeInferred, contexts );
+		synchronized ( this )
+		{
+			return localStoreConnection.getStatements(
+				subj, pred, obj, includeInferred, contexts );
+		}
 	}
 
 	public boolean isOpen()
@@ -181,7 +185,7 @@ public class LinkedDataSailConnection implements SailConnection
 		return open;
 	}
 
-	public void removeConnectionListener( final SailConnectionListener listener )
+	public synchronized void removeConnectionListener( final SailConnectionListener listener )
 	{
 		if ( null != listeners )
 		{
@@ -190,7 +194,7 @@ public class LinkedDataSailConnection implements SailConnection
 	}
 
 	// Note: only committed namespaces will be affected.
-	public void removeNamespace( final String prefix )
+	public synchronized void removeNamespace( final String prefix )
 		throws SailException
 	{
 		Sink<Namespace> sink = apiInputSink.subtractorSink().namespaceSink();
@@ -208,7 +212,7 @@ public class LinkedDataSailConnection implements SailConnection
 	}
 
 	// Note: only committed statements will be affected.
-	public void removeStatements( final Resource subj,
+	public synchronized void removeStatements( final Resource subj,
 									final URI pred,
 									final Value obj,
 									final Resource... context )
@@ -247,7 +251,7 @@ public class LinkedDataSailConnection implements SailConnection
 // TODO
 	}
 
-	public void setNamespace( final String prefix, final String name )
+	public synchronized void setNamespace( final String prefix, final String name )
 		throws SailException
 	{
 		Sink<Namespace> sink = apiInputSink.adderSink().namespaceSink();
@@ -263,7 +267,7 @@ public class LinkedDataSailConnection implements SailConnection
 		}
 	}
 
-	public long size( final Resource... contexts )
+	public synchronized long size( final Resource... contexts )
 		throws SailException
 	{
 		// Number of committed statements.
@@ -287,11 +291,11 @@ public class LinkedDataSailConnection implements SailConnection
 
 		SailConnectionOutputAdapter adapter
 			= new SailConnectionOutputAdapter( this );
-		inputBuffer = new RdfDiffBuffer(
+		inputSink = new RdfDiffBuffer(
 			( null == listenerSink )
 				? adapter
 				: new RdfDiffTee( adapter, listenerSink ) );
-apiInputSink = inputBuffer;
+apiInputSink = inputSink;
 
 		open = true;
 	}
@@ -442,11 +446,11 @@ apiInputSink = inputBuffer;
 		}
 	}
 
-	private void commitInput() throws SailException
+	private synchronized void commitInput() throws SailException
 	{
 		try
 		{
-			inputBuffer.flush();
+			inputSink.flush();
 		}
 
 		catch ( RippleException e )
@@ -471,7 +475,7 @@ apiInputSink = inputBuffer;
 	{
 		try
 		{
-			dereferencer.dereference( uri, inputBuffer.adderSink() );
+			dereferencer.dereference( uri, inputSink.adderSink() );
 		}
 
 		catch ( RippleException e )

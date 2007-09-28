@@ -565,7 +565,7 @@ public SailConnection getSailConnection()
 
 			try
 			{
-				synchronized ( model )
+				//synchronized ( model )
 				{
 					CloseableIteration<? extends Statement, SailException> stmtIter
 						= sailConnection.getStatements(
@@ -601,7 +601,7 @@ public SailConnection getSailConnection()
 	{
 		try
 		{
-			synchronized ( model )
+			//synchronized ( model )
 			{
 				sailConnection.addStatement( st.getSubject(), st.getPredicate(), st.getObject(), contexts );
 			}
@@ -623,7 +623,7 @@ public SailConnection getSailConnection()
 
 		try
 		{
-			synchronized ( model )
+			//synchronized ( model )
 			{
 				sailConnection.addStatement( subjResource, predUri, objValue, contexts );
 			}
@@ -646,7 +646,7 @@ public SailConnection getSailConnection()
 		try
 		{
 // Does this remove the statement from ALL contexts?
-			synchronized ( model )
+			//synchronized ( model )
 			{
 				sailConnection.removeStatements( subjResource, predUri, objValue );
 			}
@@ -666,7 +666,7 @@ public SailConnection getSailConnection()
 
 		try
 		{
-			synchronized ( model )
+			//synchronized ( model )
 			{
 				if ( null == context )
 				{
@@ -694,11 +694,11 @@ public SailConnection getSailConnection()
 
 		try
 		{
-			synchronized ( model )
+			//synchronized ( model )
 			{
-					CloseableIteration<? extends Statement, SailException> stmtIter
-						= sailConnection.getStatements(
-							null, null, null, Ripple.useInference(), context );
+				CloseableIteration<? extends Statement, SailException> stmtIter
+					= sailConnection.getStatements(
+						null, null, null, Ripple.useInference(), context );
 
 				while ( stmtIter.hasNext() )
 				{
@@ -1038,7 +1038,7 @@ public SailConnection getSailConnection()
 //LOGGER.info( "### setting namespace: '" + prefix + "' to " + ns );
 		try
 		{
-			synchronized ( model )
+			//synchronized ( model )
 			{
 				if ( override || null == sailConnection.getNamespace( prefix ) )
 				{
@@ -1139,7 +1139,7 @@ public SailConnection getSailConnection()
 
 		try
 		{
-			synchronized ( model )
+			//synchronized ( model )
 			{
 				nsIter = sailConnection.getNamespaces();
 			}
@@ -1196,30 +1196,34 @@ public SailConnection getSailConnection()
 			// Perform the query and collect results.
 			try
 			{
-				synchronized ( model )
+				//synchronized ( model )
 				{
 					stmtIter = sailConnection.getStatements(
 						(Resource) rdfSubj, (URI) rdfPred, rdfObj, Ripple.useInference() );
 //stmtIter.enableDuplicateFilter();
-				}
 
-				while ( stmtIter.hasNext() )
-				{
-					buffer.put( stmtIter.next() );
+					while ( stmtIter.hasNext() )
+					{
+						buffer.put( stmtIter.next() );
+					}
+	
+					stmtIter.close();
 				}
-
-				stmtIter.close();
 			}
 
 			catch ( Throwable t )
 			{
 				try
 				{
-					stmtIter.close();
+					if ( null != stmtIter )
+					{
+						stmtIter.close();
+					}
 				}
 
 				catch ( Throwable t2 )
 				{
+					t2.printStackTrace( System.err );
 					System.exit( 1 );
 				}
 
