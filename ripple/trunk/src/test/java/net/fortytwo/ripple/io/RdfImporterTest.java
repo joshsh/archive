@@ -36,6 +36,7 @@ public class RdfImporterTest extends RippleTestCase
 			RdfImporter importer = new RdfImporter( mc, context );
 			SesameInputAdapter sc = new SesameInputAdapter( importer );
 			RdfUtils.read( is, sc, context.toString(), format );
+mc.commit();
 		}
 
 		void addGraph( final URL url,
@@ -47,6 +48,7 @@ public class RdfImporterTest extends RippleTestCase
 			RdfImporter importer = new RdfImporter( mc, context );
 			SesameInputAdapter sc = new SesameInputAdapter( importer );
 			RdfUtils.read( url, sc, context.toString(), format );
+mc.commit();
 		}
 
 		public void test()

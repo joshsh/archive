@@ -45,7 +45,7 @@ public class LinkedDataSailConnection implements SailConnection
 
 	private Dereferencer dereferencer;
 
-	private RdfDiffSink sparqlUpdateSink;
+	private RdfDiffSink apiInputSink;
 
 	// Buffering input to the wrapped SailConnection avoids deadlocks.
 	private RdfDiffBuffer inputBuffer;
@@ -68,7 +68,7 @@ public class LinkedDataSailConnection implements SailConnection
 								final Resource... contexts )
 		throws SailException
 	{
-		Sink<Statement> sink = sparqlUpdateSink.adderSink().statementSink();
+		Sink<Statement> sink = apiInputSink.adderSink().statementSink();
 
 		try
 		{
@@ -193,7 +193,7 @@ public class LinkedDataSailConnection implements SailConnection
 	public void removeNamespace( final String prefix )
 		throws SailException
 	{
-		Sink<Namespace> sink = sparqlUpdateSink.subtractorSink().namespaceSink();
+		Sink<Namespace> sink = apiInputSink.subtractorSink().namespaceSink();
 
 		try
 		{
@@ -214,7 +214,7 @@ public class LinkedDataSailConnection implements SailConnection
 									final Resource... context )
 		throws SailException
 	{
-		Sink<Statement> sink = sparqlUpdateSink.subtractorSink().statementSink();
+		Sink<Statement> sink = apiInputSink.subtractorSink().statementSink();
 
 		try
 		{
@@ -250,7 +250,7 @@ public class LinkedDataSailConnection implements SailConnection
 	public void setNamespace( final String prefix, final String name )
 		throws SailException
 	{
-		Sink<Namespace> sink = sparqlUpdateSink.adderSink().namespaceSink();
+		Sink<Namespace> sink = apiInputSink.adderSink().namespaceSink();
 
 		try
 		{
@@ -291,7 +291,7 @@ public class LinkedDataSailConnection implements SailConnection
 			( null == listenerSink )
 				? adapter
 				: new RdfDiffTee( adapter, listenerSink ) );
-sparqlUpdateSink = inputBuffer;
+apiInputSink = inputBuffer;
 
 		open = true;
 	}

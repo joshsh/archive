@@ -54,6 +54,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.GraphQueryResult;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFHandler;
+import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
 public class ModelConnection
@@ -129,6 +130,19 @@ public class ModelConnection
 		openSailConnection();
 	}
 
+	public void commit() throws RippleException
+	{
+		try
+		{
+			sailConnection.commit();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+	}
+
 	// Establish a new Sesame connection.
 	private void openSailConnection()
 		throws RippleException
@@ -179,6 +193,11 @@ public class ModelConnection
 		// Don't throw an exception: we could easily end up in a loop.
 		LOGGER.error( "tried to close an already-closed connection" );
 	}
+
+public SailConnection getSailConnection()
+{
+	return sailConnection;
+}
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -537,7 +556,6 @@ public class ModelConnection
 								final Sink<RdfValue> sink )
 		throws RippleException
 	{
-/* TODO
 		Set<Value> predicates = new HashSet<Value>();
 		Value v = subject.toRdf( this ).getRdfValue();
 
@@ -547,11 +565,10 @@ public class ModelConnection
 
 			try
 			{
-				synchronized ( sailConnection )
+				synchronized ( model )
 				{
-					RepositoryResult<Statement> stmtIter
+					CloseableIteration<? extends Statement, SailException> stmtIter
 						= sailConnection.getStatements(
-//                    subject, null, null, model, includeInferred );
 							subjRdf, null, null, Ripple.useInference() );
 
 					while ( stmtIter.hasNext() )
@@ -575,7 +592,6 @@ public class ModelConnection
 		{
 			sink.put( new RdfValue( iter.next() ) );
 		}
-*/
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -676,14 +692,13 @@ public class ModelConnection
 	{
 		int count = 0;
 
-/* TODO
 		try
 		{
-			synchronized ( sailConnection )
+			synchronized ( model )
 			{
-				RepositoryResult<Statement> stmtIter
-					= sailConnection.getStatements(
-						null, null, null, Ripple.useInference(), context );
+					CloseableIteration<? extends Statement, SailException> stmtIter
+						= sailConnection.getStatements(
+							null, null, null, Ripple.useInference(), context );
 
 				while ( stmtIter.hasNext() )
 				{
@@ -697,10 +712,9 @@ public class ModelConnection
 
 		catch ( Throwable t )
 		{
-				reset( true );
-				throw new RippleException( t );
+			reset( true );
+			throw new RippleException( t );
 		}
-*/
 
 		return count;
 	}
@@ -1045,148 +1059,6 @@ public class ModelConnection
 		throws RippleException
 	{
 		setNamespace( prefix, ns.toString(), override );
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	// Hackishly find all terms in the given namespace which are the subject
-	// of statements.
-	private Set<URI> findSubjectsInNamespace( final String ns )
-		throws RippleException
-	{
-		Set<URI> subjects = new HashSet<URI>();
-
-/* TODO
-		try
-		{
-			synchronized ( sailConnection )
-			{
-				RepositoryResult<Statement> stmtIter
-					= sailConnection.getStatements(
-						null, null, null, false );
-	
-				while ( stmtIter.hasNext() )
-				{
-					Resource subj = stmtIter.next().getSubject();
-
-					if ( subj instanceof URI
-						&& subj.toString().startsWith( ns ) )
-					{
-						subjects.add( (URI) subj );
-					}
-				}
-	
-				stmtIter.close();
-			}
-		}
-
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-*/
-
-		return subjects;
-	}
-
-	private class SpecialSubgraphHandler implements Sink<Resource>
-	{
-		private Set<Resource> visited;
-		private RDFHandler handler;
-
-		public SpecialSubgraphHandler( final RDFHandler handler )
-		{
-			this.handler = handler;
-			visited = new HashSet<Resource>();
-		}
-
-		public void put( final Resource r )
-			throws RippleException
-		{
-			if ( visited.contains( r ) )
-			{
-				return;
-			}
-
-			else
-			{
-				visited.add( r );
-			}
-
-			try
-			{
-				synchronized ( sailConnection )
-				{
-/* TODO
-					RepositoryResult<Statement> stmtIter
-						= sailConnection.getStatements(
-							r, null, null, false );
-	
-					while ( stmtIter.hasNext() )
-					{
-						Statement st = stmtIter.next();
-	
-						// Add all statement about this Resource to the result graph.
-						handler.handleStatement( st );
-	
-						// Traverse to any neighboring blank nodes (but not to URIs).
-						Value obj = st.getObject();
-						if ( obj instanceof Resource
-								&& !( obj instanceof URI ) )
-						{
-							put( (Resource) obj );
-						}
-					}
-	
-					stmtIter.close();
-*/
-				}
-			}
-
-			catch ( Throwable t )
-			{
-				reset( true );
-				throw new RippleException( t );
-			}
-		}
-	}
-
-	public void exportNs( final String nsPrefix, final OutputStream out )
-		throws RippleException
-	{
-		Set<URI> subjects = findSubjectsInNamespace( nsPrefix );
-
-		RDFHandler handler = Rio.createWriter( Ripple.exportFormat(), out );
-
-		try
-		{
-			handler.startRDF();
-		}
-
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-
-		SpecialSubgraphHandler ssh = new SpecialSubgraphHandler( handler );
-
-		for ( Iterator<URI> subjIter = subjects.iterator(); subjIter.hasNext(); )
-		{
-			ssh.put( subjIter.next() );
-		}
-
-		try
-		{
-			handler.endRDF();
-		}
-
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////

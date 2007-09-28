@@ -96,6 +96,7 @@ public class ModelConnectionTest extends RippleTestCase
 				new RdfValue( uris[i] ),
 				new RdfValue( uris[j] ),
 				new RdfValue( uris[k] ), context );
+mc.commit();
 
 			long count = mc.countStatements( context );
 			assertEquals( count, 27 );
@@ -118,6 +119,7 @@ public class ModelConnectionTest extends RippleTestCase
 				new RdfValue( uri1 ),
 				new RdfValue( uri1 ),
 				new RdfValue( uri1 ) );
+mc.commit();
 			assertEquals( mc.countStatements( ctxA ), 1 );
 		}
 	}
