@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -47,12 +47,12 @@ public class Branch extends PrimitiveFunction
 		stack = stack.getRest();
 
 		RippleValue result;
-		if ( b.equals( StackExtension.getTrueValue() ) )
+		if ( b.equals( StackLibrary.getTrueValue() ) )
 		{
 			result = trueProg;
 		}
 
-		else if ( b.equals( StackExtension.getFalseValue() ) )
+		else if ( b.equals( StackLibrary.getFalseValue() ) )
 		{
 			result = falseProg;
 		}

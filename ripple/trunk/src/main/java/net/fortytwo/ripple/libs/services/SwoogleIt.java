@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.services;
+package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;

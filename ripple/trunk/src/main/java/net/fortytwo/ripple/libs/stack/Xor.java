@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -43,14 +43,14 @@ public class Xor extends PrimitiveFunction
 		y = stack.getFirst();
 		stack = stack.getRest();
 
-		RippleValue trueValue = StackExtension.getTrueValue();
+		RippleValue trueValue = StackLibrary.getTrueValue();
 
 		// Note: everything apart from joy:true is considered false.
 		boolean xb = ( 0 == x.compareTo( trueValue ) );
 		boolean yb = ( 0 == y.compareTo( trueValue ) );
 		RippleValue result = ( ( xb && !yb ) || ( !xb && yb ) )
 			? trueValue
-			: StackExtension.getFalseValue();
+			: StackLibrary.getFalseValue();
 
 		sink.put( new RippleList( result, stack ) );
 	}

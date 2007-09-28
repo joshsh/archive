@@ -7,14 +7,14 @@
  */
 
 
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.libs.etc;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Extension;
+import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class EtcExtension extends Extension
+public class EtcLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/etc#";
 

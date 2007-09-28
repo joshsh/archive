@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -46,7 +46,7 @@ public class Choice extends PrimitiveFunction
 		stack = stack.getRest();
 
 		// Note: everything apart from joy:true is considered false.
-		RippleValue result = b.equals( StackExtension.getTrueValue() ) ? t : f;
+		RippleValue result = b.equals( StackLibrary.getTrueValue() ) ? t : f;
 
 		sink.put( new RippleList( result, stack ) );
 	}

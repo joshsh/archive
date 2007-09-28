@@ -20,7 +20,7 @@ import org.openrdf.model.vocabulary.OWL;
 /**
  * RDF data and Java implementation of a library of primitive functions.
  */
-public abstract class Extension
+public abstract class Library
 {
 	private static final RdfValue OWL_SAMEAS = new RdfValue( OWL.SAMEAS );
 

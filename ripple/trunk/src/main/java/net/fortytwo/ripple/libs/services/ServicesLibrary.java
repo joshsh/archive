@@ -7,14 +7,14 @@
  */
 
 
-package net.fortytwo.ripple.extensions.services;
+package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Extension;
+import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class ServicesExtension extends Extension
+public class ServicesLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/services#";
 

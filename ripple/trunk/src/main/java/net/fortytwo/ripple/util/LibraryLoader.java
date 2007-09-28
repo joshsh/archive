@@ -17,11 +17,11 @@ import java.util.Iterator;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 
-public class ExtensionLoader extends ClassLoader
+public class LibraryLoader extends ClassLoader
 {
-	public ExtensionLoader()
+	public LibraryLoader()
 	{
-		super( ExtensionLoader.class.getClassLoader() );
+		super( LibraryLoader.class.getClassLoader() );
 	}
 
 	public void load( final UrlFactory uf, final ModelConnection mc )
@@ -33,7 +33,7 @@ public class ExtensionLoader extends ClassLoader
 			String className = namesIter.next();
 
 			Class c;
-			Extension ext;
+			Library ext;
 
 			try
 			{
@@ -47,7 +47,7 @@ public class ExtensionLoader extends ClassLoader
 
 			try
 			{
-				ext = (Extension) c.newInstance();
+				ext = (Library) c.newInstance();
 			}
 
 			catch ( InstantiationException e )

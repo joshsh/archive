@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.math;
+package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;

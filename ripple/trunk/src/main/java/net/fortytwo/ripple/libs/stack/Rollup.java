@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;

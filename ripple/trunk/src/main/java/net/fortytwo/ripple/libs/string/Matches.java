@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.string;
+package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -15,7 +15,7 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.extensions.stack.StackExtension;
+import net.fortytwo.ripple.libs.stack.StackLibrary;
 
 public class Matches extends PrimitiveFunction
 {
@@ -48,8 +48,8 @@ public class Matches extends PrimitiveFunction
 		try
 		{
 			result = ( s.matches( regex ) )
-				? StackExtension.getTrueValue()
-				: StackExtension.getFalseValue();
+				? StackLibrary.getTrueValue()
+				: StackLibrary.getFalseValue();
 			sink.put( new RippleList( result, stack ) );
 		}
 

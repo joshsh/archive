@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -50,7 +50,7 @@ public class Ifte extends PrimitiveFunction
 			.push( Operator.OP )
 			.push( trueProg )
 			.push( falseProg )
-			.push( StackExtension.getBranchValue() )
+			.push( StackLibrary.getBranchValue() )
 			.push( Operator.OP ) );
 	}
 }

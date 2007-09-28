@@ -18,7 +18,7 @@ import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSailConnection;
-import net.fortytwo.ripple.util.ExtensionLoader;
+import net.fortytwo.ripple.util.LibraryLoader;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
@@ -67,7 +67,7 @@ public LinkedDataSail getSail()
 		// evaluator.  This has the side-effect of making it a keyword.
 		bridge.add( Operator.OP, mc );
 
-		ExtensionLoader loader = new ExtensionLoader();
+		LibraryLoader loader = new LibraryLoader();
 
 		try
 		{

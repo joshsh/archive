@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -42,9 +42,9 @@ public class Not extends PrimitiveFunction
 		stack = stack.getRest();
 
 		// Note: everything apart from joy:true is considered false.
-		RippleValue result = ( 0 == x.compareTo( StackExtension.getTrueValue() ) )
-			? StackExtension.getFalseValue()
-			: StackExtension.getTrueValue();
+		RippleValue result = ( 0 == x.compareTo( StackLibrary.getTrueValue() ) )
+			? StackLibrary.getFalseValue()
+			: StackLibrary.getTrueValue();
 
 		sink.put( new RippleList( result, stack ) );
 	}

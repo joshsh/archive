@@ -17,7 +17,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.test.RippleTestCase;
 
-public class ExtensionTest extends RippleTestCase
+public class LibraryTest extends RippleTestCase
 {
 	private class PrimitiveAliasTest extends TestRunnable
 	{
@@ -28,20 +28,20 @@ public class ExtensionTest extends RippleTestCase
 
 			RdfValue dup05 = new RdfValue(
 				mc.createUri( "http://fortytwo.net/2007/05/ripple/stack#dup" ) );
-			RdfValue dup07 = new RdfValue(
+			RdfValue dup08 = new RdfValue(
 				mc.createUri( "http://fortytwo.net/2007/08/ripple/stack#dup" ) );
 
 			ModelBridge bridge = mc.getModel().getBridge();
 
 			RippleValue dup05Val = bridge.get( dup05 );
-			RippleValue dup07Val = bridge.get( dup07 );
+			RippleValue dup08Val = bridge.get( dup08 );
 
 			assertNotNull( dup05Val );
-			assertNotNull( dup07Val );
+			assertNotNull( dup08Val );
 			assertTrue( dup05Val instanceof PrimitiveFunction );
-			assertTrue( dup07Val instanceof PrimitiveFunction );
+			assertTrue( dup08Val instanceof PrimitiveFunction );
 
-			assertEquals( dup05Val, dup07Val );
+			assertEquals( dup05Val, dup08Val );
 
 			mc.close();
 		}

@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stack;
+package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -63,7 +63,7 @@ public class Has extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( new RippleList( has( list, x ) ? StackExtension.getTrueValue() : StackExtension.getFalseValue(), rest ) );
+				sink.put( new RippleList( has( list, x ) ? StackLibrary.getTrueValue() : StackLibrary.getFalseValue(), rest ) );
 			}
 		};
 

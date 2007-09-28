@@ -7,14 +7,14 @@
  */
 
 
-package net.fortytwo.ripple.extensions.graph;
+package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Extension;
+import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class GraphExtension extends Extension
+public class GraphLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/graph#";
 

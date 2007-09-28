@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.graph;
+package net.fortytwo.ripple.libs.graph;
 
 import java.net.URLConnection;
 

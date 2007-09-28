@@ -7,14 +7,14 @@
  */
 
 
-package net.fortytwo.ripple.extensions.stream;
+package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Extension;
+import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class StreamExtension extends Extension
+public class StreamLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/stream#";
 

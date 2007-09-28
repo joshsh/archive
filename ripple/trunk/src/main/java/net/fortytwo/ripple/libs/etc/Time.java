@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.etc;
+package net.fortytwo.ripple.libs.etc;
 
 import java.util.Date;
 
