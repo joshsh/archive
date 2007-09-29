@@ -29,12 +29,12 @@ import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.rdf.sail.LinkedDataSailConnection;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.NullSource;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.util.UniqueFilter;
 import net.fortytwo.ripple.control.Task;
 import net.fortytwo.ripple.control.TaskSet;
 
@@ -68,7 +68,7 @@ public class ModelConnection
 	private static Random rand = new Random();
 
 	private Model model;
-	private LinkedDataSailConnection sailConnection;
+	private SailConnection sailConnection;
 	private RdfDiffSink listenerSink;
 	private ValueFactory valueFactory;
 	private String name = null;
@@ -143,18 +143,14 @@ public class ModelConnection
 		}
 	}
 
-	// Establish a new Sesame connection.
-	private void openSailConnection()
+	private synchronized void openSailConnection()
 		throws RippleException
 	{
 		try
 		{
-			synchronized ( model )
-			{
-				sailConnection = ( null == listenerSink )
-					? (LinkedDataSailConnection) model.getSail().getConnection()
-					: model.getSail().getConnection( listenerSink );
-			}
+			sailConnection = ( null == listenerSink )
+				? model.getSail().getConnection()
+				: model.getSail().getConnection( listenerSink );
 		}
 
 		catch ( Throwable t )
@@ -163,25 +159,25 @@ public class ModelConnection
 		}
 	}
 
-	// Close the current Sesame connection.
-	private void closeSailConnection( final boolean rollback )
+	private synchronized void closeSailConnection( final boolean rollback )
 		throws RippleException
 	{
 		try
 		{
-			synchronized ( model )
+			if ( sailConnection.isOpen() )
 			{
-				if ( sailConnection.isOpen() )
+				if ( rollback )
 				{
-					if ( rollback )
-					{
-						sailConnection.rollback();
-					}
-	
-					sailConnection.close();
-	
-					return;
+					sailConnection.rollback();
 				}
+
+				sailConnection.close();
+			}
+
+			else
+			{
+				// Don't throw an exception: we could easily end up in a loop.
+				LOGGER.error( "tried to close an already-closed connection" );
 			}
 		}
 
@@ -189,12 +185,9 @@ public class ModelConnection
 		{
 			throw new RippleException( t );
 		}
-
-		// Don't throw an exception: we could easily end up in a loop.
-		LOGGER.error( "tried to close an already-closed connection" );
 	}
 
-public SailConnection getSailConnection()
+public synchronized SailConnection getSailConnection()
 {
 	return sailConnection;
 }
@@ -231,32 +224,6 @@ public SailConnection getSailConnection()
 	}
 
 	////////////////////////////////////////////////////////////////////////////
-
-	Resource castToResource( final Value v ) throws RippleException
-	{
-		if ( v instanceof Resource )
-		{
-			return (Resource) v;
-		}
-
-		else
-		{
-			throw new RippleException( "value " + v.toString() + " is not a Resource" );
-		}
-	}
-
-	private URI castToUri( final Value v ) throws RippleException
-	{
-		if ( v instanceof URI )
-		{
-			return (URI) v;
-		}
-
-		else
-		{
-			throw new RippleException( "value " + v.toString() + " is not a URI" );
-		}
-	}
 
 	private Literal castToLiteral( final Value v ) throws RippleException
 	{
@@ -333,10 +300,20 @@ public SailConnection getSailConnection()
 		return l.getLabel();
 	}
 
-	public URI uriValue( final RippleValue v )
+	public URI uriValue( final RippleValue rv )
 		throws RippleException
 	{
-		return castToUri( v.toRdf( this ).getRdfValue() );
+		Value v = rv.toRdf( this ).getRdfValue();
+
+		if ( v instanceof URI )
+		{
+			return (URI) v;
+		}
+
+		else
+		{
+			throw new RippleException( "value " + v.toString() + " is not a URI" );
+		}
 	}
 
 	/**
@@ -477,7 +454,12 @@ public SailConnection getSailConnection()
 	public void removeStatementsAbout( final URI subj )
 		throws RippleException
 	{
-/* TODO
+/*
+		Collector<Statement> stmts = new Collector<Statement>();
+
+		getStatements( new RdfValue( subj ), null, null, stmts );
+
+
 		try
 		{
 			Collection<Statement> stmts = new LinkedList<Statement>();
@@ -510,44 +492,21 @@ public SailConnection getSailConnection()
 */
 	}
 
-	// Note: this is a bit of a hack.  Ideally, the Model should handle all RDF queries.
-	public Collection<RippleValue> bagValue( final RippleValue head )
+	public void putContainerMembers( final RippleValue head, final Sink<RippleValue> sink )
 		throws RippleException
 	{
-		Collection<RippleValue> results = new LinkedList<RippleValue>();
-/* TODO
-		try
+		Sink<Statement> stSink = new Sink<Statement>()
 		{
-			boolean useInference = false;
-
-			synchronized ( sailConnection )
+			public void put( final Statement st ) throws RippleException
 			{
-				RepositoryResult<Statement> stmtIter
-					= sailConnection.getStatements(
-						castToResource( head.toRdf( this ).getRdfValue() ), null, null, useInference );
-	
-				while ( stmtIter.hasNext() )
+				if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
 				{
-					Statement st = stmtIter.next();
-					if ( '_' == st.getPredicate().getLocalName().charAt( 0 ) )
-					{
-						results.add( model.getBridge().get( new RdfValue( st.getObject() ) ) );
-					}
+					sink.put( new RdfValue( st.getObject() ) );
 				}
-	
-				stmtIter.close();
 			}
-		}
+		};
 
-		// Warning: the RepositoryResult may be left open.
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-*/
-
-		return results;
+		getStatements( head.toRdf( this ), null, null, stSink );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -556,55 +515,29 @@ public SailConnection getSailConnection()
 								final Sink<RdfValue> sink )
 		throws RippleException
 	{
-		Set<Value> predicates = new HashSet<Value>();
-		Value v = subject.toRdf( this ).getRdfValue();
-
-		if ( v instanceof Resource )
+		Sink<Statement> predSelector = new Sink<Statement>()
 		{
-			Resource subjRdf = (Resource) v;
+			Sink<RdfValue> predSink = new UniqueFilter<RdfValue>( sink );
 
-			try
+			public void put( final Statement st ) throws RippleException
 			{
-				//synchronized ( model )
-				{
-					CloseableIteration<? extends Statement, SailException> stmtIter
-						= sailConnection.getStatements(
-							subjRdf, null, null, Ripple.useInference() );
-
-					while ( stmtIter.hasNext() )
-					{
-						predicates.add( stmtIter.next().getPredicate() );
-					}
-
-					stmtIter.close();
-				}
+// TODO: don't create a new RdfValue before checking for uniqueness
+				predSink.put( new RdfValue( st.getPredicate() ) );
 			}
+		};
 
-			catch ( Throwable t )
-			{
-				reset( true );
-				throw new RippleException( t );
-			}
-		}
-
-		Iterator<Value> iter = predicates.iterator();
-		while ( iter.hasNext() )
-		{
-			sink.put( new RdfValue( iter.next() ) );
-		}
+		getStatements( subject.toRdf( this ), null, null, predSelector );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
+// FIXME: Statements should be absent from the ModelConnection API
 	public void add( final Statement st, final Resource... contexts )
 		throws RippleException
 	{
 		try
 		{
-			//synchronized ( model )
-			{
-				sailConnection.addStatement( st.getSubject(), st.getPredicate(), st.getObject(), contexts );
-			}
+			sailConnection.addStatement( st.getSubject(), st.getPredicate(), st.getObject(), contexts );
 		}
 
 		catch ( Throwable t )
@@ -614,79 +547,91 @@ public SailConnection getSailConnection()
 		}
 	}
 
-	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj, final Resource... contexts )
+	public void add( final RippleValue subj, final RippleValue pred, final RippleValue obj )
 		throws RippleException
 	{
-		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
-		URI predUri = castToUri( pred.toRdf( this ).getRdfValue() );
+		Value subjValue = subj.toRdf( this ).getRdfValue();
+		Value predValue = pred.toRdf( this ).getRdfValue();
 		Value objValue = obj.toRdf( this ).getRdfValue();
+
+		if ( !( subjValue instanceof Resource )
+				|| !( predValue instanceof URI ) )
+		{
+			return;
+		}
 
 		try
 		{
-			//synchronized ( model )
-			{
-				sailConnection.addStatement( subjResource, predUri, objValue, contexts );
-			}
+			sailConnection.addStatement(
+				(Resource) subjValue, (URI) predValue, objValue );
 		}
 
-		catch ( Throwable t )
+		catch ( SailException e )
 		{
 			reset( true );
-			throw new RippleException( t );
+			throw new RippleException( e );
 		}
 	}
 
 	public void remove( final RippleValue subj, final RippleValue pred, final RippleValue obj )
 		throws RippleException
 	{
-		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
-		URI predUri = castToUri( pred.toRdf( this ).getRdfValue() );
+		Value subjValue = subj.toRdf( this ).getRdfValue();
+		Value predValue = pred.toRdf( this ).getRdfValue();
 		Value objValue = obj.toRdf( this ).getRdfValue();
+
+		if ( !( subjValue instanceof Resource )
+				|| !( predValue instanceof URI ) )
+		{
+			return;
+		}
 
 		try
 		{
 // Does this remove the statement from ALL contexts?
-			//synchronized ( model )
-			{
-				sailConnection.removeStatements( subjResource, predUri, objValue );
-			}
+			sailConnection.removeStatements(
+				(Resource) subjValue, (URI) predValue, objValue );
 		}
 
-		catch ( Throwable t )
+		catch ( SailException e )
 		{
 			reset( true );
-			throw new RippleException( t );
+			throw new RippleException( e );
 		}
 	}
 
+// FIXME: URIs should be absent from the ModelConnection API
 	public void removeStatementsAbout( final RdfValue subj, final URI context )
 		throws RippleException
 	{
-		Resource subjResource = castToResource( subj.toRdf( this ).getRdfValue() );
+		Value subjValue = subj.toRdf( this ).getRdfValue();
+
+		if ( !( subjValue instanceof Resource ) )
+		{
+			return;
+		}
 
 		try
 		{
-			//synchronized ( model )
+			if ( null == context )
 			{
-				if ( null == context )
-				{
-					sailConnection.removeStatements( subjResource, null, null );
-				}
+				sailConnection.removeStatements( (Resource) subjValue, null, null );
+			}
 
-				else
-				{
-					sailConnection.removeStatements( subjResource, null, null, context );
-				}
+			else
+			{
+				sailConnection.removeStatements( (Resource) subjValue, null, null, context );
 			}
 		}
 
-		catch ( Throwable t )
+		catch ( SailException e )
 		{
 			reset( true );
-			throw new RippleException( t );
+			throw new RippleException( e );
 		}
 	}
 
+// FIXME: Resources should be absent from the ModelConnection API
 	public long countStatements( final Resource context )
 			throws RippleException
 	{
@@ -1064,6 +1009,7 @@ public SailConnection getSailConnection()
 	////////////////////////////////////////////////////////////////////////////
 
 	// e.g. CONSTRUCT * FROM {x} p {y}
+// FIXME: Statements should be absent from the ModelConnection API
 	public Collection<Statement> serqlQuery( final String queryStr )
 		throws RippleException
 	{
@@ -1171,6 +1117,7 @@ public SailConnection getSailConnection()
 		buffer.flush();
 	}
 
+// FIXME: Statements should be absent from the ModelConnection API
 	public void getStatements( final RdfValue subj,
 								final RdfValue pred,
 								final RdfValue obj,
@@ -1302,6 +1249,49 @@ public SailConnection getSailConnection()
 		};
 
 		getStatements( null, pred, obj, stSink );
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+// TODO: Namespaces should not be part of the ModelConnection API
+	public void putNamespaces( final Sink<Namespace> sink )
+		throws RippleException
+	{
+		try
+		{
+			CloseableIteration<? extends Namespace, SailException> iter
+				= sailConnection.getNamespaces();
+
+			while ( iter.hasNext() )
+			{
+				sink.put( iter.next() );
+			}
+		}
+
+		catch ( SailException e )
+		{
+			throw new RippleException( e );
+		}
+	}
+
+	public void putContexts( final Sink<RippleValue> sink )
+		throws RippleException
+	{
+		try
+		{
+			CloseableIteration<? extends Resource, SailException> iter
+				= sailConnection.getContextIDs();
+
+			while ( iter.hasNext() )
+			{
+				sink.put( new RdfValue( iter.next() ) );
+			}
+		}
+
+		catch ( SailException e )
+		{
+			throw new RippleException( e );
+		}
 	}
 }
 

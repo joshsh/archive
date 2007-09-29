@@ -59,11 +59,9 @@ public final class Demo
 //net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
 		Sail sail = RdfUtils.createMemoryStoreSail();
-//		Repository repository = RdfUtils.createMemoryStoreRepository();
 
 		// Attach a Ripple model to the repository.
 		Model model = new Model( sail, "Demo Model" );
-//		Model model = new Model( repository, "Demo Model" );
 
 		// Attach a query engine to the model.
 		Evaluator evaluator = new LazyEvaluator();
@@ -155,7 +153,6 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		try
 		{
 			sail.shutDown();
-//			repository.shutDown();
 		}
 
 		catch ( Throwable t )
@@ -180,7 +177,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 	{
 		System.out.println( Ripple.getName() + " " + Ripple.getVersion() );
 
-		// Would be nice: list of extensions
+		// Would be nice: list of libraries
 	}
 
 	public static void main( final String [] args )

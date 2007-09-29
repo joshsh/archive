@@ -96,6 +96,19 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		this.rest = rest;
 	}
 
+	public Sink<RippleValue> createPushSink( final Sink<RippleList> sink )
+	{
+		final RippleList rest = this;
+
+		return new Sink<RippleValue>()
+		{
+			public void put( final RippleValue v ) throws RippleException
+			{
+				sink.put( new RippleList( v, rest ) );
+			}
+		};
+	}
+
 	private RippleList()
 	{
 		// Note: this dummy value avoids null pointer exceptions in the list
@@ -183,7 +196,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 		do
 		{
-System.out.println( "cur = " + cur );
+//System.out.println( "cur = " + cur );
 			Resource curRdf;
 
 			// Associate list nodes with RDF values.
@@ -198,7 +211,7 @@ System.out.println( "cur = " + cur );
 			{
 				curRdf = (Resource) cur.rdfEquivalent.getRdfValue();
 			}
-System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
+//System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
 
 			// Annotate the head of the list with a type, but don't bother
 			// annotating every node in the list.
@@ -206,7 +219,7 @@ System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
 			{
 				if ( RDF.NIL != prevRdf )
 				{
-System.out.println( "    putting type statement" );
+//System.out.println( "    putting type statement" );
 //					sink.put(
 					mc.add(
 						mc.createStatement( curRdf, RDF.TYPE, RDF.LIST ) );
@@ -215,7 +228,7 @@ System.out.println( "    putting type statement" );
 
 			else
 			{
-System.out.println( "    putting rest statement" );
+//System.out.println( "    putting rest statement" );
 //				sink.put(
 				mc.add(
 					mc.createStatement( prevRdf, RDF.REST, curRdf ) );
@@ -223,7 +236,7 @@ System.out.println( "    putting rest statement" );
 
 			if ( RDF.NIL != curRdf )
 			{
-System.out.println( "    putting first statement" );
+//System.out.println( "    putting first statement" );
 //				sink.put(
 				mc.add(
 					mc.createStatement( curRdf, RDF.FIRST, cur.first.toRdf( mc ).getRdfValue() ) );

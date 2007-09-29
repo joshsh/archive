@@ -9,6 +9,8 @@
 
 package net.fortytwo.ripple.model;
 
+import info.aduna.iteration.CloseableIteration;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -19,6 +21,7 @@ import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSailConnection;
 import net.fortytwo.ripple.util.LibraryLoader;
+import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
@@ -26,6 +29,8 @@ import org.apache.log4j.Logger;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Namespace;
 import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailException;
 
 
 public class Model
@@ -113,89 +118,6 @@ return 0;
 
 		return size;
 */
-	}
-
-	public void showNamespaces()
-		throws RippleException
-	{
-/* TODO
-		try
-		{
-			RepositoryConnection conn = repository.getConnection();
-
-			RepositoryResult<Namespace> nsIter
-				= conn.getNamespaces();
-
-			int maxlen = 0;
-
-			while ( nsIter.hasNext() )
-			{
-				Namespace ns = nsIter.next();
-				int len = ns.getPrefix().length();
-
-				if ( len > maxlen )
-				{
-					maxlen = len;
-				}
-			}
-
-			nsIter.close();
-
-			nsIter = conn.getNamespaces();
-			while ( nsIter.hasNext() )
-			{
-				Namespace ns = nsIter.next();
-				String prefix = ns.getPrefix();
-				int len = prefix.length();
-				System.out.print( prefix + ":" );
-
-				for ( int i = 0; i < maxlen - len + 2; i++ )
-				{
-					System.out.print( " " );
-				}
-
-				System.out.println( ns.getName() );
-			}
-			nsIter.close();
-
-			conn.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-*/
-	}
-
-	public Collection<RippleValue> getContexts()
-		throws RippleException
-	{
-		Collection<RippleValue> contexts = new LinkedList<RippleValue>();
-
-/* TODO
-		try
-		{
-			RepositoryConnection conn = repository.getConnection();
-
-			RepositoryResult<Resource> contextIter
-				= conn.getContextIDs();
-
-			while ( contextIter.hasNext() )
-			{
-				contexts.add( new RdfValue( contextIter.next() ) );
-			}
-
-			contextIter.close();
-			conn.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-*/
-		return contexts;
 	}
 }
 

@@ -11,6 +11,7 @@ import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffBuffer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
+import net.fortytwo.ripple.rdf.diff.SynchronizedRdfDiffSink;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
@@ -30,6 +31,9 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 
+/**
+ * A thread-safe SailConnection for LinkedDataSail.
+ */
 public class LinkedDataSailConnection implements SailConnection
 {
 	private static final Logger LOGGER
@@ -48,7 +52,8 @@ public class LinkedDataSailConnection implements SailConnection
 	private RdfDiffSink apiInputSink;
 
 	// Buffering input to the wrapped SailConnection avoids deadlocks.
-	private RdfDiffBuffer inputSink;
+	private RdfDiffBuffer inputBuffer;
+	private RdfDiffSink inputSink;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -128,24 +133,51 @@ public class LinkedDataSailConnection implements SailConnection
 		throw new SailException( "this method is not implemented" );
 	}
 
-	public CloseableIteration<? extends Resource, SailException> getContextIDs()
+	public synchronized CloseableIteration<? extends Resource, SailException> getContextIDs()
 		throws SailException
 	{
-		throw new SailException( "this method is not implemented" );
+		try
+		{
+			return localStoreConnection.getContextIDs();
+		}
+
+		catch ( SailException e )
+		{
+			reset( true );
+			throw e;
+		}
 	}
 
 	public synchronized String getNamespace( final String prefix )
 		throws SailException
 	{
-		// Note: only committed namespaces will match.
-		return localStoreConnection.getNamespace( prefix );
+		try
+		{
+			// Note: only committed namespaces will match.
+			return localStoreConnection.getNamespace( prefix );
+		}
+
+		catch ( SailException e )
+		{
+			reset( true );
+			throw e;
+		}
 	}
 
 	public synchronized CloseableIteration<? extends Namespace, SailException> getNamespaces()
 		throws SailException
 	{
-		// Note: only committed namespaces will match.
-		return localStoreConnection.getNamespaces();
+		try
+		{
+			// Note: only committed namespaces will match.
+			return localStoreConnection.getNamespaces();
+		}
+
+		catch ( SailException e )
+		{
+			reset( true );
+			throw e;
+		}
 	}
 
 // Note: not sychronized, on account of URI dereferencing
@@ -174,8 +206,18 @@ public class LinkedDataSailConnection implements SailConnection
 //System.out.println( "    # contexts = " + contexts.length );
 		synchronized ( this )
 		{
-			return localStoreConnection.getStatements(
-				subj, pred, obj, includeInferred, contexts );
+			try
+			{
+				return new StatementIteration(
+					localStoreConnection.getStatements(
+						subj, pred, obj, includeInferred, contexts ) );
+			}
+	
+			catch ( SailException e )
+			{
+				reset( true );
+				throw e;
+			}
 		}
 	}
 
@@ -248,6 +290,7 @@ public class LinkedDataSailConnection implements SailConnection
 	public void rollback()
 		throws SailException
 	{
+		inputBuffer.clear();
 // TODO
 	}
 
@@ -270,8 +313,17 @@ public class LinkedDataSailConnection implements SailConnection
 	public synchronized long size( final Resource... contexts )
 		throws SailException
 	{
-		// Number of committed statements.
-		return localStoreConnection.size( contexts );
+		try
+		{
+			// Number of committed statements.
+			return localStoreConnection.size( contexts );
+		}
+
+		catch ( SailException e )
+		{
+			reset( true );
+			throw e;
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -291,10 +343,11 @@ public class LinkedDataSailConnection implements SailConnection
 
 		SailConnectionOutputAdapter adapter
 			= new SailConnectionOutputAdapter( this );
-		inputSink = new RdfDiffBuffer(
+		inputBuffer = new RdfDiffBuffer(
 			( null == listenerSink )
 				? adapter
 				: new RdfDiffTee( adapter, listenerSink ) );
+		inputSink = new SynchronizedRdfDiffSink( inputBuffer );
 apiInputSink = inputSink;
 
 		open = true;
@@ -316,9 +369,10 @@ apiInputSink = inputSink;
 			localStoreConnection.setNamespace( ns.getPrefix(), ns.getName() );
 		}
 
-		catch ( SailException e )
+		catch ( Throwable t )
 		{
-			throw new RippleException( e );
+			resetR( true );
+			throw new RippleException( t );
 		}
 	}
 
@@ -358,6 +412,7 @@ apiInputSink = inputSink;
 
 		catch ( Throwable t )
 		{
+			resetR( true );
 			throw new RippleException( t );
 		}
 	}
@@ -372,9 +427,10 @@ apiInputSink = inputSink;
 			localStoreConnection.removeNamespace( ns.getPrefix() );
 		}
 
-		catch ( SailException e )
+		catch ( Throwable t )
 		{
-			throw new RippleException( e );
+			resetR( true );
+			throw new RippleException( t );
 		}
 	}
 
@@ -403,9 +459,10 @@ apiInputSink = inputSink;
 			}
 		}
 
-		catch ( SailException e )
+		catch ( Throwable t )
 		{
-			throw new RippleException( e );
+			resetR( true );
+			throw new RippleException( t );
 		}
 
 		if ( null != listeners )
@@ -450,7 +507,7 @@ apiInputSink = inputSink;
 	{
 		try
 		{
-			inputSink.flush();
+			inputBuffer.flush();
 		}
 
 		catch ( RippleException e )
@@ -471,6 +528,19 @@ apiInputSink = inputSink;
 		openLocalStoreConnection();
 	}
 
+	private void resetR( final boolean rollback ) throws RippleException
+	{
+		try
+		{
+			reset( rollback );
+		}
+
+		catch ( SailException e )
+		{
+			throw new RippleException( e );
+		}
+	}
+
 	private void dereference( final URI uri )
 	{
 		try
@@ -482,6 +552,94 @@ apiInputSink = inputSink;
 		{
 			// (soft fail... don't even log the error)
 			return;
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	private class StatementIteration implements CloseableIteration<Statement, SailException>
+	{
+		private SailConnection originalConnection;
+		private Statement next = null;
+		private CloseableIteration<? extends Statement, SailException> iter;
+
+		public StatementIteration(
+			final CloseableIteration<? extends Statement, SailException> iter )
+		{
+			this.iter = iter;
+			originalConnection = localStoreConnection;
+		}
+
+		public boolean hasNext() throws SailException
+		{
+			synchronized ( localStore )
+			{
+				if ( ok() )
+				{
+					if ( null != next )
+					{
+						return true;
+					}
+	
+					else
+					{
+						if ( iter.hasNext() )
+						{
+							next = iter.next();
+							return true;
+						}
+	
+						else
+						{
+							return false;
+						}
+					}
+				}
+	
+				else
+				{
+					return false;
+				}
+			}
+		}
+	
+		public Statement next() throws SailException
+		{
+			synchronized ( localStore )
+			{
+				if ( null != next )
+				{
+					Statement tmp = next;
+					next = null;
+					return tmp;
+				}
+	
+				else if ( ok() )
+				{
+					return iter.next();
+				}
+	
+				else
+				{
+					throw new SailException( "iterator has no next element" );
+				}
+			}
+		}
+	
+		public void remove() throws SailException
+		{
+// TODO
+		}
+
+		public void close() throws SailException
+		{
+			originalConnection = null;
+			iter.close();
+		}
+
+		private boolean ok()
+		{
+			return originalConnection == localStoreConnection;
 		}
 	}
 }

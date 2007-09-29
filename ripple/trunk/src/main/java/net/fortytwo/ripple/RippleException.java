@@ -67,7 +67,7 @@ public class RippleException extends Exception
 
 		catch ( Throwable t )
 		{
-			System.err.println( "Failed to log a RippleException. A stack trace of the secondary error follows." );
+			System.err.println( "Failed to log an exception. A stack trace of the secondary error follows." );
 			t.printStackTrace( System.err );
 		}
 	}

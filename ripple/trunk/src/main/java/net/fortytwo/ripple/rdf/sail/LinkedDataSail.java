@@ -17,6 +17,10 @@ import org.openrdf.sail.SailChangedListener;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
+/**
+ * A thread-safe Sail which treats the Semantic Web as a single global graph of
+ * linked data.
+ */
 public class LinkedDataSail implements Sail
 {
 	private static final Logger LOGGER = Logger.getLogger( LinkedDataSail.class );
@@ -47,7 +51,7 @@ public class LinkedDataSail implements Sail
 	{
 	}
 
-	public SailConnection getConnection()
+	public synchronized SailConnection getConnection()
 		throws SailException
 	{
 		return new LinkedDataSailConnection( localStore, dereferencer );
@@ -93,10 +97,9 @@ return null;
 	{
 	}
 
-	////////////////////////////////////////////////////////////////////////////
+	// Extended API ////////////////////////////////////////////////////////////
 
-	// Extended API
-	public LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
+	public synchronized LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
 		return new LinkedDataSailConnection( localStore, dereferencer, listenerSink );

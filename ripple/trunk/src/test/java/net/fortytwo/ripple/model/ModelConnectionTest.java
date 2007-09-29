@@ -75,6 +75,7 @@ public class ModelConnectionTest extends RippleTestCase
 		}
 	}
 
+/*
 	private class CountStatementsTest extends TestRunnable
 	{
 		public void test()
@@ -123,13 +124,14 @@ mc.commit();
 			assertEquals( mc.countStatements( ctxA ), 1 );
 		}
 	}
+*/
 
 	public void runTests()
 		throws Exception
 	{
 // Note: Sesame repositories have not responded well to asynchronous testing, so ModelConnection will have to add its own synchronization code (synchronize on the Repository).
 		testSynchronous( new CreateUriTest() );
-		testSynchronous( new CountStatementsTest() );
+//		testSynchronous( new CountStatementsTest() );
 	}
 }
 
