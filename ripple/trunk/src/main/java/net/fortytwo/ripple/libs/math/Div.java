@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a numerator and divisor and produces their
+ * quotient.  If the divisor is 0, no value is produced.
+ */
 public class Div extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

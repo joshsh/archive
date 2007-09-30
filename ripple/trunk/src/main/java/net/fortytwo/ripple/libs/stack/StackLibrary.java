@@ -15,6 +15,10 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
+/**
+ * A collection of stack manipulation primitives.  Compare with Joy and other
+ * functional stack languages.
+ */
 public class StackLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/stack#";

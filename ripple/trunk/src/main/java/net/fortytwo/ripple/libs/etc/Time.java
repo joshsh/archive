@@ -17,6 +17,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which produces the current time, in seconds since midnight UTC of
+ * January 1, 1970.
+ */
 public class Time extends PrimitiveFunction
 {
 	private static final int ARITY = 0;

@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a subject, predicate and object, then produces the
+ * subject after removing the corresponding RDF statement from the triple store.
+ */
 public class Deny extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

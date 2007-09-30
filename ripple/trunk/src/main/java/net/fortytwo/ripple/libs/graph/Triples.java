@@ -28,6 +28,11 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 
+/**
+ * A primitive which consumes an information resource and produces a list
+ * (subject, predicate, object) for each RDF triple in the corresponding
+ * Semantic Web document.
+ */
 public class Triples extends PrimitiveFunction
 {
 	private static final int ARITY = 1;
@@ -73,7 +78,7 @@ public class Triples extends PrimitiveFunction
 					RippleValue pred = new RdfValue( st.getPredicate() );
 					RippleValue obj = new RdfValue( st.getObject() );
 	
-					RippleList triple = new RippleList( subj ).push( pred ).push( obj );
+					RippleList triple = new RippleList( obj ).push( pred ).push( subj );
 					resultSink.put(
 						new RippleList( triple, stack ) );
 				}

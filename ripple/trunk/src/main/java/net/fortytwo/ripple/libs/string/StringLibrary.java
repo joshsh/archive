@@ -14,6 +14,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
+/**
+ * A collection of string manipulation primitives.
+ */
 public class StringLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/string#";

@@ -16,6 +16,11 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a number and produces its sign.  This has three
+ * possible values: -1 if the number is less than 0, 0 if the number is equal to
+ * 0, and 1 if the number is greater than 0.
+ */
 public class Signum extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

@@ -19,6 +19,10 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Statement;
 
+/**
+ * A primitive which consumes a resource and produces a three-element list
+ * (subject, resource, object) for each statement about the resource.
+ */
 public class Links extends PrimitiveFunction
 {
 	private static final int ARITY = 1;
@@ -54,7 +58,7 @@ public class Links extends PrimitiveFunction
 				RippleValue pred = bridge.get( st.getPredicate() );
 				RippleValue obj = bridge.get( st.getObject() );
 
-				RippleList triple = new RippleList( subj ).push( pred ).push( obj );
+				RippleList triple = new RippleList( obj ).push( pred ).push( subj );
 
 				sink.put(
 					new RippleList( triple, rest ) );

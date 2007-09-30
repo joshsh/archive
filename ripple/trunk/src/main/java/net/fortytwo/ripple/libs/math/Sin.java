@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a number representing an angle in radians and
+ * produces its sine.
+ */
 public class Sin extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

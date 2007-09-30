@@ -14,6 +14,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
+/**
+ * A collection of hooks into selected web services.
+ */
 public class ServicesLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/services#";

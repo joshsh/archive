@@ -1,12 +1,3 @@
-/*
- * $URL$
- * $Revision$
- * $Author$
- *
- * Copyright (C) 2007 Joshua Shinavier
- */
-
-
 package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
@@ -17,14 +8,16 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
- * A primitive which consumes a number and produces its arc tangent, in the
- * range of -pi/2 through pi/2.
+ * A primitive which consumes a number and produces the largest integer value
+ * which is less than or equal to the number.  Note: the produced value has
+ * a type of xsd:integer, unlike Java's Math.floor, which returns a double
+ * value.
  */
-public class Atan extends PrimitiveFunction
+public class Floor extends PrimitiveFunction
 {
 	private static final int ARITY = 1;
 
-	public Atan()
+	public Floor()
 		throws RippleException
 	{
 		super();
@@ -45,7 +38,7 @@ public class Atan extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( Math.atan( a.doubleValue() ) );
+		result = new NumericLiteral( (int) Math.floor( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which produces a new blank node.
+ */
 public class New extends PrimitiveFunction
 {
 	private static final int ARITY = 0;

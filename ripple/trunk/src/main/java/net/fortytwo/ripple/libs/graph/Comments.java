@@ -26,6 +26,11 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 
+/**
+ * A primitive which consumes an information resource and produces each of
+ * the comments matched in the corresponding RDF document. Note: with the
+ * current Sesame bindings, nothing is actually matched.
+ */
 public class Comments extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

@@ -19,6 +19,10 @@ import net.fortytwo.ripple.util.Sink;
 
 import java.util.Iterator;
 
+/**
+ * A primitive which consumes an RDF container and produces all items in the
+ * container.
+ */
 public class Contains extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

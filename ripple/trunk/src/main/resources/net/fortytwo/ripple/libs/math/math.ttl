@@ -95,6 +95,20 @@ math:cbrt
 	rdfs:comment "x  =>  real cube root of x" ;
 	.
 
+math:ceil
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "ceil" ;
+	rdfs:comment "x  =>  c, where c is the smallest integer value that is greater than or equal to x" ;
+	.
+
 math:cos
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -154,6 +168,20 @@ math:exp
 	rpl:returnType xsd:double ;
 	rdfs:label "exp" ;
 	rdfs:comment "x  =>  exp(x)" ;
+	.
+
+math:floor
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "x" ;
+			rpl:parameterType xsd:double ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:integer ;
+	rdfs:label "floor" ;
+	rdfs:comment "x  =>  f, where f is the largest integer value that is less than or equal to x" ;
 	.
 
 math:gt

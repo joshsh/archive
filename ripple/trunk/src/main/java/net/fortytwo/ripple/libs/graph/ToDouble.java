@@ -17,6 +17,10 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 
+/**
+ * A primitive which consumes a literal value and produces its xsd:double
+ * equivalent (if any).
+ */
 public class ToDouble extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

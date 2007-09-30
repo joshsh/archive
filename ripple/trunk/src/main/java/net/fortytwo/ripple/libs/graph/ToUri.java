@@ -18,6 +18,10 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 
+/**
+ * A primitive which consumes a literal value and produces the resource
+ * identified by the corresponding URI (if any).
+ */
 public class ToUri extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

@@ -17,6 +17,11 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 
+/**
+ * A primitive which consumes two items x and y and produces a Boolean value of
+ * true if x is less than y according to the natural ordering of x, otherwise
+ * false.
+ */
 public class Lt extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

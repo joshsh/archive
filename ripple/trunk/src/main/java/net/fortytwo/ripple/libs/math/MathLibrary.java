@@ -14,6 +14,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
+/**
+ * A collection of mathematical primitives.
+ */
 public class MathLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/math#";
@@ -58,6 +61,8 @@ public class MathLibrary extends Library
 		registerPrimitive( Tanh.class, NS + "tanh", mc );
 
 		// Misc
+		registerPrimitive( Ceil.class, NS + "ceil", mc );
+		registerPrimitive( Floor.class, NS + "floor", mc );
 		registerPrimitive( Random.class, NS + "random", mc );
 	}
 }

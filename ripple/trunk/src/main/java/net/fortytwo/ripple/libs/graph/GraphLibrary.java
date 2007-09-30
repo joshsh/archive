@@ -14,6 +14,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
+/**
+ * A collection of primitives for manipulating data types and RDF graphs.
+ */
 public class GraphLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/graph#";

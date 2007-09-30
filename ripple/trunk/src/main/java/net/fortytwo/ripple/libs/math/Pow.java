@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes two numbers x and y and produces the number x to
+ * the power of y.
+ */
 public class Pow extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

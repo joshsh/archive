@@ -26,6 +26,11 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 
+/**
+ * A primitive which consumes an information resource and produces a two-element
+ * list (prefix name) for each namespace defined in the corresponding Semantic
+ * Web document.
+ */
 public class Namespaces extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

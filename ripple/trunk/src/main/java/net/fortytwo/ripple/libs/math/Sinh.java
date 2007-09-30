@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a number and produces its hyperbolic sine.
+ */
 public class Sinh extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

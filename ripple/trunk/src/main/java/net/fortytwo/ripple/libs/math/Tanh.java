@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a number and produces its hyperbolic tangent.
+ */
 public class Tanh extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

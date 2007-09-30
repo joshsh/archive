@@ -16,6 +16,12 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a resource and produces the resource again after
+ * removing all statements in the context its description.  The next time a
+ * description of the resource is needed, Ripple will request a new
+ * representation.
+ */
 public class Forget extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

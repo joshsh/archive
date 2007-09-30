@@ -18,6 +18,10 @@ import net.fortytwo.ripple.util.Sink;
 import org.openrdf.model.Value;
 import org.openrdf.model.Literal;
 
+/**
+ * A primitive which consumes a plain literal value and produces its language
+ * tag (or an empty string if the literal has no language tag).
+ */
 public class Lang extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

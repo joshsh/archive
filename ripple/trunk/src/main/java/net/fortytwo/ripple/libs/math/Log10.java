@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a number and produces the base-10 logarithm of the
+ * number.
+ */
 public class Log10 extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

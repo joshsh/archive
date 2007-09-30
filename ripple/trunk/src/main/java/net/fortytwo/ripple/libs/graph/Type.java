@@ -20,6 +20,10 @@ import org.openrdf.model.Value;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 
+/**
+ * A primitive which consumes a literal value and produces its data type (if
+ * any).
+ */
 public class Type extends PrimitiveFunction
 {
 	private static final int ARITY = 1;
