@@ -17,6 +17,11 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a Boolean value b, a filter t, and a filter f,
+ * then produces an active copy of t if b is true, otherwise an active copy of
+ * f.
+ */
 public class Branch extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

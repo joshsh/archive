@@ -19,6 +19,11 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A filter which drops any stack which has already been transmitted and behaves
+ * like the identity filter otherwise, making a stream of stacks into a set of
+ * stacks.
+ */
 public class Unique extends PrimitiveFunction
 {
 	private static final int ARITY = 0;

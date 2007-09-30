@@ -15,6 +15,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes two strings and produces their
+ * concatenation.
+ */
 public class StrCat extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

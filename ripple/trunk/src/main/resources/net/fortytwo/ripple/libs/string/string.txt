@@ -63,7 +63,7 @@ string:sha1
 string:split
 ========================================
 
-"one,two,three" "," /split.  # ("one" "two" "three")
+"one, two,three" ",[ ]*" /split.  # ("one" "two" "three")
 
 
 ========================================

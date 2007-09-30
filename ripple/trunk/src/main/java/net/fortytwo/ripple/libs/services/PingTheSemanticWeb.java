@@ -33,6 +33,12 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+/**
+ * A primitive which consumes a maximum number of ping results and a string
+ * representing a type of Semantic Web document, and issues the corresponding
+ * request to the PingTheSemanticWeb service, producing all results as
+ * information resources.
+ */
 public class PingTheSemanticWeb extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

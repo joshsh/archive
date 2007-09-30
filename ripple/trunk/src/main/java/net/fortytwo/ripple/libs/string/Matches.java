@@ -17,6 +17,11 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 
+/**
+ * A primitive which consumes a string and a regular expression, producing a
+ * Boolean value of true if the regular expression matches the string, otherwise
+ * false.
+ */
 public class Matches extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

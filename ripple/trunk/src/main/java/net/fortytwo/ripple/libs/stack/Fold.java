@@ -17,6 +17,12 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a list, an "initial value" and a filter, then
+ * produces the result of folding the list with the given filter and initial
+ * value.  For instance, <code>(1 2 3) 0 add /fold</code> yields 0 + 1 + 2 + 3
+ * = 6.
+ */
 public class Fold extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

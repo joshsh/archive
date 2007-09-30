@@ -17,6 +17,10 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive function which consumes two lists and produces the concatenation
+ * of the two lists.
+ */
 public class Cat extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

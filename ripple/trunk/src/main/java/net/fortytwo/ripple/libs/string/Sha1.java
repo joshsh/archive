@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
+/**
+ * A primitive which consumes a string and produces its SHA-1 sum.
+ */
 public class Sha1 extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

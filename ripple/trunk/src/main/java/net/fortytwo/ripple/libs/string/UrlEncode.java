@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
+/**
+ * A primitive which consumes a string and produces its
+ * application/x-www-form-urlencoded equivalent.
+ */
 public class UrlEncode extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

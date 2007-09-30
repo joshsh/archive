@@ -15,6 +15,9 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A filter which discards the stack.
+ */
 public class Scrap extends PrimitiveFunction
 {
 	private static final int ARITY = 0;

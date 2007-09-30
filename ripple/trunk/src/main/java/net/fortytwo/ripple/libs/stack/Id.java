@@ -15,6 +15,9 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive function which has no effect on the stack.
+ */
 public class Id extends PrimitiveFunction
 {
 	private static final int ARITY = 0;

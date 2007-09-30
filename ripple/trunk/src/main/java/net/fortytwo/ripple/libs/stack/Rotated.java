@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which permutes the second, third and fourth items on the stack
+ * such that (... x y z ...) becomes (... z y x ...).
+ */
 public class Rotated extends PrimitiveFunction
 {
 	private static final int ARITY = 4;

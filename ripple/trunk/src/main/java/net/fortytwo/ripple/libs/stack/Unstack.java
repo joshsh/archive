@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a list and yields a stack equal to the list.
+ */
 public class Unstack extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

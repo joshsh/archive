@@ -17,6 +17,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which activates the second-to-topmost item on the stack.
+ */
 public class Dip extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

@@ -24,8 +24,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * A primitive which issues a GET request for a resource and produces the
- * retrieved data as a string.
+ * A primitive which consumes an information resource, issues a GET request for
+ * the resource, then produces the retrieved data as a string.
  */
 public class Get extends PrimitiveFunction
 {

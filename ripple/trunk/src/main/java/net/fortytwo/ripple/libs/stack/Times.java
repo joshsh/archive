@@ -17,6 +17,11 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes an item and a number n, then pushes n active
+ * copies of the item to the stack.  This has the effect of applying the
+ * filter "n times" to the remainder of the stack.
+ */
 public class Times extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

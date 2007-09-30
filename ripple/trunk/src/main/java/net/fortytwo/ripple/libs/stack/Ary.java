@@ -17,6 +17,11 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a numeric "arity" and produces an active identity
+ * filter with the given arity.  This forces the remainder of the stack to be
+ * reduced to the corresponding depth.
+ */
 public class Ary extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

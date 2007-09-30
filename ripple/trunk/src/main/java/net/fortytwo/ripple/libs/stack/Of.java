@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * Consumes an index n and a list and produces the nth item in the list, where
+ * the first item in the list has an index of 1.
+ */
 public class Of extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

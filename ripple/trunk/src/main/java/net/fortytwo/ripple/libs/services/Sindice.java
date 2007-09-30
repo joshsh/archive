@@ -33,6 +33,12 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
+/**
+ * A primitive which consumes a literal value or a non-information resource and
+ * produces a number of index results according to the Sindice service.  These
+ * results represent Semantic Web documents which mention the given search
+ * string (if a literal value) or URI (if a resource).
+ */
 public class Sindice extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

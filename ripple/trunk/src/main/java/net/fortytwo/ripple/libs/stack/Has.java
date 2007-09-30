@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a list and an item and produces a Boolean value of
+ * true if the item is contained in the list, otherwise false.
+ */
 public class Has extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

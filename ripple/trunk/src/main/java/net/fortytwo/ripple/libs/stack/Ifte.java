@@ -17,6 +17,12 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a Boolean filter b, a filter t, and a filter t,
+ * then applies an active copy of b to the stack.  If b yields a value of
+ * true, then t is applied the rest of the stack.  Otherwise, f is applied to
+ * the rest of the stack.
+ */
 public class Ifte extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

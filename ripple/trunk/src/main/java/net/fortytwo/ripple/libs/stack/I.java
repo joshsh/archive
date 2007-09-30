@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which activates ("applies") the topmost item on the stack.
+ */
 public class I extends PrimitiveFunction
 {
 // Arguably 0...

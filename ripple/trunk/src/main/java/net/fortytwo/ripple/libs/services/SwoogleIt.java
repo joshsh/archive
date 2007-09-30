@@ -29,6 +29,13 @@ import org.openrdf.model.vocabulary.RDF;
 
 import java.net.URL;
 
+/**
+ * A primitive which consumes a search string, a Swoogle search type (for
+ * instance,
+ * &lt;http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#search_swt&lt;)
+ * and a Swoogle key (for instance, "demo") and produces a resource containing
+ * Swoogle search results.
+ */
 public class SwoogleIt extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

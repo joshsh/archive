@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a list and produces the least item in the list.
+ */
 public class Min extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

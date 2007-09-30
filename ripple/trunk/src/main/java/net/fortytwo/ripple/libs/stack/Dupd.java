@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which pushes a copy of the second-to-topmost item on the stack to
+ * the head of the stack.
+ */
 public class Dupd extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

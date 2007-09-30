@@ -35,6 +35,10 @@ import org.jdom.xpath.XPath;
 
 import org.openrdf.model.URI;
 
+/**
+ * A primitive which consumes a literal value and produces a number of resources
+ * which link to that value, according to the Uriqr service.
+ */
 public class Uriqr extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

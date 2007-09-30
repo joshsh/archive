@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which removes the third-to-topmost item from the stack.
+ */
 public class Popdd extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

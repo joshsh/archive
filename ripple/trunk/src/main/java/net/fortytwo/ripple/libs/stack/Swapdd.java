@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which swaps the third- and fourth-to-topmost items on the stack.
+ */
 public class Swapdd extends PrimitiveFunction
 {
 	private static final int ARITY = 4;

@@ -15,6 +15,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a string, strips off all leading and trailing
+ * white space, and produces the result.
+ */
 public class Trim extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

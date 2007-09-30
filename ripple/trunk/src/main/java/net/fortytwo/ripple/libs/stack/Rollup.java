@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which permutes the first, second and third items on the stack
+ * such that (... x y z) becomes (... z x y).
+ */
 public class Rollup extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

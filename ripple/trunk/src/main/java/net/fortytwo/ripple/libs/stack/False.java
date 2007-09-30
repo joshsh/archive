@@ -16,6 +16,9 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes two items and produces the second item.
+ */
 public class False extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

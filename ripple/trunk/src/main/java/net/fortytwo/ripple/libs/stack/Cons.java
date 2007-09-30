@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes an item and a list, prepends the item to the list,
+ * then produces the resulting list.
+ */
 public class Cons extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

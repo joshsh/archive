@@ -15,6 +15,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a string and a substring and produces the index of
+ * the last occurrence of the substring.
+ */
 public class LastIndexOf extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

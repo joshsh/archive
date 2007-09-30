@@ -15,6 +15,11 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a string, a regular expression and a replacement
+ * substring, then produces the string obtained by replacing all occurrences of the
+ * regular expression in the original string with the replacement substring.
+ */
 public class ReplaceAll extends PrimitiveFunction
 {
 	private static final int ARITY = 3;

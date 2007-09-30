@@ -17,6 +17,10 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 
+/**
+ * A primitive which consumes a string and prefix, producing a Boolean value of
+ * true if the given string starts with the given prefix, otherwise false.
+ */
 public class StartsWith extends PrimitiveFunction
 {
 	private static final int ARITY = 2;

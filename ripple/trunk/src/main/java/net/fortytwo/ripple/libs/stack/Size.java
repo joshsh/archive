@@ -16,6 +16,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a list and produces the length of the list as
+ * an integer.
+ */
 public class Size extends PrimitiveFunction
 {
 	private static final int ARITY = 1;

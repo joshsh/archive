@@ -17,6 +17,10 @@ import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
+/**
+ * A primitive which consumes a number n and produces a filter which transmits
+ * at most n stacks.
+ */
 public class Limit extends PrimitiveFunction
 {
 	private static final int ARITY = 1;
