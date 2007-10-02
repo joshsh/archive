@@ -62,64 +62,21 @@ public class HttpUriDereferencer implements Dereferencer
 		}
 	}
 
-	/**
-	 *  @return  a String representation of the URL to be resolved
-	 */
-	static String findMemo( final URI uri )
+	private static boolean isHttpMemo( final String memo )
 	{
-		String ns = uri.getNamespace();
-		String memo;
-
-		// For hash namespaces, the "racine" of the URI, followed by the hash
-		// character (because it's a little quicker to leave it intact), is memoized.
-		if ( '#' == ns.charAt( ns.length() - 1 ) )
-		{
-			memo = ns;
-		}
-
-		// For slash namespaces, we're forced to choose between requesting
-		// the information resource at the full URI, or removing a local
-		// name and treating the remainder as the URI of the information
-		// resource.  Both kinds of documents are found on the Semantic Web.
-		else
-		{
-			// Pro: saves time if multiple URIs resolve to the same information
-			//      resource
-			// Con: very many hash namespaces are not set up this way, and we
-			//      may lose significant information
-			if ( Ripple.dereferenceUrisByNamespace() )
-			{
-				memo = ns;
-			}
-
-			// Pro: no information loss
-			// Con: frequent repeated requests for the same document, resulting
-			//      in wasted bandwidth and redundant statements
-			else
-			{
-				memo = uri.toString();
-			}
-		}
-
-		// Note: currently, many distinct memos may be equivalent as URLs, e.g.
-		//           http://example.com/#
-		//           http://example.com
-		//           http://example.com/
-		//           http://example.com///
-		//           etc.
-		return memo;
+		return memo.startsWith( "http://" );
 	}
 
-// TODO: two threads may dereference the same URI twice if the two calls of this method occur close enough together in time.
+// FIXME: two threads may dereference the same URI twice if the two calls of this method occur close enough together in time.
 	public void dereference( final URI uri, final RdfSink adderSink )
 		throws RippleException
 	{
-		final String memo = findMemo( uri );
+		final String memo = RdfUtils.inferContext( uri );
 
 		// Don't dereference a URI that is not an HTTP URI (including file: URIs,
 		// which pose a security concern).
 		// Don't dereference a URI which we've already dereferenced.
-		if ( !memo.startsWith( "http://" )
+		if ( !isHttpMemo( memo )
 				|| successMemos.contains( memo )
 				|| failureMemos.contains( memo ) )
 		{
@@ -135,7 +92,7 @@ public class HttpUriDereferencer implements Dereferencer
 		}
 
 		// Note: this URL should be treated as a "black box" once created; it
-		// need not bear any relation to the URI it was created from.
+		// need not resemble the URI it was created from.
 		final URL url = urlFactory.createUrl( memo );
 
 		final SesameInputAdapter sa = new SesameInputAdapter( adderSink );
@@ -176,73 +133,6 @@ public class HttpUriDereferencer implements Dereferencer
 // 			filter( uri.getNamespace(), mc.createUri( memo ), mc );
 // 		}
 	}
-
-public void dereference( final URI uri, final ModelConnection mc )
-	throws RippleException
-{
-	final String memo = findMemo( uri );
-
-	// Don't dereference a URI that is not an HTTP URI (including file: URIs,
-	// which pose a security concern).
-	// Don't dereference a URI which we've already dereferenced.
-	if ( !memo.startsWith( "http://" )
-			|| successMemos.contains( memo )
-			|| failureMemos.contains( memo ) )
-	{
-		return;
-	}
-
-	// Don't dereference a URI which appears to point to a file which is not
-	// an RDF document.
-	int l = memo.lastIndexOf( '.' );
-	if ( l > -1 && badExtensions.contains( memo.substring( l + 1 ) ) )
-	{
-		return;
-	}
-
-	// Note: this URL should be treated as a "black box" once created; it
-	// need not bear any relation to the URI it was created from.
-	final URL url = urlFactory.createUrl( memo );
-
-	RdfImporter importer = new RdfImporter( mc, mc.createUri( memo ) );
-	final SesameInputAdapter sa = new SesameInputAdapter( importer );
-
-	// Attempt to import the information resource.  The web location
-	// 'memo' is used as the base URI for any relative references.
-	try
-	{
-		LOGGER.info( "Dereferencing URI <"
-			+ StringUtils.escapeUriString( uri.toString() )
-			+ "> at location " + url );
-
-		RdfUtils.read( url, sa, memo );
-	}
-
-	// Exceptions encountered here are logged (withoug a stack trace) but
-	// tolerated.  They usually result from missing or badly-formatted
-	// Semantic Web documents.
-	catch ( RippleException e )
-	{
-		LOGGER.info( "Failed to dereference URI <"
-			+ StringUtils.escapeUriString( uri.toString() ) + ">: " + e );
-
-		// For now, any exception thrown during the importing process
-		// results in the URI being blacklisted as not dereferenceable.
-		failureMemos.add( memo );
-
-		return;
-	}
-
-	// At this point, the URI is considered to have been successfully
-	// dereferenced.
-	successMemos.add( memo );
-
-// TODO: this should probably be in a parent Dereferencer.
-	if ( Ripple.rejectNonAssociatedStatements() )
-	{
-		filter( uri.getNamespace(), mc.createUri( memo ), mc );
-	}
-}
 
 	void filter( final String ns, final URI context, final ModelConnection mc )
 		throws RippleException
@@ -296,16 +186,6 @@ public void dereference( final URI uri, final ModelConnection mc )
 */
 	}
 
-	public void dereference( final RdfValue rv, final ModelConnection mc )
-		throws RippleException
-	{
-Value v = rv.getRdfValue();
-if ( v instanceof URI )
-{
-	dereference( (URI) v, mc );
-}
-	}
-
 	// Caution: since several URIs may share a memo (e.g. in a hash namespace),
 	//          statements may bunch up around these URIs when one of them is
 	//          subsequently dereferenced.  For instance, you may get
@@ -323,7 +203,7 @@ if ( v instanceof URI )
 
 		if ( v instanceof URI )
 		{
-			String memo = findMemo( (URI) v );
+			String memo = RdfUtils.inferContext( (URI) v );
 
 			if ( failureMemos.contains( memo ) )
 			{

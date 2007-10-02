@@ -27,6 +27,7 @@ public class LinkedDataSail implements Sail
 
 	private Sail localStore;
 	private Dereferencer dereferencer;
+	private UrlFactory urlFactory;
 
 	/**
 	 * @param localStore  (should be initialized before this object is used)
@@ -35,6 +36,7 @@ public class LinkedDataSail implements Sail
 		throws RippleException
 	{
 		this.localStore = localStore;
+		this.urlFactory = urlFactory;
 
 		dereferencer = new HttpUriDereferencer( urlFactory );
 
@@ -54,7 +56,7 @@ public class LinkedDataSail implements Sail
 	public synchronized SailConnection getConnection()
 		throws SailException
 	{
-		return new LinkedDataSailConnection( localStore, dereferencer );
+		return new LinkedDataSailConnection( localStore, dereferencer, urlFactory );
 	}
 
 	public File getDataDir()
@@ -102,7 +104,7 @@ return null;
 	public synchronized LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		return new LinkedDataSailConnection( localStore, dereferencer, listenerSink );
+		return new LinkedDataSailConnection( localStore, dereferencer, urlFactory, listenerSink );
 	}
 
 public Dereferencer getDereferencer()

@@ -22,11 +22,6 @@ public interface Dereferencer
 {
 	void dereference( URI uri, RdfSink adderSink ) throws RippleException;
 
-void dereference( URI uri, ModelConnection mc )
-	throws RippleException;
-void dereference( RdfValue rv, ModelConnection mc )
-	throws RippleException;
-
 	void forget( RdfValue rv, ModelConnection mc )
 		throws RippleException;
 

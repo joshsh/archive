@@ -122,7 +122,6 @@ nilSource.put( RippleList.NIL );
 		try
 		{
 mc.getStatements( r, null, null, new NullSink<Statement>() );
-//			mc.getModel().getDereferencer().dereference( r, mc );
 		}
 
 		catch ( RippleException e )

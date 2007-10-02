@@ -13,6 +13,7 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 import net.fortytwo.ripple.rdf.diff.SynchronizedRdfDiffSink;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
 
@@ -48,6 +49,7 @@ public class LinkedDataSailConnection implements SailConnection
 	private Set<SailConnectionListener> listeners = null;
 
 	private Dereferencer dereferencer;
+	private SparqlUpdater sparqlUpdater;
 
 	private RdfDiffSink apiInputSink;
 
@@ -119,7 +121,15 @@ public class LinkedDataSailConnection implements SailConnection
 	public void commit()
 		throws SailException
 	{
-// TODO -- flush data through the SPARUL pipeline
+		try
+		{
+			sparqlUpdater.flush();
+		}
+
+		catch ( RippleException e )
+		{
+			throw new SailException( e );
+		}
 
 		commitInput();
 	}
@@ -330,6 +340,7 @@ public class LinkedDataSailConnection implements SailConnection
 
 	LinkedDataSailConnection( final Sail localStore,
 									final Dereferencer dereferencer,
+									final UrlFactory urlFactory,
 									final RdfDiffSink listenerSink )
 		throws SailException
 	{
@@ -348,16 +359,19 @@ public class LinkedDataSailConnection implements SailConnection
 				? adapter
 				: new RdfDiffTee( adapter, listenerSink ) );
 		inputSink = new SynchronizedRdfDiffSink( inputBuffer );
-apiInputSink = inputSink;
+
+		sparqlUpdater = new SparqlUpdater( urlFactory, inputSink );
+		apiInputSink = sparqlUpdater.getSink();
 
 		open = true;
 	}
 
 	LinkedDataSailConnection( final Sail localStore,
-								final Dereferencer dereferencer )
+								final Dereferencer dereferencer,
+								final UrlFactory urlFactory )
 		throws SailException
 	{
-		this( localStore, dereferencer, null );
+		this( localStore, dereferencer, urlFactory, null );
 	}
 
 	void addNamespace( final Namespace ns )
