@@ -85,20 +85,25 @@ public class Sindice extends PrimitiveFunction
 		String urlStr;
 		if ( v instanceof Literal )
 		{
-			urlStr = "http://sindice.com/keyword/"
+			urlStr = "http://sindice.com/query/lookup?keyword="
+//			urlStr = "http://sindice.com/keyword/"
 //			urlStr = "http://sindice.com/beta/keyword/"
 //			urlStr = "http://sindice.com/beta/lookup/keyword?keyword="
-				+ StringUtils.percentEncode( v.toString() );
+				+ StringUtils.percentEncode( v.toString() )
+				+ "&type=keyword"
+			;
 		}
 
 		else if ( v instanceof URI )
 		{
-			urlStr = "http://sindice.com/uri/"
+			urlStr = "http://sindice.com/query/lookup?uri="
+//			urlStr = "http://sindice.com/uri/"
 //			urlStr = "http://sindice.com/lookup?uri="
 //			urlStr = "http://sindice.com/beta/lookup_uri?uri="
 				+ StringUtils.percentEncode( v.toString() )
+//				+ "&lookup=Lookup"
+				+ "&type=uri"
 			;
-//				+ "&lookup=Lookup";
 		}
 
 		else

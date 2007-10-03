@@ -5,7 +5,6 @@ import java.io.File;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
-import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UrlFactory;
 
@@ -38,7 +37,7 @@ public class LinkedDataSail implements Sail
 		this.localStore = localStore;
 		this.urlFactory = urlFactory;
 
-		dereferencer = new HttpUriDereferencer( urlFactory );
+		dereferencer = new HttpUriDereferencer( urlFactory, getValueFactory() );
 
 		// Don't bother trying to dereference terms in these common namespaces.
 		dereferencer.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );

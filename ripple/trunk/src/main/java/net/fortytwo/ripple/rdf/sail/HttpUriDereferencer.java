@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.rdf.sail;
 
 import java.net.URL;
 
@@ -17,10 +17,12 @@ import java.util.HashSet;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SingleContextPipe;
 import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.StringUtils;
 import net.fortytwo.ripple.util.UrlFactory;
@@ -29,8 +31,9 @@ import org.apache.log4j.Logger;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 
 // Note: throughout this implementation, both the caching context of a URI and
 //       its associated web location are the same as its success or failure 'memo'.
@@ -46,10 +49,12 @@ public class HttpUriDereferencer implements Dereferencer
 	private Set<String> badExtensions;
 
 	private UrlFactory urlFactory;
+	private ValueFactory valueFactory;
 
-	public HttpUriDereferencer( final UrlFactory urlFactory )
+	public HttpUriDereferencer( final UrlFactory urlFactory, final ValueFactory valueFactory )
 	{
 		this.urlFactory = urlFactory;
+		this.valueFactory = valueFactory;
 
 		successMemos = new HashSet<String>();
 		failureMemos = new HashSet<String>();
@@ -93,9 +98,11 @@ public class HttpUriDereferencer implements Dereferencer
 
 		// Note: this URL should be treated as a "black box" once created; it
 		// need not resemble the URI it was created from.
-		final URL url = urlFactory.createUrl( memo );
+		URL url = urlFactory.createUrl( memo );
 
-		final SesameInputAdapter sa = new SesameInputAdapter( adderSink );
+		// Note: any pre-existing context information is discarded.
+		final SesameInputAdapter sa = new SesameInputAdapter(
+			new SingleContextPipe( adderSink, valueFactory.createURI( memo ), valueFactory ) );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.

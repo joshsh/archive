@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffContextFilter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
