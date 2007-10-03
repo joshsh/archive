@@ -25,6 +25,8 @@ import java.util.Random;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.control.Task;
+import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfSource;
@@ -32,11 +34,10 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.NullSource;
+import net.fortytwo.ripple.util.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
 import net.fortytwo.ripple.util.UniqueFilter;
-import net.fortytwo.ripple.control.Task;
-import net.fortytwo.ripple.control.TaskSet;
 
 import org.apache.log4j.Logger;
 
@@ -562,8 +563,18 @@ public synchronized SailConnection getSailConnection()
 
 		try
 		{
-			sailConnection.addStatement(
-				(Resource) subjValue, (URI) predValue, objValue );
+			if ( subjValue instanceof URI )
+			{
+				sailConnection.addStatement(
+					(Resource) subjValue, (URI) predValue, objValue,
+					RdfUtils.inferContextUri( (URI) subjValue ) );
+			}
+
+			else
+			{
+				sailConnection.addStatement(
+					(Resource) subjValue, (URI) predValue, objValue );
+			}
 		}
 
 		catch ( SailException e )

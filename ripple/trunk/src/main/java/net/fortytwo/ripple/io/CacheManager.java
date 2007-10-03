@@ -48,6 +48,7 @@ public final class CacheManager
 	{
 		rplCacheRoot = new RdfValue( mc.createUri(
 			Ripple.getCacheUri() ) );
+System.out.println( "rplCacheRoot = " + rplCacheRoot );
 		rplCacheSuccessMemo = new RdfValue( mc.createUri(
 			"http://fortytwo.net/2007/08/ripple/cache#successMemo" ) );
 		rplCacheFailureMemo = new RdfValue( mc.createUri(
@@ -73,6 +74,7 @@ public final class CacheManager
 			? RdfUtils.read( url, sc, url.toString() )
 			: RdfUtils.read( url, sc, url.toString(), format );
 
+		mc.commit();
 		restoreCacheMetaData( mc );
 
 		return format;
@@ -108,6 +110,7 @@ public final class CacheManager
 		Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
 
 		mc.removeStatementsAbout( rplCacheRoot, null );
+		mc.commit();
 
 		LOGGER.debug( "writing success memos" );
 		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
@@ -120,6 +123,8 @@ public final class CacheManager
 		{
 			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.createValue( iter.next() ) );
 		}
+
+		mc.commit();
 	}
 
 	/**

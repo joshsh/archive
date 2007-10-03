@@ -23,6 +23,7 @@ import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import org.apache.log4j.Logger;
 
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
@@ -413,6 +414,22 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 	public static boolean isHttpUri( final URI uri )
 	{
 		return uri.toString().startsWith( "http://" );
+	}
+
+	public static URI inferContextUri( final URI uri )
+		throws RippleException
+	{
+		String s = inferContext( uri );
+
+		try
+		{
+			return new URIImpl( s );
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 	}
 
 	/**

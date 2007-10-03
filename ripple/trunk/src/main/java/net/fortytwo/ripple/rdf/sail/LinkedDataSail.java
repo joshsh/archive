@@ -45,7 +45,7 @@ public class LinkedDataSail implements Sail
 		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
 
 		// Don't try to dereference the cache index.
-		dereferencer.addSuccessMemo( Ripple.getCacheUri() );
+		dereferencer.addSuccessMemo( "http://fortytwo.net/2007/08/ripple/cache#" );
 	}
 
 	public void addSailChangedListener( final SailChangedListener listener )

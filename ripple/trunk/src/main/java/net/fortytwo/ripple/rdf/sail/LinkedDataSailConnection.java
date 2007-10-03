@@ -393,6 +393,7 @@ public class LinkedDataSailConnection implements SailConnection
 	void addStatement( final Statement st )
 		throws RippleException
 	{
+//System.out.println( "adding statement: " + st );
 		Resource context = st.getContext();
 
 		try

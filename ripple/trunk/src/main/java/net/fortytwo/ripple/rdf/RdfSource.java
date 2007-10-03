@@ -14,9 +14,13 @@ public abstract class RdfSource
 
 	public void writeTo( final RdfSink sink ) throws RippleException
 	{
-		statementSource().writeTo( sink.statementSink() );
-		namespaceSource().writeTo( sink.namespaceSink() );
 		commentSource().writeTo( sink.commentSink() );
+
+		// Note: it's often important that namespaces are written before
+		// statements.
+		namespaceSource().writeTo( sink.namespaceSink() );
+
+		statementSource().writeTo( sink.statementSink() );
 	}
 }
 

@@ -71,6 +71,8 @@ public class SparqlUpdater
 // the update operation (if any).
 source.writeTo( sink );
 		}
+
+		contextFilter.clear();
 	}
 
 	private void postUpdate( final URL url, final RdfDiffSource source )

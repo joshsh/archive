@@ -122,8 +122,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 	{
 		contextToCollectorMap = new HashMap<Resource, RdfDiffCollector>();
 
-		RdfDiffCollector nullCollector = new RdfDiffCollector();
-		contextToCollectorMap.put( null, nullCollector );
+		clear();
 	}
 
 	public Iterator<Resource> contextIterator()
@@ -131,9 +130,17 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 		return contextToCollectorMap.keySet().iterator();
 	}
 
-	public RdfDiffSource sourceForContext( final Resource context )
+	public void clear()
 	{
-		return contextToCollectorMap.get( context );
+		contextToCollectorMap.clear();
+
+		RdfDiffCollector nullCollector = new RdfDiffCollector();
+		contextToCollectorMap.put( null, nullCollector );
+	}
+
+	public void clearContext( final Resource context )
+	{
+		contextToCollectorMap.remove( context );
 	}
 
 	public RdfSink adderSink()
