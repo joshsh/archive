@@ -1,3 +1,12 @@
+/*
+ * $URL$
+ * $Revision$
+ * $Author$
+ *
+ * Copyright (C) 2007 Joshua Shinavier
+ */
+
+
 package net.fortytwo.ripple.rdf.diff;
 
 import java.util.HashMap;
@@ -128,6 +137,11 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 	public Iterator<Resource> contextIterator()
 	{
 		return contextToCollectorMap.keySet().iterator();
+	}
+
+	public RdfDiffSource sourceForContext( final Resource context )
+	{
+		return contextToCollectorMap.get( context );
 	}
 
 	public void clear()

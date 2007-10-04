@@ -226,6 +226,19 @@ public synchronized SailConnection getSailConnection()
 
 	////////////////////////////////////////////////////////////////////////////
 
+	private Resource castToResource( final Value v ) throws RippleException
+	{
+		if ( v instanceof Resource )
+		{
+			return (Resource) v;
+		}
+
+		else
+		{
+			throw new RippleException( "value " + v + " is not a Resource" );
+		}
+	}
+
 	private Literal castToLiteral( final Value v ) throws RippleException
 	{
 		if ( v instanceof Literal )
@@ -235,7 +248,7 @@ public synchronized SailConnection getSailConnection()
 
 		else
 		{
-			throw new RippleException( "value " + v.toString() + " is not a Literal" );
+			throw new RippleException( "value " + v + " is not a Literal" );
 		}
 	}
 
@@ -407,82 +420,50 @@ public synchronized SailConnection getSailConnection()
 		}
 	}
 
-	// Note: context is ignored.
-	// Another note: the source value is not (yet) dereferenced
+// TODO: context handling
 	public void copyStatements( final RdfValue src, final RdfValue dest )
 		throws RippleException
 	{
-/* TODO
-		Resource srcResource = castToResource( src.getRdfValue() );
-		Resource destResource = castToResource( dest.getRdfValue() );
+		final Resource destResource = castToResource( dest.getRdfValue() );
 
-		try
+		Sink<Statement> stSink = new Sink<Statement>()
 		{
-			// Note: 
-			Collection<Statement> stmts = new LinkedList<Statement>();
-
-			synchronized ( sailConnection )
+			public void put( final Statement st ) throws RippleException
 			{
-				RepositoryResult<Statement> stmtIter
-					= sailConnection.getStatements(
-						srcResource, null, null, Ripple.useInference() );
+				Resource context = st.getContext();
 
-				while ( stmtIter.hasNext() )
+				try
 				{
-					stmts.add( stmtIter.next() );
+					if ( null == context )
+					{
+						sailConnection.addStatement(
+							destResource, st.getPredicate(), st.getObject() );
+					}
+
+					else
+					{
+						sailConnection.addStatement(
+							destResource, st.getPredicate(), st.getObject(), context );
+					}
 				}
-
-				stmtIter.close();
-
-				for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
+		
+				catch ( Throwable t )
 				{
-					Statement st = iter.next();
-	
-					sailConnection.add( destResource, st.getPredicate(), st.getObject() );
-//                sailConnection.add( RDF.NIL, RDF.TYPE, RDF.LIST );
+					reset( true );
+					throw new RippleException( t );
 				}
 			}
-		}
+		};
 
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-*/
+		getStatements( src, null, null, stSink );
 	}
 
 	public void removeStatementsAbout( final URI subj )
 		throws RippleException
 	{
-/*
-		Collector<Statement> stmts = new Collector<Statement>();
-
-		getStatements( new RdfValue( subj ), null, null, stmts );
-
-
 		try
 		{
-			Collection<Statement> stmts = new LinkedList<Statement>();
-
-			synchronized ( sailConnection )
-			{
-				RepositoryResult<Statement> stmtIter
-					= sailConnection.getStatements(
-						subj, null, null, Ripple.useInference() );
-
-				while ( stmtIter.hasNext() )
-				{
-					stmts.add( stmtIter.next() );
-				}
-
-				stmtIter.close();
-	
-				for ( Iterator<Statement> iter = stmts.iterator(); iter.hasNext(); )
-				{
-					sailConnection.remove( iter.next() );
-				}
-			}
+			sailConnection.removeStatements( subj, null, null );
 		}
 
 		catch ( Throwable t )
@@ -490,7 +471,6 @@ public synchronized SailConnection getSailConnection()
 			reset( true );
 			throw new RippleException( t );
 		}
-*/
 	}
 
 	public void putContainerMembers( final RippleValue head, final Sink<RippleValue> sink )

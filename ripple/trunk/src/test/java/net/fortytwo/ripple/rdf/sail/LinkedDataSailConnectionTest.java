@@ -1,7 +1,7 @@
 /*
- * $URL: http://svn.fortytwo.net/projects/ripple/trunk/src/test/java/net/fortytwo/ripple/model/LinkedDataSailConnectionTest.java $
- * $Revision: 885 $
- * $Author: josh $
+ * $URL$
+ * $Revision$
+ * $Author$
  *
  * Copyright (C) 2007 Joshua Shinavier
  */

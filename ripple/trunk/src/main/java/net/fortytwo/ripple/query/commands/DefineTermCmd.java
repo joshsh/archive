@@ -71,70 +71,17 @@ public class DefineTermCmd extends Command
 
 // TODO: check for collision with an existing URI
 			URI uri = mc.createUri( qe.getDefaultNamespace() + term );
-
-			mc.copyStatements( exprList.toRdf( mc ), new RdfValue( uri ) );
+			RdfValue v = exprList.toRdf( mc );
+			mc.commit();
+			mc.copyStatements( v, new RdfValue( uri ) );
 
 			qe.getLexicon().add( uri );
-
-pushListToSemWeb( uri, mc );
 		}
 	}
 
 	protected void abort()
 	{
 	}
-
-
-
-
-
-private void pushListToSemWeb( final URI uri,
-								final ModelConnection mc )
-	throws RippleException
-{
-	final RdfDiff diff = new RdfDiff();
-
-	final Sink<Statement> diffAdderSink = diff.adderSink().statementSink();
-
-// FIXME: reading the list from the RDF model is backwards
-	Sink<RippleList> listSink = new Sink<RippleList>()
-	{
-		public void put( final RippleList list ) throws RippleException
-		{
-//System.out.println( "list = " + list );
-			list.writeStatementsTo( diffAdderSink, mc );
-		}
-	};
-
-	RippleList.from( new RdfValue( uri ), listSink, mc );
-
-	URL url;
-
-	try
-	{
-		String s = uri.toString();
-		int hashIndex = s.lastIndexOf( '#' );
-		if ( hashIndex >= 0 )
-		{
-			s = s.substring( 0, hashIndex );
-		}
-
-		url = new URL( s );
-System.out.println( "url =" + url );
-	}
-
-	catch ( java.net.MalformedURLException e )
-	{
-		throw new RippleException( e );
-	}
-
-	SparqlUpdater.postUpdate( diff, url );
-}
-
-
-
-
-
 }
 
 // kate: tab-width 4
