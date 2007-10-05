@@ -1,4 +1,28 @@
 
+# URI search
+<http://sindice.com/uri/http%3A%2F%2Fwww.w3.org%2FPeople%2FBerners-Lee%2Fcard%23i>.
+
+# Keyword search
+<http://sindice.com/keyword/ireland+AND+sun>.
+
+# IFP search
+<http://sindice.com/query/lookup?object=mailto%3Atimbl%40w3.org&type=ifp&property=http%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2Fmbox>.
+
+@define sindiceKeyword:
+    /urlEncode
+    "http://sindice.com/keyword/" /swap/strCat
+    /toUri.
+
+@define sindiceUri:
+    /toString /urlEncode
+    "http://sindice.com/uri/" /swap/strCat
+    /toUri.
+
+
+
+
+### old Sindice API ############################################################
+
 @define sin: /sindice/toString.
 
 # => lots of Geonames results.
