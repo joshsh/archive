@@ -1,15 +1,40 @@
-
 ########################################
 # DBLP Berlin
 ########################################
 
+@prefix dblp: <http://www4.wiwiss.fu-berlin.de/dblp/terms.rdf#>.
+
+# 11 terms.  An almost-subset of the SWRC vocabulary.
+@define dblpTerms:
+    dblp:Article
+    dblp:Book
+    dblp:InCollection
+    dblp:InProceedings
+    dblp:MastersThesis
+    dblp:PhDThesis
+    dblp:Proceedings
+    dblp:booktitle
+    dblp:crossref
+    dblp:editor
+    dblp:journal
+    .
+
 # Gateway resource
 <http://www4.wiwiss.fu-berlin.de/dblp/all>.
+
+# Records.
+<http://www4.wiwiss.fu-berlin.de/dblp/all/Records>.
+
+# People.
+<http://www4.wiwiss.fu-berlin.de/dblp/all/People>.
 
 
 ########################################
 # DBLP Hannover
 ########################################
+
+# Note: uses the SWRC vocabulary.
+@prefix swrc: <http://swrc.ontoware.org/ontology#>.
 
 # Gateway resource
 <http://dblp.l3s.de/d2r/all>.

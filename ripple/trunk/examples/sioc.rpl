@@ -67,3 +67,8 @@
     sioc:topic
     sioc:views
     .
+
+# Ripple's blog as presented by the SIOC Wordpress plugin
+<http://ripple.fortytwo.net/index.php?sioc_type=site>.
+
+<http://ripple.fortytwo.net/index.php?sioc_type=user&sioc_id=1>.
