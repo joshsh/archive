@@ -38,3 +38,54 @@
 
 # Gateway resource
 <http://dblp.l3s.de/d2r/all>.
+
+
+########################################
+# Andreas Harth's dump
+########################################
+
+# Yet another DBLP vocabulary
+@prefix dblp: <http://sw.deri.org/~aharth/2004/07/dblp/dblp.owl#>.
+@define dblpTerms:
+    dblp:Article
+    dblp:Book
+    dblp:Citation
+    dblp:Collection
+    dblp:Document
+    dblp:Inproceedings
+    dblp:Mastersthesis
+    dblp:Phdthesis
+    dblp:Proceedings
+    dblp:Publisher
+    dblp:Series
+    dblp:Www
+    dblp:address
+    dblp:author
+    dblp:booktitle
+    dblp:cdrom
+    dblp:chapter
+    dblp:cite
+    dblp:crossref
+    dblp:datatypeField
+    dblp:editor
+    dblp:ee
+    dblp:isbn
+    dblp:journal
+    dblp:key
+    dblp:label
+    dblp:mdate
+    dblp:month
+    dblp:note
+    dblp:number
+    dblp:objectField
+    dblp:pages
+    dblp:publisher
+    dblp:rating
+    dblp:reviewid
+    dblp:school
+    dblp:series
+    dblp:title
+    dblp:url
+    dblp:volume
+    dblp:year
+    .
