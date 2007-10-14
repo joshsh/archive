@@ -9,6 +9,7 @@
 
 package net.fortytwo.ripple.util;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import java.security.MessageDigest;
@@ -201,7 +202,7 @@ public final class StringUtils
 		{
 			char c = s.charAt( i );
 
-			if (SAFE_URL_CHARACTERS.indexOf( c ) >= 0)
+			if ( SAFE_URL_CHARACTERS.indexOf( c ) >= 0 )
 			{
 				enc.append( c );
 			}
@@ -227,6 +228,41 @@ public final class StringUtils
 	}
 
 	/**
+	 *  @param s  percent-encoded (per RFC 3986) string to decode
+	 *  @return   the decoded string
+	 */
+// TODO: this is a quick hack which may be too simple
+	public static String percentDecode( final String s )
+	{
+		StringBuffer dec = new StringBuffer( s.length() );
+
+		int i = 0, len = s.length();
+		while ( i < len )
+		{
+			char c = s.charAt( i );
+
+			// Percent-encoded character.
+			if ( '%' == c )
+			{
+				try
+				{
+					c = (char) Integer.parseInt( s.substring( i + 1, i + 3 ), 16 );
+					i += 2;
+				}
+
+				catch ( Throwable t )
+				{
+				}
+			}
+
+			i++;
+			dec.append( c );
+		}
+
+		return dec.toString();
+	}
+
+	/**
 	 *  @param s  a string to encode
 	 *  @return  application/x-www-form-urlencoded version of the string
 	 */
@@ -236,6 +272,24 @@ public final class StringUtils
 		try
 		{
 			return URLEncoder.encode( s, "UTF-8" );
+		}
+
+		catch ( java.io.UnsupportedEncodingException e )
+		{
+			throw new RippleException( e );
+		}
+	}
+
+	/**
+	 *  @param s  an application/x-www-form-urlencoded string to decode
+	 *  @return  the decoded string
+	 */
+ 	public static String urlDecode( final String s )
+		throws RippleException
+	{
+		try
+		{
+			return URLDecoder.decode( s, "UTF-8" );
 		}
 
 		catch ( java.io.UnsupportedEncodingException e )

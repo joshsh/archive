@@ -32,6 +32,7 @@ public class StringLibrary extends Library
 		registerPrimitive( LastIndexOf.class, NS + "lastIndexOf", mc );
 		registerPrimitive( Length.class, NS + "length", mc );
 		registerPrimitive( Matches.class, NS + "matches", mc );
+		registerPrimitive( PercentDecode.class, NS + "percentDecode", mc );
 		registerPrimitive( PercentEncode.class, NS + "percentEncode", mc );
 		registerPrimitive( ReplaceAll.class, NS + "replaceAll", mc );
 		registerPrimitive( Sha1.class, NS + "sha1", mc );
@@ -42,6 +43,7 @@ public class StringLibrary extends Library
 		registerPrimitive( ToLowerCase.class, NS + "toLowerCase", mc );
 		registerPrimitive( ToUpperCase.class, NS + "toUpperCase", mc );
 		registerPrimitive( Trim.class, NS + "trim", mc );
+		registerPrimitive( UrlDecode.class, NS + "urlDecode", mc );
 		registerPrimitive( UrlEncode.class, NS + "urlEncode", mc );
 	}
 }
