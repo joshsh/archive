@@ -10,15 +10,13 @@
 package net.fortytwo.ripple.extensions.media;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Extension;
 import net.fortytwo.ripple.util.UrlFactory;
 
 public class MediaExtension extends Extension
 {
-	static String NS = "http://fortytwo.net/2007/08/ripple/media#";
+	private static final String NS = "http://fortytwo.net/2007/08/ripple/media#";
 
 	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
