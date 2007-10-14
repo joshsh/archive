@@ -311,6 +311,11 @@ public class NumericLiteral implements RippleValue
 			return RippleList.class.getName().compareTo( other.getClass().getName() );
 		}
 	}
+
+	public String toString()
+	{
+		return number.toString();
+	}
 }
 
 // kate: tab-width 4

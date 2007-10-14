@@ -19,9 +19,13 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
+import org.apache.log4j.Logger;
+
 // Note: not thread-safe, on account of stop()
 public class LazyEvaluator extends Evaluator
 {
+	private static final Logger LOGGER = Logger.getLogger( LazyEvaluator.class );
+
 	private Model model;
 	private ModelConnection modelConnection;
 	private boolean stopped = true;
@@ -88,15 +92,21 @@ public class LazyEvaluator extends Evaluator
 				return;
 			}
 
+//LOGGER.info( this + ".put( " + stack + " )" );
 //System.out.println( this + ".put( " + stack + " )" );
 			RippleValue first = stack.getFirst();
+//LOGGER.info( "   first = " + stack.getFirst() );
+//LOGGER.info( "   first.isActive() = " + first.isActive() );
 //System.out.println( "   first = " + stack.getFirst() );
 
 			if ( first.isActive() )
 			{
 				RippleList rest = stack.getRest();
+//LOGGER.info( "   rest = " + rest );
 
 				Function f = ( (Operator) first ).getFunction();
+//LOGGER.info( "   f = " + f );
+//LOGGER.info( "   f.arity() = " + f.arity() );
 
 				// Nullary functions don't need their argument stacks reduced.
 				// They shouldn't even care if the stack is empty.

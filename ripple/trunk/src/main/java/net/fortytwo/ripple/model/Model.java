@@ -63,7 +63,7 @@ public LinkedDataSail getSail()
 		loadSymbols( urlFactory );
 	}
 
-	void loadSymbols( final UrlFactory uf )
+	private void loadSymbols( final UrlFactory uf )
 		throws RippleException
 	{
 		ModelConnection mc = getConnection( "for Model.loadSymbols" );
