@@ -1,0 +1,23 @@
+
+
+<http://purl.uniprot.org/uniprot/P12883>.
+<http://purl.uniprot.org/uniprot/P12345>.
+
+<http://purl.uniprot.org/taxonomy/9606>. # => Homo sapiens
+<http://purl.uniprot.org/taxonomy/9606> /rdfs:subClassOf.
+<http://purl.uniprot.org/taxonomy/9606> rdfs:subClassOf 29 /times.  # => cellular organisms
+
+<http://purl.uniprot.org/taxonomy/9606>
+    (/dup /<http://purl.uniprot.org/core/scientificName> /swap /rdfs:subClassOf)
+    29 /times /<http://purl.uniprot.org/core/scientificName>.
+	rdf:_1  ("Homo sapiens" "Homo" "Homo/Pan/Gorilla group" "Hominidae" "Hominoidea" "Catarrhini" "Simiiformes" "Haplorrhini" "Primates" "Euarchontoglires" "Eutheria" "Theria" "Mammalia" "Amniota" "Tetrapoda" "Sarcopterygii" "Euteleostomi" "Teleostomi" "Gnathostomata" "Vertebrata" "Craniata" "Chordata" "Deuterostomia" "Coelomata" "Bilateria" "Eumetazoa" "Metazoa" "Fungi/Metazoa group" "Eukaryota" "cellular organisms")
+
+
+# The vocabulary is apparently not dereferenceable (it 302-redirects to an FTP URL).
+<http://purl.uniprot.org/core/Taxon>.
+<http://purl.uniprot.org/core/Protein>.
+<http://purl.uniprot.org/taxonomy/9606> /<http://purl.uniprot.org/core/rank>.
+
+
+# This yields a valid RDF document, but there are no statements about the resource itself.
+<http://purl.uniprot.org/pdb/1BRC>.

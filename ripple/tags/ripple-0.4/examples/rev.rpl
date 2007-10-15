@@ -1,0 +1,19 @@
+### Danny Ayers' review vocabulary ####
+
+<http://dannyayers.com/xmlns/rev/>.
+<http://dannyayers.com/xmlns/rev/#>.
+
+#@prefix rev: <http://purl.org/stuff/rev#>.
+
+@prefix rev: <http://dannyayers.com/xmlns/rev/#>.
+
+@define revTerms:
+    rev:maxRating
+    rev:minRating
+    rev:reviewer
+    rev:Review
+    rev:text
+    rev:createdOn
+    rev:rating
+    rev:hasReview
+    .

@@ -1,0 +1,29 @@
+http://www4.wiwiss.fu-berlin.de/factbook/resource/Nepal
+
+
+@prefix db: <http://www4.wiwiss.fu-berlin.de/factbook/resource/>.
+
+# Note: terms in factbook namespace dereference to RDF/XML with a content type of text/html
+@prefix factbook: <http://www4.wiwiss.fu-berlin.de/factbook/ns#>.
+
+
+@define nepal:
+    <http://www4.wiwiss.fu-berlin.de/factbook/resource/Nepal>.
+@define australia:
+    <http://www4.wiwiss.fu-berlin.de/factbook/resource/Australia>.
+
+
+/:nepal/factbook:landboundary /toString.
+
+
+# 137 results (including countries in the Americas)
+/:nepal (/factbook:landboundary /unique) 14/times /toString.
+
+# ...because of France, which apparently has a land boundary with several South
+# American countries... but none of them has a land boundary with France
+<http://www4.wiwiss.fu-berlin.de/factbook/resource/France>
+    /factbook:landboundary/toString.
+
+
+# No results.
+/:australia /factbook:landboundary.

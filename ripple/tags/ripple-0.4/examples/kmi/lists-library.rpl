@@ -1,0 +1,33 @@
+@prefix :  <http://fortytwo.net/2007/04/kmi/lists#>.
+
+# a b /:dupDown  -->  a b a
+@define dupDown:  dup/swap/dip/swap.
+
+2 3 /:dupDown.
+
+@define listContains:
+    false /swap ()/cons/cons
+    (/dip/:dupDown/equal (/swap/pop true/swap) id /ifte ()/cons/cons)
+    /fold /i/pop.
+
+(1 2 3) 2 /:listContains.
+
+@define listUnique:
+    () (/:dupDown/:dupDown/:listContains pop (()/cons/concat) /ifte) /fold.
+
+(1 2 2 3) /:listUnique.
+
+@define filter:
+    (dup/swap/dip/i (()/cons/concat) pop /ifte)/cons /fold.
+
+(1 2 3) (2/equal) /:filter.
+
+@define listMul:
+    (/swap/:listContains)/cons /:filter.
+
+(1 2 3 4 5) (3 5 7) /:listIntersect.
+
+@define listSub:
+    (/swap/:listContains/not)/cons /:filter.
+
+(1 2 3 4 5) (2 4 6) /:listSub.

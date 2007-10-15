@@ -1,0 +1,107 @@
+@prefix : <http://brentKerbyCombinators#>.
+
+########################################
+
+@define dup: /dup.
+@define zap: /pop.
+@define unit: ()/cons.
+@define cat: /cat.
+@define cons: /cons.
+@define i: /i.
+@define dip: /dip.
+@define sip: /dupd/dip.
+
+42/:unit.  # (42)
+2 dup /:sip.  # 2 /dup 2
+
+########################################
+
+# The (i/dip/i)/cons/cons construction is in many contexts equivalent to
+# /cat, but not actually equal, because Ripple uses opaque quotation.
+(2) (3) (i/dip/i) /cons/cons
+    (2) (3) /cat
+    /equal.
+
+# To put things in classical terms, a formalism like the "eta-theory" (one with
+# a principle of extensionality) would consider "[] dip" to always be a valid
+# program that does nothing, whereas the "beta-theory" would not.
+2 3 ()/dip.
+
+########################################
+
+@define dig1: ()/cons/dip.
+@define dig2: ()/cons/cons/dip.
+@define dig3: ()/cons/cons/cons/dip.
+# ...
+@define bury1: (()/cons) /dip/swap/i.
+@define bury2: (()/cons/cons) /dip/swap/i.
+@define bury3: (()/cons/cons/cons) /dip/swap/i.
+# ...
+
+1 2 /:dig1.  # /(2) 1
+1 2 3 /:dig2.  # /(2 3) 1
+1 2 3 4 /:dig3.  # /(2 3 4) 1
+1 2 /:bury1.  # 2 1
+1 2 3 /:bury2.  # 3 1 2
+1 2 3 4 /:bury3.  # 4 1 2 3
+
+########################################
+
+@define take: dip/cons/cons.
+@define flip2: ()/take/take/i.
+@define flip3: ()/take/take/take/i.
+@define flip4: ()/take/take/take/take/i.
+# ...
+
+# ! :take doesn't work because:
+#    1) Ripple doesn't (yet) truly treat primitives or predicates as quotations
+#    2) Ripple's quotations are opaque
+3 (1 2) /:take.
+
+########################################
+
+@define swat: /swap/cat.
+@define dip4: ((dip/cons/dip)/cons/dip)/cons/dip.
+@define sip4: (/:unit/cons/cons/cons)/dip i/:swat/:sip/i.
+
+########################################
+
+@define w: dup/dip/i.
+@define k: pop/dip/i.
+@define b: cons/dip/i.
+@define c: swap/dip/i.
+
+(2)(3)/:k.  # (2) /pop 3
+
+# My definition (won't work yet).
+@define s: (/dupd/swap cons/dip) /dip/i.
+
+########################################
+
+@define sip2: (/:unit/cons)/dip i/:swat/:sip/i.
+@define cake: cons/:sip2/:take.
+
+########################################
+
+@define coup: /cons/dup.
+@define sap: /dip/i.
+
+########################################
+
+@define run: /dup/dip.
+
+  rep0 == zap
+  rep1 == run zap
+  rep2 == run run zap
+  rep3 == run run run zap
+
+@define rep0: /pop.
+@define rep1: /:run/pop.
+@define rep2: /:run/:run/pop.
+@define rep3: /:run/:run/:run/pop.
+
+(2) /:rep3.  # /(2) /(2) 2
+
+@define times: /:b.
+@define plus: (/cons/:b)/cons/:s.
+@define inverse: /i.

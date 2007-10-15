@@ -1,0 +1,188 @@
+# See: http://www.w3.org/2000/10/swap/doc/
+
+# Cwm Reason Ontology ##########################################################
+
+# Note: own prefix.
+@prefix reason: <http://www.w3.org/2000/10/swap/reason#>.
+
+@define cwmReasonTerms:
+    reason:Binding
+    reason:CommandLine
+    reason:Conjunction
+    reason:Extraction
+    reason:Inference
+    reason:Parsing
+    reason:Proof
+    reason:Step
+    reason:args
+    reason:because
+    reason:boundTo
+    reason:component
+    reason:evidence
+    reason:gives
+    reason:rule
+    reason:source
+    reason:variable
+    .
+
+:cwmReasonTerms/each/rdf:type/unique.
+
+
+# Cwm built-in functions #######################################################
+
+@prefix crypto: <http://www.w3.org/2000/10/swap/crypto#>.
+
+@define cwmCryptoTerms:
+    crypto:CanEncrypt
+    crypto:CanSign
+    crypto:HasPrivate
+    crypto:HashFunction
+    crypto:PublicKeyObject
+    crypto:md5
+    crypto:publicKey  # Note: has a bad type (rdfs:Property)
+    crypto:sha
+    crypto:sign
+    crypto:verify
+    crypto:verifyBoolean
+    .
+
+:cwmCryptoTerms/each/rdf:type/unique.
+
+
+@prefix list: <http://www.w3.org/2000/10/swap/list#>.
+
+# ! in N3 format
+@define cwmListTerms:
+    list:in
+    list:last
+    .
+
+:cwmListTerms/each/rdf:type/unique.
+
+
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
+
+@define cwmLogTerms:
+    log:Chaff
+    log:N3Document
+    log:Truth
+    log:conclusion
+    log:conjunction
+    log:content
+    log:definitiveDocument
+    log:definitiveService
+    log:dtlit
+    log:equalTo
+    log:implies
+    log:includes
+    log:n3String
+    log:notEqualTo
+    log:notIncludes
+    log:outputString
+    log:parsedAsN3
+    log:rawType
+    log:rawUri
+    log:semantics
+    log:semanticsOrError
+    log:uri
+    .
+
+:cwmLogTerms/each/rdf:type/unique.
+
+
+@prefix math: <http://www.w3.org/2000/10/swap/math#>.
+
+@define cwmMathTerms:
+    math:Function
+    math:List
+    math:LogicalOperator
+    math:ReverseFunction
+    math:TwoMemberedList
+    math:Value
+    math:absoluteValue
+    math:atan2
+    math:cos
+    math:degrees
+    math:difference
+    math:equalTo
+    math:exponentiation
+    math:greaterThan
+    math:integerQuotient
+    math:lessThan
+    math:memberCount
+    math:negation
+    math:notEqualTo
+    math:notGreaterThan
+    math:notlessThan
+    math:product
+    math:quotient
+    math:remainder
+    math:rounded
+    math:sin
+    math:sinh
+    math:sum
+    math:tan
+    math:tanh
+    .
+
+:cwmMathTerms/each/rdf:type/unique.
+
+
+@prefix os: <http://www.w3.org/2000/10/swap/os#>.
+
+@define cwmOsTerms:
+    os:argv
+    os:baseAbsolute
+    os:baseRelative
+    os:environ
+    .
+
+:cwmOsTerms/each/rdf:type/unique.
+
+
+@prefix string: <http://www.w3.org/2000/10/swap/string#>.
+
+@define cwmStringTerms:
+    string:concat
+    string:concatenation
+    string:contains
+    string:containsIgnoringCase
+    string:endsWith
+    string:equalIgnoringCase
+    string:greaterThan
+    string:lessThan
+    string:matches
+    string:notEqualIgnoringCase
+    string:notGreaterThan
+    string:notLessThan
+    string:notMatches
+    string:scrape
+    string:startsWith
+    .
+
+:cwmStringTerms/each/rdf:type/unique.
+
+
+@prefix time: <http://www.w3.org/2000/10/swap/time#>.
+
+@define cwmTimeTerms:
+    time:day
+    time:dayOfWeek
+    time:gmTime
+    time:hour
+    time:inSeconds
+    time:localTime
+    time:minute
+    time:month
+    time:second
+    time:timeZone
+    time:year
+    .
+
+:cwmTimeTerms/each/rdf:type/unique.
+
+
+################################################################################
+
+# Regression tests, e.g.
+<http://www.w3.org/2000/10/swap/test/regression.rdf#t1001>.

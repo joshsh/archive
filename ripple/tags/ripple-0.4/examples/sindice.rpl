@@ -1,0 +1,69 @@
+
+# URI search
+<http://sindice.com/uri/http%3A%2F%2Fwww.w3.org%2FPeople%2FBerners-Lee%2Fcard%23i>.
+
+# Keyword search
+<http://sindice.com/keyword/ireland+AND+sun>.
+
+# IFP search
+<http://sindice.com/query/lookup?object=mailto%3Atimbl%40w3.org&type=ifp&property=http%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2Fmbox>.
+
+@define sindiceKeyword:
+    /urlEncode
+    "http://sindice.com/keyword/" /swap/strCat
+    /toUri.
+
+@define sindiceUri:
+    /toString /urlEncode
+    "http://sindice.com/uri/" /swap/strCat
+    /toUri.
+
+
+
+
+### old Sindice API ############################################################
+
+@define sin: /sindice/toString.
+
+# => lots of Geonames results.
+<http://www.geonames.org/countries/#DE>/:sin.
+
+
+# NOTE: some Sindice results contain URIs of objects (e.g. GIF images) which are
+#       not RDF documents.  This is mentioned in the paper on Sindice.
+foaf:mbox/sindice/toString.
+
+
+# Look for documents which use reification (from a LOD comment by Giovanni):
+rdf:Statement/sindice/toString.
+
+
+
+# Literal lookup:
+"encyclopedia of life"/sindice/toString.
+
+
+wget --header="Accept: application/xml, text/xml" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal
+
+wget --header="Accept: text/javascript, text/x-javascript, application/javascript, application/x-javascript, application/json" http://www.sindice.com/lookup/lookup_literal?literal=timbl&lookup_literal=Lookup+Literal
+
+
+<http://www.w3.org/People/Berners-Lee/card#i>/foaf:knows/foaf:name/unique/sindice/toString.
+
+
+
+# This caused failure:
+#     http://sindice.com/beta/lookup_literal?keyword=H%e5kon%20Wium%20Lie&lookup=Lookup
+
+
+# On Aug 15, these worked:
+wget --header="Accept: application/xml" http://sindice.com/keyword/three
+wget --header="Accept: application/xml" "http://sindice.com/uri/http://www.w3.org/1999/02/22-rdf-syntax-ns%23type"
+wget http://sindice.com/keyword/two
+wget http://sindice.com/uri/http%3a//rdfs.org/sioc/ns%23User
+
+# ...these didn't:
+wget --header="Accept: application/xml" http://sindice.com/keyword/two
+wget --header="Accept: application/xml" http://sindice.com/uri/http%3a//rdfs.org/sioc/ns%23User
+
+

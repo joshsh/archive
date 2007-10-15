@@ -1,0 +1,65 @@
+
+Disco can't dereference URIs which point to Turtle, e.g.
+    http://fortytwo.net/2007/02/04/ipa-symbols.ttl#a
+
+
+
+
+DOAP in Disco:
+    http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=http%3A%2F%2Fusefulinc.com%2Fns%2Fdoap%23
+
+
+
+
+@prefix :  <http://foo#>.
+@define myfunc:  /dup 1 /add /mul 2 /div.
+100 /:myfunc.
+	5050
+
+
+
+
+# This is actually a list containing a single element.
+typeAlias := rdf:type.
+
+# This is a list containing a single element which also happens to be a list.
+foo := (1 2 3).
+
+
+
+
+
+# Fibonacci:
+/dup 1 /integer-greaterThan ... 1 /V
+
+
+small := 1 /integer-greaterThan;
+
+
+Fibonacci in Joy:
+	[small]  []  [pred dup pred]  [+]  binrec
+
+5 factorial in Joy:
+	5  [1]  [*]  primrec
+
+
+
+
+Unstoppable recursion combinator (there's no way to get a value out of this):
+	f /runawayRec  -->  /f f /runawayRec
+e.g.
+	f := 1 /integer-add.
+	1 f /runawayRec  -->  1 /f f /runawayRec  -->  2 f /runawayRec -->  ...
+In fact, evaluation would never even reach this point, because runawayRec only needs a single argument.  The stack would grow without limit before ever doing anything with the numeric argument.
+
+
+
+
+
+
+
+$  compatibility of /[] as prim[] and list[]:
+	dupAlias := /dup.
+	/dupAlias  -->  /(/dup)  -->  /dup
+
+

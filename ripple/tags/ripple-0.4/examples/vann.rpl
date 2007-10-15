@@ -1,0 +1,13 @@
+# wget http://vocab.org/vann/vann-vocab-20050401.rdf
+
+@prefix vann: <http://purl.org/vocab/vann/>.
+
+vann:.
+
+@define vannTerms:
+    vann:changes
+    vann:example
+    vann:preferredNamespacePrefix
+    vann:preferredNamespaceUri
+    vann:usageNote
+    .

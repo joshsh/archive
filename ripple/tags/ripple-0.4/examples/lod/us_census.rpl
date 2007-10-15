@@ -1,0 +1,23 @@
+# See http://www.rdfabout.com/demo/census/
+
+# A country
+# Note: this took forever to dereference in Ripple.  To be investigated.
+@define us: <http://www.rdfabout.com/rdf/usgov/geo/us>.
+/:us.
+
+# States in the country
+/:us /terms:hasPart.
+
+# A "ZCTA" (region, apparently)
+<http://www.rdfabout.com/rdf/usgov/geo/census/zcta/03741>.
+
+# Lots of census information about the region.
+<http://www.rdfabout.com/rdf/usgov/geo/census/zcta/03741> /census:details.
+
+
+########################################
+# Linkage into GeoNames
+########################################
+
+# This links into a page which is only served as HTML.
+/:us /owl:sameAs.

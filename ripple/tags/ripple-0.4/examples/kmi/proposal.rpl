@@ -1,0 +1,63 @@
+
+@prefix misc:  <http://fortytwo.net/2007/04/kmi/misc#>.
+
+2 3 /misc:dupDown.
+(1 2 3) 2 /misc:listContains.
+(1 2 2 3) /misc:listUnique.
+(1 2 3) (2/equal) /misc:filter.
+(1 2 3 4 5) (3 5 7) /misc:listIntersect.
+(1 2 3 4 5) (2 4 6) /misc:listSub.
+1 2 /union 2 5 /union /misc:intersect.
+
+
+@prefix ont:  <http://fortytwo.net/2007/04/kmi/ont.ttl#>.
+
+ont:Ontology.
+
+
+@prefix toy:  <http://fortytwo.net/2007/04/kmi/toy.ttl#>.
+
+toy:.
+
+
+@prefix inf:  <http://fortytwo.net/2007/04/kmi/inf#>.
+
+toy:/inf:hasItem.
+toy:Mother/inf:superConcepts.
+toy:hasChild /inf:superProperties.
+toy:samantha/inf:allConcepts.
+toy:samantha/inf:mostSpecificConceptOf.
+toy:Father toy:Mother /inf:commonSuperConcepts.
+toy:hasChild toy:hasChild /inf:commonSuperProperties.
+toy:Father toy:Mother /inf:mostSpecificCommonSuperConcept.
+toy:hasChild toy:hasChild /inf:mostSpecificCommonSuperProperty.
+
+
+@prefix toy:     <http://fortytwo.net/2007/04/kmi/toy#>.
+@prefix modalg:  <http://fortytwo.net/2007/04/kmi/modalg#>.
+
+(toy: toy:sv) /modalg:extendProperties.
+
+(toy: toy:sv) /modalg:extendOntology/i.
+(toy: toy:sv) /modalg:extendOntology/modalg:extendOntology/i.
+(toy: toy:sv) /modalg:extendOntology modalg:extendOntology /swap/swap/i.
+(toy: toy:sv) modalg:extendOntology 2 /times.
+
+
+(toy: toy:sv) /modalg:extendConcepts.
+(toy: toy:sv) /modalg:extendProperties.
+(toy: toy:sv) /modalg:extendIndividuals.
+(toy: toy:sv) /modalg:extendAssertions.
+
+
+
+modalg:extendOntology (toy: toy:sv)/modalg:extendOntology /swap/i /i.
+
+
+
+(toy: _:node128gmnj3mx727)/modalg:extendOntology/i.
+
+
+
+
+

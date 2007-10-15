@@ -1,0 +1,94 @@
+
+@prefix demo: <http://fortytwo.net/2007/05/ripple/demo#>.
+
+@define demoTerms:
+    demo:bar
+    demo:bookReviewsOnly
+    demo:fact
+    demo:fib
+    demo:foafStep
+    demo:hello
+    demo:mapped
+    demo:myMap
+    demo:ping
+    demo:restrict
+    demo:sq
+    .
+
+################################################################################
+
+@prefix : <http://fortytwo.net/2007/05/ripple/demo#>.
+
+@define bar: 1 2 3.
+
+@define hello:
+    "Hello world!".
+
+@define sq: /dup/mul.
+
+# n => fibonacci(n)
+@define fib:
+    0 1 /rolldown     # push initial value pair and put n on top
+    (/swap/dupd/add)  # push the step function
+    /swap/times       # execute the step function n times
+    /pop.             # select the low value
+
+# n => factorial(n)
+@define fact:
+    /dup 0 /equal                  # if n is 0...
+        (1 /popd)                  # yield 1
+        (/dup 1 /sub /:fact /mul)  # otherwise, yield n*fact(n-1)
+    /branch.
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+# foaf1 => foaf1, foaf2, foaf3, ...
+@define foafStep:   # iterator for a FOAF crawler
+    (   id          # include foaf1 itself
+        owl:sameAs  # include nodes identified with foaf1
+        foaf:knows  # include those foaf:known by foaf1
+    )/each/i        # apply all three patterns at once
+    /unique.        # eliminate duplicate results
+
+# a f => a, if a/f is true, otherwise nothing
+@define restrict:
+    /dupd/i    # apply the filter criterion, f
+        id     # keep the stack if a/f is true
+        scrap  # throw the stack away if it isn't
+    /branch.
+
+@prefix scom: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.
+
+# r => r, if r is a book review, otherwise nothing
+@define bookReviewsOnly:
+    (   /foaf:primaryTopic          # from review to topic
+        /owl:sameAs                 # from topic to possible book
+        /rdf:type scom:Book /equal  # is it really a book?
+    )/:restrict.
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+# node map => a new node with "mapped" edges
+@define mapped:
+    /each/i               # distribute over a list of pairs
+    /new                  # create a new node
+    i/dipd/rotate/assert  # assert a mapped statement
+    1/limit.              # produce the node just once
+
+# Maps to a minimal FOAF-like vocabulary.
+@prefix ex: <http://example.org/minimalFoaf#>.
+@define myMap:
+    (rdf:type rdf:type)     # copy any rdf:type edges
+    (foaf:name ex:name)     # map foaf:name to ex:name
+    (foaf:knows ex:knows).  # map foaf:knows to ex:knows
+
+# uri => PTSW's ping response
+@define ping:
+    /toString/percentEncode
+    "http://pingthesemanticweb.com/rest/?url=" /swap/strCat
+    /toUri /get.
+
+@export : "demo.rdf".

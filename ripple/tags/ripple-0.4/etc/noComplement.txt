@@ -1,0 +1,128 @@
+
+
+
+
+@prefix : <http://foo#>.
+@define exclusion: (/new rdf:first) /swap (/swap/dip) /swap/dip (/i/assert /unique rdf:first) /swap/dip/i/deny /unique /rdf:first.
+
+1 2 3 4 /union/union/union/unique.
+2 3 /union.
+
+(1 2 3 4 /union/union/union/unique) (2 3 /union) /:exclusion.
+
+s1 s2 (/new rdf:first) /swap (/swap/dip) /swap/dip (/i/assert /unique rdf:first) /swap/dip/i/deny /unique /rdf:first.
+
+
+
+(1 2 3 4 /union/union/union/unique) (2 3 /union).
+(1 2 3 4 /union/union/union/unique) (2 3 /union) (/new rdf:first).
+(1 2 3 4 /union/union/union/unique) (2 3 /union) (/new rdf:first) /swap (/swap/dip) /swap/dip.
+(1 2 3 4 /union/union/union/unique) (2 3 /union) (/new rdf:first) /swap (/swap/dip) /swap/dip (/i/assert /unique rdf:first).
+(1 2 3 4 /union/union/union/unique) (2 3 /union) (/new rdf:first) /swap (/swap/dip) /swap/dip (/i/assert /unique rdf:first) /swap/dip.
+(1 2 3 4 /union/union/union/unique) (2 3 /union) (/new rdf:first) /swap (/swap/dip) /swap/dip (/i/assert /unique rdf:first) /swap/dip /swap/swap.
+
+
+
+
+
+
+
+(1 2 3 4 /union /union /union /unique) (/new rdf:first) /(/swap /dip) (2 3 /union)
+
+
+(1 2 3 4 /union /union /union /unique) (2 3 /union) (/new rdf:first) /swap (/swap /dip) /swap /dip (/i /assert /unique rdf:first)
+
+
+
+(1 2 3 4 /union /union /union /unique) (/new rdf:first) /(/swap /dip) /(/i /assert /unique rdf:first) (2 3 /union)
+
+
+(1 2 3 4 /union /union /union /unique) (/new rdf:first) /(/swap /dip) /i /assert /unique rdf:first (2 3 /union)
+
+
+
+
+
+
+
+A B /new/swap swap/swap/dip /swap/swap
+
+A B /new/swap swap/swap/dip /swap rdf:first /swap
+
+n B A
+n B rdf:first A
+
+
+
+
+A n /swap B
+n A B
+n B A
+n A B
+
+
+n A /a B /b /rdf:first.
+n /A /a /B /bc.
+n A a /dip/i B bc /dip/i.
+n A /(a /dip/i) B bc /dip/i.
+n A /(a /dip/i) B /i/bc.
+n A B (a /dip/i) /swap/dip /i/bc.
+
+
+
+@define excl2: /swap/new /swap rdf:first/swap /i/assert/unique /swap rdf:first/swap /i/deny/unique /rdf:first.
+
+(1 2 3 4 /union/union/union/unique) (2 3 /union) /:excl2.
+(:n1 :n2 :n3 :n4 /union /union /union /unique) (:n2 :n3 /union) /:excl2.
+
+
+
+A B /swap/new /swap rdf:first/swap /i/assert/unique /swap rdf:first/swap /i/deny/unique /rdf:first
+
+
+
+(:n1 :n2 :n3 :n4 /union /union /union /unique) (:n2 :n3 /union) /swap/new /swap rdf:first/swap /i/assert /unique.
+(:n2 :n3 /union) _:node128fv0jllx149.
+(:n2 :n3 /union) _:node128fv0jllx149 /swap rdf:first/swap.
+(:n2 :n3 /union) _:node128fv0jllx149 /swap rdf:first/swap /i.
+(:n2 :n3 /union) _:node128fv0jllx149 /swap rdf:first/swap /i/deny/unique /rdf:first.
+
+
+(:n1 :n2 :n3 :n4 /union/union/union/unique) (:n2 :n3 /union)
+    /swap/new
+    /swap rdf:first/swap /i/assert/unique
+    /swap rdf:first/swap /i/deny/unique
+    /rdf:first.
+
+
+(:n1 :n2 :n3 :n4 /union/union/union/unique) (:n2 :n3 /union)
+    n /rdf:first.
+
+
+
+
+
+
+
+B A n
+B n rdf:first A
+B n rdf:first /A
+B n
+n B
+n rdf:first B
+n rdf:first /B
+n
+
+
+
+
+/new/swap
+
+B A n
+
+
+
+
+
+(1 2 3 4 /union/union/union/unique) (2 3 /union) /new/swap swap/swap/dip /swap/swap.
+

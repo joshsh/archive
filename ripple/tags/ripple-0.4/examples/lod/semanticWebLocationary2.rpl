@@ -1,0 +1,79 @@
+
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@define altitudeDifference: wgs84_pos:alt/dip /wgs84_pos:alt /sub.
+
+@define seattle: <http://www.pipian.com/rdf/places/5809844#5809844>.
+@define spokane: <http://www.pipian.com/rdf/places/5811696#5811696>.
+
+/:spokane /:seattle /:altitudeDifference.
+
+
+
+
+
+@prefix contact: <http://www.w3.org/2000/10/swap/pim/contact#>.
+
+<http://www.pipian.com/rdf/places/3615268#3615268>.
+<http://www.pipian.com/rdf/places/3615268#3615268>/contact:nearestAirport.
+
+
+
+<http://www.pipian.com/rdf/places/5811696#5811696>.
+
+
+
+<http://www.pipian.com/rdf/places/country/US#US>
+<http://www.pipian.com/rdf/places/6252001#6252001>
+
+
+
+http://www.pipian.com/rdf/places/5811704#5811704
+   owl:sameAs
+      <http://sws.geonames.org/5811704/>
+      <http://www.pipian.com/rdf/places/subdiv/US.WA.063#US.WA.063>
+
+
+<http://www.pipian.com/rdf/places/subdiv/US.WA.063#US.WA.063>
+
+
+
+
+# Highest and lowest points:
+Mt. Elbert, Co.
+<http://www.pipian.com/rdf/places/5420942#5420942>
+
+
+
+
+
+
+latitude, longitude -- xsd:double
+altitude, population -- xsd:integer
+
+
+
+
+
+<http://www.pipian.com/rdf/places/subdiv/Georgia>.
+
+<http://www.pipian.com/rdf/places/4197000#4197000>
+   owl:sameAs
+      <http://sws.geonames.org/4197000/>
+      <http://www.pipian.com/rdf/places/subdiv/US.GA#US.GA>
+
+
+
+
+
+# Pleasantville
+<http://www.geonames.org/4503646/>.
+http://sws.geonames.org/4871647
+
+(
+<http://www.pipian.com/rdf/places/4503646#4503646>
+<http://www.pipian.com/rdf/places/4871647#4871647>
+<http://www.pipian.com/rdf/places/5131757#5131757>
+<http://www.pipian.com/rdf/places/4144139#4144139>
+<http://www.pipian.com/rdf/places/4263205#4263205>
+)/each/con:nearestAirport.
+

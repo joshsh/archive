@@ -1,0 +1,25 @@
+@prefix lingvoj: <http://www.lingvoj.org/ontology#>.
+
+@define lingvojTerms:
+    lingvoj:hasAbility1
+    lingvoj:hasAbility2
+    lingvoj:hasAbility3
+    lingvoj:hasAbility4
+    lingvoj:hasAbility5
+    lingvoj:hasCommunicationLanguage
+    lingvoj:hasMemberLanguage
+    lingvoj:hasNativeLanguage
+    lingvoj:hasWorkingLanguage
+    lingvoj:iso1
+    lingvoj:iso2B
+    lingvoj:iso2T
+    lingvoj:iso3
+    lingvoj:Lingvo
+    .
+
+# See these terms used in Bernard's FOAF:
+<http://perso.orange.fr/universimmedia/foaf.rdf#me>.
+
+
+# Currently (as of 9/13/07), all language data is here:
+http://www.lingvoj.org/lingvoj.rdf

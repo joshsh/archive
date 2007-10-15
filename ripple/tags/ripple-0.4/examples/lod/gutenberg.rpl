@@ -1,0 +1,15 @@
+# Description of a text.
+<http://www4.wiwiss.fu-berlin.de/gutendata/resource/etext19994>.
+
+# Retrieve this text in plaint text format.
+<http://www4.wiwiss.fu-berlin.de/gutendata/resource/etext19994>
+    /dcterms:version
+    (/toString "txt"/endsWith) /:restrict
+    1 /limit
+    /get.
+
+# List of files.
+<http://www4.wiwiss.fu-berlin.de/gutendata/all/files>.
+
+# A contributor.
+<http://www4.wiwiss.fu-berlin.de/gutendata/resource/people/Pogany_Willy>.

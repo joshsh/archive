@@ -1,0 +1,60 @@
+# Some DBPedia resources.
+<http://dbpedia.org/resource/Agatha_Christie>.
+<http://dbpedia.org/resource/Innsbruck>.
+<http://dbpedia.org/resource/Tetris>.
+
+### Geonames and Eurostat linkage ######
+
+@define berlin: <http://dbpedia.org/resource/Berlin>.
+/:berlin.
+
+# All outbound links to HTTP URIs from this resource.
+/:berlin/links/popd/popd/toString/unique ("http" /startsWith) /:restrict.
+
+# Reciprocal links with Geonames and Eurostat.
+/:berlin /owl:sameAs.
+/:berlin /owl:sameAs /owl:sameAs /unique.
+
+
+### Musicbrainz linkage ################
+
+@define beatles: <http://dbpedia.org/resource/The_Beatles>.
+/:beatles.
+
+# Link into Zitgist/Musicbrainz (?).  When tried, object URI could not be dereferenced.
+/:beatles /owl:sameAs.
+
+
+### revyu.com linkage ##################
+
+# Reciprocal owl:sameAs links with revyu.com
+<http://dbpedia.org/resource/Licence_to_Kill>/owl:sameAs.
+
+
+### Project Gutenberg linkage ##########
+
+
+
+
+
+
+
+!  Eurostat arrow should be bidirectional
+
+
+Haven't found these links yet:
+
+W3C WordNet
+World Factbook
+Book Mashup
+DBLP Bibliography
+Project Gutenberg
+
+US Census Data
+
+
+
+
+### dead links (as of 9/5/07)
+# <http://dbpedia.org/resource/The_Beatles> owl:sameAs <http://zitgist.com/music/band/b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d>.
+# <http://dbpedia.org/resource/Synergy> rdf:type <http://dbpedia.org/class/yago/Buzzword106608277>

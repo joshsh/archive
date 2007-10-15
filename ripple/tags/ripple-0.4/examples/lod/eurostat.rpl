@@ -1,0 +1,30 @@
+# Note: terms are apparently not dereferenceable (404 error)
+@prefix eurostat: <http://www4.wiwiss.fu-berlin.de/eurostat/resource/eurostat/>.
+
+# Not dereferenceable:
+<http://www4.wiwiss.fu-berlin.de/eurostat/page/countries/United_Kingdom>
+<http://www4.wiwiss.fu-berlin.de/eurostat/page/regions/Wales>
+
+# Dereferenceable (redirect to 'page' URLs for HTTP requests):
+<http://www4.wiwiss.fu-berlin.de/eurostat/resource/countries/United_Kingdom>
+<http://www4.wiwiss.fu-berlin.de/eurostat/resource/regions/Wales>
+
+# RDF document URIs:
+<http://www4.wiwiss.fu-berlin.de/eurostat/data/countries/United_Kingdom>
+<http://www4.wiwiss.fu-berlin.de/eurostat/data/regions/Wales>
+
+
+
+@define france: <http://www4.wiwiss.fu-berlin.de/eurostat/resource/countries/France>.
+
+# Links into DBpedia.
+/:france/owl:sameAs.
+
+# Note: the result is an integer, whereas the operands are longs.
+@define population_female:
+    /dup /eurostat:population_total
+    /swap /eurostat:population_male
+    /sub.
+
+/:france/eurostat:population_male.
+/:france/:population_female.

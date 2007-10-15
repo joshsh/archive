@@ -1,0 +1,29 @@
+
+@define hello:
+    "Hello world!".
+
+
+# If predicates and primitive functions are really equivalent to quoations in
+# Ripple, then the following expressions should be equivalent:
+(3) dup /cat.
+(3 /dup).
+
+
+
+# Isn't this a little inconsistent?
+2 /swap.  # nothing.
+2 /swap 3  # 2 /swap 3
+
+
+
+
+# Use 'triples' together with 'assert' to manually import RDF documents
+# (including statements involving blank nodes and literals).
+# Note: namespace prefix definitions are not imported.
+<http://example.org/ns#a>.
+<http://fortytwo.net/2007/07/notDereferenceable.ttl> /triples/i/assert.
+<http://example.org/ns#a>.
+
+
+
+<http://projects.semwebcentral.org/projects/ripple>.

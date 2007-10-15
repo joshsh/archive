@@ -1,0 +1,29 @@
+# The GForge ontology ##################
+
+# Note: own definition.
+@prefix gforge: <http://swc.projects.semwebcentral.org/owl/gforge-ont#>.
+
+# Note: last time I checked, I got a 406 error dereferencing these.
+@define gForgeTerms:
+    gforge:Category
+    gforge:Project
+    gforge:User
+    gforge:admin
+    gforge:audience
+    gforge:developmentstatus
+    gforge:homepage
+    gforge:id
+    gforge:inputlanguage
+    gforge:interface
+    gforge:language
+    gforge:license
+    gforge:member
+    gforge:name
+    gforge:natlanguage
+    gforge:outputlanguage
+    gforge:registerTime
+    gforge:semwebtoolcategories
+    gforge:shortDescription
+    gforge:shortName
+    gforge:subCategoryOf
+    .
