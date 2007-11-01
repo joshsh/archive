@@ -547,7 +547,7 @@ public synchronized SailConnection getSailConnection()
 			{
 				sailConnection.addStatement(
 					(Resource) subjValue, (URI) predValue, objValue,
-					RdfUtils.inferContextUri( (URI) subjValue ) );
+					RdfUtils.inferContextUri( (URI) subjValue, valueFactory ) );
 			}
 
 			else
