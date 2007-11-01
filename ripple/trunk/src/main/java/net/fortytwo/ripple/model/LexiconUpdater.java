@@ -45,7 +45,7 @@ public class LexiconUpdater implements RdfDiffSink
 			{
 				public void put( final Statement st ) throws RippleException
 				{
-System.out.println( "st = " + st );
+//System.out.println( "st = " + st );
 					Resource subj = st.getSubject();
 					URI pred = st.getPredicate();
 					Value obj = st.getObject();

@@ -34,6 +34,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.query.BindingSet;
+import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.sail.Sail;
@@ -53,7 +54,7 @@ public class LinkedDataSailConnection implements SailConnection
 	private boolean open = false;
 
 	private Sail localStore;
-	private SailConnection localStoreConnection;
+	private SailConnection wrappedConnection;
 	private ValueFactory valueFactory;
 	private Set<SailConnectionListener> listeners = null;
 
@@ -117,6 +118,12 @@ public class LinkedDataSailConnection implements SailConnection
 		throw new SailException( "this method is not implemented" );
 	}
 
+	public void clearNamespaces()
+		throws SailException
+	{
+		wrappedConnection.clearNamespaces();
+	}
+
 	public void close()
 		throws SailException
 	{
@@ -145,11 +152,12 @@ public class LinkedDataSailConnection implements SailConnection
 
 	public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
 			final TupleExpr tupleExpr,
+			final Dataset dataset,
 			final BindingSet bindings,
 			final boolean includeInferred )
 		throws SailException
 	{
-		throw new SailException( "this method is not implemented" );
+return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	}
 
 	public synchronized CloseableIteration<? extends Resource, SailException> getContextIDs()
@@ -157,7 +165,7 @@ public class LinkedDataSailConnection implements SailConnection
 	{
 		try
 		{
-			return localStoreConnection.getContextIDs();
+			return wrappedConnection.getContextIDs();
 		}
 
 		catch ( SailException e )
@@ -173,7 +181,7 @@ public class LinkedDataSailConnection implements SailConnection
 		try
 		{
 			// Note: only committed namespaces will match.
-			return localStoreConnection.getNamespace( prefix );
+			return wrappedConnection.getNamespace( prefix );
 		}
 
 		catch ( SailException e )
@@ -189,7 +197,7 @@ public class LinkedDataSailConnection implements SailConnection
 		try
 		{
 			// Note: only committed namespaces will match.
-			return localStoreConnection.getNamespaces();
+			return wrappedConnection.getNamespaces();
 		}
 
 		catch ( SailException e )
@@ -228,7 +236,7 @@ public class LinkedDataSailConnection implements SailConnection
 			try
 			{
 				return new StatementIteration(
-					localStoreConnection.getStatements(
+					wrappedConnection.getStatements(
 						subj, pred, obj, includeInferred, contexts ) );
 			}
 	
@@ -335,7 +343,7 @@ public class LinkedDataSailConnection implements SailConnection
 		try
 		{
 			// Number of committed statements.
-			return localStoreConnection.size( contexts );
+			return wrappedConnection.size( contexts );
 		}
 
 		catch ( SailException e )
@@ -388,8 +396,8 @@ public class LinkedDataSailConnection implements SailConnection
 	{
 		try
 		{
-//localStoreConnection.commit();
-			localStoreConnection.setNamespace( ns.getPrefix(), ns.getName() );
+//wrappedConnection.commit();
+			wrappedConnection.setNamespace( ns.getPrefix(), ns.getName() );
 		}
 
 		catch ( Throwable t )
@@ -409,7 +417,7 @@ public class LinkedDataSailConnection implements SailConnection
 		{
 			if ( null == context )
 			{
-				localStoreConnection.addStatement(
+				wrappedConnection.addStatement(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject() );
@@ -417,7 +425,7 @@ public class LinkedDataSailConnection implements SailConnection
 
 			else
 			{
-				localStoreConnection.addStatement(
+				wrappedConnection.addStatement(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject(),
@@ -448,7 +456,7 @@ public class LinkedDataSailConnection implements SailConnection
 		{
 			// Note: removes the namespace with the given prefix,
 			// regardless of the associated URI.
-			localStoreConnection.removeNamespace( ns.getPrefix() );
+			wrappedConnection.removeNamespace( ns.getPrefix() );
 		}
 
 		catch ( Throwable t )
@@ -467,7 +475,7 @@ public class LinkedDataSailConnection implements SailConnection
 		{
 			if ( null == context )
 			{
-				localStoreConnection.removeStatements(
+				wrappedConnection.removeStatements(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject() );
@@ -475,7 +483,7 @@ public class LinkedDataSailConnection implements SailConnection
 
 			else
 			{
-				localStoreConnection.removeStatements(
+				wrappedConnection.removeStatements(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject(),
@@ -504,20 +512,20 @@ public class LinkedDataSailConnection implements SailConnection
 	private void openLocalStoreConnection()
 		throws SailException
 	{
-		localStoreConnection = localStore.getConnection();
+		wrappedConnection = localStore.getConnection();
 	}
 
 	private void closeLocalStoreConnection( final boolean rollback )
 		throws SailException
 	{
-		if ( localStoreConnection.isOpen() )
+		if ( wrappedConnection.isOpen() )
 		{
 			if ( rollback )
 			{
-				localStoreConnection.rollback();
+				wrappedConnection.rollback();
 			}
 
-			localStoreConnection.close();
+			wrappedConnection.close();
 		}
 
 		else
@@ -539,7 +547,7 @@ public class LinkedDataSailConnection implements SailConnection
 			throw new SailException( e );
 		}
 
-		localStoreConnection.commit();
+		wrappedConnection.commit();
 	}
 
 	/**
@@ -591,7 +599,7 @@ public class LinkedDataSailConnection implements SailConnection
 			final CloseableIteration<? extends Statement, SailException> iter )
 		{
 			this.iter = iter;
-			originalConnection = localStoreConnection;
+			originalConnection = wrappedConnection;
 		}
 
 		public boolean hasNext() throws SailException
@@ -663,7 +671,7 @@ public class LinkedDataSailConnection implements SailConnection
 
 		private boolean ok()
 		{
-			return originalConnection == localStoreConnection;
+			return originalConnection == wrappedConnection;
 		}
 	}
 }

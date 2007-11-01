@@ -17,6 +17,10 @@
     lingvoj:Lingvo
     .
 
+# A lingvoj language URI.
+<http://www.lingvoj.org/lang/en>.
+
+
 # See these terms used in Bernard's FOAF:
 <http://perso.orange.fr/universimmedia/foaf.rdf#me>.
 

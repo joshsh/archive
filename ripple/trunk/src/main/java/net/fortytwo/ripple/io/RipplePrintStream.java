@@ -67,6 +67,7 @@ public class RipplePrintStream extends PrintStream
 			else if ( v instanceof Literal )
 			{
 				URI dataTypeUri = ( (Literal) v ).getDatatype();
+				String label = ( (Literal) v ).getLabel().toString();
 
 				// Note: URI's equals() returns "true if the other object is an
 				//       instance of URI  and their String-representations are
@@ -75,27 +76,27 @@ public class RipplePrintStream extends PrintStream
 				{
 					if ( dataTypeUri.equals( XMLSchema.BOOLEAN ) )
 					{
-						print( v.toString() );
+						print( label );
 					}
 
 					else if ( dataTypeUri.equals( XMLSchema.DOUBLE ) )
 					{
-						print( v.toString() );
+						print( label );
 					}
 
 					else if ( dataTypeUri.equals( XMLSchema.INTEGER ) )
 					{
-						print( v.toString() );
+						print( label );
 					}
 
 					else if ( dataTypeUri.equals( XMLSchema.STRING ) )
 					{
-						printEscapedString( v.toString() );
+						printEscapedString( label );
 					}
 
 					else
 					{
-						printEscapedString( v.toString() );
+						printEscapedString( label );
 						print( "^^" );
 						printUri( dataTypeUri );
 					}
@@ -104,7 +105,7 @@ public class RipplePrintStream extends PrintStream
 				else
 				{
 					// For now, plain literals are printed as string-typed literals.
-					printEscapedString( v.toString() );
+					printEscapedString( label );
 				}
 
 				String language = ( (Literal) v ).getLanguage();
