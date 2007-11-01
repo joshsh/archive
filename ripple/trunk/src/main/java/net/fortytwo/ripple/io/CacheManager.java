@@ -75,7 +75,7 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 			: RdfUtils.read( url, sc, url.toString(), format );
 
 		mc.commit();
-		restoreCacheMetaData( mc );
+//		restoreCacheMetaData( mc );
 
 		return format;
 	}
@@ -90,7 +90,7 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 			initialize( mc );
 		}
 
-		persistCacheMetadata( mc );
+//		persistCacheMetadata( mc );
 
 		SesameOutputAdapter soa = RdfUtils.createOutputAdapter( out, format );
 		soa.startRDF();
@@ -104,9 +104,14 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 	 * Writes cache metadata to the triple store.
 	 * Note: for now, this metadata resides in the null context.
 	 */
-	private static void persistCacheMetadata( final ModelConnection mc )
+	public static void persistCacheMetadata( final ModelConnection mc )
 		throws RippleException
 	{
+		if ( !initialized )
+		{
+			initialize( mc );
+		}
+		
 		Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
 
 		mc.removeStatementsAbout( rplCacheRoot, null );
@@ -131,9 +136,14 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 	 * Restores dereferencer state by reading success and failure memos from
 	 * the last session (if present).
 	 */
-	private static void restoreCacheMetaData( final ModelConnection mc )
+	public static void restoreCacheMetaData( final ModelConnection mc )
 		throws RippleException
 	{
+		if ( !initialized )
+		{
+			initialize( mc );
+		}
+		
 		final Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
 
 		Sink<RdfValue> successMemoSink = new Sink<RdfValue>()

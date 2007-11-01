@@ -1277,6 +1277,8 @@ public synchronized SailConnection getSailConnection()
 			{
 				sink.put( new RdfValue( iter.next() ) );
 			}
+			
+			iter.close();
 		}
 
 		catch ( SailException e )

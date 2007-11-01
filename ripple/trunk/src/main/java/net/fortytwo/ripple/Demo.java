@@ -88,6 +88,7 @@ public final class Demo
 			}
 
 			CacheManager.loadCache( storeUrl, Ripple.cacheFormat(), mc );
+			CacheManager.restoreCacheMetaData( mc );
 		}
 
 		// Set the default namespace.
@@ -117,6 +118,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 			}
 
 			// Write the cache out in the same format as it was read in.
+			CacheManager.persistCacheMetadata( mc );
 			CacheManager.writeCacheTo( storeOut, Ripple.cacheFormat(), mc );
 
 			try
