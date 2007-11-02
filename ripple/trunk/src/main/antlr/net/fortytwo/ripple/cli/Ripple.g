@@ -2,6 +2,8 @@ header
 {
 package net.fortytwo.ripple.cli;
 
+import java.util.Properties;
+
 import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.BooleanAst;
 import net.fortytwo.ripple.cli.ast.BlankNodeAst;
@@ -10,6 +12,7 @@ import net.fortytwo.ripple.cli.ast.IntegerAst;
 import net.fortytwo.ripple.cli.ast.KeywordAst;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.ast.OperatorAst;
+import net.fortytwo.ripple.cli.ast.PropertyAnnotatedAst;
 import net.fortytwo.ripple.cli.ast.QNameAst;
 import net.fortytwo.ripple.cli.ast.StringAst;
 import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
@@ -194,13 +197,18 @@ MULTI_LINE_COMMENT
 DOUBLE_HAT : "^^" ;
 
 L_PAREN : '(' ;
-
 R_PAREN : ')' ;
 
+L_BRACKET : '[';
+R_BRACKET : ']';
+
 SEMI : ';' ;
-EOS : '.' ;
+PERIOD : '.' ;
+COMMA : ',';
 
 COLON : ':' ;
+
+EQUAL : '=';
 
 OP_PRE : '/' ;
 OP_POST : '!' ;
@@ -284,17 +292,17 @@ nt_Statement
 {
 	ListAst r;
 }
-	// A directive is executed as soon as EOS is matched in the individual
+	// A directive is executed as soon as PERIOD is matched in the individual
 	// rule.
 	: nt_Directive
 
 	// Query statements are always lists.
 	| r=nt_List (
-		EOS { matchQuery( r ); }
+		PERIOD { matchQuery( r ); }
  		| SEMI { matchContinuingQuery( r ); } )
 
 	// Empty statements are effectively ignored.
-	| EOS { matchQuery( new ListAst() ); }
+	| PERIOD { matchQuery( new ListAst() ); }
 	| SEMI { matchContinuingQuery( new ListAst() ); }
 	;
 
@@ -313,12 +321,12 @@ nt_List returns [ ListAst list ]
 		first = nt_Node
 
 		(	(WS) => ( nt_Ws
-				( (~(EOS | SEMI | R_PAREN )) => rest = nt_List
+				( (~(PERIOD | SEMI | R_PAREN )) => rest = nt_List
 				| {}
 				) )
 
 			// Tail of the list.
-		|	(~(WS | EOS | SEMI | R_PAREN)) => rest = nt_List
+		|	(~(WS | PERIOD | SEMI | R_PAREN)) => rest = nt_List
 
 			// End of the list.
 		|	()
@@ -342,14 +350,44 @@ nt_List returns [ ListAst list ]
 nt_Node returns [ Ast r ]
 {
 	r = null;
+	Properties props;
 }
-	: r=nt_Resource
-	| r=nt_Literal
-	| r=nt_ParenthesizedList
-	| OP_POST { r = new OperatorAst(); }
+	: ( r=nt_Resource
+		| r=nt_Literal
+		| r=nt_ParenthesizedList
+		| OP_POST { r = new OperatorAst(); }
+		)
+	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new PropertyAnnotatedAst( r, props ); } )
+	  | ())
 	;
 
 
+nt_Properties returns [ Properties props ]
+{
+	props = new Properties();
+}
+	: L_BRACKET (WS)? nt_PropertyList[props] R_BRACKET
+	;
+
+	
+nt_PropertyList[ Properties props ]
+{
+	String name;
+}
+	: name=nt_PropertyName EQUAL value:STRING (WS)? { props.setProperty( name, value.getText() ); }
+		( COMMA (WS)? nt_PropertyList[props] )?
+	;
+	
+	
+nt_PropertyName returns [ String name ]
+{
+	String rest;
+}
+	: name=nt_Name
+		( PERIOD rest=nt_PropertyName { name += rest; } )?
+	;
+	
+	
 nt_ParenthesizedList returns [ ListAst r ]
 {
 	r = null;
@@ -482,59 +520,59 @@ nt_Directive
 	String localName = null;
 	ListAst rhs;
 }
-	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? EOS
+	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? PERIOD
 		{
 			matchCommand( new CountStatementsCmd() );
 		}
 
-	| DRCTV_DEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ EOS
+	| DRCTV_DEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
 		{
 			matchCommand( new DefineTermCmd( rhs, localName ) );
 		}
 
-	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? EOS
+	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? PERIOD
 		{
 			matchCommand( new ExportNsCmd( nsPrefix, exFile.getText() ) );
 		}
 
-	| DRCTV_HELP (nt_Ws)? EOS
+	| DRCTV_HELP (nt_Ws)? PERIOD
 		{
 			System.out.println( "\nSorry, the @help directive is just a placeholder for now.\n" );
 		}
 
 	| DRCTV_LIST nt_Ws
-		( "contexts" (nt_Ws)? EOS
+		( "contexts" (nt_Ws)? PERIOD
 			{
 				matchCommand( new ShowContextsCmd() );
 			}
-		| "prefixes" (nt_Ws)? EOS
+		| "prefixes" (nt_Ws)? PERIOD
 			{
 				matchCommand( new ShowNamespacesCmd() );
 			}
 		)
 
-	| DRCTV_PREFIX nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? COLON (nt_Ws)? ns=nt_URIRef (nt_Ws)? EOS
+	| DRCTV_PREFIX nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? COLON (nt_Ws)? ns=nt_URIRef (nt_Ws)? PERIOD
 		{
 			matchCommand( new DefinePrefixCmd( nsPrefix, ns ) );
 		}
 
-	| DRCTV_QUIT (nt_Ws)? EOS
+	| DRCTV_QUIT (nt_Ws)? PERIOD
 		{
 			matchQuit();
 //			matchCommand( new QuitCmd() );
 		}
 
-	| DRCTV_SAVEAS nt_Ws saFile:STRING (nt_Ws)? EOS
+	| DRCTV_SAVEAS nt_Ws saFile:STRING (nt_Ws)? PERIOD
 		{
 			matchCommand( new SaveAsCmd( saFile.getText() ) );
 		}
 
-	| DRCTV_SERQL nt_Ws query:STRING (nt_Ws)? EOS
+	| DRCTV_SERQL nt_Ws query:STRING (nt_Ws)? PERIOD
 		{
 			matchCommand( new SerqlQueryCmd( query.getText() ) );
 		}
 
-	| DRCTV_UNDEFINE nt_Ws localName=nt_Name (nt_Ws)? EOS
+	| DRCTV_UNDEFINE nt_Ws localName=nt_Name (nt_Ws)? PERIOD
 		{
 			matchCommand( new UndefineTermCmd( localName ) );
 		}
