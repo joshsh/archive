@@ -9,13 +9,11 @@
 
 package net.fortytwo.ripple.rdf;
 
-import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.SynchronizedSink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.SynchronizedSink;
 
 public class SynchronizedRdfSink implements RdfSink
 {

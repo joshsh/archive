@@ -14,8 +14,6 @@ import net.fortytwo.ripple.rdf.RdfCollector;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfSource;
 
-import org.openrdf.model.Statement;
-
 public class RdfDiff implements RdfDiffSink, RdfDiffSource
 {
 	private RdfCollector added, subtracted;

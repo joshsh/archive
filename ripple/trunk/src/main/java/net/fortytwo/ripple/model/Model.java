@@ -9,35 +9,19 @@
 
 package net.fortytwo.ripple.model;
 
-import info.aduna.iteration.CloseableIteration;
-
-import java.util.Collection;
-import java.util.LinkedList;
-
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.rdf.sail.LinkedDataSailConnection;
 import net.fortytwo.ripple.util.LibraryLoader;
-import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
-
-import org.openrdf.model.Resource;
-import org.openrdf.model.Namespace;
 import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
 
 
 public class Model
 {
 	private static final Logger LOGGER = Logger.getLogger( Model.class );
 
-	private String name;
 	private LinkedDataSail sail;
 public LinkedDataSail getSail()
 {
@@ -50,12 +34,11 @@ public LinkedDataSail getSail()
 		return bridge;
 	}
 
-	public Model( final Sail localStore, final String name )
+	public Model( final Sail localStore )
 		throws RippleException
 	{
-		LOGGER.debug( "Creating new Model '" + name + "'" );
+		LOGGER.debug( "Creating new Model" );
 	
-		this.name = name;
 		bridge = new ModelBridge();
 		UrlFactory urlFactory = new UrlFactory();
 		sail = new LinkedDataSail( localStore, urlFactory );

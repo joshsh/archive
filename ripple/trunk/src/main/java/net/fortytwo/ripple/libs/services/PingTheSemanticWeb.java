@@ -9,28 +9,12 @@
 
 package net.fortytwo.ripple.libs.services;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
 
-import java.io.InputStream;
-
-import java.net.URL;
-import java.net.URLEncoder;
-import java.net.URLConnection;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import org.jdom.Document;
-import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
 /**
@@ -77,12 +61,13 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 			initialize();
 		}
 
+/*
 		String type;
 		int maxResults;
-
-		type = mc.stringValue( stack.getFirst() );
+*/
+//		type = mc.stringValue( stack.getFirst() );
 		stack = stack.getRest();
-		maxResults = mc.intValue( stack.getFirst() );
+//		maxResults = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
 sink.put( new RippleList(

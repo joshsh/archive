@@ -12,7 +12,6 @@ package net.fortytwo.ripple.control;
 import java.util.LinkedList;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
 
 /**
  * A queue of tasks which are executed sequentially and in FIFO order.
@@ -20,19 +19,6 @@ import net.fortytwo.ripple.util.Sink;
 public class TaskQueue extends Task
 {
 	private LinkedList<Task> queue = new LinkedList<Task>();
-
-	private Sink<Task> completedTaskSink = new Sink<Task>()
-	{
-		public void put( final Task task ) throws RippleException
-		{
-//System.out.println( "[" + this + "]put( " + task + ")" );
-//System.out.println( "    [-] queue.size() is now: " + queue.size() );
-			synchronized ( completedTaskSink )
-			{
-				completedTaskSink.notify();
-			}
-		}
-	};
 
 	public void add( final Task task )
 	{

@@ -44,7 +44,6 @@ public class Uriqr extends PrimitiveFunction
 	private static final int ARITY = 1;
 
 	private static SAXBuilder saxBuilder = null;
-	private static XPath resultPath = null;
 
 	private static void initialize() throws RippleException
 	{

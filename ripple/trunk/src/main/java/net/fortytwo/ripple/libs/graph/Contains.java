@@ -12,12 +12,9 @@ package net.fortytwo.ripple.libs.graph;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
-
-import java.util.Iterator;
 
 /**
  * A primitive which consumes an RDF container and produces all items in the

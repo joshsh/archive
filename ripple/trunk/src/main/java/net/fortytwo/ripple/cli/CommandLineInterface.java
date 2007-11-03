@@ -275,7 +275,7 @@ System.out.println( "reader.getTerminal() = " + term );
 	private void updateCompletors()
 	{
 		LOGGER.debug( "updating completors" );
-		List completors = new ArrayList();
+		List<Completor> completors = new ArrayList<Completor>();
 
 		try
 		{

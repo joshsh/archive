@@ -19,7 +19,7 @@ public class UniqueFilter<T> implements Sink<T>
 	private Set<T> set = new HashSet<T>();
 	private Sink<T> sink;
 
-	public UniqueFilter( final Sink sink )
+	public UniqueFilter( final Sink<T> sink )
 	{
 		this.sink = sink;
 	}

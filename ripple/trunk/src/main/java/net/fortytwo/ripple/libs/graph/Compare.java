@@ -24,9 +24,6 @@ public class Compare extends PrimitiveFunction
 {
 	private static final int ARITY = 2;
 
-	private RippleValue truePrim = null;
-	private RippleValue falsePrim = null;
-
 	public Compare()
 		throws RippleException
 	{

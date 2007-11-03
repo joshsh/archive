@@ -10,24 +10,19 @@
 package net.fortytwo.ripple.io;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.io.OutputStream;
-import java.io.InputStream;
-
-import java.net.URL;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
-
-import java.util.Iterator;
+import java.net.URL;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiff;
 import net.fortytwo.ripple.util.HttpUtils;
 
-import org.openrdf.model.Statement;
-import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 
 public final class SparqlUpdater
 {

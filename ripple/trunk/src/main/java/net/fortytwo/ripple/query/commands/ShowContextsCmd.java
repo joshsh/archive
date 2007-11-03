@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.query.commands;
 
-import java.util.Iterator;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;

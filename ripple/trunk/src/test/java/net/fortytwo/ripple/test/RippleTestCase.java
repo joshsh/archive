@@ -138,7 +138,7 @@ public abstract class RippleTestCase extends TestCase
 			// Warning: we never call shutDown() on this repository.
 			Sail sail = RdfUtils.createMemoryStoreSail();
 
-			model = new Model( sail, "Unit Test Model" );
+			model = new Model( sail );
 		}
 
 		return model;

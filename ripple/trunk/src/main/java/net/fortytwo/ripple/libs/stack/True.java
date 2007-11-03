@@ -39,11 +39,10 @@ public class True extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue x, y;
+		RippleValue x;
 
 		x = stack.getFirst();
 		stack = stack.getRest();
-		y = stack.getFirst();
 		stack = stack.getRest();
 
 		sink.put( new RippleList( x, stack ) );

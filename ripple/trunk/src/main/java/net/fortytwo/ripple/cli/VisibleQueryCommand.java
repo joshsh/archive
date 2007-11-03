@@ -61,12 +61,12 @@ public class VisibleQueryCommand extends Command
 		TurtleView view = new TurtleView(
 			qe.getPrintStream(), mc );
 
-		Sink<RippleList> med = new SynchronizedSink(
+		Sink<RippleList> med = new SynchronizedSink<RippleList>(
 			( doBuffer
 				? new Buffer<RippleList>( view )
 				: view ) );
 
-		results = new Switch(
+		results = new Switch<RippleList>(
 			new Tee<RippleList>( med, resultHistory ),
 			new NullSink<RippleList>() );
 

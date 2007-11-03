@@ -10,12 +10,10 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import java.net.URL;
-
 import java.util.Collection;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -28,9 +26,6 @@ import net.fortytwo.ripple.util.StringUtils;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
-
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -221,7 +216,7 @@ public class HttpUriDereferencer implements Dereferencer
 			// the value in the appropriate context.
 			if ( successMemos.contains( memo ) )
 			{
-				URI context = mc.createUri( memo );
+//				URI context = mc.createUri( memo );
 //				mc.removeStatementsAbout( rv, context );
 
 				successMemos.remove( memo );

@@ -11,7 +11,6 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.ListNode;
@@ -19,13 +18,10 @@ import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 
 public class RippleList extends ListNode<RippleValue> implements RippleValue
 {
-	private static final RdfValue RDF_TYPE = new RdfValue( RDF.TYPE );
-	private static final RdfValue RDF_LIST = new RdfValue( RDF.LIST );
 	private static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
 	private static final RdfValue RDF_REST = new RdfValue( RDF.REST );
 	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
@@ -118,38 +114,6 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		rest = null;
 
 		rdfEquivalent = RDF_NIL;
-	}
-
-	private RippleList( final RdfValue v, final ModelConnection mc )
-		throws RippleException
-	{
-		RdfValue curRdf = v;
-		rest = NIL;
-
-		for (;;)  // break out when we get to rdf:nil
-		{
-			rdfEquivalent = curRdf;
-
-			// Note: it might be more efficient to use ModelBridge only
-			//       lazily, binding RDF to generic RippleValues on an
-			//       as-needed basis.  However, for now there is no better
-			//       place to do this when we're coming from an rdf:List.
-			//       Consider a list containing operators.
-			first = mc.getModel().getBridge().get(
-				mc.findUniqueProduct( curRdf, RDF_FIRST ) );
-
-			curRdf = mc.findAtLeastOneObject( curRdf, RDF_REST );
-			if ( curRdf.equals( RDF_NIL ) )
-			{
-				break;
-			}
-
-			else
-			{
-				rest = new RippleList( first, rest );
-				rest.rdfEquivalent = rdfEquivalent;
-			}
-		}
 	}
 
 	public RippleList push( final RippleValue first )

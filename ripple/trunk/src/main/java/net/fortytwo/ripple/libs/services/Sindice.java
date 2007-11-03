@@ -67,6 +67,7 @@ public class Sindice extends PrimitiveFunction
 		return ARITY;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
 						final ModelConnection mc )
@@ -173,7 +174,7 @@ http://sindice.com/beta/lookup_uri?uri=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerner
 		// Nonempty result set.
 		if ( root.getName().equals( "sindice-sources" ) )
 		{
-			Iterator<Element> childIter = root.getChildren().iterator();
+			Iterator<Element> childIter = (Iterator<Element>) root.getChildren().iterator();
 			while ( childIter.hasNext() )
 			{
 				Element sourceEl = childIter.next();

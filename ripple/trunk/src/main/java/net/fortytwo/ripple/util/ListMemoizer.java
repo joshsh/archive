@@ -9,7 +9,7 @@
 
 package net.fortytwo.ripple.util;
 
-public class ListMemoizer<T extends Comparable, M>
+public class ListMemoizer<T extends Comparable<T>, M>
 {
 	private T first;
 	private M memo;
@@ -32,7 +32,7 @@ public class ListMemoizer<T extends Comparable, M>
 
 		else
 		{
-			rest = new ListMemoizer( r, memo );
+			rest = new ListMemoizer<T, M>( r, memo );
 			this.memo = null;
 		}
 	}

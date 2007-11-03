@@ -11,24 +11,17 @@ package net.fortytwo.ripple.model;
 
 import info.aduna.iteration.CloseableIteration;
 
-import java.io.OutputStream;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Random;
+import java.util.List;
+import java.util.Set;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.control.Task;
 import net.fortytwo.ripple.control.TaskSet;
-import net.fortytwo.ripple.rdf.RdfNullSink;
-import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.Buffer;
@@ -40,7 +33,6 @@ import net.fortytwo.ripple.util.Source;
 import net.fortytwo.ripple.util.UniqueFilter;
 
 import org.apache.log4j.Logger;
-
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Namespace;
@@ -49,12 +41,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.RDFHandler;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
@@ -66,7 +53,7 @@ public class ModelConnection
 	private static Set<ModelConnection> openConnections
 		= new LinkedHashSet<ModelConnection>();
 
-	private static Random rand = new Random();
+//	private static Random rand = new Random();
 
 	private Model model;
 	private SailConnection sailConnection;
@@ -218,7 +205,7 @@ public synchronized SailConnection getSailConnection()
 			Iterator<ModelConnection> i = openConnections.iterator();
 			while ( i.hasNext() )
 			{
-				ModelConnection mc = i.next();
+//				ModelConnection mc = i.next();
 //				mc.close();
 			}
 		}
@@ -819,6 +806,7 @@ public synchronized SailConnection getSailConnection()
 		}
 	}
 
+/*
 	private static int randomInt( final int lo, final int hi )
 	{
 		int n = hi - lo + 1;
@@ -831,8 +819,7 @@ public synchronized SailConnection getSailConnection()
 
 		return lo + i;
 	}
-
-/*
+	
 	URI createRandomUri() throws RippleException
 	{
 		return createUri( "urn:random:" + randomInt( 0, Integer.MAX_VALUE ) );
@@ -1195,7 +1182,7 @@ public synchronized SailConnection getSailConnection()
 				}
 			};
 
-			private Source comSource = new NullSource<String>();
+			private Source<String> comSource = new NullSource<String>();
 
 			public Source<Statement> statementSource()
 			{

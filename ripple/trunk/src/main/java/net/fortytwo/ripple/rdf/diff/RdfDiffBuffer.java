@@ -10,7 +10,6 @@
 package net.fortytwo.ripple.rdf.diff;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfCollector;
 
 public class RdfDiffBuffer extends RdfDiffCollector
 {

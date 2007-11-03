@@ -9,7 +9,6 @@
 
 package net.fortytwo.ripple.rdf;
 
-import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 

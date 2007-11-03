@@ -10,11 +10,9 @@
 package net.fortytwo.ripple.util;
 
 import java.io.InputStream;
-
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.HttpURLConnection;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,12 +23,8 @@ import java.util.Set;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 
-import org.apache.log4j.Logger;
-
 public class HttpUtils
 {
-	private static final Logger LOGGER = Logger.getLogger( HttpUtils.class );
-
 	private static Map<String, Date> lastRequestByHost = new HashMap<String, Date>();
 
 	public static void prepareUrlConnectionForTextRequest( final URLConnection urlConn )

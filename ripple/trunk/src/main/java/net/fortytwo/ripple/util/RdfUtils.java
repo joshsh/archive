@@ -11,7 +11,6 @@ package net.fortytwo.ripple.util;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -21,17 +20,15 @@ import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 
 import org.apache.log4j.Logger;
-
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
-import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
+import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 
 public final class RdfUtils
 {

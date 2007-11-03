@@ -43,7 +43,6 @@ public class Times extends PrimitiveFunction
 		throws RippleException
 	{
 		int times;
-		RippleList prog;
 
 		times = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();

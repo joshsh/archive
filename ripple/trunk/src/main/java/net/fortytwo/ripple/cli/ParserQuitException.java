@@ -15,6 +15,7 @@ package net.fortytwo.ripple.cli;
 */
 public class ParserQuitException extends RuntimeException
 {
+	private static final long serialVersionUID = -9033960706498220927L;
 }
 
 // kate: tab-width 4

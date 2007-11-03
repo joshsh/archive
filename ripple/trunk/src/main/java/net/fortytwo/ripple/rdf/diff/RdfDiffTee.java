@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.rdf.diff;
 
-import net.fortytwo.ripple.RippleException;
-
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfTee;
 

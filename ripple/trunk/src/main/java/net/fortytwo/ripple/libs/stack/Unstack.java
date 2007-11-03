@@ -42,7 +42,6 @@ public class Unstack extends PrimitiveFunction
 		RippleValue l;
 
 		l = stack.getFirst();
-		final RippleList rest = stack.getRest();
 
 		Sink<RippleList> listSink = new Sink<RippleList>()
 		{

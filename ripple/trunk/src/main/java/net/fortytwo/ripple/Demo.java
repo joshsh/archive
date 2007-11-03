@@ -34,8 +34,7 @@ import net.fortytwo.ripple.util.RdfUtils;
 
 import org.apache.log4j.Logger;
 
-	import org.openrdf.repository.Repository;
-import org.openrdf.rio.RDFFormat;
+	import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 
 
@@ -61,7 +60,7 @@ public final class Demo
 		Sail sail = RdfUtils.createMemoryStoreSail();
 
 		// Attach a Ripple model to the repository.
-		Model model = new Model( sail, "Demo Model" );
+		Model model = new Model( sail );
 
 		// Attach a query engine to the model.
 		Evaluator evaluator = new LazyEvaluator();

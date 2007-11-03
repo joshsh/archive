@@ -39,11 +39,10 @@ public class Popd extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue y, x;
+		RippleValue y;
 
 		y = stack.getFirst();
 		stack = stack.getRest();
-		x = stack.getFirst();
 		stack = stack.getRest();
 
 		sink.put( new RippleList( y, stack ) );

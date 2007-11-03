@@ -13,7 +13,6 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -39,9 +38,6 @@ public class Pop extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		RippleValue x;
-
-		x = stack.getFirst();
 		stack = stack.getRest();
 
 		if ( RippleList.NIL != stack )

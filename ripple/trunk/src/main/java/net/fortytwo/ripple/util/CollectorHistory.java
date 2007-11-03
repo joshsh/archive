@@ -54,7 +54,7 @@ public class CollectorHistory<T> implements Sink<T>
 		currentSink.put( t );
 	}
 
-	public Source getSource( final int index )
+	public Source<T> getSource( final int index )
 		throws RippleException
 	{
 		return history.get( index );

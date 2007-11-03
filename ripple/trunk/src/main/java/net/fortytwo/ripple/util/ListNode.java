@@ -19,8 +19,8 @@ public abstract class ListNode<T>
 	
 	public boolean equals( final ListNode<T> other )
 	{
-		ListNode thisCur = this;
-		ListNode otherCur = other;
+		ListNode<T> thisCur = this;
+		ListNode<T> otherCur = other;
 	
 		while ( null != thisCur )
 		{

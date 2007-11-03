@@ -34,14 +34,7 @@ public class FileRdfizer
 		lastModifiedUri;
 
 	private URI
-		propertyUri,
 		typeUri;
-
-	private URI
-		classUri,
-		domainUri,
-		rangeUri,
-		subClassOfUri;
 
 	private URI
 		booleanUri,
@@ -76,13 +69,7 @@ public class FileRdfizer
 		isHiddenUri     = valueFactory.createURI( FILE + "isHidden" );
 		lastModifiedUri = valueFactory.createURI( FILE + "lastModified" );
 
-		propertyUri     = valueFactory.createURI( RDF + "Property" );
 		typeUri         = valueFactory.createURI( RDF + "type" );
-
-		classUri        = valueFactory.createURI( RDFS + "Class" );
-		domainUri       = valueFactory.createURI( RDFS + "domain" );
-		rangeUri        = valueFactory.createURI( RDFS + "range" );
-		subClassOfUri   = valueFactory.createURI( RDFS + "subClassOf" );
 
 		booleanUri      = valueFactory.createURI( XSD + "boolean" );
 		dateTimeUri     = valueFactory.createURI( XSD + "dateTime" );

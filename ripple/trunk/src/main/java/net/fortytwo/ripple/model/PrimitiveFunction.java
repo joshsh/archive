@@ -15,7 +15,7 @@ import net.fortytwo.ripple.io.RipplePrintStream;
 public abstract class PrimitiveFunction implements Function, RippleValue
 {
 	private RdfValue rdfEquivalent = null;
-	private FunctionTypeAnnotation typeAnnotation = null;
+//	private FunctionTypeAnnotation typeAnnotation = null;
 
 	public PrimitiveFunction()
 	{
@@ -32,7 +32,7 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	{
 		rdfEquivalent = v;
 
-		typeAnnotation = new FunctionTypeAnnotation( v, mc );
+//		typeAnnotation = new FunctionTypeAnnotation( v, mc );
 	}
 
 	public void printTo( final RipplePrintStream p )

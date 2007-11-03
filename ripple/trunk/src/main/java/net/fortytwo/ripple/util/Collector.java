@@ -89,7 +89,7 @@ public class Collector<T> implements Sink<T>, Source<T>
 		}
 	}
 
-	private class NodeIterator implements Iterator
+	private class NodeIterator implements Iterator<T>
 	{
 		private Node cur;
 

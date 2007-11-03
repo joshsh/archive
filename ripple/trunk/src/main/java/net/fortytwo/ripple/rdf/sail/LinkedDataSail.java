@@ -11,13 +11,10 @@ package net.fortytwo.ripple.rdf.sail;
 
 import java.io.File;
 
-import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UrlFactory;
-
-import org.apache.log4j.Logger;
 
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
@@ -31,8 +28,6 @@ import org.openrdf.sail.SailException;
  */
 public class LinkedDataSail implements Sail
 {
-	private static final Logger LOGGER = Logger.getLogger( LinkedDataSail.class );
-
 	private Sail localStore;
 	private Dereferencer dereferencer;
 	private UrlFactory urlFactory;

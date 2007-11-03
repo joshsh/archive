@@ -10,16 +10,13 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
 
 // Note: for maximum clarity, this class should probably be called
 //       "LinkedDataSailConnectionOutputAdapter"

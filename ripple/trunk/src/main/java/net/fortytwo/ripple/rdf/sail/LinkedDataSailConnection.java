@@ -50,7 +50,6 @@ public class LinkedDataSailConnection implements SailConnection
 	private static final Logger LOGGER
 		= Logger.getLogger( LinkedDataSailConnection.class );
 
-	private String name = null;
 	private boolean open = false;
 
 	private Sail localStore;

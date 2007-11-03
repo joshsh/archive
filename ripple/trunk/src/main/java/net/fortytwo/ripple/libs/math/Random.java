@@ -23,8 +23,6 @@ public class Random extends PrimitiveFunction
 {
 	private static final int ARITY = 0;
 
-	private java.util.Random random;
-
 	public Random()
 		throws RippleException
 	{

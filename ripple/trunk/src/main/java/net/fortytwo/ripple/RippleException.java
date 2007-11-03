@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
  */
 public class RippleException extends Exception
 {
+	private static final long serialVersionUID = 2498405641024203574L;
 	private static final Logger LOGGER = Logger.getLogger( RippleException.class );
 
 	public RippleException( final Throwable cause )
