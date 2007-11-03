@@ -8,7 +8,7 @@
 	
 	<groupId>net.fortytwo</groupId>
 	<artifactId>ripple-media</artifactId>
-	<version>0.4</version>
+	<version>0.5</version>
 	<name>Ripple Media Extension</name>
 	<description>Media and speech extension for the Ripple Semantic Web scripting language</description>
 	<url>http://ripple.fortytwo.net/</url>

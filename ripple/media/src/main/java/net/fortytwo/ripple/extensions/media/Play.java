@@ -9,21 +9,19 @@
 
 package net.fortytwo.ripple.extensions.media;
 
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequencer;
 import java.io.InputStream;
-
 import java.net.URL;
 import java.net.URLConnection;
+
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequencer;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 
