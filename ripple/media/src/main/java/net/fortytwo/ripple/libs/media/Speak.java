@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.media;
+package net.fortytwo.ripple.libs.media;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;

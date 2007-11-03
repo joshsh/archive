@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.media;
+package net.fortytwo.ripple.libs.media;
 
 import java.awt.Graphics;
 import java.awt.Image;

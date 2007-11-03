@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.extensions.media;
+package net.fortytwo.ripple.libs.media;
 
 import java.io.InputStream;
 import java.net.URL;
