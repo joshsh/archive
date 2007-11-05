@@ -1,6 +1,9 @@
 
-java -cp target/ripple-audio-full.jar net.fortytwo.ripple.audio.Test kevin
-java -cp target/ripple-audio-full.jar net.fortytwo.ripple.Demo
+java -cp target/ripple-media-*-standalone.jar net.fortytwo.ripple.audio.HelloDigits
+java -cp target/ripple-media-*-standalone.jar net.fortytwo.ripple.audio.Test kevin
+java -cp target/ripple-media-*-standalone.jar net.fortytwo.ripple.Demo
+
+mvn install:install-file -DgroupId=edu.cmu -DartifactId=sphinx -Dversion=4 -Dpackaging=jar -Dfile=/home/josh/opt/comp_/lang_/java_/speech_/sphinx4/lib/sphinx4.jar
 
 mvn install:install-file -DgroupId=com.sun.speech -DartifactId=freetts -Dversion=1.2.1 -Dpackaging=jar -DgeneratePom=true -DcreateChecksum=true -Dfile=lib/freetts.jar
 mvn install:install-file -DgroupId=com.sun.speech -DartifactId=freetts-cmu_us_kal -Dversion=1.2.1 -Dpackaging=jar -DgeneratePom=true -DcreateChecksum=true -Dfile=lib/cmu_us_kal.jar

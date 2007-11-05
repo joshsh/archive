@@ -65,6 +65,13 @@
 		</dependency>-->
 		
 		<dependency>
+			<groupId>edu.cmu</groupId>
+			<artifactId>sphinx</artifactId>
+			<version>4</version>
+			<type>jar</type>
+		</dependency>
+		
+		<dependency>
 			<groupId>com.sun.speech</groupId>
 			<artifactId>freetts</artifactId>
 			<version>1.2.1</version>

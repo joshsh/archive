@@ -11,10 +11,10 @@ package net.fortytwo.ripple.libs.media;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Extension;
+import net.fortytwo.ripple.util.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
-public class MediaExtension extends Extension
+public class MediaLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/media#";
 

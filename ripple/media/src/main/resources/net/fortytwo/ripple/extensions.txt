@@ -1,14 +1,14 @@
 # Note: this list overrides the one in Ripple Core.
 
 # Ripple core extensions.
-net.fortytwo.ripple.extensions.etc.EtcExtension
-net.fortytwo.ripple.extensions.graph.GraphExtension
-net.fortytwo.ripple.extensions.math.MathExtension
-net.fortytwo.ripple.extensions.services.ServicesExtension
-net.fortytwo.ripple.extensions.stack.StackExtension
-net.fortytwo.ripple.extensions.stream.StreamExtension
-net.fortytwo.ripple.extensions.string.StringExtension
+net.fortytwo.ripple.libs.etc.EtcLibrary
+net.fortytwo.ripple.libs.graph.GraphLibrary
+net.fortytwo.ripple.libs.math.MathLibrary
+net.fortytwo.ripple.libs.services.ServicesLibrary
+net.fortytwo.ripple.libs.stack.StackLibrary
+net.fortytwo.ripple.libs.stream.StreamLibrary
+net.fortytwo.ripple.libs.string.StringLibrary
 
 # Additional extension.
-net.fortytwo.ripple.extensions.media.MediaExtension
+net.fortytwo.ripple.libs.media.MediaLibrary
 
