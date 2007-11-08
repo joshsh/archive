@@ -1,0 +1,40 @@
+@prefix event: <http://www.mindswap.org/~golbeck/web/www04photo.owl#>.
+
+@define eventTerms:
+    event:Attendee
+    event:Chair
+    event:Committee
+    event:CommitteeMember
+    event:Conference
+    event:Event
+    event:Group
+    event:KeynoteSpeaker
+    event:KeynoteTalk
+    event:Location
+    event:Organization
+    event:Panel
+    event:Person
+    event:Presentation
+    event:Presenter
+    event:SocialEvent
+    event:Workshop
+    event:hasEndDate
+    event:hasEndTime
+    event:hasLocation
+    event:hasMember
+    event:hasOrganizer
+    event:hasParticipant
+    event:hasPresenter
+    event:hasStartDate
+    event:hasStartTime
+    event:hasSubEvent
+    event:hasSubLocation
+    event:locationOf
+    event:memberOf
+    event:organizerOf
+    event:participantOf
+    event:presenterOf
+    event:subEventOf
+    event:subLocationOf
+    .
+

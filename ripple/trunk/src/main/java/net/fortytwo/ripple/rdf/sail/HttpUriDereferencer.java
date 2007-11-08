@@ -18,6 +18,8 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.rdf.RdfBuffer;
+import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SingleContextPipe;
@@ -95,9 +97,21 @@ public class HttpUriDereferencer implements Dereferencer
 		// need not resemble the URI it was created from.
 		URL url = urlFactory.createUrl( memo );
 
+		URI context;
+		
+		try
+		{
+			context = valueFactory.createURI( memo );
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+		
 		// Note: any pre-existing context information is discarded.
-		final SesameInputAdapter sa = new SesameInputAdapter(
-			new SingleContextPipe( adderSink, valueFactory.createURI( memo ), valueFactory ) );
+		SesameInputAdapter sa = new SesameInputAdapter(
+			new SingleContextPipe( adderSink, context, valueFactory ) );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.

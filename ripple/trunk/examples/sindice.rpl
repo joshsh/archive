@@ -18,7 +18,12 @@
     "http://sindice.com/uri/" /swap/strCat
     /toUri.
 
-
+@define sindiceIFP:
+    /toString/urlEncode
+    /swap /toString/urlEncode /swap
+    "http://sindice.com/query/lookup?type=ifp&object=" /rollup
+    "&property=" /swap
+    /strCat/strCat/strCat/toUri.
 
 
 ### old Sindice API ############################################################

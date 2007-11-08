@@ -409,7 +409,11 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 	void addStatement( final Statement st )
 		throws RippleException
 	{
-//System.out.println( "adding statement: " + st );
+//System.out.println( "Adding statement: " + st );
+//System.out.println( "    subject = " + st.getSubject() );
+//System.out.println( "    predicate = " + st.getPredicate() );
+//System.out.println( "    object = " + st.getObject() );
+//System.out.println( "    context = " + st.getContext() );
 		Resource context = st.getContext();
 
 		try
@@ -574,6 +578,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 
 	private void dereference( final URI uri )
 	{
+//System.out.println( "dereferencing URI: " + uri );
 		try
 		{
 			dereferencer.dereference( uri, inputSink.adderSink() );

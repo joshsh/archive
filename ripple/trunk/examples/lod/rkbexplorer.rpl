@@ -1,0 +1,8 @@
+
+
+# These don't work with Sesame because the document URI is the same as the
+# non-information resource URI.
+<http://nsf.rkbexplorer.com/id/person-6092a2a72319fc9437583fb2d04733ea>
+<http://southampton.rkbexplorer.com/id/eprints-13347>
+
+

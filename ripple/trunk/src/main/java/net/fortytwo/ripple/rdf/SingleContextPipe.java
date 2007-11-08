@@ -34,10 +34,20 @@ public class SingleContextPipe implements RdfSink
 		{
 			public void put( final Statement st ) throws RippleException
 			{
-				otherStSink.put(
-					valueFactory.createStatement(
-						st.getSubject(), st.getPredicate(), st.getObject(),
-						context ) );
+				Statement newSt;
+				
+				try
+				{
+					newSt = valueFactory.createStatement(
+							st.getSubject(), st.getPredicate(), st.getObject(),	context );
+				}
+				
+				catch ( Throwable t )
+				{
+					throw new RippleException( t );
+				}
+				
+				otherStSink.put( newSt );
 			}
 		};
 

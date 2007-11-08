@@ -38,6 +38,7 @@ public class SesameInputAdapter implements RDFHandler
 	 */
 	public void handleComment( final String comment )
 	{
+//System.out.println( "handleComment(\"" + comment + "\")" );
 		try
 		{
 			cmtSink.put( comment );
@@ -55,6 +56,7 @@ public class SesameInputAdapter implements RDFHandler
 	 */
 	public void handleNamespace( final String prefix, final String uri )
 	{
+//System.out.println( "handleNamespace(" + prefix + ", " + uri + ")" );
 		try
 		{
 			nsSink.put( new NamespaceImpl( prefix, uri ) );
@@ -72,6 +74,7 @@ public class SesameInputAdapter implements RDFHandler
 	 */
 	public void handleStatement( final Statement st )
 	{
+//System.out.println( "handleStatement(" + st + ")" );
 		try
 		{
 			stSink.put( st );
