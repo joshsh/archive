@@ -6,8 +6,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
 	
-	<groupId>net.fortytwo</groupId>
-	<artifactId>ripple</artifactId>
+	<groupId>net.fortytwo.ripple</groupId>
+	<artifactId>ripple-core</artifactId>
 	<version>0.5</version>
 	<name>Ripple</name>
 	<description>Semantic Web Scripting Language</description>

@@ -3,9 +3,9 @@
 <project  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<groupId>net.fortytwo</groupId>
-	<artifactId>rippleserver</artifactId>
-	<version>0.1</version>
+	<groupId>net.fortytwo.ripple</groupId>
+	<artifactId>ripple-server</artifactId>
+	<version>0.5</version>
 	<name>Ripple Server</name>
 	<description>Restlet add-on to Ripple for distributed computing</description>
 	<repositories>
@@ -22,8 +22,8 @@
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>net.fortytwo</groupId>
-			<artifactId>ripple</artifactId>
+			<groupId>net.fortytwo.ripple</groupId>
+			<artifactId>ripple-core</artifactId>
 			<version>0.5</version>
 		</dependency>
 		<dependency>

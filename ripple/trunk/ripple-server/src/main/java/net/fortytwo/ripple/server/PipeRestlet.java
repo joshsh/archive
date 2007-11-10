@@ -54,7 +54,7 @@ public class PipeRestlet extends Restlet
 			throw new RippleException( e );
 		}
 
-		model = new Model( RdfUtils.createMemoryStoreSail(), "for PipeRestlet" );
+		model = new Model( RdfUtils.createMemoryStoreSail() );
 		evaluator = new LazyEvaluator();
 	}
 
