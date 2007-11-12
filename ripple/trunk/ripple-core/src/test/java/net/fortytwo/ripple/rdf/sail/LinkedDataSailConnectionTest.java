@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.rdf.sail;
 
 import info.aduna.iteration.CloseableIteration;
 

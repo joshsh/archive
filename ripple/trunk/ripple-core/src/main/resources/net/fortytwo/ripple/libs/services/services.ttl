@@ -59,3 +59,18 @@ services:swoogleIt
 	rdfs:comment "grabs search results from the Swoogle web service" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#swoogleIt> ;
 	.
+
+services:uriqr
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:returnType xsd:string ;
+	rpl:parameters (
+		[
+			rdfs:label "s" ;
+			rdfs:comment "a search string" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "uriqr" ;
+	rdfs:comment "finds resources associated with the given string" ;
+	.

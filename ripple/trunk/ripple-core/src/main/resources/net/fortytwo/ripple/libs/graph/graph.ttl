@@ -39,7 +39,7 @@ graph:back
 			rdfs:label "pred" ;
 			rpl:isTransparent true ]
 		) ;
-	rpl:label "back" ;
+	rdfs:label "back" ;
 	rdfs:comment "obj pred => subj" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#back> ;
 	.
@@ -152,7 +152,7 @@ graph:links
 			rpl:isTransparent true ]
 		) ;
 	rpl:returnType rdf:List ;
-	rpl:label "links" ;
+	rdfs:label "links" ;
 	rdfs:comment "subj  =>  subj pred obj" ;
 	.
 

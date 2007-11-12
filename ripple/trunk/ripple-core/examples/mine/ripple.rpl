@@ -1,3 +1,200 @@
+# Note: [resource], [uri], [bnode], [literal] and [list] stand in for types which are not yet fully understood
+#       [boolean] stands in for xsd:boolean, which is currently represented by stack:true and stack:false
+#       [number] stands in for either xsd:integer or xsd:double
+
+# type signature of a property:  ('a -> range(p))
+# type signature of list dequotation:  !!!
+
+@define etcPrimitives:
+    etc:get			# !!!
+    etc:time			# (-> xsd:integer)
+    .
+
+@define graphPrimitives:
+    graph:assert		# ('a[resource] [uri] 'b -> 'a)
+    graph:back			# !!!
+    graph:comments		# !!! ([uri] -> xsd:string)
+    graph:compare		# ('a 'b -> [boolean])
+    graph:contains		# !!! ([list] 'a -> [boolean])
+    graph:deny			# !!! ('a[resource] [uri] 'b -> 'a)
+    graph:equal			# ('a 'b -> [boolean])
+    graph:forget		# !!! ('a[resource] -> 'a)
+    graph:links			# !!!
+    graph:namespaces		# !!! ([uri] -> ...
+    graph:new			# !!!
+    graph:toDouble		#
+    graph:toInteger
+    graph:toString
+    graph:toUri
+    graph:triples
+    xml:lang
+    xsd:type
+    .
+
+@define mathPrimitives:
+    math:abs			# ([number] -> [number])
+    math:acos			# ([number] -> [number])
+    math:add			# ([number] [number] -> [number])
+    math:asin			# ([number] -> [number])
+    math:atan			# ([number] -> [number])
+    math:cbrt			# ([number] -> [number])
+    math:ceil			# ([number] -> [number])
+    math:cos			# ([number] -> [number])
+    math:cosh			# ([number] -> [number])
+    math:div			# ([number] -> [number])
+    math:exp			# ([number] -> [number])
+    math:floor			# ([number] -> [number])
+    math:gt			# ([number] [number] -> [number])
+    math:log			# ([number] -> [number])
+    math:log10			# ([number] -> [number])
+    math:lt			# ([number] [number] -> [number])
+    math:mod			# ([number] [number] -> [number])
+    math:mul			# ([number] [number] -> [number])
+    math:neg			# ([number] -> [number])
+    math:pow			# ([number] [number] -> [number])
+    math:random			# (-> [number])
+    math:signum			# ([number] -> [number])
+    math:sin			# ([number] -> [number])
+    math:sinh			# ([number] -> [number])
+    math:sqrt			# ([number] -> [number])
+    math:sub			# ([number] [number] -> [number])
+    math:tan			# ([number] -> [number])
+    math:tanh			# ([number] -> [number])
+    .
+
+@define servicesPrimitives:
+    services:pingTheSemanticWeb	# !!!
+    services:sindice		# !!!
+    services:swoogleIt		# !!!
+    services:uriqr		# !!!
+    .
+
+@define stackPrimitives:
+    stack:and			# ([boolean] [boolean] -> [boolean])
+    stack:ary
+    stack:at
+    stack:branch
+    stack:cat
+    stack:choice
+    stack:cons
+    stack:dip
+    stack:dipd
+    stack:dup
+    stack:dupd
+    stack:dupdd
+    stack:false			# !!!
+    stack:fold
+    stack:has
+    stack:i
+    stack:id
+    stack:in
+    stack:max
+    stack:min
+    stack:not
+    stack:of
+    stack:or			# ([boolean] [boolean] -> [boolean])
+    stack:pop
+    stack:popd
+    stack:popdd
+    stack:rolldown
+    stack:rolldownd
+    stack:rollup
+    stack:rollupd
+    stack:rotate
+    stack:rotated
+    stack:size
+    stack:stack
+    stack:swap
+    stack:swapd
+    stack:swapdd
+    stack:swons
+    stack:times
+    stack:true			# !!!
+    stack:uncons
+    stack:unstack
+    stack:unswons
+    stack:x
+    stack:xor			# ([boolean] [boolean] -> [boolean])
+    .
+
+@define streamPrimitives:
+    stream:each			# !!!
+    stream:limit		# ('a -> 'a)
+    stream:scrap		# !!! ('a -> 'a)
+    stream:union		# ('A 'A -> 'A)
+    stream:unique		# ('a -> 'a)
+    .
+
+@define stringPrimitives:
+    string:endsWith		# (xsd:string xsd:string -> [boolean])
+    string:indexOf		# (xsd:string xsd:string -> xsd:integer)
+    string:lastIndexOf		# (xsd:string xsd:string -> xsd:integer)
+    string:length		# (xsd:string -> xsd:integer)
+    string:matches		# (xsd:string xsd:string -> [boolean])
+    string:percentDecode	# (xsd:string -> xsd:string)
+    string:percentEncode	# (xsd:string -> xsd:string)
+    string:replaceAll		# (xsd:string xsd:string xsd:string -> xsd:string)
+    string:sha1			# (xsd:string -> xsd:string)
+    string:split		# !!! (xsd:string xsd:string -> [list(xsd:string)])
+    string:startsWith		# (xsd:string xsd:string -> [boolean])
+    string:strCat		# (xsd:string xsd:string -> xsd:string)
+    string:substring		# (xsd:string xsd:integer xsd:integer -> xsd:string)
+    string:toLowerCase		# (xsd:string -> xsd:string)
+    string:toUpperCase		# (xsd:string -> xsd:string)
+    string:trim			# (xsd:string -> xsd:string)
+    string:urlDecode		# (xsd:string -> xsd:string)
+    string:urlEncode		# (xsd:string -> xsd:string)
+    .
+
+@define libraries:
+    :etcPrimitives
+    :graphPrimitives
+    :mathPrimitives
+    :servicesPrimitives
+    :stackPrimitives
+    :streamPrimitives
+    :stringPrimitives
+    .
+
+@define allPrimitives:
+    :libraries/each/each.
+
+# Count the primitives.
+/:allPrimitives.
+
+# Make sure they all have a type.
+/:allPrimitives /rdf:type.
+
+# Make sure the only type is rpl:Function.
+/:allPrimitives /rdf:type/unique.
+
+# Make sure they all have a label.
+/:allPrimitives /rdfs:label.
+
+# Make sure all primitives have hash URIs.
+/:allPrimitives/toString "#"/indexOf -1/gt /unique.
+
+@define substringAfterLastOccurrence:
+    /dupd /lastIndexOf 1 /add
+    /dupd/swap /length
+    /substring.
+
+# Make sure the label is the same as the local part of the URI.
+/:allPrimitives
+    /dup/toString "#"/:substringAfterLastOccurrence
+    /swap /rdfs:label
+    /equal /unique.
+
+# Make sure all primitives have comments.
+/:allPrimitives /rdfs:comment.
+
+
+
+
+
+
+
+
 
 @define hello:
     "Hello world!".
