@@ -1,0 +1,13 @@
+<projectDescription>
+  <name>rdfwiki</name>
+  <comment>a service for publishing and retrieving RDF data</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
