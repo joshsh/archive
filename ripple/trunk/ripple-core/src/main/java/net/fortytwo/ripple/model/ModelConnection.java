@@ -1118,6 +1118,8 @@ public synchronized SailConnection getSailConnection()
 			Buffer<Statement> buffer = new Buffer<Statement>( sink );
 			CloseableIteration<? extends Statement, SailException> stmtIter = null;
 
+// TODO: use CloseableIterationSource
+			
 			// Perform the query and collect results.
 			try
 			{
