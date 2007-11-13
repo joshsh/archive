@@ -1,7 +1,24 @@
 
+# Content type, data and format are good.
+# Code comment appears at or near the end of the document.
+curl -vH "Accept: text/rdf+n3" http://localhost:8182/resource/foo
+curl -vH "Accept: text/plain" http://localhost:8182/resource/foo
+curl -vH "Accept: application/rdf+xml" http://localhost:8182/resource/foo
+curl -vH "Accept: application/x-trig" http://localhost:8182/resource/foo
+curl -vH "Accept: application/trix" http://localhost:8182/resource/foo
+curl -vH "Accept: application/x-turtle" http://localhost:8182/resource/foo
+
+# For now, the default format is RDF/XML.
+curl -v http://localhost:8182/resource/foo
+
+
+
 curl http://localhost:8182/search?kwd=foo
 curl http://localhost:8182/users/josh
 
+
+*  publishing ontologies
+Y  content-negotiated hash URIs
 
 
 A client can avoid content negotiation by requesting the URI for the desired representation.
@@ -13,6 +30,10 @@ Each URI has a separate representation,
 
 *) Content negotiation is based on Accept headers and [language preferences]
 
+*) For now, the SPARQL endpoint bypasses content negotiation
+
+*) SW Sitemaps file for RDFWiki
+*) dump file(s)
 
 
 

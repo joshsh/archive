@@ -2,6 +2,10 @@ package net.fortytwo.rdfwiki;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import net.fortytwo.ripple.rdf.SailInserter;
@@ -16,12 +20,14 @@ import org.openrdf.sail.memory.MemoryStore;
 import org.restlet.Component;
 import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
+import org.restlet.resource.Variant;
 
 public class RdfWiki
 {
 	private static Sail sail = null;
 	private static Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;
 	private static Map<MediaType, RDFFormat> mediaTypeToRdfFormatMap;
+	private static List<Variant> rdfVariants = null;
 	
 	private static void createSail() throws Exception
 	{
@@ -38,9 +44,17 @@ public class RdfWiki
 		createSail();
 		
 		rdfFormatToMediaTypeMap = new HashMap<RDFFormat, MediaType>();
-		mediaTypeToRdfFormatMap = new HashMap<MediaType, RDFFormat>();
 		
+		// Note: preserves order of insertion
+		mediaTypeToRdfFormatMap = new LinkedHashMap<MediaType, RDFFormat>();
+		
+		// Note: the first format registered becomes the default format.
 		registerRdfFormat( RDFFormat.RDFXML );
+		registerRdfFormat( RDFFormat.TURTLE );
+		registerRdfFormat( RDFFormat.N3 );
+		registerRdfFormat( RDFFormat.NTRIPLES );
+		registerRdfFormat( RDFFormat.TRIG );
+		registerRdfFormat( RDFFormat.TRIX );
 	}
 	
 	private static void registerRdfFormat( final RDFFormat format )
@@ -54,12 +68,32 @@ public class RdfWiki
 		
 		else
 		{
-			t = new MediaType( format.getName() );
-			//...
+			t = new MediaType( format.getDefaultMIMEType() );
 		}
 		
 		rdfFormatToMediaTypeMap.put( format, t );
 		mediaTypeToRdfFormatMap.put( t, format );
+	}
+	
+	public static List<Variant> getRdfVariants()
+	{
+		if ( null == rdfVariants )
+		{
+			rdfVariants = new LinkedList<Variant>();
+			Iterator<MediaType> types = mediaTypeToRdfFormatMap.keySet().iterator();
+			while ( types.hasNext() )
+			{
+				rdfVariants.add( new Variant( types.next() ) );
+			}
+		}
+		
+System.out.println( "getRdfVariants() --> " + rdfVariants );
+Iterator<Variant> iter = rdfVariants.iterator();
+while(iter.hasNext()){
+Variant v = iter.next();
+System.out.println( "    " + v + " -- " + v.getMediaType().getName() + " -- " + v.getMediaType().getMainType() + "/" + v.getMediaType().getSubType() );
+}
+		return rdfVariants;
 	}
 	
 	public static String getBaseUri()

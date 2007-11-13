@@ -1,16 +1,10 @@
 package net.fortytwo.rdfwiki;
 
 import org.restlet.Application;
-import org.restlet.Directory;
-import org.restlet.Guard;
 import org.restlet.Redirector;
 import org.restlet.Restlet;
 import org.restlet.Route;
 import org.restlet.Router;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
 
 public class RootApplication extends Application
 {
