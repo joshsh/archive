@@ -22,13 +22,13 @@
     graph:links			# !!!
     graph:namespaces		# !!! ([uri] -> ...
     graph:new			# !!!
-    graph:toDouble		#
-    graph:toInteger
-    graph:toString
-    graph:toUri
-    graph:triples
-    xml:lang
-    xsd:type
+    graph:toDouble		# !!!
+    graph:toInteger		# !!!
+    graph:toString		# !!!
+    graph:toUri			# !!!
+    graph:triples		# !!! ([uri] -> list[[resource] [uri] [any])
+    xml:lang			# (xsd:string -> xsd:string)
+    xsd:type			# (xsd:string -> [XSD type])
     .
 
 @define mathPrimitives:
@@ -71,49 +71,49 @@
 
 @define stackPrimitives:
     stack:and			# ([boolean] [boolean] -> [boolean])
-    stack:ary
-    stack:at
-    stack:branch
-    stack:cat
-    stack:choice
-    stack:cons
-    stack:dip
-    stack:dipd
-    stack:dup
-    stack:dupd
-    stack:dupdd
+    stack:ary			# !!!
+    stack:at			# (list['a] xsd:integer -> 'a)
+    stack:branch		# ('A [boolean] ('A -> 'B) ('A -> 'B) -> 'B)
+    stack:cat			# (list['a] list['a] -> list['a])
+    stack:choice		# ([boolean] 'a 'a -> 'a)
+    stack:cons			# ('a list['a] -> list['a])
+    stack:dip			# ('A 'a ('A -> 'B) -> 'B 'a)
+    stack:dipd			# ('A 'a 'b ('A -> 'B) -> 'B 'a 'b)
+    stack:dup			# ('a -> 'a 'a)
+    stack:dupd			# ('a 'b -> 'a 'a 'b)
+    stack:dupdd			# ('a 'b 'c -> 'a 'a 'b 'c)
     stack:false			# !!!
-    stack:fold
-    stack:has
-    stack:i
-    stack:id
-    stack:in
-    stack:max
-    stack:min
-    stack:not
-    stack:of
+    stack:fold			# (list['a] 'b ('b 'a -> 'b) -> 'b)
+    stack:has			# (list['a] 'a -> [boolean])
+    stack:i			# ('A ('A -> 'B) -> 'B)
+    stack:id			# (R -> R)
+    stack:in			# ('a list['a] -> [boolean])
+    stack:max			# (list['a] -> 'a)
+    stack:min			# (list['a] -> 'a)
+    stack:not			# ([boolean] -> [boolean])
+    stack:of			# (xsd:integer list['a] -> 'a)
     stack:or			# ([boolean] [boolean] -> [boolean])
-    stack:pop
-    stack:popd
-    stack:popdd
-    stack:rolldown
-    stack:rolldownd
-    stack:rollup
-    stack:rollupd
-    stack:rotate
-    stack:rotated
-    stack:size
-    stack:stack
-    stack:swap
-    stack:swapd
-    stack:swapdd
-    stack:swons
-    stack:times
+    stack:pop			# ('a -> )
+    stack:popd			# ('a 'b -> 'b)
+    stack:popdd			# ('a 'b 'c -> 'b 'c)
+    stack:rolldown		# ('a 'b 'c -> 'b 'c 'a)
+    stack:rolldownd		# ('a 'b 'c 'd -> 'b 'c 'a 'd)
+    stack:rollup		# ('a 'b 'c -> 'c 'a 'b)
+    stack:rollupd		# ('a 'b 'c 'd -> 'c 'a 'b 'd)
+    stack:rotate		# ('a 'b 'c -> 'c 'b 'a)
+    stack:rotated		# ('a 'b 'c 'd -> 'c 'b 'a 'd)
+    stack:size			# (list['a] -> xsd:integer)
+    stack:stack			# !!!
+    stack:swap			# ('a 'b -> 'b 'a)
+    stack:swapd			# ('a 'b 'c -> 'b 'a 'c)
+    stack:swapdd		# ('a 'b 'c 'd -> 'b 'a 'c 'd)
+    stack:swons			# (list['a] 'a -> list['a])
+    stack:times			# !!!
     stack:true			# !!!
-    stack:uncons
-    stack:unstack
-    stack:unswons
-    stack:x
+    stack:uncons		# (list['a] -> 'a list['a])
+    stack:unstack		# !!!
+    stack:unswons		# (list['a] -> list['a] 'a)
+    stack:x			# ('A ('A -> 'B) -> 'B ('A -> 'B))
     stack:xor			# ([boolean] [boolean] -> [boolean])
     .
 

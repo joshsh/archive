@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Path to JAR (change this appropriately).
+JAR=`dirname $0`/target/ripple-*-standalone.jar
+
 # Find Java.
 if [ "$JAVA_HOME" = "" ] ; then
 	JAVA="java"
@@ -12,10 +15,8 @@ if [ "$JAVA_OPTIONS" = "" ] ; then
 	JAVA_OPTIONS="-Xms32M -Xmx512M"
 fi
 
-JAR=target/ripple-*-standalone.jar
-
 # Launch Ripple.
 $JAVA $JAVA_OPTIONS -jar $JAR $*
 
-# Return the appropriate exit code.
+# Return the program's exit code.
 exit $?
