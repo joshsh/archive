@@ -11,6 +11,21 @@ curl -vH "Accept: application/x-turtle" http://localhost:8182/resource/foo
 # For now, the default format is RDF/XML.
 curl -v http://localhost:8182/resource/foo
 
+# [DELETE]
+# DELETE removes all statements in the given context.
+
+# [POST and PUT]
+# You can only PUT or POST RDF representations.
+# Any context information (e.g. in TriX or TriG representations) will be thrown
+# away, as all statements are placed in a graph with a context URI equal to the
+# PUT or POST URI.
+# POST adds all statements in the representation to the given context.
+# PUT additionally deletes any pre-existing statements before adding the new ones.
+
+curl -H "Content-type: application/x-turtle" http://localhost:8182/resource/foo -d "\
+	<http://localhost:8182/resource/foo#mary> a <http://xmlns.com/foaf/0.1/Person> ;\
+        <http://www.w3.org/2000/01/rdf-schema#label> \"Mary Q. Contrary\" ;\
+        <http://www.w3.org/2000/01/rdf-schema#comment> \"some chick\" ."
 
 
 curl http://localhost:8182/search?kwd=foo

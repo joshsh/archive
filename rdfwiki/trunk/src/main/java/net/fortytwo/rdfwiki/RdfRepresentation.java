@@ -5,13 +5,17 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.fortytwo.ripple.rdf.RdfCollector;
 import net.fortytwo.ripple.rdf.RdfSource;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.restlet.resource.OutputRepresentation;
+import org.restlet.resource.Representation;
 
 public class RdfRepresentation extends OutputRepresentation
 {
@@ -20,6 +24,31 @@ public class RdfRepresentation extends OutputRepresentation
 	
 	private RdfSource source;
 	private RDFFormat format;
+	
+	public RdfRepresentation( final Representation other, final String baseUri ) throws Exception
+	{
+		super( other.getMediaType() );
+		RDFFormat format = RdfWiki.findRdfFormat( other.getMediaType() );
+		
+		if ( null == format )
+		{
+			throw new Exception( "bad media type: " + other.getMediaType() );
+		}
+		
+		RDFParser parser = Rio.createParser( format );
+		
+		RdfCollector coll  = new RdfCollector();
+		SesameInputAdapter sa = new SesameInputAdapter( coll );
+		parser.setRDFHandler( sa );
+		parser.parse( other.getStream(), baseUri );
+		
+		source = coll;
+	}
+	
+	public RdfSource getSource()
+	{
+		return source;
+	}
 	
 	public RdfRepresentation( final RdfSource source, final RDFFormat format )
 	{
