@@ -21,9 +21,9 @@ public class RippleServer
 		Component component = new Component();
 		component.getServers().add( Protocol.HTTP, 8182 );
 		
-		Restlet infoRestlet = new InfoRestlet();
 		
 		// Then attach it to the local host
+		Restlet infoRestlet = new InfoRestlet();
 // Note: the trailing slash prevents us from matching /informatics, /info_foo etc.
 		component.getDefaultHost().attach( "/info/", infoRestlet);
 		
