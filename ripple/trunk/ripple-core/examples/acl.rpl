@@ -1,0 +1,24 @@
+# Note: the document is published as text/plain
+@prefix acl: <http://www.w3.org/2001/02/acls/ns#>.
+
+@define aclTerms:
+    acl:CHACL
+    acl:CONNECT
+    acl:DELETE
+    acl:GET
+    acl:Group
+    acl:HEAD
+    acl:Identity
+    acl:POST
+    acl:PUT
+    acl:Principle
+    acl:RACL
+    acl:ResourceAccessRule
+    acl:TRACE
+    acl:access
+    acl:accessor
+    acl:hasAccessTo
+    acl:memberOf
+    acl:time-interval
+    .
+

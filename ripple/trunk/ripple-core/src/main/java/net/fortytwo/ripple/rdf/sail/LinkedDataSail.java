@@ -21,24 +21,25 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailChangedListener;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
+import org.openrdf.sail.StackableSail;
 
 /**
  * A thread-safe Sail which treats the Semantic Web as a single global graph of
  * linked data.
  */
-public class LinkedDataSail implements Sail
+public class LinkedDataSail implements StackableSail
 {
-	private Sail localStore;
+	private Sail baseSail;
 	private Dereferencer dereferencer;
 	private UrlFactory urlFactory;
 
 	/**
-	 * @param localStore  (should be initialized before this object is used)
+	 * @param baseSail  (should be initialized before this object is used)
 	 */
-	public LinkedDataSail( final Sail localStore, final UrlFactory urlFactory )
+	public LinkedDataSail( final Sail baseSail, final UrlFactory urlFactory )
 		throws RippleException
 	{
-		this.localStore = localStore;
+		this.baseSail = baseSail;
 		this.urlFactory = urlFactory;
 
 		dereferencer = new HttpUriDereferencer( urlFactory, getValueFactory() );
@@ -59,7 +60,7 @@ public class LinkedDataSail implements Sail
 	public synchronized SailConnection getConnection()
 		throws SailException
 	{
-		return new LinkedDataSailConnection( localStore, dereferencer, urlFactory );
+		return new LinkedDataSailConnection( baseSail, dereferencer, urlFactory );
 	}
 
 	public File getDataDir()
@@ -70,7 +71,7 @@ return null;
 	public ValueFactory getValueFactory()
 	{
 		// Inherit the local store's ValueFactory
-		return localStore.getValueFactory();
+		return baseSail.getValueFactory();
 	}
 
 	public void initialize()
@@ -107,13 +108,23 @@ return null;
 	public synchronized LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		return new LinkedDataSailConnection( localStore, dereferencer, urlFactory, listenerSink );
+		return new LinkedDataSailConnection( baseSail, dereferencer, urlFactory, listenerSink );
 	}
 
 public Dereferencer getDereferencer()
 {
 	return dereferencer;
 }
+
+	public Sail getBaseSail()
+	{
+		return baseSail;
+	}
+	
+	public void setBaseSail( final Sail baseSail )
+	{
+		this.baseSail = baseSail;
+	}
 }
 
 // kate: tab-width 4

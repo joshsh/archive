@@ -28,7 +28,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.memory.MemoryStore;
-import org.openrdf.sail.memory.MemoryStoreRDFSInferencer;
 
 public final class RdfUtils
 {
@@ -43,13 +42,8 @@ public final class RdfUtils
 	{
 		try
 		{
-			Sail sail = Ripple.useInference()
-				? new MemoryStoreRDFSInferencer(
-					new MemoryStore() )
-				: new MemoryStore();
-
+			Sail sail = new MemoryStore();
 			sail.initialize();
-
 			return sail;
 		}
 
