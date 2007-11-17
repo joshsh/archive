@@ -1,3 +1,5 @@
+Sorry if this has been asked before, but are there any plans to implement SPARQL/Update in Sesame?  I know the spec is in its early stages, but it's already very useful.  I'd like to 
+
 
 # Content type, data and format are good.
 # Code comment appears at or near the end of the document.
@@ -13,6 +15,8 @@ curl -v http://localhost:8182/resource/foo
 
 # [DELETE]
 # DELETE removes all statements in the given context.
+
+curl -X DELETE http://localhost:8182/resource/foo
 
 # [POST and PUT]
 # You can only PUT or POST RDF representations.

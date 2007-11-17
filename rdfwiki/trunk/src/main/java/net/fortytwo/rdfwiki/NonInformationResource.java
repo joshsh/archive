@@ -4,20 +4,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.RdfCollector;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SailInserter;
-import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.SingleContextPipe;
 import net.fortytwo.ripple.util.CloseableIterationSource;
-import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
 import org.openrdf.sail.SailConnection;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
@@ -34,7 +29,7 @@ public class NonInformationResource extends Resource
 	
 	private URI uri;
 
-    public NonInformationResource(Context context, Request request,
+    public NonInformationResource( Context context, Request request,
             Response response)
     {
         super(context, request, response);
