@@ -24,7 +24,7 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffContextFilter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSource;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.openrdf.model.Resource;

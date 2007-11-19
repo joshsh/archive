@@ -21,7 +21,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;

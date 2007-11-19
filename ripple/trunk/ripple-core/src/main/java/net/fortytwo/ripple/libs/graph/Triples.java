@@ -20,7 +20,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 

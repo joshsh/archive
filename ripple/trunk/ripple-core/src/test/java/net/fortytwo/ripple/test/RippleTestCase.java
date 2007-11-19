@@ -17,7 +17,7 @@ import org.openrdf.sail.Sail;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 
 public abstract class RippleTestCase extends TestCase
 {

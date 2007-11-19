@@ -27,7 +27,7 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.NullSource;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
 import net.fortytwo.ripple.util.UniqueFilter;

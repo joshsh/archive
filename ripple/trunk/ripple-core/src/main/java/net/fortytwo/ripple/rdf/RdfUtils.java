@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.rdf;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +18,8 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.Pointer;
 
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;

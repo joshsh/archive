@@ -30,7 +30,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 
 import org.apache.log4j.Logger;
 

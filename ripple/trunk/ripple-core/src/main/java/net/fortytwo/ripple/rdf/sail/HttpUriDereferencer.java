@@ -23,7 +23,7 @@ import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SingleContextPipe;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.StringUtils;
 import net.fortytwo.ripple.util.UrlFactory;
 

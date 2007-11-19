@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import java.util.Properties;
 
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 
 import org.apache.log4j.PropertyConfigurator;
 

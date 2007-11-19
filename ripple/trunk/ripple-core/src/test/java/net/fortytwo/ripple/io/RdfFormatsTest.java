@@ -14,7 +14,7 @@ import java.net.URL;
 import net.fortytwo.ripple.rdf.RdfCollector;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 
 import org.openrdf.rio.RDFFormat;
 
