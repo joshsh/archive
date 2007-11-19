@@ -7,15 +7,13 @@
  */
 
 
-package net.fortytwo.ripple.io;
+package net.fortytwo.ripple.control;
 
 import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.control.Scheduler;
-import net.fortytwo.ripple.control.Task;
 
 /**
  * An InputStream which optionally spawns a new thread to read bytes from a

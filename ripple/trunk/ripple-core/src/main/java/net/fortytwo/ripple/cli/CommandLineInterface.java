@@ -29,7 +29,7 @@ import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
 import net.fortytwo.ripple.control.Scheduler;
 import net.fortytwo.ripple.control.TaskQueue;
-import net.fortytwo.ripple.io.ThreadedInputStream;
+import net.fortytwo.ripple.control.ThreadedInputStream;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.RippleList;
