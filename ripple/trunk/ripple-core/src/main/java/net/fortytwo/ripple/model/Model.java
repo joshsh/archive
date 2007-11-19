@@ -11,7 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.LibraryLoader;
+import net.fortytwo.ripple.model.LibraryLoader;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;

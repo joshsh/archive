@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.model;
 
 import java.io.InputStream;
 
@@ -16,6 +16,8 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.util.FileUtils;
+import net.fortytwo.ripple.util.UrlFactory;
 
 public class LibraryLoader extends ClassLoader
 {

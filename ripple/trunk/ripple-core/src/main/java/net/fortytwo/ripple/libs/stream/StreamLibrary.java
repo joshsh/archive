@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Library;
+import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
 /**

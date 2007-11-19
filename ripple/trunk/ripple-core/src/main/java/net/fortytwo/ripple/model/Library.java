@@ -7,13 +7,15 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.UrlFactory;
 
 import org.openrdf.model.vocabulary.OWL;
 

@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.stack;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.Library;
+import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.util.UrlFactory;
 
 /**
