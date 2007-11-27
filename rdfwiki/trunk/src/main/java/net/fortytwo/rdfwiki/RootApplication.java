@@ -1,6 +1,7 @@
 package net.fortytwo.rdfwiki;
 
 import org.restlet.Application;
+import org.restlet.Context;
 import org.restlet.Redirector;
 import org.restlet.Restlet;
 import org.restlet.Route;
@@ -39,9 +40,12 @@ public class RootApplication extends Application
         Directory directory = new Directory(getContext(), ROOT_URI);
         guard.setNext(directory);
 */
-        
+		Context context = getContext();
+		Restlet nonInfoRestlet = new Redirector( context, "http://localhost:8182/representation/{rr}", Redirector.MODE_CLIENT_SEE_OTHER );
+		
         // Attach the handlers to the root router
-        router.attach( "/resource/", NonInformationResource.class );
+		router.attach( "/resource/", nonInfoRestlet );
+        router.attach( "/representation/", InformationResource.class );
 
         // Return the root router
         return router;

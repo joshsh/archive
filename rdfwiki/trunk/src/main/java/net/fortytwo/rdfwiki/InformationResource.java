@@ -22,14 +22,14 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 
-public class NonInformationResource extends Resource
+public class InformationResource extends Resource
 {
 	private static final Logger LOGGER
-		= Logger.getLogger( NonInformationResource.class.getName() );
+		= Logger.getLogger( InformationResource.class.getName() );
 	
 	private URI uri;
 
-    public NonInformationResource( Context context, Request request,
+    public InformationResource( Context context, Request request,
             Response response)
     {
         super(context, request, response);
