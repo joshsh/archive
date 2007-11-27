@@ -51,18 +51,17 @@ public class Back extends PrimitiveFunction
 		o = stack.getFirst();
 		final RippleList rest = stack.getRest();
 
-		Sink<RdfValue> divSink = new Sink<RdfValue>()
+		Sink<RippleValue> divSink = new Sink<RippleValue>()
 		{
-			public void put( final RdfValue v )
+			public void put( final RippleValue v )
 				throws RippleException
 			{
 				sink.put(
-					new RippleList( mc.getModel().getBridge().get( v ),
-					rest ) );
+					new RippleList( v, rest ) );
 			}
 		};
 
-		mc.divide( o.toRdf( mc ), p.toRdf( mc ), divSink );
+		mc.divide( o, p, divSink );
 	}
 }
 

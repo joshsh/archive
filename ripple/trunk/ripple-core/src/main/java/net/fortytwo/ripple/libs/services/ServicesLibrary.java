@@ -28,7 +28,6 @@ public class ServicesLibrary extends Library
 			NS, getClass().getResource( "services.ttl" ) + "#" );
 
 		registerPrimitive( PingTheSemanticWeb.class, NS + "pingTheSemanticWeb", mc );
-		registerPrimitive( Sindice.class, NS + "sindice", mc );
 		registerPrimitive( SwoogleIt.class, NS + "swoogleIt", mc );
 		registerPrimitive( Uriqr.class, NS + "uriqr", mc );
 	}

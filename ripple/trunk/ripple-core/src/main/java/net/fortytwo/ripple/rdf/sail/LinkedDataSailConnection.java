@@ -52,8 +52,8 @@ public class LinkedDataSailConnection implements SailConnection
 
 	private boolean open = false;
 
-	private Sail localStore;
-	private SailConnection wrappedConnection;
+	private Sail baseSail;
+	private SailConnection baseConnection;
 	private ValueFactory valueFactory;
 	private Set<SailConnectionListener> listeners = null;
 
@@ -120,7 +120,7 @@ public class LinkedDataSailConnection implements SailConnection
 	public void clearNamespaces()
 		throws SailException
 	{
-		wrappedConnection.clearNamespaces();
+		baseConnection.clearNamespaces();
 	}
 
 	public void close()
@@ -156,7 +156,7 @@ public class LinkedDataSailConnection implements SailConnection
 			final boolean includeInferred )
 		throws SailException
 	{
-return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
+return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	}
 
 	public synchronized CloseableIteration<? extends Resource, SailException> getContextIDs()
@@ -164,7 +164,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 	{
 		try
 		{
-			return wrappedConnection.getContextIDs();
+			return baseConnection.getContextIDs();
 		}
 
 		catch ( SailException e )
@@ -180,7 +180,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		try
 		{
 			// Note: only committed namespaces will match.
-			return wrappedConnection.getNamespace( prefix );
+			return baseConnection.getNamespace( prefix );
 		}
 
 		catch ( SailException e )
@@ -196,7 +196,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		try
 		{
 			// Note: only committed namespaces will match.
-			return wrappedConnection.getNamespaces();
+			return baseConnection.getNamespaces();
 		}
 
 		catch ( SailException e )
@@ -235,7 +235,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 			try
 			{
 				return new StatementIteration(
-					wrappedConnection.getStatements(
+					baseConnection.getStatements(
 						subj, pred, obj, includeInferred, contexts ) );
 			}
 	
@@ -342,7 +342,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		try
 		{
 			// Number of committed statements.
-			return wrappedConnection.size( contexts );
+			return baseConnection.size( contexts );
 		}
 
 		catch ( SailException e )
@@ -360,7 +360,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 									final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		this.localStore = localStore;
+		this.baseSail = localStore;
 		this.dereferencer = dereferencer;
 
 		// Inherit the local store's ValueFactory
@@ -396,7 +396,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		try
 		{
 //wrappedConnection.commit();
-			wrappedConnection.setNamespace( ns.getPrefix(), ns.getName() );
+			baseConnection.setNamespace( ns.getPrefix(), ns.getName() );
 		}
 
 		catch ( Throwable t )
@@ -420,7 +420,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		{
 			if ( null == context )
 			{
-				wrappedConnection.addStatement(
+				baseConnection.addStatement(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject() );
@@ -428,7 +428,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 
 			else
 			{
-				wrappedConnection.addStatement(
+				baseConnection.addStatement(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject(),
@@ -459,7 +459,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		{
 			// Note: removes the namespace with the given prefix,
 			// regardless of the associated URI.
-			wrappedConnection.removeNamespace( ns.getPrefix() );
+			baseConnection.removeNamespace( ns.getPrefix() );
 		}
 
 		catch ( Throwable t )
@@ -478,7 +478,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 		{
 			if ( null == context )
 			{
-				wrappedConnection.removeStatements(
+				baseConnection.removeStatements(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject() );
@@ -486,7 +486,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 
 			else
 			{
-				wrappedConnection.removeStatements(
+				baseConnection.removeStatements(
 					st.getSubject(),
 					st.getPredicate(),
 					st.getObject(),
@@ -515,20 +515,20 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 	private void openLocalStoreConnection()
 		throws SailException
 	{
-		wrappedConnection = localStore.getConnection();
+		baseConnection = baseSail.getConnection();
 	}
 
 	private void closeLocalStoreConnection( final boolean rollback )
 		throws SailException
 	{
-		if ( wrappedConnection.isOpen() )
+		if ( baseConnection.isOpen() )
 		{
 			if ( rollback )
 			{
-				wrappedConnection.rollback();
+				baseConnection.rollback();
 			}
 
-			wrappedConnection.close();
+			baseConnection.close();
 		}
 
 		else
@@ -550,7 +550,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 			throw new SailException( e );
 		}
 
-		wrappedConnection.commit();
+		baseConnection.commit();
 	}
 
 	/**
@@ -603,12 +603,12 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 			final CloseableIteration<? extends Statement, SailException> iter )
 		{
 			this.iter = iter;
-			originalConnection = wrappedConnection;
+			originalConnection = baseConnection;
 		}
 
 		public boolean hasNext() throws SailException
 		{
-			synchronized ( localStore )
+			synchronized ( baseSail )
 			{
 				if ( ok() )
 				{
@@ -641,7 +641,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 	
 		public Statement next() throws SailException
 		{
-			synchronized ( localStore )
+			synchronized ( baseSail )
 			{
 				if ( null != next )
 				{
@@ -675,7 +675,7 @@ return wrappedConnection.evaluate( tupleExpr, dataset, bindings, includeInferred
 
 		private boolean ok()
 		{
-			return originalConnection == wrappedConnection;
+			return originalConnection == baseConnection;
 		}
 	}
 }

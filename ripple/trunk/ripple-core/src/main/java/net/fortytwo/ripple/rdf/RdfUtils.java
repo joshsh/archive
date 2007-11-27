@@ -70,8 +70,7 @@ public final class RdfUtils
 
 		catch ( Throwable t )
 		{
-			// Soft fail.
-			new RippleException( t );
+			throw new RippleException( t );
 		}
 
 		return format;

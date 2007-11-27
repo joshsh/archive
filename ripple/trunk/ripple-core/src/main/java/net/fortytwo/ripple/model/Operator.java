@@ -153,7 +153,7 @@ return rdfEquivalent;
 		throws RippleException
 	{
 		return ( v.equals( RDF_NIL )
-			|| null != mc.findSingleObject( (RdfValue) v, RDF_FIRST ) );
+			|| null != mc.findSingleObject( v, RDF_FIRST ) );
 	}
 }
 

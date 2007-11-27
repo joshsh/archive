@@ -61,14 +61,14 @@ public class TurtleView implements Sink<RippleList>
 
 		final ModelBridge bridge = mc.getModel().getBridge();
 
-		Collector<RdfValue> predicates = new Collector<RdfValue>();
+		Collector<RippleValue> predicates = new Collector<RippleValue>();
 		mc.findPredicates( first, predicates );
 
 		int predCount = 0,
 			predlim = Ripple.resultViewMaxPredicates(),
 			objlim = Ripple.resultViewMaxObjects();
 
-		for ( Iterator<RdfValue> predIter = predicates.iterator();
+		for ( Iterator<RippleValue> predIter = predicates.iterator();
 			predIter.hasNext(); )
 		{
 			ps.print( INDENT );
@@ -79,15 +79,15 @@ public class TurtleView implements Sink<RippleList>
 				break;
 			}
 
-			RdfValue predicate = predIter.next();
-			ps.print( bridge.get( predicate ) );
+			RippleValue predicate = predIter.next();
+			ps.print( predicate );
 			ps.print( "\n" );
 
-			Collector<RdfValue> objects = new Collector<RdfValue>();
-			mc.multiply( first.toRdf( mc ), predicate, objects );
+			Collector<RippleValue> objects = new Collector<RippleValue>();
+			mc.multiply( first, predicate, objects );
 			int objCount = 0;
 
-			for ( Iterator<RdfValue> objIter = objects.iterator();
+			for ( Iterator<RippleValue> objIter = objects.iterator();
 				objIter.hasNext(); )
 			{
 				ps.print( INDENT );
@@ -99,8 +99,8 @@ public class TurtleView implements Sink<RippleList>
 					break;
 				}
 
-				RdfValue object = objIter.next();
-				ps.print( bridge.get( object ) );
+				RippleValue object = objIter.next();
+				ps.print( object );
 				ps.print( ( objIter.hasNext() )
 					? ","
 					: ( predIter.hasNext() )

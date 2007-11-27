@@ -1,0 +1,19 @@
+@prefix project: <http://ebiquity.umbc.edu/ontology/project.owl#>.
+
+@define projectTerms:
+    project:ActiveProject
+    project:PastProject
+    project:Project
+    project:Proposal
+    project:associatedWith
+    project:description
+    project:endDate
+    project:logoURI
+    project:relatedPublication
+    project:relatedResearchArea
+    project:relatedResource
+    project:startDate
+    project:tag
+    project:title
+    .
+

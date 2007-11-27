@@ -343,22 +343,28 @@ public synchronized SailConnection getSailConnection()
 		}
 	}
 
-	public RdfValue findSingleObject( final RdfValue subj, final RdfValue pred )
+	public RdfValue findSingleObject( final RippleValue subj, final RippleValue pred )
 		throws RippleException
 	{
+		RdfValue subjRdf = subj.toRdf( this );
+		RdfValue predRdf = subj.toRdf( this );
+		
 		SingleValueSink sink = new SingleValueSink();
 
-		multiply( subj, pred, sink );
+		multiplyRdfValues( subjRdf, predRdf, sink );
 
 		return sink.getValue();
 	}
 
-	public RdfValue findAtLeastOneObject( final RdfValue subj, final RdfValue pred )
+	public RdfValue findAtLeastOneObject( final RippleValue subj, final RippleValue pred )
 		throws RippleException
 	{
+		RdfValue subjRdf = subj.toRdf( this );
+		RdfValue predRdf = subj.toRdf( this );
+		
 		SingleValueSink sink = new SingleValueSink();
 
-		multiply( subj, pred, sink );
+		multiplyRdfValues( subjRdf, predRdf, sink );
 
 		if ( 0 == sink.countReceived() )
 		{
@@ -371,12 +377,15 @@ public synchronized SailConnection getSailConnection()
 		}
 	}
 
-	public RdfValue findAtMostOneObject( final RdfValue subj, final RdfValue pred )
+	public RdfValue findAtMostOneObject( final RippleValue subj, final RippleValue pred )
 		throws RippleException
 	{
+		RdfValue subjRdf = subj.toRdf( this );
+		RdfValue predRdf = subj.toRdf( this );
+		
 		SingleValueSink sink = new SingleValueSink();
 
-		multiply( subj, pred, sink );
+		multiplyRdfValues( subjRdf, predRdf, sink );
 
 		int count = sink.countReceived();
 
@@ -391,10 +400,13 @@ public synchronized SailConnection getSailConnection()
 		}
 	}
 
-	public RdfValue findUniqueProduct( final RdfValue subj, final RdfValue pred )
+	public RdfValue findUniqueProduct( final RippleValue subj, final RippleValue pred )
 		throws RippleException
 	{
-		RdfValue v = findAtMostOneObject( subj, pred );
+		RdfValue subjRdf = subj.toRdf( this );
+		RdfValue predRdf = subj.toRdf( this );
+		
+		RdfValue v = findAtMostOneObject( subjRdf, predRdf );
 
 		if ( null == v )
 		{
@@ -408,10 +420,10 @@ public synchronized SailConnection getSailConnection()
 	}
 
 // TODO: context handling
-	public void copyStatements( final RdfValue src, final RdfValue dest )
+	public void copyStatements( final RippleValue src, final RippleValue dest )
 		throws RippleException
 	{
-		final Resource destResource = castToResource( dest.getRdfValue() );
+		final Resource destResource = castToResource( dest.toRdf( this ).getRdfValue() );
 
 		Sink<Statement> stSink = new Sink<Statement>()
 		{
@@ -442,7 +454,7 @@ public synchronized SailConnection getSailConnection()
 			}
 		};
 
-		getStatements( src, null, null, stSink );
+		getStatements( src.toRdf( this ), null, null, stSink );
 	}
 
 	public void removeStatementsAbout( final URI subj )
@@ -479,18 +491,39 @@ public synchronized SailConnection getSailConnection()
 
 	////////////////////////////////////////////////////////////////////////////
 
+	public void forget( final RippleValue v ) throws RippleException
+	{
+		// FIXME: messy
+		model.getSail().getDereferencer().forget( v.toRdf( this ), this );
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	private RippleValue valueToRippleValue( final Value v ) throws RippleException
+	{
+		return this.model.getBridge().get( v );
+	}
+	
 	public void findPredicates( final RippleValue subject,
-								final Sink<RdfValue> sink )
+								final Sink<RippleValue> sink )
 		throws RippleException
 	{
+		final Sink<Value> valueSink = new Sink<Value>()
+		{
+			public void put( final Value v ) throws RippleException
+			{
+				sink.put( valueToRippleValue( v ) );
+			}
+		};
+		
 		Sink<Statement> predSelector = new Sink<Statement>()
 		{
-			Sink<RdfValue> predSink = new UniqueFilter<RdfValue>( sink );
+			Sink<Value> predSink = new UniqueFilter<Value>( valueSink );
 
 			public void put( final Statement st ) throws RippleException
 			{
 // TODO: don't create a new RdfValue before checking for uniqueness
-				predSink.put( new RdfValue( st.getPredicate() ) );
+				predSink.put( st.getPredicate() );
 			}
 		};
 
@@ -842,6 +875,21 @@ public synchronized SailConnection getSailConnection()
 		}
 	}
 
+	public RdfValue createTypedLiteral( final String value, final RippleValue type ) throws RippleException
+	{
+		Value v = type.toRdf( this ).getRdfValue();
+
+		if ( !( v instanceof URI ) )
+		{
+			throw new RippleException( "literal type is not a URI" );
+		}
+
+		else
+		{
+			return createValue( value, (URI) v );
+		}
+	}
+	
 	public RdfValue createValue( final String s ) throws RippleException
 	{
 		try
@@ -1021,12 +1069,12 @@ public synchronized SailConnection getSailConnection()
 
 	private class MultiplyTask extends Task
 	{
-		private RdfValue subj, pred;
-		private Sink<RdfValue> sink;
+		private RippleValue subj, pred;
+		private Sink<RippleValue> sink;
 
-		public MultiplyTask( final RdfValue subj,
-							final RdfValue pred,
-							final Sink<RdfValue> sink )
+		public MultiplyTask( final RippleValue subj,
+							final RippleValue pred,
+							final Sink<RippleValue> sink )
 		{
 			this.subj = subj;
 			this.pred = pred;
@@ -1042,12 +1090,12 @@ public synchronized SailConnection getSailConnection()
 		{
 			synchronized ( sink )
 			{
-				sink = new NullSink<RdfValue>();
+				sink = new NullSink<RippleValue>();
 			}
 		}
 	}
 
-	public void multiplyAsynch( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
+	public void multiplyAsynch( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink )
 		throws RippleException
 	{
 		MultiplyTask task = new MultiplyTask( subj, pred, sink );
@@ -1203,7 +1251,35 @@ public synchronized SailConnection getSailConnection()
 		};
 	}
 
-	public void multiply( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
+	public void multiply( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink )
+		throws RippleException
+	{
+		Sink<Statement> stSink = new Sink<Statement>()
+		{
+			public void put( final Statement st ) throws RippleException
+			{
+				sink.put( valueToRippleValue( st.getObject() ) );
+			}
+		};
+
+		getStatements( subj.toRdf( this ), pred.toRdf( this ), null, stSink );
+	}
+	
+	public void divide( final RippleValue obj, final RippleValue pred, final Sink<RippleValue> sink )
+		throws RippleException
+	{
+		Sink<Statement> stSink = new Sink<Statement>()
+		{
+			public void put( final Statement st ) throws RippleException
+			{
+				sink.put( valueToRippleValue( st.getObject() ) );
+			}
+		};
+
+		getStatements( null, pred.toRdf( this ), obj.toRdf( this ), stSink );
+	}
+	
+	private void multiplyRdfValues( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
 		throws RippleException
 	{
 		Sink<Statement> stSink = new Sink<Statement>()
@@ -1215,20 +1291,6 @@ public synchronized SailConnection getSailConnection()
 		};
 
 		getStatements( subj, pred, null, stSink );
-	}
-
-	public void divide( final RdfValue obj, final RdfValue pred, final Sink<RdfValue> sink )
-		throws RippleException
-	{
-		Sink<Statement> stSink = new Sink<Statement>()
-		{
-			public void put( final Statement st ) throws RippleException
-			{
-				sink.put( new RdfValue( st.getSubject() ) );
-			}
-		};
-
-		getStatements( null, pred, obj, stSink );
 	}
 
 	////////////////////////////////////////////////////////////////////////////

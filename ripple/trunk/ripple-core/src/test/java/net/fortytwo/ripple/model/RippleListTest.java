@@ -9,10 +9,110 @@
 
 package net.fortytwo.ripple.model;
 
+import java.io.InputStream;
+import java.util.Iterator;
+
+import org.openrdf.model.Statement;
+import org.openrdf.rio.RDFFormat;
+
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RdfImporter;
+import net.fortytwo.ripple.rdf.RdfCollector;
+import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
+import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.util.Sink;
 
 public class RippleListTest extends RippleTestCase
 {
+	private class FromRdfTest extends TestRunnable
+	{
+		public void test()
+			throws Exception
+		{
+			ModelConnection mc = getTestModel().getConnection( "for FromRdfTest" );
+
+			InputStream is = RippleListTest.class.getResourceAsStream( "listTest.ttl" );
+			RdfImporter importer = new RdfImporter( mc );
+			SesameInputAdapter sc = new SesameInputAdapter( importer );
+			RdfUtils.read( is, sc, "", RDFFormat.TURTLE );
+			mc.commit();
+			is.close();
+
+			RdfValue head;
+			Collector<RippleList> created = new Collector<RippleList>();
+			final Collector<RippleList> allowed = new Collector<RippleList>();
+			
+			Sink<RippleList> verifySink = new Sink<RippleList>()
+			{
+				public void put( final RippleList list ) throws RippleException
+				{
+					boolean found = false;
+					
+					for ( Iterator<RippleList> iter = allowed.iterator(); iter.hasNext(); )
+					{
+						if ( 0 == iter.next().compareTo( list ) )
+						{
+							found = true;
+							break;
+						}
+					}
+					
+					assertTrue( found );
+				}
+			};
+			
+			RippleValue l1 = new RdfValue( mc.createLiteral( "1" ) );
+			RippleValue l2 = new RdfValue( mc.createLiteral( "2" ) );
+			RippleValue l1a = new RdfValue( mc.createLiteral( "1a" ) );
+			RippleValue l1b = new RdfValue( mc.createLiteral( "1b" ) );		
+			RippleValue l2a = new RdfValue( mc.createLiteral( "2a" ) );
+			RippleValue l2b = new RdfValue( mc.createLiteral( "2b" ) );
+
+			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#simpleList" ) );
+			created.clear();
+			RippleList.from( head, created, mc );
+			assertEquals( 1, created.size() );
+			allowed.clear();
+			allowed.put( new RippleList( l2 ).push( l1 ) );
+			created.writeTo( verifySink );
+			
+			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#firstBranchingList" ) );
+			created.clear();
+			RippleList.from( head, created, mc );
+			assertEquals( 2, created.size() );
+			allowed.clear();
+			allowed.put( new RippleList( l2 ).push( l1a ) );
+			allowed.put( new RippleList( l2 ).push( l1b ) );
+			created.writeTo( verifySink );
+
+			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#restBranchingList" ) );
+			created.clear();
+			RippleList.from( head, created, mc );
+			assertEquals( 2, created.size() );
+			allowed.clear();
+			allowed.put( new RippleList( l2a ).push( l1 ) );
+			allowed.put( new RippleList( l2b ).push( l1 ) );
+			created.writeTo( verifySink );
+			
+			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#firstAndRestBranchingList" ) );
+			created.clear();
+			RippleList.from( head, created, mc );
+			assertEquals( 4, created.size() );
+			allowed.clear();
+			allowed.put( new RippleList( l2a ).push( l1a ) );
+			allowed.put( new RippleList( l2a ).push( l1b ) );
+			allowed.put( new RippleList( l2b ).push( l1a ) );
+			allowed.put( new RippleList( l2b ).push( l1b ) );
+			created.writeTo( verifySink );
+			
+			// Note: the circular list is not tested.
+			
+			mc.close();
+		}
+	}
+	
 	private class ListConcatenationTest extends TestRunnable
 	{
 		public void test()
@@ -71,6 +171,7 @@ public class RippleListTest extends RippleTestCase
 		throws Exception
 	{
 		testAsynchronous( new ListConcatenationTest() );
+		testAsynchronous( new FromRdfTest() );
 	}
 }
 

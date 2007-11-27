@@ -34,6 +34,7 @@ public class RdfImporter implements RdfSink
 		{
 			public void put( final Statement st ) throws RippleException
 			{
+//System.out.println( "adding statement: " + st );
 				mc.add( st, contexts );
 			}
 		};

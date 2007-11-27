@@ -15,9 +15,8 @@ import net.fortytwo.ripple.util.Sink;
 public class RdfPredicateFunction implements Function
 {
 	private RdfValue pred;
-	private ModelBridge bridge;
 
-	private class ValueSink implements Sink<RdfValue>
+	private class ValueSink implements Sink<RippleValue>
 	{
 		private Sink<RippleList> sink;
 		private RippleList stack;
@@ -28,9 +27,9 @@ public class RdfPredicateFunction implements Function
 			this.sink = sink;
 		}
 
-		public void put( final RdfValue v ) throws RippleException
+		public void put( final RippleValue v ) throws RippleException
 		{
-			sink.put( new RippleList( bridge.get( v ), stack ) );
+			sink.put( new RippleList( v, stack ) );
 		}
 	}
 
@@ -49,15 +48,13 @@ public class RdfPredicateFunction implements Function
 						final ModelConnection mc )
 		throws RippleException
 	{
-		bridge = mc.getModel().getBridge();
-
 		RippleValue first = stack.getFirst();
 		stack = stack.getRest();
 
-		Sink<RdfValue> querySink = new ValueSink( stack, sink );
+		Sink<RippleValue> querySink = new ValueSink( stack, sink );
 
 //		mc.multiply( first.toRdf( mc ), pred, querySink );
-		mc.multiplyAsynch( first.toRdf( mc ), pred, querySink );
+		mc.multiplyAsynch( first, pred, querySink );
 	}
 }
 

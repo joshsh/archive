@@ -26,18 +26,6 @@ services:pingTheSemanticWeb
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#pingTheSemanticWeb> ;
 	.
 
-services:sindice
-	a rpl:Function ;
-	rpl:arity 1 ;
-	rpl:parameters (
-		[
-			rdfs:label "uri" ;
-			rpl:isTransparent true ]
-		);
-	rdfs:label "sindice" ;
-	rdfs:comment "uri  =>  doc  -- where doc represents zero or more RDF documents referencing the given URI" ;
-	.
-
 services:swoogleIt
 	a rpl:Function ;
 	rpl:arity 3 ;

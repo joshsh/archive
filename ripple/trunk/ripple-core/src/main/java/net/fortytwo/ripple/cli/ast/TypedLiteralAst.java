@@ -37,29 +37,15 @@ public class TypedLiteralAst implements Ast
 						final ModelConnection mc )
 		throws RippleException
 	{
-		Collector<RippleValue> values = new Collector<RippleValue>();
-		type.evaluate( values, qe, mc );
-		for ( Iterator<RippleValue> iter = values.iterator(); iter.hasNext(); )
+		Sink<RippleValue> typeSink = new Sink<RippleValue>()
 		{
-			RippleValue typeValue = iter.next();
-
-			if ( null == typeValue )
+			public void put( final RippleValue type ) throws RippleException
 			{
-				throw new RippleException( "badly typed literal" );
+				sink.put( mc.createTypedLiteral( value, type ) );
 			}
-
-			Value v = typeValue.toRdf( mc ).getRdfValue();
-
-			if ( !( v instanceof URI ) )
-			{
-				throw new RippleException( "literal type is not a URI" );
-			}
-
-			else
-			{
-				sink.put( mc.createValue( value, (URI) v ) );
-			}
-		}
+		};
+		
+		type.evaluate( typeSink, qe, mc );
 	}
 
 	public String toString()

@@ -30,9 +30,12 @@ import net.fortytwo.ripple.util.SynchronizedSink;
 import net.fortytwo.ripple.util.Tee;
 
 import org.openrdf.model.Statement;
+import org.openrdf.model.vocabulary.RDF;
 
 public class VisibleQueryCommand extends Command
 {
+	private static RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
+	
 	private ListAst ast;
 	private CollectorHistory<RippleList> resultHistory;
 	private boolean continued;
@@ -117,11 +120,9 @@ nilSource.put( RippleList.NIL );
 	private static void dereference( final RippleValue v, final ModelConnection mc )
 		throws RippleException
 	{
-		RdfValue r = v.toRdf( mc );
-
 		try
 		{
-mc.getStatements( r, null, null, new NullSink<Statement>() );
+mc.multiply( v, RDF_FIRST, new NullSink<RippleValue>() );
 		}
 
 		catch ( RippleException e )

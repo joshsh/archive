@@ -19,6 +19,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.RdfUtils;
@@ -146,17 +147,17 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 		
 		final Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
 
-		Sink<RdfValue> successMemoSink = new Sink<RdfValue>()
+		Sink<RippleValue> successMemoSink = new Sink<RippleValue>()
 		{
-			public void put( final RdfValue v ) throws RippleException
+			public void put( final RippleValue v ) throws RippleException
 			{
 				dereferencer.addSuccessMemo( mc.stringValue( v ) );
 			}
 		};
 
-		Sink<RdfValue> failureMemoSink = new Sink<RdfValue>()
+		Sink<RippleValue> failureMemoSink = new Sink<RippleValue>()
 		{
-			public void put( final RdfValue v ) throws RippleException
+			public void put( final RippleValue v ) throws RippleException
 			{
 				dereferencer.addFailureMemo( mc.stringValue( v ) );
 			}

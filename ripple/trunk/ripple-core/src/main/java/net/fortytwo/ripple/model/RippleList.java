@@ -147,6 +147,10 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 		{
 net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImporter( mc );
 			putRdfStatements( importer.statementSink(), mc );
+			
+			// This is important, because the caller of toRdf() may expect to
+			// read statements immediately.
+			mc.commit();
 		}
 
 		return rdfEquivalent;
@@ -260,7 +264,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	}
 
 // TODO: handle circular lists and other convergent structures 
-	private static void createList( final RdfValue head,
+	private static void createList( final RippleValue head,
 									final Sink<RippleList> sink,
 									final ModelConnection mc )
 		throws RippleException
@@ -283,7 +287,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 						public void put( final RippleValue first ) throws RippleException
 						{
 							RippleList list = new RippleList( first, rest );
-							list.rdfEquivalent = head;
+							list.rdfEquivalent = head.toRdf( mc );
 							sink.put( list );
 						}
 					};
@@ -292,15 +296,16 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				}
 			};
 			
-			Sink<RdfValue> rdfRestSink = new Sink<RdfValue>()
+			Sink<RippleValue> rdfRestSink = new Sink<RippleValue>()
 			{
-				public void put( final RdfValue rest ) throws RippleException
+				public void put( final RippleValue rest ) throws RippleException
 				{
 					// Recurse.
 					createList( rest, restSink, mc );
 				}
 			};
 			
+			/*
 			Sink<RdfValue> rdfFirstSink = new Sink<RdfValue>()
 			{
 				public void put( final RdfValue first ) throws RippleException
@@ -312,9 +317,9 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 					//       Consider a list containing operators.
 					firstValues.put( mc.getModel().getBridge().get( first ) );
 				}
-			};
+			};*/
 
-			mc.multiply( head, RDF_FIRST, rdfFirstSink );
+			mc.multiply( head, RDF_FIRST, firstValues );
 			mc.multiply( head, RDF_REST, rdfRestSink );
 		}
 	}
@@ -586,7 +591,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		writeStatementsTo( toRdf( mc ), sink, mc );
 	}
 
-	public static void writeStatementsTo( final RdfValue head,
+	public static void writeStatementsTo( final RippleValue head,
 											final Sink<Statement> sink,
 											final ModelConnection mc )
 		throws RippleException
@@ -596,28 +601,28 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			return;
 		}
 
-		if ( !( head.getRdfValue() instanceof Resource ) )
+		if ( !( head.toRdf( mc ).getRdfValue() instanceof Resource ) )
 		{
 			return;
 		}
 
-		final Resource headVal = (Resource) head.getRdfValue();
+		final Resource headVal = (Resource) head.toRdf( mc ).getRdfValue();
 
-		Sink<RdfValue> firstSink = new Sink<RdfValue>()
+		Sink<RippleValue> firstSink = new Sink<RippleValue>()
 		{
-			public void put( final RdfValue v ) throws RippleException
+			public void put( final RippleValue v ) throws RippleException
 			{
 				sink.put( mc.createStatement(
-					headVal, RDF.FIRST, v.getRdfValue() ) );
+					headVal, RDF.FIRST, v.toRdf( mc ).getRdfValue() ) );
 			}
 		};
 
-		Sink<RdfValue> restSink = new Sink<RdfValue>()
+		Sink<RippleValue> restSink = new Sink<RippleValue>()
 		{
-			public void put( final RdfValue v ) throws RippleException
+			public void put( final RippleValue v ) throws RippleException
 			{
 				sink.put( mc.createStatement(
-					headVal, RDF.REST, v.getRdfValue() ) );
+					headVal, RDF.REST, v.toRdf( mc ).getRdfValue() ) );
 
 				// Recurse.
 				writeStatementsTo( v, sink, mc );

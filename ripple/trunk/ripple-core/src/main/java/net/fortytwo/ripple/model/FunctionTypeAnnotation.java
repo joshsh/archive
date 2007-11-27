@@ -97,7 +97,7 @@ public class FunctionTypeAnnotation
 
 // Hack: this merely forces the model to dereference the primitive's URI so it
 //       shows up in the Lexicon.
-mc.multiply( self, rplReturnTypeUri, new NullSink<RdfValue>() );
+mc.multiply( self, rplReturnTypeUri, new NullSink<RippleValue>() );
 /*
 		returnType = mc.findUniqueProduct( self, rplReturnTypeUri );
 

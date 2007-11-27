@@ -55,12 +55,12 @@ public abstract class Library
 		final ModelBridge bridge = mc.getModel().getBridge();
 		final PrimitiveFunction primFinal = prim;
 
-		Sink<RdfValue> aliasSink = new Sink<RdfValue>()
+		Sink<RippleValue> aliasSink = new Sink<RippleValue>()
 		{
-			public void put( final RdfValue v )
+			public void put( final RippleValue v )
 				throws RippleException
 			{
-				bridge.add( v, primFinal );
+				bridge.add( v.toRdf( mc ), primFinal );
 			}
 		};
 
@@ -68,7 +68,7 @@ public abstract class Library
 		bridge.add( prim, mc );
 
 		// Add all stated aliases (but no aliases of aliases) to the map.
-		mc.multiply( prim.toRdf( mc ), OWL_SAMEAS, aliasSink );
+		mc.multiply( prim, OWL_SAMEAS, aliasSink );
 
 		return prim;
 	}
