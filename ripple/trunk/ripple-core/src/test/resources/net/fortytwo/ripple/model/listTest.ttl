@@ -1,7 +1,7 @@
 @prefix : <urn:test.RippleListTest.FromRdfTest#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-<urn:test.RippleListTest.FromRdfTest#simpleList> a rdf:List;
+:simpleList a rdf:List;
 	rdf:first "1";
 	rdf:rest [
 			rdf:first "2";
