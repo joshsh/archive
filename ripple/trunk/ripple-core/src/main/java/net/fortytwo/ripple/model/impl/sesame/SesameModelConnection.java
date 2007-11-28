@@ -66,7 +66,7 @@ public class SesameModelConnection implements ModelConnection
 	
 		try
 		{
-			valueFactory = model.getSail().getValueFactory();
+			valueFactory = model.sail.getValueFactory();
 		}
 	
 		catch ( Throwable t )
@@ -134,8 +134,8 @@ public class SesameModelConnection implements ModelConnection
 		try
 		{
 			sailConnection = ( null == listenerSink )
-				? model.getSail().getConnection()
-				: model.getSail().getConnection( listenerSink );
+				? model.sail.getConnection()
+				: model.sail.getConnection( listenerSink );
 		}
 	
 		catch ( Throwable t )
@@ -460,7 +460,7 @@ public class SesameModelConnection implements ModelConnection
 	public void forget( final RippleValue v ) throws RippleException
 	{
 		// FIXME: messy
-		model.getSail().getDereferencer().forget( v.toRdf( this ), this );
+		model.sail.getDereferencer().forget( v.toRdf( this ), this );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -961,52 +961,22 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RippleValue value( final int i )
+	public NumericLiteral value( final int i )
 		throws RippleException
 	{
-		try
-		{
-			return new RdfValue(
-				valueFactory.createLiteral( "" + i, XMLSchema.INTEGER ) );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
+		return new NumericLiteral( i );
 	}
 	
-	public RippleValue value( final long l )
+	public NumericLiteral value( final long l )
 		throws RippleException
 	{
-		try
-		{
-			return new RdfValue(
-				valueFactory.createLiteral( "" + l, XMLSchema.LONG ) );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
+		return new NumericLiteral( l );
 	}
 	
-	public RippleValue value( final double d )
+	public NumericLiteral value( final double d )
 		throws RippleException
 	{
-		try
-		{
-			return new RdfValue(
-				valueFactory.createLiteral( "" + d, XMLSchema.DOUBLE ) );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
+		return new NumericLiteral( d );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@ public class NumericLiteral implements RippleValue
 	/**
 	 * Distinguishes between numeric literals of type xsd:integer and xsd:double.
 	 */
-	public enum NumericLiteralType { INTEGER, DOUBLE };
+	public enum NumericLiteralType { INTEGER, LONG, DOUBLE };
 
 	private NumericLiteralType type;
 	private Number number;
@@ -65,6 +65,20 @@ public class NumericLiteral implements RippleValue
 			}
 		}
 
+		else if ( dataType.equals( XMLSchema.LONG ) )
+		{
+			try
+			{
+				type = NumericLiteralType.LONG;
+				number = new Long( ( (Literal) v ).intValue() );
+			}
+
+			catch ( Throwable t )
+			{
+				throw new RippleException( t );
+			}
+		}
+		
 		else if ( dataType.equals( XMLSchema.DOUBLE ) )
 		{
 			try
@@ -78,6 +92,7 @@ public class NumericLiteral implements RippleValue
 				throw new RippleException( t );
 			}
 		}
+		
 		else
 		{
 			throw new RippleException( "not a recognized numeric data type: " + dataType );
@@ -90,6 +105,12 @@ public class NumericLiteral implements RippleValue
 		number = new Integer( i );
 	}
 
+	public NumericLiteral( final long l )
+	{
+		type = NumericLiteralType.LONG;
+		number = new Long( l );
+	}
+	
 	public NumericLiteral( final double d )
 	{
 		type = NumericLiteralType.DOUBLE;
@@ -106,6 +127,11 @@ public class NumericLiteral implements RippleValue
 		return number.intValue();
 	}
 
+	public long longValue()
+	{
+		return number.longValue();
+	}
+	
 	public double doubleValue()
 	{
 		return number.doubleValue();
@@ -131,6 +157,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( Math.abs( a.intValue() ) );
 		}
 
+		else if ( NumericLiteralType.LONG == a.type )
+		{
+			return new NumericLiteral( Math.abs( a.longValue() ) );
+		}
+		
 		else
 		{
 			return new NumericLiteral( Math.abs( a.doubleValue() ) );
@@ -144,6 +175,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( -a.intValue() );
 		}
 
+		else if ( NumericLiteralType.LONG == a.type )
+		{
+			return new NumericLiteral( -a.longValue() );
+		}
+		
 		else
 		{
 			// Note: avoids negative zero.
@@ -159,6 +195,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( a.number.intValue() + b.number.intValue() );
 		}
 
+		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
+		{
+			return new NumericLiteral( a.number.longValue() + b.number.longValue() );
+		}
+		
 		else
 		{
 			return new NumericLiteral( a.number.doubleValue() + b.number.doubleValue() );
@@ -173,6 +214,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( a.number.intValue() - b.number.intValue() );
 		}
 
+		else if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
+		{
+			return new NumericLiteral( a.number.longValue() - b.number.longValue() );
+		}
+		
 		else
 		{
 			return new NumericLiteral( a.number.doubleValue() - b.number.doubleValue() );
@@ -187,6 +233,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( a.number.intValue() * b.number.intValue() );
 		}
 
+		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
+		{
+			return new NumericLiteral( a.number.longValue() * b.number.longValue() );
+		}
+		
 		else
 		{
 			return new NumericLiteral( a.number.doubleValue() * b.number.doubleValue() );
@@ -202,6 +253,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( a.number.intValue() / b.number.intValue() );
 		}
 
+		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
+		{
+			return new NumericLiteral( a.number.longValue() / b.number.longValue() );
+		}
+		
 		else
 		{
 			return new NumericLiteral( a.number.doubleValue() / b.number.doubleValue() );
@@ -217,6 +273,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( a.intValue() % b.intValue() );
 		}
 
+		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
+		{
+			return new NumericLiteral( a.longValue() % b.longValue() );
+		}
+		
 		else
 		{
 			return new NumericLiteral( a.doubleValue() % b.doubleValue() );
@@ -233,6 +294,11 @@ public class NumericLiteral implements RippleValue
 			return new NumericLiteral( (int) r );
 		}
 
+		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == pow.type )
+		{
+			return new NumericLiteral( (long) r );
+		}
+		
 		else
 		{
 			return new NumericLiteral( r );
@@ -250,6 +316,9 @@ public class NumericLiteral implements RippleValue
 			{
 				case INTEGER:
 					rdfEquivalent = mc.value( number.intValue() ).toRdf( mc );
+					break;
+				case LONG:
+					rdfEquivalent = mc.value( number.longValue() ).toRdf( mc );
 					break;
 				case DOUBLE:
 					rdfEquivalent = mc.value( number.doubleValue() ).toRdf( mc );
@@ -272,6 +341,9 @@ public class NumericLiteral implements RippleValue
 		{
 			case INTEGER:
 				p.print( number.intValue() );
+				break;
+			case LONG:
+				p.print( number.longValue() );
 				break;
 			case DOUBLE:
 				p.print( number.doubleValue() );

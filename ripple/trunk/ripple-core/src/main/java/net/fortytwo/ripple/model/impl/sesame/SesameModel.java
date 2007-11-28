@@ -14,26 +14,17 @@ import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
-import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.sail.Sail;
 
 public class SesameModel implements Model
 {
 	private static final Logger LOGGER = Logger.getLogger( Model.class );
 
-	private LinkedDataSail sail;
-public LinkedDataSail getSail()
-{
-	return sail;
-}
-
+	LinkedDataSail sail;
 	Set<ModelConnection> openConnections = new LinkedHashSet<ModelConnection>();
 
 	private ModelBridge bridge;
@@ -42,14 +33,14 @@ public LinkedDataSail getSail()
 		return bridge;
 	}
 
-	public SesameModel( final Sail localStore )
+	public SesameModel( final Sail baseSail )
 		throws RippleException
 	{
 		LOGGER.debug( "Creating new Model" );
 	
 		bridge = new ModelBridge();
 		UrlFactory urlFactory = new UrlFactory();
-		sail = new LinkedDataSail( localStore, urlFactory );
+		sail = new LinkedDataSail( baseSail, urlFactory );
 
 		loadSymbols( urlFactory );
 	}
@@ -117,7 +108,7 @@ public LinkedDataSail getSail()
 
 	public Dereferencer getDereferencer()
 	{
-		return getSail().getDereferencer();
+		return sail.getDereferencer();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

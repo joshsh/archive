@@ -92,9 +92,9 @@ public interface ModelConnection
 // FIXME: this should use an implementation-independent URI class
 	RippleValue value( String s, URI dataType ) throws RippleException;
 	RippleValue value( boolean b ) throws RippleException;
-	RippleValue value( int i ) throws RippleException;
-	RippleValue value( long l ) throws RippleException;
-	RippleValue value( double d ) throws RippleException;
+	NumericLiteral value( int i ) throws RippleException;
+	NumericLiteral value( long l ) throws RippleException;
+	NumericLiteral value( double d ) throws RippleException;
 // FIXME: this should use an implementation-independent URI class
 	RippleValue value( URI uri );
 	
