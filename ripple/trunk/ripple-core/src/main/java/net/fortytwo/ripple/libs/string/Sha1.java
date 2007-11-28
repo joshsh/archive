@@ -45,7 +45,7 @@ public class Sha1 extends PrimitiveFunction
 		stack = stack.getRest();
 
 		sink.put( new RippleList(
-			mc.createValue( StringUtils.sha1SumOf( a ) ), stack ) );
+			mc.value( StringUtils.sha1SumOf( a ) ), stack ) );
 	}
 }
 

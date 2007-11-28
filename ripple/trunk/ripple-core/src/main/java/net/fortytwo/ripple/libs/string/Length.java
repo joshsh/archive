@@ -44,7 +44,7 @@ public class Length extends PrimitiveFunction
 		stack = stack.getRest();
 
 		sink.put( new RippleList(
-			mc.createValue( s.length() ), stack ) );
+			mc.value( s.length() ), stack ) );
 	}
 }
 

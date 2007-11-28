@@ -110,7 +110,7 @@ public class QueryEngine
 		return defaultNs;
 	}
 
-	public void uriForKeyword( final String localName, final Sink<RippleValue> sink )
+	public void uriForKeyword( final String localName, final Sink<RippleValue> sink, final ModelConnection mc )
 		throws RippleException
 	{
 		Collection<URI> options = lexicon.uriForKeyword( localName );
@@ -127,8 +127,7 @@ public class QueryEngine
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )
 		{
-			sink.put( model.getBridge().get(
-				new RdfValue( optIter.next() ) ) );
+			sink.put( mc.value( optIter.next() ) );
 		}
 	}
 
@@ -138,7 +137,7 @@ public class QueryEngine
 								final ModelConnection mc )
 		throws RippleException
 	{
-		Value v = lexicon.uriForQName( nsPrefix, localName, mc );
+		URI v = lexicon.uriForQName( nsPrefix, localName, mc );
 
 		if ( null == v )
 		{
@@ -147,8 +146,7 @@ public class QueryEngine
 
 		else
 		{
-			sink.put( model.getBridge().get(
-				new RdfValue( v ) ) );
+			sink.put( mc.value( v ) );
 		}
 	}
 

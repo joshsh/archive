@@ -62,7 +62,7 @@ public class ToInteger extends PrimitiveFunction
 			return;
 		}
 
-		sink.put( new RippleList( mc.createValue( i ), stack ) );
+		sink.put( new RippleList( mc.value( i ), stack ) );
 	}
 }
 

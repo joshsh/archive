@@ -121,13 +121,13 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 		LOGGER.debug( "writing success memos" );
 		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
 		{
-			mc.add( rplCacheRoot, rplCacheSuccessMemo, mc.createValue( iter.next() ) );
+			mc.add( rplCacheRoot, rplCacheSuccessMemo, mc.value( iter.next() ) );
 		}
 
 		LOGGER.debug( "writing failure memos" );
 		for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
 		{
-			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.createValue( iter.next() ) );
+			mc.add( rplCacheRoot, rplCacheFailureMemo, mc.value( iter.next() ) );
 		}
 
 		mc.commit();

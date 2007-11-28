@@ -48,7 +48,7 @@ public class ToString extends PrimitiveFunction
 		v = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( mc.createValue( v.toString() ), stack ) );
+		sink.put( new RippleList( mc.value( v.toString() ), stack ) );
 	}
 }
 

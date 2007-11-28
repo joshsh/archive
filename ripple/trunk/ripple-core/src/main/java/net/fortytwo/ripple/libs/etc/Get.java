@@ -106,7 +106,7 @@ public class Get extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
-		sink.put( new RippleList( mc.createValue( result ), stack ) );
+		sink.put( new RippleList( mc.value( result ), stack ) );
 	}
 }
 

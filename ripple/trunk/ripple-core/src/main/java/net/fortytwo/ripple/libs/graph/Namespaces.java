@@ -79,7 +79,7 @@ public class Namespaces extends PrimitiveFunction
 					throws RippleException
 				{
 					RippleList result = new RippleList(
-						mc.createValue( ns.getPrefix() ) ).push( mc.createValue( ns.getName() ) );
+						mc.value( ns.getPrefix() ) ).push( mc.value( ns.getName() ) );
 					resultSink.put( new RippleList( result, stack ) );
 				}
 			};

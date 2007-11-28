@@ -29,7 +29,7 @@ public class DoubleAst implements Ast
 						final ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( mc.createValue( value ) );
+		sink.put( mc.value( value ) );
 	}
 
 	public String toString()

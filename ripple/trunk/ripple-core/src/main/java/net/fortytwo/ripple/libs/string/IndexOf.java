@@ -48,7 +48,7 @@ public class IndexOf extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = str.indexOf( substr );
-		sink.put( new RippleList( mc.createValue( result ), stack ) );
+		sink.put( new RippleList( mc.value( result ), stack ) );
 	}
 }
 

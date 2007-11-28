@@ -50,7 +50,7 @@ public class Size extends PrimitiveFunction
 			public void put( final RippleList list ) throws RippleException
 			{
 				int result = list.length();
-				sink.put( new RippleList( mc.createValue( result ), rest ) );
+				sink.put( new RippleList( mc.value( result ), rest ) );
 			}
 		};
 

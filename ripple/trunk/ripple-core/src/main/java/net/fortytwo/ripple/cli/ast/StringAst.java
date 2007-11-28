@@ -58,8 +58,8 @@ public class StringAst implements Ast
 		throws RippleException
 	{
 		sink.put( ( null == language )
-			? mc.createValue( value )
-			: mc.createValue( value, language ) );
+			? mc.value( value )
+			: mc.value( value, language ) );
 	}
 
 	public String toString()

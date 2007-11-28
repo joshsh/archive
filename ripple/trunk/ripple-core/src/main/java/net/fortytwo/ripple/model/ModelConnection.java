@@ -34,89 +34,89 @@ public interface ModelConnection
 	*  Returns the ModelConnection to a normal state after an Exception has
 	*  been thrown.
 	*/
-	void reset( final boolean rollback ) throws RippleException;
+	void reset( boolean rollback ) throws RippleException;
 
 	void commit() throws RippleException;
 
-	boolean booleanValue( final RippleValue rv ) throws RippleException;
-	NumericLiteral numericValue( final RippleValue rv )	throws RippleException;
-	int intValue( final RippleValue rv ) throws RippleException;
-	String stringValue( final RippleValue v ) throws RippleException;
-	URI uriValue( final RippleValue rv ) throws RippleException;
+	boolean booleanValue( RippleValue rv ) throws RippleException;
+	NumericLiteral numericValue( RippleValue rv )	throws RippleException;
+	int intValue( RippleValue rv ) throws RippleException;
+	String stringValue( RippleValue v ) throws RippleException;
+	URI uriValue( RippleValue rv ) throws RippleException;
 
-	RdfValue findSingleObject( final RippleValue subj, final RippleValue pred )	throws RippleException;
-	RdfValue findAtLeastOneObject( final RippleValue subj, final RippleValue pred )	throws RippleException;
-	RdfValue findAtMostOneObject( final RippleValue subj, final RippleValue pred ) throws RippleException;
-	RdfValue findUniqueProduct( final RippleValue subj, final RippleValue pred ) throws RippleException;
+	RdfValue findSingleObject( RippleValue subj, RippleValue pred )	throws RippleException;
+	RdfValue findAtLeastOneObject( RippleValue subj, RippleValue pred )	throws RippleException;
+	RdfValue findAtMostOneObject( RippleValue subj, RippleValue pred ) throws RippleException;
+	RdfValue findUniqueProduct( RippleValue subj, RippleValue pred ) throws RippleException;
 
-	void copyStatements( final RippleValue src, final RippleValue dest ) throws RippleException;
-	void removeStatementsAbout( final URI subj ) throws RippleException;
-	void putContainerMembers( final RippleValue head, final Sink<RippleValue> sink ) throws RippleException;
+	void copyStatements( RippleValue src, RippleValue dest ) throws RippleException;
+	void removeStatementsAbout( URI subj ) throws RippleException;
+	void putContainerMembers( RippleValue head, Sink<RippleValue> sink ) throws RippleException;
 
-	void forget( final RippleValue v ) throws RippleException;
+	void forget( RippleValue v ) throws RippleException;
 
-	void findPredicates( final RippleValue subject,	final Sink<RippleValue> sink ) throws RippleException;
+	void findPredicates( RippleValue subject, Sink<RippleValue> sink ) throws RippleException;
 
-// FIXME: Statements should be absent from the ModelConnection API
-	void add( final Statement st, final Resource... contexts ) throws RippleException;
-	void add( final RippleValue subj, final RippleValue pred, final RippleValue obj ) throws RippleException;
-	void remove( final RippleValue subj, final RippleValue pred, final RippleValue obj ) throws RippleException;
+// FIXME: Statements should not be part of the ModelConnection API
+	void add( Statement st, Resource... contexts ) throws RippleException;
+	void add( RippleValue subj, RippleValue pred, RippleValue obj ) throws RippleException;
+	void remove( RippleValue subj, RippleValue pred, RippleValue obj ) throws RippleException;
 
-// FIXME: URIs should be absent from the ModelConnection API
-	void removeStatementsAbout( final RdfValue subj, final URI context ) throws RippleException;
+// FIXME: URIs should not be part of the ModelConnection API
+	void removeStatementsAbout( RdfValue subj, URI context ) throws RippleException;
 
-// FIXME: Resources should be absent from the ModelConnection API
-	public long countStatements( final Resource context ) throws RippleException;
+// FIXME: Resources should not be part of the ModelConnection API
+	public long countStatements( Resource context ) throws RippleException;
 
-// FIXME: Sesame URIs should be absent from the ModelConnection API
-	URI createUri( final String s ) throws RippleException;
-	URI createUri( final String ns, final String s ) throws RippleException;
-	URI createUri( final URI ns, final String s ) throws RippleException;
-// FIXME: Sesame literals should be absent from the ModelConnection API
-	Literal createLiteral( final String s ) throws RippleException;
-	Literal createLiteral( final String s, final String language ) throws RippleException;
-	Literal createLiteral( final String s, final URI dataType )	throws RippleException;
-	Literal createLiteral( final boolean b ) throws RippleException;
-	Literal createLiteral( final int i ) throws RippleException;
-	Literal createLiteral( final double d ) throws RippleException;
-// FIXME: BNodes should be absent from the ModelConnection API
+// FIXME: Sesame URIs should not be part of the ModelConnection API
+	URI createUri( String s ) throws RippleException;
+	URI createUri( String ns, String s ) throws RippleException;
+	URI createUri( URI ns, String s ) throws RippleException;
+// FIXME: Sesame literals should not be part of the ModelConnection API
+	Literal createLiteral( String s ) throws RippleException;
+	Literal createLiteral( String s, final String language ) throws RippleException;
+	Literal createLiteral( String s, final URI dataType )	throws RippleException;
+	Literal createLiteral( boolean b ) throws RippleException;
+	Literal createLiteral( int i ) throws RippleException;
+	Literal createLiteral( double d ) throws RippleException;
+// FIXME: BNodes should not be part of the ModelConnection API
 	BNode createBNode() throws RippleException;
-	BNode createBNode( final String id ) throws RippleException;
-// FIXME: Statements should be absent from the ModelConnection API
-	Statement createStatement( final Resource subj, final URI pred, final Value obj ) throws RippleException;
+	BNode createBNode( String id ) throws RippleException;
+// FIXME: Statements should not be part of the ModelConnection API
+	Statement createStatement( Resource subj, final URI pred, final Value obj ) throws RippleException;
 
-	RdfValue createTypedLiteral( final String value, final RippleValue type ) throws RippleException;
+	RippleValue createTypedLiteral( String value, final RippleValue type ) throws RippleException;
 	
-	RdfValue createValue( final String s ) throws RippleException;
-	RdfValue createValue( final String s, final String language ) throws RippleException;
-	RdfValue createValue( final String s, final URI dataType ) throws RippleException;
-	RdfValue createValue( final boolean b ) throws RippleException;
-	RdfValue createValue( final int i ) throws RippleException;
-	RdfValue createValue( final long l ) throws RippleException;
-	RdfValue createValue( final double d ) throws RippleException;
+	RippleValue value( String s ) throws RippleException;
+	RippleValue value( String s, String language ) throws RippleException;
+// FIXME: this should use an implementation-independent URI class
+	RippleValue value( String s, URI dataType ) throws RippleException;
+	RippleValue value( boolean b ) throws RippleException;
+	RippleValue value( int i ) throws RippleException;
+	RippleValue value( long l ) throws RippleException;
+	RippleValue value( double d ) throws RippleException;
+// FIXME: this should use an implementation-independent URI class
+	RippleValue value( URI uri );
+	
+	void setNamespace( String prefix, String ns, boolean override ) throws RippleException;
+// FIXME: URIs should not be part of the ModelConnection interface
+	void setNamespace( String prefix, URI ns, boolean override ) throws RippleException;
 
-	void setNamespace( final String prefix, final String ns, final boolean override ) throws RippleException;
-// FIXME: URIs should be absent from the ModelConnection interface
-	void setNamespace( final String prefix, final URI ns, final boolean override ) throws RippleException;
+	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
+	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
+	void divide( RippleValue obj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
 
-	void multiplyAsynch( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink ) throws RippleException;
-	void multiply( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink ) throws RippleException;
-	void divide( final RippleValue obj, final RippleValue pred, final Sink<RippleValue> sink ) throws RippleException;
-
-// FIXME: Namespaces should be absent from the ModelConnection API
-	void getNamespaces( final Sink<Namespace> sink ) throws RippleException;
-// FIXME: Statements should be absent from the ModelConnection API
-	void getStatements( final RdfValue subj,
-								final RdfValue pred,
-								final RdfValue obj,
-								final Sink<Statement> sink ) throws RippleException;
+// FIXME: Namespaces should not be part of the ModelConnection API
+	void getNamespaces( Sink<Namespace> sink ) throws RippleException;
+// FIXME: Statements should not be part of the ModelConnection API
+	void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink ) throws RippleException;
 
 	RdfSource getSource();
 
 // TODO: Namespaces should not be part of the ModelConnection API
-	void putNamespaces( final Sink<Namespace> sink ) throws RippleException;
+	void putNamespaces( Sink<Namespace> sink ) throws RippleException;
 
-	void putContexts( final Sink<RippleValue> sink ) throws RippleException;
+	void putContexts( Sink<RippleValue> sink ) throws RippleException;
 	
-	void exportNs( final String ns, final OutputStream os ) throws RippleException;
+	void exportNs( String ns, OutputStream os ) throws RippleException;
 }

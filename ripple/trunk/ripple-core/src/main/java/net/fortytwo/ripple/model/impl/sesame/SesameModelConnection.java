@@ -874,7 +874,9 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createTypedLiteral( final String value, final RippleValue type ) throws RippleException
+	////////////////////////////////////////////////////////////////////////////
+
+	public RippleValue createTypedLiteral( final String value, final RippleValue type ) throws RippleException
 	{
 		Value v = type.toRdf( this ).getRdfValue();
 	
@@ -885,11 +887,18 @@ public class SesameModelConnection implements ModelConnection
 	
 		else
 		{
-			return createValue( value, (URI) v );
+			return value( value, (URI) v );
 		}
 	}
 	
-	public RdfValue createValue( final String s ) throws RippleException
+	////////////////////////////////////////////////////////////////////////////
+	
+	public RippleValue value( final URI uri )
+	{
+		return model.getBridge().get( uri );
+	}
+	
+	public RippleValue value( final String s ) throws RippleException
 	{
 		try
 		{
@@ -904,7 +913,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createValue( final String s, final String language )
+	public RippleValue value( final String s, final String language )
 		throws RippleException
 	{
 		try
@@ -920,7 +929,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createValue( final String s, final URI dataType )
+	public RippleValue value( final String s, final URI dataType )
 		throws RippleException
 	{
 		try
@@ -936,7 +945,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createValue( final boolean b )
+	public RippleValue value( final boolean b )
 		throws RippleException
 	{
 		try
@@ -952,7 +961,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createValue( final int i )
+	public RippleValue value( final int i )
 		throws RippleException
 	{
 		try
@@ -968,7 +977,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createValue( final long l )
+	public RippleValue value( final long l )
 		throws RippleException
 	{
 		try
@@ -984,7 +993,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfValue createValue( final double d )
+	public RippleValue value( final double d )
 		throws RippleException
 	{
 		try

@@ -249,10 +249,10 @@ public class NumericLiteral implements RippleValue
 			switch ( type )
 			{
 				case INTEGER:
-					rdfEquivalent = mc.createValue( number.intValue() );
+					rdfEquivalent = mc.value( number.intValue() ).toRdf( mc );
 					break;
 				case DOUBLE:
-					rdfEquivalent = mc.createValue( number.doubleValue() );
+					rdfEquivalent = mc.value( number.doubleValue() ).toRdf( mc );
 					break;
 			}
 		}

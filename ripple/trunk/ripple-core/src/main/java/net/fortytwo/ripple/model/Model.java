@@ -18,8 +18,8 @@ public interface Model
 {
 	ModelBridge getBridge();
 
-	ModelConnection getConnection( final String name ) throws RippleException;
-	ModelConnection getConnection( final String name, final LexiconUpdater updater ) throws RippleException;
+	ModelConnection getConnection( String name ) throws RippleException;
+	ModelConnection getConnection( String name, final LexiconUpdater updater ) throws RippleException;
 
 	long countStatements() throws RippleException;
 	

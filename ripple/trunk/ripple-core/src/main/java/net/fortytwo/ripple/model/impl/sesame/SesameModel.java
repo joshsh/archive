@@ -14,10 +14,14 @@ import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.sail.Sail;
 
 public class SesameModel implements Model

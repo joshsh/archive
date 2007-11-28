@@ -40,8 +40,7 @@ public class UriAst implements Ast
 						final ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( mc.getModel().getBridge().get(
-			new RdfValue( mc.createUri( value ) ) ) );
+		sink.put( mc.value( mc.createUri( value ) ) );
 	}
 
 	public String toString()

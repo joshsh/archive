@@ -46,7 +46,7 @@ public class Trim extends PrimitiveFunction
 
 		result = s.trim();
 
-		sink.put( new RippleList( mc.createValue( result ), stack ) );
+		sink.put( new RippleList( mc.value( result ), stack ) );
 	}
 }
 

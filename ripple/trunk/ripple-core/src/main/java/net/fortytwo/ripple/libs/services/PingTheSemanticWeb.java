@@ -71,7 +71,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		stack = stack.getRest();
 
 sink.put( new RippleList(
-	mc.createValue( "Note: the PingTheSemanticWeb API has just (as of Aug 27, 2007) undergone major changes.  Check the latest release of Ripple for an updated pingTheSemanticWeb primitive!" ), stack ) );
+	mc.value( "Note: the PingTheSemanticWeb API has just (as of Aug 27, 2007) undergone major changes.  Check the latest release of Ripple for an updated pingTheSemanticWeb primitive!" ), stack ) );
 /*
 		URLConnection urlConn = HttpUtils.openConnection(
 			"http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );

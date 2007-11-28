@@ -43,7 +43,7 @@ public class Time extends PrimitiveFunction
 		throws RippleException
 	{
 		sink.put( new RippleList(
-			mc.createValue( (int) ( ( new Date() ).getTime() / ONE_THOUSAND ) ),
+			mc.value( (int) ( ( new Date() ).getTime() / ONE_THOUSAND ) ),
 			stack ) );
 	}
 }

@@ -34,7 +34,7 @@ public class KeywordAst implements Ast
 						final ModelConnection mc )
 		throws RippleException
 	{
-		qe.uriForKeyword( keyword, sink );
+		qe.uriForKeyword( keyword, sink, mc );
 	}
 }
 
