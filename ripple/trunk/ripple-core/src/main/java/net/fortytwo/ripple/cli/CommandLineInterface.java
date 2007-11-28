@@ -295,7 +295,6 @@ System.out.println( "reader.getTerminal() = " + term );
 			directives.add( "@prefix" );
 			directives.add( "@quit" );
 			directives.add( "@saveas" );
-			directives.add( "@serql" );
 			directives.add( "@undefine" );
 
 			completors.add(

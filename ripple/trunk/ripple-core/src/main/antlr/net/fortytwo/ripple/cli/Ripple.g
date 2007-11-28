@@ -24,7 +24,6 @@ import net.fortytwo.ripple.query.commands.DefineTermCmd;
 import net.fortytwo.ripple.query.commands.ExportNsCmd;
 import net.fortytwo.ripple.query.commands.QuitCmd;
 import net.fortytwo.ripple.query.commands.SaveAsCmd;
-import net.fortytwo.ripple.query.commands.SerqlQueryCmd;
 import net.fortytwo.ripple.query.commands.ShowContextsCmd;
 import net.fortytwo.ripple.query.commands.ShowNamespacesCmd;
 import net.fortytwo.ripple.query.commands.UndefineTermCmd;
@@ -223,8 +222,7 @@ DRCTV_HELP      : DRCTV ( "help"          | "h" ) ;
 DRCTV_LIST      : DRCTV ( "list"          | "l" ) ;
 DRCTV_PREFIX    : DRCTV ( "prefix"        | "p" ) ;
 DRCTV_QUIT      : DRCTV ( "quit"          | "q" ) ;
-DRCTV_SAVEAS    : DRCTV ( "saveas"        | "sa" ) ;
-DRCTV_SERQL     : DRCTV ( "serql"         | "sr" ) ;
+DRCTV_SAVEAS    : DRCTV ( "saveas"        | "s" ) ;
 DRCTV_UNDEFINE  : DRCTV ( "undefine"      | "u" ) ;
 
 
@@ -565,11 +563,6 @@ nt_Directive
 	| DRCTV_SAVEAS nt_Ws saFile:STRING (nt_Ws)? PERIOD
 		{
 			matchCommand( new SaveAsCmd( saFile.getText() ) );
-		}
-
-	| DRCTV_SERQL nt_Ws query:STRING (nt_Ws)? PERIOD
-		{
-			matchCommand( new SerqlQueryCmd( query.getText() ) );
 		}
 
 	| DRCTV_UNDEFINE nt_Ws localName=nt_Name (nt_Ws)? PERIOD

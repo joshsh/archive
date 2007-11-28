@@ -26,7 +26,6 @@ public class LazyEvaluator extends Evaluator
 {
 	private static final Logger LOGGER = Logger.getLogger( LazyEvaluator.class );
 
-	private Model model;
 	private ModelConnection modelConnection;
 	private boolean stopped = true;
 
@@ -119,8 +118,8 @@ public class LazyEvaluator extends Evaluator
 				// reduced, to one level per argument.
 				else
 				{
-					// Here's the part where we simply ignore stacks which can't
-					// be reduced to something with a passive item on top.
+					// We simply ignore stacks which can't be reduced to
+					// something with a passive item on top.
 					if ( RippleList.NIL == rest )
 					{
 						return;
@@ -155,7 +154,6 @@ if ( stack == RippleList.NIL )
 }
 
 		modelConnection = mc;
-		model = modelConnection.getModel();
 
 		EvaluatorSink evalSink = new EvaluatorSink( sink );
 		stopped = false;

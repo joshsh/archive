@@ -113,7 +113,7 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 			initialize( mc );
 		}
 		
-		Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
+		Dereferencer dereferencer = mc.getModel().getDereferencer();
 
 		mc.removeStatementsAbout( rplCacheRoot, null );
 		mc.commit();
@@ -145,7 +145,7 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 			initialize( mc );
 		}
 		
-		final Dereferencer dereferencer = mc.getModel().getSail().getDereferencer();
+		final Dereferencer dereferencer = mc.getModel().getDereferencer();
 
 		Sink<RippleValue> successMemoSink = new Sink<RippleValue>()
 		{

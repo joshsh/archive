@@ -20,6 +20,7 @@ import java.io.PrintStream;
 
 import java.net.URL;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Iterator;
 
@@ -27,6 +28,7 @@ import net.fortytwo.ripple.cli.CommandLineInterface;
 import net.fortytwo.ripple.io.CacheManager;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
@@ -60,7 +62,7 @@ public final class Demo
 		Sail sail = RdfUtils.createMemoryStoreSail();
 
 		// Attach a Ripple model to the repository.
-		Model model = new Model( sail );
+		Model model = new SesameModel( sail );
 
 		// Attach a query engine to the model.
 		Evaluator evaluator = new LazyEvaluator();
@@ -134,21 +136,21 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 		// Must close the connection before the repository can be shut down.
 		mc.close();
 
-		List<String> openConnections = ModelConnection.listOpenConnections();
+		Collection<ModelConnection> openConnections = model.openConnections();
 		if ( openConnections.size() > 0 )
 		{
-			Iterator<String> i = openConnections.iterator();
-			String s = "" + openConnections.size() + " dangling connections: \"" + i.next() + "\"";
+			Iterator<ModelConnection> i = openConnections.iterator();
+			String s = "" + openConnections.size() + " dangling connections: \"" + i.next().getName() + "\"";
 
 			while ( i.hasNext() )
 			{
-				s += ", \"" + i.next() + "\"";
+				s += ", \"" + i.next().getName() + "\"";
 			}
 
 			LOGGER.warn( s );
 
 			System.exit( 1 );
-//			ModelConnection.closeOpenConnections();
+//			model.closeOpenConnections();
 		}
 
 		try

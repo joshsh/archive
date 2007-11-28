@@ -9,99 +9,22 @@
 
 package net.fortytwo.ripple.model;
 
+import java.util.Collection;
+
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.model.LibraryLoader;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.io.Dereferencer;
 
-import org.apache.log4j.Logger;
-import org.openrdf.sail.Sail;
-
-
-public class Model
+public interface Model
 {
-	private static final Logger LOGGER = Logger.getLogger( Model.class );
+	ModelBridge getBridge();
 
-	private LinkedDataSail sail;
-public LinkedDataSail getSail()
-{
-	return sail;
-}
+	ModelConnection getConnection( final String name ) throws RippleException;
+	ModelConnection getConnection( final String name, final LexiconUpdater updater ) throws RippleException;
 
-	private ModelBridge bridge;
-	public ModelBridge getBridge()
-	{
-		return bridge;
-	}
-
-	public Model( final Sail localStore )
-		throws RippleException
-	{
-		LOGGER.debug( "Creating new Model" );
+	long countStatements() throws RippleException;
 	
-		bridge = new ModelBridge();
-		UrlFactory urlFactory = new UrlFactory();
-		sail = new LinkedDataSail( localStore, urlFactory );
-
-		loadSymbols( urlFactory );
-	}
-
-	private void loadSymbols( final UrlFactory uf )
-		throws RippleException
-	{
-		ModelConnection mc = getConnection( "for Model.loadSymbols" );
-
-		// At the moment, op needs to be a special value for the sake of the
-		// evaluator.  This has the side-effect of making it a keyword.
-		bridge.add( Operator.OP, mc );
-
-		LibraryLoader loader = new LibraryLoader();
-
-		try
-		{
-			loader.load( uf, mc );
-		}
-
-		catch ( RippleException e )
-		{
-			mc.close();
-			throw e;
-		}
-
-		mc.close();
-	}
-
-	public ModelConnection getConnection( final String name )
-		throws RippleException
-	{
-		return new ModelConnection( this, name, null );
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	// Note: this may be a very expensive operation (see Sesame API).
-	public long countStatements()
-		throws RippleException
-	{
-return 0;
-/* TODO
-		long size;
-
-		try
-		{
-			RepositoryConnection rc = repository.getConnection();
-			size = rc.size();
-			rc.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-
-		return size;
-*/
-	}
+	Collection<ModelConnection> openConnections();
+	void closeOpenConnections() throws RippleException;
+	
+	Dereferencer getDereferencer();
 }
-
-// kate: tab-width 4

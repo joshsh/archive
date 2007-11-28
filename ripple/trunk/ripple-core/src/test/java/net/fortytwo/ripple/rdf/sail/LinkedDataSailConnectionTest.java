@@ -28,7 +28,7 @@ public class LinkedDataSailConnectionTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			Sail sail = getTestModel().getSail();
+			Sail sail = getTestSail();
 			ValueFactory vf = sail.getValueFactory();
 			SailConnection sc = sail.getConnection();
 

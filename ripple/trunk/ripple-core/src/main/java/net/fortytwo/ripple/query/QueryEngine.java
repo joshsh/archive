@@ -10,23 +10,20 @@
 package net.fortytwo.ripple.query;
 
 import java.io.PrintStream;
-
 import java.util.Collection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
-
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
@@ -70,8 +67,7 @@ public class QueryEngine
 	public ModelConnection getConnection( final String name )
 		throws RippleException
 	{
-		return new ModelConnection(
-			model, name, new LexiconUpdater( lexicon ) );
+		return model.getConnection( name, new LexiconUpdater( lexicon ) );
 	}
 
 	public Evaluator getEvaluator()
@@ -138,10 +134,11 @@ public class QueryEngine
 
 	public void uriForQName( final String nsPrefix,
 								final String localName,
-								final Sink<RippleValue> sink )
+								final Sink<RippleValue> sink,
+								final ModelConnection mc )
 		throws RippleException
 	{
-		Value v = lexicon.uriForQName( nsPrefix, localName );
+		Value v = lexicon.uriForQName( nsPrefix, localName, mc );
 
 		if ( null == v )
 		{

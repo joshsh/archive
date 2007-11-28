@@ -33,8 +33,6 @@ import java.util.Iterator;
  */
 public class Lexicon
 {
-	private ValueFactory valueFactory;
-
 	private Hashtable<String, List<URI>> keywordToUriMap = null;
 	private Hashtable<URI, String> uriToKeywordMap = null;
 	private Hashtable<String, String> prefixToNamespaceMap = null;
@@ -43,8 +41,6 @@ public class Lexicon
 
 	public Lexicon( final Model model ) throws RippleException
 	{
-valueFactory = model.getSail().getValueFactory();
-
 		createKeywordMap( model );
 
 		prefixToNamespaceMap = new Hashtable<String, String>();
@@ -108,13 +104,14 @@ valueFactory = model.getSail().getValueFactory();
 	*  <code>localName</code> is unconstrained.
 	*/
 	public URI uriForQName( final String nsPrefix,
-							final String localName )
+							final String localName,
+							final ModelConnection mc ) throws RippleException
 	{
 		String ns = resolveNamespacePrefix( nsPrefix );
 
 		return ( null == ns )
 			? null
-			: valueFactory.createURI( ns, localName );
+			: mc.createUri( ns, localName );
 	}
 
 	public String resolveNamespacePrefix( final String nsPrefix )

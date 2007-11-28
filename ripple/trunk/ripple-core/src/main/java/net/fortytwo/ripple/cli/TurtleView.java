@@ -59,8 +59,6 @@ public class TurtleView implements Sink<RippleList>
 		ps.print( Ripple.resultViewPrintEntireStack() ? list : first );
 		ps.print( "\n" );
 
-		final ModelBridge bridge = mc.getModel().getBridge();
-
 		Collector<RippleValue> predicates = new Collector<RippleValue>();
 		mc.findPredicates( first, predicates );
 

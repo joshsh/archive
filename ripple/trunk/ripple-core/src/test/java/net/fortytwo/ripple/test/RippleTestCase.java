@@ -17,6 +17,7 @@ import org.openrdf.sail.Sail;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.rdf.RdfUtils;
 
 public abstract class RippleTestCase extends TestCase
@@ -128,17 +129,26 @@ public abstract class RippleTestCase extends TestCase
 
 	////////////////////////////////////////////////////////////////////////////
 
+	private static Sail sail = null;
 	private static Model model = null;
-
+	
+	protected static Sail getTestSail() throws Exception
+	{
+		if ( null == sail )
+		{
+			// Warning: we never call shutDown() on this Sail.
+			sail = RdfUtils.createMemoryStoreSail();
+		}
+		
+		return sail;
+	}
+	
 	protected static Model getTestModel()
 		throws Exception
 	{
 		if ( null == model )
 		{
-			// Warning: we never call shutDown() on this repository.
-			Sail sail = RdfUtils.createMemoryStoreSail();
-
-			model = new Model( sail );
+			model = new SesameModel( getTestSail() );
 		}
 
 		return model;
