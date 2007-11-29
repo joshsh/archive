@@ -118,11 +118,42 @@ public class NumericLiteralTest extends RippleTestCase
 				NumericLiteral.NumericLiteralType.DOUBLE );
 		}
 	}
+	
+	private class EqualityTest extends TestRunnable
+	{
+		public void test()
+			throws Exception
+		{
+			// int == int
+			assertEquals( new NumericLiteral( 1 ), new NumericLiteral( 1 ) );
+			assertEquals( new NumericLiteral( -1 ), new NumericLiteral( -1 ) );
+			assertEquals( new NumericLiteral( 0 ), new NumericLiteral( 0 ) );
+			
+			// long == long
+			assertEquals( new NumericLiteral( 1l ), new NumericLiteral( 1l ) );
+			assertEquals( new NumericLiteral( -1l ), new NumericLiteral( -1l ) );
+			assertEquals( new NumericLiteral( 0l ), new NumericLiteral( 0l ) );
+			
+			// double == double
+			assertEquals( new NumericLiteral( 1.0 ), new NumericLiteral( 1.0 ) );
+			assertEquals( new NumericLiteral( -1.0 ), new NumericLiteral( -1.0 ) );
+			assertEquals( new NumericLiteral( 0.0 ), new NumericLiteral( 0.0 ) );
+			
+			// mixed comparisons
+			assertEquals( new NumericLiteral( 1 ), new NumericLiteral( 1l ) );
+			assertEquals( new NumericLiteral( 1 ), new NumericLiteral( 1.0 ) );
+			assertEquals( new NumericLiteral( 1l ), new NumericLiteral( 1 ) );
+			assertEquals( new NumericLiteral( 1l ), new NumericLiteral( 1.0 ) );
+			assertEquals( new NumericLiteral( 1.0 ), new NumericLiteral( 1 ) );
+			assertEquals( new NumericLiteral( 1.0 ), new NumericLiteral( 1l ) );			
+		}
+	}
 
 	public void runTests()
 		throws Exception
 	{
 		testAsynchronous( new TypeTest() );
+		testAsynchronous( new EqualityTest() );
 	}
 }
 

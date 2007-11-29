@@ -9,11 +9,18 @@
 
 package net.fortytwo.ripple.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.fortytwo.ripple.RippleException;
 
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 public class ModelBridge
@@ -57,10 +64,10 @@ public class ModelBridge
 		}
 	}
 
-	public void add( final RdfValue key, final RippleValue value )
+	public void add( final RippleValue key, final RippleValue value, final ModelConnection mc )
 		throws RippleException
 	{
-		rdfToNativeMap.put( key.getRdfValue(), value );
+		rdfToNativeMap.put( key.toRdf( mc ).getRdfValue(), value );
 	}
 
 	public void add( final RippleValue v, final ModelConnection mc )
@@ -68,11 +75,49 @@ public class ModelBridge
 	{
 		rdfToNativeMap.put( v.toRdf( mc ).getRdfValue(), v );
 	}
-
+	
 	public Set<Value> keySet()
 	{
 		return rdfToNativeMap.keySet();
 	}
+	
+	/*
+	public void createKeywordMap( final ModelConnection mc ) throws RippleException
+	{
+		Map<String, Collection<RippleValue>> keywordToValueMap
+			= new HashMap<String, Collection<RippleValue>>();
+
+		Iterator<Value> keys = rdfToNativeMap.keySet().iterator();
+		while ( keys.hasNext() )
+		{
+			// An extra trip through the bridge replaces aliases with
+			// "definitive" values.
+			Value v = get( keys.next() ).toRdf( mc ).getRdfValue();
+
+			if ( v instanceof URI )
+			{
+				String keyword = ( (URI) v ).getLocalName();
+
+				Collection<RippleValue> siblings = keywordToValueMap.get( keyword );
+		
+				
+				if ( null == siblings )
+				{
+					siblings = new LinkedList<RippleValue>();
+					keywordToUriMap.put( keyword, siblings );
+
+					uriToKeywordMap.put( (URI) v, keyword );
+				}
+
+				// The presence of aliases will cause the same URI / keyword
+				// pair to appear more than once.
+				if ( !siblings.contains( (URI) v ) )
+				{
+					siblings.add( (URI) v );
+				}
+			}
+		}
+	}*/
 }
 
 // kate: tab-width 4

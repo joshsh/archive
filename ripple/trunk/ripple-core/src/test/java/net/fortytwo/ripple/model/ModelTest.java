@@ -25,7 +25,7 @@ public class ModelTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			Model model = getTestModel();
+			getTestModel();
 		}
 	}
 	

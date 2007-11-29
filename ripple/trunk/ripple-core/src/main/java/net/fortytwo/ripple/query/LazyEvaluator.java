@@ -12,7 +12,6 @@ package net.fortytwo.ripple.query;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Closure;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;

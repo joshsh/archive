@@ -351,6 +351,20 @@ public class NumericLiteral implements RippleValue
 		}
 	}
 
+// TODO: implement hashCode()
+	public boolean equals( final Object other )
+	{
+		if ( other instanceof NumericLiteral )
+		{
+			return ( 0 == compareTo( (NumericLiteral) other ) );
+		}
+		
+		else
+		{
+			return false;
+		}
+	}
+	
 	public int compareTo( final RippleValue other )
 	{
 		if ( other instanceof NumericLiteral )

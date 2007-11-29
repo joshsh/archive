@@ -60,7 +60,7 @@ public abstract class Library
 			public void put( final RippleValue v )
 				throws RippleException
 			{
-				bridge.add( v.toRdf( mc ), primFinal );
+				bridge.add( v, primFinal, mc );
 			}
 		};
 
