@@ -6,13 +6,12 @@ import java.util.logging.Logger;
 
 import net.fortytwo.ripple.rdf.CloseableIterationSource;
 import net.fortytwo.ripple.rdf.RdfCollector;
-import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
-import net.fortytwo.ripple.rdf.SingleContextPipe;
 
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
@@ -28,19 +27,18 @@ public class InformationResource extends Resource
 		= Logger.getLogger( InformationResource.class.getName() );
 	
 	private URI uri;
+	private Sail sail;
 
-    public InformationResource( Context context, Request request,
-            Response response)
+    public InformationResource( final Context context, final Request request,
+            final Response response ) throws Exception
     {
-        super(context, request, response);
+        super( context, request, response );
+
+        sail = RdfWiki.getWiki( context ).getSail( request );
         
-        uri = RdfWiki.getSail().getValueFactory().createURI(
+        uri = sail.getValueFactory().createURI(
         		request.getResourceRef().toString() );
 System.out.println( "uri = " + uri );
-
-        // Here we add the representation variants exposed
-//        getVariants().add( new Variant() );
-//        getVariants().add( new Variant( MediaType.TEXT_PLAIN ) );
     }
 
     public boolean allowDelete()
@@ -99,12 +97,16 @@ System.out.println( "uri = " + uri );
     		// Note: the resource URI might not be very useful as a base URI.
     		RdfRepresentation rep = new RdfRepresentation( entity, uri.toString() );
 
-    		sc = RdfWiki.getSail().getConnection();
+    		sc = sail.getConnection();
     		open = true;
-    		RdfSink contextPipe = new SingleContextPipe(
-    				new SesameOutputAdapter( new SailInserter(sc ) ),
-    				uri, RdfWiki.getSail().getValueFactory() );
-    		rep.getSource().writeTo( contextPipe );
+//    		RdfSink contextPipe = new SingleContextPipe(
+//    				new SesameOutputAdapter( new SailInserter(sc ) ),
+//    				uri, sail.getValueFactory() );
+//    		rep.getSource().writeTo( contextPipe );
+    		
+    		// Don't filter statement context for now.
+    		rep.getSource().writeTo( new SesameOutputAdapter( new SailInserter( sc ) ) );
+    		
     		sc.commit();
     		sc.close();
     		open = false;
@@ -142,9 +144,12 @@ System.out.println( "uri = " + uri );
     	
     	try
     	{
-    		sc = RdfWiki.getSail().getConnection();
+    		sc = sail.getConnection();
     		open = true;
-    		sc.removeStatements( null, null, null, uri );
+    		
+//    		sc.removeStatements( null, null, null, uri );
+    		sc.removeStatements( uri, null, null );
+    		
     		sc.commit();
 			sc.close();
 			open = false;
@@ -176,11 +181,12 @@ System.out.println( "uri = " + uri );
     	
     	try
     	{
-    		sc = RdfWiki.getSail().getConnection();
+    		sc = sail.getConnection();
     		open = true;
     		CloseableIterationSource source	= new CloseableIterationSource(
-    			sc.getStatements( null, null, null, false, uri ) );
-    		final RdfCollector collector = new RdfCollector();
+//    			sc.getStatements( null, null, null, false, uri ) );
+    			sc.getStatements( uri, null, null, false ) );
+ 			final RdfCollector collector = new RdfCollector();
     		source.writeTo( collector.statementSink() );
 			sc.close();
 			open = false;

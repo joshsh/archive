@@ -31,6 +31,11 @@ curl -H "Content-type: application/x-turtle" http://localhost:8182/resource/foo 
         <http://www.w3.org/2000/01/rdf-schema#label> \"Mary Q. Contrary\" ;\
         <http://www.w3.org/2000/01/rdf-schema#comment> \"some chick\" ."
 
+curl -H "Content-type: application/x-turtle" http://localhost:8182/resource/quux -d "\
+	<http://localhost:8182/resource/quux> a <http://xmlns.com/foaf/0.1/Person> ;\
+        <http://www.w3.org/2000/01/rdf-schema#label> \"Quux?\" ;\
+        <http://www.w3.org/2000/01/rdf-schema#comment> \"oh no, not again\" ."
+        
 
 curl http://localhost:8182/search?kwd=foo
 curl http://localhost:8182/users/josh

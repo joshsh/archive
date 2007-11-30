@@ -1,16 +1,32 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix : <http://localhost:8182/resource/>.
 
-<http://localhost:8182/resource/foo> {
+{
+:arthur a foaf:Person;
+	foaf:name "Arthur Dent";
+	rdfs:comment "he's a jerk";
+	.
+}
+
+:foo {
 	<http://localhost:8182/resource/foo#joe> a foaf:Person;
 		rdfs:label "Joe Bloe";
 		rdfs:comment "some dude";
 		.
 }
 
-<http://localhost:8182/resource/bar> {
+:bar {
     <http://localhost:8182/resource/bar>
     	rdfs:label "bar";
     	rdfs:comment "dunno what this is";
     	.
 }
+
+:quux {
+    <http://localhost:8182/resource/quux>
+    	rdfs:label "quux";
+    	rdfs:comment "dunno what this is";
+    	.
+}
+

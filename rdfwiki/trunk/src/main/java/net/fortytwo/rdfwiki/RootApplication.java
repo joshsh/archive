@@ -1,19 +1,23 @@
 package net.fortytwo.rdfwiki;
 
 import org.restlet.Application;
-import org.restlet.Context;
 import org.restlet.Redirector;
 import org.restlet.Restlet;
-import org.restlet.Route;
 import org.restlet.Router;
 
 public class RootApplication extends Application
-{
+{	
+	public RootApplication()
+	{
+		super();
+	}
+	
 	@Override
 	public Restlet createRoot() {
         // Create a root router
         Router router = new Router(getContext());
 
+        /*
 		// Create an application
 		Application searchApp = new Application(router.getContext()) {
 		    @Override
@@ -28,7 +32,10 @@ public class RootApplication extends Application
 		
 		Route route = router.attach("/search", searchApp);
 		route.extractQuery("keywords", "kwd", true);
-		
+		*/
+        
+//getContext().getAttributes().put( RdfWiki.SAIL_ATTR, sail );
+
 /*
         // Attach a guard to secure access to the directory
         Guard guard = new Guard(getContext(),
@@ -40,12 +47,16 @@ public class RootApplication extends Application
         Directory directory = new Directory(getContext(), ROOT_URI);
         guard.setNext(directory);
 */
-		Context context = getContext();
-		Restlet nonInfoRestlet = new Redirector( context, "http://localhost:8182/representation/{rr}", Redirector.MODE_CLIENT_SEE_OTHER );
+		Restlet nonInfoRestlet = new Redirector( getContext(),
+//				"http://localhost:8182/representation/{rr}",
+//				"http://www.qwpoierjaslkjdhflkajshdf.blah/");//,
+				"http://www.google.com/",
+				Redirector.MODE_CLIENT_SEE_OTHER );
 		
         // Attach the handlers to the root router
-		router.attach( "/resource/", nonInfoRestlet );
-        router.attach( "/representation/", InformationResource.class );
+//		router.attach( "/resource/", nonInfoRestlet );
+//        router.attach( "/representation/", InformationResource.class );
+        router.attach( "/", InformationResource.class );
 
         // Return the root router
         return router;
