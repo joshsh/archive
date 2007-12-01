@@ -46,7 +46,6 @@ private static RdfWiki singleWiki;
 		if ( !initialized )
 		{
 			initialize();
-			initialized = true;
 		}
 singleWiki = this;
 
@@ -70,7 +69,7 @@ singleWiki = this;
 		component.start();
 	}
 	
-	private static void initialize() throws Exception
+	public static void initialize() throws Exception
 	{	
 		rdfFormatToMediaTypeMap = new HashMap<RDFFormat, MediaType>();
 		
@@ -84,6 +83,8 @@ singleWiki = this;
 		registerRdfFormat( RDFFormat.NTRIPLES );
 		registerRdfFormat( RDFFormat.TRIG );
 		registerRdfFormat( RDFFormat.TRIX );
+		
+		initialized = true;
 	}
 	
 	private static void registerRdfFormat( final RDFFormat format )
