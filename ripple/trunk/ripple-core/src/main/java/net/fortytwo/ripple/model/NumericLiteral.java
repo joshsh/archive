@@ -11,6 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
+import net.fortytwo.ripple.model.impl.sesame.NumericLiteralImpl;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -20,106 +21,29 @@ import org.openrdf.model.vocabulary.XMLSchema;
 /**
  * A numeric (xsd:integer or xsd:double) literal value.
  */
-public class NumericLiteral implements RippleValue
+public abstract class NumericLiteral implements RippleValue
 {
 	/**
 	 * Distinguishes between numeric literals of type xsd:integer and xsd:double.
 	 */
 	public enum NumericLiteralType { INTEGER, LONG, DOUBLE };
 
-	private NumericLiteralType type;
-	private Number number;
+	protected NumericLiteralType type;
+	protected Number number;
 
-	private RdfValue rdfEquivalent = null;
+// TODO: move into implementation
+	protected RdfValue rdfEquivalent = null;
 
-	public NumericLiteral( final RdfValue rdf )
-		throws RippleException
-	{
-		rdfEquivalent = rdf;
-		Value v = rdf.getRdfValue();
-
-		if ( !( v instanceof Literal ) )
-		{
-			throw new RippleException( "value " + v.toString() + " is not a Literal" );
-		}
-
-		URI dataType = ( (Literal) v ).getDatatype();
-
-		if ( null == dataType )
-		{
-			throw new RippleException( "literal is untyped" );
-		}
-
-		else if ( dataType.equals( XMLSchema.INTEGER )
-			|| dataType.equals( XMLSchema.INT ) )
-		{
-			try
-			{
-				type = NumericLiteralType.INTEGER;
-				number = new Integer( ( (Literal) v ).intValue() );
-			}
-
-			catch ( Throwable t )
-			{
-				throw new RippleException( t );
-			}
-		}
-
-		else if ( dataType.equals( XMLSchema.LONG ) )
-		{
-			try
-			{
-				type = NumericLiteralType.LONG;
-				number = new Long( ( (Literal) v ).intValue() );
-			}
-
-			catch ( Throwable t )
-			{
-				throw new RippleException( t );
-			}
-		}
-		
-		else if ( dataType.equals( XMLSchema.DOUBLE ) )
-		{
-			try
-			{
-				type = NumericLiteralType.DOUBLE;
-				number = new Double( ( (Literal) v ).doubleValue() );
-			}
-
-			catch ( Throwable t )
-			{
-				throw new RippleException( t );
-			}
-		}
-		
-		else
-		{
-			throw new RippleException( "not a recognized numeric data type: " + dataType );
-		}
-	}
-
-	public NumericLiteral( final int i )
-	{
-		type = NumericLiteralType.INTEGER;
-		number = new Integer( i );
-	}
-
-	public NumericLiteral( final long l )
-	{
-		type = NumericLiteralType.LONG;
-		number = new Long( l );
-	}
+	public abstract RdfValue toRdf( final ModelConnection mc ) throws RippleException;
 	
-	public NumericLiteral( final double d )
-	{
-		type = NumericLiteralType.DOUBLE;
-		number = new Double( d );
-	}
-
 	public NumericLiteralType getType()
 	{
 		return type;
+	}
+	
+	protected Number getNumber()
+	{
+		return number;
 	}
 
 	public int intValue()
@@ -149,185 +73,6 @@ public class NumericLiteral implements RippleValue
 	}
 
 	////////////////////////////////////////////////////////////////////////////
-
-	public static NumericLiteral abs( final NumericLiteral a )
-	{
-		if ( NumericLiteralType.INTEGER == a.type )
-		{
-			return new NumericLiteral( Math.abs( a.intValue() ) );
-		}
-
-		else if ( NumericLiteralType.LONG == a.type )
-		{
-			return new NumericLiteral( Math.abs( a.longValue() ) );
-		}
-		
-		else
-		{
-			return new NumericLiteral( Math.abs( a.doubleValue() ) );
-		}
-	}
-
-	public static NumericLiteral neg( final NumericLiteral a )
-	{
-		if ( NumericLiteralType.INTEGER == a.type )
-		{
-			return new NumericLiteral( -a.intValue() );
-		}
-
-		else if ( NumericLiteralType.LONG == a.type )
-		{
-			return new NumericLiteral( -a.longValue() );
-		}
-		
-		else
-		{
-			// Note: avoids negative zero.
-			return new NumericLiteral( 0.0 - a.doubleValue() );
-		}
-	}
-
-	public static NumericLiteral add( final NumericLiteral a,
-										final NumericLiteral b )
-	{
-		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
-		{
-			return new NumericLiteral( a.number.intValue() + b.number.intValue() );
-		}
-
-		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
-		{
-			return new NumericLiteral( a.number.longValue() + b.number.longValue() );
-		}
-		
-		else
-		{
-			return new NumericLiteral( a.number.doubleValue() + b.number.doubleValue() );
-		}
-	}
-
-	public static NumericLiteral sub( final NumericLiteral a,
-										final NumericLiteral b )
-	{
-		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
-		{
-			return new NumericLiteral( a.number.intValue() - b.number.intValue() );
-		}
-
-		else if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
-		{
-			return new NumericLiteral( a.number.longValue() - b.number.longValue() );
-		}
-		
-		else
-		{
-			return new NumericLiteral( a.number.doubleValue() - b.number.doubleValue() );
-		}
-	}
-
-	public static NumericLiteral mul( final NumericLiteral a,
-										final NumericLiteral b )
-	{
-		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
-		{
-			return new NumericLiteral( a.number.intValue() * b.number.intValue() );
-		}
-
-		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
-		{
-			return new NumericLiteral( a.number.longValue() * b.number.longValue() );
-		}
-		
-		else
-		{
-			return new NumericLiteral( a.number.doubleValue() * b.number.doubleValue() );
-		}
-	}
-
-	// Note: does not check for divide-by-zero.
-	public static NumericLiteral div( final NumericLiteral a,
-										final NumericLiteral b )
-	{
-		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
-		{
-			return new NumericLiteral( a.number.intValue() / b.number.intValue() );
-		}
-
-		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
-		{
-			return new NumericLiteral( a.number.longValue() / b.number.longValue() );
-		}
-		
-		else
-		{
-			return new NumericLiteral( a.number.doubleValue() / b.number.doubleValue() );
-		}
-	}
-
-	// Note: does not check for divide-by-zero.
-	public static NumericLiteral mod( final NumericLiteral a,
-										final NumericLiteral b )
-	{
-		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == b.type )
-		{
-			return new NumericLiteral( a.intValue() % b.intValue() );
-		}
-
-		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == b.type )
-		{
-			return new NumericLiteral( a.longValue() % b.longValue() );
-		}
-		
-		else
-		{
-			return new NumericLiteral( a.doubleValue() % b.doubleValue() );
-		}
-	}
-
-	public static NumericLiteral pow( final NumericLiteral a,
-										final NumericLiteral pow )
-	{
-		double r = Math.pow( a.doubleValue(), pow.doubleValue() );
-
-		if ( NumericLiteralType.INTEGER == a.type && NumericLiteralType.INTEGER == pow.type )
-		{
-			return new NumericLiteral( (int) r );
-		}
-
-		if ( NumericLiteralType.LONG == a.type && NumericLiteralType.LONG == pow.type )
-		{
-			return new NumericLiteral( (long) r );
-		}
-		
-		else
-		{
-			return new NumericLiteral( r );
-		}
-	}
-
-	// RippleValue methods /////////////////////////////////////////////////////
-
-	public RdfValue toRdf( final ModelConnection mc )
-		throws RippleException
-	{
-		if ( null == rdfEquivalent )
-		{
-			switch ( type )
-			{
-				case INTEGER:
-					rdfEquivalent = mc.value( number.intValue() ).toRdf( mc );
-					break;
-				case LONG:
-					rdfEquivalent = mc.value( number.longValue() ).toRdf( mc );
-					break;
-				case DOUBLE:
-					rdfEquivalent = mc.value( number.doubleValue() ).toRdf( mc );
-					break;
-			}
-		}
-
-		return rdfEquivalent;
-	}
 
 	public boolean isActive()
 	{
@@ -381,7 +126,7 @@ public class NumericLiteral implements RippleValue
 			try
 			{
 				// Note: wasty
-				return compareTo( new NumericLiteral( (RdfValue) other ) );
+				return compareTo( new NumericLiteralImpl( (RdfValue) other ) );
 			}
 
 			catch ( RippleException e )
@@ -402,6 +147,15 @@ public class NumericLiteral implements RippleValue
 	{
 		return number.toString();
 	}
+		
+	public abstract NumericLiteral abs();
+	public abstract NumericLiteral neg();
+	public abstract NumericLiteral add( final NumericLiteral b );
+	public abstract NumericLiteral sub( final NumericLiteral b );
+	public abstract NumericLiteral mul( final NumericLiteral b );
+	public abstract NumericLiteral div( final NumericLiteral b );
+	public abstract NumericLiteral mod( final NumericLiteral b );
+	public abstract NumericLiteral pow( final NumericLiteral pow );
 }
 
 // kate: tab-width 4

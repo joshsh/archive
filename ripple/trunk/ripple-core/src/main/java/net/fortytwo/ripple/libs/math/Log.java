@@ -49,7 +49,7 @@ public class Log extends PrimitiveFunction
 		// Apply the function only if it is defined for the given argument.
 		if ( a > 0 )
 		{
-			result = new NumericLiteral( Math.log( a ) );
+			result = mc.value( Math.log( a ) );
 
 			sink.put( new RippleList( result, stack ) );
 		}

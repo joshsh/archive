@@ -44,7 +44,7 @@ public class Sinh extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( Math.sinh( a.doubleValue() ) );
+		result = mc.value( Math.sinh( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -27,8 +27,9 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
 // FIXME: depends on RDF_NIL being defined before the constructor is called.
+	private static final RippleValue PLACEHOLDER = RDF_REST;
 	public static final RippleList NIL = new RippleList();
-
+	
 	private RippleValue first;
 	private RippleList rest;
 
@@ -109,7 +110,7 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 	{
 		// Note: this dummy value avoids null pointer exceptions in the list
 		//       memoizer.
-		first = new NumericLiteral( 42 );
+		first = PLACEHOLDER;
 		
 		rest = null;
 
@@ -517,7 +518,15 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	{
 		if ( o instanceof ListNode )
 		{
-			return equals( (ListNode<RippleValue>) o );
+			if ( o == RippleList.NIL && this == RippleList.NIL )
+			{
+				return true;
+			}
+			
+			else
+			{
+				return equals( (ListNode<RippleValue>) o );
+			}
 		}
 
 		else

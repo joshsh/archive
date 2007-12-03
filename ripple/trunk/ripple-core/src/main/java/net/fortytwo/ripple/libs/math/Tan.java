@@ -48,7 +48,7 @@ public class Tan extends PrimitiveFunction
 
 // TODO: check for undefined values
 		double d = Math.tan( a );
-		result = new NumericLiteral( d );
+		result = mc.value( d );
 
 		sink.put( new RippleList( result, stack ) );
 	}

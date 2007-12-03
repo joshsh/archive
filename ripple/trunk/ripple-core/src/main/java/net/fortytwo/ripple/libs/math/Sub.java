@@ -46,7 +46,7 @@ public class Sub extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = NumericLiteral.sub( a, b );
+		result = a.sub( b );
 
 		sink.put( new RippleList( result, stack ) );
 	}

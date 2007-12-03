@@ -45,7 +45,7 @@ public class Exp extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( Math.exp( a.doubleValue() ) );
+		result = mc.value( Math.exp( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

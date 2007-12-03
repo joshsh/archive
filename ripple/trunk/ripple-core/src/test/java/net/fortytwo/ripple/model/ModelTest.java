@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import net.fortytwo.ripple.model.impl.sesame.NumericLiteralImpl;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.FileUtils;
 
@@ -126,42 +127,42 @@ public class ModelTest extends RippleTestCase
 				{
 					if ( func.equals( "abs" ) )
 					{
-						actualResult = NumericLiteral.abs( args[0] );
+						actualResult = args[0].abs();
 					}
 
 					else if ( func.equals( "neg" ) )
 					{
-						actualResult = NumericLiteral.neg( args[0] );
+						actualResult = args[0].neg();
 					}
 
 					else if ( func.equals( "add" ) )
 					{
-						actualResult = NumericLiteral.add( args[0], args[1] );
+						actualResult = args[0].add( args[1] );
 					}
 
 					else if ( func.equals( "sub" ) )
 					{
-						actualResult = NumericLiteral.sub( args[0], args[1] );
+						actualResult = args[0].sub( args[1] );
 					}
 
 					else if ( func.equals( "mul" ) )
 					{
-						actualResult = NumericLiteral.mul( args[0], args[1] );
+						actualResult = args[0].mul( args[1] );
 					}
 
 					else if ( func.equals( "div" ) )
 					{
-						actualResult = NumericLiteral.div( args[0], args[1] );
+						actualResult = args[0].div( args[1] );
 					}
 
 					else if ( func.equals( "mod" ) )
 					{
-						actualResult = NumericLiteral.mod( args[0], args[1] );
+						actualResult = args[0].mod( args[1] );
 					}
 
 					else if ( func.equals( "pow" ) )
 					{
-						actualResult = NumericLiteral.pow( args[0], args[1] );
+						actualResult = args[0].pow( args[1] );
 					}
 
 					else
@@ -221,22 +222,22 @@ public class ModelTest extends RippleTestCase
 			
 			else if ( s.equals( "infinity") )
 			{
-				l = new NumericLiteral( Double.POSITIVE_INFINITY );
+				l = new NumericLiteralImpl( Double.POSITIVE_INFINITY );
 			}
 			
 			else if ( s.contains( "l" ) )
 			{
-				l = new NumericLiteral( new Long( s.substring( 0, s.length() - 1 ) ).longValue() );
+				l = new NumericLiteralImpl( new Long( s.substring( 0, s.length() - 1 ) ).longValue() );
 			}
 			
 			else if ( s.contains( "." ) )
 			{
-				l = new NumericLiteral( new Double( s ).doubleValue() );
+				l = new NumericLiteralImpl( new Double( s ).doubleValue() );
 			}
 			
 			else
 			{
-				l = new NumericLiteral( new Integer( s ).intValue() );
+				l = new NumericLiteralImpl( new Integer( s ).intValue() );
 			}
 			
 			return l;

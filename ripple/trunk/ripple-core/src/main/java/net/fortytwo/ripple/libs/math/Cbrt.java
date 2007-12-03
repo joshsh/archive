@@ -44,7 +44,7 @@ public class Cbrt extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( Math.cbrt( a.doubleValue() ) );
+		result = mc.value( Math.cbrt( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

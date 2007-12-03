@@ -47,7 +47,7 @@ public class Floor extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( (int) Math.floor( a.doubleValue() ) );
+		result = mc.value( (int) Math.floor( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

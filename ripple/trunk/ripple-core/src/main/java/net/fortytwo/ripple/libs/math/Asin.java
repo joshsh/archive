@@ -49,7 +49,7 @@ public class Asin extends PrimitiveFunction
 		// Apply the function only if it is defined for the given argument.
 		if ( a >= -1 && a <= 1 )
 		{
-			result = new NumericLiteral( Math.asin( a ) );
+			result = mc.value( Math.asin( a ) );
 
 			sink.put( new RippleList( result, stack ) );
 		}

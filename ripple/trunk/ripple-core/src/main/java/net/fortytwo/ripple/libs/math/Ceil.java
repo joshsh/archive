@@ -47,7 +47,7 @@ public class Ceil extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( (int) Math.ceil( a.doubleValue() ) );
+		result = mc.value( (int) Math.ceil( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -12,17 +12,15 @@ package net.fortytwo.ripple.model;
 import java.io.InputStream;
 import java.util.Iterator;
 
-import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RdfImporter;
-import net.fortytwo.ripple.rdf.RdfCollector;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
+
+import org.openrdf.rio.RDFFormat;
 
 public class RippleListTest extends RippleTestCase
 {
@@ -63,12 +61,12 @@ public class RippleListTest extends RippleTestCase
 				}
 			};
 			
-			RippleValue l1 = new RdfValue( mc.createLiteral( "1" ) );
-			RippleValue l2 = new RdfValue( mc.createLiteral( "2" ) );
-			RippleValue l1a = new RdfValue( mc.createLiteral( "1a" ) );
-			RippleValue l1b = new RdfValue( mc.createLiteral( "1b" ) );		
-			RippleValue l2a = new RdfValue( mc.createLiteral( "2a" ) );
-			RippleValue l2b = new RdfValue( mc.createLiteral( "2b" ) );
+			RippleValue l1 = mc.value( "1" );
+			RippleValue l2 = mc.value( "2" );
+			RippleValue l1a = mc.value( "1a" );
+			RippleValue l1b = mc.value( "1b" );		
+			RippleValue l2a = mc.value( "2a" );
+			RippleValue l2b = mc.value( "2b" );
 
 			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#simpleList" ) );
 			created.clear();
@@ -118,11 +116,13 @@ public class RippleListTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
+			ModelConnection mc = getTestModel().getConnection( "for ListConcatenationTest" );
 			RippleValue
-				a0 = new NumericLiteral( 42 ),
-				a1 = new NumericLiteral( 137 ),
-				a2 = new NumericLiteral( 23 ),
-				b0 = new NumericLiteral( 216 );
+				a0 = mc.value( 42 ),
+				a1 = mc.value( 137 ),
+				a2 = mc.value( 23 ),
+				b0 = mc.value( 216 );
+			mc.close();
 
 			RippleList
 				listA = new RippleList( a2 ).push( a1 ).push( a0 ),

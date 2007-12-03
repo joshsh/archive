@@ -49,7 +49,7 @@ public class Acos extends PrimitiveFunction
 		// Apply the function only if it is defined for the given argument.
 		if ( a >= -1 && a <= 1 )
 		{
-			result = new NumericLiteral( Math.acos( a ) );
+			result = mc.value( Math.acos( a ) );
 
 			sink.put( new RippleList( result, stack ) );
 		}

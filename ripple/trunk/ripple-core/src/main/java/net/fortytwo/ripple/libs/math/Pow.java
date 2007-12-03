@@ -47,7 +47,7 @@ public class Pow extends PrimitiveFunction
 		x = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = NumericLiteral.pow( x, p );
+		result = x.pow( p );
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -45,7 +45,7 @@ public class Sin extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( Math.sin( a.doubleValue() ) );
+		result = mc.value( Math.sin( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -230,7 +230,7 @@ public class SesameModelConnection implements ModelConnection
 	
 		else
 		{
-			return new NumericLiteral( rv.toRdf( this ) );
+			return new NumericLiteralImpl( rv.toRdf( this ) );
 		}
 	}
 	
@@ -964,19 +964,19 @@ public class SesameModelConnection implements ModelConnection
 	public NumericLiteral value( final int i )
 		throws RippleException
 	{
-		return new NumericLiteral( i );
+		return new NumericLiteralImpl( i );
 	}
 	
 	public NumericLiteral value( final long l )
 		throws RippleException
 	{
-		return new NumericLiteral( l );
+		return new NumericLiteralImpl( l );
 	}
 	
 	public NumericLiteral value( final double d )
 		throws RippleException
 	{
-		return new NumericLiteral( d );
+		return new NumericLiteralImpl( d );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

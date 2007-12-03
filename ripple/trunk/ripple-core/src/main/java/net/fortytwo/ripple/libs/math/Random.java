@@ -41,7 +41,7 @@ public class Random extends PrimitiveFunction
 	{
 		NumericLiteral result;
 
-		result = new NumericLiteral( Math.random() );
+		result = mc.value( Math.random() );
 
 		sink.put( new RippleList( result, stack ) );
 	}

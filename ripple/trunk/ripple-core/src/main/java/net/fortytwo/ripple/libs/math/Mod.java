@@ -50,7 +50,7 @@ public class Mod extends PrimitiveFunction
 		// Note: mod by zero simply does not yield a result.
 		if ( !b.isZero() )
 		{
-			result = NumericLiteral.mod( a, b );
+			result = a.mod( b );
 
 			sink.put( new RippleList( result, stack ) );
 		}

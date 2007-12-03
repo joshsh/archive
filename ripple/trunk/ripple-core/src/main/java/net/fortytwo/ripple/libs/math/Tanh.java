@@ -44,7 +44,7 @@ public class Tanh extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( Math.tanh( a.doubleValue() ) );
+		result = mc.value( Math.tanh( a.doubleValue() ) );
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -46,7 +46,7 @@ public class Signum extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = new NumericLiteral( a.sign() );
+		result = mc.value( a.sign() );
 
 		sink.put(
 			new RippleList( result, stack ) );

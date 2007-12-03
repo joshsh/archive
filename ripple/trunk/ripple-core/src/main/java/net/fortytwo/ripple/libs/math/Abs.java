@@ -44,7 +44,7 @@ public class Abs extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = NumericLiteral.abs( a );
+		result = a.abs();
 
 		sink.put( new RippleList( result, stack ) );
 	}

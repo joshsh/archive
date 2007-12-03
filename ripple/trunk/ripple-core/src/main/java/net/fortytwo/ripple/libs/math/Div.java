@@ -50,7 +50,7 @@ public class Div extends PrimitiveFunction
 		// Note: division by zero simply does not yield a result.
 		if ( !b.isZero() )
 		{
-			result = NumericLiteral.div( a, b );
+			result = a.div( b );
 
 			sink.put( new RippleList( result, stack ) );
 		}

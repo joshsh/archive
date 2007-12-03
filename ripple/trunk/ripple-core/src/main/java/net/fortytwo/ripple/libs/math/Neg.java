@@ -44,7 +44,7 @@ public class Neg extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = NumericLiteral.neg( a );
+		result = a.neg();
 
 		sink.put( new RippleList( result, stack ) );
 	}

@@ -46,7 +46,7 @@ public class Mul extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = NumericLiteral.mul( a, b );
+		result = a.mul( b );
 
 		sink.put( new RippleList( result, stack ) );
 	}

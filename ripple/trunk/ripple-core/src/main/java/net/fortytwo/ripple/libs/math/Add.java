@@ -46,7 +46,7 @@ public class Add extends PrimitiveFunction
 		a = mc.numericValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		result = NumericLiteral.add( a, b );
+		result = a.add( b );
 
 		sink.put( new RippleList( result, stack ) );
 	}

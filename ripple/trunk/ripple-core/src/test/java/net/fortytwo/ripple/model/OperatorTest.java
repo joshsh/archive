@@ -111,7 +111,7 @@ public class OperatorTest extends RippleTestCase
 			assertTrue( ops.iterator().next().getFunction() instanceof RdfPredicateFunction );
 			
 			// anything else --> NullFilter
-			arg = new NumericLiteral( 42 );
+			arg = mc.value( 42 );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
