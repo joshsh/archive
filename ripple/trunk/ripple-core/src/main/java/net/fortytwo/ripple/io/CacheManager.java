@@ -105,7 +105,7 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 	 * Writes cache metadata to the triple store.
 	 * Note: for now, this metadata resides in the null context.
 	 */
-	public static void persistCacheMetadata( final ModelConnection mc )
+	public static void persistCacheMetadata( final Dereferencer dereferencer, final ModelConnection mc )
 		throws RippleException
 	{
 		if ( !initialized )
@@ -113,8 +113,6 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 			initialize( mc );
 		}
 		
-		Dereferencer dereferencer = mc.getModel().getDereferencer();
-
 		mc.removeStatementsAbout( rplCacheRoot, null );
 		mc.commit();
 
@@ -137,7 +135,7 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 	 * Restores dereferencer state by reading success and failure memos from
 	 * the last session (if present).
 	 */
-	public static void restoreCacheMetaData( final ModelConnection mc )
+	public static void restoreCacheMetaData( final Dereferencer dereferencer, final ModelConnection mc )
 		throws RippleException
 	{
 		if ( !initialized )
@@ -145,8 +143,6 @@ System.out.println( "rplCacheRoot = " + rplCacheRoot );
 			initialize( mc );
 		}
 		
-		final Dereferencer dereferencer = mc.getModel().getDereferencer();
-
 		Sink<RippleValue> successMemoSink = new Sink<RippleValue>()
 		{
 			public void put( final RippleValue v ) throws RippleException

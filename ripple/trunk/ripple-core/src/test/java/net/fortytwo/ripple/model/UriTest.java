@@ -150,7 +150,10 @@ public class UriTest extends RippleTestCase
 			scheme = strVal( r, SCHEME, mc );
 			user = strVal( r, USER, mc );
 
-			type = TestType.find( ((URI) mc.findSingleObject( r, TEST ).toRdf( mc ).getRdfValue()).getLocalName() );
+System.out.println( "r = " + r );
+			type = TestType.find(
+					((URI) mc.findSingleObject( r, TEST ).toRdf( mc ).getRdfValue() ).getLocalName() );
+System.out.println( "    type = " + type );
 		}
 
 		public void test( final ModelConnection mc )
@@ -199,7 +202,8 @@ System.out.println( "unhandled test case!" );
 			RdfImporter importer = new RdfImporter( mc );
 			SesameInputAdapter sc = new SesameInputAdapter( importer );
 			RdfUtils.read( is, sc, "", RDFFormat.N3 );
-
+			mc.commit();
+			
 			Collector<RippleValue> cases = new Collector<RippleValue>();
 			mc.divide( URITEST, TYPE, cases );
 
@@ -207,8 +211,9 @@ System.out.println( "unhandled test case!" );
 			while ( iter.hasNext() )
 			{
 				RippleValue caseValue = iter.next();
-//System.out.println( "test case: " + caseRdf );
+System.out.println( "test case: " + caseValue );
 				( new UriTestCase( caseValue, mc ) ).test( mc );
+System.out.println( "    done.");
 			}
 
 			is.close();

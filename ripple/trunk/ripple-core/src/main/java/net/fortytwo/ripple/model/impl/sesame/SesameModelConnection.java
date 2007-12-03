@@ -20,6 +20,7 @@ import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
+import net.fortytwo.ripple.rdf.sail.SailConnectionListenerAdapter;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.NullSource;
@@ -38,12 +39,13 @@ import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 
 public class SesameModelConnection implements ModelConnection
 {
 	private static final Logger LOGGER
-	= Logger.getLogger( ModelConnection.class );
+		= Logger.getLogger( ModelConnection.class );
 	
 	//private static Random rand = new Random();
 	
@@ -133,9 +135,16 @@ public class SesameModelConnection implements ModelConnection
 	{
 		try
 		{
-			sailConnection = ( null == listenerSink )
-				? model.sail.getConnection()
-				: model.sail.getConnection( listenerSink );
+			sailConnection = model.sail.getConnection();
+		
+// FIXME: this doesn't give the LexiconUpdater any information about namespaces
+			if ( null != listenerSink )
+			{
+				SailConnectionListener listener
+					= new SailConnectionListenerAdapter( listenerSink );
+				
+				sailConnection.addConnectionListener(listener);
+			}
 		}
 	
 		catch ( Throwable t )
@@ -459,8 +468,10 @@ public class SesameModelConnection implements ModelConnection
 	
 	public void forget( final RippleValue v ) throws RippleException
 	{
+/*
 		// FIXME: messy
 		model.sail.getDereferencer().forget( v.toRdf( this ), this );
+*/
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -1250,7 +1261,7 @@ public class SesameModelConnection implements ModelConnection
 		{
 			public void put( final Statement st ) throws RippleException
 			{
-				sink.put( valueToRippleValue( st.getObject() ) );
+				sink.put( valueToRippleValue( st.getSubject() ) );
 			}
 		};
 	

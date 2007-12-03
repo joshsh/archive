@@ -13,15 +13,12 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.io.PrintStream;
-
 import java.net.URL;
-
 import java.util.Collection;
-import java.util.List;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.cli.CommandLineInterface;
@@ -33,10 +30,11 @@ import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
+import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
-
-	import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 
 
@@ -59,10 +57,12 @@ public final class Demo
 	{
 //net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
-		Sail sail = RdfUtils.createMemoryStoreSail();
+		Sail baseSail = RdfUtils.createMemoryStoreSail();
+		UrlFactory urlFactory = new UrlFactory();
+		LinkedDataSail sail = new LinkedDataSail( baseSail, urlFactory );	
 
 		// Attach a Ripple model to the repository.
-		Model model = new SesameModel( sail );
+		Model model = new SesameModel( sail, urlFactory );
 
 		// Attach a query engine to the model.
 		Evaluator evaluator = new LazyEvaluator();
@@ -89,7 +89,7 @@ public final class Demo
 			}
 
 			CacheManager.loadCache( storeUrl, Ripple.cacheFormat(), mc );
-			CacheManager.restoreCacheMetaData( mc );
+			CacheManager.restoreCacheMetaData( sail.getDereferencer(), mc );
 		}
 
 		// Set the default namespace.
@@ -119,7 +119,7 @@ qe.getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaul
 			}
 
 			// Write the cache out in the same format as it was read in.
-			CacheManager.persistCacheMetadata( mc );
+			CacheManager.persistCacheMetadata( sail.getDereferencer(), mc );
 			CacheManager.writeCacheTo( storeOut, Ripple.cacheFormat(), mc );
 
 			try

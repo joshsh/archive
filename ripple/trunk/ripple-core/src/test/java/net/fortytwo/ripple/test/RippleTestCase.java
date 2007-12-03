@@ -19,6 +19,8 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
+import net.fortytwo.ripple.util.UrlFactory;
 
 public abstract class RippleTestCase extends TestCase
 {
@@ -148,7 +150,9 @@ public abstract class RippleTestCase extends TestCase
 	{
 		if ( null == model )
 		{
-			model = new SesameModel( getTestSail() );
+			UrlFactory urlFactory = new UrlFactory();
+			LinkedDataSail ldSail = new LinkedDataSail( getTestSail(), urlFactory );
+			model = new SesameModel( ldSail, urlFactory );
 		}
 
 		return model;

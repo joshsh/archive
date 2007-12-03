@@ -7,14 +7,12 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.LibraryLoader;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.util.UrlFactory;
 
 import org.apache.log4j.Logger;
@@ -24,7 +22,7 @@ public class SesameModel implements Model
 {
 	private static final Logger LOGGER = Logger.getLogger( Model.class );
 
-	LinkedDataSail sail;
+	Sail sail;
 	Set<ModelConnection> openConnections = new LinkedHashSet<ModelConnection>();
 
 	private ModelBridge bridge;
@@ -33,14 +31,13 @@ public class SesameModel implements Model
 		return bridge;
 	}
 
-	public SesameModel( final Sail baseSail )
+	public SesameModel( final Sail baseSail, final UrlFactory urlFactory )
 		throws RippleException
 	{
 		LOGGER.debug( "Creating new Model" );
 	
 		bridge = new ModelBridge();
-		UrlFactory urlFactory = new UrlFactory();
-		sail = new LinkedDataSail( baseSail, urlFactory );
+		sail = baseSail;
 
 		loadSymbols( urlFactory );
 	}
@@ -104,11 +101,6 @@ public class SesameModel implements Model
 	public ModelConnection getConnection( final String name, final LexiconUpdater updater ) throws RippleException
 	{
 		return new SesameModelConnection( this, name, updater );
-	}
-
-	public Dereferencer getDereferencer()
-	{
-		return sail.getDereferencer();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

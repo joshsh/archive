@@ -25,6 +25,4 @@ public interface Model
 	
 	Collection<ModelConnection> openConnections();
 	void closeOpenConnections() throws RippleException;
-	
-	Dereferencer getDereferencer();
 }
