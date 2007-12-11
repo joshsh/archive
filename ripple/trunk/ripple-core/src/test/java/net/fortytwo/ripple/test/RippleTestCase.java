@@ -133,6 +133,7 @@ public abstract class RippleTestCase extends TestCase
 
 	private static Sail sail = null;
 	private static Model model = null;
+	private static UrlFactory urlFactory = null;
 	
 	protected static Sail getTestSail() throws Exception
 	{
@@ -150,12 +151,18 @@ public abstract class RippleTestCase extends TestCase
 	{
 		if ( null == model )
 		{
-			UrlFactory urlFactory = new UrlFactory();
+			urlFactory = new UrlFactory();
 			LinkedDataSail ldSail = new LinkedDataSail( getTestSail(), urlFactory );
 			model = new SesameModel( ldSail, urlFactory );
 		}
 
 		return model;
+	}
+	
+	protected static UrlFactory getTestUrlFactory() throws Exception
+	{
+		getTestModel();
+		return urlFactory;
 	}
 }
 

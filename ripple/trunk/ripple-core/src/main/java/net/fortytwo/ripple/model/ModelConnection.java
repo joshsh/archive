@@ -75,7 +75,7 @@ public interface ModelConnection
 // FIXME: Sesame literals should not be part of the ModelConnection API
 	Literal createLiteral( String s ) throws RippleException;
 	Literal createLiteral( String s, final String language ) throws RippleException;
-	Literal createLiteral( String s, final URI dataType )	throws RippleException;
+	Literal createLiteral( String s, final URI dataType ) throws RippleException;
 	Literal createLiteral( boolean b ) throws RippleException;
 	Literal createLiteral( int i ) throws RippleException;
 	Literal createLiteral( double d ) throws RippleException;
