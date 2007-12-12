@@ -153,6 +153,7 @@ public abstract class RippleTestCase extends TestCase
 		{
 			urlFactory = new UrlFactory();
 			LinkedDataSail ldSail = new LinkedDataSail( getTestSail(), urlFactory );
+			ldSail.initialize();
 			model = new SesameModel( ldSail, urlFactory );
 		}
 

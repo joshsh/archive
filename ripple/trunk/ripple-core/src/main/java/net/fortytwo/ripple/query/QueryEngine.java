@@ -13,24 +13,22 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 
 public class QueryEngine
 {
-	private static final Logger LOGGER
-		= Logger.getLogger( QueryEngine.class );
+	private static final Logger LOGGER = Logger.getLogger( QueryEngine.class );
 
 	private Model model;
 	private Lexicon lexicon;
@@ -53,7 +51,16 @@ public class QueryEngine
 		printStream = new RipplePrintStream( out, lexicon );
 		errorPrintStream = err;
 
-		initializeLexicon();
+		if ( Ripple.lexiconPullsEntireModel() ) {
+			initializeLexicon();
+		}
+		
+		// Set the default namespace.
+		ModelConnection mc = getConnection( "Demo connection" );
+		mc.setNamespace( "", Ripple.defaultNamespace(), false );
+		mc.commit();
+		mc.close();
+		getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaultNamespace() ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////

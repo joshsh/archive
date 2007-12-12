@@ -294,7 +294,6 @@ System.out.println( "reader.getTerminal() = " + term );
 			directives.add( "@list" );
 			directives.add( "@prefix" );
 			directives.add( "@quit" );
-			directives.add( "@saveas" );
 			directives.add( "@undefine" );
 
 			completors.add(

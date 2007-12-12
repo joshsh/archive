@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.rdf.RdfBuffer;

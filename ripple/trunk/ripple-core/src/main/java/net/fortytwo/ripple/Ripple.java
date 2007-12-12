@@ -47,7 +47,8 @@ public final class Ripple
 	private static long urlConnectCourtesyInterval;
 	private static long urlConnectTimeout;
 	private static boolean useInference;
-
+	private static boolean pullEntireModel;
+	
 // FIXME: quiet is never used
 	private static boolean quiet = false;
 
@@ -127,7 +128,9 @@ public final class Ripple
 			props, "net.fortytwo.ripple.model.useInference", false );
 		listPadding = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.listPadding", false );
-
+		pullEntireModel = getBooleanProperty(
+			props, "net.fortytwo.ripple.model.lexicon.pullEntireModel", false );
+		
 		// Queries
 		defaultNamespace = getStringProperty(
 			props, "net.fortytwo.ripple.query.defaultNamespace", "" );
@@ -280,6 +283,11 @@ public final class Ripple
 	public static boolean useInference()
 	{
 		return useInference;
+	}
+	
+	public static boolean lexiconPullsEntireModel()
+	{
+		return pullEntireModel;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

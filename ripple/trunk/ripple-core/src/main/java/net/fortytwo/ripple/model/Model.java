@@ -12,7 +12,6 @@ package net.fortytwo.ripple.model;
 import java.util.Collection;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.Dereferencer;
 
 public interface Model
 {

@@ -35,7 +35,7 @@ public class SesameModel implements Model
 		throws RippleException
 	{
 		LOGGER.debug( "Creating new Model" );
-	
+
 		bridge = new ModelBridge();
 		sail = baseSail;
 
