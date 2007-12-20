@@ -10,12 +10,14 @@ import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.RdfUtils;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.util.UrlFactory;
 
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -54,7 +56,7 @@ public class PipeRestlet extends Restlet
 			throw new RippleException( e );
 		}
 
-		model = new Model( RdfUtils.createMemoryStoreSail() );
+		model = new SesameModel( RdfUtils.createMemoryStoreSail(), new UrlFactory() );
 		evaluator = new LazyEvaluator();
 	}
 
