@@ -15,7 +15,6 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -80,8 +79,8 @@ public interface ModelConnection
 	Literal createLiteral( int i ) throws RippleException;
 	Literal createLiteral( double d ) throws RippleException;
 // FIXME: BNodes should not be part of the ModelConnection API
-	BNode createBNode() throws RippleException;
-	BNode createBNode( String id ) throws RippleException;
+	Resource createBNode() throws RippleException;
+	Resource createBNode( String id ) throws RippleException;
 // FIXME: Statements should not be part of the ModelConnection API
 	Statement createStatement( Resource subj, final URI pred, final Value obj ) throws RippleException;
 

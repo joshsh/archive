@@ -5,6 +5,7 @@ import info.aduna.iteration.CloseableIteration;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -29,7 +30,6 @@ import net.fortytwo.ripple.util.Source;
 import net.fortytwo.ripple.util.UniqueFilter;
 
 import org.apache.log4j.Logger;
-import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -821,11 +821,13 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public BNode createBNode() throws RippleException
+	public Resource createBNode() throws RippleException
 	{
 		try
 		{
-			return valueFactory.createBNode();
+			return Ripple.useBlankNodes()
+				? valueFactory.createBNode()
+				: valueFactory.createURI( "urn:bnode:" + UUID.randomUUID().toString() );
 		}
 	
 		catch ( Throwable t )
@@ -835,11 +837,13 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public BNode createBNode( final String id ) throws RippleException
+	public Resource createBNode( final String id ) throws RippleException
 	{
 		try
 		{
-			return valueFactory.createBNode( id );
+			return Ripple.useBlankNodes()
+				? valueFactory.createBNode( id )
+				: valueFactory.createURI( "urn:bnode:" + id );
 		}
 	
 		catch ( Throwable t )
