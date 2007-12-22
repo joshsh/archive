@@ -51,7 +51,7 @@ public class Operator implements RippleValue
 
 	public String toString()
 	{
-		return "OP[" + func + "]";
+		return "Operator[" + func + "]";
 	}
 
 	public void printTo( final RipplePrintStream p )

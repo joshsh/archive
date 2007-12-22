@@ -53,7 +53,7 @@ public class Op implements Function, RippleValue
 
 	public int arity()
 	{
-		return 1;
+		return 0;
 	}
 
 	public void printTo( final RipplePrintStream p )

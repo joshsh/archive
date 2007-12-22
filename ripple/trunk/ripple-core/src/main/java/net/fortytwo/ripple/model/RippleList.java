@@ -336,7 +336,6 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
 			? this: invert( this );
-		RippleValue stateVal = null;
 
 		sb.append( padding ? "( " : "(" );
 		
@@ -345,76 +344,18 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		{
 			RippleValue val = cur.getFirst();
 
-			if ( null == stateVal )
+			if ( isFirst )
 			{
-				if ( Operator.OP == val )
-				{
-					if ( isFirst )
-					{
-						isFirst = false;
-					}
-
-					else
-					{
-						sb.append( " " );
-					}
-
-					sb.append( val );
-				}
-
-				else
-				{
-					stateVal = val;
-				}
+				isFirst = false;
 			}
-
+			
 			else
-			{
-				if ( Operator.OP == val )
-				{
-					if ( isFirst )
-					{
-						isFirst = false;
-					}
-
-					else
-					{
-						sb.append( " " );
-					}
-
-					sb.append( "/" );
-					sb.append( stateVal );
-					stateVal = null;
-				}
-
-				else
-				{
-					if ( isFirst )
-					{
-						isFirst = false;
-					}
-
-					else
-					{
-						sb.append( " " );
-					}
-
-					sb.append( stateVal );
-					stateVal = val;
-				}
-			}
-
-			cur = cur.getRest();
-		}
-
-		if ( null != stateVal )
-		{
-			if ( !isFirst )
 			{
 				sb.append( " " );
 			}
-
-			sb.append( stateVal );
+			
+			sb.append( val );
+			cur = cur.getRest();
 		}
 		
 		sb.append( padding ? " )" : ")" );
