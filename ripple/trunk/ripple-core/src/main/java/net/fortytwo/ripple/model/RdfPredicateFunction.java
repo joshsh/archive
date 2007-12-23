@@ -9,6 +9,7 @@
 
 package net.fortytwo.ripple.model;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
@@ -53,8 +54,15 @@ public class RdfPredicateFunction implements Function
 
 		Sink<RippleValue> querySink = new ValueSink( stack, sink );
 
-//		mc.multiply( first.toRdf( mc ), pred, querySink );
-		mc.multiplyAsynch( first, pred, querySink );
+		if ( Ripple.asynchronousQueries() )
+		{
+			mc.multiplyAsynch( first, pred, querySink );		
+		}
+		
+		else
+		{
+			mc.multiply( first.toRdf( mc ), pred, querySink );
+		}
 	}
 }
 

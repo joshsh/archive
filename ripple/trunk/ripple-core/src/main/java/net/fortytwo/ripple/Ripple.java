@@ -49,12 +49,23 @@ public final class Ripple
 	private static boolean useInference;
 	private static boolean pullEntireModel;
 	private static boolean useBlankNodes;
+	private static boolean useAsynchronousQueries = true;
 	
 // FIXME: quiet is never used
 	private static boolean quiet = false;
 
 	////////////////////////////////////////////////////////////////////////////
 
+	// TODO
+	public static boolean asynchronousQueries()
+	{
+		return useAsynchronousQueries; 
+	}
+	public static void enableAsynchronousQueries( final boolean enable )
+	{
+		useAsynchronousQueries = enable;
+	}
+	
 	private Ripple()
 	{
 	}
