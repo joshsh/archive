@@ -59,51 +59,54 @@ public class TurtleView implements Sink<RippleList>
 		ps.print( Ripple.resultViewPrintEntireStack() ? list : first );
 		ps.print( "\n" );
 
-		Collector<RippleValue> predicates = new Collector<RippleValue>();
-		mc.findPredicates( first, predicates );
-
-		int predCount = 0,
-			predlim = Ripple.resultViewMaxPredicates(),
-			objlim = Ripple.resultViewMaxObjects();
-
-		for ( Iterator<RippleValue> predIter = predicates.iterator();
-			predIter.hasNext(); )
+		if ( Ripple.resourceViewShowEdges() )
 		{
-			ps.print( INDENT );
-
-			if ( ++predCount > predlim )
-			{
-				ps.print( "[...]\n" );
-				break;
-			}
-
-			RippleValue predicate = predIter.next();
-			ps.print( predicate );
-			ps.print( "\n" );
-
-			Collector<RippleValue> objects = new Collector<RippleValue>();
-			mc.multiply( first, predicate, objects );
-			int objCount = 0;
-
-			for ( Iterator<RippleValue> objIter = objects.iterator();
-				objIter.hasNext(); )
+			Collector<RippleValue> predicates = new Collector<RippleValue>();
+			mc.findPredicates( first, predicates );
+	
+			int predCount = 0,
+				predlim = Ripple.resultViewMaxPredicates(),
+				objlim = Ripple.resultViewMaxObjects();
+	
+			for ( Iterator<RippleValue> predIter = predicates.iterator();
+				predIter.hasNext(); )
 			{
 				ps.print( INDENT );
-				ps.print( INDENT );
-
-				if ( ++objCount > objlim )
+	
+				if ( ++predCount > predlim )
 				{
 					ps.print( "[...]\n" );
 					break;
 				}
-
-				RippleValue object = objIter.next();
-				ps.print( object );
-				ps.print( ( objIter.hasNext() )
-					? ","
-					: ( predIter.hasNext() )
-						? ";" : "." );
+	
+				RippleValue predicate = predIter.next();
+				ps.print( predicate );
 				ps.print( "\n" );
+	
+				Collector<RippleValue> objects = new Collector<RippleValue>();
+				mc.multiply( first, predicate, objects );
+				int objCount = 0;
+	
+				for ( Iterator<RippleValue> objIter = objects.iterator();
+					objIter.hasNext(); )
+				{
+					ps.print( INDENT );
+					ps.print( INDENT );
+	
+					if ( ++objCount > objlim )
+					{
+						ps.print( "[...]\n" );
+						break;
+					}
+	
+					RippleValue object = objIter.next();
+					ps.print( object );
+					ps.print( ( objIter.hasNext() )
+						? ","
+						: ( predIter.hasNext() )
+							? ";" : "." );
+					ps.print( "\n" );
+				}
 			}
 		}
 	}

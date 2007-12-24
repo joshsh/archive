@@ -146,6 +146,7 @@ public final class Demo
 	{
 		System.out.println( "Usage:  ripple [options] [store]" );
 		System.out.println( "Options:\n"
+			+ "  -c <props>   Configuration properties file\n"
 			+ "  -f <format>  Use <format> for the RDF store\n"
 			+ "  -h           Print this help and exit\n"
 			+ "  -q           Suppress normal output\n"
@@ -163,50 +164,30 @@ public final class Demo
 
 	public static void main( final String [] args )
 	{
-		try
-		{
-			// Load Ripple configuration.
-			Ripple.initialize();
-		}
-
-		catch ( RippleException e )
-		{
-			System.err.println( "Initialization error: " + e );
-			e.logError();
-			System.exit( 1 );
-		}
-
 		// Default values.
 		boolean quiet = false, showVersion = false, showHelp = false;
-		File store = null;
+		File configFile = null, store = null;
 
 		// Long options are available but are not advertised.
 		LongOpt [] longOptions = {
+			new LongOpt( "config", LongOpt.REQUIRED_ARGUMENT, null, 'c' ),
 			new LongOpt( "format", LongOpt.REQUIRED_ARGUMENT, null, 'f' ),
 			new LongOpt( "help", LongOpt.NO_ARGUMENT, null, 'h' ),
 			new LongOpt( "quiet", LongOpt.NO_ARGUMENT, null, 'q' ),
 			new LongOpt( "version", LongOpt.NO_ARGUMENT, null, 'v' ) };
 
-		Getopt g = new Getopt( Ripple.getName(), args, "f:hqv", longOptions );
+		Getopt g = new Getopt( Ripple.getName(), args, "c:f:hqv", longOptions );
 		int c;
 		while ( ( c = g.getopt() ) != -1 )
 		{
 			switch( c )
 			{
-				case 'q':
-				case 2:
-					quiet = true;
-					break;
-				case 'h':
-				case 1:
-					showHelp = true;
-					break;
-				case 'v':
-				case 3:
-					showVersion = true;
+				case 'c':
+				case 0:
+					configFile = new File( g.getOptarg() );
 					break;
 				case 'f':
-				case 0:
+				case 1:
 					// Override the default cache format.
 					RDFFormat format = RdfUtils.findFormat( g.getOptarg() );
 					if ( null == format )
@@ -215,6 +196,18 @@ public final class Demo
 						System.exit( 1 );
 					}
 					Ripple.setCacheFormat( format );
+					break;
+				case 'h':
+				case 2:
+					showHelp = true;
+					break;
+				case 'q':
+				case 3:
+					quiet = true;
+					break;
+				case 'v':
+				case 4:
+					showVersion = true;
 					break;
 				case '?':
 					 // Note: getopt() already printed an error
@@ -251,6 +244,27 @@ public final class Demo
 			System.exit( 0 );
 		}
 
+		try
+		{
+			// Load Ripple configuration.
+			if ( null == configFile )
+			{
+				Ripple.initialize();
+			}
+			
+			else
+			{
+				Ripple.initialize( configFile );
+			}
+		}
+
+		catch ( RippleException e )
+		{
+			System.err.println( "Initialization error: " + e );
+			e.logError();
+			System.exit( 1 );
+		}
+		
 		Ripple.setQuiet( quiet );
 // System.out.println( "quiet = " + quiet );
 // System.out.println( "showVersion = " + showVersion );

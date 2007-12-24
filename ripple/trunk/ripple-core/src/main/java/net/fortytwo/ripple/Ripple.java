@@ -9,7 +9,10 @@
 
 package net.fortytwo.ripple;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.util.Properties;
 
@@ -29,6 +32,7 @@ public final class Ripple
 	private static boolean allowDuplicateNamespaces;
 	private static RDFFormat cacheFormat;
 	private static boolean bufferQueryResults;
+	private static boolean resourceViewShowEdges;
 	private static int resultViewMaxObjects;
 	private static int resultViewMaxPredicates;
 	private static boolean resultViewPrintEntireStack;
@@ -70,7 +74,7 @@ public final class Ripple
 	{
 	}
 
-	public static void initialize()
+	public static void initialize( final File... configFiles )
 		throws RippleException
 	{
 		if ( initialized )
@@ -86,6 +90,13 @@ public final class Ripple
 		try
 		{
 			props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
+			
+			for ( int i = 0; i < configFiles.length; i++ )
+			{
+				InputStream is = new FileInputStream( configFiles[i] );
+				props.load( is );
+				is.close();
+			}
 		}
 
 		catch ( IOException e )
@@ -96,6 +107,8 @@ public final class Ripple
 		// Command-line interface
 		bufferQueryResults = getBooleanProperty(
 			props, "net.fortytwo.ripple.cli.bufferQueryResults", false );
+		resourceViewShowEdges = getBooleanProperty(
+				props, "net.fortytwo.ripple.cli.resourceViewShowEdges", true );
 		resultViewMaxPredicates = getIntProperty(
 			props, "net.fortytwo.ripple.cli.resultViewMaxPredicates", 32 );
 		if ( resultViewMaxPredicates < 0 )
@@ -204,6 +217,11 @@ public final class Ripple
 		return bufferQueryResults;
 	}
 
+	public static boolean resourceViewShowEdges()
+	{
+		return resourceViewShowEdges;
+	}
+	
 	public static int resultViewMaxObjects()
 	{
 		return resultViewMaxObjects;
