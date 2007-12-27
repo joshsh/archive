@@ -9,15 +9,20 @@
 
 package net.fortytwo.ripple.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.ListNode;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.Source;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 
 public class RippleList extends ListNode<RippleValue> implements RippleValue
@@ -29,6 +34,8 @@ public class RippleList extends ListNode<RippleValue> implements RippleValue
 // FIXME: depends on RDF_NIL being defined before the constructor is called.
 	private static final RippleValue PLACEHOLDER = RDF_REST;
 	public static final RippleList NIL = new RippleList();
+	
+	private static Map<Value, Source<RippleList>> nativeLists = new HashMap<Value, Source<RippleList>>();
 	
 	private RippleValue first;
 	private RippleList rest;
@@ -254,7 +261,29 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		// If the argument is an RDF value, try to convert it to a native list.
 		else if ( v instanceof RdfValue )
 		{
-			createList( (RdfValue) v, sink, mc );
+			if ( Ripple.memoizeListsFromRdf() )
+			{
+//System.out.println("looking for source for list: " + v);
+				Value rdfVal = ( (RdfValue) v ).toRdf( mc ).getRdfValue();
+				Source<RippleList> source = nativeLists.get( rdfVal );
+				if ( null == source )
+				{
+					Collector<RippleList> coll = new Collector<RippleList>();
+					
+					createList( (RdfValue) v, coll, mc );
+					
+					source = coll;
+					nativeLists.put( rdfVal, source );
+				}
+//else System.out.println("   found source for list");
+				
+				source.writeTo( sink );
+			}
+			
+			else
+			{
+				createList( (RdfValue) v, sink, mc );
+			}
 		}
 
 		// Otherwise, fail.
@@ -269,7 +298,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 									final Sink<RippleList> sink,
 									final ModelConnection mc )
 		throws RippleException
-	{
+	{	
 		if ( head.equals( RDF_NIL ) )
 		{
 			sink.put( NIL );
@@ -320,8 +349,8 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				}
 			};*/
 
-			mc.multiply( head, RDF_FIRST, firstValues );
-			mc.multiply( head, RDF_REST, rdfRestSink );
+			mc.multiply( head, RDF_FIRST, firstValues, false );
+			mc.multiply( head, RDF_REST, rdfRestSink, false );
 		}
 	}
 
@@ -584,8 +613,8 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		sink.put( mc.createStatement(
 			headVal, RDF.TYPE, RDF.LIST ) );
 
-		mc.multiply( head, RDF_FIRST, firstSink );
-		mc.multiply( head, RDF_REST, restSink );
+		mc.multiply( head, RDF_FIRST, firstSink, false );
+		mc.multiply( head, RDF_REST, restSink, false );
 	}
 }
 

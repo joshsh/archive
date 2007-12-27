@@ -189,7 +189,7 @@ public class QueryEngine
 		LexiconUpdater updater = new LexiconUpdater( lexicon );
 
 		ModelConnection mc = getConnection();
-		mc.getStatements( null, null, null, updater.adderSink().statementSink() );
+		mc.getStatements( null, null, null, updater.adderSink().statementSink(), false );
 		mc.getNamespaces( updater.adderSink().namespaceSink() );
 		mc.close();
 	}

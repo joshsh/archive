@@ -44,6 +44,7 @@ public class GraphLibrary extends Library
 
 		// Resource-centric primitives.
 		registerPrimitive( Back.class, NS + "back", mc );
+		registerPrimitive( Infer.class, NS + "infer", mc );
 		registerPrimitive( Links.class, NS + "links", mc );
 
 		// Document-centric primitives.

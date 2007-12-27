@@ -101,14 +101,14 @@ public interface ModelConnection
 // FIXME: URIs should not be part of the ModelConnection interface
 	void setNamespace( String prefix, URI ns, boolean override ) throws RippleException;
 
-	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
-	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
+	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred ) throws RippleException;
+	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred ) throws RippleException;
 	void divide( RippleValue obj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
 
 // FIXME: Namespaces should not be part of the ModelConnection API
 	void getNamespaces( Sink<Namespace> sink ) throws RippleException;
 // FIXME: Statements should not be part of the ModelConnection API
-	void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink ) throws RippleException;
+	void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink, boolean includeInferred ) throws RippleException;
 
 	RdfSource getSource();
 

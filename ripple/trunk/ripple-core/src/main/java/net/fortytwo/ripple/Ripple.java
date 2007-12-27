@@ -53,6 +53,7 @@ public final class Ripple
 	private static boolean useInference;
 	private static boolean pullEntireModel;
 	private static boolean useBlankNodes;
+	private static boolean memoizeListsFromRdf;
 	private static boolean useAsynchronousQueries = true;
 	
 // FIXME: quiet is never used
@@ -89,7 +90,7 @@ public final class Ripple
 
 		try
 		{
-			props.load( Ripple.class.getResourceAsStream( "ripple.properties" ) );
+			props.load( Ripple.class.getResourceAsStream( "default.properties" ) );
 			
 			for ( int i = 0; i < configFiles.length; i++ )
 			{
@@ -101,7 +102,7 @@ public final class Ripple
 
 		catch ( IOException e )
 		{
-			throw new RippleException( "unable to load ripple.properties" );
+			throw new RippleException( "unable to load default.properties" );
 		}
 
 		// Command-line interface
@@ -157,6 +158,8 @@ public final class Ripple
 			props, "net.fortytwo.ripple.model.lexicon.pullEntireModel", false );
 		useBlankNodes = getBooleanProperty(
 			props, "net.fortytwo.ripple.model.useBlankNodes", true );
+		memoizeListsFromRdf = getBooleanProperty(
+				props, "net.fortytwo.ripple.model.memoizeListsFromRdf", false );
 		
 		// Queries
 		defaultNamespace = getStringProperty(
@@ -320,6 +323,11 @@ public final class Ripple
 	public static boolean useBlankNodes()
 	{
 		return useBlankNodes;
+	}
+	
+	public static boolean memoizeListsFromRdf()
+	{
+		return memoizeListsFromRdf;
 	}
 	
 	public static boolean lexiconPullsEntireModel()

@@ -429,7 +429,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		getStatements( src.toRdf( this ), null, null, stSink );
+		getStatements( src.toRdf( this ), null, null, stSink, false );
 	}
 	
 	public void removeStatementsAbout( final URI subj )
@@ -461,7 +461,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		getStatements( head.toRdf( this ), null, null, stSink );
+		getStatements( head.toRdf( this ), null, null, stSink, false );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -504,7 +504,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		getStatements( subject.toRdf( this ), null, null, predSelector );
+		getStatements( subject.toRdf( this ), null, null, predSelector, false );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -678,7 +678,7 @@ public class SesameModelConnection implements ModelConnection
 		};
 	
 		Buffer<Statement> buffer = new Buffer<Statement>( sink );
-		getStatements( null, null, null, buffer );
+		getStatements( null, null, null, buffer, false );
 	
 		adapter.startRDF();
 		buffer.flush();
@@ -1064,19 +1064,22 @@ public class SesameModelConnection implements ModelConnection
 	{
 		private RippleValue subj, pred;
 		private Sink<RippleValue> sink;
+		private boolean includeInferred;
 	
 		public MultiplyTask( final RippleValue subj,
 							final RippleValue pred,
-							final Sink<RippleValue> sink )
+							final Sink<RippleValue> sink,
+							final boolean includeInferred )
 		{
 			this.subj = subj;
 			this.pred = pred;
 			this.sink = sink;
+			this.includeInferred = includeInferred;
 		}
 	
 		public void executeProtected() throws RippleException
 		{
-			multiply( subj, pred, sink );
+			multiply( subj, pred, sink, includeInferred );
 		}
 	
 		protected void stopProtected()
@@ -1088,10 +1091,13 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public void multiplyAsynch( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink )
+	public void multiplyAsynch( final RippleValue subj,
+								final RippleValue pred,
+								final Sink<RippleValue> sink,
+								final boolean includeInferred )
 		throws RippleException
 	{
-		MultiplyTask task = new MultiplyTask( subj, pred, sink );
+		MultiplyTask task = new MultiplyTask( subj, pred, sink, includeInferred );
 		taskSet.add( task );
 	}
 	
@@ -1140,7 +1146,8 @@ public class SesameModelConnection implements ModelConnection
 	public void getStatements( final RdfValue subj,
 								final RdfValue pred,
 								final RdfValue obj,
-								final Sink<Statement> sink )
+								final Sink<Statement> sink,
+								final boolean includeInferred)
 		throws RippleException
 	{
 		Value rdfSubj = ( null == subj ) ? null : subj.getRdfValue();
@@ -1167,7 +1174,7 @@ public class SesameModelConnection implements ModelConnection
 				//synchronized ( model )
 				{
 					stmtIter = sailConnection.getStatements(
-						(Resource) rdfSubj, (URI) rdfPred, rdfObj, Ripple.useInference() );
+						(Resource) rdfSubj, (URI) rdfPred, rdfObj, includeInferred );
 	//stmtIter.enableDuplicateFilter();
 	
 					while ( stmtIter.hasNext() )
@@ -1212,7 +1219,7 @@ public class SesameModelConnection implements ModelConnection
 				public void writeTo( final Sink<Statement> sink )
 					throws RippleException
 				{
-					getStatements( null, null, null, sink );
+					getStatements( null, null, null, sink, false );
 				}
 			};
 	
@@ -1244,7 +1251,7 @@ public class SesameModelConnection implements ModelConnection
 		};
 	}
 	
-	public void multiply( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink )
+	public void multiply( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink, final boolean includeInferred )
 		throws RippleException
 	{
 		Sink<Statement> stSink = new Sink<Statement>()
@@ -1255,7 +1262,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		getStatements( subj.toRdf( this ), pred.toRdf( this ), null, stSink );
+		getStatements( subj.toRdf( this ), pred.toRdf( this ), null, stSink, includeInferred );
 	}
 	
 	public void divide( final RippleValue obj, final RippleValue pred, final Sink<RippleValue> sink )
@@ -1269,7 +1276,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		getStatements( null, pred.toRdf( this ), obj.toRdf( this ), stSink );
+		getStatements( null, pred.toRdf( this ), obj.toRdf( this ), stSink, false );
 	}
 	
 	private void multiplyRdfValues( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
@@ -1283,7 +1290,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		getStatements( subj, pred, null, stSink );
+		getStatements( subj, pred, null, stSink, false );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

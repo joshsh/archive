@@ -68,7 +68,7 @@ public abstract class Library
 		bridge.add( prim, mc );
 
 		// Add all stated aliases (but no aliases of aliases) to the map.
-		mc.multiply( prim, OWL_SAMEAS, aliasSink );
+		mc.multiply( prim, OWL_SAMEAS, aliasSink, false );
 
 		return prim;
 	}

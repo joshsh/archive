@@ -9,6 +9,7 @@
 
 package net.fortytwo.ripple.model;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.query.ListDequotation;
@@ -29,7 +30,7 @@ public class Operator implements RippleValue
 
 	public Operator( final RdfValue pred )
 	{
-		func = new RdfPredicateFunction( pred );
+		func = new RdfPredicateFunction( pred, Ripple.useInference() );
 	}
 
 	public Operator( final Function function )

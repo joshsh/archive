@@ -34,7 +34,7 @@ public class LinkedDataSailTest extends RippleTestCase
 			
 			Collector<RippleValue> results = new Collector<RippleValue>();
 			
-			mc.multiply( tagTagging, rdfType, results );
+			mc.multiply( tagTagging, rdfType, results, false );
 			assertEquals( 1, results.size() );
 			
 			mc.close();

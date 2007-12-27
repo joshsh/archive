@@ -9,6 +9,7 @@
 
 package net.fortytwo.ripple.libs.graph;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -65,7 +66,7 @@ public class Links extends PrimitiveFunction
 			}
 		};
 
-		mc.getStatements( subj.toRdf( mc ), null, null, stSink );
+		mc.getStatements( subj.toRdf( mc ), null, null, stSink, Ripple.useInference() );
 	}
 }
 

@@ -84,7 +84,7 @@ public class TurtleView implements Sink<RippleList>
 				ps.print( "\n" );
 	
 				Collector<RippleValue> objects = new Collector<RippleValue>();
-				mc.multiply( first, predicate, objects );
+				mc.multiply( first, predicate, objects, Ripple.useInference() );
 				int objCount = 0;
 	
 				for ( Iterator<RippleValue> objIter = objects.iterator();

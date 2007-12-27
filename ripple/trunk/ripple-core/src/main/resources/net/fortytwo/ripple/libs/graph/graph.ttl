@@ -143,6 +143,18 @@ graph:forget
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#forget> ;
 	.
 
+graph:infer
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "pred" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "infer" ;
+	rdfs:comment "subj pred  =>  obj (where obj may be an inferred object)" ;
+	.
+
 graph:links
 	a rpl:Function ;
 	rpl:arity 1 ;

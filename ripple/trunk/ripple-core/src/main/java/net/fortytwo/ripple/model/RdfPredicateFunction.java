@@ -16,6 +16,7 @@ import net.fortytwo.ripple.util.Sink;
 public class RdfPredicateFunction implements Function
 {
 	private RdfValue pred;
+	private boolean includeInferred;
 
 	private class ValueSink implements Sink<RippleValue>
 	{
@@ -34,9 +35,10 @@ public class RdfPredicateFunction implements Function
 		}
 	}
 
-	public RdfPredicateFunction( final RdfValue predicate )
+	public RdfPredicateFunction( final RdfValue predicate, final boolean includeInferred )
 	{
 		pred = predicate;
+		this.includeInferred = includeInferred;
 	}
 
 	public int arity()
@@ -56,12 +58,12 @@ public class RdfPredicateFunction implements Function
 
 		if ( Ripple.asynchronousQueries() )
 		{
-			mc.multiplyAsynch( first, pred, querySink );		
+			mc.multiplyAsynch( first, pred, querySink, includeInferred );		
 		}
 		
 		else
 		{
-			mc.multiply( first.toRdf( mc ), pred, querySink );
+			mc.multiply( first.toRdf( mc ), pred, querySink, includeInferred );
 		}
 	}
 }

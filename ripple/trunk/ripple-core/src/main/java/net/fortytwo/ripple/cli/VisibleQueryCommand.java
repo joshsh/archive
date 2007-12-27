@@ -122,7 +122,7 @@ nilSource.put( RippleList.NIL );
 	{
 		try
 		{
-mc.multiply( v, RDF_FIRST, new NullSink<RippleValue>() );
+mc.multiply( v, RDF_FIRST, new NullSink<RippleValue>(), false );
 		}
 
 		catch ( RippleException e )
