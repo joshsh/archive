@@ -42,7 +42,7 @@ public class Time extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( new RippleList(
+		sink.put( mc.list(
 			mc.value( (int) ( ( new Date() ).getTime() / ONE_THOUSAND ) ),
 			stack ) );
 	}

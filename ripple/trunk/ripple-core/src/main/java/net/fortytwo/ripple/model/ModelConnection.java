@@ -71,13 +71,6 @@ public interface ModelConnection
 	URI createUri( String s ) throws RippleException;
 	URI createUri( String ns, String s ) throws RippleException;
 	URI createUri( URI ns, String s ) throws RippleException;
-// FIXME: Sesame literals should not be part of the ModelConnection API
-	Literal createLiteral( String s ) throws RippleException;
-	Literal createLiteral( String s, final String language ) throws RippleException;
-	Literal createLiteral( String s, final URI dataType ) throws RippleException;
-	Literal createLiteral( boolean b ) throws RippleException;
-	Literal createLiteral( int i ) throws RippleException;
-	Literal createLiteral( double d ) throws RippleException;
 // FIXME: BNodes should not be part of the ModelConnection API
 	Resource createBNode() throws RippleException;
 	Resource createBNode( String id ) throws RippleException;
@@ -97,9 +90,14 @@ public interface ModelConnection
 // FIXME: this should use an implementation-independent URI class
 	RippleValue value( URI uri );
 	
+	RippleList list( RippleValue v );
+	RippleList list( RippleValue v, RippleList rest );
+	RippleList invert( RippleList l );
+	RippleList concat( RippleList head, RippleList tail );
+	
+	void getLists( RippleValue v, Sink<RippleList> sink ) throws RippleException;
+	
 	void setNamespace( String prefix, String ns, boolean override ) throws RippleException;
-// FIXME: URIs should not be part of the ModelConnection interface
-	void setNamespace( String prefix, URI ns, boolean override ) throws RippleException;
 
 	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred ) throws RippleException;
 	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred ) throws RippleException;

@@ -47,7 +47,7 @@ public class Sin extends PrimitiveFunction
 
 		result = mc.value( Math.sin( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

@@ -65,11 +65,11 @@ public class At extends PrimitiveFunction
 					}
 				}
 		
-				sink.put( new RippleList( list.getFirst(), rest ) );
+				sink.put( mc.list( list.getFirst(), rest ) );
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

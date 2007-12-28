@@ -50,7 +50,7 @@ public class Tan extends PrimitiveFunction
 		double d = Math.tan( a );
 		result = mc.value( d );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

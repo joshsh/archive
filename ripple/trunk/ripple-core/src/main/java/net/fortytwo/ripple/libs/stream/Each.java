@@ -51,13 +51,13 @@ public class Each extends PrimitiveFunction
 			{
 				while ( RippleList.NIL != list )
 				{
-					sink.put( new RippleList( list.getFirst(), rest ) );
+					sink.put( mc.list( list.getFirst(), rest ) );
 					list = list.getRest();
 				}
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

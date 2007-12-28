@@ -52,7 +52,7 @@ public class EndsWith extends PrimitiveFunction
 		result = ( s.endsWith( affix ) )
 			? StackLibrary.getTrueValue()
 			: StackLibrary.getFalseValue();
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

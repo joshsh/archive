@@ -45,7 +45,7 @@ public class True extends PrimitiveFunction
 		stack = stack.getRest();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( x, stack ) );
+		sink.put( mc.list( x, stack ) );
 	}
 }
 

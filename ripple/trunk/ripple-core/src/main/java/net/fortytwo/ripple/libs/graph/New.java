@@ -40,7 +40,7 @@ public class New extends PrimitiveFunction
 		throws RippleException
 	{
 		// Note: stack may be null (and this should not be a problem).
-		RippleList result = new RippleList(
+		RippleList result = mc.list(
 			new RdfValue( mc.createBNode() ), stack );
 //System.out.println( "Creating a new node" );
 

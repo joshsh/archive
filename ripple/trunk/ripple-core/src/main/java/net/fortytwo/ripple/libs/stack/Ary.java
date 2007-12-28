@@ -71,7 +71,7 @@ public class Ary extends PrimitiveFunction
 		stack = stack.getRest();
 
 		sink.put(
-			new RippleList(
+			mc.list(
 				new Operator( new NaryId( n ) ), stack ) );
 	}
 }

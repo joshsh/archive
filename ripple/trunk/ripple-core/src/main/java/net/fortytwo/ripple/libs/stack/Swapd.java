@@ -48,7 +48,7 @@ public class Swapd extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( y, stack ).push( x ).push( z ) );
+		sink.put( mc.list( y, stack ).push( x ).push( z ) );
 	}
 }
 

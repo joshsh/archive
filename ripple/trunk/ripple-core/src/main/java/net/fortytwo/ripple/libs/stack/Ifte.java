@@ -52,7 +52,7 @@ public class Ifte extends PrimitiveFunction
 		b = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( b, stack )
+		sink.put( mc.list( b, stack )
 			.push( Operator.OP )
 			.push( trueProg )
 			.push( falseProg )

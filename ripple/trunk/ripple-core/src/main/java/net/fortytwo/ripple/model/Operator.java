@@ -129,7 +129,7 @@ return rdfEquivalent;
 					}
 				};
 
-				RippleList.from( v, listSink, mc );
+				mc.getLists( v, listSink );
 				return;
 			}
 

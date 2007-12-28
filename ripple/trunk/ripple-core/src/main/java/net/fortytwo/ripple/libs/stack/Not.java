@@ -49,7 +49,7 @@ public class Not extends PrimitiveFunction
 			? StackLibrary.getFalseValue()
 			: StackLibrary.getTrueValue();
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

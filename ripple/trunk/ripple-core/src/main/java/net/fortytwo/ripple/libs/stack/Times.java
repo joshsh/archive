@@ -57,7 +57,7 @@ public class Times extends PrimitiveFunction
 
 		for ( int i = 0; i < times; i++ )
 		{
-			stack = new RippleList( p, stack ).push( Operator.OP );
+			stack = mc.list( p, stack ).push( Operator.OP );
 		}
 
 		sink.put( stack );

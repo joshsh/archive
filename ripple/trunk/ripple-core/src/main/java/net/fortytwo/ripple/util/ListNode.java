@@ -9,6 +9,9 @@
 
 package net.fortytwo.ripple.util;
 
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.impl.sesame.SesameList;
+
 /**
  * Head of a linked list.
  */
@@ -24,6 +27,12 @@ public abstract class ListNode<T>
 	
 		while ( null != thisCur )
 		{
+/*System.out.println("RippleList.NIL = " + RippleList.NIL);
+System.out.println("RippleList.NIL.getFirst() = " + RippleList.NIL.getFirst());
+System.out.println("thisCur = " + thisCur + " " + (thisCur instanceof SesameList));
+System.out.println("thisCur.getFirst() = " + thisCur.getFirst());
+System.out.println("otherCur = " + otherCur + " " + (otherCur instanceof SesameList));
+System.out.println("otherCur.getFirst() = " + otherCur.getFirst());*/
 			if ( null == otherCur )
 			{
 				return false;

@@ -48,7 +48,7 @@ public class Sub extends PrimitiveFunction
 
 		result = a.sub( b );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

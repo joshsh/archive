@@ -127,7 +127,7 @@ public class ListAst extends ListNode<Ast> implements Ast
 					{
 						public void put( final RippleValue f ) throws RippleException
 						{
-							sink.put( new RippleList( f, rest ) );
+							sink.put( mc.list( f, rest ) );
 						}
 					};
 

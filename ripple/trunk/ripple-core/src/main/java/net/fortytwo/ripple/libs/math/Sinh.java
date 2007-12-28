@@ -46,7 +46,7 @@ public class Sinh extends PrimitiveFunction
 
 		result = mc.value( Math.sinh( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

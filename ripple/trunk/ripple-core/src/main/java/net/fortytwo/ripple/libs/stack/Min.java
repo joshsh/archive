@@ -62,12 +62,12 @@ public class Min extends PrimitiveFunction
 		
 				if ( null != result )
 				{
-					sink.put( new RippleList( result, rest ) );
+					sink.put( mc.list( result, rest ) );
 				}
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

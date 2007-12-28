@@ -82,7 +82,7 @@ public class Comments extends PrimitiveFunction
 					throws RippleException
 				{
 					resultSink.put(
-						new RippleList( mc.value( comment ), stack ) );
+						mc.list( mc.value( comment ), stack ) );
 				}
 			};
 

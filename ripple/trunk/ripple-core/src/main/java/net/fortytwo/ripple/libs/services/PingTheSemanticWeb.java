@@ -70,7 +70,7 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 //		maxResults = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
-sink.put( new RippleList(
+sink.put( mc.list(
 	mc.value( "Note: the PingTheSemanticWeb API has just (as of Aug 27, 2007) undergone major changes.  Check the latest release of Ripple for an updated pingTheSemanticWeb primitive!" ), stack ) );
 /*
 		URLConnection urlConn = HttpUtils.openConnection(
@@ -110,7 +110,7 @@ sink.put( new RippleList(
 		{
 			Element child = childIter.next();
 			String s = child.getAttributeValue( "url" );
-			sink.put( new RippleList(
+			sink.put( mc.list(
 				new RdfValue( mc.createUri( s ) ), stack ) );
 		}
 */

@@ -45,7 +45,7 @@ public class X extends PrimitiveFunction
 
 		x = stack.getFirst();
 
-		sink.put( new RippleList( x, stack ).push( Operator.OP ) );
+		sink.put( mc.list( x, stack ).push( Operator.OP ) );
 	}
 }
 

@@ -51,6 +51,12 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	{
 		return rdfEquivalent.toString();
 	}
+	
+	public boolean equals( final Object o )
+	{
+		return ( o instanceof PrimitiveFunction )
+			? ( o == this ) : false;
+	}
 
 	public boolean isActive()
 	{

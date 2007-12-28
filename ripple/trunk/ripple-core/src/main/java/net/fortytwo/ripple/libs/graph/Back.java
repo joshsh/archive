@@ -57,7 +57,7 @@ public class Back extends PrimitiveFunction
 				throws RippleException
 			{
 				sink.put(
-					new RippleList( v, rest ) );
+					mc.list( v, rest ) );
 			}
 		};
 

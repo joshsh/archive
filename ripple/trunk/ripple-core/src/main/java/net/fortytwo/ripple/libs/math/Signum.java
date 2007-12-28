@@ -49,7 +49,7 @@ public class Signum extends PrimitiveFunction
 		result = mc.value( a.sign() );
 
 		sink.put(
-			new RippleList( result, stack ) );
+			mc.list( result, stack ) );
 	}
 }
 

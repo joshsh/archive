@@ -52,7 +52,7 @@ public class Mod extends PrimitiveFunction
 		{
 			result = a.mod( b );
 
-			sink.put( new RippleList( result, stack ) );
+			sink.put( mc.list( result, stack ) );
 		}
 	}
 }

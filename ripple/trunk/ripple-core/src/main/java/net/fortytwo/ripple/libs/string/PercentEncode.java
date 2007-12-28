@@ -46,7 +46,7 @@ public class PercentEncode extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = StringUtils.percentEncode( a );
-		sink.put( new RippleList( mc.value( result ), stack ) );
+		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }
 

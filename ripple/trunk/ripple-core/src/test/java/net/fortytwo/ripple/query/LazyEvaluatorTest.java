@@ -27,7 +27,7 @@ public class LazyEvaluatorTest extends RippleTestCase
 		}
 		
 		RippleList[] expArray = new RippleList[size];
-		RippleList[] actArray = new RippleList[size];	
+		RippleList[] actArray = new RippleList[size];
 		Iterator<RippleList> expIter = expected.iterator();
 		Iterator<RippleList> actIter = actual.iterator();
 		for ( int i = 0; i < size; i++ )
@@ -40,18 +40,19 @@ public class LazyEvaluatorTest extends RippleTestCase
 		Arrays.sort( actArray );
 		for ( int i = 0; i < size; i++ )
 		{
+//System.out.println("expected: " + expArray[i] + ", actual = " + actArray[i]);
 			assertEquals( expArray[i], actArray[i] );
 		}
 	}
 	
-	private RippleList createStack( final RippleValue... values )
+	private RippleList createStack( final ModelConnection mc, final RippleValue... values )
 	{
 		if ( 0 == values.length )
 		{
 			return RippleList.NIL;
 		}
 		
-		RippleList l = new RippleList( values[0] );
+		RippleList l = mc.list( values[0] );
 		for ( int i = 1; i < values.length; i++ )
 		{
 			l = l.push( values[i] );
@@ -60,9 +61,9 @@ public class LazyEvaluatorTest extends RippleTestCase
 		return l;
 	}
 	
-	private RippleList createQueue( final RippleValue... values )
+	private RippleList createQueue( final ModelConnection mc, final RippleValue... values )
 	{
-		return RippleList.invert( createStack( values ) );
+		return mc.invert( createStack( mc, values ) );
 	}
 	
 	private class SimpleTest extends TestRunnable
@@ -88,34 +89,34 @@ public class LazyEvaluatorTest extends RippleTestCase
 
 			// passive stack passes through unchanged
 			// (1 2) -> (1 2)
-			input = createStack( one, two );
+			input = createStack( mc, one, two );
 			expected.clear();
-			expected.put( createStack( one, two ) );
+			expected.put( createStack( mc, one, two ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// replacement rules are applied at the head of the stack
 			// (1 /dup) -> (1 1)
-			input = createStack( one, dup, op );
+			input = createStack( mc, one, dup, op );
 			expected.clear();
-			expected.put( createStack( one, one ) );
+			expected.put( createStack( mc, one, one ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// evaluation is recursive
 			// (1 /dup /dup) -> (1 1 1)
-			input = createStack( one, dup, op, dup, op );
+			input = createStack( mc, one, dup, op, dup, op );
 			expected.clear();
-			expected.put( createStack( one, one, one ) );
+			expected.put( createStack( mc, one, one, one ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// evaluator drops anything which can't be reduced to head-normal form
 			// (/dup) ->
-			input = createStack( dup, op );
+			input = createStack( mc, dup, op );
 			expected.clear();
 			actual.clear();
 			eval.applyTo( input, actual, mc );
@@ -131,47 +132,47 @@ public class LazyEvaluatorTest extends RippleTestCase
 			
 			// distributive reduction
 			// (1 /sqrt /dup) -> (1 1), (-1, -1)
-			input = createStack( one, sqrt, op, dup, op );
+			input = createStack( mc, one, sqrt, op, dup, op );
 			expected.clear();
-			expected.put( createStack( one, one ) );
-			expected.put( createStack( minusone, minusone ) );
+			expected.put( createStack( mc, one, one ) );
+			expected.put( createStack( mc, minusone, minusone ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// no eager reduction
 			// (2 /dup 1) -> (2 /dup 1)
-			input = createStack( two, dup, op, one );
+			input = createStack( mc, two, dup, op, one );
 			expected.clear();
-			expected.put( createStack( two, dup, op, one ) );
+			expected.put( createStack( mc, two, dup, op, one ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// lists are opaque
 			// ((2 /dup)) -> ((2 /dup))
-			input = createStack( createQueue( two, dup, op ) );
+			input = createStack( mc, createQueue( mc, two, dup, op ) );
 			expected.clear();
-			expected.put( createStack( createQueue( two, dup, op ) ) );
+			expected.put( createStack( mc, createQueue( mc, two, dup, op ) ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// list dequotation
 			// (2 /(1 /dup)) -> (2 1 1)
-			input = createStack( two, createQueue( one, dup, op ), op );
+			input = createStack( mc, two, createQueue( mc, one, dup, op ), op );
 			expected.clear();
-			expected.put( createStack( two, one, one ) );
+			expected.put( createStack( mc, two, one, one ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );
 			
 			// results are not necessarily a set
 			// (1 /sqrt /abs)
-			input = createStack( one, sqrt, op, abs, op );
+			input = createStack( mc, one, sqrt, op, abs, op );
 			expected.clear();
-			expected.put( createStack( one ) );
-			expected.put( createStack( one ) );
+			expected.put( createStack( mc, one ) );
+			expected.put( createStack( mc, one ) );
 			actual.clear();
 			eval.applyTo( input, actual, mc );
 			assertCollectorsEqual( expected, actual );

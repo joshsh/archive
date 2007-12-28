@@ -59,10 +59,10 @@ public class Links extends PrimitiveFunction
 				RippleValue pred = bridge.get( st.getPredicate() );
 				RippleValue obj = bridge.get( st.getObject() );
 
-				RippleList triple = new RippleList( obj ).push( pred ).push( subj );
+				RippleList triple = mc.list( obj ).push( pred ).push( subj );
 
 				sink.put(
-					new RippleList( triple, rest ) );
+					mc.list( triple, rest ) );
 			}
 		};
 

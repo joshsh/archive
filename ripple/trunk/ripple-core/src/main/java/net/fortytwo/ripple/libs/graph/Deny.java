@@ -52,7 +52,7 @@ public class Deny extends PrimitiveFunction
 //System.out.println( "Denying (" + subj + ", " + pred + ", " + obj + ")" );
 		mc.remove( subj, pred, obj );
 
-		sink.put( new RippleList( subj, stack ) );
+		sink.put( mc.list( subj, stack ) );
 	}
 }
 

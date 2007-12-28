@@ -53,7 +53,7 @@ public class Gt extends PrimitiveFunction
 			? StackLibrary.getTrueValue()
 			: StackLibrary.getFalseValue();
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

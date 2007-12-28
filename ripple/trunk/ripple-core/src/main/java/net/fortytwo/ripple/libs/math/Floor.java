@@ -49,7 +49,7 @@ public class Floor extends PrimitiveFunction
 
 		result = mc.value( (int) Math.floor( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

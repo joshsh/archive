@@ -43,7 +43,7 @@ public class Random extends PrimitiveFunction
 
 		result = mc.value( Math.random() );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

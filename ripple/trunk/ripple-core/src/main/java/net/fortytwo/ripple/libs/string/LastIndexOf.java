@@ -48,7 +48,7 @@ public class LastIndexOf extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = str.lastIndexOf( substr );
-		sink.put( new RippleList( mc.value( result ), stack ) );
+		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }
 

@@ -51,7 +51,7 @@ public class Unstack extends PrimitiveFunction
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

@@ -54,7 +54,7 @@ public class Or extends PrimitiveFunction
 			? trueValue
 			: StackLibrary.getFalseValue();
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

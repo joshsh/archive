@@ -46,7 +46,7 @@ public class Cosh extends PrimitiveFunction
 
 		result = mc.value( Math.cosh( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

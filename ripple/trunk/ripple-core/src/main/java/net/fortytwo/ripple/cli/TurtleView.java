@@ -53,7 +53,7 @@ public class TurtleView implements Sink<RippleList>
 		RippleValue first = stack.getFirst();
 
 		// View the list in right-to-left order
-		RippleList list = RippleList.invert( stack );
+		RippleList list = mc.invert( stack );
 
 		ps.print( "rdf:_" + ++index + INDEX_SEPARATOR );
 		ps.print( Ripple.resultViewPrintEntireStack() ? list : first );

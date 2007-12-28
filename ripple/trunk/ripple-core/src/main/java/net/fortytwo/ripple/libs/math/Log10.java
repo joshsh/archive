@@ -51,7 +51,7 @@ public class Log10 extends PrimitiveFunction
 		{
 			result = mc.value( Math.log10( a ) );
 
-			sink.put( new RippleList( result, stack ) );
+			sink.put( mc.list( result, stack ) );
 		}
 	}
 }

@@ -49,7 +49,7 @@ public class ToUri extends PrimitiveFunction
 
 		URI uri = mc.createUri( s );
 
-		sink.put( new RippleList(
+		sink.put( mc.list(
 			mc.value( uri ), stack ) );
 	}
 }

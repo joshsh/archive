@@ -52,7 +52,7 @@ public class StartsWith extends PrimitiveFunction
 		result = ( s.startsWith( affix ) )
 			? StackLibrary.getTrueValue()
 			: StackLibrary.getFalseValue();
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

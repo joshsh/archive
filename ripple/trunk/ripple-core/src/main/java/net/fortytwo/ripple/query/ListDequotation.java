@@ -39,7 +39,7 @@ public class ListDequotation implements Function
 
 		while ( RippleList.NIL != in )
 		{
-			out = new RippleList( in.getFirst(), out );
+			out = mc.list( in.getFirst(), out );
 			in = in.getRest();
 		}
 

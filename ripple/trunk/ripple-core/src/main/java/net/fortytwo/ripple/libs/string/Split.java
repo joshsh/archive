@@ -54,10 +54,10 @@ public class Split extends PrimitiveFunction
 			RippleList result = RippleList.NIL;
 			for ( int i = array.length - 1; i >= 0; i-- )
 			{
-				result = new RippleList( mc.value( array[i] ), result );
+				result = mc.list( mc.value( array[i] ), result );
 			}
 
-			sink.put( new RippleList( result, stack ) );
+			sink.put( mc.list( result, stack ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

@@ -56,15 +56,16 @@ public class Triples extends PrimitiveFunction
 		URI uri = mc.uriValue( stack.getFirst() );
 		stack = stack.getRest();
 
-		SesameInputAdapter sc = createAdapter( stack, sink );
+		SesameInputAdapter sc = createAdapter( stack, sink, mc );
 
 		URLConnection uc = HttpUtils.openConnection( uri.toString() );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
 		RdfUtils.read( uc, sc, uri.toString() );
 	}
 
-	static SesameInputAdapter createAdapter( final RippleList stack,
-										final Sink<RippleList> resultSink )
+	private static SesameInputAdapter createAdapter( final RippleList stack,
+										final Sink<RippleList> resultSink,
+										final ModelConnection mc )
 	{
 		RdfSink rdfSink = new RdfSink()
 		{
@@ -78,9 +79,9 @@ public class Triples extends PrimitiveFunction
 					RippleValue pred = new RdfValue( st.getPredicate() );
 					RippleValue obj = new RdfValue( st.getObject() );
 	
-					RippleList triple = new RippleList( obj ).push( pred ).push( subj );
+					RippleList triple = mc.list( obj ).push( pred ).push( subj );
 					resultSink.put(
-						new RippleList( triple, stack ) );
+						mc.list( triple, stack ) );
 				}
 			};
 

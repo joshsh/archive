@@ -47,7 +47,7 @@ public class Unique extends PrimitiveFunction
 		throws RippleException
 	{
 		sink.put(
-			new RippleList(
+			mc.list(
 				new Operator(
 					new UniqueInner() ), stack ) );
 	}

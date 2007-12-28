@@ -52,7 +52,7 @@ public class Assert extends PrimitiveFunction
 //System.out.println( "Asserting (" + subj + ", " + pred + ", " + obj + ")" );
 		mc.add( subj, pred, obj );
 
-		sink.put( new RippleList( subj, stack ) );
+		sink.put( mc.list( subj, stack ) );
 	}
 }
 

@@ -53,7 +53,7 @@ public class Lt extends PrimitiveFunction
 			? StackLibrary.getTrueValue()
 			: StackLibrary.getFalseValue();
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( stack.push( result ) );
 	}
 }
 

@@ -46,7 +46,7 @@ public class Cbrt extends PrimitiveFunction
 
 		result = mc.value( Math.cbrt( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

@@ -49,7 +49,7 @@ public class Ceil extends PrimitiveFunction
 
 		result = mc.value( (int) Math.ceil( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

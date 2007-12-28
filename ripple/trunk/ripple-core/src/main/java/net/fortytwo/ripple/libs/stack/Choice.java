@@ -52,7 +52,7 @@ public class Choice extends PrimitiveFunction
 		// Note: everything apart from joy:true is considered false.
 		RippleValue result = b.equals( StackLibrary.getTrueValue() ) ? t : f;
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

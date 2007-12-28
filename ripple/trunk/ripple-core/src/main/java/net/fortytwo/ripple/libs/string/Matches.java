@@ -55,7 +55,7 @@ public class Matches extends PrimitiveFunction
 			result = ( s.matches( regex ) )
 				? StackLibrary.getTrueValue()
 				: StackLibrary.getFalseValue();
-			sink.put( new RippleList( result, stack ) );
+			sink.put( mc.list( result, stack ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

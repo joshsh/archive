@@ -36,7 +36,7 @@ public class Closure implements Function
 						final ModelConnection mc )
 		throws RippleException
 	{
-		innerFunction.applyTo( new RippleList( argument, stack ), sink,  mc );
+		innerFunction.applyTo( mc.list( argument, stack ), sink,  mc );
 	}
 }
 

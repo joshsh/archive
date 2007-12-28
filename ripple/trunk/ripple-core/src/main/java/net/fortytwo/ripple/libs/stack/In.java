@@ -67,11 +67,11 @@ public class In extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( new RippleList( has( list, x ) ? StackLibrary.getTrueValue() : StackLibrary.getFalseValue(), rest ) );
+				sink.put( mc.list( has( list, x ) ? StackLibrary.getTrueValue() : StackLibrary.getFalseValue(), rest ) );
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

@@ -51,11 +51,11 @@ public class OperatorTest extends RippleTestCase
 			
 			Collector<Operator> ops = new Collector<Operator>();
 			RippleValue arg;
-			RippleValue a1 = new RdfValue( mc.createLiteral( "1" ) );
-			RippleValue a2 = new RdfValue( mc.createLiteral( "2" ) );
+			RippleValue a1 = mc.value( "1" );
+			RippleValue a2 = mc.value( "2" );
 			
 			// a RippleList --> ListDequotation
-			arg = new RippleList( a2 ).push( a1 );
+			arg = mc.list( a2 ).push( a1 );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );

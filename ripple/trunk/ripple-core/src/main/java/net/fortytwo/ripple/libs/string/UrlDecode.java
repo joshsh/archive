@@ -46,7 +46,7 @@ public class UrlDecode extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = StringUtils.urlDecode( a );
-		sink.put( new RippleList( mc.value( result ), stack ) );
+		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }
 

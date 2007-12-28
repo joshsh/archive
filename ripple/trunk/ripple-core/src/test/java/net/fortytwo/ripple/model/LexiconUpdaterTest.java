@@ -10,12 +10,10 @@
 package net.fortytwo.ripple.model;
 
 import java.io.InputStream;
-
 import java.util.Collection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.rdf.RdfNullSink;
 import net.fortytwo.ripple.util.FileUtils;
 
 import org.openrdf.model.Namespace;

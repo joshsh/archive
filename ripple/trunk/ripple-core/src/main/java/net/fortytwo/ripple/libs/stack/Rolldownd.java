@@ -51,7 +51,7 @@ public class Rolldownd extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( y, stack ).push( z ).push( x ).push( w ) );
+		sink.put( mc.list( y, stack ).push( z ).push( x ).push( w ) );
 	}
 }
 

@@ -47,7 +47,7 @@ public class Limit extends PrimitiveFunction
 		stack = stack.getRest();
 
 		sink.put(
-			new RippleList(
+			mc.list(
 				new Operator(
 					new LimitInner( (long) lim ) ), stack ) );
 	}

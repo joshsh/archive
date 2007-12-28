@@ -45,7 +45,7 @@ public class Dup extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( x, stack ).push( x ) );
+		sink.put( mc.list( x, stack ).push( x ) );
 	}
 }
 

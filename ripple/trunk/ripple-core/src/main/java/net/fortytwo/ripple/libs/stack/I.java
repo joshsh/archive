@@ -41,7 +41,7 @@ public class I extends PrimitiveFunction
 		throws RippleException
 	{
 // hack...
-		sink.put( new RippleList( Operator.OP, stack ) );
+		sink.put( mc.list( Operator.OP, stack ) );
 	}
 }
 

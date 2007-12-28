@@ -48,7 +48,7 @@ public class Dip extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( y, stack ).push( Operator.OP ).push( x ) );
+		sink.put( mc.list( y, stack ).push( Operator.OP ).push( x ) );
 	}
 }
 

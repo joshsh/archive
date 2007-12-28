@@ -46,7 +46,7 @@ public class RippleQueryCmd extends Command
 			// Note: v will always be a list.
 			public void put( final RippleValue v ) throws RippleException
 			{
-				final RippleList stack = RippleList.invert( (RippleList) v );
+				final RippleList stack = mc.invert( (RippleList) v );
 
 				Sink<RippleList> composedWithSink = new Sink<RippleList>()
 				{
@@ -54,7 +54,7 @@ public class RippleQueryCmd extends Command
 						throws RippleException
 					{
 						evaluator.applyTo(
-							RippleList.concat( stack, base ), sink, mc );
+							mc.concat( stack, base ), sink, mc );
 					}
 				};
 

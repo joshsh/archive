@@ -45,7 +45,7 @@ public class Popd extends PrimitiveFunction
 		stack = stack.getRest();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( y, stack ) );
+		sink.put( mc.list( y, stack ) );
 	}
 }
 

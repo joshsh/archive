@@ -65,7 +65,7 @@ public class LazyEvaluator extends Evaluator
 
 				Closure c = new Closure( function, first );
 
-				sink.put( new RippleList( new Operator( c ), rest ) );
+				sink.put( rest.push( new Operator( c ) ) );
 			}
 		}
 	}

@@ -49,7 +49,7 @@ public class Dupdd extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( x, stack ).push( x ).push( y ).push( z ) );
+		sink.put( mc.list( x, stack ).push( x ).push( y ).push( z ) );
 	}
 }
 

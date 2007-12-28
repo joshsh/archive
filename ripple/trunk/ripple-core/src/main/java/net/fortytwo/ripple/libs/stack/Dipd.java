@@ -50,7 +50,7 @@ public class Dipd extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( z, stack ).push( Operator.OP ).push( x ).push( y ) );
+		sink.put( mc.list( z, stack ).push( Operator.OP ).push( x ).push( y ) );
 	}
 }
 

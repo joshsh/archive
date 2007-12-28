@@ -56,8 +56,8 @@ public class Fold extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				RippleList lList = RippleList.invert( list );
-				RippleList result = new RippleList( v, rest );
+				RippleList lList = mc.invert( list );
+				RippleList result = mc.list( v, rest );
 		
 				while ( RippleList.NIL != lList )
 				{
@@ -71,7 +71,7 @@ public class Fold extends PrimitiveFunction
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

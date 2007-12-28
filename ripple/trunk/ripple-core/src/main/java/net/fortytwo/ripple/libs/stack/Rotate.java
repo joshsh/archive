@@ -49,7 +49,7 @@ public class Rotate extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( z, stack ).push( y ).push( x ) );
+		sink.put( mc.list( z, stack ).push( y ).push( x ) );
 	}
 }
 

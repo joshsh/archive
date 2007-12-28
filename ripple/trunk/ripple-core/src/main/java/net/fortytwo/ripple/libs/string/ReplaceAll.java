@@ -52,7 +52,7 @@ public class ReplaceAll extends PrimitiveFunction
 		try
 		{
 			result = s.replaceAll( regex, replacement );
-			sink.put( new RippleList( mc.value( result ), stack ) );
+			sink.put( mc.list( mc.value( result ), stack ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

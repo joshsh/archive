@@ -158,7 +158,7 @@ public class Uriqr extends PrimitiveFunction
 				String text = ( (Element) r ).getText();
 				URI resultUri = mc.createUri( text );
 
-				sink.put( new RippleList(
+				sink.put( mc.list(
 					new RdfValue( resultUri ), stack ) );
 			}
 

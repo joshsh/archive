@@ -51,7 +51,7 @@ public class Acos extends PrimitiveFunction
 		{
 			result = mc.value( Math.acos( a ) );
 
-			sink.put( new RippleList( result, stack ) );
+			sink.put( mc.list( result, stack ) );
 		}
 	}
 }

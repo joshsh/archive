@@ -51,10 +51,10 @@ public class Sqrt extends PrimitiveFunction
 			double d = Math.sqrt( a );
 
 			// Yield both square roots.
-			sink.put( new RippleList( mc.value( d ), stack ) );
+			sink.put( mc.list( mc.value( d ), stack ) );
 			if ( d > 0 )
 			{
-				sink.put( new RippleList( mc.value( 0.0 - d ), stack ) );
+				sink.put( mc.list( mc.value( 0.0 - d ), stack ) );
 			}
 		}
 	}

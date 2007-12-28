@@ -46,7 +46,7 @@ public class ToUpperCase extends PrimitiveFunction
 
 		result = s.toUpperCase();
 
-		sink.put( new RippleList( mc.value( result ), stack ) );
+		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }
 

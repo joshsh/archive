@@ -102,18 +102,19 @@ public class NumericLiteralImpl extends NumericLiteral {
 	public RdfValue toRdf( final ModelConnection mc )
 		throws RippleException
 	{
+		SesameModelConnection smc = (SesameModelConnection) mc;
 		if ( null == rdfEquivalent )
 		{
 			switch ( type )
 			{
 				case INTEGER:
-					rdfEquivalent = new RdfValue( mc.createLiteral( number.intValue() ) );
+					rdfEquivalent = new RdfValue( smc.getValueFactory().createLiteral( number.intValue() ) );
 					break;
 				case LONG:
-					rdfEquivalent = new RdfValue( mc.createLiteral( number.longValue() ) );
+					rdfEquivalent = new RdfValue( smc.getValueFactory().createLiteral( number.longValue() ) );
 					break;
 				case DOUBLE:
-					rdfEquivalent = new RdfValue( mc.createLiteral( number.doubleValue() ) );
+					rdfEquivalent = new RdfValue( smc.getValueFactory().createLiteral( number.doubleValue() ) );
 					break;
 			}
 		}

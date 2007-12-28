@@ -56,12 +56,12 @@ public class Lexicon
 		uriToKeywordMap = new Hashtable<URI, String>();
 
 		ModelBridge bridge = model.getBridge();
-		Iterator<Value> keys = bridge.keySet().iterator();
-		while ( keys.hasNext() )
+		
+		for ( Value key : bridge.keySet() )
 		{
 			// An extra trip through the bridge replaces aliases with
 			// "definitive" values.
-			Value v = bridge.get( keys.next() ).toRdf( mc ).getRdfValue();
+			Value v = bridge.get( key ).toRdf( mc ).getRdfValue();
 
 			if ( v instanceof URI )
 			{

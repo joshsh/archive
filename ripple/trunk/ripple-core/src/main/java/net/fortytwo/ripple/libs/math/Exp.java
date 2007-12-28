@@ -47,7 +47,7 @@ public class Exp extends PrimitiveFunction
 
 		result = mc.value( Math.exp( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

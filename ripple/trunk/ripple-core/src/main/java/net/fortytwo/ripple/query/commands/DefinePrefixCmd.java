@@ -48,7 +48,7 @@ public class DefinePrefixCmd extends Command
 		}
 
 		URI ns = mc.uriValue( sink.iterator().next() );
-		mc.setNamespace( prefix, ns, true );
+		mc.setNamespace( prefix, ns.toString(), true );
 
 		// Note: when a namespace is manually defined, it may both override an
 		// existing prefix with the same name, or duplicate another namespace

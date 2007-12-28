@@ -47,7 +47,7 @@ public class Cos extends PrimitiveFunction
 
 		result = mc.value( Math.cos( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

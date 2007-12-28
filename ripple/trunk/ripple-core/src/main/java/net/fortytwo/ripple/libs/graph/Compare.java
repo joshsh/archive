@@ -49,7 +49,7 @@ public class Compare extends PrimitiveFunction
 
 		int result = x.compareTo( y );
 
-		sink.put( new RippleList( mc.value( result ), stack ) );
+		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }
 

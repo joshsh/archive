@@ -31,7 +31,7 @@ public class RdfPredicateFunction implements Function
 
 		public void put( final RippleValue v ) throws RippleException
 		{
-			sink.put( new RippleList( v, stack ) );
+			sink.put( stack.push( v ) );
 		}
 	}
 

@@ -49,7 +49,7 @@ public class Pow extends PrimitiveFunction
 
 		result = x.pow( p );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

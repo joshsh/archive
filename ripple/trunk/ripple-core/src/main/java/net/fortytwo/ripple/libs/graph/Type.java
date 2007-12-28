@@ -55,7 +55,7 @@ public class Type extends PrimitiveFunction
 
 			if ( null != type )
 			{
-				sink.put( new RippleList( new RdfValue( type ), stack ) );
+				sink.put( mc.list( new RdfValue( type ), stack ) );
 			}
 		}
 	}

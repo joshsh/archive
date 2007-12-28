@@ -46,7 +46,7 @@ public class Neg extends PrimitiveFunction
 
 		result = a.neg();
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

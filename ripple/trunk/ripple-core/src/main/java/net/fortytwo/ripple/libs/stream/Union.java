@@ -46,8 +46,8 @@ public class Union extends PrimitiveFunction
 		y = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( new RippleList( x, stack ) );
-		sink.put( new RippleList( y, stack ) );
+		sink.put( mc.list( x, stack ) );
+		sink.put( mc.list( y, stack ) );
 	}
 }
 

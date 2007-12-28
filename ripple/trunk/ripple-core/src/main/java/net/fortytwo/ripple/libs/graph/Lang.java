@@ -57,7 +57,7 @@ public class Lang extends PrimitiveFunction
 				result = "";
 			}
 
-			sink.put( new RippleList( mc.value( result ), stack ) );
+			sink.put( mc.list( mc.value( result ), stack ) );
 		}
 	}
 }

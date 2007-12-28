@@ -30,7 +30,7 @@ public class Op implements Function, RippleValue
 			public void put( final Operator oper )
 				throws RippleException
 			{
-				sink.put( new RippleList( oper, rest ) );
+				sink.put( mc.list( oper, rest ) );
 			}
 		};
 

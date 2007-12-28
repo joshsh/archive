@@ -51,12 +51,12 @@ public class Swons extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( new RippleList(
-					new RippleList( x, list ), rest ) );
+				sink.put( mc.list(
+					mc.list( x, list ), rest ) );
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

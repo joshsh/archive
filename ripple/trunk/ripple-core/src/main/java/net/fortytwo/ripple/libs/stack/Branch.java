@@ -67,7 +67,7 @@ public class Branch extends PrimitiveFunction
 			throw new RippleException( "branch expects one of the values true, false as its third argument" );
 		}
 
-		sink.put( new RippleList( result, stack ).push( Operator.OP ) );
+		sink.put( mc.list( result, stack ).push( Operator.OP ) );
 	}
 }
 

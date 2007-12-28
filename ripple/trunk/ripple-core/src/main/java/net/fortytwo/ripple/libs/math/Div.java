@@ -52,7 +52,7 @@ public class Div extends PrimitiveFunction
 		{
 			result = a.div( b );
 
-			sink.put( new RippleList( result, stack ) );
+			sink.put( stack.push( result ) );
 		}
 	}
 }

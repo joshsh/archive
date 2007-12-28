@@ -14,6 +14,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.impl.sesame.SesameList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -35,15 +36,23 @@ public class Contains extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
+	public void applyTo( final RippleList stack,
 						final Sink<RippleList> sink,
 						final ModelConnection mc )
 		throws RippleException
 	{
 		RippleValue head = stack.getFirst();
-		stack = stack.getRest();
+		final RippleList rest = stack.getRest();
 
-		mc.putContainerMembers( head, stack.createPushSink( sink ) );
+		Sink<RippleValue> pushSink = new Sink<RippleValue>()
+		{
+			public void put( final RippleValue v ) throws RippleException
+			{
+				sink.put( new SesameList( v, rest ) );
+			}
+		};		
+		
+		mc.putContainerMembers( head, pushSink );
 	}
 }
 

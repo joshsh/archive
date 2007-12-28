@@ -15,6 +15,7 @@ import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericLiteral;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.rdf.BNodeClosureFilter;
 import net.fortytwo.ripple.rdf.RdfSource;
@@ -92,6 +93,36 @@ public class SesameModelConnection implements ModelConnection
 	public Model getModel()
 	{
 		return model;
+	}
+	
+	ValueFactory getValueFactory()
+	{
+		return valueFactory;
+	}
+	
+	public void getLists( RippleValue v, Sink<RippleList> sink ) throws RippleException
+	{
+		SesameList.from( v, sink, this );
+	}
+	
+	public RippleList list( RippleValue v )
+	{
+		return new SesameList( v );
+	}
+	
+	public RippleList list( RippleValue v, RippleList rest )
+	{
+		return new SesameList( v, rest );
+	}
+	
+	public RippleList invert( RippleList l )
+	{
+		return SesameList.invert( l );
+	}
+	
+	public RippleList concat( final RippleList head, final RippleList tail )
+	{
+		return SesameList.concat( head, tail );
 	}
 	
 	public void close() throws RippleException
@@ -730,97 +761,7 @@ public class SesameModelConnection implements ModelConnection
 			throw new RippleException( t );
 		}
 	}
-	
-	public Literal createLiteral( final String s )
-		throws RippleException
-	{
-		try
-		{
-			return valueFactory.createLiteral( s, XMLSchema.STRING );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
-	public Literal createLiteral( final String s, final String language )
-		throws RippleException
-	{
-		try
-		{
-			return valueFactory.createLiteral( s, language );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
-	public Literal createLiteral( final String s, final URI dataType )
-		throws RippleException
-	{
-		try
-		{
-			return valueFactory.createLiteral( s, dataType );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
-	public Literal createLiteral( final boolean b )
-		throws RippleException
-	{
-		try
-		{
-			return valueFactory.createLiteral( "" + b, XMLSchema.BOOLEAN );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
-	public Literal createLiteral( final int i )
-		throws RippleException
-	{
-		try
-		{
-			return valueFactory.createLiteral( "" + i, XMLSchema.INTEGER );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
-	public Literal createLiteral( final double d )
-		throws RippleException
-	{
-		try
-		{
-			return valueFactory.createLiteral( "" + d, XMLSchema.DOUBLE );
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
+
 	public Resource createBNode() throws RippleException
 	{
 		try
@@ -1004,10 +945,21 @@ public class SesameModelConnection implements ModelConnection
 		{
 			//synchronized ( model )
 			{
+System.out.println("--- z");
 				if ( override || null == sailConnection.getNamespace( prefix ) )
 				{
-					sailConnection.removeNamespace( prefix );
-					sailConnection.setNamespace( prefix, ns );
+System.out.println("--- x");
+					if ( null == ns )
+					{
+						sailConnection.removeNamespace( prefix );
+					}
+					
+					else
+					{
+System.out.println("--- c");
+						sailConnection.setNamespace( prefix, ns );
+					}
+System.out.println("--- v");
 				}
 			}
 		}
@@ -1017,12 +969,6 @@ public class SesameModelConnection implements ModelConnection
 			reset( true );
 			throw new RippleException( t );
 		}
-	}
-	
-	public void setNamespace( final String prefix, final URI ns, final boolean override )
-		throws RippleException
-	{
-		setNamespace( prefix, ns.toString(), override );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

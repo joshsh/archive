@@ -53,7 +53,7 @@ public class Substring extends PrimitiveFunction
 		try
 		{
 			result = s.substring( begin, end );
-			sink.put( new RippleList( mc.value( result ), stack ) );
+			sink.put( mc.list( mc.value( result ), stack ) );
 		}
 
 		catch ( IndexOutOfBoundsException e )

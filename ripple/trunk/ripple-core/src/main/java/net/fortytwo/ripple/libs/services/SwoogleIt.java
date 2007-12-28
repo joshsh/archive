@@ -113,7 +113,7 @@ URI context = mc.createUri( url.toString() );
 					if ( st.getPredicate().equals( RDF.TYPE )
 							&& st.getObject().equals( swoogleQueryResponseUri ) )
 					{
-						buffer.put( new RippleList(
+						buffer.put( mc.list(
 							new RdfValue( st.getSubject() ), stackFinal ) );
 					}
 				}

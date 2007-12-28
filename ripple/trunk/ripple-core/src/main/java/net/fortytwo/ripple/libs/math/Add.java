@@ -48,7 +48,7 @@ public class Add extends PrimitiveFunction
 
 		result = a.add( b );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

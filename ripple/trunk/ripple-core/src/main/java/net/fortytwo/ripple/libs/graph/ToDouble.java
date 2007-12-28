@@ -62,7 +62,7 @@ public class ToDouble extends PrimitiveFunction
 			return;
 		}
 
-		sink.put( new RippleList( mc.value( d ), stack ) );
+		sink.put( mc.list( mc.value( d ), stack ) );
 	}
 }
 

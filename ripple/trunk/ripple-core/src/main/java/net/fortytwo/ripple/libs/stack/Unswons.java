@@ -49,11 +49,11 @@ public class Unswons extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( new RippleList( list.getRest(), rest ).push( list.getFirst() ) );
+				sink.put( mc.list( list.getRest(), rest ).push( list.getFirst() ) );
 			}
 		};
 
-		RippleList.from( l, listSink, mc );
+		mc.getLists( l, listSink );
 	}
 }
 

@@ -47,7 +47,7 @@ public class Atan extends PrimitiveFunction
 
 		result = mc.value( Math.atan( a.doubleValue() ) );
 
-		sink.put( new RippleList( result, stack ) );
+		sink.put( mc.list( result, stack ) );
 	}
 }
 

@@ -48,7 +48,7 @@ public class StrCat extends PrimitiveFunction
 
 		result = strB + strA;
 
-		sink.put( new RippleList( mc.value( result ), stack ) );
+		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }
 
