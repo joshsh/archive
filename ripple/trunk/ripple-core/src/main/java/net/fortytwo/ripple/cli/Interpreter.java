@@ -55,7 +55,7 @@ public class Interpreter
 
 			try
 			{
-//System.out.println( "-- antlr" );
+System.out.println( "-- antlr" );
 				parser.nt_Document();
 
 				// If the parser has exited normally, then we're done.

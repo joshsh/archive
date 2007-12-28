@@ -61,7 +61,8 @@ public class RippleQueryCmd extends Command
 				composedWith.writeTo( composedWithSink );
 			}
 		};
-
+		
+System.out.println( "evaluating: " + listAst );
 		listAst.evaluate( evaluatorSink, qe, mc );
 	}
 

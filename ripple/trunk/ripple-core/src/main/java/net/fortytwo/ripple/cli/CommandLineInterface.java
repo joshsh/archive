@@ -149,36 +149,8 @@ private boolean lastQueryContinued = false;
 		RecognizerAdapter rc = new RecognizerAdapter(
 			querySink, continuingQuerySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
-		Sink<Exception> parserExceptionSink = new Sink<Exception>()
-		{
-			public void put( final Exception e ) throws RippleException
-			{
-				// This happens, for instance, when the parser receives a value
-				// which is too large for the target data type.  Non-fatal.
-				if ( e instanceof NumberFormatException )
-				{
-					alert( e.toString() );
-				}
-
-				// Non-fatal.
-				else if ( e instanceof antlr.RecognitionException )
-				{
-					alert( "RecognitionException: " + e.toString() );
-				}
-
-				// Non-fatal.
-				else if ( e instanceof antlr.TokenStreamException )
-				{
-					alert( "TokenStreamException: " + e.toString() );
-				}
-
-				else
-				{
-					alert( "Error: " + e.toString() );
-					( new RippleException( e ) ).logError();
-				}
-			}
-		};
+		Sink<Exception> parserExceptionSink = new ParserExceptionSink(
+				qe.getErrorPrintStream() );
 
 		// Pass input through a filter to watch for special byte sequences, and
 		// another draw input through it even when the interface is busy.

@@ -17,7 +17,7 @@ import net.fortytwo.ripple.util.ListMemoizer;
 
 public class LazyEvaluatorTest extends RippleTestCase
 {
-	private void assertCollectorsEqual( Collector<RippleList> expected, Collector<RippleList> actual ) throws Exception
+	public static void assertCollectorsEqual( Collector<RippleList> expected, Collector<RippleList> actual ) throws Exception
 	{
 		int size = expected.size();
 		assertEquals( size, actual.size() );
@@ -45,7 +45,7 @@ public class LazyEvaluatorTest extends RippleTestCase
 		}
 	}
 	
-	private RippleList createStack( final ModelConnection mc, final RippleValue... values )
+	public static RippleList createStack( final ModelConnection mc, final RippleValue... values )
 	{
 		if ( 0 == values.length )
 		{
@@ -61,7 +61,7 @@ public class LazyEvaluatorTest extends RippleTestCase
 		return l;
 	}
 	
-	private RippleList createQueue( final ModelConnection mc, final RippleValue... values )
+	public static RippleList createQueue( final ModelConnection mc, final RippleValue... values )
 	{
 		return mc.invert( createStack( mc, values ) );
 	}
