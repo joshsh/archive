@@ -41,7 +41,7 @@ public class ToUpperCase extends PrimitiveFunction
 	{
 		String s, result;
 
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = s.toUpperCase();

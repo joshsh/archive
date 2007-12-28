@@ -56,7 +56,7 @@ public class Swons extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l, listSink );
+		mc.toList( l, listSink );
 	}
 }
 

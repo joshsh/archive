@@ -42,9 +42,9 @@ public class Pow extends PrimitiveFunction
 	{
 		NumericLiteral p, x, result;
 
-		p = mc.numericValue( stack.getFirst() );
+		p = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
-		x = mc.numericValue( stack.getFirst() );
+		x = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = x.pow( p );

@@ -53,7 +53,7 @@ public class Triples extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		URI uri = mc.uriValue( stack.getFirst() );
+		URI uri = mc.toUri( stack.getFirst() );
 		stack = stack.getRest();
 
 		SesameInputAdapter sc = createAdapter( stack, sink, mc );

@@ -100,7 +100,7 @@ public class SesameModelConnection implements ModelConnection
 		return valueFactory;
 	}
 	
-	public void getLists( RippleValue v, Sink<RippleList> sink ) throws RippleException
+	public void toList( RippleValue v, Sink<RippleList> sink ) throws RippleException
 	{
 		SesameList.from( v, sink, this );
 	}
@@ -247,7 +247,7 @@ public class SesameModelConnection implements ModelConnection
 	
 	////////////////////////////////////////////////////////////////////////////
 	
-	public boolean booleanValue( final RippleValue rv ) throws RippleException
+	public boolean toBoolean( final RippleValue rv ) throws RippleException
 	{
 		Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
 	
@@ -260,7 +260,7 @@ public class SesameModelConnection implements ModelConnection
 		return label.equals( "true" );
 	}
 	
-	public NumericLiteral numericValue( final RippleValue rv )
+	public NumericLiteral toNumericValue( final RippleValue rv )
 		throws RippleException
 	{
 		if ( rv instanceof NumericLiteral )
@@ -274,40 +274,14 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public int intValue( final RippleValue rv ) throws RippleException
-	{
-		if ( rv instanceof NumericLiteral )
-		{
-			// Note: possible loss of precision
-			return ( (NumericLiteral) rv ).intValue();
-		}
-	
-		Literal l = castToLiteral( rv.toRdf( this ).getRdfValue() );
-	
-	//    URI type = l.getDatatype();
-	//    if ( !type.equals( XMLSchema.INTEGER ) )
-	//        throw new RippleException( "type mismatch: expected " + XMLSchema.INTEGER.toString() + ", found " + type.toString() );
-	
-		try
-		{
-			return ( new Integer( l.getLabel() ) ).intValue();
-		}
-	
-		catch ( Throwable t )
-		{
-			reset( true );
-			throw new RippleException( t );
-		}
-	}
-	
-	public String stringValue( final RippleValue v ) throws RippleException
+	public String toString( final RippleValue v ) throws RippleException
 	{
 		Literal l = castToLiteral( v.toRdf( this ).getRdfValue() );
 	
 		return l.getLabel();
 	}
 	
-	public URI uriValue( final RippleValue rv )
+	public URI toUri( final RippleValue rv )
 		throws RippleException
 	{
 		Value v = rv.toRdf( this ).getRdfValue();

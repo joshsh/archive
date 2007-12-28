@@ -45,9 +45,9 @@ public class Matches extends PrimitiveFunction
 		String regex, s;
 		RippleValue result;
 
-		regex = mc.stringValue( stack.getFirst() );
+		regex = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		try

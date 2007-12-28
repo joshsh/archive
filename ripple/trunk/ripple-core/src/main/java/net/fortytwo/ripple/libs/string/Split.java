@@ -43,9 +43,9 @@ public class Split extends PrimitiveFunction
 	{
 		String s, regex;
 
-		regex = mc.stringValue( stack.getFirst() );
+		regex = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		try

@@ -41,7 +41,7 @@ public class Neg extends PrimitiveFunction
 	{
 		NumericLiteral a, result;
 
-		a = mc.numericValue( stack.getFirst() );
+		a = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = a.neg();

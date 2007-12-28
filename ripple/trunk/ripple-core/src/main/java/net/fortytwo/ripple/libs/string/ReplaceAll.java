@@ -42,11 +42,11 @@ public class ReplaceAll extends PrimitiveFunction
 	{
 		String regex, replacement, s, result;
 
-		replacement = mc.stringValue( stack.getFirst() );
+		replacement = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		regex = mc.stringValue( stack.getFirst() );
+		regex = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		try

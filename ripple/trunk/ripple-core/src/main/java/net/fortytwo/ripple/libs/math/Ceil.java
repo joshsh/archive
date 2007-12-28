@@ -44,7 +44,7 @@ public class Ceil extends PrimitiveFunction
 	{
 		NumericLiteral a, result;
 
-		a = mc.numericValue( stack.getFirst() );
+		a = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = mc.value( (int) Math.ceil( a.doubleValue() ) );

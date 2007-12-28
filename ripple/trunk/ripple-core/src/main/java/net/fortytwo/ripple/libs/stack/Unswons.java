@@ -53,7 +53,7 @@ public class Unswons extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l, listSink );
+		mc.toList( l, listSink );
 	}
 }
 

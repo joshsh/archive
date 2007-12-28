@@ -69,11 +69,11 @@ public class SwoogleIt extends PrimitiveFunction
 		String key, searchString;
 		URI queryType;
 
-		key = mc.stringValue( stack.getFirst() );
+		key = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		queryType = mc.uriValue( stack.getFirst() );
+		queryType = mc.toUri( stack.getFirst() );
 		stack = stack.getRest();
-		searchString = mc.stringValue( stack.getFirst() );
+		searchString = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		URL url;

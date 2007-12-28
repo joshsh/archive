@@ -53,7 +53,7 @@ public class Namespaces extends PrimitiveFunction
 	{
 		URI uri;
 
-		uri = mc.uriValue( stack.getFirst() );
+		uri = mc.toUri( stack.getFirst() );
 		stack = stack.getRest();
 
 		SesameInputAdapter sc = createAdapter( stack, sink, mc );

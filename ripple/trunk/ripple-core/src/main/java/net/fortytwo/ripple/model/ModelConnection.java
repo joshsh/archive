@@ -37,11 +37,11 @@ public interface ModelConnection
 
 	void commit() throws RippleException;
 
-	boolean booleanValue( RippleValue rv ) throws RippleException;
-	NumericLiteral numericValue( RippleValue rv )	throws RippleException;
-	int intValue( RippleValue rv ) throws RippleException;
-	String stringValue( RippleValue v ) throws RippleException;
-	URI uriValue( RippleValue rv ) throws RippleException;
+	boolean toBoolean( RippleValue v ) throws RippleException;
+	NumericLiteral toNumericValue( RippleValue v )	throws RippleException;
+	String toString( RippleValue v ) throws RippleException;
+	URI toUri( RippleValue v ) throws RippleException;
+	void toList( RippleValue v, Sink<RippleList> sink ) throws RippleException;
 
 	RdfValue findSingleObject( RippleValue subj, RippleValue pred )	throws RippleException;
 	RdfValue findAtLeastOneObject( RippleValue subj, RippleValue pred )	throws RippleException;
@@ -94,8 +94,6 @@ public interface ModelConnection
 	RippleList list( RippleValue v, RippleList rest );
 	RippleList invert( RippleList l );
 	RippleList concat( RippleList head, RippleList tail );
-	
-	void getLists( RippleValue v, Sink<RippleList> sink ) throws RippleException;
 	
 	void setNamespace( String prefix, String ns, boolean override ) throws RippleException;
 

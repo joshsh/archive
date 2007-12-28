@@ -67,8 +67,8 @@ public class Cat extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l1, firstLists );
-		mc.getLists( l2, listSink );
+		mc.toList( l1, firstLists );
+		mc.toList( l2, listSink );
 	}
 }
 

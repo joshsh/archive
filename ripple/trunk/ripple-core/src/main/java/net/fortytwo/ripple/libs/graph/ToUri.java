@@ -44,7 +44,7 @@ public class ToUri extends PrimitiveFunction
 	{
 		String s;
 
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		URI uri = mc.createUri( s );

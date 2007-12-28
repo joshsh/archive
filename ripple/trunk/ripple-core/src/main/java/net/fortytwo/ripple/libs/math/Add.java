@@ -41,9 +41,9 @@ public class Add extends PrimitiveFunction
 	{
 		NumericLiteral a, b, result;
 
-		b = mc.numericValue( stack.getFirst() );
+		b = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
-		a = mc.numericValue( stack.getFirst() );
+		a = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = a.add( b );

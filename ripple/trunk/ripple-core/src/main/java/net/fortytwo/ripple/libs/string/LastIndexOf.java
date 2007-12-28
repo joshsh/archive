@@ -42,9 +42,9 @@ public class LastIndexOf extends PrimitiveFunction
 		String str, substr;
 		int result;
 
-		substr = mc.stringValue( stack.getFirst() );
+		substr = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		str = mc.stringValue( stack.getFirst() );
+		str = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = str.lastIndexOf( substr );

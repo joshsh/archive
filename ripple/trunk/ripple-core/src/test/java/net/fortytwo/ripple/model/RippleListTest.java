@@ -70,7 +70,7 @@ public class RippleListTest extends RippleTestCase
 
 			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#simpleList" ) );
 			created.clear();
-			mc.getLists( head, created );
+			mc.toList( head, created );
 			assertEquals( 1, created.size() );
 			allowed.clear();
 			allowed.put( mc.list( l2 ).push( l1 ) );
@@ -78,7 +78,7 @@ public class RippleListTest extends RippleTestCase
 			
 			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#firstBranchingList" ) );
 			created.clear();
-			mc.getLists( head, created );
+			mc.toList( head, created );
 			assertEquals( 2, created.size() );
 			allowed.clear();
 			allowed.put( mc.list( l2 ).push( l1a ) );
@@ -87,7 +87,7 @@ public class RippleListTest extends RippleTestCase
 
 			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#restBranchingList" ) );
 			created.clear();
-			mc.getLists( head, created );
+			mc.toList( head, created );
 			assertEquals( 2, created.size() );
 			allowed.clear();
 			allowed.put( mc.list( l2a ).push( l1 ) );
@@ -96,7 +96,7 @@ public class RippleListTest extends RippleTestCase
 			
 			head = new RdfValue( mc.createUri( "urn:test.RippleListTest.FromRdfTest#firstAndRestBranchingList" ) );
 			created.clear();
-			mc.getLists( head, created );
+			mc.toList( head, created );
 			assertEquals( 4, created.size() );
 			allowed.clear();
 			allowed.put( mc.list( l2a ).push( l1a ) );

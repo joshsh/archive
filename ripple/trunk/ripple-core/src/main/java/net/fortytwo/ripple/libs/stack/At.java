@@ -42,7 +42,7 @@ public class At extends PrimitiveFunction
 	{
 		RippleValue l;
 
-		final int i = mc.intValue( stack.getFirst() );
+		final int i = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 		l = stack.getFirst();
 		final RippleList rest = stack.getRest();
@@ -69,7 +69,7 @@ public class At extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l, listSink );
+		mc.toList( l, listSink );
 	}
 }
 

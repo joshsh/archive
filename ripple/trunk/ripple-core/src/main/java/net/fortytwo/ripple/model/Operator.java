@@ -129,7 +129,7 @@ return rdfEquivalent;
 					}
 				};
 
-				mc.getLists( v, listSink );
+				mc.toList( v, listSink );
 				return;
 			}
 

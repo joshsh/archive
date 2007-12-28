@@ -41,9 +41,9 @@ public class StrCat extends PrimitiveFunction
 	{
 		String strA, strB, result;
 
-		strA = mc.stringValue( stack.getFirst() );
+		strA = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		strB = mc.stringValue( stack.getFirst() );
+		strB = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = strB + strA;

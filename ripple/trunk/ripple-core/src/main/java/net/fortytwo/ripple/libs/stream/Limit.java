@@ -43,7 +43,7 @@ public class Limit extends PrimitiveFunction
 	{
 		int lim;
 
-		lim = mc.intValue( stack.getFirst() );
+		lim = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 
 		sink.put(

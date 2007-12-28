@@ -54,7 +54,7 @@ public class Size extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l, listSink );
+		mc.toList( l, listSink );
 	}
 }
 

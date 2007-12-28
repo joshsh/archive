@@ -47,7 +47,7 @@ public class DefinePrefixCmd extends Command
 			throw new RippleException( "multiple values constructed from " + uri );
 		}
 
-		URI ns = mc.uriValue( sink.iterator().next() );
+		URI ns = mc.toUri( sink.iterator().next() );
 		mc.setNamespace( prefix, ns.toString(), true );
 
 		// Note: when a namespace is manually defined, it may both override an

@@ -71,7 +71,7 @@ public class In extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l, listSink );
+		mc.toList( l, listSink );
 	}
 }
 

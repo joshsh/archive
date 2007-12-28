@@ -42,7 +42,7 @@ public class Exp extends PrimitiveFunction
 	{
 		NumericLiteral a, result;
 
-		a = mc.numericValue( stack.getFirst() );
+		a = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = mc.value( Math.exp( a.doubleValue() ) );

@@ -43,7 +43,7 @@ public class Tan extends PrimitiveFunction
 		double a;
 		NumericLiteral result;
 
-		a = mc.numericValue( stack.getFirst() ).doubleValue();
+		a = mc.toNumericValue( stack.getFirst() ).doubleValue();
 		stack = stack.getRest();
 
 // TODO: check for undefined values

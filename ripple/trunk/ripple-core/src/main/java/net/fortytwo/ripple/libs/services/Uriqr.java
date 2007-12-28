@@ -95,7 +95,7 @@ public class Uriqr extends PrimitiveFunction
 
 		String s;
 
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		String urlStr = "http://dev.uriqr.com/search.php?query="

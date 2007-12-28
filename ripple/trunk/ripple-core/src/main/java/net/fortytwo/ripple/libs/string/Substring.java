@@ -43,11 +43,11 @@ public class Substring extends PrimitiveFunction
 		int begin, end;
 		String s, result;
 
-		end = mc.intValue( stack.getFirst() );
+		end = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
-		begin = mc.intValue( stack.getFirst() );
+		begin = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		try

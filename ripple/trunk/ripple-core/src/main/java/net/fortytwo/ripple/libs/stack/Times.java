@@ -44,7 +44,7 @@ public class Times extends PrimitiveFunction
 	{
 		int times;
 
-		times = mc.intValue( stack.getFirst() );
+		times = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 		RippleValue p = stack.getFirst();
 		stack = stack.getRest();

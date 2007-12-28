@@ -40,7 +40,7 @@ public class Length extends PrimitiveFunction
 	{
 		String s;
 
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		sink.put( mc.list(

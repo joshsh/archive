@@ -43,7 +43,7 @@ public class Asin extends PrimitiveFunction
 		double a;
 		NumericLiteral result;
 
-		a = mc.numericValue( stack.getFirst() ).doubleValue();
+		a = mc.toNumericValue( stack.getFirst() ).doubleValue();
 		stack = stack.getRest();
 
 		// Apply the function only if it is defined for the given argument.

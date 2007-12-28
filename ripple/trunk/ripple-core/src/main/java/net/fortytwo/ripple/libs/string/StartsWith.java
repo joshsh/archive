@@ -44,9 +44,9 @@ public class StartsWith extends PrimitiveFunction
 		String affix, s;
 		RippleValue result;
 
-		affix = mc.stringValue( stack.getFirst() );
+		affix = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = ( s.startsWith( affix ) )

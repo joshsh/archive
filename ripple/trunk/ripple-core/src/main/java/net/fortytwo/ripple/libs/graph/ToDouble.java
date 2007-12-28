@@ -46,7 +46,7 @@ public class ToDouble extends PrimitiveFunction
 	{
 		String s;
 
-		s = mc.stringValue( stack.getFirst() );
+		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		double d;

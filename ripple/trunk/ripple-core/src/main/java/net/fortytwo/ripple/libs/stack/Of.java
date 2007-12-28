@@ -44,7 +44,7 @@ public class Of extends PrimitiveFunction
 
 		l = stack.getFirst();
 		stack = stack.getRest();
-		final int i = mc.intValue( stack.getFirst() );
+		final int i = mc.toNumericValue( stack.getFirst() ).intValue();
 		final RippleList rest = stack.getRest();
 
 		Sink<RippleList> listSink = new Sink<RippleList>()
@@ -69,7 +69,7 @@ public class Of extends PrimitiveFunction
 			}
 		};
 
-		mc.getLists( l, listSink );
+		mc.toList( l, listSink );
 	}
 }
 

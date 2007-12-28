@@ -42,7 +42,7 @@ public class UrlEncode extends PrimitiveFunction
 	{
 		String a, result;
 
-		a = mc.stringValue( stack.getFirst() );
+		a = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		result = StringUtils.urlEncode( a );

@@ -67,7 +67,7 @@ public class Ary extends PrimitiveFunction
 	{
 		int n;
 
-		n = mc.intValue( stack.getFirst() );
+		n = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 
 		sink.put(

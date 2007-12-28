@@ -49,7 +49,7 @@ public class Get extends PrimitiveFunction
 	{
 		String result;
 
-		String uriStr = mc.uriValue( stack.getFirst() ).toString();
+		String uriStr = mc.toUri( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
 		URLConnection urlConn;

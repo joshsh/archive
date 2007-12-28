@@ -41,7 +41,7 @@ public class Sha1 extends PrimitiveFunction
 	{
 		String a;
 
-		a = mc.stringValue( stack.getFirst() );
+		a = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 
 		sink.put( mc.list(
