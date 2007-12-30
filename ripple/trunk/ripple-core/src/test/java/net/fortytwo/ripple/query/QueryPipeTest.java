@@ -24,6 +24,7 @@ public class QueryPipeTest extends RippleTestCase
 			
 			RippleValue
 					zero = mc.value( 0 ),
+					four = mc.value( 4 ),
 					five = mc.value( 5 );
 			
 			// A simple expression.
@@ -42,6 +43,15 @@ public class QueryPipeTest extends RippleTestCase
 			expected.put( LazyEvaluatorTest.createStack( mc, zero ) );
 			LazyEvaluatorTest.assertCollectorsEqual( expected, results );
 			
+			// A branching expression.
+			results.clear();
+			qp.put( "(1 2)/each 3 /add.\n" );
+			expected.clear();
+			expected.put( LazyEvaluatorTest.createStack( mc, four ) );
+			expected.put( LazyEvaluatorTest.createStack( mc, five ) );
+			LazyEvaluatorTest.assertCollectorsEqual( expected, results );
+			
+			qp.close();
 			mc.close();
 		}
 	}

@@ -1,5 +1,6 @@
 package net.fortytwo.ripple.query;
 
+import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
@@ -24,8 +25,9 @@ public class QueryPipe implements Sink<String>
 	
 	private Interpreter interpreter;
 
-	private PipedInputStream  writeIn;
-	private PipedOutputStream readOut;
+	private PipedIOStream writeIn = new PipedIOStream();
+//	private PipedInputStream  writeIn;
+//	private PipedOutputStream readOut;
 
 	private Buffer<RippleList> resultBuffer;
 	
@@ -37,12 +39,12 @@ public class QueryPipe implements Sink<String>
 	
 	public QueryPipe( final QueryEngine queryEngine, final Sink<RippleList> resultSink ) throws RippleException
 	{
-final Sink<RippleList> tempSink = new Sink<RippleList>() {
+/*final Sink<RippleList> tempSink = new Sink<RippleList>() {
 	public void put( final RippleList l ) throws RippleException {
 		System.out.println( "received list: " + l );
 		resultBuffer.put(l);
 	}
-};
+};*/
 		resultBuffer = new Buffer<RippleList>( resultSink );
 		
 		// Handling of queries
@@ -57,7 +59,7 @@ System.out.println( "### received: " + ast );
 						? queryResultHistory.getSource( 1 ) : nilSource;
 			
 				ModelConnection mc = queryEngine.getConnection();
-				new RippleQueryCmd( ast, tempSink, composedWith ).execute( queryEngine, mc );
+				new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
 				mc.close();
 				
 				lastQueryContinued = false;
@@ -75,7 +77,7 @@ System.out.println( "### received: " + ast );
 						? queryResultHistory.getSource( 1 ) : nilSource;
 	
 				ModelConnection mc = queryEngine.getConnection();
-				new RippleQueryCmd( ast, tempSink, composedWith ).execute( queryEngine, mc );
+				new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
 				mc.close();
 				
 				lastQueryContinued = true;
@@ -109,7 +111,12 @@ System.out.println( "### received: " + ast );
 		Sink<Exception> parserExceptionSink = new ParserExceptionSink(
 				queryEngine.getErrorPrintStream() );
 		
-		writeIn = new PipedInputStream();
+/*		writeIn = new PipedInputStream();
+		try {
+			readOut = new PipedOutputStream( writeIn );
+		} catch ( IOException e ) {
+			throw new RippleException( e );
+		}*/
 		
 		// Create interpreter.
 		interpreter = new Interpreter( rc, writeIn, parserExceptionSink );
@@ -133,15 +140,27 @@ System.out.println( "### received: " + ast );
 		interpreterThread.start();
 	}
 	
+	public void close() throws RippleException
+	{
+		try
+		{
+//			readOut.close();
+			writeIn.close();
+		}
+		
+		catch ( IOException e )
+		{
+			throw new RippleException( e );
+		}
+	}
+	
 	public void put( final String expr ) throws RippleException
 	{
 		try
 		{
-			readOut = new PipedOutputStream();
-			readOut.connect( writeIn );
-			readOut.write( expr.getBytes() );
-			readOut.flush();
-			readOut.close();
+			writeIn.write( expr.getBytes() );
+//			readOut.write( expr.getBytes() );
+//			readOut.flush();
 		}
 		
 		catch ( java.io.IOException e )
@@ -152,9 +171,10 @@ System.out.println( "### received: " + ast );
 		// Wait until the interpreter thread is idle
 		do
 		{
-System.out.println( "waiting " + WAIT_INTERVAL + " milliseconds" );
+//System.out.println( "waiting " + WAIT_INTERVAL + " milliseconds" );
 			synchronized ( this )
 			{
+				// FIXME: the first wait depends on a race condition
 				try
 				{
 					wait( WAIT_INTERVAL );

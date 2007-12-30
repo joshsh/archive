@@ -919,10 +919,10 @@ public class SesameModelConnection implements ModelConnection
 		{
 			//synchronized ( model )
 			{
-System.out.println("--- z");
+//System.out.println("--- z");
 				if ( override || null == sailConnection.getNamespace( prefix ) )
 				{
-System.out.println("--- x");
+//System.out.println("--- x");
 					if ( null == ns )
 					{
 						sailConnection.removeNamespace( prefix );
@@ -930,10 +930,10 @@ System.out.println("--- x");
 					
 					else
 					{
-System.out.println("--- c");
+//System.out.println("--- c");
 						sailConnection.setNamespace( prefix, ns );
 					}
-System.out.println("--- v");
+//System.out.println("--- v");
 				}
 			}
 		}

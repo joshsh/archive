@@ -9,12 +9,15 @@
 
 package net.fortytwo.ripple.cli;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
+
+import antlr.TokenStreamIOException;
 
 public class Interpreter
 {
@@ -72,9 +75,25 @@ System.out.println( "-- antlr" );
 				break;
 			}
 
+			catch ( TokenStreamIOException e )
+			{
+				LOGGER.error( e );
+				break;
+			}
+			
 			catch ( Exception e )
 			{
-				exceptionSink.put( e );
+				/*Throwable cause = e.getCause();
+				if ( null != cause && cause instanceof IOException )
+				{
+					LOGGER.error( e );
+					break;
+				}
+				
+				else
+				{*/
+					exceptionSink.put( e );
+				//}
 			}
 
 /*

@@ -1,5 +1,6 @@
 package net.fortytwo.ripple.cli;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 import net.fortytwo.ripple.RippleException;
@@ -32,6 +33,12 @@ public class ParserExceptionSink implements Sink<Exception>
 		// Non-fatal.
 		else if ( e instanceof antlr.TokenStreamException )
 		{
+			/*Throwable cause = e.getCause();
+			if ( null != cause && cause instanceof IOException )
+			{
+				
+			}*/
+			
 			alert( "Lexer error: " + e.toString() );
 		}
 
