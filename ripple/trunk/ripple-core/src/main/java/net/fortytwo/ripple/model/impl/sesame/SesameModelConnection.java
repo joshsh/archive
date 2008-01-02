@@ -692,6 +692,33 @@ public class SesameModelConnection implements ModelConnection
 	
 	////////////////////////////////////////////////////////////////////////////
 	
+	private URI createBNodeUri( final String id ) throws RippleException
+	{
+		try
+		{
+			return valueFactory.createURI( "urn:bnode:" + id );
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+	}
+	
+	private URI createBNodeUri() throws RippleException
+	{
+		String s;
+		int c;
+		
+		do
+		{
+			s = UUID.randomUUID().toString();
+			c = s.charAt( 0 );
+		} while ( c >= 48 && c <= 57 );
+		
+		return createBNodeUri( s.replace("-", "") );
+	}
+	
 	public URI createUri( final String s ) throws RippleException
 	{
 		try
@@ -738,33 +765,45 @@ public class SesameModelConnection implements ModelConnection
 
 	public Resource createBNode() throws RippleException
 	{
-		try
+		if ( Ripple.useBlankNodes() )
 		{
-			return Ripple.useBlankNodes()
-				? valueFactory.createBNode()
-				: valueFactory.createURI( "urn:bnode:" + UUID.randomUUID().toString() );
+			try
+			{
+				return valueFactory.createBNode();
+			}
+		
+			catch ( Throwable t )
+			{
+				reset( true );
+				throw new RippleException( t );
+			}
 		}
-	
-		catch ( Throwable t )
+		
+		else
 		{
-			reset( true );
-			throw new RippleException( t );
+			return createBNodeUri();
 		}
 	}
 	
 	public Resource createBNode( final String id ) throws RippleException
 	{
-		try
+		if ( Ripple.useBlankNodes() )
 		{
-			return Ripple.useBlankNodes()
-				? valueFactory.createBNode( id )
-				: valueFactory.createURI( "urn:bnode:" + id );
+			try
+			{
+				return valueFactory.createBNode( id );
+			}
+		
+			catch ( Throwable t )
+			{
+				reset( true );
+				throw new RippleException( t );
+			}
 		}
-	
-		catch ( Throwable t )
+		
+		else
 		{
-			reset( true );
-			throw new RippleException( t );
+			return createBNodeUri( id );
 		}
 	}
 	
