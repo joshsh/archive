@@ -9,22 +9,20 @@
 
 package net.fortytwo.ripple.libs.graph;
 
-import java.net.URLConnection;
-
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.NullSink;
 import net.fortytwo.ripple.util.Sink;
 
+import org.apache.commons.httpclient.HttpMethod;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 
 /**
  * A primitive which consumes an information resource and produces a two-element
@@ -51,16 +49,20 @@ public class Namespaces extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		URI uri;
+		String uri;
 
-		uri = mc.toUri( stack.getFirst() );
+		uri = mc.toUri( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
 		SesameInputAdapter sc = createAdapter( stack, sink, mc );
 
+		HttpMethod method = HttpUtils.createGetMethod( uri );
+		HttpUtils.setRdfAcceptHeader( method );
+		RdfUtils.read( method, sc, uri, null );
+		/*
 		URLConnection uc = HttpUtils.openConnection( uri.toString() );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
-		RdfUtils.read( uc, sc, uri.toString() );
+		RdfUtils.read( uc, sc, uri.toString() );*/
 	}
 
 	private static SesameInputAdapter createAdapter( final RippleList stack,

@@ -585,8 +585,10 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 
 		catch ( RippleException e )
 		{
-			// (soft fail... don't even log the error)
-			return;
+			if ( LinkedDataSail.logFailedUris() )
+			{
+				e.logError();
+			}
 		}
 	}
 

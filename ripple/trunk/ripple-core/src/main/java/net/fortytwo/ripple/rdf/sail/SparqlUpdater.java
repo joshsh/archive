@@ -10,23 +10,24 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
-
-import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffContextFilter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSource;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.UrlFactory;
 
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
@@ -90,24 +91,34 @@ source.writeTo( sink );
 		String postData = createPostData( source );
 System.out.println( "posting update to url <" + url + ">: " + postData );
 
-try
-{
-		HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-		HttpUtils.prepareUrlConnectionForSparqlUpdate( huc );
-		OutputStream os = huc.getOutputStream();
-		PrintStream ps = new PrintStream( os );
-		ps.print( postData );
-		ps.close();
-		os.close();
+		PostMethod method = HttpUtils.createSparqlUpdateMethod( url.toString() );
+        NameValuePair[] data = {   // FIXME: is this correct?
+                new NameValuePair( HttpUtils.BODY, postData )
+              };
+		method.setRequestBody(data);
+		HttpUtils.registerMethod( method );
 
-		int responseCode = huc.getResponseCode();
+		int responseCode;
+
+		try
+		{
+	        HttpClient client = new HttpClient();
+	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
+	        		new DefaultHttpMethodRetryHandler() );
+			client.executeMethod( method );
+			
+			// ...do something with the response..
+			
+			responseCode = method.getStatusCode();
+			method.releaseConnection();
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+
 System.out.println( "response code = " + responseCode );
-}
-
-catch ( Throwable t )
-{
-	throw new RippleException( t );
-}
 	}
 
 	private static String createPostData( final RdfDiffSource source ) throws RippleException

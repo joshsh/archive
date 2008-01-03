@@ -5,7 +5,7 @@ import info.aduna.iteration.CloseableIteration;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+import java.util.Random;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -48,8 +48,8 @@ public class SesameModelConnection implements ModelConnection
 	private static final Logger LOGGER
 		= Logger.getLogger( ModelConnection.class );
 	
-	//private static Random rand = new Random();
-	
+	private Random rand = new Random();
+
 	private SesameModel model;
 	private SailConnection sailConnection;
 	private RdfDiffSink listenerSink;
@@ -704,19 +704,24 @@ public class SesameModelConnection implements ModelConnection
 			throw new RippleException( t );
 		}
 	}
-	
+		
 	private URI createBNodeUri() throws RippleException
 	{
-		String s;
-		int c;
+		// Local name will be a UUID (without the dashes).
+		byte[] bytes = new byte[32];
 		
-		do
+		// Artificially constrain the fist character to be a letter, so the
+		// local part of the URI is N3-friendly.
+		bytes[0] = (byte) ( 'a' + rand.nextInt( 5 ) );
+		
+		// Remaining characters are hexadecimal digits.
+		for ( int i = 1; i < 32; i++ )
 		{
-			s = UUID.randomUUID().toString();
-			c = s.charAt( 0 );
-		} while ( c >= 48 && c <= 57 );
+			int c = rand.nextInt( 16 );
+			bytes[i] = (byte) ( ( c > 9 ) ? c - 10 + 'a' : c + '0' );
+		}
 		
-		return createBNodeUri( s.replace("-", "") );
+		return createBNodeUri( new String( bytes ) );
 	}
 	
 	public URI createUri( final String s ) throws RippleException

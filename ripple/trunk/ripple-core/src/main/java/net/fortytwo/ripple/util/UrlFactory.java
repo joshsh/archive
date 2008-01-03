@@ -39,9 +39,16 @@ public class UrlFactory
 		map = new Hashtable<String, String>();
 	}
 
-	private URL createUrlPrivate( final String urlStr )
+	private URL createUrlPrivate( String urlStr )
 		throws RippleException
 	{
+		// Strip of the fragment identifier, if any.
+		int i = urlStr.lastIndexOf( '#' );
+		if ( i >= 0 )
+		{
+			urlStr = urlStr.substring( 0, i );
+		}
+		
 		try
 		{
 			return new URL( urlStr );

@@ -29,6 +29,8 @@ public final class Ripple
 {
 	private static boolean initialized = false;
 
+	private static RippleProperties properties;
+	
 	private static boolean allowDuplicateNamespaces;
 	private static RDFFormat cacheFormat;
 	private static boolean bufferQueryResults;
@@ -104,6 +106,8 @@ public final class Ripple
 		{
 			throw new RippleException( "unable to load default.properties" );
 		}
+		
+		properties = new RippleProperties( props );
 
 		// Command-line interface
 		bufferQueryResults = getBooleanProperty(
@@ -174,6 +178,11 @@ public final class Ripple
 			props, "net.fortytwo.ripple.query.expressionOrder", "diagrammatic" ) );
 
 		initialized = true;
+	}
+	
+	public static RippleProperties getProperties()
+	{
+		return properties;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

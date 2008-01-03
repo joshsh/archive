@@ -9,18 +9,22 @@
 
 package net.fortytwo.ripple.rdf;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.JarURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.Pointer;
 
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -75,7 +79,8 @@ public final class RdfUtils
 
 		return format;
 	}
-
+	
+	/*
 	private static RDFFormat readPrivate( final URLConnection uc,
 									final SesameInputAdapter sa,
 									final String baseUri,
@@ -98,7 +103,12 @@ public final class RdfUtils
 				if ( null == formatPtr.getRef() )
 				{
 					// This operation may hang as well.
-					formatPtr.setRef( guessRdfFormat( uc ) );
+					String contentType = uc.getContentType();
+					LOGGER.debug( "contentType = " + contentType );
+
+					String file = uc.getURL().getFile();
+					
+					formatPtr.setRef( guessRdfFormat( file, contentType ) );
 				}
 // 			}
 // 		}.start(  );
@@ -134,8 +144,9 @@ public final class RdfUtils
 		}
 
 		return formatPtr.getRef();
-	}
+	}*/
 
+	/*
 	public static RDFFormat read( final URLConnection uc,
 								final SesameInputAdapter sa,
 								final String baseUri,
@@ -151,18 +162,152 @@ public final class RdfUtils
 		throws RippleException
 	{
 		return readPrivate( uc, sa, baseUri, null );
-	}
+	}*/
 
+	public static RDFFormat read( final HttpMethod method,
+								final SesameInputAdapter sa,
+								final String baseUri,
+								RDFFormat format ) throws RippleException
+	{
+		HttpUtils.registerMethod( method );
+
+		InputStream body;
+		
+		try
+		{
+	        HttpClient client = new HttpClient();
+	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
+	        		new DefaultHttpMethodRetryHandler() );
+			client.executeMethod( method );
+	        body = method.getResponseBodyAsStream();
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+        
+        if ( null == format )
+        {
+        	format = guessRdfFormat( method.getPath(),
+        			method.getResponseHeader( HttpUtils.CONTENT_TYPE ).getValue() );
+        	
+        	if ( null == format )
+        	{
+        		// TODO: logger message?
+//System.out.println("coudn't guess format");
+        		return null;
+        	}
+        }
+        
+		read( body, sa, baseUri, format );
+		
+		try
+		{
+			body.close();
+		}
+		
+		catch ( IOException e )
+		{
+			throw new RippleException( e );
+		}
+		
+        method.releaseConnection();
+
+		return format;		
+	}
+	
 	public static RDFFormat read( final URL url,
 								final SesameInputAdapter sa,
 								final String baseUri,
-								RDFFormat format )
-		throws RippleException
+								RDFFormat format ) throws RippleException
 	{
+		String urlStr = url.toString();
+		
+		if ( urlStr.startsWith( "jar:" ) )
+		{
+			if ( null == format )
+			{
+				format = guessRdfFormat( urlStr, null );
+			}
+			
+			JarURLConnection jc;
+			InputStream is;
+			
+			try
+			{
+				jc = (JarURLConnection) url.openConnection();
+				is = jc.getInputStream();
+			}
+			
+			catch ( IOException e )
+			{
+				throw new RippleException( e );
+			}
+			
+			read( is, sa, baseUri, format );
+			
+			try
+			{
+				is.close();
+				
+				// Note: apparently it's not necessary to disconnect from a
+				// JarURLConnection.
+			}
+			
+			catch ( IOException e )
+			{
+				throw new RippleException( e );
+			}
+			
+			return format;
+		}
+		
+		else if ( urlStr.startsWith( "file:" ) )
+		{
+			if ( null == format )
+			{
+				format = guessRdfFormat( urlStr, null );
+			}
+			
+			InputStream is;
+			
+			try
+			{
+				is = new FileInputStream( urlStr.substring( 5 ) );
+			}
+			
+			catch ( IOException e )
+			{
+				throw new RippleException( e );
+			}
+			
+			read( is, sa, baseUri, format );
+			
+			try
+			{
+				is.close();
+			}
+			
+			catch ( IOException e )
+			{
+				throw new RippleException( e );
+			}
+			
+			return format;
+		}
+		
+		else
+		{
+			HttpMethod method = HttpUtils.createRdfGetMethod( url.toString() );
+			return read( method, sa, baseUri, format );
+		}
+		/*
 		URLConnection uc = HttpUtils.openConnection( url );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
 
 		return readPrivate( uc, sa, baseUri, format );
+		*/
 	}
 
 	public static RDFFormat read( final URL url,
@@ -245,7 +390,7 @@ public final class RdfUtils
 
 	// Note: examines the content type first, then the URL extension.  If all
 	//       else fails, default to RDF/XML and hope for the best.
-	public static RDFFormat guessRdfFormat( final URLConnection urlConn )
+	public static RDFFormat guessRdfFormat( final String file, final String contentType )
 	{
 /*
 System.out.println( RDFFormat.N3.getName() + ": " + RDFFormat.N3.getMIMEType() );
@@ -254,10 +399,7 @@ System.out.println( RDFFormat.RDFXML.getName() + ": " + RDFFormat.RDFXML.getMIME
 System.out.println( RDFFormat.TRIX.getName() + ": " + RDFFormat.TRIX.getMIMEType() );
 System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIMEType() );
 */
-		String contentType = urlConn.getContentType();
-		LOGGER.debug( "contentType = " + contentType );
-
-		String file = urlConn.getURL().getFile();
+//System.out.println("contentType = " + contentType);
 		String ext;
 		if ( null == file )
 		{

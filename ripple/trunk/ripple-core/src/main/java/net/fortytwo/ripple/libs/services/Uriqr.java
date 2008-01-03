@@ -28,6 +28,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -101,41 +105,38 @@ public class Uriqr extends PrimitiveFunction
 		String urlStr = "http://dev.uriqr.com/search.php?query="
 			+ StringUtils.urlEncode( s );
 
-		URLConnection uc;
-
+		String []mimeTypes = { "application/xhtml+xml", "application/xml", "text/xml" };
+		HttpMethod method = HttpUtils.createGetMethod( urlStr );
+		HttpUtils.setAcceptHeader( method, mimeTypes );
+//		uc.setConnectTimeout( (int) Ripple.urlConnectTimeout() );
+		HttpUtils.registerMethod( method );
+	
+		InputStream body;
+		
 		try
 		{
-			URL url = new URL( urlStr );
-			uc = url.openConnection();
+	        HttpClient client = new HttpClient();
+	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
+	        		new DefaultHttpMethodRetryHandler() );
+			client.executeMethod( method );
+	        body = method.getResponseBodyAsStream();
 		}
-
-		catch ( java.net.MalformedURLException e )
+		
+		catch ( Throwable t )
 		{
-			throw new RippleException( e );
+			throw new RippleException( t );
 		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		String []mimeTypes = { "application/xhtml+xml", "application/xml", "text/xml" };
-		HttpUtils.prepareUrlConnectionForRequest( uc, mimeTypes );
-		uc.setConnectTimeout( (int) Ripple.urlConnectTimeout() );
-		HttpUtils.connect( uc );
 
 		Document doc;
 
 		try
 		{
-			InputStream response = uc.getInputStream();
-
 			synchronized ( saxBuilder )
 			{
-				doc = saxBuilder.build( response );
+				doc = saxBuilder.build( body );
 			}
 
-			response.close();
+			body.close();
 		}
 
 		catch ( java.io.IOException e )
@@ -146,6 +147,16 @@ public class Uriqr extends PrimitiveFunction
 		catch ( org.jdom.JDOMException e )
 		{
 			throw new RippleException( e );
+		}
+		
+		try
+		{
+			method.releaseConnection();
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
 		}
 
 		List results = selectNodes( doc );

@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.query.commands;
 
-import java.net.URL;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -22,11 +20,6 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
-
-	import net.fortytwo.ripple.rdf.diff.RdfDiff;
-	import net.fortytwo.ripple.io.SparqlUpdater;
-	import net.fortytwo.ripple.util.Sink;
-	import org.openrdf.model.Statement;
 
 public class DefineTermCmd extends Command
 {

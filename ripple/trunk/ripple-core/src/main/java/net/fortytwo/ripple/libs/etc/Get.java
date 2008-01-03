@@ -9,19 +9,21 @@
 
 package net.fortytwo.ripple.libs.etc;
 
-import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.HttpUtils;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import java.net.URL;
-import java.net.URLConnection;
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.Sink;
+
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 /**
  * A primitive which consumes an information resource, issues a GET request for
@@ -52,33 +54,29 @@ public class Get extends PrimitiveFunction
 		String uriStr = mc.toUri( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
-		URLConnection urlConn;
+		HttpMethod method = HttpUtils.createGetMethod( uriStr );
+		HttpUtils.registerMethod( method );
+		
+		InputStream body;
+		
+		try
+		{
+	        HttpClient client = new HttpClient();
+	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
+	        		new DefaultHttpMethodRetryHandler() );
+			client.executeMethod( method );
+	        body = method.getResponseBodyAsStream();
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
 
 		try
 		{
-			URL url = new URL( uriStr );
-			urlConn = url.openConnection();
-		}
-
-		catch ( java.net.MalformedURLException e )
-		{
-			throw new RippleException( e );
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		HttpUtils.prepareUrlConnectionForTextRequest( urlConn );
-		HttpUtils.connect( urlConn );
-
-		try
-		{
-			InputStream response = urlConn.getInputStream();
-
 			BufferedReader br = new BufferedReader(
-				new InputStreamReader( response ) );
+				new InputStreamReader( body ) );
 			StringBuffer sb = new StringBuffer();
 			String nextLine = "";
 			boolean first = true;
@@ -98,7 +96,7 @@ public class Get extends PrimitiveFunction
 			}
 			result = sb.toString();
 
-			response.close();
+			body.close();
 		}
 
 		catch ( java.io.IOException e )
@@ -106,6 +104,16 @@ public class Get extends PrimitiveFunction
 			throw new RippleException( e );
 		}
 
+		try
+		{
+			method.releaseConnection();
+		}
+		
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+		
 		sink.put( mc.list( mc.value( result ), stack ) );
 	}
 }

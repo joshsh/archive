@@ -13,9 +13,11 @@ import info.aduna.iteration.CloseableIteration;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.Properties;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.RippleProperties;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UrlFactory;
 
@@ -37,8 +39,13 @@ import org.openrdf.sail.StackableSail;
  */
 public class LinkedDataSail implements StackableSail
 {
+	private static final String LOG_FAILED_URIS = "net.fortytwo.ripple.rdf.sail.logFailedUris";
+
 	private static final Logger LOGGER = Logger.getLogger( LinkedDataSail.class );
 
+	private RippleProperties properties;
+	private static boolean logFailedUris;
+	
 	private URI
 		rplCacheRoot,
 		rplCacheSuccessMemo,
@@ -56,6 +63,12 @@ public class LinkedDataSail implements StackableSail
 	public LinkedDataSail( final Sail baseSail, final UrlFactory urlFactory )
 		throws RippleException
 	{
+		if (null == properties)
+		{
+			properties = Ripple.getProperties();
+			logFailedUris = properties.getBoolean( LOG_FAILED_URIS );
+		}
+		
 		this.baseSail = baseSail;
 		this.urlFactory = urlFactory;
 
@@ -221,6 +234,11 @@ public Dereferencer getDereferencer()
 		}		
 		
 		sc.close();
+	}
+	
+	public static boolean logFailedUris()
+	{	
+		return logFailedUris;
 	}
 }
 
