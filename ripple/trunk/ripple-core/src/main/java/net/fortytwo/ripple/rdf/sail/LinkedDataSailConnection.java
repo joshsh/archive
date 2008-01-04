@@ -36,6 +36,8 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.evaluation.TripleSource;
+import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
@@ -43,7 +45,18 @@ import org.openrdf.sail.SailException;
 
 /**
  * A thread-safe SailConnection for LinkedDataSail.
+ * External objects which are assumed to be thread-safe:
+ * - the base Sail's ValueFactory
+ * - any SailConnectionListeners added to this SailConnection
+ * - the Dereferencer
+ * External objects which are not assumed to be thread-safe:
+ * - the base Sail and its SailConnections.  All operations involving the base
+ *   Sail or its connections are synchronized w.r.t. the base Sail
  */
+// TODO: implement commit() and rollback() properly
+// TODO: data synchronization between the base Sail and the Web
+// TODO: non-blocking / multithreaded SPARUL
+// TODO: cut down on excessive synchronization
 public class LinkedDataSailConnection implements SailConnection
 {
 	private static final Logger LOGGER
@@ -57,16 +70,24 @@ public class LinkedDataSailConnection implements SailConnection
 	private Set<SailConnectionListener> listeners = null;
 
 	private Dereferencer dereferencer;
+	
+	// Note: SparqlUpdater is not thread-safe, so we must synchronize all
+	//       operations involving it.
 	private SparqlUpdater sparqlUpdater;
 
 	private RdfDiffSink apiInputSink;
 
 	// Buffering input to the wrapped SailConnection avoids deadlocks.
-	private RdfDiffBuffer inputBuffer;
-	private RdfDiffSink inputSink;
+	private RdfDiffBuffer baseSailWriteBuffer;
+	private RdfDiffSink baseSailWriteSink;
 
+	private boolean dereferenceSubject = true;
+	private boolean dereferencePredicate = false;
+	private boolean dereferenceObject = false;
+	
 	////////////////////////////////////////////////////////////////////////////
 
+	// Connection listener methods are synchronized w.r.t. this SailConnection.
 	public synchronized void addConnectionListener( final SailConnectionListener listener )
 	{
 		if ( null == listeners )
@@ -77,10 +98,10 @@ public class LinkedDataSailConnection implements SailConnection
 		listeners.add( listener );
 	}
 
-	public synchronized void addStatement( final Resource subj,
-								final URI pred,
-								final Value obj,
-								final Resource... contexts )
+	public void addStatement( final Resource subj,
+							final URI pred,
+							final Value obj,
+							final Resource... contexts )
 		throws SailException
 	{
 		Sink<Statement> sink = apiInputSink.adderSink().statementSink();
@@ -90,16 +111,22 @@ public class LinkedDataSailConnection implements SailConnection
 // FIXME: both of these conditions are probably not necessary
 			if ( null == contexts || 0 == contexts.length )
 			{
-				sink.put( valueFactory.createStatement(
-					subj, pred, obj ) );
+				synchronized ( sparqlUpdater )
+				{
+					sink.put( valueFactory.createStatement(
+						subj, pred, obj ) );
+				}
 			}
 
 			else
 			{
-				for ( int i = 0; i < contexts.length; i++ )
-				{
-					sink.put( valueFactory.createStatement(
-						subj, pred, obj, contexts[i] ) );
+				synchronized ( sparqlUpdater )
+				{				
+					for ( int i = 0; i < contexts.length; i++ )
+					{
+						sink.put( valueFactory.createStatement(
+							subj, pred, obj, contexts[i] ) );
+					}
 				}
 			}
 		}
@@ -110,20 +137,24 @@ public class LinkedDataSailConnection implements SailConnection
 		}
 	}
 
-	public void clear( final Resource... contexts )
-		throws SailException
+	public void clear( final Resource... contexts )	throws SailException
 	{
-		throw new SailException( "this method is not implemented" );
+// TODO: notify the dereferencer.
+		synchronized ( baseSail )
+		{
+			baseConnection.clear( contexts );
+		}
 	}
 
-	public void clearNamespaces()
-		throws SailException
+	public void clearNamespaces() throws SailException
 	{
-		baseConnection.clearNamespaces();
+		synchronized ( baseSail )
+		{
+			baseConnection.clearNamespaces();
+		}
 	}
 
-	public void close()
-		throws SailException
+	public synchronized void close() throws SailException
 	{
 		commit();
 
@@ -137,7 +168,12 @@ public class LinkedDataSailConnection implements SailConnection
 	{
 		try
 		{
-			sparqlUpdater.flush();
+			// Note: currently this will block until all SPARUL requests have
+			//       been pushed.
+			synchronized ( sparqlUpdater )
+			{
+				sparqlUpdater.flush();
+			}
 		}
 
 		catch ( RippleException e )
@@ -148,6 +184,8 @@ public class LinkedDataSailConnection implements SailConnection
 		commitInput();
 	}
 
+	// Note: doesn't need to be synchronized, as it reduces to getStatements
+	//       calls, which are thread-safe and return thread-safe objects.
 	public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
 			final TupleExpr tupleExpr,
 			final Dataset dataset,
@@ -155,15 +193,34 @@ public class LinkedDataSailConnection implements SailConnection
 			final boolean includeInferred )
 		throws SailException
 	{
-return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
+		// Decompose queries into getStatements so we can dereference URIs.
+		try
+		{
+			TripleSource tripleSource = new SailConnectionTripleSource( this, valueFactory, includeInferred );
+			EvaluationStrategyImpl strategy = new EvaluationStrategyImpl( tripleSource, dataset );
+
+			return strategy.evaluate( tupleExpr, bindings );
+		}
+		
+		catch ( QueryEvaluationException e )
+		{
+			throw new SailException( e );
+		}
 	}
 
-	public synchronized CloseableIteration<? extends Resource, SailException> getContextIDs()
+	public CloseableIteration<? extends Resource, SailException> getContextIDs()
 		throws SailException
 	{
 		try
 		{
-			return baseConnection.getContextIDs();
+			CloseableIteration<? extends Resource, SailException> iter;
+			
+			synchronized ( baseSail )
+			{
+				iter = baseConnection.getContextIDs();
+			}
+			
+			return new ThreadSafeIteration<Resource>( iter );
 		}
 
 		catch ( SailException e )
@@ -173,13 +230,16 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		}
 	}
 
-	public synchronized String getNamespace( final String prefix )
+	public String getNamespace( final String prefix )
 		throws SailException
 	{
 		try
-		{
-			// Note: only committed namespaces will match.
-			return baseConnection.getNamespace( prefix );
+		{			
+			synchronized ( baseSail )
+			{
+				// Note: only committed namespaces will match.
+				return baseConnection.getNamespace( prefix );
+			}
 		}
 
 		catch ( SailException e )
@@ -189,13 +249,20 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		}
 	}
 
-	public synchronized CloseableIteration<? extends Namespace, SailException> getNamespaces()
+	public CloseableIteration<? extends Namespace, SailException> getNamespaces()
 		throws SailException
 	{
 		try
 		{
-			// Note: only committed namespaces will match.
-			return baseConnection.getNamespaces();
+			CloseableIteration<? extends Namespace, SailException> iter;
+
+			synchronized ( baseSail )
+			{
+				// Note: only committed namespaces will match.
+				iter = baseConnection.getNamespaces();
+			}
+			
+			return new ThreadSafeIteration<Namespace>( iter );
 		}
 
 		catch ( SailException e )
@@ -211,47 +278,39 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 			final URI pred,
 			final Value obj,
 			final boolean includeInferred,
-			final Resource... contexts )
-		throws SailException
+			final Resource... contexts ) throws SailException
 	{
-		if ( null != subj && subj instanceof URI )
-		{
-			dereference( (URI) subj );
-			commitInput();
-		}
-
-		if ( null != obj && obj instanceof URI )
-		{
-			dereference( (URI) obj );
-			commitInput();
-		}
-
+		extendClosure( subj, pred, obj );
+			
 		// Now that the new RDF data is in the local store, query it.
 //System.out.println( "getStatements(" + subj + ", " + pred + ", " + obj + ", " + includeInferred + ", " + contexts + ")" );
 //System.out.println( "    # contexts = " + contexts.length );
-		synchronized ( this )
+		try
 		{
-			try
+			CloseableIteration<? extends Statement, SailException> iter;
+			
+			synchronized ( baseSail )
 			{
-				return new StatementIteration(
-					baseConnection.getStatements(
-						subj, pred, obj, includeInferred, contexts ) );
+				iter = baseConnection.getStatements(
+					subj, pred, obj, includeInferred, contexts );
 			}
-	
-			catch ( SailException e )
-			{
-				reset( true );
-				throw e;
-			}
+			
+			return new ThreadSafeIteration<Statement>( iter );
+		}
+
+		catch ( SailException e )
+		{
+			reset( true );
+			throw e;
 		}
 	}
 
-	public boolean isOpen()
-		throws SailException
+	public boolean isOpen() throws SailException
 	{
 		return open;
 	}
 
+	// Connection listener methods are synchronized w.r.t. this SailConnection.
 	public synchronized void removeConnectionListener( final SailConnectionListener listener )
 	{
 		if ( null != listeners )
@@ -261,15 +320,18 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	}
 
 	// Note: only committed namespaces will be affected.
-	public synchronized void removeNamespace( final String prefix )
+	public void removeNamespace( final String prefix )
 		throws SailException
 	{
 		Sink<Namespace> sink = apiInputSink.subtractorSink().namespaceSink();
 
 		try
 		{
-			// Note: the URI of the Namespace shouldn't matter
-			sink.put( new NamespaceImpl( prefix, "" ) );
+			synchronized ( sparqlUpdater )
+			{
+				// Note: the URI of the Namespace shouldn't matter
+				sink.put( new NamespaceImpl( prefix, "" ) );
+			}
 		}
 
 		catch ( RippleException e )
@@ -279,7 +341,7 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	}
 
 	// Note: only committed statements will be affected.
-	public synchronized void removeStatements( final Resource subj,
+	public void removeStatements( final Resource subj,
 									final URI pred,
 									final Value obj,
 									final Resource... context )
@@ -292,16 +354,22 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 // FIXME: both of these conditions are probably not necessary
 			if ( null == context || 0 == context.length )
 			{
-				sink.put( valueFactory.createStatement(
-					subj, pred, obj ) );
+				synchronized ( sparqlUpdater )
+				{
+					sink.put( valueFactory.createStatement(
+						subj, pred, obj ) );
+				}
 			}
 
 			else
 			{
-				for ( int i = 0; i < context.length; i++ )
+				synchronized ( sparqlUpdater )
 				{
-					sink.put( valueFactory.createStatement(
-						subj, pred, obj, context[i] ) );
+					for ( int i = 0; i < context.length; i++ )
+					{
+						sink.put( valueFactory.createStatement(
+							subj, pred, obj, context[i] ) );
+					}
 				}
 			}
 		}
@@ -312,21 +380,25 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		}
 	}
 
-	public void rollback()
-		throws SailException
+	public void rollback() throws SailException
 	{
-		inputBuffer.clear();
-// TODO
+		synchronized ( baseSailWriteBuffer )
+		{
+			baseSailWriteBuffer.clear();
+		}
 	}
 
-	public synchronized void setNamespace( final String prefix, final String name )
+	public void setNamespace( final String prefix, final String name )
 		throws SailException
 	{
 		Sink<Namespace> sink = apiInputSink.adderSink().namespaceSink();
 
 		try
 		{
-			sink.put( new NamespaceImpl( prefix, name ) );
+			synchronized ( sparqlUpdater )
+			{
+				sink.put( new NamespaceImpl( prefix, name ) );
+			}
 		}
 
 		catch ( RippleException e )
@@ -335,13 +407,15 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		}
 	}
 
-	public synchronized long size( final Resource... contexts )
-		throws SailException
+	public long size( final Resource... contexts ) throws SailException
 	{
 		try
 		{
-			// Number of committed statements.
-			return baseConnection.size( contexts );
+			synchronized ( baseSail )
+			{
+				// Number of committed statements.
+				return baseConnection.size( contexts );
+			}
 		}
 
 		catch ( SailException e )
@@ -353,29 +427,29 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 
 	////////////////////////////////////////////////////////////////////////////
 
-	LinkedDataSailConnection( final Sail localStore,
-									final Dereferencer dereferencer,
-									final UrlFactory urlFactory,
-									final RdfDiffSink listenerSink )
+	LinkedDataSailConnection( final Sail baseSail,
+								final Dereferencer dereferencer,
+								final UrlFactory urlFactory,
+								final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		this.baseSail = localStore;
+		this.baseSail = baseSail;
 		this.dereferencer = dereferencer;
 
 		// Inherit the local store's ValueFactory
-		valueFactory = localStore.getValueFactory();
+		valueFactory = baseSail.getValueFactory();
 
 		openLocalStoreConnection();
 
 		SailConnectionOutputAdapter adapter
 			= new SailConnectionOutputAdapter( this );
-		inputBuffer = new RdfDiffBuffer(
+		baseSailWriteBuffer = new RdfDiffBuffer(
 			( null == listenerSink )
 				? adapter
 				: new RdfDiffTee( adapter, listenerSink ) );
-		inputSink = new SynchronizedRdfDiffSink( inputBuffer );
+		baseSailWriteSink = new SynchronizedRdfDiffSink( baseSailWriteBuffer, baseSailWriteBuffer );
 
-		sparqlUpdater = new SparqlUpdater( urlFactory, inputSink );
+		sparqlUpdater = new SparqlUpdater( urlFactory, baseSailWriteSink );
 		apiInputSink = sparqlUpdater.getSink();
 
 		open = true;
@@ -394,8 +468,10 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	{
 		try
 		{
-//wrappedConnection.commit();
-			baseConnection.setNamespace( ns.getPrefix(), ns.getName() );
+			synchronized ( baseSail )
+			{
+				baseConnection.setNamespace( ns.getPrefix(), ns.getName() );
+			}
 		}
 
 		catch ( Throwable t )
@@ -456,9 +532,12 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	{
 		try
 		{
-			// Note: removes the namespace with the given prefix,
-			// regardless of the associated URI.
-			baseConnection.removeNamespace( ns.getPrefix() );
+			synchronized ( baseSail )
+			{
+				// Note: removes the namespace with the given prefix,
+				// regardless of the associated URI.
+				baseConnection.removeNamespace( ns.getPrefix() );
+			}
 		}
 
 		catch ( Throwable t )
@@ -475,21 +554,24 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 
 		try
 		{
-			if ( null == context )
+			synchronized ( baseSail )
 			{
-				baseConnection.removeStatements(
-					st.getSubject(),
-					st.getPredicate(),
-					st.getObject() );
-			}
+				if ( null == context )
+				{
+					baseConnection.removeStatements(
+						st.getSubject(),
+						st.getPredicate(),
+						st.getObject() );
+				}
 
-			else
-			{
-				baseConnection.removeStatements(
-					st.getSubject(),
-					st.getPredicate(),
-					st.getObject(),
-					context );
+				else
+				{
+					baseConnection.removeStatements(
+						st.getSubject(),
+						st.getPredicate(),
+						st.getObject(),
+						context );
+				}
 			}
 		}
 
@@ -514,26 +596,32 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	private void openLocalStoreConnection()
 		throws SailException
 	{
-		baseConnection = baseSail.getConnection();
+		synchronized ( baseSail )
+		{
+			baseConnection = baseSail.getConnection();
+		}
 	}
 
 	private void closeLocalStoreConnection( final boolean rollback )
 		throws SailException
 	{
-		if ( baseConnection.isOpen() )
+		synchronized ( baseSail )
 		{
-			if ( rollback )
+			if ( baseConnection.isOpen() )
 			{
-				baseConnection.rollback();
+				if ( rollback )
+				{
+					baseConnection.rollback();
+				}
+	
+				baseConnection.close();
 			}
-
-			baseConnection.close();
-		}
-
-		else
-		{
-			// Don't throw an exception: we could easily end up in a loop.
-			LOGGER.error( "tried to close an already-closed connection" );
+	
+			else
+			{
+				// Don't throw an exception: we could easily end up in a loop.
+				LOGGER.error( "tried to close an already-closed connection" );
+			}
 		}
 	}
 
@@ -541,7 +629,7 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 	{
 		try
 		{
-			inputBuffer.flush();
+			baseSailWriteBuffer.flush();
 		}
 
 		catch ( RippleException e )
@@ -580,7 +668,7 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 //System.out.println( "dereferencing URI: " + uri );
 		try
 		{
-			dereferencer.dereference( uri, inputSink.adderSink() );
+			dereferencer.dereference( uri, baseSailWriteSink.adderSink() );
 		}
 
 		catch ( RippleException e )
@@ -592,18 +680,50 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		}
 	}
 
-	////////////////////////////////////////////////////////////////////////////
+	private void extendClosure( final Resource subj, final URI pred, final Value obj ) throws SailException
+	{
+		boolean changed = false;
+		
+		if ( dereferenceSubject && null != subj && subj instanceof URI )
+		{
+			dereference( (URI) subj );
+			changed = true;
+		}
 
-	private class StatementIteration implements CloseableIteration<Statement, SailException>
+		if ( dereferencePredicate && null != subj )
+		{
+			dereference( pred );
+			changed = true;
+		}
+		
+		if ( dereferenceObject && null != obj && obj instanceof URI )
+		{
+			dereference( (URI) obj );
+			changed = true;
+		}
+
+		if ( changed )
+		{
+			commitInput();
+		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * A CloseableIteration which is thread-safe with respect to the base Sail
+	 * and halts if this SailConnection is closed or throws an Exception.
+	 */
+	private class ThreadSafeIteration<T> implements CloseableIteration<T, SailException>
 	{
 		private SailConnection originalConnection;
-		private Statement next = null;
-		private CloseableIteration<? extends Statement, SailException> iter;
+		private T next = null;
+		private CloseableIteration<? extends T, SailException> wrappedIteration;
 
-		public StatementIteration(
-			final CloseableIteration<? extends Statement, SailException> iter )
+		public ThreadSafeIteration(
+			final CloseableIteration<? extends T, SailException> iter )
 		{
-			this.iter = iter;
+			this.wrappedIteration = iter;
 			originalConnection = baseConnection;
 		}
 
@@ -611,49 +731,40 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		{
 			synchronized ( baseSail )
 			{
-				if ( ok() )
-				{
-					if ( null != next )
-					{
-						return true;
-					}
-	
-					else
-					{
-						if ( iter.hasNext() )
-						{
-							next = iter.next();
-							return true;
-						}
-	
-						else
-						{
-							return false;
-						}
-					}
-				}
-	
-				else
+				if ( !ok() )
 				{
 					return false;
 				}
+				
+				if ( null != next )
+				{
+					return true;
+				}
+
+				if ( !wrappedIteration.hasNext() )
+				{
+					return false;
+				}
+				
+				next = wrappedIteration.next();
+				return true;
 			}
 		}
 	
-		public Statement next() throws SailException
+		public T next() throws SailException
 		{
 			synchronized ( baseSail )
 			{
 				if ( null != next )
 				{
-					Statement tmp = next;
+					T tmp = next;
 					next = null;
 					return tmp;
 				}
 	
 				else if ( ok() )
 				{
-					return iter.next();
+					return wrappedIteration.next();
 				}
 	
 				else
@@ -671,14 +782,14 @@ return baseConnection.evaluate( tupleExpr, dataset, bindings, includeInferred );
 		public void close() throws SailException
 		{
 			originalConnection = null;
-			iter.close();
+			wrappedIteration.close();
 		}
 
 		private boolean ok()
 		{
 			return originalConnection == baseConnection;
 		}
-	}
+	}	
 }
 
 // kate: tab-width 4

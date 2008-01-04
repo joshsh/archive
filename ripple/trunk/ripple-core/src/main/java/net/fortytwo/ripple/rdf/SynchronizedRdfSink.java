@@ -21,11 +21,11 @@ public class SynchronizedRdfSink implements RdfSink
 	private Sink<Namespace> nsSink;
 	private Sink<String> comSink;
 
-	public SynchronizedRdfSink( final RdfSink sink )
+	public SynchronizedRdfSink( final RdfSink sink, final Object synch )
 	{
-		stSink = new SynchronizedSink<Statement>( sink.statementSink() );
-		nsSink = new SynchronizedSink<Namespace>( sink.namespaceSink() );
-		comSink = new SynchronizedSink<String>( sink.commentSink() );
+		stSink = new SynchronizedSink<Statement>( sink.statementSink(), synch );
+		nsSink = new SynchronizedSink<Namespace>( sink.namespaceSink(), synch );
+		comSink = new SynchronizedSink<String>( sink.commentSink(), synch );
 	}
 
 	public Sink<Statement> statementSink()

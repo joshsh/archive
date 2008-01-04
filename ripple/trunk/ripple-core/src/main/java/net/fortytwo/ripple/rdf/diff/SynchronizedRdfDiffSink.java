@@ -16,10 +16,10 @@ public class SynchronizedRdfDiffSink implements RdfDiffSink
 {
 	private RdfSink addSink, subSink;
 
-	public SynchronizedRdfDiffSink( final RdfDiffSink sink )
+	public SynchronizedRdfDiffSink( final RdfDiffSink sink, final Object synch )
 	{
-		addSink = new SynchronizedRdfSink( sink.adderSink() );
-		subSink = new SynchronizedRdfSink( sink.subtractorSink() );
+		addSink = new SynchronizedRdfSink( sink.adderSink(), synch );
+		subSink = new SynchronizedRdfSink( sink.subtractorSink(), synch );
 	}
 
 	public RdfSink adderSink()

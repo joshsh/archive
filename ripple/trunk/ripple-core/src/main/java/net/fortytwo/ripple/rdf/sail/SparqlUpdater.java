@@ -32,6 +32,10 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
 
+/**
+ * Note: this class is not thread-safe.
+ * @author josh
+ */
 public class SparqlUpdater
 {
 	private RdfDiffContextFilter contextFilter;
