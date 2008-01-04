@@ -20,6 +20,12 @@ public interface Function
 	*/
 	int arity();
 
+	/**
+	 * @return whether this function is referentially transparent w.r.t. all of its
+	 * parameters.
+	 */
+	boolean isTransparent();
+	
 	void applyTo( RippleList stack,
 					Sink<RippleList> sink,
 					ModelConnection mc )

@@ -23,7 +23,6 @@ import net.fortytwo.ripple.util.HttpUtils;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
@@ -79,90 +78,6 @@ public final class RdfUtils
 
 		return format;
 	}
-	
-	/*
-	private static RDFFormat readPrivate( final URLConnection uc,
-									final SesameInputAdapter sa,
-									final String baseUri,
-									final RDFFormat format )
-		throws RippleException
-	{
-		final Pointer<RDFFormat> formatPtr = new Pointer<RDFFormat>();
-		formatPtr.setRef( format );
-
-		// Don't wait indefinitely for a connection.
-		// Note: this timeout applies only to the establishment of a connection.
-		//       A document may take arbitrarily long to retrieve and parse.
-		uc.setConnectTimeout( (int) Ripple.urlConnectTimeout() );
-		HttpUtils.connect( uc );
-
-// 		new ThreadWrapper( "for RDFFormat readPrivate" )
-// 		{
-// 			protected void run() throws RippleException
-// 			{
-				if ( null == formatPtr.getRef() )
-				{
-					// This operation may hang as well.
-					String contentType = uc.getContentType();
-					LOGGER.debug( "contentType = " + contentType );
-
-					String file = uc.getURL().getFile();
-					
-					formatPtr.setRef( guessRdfFormat( file, contentType ) );
-				}
-// 			}
-// 		}.start(  );
-
-		if ( null == formatPtr.getRef() )
-		{
-			// Soft fail (possibly too soft?)
-			return null;
-		}
-
-		InputStream response;
-
-		try
-		{
-			response = uc.getInputStream();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		read( response, sa, baseUri, formatPtr.getRef() );
-
-		try
-		{
-			response.close();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		return formatPtr.getRef();
-	}*/
-
-	/*
-	public static RDFFormat read( final URLConnection uc,
-								final SesameInputAdapter sa,
-								final String baseUri,
-								final RDFFormat format )
-		throws RippleException
-	{
-		return readPrivate( uc, sa, baseUri, format );
-	}
-
-	public static RDFFormat read( final URLConnection uc,
-								final SesameInputAdapter sa,
-								final String baseUri )
-		throws RippleException
-	{
-		return readPrivate( uc, sa, baseUri, null );
-	}*/
 
 	public static RDFFormat read( final HttpMethod method,
 								final SesameInputAdapter sa,

@@ -49,6 +49,11 @@ public class ListDequotation implements Function
 			sink.put( out );
 		}
 	}
+	
+	public boolean isTransparent()
+	{
+		return true;
+	}
 }
 
 // kate: tab-width 4

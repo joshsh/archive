@@ -28,6 +28,11 @@ public class NullFilter implements Function
 		throws RippleException
 	{
 	}
+	
+	public boolean isTransparent()
+	{
+		return true;
+	}
 }
 
 // kate: tab-width 4

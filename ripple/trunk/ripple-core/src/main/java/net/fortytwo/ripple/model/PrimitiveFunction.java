@@ -16,9 +16,16 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 {
 	private RdfValue rdfEquivalent = null;
 //	private FunctionTypeAnnotation typeAnnotation = null;
+	private boolean transparent;
 
+	public PrimitiveFunction( final boolean transparent )
+	{
+		this.transparent = transparent;
+	}
+	
 	public PrimitiveFunction()
 	{
+		transparent = true;
 	}
 
 	public PrimitiveFunction( final RdfValue v, final ModelConnection mc )
@@ -88,6 +95,11 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 		{
 			return this.getClass().getName().compareTo( other.getClass().getName() );
 		}
+	}
+	
+	public boolean isTransparent()
+	{
+		return transparent;
 	}
 }
 

@@ -77,6 +77,11 @@ public class Op implements Function, RippleValue
 		System.exit( 1 );
 		return true;
 	}
+	
+	public boolean isTransparent()
+	{
+		return true;
+	}
 }
 
 // kate: tab-width 4

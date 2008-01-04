@@ -58,6 +58,11 @@ public class Ary extends PrimitiveFunction
 		{
 			sink.put( stack );
 		}
+		
+		public boolean isTransparent()
+		{
+			return true;
+		}
 	}
 
 	public void applyTo( RippleList stack,

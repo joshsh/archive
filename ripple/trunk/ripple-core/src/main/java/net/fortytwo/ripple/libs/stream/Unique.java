@@ -79,6 +79,11 @@ public class Unique extends PrimitiveFunction
 				sink.put( stack );
 			}
 		}
+		
+		public boolean isTransparent()
+		{
+			return true;
+		}
 	}
 }
 

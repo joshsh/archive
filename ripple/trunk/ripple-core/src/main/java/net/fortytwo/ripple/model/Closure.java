@@ -38,6 +38,11 @@ public class Closure implements Function
 	{
 		innerFunction.applyTo( mc.list( argument, stack ), sink,  mc );
 	}
+	
+	public boolean isTransparent()
+	{
+		return innerFunction.isTransparent();
+	}
 }
 
 // kate: tab-width 4

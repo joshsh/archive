@@ -24,6 +24,11 @@ public abstract class Evaluator implements Function
 	}
 
 	public abstract void stop();
+	
+	public boolean isTransparent()
+	{
+		return true;
+	}
 }
 
 // kate: tab-width 4

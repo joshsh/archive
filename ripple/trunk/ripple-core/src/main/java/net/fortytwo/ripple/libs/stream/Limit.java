@@ -80,6 +80,11 @@ public class Limit extends PrimitiveFunction
 				sink.put( stack );
 			}
 		}
+		
+		public boolean isTransparent()
+		{
+			return true;
+		}
 	}
 }
 

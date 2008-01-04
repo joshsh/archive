@@ -66,6 +66,11 @@ public class RdfPredicateFunction implements Function
 			mc.multiply( first.toRdf( mc ), pred, querySink, includeInferred );
 		}
 	}
+	
+	public boolean isTransparent()
+	{
+		return true;
+	}
 }
 
 // kate: tab-width 4
