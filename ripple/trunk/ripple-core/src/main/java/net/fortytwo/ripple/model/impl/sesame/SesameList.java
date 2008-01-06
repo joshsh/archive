@@ -173,23 +173,6 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			sink.put( (RippleList) v );
 		}
 
-/* TODO
-		// Towards a more general notion of lists...
-		else
-		{
-			Sink<Operator> opSink = new Sink<Operator>()
-			{
-				public void put( final Operator op )
-					throws RippleException
-				{
-					sink.put( mc.list( op ) );
-				}
-			};
-
-			Operator.createOperator( v, opSink, mc );
-		}
-*/
-
 		// If the argument is an RDF value, try to convert it to a native list.
 		else if ( v instanceof RdfValue )
 		{
@@ -218,13 +201,42 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			}
 		}
 
+		// Towards a more general notion of lists
+		else
+		{
+			createConceptualList( v, sink, mc );
+		}
+
+		/*
 		// Otherwise, fail.
 		else
 		{
 			throw new RippleException( "expecting " + RippleList.class + ", found " + v );
-		}
+		}*/
 	}
 
+// TODO: find a better name
+	private static void createConceptualList( final RippleValue head,
+											final Sink<RippleList> sink,
+											final ModelConnection mc )
+		throws RippleException
+	{
+		/*
+		Sink<Operator> opSink = new Sink<Operator>()
+		{
+			public void put( final Operator op )
+				throws RippleException
+			{
+				sink.put( mc.list( op ) );
+			}
+		};
+
+		Operator.createOperator( head, opSink, mc );
+		*/
+		
+		sink.put( new SesameList( Operator.OP ).push( head ) );
+	}
+	
 // TODO: handle circular lists and other convergent structures 
 	private static void createList( final RippleValue head,
 									final Sink<RippleList> sink,
@@ -282,7 +294,16 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			};*/
 
 			mc.multiply( head, RDF_FIRST, firstValues, false );
-			mc.multiply( head, RDF_REST, rdfRestSink, false );
+			
+			if ( firstValues.size() > 0 || head.toRdf( mc ).getRdfValue().equals( RDF.NIL ) )
+			{
+				mc.multiply( head, RDF_REST, rdfRestSink, false );
+			}
+			
+			else
+			{
+				createConceptualList( head, sink, mc );
+			}
 		}
 	}
 
