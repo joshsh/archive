@@ -13,7 +13,7 @@ import net.fortytwo.ripple.control.Task;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.NumericLiteral;
+import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
@@ -260,17 +260,17 @@ public class SesameModelConnection implements ModelConnection
 		return label.equals( "true" );
 	}
 	
-	public NumericLiteral toNumericValue( final RippleValue rv )
+	public NumericValue toNumericValue( final RippleValue rv )
 		throws RippleException
 	{
-		if ( rv instanceof NumericLiteral )
+		if ( rv instanceof NumericValue )
 		{
-			return (NumericLiteral) rv;
+			return (NumericValue) rv;
 		}
 	
 		else
 		{
-			return new NumericLiteralImpl( rv.toRdf( this ) );
+			return new SesameNumericValue( rv.toRdf( this ) );
 		}
 	}
 	
@@ -935,22 +935,22 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public NumericLiteral value( final int i )
+	public NumericValue value( final int i )
 		throws RippleException
 	{
-		return new NumericLiteralImpl( i );
+		return new SesameNumericValue( i );
 	}
 	
-	public NumericLiteral value( final long l )
+	public NumericValue value( final long l )
 		throws RippleException
 	{
-		return new NumericLiteralImpl( l );
+		return new SesameNumericValue( l );
 	}
 	
-	public NumericLiteral value( final double d )
+	public NumericValue value( final double d )
 		throws RippleException
 	{
-		return new NumericLiteralImpl( d );
+		return new SesameNumericValue( d );
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

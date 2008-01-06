@@ -9,18 +9,16 @@
 
 package net.fortytwo.ripple.cli;
 
+import java.util.Iterator;
+
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
-
-import java.util.Iterator;
 
 public class TurtleView implements Sink<RippleList>
 {
@@ -67,13 +65,16 @@ public class TurtleView implements Sink<RippleList>
 			int predCount = 0,
 				predlim = Ripple.resultViewMaxPredicates(),
 				objlim = Ripple.resultViewMaxObjects();
-	
+
 			for ( Iterator<RippleValue> predIter = predicates.iterator();
 				predIter.hasNext(); )
 			{
 				ps.print( INDENT );
 	
-				if ( ++predCount > predlim )
+				// Stop after predlim predicates have been displayed, unless
+				// predlim < 0, which indicates an unlimited number of
+				// predicates.
+				if ( predlim >= 0 && ++predCount > predlim )
 				{
 					ps.print( "[...]\n" );
 					break;
@@ -85,6 +86,7 @@ public class TurtleView implements Sink<RippleList>
 	
 				Collector<RippleValue> objects = new Collector<RippleValue>();
 				mc.multiply( first, predicate, objects, Ripple.useInference() );
+				
 				int objCount = 0;
 	
 				for ( Iterator<RippleValue> objIter = objects.iterator();
@@ -93,7 +95,10 @@ public class TurtleView implements Sink<RippleList>
 					ps.print( INDENT );
 					ps.print( INDENT );
 	
-					if ( ++objCount > objlim )
+					// Stop after objlim objects have been displayed, unless
+					// objlim < 0, which indicates an unlimited number of
+					// objects.
+					if ( objlim >= 0 && ++objCount > objlim )
 					{
 						ps.print( "[...]\n" );
 						break;

@@ -9,7 +9,7 @@
 
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.model.impl.sesame.NumericLiteralImpl;
+import net.fortytwo.ripple.model.impl.sesame.SesameNumericValue;
 import net.fortytwo.ripple.test.RippleTestCase;
 
 public class NumericLiteralTest extends RippleTestCase
@@ -19,19 +19,19 @@ public class NumericLiteralTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			NumericLiteral
-				intLit = new NumericLiteralImpl( 5 ),
-				doubleLit = new NumericLiteralImpl( 3.1415926 );
+			NumericValue
+				intLit = new SesameNumericValue( 5 ),
+				doubleLit = new SesameNumericValue( 3.1415926 );
 
-			assertEquals( intLit.getType(), NumericLiteral.NumericLiteralType.INTEGER );
-			assertEquals( doubleLit.getType(), NumericLiteral.NumericLiteralType.DOUBLE );
+			assertEquals( intLit.getType(), NumericValue.NumericLiteralType.INTEGER );
+			assertEquals( doubleLit.getType(), NumericValue.NumericLiteralType.DOUBLE );
 
 			assertEquals(
 				intLit.abs().getType(),
-				NumericLiteral.NumericLiteralType.INTEGER );
+				NumericValue.NumericLiteralType.INTEGER );
 			assertEquals(
 				doubleLit.abs().getType(),
-				NumericLiteral.NumericLiteralType.DOUBLE );
+				NumericValue.NumericLiteralType.DOUBLE );
 
 			/*
 			assertEquals(
@@ -127,27 +127,27 @@ public class NumericLiteralTest extends RippleTestCase
 			throws Exception
 		{
 			// int == int
-			assertEquals( new NumericLiteralImpl( 1 ), new NumericLiteralImpl( 1 ) );
-			assertEquals( new NumericLiteralImpl( -1 ), new NumericLiteralImpl( -1 ) );
-			assertEquals( new NumericLiteralImpl( 0 ), new NumericLiteralImpl( 0 ) );
+			assertEquals( new SesameNumericValue( 1 ), new SesameNumericValue( 1 ) );
+			assertEquals( new SesameNumericValue( -1 ), new SesameNumericValue( -1 ) );
+			assertEquals( new SesameNumericValue( 0 ), new SesameNumericValue( 0 ) );
 			
 			// long == long
-			assertEquals( new NumericLiteralImpl( 1l ), new NumericLiteralImpl( 1l ) );
-			assertEquals( new NumericLiteralImpl( -1l ), new NumericLiteralImpl( -1l ) );
-			assertEquals( new NumericLiteralImpl( 0l ), new NumericLiteralImpl( 0l ) );
+			assertEquals( new SesameNumericValue( 1l ), new SesameNumericValue( 1l ) );
+			assertEquals( new SesameNumericValue( -1l ), new SesameNumericValue( -1l ) );
+			assertEquals( new SesameNumericValue( 0l ), new SesameNumericValue( 0l ) );
 			
 			// double == double
-			assertEquals( new NumericLiteralImpl( 1.0 ), new NumericLiteralImpl( 1.0 ) );
-			assertEquals( new NumericLiteralImpl( -1.0 ), new NumericLiteralImpl( -1.0 ) );
-			assertEquals( new NumericLiteralImpl( 0.0 ), new NumericLiteralImpl( 0.0 ) );
+			assertEquals( new SesameNumericValue( 1.0 ), new SesameNumericValue( 1.0 ) );
+			assertEquals( new SesameNumericValue( -1.0 ), new SesameNumericValue( -1.0 ) );
+			assertEquals( new SesameNumericValue( 0.0 ), new SesameNumericValue( 0.0 ) );
 			
 			// mixed comparisons
-			assertEquals( new NumericLiteralImpl( 1 ), new NumericLiteralImpl( 1l ) );
-			assertEquals( new NumericLiteralImpl( 1 ), new NumericLiteralImpl( 1.0 ) );
-			assertEquals( new NumericLiteralImpl( 1l ), new NumericLiteralImpl( 1 ) );
-			assertEquals( new NumericLiteralImpl( 1l ), new NumericLiteralImpl( 1.0 ) );
-			assertEquals( new NumericLiteralImpl( 1.0 ), new NumericLiteralImpl( 1 ) );
-			assertEquals( new NumericLiteralImpl( 1.0 ), new NumericLiteralImpl( 1l ) );			
+			assertEquals( new SesameNumericValue( 1 ), new SesameNumericValue( 1l ) );
+			assertEquals( new SesameNumericValue( 1 ), new SesameNumericValue( 1.0 ) );
+			assertEquals( new SesameNumericValue( 1l ), new SesameNumericValue( 1 ) );
+			assertEquals( new SesameNumericValue( 1l ), new SesameNumericValue( 1.0 ) );
+			assertEquals( new SesameNumericValue( 1.0 ), new SesameNumericValue( 1 ) );
+			assertEquals( new SesameNumericValue( 1.0 ), new SesameNumericValue( 1l ) );			
 		}
 	}
 

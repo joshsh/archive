@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.NumericLiteral;
+import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
@@ -41,7 +41,7 @@ public class Log extends PrimitiveFunction
 		throws RippleException
 	{
 		double a;
-		NumericLiteral result;
+		NumericValue result;
 
 		a = mc.toNumericValue( stack.getFirst() ).doubleValue();
 		stack = stack.getRest();

@@ -38,7 +38,7 @@ public interface ModelConnection
 	void commit() throws RippleException;
 
 	boolean toBoolean( RippleValue v ) throws RippleException;
-	NumericLiteral toNumericValue( RippleValue v )	throws RippleException;
+	NumericValue toNumericValue( RippleValue v )	throws RippleException;
 	String toString( RippleValue v ) throws RippleException;
 	URI toUri( RippleValue v ) throws RippleException;
 	void toList( RippleValue v, Sink<RippleList> sink ) throws RippleException;
@@ -84,9 +84,9 @@ public interface ModelConnection
 // FIXME: this should use an implementation-independent URI class
 	RippleValue value( String s, URI dataType ) throws RippleException;
 	RippleValue value( boolean b ) throws RippleException;
-	NumericLiteral value( int i ) throws RippleException;
-	NumericLiteral value( long l ) throws RippleException;
-	NumericLiteral value( double d ) throws RippleException;
+	NumericValue value( int i ) throws RippleException;
+	NumericValue value( long l ) throws RippleException;
+	NumericValue value( double d ) throws RippleException;
 // FIXME: this should use an implementation-independent URI class
 	RippleValue value( URI uri );
 	

@@ -151,16 +151,16 @@ public class QueryEngine
 								final ModelConnection mc )
 		throws RippleException
 	{
-		URI v = lexicon.uriForQName( nsPrefix, localName, mc );
+		String ns = lexicon.resolveNamespacePrefix( nsPrefix );
 
-		if ( null == v )
+		if ( null == ns )
 		{
-			errorPrintStream.println( "Warning: " + nsPrefix + ":" + localName + " is undefined\n" );
+			errorPrintStream.println( "Warning: prefix '" + nsPrefix + "' does not identify a namespace\n" );
 		}
 
 		else
 		{
-			sink.put( mc.value( v ) );
+			sink.put( mc.value( mc.createUri( ns + localName ) ) );
 		}
 	}
 

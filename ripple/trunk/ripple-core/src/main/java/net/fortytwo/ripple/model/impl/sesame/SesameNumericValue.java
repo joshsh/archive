@@ -7,32 +7,32 @@ import org.openrdf.model.vocabulary.XMLSchema;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.NumericLiteral;
+import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.RdfValue;
 
-public class NumericLiteralImpl extends NumericLiteral {
+public class SesameNumericValue extends NumericValue {
 
 	private RdfValue rdfEquivalent = null;
 
-	public NumericLiteralImpl( final int i )
+	public SesameNumericValue( final int i )
 	{
 		type = NumericLiteralType.INTEGER;
 		number = new Integer( i );
 	}
 	
-	public NumericLiteralImpl( final long l )
+	public SesameNumericValue( final long l )
 	{
 		type = NumericLiteralType.LONG;
 		number = new Long( l );
 	}
 	
-	public NumericLiteralImpl( final double d )
+	public SesameNumericValue( final double d )
 	{
 		type = NumericLiteralType.DOUBLE;
 		number = new Double( d );
 	}
 	
-	public NumericLiteralImpl( final RdfValue rdf )
+	public SesameNumericValue( final RdfValue rdf )
 		throws RippleException
 	{
 		rdfEquivalent = rdf;
@@ -122,168 +122,168 @@ public class NumericLiteralImpl extends NumericLiteral {
 		return rdfEquivalent;
 	}
 	
-	public NumericLiteral abs()
+	public NumericValue abs()
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 		
 		if ( NumericLiteralType.INTEGER == a.getType() )
 		{
-			return new NumericLiteralImpl( Math.abs( a.intValue() ) );
+			return new SesameNumericValue( Math.abs( a.intValue() ) );
 		}
 
 		else if ( NumericLiteralType.LONG == a.getType() )
 		{
-			return new NumericLiteralImpl( Math.abs( a.longValue() ) );
+			return new SesameNumericValue( Math.abs( a.longValue() ) );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( Math.abs( a.doubleValue() ) );
+			return new SesameNumericValue( Math.abs( a.doubleValue() ) );
 		}
 	}
 
-	public NumericLiteral neg()
+	public NumericValue neg()
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		if ( NumericLiteralType.INTEGER == a.getType() )
 		{
-			return new NumericLiteralImpl( -a.intValue() );
+			return new SesameNumericValue( -a.intValue() );
 		}
 
 		else if ( NumericLiteralType.LONG == a.getType() )
 		{
-			return new NumericLiteralImpl( -a.longValue() );
+			return new SesameNumericValue( -a.longValue() );
 		}
 		
 		else
 		{
 			// Note: avoids negative zero.
-			return new NumericLiteralImpl( 0.0 - a.doubleValue() );
+			return new SesameNumericValue( 0.0 - a.doubleValue() );
 		}
 	}
 
-	public NumericLiteral add( final NumericLiteral b )
+	public NumericValue add( final NumericValue b )
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		if ( NumericLiteralType.INTEGER == a.getType() && NumericLiteralType.INTEGER == b.getType() )
 		{
-			return new NumericLiteralImpl( a.intValue() + b.intValue() );
+			return new SesameNumericValue( a.intValue() + b.intValue() );
 		}
 
 		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
-			return new NumericLiteralImpl( a.longValue() + b.longValue() );
+			return new SesameNumericValue( a.longValue() + b.longValue() );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( a.doubleValue() + b.doubleValue() );
+			return new SesameNumericValue( a.doubleValue() + b.doubleValue() );
 		}
 	}
 
-	public NumericLiteral sub( final NumericLiteral b )
+	public NumericValue sub( final NumericValue b )
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		if ( NumericLiteralType.INTEGER == a.getType() && NumericLiteralType.INTEGER == b.getType() )
 		{
-			return new NumericLiteralImpl( a.intValue() - b.intValue() );
+			return new SesameNumericValue( a.intValue() - b.intValue() );
 		}
 
 		else if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
-			return new NumericLiteralImpl( a.longValue() - b.longValue() );
+			return new SesameNumericValue( a.longValue() - b.longValue() );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( a.doubleValue() - b.doubleValue() );
+			return new SesameNumericValue( a.doubleValue() - b.doubleValue() );
 		}
 	}
 
-	public NumericLiteral mul( final NumericLiteral b )
+	public NumericValue mul( final NumericValue b )
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		if ( NumericLiteralType.INTEGER == a.getType() && NumericLiteralType.INTEGER == b.getType() )
 		{
-			return new NumericLiteralImpl( a.intValue() * b.intValue() );
+			return new SesameNumericValue( a.intValue() * b.intValue() );
 		}
 
 		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
-			return new NumericLiteralImpl( a.longValue() * b.longValue() );
+			return new SesameNumericValue( a.longValue() * b.longValue() );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( a.doubleValue() * b.doubleValue() );
+			return new SesameNumericValue( a.doubleValue() * b.doubleValue() );
 		}
 	}
 
 	// Note: does not check for divide-by-zero.
-	public NumericLiteral div( final NumericLiteral b )
+	public NumericValue div( final NumericValue b )
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		if ( NumericLiteralType.INTEGER == a.getType() && NumericLiteralType.INTEGER == b.getType() )
 		{
-			return new NumericLiteralImpl( a.intValue() / b.intValue() );
+			return new SesameNumericValue( a.intValue() / b.intValue() );
 		}
 
 		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
-			return new NumericLiteralImpl( a.longValue() / b.longValue() );
+			return new SesameNumericValue( a.longValue() / b.longValue() );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( a.doubleValue() / b.doubleValue() );
+			return new SesameNumericValue( a.doubleValue() / b.doubleValue() );
 		}
 	}
 
 	// Note: does not check for divide-by-zero.
-	public NumericLiteral mod( final NumericLiteral b )
+	public NumericValue mod( final NumericValue b )
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		if ( NumericLiteralType.INTEGER == a.getType() && NumericLiteralType.INTEGER == b.getType() )
 		{
-			return new NumericLiteralImpl( a.intValue() % b.intValue() );
+			return new SesameNumericValue( a.intValue() % b.intValue() );
 		}
 
 		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
-			return new NumericLiteralImpl( a.longValue() % b.longValue() );
+			return new SesameNumericValue( a.longValue() % b.longValue() );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( a.doubleValue() % b.doubleValue() );
+			return new SesameNumericValue( a.doubleValue() % b.doubleValue() );
 		}
 	}
 
-	public NumericLiteral pow( final NumericLiteral pow )
+	public NumericValue pow( final NumericValue pow )
 	{
-		NumericLiteral a = this;
+		NumericValue a = this;
 
 		double r = Math.pow( a.doubleValue(), pow.doubleValue() );
 
 		if ( NumericLiteralType.INTEGER == a.getType() && NumericLiteralType.INTEGER == pow.getType() )
 		{
-			return new NumericLiteralImpl( (int) r );
+			return new SesameNumericValue( (int) r );
 		}
 
 		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == pow.getType() )
 		{
-			return new NumericLiteralImpl( (long) r );
+			return new SesameNumericValue( (long) r );
 		}
 		
 		else
 		{
-			return new NumericLiteralImpl( r );
+			return new SesameNumericValue( r );
 		}
 	}
 }

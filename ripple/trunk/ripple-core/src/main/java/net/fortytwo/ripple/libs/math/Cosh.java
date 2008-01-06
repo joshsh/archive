@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.NumericLiteral;
+import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
@@ -39,7 +39,7 @@ public class Cosh extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		NumericLiteral a, result;
+		NumericValue a, result;
 
 		a = mc.toNumericValue( stack.getFirst() );
 		stack = stack.getRest();

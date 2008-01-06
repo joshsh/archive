@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import net.fortytwo.ripple.model.impl.sesame.NumericLiteralImpl;
+import net.fortytwo.ripple.model.impl.sesame.SesameNumericValue;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.FileUtils;
 
@@ -37,48 +37,48 @@ public class ModelTest extends RippleTestCase
 		{
 			Model model = getTestModel();
 			ModelConnection mc = model.getConnection( "for NumericLiteralTest" );
-			NumericLiteral l;
+			NumericValue l;
 			
 			// Create an integer literal.
 			l = mc.value( 42 );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.INTEGER, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.INTEGER, l.getType() );
 			assertEquals( 42, l.intValue() );
 			l = mc.value( 0 );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.INTEGER, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.INTEGER, l.getType() );
 			assertEquals( 0, l.intValue() );
 			l = mc.value( -42 );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.INTEGER, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.INTEGER, l.getType() );
 			assertEquals( -42, l.intValue() );
 
 			// Create a long literal.
 			l = mc.value( 42l );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.LONG, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.LONG, l.getType() );
 			assertEquals( 42l, l.longValue() );
 			l = mc.value( 0l );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.LONG, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.LONG, l.getType() );
 			assertEquals( 0l, l.longValue() );
 			l = mc.value( -42l );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.LONG, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.LONG, l.getType() );
 			assertEquals( -42l, l.longValue() );
 			
 			// Create a double literal
 			l = mc.value( 42.0 );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.DOUBLE, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.DOUBLE, l.getType() );
 			assertEquals( 42.0, l.doubleValue() );
 			l = mc.value( 0.0 );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.DOUBLE, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.DOUBLE, l.getType() );
 			assertEquals( 0.0, l.doubleValue() );
 			l = mc.value( -42.0 );
-			assertTrue( l instanceof NumericLiteral );
-			assertEquals( NumericLiteral.NumericLiteralType.DOUBLE, l.getType() );
+			assertTrue( l instanceof NumericValue );
+			assertEquals( NumericValue.NumericLiteralType.DOUBLE, l.getType() );
 			assertEquals( -42.0, l.doubleValue() );
 			
 			InputStream is = ModelTest.class.getResourceAsStream( "numericLiteralTest.txt" );
@@ -102,7 +102,7 @@ public class ModelTest extends RippleTestCase
 				String func = tokenizer.nextToken();
 				String signature = func + "(";
 				int argv = argsForFunc.get( func );
-				NumericLiteral[] args = new NumericLiteral[argv];
+				NumericValue[] args = new NumericValue[argv];
 				for ( int i = 0; i < argv; i++)
 				{
 					String s = tokenizer.nextToken();
@@ -118,8 +118,8 @@ public class ModelTest extends RippleTestCase
 				// Skip the '=' token
 				tokenizer.nextToken();
 				
-				NumericLiteral correctResult = createNumericLiteral( tokenizer.nextToken() );
-				NumericLiteral actualResult = null;
+				NumericValue correctResult = createNumericLiteral( tokenizer.nextToken() );
+				NumericValue actualResult = null;
 
 				Throwable thrown = null;
 				
@@ -183,15 +183,15 @@ public class ModelTest extends RippleTestCase
 					switch ( correctResult.getType() )
 					{
 					case INTEGER:
-						assertEquals( "for case " + signature, NumericLiteral.NumericLiteralType.INTEGER, actualResult.getType() );
+						assertEquals( "for case " + signature, NumericValue.NumericLiteralType.INTEGER, actualResult.getType() );
 						assertEquals( "for case " + signature, correctResult.intValue(), actualResult.intValue() );
 						break;
 					case LONG:
-						assertEquals( "for case " + signature, NumericLiteral.NumericLiteralType.LONG, actualResult.getType() );
+						assertEquals( "for case " + signature, NumericValue.NumericLiteralType.LONG, actualResult.getType() );
 						assertEquals( "for case " + signature, correctResult.longValue(), actualResult.longValue() );
 						break;
 					case DOUBLE:
-						assertEquals( "for case " + signature, NumericLiteral.NumericLiteralType.DOUBLE, actualResult.getType() );
+						assertEquals( "for case " + signature, NumericValue.NumericLiteralType.DOUBLE, actualResult.getType() );
 						assertEquals( "for case " + signature, correctResult.longValue(), actualResult.longValue() );
 						break;
 					}
@@ -211,9 +211,9 @@ public class ModelTest extends RippleTestCase
 			mc.close();
 		}
 		
-		private NumericLiteral createNumericLiteral( final String s )
+		private NumericValue createNumericLiteral( final String s )
 		{
-			NumericLiteral l;
+			NumericValue l;
 			
 			if ( s.equals( "error" ) )
 			{
@@ -222,22 +222,22 @@ public class ModelTest extends RippleTestCase
 			
 			else if ( s.equals( "infinity") )
 			{
-				l = new NumericLiteralImpl( Double.POSITIVE_INFINITY );
+				l = new SesameNumericValue( Double.POSITIVE_INFINITY );
 			}
 			
 			else if ( s.contains( "l" ) )
 			{
-				l = new NumericLiteralImpl( new Long( s.substring( 0, s.length() - 1 ) ).longValue() );
+				l = new SesameNumericValue( new Long( s.substring( 0, s.length() - 1 ) ).longValue() );
 			}
 			
 			else if ( s.contains( "." ) )
 			{
-				l = new NumericLiteralImpl( new Double( s ).doubleValue() );
+				l = new SesameNumericValue( new Double( s ).doubleValue() );
 			}
 			
 			else
 			{
-				l = new NumericLiteralImpl( new Integer( s ).intValue() );
+				l = new SesameNumericValue( new Integer( s ).intValue() );
 			}
 			
 			return l;

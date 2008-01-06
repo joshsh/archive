@@ -99,21 +99,6 @@ public class Lexicon
 			: result;
 	}
 
-	/**
-	*  Note: <code>nsPrefix</code> must be the prefix of a defined namespace.
-	*  <code>localName</code> is unconstrained.
-	*/
-	public URI uriForQName( final String nsPrefix,
-							final String localName,
-							final ModelConnection mc ) throws RippleException
-	{
-		String ns = resolveNamespacePrefix( nsPrefix );
-
-		return ( null == ns )
-			? null
-			: mc.createUri( ns, localName );
-	}
-
 	public String resolveNamespacePrefix( final String nsPrefix )
 	{
 		return prefixToNamespaceMap.get( nsPrefix );

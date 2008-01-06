@@ -11,7 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.model.impl.sesame.NumericLiteralImpl;
+import net.fortytwo.ripple.model.impl.sesame.SesameNumericValue;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -21,7 +21,7 @@ import org.openrdf.model.vocabulary.XMLSchema;
 /**
  * A numeric (xsd:integer or xsd:double) literal value.
  */
-public abstract class NumericLiteral implements RippleValue
+public abstract class NumericValue implements RippleValue
 {
 	/**
 	 * Distinguishes between numeric literals of type xsd:integer and xsd:double.
@@ -99,9 +99,9 @@ public abstract class NumericLiteral implements RippleValue
 // TODO: implement hashCode()
 	public boolean equals( final Object other )
 	{
-		if ( other instanceof NumericLiteral )
+		if ( other instanceof NumericValue )
 		{
-			return ( 0 == compareTo( (NumericLiteral) other ) );
+			return ( 0 == compareTo( (NumericValue) other ) );
 		}
 		
 		else
@@ -112,10 +112,10 @@ public abstract class NumericLiteral implements RippleValue
 	
 	public int compareTo( final RippleValue other )
 	{
-		if ( other instanceof NumericLiteral )
+		if ( other instanceof NumericValue )
 		{
 			double n = number.doubleValue(),
-				nOther =  ((NumericLiteral) other ).number.doubleValue();
+				nOther =  ((NumericValue) other ).number.doubleValue();
 // Note: doesn't take special floating-point number entities into account:
 //       floating-point infinities, negative infinities, negative zero, and NaN
 			return ( n > nOther ) ? 1 : ( n < nOther ) ? -1 : 0;
@@ -126,7 +126,7 @@ public abstract class NumericLiteral implements RippleValue
 			try
 			{
 				// Note: wasty
-				return compareTo( new NumericLiteralImpl( (RdfValue) other ) );
+				return compareTo( new SesameNumericValue( (RdfValue) other ) );
 			}
 
 			catch ( RippleException e )
@@ -148,14 +148,14 @@ public abstract class NumericLiteral implements RippleValue
 		return number.toString();
 	}
 		
-	public abstract NumericLiteral abs();
-	public abstract NumericLiteral neg();
-	public abstract NumericLiteral add( final NumericLiteral b );
-	public abstract NumericLiteral sub( final NumericLiteral b );
-	public abstract NumericLiteral mul( final NumericLiteral b );
-	public abstract NumericLiteral div( final NumericLiteral b );
-	public abstract NumericLiteral mod( final NumericLiteral b );
-	public abstract NumericLiteral pow( final NumericLiteral pow );
+	public abstract NumericValue abs();
+	public abstract NumericValue neg();
+	public abstract NumericValue add( final NumericValue b );
+	public abstract NumericValue sub( final NumericValue b );
+	public abstract NumericValue mul( final NumericValue b );
+	public abstract NumericValue div( final NumericValue b );
+	public abstract NumericValue mod( final NumericValue b );
+	public abstract NumericValue pow( final NumericValue pow );
 }
 
 // kate: tab-width 4

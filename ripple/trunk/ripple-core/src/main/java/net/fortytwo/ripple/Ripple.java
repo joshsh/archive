@@ -116,16 +116,8 @@ public final class Ripple
 				props, "net.fortytwo.ripple.cli.resourceViewShowEdges", true );
 		resultViewMaxPredicates = getIntProperty(
 			props, "net.fortytwo.ripple.cli.resultViewMaxPredicates", 32 );
-		if ( resultViewMaxPredicates < 0 )
-		{
-			resultViewMaxPredicates = 0;
-		}
 		resultViewMaxObjects = getIntProperty(
 			props, "net.fortytwo.ripple.cli.resultViewMaxObjects", 32 );
-		if ( resultViewMaxObjects < 0 )
-		{
-			resultViewMaxObjects = 0;
-		}
 		resultViewPrintEntireStack = getBooleanProperty(
 			props, "net.fortytwo.ripple.cli.resultViewPrintEntireStack", true );
 		jLineDebugOutput = getStringProperty(
