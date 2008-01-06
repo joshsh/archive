@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.rdf.sail;
+package net.fortytwo.ripple.io;
 
 import java.net.URL;
 import java.util.Collection;
@@ -102,10 +102,6 @@ public class HttpUriDereferencer implements Dereferencer
 			return;
 		}
 
-		// Note: this URL should be treated as a "black box" once created; it
-		// need not resemble the URI it was created from.
-		URL url = urlFactory.createUrl( memo );
-
 		URI context;
 		
 		try
@@ -121,6 +117,10 @@ public class HttpUriDereferencer implements Dereferencer
 		// Note: any pre-existing context information is discarded.
 		SesameInputAdapter sa = new SesameInputAdapter(
 			new SingleContextPipe( adderSink, context, valueFactory ) );
+
+		// Note: this URL should be treated as a "black box" once created; it
+		// need not resemble the URI it was created from.
+		URL url = urlFactory.createUrl( memo );
 
 		// Attempt to import the information resource.  The web location
 		// 'memo' is used as the base URI for any relative references.

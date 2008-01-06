@@ -552,7 +552,7 @@ stack:rollup
 		) ;
 	rdfs:label "rollup" ;
 	rdfs:comment "x y z  =>  z x y" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/stack#rollupd> ;
+	owl:sameAs <http://fortytwo.net/2007/05/ripple/stack#rollup> ;
 	.
 
 stack:rollupd

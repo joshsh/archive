@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.rdf.sail;
+package net.fortytwo.ripple.io;
 
 import java.util.Collection;
 

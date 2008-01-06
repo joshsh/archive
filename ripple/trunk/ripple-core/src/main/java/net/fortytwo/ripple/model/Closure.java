@@ -43,6 +43,11 @@ public class Closure implements Function
 	{
 		return innerFunction.isTransparent();
 	}
+	
+	public String toString()
+	{
+		return "Closure(" + innerFunction + ", " + argument + ")";
+	}
 }
 
 // kate: tab-width 4

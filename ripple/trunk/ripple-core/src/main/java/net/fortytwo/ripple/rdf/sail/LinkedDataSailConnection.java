@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.io.Dereferencer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffBuffer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;

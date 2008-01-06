@@ -71,6 +71,11 @@ public class RdfPredicateFunction implements Function
 	{
 		return true;
 	}
+	
+	public String toString()
+	{
+		return "Predicate(" + pred + ")";
+	}
 }
 
 // kate: tab-width 4
