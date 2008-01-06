@@ -266,6 +266,7 @@ System.out.println( "reader.getTerminal() = " + term );
 			directives.add( "@list" );
 			directives.add( "@prefix" );
 			directives.add( "@quit" );
+			directives.add( "@redefine" );
 			directives.add( "@undefine" );
 
 			completors.add(

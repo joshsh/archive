@@ -26,7 +26,7 @@ public class DefineTermCmd extends Command
 	private ListAst ast;
 	private String term;
 
-	public DefineTermCmd( final ListAst ast, final String term )
+	public DefineTermCmd( final String term, final ListAst ast )
 	{
 		this.ast = ast;
 		this.term = term;
