@@ -105,7 +105,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 		do
 		{
-//System.out.println( "cur = " + cur );
+System.out.println( "cur = " + cur );
 			Resource curRdf;
 
 			// Associate list nodes with RDF values.
@@ -120,7 +120,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			{
 				curRdf = (Resource) cur.rdfEquivalent.getRdfValue();
 			}
-//System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
+System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
 
 			if ( null == prevRdf )
 			{
@@ -128,7 +128,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				// annotating every node in the list.
 				if ( RDF.NIL != curRdf )
 				{
-//System.out.println( "    putting type statement" );
+System.out.println( "    putting type statement" );
 					sink.put(
 						mc.createStatement( curRdf, RDF.TYPE, RDF.LIST ) );
 				}
@@ -136,14 +136,14 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 			else
 			{
-//System.out.println( "    putting rest statement" );
+System.out.println( "    putting rest statement" );
 				sink.put(
 					mc.createStatement( prevRdf, RDF.REST, curRdf ) );
 			}
 
 			if ( RDF.NIL != curRdf )
 			{
-//System.out.println( "    putting first statement" );
+System.out.println( "    putting first statement" );
 				sink.put(
 					mc.createStatement( curRdf, RDF.FIRST, cur.first.toRdf( mc ).getRdfValue() ) );
 			}
