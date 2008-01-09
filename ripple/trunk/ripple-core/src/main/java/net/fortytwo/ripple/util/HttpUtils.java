@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.util;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +16,13 @@ import java.util.Map;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 //To consider at some point: caching, authorization
 public class HttpUtils
@@ -35,6 +36,17 @@ public class HttpUtils
 
 	private static Map<String, Date> lastRequestByHost = new HashMap<String, Date>();
 
+	public static HttpClient createClient() throws RippleException
+	{
+        HttpClient client = new HttpClient();
+        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
+        		new DefaultHttpMethodRetryHandler() );
+//        client.getParams().setConnectionManagerTimeout( Ripple.httpConnectionTimeout() );
+        client.getParams().setParameter( "http.connection.timeout", (int) Ripple.httpConnectionTimeout() );
+        client.getParams().setParameter( "http.socket.timeout", (int) Ripple.httpConnectionTimeout() );
+        return client;
+	}
+	
 	public static HttpMethod createGetMethod( final String url ) throws RippleException
 	{
 		HttpMethod method;
@@ -205,7 +217,7 @@ public class HttpUtils
 		if ( null != host && host.length() > 0 )
 		{
 			Date now = new Date();
-			long delay = Ripple.urlConnectCourtesyInterval();
+			long delay = Ripple.httpConnectionCourtesyInterval();
 	
 			Date lastRequest;
 			long w = 0;

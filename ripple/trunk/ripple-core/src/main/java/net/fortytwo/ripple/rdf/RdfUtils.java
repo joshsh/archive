@@ -20,10 +20,8 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.HttpUtils;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -87,12 +85,11 @@ public final class RdfUtils
 		HttpUtils.registerMethod( method );
 
 		InputStream body;
+
+		HttpClient client = HttpUtils.createClient();
 		
 		try
 		{
-	        HttpClient client = new HttpClient();
-	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
-	        		new DefaultHttpMethodRetryHandler() );
 			client.executeMethod( method );
 	        body = method.getResponseBodyAsStream();
 		}

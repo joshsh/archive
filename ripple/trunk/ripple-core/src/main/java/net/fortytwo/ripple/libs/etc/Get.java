@@ -57,13 +57,12 @@ public class Get extends PrimitiveFunction
 		HttpMethod method = HttpUtils.createGetMethod( uriStr );
 		HttpUtils.registerMethod( method );
 		
+		HttpClient client = HttpUtils.createClient();
+		
 		InputStream body;
 		
 		try
 		{
-	        HttpClient client = new HttpClient();
-	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
-	        		new DefaultHttpMethodRetryHandler() );
 			client.executeMethod( method );
 	        body = method.getResponseBodyAsStream();
 		}

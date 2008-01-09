@@ -40,14 +40,14 @@ public class SesameNumericValue extends NumericValue {
 
 		if ( !( v instanceof Literal ) )
 		{
-			throw new RippleException( "value " + v.toString() + " is not a Literal" );
+			throw new RippleException( "value " + v.toString() + " is not numeric" );
 		}
 
 		URI dataType = ( (Literal) v ).getDatatype();
 
 		if ( null == dataType )
 		{
-			throw new RippleException( "literal is untyped" );
+			throw new RippleException( "value is untyped" );
 		}
 
 		else if ( dataType.equals( XMLSchema.INTEGER )

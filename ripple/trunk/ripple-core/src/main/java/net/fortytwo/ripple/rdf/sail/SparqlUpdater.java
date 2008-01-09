@@ -102,13 +102,12 @@ System.out.println( "posting update to url <" + url + ">: " + postData );
 		method.setRequestBody(data);
 		HttpUtils.registerMethod( method );
 
+		HttpClient client = HttpUtils.createClient();
+		
 		int responseCode;
 
 		try
 		{
-	        HttpClient client = new HttpClient();
-	        client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
-	        		new DefaultHttpMethodRetryHandler() );
 			client.executeMethod( method );
 			
 			// ...do something with the response..

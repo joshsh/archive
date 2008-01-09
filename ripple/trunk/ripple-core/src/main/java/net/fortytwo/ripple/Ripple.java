@@ -50,8 +50,8 @@ public final class Ripple
 	private static int maxWorkerThreads;
 	private static boolean preferNewestNamespaceDefinitions;
 	private static boolean rejectNonAssociatedStatements;
-	private static long urlConnectCourtesyInterval;
-	private static long urlConnectTimeout;
+	private static long httpConnectionCourtesyInterval;
+	private static long httpConnectionTimeout;
 	private static boolean useInference;
 	private static boolean pullEntireModel;
 	private static boolean useBlankNodes;
@@ -140,10 +140,10 @@ public final class Ripple
 			props, "net.fortytwo.ripple.io.allowDuplicateNamespaces", false );
 		dereferenceUrisByNamespace = getBooleanProperty(
 			props, "net.fortytwo.ripple.io.dereferenceUrisByNamespace", false );
-		urlConnectTimeout = getLongProperty(
-			props, "net.fortytwo.ripple.io.urlConnectTimeout", 2000 );
-		urlConnectCourtesyInterval = getLongProperty(
-			props, "net.fortytwo.ripple.io.urlConnectCourtesyInterval", 500 );
+		httpConnectionTimeout = getLongProperty(
+			props, "net.fortytwo.ripple.io.httpConnectionTimeout", 2000 );
+		httpConnectionCourtesyInterval = getLongProperty(
+			props, "net.fortytwo.ripple.io.httpConnectionCourtesyInterval", 500 );
 
 		// Model
 		useInference = getBooleanProperty(
@@ -306,14 +306,14 @@ public final class Ripple
 		cacheFormat = format;
 	}
 
-	public static long urlConnectCourtesyInterval()
+	public static long httpConnectionCourtesyInterval()
 	{
-		return urlConnectCourtesyInterval;
+		return httpConnectionCourtesyInterval;
 	}
 
-	public static long urlConnectTimeout()
+	public static long httpConnectionTimeout()
 	{
-		return urlConnectTimeout;
+		return httpConnectionTimeout;
 	}
 
 	public static boolean useInference()
