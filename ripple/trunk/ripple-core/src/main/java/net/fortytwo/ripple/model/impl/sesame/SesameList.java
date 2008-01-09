@@ -107,6 +107,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		{
 System.out.println( "cur = " + cur );
 			Resource curRdf;
+System.out.println( "    cur.rdfEquivalent (before) = " + cur.rdfEquivalent );
 
 			// Associate list nodes with RDF values.
 			if ( null == cur.rdfEquivalent )
