@@ -677,7 +677,7 @@ public class SesameModelConnection implements ModelConnection
 	
 	////////////////////////////////////////////////////////////////////////////
 	
-	public void exportNs( final String ns, final OutputStream os )
+	public void exportNamespace( final String ns, final OutputStream os )
 		throws RippleException
 	{
 		SesameOutputAdapter adapter = RdfUtils.createOutputAdapter( os, Ripple.exportFormat() );
@@ -714,7 +714,7 @@ public class SesameModelConnection implements ModelConnection
 	{
 		try
 		{
-			return valueFactory.createURI( "urn:bnode:" + id );
+			return valueFactory.createURI( Ripple.URN_BNODE_PREFIX + id );
 		}
 		
 		catch ( Throwable t )

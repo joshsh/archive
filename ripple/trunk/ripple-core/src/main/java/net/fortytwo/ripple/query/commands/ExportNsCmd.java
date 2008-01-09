@@ -70,7 +70,7 @@ public class ExportNsCmd extends Command
 	private void exportNs( final String ns, final OutputStream os, final ModelConnection mc )
 		throws RippleException
 	{
-		mc.exportNs( ns, os );
+		mc.exportNamespace( ns, os );
 	}
 }
 

@@ -68,8 +68,7 @@ public class BNodeClosureFilter implements Sink<Resource>
 
 				// Traverse to any neighboring blank nodes (but not to URIs).
 				Value obj = st.getObject();
-				if ( obj instanceof Resource
-						&& !( obj instanceof URI ) )
+				if ( isBlankNode( obj ) )
 				{
 					buffer.put( (Resource) obj );
 				}
@@ -90,6 +89,28 @@ public class BNodeClosureFilter implements Sink<Resource>
 
 		// Note: the buffer may be written to before it has been completely read.
 		buffer.flush();
+	}
+	
+	private static boolean isBlankNode( final Value v )
+	{
+		if ( v instanceof Resource )
+		{
+			if ( v instanceof URI )
+			{
+				return ( (URI) v ).getNamespace().startsWith( Ripple.URN_BNODE_PREFIX );
+			}
+			
+			else
+			{
+				// Note: assuming that all non-URI resources are blank nodes
+				return true;
+			}
+		}
+		
+		else
+		{
+			return false;
+		}
 	}
 }
 

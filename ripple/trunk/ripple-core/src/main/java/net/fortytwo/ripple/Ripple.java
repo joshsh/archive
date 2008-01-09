@@ -27,6 +27,8 @@ import org.openrdf.rio.RDFFormat;
  */
 public final class Ripple
 {
+	public static final String URN_BNODE_PREFIX = "urn:bnode:";
+	
 	private static boolean initialized = false;
 
 	private static RippleProperties properties;
