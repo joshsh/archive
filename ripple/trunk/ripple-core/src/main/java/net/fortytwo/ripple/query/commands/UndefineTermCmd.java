@@ -28,6 +28,7 @@ public class UndefineTermCmd extends Command
 	{
 		mc.removeStatementsAbout(
 				mc.createUri( qe.getDefaultNamespace() + term ) );
+		mc.commit();
 	}
 
 	protected void abort()

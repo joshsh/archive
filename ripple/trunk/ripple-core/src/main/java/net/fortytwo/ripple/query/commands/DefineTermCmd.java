@@ -65,6 +65,7 @@ public class DefineTermCmd extends Command
 // TODO: check for collision with an existing URI
 			URI uri = mc.createUri( qe.getDefaultNamespace() + term );
 			mc.copyStatements( exprList, new RdfValue( uri ) );
+			mc.commit();
 
 			qe.getLexicon().add( uri );
 		}
