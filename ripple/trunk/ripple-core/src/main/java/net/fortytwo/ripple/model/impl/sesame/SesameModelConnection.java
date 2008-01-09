@@ -58,6 +58,11 @@ public class SesameModelConnection implements ModelConnection
 	
 	private TaskSet taskSet = new TaskSet();
 	
+	// TODO: For now, this is just a convenience which allows graph:assert and
+	//       graph:deny to manipulate the triple store without committing after
+	//       every operation.
+	private boolean uncommittedChanges = false;
+	
 	////////////////////////////////////////////////////////////////////////////
 	
 	SesameModelConnection( final SesameModel model, final String name, final RdfDiffSink listenerSink )
@@ -130,6 +135,10 @@ public class SesameModelConnection implements ModelConnection
 		// Complete any still-executing tasks.
 		taskSet.waitUntilEmpty();
 	
+		if ( uncommittedChanges ) {
+			commit();
+		}
+		
 		closeSailConnection( false );
 	
 		synchronized ( model.openConnections )
@@ -145,6 +154,7 @@ public class SesameModelConnection implements ModelConnection
 	public void reset( final boolean rollback ) throws RippleException
 	{
 		closeSailConnection( rollback );
+		uncommittedChanges = false;
 		openSailConnection();
 	}
 	
@@ -153,6 +163,7 @@ public class SesameModelConnection implements ModelConnection
 		try
 		{
 			sailConnection.commit();
+			uncommittedChanges = false;
 		}
 	
 		catch ( Throwable t )
@@ -521,6 +532,7 @@ public class SesameModelConnection implements ModelConnection
 		try
 		{
 			sailConnection.addStatement( st.getSubject(), st.getPredicate(), st.getObject(), contexts );
+			uncommittedChanges = true;
 		}
 	
 		catch ( Throwable t )
@@ -557,6 +569,8 @@ public class SesameModelConnection implements ModelConnection
 				sailConnection.addStatement(
 					(Resource) subjValue, (URI) predValue, objValue );
 			}
+			
+			uncommittedChanges = true;
 		}
 	
 		catch ( SailException e )
@@ -584,6 +598,8 @@ public class SesameModelConnection implements ModelConnection
 	//Does this remove the statement from ALL contexts?
 			sailConnection.removeStatements(
 				(Resource) subjValue, (URI) predValue, objValue );
+
+			uncommittedChanges = true;
 		}
 	
 		catch ( SailException e )
@@ -615,6 +631,8 @@ public class SesameModelConnection implements ModelConnection
 			{
 				sailConnection.removeStatements( (Resource) subjValue, null, null, context );
 			}
+
+			uncommittedChanges = true;
 		}
 	
 		catch ( SailException e )
@@ -977,6 +995,8 @@ public class SesameModelConnection implements ModelConnection
 //System.out.println("--- c");
 						sailConnection.setNamespace( prefix, ns );
 					}
+
+					uncommittedChanges = true;
 //System.out.println("--- v");
 				}
 			}
