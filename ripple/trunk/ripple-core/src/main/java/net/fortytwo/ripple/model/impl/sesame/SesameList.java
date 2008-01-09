@@ -50,6 +50,7 @@ public class SesameList extends RippleList
 		// memoizer.
 		first = this;
 		
+		// This should never be dereferenced.
 		rest = null;
 
 		// FIXME: depends on RDF_NIL being defined before this constructor is called.
@@ -128,8 +129,8 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				if ( RDF.NIL != prevRdf )
 				{
 //System.out.println( "    putting type statement" );
-//					sink.put(
-					mc.add(
+					sink.put(
+//					mc.add(
 						mc.createStatement( curRdf, RDF.TYPE, RDF.LIST ) );
 				}
 			}
@@ -137,16 +138,16 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			else
 			{
 //System.out.println( "    putting rest statement" );
-//				sink.put(
-				mc.add(
+				sink.put(
+//				mc.add(
 					mc.createStatement( prevRdf, RDF.REST, curRdf ) );
 			}
 
 			if ( RDF.NIL != curRdf )
 			{
 //System.out.println( "    putting first statement" );
-//				sink.put(
-				mc.add(
+				sink.put(
+//				mc.add(
 					mc.createStatement( curRdf, RDF.FIRST, cur.first.toRdf( mc ).getRdfValue() ) );
 			}
 
