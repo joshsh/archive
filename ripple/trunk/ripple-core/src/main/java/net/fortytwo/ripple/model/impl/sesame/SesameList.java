@@ -29,7 +29,7 @@ public class SesameList extends RippleList
 
 	private static Map<Value, Source<RippleList>> nativeLists = new HashMap<Value, Source<RippleList>>();
 
-	private RdfValue rdfEquivalent = null;
+	private Resource rdfEquivalent = null;
 
 	public SesameList( final RippleValue first )
 	{
@@ -54,7 +54,7 @@ public class SesameList extends RippleList
 		rest = null;
 
 		// FIXME: depends on RDF_NIL being defined before this constructor is called.
-		rdfEquivalent = RDF_NIL;
+		rdfEquivalent = RDF.NIL;
 	}
 
 	public RippleList push( final RippleValue first )
@@ -94,7 +94,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			mc.commit();
 		}
 
-		return rdfEquivalent;
+		return new RdfValue( rdfEquivalent );
 	}
 
 	private void putRdfStatements( final Sink<Statement> sink, final ModelConnection mc )
@@ -113,13 +113,13 @@ System.out.println( "    cur.rdfEquivalent (before) = " + cur.rdfEquivalent );
 			if ( null == cur.rdfEquivalent )
 			{
 				curRdf = mc.createBNode();
-				cur.rdfEquivalent = new RdfValue( curRdf );
+				cur.rdfEquivalent = curRdf;
 			}
 
 			// Currently, only RippleList.NIL will already have an RDF equivalent.
 			else
 			{
-				curRdf = (Resource) cur.rdfEquivalent.getRdfValue();
+				curRdf = cur.rdfEquivalent;
 			}
 System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
 
@@ -260,7 +260,7 @@ System.out.println( "    putting first statement" );
 						public void put( final RippleValue first ) throws RippleException
 						{
 							SesameList list = new SesameList( first, rest );
-							list.rdfEquivalent = head.toRdf( mc );
+							list.rdfEquivalent = (Resource) head.toRdf( mc ).getRdfValue();
 							sink.put( list );
 						}
 					};
