@@ -122,15 +122,14 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			}
 //System.out.println( "    cur.rdfEquivalent = " + cur.rdfEquivalent );
 
-			// Annotate the head of the list with a type, but don't bother
-			// annotating every node in the list.
 			if ( null == prevRdf )
 			{
-				if ( RDF.NIL != prevRdf )
+				// Annotate the head of the list with a type, but don't bother
+				// annotating every node in the list.
+				if ( RDF.NIL != curRdf )
 				{
 //System.out.println( "    putting type statement" );
 					sink.put(
-//					mc.add(
 						mc.createStatement( curRdf, RDF.TYPE, RDF.LIST ) );
 				}
 			}
@@ -139,7 +138,6 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			{
 //System.out.println( "    putting rest statement" );
 				sink.put(
-//				mc.add(
 					mc.createStatement( prevRdf, RDF.REST, curRdf ) );
 			}
 
@@ -147,7 +145,6 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			{
 //System.out.println( "    putting first statement" );
 				sink.put(
-//				mc.add(
 					mc.createStatement( curRdf, RDF.FIRST, cur.first.toRdf( mc ).getRdfValue() ) );
 			}
 
