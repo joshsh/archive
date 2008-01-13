@@ -49,8 +49,15 @@ public class Deny extends PrimitiveFunction
 		subj = stack.getFirst();
 		stack = stack.getRest();
 
-//System.out.println( "Denying (" + subj + ", " + pred + ", " + obj + ")" );
 		mc.remove( subj, pred, obj );
+
+		// TODO: store added and removed statements in a buffer until the
+		// ModelConnection commits.  You may not simply wait to commit,
+		// as writing and then reading without first committing may result
+		// in a deadlock.  The LinkedDataSail already does this sort of
+		// buffering, which is why it does not deadlock w.r.t. its base
+		// Sail.
+		mc.commit();
 
 		sink.put( mc.list( subj, stack ) );
 	}

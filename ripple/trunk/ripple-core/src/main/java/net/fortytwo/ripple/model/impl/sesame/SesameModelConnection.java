@@ -132,15 +132,18 @@ public class SesameModelConnection implements ModelConnection
 	
 	public void close() throws RippleException
 	{
+//System.out.println("closing...");
 		// Complete any still-executing tasks.
 		taskSet.waitUntilEmpty();
-	
+//System.out.println("    empty.");
 		if ( uncommittedChanges ) {
 			commit();
 		}
-		
+//System.out.println("    committed");
+
 		closeSailConnection( false );
-	
+//System.out.println("    closed sail connection");
+		
 		synchronized ( model.openConnections )
 		{
 			model.openConnections.remove( this );
@@ -160,6 +163,7 @@ public class SesameModelConnection implements ModelConnection
 	
 	public void commit() throws RippleException
 	{
+//System.out.println("committing...");
 		try
 		{
 			sailConnection.commit();
@@ -170,6 +174,7 @@ public class SesameModelConnection implements ModelConnection
 		{
 			throw new RippleException( t );
 		}
+//System.out.println("    done.");
 	}
 	
 	private synchronized void openSailConnection()
