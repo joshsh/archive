@@ -516,6 +516,11 @@ nt_Directive
 	String nsPrefix = "";
 
 	String localName = null;
+	
+	// Note: it is not possible to define a term with a nil AST.  If this were
+	//       allowed, this would be equivalent to redefining rdf:nil in a new
+	//       namespace, which is strange and probably not what the programmer
+	//       intended.
 	ListAst rhs;
 }
 	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? PERIOD

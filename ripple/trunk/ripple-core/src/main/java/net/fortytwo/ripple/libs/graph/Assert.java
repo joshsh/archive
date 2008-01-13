@@ -51,6 +51,7 @@ public class Assert extends PrimitiveFunction
 
 //System.out.println( "Asserting (" + subj + ", " + pred + ", " + obj + ")" );
 		mc.add( subj, pred, obj );
+//System.out.println( "    done." );
 
 		sink.put( mc.list( subj, stack ) );
 	}
