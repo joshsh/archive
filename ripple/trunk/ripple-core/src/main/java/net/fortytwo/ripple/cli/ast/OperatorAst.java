@@ -10,16 +10,27 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.query.QueryEngine;
+import net.fortytwo.ripple.libs.stack.StackLibrary;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 
 public class OperatorAst implements Ast
 {
+	public enum Type { Apply, Option };
+
+	private Type type;
+
 	public OperatorAst()
 	{
+		this(Type.Apply);
+	}
+
+	public OperatorAst( final Type type )
+	{
+		this.type = type;
 	}
 
 	public void evaluate( final Sink<RippleValue> sink,
@@ -27,12 +38,28 @@ public class OperatorAst implements Ast
 						final ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( Operator.OP );
+		switch ( type )
+		{
+			case Apply:
+				sink.put( Operator.OP );
+				break;
+			case Option:
+				sink.put( new Operator( StackLibrary.getIOptValue() ) );
+				break;
+		}
 	}
 
 	public String toString()
 	{
-		return "[op]";
+		switch ( type )
+		{
+			case Apply:
+				return "!";
+			case Option:
+				return "?";
+			default:
+				return "error";
+		}
 	}
 }
 

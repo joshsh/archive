@@ -10,9 +10,10 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.Library;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.UrlFactory;
 
 /**
@@ -25,6 +26,7 @@ public class StackLibrary extends Library
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
+	private static PrimitiveFunction ioptVal;
 
 	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
@@ -67,6 +69,10 @@ public class StackLibrary extends Library
 		registerPrimitive( X.class, NS + "x", mc );
 		registerPrimitive( Xor.class, NS + "xor", mc );
 
+		// "Quantifier" application primitives
+// TODO: create RDF descriptions
+		ioptVal = registerPrimitive( IOpt.class, NS + "iopt", mc );
+
 		// List primitives.
 		registerPrimitive( Cat.class, NS + "cat", mc );
 		registerPrimitive( Cons.class, NS + "cons", mc );
@@ -97,6 +103,11 @@ public class StackLibrary extends Library
 	public static RippleValue getFalseValue()
 	{
 		return falseVal;
+	}
+
+	public static PrimitiveFunction getIOptValue()
+	{
+		return ioptVal;
 	}
 }
 

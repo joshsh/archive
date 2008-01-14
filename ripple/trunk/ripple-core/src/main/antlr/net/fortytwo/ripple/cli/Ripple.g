@@ -209,8 +209,10 @@ COLON : ':' ;
 
 EQUAL : '=';
 
-OP_PRE : '/' ;
-OP_POST : '!' ;
+OP_APPLY_PRE : '/' ;
+OP_APPLY_POST : '!' ;
+OP_OPTIONAL : '?' ;
+
 
 protected
 DRCTV : '@' ;
@@ -313,7 +315,7 @@ nt_List returns [ ListAst list ]
 	boolean modified = false;
 }
 		// Optional slash operator.
-	:	( OP_PRE (WS)? { modified = true; } )?
+	:	( OP_APPLY_PRE (WS)? { modified = true; } )?
 
 		// Head of the list.
 		first = nt_Node
@@ -353,7 +355,8 @@ nt_Node returns [ Ast r ]
 	: ( r=nt_Resource
 		| r=nt_Literal
 		| r=nt_ParenthesizedList
-		| OP_POST { r = new OperatorAst(); }
+		| OP_APPLY_POST { r = new OperatorAst(); }
+		| OP_OPTIONAL { r = new OperatorAst(OperatorAst.Type.Option); }
 		)
 	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new PropertyAnnotatedAst( r, props ); } )
 	  | ())
