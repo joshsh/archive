@@ -26,7 +26,7 @@ public class StackLibrary extends Library
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
-	private static PrimitiveFunction ioptVal;
+	private static PrimitiveFunction ioptVal, istarVal, iplusVal;
 
 	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
@@ -72,6 +72,8 @@ public class StackLibrary extends Library
 		// "Quantifier" application primitives
 // TODO: create RDF descriptions
 		ioptVal = registerPrimitive( IOpt.class, NS + "iopt", mc );
+		istarVal = registerPrimitive( IStar.class, NS + "istar", mc );
+		iplusVal = registerPrimitive( IPlus.class, NS + "iplus", mc );
 
 		// List primitives.
 		registerPrimitive( Cat.class, NS + "cat", mc );
@@ -105,9 +107,19 @@ public class StackLibrary extends Library
 		return falseVal;
 	}
 
-	public static PrimitiveFunction getIOptValue()
+	public static PrimitiveFunction getIoptValue()
 	{
 		return ioptVal;
+	}
+
+	public static PrimitiveFunction getIstarValue()
+	{
+		return istarVal;
+	}
+
+	public static PrimitiveFunction getIplusValue()
+	{
+		return iplusVal;
 	}
 }
 

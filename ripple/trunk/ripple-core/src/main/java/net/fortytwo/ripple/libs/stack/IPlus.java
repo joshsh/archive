@@ -16,15 +16,15 @@ import net.fortytwo.ripple.util.Sink;
 // kate: tab-width 4
 
 /**
- * A primitive which activates ("applies") the topmost item on the stack any
- * number of times.
+ * A primitive which activates ("applies") the topmost item on the stack one or
+ * more times.
  */
-public class IOpt extends PrimitiveFunction
+public class IPlus extends PrimitiveFunction
 {
-// Arguably 0...
+	// TODO: arity should really be 1, but this is a nice temporary solution
 	private static final int ARITY = 1;
 
-	public IOpt() throws RippleException
+	public IPlus() throws RippleException
 	{
 		super();
 	}
@@ -34,16 +34,17 @@ public class IOpt extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( final RippleList stack,
+	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
 						final ModelConnection mc )
 		throws RippleException
 	{
 		RippleValue first = stack.getFirst();
 
-		sink.put(stack.getRest());
-
 // hack...
-		sink.put( mc.list( Operator.OP, stack ) );
+		sink.put( stack
+				.push( Operator.OP )
+				.push( first )
+				.push( new Operator( StackLibrary.getIstarValue() ) ) );
 	}
 }

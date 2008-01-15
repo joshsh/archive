@@ -15,6 +15,8 @@ import net.fortytwo.ripple.util.Sink;
 
 public class Op implements Function, RippleValue
 {
+	private final static int ARITY = 1;
+
 	public void applyTo( RippleList stack,
 				final Sink<RippleList> sink,
 				final ModelConnection mc )
@@ -53,7 +55,7 @@ public class Op implements Function, RippleValue
 
 	public int arity()
 	{
-		return 0;
+		return ARITY;
 	}
 
 	public void printTo( final RipplePrintStream p )

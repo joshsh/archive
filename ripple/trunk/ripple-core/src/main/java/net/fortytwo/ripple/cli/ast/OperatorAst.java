@@ -19,13 +19,13 @@ import net.fortytwo.ripple.util.Sink;
 
 public class OperatorAst implements Ast
 {
-	public enum Type { Apply, Option };
+	public enum Type { Apply, Option, Star, Plus };
 
 	private Type type;
 
 	public OperatorAst()
 	{
-		this(Type.Apply);
+		this( Type.Apply );
 	}
 
 	public OperatorAst( final Type type )
@@ -44,7 +44,13 @@ public class OperatorAst implements Ast
 				sink.put( Operator.OP );
 				break;
 			case Option:
-				sink.put( new Operator( StackLibrary.getIOptValue() ) );
+				sink.put( new Operator( StackLibrary.getIoptValue() ) );
+				break;
+			case Star:
+				sink.put( new Operator( StackLibrary.getIstarValue() ) );
+				break;
+			case Plus:
+				sink.put( new Operator( StackLibrary.getIplusValue() ) );
 				break;
 		}
 	}
@@ -57,6 +63,10 @@ public class OperatorAst implements Ast
 				return "!";
 			case Option:
 				return "?";
+			case Star:
+				return "*";
+			case Plus:
+				return "+";
 			default:
 				return "error";
 		}

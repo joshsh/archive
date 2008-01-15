@@ -175,8 +175,10 @@ NAME_NOT_PREFIX
 
 NODEID_PREFIX : "_:" ;
 
+// Note: the '+' prefix (e.g. in +42) is excluded, as it interferes with the '+'
+// operator.
 NUMBER
-	: ('-' | '+')? ( DIGIT )+
+	: ('-' /*| '+'*/)? ( DIGIT )+
 		(('.' DIGIT ) => ( '.' ( DIGIT )+ )
 		| ())
 	;
@@ -212,7 +214,8 @@ EQUAL : '=';
 OP_APPLY_PRE : '/' ;
 OP_APPLY_POST : '!' ;
 OP_OPTIONAL : '?' ;
-
+OP_STAR : '*';
+OP_PLUS : '+';
 
 protected
 DRCTV : '@' ;
@@ -356,7 +359,9 @@ nt_Node returns [ Ast r ]
 		| r=nt_Literal
 		| r=nt_ParenthesizedList
 		| OP_APPLY_POST { r = new OperatorAst(); }
-		| OP_OPTIONAL { r = new OperatorAst(OperatorAst.Type.Option); }
+		| OP_OPTIONAL { r = new OperatorAst( OperatorAst.Type.Option ); }
+		| OP_STAR { r = new OperatorAst( OperatorAst.Type.Star ); }
+		| OP_PLUS { r = new OperatorAst( OperatorAst.Type.Plus ); }
 		)
 	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new PropertyAnnotatedAst( r, props ); } )
 	  | ())
