@@ -10,11 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.*;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -24,6 +20,7 @@ import net.fortytwo.ripple.util.Sink;
  */
 public class Times extends PrimitiveFunction
 {
+	// TODO: arity should really be 1
 	private static final int ARITY = 2;
 
 	public Times()
@@ -42,13 +39,26 @@ public class Times extends PrimitiveFunction
 						final ModelConnection mc )
 		throws RippleException
 	{
-		int times;
+		final int times;
 
 		times = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 		RippleValue p = stack.getFirst();
-		stack = stack.getRest();
+		final RippleList rest = stack.getRest();
 
+		Sink<Operator> opSink = new Sink<Operator>()
+		{
+			public void put( final Operator op ) throws RippleException
+			{
+				sink.put( rest.push( new Operator(
+						new TimesFunction( op.getFunction(), times, false ) ) ) );
+			}
+		};
+
+		Operator.createOperator( p, opSink, mc );
+
+
+		/*
 		if ( times < 0 )
 		{
 			throw new RippleException(
@@ -60,8 +70,10 @@ public class Times extends PrimitiveFunction
 			stack = mc.list( p, stack ).push( Operator.OP );
 		}
 
-		sink.put( stack );
+		sink.put( stack );*/
 	}
+
+
 }
 
 // kate: tab-width 4

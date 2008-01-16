@@ -19,9 +19,10 @@ import net.fortytwo.ripple.util.Sink;
 
 public class OperatorAst implements Ast
 {
-	public enum Type { Apply, Option, Star, Plus };
+	public enum Type { Apply, Option, Star, Plus, Times, Range };
 
 	private Type type;
+	private int min, max;
 
 	public OperatorAst()
 	{
@@ -31,6 +32,19 @@ public class OperatorAst implements Ast
 	public OperatorAst( final Type type )
 	{
 		this.type = type;
+	}
+
+	public OperatorAst( final int times )
+	{
+		type = Type.Times;
+		min = times;
+	}
+
+	public OperatorAst( final int min, final int max )
+	{
+		type = Type.Range;
+		this.min = min;
+		this.max = max;
 	}
 
 	public void evaluate( final Sink<RippleValue> sink,
@@ -52,6 +66,9 @@ public class OperatorAst implements Ast
 			case Plus:
 				sink.put( new Operator( StackLibrary.getIplusValue() ) );
 				break;
+			/* TODO
+			case Times:
+			case Range:*/
 		}
 	}
 
@@ -67,6 +84,10 @@ public class OperatorAst implements Ast
 				return "*";
 			case Plus:
 				return "+";
+			case Times:
+				return "{" + min + "}";
+			case Range:
+				return "{" + min + "," + max + "}";
 			default:
 				return "error";
 		}

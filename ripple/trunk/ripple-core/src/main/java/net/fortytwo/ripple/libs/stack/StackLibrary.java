@@ -26,7 +26,7 @@ public class StackLibrary extends Library
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
-	private static PrimitiveFunction ioptVal, istarVal, iplusVal;
+	private static PrimitiveFunction ioptVal, istarVal, iplusVal, timesVal, rangeVal;
 
 	public void load( final UrlFactory uf, final ModelConnection mc )
 		throws RippleException
@@ -34,7 +34,6 @@ public class StackLibrary extends Library
 		uf.addMapping(
 			NS, getClass().getResource( "stack.ttl" ) + "#" );
 
-		registerPrimitive( And.class, NS + "and", mc );
 		registerPrimitive( Ary.class, NS + "ary", mc );
 		registerPrimitive( At.class, NS + "at", mc );
 		branchVal = registerPrimitive( Branch.class, NS + "branch", mc );
@@ -44,12 +43,9 @@ public class StackLibrary extends Library
 		registerPrimitive( Dup.class, NS + "dup", mc );
 		registerPrimitive( Dupd.class, NS + "dupd", mc );
 		registerPrimitive( Dupdd.class, NS + "dupdd", mc );
-		falseVal = registerPrimitive( False.class, NS + "false", mc );
 		registerPrimitive( I.class, NS + "i", mc );
 		registerPrimitive( Id.class, NS + "id", mc );
 		registerPrimitive( Ifte.class, NS + "ifte", mc );
-		registerPrimitive( Not.class, NS + "not", mc );
-		registerPrimitive( Or.class, NS + "or", mc );
 		registerPrimitive( Pop.class, NS + "pop", mc );
 		registerPrimitive( Popd.class, NS + "popd", mc );
 		registerPrimitive( Popdd.class, NS + "popdd", mc );
@@ -63,17 +59,25 @@ public class StackLibrary extends Library
 		registerPrimitive( Swap.class, NS + "swap", mc );
 		registerPrimitive( Swapd.class, NS + "swapd", mc );
 		registerPrimitive( Swapdd.class, NS + "swapdd", mc );
-		registerPrimitive( Times.class, NS + "times", mc );
-		trueVal = registerPrimitive( True.class, NS + "true", mc );
+		timesVal = registerPrimitive( Times.class, NS + "times", mc );
 		registerPrimitive( Unstack.class, NS + "unstack", mc );
 		registerPrimitive( X.class, NS + "x", mc );
-		registerPrimitive( Xor.class, NS + "xor", mc );
 
+		// Boolean logic
+		registerPrimitive( And.class, NS + "and", mc );
+		falseVal = registerPrimitive( False.class, NS + "false", mc );
+		registerPrimitive( Not.class, NS + "not", mc );
+		registerPrimitive( Or.class, NS + "or", mc );
+		trueVal = registerPrimitive( True.class, NS + "true", mc );
+		registerPrimitive( Xor.class, NS + "xor", mc );
+		
 		// "Quantifier" application primitives
+// TODO: stack:times belongs here as well
 // TODO: create RDF descriptions
 		ioptVal = registerPrimitive( IOpt.class, NS + "iopt", mc );
 		istarVal = registerPrimitive( IStar.class, NS + "istar", mc );
 		iplusVal = registerPrimitive( IPlus.class, NS + "iplus", mc );
+		rangeVal = registerPrimitive( Range.class, NS + "range", mc );
 
 		// List primitives.
 		registerPrimitive( Cat.class, NS + "cat", mc );
@@ -120,6 +124,16 @@ public class StackLibrary extends Library
 	public static PrimitiveFunction getIplusValue()
 	{
 		return iplusVal;
+	}
+
+	public static PrimitiveFunction getTimesValue()
+	{
+		return timesVal;
+	}
+
+	public static PrimitiveFunction getRangeValue()
+	{
+		return rangeVal;
 	}
 }
 

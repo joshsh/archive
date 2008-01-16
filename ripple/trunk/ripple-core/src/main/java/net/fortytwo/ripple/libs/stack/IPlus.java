@@ -21,7 +21,6 @@ import net.fortytwo.ripple.util.Sink;
  */
 public class IPlus extends PrimitiveFunction
 {
-	// TODO: arity should really be 1, but this is a nice temporary solution
 	private static final int ARITY = 1;
 
 	public IPlus() throws RippleException

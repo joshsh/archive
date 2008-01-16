@@ -200,8 +200,11 @@ DOUBLE_HAT : "^^" ;
 L_PAREN : '(' ;
 R_PAREN : ')' ;
 
-L_BRACKET : '[';
-R_BRACKET : ']';
+L_BRACKET : '[' ;
+R_BRACKET : ']' ;
+
+L_CURLY : '{' ;
+R_CURLY : '}' ;
 
 SEMI : ';' ;
 PERIOD : '.' ;
@@ -358,10 +361,11 @@ nt_Node returns [ Ast r ]
 	: ( r=nt_Resource
 		| r=nt_Literal
 		| r=nt_ParenthesizedList
-		| OP_APPLY_POST { r = new OperatorAst(); }
+		| r=nt_Operator
+/*		| OP_APPLY_POST { r = new OperatorAst(); }
 		| OP_OPTIONAL { r = new OperatorAst( OperatorAst.Type.Option ); }
 		| OP_STAR { r = new OperatorAst( OperatorAst.Type.Star ); }
-		| OP_PLUS { r = new OperatorAst( OperatorAst.Type.Plus ); }
+		| OP_PLUS { r = new OperatorAst( OperatorAst.Type.Plus ); }*/
 		)
 	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new PropertyAnnotatedAst( r, props ); } )
 	  | ())
@@ -515,6 +519,33 @@ nt_Name returns [ String name ]
 	| t2:NAME_NOT_PREFIX { name = t2.getText(); }
 	;
 
+
+nt_Operator returns [ OperatorAst ast ]
+{
+	ast = null;
+}
+	: OP_APPLY_POST { ast = new OperatorAst(); }
+	| OP_OPTIONAL { ast = new OperatorAst( OperatorAst.Type.Option ); }
+	| OP_STAR { ast = new OperatorAst( OperatorAst.Type.Star ); }
+	| OP_PLUS { ast = new OperatorAst( OperatorAst.Type.Plus ); }
+	| L_CURLY (nt_Ws)? min:NUMBER (nt_Ws)? ( COMMA (nt_Ws)? max:NUMBER (nt_Ws)? )? R_CURLY
+		{
+			// Note: floating-point values are syntactically valid, but will be
+			// truncated to integer values.
+			int minVal = new Double( min.getText() ).intValue();
+			
+			if ( null == max )
+			{
+				ast = new OperatorAst( minVal );
+			}
+
+			else
+			{
+				int maxVal = new Double( max.getText() ).intValue();
+				ast = new OperatorAst( minVal, maxVal );
+			}
+		}
+	;
 
 nt_Directive
 {
