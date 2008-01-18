@@ -17,7 +17,7 @@ import java.util.Iterator;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.FileUtils;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 public class LibraryLoader extends ClassLoader
 {
@@ -26,7 +26,7 @@ public class LibraryLoader extends ClassLoader
 		super( LibraryLoader.class.getClassLoader() );
 	}
 
-	public void load( final UrlFactory uf, final ModelConnection mc )
+	public void load( final UriMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		for ( Iterator<String> namesIter = getNames().iterator();

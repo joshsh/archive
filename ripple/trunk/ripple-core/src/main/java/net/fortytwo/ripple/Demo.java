@@ -31,7 +31,7 @@ import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 import org.apache.log4j.Logger;
 import org.openrdf.repository.Repository;
@@ -71,8 +71,8 @@ public final class Demo
 			loadFromFile( repo, store );
 		}
 		
-		UrlFactory urlFactory = new UrlFactory();
-		Sail sail = new LinkedDataSail( baseSail, urlFactory );
+		UriMap uriMap = new UriMap();
+		Sail sail = new LinkedDataSail( baseSail, uriMap );
 		
 		try
 		{
@@ -85,7 +85,7 @@ public final class Demo
 		}
 
 		// Attach a Ripple model to the repository.
-		Model model = new SesameModel( sail, urlFactory );
+		Model model = new SesameModel( sail, uriMap );
 
 		// Attach a query engine to the model.
 		Evaluator evaluator = new LazyEvaluator();

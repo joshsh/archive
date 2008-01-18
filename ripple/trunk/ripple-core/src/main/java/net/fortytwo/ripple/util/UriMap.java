@@ -13,84 +13,72 @@ import net.fortytwo.ripple.RippleException;
 
 import org.apache.log4j.Logger;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class UrlFactory
+public class UriMap
 {
-	private static final Logger LOGGER
-		= Logger.getLogger( UrlFactory.class );
+	private static final Logger LOGGER = Logger.getLogger( UriMap.class );
 
 	private Map<String, String> map;
 
-	private String [] sourceUrls;
-	private String [] targetUrls;
+	private String [] fromUris;
+	private String [] toUris;
 
 	private boolean upToDate = true;
 
-	public UrlFactory()
+	public UriMap()
 	{
 		map = new Hashtable<String, String>();
 	}
 
-	private URL createUrlPrivate( String urlStr )
+	private String getPrivate( String urlStr )
 		throws RippleException
 	{
-		// Strip of the fragment identifier, if any.
+		// Strip off the fragment identifier, if any.
 		int i = urlStr.lastIndexOf( '#' );
 		if ( i >= 0 )
 		{
 			urlStr = urlStr.substring( 0, i );
 		}
-		
-		try
-		{
-			return new URL( urlStr );
-		}
 
-		catch ( MalformedURLException e )
-		{
-			throw new RippleException( e );
-		}
+		return urlStr;
 	}
 
 	private void update()
 	{
 		Set<String> keySet = map.keySet();
 
-		sourceUrls = new String[ keySet.size() ];
+		fromUris = new String[ keySet.size() ];
 		Iterator<String> keySetIter = keySet.iterator();
 		int j = 0;
 		while ( keySetIter.hasNext() )
 		{
-			sourceUrls[j++] = keySetIter.next();
+			fromUris[j++] = keySetIter.next();
 		}
-		Arrays.sort( sourceUrls );
+		Arrays.sort( fromUris );
 
-		targetUrls = new String[ sourceUrls.length ];
-		for ( int i = 0; i < sourceUrls.length; i++ )
+		toUris = new String[ fromUris.length ];
+		for ( int i = 0; i < fromUris.length; i++ )
 		{
-			targetUrls[i] = map.get( sourceUrls[i] );
-			LOGGER.debug( "map " + sourceUrls[i] + " to " + targetUrls[i] );
+			toUris[i] = map.get( fromUris[i] );
+			LOGGER.debug( "map " + fromUris[i] + " to " + toUris[i] );
 		}
 
 		upToDate = true;
 	}
 
-	public void addMapping( final String source, final String dest )
+	public void put( final String from, final String to )
 	{
 		upToDate = false;
 
-		map.put( source, dest );
+		map.put( from, to );
 	}
 
-	public URL createUrl( final String urlStr )
+	public String get( final String uri )
 		throws RippleException
 	{
 		if ( !upToDate )
@@ -98,14 +86,14 @@ public class UrlFactory
 			update();
 		}
 
-		int fromIndex = 0, toIndex = sourceUrls.length - 1;
+		int fromIndex = 0, toIndex = fromUris.length - 1;
 		int mid = 0, cmp = 0;
 		int i = -1;
 
 		while ( fromIndex <= toIndex )
 		{
 			mid = ( fromIndex + toIndex ) / 2;
-			cmp = urlStr.compareTo( sourceUrls[mid] );
+			cmp = uri.compareTo( fromUris[mid] );
 
 			if ( cmp > 0 )
 			{
@@ -121,20 +109,20 @@ public class UrlFactory
 			// Exact match.  Return the corresponding target URL.
 			else
 			{
-				return createUrlPrivate( targetUrls[mid] );
+				return getPrivate( toUris[mid] );
 			}
 		}
 
-		if ( -1 < i && urlStr.startsWith( sourceUrls[i] ) )
+		if ( -1 < i && uri.startsWith( fromUris[i] ) )
 		{
-			return createUrlPrivate(
-				targetUrls[i] + urlStr.substring( sourceUrls[i].length() ) );
+			return getPrivate(
+				toUris[i] + uri.substring( fromUris[i].length() ) );
 		}
 
 		// No rewrite necessary.
 		else
 		{
-			return createUrlPrivate( urlStr );
+			return getPrivate( uri );
 		}
 	}
 }

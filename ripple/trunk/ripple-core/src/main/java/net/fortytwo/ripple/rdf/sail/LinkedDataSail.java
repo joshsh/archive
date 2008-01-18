@@ -20,7 +20,7 @@ import net.fortytwo.ripple.io.JarUriDereferencer;
 import net.fortytwo.ripple.io.VerbatimRdfizer;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -57,14 +57,14 @@ public class LinkedDataSail implements StackableSail
 	
 	private Sail baseSail;
 	private WebClosure webClosure;
-	private UrlFactory urlFactory;
+	private UriMap uriMap;
 	
 	private boolean initialized = false;
 	
 	/**
 	 * @param baseSail  (should be initialized before this object is used)
 	 */
-	public LinkedDataSail( final Sail baseSail, final UrlFactory urlFactory )
+	public LinkedDataSail( final Sail baseSail, final UriMap uriMap )
 		throws RippleException
 	{
 		if (null == properties)
@@ -74,7 +74,7 @@ public class LinkedDataSail implements StackableSail
 		}
 		
 		this.baseSail = baseSail;
-		this.urlFactory = urlFactory;
+		this.uriMap = uriMap;
 
 		webClosure = createDefaultClosureManager();
 	}
@@ -91,7 +91,7 @@ public class LinkedDataSail implements StackableSail
 			throw new SailException( "LinkedDataSail has not been initialized" );
 		}
 		
-		return new LinkedDataSailConnection( baseSail, webClosure, urlFactory );
+		return new LinkedDataSailConnection( baseSail, webClosure, uriMap );
 	}
 
 	public File getDataDir()
@@ -101,7 +101,7 @@ return null;
 
 	public ValueFactory getValueFactory()
 	{
-		// Inherit the local store's ValueFactory
+		// Inherit the base Sail's ValueFactory
 		return baseSail.getValueFactory();
 	}
 
@@ -149,7 +149,7 @@ return null;
 	public synchronized LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		return new LinkedDataSailConnection( baseSail, webClosure, urlFactory, listenerSink );
+		return new LinkedDataSailConnection( baseSail, webClosure, uriMap, listenerSink );
 	}
 
 public WebClosure getClosureManager()
@@ -171,7 +171,7 @@ public WebClosure getClosureManager()
 
 	private WebClosure createDefaultClosureManager()
 	{
-		WebClosure cm = new WebClosure( urlFactory, getValueFactory() );
+		WebClosure cm = new WebClosure( uriMap, getValueFactory() );
 
 		// Add URI dereferencers.
 		cm.addDereferencer( "http", new HttpUriDereferencer() );
@@ -185,7 +185,6 @@ public WebClosure getClosureManager()
 		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ) );
 		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ) );
 		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ) );
-
 
 		// Don't bother trying to dereference terms in these common namespaces.
 		cm.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );

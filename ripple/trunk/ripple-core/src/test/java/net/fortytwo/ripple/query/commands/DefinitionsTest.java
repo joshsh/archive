@@ -15,14 +15,13 @@ import org.openrdf.sail.memory.MemoryStore;
 
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.ast.StringAst;
-import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 public class DefinitionsTest extends RippleTestCase
 {
@@ -35,8 +34,8 @@ public class DefinitionsTest extends RippleTestCase
 			sail.initialize();
 			SailConnection sc = sail.getConnection();
 
-			UrlFactory urlFactory = new UrlFactory();
-			Model model = new SesameModel( sail, urlFactory );
+			UriMap uriMap = new UriMap();
+			Model model = new SesameModel( sail, uriMap );
 			QueryEngine qe = new QueryEngine( model, new LazyEvaluator(), System.out, System.err );
 
 			

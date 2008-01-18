@@ -23,8 +23,10 @@ public class HttpUtilsTest extends RippleTestCase
 
             uri = new URI( "http://example.com/foo" );
             assertEquals( "http", uri.getScheme() );
-
-            uri = new URI( "jar:file:/tmp/foo.txt" );
+			uri = new URI( "http://myopenlink.net/dataspace/person/kidehen#this" );
+			assertEquals( "http", uri.getScheme() );
+			
+			uri = new URI( "jar:file:/tmp/foo.txt" );
             assertEquals( "jar", uri.getScheme() );
         }
 	}

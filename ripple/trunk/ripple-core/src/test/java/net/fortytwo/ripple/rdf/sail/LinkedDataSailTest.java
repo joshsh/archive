@@ -6,7 +6,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 import org.openrdf.model.vocabulary.RDF;
 
@@ -18,13 +18,13 @@ public class LinkedDataSailTest extends RippleTestCase
 			throws Exception
 		{
 			Model model = getTestModel();
-			UrlFactory urlFactory = getTestUrlFactory();
+			UriMap uriMap = getTestUrlFactory();
 			
 			// This is an example where HttpDereferencer fails by requesting the
 			// full URI of a resource (rather than stripping off the local part).
 			// Here, we define a mapping to a local file, so dereferencing
 			// succeeds.
-			urlFactory.addMapping( "http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging",
+			uriMap.put( "http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging",
 					LinkedDataSailTest.class.getResource( "tags.owl" ).toString() );
 			
 			ModelConnection mc = model.getConnection( "" );

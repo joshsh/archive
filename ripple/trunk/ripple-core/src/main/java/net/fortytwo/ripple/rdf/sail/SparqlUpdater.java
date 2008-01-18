@@ -11,7 +11,6 @@ package net.fortytwo.ripple.rdf.sail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.net.URL;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
@@ -21,13 +20,11 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffContextFilter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSource;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
@@ -40,11 +37,11 @@ public class SparqlUpdater
 {
 	private RdfDiffContextFilter contextFilter;
 	private RdfDiffSink sink;
-	private UrlFactory urlFactory;
+	private UriMap uriMap;
 
-	public SparqlUpdater( final UrlFactory urlFactory, final RdfDiffSink sink )
+	public SparqlUpdater( final UriMap uriMap, final RdfDiffSink sink )
 	{
-		this.urlFactory = urlFactory;
+		this.uriMap = uriMap;
 		this.sink = sink;
 
 		contextFilter = new RdfDiffContextFilter();
@@ -68,7 +65,7 @@ public class SparqlUpdater
 					&& context instanceof URI
 					&& RdfUtils.isHttpUri( (URI) context ) )
 			{
-				URL url = urlFactory.createUrl( context.toString() );
+				String url = uriMap.get( context.toString() );
 
 				try
 				{
@@ -89,7 +86,7 @@ source.writeTo( sink );
 		contextFilter.clear();
 	}
 
-	private void postUpdate( final URL url, final RdfDiffSource source )
+	private void postUpdate( final String url, final RdfDiffSource source )
 		throws RippleException
 	{
 		String postData = createPostData( source );

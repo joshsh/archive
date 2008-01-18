@@ -10,7 +10,6 @@
 package net.fortytwo.ripple.test;
 
 import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
 
 import org.openrdf.sail.Sail;
 
@@ -20,7 +19,7 @@ import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 public abstract class RippleTestCase extends TestCase
 {
@@ -133,7 +132,7 @@ public abstract class RippleTestCase extends TestCase
 
 	private static Sail sail = null;
 	private static Model model = null;
-	private static UrlFactory urlFactory = null;
+	private static UriMap uriMap = null;
 	
 	protected static Sail getTestSail() throws Exception
 	{
@@ -151,19 +150,19 @@ public abstract class RippleTestCase extends TestCase
 	{
 		if ( null == model )
 		{
-			urlFactory = new UrlFactory();
-			LinkedDataSail ldSail = new LinkedDataSail( getTestSail(), urlFactory );
+			uriMap = new UriMap();
+			LinkedDataSail ldSail = new LinkedDataSail( getTestSail(), uriMap );
 			ldSail.initialize();
-			model = new SesameModel( ldSail, urlFactory );
+			model = new SesameModel( ldSail, uriMap );
 		}
 
 		return model;
 	}
 	
-	protected static UrlFactory getTestUrlFactory() throws Exception
+	protected static UriMap getTestUrlFactory() throws Exception
 	{
 		getTestModel();
-		return urlFactory;
+		return uriMap;
 	}
 }
 

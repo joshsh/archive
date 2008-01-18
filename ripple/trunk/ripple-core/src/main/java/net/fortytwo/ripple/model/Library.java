@@ -15,7 +15,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 import org.openrdf.model.vocabulary.OWL;
 
@@ -26,7 +26,7 @@ public abstract class Library
 {
 	private static final RdfValue OWL_SAMEAS = new RdfValue( OWL.SAMEAS );
 
-	public abstract void load( UrlFactory uf, ModelConnection mc )
+	public abstract void load( UriMap uf, ModelConnection mc )
 		throws RippleException;
 
 	protected PrimitiveFunction registerPrimitive( final Class c,

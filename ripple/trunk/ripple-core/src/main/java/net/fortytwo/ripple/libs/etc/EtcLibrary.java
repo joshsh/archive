@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.etc;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 
 /**
  * A collection of miscellaneous primitives.
@@ -21,10 +21,10 @@ public class EtcLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/etc#";
 
-	public void load( final UrlFactory uf, final ModelConnection mc )
+	public void load( final UriMap uf, final ModelConnection mc )
 		throws RippleException
 	{
-		uf.addMapping(
+		uf.put(
 			NS, getClass().getResource( "etc.ttl" ) + "#" );
 
 		registerPrimitive( Get.class, NS + "get", mc );

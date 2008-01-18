@@ -17,7 +17,7 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 import net.fortytwo.ripple.rdf.diff.SynchronizedRdfDiffSink;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.UrlFactory;
+import net.fortytwo.ripple.util.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -427,7 +427,7 @@ public class LinkedDataSailConnection implements SailConnection
 
 	LinkedDataSailConnection( final Sail baseSail,
 								final WebClosure webClosure,
-								final UrlFactory urlFactory,
+								final UriMap uriMap,
 								final RdfDiffSink listenerSink )
 		throws SailException
 	{
@@ -447,7 +447,7 @@ public class LinkedDataSailConnection implements SailConnection
 				: new RdfDiffTee( adapter, listenerSink ) );
 		baseSailWriteSink = new SynchronizedRdfDiffSink( baseSailWriteBuffer, baseSailWriteBuffer );
 
-		sparqlUpdater = new SparqlUpdater( urlFactory, baseSailWriteSink );
+		sparqlUpdater = new SparqlUpdater( uriMap, baseSailWriteSink );
 		apiInputSink = sparqlUpdater.getSink();
 
 		open = true;
@@ -455,10 +455,10 @@ public class LinkedDataSailConnection implements SailConnection
 
 	LinkedDataSailConnection( final Sail localStore,
 								final WebClosure webClosure,
-								final UrlFactory urlFactory )
+								final UriMap uriMap )
 		throws SailException
 	{
-		this( localStore, webClosure, urlFactory, null );
+		this( localStore, webClosure, uriMap, null );
 	}
 
 	void addNamespace( final Namespace ns )
@@ -671,10 +671,10 @@ public class LinkedDataSailConnection implements SailConnection
 
 		catch ( RippleException e )
 		{
-			if ( LinkedDataSail.logFailedUris() )
-			{
+			//if ( LinkedDataSail.logFailedUris() )
+			//{
 				e.logError();
-			}
+			//}
 		}
 	}
 

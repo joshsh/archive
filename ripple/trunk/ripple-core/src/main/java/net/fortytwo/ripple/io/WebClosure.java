@@ -1,20 +1,30 @@
 package net.fortytwo.ripple.io;
 
+import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.BNodeToUriFilter;
+import net.fortytwo.ripple.rdf.RdfBuffer;
+import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SingleContextPipe;
 import net.fortytwo.ripple.util.StringUtils;
-import net.fortytwo.ripple.util.UrlFactory;
-import net.fortytwo.ripple.rdf.*;
+import net.fortytwo.ripple.util.UriMap;
+import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.rio.RDFHandler;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Author: josh
@@ -34,12 +44,12 @@ public class WebClosure  // TODO: the name is a little misleading...
 	private Set<String> successMemos = new HashSet<String>();
 	private Set<String> failureMemos = new HashSet<String>();
 
-    private UrlFactory urlFactory;
+    private UriMap uriMap;
 	private ValueFactory valueFactory;
 
-	public WebClosure( final UrlFactory urlFactory, final ValueFactory vf )
+	public WebClosure( final UriMap uriMap, final ValueFactory vf )
 	{
-        this.urlFactory = urlFactory;
+        this.uriMap = uriMap;
 		valueFactory = vf;
 	}
 
@@ -92,8 +102,20 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		// Note: this URL should be treated as a "black box" once created; it
 		// need not resemble the URI it was created from.
-		String mapped = urlFactory.createUrl( memo ).toString();
+		String mapped;
 
+		try
+		{
+			mapped = uriMap.get( memo );
+		}
+
+		catch ( RippleException e )
+		{
+			// Fail, but don't bother remembering the URI.
+			failed( uri, "bad URL" );
+			return Rdfizer.Outcome.Failure;
+		}
+	
 		LOGGER.info( "Dereferencing URI <"
 				+ StringUtils.escapeUriString( uri.toString() )
 				+ "> at location " + mapped );
@@ -106,7 +128,21 @@ public class WebClosure  // TODO: the name is a little misleading...
 			return Rdfizer.Outcome.Failure;
 		}
 		
-		Representation rep = dref.handle( mapped );
+		Representation rep;
+
+		try
+		{
+			rep = dref.handle( mapped );
+		}
+
+		catch ( RippleException e )
+		{
+			e.logError();
+			addFailureMemo( memo );
+			failed( uri, "dereferencer error" );
+			return Rdfizer.Outcome.Failure;
+		}
+
 		if ( null == rep )
 		{
 			addFailureMemo( memo );
@@ -141,7 +177,9 @@ public class WebClosure  // TODO: the name is a little misleading...
 		RdfSink scp = new SingleContextPipe( resultSink, context, valueFactory );
 		
 		RdfBuffer results = new RdfBuffer( scp );
-		RDFHandler hdlr = new SesameInputAdapter( results );
+		RDFHandler hdlr = new SesameInputAdapter( Ripple.useBlankNodes()
+				? results
+				: new BNodeToUriFilter( results, valueFactory ) );
 
 		InputStream is;
 
@@ -158,7 +196,9 @@ public class WebClosure  // TODO: the name is a little misleading...
 		// For now...
 		String baseUri = memo;
 
-		Rdfizer.Outcome outcome = rfiz.handle( is, hdlr, uri, baseUri );
+		Rdfizer.Outcome outcome;
+
+		outcome = rfiz.handle( is, hdlr, uri, baseUri );
 
 		switch ( outcome )
 		{
