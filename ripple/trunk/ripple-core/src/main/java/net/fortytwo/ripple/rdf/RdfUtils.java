@@ -9,17 +9,9 @@
 
 package net.fortytwo.ripple.rdf;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.HttpUtils;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.log4j.Logger;
@@ -31,13 +23,108 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.memory.MemoryStore;
+import org.restlet.resource.Variant;
+import org.restlet.data.MediaType;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.*;
 
 public final class RdfUtils
 {
 	private static final Logger LOGGER = Logger.getLogger( RdfUtils.class );
 
-	private RdfUtils()
+    private static Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;
+	private static Map<MediaType, RDFFormat> mediaTypeToRdfFormatMap;
+	private static List<Variant> rdfVariants = null;
+    private static boolean initialized = false;
+
+    private RdfUtils()
 	{
+	}
+
+    private static void initialize()
+    {
+        rdfFormatToMediaTypeMap = new HashMap<RDFFormat, MediaType>();
+
+		// Note: preserves order of insertion
+		mediaTypeToRdfFormatMap = new LinkedHashMap<MediaType, RDFFormat>();
+
+		// Note: the first format registered becomes the default format.
+		registerRdfFormat( RDFFormat.RDFXML );
+		registerRdfFormat( RDFFormat.TURTLE );
+		registerRdfFormat( RDFFormat.N3 );
+		registerRdfFormat( RDFFormat.NTRIPLES );
+		registerRdfFormat( RDFFormat.TRIG );
+		registerRdfFormat( RDFFormat.TRIX );
+
+        rdfVariants = new LinkedList<Variant>();
+        Iterator<MediaType> types = mediaTypeToRdfFormatMap.keySet().iterator();
+        while ( types.hasNext() )
+        {
+            rdfVariants.add( new Variant( types.next() ) );
+        }
+
+        initialized = true;
+    }
+
+   	private static void registerRdfFormat( final RDFFormat format )
+	{
+		MediaType t;
+
+		if ( RDFFormat.RDFXML == format )
+		{
+			t = MediaType.APPLICATION_RDF_XML;
+		}
+
+		else
+		{
+			t = new MediaType( format.getDefaultMIMEType() );
+		}
+
+		rdfFormatToMediaTypeMap.put( format, t );
+		mediaTypeToRdfFormatMap.put( t, format );
+	}
+
+	public static List<Variant> getRdfVariants()
+	{
+		if ( !initialized )
+		{
+            initialize();
+		}
+
+/*
+System.out.println( "getRdfVariants() --> " + rdfVariants );
+Iterator<Variant> iter = rdfVariants.iterator();
+while(iter.hasNext()){
+Variant v = iter.next();
+System.out.println( "    " + v + " -- " + v.getMediaType().getName() + " -- " + v.getMediaType().getMainType() + "/" + v.getMediaType().getSubType() );
+}*/
+		return rdfVariants;
+	}
+
+	public static MediaType findMediaType( final RDFFormat format )
+	{
+		if ( !initialized )
+		{
+            initialize();
+		}
+
+        return rdfFormatToMediaTypeMap.get( format );
+	}
+
+	public static RDFFormat findRdfFormat( final MediaType mediaType )
+	{
+		if ( !initialized )
+		{
+            initialize();
+		}
+
+        return mediaTypeToRdfFormatMap.get( mediaType );
 	}
 
 	public static Sail createMemoryStoreSail()
@@ -128,7 +215,7 @@ public final class RdfUtils
 
 		return format;		
 	}
-	
+
 	public static RDFFormat read( final URL url,
 								final SesameInputAdapter sa,
 								final String baseUri,
@@ -302,7 +389,7 @@ public final class RdfUtils
 
 	// Note: examines the content type first, then the URL extension.  If all
 	//       else fails, default to RDF/XML and hope for the best.
-	public static RDFFormat guessRdfFormat( final String file, final String contentType )
+	public static RDFFormat guessRdfFormat( final String uri, final String contentType )
 	{
 /*
 System.out.println( RDFFormat.N3.getName() + ": " + RDFFormat.N3.getMIMEType() );
@@ -313,16 +400,16 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 */
 //System.out.println("contentType = " + contentType);
 		String ext;
-		if ( null == file )
+		if ( null == uri )
 		{
 			ext = null;
 		}
 
 		else
 		{
-			int lastDot = file.lastIndexOf( '.' );
-			ext = ( lastDot > 0 && lastDot < file.length() - 1 )
-				? file.substring( lastDot + 1 )
+			int lastDot = uri.lastIndexOf( '.' );
+			ext = ( lastDot > 0 && lastDot < uri.length() - 1 )
+				? uri.substring( lastDot + 1 )
 				: null;
 		}
 		LOGGER.debug( "extension = " + ext );
@@ -367,7 +454,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			}
 		}
 
-		// Primary file extension rules.
+		// Primary uri extension rules.
 		if ( null != ext )
 		{
 			if ( ext.equals( "n3" ) )
@@ -431,7 +518,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 //                return RDFFormat.NTRIPLES;
 		}
 
-		// Secondary file extension rules.
+		// Secondary uri extension rules.
 		if ( null != ext )
 		{
 			// precedent:

@@ -236,7 +236,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		sink.put( new SesameList( Operator.OP ).push( head ) );
 	}
 	
-// TODO: handle circular lists and other convergent structures 
+// TODO: extend circular lists and other convergent structures
 	private static void createList( final RippleValue head,
 									final Sink<RippleList> sink,
 									final ModelConnection mc )

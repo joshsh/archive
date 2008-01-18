@@ -10,30 +10,32 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import info.aduna.iteration.CloseableIteration;
-
-import java.io.File;
-import java.util.Iterator;
-import java.util.Properties;
-
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
-import net.fortytwo.ripple.io.Dereferencer;
+import net.fortytwo.ripple.io.WebClosure;
+import net.fortytwo.ripple.io.FileUriDereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
+import net.fortytwo.ripple.io.JarUriDereferencer;
+import net.fortytwo.ripple.io.VerbatimRdfizer;
+import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UrlFactory;
-
 import org.apache.log4j.Logger;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailChangedListener;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
+
+import java.io.File;
+import java.util.Iterator;
 
 /**
  * A thread-safe Sail which treats the Semantic Web as a single global graph of
@@ -54,7 +56,7 @@ public class LinkedDataSail implements StackableSail
 		rplCacheFailureMemo;
 	
 	private Sail baseSail;
-	private Dereferencer dereferencer;
+	private WebClosure webClosure;
 	private UrlFactory urlFactory;
 	
 	private boolean initialized = false;
@@ -74,15 +76,7 @@ public class LinkedDataSail implements StackableSail
 		this.baseSail = baseSail;
 		this.urlFactory = urlFactory;
 
-		dereferencer = new HttpUriDereferencer( urlFactory, getValueFactory() );
-
-		// Don't bother trying to dereference terms in these common namespaces.
-		dereferencer.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );
-		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
-		dereferencer.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
-
-		// Don't try to dereference the cache index.
-		dereferencer.addSuccessMemo( "http://fortytwo.net/2007/08/ripple/cache#" );
+		webClosure = createDefaultClosureManager();
 	}
 
 	public void addSailChangedListener( final SailChangedListener listener )
@@ -97,7 +91,7 @@ public class LinkedDataSail implements StackableSail
 			throw new SailException( "LinkedDataSail has not been initialized" );
 		}
 		
-		return new LinkedDataSailConnection( baseSail, dereferencer, urlFactory );
+		return new LinkedDataSailConnection( baseSail, webClosure, urlFactory );
 	}
 
 	public File getDataDir()
@@ -155,12 +149,12 @@ return null;
 	public synchronized LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		return new LinkedDataSailConnection( baseSail, dereferencer, urlFactory, listenerSink );
+		return new LinkedDataSailConnection( baseSail, webClosure, urlFactory, listenerSink );
 	}
 
-public Dereferencer getDereferencer()
+public WebClosure getClosureManager()
 {
-	return dereferencer;
+	return webClosure;
 }
 
 	public Sail getBaseSail()
@@ -174,7 +168,36 @@ public Dereferencer getDereferencer()
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
-	
+
+	private WebClosure createDefaultClosureManager()
+	{
+		WebClosure cm = new WebClosure( urlFactory, getValueFactory() );
+
+		// Add URI dereferencers.
+		cm.addDereferencer( "http", new HttpUriDereferencer() );
+		cm.addDereferencer( "jar", new JarUriDereferencer() );
+		cm.addDereferencer( "file", new FileUriDereferencer() );
+
+		// Add rdfizers.
+		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.RDFXML ), new VerbatimRdfizer( RDFFormat.RDFXML ) );
+		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.NTRIPLES ), new VerbatimRdfizer( RDFFormat.NTRIPLES ) );
+		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TURTLE ), new VerbatimRdfizer( RDFFormat.TURTLE ) );
+		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ) );
+		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ) );
+		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ) );
+
+
+		// Don't bother trying to dereference terms in these common namespaces.
+		cm.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );
+		cm.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
+		cm.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
+
+		// Don't try to dereference the cache index.
+		cm.addSuccessMemo( "http://fortytwo.net/2007/08/ripple/cache#" );
+
+		return cm;
+	}
+
 	/**
 	 * Writes cache metadata to the base Sail.
 	 * Note: for now, this metadata resides in the null context.
@@ -189,13 +212,13 @@ public Dereferencer getDereferencer()
 		sc.commit();
 
 		LOGGER.debug( "writing success memos" );
-		for ( Iterator<String> iter = dereferencer.getSuccessMemos().iterator(); iter.hasNext(); )
+		for ( Iterator<String> iter = webClosure.getSuccessMemos().iterator(); iter.hasNext(); )
 		{
 			sc.addStatement( rplCacheRoot, rplCacheSuccessMemo, vf.createLiteral( iter.next() ) );
 		}
 
 		LOGGER.debug( "writing failure memos" );
-		for ( Iterator<String> iter = dereferencer.getFailureMemos().iterator(); iter.hasNext(); )
+		for ( Iterator<String> iter = webClosure.getFailureMemos().iterator(); iter.hasNext(); )
 		{
 			sc.addStatement( rplCacheRoot, rplCacheFailureMemo, vf.createLiteral( iter.next() ) );
 		}
@@ -220,7 +243,7 @@ public Dereferencer getDereferencer()
 			Value obj = iter.next().getObject();
 			if ( obj instanceof Literal )
 			{
-				dereferencer.addSuccessMemo( ( (Literal) obj ).getLabel() );
+				webClosure.addSuccessMemo( ( (Literal) obj ).getLabel() );
 			}
 		}
 		
@@ -231,7 +254,7 @@ public Dereferencer getDereferencer()
 			Value obj = iter.next().getObject();
 			if ( obj instanceof Literal )
 			{
-				dereferencer.addFailureMemo( ( (Literal) obj ).getLabel() );
+				webClosure.addFailureMemo( ( (Literal) obj ).getLabel() );
 			}
 		}		
 		

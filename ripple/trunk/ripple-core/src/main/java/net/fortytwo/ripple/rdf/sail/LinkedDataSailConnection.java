@@ -10,22 +10,15 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import info.aduna.iteration.CloseableIteration;
-
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
-
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.Dereferencer;
+import net.fortytwo.ripple.io.WebClosure;
 import net.fortytwo.ripple.rdf.diff.RdfDiffBuffer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 import net.fortytwo.ripple.rdf.diff.SynchronizedRdfDiffSink;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UrlFactory;
-
 import org.apache.log4j.Logger;
-
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -44,12 +37,16 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * A thread-safe SailConnection for LinkedDataSail.
  * External objects which are assumed to be thread-safe:
  * - the base Sail's ValueFactory
  * - any SailConnectionListeners added to this SailConnection
- * - the Dereferencer
+ * - the UriDereferencer
  * External objects which are not assumed to be thread-safe:
  * - the base Sail and its SailConnections.  All operations involving the base
  *   Sail or its connections are synchronized w.r.t. the base Sail
@@ -70,7 +67,7 @@ public class LinkedDataSailConnection implements SailConnection
 	private ValueFactory valueFactory;
 	private Set<SailConnectionListener> listeners = null;
 
-	private Dereferencer dereferencer;
+	private WebClosure webClosure;
 	
 	// Note: SparqlUpdater is not thread-safe, so we must synchronize all
 	//       operations involving it.
@@ -429,13 +426,13 @@ public class LinkedDataSailConnection implements SailConnection
 	////////////////////////////////////////////////////////////////////////////
 
 	LinkedDataSailConnection( final Sail baseSail,
-								final Dereferencer dereferencer,
+								final WebClosure webClosure,
 								final UrlFactory urlFactory,
 								final RdfDiffSink listenerSink )
 		throws SailException
 	{
 		this.baseSail = baseSail;
-		this.dereferencer = dereferencer;
+		this.webClosure = webClosure;
 
 		// Inherit the local store's ValueFactory
 		valueFactory = baseSail.getValueFactory();
@@ -457,11 +454,11 @@ public class LinkedDataSailConnection implements SailConnection
 	}
 
 	LinkedDataSailConnection( final Sail localStore,
-								final Dereferencer dereferencer,
+								final WebClosure webClosure,
 								final UrlFactory urlFactory )
 		throws SailException
 	{
-		this( localStore, dereferencer, urlFactory, null );
+		this( localStore, webClosure, urlFactory, null );
 	}
 
 	void addNamespace( final Namespace ns )
@@ -669,7 +666,7 @@ public class LinkedDataSailConnection implements SailConnection
 //System.out.println( "dereferencing URI: " + uri );
 		try
 		{
-			dereferencer.dereference( uri, baseSailWriteSink.adderSink() );
+			webClosure.extend( uri, baseSailWriteSink.adderSink() );
 		}
 
 		catch ( RippleException e )
