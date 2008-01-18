@@ -17,6 +17,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.QueryEngine;
+import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
 
@@ -26,6 +27,7 @@ public class RippleQueryCmd extends Command
 	private Sink<RippleList> sink;
 	private Source<RippleList> composedWith;
 	private Evaluator evaluator;
+	private Collector<RippleList> expressions;
 
 	public RippleQueryCmd( final ListAst listAst,
 							final Sink<RippleList> sink,
@@ -39,31 +41,46 @@ public class RippleQueryCmd extends Command
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
+		if ( null == expressions )
+		{
+			expressions = new Collector<RippleList>();
+
+			final Sink<RippleValue> exprSink = new Sink<RippleValue>()
+			{
+				// Note: v will always be a list.
+				public void put( final RippleValue v ) throws RippleException
+				{
+					final RippleList stack = mc.invert( (RippleList) v );
+
+					Sink<RippleList> composedWithSink = new Sink<RippleList>()
+					{
+						public void put( final RippleList base )
+							throws RippleException
+						{
+							expressions.put( mc.concat( stack, base ) );
+						}
+					};
+
+					composedWith.writeTo( composedWithSink );
+				}
+			};
+
+			listAst.evaluate( exprSink, qe, mc );
+		}
+
 		evaluator = qe.getEvaluator();
 
-		final Sink<RippleValue> evaluatorSink = new Sink<RippleValue>()
+		final Sink<RippleList> evaluatorSink = new Sink<RippleList>()
 		{
 			// Note: v will always be a list.
-			public void put( final RippleValue v ) throws RippleException
+			public void put( final RippleList l ) throws RippleException
 			{
-				final RippleList stack = mc.invert( (RippleList) v );
-
-				Sink<RippleList> composedWithSink = new Sink<RippleList>()
-				{
-					public void put( final RippleList base )
-						throws RippleException
-					{
-						evaluator.applyTo(
-							mc.concat( stack, base ), sink, mc );
-					}
-				};
-
-				composedWith.writeTo( composedWithSink );
+				evaluator.applyTo( l, sink, mc );
 			}
 		};
-		
-System.out.println( "evaluating: " + listAst );
-		listAst.evaluate( evaluatorSink, qe, mc );
+
+//System.out.println( "evaluating: " + listAst );
+		expressions.writeTo( evaluatorSink );		
 	}
 
 	protected void abort()

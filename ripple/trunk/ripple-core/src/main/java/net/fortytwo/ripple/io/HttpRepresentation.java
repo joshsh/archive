@@ -34,19 +34,31 @@ public class HttpRepresentation extends Representation
 		try
 		{
 			client.executeMethod( method );
-	        inputStream = new HttpRepresentationInputStream(
-                    method.getResponseBodyAsStream() );
-
-			String mtStr = method.getResponseHeader( HttpUtils.CONTENT_TYPE ).getValue().split( ";" )[0];
-			MediaType mt = new MediaType( mtStr );
-//System.out.println( "discovered media type is: " + mt );
-            setMediaType( mt );
-        }
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
 		}
+		
+		catch ( IOException e )
+		{
+			throw new RippleException( e );
+		}
+
+		InputStream is = null;
+
+		try
+		{
+			is = method.getResponseBodyAsStream();
+		}
+
+		catch ( IOException e )
+		{
+			throw new RippleException( e );
+		}
+
+		inputStream = new HttpRepresentationInputStream( is );
+
+		String mtStr = method.getResponseHeader( HttpUtils.CONTENT_TYPE ).getValue().split( ";" )[0];
+		MediaType mt = new MediaType( mtStr );
+//System.out.println( "discovered media type is: " + mt );
+		setMediaType( mt );
     }
 
     public ReadableByteChannel getChannel() throws IOException

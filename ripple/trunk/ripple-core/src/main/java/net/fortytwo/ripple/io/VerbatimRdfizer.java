@@ -34,18 +34,18 @@ public class VerbatimRdfizer implements Rdfizer
 
 		catch ( IOException e )
 		{
-			new RippleException( e ).logError();
+			new RippleException( e ).logError( false );
 			return Outcome.Failure;
 		}
 
 		catch ( RDFParseException e )
 		{
-			new RippleException( e ).logError();
+			new RippleException( e ).logError( false );
 			return Outcome.Failure;
 		}
 
 		catch ( RDFHandlerException e ) {
-			new RippleException( e ).logError();
+			new RippleException( e ).logError( false );
 			return Outcome.Failure;
 		}
 

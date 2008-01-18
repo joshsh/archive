@@ -24,7 +24,7 @@ import java.nio.channels.WritableByteChannel;
 
 public class JarUriDereferencer implements UriDereferencer
 {
-	public Representation handle( final String uri ) throws RippleException
+	public Representation dereference( final String uri ) throws RippleException
 	{
 		return new JarRepresentation( uri );
 	}

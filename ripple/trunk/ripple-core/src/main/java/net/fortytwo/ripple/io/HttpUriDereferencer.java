@@ -1,7 +1,7 @@
 /*
- * $URL$
- * $Revision$
- * $Author$
+ * $URL: http://svn.fortytwo.net/projects/ripple/trunk/ripple-core/src/main/java/net/fortytwo/ripple/io/HttpUriDereferencer.java $
+ * $Revision: 961 $
+ * $Author: josh $
  *
  * Copyright (C) 2007 Joshua Shinavier
  */
@@ -49,7 +49,7 @@ public class HttpUriDereferencer implements UriDereferencer
 		}
 	}
 
-	public Representation handle( final String uri ) throws RippleException
+	public Representation dereference( final String uri ) throws RippleException
 	{
 	    // Don't dereference a URI which appears to point to a file which is not
 		// an RDF document.

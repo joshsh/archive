@@ -23,7 +23,7 @@ import java.nio.channels.WritableByteChannel;
 
 public class FileUriDereferencer implements UriDereferencer
 {
-	public Representation handle( final String uri ) throws RippleException
+	public Representation dereference( final String uri ) throws RippleException
 	{
 		return new FileRepresentation( uri );
 	}

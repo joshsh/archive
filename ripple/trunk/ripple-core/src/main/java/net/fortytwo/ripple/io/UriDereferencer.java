@@ -14,7 +14,7 @@ import org.restlet.resource.Representation;
 
 public interface UriDereferencer
 {
-	Representation handle( String uri ) throws RippleException;
+	Representation dereference( String uri ) throws RippleException;
 }
 
 // kate: tab-width 4

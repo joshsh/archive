@@ -120,7 +120,20 @@ public class WebClosure  // TODO: the name is a little misleading...
 				+ StringUtils.escapeUriString( uri.toString() )
 				+ "> at location " + mapped );
 
-		UriDereferencer dref = chooseDereferencer( mapped );
+		UriDereferencer dref;
+
+		try
+		{
+			dref = chooseDereferencer( mapped );
+		}
+
+		catch ( RippleException e )
+		{
+			// Fail, but don't bother remembering the URI.
+			failed( uri, "bad URI" );
+			return Rdfizer.Outcome.Failure;
+		}
+
 		if ( null == dref )
 		{
 			addFailureMemo( memo );
@@ -132,7 +145,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		try
 		{
-			rep = dref.handle( mapped );
+			rep = dref.dereference( mapped );
 		}
 
 		catch ( RippleException e )

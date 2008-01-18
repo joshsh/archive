@@ -32,32 +32,48 @@ public class RippleException extends Exception
 		super( msg );
 	}
 
-	public void logError()
+	public void logError( final boolean includeStackTrace )
 	{
-		String description;
+	   	String description;
 
-		if ( null == getCause() )
+		if ( includeStackTrace )
 		{
-			description = getMessage();
+			if ( null == getCause() )
+			{
+				description = getMessage();
+			}
+
+			else
+			{
+				try
+				{
+					ByteArrayOutputStream os = new ByteArrayOutputStream();
+					PrintStream ps = new PrintStream( os );
+					getCause().printStackTrace( ps );
+					description = os.toString();
+					ps.close();
+					os.close();
+				}
+
+				catch ( java.io.IOException e )
+				{
+					System.err.println( "Failed to create error message. A stack trace of the secondary error follows." );
+					e.printStackTrace( System.err );
+					return;
+				}
+			}
 		}
 
 		else
 		{
-			try
+			if ( null == getCause() )
 			{
-				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				PrintStream ps = new PrintStream( os );
-				getCause().printStackTrace( ps );
-				description = os.toString();
-				ps.close();
-				os.close();
+				description = getMessage();
 			}
-	
-			catch ( java.io.IOException e )
+
+			else
 			{
-				System.err.println( "Failed to create error message. A stack trace of the secondary error follows." );
-				e.printStackTrace( System.err );
-				return;
+				description = getCause().getMessage();
 			}
 		}
 
@@ -71,6 +87,11 @@ public class RippleException extends Exception
 			System.err.println( "Failed to log an exception. A stack trace of the secondary error follows." );
 			t.printStackTrace( System.err );
 		}
+	}
+
+	public void logError()
+	{
+		logError( true );
 	}
 }
 
