@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Note: this tool stores metadata about web activity; if a suitable
+ * dereferencer cannot be found for a URI, no metadata will be stored.
+ * 
  * Author: josh
  * Date: Jan 16, 2008
  * Time: 12:25:29 PM
@@ -32,13 +35,13 @@ public class WebClosure  // TODO: the name is a little misleading...
 {
 	private static final Logger LOGGER = Logger.getLogger( WebClosure.class );
 
+	private Map<String, ContextMemo> memos = new HashMap<String, ContextMemo>();
+
 	// Maps media types to Rdfizers
 	private Map<MediaType, Rdfizer> rdfizers = new HashMap<MediaType, Rdfizer>();
 
 	// Maps URI schemes to Dereferencers
 	private Map<String, UriDereferencer> dereferencers = new HashMap<String, UriDereferencer>();
-
-	private Map<String, ContextMemo> memos = new HashMap<String, ContextMemo>();
 
     private UriMap uriMap;
 	private ValueFactory valueFactory;
@@ -74,7 +77,9 @@ public class WebClosure  // TODO: the name is a little misleading...
 		Rdfizer.Outcome outcome = extendPrivate( uri, resultSink );
 		if ( Rdfizer.Outcome.Success != outcome )
 		{
-			failed( uri, outcome );
+			// Note: exception information is not necessarily recorded
+			LOGGER.info( "Failed to dereference URI <"
+					+ StringUtils.escapeUriString( uri.toString() ) + ">: " + outcome );
 		}
 
 		return outcome;
@@ -85,50 +90,59 @@ public class WebClosure  // TODO: the name is a little misleading...
 		// TODO: memos should be inferred in a scheme-specific way
 		String memoUri = RdfUtils.inferContext( uri );
 
-		ContextMemo memo = memos.get( memoUri );
-		if ( null != memo )
-		{
-			return memo.getOutcome();
-		}
+		ContextMemo memo;
+		UriDereferencer dref;
 
 		// Note: this URL should be treated as a "black box" once created; it
 		// need not resemble the URI it was created from.
 		String mapped;
 
-		try
+		// Rules out an otherwise possible race condition
+		synchronized ( memos )
 		{
-			mapped = uriMap.get( memoUri );
-		}
+			memo = memos.get( memoUri );
 
-		catch ( RippleException e )
-		{
-			// Don't bother remembering the URI.
-			return Rdfizer.Outcome.InvalidUri;
-		}
+			if ( null != memo )
+			{
+				return memo.getStatus();
+			}
+
+			try
+			{
+				mapped = uriMap.get( memoUri );
+			}
+
+			catch ( RippleException e )
+			{
+				return Rdfizer.Outcome.InvalidUri;
+			}
 	
-		LOGGER.info( "Dereferencing URI <"
-				+ StringUtils.escapeUriString( uri.toString() )
-				+ "> at location " + mapped );
+			LOGGER.info( "Dereferencing URI <"
+					+ StringUtils.escapeUriString( uri.toString() )
+					+ "> at location " + mapped );
 
-		UriDereferencer dref;
+			try
+			{
+				dref = chooseDereferencer( mapped );
+			}
 
-		try
-		{
-			dref = chooseDereferencer( mapped );
+			catch ( RippleException e )
+			{
+				return Rdfizer.Outcome.InvalidUri;
+			}
+
+			if ( null == dref )
+			{
+				return Rdfizer.Outcome.BadUriScheme;
+			}
+
+			memo = new ContextMemo( Rdfizer.Outcome.Success );
+			memos.put( memoUri, memo );
 		}
 
-		catch ( RippleException e )
-		{
-			// Don't bother remembering the URI.
-			return Rdfizer.Outcome.InvalidUri;
-		}
+		// Note: from this point on, failures are explicitly stored as caching
+		// metadata.
 
-		if ( null == dref )
-		{
-			// Don't bother remembering the URI.
-			return Rdfizer.Outcome.NoDereferencer;
-		}
-		
 		Representation rep;
 
 		try
@@ -138,16 +152,8 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		catch ( RippleException e )
 		{
-			e.logError();
-			addMemo( memoUri, new ContextMemo( Rdfizer.Outcome.DereferencerError ) );
-			return Rdfizer.Outcome.DereferencerError;
-		}
-
-		// TODO: don't tolerate null representations from dereferencers; this is an error condition
-		if ( null == rep )
-		{
-			addMemo( memoUri, new ContextMemo( Rdfizer.Outcome.DereferencerError ) );
-			return Rdfizer.Outcome.DereferencerError;
+			memo.setStatus( Rdfizer.Outcome.DereferencerError );
+			return memo.getStatus();
 		}
 
 		MediaType mt = rep.getMediaType();
@@ -156,8 +162,9 @@ public class WebClosure  // TODO: the name is a little misleading...
 		Rdfizer rfiz = chooseRdfizer( mt );
 		if ( null == rfiz )
 		{
-			addMemo( memoUri, new ContextMemo( Rdfizer.Outcome.NoRdfizer ) );
-			return Rdfizer.Outcome.NoRdfizer;
+			memo.setStatus( Rdfizer.Outcome.BadMediaType );
+			memo.setMediaType( mt );
+			return memo.getStatus();
 		}
 
 		URI context;
@@ -205,22 +212,10 @@ public class WebClosure  // TODO: the name is a little misleading...
 			results.flush();
 		}
 
-		else
-		{
-			// Record the failure and discard any results
-			failed( uri, outcome );
-		}
-
-		addMemo( memoUri, new ContextMemo( outcome ) );
+		memo.setStatus( outcome );
+		memo.setMediaType( mt );
 
 		return outcome;
-	}
-
-	private void failed( final URI uri, final Rdfizer.Outcome outcome )
-	{
-		// Note: exception information is not necessarily recorded
-		LOGGER.info( "Failed to dereference URI <"
-				+ StringUtils.escapeUriString( uri.toString() ) + ">: " + outcome );
 	}
 
 	private UriDereferencer chooseDereferencer( final String uri ) throws RippleException

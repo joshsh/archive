@@ -1,6 +1,7 @@
 package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.RippleException;
+import org.restlet.data.MediaType;
 
 import java.text.FieldPosition;
 import java.text.ParsePosition;
@@ -16,18 +17,25 @@ public class ContextMemo
 {
 	private static final String STATUS = "status";
 	private static final String TIMESTAMP = "timestamp";
+	private static final String MEDIATYPE = "mediaType";
 
 	// Use XMLSchema-style time stamps, without time zone info, accurate to
 	// the nearest second.
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy'-'MM'-'dd'T'HH':'mm':'ss" );
 
-	private Rdfizer.Outcome outcome = null;
-	private Date when = null;
+	private Rdfizer.Outcome status = null;
+	private Date timestamp = null;
+	private MediaType mediaType = null;
 
-	public ContextMemo( final Rdfizer.Outcome outcome )
+	public ContextMemo()
 	{
-		this.outcome = outcome;
-		this.when = new Date();
+		this( Rdfizer.Outcome.Undetermined );
+	}
+
+	public ContextMemo( final Rdfizer.Outcome status )
+	{
+		this.status = status;
+		this.timestamp = new Date();
 	}
 
 	// TODO: parse error handling
@@ -43,12 +51,18 @@ public class ContextMemo
 
 			if ( name.equals( STATUS ) )
 			{
-				this.outcome = Rdfizer.Outcome.valueOf( value );
+				this.status = Rdfizer.Outcome.valueOf( value );
 			}
 
 			else if ( name.equals( TIMESTAMP ) )
 			{
-				this.when = dateFormat.parse( value, new ParsePosition( 0 ) );
+				this.timestamp = dateFormat.parse( value, new ParsePosition( 0 ) );
+			}
+
+			else if ( name.equals( MEDIATYPE ) )
+			{
+				// TODO: is it reasonable to *create* a new media type here?
+				this.mediaType = new MediaType( value );
 			}
 		}
 	}
@@ -57,19 +71,34 @@ public class ContextMemo
 	{
 		StringBuffer sb = new StringBuffer();
 
-		sb.append( STATUS ).append( "=" ).append( outcome );
+		sb.append( STATUS ).append( "=" ).append( status );
 
-		if ( null != when )
+		if ( null != timestamp )
 		{
 			sb.append( "; " ).append( TIMESTAMP ).append( "=" );
-			dateFormat.format( when, sb, new FieldPosition( 0 ) );
+			dateFormat.format( timestamp, sb, new FieldPosition( 0 ) );
+		}
+
+		if ( null != mediaType )
+		{
+			sb.append( "; " ).append( MEDIATYPE ).append( "=" ).append( mediaType.toString() );
 		}
 
 		return sb.toString();
 	}
 
-	public Rdfizer.Outcome getOutcome()
+	public Rdfizer.Outcome getStatus()
 	{
-		return outcome;
+		return status;
+	}
+
+	public void setStatus( final Rdfizer.Outcome status )
+	{
+		this.status = status;
+	}
+
+	public void setMediaType( final MediaType mt )
+	{
+		this.mediaType = mt;
 	}
 }

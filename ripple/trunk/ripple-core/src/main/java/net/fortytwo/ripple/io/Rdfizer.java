@@ -13,14 +13,15 @@ import java.io.InputStream;
 public interface Rdfizer
 {
 	enum Outcome {
+			Undetermined,       // to be used only when a memo is created
 			Success,            // normal outcome
 			Timeout,            // network timeout
 			InvalidUri,         // bad URI
 			ParseError,         // a document was received, but failed to parse
 			ClientError,        // 4xx HTTP error
 			ServerError,        // 5xx HTTP error
-			NoDereferencer,     // no suitable URI dereferencer was found
-			NoRdfizer,          // no suitable rdfizer was found
+			BadUriScheme,       // no suitable URI dereferencer was found
+			BadMediaType,       // no suitable rdfizer was found
 			DereferencerError,  // TODO: break this down into more specific conditions
 			RdfizerError,       // TODO: break this down into more specific conditions
 			Ignore,             // don't bother dereferencing these URIs
