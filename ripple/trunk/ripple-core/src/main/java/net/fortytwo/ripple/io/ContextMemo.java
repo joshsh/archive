@@ -15,6 +15,23 @@ import java.util.Date;
  */
 public class ContextMemo
 {
+	public static enum Status
+	{
+		Undetermined,       // to be used only when a memo is created
+		Success,            // normal outcome
+		Timeout,            // network timeout
+		InvalidUri,         // bad URI
+		ParseError,         // a document was received, but failed to parse
+		ClientError,        // 4xx HTTP error
+		ServerError,        // 5xx HTTP error
+		BadUriScheme,       // no suitable URI dereferencer was found
+		BadMediaType,       // no suitable rdfizer was found
+		DereferencerError,  // TODO: break this down into more specific conditions
+		RdfizerError,       // TODO: break this down into more specific conditions
+		Ignored,            // don't bother dereferencing these URIs
+		Failure             // all other error conditions
+	}
+
 	private static final String STATUS = "status";
 	private static final String TIMESTAMP = "timestamp";
 	private static final String MEDIATYPE = "mediaType";
@@ -23,16 +40,16 @@ public class ContextMemo
 	// the nearest second.
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy'-'MM'-'dd'T'HH':'mm':'ss" );
 
-	private Rdfizer.Outcome status = null;
+	private Status status = null;
 	private Date timestamp = null;
 	private MediaType mediaType = null;
 
 	public ContextMemo()
 	{
-		this( Rdfizer.Outcome.Undetermined );
+		this( Status.Undetermined );
 	}
 
-	public ContextMemo( final Rdfizer.Outcome status )
+	public ContextMemo( final Status status )
 	{
 		this.status = status;
 		this.timestamp = new Date();
@@ -51,7 +68,7 @@ public class ContextMemo
 
 			if ( name.equals( STATUS ) )
 			{
-				this.status = Rdfizer.Outcome.valueOf( value );
+				this.status = Status.valueOf( value );
 			}
 
 			else if ( name.equals( TIMESTAMP ) )
@@ -87,12 +104,12 @@ public class ContextMemo
 		return sb.toString();
 	}
 
-	public Rdfizer.Outcome getStatus()
+	public Status getStatus()
 	{
 		return status;
 	}
 
-	public void setStatus( final Rdfizer.Outcome status )
+	public void setStatus( final Status status )
 	{
 		this.status = status;
 	}

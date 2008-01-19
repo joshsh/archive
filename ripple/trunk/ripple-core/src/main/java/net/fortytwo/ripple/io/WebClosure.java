@@ -72,20 +72,20 @@ public class WebClosure  // TODO: the name is a little misleading...
 		return memos;
 	}
 
-	public Rdfizer.Outcome extend( final URI uri, final RdfSink resultSink ) throws RippleException
+	public ContextMemo.Status extend( final URI uri, final RdfSink resultSink ) throws RippleException
 	{
-		Rdfizer.Outcome outcome = extendPrivate( uri, resultSink );
-		if ( Rdfizer.Outcome.Success != outcome )
+		ContextMemo.Status status = extendPrivate( uri, resultSink );
+		if ( ContextMemo.Status.Success != status )
 		{
 			// Note: exception information is not necessarily recorded
 			LOGGER.info( "Failed to dereference URI <"
-					+ StringUtils.escapeUriString( uri.toString() ) + ">: " + outcome );
+					+ StringUtils.escapeUriString( uri.toString() ) + ">: " + status );
 		}
 
-		return outcome;
+		return status;
 	}
 
-	private Rdfizer.Outcome extendPrivate( final URI uri, final RdfSink resultSink ) throws RippleException
+	private ContextMemo.Status extendPrivate( final URI uri, final RdfSink resultSink ) throws RippleException
 	{
 		// TODO: memos should be inferred in a scheme-specific way
 		String memoUri = RdfUtils.inferContext( uri );
@@ -114,7 +114,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 			catch ( RippleException e )
 			{
-				return Rdfizer.Outcome.InvalidUri;
+				return ContextMemo.Status.InvalidUri;
 			}
 	
 			LOGGER.info( "Dereferencing URI <"
@@ -128,15 +128,16 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 			catch ( RippleException e )
 			{
-				return Rdfizer.Outcome.InvalidUri;
+				e.logError( false );
+				return ContextMemo.Status.InvalidUri;
 			}
 
 			if ( null == dref )
 			{
-				return Rdfizer.Outcome.BadUriScheme;
+				return ContextMemo.Status.BadUriScheme;
 			}
 
-			memo = new ContextMemo( Rdfizer.Outcome.Success );
+			memo = new ContextMemo( ContextMemo.Status.Success );
 			memos.put( memoUri, memo );
 		}
 
@@ -152,7 +153,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		catch ( RippleException e )
 		{
-			memo.setStatus( Rdfizer.Outcome.DereferencerError );
+			memo.setStatus( ContextMemo.Status.DereferencerError );
 			return memo.getStatus();
 		}
 
@@ -162,7 +163,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		Rdfizer rfiz = chooseRdfizer( mt );
 		if ( null == rfiz )
 		{
-			memo.setStatus( Rdfizer.Outcome.BadMediaType );
+			memo.setStatus( ContextMemo.Status.BadMediaType );
 			memo.setMediaType( mt );
 			return memo.getStatus();
 		}
@@ -202,20 +203,20 @@ public class WebClosure  // TODO: the name is a little misleading...
 		// For now...
 		String baseUri = memoUri;
 
-		Rdfizer.Outcome outcome;
+		ContextMemo.Status status;
 
-		outcome = rfiz.handle( is, hdlr, uri, baseUri );
+		status = rfiz.handle( is, hdlr, uri, baseUri );
 
-		if ( Rdfizer.Outcome.Success == outcome )
+		if ( ContextMemo.Status.Success == status )
 		{
 			// Push results and record success
 			results.flush();
 		}
 
-		memo.setStatus( outcome );
+		memo.setStatus( status );
 		memo.setMediaType( mt );
 
-		return outcome;
+		return status;
 	}
 
 	private UriDereferencer chooseDereferencer( final String uri ) throws RippleException

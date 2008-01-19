@@ -73,13 +73,22 @@ public class UriMap
 
 	public void put( final String from, final String to )
 	{
+		if ( null == from )
+		{
+			throw new IllegalArgumentException( "can't map from null" );
+		}
+
+		if ( null == to )
+		{
+			throw new IllegalArgumentException( "can't map to null" );
+		}
+		
 		upToDate = false;
 
 		map.put( from, to );
 	}
 
-	public String get( final String uri )
-		throws RippleException
+	public String get( final String uri ) throws RippleException
 	{
 		if ( !upToDate )
 		{
@@ -106,7 +115,7 @@ public class UriMap
 				toIndex = mid - 1;
 			}
 
-			// Exact match.  Return the corresponding target URL.
+			// Exact match.  Return the corresponding target URI.
 			else
 			{
 				return getPrivate( toUris[mid] );

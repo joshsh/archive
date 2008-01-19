@@ -21,7 +21,7 @@ public class VerbatimRdfizer implements Rdfizer
 		parser = Rio.createParser( format );
 	}
 
-	public Outcome handle( final InputStream is,
+	public ContextMemo.Status handle( final InputStream is,
 						  final RDFHandler handler,
 						  final URI documentUri,
 						  final String baseUri )
@@ -35,20 +35,20 @@ public class VerbatimRdfizer implements Rdfizer
 		catch ( IOException e )
 		{
 			new RippleException( e ).logError( false );
-			return Outcome.Failure;
+			return ContextMemo.Status.Failure;
 		}
 
 		catch ( RDFParseException e )
 		{
 			new RippleException( e ).logError( false );
-			return Outcome.ParseError;
+			return ContextMemo.Status.ParseError;
 		}
 
 		catch ( RDFHandlerException e ) {
 			new RippleException( e ).logError( false );
-			return Outcome.Failure;
+			return ContextMemo.Status.Failure;
 		}
 
-		return Outcome.Success;
+		return ContextMemo.Status.Success;
 	}
 }

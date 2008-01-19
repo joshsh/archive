@@ -17,7 +17,6 @@ import net.fortytwo.ripple.io.ContextMemo;
 import net.fortytwo.ripple.io.FileUriDereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.io.JarUriDereferencer;
-import net.fortytwo.ripple.io.Rdfizer;
 import net.fortytwo.ripple.io.VerbatimRdfizer;
 import net.fortytwo.ripple.io.WebClosure;
 import net.fortytwo.ripple.rdf.RdfUtils;
@@ -36,7 +35,6 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -193,12 +191,12 @@ public WebClosure getClosureManager()
 		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ) );
 
 		// Don't bother trying to dereference terms in these common namespaces.
-		cm.addMemo( "http://www.w3.org/XML/1998/namespace#", new ContextMemo( Rdfizer.Outcome.Ignore ) );
-		cm.addMemo( "http://www.w3.org/2001/XMLSchema", new ContextMemo( Rdfizer.Outcome.Ignore ) );
-		cm.addMemo( "http://www.w3.org/2001/XMLSchema#", new ContextMemo( Rdfizer.Outcome.Ignore ) );
+		cm.addMemo( "http://www.w3.org/XML/1998/namespace#", new ContextMemo( ContextMemo.Status.Ignored ) );
+		cm.addMemo( "http://www.w3.org/2001/XMLSchema", new ContextMemo( ContextMemo.Status.Ignored ) );
+		cm.addMemo( "http://www.w3.org/2001/XMLSchema#", new ContextMemo( ContextMemo.Status.Ignored ) );
 
 		// Don't try to dereference the cache index.
-		cm.addMemo( "http://fortytwo.net/2007/08/ripple/cache#", new ContextMemo( Rdfizer.Outcome.Ignore ) );
+		cm.addMemo( "http://fortytwo.net/2007/08/ripple/cache#", new ContextMemo( ContextMemo.Status.Ignored ) );
 
 		return cm;
 	}
