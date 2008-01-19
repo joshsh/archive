@@ -20,11 +20,8 @@ import org.restlet.resource.Representation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Author: josh
@@ -41,8 +38,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 	// Maps URI schemes to Dereferencers
 	private Map<String, UriDereferencer> dereferencers = new HashMap<String, UriDereferencer>();
 
-	private Set<String> successMemos = new HashSet<String>();
-	private Set<String> failureMemos = new HashSet<String>();
+	private Map<String, ContextMemo> memos = new HashMap<String, ContextMemo>();
 
     private UriMap uriMap;
 	private ValueFactory valueFactory;
@@ -63,41 +59,36 @@ public class WebClosure  // TODO: the name is a little misleading...
 		dereferencers.put( scheme, uriDereferencer );
 	}
 
-	public void addSuccessMemo( final String memo )
+	public void addMemo( final String uri, final ContextMemo memo )
 	{
-//System.out.println( "adding success memo: " + memo );
-		successMemos.add( memo );
+		memos.put( uri, memo );
 	}
 
-	public void addFailureMemo( final String memo )
+	public Map<String, ContextMemo> getMemos()
 	{
-//System.out.println( "adding failure memo: " + memo );
-		failureMemos.add( memo );
-	}
-
-	public Collection<String> getSuccessMemos()
-	{
-		return successMemos;
-	}
-
-	public Collection<String> getFailureMemos()
-	{
-		return failureMemos;
+		return memos;
 	}
 
 	public Rdfizer.Outcome extend( final URI uri, final RdfSink resultSink ) throws RippleException
 	{
-		// TODO: memos should be inferred in a scheme-specific way
-		String memo = RdfUtils.inferContext( uri );
-
-		if ( successMemos.contains( memo ) )
+		Rdfizer.Outcome outcome = extendPrivate( uri, resultSink );
+		if ( Rdfizer.Outcome.Success != outcome )
 		{
-			return Rdfizer.Outcome.Success;
+			failed( uri, outcome );
 		}
 
-		if ( failureMemos.contains( memo ) )
+		return outcome;
+	}
+
+	private Rdfizer.Outcome extendPrivate( final URI uri, final RdfSink resultSink ) throws RippleException
+	{
+		// TODO: memos should be inferred in a scheme-specific way
+		String memoUri = RdfUtils.inferContext( uri );
+
+		ContextMemo memo = memos.get( memoUri );
+		if ( null != memo )
 		{
-			return Rdfizer.Outcome.Failure;
+			return memo.getOutcome();
 		}
 
 		// Note: this URL should be treated as a "black box" once created; it
@@ -106,14 +97,13 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		try
 		{
-			mapped = uriMap.get( memo );
+			mapped = uriMap.get( memoUri );
 		}
 
 		catch ( RippleException e )
 		{
-			// Fail, but don't bother remembering the URI.
-			failed( uri, "bad URL" );
-			return Rdfizer.Outcome.Failure;
+			// Don't bother remembering the URI.
+			return Rdfizer.Outcome.InvalidUri;
 		}
 	
 		LOGGER.info( "Dereferencing URI <"
@@ -129,16 +119,14 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		catch ( RippleException e )
 		{
-			// Fail, but don't bother remembering the URI.
-			failed( uri, "bad URI" );
-			return Rdfizer.Outcome.Failure;
+			// Don't bother remembering the URI.
+			return Rdfizer.Outcome.InvalidUri;
 		}
 
 		if ( null == dref )
 		{
-			addFailureMemo( memo );
-			failed( uri, "no suitable dereferencer found" );
-			return Rdfizer.Outcome.Failure;
+			// Don't bother remembering the URI.
+			return Rdfizer.Outcome.NoDereferencer;
 		}
 		
 		Representation rep;
@@ -151,16 +139,15 @@ public class WebClosure  // TODO: the name is a little misleading...
 		catch ( RippleException e )
 		{
 			e.logError();
-			addFailureMemo( memo );
-			failed( uri, "dereferencer error" );
-			return Rdfizer.Outcome.Failure;
+			addMemo( memoUri, new ContextMemo( Rdfizer.Outcome.DereferencerError ) );
+			return Rdfizer.Outcome.DereferencerError;
 		}
 
+		// TODO: don't tolerate null representations from dereferencers; this is an error condition
 		if ( null == rep )
 		{
-			addFailureMemo( memo );
-			failed( uri, "no representation could be created" );
-			return Rdfizer.Outcome.Failure;
+			addMemo( memoUri, new ContextMemo( Rdfizer.Outcome.DereferencerError ) );
+			return Rdfizer.Outcome.DereferencerError;
 		}
 
 		MediaType mt = rep.getMediaType();
@@ -169,16 +156,15 @@ public class WebClosure  // TODO: the name is a little misleading...
 		Rdfizer rfiz = chooseRdfizer( mt );
 		if ( null == rfiz )
 		{
-			addFailureMemo( memo );
-			failed( uri, "no suitable rdfizer found" );
-			return Rdfizer.Outcome.Failure;
+			addMemo( memoUri, new ContextMemo( Rdfizer.Outcome.NoRdfizer ) );
+			return Rdfizer.Outcome.NoRdfizer;
 		}
 
 		URI context;
 
 		try
 		{
-			context = valueFactory.createURI( memo );
+			context = valueFactory.createURI( memoUri );
 		}
 
 		catch ( Throwable t )
@@ -207,34 +193,34 @@ public class WebClosure  // TODO: the name is a little misleading...
 		}
 
 		// For now...
-		String baseUri = memo;
+		String baseUri = memoUri;
 
 		Rdfizer.Outcome outcome;
 
 		outcome = rfiz.handle( is, hdlr, uri, baseUri );
 
-		switch ( outcome )
+		if ( Rdfizer.Outcome.Success == outcome )
 		{
-			case Success:
-				// Push results and record success
-				results.flush();
-				addSuccessMemo( memo );
-				break;
-			case Failure:
-				// Record the failure and discard any results
-				addFailureMemo( memo );
-				failed( uri, "rdfization failed" );
-				break;
+			// Push results and record success
+			results.flush();
 		}
+
+		else
+		{
+			// Record the failure and discard any results
+			failed( uri, outcome );
+		}
+
+		addMemo( memoUri, new ContextMemo( outcome ) );
 
 		return outcome;
 	}
 
-	private void failed( final URI uri, final String msg )
+	private void failed( final URI uri, final Rdfizer.Outcome outcome )
 	{
 		// Note: exception information is not necessarily recorded
 		LOGGER.info( "Failed to dereference URI <"
-				+ StringUtils.escapeUriString( uri.toString() ) + ">: " + msg );
+				+ StringUtils.escapeUriString( uri.toString() ) + ">: " + outcome );
 	}
 
 	private UriDereferencer chooseDereferencer( final String uri ) throws RippleException

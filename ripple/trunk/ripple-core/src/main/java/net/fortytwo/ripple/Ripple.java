@@ -28,6 +28,10 @@ import org.openrdf.rio.RDFFormat;
 public final class Ripple
 {
 	public static final String URN_BNODE_PREFIX = "urn:bnode:";
+
+	// TODO: these should probably not be HTTP URIs
+	public static final String CACHE_CONTEXT = "http://fortytwo.net/2008/01/webclosure#context";
+	public static final String CACHE_MEMO = "http://fortytwo.net/2008/01/webclosure#memo";
 	
 	private static boolean initialized = false;
 
@@ -131,7 +135,12 @@ public final class Ripple
 
 		// Input/Output
 		cacheFormat = getRdfFormatProperty(
-			props, "net.fortytwo.ripple.io.cacheFormat", RDFFormat.RDFXML );
+			props, "net.fortytwo.ripple.io.cacheFormat", RDFFormat.TRIG );
+		if ( cacheFormat != RDFFormat.TRIG && cacheFormat != RDFFormat.TRIX )
+		{
+			throw new RippleException( "cache must use one of the named graph formats (TriG or TriX)" );
+		}
+
 		exportFormat = getRdfFormatProperty(
 			props, "net.fortytwo.ripple.io.exportFormat", RDFFormat.RDFXML );
 		rejectNonAssociatedStatements = getBooleanProperty(
@@ -189,11 +198,6 @@ public final class Ripple
 	public static String getVersion()
 	{
 		return "0.5-dev";
-	}
-
-	public static String getCacheUri()
-	{
-		return "http://fortytwo.net/2007/08/ripple/cache#index";
 	}
 
 	public static boolean getQuiet()

@@ -13,11 +13,13 @@ import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
-import net.fortytwo.ripple.io.WebClosure;
+import net.fortytwo.ripple.io.ContextMemo;
 import net.fortytwo.ripple.io.FileUriDereferencer;
 import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.io.JarUriDereferencer;
+import net.fortytwo.ripple.io.Rdfizer;
 import net.fortytwo.ripple.io.VerbatimRdfizer;
+import net.fortytwo.ripple.io.WebClosure;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UriMap;
@@ -25,7 +27,6 @@ import org.apache.log4j.Logger;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
@@ -36,6 +37,7 @@ import org.openrdf.sail.StackableSail;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A thread-safe Sail which treats the Semantic Web as a single global graph of
@@ -51,9 +53,8 @@ public class LinkedDataSail implements StackableSail
 	private static boolean logFailedUris;
 	
 	private URI
-		rplCacheRoot,
-		rplCacheSuccessMemo,
-		rplCacheFailureMemo;
+		cacheContext,
+		cacheMemo;
 	
 	private Sail baseSail;
 	private WebClosure webClosure;
@@ -76,7 +77,7 @@ public class LinkedDataSail implements StackableSail
 		this.baseSail = baseSail;
 		this.uriMap = uriMap;
 
-		webClosure = createDefaultClosureManager();
+		webClosure = createDefaultWebClosure();
 	}
 
 	public void addSailChangedListener( final SailChangedListener listener )
@@ -109,13 +110,18 @@ return null;
 	{
 		ValueFactory vf = getValueFactory();
 		
-		rplCacheRoot = vf.createURI( Ripple.getCacheUri() );
-		rplCacheSuccessMemo = vf.createURI(
-			"http://fortytwo.net/2007/08/ripple/cache#successMemo" );
-		rplCacheFailureMemo = vf.createURI(
-			"http://fortytwo.net/2007/08/ripple/cache#failureMemo" );
-		
-		restoreCacheMetaData();
+		cacheContext = vf.createURI( Ripple.CACHE_CONTEXT );
+		cacheMemo = vf.createURI( Ripple.CACHE_MEMO );
+
+		try
+		{
+			restoreCacheMetaData();
+		}
+
+		catch ( RippleException e )
+		{
+			throw new SailException( e );
+		}
 		
 		initialized = true;
 	}
@@ -169,7 +175,7 @@ public WebClosure getClosureManager()
 	
 	////////////////////////////////////////////////////////////////////////////
 
-	private WebClosure createDefaultClosureManager()
+	private WebClosure createDefaultWebClosure()
 	{
 		WebClosure cm = new WebClosure( uriMap, getValueFactory() );
 
@@ -187,12 +193,12 @@ public WebClosure getClosureManager()
 		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ) );
 
 		// Don't bother trying to dereference terms in these common namespaces.
-		cm.addFailureMemo( "http://www.w3.org/XML/1998/namespace#" );
-		cm.addFailureMemo( "http://www.w3.org/2001/XMLSchema" );
-		cm.addFailureMemo( "http://www.w3.org/2001/XMLSchema#" );
+		cm.addMemo( "http://www.w3.org/XML/1998/namespace#", new ContextMemo( Rdfizer.Outcome.Ignore ) );
+		cm.addMemo( "http://www.w3.org/2001/XMLSchema", new ContextMemo( Rdfizer.Outcome.Ignore ) );
+		cm.addMemo( "http://www.w3.org/2001/XMLSchema#", new ContextMemo( Rdfizer.Outcome.Ignore ) );
 
 		// Don't try to dereference the cache index.
-		cm.addSuccessMemo( "http://fortytwo.net/2007/08/ripple/cache#" );
+		cm.addMemo( "http://fortytwo.net/2007/08/ripple/cache#", new ContextMemo( Rdfizer.Outcome.Ignore ) );
 
 		return cm;
 	}
@@ -207,19 +213,19 @@ public WebClosure getClosureManager()
 		SailConnection sc = baseSail.getConnection();
 		
 		// Clear any existing cache metadata (in any named graph).
-		sc.removeStatements( rplCacheRoot, null, null );
+		sc.removeStatements( null, null, null, cacheContext );
 		sc.commit();
 
-		LOGGER.debug( "writing success memos" );
-		for ( Iterator<String> iter = webClosure.getSuccessMemos().iterator(); iter.hasNext(); )
+		LOGGER.debug( "writing memos" );
+		Map<String, ContextMemo> map = webClosure.getMemos();
+		for ( String k : map.keySet() )
 		{
-			sc.addStatement( rplCacheRoot, rplCacheSuccessMemo, vf.createLiteral( iter.next() ) );
-		}
+			ContextMemo memo = map.get( k );
 
-		LOGGER.debug( "writing failure memos" );
-		for ( Iterator<String> iter = webClosure.getFailureMemos().iterator(); iter.hasNext(); )
-		{
-			sc.addStatement( rplCacheRoot, rplCacheFailureMemo, vf.createLiteral( iter.next() ) );
+			URI uri = vf.createURI( k );
+			Literal memoLit = vf.createLiteral( memo.toString() );
+
+			sc.addStatement( uri, cacheMemo, memoLit, cacheContext );
 		}
 
 		sc.commit();
@@ -230,33 +236,24 @@ public WebClosure getClosureManager()
 	 * Restores dereferencer state by reading success and failure memos from
 	 * the last session (if present).
 	 */
-	private void restoreCacheMetaData() throws SailException
+	private void restoreCacheMetaData() throws SailException, RippleException
 	{
 		CloseableIteration<? extends Statement, SailException> iter;
 		SailConnection sc = baseSail.getConnection();
 		
-		// Read success memos.
-		iter = sc.getStatements( rplCacheRoot, rplCacheSuccessMemo, null, false );
+		// Read memos.
+		iter = sc.getStatements( null, cacheMemo, null, false, cacheContext );
 		while ( iter.hasNext() )
 		{
-			Value obj = iter.next().getObject();
-			if ( obj instanceof Literal )
-			{
-				webClosure.addSuccessMemo( ( (Literal) obj ).getLabel() );
-			}
+			Statement st = iter.next();
+			URI subj = (URI) st.getSubject();
+			Literal obj = (Literal) st.getObject();
+
+			ContextMemo memo = new ContextMemo( obj.getLabel() );
+			webClosure.addMemo( subj.toString(), memo );
 		}
-		
-		// Read failure memos.
-		iter = sc.getStatements( rplCacheRoot, rplCacheFailureMemo, null, false );
-		while ( iter.hasNext() )
-		{
-			Value obj = iter.next().getObject();
-			if ( obj instanceof Literal )
-			{
-				webClosure.addFailureMemo( ( (Literal) obj ).getLabel() );
-			}
-		}		
-		
+		iter.close();
+
 		sc.close();
 	}
 	
