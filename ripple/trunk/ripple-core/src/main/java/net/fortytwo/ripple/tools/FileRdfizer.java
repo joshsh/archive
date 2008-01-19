@@ -9,16 +9,14 @@
 
 package net.fortytwo.ripple.tools;
 
-import java.io.File;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.sail.SailConnection;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FileRdfizer
 {
@@ -80,50 +78,48 @@ public class FileRdfizer
 	public void addTree( final File file,
 						final URI context,
 						final String namespace,
-						final RepositoryConnection connection )
-		throws org.openrdf.sail.SailException,
-		org.openrdf.repository.RepositoryException
+						final SailConnection sc )
+		throws org.openrdf.sail.SailException
 	{
-		connection.setNamespace( "file", FILE );
-		connection.setNamespace( "xsd", XSD );
+		sc.setNamespace( "file", FILE );
+		sc.setNamespace( "xsd", XSD );
 
-		add( file, context, namespace, connection );
+		add( file, context, namespace, sc );
 	}
 
 	private URI add( final File file,
 					final URI context,
 					final String namespace,
-					final RepositoryConnection connection )
+					final SailConnection sc )
 		throws
-			org.openrdf.sail.SailException,
-			org.openrdf.repository.RepositoryException
+			org.openrdf.sail.SailException
 	{
 		URI self = createFileUri( file, namespace );
 
 		// type
-		connection.add( valueFactory.createStatement(
+		sc.addStatement(
 			self,
 			typeUri,
 			file.isDirectory() ? directoryUri : fileUri,
-			context ) );
+			context );
 
 		// name
 		String name = file.getName();
-		connection.add( valueFactory.createStatement(
+		sc.addStatement(
 			self,
 			nameUri,
 			valueFactory.createLiteral( name, stringUri ),
-			context ) );
+			context );
 		
 		// url
 		try
 		{
 			String url = file.toURL().toString();
-			connection.add( valueFactory.createStatement(
+			sc.addStatement(
 				self,
 				urlUri,
 				valueFactory.createLiteral( url, stringUri ),
-				context ) );
+				context );
 		}
 
 		catch ( java.net.MalformedURLException e )
@@ -133,28 +129,28 @@ public class FileRdfizer
 
 		// size
 		long size = file.length();
-		connection.add( valueFactory.createStatement(
+		sc.addStatement(
 			self,
 			sizeUri,
 			valueFactory.createLiteral( "" + size, longUri ),
-			context ) );
+			context );
 
 		// isHidden
 		boolean isHidden = file.isHidden();
-		connection.add( valueFactory.createStatement(
+		sc.addStatement(
 			self,
 			isHiddenUri,
 			valueFactory.createLiteral( "" + isHidden, booleanUri ),
-			context ) );
+			context );
 
 		// lastModified
 		long lastModified = file.lastModified();
-		connection.add( valueFactory.createStatement(
+		sc.addStatement(
 			self,
 			lastModifiedUri,
 			valueFactory.createLiteral( xsdDateTimeFormat.format(
 				new Date( lastModified ) ), dateTimeUri ),
-			context ) );
+			context );
 
 		// parentOf
 		if ( file.isDirectory() )
@@ -162,18 +158,18 @@ public class FileRdfizer
 			File [] children = file.listFiles();
 			for ( File child : children )
 			{
-				URI childUri = add( child, context, namespace, connection );
-				connection.add( valueFactory.createStatement(
+				URI childUri = add( child, context, namespace, sc );
+				sc.addStatement(
 					self,
 					parentOfUri,
 					childUri,
 					//createFileUri( child, namespace ),
-					context ) );
-				connection.add( valueFactory.createStatement(
+					context );
+				sc.addStatement(
 					childUri,
 					childOfUri,
 					self,
-					context ) );
+					context );
 			}
 		}
 

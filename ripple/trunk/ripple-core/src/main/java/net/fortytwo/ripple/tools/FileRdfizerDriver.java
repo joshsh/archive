@@ -9,16 +9,23 @@
 
 package net.fortytwo.ripple.tools;
 
+import org.openrdf.model.URI;
+import org.openrdf.model.Namespace;
+import org.openrdf.model.Statement;
+import org.openrdf.rio.rdfxml.RDFXMLWriter;
+import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
+import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailException;
+import org.openrdf.sail.memory.MemoryStore;
+
 import java.io.File;
 import java.io.OutputStream;
 
-import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
-import org.openrdf.rio.rdfxml.RDFXMLWriter;
-import org.openrdf.sail.memory.MemoryStore;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.rdf.CloseableIterationSource;
+import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.RippleException;
 
 public final class FileRdfizerDriver
 {
@@ -34,27 +41,23 @@ public final class FileRdfizerDriver
 	private static void rdfize( final File file,
 								final String namespace,
 								final OutputStream out )
-		throws
-			org.openrdf.sail.SailException,
-			org.openrdf.rio.RDFHandlerException,
-			org.openrdf.repository.RepositoryException
+			throws
+			org.openrdf.sail.SailException, RippleException
 	{
-		Repository repository = new SailRepository(
-			new MemoryStore() );
-		repository.initialize();
+		Sail sail = new MemoryStore();
 
 		FileRdfizer rdfizer
-			= new FileRdfizer( repository.getValueFactory() );
+			= new FileRdfizer( sail.getValueFactory() );
 
-		URI context = repository.getValueFactory().createURI( namespace );
+		URI context = sail.getValueFactory().createURI( namespace );
 //		connection.setNamespace( "dir", namespace );
 
-		RepositoryConnection connection = repository.getConnection();
-		rdfizer.addTree( file, context, namespace, connection );
-		extractRDF( connection, out );
-		connection.close();
+		SailConnection sc = sail.getConnection();
+		rdfizer.addTree( file, context, namespace, sc );
+		extractRDF( sc, out );
+		sc.close();
 
-		repository.shutDown();
+		sail.shutDown();
 	}
 
 	public static void main( final String [] args )
@@ -82,14 +85,22 @@ public final class FileRdfizerDriver
 		}
 	}
 
-	private static void extractRDF( final RepositoryConnection connection,
-									final OutputStream out )
-		throws org.openrdf.rio.RDFHandlerException,
-		org.openrdf.repository.RepositoryException
+	private static void extractRDF( final SailConnection sc,
+									final OutputStream out ) throws RippleException, SailException
 	{
 		RDFXMLWriter writer = new RDFXMLPrettyWriter( out );
+		SesameOutputAdapter adapter = new SesameOutputAdapter( writer );
 
-		connection.export( writer );
+		adapter.startRDF();
+		CloseableIterationSource<? extends Namespace, SailException> nsSource
+				= new CloseableIterationSource(
+			 			sc.getNamespaces() );
+		( (Source<Namespace>) nsSource ).writeTo( adapter.namespaceSink() );
+		CloseableIterationSource<? extends Statement, SailException> stSource
+				= new CloseableIterationSource(
+						sc.getStatements( null, null, null, false )	);
+		( (Source <Statement>) stSource ).writeTo( adapter.statementSink() );
+		adapter.endRDF();
 	}
 }
 

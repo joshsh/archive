@@ -11,6 +11,31 @@ package net.fortytwo.ripple;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import net.fortytwo.ripple.cli.CommandLineInterface;
+import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.impl.sesame.SesameModel;
+import net.fortytwo.ripple.query.Evaluator;
+import net.fortytwo.ripple.query.LazyEvaluator;
+import net.fortytwo.ripple.query.QueryEngine;
+import net.fortytwo.ripple.rdf.CloseableIterationSource;
+import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.SailInserter;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
+import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.util.UriMap;
+import org.apache.log4j.Logger;
+import org.openrdf.model.Namespace;
+import org.openrdf.model.Statement;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandler;
+import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.Rio;
+import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,27 +46,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
-
-import net.fortytwo.ripple.cli.CommandLineInterface;
-import net.fortytwo.ripple.model.Model;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.impl.sesame.SesameModel;
-import net.fortytwo.ripple.query.Evaluator;
-import net.fortytwo.ripple.query.LazyEvaluator;
-import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.rdf.RdfUtils;
-import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.UriMap;
-
-import org.apache.log4j.Logger;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.Rio;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailException;
 
 
 /**
@@ -64,11 +68,10 @@ public final class Demo
 //net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
 		Sail baseSail = RdfUtils.createMemoryStoreSail();
-		SailRepository repo = new SailRepository( baseSail );
-		
+
 		if ( null != store )
 		{
-			loadFromFile( repo, store );
+			loadFromFile( baseSail, store );
 		}
 		
 		UriMap uriMap = new UriMap();
@@ -127,12 +130,11 @@ public final class Demo
 		// Save back to store.
 		if ( null != store )
 		{
-			saveToFile( repo, store );
+			saveToFile( baseSail, store );
 		}
 
 		try
 		{
-			repo.shutDown();
 			baseSail.shutDown();
 		}
 
@@ -288,7 +290,7 @@ public final class Demo
 	}
 	
 
-	private static void loadFromFile( final Repository repo, final File file ) throws RippleException
+	private static void loadFromFile( final Sail sail, final File file ) throws RippleException
 	{
 		LOGGER.info( "loading state from " + file );
 
@@ -307,10 +309,9 @@ public final class Demo
 		
 		try
 		{
-			RepositoryConnection rc = repo.getConnection();
-			rc.add( in, "urn:nobaseuri#", Ripple.cacheFormat() );
-			rc.commit();
-			rc.close();
+			RDFParser parser = Rio.createParser( Ripple.cacheFormat() );
+			parser.setRDFHandler( new SailInserter( sail ) );
+			parser.parse( in, "urn:nobaseuri#" );
 		}
 		
 		catch ( Throwable t )
@@ -329,7 +330,7 @@ public final class Demo
 		}
 	}
 	
-	private static void saveToFile( final Repository repo, final File file ) throws RippleException
+	private static void saveToFile( final Sail sail, final File file ) throws RippleException
 	{
 		FileOutputStream out;
 		
@@ -344,12 +345,22 @@ public final class Demo
 		}
 		
 		RDFHandler writer = Rio.createWriter( Ripple.cacheFormat(), out );
-		
+		SesameOutputAdapter adapter = new SesameOutputAdapter( writer );
+
 		try
 		{
-			RepositoryConnection rc = repo.getConnection();
-			rc.export( writer );
-			rc.close();
+			SailConnection sc = sail.getConnection();
+			adapter.startRDF();
+			CloseableIterationSource<? extends Namespace, SailException> nsSource
+					= new CloseableIterationSource(
+				 			sc.getNamespaces() );
+			( (Source <Namespace>) nsSource ).writeTo( adapter.namespaceSink() );
+			CloseableIterationSource<? extends Statement, SailException> stSource
+					= new CloseableIterationSource(
+							sc.getStatements( null, null, null, false )	);
+			( (Source <Statement>) stSource ).writeTo( adapter.statementSink() );
+			adapter.endRDF();
+			sc.close();
 		}
 		
 		catch ( Throwable t )

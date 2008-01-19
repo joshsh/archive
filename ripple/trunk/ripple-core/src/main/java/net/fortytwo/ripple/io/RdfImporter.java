@@ -19,6 +19,7 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 
+// TODO: change this class to use a SailConnection instead of a ModelConnection
 public class RdfImporter implements RdfSink
 {
 	private Sink<Statement> stSink;

@@ -9,32 +9,40 @@
 
 package net.fortytwo.ripple.model;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
+import info.aduna.iteration.CloseableIteration;
+import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.SailInserter;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.rdf.SingleContextPipe;
 import net.fortytwo.ripple.test.RippleTestCase;
-
 import org.apache.log4j.Logger;
-
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.Rio;
+import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class SesameTest extends RippleTestCase
 {
 	private static final Logger LOGGER = Logger.getLogger( SesameTest.class );
 
-	static int countStatements( RepositoryConnection rc, URI context )
+	static int countStatements( SailConnection rc, URI context )
 		throws Exception
 	{
 		int count = 0;
 
-		RepositoryResult<Statement> stmtIter
+		CloseableIteration<? extends Statement, SailException> stmtIter
 			= ( null == context )
 				? rc.getStatements( null, null, null, false )
 				: rc.getStatements( null, null, null, false, context );
@@ -55,10 +63,9 @@ public class SesameTest extends RippleTestCase
 		public void test()
 			throws Exception
 		{
-			Repository repo = new SailRepository(
-				new MemoryStore() );
-			repo.initialize();
-			RepositoryConnection rc = repo.getConnection();
+			Sail sail = new MemoryStore();
+			sail.initialize();
+			SailConnection sc = sail.getConnection();
 
 			String bad = "bad" ;
 			String good = "@prefix foo:  <http://example.org/foo#>.\n"
@@ -69,19 +76,19 @@ public class SesameTest extends RippleTestCase
 LOGGER.debug( "### start" );
 			try {
 				is = new ByteArrayInputStream( bad.getBytes() );
-				rc.add( is, "", RDFFormat.TURTLE );
+				add( sail, is, "", RDFFormat.TURTLE );
 			} catch ( Exception e ) {}
 LOGGER.debug( "### mid" );
 			try {
 				is = new ByteArrayInputStream( good.getBytes() );
-				rc.add( is, "", RDFFormat.TURTLE );
+				add( sail, is, "", RDFFormat.TURTLE );
 			} catch ( Exception e ) {}
 LOGGER.debug( "### stop" );
 
-			assertEquals( 1, countStatements( rc, null ) );
+			assertEquals( 1, countStatements( sc, null ) );
 
-			rc.close();
-			repo.shutDown();
+			sc.close();
+			sail.shutDown();
 		}
 	}
 
@@ -90,25 +97,71 @@ LOGGER.debug( "### stop" );
 		public void test()
 			throws Exception
 		{
-			Repository repo = new SailRepository(
-				new MemoryStore() );
-			repo.initialize();
-			RepositoryConnection rc = repo.getConnection();
+			Sail sail = new MemoryStore();
+			sail.initialize();
+			SailConnection sc = sail.getConnection();
 
-			URI ctxA = repo.getValueFactory().createURI( "urn:test.AddFromInputStreamTest.ctxA#" );
+			URI ctxA = sail.getValueFactory().createURI( "urn:test.AddFromInputStreamTest.ctxA#" );
 
 			String s = "@prefix foo:  <http://example.org/foo#>.\n"
 				+ "foo:a foo:b foo:c." ;
 			InputStream is = new ByteArrayInputStream( s.getBytes() );
 
-			rc.add( is, ctxA.toString(), RDFFormat.TURTLE, ctxA );
+			add( sail, is, ctxA.toString(), RDFFormat.TURTLE, ctxA );
 
-			assertEquals( 1, countStatements( rc, null ) );
-/* 60 */    assertEquals( 1, countStatements( rc, ctxA ) );
+			assertEquals( 1, countStatements( sc, null ) );
+/* 60 */    assertEquals( 1, countStatements( sc, ctxA ) );
 
-			rc.close();
-			repo.shutDown();
+			sc.close();
+			sail.shutDown();
 		}
+	}
+
+	private void add( final Sail sail, final InputStream is, final String baseUri, final RDFFormat format ) throws Exception
+	{
+		RDFParser parser = Rio.createParser( format );
+		SailInserter inserter = new SailInserter( sail );
+		parser.setRDFHandler( inserter );
+		
+		inserter.startRDF();
+
+		try
+		{
+			parser.parse( is, baseUri );
+		}
+
+		catch ( Exception e )
+		{
+			inserter.endRDF();
+			throw e;
+		}
+
+		inserter.endRDF();
+	}
+
+	private void add( final Sail sail, final InputStream is, final String baseUri, final RDFFormat format, final URI context ) throws Exception
+	{
+		RDFParser parser = Rio.createParser( format );
+		SailInserter inserter = new SailInserter( sail );
+		SesameOutputAdapter outAdapter = new SesameOutputAdapter( inserter );
+		RdfSink scp = new SingleContextPipe( outAdapter, context, sail.getValueFactory() );
+		SesameInputAdapter inAdapter = new SesameInputAdapter( scp );
+		parser.setRDFHandler( inAdapter );
+
+		inserter.startRDF();
+		
+		try
+		{
+			parser.parse( is, baseUri );
+		}
+
+		catch ( Exception e )
+		{
+			inserter.endRDF();
+			throw e;
+		}
+
+		inserter.endRDF();
 	}
 
 	public void runTests()
