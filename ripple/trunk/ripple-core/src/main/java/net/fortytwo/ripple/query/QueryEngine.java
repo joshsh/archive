@@ -59,6 +59,7 @@ public class QueryEngine
 		ModelConnection mc = getConnection( "Demo connection" );
 //System.out.println("--- w2");
 //System.out.println("--- Ripple.defaultNamespace() = " + Ripple.defaultNamespace());
+
 		mc.setNamespace( "", Ripple.defaultNamespace(), false );
 //System.out.println("--- w3");
 		mc.commit();

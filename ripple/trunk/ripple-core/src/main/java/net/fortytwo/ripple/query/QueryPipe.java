@@ -1,12 +1,9 @@
 package net.fortytwo.ripple.query;
 
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.cli.ParserExceptionSink;
+import net.fortytwo.ripple.cli.ParserQuitException;
 import net.fortytwo.ripple.cli.RecognizerAdapter;
 import net.fortytwo.ripple.cli.RecognizerEvent;
 import net.fortytwo.ripple.cli.ast.ListAst;
@@ -19,15 +16,16 @@ import net.fortytwo.ripple.util.CollectorHistory;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
 
+import java.io.IOException;
+
 public class QueryPipe implements Sink<String>
 {
 	private static final long WAIT_INTERVAL = 100l;
 	
 	private Interpreter interpreter;
+	private RecognizerAdapter recognizerAdapter;
 
-	private PipedIOStream writeIn = new PipedIOStream();
-//	private PipedInputStream  writeIn;
-//	private PipedOutputStream readOut;
+	private PipedIOStream inOut = new PipedIOStream();
 
 	private Buffer<RippleList> resultBuffer;
 	
@@ -46,23 +44,29 @@ public class QueryPipe implements Sink<String>
 	}
 };*/
 		resultBuffer = new Buffer<RippleList>( resultSink );
-		
+		final Object mutex = resultBuffer;
+
+		final Collector<RippleList> nilSource = new Collector<RippleList>();
+		nilSource.put( RippleList.NIL );
+
 		// Handling of queries
 		Sink<ListAst> querySink = new Sink<ListAst>()
 		{
 			public void put( final ListAst ast ) throws RippleException
 			{
-System.out.println( "### received: " + ast );
-				Collector<RippleList> nilSource = new Collector<RippleList>();
-				nilSource.put( RippleList.NIL );
-				Source<RippleList> composedWith = lastQueryContinued
-						? queryResultHistory.getSource( 1 ) : nilSource;
-			
-				ModelConnection mc = queryEngine.getConnection();
-				new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
-				mc.close();
-				
-				lastQueryContinued = false;
+//System.out.println( "### received: " + ast );
+				synchronized ( mutex )
+				{
+					Source<RippleList> composedWith = lastQueryContinued
+							? queryResultHistory.getSource( 1 ) : nilSource;
+
+					ModelConnection mc = queryEngine.getConnection();
+					new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
+					mc.close();
+
+					lastQueryContinued = false;
+					queryResultHistory.advance();
+				}
 			}
 		};
 
@@ -71,16 +75,18 @@ System.out.println( "### received: " + ast );
 		{
 			public void put( final ListAst ast ) throws RippleException
 			{
-				Collector<RippleList> nilSource = new Collector<RippleList>();
-				nilSource.put( RippleList.NIL );
-				Source<RippleList> composedWith = lastQueryContinued
-						? queryResultHistory.getSource( 1 ) : nilSource;
-	
-				ModelConnection mc = queryEngine.getConnection();
-				new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
-				mc.close();
-				
-				lastQueryContinued = true;
+				synchronized ( mutex )
+				{
+					Source<RippleList> composedWith = lastQueryContinued
+							? queryResultHistory.getSource( 1 ) : nilSource;
+
+					ModelConnection mc = queryEngine.getConnection();
+					new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
+					mc.close();
+
+					lastQueryContinued = true;
+					queryResultHistory.advance();
+				}
 			}
 		};
 
@@ -101,25 +107,30 @@ System.out.println( "### received: " + ast );
 			public void put( final RecognizerEvent event )
 				throws RippleException
 			{
-				// (ignore events)
+				/*if ( RecognizerEvent.QUIT == event )
+				{
+					throw new ParserQuitException();
+				}*/
+				
+				// (ignore other events)
 			}
 		};
 		
-		RecognizerAdapter rc = new RecognizerAdapter(
+		recognizerAdapter = new RecognizerAdapter(
 				querySink, continuingQuerySink, commandSink, eventSink, queryEngine.getErrorPrintStream() );
 
 		Sink<Exception> parserExceptionSink = new ParserExceptionSink(
 				queryEngine.getErrorPrintStream() );
 		
-/*		writeIn = new PipedInputStream();
+/*		inOut = new PipedInputStream();
 		try {
-			readOut = new PipedOutputStream( writeIn );
+			readOut = new PipedOutputStream( inOut );
 		} catch ( IOException e ) {
 			throw new RippleException( e );
 		}*/
 		
 		// Create interpreter.
-		interpreter = new Interpreter( rc, writeIn, parserExceptionSink );
+		interpreter = new Interpreter( recognizerAdapter, inOut, parserExceptionSink );
 		
 		Runnable r = new Runnable() {
 			public void run() {
@@ -144,8 +155,10 @@ System.out.println( "### received: " + ast );
 	{
 		try
 		{
-//			readOut.close();
-			writeIn.close();
+			//recognizerAdapter.putEvent( RecognizerEvent.QUIT );
+			interpreter.quit();
+			interpreterThread.interrupt();
+			inOut.close();
 		}
 		
 		catch ( IOException e )
@@ -158,9 +171,7 @@ System.out.println( "### received: " + ast );
 	{
 		try
 		{
-			writeIn.write( expr.getBytes() );
-//			readOut.write( expr.getBytes() );
-//			readOut.flush();
+			inOut.write( expr.getBytes() );
 		}
 		
 		catch ( java.io.IOException e )

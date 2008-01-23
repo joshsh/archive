@@ -7,6 +7,9 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.util.Collector;
 
+import java.util.Random;
+import java.io.PrintStream;
+
 public class QueryPipeTest extends RippleTestCase
 {
 	private class QueriesTest extends TestRunnable
@@ -21,7 +24,7 @@ public class QueryPipeTest extends RippleTestCase
 			Collector<RippleList> results = new Collector<RippleList>();
 			QueryPipe qp = new QueryPipe( qe, results );
 			ModelConnection mc = qe.getConnection();
-			
+
 			RippleValue
 					zero = mc.value( 0 ),
 					four = mc.value( 4 ),
@@ -29,7 +32,7 @@ public class QueryPipeTest extends RippleTestCase
 			
 			// A simple expression.
 			results.clear();
-			qp.put( "2 3 /add.\n" );
+			qp.put( "2 3 add!.\n" );
 			expected.clear();
 			expected.put( createStack( mc, five ) );
 			assertCollectorsEqual( expected, results );
@@ -37,15 +40,15 @@ public class QueryPipeTest extends RippleTestCase
 			// A slightly more complex expression.
 			results.clear();
 			qp.put( "105"
-					+ " ((1 2 3 4 5) 0 add /fold) 7/times"
-					+ " add 6/times /sub.\n" );
+					+ " ((1 2 3 4 5) 0 add fold!) 7 times!"
+					+ " add 6 times! sub!.\n" );
 			expected.clear();
 			expected.put( createStack( mc, zero ) );
 			assertCollectorsEqual( expected, results );
 			
 			// A branching expression.
 			results.clear();
-			qp.put( "(1 2)/each 3 /add.\n" );
+			qp.put( "(1 2) each! 3 add!.\n" );
 			expected.clear();
 			expected.put( createStack( mc, four ) );
 			expected.put( createStack( mc, five ) );
@@ -55,10 +58,75 @@ public class QueryPipeTest extends RippleTestCase
 			mc.close();
 		}
 	}
+
+	private class FuzzTest extends TestRunnable
+	{
+		private static final int
+				REPEAT = 10,
+				MIN_EXPR_LENGTH = 0,
+				MAX_EXPR_LENGTH = 50;
+		private Random rand = new Random();
+
+		public void test() throws Exception
+		{
+			Model model = RippleTestCase.getTestModel();
+			Evaluator eval = new LazyEvaluator();
+
+			// Discard error output (of which there will be a lot).
+			PrintStream errStream = new PrintStream( new NullOutputStream() );
+
+			QueryEngine qe = new QueryEngine( model, eval, System.out, errStream );
+			Collector<RippleList> expected = new Collector<RippleList>();
+			Collector<RippleList> results = new Collector<RippleList>();
+			QueryPipe qp = new QueryPipe( qe, results );
+			ModelConnection mc = qe.getConnection();
+
+			RippleValue
+					five = mc.value( 5 );
+
+			byte[] bytes = new byte[128];
+			for ( int i = 0; i < bytes.length; i++ )
+			{
+				bytes[i] = ( i >= 32 )
+						? (byte) i
+						: ( i >= 16 )
+								? (byte) '\n'
+								: (byte) '\t';
+			}
+
+			for ( int i = 0; i < REPEAT; i++ )
+			{
+			 	// Feed the pipe some fuzz.
+				int len = MAX_EXPR_LENGTH + rand.nextInt( MAX_EXPR_LENGTH - MIN_EXPR_LENGTH );
+				byte[] expr = new byte[len];
+				for ( int j = 0; j < len; j++ )
+				{
+					expr[j] = bytes[rand.nextInt(bytes.length)];
+				}
+				String s = new String( expr );
+				qp.put( new String( expr ) );
+
+				qp.put(".\n");
+				qp.put(".\n");
+				qp.put(".\n");
+
+				// Now make sure the pipe still works.
+				results.clear();
+				qp.put( "2 3 add!.\n" );
+				expected.clear();
+				expected.put( createStack( mc, five ) );
+				assertCollectorsEqual( expected, results );
+			}
+
+			qp.close();
+			mc.close();
+		}
+	}
 	
 	public void runTests()
 		throws Exception
 	{
-		testAsynchronous( new QueriesTest() );
+		testSynchronous( new QueriesTest() );
+		testSynchronous( new FuzzTest() );
 	}
 }

@@ -35,7 +35,6 @@ public class CollectorHistory<T> implements Sink<T>
 
 	public void advance()
 	{
-
 		Collector<T> coll = new Collector<T>();
 		history.addFirst( coll );
 
@@ -54,10 +53,17 @@ public class CollectorHistory<T> implements Sink<T>
 		currentSink.put( t );
 	}
 
-	public Source<T> getSource( final int index )
-		throws RippleException
+	public Source<T> getSource( final int index ) throws RippleException
 	{
-		return history.get( index );
+		try
+		{
+			return history.get( index );
+		}
+
+		catch ( IndexOutOfBoundsException e )
+		{
+			throw new RippleException( e );
+		}
 	}
 }
 

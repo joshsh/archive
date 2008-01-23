@@ -25,10 +25,9 @@ public class Interpreter
 		= Logger.getLogger( Interpreter.class );
 
 	private RecognizerAdapter recognizerAdapter;
-
 	private InputStream input;
-
 	private Sink<Exception> exceptionSink;
+	private boolean active = false;
 
 	public Interpreter( final RecognizerAdapter rc,
 						final InputStream in,
@@ -39,11 +38,18 @@ public class Interpreter
 		exceptionSink = exceptions;
 	}
 
+	public void quit()
+	{
+		active = false;
+	}
+
 	public void parse() throws RippleException
 	{
+		active = true;
+
 //System.out.println( "-- parse" );
 		// Break out when a @quit directive is encountered
-		for (;;)
+		while ( active )
 		{
 			// If there's anything in the input buffer, it's because the parser
 			// ran across a syntax error.  Clear the buffer, create a new lexer
@@ -58,12 +64,12 @@ public class Interpreter
 
 			try
 			{
-System.out.println( "-- antlr" );
+//System.out.println( "-- antlr" );
 				parser.nt_Document();
 
 				// If the parser has exited normally, then we're done.
 //System.out.println( "-- normal exit" );
-				break;
+				active = false;
 			}
 
 			// The parser has received a quit command.
@@ -72,7 +78,7 @@ System.out.println( "-- antlr" );
 //System.out.println( "-- quit" );
 				LOGGER.debug( "quit() called on Interpreter" );
 
-				break;
+				active = false;
 			}
 
 /*			catch ( TokenStreamIOException e )
@@ -123,7 +129,7 @@ System.out.println( "-- interrupted" );
 			}
 		}
 
-		catch ( java.io.IOException e )
+		catch ( IOException e )
 		{
 			throw new RippleException( e );
 		}

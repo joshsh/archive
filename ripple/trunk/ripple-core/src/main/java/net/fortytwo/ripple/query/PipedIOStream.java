@@ -2,8 +2,9 @@ package net.fortytwo.ripple.query;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
-public class PipedIOStream extends InputStream
+public class PipedIOStream extends InputStream //, OutputStream
 {
 	private static final int BUFFER_EXPANSION = 2;
 	private static final int DEFAULT_INITIAL_SIZE = 200;
@@ -19,7 +20,7 @@ public class PipedIOStream extends InputStream
 		pos = 0;
 		length = 0;
 	}
-	
+
 	@Override
 	public synchronized void close() throws IOException
 	{
@@ -30,7 +31,13 @@ public class PipedIOStream extends InputStream
 			mutex.notify();
 		}
 	}
-	
+
+	@Override
+	public synchronized int available()
+	{
+		return length;	
+	}
+
 	@Override
 	public int read() throws IOException
 	{
@@ -50,7 +57,7 @@ public class PipedIOStream extends InputStream
 		{
 			if ( null == data )
 			{
-				throw new IOException( "pipe has been closed" );
+				throw new IOException( "can't read: pipe has been closed: " + this );
 			}
 			
 			int c = data[pos];
@@ -60,32 +67,42 @@ public class PipedIOStream extends InputStream
 		}
 	}
 
-	public synchronized void write( final byte[] b ) throws IOException
+	public synchronized void write( int b ) throws IOException
 	{
-		// Expand the buffer if needed.
-		if ( length + b.length > size )
+		if ( null == data )
 		{
-			size *= BUFFER_EXPANSION;
-			int[] newData = new int[size];
+			throw new IOException( "can't write: pipe has been closed" );
+		}
+
+		// Expand the buffer if needed.
+		if ( length + 1 > size )
+		{
+			int newSize = size * BUFFER_EXPANSION;
+			int[] newData = new int[newSize];
 			for ( int i = 0; i < length; i++ )
 			{
-				newData[i] = data[pos + i];
+				newData[i] = data[( pos + i ) % size];
 			}
-			
+
 			pos = 0;
 			data = newData;
+			size = newSize;
 		}
-		
-		for ( int i = 0; i < b.length; i++ )
-		{
-			data[( i + pos ) % size] = b[i];
-		}
-		
-		length += b.length;
-		
+
+		data[( pos + length ) % size] = b;
+		length++;
+
 		synchronized ( mutex )
 		{
 			mutex.notify();
+		}
+	}
+
+	public void write( final byte[] b ) throws IOException
+	{
+		for ( int i = 0; i < b.length; i++ )
+		{
+			write( b[i] );
 		}
 	}
 }
