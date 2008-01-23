@@ -9,26 +9,128 @@
 
 package net.fortytwo.ripple.cli;
 
+import net.fortytwo.ripple.cli.ast.Ast;
+import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.query.Command;
+import net.fortytwo.ripple.query.PipedIOStream;
+import net.fortytwo.ripple.test.RippleTestCase;
+import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.util.NullSink;
+import net.fortytwo.ripple.RippleException;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-
-import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
 
 public class InterpreterTest extends RippleTestCase
 {
-	int lineNumber;
-	int getLineNumber() { return lineNumber; }
-	void setLineNumber( int n ) { lineNumber = n; }
+	private static final long WAIT_INTERVAL = 100l;
+	private static final byte[] NEWLINE = { '\n' };
 
-	void parse( final InputStream is, final boolean expectSuccess )
+	private int lineNumber;
+	private int getLineNumber() { return lineNumber; }
+	private void setLineNumber( int n ) { lineNumber = n; }
+
+	private void parse( final InputStream is, final boolean expectSuccess )
+		throws Exception
+	{
+//		final Integer nQueries, nCommands, nEvents, lineNumber;
+//		nQueries = nCommands = nEvents =
+		lineNumber = 0;
+
+		final PipedIOStream pio = new PipedIOStream();
+
+		Collector<Exception> exceptions = new Collector<Exception>();
+		RecognizerAdapter ra = new RecognizerAdapter(
+				new NullSink<ListAst>(),
+				new NullSink<ListAst>(),
+				new NullSink<Command>(),
+				new NullSink<RecognizerEvent>(),
+				System.err );
+		final Interpreter interpreter = new Interpreter( ra, pio, exceptions );
+
+		Thread interpreterThread = new Thread( new Runnable()
+			{
+				public void run()
+				{
+					try
+					{
+						interpreter.parse();
+					}
+
+					catch ( Exception e )
+					{
+						// Throw out the error, for now.
+						e.printStackTrace();
+					}
+				}
+			 } );
+
+		interpreterThread.start();
+
+		final BufferedReader reader = new BufferedReader(
+			new InputStreamReader( is ) );
+
+		String line;
+
+		do
+		{
+			exceptions.clear();
+
+			lineNumber++;
+System.out.println("line #" + lineNumber);
+			line = reader.readLine();
+
+			if ( null == line )
+			{
+				break;
+			}
+
+			pio.write( ( line.trim() + '\n' ).getBytes() );
+
+			do
+			{
+	//System.out.println( "waiting " + WAIT_INTERVAL + " milliseconds" );
+				synchronized ( this )
+				{
+					// FIXME: the first wait depends on a race condition
+					try
+					{
+						wait( WAIT_INTERVAL );
+					}
+
+					catch ( InterruptedException e )
+					{
+						throw new RippleException( e );
+					}
+				}
+			} while ( Thread.State.RUNNABLE == interpreterThread.getState() );
+
+			if ( expectSuccess )
+			{
+				if ( exceptions.size() > 0 )
+				{
+					fail( "Success case failed on line "
+							+ lineNumber + ": " + line
+							+ ", with exception = " + exceptions.iterator().next() );
+				}
+			}
+
+			else
+			{
+				if ( exceptions.size() < 1 )
+				{
+					fail( "Failure case succeeded on line "
+							+ lineNumber + ": " + line );
+				}
+			}
+		} while ( true );
+
+
+		pio.close();
+	}
+
+/*	private void parse( final InputStream is, final boolean expectSuccess )
 		throws Exception
 	{
 //		final Integer nQueries, nCommands, nEvents, lineNumber;
@@ -55,8 +157,7 @@ public class InterpreterTest extends RippleTestCase
 			}
 		};
 
-		PipedInputStream  writeIn = new PipedInputStream();
-		final PipedOutputStream readOut = new PipedOutputStream( writeIn );
+		final PipedIOStream pio = new PipedIOStream();
 
 		final BufferedReader reader = new BufferedReader(
 			new InputStreamReader( is ) );
@@ -84,6 +185,7 @@ System.out.println( "(" + expectSuccess + ") exceptions.size() = " + exceptions.
 								if ( exceptions.size() > 0 )
 									fail( "Success case failed on line "
 										+ getLineNumber() + ": " );// + line );
+//System.out.println("    success!");
 							}
 		
 							else
@@ -91,6 +193,7 @@ System.out.println( "(" + expectSuccess + ") exceptions.size() = " + exceptions.
 								if ( exceptions.size() < 1 )
 									fail( "Failure case succeeded on line "
 										+ getLineNumber() + ": " );//+ line );
+//System.out.println("    failure!");
 							}
 
 							exceptions.clear();
@@ -109,7 +212,9 @@ System.out.println( "(" + expectSuccess + ") exceptions.size() = " + exceptions.
 							}
 
 							if ( null == line )
+							{
 								throw new ParserQuitException();
+							}
 
 							line = line.trim();
 
@@ -120,8 +225,8 @@ System.out.println( "(" + expectSuccess + ") testing line " + getLineNumber() + 
 						try
 						{
 System.out.println( "pushing line to readOut: " + line );
-							readOut.write( line.getBytes() );
-							readOut.write( '\n' );
+							pio.write( line.getBytes() );
+							pio.write( NEWLINE );
 //readOut.flush();
 //							readOut.write( ' ' );
 						}
@@ -158,9 +263,11 @@ System.out.println( "########## got an exception: " + e );
 			}
 		};
 
-		Interpreter interpreter = new Interpreter( rc, writeIn, exceptionSink );
+		Interpreter interpreter = new Interpreter( rc, pio, exceptionSink );
 		interpreter.parse();
-	}
+
+		pio.close();
+	}*/
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -189,9 +296,7 @@ System.out.println( "########## got an exception: " + e );
 	public void runTests()
 		throws Exception
 	{
-		testSynchronous( new SuccessCasesTest() );
-		testSynchronous( new FailureCasesTest() );
+//		testSynchronous( new SuccessCasesTest() );
+//		testSynchronous( new FailureCasesTest() );
 	}
 }
-
-// kate: tab-width 4

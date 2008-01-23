@@ -75,11 +75,11 @@ System.out.println( "-- antlr" );
 				break;
 			}
 
-			catch ( TokenStreamIOException e )
+/*			catch ( TokenStreamIOException e )
 			{
 				LOGGER.error( e );
 				break;
-			}
+			}*/
 			
 			catch ( Exception e )
 			{

@@ -17,55 +17,6 @@ import net.fortytwo.ripple.util.ListMemoizer;
 
 public class LazyEvaluatorTest extends RippleTestCase
 {
-	public static void assertCollectorsEqual( Collector<RippleList> expected, Collector<RippleList> actual ) throws Exception
-	{
-		int size = expected.size();
-		assertEquals( size, actual.size() );
-		if ( 0 == size )
-		{
-			return;
-		}
-		
-		RippleList[] expArray = new RippleList[size];
-		RippleList[] actArray = new RippleList[size];
-		Iterator<RippleList> expIter = expected.iterator();
-		Iterator<RippleList> actIter = actual.iterator();
-		for ( int i = 0; i < size; i++ )
-		{
-			expArray[i] = expIter.next();
-			actArray[i] = actIter.next();
-		}
-
-		Arrays.sort( expArray );
-		Arrays.sort( actArray );
-		for ( int i = 0; i < size; i++ )
-		{
-//System.out.println("expected: " + expArray[i] + ", actual = " + actArray[i]);
-			assertEquals( expArray[i], actArray[i] );
-		}
-	}
-	
-	public static RippleList createStack( final ModelConnection mc, final RippleValue... values )
-	{
-		if ( 0 == values.length )
-		{
-			return RippleList.NIL;
-		}
-		
-		RippleList l = mc.list( values[0] );
-		for ( int i = 1; i < values.length; i++ )
-		{
-			l = l.push( values[i] );
-		}
-		
-		return l;
-	}
-	
-	public static RippleList createQueue( final ModelConnection mc, final RippleValue... values )
-	{
-		return mc.invert( createStack( mc, values ) );
-	}
-	
 	private class SimpleTest extends TestRunnable
 	{
 		public void test()

@@ -9,23 +9,22 @@
 
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.jline.LexicalCompletor;
-
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.URI;
-
 import jline.Completor;
 import jline.NullCompletor;
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.cli.jline.LexicalCompletor;
+import org.openrdf.model.Namespace;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Defines a mapping between keywords and URIs, and between namespace prefixes
@@ -33,18 +32,18 @@ import java.util.Iterator;
  */
 public class Lexicon
 {
-	private Hashtable<String, List<URI>> keywordToUriMap = null;
-	private Hashtable<URI, String> uriToKeywordMap = null;
-	private Hashtable<String, String> prefixToNamespaceMap = null;
-	private Hashtable<String, String> namespaceToPrefixMap = null;
+	private Map<String, List<URI>> keywordToUriMap = null;
+	private Map<URI, String> uriToKeywordMap = null;
+	private Map<String, String> prefixToNamespaceMap = null;
+	private Map<String, String> namespaceToPrefixMap = null;
 	private Collection<String> allQNames = null;
 
 	public Lexicon( final Model model ) throws RippleException
 	{
 		createKeywordMap( model );
 
-		prefixToNamespaceMap = new Hashtable<String, String>();
-		namespaceToPrefixMap = new Hashtable<String, String>();
+		prefixToNamespaceMap = new HashMap<String, String>();
+		namespaceToPrefixMap = new HashMap<String, String>();
 		allQNames = new ArrayList<String>();
 	}
 
@@ -52,8 +51,8 @@ public class Lexicon
 	{
 		ModelConnection mc = model.getConnection( "for Lexicon constructor" );
 
-		keywordToUriMap = new Hashtable<String, List<URI>>();
-		uriToKeywordMap = new Hashtable<URI, String>();
+		keywordToUriMap = new HashMap<String, List<URI>>();
+		uriToKeywordMap = new HashMap<URI, String>();
 
 		ModelBridge bridge = model.getBridge();
 		

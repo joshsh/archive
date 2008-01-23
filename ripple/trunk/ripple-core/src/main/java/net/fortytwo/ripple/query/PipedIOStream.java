@@ -60,7 +60,7 @@ public class PipedIOStream extends InputStream
 		}
 	}
 
-	synchronized void write( final byte[] b ) throws IOException
+	public synchronized void write( final byte[] b ) throws IOException
 	{
 		// Expand the buffer if needed.
 		if ( length + b.length > size )

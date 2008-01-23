@@ -31,8 +31,8 @@ public class QueryPipeTest extends RippleTestCase
 			results.clear();
 			qp.put( "2 3 /add.\n" );
 			expected.clear();
-			expected.put( LazyEvaluatorTest.createStack( mc, five ) );
-			LazyEvaluatorTest.assertCollectorsEqual( expected, results );
+			expected.put( createStack( mc, five ) );
+			assertCollectorsEqual( expected, results );
 
 			// A slightly more complex expression.
 			results.clear();
@@ -40,16 +40,16 @@ public class QueryPipeTest extends RippleTestCase
 					+ " ((1 2 3 4 5) 0 add /fold) 7/times"
 					+ " add 6/times /sub.\n" );
 			expected.clear();
-			expected.put( LazyEvaluatorTest.createStack( mc, zero ) );
-			LazyEvaluatorTest.assertCollectorsEqual( expected, results );
+			expected.put( createStack( mc, zero ) );
+			assertCollectorsEqual( expected, results );
 			
 			// A branching expression.
 			results.clear();
 			qp.put( "(1 2)/each 3 /add.\n" );
 			expected.clear();
-			expected.put( LazyEvaluatorTest.createStack( mc, four ) );
-			expected.put( LazyEvaluatorTest.createStack( mc, five ) );
-			LazyEvaluatorTest.assertCollectorsEqual( expected, results );
+			expected.put( createStack( mc, four ) );
+			expected.put( createStack( mc, five ) );
+			assertCollectorsEqual( expected, results );
 			
 			qp.close();
 			mc.close();

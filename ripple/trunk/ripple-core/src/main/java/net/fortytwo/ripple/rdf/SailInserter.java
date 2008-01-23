@@ -10,40 +10,19 @@ import org.openrdf.sail.Sail;
 
 public class SailInserter implements RDFHandler
 {
-	private Sail sail;
 	private SailConnection sailConnection;
 
-	public SailInserter( final Sail sail )
+	public SailInserter( final SailConnection sailConnection )
 	{
-		this.sail = sail;
-		sailConnection = null;
+		this.sailConnection = sailConnection;
 	}
 
 	public void startRDF() throws RDFHandlerException
 	{
-		try
-		{
-			sailConnection = sail.getConnection();
-		}
-
-		catch ( SailException e )
-		{
-			throw new RDFHandlerException( e );
-		}
 	}
 
 	public void endRDF() throws RDFHandlerException
 	{
-		try
-		{
-			sailConnection.commit();
-			sailConnection.close();
-		}
-
-		catch ( SailException e )
-		{
-			throw new RDFHandlerException( e );
-		}
 	}
 
 	public void handleNamespace( final String prefix, final String uri ) throws RDFHandlerException

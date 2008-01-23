@@ -16,10 +16,17 @@ import org.openrdf.sail.Sail;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Model;
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.util.Collector;
+
+import java.util.Iterator;
+import java.util.Arrays;
 
 public abstract class RippleTestCase extends TestCase
 {
@@ -163,6 +170,55 @@ public abstract class RippleTestCase extends TestCase
 	{
 		getTestModel();
 		return uriMap;
+	}
+
+	public static RippleList createStack( final ModelConnection mc, final RippleValue... values )
+	{
+		if ( 0 == values.length )
+		{
+			return RippleList.NIL;
+		}
+
+		RippleList l = mc.list( values[0] );
+		for ( int i = 1; i < values.length; i++ )
+		{
+			l = l.push( values[i] );
+		}
+
+		return l;
+	}
+
+	public static RippleList createQueue( final ModelConnection mc, final RippleValue... values )
+	{
+		return mc.invert( createStack( mc, values ) );
+	}
+
+	public static void assertCollectorsEqual( Collector<RippleList> expected, Collector<RippleList> actual ) throws Exception
+	{
+		int size = expected.size();
+		assertEquals( size, actual.size() );
+		if ( 0 == size )
+		{
+			return;
+		}
+
+		RippleList[] expArray = new RippleList[size];
+		RippleList[] actArray = new RippleList[size];
+		Iterator<RippleList> expIter = expected.iterator();
+		Iterator<RippleList> actIter = actual.iterator();
+		for ( int i = 0; i < size; i++ )
+		{
+			expArray[i] = expIter.next();
+			actArray[i] = actIter.next();
+		}
+
+		Arrays.sort( expArray );
+		Arrays.sort( actArray );
+		for ( int i = 0; i < size; i++ )
+		{
+//System.out.println("expected: " + expArray[i] + ", actual = " + actArray[i]);
+			assertEquals( expArray[i], actArray[i] );
+		}
 	}
 }
 
