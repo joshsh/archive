@@ -310,8 +310,11 @@ public final class Demo
 		try
 		{
 			RDFParser parser = Rio.createParser( Ripple.cacheFormat() );
-			parser.setRDFHandler( new SailInserter( sail ) );
+			SailConnection sc = sail.getConnection();
+			parser.setRDFHandler( new SailInserter( sc ) );
 			parser.parse( in, "urn:nobaseuri#" );
+			sc.commit();
+			sc.close();
 		}
 		
 		catch ( Throwable t )
