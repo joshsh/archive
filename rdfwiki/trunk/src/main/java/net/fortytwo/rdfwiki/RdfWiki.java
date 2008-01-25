@@ -19,12 +19,7 @@ import org.restlet.resource.Variant;
 public class RdfWiki
 {
 	public static final String WIKI_ATTR = "wiki";
-	
-	private static Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;
-	private static Map<MediaType, RDFFormat> mediaTypeToRdfFormatMap;
-	private static List<Variant> rdfVariants = null;
-	private static boolean initialized = false;
-	
+
 	private SailSelector sailSelector;
 	
 // FIXME: temporary
@@ -43,10 +38,6 @@ private static RdfWiki singleWiki;
 		
 	public RdfWiki( final SailSelector selector ) throws Exception
 	{
-		if ( !initialized )
-		{
-			initialize();
-		}
 singleWiki = this;
 
 		sailSelector = selector;
@@ -67,73 +58,5 @@ singleWiki = this;
 		component.getDefaultHost().getContext().getAttributes().put( WIKI_ATTR, this );
 		component.getDefaultHost().attach( new RootApplication() );
 		component.start();
-	}
-	
-	public static void initialize() throws Exception
-	{	
-		rdfFormatToMediaTypeMap = new HashMap<RDFFormat, MediaType>();
-		
-		// Note: preserves order of insertion
-		mediaTypeToRdfFormatMap = new LinkedHashMap<MediaType, RDFFormat>();
-		
-		// Note: the first format registered becomes the default format.
-		registerRdfFormat( RDFFormat.RDFXML );
-		registerRdfFormat( RDFFormat.TURTLE );
-		registerRdfFormat( RDFFormat.N3 );
-		registerRdfFormat( RDFFormat.NTRIPLES );
-		registerRdfFormat( RDFFormat.TRIG );
-		registerRdfFormat( RDFFormat.TRIX );
-		
-		initialized = true;
-	}
-	
-	private static void registerRdfFormat( final RDFFormat format )
-	{
-		MediaType t;
-		
-		if ( RDFFormat.RDFXML == format )
-		{
-			t = MediaType.APPLICATION_RDF_XML;
-		}
-		
-		else
-		{
-			t = new MediaType( format.getDefaultMIMEType() );
-		}
-		
-		rdfFormatToMediaTypeMap.put( format, t );
-		mediaTypeToRdfFormatMap.put( t, format );
-	}
-	
-	public static List<Variant> getRdfVariants()
-	{
-		if ( null == rdfVariants )
-		{
-			rdfVariants = new LinkedList<Variant>();
-			Iterator<MediaType> types = mediaTypeToRdfFormatMap.keySet().iterator();
-			while ( types.hasNext() )
-			{
-				rdfVariants.add( new Variant( types.next() ) );
-			}
-		}
-
-/*
-System.out.println( "getRdfVariants() --> " + rdfVariants );
-Iterator<Variant> iter = rdfVariants.iterator();
-while(iter.hasNext()){
-Variant v = iter.next();
-System.out.println( "    " + v + " -- " + v.getMediaType().getName() + " -- " + v.getMediaType().getMainType() + "/" + v.getMediaType().getSubType() );
-}*/
-		return rdfVariants;
-	}
-	
-	public static MediaType findMediaType( final RDFFormat format )
-	{
-		return rdfFormatToMediaTypeMap.get( format );
-	}
-	
-	public static RDFFormat findRdfFormat( final MediaType mediaType )
-	{
-		return mediaTypeToRdfFormatMap.get( mediaType );
 	}
 }

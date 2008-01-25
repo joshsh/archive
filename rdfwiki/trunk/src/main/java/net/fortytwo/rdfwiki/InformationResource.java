@@ -1,14 +1,6 @@
 package net.fortytwo.rdfwiki;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import net.fortytwo.ripple.rdf.CloseableIterationSource;
-import net.fortytwo.ripple.rdf.RdfCollector;
-import net.fortytwo.ripple.rdf.SailInserter;
-import net.fortytwo.ripple.rdf.SesameOutputAdapter;
-
+import net.fortytwo.ripple.rdf.*;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
@@ -20,6 +12,10 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InformationResource extends Resource
 {
@@ -64,14 +60,14 @@ System.out.println( "uri = " + uri );
     @Override
     public List<Variant> getVariants()
     {
-    	return RdfWiki.getRdfVariants();
+    	return RdfUtils.getRdfVariants();
     }
     
     @Override
     public Representation getRepresentation( final Variant variant )
     {
         MediaType type = variant.getMediaType();
-        RDFFormat format = RdfWiki.findRdfFormat( type );
+        RDFFormat format = RdfUtils.findRdfFormat( type );
         
         if ( null != format )
         {

@@ -1,21 +1,17 @@
 package net.fortytwo.rdfwiki;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import net.fortytwo.ripple.rdf.RdfCollector;
-import net.fortytwo.ripple.rdf.RdfSource;
-import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.rdf.SesameOutputAdapter;
-
+import net.fortytwo.ripple.rdf.*;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.restlet.resource.OutputRepresentation;
 import org.restlet.resource.Representation;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RdfRepresentation extends OutputRepresentation
 {
@@ -28,7 +24,7 @@ public class RdfRepresentation extends OutputRepresentation
 	public RdfRepresentation( final Representation other, final String baseUri ) throws Exception
 	{
 		super( other.getMediaType() );
-		RDFFormat format = RdfWiki.findRdfFormat( other.getMediaType() );
+		RDFFormat format = RdfUtils.findRdfFormat( other.getMediaType() );
 		
 		if ( null == format )
 		{
@@ -52,7 +48,7 @@ public class RdfRepresentation extends OutputRepresentation
 	
 	public RdfRepresentation( final RdfSource source, final RDFFormat format )
 	{
-		super( RdfWiki.findMediaType( format ) );
+		super( RdfUtils.findMediaType( format ) );
 		
 		this.source = source;
 		this.format = format;
