@@ -9,10 +9,11 @@
 
 package net.fortytwo.ripple;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.apache.log4j.Logger;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * A custom Exception.
@@ -34,7 +35,8 @@ public class RippleException extends Exception
 
 	public void logError( final boolean includeStackTrace )
 	{
-	   	String description;
+System.out.println("LOGGING THE ERROR");
+		String description;
 
 		if ( includeStackTrace )
 		{
@@ -55,7 +57,7 @@ public class RippleException extends Exception
 					os.close();
 				}
 
-				catch ( java.io.IOException e )
+				catch ( IOException e )
 				{
 					System.err.println( "Failed to create error message. A stack trace of the secondary error follows." );
 					e.printStackTrace( System.err );
@@ -79,6 +81,7 @@ public class RippleException extends Exception
 
 		try
 		{
+System.out.println("REALLY LOGGING THE ERROR");
 			LOGGER.error( description );
 		}
 

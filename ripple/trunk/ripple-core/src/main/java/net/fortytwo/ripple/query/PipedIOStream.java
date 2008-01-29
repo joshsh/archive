@@ -4,12 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * A buffer to which bytes are written by any number of threads, and from which
+ * bytes are read, in FIFO order, by a single thread.  The reader thread may be
+ * the same as any of the writer threads.
+ */
 public class PipedIOStream extends InputStream //, OutputStream
 {
 	private static final int BUFFER_EXPANSION = 2;
 	private static final int DEFAULT_INITIAL_SIZE = 200;
 	
-	private String mutex = "";
+	private Object mutex = "";
 	private int pos, length, size;
 	private int[] data;
 	
@@ -24,12 +29,13 @@ public class PipedIOStream extends InputStream //, OutputStream
 	@Override
 	public synchronized void close() throws IOException
 	{
+//System.out.println("[" + this + "].close() #####################");
 		data = null;
 		
-		synchronized ( mutex )
+		/*synchronized ( mutex )
 		{
 			mutex.notify();
-		}
+		}*/
 	}
 
 	@Override
@@ -41,6 +47,8 @@ public class PipedIOStream extends InputStream //, OutputStream
 	@Override
 	public int read() throws IOException
 	{
+//System.out.println("    ---> length = " + length );
+		// FIXME: race condition
 		if ( 0 == length )
 		{
 			synchronized ( mutex )
@@ -63,12 +71,14 @@ public class PipedIOStream extends InputStream //, OutputStream
 			int c = data[pos];
 			pos = ( 1 + pos ) % size;
 			length--;
+//System.out.println("    [" + this + "] read(" + c + " -- '" + (char) c + "') -- length = " + length + " -- thread = " + Thread.currentThread());
 			return c;
 		}
 	}
 
 	public synchronized void write( int b ) throws IOException
 	{
+//System.out.println("[" + this + "] write(" + b + ")");
 		if ( null == data )
 		{
 			throw new IOException( "can't write: pipe has been closed" );
@@ -77,6 +87,7 @@ public class PipedIOStream extends InputStream //, OutputStream
 		// Expand the buffer if needed.
 		if ( length + 1 > size )
 		{
+//System.out.println("EXPANDING ######################");
 			int newSize = size * BUFFER_EXPANSION;
 			int[] newData = new int[newSize];
 			for ( int i = 0; i < length; i++ )

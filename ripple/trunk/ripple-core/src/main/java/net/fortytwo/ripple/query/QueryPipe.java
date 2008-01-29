@@ -20,12 +20,12 @@ import java.io.IOException;
 
 public class QueryPipe implements Sink<String>
 {
-	private static final long WAIT_INTERVAL = 100l;
+	private static final long WAIT_INTERVAL = 10l;
 	
 	private Interpreter interpreter;
 	private RecognizerAdapter recognizerAdapter;
 
-	private PipedIOStream inOut = new PipedIOStream();
+	private PipedIOStream inOut;
 
 	private Buffer<RippleList> resultBuffer;
 	
@@ -37,6 +37,7 @@ public class QueryPipe implements Sink<String>
 	
 	public QueryPipe( final QueryEngine queryEngine, final Sink<RippleList> resultSink ) throws RippleException
 	{
+		 inOut = new PipedIOStream();
 /*final Sink<RippleList> tempSink = new Sink<RippleList>() {
 	public void put( final RippleList l ) throws RippleException {
 		System.out.println( "received list: " + l );
@@ -131,11 +132,13 @@ public class QueryPipe implements Sink<String>
 		
 		// Create interpreter.
 		interpreter = new Interpreter( recognizerAdapter, inOut, parserExceptionSink );
-		
+//System.out.println("main thread: " + Thread.currentThread());
+
 		Runnable r = new Runnable() {
 			public void run() {
 				try
 				{
+//System.out.println("parser thread: " + Thread.currentThread());
 					interpreter.parse();
 				}
 				
@@ -153,11 +156,13 @@ public class QueryPipe implements Sink<String>
 	
 	public void close() throws RippleException
 	{
+//System.out.println("CLOSING THE PIPE");
 		try
 		{
 			//recognizerAdapter.putEvent( RecognizerEvent.QUIT );
 			interpreter.quit();
 			interpreterThread.interrupt();
+//System.out.println("CLOSING THE BUFFER");
 			inOut.close();
 		}
 		
@@ -169,6 +174,7 @@ public class QueryPipe implements Sink<String>
 	
 	public void put( final String expr ) throws RippleException
 	{
+//System.out.println("evaluating: " + expr);
 		try
 		{
 			inOut.write( expr.getBytes() );

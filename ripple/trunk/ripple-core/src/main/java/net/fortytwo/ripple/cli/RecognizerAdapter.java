@@ -48,7 +48,7 @@ public class RecognizerAdapter
 
 		catch ( RippleException e )
 		{
-			errorStream.println( "\nError: " + e + "\n" );
+			errorStream.println( "\nQuery error: " + e + "\n" );
 			e.logError();
 		}
 	}
@@ -62,7 +62,7 @@ public class RecognizerAdapter
 
 		catch ( RippleException e )
 		{
-			errorStream.println( "\nError: " + e + "\n" );
+			errorStream.println( "\nQuery error: " + e + "\n" );
 			e.logError();
 		}
 	}
@@ -76,7 +76,7 @@ public class RecognizerAdapter
 
 		catch ( RippleException e )
 		{
-			errorStream.println( "\nError: " + e + "\n" );
+			errorStream.println( "\nCommand error: " + e + "\n" );
 			e.logError();
 		}
 	}
@@ -90,7 +90,7 @@ public class RecognizerAdapter
 
 		catch ( RippleException e )
 		{
-			errorStream.println( "\nError: " + e + "\n" );
+			errorStream.println( "\nEvent error: " + e + "\n" );
 			e.logError();
 		}
 	}
