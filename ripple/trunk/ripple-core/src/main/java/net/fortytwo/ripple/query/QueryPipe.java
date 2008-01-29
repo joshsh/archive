@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class QueryPipe implements Sink<String>
 {
-	private static final long WAIT_INTERVAL = 10l;
+	private static final long WAIT_INTERVAL = 100l;
 	
 	private Interpreter interpreter;
 	private RecognizerAdapter recognizerAdapter;
