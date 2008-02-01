@@ -10,9 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -38,9 +39,11 @@ public class Split extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		String s, regex;
 
 		regex = mc.toString( stack.getFirst() );
@@ -54,10 +57,10 @@ public class Split extends PrimitiveFunction
 			RippleList result = RippleList.NIL;
 			for ( int i = array.length - 1; i >= 0; i-- )
 			{
-				result = mc.list( mc.value( array[i] ), result );
+				result = result.push( mc.value( array[i] ) );
 			}
 
-			sink.put( mc.list( result, stack ) );
+			sink.put( stack.push( result ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

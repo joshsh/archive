@@ -36,7 +36,7 @@ public class IStar extends PrimitiveFunction
 
 	public void applyTo( final RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
 		RippleValue first = stack.getFirst();

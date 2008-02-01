@@ -10,10 +10,11 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 
@@ -38,9 +39,11 @@ public class EndsWith extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		String affix, s;
 		RippleValue result;
 
@@ -52,7 +55,7 @@ public class EndsWith extends PrimitiveFunction
 		result = ( s.endsWith( affix ) )
 			? StackLibrary.getTrueValue()
 			: StackLibrary.getFalseValue();
-		sink.put( mc.list( result, stack ) );
+		sink.put( stack.push( result ) );
 	}
 }
 

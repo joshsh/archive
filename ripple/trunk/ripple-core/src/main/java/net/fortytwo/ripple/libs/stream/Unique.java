@@ -11,11 +11,11 @@ package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.util.Sink;
 
@@ -43,13 +43,13 @@ public class Unique extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
 		sink.put(
-			mc.list(
+			stack.push(
 				new Operator(
-					new UniqueInner() ), stack ) );
+					new UniqueInner() ) ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ public class Unique extends PrimitiveFunction
 	
 		public void applyTo( RippleList stack,
 							final Sink<RippleList> sink,
-							final ModelConnection mc )
+							final Context context )
 			throws RippleException
 		{
 			if ( null == memoizer )

@@ -10,9 +10,10 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
@@ -39,9 +40,11 @@ public class Lang extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		Value v;
 		String result;
 

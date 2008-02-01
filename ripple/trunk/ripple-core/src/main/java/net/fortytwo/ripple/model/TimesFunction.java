@@ -34,7 +34,7 @@ public class TimesFunction implements Function
 
 	public void applyTo( final RippleList stack,
 						 final Sink<RippleList> sink,
-						 final ModelConnection mc ) throws RippleException
+						 final Context context ) throws RippleException
 	{
 		if ( 1 < times )
 		{

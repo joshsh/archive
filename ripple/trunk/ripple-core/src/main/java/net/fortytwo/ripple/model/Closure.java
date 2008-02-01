@@ -33,10 +33,10 @@ public class Closure implements Function
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
-		innerFunction.applyTo( mc.list( argument, stack ), sink,  mc );
+		innerFunction.applyTo( context.getModelConnection().list( argument, stack ), sink, context );
 	}
 	
 	public boolean isTransparent()

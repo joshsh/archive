@@ -11,6 +11,7 @@ package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
@@ -75,7 +76,7 @@ public class RippleQueryCmd extends Command
 			// Note: v will always be a list.
 			public void put( final RippleList l ) throws RippleException
 			{
-				evaluator.applyTo( l, sink, mc );
+				evaluator.applyTo( l, sink, new Context( mc ) );
 			}
 		};
 

@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -35,13 +35,13 @@ public class Stack extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
 // TODO: this should be even simpler.
 		if ( RippleList.NIL != stack )
 		{
-			sink.put( mc.list( stack, stack ) );
+			sink.put( stack.push( stack ) );
 		}
 	}
 }

@@ -9,21 +9,19 @@
 
 package net.fortytwo.ripple.libs.etc;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
-
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * A primitive which consumes an information resource, issues a GET request for
@@ -46,9 +44,10 @@ public class Get extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
 		String result;
 
 		String uriStr = mc.toUri( stack.getFirst() ).toString();

@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
@@ -25,7 +26,7 @@ public class LazyEvaluator extends Evaluator
 {
 	private static final Logger LOGGER = Logger.getLogger( LazyEvaluator.class );
 
-	private ModelConnection modelConnection;
+	private Context context;
 	private boolean stopped = true;
 
 	////////////////////////////////////////////////////////////////////////////
@@ -55,7 +56,7 @@ public class LazyEvaluator extends Evaluator
 //System.out.println( "   first = " + stack.getFirst() );
 			if ( function.arity() == 1 )
 			{
-				function.applyTo( stack, sink, modelConnection );
+				function.applyTo( stack, sink, context );
 			}
 
 			else
@@ -110,7 +111,7 @@ public class LazyEvaluator extends Evaluator
 				// They shouldn't even care if the stack is empty.
 				if ( f.arity() == 0 )
 				{
-					f.applyTo( rest, this, modelConnection );
+					f.applyTo( rest, this, context );
 				}
 
 				// Functions with positive arity do require the stack to be
@@ -144,7 +145,7 @@ public class LazyEvaluator extends Evaluator
 
 	public void applyTo( final RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
 if ( stack == RippleList.NIL )
@@ -152,7 +153,7 @@ if ( stack == RippleList.NIL )
 	return;
 }
 
-		modelConnection = mc;
+		this.context = context;
 
 		EvaluatorSink evalSink = new EvaluatorSink( sink );
 		stopped = false;

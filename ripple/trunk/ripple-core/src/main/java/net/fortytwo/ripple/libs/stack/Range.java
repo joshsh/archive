@@ -36,9 +36,11 @@ public class Range extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		final int min, max;
 
 		max = mc.toNumericValue( stack.getFirst() ).intValue();

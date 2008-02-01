@@ -10,9 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -36,16 +37,18 @@ public class ToLowerCase extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		String s, result;
 
 		s = mc.toString( stack.getFirst() );
 		stack = stack.getRest();
 		result = s.toLowerCase();
 
-		sink.put( mc.list( mc.value( result ), stack ) );
+		sink.put( stack.push( mc.value( result ) ) );
 	}
 }
 

@@ -36,7 +36,7 @@ public class IOpt extends PrimitiveFunction
 
 	public void applyTo( final RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
 		RippleValue first = stack.getFirst();
@@ -44,6 +44,6 @@ public class IOpt extends PrimitiveFunction
 		sink.put(stack.getRest());
 
 // hack...
-		sink.put( mc.list( Operator.OP, stack ) );
+		sink.put( stack.push( Operator.OP ) );
 	}
 }

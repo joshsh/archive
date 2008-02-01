@@ -11,10 +11,11 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -53,7 +54,7 @@ public class Ary extends PrimitiveFunction
 
 		public void applyTo( RippleList stack,
 							final Sink<RippleList> sink,
-							final ModelConnection mc )
+							final Context context )
 			throws RippleException
 		{
 			sink.put( stack );
@@ -67,17 +68,18 @@ public class Ary extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		int n;
 
 		n = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 
 		sink.put(
-			mc.list(
-				new Operator( new NaryId( n ) ), stack ) );
+			stack.push( new Operator( new NaryId( n ) ) ) );
 	}
 }
 

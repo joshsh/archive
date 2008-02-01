@@ -28,7 +28,7 @@ public interface Function
 	
 	void applyTo( RippleList stack,
 					Sink<RippleList> sink,
-					ModelConnection mc )
+					Context context )
 		throws RippleException;
 }
 

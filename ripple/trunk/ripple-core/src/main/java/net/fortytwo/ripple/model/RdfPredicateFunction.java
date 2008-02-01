@@ -48,7 +48,7 @@ public class RdfPredicateFunction implements Function
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
 		RippleValue first = stack.getFirst();
@@ -58,12 +58,12 @@ public class RdfPredicateFunction implements Function
 
 		if ( Ripple.asynchronousQueries() )
 		{
-			mc.multiplyAsynch( first, pred, querySink, includeInferred );		
+			context.getModelConnection().multiplyAsynch( first, pred, querySink, includeInferred );
 		}
 		
 		else
 		{
-			mc.multiply( first.toRdf( mc ), pred, querySink, includeInferred );
+			context.getModelConnection().multiply( first.toRdf( context.getModelConnection() ), pred, querySink, includeInferred );
 		}
 	}
 	

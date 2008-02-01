@@ -10,11 +10,12 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -40,9 +41,11 @@ public class Fold extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		RippleValue l;
 
 		final RippleValue f = stack.getFirst();
@@ -57,7 +60,7 @@ public class Fold extends PrimitiveFunction
 			public void put( final RippleList list ) throws RippleException
 			{
 				RippleList lList = mc.invert( list );
-				RippleList result = mc.list( v, rest );
+				RippleList result = rest.push( v );
 		
 				while ( RippleList.NIL != lList )
 				{

@@ -19,7 +19,7 @@ public class Op implements Function, RippleValue
 
 	public void applyTo( RippleList stack,
 				final Sink<RippleList> sink,
-				final ModelConnection mc )
+				final Context context )
 		throws RippleException
 	{
 		RippleValue v;
@@ -32,11 +32,11 @@ public class Op implements Function, RippleValue
 			public void put( final Operator oper )
 				throws RippleException
 			{
-				sink.put( mc.list( oper, rest ) );
+				sink.put( context.getModelConnection().list( oper, rest ) );
 			}
 		};
 
-		Operator.createOperator( v, opSink, mc );
+		Operator.createOperator( v, opSink, context.getModelConnection() );
 	}
 
 	public int compareTo( final RippleValue other )

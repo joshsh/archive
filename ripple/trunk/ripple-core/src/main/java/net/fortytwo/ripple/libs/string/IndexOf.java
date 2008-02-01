@@ -10,9 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -36,9 +37,11 @@ public class IndexOf extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		String str, substr;
 		int result;
 
@@ -48,7 +51,7 @@ public class IndexOf extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = str.indexOf( substr );
-		sink.put( mc.list( mc.value( result ), stack ) );
+		sink.put( stack.push( mc.value( result ) ) );
 	}
 }
 

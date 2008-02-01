@@ -10,9 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -37,9 +38,11 @@ public class ReplaceAll extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		String regex, replacement, s, result;
 
 		replacement = mc.toString( stack.getFirst() );
@@ -52,7 +55,7 @@ public class ReplaceAll extends PrimitiveFunction
 		try
 		{
 			result = s.replaceAll( regex, replacement );
-			sink.put( mc.list( mc.value( result ), stack ) );
+			sink.put( stack.push( mc.value( result ) ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

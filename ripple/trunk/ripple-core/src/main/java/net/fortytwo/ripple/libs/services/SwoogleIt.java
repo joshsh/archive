@@ -11,12 +11,13 @@ package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
@@ -58,9 +59,11 @@ public class SwoogleIt extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		if ( null == swoogleQueryResponseUri )
 		{
 			swoogleQueryResponseUri = mc.createUri( SWOOGLE_NS + "QueryResponse" );
@@ -94,8 +97,8 @@ public class SwoogleIt extends PrimitiveFunction
 		}
 
 		final RippleList stackFinal = stack;
-URI context = mc.createUri( url.toString() );
-		final RdfImporter importer = new RdfImporter( mc, context );
+URI ctx = mc.createUri( url.toString() );
+		final RdfImporter importer = new RdfImporter( mc, ctx );
 
 		// Output is buffered so that the entire document is imported into the
 		// model before results are processed.

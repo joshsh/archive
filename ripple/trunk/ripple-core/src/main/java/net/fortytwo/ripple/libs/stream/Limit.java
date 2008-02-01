@@ -11,10 +11,11 @@ package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -38,18 +39,20 @@ public class Limit extends PrimitiveFunction
 
 	public void applyTo( RippleList stack,
 						final Sink<RippleList> sink,
-						final ModelConnection mc )
+						final Context context )
 		throws RippleException
 	{
+		final ModelConnection mc = context.getModelConnection();
+
 		int lim;
 
 		lim = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 
 		sink.put(
-			mc.list(
+			stack.push(
 				new Operator(
-					new LimitInner( (long) lim ) ), stack ) );
+					new LimitInner( (long) lim ) ) ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -71,7 +74,7 @@ public class Limit extends PrimitiveFunction
 	
 		public void applyTo( RippleList stack,
 							final Sink<RippleList> sink,
-							final ModelConnection mc )
+							final Context context )
 			throws RippleException
 		{
 			if ( count < limit )
