@@ -205,29 +205,32 @@ public WebClosure getClosureManager()
 	 * Writes cache metadata to the base Sail.
 	 * Note: for now, this metadata resides in the null context.
 	 */
-	private void persistCacheMetadata()	throws SailException
+	public void persistCacheMetadata() throws SailException
 	{
-		ValueFactory vf = getValueFactory();
-		SailConnection sc = baseSail.getConnection();
-		
-		// Clear any existing cache metadata (in any named graph).
-		sc.removeStatements( null, null, null, cacheContext );
-		sc.commit();
-
-		LOGGER.debug( "writing memos" );
-		Map<String, ContextMemo> map = webClosure.getMemos();
-		for ( String k : map.keySet() )
+		synchronized ( baseSail )
 		{
-			ContextMemo memo = map.get( k );
+			ValueFactory vf = getValueFactory();
+			SailConnection sc = baseSail.getConnection();
 
-			URI uri = vf.createURI( k );
-			Literal memoLit = vf.createLiteral( memo.toString() );
+			// Clear any existing cache metadata (in any named graph).
+			sc.removeStatements( null, null, null, cacheContext );
+			sc.commit();
 
-			sc.addStatement( uri, cacheMemo, memoLit, cacheContext );
+			LOGGER.debug( "writing memos" );
+			Map<String, ContextMemo> map = webClosure.getMemos();
+			for ( String k : map.keySet() )
+			{
+				ContextMemo memo = map.get( k );
+
+				URI uri = vf.createURI( k );
+				Literal memoLit = vf.createLiteral( memo.toString() );
+
+				sc.addStatement( uri, cacheMemo, memoLit, cacheContext );
+			}
+
+			sc.commit();
+			sc.close();
 		}
-
-		sc.commit();
-		sc.close();
 	}
 
 	/**
@@ -236,23 +239,26 @@ public WebClosure getClosureManager()
 	 */
 	private void restoreCacheMetaData() throws SailException, RippleException
 	{
-		CloseableIteration<? extends Statement, SailException> iter;
-		SailConnection sc = baseSail.getConnection();
-		
-		// Read memos.
-		iter = sc.getStatements( null, cacheMemo, null, false, cacheContext );
-		while ( iter.hasNext() )
+		synchronized ( baseSail )
 		{
-			Statement st = iter.next();
-			URI subj = (URI) st.getSubject();
-			Literal obj = (Literal) st.getObject();
+			CloseableIteration<? extends Statement, SailException> iter;
+			SailConnection sc = baseSail.getConnection();
 
-			ContextMemo memo = new ContextMemo( obj.getLabel() );
-			webClosure.addMemo( subj.toString(), memo );
+			// Read memos.
+			iter = sc.getStatements( null, cacheMemo, null, false, cacheContext );
+			while ( iter.hasNext() )
+			{
+				Statement st = iter.next();
+				URI subj = (URI) st.getSubject();
+				Literal obj = (Literal) st.getObject();
+
+				ContextMemo memo = new ContextMemo( obj.getLabel() );
+				webClosure.addMemo( subj.toString(), memo );
+			}
+			iter.close();
+
+			sc.close();
 		}
-		iter.close();
-
-		sc.close();
 	}
 	
 	public static boolean logFailedUris()

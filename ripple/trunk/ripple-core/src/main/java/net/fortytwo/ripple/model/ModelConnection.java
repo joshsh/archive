@@ -39,7 +39,16 @@ public interface ModelConnection
 
 	boolean toBoolean( RippleValue v ) throws RippleException;
 	NumericValue toNumericValue( RippleValue v )	throws RippleException;
+
+	/**
+	 *
+	 * @param v
+	 * @return the string representation of a value.  This is not identical to
+	 * Object.toString(), and may involve a loss of information.
+	 * @throws RippleException
+	 */
 	String toString( RippleValue v ) throws RippleException;
+
 	URI toUri( RippleValue v ) throws RippleException;
 	void toList( RippleValue v, Sink<RippleList> sink ) throws RippleException;
 

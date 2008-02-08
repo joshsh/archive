@@ -74,7 +74,7 @@ public class Unique extends PrimitiveFunction
 				sink.put( stack );
 			}
 	
-			else if ( memoizer.add( stack, MEMO ) )
+			else if ( memoizer.put( stack, MEMO ) )
 			{
 				sink.put( stack );
 			}

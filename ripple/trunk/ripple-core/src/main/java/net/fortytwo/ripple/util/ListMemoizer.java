@@ -9,6 +9,11 @@
 
 package net.fortytwo.ripple.util;
 
+// TODO: balancing operations
+
+/**
+ * A space-efficient map using where the key values are linked lists.
+ */
 public class ListMemoizer<T extends Comparable<T>, M>
 {
 	private T first;
@@ -19,6 +24,11 @@ public class ListMemoizer<T extends Comparable<T>, M>
 
 	public ListMemoizer( final ListNode<T> list, final M memo )
 	{
+		if ( null == list )
+		{
+			throw new IllegalArgumentException( "the empty list cannot be memoized" );
+		}
+
 		first = list.getFirst();
 		left = null;
 		right = null;
@@ -37,9 +47,14 @@ public class ListMemoizer<T extends Comparable<T>, M>
 		}
 	}
 
-	public boolean add( final ListNode<T> list, final M memo )
+	public boolean put( final ListNode<T> list, final M memo )
 	{
-		int cmp = first.compareTo( list.getFirst() );
+		if ( null == list )
+		{
+			throw new IllegalArgumentException( "the empty list cannot be memoized" );
+		}
+
+		int cmp = this.first.compareTo( list.getFirst() );
 
 		if ( 0 == cmp )
 		{
@@ -61,47 +76,90 @@ public class ListMemoizer<T extends Comparable<T>, M>
 
 			else
 			{
-				if ( null == rest )
+				if ( null == this.rest )
 				{
-					rest = new ListMemoizer<T, M>( r, memo );
+					this.rest = new ListMemoizer<T, M>( r, memo );
 					return true;
 				}
 
 				else
 				{
-					return rest.add( r, memo );
+					return this.rest.put( r, memo );
 				}
 			}
 		}
 
 		else if ( cmp < 0 )
 		{
-			if ( null == left )
+			if ( null == this.left )
 			{
-				left = new ListMemoizer<T, M>( list, memo );
+				this.left = new ListMemoizer<T, M>( list, memo );
 				return true;
 			}
 
 			else
 			{
-				return left.add( list, memo );
+				return this.left.put( list, memo );
 			}
 		}
 
 		else
 		{
-			if ( null == right )
+			if ( null == this.right )
 			{
-				right = new ListMemoizer<T, M>( list, memo );
+				this.right = new ListMemoizer<T, M>( list, memo );
 				return true;
 			}
 
 			else
 			{
-				return right.add( list, memo );
+				return this.right.put( list, memo );
 			}
 		}
 	}
+
+	public M get( final ListNode<T> list )
+	{
+		if ( null == list )
+		{
+			return null;
+		}
+
+		int cmp = this.first.compareTo( list.getFirst() );
+
+		if ( 0 == cmp )
+		{
+			ListNode<T> r = list.getRest();
+
+			if ( null == r )
+			{
+				return this.memo;
+			}
+
+			else
+			{
+				return ( null == this.rest )
+						? null
+						: this.rest.get( r );
+			}
+		}
+
+		else if ( cmp < 0 )
+		{
+			return ( null == this.left )
+					? null
+					: this.left.get( list );
+		}
+
+		else
+		{
+			return ( null == this.right )
+					? null
+					: this.right.get( list );
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
 
 	private int compare( final ListMemoizer<T, M> first,
 						final ListMemoizer<T, M> second )
@@ -123,28 +181,28 @@ public class ListMemoizer<T extends Comparable<T>, M>
 		}
 	}
 
-	public int compareTo( final ListMemoizer<T, M> other )
+	private int compareTo( final ListMemoizer<T, M> other )
 	{
-		int cmp = first.compareTo( other.first );
+		int cmp = this.first.compareTo( other.first );
 
 		if ( 0 != cmp )
 		{
 			return cmp;
 		}
 
-		cmp = compare( left, other.left );
+		cmp = compare( this.left, other.left );
 		if ( 0 != cmp )
 		{
 			return cmp;
 		}
 
-		cmp = compare( rest, other.rest );
+		cmp = compare( this.rest, other.rest );
 		if ( 0 != cmp )
 		{
 			return cmp;
 		}
 
-		cmp = compare( right, other.right );
+		cmp = compare( this.right, other.right );
 		return cmp;
 	}
 }

@@ -5,9 +5,9 @@ package net.fortytwo.ripple.model;
  * Date: Jan 31, 2008
  * Time: 4:38:03 PM
  */
-public class Context
+public class Context //implements Cloneable
 {
-	private ModelConnection modelConnection;
+	protected ModelConnection modelConnection;
 
 	public Context(final ModelConnection mc)
 	{

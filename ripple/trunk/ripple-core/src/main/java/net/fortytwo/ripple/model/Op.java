@@ -32,7 +32,7 @@ public class Op implements Function, RippleValue
 			public void put( final Operator oper )
 				throws RippleException
 			{
-				sink.put( context.getModelConnection().list( oper, rest ) );
+				sink.put( rest.push( oper ) );
 			}
 		};
 

@@ -51,7 +51,7 @@ public class ToString extends PrimitiveFunction
 		v = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( mc.list( mc.value( v.toString() ), stack ) );
+		sink.put( stack.push( mc.value( mc.toString( v ) ) ) );
 	}
 }
 

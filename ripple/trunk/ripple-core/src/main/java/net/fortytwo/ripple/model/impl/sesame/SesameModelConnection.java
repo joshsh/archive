@@ -289,12 +289,29 @@ public class SesameModelConnection implements ModelConnection
 			return new SesameNumericValue( rv.toRdf( this ) );
 		}
 	}
-	
+
+	// TODO: this method is incomplete
 	public String toString( final RippleValue v ) throws RippleException
 	{
-		Literal l = castToLiteral( v.toRdf( this ).getRdfValue() );
-	
-		return l.getLabel();
+		if ( v instanceof RdfValue )
+		{
+			Value r = ( (RdfValue) v ).getRdfValue();
+
+			if ( r instanceof Literal )
+			{
+				return ( (Literal) r ).getLabel();
+			}
+
+			else
+			{
+				return r.toString();
+			}
+		}
+
+		else
+		{
+			return v.toString();
+		}
 	}
 	
 	public URI toUri( final RippleValue rv )

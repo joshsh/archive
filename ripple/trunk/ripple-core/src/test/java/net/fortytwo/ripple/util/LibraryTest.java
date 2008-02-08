@@ -47,7 +47,6 @@ public class LibraryTest extends RippleTestCase
 		}
 	}
 
-
 	public void runTests()
 		throws Exception
 	{

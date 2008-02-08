@@ -19,6 +19,21 @@ stream:each
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/stream#each> ;
 	.
 
+stream:intersect
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "r1" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "r2" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "intersect" ;
+	rdfs:comment "r1 r2 => applied intersection of relations r1 and r2" ;
+	.
+
 stream:limit
 	a rpl:Function ;
 	rpl:arity 1 ;

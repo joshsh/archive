@@ -132,12 +132,12 @@ public class QueryEngine
 
 		if ( 0 == options.size() )
 		{
-			errorPrintStream.println( "Warning: keyword " + localName + " is undefined\n" );
+			errorPrintStream.println( "Warning: keyword '" + localName + "' is undefined\n" );
 		}
 
 		else if ( 1 < options.size() )
 		{
-			errorPrintStream.println( "Warning: keyword " + localName + " is ambiguous\n" );
+			errorPrintStream.println( "Warning: keyword '" + localName + "' is ambiguous\n" );
 		}
 
 		for ( Iterator<URI> optIter = options.iterator(); optIter.hasNext(); )

@@ -330,7 +330,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				isFirst = false;
 			}
 			
-			else
+			else if ( Operator.OP != val )
 			{
 				sb.append( " " );
 			}
@@ -352,7 +352,6 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		ListNode<RippleValue> cur =
 			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
 			? this : invert( this );
-		RippleValue stateVal = null;
 
 		p.print( padding ? "( " : "(" );
 		
@@ -361,78 +360,29 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		{
 			RippleValue val = cur.getFirst();
 
-			if ( null == stateVal )
+			if ( isFirst )
 			{
-				if ( Operator.OP == val )
-				{
-					if ( isFirst )
-					{
-						isFirst = false;
-					}
-
-					else
-					{
-						p.print( " " );
-					}
-
-					p.print( val );
-				}
-
-				else
-				{
-					stateVal = val;
-				}
+				isFirst = false;
 			}
 
-			else
-			{
-				if ( Operator.OP == val )
-				{
-					if ( isFirst )
-					{
-						isFirst = false;
-					}
-
-					else
-					{
-						p.print( " " );
-					}
-
-					p.print( "/" );
-					p.print( stateVal );
-					stateVal = null;
-				}
-
-				else
-				{
-					if ( isFirst )
-					{
-						isFirst = false;
-					}
-
-					else
-					{
-						p.print( " " );
-					}
-
-					p.print( stateVal );
-					stateVal = val;
-				}
-			}
-
-			cur = cur.getRest();
-		}
-
-		if ( null != stateVal )
-		{
-			if ( !isFirst )
+			else if ( Operator.OP != val )
 			{
 				p.print( " " );
 			}
 
-			p.print( stateVal );
+			if ( Operator.OP == val )
+			{
+				p.print( "!" );
+			}
+
+			else
+			{
+				p.print( val );
+			}
+			
+			cur = cur.getRest();
 		}
-		
+
 		p.print( padding ? " )" : ")" );
 	}
 
