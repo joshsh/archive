@@ -10,12 +10,12 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.StackRelation;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.util.Sink;
  * filter with the given arity.  This forces the remainder of the stack to be
  * reduced to the corresponding depth.
  */
-public class Ary extends PrimitiveFunction
+public class Ary extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -38,7 +38,7 @@ public class Ary extends PrimitiveFunction
 		return ARITY;
 	}
 
-	private class NaryId implements Function
+	private class NaryId implements StackRelation
 	{
 		private int n;
 
@@ -52,12 +52,12 @@ public class Ary extends PrimitiveFunction
 			return n;
 		}
 
-		public void applyTo( RippleList stack,
-							final Sink<RippleList> sink,
-							final Context context )
+		public void applyTo( final StackContext arg,
+							 final Sink<StackContext> sink
+		)
 			throws RippleException
 		{
-			sink.put( stack );
+			sink.put( arg );
 		}
 		
 		public boolean isTransparent()
@@ -66,20 +66,21 @@ public class Ary extends PrimitiveFunction
 		}
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		int n;
 
 		n = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 
-		sink.put(
-			stack.push( new Operator( new NaryId( n ) ) ) );
+		sink.put( arg.with(
+			stack.push( new Operator( new NaryId( n ) ) ) ) );
 	}
 }
 

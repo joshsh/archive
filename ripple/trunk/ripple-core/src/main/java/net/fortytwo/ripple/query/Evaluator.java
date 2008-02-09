@@ -9,12 +9,12 @@
 
 package net.fortytwo.ripple.query;
 
-import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.StackRelation;
 
 /**
 *  A function which reduces arbitrary expressions to a particular normal form.
 */
-public abstract class Evaluator implements Function
+public abstract class Evaluator implements StackRelation
 {
 	public int arity()
 	{
@@ -30,5 +30,3 @@ public abstract class Evaluator implements Function
 		return true;
 	}
 }
-
-// kate: tab-width 4

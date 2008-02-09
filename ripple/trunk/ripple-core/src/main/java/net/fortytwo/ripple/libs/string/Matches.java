@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.libs.stack.StackLibrary;
  * Boolean value of true if the regular expression matches the string, otherwise
  * false.
  */
-public class Matches extends PrimitiveFunction
+public class Matches extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -38,12 +38,13 @@ public class Matches extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		String regex, s;
 		RippleValue result;
@@ -58,7 +59,8 @@ public class Matches extends PrimitiveFunction
 			result = ( s.matches( regex ) )
 				? StackLibrary.getTrueValue()
 				: StackLibrary.getFalseValue();
-			sink.put( stack.push( result ) );
+			sink.put( arg.with(
+					stack.push( result ) ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

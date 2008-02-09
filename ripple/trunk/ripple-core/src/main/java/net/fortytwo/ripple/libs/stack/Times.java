@@ -18,7 +18,7 @@ import net.fortytwo.ripple.util.Sink;
  * copies of the item to the stack.  This has the effect of applying the
  * filter "n times" to the remainder of the stack.
  */
-public class Times extends PrimitiveFunction
+public class Times extends PrimitiveStackRelation
 {
 	// TODO: arity should really be 1
 	private static final int ARITY = 2;
@@ -34,12 +34,13 @@ public class Times extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		final int times;
 
@@ -52,8 +53,9 @@ public class Times extends PrimitiveFunction
 		{
 			public void put( final Operator op ) throws RippleException
 			{
-				sink.put( rest.push( new Operator(
-						new TimesFunction( op.getFunction(), times, false ) ) ) );
+				sink.put( arg.with(
+						rest.push( new Operator(
+						new TimesRelation( op.getRelation(), times, false ) ) ) ) );
 			}
 		};
 

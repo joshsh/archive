@@ -10,34 +10,31 @@
 package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
-import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
-
-import java.io.InputStream;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
-
 import org.openrdf.model.URI;
+
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A primitive which consumes a literal value and produces a number of resources
  * which link to that value, according to the Uriqr service.
  */
-public class Uriqr extends PrimitiveFunction
+public class Uriqr extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -81,12 +78,13 @@ public class Uriqr extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		if ( null == saxBuilder )
 		{
@@ -164,8 +162,8 @@ public class Uriqr extends PrimitiveFunction
 				String text = ( (Element) r ).getText();
 				URI resultUri = mc.createUri( text );
 
-				sink.put( mc.list(
-					new RdfValue( resultUri ), stack ) );
+				sink.put( arg.with(
+						stack.push(	new RdfValue( resultUri ) ) ) );
 			}
 
 			throw new RippleException( "unexpected result format" );

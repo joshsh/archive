@@ -12,18 +12,18 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.RippleException;
 
-public class Closure implements Function
+public class Closure implements StackRelation
 {
-	private Function innerFunction;
+	private StackRelation innerRelation;
 	private RippleValue argument;
 	private int cachedArity;
 
-	public Closure( final Function innerFunction, final RippleValue argument )
+	public Closure( final StackRelation innerRelation, final RippleValue argument )
 	{
-		this.innerFunction = innerFunction;
+		this.innerRelation = innerRelation;
 		this.argument = argument;
-		cachedArity = innerFunction.arity() - 1;
-//System.out.println( "" + this + ": (" + innerFunction + ", " + argument + ")" );
+		cachedArity = innerRelation.arity() - 1;
+//System.out.println( "" + this + ": (" + innerRelation + ", " + argument + ")" );
 	}
 
 	public int arity()
@@ -31,22 +31,21 @@ public class Closure implements Function
 		return cachedArity;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						final Sink<StackContext> sink )
 		throws RippleException
 	{
-		innerFunction.applyTo( context.getModelConnection().list( argument, stack ), sink, context );
+		innerRelation.applyTo( arg.with( arg.getStack().push( argument ) ), sink );
 	}
 	
 	public boolean isTransparent()
 	{
-		return innerFunction.isTransparent();
+		return innerRelation.isTransparent();
 	}
 	
 	public String toString()
 	{
-		return "Closure(" + innerFunction + ", " + argument + ")";
+		return "Closure(" + innerRelation + ", " + argument + ")";
 	}
 }
 

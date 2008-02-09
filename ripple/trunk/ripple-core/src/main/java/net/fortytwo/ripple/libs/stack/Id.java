@@ -10,15 +10,14 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive function which has no effect on the stack.
  */
-public class Id extends PrimitiveFunction
+public class Id extends PrimitiveStackRelation
 {
 	private static final int ARITY = 0;
 
@@ -33,12 +32,12 @@ public class Id extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		sink.put( stack );
+		sink.put( arg );
 	}
 }
 

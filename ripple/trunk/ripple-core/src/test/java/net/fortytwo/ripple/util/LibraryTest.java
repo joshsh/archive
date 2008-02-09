@@ -9,10 +9,9 @@
 
 package net.fortytwo.ripple.util;
 
-import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.test.RippleTestCase;
@@ -38,8 +37,8 @@ public class LibraryTest extends RippleTestCase
 
 			assertNotNull( dup05Val );
 			assertNotNull( dup08Val );
-			assertTrue( dup05Val instanceof PrimitiveFunction );
-			assertTrue( dup08Val instanceof PrimitiveFunction );
+			assertTrue( dup05Val instanceof PrimitiveStackRelation );
+			assertTrue( dup08Val instanceof PrimitiveStackRelation );
 
 			assertEquals( dup05Val, dup08Val );
 

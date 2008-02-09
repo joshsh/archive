@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * produces the substring between the first index (inclusive) and the second
  * index (exclusive).
  */
-public class Substring extends PrimitiveFunction
+public class Substring extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -36,12 +36,13 @@ public class Substring extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		int begin, end;
 		String s, result;
@@ -56,7 +57,8 @@ public class Substring extends PrimitiveFunction
 		try
 		{
 			result = s.substring( begin, end );
-			sink.put( stack.push( mc.value( result ) ) );
+			sink.put( arg.with(
+					stack.push( mc.value( result ) ) ) );
 		}
 
 		catch ( IndexOutOfBoundsException e )

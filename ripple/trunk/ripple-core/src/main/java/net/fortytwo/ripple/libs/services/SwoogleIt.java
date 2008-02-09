@@ -11,13 +11,13 @@ package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.Sink;
@@ -37,7 +37,7 @@ import java.net.URL;
  * and a Swoogle key (for instance, "demo") and produces a resource containing
  * Swoogle search results.
  */
-public class SwoogleIt extends PrimitiveFunction
+public class SwoogleIt extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -57,12 +57,13 @@ public class SwoogleIt extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		if ( null == swoogleQueryResponseUri )
 		{
@@ -102,7 +103,7 @@ URI ctx = mc.createUri( url.toString() );
 
 		// Output is buffered so that the entire document is imported into the
 		// model before results are processed.
-		final Buffer<RippleList> buffer = new Buffer<RippleList>( sink );
+		final Buffer<StackContext> buffer = new Buffer<StackContext>( sink );
 
 		RdfSink responseWatcher = new RdfSink()
 		{
@@ -116,8 +117,8 @@ URI ctx = mc.createUri( url.toString() );
 					if ( st.getPredicate().equals( RDF.TYPE )
 							&& st.getObject().equals( swoogleQueryResponseUri ) )
 					{
-						buffer.put( mc.list(
-							new RdfValue( st.getSubject() ), stackFinal ) );
+						buffer.put( arg.with(
+								stackFinal.push( new RdfValue( st.getSubject() ) ) ) );
 					}
 				}
 			};

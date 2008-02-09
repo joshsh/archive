@@ -10,18 +10,18 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes an item and a list and produces a Boolean value of
  * true if the item is contained in the list, otherwise false.
  */
-public class In extends PrimitiveFunction
+public class In extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -52,12 +52,13 @@ public class In extends PrimitiveFunction
 		return false;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue l;
 
@@ -70,7 +71,8 @@ public class In extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( rest.push( has( list, x ) ? StackLibrary.getTrueValue() : StackLibrary.getFalseValue() ) );
+				sink.put( arg.with(
+						rest.push( has( list, x ) ? StackLibrary.getTrueValue() : StackLibrary.getFalseValue() ) ) );
 			}
 		};
 

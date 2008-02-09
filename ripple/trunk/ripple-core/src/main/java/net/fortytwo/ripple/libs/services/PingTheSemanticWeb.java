@@ -10,12 +10,11 @@
 package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
-
 import org.jdom.input.SAXBuilder;
 
 /**
@@ -24,9 +23,10 @@ import org.jdom.input.SAXBuilder;
  * request to the PingTheSemanticWeb service, producing all results as
  * information resources.
  */
-public class PingTheSemanticWeb extends PrimitiveFunction
+public class PingTheSemanticWeb extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
+	private static final String MSG = "Note: the PingTheSemanticWeb API has just (as of Aug 27, 2007) undergone major changes.  Check the latest release of Ripple for an updated pingTheSemanticWeb primitive!";
 
 	private static SAXBuilder saxBuilder = null;
 	private static void initialize()
@@ -52,12 +52,13 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		if ( null == saxBuilder )
 		{
@@ -73,8 +74,8 @@ public class PingTheSemanticWeb extends PrimitiveFunction
 //		maxResults = mc.intValue( stack.getFirst() );
 		stack = stack.getRest();
 
-sink.put( mc.list(
-	mc.value( "Note: the PingTheSemanticWeb API has just (as of Aug 27, 2007) undergone major changes.  Check the latest release of Ripple for an updated pingTheSemanticWeb primitive!" ), stack ) );
+sink.put( arg.with(
+		stack.push( mc.value( MSG ) ) ) );
 /*
 		URLConnection urlConn = HttpUtils.openConnection(
 			"http://pingthesemanticweb.com/export/?serialization=xml&ns=&domain=&timeframe=any_time&type=" + type + "&nbresults=" + maxResults );

@@ -10,18 +10,17 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
-import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a Boolean value b, an item t, and an item f, then
  * produces t if b is true, otherwise f.
  */
-public class Choice extends PrimitiveFunction
+public class Choice extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -36,12 +35,13 @@ public class Choice extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
 		RippleValue f, t, b;
+		RippleList stack = arg.getStack();
 
 		f = stack.getFirst();
 		stack = stack.getRest();
@@ -53,7 +53,8 @@ public class Choice extends PrimitiveFunction
 		// Note: everything apart from joy:true is considered false.
 		RippleValue result = b.equals( StackLibrary.getTrueValue() ) ? t : f;
 
-		sink.put( stack.push( result ) );
+		sink.put( arg.with(
+				stack.push( result ) ) );
 	}
 }
 

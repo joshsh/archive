@@ -10,12 +10,12 @@
 package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Function;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackRelation;
 import net.fortytwo.ripple.util.Sink;
 
-public class ListDequotation implements Function
+public class ListDequotation implements StackRelation
 {
 	private RippleList list;
 
@@ -29,24 +29,25 @@ public class ListDequotation implements Function
 		return 0;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						final Sink<StackContext> sink )
 		throws RippleException
 	{
+		RippleList stack = arg.getStack();
+
 		RippleList in = list;
 		RippleList out = stack;
 
 		while ( RippleList.NIL != in )
 		{
-			out = context.getModelConnection().list( in.getFirst(), out );
+			out = out.push( in.getFirst() );
 			in = in.getRest();
 		}
 
 		// Never emit an empty stack.
 		if ( RippleList.NIL != out )
 		{
-			sink.put( out );
+			sink.put( arg.with( out ) );
 		}
 	}
 	

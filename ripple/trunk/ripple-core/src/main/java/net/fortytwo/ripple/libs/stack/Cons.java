@@ -10,18 +10,18 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes an item and a list, prepends the item to the list,
  * then produces the resulting list.
  */
-public class Cons extends PrimitiveFunction
+public class Cons extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -36,12 +36,13 @@ public class Cons extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue l;
 
@@ -54,7 +55,8 @@ public class Cons extends PrimitiveFunction
 		{
 			public void put( final RippleList list ) throws RippleException
 			{
-				sink.put( rest.push( list.push( x ) ) );
+				sink.put( arg.with(
+						rest.push( list.push( x ) ) ) );
 			}
 		};
 

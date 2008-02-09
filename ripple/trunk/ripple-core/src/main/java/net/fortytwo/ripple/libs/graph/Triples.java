@@ -11,11 +11,11 @@ package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
@@ -32,7 +32,7 @@ import org.openrdf.model.Statement;
  * (subject, predicate, object) for each RDF triple in the corresponding
  * Semantic Web document.
  */
-public class Triples extends PrimitiveFunction
+public class Triples extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -47,61 +47,59 @@ public class Triples extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		String uri = mc.toUri( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
-		SesameInputAdapter sc = createAdapter( stack, sink, mc );
+		SesameInputAdapter sc = createAdapter( arg, sink );
 
 		HttpMethod method = HttpUtils.createGetMethod( uri );
 		HttpUtils.setRdfAcceptHeader( method );
 		RdfUtils.read( method, sc, uri, null );
 	}
 
-	private static SesameInputAdapter createAdapter( final RippleList stack,
-										final Sink<RippleList> resultSink,
-										final ModelConnection mc )
+	static SesameInputAdapter createAdapter( final StackContext arg,
+										final Sink<StackContext> resultSink )
 	{
+		final ModelConnection mc = arg.getModelConnection();
+		final RippleList stack = arg.getStack();
+
 		RdfSink rdfSink = new RdfSink()
 		{
 			// Discard statements.
-			private Sink<Statement> stSink = new Sink<Statement>()
-			{
-				public void put( final Statement st ) throws RippleException
-				{
-// Note: don't bother with the ModelBridge for now.
-					RippleValue subj = new RdfValue( st.getSubject() );
-					RippleValue pred = new RdfValue( st.getPredicate() );
-					RippleValue obj = new RdfValue( st.getObject() );
-	
-					RippleList triple = mc.list( obj ).push( pred ).push( subj );
-					resultSink.put(
-						mc.list( triple, stack ) );
-				}
-			};
+			private Sink<Statement> stSink = new NullSink<Statement>();
 
 			// Discard namespaces.
 			private Sink<Namespace> nsSink = new NullSink<Namespace>();
 
-			// Discard comments.
-			private Sink<String> cmtSink = new NullSink<String>();
+			// Push comments.
+			private Sink<String> cmtSink = new Sink<String>()
+			{
+				public void put( final String comment )
+					throws RippleException
+				{
+					resultSink.put( arg.with(
+						stack.push( mc.value( comment ) ) ) );
+				}
+			};
 
 			public Sink<Statement> statementSink()
 			{
 				return stSink;
 			}
-		
+
 			public Sink<Namespace> namespaceSink()
 			{
 				return nsSink;
 			}
-		
+
 			public Sink<String> commentSink()
 			{
 				return cmtSink;

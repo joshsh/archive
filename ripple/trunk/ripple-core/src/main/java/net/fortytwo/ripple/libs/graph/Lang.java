@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
@@ -23,7 +23,7 @@ import org.openrdf.model.Literal;
  * A primitive which consumes a plain literal value and produces its language
  * tag (or an empty string if the literal has no language tag).
  */
-public class Lang extends PrimitiveFunction
+public class Lang extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -38,12 +38,13 @@ public class Lang extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		Value v;
 		String result;
@@ -60,7 +61,8 @@ public class Lang extends PrimitiveFunction
 				result = "";
 			}
 
-			sink.put( mc.list( mc.value( result ), stack ) );
+			sink.put( arg.with(
+					stack.push( mc.value( result ) ) ) );
 		}
 	}
 }

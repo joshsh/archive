@@ -10,17 +10,17 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which permutes the first, second and third items on the stack
  * such that (... x y z) becomes (... y z x).
  */
-public class Rolldown extends PrimitiveFunction
+public class Rolldown extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -35,11 +35,12 @@ public class Rolldown extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
+		RippleList stack = arg.getStack();
 		RippleValue z, y, x;
 
 		z = stack.getFirst();
@@ -49,7 +50,8 @@ public class Rolldown extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( stack.push( y ).push( z ).push( x ) );
+		sink.put( arg.with(
+				stack.push( y ).push( z ).push( x ) ) );
 	}
 }
 

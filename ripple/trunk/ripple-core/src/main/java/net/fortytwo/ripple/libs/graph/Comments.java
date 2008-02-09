@@ -11,9 +11,9 @@ package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
@@ -30,7 +30,7 @@ import org.openrdf.model.Statement;
  * the comments matched in the corresponding RDF document. Note: with the
  * current Sesame bindings, nothing is actually matched.
  */
-public class Comments extends PrimitiveFunction
+public class Comments extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -45,29 +45,32 @@ public class Comments extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		String uri;
 
 		uri = mc.toUri( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
-		SesameInputAdapter sc = createAdapter( stack, sink, mc );
+		SesameInputAdapter sc = createAdapter( arg, sink );
 
 		HttpMethod method = HttpUtils.createGetMethod( uri );
 		HttpUtils.setRdfAcceptHeader( method );
 		RdfUtils.read( method, sc, uri, null );
 	}
 
-	static SesameInputAdapter createAdapter( final RippleList stack,
-										final Sink<RippleList> resultSink,
-										final ModelConnection mc )
+	static SesameInputAdapter createAdapter( final StackContext arg,
+										final Sink<StackContext> resultSink )
 	{
+		final ModelConnection mc = arg.getModelConnection();
+		final RippleList stack = arg.getStack();
+
 		RdfSink rdfSink = new RdfSink()
 		{
 			// Discard statements.
@@ -82,8 +85,8 @@ public class Comments extends PrimitiveFunction
 				public void put( final String comment )
 					throws RippleException
 				{
-					resultSink.put(
-						mc.list( mc.value( comment ), stack ) );
+					resultSink.put( arg.with(
+						stack.push( mc.value( comment ) ) ) );
 				}
 			};
 

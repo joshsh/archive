@@ -11,11 +11,11 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * value.  For instance, <code>(1 2 3) 0 add /fold</code> yields 0 + 1 + 2 + 3
  * = 6.
  */
-public class Fold extends PrimitiveFunction
+public class Fold extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -39,12 +39,13 @@ public class Fold extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue l;
 
@@ -70,7 +71,7 @@ public class Fold extends PrimitiveFunction
 					lList = lList.getRest();
 				}
 		
-				sink.put( result );
+				sink.put( arg.with( result ) );
 			}
 		};
 

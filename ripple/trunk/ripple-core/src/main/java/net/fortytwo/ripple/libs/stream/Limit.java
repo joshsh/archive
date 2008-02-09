@@ -10,19 +10,19 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.StackRelation;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a number n and produces a filter which transmits
  * at most n stacks.
  */
-public class Limit extends PrimitiveFunction
+public class Limit extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -37,27 +37,28 @@ public class Limit extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		int lim;
 
 		lim = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 
-		sink.put(
+		sink.put( arg.with(
 			stack.push(
 				new Operator(
-					new LimitInner( (long) lim ) ) ) );
+					new LimitInner( (long) lim ) ) ) ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class LimitInner implements Function
+	protected class LimitInner implements StackRelation
 	{
 		private long count, limit;
 
@@ -72,15 +73,15 @@ public class Limit extends PrimitiveFunction
 			count = 0;
 		}
 	
-		public void applyTo( RippleList stack,
-							final Sink<RippleList> sink,
-							final Context context )
+		public void applyTo( final StackContext arg,
+							 final Sink<StackContext> sink
+		)
 			throws RippleException
 		{
 			if ( count < limit )
 			{
 				count++;
-				sink.put( stack );
+				sink.put( arg );
 			}
 		}
 		

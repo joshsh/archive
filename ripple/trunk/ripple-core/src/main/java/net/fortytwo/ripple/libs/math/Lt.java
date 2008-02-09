@@ -10,19 +10,19 @@
 package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.libs.stack.StackLibrary;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.libs.stack.StackLibrary;
 
 /**
  * A primitive which consumes two items x and y and produces a Boolean value of
  * true if x is less than y according to the natural ordering of x, otherwise
  * false.
  */
-public class Lt extends PrimitiveFunction
+public class Lt extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -37,12 +37,13 @@ public class Lt extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
 		RippleValue a, b, result;
+		RippleList stack = arg.getStack();
 
 		b = stack.getFirst();
 		stack = stack.getRest();
@@ -53,7 +54,8 @@ public class Lt extends PrimitiveFunction
 			? StackLibrary.getTrueValue()
 			: StackLibrary.getFalseValue();
 
-		sink.put( stack.push( result ) );
+		sink.put( arg.with(
+				stack.push( result ) ) );
 	}
 }
 

@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.StringUtils;
  * A primitive which consumes a string and produces its (RFC 3986)
  * percent-encoded equivalent.
  */
-public class PercentEncode extends PrimitiveFunction
+public class PercentEncode extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -36,12 +36,13 @@ public class PercentEncode extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		String a, result;
 
@@ -49,7 +50,8 @@ public class PercentEncode extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = StringUtils.percentEncode( a );
-		sink.put( stack.push( mc.value( result ) ) );
+		sink.put( arg.with(
+				stack.push( mc.value( result ) ) ) );
 	}
 }
 

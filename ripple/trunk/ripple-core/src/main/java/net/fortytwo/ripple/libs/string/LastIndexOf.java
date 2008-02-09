@@ -10,17 +10,17 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a string and a substring and produces the index of
  * the last occurrence of the substring.
  */
-public class LastIndexOf extends PrimitiveFunction
+public class LastIndexOf extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -35,12 +35,13 @@ public class LastIndexOf extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		String str, substr;
 		int result;
@@ -51,7 +52,8 @@ public class LastIndexOf extends PrimitiveFunction
 		stack = stack.getRest();
 
 		result = str.lastIndexOf( substr );
-		sink.put( stack.push( mc.value( result ) ) );
+		sink.put( arg.with(
+				stack.push( mc.value( result ) ) ) );
 	}
 }
 

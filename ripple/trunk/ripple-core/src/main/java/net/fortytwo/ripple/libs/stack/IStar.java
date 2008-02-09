@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which optionally activates ("applies") the topmost item on the
  * stack.
  */
-public class IStar extends PrimitiveFunction
+public class IStar extends PrimitiveStackRelation
 {
 	// TODO: arity should really be 1, but this is a nice temporary solution
 	private static final int ARITY = 2;
@@ -34,14 +34,16 @@ public class IStar extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( final RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
+		RippleList stack = arg.getStack();
 		RippleValue first = stack.getFirst();
 
-		sink.put( stack.getRest() );
+		sink.put( arg.with(
+				stack.getRest() ) );
 
 		/*Sink<Operator> opSink = new Sink<Operator>()
 		{
@@ -52,18 +54,18 @@ public class IStar extends PrimitiveFunction
 		};*/
 
 // hack...
-		sink.put( stack
+		sink.put( arg.with( stack
 				.push( Operator.OP )
 				.push( first )
-				.push( new Operator( StackLibrary.getIstarValue() ) ) );
+				.push( new Operator( StackLibrary.getIstarValue() ) ) ) );
 	}
 
 	/*
-	private class StarClosure implements Function
+	private class StarClosure implements StackRelation
 	{
-		private Function innerFunction;
+		private StackRelation innerFunction;
 
-		public StarClosure( final Function f )
+		public StarClosure( final StackRelation f )
 		{
 			innerFunction = f;
 		}

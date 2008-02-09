@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * substring, then produces the string obtained by replacing all occurrences of the
  * regular expression in the original string with the replacement substring.
  */
-public class ReplaceAll extends PrimitiveFunction
+public class ReplaceAll extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -36,12 +36,13 @@ public class ReplaceAll extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		String regex, replacement, s, result;
 
@@ -55,7 +56,8 @@ public class ReplaceAll extends PrimitiveFunction
 		try
 		{
 			result = s.replaceAll( regex, replacement );
-			sink.put( stack.push( mc.value( result ) ) );
+			sink.put( arg.with(
+					stack.push( mc.value( result ) ) ) );
 		}
 
 		catch ( java.util.regex.PatternSyntaxException e )

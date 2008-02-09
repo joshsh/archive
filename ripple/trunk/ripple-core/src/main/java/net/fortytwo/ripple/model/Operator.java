@@ -25,34 +25,34 @@ public class Operator implements RippleValue
 	private static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
 	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
-	private Function func;
+	private StackRelation relation;
 	private RdfValue rdfEquivalent = null;
 
 	public Operator( final RdfValue pred )
 	{
-		func = new RdfPredicateFunction( pred, Ripple.useInference() );
+		relation = new RdfPredicateRelation( pred, Ripple.useInference() );
 	}
 
-	public Operator( final Function function )
+	public Operator( final StackRelation relation )
 	{
 //System.out.println( "Operator[" + this + "](" + function + ")" );
-		func = function;
+		this.relation = relation;
 	}
 
 	public Operator( final RippleList list )
 	{
 //System.out.println( "Operator[" + this + "](" + list + ")" );
-		func = new ListDequotation( list );
+		relation = new ListDequotation( list );
 	}
 
-	public Function getFunction()
+	public StackRelation getRelation()
 	{
-		return func;
+		return relation;
 	}
 
 	public String toString()
 	{
-		return "Operator(" + func + ")";
+		return "Operator(" + relation + ")";
 	}
 
 	public void printTo( final RipplePrintStream p )
@@ -101,9 +101,9 @@ return rdfEquivalent;
 		throws RippleException
 	{
 		// A function becomes active.
-		if ( v instanceof Function )
+		if ( v instanceof StackRelation )
 		{
-			opSink.put( new Operator( (Function) v ) );
+			opSink.put( new Operator( (StackRelation) v ) );
 			return;
 		}
 

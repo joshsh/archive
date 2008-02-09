@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive function which consumes two lists and produces the concatenation
  * of the two lists.
  */
-public class Cat extends PrimitiveFunction
+public class Cat extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -37,12 +37,13 @@ public class Cat extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue l1, l2;
 
@@ -62,7 +63,8 @@ public class Cat extends PrimitiveFunction
 					public void put( final RippleList list1 ) throws RippleException
 					{
 						RippleList result = mc.concat( list2, list1 );
-						sink.put( rest.push( result ) );
+						sink.put( arg.with(
+								rest.push( result ) ) );
 					}
 				};
 

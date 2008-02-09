@@ -13,17 +13,17 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Sink;
 
-public class Op implements Function, RippleValue
+public class Op implements StackRelation, RippleValue
 {
 	private final static int ARITY = 1;
 
-	public void applyTo( RippleList stack,
-				final Sink<RippleList> sink,
-				final Context context )
+	public void applyTo( final StackContext arg,
+				final Sink<StackContext> sink )
 		throws RippleException
 	{
 		RippleValue v;
-	
+	    RippleList stack = arg.getStack();
+
 		v = stack.getFirst();
 		final RippleList rest = stack.getRest();
 	
@@ -32,11 +32,11 @@ public class Op implements Function, RippleValue
 			public void put( final Operator oper )
 				throws RippleException
 			{
-				sink.put( rest.push( oper ) );
+				sink.put( arg.with( rest.push( oper ) ) );
 			}
 		};
 
-		Operator.createOperator( v, opSink, context.getModelConnection() );
+		Operator.createOperator( v, opSink, arg.getModelConnection() );
 	}
 
 	public int compareTo( final RippleValue other )

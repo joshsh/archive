@@ -10,17 +10,17 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes two strings and produces their
  * concatenation.
  */
-public class StrCat extends PrimitiveFunction
+public class StrCat extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -35,12 +35,13 @@ public class StrCat extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		String strA, strB, result;
 
@@ -51,7 +52,8 @@ public class StrCat extends PrimitiveFunction
 
 		result = strB + strA;
 
-		sink.put( stack.push( mc.value( result ) ) );
+		sink.put( arg.with(
+				stack.push( mc.value( result ) ) ) );
 	}
 }
 

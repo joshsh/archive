@@ -10,12 +10,12 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.StackRelation;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.util.Sink;
 
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * like the identity filter otherwise, making a stream of stacks into a set of
  * stacks.
  */
-public class Unique extends PrimitiveFunction
+public class Unique extends PrimitiveStackRelation
 {
 	private static final int ARITY = 0;
 
@@ -41,20 +41,22 @@ public class Unique extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		sink.put(
+		RippleList stack = arg.getStack();
+
+		sink.put( arg.with(
 			stack.push(
 				new Operator(
-					new UniqueInner() ) ) );
+					new UniqueInner() ) ) ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class UniqueInner implements Function
+	protected class UniqueInner implements StackRelation
 	{
 		private ListMemoizer<RippleValue, String> memoizer = null;
 	
@@ -63,20 +65,20 @@ public class Unique extends PrimitiveFunction
 			return 1;
 		}
 	
-		public void applyTo( RippleList stack,
-							final Sink<RippleList> sink,
-							final Context context )
+		public void applyTo( final StackContext arg,
+							 final Sink<StackContext> sink
+		)
 			throws RippleException
 		{
 			if ( null == memoizer )
 			{
-				memoizer = new ListMemoizer<RippleValue, String>( stack, MEMO );
-				sink.put( stack );
+				memoizer = new ListMemoizer<RippleValue, String>( arg.getStack(), MEMO );
+				sink.put( arg );
 			}
 	
-			else if ( memoizer.put( stack, MEMO ) )
+			else if ( memoizer.put( arg.getStack(), MEMO ) )
 			{
-				sink.put( stack );
+				sink.put( arg );
 			}
 		}
 		

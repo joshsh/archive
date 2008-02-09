@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * this is the URI as a string.  For blank nodes, this is the identifier of
  * the node.
  */
-public class ToString extends PrimitiveFunction
+public class ToString extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -39,19 +39,21 @@ public class ToString extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue v;
 
 		v = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( stack.push( mc.value( mc.toString( v ) ) ) );
+		sink.put( arg.with(
+				stack.push( mc.value( mc.toString( v ) ) ) ) );
 	}
 }
 

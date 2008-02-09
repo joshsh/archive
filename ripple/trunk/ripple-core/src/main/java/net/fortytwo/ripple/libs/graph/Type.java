@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Value;
@@ -25,7 +25,7 @@ import org.openrdf.model.URI;
  * A primitive which consumes a literal value and produces its data type (if
  * any).
  */
-public class Type extends PrimitiveFunction
+public class Type extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -40,12 +40,13 @@ public class Type extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		Value v;
 
@@ -58,7 +59,8 @@ public class Type extends PrimitiveFunction
 
 			if ( null != type )
 			{
-				sink.put( mc.list( new RdfValue( type ), stack ) );
+				sink.put( arg.with(
+						stack.push( new RdfValue( type ) ) ) );
 			}
 		}
 	}

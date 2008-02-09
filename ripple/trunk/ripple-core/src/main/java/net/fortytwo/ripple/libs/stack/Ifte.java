@@ -11,10 +11,10 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.util.Sink;
  * true, then t is applied the rest of the stack.  Otherwise, f is applied to
  * the rest of the stack.
  */
-public class Ifte extends PrimitiveFunction
+public class Ifte extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -38,12 +38,13 @@ public class Ifte extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
 		RippleValue b, trueProg, falseProg;
+		RippleList stack = arg.getStack();
 
 		falseProg = stack.getFirst();
 		stack = stack.getRest();
@@ -52,12 +53,12 @@ public class Ifte extends PrimitiveFunction
 		b = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( stack.push( b )
-			.push( Operator.OP )
-			.push( trueProg )
-			.push( falseProg )
-			.push( StackLibrary.getBranchValue() )
-			.push( Operator.OP ) );
+		sink.put( arg.with(	stack.push( b )
+				.push( Operator.OP )
+				.push( trueProg )
+				.push( falseProg )
+				.push( StackLibrary.getBranchValue() )
+				.push( Operator.OP ) ) );
 	}
 }
 

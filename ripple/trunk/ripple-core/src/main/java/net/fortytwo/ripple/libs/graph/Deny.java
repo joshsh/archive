@@ -10,18 +10,18 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a subject, predicate and object, then produces the
  * subject after removing the corresponding RDF statement from the triple store.
  */
-public class Deny extends PrimitiveFunction
+public class Deny extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -36,12 +36,13 @@ public class Deny extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue subj, pred, obj;
 
@@ -62,7 +63,7 @@ public class Deny extends PrimitiveFunction
 		// Sail.
 		mc.commit();
 
-		sink.put( mc.list( subj, stack ) );
+		sink.put( arg.with( stack.push( subj ) ) );
 	}
 }
 

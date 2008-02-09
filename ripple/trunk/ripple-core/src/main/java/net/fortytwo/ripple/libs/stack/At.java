@@ -10,18 +10,18 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * Consumes a list and an index n and produces the nth item in the list, where
  * the first item in the list has an index of 1.
  */
-public class At extends PrimitiveFunction
+public class At extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -36,12 +36,13 @@ public class At extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue l;
 
@@ -68,7 +69,8 @@ public class At extends PrimitiveFunction
 					}
 				}
 		
-				sink.put( rest.push( mc.list( list.getFirst() ) ) );
+				sink.put( arg.with(
+						rest.push( mc.list( list.getFirst() ) ) ) );
 			}
 		};
 

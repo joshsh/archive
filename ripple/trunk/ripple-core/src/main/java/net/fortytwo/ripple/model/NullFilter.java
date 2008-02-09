@@ -15,16 +15,15 @@ import net.fortytwo.ripple.util.Sink;
 /**
  *  A filter which yields no results, regardless of its inputs.
  */
-public class NullFilter implements Function
+public class NullFilter implements StackRelation
 {
 	public int arity()
 	{
 		return 0;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						final Sink<StackContext> sink )
 		throws RippleException
 	{
 	}

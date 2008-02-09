@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which activates ("applies") the topmost item on the stack one or
  * more times.
  */
-public class Range extends PrimitiveFunction
+public class Range extends PrimitiveStackRelation
 {
 	// TODO: arity should really be 2
 	private static final int ARITY = 3;
@@ -34,12 +34,13 @@ public class Range extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		RippleList stack = arg.getStack();
+		final ModelConnection mc = arg.getModelConnection();
 
 		final int min, max;
 
@@ -54,13 +55,13 @@ public class Range extends PrimitiveFunction
 		{
 			public void put( final Operator op ) throws RippleException
 			{
-				Function f = op.getFunction();
+				StackRelation f = op.getRelation();
 
-				sink.put( rest
+				sink.put( arg.with( rest
 						.push( new Operator(
-								new TimesFunction( f, min, false ) ) )
+								new TimesRelation( f, min, false ) ) )
 						.push( new Operator(
-								new TimesFunction( f, max - min, true ) ) ) );
+								new TimesRelation( f, max - min, true ) ) ) ) );
 			}
 		};
 

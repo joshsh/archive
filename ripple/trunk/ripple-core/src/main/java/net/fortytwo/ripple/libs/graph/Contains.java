@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.impl.sesame.SesameList;
 import net.fortytwo.ripple.util.Sink;
 
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes an RDF container and produces all items in the
  * container.
  */
-public class Contains extends PrimitiveFunction
+public class Contains extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -37,12 +37,13 @@ public class Contains extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( final RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue head = stack.getFirst();
 		final RippleList rest = stack.getRest();
@@ -51,7 +52,7 @@ public class Contains extends PrimitiveFunction
 		{
 			public void put( final RippleValue v ) throws RippleException
 			{
-				sink.put( new SesameList( v, rest ) );
+				sink.put( arg.with( new SesameList( v, rest ) ) );
 			}
 		};		
 		

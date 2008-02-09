@@ -11,12 +11,12 @@ package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
-import net.fortytwo.ripple.model.Context;
-import net.fortytwo.ripple.model.Function;
+import net.fortytwo.ripple.model.StackRelation;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.util.Sink;
 
@@ -27,7 +27,7 @@ import net.fortytwo.ripple.util.Sink;
  * like the identity filter otherwise, making a stream of stacks into a set of
  * stacks.
  */
-public class Intersect extends PrimitiveFunction
+public class Intersect extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 	private static final String MEMO = "memo";
@@ -42,24 +42,28 @@ public class Intersect extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
+		RippleList stack = arg.getStack();
+
 		RippleValue rtrue = stack.getFirst();
 		stack = stack.getRest();
 		RippleValue rfalse = stack.getFirst();
 		stack = stack.getRest();
 
 		Operator inner = new Operator( new IntersectInner() );
-		sink.put( stack.push( rtrue ).push( Operator.OP ).push( StackLibrary.getTrueValue() ).push( inner ) );
-		sink.put( stack.push( rfalse ).push( Operator.OP ).push( StackLibrary.getFalseValue() ).push( inner ) );
+		sink.put( arg.with(
+				stack.push( rtrue ).push( Operator.OP ).push( StackLibrary.getTrueValue() ).push( inner ) ) );
+		sink.put( arg.with(
+				stack.push( rfalse ).push( Operator.OP ).push( StackLibrary.getFalseValue() ).push( inner ) ) );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class IntersectInner implements Function
+	protected class IntersectInner implements StackRelation
 	{
 		private ListMemoizer<RippleValue, String> trueMemoizer = null;
 		private ListMemoizer<RippleValue, String> falseMemoizer = null;
@@ -71,28 +75,30 @@ public class Intersect extends PrimitiveFunction
 			return 2;
 		}
 
-		public void applyTo( RippleList stack,
-							final Sink<RippleList> sink,
-							final Context context )
+		public void applyTo( final StackContext arg,
+							 final Sink<StackContext> sink
+		)
 			throws RippleException
 		{
+			RippleList stack = arg.getStack();
 			RippleValue marker = stack.getFirst();
 
 			if ( marker.equals( StackLibrary.getTrueValue() ) )
 			{
-				applyTrue( stack.getRest(), sink, context );
+				applyTrue( arg, sink );
 			}
 
 			if ( marker.equals( StackLibrary.getFalseValue() ) )
 			{
-				applyFalse( stack.getRest(), sink, context );
+				applyFalse( arg, sink );
 			}
 		}
 
-		private void applyTrue( final RippleList stack,
-								final Sink<RippleList> sink,
-								final Context context ) throws RippleException
+		private void applyTrue( final StackContext arg,
+								final Sink<StackContext> sink ) throws RippleException
 		{
+			RippleList stack = arg.getStack().getRest();
+
 			if ( null == trueMemoizer )
 			{
 				trueMemoizer = new ListMemoizer<RippleValue, String>( stack, MEMO );
@@ -105,14 +111,15 @@ public class Intersect extends PrimitiveFunction
 
 			if ( null != falseMemoizer && null != falseMemoizer.get( stack ) )
 			{
-				sink.put( stack );
+				sink.put( arg.with( stack ) );
 			}
 		}
 
-		private void applyFalse( final RippleList stack,
-								final Sink<RippleList> sink,
-								final Context context ) throws RippleException
+		private void applyFalse( final StackContext arg,
+								final Sink<StackContext> sink ) throws RippleException
 		{
+			RippleList stack = arg.getStack().getRest();
+
 			if ( null == falseMemoizer )
 			{
 				falseMemoizer = new ListMemoizer<RippleValue, String>( stack, MEMO );
@@ -125,7 +132,7 @@ public class Intersect extends PrimitiveFunction
 
 			if ( null != trueMemoizer && null != trueMemoizer.get( stack ) )
 			{
-				sink.put( stack );
+				sink.put( arg.with( stack ) );
 			}
 		}
 

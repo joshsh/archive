@@ -12,11 +12,11 @@ package net.fortytwo.ripple.libs.graph;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Statement;
@@ -25,7 +25,7 @@ import org.openrdf.model.Statement;
  * A primitive which consumes a resource and produces a three-element list
  * (subject, resource, object) for each statement about the resource.
  */
-public class Links extends PrimitiveFunction
+public class Links extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -40,12 +40,13 @@ public class Links extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		RippleValue subj;
 
@@ -64,8 +65,8 @@ public class Links extends PrimitiveFunction
 
 				RippleList triple = mc.list( obj ).push( pred ).push( subj );
 
-				sink.put(
-					mc.list( triple, rest ) );
+				sink.put( arg.with(
+					rest.push( triple ) ) );
 			}
 		};
 

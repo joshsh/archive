@@ -11,16 +11,16 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which activates the third-to-topmost item on the stack.
  */
-public class Dipd extends PrimitiveFunction
+public class Dipd extends PrimitiveStackRelation
 {
 	private static final int ARITY = 3;
 
@@ -35,12 +35,13 @@ public class Dipd extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
 		RippleValue z, y, x;
+		RippleList stack = arg.getStack();
 
 // hack...
 		z = stack.getFirst();
@@ -50,7 +51,8 @@ public class Dipd extends PrimitiveFunction
 		x = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( stack.push( z ).push( Operator.OP ).push( x ).push( y ) );
+		sink.put( arg.with(
+				stack.push( z ).push( Operator.OP ).push( x ).push( y ) ) );
 	}
 }
 

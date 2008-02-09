@@ -10,16 +10,16 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes two items and produces the second item.
  */
-public class False extends PrimitiveFunction
+public class False extends PrimitiveStackRelation
 {
 	private static final int ARITY = 2;
 
@@ -34,18 +34,20 @@ public class False extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
 		RippleValue y;
+		RippleList stack = arg.getStack();
 
 		stack = stack.getRest();
 		y = stack.getFirst();
 		stack = stack.getRest();
 
-		sink.put( stack.push( y ) );
+		sink.put( arg.with(
+				stack.push( y ) ) );
 	}
 }
 

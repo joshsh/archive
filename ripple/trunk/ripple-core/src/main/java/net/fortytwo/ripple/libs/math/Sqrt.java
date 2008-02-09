@@ -10,17 +10,17 @@
 package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a number and produces all real square roots of the
  * number.
  */
-public class Sqrt extends PrimitiveFunction
+public class Sqrt extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -35,12 +35,13 @@ public class Sqrt extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		double a;
 
@@ -53,10 +54,12 @@ public class Sqrt extends PrimitiveFunction
 			double d = Math.sqrt( a );
 
 			// Yield both square roots.
-			sink.put( mc.list( mc.value( d ), stack ) );
+			sink.put( arg.with(
+					stack.push( mc.value( d ) ) ) );
 			if ( d > 0 )
 			{
-				sink.put( mc.list( mc.value( 0.0 - d ), stack ) );
+				sink.put( arg.with(
+						stack.push( mc.value( 0.0 - d ) ) ) );
 			}
 		}
 	}

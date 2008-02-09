@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
  * A primitive which consumes a literal value and produces its xsd:double
  * equivalent (if any).
  */
-public class ToDouble extends PrimitiveFunction
+public class ToDouble extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -40,12 +40,13 @@ public class ToDouble extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		String s;
 
@@ -65,7 +66,8 @@ public class ToDouble extends PrimitiveFunction
 			return;
 		}
 
-		sink.put( mc.list( mc.value( d ), stack ) );
+		sink.put( arg.with(
+				stack.push( mc.value( d ) ) ) );
 	}
 }
 

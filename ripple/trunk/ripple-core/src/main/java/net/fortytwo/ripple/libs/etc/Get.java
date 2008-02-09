@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.etc;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.Sink;
 import org.apache.commons.httpclient.HttpClient;
@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
  * A primitive which consumes an information resource, issues a GET request for
  * the resource, then produces the retrieved data as a string.
  */
-public class Get extends PrimitiveFunction
+public class Get extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
@@ -42,12 +42,14 @@ public class Get extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
+
 		String result;
 
 		String uriStr = mc.toUri( stack.getFirst() ).toString();
@@ -112,7 +114,7 @@ public class Get extends PrimitiveFunction
 			throw new RippleException( t );
 		}
 		
-		sink.put( mc.list( mc.value( result ), stack ) );
+		sink.put( arg.with( stack.push( mc.value( result ) ) ) );
 	}
 }
 

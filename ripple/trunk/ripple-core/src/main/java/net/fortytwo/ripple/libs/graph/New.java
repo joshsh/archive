@@ -10,17 +10,17 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveFunction;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.Context;
 import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which produces a new blank node.
  */
-public class New extends PrimitiveFunction
+public class New extends PrimitiveStackRelation
 {
 	private static final int ARITY = 0;
 
@@ -35,19 +35,20 @@ public class New extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						 final Sink<StackContext> sink
+	)
 		throws RippleException
 	{
-		final ModelConnection mc = context.getModelConnection();
+		final ModelConnection mc = arg.getModelConnection();
+		RippleList stack = arg.getStack();
 
 		// Note: stack may be null (and this should not be a problem).
-		RippleList result = mc.list(
-			new RdfValue( mc.createBNode() ), stack );
+		RippleList result = stack.push(
+			new RdfValue( mc.createBNode() ) );
 //System.out.println( "Creating a new node" );
 
-		sink.put( result );
+		sink.put( arg.with( result ) );
 	}
 }
 

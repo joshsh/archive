@@ -12,23 +12,23 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 
-public abstract class PrimitiveFunction implements Function, RippleValue
+public abstract class PrimitiveStackRelation implements StackRelation, RippleValue
 {
 	private RdfValue rdfEquivalent = null;
 //	private FunctionTypeAnnotation typeAnnotation = null;
 	private boolean transparent;
 
-	public PrimitiveFunction( final boolean transparent )
+	public PrimitiveStackRelation( final boolean transparent )
 	{
 		this.transparent = transparent;
 	}
 	
-	public PrimitiveFunction()
+	public PrimitiveStackRelation()
 	{
 		transparent = true;
 	}
 
-	public PrimitiveFunction( final RdfValue v, final ModelConnection mc )
+	public PrimitiveStackRelation( final RdfValue v, final ModelConnection mc )
 		throws RippleException
 	{
 		setRdfEquivalent( v, mc );
@@ -61,7 +61,7 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	
 	public boolean equals( final Object o )
 	{
-		return ( o instanceof PrimitiveFunction )
+		return ( o instanceof PrimitiveStackRelation )
 			? ( o == this ) : false;
 	}
 
@@ -73,7 +73,7 @@ public abstract class PrimitiveFunction implements Function, RippleValue
 	public int compareTo( final RippleValue other )
 	{
 //System.out.println( "[" + this + "].compareTo(" + other + ")" );
-		if ( other instanceof PrimitiveFunction )
+		if ( other instanceof PrimitiveStackRelation )
 		{
 			if ( other == this )
 			{

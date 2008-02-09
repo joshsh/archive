@@ -11,14 +11,12 @@ package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Closure;
-import net.fortytwo.ripple.model.Function;
-import net.fortytwo.ripple.model.ModelConnection;
+import net.fortytwo.ripple.model.StackRelation;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.Context;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
-
 import org.apache.log4j.Logger;
 
 // Note: not thread-safe, on account of stop()
@@ -26,26 +24,24 @@ public class LazyEvaluator extends Evaluator
 {
 	private static final Logger LOGGER = Logger.getLogger( LazyEvaluator.class );
 
-	private Context context;
 	private boolean stopped = true;
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class FunctionSink implements Sink<RippleList>
+	protected class RelationSink implements Sink<StackContext>
 	{
-		private Function function;
-		private Sink<RippleList> sink;
+		private StackRelation relation;
+		private Sink<StackContext> sink;
 
-		public FunctionSink( final Function function, final Sink<RippleList> sink )
+		public RelationSink( final StackRelation relation, final Sink<StackContext> sink )
 		{
-			this.function = function;
+			this.relation = relation;
 			this.sink = sink;
-//System.out.println( this + "( " + function + ", " + sink + ")" );
-//System.out.println( "function.arity() = " + function.arity() );
+//System.out.println( this + "( " + relation + ", " + sink + ")" );
+//System.out.println( "relation.arity() = " + relation.arity() );
 		}
 
-		public void put( final RippleList stack )
-			throws RippleException
+		public void put( final StackContext arg ) throws RippleException
 		{
 			if ( stopped )
 			{
@@ -54,36 +50,37 @@ public class LazyEvaluator extends Evaluator
 
 //System.out.println( this + ".put( " + stack + " )" );
 //System.out.println( "   first = " + stack.getFirst() );
-			if ( function.arity() == 1 )
+			if ( relation.arity() == 1 )
 			{
-				function.applyTo( stack, sink, context );
+				relation.applyTo( arg, sink );
 			}
 
 			else
 			{
+				RippleList stack = arg.getStack();
 				RippleValue first = stack.getFirst();
 				RippleList rest = stack.getRest();
 
-				Closure c = new Closure( function, first );
+				Closure c = new Closure( relation, first );
 
-				sink.put( rest.push( new Operator( c ) ) );
+				sink.put( arg.with( rest.push( new Operator( c ) ) ) );
 			}
 		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class EvaluatorSink implements Sink<RippleList>
+	protected class EvaluatorSink implements Sink<StackContext>
 	{
-		private Sink<RippleList> sink;
+		private Sink<StackContext> sink;
 
-		public EvaluatorSink( final Sink<RippleList> sink )
+		public EvaluatorSink( final Sink<StackContext> sink )
 		{
 			this.sink = sink;
 //System.out.println( this + "( " + sink + ")" );
 		}
 
-		public void put( final RippleList stack )
+		public void put( final StackContext arg )
 			throws RippleException
 		{
 			if ( stopped )
@@ -91,6 +88,7 @@ public class LazyEvaluator extends Evaluator
 				return;
 			}
 
+			RippleList stack = arg.getStack();
 //LOGGER.info( this + ".put( " + stack + " )" );
 //System.out.println( this + ".put( " + stack + " )" );
 			RippleValue first = stack.getFirst();
@@ -103,7 +101,7 @@ public class LazyEvaluator extends Evaluator
 				RippleList rest = stack.getRest();
 //LOGGER.info( "   rest = " + rest );
 
-				Function f = ( (Operator) first ).getFunction();
+				StackRelation f = ( (Operator) first ).getRelation();
 //LOGGER.info( "   f = " + f );
 //LOGGER.info( "   f.arity() = " + f.arity() );
 
@@ -111,7 +109,7 @@ public class LazyEvaluator extends Evaluator
 				// They shouldn't even care if the stack is empty.
 				if ( f.arity() == 0 )
 				{
-					f.applyTo( rest, this, context );
+					f.applyTo( arg.with( rest ), this );
 				}
 
 				// Functions with positive arity do require the stack to be
@@ -129,38 +127,35 @@ public class LazyEvaluator extends Evaluator
 					else
 					{
 						( new EvaluatorSink(
-							new FunctionSink( f, this ) ) ).put( rest );
+							new RelationSink( f, this ) ) ).put( arg.with( rest ) );
 					}
 				}
 			}
 
 			else
 			{
-				sink.put( stack );
+				sink.put( arg );
 			}
 		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public void applyTo( final RippleList stack,
-						final Sink<RippleList> sink,
-						final Context context )
+	public void applyTo( final StackContext arg,
+						final Sink<StackContext> sink )
 		throws RippleException
 	{
-if ( stack == RippleList.NIL )
+if ( RippleList.NIL == arg.getStack() )
 {
 	return;
 }
-
-		this.context = context;
 
 		EvaluatorSink evalSink = new EvaluatorSink( sink );
 		stopped = false;
 
 		try
 		{
-			evalSink.put( stack );
+			evalSink.put( arg );
 		}
 
 		// Attempt to recover from stack overflow.
