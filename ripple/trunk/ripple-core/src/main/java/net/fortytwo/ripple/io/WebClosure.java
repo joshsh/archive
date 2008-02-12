@@ -75,9 +75,14 @@ public class WebClosure  // TODO: the name is a little misleading...
 	public ContextMemo.Status extend( final URI uri, final RdfSink resultSink ) throws RippleException
 	{
 		ContextMemo.Status status = extendPrivate( uri, resultSink );
+
+		return status;
+	}
+
+	private ContextMemo.Status logStatus( final URI uri, final ContextMemo.Status status )
+	{
 		if ( ContextMemo.Status.Success != status )
 		{
-			// Note: exception information is not necessarily recorded
 			LOGGER.info( "Failed to dereference URI <"
 					+ StringUtils.escapeUriString( uri.toString() ) + ">: " + status );
 		}
@@ -104,6 +109,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 			if ( null != memo )
 			{
+				// Don't log success or failure based on cached values.
 				return memo.getStatus();
 			}
 
@@ -114,12 +120,9 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 			catch ( RippleException e )
 			{
+				// Don't log extremely common errors.
 				return ContextMemo.Status.InvalidUri;
 			}
-	
-			LOGGER.info( "Dereferencing URI <"
-					+ StringUtils.escapeUriString( uri.toString() )
-					+ "> at location " + mapped );
 
 			try
 			{
@@ -129,13 +132,20 @@ public class WebClosure  // TODO: the name is a little misleading...
 			catch ( RippleException e )
 			{
 				e.logError( false );
+
+				// Don't log extremely common errors.
 				return ContextMemo.Status.InvalidUri;
 			}
 
 			if ( null == dref )
 			{
+				// Don't log extremely common errors.
 				return ContextMemo.Status.BadUriScheme;
 			}
+
+			LOGGER.info( "Dereferencing URI <"
+					+ StringUtils.escapeUriString( uri.toString() ) );
+					//+ "> at location " + mapped );
 
 			memo = new ContextMemo( ContextMemo.Status.Success );
 			memos.put( memoUri, memo );
@@ -154,7 +164,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		catch ( RippleException e )
 		{
 			memo.setStatus( ContextMemo.Status.DereferencerError );
-			return memo.getStatus();
+			return logStatus( uri, memo.getStatus() );
 		}
 
 		MediaType mt = rep.getMediaType();
@@ -165,7 +175,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		{
 			memo.setStatus( ContextMemo.Status.BadMediaType );
 			memo.setMediaType( mt );
-			return memo.getStatus();
+			return logStatus( uri, memo.getStatus() );
 		}
 
 		URI context;
@@ -216,7 +226,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		memo.setStatus( status );
 		memo.setMediaType( mt );
 
-		return status;
+		return logStatus( uri, status );
 	}
 
 	private UriDereferencer chooseDereferencer( final String uri ) throws RippleException

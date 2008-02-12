@@ -330,12 +330,21 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				isFirst = false;
 			}
 			
-			else if ( Operator.OP != val )
-			{
+			//else if ( Operator.OP != val )
+			//{
 				sb.append( " " );
+			//}
+
+			if ( Operator.OP == val )
+			{
+				sb.append( "!" );
 			}
-			
-			sb.append( val );
+
+			else
+			{
+				sb.append( val );
+			}
+
 			cur = cur.getRest();
 		}
 		
@@ -344,6 +353,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		return sb.toString();
 	}
 
+	// Note: assumes diagrammatic order
 	public void printTo( final RipplePrintStream p )
 		throws RippleException
 	{

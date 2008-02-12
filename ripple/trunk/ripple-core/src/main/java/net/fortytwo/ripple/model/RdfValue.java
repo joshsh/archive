@@ -11,7 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-
+import net.fortytwo.ripple.util.StringUtils;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -127,8 +127,24 @@ public class RdfValue implements RippleValue
 
 	public String toString()
 	{
-		// Use Sesame's toString() methods.
-		return value.toString();
+		if ( value instanceof URI )
+		{
+			URI uri = (URI) value;
+			return "<" + uri.getNamespace() + uri.getLocalName() + ">";
+		}
+
+		else if ( value instanceof Literal )
+		{
+			Literal lit = (Literal) value;
+			return "\"" + StringUtils.escapeString( lit.getLabel() ) + "\""
+					+ ( (null != lit.getDatatype() ) ? "^^<" + lit.getDatatype() + ">" : "" );
+		}
+
+		else
+		{
+			// Use Sesame's toString() methods.
+			return value.toString();
+		}
 	}
 }
 

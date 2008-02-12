@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
 import org.apache.log4j.Logger;
 
 // Note: not thread-safe, on account of stop()
-public class LazyEvaluator extends Evaluator
+public class LazyEvaluator extends StackEvaluator
 {
 	private static final Logger LOGGER = Logger.getLogger( LazyEvaluator.class );
 

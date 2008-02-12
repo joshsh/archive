@@ -9,8 +9,8 @@ import net.fortytwo.ripple.RippleException;
  */
 public class StackContext implements Cloneable
 {
-	private RippleList stack;
-	private ModelConnection modelConnection;
+	protected RippleList stack;
+	protected ModelConnection modelConnection;
 
 	public StackContext( final RippleList stack, final ModelConnection mc )
 	{
