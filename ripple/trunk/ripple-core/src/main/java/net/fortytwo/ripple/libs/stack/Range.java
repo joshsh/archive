@@ -11,6 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.*;
+import net.fortytwo.ripple.model.regex.TimesQuantifier;
 import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
@@ -55,13 +56,8 @@ public class Range extends PrimitiveStackRelation
 		{
 			public void put( final Operator op ) throws RippleException
 			{
-				StackRelation f = op.getRelation();
-
-				sink.put( arg.with( rest
-						.push( new Operator(
-								new TimesRelation( f, min, false ) ) )
-						.push( new Operator(
-								new TimesRelation( f, max - min, true ) ) ) ) );
+				sink.put( arg.with( rest.push(
+						new Operator( new TimesQuantifier( op, min, max ) ) ) ) );
 			}
 		};
 

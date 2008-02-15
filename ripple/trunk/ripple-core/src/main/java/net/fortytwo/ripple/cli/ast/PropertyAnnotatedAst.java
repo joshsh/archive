@@ -15,9 +15,10 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
-public class PropertyAnnotatedAst implements Ast
+public class PropertyAnnotatedAst implements Ast<RippleList>
 {
 	private Ast innerAst;
 	private Properties props;
@@ -28,7 +29,7 @@ public class PropertyAnnotatedAst implements Ast
 		this.props = props;
 	}
 	
-	public void evaluate( Sink<RippleValue> sink,
+	public void evaluate( Sink<RippleList> sink,
 					QueryEngine qe,
 					ModelConnection mc )
 		throws RippleException

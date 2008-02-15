@@ -35,7 +35,7 @@ public class DefineTermCmd extends Command
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
-		Collector<RippleValue> expressions = new Collector<RippleValue>();
+		Collector<RippleList> expressions = new Collector<RippleList>();
 		ast.evaluate( expressions, qe, mc );
 
 		if ( expressions.size() == 0 )
@@ -52,19 +52,14 @@ public class DefineTermCmd extends Command
 
 		else
 		{
-			RippleValue expr = expressions.iterator().next();
+			// Note: the first element of the list will also be a list
+			RippleList expr = (RippleList) expressions.iterator().next().getFirst();
 
-			if ( !( expr instanceof RippleList ) )
-			{
-				throw new RippleException( "term assignment for non-lists is not implemented" );
-			}
-
-			RippleList exprList = (RippleList) expr;
 //System.out.println( "exprList = " + exprList );
 
 // TODO: check for collision with an existing URI
 			URI uri = mc.createUri( qe.getDefaultNamespace() + term );
-			mc.copyStatements( exprList, new RdfValue( uri ) );
+			mc.copyStatements( expr, new RdfValue( uri ) );
 			mc.commit();
 
 			qe.getLexicon().add( uri );

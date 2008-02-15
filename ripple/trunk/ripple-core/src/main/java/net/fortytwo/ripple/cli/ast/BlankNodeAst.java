@@ -9,14 +9,15 @@
 
 package net.fortytwo.ripple.cli.ast;
 
-import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 
-public class BlankNodeAst implements Ast
+public class BlankNodeAst implements Ast<RippleList>
 {
 	private String id;
 
@@ -30,7 +31,7 @@ public class BlankNodeAst implements Ast
 		return "_:" + id;
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
@@ -44,7 +45,7 @@ public class BlankNodeAst implements Ast
 
 		else
 		{
-			sink.put( v );
+			sink.put( mc.list( v ) );
 		}
 	}
 }

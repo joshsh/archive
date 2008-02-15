@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.ListNode;
 import net.fortytwo.ripple.util.Sink;
 
 // TODO: this class has more plumbing than it needs
-public class ListAst extends ListNode<Ast> implements Ast
+public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 {
 	private Ast first;
 	private ListNode<Ast> rest;
@@ -59,21 +59,20 @@ public class ListAst extends ListNode<Ast> implements Ast
 		return ( null == listNode.getFirst() );
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		Sink<RippleList> upcastSink = new Sink<RippleList>()
+		Sink<RippleList> listSink = new Sink<RippleList>()
 		{
-			public void put( final RippleList list ) throws RippleException
+			public void put(final RippleList l) throws RippleException
 			{
-//System.out.println( "putting list: " + list );
-				sink.put( list );
+				sink.put( mc.list( l ) );
 			}
 		};
 
-		createLists( this, upcastSink, qe, mc );
+		createLists( this, listSink, qe, mc );
 	}
 
 	public String toString()
@@ -116,18 +115,18 @@ public class ListAst extends ListNode<Ast> implements Ast
 
 		else
 		{
-			final Collector<RippleValue> firstValues = new Collector<RippleValue>();
+			final Collector<RippleList> firstValues = new Collector<RippleList>();
 			astList.getFirst().evaluate( firstValues, qe, mc );
 	
 			Sink<RippleList> restSink = new Sink<RippleList>()
 			{
 				public void put( final RippleList rest ) throws RippleException
 				{
-					Sink<RippleValue> firstSink = new Sink<RippleValue>()
+					Sink<RippleList> firstSink = new Sink<RippleList>()
 					{
-						public void put( final RippleValue f ) throws RippleException
+						public void put( final RippleList f ) throws RippleException
 						{
-							sink.put( mc.list( f, rest ) );
+							sink.put( mc.concat( f, rest ) );
 						}
 					};
 

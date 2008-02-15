@@ -13,9 +13,10 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
-public class KeywordAst implements Ast
+public class KeywordAst implements Ast<RippleList>
 {
 	private String keyword;
 
@@ -29,12 +30,20 @@ public class KeywordAst implements Ast
 		return keyword;
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		qe.uriForKeyword( keyword, sink, mc );
+		Sink<RippleValue> uriSink = new Sink<RippleValue>()
+		{
+			public void put(final RippleValue v) throws RippleException
+			{
+				sink.put( mc.list( v ) );
+			}
+		};
+
+		qe.uriForKeyword( keyword, uriSink, mc );
 	}
 }
 

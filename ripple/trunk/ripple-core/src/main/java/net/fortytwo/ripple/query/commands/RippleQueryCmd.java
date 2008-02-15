@@ -46,12 +46,12 @@ public class RippleQueryCmd extends Command
 		{
 			expressions = new Collector<RippleList>();
 
-			final Sink<RippleValue> exprSink = new Sink<RippleValue>()
+			final Sink<RippleList> exprSink = new Sink<RippleList>()
 			{
-				// Note: v will always be a list.
-				public void put( final RippleValue v ) throws RippleException
+				public void put( final RippleList l ) throws RippleException
 				{
-					final RippleList stack = mc.invert( (RippleList) v );
+					// Note: the first element of the list will also be a list
+					final RippleList stack = mc.invert( (RippleList) l.getFirst() );
 
 					Sink<RippleList> composedWithSink = new Sink<RippleList>()
 					{

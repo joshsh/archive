@@ -15,6 +15,7 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Collector;
 
 import org.openrdf.model.URI;
@@ -34,7 +35,7 @@ public class DefinePrefixCmd extends Command
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
-		Collector<RippleValue> sink = new Collector<RippleValue>();
+		Collector<RippleList> sink = new Collector<RippleList>();
 		uri.evaluate( sink, qe, mc );
 
 		if ( sink.size() == 0 )
@@ -47,7 +48,9 @@ public class DefinePrefixCmd extends Command
 			throw new RippleException( "multiple values constructed from " + uri );
 		}
 
-		URI ns = mc.toUri( sink.iterator().next() );
+		// TODO: check that the list has exactly one element
+		URI ns = mc.toUri( sink.iterator().next().getFirst() );
+		
 		mc.setNamespace( prefix, ns.toString(), true );
 
 		// Note: when a namespace is manually defined, it may both override an

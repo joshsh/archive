@@ -10,7 +10,12 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.*;
+import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.regex.PlusQuantifier;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
@@ -40,11 +45,17 @@ public class IPlus extends PrimitiveStackRelation
 	{
 		RippleList stack = arg.getStack();
 		RippleValue first = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-// hack...
-		sink.put( arg.with( stack
-				.push( Operator.OP )
-				.push( first )
-				.push( new Operator( StackLibrary.getIstarValue() ) ) ) );
+		Sink<Operator> opSink = new Sink<Operator>()
+		{
+			public void put( final Operator op ) throws RippleException
+			{
+				sink.put( arg.with( rest.push(
+						new Operator( new PlusQuantifier( op ) ) ) ) );
+			}
+		};
+
+		Operator.createOperator( first, opSink, arg.getModelConnection() );
 	}
 }

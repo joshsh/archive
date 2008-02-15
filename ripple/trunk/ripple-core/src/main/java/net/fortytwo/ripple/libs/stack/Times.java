@@ -11,6 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.*;
+import net.fortytwo.ripple.model.regex.TimesQuantifier;
 import net.fortytwo.ripple.util.Sink;
 
 /**
@@ -53,28 +54,12 @@ public class Times extends PrimitiveStackRelation
 		{
 			public void put( final Operator op ) throws RippleException
 			{
-				sink.put( arg.with(
-						rest.push( new Operator(
-						new TimesRelation( op.getRelation(), times, false ) ) ) ) );
+				sink.put( arg.with( rest.push(
+						new Operator( new TimesQuantifier( op, times, times ) ) ) ) );
 			}
 		};
 
 		Operator.createOperator( p, opSink, mc );
-
-
-		/*
-		if ( times < 0 )
-		{
-			throw new RippleException(
-				"first argument to Times must be a positive integer" );
-		}
-
-		for ( int i = 0; i < times; i++ )
-		{
-			stack = mc.list( p, stack ).push( Operator.OP );
-		}
-
-		sink.put( stack );*/
 	}
 
 

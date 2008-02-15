@@ -15,13 +15,14 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class TypedLiteralAst implements Ast
+public class TypedLiteralAst implements Ast<RippleList>
 {
 	private String value;
 	private Ast type;
@@ -32,7 +33,7 @@ public class TypedLiteralAst implements Ast
 		this.type = type;
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
@@ -41,7 +42,7 @@ public class TypedLiteralAst implements Ast
 		{
 			public void put( final RippleValue type ) throws RippleException
 			{
-				sink.put( mc.createTypedLiteral( value, type ) );
+				sink.put( mc.list( mc.createTypedLiteral( value, type ) ) );
 			}
 		};
 		

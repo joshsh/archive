@@ -15,9 +15,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.Sink;
 
-public interface Ast
+public interface Ast<T>
 {
-	void evaluate( Sink<RippleValue> sink,
+	void evaluate( Sink<T> sink,
 					QueryEngine qe,
 					ModelConnection mc )
 		throws RippleException;

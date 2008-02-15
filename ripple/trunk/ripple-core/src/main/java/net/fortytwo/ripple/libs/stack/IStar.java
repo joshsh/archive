@@ -10,7 +10,12 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.*;
+import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.regex.StarQuantifier;
 import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
@@ -41,51 +46,17 @@ public class IStar extends PrimitiveStackRelation
 	{
 		RippleList stack = arg.getStack();
 		RippleValue first = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		sink.put( arg.with(
-				stack.getRest() ) );
-
-		/*Sink<Operator> opSink = new Sink<Operator>()
+		Sink<Operator> opSink = new Sink<Operator>()
 		{
 			public void put( final Operator op ) throws RippleException
 			{
-				
+				sink.put( arg.with( rest.push(
+						new Operator( new StarQuantifier( op ) ) ) ) );
 			}
-		};*/
+		};
 
-// hack...
-		sink.put( arg.with( stack
-				.push( Operator.OP )
-				.push( first )
-				.push( new Operator( StackLibrary.getIstarValue() ) ) ) );
+		Operator.createOperator( first, opSink, arg.getModelConnection() );
 	}
-
-	/*
-	private class StarClosure implements StackRelation
-	{
-		private StackRelation innerFunction;
-
-		public StarClosure( final StackRelation f )
-		{
-			innerFunction = f;
-		}
-
-		public int arity()
-		{
-			// TODO
-			return 1;
-		}
-
-		public boolean isTransparent()
-		{
-			return innerFunction.isTransparent();
-		}
-
-		public void applyTo( final RippleList stack,
-							 final Sink<RippleList> sink,
-							 final ModelConnection mc ) throws RippleException
-		{
-			innerFunction.applyTo( stack, sink, mc );
-		}
-	}*/
 }

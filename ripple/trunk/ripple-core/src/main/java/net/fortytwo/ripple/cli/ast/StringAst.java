@@ -12,11 +12,12 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
-public class StringAst implements Ast
+public class StringAst implements Ast<RippleList>
 {
 	private String value, language;
 
@@ -52,14 +53,15 @@ public class StringAst implements Ast
 		this.language = language;
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( ( null == language )
+		RippleValue v = ( null == language )
 			? mc.value( value )
-			: mc.value( value, language ) );
+			: mc.value( value, language );
+		sink.put( mc.list( v ) );
 	}
 
 	public String toString()

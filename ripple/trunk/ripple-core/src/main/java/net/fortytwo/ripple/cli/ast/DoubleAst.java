@@ -13,9 +13,10 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
-public class DoubleAst implements Ast
+public class DoubleAst implements Ast<RippleList>
 {
 	private double value;
 
@@ -24,12 +25,12 @@ public class DoubleAst implements Ast
 		this.value = value;
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		sink.put( mc.value( value ) );
+		sink.put( mc.list( mc.value( value ) ) );
 	}
 
 	public String toString()

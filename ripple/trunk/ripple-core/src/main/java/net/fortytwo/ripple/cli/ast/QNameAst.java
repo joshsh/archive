@@ -13,9 +13,10 @@ import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
-public class QNameAst implements Ast
+public class QNameAst implements Ast<RippleList>
 {
 	private String nsPrefix, localName;
 
@@ -32,12 +33,20 @@ public class QNameAst implements Ast
 			+ ( ( null == localName ) ? "" : localName );
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		qe.uriForQName( nsPrefix, localName, sink, mc );
+		Sink<RippleValue> uriSink = new Sink<RippleValue>()
+		{
+			public void put(final RippleValue v) throws RippleException
+			{
+				sink.put( mc.list( v ) );
+			}
+		};
+
+		qe.uriForQName( nsPrefix, localName, uriSink, mc );
 	}
 }
 

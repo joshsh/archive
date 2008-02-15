@@ -14,10 +14,11 @@ import net.fortytwo.ripple.libs.stack.StackLibrary;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
 
-public class OperatorAst implements Ast
+public class OperatorAst implements Ast<RippleList>
 {
 	public enum Type { Apply, Option, Star, Plus, Times, Range };
 
@@ -47,29 +48,43 @@ public class OperatorAst implements Ast
 		this.max = max;
 	}
 
-	public void evaluate( final Sink<RippleValue> sink,
+	public void evaluate( final Sink<RippleList> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
+		RippleList l;
+
 		switch ( type )
 		{
 			case Apply:
-				sink.put( Operator.OP );
+				l = mc.list( Operator.OP );
 				break;
 			case Option:
-				sink.put( new Operator( StackLibrary.getIoptValue() ) );
+				l = mc.list( Operator.OP ).push( StackLibrary.getIoptValue() );
 				break;
 			case Star:
-				sink.put( new Operator( StackLibrary.getIstarValue() ) );
+				l = mc.list( Operator.OP ).push( StackLibrary.getIstarValue() );
 				break;
 			case Plus:
-				sink.put( new Operator( StackLibrary.getIplusValue() ) );
+				l = mc.list( Operator.OP ).push( StackLibrary.getIplusValue() );
 				break;
-			/* TODO
 			case Times:
-			case Range:*/
+				l = mc.list( Operator.OP )
+						.push( StackLibrary.getTimesValue() )
+						.push( mc.value( min ) );
+				break;
+			case Range:
+				l = mc.list( Operator.OP )
+						.push( StackLibrary.getRangeValue() )
+						.push( mc.value( max ) )
+						.push( mc.value( min ) );
+				break;
+			default:
+				throw new RippleException( "unhandled operator type: " + type );	
 		}
+
+		sink.put( l );
 	}
 
 	public String toString()

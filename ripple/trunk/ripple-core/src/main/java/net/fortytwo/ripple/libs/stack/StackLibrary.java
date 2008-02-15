@@ -59,7 +59,6 @@ public class StackLibrary extends Library
 		registerPrimitive( Swap.class, NS + "swap", mc );
 		registerPrimitive( Swapd.class, NS + "swapd", mc );
 		registerPrimitive( Swapdd.class, NS + "swapdd", mc );
-		timesVal = registerPrimitive( Times.class, NS + "times", mc );
 		registerPrimitive( Unstack.class, NS + "unstack", mc );
 		registerPrimitive( X.class, NS + "x", mc );
 
@@ -78,6 +77,7 @@ public class StackLibrary extends Library
 		istarVal = registerPrimitive( IStar.class, NS + "istar", mc );
 		iplusVal = registerPrimitive( IPlus.class, NS + "iplus", mc );
 		rangeVal = registerPrimitive( Range.class, NS + "range", mc );
+		timesVal = registerPrimitive( Times.class, NS + "times", mc );
 
 		// List primitives.
 		registerPrimitive( Cat.class, NS + "cat", mc );
