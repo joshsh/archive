@@ -14,7 +14,7 @@ import net.fortytwo.ripple.model.BinaryRelation;
 /**
 *  A function which reduces arbitrary expressions to a particular normal form.
 */
-public abstract class Evaluator<T> implements BinaryRelation<T>
+public abstract class Evaluator<D, R> implements BinaryRelation<D, R>
 {
 	/*public int arity()
 	{

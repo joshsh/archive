@@ -24,10 +24,11 @@ public class HttpRepresentation extends Representation
     private HttpMethod method;
 
     // Note: the URI is immediately dereferenced
-    public HttpRepresentation( final String uri ) throws RippleException
+    public HttpRepresentation( final String uri, final String acceptHeader ) throws RippleException
     {
-        method = HttpUtils.createRdfGetMethod( uri );
-        HttpUtils.registerMethod( method );
+        method = HttpUtils.createGetMethod( uri );
+		HttpUtils.setAcceptHeader( method, acceptHeader );
+		HttpUtils.registerMethod( method );
 
 		HttpClient client = HttpUtils.createClient();
 

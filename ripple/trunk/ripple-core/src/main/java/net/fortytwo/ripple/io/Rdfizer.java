@@ -12,5 +12,5 @@ import java.io.InputStream;
  */
 public interface Rdfizer
 {
-	ContextMemo.Status handle( InputStream is, RDFHandler handler, URI documentUri, String baseUri );
+	ContextMemo.Status handle( InputStream is, RDFHandler handler, URI resourceUri, String baseUri );
 }

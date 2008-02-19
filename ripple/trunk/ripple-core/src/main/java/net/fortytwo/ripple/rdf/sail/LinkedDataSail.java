@@ -175,30 +175,30 @@ public WebClosure getClosureManager()
 
 	private WebClosure createDefaultWebClosure()
 	{
-		WebClosure cm = new WebClosure( uriMap, getValueFactory() );
+		WebClosure wc = new WebClosure( uriMap, getValueFactory() );
 
 		// Add URI dereferencers.
-		cm.addDereferencer( "http", new HttpUriDereferencer() );
-		cm.addDereferencer( "jar", new JarUriDereferencer() );
-		cm.addDereferencer( "file", new FileUriDereferencer() );
+		wc.addDereferencer( "http", new HttpUriDereferencer( wc ) );
+		wc.addDereferencer( "jar", new JarUriDereferencer() );
+		wc.addDereferencer( "file", new FileUriDereferencer() );
 
 		// Add rdfizers.
-		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.RDFXML ), new VerbatimRdfizer( RDFFormat.RDFXML ) );
-		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.NTRIPLES ), new VerbatimRdfizer( RDFFormat.NTRIPLES ) );
-		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TURTLE ), new VerbatimRdfizer( RDFFormat.TURTLE ) );
-		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ) );
-		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ) );
-		cm.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ) );
+		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.RDFXML ), new VerbatimRdfizer( RDFFormat.RDFXML ) );
+		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TURTLE ), new VerbatimRdfizer( RDFFormat.TURTLE ) );
+		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ), 0.9 );
+		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ), 0.8 );
+		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ), 0.8 );
+		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.NTRIPLES ), new VerbatimRdfizer( RDFFormat.NTRIPLES ), 0.5 );
 
 		// Don't bother trying to dereference terms in these common namespaces.
-		cm.addMemo( "http://www.w3.org/XML/1998/namespace#", new ContextMemo( ContextMemo.Status.Ignored ) );
-		cm.addMemo( "http://www.w3.org/2001/XMLSchema", new ContextMemo( ContextMemo.Status.Ignored ) );
-		cm.addMemo( "http://www.w3.org/2001/XMLSchema#", new ContextMemo( ContextMemo.Status.Ignored ) );
+		wc.addMemo( "http://www.w3.org/XML/1998/namespace#", new ContextMemo( ContextMemo.Status.Ignored ) );
+		wc.addMemo( "http://www.w3.org/2001/XMLSchema", new ContextMemo( ContextMemo.Status.Ignored ) );
+		wc.addMemo( "http://www.w3.org/2001/XMLSchema#", new ContextMemo( ContextMemo.Status.Ignored ) );
 
 		// Don't try to dereference the cache index.
-		cm.addMemo( "http://fortytwo.net/2007/08/ripple/cache#", new ContextMemo( ContextMemo.Status.Ignored ) );
+		wc.addMemo( "http://fortytwo.net/2007/08/ripple/cache#", new ContextMemo( ContextMemo.Status.Ignored ) );
 
-		return cm;
+		return wc;
 	}
 
 	/**

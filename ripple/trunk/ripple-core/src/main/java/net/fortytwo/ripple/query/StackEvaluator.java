@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.StackRelation;
  * Date: Feb 11, 2008
  * Time: 3:15:35 PM
  */
-public abstract class StackEvaluator extends Evaluator<StackContext> implements StackRelation
+public abstract class StackEvaluator extends Evaluator<StackContext, StackContext> implements StackRelation
 {
 	public int arity()
 	{

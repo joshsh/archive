@@ -14,7 +14,7 @@ import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
 
-public interface BinaryRelation<T>
+public interface BinaryRelation<D, R>
 {
 	/**
 	 * @return whether this function is referentially transparent w.r.t. all of its
@@ -22,5 +22,5 @@ public interface BinaryRelation<T>
 	 */
 	boolean isTransparent();
 
-	void applyTo( T arg, Sink<T> sink ) throws RippleException;
+	void applyTo( D arg, Sink<R> sink ) throws RippleException;
 }

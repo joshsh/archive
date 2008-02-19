@@ -23,6 +23,9 @@ public class HttpUriDereferencer implements UriDereferencer
 {
 	private static final Logger LOGGER = Logger.getLogger( HttpUriDereferencer.class );
 
+	// FIXME: temporary
+	private WebClosure webClosure;
+
 	private static final String[] BADEXT = {
 		"123", "3dm", "3dmf", "3gp", "8bi", "aac", "ai", "aif", "app", "asf",
 		"asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi",
@@ -39,8 +42,10 @@ public class HttpUriDereferencer implements UriDereferencer
 
 	private Set<String> badExtensions;
 
-	public HttpUriDereferencer()
+	public HttpUriDereferencer( final WebClosure webClosure )
 	{
+		this.webClosure = webClosure;
+
 		badExtensions = new HashSet<String>();
 
 		for ( int i = 0; i < BADEXT.length; i++ )
@@ -59,7 +64,7 @@ public class HttpUriDereferencer implements UriDereferencer
 			return null;
 		}
 
-        return new HttpRepresentation( uri );
+        return new HttpRepresentation( uri, webClosure.getAcceptHeader() );
 	}
 }
 

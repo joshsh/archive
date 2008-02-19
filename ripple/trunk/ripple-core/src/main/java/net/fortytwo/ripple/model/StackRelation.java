@@ -12,7 +12,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
-public interface StackRelation extends BinaryRelation<StackContext>
+public interface StackRelation extends BinaryRelation<StackContext, StackContext>
 {
 	/**
 	*  The fixed number of arguments which this function consumes before

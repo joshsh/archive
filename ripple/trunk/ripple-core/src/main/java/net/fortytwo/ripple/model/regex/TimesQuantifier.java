@@ -59,7 +59,6 @@ public class TimesQuantifier implements StackRelation
 				sink.put( arg.with( stack
 						.push( innerOperator )
 						.push(new Operator( new TimesQuantifier( innerOperator, newMin, newMax ) ) ) ) );
-
 			}
 		}
 	}

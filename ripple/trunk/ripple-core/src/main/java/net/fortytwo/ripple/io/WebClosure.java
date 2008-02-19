@@ -20,6 +20,8 @@ import org.restlet.resource.Representation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +40,8 @@ public class WebClosure  // TODO: the name is a little misleading...
 	private Map<String, ContextMemo> memos = new HashMap<String, ContextMemo>();
 
 	// Maps media types to Rdfizers
-	private Map<MediaType, Rdfizer> rdfizers = new HashMap<MediaType, Rdfizer>();
+	private Map<MediaType, MediaTypeInfo> rdfizers
+			= new HashMap<MediaType, MediaTypeInfo>();
 
 	// Maps URI schemes to Dereferencers
 	private Map<String, UriDereferencer> dereferencers = new HashMap<String, UriDereferencer>();
@@ -46,15 +49,83 @@ public class WebClosure  // TODO: the name is a little misleading...
     private UriMap uriMap;
 	private ValueFactory valueFactory;
 
+	private String acceptHeader = null;
+
 	public WebClosure( final UriMap uriMap, final ValueFactory vf )
 	{
         this.uriMap = uriMap;
 		valueFactory = vf;
 	}
 
+	public String getAcceptHeader()
+	{
+		if ( null == acceptHeader )
+		{
+ 			StringBuilder sb = new StringBuilder();
+			boolean first = true;
+
+			// Order from highest quality to lowest.
+			Comparator<MediaTypeInfo> comparator
+					= new Comparator<MediaTypeInfo>()
+			{
+				public int compare( final MediaTypeInfo first,
+									final MediaTypeInfo second )
+				{
+					return first.quality < second.quality ? 1 : first.quality > second.quality ? -1 : 0;
+				}
+			};
+
+			MediaTypeInfo[] array = new MediaTypeInfo[rdfizers.size()];
+			rdfizers.values().toArray( array );
+			Arrays.sort( array, comparator );
+
+			for ( MediaTypeInfo m : array )
+			{
+				if ( first )
+				{
+					first = false;
+				}
+
+				else
+				{
+					sb.append(", ");
+				}
+
+				sb.append( m.mediaType.getName() );
+				double quality = m.quality;
+				if ( 1.0 != quality )
+				{
+					sb.append( ";q=" ).append( quality );
+				}
+			}
+
+			acceptHeader = sb.toString();
+		}
+
+		return acceptHeader;
+	}
+	
+	public void addRdfizer( final MediaType mediaType,
+							final Rdfizer rdfizer,
+							final double qualityFactor )
+	{
+		if ( qualityFactor <= 0 || qualityFactor > 1 )
+		{
+			throw new IllegalArgumentException( "quality factor must be between 0 and 1" );
+		}
+
+		MediaTypeInfo rq = new MediaTypeInfo();
+		rq.mediaType = mediaType;
+		rq.quality = qualityFactor;
+		rq.rdfizer = rdfizer;
+		rdfizers.put( mediaType, rq );
+
+		acceptHeader = null;
+	}
+
 	public void addRdfizer( final MediaType mediaType, final Rdfizer rdfizer )
 	{
-		rdfizers.put( mediaType, rdfizer );
+		addRdfizer( mediaType, rdfizer, 1.0 );
 	}
 
 	public void addDereferencer( final String scheme, final UriDereferencer uriDereferencer )
@@ -248,6 +319,14 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 	private Rdfizer chooseRdfizer( final MediaType mediaType ) throws RippleException
 	{
-		return rdfizers.get( mediaType );
+		MediaTypeInfo rq = rdfizers.get( mediaType );
+		return ( null == rq ) ? null : rq.rdfizer;
+	}
+
+	private class MediaTypeInfo
+	{
+		MediaType mediaType;
+		public double quality;
+		public Rdfizer rdfizer;
 	}
 }
