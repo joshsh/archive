@@ -2,6 +2,7 @@ package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.StringUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.restlet.data.MediaType;
@@ -57,6 +58,11 @@ public class HttpRepresentation extends Representation
 		inputStream = new HttpRepresentationInputStream( is );
 
 		String mtStr = method.getResponseHeader( HttpUtils.CONTENT_TYPE ).getValue().split( ";" )[0];
+		if ( null == mtStr || 0 == mtStr.length() )
+		{
+			throw new RippleException( "no media type found for resource <"
+					+ StringUtils.escapeUriString( uri ) + ">" );
+		}
 		MediaType mt = new MediaType( mtStr );
 //System.out.println( "discovered media type is: " + mt );
 		setMediaType( mt );
@@ -107,5 +113,11 @@ public class HttpRepresentation extends Representation
 
             innerInputStream.close();
         }
-    }
+
+		@Override
+		public int available() throws IOException
+		{
+			return innerInputStream.available();
+		}
+	}
 }

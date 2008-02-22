@@ -47,6 +47,21 @@ public class LinkedDataSail implements StackableSail
 
 	private static final Logger LOGGER = Logger.getLogger( LinkedDataSail.class );
 
+	// TODO: move this
+	private static final String[] BADEXT = {
+		"123", "3dm", "3dmf", "3gp", "8bi", "aac", "ai", "aif", "app", "asf",
+		"asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi",
+		"com", "cpl", "cpp", "css", "csv", "dat", "db", "dll", "dmg", "dmp",
+		"doc", "drv", "drw", "dxf", "eps", "exe", "fnt", "fon", "gif", "gz",
+		"h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", "jpeg",
+		"jpg", "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim",
+		"mng", "mov", "mp3", "mp4", "mpa", "mpg", "msg", "msi", "otf", "pct",
+		"pdf", "php", "pif", "pkg", "pl", "plugin", "png", "pps", "ppt", "ps",
+		"psd", "psp", "qt", "qxd", "qxp", "ra", "ram", "rar", "reg", "rm",
+		"rtf", "sea", "sit", "sitx", "sql", "svg", "swf", "sys", "tar", "tif",
+		"ttf", "uue", "vb", "vcd", "wav", "wks", "wma", "wmv", "wpd", "wps",
+		"ws", "xhtml", "xll", "xls", "yps", "zip"};
+
 	private RippleProperties properties;
 	private static boolean logFailedUris;
 	
@@ -108,8 +123,8 @@ return null;
 	{
 		ValueFactory vf = getValueFactory();
 		
-		cacheContext = vf.createURI( Ripple.CACHE_CONTEXT );
-		cacheMemo = vf.createURI( Ripple.CACHE_MEMO );
+		cacheContext = vf.createURI( WebClosure.CACHE_CONTEXT );
+		cacheMemo = vf.createURI( WebClosure.CACHE_MEMO );
 
 		try
 		{
@@ -178,7 +193,12 @@ public WebClosure getClosureManager()
 		WebClosure wc = new WebClosure( uriMap, getValueFactory() );
 
 		// Add URI dereferencers.
-		wc.addDereferencer( "http", new HttpUriDereferencer( wc ) );
+		HttpUriDereferencer hdref = new HttpUriDereferencer( wc );
+		for ( int i = 0; i < BADEXT.length; i++ )
+		{
+			hdref.blackListExtension( BADEXT[i] );
+		}
+		wc.addDereferencer( "http", hdref );
 		wc.addDereferencer( "jar", new JarUriDereferencer() );
 		wc.addDereferencer( "file", new FileUriDereferencer() );
 
@@ -212,8 +232,12 @@ public WebClosure getClosureManager()
 			ValueFactory vf = getValueFactory();
 			SailConnection sc = baseSail.getConnection();
 
+			// TODO: move this so that it's a default which can be overridden
+			sc.setNamespace( "cache", WebClosure.CACHE_NS );
+
 			// Clear any existing cache metadata (in any named graph).
 			sc.removeStatements( null, null, null, cacheContext );
+
 			sc.commit();
 
 			LOGGER.debug( "writing memos" );

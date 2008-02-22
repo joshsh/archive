@@ -35,6 +35,8 @@ public class ContextMemo
 	private static final String STATUS = "status";
 	private static final String TIMESTAMP = "timestamp";
 	private static final String MEDIATYPE = "mediaType";
+	private static final String URIDEREFERENCER = "uriDereferencer";
+	private static final String RDFIZER = "rdfizer";
 
 	// Use XMLSchema-style time stamps, without time zone info, accurate to
 	// the nearest second.
@@ -43,6 +45,8 @@ public class ContextMemo
 	private Status status = null;
 	private Date timestamp = null;
 	private MediaType mediaType = null;
+	private String uriDereferencer = null;
+    private String rdfizer = null;
 
 	public ContextMemo()
 	{
@@ -81,6 +85,16 @@ public class ContextMemo
 				// TODO: is it reasonable to *create* a new media type here?
 				this.mediaType = new MediaType( value );
 			}
+
+			else if ( name.equals( URIDEREFERENCER ) )
+			{
+				this.uriDereferencer = value;
+			}
+
+			else if ( name.equals( RDFIZER ) )
+			{
+				this.rdfizer = value;
+			}
 		}
 	}
 
@@ -88,19 +102,29 @@ public class ContextMemo
 	{
 		StringBuffer sb = new StringBuffer();
 
-		sb.append( STATUS ).append( "=" ).append( status );
+		sb.append( STATUS ).append( "=" ).append( this.status );
 
-		if ( null != timestamp )
+		if ( null != this.timestamp )
 		{
 			sb.append( "; " ).append( TIMESTAMP ).append( "=" );
-			dateFormat.format( timestamp, sb, new FieldPosition( 0 ) );
+			dateFormat.format( this.timestamp, sb, new FieldPosition( 0 ) );
 		}
 
-		if ( null != mediaType )
+		if ( null != this.mediaType )
 		{
-			sb.append( "; " ).append( MEDIATYPE ).append( "=" ).append( mediaType.toString() );
+			sb.append( "; " ).append( MEDIATYPE ).append( "=" ).append( this.mediaType );
 		}
 
+		if ( null != this.uriDereferencer )
+		{
+			sb.append( "; " ).append( URIDEREFERENCER ).append( "=" ).append( this.uriDereferencer );
+		}
+
+		if ( null != this.rdfizer )
+		{
+			sb.append( "; " ).append( RDFIZER ).append( "=" ).append( this.rdfizer );
+		}
+		
 		return sb.toString();
 	}
 
@@ -117,5 +141,15 @@ public class ContextMemo
 	public void setMediaType( final MediaType mt )
 	{
 		this.mediaType = mt;
+	}
+
+	public void setUriDereferencer( final UriDereferencer dref )
+	{
+		this.uriDereferencer = dref.getClass().getName();
+	}
+
+	public void setRdfizer( final Rdfizer rfiz )
+	{
+		this.rdfizer = rfiz.getClass().getName();
 	}
 }

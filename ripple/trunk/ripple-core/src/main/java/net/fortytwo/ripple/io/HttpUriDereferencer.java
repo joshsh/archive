@@ -9,13 +9,13 @@
 
 package net.fortytwo.ripple.io;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.fortytwo.ripple.RippleException;
-
+import net.fortytwo.ripple.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.restlet.resource.Representation;
+
+import java.util.HashSet;
+import java.util.Set;
 
 // Note: throughout this implementation, both the caching context of a URI and
 //       its associated web location are the same as its success or failure 'memo'.
@@ -26,20 +26,6 @@ public class HttpUriDereferencer implements UriDereferencer
 	// FIXME: temporary
 	private WebClosure webClosure;
 
-	private static final String[] BADEXT = {
-		"123", "3dm", "3dmf", "3gp", "8bi", "aac", "ai", "aif", "app", "asf",
-		"asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi",
-		"com", "cpl", "cpp", "css", "csv", "dat", "db", "dll", "dmg", "dmp",
-		"doc", "drv", "drw", "dxf", "eps", "exe", "fnt", "fon", "gif", "gz",
-		"h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", "jpeg",
-		"jpg", "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim",
-		"mng", "mov", "mp3", "mp4", "mpa", "mpg", "msg", "msi", "otf", "pct",
-		"pdf", "php", "pif", "pkg", "pl", "plugin", "png", "pps", "ppt", "ps",
-		"psd", "psp", "qt", "qxd", "qxp", "ra", "ram", "rar", "reg", "rm",
-		"rtf", "sea", "sit", "sitx", "sql", "svg", "swf", "sys", "tar", "tif",
-		"ttf", "uue", "vb", "vcd", "wav", "wks", "wma", "wmv", "wpd", "wps",
-		"ws", "xhtml", "xll", "xls", "yps", "zip"};
-
 	private Set<String> badExtensions;
 
 	public HttpUriDereferencer( final WebClosure webClosure )
@@ -48,10 +34,6 @@ public class HttpUriDereferencer implements UriDereferencer
 
 		badExtensions = new HashSet<String>();
 
-		for ( int i = 0; i < BADEXT.length; i++ )
-		{
-			badExtensions.add( BADEXT[i] );
-		}
 	}
 
 	public Representation dereference( final String uri ) throws RippleException
@@ -61,10 +43,22 @@ public class HttpUriDereferencer implements UriDereferencer
 		int l = uri.lastIndexOf( '.' );
 		if ( l >= 0 && badExtensions.contains( uri.substring( l + 1 ) ) )
 		{
-			return null;
+			throw new RippleException( "URI <" + StringUtils.escapeUriString( uri ) + "> has blacklisted extension" );
+			// TODO: we can throw exceptions or return nulls to indicate an error, but we shouldn't do both
+//			return null;
 		}
 
         return new HttpRepresentation( uri, webClosure.getAcceptHeader() );
+	}
+
+	public void blackListExtension( final String ext )
+	{
+		badExtensions.add( ext );
+	}
+
+	public void whitelistExtension( final String ext )
+	{
+		badExtensions.remove( ext );
 	}
 }
 

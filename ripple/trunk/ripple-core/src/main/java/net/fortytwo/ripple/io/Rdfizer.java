@@ -12,5 +12,13 @@ import java.io.InputStream;
  */
 public interface Rdfizer
 {
+	/**
+	 *
+	 * @param is  a stream representation of the resource to be converted
+	 * @param handler  
+	 * @param resourceUri
+	 * @param baseUri
+	 * @return
+	 */
 	ContextMemo.Status handle( InputStream is, RDFHandler handler, URI resourceUri, String baseUri );
 }

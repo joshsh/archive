@@ -14,6 +14,13 @@ import org.restlet.resource.Representation;
 
 public interface UriDereferencer
 {
+	/**
+	 *
+	 * @param uri
+	 * @return
+	 * @throws RippleException
+	 */
+	// TODO: this method throws an exception, while Rdfizer.handle does not
 	Representation dereference( String uri ) throws RippleException;
 }
 

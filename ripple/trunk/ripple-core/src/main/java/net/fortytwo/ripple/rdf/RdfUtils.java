@@ -539,8 +539,9 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			}
 		}
 
+		return null;
 		// Last-ditch rule.
-		return RDFFormat.RDFXML;
+		//return RDFFormat.RDFXML;
 	}
 
 	////////////////////////////////////////////////////////////////////////////

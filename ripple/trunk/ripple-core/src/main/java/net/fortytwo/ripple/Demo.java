@@ -289,7 +289,6 @@ public final class Demo
 		System.exit( 0 );
 	}
 	
-
 	private static void loadFromFile( final Sail sail, final File file ) throws RippleException
 	{
 		LOGGER.info( "loading state from " + file );

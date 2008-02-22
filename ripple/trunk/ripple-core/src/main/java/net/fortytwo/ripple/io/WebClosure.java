@@ -35,6 +35,11 @@ import java.util.Map;
  */
 public class WebClosure  // TODO: the name is a little misleading...
 {
+	// TODO: these should probably not be HTTP URIs
+	public static final String CACHE_NS = "http://fortytwo.net/2008/01/webclosure#";
+	public static final String CACHE_CONTEXT = "http://fortytwo.net/2008/01/webclosure#context";
+	public static final String CACHE_MEMO = "http://fortytwo.net/2008/01/webclosure#memo";
+	
 	private static final Logger LOGGER = Logger.getLogger( WebClosure.class );
 
 	private Map<String, ContextMemo> memos = new HashMap<String, ContextMemo>();
@@ -215,12 +220,14 @@ public class WebClosure  // TODO: the name is a little misleading...
 			}
 
 			LOGGER.info( "Dereferencing URI <"
-					+ StringUtils.escapeUriString( uri.toString() ) );
-					//+ "> at location " + mapped );
+					+ StringUtils.escapeUriString( uri.toString() ) + ">" );
+					//+ " at location " + mapped );
 
 			memo = new ContextMemo( ContextMemo.Status.Success );
 			memos.put( memoUri, memo );
 		}
+
+		memo.setUriDereferencer( dref );
 
 		// Note: from this point on, failures are explicitly stored as caching
 		// metadata.
@@ -234,12 +241,32 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 		catch ( RippleException e )
 		{
+			e.logError();
 			memo.setStatus( ContextMemo.Status.DereferencerError );
 			return logStatus( uri, memo.getStatus() );
 		}
 
-		MediaType mt = rep.getMediaType();
+		catch ( Throwable t )
+		{
+			memo.setStatus( ContextMemo.Status.DereferencerError );
+			logStatus( uri, memo.getStatus() );
+			throw new RippleException( t );
+		}
+
+		MediaType mt;
+
+		try
+		{
+			mt = rep.getMediaType();
+		}
+
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+		
 //System.out.println( "media type = " + mt );
+		memo.setMediaType( mt );
 
 		Rdfizer rfiz = chooseRdfizer( mt );
 		if ( null == rfiz )
@@ -248,6 +275,8 @@ public class WebClosure  // TODO: the name is a little misleading...
 			memo.setMediaType( mt );
 			return logStatus( uri, memo.getStatus() );
 		}
+
+		memo.setRdfizer( rfiz );
 
 		URI context;
 
@@ -281,6 +310,11 @@ public class WebClosure  // TODO: the name is a little misleading...
 			throw new RippleException( e );
 		}
 
+		catch ( Throwable t )
+		{
+			throw new RippleException( t );
+		}
+
 		// For now...
 		String baseUri = memoUri;
 
@@ -295,7 +329,6 @@ public class WebClosure  // TODO: the name is a little misleading...
 		}
 
 		memo.setStatus( status );
-		memo.setMediaType( mt );
 
 		return logStatus( uri, status );
 	}
