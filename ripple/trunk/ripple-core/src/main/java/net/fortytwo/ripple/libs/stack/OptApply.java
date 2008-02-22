@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.regex.PlusQuantifier;
+import net.fortytwo.ripple.model.regex.OptionalQuantifier;
 import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
@@ -21,14 +21,15 @@ import net.fortytwo.ripple.util.Sink;
 // kate: tab-width 4
 
 /**
- * A primitive which activates ("applies") the topmost item on the stack one or
- * more times.
+ * A primitive which activates ("applies") the topmost item on the stack any
+ * number of times.
  */
-public class IPlus extends PrimitiveStackRelation
+public class OptApply extends PrimitiveStackRelation
 {
+// Arguably 0...
 	private static final int ARITY = 1;
 
-	public IPlus() throws RippleException
+	public OptApply() throws RippleException
 	{
 		super();
 	}
@@ -52,7 +53,7 @@ public class IPlus extends PrimitiveStackRelation
 			public void put( final Operator op ) throws RippleException
 			{
 				sink.put( arg.with( rest.push(
-						new Operator( new PlusQuantifier( op ) ) ) ) );
+						new Operator( new OptionalQuantifier( op ) ) ) ) );
 			}
 		};
 

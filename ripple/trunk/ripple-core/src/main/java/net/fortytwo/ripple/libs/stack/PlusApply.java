@@ -10,22 +10,25 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.regex.PlusQuantifier;
 import net.fortytwo.ripple.model.PrimitiveStackRelation;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
+// kate: tab-width 4
+
 /**
- * A primitive which consumes a list and yields a stack equal to the list.
+ * A primitive which activates ("applies") the topmost item on the stack one or
+ * more times.
  */
-public class Unstack extends PrimitiveStackRelation
+public class PlusApply extends PrimitiveStackRelation
 {
 	private static final int ARITY = 1;
 
-	public Unstack()
-		throws RippleException
+	public PlusApply() throws RippleException
 	{
 		super();
 	}
@@ -41,22 +44,18 @@ public class Unstack extends PrimitiveStackRelation
 		throws RippleException
 	{
 		RippleList stack = arg.getStack();
-		final ModelConnection mc = arg.getModelConnection();
+		RippleValue first = stack.getFirst();
+		final RippleList rest = stack.getRest();
 
-		RippleValue l;
-
-		l = stack.getFirst();
-
-		Sink<RippleList> listSink = new Sink<RippleList>()
+		Sink<Operator> opSink = new Sink<Operator>()
 		{
-			public void put( final RippleList list ) throws RippleException
+			public void put( final Operator op ) throws RippleException
 			{
-				sink.put( arg.with( list ) );
+				sink.put( arg.with( rest.push(
+						new Operator( new PlusQuantifier( op ) ) ) ) );
 			}
 		};
 
-		mc.toList( l, listSink );
+		Operator.createOperator( first, opSink, arg.getModelConnection() );
 	}
 }
-
-// kate: tab-width 4

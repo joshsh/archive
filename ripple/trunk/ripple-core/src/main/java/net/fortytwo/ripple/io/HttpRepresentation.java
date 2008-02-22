@@ -3,6 +3,7 @@ package net.fortytwo.ripple.io;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.util.StringUtils;
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.restlet.data.MediaType;
@@ -37,11 +38,17 @@ public class HttpRepresentation extends Representation
 		{
 			client.executeMethod( method );
 		}
-		
+
+		catch ( ConnectTimeoutException e )
+		{
+			
+		}
+
 		catch ( IOException e )
 		{
 			throw new RippleException( e );
 		}
+
 
 		InputStream is = null;
 

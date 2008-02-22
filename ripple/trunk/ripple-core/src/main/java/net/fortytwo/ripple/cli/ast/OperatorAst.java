@@ -13,7 +13,6 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Sink;
@@ -61,22 +60,22 @@ public class OperatorAst implements Ast<RippleList>
 				l = mc.list( Operator.OP );
 				break;
 			case Option:
-				l = mc.list( Operator.OP ).push( StackLibrary.getIoptValue() );
+				l = mc.list( Operator.OP ).push( StackLibrary.getOptApplyValue() );
 				break;
 			case Star:
-				l = mc.list( Operator.OP ).push( StackLibrary.getIstarValue() );
+				l = mc.list( Operator.OP ).push( StackLibrary.getStarApplyValue() );
 				break;
 			case Plus:
-				l = mc.list( Operator.OP ).push( StackLibrary.getIplusValue() );
+				l = mc.list( Operator.OP ).push( StackLibrary.getPlusApplyValue() );
 				break;
 			case Times:
 				l = mc.list( Operator.OP )
-						.push( StackLibrary.getTimesValue() )
+						.push( StackLibrary.getTimesApplyValue() )
 						.push( mc.value( min ) );
 				break;
 			case Range:
 				l = mc.list( Operator.OP )
-						.push( StackLibrary.getRangeValue() )
+						.push( StackLibrary.getRangeApplyValue() )
 						.push( mc.value( max ) )
 						.push( mc.value( min ) );
 				break;

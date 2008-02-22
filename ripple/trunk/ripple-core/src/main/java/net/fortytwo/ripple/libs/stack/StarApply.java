@@ -24,12 +24,12 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which optionally activates ("applies") the topmost item on the
  * stack.
  */
-public class IStar extends PrimitiveStackRelation
+public class StarApply extends PrimitiveStackRelation
 {
 	// TODO: arity should really be 1, but this is a nice temporary solution
 	private static final int ARITY = 2;
 
-	public IStar() throws RippleException
+	public StarApply() throws RippleException
 	{
 		super();
 	}

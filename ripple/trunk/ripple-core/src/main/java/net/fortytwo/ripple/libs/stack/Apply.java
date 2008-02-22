@@ -12,20 +12,19 @@ package net.fortytwo.ripple.libs.stack;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveStackRelation;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.util.Sink;
 
 /**
- * A primitive which pushes an active copy of the topmost item on the stack to
- * the head of the stack.
+ * A primitive which activates ("applies") the topmost item on the stack.
  */
-public class X extends PrimitiveStackRelation
+public class Apply extends PrimitiveStackRelation
 {
+// Arguably 0...
 	private static final int ARITY = 1;
 
-	public X()
+	public Apply()
 		throws RippleException
 	{
 		super();
@@ -41,13 +40,10 @@ public class X extends PrimitiveStackRelation
 	)
 		throws RippleException
 	{
+// hack...
 		RippleList stack = arg.getStack();
-		RippleValue x;
-
-		x = stack.getFirst();
-
 		sink.put( arg.with(
-				stack.push( x ).push( Operator.OP ) ) );
+				stack.push( Operator.OP ) ) );
 	}
 }
 

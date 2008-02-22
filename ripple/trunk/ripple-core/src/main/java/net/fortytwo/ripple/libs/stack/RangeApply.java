@@ -14,18 +14,18 @@ import net.fortytwo.ripple.model.*;
 import net.fortytwo.ripple.model.regex.TimesQuantifier;
 import net.fortytwo.ripple.util.Sink;
 
-/**
- * A primitive which consumes an item and a number n, then pushes n active
- * copies of the item to the stack.  This has the effect of applying the
- * filter "n times" to the remainder of the stack.
- */
-public class Times extends PrimitiveStackRelation
-{
-	// TODO: arity should really be 1
-	private static final int ARITY = 2;
+// kate: tab-width 4
 
-	public Times()
-		throws RippleException
+/**
+ * A primitive which activates ("applies") the topmost item on the stack one or
+ * more times.
+ */
+public class RangeApply extends PrimitiveStackRelation
+{
+	// TODO: arity should really be 2
+	private static final int ARITY = 3;
+
+	public RangeApply() throws RippleException
 	{
 		super();
 	}
@@ -43,9 +43,11 @@ public class Times extends PrimitiveStackRelation
 		RippleList stack = arg.getStack();
 		final ModelConnection mc = arg.getModelConnection();
 
-		final int times;
+		final int min, max;
 
-		times = mc.toNumericValue( stack.getFirst() ).intValue();
+		max = mc.toNumericValue( stack.getFirst() ).intValue();
+		stack = stack.getRest();
+		min = mc.toNumericValue( stack.getFirst() ).intValue();
 		stack = stack.getRest();
 		RippleValue p = stack.getFirst();
 		final RippleList rest = stack.getRest();
@@ -55,14 +57,10 @@ public class Times extends PrimitiveStackRelation
 			public void put( final Operator op ) throws RippleException
 			{
 				sink.put( arg.with( rest.push(
-						new Operator( new TimesQuantifier( op, times, times ) ) ) ) );
+						new Operator( new TimesQuantifier( op, min, max ) ) ) ) );
 			}
 		};
 
 		Operator.createOperator( p, opSink, mc );
 	}
-
-
 }
-
-// kate: tab-width 4

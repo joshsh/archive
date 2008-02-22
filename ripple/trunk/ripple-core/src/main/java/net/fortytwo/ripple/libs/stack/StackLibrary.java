@@ -26,7 +26,7 @@ public class StackLibrary extends Library
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
-	private static PrimitiveStackRelation ioptVal, istarVal, iplusVal, timesVal, rangeVal;
+	private static PrimitiveStackRelation optApplyVal, starApplyVal, plusApplyVal, timesApplyVal, rangeApplyVal;
 
 	public void load( final UriMap uf, final ModelConnection mc )
 		throws RippleException
@@ -34,18 +34,11 @@ public class StackLibrary extends Library
 		uf.put(
 			NS, getClass().getResource( "stack.ttl" ) + "#" );
 
-		registerPrimitive( Ary.class, NS + "ary", mc );
-		registerPrimitive( At.class, NS + "at", mc );
-		branchVal = registerPrimitive( Branch.class, NS + "branch", mc );
-		registerPrimitive( Choice.class, NS + "choice", mc );
-		registerPrimitive( Dip.class, NS + "dip", mc );
-		registerPrimitive( Dipd.class, NS + "dipd", mc );
+		// Stack shuffling primitives
 		registerPrimitive( Dup.class, NS + "dup", mc );
 		registerPrimitive( Dupd.class, NS + "dupd", mc );
 		registerPrimitive( Dupdd.class, NS + "dupdd", mc );
-		registerPrimitive( I.class, NS + "i", mc );
 		registerPrimitive( Id.class, NS + "id", mc );
-		registerPrimitive( Ifte.class, NS + "ifte", mc );
 		registerPrimitive( Pop.class, NS + "pop", mc );
 		registerPrimitive( Popd.class, NS + "popd", mc );
 		registerPrimitive( Popdd.class, NS + "popdd", mc );
@@ -55,31 +48,34 @@ public class StackLibrary extends Library
 		registerPrimitive( Rollupd.class, NS + "rollupd", mc );
 		registerPrimitive( Rotate.class, NS + "rotate", mc );
 		registerPrimitive( Rotated.class, NS + "rotated", mc );
-		registerPrimitive( Stack.class, NS + "stack", mc );
 		registerPrimitive( Swap.class, NS + "swap", mc );
 		registerPrimitive( Swapd.class, NS + "swapd", mc );
 		registerPrimitive( Swapdd.class, NS + "swapdd", mc );
-		registerPrimitive( Unstack.class, NS + "unstack", mc );
-		registerPrimitive( X.class, NS + "x", mc );
 
-		// Boolean logic
+		// Boolean logic and conditionals
 		registerPrimitive( And.class, NS + "and", mc );
+		branchVal = registerPrimitive( Branch.class, NS + "branch", mc );
+		registerPrimitive( Choice.class, NS + "choice", mc );
 		falseVal = registerPrimitive( False.class, NS + "false", mc );
+		registerPrimitive( Ifte.class, NS + "ifte", mc );
 		registerPrimitive( Not.class, NS + "not", mc );
 		registerPrimitive( Or.class, NS + "or", mc );
 		trueVal = registerPrimitive( True.class, NS + "true", mc );
 		registerPrimitive( Xor.class, NS + "xor", mc );
 		
-		// "Quantifier" application primitives
-// TODO: stack:times belongs here as well
-// TODO: create RDF descriptions
-		ioptVal = registerPrimitive( IOpt.class, NS + "iopt", mc );
-		istarVal = registerPrimitive( IStar.class, NS + "istar", mc );
-		iplusVal = registerPrimitive( IPlus.class, NS + "iplus", mc );
-		rangeVal = registerPrimitive( Range.class, NS + "range", mc );
-		timesVal = registerPrimitive( Times.class, NS + "times", mc );
+		// Application primitives
+		registerPrimitive( Apply.class, NS + "apply", mc );
+		registerPrimitive( Ary.class, NS + "ary", mc );
+		registerPrimitive( Dip.class, NS + "dip", mc );
+		registerPrimitive( Dipd.class, NS + "dipd", mc );
+		optApplyVal = registerPrimitive( OptApply.class, NS + "optApply", mc );
+		plusApplyVal = registerPrimitive( PlusApply.class, NS + "plusApply", mc );
+		starApplyVal = registerPrimitive( StarApply.class, NS + "starApply", mc );
+		rangeApplyVal = registerPrimitive( RangeApply.class, NS + "rangeApply", mc );
+		timesApplyVal = registerPrimitive( TimesApply.class, NS + "timesApply", mc );
 
 		// List primitives.
+		registerPrimitive( At.class, NS + "at", mc );
 		registerPrimitive( Cat.class, NS + "cat", mc );
 		registerPrimitive( Cons.class, NS + "cons", mc );
 		registerPrimitive( Fold.class, NS + "fold", mc );
@@ -111,29 +107,29 @@ public class StackLibrary extends Library
 		return falseVal;
 	}
 
-	public static PrimitiveStackRelation getIoptValue()
+	public static PrimitiveStackRelation getOptApplyValue()
 	{
-		return ioptVal;
+		return optApplyVal;
 	}
 
-	public static PrimitiveStackRelation getIstarValue()
+	public static PrimitiveStackRelation getStarApplyValue()
 	{
-		return istarVal;
+		return starApplyVal;
 	}
 
-	public static PrimitiveStackRelation getIplusValue()
+	public static PrimitiveStackRelation getPlusApplyValue()
 	{
-		return iplusVal;
+		return plusApplyVal;
 	}
 
-	public static PrimitiveStackRelation getTimesValue()
+	public static PrimitiveStackRelation getTimesApplyValue()
 	{
-		return timesVal;
+		return timesApplyVal;
 	}
 
-	public static PrimitiveStackRelation getRangeValue()
+	public static PrimitiveStackRelation getRangeApplyValue()
 	{
-		return rangeVal;
+		return rangeApplyVal;
 	}
 }
 
