@@ -23,13 +23,11 @@ import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
 import net.fortytwo.ripple.util.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
@@ -149,7 +147,6 @@ public final class Demo
 		System.out.println( "Usage:  ripple [options] [store]" );
 		System.out.println( "Options:\n"
 			+ "  -c <props>   Configuration properties file\n"
-			+ "  -f <format>  Use <format> for the RDF store\n"
 			+ "  -h           Print this help and exit\n"
 			+ "  -q           Suppress normal output\n"
 			+ "  -v           Print version information and exit" );
@@ -173,12 +170,11 @@ public final class Demo
 		// Long options are available but are not advertised.
 		LongOpt [] longOptions = {
 			new LongOpt( "config", LongOpt.REQUIRED_ARGUMENT, null, 'c' ),
-			new LongOpt( "format", LongOpt.REQUIRED_ARGUMENT, null, 'f' ),
 			new LongOpt( "help", LongOpt.NO_ARGUMENT, null, 'h' ),
 			new LongOpt( "quiet", LongOpt.NO_ARGUMENT, null, 'q' ),
 			new LongOpt( "version", LongOpt.NO_ARGUMENT, null, 'v' ) };
 
-		Getopt g = new Getopt( Ripple.getName(), args, "c:f:hqv", longOptions );
+		Getopt g = new Getopt( Ripple.getName(), args, "c:hqv", longOptions );
 		int c;
 		while ( ( c = g.getopt() ) != -1 )
 		{
@@ -188,27 +184,16 @@ public final class Demo
 				case 0:
 					configFile = new File( g.getOptarg() );
 					break;
-				case 'f':
-				case 1:
-					// Override the default cache format.
-					RDFFormat format = RdfUtils.findFormat( g.getOptarg() );
-					if ( null == format )
-					{
-						System.err.println( "Unknown format: " + g.getOptarg() );
-						System.exit( 1 );
-					}
-					Ripple.setCacheFormat( format );
-					break;
 				case 'h':
-				case 2:
+				case 1:
 					showHelp = true;
 					break;
 				case 'q':
-				case 3:
+				case 2:
 					quiet = true;
 					break;
 				case 'v':
-				case 4:
+				case 3:
 					showVersion = true;
 					break;
 				case '?':
