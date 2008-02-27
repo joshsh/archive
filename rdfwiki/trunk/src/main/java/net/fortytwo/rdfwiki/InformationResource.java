@@ -22,8 +22,8 @@ public class InformationResource extends Resource
 	private static final Logger LOGGER
 		= Logger.getLogger( InformationResource.class.getName() );
 	
-	private URI uri;
-	private Sail sail;
+	protected URI selfUri;
+	protected Sail sail;
 
     public InformationResource( final Context context, final Request request,
             final Response response ) throws Exception
@@ -32,9 +32,9 @@ public class InformationResource extends Resource
 
         sail = RdfWiki.getWiki( context ).getSail( request );
         
-        uri = sail.getValueFactory().createURI(
+        selfUri = sail.getValueFactory().createURI(
         		request.getResourceRef().toString() );
-System.out.println( "uri = " + uri );
+//System.out.println( "selfUri = " + selfUri );
     }
 
     public boolean allowDelete()
@@ -73,16 +73,17 @@ System.out.println( "uri = " + uri );
         {
         	return getRdfRepresentation( format );
         }
-        
+
         /*
         if (variant.getMediaType().equals(MediaType.TEXT_PLAIN)) {
             result = new StringRepresentation("Resource with URI \""
-                    + uri + "\"");
+                    + selfUri + "\"");
         }*/
         
         return null;
     }
-    
+
+    @Override
     public void	post( final Representation entity )
     {
     	SailConnection sc = null;
@@ -91,13 +92,13 @@ System.out.println( "uri = " + uri );
     	try
     	{
     		// Note: the resource URI might not be very useful as a base URI.
-    		RdfRepresentation rep = new RdfRepresentation( entity, uri.toString() );
+    		RdfRepresentation rep = new RdfRepresentation( entity, selfUri.toString() );
 
     		sc = sail.getConnection();
     		open = true;
 //    		RdfSink contextPipe = new SingleContextPipe(
 //    				new SesameOutputAdapter( new SailInserter(sc ) ),
-//    				uri, sail.getValueFactory() );
+//    				selfUri, sail.getValueFactory() );
 //    		rep.getSource().writeTo( contextPipe );
     		
     		// Don't filter statement context for now.
@@ -127,12 +128,14 @@ System.out.println( "uri = " + uri );
     	}
     }
     
+    @Override
     public void put( final Representation entity )
     {
     	delete();
     	post( entity );
     }
     
+    @Override
     public void delete()
     {
     	boolean open = false;
@@ -144,7 +147,7 @@ System.out.println( "uri = " + uri );
     		open = true;
     		
 //    		sc.removeStatements( null, null, null, uri );
-    		sc.removeStatements( uri, null, null );
+    		sc.removeStatements( selfUri, null, null );
     		
     		sc.commit();
 			sc.close();
@@ -181,7 +184,7 @@ System.out.println( "uri = " + uri );
     		open = true;
     		CloseableIterationSource source	= new CloseableIterationSource(
 //    			sc.getStatements( null, null, null, false, uri ) );
-    			sc.getStatements( uri, null, null, false ) );
+    			sc.getStatements( selfUri, null, null, false ) );
  			final RdfCollector collector = new RdfCollector();
     		source.writeTo( collector.statementSink() );
 			sc.close();
