@@ -4,18 +4,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.Model;
-import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.*;
+import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.util.UriMap;
 
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -54,7 +51,10 @@ public class PipeRestlet extends Restlet
 			throw new RippleException( e );
 		}
 
-		model = new Model( RdfUtils.createMemoryStoreSail() );
+        // TODO: use a shared map
+        UriMap uriMap = new UriMap();
+
+        model = new SesameModel( RdfUtils.createMemoryStoreSail(), uriMap );
 		evaluator = new LazyEvaluator();
 	}
 
@@ -84,30 +84,29 @@ final StringBuilder message = new StringBuilder();
 message.append( "Filter URI: " + filterUri + "\n" );
 message.append( "Sink URI: " + sinkUri + "\n" );
 
-			Collector<RippleList> outStacks = new Collector<RippleList>();
+			Collector<StackContext> outStacks = new Collector<StackContext>();
 			ModelConnection mc = model.getConnection( "for PipeRestlet.handle()" );
 			RippleValue filterValue = model.getBridge().get(
 				new RdfValue( mc.createUri( filterUri ) ) );
-			RippleList inStack = new RippleList( filterValue ).push( Operator.OP );
+			RippleList inStack = mc.list( filterValue ).push( Operator.OP );
+            StackContext arg = new StackContext( inStack, mc );
 //			RippleList inStack = new RippleList( Operator.OP ).push( new RdfValue( mc.createUri( filterUri ) ) );
 message.append( "inStack = " + inStack + "\n" );
-			evaluator.applyTo( inStack, outStacks, mc );
+			evaluator.applyTo( arg, outStacks );
 			mc.close();
 
 			final PostSink postSink = new PostSink( sinkUri );
 
-			Sink<RippleList> resultSink = new Sink<RippleList>()
+			Sink<StackContext> resultSink = new Sink<StackContext>()
 			{
-				public void put( final RippleList l ) throws RippleException
+				public void put( final StackContext arg ) throws RippleException
 				{
-message.append( "    result: " + l + "\n" );
-					postSink.put( l.toString() );
+message.append( "    result: " + arg + "\n" );
+					postSink.put( arg.toString() );
 				}
 			};
 
 			outStacks.writeTo( resultSink );
-
-
 
 response.setEntity( message.toString(), MediaType.TEXT_PLAIN );
 		}

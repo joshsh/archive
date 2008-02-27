@@ -1,41 +1,174 @@
 package net.fortytwo.restpipe;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.logging.Level;
 
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 import org.restlet.resource.Resource;
+import org.restlet.resource.Variant;
+import org.restlet.resource.Representation;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Namespace;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.NamespaceImpl;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.sail.SailConnection;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.*;
 import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.rdfwiki.RdfRepresentation;
 
 public class Receiver extends Resource
 {
-	private Sink<Resource> sink;
-	private URI selfUri;
+    // TODO: move these to a common location
+    private static String NS = "http://fortytwo.net/2008/02/rpp#";
+    private static URI INPUTTYPE = new URIImpl("http://fortytwo.net/2008/02/rpp#inputType");
+    private static URI SINK = new URIImpl("http://fortytwo.net/2008/02/rpp#Sink");
 
-	public Receiver( final Context context,
+    protected RepresentationSink sink;
+    protected org.openrdf.model.URI selfUri;
+    protected RdfCollector selfRepresentation = null;
+
+    // TODO: re-use a shared ValueFactory
+    protected ValueFactory valueFactory = new ValueFactoryImpl();
+
+    public Receiver( final Context context,
 			final Request request,
-            final Response response,
-            final Sink<Resource> sink ) throws RippleException
-	{
+            final Response response ) throws RippleException
+	{            
         super( context, request, response );
 
-		this.sink = sink;
-		
-        try
+        this.sink = RippleServer.getSink( request.getResourceRef().getLastSegment() );
+
+        selfUri = valueFactory.createURI(
+      	        request.getResourceRef().toString() );
+    }
+
+    @Override
+    public boolean allowDelete()
+    {
+    	return false;
+    }
+
+    @Override
+    public boolean allowGet()
+    {
+    	return true;
+    }
+
+    @Override
+    public boolean allowPost()
+    {
+    	return true;
+    }
+
+    @Override
+    public boolean allowPut()
+    {
+    	return true;
+    }
+
+    @Override
+    public List<Variant> getVariants()
+    {
+    	return ( null == sink ) ? new LinkedList<Variant>() : sink.getVariants();
+    }
+
+    @Override
+    public Representation getRepresentation( final Variant variant )
+    {
+        if ( null == sink )
         {
-			selfUri = new URI(
-					request.getResourceRef().toString() );
-		}
+            // FIXME
+            return null;
+        }
+
+        try {
+            return selfRepresentation( variant );
+        } catch ( RippleException e ) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
+    }
+
+    @Override
+    public void	post( final Representation entity )
+    {
+        if ( null == sink )
+        {
+            // FIXME
+            System.err.println( "null sink" );
+        }
+
+        else if ( !getVariants().contains( entity.getMediaType() ) )
+        {
+            // FIXME
+            System.err.println( "wrong media type" );
+        }
         
-        catch ( URISyntaxException e )
+        else
         {
-			throw new RippleException( e );
-		}
-	}
-	
-	...
+            try {
+                sink.put( entity );
+            } catch (RippleException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+
+        Response response = new Response(getRequest());
+        response.setStatus(Status.SUCCESS_ACCEPTED);
+/*try {
+    response.setEntity( selfRepresentation( null ) );
+} catch (RippleException e) {
+    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+}*/
+        setResponse(response);
+System.out.println("here");
+    }
+
+    @Override
+    public void put( final Representation entity )
+    {
+    	post( entity );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private Representation selfRepresentation( final Variant variant ) throws RippleException
+    {
+        if ( null == selfRepresentation )
+        {
+            selfRepresentation = new RdfCollector();
+
+            Sink<Namespace> nsSink = selfRepresentation.namespaceSink();
+            Sink<Statement> stSink = selfRepresentation.statementSink();
+
+            nsSink.put( new NamespaceImpl( "rdf", RDF.NAMESPACE ) );
+            nsSink.put( new NamespaceImpl( "rpp", NS ) );
+
+            stSink.put( valueFactory.createStatement( selfUri, RDF.TYPE, SINK ) );
+            for ( Variant v : getVariants() )
+            {
+                stSink.put( valueFactory.createStatement( selfUri, INPUTTYPE,
+                        valueFactory.createLiteral( v.getMediaType().getName() ) ) );
+            }
+        }
+
+        MediaType type = variant.getMediaType();
+//        MediaType type = ( null == variant ) ? new MediaType( "application/rdf+xml" ) : variant.getMediaType();
+
+        RDFFormat format = RdfUtils.findRdfFormat( type );
+
+        return ( null == format ) ? null : new RdfRepresentation( selfRepresentation, format );
+    }
 }

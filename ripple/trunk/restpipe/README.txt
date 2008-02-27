@@ -1,6 +1,15 @@
 mvn install
+./run.sh
 
-java -jar target/rippleserver-0.1-standalone.jar
+
+# Get a description of a sink
+curl "http://localhost:8182/registered/sink1"
+
+# Post some data into a sink
+curl -d "ignore me" -H "Content-Type: application/rdf+xml" "http://localhost:8182/registered/debugSink" 
+
+
+
 
 wget http://localhost:8182/sink42
 
