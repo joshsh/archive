@@ -3,12 +3,12 @@ mvn install
 
 
 # Get a description of a sink
-curl "http://localhost:8182/registered/sink1"
+curl "http://localhost:8182/registered/debugSink"
+wget "http://localhost:8182/registered/debugSink"
 
 # Post some data into a sink
 curl -d "ignore me" -H "Content-Type: application/rdf+xml" "http://localhost:8182/registered/debugSink" 
-
-
+wget --post-data "ignore me" --header "Content-Type: application/rdf+xml" "http://localhost:8182/registered/debugSink"
 
 
 wget http://localhost:8182/sink42

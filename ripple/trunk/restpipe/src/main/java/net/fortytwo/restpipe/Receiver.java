@@ -12,11 +12,13 @@ import org.restlet.data.Status;
 import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 import org.restlet.resource.Representation;
+import org.restlet.resource.StringRepresentation;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.URIImpl;
@@ -89,7 +91,6 @@ public class Receiver extends Resource
     {
         if ( null == sink )
         {
-            // FIXME
             return null;
         }
 
@@ -106,43 +107,75 @@ public class Receiver extends Resource
     {
         if ( null == sink )
         {
-            // FIXME
-            System.err.println( "null sink" );
+            this.getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND );
         }
 
-        else if ( !getVariants().contains( entity.getMediaType() ) )
+        else if ( !isAllowedMediaType( entity.getMediaType() ) )
         {
-            // FIXME
-            System.err.println( "wrong media type" );
+            StringBuilder sb = new StringBuilder();
+            sb.append( "Unsupported media type: " )
+                    .append( entity.getMediaType() )
+                    .append( ".  Should be one of: " );
+            
+            boolean first = true;
+            for ( Variant v : getVariants() )
+            {
+                if ( first )
+                {
+                    first = false;
+                }
+
+                else
+                {
+                    sb.append( ", " );
+                }
+
+                sb.append( v.getMediaType() );
+            }
+
+            this.getResponse().setStatus(
+                    Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, sb.toString() );
         }
         
         else
         {
             try {
                 sink.put( entity );
+
+                this.getResponse().setStatus( Status.SUCCESS_ACCEPTED );               
+                // For some reason, we must explicitly set the response entity,
+                // or the connection hangs.
+                this.getResponse().setEntity( new StringRepresentation(
+                        "input entity has been accepted and will be acted upon" ) );
             } catch (RippleException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                // Display a basic error message, without a stack trace.
+                // Ideally, this should include a logging ID as well.
+                this.getResponse().setStatus( Status.SERVER_ERROR_INTERNAL, "Error: " + e.getMessage() );
             }
         }
-
-        Response response = new Response(getRequest());
-        response.setStatus(Status.SUCCESS_ACCEPTED);
-/*try {
-    response.setEntity( selfRepresentation( null ) );
-} catch (RippleException e) {
-    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-}*/
-        setResponse(response);
-System.out.println("here");
     }
 
     @Override
     public void put( final Representation entity )
     {
-    	post( entity );
+        // For now, PUT is handled identially to POST
+        post( entity );
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    private boolean isAllowedMediaType( final MediaType mt )
+    {       
+        for ( Variant v : getVariants() )
+        {
+            if ( v.getMediaType().equals( mt ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private Representation selfRepresentation( final Variant variant ) throws RippleException
     {
@@ -154,9 +187,13 @@ System.out.println("here");
             Sink<Statement> stSink = selfRepresentation.statementSink();
 
             nsSink.put( new NamespaceImpl( "rdf", RDF.NAMESPACE ) );
+            nsSink.put( new NamespaceImpl( "rdfs", RDFS.NAMESPACE ) );
             nsSink.put( new NamespaceImpl( "rpp", NS ) );
 
-            stSink.put( valueFactory.createStatement( selfUri, RDF.TYPE, SINK ) );
+            stSink.put( valueFactory.createStatement(
+                    selfUri, RDF.TYPE, SINK ) );
+            stSink.put( valueFactory.createStatement(
+                    selfUri, RDFS.COMMENT, valueFactory.createLiteral( sink.getComment() ) ) );
             for ( Variant v : getVariants() )
             {
                 stSink.put( valueFactory.createStatement( selfUri, INPUTTYPE,

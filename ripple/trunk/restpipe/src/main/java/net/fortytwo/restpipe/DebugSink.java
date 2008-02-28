@@ -15,6 +15,11 @@ import net.fortytwo.ripple.rdf.RdfUtils;
  */
 public class DebugSink implements RepresentationSink
 {
+    public String getComment()
+    {
+        return "just a debugging tool";    
+    }
+
     public List<Variant> getVariants()
     {
         return  RdfUtils.getRdfVariants();
@@ -23,5 +28,6 @@ public class DebugSink implements RepresentationSink
     public void put( final Representation rep ) throws RippleException
     {
         System.out.println( "received representation:\n" + rep );
+        //throw new RippleException("just testing!");
     }
 }

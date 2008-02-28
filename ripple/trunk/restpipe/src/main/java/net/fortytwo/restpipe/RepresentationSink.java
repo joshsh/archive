@@ -14,4 +14,6 @@ import java.util.List;
 public interface RepresentationSink extends Sink<Representation>
 {
 	List<Variant> getVariants();
+
+    String getComment();
 }
