@@ -3,6 +3,9 @@ package net.fortytwo.ripple;
 import java.util.Properties;
 
 import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.model.enums.ExpressionOrder;
+import net.fortytwo.ripple.model.enums.EvaluationStyle;
+import net.fortytwo.ripple.model.enums.EvaluationOrder;
 
 import org.openrdf.rio.RDFFormat;
 
@@ -72,11 +75,11 @@ public class RippleProperties
 		return format;
 	}
 
-    public Ripple.ExpressionOrder getExpressionOrder( final String name ) throws RippleException
+    public ExpressionOrder getExpressionOrder( final String name ) throws RippleException
     {
         String value = getProperty( name );
 
-        Ripple.ExpressionOrder order = Ripple.ExpressionOrder.find( value );
+        ExpressionOrder order = ExpressionOrder.find( value );
 
         if ( null == order )
         {
@@ -86,11 +89,11 @@ public class RippleProperties
         return order;
     }
 
-    public Ripple.EvaluationOrder getEvaluationOrder( final String name ) throws RippleException
+    public EvaluationOrder getEvaluationOrder( final String name ) throws RippleException
     {
         String value = getProperty( name );
 
-        Ripple.EvaluationOrder order = Ripple.EvaluationOrder.find( value );
+        EvaluationOrder order = EvaluationOrder.find( value );
 
         if ( null == order )
         {
@@ -100,11 +103,11 @@ public class RippleProperties
         return order;
     }
 
-    public Ripple.EvaluationStyle getEvaluationStyle( final String name ) throws RippleException
+    public EvaluationStyle getEvaluationStyle( final String name ) throws RippleException
     {
         String value = getProperty( name );
 
-        Ripple.EvaluationStyle style = Ripple.EvaluationStyle.find( value );
+        EvaluationStyle style = EvaluationStyle.find( value );
 
         if ( null == style )
         {

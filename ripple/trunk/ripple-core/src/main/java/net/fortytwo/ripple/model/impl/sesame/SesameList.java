@@ -6,6 +6,7 @@ import java.util.Map;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
+import net.fortytwo.ripple.model.enums.ExpressionOrder;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
@@ -30,7 +31,7 @@ public class SesameList extends RippleList
 
 	private static Map<Value, Source<RippleList>> nativeLists = new HashMap<Value, Source<RippleList>>();
 
-    private static Ripple.ExpressionOrder expressionOrder;
+    private static ExpressionOrder expressionOrder;
     private static boolean printPadded;
     private static boolean initialized = false;
 
@@ -337,7 +338,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
         StringBuilder sb = new StringBuilder();
 
 		ListNode<RippleValue> cur =
-			( Ripple.ExpressionOrder.DIAGRAMMATIC == expressionOrder )
+			( ExpressionOrder.DIAGRAMMATIC == expressionOrder )
 			? this: invert( this );
 
 		sb.append( printPadded ? "( " : "(" );
@@ -385,7 +386,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
         }
 
 		ListNode<RippleValue> cur =
-			( Ripple.ExpressionOrder.DIAGRAMMATIC == expressionOrder )
+			( ExpressionOrder.DIAGRAMMATIC == expressionOrder )
 			? this : invert( this );
 
 		p.print( printPadded ? "( " : "(" );

@@ -6,7 +6,6 @@
  * Copyright (C) 2007 Joshua Shinavier
  */
 
-
 package net.fortytwo.ripple;
 
 import java.io.File;
@@ -16,11 +15,8 @@ import java.io.InputStream;
 
 import java.util.Properties;
 
-import net.fortytwo.ripple.rdf.RdfUtils;
-
 import org.apache.log4j.PropertyConfigurator;
 
-import org.openrdf.rio.RDFFormat;
 
 /**
  *  Read-only configuration metadata.
@@ -58,6 +54,9 @@ public final class Ripple
             // TODO: .........
             USE_ASYNCHRONOUS_QUERIES            = "";
 
+    private static final String RIPPLE_PROPERTIES = "default.properties";
+    private static final String LOG4J_PROPERTIES = "log4j.properties";
+
     private static boolean initialized = false;
 
 	private static RippleProperties properties;
@@ -70,17 +69,7 @@ public final class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-    // TODO
-	public static boolean asynchronousQueries()
-	{
-		return useAsynchronousQueries; 
-	}
-	public static void enableAsynchronousQueries( final boolean enable )
-	{
-		useAsynchronousQueries = enable;
-	}
-	
-	private Ripple()
+    private Ripple()
 	{
 	}
 
@@ -93,13 +82,13 @@ public final class Ripple
 		}
 
 		PropertyConfigurator.configure(
-			Ripple.class.getResource( "log4j.properties" ) );
+			    Ripple.class.getResource( LOG4J_PROPERTIES ) );
 
 		Properties props = new Properties();
 
 		try
 		{
-			props.load( Ripple.class.getResourceAsStream( "default.properties" ) );
+			props.load( Ripple.class.getResourceAsStream( RIPPLE_PROPERTIES ) );
 			
 			for ( int i = 0; i < configFiles.length; i++ )
 			{
@@ -111,7 +100,7 @@ public final class Ripple
 
 		catch ( IOException e )
 		{
-			throw new RippleException( "unable to load default.properties" );
+			throw new RippleException( "unable to load properties file " + RIPPLE_PROPERTIES );
 		}
 
         properties = new RippleProperties( props );
@@ -146,232 +135,19 @@ public final class Ripple
 		quiet = q;
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-
     // TODO: move this
     public static boolean useInference() throws RippleException
 	{
 		return properties.getBoolean( USE_INFERENCE );
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-
-	private static String getStringProperty( final Properties props,
-											final String name,
-											final String defaultValue )
+    // TODO: move these
+	public static boolean asynchronousQueries()
 	{
-		String s = props.getProperty( name );
-
-		return ( null == s )
-			? defaultValue
-			: s;
+		return useAsynchronousQueries;
 	}
-
-	private static boolean getBooleanProperty( final Properties props,
-											final String name,
-											final boolean defaultValue )
+    public static void enableAsynchronousQueries( final boolean enable )
 	{
-		String s = props.getProperty( name );
-
-		return ( null == s )
-			? defaultValue
-			: s.equals( "true" );
-	}
-
-	private static int getIntProperty( final Properties props,
-									final String name,
-									final int defaultValue )
-		throws RippleException
-	{
-		String s = props.getProperty( name );
-
-		if ( null == s )
-		{
-			return defaultValue;
-		}
-
-		else
-		{
-			try
-			{
-				return ( new Integer( s ) ).intValue();
-			}
-
-			catch ( java.lang.NumberFormatException e )
-			{
-				throw new RippleException( e );
-			}
-		}
-	}
-
-	private static long getLongProperty( final Properties props,
-									final String name,
-									final long defaultValue )
-		throws RippleException
-	{
-		String s = props.getProperty( name );
-
-		if ( null == s )
-		{
-			return defaultValue;
-		}
-
-		else
-		{
-			try
-			{
-				return ( new Long( s ) ).longValue();
-			}
-
-			catch ( java.lang.NumberFormatException e )
-			{
-				throw new RippleException( e );
-			}
-		}
-	}
-
-	private static RDFFormat getRdfFormatProperty(
-		final Properties props,
-		final String name,
-		final RDFFormat defaultValue ) throws RippleException
-	{
-// System.out.println( "########## " + RDFFormat.N3 );
-// System.out.println( "########## " + RDFFormat.NTRIPLES );
-// System.out.println( "########## " + RDFFormat.RDFXML );
-// System.out.println( "########## " + RDFFormat.TRIG );
-// System.out.println( "########## " + RDFFormat.TRIX );
-// System.out.println( "########## " + RDFFormat.TURTLE );
-		String s = props.getProperty( name );
-
-		if ( null == s )
-		{
-			return defaultValue;
-		}
-
-		else
-		{
-			RDFFormat format = RdfUtils.findFormat( s );
-
-			if ( null == format )
-			{
-				throw new RippleException( "unknown RDF format: " + s );
-			}
-
-			return format;
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	public enum ExpressionOrder
-	{
-		DIAGRAMMATIC      ( "diagrammatic" ),
-		ANTIDIAGRAMMATIC  ( "antidiagrammatic" );
-
-		private String name;
-
-		private ExpressionOrder( final String n )
-		{
-			name = n;
-		}
-
-		public static ExpressionOrder find( final String name )
-			throws RippleException
-		{
-			for ( ExpressionOrder x : ExpressionOrder.values() )
-			{
-				if ( x.name.equals( name ) )
-				{
-					return x;
-				}
-			}
-
-			String msg = "unknown ExpressionOrder: '" + name + "'";
-			throw new RippleException( msg );
-		}
-	}
-
-	public enum ExpressionAssociativity
-	{
-		LEFT   ( "left" ),
-		RIGHT  ( "right" );
-
-		private String name;
-
-		private ExpressionAssociativity( final String n )
-		{
-			name = n;
-		}
-
-		public static ExpressionAssociativity find( final String name )
-			throws RippleException
-		{
-			for ( ExpressionAssociativity x : ExpressionAssociativity.values() )
-			{
-				if ( x.name.equals( name ) )
-				{
-					return x;
-				}
-			}
-
-			String msg = "unknown ExpressionAssociativity: '" + name + "'";
-			throw new RippleException( msg );
-		}
-	}
-
-	public enum EvaluationOrder
-	{
-		EAGER  ( "eager" ),
-		LAZY   ( "lazy" );
-
-		private String name;
-
-		private EvaluationOrder( final String name )
-		{
-			this.name = name;
-		}
-
-		public static EvaluationOrder find( final String name )
-			throws RippleException
-		{
-			for ( EvaluationOrder order : EvaluationOrder.values() )
-			{
-				if ( order.name.equals( name ) )
-				{
-					return order;
-				}
-			}
-
-			throw new RippleException( "unknown EvaluationOrder: " + name );
-		}
-	}
-
-	public enum EvaluationStyle
-	{
-		APPLICATIVE    ( "applicative" ),
-		COMPOSITIONAL  ( "compositional" );
-
-		private String name;
-
-		private EvaluationStyle( final String name )
-		{
-			this.name = name;
-		}
-
-		public static EvaluationStyle find( final String name )
-			throws RippleException
-		{
-			for ( EvaluationStyle style : EvaluationStyle.values() )
-			{
-				if ( style.name.equals( name ) )
-				{
-					return style;
-				}
-			}
-
-			throw new RippleException( "unknown EvaluationStyle: " + name );
-		}
+		useAsynchronousQueries = enable;
 	}
 }
-
-// kate: tab-width 4
