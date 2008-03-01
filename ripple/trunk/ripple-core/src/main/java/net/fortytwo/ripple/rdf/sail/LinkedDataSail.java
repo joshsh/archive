@@ -188,7 +188,7 @@ public WebClosure getClosureManager()
 	
 	////////////////////////////////////////////////////////////////////////////
 
-	private WebClosure createDefaultWebClosure()
+	private WebClosure createDefaultWebClosure() throws RippleException
 	{
 		WebClosure wc = new WebClosure( uriMap, getValueFactory() );
 

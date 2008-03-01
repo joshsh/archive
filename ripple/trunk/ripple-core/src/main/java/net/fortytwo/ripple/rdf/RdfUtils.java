@@ -41,13 +41,14 @@ public final class RdfUtils
     private static Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;
 	private static Map<MediaType, RDFFormat> mediaTypeToRdfFormatMap;
 	private static List<Variant> rdfVariants = null;
+    private static boolean dereferenceUrisByNamespace;
     private static boolean initialized = false;
 
     private RdfUtils()
 	{
 	}
 
-    private static void initialize()
+    private static void initialize() throws RippleException
     {
         rdfFormatToMediaTypeMap = new HashMap<RDFFormat, MediaType>();
 
@@ -68,6 +69,9 @@ public final class RdfUtils
         {
             rdfVariants.add( new Variant( types.next() ) );
         }
+
+        dereferenceUrisByNamespace = Ripple.getProperties().getBoolean(
+                Ripple.DEREFERENCE_URIS_BY_NAMESPACE );
 
         initialized = true;
     }
@@ -90,7 +94,7 @@ public final class RdfUtils
 		mediaTypeToRdfFormatMap.put( t, format );
 	}
 
-	public static List<Variant> getRdfVariants()
+	public static List<Variant> getRdfVariants() throws RippleException
 	{
 		if ( !initialized )
 		{
@@ -107,7 +111,7 @@ System.out.println( "    " + v + " -- " + v.getMediaType().getName() + " -- " + 
 		return rdfVariants;
 	}
 
-	public static MediaType findMediaType( final RDFFormat format )
+	public static MediaType findMediaType( final RDFFormat format ) throws RippleException
 	{
 		if ( !initialized )
 		{
@@ -117,7 +121,7 @@ System.out.println( "    " + v + " -- " + v.getMediaType().getName() + " -- " + 
         return rdfFormatToMediaTypeMap.get( format );
 	}
 
-	public static RDFFormat findRdfFormat( final MediaType mediaType )
+	public static RDFFormat findRdfFormat( final MediaType mediaType ) throws RippleException
 	{
 		if ( !initialized )
 		{
@@ -593,7 +597,7 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 			//      resource
 			// Con: very many hash namespaces are not set up this way, and we
 			//      may lose significant information
-			if ( Ripple.dereferenceUrisByNamespace() )
+			if ( dereferenceUrisByNamespace )
 			{
 				memo = ns;
 			}

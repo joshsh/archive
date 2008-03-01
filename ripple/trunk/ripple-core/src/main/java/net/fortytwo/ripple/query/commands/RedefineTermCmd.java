@@ -13,11 +13,13 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.UriAst;
 import net.fortytwo.ripple.model.ModelConnection;
 
 public class RedefineTermCmd extends Command
 {
-	private Command undefineCmd, defineCmd;
+	private UndefineTermCmd undefineCmd;
+    private DefineTermCmd defineCmd;
 
 	public RedefineTermCmd( final String term, final ListAst ast )
 	{
@@ -25,7 +27,17 @@ public class RedefineTermCmd extends Command
 		defineCmd = new DefineTermCmd( term, ast );
 	}
 
-	public void execute( final QueryEngine qe, final ModelConnection mc )
+    public String getName()
+    {
+        return defineCmd.getName();
+    }
+
+    public ListAst getList()
+    {
+        return defineCmd.getList();
+    }
+
+    public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		undefineCmd.execute( qe, mc );

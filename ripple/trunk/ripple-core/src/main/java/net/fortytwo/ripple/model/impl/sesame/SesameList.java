@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.RippleProperties;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
@@ -29,9 +30,20 @@ public class SesameList extends RippleList
 
 	private static Map<Value, Source<RippleList>> nativeLists = new HashMap<Value, Source<RippleList>>();
 
-	private Resource rdfEquivalent = null;
+    private static Ripple.ExpressionOrder expressionOrder;
+    private static boolean printPadded;
+    private static boolean initialized = false;
 
-	public SesameList( final RippleValue first )
+    private Resource rdfEquivalent = null;
+
+    private static void initialize() throws RippleException
+    {
+        RippleProperties props = Ripple.getProperties();
+        expressionOrder = props.getExpressionOrder( Ripple.EXPRESSION_ORDER );
+        printPadded = props.getBoolean( Ripple.LIST_PADDING );
+        initialized = true;
+    }
+    public SesameList( final RippleValue first )
 	{
 		this.first = first;
 		rest = NIL;
@@ -166,7 +178,9 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 							final ModelConnection mc )
 		throws RippleException
 	{
-		// If already a list...
+        boolean memoize = Ripple.getProperties().getBoolean( Ripple.MEMOIZE_LISTS_FROM_RDF );
+
+        // If already a list...
 		if ( v instanceof RippleList )
 		{
 			sink.put( (RippleList) v );
@@ -175,7 +189,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		// If the argument is an RDF value, try to convert it to a native list.
 		else if ( v instanceof RdfValue )
 		{
-			if ( Ripple.memoizeListsFromRdf() )
+			if ( memoize )
 			{
 //System.out.println("looking for source for list: " + v);
 				Value rdfVal = ( (RdfValue) v ).toRdf( mc ).getRdfValue();
@@ -310,15 +324,23 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
+        if ( !initialized )
+        {
+            try {
+                initialize();
+            } catch (RippleException e) {
+                initialized = true;
+                e.logError();
+            }
+        }
 
-		boolean padding = Ripple.listPadding();
+        StringBuilder sb = new StringBuilder();
 
 		ListNode<RippleValue> cur =
-			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
+			( Ripple.ExpressionOrder.DIAGRAMMATIC == expressionOrder )
 			? this: invert( this );
 
-		sb.append( padding ? "( " : "(" );
+		sb.append( printPadded ? "( " : "(" );
 		
 		boolean isFirst = true;
 		while ( NIL != cur )
@@ -348,7 +370,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			cur = cur.getRest();
 		}
 		
-		sb.append( padding ? " )" : ")" );
+		sb.append( printPadded ? " )" : ")" );
 
 		return sb.toString();
 	}
@@ -357,13 +379,16 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	public void printTo( final RipplePrintStream p )
 		throws RippleException
 	{
-		boolean padding = Ripple.listPadding();
+        if ( !initialized )
+        {
+            initialize();
+        }
 
 		ListNode<RippleValue> cur =
-			( Ripple.ExpressionOrder.DIAGRAMMATIC == Ripple.expressionOrder() )
+			( Ripple.ExpressionOrder.DIAGRAMMATIC == expressionOrder )
 			? this : invert( this );
 
-		p.print( padding ? "( " : "(" );
+		p.print( printPadded ? "( " : "(" );
 		
 		boolean isFirst = true;
 		while ( NIL != cur )
@@ -393,7 +418,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			cur = cur.getRest();
 		}
 
-		p.print( padding ? " )" : ")" );
+		p.print( printPadded ? " )" : ")" );
 	}
 
 	public boolean equals( final Object o )

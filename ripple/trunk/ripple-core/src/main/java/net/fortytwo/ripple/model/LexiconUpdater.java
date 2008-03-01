@@ -34,10 +34,12 @@ public class LexiconUpdater implements RdfDiffSink
 
 	private RdfSink addSink, subSink;
 
-	public LexiconUpdater( final Lexicon lexicon )
-	{
-		final boolean override = Ripple.preferNewestNamespaceDefinitions();
-		final boolean allowDuplicateNamespaces = Ripple.allowDuplicateNamespaces();
+	public LexiconUpdater( final Lexicon lexicon ) throws RippleException
+    {
+		final boolean override = Ripple.getProperties().getBoolean(
+                Ripple.PREFER_NEWEST_NAMESPACE_DEFINITIONS );
+		final boolean allowDuplicateNamespaces = Ripple.getProperties().getBoolean(
+                Ripple.ALLOW_DUPLICATE_NAMESPACES );
 
 		addSink = new RdfSink()
 		{

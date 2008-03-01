@@ -71,8 +71,50 @@ public class RippleProperties
 		
 		return format;
 	}
-		
-	private String getProperty( final String name ) throws RippleException
+
+    public Ripple.ExpressionOrder getExpressionOrder( final String name ) throws RippleException
+    {
+        String value = getProperty( name );
+
+        Ripple.ExpressionOrder order = Ripple.ExpressionOrder.find( value );
+
+        if ( null == order )
+        {
+            throw new RippleException( "unknown expression order: " + value );
+        }
+
+        return order;
+    }
+
+    public Ripple.EvaluationOrder getEvaluationOrder( final String name ) throws RippleException
+    {
+        String value = getProperty( name );
+
+        Ripple.EvaluationOrder order = Ripple.EvaluationOrder.find( value );
+
+        if ( null == order )
+        {
+            throw new RippleException( "unknown evaluation order: " + value );
+        }
+
+        return order;
+    }
+
+    public Ripple.EvaluationStyle getEvaluationStyle( final String name ) throws RippleException
+    {
+        String value = getProperty( name );
+
+        Ripple.EvaluationStyle style = Ripple.EvaluationStyle.find( value );
+
+        if ( null == style )
+        {
+            throw new RippleException( "unknown evaluation style: " + value );
+        }
+
+        return style;
+    }
+
+    private String getProperty( final String name ) throws RippleException
 	{
 		String s = props.getProperty( name );
 		

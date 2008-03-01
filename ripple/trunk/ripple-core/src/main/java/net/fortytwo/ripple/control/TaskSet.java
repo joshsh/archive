@@ -35,7 +35,7 @@ public class TaskSet
 		}
 	};
 
-	public void add( final Task task )
+	public void add( final Task task ) throws RippleException
 	{
 //System.out.println( "add( " + task + ")" );
 		synchronized ( completedTaskSink )

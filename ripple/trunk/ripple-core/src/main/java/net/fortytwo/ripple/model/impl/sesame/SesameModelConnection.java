@@ -55,8 +55,9 @@ public class SesameModelConnection implements ModelConnection
 	private RdfDiffSink listenerSink;
 	private ValueFactory valueFactory;
 	private String name = null;
-	
-	private TaskSet taskSet = new TaskSet();
+	private boolean useBlankNodes;
+
+    private TaskSet taskSet = new TaskSet();
 	
 	// TODO: For now, this is just a convenience which allows graph:assert and
 	//       graph:deny to manipulate the triple store without committing after
@@ -88,7 +89,9 @@ public class SesameModelConnection implements ModelConnection
 		{
 			model.openConnections.add( this );
 		}
-	}
+
+        this.useBlankNodes = Ripple.getProperties().getBoolean(Ripple.USE_BLANK_NODES);
+    }
 	
 	public String getName()
 	{
@@ -702,7 +705,8 @@ public class SesameModelConnection implements ModelConnection
 	public void exportNamespace( final String ns, final OutputStream os )
 		throws RippleException
 	{
-		SesameOutputAdapter adapter = RdfUtils.createOutputAdapter( os, Ripple.exportFormat() );
+		SesameOutputAdapter adapter = RdfUtils.createOutputAdapter(
+                os, Ripple.getProperties().getRdfFormat( Ripple.EXPORT_FORMAT ) );
 	
 		final Sink<Resource> bnodeClosure = new BNodeClosureFilter(
 			adapter.statementSink(), getSailConnection() );
@@ -810,7 +814,7 @@ public class SesameModelConnection implements ModelConnection
 
 	public Resource createBNode() throws RippleException
 	{
-		if ( Ripple.useBlankNodes() )
+		if ( useBlankNodes )
 		{
 			try
 			{
@@ -832,7 +836,7 @@ public class SesameModelConnection implements ModelConnection
 	
 	public Resource createBNode( final String id ) throws RippleException
 	{
-		if ( Ripple.useBlankNodes() )
+		if ( useBlankNodes )
 		{
 			try
 			{

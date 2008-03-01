@@ -36,14 +36,32 @@ public class HttpUtils
 
 	private static Map<String, Date> lastRequestByHost = new HashMap<String, Date>();
 
-	public static HttpClient createClient() throws RippleException
+    private static long courtesyInterval;
+    private static long connectionTimeout;
+    private static boolean initialized = false;
+
+    private static void initialize() throws RippleException
+    {
+        courtesyInterval = Ripple.getProperties().getLong(
+                Ripple.HTTPCONNECTION_COURTESY_INTERVAL );
+        connectionTimeout = Ripple.getProperties().getLong(
+                Ripple.HTTPCONNECTION_TIMEOUT );
+        initialized = true;
+    }
+
+    public static HttpClient createClient() throws RippleException
 	{
+        if ( !initialized )
+        {
+            initialize();
+        }
+
         HttpClient client = new HttpClient();
         client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER,
         		new DefaultHttpMethodRetryHandler() );
 //        client.getParams().setConnectionManagerTimeout( Ripple.httpConnectionTimeout() );
-        client.getParams().setParameter( "http.connection.timeout", (int) Ripple.httpConnectionTimeout() );
-        client.getParams().setParameter( "http.socket.timeout", (int) Ripple.httpConnectionTimeout() );
+        client.getParams().setParameter( "http.connection.timeout", (int) connectionTimeout );
+        client.getParams().setParameter( "http.socket.timeout", (int) connectionTimeout );
         return client;
 	}
 	
@@ -200,7 +218,12 @@ public class HttpUtils
      */
 	public static void registerMethod( final HttpMethod method ) throws RippleException
 	{
-		String host;
+        if ( !initialized )
+        {
+            initialize();
+        }
+
+        String host;
 		
 		try
 		{
@@ -217,7 +240,7 @@ public class HttpUtils
 		if ( null != host && host.length() > 0 )
 		{
 			Date now = new Date();
-			long delay = Ripple.httpConnectionCourtesyInterval();
+			long delay = courtesyInterval;
 	
 			Date lastRequest;
 			long w = 0;

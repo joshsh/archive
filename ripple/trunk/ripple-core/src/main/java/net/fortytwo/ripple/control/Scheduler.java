@@ -32,7 +32,7 @@ public final class Scheduler
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public static void add( final Task task, final Sink<Task> completedTaskSink )
+	public static void add( final Task task, final Sink<Task> completedTaskSink ) throws RippleException
 	{
 		if ( null == singleInstance )
 		{
@@ -42,20 +42,20 @@ public final class Scheduler
 		singleInstance.addPrivate( task, completedTaskSink );
 	}
 
-	public static void add( final Task task )
+	public static void add( final Task task ) throws RippleException
 	{
 		add( task, new NullSink<Task>() );
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private Scheduler()
+	private Scheduler() throws RippleException
 	{
 		taskQueue = new LinkedList<TaskItem>();
 		allRunnables = new LinkedList<WorkerRunnable>();
 		waitingRunnables = new LinkedList<WorkerRunnable>();
 
-		maxThreads = Ripple.maxWorkerThreads();
+		maxThreads = Ripple.getProperties().getInt(Ripple.MAX_WORKER_THREADS);
 	}
 
 	private void addPrivate( final Task task, final Sink<Task> completedTaskSink )

@@ -35,7 +35,7 @@ public class RippleException extends Exception
 
 	public void logError( final boolean includeStackTrace )
 	{
-System.out.println("LOGGING THE ERROR");
+//System.out.println("LOGGING THE ERROR");
 		String description;
 
 		if ( includeStackTrace )
@@ -81,7 +81,7 @@ System.out.println("LOGGING THE ERROR");
 
 		try
 		{
-System.out.println("REALLY LOGGING THE ERROR");
+//System.out.println("REALLY LOGGING THE ERROR");
 			LOGGER.error( description );
 		}
 

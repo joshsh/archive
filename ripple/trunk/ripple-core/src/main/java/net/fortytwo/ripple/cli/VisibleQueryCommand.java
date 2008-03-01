@@ -55,7 +55,8 @@ public class VisibleQueryCommand extends Command
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
-		boolean doBuffer = Ripple.bufferQueryResults();
+		boolean doBuffer = Ripple.getProperties().getBoolean(
+                Ripple.BUFFER_QUERY_RESULTS );
 
 		qe.getPrintStream().println( "" );
 

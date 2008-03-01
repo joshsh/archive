@@ -49,8 +49,8 @@ public class ThreadedInputStream extends InputStream
 		}
 	}
 
-	public void setEager( final boolean eager )
-	{
+	public void setEager( final boolean eager ) throws RippleException
+    {
 //System.out.println( "setEager( " + eager + " )" );
 		if ( eager )
 		{

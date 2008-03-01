@@ -53,14 +53,16 @@ public class WebClosure  // TODO: the name is a little misleading...
 
     private UriMap uriMap;
 	private ValueFactory valueFactory;
+    private boolean useBlankNodes;
 
-	private String acceptHeader = null;
+    private String acceptHeader = null;
 
-	public WebClosure( final UriMap uriMap, final ValueFactory vf )
+	public WebClosure( final UriMap uriMap, final ValueFactory vf ) throws RippleException
 	{
         this.uriMap = uriMap;
 		valueFactory = vf;
-	}
+        useBlankNodes = Ripple.getProperties().getBoolean(Ripple.USE_BLANK_NODES);
+    }
 
 	public String getAcceptHeader()
 	{
@@ -294,7 +296,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		RdfSink scp = new SingleContextPipe( resultSink, context, valueFactory );
 		
 		RdfBuffer results = new RdfBuffer( scp );
-		RDFHandler hdlr = new SesameInputAdapter( Ripple.useBlankNodes()
+		RDFHandler hdlr = new SesameInputAdapter( useBlankNodes
 				? results
 				: new BNodeToUriFilter( results, valueFactory ) );
 

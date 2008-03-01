@@ -32,7 +32,17 @@ public class DefinePrefixCmd extends Command
 		this.uri = uri;
 	}
 
-	public void execute( final QueryEngine qe, final ModelConnection mc )
+    public String getPrefix()
+    {
+        return prefix;
+    }
+
+    public UriAst getUri()
+    {
+        return uri;
+    }
+
+    public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		Collector<RippleList> sink = new Collector<RippleList>();

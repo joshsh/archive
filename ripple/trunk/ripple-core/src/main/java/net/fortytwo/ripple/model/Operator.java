@@ -28,7 +28,7 @@ public class Operator implements RippleValue
 	private StackRelation relation;
 	private RdfValue rdfEquivalent = null;
 
-	public Operator( final RdfValue pred )
+	public Operator( final RdfValue pred ) throws RippleException
 	{
 		relation = new RdfPredicateRelation( pred, Ripple.useInference() );
 	}

@@ -28,36 +28,41 @@ import org.openrdf.rio.RDFFormat;
 public final class Ripple
 {
 	public static final String URN_BNODE_PREFIX = "urn:bnode:";
-	
-	private static boolean initialized = false;
+
+    public static final String
+            BUFFER_QUERY_RESULTS                = "net.fortytwo.ripple.cli.bufferQueryResults",
+            RESOURCE_VIEW_SHOW_EDGES            = "net.fortytwo.ripple.cli.resourceViewShowEdges",
+            RESULT_VIEW_MAX_OBJECTS             = "net.fortytwo.ripple.cli.resultViewMaxObjects",
+            RESULT_VIEW_MAX_PREDICATES          = "net.fortytwo.ripple.cli.resultViewMaxPredicates",
+            JLINE_DEBUG_OUTPUT                  = "net.fortytwo.ripple.cli.jline.debugOutput",
+            RESULT_VIEW_PRINT_ENTIRE_STACK      = "net.fortytwo.ripple.cli.resultViewPrintEntireStack",
+            MAX_WORKER_THREADS                  = "net.fortytwo.ripple.control.maxWorkerThreads",
+            ALLOW_DUPLICATE_NAMESPACES          = "net.fortytwo.ripple.io.allowDuplicateNamespaces",
+            CACHE_FORMAT                        = "net.fortytwo.ripple.io.cacheFormat",
+            DEREFERENCE_URIS_BY_NAMESPACE       = "net.fortytwo.ripple.io.dereferenceUrisByNamespace",
+            EXPORT_FORMAT                       = "net.fortytwo.ripple.io.exportFormat",
+            PREFER_NEWEST_NAMESPACE_DEFINITIONS = "net.fortytwo.ripple.io.preferNewestNamespaceDefinitions",
+            REJECT_NONASSOCIATED_STATEMENTS     = "net.fortytwo.ripple.io.rejectNonAssociatedStatements",
+            HTTPCONNECTION_COURTESY_INTERVAL    = "net.fortytwo.ripple.io.httpConnectionCourtesyInterval",
+            HTTPCONNECTION_TIMEOUT              = "net.fortytwo.ripple.io.httpConnectionTimeout",
+            LIST_PADDING                        = "net.fortytwo.ripple.model.listPadding",
+            USE_INFERENCE                       = "net.fortytwo.ripple.model.useInference",
+            PULL_ENTIRE_MODEL                   = "net.fortytwo.ripple.model.lexicon.pullEntireModel",
+            USE_BLANK_NODES                     = "net.fortytwo.ripple.model.useBlankNodes",
+            MEMOIZE_LISTS_FROM_RDF              = "net.fortytwo.ripple.model.memoizeListsFromRdf",
+            DEFAULT_NAMESPACE                   = "net.fortytwo.ripple.query.defaultNamespace",
+            EVALUATION_ORDER                    = "net.fortytwo.ripple.query.evaluationOrder",
+            EVALUATION_STYLE                    = "net.fortytwo.ripple.query.evaluationStyle",
+            EXPRESSION_ASSOCIATIVITY            = "net.fortytwo.ripple.query.expressionAssociativity",
+            EXPRESSION_ORDER                    = "net.fortytwo.ripple.query.expressionOrder",
+            // TODO: .........
+            USE_ASYNCHRONOUS_QUERIES            = "";
+
+    private static boolean initialized = false;
 
 	private static RippleProperties properties;
 	
-	private static boolean allowDuplicateNamespaces;
-	private static RDFFormat cacheFormat;
-	private static boolean bufferQueryResults;
-	private static boolean resourceViewShowEdges;
-	private static int resultViewMaxObjects;
-	private static int resultViewMaxPredicates;
-	private static boolean resultViewPrintEntireStack;
-	private static String defaultNamespace;
-	private static boolean dereferenceUrisByNamespace;
-	private static EvaluationOrder evaluationOrder;
-	private static EvaluationStyle evaluationStyle;
-	private static RDFFormat exportFormat;
-	private static ExpressionAssociativity expressionAssociativity;
-	private static ExpressionOrder expressionOrder;
-	private static String jLineDebugOutput;
-	private static boolean listPadding;
-	private static int maxWorkerThreads;
-	private static boolean preferNewestNamespaceDefinitions;
-	private static boolean rejectNonAssociatedStatements;
-	private static long httpConnectionCourtesyInterval;
-	private static long httpConnectionTimeout;
-	private static boolean useInference;
-	private static boolean pullEntireModel;
-	private static boolean useBlankNodes;
-	private static boolean memoizeListsFromRdf;
+    // TODO: get rid of these
 	private static boolean useAsynchronousQueries = true;
 	
 // FIXME: quiet is never used
@@ -65,7 +70,7 @@ public final class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	// TODO
+    // TODO
 	public static boolean asynchronousQueries()
 	{
 		return useAsynchronousQueries; 
@@ -108,73 +113,8 @@ public final class Ripple
 		{
 			throw new RippleException( "unable to load default.properties" );
 		}
-		
-		properties = new RippleProperties( props );
 
-		// Command-line interface
-		bufferQueryResults = getBooleanProperty(
-			props, "net.fortytwo.ripple.cli.bufferQueryResults", false );
-		resourceViewShowEdges = getBooleanProperty(
-				props, "net.fortytwo.ripple.cli.resourceViewShowEdges", true );
-		resultViewMaxPredicates = getIntProperty(
-			props, "net.fortytwo.ripple.cli.resultViewMaxPredicates", 32 );
-		resultViewMaxObjects = getIntProperty(
-			props, "net.fortytwo.ripple.cli.resultViewMaxObjects", 32 );
-		resultViewPrintEntireStack = getBooleanProperty(
-			props, "net.fortytwo.ripple.cli.resultViewPrintEntireStack", true );
-		jLineDebugOutput = getStringProperty(
-			props, "net.fortytwo.ripple.cli.jline.debugOutput", null );
-
-		// Program control
-		maxWorkerThreads = getIntProperty(
-			props, "net.fortytwo.ripple.control.maxWorkerThreads", 50 );
-
-		// Input/Output
-		cacheFormat = getRdfFormatProperty(
-			props, "net.fortytwo.ripple.io.cacheFormat", RDFFormat.TRIG );
-		if ( cacheFormat != RDFFormat.TRIG && cacheFormat != RDFFormat.TRIX )
-		{
-			throw new RippleException( "cache must use one of the named graph formats (TriG or TriX)" );
-		}
-
-		exportFormat = getRdfFormatProperty(
-			props, "net.fortytwo.ripple.io.exportFormat", RDFFormat.RDFXML );
-		rejectNonAssociatedStatements = getBooleanProperty(
-			props, "net.fortytwo.ripple.io.rejectNonAssociatedStatements", true );
-		preferNewestNamespaceDefinitions = getBooleanProperty(
-			props, "net.fortytwo.ripple.io.preferNewestNamespaceDefinitions", false );
-		allowDuplicateNamespaces = getBooleanProperty(
-			props, "net.fortytwo.ripple.io.allowDuplicateNamespaces", false );
-		dereferenceUrisByNamespace = getBooleanProperty(
-			props, "net.fortytwo.ripple.io.dereferenceUrisByNamespace", false );
-		httpConnectionTimeout = getLongProperty(
-			props, "net.fortytwo.ripple.io.httpConnectionTimeout", 2000 );
-		httpConnectionCourtesyInterval = getLongProperty(
-			props, "net.fortytwo.ripple.io.httpConnectionCourtesyInterval", 500 );
-
-		// Model
-		useInference = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.useInference", false );
-		listPadding = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.listPadding", false );
-		pullEntireModel = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.lexicon.pullEntireModel", false );
-		useBlankNodes = getBooleanProperty(
-			props, "net.fortytwo.ripple.model.useBlankNodes", true );
-		memoizeListsFromRdf = getBooleanProperty(
-				props, "net.fortytwo.ripple.model.memoizeListsFromRdf", false );
-		
-		// Queries
-		defaultNamespace = getStringProperty(
-			props, "net.fortytwo.ripple.query.defaultNamespace", "" );
-		evaluationOrder = EvaluationOrder.find( getStringProperty(
-			props, "net.fortytwo.ripple.query.evaluationOrder", "lazy" ) );
-		evaluationStyle = EvaluationStyle.find( getStringProperty(
-			props, "net.fortytwo.ripple.query.evaluationStyle", "compositional" ) );
-		expressionAssociativity = ExpressionAssociativity.find( getStringProperty(
-			props, "net.fortytwo.ripple.query.expressionAssociativity", "left" ) );
-		expressionOrder = ExpressionOrder.find( getStringProperty(
-			props, "net.fortytwo.ripple.query.expressionOrder", "diagrammatic" ) );
+        properties = new RippleProperties( props );
 
 		initialized = true;
 	}
@@ -208,134 +148,10 @@ public final class Ripple
 
 	////////////////////////////////////////////////////////////////////////////
 
-	public static boolean allowDuplicateNamespaces()
+    // TODO: move this
+    public static boolean useInference() throws RippleException
 	{
-		return allowDuplicateNamespaces;
-	}
-
-	public static RDFFormat cacheFormat()
-	{
-		return cacheFormat;
-	}
-
-	public static boolean bufferQueryResults()
-	{
-		return bufferQueryResults;
-	}
-
-	public static boolean resourceViewShowEdges()
-	{
-		return resourceViewShowEdges;
-	}
-	
-	public static int resultViewMaxObjects()
-	{
-		return resultViewMaxObjects;
-	}
-
-	public static int resultViewMaxPredicates()
-	{
-		return resultViewMaxPredicates;
-	}
-
-	public static boolean resultViewPrintEntireStack()
-	{
-		return resultViewPrintEntireStack;
-	}
-
-	public static String defaultNamespace()
-	{
-		return defaultNamespace;
-	}
-
-	public static boolean dereferenceUrisByNamespace()
-	{
-		return dereferenceUrisByNamespace;
-	}
-
-	public static RDFFormat exportFormat()
-	{
-		return exportFormat;
-	}
-
-	public static ExpressionAssociativity expressionAssociativity()
-	{
-		return expressionAssociativity;
-	}
-
-	public static ExpressionOrder expressionOrder()
-	{
-		return expressionOrder;
-	}
-
-	public static EvaluationOrder evaluationOrder()
-	{
-		return evaluationOrder;
-	}
-
-	public static EvaluationStyle evaluationStyle()
-	{
-		return evaluationStyle;
-	}
-
-	public static String jlineDebugOutput()
-	{
-		return jLineDebugOutput;
-	}
-
-	public static boolean listPadding()
-	{
-		return listPadding;
-	}
-
-	public static int maxWorkerThreads()
-	{
-		return maxWorkerThreads;
-	}
-
-	public static boolean preferNewestNamespaceDefinitions()
-	{
-		return preferNewestNamespaceDefinitions;
-	}
-
-	public static boolean rejectNonAssociatedStatements()
-	{
-		return rejectNonAssociatedStatements;
-	}
-
-	public static void setCacheFormat( final RDFFormat format )
-	{
-		cacheFormat = format;
-	}
-
-	public static long httpConnectionCourtesyInterval()
-	{
-		return httpConnectionCourtesyInterval;
-	}
-
-	public static long httpConnectionTimeout()
-	{
-		return httpConnectionTimeout;
-	}
-
-	public static boolean useInference()
-	{
-		return useInference;
-	}
-	
-	public static boolean useBlankNodes()
-	{
-		return useBlankNodes;
-	}
-	
-	public static boolean memoizeListsFromRdf()
-	{
-		return memoizeListsFromRdf;
-	}
-	
-	public static boolean lexiconPullsEntireModel()
-	{
-		return pullEntireModel;
+		return properties.getBoolean( USE_INFERENCE );
 	}
 
 	////////////////////////////////////////////////////////////////////////////

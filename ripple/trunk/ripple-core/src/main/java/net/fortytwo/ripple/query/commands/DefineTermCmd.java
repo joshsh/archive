@@ -11,10 +11,10 @@ package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.UriAst;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.util.Collector;
@@ -23,20 +23,30 @@ import org.openrdf.model.URI;
 
 public class DefineTermCmd extends Command
 {
-	private ListAst ast;
-	private String term;
+	private ListAst list;
+	private String name;
 
-	public DefineTermCmd( final String term, final ListAst ast )
+	public DefineTermCmd( final String name, final ListAst list)
 	{
-		this.ast = ast;
-		this.term = term;
+		this.list = list;
+		this.name = name;
 	}
+        
+    public String getName()
+    {
+        return name;
+    }
 
-	public void execute( final QueryEngine qe, final ModelConnection mc )
+    public ListAst getList()
+    {
+        return list;
+    }
+
+    public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
 		Collector<RippleList> expressions = new Collector<RippleList>();
-		ast.evaluate( expressions, qe, mc );
+		list.evaluate( expressions, qe, mc );
 
 		if ( expressions.size() == 0 )
 		{
@@ -58,7 +68,7 @@ public class DefineTermCmd extends Command
 //System.out.println( "exprList = " + exprList );
 
 // TODO: check for collision with an existing URI
-			URI uri = mc.createUri( qe.getDefaultNamespace() + term );
+			URI uri = mc.createUri( qe.getDefaultNamespace() + name);
 			mc.copyStatements( expr, new RdfValue( uri ) );
 			mc.commit();
 

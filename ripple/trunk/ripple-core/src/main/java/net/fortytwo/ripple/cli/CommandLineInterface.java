@@ -146,7 +146,7 @@ private boolean lastQueryContinued = false;
 			}
 		};
 
-		RecognizerAdapter rc = new RecognizerAdapter(
+		RecognizerAdapter ra = new RecognizerAdapter(
 			querySink, continuingQuerySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
 		Sink<Exception> parserExceptionSink = new ParserExceptionSink(
@@ -154,19 +154,20 @@ private boolean lastQueryContinued = false;
 
 		// Pass input through a filter to watch for special byte sequences, and
 		// another draw input through it even when the interface is busy.
-		InputStream filter = new InputStreamEventFilter( is, rc );
+		InputStream filter = new InputStreamEventFilter( is, ra );
 		consoleReaderInput = new ThreadedInputStream( filter );
 
-		String jlineDebugOutput = Ripple.jlineDebugOutput();
+		String jlineDebugOutput = Ripple.getProperties().getString(
+                Ripple.JLINE_DEBUG_OUTPUT );
 
-		// Create reader.
+        // Create reader.
 		try
 		{
 			reader = new ConsoleReader( consoleReaderInput,
 				new OutputStreamWriter( qe.getPrintStream() ) );
 
 			// Set up JLine logging if asked for.
-			if ( null != jlineDebugOutput )
+			if ( null != jlineDebugOutput && 0 < jlineDebugOutput.length() )
 			{
 				reader.setDebug(
 					new PrintWriter(
@@ -196,7 +197,7 @@ System.out.println( "reader.getTerminal() = " + term );
 		updateCompletors();
 
 		// Create interpreter.
-		interpreter = new Interpreter( rc, writeIn, parserExceptionSink );
+		interpreter = new Interpreter( ra, writeIn, parserExceptionSink );
 	}
 
 	public void run() throws RippleException

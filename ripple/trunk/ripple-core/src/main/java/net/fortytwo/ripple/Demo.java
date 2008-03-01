@@ -31,6 +31,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -66,10 +67,12 @@ public final class Demo
 //net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
 		Sail baseSail = RdfUtils.createMemoryStoreSail();
+        RDFFormat cacheFormat = Ripple.getProperties().getRdfFormat(
+                Ripple.CACHE_FORMAT );
 
-		if ( null != store )
+        if ( null != store )
 		{
-			loadFromFile( baseSail, store );
+			loadFromFile( baseSail, store, cacheFormat );
 		}
 		
 		UriMap uriMap = new UriMap();
@@ -128,7 +131,7 @@ public final class Demo
 		// Save back to store.
 		if ( null != store )
 		{
-			saveToFile( baseSail, store );
+			saveToFile( baseSail, store, cacheFormat );
 		}
 
 		try
@@ -274,7 +277,7 @@ public final class Demo
 		System.exit( 0 );
 	}
 	
-	private static void loadFromFile( final Sail sail, final File file ) throws RippleException
+	private static void loadFromFile( final Sail sail, final File file, final RDFFormat format ) throws RippleException
 	{
 		LOGGER.info( "loading state from " + file );
 
@@ -293,7 +296,7 @@ public final class Demo
 		
 		try
 		{
-			RDFParser parser = Rio.createParser( Ripple.cacheFormat() );
+			RDFParser parser = Rio.createParser( format );
 			SailConnection sc = sail.getConnection();
 			parser.setRDFHandler( new SailInserter( sc ) );
 			parser.parse( in, "urn:nobaseuri#" );
@@ -317,7 +320,7 @@ public final class Demo
 		}
 	}
 	
-	private static void saveToFile( final Sail sail, final File file ) throws RippleException
+	private static void saveToFile( final Sail sail, final File file, final RDFFormat format ) throws RippleException
 	{
 		FileOutputStream out;
 		
@@ -331,7 +334,7 @@ public final class Demo
 			throw new RippleException( e );
 		}
 		
-		RDFHandler writer = Rio.createWriter( Ripple.cacheFormat(), out );
+		RDFHandler writer = Rio.createWriter( format, out );
 		SesameOutputAdapter adapter = new SesameOutputAdapter( writer );
 
 		try

@@ -13,6 +13,7 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.RippleProperties;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
@@ -31,13 +32,28 @@ public class TurtleView implements Sink<RippleList>
 	private ModelConnection mc;
 	private int index = 0;
 
-	public TurtleView( final RipplePrintStream printStream,
+    private boolean printEntireStack;
+    private boolean showEdges;
+    private int maxPredicates;
+    private int maxObjects;
+
+    public TurtleView( final RipplePrintStream printStream,
 						final ModelConnection mc )
 		throws RippleException
 	{
 		ps = printStream;
 		this.mc = mc;
-	}
+
+        RippleProperties props = Ripple.getProperties();
+        this.printEntireStack = props.getBoolean(
+                Ripple.RESULT_VIEW_PRINT_ENTIRE_STACK );
+        this.showEdges = props.getBoolean(
+                Ripple.RESOURCE_VIEW_SHOW_EDGES );
+        this.maxPredicates = props.getInt(
+                Ripple.RESULT_VIEW_MAX_PREDICATES );
+        this.maxObjects = props.getInt(
+                Ripple.RESULT_VIEW_MAX_OBJECTS );
+    }
 
 	public int size()
 	{
@@ -54,27 +70,25 @@ public class TurtleView implements Sink<RippleList>
 		RippleList list = mc.invert( stack );
 
 		ps.print( "rdf:_" + ++index + INDEX_SEPARATOR );
-		ps.print( Ripple.resultViewPrintEntireStack() ? list : first );
+		ps.print( printEntireStack ? list : first );
 		ps.print( "\n" );
 
-		if ( Ripple.resourceViewShowEdges() )
+		if ( showEdges )
 		{
 			Collector<RippleValue> predicates = new Collector<RippleValue>();
 			mc.findPredicates( first, predicates );
 	
-			int predCount = 0,
-				predlim = Ripple.resultViewMaxPredicates(),
-				objlim = Ripple.resultViewMaxObjects();
+			int predCount = 0;
 
 			for ( Iterator<RippleValue> predIter = predicates.iterator();
 				predIter.hasNext(); )
 			{
 				ps.print( INDENT );
 	
-				// Stop after predlim predicates have been displayed, unless
-				// predlim < 0, which indicates an unlimited number of
+				// Stop after maxPredicates predicates have been displayed, unless
+				// maxPredicates < 0, which indicates an unlimited number of
 				// predicates.
-				if ( predlim >= 0 && ++predCount > predlim )
+				if ( maxPredicates >= 0 && ++predCount > maxPredicates )
 				{
 					ps.print( "[...]\n" );
 					break;
@@ -95,10 +109,10 @@ public class TurtleView implements Sink<RippleList>
 					ps.print( INDENT );
 					ps.print( INDENT );
 	
-					// Stop after objlim objects have been displayed, unless
-					// objlim < 0, which indicates an unlimited number of
+					// Stop after maxObjects objects have been displayed, unless
+					// maxObjects < 0, which indicates an unlimited number of
 					// objects.
-					if ( objlim >= 0 && ++objCount > objlim )
+					if ( maxObjects >= 0 && ++objCount > maxObjects )
 					{
 						ps.print( "[...]\n" );
 						break;

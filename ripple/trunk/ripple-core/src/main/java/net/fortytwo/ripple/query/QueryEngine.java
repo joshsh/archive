@@ -54,20 +54,23 @@ public class QueryEngine
 //System.out.println("--- q");
 		initializeLexicon();
 //System.out.println("--- w");
-		
-		// Set the default namespace.
+
+        String defaultNamespace = Ripple.getProperties().getString(
+                Ripple.DEFAULT_NAMESPACE );
+
+        // Set the default namespace.
 		ModelConnection mc = getConnection( "Demo connection" );
 //System.out.println("--- w2");
 //System.out.println("--- Ripple.defaultNamespace() = " + Ripple.defaultNamespace());
 
-		mc.setNamespace( "", Ripple.defaultNamespace(), false );
+		mc.setNamespace( "", defaultNamespace, false );
 //System.out.println("--- w3");
 		mc.commit();
 //System.out.println("--- w4");
 		mc.close();
 //System.out.println("--- e");
 		
-		getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", Ripple.defaultNamespace() ) );
+		getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", defaultNamespace ) );
 //System.out.println("--- r");
 	}
 
@@ -198,7 +201,7 @@ public class QueryEngine
 
 		ModelConnection mc = getConnection();
 		
-		if ( Ripple.lexiconPullsEntireModel() )
+		if ( Ripple.getProperties().getBoolean( Ripple.PULL_ENTIRE_MODEL ) );
 		{
 			mc.getStatements( null, null, null, updater.adderSink().statementSink(), false );
 		}
