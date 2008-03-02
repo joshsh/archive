@@ -5,6 +5,7 @@ import net.fortytwo.ripple.Ripple;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.VirtualHost;
+import org.restlet.Router;
 import org.restlet.data.Protocol;
 
 import java.util.HashMap;
@@ -19,29 +20,42 @@ public class RippleServer
         return uriToSinkMap.get( uri );
     }
 
-    public static void main( final String[] args ) throws Exception
+    public static void putSink( final String uri, final RepresentationSink sink )
+    {
+        uriToSinkMap.put( uri, sink );
+    }
+
+    public static void main( final String[] args )
 	{
-		Ripple.initialize();
+        try {
+            Ripple.initialize();
 
-		// Create a new Restlet component and add a HTTP server connector to it
-		Component component = new Component();
-		component.getServers().add( Protocol.HTTP, 8182 );
-		VirtualHost host = component.getDefaultHost();
+            // Create a new Restlet component and add a HTTP server connector to it
+            Component component = new Component();
+            component.getServers().add( Protocol.HTTP, 8182 );
+            VirtualHost host = component.getDefaultHost();
 
-        RepresentationSink debugSink = new DebugSink();
-        uriToSinkMap.put( "debugSink", debugSink );
+            RepresentationSink debugSink = new DebugSink();
+            putSink( "debugSink", debugSink );
 
-        // For now, registered sinks take up only part of the URI space.
-        host.attach( "/registered/", Receiver.class );
+            //Router r = null;
+            //host.attach( "/seed", r );
 
-        // Some other temporary stuff, for experimental purposes
-		Restlet infoRestlet = new InfoRestlet();
-		host.attach( "/info/", infoRestlet);
-		Restlet pipeRestlet = new PipeRestlet();
-		host.attach( "/pipe/", pipeRestlet );
-               
-        // Now, let's start the component!
-		// Note that the HTTP server connector is also automatically started.
-		component.start();
-	}
+            // For now, registered sinks take up only part of the URI space.
+            host.attach( "/registered/", Receiver.class );
+
+            // Some other temporary stuff, for experimental purposes
+            Restlet infoRestlet = new InfoRestlet();
+            host.attach( "/info/", infoRestlet);
+            Restlet pipeRestlet = new PipeRestlet();
+            host.attach( "/pipe/", pipeRestlet );
+
+            // Now, let's start the component!
+            // Note that the HTTP server connector is also automatically started.
+            component.start();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.exit(1);
+        }
+    }
 }

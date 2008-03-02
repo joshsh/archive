@@ -61,11 +61,11 @@ public class PipeRestlet extends Restlet
 	@Override
 	public void handle( final Request request, final Response response )
 	{
-		Reference resourceRef = request.getResourceRef();
-		String uri = resourceRef.toString();
-
 		try
 		{
+            Reference resourceRef = request.getResourceRef();
+            String uri = resourceRef.toString();
+
 final StringBuilder message = new StringBuilder();
 			if ( !uriPattern.matcher( uri ).matches() )
 			{
@@ -113,7 +113,9 @@ response.setEntity( message.toString(), MediaType.TEXT_PLAIN );
 
 		catch ( Throwable t )
 		{
-			// Note: revealing the error message to the client might be a bad
+            new RippleException(t).logError( false );
+            
+            // Note: revealing the error message to the client might be a bad
 			//       idea.
 			response.setStatus( Status.CONNECTOR_ERROR_INTERNAL, t.toString() );
 			response.setEntity( "", MediaType.TEXT_PLAIN );
