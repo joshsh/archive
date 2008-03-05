@@ -8,7 +8,6 @@
 
 package net.fortytwo.ripple;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +72,7 @@ public final class Ripple
 	{
 	}
 
-	public static void initialize( final File... configFiles )
+	public static void initialize( final Properties... configuration )
 		throws RippleException
 	{
 		if ( initialized )
@@ -89,19 +88,22 @@ public final class Ripple
 		try
 		{
 			props.load( Ripple.class.getResourceAsStream( RIPPLE_PROPERTIES ) );
-			
-			for ( int i = 0; i < configFiles.length; i++ )
-			{
-				InputStream is = new FileInputStream( configFiles[i] );
-				props.load( is );
-				is.close();
-			}
 		}
 
 		catch ( IOException e )
 		{
 			throw new RippleException( "unable to load properties file " + RIPPLE_PROPERTIES );
 		}
+
+        for ( Properties p : configuration )
+        {
+            if ( null == p )
+            {
+                throw new IllegalArgumentException("null Properties");
+            }
+            
+            props.putAll(p);
+        }
 
         properties = new RippleProperties( props );
 

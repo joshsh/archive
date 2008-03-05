@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Properties;
 
 
 /**
@@ -244,7 +245,15 @@ public final class Demo
 			
 			else
 			{
-				Ripple.initialize( configFile );
+                Properties p = new Properties();
+
+                try {
+                    p.load(new FileInputStream(configFile));
+                } catch (IOException e) {
+                    throw new RippleException(e);
+                }
+
+                Ripple.initialize( p );
 			}
 		}
 
