@@ -23,7 +23,6 @@ public class Closure implements StackRelation
 		this.innerRelation = innerRelation;
 		this.argument = argument;
 		cachedArity = innerRelation.arity() - 1;
-//System.out.println( "" + this + ": (" + innerRelation + ", " + argument + ")" );
 	}
 
 	public int arity()
@@ -35,7 +34,7 @@ public class Closure implements StackRelation
 						final Sink<StackContext> sink )
 		throws RippleException
 	{
-		innerRelation.applyTo( arg.with( arg.getStack().push( argument ) ), sink );
+        innerRelation.applyTo( arg.with( arg.getStack().push( argument ) ), sink );
 	}
 	
 	public boolean isTransparent()

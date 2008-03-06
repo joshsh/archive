@@ -72,7 +72,7 @@ public class LibraryLoader extends ClassLoader
 		{
 			InputStream is
 				= net.fortytwo.ripple.Ripple.class.getResourceAsStream(
-					"extensions.txt" );
+					"libraries.txt" );
 			Collection<String> names = FileUtils.getLines( is );
 			is.close();
 

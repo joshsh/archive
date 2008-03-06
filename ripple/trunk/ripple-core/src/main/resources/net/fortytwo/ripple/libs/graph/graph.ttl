@@ -163,7 +163,6 @@ graph:links
 			rdfs:label "subj" ;
 			rpl:isTransparent true ]
 		) ;
-	rpl:returnType rdf:List ;
 	rdfs:label "links" ;
 	rdfs:comment "subj  =>  subj pred obj" ;
 	.

@@ -46,12 +46,12 @@ public class Links extends PrimitiveStackRelation
 		throws RippleException
 	{
 		final ModelConnection mc = arg.getModelConnection();
-		RippleList stack = arg.getStack();
+		final RippleList stack = arg.getStack();
 
 		RippleValue subj;
 
 		subj = stack.getFirst();
-		final RippleList rest = stack.getRest();
+		//final RippleList rest = stack.getRest();
 
 		final ModelBridge bridge = mc.getModel().getBridge();
 
@@ -59,15 +59,16 @@ public class Links extends PrimitiveStackRelation
 		{
 			public void put( final Statement st ) throws RippleException
 			{
-				RippleValue subj = bridge.get( st.getSubject() );
+				//RippleValue subj = bridge.get( st.getSubject() );
 				RippleValue pred = bridge.get( st.getPredicate() );
 				RippleValue obj = bridge.get( st.getObject() );
 
-				RippleList triple = mc.list( obj ).push( pred ).push( subj );
+				//RippleList triple = mc.list( obj ).push( pred ).push( subj );
 
-				sink.put( arg.with(
-					rest.push( triple ) ) );
-			}
+				//sink.put( arg.with(
+				//	rest.push( triple ) ) );
+                sink.put( arg.with( stack.push( pred ).push( obj ) ) );
+            }
 		};
 
 		mc.getStatements( subj.toRdf( mc ), null, null, stSink, Ripple.useInference() );
