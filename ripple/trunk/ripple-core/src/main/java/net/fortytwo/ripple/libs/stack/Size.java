@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a list and produces the length of the list as
  * an integer.
  */
-public class Size extends PrimitiveStackRelation
+public class Size extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

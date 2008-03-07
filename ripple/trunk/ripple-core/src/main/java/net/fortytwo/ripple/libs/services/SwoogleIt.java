@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.model.RdfValue;
@@ -37,7 +37,7 @@ import java.net.URL;
  * and a Swoogle key (for instance, "demo") and produces a resource containing
  * Swoogle search results.
  */
-public class SwoogleIt extends PrimitiveStackRelation
+public class SwoogleIt extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.libs.stack.StackLibrary;
  * A primitive which consumes two items and produces a Boolean value of true if
  * they are equal according to their data types, otherwise false.
  */
-public class Equal extends PrimitiveStackRelation
+public class Equal extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

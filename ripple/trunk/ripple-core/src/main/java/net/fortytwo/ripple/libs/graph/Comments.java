@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfSink;
@@ -30,7 +30,7 @@ import org.openrdf.model.Statement;
  * the comments matched in the corresponding RDF document. Note: with the
  * current Sesame bindings, nothing is actually matched.
  */
-public class Comments extends PrimitiveStackRelation
+public class Comments extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which activates ("applies") the topmost item on the stack one or
  * more times.
  */
-public class RangeApply extends PrimitiveStackRelation
+public class RangeApply extends PrimitiveStackMapping
 {
 	// TODO: arity should really be 2
 	private static final int ARITY = 3;

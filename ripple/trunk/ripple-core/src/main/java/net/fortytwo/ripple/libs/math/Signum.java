@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.math;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericValue;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * possible values: -1 if the number is less than 0, 0 if the number is equal to
  * 0, and 1 if the number is greater than 0.
  */
-public class Signum extends PrimitiveStackRelation
+public class Signum extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.math;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericValue;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a number representing an angle in radians and
  * produces its sine.
  */
-public class Sin extends PrimitiveStackRelation
+public class Sin extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

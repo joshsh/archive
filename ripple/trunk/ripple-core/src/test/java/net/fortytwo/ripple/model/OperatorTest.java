@@ -59,63 +59,63 @@ public class OperatorTest extends RippleTestCase
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof ListDequotation );
+			assertTrue( ops.iterator().next().getMapping() instanceof ListDequotation );
 			
 			// the nil RippleList --> ListDequotation
 			arg = RippleList.NIL;
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof ListDequotation );
+			assertTrue( ops.iterator().next().getMapping() instanceof ListDequotation );
 			
 			// rdf:nil --> ListDequotation
 			arg = new RdfValue( RDF.NIL );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof ListDequotation );
+			assertTrue( ops.iterator().next().getMapping() instanceof ListDequotation );
 			
 			// an rdf:List --> ListDequotation
 			arg = new RdfValue( mc.createUri( "urn:test.CreateOperatorTest#simpleList" ) );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof ListDequotation );
+			assertTrue( ops.iterator().next().getMapping() instanceof ListDequotation );
 			
 			// a branching rdf:List --> multiple ListDequotations
 			arg = new RdfValue( mc.createUri( "urn:test.CreateOperatorTest#firstBranchingList" ) );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 2, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof ListDequotation );
+			assertTrue( ops.iterator().next().getMapping() instanceof ListDequotation );
 			
 			// a PrimitiveStackRelation --> the same PrimitiveStackRelation
 			arg = new Dup();
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof Dup );
+			assertTrue( ops.iterator().next().getMapping() instanceof Dup );
 			
 			// an rdf:Property --> RdfPredicateRelation
 			arg = new RdfValue( RDF.TYPE );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof RdfPredicateRelation );
+			assertTrue( ops.iterator().next().getMapping() instanceof RdfPredicateMapping);
 
 			// a non-property RdfValue which is not anything else --> RdfPredicateRelation
 			arg = new RdfValue( RDF.BAG );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof RdfPredicateRelation );
+			assertTrue( ops.iterator().next().getMapping() instanceof RdfPredicateMapping);
 			
 			// anything else --> NullFilter
 			arg = mc.value( 42 );
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getRelation() instanceof NullFilter );
+			assertTrue( ops.iterator().next().getMapping() instanceof NullFilter );
 			
 			mc.close();
 		}

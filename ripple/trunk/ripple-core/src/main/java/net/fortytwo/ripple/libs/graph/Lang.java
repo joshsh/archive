@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -23,7 +23,7 @@ import org.openrdf.model.Literal;
  * A primitive which consumes a plain literal value and produces its language
  * tag (or an empty string if the literal has no language tag).
  */
-public class Lang extends PrimitiveStackRelation
+public class Lang extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

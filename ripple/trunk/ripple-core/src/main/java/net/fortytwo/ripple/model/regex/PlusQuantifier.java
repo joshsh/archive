@@ -2,7 +2,7 @@ package net.fortytwo.ripple.model.regex;
 
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.regex.StarQuantifier;
@@ -12,7 +12,7 @@ import net.fortytwo.ripple.model.regex.StarQuantifier;
  * Date: Feb 14, 2008
  * Time: 4:31:15 PM
  */
-public class PlusQuantifier implements StackRelation
+public class PlusQuantifier implements StackMapping
 {
 	private Operator innerOperator;
 
@@ -29,7 +29,7 @@ public class PlusQuantifier implements StackRelation
 
 	public boolean isTransparent()
 	{
-		return innerOperator.getRelation().isTransparent();
+		return innerOperator.getMapping().isTransparent();
 	}
 
 	public void applyTo( final StackContext arg,

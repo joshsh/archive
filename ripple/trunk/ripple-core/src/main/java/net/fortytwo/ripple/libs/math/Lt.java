@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * true if x is less than y according to the natural ordering of x, otherwise
  * false.
  */
-public class Lt extends PrimitiveStackRelation
+public class Lt extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

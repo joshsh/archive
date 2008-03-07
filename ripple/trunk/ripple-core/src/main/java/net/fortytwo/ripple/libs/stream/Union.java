@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.Sink;
 /**
  * A filter which consumes two items and produces each item in its own stack.
  */
-public class Union extends PrimitiveStackRelation
+public class Union extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

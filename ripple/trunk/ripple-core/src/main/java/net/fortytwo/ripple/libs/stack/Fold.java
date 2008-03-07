@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * value.  For instance, <code>(1 2 3) 0 add /fold</code> yields 0 + 1 + 2 + 3
  * = 6.
  */
-public class Fold extends PrimitiveStackRelation
+public class Fold extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

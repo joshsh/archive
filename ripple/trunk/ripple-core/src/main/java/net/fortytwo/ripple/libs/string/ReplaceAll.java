@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * substring, then produces the string obtained by replacing all occurrences of the
  * regular expression in the original string with the replacement substring.
  */
-public class ReplaceAll extends PrimitiveStackRelation
+public class ReplaceAll extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * produces the substring between the first index (inclusive) and the second
  * index (exclusive).
  */
-public class Substring extends PrimitiveStackRelation
+public class Substring extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

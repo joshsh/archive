@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.libs.stack.StackLibrary;
  * Boolean value of true if the regular expression matches the string, otherwise
  * false.
  */
-public class Matches extends PrimitiveStackRelation
+public class Matches extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

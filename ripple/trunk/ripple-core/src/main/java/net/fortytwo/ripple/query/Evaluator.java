@@ -9,12 +9,12 @@
 
 package net.fortytwo.ripple.query;
 
-import net.fortytwo.ripple.model.BinaryRelation;
+import net.fortytwo.ripple.model.Mapping;
 
 /**
 *  A function which reduces arbitrary expressions to a particular normal form.
 */
-public abstract class Evaluator<D, R> implements BinaryRelation<D, R>
+public abstract class Evaluator<D, R> implements Mapping<D, R>
 {
 	/*public int arity()
 	{

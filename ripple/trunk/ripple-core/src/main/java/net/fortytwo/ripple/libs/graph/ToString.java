@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * this is the URI as a string.  For blank nodes, this is the identifier of
  * the node.
  */
-public class ToString extends PrimitiveStackRelation
+public class ToString extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

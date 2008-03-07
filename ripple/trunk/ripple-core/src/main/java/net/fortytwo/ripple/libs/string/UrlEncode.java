@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.StringUtils;
  * A primitive which consumes a string and produces its
  * application/x-www-form-urlencoded equivalent.
  */
-public class UrlEncode extends PrimitiveStackRelation
+public class UrlEncode extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a string, maps its characters to upper case, and
  * produces the result.
  */
-public class ToUpperCase extends PrimitiveStackRelation
+public class ToUpperCase extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

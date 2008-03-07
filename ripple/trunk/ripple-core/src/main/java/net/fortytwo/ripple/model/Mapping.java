@@ -14,7 +14,7 @@ import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
 
-public interface BinaryRelation<D, R>
+public interface Mapping<D, R>
 {
 	/**
 	 * @return whether this function is referentially transparent w.r.t. all of its

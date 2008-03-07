@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * then produces an active copy of t if b is true, otherwise an active copy of
  * f.
  */
-public class Branch extends PrimitiveStackRelation
+public class Branch extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

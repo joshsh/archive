@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a number n and produces a filter which transmits
  * at most n stacks.
  */
-public class Limit extends PrimitiveStackRelation
+public class Limit extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
@@ -58,7 +58,7 @@ public class Limit extends PrimitiveStackRelation
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class LimitInner implements StackRelation
+	protected class LimitInner implements StackMapping
 	{
 		private long count, limit;
 

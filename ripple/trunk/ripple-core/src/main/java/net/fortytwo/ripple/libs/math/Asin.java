@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.math;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericValue;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a number and produces its arc sine (if defined),
  * in the range of -pi/2 through pi/2.
  */
-public class Asin extends PrimitiveStackRelation
+public class Asin extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

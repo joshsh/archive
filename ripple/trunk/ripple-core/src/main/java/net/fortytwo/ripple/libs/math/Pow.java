@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.math;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericValue;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes two numbers x and y and produces the number x to
  * the power of y.
  */
-public class Pow extends PrimitiveStackRelation
+public class Pow extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

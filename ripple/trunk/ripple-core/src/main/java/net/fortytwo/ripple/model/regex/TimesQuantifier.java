@@ -2,7 +2,7 @@ package net.fortytwo.ripple.model.regex;
 
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.Operator;
@@ -12,7 +12,7 @@ import net.fortytwo.ripple.model.Operator;
  * Date: Jan 15, 2008
  * Time: 9:24:59 PM
  */
-public class TimesQuantifier implements StackRelation
+public class TimesQuantifier implements StackMapping
 {
 	private Operator innerOperator;
 	private int min, max;
@@ -32,7 +32,7 @@ public class TimesQuantifier implements StackRelation
 
 	public boolean isTransparent()
 	{
-		return innerOperator.getRelation().isTransparent();
+		return innerOperator.getMapping().isTransparent();
 	}
 
 	public void applyTo( final StackContext arg,

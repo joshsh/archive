@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
 /**
  * A primitive which activates the second-to-topmost item on the stack.
  */
-public class Dip extends PrimitiveStackRelation
+public class Dip extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * dependent on the history of query evaluation than forward traversal, which is
  * built into Ripple's query model.
  */
-public class Back extends PrimitiveStackRelation
+public class Back extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

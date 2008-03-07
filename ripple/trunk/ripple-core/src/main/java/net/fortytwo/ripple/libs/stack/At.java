@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * Consumes a list and an index n and produces the nth item in the list, where
  * the first item in the list has an index of 1.
  */
-public class At extends PrimitiveStackRelation
+public class At extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

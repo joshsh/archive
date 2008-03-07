@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.Sink;
  * copies of the item to the stack.  This has the effect of applying the
  * filter "n times" to the remainder of the stack.
  */
-public class TimesApply extends PrimitiveStackRelation
+public class TimesApply extends PrimitiveStackMapping
 {
 	// TODO: arity should really be 1
 	private static final int ARITY = 2;

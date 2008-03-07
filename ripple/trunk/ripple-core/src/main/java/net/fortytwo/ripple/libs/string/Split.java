@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * For instance <code>... "one, two,three" ",[ ]*" /split</code> yields
  * <code>... ("one" "two" "three")</code>
  */
-public class Split extends PrimitiveStackRelation
+public class Split extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

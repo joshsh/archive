@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes two Boolean values and produces the result of
  * their logical conjunction.
  */
-public class And extends PrimitiveStackRelation
+public class And extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

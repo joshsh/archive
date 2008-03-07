@@ -12,10 +12,10 @@ package net.fortytwo.ripple.query;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.util.Sink;
 
-public class ListDequotation implements StackRelation
+public class ListDequotation implements StackMapping
 {
 	private RippleList list;
 

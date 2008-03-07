@@ -9,13 +9,13 @@ import net.fortytwo.ripple.Ripple;
  * Date: Feb 7, 2008
  * Time: 10:29:26 AM
  */
-public class RdfPredicateRelation implements StackRelation
+public class RdfPredicateMapping implements StackMapping
 {
 	private RippleValue predicate;
 	private boolean includeInferred;
 	private RippleValue inContext;
 
-	public RdfPredicateRelation( final RippleValue pred, final boolean includeInferred )
+	public RdfPredicateMapping( final RippleValue pred, final boolean includeInferred )
 	{
 		predicate = pred;
 		// FIXME

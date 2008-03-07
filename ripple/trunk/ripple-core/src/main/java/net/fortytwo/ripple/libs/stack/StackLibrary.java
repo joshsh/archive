@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.stack;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.util.UriMap;
 
@@ -26,7 +26,7 @@ public class StackLibrary extends Library
 
 	// Some special values.
 	private static RippleValue branchVal, trueVal, falseVal;
-	private static PrimitiveStackRelation optApplyVal, starApplyVal, plusApplyVal, timesApplyVal, rangeApplyVal;
+	private static PrimitiveStackMapping optApplyVal, starApplyVal, plusApplyVal, timesApplyVal, rangeApplyVal;
 
 	public void load( final UriMap uf, final ModelConnection mc )
 		throws RippleException
@@ -107,27 +107,27 @@ public class StackLibrary extends Library
 		return falseVal;
 	}
 
-	public static PrimitiveStackRelation getOptApplyValue()
+	public static PrimitiveStackMapping getOptApplyValue()
 	{
 		return optApplyVal;
 	}
 
-	public static PrimitiveStackRelation getStarApplyValue()
+	public static PrimitiveStackMapping getStarApplyValue()
 	{
 		return starApplyVal;
 	}
 
-	public static PrimitiveStackRelation getPlusApplyValue()
+	public static PrimitiveStackMapping getPlusApplyValue()
 	{
 		return plusApplyVal;
 	}
 
-	public static PrimitiveStackRelation getTimesApplyValue()
+	public static PrimitiveStackMapping getTimesApplyValue()
 	{
 		return timesApplyVal;
 	}
 
-	public static PrimitiveStackRelation getRangeApplyValue()
+	public static PrimitiveStackMapping getRangeApplyValue()
 	{
 		return rangeApplyVal;
 	}

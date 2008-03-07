@@ -12,8 +12,8 @@ package net.fortytwo.ripple.libs.graph;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
-import net.fortytwo.ripple.model.RdfPredicateRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
+import net.fortytwo.ripple.model.RdfPredicateMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
 /**
  * A primitive which follows inferred forward triples from a resource.
  */
-public class Infer extends PrimitiveStackRelation
+public class Infer extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
@@ -51,7 +51,7 @@ public class Infer extends PrimitiveStackRelation
 		stack = stack.getRest();
 
 		sink.put( arg.with(
-				stack.push( new Operator( new RdfPredicateRelation( pred.toRdf( mc ), true ) ) ) ) );
+				stack.push( new Operator( new RdfPredicateMapping( pred.toRdf( mc ), true ) ) ) ) );
 	}
 }
 

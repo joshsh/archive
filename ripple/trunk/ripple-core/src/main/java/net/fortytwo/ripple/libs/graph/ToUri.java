@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -22,7 +22,7 @@ import org.openrdf.model.URI;
  * A primitive which consumes a literal value and produces the resource
  * identified by the corresponding URI (if any).
  */
-public class ToUri extends PrimitiveStackRelation
+public class ToUri extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

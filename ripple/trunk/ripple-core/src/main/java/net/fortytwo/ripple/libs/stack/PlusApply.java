@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.stack;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.regex.PlusQuantifier;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which activates ("applies") the topmost item on the stack one or
  * more times.
  */
-public class PlusApply extends PrimitiveStackRelation
+public class PlusApply extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

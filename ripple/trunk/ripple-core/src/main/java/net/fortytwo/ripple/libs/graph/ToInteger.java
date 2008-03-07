@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
  * A primitive which consumes a literal value and produces its xsd:integer
  * equivalent (if any).
  */
-public class ToInteger extends PrimitiveStackRelation
+public class ToInteger extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

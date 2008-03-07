@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.util.Sink;
  * description of the resource is needed, Ripple will request a new
  * representation.
  */
-public class Forget extends PrimitiveStackRelation
+public class Forget extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

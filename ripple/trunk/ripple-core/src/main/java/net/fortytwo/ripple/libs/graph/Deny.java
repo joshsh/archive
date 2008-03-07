@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a subject, predicate and object, then produces the
  * subject after removing the corresponding RDF statement from the triple store.
  */
-public class Deny extends PrimitiveStackRelation
+public class Deny extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

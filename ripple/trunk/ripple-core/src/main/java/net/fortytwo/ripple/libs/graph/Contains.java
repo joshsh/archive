@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes an RDF container and produces all items in the
  * container.
  */
-public class Contains extends PrimitiveStackRelation
+public class Contains extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

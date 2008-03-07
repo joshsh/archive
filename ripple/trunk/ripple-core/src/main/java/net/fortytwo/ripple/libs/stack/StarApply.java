@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -24,7 +24,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which optionally activates ("applies") the topmost item on the
  * stack.
  */
-public class StarApply extends PrimitiveStackRelation
+public class StarApply extends PrimitiveStackMapping
 {
 	// TODO: arity should really be 1, but this is a nice temporary solution
 	private static final int ARITY = 2;

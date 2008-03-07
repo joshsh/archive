@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -18,7 +18,7 @@ import net.fortytwo.ripple.util.Sink;
 /**
  * A primitive which removes the topmost item from the stack.
  */
-public class Pop extends PrimitiveStackRelation
+public class Pop extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

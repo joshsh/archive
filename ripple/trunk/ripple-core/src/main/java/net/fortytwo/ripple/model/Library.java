@@ -12,7 +12,7 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UriMap;
@@ -29,16 +29,16 @@ public abstract class Library
 	public abstract void load( UriMap uf, ModelConnection mc )
 		throws RippleException;
 
-	protected PrimitiveStackRelation registerPrimitive( final Class c,
+	protected PrimitiveStackMapping registerPrimitive( final Class c,
 										final String name,
 										final ModelConnection mc )
 		throws RippleException
 	{
-		PrimitiveStackRelation prim;
+		PrimitiveStackMapping prim;
 
 		try
 		{
-			prim = (PrimitiveStackRelation) c.newInstance();
+			prim = (PrimitiveStackMapping) c.newInstance();
 			prim.setRdfEquivalent( new RdfValue( mc.createUri( name ) ), mc );
 		}
 
@@ -53,7 +53,7 @@ public abstract class Library
 		}
 
 		final ModelBridge bridge = mc.getModel().getBridge();
-		final PrimitiveStackRelation primFinal = prim;
+		final PrimitiveStackMapping primFinal = prim;
 
 		Sink<RippleValue> aliasSink = new Sink<RippleValue>()
 		{

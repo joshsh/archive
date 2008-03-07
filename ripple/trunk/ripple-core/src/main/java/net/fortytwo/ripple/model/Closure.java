@@ -12,13 +12,13 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.RippleException;
 
-public class Closure implements StackRelation
+public class Closure implements StackMapping
 {
-	private StackRelation innerRelation;
+	private StackMapping innerRelation;
 	private RippleValue argument;
 	private int cachedArity;
 
-	public Closure( final StackRelation innerRelation, final RippleValue argument )
+	public Closure( final StackMapping innerRelation, final RippleValue argument )
 	{
 		this.innerRelation = innerRelation;
 		this.argument = argument;

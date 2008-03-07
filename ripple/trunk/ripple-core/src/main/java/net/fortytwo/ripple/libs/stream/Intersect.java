@@ -11,9 +11,9 @@ package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -27,7 +27,7 @@ import net.fortytwo.ripple.util.Sink;
  * like the identity filter otherwise, making a stream of stacks into a set of
  * stacks.
  */
-public class Intersect extends PrimitiveStackRelation
+public class Intersect extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 	private static final String MEMO = "memo";
@@ -63,7 +63,7 @@ public class Intersect extends PrimitiveStackRelation
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class IntersectInner implements StackRelation
+	protected class IntersectInner implements StackMapping
 	{
 		private ListMemoizer<RippleValue, String> trueMemoizer = null;
 		private ListMemoizer<RippleValue, String> falseMemoizer = null;

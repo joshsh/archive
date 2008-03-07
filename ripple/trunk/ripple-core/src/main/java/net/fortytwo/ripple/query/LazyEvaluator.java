@@ -11,7 +11,7 @@ package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Closure;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
@@ -28,17 +28,17 @@ public class LazyEvaluator extends StackEvaluator
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class RelationSink implements Sink<StackContext>
+	protected class MappingSink implements Sink<StackContext>
 	{
-		private StackRelation relation;
+		private StackMapping mapping;
 		private Sink<StackContext> sink;
 
-		public RelationSink( final StackRelation relation, final Sink<StackContext> sink )
+		public MappingSink( final StackMapping mapping, final Sink<StackContext> sink )
 		{
-			this.relation = relation;
+			this.mapping = mapping;
 			this.sink = sink;
-//System.out.println( this + "( " + relation + ", " + sink + ")" );
-//System.out.println( "relation.arity() = " + relation.arity() );
+//System.out.println( this + "( " + mapping + ", " + sink + ")" );
+//System.out.println( "mapping.arity() = " + mapping.arity() );
 		}
 
 		public void put( final StackContext arg ) throws RippleException
@@ -50,9 +50,9 @@ public class LazyEvaluator extends StackEvaluator
 
 //System.out.println( this + ".put( " + stack + " )" );
 //System.out.println( "   first = " + stack.getFirst() );
-			if ( relation.arity() == 1 )
+			if ( mapping.arity() == 1 )
 			{
-				relation.applyTo( arg, sink );
+				mapping.applyTo( arg, sink );
 			}
 
 			else
@@ -61,7 +61,7 @@ public class LazyEvaluator extends StackEvaluator
 				RippleValue first = stack.getFirst();
 				RippleList rest = stack.getRest();
 
-				Closure c = new Closure( relation, first );
+				Closure c = new Closure(mapping, first );
 
 				sink.put( arg.with( rest.push( new Operator( c ) ) ) );
 			}
@@ -101,7 +101,7 @@ public class LazyEvaluator extends StackEvaluator
 				RippleList rest = stack.getRest();
 //LOGGER.info( "   rest = " + rest );
 
-				StackRelation f = ( (Operator) first ).getRelation();
+				StackMapping f = ( (Operator) first ).getMapping();
 //LOGGER.info( "   f = " + f );
 //LOGGER.info( "   f.arity() = " + f.arity() );
 
@@ -127,7 +127,7 @@ public class LazyEvaluator extends StackEvaluator
 					else
 					{
 						( new EvaluatorSink(
-							new RelationSink( f, this ) ) ).put( arg.with( rest ) );
+							new MappingSink( f, this ) ) ).put( arg.with( rest ) );
 					}
 				}
 			}

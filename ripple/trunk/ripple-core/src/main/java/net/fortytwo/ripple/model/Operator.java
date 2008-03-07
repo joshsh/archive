@@ -19,40 +19,39 @@ import org.openrdf.model.vocabulary.RDF;
 
 public class Operator implements RippleValue
 {
-	public static final Operator
-		OP = new Operator( new Op() );
+	public static final Operator OP = new Operator( new Op() );
 
 	private static final RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
 	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
-	private StackRelation relation;
+	private StackMapping mapping;
 	private RdfValue rdfEquivalent = null;
 
 	public Operator( final RdfValue pred ) throws RippleException
 	{
-		relation = new RdfPredicateRelation( pred, Ripple.useInference() );
+		mapping = new RdfPredicateMapping( pred, Ripple.useInference() );
 	}
 
-	public Operator( final StackRelation relation )
+	public Operator( final StackMapping mapping )
 	{
 //System.out.println( "Operator[" + this + "](" + function + ")" );
-		this.relation = relation;
+		this.mapping = mapping;
 	}
 
 	public Operator( final RippleList list )
 	{
 //System.out.println( "Operator[" + this + "](" + list + ")" );
-		relation = new ListDequotation( list );
+		mapping = new ListDequotation( list );
 	}
 
-	public StackRelation getRelation()
+	public StackMapping getMapping()
 	{
-		return relation;
+		return mapping;
 	}
 
 	public String toString()
 	{
-		return "Operator(" + relation + ")";
+		return "Operator(" + mapping + ")";
 	}
 
 	public void printTo( final RipplePrintStream p )
@@ -101,9 +100,9 @@ return rdfEquivalent;
 		throws RippleException
 	{
 		// A function becomes active.
-		if ( v instanceof StackRelation )
+		if ( v instanceof StackMapping)
 		{
-			opSink.put( new Operator( (StackRelation) v ) );
+			opSink.put( new Operator( (StackMapping) v ) );
 			return;
 		}
 

@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which pushes a copy of the second-to-topmost item on the stack to
  * the head of the stack.
  */
-public class Dupd extends PrimitiveStackRelation
+public class Dupd extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

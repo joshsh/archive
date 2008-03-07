@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.StackRelation;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.util.Sink;
  * filter with the given arity.  This forces the remainder of the stack to be
  * reduced to the corresponding depth.
  */
-public class Ary extends PrimitiveStackRelation
+public class Ary extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
@@ -38,7 +38,7 @@ public class Ary extends PrimitiveStackRelation
 		return ARITY;
 	}
 
-	private class NaryId implements StackRelation
+	private class NaryId implements StackMapping
 	{
 		private int n;
 

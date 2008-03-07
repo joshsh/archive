@@ -11,10 +11,8 @@ package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
-import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
@@ -32,7 +30,7 @@ import org.openrdf.model.Statement;
  * (subject, predicate, object) for each RDF triple in the corresponding
  * Semantic Web document.
  */
-public class Triples extends PrimitiveStackRelation
+public class Triples extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

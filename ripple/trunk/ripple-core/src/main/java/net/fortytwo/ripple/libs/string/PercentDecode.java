@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -21,7 +21,7 @@ import net.fortytwo.ripple.util.StringUtils;
  * A primitive which consumes an  (RFC 3986) percent-encoded string and produces
  * its decoded equivalent.
  */
-public class PercentDecode extends PrimitiveStackRelation
+public class PercentDecode extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

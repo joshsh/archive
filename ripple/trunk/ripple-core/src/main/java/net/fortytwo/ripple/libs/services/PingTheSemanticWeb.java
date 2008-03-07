@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -23,7 +23,7 @@ import org.jdom.input.SAXBuilder;
  * request to the PingTheSemanticWeb service, producing all results as
  * information resources.
  */
-public class PingTheSemanticWeb extends PrimitiveStackRelation
+public class PingTheSemanticWeb extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 	private static final String MSG = "Note: the PingTheSemanticWeb API has just (as of Aug 27, 2007) undergone major changes.  Check the latest release of Ripple for an updated pingTheSemanticWeb primitive!";

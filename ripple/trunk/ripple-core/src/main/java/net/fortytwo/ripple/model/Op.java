@@ -13,7 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.util.Sink;
 
-public class Op implements StackRelation, RippleValue
+public class Op implements StackMapping, RippleValue
 {
 	private final static int ARITY = 1;
 

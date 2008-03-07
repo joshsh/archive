@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.graph;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelBridge;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -25,7 +25,7 @@ import org.openrdf.model.Statement;
  * A primitive which consumes a resource and produces a three-element list
  * (subject, resource, object) for each statement about the resource.
  */
-public class Links extends PrimitiveStackRelation
+public class Links extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

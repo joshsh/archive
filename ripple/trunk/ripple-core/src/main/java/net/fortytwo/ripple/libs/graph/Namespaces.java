@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfSink;
@@ -30,7 +30,7 @@ import org.openrdf.model.Statement;
  * list (prefix name) for each namespace defined in the corresponding Semantic
  * Web document.
  */
-public class Namespaces extends PrimitiveStackRelation
+public class Namespaces extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

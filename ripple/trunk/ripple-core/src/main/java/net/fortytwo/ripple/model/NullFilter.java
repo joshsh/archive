@@ -15,7 +15,7 @@ import net.fortytwo.ripple.util.Sink;
 /**
  *  A filter which yields no results, regardless of its inputs.
  */
-public class NullFilter implements StackRelation
+public class NullFilter implements StackMapping
 {
 	public int arity()
 	{

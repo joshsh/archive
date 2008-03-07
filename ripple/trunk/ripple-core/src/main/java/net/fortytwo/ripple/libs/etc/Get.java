@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.etc;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
  * A primitive which consumes an information resource, issues a GET request for
  * the resource, then produces the retrieved data as a string.
  */
-public class Get extends PrimitiveStackRelation
+public class Get extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

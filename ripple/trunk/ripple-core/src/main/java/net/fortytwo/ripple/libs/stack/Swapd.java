@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -19,7 +19,7 @@ import net.fortytwo.ripple.util.Sink;
 /**
  * A primitive which swaps the second- and third-to-topmost items on the stack.
  */
-public class Swapd extends PrimitiveStackRelation
+public class Swapd extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

@@ -10,14 +10,14 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
 
 /**
  * A filter which discards the stack.
  */
-public class Scrap extends PrimitiveStackRelation
+public class Scrap extends PrimitiveStackMapping
 {
 	private static final int ARITY = 0;
 

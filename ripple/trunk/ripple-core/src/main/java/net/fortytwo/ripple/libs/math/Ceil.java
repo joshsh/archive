@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.math;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.NumericValue;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.Sink;
@@ -23,7 +23,7 @@ import net.fortytwo.ripple.util.Sink;
  * a type of xsd:integer, unlike Java's Math.ceil, which returns a double
  * value.
  */
-public class Ceil extends PrimitiveStackRelation
+public class Ceil extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

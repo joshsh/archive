@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
@@ -20,7 +20,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which permutes the first, second and third items on the stack
  * such that (... x y z) becomes (... z x y).
  */
-public class Rollup extends PrimitiveStackRelation
+public class Rollup extends PrimitiveStackMapping
 {
 	private static final int ARITY = 3;
 

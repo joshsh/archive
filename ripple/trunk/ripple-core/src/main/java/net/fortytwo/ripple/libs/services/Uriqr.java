@@ -11,7 +11,7 @@ package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
@@ -34,7 +34,7 @@ import java.util.List;
  * A primitive which consumes a literal value and produces a number of resources
  * which link to that value, according to the Uriqr service.
  */
-public class Uriqr extends PrimitiveStackRelation
+public class Uriqr extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 

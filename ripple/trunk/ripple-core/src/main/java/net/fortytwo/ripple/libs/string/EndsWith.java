@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.string;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
@@ -22,7 +22,7 @@ import net.fortytwo.ripple.util.Sink;
  * A primitive which consumes a string and suffix, producing a Boolean value of
  * true if the given string ends with the given suffix, otherwise false.
  */
-public class EndsWith extends PrimitiveStackRelation
+public class EndsWith extends PrimitiveStackMapping
 {
 	private static final int ARITY = 2;
 

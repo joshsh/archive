@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.PrimitiveStackRelation;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
@@ -25,7 +25,7 @@ import org.openrdf.model.URI;
  * A primitive which consumes a literal value and produces its data type (if
  * any).
  */
-public class Type extends PrimitiveStackRelation
+public class Type extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
