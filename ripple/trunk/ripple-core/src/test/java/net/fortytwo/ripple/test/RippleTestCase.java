@@ -195,7 +195,8 @@ public abstract class RippleTestCase extends TestCase
 
 	public static void assertCollectorsEqual( Collector<RippleList> expected, Collector<RippleList> actual ) throws Exception
 	{
-		int size = expected.size();
+//System.out.println("expected: " + expected + ", actual = " + actual);
+        int size = expected.size();
 		assertEquals( size, actual.size() );
 		if ( 0 == size )
 		{
