@@ -89,6 +89,20 @@ string:matches
 	rdfs:comment "s regex  =>  b -- where b is true if the given string matches the given regular expression, otherwise false" ;
 	.
 
+string:md5
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "plaintext" ;
+			rpl:parameterType xsd:string ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType xsd:string ;
+	rdfs:label "md5" ;
+	rdfs:comment "finds the md5 hash of a string" ;
+	.
+
 string:percentDecode
 	a rpl:Function ;
 	rpl:arity 1 ;

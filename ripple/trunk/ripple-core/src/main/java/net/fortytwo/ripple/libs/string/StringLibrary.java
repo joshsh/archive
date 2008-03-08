@@ -31,7 +31,8 @@ public class StringLibrary extends Library
 		registerPrimitive( IndexOf.class, NS + "indexOf", mc );
 		registerPrimitive( LastIndexOf.class, NS + "lastIndexOf", mc );
 		registerPrimitive( Length.class, NS + "length", mc );
-		registerPrimitive( Matches.class, NS + "matches", mc );
+        registerPrimitive( Matches.class, NS + "matches", mc );
+        registerPrimitive( Md5.class, NS + "md5", mc );
 		registerPrimitive( PercentDecode.class, NS + "percentDecode", mc );
 		registerPrimitive( PercentEncode.class, NS + "percentEncode", mc );
 		registerPrimitive( ReplaceAll.class, NS + "replaceAll", mc );

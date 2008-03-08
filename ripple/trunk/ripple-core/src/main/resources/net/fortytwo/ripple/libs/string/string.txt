@@ -34,6 +34,13 @@ string:length
 string:matches
 ========================================
 
+"foobar" md5!.  #
+
+
+========================================
+string:matches
+========================================
+
 "foo" "f[o]*" /matches.  # true
 "foo" "fo" /matches.  #false
 

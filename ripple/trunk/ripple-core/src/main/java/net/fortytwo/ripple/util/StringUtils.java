@@ -27,7 +27,8 @@ public final class StringUtils
 		EIGHT = 8,
 		SIXTEEN = 16;
 
-	private static MessageDigest sha1Digest = null;
+    private static MessageDigest sha1Digest = null;
+    private static MessageDigest md5Digest = null;
 
 	private StringUtils()
 	{
@@ -348,7 +349,56 @@ public final class StringUtils
 		return coded;
 	}
 
-	////////////////////////////////////////////////////////////////////////////
+    public static String md5SumOf( final String plaintext )
+		throws RippleException
+	{
+		try
+		{
+			if ( null == md5Digest )
+			{
+				md5Digest = MessageDigest.getInstance( "MD5" );
+			}
+		}
+
+		catch ( java.security.NoSuchAlgorithmException e )
+		{
+			throw new RippleException( e );
+		}
+
+		try
+		{
+			synchronized ( md5Digest )
+			{
+				md5Digest.update( plaintext.getBytes( "UTF-8" ) );
+			}
+		}
+
+		catch ( java.io.UnsupportedEncodingException e )
+		{
+			throw new RippleException( e );
+		}
+
+		byte[] digest = md5Digest.digest();
+
+		String coded = "";
+
+		for  ( byte b : digest )
+		{
+			String hex = Integer.toHexString( b );
+
+			if ( hex.length() == 1 )
+			{
+				hex = "0" + hex;
+			}
+
+			hex = hex.substring( hex.length() - 2 );
+			coded += hex;
+		}
+
+		return coded;
+	}
+
+    ////////////////////////////////////////////////////////////////////////////
 
 	private static char toUnicodeChar( final String unicode )
 		throws RippleException
