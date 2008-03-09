@@ -13,11 +13,6 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.impl.sesame.SesameNumericValue;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.vocabulary.XMLSchema;
-
 /**
  * A numeric (xsd:integer or xsd:double) literal value.
  */
@@ -26,7 +21,7 @@ public abstract class NumericValue implements RippleValue
 	/**
 	 * Distinguishes between numeric literals of type xsd:integer and xsd:double.
 	 */
-	public enum NumericLiteralType { INTEGER, LONG, DOUBLE };
+	public enum NumericLiteralType { INTEGER, LONG, DOUBLE, FLOAT };
 
 	protected NumericLiteralType type;
 	protected Number number;
@@ -60,6 +55,11 @@ public abstract class NumericValue implements RippleValue
 	{
 		return number.doubleValue();
 	}
+	
+	public float floatValue()
+	{
+		return number.floatValue();
+	}
 
 	public boolean isZero()
 	{
@@ -92,6 +92,9 @@ public abstract class NumericValue implements RippleValue
 				break;
 			case DOUBLE:
 				p.print( number.doubleValue() );
+				break;
+			case FLOAT:
+				p.print( number.floatValue() );
 				break;
 		}
 	}

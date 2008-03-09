@@ -32,6 +32,12 @@ public class SesameNumericValue extends NumericValue {
 		number = new Double( d );
 	}
 	
+	public SesameNumericValue( final float f )
+	{
+		type = NumericLiteralType.FLOAT;
+		number = new Float( f );
+	}
+	
 	public SesameNumericValue( final RdfValue rdf )
 		throws RippleException
 	{
@@ -92,6 +98,20 @@ public class SesameNumericValue extends NumericValue {
 				throw new RippleException( t );
 			}
 		}
+
+		else if ( dataType.equals( XMLSchema.FLOAT ) )
+		{
+			try
+			{
+				type = NumericLiteralType.FLOAT;
+				number = new Float( ( (Literal) v ).floatValue() );
+			}
+
+			catch ( Throwable t )
+			{
+				throw new RippleException( t );
+			}
+		}
 		
 		else
 		{
@@ -116,6 +136,9 @@ public class SesameNumericValue extends NumericValue {
 				case DOUBLE:
 					rdfEquivalent = new RdfValue( smc.getValueFactory().createLiteral( number.doubleValue() ) );
 					break;
+				case FLOAT:
+					rdfEquivalent = new RdfValue( smc.getValueFactory().createLiteral( number.floatValue() ) );
+					break;
 			}
 		}
 	
@@ -134,6 +157,11 @@ public class SesameNumericValue extends NumericValue {
 		else if ( NumericLiteralType.LONG == a.getType() )
 		{
 			return new SesameNumericValue( Math.abs( a.longValue() ) );
+		}
+	
+		else if ( NumericLiteralType.FLOAT == a.getType() )
+		{
+			return new SesameNumericValue( Math.abs( a.floatValue() ) );
 		}
 		
 		else
@@ -155,6 +183,11 @@ public class SesameNumericValue extends NumericValue {
 		{
 			return new SesameNumericValue( -a.longValue() );
 		}
+
+		else if ( NumericLiteralType.FLOAT == a.getType() )
+		{
+			return new SesameNumericValue( -a.floatValue() );
+		}
 		
 		else
 		{
@@ -172,9 +205,14 @@ public class SesameNumericValue extends NumericValue {
 			return new SesameNumericValue( a.intValue() + b.intValue() );
 		}
 
-		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
+		else if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
 			return new SesameNumericValue( a.longValue() + b.longValue() );
+		}
+
+		else if ( NumericLiteralType.FLOAT == a.getType() && NumericLiteralType.FLOAT == b.getType() )
+		{
+			return new SesameNumericValue( a.floatValue() + b.floatValue() );
 		}
 		
 		else
@@ -196,6 +234,11 @@ public class SesameNumericValue extends NumericValue {
 		{
 			return new SesameNumericValue( a.longValue() - b.longValue() );
 		}
+	
+		else if ( NumericLiteralType.FLOAT == a.getType() && NumericLiteralType.FLOAT == b.getType() )
+		{
+			return new SesameNumericValue( a.floatValue() - b.floatValue() );
+		}
 		
 		else
 		{
@@ -212,9 +255,14 @@ public class SesameNumericValue extends NumericValue {
 			return new SesameNumericValue( a.intValue() * b.intValue() );
 		}
 
-		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
+		else if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
 			return new SesameNumericValue( a.longValue() * b.longValue() );
+		}
+	
+		else if ( NumericLiteralType.FLOAT == a.getType() && NumericLiteralType.FLOAT == b.getType() )
+		{
+			return new SesameNumericValue( a.floatValue() * b.floatValue() );
 		}
 		
 		else
@@ -233,9 +281,14 @@ public class SesameNumericValue extends NumericValue {
 			return new SesameNumericValue( a.intValue() / b.intValue() );
 		}
 
-		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
+		else if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
 			return new SesameNumericValue( a.longValue() / b.longValue() );
+		}
+
+		else if ( NumericLiteralType.FLOAT == a.getType() && NumericLiteralType.FLOAT == b.getType() )
+		{
+			return new SesameNumericValue( a.floatValue() / b.floatValue() );
 		}
 		
 		else
@@ -254,9 +307,14 @@ public class SesameNumericValue extends NumericValue {
 			return new SesameNumericValue( a.intValue() % b.intValue() );
 		}
 
-		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
+		else if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == b.getType() )
 		{
 			return new SesameNumericValue( a.longValue() % b.longValue() );
+		}
+
+		else if ( NumericLiteralType.FLOAT == a.getType() && NumericLiteralType.FLOAT == b.getType() )
+		{
+			return new SesameNumericValue( a.floatValue() % b.floatValue() );
 		}
 		
 		else
@@ -276,9 +334,14 @@ public class SesameNumericValue extends NumericValue {
 			return new SesameNumericValue( (int) r );
 		}
 
-		if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == pow.getType() )
+		else if ( NumericLiteralType.LONG == a.getType() && NumericLiteralType.LONG == pow.getType() )
 		{
 			return new SesameNumericValue( (long) r );
+		}
+		
+		else if ( NumericLiteralType.FLOAT == a.getType() && NumericLiteralType.FLOAT == pow.getType() )
+		{
+			return new SesameNumericValue( (float) r );
 		}
 		
 		else
