@@ -18,7 +18,7 @@ public class QueryPipeTest extends RippleTestCase
 			throws Exception
 		{
 			Model model = RippleTestCase.getTestModel();
-			Evaluator eval = new LazyEvaluator();
+			StackEvaluator eval = new LazyEvaluator();
 			QueryEngine qe = new QueryEngine( model, eval, System.out, System.err );
 			Collector<RippleList> expected = new Collector<RippleList>();
 			Collector<RippleList> results = new Collector<RippleList>();
@@ -70,7 +70,7 @@ public class QueryPipeTest extends RippleTestCase
 		public void test() throws Exception
 		{
 			Model model = RippleTestCase.getTestModel();
-			Evaluator eval = new LazyEvaluator();
+			StackEvaluator eval = new LazyEvaluator();
 
 			// Discard error output (of which there will be a lot).
 			PrintStream errStream = new PrintStream( new NullOutputStream() );

@@ -32,7 +32,7 @@ public class QueryEngine
 
 	private Model model;
 	private Lexicon lexicon;
-	private Evaluator evaluator;
+	private StackEvaluator evaluator;
 
 	private RipplePrintStream printStream;
 	private PrintStream errorPrintStream;
@@ -40,7 +40,7 @@ public class QueryEngine
 	////////////////////////////////////////////////////////////////////////////
 
 	public QueryEngine( final Model model,
-						final Evaluator evaluator,
+						final StackEvaluator evaluator,
 						final PrintStream out,
 						final PrintStream err )
 		throws RippleException
@@ -88,7 +88,7 @@ public class QueryEngine
 		return model.getConnection( name, new LexiconUpdater( lexicon ) );
 	}
 
-	public Evaluator getEvaluator()
+	public StackEvaluator getEvaluator()
 	{
 		return evaluator;
 	}
